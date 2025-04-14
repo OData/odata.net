@@ -113,6 +113,11 @@ return (node as _HEXDIG<TMode>.Realized)!.Dispatch(this, context);
                 {
                     return visitor.Accept(this, context);
                 }
+                
+                internal static IRealizationResult<char, _HEXDIG<ParseMode.Realized>.Realized._DIGIT> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+                {
+                    throw new Exception();
+                }
             }
             
             public sealed class _ʺx41ʺ : _HEXDIG<TMode>.Realized
@@ -143,6 +148,11 @@ return (node as _HEXDIG<TMode>.Realized)!.Dispatch(this, context);
                 protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
                     return visitor.Accept(this, context);
+                }
+                
+                internal static IRealizationResult<char, _HEXDIG<ParseMode.Realized>.Realized._ʺx41ʺ> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+                {
+                    throw new Exception();
                 }
             }
             
@@ -175,6 +185,11 @@ return (node as _HEXDIG<TMode>.Realized)!.Dispatch(this, context);
                 {
                     return visitor.Accept(this, context);
                 }
+                
+                internal static IRealizationResult<char, _HEXDIG<ParseMode.Realized>.Realized._ʺx42ʺ> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+                {
+                    throw new Exception();
+                }
             }
             
             public sealed class _ʺx43ʺ : _HEXDIG<TMode>.Realized
@@ -205,6 +220,11 @@ return (node as _HEXDIG<TMode>.Realized)!.Dispatch(this, context);
                 protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
                     return visitor.Accept(this, context);
+                }
+                
+                internal static IRealizationResult<char, _HEXDIG<ParseMode.Realized>.Realized._ʺx43ʺ> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+                {
+                    throw new Exception();
                 }
             }
             
@@ -237,6 +257,11 @@ return (node as _HEXDIG<TMode>.Realized)!.Dispatch(this, context);
                 {
                     return visitor.Accept(this, context);
                 }
+                
+                internal static IRealizationResult<char, _HEXDIG<ParseMode.Realized>.Realized._ʺx44ʺ> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+                {
+                    throw new Exception();
+                }
             }
             
             public sealed class _ʺx45ʺ : _HEXDIG<TMode>.Realized
@@ -268,6 +293,11 @@ return (node as _HEXDIG<TMode>.Realized)!.Dispatch(this, context);
                 {
                     return visitor.Accept(this, context);
                 }
+                
+                internal static IRealizationResult<char, _HEXDIG<ParseMode.Realized>.Realized._ʺx45ʺ> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+                {
+                    throw new Exception();
+                }
             }
             
             public sealed class _ʺx46ʺ : _HEXDIG<TMode>.Realized
@@ -298,6 +328,11 @@ return (node as _HEXDIG<TMode>.Realized)!.Dispatch(this, context);
                 protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
                     return visitor.Accept(this, context);
+                }
+                
+                internal static IRealizationResult<char, _HEXDIG<ParseMode.Realized>.Realized._ʺx46ʺ> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+                {
+                    throw new Exception();
                 }
             }
         }

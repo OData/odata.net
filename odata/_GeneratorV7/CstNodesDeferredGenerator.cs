@@ -771,6 +771,20 @@ return this.realizationResult;
 return visitor.Accept(this, context);
 """
                                                 ),
+                                            new MethodDefinition(
+                                                AccessModifier.Internal, 
+                                                ClassModifier.Static, 
+                                                false,
+                                                $"IRealizationResult<char, {toTranslate.Name}<ParseMode.Realized>.Realized.{nestedClass.Name}>",
+                                                Enumerable.Empty<string>(),
+                                                "Create",
+                                                new[]
+                                                {
+                                                    new MethodParameter(
+                                                        "IFuture<IRealizationResult<char>>",
+                                                        "previousNodeRealizationResult"),
+                                                },
+                                                "throw new Exception();"),
                                             //// TODO implement create
                                             //// TODO implement realizeimpl for deferred
                                         },

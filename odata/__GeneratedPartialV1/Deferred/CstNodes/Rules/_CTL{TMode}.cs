@@ -108,6 +108,11 @@ return (node as _CTL<TMode>.Realized)!.Dispatch(this, context);
                 {
                     return visitor.Accept(this, context);
                 }
+                
+                internal static IRealizationResult<char, _CTL<ParseMode.Realized>.Realized._Ⰳx00ⲻ1F> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+                {
+                    throw new Exception();
+                }
             }
             
             public sealed class _Ⰳx7F : _CTL<TMode>.Realized
@@ -138,6 +143,11 @@ return (node as _CTL<TMode>.Realized)!.Dispatch(this, context);
                 protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
                     return visitor.Accept(this, context);
+                }
+                
+                internal static IRealizationResult<char, _CTL<ParseMode.Realized>.Realized._Ⰳx7F> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+                {
+                    throw new Exception();
                 }
             }
         }

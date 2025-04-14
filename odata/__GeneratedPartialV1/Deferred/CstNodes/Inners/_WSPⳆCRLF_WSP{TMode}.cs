@@ -108,6 +108,11 @@ return (node as _WSPⳆCRLF_WSP<TMode>.Realized)!.Dispatch(this, context);
                 {
                     return visitor.Accept(this, context);
                 }
+                
+                internal static IRealizationResult<char, _WSPⳆCRLF_WSP<ParseMode.Realized>.Realized._WSP> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+                {
+                    throw new Exception();
+                }
             }
             
             public sealed class _CRLF_WSP : _WSPⳆCRLF_WSP<TMode>.Realized
@@ -140,6 +145,11 @@ return (node as _WSPⳆCRLF_WSP<TMode>.Realized)!.Dispatch(this, context);
                 protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
                     return visitor.Accept(this, context);
+                }
+                
+                internal static IRealizationResult<char, _WSPⳆCRLF_WSP<ParseMode.Realized>.Realized._CRLF_WSP> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+                {
+                    throw new Exception();
                 }
             }
         }

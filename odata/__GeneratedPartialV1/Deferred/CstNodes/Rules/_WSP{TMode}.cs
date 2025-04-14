@@ -108,6 +108,11 @@ return (node as _WSP<TMode>.Realized)!.Dispatch(this, context);
                 {
                     return visitor.Accept(this, context);
                 }
+                
+                internal static IRealizationResult<char, _WSP<ParseMode.Realized>.Realized._SP> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+                {
+                    throw new Exception();
+                }
             }
             
             public sealed class _HTAB : _WSP<TMode>.Realized
@@ -138,6 +143,11 @@ return (node as _WSP<TMode>.Realized)!.Dispatch(this, context);
                 protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
                     return visitor.Accept(this, context);
+                }
+                
+                internal static IRealizationResult<char, _WSP<ParseMode.Realized>.Realized._HTAB> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+                {
+                    throw new Exception();
                 }
             }
         }

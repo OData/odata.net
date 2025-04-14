@@ -108,6 +108,11 @@ return (node as _ALPHA<TMode>.Realized)!.Dispatch(this, context);
                 {
                     return visitor.Accept(this, context);
                 }
+                
+                internal static IRealizationResult<char, _ALPHA<ParseMode.Realized>.Realized._Ⰳx41ⲻ5A> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+                {
+                    throw new Exception();
+                }
             }
             
             public sealed class _Ⰳx61ⲻ7A : _ALPHA<TMode>.Realized
@@ -138,6 +143,11 @@ return (node as _ALPHA<TMode>.Realized)!.Dispatch(this, context);
                 protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
                     return visitor.Accept(this, context);
+                }
+                
+                internal static IRealizationResult<char, _ALPHA<ParseMode.Realized>.Realized._Ⰳx61ⲻ7A> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+                {
+                    throw new Exception();
                 }
             }
         }

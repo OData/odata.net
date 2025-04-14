@@ -108,6 +108,11 @@ return (node as _BIT<TMode>.Realized)!.Dispatch(this, context);
                 {
                     return visitor.Accept(this, context);
                 }
+                
+                internal static IRealizationResult<char, _BIT<ParseMode.Realized>.Realized._ʺx30ʺ> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+                {
+                    throw new Exception();
+                }
             }
             
             public sealed class _ʺx31ʺ : _BIT<TMode>.Realized
@@ -138,6 +143,11 @@ return (node as _BIT<TMode>.Realized)!.Dispatch(this, context);
                 protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
                     return visitor.Accept(this, context);
+                }
+                
+                internal static IRealizationResult<char, _BIT<ParseMode.Realized>.Realized._ʺx31ʺ> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+                {
+                    throw new Exception();
                 }
             }
         }

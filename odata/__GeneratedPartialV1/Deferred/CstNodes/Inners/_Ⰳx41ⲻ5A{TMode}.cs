@@ -134,6 +134,11 @@ return (node as _Ⰳx41ⲻ5A<TMode>.Realized)!.Dispatch(this, context);
                 {
                     return visitor.Accept(this, context);
                 }
+                
+                internal static IRealizationResult<char, _Ⰳx41ⲻ5A<ParseMode.Realized>.Realized._41> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+                {
+                    throw new Exception();
+                }
             }
             
             public sealed class _42 : _Ⰳx41ⲻ5A<TMode>.Realized
@@ -166,6 +171,11 @@ return (node as _Ⰳx41ⲻ5A<TMode>.Realized)!.Dispatch(this, context);
                 protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
                     return visitor.Accept(this, context);
+                }
+                
+                internal static IRealizationResult<char, _Ⰳx41ⲻ5A<ParseMode.Realized>.Realized._42> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+                {
+                    throw new Exception();
                 }
             }
             
@@ -200,6 +210,11 @@ return (node as _Ⰳx41ⲻ5A<TMode>.Realized)!.Dispatch(this, context);
                 {
                     return visitor.Accept(this, context);
                 }
+                
+                internal static IRealizationResult<char, _Ⰳx41ⲻ5A<ParseMode.Realized>.Realized._43> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+                {
+                    throw new Exception();
+                }
             }
             
             public sealed class _44 : _Ⰳx41ⲻ5A<TMode>.Realized
@@ -232,6 +247,11 @@ return (node as _Ⰳx41ⲻ5A<TMode>.Realized)!.Dispatch(this, context);
                 protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
                     return visitor.Accept(this, context);
+                }
+                
+                internal static IRealizationResult<char, _Ⰳx41ⲻ5A<ParseMode.Realized>.Realized._44> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+                {
+                    throw new Exception();
                 }
             }
             
@@ -266,6 +286,11 @@ return (node as _Ⰳx41ⲻ5A<TMode>.Realized)!.Dispatch(this, context);
                 {
                     return visitor.Accept(this, context);
                 }
+                
+                internal static IRealizationResult<char, _Ⰳx41ⲻ5A<ParseMode.Realized>.Realized._45> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+                {
+                    throw new Exception();
+                }
             }
             
             public sealed class _46 : _Ⰳx41ⲻ5A<TMode>.Realized
@@ -298,6 +323,11 @@ return (node as _Ⰳx41ⲻ5A<TMode>.Realized)!.Dispatch(this, context);
                 protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
                     return visitor.Accept(this, context);
+                }
+                
+                internal static IRealizationResult<char, _Ⰳx41ⲻ5A<ParseMode.Realized>.Realized._46> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+                {
+                    throw new Exception();
                 }
             }
             
@@ -332,6 +362,11 @@ return (node as _Ⰳx41ⲻ5A<TMode>.Realized)!.Dispatch(this, context);
                 {
                     return visitor.Accept(this, context);
                 }
+                
+                internal static IRealizationResult<char, _Ⰳx41ⲻ5A<ParseMode.Realized>.Realized._47> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+                {
+                    throw new Exception();
+                }
             }
             
             public sealed class _48 : _Ⰳx41ⲻ5A<TMode>.Realized
@@ -364,6 +399,11 @@ return (node as _Ⰳx41ⲻ5A<TMode>.Realized)!.Dispatch(this, context);
                 protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
                     return visitor.Accept(this, context);
+                }
+                
+                internal static IRealizationResult<char, _Ⰳx41ⲻ5A<ParseMode.Realized>.Realized._48> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+                {
+                    throw new Exception();
                 }
             }
             
@@ -398,6 +438,11 @@ return (node as _Ⰳx41ⲻ5A<TMode>.Realized)!.Dispatch(this, context);
                 {
                     return visitor.Accept(this, context);
                 }
+                
+                internal static IRealizationResult<char, _Ⰳx41ⲻ5A<ParseMode.Realized>.Realized._49> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+                {
+                    throw new Exception();
+                }
             }
             
             public sealed class _4A : _Ⰳx41ⲻ5A<TMode>.Realized
@@ -430,6 +475,11 @@ return (node as _Ⰳx41ⲻ5A<TMode>.Realized)!.Dispatch(this, context);
                 protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
                     return visitor.Accept(this, context);
+                }
+                
+                internal static IRealizationResult<char, _Ⰳx41ⲻ5A<ParseMode.Realized>.Realized._4A> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+                {
+                    throw new Exception();
                 }
             }
             
@@ -464,6 +514,11 @@ return (node as _Ⰳx41ⲻ5A<TMode>.Realized)!.Dispatch(this, context);
                 {
                     return visitor.Accept(this, context);
                 }
+                
+                internal static IRealizationResult<char, _Ⰳx41ⲻ5A<ParseMode.Realized>.Realized._4B> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+                {
+                    throw new Exception();
+                }
             }
             
             public sealed class _4C : _Ⰳx41ⲻ5A<TMode>.Realized
@@ -496,6 +551,11 @@ return (node as _Ⰳx41ⲻ5A<TMode>.Realized)!.Dispatch(this, context);
                 protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
                     return visitor.Accept(this, context);
+                }
+                
+                internal static IRealizationResult<char, _Ⰳx41ⲻ5A<ParseMode.Realized>.Realized._4C> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+                {
+                    throw new Exception();
                 }
             }
             
@@ -530,6 +590,11 @@ return (node as _Ⰳx41ⲻ5A<TMode>.Realized)!.Dispatch(this, context);
                 {
                     return visitor.Accept(this, context);
                 }
+                
+                internal static IRealizationResult<char, _Ⰳx41ⲻ5A<ParseMode.Realized>.Realized._4D> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+                {
+                    throw new Exception();
+                }
             }
             
             public sealed class _4E : _Ⰳx41ⲻ5A<TMode>.Realized
@@ -562,6 +627,11 @@ return (node as _Ⰳx41ⲻ5A<TMode>.Realized)!.Dispatch(this, context);
                 protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
                     return visitor.Accept(this, context);
+                }
+                
+                internal static IRealizationResult<char, _Ⰳx41ⲻ5A<ParseMode.Realized>.Realized._4E> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+                {
+                    throw new Exception();
                 }
             }
             
@@ -596,6 +666,11 @@ return (node as _Ⰳx41ⲻ5A<TMode>.Realized)!.Dispatch(this, context);
                 {
                     return visitor.Accept(this, context);
                 }
+                
+                internal static IRealizationResult<char, _Ⰳx41ⲻ5A<ParseMode.Realized>.Realized._4F> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+                {
+                    throw new Exception();
+                }
             }
             
             public sealed class _50 : _Ⰳx41ⲻ5A<TMode>.Realized
@@ -628,6 +703,11 @@ return (node as _Ⰳx41ⲻ5A<TMode>.Realized)!.Dispatch(this, context);
                 protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
                     return visitor.Accept(this, context);
+                }
+                
+                internal static IRealizationResult<char, _Ⰳx41ⲻ5A<ParseMode.Realized>.Realized._50> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+                {
+                    throw new Exception();
                 }
             }
             
@@ -662,6 +742,11 @@ return (node as _Ⰳx41ⲻ5A<TMode>.Realized)!.Dispatch(this, context);
                 {
                     return visitor.Accept(this, context);
                 }
+                
+                internal static IRealizationResult<char, _Ⰳx41ⲻ5A<ParseMode.Realized>.Realized._51> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+                {
+                    throw new Exception();
+                }
             }
             
             public sealed class _52 : _Ⰳx41ⲻ5A<TMode>.Realized
@@ -694,6 +779,11 @@ return (node as _Ⰳx41ⲻ5A<TMode>.Realized)!.Dispatch(this, context);
                 protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
                     return visitor.Accept(this, context);
+                }
+                
+                internal static IRealizationResult<char, _Ⰳx41ⲻ5A<ParseMode.Realized>.Realized._52> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+                {
+                    throw new Exception();
                 }
             }
             
@@ -728,6 +818,11 @@ return (node as _Ⰳx41ⲻ5A<TMode>.Realized)!.Dispatch(this, context);
                 {
                     return visitor.Accept(this, context);
                 }
+                
+                internal static IRealizationResult<char, _Ⰳx41ⲻ5A<ParseMode.Realized>.Realized._53> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+                {
+                    throw new Exception();
+                }
             }
             
             public sealed class _54 : _Ⰳx41ⲻ5A<TMode>.Realized
@@ -760,6 +855,11 @@ return (node as _Ⰳx41ⲻ5A<TMode>.Realized)!.Dispatch(this, context);
                 protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
                     return visitor.Accept(this, context);
+                }
+                
+                internal static IRealizationResult<char, _Ⰳx41ⲻ5A<ParseMode.Realized>.Realized._54> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+                {
+                    throw new Exception();
                 }
             }
             
@@ -794,6 +894,11 @@ return (node as _Ⰳx41ⲻ5A<TMode>.Realized)!.Dispatch(this, context);
                 {
                     return visitor.Accept(this, context);
                 }
+                
+                internal static IRealizationResult<char, _Ⰳx41ⲻ5A<ParseMode.Realized>.Realized._55> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+                {
+                    throw new Exception();
+                }
             }
             
             public sealed class _56 : _Ⰳx41ⲻ5A<TMode>.Realized
@@ -826,6 +931,11 @@ return (node as _Ⰳx41ⲻ5A<TMode>.Realized)!.Dispatch(this, context);
                 protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
                     return visitor.Accept(this, context);
+                }
+                
+                internal static IRealizationResult<char, _Ⰳx41ⲻ5A<ParseMode.Realized>.Realized._56> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+                {
+                    throw new Exception();
                 }
             }
             
@@ -860,6 +970,11 @@ return (node as _Ⰳx41ⲻ5A<TMode>.Realized)!.Dispatch(this, context);
                 {
                     return visitor.Accept(this, context);
                 }
+                
+                internal static IRealizationResult<char, _Ⰳx41ⲻ5A<ParseMode.Realized>.Realized._57> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+                {
+                    throw new Exception();
+                }
             }
             
             public sealed class _58 : _Ⰳx41ⲻ5A<TMode>.Realized
@@ -892,6 +1007,11 @@ return (node as _Ⰳx41ⲻ5A<TMode>.Realized)!.Dispatch(this, context);
                 protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
                     return visitor.Accept(this, context);
+                }
+                
+                internal static IRealizationResult<char, _Ⰳx41ⲻ5A<ParseMode.Realized>.Realized._58> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+                {
+                    throw new Exception();
                 }
             }
             
@@ -926,6 +1046,11 @@ return (node as _Ⰳx41ⲻ5A<TMode>.Realized)!.Dispatch(this, context);
                 {
                     return visitor.Accept(this, context);
                 }
+                
+                internal static IRealizationResult<char, _Ⰳx41ⲻ5A<ParseMode.Realized>.Realized._59> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+                {
+                    throw new Exception();
+                }
             }
             
             public sealed class _5A : _Ⰳx41ⲻ5A<TMode>.Realized
@@ -958,6 +1083,11 @@ return (node as _Ⰳx41ⲻ5A<TMode>.Realized)!.Dispatch(this, context);
                 protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
                     return visitor.Accept(this, context);
+                }
+                
+                internal static IRealizationResult<char, _Ⰳx41ⲻ5A<ParseMode.Realized>.Realized._5A> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+                {
+                    throw new Exception();
                 }
             }
         }
