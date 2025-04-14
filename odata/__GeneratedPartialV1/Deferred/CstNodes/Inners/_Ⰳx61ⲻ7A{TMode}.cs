@@ -45,7 +45,7 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Inners
             
             public override IRealizationResult<char, _Ⰳx61ⲻ7A<ParseMode.Realized>> Realize()
             {
-                throw new Exception("TODO");
+                return this.realizationResult.Value;
             }
             
             private IRealizationResult<char, _Ⰳx61ⲻ7A<ParseMode.Realized>> RealizeImpl()

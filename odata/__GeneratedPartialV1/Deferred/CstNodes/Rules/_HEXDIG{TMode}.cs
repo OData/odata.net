@@ -45,7 +45,7 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Rules
             
             public override IRealizationResult<char, _HEXDIG<ParseMode.Realized>> Realize()
             {
-                throw new Exception("TODO");
+                return this.realizationResult.Value;
             }
             
             private IRealizationResult<char, _HEXDIG<ParseMode.Realized>> RealizeImpl()

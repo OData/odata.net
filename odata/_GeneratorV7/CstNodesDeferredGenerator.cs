@@ -592,7 +592,6 @@ return new {{toTranslate.Name}}<ParseMode.Deferred>.Deferred(previousNodeRealiza
                                 Enumerable.Empty<string>(),
                                 "Convert",
                                 Enumerable.Empty<MethodParameter>(),
-                        //// TODO you are here
 """
 return this;
 """
@@ -605,8 +604,9 @@ return this;
                                 Enumerable.Empty<string>(),
                                 "Realize",
                                 Enumerable.Empty<MethodParameter>(),
+                        //// TODO you are here
 """
-throw new Exception("TODO");
+return this.realizationResult.Value;
 """
                                 ),
                             new MethodDefinition(
