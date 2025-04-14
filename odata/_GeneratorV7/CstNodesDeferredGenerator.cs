@@ -681,7 +681,6 @@ throw new Exception("TODO");
                                 },
                                 null),
                         },
-                        //// TODO implement du members
                         toTranslate
                             .NestedClasses
                             .Where(nestedClass => !string.Equals(nestedClass.Name, "Visitor", StringComparison.Ordinal))
@@ -694,6 +693,7 @@ throw new Exception("TODO");
                                         Enumerable.Empty<string>(),
                                         $"{toTranslate.Name}<TMode>.Realized",
                                         //// TODO finis the rest of this class initialization
+                                        //// TODO implement realizeimpl for deferred
                                         Enumerable.Empty<ConstructorDefinition>(),
                                         new[]
                                         {
@@ -749,7 +749,6 @@ throw new Exception("TODO");
                                         Enumerable.Empty<Class>(),
                                         Enumerable.Empty<PropertyDefinition>()))
                             .Prepend(
-                                //// TODO finish implementing visitor
                                 new Class(
                                     AccessModifier.Public, 
                                     ClassModifier.Abstract,
@@ -829,7 +828,6 @@ return node.Dispatch(this, context);
                                     Enumerable.Empty<Class>(),
                                     Enumerable.Empty<PropertyDefinition>())),
                         Enumerable.Empty<PropertyDefinition>()),
-                    //// TODO implement realizeimpl for deferred
                 },
                 Enumerable.Empty<PropertyDefinition>());
 
