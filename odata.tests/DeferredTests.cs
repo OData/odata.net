@@ -276,6 +276,107 @@ namespace odata.tests
 
             Assert.AreEqual(url, stringBuilder.ToString());
         }
+
+        //// TODO rewriter
+        /*
+        [TestMethod]
+        public void WriteTest()
+        {
+            var url = "/AA/A/AAA?AAAA=AAAAAC";
+
+            var input = new CombinatorParsingV3.CharacterTokenStream(url);
+
+            var deferredOdataUri = GeneratedOdataUri.Create(input);
+
+            var odataUri = deferredOdataUri.Parse();
+
+            var rewritten = Rewrite(odataUri);
+            var realized = rewritten.Realize().RealizedValue;
+
+            var stringBuilder = new StringBuilder();
+            V3ParserPlayground.OdataUriTranscriber.Instance.Transcribe(realized, stringBuilder);
+
+            Assert.AreEqual(url.Replace('C', 'D').Replace('A', 'C').Replace('D', 'A'), stringBuilder.ToString());
+        }
+
+        [TestMethod]
+        public void DeferredWriteTest()
+        {
+            //// TODO what you really want is to rewrite from deferred to deferred, not realized to deferred
+
+            var url = "/AA/A/AAA?AAAA=AAAAAC";
+
+            var input = new CombinatorParsingV3.CharacterTokenStream(url);
+
+            var deferredOdataUri = V3ParserPlayground.OdataUri.Create(input);
+
+            var odataUri = deferredOdataUri.Parse();
+
+            var rewritten = Rewrite(odataUri);
+
+            var segmentOutput = rewritten.Segments._1.Realize();
+
+            var stringBuilder = new StringBuilder();
+            V3ParserPlayground.SegmentTranscriber.Instance.Transcribe(segmentOutput.RealizedValue, stringBuilder);
+
+            Assert.AreEqual("/CC", stringBuilder.ToString());
+
+            var questionMarkOutput = rewritten.QuestionMark.Realize();
+
+            rewritten.Realize();
+        }
+
+        private static V3ParserPlayground.OdataUri<ParseMode.Deferred> Rewrite(V3ParserPlayground.OdataUri<ParseMode.Realized> originalUri)
+        {
+            return V3ParserPlayground.OdataUriFromRealizedRewriter.Instance.Transcribe(originalUri, new StringBuilder());
+        }
+
+        [TestMethod]
+        public void WriteFromDeferredToDeferred()
+        {
+            //// TODO what you really want is to rewrite from deferred to deferred, not realized to deferred
+
+            var url = "/AA/A/AAA?AAAA=AAAAAC";
+
+            var indexes = new List<int>();
+            var input = new InstrumentedStringInput(url, indexes);
+
+            var deferredOdataUri = V3ParserPlayground.OdataUri.Create(input);
+
+            var rewritten = Rewrite2(deferredOdataUri);
+
+            Assert.AreEqual(0, indexes.Count);
+
+            var segmentOutput = rewritten.Segments._1.Realize();
+
+            Assert.AreEqual(3, indexes.Max());
+
+            var stringBuilder = new StringBuilder();
+            V3ParserPlayground.SegmentTranscriber.Instance.Transcribe(segmentOutput.RealizedValue, stringBuilder);
+
+            Assert.AreEqual(3, indexes.Max());
+
+            Assert.AreEqual("/CC", stringBuilder.ToString());
+
+            var questionMarkOutput = rewritten.QuestionMark.Realize();
+
+            Assert.AreEqual(9, indexes.Max());
+
+            var realized = rewritten.Realize().RealizedValue;
+
+            Assert.AreEqual(url.Length - 1, indexes.Max());
+
+            var secondStringBuilder = new StringBuilder();
+            V3ParserPlayground.OdataUriTranscriber.Instance.Transcribe(realized, secondStringBuilder);
+
+            Assert.AreEqual(url.Replace('C', 'D').Replace('A', 'C').Replace('D', 'A'), secondStringBuilder.ToString());
+        }
+
+        private static V3ParserPlayground.OdataUri<ParseMode.Deferred> Rewrite2(V3ParserPlayground.OdataUri<ParseMode.Deferred> originalUri)
+        {
+            return V3ParserPlayground.Rewriter2.OdataUriRewriter.Instance.Transcribe(originalUri, new StringBuilder());
+        }
+        */
     }
 
     public static class GeneratedOdataUri
