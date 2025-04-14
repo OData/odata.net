@@ -96,7 +96,8 @@ return (node as _WSP<TMode>.Realized)!.Dispatch(this, context);
                 
                 internal static IRealizationResult<char, _WSP<TMode>.Realized._SP> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
                 {
-                    var _SP_1 = __GeneratedPartialV1.Deferred.CstNodes.Rules._SP.Create(previousNodeRealizationResult).Realize();if (!_SP_1.Success)
+                    var _SP_1 = __GeneratedPartialV1.Deferred.CstNodes.Rules._SP.Create(previousNodeRealizationResult).Realize();
+if (!_SP_1.Success)
 {
 return new RealizationResult<char, _WSP<TMode>.Realized._SP>(false, default, _SP_1.RemainingTokens);
 }
@@ -139,7 +140,8 @@ return node.realizationResult;
                 
                 internal static IRealizationResult<char, _WSP<TMode>.Realized._HTAB> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
                 {
-                    var _HTAB_1 = __GeneratedPartialV1.Deferred.CstNodes.Rules._HTAB.Create(previousNodeRealizationResult).Realize();if (!_HTAB_1.Success)
+                    var _HTAB_1 = __GeneratedPartialV1.Deferred.CstNodes.Rules._HTAB.Create(previousNodeRealizationResult).Realize();
+if (!_HTAB_1.Success)
 {
 return new RealizationResult<char, _WSP<TMode>.Realized._HTAB>(false, default, _HTAB_1.RemainingTokens);
 }
