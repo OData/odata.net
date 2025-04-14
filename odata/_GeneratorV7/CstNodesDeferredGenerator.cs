@@ -530,14 +530,42 @@ return {{toTranslate.Name}}<ParseMode.Deferred>.Deferred.Create(previousNodeReal
                 },
                 new[]
                 {
-                    //// TODO implement deferred
                     new Class(
                         AccessModifier.Public,
                         ClassModifier.Sealed,
                         "Deferred",
                         Enumerable.Empty<string>(),
                         $"{toTranslate.Name}<ParseMode.Deferred>",
-                        Enumerable.Empty<ConstructorDefinition>(),
+                        //// TODO you are here
+                        new[]
+                        {
+                            new ConstructorDefinition(
+                                AccessModifier.Private,
+                                new[]
+                                {
+                                    new MethodParameter(
+                                        "IFuture<IRealizationResult<char>>",
+                                        "previousNodeRealizationResult"),
+                                },
+"""
+this.previousNodeRealizationResult = previousNodeRealizationResult;
+
+this.realizationResult = Future.Create(() => this.RealizeImpl());
+""".Split(Environment.NewLine)
+                                ),
+                            new ConstructorDefinition(
+                                AccessModifier.Internal,
+                                new[]
+                                {
+                                    new MethodParameter(
+                                        $"IFuture<IRealizationResult<char, {toTranslate.Name}<ParseMode.Realized>>>",
+                                        "realizationResult"),
+                                },
+"""
+this.realizationResult = realizationResult;
+""".Split(Environment.NewLine)
+                                ),
+                        },
                         new[]
                         {
                             new MethodDefinition(
@@ -554,7 +582,7 @@ return {{toTranslate.Name}}<ParseMode.Deferred>.Deferred.Create(previousNodeReal
                                         "previousNodeRealizationResult"),
                                 },
 $$"""
-return {{toTranslate.Name}}<ParseMode.Deferred>.Deferred.Create(previousNodeRealizationResult);
+return new {{toTranslate.Name}}<ParseMode.Deferred>.Deferred(previousNodeRealizationResult);
 """
                                 ),
                             new MethodDefinition(
@@ -576,6 +604,18 @@ throw new Exception("TODO");
                                 $"IRealizationResult<char, {toTranslate.Name}<ParseMode.Realized>>",
                                 Enumerable.Empty<string>(),
                                 "Realize",
+                                Enumerable.Empty<MethodParameter>(),
+"""
+throw new Exception("TODO");
+"""
+                                ),
+                            new MethodDefinition(
+                                AccessModifier.Private,
+                                ClassModifier.None,
+                                false,
+                                $"IRealizationResult<char, {toTranslate.Name}<ParseMode.Realized>>",
+                                Enumerable.Empty<string>(),
+                                "RealizeImpl",
                                 Enumerable.Empty<MethodParameter>(),
 """
 throw new Exception("TODO");
