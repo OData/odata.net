@@ -546,7 +546,7 @@ return {{toTranslate.Name}}<ParseMode.Deferred>.Deferred.Create(previousNodeReal
                                 false,
                                 $"{toTranslate.Name}<ParseMode.Deferred>.Deferred",
                                 Enumerable.Empty<string>(),
-                                "Create",
+                                "Create", //// TODO implement adding `new` to methods
                                 new[]
                                 {
                                     new MethodParameter(
@@ -555,6 +555,30 @@ return {{toTranslate.Name}}<ParseMode.Deferred>.Deferred.Create(previousNodeReal
                                 },
 $$"""
 return {{toTranslate.Name}}<ParseMode.Deferred>.Deferred.Create(previousNodeRealizationResult);
+"""
+                                ),
+                            new MethodDefinition(
+                                AccessModifier.Public,
+                                ClassModifier.None,
+                                true,
+                                $"{toTranslate.Name}<ParseMode.Deferred>",
+                                Enumerable.Empty<string>(),
+                                "Convert",
+                                Enumerable.Empty<MethodParameter>(),
+"""
+throw new Exception("TODO");
+"""
+                                ),
+                            new MethodDefinition(
+                                AccessModifier.Public,
+                                ClassModifier.None,
+                                true,
+                                $"IRealizationResult<char, {toTranslate.Name}<ParseMode.Realized>>",
+                                Enumerable.Empty<string>(),
+                                "Realize",
+                                Enumerable.Empty<MethodParameter>(),
+"""
+throw new Exception("TODO");
 """
                                 ),
                         },
