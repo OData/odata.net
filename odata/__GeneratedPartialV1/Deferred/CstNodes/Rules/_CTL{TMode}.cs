@@ -96,7 +96,12 @@ return (node as _CTL<TMode>.Realized)!.Dispatch(this, context);
                 
                 internal static IRealizationResult<char, _CTL<TMode>.Realized._Ⰳx00ⲻ1F> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
                 {
-                    var _Ⰳx00ⲻ1F_1 = __GeneratedPartialV1.Deferred.CstNodes.Inners._Ⰳx00ⲻ1F.Create(previousNodeRealizationResult).Realize();
+                    var _Ⰳx00ⲻ1F_1 = __GeneratedPartialV1.Deferred.CstNodes.Inners._Ⰳx00ⲻ1F.Create(previousNodeRealizationResult).Realize();if (!_Ⰳx00ⲻ1F_1.Success)
+{
+return new RealizationResult<char, _CTL<TMode>.Realized._Ⰳx00ⲻ1F>(false, default, _Ⰳx00ⲻ1F_1.RemainingTokens);
+}
+
+
 var node = new _Ⰳx00ⲻ1F(_Ⰳx00ⲻ1F_1.RealizedValue, _Ⰳx00ⲻ1F_1.RemainingTokens);
 return node.realizationResult;
                 }
@@ -134,7 +139,12 @@ return node.realizationResult;
                 
                 internal static IRealizationResult<char, _CTL<TMode>.Realized._Ⰳx7F> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
                 {
-                    var _Ⰳx7F_1 = __GeneratedPartialV1.Deferred.CstNodes.Inners._Ⰳx7F.Create(previousNodeRealizationResult).Realize();
+                    var _Ⰳx7F_1 = __GeneratedPartialV1.Deferred.CstNodes.Inners._Ⰳx7F.Create(previousNodeRealizationResult).Realize();if (!_Ⰳx7F_1.Success)
+{
+return new RealizationResult<char, _CTL<TMode>.Realized._Ⰳx7F>(false, default, _Ⰳx7F_1.RemainingTokens);
+}
+
+
 var node = new _Ⰳx7F(_Ⰳx7F_1.RealizedValue, _Ⰳx7F_1.RemainingTokens);
 return node.realizationResult;
                 }

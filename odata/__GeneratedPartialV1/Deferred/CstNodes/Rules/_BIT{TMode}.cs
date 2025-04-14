@@ -96,7 +96,12 @@ return (node as _BIT<TMode>.Realized)!.Dispatch(this, context);
                 
                 internal static IRealizationResult<char, _BIT<TMode>.Realized._ʺx30ʺ> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
                 {
-                    var _ʺx30ʺ_1 = __GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx30ʺ.Create(previousNodeRealizationResult).Realize();
+                    var _ʺx30ʺ_1 = __GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx30ʺ.Create(previousNodeRealizationResult).Realize();if (!_ʺx30ʺ_1.Success)
+{
+return new RealizationResult<char, _BIT<TMode>.Realized._ʺx30ʺ>(false, default, _ʺx30ʺ_1.RemainingTokens);
+}
+
+
 var node = new _ʺx30ʺ(_ʺx30ʺ_1.RealizedValue, _ʺx30ʺ_1.RemainingTokens);
 return node.realizationResult;
                 }
@@ -134,7 +139,12 @@ return node.realizationResult;
                 
                 internal static IRealizationResult<char, _BIT<TMode>.Realized._ʺx31ʺ> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
                 {
-                    var _ʺx31ʺ_1 = __GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx31ʺ.Create(previousNodeRealizationResult).Realize();
+                    var _ʺx31ʺ_1 = __GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx31ʺ.Create(previousNodeRealizationResult).Realize();if (!_ʺx31ʺ_1.Success)
+{
+return new RealizationResult<char, _BIT<TMode>.Realized._ʺx31ʺ>(false, default, _ʺx31ʺ_1.RemainingTokens);
+}
+
+
 var node = new _ʺx31ʺ(_ʺx31ʺ_1.RealizedValue, _ʺx31ʺ_1.RemainingTokens);
 return node.realizationResult;
                 }

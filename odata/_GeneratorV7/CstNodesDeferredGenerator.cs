@@ -441,7 +441,7 @@ else
             return translated;
         }
 
-        private string GenerateDisciminatedUnionFactoryMethodBody(Class toTranslate, Namespace rules, Namespace inners)
+        private string GenerateDisciminatedUnionFactoryMethodBody(Class toTranslate, string returnType, Namespace rules, Namespace inners)
         {
             var properties = toTranslate.Properties.ToList();
 
@@ -451,13 +451,14 @@ else
             }
 
             var builder = new StringBuilder();
-            GenerateDisciminatedUnionFactoryMethodBodyPropertyInitialization(properties[0], "previousNodeRealizationResult", rules, inners, builder);
+            GenerateDisciminatedUnionFactoryMethodBodyPropertyInitialization(properties[0], "previousNodeRealizationResult", returnType, rules, inners, builder);
             builder.AppendLine();
             for (int i = 1; i < properties.Count; ++i)
             {
                 GenerateDisciminatedUnionFactoryMethodBodyPropertyInitialization(
                     properties[i],
                     $"Future.Create(() => {properties[i - 1].Name})",
+                    returnType,
                     rules,
                     inners,
                     builder);
@@ -479,6 +480,7 @@ else
         private void GenerateDisciminatedUnionFactoryMethodBodyPropertyInitialization(
             PropertyDefinition property,
             string previousNodeRealizationResult,
+            string returnType,
             Namespace rules,
             Namespace inners,
             StringBuilder builder)
@@ -503,6 +505,12 @@ else
             }
 
             builder.Append(".Realize();");
+            builder.AppendLine();
+            builder.AppendLine($"if (!{property.Name}.Success)");
+            builder.AppendLine("{");
+            builder.AppendLine($"return new RealizationResult<char, {returnType}>(false, default, {property.Name}.RemainingTokens);");
+            builder.AppendLine("}");
+            builder.AppendLine();
             //// TODO add if statements
         }
 
@@ -804,7 +812,7 @@ if (typeof(TMode) != typeof(ParseMode.Realized))
                                                         "IFuture<IRealizationResult<char>>",
                                                         "previousNodeRealizationResult"),
                                                 },
-                                                GenerateDisciminatedUnionFactoryMethodBody(nestedClass, rules, inners)),
+                                                GenerateDisciminatedUnionFactoryMethodBody(nestedClass, $"{toTranslate.Name}<TMode>.Realized.{nestedClass.Name}", rules, inners)),
                                             //// TODO implement create
                                             //// TODO implement realizeimpl for deferred
                                             new MethodDefinition(
