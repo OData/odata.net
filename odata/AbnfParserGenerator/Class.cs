@@ -113,12 +113,24 @@
         }
 
         public PropertyDefinition(AccessModifier accessModifier, bool isStatic, string type, string name, bool hasGet, bool hasSet, string? initializer)
+            : this(
+                  accessModifier,
+                  isStatic,
+                  type,
+                  name,
+                  hasGet ? new GetterDefinition(Enumerable.Empty<string>()) : null,
+                  hasSet,
+                  initializer)
+        {
+        }
+
+        public PropertyDefinition(AccessModifier accessModifier, bool isStatic, string type, string name, GetterDefinition? getter, bool hasSet, string? initializer)
         {
             AccessModifier = accessModifier;
             IsStatic = isStatic;
             Type = type;
             Name = name;
-            HasGet = hasGet;
+            this.Getter = getter;
             HasSet = hasSet;
             Initializer = initializer;
         }
@@ -131,11 +143,21 @@
 
         public string Name { get; }
 
-        public bool HasGet { get; }
+        public GetterDefinition? Getter { get; }
 
         public bool HasSet { get; }
 
         public string? Initializer { get; }
+    }
+
+    public sealed class GetterDefinition
+    {
+        public GetterDefinition(IEnumerable<string> body)
+        {
+            Body = body;
+        }
+
+        public IEnumerable<string> Body { get; }
     }
 
     public sealed class MethodDefinition

@@ -103,7 +103,7 @@
                                 property.IsStatic,
                                 this.QualifyType(property.Type),
                                 property.Name,
-                                property.HasGet,
+                                property.Getter,
                                 property.HasSet,
                                 property.Initializer)));
         }

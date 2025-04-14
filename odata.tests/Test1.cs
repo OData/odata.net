@@ -1245,7 +1245,9 @@ second-rule = first-rule
                         builder.Append(property.Type).Append(" ");
                         builder.Append(property.Name).Append(" ");
                         var needsBrace = true;
-                        if (property.HasGet)
+
+                        var getter = property.Getter;
+                        if (getter != null)
                         {
                             if (needsBrace)
                             {
@@ -1253,7 +1255,22 @@ second-rule = first-rule
                             }
 
                             needsBrace = false;
-                            builder.Append("get; ");
+                            builder.Append("get");
+
+                            if (getter.Body.Any())
+                            {
+                                builder.AppendLine("{");
+                                foreach (var line in getter.Body)
+                                {
+                                    builder.AppendLine(line);
+                                }
+
+                                builder.AppendLine("}");
+                            }
+                            else
+                            {
+                                builder.Append("; ");
+                            }
                         }
 
                         if (property.HasSet)
