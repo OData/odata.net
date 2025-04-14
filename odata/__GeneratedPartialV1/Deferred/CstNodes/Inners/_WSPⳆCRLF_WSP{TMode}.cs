@@ -101,7 +101,7 @@ return (node as _WSPⳆCRLF_WSP<TMode>.Realized)!.Dispatch(this, context);
                 
                 public override IRealizationResult<char, _WSPⳆCRLF_WSP<ParseMode.Realized>> Realize()
                 {
-                    throw new Exception("TODO");
+                    return this.realizationResult;
                 }
                 
                 protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
@@ -134,7 +134,7 @@ return (node as _WSPⳆCRLF_WSP<TMode>.Realized)!.Dispatch(this, context);
                 
                 public override IRealizationResult<char, _WSPⳆCRLF_WSP<ParseMode.Realized>> Realize()
                 {
-                    throw new Exception("TODO");
+                    return this.realizationResult;
                 }
                 
                 protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)

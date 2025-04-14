@@ -101,7 +101,7 @@ return (node as _BIT<TMode>.Realized)!.Dispatch(this, context);
                 
                 public override IRealizationResult<char, _BIT<ParseMode.Realized>> Realize()
                 {
-                    throw new Exception("TODO");
+                    return this.realizationResult;
                 }
                 
                 protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
@@ -132,7 +132,7 @@ return (node as _BIT<TMode>.Realized)!.Dispatch(this, context);
                 
                 public override IRealizationResult<char, _BIT<ParseMode.Realized>> Realize()
                 {
-                    throw new Exception("TODO");
+                    return this.realizationResult;
                 }
                 
                 protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)

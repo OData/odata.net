@@ -743,9 +743,8 @@ return new {{toTranslate.Name}}<ParseMode.Deferred>.Deferred(Future.Create(() =>
                                                 Enumerable.Empty<string>(),
                                                 "Realize",
                                                 Enumerable.Empty<MethodParameter>(),
-                                                //// TODo implement these methods
 """
-throw new Exception("TODO");
+return this.realizationResult;
 """
                                                 ),
                                             new MethodDefinition(
@@ -768,6 +767,7 @@ throw new Exception("TODO");
                                                         "TContext",
                                                         "context"),
                                                 },
+                                                //// TODo implement these methods
 """
 throw new Exception("TODO");
 """
