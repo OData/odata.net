@@ -748,7 +748,7 @@ throw new Exception("TODO");
                                         },
                                         Enumerable.Empty<Class>(),
                                         Enumerable.Empty<PropertyDefinition>()))
-                            .Append(
+                            .Prepend(
                                 //// TODO finish implementing visitor
                                 new Class(
                                     AccessModifier.Public, 
@@ -761,51 +761,71 @@ throw new Exception("TODO");
                                     },
                                     null,
                                     Enumerable.Empty<ConstructorDefinition>(),
-                                    new[]
-                                    {
-                                        new MethodDefinition(
-                                            AccessModifier.Public, 
-                                            ClassModifier.None, 
-                                            false,
-                                            "TResult",
-                                            Enumerable.Empty<string>(),
-                                            "Visit",
-                                            new[]
-                                            {
-                                                new MethodParameter(
-                                                    $"{toTranslate.Name}<ParseMode.Realized>",
-                                                    "node"),
-                                                new MethodParameter(
-                                                    "TContext",
-                                                    "context"),
-                                            },
+                                    toTranslate
+                                        .NestedClasses
+                                        .Where(nestedClass => !string.Equals(nestedClass.Name, "Visitor", StringComparison.Ordinal))
+                                        .Select(
+                                            nestedClass => 
+                                                new MethodDefinition(
+                                                    AccessModifier.Protected | AccessModifier.Internal,
+                                                    ClassModifier.Abstract,
+                                                    false,
+                                                    "TResult",
+                                                    Enumerable.Empty<string>(),
+                                                    "Accept",
+                                                    new[]
+                                                    {
+                                                        new MethodParameter(
+                                                            $"{toTranslate.Name}<TMode>.Realized.{nestedClass.Name}",
+                                                            "node"),
+                                                        new MethodParameter(
+                                                            "TContext",
+                                                            "context"),
+                                                    },
+                                                    null))
+                                        .Prepend(
+                                            new MethodDefinition(
+                                                AccessModifier.Public, 
+                                                ClassModifier.None, 
+                                                false,
+                                                "TResult",
+                                                Enumerable.Empty<string>(),
+                                                "Visit",
+                                                new[]
+                                                {
+                                                    new MethodParameter(
+                                                        $"{toTranslate.Name}<ParseMode.Realized>",
+                                                        "node"),
+                                                    new MethodParameter(
+                                                        "TContext",
+                                                        "context"),
+                                                },
 $$"""
 //// TODO is there a way to avoid this cast?
 return (node as {{toTranslate.Name}}<TMode>.Realized)!.Dispatch(this, context);
 """
-                                            ),
-                                        new MethodDefinition(
-                                            AccessModifier.Public, 
-                                            ClassModifier.None, 
-                                            false,
-                                            "TResult",
-                                            Enumerable.Empty<string>(),
-                                            "Visit",
-                                            new[]
-                                            {
-                                                new MethodParameter(
-                                                    $"{toTranslate.Name}<TMode>.Realized",
-                                                    "node"),
-                                                new MethodParameter(
-                                                    "TContext",
-                                                    "context"),
-                                            },
+                                                ))
+                                        .Prepend(
+                                            new MethodDefinition(
+                                                AccessModifier.Public, 
+                                                ClassModifier.None, 
+                                                false,
+                                                "TResult",
+                                                Enumerable.Empty<string>(),
+                                                "Visit",
+                                                new[]
+                                                {
+                                                    new MethodParameter(
+                                                        $"{toTranslate.Name}<TMode>.Realized",
+                                                        "node"),
+                                                    new MethodParameter(
+                                                        "TContext",
+                                                        "context"),
+                                                },
 """
 return node.Dispatch(this, context);
 """
-                                            ),
-                                        //// TODO add accept methods
-                                    },
+                                                )),
                                     Enumerable.Empty<Class>(),
                                     Enumerable.Empty<PropertyDefinition>())),
                         Enumerable.Empty<PropertyDefinition>()),
