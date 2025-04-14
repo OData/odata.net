@@ -94,6 +94,10 @@ return (node as _HEXDIG<TMode>.Realized)!.Dispatch(this, context);
                     }
                 }
                 
+                private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Rules._DIGIT<TMode>> __DIGIT_1 { get; }
+                private IFuture<IRealizationResult<char, _HEXDIG<ParseMode.Realized>>> realizationResult { get; }
+                public __GeneratedPartialV1.Deferred.CstNodes.Rules._DIGIT<TMode> _DIGIT_1 { get; }
+                
                 public override _HEXDIG<ParseMode.Deferred> Convert()
                 {
                     throw new Exception("TODO");
@@ -119,6 +123,10 @@ return (node as _HEXDIG<TMode>.Realized)!.Dispatch(this, context);
                         throw new Exception("tODO");
                     }
                 }
+                
+                private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx41ʺ<TMode>> __ʺx41ʺ_1 { get; }
+                private IFuture<IRealizationResult<char, _HEXDIG<ParseMode.Realized>>> realizationResult { get; }
+                public __GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx41ʺ<TMode> _ʺx41ʺ_1 { get; }
                 
                 public override _HEXDIG<ParseMode.Deferred> Convert()
                 {
@@ -146,6 +154,10 @@ return (node as _HEXDIG<TMode>.Realized)!.Dispatch(this, context);
                     }
                 }
                 
+                private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx42ʺ<TMode>> __ʺx42ʺ_1 { get; }
+                private IFuture<IRealizationResult<char, _HEXDIG<ParseMode.Realized>>> realizationResult { get; }
+                public __GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx42ʺ<TMode> _ʺx42ʺ_1 { get; }
+                
                 public override _HEXDIG<ParseMode.Deferred> Convert()
                 {
                     throw new Exception("TODO");
@@ -171,6 +183,10 @@ return (node as _HEXDIG<TMode>.Realized)!.Dispatch(this, context);
                         throw new Exception("tODO");
                     }
                 }
+                
+                private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx43ʺ<TMode>> __ʺx43ʺ_1 { get; }
+                private IFuture<IRealizationResult<char, _HEXDIG<ParseMode.Realized>>> realizationResult { get; }
+                public __GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx43ʺ<TMode> _ʺx43ʺ_1 { get; }
                 
                 public override _HEXDIG<ParseMode.Deferred> Convert()
                 {
@@ -198,6 +214,10 @@ return (node as _HEXDIG<TMode>.Realized)!.Dispatch(this, context);
                     }
                 }
                 
+                private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx44ʺ<TMode>> __ʺx44ʺ_1 { get; }
+                private IFuture<IRealizationResult<char, _HEXDIG<ParseMode.Realized>>> realizationResult { get; }
+                public __GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx44ʺ<TMode> _ʺx44ʺ_1 { get; }
+                
                 public override _HEXDIG<ParseMode.Deferred> Convert()
                 {
                     throw new Exception("TODO");
@@ -224,6 +244,10 @@ return (node as _HEXDIG<TMode>.Realized)!.Dispatch(this, context);
                     }
                 }
                 
+                private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx45ʺ<TMode>> __ʺx45ʺ_1 { get; }
+                private IFuture<IRealizationResult<char, _HEXDIG<ParseMode.Realized>>> realizationResult { get; }
+                public __GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx45ʺ<TMode> _ʺx45ʺ_1 { get; }
+                
                 public override _HEXDIG<ParseMode.Deferred> Convert()
                 {
                     throw new Exception("TODO");
@@ -249,6 +273,10 @@ return (node as _HEXDIG<TMode>.Realized)!.Dispatch(this, context);
                         throw new Exception("tODO");
                     }
                 }
+                
+                private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx46ʺ<TMode>> __ʺx46ʺ_1 { get; }
+                private IFuture<IRealizationResult<char, _HEXDIG<ParseMode.Realized>>> realizationResult { get; }
+                public __GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx46ʺ<TMode> _ʺx46ʺ_1 { get; }
                 
                 public override _HEXDIG<ParseMode.Deferred> Convert()
                 {

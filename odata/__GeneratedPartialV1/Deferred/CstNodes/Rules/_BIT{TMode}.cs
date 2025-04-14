@@ -89,6 +89,10 @@ return (node as _BIT<TMode>.Realized)!.Dispatch(this, context);
                     }
                 }
                 
+                private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx30ʺ<TMode>> __ʺx30ʺ_1 { get; }
+                private IFuture<IRealizationResult<char, _BIT<ParseMode.Realized>>> realizationResult { get; }
+                public __GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx30ʺ<TMode> _ʺx30ʺ_1 { get; }
+                
                 public override _BIT<ParseMode.Deferred> Convert()
                 {
                     throw new Exception("TODO");
@@ -114,6 +118,10 @@ return (node as _BIT<TMode>.Realized)!.Dispatch(this, context);
                         throw new Exception("tODO");
                     }
                 }
+                
+                private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx31ʺ<TMode>> __ʺx31ʺ_1 { get; }
+                private IFuture<IRealizationResult<char, _BIT<ParseMode.Realized>>> realizationResult { get; }
+                public __GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx31ʺ<TMode> _ʺx31ʺ_1 { get; }
                 
                 public override _BIT<ParseMode.Deferred> Convert()
                 {

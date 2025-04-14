@@ -89,6 +89,10 @@ return (node as _alphaNumeric<TMode>.Realized)!.Dispatch(this, context);
                     }
                 }
                 
+                private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx41ʺ<TMode>> __ʺx41ʺ_1 { get; }
+                private IFuture<IRealizationResult<char, _alphaNumeric<ParseMode.Realized>>> realizationResult { get; }
+                public __GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx41ʺ<TMode> _ʺx41ʺ_1 { get; }
+                
                 public override _alphaNumeric<ParseMode.Deferred> Convert()
                 {
                     throw new Exception("TODO");
@@ -114,6 +118,10 @@ return (node as _alphaNumeric<TMode>.Realized)!.Dispatch(this, context);
                         throw new Exception("tODO");
                     }
                 }
+                
+                private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx43ʺ<TMode>> __ʺx43ʺ_1 { get; }
+                private IFuture<IRealizationResult<char, _alphaNumeric<ParseMode.Realized>>> realizationResult { get; }
+                public __GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx43ʺ<TMode> _ʺx43ʺ_1 { get; }
                 
                 public override _alphaNumeric<ParseMode.Deferred> Convert()
                 {

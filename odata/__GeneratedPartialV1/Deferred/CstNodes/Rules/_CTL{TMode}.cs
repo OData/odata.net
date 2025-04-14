@@ -89,6 +89,10 @@ return (node as _CTL<TMode>.Realized)!.Dispatch(this, context);
                     }
                 }
                 
+                private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._Ⰳx00ⲻ1F<TMode>> __Ⰳx00ⲻ1F_1 { get; }
+                private IFuture<IRealizationResult<char, _CTL<ParseMode.Realized>>> realizationResult { get; }
+                public __GeneratedPartialV1.Deferred.CstNodes.Inners._Ⰳx00ⲻ1F<TMode> _Ⰳx00ⲻ1F_1 { get; }
+                
                 public override _CTL<ParseMode.Deferred> Convert()
                 {
                     throw new Exception("TODO");
@@ -114,6 +118,10 @@ return (node as _CTL<TMode>.Realized)!.Dispatch(this, context);
                         throw new Exception("tODO");
                     }
                 }
+                
+                private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._Ⰳx7F<TMode>> __Ⰳx7F_1 { get; }
+                private IFuture<IRealizationResult<char, _CTL<ParseMode.Realized>>> realizationResult { get; }
+                public __GeneratedPartialV1.Deferred.CstNodes.Inners._Ⰳx7F<TMode> _Ⰳx7F_1 { get; }
                 
                 public override _CTL<ParseMode.Deferred> Convert()
                 {

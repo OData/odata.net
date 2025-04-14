@@ -89,6 +89,10 @@ return (node as _WSP<TMode>.Realized)!.Dispatch(this, context);
                     }
                 }
                 
+                private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Rules._SP<TMode>> __SP_1 { get; }
+                private IFuture<IRealizationResult<char, _WSP<ParseMode.Realized>>> realizationResult { get; }
+                public __GeneratedPartialV1.Deferred.CstNodes.Rules._SP<TMode> _SP_1 { get; }
+                
                 public override _WSP<ParseMode.Deferred> Convert()
                 {
                     throw new Exception("TODO");
@@ -114,6 +118,10 @@ return (node as _WSP<TMode>.Realized)!.Dispatch(this, context);
                         throw new Exception("tODO");
                     }
                 }
+                
+                private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Rules._HTAB<TMode>> __HTAB_1 { get; }
+                private IFuture<IRealizationResult<char, _WSP<ParseMode.Realized>>> realizationResult { get; }
+                public __GeneratedPartialV1.Deferred.CstNodes.Rules._HTAB<TMode> _HTAB_1 { get; }
                 
                 public override _WSP<ParseMode.Deferred> Convert()
                 {
