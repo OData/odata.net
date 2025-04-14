@@ -714,14 +714,14 @@ if (typeof(TMode) != typeof(ParseMode.Realized))
     throw new Exception("tODO");
 }
 """.Split(Environment.NewLine)
-                                                /*.Concat(
+                                                .Concat(
                                                     toTranslate
                                                         .Properties
                                                         .Select(
                                                             property =>
                                                                 $"this._{property.Name} = {property.Name};"))
                                                 .Append(
-                                                    $"this.RealizationResult = new RealizationResult<char, {toTranslate.Name}<TMode>.Realized.A>(true, this, nextTokens);")*/),
+                                                    $"this.realizationResult = new RealizationResult<char, {toTranslate.Name}<TMode>.Realized.A>(true, this, nextTokens);")),
                                         },
                                         new[]
                                         {
@@ -793,7 +793,7 @@ throw new Exception("TODO");
                                                 new PropertyDefinition(
                                                     AccessModifier.Private,
                                                     false,
-                                                    $"IFuture<IRealizationResult<char, {toTranslate.Name}<ParseMode.Realized>>>",
+                                                    $"IRealizationResult<char, {toTranslate.Name}<ParseMode.Realized>.Realized.{nestedClass.Name}>",
                                                     "realizationResult",
                                                     true,
                                                     false,
