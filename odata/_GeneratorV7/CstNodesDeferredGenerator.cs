@@ -731,7 +731,6 @@ if (typeof(TMode) != typeof(ParseMode.Realized))
                                                 Enumerable.Empty<string>(),
                                                 "Convert",
                                                 Enumerable.Empty<MethodParameter>(),
-                                                //// TODo implement these methods
 $$"""
 return new {{toTranslate.Name}}<ParseMode.Deferred>.Deferred(Future.Create(() => this.realizationResult));
 """
@@ -744,6 +743,7 @@ return new {{toTranslate.Name}}<ParseMode.Deferred>.Deferred(Future.Create(() =>
                                                 Enumerable.Empty<string>(),
                                                 "Realize",
                                                 Enumerable.Empty<MethodParameter>(),
+                                                //// TODo implement these methods
 """
 throw new Exception("TODO");
 """
