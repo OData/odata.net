@@ -81,7 +81,7 @@ return (node as _WSP<TMode>.Realized)!.Dispatch(this, context);
             
             public sealed class _SP : _WSP<TMode>.Realized
             {
-                private _SP(__GeneratedPartialV1.Deferred.CstNodes.Rules._SP<TMode> _SP_1, ITokenStream<char>? nextTokens)
+                private _SP(__GeneratedPartialV1.Deferred.CstNodes.Rules._SP<ParseMode.Realized> _SP_1, ITokenStream<char>? nextTokens)
                 {
                     if (typeof(TMode) != typeof(ParseMode.Realized))
                     {
@@ -92,11 +92,13 @@ return (node as _WSP<TMode>.Realized)!.Dispatch(this, context);
                 }
                 
                 private IRealizationResult<char, _WSP<TMode>.Realized._SP> realizationResult { get; }
-                public __GeneratedPartialV1.Deferred.CstNodes.Rules._SP<TMode> _SP_1 { get; }
+                public __GeneratedPartialV1.Deferred.CstNodes.Rules._SP<ParseMode.Realized> _SP_1 { get; }
                 
-                internal static IRealizationResult<char, _WSP<ParseMode.Realized>.Realized._SP> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+                internal static IRealizationResult<char, _WSP<TMode>.Realized._SP> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
                 {
-                    throw new Exception("TODO");
+                    var _SP_1 = __GeneratedPartialV1.Deferred.CstNodes.Rules._SP.Create(previousNodeRealizationResult).Realize();
+var node = new _SP(_SP_1.RealizedValue, _SP_1.RemainingTokens);
+return node.realizationResult;
                 }
                 
                 public override _WSP<ParseMode.Deferred> Convert()
@@ -117,7 +119,7 @@ return (node as _WSP<TMode>.Realized)!.Dispatch(this, context);
             
             public sealed class _HTAB : _WSP<TMode>.Realized
             {
-                private _HTAB(__GeneratedPartialV1.Deferred.CstNodes.Rules._HTAB<TMode> _HTAB_1, ITokenStream<char>? nextTokens)
+                private _HTAB(__GeneratedPartialV1.Deferred.CstNodes.Rules._HTAB<ParseMode.Realized> _HTAB_1, ITokenStream<char>? nextTokens)
                 {
                     if (typeof(TMode) != typeof(ParseMode.Realized))
                     {
@@ -128,11 +130,13 @@ return (node as _WSP<TMode>.Realized)!.Dispatch(this, context);
                 }
                 
                 private IRealizationResult<char, _WSP<TMode>.Realized._HTAB> realizationResult { get; }
-                public __GeneratedPartialV1.Deferred.CstNodes.Rules._HTAB<TMode> _HTAB_1 { get; }
+                public __GeneratedPartialV1.Deferred.CstNodes.Rules._HTAB<ParseMode.Realized> _HTAB_1 { get; }
                 
-                internal static IRealizationResult<char, _WSP<ParseMode.Realized>.Realized._HTAB> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+                internal static IRealizationResult<char, _WSP<TMode>.Realized._HTAB> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
                 {
-                    throw new Exception("TODO");
+                    var _HTAB_1 = __GeneratedPartialV1.Deferred.CstNodes.Rules._HTAB.Create(previousNodeRealizationResult).Realize();
+var node = new _HTAB(_HTAB_1.RealizedValue, _HTAB_1.RemainingTokens);
+return node.realizationResult;
                 }
                 
                 public override _WSP<ParseMode.Deferred> Convert()

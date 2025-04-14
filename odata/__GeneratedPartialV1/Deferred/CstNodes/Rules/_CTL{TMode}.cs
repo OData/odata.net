@@ -81,7 +81,7 @@ return (node as _CTL<TMode>.Realized)!.Dispatch(this, context);
             
             public sealed class _Ⰳx00ⲻ1F : _CTL<TMode>.Realized
             {
-                private _Ⰳx00ⲻ1F(__GeneratedPartialV1.Deferred.CstNodes.Inners._Ⰳx00ⲻ1F<TMode> _Ⰳx00ⲻ1F_1, ITokenStream<char>? nextTokens)
+                private _Ⰳx00ⲻ1F(__GeneratedPartialV1.Deferred.CstNodes.Inners._Ⰳx00ⲻ1F<ParseMode.Realized> _Ⰳx00ⲻ1F_1, ITokenStream<char>? nextTokens)
                 {
                     if (typeof(TMode) != typeof(ParseMode.Realized))
                     {
@@ -92,11 +92,13 @@ return (node as _CTL<TMode>.Realized)!.Dispatch(this, context);
                 }
                 
                 private IRealizationResult<char, _CTL<TMode>.Realized._Ⰳx00ⲻ1F> realizationResult { get; }
-                public __GeneratedPartialV1.Deferred.CstNodes.Inners._Ⰳx00ⲻ1F<TMode> _Ⰳx00ⲻ1F_1 { get; }
+                public __GeneratedPartialV1.Deferred.CstNodes.Inners._Ⰳx00ⲻ1F<ParseMode.Realized> _Ⰳx00ⲻ1F_1 { get; }
                 
-                internal static IRealizationResult<char, _CTL<ParseMode.Realized>.Realized._Ⰳx00ⲻ1F> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+                internal static IRealizationResult<char, _CTL<TMode>.Realized._Ⰳx00ⲻ1F> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
                 {
-                    throw new Exception("TODO");
+                    var _Ⰳx00ⲻ1F_1 = __GeneratedPartialV1.Deferred.CstNodes.Inners._Ⰳx00ⲻ1F.Create(previousNodeRealizationResult).Realize();
+var node = new _Ⰳx00ⲻ1F(_Ⰳx00ⲻ1F_1.RealizedValue, _Ⰳx00ⲻ1F_1.RemainingTokens);
+return node.realizationResult;
                 }
                 
                 public override _CTL<ParseMode.Deferred> Convert()
@@ -117,7 +119,7 @@ return (node as _CTL<TMode>.Realized)!.Dispatch(this, context);
             
             public sealed class _Ⰳx7F : _CTL<TMode>.Realized
             {
-                private _Ⰳx7F(__GeneratedPartialV1.Deferred.CstNodes.Inners._Ⰳx7F<TMode> _Ⰳx7F_1, ITokenStream<char>? nextTokens)
+                private _Ⰳx7F(__GeneratedPartialV1.Deferred.CstNodes.Inners._Ⰳx7F<ParseMode.Realized> _Ⰳx7F_1, ITokenStream<char>? nextTokens)
                 {
                     if (typeof(TMode) != typeof(ParseMode.Realized))
                     {
@@ -128,11 +130,13 @@ return (node as _CTL<TMode>.Realized)!.Dispatch(this, context);
                 }
                 
                 private IRealizationResult<char, _CTL<TMode>.Realized._Ⰳx7F> realizationResult { get; }
-                public __GeneratedPartialV1.Deferred.CstNodes.Inners._Ⰳx7F<TMode> _Ⰳx7F_1 { get; }
+                public __GeneratedPartialV1.Deferred.CstNodes.Inners._Ⰳx7F<ParseMode.Realized> _Ⰳx7F_1 { get; }
                 
-                internal static IRealizationResult<char, _CTL<ParseMode.Realized>.Realized._Ⰳx7F> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+                internal static IRealizationResult<char, _CTL<TMode>.Realized._Ⰳx7F> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
                 {
-                    throw new Exception("TODO");
+                    var _Ⰳx7F_1 = __GeneratedPartialV1.Deferred.CstNodes.Inners._Ⰳx7F.Create(previousNodeRealizationResult).Realize();
+var node = new _Ⰳx7F(_Ⰳx7F_1.RealizedValue, _Ⰳx7F_1.RemainingTokens);
+return node.realizationResult;
                 }
                 
                 public override _CTL<ParseMode.Deferred> Convert()

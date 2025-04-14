@@ -81,7 +81,7 @@ return (node as _BIT<TMode>.Realized)!.Dispatch(this, context);
             
             public sealed class _ʺx30ʺ : _BIT<TMode>.Realized
             {
-                private _ʺx30ʺ(__GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx30ʺ<TMode> _ʺx30ʺ_1, ITokenStream<char>? nextTokens)
+                private _ʺx30ʺ(__GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx30ʺ<ParseMode.Realized> _ʺx30ʺ_1, ITokenStream<char>? nextTokens)
                 {
                     if (typeof(TMode) != typeof(ParseMode.Realized))
                     {
@@ -92,11 +92,13 @@ return (node as _BIT<TMode>.Realized)!.Dispatch(this, context);
                 }
                 
                 private IRealizationResult<char, _BIT<TMode>.Realized._ʺx30ʺ> realizationResult { get; }
-                public __GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx30ʺ<TMode> _ʺx30ʺ_1 { get; }
+                public __GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx30ʺ<ParseMode.Realized> _ʺx30ʺ_1 { get; }
                 
-                internal static IRealizationResult<char, _BIT<ParseMode.Realized>.Realized._ʺx30ʺ> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+                internal static IRealizationResult<char, _BIT<TMode>.Realized._ʺx30ʺ> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
                 {
-                    throw new Exception("TODO");
+                    var _ʺx30ʺ_1 = __GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx30ʺ.Create(previousNodeRealizationResult).Realize();
+var node = new _ʺx30ʺ(_ʺx30ʺ_1.RealizedValue, _ʺx30ʺ_1.RemainingTokens);
+return node.realizationResult;
                 }
                 
                 public override _BIT<ParseMode.Deferred> Convert()
@@ -117,7 +119,7 @@ return (node as _BIT<TMode>.Realized)!.Dispatch(this, context);
             
             public sealed class _ʺx31ʺ : _BIT<TMode>.Realized
             {
-                private _ʺx31ʺ(__GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx31ʺ<TMode> _ʺx31ʺ_1, ITokenStream<char>? nextTokens)
+                private _ʺx31ʺ(__GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx31ʺ<ParseMode.Realized> _ʺx31ʺ_1, ITokenStream<char>? nextTokens)
                 {
                     if (typeof(TMode) != typeof(ParseMode.Realized))
                     {
@@ -128,11 +130,13 @@ return (node as _BIT<TMode>.Realized)!.Dispatch(this, context);
                 }
                 
                 private IRealizationResult<char, _BIT<TMode>.Realized._ʺx31ʺ> realizationResult { get; }
-                public __GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx31ʺ<TMode> _ʺx31ʺ_1 { get; }
+                public __GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx31ʺ<ParseMode.Realized> _ʺx31ʺ_1 { get; }
                 
-                internal static IRealizationResult<char, _BIT<ParseMode.Realized>.Realized._ʺx31ʺ> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+                internal static IRealizationResult<char, _BIT<TMode>.Realized._ʺx31ʺ> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
                 {
-                    throw new Exception("TODO");
+                    var _ʺx31ʺ_1 = __GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx31ʺ.Create(previousNodeRealizationResult).Realize();
+var node = new _ʺx31ʺ(_ʺx31ʺ_1.RealizedValue, _ʺx31ʺ_1.RemainingTokens);
+return node.realizationResult;
                 }
                 
                 public override _BIT<ParseMode.Deferred> Convert()

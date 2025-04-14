@@ -81,7 +81,7 @@ return (node as _alphaNumeric<TMode>.Realized)!.Dispatch(this, context);
             
             public sealed class _ʺx41ʺ : _alphaNumeric<TMode>.Realized
             {
-                private _ʺx41ʺ(__GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx41ʺ<TMode> _ʺx41ʺ_1, ITokenStream<char>? nextTokens)
+                private _ʺx41ʺ(__GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx41ʺ<ParseMode.Realized> _ʺx41ʺ_1, ITokenStream<char>? nextTokens)
                 {
                     if (typeof(TMode) != typeof(ParseMode.Realized))
                     {
@@ -92,11 +92,13 @@ return (node as _alphaNumeric<TMode>.Realized)!.Dispatch(this, context);
                 }
                 
                 private IRealizationResult<char, _alphaNumeric<TMode>.Realized._ʺx41ʺ> realizationResult { get; }
-                public __GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx41ʺ<TMode> _ʺx41ʺ_1 { get; }
+                public __GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx41ʺ<ParseMode.Realized> _ʺx41ʺ_1 { get; }
                 
-                internal static IRealizationResult<char, _alphaNumeric<ParseMode.Realized>.Realized._ʺx41ʺ> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+                internal static IRealizationResult<char, _alphaNumeric<TMode>.Realized._ʺx41ʺ> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
                 {
-                    throw new Exception("TODO");
+                    var _ʺx41ʺ_1 = __GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx41ʺ.Create(previousNodeRealizationResult).Realize();
+var node = new _ʺx41ʺ(_ʺx41ʺ_1.RealizedValue, _ʺx41ʺ_1.RemainingTokens);
+return node.realizationResult;
                 }
                 
                 public override _alphaNumeric<ParseMode.Deferred> Convert()
@@ -117,7 +119,7 @@ return (node as _alphaNumeric<TMode>.Realized)!.Dispatch(this, context);
             
             public sealed class _ʺx43ʺ : _alphaNumeric<TMode>.Realized
             {
-                private _ʺx43ʺ(__GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx43ʺ<TMode> _ʺx43ʺ_1, ITokenStream<char>? nextTokens)
+                private _ʺx43ʺ(__GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx43ʺ<ParseMode.Realized> _ʺx43ʺ_1, ITokenStream<char>? nextTokens)
                 {
                     if (typeof(TMode) != typeof(ParseMode.Realized))
                     {
@@ -128,11 +130,13 @@ return (node as _alphaNumeric<TMode>.Realized)!.Dispatch(this, context);
                 }
                 
                 private IRealizationResult<char, _alphaNumeric<TMode>.Realized._ʺx43ʺ> realizationResult { get; }
-                public __GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx43ʺ<TMode> _ʺx43ʺ_1 { get; }
+                public __GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx43ʺ<ParseMode.Realized> _ʺx43ʺ_1 { get; }
                 
-                internal static IRealizationResult<char, _alphaNumeric<ParseMode.Realized>.Realized._ʺx43ʺ> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+                internal static IRealizationResult<char, _alphaNumeric<TMode>.Realized._ʺx43ʺ> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
                 {
-                    throw new Exception("TODO");
+                    var _ʺx43ʺ_1 = __GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx43ʺ.Create(previousNodeRealizationResult).Realize();
+var node = new _ʺx43ʺ(_ʺx43ʺ_1.RealizedValue, _ʺx43ʺ_1.RemainingTokens);
+return node.realizationResult;
                 }
                 
                 public override _alphaNumeric<ParseMode.Deferred> Convert()

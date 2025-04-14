@@ -457,7 +457,7 @@ else
             {
                 GenerateDisciminatedUnionFactoryMethodBodyPropertyInitialization(
                     properties[i],
-                    $"Future.Create(() => {properties[i - 1].Name}.RealizedValue)",
+                    $"Future.Create(() => {properties[i - 1].Name})",
                     rules,
                     inners,
                     builder);
