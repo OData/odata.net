@@ -691,6 +691,7 @@ return this.realizationResult.Value;
                                 Enumerable.Empty<string>(),
                                 "RealizeImpl",
                                 Enumerable.Empty<MethodParameter>(),
+                                //// TODO implement realizeimpl for deferred
 """
 throw new Exception("TODO");
 """
@@ -813,8 +814,6 @@ if (typeof(TMode) != typeof(ParseMode.Realized))
                                                         "previousNodeRealizationResult"),
                                                 },
                                                 GenerateDisciminatedUnionFactoryMethodBody(nestedClass, $"{toTranslate.Name}<TMode>.Realized.{nestedClass.Name}", rules, inners)),
-                                            //// TODO implement create
-                                            //// TODO implement realizeimpl for deferred
                                             new MethodDefinition(
                                                 AccessModifier.Public,
                                                 ClassModifier.None,
