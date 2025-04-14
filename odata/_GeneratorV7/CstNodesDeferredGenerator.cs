@@ -522,6 +522,16 @@ else
             builder.AppendLine($"return new RealizationResult<char, {returnType}>(false, default, this.previousNodeRealizationResult.Value.RemainingTokens);");
             builder.AppendLine("}");
 
+            foreach (var duMember in duMembers)
+            {
+                builder.AppendLine($"var {duMember.Name} = {returnType}.Realized.{duMember.Name}.Create(this.previousNodeRealizationResult);");
+                builder.AppendLine($"if ({duMember.Name}.Success)");
+                builder.AppendLine("{");
+                builder.AppendLine($"return {duMember.Name};");
+                builder.AppendLine("}");
+            }
+
+            builder.AppendLine();
             builder.AppendLine($"return new RealizationResult<char, {returnType}>(false, default, this.previousNodeRealizationResult.Value.RemainingTokens);");
 
             return builder.ToString();

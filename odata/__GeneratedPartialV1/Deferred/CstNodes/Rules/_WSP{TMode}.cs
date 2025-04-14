@@ -54,6 +54,17 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Rules
 {
 return new RealizationResult<char, _WSP<ParseMode.Realized>>(false, default, this.previousNodeRealizationResult.Value.RemainingTokens);
 }
+var _SP = _WSP<ParseMode.Realized>.Realized._SP.Create(this.previousNodeRealizationResult);
+if (_SP.Success)
+{
+return _SP;
+}
+var _HTAB = _WSP<ParseMode.Realized>.Realized._HTAB.Create(this.previousNodeRealizationResult);
+if (_HTAB.Success)
+{
+return _HTAB;
+}
+
 return new RealizationResult<char, _WSP<ParseMode.Realized>>(false, default, this.previousNodeRealizationResult.Value.RemainingTokens);
 
             }

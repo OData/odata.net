@@ -54,6 +54,42 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Rules
 {
 return new RealizationResult<char, _HEXDIG<ParseMode.Realized>>(false, default, this.previousNodeRealizationResult.Value.RemainingTokens);
 }
+var _DIGIT = _HEXDIG<ParseMode.Realized>.Realized._DIGIT.Create(this.previousNodeRealizationResult);
+if (_DIGIT.Success)
+{
+return _DIGIT;
+}
+var _ʺx41ʺ = _HEXDIG<ParseMode.Realized>.Realized._ʺx41ʺ.Create(this.previousNodeRealizationResult);
+if (_ʺx41ʺ.Success)
+{
+return _ʺx41ʺ;
+}
+var _ʺx42ʺ = _HEXDIG<ParseMode.Realized>.Realized._ʺx42ʺ.Create(this.previousNodeRealizationResult);
+if (_ʺx42ʺ.Success)
+{
+return _ʺx42ʺ;
+}
+var _ʺx43ʺ = _HEXDIG<ParseMode.Realized>.Realized._ʺx43ʺ.Create(this.previousNodeRealizationResult);
+if (_ʺx43ʺ.Success)
+{
+return _ʺx43ʺ;
+}
+var _ʺx44ʺ = _HEXDIG<ParseMode.Realized>.Realized._ʺx44ʺ.Create(this.previousNodeRealizationResult);
+if (_ʺx44ʺ.Success)
+{
+return _ʺx44ʺ;
+}
+var _ʺx45ʺ = _HEXDIG<ParseMode.Realized>.Realized._ʺx45ʺ.Create(this.previousNodeRealizationResult);
+if (_ʺx45ʺ.Success)
+{
+return _ʺx45ʺ;
+}
+var _ʺx46ʺ = _HEXDIG<ParseMode.Realized>.Realized._ʺx46ʺ.Create(this.previousNodeRealizationResult);
+if (_ʺx46ʺ.Success)
+{
+return _ʺx46ʺ;
+}
+
 return new RealizationResult<char, _HEXDIG<ParseMode.Realized>>(false, default, this.previousNodeRealizationResult.Value.RemainingTokens);
 
             }

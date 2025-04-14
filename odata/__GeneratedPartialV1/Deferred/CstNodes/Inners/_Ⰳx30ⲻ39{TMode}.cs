@@ -54,6 +54,57 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Inners
 {
 return new RealizationResult<char, _Ⰳx30ⲻ39<ParseMode.Realized>>(false, default, this.previousNodeRealizationResult.Value.RemainingTokens);
 }
+var _30 = _Ⰳx30ⲻ39<ParseMode.Realized>.Realized._30.Create(this.previousNodeRealizationResult);
+if (_30.Success)
+{
+return _30;
+}
+var _31 = _Ⰳx30ⲻ39<ParseMode.Realized>.Realized._31.Create(this.previousNodeRealizationResult);
+if (_31.Success)
+{
+return _31;
+}
+var _32 = _Ⰳx30ⲻ39<ParseMode.Realized>.Realized._32.Create(this.previousNodeRealizationResult);
+if (_32.Success)
+{
+return _32;
+}
+var _33 = _Ⰳx30ⲻ39<ParseMode.Realized>.Realized._33.Create(this.previousNodeRealizationResult);
+if (_33.Success)
+{
+return _33;
+}
+var _34 = _Ⰳx30ⲻ39<ParseMode.Realized>.Realized._34.Create(this.previousNodeRealizationResult);
+if (_34.Success)
+{
+return _34;
+}
+var _35 = _Ⰳx30ⲻ39<ParseMode.Realized>.Realized._35.Create(this.previousNodeRealizationResult);
+if (_35.Success)
+{
+return _35;
+}
+var _36 = _Ⰳx30ⲻ39<ParseMode.Realized>.Realized._36.Create(this.previousNodeRealizationResult);
+if (_36.Success)
+{
+return _36;
+}
+var _37 = _Ⰳx30ⲻ39<ParseMode.Realized>.Realized._37.Create(this.previousNodeRealizationResult);
+if (_37.Success)
+{
+return _37;
+}
+var _38 = _Ⰳx30ⲻ39<ParseMode.Realized>.Realized._38.Create(this.previousNodeRealizationResult);
+if (_38.Success)
+{
+return _38;
+}
+var _39 = _Ⰳx30ⲻ39<ParseMode.Realized>.Realized._39.Create(this.previousNodeRealizationResult);
+if (_39.Success)
+{
+return _39;
+}
+
 return new RealizationResult<char, _Ⰳx30ⲻ39<ParseMode.Realized>>(false, default, this.previousNodeRealizationResult.Value.RemainingTokens);
 
             }
