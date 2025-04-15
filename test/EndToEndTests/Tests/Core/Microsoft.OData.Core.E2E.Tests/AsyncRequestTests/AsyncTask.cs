@@ -8,17 +8,23 @@ using Microsoft.OData.E2E.TestCommon.Common;
 
 namespace Microsoft.OData.Core.E2E.Tests.AsyncRequestTests;
 
-public class AsyncTask
+internal class AsyncTask
 {
-    // This is an assumption that every async task takes the same amount of time to finish
     public const int DefaultDuration = 5;
 
+    // A static dictionary to store and manage async tasks using a unique token as the key
     private static Dictionary<string, AsyncTask> asyncTaskMap = new Dictionary<string, AsyncTask>();
 
+    // The time at which the task is due to be completed
     private DateTime dueAt;
+
+    // The original URL associated with the async task
     private Uri originalUrl;
+
+    // The HTTP request message associated with the async task, if any
     private TestHttpClientRequestMessage? requestMessage;
 
+    // Indicates whether the task is ready to be processed (i.e., its due time has passed)
     public bool Ready
     {
         get { return dueAt < DateTime.Now; }
@@ -31,6 +37,7 @@ public class AsyncTask
         this.requestMessage = requestMessage;
     }
 
+    // Retrieves an async task from the map using the provided async token
     public static AsyncTask GetTask(string asyncToken)
     {
         AsyncTask task;
@@ -38,17 +45,20 @@ public class AsyncTask
         return task;
     }
 
+    // Adds a new async task to the map with the specified async token
     public static bool AddTask(string asyncToken, AsyncTask newTask)
     {
         asyncTaskMap.Add(asyncToken, newTask);
         return true;
     }
 
+    // Returns the original URL associated with the async task
     public Uri GetOriginalUrl()
     {
         return this.originalUrl;
     }
 
+    // Returns the HTTP request message associated with the async task, if any
     public TestHttpClientRequestMessage? GetRequestMessage()
     {
         return this.requestMessage;

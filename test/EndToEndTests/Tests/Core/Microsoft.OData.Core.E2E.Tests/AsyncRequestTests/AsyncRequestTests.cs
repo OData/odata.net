@@ -4,8 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using System.Text;
-using System.Text.Json;
 using Microsoft.AspNetCore.OData;
 using Microsoft.AspNetCore.OData.Batch;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
@@ -50,8 +48,6 @@ public class AsyncRequestTests : EndToEndTestBase<AsyncRequestTests.TestsStartup
 
     // Constants
     private const string NameSpacePrefix = "Microsoft.OData.E2E.TestCommon.Common.Server.Default.";
-    private new const string MimeTypeODataParameterFullMetadata = MimeTypes.ApplicationJson + MimeTypes.ODataParameterFullMetadata;
-    private new const string MimeTypeODataParameterMinimalMetadata = MimeTypes.ApplicationJson + MimeTypes.ODataParameterMinimalMetadata;
 
     [Theory]
     [InlineData(MimeTypeODataParameterFullMetadata)]
@@ -426,18 +422,6 @@ public class AsyncRequestTests : EndToEndTestBase<AsyncRequestTests.TestsStartup
         var responseMessage = requestMessage.GetResponseAsync().Result;
 
         Assert.Equal(200, responseMessage.StatusCode);
-    }
-
-    private async Task<string> ReadAsStringAsync(IODataResponseMessageAsync responseMessage)
-    {
-        using (Stream stream = await responseMessage.GetStreamAsync())
-        {
-            using (StreamReader reader = new StreamReader(stream, Encoding.UTF8))
-            {
-                var content = await reader.ReadToEndAsync();
-                return content;
-            }
-        }
     }
 
     #endregion

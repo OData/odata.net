@@ -5,14 +5,11 @@
 //---------------------------------------------------------------------
 
 using System.Globalization;
-using System.Text;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.OData.E2E.TestCommon.Common;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel.Client;
 
 namespace Microsoft.OData.Core.E2E.Tests.AsyncRequestTests;
 
-public class CustomHttpClientRequestMessage : TestHttpClientRequestMessage
+internal class CustomHttpClientRequestMessage : TestHttpClientRequestMessage
 {
     private readonly HttpClient _httpClient;
 
