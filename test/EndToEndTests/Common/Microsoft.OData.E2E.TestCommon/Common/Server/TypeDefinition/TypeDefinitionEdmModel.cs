@@ -28,7 +28,8 @@ public static class TypeDefinitionEdmModel
 
         var nameTypeDefinitionRef = new EdmTypeDefinitionReference(nameType, false);
 
-        // Define a new type for Temperature
+        // Define a new type for height
+
         var heightType = new EdmTypeDefinition(ns, "Height", EdmPrimitiveTypeKind.String);
         model.AddElement(heightType);
 
