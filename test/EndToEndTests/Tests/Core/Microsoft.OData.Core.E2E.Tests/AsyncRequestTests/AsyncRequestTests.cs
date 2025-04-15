@@ -16,6 +16,11 @@ using Microsoft.OData.Edm;
 
 namespace Microsoft.OData.Core.E2E.Tests.AsyncRequestTests;
 
+/// <summary>
+/// Contains end-to-end tests for validating asynchronous OData requests.
+/// These tests ensure that the OData service correctly handles asynchronous operations
+/// such as querying, creating, and batching resources.
+/// </summary>
 public class AsyncRequestTests : EndToEndTestBase<AsyncRequestTests.TestsStartup>
 {
     private readonly Uri _baseUri;

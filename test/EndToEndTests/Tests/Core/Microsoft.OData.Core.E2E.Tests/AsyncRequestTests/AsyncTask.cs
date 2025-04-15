@@ -8,6 +8,10 @@ using Microsoft.OData.E2E.TestCommon.Common;
 
 namespace Microsoft.OData.Core.E2E.Tests.AsyncRequestTests;
 
+/// <summary>
+/// Represents an asynchronous task that is managed using a unique token.
+/// This class is used to simulate and manage asynchronous operations in tests.
+/// </summary>
 internal class AsyncTask
 {
     public const int DefaultDuration = 5;
