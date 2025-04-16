@@ -9,6 +9,9 @@
 
   <ItemGroup>
     <None Remove="Common\Client\Operations\OperationsServiceCsdl.xml" />
+    <None Remove="Common\Server\BroadCoverageTests\CapabilitiesVocabularies.xml" />
+    <None Remove="Common\Server\BroadCoverageTests\ODataLogo.jpg" />
+    <None Remove="Common\Server\BroadCoverageTests\Vocabularies\MeasuresVocabularies.xml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -28,6 +31,15 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Common\Client\PrimitiveKeys\PrimitiveKeysODataServiceCsdl.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Common\Server\BroadCoverageTests\Vocabularies\CapabilitiesVocabularies.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Common\Server\BroadCoverageTests\ODataLogo.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Common\Server\BroadCoverageTests\Vocabularies\MeasuresVocabularies.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>
