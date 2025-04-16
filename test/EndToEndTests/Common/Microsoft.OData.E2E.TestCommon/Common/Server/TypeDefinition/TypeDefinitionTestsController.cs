@@ -176,6 +176,19 @@ public class TypeDefinitionTestsController : ODataController
     }
 
     [EnableQuery]
+    [HttpGet("odata/Products({key})/Microsoft.OData.E2E.TestCommon.Common.Server.TypeDefinition.ExtendLifeTime")]
+    public IActionResult GetProductLifeTimeInSecondsUsingExtendLifeTime([FromODataUri] int key)
+    {
+        var product = _dataSource.Products?.FirstOrDefault(p => p.ProductId == key);
+        if (product == null)
+        {
+            return NotFound();
+        }
+
+        return Ok(product.LifeTimeInSeconds);
+    }
+
+    [EnableQuery]
     [HttpGet("odata/Products({key})/TheCombo")]
     public IActionResult GetProductTheCombo([FromODataUri] int key)
     {

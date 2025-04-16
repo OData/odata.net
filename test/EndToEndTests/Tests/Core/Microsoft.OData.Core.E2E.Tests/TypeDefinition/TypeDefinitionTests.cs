@@ -4,6 +4,9 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System.Text;
+using System.Text.Json;
+using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.OData;
 using Microsoft.AspNetCore.OData.Formatter.Deserialization;
 using Microsoft.AspNetCore.OData.Formatter.Serialization;
@@ -61,8 +64,107 @@ public class TypeDefinitionTests : EndToEndTestBase<TypeDefinitionTests.TestsSta
 
     // Constants
     private const string NameSpacePrefix = "Microsoft.OData.E2E.TestCommon.Common.Server.TypeDefinition.";
-    private new const string MimeTypeODataParameterFullMetadata = MimeTypes.ApplicationJson + MimeTypes.ODataParameterFullMetadata;
-    private new const string MimeTypeODataParameterMinimalMetadata = MimeTypes.ApplicationJson + MimeTypes.ODataParameterMinimalMetadata;
+
+    public static TheoryData<string, string> QueryTypeDefinitionPropertiesData => new()
+    {
+      { "Products(11)/ProductId", "{ \"@odata.context\": \"http://localhost/odata/$metadata#Products(11)/ProductId\", \"value\": 11 }" },
+      { "Products(15)/Quantity", "{ \"@odata.context\": \"http://localhost/odata/$metadata#Products(15)/Quantity\", \"value\": 105 }" },
+      { "Products(12)/LifeTimeInSeconds", "{ \"@odata.context\": \"http://localhost/odata/$metadata#Products(12)/LifeTimeInSeconds\", \"value\": 18446744073709551615 }" },
+      { "Products(11)/TheCombo", "{ \"@odata.context\": \"http://localhost/odata/$metadata#Products(11)/TheCombo\", \"Small\": 80, \"Middle\": 196, \"Large\": 3 }" },
+      { "Products(11)/LargeNumbers", "{ \"@odata.context\": \"http://localhost/odata/$metadata#Collection(Edm.Int64)\", \"value\": [ 36, 12, 9 ] }" },
+      { "Products(11)/Temperature", "{ \"@odata.context\": \"http://localhost/odata/$metadata#Products(11)/Temperature\", \"value\": \"10.57℉\" }" },
+      { "People(1)/LastName", "{ \"@odata.context\": \"http://localhost/odata/$metadata#People(1)/LastName\", \"value\": \"Cat\" }" },
+      { "People(1)/Address", "{ \"@odata.context\": \"http://localhost/odata/$metadata#People(1)/Address\", \"Road\": \"Zixing Road\", \"City\": \"Shanghai\" }" },
+      { "People(1)/Descriptions", "{ \"@odata.context\": \"http://localhost/odata/$metadata#Collection(Edm.String)\", \"value\": [ \"Nice\", \"Tall\" ] }" },
+      { "People(1)/Height", "{ \"@odata.context\": \"http://localhost/odata/$metadata#People(1)/Height\", \"value\": \"1.8m\" }" }
+    };
+
+    [Theory]
+    [MemberData(nameof(QueryTypeDefinitionPropertiesData))]
+    public async Task QueryPropertiesWithTypeDefinition_VerifyResponseContent(string queryText, string expectedContent)
+    {
+        // Arrange
+        var requestUrl = new Uri(_baseUri.AbsoluteUri + queryText, UriKind.Absolute);
+        var requestMessage = new TestHttpClientRequestMessage(requestUrl, Client);
+        requestMessage.SetHeader("Accept", MimeTypeODataParameterMinimalMetadata);
+
+        // Act
+        var responseMessage = await requestMessage.GetResponseAsync();
+        var responseContent = await ReadAsStringAsync(responseMessage);
+        responseContent = Regex.Replace(responseContent, @"\s+", " ").Replace("\r\n", "");
+
+        // Assert
+        Assert.Equal(200, responseMessage.StatusCode);
+        Assert.Equal(expectedContent.Trim(), responseContent.Trim());
+    }
+
+    public static TheoryData<string, string> InvokeFunctionWithDefinedTypeParameterAndReturnTypeData = new()
+    {
+        {
+            "People(1)/Microsoft.OData.E2E.TestCommon.Common.Server.TypeDefinition.GetFullName(nickname='Moon')",
+            "{ \"@odata.context\": \"http://localhost/odata/$metadata#Edm.String\", \"value\": \"Bob (Moon) Cat\" }"
+        },
+        {
+            "Products(11)/Microsoft.OData.E2E.TestCommon.Common.Server.TypeDefinition.ExtendLifeTime",
+            "{ \"@odata.context\": \"http://localhost/odata/$metadata#Edm.Int64\", \"value\": 3600 }"
+        }
+    };
+
+    [Theory]
+    [MemberData(nameof(InvokeFunctionWithDefinedTypeParameterAndReturnTypeData))]
+    public async Task InvokeFunctionWithDefinedTypeParameterAndReturnType_VerifyResponseContent(string queryText, string expectedContent)
+    {
+        // Arrange
+        var requestUrl = new Uri(_baseUri.AbsoluteUri + queryText, UriKind.Absolute);
+        var requestMessage = new TestHttpClientRequestMessage(requestUrl, Client);
+        requestMessage.SetHeader("Accept", MimeTypeODataParameterMinimalMetadata);
+
+        // Act
+        var responseMessage = await requestMessage.GetResponseAsync();
+        var responseContent = await ReadAsStringAsync(responseMessage);
+        responseContent = Regex.Replace(responseContent, @"\s+", " ");
+
+        // Assert
+        Assert.Equal(200, responseMessage.StatusCode);
+        Assert.Equal(expectedContent.Trim(), responseContent.Replace("\r\n", "").Trim());
+    }
+
+    [Fact]
+    public async Task QueryEntryWithTypeDefinitionMetadata_VerifyResponseContent()
+    {
+        // Arrange
+        var readerSettings = new ODataMessageReaderSettings() { BaseUri = _baseUri, EnablePrimitiveTypeConversion = true, EnableMessageStreamDisposal = false };
+
+        var requestUrl = new Uri(_baseUri.AbsoluteUri + "People(1)", UriKind.Absolute);
+        var requestMessage = new TestHttpClientRequestMessage(requestUrl, Client);
+        requestMessage.SetHeader("Accept", MimeTypeODataParameterMinimalMetadata);
+
+        // Act
+        var queryResponseMessage = await requestMessage.GetResponseAsync();
+        var responseContent = await ReadAsStringAsync(queryResponseMessage);
+
+        // Assert
+        Assert.Equal(200, queryResponseMessage.StatusCode);
+
+        var expectedContent = @"
+{
+  ""@odata.context"": ""http://localhost/odata/$metadata#People/$entity"",
+  ""PersonId"": 1,
+  ""FirstName"": ""Bob"",
+  ""LastName"": ""Cat"",
+  ""Descriptions"": [
+    ""Nice"",
+    ""Tall""
+  ],
+  ""Height"": ""1.8m"",
+  ""Address"": {
+    ""Road"": ""Zixing Road"",
+    ""City"": ""Shanghai""
+  }
+}";
+
+        Assert.Equal(expectedContent.Trim(), responseContent.Trim());
+    }
 
     [Theory]
     [InlineData(MimeTypeODataParameterFullMetadata)]
@@ -70,7 +172,7 @@ public class TypeDefinitionTests : EndToEndTestBase<TypeDefinitionTests.TestsSta
     public async Task QueryEntryWithTypeDefinitionMetadata(string mimeType)
     {
         // Arrange
-        var readerSettings = new ODataMessageReaderSettings() { BaseUri = _baseUri, EnablePrimitiveTypeConversion = true };
+        var readerSettings = new ODataMessageReaderSettings() { BaseUri = _baseUri, EnablePrimitiveTypeConversion = true, EnableMessageStreamDisposal = false };
 
         var requestUrl = new Uri(_baseUri.AbsoluteUri + "People(1)", UriKind.Absolute);
         var requestMessage = new TestHttpClientRequestMessage(requestUrl, Client);
@@ -99,6 +201,7 @@ public class TypeDefinitionTests : EndToEndTestBase<TypeDefinitionTests.TestsSta
         }
 
         Assert.NotNull(entry);
+
         Assert.Equal(1, (entry.Properties.Single(p => p.Name == "PersonId") as ODataProperty)?.Value);
         Assert.Equal("Bob", (entry.Properties.Single(p => p.Name == "FirstName") as ODataProperty)?.Value);
         Assert.Equal("Cat", (entry.Properties.Single(p => p.Name == "LastName") as ODataProperty)?.Value);
@@ -243,6 +346,82 @@ public class TypeDefinitionTests : EndToEndTestBase<TypeDefinitionTests.TestsSta
         }
     }
 
+    [Fact]
+    public async Task QueryAndFilterOnPropertyWithTypeDefinition_VerifyResponseContent()
+    {
+        // Arrange
+        var requestUrl = new Uri(_baseUri.AbsoluteUri + "People?$filter=FirstName ne 'Bob'", UriKind.Absolute);
+        var requestMessage = new TestHttpClientRequestMessage(requestUrl, Client);
+        requestMessage.SetHeader("Accept", MimeTypeODataParameterMinimalMetadata);
+
+        // Act
+        var responseMessage = await requestMessage.GetResponseAsync();
+        var responseContent = await ReadAsStringAsync(responseMessage);
+
+        // Assert
+        Assert.Equal(200, responseMessage.StatusCode);
+
+        var expectedContent = @"
+{
+  ""@odata.context"": ""http://localhost/odata/$metadata#People"",
+  ""value"": [
+    {
+      ""PersonId"": 2,
+      ""FirstName"": ""Jill"",
+      ""LastName"": ""Jones"",
+      ""Descriptions"": [
+        ""Nice""
+      ],
+      ""Height"": ""160cm"",
+      ""Address"": {
+        ""Road"": ""Hongqiao Road"",
+        ""City"": ""Shanghai""
+      }
+    },
+    {
+      ""PersonId"": 3,
+      ""FirstName"": ""Jacob"",
+      ""LastName"": ""Zip"",
+      ""Descriptions"": [
+        ""Easy going"",
+        ""Smile""
+      ],
+      ""Height"": ""1.8m"",
+      ""Address"": {
+        ""Road"": ""1 Microsoft Way"",
+        ""City"": ""Redmond""
+      }
+    },
+    {
+      ""PersonId"": 4,
+      ""FirstName"": ""Elmo"",
+      ""LastName"": ""Rogers"",
+      ""Descriptions"": [
+        ""Patient""
+      ],
+      ""Height"": ""62in"",
+      ""Address"": {
+        ""Road"": ""1 Microsoft Way"",
+        ""City"": ""Redmond""
+      }
+    },
+    {
+      ""PersonId"": 5,
+      ""FirstName"": ""Peter"",
+      ""LastName"": ""Bee"",
+      ""Descriptions"": [],
+      ""Height"": ""7ft"",
+      ""Address"": {
+        ""Road"": ""Zixing Road"",
+        ""City"": ""Shanghai""
+      }
+    }
+  ]
+}";
+
+        Assert.Equal(expectedContent.Trim(), responseContent.Trim());
+    }
+
     [Theory]
     [InlineData(MimeTypeODataParameterFullMetadata)]
     [InlineData(MimeTypeODataParameterMinimalMetadata)]
@@ -331,6 +510,96 @@ public class TypeDefinitionTests : EndToEndTestBase<TypeDefinitionTests.TestsSta
         Assert.All(entries, entry => Assert.NotNull((entry.Properties.Single(p => p.Name == "FirstName") as ODataProperty)?.Value));
         Assert.Equal("Peter", (entries[0].Properties.Single(p => p.Name == "FirstName") as ODataProperty)?.Value);
         Assert.Equal("Bob", (entries[4].Properties.Single(p => p.Name == "FirstName") as ODataProperty)?.Value);
+    }
+
+    [Fact]
+    public async Task QueryAndOrderbyPropertyWithTypeDefinition_VerifyResponseContent()
+    {
+        // Arrange
+        var requestUrl = new Uri(_baseUri.AbsoluteUri + "People?$orderby=FirstName desc", UriKind.Absolute);
+        var requestMessage = new TestHttpClientRequestMessage(requestUrl, Client);
+        requestMessage.SetHeader("Accept", MimeTypeODataParameterMinimalMetadata);
+
+        // Act
+        var responseMessage = await requestMessage.GetResponseAsync();
+        var responseContent = await ReadAsStringAsync(responseMessage);
+
+        // Assert
+        Assert.Equal(200, responseMessage.StatusCode);
+
+        var expectedContent = @"
+{
+  ""@odata.context"": ""http://localhost/odata/$metadata#People"",
+  ""value"": [
+    {
+      ""PersonId"": 5,
+      ""FirstName"": ""Peter"",
+      ""LastName"": ""Bee"",
+      ""Descriptions"": [],
+      ""Height"": ""7ft"",
+      ""Address"": {
+        ""Road"": ""Zixing Road"",
+        ""City"": ""Shanghai""
+      }
+    },
+    {
+      ""PersonId"": 2,
+      ""FirstName"": ""Jill"",
+      ""LastName"": ""Jones"",
+      ""Descriptions"": [
+        ""Nice""
+      ],
+      ""Height"": ""160cm"",
+      ""Address"": {
+        ""Road"": ""Hongqiao Road"",
+        ""City"": ""Shanghai""
+      }
+    },
+    {
+      ""PersonId"": 3,
+      ""FirstName"": ""Jacob"",
+      ""LastName"": ""Zip"",
+      ""Descriptions"": [
+        ""Easy going"",
+        ""Smile""
+      ],
+      ""Height"": ""1.8m"",
+      ""Address"": {
+        ""Road"": ""1 Microsoft Way"",
+        ""City"": ""Redmond""
+      }
+    },
+    {
+      ""PersonId"": 4,
+      ""FirstName"": ""Elmo"",
+      ""LastName"": ""Rogers"",
+      ""Descriptions"": [
+        ""Patient""
+      ],
+      ""Height"": ""62in"",
+      ""Address"": {
+        ""Road"": ""1 Microsoft Way"",
+        ""City"": ""Redmond""
+      }
+    },
+    {
+      ""PersonId"": 1,
+      ""FirstName"": ""Bob"",
+      ""LastName"": ""Cat"",
+      ""Descriptions"": [
+        ""Nice"",
+        ""Tall""
+      ],
+      ""Height"": ""1.8m"",
+      ""Address"": {
+        ""Road"": ""Zixing Road"",
+        ""City"": ""Shanghai""
+      }
+    }
+  ]
+}";
+
+        Assert.Equal(expectedContent.Trim(), responseContent.Trim());
     }
 
     [Theory]
@@ -521,6 +790,108 @@ public class TypeDefinitionTests : EndToEndTestBase<TypeDefinitionTests.TestsSta
         Assert.Equal(UInt64.MinValue, lifetime);
     }
 
+    [Fact]
+    public async Task QueryEntryWithUnsignedIntegerProperties_VerifyResponseContent()
+    {
+        // Arrange
+        var requestUrl = new Uri(_baseUri.AbsoluteUri + "Products", UriKind.Absolute);
+        var requestMessage = new TestHttpClientRequestMessage(requestUrl, Client);
+        requestMessage.SetHeader("Accept", MimeTypeODataParameterMinimalMetadata);
+
+        // Act
+        var responseMessage = await requestMessage.GetResponseAsync();
+        var responseContent = await ReadAsStringAsync(responseMessage);
+
+        // Assert
+        Assert.Equal(200, responseMessage.StatusCode);
+
+        var expectedContent = @"
+{
+  ""@odata.context"": ""http://localhost/odata/$metadata#Products"",
+  ""value"": [
+    {
+      ""ProductId"": 11,
+      ""Quantity"": 100,
+      ""NullableUInt32"": 12,
+      ""LifeTimeInSeconds"": 3600,
+      ""LargeNumbers"": [
+        36,
+        12,
+        9
+      ],
+      ""Temperature"": ""10.57℉"",
+      ""TheCombo"": {
+        ""Small"": 80,
+        ""Middle"": 196,
+        ""Large"": 3
+      }
+    },
+    {
+      ""ProductId"": 12,
+      ""Quantity"": 4294967295,
+      ""NullableUInt32"": 4294967295,
+      ""LifeTimeInSeconds"": 18446744073709551615,
+      ""LargeNumbers"": [
+        18446744073709551615,
+        18446744073709551615
+      ],
+      ""Temperature"": ""30.67℃"",
+      ""TheCombo"": {
+        ""Small"": 65535,
+        ""Middle"": 4294967295,
+        ""Large"": 18446744073709551615
+      }
+    },
+    {
+      ""ProductId"": 13,
+      ""Quantity"": 0,
+      ""NullableUInt32"": null,
+      ""LifeTimeInSeconds"": 0,
+      ""LargeNumbers"": [
+        0
+      ],
+      ""Temperature"": ""-0.23℃"",
+      ""TheCombo"": {
+        ""Small"": 0,
+        ""Middle"": 0,
+        ""Large"": 0
+      }
+    },
+    {
+      ""ProductId"": 14,
+      ""Quantity"": 30,
+      ""NullableUInt32"": 109,
+      ""LifeTimeInSeconds"": 3600,
+      ""LargeNumbers"": [],
+      ""Temperature"": ""-19.40℉"",
+      ""TheCombo"": {
+        ""Small"": 12,
+        ""Middle"": 133333,
+        ""Large"": 99889986
+      }
+    },
+    {
+      ""ProductId"": 15,
+      ""Quantity"": 105,
+      ""NullableUInt32"": null,
+      ""LifeTimeInSeconds"": 1800,
+      ""LargeNumbers"": [
+        99,
+        38
+      ],
+      ""Temperature"": ""10.57℉"",
+      ""TheCombo"": {
+        ""Small"": 80,
+        ""Middle"": 196,
+        ""Large"": 3
+      }
+    }
+  ]
+}";
+
+        Assert.Equal(expectedContent.Trim(), responseContent.Trim());
+    }
+
     [Theory]
     [InlineData("Products(11)/ProductId", MimeTypeODataParameterFullMetadata)]
     [InlineData("Products(11)/ProductId", MimeTypeODataParameterMinimalMetadata)]
@@ -548,15 +919,15 @@ public class TypeDefinitionTests : EndToEndTestBase<TypeDefinitionTests.TestsSta
             Assert.NotNull(property);
         }
 
-        if(queryText.EndsWith("ProductId"))
+        if(queryText.EndsWith("Products(11)/ProductId"))
         {
             Assert.Equal((UInt16)11, property?.Value);
         }
-        else if(queryText.EndsWith("Quantity"))
+        else if(queryText.EndsWith("Products(15)/Quantity"))
         {
             Assert.Equal(105u, property?.Value);
         }
-        else if (queryText.EndsWith("LifeTimeInSeconds"))
+        else if (queryText.EndsWith("Products(15)/LifeTimeInSeconds"))
         {
             Assert.Equal(18446744073709551615ul, property?.Value);
         }
@@ -831,69 +1202,6 @@ public class TypeDefinitionTests : EndToEndTestBase<TypeDefinitionTests.TestsSta
     }
 
     [Theory]
-    [InlineData("Products?$filter=Quantity eq 100", MimeTypeODataParameterFullMetadata, "Quantity")]
-    [InlineData("Products?$filter=Quantity eq 100", MimeTypeODataParameterMinimalMetadata, "Quantity")]
-    [InlineData("Products?$filter=18446744073709551615 eq LifeTimeInSeconds", MimeTypeODataParameterFullMetadata, "LifeTimeInSeconds")]
-    [InlineData("Products?$filter=18446744073709551615 eq LifeTimeInSeconds", MimeTypeODataParameterMinimalMetadata, "LifeTimeInSeconds")]
-    [InlineData("Products?$filter=NullableUInt32 eq null", MimeTypeODataParameterFullMetadata, "NullableUInt32")]
-    [InlineData("Products?$filter=NullableUInt32 eq null", MimeTypeODataParameterMinimalMetadata, "NullableUInt32")]
-    public async Task QueryAndFilterByUnsignedIntegerProperties(string queryText, string mimeType, string propertyName)
-    {
-        // Arrange
-        var entries = new List<ODataResource>();
-        var requestUrl = new Uri(_baseUri.AbsoluteUri + queryText, UriKind.Absolute);
-        var requestMessage = new TestHttpClientRequestMessage(requestUrl, Client);
-        requestMessage.SetHeader("Accept", mimeType);
-
-        // Act
-        var responseMessage = await requestMessage.GetResponseAsync();
-
-        // Assert
-        Assert.Equal(200, responseMessage.StatusCode);
-
-        using (var messageReader = new ODataMessageReader(responseMessage, _readerSettings, _model))
-        {
-            var reader = messageReader.CreateODataResourceSetReader();
-
-            while (reader.Read())
-            {
-                if (reader.State == ODataReaderState.ResourceEnd)
-                {
-                    if (reader.Item is ODataResource entry && entry.TypeName.Contains("Product"))
-                    {
-                        entries.Add(entry);
-                    }
-                }
-                else if (reader.State == ODataReaderState.ResourceSetEnd)
-                {
-                    Assert.NotNull(reader.Item as ODataResourceSet);
-                }
-            }
-
-            Assert.Equal(ODataReaderState.Completed, reader.State);
-        }
-
-        if(propertyName == "Quantity")
-        {
-            Assert.Single(entries);
-            var quantity = (entries[0].Properties.Single(p => p.Name == propertyName) as ODataProperty)?.Value;
-            Assert.Equal(100u, quantity);
-        }
-        else if (propertyName == "LifeTimeInSeconds")
-        {
-            Assert.Single(entries);
-            var lifetime = (entries[0].Properties.Single(p => p.Name == propertyName) as ODataProperty)?.Value; //UInt64.Max
-            Assert.Equal(UInt64.MaxValue, lifetime); 
-        }
-        else if (propertyName == "NullableUInt32")
-        {
-            Assert.Equal(2, entries.Count);
-            var nullable = (entries[0].Properties.Single(p => p.Name == propertyName) as ODataProperty)?.Value; //null
-            Assert.Null(nullable);
-        }
-    }
-
-    [Theory]
     [InlineData(MimeTypeODataParameterFullMetadata)]
     [InlineData(MimeTypeODataParameterMinimalMetadata)]
     public async Task QueryAndOrderByUnsignedIntegerProperties(string mimeType)
@@ -936,6 +1244,108 @@ public class TypeDefinitionTests : EndToEndTestBase<TypeDefinitionTests.TestsSta
 
         var lifetime = (entries[0].Properties.Single(p => p.Name == "LifeTimeInSeconds") as ODataProperty)?.Value;
         Assert.Equal(UInt64.MaxValue, lifetime);
+    }
+
+    [Fact]
+    public async Task QueryAndOrderByUnsignedIntegerProperties_VerifyResponseContent()
+    {
+        // Arrange
+        var requestUrl = new Uri(_baseUri.AbsoluteUri + "Products?$orderby=LifeTimeInSeconds desc", UriKind.Absolute);
+        var requestMessage = new TestHttpClientRequestMessage(requestUrl, Client);
+        requestMessage.SetHeader("Accept", MimeTypeODataParameterMinimalMetadata);
+
+        // Act
+        var responseMessage = await requestMessage.GetResponseAsync();
+        var responseContent = await ReadAsStringAsync(responseMessage);
+
+        // Assert
+        Assert.Equal(200, responseMessage.StatusCode);
+
+        var expectedContent = @"
+{
+  ""@odata.context"": ""http://localhost/odata/$metadata#Products"",
+  ""value"": [
+    {
+      ""ProductId"": 12,
+      ""Quantity"": 4294967295,
+      ""NullableUInt32"": 4294967295,
+      ""LifeTimeInSeconds"": 18446744073709551615,
+      ""LargeNumbers"": [
+        18446744073709551615,
+        18446744073709551615
+      ],
+      ""Temperature"": ""30.67℃"",
+      ""TheCombo"": {
+        ""Small"": 65535,
+        ""Middle"": 4294967295,
+        ""Large"": 18446744073709551615
+      }
+    },
+    {
+      ""ProductId"": 11,
+      ""Quantity"": 100,
+      ""NullableUInt32"": 12,
+      ""LifeTimeInSeconds"": 3600,
+      ""LargeNumbers"": [
+        36,
+        12,
+        9
+      ],
+      ""Temperature"": ""10.57℉"",
+      ""TheCombo"": {
+        ""Small"": 80,
+        ""Middle"": 196,
+        ""Large"": 3
+      }
+    },
+    {
+      ""ProductId"": 14,
+      ""Quantity"": 30,
+      ""NullableUInt32"": 109,
+      ""LifeTimeInSeconds"": 3600,
+      ""LargeNumbers"": [],
+      ""Temperature"": ""-19.40℉"",
+      ""TheCombo"": {
+        ""Small"": 12,
+        ""Middle"": 133333,
+        ""Large"": 99889986
+      }
+    },
+    {
+      ""ProductId"": 15,
+      ""Quantity"": 105,
+      ""NullableUInt32"": null,
+      ""LifeTimeInSeconds"": 1800,
+      ""LargeNumbers"": [
+        99,
+        38
+      ],
+      ""Temperature"": ""10.57℉"",
+      ""TheCombo"": {
+        ""Small"": 80,
+        ""Middle"": 196,
+        ""Large"": 3
+      }
+    },
+    {
+      ""ProductId"": 13,
+      ""Quantity"": 0,
+      ""NullableUInt32"": null,
+      ""LifeTimeInSeconds"": 0,
+      ""LargeNumbers"": [
+        0
+      ],
+      ""Temperature"": ""-0.23℃"",
+      ""TheCombo"": {
+        ""Small"": 0,
+        ""Middle"": 0,
+        ""Large"": 0
+      }
+    }
+  ]
+}";
+
+        Assert.Equal(expectedContent.Trim(), responseContent.Trim());
     }
 
     [Theory]
@@ -984,9 +1394,250 @@ public class TypeDefinitionTests : EndToEndTestBase<TypeDefinitionTests.TestsSta
         Assert.Equal(3600ul, lifetime);
     }
 
+    [Fact]
+    public async Task QueryAndSelectUnsignedIntegerProperties_VerifyResponseContent()
+    {
+        // Arrange
+        var requestUrl = new Uri(_baseUri.AbsoluteUri + "Products?$select=ProductId, LifeTimeInSeconds", UriKind.Absolute);
+        var requestMessage = new TestHttpClientRequestMessage(requestUrl, Client);
+        requestMessage.SetHeader("Accept", MimeTypeODataParameterMinimalMetadata);
+
+        // Act
+        var responseMessage = await requestMessage.GetResponseAsync();
+        var responseContent = await ReadAsStringAsync(responseMessage);
+
+        // Assert
+        Assert.Equal(200, responseMessage.StatusCode);
+
+        var expectedContent = @"
+{
+  ""@odata.context"": ""http://localhost/odata/$metadata#Products(ProductId,LifeTimeInSeconds)"",
+  ""value"": [
+    {
+      ""ProductId"": 11,
+      ""LifeTimeInSeconds"": 3600
+    },
+    {
+      ""ProductId"": 12,
+      ""LifeTimeInSeconds"": 18446744073709551615
+    },
+    {
+      ""ProductId"": 13,
+      ""LifeTimeInSeconds"": 0
+    },
+    {
+      ""ProductId"": 14,
+      ""LifeTimeInSeconds"": 3600
+    },
+    {
+      ""ProductId"": 15,
+      ""LifeTimeInSeconds"": 1800
+    }
+  ]
+}";
+
+        Assert.Equal(expectedContent.Trim(), responseContent.Trim());
+    }
+
+    [Theory]
+    [InlineData("Products?$filter=Quantity eq 100", MimeTypeODataParameterFullMetadata, "Quantity")]
+    [InlineData("Products?$filter=Quantity eq 100", MimeTypeODataParameterMinimalMetadata, "Quantity")]
+    [InlineData("Products?$filter=18446744073709551615 eq LifeTimeInSeconds", MimeTypeODataParameterFullMetadata, "LifeTimeInSeconds")]
+    [InlineData("Products?$filter=18446744073709551615 eq LifeTimeInSeconds", MimeTypeODataParameterMinimalMetadata, "LifeTimeInSeconds")]
+    [InlineData("Products?$filter=NullableUInt32 eq null", MimeTypeODataParameterFullMetadata, "NullableUInt32")]
+    [InlineData("Products?$filter=NullableUInt32 eq null", MimeTypeODataParameterMinimalMetadata, "NullableUInt32")]
+    public async Task QueryAndFilterByUnsignedIntegerProperties(string queryText, string mimeType, string propertyName)
+    {
+        // Arrange
+        var entries = new List<ODataResource>();
+        var requestUrl = new Uri(_baseUri.AbsoluteUri + queryText, UriKind.Absolute);
+        var requestMessage = new TestHttpClientRequestMessage(requestUrl, Client);
+        requestMessage.SetHeader("Accept", mimeType);
+
+        // Act
+        var responseMessage = await requestMessage.GetResponseAsync();
+
+        // Assert
+        Assert.Equal(200, responseMessage.StatusCode);
+
+        using (var messageReader = new ODataMessageReader(responseMessage, _readerSettings, _model))
+        {
+            var reader = messageReader.CreateODataResourceSetReader();
+
+            while (reader.Read())
+            {
+                if (reader.State == ODataReaderState.ResourceEnd)
+                {
+                    if (reader.Item is ODataResource entry && entry.TypeName.Contains("Product"))
+                    {
+                        entries.Add(entry);
+                    }
+                }
+                else if (reader.State == ODataReaderState.ResourceSetEnd)
+                {
+                    Assert.NotNull(reader.Item as ODataResourceSet);
+                }
+            }
+
+            Assert.Equal(ODataReaderState.Completed, reader.State);
+        }
+
+        if (propertyName == "Quantity")
+        {
+            Assert.Single(entries);
+            var quantity = (entries[0].Properties.Single(p => p.Name == propertyName) as ODataProperty)?.Value;
+            Assert.Equal(100u, quantity);
+        }
+        else if (propertyName == "LifeTimeInSeconds")
+        {
+            Assert.Single(entries);
+            var lifetime = (entries[0].Properties.Single(p => p.Name == propertyName) as ODataProperty)?.Value; //UInt64.Max
+            Assert.Equal(UInt64.MaxValue, lifetime);
+        }
+        else if (propertyName == "NullableUInt32")
+        {
+            Assert.Equal(2, entries.Count);
+            var nullable = (entries[0].Properties.Single(p => p.Name == propertyName) as ODataProperty)?.Value; //null
+            Assert.Null(nullable);
+        }
+    }
+
+    public static TheoryData<string, string> QueryAndFilterByUnsignedIntegerPropertiesData = new()
+    {
+        {
+            "Products?$filter=Quantity eq 100",
+            @"
+{
+  ""@odata.context"": ""http://localhost/odata/$metadata#Products"",
+  ""value"": [
+    {
+      ""ProductId"": 11,
+      ""Quantity"": 100,
+      ""NullableUInt32"": 12,
+      ""LifeTimeInSeconds"": 3600,
+      ""LargeNumbers"": [
+        36,
+        12,
+        9
+      ],
+      ""Temperature"": ""10.57℉"",
+      ""TheCombo"": {
+        ""Small"": 80,
+        ""Middle"": 196,
+        ""Large"": 3
+      }
+    }
+  ]
+}"
+        },
+        {
+            "Products?$filter=18446744073709551615 eq LifeTimeInSeconds",
+            @"
+{
+  ""@odata.context"": ""http://localhost/odata/$metadata#Products"",
+  ""value"": [
+    {
+      ""ProductId"": 12,
+      ""Quantity"": 4294967295,
+      ""NullableUInt32"": 4294967295,
+      ""LifeTimeInSeconds"": 18446744073709551615,
+      ""LargeNumbers"": [
+        18446744073709551615,
+        18446744073709551615
+      ],
+      ""Temperature"": ""30.67℃"",
+      ""TheCombo"": {
+        ""Small"": 65535,
+        ""Middle"": 4294967295,
+        ""Large"": 18446744073709551615
+      }
+    }
+  ]
+}"
+        },
+        {
+            "Products?$filter=NullableUInt32 eq null",
+            @"
+{
+  ""@odata.context"": ""http://localhost/odata/$metadata#Products"",
+  ""value"": [
+    {
+      ""ProductId"": 13,
+      ""Quantity"": 0,
+      ""NullableUInt32"": null,
+      ""LifeTimeInSeconds"": 0,
+      ""LargeNumbers"": [
+        0
+      ],
+      ""Temperature"": ""-0.23℃"",
+      ""TheCombo"": {
+        ""Small"": 0,
+        ""Middle"": 0,
+        ""Large"": 0
+      }
+    },
+    {
+      ""ProductId"": 15,
+      ""Quantity"": 105,
+      ""NullableUInt32"": null,
+      ""LifeTimeInSeconds"": 1800,
+      ""LargeNumbers"": [
+        99,
+        38
+      ],
+      ""Temperature"": ""10.57℉"",
+      ""TheCombo"": {
+        ""Small"": 80,
+        ""Middle"": 196,
+        ""Large"": 3
+      }
+    }
+  ]
+}"
+        }
+    };
+
+    [Theory]
+    [MemberData(nameof(QueryAndFilterByUnsignedIntegerPropertiesData))]
+    public async Task QueryAndFilterByUnsignedIntegerProperties_VerifyResponseContent(string queryText, string expectedContent)
+    {
+        // Arrange
+        var requestUrl = new Uri(_baseUri.AbsoluteUri + queryText, UriKind.Absolute);
+        var requestMessage = new TestHttpClientRequestMessage(requestUrl, Client);
+        requestMessage.SetHeader("Accept", MimeTypeODataParameterMinimalMetadata);
+
+        // Act
+        var responseMessage = await requestMessage.GetResponseAsync();
+        var responseContent = await ReadAsStringAsync(responseMessage);
+
+        // Assert
+        Assert.Equal(200, responseMessage.StatusCode);
+        Assert.Equal(expectedContent.Trim(), responseContent.Trim());
+    }
+
     #region Private methods
 
-    public async Task<ODataResource?> QueryEntryAsync(string queryText, string mimeType)
+    private static async Task<string> ReadAsStringAsync(IODataResponseMessageAsync responseMessage)
+    {
+        using (Stream stream = await responseMessage.GetStreamAsync())
+        {
+            using (StreamReader reader = new StreamReader(stream, Encoding.UTF8))
+            {
+                var content = await reader.ReadToEndAsync();
+
+                // Format the content in JSON format
+                var jsonElement = JsonSerializer.Deserialize<JsonElement>(content);
+                return JsonSerializer.Serialize(jsonElement, 
+                    new JsonSerializerOptions 
+                    { 
+                        WriteIndented = true,
+                        Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+                    });
+            }
+        }
+    }
+
+    private async Task<ODataResource?> QueryEntryAsync(string queryText, string mimeType)
     {
         var requestUrl = new Uri(_baseUri.AbsoluteUri + queryText, UriKind.Absolute);
         var requestMessage = new TestHttpClientRequestMessage(requestUrl, Client);
