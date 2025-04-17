@@ -49,8 +49,6 @@ public class ModelReferenceCUDTests : EndToEndTestBase<ModelReferenceCUDTests.Te
 
     // Constants
     private const string NameSpacePrefix = "Microsoft.OData.E2E.TestCommon.Common.Server.ODataModelRef";
-    private new const string MimeTypeODataParameterFullMetadata = MimeTypes.ApplicationJson + MimeTypes.ODataParameterFullMetadata;
-    private new const string MimeTypeODataParameterMinimalMetadata = MimeTypes.ApplicationJson + MimeTypes.ODataParameterMinimalMetadata;
 
     #region CUD Testing
     [Theory]
