@@ -2228,6 +2228,11 @@ namespace Microsoft.OData.Tests.UriParser
             return TestModel.FindOperations("Fully.Qualified.Namespace.GetMyDog").Single() as IEdmFunction;
         }
 
+        public static IEdmFunction GetFunctionForGetMyDogGetSomeAddressFromPerson()
+        {
+            return TestModel.FindOperations("Fully.Qualified.Namespace.GetSomeAddressFromPerson").Single() as IEdmFunction;
+        }
+
         public static IEdmFunctionImport GetFunctionImportIsAddressGood()
         {
             return TestModel.EntityContainer.FindOperationImports("IsAddressGood").Single() as IEdmFunctionImport;

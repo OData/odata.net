@@ -1167,6 +1167,16 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         }
 
         [Fact]
+        public void BindSingleComplexFunctionCallReturnsSingleResourceFunctionCallNode()
+        {
+            QueryNode functionCallNode;
+            Assert.True(RunBindEndPathAsFunctionCall("Fully.Qualified.Namespace.GetSomeAddressFromPerson", out functionCallNode));
+            IEdmFunction function = HardCodedTestModel.GetFunctionForGetMyDogGetSomeAddressFromPerson();
+            SingleResourceFunctionCallNode SingleResourceCallNode = functionCallNode.ShouldBeSingleResourceFunctionCallNode(function);
+            Assert.Empty(SingleResourceCallNode.Parameters);
+        }
+
+        [Fact]
         public void EntityCollectionFunctionDoesNotHaveResultEntitySetIfFunctionImportDidntSpecifyOne()
         {
             QueryNode functionCallNode;
