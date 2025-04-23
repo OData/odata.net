@@ -402,28 +402,18 @@ namespace Microsoft.OData.UriParser
             ODataPathSegment lastSegment = path.LastSegment;
             if (lastSegment == null)
             {
-                throw new ODataException("Empty root path is not valid.");
+                throw new ODataException(SRResources.MetadataBinder_EmptyRootPath);
             }
 
             // The $root literal can be used in expressions to refer to resources of the same service. It can be used as a single-valued expression or within complex or collection literals.
             if (!lastSegment.SingleResult)
             {
-                throw new ODataException("The $root literal can be used in expressions to refer to resources of the same service. It can be used as a single-valued expression or within complex or collection literals.");
+                throw new ODataException(SRResources.MetadataBinder_InvalidRootPath);
             }
 
             // The EdmType could be null for Dynamic path segment
             IEdmTypeReference typeReference = lastSegment.EdmType == null ? null : lastSegment.EdmType.ToTypeReference(true);
             return new RootPathNode(path, typeReference);
-
-            // Keep them for discussion, will remove after discussion.
-            //// If it's collection segment, the typeReference should not be null and it should be the collection type reference
-            //IEdmCollectionTypeReference collectionTypeRef = typeReference as IEdmCollectionTypeReference;
-            //if (collectionTypeRef == null)
-            //{
-            //    throw new ODataException("Empty root path is not valid.");
-            //}
-
-            //return new RootPathCollectionValueNode(path, collectionTypeRef);
         }
     }
 }
