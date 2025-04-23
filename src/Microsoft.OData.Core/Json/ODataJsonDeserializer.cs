@@ -12,6 +12,7 @@ namespace Microsoft.OData.Json
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.Linq;
+    using System.Text.RegularExpressions;
     using System.Threading.Tasks;
     using Microsoft.OData;
     using Microsoft.OData.Core;
@@ -24,6 +25,9 @@ namespace Microsoft.OData.Json
     /// </summary>
     internal abstract class ODataJsonDeserializer : ODataDeserializer
     {
+        /// <summary>Regex used to strip unwanted information from the start of a relative contextUriAnnotation value</summary>
+        internal static readonly Regex RelativeContextUriAnnotationRegex = PlatformHelper.CreateCompiled(@"^(\.\.\/)*\$metadata#", RegexOptions.IgnoreCase);
+
         /// <summary>The Json input context to use for reading.</summary>
         private readonly ODataJsonInputContext jsonInputContext;
 
@@ -278,12 +282,12 @@ namespace Microsoft.OData.Json
             {
                 // If the Base uri string is http://odata.org/test
                 // The MetadataDocumentUri will be http://odata.org/test/$metadata
-                // If the contextUriAnnotation value is Customers(1)/Name or $metadata#Customers(1)/Name
+                // If the contextUriAnnotation value is Customers(1)/Name, $metadata#Customers(1)/Name, or ../$metadata#Customers(1)/Name
                 // The generated context uri will be http://odata.org/test/$metadata#Customers(1)/Name
                 ODataUri oDataUri = new ODataUri() { ServiceRoot = this.BaseUri };
-                contextUriAnnotationValue = contextUriAnnotationValue.StartsWith("$metadata#", StringComparison.OrdinalIgnoreCase)
-                    ? this.BaseUri + contextUriAnnotationValue
-                    : oDataUri.MetadataDocumentUri.ToString() + ODataConstants.ContextUriFragmentIndicator + contextUriAnnotationValue;
+                contextUriAnnotationValue = RelativeContextUriAnnotationRegex.Replace(contextUriAnnotationValue, string.Empty);
+                contextUriAnnotationValue = oDataUri.MetadataDocumentUri.ToString()
+                    + ODataConstants.ContextUriFragmentIndicator + contextUriAnnotationValue;
             }
 
             ODataJsonContextUriParseResult parseResult = null;
