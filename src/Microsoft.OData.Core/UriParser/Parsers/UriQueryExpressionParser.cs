@@ -1064,7 +1064,7 @@ namespace Microsoft.OData.UriParser
                 expr = this.ParsePrimaryStart();
             }
 
-            // Pase the $root path, for example: '$root/people(12)'
+            // Parse the $root path, for example: '$root/people(12)'
             if (expr != null && expr.Kind == QueryTokenKind.RootPath)
             {
                 return ParseRootPath((RootPathToken)expr);
@@ -1163,11 +1163,11 @@ namespace Microsoft.OData.UriParser
                 {
                     ReadOnlySpan<char> dotIdentifier = this.lexer.ReadDottedIdentifier(false);
                     rootPathToken.Segments.Add(dotIdentifier.ToString());
-                    //lexer.NextToken();
                     continue;
                 }
 
-                //lexer.ValidateToken(ExpressionTokenKind.Identifier); // could be integerLiteral or others, for example: /people/1234
+                // Don't validate token as identifier only, It could be integerLiteral or others, for example: /people/1234
+                // lexer.ValidateToken(ExpressionTokenKind.Identifier);
                 rootPathToken.Segments.Add(this.lexer.CurrentToken.Text.ToString());
                 this.lexer.NextToken();
             }
@@ -1321,7 +1321,7 @@ namespace Microsoft.OData.UriParser
             {
                 if (parent != null)
                 {
-                    throw new ODataException("$root should be the top-level segment");
+                    throw new ODataException(SRResources.UriQueryExpressionParser_RootPathNotTopLevel);
                 }
 
                 return new RootPathToken();
