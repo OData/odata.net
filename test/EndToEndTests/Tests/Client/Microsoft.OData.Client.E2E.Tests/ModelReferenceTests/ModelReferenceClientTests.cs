@@ -264,7 +264,26 @@ public class ModelReferenceClientTests : EndToEndTestBase<ModelReferenceClientTe
     }
 
     [Fact]
-    public void QueryPropertiesAndNavigationProperties_FromMainAndReferencedModels()
+    public void QueryPropertiesAndNavigationProperties_FromMainModels()
+    {
+        // Arrange
+        var context = this.ContextWrapper();
+
+        // Load property and navigation property from type declared in main model
+        var property = (context.Trucks.Where(t => t.Key == "Key1")).Select(t => new { t.TruckStoppedAlarm }).Single();
+        Assert.Equal(2, property.TruckStoppedAlarm.Severity);
+        Assert.Equal((double)1.2, property.TruckStoppedAlarm.LocationAndFuel.FuelLevel);
+        Assert.Equal((double)101.1, property.TruckStoppedAlarm.LocationAndFuel.Location.Lat);
+
+        var truck = (context.Trucks.Where(t => t.Key == "Key1")).Single();
+        context.LoadProperty(truck, "HeadUnit");
+        Assert.NotNull(truck.HeadUnit);
+        Assert.Equal("SerialNo1", truck.HeadUnit.SerialNo);
+        Assert.Equal((double)3.5, truck.HeadUnit.DimmingLevel);
+    }
+
+    [Fact]
+    public void QueryPropertiesAndNavigationProperties_FromReferencedModels()
     {
         // Arrange
         var context = this.ContextWrapper();
@@ -273,9 +292,18 @@ public class ModelReferenceClientTests : EndToEndTestBase<ModelReferenceClientTe
         var outsideGeoFenceAlarm = (context.Trucks.Where(t => t.Key == "Key1")).Select(t => new { t.OutsideGeoFenceAlarm }).Single();
         Assert.Equal(3, outsideGeoFenceAlarm.OutsideGeoFenceAlarm.Severity);
 
+        var navigationProperty = (context.Trucks.Where(t => t.Key == "Key1")).Select(t => new { t.VehicleGPS }).Single();
+        Assert.NotNull(navigationProperty.VehicleGPS);
+        Assert.Equal("VehicleKey1", navigationProperty.VehicleGPS.Key);
+        Assert.Equal((double)120, navigationProperty.VehicleGPS.VehicleSpeed);
+        Assert.Equal((double)19.1, navigationProperty.VehicleGPS.StartLocation.Lat);
+
         var truck = (context.Trucks.Where(t => t.Key == "Key1")).Single();
         context.LoadProperty(truck, "VehicleGPS");
-        Assert.True(truck.VehicleGPS != null);
+        Assert.NotNull(truck.VehicleGPS);
+        Assert.Equal("VehicleKey1", truck.VehicleGPS.Key);
+        Assert.Equal((double)120, truck.VehicleGPS.VehicleSpeed);
+        Assert.Equal((double)19.1, truck.VehicleGPS.StartLocation.Lat);
 
         // Load property from type declared in referenced model
         var currentLocation = (context.VehicleGPSSet.Where(t => t.Key == "VehicleKey2")).Select(t => new { t.CurrentLocation }).Single();
@@ -287,7 +315,28 @@ public class ModelReferenceClientTests : EndToEndTestBase<ModelReferenceClientTe
     }
 
     [Fact]
-    public async Task AddNavigationProperties_ToEntitiesInMainAndReferencedModels()
+    public async Task AddNavigationProperties_ToEntitiesInMainModels()
+    {
+        // Arrange
+        var context = this.ContextWrapper();
+        context.MergeOption = MergeOption.OverwriteChanges;
+
+        var truck = (context.Trucks.Where(t => t.Key == "Key1")).Single();
+
+        var headUnit = HeadUnitType.CreateHeadUnitType("SomeSerialNo");
+        headUnit.DimmingLevel = 5.6;
+
+        context.UpdateRelatedObject(truck, "HeadUnit", headUnit);
+        await context.SaveChangesAsync();
+
+        context.LoadProperty(truck, "HeadUnit");
+        Assert.NotNull(truck.HeadUnit);
+        Assert.Equal("SomeSerialNo", truck.HeadUnit.SerialNo);
+        Assert.Equal((double)5.6, truck.HeadUnit.DimmingLevel);
+    }
+
+    [Fact]
+    public async Task AddNavigationProperties_ToEntitiesInReferencedModels()
     {
         // Arrange
         var context = this.ContextWrapper();

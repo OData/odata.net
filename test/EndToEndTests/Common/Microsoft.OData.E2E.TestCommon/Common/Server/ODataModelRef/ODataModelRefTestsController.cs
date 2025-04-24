@@ -55,6 +55,19 @@ public class ODataModelRefTestsController : ODataController
     }
 
     [EnableQuery]
+    [HttpGet("odata/Trucks({key})/HeadUnit")]
+    public IActionResult GetTrucksHeadUnit([FromRoute] string key)
+    {
+        var current = _dataSource.Trucks?.SingleOrDefault(t => t.Key == key);
+        if (current == null)
+        {
+            return NotFound();
+        }
+
+        return Ok(current.HeadUnit);
+    }
+
+    [EnableQuery]
     [HttpGet("odata/Trucks({key})/VehicleGPSGroup")]
     public IActionResult GetTrucksVehicleGPSGroup([FromRoute] string key)
     {
@@ -265,6 +278,19 @@ public class ODataModelRefTestsController : ODataController
         }
 
         var patched = delta.Patch(current);
+        return Updated(patched);
+    }
+
+    [HttpPatch("odata/Trucks({key})/HeadUnit")]
+    public IActionResult PatchTruckHeadUnit([FromRoute] string key, [FromBody] Delta<HeadUnitType> delta)
+    {
+        var current = _dataSource.Trucks?.SingleOrDefault(t => t.Key == key);
+        if (current == null)
+        {
+            return NotFound();
+        }
+
+        var patched = delta.Patch(current.HeadUnit);
         return Updated(patched);
     }
 
