@@ -144,6 +144,7 @@
             {
                 public ExponentialDecimals(Boolean value)
                 {
+                    this.Semicolon = TokenChar.Semicolon.Instance;
                     this.E = TokenChar.E.Instance;
                     this._x = TokenChar._x.Instance;
                     this._p = TokenChar._p.Instance;
@@ -164,9 +165,11 @@
                     this._a_2 = TokenChar._a.Instance;
                     this._l_2 = TokenChar._l.Instance;
                     this._s = TokenChar._s.Instance;
+                    this.EqualsSign = TokenChar.EqualsSign.Instance;
                     this.Value = value;
                 }
 
+                public TokenChar.Semicolon Semicolon { get; }
                 public TokenChar.E E { get; }
                 public TokenChar._x _x { get; }
                 public TokenChar._p _p { get; }
@@ -186,6 +189,7 @@
                 public TokenChar._a _a_2 { get; }
                 public TokenChar._l _l_2 { get; }
                 public TokenChar._s _s { get; }
+                public TokenChar.EqualsSign EqualsSign { get; }
                 public Boolean Value { get; }
             }
 

@@ -112,6 +112,15 @@
             public static Semicolon Instance { get; } = new Semicolon();
         }
 
+        public sealed class EqualsSign : TokenChar
+        {
+            private EqualsSign()
+            {
+            }
+
+            public static EqualsSign Instance { get; } = new EqualsSign();
+        }
+
         public sealed class D : TokenChar
         {
             private D()
