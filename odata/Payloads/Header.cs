@@ -94,6 +94,15 @@
             //// TODO you have not completely fleshed out this discriminated union
         }
 
+        public sealed class Period : TokenChar
+        {
+            private Period()
+            {
+            }
+
+            public static Period Instance { get; } = new Period();
+        }
+
         public sealed class ForwardSlash : TokenChar
         {
             private ForwardSlash()
@@ -209,6 +218,15 @@
             }
 
             public static _c Instance { get; } = new _c();
+        }
+
+        public sealed class _d : TokenChar
+        {
+            private _d()
+            {
+            }
+
+            public static _d Instance { get; } = new _d();
         }
 
         public sealed class _e : TokenChar
