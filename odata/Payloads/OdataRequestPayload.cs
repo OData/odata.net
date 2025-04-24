@@ -167,10 +167,10 @@
             /// </summary>
             public sealed class IEEE754Compatible : FormatParameter
             {
-                private IEEE754Compatible()
+                public IEEE754Compatible(Boolean value)
                 {
                     //// TODO this is supposed to be case-insensitive
-
+                    this.Semicolon = TokenChar.Semicolon.Instance;
                     this.I = TokenChar.I.Instance;
                     this.E = TokenChar.E.Instance;
                     this.E_2 = TokenChar.E.Instance;
@@ -188,8 +188,11 @@
                     this._b = TokenChar._b.Instance;
                     this._l = TokenChar._l.Instance;
                     this._e = TokenChar._e.Instance;
+                    this.EqualsSign = TokenChar.EqualsSign.Instance;
+                    this.Value = value;
                 }
 
+                public TokenChar.Semicolon Semicolon { get; }
                 public TokenChar.I I { get; }
                 public TokenChar.E E { get; }
                 public TokenChar.E E_2 { get; }
@@ -207,6 +210,8 @@
                 public TokenChar._b _b { get; }
                 public TokenChar._l _l { get; }
                 public TokenChar._e _e { get; }
+                public TokenChar.EqualsSign EqualsSign { get; }
+                public Boolean Value { get; }
             }
 
             public sealed class Metadata : FormatParameter
