@@ -142,7 +142,7 @@
             /// </summary>
             public sealed class ExponentialDecimals : FormatParameter
             {
-                private ExponentialDecimals()
+                public ExponentialDecimals(Boolean value)
                 {
                     this.E = TokenChar.E.Instance;
                     this._x = TokenChar._x.Instance;
@@ -164,6 +164,7 @@
                     this._a_2 = TokenChar._a.Instance;
                     this._l_2 = TokenChar._l.Instance;
                     this._s = TokenChar._s.Instance;
+                    this.Value = value;
                 }
 
                 public TokenChar.E E { get; }
@@ -185,6 +186,7 @@
                 public TokenChar._a _a_2 { get; }
                 public TokenChar._l _l_2 { get; }
                 public TokenChar._s _s { get; }
+                public Boolean Value { get; }
             }
 
             /// <summary>
