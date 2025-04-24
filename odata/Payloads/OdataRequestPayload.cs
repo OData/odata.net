@@ -284,15 +284,24 @@
             {
                 private Minimal()
                 {
+                    this._m = TokenChar._m.Instance;
+                    this._i = TokenChar._i.Instance;
+                    this._n = TokenChar._n.Instance;
+                    this._i_2 = TokenChar._i.Instance;
+                    this._m_2 = TokenChar._m.Instance;
+                    this._a = TokenChar._a.Instance;
+                    this._l = TokenChar._l.Instance;
                 }
 
-                public TokenChar._m _o { get; }
-                public TokenChar._i _o { get; }
-                public TokenChar._n _o { get; }
-                public TokenChar._i _o { get; }
-                public TokenChar._m _o { get; }
-                public TokenChar._a _o { get; }
-                public TokenChar._l _o { get; }
+                public static Minimal Instance { get; } = new Minimal();
+
+                public TokenChar._m _m { get; }
+                public TokenChar._i _i { get; }
+                public TokenChar._n _n { get; }
+                public TokenChar._i _i_2 { get; }
+                public TokenChar._m _m_2 { get; }
+                public TokenChar._a _a { get; }
+                public TokenChar._l _l { get; }
             }
 
             public sealed class Full : MetadataValue
