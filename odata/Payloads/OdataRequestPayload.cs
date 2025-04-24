@@ -54,6 +54,9 @@
         {
             public FormatRequestHeader(IEnumerable<FormatParameter> parameters)
             {
+                this.Type = ApplicationType.Instance;
+                this.Subtype = JsonSubtype.Instance;
+
                 Parameters = parameters;
             }
 
@@ -70,13 +73,13 @@
             {
                 this._a = TokenChar._a.Instance;
                 this._p = TokenChar._p.Instance;
-                this._p = TokenChar._p.Instance;
+                this._p_2 = TokenChar._p.Instance;
                 this._l = TokenChar._l.Instance;
                 this._i = TokenChar._i.Instance;
                 this._c = TokenChar._c.Instance;
-                this._a = TokenChar._a.Instance;
+                this._a_2 = TokenChar._a.Instance;
                 this._t = TokenChar._t.Instance;
-                this._i = TokenChar._i.Instance;
+                this._i_2 = TokenChar._i.Instance;
                 this._o = TokenChar._o.Instance;
                 this._n = TokenChar._n.Instance;
             }
@@ -100,7 +103,18 @@
         {
             private JsonSubtype()
             {
+                this._j = TokenChar._j.Instance;
+                this._s = TokenChar._s.Instance;
+                this._o = TokenChar._o.Instance;
+                this._n = TokenChar._n.Instance;
             }
+
+            public static JsonSubtype Instance { get; } = new JsonSubtype();
+
+            public TokenChar._j _j { get; }
+            public TokenChar._s _s { get; }
+            public TokenChar._o _o { get; }
+            public TokenChar._n _n { get; }
         }
 
         public abstract class FormatParameter
