@@ -94,6 +94,42 @@
             //// TODO you have not completely fleshed out this discriminated union
         }
 
+        public sealed class ForwardSlash : TokenChar
+        {
+            private ForwardSlash()
+            {
+            }
+
+            public static ForwardSlash Instance { get; } = new ForwardSlash();
+        }
+
+        public sealed class Semicolon : TokenChar
+        {
+            private Semicolon()
+            {
+            }
+
+            public static Semicolon Instance { get; } = new Semicolon();
+        }
+
+        public sealed class D : TokenChar
+        {
+            private D()
+            {
+            }
+
+            public static D Instance { get; } = new D();
+        }
+
+        public sealed class E : TokenChar
+        {
+            private E()
+            {
+            }
+
+            public static E Instance { get; } = new E();
+        }
+
         public sealed class _a : TokenChar
         {
             private _a()
@@ -110,6 +146,15 @@
             }
 
             public static _c Instance { get; } = new _c();
+        }
+
+        public sealed class _e : TokenChar
+        {
+            private _e()
+            {
+            }
+
+            public static _e Instance { get; } = new _e();
         }
 
         public sealed class _i : TokenChar
@@ -137,6 +182,15 @@
             }
 
             public static _l Instance { get; } = new _l();
+        }
+
+        public sealed class _m : TokenChar
+        {
+            private _m()
+            {
+            }
+
+            public static _m Instance { get; } = new _m();
         }
 
         public sealed class _n : TokenChar
@@ -182,6 +236,15 @@
             }
 
             public static _t Instance { get; } = new _t();
+        }
+
+        public sealed class _x : TokenChar
+        {
+            private _x()
+            {
+            }
+
+            public static _x Instance { get; } = new _x();
         }
     }
 
