@@ -222,6 +222,7 @@
             {
                 public Metadata(MetadataValue value)
                 {
+                    //// TODO this is supposed to be case-insensitive
                     this.Semicolon = TokenChar.Semicolon.Instance;
                     this._o = TokenChar._o.Instance;
                     this._d = TokenChar._d.Instance;
@@ -264,6 +265,7 @@
             {
                 private Streaming()
                 {
+                    //// TODO this is supposed to be case-insensitive
                 }
             }
         }
@@ -284,6 +286,7 @@
             {
                 private Minimal()
                 {
+                    //// TODO this is supposed to be case-insensitive
                     this._m = TokenChar._m.Instance;
                     this._i = TokenChar._i.Instance;
                     this._n = TokenChar._n.Instance;
@@ -308,14 +311,36 @@
             {
                 private Full()
                 {
+                    //// TODO this is supposed to be case-insensitive
+                    this._f = TokenChar._f.Instance;
+                    this._u = TokenChar._u.Instance;
+                    this._l = TokenChar._l.Instance;
+                    this._l_2 = TokenChar._l.Instance;
                 }
+
+                public static Full Instance { get; } = new Full();
+
+                public TokenChar._f _f { get; }
+                public TokenChar._u _u { get; }
+                public TokenChar._l _l { get; }
+                public TokenChar._l _l_2 { get; }
             }
 
             public sealed class None : MetadataValue
             {
                 private None()
                 {
+                    //// TODO this is supposed to be case-insensitive
+                    this._n = TokenChar._n.Instance;
+                    this._o = TokenChar._o.Instance;
+                    this._n_2 = TokenChar._n.Instance;
+                    this._e = TokenChar._e.Instance;
                 }
+
+                public TokenChar._n _n { get; }
+                public TokenChar._o _o { get; }
+                public TokenChar._n _n_2 { get; }
+                public TokenChar._e _e { get; }
             }
         }
 
@@ -333,6 +358,7 @@
             {
                 private True()
                 {
+                    //// TODO this is supposed to be case-insensitive
                     this._t = TokenChar._t.Instance;
                     this._r = TokenChar._r.Instance;
                     this._u = TokenChar._u.Instance;
@@ -351,6 +377,7 @@
             {
                 private False()
                 {
+                    //// TODO this is supposed to be case-insensitive
                     this._f = TokenChar._f.Instance;
                     this._a = TokenChar._a.Instance;
                     this._l = TokenChar._l.Instance;
