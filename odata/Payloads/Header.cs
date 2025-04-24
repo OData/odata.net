@@ -103,6 +103,33 @@
             public static ForwardSlash Instance { get; } = new ForwardSlash();
         }
 
+        public sealed class _4 : TokenChar
+        {
+            private _4()
+            {
+            }
+
+            public static _4 Instance { get; } = new _4();
+        }
+
+        public sealed class _5 : TokenChar
+        {
+            private _5()
+            {
+            }
+
+            public static _5 Instance { get; } = new _5();
+        }
+
+        public sealed class _7 : TokenChar
+        {
+            private _7()
+            {
+            }
+
+            public static _7 Instance { get; } = new _7();
+        }
+
         public sealed class Semicolon : TokenChar
         {
             private Semicolon()
@@ -119,6 +146,15 @@
             }
 
             public static EqualsSign Instance { get; } = new EqualsSign();
+        }
+
+        public sealed class C : TokenChar
+        {
+            private C()
+            {
+            }
+
+            public static C Instance { get; } = new C();
         }
 
         public sealed class D : TokenChar
@@ -139,6 +175,15 @@
             public static E Instance { get; } = new E();
         }
 
+        public sealed class I : TokenChar
+        {
+            private I()
+            {
+            }
+
+            public static I Instance { get; } = new I();
+        }
+
         public sealed class _a : TokenChar
         {
             private _a()
@@ -146,6 +191,15 @@
             }
 
             public static _a Instance { get; } = new _a();
+        }
+
+        public sealed class _b : TokenChar
+        {
+            private _b()
+            {
+            }
+
+            public static _b Instance { get; } = new _b();
         }
 
         public sealed class _c : TokenChar

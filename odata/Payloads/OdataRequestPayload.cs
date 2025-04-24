@@ -112,6 +112,7 @@
             {
                 public ExponentialDecimals(Boolean value)
                 {
+                    //// TODO this is supposed to be case-insensitive
                     this.Semicolon = TokenChar.Semicolon.Instance;
                     this.E = TokenChar.E.Instance;
                     this._x = TokenChar._x.Instance;
@@ -168,8 +169,44 @@
             {
                 private IEEE754Compatible()
                 {
-                    //// TODO you are here
+                    //// TODO this is supposed to be case-insensitive
+
+                    this.I = TokenChar.I.Instance;
+                    this.E = TokenChar.E.Instance;
+                    this.E_2 = TokenChar.E.Instance;
+                    this.E_3 = TokenChar.E.Instance;
+                    this._7 = TokenChar._7.Instance;
+                    this._5 = TokenChar._5.Instance;
+                    this._4 = TokenChar._4.Instance;
+                    this.C = TokenChar.C.Instance;
+                    this._o = TokenChar._o.Instance;
+                    this._m = TokenChar._m.Instance;
+                    this._p = TokenChar._p.Instance;
+                    this._a = TokenChar._a.Instance;
+                    this._t = TokenChar._t.Instance;
+                    this._i = TokenChar._i.Instance;
+                    this._b = TokenChar._b.Instance;
+                    this._l = TokenChar._l.Instance;
+                    this._e = TokenChar._e.Instance;
                 }
+
+                public TokenChar.I I { get; }
+                public TokenChar.E E { get; }
+                public TokenChar.E E_2 { get; }
+                public TokenChar.E E_3 { get; }
+                public TokenChar._7 _7 { get; }
+                public TokenChar._5 _5 { get; }
+                public TokenChar._4 _4 { get; }
+                public TokenChar.C C { get; }
+                public TokenChar._o _o { get; }
+                public TokenChar._m _m { get; }
+                public TokenChar._p _p { get; }
+                public TokenChar._a _a { get; }
+                public TokenChar._t _t { get; }
+                public TokenChar._i _i { get; }
+                public TokenChar._b _b { get; }
+                public TokenChar._l _l { get; }
+                public TokenChar._e _e { get; }
             }
 
             public sealed class Metadata : FormatParameter
