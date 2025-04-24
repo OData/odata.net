@@ -56,29 +56,6 @@
         {
             public FormatRequestHeader(IEnumerable<FormatParameter> parameters)
             {
-                this.Type = ApplicationTypeLiteral.Instance;
-                this.Slash = TokenChar.ForwardSlash.Instance;
-                this.Subtype = JsonSubtypeLiteral.Instance;
-                Parameters = parameters;
-            }
-
-            public ApplicationTypeLiteral Type { get; }
-            public TokenChar.ForwardSlash Slash { get; }
-            public JsonSubtypeLiteral Subtype { get; }
-            public IEnumerable<FormatParameter> Parameters { get; }
-            
-            //// TODO you could have an extension that returns an http accept header from this
-        }
-
-
-
-        /// <summary>
-        /// https://docs.oasis-open.org/odata/odata-json-format/v4.01/odata-json-format-v4.01.html#sec_RequestingtheJSONFormat
-        /// </summary>
-        public sealed class ApplicationTypeLiteral
-        {
-            private ApplicationTypeLiteral()
-            {
                 this._a = TokenChar._a.Instance;
                 this._p = TokenChar._p.Instance;
                 this._p_2 = TokenChar._p.Instance;
@@ -90,9 +67,13 @@
                 this._i_2 = TokenChar._i.Instance;
                 this._o = TokenChar._o.Instance;
                 this._n = TokenChar._n.Instance;
+                this.Slash = TokenChar.ForwardSlash.Instance;
+                this._j = TokenChar._j.Instance;
+                this._s = TokenChar._s.Instance;
+                this._o_2 = TokenChar._o.Instance;
+                this._n_2 = TokenChar._n.Instance;
+                Parameters = parameters;
             }
-
-            public static ApplicationTypeLiteral Instance { get; } = new ApplicationTypeLiteral();
 
             public TokenChar._a _a { get; }
             public TokenChar._p _p { get; }
@@ -105,27 +86,14 @@
             public TokenChar._i _i_2 { get; }
             public TokenChar._o _o { get; }
             public TokenChar._n _n { get; }
-        }
-
-        /// <summary>
-        /// https://docs.oasis-open.org/odata/odata-json-format/v4.01/odata-json-format-v4.01.html#sec_RequestingtheJSONFormat
-        /// </summary>
-        public sealed class JsonSubtypeLiteral
-        {
-            private JsonSubtypeLiteral()
-            {
-                this._j = TokenChar._j.Instance;
-                this._s = TokenChar._s.Instance;
-                this._o = TokenChar._o.Instance;
-                this._n = TokenChar._n.Instance;
-            }
-
-            public static JsonSubtypeLiteral Instance { get; } = new JsonSubtypeLiteral();
-
+            public TokenChar.ForwardSlash Slash { get; }
             public TokenChar._j _j { get; }
             public TokenChar._s _s { get; }
-            public TokenChar._o _o { get; }
-            public TokenChar._n _n { get; }
+            public TokenChar._o _o_2 { get; }
+            public TokenChar._n _n_2 { get; }
+            public IEnumerable<FormatParameter> Parameters { get; }
+            
+            //// TODO you could have an extension that returns an http accept header from this
         }
 
         /// <summary>
