@@ -107,6 +107,11 @@ namespace Microsoft.OData.E2E.TestCommon.Common
             };
         }
 
+        public virtual Task<IODataResponseMessageAsync> GetResponseAsync(string mimeType, TestHttpClientRequestMessage? requestMessage = null)
+        {
+            throw new NotImplementedException();
+        }
+
         public Stream GetStream()
         {
             if (_stream == null)
