@@ -1,5 +1,6 @@
 ﻿namespace Payloads
 {
+    using Root.OdataResourcePath.ConcreteSyntaxTreeNodes;
     using System.Collections.Generic;
 
     //// TODO i'm still not clear if i'm defining a CST or the CLR definitions of the conventions
@@ -214,11 +215,17 @@
                 public Boolean Value { get; }
             }
 
+            /// <summary>
+            /// https://docs.oasis-open.org/odata/odata-json-format/v4.01/odata-json-format-v4.01.html#sec_ControllingtheAmountofControlInforma
+            /// </summary>
             public sealed class Metadata : FormatParameter
             {
-                private Metadata()
+                public Metadata(MetadataParameter parameter)
                 {
+                    Parameter = parameter;
                 }
+
+                public MetadataParameter Parameter { get; }
             }
 
             public sealed class Streaming : FormatParameter
@@ -226,6 +233,16 @@
                 private Streaming()
                 {
                 }
+            }
+        }
+
+        /// <summary>
+        /// https://docs.oasis-open.org/odata/odata-json-format/v4.01/odata-json-format-v4.01.html#sec_ControllingtheAmountofControlInforma
+        /// </summary>
+        public sealed class MetadataParameter
+        {
+            private MetadataParameter()
+            {
             }
         }
 
