@@ -9,7 +9,7 @@
         {
         }
 
-        public sealed class General
+        public sealed class General : Header
         {
             public General(GeneralHeader header)
             {
@@ -19,7 +19,7 @@
             public GeneralHeader Header { get; }
         }
 
-        public sealed class Request
+        public sealed class Request : Header
         {
             public Request(RequestHeader header)
             {
@@ -29,7 +29,7 @@
             public RequestHeader Header { get; }
         }
 
-        public sealed class Response
+        public sealed class Response : Header
         {
             public Response(ResponseHeader header)
             {
@@ -39,7 +39,7 @@
             public ResponseHeader Header { get; }
         }
 
-        public sealed class Entity
+        public sealed class Entity : Header
         {
             public Entity(EntityHeader header)
             {
@@ -49,7 +49,7 @@
             public EntityHeader Header { get; }
         }
 
-        public sealed class Custom
+        public sealed class Custom : Header
         {
             public Custom(CustomHeader header)
             {
@@ -67,10 +67,146 @@
         }
     }
 
-    public sealed class RequestHeader
+    /// <summary>
+    /// https://www.rfc-editor.org/rfc/rfc2616#page-38
+    /// </summary>
+    public abstract class RequestHeader
     {
         private RequestHeader()
         {
+        }
+
+        public sealed class Accept : RequestHeader
+        {
+            private Accept()
+            {
+            }
+        }
+
+        public sealed class AcceptCharset : RequestHeader
+        {
+            private AcceptCharset()
+            {
+            }
+        }
+
+        public sealed class AcceptEncoding : RequestHeader
+        {
+            private AcceptEncoding()
+            {
+            }
+        }
+
+        public sealed class AcceptLanguage : RequestHeader
+        {
+            private AcceptLanguage()
+            {
+            }
+        }
+
+        public sealed class Authorization : RequestHeader
+        {
+            private Authorization()
+            {
+            }
+        }
+
+        public sealed class Expect : RequestHeader
+        {
+            private Expect()
+            {
+            }
+        }
+
+        public sealed class From : RequestHeader
+        {
+            private From()
+            {
+            }
+        }
+
+        public sealed class Host : RequestHeader
+        {
+            private Host()
+            {
+            }
+        }
+
+        public sealed class IfMatch : RequestHeader
+        {
+            private IfMatch()
+            {
+            }
+        }
+
+        public sealed class IfModifiedSince : RequestHeader
+        {
+            private IfModifiedSince()
+            {
+            }
+        }
+
+        public sealed class IfNoneMatch : RequestHeader
+        {
+            private IfNoneMatch()
+            {
+            }
+        }
+
+        public sealed class IfRange : RequestHeader
+        {
+            private IfRange()
+            {
+            }
+        }
+
+        public sealed class IfUnmodifiedSince : RequestHeader
+        {
+            private IfUnmodifiedSince()
+            {
+            }
+        }
+
+        public sealed class MaxForwards : RequestHeader
+        {
+            private MaxForwards()
+            {
+            }
+        }
+
+        public sealed class ProxyAuthorization : RequestHeader
+        {
+            private ProxyAuthorization()
+            {
+            }
+        }
+
+        public sealed class Range : RequestHeader
+        {
+            private Range()
+            {
+            }
+        }
+
+        public sealed class Referer : RequestHeader
+        {
+            private Referer()
+            {
+            }
+        }
+
+        public sealed class Te : RequestHeader
+        {
+            private Te()
+            {
+            }
+        }
+
+        public sealed class UserAgent : RequestHeader
+        {
+            private UserAgent()
+            {
+            }
         }
     }
 
