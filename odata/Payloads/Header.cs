@@ -166,6 +166,15 @@
             public static _e Instance { get; } = new _e();
         }
 
+        public sealed class _f : TokenChar
+        {
+            private _f()
+            {
+            }
+
+            public static _f Instance { get; } = new _f();
+        }
+
         public sealed class _i : TokenChar
         {
             private _i()
@@ -229,6 +238,15 @@
             public static _p Instance { get; } = new _p();
         }
 
+        public sealed class _r : TokenChar
+        {
+            private _r()
+            {
+            }
+
+            public static _r Instance { get; } = new _r();
+        }
+
         public sealed class _s : TokenChar
         {
             private _s()
@@ -245,6 +263,15 @@
             }
 
             public static _t Instance { get; } = new _t();
+        }
+
+        public sealed class _u : TokenChar
+        {
+            private _u()
+            {
+            }
+
+            public static _u Instance { get; } = new _u();
         }
 
         public sealed class _x : TokenChar

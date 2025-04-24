@@ -189,11 +189,47 @@
         /// <summary>
         /// https://docs.oasis-open.org/odata/odata-json-format/v4.01/odata-json-format-v4.01.html#sec_ControllingtheRepresentationofNumber
         /// </summary>
-        public sealed class Boolean
+        public abstract class Boolean
         {
             private Boolean()
             {
                 //// TODO this might be more general than the `Json` namespace
+            }
+
+            public sealed class True : Boolean
+            {
+                private True()
+                {
+                    this._t = TokenChar._t.Instance;
+                    this._r = TokenChar._r.Instance;
+                    this._u = TokenChar._u.Instance;
+                    this._e = TokenChar._e.Instance;
+                }
+
+                public static True Instance { get; } = new True();
+
+                public TokenChar._t _t { get; }
+                public TokenChar._r _r { get; }
+                public TokenChar._u _u { get; }
+                public TokenChar._e _e { get; }
+            }
+
+            public sealed class False : Boolean
+            {
+                private False()
+                {
+                    this._f = TokenChar._f.Instance;
+                    this._a = TokenChar._a.Instance;
+                    this._l = TokenChar._l.Instance;
+                    this._s = TokenChar._s.Instance;
+                    this._e = TokenChar._e.Instance;
+                }
+
+                public TokenChar._f _f { get; }
+                public TokenChar._a _a { get; }
+                public TokenChar._l _l { get; }
+                public TokenChar._s _s { get; }
+                public TokenChar._e _e { get; }
             }
         }
     }
