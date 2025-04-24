@@ -1,7 +1,9 @@
 ﻿namespace Payloads
 {
+    using System.Collections.Generic;
+
     /// <summary>
-    /// RFC 2616: https://www.rfc-editor.org/rfc/rfc2616#page-31
+    /// RFC 2616: https://www.rfc-editor.org/rfc/rfc2616#section-4.2
     /// </summary>
     public abstract class Header
     {
@@ -67,8 +69,34 @@
         }
     }
 
+    public sealed class MediaRangeAcceptParamsPair
+    {
+        public MediaRangeAcceptParamsPair(MediaRange mediaRange, AcceptParams acceptParams)
+        {
+            MediaRange = mediaRange;
+            AcceptParams = acceptParams;
+        }
+
+        public MediaRange MediaRange { get; }
+        public AcceptParams AcceptParams { get; }
+    }
+
+    public sealed class MediaRange
+    {
+        private MediaRange()
+        {
+        }
+    }
+
+    public sealed class AcceptParams
+    {
+        private AcceptParams()
+        {
+        }
+    }
+
     /// <summary>
-    /// https://www.rfc-editor.org/rfc/rfc2616#page-38
+    /// https://www.rfc-editor.org/rfc/rfc2616#section-5.3
     /// </summary>
     public abstract class RequestHeader
     {
@@ -76,11 +104,17 @@
         {
         }
 
+        /// <summary>
+        /// https://www.rfc-editor.org/rfc/rfc2616#section-14.1
+        /// </summary>
         public sealed class Accept : RequestHeader
         {
-            private Accept()
+            public Accept(IEnumerable<MediaRangeAcceptParamsPair> mediaRangeAcceptParamsPairs)
             {
+                MediaRangeAcceptParamsPairs = mediaRangeAcceptParamsPairs;
             }
+
+            public IEnumerable<MediaRangeAcceptParamsPair> MediaRangeAcceptParamsPairs { get; }
         }
 
         public sealed class AcceptCharset : RequestHeader
