@@ -379,6 +379,88 @@ namespace odata.tests
         */
     }
 
+    [TestClass]
+    public sealed class LockTests
+    {
+        public static int Iterations = 6900;
+
+        [TestMethod]
+        public void Test()
+        {
+            int iterations = 1000000;
+            System.Diagnostics.Stopwatch stopwatch;
+
+            stopwatch = System.Diagnostics.Stopwatch.StartNew();
+            for (int i = 0; i < iterations; ++i)
+            {
+                var instance = new NoLock().Instance;
+            }
+
+            Console.WriteLine(stopwatch.ElapsedTicks);
+
+            stopwatch = System.Diagnostics.Stopwatch.StartNew();
+            for (int i = 0; i < iterations; ++i)
+            {
+                var instance = new NoLock().Instance2;
+            }
+
+            Console.WriteLine(stopwatch.ElapsedTicks);
+        }
+
+        public sealed class Value
+        {
+            private readonly int value;
+
+            public Value()
+            {
+                for (this.value = 0; this.value < Iterations; ++this.value)
+                {
+                }
+            }
+        }
+
+        public sealed class NoLock
+        {
+            private Value? noLock;
+
+            private readonly object @lock = new object();
+
+            public Value Instance
+            {
+                get
+                {
+                    if (noLock == null)
+                    {
+                        lock (@lock)
+                        {
+                            if (noLock == null)
+                            {
+                                noLock = new Value();
+                            }
+                        }
+                    }
+
+                    return noLock;
+                }
+            }
+
+            private volatile Value? noLock2;
+
+            public Value Instance2
+            {
+                get
+                {
+                    if (noLock2 == null)
+                    {
+                        noLock2 = new Value();
+                    }
+
+                    return noLock2;
+                }
+            }
+        }
+    }
+
     public static class GeneratedOdataUri
     {
         public static __GeneratedPartialV1.Deferred.CstNodes.Rules._odataUri<ParseMode.Deferred> Create(ITokenStream<char> input)
