@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
 
-    //// TODO i'm still not clear if i'm defining an AST or the CLR definitions of the conventions
+    //// TODO i'm still not clear if i'm defining a CST or the CLR definitions of the conventions
 
     public abstract class OdataRequestPayload
     {
@@ -12,7 +12,7 @@
 
         public sealed class Json : OdataRequestPayload
         {
-            private Json(Payloads.Json.FormatRequestHeader? accept)
+            private Json(FormatRequestHeader? accept)
             {
                 Accept = accept;
             }
@@ -20,8 +20,27 @@
             /// <summary>
             /// https://docs.oasis-open.org/odata/odata-json-format/v4.01/odata-json-format-v4.01.html#sec_RequestingtheJSONFormat
             /// </summary>
-            public Payloads.Json.FormatRequestHeader? Accept { get; } //// TODO i *think* this is optional, but i can't tell; i guess it's not optional if the service supports other formats and the client only understands JSON, so they want to ensure they only get a JSON response?
+            public FormatRequestHeader? Accept { get; }
         }
+    }
+
+    public abstract class FormatRequestHeader
+    {
+        private FormatRequestHeader()
+        {
+        }
+
+        public sealed class Json : FormatRequestHeader
+        {
+            public Json(Payloads.Json.FormatRequestHeader formatRequestHeader)
+            {
+                FormatRequestHeader = formatRequestHeader;
+            }
+
+            public Payloads.Json.FormatRequestHeader FormatRequestHeader { get; }
+        }
+
+        //// TODO i don't think other formats are allowed by the standard at the moment; you should figure out how custom formats get supported and add that derived type, though
     }
 
     namespace Json
@@ -33,18 +52,55 @@
         /// </summary>
         public sealed class FormatRequestHeader
         {
-            public FormatRequestHeader(Type type, Subtype subtype, IEnumerable<FormatParameter> parameters)
+            public FormatRequestHeader(IEnumerable<FormatParameter> parameters)
             {
-                Type = type;
-                Subtype = subtype;
                 Parameters = parameters;
             }
 
-            public Type Type { get; }
-            public Subtype Subtype { get; }
+            public ApplicationType Type { get; }
+            public JsonSubtype Subtype { get; } //// TODO you are here; finish this property, then you are proceeding through the standard with the next property
             public IEnumerable<FormatParameter> Parameters { get; }
             
             //// TODO you could have an extension that returns an http accept header from this
+        }
+
+        public sealed class ApplicationType
+        {
+            private ApplicationType()
+            {
+                this._a = TokenChar._a.Instance;
+                this._p = TokenChar._p.Instance;
+                this._p = TokenChar._p.Instance;
+                this._l = TokenChar._l.Instance;
+                this._i = TokenChar._i.Instance;
+                this._c = TokenChar._c.Instance;
+                this._a = TokenChar._a.Instance;
+                this._t = TokenChar._t.Instance;
+                this._i = TokenChar._i.Instance;
+                this._o = TokenChar._o.Instance;
+                this._n = TokenChar._n.Instance;
+            }
+
+            public static ApplicationType Instance { get; } = new ApplicationType();
+
+            public TokenChar._a _a { get; }
+            public TokenChar._p _p { get; }
+            public TokenChar._p _p_2 { get; }
+            public TokenChar._l _l { get; }
+            public TokenChar._i _i { get; }
+            public TokenChar._c _c { get; }
+            public TokenChar._a _a_2 { get; }
+            public TokenChar._t _t { get; }
+            public TokenChar._i _i_2 { get; }
+            public TokenChar._o _o { get; }
+            public TokenChar._n _n { get; }
+        }
+
+        public sealed class JsonSubtype
+        {
+            private JsonSubtype()
+            {
+            }
         }
 
         public abstract class FormatParameter
