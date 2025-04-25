@@ -28,7 +28,7 @@
 
         public sealed class _Ⰳx65ⲻ7E : NotDHeaderCharacter
         {
-            public _Ⰳx65ⲻ7E(Inners._Ⰳx65ⲻ7E _Ⰳx70ⲻ7E)
+            public _Ⰳx65ⲻ7E(Inners._Ⰳx65ⲻ7E _Ⰳx65ⲻ7E)
             {
                 Ⰳx65ⲻ7E = _Ⰳx65ⲻ7E;
             }
