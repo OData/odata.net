@@ -19,10 +19,12 @@
 
         public sealed class A : HeaderCharacter
         {
-            private A()
+            public A(Inners.A character)
             {
-                //// TODO you could make this a discriminated union so that you can have case insensitivity
+                Character = character;
             }
+
+            public Inners.A Character { get; }
         }
 
         public sealed class D : HeaderCharacter
