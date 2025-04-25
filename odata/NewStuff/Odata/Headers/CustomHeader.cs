@@ -23,9 +23,9 @@
                 RemainingCharacters = remainingCharacters;
             }
 
-            //// TODO you are here; implement dependent types
             public NotOHeaderCharacter FirstCharacter { get; }
 
+            //// TODO you are here; implement dependent types
             public IEnumerable<HeaderCharacter> RemainingCharacters { get; }
         }
 
