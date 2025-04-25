@@ -1,4 +1,4 @@
-﻿namespace Payloads.Odata.SyntacticCst.Http
+﻿namespace Payloads.Http
 {
     using System.Collections.Generic;
 

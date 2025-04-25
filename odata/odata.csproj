@@ -12,9 +12,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Payloads\Http\" />
     <Folder Include="Payloads\Iri\" />
-    <Folder Include="Payloads\Uri\" />
+    <Folder Include="Payloads\Odata\SyntacticCst\Http\" />
     <Folder Include="Payloads\Odata\SyntacticCst\Odata\Json\Inners\" />
     <Folder Include="Root\OdataResourcePath\SyntacticCstNodes\" />
     <Folder Include="__GeneratedPartialV1\Deferred\" />
