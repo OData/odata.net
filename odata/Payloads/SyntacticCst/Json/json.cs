@@ -170,50 +170,14 @@
             public Boolean Value { get; }
         }
 
-        /// <summary>
-        /// https://docs.oasis-open.org/odata/odata-json-format/v4.01/odata-json-format-v4.01.html#sec_ControllingtheAmountofControlInforma
-        /// </summary>
         public sealed class Metadata : FormatParameter
         {
-            public Metadata(MetadataValue value)
+            public Metadata(MetadataFormatParameter metadataFormatParameter)
             {
-                //// TODO this is supposed to be case-insensitive
-                this.Semicolon = TokenChar.Semicolon.Instance;
-                this._o = TokenChar._o.Instance;
-                this._d = TokenChar._d.Instance;
-                this._a = TokenChar._a.Instance;
-                this._t = TokenChar._t.Instance;
-                this._a_2 = TokenChar._a.Instance;
-                this.Period = TokenChar.Period.Instance;
-                this._m = TokenChar._m.Instance;
-                this._e = TokenChar._e.Instance;
-                this._t_2 = TokenChar._t.Instance;
-                this._a_3 = TokenChar._a.Instance;
-                this._d_2 = TokenChar._d.Instance;
-                this._a_4 = TokenChar._a.Instance;
-                this._t_3 = TokenChar._t.Instance;
-                this._a_5 = TokenChar._a.Instance;
-                this.EqualsSign = TokenChar.EqualsSign.Instance;
-                Value = value;
+                MetadataFormatParameter = metadataFormatParameter;
             }
 
-            public TokenChar.Semicolon Semicolon { get; }
-            public TokenChar._o _o { get; }
-            public TokenChar._d _d { get; }
-            public TokenChar._a _a { get; }
-            public TokenChar._t _t { get; }
-            public TokenChar._a _a_2 { get; }
-            public TokenChar.Period Period { get; }
-            public TokenChar._m _m { get; }
-            public TokenChar._e _e { get; }
-            public TokenChar._t _t_2 { get; }
-            public TokenChar._a _a_3 { get; }
-            public TokenChar._d _d_2 { get; }
-            public TokenChar._a _a_4 { get; }
-            public TokenChar._t _t_3 { get; }
-            public TokenChar._a _a_5 { get; }
-            public TokenChar.EqualsSign EqualsSign { get; }
-            public MetadataValue Value { get; }
+            public MetadataFormatParameter MetadataFormatParameter { get; }
         }
 
         /// <summary>
@@ -259,6 +223,93 @@
             public TokenChar._r _r_2 { get; }
             public TokenChar._u _u { get; }
             public TokenChar._e _e_2 { get; }
+        }
+    }
+
+    public abstract class MetadataFormatParameter
+    {
+        private MetadataFormatParameter()
+        {
+        }
+
+        /// <summary>
+        /// https://docs.oasis-open.org/odata/odata-json-format/v4.01/odata-json-format-v4.01.html#sec_ControllingtheAmountofControlInforma
+        /// </summary>
+        public sealed class OdataMetadata : MetadataFormatParameter
+        {
+            public OdataMetadata(MetadataValue value)
+            {
+                //// TODO this is supposed to be case-insensitive
+                this.Semicolon = TokenChar.Semicolon.Instance;
+                this._o = TokenChar._o.Instance;
+                this._d = TokenChar._d.Instance;
+                this._a = TokenChar._a.Instance;
+                this._t = TokenChar._t.Instance;
+                this._a_2 = TokenChar._a.Instance;
+                this.Period = TokenChar.Period.Instance;
+                this._m = TokenChar._m.Instance;
+                this._e = TokenChar._e.Instance;
+                this._t_2 = TokenChar._t.Instance;
+                this._a_3 = TokenChar._a.Instance;
+                this._d_2 = TokenChar._d.Instance;
+                this._a_4 = TokenChar._a.Instance;
+                this._t_3 = TokenChar._t.Instance;
+                this._a_5 = TokenChar._a.Instance;
+                this.EqualsSign = TokenChar.EqualsSign.Instance;
+                Value = value;
+            }
+
+            public TokenChar.Semicolon Semicolon { get; }
+            public TokenChar._o _o { get; }
+            public TokenChar._d _d { get; }
+            public TokenChar._a _a { get; }
+            public TokenChar._t _t { get; }
+            public TokenChar._a _a_2 { get; }
+            public TokenChar.Period Period { get; }
+            public TokenChar._m _m { get; }
+            public TokenChar._e _e { get; }
+            public TokenChar._t _t_2 { get; }
+            public TokenChar._a _a_3 { get; }
+            public TokenChar._d _d_2 { get; }
+            public TokenChar._a _a_4 { get; }
+            public TokenChar._t _t_3 { get; }
+            public TokenChar._a _a_5 { get; }
+            public TokenChar.EqualsSign EqualsSign { get; }
+            public MetadataValue Value { get; }
+        }
+
+        /// <summary>
+        /// https://docs.oasis-open.org/odata/odata-json-format/v4.01/odata-json-format-v4.01.html#sec_ControllingtheAmountofControlInforma
+        /// </summary>
+        public sealed class Metadata : MetadataFormatParameter
+        {
+            public Metadata(MetadataValue value)
+            {
+                //// TODO this is supposed to be case-insensitive
+                this.Semicolon = TokenChar.Semicolon.Instance;
+                this._m = TokenChar._m.Instance;
+                this._e = TokenChar._e.Instance;
+                this._t = TokenChar._t.Instance;
+                this._a = TokenChar._a.Instance;
+                this._d = TokenChar._d.Instance;
+                this._a_2 = TokenChar._a.Instance;
+                this._t_2 = TokenChar._t.Instance;
+                this._a_3 = TokenChar._a.Instance;
+                this.EqualsSign = TokenChar.EqualsSign.Instance;
+                Value = value;
+            }
+
+            public TokenChar.Semicolon Semicolon { get; }
+            public TokenChar._m _m { get; }
+            public TokenChar._e _e { get; }
+            public TokenChar._t _t { get; }
+            public TokenChar._a _a { get; }
+            public TokenChar._d _d { get; }
+            public TokenChar._a _a_2 { get; }
+            public TokenChar._t _t_2 { get; }
+            public TokenChar._a _a_3 { get; }
+            public TokenChar.EqualsSign EqualsSign { get; }
+            public MetadataValue Value { get; }
         }
     }
 
