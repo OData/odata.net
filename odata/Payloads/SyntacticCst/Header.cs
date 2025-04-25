@@ -1,4 +1,4 @@
-﻿namespace Payloads
+﻿namespace Payloads.SyntacticCst
 {
     using System.Collections.Generic;
 
