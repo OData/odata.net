@@ -77,6 +77,66 @@
             public Inners.T Character { get; }
         }
 
+        public sealed class U : HeaderCharacter
+        {
+            public U(Inners.U character)
+            {
+                Character = character;
+            }
+
+            public Inners.U Character { get; }
+        }
+
+        public sealed class V : HeaderCharacter
+        {
+            public V(Inners.V character)
+            {
+                Character = character;
+            }
+
+            public Inners.V Character { get; }
+        }
+
+        public sealed class W : HeaderCharacter
+        {
+            public W(Inners.W character)
+            {
+                Character = character;
+            }
+
+            public Inners.W Character { get; }
+        }
+
+        public sealed class X : HeaderCharacter
+        {
+            public X(Inners.X character)
+            {
+                Character = character;
+            }
+
+            public Inners.X Character { get; }
+        }
+
+        public sealed class Y : HeaderCharacter
+        {
+            public Y(Inners.Y character)
+            {
+                Character = character;
+            }
+
+            public Inners.Y Character { get; }
+        }
+
+        public sealed class Z : HeaderCharacter
+        {
+            public Z(Inners.Z character)
+            {
+                Character = character;
+            }
+
+            public Inners.Z Character { get; }
+        }
+
         public sealed class _Ⰳx5Bⲻ60 : HeaderCharacter
         {
             public _Ⰳx5Bⲻ60(Inners._Ⰳx5Bⲻ60 _Ⰳx5Bⲻ60)
