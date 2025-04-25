@@ -2,7 +2,7 @@
 {
     public abstract class O
     {
-        private P()
+        private O()
         {
         }
 
