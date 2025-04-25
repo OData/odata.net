@@ -1,6 +1,6 @@
 ﻿namespace NewStuff.Odata.Headers
 {
-    public abstract class FormatRequestHeader
+    public abstract class FormatRequestHeader //// TODO i think you just made up this name; use a better one when it comes along
     {
         private FormatRequestHeader()
         {
