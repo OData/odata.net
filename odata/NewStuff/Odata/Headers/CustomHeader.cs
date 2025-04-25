@@ -89,7 +89,6 @@
         {
             public Fifth(HeaderCharacter.O o, HeaderCharacter.D d, HeaderCharacter.A a, HeaderCharacter.T t, NotAHeaderCharacter fifthCharacter, IEnumerable<HeaderCharacter> remainingCharacters)
             {
-                //// TODO this should be case insensitive
                 O = o;
                 D = d;
                 A = a;

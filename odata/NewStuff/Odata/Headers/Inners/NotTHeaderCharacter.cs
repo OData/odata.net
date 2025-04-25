@@ -1,39 +1,39 @@
 ﻿namespace NewStuff.Odata.Headers.Inners
 {
-    public sealed class NotTHeaderCharacter
+    public abstract class NotTHeaderCharacter
     {
         private NotTHeaderCharacter()
         {
         }
 
-        public sealed class _Ⰳx32ⲻ40 : NotAHeaderCharacter
+        public sealed class _Ⰳx32ⲻ53 : NotTHeaderCharacter
         {
-            public _Ⰳx32ⲻ40(Inners._Ⰳx32ⲻ40 _Ⰳx32ⲻ40)
+            public _Ⰳx32ⲻ53(Inners._Ⰳx32ⲻ53 _Ⰳx32ⲻ53)
             {
-                Ⰳx32ⲻ40 = _Ⰳx32ⲻ40;
+                Ⰳx32ⲻ53 = _Ⰳx32ⲻ53;
             }
 
-            public Inners._Ⰳx32ⲻ40 Ⰳx32ⲻ40 { get; }
+            public Inners._Ⰳx32ⲻ53 Ⰳx32ⲻ53 { get; }
         }
 
-        public sealed class _Ⰳx42ⲻ60 : NotAHeaderCharacter
+        public sealed class _Ⰳx55ⲻ73 : NotTHeaderCharacter
         {
-            public _Ⰳx42ⲻ60(Inners._Ⰳx42ⲻ60 _Ⰳx42ⲻ60)
+            public _Ⰳx55ⲻ73(Inners._Ⰳx55ⲻ73 _Ⰳx55ⲻ73)
             {
-                Ⰳx42ⲻ60 = _Ⰳx42ⲻ60;
+                Ⰳx55ⲻ73 = _Ⰳx55ⲻ73;
             }
 
-            public Inners._Ⰳx42ⲻ60 Ⰳx42ⲻ60 { get; }
+            public Inners._Ⰳx55ⲻ73 Ⰳx55ⲻ73 { get; }
         }
 
-        public sealed class _Ⰳx62ⲻ7E : NotAHeaderCharacter
+        public sealed class _Ⰳx75ⲻ7E : NotTHeaderCharacter
         {
-            public _Ⰳx62ⲻ7E(Inners._Ⰳx62ⲻ7E _Ⰳx62ⲻ7E)
+            public _Ⰳx75ⲻ7E(Inners._Ⰳx75ⲻ7E _Ⰳx75ⲻ7E)
             {
-                Ⰳx62ⲻ7E = _Ⰳx62ⲻ7E;
+                Ⰳx75ⲻ7E = _Ⰳx75ⲻ7E;
             }
 
-            public Inners._Ⰳx62ⲻ7E Ⰳx62ⲻ7E { get; }
+            public Inners._Ⰳx75ⲻ7E Ⰳx75ⲻ7E { get; }
         }
     }
 }
