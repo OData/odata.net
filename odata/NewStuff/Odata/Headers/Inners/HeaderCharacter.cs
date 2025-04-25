@@ -27,6 +27,26 @@
             public Inners.A Character { get; }
         }
 
+        public sealed class B : HeaderCharacter
+        {
+            public B(Inners.B character)
+            {
+                Character = character;
+            }
+
+            public Inners.B Character { get; }
+        }
+
+        public sealed class C : HeaderCharacter
+        {
+            public C(Inners.C character)
+            {
+                Character = character;
+            }
+
+            public Inners.C Character { get; }
+        }
+
         public sealed class D : HeaderCharacter
         {
             public D(Inners.D character)
