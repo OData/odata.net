@@ -9,9 +9,12 @@
 
         public sealed class _Ⰳx32ⲻ40 : HeaderCharacter
         {
-            private _Ⰳx32ⲻ40()
+            public _Ⰳx32ⲻ40(Inners._Ⰳx32ⲻ40 _Ⰳx32ⲻ40)
             {
+                Ⰳx32ⲻ40 = _Ⰳx32ⲻ40;
             }
+
+            public Inners._Ⰳx32ⲻ40 Ⰳx32ⲻ40 { get; }
         }
 
         public sealed class A : HeaderCharacter
@@ -48,16 +51,22 @@
 
         public sealed class _Ⰳx5Bⲻ60 : HeaderCharacter
         {
-            private _Ⰳx5Bⲻ60()
+            public _Ⰳx5Bⲻ60(Inners._Ⰳx5Bⲻ60 _Ⰳx5Bⲻ60)
             {
+                Ⰳx5Bⲻ60 = _Ⰳx5Bⲻ60;
             }
+
+            public Inners._Ⰳx5Bⲻ60 Ⰳx5Bⲻ60 { get; }
         }
 
         public sealed class _Ⰳx7Bⲻ7E : HeaderCharacter
         {
-            private _Ⰳx7Bⲻ7E()
+            public _Ⰳx7Bⲻ7E(Inners._Ⰳx7Bⲻ7E _Ⰳx7Bⲻ7E)
             {
+                Ⰳx7Bⲻ7E = _Ⰳx7Bⲻ7E;
             }
+
+            public Inners._Ⰳx7Bⲻ7E Ⰳx7Bⲻ7E { get; }
         }
     }
 }
