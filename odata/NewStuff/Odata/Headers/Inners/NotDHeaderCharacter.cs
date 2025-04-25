@@ -26,14 +26,14 @@
             public Inners._Ⰳx46ⲻ63 Ⰳx46ⲻ63 { get; }
         }
 
-        public sealed class _Ⰳx70ⲻ7E : NotDHeaderCharacter
+        public sealed class _Ⰳx65ⲻ7E : NotDHeaderCharacter
         {
-            public _Ⰳx70ⲻ7E(Inners._Ⰳx70ⲻ7E _Ⰳx70ⲻ7E)
+            public _Ⰳx65ⲻ7E(Inners._Ⰳx65ⲻ7E _Ⰳx70ⲻ7E)
             {
-                Ⰳx70ⲻ7E = _Ⰳx70ⲻ7E;
+                Ⰳx65ⲻ7E = _Ⰳx65ⲻ7E;
             }
 
-            public Inners._Ⰳx70ⲻ7E Ⰳx70ⲻ7E { get; }
+            public Inners._Ⰳx65ⲻ7E Ⰳx65ⲻ7E { get; }
         }
     }
 }
