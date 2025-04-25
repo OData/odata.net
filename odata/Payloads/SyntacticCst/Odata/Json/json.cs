@@ -1,6 +1,6 @@
-﻿namespace Payloads.SyntacticCst.Json
+﻿namespace Payloads.SyntacticCst.Odata.Json
 {
-    using Payloads;
+    using Payloads.SyntacticCst.Odata;
     using System.Collections.Generic;
 
     /// <summary>
@@ -12,22 +12,22 @@
     {
         public FormatRequestHeader(IEnumerable<FormatParameter> parameters)
         {
-            this._a = TokenChar._a.Instance;
-            this._p = TokenChar._p.Instance;
-            this._p_2 = TokenChar._p.Instance;
-            this._l = TokenChar._l.Instance;
-            this._i = TokenChar._i.Instance;
-            this._c = TokenChar._c.Instance;
-            this._a_2 = TokenChar._a.Instance;
-            this._t = TokenChar._t.Instance;
-            this._i_2 = TokenChar._i.Instance;
-            this._o = TokenChar._o.Instance;
-            this._n = TokenChar._n.Instance;
-            this.Slash = TokenChar.ForwardSlash.Instance;
-            this._j = TokenChar._j.Instance;
-            this._s = TokenChar._s.Instance;
-            this._o_2 = TokenChar._o.Instance;
-            this._n_2 = TokenChar._n.Instance;
+            _a = TokenChar._a.Instance;
+            _p = TokenChar._p.Instance;
+            _p_2 = TokenChar._p.Instance;
+            _l = TokenChar._l.Instance;
+            _i = TokenChar._i.Instance;
+            _c = TokenChar._c.Instance;
+            _a_2 = TokenChar._a.Instance;
+            _t = TokenChar._t.Instance;
+            _i_2 = TokenChar._i.Instance;
+            _o = TokenChar._o.Instance;
+            _n = TokenChar._n.Instance;
+            Slash = TokenChar.ForwardSlash.Instance;
+            _j = TokenChar._j.Instance;
+            _s = TokenChar._s.Instance;
+            _o_2 = TokenChar._o.Instance;
+            _n_2 = TokenChar._n.Instance;
             Parameters = parameters;
         }
 
@@ -69,29 +69,29 @@
             public ExponentialDecimals(Boolean value)
             {
                 //// TODO this is supposed to be case-insensitive
-                this.Semicolon = TokenChar.Semicolon.Instance;
-                this.E = TokenChar.E.Instance;
-                this._x = TokenChar._x.Instance;
-                this._p = TokenChar._p.Instance;
-                this._o = TokenChar._o.Instance;
-                this._n = TokenChar._n.Instance;
-                this._e = TokenChar._e.Instance;
-                this._n_2 = TokenChar._n.Instance;
-                this._t = TokenChar._t.Instance;
-                this._i = TokenChar._i.Instance;
-                this._a = TokenChar._a.Instance;
-                this._l = TokenChar._l.Instance;
-                this._s = TokenChar._s.Instance;
-                this.D = TokenChar.D.Instance;
-                this._e_2 = TokenChar._e.Instance;
-                this._c = TokenChar._c.Instance;
-                this._i_2 = TokenChar._i.Instance;
-                this._m = TokenChar._m.Instance;
-                this._a_2 = TokenChar._a.Instance;
-                this._l_2 = TokenChar._l.Instance;
-                this._s = TokenChar._s.Instance;
-                this.EqualsSign = TokenChar.EqualsSign.Instance;
-                this.Value = value;
+                Semicolon = TokenChar.Semicolon.Instance;
+                E = TokenChar.E.Instance;
+                _x = TokenChar._x.Instance;
+                _p = TokenChar._p.Instance;
+                _o = TokenChar._o.Instance;
+                _n = TokenChar._n.Instance;
+                _e = TokenChar._e.Instance;
+                _n_2 = TokenChar._n.Instance;
+                _t = TokenChar._t.Instance;
+                _i = TokenChar._i.Instance;
+                _a = TokenChar._a.Instance;
+                _l = TokenChar._l.Instance;
+                _s = TokenChar._s.Instance;
+                D = TokenChar.D.Instance;
+                _e_2 = TokenChar._e.Instance;
+                _c = TokenChar._c.Instance;
+                _i_2 = TokenChar._i.Instance;
+                _m = TokenChar._m.Instance;
+                _a_2 = TokenChar._a.Instance;
+                _l_2 = TokenChar._l.Instance;
+                _s = TokenChar._s.Instance;
+                EqualsSign = TokenChar.EqualsSign.Instance;
+                Value = value;
             }
 
             public TokenChar.Semicolon Semicolon { get; }
@@ -126,26 +126,26 @@
             public IEEE754Compatible(Boolean value)
             {
                 //// TODO this is supposed to be case-insensitive
-                this.Semicolon = TokenChar.Semicolon.Instance;
-                this.I = TokenChar.I.Instance;
-                this.E = TokenChar.E.Instance;
-                this.E_2 = TokenChar.E.Instance;
-                this.E_3 = TokenChar.E.Instance;
-                this._7 = TokenChar._7.Instance;
-                this._5 = TokenChar._5.Instance;
-                this._4 = TokenChar._4.Instance;
-                this.C = TokenChar.C.Instance;
-                this._o = TokenChar._o.Instance;
-                this._m = TokenChar._m.Instance;
-                this._p = TokenChar._p.Instance;
-                this._a = TokenChar._a.Instance;
-                this._t = TokenChar._t.Instance;
-                this._i = TokenChar._i.Instance;
-                this._b = TokenChar._b.Instance;
-                this._l = TokenChar._l.Instance;
-                this._e = TokenChar._e.Instance;
-                this.EqualsSign = TokenChar.EqualsSign.Instance;
-                this.Value = value;
+                Semicolon = TokenChar.Semicolon.Instance;
+                I = TokenChar.I.Instance;
+                E = TokenChar.E.Instance;
+                E_2 = TokenChar.E.Instance;
+                E_3 = TokenChar.E.Instance;
+                _7 = TokenChar._7.Instance;
+                _5 = TokenChar._5.Instance;
+                _4 = TokenChar._4.Instance;
+                C = TokenChar.C.Instance;
+                _o = TokenChar._o.Instance;
+                _m = TokenChar._m.Instance;
+                _p = TokenChar._p.Instance;
+                _a = TokenChar._a.Instance;
+                _t = TokenChar._t.Instance;
+                _i = TokenChar._i.Instance;
+                _b = TokenChar._b.Instance;
+                _l = TokenChar._l.Instance;
+                _e = TokenChar._e.Instance;
+                EqualsSign = TokenChar.EqualsSign.Instance;
+                Value = value;
             }
 
             public TokenChar.Semicolon Semicolon { get; }
@@ -188,21 +188,21 @@
             private Streaming()
             {
                 //// TODO this is supposed to be case-insensitive
-                this.Semicolon = TokenChar.Semicolon.Instance;
-                this._s = TokenChar._s.Instance;
-                this._t = TokenChar._t.Instance;
-                this._r = TokenChar._r.Instance;
-                this._e = TokenChar._e.Instance;
-                this._a = TokenChar._a.Instance;
-                this._m = TokenChar._m.Instance;
-                this._i = TokenChar._i.Instance;
-                this._n = TokenChar._n.Instance;
-                this._g = TokenChar._g.Instance;
-                this.EqualsSign = TokenChar.EqualsSign.Instance;
-                this._t_2 = TokenChar._t.Instance;
-                this._r_2 = TokenChar._r.Instance;
-                this._u = TokenChar._u.Instance;
-                this._e_2 = TokenChar._e.Instance;
+                Semicolon = TokenChar.Semicolon.Instance;
+                _s = TokenChar._s.Instance;
+                _t = TokenChar._t.Instance;
+                _r = TokenChar._r.Instance;
+                _e = TokenChar._e.Instance;
+                _a = TokenChar._a.Instance;
+                _m = TokenChar._m.Instance;
+                _i = TokenChar._i.Instance;
+                _n = TokenChar._n.Instance;
+                _g = TokenChar._g.Instance;
+                EqualsSign = TokenChar.EqualsSign.Instance;
+                _t_2 = TokenChar._t.Instance;
+                _r_2 = TokenChar._r.Instance;
+                _u = TokenChar._u.Instance;
+                _e_2 = TokenChar._e.Instance;
             }
 
             public static Streaming Instance { get; } = new Streaming();
@@ -240,22 +240,22 @@
             public OdataMetadata(MetadataValue value)
             {
                 //// TODO this is supposed to be case-insensitive
-                this.Semicolon = TokenChar.Semicolon.Instance;
-                this._o = TokenChar._o.Instance;
-                this._d = TokenChar._d.Instance;
-                this._a = TokenChar._a.Instance;
-                this._t = TokenChar._t.Instance;
-                this._a_2 = TokenChar._a.Instance;
-                this.Period = TokenChar.Period.Instance;
-                this._m = TokenChar._m.Instance;
-                this._e = TokenChar._e.Instance;
-                this._t_2 = TokenChar._t.Instance;
-                this._a_3 = TokenChar._a.Instance;
-                this._d_2 = TokenChar._d.Instance;
-                this._a_4 = TokenChar._a.Instance;
-                this._t_3 = TokenChar._t.Instance;
-                this._a_5 = TokenChar._a.Instance;
-                this.EqualsSign = TokenChar.EqualsSign.Instance;
+                Semicolon = TokenChar.Semicolon.Instance;
+                _o = TokenChar._o.Instance;
+                _d = TokenChar._d.Instance;
+                _a = TokenChar._a.Instance;
+                _t = TokenChar._t.Instance;
+                _a_2 = TokenChar._a.Instance;
+                Period = TokenChar.Period.Instance;
+                _m = TokenChar._m.Instance;
+                _e = TokenChar._e.Instance;
+                _t_2 = TokenChar._t.Instance;
+                _a_3 = TokenChar._a.Instance;
+                _d_2 = TokenChar._d.Instance;
+                _a_4 = TokenChar._a.Instance;
+                _t_3 = TokenChar._t.Instance;
+                _a_5 = TokenChar._a.Instance;
+                EqualsSign = TokenChar.EqualsSign.Instance;
                 Value = value;
             }
 
@@ -286,16 +286,16 @@
             public Metadata(MetadataValue value)
             {
                 //// TODO this is supposed to be case-insensitive
-                this.Semicolon = TokenChar.Semicolon.Instance;
-                this._m = TokenChar._m.Instance;
-                this._e = TokenChar._e.Instance;
-                this._t = TokenChar._t.Instance;
-                this._a = TokenChar._a.Instance;
-                this._d = TokenChar._d.Instance;
-                this._a_2 = TokenChar._a.Instance;
-                this._t_2 = TokenChar._t.Instance;
-                this._a_3 = TokenChar._a.Instance;
-                this.EqualsSign = TokenChar.EqualsSign.Instance;
+                Semicolon = TokenChar.Semicolon.Instance;
+                _m = TokenChar._m.Instance;
+                _e = TokenChar._e.Instance;
+                _t = TokenChar._t.Instance;
+                _a = TokenChar._a.Instance;
+                _d = TokenChar._d.Instance;
+                _a_2 = TokenChar._a.Instance;
+                _t_2 = TokenChar._t.Instance;
+                _a_3 = TokenChar._a.Instance;
+                EqualsSign = TokenChar.EqualsSign.Instance;
                 Value = value;
             }
 
@@ -330,13 +330,13 @@
             private Minimal()
             {
                 //// TODO this is supposed to be case-insensitive
-                this._m = TokenChar._m.Instance;
-                this._i = TokenChar._i.Instance;
-                this._n = TokenChar._n.Instance;
-                this._i_2 = TokenChar._i.Instance;
-                this._m_2 = TokenChar._m.Instance;
-                this._a = TokenChar._a.Instance;
-                this._l = TokenChar._l.Instance;
+                _m = TokenChar._m.Instance;
+                _i = TokenChar._i.Instance;
+                _n = TokenChar._n.Instance;
+                _i_2 = TokenChar._i.Instance;
+                _m_2 = TokenChar._m.Instance;
+                _a = TokenChar._a.Instance;
+                _l = TokenChar._l.Instance;
             }
 
             public static Minimal Instance { get; } = new Minimal();
@@ -358,10 +358,10 @@
             private Full()
             {
                 //// TODO this is supposed to be case-insensitive
-                this._f = TokenChar._f.Instance;
-                this._u = TokenChar._u.Instance;
-                this._l = TokenChar._l.Instance;
-                this._l_2 = TokenChar._l.Instance;
+                _f = TokenChar._f.Instance;
+                _u = TokenChar._u.Instance;
+                _l = TokenChar._l.Instance;
+                _l_2 = TokenChar._l.Instance;
             }
 
             public static Full Instance { get; } = new Full();
@@ -380,10 +380,10 @@
             private None()
             {
                 //// TODO this is supposed to be case-insensitive
-                this._n = TokenChar._n.Instance;
-                this._o = TokenChar._o.Instance;
-                this._n_2 = TokenChar._n.Instance;
-                this._e = TokenChar._e.Instance;
+                _n = TokenChar._n.Instance;
+                _o = TokenChar._o.Instance;
+                _n_2 = TokenChar._n.Instance;
+                _e = TokenChar._e.Instance;
             }
 
             public TokenChar._n _n { get; }
@@ -408,10 +408,10 @@
             private True()
             {
                 //// TODO this is supposed to be case-insensitive
-                this._t = TokenChar._t.Instance;
-                this._r = TokenChar._r.Instance;
-                this._u = TokenChar._u.Instance;
-                this._e = TokenChar._e.Instance;
+                _t = TokenChar._t.Instance;
+                _r = TokenChar._r.Instance;
+                _u = TokenChar._u.Instance;
+                _e = TokenChar._e.Instance;
             }
 
             public static True Instance { get; } = new True();
@@ -427,11 +427,11 @@
             private False()
             {
                 //// TODO this is supposed to be case-insensitive
-                this._f = TokenChar._f.Instance;
-                this._a = TokenChar._a.Instance;
-                this._l = TokenChar._l.Instance;
-                this._s = TokenChar._s.Instance;
-                this._e = TokenChar._e.Instance;
+                _f = TokenChar._f.Instance;
+                _a = TokenChar._a.Instance;
+                _l = TokenChar._l.Instance;
+                _s = TokenChar._s.Instance;
+                _e = TokenChar._e.Instance;
             }
 
             public TokenChar._f _f { get; }

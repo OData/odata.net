@@ -1,4 +1,4 @@
-﻿namespace Payloads.SyntacticCst
+﻿namespace Payloads.SyntacticCst.Odata
 {
     using System.Collections.Generic;
 
