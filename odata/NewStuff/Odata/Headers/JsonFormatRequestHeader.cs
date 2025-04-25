@@ -1,6 +1,4 @@
-﻿using NewStuff.Odata.SyntacticCst.Json;
-
-namespace NewStuff.Odata.Headers
+﻿namespace NewStuff.Odata.Headers
 {
     using NewStuff.Http.Inners;
     using System.Collections.Generic;
