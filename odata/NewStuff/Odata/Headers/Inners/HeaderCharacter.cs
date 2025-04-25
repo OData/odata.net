@@ -57,6 +57,106 @@
             public Inners.D Character { get; }
         }
 
+        public sealed class E : HeaderCharacter
+        {
+            public E(Inners.E character)
+            {
+                Character = character;
+            }
+
+            public Inners.E Character { get; }
+        }
+
+        public sealed class F : HeaderCharacter
+        {
+            public F(Inners.F character)
+            {
+                Character = character;
+            }
+
+            public Inners.F Character { get; }
+        }
+
+        public sealed class G : HeaderCharacter
+        {
+            public G(Inners.G character)
+            {
+                Character = character;
+            }
+
+            public Inners.G Character { get; }
+        }
+
+        public sealed class H : HeaderCharacter
+        {
+            public H(Inners.H character)
+            {
+                Character = character;
+            }
+
+            public Inners.H Character { get; }
+        }
+
+        public sealed class I : HeaderCharacter
+        {
+            public I(Inners.I character)
+            {
+                Character = character;
+            }
+
+            public Inners.I Character { get; }
+        }
+
+        public sealed class J : HeaderCharacter
+        {
+            public J(Inners.J character)
+            {
+                Character = character;
+            }
+
+            public Inners.J Character { get; }
+        }
+
+        public sealed class K : HeaderCharacter
+        {
+            public K(Inners.K character)
+            {
+                Character = character;
+            }
+
+            public Inners.K Character { get; }
+        }
+
+        public sealed class L : HeaderCharacter
+        {
+            public L(Inners.L character)
+            {
+                Character = character;
+            }
+
+            public Inners.L Character { get; }
+        }
+
+        public sealed class M : HeaderCharacter
+        {
+            public M(Inners.M character)
+            {
+                Character = character;
+            }
+
+            public Inners.M Character { get; }
+        }
+
+        public sealed class N : HeaderCharacter
+        {
+            public N(Inners.N character)
+            {
+                Character = character;
+            }
+
+            public Inners.N Character { get; }
+        }
+
         public sealed class O : HeaderCharacter
         {
             public O(Inners.O character)
