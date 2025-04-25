@@ -1,12 +1,12 @@
 ﻿namespace NewStuff.Odata.Headers.Inners
 {
-    public abstract class A
+    public abstract class V
     {
-        private A()
+        private V()
         {
         }
 
-        public sealed class Upper : A
+        public sealed class Upper : V
         {
             private Upper()
             {
@@ -15,7 +15,7 @@
             public static Upper Instance { get; } = new Upper();
         }
 
-        public sealed class Lower : A
+        public sealed class Lower : V
         {
             private Lower()
             {
