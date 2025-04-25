@@ -1,5 +1,6 @@
 ﻿namespace Payloads.SyntacticCst.Json
 {
+    using Payloads;
     using System.Collections.Generic;
 
     /// <summary>
