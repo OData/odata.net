@@ -1,4 +1,4 @@
-﻿namespace NewStuff.Odata.SyntacticCst
+﻿namespace NewStuff.Odata.Headers
 {
     public abstract class FormatRequestHeader
     {
@@ -11,12 +11,12 @@
         /// </summary>
         public sealed class Json : FormatRequestHeader
         {
-            public Json(SyntacticCst.Json.FormatRequestHeader formatRequestHeader)
+            public Json(JsonFormatRequestHeader formatRequestHeader)
             {
                 FormatRequestHeader = formatRequestHeader;
             }
 
-            public SyntacticCst.Json.FormatRequestHeader FormatRequestHeader { get; }
+            public JsonFormatRequestHeader FormatRequestHeader { get; }
         }
 
         //// TODO i don't think other formats are allowed by the standard at the moment; you should figure out how custom formats get supported and add that derived type, though

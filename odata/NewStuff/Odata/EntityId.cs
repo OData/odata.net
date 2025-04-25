@@ -1,4 +1,4 @@
-﻿namespace NewStuff.Odata.SyntacticCst
+﻿namespace NewStuff.Odata
 {
     using NewStuff.Iri;
     using NewStuff.Uri;

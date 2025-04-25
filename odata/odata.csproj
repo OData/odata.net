@@ -13,7 +13,6 @@
 
   <ItemGroup>
     <Folder Include="NewStuff\Odata\SyntacticCst\Json\Inners\" />
-    <Folder Include="NewStuff\Odata\SyntacticCst\Odata\" />
     <Folder Include="Root\OdataResourcePath\SyntacticCstNodes\" />
     <Folder Include="__GeneratedPartialV1\Deferred\" />
     <Folder Include="__Generated\CstNodes\Rules\" />
