@@ -7,6 +7,13 @@
             //// TODO implement all of the DU members
         }
 
+        public sealed class _Ⰳx32ⲻ40 : HeaderCharacter
+        {
+            private _Ⰳx32ⲻ40()
+            {
+            }
+        }
+
         public sealed class A : HeaderCharacter
         {
             private A()
@@ -36,6 +43,20 @@
             private T()
             {
                 //// TODO you could make this a discriminated union so that you can have case insensitivity
+            }
+        }
+
+        public sealed class _Ⰳx5Bⲻ60 : HeaderCharacter
+        {
+            private _Ⰳx5Bⲻ60()
+            {
+            }
+        }
+
+        public sealed class _Ⰳx7Bⲻ7E : HeaderCharacter
+        {
+            private _Ⰳx7Bⲻ7E()
+            {
             }
         }
     }
