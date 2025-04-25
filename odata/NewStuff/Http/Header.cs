@@ -1,4 +1,4 @@
-﻿namespace Payloads.Http
+﻿namespace NewStuff.Http
 {
     using System.Collections.Generic;
 

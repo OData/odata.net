@@ -1,7 +1,7 @@
-﻿namespace Payloads.Odata.SyntacticCst.Odata
+﻿namespace NewStuff.Odata.SyntacticCst
 {
-    using Payloads.Iri;
-    using Payloads.Uri;
+    using NewStuff.Iri;
+    using NewStuff.Uri;
 
     public sealed class EntityId
     {

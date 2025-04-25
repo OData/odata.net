@@ -1,6 +1,6 @@
-﻿namespace Payloads.Odata.SyntacticCst.Odata.Json
+﻿namespace NewStuff.Odata.SyntacticCst.Json
 {
-    using Payloads.Http;
+    using NewStuff.Http;
     using System.Collections.Generic;
 
     /// <summary>
