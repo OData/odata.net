@@ -247,6 +247,15 @@
             public static _f Instance { get; } = new _f();
         }
 
+        public sealed class _g : TokenChar
+        {
+            private _g()
+            {
+            }
+
+            public static _g Instance { get; } = new _g();
+        }
+
         public sealed class _i : TokenChar
         {
             private _i()

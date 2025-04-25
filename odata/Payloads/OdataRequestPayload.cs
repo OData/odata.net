@@ -261,12 +261,49 @@
                 public MetadataValue Value { get; }
             }
 
+            /// <summary>
+            /// https://docs.oasis-open.org/odata/odata-json-format/v4.01/odata-json-format-v4.01.html#sec_PayloadOrderingConstraints
+            /// </summary>
             public sealed class Streaming : FormatParameter
             {
                 private Streaming()
                 {
                     //// TODO this is supposed to be case-insensitive
+                    this.Semicolon = TokenChar.Semicolon.Instance;
+                    this._s = TokenChar._s.Instance;
+                    this._t = TokenChar._t.Instance;
+                    this._r = TokenChar._r.Instance;
+                    this._e = TokenChar._e.Instance;
+                    this._a = TokenChar._a.Instance;
+                    this._m = TokenChar._m.Instance;
+                    this._i = TokenChar._i.Instance;
+                    this._n = TokenChar._n.Instance;
+                    this._g = TokenChar._g.Instance;
+                    this.EqualsSign = TokenChar.EqualsSign.Instance;
+                    this._t_2 = TokenChar._t.Instance;
+                    this._r_2 = TokenChar._r.Instance;
+                    this._u = TokenChar._u.Instance;
+                    this._e_2 = TokenChar._e.Instance;
                 }
+
+                public static Streaming Instance { get; } = new Streaming();
+
+                public TokenChar.Semicolon Semicolon { get; }
+                public TokenChar._s _s { get; }
+                public TokenChar._t _t { get; }
+                public TokenChar._r _r { get; }
+                public TokenChar._e _e { get; }
+                public TokenChar._a _a { get; }
+                public TokenChar._m _m { get; }
+                public TokenChar._i _i { get; }
+                public TokenChar._n _n { get; }
+                public TokenChar._g _g { get; }
+                public TokenChar.EqualsSign EqualsSign { get; }
+                // it's a bit strange, but the standard doesn't seem to indicate that `streaming=false` is an allowed parameter
+                public TokenChar._t _t_2 { get; }
+                public TokenChar._r _r_2 { get; }
+                public TokenChar._u _u { get; }
+                public TokenChar._e _e_2 { get; }
             }
         }
 
@@ -307,6 +344,9 @@
                 public TokenChar._l _l { get; }
             }
 
+            /// <summary>
+            /// https://docs.oasis-open.org/odata/odata-json-format/v4.01/odata-json-format-v4.01.html#sec_metadatafullodatametadatafull
+            /// </summary>
             public sealed class Full : MetadataValue
             {
                 private Full()
@@ -326,6 +366,9 @@
                 public TokenChar._l _l_2 { get; }
             }
 
+            /// <summary>
+            /// https://docs.oasis-open.org/odata/odata-json-format/v4.01/odata-json-format-v4.01.html#sec_metadatanoneodatametadatanone
+            /// </summary>
             public sealed class None : MetadataValue
             {
                 private None()
