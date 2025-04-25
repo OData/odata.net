@@ -1,6 +1,6 @@
 ﻿namespace NewStuff.Odata.SyntacticCst.Json
 {
-    using NewStuff.Http;
+    using NewStuff.Http.Inners;
     using System.Collections.Generic;
 
     /// <summary>
