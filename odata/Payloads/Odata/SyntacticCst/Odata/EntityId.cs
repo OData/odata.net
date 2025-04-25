@@ -1,5 +1,8 @@
 ﻿namespace Payloads.Odata.SyntacticCst.Odata
 {
+    using Payloads.Iri;
+    using Payloads.Uri;
+
     public sealed class EntityId
     {
         private EntityId(
@@ -15,13 +18,6 @@
         {
             //// TODO this should be its own public extension method
             throw new System.Exception("TODO");
-        }
-    }
-
-    public sealed class Iri //// TODO i think this is based on another rfc and should go in it's own folder
-    {
-        private Iri()
-        {
         }
     }
 }
