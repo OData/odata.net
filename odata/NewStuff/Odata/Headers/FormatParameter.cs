@@ -1,7 +1,6 @@
 ﻿namespace NewStuff.Odata.Headers
 {
     using NewStuff.Http.Inners;
-    using NewStuff.Odata.SyntacticCst.Json;
 
     /// <summary>
     /// https://docs.oasis-open.org/odata/odata-json-format/v4.01/odata-json-format-v4.01.html#sec_RequestingtheJSONFormat

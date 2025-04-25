@@ -1,7 +1,6 @@
 ﻿namespace NewStuff.Odata.Headers
 {
     using NewStuff.Http.Inners;
-    using NewStuff.Odata.SyntacticCst.Json;
 
     public abstract class MetadataFormatParameter
     {
