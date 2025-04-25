@@ -18,14 +18,12 @@
         {
             public First(NotOHeaderCharacter firstCharacter, IEnumerable<HeaderCharacter> remainingCharacters)
             {
-                //// TODO this should be case insensitive
                 FirstCharacter = firstCharacter;
                 RemainingCharacters = remainingCharacters;
             }
 
             public NotOHeaderCharacter FirstCharacter { get; }
 
-            //// TODO you are here; implement dependent types
             public IEnumerable<HeaderCharacter> RemainingCharacters { get; }
         }
 
@@ -33,7 +31,6 @@
         {
             public Second(HeaderCharacter.O o, NotDHeaderCharacter secondCharacter, IEnumerable<HeaderCharacter> remainingCharacters)
             {
-                //// TODO this should be case insensitive
                 O = o;
                 SecondCharacter = secondCharacter;
                 RemainingCharacters = remainingCharacters;
@@ -61,7 +58,7 @@
 
             public HeaderCharacter.D D { get; }
 
-            public NotAHeaderCharacter ThirdCharacter { get; }
+            public NotAHeaderCharacter ThirdCharacter { get; } //// TODO you are here
 
             public IEnumerable<HeaderCharacter> RemainingCharacters { get; }
         }
