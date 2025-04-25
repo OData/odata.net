@@ -47,7 +47,6 @@
         {
             public Third(HeaderCharacter.O o, HeaderCharacter.D d, NotAHeaderCharacter thirdCharacter, IEnumerable<HeaderCharacter> remainingCharacters)
             {
-                //// TODO this should be case insensitive
                 O = o;
                 D = d;
                 ThirdCharacter = thirdCharacter;
@@ -58,7 +57,7 @@
 
             public HeaderCharacter.D D { get; }
 
-            public NotAHeaderCharacter ThirdCharacter { get; } //// TODO you are here
+            public NotAHeaderCharacter ThirdCharacter { get; }
 
             public IEnumerable<HeaderCharacter> RemainingCharacters { get; }
         }
@@ -81,7 +80,7 @@
 
             public HeaderCharacter.A A { get; }
 
-            public NotTHeaderCharacter FourthCharacter { get; }
+            public NotTHeaderCharacter FourthCharacter { get; } //// TODO you are here
 
             public IEnumerable<HeaderCharacter> RemainingCharacters { get; }
         }
