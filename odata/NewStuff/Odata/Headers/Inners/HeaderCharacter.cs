@@ -29,26 +29,32 @@
 
         public sealed class D : HeaderCharacter
         {
-            private D()
+            public D(Inners.D character)
             {
-                //// TODO you could make this a discriminated union so that you can have case insensitivity
+                Character = character;
             }
+
+            public Inners.D Character { get; }
         }
 
         public sealed class O : HeaderCharacter
         {
-            private O()
+            public O(Inners.O character)
             {
-                //// TODO you could make this a discriminated union so that you can have case insensitivity
+                Character = character;
             }
+
+            public Inners.O Character { get; }
         }
 
         public sealed class T : HeaderCharacter
         {
-            private T()
+            public T(Inners.T character)
             {
-                //// TODO you could make this a discriminated union so that you can have case insensitivity
+                Character = character;
             }
+
+            public Inners.T Character { get; }
         }
 
         public sealed class _Ⰳx5Bⲻ60 : HeaderCharacter
