@@ -1,4 +1,4 @@
-﻿namespace NewStuff.Odata.Headers
+﻿namespace NewStuff.Odata.Headers.Json
 {
     using NewStuff.Http.Inners;
 

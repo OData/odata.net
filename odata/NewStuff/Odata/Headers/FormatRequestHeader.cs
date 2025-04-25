@@ -11,12 +11,12 @@
         /// </summary>
         public sealed class Json : FormatRequestHeader
         {
-            public Json(JsonFormatRequestHeader formatRequestHeader)
+            public Json(NewStuff.Odata.Headers.Json.FormatRequestHeader formatRequestHeader)
             {
                 FormatRequestHeader = formatRequestHeader;
             }
 
-            public JsonFormatRequestHeader FormatRequestHeader { get; }
+            public NewStuff.Odata.Headers.Json.FormatRequestHeader FormatRequestHeader { get; }
         }
 
         //// TODO i don't think other formats are allowed by the standard at the moment; you should figure out how custom formats get supported and add that derived type, though

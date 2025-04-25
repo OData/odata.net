@@ -1,4 +1,4 @@
-﻿namespace NewStuff.Odata.Headers
+﻿namespace NewStuff.Odata.Headers.Json
 {
     using NewStuff.Http.Inners;
     using System.Collections.Generic;
@@ -8,9 +8,9 @@
     /// 
     /// based off of https://www.rfc-editor.org/rfc/rfc2616#section-14.1
     /// </summary>
-    public sealed class JsonFormatRequestHeader
+    public sealed class FormatRequestHeader
     {
-        public JsonFormatRequestHeader(IEnumerable<FormatParameter> parameters)
+        public FormatRequestHeader(IEnumerable<FormatParameter> parameters)
         {
             _a = TokenChar._a.Instance;
             _p = TokenChar._p.Instance;
