@@ -1,6 +1,7 @@
 ﻿namespace Payloads.Convention
 {
-    //// TODO i'm trying to define "syntactic" CSTs; it seems like there will need to be a subsequent step to translate from "syntactic" CST to "semantic" CST (to do things like validate the `metadata` format parameters against the `odata-version` header, for example); then, there can be an optional step to convert from a "semantic" CST to a "convention payload" (meaning, a CLR type that doesn't care about ordering or syntax or anything, just about the *meaning* of the values)
+    //// TODO it seems like there will need to be a subsequent step to translate from "syntactic" CST to "semantic" CST (to do things like validate the `metadata` format parameters against the `odata-version` header, for example); then, there can be an optional step to convert from a "semantic" CST to a "convention payload" (meaning, a CLR type that doesn't care about ordering or syntax or anything, just about the *meaning* of the values)
+    //// TODO i'm currently trying to define "syntactic" CSTs
 
     public abstract class OdataRequestPayload
     {
