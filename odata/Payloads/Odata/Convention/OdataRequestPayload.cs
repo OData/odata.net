@@ -1,8 +1,9 @@
-﻿using Payloads.SyntacticCst.Odata;
+﻿using Payloads.Odata.SyntacticCst.Odata;
 
-namespace Payloads.Convention
+namespace Payloads.Odata.Convention
 {
     //// TODO it seems like there will need to be a subsequent step to translate from "syntactic" CST to "semantic" CST (to do things like validate the `metadata` format parameters against the `odata-version` header, for example); then, there can be an optional step to convert from a "semantic" CST to a "convention payload" (meaning, a CLR type that doesn't care about ordering or syntax or anything, just about the *meaning* of the values)
+    //// TODO going this right, it might even make sense to generate an http CST and convert that to an odata "syntactic" cst
     //// TODO i'm currently trying to define "syntactic" CSTs
 
     public abstract class OdataRequestPayload
