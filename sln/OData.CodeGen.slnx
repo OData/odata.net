@@ -1,0 +1,41 @@
+<Solution>
+  <Configurations>
+    <BuildType Name="Cover" />
+    <BuildType Name="Debug" />
+    <BuildType Name="Release" />
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Folder Name="/libraries/">
+    <Project Path="../src/Microsoft.OData.Client/Microsoft.OData.Client.csproj">
+      <BuildType Solution="Cover|*" Project="Release" />
+      <Platform Solution="*|x64" Project="x64" />
+      <Platform Solution="*|x86" Project="x86" />
+      <Build Solution="Release|Any CPU" Project="false" />
+    </Project>
+    <Project Path="../src/Microsoft.OData.Core/Microsoft.OData.Core.csproj">
+      <BuildType Solution="Cover|*" Project="Release" />
+      <Platform Solution="*|x64" Project="x64" />
+      <Platform Solution="*|x86" Project="x86" />
+      <Build Solution="Release|Any CPU" Project="false" />
+    </Project>
+    <Project Path="../src/Microsoft.OData.Edm/Microsoft.OData.Edm.csproj">
+      <BuildType Solution="Cover|*" Project="Release" />
+      <Platform Solution="*|x64" Project="x64" />
+      <Platform Solution="*|x86" Project="x86" />
+      <Build Solution="Release|Any CPU" Project="false" />
+    </Project>
+    <Project Path="../src/Microsoft.Spatial/Microsoft.Spatial.csproj">
+      <BuildType Solution="Cover|*" Project="Release" />
+      <Platform Solution="*|x64" Project="x64" />
+      <Platform Solution="*|x86" Project="x86" />
+      <Build Solution="Release|Any CPU" Project="false" />
+    </Project>
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="../src/CodeGen/ODataT4ItemTemplate/ODataT4ItemTemplate.csproj">
+      <BuildType Solution="Cover|*" Project="Release" />
+    </Project>
+  </Folder>
+</Solution>

@@ -1,0 +1,22 @@
+<Solution>
+  <Configurations>
+    <BuildType Name="Release" />
+  </Configurations>
+  <Folder Name="/src/">
+    <Project Path="../src/Microsoft.OData.Core/Microsoft.OData.Core.csproj" />
+    <Project Path="../src/Microsoft.OData.Edm/Microsoft.OData.Edm.csproj" />
+    <Project Path="../src/Microsoft.Spatial/Microsoft.Spatial.csproj" />
+  </Folder>
+  <Folder Name="/test/" />
+  <Folder Name="/test/helper/">
+    <Project Path="../test/Common/Microsoft.Test.OData.DependencyInjection/Microsoft.Test.OData.DependencyInjection.csproj" />
+    <Project Path="../test/EndToEndTests/Services/ODataWCFLibrary/ODataSamples.Services.Core.csproj" />
+    <Project Path="../test/PerformanceTests/Framework/PerfServiceCore/Microsoft.Test.OData.Services.PerfService.csproj" />
+    <Project Path="../test/PerformanceTests/Framework/TestService/Microsoft.Test.OData.TestService.csproj" />
+  </Folder>
+  <Folder Name="/test/perfTests/">
+    <Project Path="../test/PerformanceTests/ComponentTests/Microsoft.OData.Performance.ComponentTests.csproj" />
+    <Project Path="../test/PerformanceTests/SerializationBaselineTests/SerializationBaselineTests.csproj" />
+    <Project Path="../test/PerformanceTests/ServiceTests/Microsoft.OData.Performance.ServiceTests.csproj" />
+  </Folder>
+</Solution>
