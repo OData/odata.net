@@ -1,0 +1,25 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="../src/Microsoft.OData.Client/Microsoft.OData.Client.csproj" />
+    <Project Path="../src/Microsoft.OData.Core/Microsoft.OData.Core.csproj" />
+    <Project Path="../src/Microsoft.OData.Edm/Microsoft.OData.Edm.csproj" />
+    <Project Path="../src/Microsoft.Spatial/Microsoft.Spatial.csproj" />
+  </Folder>
+  <Folder Name="/test/" />
+  <Folder Name="/test/e2eTests/">
+    <Project Path="../test/EndToEndTests/Common/Microsoft.OData.E2E.TestCommon/Microsoft.OData.E2E.TestCommon.csproj" />
+    <Project Path="../test/EndToEndTests/Tests/Client/Microsoft.OData.Client.E2E.Tests/Microsoft.OData.Client.E2E.Tests.csproj" />
+    <Project Path="../test/EndToEndTests/Tests/Core/Microsoft.OData.Core.E2E.Tests/Microsoft.OData.Core.E2E.Tests.csproj" />
+    <Project Path="../test/EndToEndTests/Tests/Edm/Microsoft.OData.Edm.E2E.Tests/Microsoft.OData.Edm.E2E.Tests.csproj" />
+  </Folder>
+  <Folder Name="/test/helper/">
+    <Project Path="../test/Common/Microsoft.OData.TestCommon/Microsoft.OData.TestCommon.csproj" />
+    <Project Path="../test/Common/Microsoft.Test.OData.DependencyInjection/Microsoft.Test.OData.DependencyInjection.csproj" />
+  </Folder>
+  <Folder Name="/test/unitTests/">
+    <Project Path="../test/UnitTests/Microsoft.OData.Client.Tests/Microsoft.OData.Client.Tests.csproj" />
+    <Project Path="../test/UnitTests/Microsoft.OData.Core.Tests/Microsoft.OData.Core.Tests.csproj" />
+    <Project Path="../test/UnitTests/Microsoft.OData.Edm.Tests/Microsoft.OData.Edm.Tests.csproj" />
+    <Project Path="../test/UnitTests/Microsoft.Spatial.Tests/Microsoft.Spatial.Tests.csproj" />
+  </Folder>
+</Solution>

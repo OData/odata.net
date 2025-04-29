@@ -73,10 +73,10 @@ Note: The project T4CrossPlatformTests.WindowsStore.csproj will not be loaded un
 
 Simply open the shortcut `OData.sln` at the root level folder to launch a solution that contains the product source and relevant unit tests. Should you see the need to modify or add additional tests, please see the `sln` folder for the whole set of solution files.
 
-Here is the usage of each solution file (the `OData.sln` shortcut opens the one marked default):
+Here is the usage of each solution file (the `OData.slnx` shortcut opens the one marked default):
 
-- OData.sln - Product source built with .Net Framework 4.5, .Net Standard 1.1 (except for OData Client ), .Net Standard 2.0. Unit Tests built with .Net Framework 4.5.2, .Net Core 1.1, .Net Core 2.1, .Net Core 3.1
-- OData.E2E.sln - Product source built with .Net Framework 4.5. Contains exhaustive list of tests (unit, E2E, and regression). The `Build.cmd` script will run all tests from here and this solution is used to _fully_ test your code.
+- OData.slnx - Product source built with .Net Framework 4.5, .Net Standard 1.1 (except for OData Client ), .Net Standard 2.0. Unit Tests built with .Net Framework 4.5.2, .Net Core 1.1, .Net Core 2.1, .Net Core 3.1
+- OData.E2E.slnx - Product source built with .Net Framework 4.5. Contains exhaustive list of tests (unit, E2E, and regression). The `Build.cmd` script will run all tests from here and this solution is used to _fully_ test your code.
 
 Each solution contains some test projects. Please open it, build it and run all the tests in the test explorer. For running tests within OData.E2E.sln  you need to open Visual Studio IDE as **_Administrator_** so that the test services can be started properly.
 

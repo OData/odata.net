@@ -36,15 +36,15 @@ steps:
     command: 'build'
     arguments: '--configuration $(BuildConfiguration) --no-incremental'
     projects: |
-     $(Build.SourcesDirectory)\sln\OData.Pipeline.sln
+     $(Build.SourcesDirectory)\sln\OData.Pipeline.slnx
 
 - task: DotNetCoreCLI@2
   displayName: 'Test'
   inputs:
     command: 'test'
     arguments: '--configuration $(buildConfiguration) --settings $(Build.SourcesDirectory)\test.runsettings --no-build --collect "Code Coverage"'
-    projects: |      
-     $(Build.SourcesDirectory)\sln\OData.Pipeline.sln
+    projects: |
+     $(Build.SourcesDirectory)\sln\OData.Pipeline.slnx
 
 - task: DotNetCoreCLI@2
   condition: eq(variables.buildConfiguration, 'Release')
@@ -52,7 +52,7 @@ steps:
   inputs:
     command: 'test'
     arguments: '--configuration $(buildConfiguration) --settings $(Build.SourcesDirectory)\test.runsettings --collect "Code Coverage"'
-    projects: |      
+    projects: |
      $(Build.SourcesDirectory)\test\EndToEndTests\Tests\Client\Microsoft.OData.Client.E2E.Tests\Microsoft.OData.Client.E2E.Tests.csproj
      $(Build.SourcesDirectory)\test\EndToEndTests\Tests\Core\Microsoft.OData.Core.E2E.Tests\Microsoft.OData.Core.E2E.Tests.csproj
      $(Build.SourcesDirectory)\test\EndToEndTests\Tests\Edm\Microsoft.OData.Edm.E2E.Tests\Microsoft.OData.Edm.E2E.Tests.csproj
