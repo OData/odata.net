@@ -80,7 +80,7 @@ public class AnnotatableTests : EdmLibTestCaseBase
         };
 
         // set
-        for (int i = 0; i < qualifiedNames.Count(); i++)
+        for (int i = 0; i < qualifiedNames.Length; i++)
         {
             MyQualifiedName q = qualifiedNames[i];
             model.SetAnnotationValue(annotatable, q.NamespaceName, q.Name, q.MyFullName);

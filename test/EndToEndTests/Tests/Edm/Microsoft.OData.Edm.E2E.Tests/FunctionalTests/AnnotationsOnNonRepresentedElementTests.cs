@@ -63,7 +63,8 @@ public class AnnotationsOnNonRepresentedElementTests : EdmLibTestCaseBase
         // Act
         var parsedCsdl = XElement.Parse(ModelBuilderHelpers.ReplaceCsdlNamespaceForEdmVersion(csdl, EdmVersion.V40), LoadOptions.SetLineInfo);
 
-        SchemaReader.TryParse(new XElement[] { parsedCsdl }.Select(e => e.CreateReader()), out IEdmModel testModel, out IEnumerable<EdmError> errors);
+        bool success = SchemaReader.TryParse(new XElement[] { parsedCsdl }.Select(e => e.CreateReader()), out IEdmModel testModel, out IEnumerable<EdmError> errors);
+        Assert.True(success);
         Assert.False(errors.Any());
 
         var validationRuleSet = ValidationRuleSet.GetEdmModelRuleSet(this.GetProductVersion(EdmVersion.V40));
@@ -101,7 +102,8 @@ public class AnnotationsOnNonRepresentedElementTests : EdmLibTestCaseBase
         // Act
         var parsedCsdl = XElement.Parse(ModelBuilderHelpers.ReplaceCsdlNamespaceForEdmVersion(csdl, EdmVersion.V40), LoadOptions.SetLineInfo);
 
-        SchemaReader.TryParse(new XElement[] { parsedCsdl }.Select(e => e.CreateReader()), out IEdmModel testModel, out IEnumerable<EdmError> errors);
+        bool success = SchemaReader.TryParse(new XElement[] { parsedCsdl }.Select(e => e.CreateReader()), out IEdmModel testModel, out IEnumerable<EdmError> errors);
+        Assert.True(success);
         Assert.False(errors.Any());
 
         var validationRuleSet = ValidationRuleSet.GetEdmModelRuleSet(this.GetProductVersion(EdmVersion.V40));
@@ -135,7 +137,8 @@ public class AnnotationsOnNonRepresentedElementTests : EdmLibTestCaseBase
         // Act
         var parsedCsdl = XElement.Parse(ModelBuilderHelpers.ReplaceCsdlNamespaceForEdmVersion(csdl, EdmVersion.V40), LoadOptions.SetLineInfo);
 
-        SchemaReader.TryParse(new XElement[] { parsedCsdl }.Select(e => e.CreateReader()), out IEdmModel testModel, out IEnumerable<EdmError> errors);
+        bool success = SchemaReader.TryParse(new XElement[] { parsedCsdl }.Select(e => e.CreateReader()), out IEdmModel testModel, out IEnumerable<EdmError> errors);
+        Assert.True(success);
         Assert.False(errors.Any());
 
         var validationRuleSet = ValidationRuleSet.GetEdmModelRuleSet(this.GetProductVersion(EdmVersion.V40));
@@ -167,7 +170,8 @@ public class AnnotationsOnNonRepresentedElementTests : EdmLibTestCaseBase
         // Act
         var parsedCsdl = XElement.Parse(ModelBuilderHelpers.ReplaceCsdlNamespaceForEdmVersion(csdl, EdmVersion.V40), LoadOptions.SetLineInfo);
 
-        SchemaReader.TryParse(new XElement[] { parsedCsdl }.Select(e => e.CreateReader()), out IEdmModel testModel, out IEnumerable<EdmError> errors);
+        bool success = SchemaReader.TryParse(new XElement[] { parsedCsdl }.Select(e => e.CreateReader()), out IEdmModel testModel, out IEnumerable<EdmError> errors);
+        Assert.True(success);
         Assert.False(errors.Any());
 
         var validationRuleSet = ValidationRuleSet.GetEdmModelRuleSet(this.GetProductVersion(EdmVersion.V40));
@@ -223,7 +227,8 @@ public class AnnotationsOnNonRepresentedElementTests : EdmLibTestCaseBase
     {
         // Arrange
         var parsedCsdl = XElement.Parse(ModelBuilderHelpers.ReplaceCsdlNamespaceForEdmVersion(csdl, EdmVersion.V40), LoadOptions.SetLineInfo);
-        SchemaReader.TryParse(new XElement[] { parsedCsdl }.Select(e => e.CreateReader()), out IEdmModel testModel, out IEnumerable<EdmError> errors);
+        bool success = SchemaReader.TryParse(new XElement[] { parsedCsdl }.Select(e => e.CreateReader()), out IEdmModel testModel, out IEnumerable<EdmError> errors);
+        Assert.True(success);
         Assert.False(errors.Any());
 
         var validationRuleSet = ValidationRuleSet.GetEdmModelRuleSet(this.GetProductVersion(EdmVersion.V40));
@@ -256,7 +261,8 @@ public class AnnotationsOnNonRepresentedElementTests : EdmLibTestCaseBase
         // Act
         var parsedCsdl = XElement.Parse(ModelBuilderHelpers.ReplaceCsdlNamespaceForEdmVersion(csdl, EdmVersion.V40), LoadOptions.SetLineInfo);
 
-        SchemaReader.TryParse(new XElement[] { parsedCsdl }.Select(e => e.CreateReader()), out IEdmModel testModel, out IEnumerable<EdmError> errors);
+        bool success = SchemaReader.TryParse(new XElement[] { parsedCsdl }.Select(e => e.CreateReader()), out IEdmModel testModel, out IEnumerable<EdmError> errors);
+        Assert.True(success);
         Assert.False(errors.Any());
 
         var validationRuleSet = ValidationRuleSet.GetEdmModelRuleSet(this.GetProductVersion(EdmVersion.V40));

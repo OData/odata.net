@@ -4,7 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using System;
 using System.Collections;
 using System.Xml.Linq;
 using Microsoft.OData.Edm.Csdl;
@@ -26,7 +25,8 @@ public class ClrTypeMappingTests : EdmLibTestCaseBase
   </Function>
 </Schema>";
 
-        SchemaReader.TryParse(new XElement[] { XElement.Parse(operationCsdl) }.Select(e => e.CreateReader()), out IEdmModel edmModel, out IEnumerable<EdmError> errors);
+        bool success = SchemaReader.TryParse(new XElement[] { XElement.Parse(operationCsdl) }.Select(e => e.CreateReader()), out IEdmModel edmModel, out IEnumerable<EdmError> errors);
+        Assert.True(success, "Failed to parse operation CSDL.");
         Assert.False(errors.Any());
 
         this.operationDeclarationModel = edmModel;
@@ -39,7 +39,8 @@ public class ClrTypeMappingTests : EdmLibTestCaseBase
     {
         this.InitializeOperationDefinitions();
 
-        SchemaReader.TryParse(VocabularyAnnotationClassTypeBasicTest().Select(e => e.CreateReader()), this.operationDeclarationModel, out IEdmModel edmModel, out IEnumerable<EdmError> errors);
+        bool success = SchemaReader.TryParse(VocabularyAnnotationClassTypeBasicTest().Select(e => e.CreateReader()), this.operationDeclarationModel, out IEdmModel edmModel, out IEnumerable<EdmError> errors);
+        Assert.True(success);
         Assert.False(errors.Any());
 
         this.ValidateClrObjectConverter(this.GetVocabularyAnnotations(edmModel, edmModel.FindType("NS1.Person"), "Coordination").Single(),
@@ -61,7 +62,8 @@ public class ClrTypeMappingTests : EdmLibTestCaseBase
     [Fact]
     public void Should_ThrowInvalidCastException_When_ConvertingBetweenCollectionAndSingularObject()
     {
-        SchemaReader.TryParse(VocabularyAnnotationClassTypeBasicTest().Select(e => e.CreateReader()), out IEdmModel edmModel, out IEnumerable<EdmError> errors);
+        bool success = SchemaReader.TryParse(VocabularyAnnotationClassTypeBasicTest().Select(e => e.CreateReader()), out IEdmModel edmModel, out IEnumerable<EdmError> errors);
+        Assert.True(success);
         Assert.False(errors.Any());
 
         var exception = Assert.Throws<InvalidCastException>(() =>
@@ -77,7 +79,8 @@ public class ClrTypeMappingTests : EdmLibTestCaseBase
     [Fact]
     public void Should_ThrowInvalidCastException_When_ConvertingCollectionValueToUnsupportedCollectionType()
     {
-        SchemaReader.TryParse(VocabularyAnnotationClassTypeBasicTest().Select(e => e.CreateReader()), out IEdmModel edmModel, out IEnumerable<EdmError> errors);
+        bool success = SchemaReader.TryParse(VocabularyAnnotationClassTypeBasicTest().Select(e => e.CreateReader()), out IEdmModel edmModel, out IEnumerable<EdmError> errors);
+        Assert.True(success);
         Assert.False(errors.Any());
 
         var exception = Assert.Throws<InvalidCastException>(() =>
@@ -124,7 +127,8 @@ public class ClrTypeMappingTests : EdmLibTestCaseBase
   </Annotations>
 </Schema>";
 
-        SchemaReader.TryParse(new XElement[] { XElement.Parse(csdl) }.Select(e => e.CreateReader()), out IEdmModel edmModel, out IEnumerable<EdmError> errors);
+        bool success = SchemaReader.TryParse(new XElement[] { XElement.Parse(csdl) }.Select(e => e.CreateReader()), out IEdmModel edmModel, out IEnumerable<EdmError> errors);
+        Assert.True(success);
         Assert.False(errors.Any());
 
         var person = edmModel.FindType("NS1.Person") as IEdmEntityType;
@@ -193,7 +197,8 @@ public class ClrTypeMappingTests : EdmLibTestCaseBase
   </Annotations>
 </Schema>";
 
-        SchemaReader.TryParse(new XElement[] { XElement.Parse(csdl) }.Select(e => e.CreateReader()), out IEdmModel edmModel, out IEnumerable<EdmError> errors);
+        bool success = SchemaReader.TryParse(new XElement[] { XElement.Parse(csdl) }.Select(e => e.CreateReader()), out IEdmModel edmModel, out IEnumerable<EdmError> errors);
+        Assert.True(success);
         Assert.False(errors.Any());
 
         var annotation = edmModel.FindVocabularyAnnotations(edmModel.FindType("NS1.Person")).Where(n => n.Term == edmModel.FindTerm("NS1.Title1")).Single();
@@ -210,8 +215,8 @@ public class ClrTypeMappingTests : EdmLibTestCaseBase
     {
         this.InitializeOperationDefinitions();
 
-        SchemaReader.TryParse(VocabularyAnnotationClassTypeBasicTest().Select(e => e.CreateReader()), this.operationDeclarationModel, out IEdmModel edmModel, out IEnumerable<EdmError> errors);
-        
+        bool success = SchemaReader.TryParse(VocabularyAnnotationClassTypeBasicTest().Select(e => e.CreateReader()), this.operationDeclarationModel, out IEdmModel edmModel, out IEnumerable<EdmError> errors);
+        Assert.True(success);
         Assert.False(errors.Any());
 
         this.ValidateClrObjectConverter(this.GetVocabularyAnnotations(edmModel, edmModel.FindType("NS1.Person"), "Coordination").Single(),
@@ -225,7 +230,8 @@ public class ClrTypeMappingTests : EdmLibTestCaseBase
     [Fact]
     public void Should_ThrowMissingMethodException_When_ClrTypeHasNoParameterlessConstructor()
     {
-        SchemaReader.TryParse(VocabularyAnnotationClassTypeBasicTest().Select(e => e.CreateReader()), out IEdmModel edmModel, out IEnumerable<EdmError> errors);
+        bool success = SchemaReader.TryParse(VocabularyAnnotationClassTypeBasicTest().Select(e => e.CreateReader()), out IEdmModel edmModel, out IEnumerable<EdmError> errors);
+        Assert.True(success);
         Assert.False(errors.Any());
 
         var valueAnnotation = this.GetVocabularyAnnotations(edmModel, edmModel.FindType("NS1.Person"), "InspectedBy").Single();
@@ -243,7 +249,8 @@ public class ClrTypeMappingTests : EdmLibTestCaseBase
     [Fact]
     public void Should_ValidateClrTypeMappingForPrivateProperties()
     {
-        SchemaReader.TryParse(VocabularyAnnotationClassTypeBasicTest().Select(e => e.CreateReader()), out IEdmModel edmModel, out IEnumerable<EdmError> errors);
+        bool success = SchemaReader.TryParse(VocabularyAnnotationClassTypeBasicTest().Select(e => e.CreateReader()), out IEdmModel edmModel, out IEnumerable<EdmError> errors);
+        Assert.True(success);
         Assert.False(errors.Any());
 
         var valueAnnotation = this.GetVocabularyAnnotations(edmModel, edmModel.FindType("NS1.Person"), "InspectedBy").Single();
@@ -260,7 +267,8 @@ public class ClrTypeMappingTests : EdmLibTestCaseBase
     [Fact]
     public void Should_ValidateClrTypeMappingForGenericTypes()
     {
-        SchemaReader.TryParse(VocabularyAnnotationClassTypeBasicTest().Select(e => e.CreateReader()), out IEdmModel edmModel, out IEnumerable<EdmError> errors);
+        bool success = SchemaReader.TryParse(VocabularyAnnotationClassTypeBasicTest().Select(e => e.CreateReader()), out IEdmModel edmModel, out IEnumerable<EdmError> errors);
+        Assert.True(success);
         Assert.False(errors.Any());
 
         var valueAnnotation = this.GetVocabularyAnnotations(edmModel, edmModel.FindType("NS1.Person"), "InspectedBy").Single();
@@ -273,7 +281,8 @@ public class ClrTypeMappingTests : EdmLibTestCaseBase
     {
         this.InitializeOperationDefinitions();
 
-        SchemaReader.TryParse(VocabularyAnnotationClassTypeBasicTest().Select(e => e.CreateReader()), this.operationDeclarationModel, out IEdmModel edmModel, out IEnumerable<EdmError> errors);
+        bool success = SchemaReader.TryParse(VocabularyAnnotationClassTypeBasicTest().Select(e => e.CreateReader()), this.operationDeclarationModel, out IEdmModel edmModel, out IEnumerable<EdmError> errors);
+        Assert.True(success);
         Assert.False(errors.Any());
 
         var valueAnnotation = this.GetVocabularyAnnotations(edmModel, edmModel.FindType("NS1.Person"), "TVDisplay").Single();
@@ -308,7 +317,8 @@ public class ClrTypeMappingTests : EdmLibTestCaseBase
   </Annotations>
 </Schema>";
 
-        SchemaReader.TryParse(new XElement[] { XElement.Parse(csdl) }.Select(e => e.CreateReader()), out IEdmModel edmModel, out IEnumerable<EdmError> errors);
+        bool success = SchemaReader.TryParse(new XElement[] { XElement.Parse(csdl) }.Select(e => e.CreateReader()), out IEdmModel edmModel, out IEnumerable<EdmError> errors);
+        Assert.True(success);
         Assert.False(errors.Any());
 
         var annotations = edmModel.FindVocabularyAnnotations(edmModel.FindType("NS1.Person"));
@@ -379,7 +389,8 @@ public class ClrTypeMappingTests : EdmLibTestCaseBase
   </Annotations>
 </Schema>";
 
-        SchemaReader.TryParse(new XElement[] { XElement.Parse(csdl) }.Select(e => e.CreateReader()), out IEdmModel edmModel, out IEnumerable<EdmError> errors);
+        bool success = SchemaReader.TryParse(new XElement[] { XElement.Parse(csdl) }.Select(e => e.CreateReader()), out IEdmModel edmModel, out IEnumerable<EdmError> errors);
+        Assert.True(success);
         Assert.False(errors.Any());
 
         var valueAnnotation = this.GetVocabularyAnnotations(edmModel, edmModel.FindType("NS1.Person"), "RecursiveProperty").Single();
@@ -412,7 +423,8 @@ public class ClrTypeMappingTests : EdmLibTestCaseBase
   </Annotations>
 </Schema>";
 
-        SchemaReader.TryParse(new XElement[] { XElement.Parse(csdl) }.Select(e => e.CreateReader()), out IEdmModel edmModel, out IEnumerable<EdmError> errors);
+        bool success = SchemaReader.TryParse(new XElement[] { XElement.Parse(csdl) }.Select(e => e.CreateReader()), out IEdmModel edmModel, out IEnumerable<EdmError> errors);
+        Assert.True(success);
         Assert.False(errors.Any());
 
         var valueAnnotation = this.GetVocabularyAnnotations(edmModel, edmModel.FindType("NS1.Person"), "RecursivePropertyWithNewProperties").Single();
@@ -472,7 +484,8 @@ public class ClrTypeMappingTests : EdmLibTestCaseBase
   </Annotations>
 </Schema>";
 
-        SchemaReader.TryParse(new XElement[] { XElement.Parse(csdl) }.Select(e => e.CreateReader()), out IEdmModel edmModel, out IEnumerable<EdmError> errors);
+        bool success = SchemaReader.TryParse(new XElement[] { XElement.Parse(csdl) }.Select(e => e.CreateReader()), out IEdmModel edmModel, out IEnumerable<EdmError> errors);
+        Assert.True(success);
         Assert.False(errors.Any());
 
         var valueAnnotation = this.GetVocabularyAnnotations(edmModel, edmModel.FindType("NS1.Person"), "PersonValueAnnotation").Single();
@@ -516,7 +529,8 @@ public class ClrTypeMappingTests : EdmLibTestCaseBase
   </Annotations>
 </Schema>";
 
-        SchemaReader.TryParse(new XElement[] { XElement.Parse(csdl) }.Select(e => e.CreateReader()), out IEdmModel edmModel, out IEnumerable<EdmError> errors);
+        bool success = SchemaReader.TryParse(new XElement[] { XElement.Parse(csdl) }.Select(e => e.CreateReader()), out IEdmModel edmModel, out IEnumerable<EdmError> errors);
+        Assert.True(success);
         Assert.False(errors.Any());
 
         var valueAnnotation = this.GetVocabularyAnnotations(edmModel, edmModel.FindType("NS1.Person"), "PersonValueAnnotation").Single();
@@ -561,7 +575,8 @@ public class ClrTypeMappingTests : EdmLibTestCaseBase
   </Annotations>
 </Schema>";
 
-        SchemaReader.TryParse(new XElement[] { XElement.Parse(csdl) }.Select(e => e.CreateReader()), out IEdmModel edmModel, out IEnumerable<EdmError> errors);
+        bool success = SchemaReader.TryParse(new XElement[] { XElement.Parse(csdl) }.Select(e => e.CreateReader()), out IEdmModel edmModel, out IEnumerable<EdmError> errors);
+        Assert.True(success);
         Assert.False(errors.Any());
 
         var annotations = edmModel.FindVocabularyAnnotations(edmModel.FindType("NS1.Person"));
@@ -597,10 +612,10 @@ public class ClrTypeMappingTests : EdmLibTestCaseBase
         Assert.Equal("Unable to cast object of type 'Microsoft.OData.Edm.Csdl.CsdlSemantics.CsdlSemanticsDecimalConstantExpression' to type 'Microsoft.OData.Edm.Vocabularies.IEdmIntegerConstantExpression'.", exception.Message);
 
         this.ValidateClrObjectConverter(this.GetVocabularyAnnotations(edmModel, edmModel.FindType("NS1.Person"), "PersonValueAnnotation8").Single(),
-               new ClassWithEnum()
-               {
-                   EnumInt = (EnumInt)10,
-               });
+            new ClassWithEnum()
+            {
+                EnumInt = (EnumInt)10,
+            });
     }
 
     [Fact]
@@ -625,7 +640,8 @@ public class ClrTypeMappingTests : EdmLibTestCaseBase
   </Annotations>
 </Schema>";
 
-        SchemaReader.TryParse(new XElement[] { XElement.Parse(csdl) }.Select(e => e.CreateReader()), out IEdmModel edmModel, out IEnumerable<EdmError> errors);
+        bool success = SchemaReader.TryParse(new XElement[] { XElement.Parse(csdl) }.Select(e => e.CreateReader()), out IEdmModel edmModel, out IEnumerable<EdmError> errors);
+        Assert.True(success);
         Assert.False(errors.Any());
 
         var exception = Assert.Throws<InvalidCastException>(() =>
@@ -655,7 +671,8 @@ public class ClrTypeMappingTests : EdmLibTestCaseBase
   </Annotations>
 </Schema>";
 
-        SchemaReader.TryParse(new XElement[] { XElement.Parse(csdl) }.Select(e => e.CreateReader()), out IEdmModel edmModel, out IEnumerable<EdmError> errors);
+        bool success = SchemaReader.TryParse(new XElement[] { XElement.Parse(csdl) }.Select(e => e.CreateReader()), out IEdmModel edmModel, out IEnumerable<EdmError> errors);
+        Assert.True(success);
         Assert.False(errors.Any());
 
         this.ValidateClrObjectConverter(this.GetVocabularyAnnotations(edmModel, edmModel.FindType("NS1.Person"), "PersonValueAnnotation1").Single(),
@@ -683,7 +700,8 @@ public class ClrTypeMappingTests : EdmLibTestCaseBase
     [Fact]
     public void Should_ThrowInvalidCastException_When_ConvertingToStructType()
     {
-        SchemaReader.TryParse(VocabularyAnnotationClassTypeBasicTest().Select(e => e.CreateReader()), out IEdmModel edmModel, out IEnumerable<EdmError> errors);
+        bool success = SchemaReader.TryParse(VocabularyAnnotationClassTypeBasicTest().Select(e => e.CreateReader()), out IEdmModel edmModel, out IEnumerable<EdmError> errors);
+        Assert.True(success);
         Assert.False(errors.Any());
 
         var exception = Assert.Throws<InvalidCastException>(() =>
@@ -704,7 +722,8 @@ public class ClrTypeMappingTests : EdmLibTestCaseBase
     {
         this.InitializeOperationDefinitions();
 
-        SchemaReader.TryParse(VocabularyAnnotationClassTypeBasicTest().Select(e => e.CreateReader()), out IEdmModel edmModel, out IEnumerable<EdmError> errors);
+        bool success = SchemaReader.TryParse(VocabularyAnnotationClassTypeBasicTest().Select(e => e.CreateReader()), out IEdmModel edmModel, out IEnumerable<EdmError> errors);
+        Assert.True(success);
         Assert.False(errors.Any());
 
         var exception = Assert.Throws<MissingMethodException>(() =>
@@ -719,14 +738,15 @@ public class ClrTypeMappingTests : EdmLibTestCaseBase
 
         EdmToClrEvaluator ev = new EdmToClrEvaluator(this.operationDefinitions);
 
-        SchemaReader.TryParse(VocabularyAnnotationClassTypeBasicTest().Select(e => e.CreateReader()), this.operationDeclarationModel, out IEdmModel edmModel, out IEnumerable<EdmError> errors);
+        bool success = SchemaReader.TryParse(VocabularyAnnotationClassTypeBasicTest().Select(e => e.CreateReader()), this.operationDeclarationModel, out IEdmModel edmModel, out IEnumerable<EdmError> errors);
+        Assert.True(success);
         Assert.False(errors.Any());
 
         var value = ev.Evaluate(this.GetVocabularyAnnotations(edmModel, edmModel.FindType("NS1.Person"), "TVDisplay").Single().Value);
 
         var isObjectPopulated = true;
         var isObjectInitialized = true;
-        object createdObjectInstance = null;
+        object? createdObjectInstance = null;
         TryCreateObjectInstance tryCreateObjectInstance = (IEdmStructuredValue edmValue, Type clrType, EdmToClrConverter converter, out object objectInstance, out bool objectInstanceInitialized) =>
         {
             objectInstance = createdObjectInstance;
@@ -799,7 +819,8 @@ public class ClrTypeMappingTests : EdmLibTestCaseBase
 
         EdmToClrEvaluator ev = new EdmToClrEvaluator(this.operationDefinitions);
 
-        SchemaReader.TryParse(VocabularyAnnotationClassTypeBasicTest().Select(e => e.CreateReader()), this.operationDeclarationModel, out IEdmModel edmModel, out IEnumerable<EdmError> errors);
+        bool success = SchemaReader.TryParse(VocabularyAnnotationClassTypeBasicTest().Select(e => e.CreateReader()), this.operationDeclarationModel, out IEdmModel edmModel, out IEnumerable<EdmError> errors);
+        Assert.True(success);
         Assert.False(errors.Any());
 
         var value = ev.Evaluate(this.GetVocabularyAnnotations(edmModel, edmModel.FindType("NS1.Person"), "TVDisplay").Single().Value);
@@ -836,7 +857,8 @@ public class ClrTypeMappingTests : EdmLibTestCaseBase
     [Fact]
     public void Should_ThrowInvalidCastException_When_InterfacePropertyIsMapped()
     {
-        SchemaReader.TryParse(VocabularyAnnotationClassTypeBasicTest().Select(e => e.CreateReader()), out IEdmModel edmModel, out IEnumerable<EdmError> errors);
+        bool success = SchemaReader.TryParse(VocabularyAnnotationClassTypeBasicTest().Select(e => e.CreateReader()), out IEdmModel edmModel, out IEnumerable<EdmError> errors);
+        Assert.True(success);
         Assert.False(errors.Any());
 
         var valueAnnotation = this.GetVocabularyAnnotations(edmModel, edmModel.FindType("NS1.Person"), "TVDisplay").Single();
@@ -848,7 +870,8 @@ public class ClrTypeMappingTests : EdmLibTestCaseBase
     [Fact]
     public void Should_ValidateClrTypeMappingForVirtualMembers()
     {
-        SchemaReader.TryParse(VocabularyAnnotationClassTypeBasicTest().Select(e => e.CreateReader()), out IEdmModel edmModel, out IEnumerable<EdmError> errors);
+        bool success = SchemaReader.TryParse(VocabularyAnnotationClassTypeBasicTest().Select(e => e.CreateReader()), out IEdmModel edmModel, out IEnumerable<EdmError> errors);
+        Assert.True(success);
         Assert.False(errors.Any());
 
         var valueAnnotation = this.GetVocabularyAnnotations(edmModel, edmModel.FindType("NS1.Person"), "TVDisplay").Single();
@@ -862,7 +885,8 @@ public class ClrTypeMappingTests : EdmLibTestCaseBase
     {
         this.InitializeOperationDefinitions();
 
-        SchemaReader.TryParse(VocabularyAnnotationClassTypeBasicTest().Select(e => e.CreateReader()), this.operationDeclarationModel, out IEdmModel edmModel, out IEnumerable<EdmError> errors);
+        bool success = SchemaReader.TryParse(VocabularyAnnotationClassTypeBasicTest().Select(e => e.CreateReader()), this.operationDeclarationModel, out IEdmModel edmModel, out IEnumerable<EdmError> errors);
+        Assert.True(success);
         Assert.False(errors.Any());
 
         var valueAnnotation = this.GetVocabularyAnnotations(edmModel, edmModel.FindType("NS1.Person"), "TVDisplay").Single();
@@ -923,7 +947,8 @@ public class ClrTypeMappingTests : EdmLibTestCaseBase
   </Annotations>
 </Schema>";
 
-        SchemaReader.TryParse(new XElement[] { XElement.Parse(csdl) }.Select(e => e.CreateReader()), out IEdmModel edmModel, out IEnumerable<EdmError> errors);
+        bool success = SchemaReader.TryParse(new XElement[] { XElement.Parse(csdl) }.Select(e => e.CreateReader()), out IEdmModel edmModel, out IEnumerable<EdmError> errors);
+        Assert.True(success);
         Assert.False(errors.Any());
 
         var valueAnnotation = this.GetVocabularyAnnotations(edmModel, edmModel.FindType("NS1.Person"), "PersonValueAnnotation").Single();
@@ -979,7 +1004,6 @@ public class ClrTypeMappingTests : EdmLibTestCaseBase
             return false;
         }
         bool result = true;
-        // TODO: We can update this function for the properties of the collection type such as Item. 
         foreach (var property in typeX.GetProperties(BindingFlags.Public | BindingFlags.Instance))
         {
             if (!typeof(IEnumerable).IsAssignableFrom(property.PropertyType))
@@ -1145,6 +1169,7 @@ public class ClrTypeMappingTests : EdmLibTestCaseBase
                 break;
         }
     }
+
     private IEdmModel operationDeclarationModel
     {
         get;
