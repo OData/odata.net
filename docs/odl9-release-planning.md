@@ -66,11 +66,11 @@ ODL 9 will align with modern .NET platform support to ensure compatibility and l
   - Review each proposed item to determine its relevance and priority for the ODL 9 release.
   - Conduct feasibility analysis to assess the complexity and resources required for implementation.
 
-### 2. Development Phase (March - September 2025)
+### 2. Development Phase (April - September 2025)
   - Implement selected features and address prioritized issues.
   - Perform internal testing to ensure stability and performance improvements.
 
-### 3. Preview Releases (March 2025)
+### 3. Preview Releases (June 2025)
   - Release a preview version to gather feedback from the community.
   - Address any critical issues identified during the preview phase.
 
