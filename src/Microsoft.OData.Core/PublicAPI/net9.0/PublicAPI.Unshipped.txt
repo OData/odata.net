@@ -2500,3 +2500,17 @@ override Microsoft.OData.UriParser.PathCountSelectItem.HandleWith(Microsoft.ODat
 override Microsoft.OData.UriParser.PathCountSelectItem.TranslateWith<T>(Microsoft.OData.UriParser.SelectItemTranslator<T> translator) -> T
 virtual Microsoft.OData.UriParser.SelectItemHandler.Handle(Microsoft.OData.UriParser.PathCountSelectItem item) -> void
 virtual Microsoft.OData.UriParser.SelectItemTranslator<T>.Translate(Microsoft.OData.UriParser.PathCountSelectItem item) -> T
+Microsoft.OData.UriParser.ISyntacticTreeVisitor<T>.Visit(Microsoft.OData.UriParser.RootPathToken tokenIn) -> T
+Microsoft.OData.UriParser.QueryNodeKind.RootPath = 34 -> Microsoft.OData.UriParser.QueryNodeKind
+Microsoft.OData.UriParser.QueryTokenKind.RootPath = 33 -> Microsoft.OData.UriParser.QueryTokenKind
+Microsoft.OData.UriParser.RootPathNode
+Microsoft.OData.UriParser.RootPathNode.Path.get -> Microsoft.OData.UriParser.ODataPath
+Microsoft.OData.UriParser.RootPathNode.RootPathNode(Microsoft.OData.UriParser.ODataPath path, Microsoft.OData.Edm.IEdmTypeReference typeRef) -> void
+Microsoft.OData.UriParser.RootPathToken
+Microsoft.OData.UriParser.RootPathToken.RootPathToken() -> void
+Microsoft.OData.UriParser.RootPathToken.Segments.get -> System.Collections.Generic.IList<string>
+override Microsoft.OData.UriParser.RootPathNode.Accept<T>(Microsoft.OData.UriParser.QueryNodeVisitor<T> visitor) -> T
+override Microsoft.OData.UriParser.RootPathNode.TypeReference.get -> Microsoft.OData.Edm.IEdmTypeReference
+override Microsoft.OData.UriParser.RootPathToken.Accept<T>(Microsoft.OData.UriParser.ISyntacticTreeVisitor<T> visitor) -> T
+override Microsoft.OData.UriParser.RootPathToken.Kind.get -> Microsoft.OData.UriParser.QueryTokenKind
+virtual Microsoft.OData.UriParser.QueryNodeVisitor<T>.Visit(Microsoft.OData.UriParser.RootPathNode nodeIn) -> T
