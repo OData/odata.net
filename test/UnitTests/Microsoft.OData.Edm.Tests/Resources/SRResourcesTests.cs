@@ -333,19 +333,10 @@ public class SRResourcesTests
         var exception = Record.Exception(() => Error.Format(resourceValue, formatArgs));
         Assert.Null(exception); // Ensure no Exception is thrown
 
-        ValidateResourceArguments(resourceValue, formatArgs);
+        var matches = Regex.Matches(resourceValue, @"\{\d+\}").Select(m => m.Value).Distinct();
+        Assert.Equal(matches.Count(), formatArgs.Length);
 
         var formattedValue = Error.Format(resourceValue, formatArgs);
         Assert.NotNull(formattedValue);
-    }
-
-    private static void ValidateResourceArguments(string resourceValue, object[] formatArgs)
-    {
-        // Match numbers inside curly braces and ensure unique count matches formatArgs length
-        var matches = Regex.Matches(resourceValue, @"\{\d+\}")
-                           .Select(m => m.Value)
-                           .Distinct();
-
-        Assert.Equal(matches.Count(), formatArgs.Length);
     }
 }

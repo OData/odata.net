@@ -4,7 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Xunit;
@@ -860,19 +859,11 @@ public class SRResourcesTests
         var exception = Record.Exception(() => string.Format(resourceValue, formatArgs));
         Assert.Null(exception); // Ensure no Exception is thrown
 
-        ValidateResourceArguments(resourceValue, formatArgs);
+        // Match numbers of arguments required in the resource string and validate against formatArgs
+        var matches = Regex.Matches(resourceValue, @"\{\d+\}").Select(m => m.Value).Distinct();
+        Assert.Equal(matches.Count(), formatArgs.Length);
 
         var formattedValue = Error.Format(resourceValue, formatArgs);
         Assert.NotNull(formattedValue);
-    }
-
-    private static void ValidateResourceArguments(string resourceValue, object[] formatArgs)
-    {
-        // Match numbers inside curly braces and ensure unique count matches formatArgs length
-        var matches = Regex.Matches(resourceValue, @"\{\d+\}")
-                           .Select(m => m.Value)
-                           .Distinct();
-
-        Assert.Equal(matches.Count(), formatArgs.Length);
     }
 }
