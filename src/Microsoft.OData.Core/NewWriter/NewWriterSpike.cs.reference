@@ -1,5 +1,15 @@
-﻿// Step 1: Writer Interface Definition
-public interface IODataWriter<T>
+﻿using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+
+namespace Microsoft.OData.Core.ExperimentalNewWriter;
+
+// Step 1: Writer Interface Definition
+internal interface IODataWriter<T>
 {
     void Write(
         Utf8JsonWriter writer,
@@ -10,27 +20,27 @@ public interface IODataWriter<T>
 }
 
 // Step 2: Select/Expand context representation
-public class ODataSelectExpandNode
+internal class ODataSelectExpandNode
 {
     public HashSet<string> SelectedProperties { get; set; } = new();
     public Dictionary<string, ODataSelectExpandNode> ExpandedProperties { get; set; } = new();
 }
 
 // Step 3: Annotation Provider Interface
-public interface IODataAnnotationProvider
+internal interface IODataAnnotationProvider
 {
     IDictionary<string, object> GetAnnotations(object instance);
     IDictionary<string, object> GetPropertyAnnotations(object instance, string propertyName);
 }
 
 // Step 4: OData Serializer Interface
-public interface IODataSerializer
+internal interface IODataSerializer
 {
     object GetWriter(Type type);
 }
 
 // Step 5: Default POCO Serializer Factory
-public class PocoODataSerializer : IODataSerializer
+internal class PocoODataSerializer : IODataSerializer
 {
     private readonly ConcurrentDictionary<Type, object> _cache = new();
 
@@ -50,7 +60,7 @@ public class PocoODataSerializer : IODataSerializer
     {
         private readonly PropertyInfo[] _props;
         private readonly PocoODataSerializer _serializer;
-        private readonly JsonConverter<T>? _customConverter;
+        private JsonConverter<T>? _customConverter;
 
         public PocoWriter(PropertyInfo[] props, PocoODataSerializer serializer)
         {
@@ -127,7 +137,7 @@ public class PocoODataSerializer : IODataSerializer
 }
 
 // Step 6: Dictionary Serializer
-public class DictionaryODataSerializer : IODataSerializer
+internal class DictionaryODataSerializer : IODataSerializer
 {
     public object GetWriter(Type type)
     {
@@ -184,7 +194,7 @@ public class DictionaryODataSerializer : IODataSerializer
 }
 
 // Step 7: Composite Serializer
-public class CompositeODataSerializer : IODataSerializer
+internal class CompositeODataSerializer : IODataSerializer
 {
     private readonly List<IODataSerializer> _strategies;
 
@@ -202,14 +212,14 @@ public class CompositeODataSerializer : IODataSerializer
                 var writer = strategy.GetWriter(type);
                 if (writer != null) return writer;
             }
-            catch { }
+            catch (ODataException ex) { }
         }
         throw new InvalidOperationException($"No serializer found for type {type.FullName}");
     }
 }
 
 // Step 8: Usage Wrapper
-public class ODataSerializerService
+internal class ODataSerializerService
 {
     private readonly IODataSerializer _serializer;
     private readonly IODataAnnotationProvider _annotationProvider;
@@ -228,7 +238,7 @@ public class ODataSerializerService
 }
 
 // Step 9: Integration with System.Text.Json
-public class ODataJsonConverterFactory : JsonConverterFactory
+internal class ODataJsonConverterFactory : JsonConverterFactory
 {
     private readonly ODataSerializerService _serializer;
     private readonly ODataSelectExpandNode _selectExpand;
