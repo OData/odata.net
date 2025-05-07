@@ -6,6 +6,7 @@
 
 using System.Text;
 using System.Xml;
+using System.Xml.Linq;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.E2E.Tests.StubEdm;
 using Microsoft.OData.Edm.Validation;
@@ -18,6 +19,7 @@ public class CodeCoverageBoostingTests : EdmLibTestCaseBase
     [Fact]
     public void Should_IdentifyAmbiguousOperationsInModel()
     {
+        // Arrange
         string csdl = @"
 <Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
     <Term Name=""Annotation"" Type=""Edm.Int32"" />
@@ -49,9 +51,8 @@ public class CodeCoverageBoostingTests : EdmLibTestCaseBase
     </Annotations>
 </Schema>";
 
-        IEdmModel model;
-        IEnumerable<EdmError> errors;
-        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
+        // Act & Assert
+        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out IEdmModel model, out IEnumerable<EdmError> errors);
         Assert.True(parsed);
         Assert.Empty(errors);
 
@@ -69,6 +70,7 @@ public class CodeCoverageBoostingTests : EdmLibTestCaseBase
     [Fact]
     public void Should_IdentifyAmbiguousOperationImportsInEntityContainer()
     {
+        // Arrange
         string csdl = @"
 <Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
       <Annotations Target=""DefaultNamespace.Container/FunctionImport"">
@@ -87,9 +89,8 @@ public class CodeCoverageBoostingTests : EdmLibTestCaseBase
       </EntityContainer>
     </Schema>";
 
-        IEdmModel model;
-        IEnumerable<EdmError> errors;
-        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
+        // Act & Assert
+        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out IEdmModel model, out IEnumerable<EdmError> errors);
         Assert.True(parsed);
         Assert.Empty(errors);
 
@@ -110,6 +111,7 @@ public class CodeCoverageBoostingTests : EdmLibTestCaseBase
     [Fact]
     public void Should_DetectUnresolvedAnnotationTargetsInModel()
     {
+        // Arrange
         string csdl = @"
 <Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
     <Term Name=""Term"" Type=""Edm.Int32"" />
@@ -153,9 +155,8 @@ public class CodeCoverageBoostingTests : EdmLibTestCaseBase
     </Annotations>
 </Schema>";
 
-        IEdmModel model;
-        IEnumerable<EdmError> errors;
-        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
+        // Act & Assert
+        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out IEdmModel model, out IEnumerable<EdmError> errors);
         Assert.True(parsed);
         Assert.Empty(errors);
 
@@ -181,9 +182,12 @@ public class CodeCoverageBoostingTests : EdmLibTestCaseBase
         Assert.True(badElement.IsBad());
     }
 
-    [Fact]
-    public void Should_ValidateElementsWithKindOfNone()
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void Should_ValidateElementsWithKindOfNone(EdmVersion edmVersion)
     {
+        // Arrange
         StubEdmModel model = new StubEdmModel();
         EdmEntityContainer container = new EdmEntityContainer("namespace", "container");
         model.Add(container);
@@ -193,24 +197,35 @@ public class CodeCoverageBoostingTests : EdmLibTestCaseBase
         type.AddProperty(new NoneKinds2("namespace", "otherBadThing", EdmCoreModel.Instance.GetInt32(false), type));
         model.Add(type);
 
-        var expectedErrors = new EdmLibTestErrors()
-        {
-            { "(Microsoft.OData.Edm.E2E.Tests.FunctionalTests.CodeCoverageBoostingTests+NoneKinds1)", EdmErrorCode.TypeMustNotHaveKindOfNone },
-            { "(Microsoft.OData.Edm.E2E.Tests.FunctionalTests.CodeCoverageBoostingTests+NoneKinds1)", EdmErrorCode.EntityContainerElementMustNotHaveKindOfNone },
-            { "(Microsoft.OData.Edm.E2E.Tests.FunctionalTests.CodeCoverageBoostingTests+NoneKinds1)", EdmErrorCode.SchemaElementMustNotHaveKindOfNone },
-            { "(Microsoft.OData.Edm.E2E.Tests.FunctionalTests.CodeCoverageBoostingTests+NoneKinds2)", EdmErrorCode.PrimitiveTypeMustNotHaveKindOfNone },
-            { "(Microsoft.OData.Edm.E2E.Tests.FunctionalTests.CodeCoverageBoostingTests+NoneKinds2)", EdmErrorCode.SchemaElementMustNotHaveKindOfNone },
-            { "(Microsoft.OData.Edm.E2E.Tests.FunctionalTests.CodeCoverageBoostingTests+NoneKinds2)", EdmErrorCode.TypeMustNotHaveKindOfNone },
-            { "(Microsoft.OData.Edm.E2E.Tests.FunctionalTests.CodeCoverageBoostingTests+NoneKinds2)", EdmErrorCode.PropertyMustNotHaveKindOfNone },
-        };
+        var validationRuleSet = ValidationRuleSet.GetEdmModelRuleSet(this.GetProductVersion(edmVersion));
 
-        var validationRuleSet = ValidationRuleSet.GetEdmModelRuleSet(this.GetProductVersion(EdmVersion.V40));
-        this.VerifySemanticValidation(model, validationRuleSet, expectedErrors);
+        // Act & Assert
+        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError>? actualErrors);
+        Assert.Equal(7, actualErrors.Count());
+
+        Assert.Equal(EdmErrorCode.TypeMustNotHaveKindOfNone, actualErrors.ElementAt(0).ErrorCode);
+        Assert.Equal("(Microsoft.OData.Edm.E2E.Tests.FunctionalTests.CodeCoverageBoostingTests+NoneKinds1)", actualErrors.ElementAt(0).ErrorLocation.ToString());
+        Assert.Equal(EdmErrorCode.EntityContainerElementMustNotHaveKindOfNone, actualErrors.ElementAt(1).ErrorCode);
+        Assert.Equal("(Microsoft.OData.Edm.E2E.Tests.FunctionalTests.CodeCoverageBoostingTests+NoneKinds1)", actualErrors.ElementAt(1).ErrorLocation.ToString());
+        Assert.Equal(EdmErrorCode.SchemaElementMustNotHaveKindOfNone, actualErrors.ElementAt(2).ErrorCode);
+        Assert.Equal("(Microsoft.OData.Edm.E2E.Tests.FunctionalTests.CodeCoverageBoostingTests+NoneKinds1)", actualErrors.ElementAt(2).ErrorLocation.ToString());
+        Assert.Equal(EdmErrorCode.PrimitiveTypeMustNotHaveKindOfNone, actualErrors.ElementAt(3).ErrorCode);
+        Assert.Equal("(Microsoft.OData.Edm.E2E.Tests.FunctionalTests.CodeCoverageBoostingTests+NoneKinds2)", actualErrors.ElementAt(3).ErrorLocation.ToString());
+        Assert.Equal(EdmErrorCode.SchemaElementMustNotHaveKindOfNone, actualErrors.ElementAt(4).ErrorCode);
+        Assert.Equal("(Microsoft.OData.Edm.E2E.Tests.FunctionalTests.CodeCoverageBoostingTests+NoneKinds2)", actualErrors.ElementAt(4).ErrorLocation.ToString());
+        Assert.Equal(EdmErrorCode.TypeMustNotHaveKindOfNone, actualErrors.ElementAt(5).ErrorCode);
+        Assert.Equal("(Microsoft.OData.Edm.E2E.Tests.FunctionalTests.CodeCoverageBoostingTests+NoneKinds2)", actualErrors.ElementAt(5).ErrorLocation.ToString());
+        Assert.Equal(EdmErrorCode.PropertyMustNotHaveKindOfNone, actualErrors.ElementAt(6).ErrorCode);
+        Assert.Equal("(Microsoft.OData.Edm.E2E.Tests.FunctionalTests.CodeCoverageBoostingTests+NoneKinds2)", actualErrors.ElementAt(6).ErrorLocation.ToString());
+
+        var serializedCsdls = GetSerializerResult(model, edmVersion, out IEnumerable<EdmError> serializationErrors).Select(n => XElement.Parse(n));
+        Assert.False(serializedCsdls.Any());
     }
 
     [Fact]
     public void Should_ValidateSerializationBlockingErrorsInModel()
     {
+        // Arrange
         EdmModel model = new EdmModel();
 
         EdmComplexType complexWithBadProperty = new EdmComplexType("Foo", "Bar");
@@ -231,23 +246,26 @@ public class CodeCoverageBoostingTests : EdmLibTestCaseBase
         model.AddElement(container);
         container.AddElement(new EdmEntitySet(container, "badNameSet", baseType));
 
+        // Act & Assert
         StringBuilder sb = new StringBuilder();
-        IEnumerable<EdmError> errors;
-        bool written = model.TryWriteSchema(XmlWriter.Create(sb), out errors);
-        var expectedErrors = new EdmLibTestErrors()
-        {
-            { "([. Nullable=False])", EdmErrorCode.ReferencedTypeMustHaveValidName },
-            { "(Foo.Quip)", EdmErrorCode.ReferencedTypeMustHaveValidName },
-            { "(Microsoft.OData.Edm.EdmEntitySet)", EdmErrorCode.ReferencedTypeMustHaveValidName },
-        };
+        bool written = model.TryWriteSchema(XmlWriter.Create(sb), out IEnumerable<EdmError> errors);
+        Assert.False(written);
 
-        this.CompareErrors(errors, expectedErrors);
+        Assert.Equal(EdmErrorCode.ReferencedTypeMustHaveValidName, errors.ElementAt(0).ErrorCode);
+        Assert.Equal("([. Nullable=False])", errors.ElementAt(0).ErrorLocation.ToString());
+        Assert.Equal(EdmErrorCode.ReferencedTypeMustHaveValidName, errors.ElementAt(1).ErrorCode);
+        Assert.Equal("(Foo.Quip)", errors.ElementAt(1).ErrorLocation.ToString());
+        Assert.Equal(EdmErrorCode.ReferencedTypeMustHaveValidName, errors.ElementAt(2).ErrorCode);
+        Assert.Equal("(Microsoft.OData.Edm.EdmEntitySet)", errors.ElementAt(2).ErrorLocation.ToString());
     }
 
     // Inline vocabulary annotation on an operation import nullrefs when computing the annotation's Term
-    [Fact]
-    public void Should_HandleInlineLabeledElementsInAnnotations()
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void Should_HandleInlineLabeledElementsInAnnotations(EdmVersion edmVersion)
     {
+        // Arrange
         const string annotatingModelCsdl =
 @"<Schema Namespace=""foo"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
   <Term Name=""Term"" Type=""Edm.Int32"" >
@@ -339,16 +357,28 @@ public class CodeCoverageBoostingTests : EdmLibTestCaseBase
   </EntityContainer>
 </Schema>";
 
-        IEnumerable<EdmError> errors;
-        IEdmModel model;
-        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(annotatingModelCsdl)) }, out model, out errors);
+        // Act
+        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(annotatingModelCsdl)) }, out IEdmModel model, out IEnumerable<EdmError> errors);
         Assert.True(parsed);
         Assert.Empty(errors);
 
-        var expectedErrors = new EdmLibTestErrors();
+        var validationRuleSet = ValidationRuleSet.GetEdmModelRuleSet(this.GetProductVersion(edmVersion));
 
-        var validationRuleSet = ValidationRuleSet.GetEdmModelRuleSet(this.GetProductVersion(EdmVersion.V40));
-        this.VerifySemanticValidation(model, validationRuleSet, expectedErrors);
+        // Assert
+        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError>? actualErrors);
+        Assert.Empty(actualErrors);
+
+        var serializedCsdls = GetSerializerResult(model, edmVersion, out IEnumerable<EdmError> serializationErrors).Select(n => XElement.Parse(n));
+        Assert.True(serializedCsdls.Any());
+        Assert.False(serializationErrors.Any());
+
+        // if the original test model is valid, the round-tripped model should be well-formed and valid.
+        IEdmModel? roundtrippedModel = null;
+        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out roundtrippedModel, out IEnumerable<EdmError>? parserErrors);
+        Assert.True(isWellFormed && !parserErrors.Any());
+
+        var isValid = roundtrippedModel.Validate(out IEnumerable<EdmError>? validationErrors);
+        Assert.True(!validationErrors.Any() && isValid);
     }
 
     class NoneKinds1 : IEdmType, IEdmEntityContainerElement, IEdmSchemaElement

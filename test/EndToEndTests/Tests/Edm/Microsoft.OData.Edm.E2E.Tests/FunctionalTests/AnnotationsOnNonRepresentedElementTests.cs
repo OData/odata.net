@@ -41,8 +41,10 @@ public class AnnotationsOnNonRepresentedElementTests : EdmLibTestCaseBase
         Assert.Equal("'Bogus:PropertyAnnotationAttribute' is a duplicate attribute name. Line 3, position 78.", errors.First().ErrorMessage);
     }
 
-    [Fact]
-    public void Should_SupportKeyAnnotationElement_InEdmV40()
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void Should_SupportKeyAnnotationElement_InEdmV40AndV401(EdmVersion edmVersion)
     {
         // Arrange
         const string csdl =
@@ -58,23 +60,36 @@ public class AnnotationsOnNonRepresentedElementTests : EdmLibTestCaseBase
   </EntityType>
 </Schema>";
 
-        var expectedErrors = new EdmLibTestErrors();
-
         // Act
-        var parsedCsdl = XElement.Parse(ModelBuilderHelpers.ReplaceCsdlNamespaceForEdmVersion(csdl, EdmVersion.V40), LoadOptions.SetLineInfo);
+        var parsedCsdl = XElement.Parse(ModelBuilderHelpers.ReplaceCsdlNamespaceForEdmVersion(csdl, edmVersion), LoadOptions.SetLineInfo);
 
         bool success = SchemaReader.TryParse(new XElement[] { parsedCsdl }.Select(e => e.CreateReader()), out IEdmModel testModel, out IEnumerable<EdmError> errors);
         Assert.True(success);
         Assert.False(errors.Any());
 
-        var validationRuleSet = ValidationRuleSet.GetEdmModelRuleSet(this.GetProductVersion(EdmVersion.V40));
+        var validationRuleSet = ValidationRuleSet.GetEdmModelRuleSet(this.GetProductVersion(edmVersion));
 
         // Assert
-        this.VerifySemanticValidation(testModel, validationRuleSet, expectedErrors);
+        var validationResult = testModel.Validate(validationRuleSet, out IEnumerable<EdmError>? actualErrors);
+        Assert.Empty(actualErrors);
+
+        var serializedCsdls = GetSerializerResult(testModel, edmVersion, out IEnumerable<EdmError> serializationErrors).Select(n => XElement.Parse(n));
+        Assert.True(serializedCsdls.Any());
+        Assert.False(serializationErrors.Any());
+
+        // if the original test model is valid, the round-tripped model should be well-formed and valid.
+        IEdmModel? roundtrippedModel = null;
+        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out roundtrippedModel, out IEnumerable<EdmError>? parserErrors);
+        Assert.True(isWellFormed && !parserErrors.Any());
+
+        var isValid = roundtrippedModel.Validate(out IEnumerable<EdmError>? validationErrors);
+        Assert.True(!validationErrors.Any() && isValid);
     }
 
-    [Fact]
-    public void Should_SupportEntityContainerAnnotationElement_InEdmV40()
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void Should_SupportEntityContainerAnnotationElement_InEdmV40AndV401(EdmVersion edmVersion)
     {
         // Arrange
         const string csdl =
@@ -95,25 +110,41 @@ public class AnnotationsOnNonRepresentedElementTests : EdmLibTestCaseBase
 </Schema>";
 
         var expectedErrors = new EdmLibTestErrors()
-            {
-                { 5, 6, EdmErrorCode.DuplicateDirectValueAnnotationFullName},
-            };
+        {
+            { 5, 6, EdmErrorCode.DuplicateDirectValueAnnotationFullName},
+        };
 
         // Act
-        var parsedCsdl = XElement.Parse(ModelBuilderHelpers.ReplaceCsdlNamespaceForEdmVersion(csdl, EdmVersion.V40), LoadOptions.SetLineInfo);
+        var parsedCsdl = XElement.Parse(ModelBuilderHelpers.ReplaceCsdlNamespaceForEdmVersion(csdl, edmVersion), LoadOptions.SetLineInfo);
 
         bool success = SchemaReader.TryParse(new XElement[] { parsedCsdl }.Select(e => e.CreateReader()), out IEdmModel testModel, out IEnumerable<EdmError> errors);
         Assert.True(success);
         Assert.False(errors.Any());
 
-        var validationRuleSet = ValidationRuleSet.GetEdmModelRuleSet(this.GetProductVersion(EdmVersion.V40));
+        var validationRuleSet = ValidationRuleSet.GetEdmModelRuleSet(this.GetProductVersion(edmVersion));
 
         // Assert
-        this.VerifySemanticValidation(testModel, validationRuleSet, expectedErrors);
+        var validationResult = testModel.Validate(validationRuleSet, out IEnumerable<EdmError>? actualErrors);
+        Assert.True(expectedErrors.Count == actualErrors.Count());
+        Assert.Single(actualErrors);
+
+        Assert.Equal(EdmErrorCode.DuplicateDirectValueAnnotationFullName, actualErrors.Last().ErrorCode);
+        Assert.Equal("An element already has a direct annotation with the namespace 'http://bogus.com/schema' and name 'SchemaAnnotation'.", actualErrors.Last().ErrorMessage);
+        Assert.Equal("(5, 6)", actualErrors.Last().ErrorLocation.ToString());
+
+        var serializedCsdls = GetSerializerResult(testModel, edmVersion, out IEnumerable<EdmError> serializationErrors).Select(n => XElement.Parse(n));
+        Assert.True(serializedCsdls.Any());
+        Assert.False(serializationErrors.Any());
+
+        // if the original test model is not valid, the serializer should still generate CSDLs that parser can handle, but the round trip-ability is not guaranteed.
+        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel? roundtrippedModel, out IEnumerable<EdmError>? parserErrors);
+        Assert.True(isWellFormed);
     }
 
-    [Fact]
-    public void Should_FailValidation_When_AnnotationElementFullNameIsNotUnique()
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void Should_FailValidation_When_AnnotationElementFullNameIsNotUnique_InEdmV40AndV401(EdmVersion edmVersion)
     {
         // Arrange
         const string csdl =
@@ -135,20 +166,36 @@ public class AnnotationsOnNonRepresentedElementTests : EdmLibTestCaseBase
         };
 
         // Act
-        var parsedCsdl = XElement.Parse(ModelBuilderHelpers.ReplaceCsdlNamespaceForEdmVersion(csdl, EdmVersion.V40), LoadOptions.SetLineInfo);
+        var parsedCsdl = XElement.Parse(ModelBuilderHelpers.ReplaceCsdlNamespaceForEdmVersion(csdl, edmVersion), LoadOptions.SetLineInfo);
 
         bool success = SchemaReader.TryParse(new XElement[] { parsedCsdl }.Select(e => e.CreateReader()), out IEdmModel testModel, out IEnumerable<EdmError> errors);
         Assert.True(success);
         Assert.False(errors.Any());
 
-        var validationRuleSet = ValidationRuleSet.GetEdmModelRuleSet(this.GetProductVersion(EdmVersion.V40));
+        var validationRuleSet = ValidationRuleSet.GetEdmModelRuleSet(this.GetProductVersion(edmVersion));
 
         // Assert
-        this.VerifySemanticValidation(testModel, validationRuleSet, expectedErrors);
+        var validationResult = testModel.Validate(validationRuleSet, out IEnumerable<EdmError>? actualErrors);
+        Assert.True(expectedErrors.Count == actualErrors.Count());
+        Assert.Single(actualErrors);
+
+        Assert.Equal(EdmErrorCode.DuplicateDirectValueAnnotationFullName, actualErrors.Last().ErrorCode);
+        Assert.Equal("An element already has a direct annotation with the namespace 'http://bogus.com/schema' and name 'SchemaAnnotation'.", actualErrors.Last().ErrorMessage);
+        Assert.Equal("(7, 9)", actualErrors.Last().ErrorLocation.ToString());
+
+        var serializedCsdls = GetSerializerResult(testModel, edmVersion, out IEnumerable<EdmError> serializationErrors).Select(n => XElement.Parse(n));
+        Assert.True(serializedCsdls.Any());
+        Assert.False(serializationErrors.Any());
+
+        // if the original test model is not valid, the serializer should still generate CSDLs that parser can handle, but the round trip-ability is not guaranteed.
+        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel? roundtrippedModel, out IEnumerable<EdmError>? parserErrors);
+        Assert.True(isWellFormed);
     }
 
-    [Fact]
-    public void Should_SupportPropertyRefAnnotationElement_InEdmV40()
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void Should_SupportPropertyRefAnnotationElement_InEdmV40AndV401(EdmVersion edmVersion)
     {
         // Arrange
         const string csdl =
@@ -165,27 +212,39 @@ public class AnnotationsOnNonRepresentedElementTests : EdmLibTestCaseBase
   </EntityType>
 </Schema>";
 
-        var expectedErrors = new EdmLibTestErrors();
-
         // Act
-        var parsedCsdl = XElement.Parse(ModelBuilderHelpers.ReplaceCsdlNamespaceForEdmVersion(csdl, EdmVersion.V40), LoadOptions.SetLineInfo);
+        var parsedCsdl = XElement.Parse(ModelBuilderHelpers.ReplaceCsdlNamespaceForEdmVersion(csdl, edmVersion), LoadOptions.SetLineInfo);
 
         bool success = SchemaReader.TryParse(new XElement[] { parsedCsdl }.Select(e => e.CreateReader()), out IEdmModel testModel, out IEnumerable<EdmError> errors);
         Assert.True(success);
         Assert.False(errors.Any());
 
-        var validationRuleSet = ValidationRuleSet.GetEdmModelRuleSet(this.GetProductVersion(EdmVersion.V40));
+        var validationRuleSet = ValidationRuleSet.GetEdmModelRuleSet(this.GetProductVersion(edmVersion));
 
         // Assert
-        this.VerifySemanticValidation(testModel, validationRuleSet, expectedErrors);
+        var validationResult = testModel.Validate(validationRuleSet, out IEnumerable<EdmError>? actualErrors);
+        Assert.Empty(actualErrors);
+
+        var serializedCsdls = GetSerializerResult(testModel, edmVersion, out IEnumerable<EdmError> serializationErrors).Select(n => XElement.Parse(n));
+        Assert.True(serializedCsdls.Any());
+        Assert.False(serializationErrors.Any());
+
+        // if the original test model is valid, the round-tripped model should be well-formed and valid.
+        IEdmModel? roundtrippedModel = null;
+        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out roundtrippedModel, out IEnumerable<EdmError>? parserErrors);
+        Assert.True(isWellFormed && !parserErrors.Any());
+
+        var isValid = roundtrippedModel.Validate(out IEnumerable<EdmError>? validationErrors);
+        Assert.True(!validationErrors.Any() && isValid);
     }
 
-    public static TheoryData<string, EdmLibTestErrors> GetAnnotationElementTestData()
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void Should_ValidateAnnotationElementRules1_InEdmV40AndV401(EdmVersion edmVersion)
     {
-        return new TheoryData<string, EdmLibTestErrors>
-        {
-            {
-                @"<?xml version=""1.0"" encoding=""utf-16""?>
+        // Arrange
+        var csdl = @"<?xml version=""1.0"" encoding=""utf-16""?>
 <Schema Namespace=""Bork"" Alias=""Self"" xmlns:Bogus=""http://bogus.com/schema"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
     <Function Name=""Function1""><ReturnType Type=""Int32""/>
         <Bogus:SchemaAnnotation Stuff=""Stuffed"" />
@@ -197,11 +256,40 @@ public class AnnotationsOnNonRepresentedElementTests : EdmLibTestCaseBase
         <Bogus:AnotherSchemaAnnotation Fluff=""Fluffy"" />
     </FunctionImport>
     </EntityContainer>
-</Schema>",
-                new EdmLibTestErrors()
-            },
-            {
-                 @"<?xml version=""1.0"" encoding=""utf-16""?>
+</Schema>";
+
+        var parsedCsdl = XElement.Parse(ModelBuilderHelpers.ReplaceCsdlNamespaceForEdmVersion(csdl, EdmVersion.V401), LoadOptions.SetLineInfo);
+        bool success = SchemaReader.TryParse(new XElement[] { parsedCsdl }.Select(e => e.CreateReader()), out IEdmModel testModel, out IEnumerable<EdmError> errors);
+        Assert.True(success);
+        Assert.False(errors.Any());
+
+        var validationRuleSet = ValidationRuleSet.GetEdmModelRuleSet(this.GetProductVersion(edmVersion));
+
+        // Assert
+        // Assert
+        var validationResult = testModel.Validate(validationRuleSet, out IEnumerable<EdmError>? actualErrors);
+        Assert.Empty(actualErrors);
+
+        var serializedCsdls = GetSerializerResult(testModel, edmVersion, out IEnumerable<EdmError> serializationErrors).Select(n => XElement.Parse(n));
+        Assert.True(serializedCsdls.Any());
+        Assert.False(serializationErrors.Any());
+
+        // if the original test model is valid, the round-tripped model should be well-formed and valid.
+        IEdmModel? roundtrippedModel = null;
+        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out roundtrippedModel, out IEnumerable<EdmError>? parserErrors);
+        Assert.True(isWellFormed && !parserErrors.Any());
+
+        var isValid = roundtrippedModel.Validate(out IEnumerable<EdmError>? validationErrors);
+        Assert.True(!validationErrors.Any() && isValid);
+    }
+
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void Should_ValidateAnnotationElementRules2_InEdmV40AndV401(EdmVersion edmVersion)
+    {
+        // Arrange
+        var csdl = @"<?xml version=""1.0"" encoding=""utf-16""?>
 <Schema Namespace=""Grumble"" Alias=""Self"" xmlns:Bogus=""http://bogus.com/schema"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
     <EntityContainer Name=""EC1"">
     <Bogus:SchemaAnnotation Stuff=""Stuffed1"" />
@@ -215,30 +303,40 @@ public class AnnotationsOnNonRepresentedElementTests : EdmLibTestCaseBase
     <Property Name=""Id"" Type=""Int32"" Nullable=""false""/>
     <Property Name=""Bar"" Type=""Int32"" />
     </EntityType>
-</Schema>",
-                new EdmLibTestErrors { { 5, 6, EdmErrorCode.DuplicateDirectValueAnnotationFullName } }
-            }
-        };
-    }
+</Schema>";
 
-    [Theory]
-    [MemberData(nameof(GetAnnotationElementTestData))]
-    public void Should_ValidateAnnotationElementRules_InEdmV40(string csdl, EdmLibTestErrors expectedErrors)
-    {
-        // Arrange
-        var parsedCsdl = XElement.Parse(ModelBuilderHelpers.ReplaceCsdlNamespaceForEdmVersion(csdl, EdmVersion.V40), LoadOptions.SetLineInfo);
+        var expectedErrors = new EdmLibTestErrors { { 5, 6, EdmErrorCode.DuplicateDirectValueAnnotationFullName } };
+
+        // Act
+        var parsedCsdl = XElement.Parse(ModelBuilderHelpers.ReplaceCsdlNamespaceForEdmVersion(csdl, EdmVersion.V401), LoadOptions.SetLineInfo);
         bool success = SchemaReader.TryParse(new XElement[] { parsedCsdl }.Select(e => e.CreateReader()), out IEdmModel testModel, out IEnumerable<EdmError> errors);
         Assert.True(success);
         Assert.False(errors.Any());
 
-        var validationRuleSet = ValidationRuleSet.GetEdmModelRuleSet(this.GetProductVersion(EdmVersion.V40));
+        var validationRuleSet = ValidationRuleSet.GetEdmModelRuleSet(this.GetProductVersion(edmVersion));
 
         // Assert
-        this.VerifySemanticValidation(testModel, validationRuleSet, expectedErrors);
+        var validationResult = testModel.Validate(validationRuleSet, out IEnumerable<EdmError>? actualErrors);
+        Assert.True(expectedErrors.Count == actualErrors.Count());
+        Assert.Single(actualErrors);
+
+        Assert.Equal(EdmErrorCode.DuplicateDirectValueAnnotationFullName, actualErrors.Last().ErrorCode);
+        Assert.Equal("An element already has a direct annotation with the namespace 'http://bogus.com/schema' and name 'SchemaAnnotation'.", actualErrors.Last().ErrorMessage);
+        Assert.Equal("(5, 6)", actualErrors.Last().ErrorLocation.ToString());
+
+        var serializedCsdls = GetSerializerResult(testModel, edmVersion, out IEnumerable<EdmError> serializationErrors).Select(n => XElement.Parse(n));
+        Assert.True(serializedCsdls.Any());
+        Assert.False(serializationErrors.Any());
+
+        // if the original test model is not valid, the serializer should still generate CSDLs that parser can handle, but the round trip-ability is not guaranteed.
+        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel? roundtrippedModel, out IEnumerable<EdmError>? parserErrors);
+        Assert.True(isWellFormed);
     }
 
-    [Fact]
-    public void Should_SupportFunctionImportAnnotationElement_InEdmV40()
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void Should_SupportFunctionImportAnnotationElement_InEdmV40AndV401(EdmVersion edmVersion)
     {
         // Arrange
         const string csdl =
@@ -259,16 +357,28 @@ public class AnnotationsOnNonRepresentedElementTests : EdmLibTestCaseBase
         var expectedErrors = new EdmLibTestErrors() { };
 
         // Act
-        var parsedCsdl = XElement.Parse(ModelBuilderHelpers.ReplaceCsdlNamespaceForEdmVersion(csdl, EdmVersion.V40), LoadOptions.SetLineInfo);
+        var parsedCsdl = XElement.Parse(ModelBuilderHelpers.ReplaceCsdlNamespaceForEdmVersion(csdl, edmVersion), LoadOptions.SetLineInfo);
 
         bool success = SchemaReader.TryParse(new XElement[] { parsedCsdl }.Select(e => e.CreateReader()), out IEdmModel testModel, out IEnumerable<EdmError> errors);
         Assert.True(success);
         Assert.False(errors.Any());
 
-        var validationRuleSet = ValidationRuleSet.GetEdmModelRuleSet(this.GetProductVersion(EdmVersion.V40));
+        var validationRuleSet = ValidationRuleSet.GetEdmModelRuleSet(this.GetProductVersion(edmVersion));
 
         // Assert
-        this.VerifySemanticValidation(testModel, validationRuleSet, expectedErrors);
-    }
+        var validationResult = testModel.Validate(validationRuleSet, out IEnumerable<EdmError>? actualErrors);
+        Assert.True(expectedErrors.Count == actualErrors.Count());
+        Assert.Empty(actualErrors);
 
+        var serializedCsdls = GetSerializerResult(testModel, edmVersion, out IEnumerable<EdmError> serializationErrors).Select(n => XElement.Parse(n));
+        Assert.True(serializedCsdls.Any());
+        Assert.False(serializationErrors.Any());
+
+        // if the original test model is valid, the round-tripped model should be well-formed and valid.
+        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel? roundtrippedModel, out IEnumerable<EdmError>? parserErrors);
+        Assert.True(isWellFormed && !parserErrors.Any());
+
+        var isValid = roundtrippedModel.Validate(out IEnumerable<EdmError>? validationErrors);
+        Assert.True(!validationErrors.Any() && isValid);
+    }
 }

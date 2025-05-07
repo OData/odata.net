@@ -142,7 +142,7 @@ public class CsdlXElementComparer
     private void UpdatePrimitiveTypeNameByAttribute(XElement csdlElement, string attributeName)
     {
         var primitiveTypeNames = new Dictionary<string, string>();
-        foreach (var primitiveType in ModelBuilderHelpers.AllPrimitiveEdmTypes(EdmVersion.Latest, false))
+        foreach (var primitiveType in ModelBuilderHelpers.AllPrimitiveEdmTypes(EdmVersion.V401, false))
         {
             primitiveTypeNames.Add((primitiveType.Definition as IEdmSchemaElement).Name, primitiveType.TestFullName());
         }

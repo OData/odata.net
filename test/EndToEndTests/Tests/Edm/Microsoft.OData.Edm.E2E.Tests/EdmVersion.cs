@@ -19,5 +19,5 @@ public enum EdmVersion
     /// <summary>
     /// Latest version
     /// </summary>
-    Latest = V40
+    V401
 }

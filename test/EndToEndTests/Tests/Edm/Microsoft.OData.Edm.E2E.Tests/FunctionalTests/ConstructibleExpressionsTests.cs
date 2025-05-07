@@ -12,7 +12,7 @@ namespace Microsoft.OData.Edm.E2E.Tests.FunctionalTests;
 public class ConstructibleExpressionsTests : EdmLibTestCaseBase
 {
     [Fact]
-    public void EdmBinaryConstant()
+    public void EdmBinaryConstant_ShouldCreateBinaryConstantExpressionAndValidateProperties()
     {
         // Arrange & Act & Assert
         var e = new EdmBinaryConstant(new byte[] { 1, 2, 3 });
@@ -37,7 +37,7 @@ public class ConstructibleExpressionsTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void EdmBooleanConstant()
+    public void EdmBooleanConstant_ShouldCreateBooleanConstantExpressionAndValidateProperties()
     {
         // Arrange & Act & Assert
         var e = new EdmBooleanConstant(true);
@@ -58,7 +58,7 @@ public class ConstructibleExpressionsTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void EdmDurationConstant()
+    public void EdmDurationConstant_ShouldCreateDurationConstantExpressionAndValidateProperties()
     {
         // Arrange & Act & Assert
         var e = new EdmDurationConstant(new TimeSpan(1, 2, 3));
@@ -78,7 +78,7 @@ public class ConstructibleExpressionsTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void EdmDateTimeOffsetConstant()
+    public void EdmDateTimeOffsetConstant_ShouldCreateDateTimeOffsetConstantExpressionAndValidateProperties()
     {
         // Arrange & Act & Assert
         var e = new EdmDateTimeOffsetConstant(new DateTimeOffset(2011, 9, 8, 0, 0, 0, new TimeSpan(1, 2, 0)));
@@ -98,7 +98,7 @@ public class ConstructibleExpressionsTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void EdmDateConstant()
+    public void EdmDateConstant_ShouldCreateDateConstantExpressionAndValidateProperties()
     {
         // Arrange & Act & Assert
         var e = new EdmDateConstant(new Date(2014, 8, 8));
@@ -119,7 +119,7 @@ public class ConstructibleExpressionsTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void EdmDecimalConstant()
+    public void EdmDecimalConstant_ShouldCreateDecimalConstantExpressionAndValidateProperties()
     {
         // Arrange & Act & Assert
         var e = new EdmDecimalConstant((decimal)11.22);
@@ -139,7 +139,7 @@ public class ConstructibleExpressionsTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void EdmFloatingConstant()
+    public void EdmFloatingConstant_ShouldCreateFloatingPointConstantExpressionAndValidateProperties()
     {
         // Arrange & Act & Assert
         var e = new EdmFloatingConstant(11.22);
@@ -159,7 +159,7 @@ public class ConstructibleExpressionsTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void EdmGuidConstant()
+    public void EdmGuidConstant_ShouldCreateGuidConstantExpressionAndValidateProperties()
     {
         // Arrange & Act & Assert
         var e = new EdmGuidConstant(new Guid(new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 }));
@@ -179,7 +179,7 @@ public class ConstructibleExpressionsTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void EdmIntegerConstant()
+    public void EdmIntegerConstant_ShouldCreateIntegerConstantExpressionAndValidateProperties()
     {
         // Arrange & Act & Assert
         var e = new EdmIntegerConstant(2);
@@ -199,7 +199,7 @@ public class ConstructibleExpressionsTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void EdmStringConstant()
+    public void EdmStringConstant_ShouldCreateStringConstantExpressionAndValidateProperties()
     {
         // Arrange & Act & Assert
         var e = new EdmStringConstant("qqq");
@@ -222,7 +222,7 @@ public class ConstructibleExpressionsTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void EdmTimeOfDayConstant()
+    public void EdmTimeOfDayConstant_ShouldCreateTimeOfDayConstantExpressionAndValidateProperties()
     {
         // Arrange & Act & Assert
         var e = new EdmTimeOfDayConstant(new TimeOfDay(12, 30, 50, 0));
@@ -241,7 +241,7 @@ public class ConstructibleExpressionsTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void EdmCastExpression()
+    public void EdmCastExpression_ShouldCreateCastExpressionAndValidateProperties()
     {
         // Arrange & Act & Assert
         var e = new EdmCastExpression(new EdmStringConstant("qwerty"), EdmCoreModel.Instance.GetBoolean(false));
@@ -259,7 +259,7 @@ public class ConstructibleExpressionsTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void EdmLabeledExpression()
+    public void EdmLabeledExpression_ShouldCreateLabeledExpressionAndValidateProperties()
     {
         // Arrange & Act & Assert
         var e = new EdmLabeledExpression("l1", new EdmStringConstant("qwerty"));
@@ -278,7 +278,7 @@ public class ConstructibleExpressionsTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void EdmCollectionExpression()
+    public void EdmCollectionExpression_ShouldCreateCollectionExpressionAndValidateProperties()
     {
         // Arrange & Act & Assert
         var e = new EdmCollectionExpression(
@@ -300,7 +300,7 @@ public class ConstructibleExpressionsTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void EdmLabeledExpressionReferenceExpression()
+    public void EdmLabeledExpressionReferenceExpression_ShouldCreateLabeledExpressionReferenceAndValidateProperties()
     {
         // Arrange & Act & Assert
         var e = new EdmLabeledExpressionReferenceExpression(new EdmLabeledExpression("qq", EdmNullExpression.Instance));
@@ -323,7 +323,33 @@ public class ConstructibleExpressionsTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void EdmApplyExpression()
+    public void EdmLabeledExpression_ShouldCreateLabeledExpressionReferenceAndValidateProperties()
+    {
+        // Arrange & Act & Assert
+        var label = new EdmLabeledExpression("Label", new EdmStringConstant("foo"));
+        var e = new EdmLabeledExpressionReferenceExpression(label);
+        Assert.Equal(EdmExpressionKind.LabeledExpressionReference, e.ExpressionKind);
+        Assert.Equal("Label", e.ReferencedLabeledExpression.Name);
+        Assert.False(e.IsBad());
+        Assert.Throws<InvalidOperationException>(() => e.ReferencedLabeledExpression = label);
+
+        e = new EdmLabeledExpressionReferenceExpression();
+        e.ReferencedLabeledExpression = label;
+        Assert.Equal(EdmExpressionKind.LabeledExpressionReference, e.ExpressionKind);
+        Assert.Equal("Label", e.ReferencedLabeledExpression.Name);
+        Assert.False(e.IsBad());
+        Assert.Throws<InvalidOperationException>(() => e.ReferencedLabeledExpression = label);
+
+        Assert.Throws<ArgumentNullException>(() => new EdmLabeledExpressionReferenceExpression(null));
+
+        var ee = new MutableEdmLabeledExpressionReferenceExpression();
+        Assert.Null(ee.ReferencedLabeledExpression);
+        Assert.True(ee.IsBad());
+        Assert.Single(ee.Errors());
+    }
+
+    [Fact]
+    public void EdmApplyExpression_ShouldCreateApplyExpressionAndValidateProperties()
     {
         // Arrange & Act & Assert
         var arguments = new IEdmExpression[] { new EdmIntegerConstant(1) };
@@ -334,16 +360,203 @@ public class ConstructibleExpressionsTests : EdmLibTestCaseBase
         Assert.Equal(arguments, e.Arguments);
         Assert.False(e.IsBad());
 
-        this.VerifyThrowsException(typeof(ArgumentNullException), () => new EdmApplyExpression(null, arguments));
-        this.VerifyThrowsException(typeof(ArgumentNullException), () => new EdmApplyExpression(null, arguments.AsEnumerable()));
-        this.VerifyThrowsException(typeof(ArgumentNullException), () => new EdmApplyExpression(operation, null));
-        this.VerifyThrowsException(typeof(ArgumentNullException), () => new EdmApplyExpression(operation, (IEnumerable<IEdmExpression>)null));
+        Assert.Throws<ArgumentNullException>(() => new EdmApplyExpression(null, arguments));
+        Assert.Throws<ArgumentNullException>(() => new EdmApplyExpression(null, arguments));
+        Assert.Throws<ArgumentNullException>(() => new EdmApplyExpression(operation, null));
+        Assert.Throws<ArgumentNullException>(() => new EdmApplyExpression(operation, (IEnumerable<IEdmExpression>)null));
 
         var ee = new MutableEdmApplyExpression();
         Assert.Null(ee.AppliedFunction);
         Assert.Null(ee.Arguments);
         Assert.True(ee.IsBad());
         Assert.Equal(2, ee.Errors().Count());
+    }
+
+    [Fact]
+    public void EdmEnumMemberExpression_ShouldCreateEnumMemberExpressionAndValidateProperties()
+    {
+        // Arrange & Act & Assert
+        var et = new EdmEnumType("NS", "Spicy");
+        var em = new EdmEnumMember(et, "Hot", new EdmEnumMemberValue(5));
+        var e = new EdmEnumMemberExpression(em);
+        Assert.Equal(EdmExpressionKind.EnumMember, e.ExpressionKind);
+        Assert.Equal("Hot", e.EnumMembers.Single().Name);
+        Assert.False(e.IsBad());
+
+        Assert.Throws<ArgumentNullException>(() => new EdmEnumMemberExpression(null));
+
+        var ee = new MutableEdmEnumMemberExpression();
+        Assert.Null(ee.EnumMembers);
+        Assert.True(ee.IsBad());
+        Assert.Single(ee.Errors());
+    }
+
+    [Fact]
+    public void EdmNullExpression_ShouldCreateNullExpressionAndValidateProperties()
+    {
+        // Arrange & Act & Assert
+        var e = EdmNullExpression.Instance;
+        Assert.Equal(EdmExpressionKind.Null, e.ExpressionKind);
+        Assert.Equal(EdmValueKind.Null, e.ValueKind);
+        Assert.False(e.IsBad());
+    }
+
+    [Fact]
+    public void EdmIfExpression_ShouldCreateIfExpressionAndValidateProperties()
+    {
+        var e = new EdmIfExpression(new EdmStringConstant("if"), new EdmStringConstant("then"), new EdmStringConstant("else"));
+        Assert.Equal(EdmExpressionKind.If, e.ExpressionKind);
+        Assert.Equal("if", ((IEdmStringValue)e.TestExpression).Value);
+        Assert.Equal("then", ((IEdmStringValue)e.TrueExpression).Value);
+        Assert.Equal("else", ((IEdmStringValue)e.FalseExpression).Value);
+        Assert.False(e.IsBad());
+
+        Assert.Throws<ArgumentNullException>(() => new EdmIfExpression(null, new EdmStringConstant("then"), new EdmStringConstant("else")));
+        Assert.Throws<ArgumentNullException>(() => new EdmIfExpression(new EdmStringConstant("if"), null, new EdmStringConstant("else")));
+        Assert.Throws<ArgumentNullException>(() => new EdmIfExpression(new EdmStringConstant("if"), new EdmStringConstant("then"), null));
+
+        var ee = new MutableIfExpression();
+        Assert.Null(ee.TestExpression);
+        Assert.Null(ee.TrueExpression);
+        Assert.Null(ee.FalseExpression);
+        Assert.True(ee.IsBad());
+        Assert.Equal(3, ee.Errors().Count());
+    }
+
+    [Fact]
+    public void EdmIsOfExpression_ShouldCreateIsOfExpressionAndValidateProperties()
+    {
+        // Arrange & Act & Assert
+        var e = new EdmIsOfExpression(new EdmStringConstant("qwerty"), EdmCoreModel.Instance.GetBoolean(false));
+        Assert.Equal(EdmExpressionKind.IsOf, e.ExpressionKind);
+        Assert.Equal("qwerty", ((IEdmStringValue)e.Operand).Value);
+        Assert.Equal("Edm.Boolean", e.Type.FullName());
+        Assert.False(e.IsBad());
+
+        Assert.Throws<ArgumentNullException>(() => new EdmIsOfExpression(null, EdmCoreModel.Instance.GetBoolean(false)));
+        Assert.Throws<ArgumentNullException>(() => new EdmIsOfExpression(new EdmStringConstant("qwerty"), null));
+
+        var ee = new MutableIsTypeExpression();
+        Assert.Null(ee.Operand);
+        Assert.Null(ee.Type);
+        Assert.True(ee.IsBad());
+        Assert.Equal(2, ee.Errors().Count());
+    }
+
+    [Fact]
+    public void EdmPathExpression_ShouldCreatePathExpressionAndValidateProperties()
+    {
+        // Arrange & Act & Assert
+        var e = new EdmPathExpression("x", "y");
+        Assert.False(e.IsBad());
+        Assert.Equal(EdmExpressionKind.Path, e.ExpressionKind);
+        Assert.Equal(2, e.PathSegments.Count());
+        var s1 = e.PathSegments.First();
+        Assert.Equal("x", s1);
+        Assert.Equal("y", e.PathSegments.Last());
+
+        Assert.Throws<ArgumentNullException>(() => new EdmPathExpression((string[])null));
+
+        var ee = new MutablePathExpression();
+        Assert.Null(ee.PathSegments);
+        Assert.True(ee.IsBad());
+        Assert.Single(ee.Errors());
+    }
+
+    [Fact]
+    public void EdmPropertyConstructor_ShouldCreatePropertyConstructorAndValidateProperties()
+    {
+        // Arrange & Act & Assert
+        var e = new EdmPropertyConstructor("n1", new EdmStringConstant("qwerty"));
+        Assert.Equal("n1", e.Name);
+        Assert.Equal("qwerty", ((IEdmStringValue)e.Value).Value);
+        Assert.False(e.IsBad());
+
+        Assert.Throws<ArgumentNullException>(() => new EdmPropertyConstructor(null, new EdmStringConstant("qwerty")));
+        Assert.Throws<ArgumentNullException>(() => new EdmPropertyConstructor("n1", null));
+
+        var ee = new MutablePropertyConstructor();
+        Assert.Null(ee.Name);
+        Assert.Null(ee.Value);
+        Assert.True(ee.IsBad());
+        Assert.Equal(2, ee.Errors().Count());
+    }
+
+    [Fact]
+    public void EdmRecordExpression_ShouldCreateRecordExpressionAndValidateProperties()
+    {
+        // Arrange & Act & Assert
+        var e = new EdmRecordExpression(EdmCoreModel.Instance.GetBoolean(true).AsStructured(),
+            new EdmPropertyConstructor("p1", new EdmStringConstant("qwerty")),
+            new EdmPropertyConstructor("p2", new EdmStringConstant("qwerty2")));
+
+        Assert.Equal(EdmExpressionKind.Record, e.ExpressionKind);
+        Assert.Equal("Edm.Boolean", e.DeclaredType.FullName());
+        Assert.True(e.IsBad());
+        Assert.Single(e.Errors());
+
+        e = new EdmRecordExpression();
+        Assert.Null(e.DeclaredType);
+        Assert.Empty(e.Properties);
+        Assert.False(e.IsBad());
+        Assert.Empty(e.Errors());
+
+        e = new EdmRecordExpression(new EdmEntityTypeReference(new EdmEntityType("", ""), false),
+            new EdmPropertyConstructor("p1", new EdmStringConstant("qwerty")),
+            new EdmPropertyConstructor("p2", new EdmStringConstant("qwerty2")));
+        Assert.False(e.IsBad());
+        Assert.Empty(e.Errors());
+
+        e = new EdmRecordExpression((IEdmStructuredTypeReference)null);
+        Assert.Null(e.DeclaredType);
+        Assert.Empty(e.Properties);
+        Assert.False(e.IsBad());
+        Assert.Empty(e.Errors());
+
+        Assert.Throws<ArgumentNullException>(() => new EdmPropertyConstructor(null, new EdmStringConstant("qwerty")));
+        Assert.Throws<ArgumentNullException>(() => new EdmPropertyConstructor("p1", null));
+    }
+
+    #region Private
+
+    private sealed class MutableCastExpression : IEdmCastExpression
+    {
+        public IEdmExpression Operand
+        {
+            get;
+            set;
+        }
+
+        public IEdmTypeReference Type
+        {
+            get;
+            set;
+        }
+
+        public EdmExpressionKind ExpressionKind
+        {
+            get { return EdmExpressionKind.Cast; }
+        }
+    }
+
+    private sealed class MutableLabeledExpression : IEdmLabeledExpression
+    {
+        public IEdmExpression Expression
+        {
+            get;
+            set;
+        }
+
+        public string Name
+        {
+            get;
+            set;
+        }
+
+        public EdmExpressionKind ExpressionKind
+        {
+            get { return EdmExpressionKind.Labeled; }
+        }
     }
 
     private sealed class MutableEdmApplyExpression : IEdmApplyExpression
@@ -366,24 +579,6 @@ public class ConstructibleExpressionsTests : EdmLibTestCaseBase
         }
     }
 
-    [Fact]
-    public void EdmEnumMemberExpression()
-    {
-        var et = new EdmEnumType("NS", "Spicy");
-        var em = new EdmEnumMember(et, "Hot", new EdmEnumMemberValue(5));
-        var e = new EdmEnumMemberExpression(em);
-        Assert.Equal(EdmExpressionKind.EnumMember, e.ExpressionKind);
-        Assert.Equal("Hot", e.EnumMembers.Single().Name, "e.EnumMembers");
-        Assert.False(e.IsBad());
-
-        this.VerifyThrowsException(typeof(ArgumentNullException), () => new EdmEnumMemberExpression(null));
-
-        var ee = new MutableEdmEnumMemberExpression();
-        Assert.Null(ee.EnumMembers, "e.EnumMembers");
-        Assert.True(ee.IsBad());
-        Assert.Equal(1, ee.Errors().Count());
-    }
-
     private sealed class MutableEdmEnumMemberExpression : IEdmEnumMemberExpression
     {
         public IEnumerable<IEdmEnumMember> EnumMembers { get; set; }
@@ -392,99 +587,6 @@ public class ConstructibleExpressionsTests : EdmLibTestCaseBase
         {
             get { return EdmExpressionKind.EnumMember; }
         }
-    }
-
-    [Fact]
-    public void EdmNullExpressionTest()
-    {
-        var e = EdmNullExpression.Instance;
-        Assert.Equal(EdmExpressionKind.Null, e.ExpressionKind);
-        Assert.Equal(EdmValueKind.Null, e.ValueKind, "e.ValueKind");
-        Assert.False(e.IsBad());
-    }
-
-    [Fact]
-    public void EdmLabeledExpressionReferenceExpressionTest()
-    {
-        var label = new EdmLabeledExpression("Label", new EdmStringConstant("foo"));
-        var e = new EdmLabeledExpressionReferenceExpression(label);
-        Assert.Equal(EdmExpressionKind.LabeledExpressionReference, e.ExpressionKind);
-        Assert.Equal("Label", e.ReferencedLabeledExpression.Name, "e.ReferencedLabeledExpression");
-        Assert.False(e.IsBad());
-        this.VerifyThrowsException(typeof(InvalidOperationException), () => e.ReferencedLabeledExpression = label);
-
-        e = new EdmLabeledExpressionReferenceExpression();
-        e.ReferencedLabeledExpression = label;
-        Assert.Equal(EdmExpressionKind.LabeledExpressionReference, e.ExpressionKind);
-        Assert.Equal("Label", e.ReferencedLabeledExpression.Name, "e.ReferencedLabeledExpression");
-        Assert.False(e.IsBad());
-        this.VerifyThrowsException(typeof(InvalidOperationException), () => e.ReferencedLabeledExpression = label);
-
-        this.VerifyThrowsException(typeof(ArgumentNullException), () => new EdmLabeledExpressionReferenceExpression(null));
-
-        var ee = new MutableEdmLabeledExpressionReferenceExpression();
-        Assert.Null(ee.ReferencedLabeledExpression, "e.ReferencedLabeledExpression");
-        Assert.True(ee.IsBad());
-        Assert.Equal(1, ee.Errors().Count());
-    }
-
-    private sealed class MutableEdmLabeledExpressionReferenceExpression : IEdmLabeledExpressionReferenceExpression
-    {
-        public IEdmLabeledExpression ReferencedLabeledExpression
-        {
-            get;
-            set;
-        }
-
-        public EdmExpressionKind ExpressionKind
-        {
-            get { return EdmExpressionKind.LabeledExpressionReference; }
-        }
-    }
-
-    [Fact]
-    public void EdmIfExpression()
-    {
-        var e = new EdmIfExpression(new EdmStringConstant("if"), new EdmStringConstant("then"), new EdmStringConstant("else"));
-        Assert.Equal(EdmExpressionKind.If, e.ExpressionKind);
-        Assert.Equal("if", ((IEdmStringValue)e.TestExpression).Value, "e.TestExpression");
-        Assert.Equal("then", ((IEdmStringValue)e.TrueExpression).Value, "e.TrueExpression");
-        Assert.Equal("else", ((IEdmStringValue)e.FalseExpression).Value, "e.FalseExpression");
-        Assert.False(e.IsBad());
-
-        try
-        {
-            new EdmIfExpression(null, new EdmStringConstant("then"), new EdmStringConstant("else"));
-            Assert.Fail("exception expected");
-        }
-        catch (ArgumentNullException)
-        {
-        }
-
-        try
-        {
-            new EdmIfExpression(new EdmStringConstant("if"), null, new EdmStringConstant("else"));
-            Assert.Fail("exception expected");
-        }
-        catch (ArgumentNullException)
-        {
-        }
-
-        try
-        {
-            new EdmIfExpression(new EdmStringConstant("if"), new EdmStringConstant("then"), null);
-            Assert.Fail("exception expected");
-        }
-        catch (ArgumentNullException)
-        {
-        }
-
-        var ee = new MutableIfExpression();
-        Assert.Null(ee.TestExpression, "ee.TestExpression");
-        Assert.Null(ee.TrueExpression, "ee.TrueExpression");
-        Assert.Null(ee.FalseExpression, "ee.FalseExpression");
-        Assert.True(ee.IsBad());
-        Assert.Equal(3, ee.Errors().Count());
     }
 
     private sealed class MutableIfExpression : IEdmIfExpression
@@ -513,41 +615,7 @@ public class ConstructibleExpressionsTests : EdmLibTestCaseBase
         }
     }
 
-    [Fact]
-    public void EdmIsTypeExpression()
-    {
-        var e = new EdmIsTypeExpression(new EdmStringConstant("qwerty"), EdmCoreModel.Instance.GetBoolean(false));
-        Assert.Equal(EdmExpressionKind.IsType, e.ExpressionKind);
-        Assert.Equal("qwerty", ((IEdmStringValue)e.Operand).Value););
-        Assert.Equal("Edm.Boolean", e.Type.FullName());
-        Assert.False(e.IsBad());
-
-        try
-        {
-            new EdmIsTypeExpression(null, EdmCoreModel.Instance.GetBoolean(false));
-            Assert.Fail("exception expected");
-        }
-        catch (ArgumentNullException)
-        {
-        }
-
-        try
-        {
-            new EdmIsTypeExpression(new EdmStringConstant("qwerty"), null);
-            Assert.Fail("exception expected");
-        }
-        catch (ArgumentNullException)
-        {
-        }
-
-        var ee = new MutableIsTypeExpression();
-        Assert.Null(ee.Operand, "ee.Operand");
-        Assert.Null(ee.Type, "ee.Type");
-        Assert.True(ee.IsBad());
-        Assert.Equal(2, ee.Errors().Count());
-    }
-
-    private sealed class MutableIsTypeExpression : IEdmIsTypeExpression
+    private sealed class MutableIsTypeExpression : IEdmIsOfExpression
     {
         public IEdmExpression Operand
         {
@@ -563,34 +631,8 @@ public class ConstructibleExpressionsTests : EdmLibTestCaseBase
 
         public EdmExpressionKind ExpressionKind
         {
-            get { return EdmExpressionKind.IsType; }
+            get { return EdmExpressionKind.IsOf; }
         }
-    }
-
-    [Fact]
-    public void EdmPathExpression()
-    {
-        var e = new EdmPathExpression("x", "y");
-        Assert.False(e.IsBad());
-        Assert.Equal(EdmExpressionKind.Path, e.ExpressionKind);
-        Assert.Equal(2, e.PathSegments.Count(), "e.Path.Count()");
-        var s1 = e.PathSegments.First();
-        Assert.Equal("x", s1, "s1");
-        Assert.Equal("y", e.PathSegments.Last(), "e.Path.Last()");
-
-        try
-        {
-            new EdmPathExpression((string[])null);
-            Assert.Fail("exception expected");
-        }
-        catch (ArgumentNullException)
-        {
-        }
-
-        var ee = new MutablePathExpression();
-        Assert.Null(ee.PathSegments, "ee.Path");
-        Assert.True(ee.IsBad());
-        Assert.Equal(1, ee.Errors().Count());
     }
 
     private sealed class MutablePathExpression : IEdmPathExpression
@@ -609,39 +651,6 @@ public class ConstructibleExpressionsTests : EdmLibTestCaseBase
         }
     }
 
-    [Fact]
-    public void EdmPropertyConstructor()
-    {
-        var e = new EdmPropertyConstructor("n1", new EdmStringConstant("qwerty"));
-        Assert.Equal("n1", e.Name, "e.Name");
-        Assert.Equal("qwerty", ((IEdmStringValue)e.Value).Value, ((IEdmStringValue)e.Value).Value);
-        Assert.False(e.IsBad());
-
-        try
-        {
-            new EdmPropertyConstructor(null, new EdmStringConstant("qwerty"));
-            Assert.Fail("exception expected");
-        }
-        catch (ArgumentNullException)
-        {
-        }
-
-        try
-        {
-            new EdmPropertyConstructor("n1", null);
-            Assert.Fail("exception expected");
-        }
-        catch (ArgumentNullException)
-        {
-        }
-
-        var ee = new MutablePropertyConstructor();
-        Assert.Null(ee.Name, "ee.Name");
-        Assert.Null(ee.Value);
-        Assert.True(ee.IsBad());
-        Assert.Equal(2, ee.Errors().Count());
-    }
-
     private sealed class MutablePropertyConstructor : IEdmPropertyConstructor
     {
         public string Name
@@ -657,48 +666,9 @@ public class ConstructibleExpressionsTests : EdmLibTestCaseBase
         }
     }
 
-    [Fact]
-    public void EdmRecordExpression()
+    private sealed class MutableEdmLabeledExpressionReferenceExpression : IEdmLabeledExpressionReferenceExpression
     {
-        var e = new EdmRecordExpression(EdmCoreModel.Instance.GetBoolean(true).AsStructured(),
-            new EdmPropertyConstructor("p1", new EdmStringConstant("qwerty")),
-            new EdmPropertyConstructor("p2", new EdmStringConstant("qwerty2")));
-        Assert.Equal(EdmExpressionKind.Record, e.ExpressionKind);
-        Assert.Equal("Edm.Boolean", e.DeclaredType.FullName());
-        Assert.True(e.IsBad(), "e is bad because it has a bad declared type");
-        Assert.Equal(1, e.Errors().Count());
-
-        e = new EdmRecordExpression();
-        Assert.Null(e.DeclaredType);
-        Assert.Equal(0, e.Properties.Count(), "e.Properties.Count()");
-        Assert.False(e.IsBad(), "e is good");
-        Assert.Equal(0, e.Errors().Count());
-
-        e = new EdmRecordExpression(new EdmEntityTypeReference(new EdmEntityType("", ""), false),
-            new EdmPropertyConstructor("p1", new EdmStringConstant("qwerty")),
-            new EdmPropertyConstructor("p2", new EdmStringConstant("qwerty2")));
-        Assert.False(e.IsBad(), "e is good");
-        Assert.Equal(0, e.Errors().Count());
-
-        e = new EdmRecordExpression((IEdmStructuredTypeReference)null);
-        Assert.Null(e.DeclaredType);
-        Assert.Equal(0, e.Properties.Count(), "e.Properties.Count()");
-        Assert.False(e.IsBad(), "e is good");
-        Assert.Equal(0, e.Errors().Count());
-
-        this.VerifyThrowsException(typeof(ArgumentNullException), () => new EdmPropertyConstructor(null, new EdmStringConstant("qwerty")));
-        this.VerifyThrowsException(typeof(ArgumentNullException), () => new EdmPropertyConstructor("p1", null));
-    }
-
-    private sealed class MutableCastExpression : IEdmCastExpression
-    {
-        public IEdmExpression Operand
-        {
-            get;
-            set;
-        }
-
-        public IEdmTypeReference Type
+        public IEdmLabeledExpression ReferencedLabeledExpression
         {
             get;
             set;
@@ -706,29 +676,9 @@ public class ConstructibleExpressionsTests : EdmLibTestCaseBase
 
         public EdmExpressionKind ExpressionKind
         {
-            get { return EdmExpressionKind.Cast; }
+            get { return EdmExpressionKind.LabeledExpressionReference; }
         }
     }
 
-
-
-    private sealed class MutableLabeledExpression : IEdmLabeledExpression
-    {
-        public IEdmExpression Expression
-        {
-            get;
-            set;
-        }
-
-        public string Name
-        {
-            get;
-            set;
-        }
-
-        public EdmExpressionKind ExpressionKind
-        {
-            get { return EdmExpressionKind.Labeled; }
-        }
-    }
+    #endregion
 }

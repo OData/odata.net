@@ -15,7 +15,7 @@ public static class EdmLibCsdlContentGenerator
 {
     public static XNamespace GetCsdlFullNamespace(EdmVersion csdlVersion)
     {
-        if (csdlVersion == EdmVersion.V40)
+        if (csdlVersion == EdmVersion.V40 || csdlVersion == EdmVersion.V401)
         {
             return EdmStringConstants.EdmOasisNamespace;
         }

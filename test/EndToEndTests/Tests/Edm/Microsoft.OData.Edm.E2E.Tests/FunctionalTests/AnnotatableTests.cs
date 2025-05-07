@@ -608,10 +608,7 @@ public class AnnotatableTests : EdmLibTestCaseBase
         foreach (MyQualifiedName q in qualifiedNames)
         {
             model.SetAnnotationValue(annotatable, q.NamespaceName, q.Name, new EdmStringConstant(this.stringRef, q.MyFullName));
-
-            this.VerifyThrowsException(
-                typeof(InvalidOperationException),
-                () => model.GetAnnotationValue<string>(annotatable, q.NamespaceName, q.Name));
+            Assert.Throws<InvalidOperationException>(() => model.GetAnnotationValue<string>(annotatable, q.NamespaceName, q.Name));
         }
 
         Assert.Equal(qualifiedNames.Count(), model.DirectValueAnnotations(annotatable).Count());
