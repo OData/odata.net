@@ -8,12 +8,14 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Transactions;
 using Microsoft.OData.Core;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Vocabularies;
 using Microsoft.OData.Edm.Vocabularies.Community.V1;
 using Microsoft.OData.UriParser;
+using Microsoft.OData.UriParser.Aggregation;
 using Microsoft.OData.UriParser.Validation;
 using Xunit;
 
@@ -26,6 +28,52 @@ namespace Microsoft.OData.Tests.UriParser
     {
         private readonly Uri ServiceRoot = new Uri("http://host");
         private readonly Uri FullUri = new Uri("http://host/People");
+
+        [Fact]
+        public void AverageUint16()
+        {
+            var uriParser = new ODataUriParser(
+                HardCodedTestModel.TestModel, 
+                ServiceRoot, 
+                new Uri("http://host/People?$apply=aggregate(FavoriteNumber with average as AverageFavoriteNumber)"));
+
+            var odataUri = uriParser.ParseUri();
+
+            var apply = odataUri.Apply;
+            Assert.NotNull(apply);
+            var transformations = apply.Transformations.ToList();
+            Assert.Single(transformations);
+            var aggregateTransformationNode = transformations[0] as AggregateTransformationNode;
+            Assert.NotNull(aggregateTransformationNode);
+            var aggregateExpressions = aggregateTransformationNode.AggregateExpressions.ToList();
+            Assert.Single(aggregateExpressions);
+            var averageExpression = aggregateExpressions[0] as AggregateExpression;
+            Assert.NotNull(averageExpression);
+            Assert.Equal(AggregationMethod.Average, averageExpression.Method);
+        }
+
+        [Fact]
+        public void AverageInt16()
+        {
+            var uriParser = new ODataUriParser(
+                HardCodedTestModel.TestModel,
+                ServiceRoot, 
+                new Uri("http://host/People?$apply=aggregate(SecondFavoriteNumber with average as AverageFavoriteNumber)"));
+
+            var odataUri = uriParser.ParseUri();
+
+            var apply = odataUri.Apply;
+            Assert.NotNull(apply);
+            var transformations = apply.Transformations.ToList();
+            Assert.Single(transformations);
+            var aggregateTransformationNode = transformations[0] as AggregateTransformationNode;
+            Assert.NotNull(aggregateTransformationNode);
+            var aggregateExpressions = aggregateTransformationNode.AggregateExpressions.ToList();
+            Assert.Single(aggregateExpressions);
+            var averageExpression = aggregateExpressions[0] as AggregateExpression;
+            Assert.NotNull(averageExpression);
+            Assert.Equal(AggregationMethod.Average, averageExpression.Method);
+        }
 
         [Theory]
         [InlineData(true)]
