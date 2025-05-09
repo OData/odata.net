@@ -11,8 +11,11 @@ trigger:
    
 # Pull request (PR) triggers
 pr:
-- main
-- dev-8.x
+  autoCancel: false
+  brannches:
+    include:
+      - main
+      - dev-8.x
 
 resources:
   repositories:
