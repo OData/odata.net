@@ -14,8 +14,8 @@ pr:
   autoCancel: false
   brannches:
     include:
-      - main
-      - dev-8.x
+    - main
+    - dev-8.x
 
 resources:
   repositories:
