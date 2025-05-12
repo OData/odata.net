@@ -307,6 +307,10 @@ namespace Microsoft.OData.Tests.UriParser
 
             var pointer = Create("qwe");
 
+            var value = pointer.Value;
+            WriteAddress(((long*)&value)[0]);
+            WriteString((long*)((long*)&value)[0]);
+
             var casted = Retrieve(ref pointer);
             helper.WriteLine(casted);
 
@@ -344,20 +348,40 @@ namespace Microsoft.OData.Tests.UriParser
             pointerPointerAsLongs[0] = addressOfValueData;
         }
 
-        public string Retrieve(ref Pointer<string> pointer)
+        /*public string Retrieve(ref Pointer<string> pointer)
         {
             return pointer.Value as string;
-        }
+        }*/
 
-        public unsafe T Retrieve<T>(ref Pointer<T> pointer) where T : allows ref struct
+        public unsafe ref T Retrieve<T>(ref Pointer<T> pointer) where T : allows ref struct
         {
-            long* pointerPointer = (long*)Unsafe.AsPointer(ref pointer);
-            long* newValueData = (long*)pointerPointer[0];
+            var value = pointer.Value;
+            var valuePointer = ((long*)&value)[0];
 
-            long* newValuePointer = (long*)newValueData[0];
-            T* value = (T*)newValuePointer;
+            var valuePointer2 = (long*)valuePointer;
+            WriteString(valuePointer2);
 
-            return *value;
+            var resultPointer = (T*)valuePointer2;
+
+            return ref Unsafe.AsRef<T>(&value);
+
+            ////return *resultPointer;
+
+            void* pointerPointer = Unsafe.AsPointer(ref pointer);
+            long* pointerPointerAsLongs = (long*)pointerPointer;
+
+            long addressOfValueData = pointerPointerAsLongs[0];
+
+            /*var foo = pointer.Value;
+            long* bar = (long*)&foo;*/
+
+            /*return *(T*)addressOfValueData;
+
+            long* valuePointerAsLongs = (long*)addressOfValueData;
+            T* valuePointer = (T*)valuePointerAsLongs;
+
+            T value = *valuePointer;
+            return value;*/
         }
 
         public ref struct Pointer<T> where T : allows ref struct
