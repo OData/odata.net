@@ -323,14 +323,14 @@ namespace Microsoft.OData.Tests.UriParser
             public int Second;
         }
 
-        public unsafe Pointer<T> Create<T>(T value)
+        public unsafe Pointer<T> Create<T>(T value) where T : allows ref struct
         {
             var pointer = new Pointer<T>();
             Set(ref pointer, value);
             return pointer;
         }
 
-        public unsafe void Set<T>(ref Pointer<T> pointer, T value)
+        public unsafe void Set<T>(ref Pointer<T> pointer, T value) where T : allows ref struct
         {
             long* newValuePointer = (long*)&value;
             long* newValueData = (long*)newValuePointer[0];
