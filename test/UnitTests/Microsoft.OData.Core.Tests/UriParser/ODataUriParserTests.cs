@@ -328,7 +328,7 @@ namespace Microsoft.OData.Tests.UriParser
             return pointer;
         }
 
-        public unsafe void Set(ref Pointer<string> pointer, string value)
+        public unsafe void Set<T>(ref Pointer<T> pointer, T value)
         {
             long* newValuePointer = (long*)&value;
             long* newValueData = (long*)newValuePointer[0];
