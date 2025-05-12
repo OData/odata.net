@@ -320,6 +320,17 @@ namespace Microsoft.OData.Tests.UriParser
             helper.WriteLine(value);*/
         }
 
+        [Fact]
+        public void PointerToRefStructTest()
+        {
+            var pointer = Create(new Bar() { First = "asdf", Second = 42 });
+
+            var value = Retrieve(ref pointer);
+
+            Assert.Equal("asdf", value.First);
+            Assert.Equal(42, value.Second);
+        }
+
         public ref struct Bar
         {
             public string First;
