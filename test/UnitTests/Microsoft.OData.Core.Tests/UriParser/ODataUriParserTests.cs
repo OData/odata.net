@@ -337,10 +337,10 @@ namespace Microsoft.OData.Tests.UriParser
             long* valuePointerAsLongs = (long*)valuePointer;
             long addressOfValueData = valuePointerAsLongs[0];
 
-            long* newValueData = (long*)addressOfValueData;
+            long* valueDataPointer = (long*)addressOfValueData;
             
             long* pointerPointer = (long*)Unsafe.AsPointer(ref pointer);
-            pointerPointer[0] = (long)newValueData;
+            pointerPointer[0] = (long)valueDataPointer;
         }
 
         public string Retrieve(ref Pointer<string> pointer)
