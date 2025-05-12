@@ -290,8 +290,10 @@ namespace Microsoft.OData.Tests.UriParser
             var casted = pointer.Value as string;
             helper.WriteLine(casted);
 
-            var value = GetValue(pointer);
-            helper.WriteLine(value);
+            /*var value = GetValue(pointer);
+            helper.WriteLine(value);*/
+
+            WriteAddresses((long*)&pointer, 5);
         }
 
         [Fact]
@@ -317,8 +319,8 @@ namespace Microsoft.OData.Tests.UriParser
             var casted = pointer.Value as string;
             helper.WriteLine(casted);
 
-            var value = GetValue(pointer);
-            helper.WriteLine(value);
+            /*var value = GetValue(pointer);
+            helper.WriteLine(value);*/
         }
 
         public ref struct Bar
