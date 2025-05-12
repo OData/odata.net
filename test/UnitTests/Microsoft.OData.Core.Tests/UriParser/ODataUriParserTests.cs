@@ -259,24 +259,39 @@ namespace Microsoft.OData.Tests.UriParser
         [Fact]
         public unsafe void PointerTest()
         {
-            WriteAddress(typeof(Bar).TypeHandle.Value);
+            var typeHandleValue = typeof(string).TypeHandle.Value;
+            WriteAddress(typeHandleValue);
             helper.WriteLine(string.Empty);
 
-            WriteAddress(typeof(object).TypeHandle.Value);
-            helper.WriteLine(string.Empty);
+            WriteTypedReferenceAddress("asdf");
 
-            WriteTypedReferenceAddress(new object());
+            var pointer = new Pointer<string>();
 
-            Span<byte> memory = stackalloc byte[16];
-            var bar = new Bar() { Second = 42 };
-            var pointer = CreatePointer(new object(), memory);
+            long* stackData = stackalloc long[4];
+            stackData[0] = 0;
+            stackData[1] = 0;
+            stackData[2] = 0;
+            stackData[3] = 0;
+
+            stackData[0] = typeHandleValue;
+
+            var ints = (int*)(stackData + 1);
+            ints[0] = 3;
+            var chars = (char*)(ints + 1);
+            chars[0] = 'q';
+            chars[1] = 'w';
+            chars[2] = 'e';
+
+            WriteString(stackData);
 
             long* pointerPointer = (long*)&pointer;
-            WriteAddresses(pointerPointer, 5);
+            pointerPointer[0] = (long)stackData;
+
+            var casted = pointer.Value as string;
+            helper.WriteLine(casted);
 
             var value = GetValue(pointer);
-
-            ////helper.WriteLine(value.Second.ToString());
+            helper.WriteLine(value);
         }
 
         public ref struct Bar
@@ -290,9 +305,23 @@ namespace Microsoft.OData.Tests.UriParser
         {
             private object? value;
 
-            public ref object? GetPinnableReference()
+            public object? Value
             {
-                return ref Unsafe.AsRef(ref this.value);
+                get
+                {
+                    return this.value;
+                }
+            }
+
+            public unsafe void* Address
+            {
+                get
+                {
+                    fixed (void* address = &this.value)
+                    {
+                        return address; //// TODO i think this is *actually* unsafe because the caller will receive an address to memory that is no longer pinned
+                    }
+                }
             }
         }
 
@@ -324,13 +353,10 @@ namespace Microsoft.OData.Tests.UriParser
 
         public static unsafe T GetValue<T>(Pointer<T> pointer) where T : allows ref struct
         {
-            fixed (void* valuePointer = pointer)
-            {
-                var longs = (long*)valuePointer;
-                var startOfData = longs + 1;
-                var bytes = (byte*)startOfData;
-                return Unsafe.Read<T>(bytes);
-            }
+            long* selfPointer = (long*)&pointer;
+            long memoryAddress = selfPointer[0];
+            byte* memoryPointer = (byte*)memoryAddress;
+            return Unsafe.Read<T>(memoryPointer + 8);
         }
 #nullable disable
 
