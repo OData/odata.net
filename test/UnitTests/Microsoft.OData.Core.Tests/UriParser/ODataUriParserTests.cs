@@ -338,8 +338,9 @@ namespace Microsoft.OData.Tests.UriParser
             long addressOfValueData = valuePointerAsLongs[0];
 
             long* valueDataPointer = (long*)addressOfValueData;
-            
-            long* pointerPointerAsLongs = (long*)Unsafe.AsPointer(ref pointer);
+
+            void* pointerPointer = Unsafe.AsPointer(ref pointer);
+            long* pointerPointerAsLongs = (long*)pointerPointer;
             pointerPointerAsLongs[0] = (long)valueDataPointer;
         }
 
