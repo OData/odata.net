@@ -310,6 +310,8 @@ namespace Microsoft.OData.Tests.UriParser
             var casted = Retrieve(pointer);
             helper.WriteLine(casted);
 
+            Assert.Equal("qwe", casted);
+
             /*var value = GetValue(pointer);
             helper.WriteLine(value);*/
         }
