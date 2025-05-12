@@ -323,9 +323,9 @@ namespace Microsoft.OData.Tests.UriParser
             public int Second;
         }
 
-        public unsafe Pointer<string> Create(string value)
+        public unsafe Pointer<T> Create<T>(T value)
         {
-            var pointer = new Pointer<string>();
+            var pointer = new Pointer<T>();
             Set(ref pointer, value);
             return pointer;
         }
