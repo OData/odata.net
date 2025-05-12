@@ -307,7 +307,7 @@ namespace Microsoft.OData.Tests.UriParser
 
             var pointer = Create("qwe");
 
-            var casted = pointer.Value as string;
+            var casted = Retrieve(pointer);
             helper.WriteLine(casted);
 
             /*var value = GetValue(pointer);
@@ -337,9 +337,10 @@ namespace Microsoft.OData.Tests.UriParser
             pointerPointer[0] = (long)newValueData;
         }
 
-        /*public unsafe static T Retrieve<T>(Pointer<T> pointer)
+        public unsafe string Retrieve(Pointer<string> pointer)
         {
-        }*/
+            return pointer.Value as string;
+        }
 
         public ref struct Pointer<T> where T : allows ref struct
         {
