@@ -25,6 +25,7 @@ using Xunit.Abstractions;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.ComponentModel;
+using System.Net.WebSockets;
 
 namespace Microsoft.OData.Tests.UriParser
 {
@@ -127,6 +128,232 @@ namespace Microsoft.OData.Tests.UriParser
             helper.WriteLine(another.Third);
             pointer[1] = (long)stackData;
             helper.WriteLine(another.Third);
+        }
+
+        [Fact]
+        public unsafe void FourthTest()
+        {
+            var fourth = new Fourth()
+            {
+                First = 42,
+                Third = new[] { "qwer" },
+                Second = 67,
+            };
+            long* fourthPointer = (long*)&fourth;
+
+            WriteAddresses(fourthPointer, 4);
+
+            var fakeObjectArray = new object[1];
+            WriteTypedReferenceAddress(fakeObjectArray);
+
+            var fakeStringArray = new string[1];
+            WriteTypedReferenceAddress(fakeStringArray);
+
+            var arrayPointer = (long*)(void*)fourthPointer[1];
+            WriteAddresses(arrayPointer, 4);
+
+            WriteString((long*)arrayPointer[2]);
+
+
+
+
+
+            var typeReference = __makeref(fakeObjectArray);
+            var targetType = TypedReference.GetTargetType(typeReference);
+            var targetTypeToken = TypedReference.TargetTypeToken(typeReference);
+            var type = fakeObjectArray.GetType();
+            var typeHandle = type.TypeHandle;
+
+            helper.WriteLine(Convert.ToHexString(BitConverter.GetBytes(typeHandle.Value)));
+
+            /*var objectArrayType = fakeObjectArray.GetType().TypeHandle;
+            ////var objectArrayType = typeof(object[]).TypeHandle;
+            var objectArrayTypePointer = (long*)&objectArrayType;
+            helper.WriteLine(Convert.ToHexString(BitConverter.GetBytes(objectArrayTypePointer[0])));
+            helper.WriteLine(string.Empty);*/
+
+
+
+            var list = new List<int>();
+            var reference = __makeref(list);
+
+            var thetype = __reftype(reference);
+
+
+
+            var span = new Span<int>();
+            var spanReference = typeof(Span<int>).TypeHandle;
+
+            helper.WriteLine(Convert.ToHexString(BitConverter.GetBytes(spanReference.Value)));
+        }
+
+        [StructLayout(LayoutKind.Explicit)]
+        public struct Fourth
+        {
+            [FieldOffset(0)]
+            public int First;
+
+            [FieldOffset(8)]
+            public object[] Third;
+
+            [FieldOffset(16)]
+            public int Second;
+        }
+
+#nullable enable
+        [Fact]
+        public unsafe void FifthTest()
+        {
+            var fifth = new Fifth()
+            {
+                First = 42,
+                Third = new Foo("asdf"),
+                Second = 67,
+            };
+            long* fifthPointer = (long*)&fifth;
+
+            WriteAddresses(fifthPointer, 4);
+
+            var fakeObjectArray = new object();
+            WriteTypedReferenceAddress(fakeObjectArray);
+
+            var fakeStringArray = "asdf";
+            WriteTypedReferenceAddress(fakeStringArray);
+
+            var fakeFoo = new Foo("qwer");
+            WriteTypedReferenceAddress(fakeFoo);
+
+            var objectPointer = (long*)(void*)fifthPointer[1];
+            WriteAddresses(objectPointer, 7);
+        }
+
+        public sealed class Foo
+        {
+            public Foo(string property)
+            {
+                this.Property = property;
+            }
+
+            public string Property { get; }
+
+            public string Property1 { get; }
+
+            public string Property2 { get; }
+
+            public string Property3 { get; }
+        }
+
+        [StructLayout(LayoutKind.Explicit)]
+        public struct Fifth
+        {
+            [FieldOffset(0)]
+            public int First;
+
+            [FieldOffset(8)]
+            public object Third;
+
+            [FieldOffset(16)]
+            public int Second;
+        }
+
+        [Fact]
+        public unsafe void PointerTest()
+        {
+            WriteAddress(typeof(Bar).TypeHandle.Value);
+            helper.WriteLine(string.Empty);
+
+            WriteAddress(typeof(object).TypeHandle.Value);
+            helper.WriteLine(string.Empty);
+
+            WriteTypedReferenceAddress(new object());
+
+            Span<byte> memory = stackalloc byte[16];
+            var bar = new Bar() { Second = 42 };
+            var pointer = CreatePointer(new object(), memory);
+
+            long* pointerPointer = (long*)&pointer;
+            WriteAddresses(pointerPointer, 5);
+
+            var value = GetValue(pointer);
+
+            ////helper.WriteLine(value.Second.ToString());
+        }
+
+        public ref struct Bar
+        {
+            public string First;
+
+            public int Second;
+        }
+
+        public ref struct Pointer<T> where T : allows ref struct
+        {
+            private object? value;
+
+            public ref object? GetPinnableReference()
+            {
+                return ref Unsafe.AsRef(ref this.value);
+            }
+        }
+
+        public static unsafe Pointer<T> CreatePointer<T>(T value, Span<byte> memory) where T : allows ref struct
+        {
+            var pointer = default(Pointer<T>);
+
+            var valueSize = Unsafe.SizeOf<T>();
+            var requiredSize = valueSize + 8; //// TODO 8 is the pointer size for the typehandle
+            if (memory.Length != requiredSize)
+            {
+                throw new ArgumentOutOfRangeException("TODO");
+            }
+
+            var valueTypeHandle = typeof(T).TypeHandle;
+            fixed (byte* memoryPointer = memory)
+            {
+                long* longs = (long*)memoryPointer;
+                longs[0] = valueTypeHandle.Value;
+
+                Unsafe.WriteUnaligned(memoryPointer + 8, value);
+
+                long* selfPointer = (long*)&pointer;
+                selfPointer[0] = (long)memoryPointer;
+            }
+
+            return pointer;
+        }
+
+        public static unsafe T GetValue<T>(Pointer<T> pointer) where T : allows ref struct
+        {
+            fixed (void* valuePointer = pointer)
+            {
+                var longs = (long*)valuePointer;
+                var startOfData = longs + 1;
+                var bytes = (byte*)startOfData;
+                return Unsafe.Read<T>(bytes);
+            }
+        }
+#nullable disable
+
+        private void WriteAddress(long value)
+        {
+            helper.WriteLine(Convert.ToHexString(BitConverter.GetBytes(value)));
+        }
+
+        private unsafe void WriteAddresses(long* pointer, int count)
+        {
+            for (int i = 0; i < count; ++i)
+            {
+                helper.WriteLine(Convert.ToHexString(BitConverter.GetBytes(pointer[i])));
+            }
+            helper.WriteLine(string.Empty);
+        }
+
+        private unsafe void WriteTypedReferenceAddress<T>(T instance)
+        {
+            var reference = __makeref(instance);
+            var referencePointer = (long*)&reference;
+            helper.WriteLine(Convert.ToHexString(BitConverter.GetBytes(referencePointer[1])));
+            helper.WriteLine(string.Empty);
         }
 
         private unsafe void WriteString(long* pointer)
