@@ -332,7 +332,9 @@ namespace Microsoft.OData.Tests.UriParser
 
         public unsafe void Set<T>(ref Pointer<T> pointer, T value) where T : allows ref struct
         {
-            long* newValuePointer = (long*)&value;
+            T* valuePointer = &value;
+
+            long* newValuePointer = (long*)valuePointer;
             long* newValueData = (long*)newValuePointer[0];
             
             long* pointerPointer = (long*)Unsafe.AsPointer(ref pointer);
