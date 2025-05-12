@@ -307,8 +307,8 @@ namespace Microsoft.OData.Tests.UriParser
 
             var pointer = new Pointer<string>();
 
-            var newValue = "qwe";
-            long* newValuePointer = (long*)&newValue;
+            var value = "qwe";
+            long* newValuePointer = (long*)&value;
             long* newValueData = (long*)newValuePointer[0];
 
             WriteString(newValueData);
@@ -329,6 +329,18 @@ namespace Microsoft.OData.Tests.UriParser
 
             public int Second;
         }
+
+        /*public unsafe static Pointer<T> Create<T>(T value)
+        {
+        }
+
+        public unsafe static void Set<T>(Pointer<T> pointer, T value)
+        {
+        }
+
+        public unsafe static T Retrieve<T>(Pointer<T> pointer)
+        {
+        }*/
 
         public ref struct Pointer<T> where T : allows ref struct
         {
