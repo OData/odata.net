@@ -331,16 +331,9 @@ namespace Microsoft.OData.Tests.UriParser
         public unsafe void Set(ref Pointer<string> pointer, string value)
         {
             long* newValuePointer = (long*)&value;
-            WriteAddress((long)newValuePointer);
             long* newValueData = (long*)newValuePointer[0];
-            WriteAddress((long)newValueData);
-            helper.WriteLine(string.Empty);
-
-            WriteString(newValueData);
-
+            
             long* pointerPointer = (long*)Unsafe.AsPointer(ref pointer);
-            WriteAddress((long)pointerPointer);
-            helper.WriteLine(string.Empty);
             pointerPointer[0] = (long)newValueData;
         }
 
