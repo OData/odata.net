@@ -305,16 +305,7 @@ namespace Microsoft.OData.Tests.UriParser
 
             WriteTypedReferenceAddress("asdf");
 
-            var pointer = new Pointer<string>();
-
-            var value = "qwe";
-            long* newValuePointer = (long*)&value;
-            long* newValueData = (long*)newValuePointer[0];
-
-            WriteString(newValueData);
-
-            long* pointerPointer = (long*)&pointer;
-            pointerPointer[0] = (long)newValueData;
+            var pointer = Create("qwe");
 
             var casted = pointer.Value as string;
             helper.WriteLine(casted);
@@ -330,15 +321,30 @@ namespace Microsoft.OData.Tests.UriParser
             public int Second;
         }
 
-        /*public unsafe static Pointer<T> Create<T>(T value)
+        public unsafe Pointer<string> Create(string value)
         {
+            var pointer = new Pointer<string>();
+            Set(ref pointer, value);
+            return pointer;
         }
 
-        public unsafe static void Set<T>(Pointer<T> pointer, T value)
+        public unsafe void Set(ref Pointer<string> pointer, string value)
         {
+            long* newValuePointer = (long*)&value;
+            WriteAddress((long)newValuePointer);
+            long* newValueData = (long*)newValuePointer[0];
+            WriteAddress((long)newValueData);
+            helper.WriteLine(string.Empty);
+
+            WriteString(newValueData);
+
+            long* pointerPointer = (long*)Unsafe.AsPointer(ref pointer);
+            WriteAddress((long)pointerPointer);
+            helper.WriteLine(string.Empty);
+            pointerPointer[0] = (long)newValueData;
         }
 
-        public unsafe static T Retrieve<T>(Pointer<T> pointer)
+        /*public unsafe static T Retrieve<T>(Pointer<T> pointer)
         {
         }*/
 
