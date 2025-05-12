@@ -356,13 +356,7 @@ namespace Microsoft.OData.Tests.UriParser
         public unsafe ref T Retrieve<T>(ref Pointer<T> pointer) where T : allows ref struct
         {
             var value = pointer.Value;
-            var valuePointer = ((long*)&value)[0];
-
-            var valuePointer2 = (long*)valuePointer;
-            WriteString(valuePointer2);
-
-            var resultPointer = (T*)valuePointer2;
-
+            
             return ref Unsafe.AsRef<T>(&value);
 
             ////return *resultPointer;
