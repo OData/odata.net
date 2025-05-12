@@ -294,6 +294,33 @@ namespace Microsoft.OData.Tests.UriParser
             helper.WriteLine(value);
         }
 
+        [Fact]
+        public unsafe void PointerDirectTest()
+        {
+            var typeHandleValue = typeof(string).TypeHandle.Value;
+            WriteAddress(typeHandleValue);
+            helper.WriteLine(string.Empty);
+
+            WriteTypedReferenceAddress("asdf");
+
+            var pointer = new Pointer<string>();
+
+            var newValue = "qwe";
+            long* newValuePointer = (long*)&newValue;
+            long* newValueData = (long*)newValuePointer[0];
+
+            WriteString(newValueData);
+
+            long* pointerPointer = (long*)&pointer;
+            pointerPointer[0] = (long)newValueData;
+
+            var casted = pointer.Value as string;
+            helper.WriteLine(casted);
+
+            var value = GetValue(pointer);
+            helper.WriteLine(value);
+        }
+
         public ref struct Bar
         {
             public string First;
