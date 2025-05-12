@@ -39,6 +39,8 @@
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>..\..\..\tools\StrongNamePublicKeys\testkey.snk</AssemblyOriginatorKeyFile>
     <DelaySign>false</DelaySign>
+    <TargetFrameworks>net9.0</TargetFrameworks>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>

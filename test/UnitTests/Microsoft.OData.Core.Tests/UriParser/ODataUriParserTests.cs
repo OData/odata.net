@@ -21,16 +21,126 @@ using Microsoft.OData.UriParser;
 using Microsoft.OData.UriParser.Aggregation;
 using Microsoft.OData.UriParser.Validation;
 using Xunit;
+using Xunit.Abstractions;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+using System.ComponentModel;
 
 namespace Microsoft.OData.Tests.UriParser
 {
+    public readonly ref struct Node<T> where T : allows ref struct
+    {
+        public readonly Span<int> next; // Node<T>[1] next
+
+        public Node(Span<int> next)
+        {
+            this.next = next;
+        }
+    }
+
+    [StructLayout(LayoutKind.Explicit)]
+    public struct Another
+    {
+        [FieldOffset(0)]
+        public int First;
+
+        [FieldOffset(8)]
+        public string Third;
+
+        [FieldOffset(16)]
+        public int Second;
+    }
+
     /// <summary>
     /// Unit tests for ODataUriParser.
     /// </summary>
     public class ODataUriParserTests
     {
+        public ODataUriParserTests(ITestOutputHelper helper)
+        {
+            this.helper = helper;
+        }
+
+        [Fact]
+        public unsafe void Something()
+        {
+            helper.WriteLine("qwer");
+
+            string value = "asdf";
+            var another = new Another()
+            {
+                First = 3,
+                Third = value,
+                Second = 5,
+            };
+
+            long* pointer = (long*)&another;
+
+            long pointer1 = pointer[1];
+
+            helper.WriteLine(Convert.ToHexString(BitConverter.GetBytes(pointer[0])));
+            helper.WriteLine(Convert.ToHexString(BitConverter.GetBytes(pointer[1])));
+            helper.WriteLine(Convert.ToHexString(BitConverter.GetBytes(pointer[2])));
+            helper.WriteLine(Convert.ToHexString(BitConverter.GetBytes(pointer[3])));
+            helper.WriteLine(string.Empty);
+            
+            void* stringPointer = (void*)pointer1;
+
+            long* anotherPointer = (long*)stringPointer;
+
+            var thing = __makeref(value);
+            var thingPointer = (long*)&thing;
+            helper.WriteLine(Convert.ToHexString(BitConverter.GetBytes(thingPointer[1])));
+            helper.WriteLine(string.Empty);
+
+            WriteString(anotherPointer);
+
+            var anotherValue = "qwer";
+            var valuePointer = (long*)&anotherValue;
+            /*helper.WriteLine(Convert.ToHexString(BitConverter.GetBytes(((long*)valuePointer[0])[0])));
+            helper.WriteLine(string.Empty);*/
+            WriteString((long*)valuePointer[0]);
+
+            long* stackData = stackalloc long[4];
+            stackData[0] = 0;
+            stackData[1] = 0;
+            stackData[2] = 0;
+            stackData[3] = 0;
+
+            stackData[0] = thingPointer[1];
+
+            var ints = (int*)(stackData + 1);
+            ints[0] = 3;
+            var chars = (char*)(ints + 1);
+            chars[0] = 'q';
+            chars[1] = 'w';
+            chars[2] = 'e';
+
+            WriteString(stackData);
+
+            ////var location = *stackData;
+            ////pointer[1] = location;
+
+
+            helper.WriteLine(another.Third);
+            pointer[1] = valuePointer[0];
+            helper.WriteLine(another.Third);
+            pointer[1] = (long)stackData;
+            helper.WriteLine(another.Third);
+        }
+
+        private unsafe void WriteString(long* pointer)
+        {
+            for (int i = 0; i < 5; ++i)
+            {
+                helper.WriteLine(Convert.ToHexString(BitConverter.GetBytes(pointer[i])));
+            }
+            helper.WriteLine(string.Empty);
+        }
+
         private readonly Uri ServiceRoot = new Uri("http://host");
         private readonly Uri FullUri = new Uri("http://host/People");
+        private readonly ITestOutputHelper helper;
 
         [Fact]
         public void NestedFilterWithDerivedType()
