@@ -7,12 +7,15 @@
 namespace Microsoft.OData.UriParser
 {
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
-    using Microsoft.OData.Edm;
+    using System.Reflection.PortableExecutable;
+    using System.Xml.Linq;
     using Microsoft.OData;
-    using Microsoft.OData.Metadata;
     using Microsoft.OData.Core;
+    using Microsoft.OData.Edm;
+    using Microsoft.OData.Metadata;
 
     /// <summary>
     /// Helper methods for metadata binding.
@@ -71,10 +74,61 @@ namespace Microsoft.OData.UriParser
                     }
 
                     // If the member name is an integral value, we should try to convert it to the enum member name and find the enum member with the matching integral value
-                    if (long.TryParse(memberName, out long memberIntegralValue) && enumType.TryParse(memberIntegralValue, out IEdmEnumMember enumMember))
+                    if (long.TryParse(memberName, out long memberIntegralValue))
                     {
-                        string literalText = ODataUriUtils.ConvertToUriLiteral(enumMember.Name, default(ODataVersion));
-                        return new ConstantNode(new ODataEnumValue(enumMember.Name, enumType.ToString()), literalText, targetTypeReference);
+                        if(enumType.TryParse(memberIntegralValue, out IEdmEnumMember enumMember))
+                        {
+                            string literalText = ODataUriUtils.ConvertToUriLiteral(enumMember.Name, default(ODataVersion));
+                            return new ConstantNode(new ODataEnumValue(enumMember.Name, enumType.ToString()), literalText, targetTypeReference);
+                        }
+                        else if(enumType.IsFlags)
+                        {
+                            List<string> flagsList = new List<string>();
+                            foreach (IEdmEnumMember member in enumType.Members)
+                            {
+                                long flagValue = Convert.ToInt64(member.Value.Value);
+                                // Using bitwise operations to check if a flag is set, which is more efficient than Enum.HasFlag
+                                if (flagValue != 0 && (memberIntegralValue & flagValue) == flagValue)
+                                {
+                                    flagsList.Add(member.Name);
+                                }
+                            }
+
+                            string flagsValue = string.Join(", ", flagsList);
+                            string literalText = ODataUriUtils.ConvertToUriLiteral(flagsValue, default(ODataVersion));
+                            return new ConstantNode(new ODataEnumValue(flagsValue, enumType.ToString()), literalText, targetTypeReference);
+                        }
+                    }
+
+                    if(enumType.IsFlags && memberName is string)
+                    {
+                        List<string> flagsList = new List<string>();
+                        // If the enum is a flags enum, we need to handle the case where multiple flags are set
+                        int start = 0, end = 0;
+                        while (end < memberName.Length)
+                        {
+                            // Find the end of the current value.
+                            while (end < memberName.Length && memberName[end] != ',')
+                            {
+                                end++;
+                            }
+
+                            // Extract the current value.
+                            ReadOnlySpan<char> currentValue = memberName.AsSpan()[start..end].Trim();
+                            if (!enumType.ContainsMember(currentValue.ToString(), StringComparison.Ordinal))
+                            {
+                                throw new ODataException(Error.Format(SRResources.Binder_IsNotValidEnumConstant, currentValue.ToString()));
+                            }
+
+                            flagsList.Add(currentValue.ToString());
+
+                            start = end + 1;
+                            end = start;
+                        }
+
+                        string flagsValue = string.Join(", ", flagsList);
+                        string literalText = ODataUriUtils.ConvertToUriLiteral(flagsValue, default(ODataVersion));
+                        return new ConstantNode(new ODataEnumValue(flagsValue, enumType.ToString()), literalText, targetTypeReference);
                     }
 
                     throw new ODataException(Error.Format(SRResources.Binder_IsNotValidEnumConstant, memberName));
@@ -201,10 +255,60 @@ namespace Microsoft.OData.UriParser
             {
                 if (item != null && item.Value != null && item.Value is ODataEnumValue enumValue)
                 {
-                    if (!enumType.ContainsMember(enumValue.Value, comparison))
+                    // Check if the enum value is a valid enum member name
+                    bool isValidEnumValue = enumType.ContainsMember(enumValue.Value, comparison);
+                    if (isValidEnumValue)
                     {
-                        throw new ODataException(Error.Format(SRResources.Binder_IsNotValidEnumConstant, enumValue.Value));
+                        continue;
                     }
+
+                    if(long.TryParse(enumValue.Value, out long memberIntegralValue))
+                    {
+                        // Check if the enum value is a valid integral value
+                        bool isValidIntegralValue = enumType.TryParse(memberIntegralValue, out IEdmEnumMember enumMember);
+                        if (isValidIntegralValue)
+                        {
+                            continue;
+                        }
+
+                        int allFlags = enumType.Members.Aggregate(0, (current, member) => current | (int)member.Value.Value);
+                        bool isValidFlagsEnumValue = enumType.IsFlags && ((memberIntegralValue & ~allFlags) == 0);
+                        if (isValidFlagsEnumValue)
+                        {
+                            continue;
+                        }
+                    }
+
+                    if (enumType.IsFlags && enumValue.Value is string)
+                    {
+                        // If the enum is a flags enum, we need to handle the case where multiple flags are set
+                        int start = 0, end = 0;
+                        while (end < enumValue.Value.Length)
+                        {
+                            // Find the end of the current value.
+                            while (end < enumValue.Value.Length && enumValue.Value[end] != ',')
+                            {
+                                end++;
+                            }
+
+                            // Extract the current value.
+                            ReadOnlySpan<char> currentValue = enumValue.Value.AsSpan()[start..end].Trim();
+                            if (!enumType.ContainsMember(currentValue.ToString(), comparison))
+                            {
+                                throw new ODataException(Error.Format(SRResources.Binder_IsNotValidEnumConstant, currentValue.ToString()));
+                            }
+
+                            start = end + 1;
+                            end = start;
+                        }
+
+                        if(start == end && start == enumValue.Value.Length + 1)
+                        {
+                            continue;
+                        }
+                    }
+
+                    throw new ODataException(Error.Format(SRResources.Binder_IsNotValidEnumConstant, enumValue.Value));
                 }
             }
         }
