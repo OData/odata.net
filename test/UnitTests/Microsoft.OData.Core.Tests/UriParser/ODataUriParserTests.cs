@@ -323,12 +323,13 @@ namespace Microsoft.OData.Tests.UriParser
         [Fact]
         public void PointerToRefStructTest()
         {
-            var pointer = Create(new Bar() { First = "asdf", Second = 42 });
+            var wrapper = new Wrapper<Bar>(new Bar() { First = "asdf", Second = 42 });
+            var pointer = Create(wrapper);
 
             var value = Retrieve(ref pointer);
 
-            Assert.Equal("asdf", value.First);
-            Assert.Equal(42, value.Second);
+            Assert.Equal("asdf", value.value.First);
+            Assert.Equal(42, value.value.Second);
         }
 
         public ref struct Bar
@@ -357,6 +358,36 @@ namespace Microsoft.OData.Tests.UriParser
             void* pointerPointer = Unsafe.AsPointer(ref pointer);
             long* pointerPointerAsLongs = (long*)pointerPointer;
             pointerPointerAsLongs[0] = addressOfValueData;
+        }
+
+        private readonly ref struct Wrapper<T> where T : allows ref struct
+        {
+            private readonly byte _0;
+            private readonly byte _1;
+            private readonly byte _2;
+            private readonly byte _3;
+            private readonly byte _4;
+            private readonly byte _5;
+            private readonly byte _6;
+            private readonly byte _7;
+
+            public readonly T value;
+
+            public Wrapper(T value)
+            {
+                var typeHandleValue = typeof(T).TypeHandle.Value;
+                var bytes = BitConverter.GetBytes(typeHandleValue);
+                this._0 = bytes[0];
+                this._1 = bytes[1];
+                this._2 = bytes[2];
+                this._3 = bytes[3];
+                this._4 = bytes[4];
+                this._5 = bytes[5];
+                this._6 = bytes[6];
+                this._7 = bytes[7];
+
+                this.value = value;
+            }
         }
 
         /*public string Retrieve(ref Pointer<string> pointer)
