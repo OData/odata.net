@@ -23,41 +23,9 @@ namespace Microsoft.OData.Tests.Json
     public class ODataJsonSerializerTests
     {
         [Fact]
-        public void WritePayloadStartWritesJsonPaddingStuffIfSpecified()
-        {
-            var result = SetupSerializerAndRunTest("functionName", serializer => serializer.WritePayloadStart());
-            Assert.StartsWith("functionName(", result);
-        }
-
-        [Fact]
-        public void WritePayloadEndWritesClosingParenthesisIfJsonPaddingSpecified()
-        {
-            var result = SetupSerializerAndRunTest("functionName", serializer =>
-            {
-                serializer.WritePayloadStart();
-                serializer.WritePayloadEnd();
-            });
-
-            Assert.EndsWith(")", result);
-        }
-
-        [Fact]
-        public void WillNotWriteJsonPaddingStuffIfUnspecified()
-        {
-            var result = SetupSerializerAndRunTest(null, serializer =>
-            {
-                serializer.WritePayloadStart();
-                serializer.WritePayloadEnd();
-            });
-
-            Assert.DoesNotContain("(", result);
-            Assert.DoesNotContain(")", result);
-        }
-
-        [Fact]
         public void WriteTopLevelErrorUsesProvidedErrorCode()
         {
-            var result = SetupSerializerAndRunTest(null, serializer =>
+            var result = SetupSerializerAndRunTest(serializer =>
             {
                 ODataError error = new ODataError { Code = "Error Code" };
                 serializer.WriteTopLevelError(error, false);
@@ -69,7 +37,7 @@ namespace Microsoft.OData.Tests.Json
         [Fact]
         public void WriteTopLevelErrorUsesProvidedMessage()
         {
-            var result = SetupSerializerAndRunTest(null, serializer =>
+            var result = SetupSerializerAndRunTest(serializer =>
             {
                 ODataError error = new ODataError { Message = "error message text" };
                 serializer.WriteTopLevelError(error, false);
@@ -81,7 +49,7 @@ namespace Microsoft.OData.Tests.Json
         [Fact]
         public void WriteTopLevelErrorUsesProvidedTarget()
         {
-            var result = SetupSerializerAndRunTest(null, serializer =>
+            var result = SetupSerializerAndRunTest(serializer =>
             {
                 ODataError error = new ODataError { Target = "error target text" };
                 serializer.WriteTopLevelError(error, includeDebugInformation: false);
@@ -93,7 +61,7 @@ namespace Microsoft.OData.Tests.Json
         [Fact]
         public void WriteTopLevelErrorHasCorrectDefaults()
         {
-            var result = SetupSerializerAndRunTest(null, serializer =>
+            var result = SetupSerializerAndRunTest(serializer =>
             {
                 ODataError error = new ODataError();
                 serializer.WriteTopLevelError(error, false);
@@ -108,7 +76,7 @@ namespace Microsoft.OData.Tests.Json
         [Fact]
         public void WriteTopLevelErrorWithStringInstanceAnnotation()
         {
-            var result = SetupSerializerAndRunTest(null, serializer =>
+            var result = SetupSerializerAndRunTest(serializer =>
             {
                 ODataError error = new ODataError();
                 var instanceAnnotations = new Collection<ODataInstanceAnnotation>();
@@ -125,7 +93,7 @@ namespace Microsoft.OData.Tests.Json
         [Fact]
         public void WriteTopLevelErrorWithDateTimeInstanceAnnotation()
         {
-            var result = SetupSerializerAndRunTest(null, serializer =>
+            var result = SetupSerializerAndRunTest(serializer =>
             {
                 ODataError error = new ODataError();
                 var instanceAnnotations = new Collection<ODataInstanceAnnotation>();
@@ -143,7 +111,7 @@ namespace Microsoft.OData.Tests.Json
         [Fact]
         public void WriteTopLevelErrorWithDateInstanceAnnotation()
         {
-            var result = SetupSerializerAndRunTest(null, serializer =>
+            var result = SetupSerializerAndRunTest(serializer =>
             {
                 ODataError error = new ODataError();
                 var instanceAnnotations = new Collection<ODataInstanceAnnotation>();
@@ -161,7 +129,7 @@ namespace Microsoft.OData.Tests.Json
         [Fact]
         public void WriteTopLevelErrorWithTimeOfDayInstanceAnnotation()
         {
-            var result = SetupSerializerAndRunTest(null, serializer =>
+            var result = SetupSerializerAndRunTest(serializer =>
             {
                 ODataError error = new ODataError();
                 var instanceAnnotations = new Collection<ODataInstanceAnnotation>();
@@ -179,7 +147,7 @@ namespace Microsoft.OData.Tests.Json
         [Fact]
         public void WriteTopLevelErrorWithStringInstanceAnnotationWithTypeNameAttribute()
         {
-            var result = SetupSerializerAndRunTest(null, serializer =>
+            var result = SetupSerializerAndRunTest(serializer =>
             {
                 ODataError error = new ODataError();
                 var instanceAnnotations = new Collection<ODataInstanceAnnotation>();
@@ -198,7 +166,7 @@ namespace Microsoft.OData.Tests.Json
         [Fact]
         public void WriteTopLevelErrorWithResourceInstanceAnnotation()
         {
-            var result = SetupSerializerAndRunTest(null, serializer =>
+            var result = SetupSerializerAndRunTest(serializer =>
             {
                 ODataError error = new ODataError();
                 var instanceAnnotations = new Collection<ODataInstanceAnnotation>();
@@ -217,7 +185,7 @@ namespace Microsoft.OData.Tests.Json
         [Fact]
         public void WriteTopLevelErrorWithResourceInstanceAnnotationNoTypeNameShouldThrow()
         {
-            SetupSerializerAndRunTest(null, serializer =>
+            SetupSerializerAndRunTest(serializer =>
             {
                 ODataError error = new ODataError();
                 var instanceAnnotations = new Collection<ODataInstanceAnnotation>();
@@ -234,7 +202,7 @@ namespace Microsoft.OData.Tests.Json
         [Fact]
         public void WriteTopLevelErrorWithCollectionOfResourceInstanceAnnotation()
         {
-            var result = SetupSerializerAndRunTest(null, serializer =>
+            var result = SetupSerializerAndRunTest(serializer =>
             {
                 ODataError error = new ODataError();
                 var instanceAnnotations = new Collection<ODataInstanceAnnotation>();
@@ -256,7 +224,7 @@ namespace Microsoft.OData.Tests.Json
         [Fact]
         public void WriteTopLevelErrorWithCollectionOfResourceInstanceAnnotationWithNoTypeNameShouldThrow()
         {
-            SetupSerializerAndRunTest(null, serializer =>
+            SetupSerializerAndRunTest(serializer =>
             {
                 ODataError error = new ODataError();
                 var instanceAnnotations = new Collection<ODataInstanceAnnotation>();
@@ -277,7 +245,7 @@ namespace Microsoft.OData.Tests.Json
         public void UrlToStringShouldThrowWithNoMetadataAndMetadataDocumentUriIsNotProvided()
         {
             var stream = new MemoryStream();
-            var serializer = GetSerializer(stream, null, true, false);
+            var serializer = GetSerializer(stream, true, false);
             var uri = new Uri("TestUri", UriKind.Relative);
             Action uriToStrongError = () => serializer.UriToString(uri);
             uriToStrongError.Throws<ODataException>(Error.Format(SRResources.ODataJsonSerializer_RelativeUriUsedWithoutMetadataDocumentUriOrMetadata, UriUtils.UriToString(uri)));
@@ -287,7 +255,7 @@ namespace Microsoft.OData.Tests.Json
         public void UrlToStringShouldReturnAbsoluteUriWithNoMetadata()
         {
             var stream = new MemoryStream();
-            var serializer = GetSerializer(stream, null, true);
+            var serializer = GetSerializer(stream, true);
             string uri = serializer.UriToString(new Uri("TestUri", UriKind.Relative));
             Assert.Equal("http://example.com/TestUri", uri);
         }
@@ -304,33 +272,9 @@ namespace Microsoft.OData.Tests.Json
         }
 
         [Fact]
-        public async Task WritePayloadStartAsync_WritesLeftParenIfJsonPaddingSpecified()
-        {
-            var result = await SetupSerializerAndRunTestAsync(
-                "functionName",
-                lightJsonSerializer => lightJsonSerializer.WritePayloadStartAsync());
-            Assert.Equal("functionName(", result);
-        }
-
-        [Fact]
-        public async Task WritePayloadEndAsync_WritesRightParenIfJsonPaddingSpecified()
-        {
-            var result = await SetupSerializerAndRunTestAsync(
-                "functionName",
-                async (jsonSerializer) =>
-                {
-                    await jsonSerializer.WritePayloadStartAsync();
-                    await jsonSerializer.WritePayloadEndAsync();
-                });
-
-            Assert.Equal("functionName()", result);
-        }
-
-        [Fact]
         public async Task WriteContextUriPropertyAsync_WritesInstanceAnnotationContextUri()
         {
             var result = await SetupSerializerAndRunTestAsync(
-                null,
                 async (jsonSerializer) =>
                 {
                     await jsonSerializer.JsonWriter.StartObjectScopeAsync();
@@ -344,7 +288,6 @@ namespace Microsoft.OData.Tests.Json
         public async Task WriteContextUriPropertyAsync_WritesPropertyAnnotationContextUri()
         {
             var result = await SetupSerializerAndRunTestAsync(
-                null,
                 async (jsonSerializer) =>
                 {
                     var property = new ODataProperty { Name = "Prop", Value = 13 };
@@ -365,7 +308,6 @@ namespace Microsoft.OData.Tests.Json
         public async Task WriteTopLevelPayloadAsync_WritesTopLevelPayload()
         {
             var result = await SetupSerializerAndRunTestAsync(
-                null,
                 (jsonSerializer) =>
                 {
                     return jsonSerializer.WriteTopLevelPayloadAsync(
@@ -382,7 +324,6 @@ namespace Microsoft.OData.Tests.Json
         public async Task WriteTopLevelErrorAsync_WritesErrorPayload()
         {
             var result = await SetupSerializerAndRunTestAsync(
-                null,
                 (jsonSerializer) =>
                 {
                     ODataError error = new ODataError
@@ -431,10 +372,10 @@ namespace Microsoft.OData.Tests.Json
         /// then runs the given test code asynchronously,
         /// then flushes and reads the stream back as a string for customized verification.
         /// </summary>
-        private static async Task<string> SetupSerializerAndRunTestAsync(string jsonpFunctionName, Func<ODataJsonSerializer, Task> func)
+        private static async Task<string> SetupSerializerAndRunTestAsync(Func<ODataJsonSerializer, Task> func)
         {
             var stream = new AsyncStream(new MemoryStream());
-            var jsonSerializer = GetSerializer(stream, jsonpFunctionName, isAsync: true);
+            var jsonSerializer = GetSerializer(stream, isAsync: true);
             await func(jsonSerializer);
             await jsonSerializer.JsonOutputContext.FlushAsync();
             await jsonSerializer.JsonWriter.FlushAsync();
@@ -448,10 +389,10 @@ namespace Microsoft.OData.Tests.Json
         /// Sets up a ODataJsonSerializer, runs the given test code, and then flushes and reads the stream back as a string for
         /// customized verification.
         /// </summary>
-        private static string SetupSerializerAndRunTest(string jsonpFunctionName, Action<ODataJsonSerializer> action)
+        private static string SetupSerializerAndRunTest(Action<ODataJsonSerializer> action)
         {
             var stream = new MemoryStream();
-            var serializer = GetSerializer(stream, jsonpFunctionName);
+            var serializer = GetSerializer(stream);
             action(serializer);
             serializer.JsonWriter.Flush();
             stream.Position = 0;
@@ -459,14 +400,14 @@ namespace Microsoft.OData.Tests.Json
             return streamReader.ReadToEnd();
         }
 
-        private static ODataJsonSerializer GetSerializer(Stream stream, string jsonpFunctionName = null, bool nometadata = false, bool setMetadataDocumentUri = true, bool isAsync = false)
+        private static ODataJsonSerializer GetSerializer(Stream stream, bool nometadata = false, bool setMetadataDocumentUri = true, bool isAsync = false)
         {
             var model = new EdmModel();
             var complexType = new EdmComplexType("ns", "ErrorDetails");
             //var collectionType = new EdmCollectionType(new EdmComplexTypeReference(complexType, false));
             model.AddElement(complexType);
 
-            var settings = new ODataMessageWriterSettings { JsonPCallback = jsonpFunctionName, EnableMessageStreamDisposal = false, Version = ODataVersion.V4 };
+            var settings = new ODataMessageWriterSettings { EnableMessageStreamDisposal = false, Version = ODataVersion.V4 };
             if (setMetadataDocumentUri)
             {
                 settings.SetServiceDocumentUri(new Uri("http://example.com"));

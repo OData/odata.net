@@ -164,13 +164,6 @@ namespace Microsoft.OData
         /// </summary>
         public bool EnableCharactersCheck { get; set; }
 
-        /// <summary>Gets or sets a callback function use to wrap the response from server.</summary>
-        /// <returns>The callback function used to wrap the response from server.</returns>
-        /// <remarks>If it has a value and we are writing a JSON response, then we will wrap the entirety of the response in
-        /// the provided function name and parenthesis for JSONP. Otherwise this value is ignored.</remarks>
-        [Obsolete("This will be dropped in the 9.x release.")]
-        public string JsonPCallback { get; set; }
-
         /// <summary>
         /// Get/sets the character buffer pool.
         /// </summary>
@@ -512,15 +505,6 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Determines if there is a JSON padding function defined.
-        /// </summary>
-        /// <returns>True if the JsonPCallback property is not null or empty.</returns>
-        internal bool HasJsonPaddingFunction()
-        {
-            return !string.IsNullOrEmpty(this.JsonPCallback);
-        }
-
-        /// <summary>
         /// Returns true to indicate that the annotation with the name <paramref name="annotationName"/> should not be written, false otherwise.
         /// </summary>
         /// <param name="annotationName">The name of the annotation in question.</param>
@@ -547,7 +531,6 @@ namespace Microsoft.OData
             this.EnableMessageStreamDisposal = other.EnableMessageStreamDisposal;
             this.EnableCharactersCheck = other.EnableCharactersCheck;
             this.format = other.format;
-            this.JsonPCallback = other.JsonPCallback;
             this.messageQuotas = new ODataMessageQuotas(other.MessageQuotas);
             this.ODataUri = other.ODataUri.Clone();
             this.ShouldIncludeAnnotationInternal = other.ShouldIncludeAnnotationInternal;

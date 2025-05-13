@@ -1238,9 +1238,6 @@
   <data name="WriterValidationUtils_NestedResourceInfoMustSpecifyIsCollection" xml:space="preserve">
     <value>The ODataNestedResourceInfo.IsCollection property on a nested resource info '{0}' is null. The ODataNestedResourceInfo.IsCollection property must be specified when writing a nested resource into a request.</value>
   </data>
-  <data name="WriterValidationUtils_MessageWriterSettingsJsonPaddingOnRequestMessage" xml:space="preserve">
-    <value>A JSON Padding function was specified on ODataMessageWriterSettings when trying to write a request message. JSON Padding is only for writing responses.</value>
-  </data>
   <data name="WriterValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint" xml:space="preserve">
     <value>The value type '{0}' is not allowed due to an Org.OData.Validation.V1.DerivedTypeConstraint annotation on {1} '{2}'.</value>
   </data>

@@ -114,11 +114,6 @@ namespace Microsoft.OData
         /// </summary>
         internal void Start()
         {
-            if (this.settings.HasJsonPaddingFunction())
-            {
-                this.textWriter.Write(this.settings.JsonPCallback);
-                this.textWriter.Write(JsonConstants.StartPaddingFunctionScope);
-            }
         }
 
         /// <summary>
@@ -126,10 +121,6 @@ namespace Microsoft.OData
         /// </summary>
         internal void End()
         {
-            if (this.settings.HasJsonPaddingFunction())
-            {
-                this.textWriter.Write(JsonConstants.EndPaddingFunctionScope);
-            }
         }
 
         /// <summary>
@@ -181,19 +172,6 @@ namespace Microsoft.OData
         /// <returns>A task that represents the asynchronous write operation.</returns>
         internal Task StartAsync()
         {
-            if (this.settings.HasJsonPaddingFunction())
-            {
-                return StartInnerAsync();
-
-                async Task StartInnerAsync()
-                {
-                    await this.textWriter.WriteAsync(this.settings.JsonPCallback)
-                    .ConfigureAwait(false);
-                    await this.textWriter.WriteAsync(JsonConstants.StartPaddingFunctionScope)
-                        .ConfigureAwait(false);
-                }
-            }
-
             return TaskUtils.CompletedTask;
         }
 
@@ -203,11 +181,6 @@ namespace Microsoft.OData
         /// <returns>A task that represents the asynchronous write operation.</returns>
         internal Task EndAsync()
         {
-            if (this.settings.HasJsonPaddingFunction())
-            {
-                return this.textWriter.WriteAsync(JsonConstants.EndPaddingFunctionScope);
-            }
-
             return TaskUtils.CompletedTask;
         }
 

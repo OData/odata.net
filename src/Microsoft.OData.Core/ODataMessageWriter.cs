@@ -840,16 +840,6 @@ namespace Microsoft.OData
                 ODataPayloadKind computedPayloadKind;
                 this.format = MediaTypeUtils.GetFormatFromContentType(contentType, new ODataPayloadKind[] { this.writerPayloadKind }, this.mediaTypeResolver, out this.mediaType, out this.encoding, out computedPayloadKind);
                 Debug.Assert(this.writerPayloadKind == computedPayloadKind, "The payload kinds must always match.");
-
-                if (this.settings.HasJsonPaddingFunction())
-                {
-                    // Note: we change the media type being written from "application/json" to "text/javascript",
-                    // but we internally keep "application/json" as the value of the mediaType field.
-                    contentType = MediaTypeUtils.AlterContentTypeForJsonPadding(contentType);
-
-                    // Override the header even though they set it.
-                    this.message.SetHeader(ODataConstants.ContentTypeHeader, contentType);
-                }
             }
             else
             {
@@ -864,13 +854,6 @@ namespace Microsoft.OData
                 if (this.mediaType.Parameters != updatedParameters)
                 {
                     this.mediaType = new ODataMediaType(mediaType.Type, mediaType.SubType, updatedParameters);
-                }
-
-                if (this.settings.HasJsonPaddingFunction())
-                {
-                    // Note: we change the media type being written from "application/json" to "text/javascript",
-                    // but we internally keep "application/json" as the value of the mediaType field.
-                    contentType = MediaTypeUtils.AlterContentTypeForJsonPadding(contentType);
                 }
 
                 // NOTE: set the content type header here since all headers have to be set before getting the stream

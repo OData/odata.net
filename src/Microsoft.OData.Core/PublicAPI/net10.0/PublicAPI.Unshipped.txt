@@ -790,8 +790,6 @@ Microsoft.OData.ODataMessageWriterSettings.EnableCharactersCheck.get -> bool
 Microsoft.OData.ODataMessageWriterSettings.EnableCharactersCheck.set -> void
 Microsoft.OData.ODataMessageWriterSettings.EnableMessageStreamDisposal.get -> bool
 Microsoft.OData.ODataMessageWriterSettings.EnableMessageStreamDisposal.set -> void
-Microsoft.OData.ODataMessageWriterSettings.JsonPCallback.get -> string
-Microsoft.OData.ODataMessageWriterSettings.JsonPCallback.set -> void
 Microsoft.OData.ODataMessageWriterSettings.LibraryCompatibility.get -> Microsoft.OData.ODataLibraryCompatibility
 Microsoft.OData.ODataMessageWriterSettings.LibraryCompatibility.set -> void
 Microsoft.OData.ODataMessageWriterSettings.MessageQuotas.get -> Microsoft.OData.ODataMessageQuotas

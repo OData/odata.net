@@ -30,47 +30,6 @@ namespace Microsoft.OData.Tests.Json
         }
 
         [Fact]
-        public void StartJsonPaddingIfRequiredWillDoNothingIfNullFunctionName()
-        {
-            messageWriterSettings.JsonPCallback = null;
-            ODataJsonWriterUtils.StartJsonPaddingIfRequired(this.jsonWriter, messageWriterSettings);
-            Assert.Empty(stringWriter.GetStringBuilder().ToString());
-        }
-
-        [Fact]
-        public void StartJsonPaddingIfRequiredWillDoNothingIfEmptyFunctionName()
-        {
-            messageWriterSettings.JsonPCallback = "";
-            ODataJsonWriterUtils.StartJsonPaddingIfRequired(this.jsonWriter, messageWriterSettings);
-            Assert.Empty(stringWriter.GetStringBuilder().ToString());
-        }
-
-        [Fact]
-        public void EndJsonPaddingIfRequiredWillDoNothingIfNullFunctionName()
-        {
-            messageWriterSettings.JsonPCallback = null;
-            ODataJsonWriterUtils.EndJsonPaddingIfRequired(this.jsonWriter, messageWriterSettings);
-            Assert.Empty(stringWriter.GetStringBuilder().ToString());
-        }
-
-        [Fact]
-        public void EndJsonPaddingIfRequiredWillDoNothingIfEmptyFunctionName()
-        {
-            messageWriterSettings.JsonPCallback = "";
-            ODataJsonWriterUtils.EndJsonPaddingIfRequired(this.jsonWriter, messageWriterSettings);
-            Assert.Empty(stringWriter.GetStringBuilder().ToString());
-        }
-
-        [Fact]
-        public void StartAndEndJsonPaddingSuccessTest()
-        {
-            messageWriterSettings.JsonPCallback = "functionName";
-            ODataJsonWriterUtils.StartJsonPaddingIfRequired(this.jsonWriter, messageWriterSettings);
-            ODataJsonWriterUtils.EndJsonPaddingIfRequired(this.jsonWriter, messageWriterSettings);
-            Assert.Equal("functionName()", stringWriter.GetStringBuilder().ToString());
-        }
-
-        [Fact]
         public void WriteError_WritesTargetAndDetails()
         {
             var error = new ODataError

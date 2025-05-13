@@ -40,7 +40,6 @@ namespace Microsoft.OData.Tests
         [Fact]
         public void StartWithJsonPadding()
         {
-            this.settings.JsonPCallback = "foo";
             RawValueWriter target = new RawValueWriter(this.settings, this.stream, new UTF32Encoding());
             target.Start();
             Assert.Equal("foo(", this.StreamAsString(target));
@@ -52,15 +51,6 @@ namespace Microsoft.OData.Tests
             RawValueWriter target = new RawValueWriter(this.settings, this.stream, new UTF32Encoding());
             target.End();
             Assert.Empty(this.StreamAsString(target));
-        }
-
-        [Fact]
-        public void EndWithJsonPadding()
-        {
-            this.settings.JsonPCallback = "foo";
-            RawValueWriter target = new RawValueWriter(this.settings, this.stream, new UTF32Encoding());
-            target.End();
-            Assert.Equal(")", this.StreamAsString(target));
         }
 
         /// <summary>
@@ -133,17 +123,6 @@ namespace Microsoft.OData.Tests
         }
 
         [Fact]
-        public async Task RawValueWriterStartAsyncWithJsonPadding()
-        {
-            this.settings.JsonPCallback = "foo";
-
-            var result = await SetupRawValueWriterAndRunTestAsync(
-                (rawValueWriter) => rawValueWriter.StartAsync());
-
-            Assert.Equal("foo(", result);
-        }
-
-        [Fact]
         public async Task RawValueWriterEndAsync()
         {
             var result = await SetupRawValueWriterAndRunTestAsync(
@@ -155,8 +134,6 @@ namespace Microsoft.OData.Tests
         [Fact]
         public async Task RawValueWriterEndAsyncWithJsonPadding()
         {
-            this.settings.JsonPCallback = "foo";
-
             var result = await SetupRawValueWriterAndRunTestAsync(
                 (rawValueWriter) => rawValueWriter.EndAsync());
 
