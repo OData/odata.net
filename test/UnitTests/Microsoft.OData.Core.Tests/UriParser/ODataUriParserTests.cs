@@ -342,8 +342,21 @@ namespace Microsoft.OData.Tests.UriParser
 
             var value = Retrieve(ref pointer);
 
-            /*Assert.Equal("asdf", value.First);
-            Assert.Equal(42, value.Second);*/
+            Assert.Equal("asdf", value.First);
+            Assert.Equal(42, value.Second);
+        }
+
+        [Fact]
+        public unsafe void PointerTrickery()
+        {
+            var handle = typeof(Bar).TypeHandle.Value;
+            var bar = new Bar() { First = "asdf", Second = 42 };
+
+            //// TODO can you trust that the JITer isn't going to change the order of these?
+
+            var reference = Unsafe.AsRef<Bar>(&handle);
+            var pointer = Create(ref reference);
+            var value = Retrieve(ref pointer);
         }
 
         public ref struct Bar
@@ -435,7 +448,7 @@ namespace Microsoft.OData.Tests.UriParser
 
         public unsafe ref T Retrieve<T>(ref Pointer<T> pointer) where T : allows ref struct
         {
-            if (typeof(T) == typeof(Bar))
+            if (!typeof(T).IsClass && !typeof(T).IsPrimitive)
             {
                 //// TODO more general check
 
@@ -493,38 +506,23 @@ namespace Microsoft.OData.Tests.UriParser
             }
         }
 
-        public static unsafe Pointer<T> CreatePointer<T>(T value, Span<byte> memory) where T : allows ref struct
+        [Fact]
+        public void PointerNodeTest()
         {
-            var pointer = default(Pointer<T>);
-
-            var valueSize = Unsafe.SizeOf<T>();
-            var requiredSize = valueSize + 8; //// TODO 8 is the pointer size for the typehandle
-            if (memory.Length != requiredSize)
-            {
-                throw new ArgumentOutOfRangeException("TODO");
-            }
-
-            var valueTypeHandle = typeof(T).TypeHandle;
-            fixed (byte* memoryPointer = memory)
-            {
-                long* longs = (long*)memoryPointer;
-                longs[0] = valueTypeHandle.Value;
-
-                Unsafe.WriteUnaligned(memoryPointer + 8, value);
-
-                long* selfPointer = (long*)&pointer;
-                selfPointer[0] = (long)memoryPointer;
-            }
-
-            return pointer;
         }
 
-        public static unsafe T GetValue<T>(Pointer<T> pointer) where T : allows ref struct
+        public ref struct NewList<T> where T : allows ref struct
         {
-            long* selfPointer = (long*)&pointer;
-            long memoryAddress = selfPointer[0];
-            byte* memoryPointer = (byte*)memoryAddress;
-            return Unsafe.Read<T>(memoryPointer + 8);
+            
+        }
+
+        public ref struct Pointer2<T> where T : allows ref struct
+        {
+            private object? value;
+
+            public Pointer2(Span<byte> memory)
+            {
+            }
         }
 #nullable disable
 
