@@ -12,7 +12,8 @@ trigger:
 # Pull request (PR) triggers
 pr:
   autoCancel: false
-  brannches:
+  branches:
+
     include:
     - main
     - dev-8.x
