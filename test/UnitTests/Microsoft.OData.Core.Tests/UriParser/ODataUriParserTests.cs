@@ -305,7 +305,8 @@ namespace Microsoft.OData.Tests.UriParser
 
             WriteTypedReferenceAddress("asdf");
 
-            var pointer = Create("qwe");
+            var originalValue = "qwe";
+            var pointer = Create(ref originalValue);
 
             var value = pointer.Value;
             WriteAddress(((long*)&value)[0]);
@@ -324,7 +325,7 @@ namespace Microsoft.OData.Tests.UriParser
         public void PointerToRefStructTest()
         {
             var wrapper = new Wrapper<Bar>(new Bar() { First = "asdf", Second = 42 });
-            var pointer = Create(wrapper);
+            var pointer = Create(ref wrapper);
 
             var value = Retrieve(ref pointer);
 
@@ -339,16 +340,17 @@ namespace Microsoft.OData.Tests.UriParser
             public int Second;
         }
 
-        public unsafe Pointer<T> Create<T>(T value) where T : allows ref struct
+        public unsafe Pointer<T> Create<T>(ref T value) where T : allows ref struct
         {
             var pointer = new Pointer<T>();
-            Set(ref pointer, value);
+            Set(ref pointer, ref value);
             return pointer;
         }
 
-        public unsafe void Set<T>(ref Pointer<T> pointer, T value) where T : allows ref struct
+        public unsafe void Set<T>(ref Pointer<T> pointer, ref T value) where T : allows ref struct
         {
-            T* valuePointer = &value;
+            ////T* valuePointer = &value;
+            T* valuePointer = (T*)Unsafe.AsPointer(ref value);
 
             long* valuePointerAsLongs = (long*)valuePointer;
             long addressOfValueData = valuePointerAsLongs[0];
