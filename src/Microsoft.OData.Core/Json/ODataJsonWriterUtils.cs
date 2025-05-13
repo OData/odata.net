@@ -57,39 +57,6 @@ namespace Microsoft.OData.Json
                 messageWriterSettings);
         }
 
-        /// <summary>
-        /// Will write the function's name and start the JSONP scope if we are writing a response and the
-        /// JSONP function name is not null or empty.
-        /// </summary>
-        /// <param name="jsonWriter">JsonWriter to write to.</param>
-        /// <param name="settings">Writer settings.</param>
-        internal static void StartJsonPaddingIfRequired(IJsonWriter jsonWriter, ODataMessageWriterSettings settings)
-        {
-            Debug.Assert(jsonWriter != null, "jsonWriter should not be null");
-
-            if (settings.HasJsonPaddingFunction())
-            {
-                jsonWriter.WritePaddingFunctionName(settings.JsonPCallback);
-                jsonWriter.StartPaddingFunctionScope();
-            }
-        }
-
-        /// <summary>
-        /// If we are writing a response and the given Json Padding function name is not null or empty
-        /// this function will close the JSONP scope.
-        /// </summary>
-        /// <param name="jsonWriter">JsonWriter to write to.</param>
-        /// <param name="settings">Writer settings.</param>
-        internal static void EndJsonPaddingIfRequired(IJsonWriter jsonWriter, ODataMessageWriterSettings settings)
-        {
-            Debug.Assert(jsonWriter != null, "jsonWriter should not be null");
-
-            if (settings.HasJsonPaddingFunction())
-            {
-                jsonWriter.EndPaddingFunctionScope();
-            }
-        }
-
         internal static void ODataValueToString(StringBuilder sb, ODataValue value)
         {
             if (value == null || value is ODataNullValue)

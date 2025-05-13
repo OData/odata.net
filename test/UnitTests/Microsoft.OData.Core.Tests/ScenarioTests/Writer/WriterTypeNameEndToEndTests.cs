@@ -160,19 +160,6 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer
         }
 
         [Fact]
-        public void TypeNameShouldBeWrittenCorrectlyInNoMetadataWhenAlwaysAddTypeAnnotationsForDerivedTypesIsSetWithJsonP()
-        {
-            this.settings.SetContentType(JsonNoMetadata, null);
-            this.settings.JsonPCallback = "callback";
-            this.settings.AlwaysAddTypeAnnotationsForDerivedTypes = true;
-
-            Assert.DoesNotContain("DeclaredInt16@odata.type", this.writerOutput.Value);
-            Assert.Contains("UndeclaredDecimal@odata.type\":\"#Decimal\"", this.writerOutput.Value);
-            Assert.Contains("DerivedPrimitive@odata.type\":\"#GeographyPoint\"", this.writerOutput.Value);
-            Assert.Contains("PropertyWithSTNA@odata.type\":\"#TypeNameFromSTNA\"", this.writerOutput.Value);
-        }
-
-        [Fact]
         public void TypeNameShouldBeWrittenCorrectlyInFullMetadataWhenAlwaysAddTypeAnnotationsForDerivedTypesIsSet()
         {
             this.settings.SetContentType(JsonFullMetadata, null);

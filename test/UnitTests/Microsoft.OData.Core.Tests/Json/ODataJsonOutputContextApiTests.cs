@@ -2462,40 +2462,6 @@ POST http://tempuri.org/Customers HTTP/1.1
         }
 
         [Fact]
-        public async Task WriteResponsePayloadWithJsonPaddingEnabled_APIsShouldYieldSameResult()
-        {
-            this.writerSettings.JsonPCallback = "fn";
-
-            IODataResponseMessage asyncResponseMessage = new InMemoryMessage { Stream = this.asyncStream };
-
-            await using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
-            {
-                await messageWriter.WritePropertyAsync(new ODataProperty { Name = "Count", Value = 5 });
-            }
-
-            this.asyncStream.Position = 0;
-            var asyncResult = await new StreamReader(this.asyncStream).ReadToEndAsync();
-
-            var syncResult = await TaskUtils.GetTaskForSynchronousOperation(
-                () =>
-                {
-                    IODataResponseMessage syncResponseMessage = new InMemoryMessage { Stream = this.syncStream };
-                    using (var messageWriter = new ODataMessageWriter(syncResponseMessage, this.writerSettings))
-                    {
-                        messageWriter.WriteProperty(new ODataProperty { Name = "Count", Value = 5 });
-                    }
-
-                    this.syncStream.Position = 0;
-                    return new StreamReader(this.syncStream).ReadToEnd();
-                });
-
-            var expected = "fn({\"@odata.context\":\"http://tempuri.org/$metadata#Edm.Int32\",\"value\":5})";
-
-            Assert.Equal(expected, asyncResult);
-            Assert.Equal(expected, syncResult);
-        }
-
-        [Fact]
         public async Task WriteTopLevelDeltaResourceSet_WorksForResourceSetWriter()
         {
             var customerDeltaResourceSet = CreateDeltaResourceSet("Customers", "NS.Customer", new Uri($"{ServiceUri}/Customers/deltaLink"));
