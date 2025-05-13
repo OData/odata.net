@@ -20,6 +20,7 @@ namespace Microsoft.OData.Client
     using Microsoft.OData.Client.Metadata;
     using Microsoft.OData;
     using Microsoft.OData.Edm;
+    using System.Globalization;
 
     #endregion Namespaces
 
@@ -561,7 +562,16 @@ namespace Microsoft.OData.Client
 
                     try
                     {
-                        uriLiteral = LiteralFormatter.ForConstants.Format(item);
+                        if (item.GetType().IsEnum)
+                        {
+                            string enumValue = ((int)item).ToString(CultureInfo.InvariantCulture);
+                            //string enumValue = item.ToString();
+                            uriLiteral = LiteralFormatter.ForConstants.Format(enumValue);
+                        }
+                        else
+                        {
+                            uriLiteral = LiteralFormatter.ForConstants.Format(item);
+                        }
                     }
                     catch (InvalidOperationException)
                     {

@@ -128,7 +128,8 @@ namespace Microsoft.OData.UriParser
                     }
 
                     Debug.Assert(expectedType.IsCollection());
-                    string expectedTypeFullName = expectedType.Definition.AsElementType().FullTypeName();
+                    var expectedTypeAsElementType = expectedType.Definition.AsElementType();
+                    string expectedTypeFullName = expectedTypeAsElementType.FullTypeName();
 
                     if (expectedTypeFullName.Equals("Edm.String", StringComparison.Ordinal) || (expectedTypeFullName.Equals("Edm.Untyped", StringComparison.Ordinal) && IsCollectionEmptyOrWhiteSpace(bracketLiteralText)))
                     {
@@ -156,6 +157,15 @@ namespace Microsoft.OData.UriParser
                         // Sample: [1970-01-01T00:00:00Z, 1980-01-01T01:01:01+01:00]
                         //    ==>  ['1970-01-01T00:00:00Z', '1980-01-01T01:01:01+01:00']
                         bracketLiteralText = NormalizeDateTimeCollectionItems(bracketLiteralText);
+                    }
+                    else if (expectedTypeAsElementType.TypeKind == EdmTypeKind.Enum)
+                    {
+                        // I want to handle situation like this:
+                        //  [NS.CustomerType'Premium',NS.CustomerType'VIP'] convert to ["NS.CustomerType'Premium'","NS.CustomerType'VIP'"]
+                        // ["Premium","VIP"] remains as ["Premium","VIP"]
+                        // ["3","6"] remains as ["3","6"]
+                        // [3,6] convert to ["3","6"]
+                        bracketLiteralText = NormalizeEnumCollectionItems(bracketLiteralText);
                     }
                 }
 
@@ -497,6 +507,40 @@ namespace Microsoft.OData.UriParser
             }
 
             return isEmptyOrWhiteSpace;
+        }
+
+        private static string NormalizeEnumCollectionItems(string bracketLiteralText)
+        {
+            // Remove the enclosing brackets
+            string normalizedText = bracketLiteralText[1..^1].Trim();
+
+            // Split the items by commas and trim whitespace
+            string[] items = normalizedText.Split(',').Select(item => item.Trim()).ToArray();
+
+            for (int i = 0; i < items.Length; i++)
+            {
+                string item = items[i];
+
+                if (item != NullLiteral) // Skip null literals
+                {
+                    // Check if the item contains a namespace (e.g., NS.CustomerType'Premium')
+                    if (item.Contains("'") && item.IndexOf("'") > item.IndexOf('.'))
+                    {
+                        // Extract the value after the namespace and single quote
+                        int startIndex = item.IndexOf("'") + 1;
+                        int endIndex = item.LastIndexOf("'");
+                        items[i] = $"'{item[startIndex..endIndex]}'";
+                    }
+                    else if (!item.StartsWith("\"") && !item.StartsWith("'"))
+                    {
+                        // Treat unquoted items as numeric or unquoted values and quote them
+                        items[i] = $"\"{item}\"";
+                    }
+                }
+            }
+
+            // Join the items back into a JSON array format
+            return "[" + string.Join(",", items) + "]";
         }
     }
 }
