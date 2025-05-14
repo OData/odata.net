@@ -507,21 +507,65 @@ namespace Microsoft.OData.Tests.UriParser
         }
 
         [Fact]
-        public void PointerNodeTest()
+        public unsafe void PointerNodeTest()
         {
+            var typeHandleValue = typeof(Node<int>).TypeHandle.Value;
+            var pointerSize = (Unsafe.SizeOf<Node<int>>() + 8) / sizeof(long);
+
+            var first = new Node<int>();
+            first.Value = 42;
+            var firstWrapper = new Wrapper<Node<int>>(ref first);
+            var firstSpan = new Span<long>(&firstWrapper, pointerSize);
+            var firstPointer = new Pointer2<Node<int>>(firstSpan);
+
+            var secondTypeHandle = typeof(Node<int>).TypeHandle.Value;
+            var secondNode = new Node<int>();
+            secondNode.Value = 67;
+            secondNode.Previous = firstPointer;
+            var secondWrapper = new Wrapper<Node<int>>(ref secondNode);
+            var secondSpan = new Span<long>(&secondWrapper, pointerSize);
+            var secondPointer = new Pointer2<Node<int>>(secondSpan);
+
+            var thirdTypeHandle = typeof(Node<int>).TypeHandle.Value;
+            var thirdNode = new Node<int>();
+            thirdNode.Value = 980;
+            thirdNode.Previous = secondPointer;
+            var thirdWrapper = new Wrapper<Node<int>>(ref thirdNode);
+            var thirdSpan = new Span<long>(&thirdWrapper, pointerSize);
+            var thirdPointer = new Pointer2<Node<int>>(thirdSpan);
+
+            Assert.Equal(980, thirdNode.Value);
+            Assert.Equal(67, thirdNode.Previous.Value.Value);
+            Assert.Equal(42, thirdNode.Previous.Value.Previous.Value.Value);
+
+            /*Assert.Equal(42, first.Value);
+            Assert.Equal(67, first.Next.Value.Value);
+            Assert.Equal(980, first.Next.Value.Next.Value.Value);*/
         }
 
-        public ref struct NewList<T> where T : allows ref struct
+        public ref struct Node<T> where T : allows ref struct
         {
-            
+            public T Value;
+
+            public Pointer2<Node<T>> Previous;
         }
 
         public ref struct Pointer2<T> where T : allows ref struct
         {
+            private readonly Span<long> memory;
             private object? value;
 
-            public Pointer2(Span<byte> memory)
+            public Pointer2(Span<long> memory)
             {
+                this.memory = memory;
+            }
+
+            public unsafe ref T Value
+            {
+                get
+                {
+                    return ref Unsafe.AsRef<T>(Unsafe.AsPointer(ref memory[1]));
+                }
             }
         }
 #nullable disable
