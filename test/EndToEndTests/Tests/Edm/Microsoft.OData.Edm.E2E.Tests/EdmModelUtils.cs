@@ -51,22 +51,6 @@ public static class EdmModelUtils
     }
 
     /// <summary>
-    /// Returns a full name of entity set.
-    /// </summary>
-    /// <param name="entitySet">The entity set to get the name for.</param>
-    /// <returns>The container qualified full name of the entity set.</returns>
-    public static string FullEdmName(this IEdmEntitySet entitySet)
-    {
-        IEdmEntityContainer container = entitySet.Container;
-        if (container == null)
-        {
-            return entitySet.Name;
-        }
-
-        return container.Namespace + "." + container.Name + "." + entitySet.Name;
-    }
-
-    /// <summary>
     /// Asserts that a given entity type is derived from the specified base entity type.
     /// </summary>
     /// <param name="derivedType">The derived entity type.</param>

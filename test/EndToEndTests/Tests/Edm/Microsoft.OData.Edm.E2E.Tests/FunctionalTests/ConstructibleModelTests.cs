@@ -1154,8 +1154,8 @@ public class ConstructibleModelTests : EdmLibTestCaseBase
 
         var actualCsdls = this.GetSerializerResult(model).Select(n => XElement.Parse(n));
 
-        XElement expectedContainers = CsdlElementExtractor.ExtractElementByName(expectCsdls.ToList(), "EntityContainer");
-        XElement actualContainers = CsdlElementExtractor.ExtractElementByName(actualCsdls.ToList(), "EntityContainer");
+        XElement expectedContainers = ExtractElementByName(expectCsdls.ToList(), "EntityContainer");
+        XElement actualContainers = ExtractElementByName(actualCsdls.ToList(), "EntityContainer");
     }
 
     [Fact]
@@ -1555,8 +1555,8 @@ public class ConstructibleModelTests : EdmLibTestCaseBase
         Assert.Equal(expectXElements.Count(), actualXElements.Count());
 
         // extract EntityContainers into one place
-        XElement expectedContainers = CsdlElementExtractor.ExtractElementByName(expectXElements, "EntityContainer");
-        XElement actualContainers = CsdlElementExtractor.ExtractElementByName(actualXElements, "EntityContainer");
+        XElement expectedContainers = ExtractElementByName(expectXElements, "EntityContainer");
+        XElement actualContainers = ExtractElementByName(actualXElements, "EntityContainer");
 
         // compare just the EntityContainers
         csdlXElementComparer.Compare(expectedContainers, actualContainers);
@@ -1573,6 +1573,24 @@ public class ConstructibleModelTests : EdmLibTestCaseBase
 
             csdlXElementComparer.Compare(expectXElement, actualXElement);
         }
+    }
+
+    private static XElement ExtractElementByName(IEnumerable<XElement> inputSchemas, string elementNameToExtract)
+    {
+        XNamespace csdlXNamespace = inputSchemas.First().Name.Namespace;
+        var containers = new XElement(csdlXNamespace + "Schema",
+                                  new XAttribute("Namespace", "ExtractedElements"));
+
+        foreach (var s in inputSchemas)
+        {
+            foreach (var c in s.Elements(csdlXNamespace + elementNameToExtract).ToArray())
+            {
+                c.Remove();
+                containers.Add(c);
+            }
+        }
+
+        return containers;
     }
 
     class Boxed<T>

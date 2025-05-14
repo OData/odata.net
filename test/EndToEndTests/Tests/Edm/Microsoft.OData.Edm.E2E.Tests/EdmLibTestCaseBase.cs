@@ -32,6 +32,8 @@ public class EdmLibTestCaseBase
         return toProductVersionlookup[EdmVersion];
     }
 
+    public CsdlXElementComparer CsdlXElementComparer = new CsdlXElementComparer();
+
     protected IEnumerable<string> GetSerializerResult(IEdmModel edmModel, EdmVersion edmVersion, out IEnumerable<EdmError> errors)
     {
         List<StringBuilder> stringBuilders = new List<StringBuilder>();
