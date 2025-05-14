@@ -27,6 +27,7 @@ using System.Runtime.InteropServices;
 using System.ComponentModel;
 using System.Net.WebSockets;
 using System.Threading;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Microsoft.OData.Tests.UriParser
 {
@@ -60,7 +61,7 @@ namespace Microsoft.OData.Tests.UriParser
     {
         public ODataUriParserTests(ITestOutputHelper helper)
         {
-            this.helper = helper;
+            ODataUriParserTests.helper = helper;
         }
 
         [Fact]
@@ -517,7 +518,15 @@ namespace Microsoft.OData.Tests.UriParser
             first.Value = 42;
             var firstWrapper = new Wrapper<Node<int>>(ref first);
             var firstSpan = new Span<long>(&firstWrapper, pointerSize);
-            var firstPointer = new Pointer2<Node<int>>(firstSpan);
+            var firstPointer = new Pointer2<Node<int>>();
+            SetStruct(ref firstPointer, firstSpan);
+            helper.WriteLine("first");
+            WriteAddresses((long*)&first, 5);
+            WriteAddresses((long*)&firstWrapper, 5);
+            WriteAddress((long)&firstWrapper);
+            helper.WriteLine(string.Empty);
+            WriteAddresses((long*)&firstPointer, 5);
+            helper.WriteLine("*********************************************");
 
             var secondTypeHandle = typeof(Node<int>).TypeHandle.Value;
             var secondNode = new Node<int>();
@@ -525,7 +534,15 @@ namespace Microsoft.OData.Tests.UriParser
             secondNode.Previous = firstPointer;
             var secondWrapper = new Wrapper<Node<int>>(ref secondNode);
             var secondSpan = new Span<long>(&secondWrapper, pointerSize);
-            var secondPointer = new Pointer2<Node<int>>(secondSpan);
+            var secondPointer = new Pointer2<Node<int>>();
+            SetStruct(ref secondPointer, secondSpan);
+            helper.WriteLine("second");
+            WriteAddresses((long*)&secondNode, 5);
+            WriteAddresses((long*)&secondWrapper, 5);
+            WriteAddress((long)&secondWrapper);
+            helper.WriteLine(string.Empty);
+            WriteAddresses((long*)&secondPointer, 5);
+            helper.WriteLine("*********************************************");
 
             var thirdTypeHandle = typeof(Node<int>).TypeHandle.Value;
             var thirdNode = new Node<int>();
@@ -533,11 +550,19 @@ namespace Microsoft.OData.Tests.UriParser
             thirdNode.Previous = secondPointer;
             var thirdWrapper = new Wrapper<Node<int>>(ref thirdNode);
             var thirdSpan = new Span<long>(&thirdWrapper, pointerSize);
-            var thirdPointer = new Pointer2<Node<int>>(thirdSpan);
+            var thirdPointer = new Pointer2<Node<int>>();
+            SetStruct(ref thirdPointer, thirdSpan);
+            helper.WriteLine("third");
+            WriteAddresses((long*)&thirdNode, 5);
+            WriteAddresses((long*)&thirdWrapper, 5);
+            WriteAddress((long)&thirdWrapper);
+            helper.WriteLine(string.Empty);
+            WriteAddresses((long*)&thirdPointer, 5);
+            helper.WriteLine("*********************************************");
 
             Assert.Equal(980, thirdNode.Value);
-            Assert.Equal(67, thirdNode.Previous.Value.Value);
-            Assert.Equal(42, thirdNode.Previous.Value.Previous.Value.Value);
+            Assert.Equal(67, Retrieve(ref thirdNode.Previous).Value);
+            Assert.Equal(42, Retrieve(ref Retrieve(ref thirdNode.Previous).Previous).Value);
 
             /*Assert.Equal(42, first.Value);
             Assert.Equal(67, first.Next.Value.Value);
@@ -547,37 +572,99 @@ namespace Microsoft.OData.Tests.UriParser
         public ref struct Node<T> where T : allows ref struct
         {
             public T Value;
-
+            
             public Pointer2<Node<T>> Previous;
+        }
+
+        public static unsafe void SetStruct<T>(ref Pointer2<T> pointer, Span<long> memory) where T : allows ref struct
+        {
+            /*void* valuePointer = Unsafe.AsPointer(ref value);
+
+            long* valuePointerAsLongs = (long*)valuePointer;
+            WriteString(valuePointerAsLongs);
+
+            long addressOfValueData = valuePointerAsLongs[0];
+
+            ////long* valueDataPointer = (long*)addressOfValueData;
+
+            void* pointerPointer = Unsafe.AsPointer(ref pointer);
+            long* pointerPointerAsLongs = (long*)pointerPointer;
+            pointerPointerAsLongs[0] = addressOfValueData;*/
+
+            void* pointerPointer = Unsafe.AsPointer(ref pointer);
+            long* pointerPointerAsLongs = (long*)pointerPointer;
+            fixed (long* memoryPointer = memory)
+            {
+                pointerPointerAsLongs[0] = (long)memoryPointer;
+            }
+        }
+
+        public unsafe void SetClass<T>(ref Pointer2<T> pointer, ref T value) where T : allows ref struct
+        {
+            ////T* valuePointer = &value;
+            T* valuePointer = (T*)Unsafe.AsPointer(ref value);
+
+            long* valuePointerAsLongs = (long*)valuePointer;
+            WriteString(valuePointerAsLongs);
+
+            long addressOfValueData = valuePointerAsLongs[0];
+
+            ////long* valueDataPointer = (long*)addressOfValueData;
+
+            void* pointerPointer = Unsafe.AsPointer(ref pointer);
+            long* pointerPointerAsLongs = (long*)pointerPointer;
+            pointerPointerAsLongs[0] = addressOfValueData;
+        }
+
+        public static unsafe ref T Retrieve<T>(ref Pointer2<T> pointer) where T : allows ref struct
+        {
+            if (!typeof(T).IsClass && !typeof(T).IsPrimitive)
+            {
+                //// TODO more general check
+
+                var location = (long*)Unsafe.AsPointer(ref pointer);
+                var realLocation = (long*)location[0];
+                realLocation += 1;
+                return ref Unsafe.AsRef<T>(realLocation);
+
+                /*fixed (Pointer2<T>* foo = &pointer)
+                {
+                    long* location = (long*)foo;
+                    WriteAddresses(location, 5);
+
+                    location += 16; //// TODO why 24? i though it should be 8 to get past the type handle...
+
+                    return ref Unsafe.AsRef<T>((long*)(((long*)((long*)foo)[0])[0]) + 1);
+                }*/
+            }
+
+            var value = pointer.value;
+            var valuePointer = (byte*)&value;
+
+            return ref Unsafe.AsRef<T>(valuePointer);
+
+            ////return *resultPointer;
+
+            void* pointerPointer = Unsafe.AsPointer(ref pointer);
+            long* pointerPointerAsLongs = (long*)pointerPointer;
+
+            long addressOfValueData = pointerPointerAsLongs[0];
+
+            /*var foo = pointer.Value;
+            long* bar = (long*)&foo;*/
+
+            /*return *(T*)addressOfValueData;
+
+            long* valuePointerAsLongs = (long*)addressOfValueData;
+            T* valuePointer = (T*)valuePointerAsLongs;
+
+            T value = *valuePointer;
+            return value;*/
         }
 
         public ref struct Pointer2<T> where T : allows ref struct
         {
-            private readonly Span<long> memory;
-            private object? value;
-
-            public Pointer2(Span<long> memory)
-            {
-                this.memory = memory;
-            }
-
-            public unsafe ref T Value
-            {
-                get
-                {
-                    int index;
-                    if (typeof(T).IsClass)
-                    {
-                        index = 0;
-                    }
-                    else
-                    {
-                        index = 1;
-                    }
-
-                    return ref Unsafe.AsRef<T>(Unsafe.AsPointer(ref memory[index]));
-                }
-            }
+            public object? value;
         }
 
         [Fact]
@@ -587,9 +674,9 @@ namespace Microsoft.OData.Tests.UriParser
             stack.Prepend(67, stackalloc long[Stack<int>.PointerSize]);
             stack.Prepend(42, stackalloc long[Stack<int>.PointerSize]);
 
-            Assert.Equal(980, stack.last.Value.Value);
-            Assert.Equal(67, stack.last.Value.Previous.Value.Value);
-            Assert.Equal(42, stack.last.Value.Previous.Value.Previous.Value.Value);
+            Assert.Equal(980, Retrieve(ref stack.last).Value);
+            Assert.Equal(67, Retrieve(ref Retrieve(ref stack.last).Previous).Value);
+            Assert.Equal(42, Retrieve(ref Retrieve(ref Retrieve(ref stack.last).Previous).Previous).Value);
         }
 
         [Fact]
@@ -634,10 +721,10 @@ namespace Microsoft.OData.Tests.UriParser
             stack.Prepend(new WithFinalizer() { First = "qwer" }, stackalloc long[Stack<WithFinalizer>.PointerSize]);
             stack.Prepend(new WithFinalizer() { First = "zxcv" }, stackalloc long[Stack<WithFinalizer>.PointerSize]);
 
-            Assert.Equal("asdf", stack.last.Value.Value.First);
-            Assert.Equal("qwer", stack.last.Value.Previous.Value.Value.First);
-            Assert.Equal("zxcv", stack.last.Value.Previous.Value.Previous.Value.Value.First);
-            
+            Assert.Equal("asdf", Retrieve(ref stack.last).Value.First);
+            Assert.Equal("qwer", Retrieve(ref Retrieve(ref stack.last).Previous).Value.First);
+            Assert.Equal("zxcv", Retrieve(ref Retrieve(ref Retrieve(ref stack.last).Previous).Previous).Value.First);
+
             GC.Collect();
             GC.WaitForPendingFinalizers();
 
@@ -645,25 +732,41 @@ namespace Microsoft.OData.Tests.UriParser
         }
 
         [Fact]
-        public void PointerListLoopTest()
+        public unsafe void PointerListLoopTest()
         {
             GC.Collect();
             GC.WaitForPendingFinalizers();
+
+            WriteAddress(typeof(Node<WithFinalizer>).TypeHandle.Value);
+            WriteAddress(typeof(WithFinalizer).TypeHandle.Value);
+            helper.WriteLine(string.Empty);
 
             ReferenceElementsFinalized = 0;
             var stack = new Stack<WithFinalizer>(new WithFinalizer() { First = "asdf" }, stackalloc long[Stack<WithFinalizer>.PointerSize]);
             for (int i = 0; i < 10; ++i)
             {
-                stack.Prepend(new WithFinalizer() { First = i.ToString() }, stackalloc long[Stack<WithFinalizer>.PointerSize]);
+                var toAdd = new WithFinalizer() { First = i.ToString() };
+                stack.Prepend(toAdd, stackalloc long[Stack<WithFinalizer>.PointerSize]);
+                GC.KeepAlive(toAdd);
             }
 
-            Assert.Equal("asdf", stack.last.Value.Value.First);
-            var current = stack.last.Value.Previous;
+            Assert.Equal("asdf", Retrieve(ref stack.last).Value.First);
+            var current = Retrieve(ref stack.last).Previous;
             for (int i = 0; i < 10; ++i)
             {
-                Assert.Equal(i.ToString(), current.Value.Value.First);
-                current = current.Value.Previous;
+                Assert.Equal(i.ToString(), Retrieve(ref current).Value.First);
+                current = Retrieve(ref current).Previous;
             }
+
+
+            var stackPointer = (long*)&stack;
+            WriteAddresses(stackPointer, 5);
+            var nodePointer = (long*)stackPointer[0];
+            WriteAddresses(nodePointer, 5);
+            var valuePointer = (long*)nodePointer[1];
+            WriteAddresses(valuePointer, 5);
+
+
 
             GC.Collect();
             GC.WaitForPendingFinalizers();
@@ -695,7 +798,8 @@ namespace Microsoft.OData.Tests.UriParser
                     Unsafe.WriteUnaligned(memoryPointer, wrapper);
                 }
 
-                var pointer = new Pointer2<Node<T>>(memory);
+                var pointer = new Pointer2<Node<T>>();
+                SetStruct(ref pointer, memory);
 
                 this.current = pointer;
                 this.last = pointer;
@@ -716,19 +820,21 @@ namespace Microsoft.OData.Tests.UriParser
                     Unsafe.WriteUnaligned(memoryPointer, wrapper);
                 }
 
-                var pointer = new Pointer2<Node<T>>(memory);
-                this.current.Value.Previous = pointer;
+                var pointer = new Pointer2<Node<T>>();
+                SetStruct(ref pointer, memory);
+
+                Retrieve(ref this.current).Previous = pointer;
                 this.current = pointer;
             }
         }
 #nullable disable
 
-        private void WriteAddress(long value)
+        private static void WriteAddress(long value)
         {
             helper.WriteLine(Convert.ToHexString(BitConverter.GetBytes(value)));
         }
 
-        private unsafe void WriteAddresses(long* pointer, int count)
+        private static unsafe void WriteAddresses(long* pointer, int count)
         {
             for (int i = 0; i < count; ++i)
             {
@@ -737,7 +843,7 @@ namespace Microsoft.OData.Tests.UriParser
             helper.WriteLine(string.Empty);
         }
 
-        private unsafe void WriteTypedReferenceAddress<T>(T instance)
+        private static unsafe void WriteTypedReferenceAddress<T>(T instance)
         {
             var reference = __makeref(instance);
             var referencePointer = (long*)&reference;
@@ -745,7 +851,7 @@ namespace Microsoft.OData.Tests.UriParser
             helper.WriteLine(string.Empty);
         }
 
-        private unsafe void WriteString(long* pointer)
+        private static unsafe void WriteString(long* pointer)
         {
             for (int i = 0; i < 5; ++i)
             {
@@ -756,7 +862,7 @@ namespace Microsoft.OData.Tests.UriParser
 
         private readonly Uri ServiceRoot = new Uri("http://host");
         private readonly Uri FullUri = new Uri("http://host/People");
-        private readonly ITestOutputHelper helper;
+        private static ITestOutputHelper helper;
 
         [Fact]
         public void NestedFilterWithDerivedType()
