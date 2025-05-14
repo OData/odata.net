@@ -698,6 +698,27 @@ namespace Microsoft.OData.Tests.UriParser
             Assert.Equal(9, ReferenceElementsFinalized);
         }
 
+        [Fact]
+        public void PointerListFinalizerTest2()
+        {
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+
+            ReferenceElementsFinalized = 0;
+
+            var list = new List<WithFinalizer>();
+            for (int i = 0; i < 10; ++i)
+            {
+                var foo = new WithFinalizer();
+                list.Add(foo);
+            }
+
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+
+            Assert.Equal(9, ReferenceElementsFinalized);
+        }
+
         private static int ReferenceElementsFinalized = 0;
 
         public class WithFinalizer
@@ -831,6 +852,11 @@ namespace Microsoft.OData.Tests.UriParser
         [Fact]
         public unsafe void NewListTest()
         {
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+
+            ReferenceElementsFinalized = 0;
+
             var list = new NewList<WithFinalizer>(new WithFinalizer() { First = "asdf" });
 
             WriteAddress((long)&list);
@@ -842,7 +868,7 @@ namespace Microsoft.OData.Tests.UriParser
             helper.WriteLine(string.Empty);
             WriteAddresses((long*)((long*)&list)[0], 5);
 
-            for (int i = 0; i < 1; ++i)
+            for (int i = 0; i < 4; ++i)
             {
                 var size = (Unsafe.SizeOf<NewList<WithFinalizer>.Node>() + 8) / sizeof(long);
                 long* memoryPointer = stackalloc long[size];
@@ -850,6 +876,7 @@ namespace Microsoft.OData.Tests.UriParser
                 var foo = new WithFinalizer() { First = i.ToString() };
 
                 list.Append(foo, memorySpan);
+                GC.KeepAlive(foo);
 
                 helper.WriteLine($"element {i.ToString()}");
                 WriteAddresses((long*)&list, 5);
@@ -860,12 +887,27 @@ namespace Microsoft.OData.Tests.UriParser
                 helper.WriteLine(string.Empty);
             }
 
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+
+            Assert.Equal(0, ReferenceElementsFinalized);
+
             Assert.Equal("asdf", list.Root.Value.First);
             var current = list.Root;
             for (int i = 0; current.TryGetNext(out current); ++i)
             {
                 Assert.Equal(i.ToString(), current.Value.First);
             }
+        }
+
+        public struct Frub
+        {
+            public Frub()
+            {
+                this.Property = new WithFinalizer();
+            }
+
+            public WithFinalizer Property { get; }
         }
 
         public unsafe ref struct NewList<T> where T : allows ref struct
