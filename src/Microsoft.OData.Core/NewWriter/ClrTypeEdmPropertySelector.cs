@@ -12,7 +12,7 @@ internal class ClrTypeEdmPropertySelector<T> : IPropertySelector<T, IEdmProperty
     {
         // TODO: handle nested properties/nested selects
         var edmType = context.EdmType;
-        if (context.WriterContext.SelectExpandClause == null || context.WriterContext.SelectExpandClause.AllSelected)
+        if (context.SelectAndExpand == null || context.SelectAndExpand.AllSelected)
         {
             if (edmType is IEdmStructuredType structuredType)
             {
@@ -22,7 +22,7 @@ internal class ClrTypeEdmPropertySelector<T> : IPropertySelector<T, IEdmProperty
         else
         {
             // retrieve properties from the SelectExpandClause
-            var selectedItems = context.WriterContext.SelectExpandClause.SelectedItems;
+            var selectedItems = context.SelectAndExpand.SelectedItems;
             var selectedPropertyNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             List<IEdmProperty> selectedProperties = [];
             foreach (var item in selectedItems)

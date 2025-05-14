@@ -23,7 +23,8 @@ internal class ODataConventionalEntitySetJsonResponseWriter<TPayload>(
         var resourceState = new ODataWriterState
         {
             WriterContext = state.WriterContext,
-            EdmType = state.EdmType.AsElementType()
+            EdmType = state.EdmType.AsElementType(),
+            SelectAndExpand = state.WriterContext.SelectExpandClause
         };
 
         foreach (var value in values)
