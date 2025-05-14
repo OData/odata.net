@@ -568,6 +568,68 @@ namespace Microsoft.OData.Tests.UriParser
                 }
             }
         }
+
+        [Fact]
+        public void PointerListTest()
+        {
+            var stack = new Stack<int>(980, stackalloc long[Stack<int>.PointerSize]);
+            stack.Prepend(67, stackalloc long[Stack<int>.PointerSize]);
+            stack.Prepend(42, stackalloc long[Stack<int>.PointerSize]);
+
+            Assert.Equal(980, stack.last.Value.Value);
+            Assert.Equal(67, stack.last.Value.Previous.Value.Value);
+            Assert.Equal(42, stack.last.Value.Previous.Value.Previous.Value.Value);
+        }
+
+        public ref struct Stack<T> where T : allows ref struct
+        {
+            public static int PointerSize { get; } = (Unsafe.SizeOf<Node<T>>() + 8) / sizeof(long);
+
+            public Pointer2<Node<T>> last;
+
+            private Pointer2<Node<T>> current;
+
+            public unsafe Stack(T value, Span<long> memory)
+            {
+                if (memory.Length != PointerSize)
+                {
+                    throw new Exception("TODO");
+                }
+
+                var node = new Node<T>();
+                node.Value = value;
+                var wrapper = new Wrapper<Node<T>>(ref node);
+                fixed (long* memoryPointer = memory)
+                {
+                    Unsafe.WriteUnaligned(memoryPointer, wrapper);
+                }
+
+                var pointer = new Pointer2<Node<T>>(memory);
+
+                this.current = pointer;
+                this.last = pointer;
+            }
+
+            public unsafe void Prepend(T value, Span<long> memory)
+            {
+                if (memory.Length != PointerSize)
+                {
+                    throw new Exception("TODO");
+                }
+
+                var node = new Node<T>();
+                node.Value = value;
+                var wrapper = new Wrapper<Node<T>>(ref node);
+                fixed (long* memoryPointer = memory)
+                {
+                    Unsafe.WriteUnaligned(memoryPointer, wrapper);
+                }
+
+                var pointer = new Pointer2<Node<T>>(memory);
+                this.current.Value.Previous = pointer;
+                this.current = pointer;
+            }
+        }
 #nullable disable
 
         private void WriteAddress(long value)
