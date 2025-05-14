@@ -26,6 +26,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.ComponentModel;
 using System.Net.WebSockets;
+using System.Threading;
 
 namespace Microsoft.OData.Tests.UriParser
 {
@@ -564,7 +565,17 @@ namespace Microsoft.OData.Tests.UriParser
             {
                 get
                 {
-                    return ref Unsafe.AsRef<T>(Unsafe.AsPointer(ref memory[1]));
+                    int index;
+                    if (typeof(T).IsClass)
+                    {
+                        index = 0;
+                    }
+                    else
+                    {
+                        index = 1;
+                    }
+
+                    return ref Unsafe.AsRef<T>(Unsafe.AsPointer(ref memory[index]));
                 }
             }
         }
@@ -579,6 +590,76 @@ namespace Microsoft.OData.Tests.UriParser
             Assert.Equal(980, stack.last.Value.Value);
             Assert.Equal(67, stack.last.Value.Previous.Value.Value);
             Assert.Equal(42, stack.last.Value.Previous.Value.Previous.Value.Value);
+        }
+
+        [Fact]
+        public void PointerListFinalizerTest()
+        {
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+
+            ReferenceElementsFinalized = 0;
+
+            for (int i = 0; i < 10; ++i)
+            {
+                var foo = new WithFinalizer();
+            }
+
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+
+            Assert.Equal(9, ReferenceElementsFinalized);
+        }
+
+        private static int ReferenceElementsFinalized = 0;
+
+        public class WithFinalizer
+        {
+            public string First { get; set; }
+            ~WithFinalizer()
+            {
+                Interlocked.Increment(ref ReferenceElementsFinalized);
+            }
+        }
+
+        [Fact]
+        public void PointerListClassTest()
+        {
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+
+            ReferenceElementsFinalized = 0;
+
+            var stack = new Stack<WithFinalizer>(new WithFinalizer() { First = "asdf" }, stackalloc long[Stack<WithFinalizer>.PointerSize]);
+            stack.Prepend(new WithFinalizer() { First = "qwer" }, stackalloc long[Stack<WithFinalizer>.PointerSize]);
+            stack.Prepend(new WithFinalizer() { First = "zxcv" }, stackalloc long[Stack<WithFinalizer>.PointerSize]);
+
+            Assert.Equal("asdf", stack.last.Value.Value.First);
+            Assert.Equal("qwer", stack.last.Value.Previous.Value.Value.First);
+            Assert.Equal("zxcv", stack.last.Value.Previous.Value.Previous.Value.Value.First);
+            
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+
+            Assert.Equal(0, ReferenceElementsFinalized);
+        }
+
+        [Fact]
+        public void PointerListLoopTest()
+        {
+            var stack = new Stack<WithFinalizer>(new WithFinalizer() { First = "asdf" }, stackalloc long[Stack<WithFinalizer>.PointerSize]);
+            for (int i = 0; i < 10; ++i)
+            {
+                stack.Prepend(new WithFinalizer() { First = i.ToString() }, stackalloc long[Stack<WithFinalizer>.PointerSize]);
+            }
+
+            Assert.Equal("asdf", stack.last.Value.Value.First);
+            var current = stack.last.Value.Previous;
+            for (int i = 0; i < 10; ++i)
+            {
+                Assert.Equal(i.ToString(), current.Value.Value.First);
+                current = current.Value.Previous;
+            }
         }
 
         public ref struct Stack<T> where T : allows ref struct
@@ -598,6 +679,7 @@ namespace Microsoft.OData.Tests.UriParser
 
                 var node = new Node<T>();
                 node.Value = value;
+
                 var wrapper = new Wrapper<Node<T>>(ref node);
                 fixed (long* memoryPointer = memory)
                 {
