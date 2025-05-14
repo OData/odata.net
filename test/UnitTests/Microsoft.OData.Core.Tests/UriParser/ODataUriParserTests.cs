@@ -647,6 +647,10 @@ namespace Microsoft.OData.Tests.UriParser
         [Fact]
         public void PointerListLoopTest()
         {
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+
+            ReferenceElementsFinalized = 0;
             var stack = new Stack<WithFinalizer>(new WithFinalizer() { First = "asdf" }, stackalloc long[Stack<WithFinalizer>.PointerSize]);
             for (int i = 0; i < 10; ++i)
             {
@@ -660,6 +664,11 @@ namespace Microsoft.OData.Tests.UriParser
                 Assert.Equal(i.ToString(), current.Value.Value.First);
                 current = current.Value.Previous;
             }
+
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+
+            Assert.Equal(0, ReferenceElementsFinalized);
         }
 
         public ref struct Stack<T> where T : allows ref struct
