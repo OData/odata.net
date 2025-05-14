@@ -827,6 +827,128 @@ namespace Microsoft.OData.Tests.UriParser
                 this.current = pointer;
             }
         }
+
+        [Fact]
+        public unsafe void NewListTest()
+        {
+            var list = new NewList<WithFinalizer>(new WithFinalizer() { First = "asdf" });
+
+            WriteAddress((long)&list);
+            helper.WriteLine(string.Empty);
+            WriteAddresses((long*)&list, 5);
+            WriteAddress((long)&list.Root);
+            helper.WriteLine(string.Empty);
+            WriteAddress(typeof(WithFinalizer).TypeHandle.Value);
+            helper.WriteLine(string.Empty);
+            WriteAddresses((long*)((long*)&list)[0], 5);
+
+            for (int i = 0; i < 1; ++i)
+            {
+                var size = (Unsafe.SizeOf<NewList<WithFinalizer>.Node>() + 8) / sizeof(long);
+                long* memoryPointer = stackalloc long[size];
+                var memorySpan = new Span<long>(memoryPointer, size);
+                var foo = new WithFinalizer() { First = i.ToString() };
+
+                list.Append(foo, memorySpan);
+
+                helper.WriteLine($"element {i.ToString()}");
+                WriteAddresses((long*)&list, 5);
+                WriteAddress((long)&foo);
+                helper.WriteLine(string.Empty);
+                WriteAddresses(memoryPointer, 5);
+                WriteAddress((long)memoryPointer);
+                helper.WriteLine(string.Empty);
+            }
+
+            Assert.Equal("asdf", list.Root.Value.First);
+            var current = list.Root;
+            for (int i = 0; current.TryGetNext(out current); ++i)
+            {
+                Assert.Equal(i.ToString(), current.Value.First);
+            }
+        }
+
+        public unsafe ref struct NewList<T> where T : allows ref struct
+        {
+            public ref struct Node
+            {
+                public T Value;
+
+                private object? next;
+
+                public bool TryGetNext(out Node next)
+                {
+                    if (this.next == null)
+                    {
+                        next = default;
+                        return false;
+                    }
+
+                    fixed (Node* selfPointer = &this)
+                    {
+                        long* selfPointerAsLongs = (long*)selfPointer;
+                        long* nextData = (long*)selfPointerAsLongs[1];
+
+                        var result = new Node();
+                        Node* resultPointer = &result;
+                        long* resultPointerAsLongs = (long*)resultPointer;
+                        resultPointerAsLongs[0] = nextData[1];
+                        resultPointerAsLongs[1] = nextData[2];
+
+                        WriteAddresses(resultPointerAsLongs, 5);
+
+                        next = result;
+                        return true;
+                    }
+                }
+            }
+
+            public Node Root;
+
+            private Span<long> current;
+
+            public NewList(T value)
+            {
+                this.Root = new Node();
+                this.Root.Value = value;
+            }
+
+            public void Append(T value, Span<long> memory)
+            {
+                var valuePointer = (long*)((long*)&value)[0];
+
+                WriteAddress((long)valuePointer);
+                WriteAddresses(valuePointer, 5);
+
+                WriteAddress((long)&value);
+                WriteAddress((long)((long*)&value)[0]);
+
+                memory[0] = typeof(Node).TypeHandle.Value;
+                memory[1] = (long)valuePointer;
+
+                if (this.current.Length == 0)
+                {
+                    fixed (NewList<T>* selfPointer = &this)
+                    {
+                        long* selfPointerAsLongs = (long*)selfPointer;
+                        fixed (long* memoryPointer = memory)
+                        {
+                            selfPointerAsLongs[1] = (long)memoryPointer;
+                        }
+                    }
+
+                }
+                else
+                {
+                    fixed (long* memoryPointer = memory)
+                    {
+                        this.current[2] = (long)memoryPointer;
+                    }
+                }
+
+                this.current = memory;
+            }
+        }
 #nullable disable
 
         private static void WriteAddress(long value)
