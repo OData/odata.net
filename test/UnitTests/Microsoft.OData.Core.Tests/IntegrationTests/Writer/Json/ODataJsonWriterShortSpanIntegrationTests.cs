@@ -10,9 +10,10 @@ using System.IO;
 using System.Text;
 using Microsoft.OData.Json;
 using Microsoft.OData.Edm;
-using Microsoft.Spatial;
 using Xunit;
 using Microsoft.OData.Core;
+using NetTopologySuite;
+using NetTopologySuite.Geometries;
 
 namespace Microsoft.OData.Tests.IntegrationTests.Writer.Json
 {
@@ -1151,11 +1152,15 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.Json
         [Fact]
         public void WritePrimitivePropertyWithGeographyWithUserModel()
         {
-            var property = new ODataProperty { Name = "GeographyProperty", Value = new ODataPrimitiveValue(GeographyFactory.MultiPoint().Point(1.5, 1.0).Point(2.5, 2.0).Build()) };
+            var geometryFactory = NtsGeometryServices.Instance.CreateGeometryFactory(4326);
+            var geographyMultiPoint = geometryFactory.CreateMultiPoint([
+                geometryFactory.CreatePoint(new Coordinate(1.0, 1.5)),
+                geometryFactory.CreatePoint(new Coordinate(2.0, 2.5))]);
+            var property = new ODataProperty { Name = "GeographyProperty", Value = new ODataPrimitiveValue(geographyMultiPoint) };
             var entry = new ODataResource { TypeName = "NS.MyDerivedEntityType", Properties = new[] { property } };
             const string expectedPayload = "{\"@odata.context\":\"http://odata.org/test/$metadata#MySet/$entity\","
                 + "\"@odata.type\":\"#NS.MyDerivedEntityType\","
-                + "\"GeographyProperty@odata.type\":\"#GeographyMultiPoint\","
+                + "\"GeographyProperty@odata.type\":\"#GeometryMultiPoint\","
                 + "\"GeographyProperty\":{\"type\":\"MultiPoint\",\"coordinates\":[[1.0,1.5],[2.0,2.5]],\"crs\":{\"type\":\"name\",\"properties\":{\"name\":\"EPSG:4326\"}}}}";
             this.WriteNestedItemsAndValidatePayload(entitySet: this.entitySet, entityType: null, nestedItemToWrite: new[] { entry }, expectedPayload: expectedPayload, writingResponse: true);
         }
@@ -1163,7 +1168,10 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.Json
         [Fact]
         public void WritePrimitivePropertyWithGeometryWithUserModel()
         {
-            var property = new ODataProperty { Name = "GeometryProperty", Value = new ODataPrimitiveValue(GeometryFactory.Collection().Point(-19.99, -12.0).Build()) };
+            var geometryFactory = NtsGeometryServices.Instance.CreateGeometryFactory(srid: 0);
+            var geometryCollection = geometryFactory.CreateGeometryCollection([
+                geometryFactory.CreatePoint(new Coordinate(-19.99, -12.0))]);
+            var property = new ODataProperty { Name = "GeometryProperty", Value = new ODataPrimitiveValue(geometryCollection) };
             var entry = new ODataResource { TypeName = "NS.MyDerivedEntityType", Properties = new[] { property } };
             const string expectedPayload = "{\"@odata.context\":\"http://odata.org/test/$metadata#MySet/$entity\","
                 + "\"@odata.type\":\"#NS.MyDerivedEntityType\","

@@ -13,7 +13,8 @@ using Microsoft.OData.Core;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Json;
 using Microsoft.OData.UriParser;
-using Microsoft.Spatial;
+using NetTopologySuite;
+using NetTopologySuite.Geometries;
 using Xunit;
 
 namespace Microsoft.OData.Tests.Json
@@ -256,6 +257,8 @@ namespace Microsoft.OData.Tests.Json
             var dynamicComplexPropertyNestedResourceInfo = CreateNestedResourceInfo("DynamicComplexProperty", isComplex: true, isUndeclared: true);
             var dynamicComplexCollectionPropertyNestedResourceInfo = CreateNestedResourceInfo("DynamicComplexCollectionProperty", isComplex: true, isCollection: true, isUndeclared: true);
 
+            var geographyFactory = NtsGeometryServices.Instance.CreateGeometryFactory(4326);
+
             IODataResponseMessage asyncResponseMessage = new InMemoryMessage { Stream = this.asyncStream };
 
             await using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
@@ -266,7 +269,7 @@ namespace Microsoft.OData.Tests.Json
                 await writer.WriteStartAsync(new ODataProperty { Name = "DynamicPrimitiveProperty", Value = 3.14159265359d });
                 await writer.WriteEndAsync();
                 await writer.WriteStartAsync(new ODataPropertyInfo { Name = "DynamicSpatialProperty" });
-                await writer.WritePrimitiveAsync(new ODataPrimitiveValue(GeographyPoint.Create(11.1, 11.1)));
+                await writer.WritePrimitiveAsync(new ODataPrimitiveValue(geographyFactory.CreatePoint(new Coordinate(11.1, 11.1))));
                 await writer.WriteEndAsync();
                 await writer.WriteStartAsync(new ODataPropertyInfo { Name = "DynamicNullProperty" });
                 await writer.WritePrimitiveAsync(null);
@@ -349,7 +352,7 @@ namespace Microsoft.OData.Tests.Json
                         writer.WriteStart(new ODataProperty { Name = "DynamicPrimitiveProperty", Value = 3.14159265359d });
                         writer.WriteEnd();
                         writer.WriteStart(new ODataPropertyInfo { Name = "DynamicSpatialProperty" });
-                        writer.WritePrimitive(new ODataPrimitiveValue(GeographyPoint.Create(11.1, 11.1)));
+                        writer.WritePrimitive(new ODataPrimitiveValue(geographyFactory.CreatePoint(new Coordinate(11.1, 11.1))));
                         writer.WriteEnd();
                         writer.WriteStart(new ODataPropertyInfo { Name = "DynamicNullProperty" });
                         writer.WritePrimitive(null);
@@ -4286,7 +4289,7 @@ POST http://tempuri.org/Customers HTTP/1.1
             this.superEntityType.AddStructuralProperty("TimeOfDayProperty", EdmPrimitiveTypeKind.TimeOfDay, false);
             this.superEntityType.AddStructuralProperty("ColorProperty", new EdmEnumTypeReference(this.colorEnumType, false));
             this.superEntityType.AddStructuralProperty("CoordinateProperty", new EdmComplexTypeReference(this.coordinateComplexType, true));
-            this.superEntityType.AddStructuralProperty("GeographyPointProperty", EdmPrimitiveTypeKind.GeographyPoint, false);
+            this.superEntityType.AddStructuralProperty("GeographyPointProperty", EdmPrimitiveTypeKind.GeometryPoint, false);
             this.superEntityType.AddStructuralProperty("GeometryPointProperty", EdmPrimitiveTypeKind.GeometryPoint, false);
             var entityNavProperty = this.superEntityType.AddUnidirectionalNavigation(
                 new EdmNavigationPropertyInfo
@@ -4333,7 +4336,7 @@ POST http://tempuri.org/Customers HTTP/1.1
                 new EdmCollectionTypeReference(new EdmCollectionType(new EdmComplexTypeReference(this.coordinateComplexType, true))));
             this.superEntityType.AddStructuralProperty("GeographyPointCollectionProperty",
                 new EdmCollectionTypeReference(new EdmCollectionType(new EdmPrimitiveTypeReference(
-                    EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.GeographyPoint), false))));
+                    EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.GeometryPoint), false))));
             this.superEntityType.AddStructuralProperty("GeometryPointCollectionProperty",
                 new EdmCollectionTypeReference(new EdmCollectionType(new EdmPrimitiveTypeReference(
                     EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.GeometryPoint), false))));
@@ -4598,6 +4601,9 @@ POST http://tempuri.org/Customers HTTP/1.1
 
         private static IList<ODataProperty> GetSuperTypeProperties()
         {
+            var geographyFactory = NtsGeometryServices.Instance.CreateGeometryFactory(4326);
+            var geometryFactory = NtsGeometryServices.Instance.CreateGeometryFactory(srid: 0);
+
             return new List<ODataProperty>
             {
                 new ODataProperty
@@ -4623,8 +4629,8 @@ POST http://tempuri.org/Customers HTTP/1.1
                 new ODataProperty { Name = "DateProperty", Value = new Date(1970, 1, 1) },
                 new ODataProperty { Name = "TimeOfDayProperty", Value = new TimeOfDay(23, 59, 59, 0) },
                 new ODataProperty { Name = "ColorProperty", Value = new ODataEnumValue("Black") },
-                new ODataProperty { Name = "GeographyPointProperty", Value = GeographyPoint.Create(22.2, 22.2) },
-                new ODataProperty { Name = "GeometryPointProperty", Value = GeometryPoint.Create(7, 13) },
+                new ODataProperty { Name = "GeographyPointProperty", Value = geographyFactory.CreatePoint(new Coordinate(22.2, 22.2)) },
+                new ODataProperty { Name = "GeometryPointProperty", Value = geometryFactory.CreatePoint(new Coordinate(7, 13)) },
                 new ODataProperty { Name = "BooleanCollectionProperty", Value = new ODataCollectionValue { Items = new List<object> { true, false } } },
                 new ODataProperty { Name = "Int32CollectionProperty", Value = new ODataCollectionValue { Items = new List<object> { 13, 31 } } },
                 new ODataProperty { Name = "SingleCollectionProperty", Value = new ODataCollectionValue { Items = new List<object> { 3.142f, 241.3f } } },
@@ -4672,13 +4678,13 @@ POST http://tempuri.org/Customers HTTP/1.1
                 } } },
                 new ODataProperty { Name = "GeographyPointCollectionProperty", Value = new ODataCollectionValue { Items = new List<object>
                 {
-                    GeographyPoint.Create(22.2, 22.2),
-                    GeographyPoint.Create(11.9, 11.6)
+                    geographyFactory.CreatePoint(new Coordinate(22.2, 22.2)),
+                    geographyFactory.CreatePoint(new Coordinate(11.6, 11.9))
                 } } },
                 new ODataProperty { Name = "GeometryPointCollectionProperty", Value = new ODataCollectionValue { Items = new List<object>
                 {
-                    GeometryPoint.Create(7, 13),
-                    GeometryPoint.Create(13, 7)
+                    geometryFactory.CreatePoint(new Coordinate(7, 13)),
+                    geometryFactory.CreatePoint(new Coordinate(13, 7))
                 } } },
             };
         }

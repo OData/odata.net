@@ -7,6 +7,7 @@
 namespace Microsoft.OData
 {
     #region Namespaces
+    using System.Threading.Tasks;
     using Microsoft.OData.Json;
     #endregion
 
@@ -21,5 +22,12 @@ namespace Microsoft.OData
         /// <param name="instance">The instance to write.</param>
         /// <param name="jsonWriter">Instance of JsonWriter.</param>
         void WriteJson(object instance, IJsonWriter jsonWriter);
+
+        /// <summary>
+        /// Asynchronously writes the JSON representation of an instance of a primitive type to a json writer.
+        /// </summary>
+        /// <param name="instance">The instance to write.</param>
+        /// <param name="jsonWriter">Instance of JsonWriter.</param>
+        Task WriteJsonAsync(object instance, IJsonWriter jsonWriter);
     }
 }

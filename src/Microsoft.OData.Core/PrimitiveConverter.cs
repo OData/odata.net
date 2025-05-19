@@ -10,10 +10,9 @@ namespace Microsoft.OData
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using System.IO;
-    using System.Xml;
+    using System.Threading.Tasks;
     using Microsoft.OData.Json;
-    using Microsoft.Spatial;
+    using NetTopologySuite.Geometries;
     #endregion
 
     /// <summary>
@@ -22,32 +21,20 @@ namespace Microsoft.OData
     internal sealed class PrimitiveConverter
     {
         /// <summary>Instance of GeographyTypeConverter to register for all Geography types.</summary>
-        private static readonly IPrimitiveTypeConverter geographyTypeConverter = new GeographyTypeConverter();
-
-        /// <summary>Instance of GeographyTypeConverter to register for all Geography types.</summary>
-        private static readonly IPrimitiveTypeConverter geometryTypeConverter = new GeometryTypeConverter();
+        private static readonly IPrimitiveTypeConverter geometryTypeConverter = new SpatialGeometryTypeConverter();
 
         /// <summary>Set of type converters that implement their own conversion using IPrimitiveTypeConverter.</summary>
         private static readonly PrimitiveConverter primitiveConverter =
             new PrimitiveConverter(
                 new KeyValuePair<Type, IPrimitiveTypeConverter>[]
                 {
-                    new KeyValuePair<Type, IPrimitiveTypeConverter>(typeof(GeographyPoint), geographyTypeConverter),
-                    new KeyValuePair<Type, IPrimitiveTypeConverter>(typeof(GeographyLineString), geographyTypeConverter),
-                    new KeyValuePair<Type, IPrimitiveTypeConverter>(typeof(GeographyPolygon), geographyTypeConverter),
-                    new KeyValuePair<Type, IPrimitiveTypeConverter>(typeof(GeographyCollection), geographyTypeConverter),
-                    new KeyValuePair<Type, IPrimitiveTypeConverter>(typeof(GeographyMultiPoint), geographyTypeConverter),
-                    new KeyValuePair<Type, IPrimitiveTypeConverter>(typeof(GeographyMultiLineString), geographyTypeConverter),
-                    new KeyValuePair<Type, IPrimitiveTypeConverter>(typeof(GeographyMultiPolygon), geographyTypeConverter),
-                    new KeyValuePair<Type, IPrimitiveTypeConverter>(typeof(Geography), geographyTypeConverter),
-
-                    new KeyValuePair<Type, IPrimitiveTypeConverter>(typeof(GeometryPoint), geometryTypeConverter),
-                    new KeyValuePair<Type, IPrimitiveTypeConverter>(typeof(GeometryLineString), geometryTypeConverter),
-                    new KeyValuePair<Type, IPrimitiveTypeConverter>(typeof(GeometryPolygon), geometryTypeConverter),
+                    new KeyValuePair<Type, IPrimitiveTypeConverter>(typeof(Point), geometryTypeConverter),
+                    new KeyValuePair<Type, IPrimitiveTypeConverter>(typeof(LineString), geometryTypeConverter),
+                    new KeyValuePair<Type, IPrimitiveTypeConverter>(typeof(Polygon), geometryTypeConverter),
                     new KeyValuePair<Type, IPrimitiveTypeConverter>(typeof(GeometryCollection), geometryTypeConverter),
-                    new KeyValuePair<Type, IPrimitiveTypeConverter>(typeof(GeometryMultiPoint), geometryTypeConverter),
-                    new KeyValuePair<Type, IPrimitiveTypeConverter>(typeof(GeometryMultiLineString), geometryTypeConverter),
-                    new KeyValuePair<Type, IPrimitiveTypeConverter>(typeof(GeometryMultiPolygon), geometryTypeConverter),
+                    new KeyValuePair<Type, IPrimitiveTypeConverter>(typeof(MultiPoint), geometryTypeConverter),
+                    new KeyValuePair<Type, IPrimitiveTypeConverter>(typeof(MultiLineString), geometryTypeConverter),
+                    new KeyValuePair<Type, IPrimitiveTypeConverter>(typeof(MultiPolygon), geometryTypeConverter),
                     new KeyValuePair<Type, IPrimitiveTypeConverter>(typeof(Geometry), geometryTypeConverter),
                 });
 
@@ -95,6 +82,23 @@ namespace Microsoft.OData
         }
 
         /// <summary>
+        /// Try to write the JSON representation of <paramref name="instance"/> using a registered primitive type converter
+        /// </summary>
+        /// <param name="instance">Object to convert to JSON representation.</param>
+        /// <param name="jsonWriter">JsonWriter instance to write to.</param>
+        internal Task WriteJsonAsync(object instance, IJsonWriter jsonWriter)
+        {
+            Debug.Assert(instance != null, "Expected a non-null instance to write.");
+
+            Type instanceType = instance.GetType();
+
+            IPrimitiveTypeConverter primitiveTypeConverter;
+            this.TryGetConverter(instanceType, out primitiveTypeConverter);
+            Debug.Assert(primitiveTypeConverter != null, "primitiveTypeConverter != null");
+            return primitiveTypeConverter.WriteJsonAsync(instance, jsonWriter);
+        }
+
+        /// <summary>
         /// Get the primitive type converter for the given type.
         /// </summary>
         /// <param name="type">Clr type whose primitive type converter needs to be returned.</param>
@@ -102,7 +106,7 @@ namespace Microsoft.OData
         /// <returns>True if a converter was found for the given type, otherwise returns false.</returns>
         private bool TryGetConverter(Type type, out IPrimitiveTypeConverter primitiveTypeConverter)
         {
-            if (typeof(ISpatial).IsAssignableFrom(type))
+            if (typeof(Geometry).IsAssignableFrom(type))
             {
                 KeyValuePair<Type, IPrimitiveTypeConverter> bestMatch = new KeyValuePair<Type, IPrimitiveTypeConverter>(typeof(object), null);
                 foreach (KeyValuePair<Type, IPrimitiveTypeConverter> possibleMatch in this.spatialPrimitiveTypeConverters)

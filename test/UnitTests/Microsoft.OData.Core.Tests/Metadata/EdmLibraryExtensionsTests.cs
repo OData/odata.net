@@ -11,8 +11,8 @@ using System.Linq;
 using Microsoft.OData.Metadata;
 using Microsoft.OData.Tests.Evaluation;
 using Microsoft.OData.Edm;
-using Microsoft.Spatial;
 using Xunit;
+using NetTopologySuite.Geometries;
 
 namespace Microsoft.OData.Tests.Metadata
 {
@@ -727,7 +727,6 @@ namespace Microsoft.OData.Tests.Metadata
         [InlineData(typeof(DateOnly?))]
         [InlineData(typeof(TimeOnly))]
         [InlineData(typeof(TimeOnly?))]
-        [InlineData(typeof(Geography))]
         [InlineData(typeof(Geometry))]
         public void IsPrimitiveTypeForSupportedTypesShouldBeTrue(Type type)
         {
@@ -767,10 +766,10 @@ namespace Microsoft.OData.Tests.Metadata
         [InlineData(EdmPrimitiveTypeKind.Int32, false, typeof(int))]
         [InlineData(EdmPrimitiveTypeKind.Stream, true, typeof(Stream))]
         [InlineData(EdmPrimitiveTypeKind.Stream, false, typeof(Stream))]
-        [InlineData(EdmPrimitiveTypeKind.Geography, true, typeof(Geography))]
-        [InlineData(EdmPrimitiveTypeKind.Geography, false, typeof(Geography))]
-        [InlineData(EdmPrimitiveTypeKind.GeographyCollection, true, typeof(GeographyCollection))]
-        [InlineData(EdmPrimitiveTypeKind.GeographyCollection, false, typeof(GeographyCollection))]
+        [InlineData(EdmPrimitiveTypeKind.Geography, true, typeof(Geometry))]
+        [InlineData(EdmPrimitiveTypeKind.Geography, false, typeof(Geometry))]
+        [InlineData(EdmPrimitiveTypeKind.GeographyCollection, true, typeof(GeometryCollection))]
+        [InlineData(EdmPrimitiveTypeKind.GeographyCollection, false, typeof(GeometryCollection))]
         [InlineData(EdmPrimitiveTypeKind.Geometry, true, typeof(Geometry))]
         [InlineData(EdmPrimitiveTypeKind.Geometry, false, typeof(Geometry))]
         [InlineData(EdmPrimitiveTypeKind.GeometryCollection, true, typeof(GeometryCollection))]

@@ -7,8 +7,9 @@
 using System;
 using Microsoft.OData.Json;
 using Microsoft.OData.Edm;
-using Microsoft.Spatial;
 using Xunit;
+using NetTopologySuite;
+using NetTopologySuite.Geometries;
 
 namespace Microsoft.OData.Tests.Json
 {
@@ -134,8 +135,9 @@ namespace Microsoft.OData.Tests.Json
         [Fact]
         public void DerivedPrimitiveValueShouldReturnDerivedTypeName()
         {
-            Assert.Equal("Edm.GeographyPoint", this.testSubject.GetValueTypeNameForWriting(
-                new ODataPrimitiveValue(GeographyPoint.Create(42, 42)),
+            var geographyPoint = NtsGeometryServices.Instance.CreateGeometryFactory(4326).CreatePoint(new Coordinate(42, 42));
+            Assert.Equal("Edm.GeometryPoint", this.testSubject.GetValueTypeNameForWriting(
+                new ODataPrimitiveValue(geographyPoint),
                 this.geographyTypeReference,
                 this.geographyPointTypeReference,
                 /*isOpen*/ false));

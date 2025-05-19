@@ -15,7 +15,6 @@ namespace Microsoft.OData.Metadata
     using System.Globalization;
     using System.IO;
     using System.Linq;
-    using Microsoft.Spatial;
     using Microsoft.OData.Edm;
 #if ODATA_SERVICE
     using Microsoft.OData.Service;
@@ -28,6 +27,7 @@ namespace Microsoft.OData.Metadata
     using Microsoft.OData.Json;
     using Microsoft.OData.UriParser;
     using Microsoft.OData.Core;
+    using NetTopologySuite.Geometries;
 #endif
     #endregion Namespaces
 
@@ -646,7 +646,7 @@ namespace Microsoft.OData.Metadata
                 // then it could take longer to reach the types in the last predicates than to look them up in the
                 // dictionary. So for a good balance handle common types directly and the rest in the dictionary.
                 || PrimitiveTypeReferenceMap.ContainsKey(clrType)
-                || typeof(ISpatial).IsAssignableFrom(clrType);
+                || typeof(Geometry).IsAssignableFrom(clrType);
         }
 
         /// <summary>
@@ -1519,59 +1519,27 @@ namespace Microsoft.OData.Metadata
 
             // If it didn't work, try spatial types which need assignability.
             IEdmPrimitiveType primitiveType = null;
-            if (typeof(GeographyPoint).IsAssignableFrom(clrType))
-            {
-                primitiveType = EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.GeographyPoint);
-            }
-            else if (typeof(GeographyLineString).IsAssignableFrom(clrType))
-            {
-                primitiveType = EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.GeographyLineString);
-            }
-            else if (typeof(GeographyPolygon).IsAssignableFrom(clrType))
-            {
-                primitiveType = EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.GeographyPolygon);
-            }
-            else if (typeof(GeographyMultiPoint).IsAssignableFrom(clrType))
-            {
-                primitiveType = EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.GeographyMultiPoint);
-            }
-            else if (typeof(GeographyMultiLineString).IsAssignableFrom(clrType))
-            {
-                primitiveType = EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.GeographyMultiLineString);
-            }
-            else if (typeof(GeographyMultiPolygon).IsAssignableFrom(clrType))
-            {
-                primitiveType = EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.GeographyMultiPolygon);
-            }
-            else if (typeof(GeographyCollection).IsAssignableFrom(clrType))
-            {
-                primitiveType = EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.GeographyCollection);
-            }
-            else if (typeof(Geography).IsAssignableFrom(clrType))
-            {
-                primitiveType = EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Geography);
-            }
-            else if (typeof(GeometryPoint).IsAssignableFrom(clrType))
+            if (typeof(Point).IsAssignableFrom(clrType))
             {
                 primitiveType = EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.GeometryPoint);
             }
-            else if (typeof(GeometryLineString).IsAssignableFrom(clrType))
+            else if (typeof(LineString).IsAssignableFrom(clrType))
             {
                 primitiveType = EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.GeometryLineString);
             }
-            else if (typeof(GeometryPolygon).IsAssignableFrom(clrType))
+            else if (typeof(Polygon).IsAssignableFrom(clrType))
             {
                 primitiveType = EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.GeometryPolygon);
             }
-            else if (typeof(GeometryMultiPoint).IsAssignableFrom(clrType))
+            else if (typeof(MultiPoint).IsAssignableFrom(clrType))
             {
                 primitiveType = EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.GeometryMultiPoint);
             }
-            else if (typeof(GeometryMultiLineString).IsAssignableFrom(clrType))
+            else if (typeof(MultiLineString).IsAssignableFrom(clrType))
             {
                 primitiveType = EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.GeometryMultiLineString);
             }
-            else if (typeof(GeometryMultiPolygon).IsAssignableFrom(clrType))
+            else if (typeof(MultiPolygon).IsAssignableFrom(clrType))
             {
                 primitiveType = EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.GeometryMultiPolygon);
             }
@@ -1582,6 +1550,10 @@ namespace Microsoft.OData.Metadata
             else if (typeof(Geometry).IsAssignableFrom(clrType))
             {
                 primitiveType = EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Geometry);
+            }
+            else if (typeof(NetTopologySuite.Geometries.Point).IsAssignableFrom(clrType))
+            {
+                primitiveType = EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.GeometryPoint);
             }
 
             if (primitiveType == null)
@@ -1748,38 +1720,38 @@ namespace Microsoft.OData.Metadata
                     return isNullable ? typeof(Decimal?) : typeof(Decimal);
                 case EdmPrimitiveTypeKind.Double:
                     return isNullable ? typeof(Double?) : typeof(Double);
-                case EdmPrimitiveTypeKind.Geography:
-                    return typeof(Geography);
-                case EdmPrimitiveTypeKind.GeographyCollection:
-                    return typeof(GeographyCollection);
-                case EdmPrimitiveTypeKind.GeographyLineString:
-                    return typeof(GeographyLineString);
-                case EdmPrimitiveTypeKind.GeographyMultiLineString:
-                    return typeof(GeographyMultiLineString);
-                case EdmPrimitiveTypeKind.GeographyMultiPoint:
-                    return typeof(GeographyMultiPoint);
-                case EdmPrimitiveTypeKind.GeographyMultiPolygon:
-                    return typeof(GeographyMultiPolygon);
-                case EdmPrimitiveTypeKind.GeographyPoint:
-                    return typeof(GeographyPoint);
-                case EdmPrimitiveTypeKind.GeographyPolygon:
-                    return typeof(GeographyPolygon);
                 case EdmPrimitiveTypeKind.Geometry:
                     return typeof(Geometry);
                 case EdmPrimitiveTypeKind.GeometryCollection:
                     return typeof(GeometryCollection);
                 case EdmPrimitiveTypeKind.GeometryLineString:
-                    return typeof(GeometryLineString);
+                    return typeof(LineString);
                 case EdmPrimitiveTypeKind.GeometryMultiLineString:
-                    return typeof(GeometryMultiLineString);
+                    return typeof(MultiLineString);
                 case EdmPrimitiveTypeKind.GeometryMultiPoint:
-                    return typeof(GeometryMultiPoint);
+                    return typeof(MultiPoint);
                 case EdmPrimitiveTypeKind.GeometryMultiPolygon:
-                    return typeof(GeometryMultiPolygon);
+                    return typeof(MultiPolygon);
                 case EdmPrimitiveTypeKind.GeometryPoint:
-                    return typeof(GeometryPoint);
+                    return typeof(Point);
                 case EdmPrimitiveTypeKind.GeometryPolygon:
-                    return typeof(GeometryPolygon);
+                    return typeof(Polygon);
+                case EdmPrimitiveTypeKind.Geography:
+                    return typeof(Geometry);
+                case EdmPrimitiveTypeKind.GeographyCollection:
+                    return typeof(GeometryCollection);
+                case EdmPrimitiveTypeKind.GeographyLineString:
+                    return typeof(LineString);
+                case EdmPrimitiveTypeKind.GeographyMultiLineString:
+                    return typeof(MultiLineString);
+                case EdmPrimitiveTypeKind.GeographyMultiPoint:
+                    return typeof(MultiPoint);
+                case EdmPrimitiveTypeKind.GeographyMultiPolygon:
+                    return typeof(MultiPolygon);
+                case EdmPrimitiveTypeKind.GeographyPoint:
+                    return typeof(Point);
+                case EdmPrimitiveTypeKind.GeographyPolygon:
+                    return typeof(Polygon);
                 case EdmPrimitiveTypeKind.Guid:
                     return isNullable ? typeof(Guid?) : typeof(Guid);
                 case EdmPrimitiveTypeKind.Int16:
