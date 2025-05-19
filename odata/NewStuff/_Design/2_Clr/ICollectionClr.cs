@@ -1,9 +1,11 @@
 ﻿namespace NewStuff._Design._2_Clr
 {
-    public interface ICollectionClr<T>
+    public interface ICollectionClr<TEntity, TKey>
     {
-        IGetCollectionClr<T> Get();
+        IGetCollectionClr<TEntity, TKey> Get();
 
-        IPostCollectionClr<T> Post(T entity); //// TODO what about deep insert and deep update?
+        IGetClr<TEntity> Get(TKey key);
+
+        IPostCollectionClr<TEntity> Post(TEntity entity); //// TODO what about deep insert and deep update? //// TODO what about services that allow the key to be provided on create?
     }
 }

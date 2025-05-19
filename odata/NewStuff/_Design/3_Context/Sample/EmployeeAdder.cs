@@ -8,9 +8,9 @@
 
     public class EmployeeAdder
     {
-        private readonly ICollectionClr<User> usersClr;
+        private readonly ICollectionClr<User, string> usersClr;
 
-        public EmployeeAdder(ICollectionClr<User> usersClr)
+        public EmployeeAdder(ICollectionClr<User, string> usersClr)
         {
             this.usersClr = usersClr;
         }

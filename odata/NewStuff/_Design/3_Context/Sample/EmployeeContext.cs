@@ -10,9 +10,9 @@
     
     public class EmployeeContext
     {
-        private readonly IGetCollectionClr<User> usersClr;
+        private readonly IGetCollectionClr<User, string> usersClr;
 
-        public EmployeeContext(IGetCollectionClr<User> usersClr)
+        public EmployeeContext(IGetCollectionClr<User, string> usersClr)
         {
             this.usersClr = usersClr;
         }
@@ -28,7 +28,7 @@
             //// TODO traverse skiptokens
 
             //// TODO note that you are skipping users that didn't have displayname or directreports provided and you are skipping direct reports that didn't have id provided even though, based on your request, these things should all be provided in the response; this is because you have no way to surface those errors
-            return TrySelect<User, Employee>(usersReponse.Values.Select(user => user.Value), Adapt);
+            return TrySelect<User, Employee>(usersReponse.Values.Select(user => user.Value.Value), Adapt);
         }
 
         private static bool Adapt(User user, out Employee employee)

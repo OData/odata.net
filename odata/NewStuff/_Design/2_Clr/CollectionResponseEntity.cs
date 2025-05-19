@@ -1,8 +1,8 @@
 ﻿namespace NewStuff._Design._2_Clr
 {
-    public class CollectionResponseEntity<TEntity>
+    public class CollectionResponseEntity<TEntity, TKey>
     {
-        public TEntity Value { get; }
+        public Entity<TEntity, TKey> Value { get; }
 
         public string? Type { get; } //// TODO this should be more strongly-typed
 

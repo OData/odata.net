@@ -6,9 +6,9 @@
     public interface IPostCollectionClr<TEntity>
     {
         TEntity? Evaluate(); //// TODO you need a better way to represent whether the created entity was returned
-        
-        ICollectionClr<TEntity> Select<TProperty>(Expression<Func<TEntity, Property<TProperty>>> selector);
 
-        ICollectionClr<TEntity> Expand<TProperty>(Expression<Func<TEntity, Property<TProperty>>> expander); //// TODO what about a nested filter?
+        IPostCollectionClr<TEntity> Select<TProperty>(Expression<Func<TEntity, Property<TProperty>>> selector);
+
+        IPostCollectionClr<TEntity> Expand<TProperty>(Expression<Func<TEntity, Property<TProperty>>> expander); //// TODO what about a nested filter?
     }
 }
