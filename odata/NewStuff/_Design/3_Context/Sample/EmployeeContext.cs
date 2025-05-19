@@ -8,7 +8,7 @@
     using NewStuff._Design._2_Clr;
     using NewStuff._Design._2_Clr.Sample;
     
-    public class EmployeeContext : IContext<Employee>
+    public class EmployeeContext
     {
         private readonly IGetCollectionClr<User> usersClr;
 
@@ -30,7 +30,7 @@
                         user.Value.DirectReports.Value.Select(directReport => directReport.Id.Value)));
         }
 
-        public IContext<Employee> Where(Expression<Func<Employee, bool>> predicate)
+        public EmployeeContext Where(Expression<Func<Employee, bool>> predicate)
         {
             var adaptedPredicate = this.Adapt(predicate);
             var filteredClr = this.usersClr.Filter(adaptedPredicate);
