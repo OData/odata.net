@@ -4,10 +4,16 @@
     using System.Collections.Generic;
     using System.Linq.Expressions;
 
+    using NewStuff._Design._2_Clr;
+    using NewStuff._Design._2_Clr.Sample;
+    
     public class EmployeeContext : IContext<Employee>
     {
-        public EmployeeContext()
+        private readonly ICollectionClr<User> clr;
+
+        public EmployeeContext(ICollectionClr<User> clr)
         {
+            this.clr = clr;
         }
 
         public IEnumerable<Employee> Evaluate()
