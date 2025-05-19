@@ -22,6 +22,8 @@
             var usersWithDirectReportsClr = this.usersClr.Get().Expand(user => user.DirectReports);
             var usersReponse = usersWithDirectReportsClr.Evaluate();
 
+            //// TODO traverse skiptokens
+
             return usersReponse
                 .Values
                 .Select(
