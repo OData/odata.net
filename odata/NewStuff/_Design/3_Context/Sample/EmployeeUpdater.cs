@@ -4,6 +4,7 @@
     {
         public Employee? Update(string id, string displayName)
         {
+            return null;
         }
     }
 }
