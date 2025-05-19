@@ -12,6 +12,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="NewStuff\_Design\0_Convention\" />
+    <Folder Include="NewStuff\_Design\3_Context\" />
+    <Folder Include="NewStuff\_Design\1_Protocol\" />
     <Folder Include="Root\OdataResourcePath\SyntacticCstNodes\" />
     <Folder Include="__GeneratedPartialV1\Deferred\" />
     <Folder Include="__Generated\CstNodes\Rules\" />
