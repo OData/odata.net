@@ -11,7 +11,7 @@
 
         IGetCollectionClr<TEntity> Select<TProperty>(Expression<Func<TEntity, Property<TProperty>>> selector);
 
-        IGetCollectionClr<TEntity> Expand<TProperty>(Expression<Func<TEntity, Property<TProperty>>> expander); //// TODO what about a nested filter?
+        IGetCollectionClr<TEntity> Expand<TProperty>(Expression<Func<TEntity, Property<TProperty>>> expander); //// TODO what about a nested filter? //// TODO what about a nested select
 
         IGetCollectionClr<TEntity> Skip(int count);
     }
