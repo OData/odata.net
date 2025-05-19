@@ -13,88 +13,87 @@ using Microsoft.OData.Edm;
 
 public class SerializerSchemaCustomizationTests : EdmLibTestCaseBase
 {
-    public SerializerSchemaCustomizationTests()
-    {
-        this.EdmVersion = EdmVersion.V40;
-    }
-
-    private const string defaultSerializerSchemaNamespace = "Default";
-    
     [Fact]
     public void OneContainer_NoSchema_NoCustomization()
     {
-        var edmModel = this.DefineEdmModel(
-                new NamespaceAndEntityContainers[] { new NamespaceAndEntityContainers("Default", "MyContainer") }
-                );
+        var edmModel = new EdmModel();
+        var oneNamespaceAndEntityContainers = new NamespaceAndEntityContainers("Default", "MyContainer");
+        foreach (string entityContainer in oneNamespaceAndEntityContainers.Containers)
+        {
+            var container = new EdmEntityContainer(oneNamespaceAndEntityContainers.Namespace, entityContainer);
+            edmModel.AddElement(container);
+        }
 
         IEnumerable<string> actualCsdlStrings = this.GetSerializerResult(edmModel);
 
-        this.Compare(new string[] 
+        var expectedCsdlStrings = new string[]
             { @"
 <Schema Namespace='$$DefaultSchemaNamespace$$' xmlns='$$XmlNamespace$$'>
   <EntityContainer Name='MyContainer' />
 </Schema>",
-            },
-            actualCsdlStrings);
+            };
+
+        Assert.Equal(expectedCsdlStrings.Count(), actualCsdlStrings.Count());
+
+        var expectedSchemaElements = expectedCsdlStrings.Select(s =>
+        {
+            string expectedString = this.FixupAllNamespacePlaceholders(s);
+            return XElement.Parse(expectedString);
+        });
+
+        var actaulSchemaElements = actualCsdlStrings.Select(s => XElement.Parse(s));
+
+        foreach (XElement expectedSchema in expectedSchemaElements)
+        {
+            string schemaNamespace = this.ExtractSchemaNamespace(expectedSchema);
+            var actualSchemaWithMatchingNamespace = actaulSchemaElements.Where(s => this.ExtractSchemaNamespace(s) == schemaNamespace);
+            Assert.Single(actualSchemaWithMatchingNamespace);
+
+            XElement actualSchema = actualSchemaWithMatchingNamespace.Single();
+            Assert.Equal(expectedSchema.ToString(), actualSchema.ToString());
+        }
     }
 
     [Fact]
     public void OneContainer_OneSchema_NoCustomization()
     {
-        var edmModel = this.DefineEdmModel(
-                new NamespaceAndEntityContainers[] { new NamespaceAndEntityContainers("NS1", "MyContainer") },
-                new NamespaceAndComplexTypes("NS1", "T1")
-                );
+        var edmModel = new EdmModel();
+
+        var oneNamespaceAndComplexTypes = new NamespaceAndComplexTypes("NS1", "T1");
+        foreach (string complexType in oneNamespaceAndComplexTypes.ComplexTypes)
+        {
+            var t1 = new EdmComplexType(oneNamespaceAndComplexTypes.Namespace, complexType);
+            edmModel.AddElement(t1);
+        }
+
+        var oneNamespaceAndEntityContainers = new NamespaceAndEntityContainers("NS1", "MyContainer");
+        foreach (string entityContainer in oneNamespaceAndEntityContainers.Containers)
+        {
+            var container = new EdmEntityContainer(oneNamespaceAndEntityContainers.Namespace, entityContainer);
+            edmModel.AddElement(container);
+        }
 
         IEnumerable<string> actualCsdlStrings = this.GetSerializerResult(edmModel);
 
-        this.Compare(new string[] 
+        var expectedCsdlStrings = new string[]
             { @"
 <Schema Namespace='NS1' xmlns='$$XmlNamespace$$'>
   <ComplexType Name='T1' />
   <EntityContainer Name='MyContainer' />
 </Schema>",
-            },
-            actualCsdlStrings);
-    }
+            };
 
-    private EdmModel DefineEdmModel(IEnumerable<NamespaceAndEntityContainers> allNamespaceAndEntityContainers, params NamespaceAndComplexTypes[] allNamespaceAndComplexTypes)
-    {
-        var edmModel = new EdmModel();
-
-        foreach (var oneNamespaceAndComplexTypes in allNamespaceAndComplexTypes)
-        {
-            foreach (string complexType in oneNamespaceAndComplexTypes.ComplexTypes)
-            {
-                var t1 = new EdmComplexType(oneNamespaceAndComplexTypes.Namespace, complexType);
-                edmModel.AddElement(t1);
-            }
-        }
-
-        foreach (var oneNamespaceAndEntityContainers in allNamespaceAndEntityContainers)
-        {
-            foreach (string entityContainer in oneNamespaceAndEntityContainers.Containers)
-            {
-                var container = new EdmEntityContainer(oneNamespaceAndEntityContainers.Namespace, entityContainer);
-                edmModel.AddElement(container);
-            }
-        }
-        return edmModel;
-    }
-
-    private void Compare(IEnumerable<string> expectedCsdlStrings, IEnumerable<string> actualCsdlStrings)
-    {
         Assert.Equal(expectedCsdlStrings.Count(), actualCsdlStrings.Count());
 
         var expectedSchemaElements = expectedCsdlStrings.Select(s =>
-            {
-                string expectedString = this.FixupAllNamespacePlaceholders(s);
-                return XElement.Parse(expectedString);
-            });
+        {
+            string expectedString = this.FixupAllNamespacePlaceholders(s);
+            return XElement.Parse(expectedString);
+        });
 
         var actaulSchemaElements = actualCsdlStrings.Select(s => XElement.Parse(s));
 
-        foreach(XElement expectedSchema in expectedSchemaElements)
+        foreach (XElement expectedSchema in expectedSchemaElements)
         {
             string schemaNamespace = this.ExtractSchemaNamespace(expectedSchema);
             var actualSchemaWithMatchingNamespace = actaulSchemaElements.Where(s => this.ExtractSchemaNamespace(s) == schemaNamespace);
@@ -115,7 +114,7 @@ public class SerializerSchemaCustomizationTests : EdmLibTestCaseBase
         string xmlNamespace = EdmLibCsdlContentGenerator.GetCsdlFullNamespace(this.EdmVersion).NamespaceName;
         
         return inputCsdlString.Replace("$$XmlNamespace$$", xmlNamespace)
-                              .Replace("$$DefaultSchemaNamespace$$", defaultSerializerSchemaNamespace);
+                              .Replace("$$DefaultSchemaNamespace$$", "Default");
     }
 
     private class NamespaceAndComplexTypes

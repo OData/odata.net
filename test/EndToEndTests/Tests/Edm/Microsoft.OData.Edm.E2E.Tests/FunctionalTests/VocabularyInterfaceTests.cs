@@ -9,6 +9,7 @@ namespace Microsoft.OData.Edm.E2E.Tests.FunctionalTests;
 using System.Linq;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.E2E.Tests.StubEdm;
+using Microsoft.OData.Edm.E2E.Tests.VocabularyStubs;
 using Microsoft.OData.Edm.Vocabularies;
 
 public class VocabularyInterfaceTests : EdmLibTestCaseBase
@@ -28,13 +29,13 @@ public class VocabularyInterfaceTests : EdmLibTestCaseBase
 
         entityType.AddVocabularyAnnotation(valueAnnotation);
 
-        Assert.Equal(1, entityType.InlineVocabularyAnnotations.Count(), "annotation count");
+        Assert.Single(entityType.InlineVocabularyAnnotations);
 
         var actual = entityType.InlineVocabularyAnnotations.Single();
 
-        Assert.Equal("", actual.Term.Namespace, "namespace");
-        Assert.Equal("FullName", actual.Term.Name, "name");
+        Assert.Equal("", actual.Term.Namespace);
+        Assert.Equal("FullName", actual.Term.Name);
         Assert.True(actual.Term.Type.IsString() , "Term type is string");
-        Assert.Equal("Forever Young", ((IEdmStringConstantExpression)actual.Value).Value, "annotation value");
+        Assert.Equal("Forever Young", ((IEdmStringConstantExpression)actual.Value).Value);
     }
 }

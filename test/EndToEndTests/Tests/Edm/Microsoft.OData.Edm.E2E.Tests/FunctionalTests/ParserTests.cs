@@ -4,55 +4,96 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System.Reflection;
+using System.Text;
+using System.Xml;
 using System.Xml.Linq;
+using Microsoft.OData.Edm.Csdl;
+using Microsoft.OData.Edm.Validation;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Microsoft.OData.Edm.E2E.Tests.FunctionalTests;
 
 public class ParserTests : EdmLibTestCaseBase
 {
-    public ParserTests()
-    {
-        this.EdmVersion = EdmVersion.V40;
-    }
-
     [Fact]
-    /* 
-     * TODO: Add test cases for the default vaules of facets such as 
-     *  3. String::fixedLength - The fixedLength facet is a Boolean value. The value indicates whether the store requires a string to be fixed length or not (that is, in SqlServer setting this facet to true would require a fixed-length field (char or nchar) instead of variable-length (varchar or nvarchar)).
-     *  4. <Property> can define a Nullable facet. The default value is Nullable=true. (Any Property that has a Type of ComplexType, MUST also define a Nullable attribute which MUST be set to false.)
-     */
     public void ParseTestStringWithFacets()
     {
-        IEdmModel edmModel = GetParserResult(ModelBuilder.StringWithFacets());
+        var csdlElement = XElement.Parse(@"
+<Schema Namespace='ModelBuilder' xmlns='http://docs.oasis-open.org/odata/ns/edm'>
+    <EntityType Name='Content'>
+        <Key>
+            <PropertyRef Name='NullableStringUnboundedUnicode'/>
+        </Key>
+        <Property Name='NullableStringUnboundedUnicode' Type='String' Nullable='false' MaxLength='Max' Unicode='true' />
+        <Property Name='NullableStringUnbounded' Type='String' Nullable='false' MaxLength='Max' Unicode='false' />
+        <Property Name='NullableStringMaxLength10' Type='String' Nullable='false' MaxLength='10'/>
+        <Property Name='StringCollation' Type='String' MaxLength='10'/>
+        <Property Name='SimpleString' Type='String' />
+    </EntityType>
+</Schema>");
 
-        Assert.NotNull(edmModel, "The Parser failed to read the CSDL content");
+        var isParsed = SchemaReader.TryParse(new XElement[] { csdlElement }.Select(e => e.CreateReader()), out IEdmModel edmModel, out IEnumerable<EdmError> errors);
+        Assert.True(isParsed);
+
+        Assert.NotNull(edmModel);
         var contentEntityType = edmModel.SchemaElements.Single() as IEdmEntityType;
-        Assert.NotNull(edmModel, "The Parser failed to parse an entity type");
+        Assert.NotNull(contentEntityType);
 
         var NullableStringUnboundedUnicode = contentEntityType.FindProperty("NullableStringUnboundedUnicode").Type.AsPrimitive().AsString();
-        Assert.True(NullableStringUnboundedUnicode.IsUnbounded, "The parser failed to process the value, Max, for the maxLength facet");
-        Assert.Null(NullableStringUnboundedUnicode.MaxLength, "The parser failed to process the value for the maxLength facet");
-        Assert.True(NullableStringUnboundedUnicode.IsUnicode == true, "The parser failed to process the value of the unicode facet");
+        Assert.True(NullableStringUnboundedUnicode.IsUnbounded);
+        Assert.Null(NullableStringUnboundedUnicode.MaxLength);
+        Assert.True(NullableStringUnboundedUnicode.IsUnicode == true);
 
         var SimpleString = contentEntityType.FindProperty("SimpleString").Type.AsPrimitive().AsString();
-        Assert.False(SimpleString.IsUnbounded, "The parser failed to process the value, Max, for the maxLength facet");
-        Assert.Null(SimpleString.MaxLength, "The parser failed to process the value for the maxLength facet");
-        Assert.Equal(true, SimpleString.IsUnicode, "The parser failed to process the value of the unicode facet");
+        Assert.False(SimpleString.IsUnbounded);
+        Assert.Null(SimpleString.MaxLength);
+        Assert.Equal(true, SimpleString.IsUnicode);
 
         var NullableStringMaxLength10 = contentEntityType.FindProperty("NullableStringMaxLength10").Type.AsPrimitive().AsString();
-        Assert.False(NullableStringMaxLength10.IsUnbounded, "The parser failed to process the value, Max, for the maxLength facet");
-        Assert.NotNull(NullableStringMaxLength10.MaxLength, "The parser failed to process the value for the maxLength facet");
-        Assert.Equal(true, NullableStringMaxLength10.IsUnicode, "The parser failed to process the value of the unicode facet");
+        Assert.False(NullableStringMaxLength10.IsUnbounded);
+        Assert.NotNull(NullableStringMaxLength10.MaxLength);
+        Assert.Equal(true, NullableStringMaxLength10.IsUnicode);
 
         var NullableStringUnbounded = contentEntityType.FindProperty("NullableStringUnbounded").Type.AsPrimitive().AsString();
-        Assert.True(NullableStringUnbounded.IsUnicode == false, "The parser failed to process the value of the unicode facet");
+        Assert.True(NullableStringUnbounded.IsUnicode == false);
     }
 
-    [Fact]
-    public void ParserTestSimpleAllPrimitiveTypesDefaultValueCheck()
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void ParserTestSimpleAllPrimitiveTypesDefaultValueCheck(EdmVersion edmVersion)
     {
-        var csdlElements = ModelBuilder.SimpleAllPrimitiveTypes(this.EdmVersion, false, true);
-        IEdmModel resultEdmModel = this.GetParserResult(csdlElements);
+        var namespaceName = "ModelBuilder.SimpleAllPrimitiveTypes";
+
+        var model = new EdmModel();
+        var entityType = new EdmEntityType(namespaceName, "validEntityType1");
+        entityType.AddKeys(entityType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32, false));
+        model.AddElement(entityType);
+
+        var complexType = new EdmComplexType(namespaceName, "V1alidcomplexType");
+        model.AddElement(complexType);
+
+        int i = 0;
+        foreach (var primitiveType in ModelBuilderHelpers.AllPrimitiveEdmTypes(edmVersion, true))
+        {
+            entityType.AddStructuralProperty("Property" + i++, primitiveType);
+            complexType.AddStructuralProperty("Property" + i++, primitiveType);
+        }
+
+        var stringBuilder = new StringBuilder();
+        var xmlWriter = XmlWriter.Create(stringBuilder);
+        var result = model.TryWriteSchema((s) => xmlWriter, out IEnumerable<EdmError> errors);
+        Assert.True(result);
+        Assert.Empty(errors);
+
+        xmlWriter.Close();
+        var csdlElements = new[] { XElement.Parse(stringBuilder.ToString()) };
+
+        var isParsed = SchemaReader.TryParse(csdlElements.Select(e => e.CreateReader()), out IEdmModel resultEdmModel, out errors);
+        Assert.True(isParsed);
+        Assert.Empty(errors);
+
         foreach (var schemaElement in resultEdmModel.SchemaElements)
         {
             var structuredType = schemaElement as IEdmStructuredType;
@@ -60,56 +101,92 @@ public class ParserTests : EdmLibTestCaseBase
             {
                 if (property.Type as IEdmTypeReference != null)
                 {
-                    var entityType = structuredType as IEdmEntityType;
-                    if (entityType == null || !entityType.DeclaredKey.Any(n => n.Name == property.Name))
+                    if (structuredType is not IEdmEntityType entityType2 || !entityType2.DeclaredKey.Any(n => n.Name == property.Name))
                     {
-                        Assert.Equal(true, ((IEdmTypeReference)property.Type).IsNullable, "{0}'s IsNullable's default value should be true.", property.Name);
+                        Assert.True(((IEdmTypeReference)property.Type).IsNullable);
                     }
                 }
                 if (property.Type as IEdmBinaryTypeReference != null)
                 {
                     var type = (IEdmBinaryTypeReference)property.Type;
-                    Assert.False(type.MaxLength.HasValue, "The default value of non boolean facets is Null.");
+                    Assert.False(type.MaxLength.HasValue);
                 }
                 else if (property.Type as IEdmStringTypeReference != null)
                 {
                     var type = (IEdmStringTypeReference)property.Type;
-                    Assert.False(type.MaxLength.HasValue, "The default value of non boolean facets is Null.");
-                    Assert.Equal(true, type.IsUnicode, "IsUnicode's default value should be true.");
+                    Assert.False(type.MaxLength.HasValue);
+                    Assert.Equal(true, type.IsUnicode);
                 }
                 else if (property.Type as IEdmTemporalTypeReference != null)
                 {
                     var type = (IEdmTemporalTypeReference)property.Type;
-                    Assert.Equal(0, type.Precision, "Default value of Precision is 0.");
+                    Assert.Equal(0, type.Precision);
                 }
                 else if (property.Type as IEdmDecimalTypeReference != null)
                 {
                     var type = (IEdmDecimalTypeReference)property.Type;
-                    Assert.False(type.Precision.HasValue, "Default value of Precision is null.");
-                    Assert.False(type.Scale.HasValue, "Default value of Scale is null.");
+                    Assert.False(type.Precision.HasValue);
+                    Assert.False(type.Scale.HasValue);
                 }
             }
         }
     }
 
-    [Fact]
-    public void ParserTestSimpleAllPrimtiveTypesNullableAttribute()
+    [Theory]
+    [InlineData(EdmVersion.V40, true, true)]
+    [InlineData(EdmVersion.V40, false, true)]
+    [InlineData(EdmVersion.V40, true, false)]
+    [InlineData(EdmVersion.V40, false, false)]
+    [InlineData(EdmVersion.V401, true, true)]
+    [InlineData(EdmVersion.V401, false, true)]
+    [InlineData(EdmVersion.V401, true, false)]
+    [InlineData(EdmVersion.V401, false, false)]
+    public void ParserTestSimpleAllPrimtiveTypesNullableAttribute(EdmVersion edmVersion, bool explicitNullable, bool isNullable)
     {
-        var testPairs = from isNullable in new bool[] { true, false }
-                        from explicitNullable in new bool[] { true, false }
-                        select new { isNullable, explicitNullable };
+        var namespaceName = "ModelBuilder.SimpleAllPrimitiveTypes";
 
-        foreach (var testPair in testPairs)
+        var model = new EdmModel();
+        var entityType = new EdmEntityType(namespaceName, "validEntityType1");
+        entityType.AddKeys(entityType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32, false));
+        model.AddElement(entityType);
+
+        var complexType = new EdmComplexType(namespaceName, "V1alidcomplexType");
+        model.AddElement(complexType);
+
+        int i = 0;
+        bool typesAreNullable = !explicitNullable && isNullable;
+        foreach (var primitiveType in ModelBuilderHelpers.AllPrimitiveEdmTypes(edmVersion, typesAreNullable))
         {
-            var resultEdmModel = this.GetParserResult(ModelBuilder.SimpleAllPrimitiveTypes(this.EdmVersion, testPair.explicitNullable, testPair.isNullable));
-            foreach (var type in resultEdmModel.SchemaElements.OfType<IEdmStructuredType>())
+            entityType.AddStructuralProperty("Property" + i++, primitiveType);
+            complexType.AddStructuralProperty("Property" + i++, primitiveType);
+        }
+
+        var stringBuilder = new StringBuilder();
+        var xmlWriter = XmlWriter.Create(stringBuilder);
+        if (!model.TryWriteSchema((s) => xmlWriter, out IEnumerable<EdmError> errors) || errors.Any())
+        {
+            ExceptionUtilities.Assert(false, "Failed to write CSDL: " + string.Join(",", errors.Select(e => e.ErrorMessage)));
+        }
+
+        xmlWriter.Close();
+        var csdlElements = new[] { XElement.Parse(stringBuilder.ToString()) };
+
+        if (explicitNullable)
+        {
+            ModelBuilderHelpers.SetNullableAttributes(csdlElements, isNullable);
+        }
+
+        var isParsed = SchemaReader.TryParse(csdlElements.Select(e => e.CreateReader()), out IEdmModel resultEdmModel, out errors);
+        Assert.True(isParsed);
+        Assert.Empty(errors);
+
+        foreach (var type in resultEdmModel.SchemaElements.OfType<IEdmStructuredType>())
+        {
+            foreach (var property in type.DeclaredProperties)
             {
-                foreach (var property in type.DeclaredProperties)
+                if (property.Name != "Id")
                 {
-                    if (property.Name != "Id")
-                    {
-                        Assert.Equal(property.Type.IsNullable, testPair.isNullable, "IsNullable of {0} should be {1}", property.Name, testPair.isNullable);
-                    }
+                    Assert.Equal(property.Type.IsNullable, isNullable);
                 }
             }
         }
@@ -118,22 +195,44 @@ public class ParserTests : EdmLibTestCaseBase
     [Fact]
     public void ParserTestTypeRefFacets()
     {
-        var csdlElements = ModelBuilder.TypeRefFacets();
-        this.VerifyParserResult(csdlElements, this.GetParserResult(csdlElements));
+        var csdlElement = XElement.Parse(@"
+<Schema Namespace='MyNamespace' xmlns='http://docs.oasis-open.org/odata/ns/edm'>
+    <EntityType Name='MyEntityType'>
+        <Key>
+            <PropertyRef Name='Property1'/>
+        </Key>
+        <Property Name='Property1' Type='String' Nullable='false'/>
+    </EntityType>
+    <ComplexType Name='MyComplexType'>
+        <Property Name='Property1' Type='String' />
+    </ComplexType>
+    <Function Name='MyFunction'><ReturnType Type='MyNamespace.MyEntityType' />
+        <Parameter Name='P1' Type='Collection(MyNamespace.MyEntityType)'/>
+        <Parameter Name='P2' Type='Collection(Edm.String)' MaxLength='Max' Nullable='false'/>
+        <Parameter Name='P3' Type='Collection(MyNamespace.MyComplexType)'/>
+        <Parameter Name='P4' Type='Collection(Binary)'/>
+    </Function>
+</Schema>");
 
-        var operationGroup = this.GetParserResult(csdlElements).FindOperations("MyNamespace.MyFunction");
+        var csdlElements = new XElement[] { csdlElement };
+        var isParsed = SchemaReader.TryParse(csdlElements.Select(e => e.CreateReader()), out IEdmModel model, out IEnumerable<EdmError> errors);
+        Assert.True(isParsed);
+        Assert.Empty(errors);
+
+        CsdlToEdmModelComparer.Compare(csdlElements, model);
+
+        var operationGroup = model.FindOperations("MyNamespace.MyFunction");
         var operation = operationGroup.Single();
-        Assert.Equal(true, operation.FindParameter("P1").Type.AsCollection().ElementType().IsNullable, "The value of the IsNullable of P1 should be false.");
-        Assert.Equal(true, operation.FindParameter("P2").Type.AsCollection().ElementType().AsString().IsUnbounded, "The value of the isUnbounded of P2 should be true.");
-        Assert.Equal(true, operation.FindParameter("P2").Type.AsCollection().ElementType().AsString().IsUnicode, "The value of the IsUnicode of P2 should be true.");
-        Assert.Null(operation.FindParameter("P2").Type.AsCollection().ElementType().AsString().MaxLength, "The value of the MaxLength of P2 should be null.");
-        Assert.Equal(false, operation.FindParameter("P2").Type.AsCollection().ElementType().IsNullable, "The value of the IsNullable of P2 should be false.");
-        Assert.Equal(true, operation.FindParameter("P3").Type.AsCollection().ElementType().IsNullable, "The default value of IsNullable is true.");
-        Assert.Equal(true, operation.FindParameter("P4").Type.AsCollection().ElementType().IsNullable, "The default value of IsNullable is true.");
-        Assert.Equal(false, operation.FindParameter("P4").Type.AsCollection().ElementType().IsCollection(), "The value of IsCollection of P4 is false.");
-        Assert.False(operation.FindParameter("P4").Type.AsCollection().ElementType().AsBinary().IsUnbounded, "The value of isUnbounded of P4 is false.");
-        Assert.Null(operation.FindParameter("P4").Type.AsCollection().ElementType().AsBinary().MaxLength, "The value of the MaxLength of P4 should be null.");
-        // TODO: After fixing the related bug, add more verification steps for the TypeRef elements
+        Assert.True(operation.FindParameter("P1").Type.AsCollection().ElementType().IsNullable);
+        Assert.True(operation.FindParameter("P2").Type.AsCollection().ElementType().AsString().IsUnbounded);
+        Assert.Equal(true, operation.FindParameter("P2").Type.AsCollection().ElementType().AsString().IsUnicode);
+        Assert.Null(operation.FindParameter("P2").Type.AsCollection().ElementType().AsString().MaxLength);
+        Assert.False(operation.FindParameter("P2").Type.AsCollection().ElementType().IsNullable);
+        Assert.True(operation.FindParameter("P3").Type.AsCollection().ElementType().IsNullable);
+        Assert.True(operation.FindParameter("P4").Type.AsCollection().ElementType().IsNullable);
+        Assert.False(operation.FindParameter("P4").Type.AsCollection().ElementType().IsCollection());
+        Assert.False(operation.FindParameter("P4").Type.AsCollection().ElementType().AsBinary().IsUnbounded);
+        Assert.Null(operation.FindParameter("P4").Type.AsCollection().ElementType().AsBinary().MaxLength);
     }
 
     [Fact]
@@ -149,238 +248,333 @@ public class ParserTests : EdmLibTestCaseBase
         <ActionImport Name=""FunctionImportsWithReturnTypePrimitiveDataType"" Action=""DefaultNamespace.FunctionImportsWithReturnTypePrimitiveDataType"" />
       </EntityContainer>
 </Schema>";
-        IEdmModel model;
-        IEnumerable<EdmError> errors;
-        var csdlElements = new XElement[] { XElement.Parse(csdl) };
-        bool parsed = SchemaReader.TryParse(new System.Xml.XmlReader[] { System.Xml.XmlReader.Create(new System.IO.StringReader(csdl)) }, out model, out errors);
-        Assert.False(parsed, "parsed");
-        Assert.Equal(2, errors.Count(), "2 errors");
-        Assert.Equal(EdmErrorCode.UnexpectedXmlElement, errors.First().ErrorCode, "10: Unexpected Xml Element");
 
-        parsed = SchemaReader.TryParse(new System.Xml.XmlReader[] { csdlElements.First().CreateReader() }, out model, out errors);
-        Assert.False(parsed, "parsed");
-        Assert.Equal(2, errors.Count(), "2 errors");
-        Assert.Equal(EdmErrorCode.UnexpectedXmlElement, errors.First().ErrorCode, "10: Unexpected Xml Element");
+        var csdlElements = new XElement[] { XElement.Parse(csdl) };
+        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out IEdmModel model, out IEnumerable<EdmError> errors);
+        Assert.False(parsed);
+        Assert.Equal(2, errors.Count());
+        Assert.Equal(EdmErrorCode.UnexpectedXmlElement, errors.First().ErrorCode);
+
+        parsed = SchemaReader.TryParse(new XmlReader[] { csdlElements.First().CreateReader() }, out model, out errors);
+        Assert.False(parsed);
+        Assert.Equal(2, errors.Count());
+        Assert.Equal(EdmErrorCode.UnexpectedXmlElement, errors.First().ErrorCode);
     }
 
     [Fact]
     public void ParserTestForIncorrectCsdl20Namespace()
     {
-        var csdls = ModelBuilder.SimpleConstructiveApiTestModel();
-        IEdmModel model;
-        IEnumerable<EdmError> errors;
+        var csdl =
+@"<?xml version=""1.0"" encoding=""utf-16""?>
+<Schema Namespace=""Westwind"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+  <EntityType Name=""Customer"">
+    <Key>
+      <PropertyRef Name=""IDC"" />
+    </Key>
+    <Property Name=""IDC"" Type=""Edm.Int32"" Nullable=""false"" />
+    <Property Name=""Name"" Type=""Edm.String"" Nullable=""false"" Unicode=""true"" p3:Stumble=""Rumble"" p3:Tumble=""Bumble"" xmlns:p3=""Grumble"" />
+    <Property Name=""Address"" Type=""Edm.String"" Unicode=""true"" />
+    <NavigationProperty Name=""Orders"" Type=""Collection(Westwind.Order)"" Partner=""Customer""  />
+  </EntityType>
+  <EntityType Name=""Order"">
+    <Key>
+      <PropertyRef Name=""IDO"" />
+    </Key>
+    <Property Name=""IDO"" Type=""Edm.Int32"" Nullable=""false"" />
+    <Property Name=""CustomerID"" Type=""Edm.Int32"" Nullable=""false"" />
+    <Property Name=""Item"" Type=""Edm.Int32"" Nullable=""false"" />
+    <Property Name=""Quantity"" Type=""Edm.Int32"" Nullable=""false"" />
+    <NavigationProperty Name=""Customer"" Type=""Westwind.Customer"" Nullable=""false"" Partner=""Orders"">
+      <ReferentialConstraint Property=""CustomerID"" ReferencedProperty=""IDC"" />
+    </NavigationProperty>
+  </EntityType>
+  <EntityContainer Name=""Eastwind"">
+    <EntitySet Name=""Customers"" EntityType=""Westwind.Customer"">
+      <NavigationPropertyBinding Path=""Orders"" Target=""Orders""/>
+    </EntitySet>
+    <EntitySet Name=""Orders"" EntityType=""Westwind.Order"">
+      <NavigationPropertyBinding Path=""Customer"" Target=""Customers""/>
+    </EntitySet>
+  </EntityContainer>
+</Schema>";
 
-        foreach (var csdl in csdls)
+        var csdls = new XElement[] { XElement.Parse(csdl) };
+
+        foreach (var csdlElement in csdls)
         {
-            bool parsed = SchemaReader.TryParse(new System.Xml.XmlReader[] { csdl.CreateReader() }, out model, out errors);
-            Assert.True(parsed, "parsed");
+            bool parsed = SchemaReader.TryParse(new XmlReader[] { csdlElement.CreateReader() }, out IEdmModel model, out IEnumerable<EdmError> errors);
+            Assert.True(parsed);
 
             // http://docs.oasis-open.org/odata/ns/edm is a namespace that OData uses. 
-            var csdlStringNewNamespace = csdl.ToString();
-            parsed = SchemaReader.TryParse(new System.Xml.XmlReader[] { System.Xml.XmlReader.Create(new System.IO.StringReader(csdlStringNewNamespace)) }, out model, out errors);
-            Assert.True(parsed, "parsed");
+            var csdlStringNewNamespace = csdlElement.ToString();
+            parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdlStringNewNamespace)) }, out _, out errors);
+            Assert.True(parsed);
+            Assert.Empty(errors);
 
-            csdlStringNewNamespace = csdl.ToString().Replace(csdl.GetDefaultNamespace().NamespaceName, "http://schemas.microsoft.com/ado/2007/09/edm");
-            parsed = SchemaReader.TryParse(new System.Xml.XmlReader[] { System.Xml.XmlReader.Create(new System.IO.StringReader(csdlStringNewNamespace)) }, out model, out errors);
-            Assert.False(parsed, "The parser should not support other invalid namespaces than http://docs.oasis-open.org/odata/ns/edm.");
+            csdlStringNewNamespace = csdlElement.ToString().Replace(csdlElement.GetDefaultNamespace().NamespaceName, "http://schemas.microsoft.com/ado/2007/09/edm");
+            parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdlStringNewNamespace)) }, out _, out errors);
+            Assert.False(parsed);
+            Assert.Equal(2, errors.Count());
         }
     }
 
     [Fact]
     public void ParserTestEntityTypeWithoutKey()
     {
-        var csdls = ODataTestModelBuilder.InvalidCsdl.EntityTypeWithoutKey;
-        var model = this.GetParserResult(csdls);
+        var csdl = @"
+<Schema Namespace=""TestModel"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+    <EntityContainer Name=""DefaultContainer"">
+        <EntitySet Name=""EntityTypeWithoutKey"" EntityType=""TestModel.EntityTypeWithoutKey"" />
+        <Singleton Name=""SingletonWhoseEntityTypeWithoutKey"" Type=""TestModel.EntityTypeWithoutKey"" />
+    </EntityContainer>
+    <EntityType Name=""EntityTypeWithoutKey"" />
+</Schema>";
 
-        Assert.True(model.SchemaElements.Count() == 2, "Invalid schema element count");
+        var csdlElements = new string[] { csdl }.Select(e => XElement.Parse(e, LoadOptions.SetLineInfo));
+        var isParsed = SchemaReader.TryParse(csdlElements.Select(e => e.CreateReader()), out IEdmModel model, out IEnumerable<EdmError> errors);
+        Assert.True(isParsed);
+        Assert.Empty(errors);
+
+        Assert.Equal(2, model.SchemaElements.Count());
 
         IEdmEntityType entityType = (IEdmEntityType)model.SchemaElements.First();
-        Assert.Equal("TestModel.EntityTypeWithoutKey", entityType.FullName(), "Invalid entity type full name");
-        Assert.Equal("EntityTypeWithoutKey", entityType.Name, "Invalid entity type name");
+        Assert.Equal("TestModel.EntityTypeWithoutKey", entityType.FullName());
+        Assert.Equal("EntityTypeWithoutKey", entityType.Name);
 
         IEdmEntityContainer entityContainer = model.EntityContainer;
-        Assert.Equal("DefaultContainer", entityContainer.Name, "Invalid entity container name");
-        Assert.True(entityContainer.Elements.Count() == 2, "Entity container has invalid amount of elements");
+        Assert.Equal("DefaultContainer", entityContainer.Name);
+        Assert.Equal(2, entityContainer.Elements.Count());
 
         IEdmEntitySet entitySet = entityContainer.FindEntitySet("EntityTypeWithoutKey");
-        Assert.Equal("EntityTypeWithoutKey", entitySet.Name, "Invalid entity set name");
-        Assert.Equal("TestModel.EntityTypeWithoutKey", entitySet.EntityType().FullName(), "Invalid entity set element type");
+        Assert.Equal("EntityTypeWithoutKey", entitySet.Name);
+        Assert.Equal("TestModel.EntityTypeWithoutKey", entitySet.EntityType.FullName());
 
         IEdmSingleton singleton = entityContainer.FindSingleton("SingletonWhoseEntityTypeWithoutKey");
-        Assert.Equal("SingletonWhoseEntityTypeWithoutKey", singleton.Name, "Invalid singleton name");
-        Assert.Equal("TestModel.EntityTypeWithoutKey", singleton.EntityType().FullName(), "Invalid singleton element type");
+        Assert.Equal("SingletonWhoseEntityTypeWithoutKey", singleton.Name);
+        Assert.Equal("TestModel.EntityTypeWithoutKey", singleton.EntityType.FullName());
+        model.Validate(out IEnumerable<EdmError> actualErrors);
+        Assert.Single(actualErrors);
 
-        var expectedErrors = new EdmLibTestErrors()
-            {
-                { 4, 10, EdmErrorCode.NavigationSourceTypeHasNoKeys },
-            };
-
-        IEnumerable<EdmError> actualErrors = null;
-        model.Validate(out actualErrors);
-        this.CompareErrors(actualErrors, expectedErrors);
+        Assert.Equal(EdmErrorCode.NavigationSourceTypeHasNoKeys, actualErrors.First().ErrorCode);
+        Assert.Equal("(4, 10)", actualErrors.First().ErrorLocation.ToString());
     }
 
     [Fact]
     public void ParserTestDuplicateEntityTypes()
     {
-        var csdls = ODataTestModelBuilder.InvalidCsdl.DuplicateEntityTypes;
-        var model = this.GetParserResult(csdls);
+        var csdl = @"
+<Schema Namespace=""TestModel"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+    <EntityContainer Name=""DefaultContainer"">
+        <EntitySet Name=""DuplicateEntityType"" EntityType=""TestModel.DuplicateEntityType"" />
+        <EntitySet Name=""DuplicateEntityType"" EntityType=""TestModel.DuplicateEntityType"" />
+    </EntityContainer>
+    <EntityType Name=""DuplicateEntityType"">
+        <Key>
+            <PropertyRef Name=""Id"" />
+        </Key>
+        <Property Name=""Id"" Type=""Int32"" Nullable=""false"" />
+    </EntityType>
+    <EntityType Name=""DuplicateEntityType"">
+        <Key>
+            <PropertyRef Name=""Id"" />
+        </Key>
+        <Property Name=""Id"" Type=""Int32"" Nullable=""false"" />
+    </EntityType>
+</Schema>";
+
+        var csdlElements = new string[] { csdl }.Select(e => XElement.Parse(e, LoadOptions.SetLineInfo));
+        var isParsed = SchemaReader.TryParse(csdlElements.Select(e => e.CreateReader()), out IEdmModel model, out IEnumerable<EdmError> errors);
+        Assert.True(isParsed);
+        Assert.Empty(errors);
 
         IEdmEntityContainer entityContainer = model.EntityContainer;
-        Assert.Equal("DefaultContainer", entityContainer.Name, "Invalid entity container name");
-        Assert.True(entityContainer.Elements.Count() == 2, "Entity container has invalid amount of elements");
-        Assert.Equal(EdmContainerElementKind.EntitySet, entityContainer.Elements.ElementAt(0).ContainerElementKind, "Invalid container element kind");
-        Assert.Equal(EdmContainerElementKind.EntitySet, entityContainer.Elements.ElementAt(1).ContainerElementKind, "Invalid container element kind");
+        Assert.Equal("DefaultContainer", entityContainer.Name);
+        Assert.True(entityContainer.Elements.Count() == 2);
+        Assert.Equal(EdmContainerElementKind.EntitySet, entityContainer.Elements.ElementAt(0).ContainerElementKind);
+        Assert.Equal(EdmContainerElementKind.EntitySet, entityContainer.Elements.ElementAt(1).ContainerElementKind);
 
         IEdmEntitySet entitySetElement1 = (IEdmEntitySet)entityContainer.Elements.ElementAt(0);
-        Assert.Equal("DuplicateEntityType", entitySetElement1.Name, "Invalid entity set name");
-        Assert.Equal("TestModel.DuplicateEntityType", entitySetElement1.EntityType().FullName(), "Invalid entity set element type");
+        Assert.Equal("DuplicateEntityType", entitySetElement1.Name);
+        Assert.Equal("TestModel.DuplicateEntityType", entitySetElement1.EntityType.FullName());
 
         IEdmEntitySet entitySetElement2 = (IEdmEntitySet)entityContainer.Elements.ElementAt(1);
-        Assert.Equal("DuplicateEntityType", entitySetElement2.Name, "Invalid entity set name");
-        Assert.Equal("TestModel.DuplicateEntityType", entitySetElement2.EntityType().FullName(), "Invalid entity set element type");
+        Assert.Equal("DuplicateEntityType", entitySetElement2.Name);
+        Assert.Equal("TestModel.DuplicateEntityType", entitySetElement2.EntityType.FullName());
 
         Assert.True(model.SchemaElements.Count() == 3, "Invalid schema element count");
-        Assert.Equal(EdmSchemaElementKind.TypeDefinition, model.SchemaElements.ElementAt(0).SchemaElementKind, "Invalid schema element kind");
-        Assert.Equal(EdmSchemaElementKind.TypeDefinition, model.SchemaElements.ElementAt(1).SchemaElementKind, "Invalid schema element kind");
+        Assert.Equal(EdmSchemaElementKind.TypeDefinition, model.SchemaElements.ElementAt(0).SchemaElementKind);
+        Assert.Equal(EdmSchemaElementKind.TypeDefinition, model.SchemaElements.ElementAt(1).SchemaElementKind);
 
         IEdmEntityType entityTypeElement1 = (IEdmEntityType)model.SchemaElements.ElementAt(0);
-        Assert.Equal("TestModel.DuplicateEntityType", entityTypeElement1.FullName(), "Invalid entity type full name");
-        Assert.Equal("DuplicateEntityType", entityTypeElement1.Name, "Invalid entity type name");
-        Assert.True(entityTypeElement1.Properties().Count() == 1, "Invalid property count");
-        Assert.Equal("Id", entityTypeElement1.Properties().Single().Name, "Invalid property name");
-        Assert.True(entityTypeElement1.DeclaredKey.Count() == 1, "Invalid declare key count for entity type");
+        Assert.Equal("TestModel.DuplicateEntityType", entityTypeElement1.FullName());
+        Assert.Equal("DuplicateEntityType", entityTypeElement1.Name);
+        Assert.Single(entityTypeElement1.Properties());
+        Assert.Equal("Id", entityTypeElement1.Properties().Single().Name);
+        Assert.Single(entityTypeElement1.DeclaredKey);
 
         IEdmEntityType entityTypeElement2 = (IEdmEntityType)model.SchemaElements.ElementAt(1);
-        Assert.Equal("TestModel.DuplicateEntityType", entityTypeElement2.FullName(), "Invalid entity type full name");
-        Assert.Equal("DuplicateEntityType", entityTypeElement2.Name, "Invalid entity type name");
-        Assert.True(entityTypeElement2.Properties().Count() == 1, "Invalid property count");
-        Assert.Equal("Id", entityTypeElement2.Properties().Single().Name, "Invalid property name");
-        Assert.True(entityTypeElement2.DeclaredKey.Count() == 1, "Invalid declare key count for entity type");
+        Assert.Equal("TestModel.DuplicateEntityType", entityTypeElement2.FullName());
+        Assert.Equal("DuplicateEntityType", entityTypeElement2.Name);
+        Assert.Single(entityTypeElement2.Properties());
+        Assert.Equal("Id", entityTypeElement2.Properties().Single().Name);
+        Assert.Single(entityTypeElement2.DeclaredKey);
 
-        var expectedErrors = new EdmLibTestErrors()
-            {
-                { 5, 10, EdmErrorCode.DuplicateEntityContainerMemberName },
-                { 13, 6, EdmErrorCode.AlreadyDefined },
-                { 4, 10, EdmErrorCode.BadUnresolvedEntityType },
-                { 5, 10, EdmErrorCode.BadUnresolvedEntityType }
-            };
+        model.Validate(out IEnumerable<EdmError> actualErrors);
+        Assert.Equal(4, actualErrors.Count());
+        Assert.Equal(EdmErrorCode.DuplicateEntityContainerMemberName, actualErrors.ElementAt(0).ErrorCode);
+        Assert.Equal(EdmErrorCode.AlreadyDefined, actualErrors.ElementAt(1).ErrorCode);
+        Assert.Equal(EdmErrorCode.BadUnresolvedEntityType, actualErrors.ElementAt(2).ErrorCode);
+        Assert.Equal(EdmErrorCode.BadUnresolvedEntityType, actualErrors.ElementAt(3).ErrorCode);
 
-        IEnumerable<EdmError> actualErrors = null;
-        model.Validate(out actualErrors);
-        this.CompareErrors(actualErrors, expectedErrors);
+        Assert.Equal("(5, 10)", actualErrors.ElementAt(0).ErrorLocation.ToString());
+        Assert.Equal("(13, 6)", actualErrors.ElementAt(1).ErrorLocation.ToString());
+        Assert.Equal("(4, 10)", actualErrors.ElementAt(2).ErrorLocation.ToString());
+        Assert.Equal("(5, 10)", actualErrors.ElementAt(3).ErrorLocation.ToString());
     }
 
     [Fact]
     public void ParserTestDuplicateComplexTypes()
     {
-        var csdls = ODataTestModelBuilder.InvalidCsdl.DuplicateComplexTypes;
-        var model = this.GetParserResult(csdls);
+        var csdl = @"
+<Schema Namespace=""TestModel"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+    <EntityContainer Name=""DefaultContainer"" />
+    <ComplexType Name=""DuplicateComplexTypes"">
+       <Property Name=""Data"" Type=""Edm.String"" />
+    </ComplexType>
+    <ComplexType Name=""DuplicateComplexTypes"">
+       <Property Name=""Data"" Type=""Edm.String"" />
+    </ComplexType>
+</Schema>";
+
+        var csdlElements = new string[] { csdl }.Select(e => XElement.Parse(e, LoadOptions.SetLineInfo));
+        var isParsed = SchemaReader.TryParse(csdlElements.Select(e => e.CreateReader()), out IEdmModel model, out IEnumerable<EdmError> errors);
+        Assert.True(isParsed);
+        Assert.Empty(errors);
 
         IEdmEntityContainer entityContainer = model.EntityContainer;
-        Assert.Equal("DefaultContainer", entityContainer.Name, "Invalid entity container name");
-        Assert.True(entityContainer.Elements.Count() == 0, "Entity container has invalid amount of elements");
+        Assert.Equal("DefaultContainer", entityContainer.Name);
+        Assert.Empty(entityContainer.Elements);
 
-        Assert.True(model.SchemaElements.Count() == 3, "Invalid schema element count");
-        Assert.Equal(EdmSchemaElementKind.TypeDefinition, model.SchemaElements.ElementAt(0).SchemaElementKind, "Invalid schema element kind");
-        Assert.Equal(EdmSchemaElementKind.TypeDefinition, model.SchemaElements.ElementAt(1).SchemaElementKind, "Invalid schema element kind");
+        Assert.True(model.SchemaElements.Count() == 3);
+        Assert.Equal(EdmSchemaElementKind.TypeDefinition, model.SchemaElements.ElementAt(0).SchemaElementKind);
+        Assert.Equal(EdmSchemaElementKind.TypeDefinition, model.SchemaElements.ElementAt(1).SchemaElementKind);
 
         IEdmComplexType complexTypeElement1 = (IEdmComplexType)model.SchemaElements.ElementAt(0);
-        Assert.Equal("TestModel.DuplicateComplexTypes", complexTypeElement1.FullName(), "Invalid complex type full name");
-        Assert.Equal("DuplicateComplexTypes", complexTypeElement1.Name, "Invalid complex type name");
+        Assert.Equal("TestModel.DuplicateComplexTypes", complexTypeElement1.FullName());
+        Assert.Equal("DuplicateComplexTypes", complexTypeElement1.Name);
 
         IEdmComplexType complexTypeElement2 = (IEdmComplexType)model.SchemaElements.ElementAt(1);
-        Assert.Equal("TestModel.DuplicateComplexTypes", complexTypeElement2.FullName(), "Invalid complex type full name");
-        Assert.Equal("DuplicateComplexTypes", complexTypeElement2.Name, "Invalid complex type name");
+        Assert.Equal("TestModel.DuplicateComplexTypes", complexTypeElement2.FullName());
+        Assert.Equal("DuplicateComplexTypes", complexTypeElement2.Name);
 
-        var expectedErrors = new EdmLibTestErrors()
-            {
-                { 7, 6, EdmErrorCode.AlreadyDefined }
-            };
+        model.Validate(out IEnumerable<EdmError> actualErrors);
+        Assert.Single(actualErrors);
+        Assert.Equal(EdmErrorCode.AlreadyDefined, actualErrors.Last().ErrorCode);
 
-        IEnumerable<EdmError> actualErrors = null;
-        model.Validate(out actualErrors);
-        this.CompareErrors(actualErrors, expectedErrors);
+        Assert.Equal("(7, 6)", actualErrors.Last().ErrorLocation.ToString());
     }
 
     [Fact]
     public void ParserTestComplexTypeWithDuplicateProperties()
     {
-        var csdls = ODataTestModelBuilder.InvalidCsdl.ComplexTypeWithDuplicateProperties;
-        var model = this.GetParserResult(csdls);
+        var csdl = @"
+<Schema Namespace=""TestModel"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+    <EntityContainer Name=""DefaultContainer"" />
+    <ComplexType Name=""DuplicatePropertiesComplexType"">
+        <Property Name=""Duplicate"" Type=""String"" />
+        <Property Name=""Duplicate"" Type=""String"" />
+    </ComplexType>
+</Schema>";
+
+        var csdlElements = new string[] { csdl }.Select(e => XElement.Parse(e, LoadOptions.SetLineInfo));
+        var isParsed = SchemaReader.TryParse(csdlElements.Select(e => e.CreateReader()), out IEdmModel model, out IEnumerable<EdmError> errors);
+        Assert.True(isParsed);
+        Assert.Empty(errors);
 
         IEdmEntityContainer entityContainer = model.EntityContainer;
-        Assert.Equal("DefaultContainer", entityContainer.Name, "Invalid entity container name");
-        Assert.True(entityContainer.Elements.Count() == 0, "Entity container has invalid amount of elements");
+        Assert.Equal("DefaultContainer", entityContainer.Name);
+        Assert.Single(entityContainer.Elements);
 
-        Assert.True(model.SchemaElements.Count() == 2, "Invalid schema element count");
-        Assert.Equal(EdmSchemaElementKind.TypeDefinition, model.SchemaElements.ElementAt(0).SchemaElementKind, "Invalid schema element kind");
+        Assert.True(model.SchemaElements.Count() == 2);
+        Assert.Equal(EdmSchemaElementKind.TypeDefinition, model.SchemaElements.ElementAt(0).SchemaElementKind);
 
         IEdmComplexType complexTypeElement = (IEdmComplexType)model.SchemaElements.ElementAt(0);
-        Assert.Equal("TestModel.DuplicatePropertiesComplexType", complexTypeElement.FullName(), "Invalid complex type full name");
-        Assert.Equal("DuplicatePropertiesComplexType", complexTypeElement.Name, "Invalid complex type name");
+        Assert.Equal("TestModel.DuplicatePropertiesComplexType", complexTypeElement.FullName());
+        Assert.Equal("DuplicatePropertiesComplexType", complexTypeElement.Name);
 
-        Assert.True(complexTypeElement.DeclaredProperties.Count() == 2, "Invalid complex type property count");
-        Assert.Equal(EdmPropertyKind.Structural, complexTypeElement.DeclaredProperties.ElementAt(0).PropertyKind, "Invalid property kind");
-        Assert.Equal(EdmPropertyKind.Structural, complexTypeElement.DeclaredProperties.ElementAt(1).PropertyKind, "Invalid property kind");
+        Assert.True(complexTypeElement.DeclaredProperties.Count() == 2);
+        Assert.Equal(EdmPropertyKind.Structural, complexTypeElement.DeclaredProperties.ElementAt(0).PropertyKind);
+        Assert.Equal(EdmPropertyKind.Structural, complexTypeElement.DeclaredProperties.ElementAt(1).PropertyKind);
 
         IEdmProperty complexProperty1 = (IEdmProperty)complexTypeElement.DeclaredProperties.ElementAt(0);
-        Assert.Equal("Duplicate", complexProperty1.Name, "Invalid property name");
+        Assert.Equal("Duplicate", complexProperty1.Name);
 
         IEdmProperty complexProperty2 = (IEdmProperty)complexTypeElement.DeclaredProperties.ElementAt(1);
-        Assert.Equal("Duplicate", complexProperty2.Name, "Invalid property name");
+        Assert.Equal("Duplicate", complexProperty2.Name);
 
-        var expectedErrors = new EdmLibTestErrors()
-            {
-                { 6, 10, EdmErrorCode.AlreadyDefined }
-            };
+        model.Validate(out IEnumerable<EdmError> actualErrors);
+        Assert.Single(actualErrors);
+        Assert.Equal(EdmErrorCode.AlreadyDefined, actualErrors.Last().ErrorCode);
 
-        IEnumerable<EdmError> actualErrors = null;
-        model.Validate(out actualErrors);
-        this.CompareErrors(actualErrors, expectedErrors);
+        Assert.Equal("(6, 10)", actualErrors.Last().ErrorLocation.ToString());
     }
 
     [Fact]
     public void ParserTestEntityTypeWithDuplicateProperties()
     {
-        var csdls = ODataTestModelBuilder.InvalidCsdl.EntityTypeWithDuplicateProperties;
-        var model = this.GetParserResult(csdls);
+        var csdl = @"
+<Schema Namespace=""TestModel"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+    <EntityContainer Name=""DefaultContainer"">
+        <EntitySet Name=""DuplicatePropertiesEntityType"" EntityType=""TestModel.DuplicatePropertiesEntityType"" />
+    </EntityContainer>
+    <EntityType Name=""DuplicatePropertiesEntityType"">
+        <Key>
+            <PropertyRef Name=""Id"" />
+        </Key>
+        <Property Name=""Id"" Type=""Int32"" Nullable=""false"" />
+        <Property Name=""Duplicate"" Type=""String"" />
+        <Property Name=""Duplicate"" Type=""String"" />
+    </EntityType>
+</Schema>";
+
+        var csdlElements = new string[] { csdl }.Select(e => XElement.Parse(e, LoadOptions.SetLineInfo));
+        var isParsed = SchemaReader.TryParse(csdlElements.Select(e => e.CreateReader()), out IEdmModel model, out IEnumerable<EdmError> errors);
+        Assert.True(isParsed);
+        Assert.Empty(errors);
 
         IEdmEntityContainer entityContainer = model.EntityContainer;
-        Assert.Equal("DefaultContainer", entityContainer.Name, "Invalid entity container name");
-        Assert.True(entityContainer.Elements.Count() == 1, "Entity container has invalid amount of elements");
-        Assert.Equal(EdmContainerElementKind.EntitySet, entityContainer.Elements.Single().ContainerElementKind, "Invalid container element kind");
+        Assert.Equal("DefaultContainer", entityContainer.Name);
+        Assert.Single(entityContainer.Elements);
+        Assert.Equal(EdmContainerElementKind.EntitySet, entityContainer.Elements.Single().ContainerElementKind);
 
         IEdmEntitySet entitySet = (IEdmEntitySet)entityContainer.Elements.Single();
-        Assert.Equal("DuplicatePropertiesEntityType", entitySet.Name, "Invalid entity set name");
-        Assert.Equal("TestModel.DuplicatePropertiesEntityType", entitySet.EntityType().FullName(), "Invalid entity set element type");
+        Assert.Equal("DuplicatePropertiesEntityType", entitySet.Name);
+        Assert.Equal("TestModel.DuplicatePropertiesEntityType", entitySet.EntityType.FullName());
 
-        Assert.True(model.SchemaElements.Count() == 2, "Invalid schema element count");
+        Assert.True(model.SchemaElements.Count() == 2);
 
         IEdmEntityType entityType = (IEdmEntityType)model.SchemaElements.First();
-        Assert.Equal("TestModel.DuplicatePropertiesEntityType", entityType.FullName(), "Invalid entity type full name");
-        Assert.Equal("DuplicatePropertiesEntityType", entityType.Name, "Invalid entity type name");
+        Assert.Equal("TestModel.DuplicatePropertiesEntityType", entityType.FullName());
+        Assert.Equal("DuplicatePropertiesEntityType", entityType.Name);
 
-        Assert.True(entityType.Properties().Count() == 3, "Invalid entity type property count");
-        Assert.Equal(EdmPropertyKind.Structural, entityType.Properties().ElementAt(0).PropertyKind, "Invalid property kind");
-        Assert.Equal(EdmPropertyKind.Structural, entityType.Properties().ElementAt(1).PropertyKind, "Invalid property kind");
-        Assert.Equal(EdmPropertyKind.Structural, entityType.Properties().ElementAt(2).PropertyKind, "Invalid property kind");
+        Assert.True(entityType.Properties().Count() == 3);
+        Assert.Equal(EdmPropertyKind.Structural, entityType.Properties().ElementAt(0).PropertyKind);
+        Assert.Equal(EdmPropertyKind.Structural, entityType.Properties().ElementAt(1).PropertyKind);
+        Assert.Equal(EdmPropertyKind.Structural, entityType.Properties().ElementAt(2).PropertyKind);
 
-        Assert.Equal("Id", entityType.Properties().ElementAt(0).Name, "Invalid property name");
-        Assert.Equal("Duplicate", entityType.Properties().ElementAt(1).Name, "Invalid property name");
-        Assert.Equal("Duplicate", entityType.Properties().ElementAt(2).Name, "Invalid property name");
+        Assert.Equal("Id", entityType.Properties().ElementAt(0).Name);
+        Assert.Equal("Duplicate", entityType.Properties().ElementAt(1).Name);
+        Assert.Equal("Duplicate", entityType.Properties().ElementAt(2).Name);
 
-        var expectedErrors = new EdmLibTestErrors()
-            {
-                { 12, 10, EdmErrorCode.AlreadyDefined }
-            };
+        model.Validate(out IEnumerable<EdmError> actualErrors);
+        Assert.Single(actualErrors);
+        Assert.Equal(EdmErrorCode.AlreadyDefined, actualErrors.Last().ErrorCode);
 
-        IEnumerable<EdmError> actualErrors = null;
-        model.Validate(out actualErrors);
-        this.CompareErrors(actualErrors, expectedErrors);
+        Assert.Equal("(12, 10)", actualErrors.Last().ErrorLocation.ToString());
     }
 
     //[TestMethod, Variation(Id = 171, SkipReason = @"An FK association based on PK-PK selfjoin should not be allowed -- postponed")]
+    [Fact]
     public void ParsingSelfReferencingNavigationPropertyPrimaryKey()
     {
         var csdl = @"
@@ -397,13 +591,17 @@ public class ParserTests : EdmLibTestCaseBase
     </EntityType>
 </Schema>";
 
-        var model = this.GetParserResult(new List<string>() { csdl });
-        IEnumerable<EdmError> errors;
-        model.Validate(out errors);
-        Assert.AreNotEqual(0, errors.Count(), "Invalid count of validation errors.");
+        var csdlElements = new string[] { csdl }.Select(e => XElement.Parse(e, LoadOptions.SetLineInfo));
+        var isParsed = SchemaReader.TryParse(csdlElements.Select(e => e.CreateReader()), out IEdmModel model, out IEnumerable<EdmError> errors);
+        Assert.True(isParsed);
+        Assert.Empty(errors);
+
+        model.Validate(out IEnumerable<EdmError> validationErrors);
+        Assert.NotEmpty(validationErrors);
     }
 
     //[TestMethod, Variation(Id = 172, SkipReason = @"An FK association based on PK-PK selfjoin should not be allowed -- postponed")]
+    [Fact]
     public void ParsingSelfReferencingNavigationPropertyPrimaryKeyWithBaseType()
     {
         var csdl = @"
@@ -423,14 +621,12 @@ public class ParserTests : EdmLibTestCaseBase
     </EntityType>
 </Schema>";
 
-        var model = this.GetParserResult(new List<string>() { csdl });
-        IEnumerable<EdmError> errors;
-        model.Validate(out errors);
-        Assert.AreNotEqual(0, errors.Count(), "Invalid count of validation errors.");
-    }
+        var csdlElements = new string[] { csdl }.Select(e => XElement.Parse(e, LoadOptions.SetLineInfo));
+        var isParsed = SchemaReader.TryParse(csdlElements.Select(e => e.CreateReader()), out IEdmModel model, out IEnumerable<EdmError> errors);
+        Assert.True(isParsed);
+        Assert.Empty(errors);
 
-    private void VerifyParserResult(IEnumerable<XElement> csdl, IEdmModel model)
-    {
-        CsdlToEdmModelComparer.Compare(csdl, model);
+        model.Validate(out IEnumerable<EdmError> validationErrors);
+        Assert.NotEmpty(validationErrors);
     }
 }

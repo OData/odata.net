@@ -19,11 +19,9 @@ public class ParsingValidation : EdmLibTestCaseBase
         XmlReaderSettings settings = new XmlReaderSettings();
         settings.ConformanceLevel = ConformanceLevel.Fragment;
         XmlReader foo = XmlReader.Create(new StringReader(csdl), settings);
-        IEdmModel model;
-        IEnumerable<EdmError> errors;
-        bool parsed = SchemaReader.TryParse(new XmlReader[] { foo }, out model, out errors);
+        bool parsed = SchemaReader.TryParse(new XmlReader[] { foo }, out IEdmModel model, out IEnumerable<EdmError> errors);
 
-        Assert.False(parsed, "parsed");
+        Assert.False(parsed);
         ExpectedEdmErrors expectedErrors = new ExpectedEdmErrors
             {
                 {EdmErrorCode.EmptyFile, "XmlParser_EmptyFile"},
@@ -50,7 +48,7 @@ public class ParsingValidation : EdmLibTestCaseBase
         IEnumerable<EdmError> errors;
         bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
 
-        Assert.False(parsed, "parsed");
+        Assert.False(parsed);
         ExpectedEdmErrors expectedErrors = new ExpectedEdmErrors
             {
                 {EdmErrorCode.UnexpectedXmlElement, "XmlParser_UnexpectedRootElementNoNamespace"},
@@ -77,7 +75,7 @@ public class ParsingValidation : EdmLibTestCaseBase
         IEnumerable<EdmError> errors;
         bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
 
-        Assert.False(parsed, "parsed");
+        Assert.False(parsed);
         ExpectedEdmErrors expectedErrors = new ExpectedEdmErrors
             {
                 {EdmErrorCode.UnexpectedXmlElement, "XmlParser_UnexpectedRootElementWrongNamespace"},
@@ -103,7 +101,7 @@ public class ParsingValidation : EdmLibTestCaseBase
         IEnumerable<EdmError> errors;
         bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
 
-        Assert.False(parsed, "parsed");
+        Assert.False(parsed);
         ExpectedEdmErrors expectedErrors = new ExpectedEdmErrors
             {
                 {EdmErrorCode.UnexpectedXmlElement, "XmlParser_UnexpectedRootElement"},
@@ -130,7 +128,7 @@ public class ParsingValidation : EdmLibTestCaseBase
         IEnumerable<EdmError> errors;
         bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
 
-        Assert.False(parsed, "parsed");
+        Assert.False(parsed);
         ExpectedEdmErrors expectedErrors = new ExpectedEdmErrors
             {
                 {EdmErrorCode.UnexpectedXmlAttribute, "XmlParser_UnexpectedAttribute"},
@@ -158,7 +156,7 @@ public class ParsingValidation : EdmLibTestCaseBase
         IEnumerable<EdmError> errors;
         bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
 
-        Assert.False(parsed, "parsed");
+        Assert.False(parsed);
         ExpectedEdmErrors expectedErrors = new ExpectedEdmErrors
             {
                 {EdmErrorCode.UnexpectedXmlElement, "XmlParser_UnexpectedElement"},
@@ -187,7 +185,7 @@ public class ParsingValidation : EdmLibTestCaseBase
         IEnumerable<EdmError> errors;
         bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
 
-        Assert.False(parsed, "parsed");
+        Assert.False(parsed);
         ExpectedEdmErrors expectedErrors = new ExpectedEdmErrors
             {
                 {EdmErrorCode.UnexpectedXmlElement, "XmlParser_UnexpectedElement"},
@@ -211,7 +209,7 @@ public class ParsingValidation : EdmLibTestCaseBase
         IEnumerable<EdmError> errors;
         bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
 
-        Assert.False(parsed, "parsed");
+        Assert.False(parsed);
         ExpectedEdmErrors expectedErrors = new ExpectedEdmErrors
             {
                 {EdmErrorCode.MissingType, "CsdlParser_MissingTypeAttributeOrElement"},
@@ -255,7 +253,7 @@ public class ParsingValidation : EdmLibTestCaseBase
         IEnumerable<EdmError> errors;
         bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
 
-        Assert.False(parsed, "parsed");
+        Assert.False(parsed);
         Assert.Equal(1, errors.Count(), "1 errors");
         Assert.Equal(EdmErrorCode.XmlError, errors.First().ErrorCode, "Correct error.");
         Assert.True(errors.First().ErrorMessage.Contains("'Property' is a duplicate attribute name."), "Correct error message");
@@ -297,7 +295,7 @@ public class ParsingValidation : EdmLibTestCaseBase
         IEnumerable<EdmError> errors;
         bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
 
-        Assert.False(parsed, "parsed");
+        Assert.False(parsed);
         Assert.Equal(1, errors.Count(), "1 errors");
         Assert.Equal(EdmErrorCode.XmlError, errors.First().ErrorCode, "Correct error code.");
         Assert.True(errors.First().ErrorMessage.Contains("'ReferencedProperty' is a duplicate attribute name."), "Correct error message");
@@ -324,7 +322,7 @@ public class ParsingValidation : EdmLibTestCaseBase
         IEnumerable<EdmError> errors;
         bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
 
-        Assert.False(parsed, "parsed");
+        Assert.False(parsed);
         ExpectedEdmErrors expectedErrors = new ExpectedEdmErrors
             {
                 {EdmErrorCode.TextNotAllowed, "XmlParser_TextNotAllowed"},
@@ -352,7 +350,7 @@ public class ParsingValidation : EdmLibTestCaseBase
         IEnumerable<EdmError> errors;
         bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
 
-        Assert.False(parsed, "parsed");
+        Assert.False(parsed);
         ExpectedEdmErrors expectedErrors = new ExpectedEdmErrors
             {
                 {EdmErrorCode.InvalidBoolean, "ValueParser_InvalidBoolean"},
@@ -376,7 +374,7 @@ public class ParsingValidation : EdmLibTestCaseBase
         IEnumerable<EdmError> errors;
         bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
 
-        Assert.True(parsed, "parsed");
+        Assert.True(parsed);
         IEdmEntityType customer = model.SchemaElements.First() as IEdmEntityType;
         Assert.Equal(string.Empty, customer.Namespace, "Empty namespace");
         Assert.Equal("Customer", customer.Name, "Correct name");
@@ -396,7 +394,7 @@ public class ParsingValidation : EdmLibTestCaseBase
         IEnumerable<EdmError> errors;
         bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
 
-        Assert.True(parsed, "parsed");
+        Assert.True(parsed);
         ExpectedEdmErrors expectedErrors = new ExpectedEdmErrors
         {
         };
@@ -423,7 +421,7 @@ public class ParsingValidation : EdmLibTestCaseBase
         IEnumerable<EdmError> errors;
         bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
 
-        Assert.False(parsed, "parsed");
+        Assert.False(parsed);
         ExpectedEdmErrors expectedErrors = new ExpectedEdmErrors
             {
                 {EdmErrorCode.MissingAttribute, "XmlParser_MissingAttribute"},
@@ -451,7 +449,7 @@ public class ParsingValidation : EdmLibTestCaseBase
         IEnumerable<EdmError> errors;
         bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
 
-        Assert.True(parsed, "parsed");
+        Assert.True(parsed);
         ExpectedEdmErrors expectedErrors = new ExpectedEdmErrors
         {
         };
@@ -478,7 +476,7 @@ public class ParsingValidation : EdmLibTestCaseBase
         IEdmModel model;
         IEnumerable<EdmError> errors;
         bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
-        Assert.False(parsed, "parsed");
+        Assert.False(parsed);
         Assert.Equal(1, errors.Count(), "1 errors");
         Assert.Equal(EdmErrorCode.InvalidBoolean, errors.First().ErrorCode, "11: Text not allowed");
     }
@@ -507,7 +505,7 @@ public class ParsingValidation : EdmLibTestCaseBase
         IEnumerable<EdmError> errors;
         bool parsed = CsdlReader.TryParse(XmlReader.Create(new StringReader(edmx)), out model, out errors);
 
-        Assert.False(parsed, "parsed");
+        Assert.False(parsed);
         ExpectedEdmErrors expectedErrors = new ExpectedEdmErrors
             {
                 {EdmErrorCode.UnexpectedXmlAttribute, "XmlParser_UnexpectedAttribute"},
@@ -530,7 +528,7 @@ public class ParsingValidation : EdmLibTestCaseBase
         IEnumerable<EdmError> errors;
         bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
 
-        Assert.False(parsed, "parsed");
+        Assert.False(parsed);
         ExpectedEdmErrors expectedErrors = new ExpectedEdmErrors
             {
                 {EdmErrorCode.UnexpectedXmlElement, "XmlParser_UnusedElement"},
@@ -565,7 +563,7 @@ public class ParsingValidation : EdmLibTestCaseBase
         IEnumerable<EdmError> errors;
         bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
 
-        Assert.False(parsed, "parsed");
+        Assert.False(parsed);
         ExpectedEdmErrors expectedErrors = new ExpectedEdmErrors
             {
                 {EdmErrorCode.InvalidIfExpressionIncorrectNumberOfOperands, "CsdlParser_InvalidIfExpressionIncorrectNumberOfOperands"},
@@ -598,7 +596,7 @@ public class ParsingValidation : EdmLibTestCaseBase
         IEnumerable<EdmError> errors;
         bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
 
-        Assert.False(parsed, "parsed");
+        Assert.False(parsed);
         ExpectedEdmErrors expectedErrors = new ExpectedEdmErrors
             {
                 {EdmErrorCode.InvalidIfExpressionIncorrectNumberOfOperands, "CsdlParser_InvalidIfExpressionIncorrectNumberOfOperands"},
@@ -617,7 +615,7 @@ public class ParsingValidation : EdmLibTestCaseBase
         IEnumerable<EdmError> errors;
         bool parsed = CsdlReader.TryParse(foo, out model, out errors);
 
-        Assert.False(parsed, "parsed");
+        Assert.False(parsed);
         ExpectedEdmErrors expectedErrors = new ExpectedEdmErrors
             {
                 {EdmErrorCode.EmptyFile, "XmlParser_EmptySchemaTextReader"},
@@ -636,7 +634,7 @@ public class ParsingValidation : EdmLibTestCaseBase
         IEnumerable<EdmError> errors;
         bool parsed = CsdlReader.TryParse(foo, out model, out errors);
 
-        Assert.False(parsed, "parsed");
+        Assert.False(parsed);
         ExpectedEdmErrors expectedErrors = new ExpectedEdmErrors
             {
                 {EdmErrorCode.UnexpectedXmlElement, "XmlParser_UnexpectedRootElement"},
@@ -655,7 +653,7 @@ public class ParsingValidation : EdmLibTestCaseBase
         IEnumerable<EdmError> errors;
         bool parsed = CsdlReader.TryParse(foo, out model, out errors);
 
-        Assert.False(parsed, "parsed");
+        Assert.False(parsed);
         ExpectedEdmErrors expectedErrors = new ExpectedEdmErrors
             {
                 {EdmErrorCode.UnexpectedXmlElement, "XmlParser_UnexpectedRootElement"},
@@ -686,7 +684,7 @@ public class ParsingValidation : EdmLibTestCaseBase
         IEdmModel model;
         IEnumerable<EdmError> errors;
         bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
-        Assert.False(parsed, "parsed");
+        Assert.False(parsed);
     }
 
     [Fact]
@@ -707,8 +705,8 @@ public class ParsingValidation : EdmLibTestCaseBase
         IEdmModel model;
         IEnumerable<EdmError> errors;
         bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
-        Assert.True(parsed, "parsed");
-        Assert.True(errors.Count() == 0, "No errors");
+        Assert.True(parsed);
+       Assert.Empty(errors);
 
         IEdmEntityType entityType = (IEdmEntityType)model.SchemaElements.First();
         IEdmStructuralProperty badProp = entityType.DeclaredKey.First();
@@ -741,7 +739,7 @@ public class ParsingValidation : EdmLibTestCaseBase
         IEdmModel model;
         IEnumerable<EdmError> errors;
         bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)), null }, out model, out errors);
-        Assert.False(parsed, "parsed");
+        Assert.False(parsed);
         Assert.Equal(1, errors.Count(), "Error found");
         Assert.Equal(EdmErrorCode.NullXmlReader, errors.First().ErrorCode, "Correct error");
     }
@@ -771,8 +769,8 @@ public class ParsingValidation : EdmLibTestCaseBase
         IEnumerable<EdmError> errors;
 
         bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
-        Assert.True(parsed, "parsed");
-        Assert.True(errors.Count() == 0, "No errors");
+        Assert.True(parsed);
+       Assert.Empty(errors);
 
         IEdmEntityType person = (IEdmEntityType)model.FindType("foo.Person");
         IEnumerable<IEdmVocabularyAnnotation> personAnnotations = person.VocabularyAnnotations(model);
@@ -790,7 +788,7 @@ public class ParsingValidation : EdmLibTestCaseBase
         IEdmModel model;
         IEnumerable<EdmError> errors;
         bool parsed = SchemaReader.TryParse(new XmlReader[] { }, out model, out errors);
-        Assert.False(parsed, "parsed");
+        Assert.False(parsed);
         Assert.Equal(1, errors.Count(), "Error found");
         Assert.Equal(EdmErrorCode.NoReadersProvided, errors.First().ErrorCode, "Correct error");
     }
@@ -809,8 +807,8 @@ public class ParsingValidation : EdmLibTestCaseBase
         IEdmModel model;
         IEnumerable<EdmError> errors;
         bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
-        Assert.False(parsed, "parsed");
-        Assert.Equal(1, errors.Count(), "Correct number of errors");
+        Assert.False(parsed);
+        Assert.Equal(1, errors.Count());
         Assert.Equal(EdmErrorCode.InvalidInteger, errors.First().ErrorCode, "Correct error code.");
     }
 
@@ -830,8 +828,8 @@ public class ParsingValidation : EdmLibTestCaseBase
         IEdmModel model;
         IEnumerable<EdmError> errors;
         bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
-        Assert.False(parsed, "parsed");
-        Assert.Equal(1, errors.Count(), "Correct number of errors");
+        Assert.False(parsed);
+        Assert.Equal(1, errors.Count());
         Assert.Equal(EdmErrorCode.InvalidLong, errors.First().ErrorCode, "Correct error code.");
     }
 
@@ -849,8 +847,8 @@ public class ParsingValidation : EdmLibTestCaseBase
         IEdmModel model;
         IEnumerable<EdmError> errors;
         bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
-        Assert.False(parsed, "parsed");
-        Assert.Equal(1, errors.Count(), "Correct number of errors");
+        Assert.False(parsed);
+        Assert.Equal(1, errors.Count());
         Assert.Equal(EdmErrorCode.InvalidSrid, errors.First().ErrorCode, "Correct error code.");
     }
 
@@ -868,8 +866,8 @@ public class ParsingValidation : EdmLibTestCaseBase
         IEdmModel model;
         IEnumerable<EdmError> errors;
         bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
-        Assert.False(parsed, "parsed");
-        Assert.Equal(1, errors.Count(), "Correct number of errors");
+        Assert.False(parsed);
+        Assert.Equal(1, errors.Count());
         Assert.Equal(EdmErrorCode.InvalidMaxLength, errors.First().ErrorCode, "Correct error code.");
     }
 
@@ -887,8 +885,8 @@ public class ParsingValidation : EdmLibTestCaseBase
         IEdmModel model;
         IEnumerable<EdmError> errors;
         bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
-        Assert.True(parsed, "parsed");
-        Assert.Equal(0, errors.Count(), "Correct number of errors");
+        Assert.True(parsed);
+        Assert.Equal(0, errors.Count());
         Assert.Null(((IEdmComplexType)model.FindType("Grumble.Person")).Properties().First().Type.AsString().MaxLength, "MaxLength is null.");
     }
 
@@ -926,8 +924,8 @@ public class ParsingValidation : EdmLibTestCaseBase
         IEdmModel model;
         IEnumerable<EdmError> errors;
         bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
-        Assert.True(parsed, "parsed");
-        Assert.True(errors.Count() == 0, "No errors");
+        Assert.True(parsed);
+       Assert.Empty(errors);
 
         IEdmEntityType feckless = (IEdmEntityType)model.SchemaElements.First();
         IEdmNavigationProperty end1 = feckless.NavigationProperties().First();
@@ -968,8 +966,8 @@ public class ParsingValidation : EdmLibTestCaseBase
         IEdmModel model;
         IEnumerable<EdmError> errors;
         bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
-        Assert.False(parsed, "parsed");
-        Assert.Equal(1, errors.Count(), "Correct number of errors");
+        Assert.False(parsed);
+        Assert.Equal(1, errors.Count());
         Assert.Equal(EdmErrorCode.InvalidOnDelete, errors.First().ErrorCode, "Correct error code.");
     }
 
@@ -987,8 +985,8 @@ public class ParsingValidation : EdmLibTestCaseBase
         IEdmModel model;
         IEnumerable<EdmError> errors;
         bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
-        Assert.False(parsed, "parsed");
-        Assert.Equal(1, errors.Count(), "Correct number of errors");
+        Assert.False(parsed);
+        Assert.Equal(1, errors.Count());
         Assert.Equal(EdmErrorCode.InvalidBoolean, errors.First().ErrorCode, "Correct error code.");
     }
 
@@ -1006,8 +1004,8 @@ public class ParsingValidation : EdmLibTestCaseBase
         IEdmModel model;
         IEnumerable<EdmError> errors;
         bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
-        Assert.False(parsed, "parsed");
-        Assert.Equal(1, errors.Count(), "Correct number of errors");
+        Assert.False(parsed);
+        Assert.Equal(1, errors.Count());
         Assert.Equal(EdmErrorCode.InvalidTypeName, errors.First().ErrorCode, "Correct error code.");
     }
 
@@ -1025,8 +1023,8 @@ public class ParsingValidation : EdmLibTestCaseBase
         IEdmModel model;
         IEnumerable<EdmError> errors;
         bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
-        Assert.False(parsed, "parsed");
-        Assert.Equal(1, errors.Count(), "Correct number of errors");
+        Assert.False(parsed);
+        Assert.Equal(1, errors.Count());
         Assert.Equal(EdmErrorCode.InvalidTypeName, errors.First().ErrorCode, "Correct error code.");
     }
 
@@ -1050,8 +1048,8 @@ public class ParsingValidation : EdmLibTestCaseBase
         IEdmModel model;
         IEnumerable<EdmError> errors;
         bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
-        Assert.False(parsed, "parsed");
-        Assert.Equal(1, errors.Count(), "Correct number of errors");
+        Assert.False(parsed);
+        Assert.Equal(1, errors.Count());
         Assert.Equal(EdmErrorCode.UnexpectedXmlElement, errors.First().ErrorCode, "Correct error code.");
     }
 
@@ -1079,8 +1077,8 @@ public class ParsingValidation : EdmLibTestCaseBase
         IEdmModel model;
         IEnumerable<EdmError> errors;
         bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl1)), XmlReader.Create(new StringReader(csdl2)) }, out model, out errors);
-        Assert.False(parsed, "parsed");
-        Assert.Equal(1, errors.Count(), "Correct number of errors");
+        Assert.False(parsed);
+        Assert.Equal(1, errors.Count());
         Assert.Equal(EdmErrorCode.UnexpectedXmlElement, errors.First().ErrorCode, "Correct error code.");
     }
 
@@ -1098,15 +1096,15 @@ public class ParsingValidation : EdmLibTestCaseBase
         CheckModelEntityContainer(model.EntityContainer.Elements, 4 /* entityContainerElementCount */, 3 /* entitySetCount */, 0 /* operationImportCount */, 1 /* actionImportCount */);
 
         var person = model.FindEntityType("TestModel.Person");
-        Assert.NotNull(person, "Invalid entity type.");
+        Assert.NotNull(person);
         Assert.Null(person.BaseType, "Entity type has invalid base type.");
 
         var employee = model.FindEntityType("TestModel.Employee");
-        Assert.NotNull(employee, "Invalid entity type.");
+        Assert.NotNull(employee);
         Assert.Equal(person, employee.BaseType, "Entity type has invalid base type.");
 
         var manager = model.FindEntityType("TestModel.Manager");
-        Assert.NotNull(manager, "Invalid entity type.");
+        Assert.NotNull(manager);
         Assert.Equal(employee, manager.BaseType, "Entity type has invalid base type.");
 
         var friend = person.FindProperty("Friend") as IEdmNavigationProperty;
@@ -1135,7 +1133,7 @@ public class ParsingValidation : EdmLibTestCaseBase
         Assert.Equal(2, model.DirectValueAnnotations(zipProperty).Count(), "Invalid immediate annotation count for complex type property.");
 
         var firstEntityContainer = model.EntityContainer;
-        Assert.NotNull(firstEntityContainer, "Invalid entity container.");
+        Assert.NotNull(firstEntityContainer);
         Assert.Equal(0, model.DirectValueAnnotations(firstEntityContainer).Count(), "Invalid immediate annotation count of entity container.");
 
         var serviceOperation = firstEntityContainer.FindOperationImports("ServiceOperation1").SingleOrDefault();
@@ -1158,7 +1156,7 @@ public class ParsingValidation : EdmLibTestCaseBase
         CheckModelEntityContainer(model.EntityContainer.Elements, 3, 2, 0, 1);
 
         var firstEntityContainer = model.EntityContainer;
-        Assert.NotNull(firstEntityContainer, "Invalid entity container.");
+        Assert.NotNull(firstEntityContainer);
         Assert.Equal(0, model.DirectValueAnnotations(firstEntityContainer).Count(), "Invalid immediate annotation count of entity container.");
 
         var serviceOperation = firstEntityContainer.FindOperationImports("ServiceOperation1").SingleOrDefault();
@@ -1183,7 +1181,7 @@ public class ParsingValidation : EdmLibTestCaseBase
         Assert.NotNull(enumType, "Invalid enum type.");
 
         var firstEntityContainer = model.EntityContainer;
-        Assert.NotNull(firstEntityContainer, "Invalid entity container.");
+        Assert.NotNull(firstEntityContainer);
 
         var enumOperation = model.FindOperations("TestNS.FunctionImport_Enum").SingleOrDefault();
         Assert.NotNull(enumOperation, "Invalid operation.");
@@ -1290,12 +1288,12 @@ public class ParsingValidation : EdmLibTestCaseBase
         CheckModelEntityContainer(model.EntityContainer.Elements, 1, 1, 0);
 
         var openEntityType = model.FindEntityType("TestModel.OpenEntityType");
-        Assert.NotNull(openEntityType, "Invalid entity type.");
+        Assert.NotNull(openEntityType);
         Assert.Equal(true, openEntityType.IsOpen, "Invalid OpenType attribute value.");
 
         var openEntitySet = model.EntityContainer.FindEntitySet("OpenEntityType");
         Assert.NotNull(openEntityType, "Invalid entity set.");
-        Assert.Equal(openEntityType, openEntitySet.EntityType(), "Invalid entity set type.");
+        Assert.Equal(openEntityType, openEntitySet.EntityType, "Invalid entity set type.");
     }
 
     [Fact]
@@ -1312,7 +1310,7 @@ public class ParsingValidation : EdmLibTestCaseBase
         CheckModelEntityContainer(model.EntityContainer.Elements, 1, 1, 0);
 
         var streamEntityType = model.FindEntityType("TestModel.NamedStreamEntityType");
-        Assert.NotNull(streamEntityType, "Invalid entity type.");
+        Assert.NotNull(streamEntityType);
         Assert.Equal(2, streamEntityType.Properties().Count(), "Invalid property count for entity type.");
 
         var streamProperty = streamEntityType.Properties().Where(x => x.Name.Equals("NamedStream")).SingleOrDefault();
@@ -1321,7 +1319,7 @@ public class ParsingValidation : EdmLibTestCaseBase
 
         var streamSet = model.EntityContainer.FindEntitySet("NamedStreamEntityType");
         Assert.NotNull(streamSet, "Invalid entity set.");
-        Assert.Equal(streamEntityType, streamSet.EntityType(), "Invalid element type.");
+        Assert.Equal(streamEntityType, streamSet.EntityType, "Invalid element type.");
     }
 
     private void CheckImmediateAnnotation(IEdmDirectValueAnnotation immediateAnnotation, string termName, string value)

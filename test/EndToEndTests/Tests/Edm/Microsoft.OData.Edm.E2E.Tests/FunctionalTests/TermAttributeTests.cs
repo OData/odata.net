@@ -49,81 +49,6 @@ public class TermAttributeTests : EdmLibTestCaseBase
         this.RunTest(this.TermAppliesToAttributeModel(), this.TermAppliesToAttributeCsdls());
     }
 
-    private void RunTest(IEdmModel model, IEnumerable<XElement> csdls)
-    {
-        this.RunSerializeTest(model, csdls);
-        this.RunDeSerializeTest(model, csdls);
-        this.RunRoundTripTest(csdls);
-        this.RunValidateTest(csdls);
-    }
-
-    private void RunSerializeTest(IEdmModel model, IEnumerable<XElement> expectedCsdls)
-    {
-        var actualCsdls = this.SerializeModelToCsdls(model);
-        new ConstructiveApiCsdlXElementComparer().Compare(expectedCsdls.ToList(), actualCsdls.ToList());
-    }
-
-    private void RunDeSerializeTest(IEdmModel expectedModel, IEnumerable<XElement> csdls)
-    {
-        var actualModel = this.DeSerializeCsdlsToModel(csdls);
-        var errors = new VocabularyModelComparer().CompareModels(expectedModel, actualModel);
-        Assert.False(errors.Any(), "The actual model is not equal to the expected model");
-    }
-
-    private void RunRoundTripTest(IEnumerable<XElement> expectedCsdls)
-    {
-        var actualModel = this.DeSerializeCsdlsToModel(expectedCsdls);
-        var actualCsdls = this.SerializeModelToCsdls(actualModel);
-        new ConstructiveApiCsdlXElementComparer().Compare(expectedCsdls.ToList(), actualCsdls.ToList());
-    }
-
-    private void RunValidateTest(IEnumerable<XElement> csdls)
-    {
-        var model = this.DeSerializeCsdlsToModel(csdls);
-        IEnumerable<EdmError> errors;
-        model.Validate(out errors);
-        Assert.False(errors.Any(), "The parsed model doesn't pass validation");
-    }
-
-    private IEnumerable<XElement> SerializeModelToCsdls(IEdmModel model)
-    {
-        List<StringBuilder> stringBuilders = new List<StringBuilder>();
-        List<XmlWriter> xmlWriters = new List<XmlWriter>();
-        IEnumerable<EdmError> errors;
-
-        model.TryWriteSchema(
-            s =>
-            {
-                stringBuilders.Add(new StringBuilder());
-                xmlWriters.Add(XmlWriter.Create(stringBuilders.Last()));
-                return xmlWriters.Last();
-            }, out errors);
-
-        Assert.False(errors.Any(), "Error occurs while serializing model to csdl");
-
-        for (int i = 0; i < stringBuilders.Count; i++)
-        {
-            xmlWriters[i].Close();
-        }
-
-        var csdls = stringBuilders.Select(stringBuilder => stringBuilder.ToString()).Select(XElement.Parse);
-        return csdls;
-    }
-
-    private IEdmModel DeSerializeCsdlsToModel(IEnumerable<XElement> csdls)
-    {
-        IEdmModel model;
-        IEnumerable<EdmError> errors;
-        var isParsed = SchemaReader.TryParse(csdls.Select(e => e.CreateReader()), out model, out errors);
-        Assert.True(isParsed, "Error occurs while deserializing csdl to model");
-        return model;
-    }
-
-    private static IEnumerable<XElement> ConvertCsdlsToXElements(params string[] csdls)
-    {
-        return csdls.Select(e => XElement.Parse(e, LoadOptions.SetLineInfo));
-    }
-
     #region Collection of primitive type
 
     private IEdmModel CollectionOfPrimitiveTypeTermModel()
@@ -627,4 +552,100 @@ public class TermAttributeTests : EdmLibTestCaseBase
     }
 
     #endregion
+
+    private void Compare(List<XElement> expectXElements, List<XElement> actualXElements)
+    {
+        Assert.Equal(expectXElements.Count, actualXElements.Count);
+
+        // extract EntityContainers into one place
+        XElement expectedContainers = ExtractElementByName(expectXElements, "EntityContainer");
+        XElement actualContainers = ExtractElementByName(actualXElements, "EntityContainer");
+
+        // compare just the EntityContainers
+        this.CsdlXElementComparer.Compare(expectedContainers, actualContainers);
+
+        foreach (var expectXElement in expectXElements)
+        {
+            var schemaNamespace = expectXElement.Attribute("Namespace") == null ? string.Empty : expectXElement.Attribute("Namespace")?.Value;
+            var actualXElement = actualXElements.FirstOrDefault(e => schemaNamespace == (e.Attribute("Namespace") == null ? string.Empty : e.Attribute("Namespace")?.Value));
+
+            Assert.NotNull(actualXElement);
+
+            this.CsdlXElementComparer.Compare(expectXElement, actualXElement);
+        }
+    }
+
+    private void RunTest(IEdmModel model, IEnumerable<XElement> csdls)
+    {
+        this.RunSerializeTest(model, csdls);
+        this.RunDeSerializeTest(model, csdls);
+        this.RunRoundTripTest(csdls);
+        this.RunValidateTest(csdls);
+    }
+
+    private void RunSerializeTest(IEdmModel model, IEnumerable<XElement> expectedCsdls)
+    {
+        var actualCsdls = this.SerializeModelToCsdls(model);
+        new ConstructiveApiCsdlXElementComparer().Compare(expectedCsdls.ToList(), actualCsdls.ToList());
+    }
+
+    private void RunDeSerializeTest(IEdmModel expectedModel, IEnumerable<XElement> csdls)
+    {
+        var actualModel = this.DeSerializeCsdlsToModel(csdls);
+        var errors = new VocabularyModelComparer().CompareModels(expectedModel, actualModel);
+        Assert.False(errors.Any(), "The actual model is not equal to the expected model");
+    }
+
+    private void RunRoundTripTest(IEnumerable<XElement> expectedCsdls)
+    {
+        var actualModel = this.DeSerializeCsdlsToModel(expectedCsdls);
+        var actualCsdls = this.SerializeModelToCsdls(actualModel);
+        new ConstructiveApiCsdlXElementComparer().Compare(expectedCsdls.ToList(), actualCsdls.ToList());
+    }
+
+    private void RunValidateTest(IEnumerable<XElement> csdls)
+    {
+        var model = this.DeSerializeCsdlsToModel(csdls);
+        model.Validate(out IEnumerable<EdmError> errors);
+        Assert.False(errors.Any());
+    }
+
+    private IEnumerable<XElement> SerializeModelToCsdls(IEdmModel model)
+    {
+        List<StringBuilder> stringBuilders = new List<StringBuilder>();
+        List<XmlWriter> xmlWriters = new List<XmlWriter>();
+        IEnumerable<EdmError> errors;
+
+        model.TryWriteSchema(
+            s =>
+            {
+                stringBuilders.Add(new StringBuilder());
+                xmlWriters.Add(XmlWriter.Create(stringBuilders.Last()));
+                return xmlWriters.Last();
+            }, out errors);
+
+        Assert.False(errors.Any());
+
+        for (int i = 0; i < stringBuilders.Count; i++)
+        {
+            xmlWriters[i].Close();
+        }
+
+        var csdls = stringBuilders.Select(stringBuilder => stringBuilder.ToString()).Select(XElement.Parse);
+        return csdls;
+    }
+
+    private IEdmModel DeSerializeCsdlsToModel(IEnumerable<XElement> csdls)
+    {
+        IEdmModel model;
+        IEnumerable<EdmError> errors;
+        var isParsed = SchemaReader.TryParse(csdls.Select(e => e.CreateReader()), out model, out errors);
+        Assert.True(isParsed);
+        return model;
+    }
+
+    private static IEnumerable<XElement> ConvertCsdlsToXElements(params string[] csdls)
+    {
+        return csdls.Select(e => XElement.Parse(e, LoadOptions.SetLineInfo));
+    }
 }

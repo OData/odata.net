@@ -353,7 +353,7 @@ public class EdmToStockModelConverter : IEdmToStockModelConverter
 
         foreach (var edmNavigationSource in edmContainer.Elements.OfType<IEdmNavigationSource>())
         {
-            var stockEntityType = (EdmEntityType)stockModel.FindType(GetFullName(edmNavigationSource.EntityType()));
+            var stockEntityType = (EdmEntityType)stockModel.FindType(GetFullName(edmNavigationSource.EntityType));
             if (edmNavigationSource is IEdmSingleton)
             {
                 stockContainer.AddSingleton(edmNavigationSource.Name, stockEntityType);
@@ -366,7 +366,7 @@ public class EdmToStockModelConverter : IEdmToStockModelConverter
 
         foreach (var stockNavigationSource in stockContainer.Elements.OfType<EdmNavigationSource>())
         {
-            var stockEntityType = (EdmEntityType)stockModel.FindType(GetFullName(stockNavigationSource.EntityType()));
+            var stockEntityType = (EdmEntityType)stockModel.FindType(GetFullName(stockNavigationSource.EntityType));
             IEdmNavigationSource edmNavigationSource = edmContainer.FindEntitySet(stockNavigationSource.Name);
             if (edmNavigationSource == null)
             {
@@ -388,7 +388,7 @@ public class EdmToStockModelConverter : IEdmToStockModelConverter
                         var targetEntitySetFromContainer = stockContainer.Elements.OfType<EdmEntitySet>().SingleOrDefault
                             (
                                 n =>
-                                    GetBaseTypesAndSelf(((IEdmNavigationProperty)stockNavigationProperty).ToEntityType()).Select(m => GetFullName(m)).Contains(n.EntityType().FullName()) && n.Name == targetEdmEntitySet.Name
+                                    GetBaseTypesAndSelf(((IEdmNavigationProperty)stockNavigationProperty).ToEntityType()).Select(m => GetFullName(m)).Contains(n.EntityType.FullName()) && n.Name == targetEdmEntitySet.Name
                             );
 
                         if (null == targetEntitySetFromContainer)
@@ -396,7 +396,7 @@ public class EdmToStockModelConverter : IEdmToStockModelConverter
                             targetEntitySetFromContainer = stockContainer.Elements.OfType<EdmEntitySet>().SingleOrDefault
                             (
                                 n =>
-                                    GetAllDerivedTypesAndSelf(((IEdmNavigationProperty)stockNavigationProperty).ToEntityType(), stockModel).Select(m => GetFullName(m)).Contains(n.EntityType().FullName()) && n.Name == targetEdmEntitySet.Name
+                                    GetAllDerivedTypesAndSelf(((IEdmNavigationProperty)stockNavigationProperty).ToEntityType(), stockModel).Select(m => GetFullName(m)).Contains(n.EntityType.FullName()) && n.Name == targetEdmEntitySet.Name
                             );
                         }
 
@@ -535,7 +535,7 @@ public class EdmToStockModelConverter : IEdmToStockModelConverter
     private IEdmTypeReference CreateEntityReference(IEdmTypeReference edmTypeReference, EdmModel stockModel)
     {
         var edmEntityReferenceTypeReference = edmTypeReference.AsEntityReference();
-        var stockEntityReference = new EdmEntityReferenceType((IEdmEntityType)stockModel.FindType(edmEntityReferenceTypeReference.EntityType().FullName()));
+        var stockEntityReference = new EdmEntityReferenceType((IEdmEntityType)stockModel.FindType(edmEntityReferenceTypeReference.EntityType.FullName()));
         return new EdmEntityReferenceTypeReference(stockEntityReference, edmEntityReferenceTypeReference.IsNullable);
     }
 

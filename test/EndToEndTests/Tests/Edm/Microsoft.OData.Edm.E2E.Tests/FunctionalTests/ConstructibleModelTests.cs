@@ -1568,29 +1568,8 @@ public class ConstructibleModelTests : EdmLibTestCaseBase
 
             Assert.NotNull(actualXElement);
 
-            Console.WriteLine("Expected: " + expectXElement.ToString());
-            Console.WriteLine("Actual: " + actualXElement.ToString());
-
             csdlXElementComparer.Compare(expectXElement, actualXElement);
         }
-    }
-
-    private static XElement ExtractElementByName(IEnumerable<XElement> inputSchemas, string elementNameToExtract)
-    {
-        XNamespace csdlXNamespace = inputSchemas.First().Name.Namespace;
-        var containers = new XElement(csdlXNamespace + "Schema",
-                                  new XAttribute("Namespace", "ExtractedElements"));
-
-        foreach (var s in inputSchemas)
-        {
-            foreach (var c in s.Elements(csdlXNamespace + elementNameToExtract).ToArray())
-            {
-                c.Remove();
-                containers.Add(c);
-            }
-        }
-
-        return containers;
     }
 
     class Boxed<T>

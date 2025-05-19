@@ -441,7 +441,7 @@ public static class CsdlToEdmModelComparer
             var entitySetName = entitySetElement.GetAttributeValue("Name");
             var entitySet = entitySets.SingleOrDefault(e => e.Name == entitySetName);
             ExceptionUtilities.Assert(entitySet != null, "Failed to find entity set " + entitySetName);
-            ExceptionUtilities.Assert(entitySetElement.GetAttributeValue("EntityType") == entitySet.EntityType().FullName(), "Unexpected type for entity set " + entitySetName);
+            ExceptionUtilities.Assert(entitySetElement.GetAttributeValue("EntityType") == entitySet.EntityType.FullName(), "Unexpected type for entity set " + entitySetName);
 
             // Compare Navigation Property Bindings
             var navigationPropertyBindingElements = entitySetElement.EdmElements("NavigationPropertyBinding").ToArray();

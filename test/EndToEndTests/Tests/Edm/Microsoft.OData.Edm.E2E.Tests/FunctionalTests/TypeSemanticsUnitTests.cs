@@ -24,26 +24,26 @@ public class TypeSemanticsUnitTests : EdmLibTestCaseBase
         IEdmEntityType entityDef = new EdmEntityType("MyNamespace", "MyEntity");
         IEdmEntityTypeReference entityRef = new EdmEntityTypeReference(entityDef, false);
 
-        Assert.True(entityRef.IsEntity(), "Entity is Entity");
+        Assert.True(entityRef.IsEntity());
 
         IEdmPrimitiveTypeReference bad = entityRef.AsPrimitive();
-        Assert.True(bad.Definition.IsBad(), "bad TypeReference is bad");
+        Assert.True(bad.Definition.IsBad());
         Assert.Equal(EdmErrorCode.TypeSemanticsCouldNotConvertTypeReference, bad.Definition.Errors().First().ErrorCode);
-        Assert.True(bad.Definition.IsBad(), "Bad definition is bad");
+        Assert.True(bad.Definition.IsBad());
         Assert.Equal(EdmErrorCode.TypeSemanticsCouldNotConvertTypeReference, bad.Definition.Errors().First().ErrorCode);
 
         IEdmPrimitiveType intDef = EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Int32);
         IEdmPrimitiveTypeReference intRef = new EdmPrimitiveTypeReference(intDef, false);
         IEdmCollectionTypeReference intCollection = new EdmCollectionTypeReference(new EdmCollectionType(intRef));
-        Assert.True(intCollection.IsCollection(), "Collection is collection");
+        Assert.True(intCollection.IsCollection());
 
         IEdmComplexType complexDef = new EdmComplexType("MyNamespace", "MyComplex");
         IEdmComplexTypeReference complexRef = new EdmComplexTypeReference(complexDef, false);
-        Assert.True(complexRef.IsComplex(), "Complex is Complex");
+        Assert.True(complexRef.IsComplex());
 
-        Assert.True(entityRef.IsStructured(), "Entity is Structured");
-        Assert.True(complexRef.IsStructured(), "Complex is stuctured");
-        Assert.False(intCollection.IsStructured(), "Collection is not structured");
+        Assert.True(entityRef.IsStructured());
+        Assert.True(complexRef.IsStructured());
+        Assert.False(intCollection.IsStructured());
     }
 
     [Fact]
@@ -67,17 +67,17 @@ public class TypeSemanticsUnitTests : EdmLibTestCaseBase
         IEdmPrimitiveTypeReference dateRef = new EdmPrimitiveTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Date), false);
         IEdmPrimitiveTypeReference timeOfDayRef = new EdmPrimitiveTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.TimeOfDay), false);
 
-        Assert.True(binaryRef.IsPrimitive(), "Binary is Primitive");
-        Assert.True(binaryRef.IsBinary(), "Binary is Binary");
-        Assert.True(booleanRef.IsBoolean(), "Boolean is Boolean");
-        Assert.True(byteRef.IsByte(), "Byte is Byte");
-        Assert.True(dateTimeOffsetRef.IsDateTimeOffset(), "DateTimeOffset is DateTimeOffset");
-        Assert.True(decimalRef.IsDecimal(), "Decimal is Decimal");
-        Assert.True(doubleRef.IsDouble(), "Double is Double");
-        Assert.True(guidRef.IsGuid(), "Guid is Guid");
-        Assert.True(int16Ref.IsInt16(), "Int16 is Int16");
-        Assert.True(int32Ref.IsInt32(), "Int32 is Int32");
-        Assert.True(int64Ref.IsInt64(), "Int64 is Int64");
+        Assert.True(binaryRef.IsPrimitive());
+        Assert.True(binaryRef.IsBinary());
+        Assert.True(booleanRef.IsBoolean());
+        Assert.True(byteRef.IsByte());
+        Assert.True(dateTimeOffsetRef.IsDateTimeOffset());
+        Assert.True(decimalRef.IsDecimal());
+        Assert.True(doubleRef.IsDouble());
+        Assert.True(guidRef.IsGuid());
+        Assert.True(int16Ref.IsInt16());
+        Assert.True(int32Ref.IsInt32());
+        Assert.True(int64Ref.IsInt64());
         Assert.True(sByteRef.IsSByte(), "SByte is SByte");
         Assert.True(singleRef.IsSingle(), "Single is Single");
         Assert.True(stringRef.IsString(), "String is String");
@@ -267,7 +267,7 @@ public class TypeSemanticsUnitTests : EdmLibTestCaseBase
         Assert.Null(badComplexRef.ComplexDefinition().FindProperty("PropertyName"));
 
         Assert.Equal(EdmTypeKind.EntityReference, badEntityRefRef.TypeKind());
-        Assert.Equal(String.Empty, badEntityRefRef.EntityType().Name);
+        Assert.Equal(string.Empty, badEntityRefRef.EntityType().Name);
         model.SetAnnotationValue(badEntityRefRef.Definition, "foo", "bar", new EdmStringConstant(new EdmStringTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.String), false), "baz"));
         Assert.Single(model.DirectValueAnnotations(badEntityRefRef.Definition));
         Assert.NotNull(model.GetAnnotationValue(badEntityRefRef.Definition, "foo", "bar"));
@@ -696,7 +696,7 @@ public class TypeSemanticsUnitTests : EdmLibTestCaseBase
         IEdmModel model;
         IEnumerable<EdmError> errors;
         bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
-        Assert.True(parsed, "parsed");
+        Assert.True(parsed);
     }
 
     [Fact]
@@ -746,7 +746,7 @@ public class TypeSemanticsUnitTests : EdmLibTestCaseBase
 </Schema>";
 
         bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out IEdmModel model, out IEnumerable<EdmError> errors);
-        Assert.True(parsed, "parsed");
+        Assert.True(parsed);
 
         IEdmComplexType complex = (IEdmComplexType)model.FindType("Grumble.Smod");
 
@@ -851,8 +851,8 @@ public class TypeSemanticsUnitTests : EdmLibTestCaseBase
 </Schema>";
 
         bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(annotatingModelCsdl)), XmlReader.Create(new StringReader(baseModelCsdl)) }, out IEdmModel model, out IEnumerable<EdmError> errors);
-        Assert.True(parsed, "parsed");
-        Assert.True(errors.Count() == 0, "No errors");
+        Assert.True(parsed);
+       Assert.Empty(errors);
 
         IEdmEntityType person = (IEdmEntityType)model.FindType("foo.Person");
         IEdmVocabularyAnnotation valueAnnotation = person.VocabularyAnnotations(model).First();

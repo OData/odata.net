@@ -101,7 +101,7 @@ public class VocabularySerializingTests : EdmLibTestCaseBase
         xw.Flush();
         xw.Close();
 
-        Assert.AreNotEqual(string.Empty, actualResult.ToString().Trim(), "The serializer should not generate empty CSDLs");
+        Assert.NotEqual(string.Empty, actualResult.ToString().Trim(), "The serializer should not generate empty CSDLs");
         var actualModel = this.GetParserResult(new XElement[] { XElement.Parse(actualResult.ToString()) });
 
         Assert.Equal((actualModel.VocabularyAnnotations.Single().Target as IEdmCheckable).Errors.Single().ErrorCode, EdmErrorCode.BadUnresolvedType, "The Target property should have an error of unresolved type.");
@@ -119,7 +119,7 @@ public class VocabularySerializingTests : EdmLibTestCaseBase
         xw.Flush();
         xw.Close();
 
-        Assert.AreNotEqual(string.Empty, actualResult.ToString().Trim(), "The serializer should not generate empty CSDLs");
+        Assert.NotEqual(string.Empty, actualResult.ToString().Trim(), "The serializer should not generate empty CSDLs");
         var actualModel = this.GetParserResult(new XElement[] { XElement.Parse(actualResult.ToString()) });
 
         var actualVocab = actualModel.EntityContainer.VocabularyAnnotations(actualModel);

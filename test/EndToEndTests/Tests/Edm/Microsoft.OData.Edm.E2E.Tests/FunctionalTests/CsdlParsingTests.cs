@@ -4,13 +4,10 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using System.Collections.Generic;
 using System.Xml;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Validation;
 using Microsoft.OData.Edm.Vocabularies;
-using Microsoft.VisualBasic;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Microsoft.OData.Edm.E2E.Tests.FunctionalTests;
 
@@ -1433,6 +1430,7 @@ public class CsdlParsingTests : EdmLibTestCaseBase
         var pathExpression = expression as IEdmPathExpression;
         Assert.Equal("BP_2_CONTACT/@com.sap.vocabularies.UI.v1.Badge", string.Join("/", pathExpression.Path));
     }
+
     #region Edm.Untyped
 
     [Fact]

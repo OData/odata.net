@@ -506,7 +506,7 @@ public class NavigationParsingTests : EdmLibTestCaseBase
         var model = this.GetParserResult(csdls);
 
         var person = model.FindEntityType("DefaultNamespace.Person");
-        Assert.NotNull(person, "Invalid entity type.");
+        Assert.NotNull(person);
         var personNavs = person.NavigationProperties();
         Assert.Equal(1, personNavs.Count(), "Invalid navigation property count.");
         var personNav = personNavs.First();
@@ -543,7 +543,7 @@ public class NavigationParsingTests : EdmLibTestCaseBase
         var roundTripModel = this.GetParserResult(csdls);
 
         var roundTripPerson = roundTripModel.FindEntityType("NS.Person");
-        Assert.NotNull(roundTripPerson, "Invalid entity type.");
+        Assert.NotNull(roundTripPerson);
         var roundTripNavs = roundTripPerson.NavigationProperties();
         Assert.Equal(1, roundTripNavs.Count(), "Invalid navigation property count.");
         var roundTripNav = roundTripNavs.First();

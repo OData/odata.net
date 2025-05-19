@@ -30,6 +30,7 @@ public class XElementAnnotationTest : EdmLibTestCaseBase
         {
             new ElementInfo() { Name = "ComplexType", Type = AnnotatableElementType.ComplexType }
         };
+
         ElementLocation annotationLocation = new ElementLocation() { Namespace = "DefaultNamespace", ElementPath = annotationPath };
 
         this.AnnotationRoundTripCsdlCheck(XElementAnnotationModelBuilder.AnnotationWithoutChildrenCsdl(), expectedAnnotation, annotationInfo, annotationLocation);
@@ -63,7 +64,8 @@ public class XElementAnnotationTest : EdmLibTestCaseBase
 
         XElement annotationElement = new XElement("EmptyAnnotation");
         var annotation = new EdmStringConstant(EdmCoreModel.Instance.GetString(false), annotationElement.ToString());
-        VerifyThrowsException(typeof(InvalidOperationException), () => annotation.SetIsSerializedAsElement(model, true));
+
+        Assert.Throws<InvalidOperationException>(() => annotation.SetIsSerializedAsElement(model, true));
     }
 
     [Fact]

@@ -208,8 +208,8 @@ public class SerializerTests : EdmLibTestCaseBase
         var isParsed = SchemaReader.TryParse(csdls.Select(e => e.CreateReader()), out edmModel, out errors);
 
         Assert.Equal(2, errors.Count(), "Expecting errors.");
-        Assert.Equal(EdmErrorCode.UnexpectedXmlAttribute, errors.ElementAt(0).ErrorCode, "Invalid error code.");
-        Assert.Equal(EdmErrorCode.UnexpectedXmlAttribute, errors.ElementAt(1).ErrorCode, "Invalid error code.");
+        Assert.Equal(EdmErrorCode.UnexpectedXmlAttribute, errors.ElementAt(0).ErrorCode);
+        Assert.Equal(EdmErrorCode.UnexpectedXmlAttribute, errors.ElementAt(1).ErrorCode);
     }
 
     [Fact]
@@ -221,7 +221,7 @@ public class SerializerTests : EdmLibTestCaseBase
         var isParsed = SchemaReader.TryParse(csdls.Select(e => e.CreateReader()), out edmModel, out errors);
 
         Assert.Equal(1, errors.Count(), "Expecting errors.");
-        Assert.Equal(EdmErrorCode.UnexpectedXmlElement, errors.ElementAt(0).ErrorCode, "Invalid error code.");
+        Assert.Equal(EdmErrorCode.UnexpectedXmlElement, errors.ElementAt(0).ErrorCode);
     }
 
     //[TestMethod, Variation(Id = 172, SkipReason = @"[EdmLib] Extra immediate annotation namespace gets generated for ComplexType, EntityType and EntityContainer if namespace name is not expected - postponed")] 

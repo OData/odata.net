@@ -46,8 +46,8 @@ public class ToStringTests : EdmLibTestCaseBase
 </Schema>";
 
         bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out IEdmModel model, out IEnumerable<EdmError> errors);
-        Assert.True(parsed, "parsed");
-        Assert.True(errors.Count() == 0, "No errors");
+        Assert.True(parsed);
+       Assert.Empty(errors);
 
         IEdmEntityType astonishing = (IEdmEntityType)model.FindType("AwesomeNamespace.AstonishingEntity");
         IEdmEntityType aweInspiring = (IEdmEntityType)model.FindType("AwesomeNamespace.AweInspiringEntity");
@@ -107,8 +107,8 @@ public class ToStringTests : EdmLibTestCaseBase
 </Schema>";
 
         bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out IEdmModel model, out IEnumerable<EdmError> errors);
-        Assert.True(parsed, "parsed");
-        Assert.True(errors.Count() == 0, "No errors");
+        Assert.True(parsed);
+       Assert.Empty(errors);
 
         IEdmOperation operation = (IEdmOperation)(model.FindOperations("AwesomeNamespace.Function1")).First();
 
@@ -163,8 +163,8 @@ public class ToStringTests : EdmLibTestCaseBase
 </Schema>";
 
         bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out IEdmModel model, out IEnumerable<EdmError> errors);
-        Assert.True(parsed, "parsed");
-        Assert.True(errors.Count() == 0, "No errors");
+        Assert.True(parsed);
+       Assert.Empty(errors);
 
         IEdmOperation operation = (IEdmOperation)(model.FindOperations("Namespace.Function1")).First();
         IEdmCollectionType collection = (IEdmCollectionType)operation.FindParameter("P1").Type.Definition;

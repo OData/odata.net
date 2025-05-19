@@ -300,7 +300,7 @@ public class ExpressionEvaluationTests : EdmLibTestCaseBase
         IEdmTerm termInt32Value = this.vocabularyDefinitionModel.FindTerm("bar.Int32Value");
         IEdmTerm termStringValue = this.vocabularyDefinitionModel.FindTerm("bar.StringValue");
 
-        IEdmVocabularyAnnotation annotation = property.VocabularyAnnotations(applicationModel).SingleOrDefault(a => a.Term == termInt32Value);
+        var annotation = property.VocabularyAnnotations(applicationModel).SingleOrDefault(a => a.Term == termInt32Value);
         IEdmExpression expression = annotation.Value;
         IEdmValue annotationHotIndex = expressionEvaluator.Evaluate(expression);
         Assert.Equal(-1, ((IEdmIntegerValue)annotationHotIndex).Value);
@@ -349,9 +349,8 @@ public class ExpressionEvaluationTests : EdmLibTestCaseBase
         IEdmPropertyValue contextPropertyValue = ((IEdmStructuredValue)this.personValue).FindPropertyValue("ContactInfo");
 
         IEdmTerm termInt16Value = this.vocabularyDefinitionModel.FindTerm("bar.Int16Value");
-        // ?? Assumes Entity always??
         // IEdmValue annotationHotIndex = applicationModel.GetTermValue(contextPropertyValue.Value, termInt16Value, evaluator);
-        IEdmVocabularyAnnotation annotation = property.VocabularyAnnotations(applicationModel).SingleOrDefault(a => a.Term == termInt16Value);
+        var annotation = property.VocabularyAnnotations(applicationModel).SingleOrDefault(a => a.Term == termInt16Value);
         IEdmExpression expression = annotation.Value;
         IEdmValue annotationWorkphoneLocal = expressionEvaluator.Evaluate(expression, (IEdmStructuredValue)contextPropertyValue.Value);
         Assert.Equal(9991234, ((IEdmIntegerValue)annotationWorkphoneLocal).Value);
@@ -384,7 +383,7 @@ public class ExpressionEvaluationTests : EdmLibTestCaseBase
         IEdmPropertyValue contextPropertyValue = ((IEdmStructuredValue)this.personValue).FindPropertyValue("Address");
 
         IEdmTerm termStringValue = this.vocabularyDefinitionModel.FindTerm("bar.StringValue");
-        IEdmVocabularyAnnotation annotationString = property.VocabularyAnnotations(applicationModel).SingleOrDefault(a => a.Term == termStringValue);
+        var annotationString = property.VocabularyAnnotations(applicationModel).SingleOrDefault(a => a.Term == termStringValue);
         IEdmValue annotationStringValue = expressionEvaluator.Evaluate(annotationString.Value, (IEdmStructuredValue)contextPropertyValue.Value);
         Assert.Equal("98052-0000", ((IEdmStringValue)annotationStringValue).Value);
     }
@@ -412,7 +411,7 @@ public class ExpressionEvaluationTests : EdmLibTestCaseBase
         IEdmEntityContainer container = this.baseModel.FindEntityContainer("fooContainer");
 
         IEdmTerm termInt32Value = this.vocabularyDefinitionModel.FindTerm("bar.Int32Value");
-        IEdmVocabularyAnnotation valueAnnotation = applicationModel.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(container, termInt32Value).SingleOrDefault();
+        var valueAnnotation = applicationModel.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(container, termInt32Value).SingleOrDefault();
 
         IEdmValue valueOfValueAnnotation = expressionEvaluator.Evaluate(valueAnnotation.Value, this.personValue);
         Assert.Equal(999, ((IEdmIntegerValue)valueOfValueAnnotation).Value);

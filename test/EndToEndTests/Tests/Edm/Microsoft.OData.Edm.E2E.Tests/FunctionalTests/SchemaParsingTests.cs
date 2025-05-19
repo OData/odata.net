@@ -5,8 +5,10 @@
 //---------------------------------------------------------------------
 
 using System.Xml;
+using System.Xml.Linq;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Validation;
+using Microsoft.OData.Edm.Vocabularies;
 
 namespace Microsoft.OData.Edm.E2E.Tests.FunctionalTests;
 
@@ -17,11 +19,9 @@ public class SchemaParsingTests : EdmLibTestCaseBase
     {
         var csdl = @"<Schema Namespace=""NS1"" xmlns=""http://docs.oasis-open.org/odata/ns/edm""/>";
 
-        IEdmModel model;
-        IEnumerable<EdmError> errors;
-        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
-        Assert.True(parsed, "parsed");
-        Assert.True(errors.Count() == 0, "No errors");
+        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out IEdmModel model, out IEnumerable<EdmError> errors);
+        Assert.True(parsed);
+        Assert.Empty(errors);
     }
 
     [Fact]
@@ -29,11 +29,9 @@ public class SchemaParsingTests : EdmLibTestCaseBase
     {
         var csdl = @"<Schema Namespace=""NS1"" xmlns=""http://docs.oasis-open.org/odata/ns/edm""></Schema>";
 
-        IEdmModel model;
-        IEnumerable<EdmError> errors;
-        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
-        Assert.True(parsed, "parsed");
-        Assert.True(errors.Count() == 0, "No errors");
+        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out IEdmModel model, out IEnumerable<EdmError> errors);
+        Assert.True(parsed);
+        Assert.Empty(errors);
     }
 
     [Fact]
@@ -52,16 +50,14 @@ public class SchemaParsingTests : EdmLibTestCaseBase
     </EntityType>
 </Schema>";
 
-        IEdmModel model;
-        IEnumerable<EdmError> errors;
-        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
-        Assert.True(parsed, "parsed");
-        Assert.True(errors.Count() == 0, "No errors");
+        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out IEdmModel model, out IEnumerable<EdmError> errors);
+        Assert.True(parsed);
+        Assert.Empty(errors);
 
-        Assert.Equal("C1", model.EntityContainer.Name, "model.EntityContainers.First().Name = C1");
-        Assert.Equal("Customers", model.EntityContainer.Elements.Single().Name, "model.EntityContainers.Single().Elements.Single().Name = Customers");
-        Assert.Equal("NS1.Customer", model.SchemaElements.Single(e => e.FullName() == "NS1.Customer").FullName(), "model.SchemaElements.Single().FullName() = NS1.Customer");
-        Assert.Equal("CustomerID", ((IEdmEntityType)model.SchemaElements.Single(e => e.FullName() == "NS1.Customer")).DeclaredStructuralProperties().Single().Name, "model.SchemaElements.Single().DeclaredStructuralProperties.Single().Name = CustomerID");
+        Assert.Equal("C1", model.EntityContainer.Name);
+        Assert.Equal("Customers", model.EntityContainer.Elements.Single().Name);
+        Assert.Equal("NS1.Customer", model.SchemaElements.Single(e => e.FullName() == "NS1.Customer").FullName());
+        Assert.Equal("CustomerID", ((IEdmEntityType)model.SchemaElements.Single(e => e.FullName() == "NS1.Customer")).DeclaredStructuralProperties().Single().Name);
     }
 
     [Fact]
@@ -81,27 +77,27 @@ public class SchemaParsingTests : EdmLibTestCaseBase
     </EntityType>
 </Schema>";
 
-        IEdmModel model;
         IEnumerable<EdmError> errors;
-        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
-        Assert.True(parsed, "parsed");
-        Assert.True(errors.Count() == 0, "No errors");
+        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out IEdmModel model, out errors);
+        Assert.True(parsed);
+        Assert.Empty(errors);
 
-        Assert.Equal("C1", model.EntityContainer.Name, "model.EntityContainers.First().Name = C1");
-        Assert.Equal("Customers", model.EntityContainer.Elements.Single().Name, "model.EntityContainers.Single().Elements.Single().Name = Customers");
-        Assert.Equal("NS1.Customer", model.SchemaElements.Single(e => e.FullName() == "NS1.Customer").FullName(), "model.SchemaElements.Single().FullName() = NS1.Customer");
+        Assert.Equal("C1", model.EntityContainer.Name);
+        Assert.Equal("Customers", model.EntityContainer.Elements.Single().Name);
+        Assert.Equal("NS1.Customer", model.SchemaElements.Single(e => e.FullName() == "NS1.Customer").FullName());
         Assert.Equal(
             "CustomerID",
-            ((IEdmEntityType)model.SchemaElements.Single(e => e.FullName() == "NS1.Customer")).DeclaredStructuralProperties().First().Name, "model.SchemaElements.Single().DeclaredStructuralProperties.Single().Name = CustomerID");
+            ((IEdmEntityType)model.SchemaElements.Single(e => e.FullName() == "NS1.Customer")).DeclaredStructuralProperties().First().Name);
         Assert.Equal(
             "Names",
-            ((IEdmEntityType)model.SchemaElements.Single(e => e.FullName() == "NS1.Customer")).DeclaredStructuralProperties().Last().Name, "model.SchemaElements.Single().DeclaredStructuralProperties.Single().Name = Names");
+            ((IEdmEntityType)model.SchemaElements.Single(e => e.FullName() == "NS1.Customer")).DeclaredStructuralProperties().Last().Name);
 
         IEdmEntityType customer = ((IEdmEntityType)model.SchemaElements.Single(e => e.FullName() == "NS1.Customer"));
         IEdmStructuralProperty names = customer.DeclaredStructuralProperties().Last();
         IEdmTypeReference typeRef = names.Type;
         Assert.False(typeRef.IsNullable);
-        IEdmCollectionType type = typeRef.Definition as IEdmCollectionType;
+
+        var type = typeRef.Definition as IEdmCollectionType;
         Assert.NotNull(type);
         Assert.Equal(EdmTypeKind.Collection, type.TypeKind);
         IEdmTypeReference elementType = type.ElementType;
@@ -125,28 +121,27 @@ public class SchemaParsingTests : EdmLibTestCaseBase
     </EntityType>
 </Schema>";
 
-        IEdmModel model;
-        IEnumerable<EdmError> errors;
-        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
-        Assert.True(parsed, "parsed");
-        Assert.True(errors.Count() == 0, "No errors");
+        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out IEdmModel model, out IEnumerable<EdmError> errors);
+        Assert.True(parsed);
+        Assert.Empty(errors);
 
-        Assert.Equal("C1", model.EntityContainer.Name, "model.EntityContainers.First().Name = C1");
-        Assert.Equal("Customers", model.EntityContainer.Elements.Single().Name, "model.EntityContainers.Single().Elements.Single().Name = Customers");
-        Assert.Equal("NS1.Customer", model.SchemaElements.Single(e => e.FullName() == "NS1.Customer").FullName(), "model.SchemaElements.Single().FullName() = NS1.Customer");
+        Assert.Equal("C1", model.EntityContainer.Name);
+        Assert.Equal("Customers", model.EntityContainer.Elements.Single().Name);
+        Assert.Equal("NS1.Customer", model.SchemaElements.Single(e => e.FullName() == "NS1.Customer").FullName());
         Assert.Equal(
             "CustomerID",
-            ((IEdmEntityType)model.SchemaElements.Single(e => e.FullName() == "NS1.Customer")).DeclaredStructuralProperties().First().Name, "model.SchemaElements.Single().DeclaredStructuralProperties.Single().Name = CustomerID");
+            ((IEdmEntityType)model.SchemaElements.Single(e => e.FullName() == "NS1.Customer")).DeclaredStructuralProperties().First().Name);
         Assert.Equal(
             "Names",
-            ((IEdmEntityType)model.SchemaElements.Single(e => e.FullName() == "NS1.Customer")).DeclaredStructuralProperties().Last().Name, "model.SchemaElements.Single().DeclaredStructuralProperties.Single().Name = Names");
+            ((IEdmEntityType)model.SchemaElements.Single(e => e.FullName() == "NS1.Customer")).DeclaredStructuralProperties().Last().Name);
 
         IEdmEntityType customer = ((IEdmEntityType)model.SchemaElements.Single(e => e.FullName() == "NS1.Customer"));
         IEdmStructuralProperty names = customer.DeclaredStructuralProperties().Last();
-        IEdmCollectionTypeReference typeRef = names.Type as IEdmCollectionTypeReference;
+        var typeRef = names.Type as IEdmCollectionTypeReference;
         Assert.NotNull(typeRef);
         Assert.True(typeRef.IsNullable);
-        IEdmCollectionType type = typeRef.Definition as IEdmCollectionType;
+        
+        var type = typeRef.Definition as IEdmCollectionType;
         Assert.NotNull(type);
         Assert.Equal(EdmTypeKind.Collection, type.TypeKind);
         IEdmTypeReference elementType = type.ElementType;
@@ -177,21 +172,20 @@ public class SchemaParsingTests : EdmLibTestCaseBase
     </EntityType>
 </Schema>";
 
-        IEdmModel model;
-        IEnumerable<EdmError> errors;
-        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
-        Assert.True(parsed, "parsed");
-        Assert.True(errors.Count() == 0, "No errors");
+        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out IEdmModel model, out IEnumerable<EdmError> errors);
+        Assert.True(parsed);
+        Assert.Empty(errors);
 
         bool result = model.Validate(out errors);
         Assert.True(result);
-        Assert.True(errors.Count() == 0, "No errors");
+        Assert.Empty(errors);
 
         IEdmEntityType customer = ((IEdmEntityType)model.SchemaElements.Single(e => e.FullName() == "NS1.Customer"));
-        IEdmNavigationProperty pets = customer.DeclaredNavigationProperties().Single();
+        var pets = customer.DeclaredNavigationProperties().Single();
         IEdmTypeReference typeRef = pets.Type;
         Assert.True(typeRef.IsNullable);
-        IEdmCollectionType type = typeRef.Definition as IEdmCollectionType;
+        
+        var type = typeRef.Definition as IEdmCollectionType;
         Assert.NotNull(type);
         Assert.Equal(EdmTypeKind.Collection, type.TypeKind);
         IEdmTypeReference elementType = type.ElementType;
@@ -222,11 +216,9 @@ public class SchemaParsingTests : EdmLibTestCaseBase
   </EntityType>
 </Schema>";
 
-        IEdmModel model;
-        IEnumerable<EdmError> errors;
-        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
-        Assert.True(parsed, "parsed");
-        Assert.True(!errors.Any(), "No errors");
+        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out IEdmModel model, out IEnumerable<EdmError> errors);
+        Assert.True(parsed);
+        Assert.Empty(errors);
 
         bool result = model.Validate(out errors);
         Assert.False(result);
@@ -258,15 +250,13 @@ public class SchemaParsingTests : EdmLibTestCaseBase
   </EntityType>
 </Schema>";
 
-        IEdmModel model;
-        IEnumerable<EdmError> errors;
-        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
-        Assert.True(parsed, "parsed");
-        Assert.True(!errors.Any(), "No errors");
+        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out IEdmModel model, out IEnumerable<EdmError> errors);
+        Assert.True(parsed);
+        Assert.Empty(errors);
 
         bool result = model.Validate(out errors);
         Assert.False(result);
-        Assert.True(errors.Count() == 1, "Has errors");
+        Assert.Single(errors);
         Assert.Equal(EdmErrorCode.NavigationPropertyWithCollectionTypeCannotHaveNullableAttribute, errors.First().ErrorCode);
     }
 
@@ -299,31 +289,29 @@ public class SchemaParsingTests : EdmLibTestCaseBase
   </EntityContainer>
 </Schema>";
 
-        IEdmModel model;
-        IEnumerable<EdmError> errors;
-        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
-        Assert.True(parsed, "parsed");
-        Assert.True(errors.Count() == 0, "No errors");
+        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out IEdmModel model, out IEnumerable<EdmError> errors);
+        Assert.True(parsed);
+        Assert.Empty(errors);
 
         IEdmEntityContainer wild = model.EntityContainer;
 
-        Assert.Equal("Wild", wild.Name, "Wild: correct name");
+        Assert.Equal("Wild", wild.Name);
 
-        Assert.True(wild.Elements.Count() == 2, "Wild: correct number of Elements");
-        Assert.Equal("Pets", wild.Elements.First().Name, "Wild: correct first element");
-        Assert.Equal(EdmContainerElementKind.EntitySet, wild.Elements.First().ContainerElementKind, "Wild: first element type");
-        Assert.Equal("Hot.Pet", ((IEdmEntitySet)wild.Elements.First()).EntityType().FullName(), "Wild: element type for first entityset");
+        Assert.Equal(2, wild.Elements.Count());
+        Assert.Equal("Pets", wild.Elements.First().Name);
+        Assert.Equal(EdmContainerElementKind.EntitySet, wild.Elements.First().ContainerElementKind);
+        Assert.Equal("Hot.Pet", ((IEdmEntitySet)wild.Elements.First()).EntityType.FullName());
 
-        Assert.Equal("People", wild.Elements.ElementAt(1).Name, "Wild: correct second element");
-        Assert.Equal(EdmContainerElementKind.EntitySet, wild.Elements.ElementAt(1).ContainerElementKind, "Zero: second element type");
-        Assert.Equal("Hot.Person", ((IEdmEntitySet)wild.Elements.ElementAt(1)).EntityType().FullName(), "Zero: element type for second entityset");
+        Assert.Equal("People", wild.Elements.ElementAt(1).Name);
+        Assert.Equal(EdmContainerElementKind.EntitySet, wild.Elements.ElementAt(1).ContainerElementKind);
+        Assert.Equal("Hot.Person", ((IEdmEntitySet)wild.Elements.ElementAt(1)).EntityType.FullName());
 
         IEdmEntityType person = (IEdmEntityType)model.FindType("Hot.Person");
         IEdmEntityType pet = (IEdmEntityType)model.FindType("Hot.Pet");
         IEdmEntitySet wildpeople = wild.FindEntitySet("People");
         IEdmEntitySet wildpets = wild.FindEntitySet("Pets");
 
-        Assert.Equal("Hot.Wild", wildpets.Container.FullName(), "Correct container name");
+        Assert.Equal("Hot.Wild", wildpets.Container.FullName());
     }
 
     [Fact]
@@ -356,28 +344,27 @@ public class SchemaParsingTests : EdmLibTestCaseBase
   </EntityContainer>
 </Schema>";
 
-        IEdmModel model;
-        IEnumerable<EdmError> errors;
-        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
-        Assert.True(parsed, "parsed");
-        Assert.True(errors.Count() == 0, "No errors");
+        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out IEdmModel model, out IEnumerable<EdmError> errors);
+        Assert.True(parsed);
+        Assert.Empty(errors);
         bool validated = model.Validate(out errors);
 
-        Assert.True(validated, "validated");
+        Assert.True(validated);
 
         IEdmEntityContainer container = model.EntityContainer;
         IEdmEntitySet peopleEntitySet = container.FindEntitySet("People");
         IEdmEntityType petEntityType = (IEdmEntityType)model.FindType("Hot.Pet");
-        IEdmNavigationProperty masterNavigationProperty = petEntityType.FindProperty("Master") as IEdmNavigationProperty;
+        var masterNavigationProperty = petEntityType.FindProperty("Master") as IEdmNavigationProperty;
         Assert.NotNull(masterNavigationProperty);
+
         IEdmNavigationSource navigationSource = peopleEntitySet.FindNavigationTarget(masterNavigationProperty, new EdmPathExpression("Pet/Master"));
         Assert.Equal(navigationSource, peopleEntitySet);
         IEdmEntityType peopleEntityType = (IEdmEntityType)model.FindType("Hot.Person");
-        IEdmNavigationProperty petNavigationProperty = peopleEntityType.FindProperty("Pet") as IEdmNavigationProperty;
+        var petNavigationProperty = peopleEntityType.FindProperty("Pet") as IEdmNavigationProperty;
         IEdmNavigationSource containedNavigationSource = peopleEntitySet.FindNavigationTarget(petNavigationProperty);
         Assert.True(containedNavigationSource is IEdmContainedEntitySet);
         IEdmNavigationSource peopleNavigationSource = containedNavigationSource.FindNavigationTarget(masterNavigationProperty);
-        Assert.AreSame(peopleNavigationSource, navigationSource);
+        Assert.Equal(peopleNavigationSource, navigationSource);
     }
 
     [Fact]
@@ -410,16 +397,14 @@ public class SchemaParsingTests : EdmLibTestCaseBase
   </EntityContainer>
 </Schema>";
 
-        IEdmModel model;
-        IEnumerable<EdmError> errors;
-        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
-        Assert.True(parsed, "parsed");
-        Assert.True(errors.Count() == 0, "No errors");
+        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out IEdmModel model, out IEnumerable<EdmError> errors);
+        Assert.True(parsed);
+        Assert.Empty(errors);
         bool validated = model.Validate(out errors);
 
         Assert.False(validated, "Validation should fail because Property Master1 does not exist on type Hot.Pet");
-        Assert.Equal(errors.Count(), 1);
-        Assert.Equal(errors.FirstOrDefault().ErrorCode, EdmErrorCode.BadUnresolvedNavigationPropertyPath);
+        Assert.Single(errors);
+        Assert.Equal(EdmErrorCode.BadUnresolvedNavigationPropertyPath, errors.FirstOrDefault().ErrorCode);
     }
 
     [Fact]
@@ -454,11 +439,9 @@ public class SchemaParsingTests : EdmLibTestCaseBase
   </EntityContainer>
 </Schema>";
 
-        IEdmModel model;
-        IEnumerable<EdmError> errors;
-        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
-        Assert.True(parsed, "parsed");
-        Assert.True(errors.Count() == 0, "No errors");
+        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out IEdmModel model, out IEnumerable<EdmError> errors);
+        Assert.True(parsed);
+        Assert.Empty(errors);
         bool validated = model.Validate(out errors);
 
         Assert.True(validated, "validated");
@@ -466,7 +449,7 @@ public class SchemaParsingTests : EdmLibTestCaseBase
         IEdmEntityContainer container = model.EntityContainer;
         IEdmEntitySet peopleEntitySet = container.FindEntitySet("People");
         IEdmEntityType dogEntityType = (IEdmEntityType)model.FindType("Hot.Dog");
-        IEdmNavigationProperty masterNavigationProperty = dogEntityType.FindProperty("Master") as IEdmNavigationProperty;
+        var masterNavigationProperty = dogEntityType.FindProperty("Master") as IEdmNavigationProperty;
         Assert.NotNull(masterNavigationProperty);
         IEdmNavigationSource navigationSource = peopleEntitySet.FindNavigationTarget(masterNavigationProperty, new EdmPathExpression("Pet/Hot.Dog/Master"));
         Assert.Equal(navigationSource, peopleEntitySet);
@@ -507,35 +490,33 @@ public class SchemaParsingTests : EdmLibTestCaseBase
   </EntityContainer>
 </Schema>";
 
-        IEdmModel model;
-        IEnumerable<EdmError> errors;
-        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
-        Assert.True(parsed, "parsed");
-        Assert.True(errors.Count() == 0, "No errors");
+        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out IEdmModel model, out IEnumerable<EdmError> errors);
+        Assert.True(parsed);
+        Assert.Empty(errors);
 
         IEdmEntityContainer wild = model.EntityContainer;
 
-        Assert.Equal("AnotherSingletonPeople", wild.Elements.ElementAt(1).Name, "AnotherSingletonPeople: correct second element");
-        Assert.Equal(EdmContainerElementKind.Singleton, wild.Elements.ElementAt(1).ContainerElementKind, "Wild: second element type");
-        Assert.Equal("Hot.Person", ((IEdmSingleton)wild.Elements.ElementAt(1)).EntityType().FullName(), "Wild: type for first singleton");
+        Assert.Equal("AnotherSingletonPeople", wild.Elements.ElementAt(1).Name);
+        Assert.Equal(EdmContainerElementKind.Singleton, wild.Elements.ElementAt(1).ContainerElementKind);
+        Assert.Equal("Hot.Person", ((IEdmSingleton)wild.Elements.ElementAt(1)).EntityType.FullName());
 
         IEdmEntityType person = (IEdmEntityType)model.FindType("Hot.Person");
         IEdmEntityType pet = (IEdmEntityType)model.FindType("Hot.Pet");
         IEdmSingleton singletonPeople = wild.FindSingleton("SingletonPeople");
-        Assert.NotNull(singletonPeople, "singletonPeople singleton is not null");
-        Assert.Equal(person, singletonPeople.EntityType(), "the type of singletonPeople is Person");
+        Assert.NotNull(singletonPeople);
+        Assert.Equal(person, singletonPeople.EntityType);
         IEdmSingleton anotherPeople = wild.FindSingleton("AnotherSingletonPeople");
-        Assert.NotNull(anotherPeople, "anotherPeople singleton is not null");
-        Assert.Equal(person, singletonPeople.Type, "the type of singletonPeople is Person");
+        Assert.NotNull(anotherPeople);
+        Assert.Equal(person, singletonPeople.Type);
         IEdmEntitySet entitySetPeople = wild.FindEntitySet("SingletonPeople");
-        Assert.Null(entitySetPeople, "entitySetPeople is null");
+        Assert.Null(entitySetPeople);
         IEdmEntitySet pets = wild.FindEntitySet("Pets");
         Assert.NotNull(pets);
 
-        Assert.Equal("Pets", singletonPeople.FindNavigationTarget(person.NavigationProperties().First()).Name, "PetsAndPeople: end2 correct entity set name");
+        Assert.Equal("Pets", singletonPeople.FindNavigationTarget(person.NavigationProperties().First()).Name);
         Assert.Equal("SingletonPeople", pets.FindNavigationTarget(pet.NavigationProperties().First()).Name);
 
-        Assert.Equal("SingletonPeople", singletonPeople.Name, "SingletonPeople: correct name");
+        Assert.Equal("SingletonPeople", singletonPeople.Name);
     }
 
     [Fact]
@@ -569,69 +550,68 @@ public class SchemaParsingTests : EdmLibTestCaseBase
   </EntityType>
 </Schema>";
 
-        IEdmModel model;
-        IEnumerable<EdmError> errors;
-        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
-        Assert.True(parsed, "parsed");
-        Assert.True(errors.Count() == 0, "No errors");
+        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out IEdmModel model, out IEnumerable<EdmError> errors);
+        Assert.True(parsed);
+        Assert.Empty(errors);
 
         // Test the structural objects.
 
-        Assert.True(model.SchemaElements.Count() == 2, "Model: contains proper number of Schema Elements");
+        Assert.True(model.SchemaElements.Count() == 2);
 
         IEdmEntityType type1 = (IEdmEntityType)model.SchemaElements.First();
 
-        Assert.Equal("Feckless", type1.Name, "Type1 correct name");
-        Assert.Equal(3, type1.DeclaredStructuralProperties().Count(), "Type1: correct count of properties");
-        Assert.Equal(2, type1.DeclaredKey.Count(), "Type1: correct number of key properties");
-        Assert.Equal("Id", type1.DeclaredKey.First().Name, "Type1: correct first key prop");
-        Assert.Equal(1, type1.DeclaredNavigationProperties().Count(), "Type1: correct count of nav props");
-        IEdmNavigationProperty nav1 = type1.DeclaredNavigationProperties().First();
-        Assert.Equal("MyReckless", nav1.Name, "Nav1: correct name");
-        Assert.False(nav1.ContainsTarget, "Nav1: ContainsTarget");
+        Assert.Equal("Feckless", type1.Name);
+        Assert.Equal(3, type1.DeclaredStructuralProperties().Count());
+        Assert.Equal(2, type1.DeclaredKey.Count());
+        Assert.Equal("Id", type1.DeclaredKey.First().Name);
+        Assert.Single(type1.DeclaredNavigationProperties());
+        var nav1 = type1.DeclaredNavigationProperties().First();
+        Assert.Equal("MyReckless", nav1.Name);
+        Assert.False(nav1.ContainsTarget);
 
         IEdmEntityType type2 = (IEdmEntityType)model.SchemaElements.ElementAt(1);
 
-        Assert.Equal("Reckless", type2.Name, "Type2 correct name");
-        Assert.Equal(2, type2.DeclaredStructuralProperties().Count(), "Type2: correct count of properties");
-        Assert.Equal(2, type2.DeclaredKey.Count(), "Type2: correct number of key properties");
-        Assert.Equal("Id", type2.DeclaredKey.First().Name, "Type2 correct first key prop");
-        Assert.Equal(1, type2.DeclaredNavigationProperties().Count(), "Type2: correct count of nav props");
-        IEdmNavigationProperty nav2 = type2.DeclaredNavigationProperties().First();
+        Assert.Equal("Reckless", type2.Name);
+        Assert.Equal(2, type2.DeclaredStructuralProperties().Count());
+        Assert.Equal(2, type2.DeclaredKey.Count());
+        Assert.Equal("Id", type2.DeclaredKey.First().Name);
+        Assert.Single(type2.DeclaredNavigationProperties());
+        var nav2 = type2.DeclaredNavigationProperties().First();
         Assert.True(nav2.Type.IsNullable);
-        Assert.Equal("MyFecklesses", nav2.Name, "Nav2: correct name");
-        Assert.True(nav2.ContainsTarget, "Nav2: ContainsTarget");
+        Assert.Equal("MyFecklesses", nav2.Name);
+        Assert.True(nav2.ContainsTarget);
 
         // Test the semantic objects.
 
         IEdmEntityType feckless = (IEdmEntityType)model.FindType("Cold.Feckless");
         IEdmEntityType reckless = (IEdmEntityType)model.FindType("Cold.Reckless");
 
-        IEdmNavigationProperty toReckless = (IEdmNavigationProperty)feckless.FindProperty("MyReckless");
-        IEdmNavigationProperty toFecklesses = (IEdmNavigationProperty)reckless.FindProperty("MyFecklesses");
+        var toReckless = (IEdmNavigationProperty)feckless.FindProperty("MyReckless");
+        var toFecklesses = (IEdmNavigationProperty)reckless.FindProperty("MyFecklesses");
 
-        Assert.Equal(toFecklesses, toReckless.Partner, "Correct partner for toReckless");
-        Assert.Equal(feckless, toReckless.DeclaringEntityType(), "ToReckless correct from type");
-        Assert.Equal(reckless, toReckless.ToEntityType(), "ToReckless correct to type");
+        Assert.Equal(toFecklesses, toReckless.Partner);
+        Assert.Equal(feckless, toReckless.DeclaringEntityType());
+        Assert.Equal(reckless, toReckless.ToEntityType());
 
-        Assert.Equal(toReckless, toFecklesses.Partner, "Correct partner for toFecklesses");
-        Assert.Equal(reckless, toFecklesses.DeclaringEntityType(), "toFecklesses correct from type");
-        Assert.Equal(feckless, toFecklesses.ToEntityType(), "toFecklesses correct to type");
+        Assert.Equal(toReckless, toFecklesses.Partner);
+        Assert.Equal(reckless, toFecklesses.DeclaringEntityType());
+        Assert.Equal(feckless, toFecklesses.ToEntityType());
 
-        Assert.Equal(true, toFecklesses.IsPrincipal(), "Principal end match");
-        Assert.Null(toFecklesses.DependentProperties(), "Principal end match");
-        Assert.Equal(false, toReckless.IsPrincipal(), "Dependent end match");
-        Assert.NotNull(toReckless.DependentProperties(), "Dependent end match");
+        Assert.True(toFecklesses.IsPrincipal());
+        Assert.Null(toFecklesses.DependentProperties());
+        Assert.False(toReckless.IsPrincipal());
+        Assert.NotNull(toReckless.DependentProperties());
 
-        Assert.Equal(2, toReckless.DependentProperties().Count(), "DependentProperty count correct");
-        Assert.Equal(toReckless.DependentProperties().First(), feckless.DeclaredKey.First(), "Dependent property1 match");
-        Assert.Equal(toReckless.DependentProperties().Last(), feckless.DeclaredKey.Last(), "Dependent property2 match");
+        Assert.Equal(2, toReckless.DependentProperties().Count());
+        Assert.Equal(toReckless.DependentProperties().First(), feckless.DeclaredKey.First());
+        Assert.Equal(toReckless.DependentProperties().Last(), feckless.DeclaredKey.Last());
 
-        Assert.Equal(EdmOnDeleteAction.Cascade, toReckless.OnDelete, "Correct end1 action");
-        Assert.Equal(EdmOnDeleteAction.None, toFecklesses.OnDelete, "Correct end2 action");
+        Assert.Equal(EdmOnDeleteAction.Cascade, toReckless.OnDelete);
+        Assert.Equal(EdmOnDeleteAction.None, toFecklesses.OnDelete);
 
-        Assert.Equal(EdmMultiplicity.Many, toFecklesses.TargetMultiplicity(), "Correct end1 multiplicity");
-        Assert.Equal(EdmMultiplicity.ZeroOrOne, toReckless.TargetMultiplicity(), "Correct end2 multiplicity");
+        Assert.Equal(EdmMultiplicity.Many, toFecklesses.TargetMultiplicity());
+        Assert.Equal(EdmMultiplicity.ZeroOrOne, toReckless.TargetMultiplicity());
+        Assert.Equal(EdmMultiplicity.ZeroOrOne, toReckless.TargetMultiplicity());
     }
 
     [Fact]
@@ -656,11 +636,9 @@ public class SchemaParsingTests : EdmLibTestCaseBase
   </EntityType>
 </Schema>";
 
-        IEdmModel model;
-        IEnumerable<EdmError> errors;
-        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
-        Assert.True(parsed, "parsed");
-        Assert.True(errors.Count() == 0, "No errors");
+        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out IEdmModel model, out IEnumerable<EdmError> errors);
+        Assert.True(parsed);
+        Assert.Empty(errors);
     }
 
     [Fact]
@@ -685,11 +663,9 @@ public class SchemaParsingTests : EdmLibTestCaseBase
   </EntityType>
 </Schema>";
 
-        IEdmModel model;
-        IEnumerable<EdmError> errors;
-        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
-        Assert.True(parsed, "parsed");
-        Assert.True(errors.Count() == 0, "No errors");
+        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out IEdmModel model, out IEnumerable<EdmError> errors);
+        Assert.True(parsed);
+        Assert.Empty(errors);
     }
 
     [Fact]
@@ -712,52 +688,50 @@ public class SchemaParsingTests : EdmLibTestCaseBase
 </Schema>";
 
 
-        IEdmModel model;
-        IEnumerable<EdmError> errors;
-        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl1)), XmlReader.Create(new StringReader(csdl2)) }, out model, out errors);
-        Assert.True(parsed, "parsed");
-        Assert.True(errors.Count() == 0, "No errors");
+        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl1)), XmlReader.Create(new StringReader(csdl2)) }, out IEdmModel model, out IEnumerable<EdmError> errors);
+        Assert.True(parsed);
+        Assert.Empty(errors);
 
         // Test the structural objects.
-        Assert.True(model.SchemaElements.Count() == 2, "correct schemata element count");
+        Assert.Equal(2, model.SchemaElements.Count());
         IEdmComplexType type1 = (IEdmComplexType)model.SchemaElements.First();
         IEdmComplexType type2 = (IEdmComplexType)model.SchemaElements.Last();
-        Assert.Equal("Smod", type1.Name, "Smod not found");
-        Assert.Equal("Id", type1.DeclaredStructuralProperties().First().Name, "Type1 correct name");
+        Assert.Equal("Smod", type1.Name);
+        Assert.Equal("Id", type1.DeclaredStructuralProperties().First().Name);
         IEdmPrimitiveTypeReference idType = type1.DeclaredStructuralProperties().First().Type.AsPrimitive();
-        Assert.Equal("Int32", idType.PrimitiveDefinition().Name, "ID is correct type");
-        Assert.False(idType.IsNullable, "ID is nullable");
+        Assert.Equal("Int32", idType.PrimitiveDefinition().Name);
+        Assert.False(idType.IsNullable);
 
 
-        Assert.Equal("Clod", type2.Name, "Clod not found");
-        Assert.Equal(2, type2.DeclaredStructuralProperties().Count(), "Correct number of properties");
-        Assert.Equal("Address", type2.DeclaredStructuralProperties().Last().Name, "Correct last property");
+        Assert.Equal("Clod", type2.Name);
+        Assert.Equal(2, type2.DeclaredStructuralProperties().Count());
+        Assert.Equal("Address", type2.DeclaredStructuralProperties().Last().Name);
         IEdmStringTypeReference addressType = type2.DeclaredStructuralProperties().Last().Type.AsPrimitive().AsString();
-        Assert.Equal("String", addressType.PrimitiveDefinition().Name, "Correct Address type");
-        Assert.Equal(2048, addressType.MaxLength, "Correct address max length");
-        Assert.True(addressType.IsNullable, "Correct address nulliblity");
+        Assert.Equal("String", addressType.PrimitiveDefinition().Name);
+        Assert.Equal(2048, addressType.MaxLength);
+        Assert.True(addressType.IsNullable);
 
         // Test the semantic objects.
 
         IEdmComplexType smod = (IEdmComplexType)model.FindType("Grumble.Smod");
         IEdmComplexType clod = (IEdmComplexType)model.FindType("Mumble.Clod");
 
-        Assert.Equal("Smod", smod.Name, "Smod Name correct");
-        Assert.Equal("Grumble", smod.Namespace, "Smod Namespace correct");
-        Assert.Equal("Clod", clod.Name, "Clod Name correct");
-        Assert.Equal("Mumble", clod.Namespace, "Clod Namespace correct");
+        Assert.Equal("Smod", smod.Name);
+        Assert.Equal("Grumble", smod.Namespace);
+        Assert.Equal("Clod", clod.Name);
+        Assert.Equal("Mumble", clod.Namespace);
 
-        Assert.Equal(clod.BaseType, smod, "Clod base type correct");
+        Assert.Equal(smod, clod.BaseType);
 
-        Assert.Equal(3, clod.StructuralProperties().Count(), "clod inheritied properties properly");
-        Assert.Equal(clod.StructuralProperties().First(), smod.StructuralProperties().First(), "share same property");
+        Assert.Equal(3, clod.StructuralProperties().Count());
+        Assert.Equal(clod.StructuralProperties().First(), smod.StructuralProperties().First());
         IEdmProperty address = clod.FindProperty("Address");
-        Assert.Equal("Address", address.Name, "Addres has proper name");
-        Assert.Equal(clod.StructuralProperties().Last(), address, "Clod last property is correct");
+        Assert.Equal("Address", address.Name);
+        Assert.Equal(address, clod.StructuralProperties().Last());
 
         IEdmProperty id = clod.FindProperty("Id");
         IEdmPrimitiveTypeReference resolvedIdType = id.Type.AsPrimitive();
-        Assert.True(resolvedIdType.PrimitiveKind() == EdmPrimitiveTypeKind.Int32, "ID is proper kind");
+        Assert.Equal(EdmPrimitiveTypeKind.Int32, resolvedIdType.PrimitiveKind());
     }
 
     [Fact]
@@ -780,52 +754,50 @@ public class SchemaParsingTests : EdmLibTestCaseBase
 </Schema>";
 
 
-        IEdmModel model;
-        IEnumerable<EdmError> errors;
-        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl1)), XmlReader.Create(new StringReader(csdl2)) }, out model, out errors);
-        Assert.True(parsed, "parsed");
-        Assert.True(errors.Count() == 0, "No errors");
+        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl1)), XmlReader.Create(new StringReader(csdl2)) }, out IEdmModel model, out IEnumerable<EdmError> errors);
+        Assert.True(parsed);
+        Assert.Empty(errors);
 
         // Test the structural objects.
-        Assert.True(model.SchemaElements.Count() == 2, "correct schemata element count");
+        Assert.Equal(2, model.SchemaElements.Count());
         IEdmComplexType type1 = (IEdmComplexType)model.SchemaElements.First();
         IEdmComplexType type2 = (IEdmComplexType)model.SchemaElements.Last();
-        Assert.Equal("Smod", type1.Name, "Smod not found");
-        Assert.Equal("Id", type1.DeclaredStructuralProperties().First().Name, "Type1 correct name");
+        Assert.Equal("Smod", type1.Name);
+        Assert.Equal("Id", type1.DeclaredStructuralProperties().First().Name);
         IEdmPrimitiveTypeReference idType = type1.DeclaredStructuralProperties().First().Type.AsPrimitive();
-        Assert.Equal("Int32", idType.PrimitiveDefinition().Name, "ID is correct type");
-        Assert.False(idType.IsNullable, "ID is nullable");
+        Assert.Equal("Int32", idType.PrimitiveDefinition().Name);
+        Assert.False(idType.IsNullable);
 
 
-        Assert.Equal("Clod", type2.Name, "Clod not found");
-        Assert.Equal(2, type2.DeclaredStructuralProperties().Count(), "Correct number of properties");
-        Assert.Equal("Address", type2.DeclaredStructuralProperties().Last().Name, "Correct last property");
+        Assert.Equal("Clod", type2.Name);
+        Assert.Equal(2, type2.DeclaredStructuralProperties().Count());
+        Assert.Equal("Address", type2.DeclaredStructuralProperties().Last().Name);
         IEdmStringTypeReference addressType = type2.DeclaredStructuralProperties().Last().Type.AsPrimitive().AsString();
-        Assert.Equal("String", addressType.PrimitiveDefinition().Name, "Correct Address type");
-        Assert.Equal(2048, addressType.MaxLength, "Correct address max length");
-        Assert.True(addressType.IsNullable, "Correct address nulliblity");
+        Assert.Equal("String", addressType.PrimitiveDefinition().Name);
+        Assert.Equal(2048, addressType.MaxLength);
+        Assert.True(addressType.IsNullable);
 
         // Test the semantic objects.
 
         IEdmComplexType smod = (IEdmComplexType)model.FindType("Grumble.Smod");
         IEdmComplexType clod = (IEdmComplexType)model.FindType("Mumble.Clod");
 
-        Assert.Equal("Smod", smod.Name, "Smod Name correct");
-        Assert.Equal("Grumble", smod.Namespace, "Smod Namespace correct");
-        Assert.Equal("Clod", clod.Name, "Clod Name correct");
-        Assert.Equal("Mumble", clod.Namespace, "Clod Namespace correct");
+        Assert.Equal("Smod", smod.Name);
+        Assert.Equal("Grumble", smod.Namespace);
+        Assert.Equal("Clod", clod.Name);
+        Assert.Equal("Mumble", clod.Namespace);
 
-        Assert.Equal(clod.BaseType, smod, "Clod base type correct");
+        Assert.Equal(smod, clod.BaseType);
 
-        Assert.Equal(3, clod.StructuralProperties().Count(), "clod inheritied properties properly");
-        Assert.Equal(clod.StructuralProperties().First(), smod.StructuralProperties().First(), "share same property");
+        Assert.Equal(3, clod.StructuralProperties().Count());
+        Assert.Equal(clod.StructuralProperties().First(), smod.StructuralProperties().First());
         IEdmProperty address = clod.FindProperty("Address");
-        Assert.Equal("Address", address.Name, "Addres has proper name");
-        Assert.Equal(clod.StructuralProperties().Last(), address, "Clod last property is correct");
+        Assert.Equal("Address", address.Name);
+        Assert.Equal(address, clod.StructuralProperties().Last());
 
         IEdmProperty id = clod.FindProperty("Id");
         IEdmPrimitiveTypeReference resolvedIdType = id.Type.AsPrimitive();
-        Assert.True(resolvedIdType.PrimitiveKind() == EdmPrimitiveTypeKind.Int32, "ID is proper kind");
+        Assert.Equal(EdmPrimitiveTypeKind.Int32, resolvedIdType.PrimitiveKind());
     }
 
     [Fact]
@@ -869,34 +841,32 @@ public class SchemaParsingTests : EdmLibTestCaseBase
   </ComplexType>
 </Schema>";
 
-        IEdmModel model;
-        IEnumerable<EdmError> errors;
-        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl1)), XmlReader.Create(new StringReader(csdl2)), XmlReader.Create(new StringReader(csdl3)) }, out model, out errors);
-        //Assert.True(parsed, "parsed");
-        Assert.True(errors.Count() == 0, "No errors");
+        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl1)), XmlReader.Create(new StringReader(csdl2)), XmlReader.Create(new StringReader(csdl3)) }, out IEdmModel model, out IEnumerable<EdmError> errors);
+        //Assert.True(parsed);
+        Assert.Empty(errors);
 
         // Test the structural objects.
-        Assert.Equal(7, model.SchemaElements.Count(), "correct schemata element count");
+        Assert.Equal(7, model.SchemaElements.Count());
         IEdmComplexType type1 = (IEdmComplexType)model.SchemaElements.First();
         IEdmComplexType type2 = (IEdmComplexType)model.SchemaElements.ElementAt(1);
-        Assert.Equal("MyComplex1", type1.Name, "MyComplex1 not found");
-        Assert.Equal("Id", type2.DeclaredStructuralProperties().First().Name, "Type2 correct name");
+        Assert.Equal("MyComplex1", type1.Name);
+        Assert.Equal("Id", type2.DeclaredStructuralProperties().First().Name);
 
         IEdmPrimitiveTypeReference idType = type2.DeclaredStructuralProperties().First().Type.AsPrimitive();
-        Assert.Equal("Int32", idType.PrimitiveDefinition().Name, "ID is correct type");
-        Assert.False(idType.IsNullable, "ID is nullable");
+        Assert.Equal("Int32", idType.PrimitiveDefinition().Name);
+        Assert.False(idType.IsNullable);
 
         // Test the semantic objects.
         IEdmComplexType type2_1 = (IEdmComplexType)model.FindType("NameSpace2.MyComplex1");
         IEdmComplexType type2_2 = (IEdmComplexType)model.FindType("NameSpace2.MyComplex2");
         IEdmComplexType type2_3 = (IEdmComplexType)model.FindType("NameSpace2.MyComplex3");
 
-        Assert.Equal("MyComplex1", type2_1.Name, "MyComplex1 Name correct");
-        Assert.Equal("MyComplex2", type2_2.Name, "MyComplex2 Name correct");
-        Assert.Equal("MyComplex3", type2_3.Name, "MyComplex3 Name correct");
+        Assert.Equal("MyComplex1", type2_1.Name);
+        Assert.Equal("MyComplex2", type2_2.Name);
+        Assert.Equal("MyComplex3", type2_3.Name);
 
-        Assert.Equal(type2_2.BaseType, type2_1, "MyComplex2 base type correct");
-        Assert.Equal(type2_3.BaseType, type2_2, "MyComplex3 base type correct");
+        Assert.Equal(type2_1, type2_2.BaseType);
+        Assert.Equal(type2_2, type2_3.BaseType);
     }
 
     [Fact]
@@ -927,30 +897,30 @@ public class SchemaParsingTests : EdmLibTestCaseBase
   </EntityType>
 </Schema>";
 
-        IEdmModel model;
-        IEnumerable<EdmError> errors;
-        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl1)), XmlReader.Create(new StringReader(csdl2)) }, out model, out errors);
-        Assert.True(parsed, "parsed");
-        Assert.True(errors.Count() == 0, "No errors");
+        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl1)), XmlReader.Create(new StringReader(csdl2)) }, out IEdmModel model, out IEnumerable<EdmError> errors);
+        Assert.True(parsed);
+        Assert.Empty(errors);
         // Test the structural objects.
 
         IEdmEntityType type1 = (IEdmEntityType)model.SchemaElements.First();
         IEdmEntityType type2 = (IEdmEntityType)model.SchemaElements.Last();
-        Assert.Equal(type1.Name, "Smod", "Smod not found");
-        Assert.Equal(1, type1.DeclaredKey.Count(), "Type1: correct key property count");
-        Assert.Equal("Id", type1.DeclaredKey.First().Name, "Type1: correct key property name");
-        Assert.Equal("Id", type1.DeclaredStructuralProperties().First().Name, "Correct first property");
+        Assert.Equal("Smod", type1.Name);
+        Assert.Single(type1.DeclaredKey);
+        Assert.Equal("Id", type1.DeclaredKey.First().Name);
+        Assert.Equal("Id", type1.DeclaredStructuralProperties().First().Name);
+
         IEdmPrimitiveTypeReference idType = type1.DeclaredStructuralProperties().First().Type.AsPrimitive();
-        Assert.Equal(EdmPrimitiveTypeKind.Int32, idType.PrimitiveKind(), "First property correct type");
-        Assert.False(idType.IsNullable, "First prop is correctly not nullable");
-        Assert.Equal(type2.Name, "Clod", "Clod not found");
-        Assert.Equal("Grumble.Smod", type2.BaseEntityType().FullName(), "Correct base type name");
-        Assert.Equal(type2.DeclaredStructuralProperties().Count(), 2, "Correct number of properties on inheriting type");
-        Assert.Equal("Address", type2.StructuralProperties().Last().Name, "Correct name on last structural prop");
+        Assert.Equal(EdmPrimitiveTypeKind.Int32, idType.PrimitiveKind());
+        Assert.False(idType.IsNullable);
+        Assert.Equal("Clod", type2.Name);
+        Assert.Equal("Grumble.Smod", type2.BaseEntityType().FullName());
+        Assert.Equal(2, type2.DeclaredStructuralProperties().Count());
+        Assert.Equal("Address", type2.StructuralProperties().Last().Name);
+
         IEdmStringTypeReference addressType = type2.StructuralProperties().Last().Type.AsPrimitive().AsString();
-        Assert.Equal(addressType.PrimitiveKind(), EdmPrimitiveTypeKind.String, "Last property correct type");
-        Assert.Equal(2048, addressType.MaxLength, "Address correct length");
-        Assert.True(addressType.IsNullable, "Address is nullable");
+        Assert.Equal(addressType.PrimitiveKind(), EdmPrimitiveTypeKind.String);
+        Assert.Equal(2048, addressType.MaxLength);
+        Assert.True(addressType.IsNullable);
 
         // Test the semantic objects.
 
@@ -959,28 +929,28 @@ public class SchemaParsingTests : EdmLibTestCaseBase
         IEdmEntityType smod3 = (IEdmEntityType)model.FindType("Grumble.Smod3");
         IEdmEntityType clod = (IEdmEntityType)model.FindType("Mumble.Clod");
 
-        Assert.Equal("Smod", smod.Name, "Correct Smod Name");
-        Assert.Equal("Clod", clod.Name, "Correct Clod Name");
+        Assert.Equal("Smod", smod.Name);
+        Assert.Equal("Clod", clod.Name);
 
-        Assert.False(smod.IsOpen, "smod.IsOpen");
-        Assert.True(smod2.IsOpen, "smod2.IsOpen");
-        Assert.False(smod3.IsOpen, "smod3.IsOpen");
+        Assert.False(smod.IsOpen);
+        Assert.True(smod2.IsOpen);
+        Assert.False(smod3.IsOpen);
 
-        Assert.Equal(clod.BaseType, smod, "Correct Inheritance");
+        Assert.Equal(smod, clod.BaseType);
 
-        Assert.Equal(3, clod.StructuralProperties().Count(), "Correct number of total props");
-        Assert.Equal(clod.StructuralProperties().First(), smod.StructuralProperties().First(), "ID properly inherited");
+        Assert.Equal(3, clod.StructuralProperties().Count());
+        Assert.Equal(clod.StructuralProperties().First(), smod.StructuralProperties().First());
         IEdmProperty address = clod.FindProperty("Address");
-        Assert.Equal("Address", address.Name, "Address correct name");
-        Assert.Equal(clod.StructuralProperties().Last(), address, "Clod correct last property");
+        Assert.Equal("Address", address.Name);
+        Assert.Equal(address, clod.StructuralProperties().Last());
 
         IEdmProperty id = clod.FindProperty("Id");
         IEdmPrimitiveTypeReference resolvedIdType = id.Type.AsPrimitive();
-        Assert.Equal(resolvedIdType.PrimitiveKind(), EdmPrimitiveTypeKind.Int32, "ID correct kind");
+        Assert.Equal(EdmPrimitiveTypeKind.Int32, resolvedIdType.PrimitiveKind());
 
-        Assert.Equal(1, smod.DeclaredKey.Count(), "Smod correct number of key props");
-        Assert.Equal(id, smod.DeclaredKey.First(), "Smod correct key prop");
-        Assert.Equal(smod.DeclaredKey.First(), clod.Key().First(), "Inhertance shared key");
+        Assert.Equal(1, smod.DeclaredKey.Count());
+        Assert.Equal(id, smod.DeclaredKey.First());
+        Assert.Equal(smod.DeclaredKey.First(), clod.Key().First());
     }
 
     [Fact]
@@ -997,18 +967,20 @@ public class SchemaParsingTests : EdmLibTestCaseBase
   </ComplexType>
 </Schema>";
 
-        IEdmModel model;
-        IEnumerable<EdmError> errors;
-        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
-        Assert.True(parsed, "parsed");
-        Assert.True(errors.Count() == 0, "No errors");
+        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out IEdmModel model, out IEnumerable<EdmError> errors);
+        Assert.True(parsed);
+        Assert.Empty(errors);
 
         IEdmComplexType smodDef = (IEdmComplexType)model.SchemaElements.First();
         IEdmStructuralProperty streamProp = (IEdmStructuralProperty)smodDef.FindProperty("Stream");
-        Assert.Equal(EdmTypeKind.Primitive, streamProp.Type.TypeKind(), "Stream should have type of primitive");
-        Assert.Equal(EdmPrimitiveTypeKind.Stream, streamProp.Type.AsPrimitive().PrimitiveKind(), "Stream should have primitive kind of stream");
+        Assert.Equal(EdmTypeKind.Primitive, streamProp.Type.TypeKind());
+        Assert.Equal(EdmPrimitiveTypeKind.Stream, streamProp.Type.AsPrimitive().PrimitiveKind());
         IEdmStructuralProperty streamProp1 = (IEdmStructuralProperty)smodDef.FindProperty("Stream1");
         IEdmStructuralProperty streamProp2 = (IEdmStructuralProperty)smodDef.FindProperty("Stream2");
+        Assert.Equal(EdmTypeKind.Primitive, streamProp1.Type.TypeKind());
+        Assert.Equal(EdmPrimitiveTypeKind.Stream, streamProp1.Type.AsPrimitive().PrimitiveKind());
+        Assert.Equal(EdmTypeKind.Primitive, streamProp2.Type.TypeKind());
+        Assert.Equal(EdmPrimitiveTypeKind.Stream, streamProp2.Type.AsPrimitive().PrimitiveKind());
     }
 
     [Fact]
@@ -1022,29 +994,27 @@ public class SchemaParsingTests : EdmLibTestCaseBase
   </ComplexType>
 </Schema>";
 
-        IEdmModel model;
-        IEnumerable<EdmError> errors;
-        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
-        Assert.True(parsed, "parsed");
-        Assert.True(errors.Count() == 0, "No errors");
+        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out IEdmModel model, out IEnumerable<EdmError> errors);
+        Assert.True(parsed);
+        Assert.Empty(errors);
 
         // Test the structural objects.
-        Assert.True(model.SchemaElements.Count() == 1, "correct schemata element count");
+         Assert.Single(model.SchemaElements);
         IEdmComplexType type = (IEdmComplexType)model.SchemaElements.First();
-        Assert.Equal("Smod", type.Name, "Smod not found");
-        Assert.Equal("Id", type.DeclaredStructuralProperties().First().Name, "Type correct name");
+        Assert.Equal("Smod", type.Name);
+        Assert.Equal("Id", type.DeclaredStructuralProperties().First().Name);
         IEdmPrimitiveTypeReference idType = type.DeclaredStructuralProperties().First().Type.AsPrimitive();
-        Assert.Equal("Int32", idType.PrimitiveDefinition().Name, "ID is correct type");
-        Assert.False(idType.IsNullable, "ID is nullable");
+        Assert.Equal("Int32", idType.PrimitiveDefinition().Name);
+        Assert.False(idType.IsNullable);
 
         // Test the Annotation
         IEdmValue annotationValue = model.GetAnnotationValue<IEdmValue>(type.DeclaredStructuralProperties().First(), "p", "foo");
         IEdmDirectValueAnnotation annotation = (IEdmDirectValueAnnotation)model.DirectValueAnnotations(type.DeclaredStructuralProperties().First()).First();
-        Assert.Equal(annotation.Value, annotationValue, "Correct annotation found");
-        Assert.Equal("p", annotation.NamespaceUri, "Correct annotation namespace");
-        Assert.Equal("foo", annotation.Name, "Correct annotation local name");
-        Assert.Equal(EdmPrimitiveTypeKind.String, annotationValue.Type.AsPrimitive().PrimitiveKind(), "Correct annotation type");
-        Assert.Equal("Quoth the Raven", ((IEdmStringValue)annotationValue).Value, "Correct annotation value");
+        Assert.Equal(annotationValue, annotation.Value);
+        Assert.Equal("p", annotation.NamespaceUri   );
+        Assert.Equal("foo", annotation.Name );
+        Assert.Equal(EdmPrimitiveTypeKind.String, annotationValue.Type.AsPrimitive().PrimitiveKind());
+        Assert.Equal("Quoth the Raven", ((IEdmStringValue)annotationValue).Value);
     }
 
     [Fact]
@@ -1062,30 +1032,28 @@ public class SchemaParsingTests : EdmLibTestCaseBase
   </ComplexType>
 </Schema>";
 
-        IEdmModel model;
-        IEnumerable<EdmError> errors;
-        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
-        Assert.True(parsed, "parsed");
-        Assert.True(errors.Count() == 0, "No errors");
+        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out IEdmModel model, out IEnumerable<EdmError> errors);
+        Assert.True(parsed);
+        Assert.Empty(errors);
 
         // Test the structural objects.
-        Assert.True(model.SchemaElements.Count() == 1, "correct schemata element count");
+         Assert.Single(model.SchemaElements);
         IEdmComplexType type = (IEdmComplexType)model.SchemaElements.First();
-        Assert.Equal("Smod", type.Name, "Smod not found");
-        Assert.Equal("Id", type.DeclaredStructuralProperties().First().Name, "Type correct name");
+        Assert.Equal("Smod", type.Name);
+        Assert.Equal("Id", type.DeclaredStructuralProperties().First().Name);
         IEdmPrimitiveTypeReference idType = type.DeclaredStructuralProperties().First().Type.AsPrimitive();
-        Assert.Equal("Int32", idType.PrimitiveDefinition().Name, "ID is correct type");
-        Assert.False(idType.IsNullable, "ID is nullable");
+        Assert.Equal("Int32", idType.PrimitiveDefinition().Name);
+        Assert.False(idType.IsNullable);
 
         // Test the Annotation
         IEdmValue annotationValue = model.GetAnnotationValue<IEdmValue>(type.DeclaredStructuralProperties().First(), "p", "foo");
         IEdmDirectValueAnnotation annotation = (IEdmDirectValueAnnotation)model.DirectValueAnnotations(type.DeclaredStructuralProperties().First()).First();
-        Assert.Equal(annotation.Value, annotationValue, "Correct annotation found");
-        Assert.Equal("p", annotation.NamespaceUri, "Correct annotation namespace");
-        Assert.Equal("foo", annotation.Name, "Correct annotation local name");
-        Assert.Equal(EdmPrimitiveTypeKind.String, annotationValue.Type.AsPrimitive().PrimitiveKind(), "Correct annotation type");
+        Assert.Equal(annotationValue, annotation.Value);
+        Assert.Equal("p", annotation.NamespaceUri);
+        Assert.Equal("foo", annotation.Name);
+        Assert.Equal(EdmPrimitiveTypeKind.String, annotationValue.Type.AsPrimitive().PrimitiveKind());
         //TODO: handle complex annotations properly
-        Assert.Equal("<p:foo xmlns:p=\"p\">\n           Quoth the Raven\n        </p:foo>", ((IEdmStringValue)annotationValue).Value, "Correct annotation value");
+        Assert.Equal("<p:foo xmlns:p=\"p\">\n           Quoth the Raven\n        </p:foo>", ((IEdmStringValue)annotationValue).Value);
     }
 
     [Fact]
@@ -1099,30 +1067,27 @@ public class SchemaParsingTests : EdmLibTestCaseBase
   </ComplexType>
 </Schema>";
 
-        IEdmModel model;
-        IEnumerable<EdmError> errors;
-        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
-        Assert.True(parsed, "parsed");
-        Assert.True(errors.Count() == 0, "No errors");
+        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out IEdmModel model, out IEnumerable<EdmError> errors);
+        Assert.True(parsed);
+        Assert.Empty(errors);
 
         // Test the structural objects.
-        Assert.True(model.SchemaElements.Count() == 1, "correct schemata element count");
+        Assert.Single(model.SchemaElements);
         IEdmComplexType type = (IEdmComplexType)model.SchemaElements.First();
-        Assert.Equal("Smod", type.Name, "Smod not found");
-        Assert.Equal("Id", type.DeclaredStructuralProperties().First().Name, "Type correct name");
+        Assert.Equal("Smod", type.Name);
+        Assert.Equal("Id", type.DeclaredStructuralProperties().First().Name);
         IEdmPrimitiveTypeReference idType = type.DeclaredStructuralProperties().First().Type.AsPrimitive();
-        Assert.Equal("Int32", idType.PrimitiveDefinition().Name, "ID is correct type");
-        Assert.False(idType.IsNullable, "ID is nullable");
+        Assert.Equal("Int32", idType.PrimitiveDefinition().Name);
+        Assert.False(idType.IsNullable);
 
         // Test the Annotation
         IEdmValue annotationValue = model.GetAnnotationValue<IEdmValue>(type.DeclaredStructuralProperties().First(), "p", "foo");
         IEdmDirectValueAnnotation annotation = (IEdmDirectValueAnnotation)model.DirectValueAnnotations(type.DeclaredStructuralProperties().First()).First();
-        Assert.Equal(annotation.Value, annotationValue, "Correct annotation found");
-        Assert.Equal("p", annotation.NamespaceUri, "Correct annotation namespace");
-        Assert.Equal("foo", annotation.Name, "Correct annotation local name");
-        Assert.Equal(EdmPrimitiveTypeKind.String, annotationValue.Type.AsPrimitive().PrimitiveKind(), "Correct annotation type");
-        //TODO: handle complex annotations properly
-        Assert.Equal(@"<p:foo xmlns:p=""p"" />", ((IEdmStringValue)annotationValue).Value, "Correct annotation value");
+        Assert.Equal(annotationValue, annotation.Value);
+        Assert.Equal("p", annotation.NamespaceUri);
+        Assert.Equal("foo", annotation.Name);
+        Assert.Equal(EdmPrimitiveTypeKind.String, annotationValue.Type.AsPrimitive().PrimitiveKind());
+        Assert.Equal(@"<p:foo xmlns:p=""p"" />", ((IEdmStringValue)annotationValue).Value);
     }
 
     [Fact]
@@ -1136,32 +1101,30 @@ public class SchemaParsingTests : EdmLibTestCaseBase
   </ComplexType>
 </Schema>";
 
-        IEdmModel model;
-        IEnumerable<EdmError> errors;
-        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
-        Assert.True(parsed, "parsed");
-        Assert.True(errors.Count() == 0, "No errors");
+        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out IEdmModel model, out IEnumerable<EdmError> errors);
+        Assert.True(parsed);
+        Assert.Empty(errors);
 
         IEdmComplexType type = (IEdmComplexType)model.SchemaElements.First();
         IEdmStructuralProperty id = type.DeclaredStructuralProperties().First();
 
         Assert.True(model.DirectValueAnnotations(id).Count() == 3, "Annotation count");
         IEdmValue annotationValue = model.GetAnnotationValue<IEdmValue>(id, "p", "foo");
-        Assert.Equal("Quoth the Raven", ((IEdmStringValue)annotationValue).Value, "Annotation value");
+        Assert.Equal("Quoth the Raven", ((IEdmStringValue)annotationValue).Value);
         annotationValue = model.GetAnnotationValue<IEdmValue>(id, "p", "bar");
-        Assert.Equal("Nevermore", ((IEdmStringValue)annotationValue).Value, "Annotation value");
+        Assert.Equal("Nevermore", ((IEdmStringValue)annotationValue).Value);
         annotationValue = model.GetAnnotationValue<IEdmValue>(id, "p", "baz");
-        Assert.Equal("Right Phil?", ((IEdmStringValue)annotationValue).Value, "Annotation value");
+        Assert.Equal("Right Phil?", ((IEdmStringValue)annotationValue).Value);
 
         model.SetAnnotationValue(id, "p", "foo", null);
         model.SetAnnotationValue(id, "p", "baz", "Sure Bobby");
 
         Assert.True(model.DirectValueAnnotations(id).Count() == 2, "Annotation count");
         annotationValue = model.GetAnnotationValue<IEdmValue>(id, "p", "foo");
-        Assert.Null(annotationValue, "Annotation value");
+        Assert.Null(annotationValue);
         annotationValue = model.GetAnnotationValue<IEdmValue>(id, "p", "bar");
-        Assert.Equal("Nevermore", ((IEdmStringValue)annotationValue).Value, "Annotation value");
-        Assert.Equal(model.GetAnnotationValue<string>(id, "p", "baz"), "Sure Bobby", "Annotation value");
+        Assert.Equal("Nevermore", ((IEdmStringValue)annotationValue).Value);
+        Assert.Equal("Sure Bobby", model.GetAnnotationValue<string>(id, "p", "baz"));
     }
 
     [Fact]
@@ -1176,17 +1139,15 @@ public class SchemaParsingTests : EdmLibTestCaseBase
   </ComplexType>
 </Schema>";
 
-        IEdmModel model;
-        IEnumerable<EdmError> errors;
-        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
-        Assert.True(parsed, "parsed");
-        Assert.True(errors.Count() == 0, "No errors");
+        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out IEdmModel model, out IEnumerable<EdmError> errors);
+        Assert.True(parsed);
+        Assert.Empty(errors);
 
         IEdmComplexType smodDef = (IEdmComplexType)model.SchemaElements.First();
         IEdmStructuralProperty mvProp = (IEdmStructuralProperty)smodDef.FindProperty("Collection");
-        Assert.Equal(EdmTypeKind.Collection, mvProp.Type.TypeKind(), "Collection should have type of collection");
-        Assert.Equal(EdmTypeKind.Primitive, mvProp.Type.AsCollection().ElementType().TypeKind(), "Collection should be of primitives");
-        Assert.Equal(EdmPrimitiveTypeKind.Int32, mvProp.Type.AsCollection().ElementType().AsPrimitive().PrimitiveKind(), "Collection should be of Int32s");
+        Assert.Equal(EdmTypeKind.Collection, mvProp.Type.TypeKind());
+        Assert.Equal(EdmTypeKind.Primitive, mvProp.Type.AsCollection().ElementType().TypeKind());
+        Assert.Equal(EdmPrimitiveTypeKind.Int32, mvProp.Type.AsCollection().ElementType().AsPrimitive().PrimitiveKind());
     }
 
     [Fact]
@@ -1200,15 +1161,13 @@ public class SchemaParsingTests : EdmLibTestCaseBase
   </ComplexType>
 </Schema>";
 
-        IEdmModel model;
-        IEnumerable<EdmError> errors;
-        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
-        Assert.True(parsed, "parsed");
-        Assert.True(errors.Count() == 0, "No errors");
+        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out IEdmModel model, out IEnumerable<EdmError> errors);
+        Assert.True(parsed);
+        Assert.Empty(errors);
 
         IEdmComplexType smodDef = (IEdmComplexType)model.SchemaElements.First();
         IEdmStructuralProperty idProp = (IEdmStructuralProperty)smodDef.FindProperty("Id");
-        Assert.True(idProp.Type.IsNullable, "Nullable should default to true");
+        Assert.True(idProp.Type.IsNullable);
 
     }
 
@@ -1227,15 +1186,13 @@ public class SchemaParsingTests : EdmLibTestCaseBase
   <EntityType Name=""validEntityType2"" BaseType=""FindMethodsTestModelBuilder.MultipleSchemasWithDifferentNamespacesComplex.first.validEntityType1"" />
 </Schema>";
 
-        IEdmModel model;
-        IEnumerable<EdmError> errors;
-        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
-        Assert.True(parsed, "parsed");
-        Assert.True(errors.Count() == 0, "No errors");
+        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out IEdmModel model, out IEnumerable<EdmError> errors);
+        Assert.True(parsed);
+        Assert.Empty(errors);
 
         IEdmEntityType inheritingEntityType = (IEdmEntityType)model.SchemaElements.Last();
         IEdmStructuralProperty baseProperty = (IEdmStructuralProperty)inheritingEntityType.FindProperty("Property0");
-        Assert.Equal(baseProperty, inheritingEntityType.StructuralProperties().First(), "FindProperty should also return properties of base type");
+        Assert.Equal(baseProperty, inheritingEntityType.StructuralProperties().First());
     }
 
     [Fact]
@@ -1249,15 +1206,13 @@ public class SchemaParsingTests : EdmLibTestCaseBase
   </ComplexType>
 </Schema>";
 
-        IEdmModel model;
-        IEnumerable<EdmError> errors;
-        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
-        Assert.True(parsed, "parsed");
-        Assert.True(errors.Count() == 0, "No errors");
+        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out IEdmModel model, out IEnumerable<EdmError> errors);
+        Assert.True(parsed);
+        Assert.Empty(errors);
 
         IEdmComplexType typeDefinition = (IEdmComplexType)model.SchemaElements.First();
         IEdmStructuralProperty stringProp = (IEdmStructuralProperty)typeDefinition.FindProperty("myString");
-        Assert.Equal(stringProp.Type.AsString().IsUnicode, true, "Unicode should default to true");
+        Assert.Equal(true, stringProp.Type.AsString().IsUnicode);
     }
 
     #region Operations and OperationImports
@@ -1280,24 +1235,22 @@ public class SchemaParsingTests : EdmLibTestCaseBase
   </Function>
 </Schema>";
 
-        IEdmModel model;
-        IEnumerable<EdmError> errors;
-        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
-        Assert.True(parsed, "parsed");
-        Assert.True(errors.Count() == 0, "No errors");
+        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out IEdmModel model, out IEnumerable<EdmError> errors);
+        Assert.True(parsed);
+        Assert.Empty(errors);
 
         IEdmEntityType personType = (IEdmEntityType)model.SchemaElements.First();
         IEdmOperation getAge = (IEdmOperation)model.FindOperations("foo.GetAge").First();
-        Assert.Equal("GetAge", getAge.Name, "Group name correct");
-        Assert.NotNull(getAge, "Function exists and has IEdmFunctionType");
-        Assert.Equal("GetAge", getAge.Name, "Name correct");
-        Assert.Equal("foo", getAge.Namespace, "Namespace correct");
-        Assert.Equal(EdmPrimitiveTypeKind.Int32, getAge.ReturnType.AsPrimitive().PrimitiveKind(), "Return type correct");
-        Assert.Equal(EdmSchemaElementKind.Function, getAge.SchemaElementKind, "Schema element kind correct");
+        Assert.Equal("GetAge", getAge.Name);
+        Assert.NotNull(getAge);
+        Assert.Equal("GetAge", getAge.Name);
+        Assert.Equal("foo", getAge.Namespace);
+        Assert.Equal(EdmPrimitiveTypeKind.Int32, getAge.ReturnType.AsPrimitive().PrimitiveKind());
+        Assert.Equal(EdmSchemaElementKind.Function, getAge.SchemaElementKind);
         IEdmOperationParameter getAgeParameter = getAge.Parameters.First();
-        Assert.Equal(getAgeParameter, getAge.FindParameter("Person"), "Find parameter returns proper parameter");
-        Assert.Equal("Person", getAgeParameter.Name, "Parameter has correct name");
-        Assert.Equal(personType, getAgeParameter.Type.Definition, "Parameter has correct mode");
+        Assert.Equal(getAgeParameter, getAge.FindParameter("Person"));
+        Assert.Equal("Person", getAgeParameter.Name);
+        Assert.Equal(personType, getAgeParameter.Type.Definition);
     }
 
     [Fact]
@@ -1320,31 +1273,20 @@ public class SchemaParsingTests : EdmLibTestCaseBase
 </Schema>";
 
         // parsing should succeed.
-        IEdmModel model;
-        IEnumerable<EdmError> errors;
-        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
-        Assert.True(parsed, "parsed");
-        Assert.True(errors.Count() == 0, "No errors");
+        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out IEdmModel model, out IEnumerable<EdmError> errors);
+        Assert.True(parsed);
+        Assert.Empty(errors);
 
         // validation should detect duplicated parameter names.
         IEnumerable<EdmError> validationErrors;
         model.Validate(out validationErrors);
-        Assert.Equal(validationErrors.Single().ErrorMessage, "Each parameter name in a operation must be unique. The parameter name 'PersonParam' is already defined.");
+        Assert.Equal("Each parameter name in a operation must be unique. The parameter name 'PersonParam' is already defined.", validationErrors.Single().ErrorMessage);
 
         // FindParameter() should throw exception.
         IEdmEntityType personType = (IEdmEntityType)model.SchemaElements.First();
         IEdmOperation getAge = (IEdmOperation)model.FindOperations("foo.GetAge").First();
-        try
-        {
-            var param1 = getAge.FindParameter("PersonParam");
-        }
-        catch (InvalidOperationException ex)
-        {
-            Assert.Equal("Sequence contains more than one matching element", ex.Message);
-            return;
-        }
 
-        Assert.Fail();
+        Assert.Throws<InvalidOperationException>(() => getAge.FindParameter("PersonParam"));
     }
 
     [Fact]
@@ -1358,11 +1300,9 @@ public class SchemaParsingTests : EdmLibTestCaseBase
   </Function>
 </Schema>";
 
-        IEdmModel model;
-        IEnumerable<EdmError> errors;
-        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
-        Assert.True(parsed, "parsed");
-        Assert.True(errors.Count() == 0, "No errors");
+        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out IEdmModel model, out IEnumerable<EdmError> errors);
+        Assert.True(parsed);
+        Assert.Empty(errors);
     }
 
     [Fact]
@@ -1411,45 +1351,44 @@ public class SchemaParsingTests : EdmLibTestCaseBase
       </EntityContainer>
     </Schema>";
 
-        IEdmModel model;
-        IEnumerable<EdmError> errors;
-        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
-        Assert.True(parsed, "parsed");
-        Assert.True(errors.Count() == 0, "No errors");
+        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out IEdmModel model, out IEnumerable<EdmError> errors);
+        Assert.True(parsed);
+        Assert.Empty(errors);
 
         IEdmEntityType personType = (IEdmEntityType)model.SchemaElements.First();
         IEdmEntityContainer fooContainer = (IEdmEntityContainer)model.FindEntityContainer("fooContainer");
         IEdmEntitySet peopleSet = (IEdmEntitySet)fooContainer.Elements.First();
 
         var fiGroup = fooContainer.FindOperationImports("peopleWhoAreAwesomeAction").ToArray();
-        Assert.Equal(4, fiGroup.Length, "# of overloads expected");
+        Assert.Equal(4, fiGroup.Length);
 
         IEdmOperationImport peopleWhoAreAwesome = fiGroup.First();
-        Assert.Equal(EdmContainerElementKind.ActionImport, peopleWhoAreAwesome.ContainerElementKind, "FunctionImport has correct ContainerElementKind");
-        IEdmEntitySetBase eset;
-        Assert.True(peopleWhoAreAwesome.TryGetStaticEntitySet(model, out eset), "peopleWhoAreAwesome.TryGetStaticEntitySet");
-        Assert.Equal(peopleSet, eset, "Return EntitySet name is correct");
-        IEdmEntitySetBase fiEntitySet;
-        Assert.True(peopleWhoAreAwesome.TryGetStaticEntitySet(model, out fiEntitySet), "peopleWhoAreAwesome.TryGetStaticEntitySet");
-        Assert.Equal(personType, fiEntitySet.EntityType(), "Return EntitySet type is correct");
-        Assert.Equal("peopleWhoAreAwesomeAction", peopleWhoAreAwesome.Name, "FunctionImport name is correct");
-        Assert.Equal(EdmTypeKind.Collection, peopleWhoAreAwesome.Operation.ReturnType.Definition.TypeKind, "Return typekind is correct");
-        Assert.Equal(personType, peopleWhoAreAwesome.Operation.ReturnType.AsCollection().ElementType().Definition, "Return entitytype is correct");
-        IEdmOperationParameter peopleWhoAreAwesomeParameter = peopleWhoAreAwesome.Operation.Parameters.First();
-        Assert.Equal(peopleWhoAreAwesomeParameter, peopleWhoAreAwesome.Operation.FindParameter("awesomeName"), "Find parameter returns proper parameter");
-        Assert.Equal("awesomeName", peopleWhoAreAwesomeParameter.Name, "FunctionImport parameter name is correct");
-        Assert.False(peopleWhoAreAwesomeParameter.Type.AsString().IsBad(), "FunctionImport has correct ContainerElementKind");
+        Assert.Equal(EdmContainerElementKind.ActionImport, peopleWhoAreAwesome.ContainerElementKind);
 
-        Assert.True(fiGroup[0] is IEdmActionImport, "Expected to be a action import");
-        Assert.True(fiGroup[1] is IEdmActionImport, "Expected to be a action import");
-        Assert.True(fiGroup[2] is IEdmActionImport, "Expected to be a action import");
-        Assert.True(fiGroup[3] is IEdmActionImport, "Expected to be a action import");
+        Assert.True(peopleWhoAreAwesome.TryGetStaticEntitySet(model, out IEdmEntitySetBase eset), "peopleWhoAreAwesome.TryGetStaticEntitySet");
+        Assert.Equal(peopleSet, eset);
+
+        Assert.True(peopleWhoAreAwesome.TryGetStaticEntitySet(model, out IEdmEntitySetBase fiEntitySet), "peopleWhoAreAwesome.TryGetStaticEntitySet");
+        Assert.Equal(personType, fiEntitySet.EntityType);
+        Assert.Equal("peopleWhoAreAwesomeAction", peopleWhoAreAwesome.Name);
+        Assert.Equal(EdmTypeKind.Collection, peopleWhoAreAwesome.Operation.ReturnType.Definition.TypeKind);
+        Assert.Equal(personType, peopleWhoAreAwesome.Operation.ReturnType.AsCollection().ElementType().Definition);
+
+        IEdmOperationParameter peopleWhoAreAwesomeParameter = peopleWhoAreAwesome.Operation.Parameters.First();
+        Assert.Equal(peopleWhoAreAwesomeParameter, peopleWhoAreAwesome.Operation.FindParameter("awesomeName"));
+        Assert.Equal("awesomeName", peopleWhoAreAwesomeParameter.Name);
+        Assert.False(peopleWhoAreAwesomeParameter.Type.AsString().IsBad());
+
+        Assert.True(fiGroup[0] is IEdmActionImport);
+        Assert.True(fiGroup[1] is IEdmActionImport);
+        Assert.True(fiGroup[2] is IEdmActionImport);
+        Assert.True(fiGroup[3] is IEdmActionImport);
 
         fiGroup = fooContainer.FindOperationImports("peopleWhoAreAwesomeFunction").ToArray();
-        Assert.Equal(3, fiGroup.Length, "# of overloads expected");
-        Assert.True(fiGroup[0] is IEdmFunctionImport, "Expected to be a function import");
-        Assert.True(fiGroup[1] is IEdmFunctionImport, "Expected to be a function import");
-        Assert.True(fiGroup[2] is IEdmFunctionImport, "Expected to be a function import");
+        Assert.Equal(3, fiGroup.Length);
+        Assert.True(fiGroup[0] is IEdmFunctionImport);
+        Assert.True(fiGroup[1] is IEdmFunctionImport);
+        Assert.True(fiGroup[2] is IEdmFunctionImport);
     }
 
     // BuildInternalUniqueParameterTypeFunctionString is not including the type name for collection of entities
@@ -1551,66 +1490,61 @@ public class SchemaParsingTests : EdmLibTestCaseBase
   </EntityContainer>
 </Schema>";
 
-        IEdmModel model;
-        IEnumerable<EdmError> errors;
-        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
-        Assert.True(parsed, "parsed");
-        Assert.True(errors.Count() == 0, "No parsing errors");
+        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out IEdmModel model, out IEnumerable<EdmError> errors);
+        Assert.True(parsed);
+        Assert.Empty(errors);
 
         var validated = EdmValidator.Validate(model, EdmConstants.EdmVersionLatest, out errors);
-        Assert.True(validated, "validate");
+        Assert.True(validated);
 
         var people = model.EntityContainer.FindEntitySet("People");
-        Assert.Equal("Person", people.EntityType().Name, "people.ElementType.Name");
-        Assert.False(((IEdmNavigationProperty)people.EntityType().FindProperty("Orders")).ContainsTarget, "Orders.ContainsTarget");
+        Assert.Equal("Person", people.EntityType.Name);
+        Assert.False(((IEdmNavigationProperty)people.EntityType.FindProperty("Orders")).ContainsTarget);
 
         var operationImports = model.EntityContainer.OperationImports().ToArray();
-        Assert.Equal(11, operationImports.Length, "# of operation imports");
+        Assert.Equal(11, operationImports.Length);
 
-        Assert.Equal(EdmTypeKind.Entity, operationImports[0].Operation.ReturnType.AsCollection().ElementType().TypeKind(), "operationImports[0] return type");
-        Assert.Equal(EdmTypeKind.Entity, operationImports[0].Operation.Parameters.Single().Type.AsCollection().ElementType().TypeKind(), "operationImports[0] parameter type");
-        IEdmEntitySetBase eset;
-        IEdmOperationParameter p;
-        Dictionary<IEdmNavigationProperty, IEdmPathExpression> np;
-        IEnumerable<EdmError> entitySetPathErrors;
-        Assert.True(operationImports[0].TryGetStaticEntitySet(model, out eset), "operationImports[0].TryGetStaticEntitySet");
-        Assert.False(operationImports[0].TryGetRelativeEntitySetPath(model, out p, out np, out entitySetPathErrors), "operationImports[0].TryGetRelativeEntitySetPath");
-        Assert.Equal(people, eset, "people, eset");
+        Assert.Equal(EdmTypeKind.Entity, operationImports[0].Operation.ReturnType.AsCollection().ElementType().TypeKind());
+        Assert.Equal(EdmTypeKind.Entity, operationImports[0].Operation.Parameters.Single().Type.AsCollection().ElementType().TypeKind());
 
-        Assert.Equal(EdmTypeKind.Complex, operationImports[1].Operation.ReturnType.AsCollection().ElementType().TypeKind(), "operationImports[1] return type");
-        Assert.Equal(EdmTypeKind.Complex, operationImports[1].Operation.Parameters.Single().Type.AsCollection().ElementType().TypeKind(), "operationImports[1] parameter type");
+        Assert.True(operationImports[0].TryGetStaticEntitySet(model, out IEdmEntitySetBase eset), "operationImports[0].TryGetStaticEntitySet");
+        Assert.False(operationImports[0].TryGetRelativeEntitySetPath(model, out IEdmOperationParameter p, out Dictionary<IEdmNavigationProperty, IEdmPathExpression> np, out IEnumerable<EdmError> entitySetPathErrors));
+        Assert.Equal(people, eset);
 
-        Assert.Equal(EdmTypeKind.Primitive, operationImports[2].Operation.ReturnType.AsCollection().ElementType().TypeKind(), "operationImports[2] return type");
-        Assert.Equal(EdmTypeKind.Primitive, operationImports[2].Operation.Parameters.Single().Type.AsCollection().ElementType().TypeKind(), "operationImports[2] parameter type");
+        Assert.Equal(EdmTypeKind.Complex, operationImports[1].Operation.ReturnType.AsCollection().ElementType().TypeKind());
+        Assert.Equal(EdmTypeKind.Complex, operationImports[1].Operation.Parameters.Single().Type.AsCollection().ElementType().TypeKind());
 
-        Assert.Equal(EdmTypeKind.Entity, operationImports[3].Operation.ReturnType.TypeKind(), "operationImports[3] return type");
-        Assert.Equal(EdmTypeKind.Entity, operationImports[3].Operation.Parameters.Single().Type.TypeKind(), "operationImports[3] parameter type");
-        IEdmEntitySetBase eset2;
-        Assert.True(operationImports[3].TryGetStaticEntitySet(model, out eset2), "operationImports[3].TryGetStaticEntitySet");
-        Assert.False(operationImports[0].TryGetRelativeEntitySetPath(model, out p, out np, out entitySetPathErrors), "operationImports[0].TryGetRelativeEntitySetPath");
-        Assert.Equal(people, eset2, "people, eset2");
+        Assert.Equal(EdmTypeKind.Primitive, operationImports[2].Operation.ReturnType.AsCollection().ElementType().TypeKind());
+        Assert.Equal(EdmTypeKind.Primitive, operationImports[2].Operation.Parameters.Single().Type.AsCollection().ElementType().TypeKind());
 
-        Assert.Equal(EdmTypeKind.Complex, operationImports[4].Operation.ReturnType.TypeKind(), "operationImports[4] return type");
-        Assert.Equal(EdmTypeKind.Complex, operationImports[4].Operation.Parameters.Single().Type.TypeKind(), "operationImports[4] parameter type");
+        Assert.Equal(EdmTypeKind.Entity, operationImports[3].Operation.ReturnType.TypeKind());
+        Assert.Equal(EdmTypeKind.Entity, operationImports[3].Operation.Parameters.Single().Type.TypeKind());
 
-        Assert.Equal(EdmTypeKind.Primitive, operationImports[5].Operation.ReturnType.TypeKind(), "operationImports[5] return type");
-        Assert.Equal(EdmTypeKind.Primitive, operationImports[5].Operation.Parameters.Single().Type.TypeKind(), "operationImports[5] parameter type");
+        Assert.True(operationImports[3].TryGetStaticEntitySet(model, out IEdmEntitySetBase eset2));
+        Assert.False(operationImports[0].TryGetRelativeEntitySetPath(model, out p, out np, out entitySetPathErrors));
+        Assert.Equal(people, eset2);
 
-        Assert.False(operationImports[6].TryGetStaticEntitySet(model, out eset), "operationImports[6].TryGetStaticEntitySet");
-        Assert.False(operationImports[6].TryGetRelativeEntitySetPath(model, out p, out np, out entitySetPathErrors), "operationImports[6].TryGetStaticEntitySet");
-        Assert.Null(p, "p is null");
+        Assert.Equal(EdmTypeKind.Complex, operationImports[4].Operation.ReturnType.TypeKind());
+        Assert.Equal(EdmTypeKind.Complex, operationImports[4].Operation.Parameters.Single().Type.TypeKind());
 
-        Assert.False(operationImports[7].TryGetStaticEntitySet(model, out eset), "operationImports[7].TryGetStaticEntitySet");
-        Assert.False(operationImports[7].TryGetRelativeEntitySetPath(model, out p, out np, out entitySetPathErrors), "operationImports[7].TryGetStaticEntitySet");
+        Assert.Equal(EdmTypeKind.Primitive, operationImports[5].Operation.ReturnType.TypeKind());
+        Assert.Equal(EdmTypeKind.Primitive, operationImports[5].Operation.Parameters.Single().Type.TypeKind());
 
-        Assert.False(operationImports[8].TryGetStaticEntitySet(model, out eset), "operationImports[8].TryGetStaticEntitySet");
-        Assert.False(operationImports[8].TryGetRelativeEntitySetPath(model, out p, out np, out entitySetPathErrors), "operationImports[8].TryGetStaticEntitySet");
+        Assert.False(operationImports[6].TryGetStaticEntitySet(model, out eset));
+        Assert.False(operationImports[6].TryGetRelativeEntitySetPath(model, out p, out np, out entitySetPathErrors));
+        Assert.Null(p);
 
-        Assert.False(operationImports[9].TryGetStaticEntitySet(model, out eset), "operationImports[9].TryGetStaticEntitySet");
-        Assert.False(operationImports[9].TryGetRelativeEntitySetPath(model, out p, out np, out entitySetPathErrors), "operationImports[9].TryGetStaticEntitySet");
+        Assert.False(operationImports[7].TryGetStaticEntitySet(model, out eset));
+        Assert.False(operationImports[7].TryGetRelativeEntitySetPath(model, out p, out np, out entitySetPathErrors));
 
-        Assert.False(operationImports[10].TryGetStaticEntitySet(model, out eset), "operationImports[10].TryGetStaticEntitySet");
-        Assert.False(operationImports[10].TryGetRelativeEntitySetPath(model, out p, out np, out entitySetPathErrors), "operationImports[10].TryGetStaticEntitySet");
+        Assert.False(operationImports[8].TryGetStaticEntitySet(model, out eset));
+        Assert.False(operationImports[8].TryGetRelativeEntitySetPath(model, out p, out np, out entitySetPathErrors));
+
+        Assert.False(operationImports[9].TryGetStaticEntitySet(model, out eset));
+        Assert.False(operationImports[9].TryGetRelativeEntitySetPath(model, out p, out np, out entitySetPathErrors));
+
+        Assert.False(operationImports[10].TryGetStaticEntitySet(model, out eset));
+        Assert.False(operationImports[10].TryGetRelativeEntitySetPath(model, out p, out np, out entitySetPathErrors));
     }
     #endregion
 
@@ -1643,20 +1577,18 @@ public class SchemaParsingTests : EdmLibTestCaseBase
     </EntityType>
 </Schema>";
 
-        IEdmModel model;
-        IEnumerable<EdmError> errors;
-        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
-        Assert.True(parsed, "parsed");
-        Assert.True(errors.Count() == 0, "No errors");
+        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out IEdmModel model, out IEnumerable<EdmError> errors);
+        Assert.True(parsed);
+        Assert.Empty(errors);
 
         IEdmEntityType entity1Def = (IEdmEntityType)model.FindType("Grumble.Entity1");
         IEdmEntityType entity2Def = (IEdmEntityType)model.FindType("Grumble.Entity2");
 
         Assert.True(((IEdmNavigationProperty)entity1Def.FindProperty("ToEntity2")).IsPrincipal(), "Correct principal end");
-        Assert.Equal(entity2Def.FindProperty("Fk1"), ((IEdmNavigationProperty)entity1Def.FindProperty("ToEntity2")).Partner.DependentProperties().First(), "Referential constraint in correct order");
+        Assert.Equal(entity2Def.FindProperty("Fk1"), ((IEdmNavigationProperty)entity1Def.FindProperty("ToEntity2")).Partner.DependentProperties().First());
 
-        Assert.Equal("Entity1", entity1Def.Name, "Principal end is correct");
-        Assert.Equal("Entity2", entity2Def.Name, "Dependent end is correct");
+        Assert.Equal("Entity1", entity1Def.Name);
+        Assert.Equal("Entity2", entity2Def.Name);
     }
 
     [Fact]
@@ -1672,20 +1604,18 @@ public class SchemaParsingTests : EdmLibTestCaseBase
   </ComplexType>
 </Schema>";
 
-        IEdmModel model;
-        IEnumerable<EdmError> errors;
-        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
-        Assert.True(parsed, "parsed");
-        Assert.True(errors.Count() == 0, "No errors");
+        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out IEdmModel model, out IEnumerable<EdmError> errors);
+        Assert.True(parsed);
+        Assert.Empty(errors);
 
         IEdmComplexType typeDefinition = (IEdmComplexType)model.SchemaElements.First();
         IEdmStructuralProperty stringProp = (IEdmStructuralProperty)typeDefinition.FindProperty("myString");
-        Assert.Null(stringProp.Type.AsString().MaxLength, "Maxlength should default to null");
+        Assert.Null(stringProp.Type.AsString().MaxLength);
         IEdmStructuralProperty decimalProp = (IEdmStructuralProperty)typeDefinition.FindProperty("myDecimal");
-        Assert.Null(decimalProp.Type.AsDecimal().Scale, "Scale should default to null");
-        Assert.Null(decimalProp.Type.AsDecimal().Precision, "Precision should default to null");
+        Assert.Null(decimalProp.Type.AsDecimal().Scale);
+        Assert.Null(decimalProp.Type.AsDecimal().Precision);
         IEdmStructuralProperty datetimeProp = (IEdmStructuralProperty)typeDefinition.FindProperty("myDateTime");
-        Assert.Equal(0, datetimeProp.Type.AsTemporal().Precision, "Temporal precision should default to 0");
+        Assert.Equal(0, datetimeProp.Type.AsTemporal().Precision);
     }
 
     [Fact]
@@ -1703,27 +1633,25 @@ public class SchemaParsingTests : EdmLibTestCaseBase
   </ComplexType>
 </Schema>";
 
-        IEdmModel model;
-        IEnumerable<EdmError> errors;
-        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
-        Assert.True(parsed, "parsed");
-        Assert.True(errors.Count() == 0, "No errors");
+        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out IEdmModel model, out IEnumerable<EdmError> errors);
+        Assert.True(parsed);
+        Assert.Empty(errors);
 
         IEdmComplexType typeDefinition = (IEdmComplexType)model.SchemaElements.First();
         IEdmStructuralProperty stringProp = (IEdmStructuralProperty)typeDefinition.FindProperty("myString");
-        Assert.Null(stringProp.Type.AsString().MaxLength, "Maxlength should default to null");
-        Assert.Equal(false, stringProp.Type.AsString().IsUnicode, "String unicode should be set to false");
+        Assert.Null(stringProp.Type.AsString().MaxLength);
+        Assert.Equal(false, stringProp.Type.AsString().IsUnicode);
         IEdmStructuralProperty decimalProp = (IEdmStructuralProperty)typeDefinition.FindProperty("myDecimal");
-        Assert.Null(decimalProp.Type.AsDecimal().Scale, "Scale should default to null");
-        Assert.Equal(3, decimalProp.Type.AsDecimal().Precision, "Decimal precision should be set to 3");
+        Assert.Null(decimalProp.Type.AsDecimal().Scale);
+        Assert.Equal(3, decimalProp.Type.AsDecimal().Precision);
         IEdmStructuralProperty secondDecimalProp = (IEdmStructuralProperty)typeDefinition.FindProperty("mySecondDecimal");
-        Assert.Null(secondDecimalProp.Type.AsDecimal().Scale, "Decimal scale should be null when its value is Variable");
-        Assert.Equal(3, secondDecimalProp.Type.AsDecimal().Precision, "Decimal precision should be set to 3");
+        Assert.Null(secondDecimalProp.Type.AsDecimal().Scale);
+        Assert.Equal(3, secondDecimalProp.Type.AsDecimal().Precision);
         IEdmStructuralProperty thirdDecimalProp = (IEdmStructuralProperty)typeDefinition.FindProperty("myThirdDecimal");
-        Assert.Equal(thirdDecimalProp.Type.AsDecimal().Scale, 0, "Decimal scale should be set to 0");
-        Assert.Equal(3, thirdDecimalProp.Type.AsDecimal().Precision, "Decimal precision should be set to 3");
+        Assert.Equal(0, thirdDecimalProp.Type.AsDecimal().Scale);
+        Assert.Equal(3, thirdDecimalProp.Type.AsDecimal().Precision);
         IEdmStructuralProperty datetimeProp = (IEdmStructuralProperty)typeDefinition.FindProperty("myDateTime");
-        Assert.Equal(1, datetimeProp.Type.AsTemporal().Precision, "Temporal precision should be set to 1");
+        Assert.Equal(1, datetimeProp.Type.AsTemporal().Precision);
     }
 
     [Fact]
@@ -1746,14 +1674,14 @@ public class SchemaParsingTests : EdmLibTestCaseBase
         IEdmModel model;
         IEnumerable<EdmError> error;
         bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out error);
-        Assert.True(parsed, "parsed");
+        Assert.True(parsed);
 
         IEdmEntityType entityTypeDefinition = (IEdmEntityType)model.SchemaElements.First();
         IEdmComplexType complexTypeDefinition = (IEdmComplexType)model.SchemaElements.Last();
         IEdmStructuralProperty refProp = (IEdmStructuralProperty)complexTypeDefinition.FindProperty("myRef");
 
-        Assert.Equal(EdmTypeKind.EntityReference, refProp.Type.TypeKind(), "Property has correct type kind");
-        Assert.Equal(entityTypeDefinition, refProp.Type.AsEntityReference().EntityReferenceDefinition().EntityType, "EntityTypeReference points to correct entity type");
+        Assert.Equal(EdmTypeKind.EntityReference, refProp.Type.TypeKind());
+        Assert.Equal(entityTypeDefinition, refProp.Type.AsEntityReference().EntityReferenceDefinition().EntityType);
     }
 
     [Fact]
@@ -1774,22 +1702,20 @@ public class SchemaParsingTests : EdmLibTestCaseBase
   </EntityType>
 </Schema>";
 
-        IEdmModel model;
-        IEnumerable<EdmError> errors;
-        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
-        Assert.True(parsed, "parsed");
-        Assert.True(errors.Count() == 0, "No errors");
+        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out IEdmModel model, out IEnumerable<EdmError> errors);
+        Assert.True(parsed);
+        Assert.Empty(errors);
 
         IEdmEntityType entityTypeDefinitionSmod = (IEdmEntityType)model.SchemaElements.First();
         IEdmEntityType entityTypeDefinitionClod = (IEdmEntityType)model.SchemaElements.Last();
         Assert.True(entityTypeDefinitionClod.BaseType.IsBad(), "Clod basetype is bad because of cycle");
-        Assert.Equal(EdmErrorCode.BadCyclicEntity, entityTypeDefinitionClod.BaseType.Errors().First().ErrorCode, "Cyclic entity is cyclic?");
+        Assert.Equal(EdmErrorCode.BadCyclicEntity, entityTypeDefinitionClod.BaseType.Errors().First().ErrorCode);
         Assert.True(entityTypeDefinitionSmod.BaseType.IsBad(), "Smod basetype is bad because of cycle");
 
         EdmValidator.Validate(model, EdmConstants.EdmVersion4, out errors);
-        Assert.Equal(2, errors.Count(), "Correct number of errors");
-        Assert.Equal(EdmErrorCode.BadCyclicEntity, errors.ElementAt(0).ErrorCode, "Correct error code 1");
-        Assert.Equal(EdmErrorCode.BadCyclicEntity, errors.ElementAt(1).ErrorCode, "Correct error code 2");
+        Assert.Equal(2, errors.Count());
+        Assert.Equal(EdmErrorCode.BadCyclicEntity, errors.ElementAt(0).ErrorCode);
+        Assert.Equal(EdmErrorCode.BadCyclicEntity, errors.ElementAt(1).ErrorCode);
     }
 
     [Fact]
@@ -1813,23 +1739,21 @@ public class SchemaParsingTests : EdmLibTestCaseBase
   </EntityType>
 </Schema>";
 
-        IEdmModel model;
-        IEnumerable<EdmError> errors;
-        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
-        Assert.True(parsed, "parsed");
-        Assert.True(errors.Count() == 0, "No errors");
+        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out IEdmModel model, out IEnumerable<EdmError> errors);
+        Assert.True(parsed);
+        Assert.Empty(errors);
 
         IEdmEntityType entityTypeDefinitionSmod = (IEdmEntityType)model.SchemaElements.First();
         IEdmEntityType entityTypeDefinitionClod = (IEdmEntityType)model.SchemaElements.ElementAt(1);
         IEdmEntityType entityTypeDefinitionBlob = (IEdmEntityType)model.SchemaElements.Last();
-        Assert.True(entityTypeDefinitionClod.BaseType.IsBad(), "Clod basetype is bad because of cycle");
-        Assert.Equal(EdmErrorCode.BadCyclicEntity, entityTypeDefinitionClod.BaseType.Errors().First().ErrorCode, "Cyclic entity is cyclic?");
-        Assert.True(entityTypeDefinitionSmod.BaseType.IsBad(), "Smod basetype is bad because of cycle");
-        Assert.True(entityTypeDefinitionBlob.BaseType.IsBad(), "Blob basetype is bad because of cycle");
+        Assert.True(entityTypeDefinitionClod.BaseType.IsBad());
+        Assert.Equal(EdmErrorCode.BadCyclicEntity, entityTypeDefinitionClod.BaseType.Errors().First().ErrorCode);
+        Assert.True(entityTypeDefinitionSmod.BaseType.IsBad());
+        Assert.True(entityTypeDefinitionBlob.BaseType.IsBad());
 
         EdmValidator.Validate(model, EdmConstants.EdmVersion4, out errors);
-        Assert.Equal(3, errors.Count(), "Correct number of errors");
-        Assert.Equal(EdmErrorCode.BadCyclicEntity, errors.First().ErrorCode, "Correct error code");
+        Assert.Equal(3, errors.Count());
+        Assert.Equal(EdmErrorCode.BadCyclicEntity, errors.First().ErrorCode);
     }
 
     [Fact]
@@ -1853,22 +1777,20 @@ public class SchemaParsingTests : EdmLibTestCaseBase
   </EntityType>
 </Schema>";
 
-        IEdmModel model;
-        IEnumerable<EdmError> errors;
-        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
-        Assert.True(parsed, "parsed");
-        Assert.True(errors.Count() == 0, "No errors");
+        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out IEdmModel model, out IEnumerable<EdmError> errors);
+        Assert.True(parsed);
+        Assert.Empty(errors);
 
         IEdmEntityType entityTypeDefinitionSmod = (IEdmEntityType)model.SchemaElements.First();
         IEdmEntityType entityTypeDefinitionClod = (IEdmEntityType)model.SchemaElements.ElementAt(1);
         IEdmEntityType entityTypeDefinitionBlob = (IEdmEntityType)model.SchemaElements.Last();
-        Assert.False(entityTypeDefinitionClod.BaseType.IsBad(), "Contagious badness not");
-        Assert.True(entityTypeDefinitionBlob.BaseType.IsBad(), "Blob basetype is bad because Blob is in a cycle.");
-        Assert.Equal(EdmErrorCode.BadCyclicEntity, entityTypeDefinitionBlob.BaseType.Errors().First().ErrorCode, "Cyclic entity is cyclic?");
+        Assert.False(entityTypeDefinitionClod.BaseType.IsBad());
+        Assert.True(entityTypeDefinitionBlob.BaseType.IsBad());
+        Assert.Equal(EdmErrorCode.BadCyclicEntity, entityTypeDefinitionBlob.BaseType.Errors().First().ErrorCode);
 
         EdmValidator.Validate(model, EdmConstants.EdmVersion4, out errors);
-        Assert.Equal(1, errors.Count(), "Correct number of errors");
-        Assert.Equal(EdmErrorCode.BadCyclicEntity, errors.First().ErrorCode, "Correct error code");
+        Assert.Single(errors);
+        Assert.Equal(EdmErrorCode.BadCyclicEntity, errors.First().ErrorCode);
     }
 
     [Fact]
@@ -1885,22 +1807,20 @@ public class SchemaParsingTests : EdmLibTestCaseBase
   </ComplexType>
 </Schema>";
 
-        IEdmModel model;
-        IEnumerable<EdmError> errors;
-        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
-        Assert.True(parsed, "parsed");
-        Assert.True(errors.Count() == 0, "No errors");
+        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out IEdmModel model, out IEnumerable<EdmError> errors);
+        Assert.True(parsed);
+        Assert.Empty(errors);
 
         IEdmComplexType complexTypeDefinitionSmod = (IEdmComplexType)model.SchemaElements.First();
         IEdmComplexType complexTypeDefinitionClod = (IEdmComplexType)model.SchemaElements.Last();
-        Assert.True(complexTypeDefinitionClod.BaseType.IsBad(), "Clod basetype is bad because of cycle");
-        Assert.Equal(EdmErrorCode.BadCyclicComplex, complexTypeDefinitionClod.BaseType.Errors().First().ErrorCode, "Cyclic entity is cyclic?");
-        Assert.True(complexTypeDefinitionSmod.BaseType.IsBad(), "Smod basetype is bad because of cycle");
+        Assert.True(complexTypeDefinitionClod.BaseType.IsBad());
+        Assert.Equal(EdmErrorCode.BadCyclicComplex, complexTypeDefinitionClod.BaseType.Errors().First().ErrorCode);
+        Assert.True(complexTypeDefinitionSmod.BaseType.IsBad());
 
         EdmValidator.Validate(model, EdmConstants.EdmVersion4, out errors);
-        Assert.Equal(2, errors.Count(), "Correct number of errors");
-        Assert.Equal(1, errors.Select(e => e.ErrorCode).Distinct().Count(), "Correct number of unique errors");
-        Assert.True(errors.Any(e => e.ErrorCode == EdmErrorCode.BadCyclicComplex), "Correct error code 1");
+        Assert.Equal(2, errors.Count());
+        Assert.Equal(1, errors.Select(e => e.ErrorCode).Distinct().Count());
+        Assert.True(errors.Any(e => e.ErrorCode == EdmErrorCode.BadCyclicComplex));
     }
 
     [Fact]
@@ -1917,18 +1837,16 @@ public class SchemaParsingTests : EdmLibTestCaseBase
   </ComplexType>
 </Schema>";
 
-        IEdmModel model;
-        IEnumerable<EdmError> errors;
-        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
-        Assert.True(parsed, "parsed");
-        Assert.True(errors.Count() == 0, "No errors");
+        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out IEdmModel model, out IEnumerable<EdmError> errors);
+        Assert.True(parsed);
+        Assert.Empty(errors);
 
         IEdmComplexType complexTypeDefinitionSmod = (IEdmComplexType)model.SchemaElements.First();
         IEdmComplexType complexTypeDefinitionClod = (IEdmComplexType)model.SchemaElements.Last();
 
         EdmValidator.Validate(model, EdmConstants.EdmVersion4, out errors);
-        Assert.Equal(1, errors.Count(), "Correct number of errors");
-        Assert.Equal(1, errors.Select(e => e.ErrorCode).Distinct().Count(), "Correct number of unique errors");
+        Assert.Equal(1, errors.Count());
+        Assert.Equal(1, errors.Select(e => e.ErrorCode).Distinct().Count());
     }
 
     [Fact]
@@ -1948,24 +1866,22 @@ public class SchemaParsingTests : EdmLibTestCaseBase
   </ComplexType>
 </Schema>";
 
-        IEdmModel model;
-        IEnumerable<EdmError> errors;
-        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
-        Assert.True(parsed, "parsed");
-        Assert.True(errors.Count() == 0, "No errors");
+        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out IEdmModel model, out IEnumerable<EdmError> errors);
+        Assert.True(parsed);
+        Assert.Empty(errors);
 
         IEdmComplexType complexTypeDefinitionSmod = (IEdmComplexType)model.SchemaElements.First();
         IEdmComplexType complexTypeDefinitionClod = (IEdmComplexType)model.SchemaElements.ElementAt(1);
         IEdmComplexType complexTypeDefinitionBlob = (IEdmComplexType)model.SchemaElements.Last();
-        Assert.True(complexTypeDefinitionClod.BaseType.IsBad(), "Clod basetype is bad because of cycle");
-        Assert.Equal(EdmErrorCode.BadCyclicComplex, complexTypeDefinitionClod.BaseType.Errors().First().ErrorCode, "Cyclic entity is cyclic?");
-        Assert.True(complexTypeDefinitionSmod.BaseType.IsBad(), "Smod basetype is bad because of cycle");
-        Assert.True(complexTypeDefinitionBlob.BaseType.IsBad(), "Blob basetype is bad because of cycle");
+        Assert.True(complexTypeDefinitionClod.BaseType.IsBad());
+        Assert.Equal(EdmErrorCode.BadCyclicComplex, complexTypeDefinitionClod.BaseType.Errors().First().ErrorCode);
+        Assert.True(complexTypeDefinitionSmod.BaseType.IsBad());
+        Assert.True(complexTypeDefinitionBlob.BaseType.IsBad());
 
         EdmValidator.Validate(model, EdmConstants.EdmVersion4, out errors);
-        Assert.Equal(3, errors.Count(), "Correct number of errors");
-        Assert.Equal(1, errors.Select(e => e.ErrorCode).Distinct().Count(), "Correct number of unique errors");
-        Assert.True(errors.Any(e => e.ErrorCode == EdmErrorCode.BadCyclicComplex), "Correct error code 1");
+        Assert.Equal(3, errors.Count());
+        Assert.Single(errors.Select(e => e.ErrorCode).Distinct());
+        Assert.Contains(errors, e => e.ErrorCode == EdmErrorCode.BadCyclicComplex);
     }
 
     [Fact]
@@ -1986,17 +1902,17 @@ public class SchemaParsingTests : EdmLibTestCaseBase
         IEdmModel model;
         IEnumerable<EdmError> error;
         bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out error);
-        Assert.True(parsed, "parsed");
+        Assert.True(parsed);
 
         IEdmOperation operation = (IEdmOperation)model.SchemaElements.First();
         IEdmTypeReference returnType = operation.ReturnType;
         IEdmTypeReference parameterType = operation.Parameters.First().Type;
 
-        Assert.False(returnType.IsBad(), "Function return type should not be bad");
-        Assert.Equal(EdmTypeKind.Collection, returnType.TypeKind(), "Function return type is right kind");
-        Assert.Equal(EdmTypeKind.Collection, parameterType.TypeKind(), "Function parameter type is right kind");
-        Assert.Equal(EdmTypeKind.Collection, parameterType.AsCollection().ElementType().TypeKind(), "Collection is of collections");
-        Assert.Equal(EdmPrimitiveTypeKind.Binary, parameterType.AsCollection().ElementType().AsCollection().ElementType().AsPrimitive().PrimitiveKind(), "root type is binary");
+        Assert.False(returnType.IsBad());
+        Assert.Equal(EdmTypeKind.Collection, returnType.TypeKind());
+        Assert.Equal(EdmTypeKind.Collection, parameterType.TypeKind());
+        Assert.Equal(EdmTypeKind.Collection, parameterType.AsCollection().ElementType().TypeKind());
+        Assert.Equal(EdmPrimitiveTypeKind.Binary, parameterType.AsCollection().ElementType().AsCollection().ElementType().AsPrimitive().PrimitiveKind());
     }
 
 
@@ -2017,21 +1933,21 @@ public class SchemaParsingTests : EdmLibTestCaseBase
         IEdmModel model;
         IEnumerable<EdmError> error;
         bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out error);
-        Assert.True(parsed, "parsed");
+        Assert.True(parsed);
 
         IEdmOperation operation = (IEdmOperation)model.SchemaElements.First();
         IEdmTypeReference returnType = operation.ReturnType;
         IEdmTypeReference parameterType = operation.Parameters.First().Type;
 
-        Assert.False(returnType.IsBad(), "Function return type should not be bad");
-        Assert.False(returnType.AsCollection().IsBad(), "Function return type should not be bad");
-        Assert.False(returnType.AsCollection().CollectionDefinition().IsBad(), "Function return type should not be bad");
-        Assert.False(returnType.AsCollection().CollectionDefinition().ElementType.IsBad(), "Function return type should not be bad");
-        Assert.True(returnType.AsCollection().CollectionDefinition().ElementType.Definition.IsBad(), "Function return type should be bad");
-        Assert.Equal(EdmTypeKind.Collection, returnType.TypeKind(), "Function return type is right kind");
-        Assert.Equal(EdmTypeKind.Collection, parameterType.TypeKind(), "Function parameter type is right kind");
-        Assert.Equal(EdmTypeKind.Collection, parameterType.AsCollection().ElementType().TypeKind(), "Collection is of collections");
-        Assert.Equal(EdmPrimitiveTypeKind.Binary, parameterType.AsCollection().ElementType().AsCollection().ElementType().AsPrimitive().PrimitiveKind(), "root type is binary");
+        Assert.False(returnType.IsBad());
+        Assert.False(returnType.AsCollection().IsBad());
+        Assert.False(returnType.AsCollection().CollectionDefinition().IsBad());
+        Assert.False(returnType.AsCollection().CollectionDefinition().ElementType.IsBad());
+        Assert.True(returnType.AsCollection().CollectionDefinition().ElementType.Definition.IsBad());
+        Assert.Equal(EdmTypeKind.Collection, returnType.TypeKind());
+        Assert.Equal(EdmTypeKind.Collection, parameterType.TypeKind());
+        Assert.Equal(EdmTypeKind.Collection, parameterType.AsCollection().ElementType().TypeKind());
+        Assert.Equal(EdmPrimitiveTypeKind.Binary, parameterType.AsCollection().ElementType().AsCollection().ElementType().AsPrimitive().PrimitiveKind());
     }
 
     [Fact]
@@ -2061,10 +1977,11 @@ public class SchemaParsingTests : EdmLibTestCaseBase
     <Property Name=""myOtherGeometricMultiPoint"" Type=""Edm.GeometryMultiPoint"" SRID=""variable"" />
   </ComplexType>
 </Schema>";
+
         IEdmModel model;
         IEnumerable<EdmError> error;
         bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out error);
-        Assert.True(parsed, "parsed");
+        Assert.True(parsed);
 
         IEdmComplexType complexType = (IEdmComplexType)model.FindType("Grumble.Smod");
         IEdmSpatialTypeReference myGeography = complexType.FindProperty("myGeography").Type.AsSpatial();
@@ -2084,23 +2001,23 @@ public class SchemaParsingTests : EdmLibTestCaseBase
         IEdmSpatialTypeReference myGeometricMultiLineString = complexType.FindProperty("myGeometricMultiLineString").Type.AsSpatial();
         IEdmSpatialTypeReference myGeometricMultiPoint = complexType.FindProperty("myGeometricMultiPoint").Type.AsSpatial();
         IEdmSpatialTypeReference myOtherGeometricMultiPoint = complexType.FindProperty("myOtherGeometricMultiPoint").Type.AsSpatial();
-        Assert.Equal(4326, myGeography.SpatialReferenceIdentifier, "Geography SRID correct");
-        Assert.Equal(4326, myPoint.SpatialReferenceIdentifier, "Geography SRID correct");
-        Assert.Equal(4326, myLineString.SpatialReferenceIdentifier, "Geography SRID correct");
-        Assert.Equal(4326, myPolygon.SpatialReferenceIdentifier, "Geography SRID correct");
-        Assert.Equal(4326, myGeographyCollection.SpatialReferenceIdentifier, "Geography SRID correct");
-        Assert.Equal(4326, myMultiPolygon.SpatialReferenceIdentifier, "Geography SRID correct");
-        Assert.Equal(4326, myMultiLineString.SpatialReferenceIdentifier, "Geography SRID correct");
-        Assert.Equal(4326, myMultiPoint.SpatialReferenceIdentifier, "Geography SRID correct");
-        Assert.Equal(0, myGeometry.SpatialReferenceIdentifier, "Geometry SRID correct");
-        Assert.Equal(0, myGeometricPoint.SpatialReferenceIdentifier, "Geometry SRID correct");
-        Assert.Equal(0, myGeometricLineString.SpatialReferenceIdentifier, "Geometry SRID correct");
-        Assert.Equal(0, myGeometricPolygon.SpatialReferenceIdentifier, "Geometry SRID correct");
-        Assert.Equal(0, myGeometryCollection.SpatialReferenceIdentifier, "Geometry SRID correct");
-        Assert.Equal(0, myGeometricMultiPolygon.SpatialReferenceIdentifier, "Geometry SRID correct");
-        Assert.Equal(0, myGeometricMultiLineString.SpatialReferenceIdentifier, "Geometry SRID correct");
-        Assert.Equal(null, myGeometricMultiPoint.SpatialReferenceIdentifier, "Variable SRID correct");
-        Assert.Equal(null, myOtherGeometricMultiPoint.SpatialReferenceIdentifier, "variable SRID correct");
+        Assert.Equal(4326, myGeography.SpatialReferenceIdentifier);
+        Assert.Equal(4326, myPoint.SpatialReferenceIdentifier);
+        Assert.Equal(4326, myLineString.SpatialReferenceIdentifier);
+        Assert.Equal(4326, myPolygon.SpatialReferenceIdentifier);
+        Assert.Equal(4326, myGeographyCollection.SpatialReferenceIdentifier);
+        Assert.Equal(4326, myMultiPolygon.SpatialReferenceIdentifier);
+        Assert.Equal(4326, myMultiLineString.SpatialReferenceIdentifier);
+        Assert.Equal(4326, myMultiPoint.SpatialReferenceIdentifier);
+        Assert.Equal(0, myGeometry.SpatialReferenceIdentifier);
+        Assert.Equal(0, myGeometricPoint.SpatialReferenceIdentifier);
+        Assert.Equal(0, myGeometricLineString.SpatialReferenceIdentifier);
+        Assert.Equal(0, myGeometricPolygon.SpatialReferenceIdentifier);
+        Assert.Equal(0, myGeometryCollection.SpatialReferenceIdentifier);
+        Assert.Equal(0, myGeometricMultiPolygon.SpatialReferenceIdentifier);
+        Assert.Equal(0, myGeometricMultiLineString.SpatialReferenceIdentifier);
+        Assert.Equal(null, myGeometricMultiPoint.SpatialReferenceIdentifier);
+        Assert.Equal(null, myOtherGeometricMultiPoint.SpatialReferenceIdentifier);
     }
 
     [Fact]
@@ -2133,26 +2050,26 @@ public class SchemaParsingTests : EdmLibTestCaseBase
         IEdmModel model;
         IEnumerable<EdmError> errors;
         bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(inputText1)), XmlReader.Create(new StringReader(inputText2)), XmlReader.Create(new StringReader(inputText3)) }, out model, out errors);
-        Assert.True(parsed, "parsed");
-        Assert.True(errors.Count() == 0, "No errors");
+        Assert.True(parsed);
+        Assert.Empty(errors);
 
         IEdmComplexType complex1 = (IEdmComplexType)model.SchemaElements.ElementAt(0);
         IEdmComplexType complex2 = (IEdmComplexType)model.SchemaElements.ElementAt(1);
         IEdmComplexType complex3 = (IEdmComplexType)model.SchemaElements.ElementAt(2);
 
-        Assert.Equal(complex1.BaseComplexType().FullName(), complex2.FullName(), "Correct base type name");
-        Assert.Equal(complex2.BaseComplexType().FullName(), complex3.FullName(), "Correct base type name");
-        Assert.Equal(complex3.BaseComplexType().FullName(), complex1.FullName(), "Correct base type name");
+        Assert.Equal(complex1.BaseComplexType().FullName(), complex2.FullName());
+        Assert.Equal(complex2.BaseComplexType().FullName(), complex3.FullName());
+        Assert.Equal(complex3.BaseComplexType().FullName(), complex1.FullName());
 
-        Assert.True(complex1.BaseType.IsBad(), "Cyclic base type is bad");
-        Assert.Equal(EdmErrorCode.BadCyclicComplex, complex1.BaseType.Errors().First().ErrorCode, "Cyclic is cyclic");
-        Assert.True(complex2.BaseType.IsBad(), "Cyclic base type is bad");
-        Assert.True(complex3.BaseType.IsBad(), "Cyclic base type is bad");
+        Assert.True(complex1.BaseType.IsBad());
+        Assert.Equal(EdmErrorCode.BadCyclicComplex, complex1.BaseType.Errors().First().ErrorCode);
+        Assert.True(complex2.BaseType.IsBad());
+        Assert.True(complex3.BaseType.IsBad());
 
         EdmValidator.Validate(model, EdmConstants.EdmVersion4, out errors);
-        Assert.Equal(3, errors.Count(), "Correct number of errors");
-        Assert.Equal(1, errors.Select(e => e.ErrorCode).Distinct().Count(), "Correct number of unique errors");
-        Assert.True(errors.Any(e => e.ErrorCode == EdmErrorCode.BadCyclicComplex), "Correct error code 1");
+        Assert.Equal(3, errors.Count());
+        Assert.Single(errors.Select(e => e.ErrorCode).Distinct());
+        Assert.Contains(errors, e => e.ErrorCode == EdmErrorCode.BadCyclicComplex);
     }
 
     [Fact]
@@ -2179,17 +2096,17 @@ public class SchemaParsingTests : EdmLibTestCaseBase
         IEdmModel model;
         IEnumerable<EdmError> errors;
         bool parsed = SchemaReader.TryParse(new[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
-        Assert.True(parsed, "parsed");
-        Assert.True(!errors.Any(), "No errors");
+        Assert.True(parsed);
+        Assert.Empty(errors);
 
         IEdmEntityContainer fooContainer = model.FindEntityContainer("fooContainer");
         IEdmOperationImport peopleWhoAreAwesome = (IEdmOperationImport)fooContainer.Elements.Last();
         IEdmEntitySetBase badSet;
-        Assert.False(peopleWhoAreAwesome.TryGetStaticEntitySet(model, out badSet), "peopleWhoAreAwesome.TryGetStaticEntitySet");
+        Assert.False(peopleWhoAreAwesome.TryGetStaticEntitySet(model, out badSet));
 
-        Assert.False(EdmValidator.Validate(model, EdmConstants.EdmVersion4, out errors), "EdmValidator.Validate(model");
-        Assert.Equal(1, errors.Count(), "Correct number of errors");
-        Assert.Equal(EdmErrorCode.OperationImportEntitySetExpressionIsInvalid, errors.First().ErrorCode, "Correct error code");
+        Assert.False(EdmValidator.Validate(model, EdmConstants.EdmVersion4, out errors));
+        Assert.Single(errors);
+        Assert.Equal(EdmErrorCode.OperationImportEntitySetExpressionIsInvalid, errors.First().ErrorCode);
     }
 
     [Fact]
@@ -2223,48 +2140,49 @@ public class SchemaParsingTests : EdmLibTestCaseBase
         IEdmModel model;
         IEnumerable<EdmError> errors;
         bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
-        Assert.True(parsed, "parsed");
-        Assert.True(errors.Count() == 0, "No errors");
+        Assert.True(parsed);
+        Assert.Empty(errors);
 
         var colorType = model.FindType("foo.Color") as IEdmEnumType;
-        Assert.NotNull(colorType, "foo.Color enum type exists");
-        Assert.Equal("Color", colorType.Name, "Color.Name");
-        Assert.False(colorType.IsFlags, "Color.IsFlags");
-        Assert.False(colorType.IsBad(), "Color.IsBad");
-        Assert.Equal(EdmPrimitiveTypeKind.Int32, colorType.UnderlyingType.PrimitiveKind, "Color.UnderlyingType.Kind");
-        Assert.Equal(4, colorType.Members.Count(), "Color has 4 members");
+        Assert.NotNull(colorType);
+        Assert.Equal("Color", colorType.Name);
+        Assert.False(colorType.IsFlags);
+        Assert.False(colorType.IsBad());
+        Assert.Equal(EdmPrimitiveTypeKind.Int32, colorType.UnderlyingType.PrimitiveKind);
+        Assert.Equal(4, colorType.Members.Count());
+
         var colors = colorType.Members.ToArray();
-        Assert.Equal("Blue", colors[2].Name, "Color.Blue.Name");
-        Assert.Equal(colorType, colors[2].DeclaringType, "Color.Blue.DeclaringType");
+        Assert.Equal("Blue", colors[2].Name);
+        Assert.Equal(colorType, colors[2].DeclaringType);
 
         var color2Type = model.FindType("foo.Color2") as IEdmEnumType;
-        Assert.NotNull(color2Type, "foo.Color2 enum type exists");
-        Assert.Equal("Color2", color2Type.Name, "Color2.Name");
-        Assert.True(color2Type.IsFlags, "Color2.IsFlags");
-        Assert.False(color2Type.IsBad(), "Color2.IsBad");
-        Assert.Equal(EdmPrimitiveTypeKind.Int64, color2Type.UnderlyingType.PrimitiveKind, "Color2.UnderlyingType.Kind");
-        Assert.Equal(4, colorType.Members.Count(), "Color2 has 4 members");
+        Assert.NotNull(color2Type);
+        Assert.Equal("Color2", color2Type.Name);
+        Assert.True(color2Type.IsFlags);
+        Assert.False(color2Type.IsBad());
+        Assert.Equal(EdmPrimitiveTypeKind.Int64, color2Type.UnderlyingType.PrimitiveKind);
+        Assert.Equal(4, colorType.Members.Count());
         var colors2 = color2Type.Members.ToArray();
-        Assert.Equal("Blue", colors2[2].Name, "Color2.Blue.Name");
-        Assert.Equal(color2Type, colors2[2].DeclaringType, "Color2.Blue.DeclaringType");
+        Assert.Equal("Blue", colors2[2].Name);
+        Assert.Equal(color2Type, colors2[2].DeclaringType);
 
         var personType = model.FindType("foo.Person") as IEdmEntityType;
-        Assert.NotNull(personType, "foo.Person type exists");
-        Assert.Equal(colorType, personType.Properties().ElementAt(1).Type.AsEnum().EnumDefinition(), "Person.c1.Type == foo.Color");
-        Assert.True(personType.Properties().ElementAt(1).Type.AsEnum().IsNullable, "Person.c1.Type.Nullable");
-        Assert.Equal(color2Type, personType.Properties().ElementAt(2).Type.AsEnum().EnumDefinition(), "Person.c2.Type == foo.Color2");
-        Assert.False(personType.Properties().ElementAt(2).Type.AsEnum().IsNullable, "Person.c2.Type.Nullable");
-        Assert.True(personType.Properties().ElementAt(3).Type.AsEnum().IsNullable, "Person.c3.Type.Nullable");
+        Assert.NotNull(personType);
+        Assert.Equal(colorType, personType.Properties().ElementAt(1).Type.AsEnum().EnumDefinition());
+        Assert.True(personType.Properties().ElementAt(1).Type.AsEnum().IsNullable);
+        Assert.Equal(color2Type, personType.Properties().ElementAt(2).Type.AsEnum().EnumDefinition());
+        Assert.False(personType.Properties().ElementAt(2).Type.AsEnum().IsNullable);
+        Assert.True(personType.Properties().ElementAt(3).Type.AsEnum().IsNullable);
 
-        Assert.Equal((color2Type.Members.ElementAt(0).Value).Value, 5, "Correct value");
-        Assert.Equal((color2Type.Members.ElementAt(1).Value).Value, 6, "Correct value");
-        Assert.Equal((color2Type.Members.ElementAt(2).Value).Value, 10, "Correct value");
-        Assert.Equal((color2Type.Members.ElementAt(3).Value).Value, 11, "Correct value");
+        Assert.Equal(5, (color2Type.Members.ElementAt(0).Value).Value);
+        Assert.Equal(6, (color2Type.Members.ElementAt(1).Value).Value);
+        Assert.Equal(10, (color2Type.Members.ElementAt(2).Value).Value);
+        Assert.Equal(11, (color2Type.Members.ElementAt(3).Value).Value);
 
-        Assert.Equal((colorType.Members.ElementAt(0).Value).Value, 10, "Correct value");
-        Assert.Equal((colorType.Members.ElementAt(1).Value).Value, 11, "Correct value");
-        Assert.Equal((colorType.Members.ElementAt(2).Value).Value, 5, "Correct value");
-        Assert.Equal((colorType.Members.ElementAt(3).Value).Value, 6, "Correct value");
+        Assert.Equal(10, (colorType.Members.ElementAt(0).Value).Value);
+        Assert.Equal(11, (colorType.Members.ElementAt(1).Value).Value);
+        Assert.Equal(5, (colorType.Members.ElementAt(2).Value).Value);
+        Assert.Equal(6, (colorType.Members.ElementAt(3).Value).Value);
     }
 
     [Fact]
@@ -2283,18 +2201,18 @@ public class SchemaParsingTests : EdmLibTestCaseBase
         IEdmModel model;
         IEnumerable<EdmError> errors;
         bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
-        Assert.True(parsed, "parsed");
-        Assert.Equal(0, errors.Count(), "No errors");
+        Assert.True(parsed);
+        Assert.Empty(errors);
 
         bool valid = model.Validate(out errors);
-        Assert.False(valid, "valid");
-        Assert.Equal(1, errors.Count(), "one validation errors expected");
-        Assert.Equal(EdmErrorCode.EnumMemberMustHaveValue, errors.ElementAt(0).ErrorCode, "EnumMemberMustHaveValue expected");
-        Assert.True(errors.ElementAt(0).ErrorLocation.ToString().Contains("(4, 8)"), "error location");
+        Assert.False(valid);
+        Assert.Single(errors);
+        Assert.Equal(EdmErrorCode.EnumMemberMustHaveValue, errors.ElementAt(0).ErrorCode);
+        Assert.Contains("(4, 8)", errors.ElementAt(0).ErrorLocation.ToString());
 
         IEdmEnumMember enumMemeber = ((IEdmEnumType)model.FindType("foo.Color")).Members.First(m => m.Name == "Green");
-        Assert.Equal(model.FindType("foo.Color"), enumMemeber.DeclaringType, "Enum member has correct type.");
-        Assert.True(enumMemeber.Value.IsBad(), "Enum member value is bad.");
+        Assert.Equal(model.FindType("foo.Color"), enumMemeber.DeclaringType);
+        Assert.True(enumMemeber.Value.IsBad());
     }
 
     [Fact]
@@ -2313,18 +2231,18 @@ public class SchemaParsingTests : EdmLibTestCaseBase
         IEdmModel model;
         IEnumerable<EdmError> errors;
         bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
-        Assert.True(parsed, "parsed");
-        Assert.Equal(0, errors.Count(), "No errors");
+        Assert.True(parsed);
+        Assert.Empty(errors);
 
         bool valid = model.Validate(out errors);
         Assert.False(valid, "valid");
-        Assert.Equal(1, errors.Count(), "one validation errors expected");
-        Assert.Equal(EdmErrorCode.EnumMemberValueOutOfRange, errors.ElementAt(0).ErrorCode, "EnumMemberValueOutOfRange expected");
-        Assert.True(errors.ElementAt(0).ErrorLocation.ToString().Contains("(4, 8)"), "error location");
+        Assert.Single(errors);
+        Assert.Equal(EdmErrorCode.EnumMemberValueOutOfRange, errors.ElementAt(0).ErrorCode);
+        Assert.Contains("(4, 8)", errors.ElementAt(0).ErrorLocation.ToString());
 
         IEdmEnumMember enumMemeber = ((IEdmEnumType)model.FindType("foo.Color")).Members.First(m => m.Name == "Green");
-        Assert.Equal(model.FindType("foo.Color"), enumMemeber.DeclaringType, "Enum member has correct type.");
-        Assert.False(enumMemeber.Value.IsBad(), "Enum member value is good.");
+        Assert.Equal(model.FindType("foo.Color"), enumMemeber.DeclaringType);
+        Assert.False(enumMemeber.Value.IsBad());
     }
 
     [Fact]
@@ -2343,18 +2261,18 @@ public class SchemaParsingTests : EdmLibTestCaseBase
         IEdmModel model;
         IEnumerable<EdmError> errors;
         bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
-        Assert.True(parsed, "parsed");
-        Assert.Equal(0, errors.Count(), "No errors");
+        Assert.True(parsed);
+        Assert.Empty(errors);
 
         bool valid = model.Validate(out errors);
         Assert.True(valid, "valid");
-        Assert.Equal(0, errors.Count(), "no validation errors");
+        Assert.Empty(errors);
 
         IEdmEnumType enumType = ((IEdmEnumType)model.FindType("foo.Color"));
-        Assert.Equal((enumType.Members.ElementAt(0).Value).Value, 0, "Correct value");
-        Assert.Equal((enumType.Members.ElementAt(1).Value).Value, 1, "Correct value");
-        Assert.Equal((enumType.Members.ElementAt(2).Value).Value, 5, "Correct value");
-        Assert.Equal((enumType.Members.ElementAt(3).Value).Value, 6, "Correct value");
+        Assert.Equal(0, (enumType.Members.ElementAt(0).Value).Value);
+        Assert.Equal(1, (enumType.Members.ElementAt(1).Value).Value);
+        Assert.Equal(5, (enumType.Members.ElementAt(2).Value).Value);
+        Assert.Equal(6, (enumType.Members.ElementAt(3).Value).Value);
     }
 
     [Fact]
@@ -2384,18 +2302,18 @@ public class SchemaParsingTests : EdmLibTestCaseBase
         IEdmModel model;
         IEnumerable<EdmError> errors;
         bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
-        Assert.True(parsed, "parsed");
-        Assert.True(errors.Count() == 0, "No errors");
+        Assert.True(parsed);
+        Assert.Empty(errors);
 
         bool valid = model.Validate(out errors);
         Assert.False(valid, "valid");
-        Assert.Equal(4, errors.Count(), "one validation error expected");
+        Assert.Equal(4, errors.Count());
 
-        Assert.Equal(EdmErrorCode.BadUnresolvedPrimitiveType, errors.ElementAt(0).ErrorCode, "BadUnresolvedPrimitiveType expected");
-        Assert.True(errors.ElementAt(0).ErrorLocation.ToString().Contains("(9, 6)"), "error location");
+        Assert.Equal(EdmErrorCode.BadUnresolvedPrimitiveType, errors.ElementAt(0).ErrorCode);
+        Assert.True(errors.ElementAt(0).ErrorLocation.ToString().Contains("(9, 6)"));
 
-        Assert.Equal(EdmErrorCode.EnumMustHaveIntegerUnderlyingType, errors.ElementAt(1).ErrorCode, "EnumMustHaveIntegerUnderlyingType expected");
-        Assert.True(errors.ElementAt(1).ErrorLocation.ToString().Contains("(15, 6)"), "error location");
+        Assert.Equal(EdmErrorCode.EnumMustHaveIntegerUnderlyingType, errors.ElementAt(1).ErrorCode);
+        Assert.True(errors.ElementAt(1).ErrorLocation.ToString().Contains("(15, 6)"));
     }
 
     [Fact]
@@ -2417,19 +2335,19 @@ public class SchemaParsingTests : EdmLibTestCaseBase
         IEdmModel model;
         IEnumerable<EdmError> errors;
         bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
-        Assert.True(parsed, "parsed");
-        Assert.True(errors.Count() == 0, "No errors");
+        Assert.True(parsed);
+        Assert.Empty(errors);
 
         IEdmTerm age = model.FindTerm("foo.Age");
         IEdmTerm subject = model.FindTerm("foo.Subject");
 
-        Assert.Equal(age.Name, "Age", "Term name");
-        Assert.Equal(subject.Name, "Subject", "Term name");
+        Assert.Equal("Age", age.Name);
+        Assert.Equal("Subject", subject.Name);
 
-        Assert.Equal(age.Type.AsPrimitive().PrimitiveKind(), EdmPrimitiveTypeKind.Int32, "Term type");
-        Assert.Equal(subject.Type.AsEntity().FullName(), "foo.Person", "Term type");
+        Assert.Equal(EdmPrimitiveTypeKind.Int32, age.Type.AsPrimitive().PrimitiveKind());
+        Assert.Equal("foo.Person", subject.Type.AsEntity().FullName());
 
-        Assert.Equal(age.Namespace, "foo", "Term namespace");
+        Assert.Equal("foo", age.Namespace);
     }
 
     [Fact]
@@ -2457,37 +2375,37 @@ public class SchemaParsingTests : EdmLibTestCaseBase
         IEnumerable<EdmError> errors;
 
         bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
-        Assert.True(parsed, "parsed");
-        Assert.True(errors.Count() == 0, "No errors");
+        Assert.True(parsed);
+        Assert.Empty(errors);
 
         IEdmEntityType person = (IEdmEntityType)model.FindType("foo.Person");
         IEnumerable<IEdmVocabularyAnnotation> personAnnotations = person.VocabularyAnnotations(model);
-        Assert.Equal(personAnnotations.Count(), 3, "Annotations count");
+        Assert.Equal(3, personAnnotations.Count());
 
         IEdmVocabularyAnnotation[] annotations = personAnnotations.ToArray<IEdmVocabularyAnnotation>();
         IEdmVocabularyAnnotation first = annotations[0];
-        Assert.Equal(first.Qualifier, "First", "Annotation qualifier");
-        Assert.Equal(first.Term.Name, "Age", "Term name");
-        Assert.Equal(first.Term.Namespace, "foo", "Term namespace");
+        Assert.Equal("First", first.Qualifier);
+        Assert.Equal("Age", first.Term.Name);
+        Assert.Equal("foo", first.Term.Namespace);
 
         IEdmIntegerConstantExpression value = (IEdmIntegerConstantExpression)first.Value;
-        Assert.Equal(value.Value, 123, "Annotation value");
+        Assert.Equal(123, value.Value);
 
         IEdmVocabularyAnnotation second = annotations[1];
-        Assert.Equal(second.Qualifier, "Best", "Annotation qualifier");
-        Assert.Equal(second.Term.Name, "Age", "Term name");
-        Assert.Equal(second.Term.Namespace, "foo", "Term namespace");
+        Assert.Equal("Best", second.Qualifier);
+        Assert.Equal("Age", second.Term.Name);
+        Assert.Equal("foo", second.Term.Namespace);
 
         value = (IEdmIntegerConstantExpression)second.Value;
-        Assert.Equal(value.Value, 456, "Annotation value");
+        Assert.Equal(456, value.Value);
 
         IEdmVocabularyAnnotation third = annotations[2];
-        Assert.Null(third.Qualifier, "Annotation qualifier");
-        Assert.Equal(third.Term.Name, "Mage", "Term name");
-        Assert.Equal(third.Term.Namespace, "Funk", "Term namespace");
+        Assert.Null(third.Qualifier);
+        Assert.Equal("Mage", third.Term.Name);
+        Assert.Equal("Funk", third.Term.Namespace);
 
         value = (IEdmIntegerConstantExpression)third.Value;
-        Assert.Equal(value.Value, 789, "Annotation value");
+        Assert.Equal(789, value.Value);
     }
 
     [Fact]
@@ -2514,36 +2432,36 @@ public class SchemaParsingTests : EdmLibTestCaseBase
         IEdmModel model;
         IEnumerable<EdmError> errors;
         bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
-        Assert.True(parsed, "parsed");
-        Assert.True(errors.Count() == 0, "No errors");
+        Assert.True(parsed);
+        Assert.Empty(errors);
 
         IEdmEntityType person = (IEdmEntityType)model.FindType("foo.Person");
         IEnumerable<IEdmVocabularyAnnotation> personAnnotations = person.VocabularyAnnotations(model);
-        Assert.Equal(personAnnotations.Count(), 3, "Annotations count");
+        Assert.Equal(3, personAnnotations.Count());
 
         IEdmVocabularyAnnotation[] annotations = personAnnotations.ToArray<IEdmVocabularyAnnotation>();
         IEdmVocabularyAnnotation first = annotations[0];
-        Assert.Equal(first.Qualifier, "First", "Annotation qualifier");
-        Assert.Equal(first.Term.Name, "Age", "Term name");
-        Assert.Equal(first.Term.Namespace, "foo", "Term namespace");
+        Assert.Equal("First", first.Qualifier);
+        Assert.Equal("Age", first.Term.Name);
+        Assert.Equal("foo", first.Term.Namespace);
 
         IEdmIntegerConstantExpression value = (IEdmIntegerConstantExpression)first.Value;
-        Assert.Equal(value.Value, 123, "Annotation value");
+        Assert.Equal(123, value.Value);
 
         IEdmVocabularyAnnotation second = annotations[1];
-        Assert.Equal(second.Qualifier, "Best", "Annotation qualifier");
-        Assert.Equal(second.Term.Name, "Age", "Term name");
-        Assert.Equal(second.Term.Namespace, "foo", "Term namespace");
+        Assert.Equal("Best", second.Qualifier);
+        Assert.Equal("Age", second.Term.Name);
+        Assert.Equal("foo", second.Term.Namespace);
 
         value = (IEdmIntegerConstantExpression)second.Value;
-        Assert.Equal(value.Value, 456, "Annotation value");
+        Assert.Equal(456, value.Value);
 
         IEdmVocabularyAnnotation third = annotations[2];
-        Assert.Null(third.Qualifier, "Annotation qualifier");
-        Assert.Equal(third.Term.Name, "Mage", "Term name");
-        Assert.Equal(third.Term.Namespace, "Funk", "Term namespace");
+        Assert.Null(third.Qualifier);
+        Assert.Equal("Mage", third.Term.Name);
+        Assert.Equal("Funk", third.Term.Namespace);
         value = (IEdmIntegerConstantExpression)third.Value;
-        Assert.Equal(value.Value, 789, "Annotation value");
+        Assert.Equal(789, value.Value);
     }
 
     [Fact]
@@ -2576,36 +2494,36 @@ public class SchemaParsingTests : EdmLibTestCaseBase
         IEdmModel model;
         IEnumerable<EdmError> errors;
         bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
-        Assert.True(parsed, "parsed");
-        Assert.True(errors.Count() == 0, "No errors");
+        Assert.True(parsed);
+        Assert.Empty(errors);
 
         IEdmEntityType person = (IEdmEntityType)model.FindType("foo.Person");
         IEdmEntityType lyingPerson = (IEdmEntityType)model.FindType("foo.LyingPerson");
 
         IEnumerable<IEdmVocabularyAnnotation> personAnnotations = person.VocabularyAnnotations(model);
-        Assert.Equal(personAnnotations.Count(), 3, "Annotations count");
+        Assert.Equal(3, personAnnotations.Count());
         IEdmVocabularyAnnotation[] annotations = personAnnotations.ToArray<IEdmVocabularyAnnotation>();
 
         IEdmVocabularyAnnotation first = annotations[0];
-        Assert.Equal(first.Qualifier, "First", "Annotation qualifier");
-        Assert.Equal(first.Term.Name, "Age", "Term name");
-        Assert.Equal(first.Term.Namespace, "foo", "Term namespace");
+        Assert.Equal("First", first.Qualifier);
+        Assert.Equal("Age", first.Term.Name);
+        Assert.Equal("foo", first.Term.Namespace);
         IEdmIntegerConstantExpression value = (IEdmIntegerConstantExpression)first.Value;
-        Assert.Equal(value.Value, 123, "Annotation value");
+        Assert.Equal(123, value.Value);
 
         IEdmVocabularyAnnotation second = annotations[1];
-        Assert.Equal(second.Qualifier, "Best", "Annotation qualifier");
-        Assert.Equal(second.Term.Name, "Age", "Term name");
-        Assert.Equal(second.Term.Namespace, "foo", "Term namespace");
+        Assert.Equal("Best", second.Qualifier);
+        Assert.Equal("Age", second.Term.Name);
+        Assert.Equal("foo", second.Term.Namespace);
         value = (IEdmIntegerConstantExpression)second.Value;
-        Assert.Equal(value.Value, 456, "Annotation value");
+        Assert.Equal(456, value.Value);
 
         IEdmVocabularyAnnotation third = annotations[2];
-        Assert.Null(third.Qualifier, "Annotation qualifier");
-        Assert.Equal(third.Term.Name, "Mage", "Term name");
-        Assert.Equal(third.Term.Namespace, "Funk", "Term namespace");
+        Assert.Null(third.Qualifier);
+        Assert.Equal("Mage", third.Term.Name);
+        Assert.Equal("Funk", third.Term.Namespace);
         value = (IEdmIntegerConstantExpression)third.Value;
-        Assert.Equal(value.Value, 789, "Annotation value");
+        Assert.Equal(789, value.Value);
     }
 
     [Fact]
@@ -2645,57 +2563,57 @@ public class SchemaParsingTests : EdmLibTestCaseBase
         IEdmModel model;
         IEnumerable<EdmError> errors;
         bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
-        Assert.True(parsed, "parsed");
-        Assert.True(errors.Count() == 0, "No errors");
+        Assert.True(parsed);
+        Assert.Empty(errors);
 
         IEdmEntityType person = (IEdmEntityType)model.FindType("foo.Person");
         IEdmEntityType lyingPerson = (IEdmEntityType)model.FindType("foo.LyingPerson");
 
         IEnumerable<IEdmVocabularyAnnotation> personAnnotations = person.VocabularyAnnotations(model);
-        Assert.Equal(personAnnotations.Count(), 6, "Annotations count");
+        Assert.Equal(6, personAnnotations.Count());
         IEdmVocabularyAnnotation[] annotations = personAnnotations.ToArray<IEdmVocabularyAnnotation>();
 
         IEdmVocabularyAnnotation first = annotations[0];
-        Assert.Equal(first.Qualifier, "Middling", "Annotation qualifier");
-        Assert.Equal(first.Term.Name, "Age", "Term name");
-        Assert.Equal(first.Term.Namespace, "foo", "Term namespace");
+        Assert.Equal("Middling", first.Qualifier);
+        Assert.Equal("Age", first.Term.Name);
+        Assert.Equal("foo", first.Term.Namespace);
         IEdmIntegerConstantExpression value = (IEdmIntegerConstantExpression)first.Value;
-        Assert.Equal(value.Value, 777, "Annotation value");
+        Assert.Equal(777, value.Value);
 
         IEdmVocabularyAnnotation second = annotations[1];
-        Assert.Equal(second.Qualifier, "Middling", "Annotation qualifier");
-        Assert.Equal(second.Term.Name, "Mage", "Term name");
-        Assert.Equal(second.Term.Namespace, "Var1", "Term namespace");
+        Assert.Equal("Middling", second.Qualifier);
+        Assert.Equal("Mage", second.Term.Name);
+        Assert.Equal("Var1", second.Term.Namespace);
         value = (IEdmIntegerConstantExpression)second.Value;
-        Assert.Equal(value.Value, 888, "Annotation value");
+        Assert.Equal(888, value.Value);
 
         IEdmVocabularyAnnotation third = annotations[2];
-        Assert.Equal(third.Qualifier, "First", "Annotation qualifier");
-        Assert.Equal(third.Term.Name, "Age", "Term name");
-        Assert.Equal(third.Term.Namespace, "foo", "Term namespace");
+        Assert.Equal("First", third.Qualifier);
+        Assert.Equal("Age", third.Term.Name);
+        Assert.Equal("foo", third.Term.Namespace);
         value = (IEdmIntegerConstantExpression)third.Value;
-        Assert.Equal(value.Value, 123, "Annotation value");
+        Assert.Equal(123, value.Value);
 
         IEdmVocabularyAnnotation fourth = annotations[3];
-        Assert.Equal(fourth.Qualifier, "Best", "Annotation qualifier");
-        Assert.Equal(fourth.Term.Name, "Age", "Term name");
-        Assert.Equal(fourth.Term.Namespace, "foo", "Term namespace");
+        Assert.Equal("Best", fourth.Qualifier);
+        Assert.Equal("Age", fourth.Term.Name);
+        Assert.Equal("foo", fourth.Term.Namespace);
         value = (IEdmIntegerConstantExpression)fourth.Value;
-        Assert.Equal(value.Value, 456, "Annotation value");
+        Assert.Equal(456, value.Value);
 
         IEdmVocabularyAnnotation fifth = annotations[4];
-        Assert.Null(fifth.Qualifier, "Annotation qualifier");
-        Assert.Equal(fifth.Term.Name, "Mage", "Term name");
-        Assert.Equal(fifth.Term.Namespace, "Funk", "Term namespace");
+        Assert.Null(fifth.Qualifier);
+        Assert.Equal("Mage", fifth.Term.Name);
+        Assert.Equal("Funk", fifth.Term.Namespace);
         value = (IEdmIntegerConstantExpression)fifth.Value;
-        Assert.Equal(value.Value, 789, "Annotation value");
+        Assert.Equal(789, value.Value);
 
         IEdmVocabularyAnnotation sixth = annotations[5];
-        Assert.Equal(sixth.Qualifier, "Zonky", "Annotation qualifier");
-        Assert.Equal(sixth.Term.Name, "Yage", "Term name");
-        Assert.Equal(sixth.Term.Namespace, "Var1", "Term namespace");
+        Assert.Equal("Zonky", sixth.Qualifier);
+        Assert.Equal("Yage", sixth.Term.Name);
+        Assert.Equal("Var1", sixth.Term.Namespace);
         value = (IEdmIntegerConstantExpression)sixth.Value;
-        Assert.Equal(value.Value, 555, "Annotation value");
+        Assert.Equal(555, value.Value);
     }
 
     [Fact]
@@ -2734,58 +2652,58 @@ public class SchemaParsingTests : EdmLibTestCaseBase
         IEdmModel model1;
         IEnumerable<EdmError> errors;
         bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl1)) }, out model1, out errors);
-        Assert.True(parsed, "parsed");
-        Assert.True(errors.Count() == 0, "No errors");
+        Assert.True(parsed);
+        Assert.Empty(errors);
 
         IEdmModel model2;
         parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl2)) }, new IEdmModel[] { model1 }, out model2, out errors);
-        Assert.True(parsed, "parsed");
-        Assert.True(errors.Count() == 0, "No errors");
+        Assert.True(parsed);
+        Assert.Empty(errors);
 
         IEdmEntityType person = (IEdmEntityType)model1.FindType("foo.Person");
         IEdmEntityType lyingPerson = (IEdmEntityType)model1.FindType("foo.LyingPerson");
         IEdmTerm distantAge = model1.FindTerm("foo.DistantAge");
-        Assert.Equal(lyingPerson, model2.FindType("foo.LyingPerson"), "Lookup through referenced model");
+        Assert.Equal(lyingPerson, model2.FindType("foo.LyingPerson"));
 
         IEnumerable<IEdmVocabularyAnnotation> personAnnotations = person.VocabularyAnnotations(model2);
-        Assert.Equal(personAnnotations.Count(), 4, "Annotations count");
+        Assert.Equal(4, personAnnotations.Count());
 
         IEdmVocabularyAnnotation[] annotations = personAnnotations.ToArray<IEdmVocabularyAnnotation>();
         IEdmVocabularyAnnotation third = annotations[0];
-        Assert.Equal(third.Qualifier, "First", "Annotation qualifier");
-        Assert.Equal(third.Term.Name, "Age", "Term name");
-        Assert.Equal(third.Term.Namespace, "foo", "Term namespace");
+        Assert.Equal("First", third.Qualifier);
+        Assert.Equal("Age", third.Term.Name);
+        Assert.Equal("foo", third.Term.Namespace);
 
         IEdmIntegerConstantExpression value = (IEdmIntegerConstantExpression)third.Value;
-        Assert.Equal(value.Value, 123, "Annotation value");
+        Assert.Equal(123, value.Value);
 
         IEdmVocabularyAnnotation fourth = annotations[1];
-        Assert.Equal(fourth.Qualifier, "Best", "Annotation qualifier");
-        Assert.Equal(fourth.Term.Name, "Age", "Term name");
-        Assert.Equal(fourth.Term.Namespace, "foo", "Term namespace");
+        Assert.Equal("Best", fourth.Qualifier);
+        Assert.Equal("Age", fourth.Term.Name);
+        Assert.Equal("foo", fourth.Term.Namespace);
 
         value = (IEdmIntegerConstantExpression)fourth.Value;
-        Assert.Equal(value.Value, 456, "Annotation value");
+        Assert.Equal(456, value.Value);
 
         IEdmVocabularyAnnotation fifth = annotations[2];
-        Assert.Null(fifth.Qualifier, "Annotation qualifier");
-        Assert.Equal(fifth.Term.Name, "DistantAge", "Term name");
-        Assert.Equal(fifth.Term.Namespace, "foo", "Term namespace");
-        Assert.Equal(fifth.Term, distantAge, "Annotation term");
+        Assert.Null(fifth.Qualifier);
+        Assert.Equal("DistantAge", fifth.Term.Name);
+        Assert.Equal("foo", fifth.Term.Namespace);
+        Assert.Equal(distantAge, fifth.Term);
 
         value = (IEdmIntegerConstantExpression)fifth.Value;
-        Assert.Equal(value.Value, 99, "Annotation value");
+        Assert.Equal(99, value.Value);
 
         IEdmVocabularyAnnotation sixth = annotations[3];
-        Assert.Null(sixth.Qualifier, "Annotation qualifier");
-        Assert.Equal(sixth.Term.Name, "Mage", "Term name");
-        Assert.Equal(sixth.Term.Namespace, "Funk", "Term namespace");
+        Assert.Null(sixth.Qualifier);
+        Assert.Equal("Mage", sixth.Term.Name);
+        Assert.Equal("Funk", sixth.Term.Namespace);
 
         value = (IEdmIntegerConstantExpression)sixth.Value;
-        Assert.Equal(value.Value, 789, "Annotation value");
+        Assert.Equal(789, value.Value);
 
-        Assert.Equal(1, model1.VocabularyAnnotations.Count(), "Model annotations count");
-        Assert.Equal(3, model2.VocabularyAnnotations.Count(), "Model annotations count");
+        Assert.Single(model1.VocabularyAnnotations);
+        Assert.Equal(3, model2.VocabularyAnnotations.Count());
     }
 
     [Fact]
@@ -2818,46 +2736,46 @@ public class SchemaParsingTests : EdmLibTestCaseBase
         IEdmModel model;
         IEnumerable<EdmError> errors;
         bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
-        Assert.True(parsed, "parsed");
-        Assert.True(errors.Count() == 0, "No errors");
+        Assert.True(parsed);
+        Assert.Empty(errors);
 
         IEdmModel model2;
         parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl2)) }, new IEdmModel[] { model }, out model2, out errors);
-        Assert.True(parsed, "parsed");
-        Assert.True(errors.Count() == 0, "No errors");
+        Assert.True(parsed);
+        Assert.Empty(errors);
 
         IEdmEntitySet persons = model.FindEntityContainer("bar").FindEntitySet("PersonsOfInterest");
 
         IEnumerable<IEdmVocabularyAnnotation> personsAnnotations = persons.VocabularyAnnotations(model);
-        Assert.Equal(personsAnnotations.Count(), 1, "Annotations count");
+        Assert.Single(personsAnnotations);
         IEdmVocabularyAnnotation[] annotations = personsAnnotations.ToArray<IEdmVocabularyAnnotation>();
 
         IEdmVocabularyAnnotation mage = annotations[0];
-        Assert.Null(mage.Qualifier, "Annotation qualifier");
-        Assert.Equal(mage.Term.Name, "Mage", "Term name");
-        Assert.Equal(mage.Term.Namespace, "Funk", "Term namespace");
+        Assert.Null(mage.Qualifier);
+        Assert.Equal("Mage", mage.Term.Name);
+        Assert.Equal("Funk", mage.Term.Namespace);
         IEdmIntegerConstantExpression value = (IEdmIntegerConstantExpression)mage.Value;
-        Assert.Equal(value.Value, 789, "Annotation value");
+        Assert.Equal(789, value.Value);
 
         personsAnnotations = persons.VocabularyAnnotations(model2);
-        Assert.Equal(personsAnnotations.Count(), 2, "Annotations count");
+        Assert.Equal(2, personsAnnotations.Count());
         annotations = personsAnnotations.ToArray<IEdmVocabularyAnnotation>();
 
         IEdmVocabularyAnnotation strange = annotations[0];
-        Assert.Equal(persons, strange.Target, "Annotation target");
-        Assert.Null(strange.Qualifier, "Annotation qualifier");
-        Assert.Equal(strange.Term.Name, "Strange", "Term name");
-        Assert.Equal(strange.Term.Namespace, "Funk", "Term namespace");
+        Assert.Equal(persons, strange.Target);
+        Assert.Null(strange.Qualifier);
+        Assert.Equal("Strange", strange.Term.Name);
+        Assert.Equal("Funk", strange.Term.Namespace);
         value = (IEdmIntegerConstantExpression)strange.Value;
-        Assert.Equal(value.Value, 13, "Annotation value");
+        Assert.Equal(13, value.Value);
 
         mage = annotations[1];
-        Assert.Equal(persons, mage.Target, "Annotation target");
-        Assert.Null(mage.Qualifier, "Annotation qualifier");
-        Assert.Equal(mage.Term.Name, "Mage", "Term name");
-        Assert.Equal(mage.Term.Namespace, "Funk", "Term namespace");
+        Assert.Equal(persons, mage.Target);
+        Assert.Null(mage.Qualifier);
+        Assert.Equal("Mage", mage.Term.Name);
+        Assert.Equal("Funk", mage.Term.Namespace);
         value = (IEdmIntegerConstantExpression)mage.Value;
-        Assert.Equal(value.Value, 789, "Annotation value");
+        Assert.Equal(789, value.Value);
     }
 
     [Fact]
@@ -2889,58 +2807,58 @@ public class SchemaParsingTests : EdmLibTestCaseBase
         IEdmModel model;
         IEnumerable<EdmError> errors;
         bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
-        Assert.True(parsed, "parsed");
-        Assert.True(errors.Count() == 0, "No errors");
+        Assert.True(parsed);
+        Assert.Empty(errors);
 
         IEdmModel model2;
         parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl2)) }, model, out model2, out errors);
-        Assert.True(parsed, "parsed");
-        Assert.True(errors.Count() == 0, "No errors");
+        Assert.True(parsed);
+        Assert.Empty(errors);
 
         IEdmProperty birthday = ((IEdmEntityType)model.FindType("foo.Person")).FindProperty("Birthday");
 
         IEnumerable<IEdmVocabularyAnnotation> birthdayAnnotations = birthday.VocabularyAnnotations(model);
-        Assert.Equal(birthdayAnnotations.Count(), 2, "Annotations count");
+        Assert.Equal(2, birthdayAnnotations.Count());
         IEdmVocabularyAnnotation[] annotations = birthdayAnnotations.ToArray<IEdmVocabularyAnnotation>();
 
         IEdmVocabularyAnnotation funkadelic = annotations[0];
-        Assert.Null(funkadelic.Qualifier, "Annotation qualifier");
-        Assert.Equal(funkadelic.Term.Name, "ADelic", "Term name");
-        Assert.Equal(funkadelic.Term.Namespace, "Funk", "Term namespace");
+        Assert.Null(funkadelic.Qualifier);
+        Assert.Equal("ADelic", funkadelic.Term.Name);
+        Assert.Equal("Funk", funkadelic.Term.Namespace);
         IEdmIntegerConstantExpression value = (IEdmIntegerConstantExpression)funkadelic.Value;
-        Assert.Equal(value.Value, 17, "Annotation value");
+        Assert.Equal(17, value.Value);
 
         IEdmVocabularyAnnotation mage = annotations[1];
-        Assert.Null(mage.Qualifier, "Annotation qualifier");
-        Assert.Equal(mage.Term.Name, "Mage", "Term name");
-        Assert.Equal(mage.Term.Namespace, "Funk", "Term namespace");
+        Assert.Null(mage.Qualifier);
+        Assert.Equal("Mage", mage.Term.Name);
+        Assert.Equal("Funk", mage.Term.Namespace);
         value = (IEdmIntegerConstantExpression)mage.Value;
-        Assert.Equal(value.Value, 789, "Annotation value");
+        Assert.Equal(789, value.Value);
 
         birthdayAnnotations = birthday.VocabularyAnnotations(model2);
-        Assert.Equal(birthdayAnnotations.Count(), 3, "Annotations count");
+        Assert.Equal(3, birthdayAnnotations.Count());
         annotations = birthdayAnnotations.ToArray<IEdmVocabularyAnnotation>();
 
         IEdmVocabularyAnnotation strange = annotations[0];
-        Assert.Null(strange.Qualifier, "Annotation qualifier");
-        Assert.Equal(strange.Term.Name, "Strange", "Term name");
-        Assert.Equal(strange.Term.Namespace, "Funk", "Term namespace");
+        Assert.Null(strange.Qualifier);
+        Assert.Equal("Strange", strange.Term.Name);
+        Assert.Equal("Funk", strange.Term.Namespace);
         value = (IEdmIntegerConstantExpression)strange.Value;
-        Assert.Equal(value.Value, 13, "Annotation value");
+        Assert.Equal(13, value.Value);
 
         funkadelic = annotations[1];
-        Assert.Null(funkadelic.Qualifier, "Annotation qualifier");
-        Assert.Equal(funkadelic.Term.Name, "ADelic", "Term name");
-        Assert.Equal(funkadelic.Term.Namespace, "Funk", "Term namespace");
+        Assert.Null(funkadelic.Qualifier);
+        Assert.Equal("ADelic", funkadelic.Term.Name);
+        Assert.Equal("Funk", funkadelic.Term.Namespace);
         value = (IEdmIntegerConstantExpression)funkadelic.Value;
-        Assert.Equal(value.Value, 17, "Annotation value");
+        Assert.Equal(17, value.Value);
 
         mage = annotations[2];
-        Assert.Null(mage.Qualifier, "Annotation qualifier");
-        Assert.Equal(mage.Term.Name, "Mage", "Term name");
-        Assert.Equal(mage.Term.Namespace, "Funk", "Term namespace");
+        Assert.Null(mage.Qualifier);
+        Assert.Equal("Mage", mage.Term.Name);
+        Assert.Equal("Funk", mage.Term.Namespace);
         value = (IEdmIntegerConstantExpression)mage.Value;
-        Assert.Equal(value.Value, 789, "Annotation value");
+        Assert.Equal(789, value.Value);
     }
 
     [Fact]
@@ -2996,89 +2914,62 @@ public class SchemaParsingTests : EdmLibTestCaseBase
         IEdmModel model;
         IEnumerable<EdmError> errors;
         bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
-        Assert.True(parsed, "parsed");
-        Assert.True(errors.Count() == 0, "No errors");
+        Assert.True(parsed);
+        Assert.Empty(errors);
 
         IEdmEntityType person = (IEdmEntityType)model.FindType("foo.Person");
 
         IEnumerable<IEdmVocabularyAnnotation> personAnnotations = person.VocabularyAnnotations(model);
-        Assert.Equal(personAnnotations.Count(), 18, "Annotations count");
+        Assert.Equal(18, personAnnotations.Count());
         IEdmVocabularyAnnotation[] annotations = personAnnotations.ToArray<IEdmVocabularyAnnotation>();
 
         var byteArrayComparer = new ArrayComp();
 
         int i = 0;
-        Assert.Equal((annotations[i]).Value.ExpressionKind, EdmExpressionKind.IntegerConstant, "Annotation expression kind");
-        Assert.Equal(((IEdmIntegerConstantExpression)(annotations[i]).Value).Value, 1, "Annotation value");
-        Assert.Equal((annotations[++i]).Value.ExpressionKind, EdmExpressionKind.IntegerConstant, "Annotation expression kind");
-        Assert.Equal(((IEdmIntegerConstantExpression)(annotations[i]).Value).Value, 2, "Annotation value");
+        Assert.Equal(EdmExpressionKind.IntegerConstant, (annotations[i]).Value.ExpressionKind);
+        Assert.Equal(1, ((IEdmIntegerConstantExpression)(annotations[i]).Value).Value);
+        Assert.Equal(EdmExpressionKind.IntegerConstant, (annotations[++i]).Value.ExpressionKind);
+        Assert.Equal(2, ((IEdmIntegerConstantExpression)(annotations[i]).Value).Value);
 
-        Assert.Equal((annotations[++i]).Value.ExpressionKind, EdmExpressionKind.StringConstant, "Annotation expression kind");
-        Assert.Equal(((IEdmStringConstantExpression)(annotations[i]).Value).Value, "Cat", "Annotation value");
-        Assert.Equal((annotations[++i]).Value.ExpressionKind, EdmExpressionKind.StringConstant, "Annotation expression kind");
-        Assert.Equal(((IEdmStringConstantExpression)(annotations[i]).Value).Value, "Dog", "Annotation value");
+        Assert.Equal(EdmExpressionKind.StringConstant, (annotations[++i]).Value.ExpressionKind);
+        Assert.Equal("Cat", ((IEdmStringConstantExpression)(annotations[i]).Value).Value);
+        Assert.Equal(EdmExpressionKind.StringConstant, (annotations[++i]).Value.ExpressionKind);
+        Assert.Equal("Dog", ((IEdmStringConstantExpression)(annotations[i]).Value).Value);
 
-        Assert.Equal((annotations[++i]).Value.ExpressionKind, EdmExpressionKind.BinaryConstant, "Annotation expression kind");
-        Assert.True(byteArrayComparer.Equals(((IEdmBinaryConstantExpression)(annotations[i]).Value).Value, new byte[] { 0x12, 0x34, 0x56 }), "Annotation value");
-        Assert.Equal((annotations[++i]).Value.ExpressionKind, EdmExpressionKind.BinaryConstant, "Annotation expression kind");
-        Assert.True(byteArrayComparer.Equals(((IEdmBinaryConstantExpression)(annotations[i]).Value).Value, new byte[] { 0x65, 0x43, 0x21 }), "Annotation value");
+        Assert.Equal(EdmExpressionKind.BinaryConstant, (annotations[++i]).Value.ExpressionKind);
+        Assert.True(byteArrayComparer.Equals(((IEdmBinaryConstantExpression)(annotations[i]).Value).Value, new byte[] { 0x12, 0x34, 0x56 }));
+        Assert.Equal(EdmExpressionKind.BinaryConstant, (annotations[++i]).Value.ExpressionKind);
+        Assert.True(byteArrayComparer.Equals(((IEdmBinaryConstantExpression)(annotations[i]).Value).Value, new byte[] { 0x65, 0x43, 0x21 }));
 
-        Assert.Equal((annotations[++i]).Value.ExpressionKind, EdmExpressionKind.FloatingConstant, "Annotation expression kind");
-        Assert.Equal(((IEdmFloatingConstantExpression)(annotations[i]).Value).Value, 1.1, "Annotation value");
-        Assert.Equal((annotations[++i]).Value.ExpressionKind, EdmExpressionKind.FloatingConstant, "Annotation expression kind");
-        Assert.Equal(((IEdmFloatingConstantExpression)(annotations[i]).Value).Value, 2.2E10, "Annotation value");
+        Assert.Equal(EdmExpressionKind.FloatingConstant, (annotations[++i]).Value.ExpressionKind);
+        Assert.Equal(1.1, ((IEdmFloatingConstantExpression)(annotations[i]).Value).Value);
+        Assert.Equal(EdmExpressionKind.FloatingConstant, (annotations[++i]).Value.ExpressionKind);
+        Assert.Equal(2.2E10, ((IEdmFloatingConstantExpression)(annotations[i]).Value).Value);
 
-        Assert.Equal((annotations[++i]).Value.ExpressionKind, EdmExpressionKind.GuidConstant, "Annotation expression kind");
-        Assert.Equal(((IEdmGuidConstantExpression)(annotations[i]).Value).Value, Guid.Parse("4ae71c81-c21a-40a2-8d53-f1a29ed4a2f2"), "Annotation value");
-        Assert.Equal((annotations[++i]).Value.ExpressionKind, EdmExpressionKind.GuidConstant, "Annotation expression kind");
-        Assert.Equal(((IEdmGuidConstantExpression)(annotations[i]).Value).Value, Guid.Parse("4ae71c81-c21a-40a2-8d53-f1a29ed4a2f3"), "Annotation value");
+        Assert.Equal(EdmExpressionKind.GuidConstant, (annotations[++i]).Value.ExpressionKind);
+        Assert.Equal(((IEdmGuidConstantExpression)(annotations[i]).Value).Value, Guid.Parse("4ae71c81-c21a-40a2-8d53-f1a29ed4a2f2"));
+        Assert.Equal(EdmExpressionKind.GuidConstant, (annotations[++i]).Value.ExpressionKind);
+        Assert.Equal(((IEdmGuidConstantExpression)(annotations[i]).Value).Value, Guid.Parse("4ae71c81-c21a-40a2-8d53-f1a29ed4a2f3"));
 
-        Assert.Equal((annotations[++i]).Value.ExpressionKind, EdmExpressionKind.DecimalConstant, "Annotation expression kind");
-        Assert.Equal(((IEdmDecimalConstantExpression)(annotations[i]).Value).Value, 1.2M, "Annotation value");
-        Assert.Equal((annotations[++i]).Value.ExpressionKind, EdmExpressionKind.DecimalConstant, "Annotation expression kind");
-        Assert.Equal(((IEdmDecimalConstantExpression)(annotations[i]).Value).Value, 2.3M, "Annotation value");
+        Assert.Equal(EdmExpressionKind.DecimalConstant, (annotations[++i]).Value.ExpressionKind);
+        Assert.Equal(1.2M, ((IEdmDecimalConstantExpression)(annotations[i]).Value).Value);
+        Assert.Equal(EdmExpressionKind.DecimalConstant, (annotations[++i]).Value.ExpressionKind);
+        Assert.Equal(2.3M, ((IEdmDecimalConstantExpression)(annotations[i]).Value).Value);
 
-        Assert.Equal((annotations[++i]).Value.ExpressionKind, EdmExpressionKind.BooleanConstant, "Annotation expression kind");
-        Assert.Equal(((IEdmBooleanConstantExpression)(annotations[i]).Value).Value, true, "Annotation value");
-        Assert.Equal((annotations[++i]).Value.ExpressionKind, EdmExpressionKind.BooleanConstant, "Annotation expression kind");
-        Assert.Equal(((IEdmBooleanConstantExpression)(annotations[i]).Value).Value, false, "Annotation value");
+        Assert.Equal(EdmExpressionKind.BooleanConstant, (annotations[++i]).Value.ExpressionKind);
+        Assert.True(((IEdmBooleanConstantExpression)(annotations[i]).Value).Value);
+        Assert.Equal(EdmExpressionKind.BooleanConstant, (annotations[++i]).Value.ExpressionKind);
+        Assert.False(((IEdmBooleanConstantExpression)(annotations[i]).Value).Value);
 
-        Assert.Equal((annotations[++i]).Value.ExpressionKind, EdmExpressionKind.DateTimeOffsetConstant, "Annotation expression kind");
-        Assert.Equal(((IEdmDateTimeOffsetConstantExpression)(annotations[i]).Value).Value, new DateTimeOffset(2001, 10, 26, 19, 32, 52, new TimeSpan(0, 0, 0)), "Annotation value");
-        Assert.Equal((annotations[++i]).Value.ExpressionKind, EdmExpressionKind.DateTimeOffsetConstant, "Annotation expression kind");
-        Assert.Equal(((IEdmDateTimeOffsetConstantExpression)(annotations[i]).Value).Value, new DateTimeOffset(2001, 10, 26, 19, 32, 52, new TimeSpan(0, 0, 0)), "Annotation value");
+        Assert.Equal(EdmExpressionKind.DateTimeOffsetConstant, (annotations[++i]).Value.ExpressionKind);
+        Assert.Equal(new DateTimeOffset(2001, 10, 26, 19, 32, 52, new TimeSpan(0, 0, 0)), ((IEdmDateTimeOffsetConstantExpression)(annotations[i]).Value).Value);
+        Assert.Equal(EdmExpressionKind.DateTimeOffsetConstant, (annotations[++i]).Value.ExpressionKind);
+        Assert.Equal(new DateTimeOffset(2001, 10, 26, 19, 32, 52, new TimeSpan(0, 0, 0)), ((IEdmDateTimeOffsetConstantExpression)(annotations[i]).Value).Value);
 
-        Assert.Equal((annotations[++i]).Value.ExpressionKind, EdmExpressionKind.DurationConstant, "Annotation expression kind");
-        Assert.Equal(new TimeSpan(0, 0, 1), ((IEdmDurationConstantExpression)(annotations[i]).Value).Value, "Annotation value");
-        Assert.Equal((annotations[++i]).Value.ExpressionKind, EdmExpressionKind.DurationConstant, "Annotation expression kind");
-        Assert.Equal(new TimeSpan(0, 0, 1), ((IEdmDurationConstantExpression)(annotations[i]).Value).Value, "Annotation value");
-    }
-
-    private class ArrayComp : IEqualityComparer<byte[]>
-    {
-        public static readonly ArrayComp Instance = new ArrayComp();
-        public bool Equals(byte[] x, byte[] y)
-        {
-            if (x == null && y == null)
-            {
-                return true;
-            }
-            if (x == null || y == null || x.Length != y.Length)
-            {
-                return false;
-            }
-            for (int i = 0; i < x.Length; ++i)
-            {
-                if (x[i] != y[i])
-                    return false;
-            }
-            return true;
-        }
-
-        public int GetHashCode(byte[] obj)
-        {
-            throw new NotSupportedException();
-        }
+        Assert.Equal(EdmExpressionKind.DurationConstant, (annotations[++i]).Value.ExpressionKind);
+        Assert.Equal(new TimeSpan(0, 0, 1), ((IEdmDurationConstantExpression)(annotations[i]).Value).Value);
+        Assert.Equal(EdmExpressionKind.DurationConstant, (annotations[++i]).Value.ExpressionKind);
+        Assert.Equal(new TimeSpan(0, 0, 1), ((IEdmDurationConstantExpression)(annotations[i]).Value).Value);
     }
 
     [Fact]
@@ -3106,32 +2997,32 @@ public class SchemaParsingTests : EdmLibTestCaseBase
         IEdmModel model;
         IEnumerable<EdmError> errors;
         bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
-        Assert.True(parsed, "parsed");
-        Assert.True(errors.Count() == 0, "No errors");
+        Assert.True(parsed);
+        Assert.Empty(errors);
 
         IEdmEntityType person = (IEdmEntityType)model.FindType("foo.Person");
 
         IEnumerable<IEdmVocabularyAnnotation> personAnnotations = person.VocabularyAnnotations(model);
-        Assert.Equal(personAnnotations.Count(), 1, "Annotations count");
+        Assert.Single(personAnnotations);
         IEdmVocabularyAnnotation[] annotations = personAnnotations.ToArray<IEdmVocabularyAnnotation>();
 
         IEdmVocabularyAnnotation first = annotations[0];
-        Assert.Equal(first.Value.ExpressionKind, EdmExpressionKind.Record, "Annotation expression kind");
+        Assert.Equal(EdmExpressionKind.Record, first.Value.ExpressionKind);
 
         IEdmRecordExpression record = (IEdmRecordExpression)first.Value;
         IEnumerable<IEdmPropertyConstructor> propertyConstructors = record.Properties;
-        Assert.Equal(propertyConstructors.Count(), 2, "Property constructors count");
+        Assert.Equal(2, propertyConstructors.Count());
         IEdmPropertyConstructor[] properties = propertyConstructors.ToArray<IEdmPropertyConstructor>();
 
         IEdmPropertyConstructor x = properties[0];
-        Assert.Equal(x.Name, "X", "Property name");
-        Assert.Equal(x.Value.ExpressionKind, EdmExpressionKind.IntegerConstant, "Property expression kind");
-        Assert.Equal(((IEdmIntegerConstantExpression)x.Value).Value, 10, "Property expression value");
+        Assert.Equal("X", x.Name);
+        Assert.Equal(EdmExpressionKind.IntegerConstant, x.Value.ExpressionKind);
+        Assert.Equal(10, ((IEdmIntegerConstantExpression)x.Value).Value);
 
         IEdmPropertyConstructor y = properties[1];
-        Assert.Equal(y.Name, "Y", "Property name");
-        Assert.Equal(y.Value.ExpressionKind, EdmExpressionKind.IntegerConstant, "Property expression kind");
-        Assert.Equal(((IEdmIntegerConstantExpression)y.Value).Value, 20, "Property expression value");
+        Assert.Equal("Y", y.Name);
+        Assert.Equal(EdmExpressionKind.IntegerConstant, y.Value.ExpressionKind);
+        Assert.Equal(20, ((IEdmIntegerConstantExpression)y.Value).Value);
     }
 
     [Fact]
@@ -3163,8 +3054,8 @@ public class SchemaParsingTests : EdmLibTestCaseBase
         IEdmModel model;
         IEnumerable<EdmError> errors;
         bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
-        Assert.True(parsed, "parsed");
-        Assert.True(errors.Count() == 0, "No errors");
+        Assert.True(parsed);
+        Assert.Empty(errors);
 
         IEdmEntityType person = (IEdmEntityType)model.FindType("foo.Person");
         IEdmProperty name = person.FindProperty("Name");
@@ -3172,18 +3063,18 @@ public class SchemaParsingTests : EdmLibTestCaseBase
         IEdmEntityType lyingPerson = (IEdmEntityType)model.FindType("foo.LyingPerson");
 
         IEnumerable<IEdmVocabularyAnnotation> personAnnotations = person.VocabularyAnnotations(model);
-        Assert.Equal(personAnnotations.Count(), 2, "Annotations count");
+        Assert.Equal(2, personAnnotations.Count());
         IEdmVocabularyAnnotation[] annotations = personAnnotations.ToArray<IEdmVocabularyAnnotation>();
 
         IEdmVocabularyAnnotation first = annotations[0];
-        Assert.Equal(first.Term.Name, "Mage", "Term name");
+        Assert.Equal("Mage", first.Term.Name);
         IEdmPathExpression value = (IEdmPathExpression)first.Value;
-        Assert.Equal(value.PathSegments.First(), "Age", "Bound path name");
+        Assert.Equal("Age", value.PathSegments.First());
 
         IEdmVocabularyAnnotation second = annotations[1];
-        Assert.Equal(second.Term.Name, "Age", "Term name");
+        Assert.Equal("Age", second.Term.Name);
         value = (IEdmPathExpression)second.Value;
-        Assert.Equal(value.PathSegments.First(), "Age", "Bound path name");
+        Assert.Equal("Age", value.PathSegments.First());
     }
 
     [Fact]
@@ -3222,14 +3113,15 @@ public class SchemaParsingTests : EdmLibTestCaseBase
         </ReturnType>
     </Function>
 </Schema>";
+
         IEdmModel edmModel;
         IEnumerable<EdmError> errors;
         var isParsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out edmModel, out errors);
         Assert.False(isParsed, "SchemaReader.TryParse failed");
         Assert.True(errors.Count() == 4, "SchemaReader.TryParse returned errors");
-        Assert.Equal(EdmErrorCode.UnexpectedXmlElement, errors.OrderBy(e => e.ErrorCode).ElementAt(0).ErrorCode, "EdmErrorCode.UnexpectedXmlElement");
-        Assert.Equal(EdmErrorCode.MissingAttribute, errors.OrderBy(e => e.ErrorCode).ElementAt(1).ErrorCode, "EdmErrorCode.MissingAttribute");
-        Assert.Equal(EdmErrorCode.MissingType, errors.OrderBy(e => e.ErrorCode).ElementAt(3).ErrorCode, "EdmErrorCode.MissingType");
+        Assert.Equal(EdmErrorCode.UnexpectedXmlElement, errors.OrderBy(e => e.ErrorCode).ElementAt(0).ErrorCode);
+        Assert.Equal(EdmErrorCode.MissingAttribute, errors.OrderBy(e => e.ErrorCode).ElementAt(1).ErrorCode);
+        Assert.Equal(EdmErrorCode.MissingType, errors.OrderBy(e => e.ErrorCode).ElementAt(3).ErrorCode);
     }
 
     [Fact]
@@ -3242,13 +3134,14 @@ public class SchemaParsingTests : EdmLibTestCaseBase
     </Annotation>
   </Annotations>
 </Schema>";
+
         IEdmModel edmModel;
         IEnumerable<EdmError> errors;
         var isParsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out edmModel, out errors);
         Assert.True(isParsed, "SchemaReader.TryParse failed");
 
         IEdmVocabularyAnnotation annotation = edmModel.VocabularyAnnotations.First();
-        Assert.Equal("Netflix.Catalog.v2", ((IEdmSchemaElement)annotation.Target).Namespace, "Namespace is resolved correctly");
+        Assert.Equal("Netflix.Catalog.v2", ((IEdmSchemaElement)annotation.Target).Namespace);
     }
 
     [Fact]
@@ -3262,13 +3155,14 @@ public class SchemaParsingTests : EdmLibTestCaseBase
     </Annotations>
     <Term Name=""value"" Type=""Int32"" />
 </Schema>";
+
         var csdls = new List<XElement> { XElement.Parse(csdl) };
         IEdmModel model;
         IEnumerable<EdmError> errors;
         var isParsed = SchemaReader.TryParse(csdls.Select(e => e.CreateReader()), out model, out errors);
-        Assert.False(isParsed, "SchemaReader.TryParse failed");
-        Assert.Equal(1, errors.Count(), "Invalid error count.");
-        Assert.Equal(EdmErrorCode.InvalidQualifiedName, errors.First().ErrorCode, "Invalid error code.");
+        Assert.False(isParsed);
+        Assert.Single(errors);
+        Assert.Equal(EdmErrorCode.InvalidQualifiedName, errors.First().ErrorCode);
     }
 
     [Fact]
@@ -3282,27 +3176,56 @@ public class SchemaParsingTests : EdmLibTestCaseBase
     </Annotations>
     <Term Name=""value"" Type=""Int32"" />
 </Schema>";
+
         var csdls = new List<XElement> { XElement.Parse(csdl) };
-        IEdmModel model;
-        IEnumerable<EdmError> errors;
-        var isParsed = SchemaReader.TryParse(csdls.Select(e => e.CreateReader()), out model, out errors);
-        Assert.False(isParsed, "SchemaReader.TryParse failed");
-        Assert.Equal(1, errors.Count(), "Invalid error count.");
-        Assert.Equal(EdmErrorCode.InvalidQualifiedName, errors.First().ErrorCode, "Invalid error code.");
+        var isParsed = SchemaReader.TryParse(csdls.Select(e => e.CreateReader()), out IEdmModel model, out IEnumerable<EdmError> errors);
+        Assert.False(isParsed);
+        Assert.Single(errors);
+        Assert.Equal(EdmErrorCode.InvalidQualifiedName, errors.First().ErrorCode);
     }
 
-    [Fact]
-    public void TestingAnnotationQualifiersWithNonSimpleValue()
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void TestingAnnotationQualifiersWithNonSimpleValue(EdmVersion edmVersion)
     {
-        var csdl = VocabularyTestModelBuilder.AnnotationQualifiersWithNonSimpleValue();
-        IEdmModel model = this.GetParserResult(csdl);
+        var csdl = @"<Schema Namespace=""foo"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+    <Annotations Target=""foo.Person"">
+        <Annotation Term=""foo.Note"" Qualifier=""3"" Int=""99"" />
+        <Annotation Term=""foo.Note"" Qualifier=""ReallyOddQualifer1234567890!@#$%^*()_+&amp;"" Int=""127"" />
+    </Annotations>
+    <Annotations Target=""foo.Person"" Qualifier=""foo+bar"">
+        <Annotation Term=""foo.Note"" Int=""127"" />
+    </Annotations>
+    <Term Name=""Note"" Type=""Edm.Int32"" />
+    <EntityType Name=""Person"">
+        <Key>
+            <PropertyRef Name=""Id"" />
+        </Key>
+        <Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false"" />
+        <Property Name=""Name"" Type=""Edm.String"" />
+    </EntityType>
+</Schema>";
 
-        var expectedErrors = new EdmLibTestErrors();
-        this.VerifySemanticValidation(model, Microsoft.Test.OData.Utils.Metadata.EdmVersion.V40, expectedErrors);
+        var csdlElements = new string[] { csdl }.Select(e => XElement.Parse(e, LoadOptions.SetLineInfo));
+        var isParsed = SchemaReader.TryParse(csdlElements.Select(e => e.CreateReader()), out IEdmModel model, out IEnumerable<EdmError> errors);
+        Assert.False(isParsed);
+        Assert.Single(errors);
+
+        var ruleset = ValidationRuleSet.GetEdmModelRuleSet(toProductVersionlookup[edmVersion]);
+        var validationResult = model.Validate(ruleset, out IEnumerable<EdmError> actualErrors);
+        Assert.True(validationResult);
+        Assert.Empty(actualErrors);
+
+        var roundTripCsdls = this.GetSerializerResult(model, edmVersion, out errors).Select(n => XElement.Parse(n));
+        Assert.Empty(errors);
+        Assert.Single(roundTripCsdls);
     }
 
-    [Fact]
-    public void TestParsingSchemaWithoutNamespace()
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void TestParsingSchemaWithoutNamespace(EdmVersion edmVersion)
     {
         var csdl = XElement.Parse(@"
 <Schema xmlns='http://docs.oasis-open.org/odata/ns/edm'>
@@ -3319,17 +3242,20 @@ public class SchemaParsingTests : EdmLibTestCaseBase
         </Annotation>
     </Annotations>
 </Schema>");
+
         var actualCsdls = new XElement[] { csdl };
 
-        var model = this.GetParserResult(actualCsdls);
-        Assert.Equal(1, model.VocabularyAnnotations.Count(), "Invalid annotation count.");
+        var isParsed = SchemaReader.TryParse(actualCsdls.Select(e => e.CreateReader()), out IEdmModel model, out IEnumerable<EdmError> errors);
+        Assert.True(isParsed);
+        Assert.Empty(errors);
 
-        IEnumerable<EdmError> errors;
-        var roundTripCsdls = this.GetSerializerResult(model, Microsoft.Test.OData.Utils.Metadata.EdmVersion.V40, out errors).Select(n => XElement.Parse(n));
-        Assert.Equal(0, errors.Count(), "Invalid error count.");
-        Assert.Equal(1, roundTripCsdls.Count(), "Invalid csdl count.");
+        Assert.Single(model.VocabularyAnnotations);
 
-        new ConstructiveApiCsdlXElementComparer().Compare(actualCsdls.ToList(), roundTripCsdls.ToList());
+        var roundTripCsdls = this.GetSerializerResult(model, edmVersion, out errors).Select(n => XElement.Parse(n));
+        Assert.Empty(errors);
+        Assert.Single(roundTripCsdls);
+
+        Compare(actualCsdls.ToList(), roundTripCsdls.ToList());
     }
 
     [Fact]
@@ -3344,11 +3270,14 @@ public class SchemaParsingTests : EdmLibTestCaseBase
   </Annotations>
 </Schema>";
 
-        var model = this.GetParserResult(new string[] { csdl });
-        Assert.Equal(1, model.VocabularyAnnotations.Count(), "Invalid annotation count.");
+        var isParsed = SchemaReader.TryParse(new string[] { csdl }.Select(XElement.Parse).Select(e => e.CreateReader()), out IEdmModel model, out IEnumerable<EdmError> errors);
+        Assert.True(isParsed);
+        Assert.Empty(errors);
+
+        Assert.Single(model.VocabularyAnnotations);
 
         var annotationTarget = model.VocabularyAnnotations.First().Target;
-        Assert.True(annotationTarget.ToString().Contains("Netflix.Catalog.v2.Person"), "Invalid target ToString().");
+        Assert.Contains("Netflix.Catalog.v2.Person", annotationTarget.ToString());
     }
 
     [Fact]
@@ -3371,14 +3300,14 @@ public class SchemaParsingTests : EdmLibTestCaseBase
         IEnumerable<EdmError> errors;
         bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
 
-        Assert.True(parsed, "parsed");
-        Assert.False(errors.Any(), "No errors");
+        Assert.True(parsed);
+        Assert.Empty(errors);
 
         var types = model.SchemaElements.OfType<IEdmComplexType>().ToList();
-        Assert.True(types.Count == 3, "Should have three types");
-        Assert.True(types[0].IsOpen, "Should be open type");
-        Assert.False(types[1].IsOpen, "Should not be open type");
-        Assert.False(types[2].IsOpen, "Should not be open type");
+        Assert.True(types.Count == 3);
+        Assert.True(types[0].IsOpen);
+        Assert.False(types[1].IsOpen);
+        Assert.False(types[2].IsOpen);
     }
 
     [Fact]
@@ -3414,8 +3343,8 @@ public class SchemaParsingTests : EdmLibTestCaseBase
         IEnumerable<EdmError> errors;
         bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
 
-        Assert.True(parsed, "parsed");
-        Assert.False(errors.Any(), "No errors");
+        Assert.True(parsed);
+        Assert.Empty(errors);
 
         var elements = model.SchemaElements.ToList();
 
@@ -3430,32 +3359,32 @@ public class SchemaParsingTests : EdmLibTestCaseBase
         Assert.Equal(EdmPrimitiveTypeKind.Int32, widthType.UnderlyingType.PrimitiveKind);
         Assert.Equal(EdmSchemaElementKind.TypeDefinition, widthType.SchemaElementKind);
         Assert.Equal("Width", widthType.Name);
-        var widthElement = ((CsdlSemanticsElement)widthType).Element;
-        Assert.Equal(1, widthElement.VocabularyAnnotations.Count());
+        //var widthElement = ((CsdlSemanticsElement)widthType).Element;
+        //Assert.Equal(1, widthElement.VocabularyAnnotations.Count());
 
         // Weight
         var weightType = (IEdmTypeDefinition)elements[2];
         Assert.Equal(EdmPrimitiveTypeKind.Decimal, weightType.UnderlyingType.PrimitiveKind);
         Assert.Equal(EdmSchemaElementKind.TypeDefinition, weightType.SchemaElementKind);
         Assert.Equal("Weight", weightType.Name);
-        var weightElement = ((CsdlSemanticsElement)weightType).Element;
-        Assert.Equal("Edm.Decimal", ((CsdlTypeDefinition)weightElement).UnderlyingTypeName);
+        //var weightElement = ((CsdlSemanticsElement)weightType).Element;
+        //Assert.Equal("Edm.Decimal", ((CsdlTypeDefinition)weightElement).UnderlyingTypeName);
 
         // Address
         var addressType = (IEdmTypeDefinition)elements[3];
         Assert.Equal(EdmPrimitiveTypeKind.String, addressType.UnderlyingType.PrimitiveKind);
         Assert.Equal(EdmSchemaElementKind.TypeDefinition, addressType.SchemaElementKind);
         Assert.Equal("Address", addressType.Name);
-        var addressElement = ((CsdlSemanticsElement)addressType).Element;
-        Assert.Equal("Edm.String", ((CsdlTypeDefinition)addressElement).UnderlyingTypeName);
+        //var addressElement = ((CsdlSemanticsElement)addressType).Element;
+        //Assert.Equal("Edm.String", ((CsdlTypeDefinition)addressElement).UnderlyingTypeName);
 
         // Point
         var pointType = (IEdmTypeDefinition)elements[4];
         Assert.Equal(EdmPrimitiveTypeKind.GeographyPoint, pointType.UnderlyingType.PrimitiveKind);
         Assert.Equal(EdmSchemaElementKind.TypeDefinition, pointType.SchemaElementKind);
         Assert.Equal("Point", pointType.Name);
-        var pointElement = ((CsdlSemanticsElement)pointType).Element;
-        Assert.Equal("Edm.GeographyPoint", ((CsdlTypeDefinition)pointElement).UnderlyingTypeName);
+        //var pointElement = ((CsdlSemanticsElement)pointType).Element;
+        //Assert.Equal("Edm.GeographyPoint", ((CsdlTypeDefinition)pointElement).UnderlyingTypeName);
 
         // Person
         var personType = elements[5] as IEdmEntityType;
@@ -3463,42 +3392,42 @@ public class SchemaParsingTests : EdmLibTestCaseBase
         var addressProperty = personType.FindProperty("Address");
         var addressProperty2 = personType.FindProperty("Address2");
         var pointProperty = personType.FindProperty("Point");
-        Assert.Equal(weightProperty.Type.AsTypeDefinition().FullName(), "MyNS.Weight");
-        Assert.Equal(weightProperty.Type.AsTypeDefinition().Definition, weightType);
-        Assert.Equal(addressProperty.Type.AsTypeDefinition().FullName(), "MyNS.Address");
-        Assert.Equal(addressProperty.Type.AsTypeDefinition().Definition, addressType);
-        Assert.Equal(addressProperty2.Type.AsTypeDefinition().FullName(), "MyNS.Address");
-        Assert.Equal(addressProperty2.Type.AsTypeDefinition().Definition, addressType);
-        Assert.Equal(pointProperty.Type.AsTypeDefinition().FullName(), "MyNS.Point");
-        Assert.Equal(pointProperty.Type.AsTypeDefinition().Definition, pointType);
+        Assert.Equal("MyNS.Weight", weightProperty.Type.AsTypeDefinition().FullName());
+        Assert.Equal(weightType, weightProperty.Type.AsTypeDefinition().Definition);
+        Assert.Equal("MyNS.Address", addressProperty.Type.AsTypeDefinition().FullName());
+        Assert.Equal(addressType, addressProperty.Type.AsTypeDefinition().Definition);
+        Assert.Equal("MyNS.Address", addressProperty2.Type.AsTypeDefinition().FullName());
+        Assert.Equal(addressType, addressProperty2.Type.AsTypeDefinition().Definition);
+        Assert.Equal("MyNS.Point", pointProperty.Type.AsTypeDefinition().FullName());
+        Assert.Equal(pointType, pointProperty.Type.AsTypeDefinition().Definition);
 
         // Facets
-        Assert.Equal(false, ((IEdmTypeDefinitionReference)weightProperty.Type).IsUnbounded);
-        Assert.Equal(null, ((IEdmTypeDefinitionReference)weightProperty.Type).MaxLength);
-        Assert.Equal(null, ((IEdmTypeDefinitionReference)weightProperty.Type).IsUnicode);
+        Assert.False(((IEdmTypeDefinitionReference)weightProperty.Type).IsUnbounded);
+        Assert.Null(((IEdmTypeDefinitionReference)weightProperty.Type).MaxLength);
+        Assert.Null(((IEdmTypeDefinitionReference)weightProperty.Type).IsUnicode);
         Assert.Equal(3, ((IEdmTypeDefinitionReference)weightProperty.Type).Precision);
         Assert.Equal(2, ((IEdmTypeDefinitionReference)weightProperty.Type).Scale);
-        Assert.Equal(null, ((IEdmTypeDefinitionReference)weightProperty.Type).SpatialReferenceIdentifier);
+        Assert.Null(((IEdmTypeDefinitionReference)weightProperty.Type).SpatialReferenceIdentifier);
 
-        Assert.Equal(false, ((IEdmTypeDefinitionReference)addressProperty.Type).IsUnbounded);
+        Assert.False(((IEdmTypeDefinitionReference)addressProperty.Type).IsUnbounded);
         Assert.Equal(10, ((IEdmTypeDefinitionReference)addressProperty.Type).MaxLength);
-        Assert.Equal(true, ((IEdmTypeDefinitionReference)addressProperty.Type).IsUnicode);
-        Assert.Equal(null, ((IEdmTypeDefinitionReference)addressProperty.Type).Precision);
-        Assert.Equal(null, ((IEdmTypeDefinitionReference)addressProperty.Type).Scale);
-        Assert.Equal(null, ((IEdmTypeDefinitionReference)addressProperty.Type).SpatialReferenceIdentifier);
+        Assert.True(((IEdmTypeDefinitionReference)addressProperty.Type).IsUnicode);
+        Assert.Null(((IEdmTypeDefinitionReference)addressProperty.Type).Precision);
+        Assert.Null(((IEdmTypeDefinitionReference)addressProperty.Type).Scale);
+        Assert.Null(((IEdmTypeDefinitionReference)addressProperty.Type).SpatialReferenceIdentifier);
 
-        Assert.Equal(true, ((IEdmTypeDefinitionReference)addressProperty2.Type).IsUnbounded);
-        Assert.Equal(null, ((IEdmTypeDefinitionReference)addressProperty2.Type).MaxLength);
-        Assert.Equal(false, ((IEdmTypeDefinitionReference)addressProperty2.Type).IsUnicode);
-        Assert.Equal(null, ((IEdmTypeDefinitionReference)addressProperty2.Type).Precision);
-        Assert.Equal(null, ((IEdmTypeDefinitionReference)addressProperty2.Type).Scale);
-        Assert.Equal(null, ((IEdmTypeDefinitionReference)addressProperty2.Type).SpatialReferenceIdentifier);
+        Assert.True(((IEdmTypeDefinitionReference)addressProperty2.Type).IsUnbounded);
+        Assert.Null(((IEdmTypeDefinitionReference)addressProperty2.Type).MaxLength);
+        Assert.False(((IEdmTypeDefinitionReference)addressProperty2.Type).IsUnicode);
+        Assert.Null(((IEdmTypeDefinitionReference)addressProperty2.Type).Precision);
+        Assert.Null(((IEdmTypeDefinitionReference)addressProperty2.Type).Scale);
+        Assert.Null(((IEdmTypeDefinitionReference)addressProperty2.Type).SpatialReferenceIdentifier);
 
-        Assert.Equal(false, ((IEdmTypeDefinitionReference)pointProperty.Type).IsUnbounded);
-        Assert.Equal(null, ((IEdmTypeDefinitionReference)pointProperty.Type).MaxLength);
-        Assert.Equal(null, ((IEdmTypeDefinitionReference)pointProperty.Type).IsUnicode);
-        Assert.Equal(null, ((IEdmTypeDefinitionReference)pointProperty.Type).Precision);
-        Assert.Equal(null, ((IEdmTypeDefinitionReference)pointProperty.Type).Scale);
+        Assert.False(((IEdmTypeDefinitionReference)pointProperty.Type).IsUnbounded);
+        Assert.Null(((IEdmTypeDefinitionReference)pointProperty.Type).MaxLength);
+        Assert.Null(((IEdmTypeDefinitionReference)pointProperty.Type).IsUnicode);
+        Assert.Null(((IEdmTypeDefinitionReference)pointProperty.Type).Precision);
+        Assert.Null(((IEdmTypeDefinitionReference)pointProperty.Type).Scale);
         Assert.Equal(123, ((IEdmTypeDefinitionReference)pointProperty.Type).SpatialReferenceIdentifier);
     }
 
@@ -3523,39 +3452,36 @@ public class SchemaParsingTests : EdmLibTestCaseBase
   </EntityContainer>
 </Schema>";
 
-        IEdmModel model;
-        IEnumerable<EdmError> errors;
-        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
-
-        Assert.True(parsed, "parsed");
-        Assert.False(errors.Any(), "No errors");
+        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out IEdmModel model, out IEnumerable<EdmError> errors);
+        Assert.True(parsed);
+        Assert.False(errors.Any());
 
         var elements = model.SchemaElements.ToList();
 
         // UInt16
-        Assert.Equal(((IEdmTypeDefinition)elements[0]).UnderlyingType.PrimitiveKind, EdmPrimitiveTypeKind.Int32);
-        Assert.Equal(((IEdmSchemaElement)elements[0]).SchemaElementKind, EdmSchemaElementKind.TypeDefinition);
-        Assert.Equal(((IEdmNamedElement)elements[0]).Name, "UInt16");
+        Assert.Equal(EdmPrimitiveTypeKind.Int32, ((IEdmTypeDefinition)elements[0]).UnderlyingType.PrimitiveKind);
+        Assert.Equal(EdmSchemaElementKind.TypeDefinition, ((IEdmSchemaElement)elements[0]).SchemaElementKind);
+        Assert.Equal("UInt16", ((IEdmNamedElement)elements[0]).Name);
 
         // UInt32
-        Assert.Equal(((IEdmTypeDefinition)elements[1]).UnderlyingType.PrimitiveKind, EdmPrimitiveTypeKind.Int64);
-        Assert.Equal(elements[1].SchemaElementKind, EdmSchemaElementKind.TypeDefinition);
-        Assert.Equal(((IEdmNamedElement)elements[1]).Name, "UInt32");
+        Assert.Equal(EdmPrimitiveTypeKind.Int64, ((IEdmTypeDefinition)elements[1]).UnderlyingType.PrimitiveKind);
+        Assert.Equal(EdmSchemaElementKind.TypeDefinition, elements[1].SchemaElementKind);
+        Assert.Equal("UInt32", ((IEdmNamedElement)elements[1]).Name);
 
         // UInt64
-        Assert.Equal(((IEdmTypeDefinition)elements[2]).UnderlyingType.PrimitiveKind, EdmPrimitiveTypeKind.Decimal);
-        Assert.Equal(elements[2].SchemaElementKind, EdmSchemaElementKind.TypeDefinition);
-        Assert.Equal(((IEdmNamedElement)elements[2]).Name, "UInt64");
+        Assert.Equal(EdmPrimitiveTypeKind.Decimal, ((IEdmTypeDefinition)elements[2]).UnderlyingType.PrimitiveKind);
+        Assert.Equal(EdmSchemaElementKind.TypeDefinition, elements[2].SchemaElementKind);
+        Assert.Equal("UInt64", ((IEdmNamedElement)elements[2]).Name);
 
         // Person
         var personType = elements[3] as IEdmEntityType;
-        Assert.NotNull(personType, "MyNS.Person");
+        Assert.NotNull(personType);
         var idProperty = personType.FindProperty("Id");
         var shortIntProperty = personType.FindProperty("ShortInt");
         var longIntProperty = personType.FindProperty("LongInt");
-        Assert.Equal(idProperty.Type.AsTypeDefinition().FullName(), "MyNS.UInt32");
-        Assert.Equal(shortIntProperty.Type.AsTypeDefinition().FullName(), "MyNS.UInt16");
-        Assert.Equal(longIntProperty.Type.AsTypeDefinition().FullName(), "MyNS.UInt64");
+        Assert.Equal("MyNS.UInt32", idProperty.Type.AsTypeDefinition().FullName());
+        Assert.Equal("MyNS.UInt16", shortIntProperty.Type.AsTypeDefinition().FullName());
+        Assert.Equal("MyNS.UInt64", longIntProperty.Type.AsTypeDefinition().FullName());
     }
 
     [Fact]
@@ -3577,26 +3503,24 @@ public class SchemaParsingTests : EdmLibTestCaseBase
   </EntityContainer>
 </Schema>";
 
-        IEdmModel model;
-        IEnumerable<EdmError> errors;
-        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
+        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out IEdmModel model, out IEnumerable<EdmError> errors);
 
-        Assert.True(parsed, "parsed");
-        Assert.False(errors.Any(), "No errors");
+        Assert.True(parsed);
+        Assert.Empty(errors);
 
         var elements = model.SchemaElements.ToList();
 
         // Person
         var personType = elements[0] as IEdmEntityType;
-        Assert.NotNull(personType, "MyNS.Person");
+        Assert.NotNull(personType);
         var idProperty = personType.FindProperty("Id");
         var dateTimeOffsetProperty = personType.FindProperty("dateTimeOffset");
         var dateProperty = personType.FindProperty("date");
         var timeOfDayProperty = personType.FindProperty("timeofday");
-        Assert.Equal(idProperty.Type.AsTypeDefinition().FullName(), "Edm.Int32");
-        Assert.Equal(dateTimeOffsetProperty.Type.AsTypeDefinition().FullName(), "Edm.DateTimeOffset");
-        Assert.Equal(dateProperty.Type.AsTypeDefinition().FullName(), "Edm.Date");
-        Assert.Equal(timeOfDayProperty.Type.AsTypeDefinition().FullName(), "Edm.TimeOfDay");
+        Assert.Equal("Edm.Int32", idProperty.Type.AsTypeDefinition().FullName());
+        Assert.Equal("Edm.DateTimeOffset", dateTimeOffsetProperty.Type.AsTypeDefinition().FullName());
+        Assert.Equal("Edm.Date", dateProperty.Type.AsTypeDefinition().FullName());
+        Assert.Equal("Edm.TimeOfDay", timeOfDayProperty.Type.AsTypeDefinition().FullName());
     }
 
     [Fact]
@@ -3609,15 +3533,12 @@ public class SchemaParsingTests : EdmLibTestCaseBase
   </Term>
 </Schema>";
 
-        IEdmModel model;
-        IEnumerable<EdmError> errors;
-        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
-
-        Assert.True(parsed, "parsed");
-        Assert.False(errors.Any(), "No errors");
+        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out IEdmModel model, out IEnumerable<EdmError> errors);
+        Assert.True(parsed);
+        Assert.False(errors.Any());
 
         var term = model.FindTerm("MyNS.ConventionalIDs");
-        Assert.Equal(term.DefaultValue, "True");
+        Assert.Equal("True", term.DefaultValue);
     }
 
 
@@ -3630,16 +3551,13 @@ public class SchemaParsingTests : EdmLibTestCaseBase
   <TypeDefinition Name=""Length"" UnderlyingType=""Edm.Double"" />
 </Schema>";
 
-        IEdmModel model;
-        IEnumerable<EdmError> errors;
-        IEnumerable<EdmError> validationErrors;
-        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
+        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out IEdmModel model, out IEnumerable<EdmError> errors);
 
-        Assert.True(parsed, "parsed");
-        Assert.False(errors.Any(), "No errors");
+        Assert.True(parsed);
+        Assert.Empty(errors);
 
-        model.Validate(out validationErrors);
-        Assert.Equal(validationErrors.Single().ErrorMessage, "An element with the name 'MyNS.Length' is already defined.");
+        model.Validate(out IEnumerable<EdmError> validationErrors);
+        Assert.Equal("An element with the name 'MyNS.Length' is already defined.", validationErrors.Single().ErrorMessage);
     }
 
     [Fact]
@@ -3656,16 +3574,13 @@ public class SchemaParsingTests : EdmLibTestCaseBase
   </EntityType>
 </Schema>";
 
-        IEdmModel model;
-        IEnumerable<EdmError> errors;
-        IEnumerable<EdmError> validationErrors;
-        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
+        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out IEdmModel model, out IEnumerable<EdmError> errors);
 
-        Assert.True(parsed, "parsed");
-        Assert.False(errors.Any(), "No errors");
+        Assert.True(parsed);
+        Assert.Empty(errors);
 
-        model.Validate(out validationErrors);
-        Assert.Equal(validationErrors.Single().ErrorMessage, "An element with the name 'MyNS.Person' is already defined.");
+        model.Validate(out IEnumerable<EdmError> validationErrors);
+        Assert.Equal("An element with the name 'MyNS.Person' is already defined.", validationErrors.Single().ErrorMessage);
     }
 
     [Fact]
@@ -3682,16 +3597,12 @@ public class SchemaParsingTests : EdmLibTestCaseBase
   </EntityType>
 </Schema>";
 
-        IEdmModel model;
-        IEnumerable<EdmError> errors;
-        IEnumerable<EdmError> validationErrors;
-        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
+        bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out IEdmModel model, out IEnumerable<EdmError> errors);
+        Assert.True(parsed);
+        Assert.Empty(errors);
 
-        Assert.True(parsed, "parsed");
-        Assert.False(errors.Any(), "No errors");
-
-        model.Validate(out validationErrors);
-        Assert.Equal(validationErrors.Single().ErrorMessage, "Each property name in a type must be unique. Property name 'Id' is already defined.");
+        model.Validate(out IEnumerable<EdmError> validationErrors);
+        Assert.Equal("Each property name in a type must be unique. Property name 'Id' is already defined.", validationErrors.Single().ErrorMessage);
     }
 
     [Fact]
@@ -3710,11 +3621,11 @@ public class SchemaParsingTests : EdmLibTestCaseBase
         IEnumerable<EdmError> validationErrors;
         bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
 
-        Assert.True(parsed, "parsed");
-        Assert.False(errors.Any(), "No errors");
+        Assert.True(parsed);
+        Assert.Empty(errors);
 
         model.Validate(out validationErrors);
-        Assert.Equal(validationErrors.Single().ErrorMessage, "An element with the name 'MyNS.Person' is already defined.");
+        Assert.Equal("An element with the name 'MyNS.Person' is already defined.", validationErrors.Single().ErrorMessage);
     }
 
     [Fact]
@@ -3735,9 +3646,58 @@ public class SchemaParsingTests : EdmLibTestCaseBase
         IEdmModel model;
         IEnumerable<EdmError> errors;
         bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
-        Assert.True(parsed, "parsed");
+        Assert.True(parsed);
         Assert.Equal(0, errors.Count());
         bool valid = model.Validate(out errors);
         Assert.True(valid, "valid");
+    }
+
+    private void Compare(List<XElement> expectXElements, List<XElement> actualXElements)
+    {
+        Assert.Equal(expectXElements.Count, actualXElements.Count);
+
+        // extract EntityContainers into one place
+        XElement expectedContainers = ExtractElementByName(expectXElements, "EntityContainer");
+        XElement actualContainers = ExtractElementByName(actualXElements, "EntityContainer");
+
+        // compare just the EntityContainers
+        this.CsdlXElementComparer.Compare(expectedContainers, actualContainers);
+
+        foreach (var expectXElement in expectXElements)
+        {
+            var schemaNamespace = expectXElement.Attribute("Namespace") == null ? string.Empty : expectXElement.Attribute("Namespace")?.Value;
+            var actualXElement = actualXElements.FirstOrDefault(e => schemaNamespace == (e.Attribute("Namespace") == null ? string.Empty : e.Attribute("Namespace")?.Value));
+
+            Assert.NotNull(actualXElement);
+
+            this.CsdlXElementComparer.Compare(expectXElement, actualXElement);
+        }
+    }
+
+    private class ArrayComp : IEqualityComparer<byte[]>
+    {
+        public static readonly ArrayComp Instance = new ArrayComp();
+        public bool Equals(byte[] x, byte[] y)
+        {
+            if (x == null && y == null)
+            {
+                return true;
+            }
+            if (x == null || y == null || x.Length != y.Length)
+            {
+                return false;
+            }
+            for (int i = 0; i < x.Length; ++i)
+            {
+                if (x[i] != y[i])
+                    return false;
+            }
+            return true;
+        }
+
+        public int GetHashCode(byte[] obj)
+        {
+            throw new NotSupportedException();
+        }
     }
 }

@@ -4,9 +4,12 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System.Reflection;
+using System.Security.AccessControl;
 using System.Xml.Linq;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.E2E.Tests.StubEdm;
+using Microsoft.OData.Edm.Validation;
 using Microsoft.OData.Edm.Vocabularies;
 
 namespace Microsoft.OData.Edm.E2E.Tests.FunctionalTests;
@@ -216,6 +219,7 @@ public class ODataScenarioTests : EdmLibTestCaseBase
         </Annotation>
     </Annotations>
 </Schema>";
+
         IEdmModel applicationModel = this.Parse(applicationCsdl, this.baseModel);
 
         IEdmModel combinedModel = new CombiningModel(this.baseModel, applicationModel);
@@ -223,7 +227,31 @@ public class ODataScenarioTests : EdmLibTestCaseBase
         IEnumerable<string> actualCsdls = this.GetSerializerResult(combinedModel);
 
         var expectedCsdls = CsdlCombiner.GetCombinedCsdls(new[] { applicationCsdl, baseModelCsdl });
-        this.CompareCsdls(expectedCsdls, actualCsdls);
+
+        var expectedXElements = expectedCsdls.Select(s => XElement.Load(new StringReader(s)));
+        var actualXElements = actualCsdls.Select(s => XElement.Load(new StringReader(s)));
+
+        Assert.Equal(expectedXElements.Count(), actualXElements.Count());
+
+        var comparer = new CsdlXElementComparer();
+
+        // extract EntityContainers into one place
+        XElement expectedContainers = ExtractElementByName(expectedXElements.ToList(), "EntityContainer");
+        XElement actualContainers = ExtractElementByName(actualXElements, "EntityContainer");
+
+        // compare just the EntityContainers
+        comparer.Compare(expectedContainers, actualContainers);
+
+        // compare non-EntityContainers
+        foreach (XElement expectedXElement in expectedXElements)
+        {
+            var schemaNamespace = expectedXElement.Attribute("Namespace")?.Value;
+            var actualXElement = actualXElements.FirstOrDefault(e => schemaNamespace == e.Attribute("Namespace")?.Value);
+
+            Assert.NotNull(actualXElement);
+
+            comparer.Compare(expectedXElement, actualXElement);
+        }
     }
 
     [Fact]
@@ -251,7 +279,31 @@ public class ODataScenarioTests : EdmLibTestCaseBase
 <Schema Namespace=""foo"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
 </Schema>";
         var expectedCsdls = CsdlCombiner.GetCombinedCsdls(new[] { applicationCsdl, baseModelCsdl, usingCsdl });
-        this.CompareCsdls(expectedCsdls, actualCsdls);
+
+        var expectedXElements = expectedCsdls.Select(s => XElement.Load(new StringReader(s)));
+        var actualXElements = actualCsdls.Select(s => XElement.Load(new StringReader(s)));
+
+        Assert.Equal(expectedXElements.Count(), actualXElements.Count());
+
+        var comparer = new CsdlXElementComparer();
+
+        // extract EntityContainers into one place
+        XElement expectedContainers = ExtractElementByName(expectedXElements.ToList(), "EntityContainer");
+        XElement actualContainers = ExtractElementByName(actualXElements, "EntityContainer");
+
+        // compare just the EntityContainers
+        comparer.Compare(expectedContainers, actualContainers);
+
+        // compare non-EntityContainers
+        foreach (XElement expectedXElement in expectedXElements)
+        {
+            var schemaNamespace = expectedXElement.Attribute("Namespace")?.Value;
+            var actualXElement = actualXElements.FirstOrDefault(e => schemaNamespace == e.Attribute("Namespace")?.Value);
+
+            Assert.NotNull(actualXElement);
+
+            comparer.Compare(expectedXElement, actualXElement);
+        }
     }
 
     [Fact]
@@ -259,11 +311,11 @@ public class ODataScenarioTests : EdmLibTestCaseBase
     {
         this.SetupModels();
 
-        IEdmEntityType person = baseModel.FindEntityType("foo.Person");
-        Assert.NotNull(person, "Personage");
+        var person = baseModel.FindType("foo.Person") as IEdmEntityType;
+        Assert.NotNull(person);
 
         IEdmProperty name = person.FindProperty("Name");
-        Assert.NotNull(name, "Person Name");
+        Assert.NotNull(name);
 
         string bogus = "http://bogus.com";
         string goop = "goop";
@@ -272,22 +324,22 @@ public class ODataScenarioTests : EdmLibTestCaseBase
 
         var setters = new IEdmDirectValueAnnotationBinding[]
         {
-                new EdmDirectValueAnnotationBinding(person, bogus, goop, 0),
-                new EdmDirectValueAnnotationBinding(person, bogus, droop, 0),
-                new EdmDirectValueAnnotationBinding(person, bogus, scoop, 0),
-                new EdmDirectValueAnnotationBinding(name, bogus, goop, 0),
-                new EdmDirectValueAnnotationBinding(name, bogus, droop, 0),
-                new EdmDirectValueAnnotationBinding(name, bogus, scoop, 0)
+            new EdmDirectValueAnnotationBinding(person, bogus, goop, 0),
+            new EdmDirectValueAnnotationBinding(person, bogus, droop, 0),
+            new EdmDirectValueAnnotationBinding(person, bogus, scoop, 0),
+            new EdmDirectValueAnnotationBinding(name, bogus, goop, 0),
+            new EdmDirectValueAnnotationBinding(name, bogus, droop, 0),
+            new EdmDirectValueAnnotationBinding(name, bogus, scoop, 0)
         };
 
         var getters = new IEdmDirectValueAnnotationBinding[]
         {
-                new EdmDirectValueAnnotationBinding(person, bogus, goop),
-                new EdmDirectValueAnnotationBinding(person, bogus, droop),
-                new EdmDirectValueAnnotationBinding(person, bogus, scoop),
-                new EdmDirectValueAnnotationBinding(name, bogus, goop),
-                new EdmDirectValueAnnotationBinding(name, bogus, droop),
-                new EdmDirectValueAnnotationBinding(name, bogus, scoop)
+            new EdmDirectValueAnnotationBinding(person, bogus, goop),
+            new EdmDirectValueAnnotationBinding(person, bogus, droop),
+            new EdmDirectValueAnnotationBinding(person, bogus, scoop),
+            new EdmDirectValueAnnotationBinding(name, bogus, goop),
+            new EdmDirectValueAnnotationBinding(name, bogus, droop),
+            new EdmDirectValueAnnotationBinding(name, bogus, scoop)
         };
 
         baseModel.SetAnnotationValues(setters);
@@ -295,18 +347,18 @@ public class ODataScenarioTests : EdmLibTestCaseBase
         bool foundNonzero = false;
 
         ThreadIndex = 0;
-        System.Threading.ParameterizedThreadStart threadStart = new System.Threading.ParameterizedThreadStart(AnnotationsThreadFunction);
+        ParameterizedThreadStart threadStart = new ParameterizedThreadStart(AnnotationsThreadFunction);
 
         for (int i = 0; i < 100; i++)
         {
-            System.Threading.Thread newThread = new System.Threading.Thread(threadStart);
+            Thread newThread = new Thread(threadStart);
             newThread.Start(baseModel);
 
             object[] values = baseModel.GetAnnotationValues(getters);
             int firstValue = (int)values[0];
             foreach (object value in values)
             {
-                Assert.Equal(firstValue, (int)value, "Person and name values");
+                Assert.Equal(firstValue, (int)value);
             }
         }
 
@@ -321,11 +373,11 @@ public class ODataScenarioTests : EdmLibTestCaseBase
 
             foreach (object value in values)
             {
-                Assert.Equal(firstValue, (int)value, "Person and name values");
+                Assert.Equal(firstValue, (int)value);
             }
         }
 
-        Assert.True(foundNonzero, "Nonzero value");
+        Assert.True(foundNonzero);
     }
 
     private static int ThreadIndex;
@@ -334,8 +386,8 @@ public class ODataScenarioTests : EdmLibTestCaseBase
     {
         IEdmModel model = (IEdmModel)o;
 
-        IEdmEntityType person = model.FindEntityType("foo.Person");
-        IEdmProperty name = person.FindProperty("Name");
+        var person = model.FindType("foo.Person") as IEdmEntityType;
+        var name = person.FindProperty("Name");
 
         string bogus = "http://bogus.com";
         string goop = "goop";
@@ -348,12 +400,12 @@ public class ODataScenarioTests : EdmLibTestCaseBase
         {
             var setters = new IEdmDirectValueAnnotationBinding[]
             {
-                    new EdmDirectValueAnnotationBinding(person, bogus, goop, index),
-                    new EdmDirectValueAnnotationBinding(person, bogus, droop, index),
-                    new EdmDirectValueAnnotationBinding(person, bogus, scoop, index),
-                    new EdmDirectValueAnnotationBinding(name, bogus, goop, index),
-                    new EdmDirectValueAnnotationBinding(name, bogus, droop, index),
-                    new EdmDirectValueAnnotationBinding(name, bogus, scoop, index)
+                new EdmDirectValueAnnotationBinding(person, bogus, goop, index),
+                new EdmDirectValueAnnotationBinding(person, bogus, droop, index),
+                new EdmDirectValueAnnotationBinding(person, bogus, scoop, index),
+                new EdmDirectValueAnnotationBinding(name, bogus, goop, index),
+                new EdmDirectValueAnnotationBinding(name, bogus, droop, index),
+                new EdmDirectValueAnnotationBinding(name, bogus, scoop, index)
             };
 
             model.SetAnnotationValues(setters);
@@ -398,7 +450,7 @@ public class ODataScenarioTests : EdmLibTestCaseBase
             getters.Add(new EdmDirectValueAnnotationBinding(element, bogus, droop));
             getters.Add(new EdmDirectValueAnnotationBinding(element, bogus, scoop));
 
-            IEdmEntityType entityType = element as IEdmEntityType;
+            var entityType = element as IEdmEntityType;
             if (entityType != null)
             {
                 getters.Add(new EdmDirectValueAnnotationBinding(entityType.FindProperty("Name"), bogus, goop));
@@ -416,18 +468,18 @@ public class ODataScenarioTests : EdmLibTestCaseBase
         bool foundNonzero = false;
 
         ThreadIndexForLargerModel = 0;
-        System.Threading.ParameterizedThreadStart threadStart = new System.Threading.ParameterizedThreadStart(AnnotationsThreadFunctionForLargerModel);
+        ParameterizedThreadStart threadStart = new ParameterizedThreadStart(AnnotationsThreadFunctionForLargerModel);
 
         for (int i = 0; i < 100; i++)
         {
-            System.Threading.Thread newThread = new System.Threading.Thread(threadStart);
+            Thread newThread = new Thread(threadStart);
             newThread.Start(model);
 
             object[] values = model.GetAnnotationValues(getters);
             int firstValue = (int)values[0];
             foreach (object value in values)
             {
-                Assert.Equal(firstValue, (int)value, "Person and name values");
+                Assert.Equal(firstValue, (int)value);
             }
         }
 
@@ -442,11 +494,11 @@ public class ODataScenarioTests : EdmLibTestCaseBase
 
             foreach (object value in values)
             {
-                Assert.Equal(firstValue, (int)value, "Person and name values");
+                Assert.Equal(firstValue, (int)value);
             }
         }
 
-        Assert.True(foundNonzero, "Nonzero value");
+        Assert.True(foundNonzero);
     }
 
     private static int ThreadIndexForLargerModel;
@@ -472,7 +524,7 @@ public class ODataScenarioTests : EdmLibTestCaseBase
                 setters.Add(new EdmDirectValueAnnotationBinding(element, bogus, droop, index));
                 setters.Add(new EdmDirectValueAnnotationBinding(element, bogus, scoop, index));
 
-                IEdmEntityType entityType = element as IEdmEntityType;
+                var entityType = element as IEdmEntityType;
                 if (entityType != null)
                 {
                     foreach (IEdmStructuralProperty property in entityType.DeclaredProperties)
@@ -497,11 +549,11 @@ public class ODataScenarioTests : EdmLibTestCaseBase
         Properties = new IEnumerable<IEdmProperty>[10];
         PropertyTypes = new IEdmTypeReference[100];
 
-        System.Threading.ParameterizedThreadStart threadStart = new System.Threading.ParameterizedThreadStart(PropertiesThreadFunction);
+        ParameterizedThreadStart threadStart = new ParameterizedThreadStart(PropertiesThreadFunction);
 
         for (int i = 0; i < 100; i++)
         {
-            System.Threading.Thread newThread = new System.Threading.Thread(threadStart);
+            Thread newThread = new Thread(threadStart);
             newThread.Start(model);
         }
 
@@ -513,7 +565,7 @@ public class ODataScenarioTests : EdmLibTestCaseBase
         {
             foreach (IEdmEntityType baseType in BaseTypes)
             {
-                Assert.AreNotEqual(BadBaseType, baseType, "Base Type");
+                Assert.NotEqual(BadBaseType, baseType);
 
                 if (baseType != null)
                 {
@@ -523,7 +575,7 @@ public class ODataScenarioTests : EdmLibTestCaseBase
 
             foreach (IEnumerable<IEdmProperty> properties in Properties)
             {
-                Assert.AreNotEqual(BadProperties, properties, "Properties");
+                Assert.NotEqual(BadProperties, properties);
 
                 if (properties != null)
                 {
@@ -533,7 +585,7 @@ public class ODataScenarioTests : EdmLibTestCaseBase
 
             foreach (IEdmTypeReference type in PropertyTypes)
             {
-                Assert.AreNotEqual(BadTypeReference, type, "Property type");
+                Assert.NotEqual(BadTypeReference, type);
 
                 if (type != null)
                 {
@@ -588,7 +640,7 @@ public class ODataScenarioTests : EdmLibTestCaseBase
         int index = 0;
         foreach (IEdmSchemaElement element in model.SchemaElements)
         {
-            IEdmEntityType entityType = element as IEdmEntityType;
+            var entityType = element as IEdmEntityType;
             if (entityType != null)
             {
                 IEdmEntityType baseType = entityType.BaseEntityType();
@@ -659,6 +711,7 @@ public class ODataScenarioTests : EdmLibTestCaseBase
         <Property Name=""Name"" Type=""String"" Nullable=""false"" />
     </EntityType>
 </Schema>";
+
         IEdmModel applicationModel = this.Parse(applicationCsdl);
 
         var annotation = applicationModel.VocabularyAnnotations.Single();
@@ -666,7 +719,30 @@ public class ODataScenarioTests : EdmLibTestCaseBase
         annotation.SetSerializationLocation(applicationModel, EdmVocabularyAnnotationSerializationLocation.Inline);
         IEnumerable<string> actualCsdls = this.GetSerializerResult(applicationModel);
 
-        this.CompareCsdls(new[] { applicationCsdl }, actualCsdls);
+        var expectedXElements = new[] { applicationCsdl }.Select(s => XElement.Load(new StringReader(s)));
+        var actualXElements = actualCsdls.Select(s => XElement.Load(new StringReader(s)));
+
+        Assert.Equal(expectedXElements.Count(), actualXElements.Count());
+
+        var comparer = new CsdlXElementComparer();
+
+        // extract EntityContainers into one place
+        XElement expectedContainers = ExtractElementByName(expectedXElements.ToList(), "EntityContainer");
+        XElement actualContainers = ExtractElementByName(actualXElements, "EntityContainer");
+
+        // compare just the EntityContainers
+        comparer.Compare(expectedContainers, actualContainers);
+
+        // compare non-EntityContainers
+        foreach (XElement expectedXElement in expectedXElements)
+        {
+            var schemaNamespace = expectedXElement.Attribute("Namespace")?.Value;
+            var actualXElement = actualXElements.FirstOrDefault(e => schemaNamespace == e.Attribute("Namespace")?.Value);
+
+            Assert.NotNull(actualXElement);
+
+            comparer.Compare(expectedXElement, actualXElement);
+        }
     }
 
     [Fact]
@@ -698,7 +774,30 @@ public class ODataScenarioTests : EdmLibTestCaseBase
         annotation.SetSerializationLocation(applicationModel, EdmVocabularyAnnotationSerializationLocation.Inline);
         IEnumerable<string> actualCsdls = this.GetSerializerResult(applicationModel);
 
-        this.CompareCsdls(new[] { applicationCsdl }, actualCsdls);
+        var expectedXElements = new[] { applicationCsdl }.Select(s => XElement.Load(new StringReader(s)));
+        var actualXElements = actualCsdls.Select(s => XElement.Load(new StringReader(s)));
+
+        Assert.Equal(expectedXElements.Count(), actualXElements.Count());
+
+        var comparer = new CsdlXElementComparer();
+
+        // extract EntityContainers into one place
+        XElement expectedContainers = ExtractElementByName(expectedXElements.ToList(), "EntityContainer");
+        XElement actualContainers = ExtractElementByName(actualXElements, "EntityContainer");
+
+        // compare just the EntityContainers
+        comparer.Compare(expectedContainers, actualContainers);
+
+        // compare non-EntityContainers
+        foreach (XElement expectedXElement in expectedXElements)
+        {
+            var schemaNamespace = expectedXElement.Attribute("Namespace")?.Value;
+            var actualXElement = actualXElements.FirstOrDefault(e => schemaNamespace == e.Attribute("Namespace")?.Value);
+
+            Assert.NotNull(actualXElement);
+
+            comparer.Compare(expectedXElement, actualXElement);
+        }
     }
 
     [Fact]
@@ -720,31 +819,48 @@ public class ODataScenarioTests : EdmLibTestCaseBase
         <Property Name=""Name"" Type=""String"" Nullable=""false"" />
     </EntityType>
 </Schema>";
+
         IEdmModel applicationModel = this.Parse(applicationCsdl);
 
         // query
-        var person = applicationModel.FindEntityType("foo.Person");
+        var person = applicationModel.FindType("foo.Person") as IEdmEntityType;
         var annotation = person.VocabularyAnnotations(applicationModel).Single();
 
-        Assert.Equal("MoreTransformedPersonTerm", annotation.Term.Name, "term name");
-        Assert.Equal("bar", annotation.Term.Namespace, "term namespace uri");
-        Assert.Null(annotation.Qualifier, "term qualifier");
+        Assert.Equal("MoreTransformedPersonTerm", annotation.Term.Name);
+        Assert.Equal("bar", annotation.Term.Namespace);
+        Assert.Null(annotation.Qualifier);
     }
 
     private IEdmModel Parse(string csdl, params IEdmModel[] referencedModels)
     {
-        return this.GetParserResult(new[] { csdl }, referencedModels);
+        IEnumerable<XElement> csdlElements = new[] { csdl }.Select(XElement.Parse);
+
+        var isParsed = SchemaReader.TryParse(csdlElements.Select(e => e.CreateReader()), referencedModels, out IEdmModel edmModel, out IEnumerable<EdmError> errors);
+        Assert.True(isParsed);
+        Assert.True(!errors.Any());
+
+        return edmModel;
     }
 
-    private void CompareCsdls(IEnumerable<string> expectedCsdls, IEnumerable<string> actualCsdls)
+    // [EdmLib] NRE thrown from Cache when compute func throws repeatedly
+    [Fact]
+    public void Exception_From_Compute_Does_Not_Make_Cache_To_Fail_With_NullRefException()
     {
-        var verifier = new SerializerResultVerifierUsingXml();
+        var complexType = new EdmComplexType("Bar", "Foo");
+        var property = new StubEdmStructuralProperty(null) { DeclaringType = complexType };
+        complexType.AddProperty(property);
 
-        var expected = expectedCsdls.Select(s => XElement.Load(new StringReader(s)));
-        var actual = actualCsdls.Select(s => XElement.Load(new StringReader(s)));
-
-        verifier.Verify(expected, actual);
+        for (int i = 0; i < 10; i++)
+        {
+            try
+            {
+                complexType.FindProperty(null);
+            }
+            catch (ArgumentNullException) { }
+        }
     }
+
+
 
     private class CombiningModel : IEdmModel
     {
@@ -886,7 +1002,6 @@ public class ODataScenarioTests : EdmLibTestCaseBase
 
             foreach (var original in originalSchemaElements)
             {
-                // TODO: handle other attributes, like NamespaceUri
                 var combined = combinedXElements.Single(e => e.Attribute("Namespace").Value == original.Attribute("Namespace").Value);
                 combined.Add(original.Elements().ToArray());
             }
@@ -898,23 +1013,5 @@ public class ODataScenarioTests : EdmLibTestCaseBase
     private class Person
     {
         public string Name { get; set; }
-    }
-
-    // [EdmLib] NRE thrown from Cache when compute func throws repeatedly
-    [Fact]
-    public void Exception_From_Compute_Does_Not_Make_Cache_To_Fail_With_NullRefException()
-    {
-        var complexType = new EdmComplexType("Bar", "Foo");
-        var property = new StubEdmStructuralProperty(null) { DeclaringType = complexType };
-        complexType.AddProperty(property);
-
-        for (int i = 0; i < 10; i++)
-        {
-            try
-            {
-                complexType.FindProperty(null);
-            }
-            catch (ArgumentNullException) { }
-        }
     }
 }

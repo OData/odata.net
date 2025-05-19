@@ -107,8 +107,8 @@ public class VocabularyRoundTripTests : EdmLibTestCaseBase
         IEnumerable<EdmError> errors;
         model.Validate(out errors);
         Assert.Equal(2, errors.Count(), "Invalid error count.");
-        Assert.Equal(EdmErrorCode.DuplicateFunctions, errors.First().ErrorCode, "Invalid error code.");
-        Assert.Equal(EdmErrorCode.DuplicateFunctions, errors.ToArray()[1].ErrorCode, "Invalid error code.");
+        Assert.Equal(EdmErrorCode.DuplicateFunctions, errors.First().ErrorCode);
+        Assert.Equal(EdmErrorCode.DuplicateFunctions, errors.ToArray()[1].ErrorCode);
 
         var roundTripCsdl = this.GetSerializerResult(model, EdmVersion.V40, out errors).Select(n => XElement.Parse(n));
         Assert.Equal(0, errors.Count(), "Invalid error count.");

@@ -10,6 +10,7 @@ using System.Xml.Linq;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.E2E.Tests.StubEdm;
 using Microsoft.OData.Edm.Validation;
+using Microsoft.OData.Edm.Vocabularies;
 
 namespace Microsoft.OData.Edm.E2E.Tests.FunctionalTests;
 
@@ -53,14 +54,14 @@ public class FindMethodTests : EdmLibTestCaseBase
         Assert.True(isParsed);
         Assert.Empty(errors);
 
-        this.VerifyFindMethods(csdlElements, testModelImmutable);
+        this.VerifyFindMethods(csdlElements, testModelImmutable, edmVersion);
 
         var testModelConstructible = (new EdmToStockModelConverter()).ConvertToStockModel(testModelImmutable);
         IEnumerable<EdmError> serializationErrors;
         var testCsdls = this.GetSerializerResult(testModelConstructible, out serializationErrors).Select(n => XElement.Parse(n));
         Assert.Empty(serializationErrors);
 
-        this.VerifyFindMethods(testCsdls, testModelConstructible);
+        this.VerifyFindMethods(testCsdls, testModelConstructible, edmVersion);
     }
 
     [Theory]
@@ -97,14 +98,14 @@ public class FindMethodTests : EdmLibTestCaseBase
         Assert.True(isParsed);
         Assert.Empty(errors);
 
-        this.VerifyFindMethods(csdlElements, testModelImmutable);
+        this.VerifyFindMethods(csdlElements, testModelImmutable, edmVersion);
 
         var testModelConstructible = (new EdmToStockModelConverter()).ConvertToStockModel(testModelImmutable);
         IEnumerable<EdmError> serializationErrors;
         var testCsdls = this.GetSerializerResult(testModelConstructible, out serializationErrors).Select(n => XElement.Parse(n));
         Assert.Empty(serializationErrors);
 
-        this.VerifyFindMethods(testCsdls, testModelConstructible);
+        this.VerifyFindMethods(testCsdls, testModelConstructible, edmVersion);
     }
 
 
@@ -114,10 +115,10 @@ public class FindMethodTests : EdmLibTestCaseBase
     public void FindMethodsTestMultipleSchemasWithDifferentNamespaces(EdmVersion edmVersion)
     {
         var namespaces = new string[]
-                {
-                    "FindMethodsTestModelBuilder.MultipleSchemasWithDifferentNamespaces.first",
-                    "FindMethodsTestModelBuilder.MultipleSchemasWithDifferentNamespaces.second"
-                };
+        {
+            "FindMethodsTestModelBuilder.MultipleSchemasWithDifferentNamespaces.first",
+            "FindMethodsTestModelBuilder.MultipleSchemasWithDifferentNamespaces.second"
+        };
 
         var model = new EdmModel();
         foreach (var namespaceName in namespaces)
@@ -151,14 +152,14 @@ public class FindMethodTests : EdmLibTestCaseBase
         Assert.True(isParsed);
         Assert.Empty(errors);
 
-        this.VerifyFindMethods(csdlElements, testModelImmutable);
+        this.VerifyFindMethods(csdlElements, testModelImmutable, edmVersion);
 
         var testModelConstructible = (new EdmToStockModelConverter()).ConvertToStockModel(testModelImmutable);
         IEnumerable<EdmError> serializationErrors;
         var testCsdls = this.GetSerializerResult(testModelConstructible, out serializationErrors).Select(n => XElement.Parse(n));
         Assert.Empty(serializationErrors);
 
-        this.VerifyFindMethods(testCsdls, testModelConstructible);
+        this.VerifyFindMethods(testCsdls, testModelConstructible, edmVersion);
     }
 
     [Theory]
@@ -239,14 +240,13 @@ public class FindMethodTests : EdmLibTestCaseBase
         Assert.True(isParsed);
         Assert.Empty(errors);
 
-        this.VerifyFindMethods(csdlElements, testModelImmutable);
+        this.VerifyFindMethods(csdlElements, testModelImmutable, edmVersion);
 
         var testModelConstructible = (new EdmToStockModelConverter()).ConvertToStockModel(testModelImmutable);
-        IEnumerable<EdmError> serializationErrors;
-        var testCsdls = this.GetSerializerResult(testModelConstructible, out serializationErrors).Select(n => XElement.Parse(n));
+        var testCsdls = this.GetSerializerResult(testModelConstructible, out IEnumerable<EdmError> serializationErrors).Select(n => XElement.Parse(n));
         Assert.Empty(serializationErrors);
 
-        this.VerifyFindMethods(testCsdls, testModelConstructible);
+        this.VerifyFindMethods(testCsdls, testModelConstructible, edmVersion);
     }
 
     [Fact]
@@ -305,184 +305,1024 @@ public class FindMethodTests : EdmLibTestCaseBase
         Assert.NotNull(testModel.FindType("Edm.Int32"));
     }
 
-    [Fact]
-    public void FindMethodTestAssociationCompositeFk()
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void FindMethodTestAssociationCompositeFk(EdmVersion edmVersion)
     {
-        this.BasicFindMethodsTest(ModelBuilder.AssociationCompositeFkEdm());
+        var model = new EdmModel();
+        var customerType = new EdmEntityType("NS1", "Customer");
+        customerType.AddKeys(customerType.AddStructuralProperty("Id1", EdmPrimitiveTypeKind.Int32));
+        customerType.AddKeys(customerType.AddStructuralProperty("Id2", EdmPrimitiveTypeKind.Int32));
+        model.AddElement(customerType);
+
+        var orderType = new EdmEntityType("NS1", "Order");
+        orderType.AddKeys(orderType.AddStructuralProperty("Id1", EdmPrimitiveTypeKind.Int32));
+        var customerId1Property = orderType.AddStructuralProperty("CustomerId1", EdmPrimitiveTypeKind.Int32);
+        var customerId2Property = orderType.AddStructuralProperty("CustomerId2", EdmPrimitiveTypeKind.Int32);
+        model.AddElement(orderType);
+
+        var navProp = new EdmNavigationPropertyInfo { Name = "ToCustomer", Target = customerType, TargetMultiplicity = EdmMultiplicity.One, DependentProperties = new[] { customerId1Property, customerId2Property }, PrincipalProperties = customerType.Key() };
+        orderType.AddUnidirectionalNavigation(navProp);
+
+        var csdlElements = this.GetSerializerResult(model).Select(XElement.Parse);
+        csdlElements = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(csdlElements.ToArray(), edmVersion);
+
+        var isParsed = SchemaReader.TryParse(csdlElements.Select(e => e.CreateReader()), out IEdmModel testModelImmutable, out IEnumerable<EdmError> errors);
+        Assert.True(isParsed);
+        Assert.Empty(errors);
+
+        this.VerifyFindMethods(csdlElements, testModelImmutable, edmVersion);
+
+        var testModelConstructible = (new EdmToStockModelConverter()).ConvertToStockModel(testModelImmutable);
+        var testCsdls = this.GetSerializerResult(testModelConstructible, out IEnumerable<EdmError> serializationErrors).Select(n => XElement.Parse(n));
+        Assert.Empty(serializationErrors);
+
+        this.VerifyFindMethods(testCsdls, testModelConstructible, edmVersion);
     }
 
-    [Fact]
-    public void FindMethodTestAssociationFk()
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void FindMethodTestAssociationFk(EdmVersion edmVersion)
     {
-        this.BasicFindMethodsTest(ModelBuilder.AssociationFkEdm());
+        var model = new EdmModel();
+
+        var customerType = new EdmEntityType("NS1", "Customer");
+        customerType.AddKeys(customerType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
+        model.AddElement(customerType);
+
+        var orderType = new EdmEntityType("NS1", "Order");
+        orderType.AddKeys(orderType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
+        var orderTypeCustomerId = orderType.AddStructuralProperty("CustomerId", EdmPrimitiveTypeKind.Int32);
+        model.AddElement(orderType);
+
+        customerType.AddUnidirectionalNavigation(
+            new EdmNavigationPropertyInfo
+            {
+                Name = "ToOrders",
+                Target = orderType,
+                TargetMultiplicity = EdmMultiplicity.Many,
+            });
+
+        orderType.AddUnidirectionalNavigation(
+            new EdmNavigationPropertyInfo
+            {
+                Name = "Customer",
+                Target = customerType,
+                TargetMultiplicity = EdmMultiplicity.One,
+                DependentProperties = new[] { orderTypeCustomerId },
+                PrincipalProperties = orderType.Key()
+            });
+
+        var csdlElements = this.GetSerializerResult(model).Select(XElement.Parse);
+        csdlElements = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(csdlElements.ToArray(), edmVersion);
+
+        var isParsed = SchemaReader.TryParse(csdlElements.Select(e => e.CreateReader()), out IEdmModel testModelImmutable, out IEnumerable<EdmError> errors);
+        Assert.True(isParsed);
+        Assert.Empty(errors);
+
+        this.VerifyFindMethods(csdlElements, testModelImmutable, edmVersion);
+
+        var testModelConstructible = (new EdmToStockModelConverter()).ConvertToStockModel(testModelImmutable);
+        var testCsdls = this.GetSerializerResult(testModelConstructible, out IEnumerable<EdmError> serializationErrors).Select(n => XElement.Parse(n));
+        Assert.Empty(serializationErrors);
+
+        this.VerifyFindMethods(testCsdls, testModelConstructible, edmVersion);
     }
 
-    [Fact]
-    public void FindMethodTestAssociationFkWithNavigation()
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void FindMethodTestAssociationFkWithNavigation(EdmVersion edmVersion)
     {
-        this.BasicFindMethodsTest(ModelBuilder.AssociationFkWithNavigationEdm());
+        var model = new EdmModel();
+        var customerType = new EdmEntityType("NS1", "Customer");
+        customerType.AddKeys(customerType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
+        model.AddElement(customerType);
+
+        var orderType = new EdmEntityType("NS1", "Order");
+        orderType.AddKeys(orderType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
+        model.AddElement(orderType);
+
+        var customerIdProperty = orderType.AddStructuralProperty("CustomerId", EdmPrimitiveTypeKind.Int32);
+        var navProp1 = new EdmNavigationPropertyInfo { Name = "ToOrders", Target = orderType, TargetMultiplicity = EdmMultiplicity.Many, };
+        var navProp2 = new EdmNavigationPropertyInfo { Name = "ToCustomer", Target = customerType, TargetMultiplicity = EdmMultiplicity.One, DependentProperties = new[] { customerIdProperty }, PrincipalProperties = customerType.Key() };
+        customerType.AddBidirectionalNavigation(navProp1, navProp2);
+
+        var csdlElements = this.GetSerializerResult(model).Select(XElement.Parse);
+        csdlElements = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(csdlElements.ToArray(), edmVersion);
+
+        var isParsed = SchemaReader.TryParse(csdlElements.Select(e => e.CreateReader()), out IEdmModel testModelImmutable, out IEnumerable<EdmError> errors);
+        Assert.True(isParsed);
+        Assert.Empty(errors);
+
+        this.VerifyFindMethods(csdlElements, testModelImmutable, edmVersion);
+
+        var testModelConstructible = (new EdmToStockModelConverter()).ConvertToStockModel(testModelImmutable);
+        var testCsdls = this.GetSerializerResult(testModelConstructible, out IEnumerable<EdmError> serializationErrors).Select(n => XElement.Parse(n));
+        Assert.Empty(serializationErrors);
+
+        this.VerifyFindMethods(testCsdls, testModelConstructible, edmVersion);
     }
 
-    [Fact]
-    public void FindMethodTestAssociationIndependent()
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void FindMethodTestAssociationIndependent(EdmVersion edmVersion)
     {
-        this.BasicFindMethodsTest(ModelBuilder.AssociationIndependentEdm());
+        var model = new EdmModel();
+        var customerType = new EdmEntityType("NS1", "Customer");
+        customerType.AddKeys(customerType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
+        model.AddElement(customerType);
+
+        var orderType = new EdmEntityType("NS1", "Order");
+        orderType.AddKeys(orderType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
+        model.AddElement(orderType);
+
+        var navProp1 = new EdmNavigationPropertyInfo { Name = "ToOrders", Target = orderType, TargetMultiplicity = EdmMultiplicity.Many };
+        var navProp2 = new EdmNavigationPropertyInfo { Name = "ToCustomer", Target = customerType, TargetMultiplicity = EdmMultiplicity.One };
+        customerType.AddBidirectionalNavigation(navProp1, navProp2);
+
+        var csdlElements = this.GetSerializerResult(model).Select(XElement.Parse);
+        csdlElements = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(csdlElements.ToArray(), edmVersion);
+
+        var isParsed = SchemaReader.TryParse(csdlElements.Select(e => e.CreateReader()), out IEdmModel testModelImmutable, out IEnumerable<EdmError> errors);
+        Assert.True(isParsed);
+        Assert.Empty(errors);
+
+        this.VerifyFindMethods(csdlElements, testModelImmutable, edmVersion);
+
+        var testModelConstructible = (new EdmToStockModelConverter()).ConvertToStockModel(testModelImmutable);
+        var testCsdls = this.GetSerializerResult(testModelConstructible, out IEnumerable<EdmError> serializationErrors).Select(n => XElement.Parse(n));
+        Assert.Empty(serializationErrors);
+
+        this.VerifyFindMethods(testCsdls, testModelConstructible, edmVersion);
     }
 
-    [Fact]
-    public void FindMethodTestAssociationOnDeleteModel()
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void FindMethodTestAssociationOnDeleteModel(EdmVersion edmVersion)
     {
-        this.BasicFindMethodsTest(ModelBuilder.AssociationOnDeleteModelEdm());
+        var model = new EdmModel();
+        var customerType = new EdmEntityType("NS1", "Customer");
+        customerType.AddKeys(customerType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
+        model.AddElement(customerType);
+
+        var orderType = new EdmEntityType("NS1", "Order");
+        orderType.AddKeys(orderType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
+        model.AddElement(orderType);
+
+        var customerIdProperty = orderType.AddStructuralProperty("CustomerId", EdmPrimitiveTypeKind.Int32);
+        var navProp1 = new EdmNavigationPropertyInfo { Name = "ToOrders", Target = orderType, TargetMultiplicity = EdmMultiplicity.Many, OnDelete = EdmOnDeleteAction.Cascade };
+        var navProp2 = new EdmNavigationPropertyInfo { Name = "ToCustomer", Target = customerType, TargetMultiplicity = EdmMultiplicity.One, DependentProperties = new[] { customerIdProperty }, PrincipalProperties = customerType.Key(), OnDelete = EdmOnDeleteAction.None };
+        customerType.AddBidirectionalNavigation(navProp1, navProp2);
+
+        var csdlElements = this.GetSerializerResult(model).Select(XElement.Parse);
+        csdlElements = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(csdlElements.ToArray(), edmVersion);
+
+        var isParsed = SchemaReader.TryParse(csdlElements.Select(e => e.CreateReader()), out IEdmModel testModelImmutable, out IEnumerable<EdmError> errors);
+        Assert.True(isParsed);
+        Assert.Empty(errors);
+
+        this.VerifyFindMethods(csdlElements, testModelImmutable, edmVersion);
+
+        var testModelConstructible = (new EdmToStockModelConverter()).ConvertToStockModel(testModelImmutable);
+        var testCsdls = this.GetSerializerResult(testModelConstructible, out IEnumerable<EdmError> serializationErrors).Select(n => XElement.Parse(n));
+        Assert.Empty(serializationErrors);
+
+        this.VerifyFindMethods(testCsdls, testModelConstructible, edmVersion);
     }
 
-    [Fact]
-    public void FindMethodTestCollectionTypes()
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void FindMethodTestCollectionTypes(EdmVersion edmVersion)
     {
-        var testCsdls = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(ModelBuilder.CollectionTypes().ToArray(), this.EdmVersion);
-        var testModelImmutable = this.GetParserResult(testCsdls);
+        var csdlElement = XElement.Parse(@"
+<Schema Namespace='MyNamespace' xmlns='http://docs.oasis-open.org/odata/ns/edm'>
+    <EntityType Name='MyEntityType'>
+        <Key>
+            <PropertyRef Name='Property1'/>
+        </Key>
+        <Property Name='Property1' Type='String' Nullable='false'/>
+    </EntityType>
+    <ComplexType Name='MyComplexType'>
+        <Property Name='Property1' Type='String' />
+    </ComplexType>
+    <Function Name='MyFunction'>
+        <ReturnType Type='Collection(MyNamespace.MyEntityType)'/>
+        <Parameter Name='P1' Type='Collection(MyNamespace.MyEntityType)'/>
+        <Parameter Name='P3' Type='Collection(MyNamespace.MyEntityType)'/>
+        <Parameter Name='P4' Type='Collection(Binary)'/>
+        <Parameter Name='P5' Type='Collection(MyNamespace.MyEntityType)'/>
+    </Function>
+    <Function Name='MyFunction'><ReturnType Type='Collection(MyNamespace.MyEntityType)'/>
+        <Parameter Name='P1' Type='Collection(Binary)'/>
+    </Function>
+</Schema>
+");
+        var testCsdls = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(new XElement[] { csdlElement }, edmVersion);
+        var isParsed = SchemaReader.TryParse(testCsdls.Select(e => e.CreateReader()), out IEdmModel testModelImmutable, out IEnumerable<EdmError> errors);
+        Assert.True(isParsed);
+        Assert.Empty(errors);
 
-        this.VerifyFindSchemaElementMethod(testCsdls.Single(), testModelImmutable);
-        this.VerifyFindEntityContainer(testCsdls.Single(), testModelImmutable);
-        this.VerifyFindEntityContainerElement(testCsdls.Single(), testModelImmutable);
+        this.VerifyFindSchemaElementMethod(testCsdls.Single(), testModelImmutable, edmVersion);
+        this.VerifyFindEntityContainer(testCsdls.Single(), testModelImmutable, edmVersion);
+        this.VerifyFindEntityContainerElement(testCsdls.Single(), testModelImmutable, edmVersion);
 
         var testModelConstructible = (new EdmToStockModelConverter()).ConvertToStockModel(testModelImmutable);
         testCsdls = this.GetSerializerResult(testModelConstructible).Select(n => XElement.Parse(n));
 
-        this.VerifyFindSchemaElementMethod(testCsdls.Single(), testModelConstructible);
-        this.VerifyFindEntityContainer(testCsdls.Single(), testModelConstructible);
-        this.VerifyFindEntityContainerElement(testCsdls.Single(), testModelConstructible);
+        this.VerifyFindSchemaElementMethod(testCsdls.Single(), testModelConstructible, edmVersion);
+        this.VerifyFindEntityContainer(testCsdls.Single(), testModelConstructible, edmVersion);
+        this.VerifyFindEntityContainerElement(testCsdls.Single(), testModelConstructible, edmVersion);
     }
 
-    [Fact]
-    public void FindMethodTestCollectionTypesWithSimpleType()
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void FindMethodTestCollectionTypesWithSimpleType(EdmVersion edmVersion)
     {
-        this.BasicFindMethodsTest(ModelBuilder.CollectionTypesWithSimpleType());
+        var csdlElement = XElement.Parse(@"
+<Schema Namespace='MyNamespace' xmlns='http://docs.oasis-open.org/odata/ns/edm'>
+    <EntityType Name='MyEntityType'>
+        <Key>
+            <PropertyRef Name='Property1'/>
+        </Key>
+        <Property Name='Property1' Type='String' Nullable='false'/>
+    </EntityType>
+    <Function Name='MyFunction'><ReturnType Type='Edm.Int32' />
+        <Parameter Name='P4' Type='Collection(Binary)'/>
+    </Function>
+    <Function Name='MyFunction'><ReturnType Type='Collection(MyNamespace.MyEntityType)'/>
+        <Parameter Name='P2' Type='Collection(Edm.Int32)' /> 
+    </Function>
+</Schema>
+");
+
+        var csdls = new XElement[] { csdlElement };
+        var csdlElements = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(csdls.ToArray(), edmVersion);
+
+        var isParsed = SchemaReader.TryParse(csdlElements.Select(e => e.CreateReader()), out IEdmModel testModelImmutable, out IEnumerable<EdmError> errors);
+        Assert.True(isParsed);
+        Assert.Empty(errors);
+
+        this.VerifyFindMethods(csdlElements, testModelImmutable, edmVersion);
+
+        var testModelConstructible = (new EdmToStockModelConverter()).ConvertToStockModel(testModelImmutable);
+        var testCsdls = this.GetSerializerResult(testModelConstructible, out IEnumerable<EdmError> serializationErrors).Select(n => XElement.Parse(n));
+        Assert.Empty(serializationErrors);
+
+        this.VerifyFindMethods(testCsdls, testModelConstructible, edmVersion);
     }
 
-    [Fact]
-    public void FindMethodTestComplexTypeAttributes()
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void FindMethodTestComplexTypeAttributes(EdmVersion edmVersion)
     {
-        this.BasicFindMethodsTest(ModelBuilder.ComplexTypeAttributesEdm());
+        var model = new EdmModel();
+
+        var baseComplexType = new EdmComplexType("MyNamespace", "MyBaseComplexType");
+        model.AddElement(baseComplexType);
+
+        var complexType = new EdmComplexType("MyNamespace", "MyComplexType", baseComplexType, true);
+        model.AddElement(complexType);
+
+        var csdlElements = this.GetSerializerResult(model).Select(XElement.Parse);
+        csdlElements = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(csdlElements.ToArray(), edmVersion);
+
+        var isParsed = SchemaReader.TryParse(csdlElements.Select(e => e.CreateReader()), out IEdmModel testModelImmutable, out IEnumerable<EdmError> errors);
+        Assert.True(isParsed);
+        Assert.Empty(errors);
+
+        this.VerifyFindMethods(csdlElements, testModelImmutable, edmVersion);
+
+        var testModelConstructible = (new EdmToStockModelConverter()).ConvertToStockModel(testModelImmutable);
+        var testCsdls = this.GetSerializerResult(testModelConstructible, out IEnumerable<EdmError> serializationErrors).Select(n => XElement.Parse(n));
+        Assert.Empty(serializationErrors);
+
+        this.VerifyFindMethods(testCsdls, testModelConstructible, edmVersion);
     }
 
-    [Fact]
-    public void FindMethodTestEntityContainerAttributes()
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void FindMethodTestEntityContainerAttributes(EdmVersion edmVersion)
     {
-        this.BasicFindMethodsTest(ModelBuilder.EntityContainerAttributes());
+        var csdlElement1 = XElement.Parse(@"
+<Schema Namespace='NS1' xmlns='http://docs.oasis-open.org/odata/ns/edm'>
+  <EntityContainer Name='MyContainer1'>
+    <EntitySet Name='CustomerSet1' EntityType='NS1.Customer'>
+      <NavigationPropertyBinding Path=""ToOrders"" Target=""OrderSet1""/>
+    </EntitySet>
+    <EntitySet Name='OrderSet1' EntityType='NS1.Order'>
+      <NavigationPropertyBinding Path=""ToCustomer"" Target=""CustomerSet1""/>
+    </EntitySet>
+    <EntitySet Name='OrderSet3' EntityType='NS1.Order'/>
+    <EntitySet Name='CustomerSet2' EntityType='NS1.Customer'>
+      <NavigationPropertyBinding Path=""ToOrders"" Target=""OrderSet2""/>
+    </EntitySet>
+    <EntitySet Name='OrderSet2' EntityType='NS1.Order'>
+      <NavigationPropertyBinding Path=""ToCustomer"" Target=""CustomerSet2""/>
+    </EntitySet>
+  </EntityContainer>
+  <EntityType Name='Customer'>
+    <Key>
+      <PropertyRef Name='Id' />
+    </Key>
+    <Property Name='Id' Type='Int32' Nullable='false' />
+    <NavigationProperty Name='ToOrders' Type=""Collection(NS1.Order)"" Partner=""ToCustomer"" />
+  </EntityType>
+  <EntityType Name='Order'>
+    <Key>
+      <PropertyRef Name='Id' />
+    </Key>
+    <Property Name='Id' Type='Int32' Nullable='false' />
+    <Property Name='CustomerId' Type='Int32' Nullable='false' />
+    <NavigationProperty Name='ToCustomer' Type=""NS1.Customer"" Nullable=""false"" Partner=""ToOrders"">
+      <ReferentialConstraint Property=""CustomerId"" ReferencedProperty=""Id"" />
+    </NavigationProperty>
+  </EntityType>
+</Schema>
+");
+        var csdlElement2 = XElement.Parse(@"
+<Schema Namespace='NS2' xmlns='http://docs.oasis-open.org/odata/ns/edm'>
+  <EntityType Name='Guest'>
+    <Key>
+      <PropertyRef Name='Id' />
+    </Key>
+    <Property Name='Id' Type='Int32' Nullable='false' />
+  </EntityType>
+  <Function Name='GetGuestsExcluding'><ReturnType Type='Collection(NS2.Guest)'/> 
+    <Parameter Name='GuestId' Type='Int32' />
+  </Function>
+</Schema>
+");
+
+        var csdls = new XElement[] { csdlElement1, csdlElement2 };
+        var csdlElements = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(csdls.ToArray(), edmVersion);
+
+        var isParsed = SchemaReader.TryParse(csdlElements.Select(e => e.CreateReader()), out IEdmModel testModelImmutable, out IEnumerable<EdmError> errors);
+        Assert.True(isParsed);
+        Assert.Empty(errors);
+
+        this.VerifyFindMethods(csdlElements, testModelImmutable, edmVersion);
+
+        var testModelConstructible = (new EdmToStockModelConverter()).ConvertToStockModel(testModelImmutable);
+        var testCsdls = this.GetSerializerResult(testModelConstructible, out IEnumerable<EdmError> serializationErrors).Select(n => XElement.Parse(n));
+        Assert.Empty(serializationErrors);
+
+        this.VerifyFindMethods(testCsdls, testModelConstructible, edmVersion);
+
+
     }
 
-    [Fact]
-    public void FindMethodTestEntityContainerWithEntitySets()
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void FindMethodTestEntityContainerWithEntitySets(EdmVersion edmVersion)
     {
-        this.BasicFindMethodsTest(ModelBuilder.EntityContainerWithEntitySetsEdm());
+        var model = new EdmModel();
+        var rootType = new EdmEntityType("NS1", "Root");
+        rootType.AddKeys(rootType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
+        model.AddElement(rootType);
+
+        var derivedType1 = new EdmEntityType("NS1", "DerivedLevel1", rootType);
+        derivedType1.AddStructuralProperty("PropertyLevel1", EdmPrimitiveTypeKind.Int32);
+        model.AddElement(derivedType1);
+
+        var derivedType2 = new EdmEntityType("NS1", "DerivedLevel2", derivedType1);
+        derivedType2.AddStructuralProperty("PropertyLevel2", EdmPrimitiveTypeKind.Int32);
+        model.AddElement(derivedType2);
+
+        var container = new EdmEntityContainer("NS1", "MyContainer");
+        container.AddEntitySet("RootSet", rootType);
+        container.AddEntitySet("Level1Set", derivedType1);
+        container.AddEntitySet("Level2Set", derivedType2);
+        model.AddElement(container);
+
+        var csdlElements = this.GetSerializerResult(model).Select(XElement.Parse);
+        csdlElements = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(csdlElements.ToArray(), edmVersion);
+
+        var isParsed = SchemaReader.TryParse(csdlElements.Select(e => e.CreateReader()), out IEdmModel testModelImmutable, out IEnumerable<EdmError> errors);
+        Assert.True(isParsed);
+        Assert.Empty(errors);
+
+        this.VerifyFindMethods(csdlElements, testModelImmutable, edmVersion);
+
+        var testModelConstructible = (new EdmToStockModelConverter()).ConvertToStockModel(testModelImmutable);
+        var testCsdls = this.GetSerializerResult(testModelConstructible, out IEnumerable<EdmError> serializationErrors).Select(n => XElement.Parse(n));
+        Assert.Empty(serializationErrors);
+
+        this.VerifyFindMethods(testCsdls, testModelConstructible, edmVersion);
     }
 
-    [Fact]
-    public void FindMethodTestEntityContainerWithFunctionImports()
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void FindMethodTestEntityContainerWithFunctionImports(EdmVersion edmVersion)
     {
-        this.BasicFindMethodsTest(ModelBuilder.EntityContainerWithOperationImportsEdm());
+        var model = new EdmModel();
+        var customerType = new EdmEntityType("NS1", "Customer");
+        customerType.AddKeys(customerType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
+        model.AddElement(customerType);
+
+        var container = new EdmEntityContainer("NS1", "MyContainer");
+        var customerSet = container.AddEntitySet("Customer", customerType);
+
+        var function = new EdmFunction("NS1", "GetCustomersExcluding", EdmCoreModel.GetCollection(new EdmEntityTypeReference(customerType, false)), false, null, false);
+        function.AddParameter("CustomerId", EdmCoreModel.Instance.GetInt32(true));
+
+        model.AddElement(function);
+        container.AddFunctionImport("GetCustomersExcluding", function, new EdmPathExpression(customerSet.Name));
+
+        model.AddElement(container);
+
+        var csdlElements = this.GetSerializerResult(model).Select(XElement.Parse);
+        csdlElements = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(csdlElements.ToArray(), edmVersion);
+
+        var isParsed = SchemaReader.TryParse(csdlElements.Select(e => e.CreateReader()), out IEdmModel testModelImmutable, out IEnumerable<EdmError> errors);
+        Assert.True(isParsed);
+        Assert.Empty(errors);
+
+        this.VerifyFindMethods(csdlElements, testModelImmutable, edmVersion);
+
+        var testModelConstructible = (new EdmToStockModelConverter()).ConvertToStockModel(testModelImmutable);
+        var testCsdls = this.GetSerializerResult(testModelConstructible, out IEnumerable<EdmError> serializationErrors).Select(n => XElement.Parse(n));
+        Assert.Empty(serializationErrors);
+
+        this.VerifyFindMethods(testCsdls, testModelConstructible, edmVersion);
     }
 
-    [Fact]
-    public void FindMethodTestEntityInheritanceTree()
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void FindMethodTestEntityInheritanceTree(EdmVersion edmVersion)
     {
-        this.BasicFindMethodsTest(ModelBuilder.EntityInheritanceTreeEdm());
+        var model = new EdmModel();
+        var rootType = new EdmEntityType("NS1", "Root");
+        rootType.AddKeys(rootType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
+        model.AddElement(rootType);
+
+        var derivedType1_1 = new EdmEntityType("NS1", "DerivedLevel1_1", rootType);
+        derivedType1_1.AddStructuralProperty("PropertyLevel1", EdmPrimitiveTypeKind.Int32);
+        model.AddElement(derivedType1_1);
+
+        var derivedType1_2 = new EdmEntityType("NS1", "DerivedLevel1_2", rootType);
+        rootType.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo { Name = "RootDerivedLevel1_2", Target = derivedType1_2, TargetMultiplicity = EdmMultiplicity.Many });
+        model.AddElement(derivedType1_2);
+
+        var derivedType2_1 = new EdmEntityType("NS1", "DerivedLevel2_1", derivedType1_1);
+        derivedType2_1.AddStructuralProperty("PropertyLevel2", EdmPrimitiveTypeKind.Int32);
+        model.AddElement(derivedType2_1);
+
+        var derivedType2_2 = new EdmEntityType("NS1", "DerivedLevel2_2", derivedType1_2);
+        derivedType2_2.AddStructuralProperty("PropertyLevel2", EdmPrimitiveTypeKind.Int32);
+        model.AddElement(derivedType2_2);
+
+        var derivedType2_3 = new EdmEntityType("NS1", "DerivedLevel2_3", derivedType1_2);
+        derivedType2_3.AddStructuralProperty("PropertyLevel2", EdmPrimitiveTypeKind.Int32);
+        model.AddElement(derivedType2_3);
+
+        var csdlElements = this.GetSerializerResult(model).Select(XElement.Parse);
+        csdlElements = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(csdlElements.ToArray(), edmVersion);
+
+        var isParsed = SchemaReader.TryParse(csdlElements.Select(e => e.CreateReader()), out IEdmModel testModelImmutable, out IEnumerable<EdmError> errors);
+        Assert.True(isParsed);
+        Assert.Empty(errors);
+
+        this.VerifyFindMethods(csdlElements, testModelImmutable, edmVersion);
+
+        var testModelConstructible = (new EdmToStockModelConverter()).ConvertToStockModel(testModelImmutable);
+        var testCsdls = this.GetSerializerResult(testModelConstructible, out IEnumerable<EdmError> serializationErrors).Select(n => XElement.Parse(n));
+        Assert.Empty(serializationErrors);
+
+        this.VerifyFindMethods(testCsdls, testModelConstructible, edmVersion);
     }
 
-    [Fact]
-    public void FindMethodTestFunctionWithAll()
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void FindMethodTestFunctionWithAll(EdmVersion edmVersion)
     {
-        this.BasicFindMethodsTest(ModelBuilder.FunctionWithAllEdm());
+        var model = new EdmModel();
+        var function = new EdmFunction("NS1", "FunctionWithAll", EdmCoreModel.Instance.GetInt32(true));
+        function.AddParameter("Param1", EdmCoreModel.Instance.GetInt32(false));
+        model.AddElement(function);
+
+        var csdlElements = this.GetSerializerResult(model).Select(XElement.Parse);
+        csdlElements = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(csdlElements.ToArray(), edmVersion);
+
+        var isParsed = SchemaReader.TryParse(csdlElements.Select(e => e.CreateReader()), out IEdmModel testModelImmutable, out IEnumerable<EdmError> errors);
+        Assert.True(isParsed);
+        Assert.Empty(errors);
+
+        this.VerifyFindMethods(csdlElements, testModelImmutable, edmVersion);
+
+        var testModelConstructible = (new EdmToStockModelConverter()).ConvertToStockModel(testModelImmutable);
+        var testCsdls = this.GetSerializerResult(testModelConstructible, out IEnumerable<EdmError> serializationErrors).Select(n => XElement.Parse(n));
+        Assert.Empty(serializationErrors);
+
+        this.VerifyFindMethods(testCsdls, testModelConstructible, edmVersion);
     }
 
-    [Fact]
-    public void FindMethodTestModelWithAllConcepts()
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void FindMethodTestModelWithAllConcepts(EdmVersion edmVersion)
     {
-        this.BasicFindMethodsTest(ModelBuilder.ModelWithAllConceptsEdm());
+        var stringType = EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.String);
+
+        var model = new EdmModel();
+        var addressType = new EdmComplexType("NS1", "Address");
+        addressType.AddStructuralProperty("Street", EdmPrimitiveTypeKind.String);
+        addressType.AddStructuralProperty("City", new EdmStringTypeReference(stringType, /*isNullable*/false, /*isUnbounded*/false, /*maxLength*/30, /*isUnicode*/true));
+        model.AddElement(addressType);
+
+        var zipCodeType = new EdmComplexType("NS1", "ZipCode");
+        zipCodeType.AddStructuralProperty("Main", new EdmStringTypeReference(stringType, /*isNullable*/false, /*isUnbounded*/false, /*maxLength*/5, /*isUnicode*/false));
+        zipCodeType.AddStructuralProperty("Extended", new EdmStringTypeReference(stringType, /*isNullable*/true, /*isUnbounded*/false, /*maxLength*/5, /*isUnicode*/false));
+        model.AddElement(zipCodeType);
+        addressType.AddStructuralProperty("Zip", new EdmComplexTypeReference(zipCodeType, false));
+
+        var foreignAddressType = new EdmComplexType("NS1", "ForeignAddress", addressType, false);
+        foreignAddressType.AddStructuralProperty("State", EdmPrimitiveTypeKind.String);
+        model.AddElement(foreignAddressType);
+
+        var personType = new EdmEntityType("NS1", "Person", null, true, false);
+        personType.AddKeys(personType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32, false));
+        model.AddElement(personType);
+
+        var customerType = new EdmEntityType("NS1", "Customer", personType);
+        customerType.AddStructuralProperty("IsVIP", EdmPrimitiveTypeKind.Boolean);
+        customerType.AddProperty(new EdmStructuralProperty(customerType, "LastUpdated", EdmCoreModel.Instance.GetDateTimeOffset(false), null));
+        customerType.AddStructuralProperty("BillingAddress", new EdmComplexTypeReference(addressType, false));
+        customerType.AddStructuralProperty("ShippingAddress", new EdmComplexTypeReference(addressType, false));
+        model.AddElement(customerType);
+
+        var orderType = new EdmEntityType("NS1", "Order");
+        orderType.AddKeys(orderType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32, false));
+        var customerIdProperty = orderType.AddStructuralProperty("CustomerId", EdmPrimitiveTypeKind.Int32, false);
+        model.AddElement(orderType);
+
+        var navProp1 = new EdmNavigationPropertyInfo { Name = "ToOrders", Target = orderType, TargetMultiplicity = EdmMultiplicity.Many, };
+        var navProp2 = new EdmNavigationPropertyInfo { Name = "ToCustomer", Target = customerType, TargetMultiplicity = EdmMultiplicity.One, DependentProperties = new[] { customerIdProperty }, PrincipalProperties = customerType.Key() };
+        customerType.AddBidirectionalNavigation(navProp1, navProp2);
+
+        var container = new EdmEntityContainer("NS1", "MyContainer");
+        container.AddEntitySet("PersonSet", personType);
+        container.AddEntitySet("OrderSet", orderType);
+        model.AddElement(container);
+
+        var function = new EdmFunction("NS1", "Function1", EdmCoreModel.Instance.GetInt64(true));
+        function.AddParameter("Param1", EdmCoreModel.Instance.GetInt32(true));
+        container.AddFunctionImport(function);
+        model.AddElement(function);
+
+        var csdlElements = this.GetSerializerResult(model).Select(XElement.Parse);
+        csdlElements = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(csdlElements.ToArray(), edmVersion);
+
+        var isParsed = SchemaReader.TryParse(csdlElements.Select(e => e.CreateReader()), out IEdmModel testModelImmutable, out IEnumerable<EdmError> errors);
+        Assert.True(isParsed);
+        Assert.Empty(errors);
+
+        this.VerifyFindMethods(csdlElements, testModelImmutable, edmVersion);
+
+        var testModelConstructible = (new EdmToStockModelConverter()).ConvertToStockModel(testModelImmutable);
+        var testCsdls = this.GetSerializerResult(testModelConstructible, out IEnumerable<EdmError> serializationErrors).Select(n => XElement.Parse(n));
+        Assert.Empty(serializationErrors);
+
+        this.VerifyFindMethods(testCsdls, testModelConstructible, edmVersion);
     }
 
-    [Fact]
-    public void FindMethodTestMultipleNamespaces()
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void FindMethodTestMultipleNamespaces(EdmVersion edmVersion)
     {
-        this.BasicFindMethodsTest(ModelBuilder.MultipleNamespacesEdm());
+        var model = new EdmModel();
+        var personType = new EdmEntityType("NS1", "Person");
+        personType.AddKeys(personType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
+        model.AddElement(personType);
+
+        var complexType1 = new EdmComplexType("NS3", "ComplexLevel1");
+        model.AddElement(complexType1);
+        var complexType2 = new EdmComplexType("NS2", "ComplexLevel2");
+        model.AddElement(complexType2);
+        var complexType3 = new EdmComplexType("NS2", "ComplexLevel3");
+        model.AddElement(complexType3);
+
+        complexType3.AddStructuralProperty("IntProperty", EdmPrimitiveTypeKind.Int32);
+        complexType2.AddStructuralProperty("ComplexProperty", new EdmComplexTypeReference(complexType3, false));
+        complexType1.AddStructuralProperty("ComplexProperty", new EdmComplexTypeReference(complexType2, false));
+        personType.AddStructuralProperty("ComplexProperty", new EdmComplexTypeReference(complexType1, false));
+
+        var customerType = new EdmEntityType("NS3", "Customer", personType);
+        model.AddElement(customerType);
+
+        var orderType = new EdmEntityType("NS2", "Order");
+        orderType.AddKeys(orderType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
+        model.AddElement(orderType);
+
+        var customerIdProperty = orderType.AddStructuralProperty("CustomerId", EdmPrimitiveTypeKind.Int32);
+        var navProp1 = new EdmNavigationPropertyInfo { Name = "ToOrders", Target = orderType, TargetMultiplicity = EdmMultiplicity.Many, };
+        var navProp2 = new EdmNavigationPropertyInfo { Name = "ToCustomer", Target = customerType, TargetMultiplicity = EdmMultiplicity.One, DependentProperties = new[] { customerIdProperty }, PrincipalProperties = customerType.Key() };
+        customerType.AddBidirectionalNavigation(navProp1, navProp2);
+
+        var csdlElements = this.GetSerializerResult(model).Select(XElement.Parse);
+        csdlElements = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(csdlElements.ToArray(), edmVersion);
+
+        var isParsed = SchemaReader.TryParse(csdlElements.Select(e => e.CreateReader()), out IEdmModel testModelImmutable, out IEnumerable<EdmError> errors);
+        Assert.True(isParsed);
+        Assert.Empty(errors);
+
+        this.VerifyFindMethods(csdlElements, testModelImmutable, edmVersion);
+
+        var testModelConstructible = (new EdmToStockModelConverter()).ConvertToStockModel(testModelImmutable);
+        var testCsdls = this.GetSerializerResult(testModelConstructible, out IEnumerable<EdmError> serializationErrors).Select(n => XElement.Parse(n));
+        Assert.Empty(serializationErrors);
+
+        this.VerifyFindMethods(testCsdls, testModelConstructible, edmVersion);
     }
 
-    [Fact]
-    public void FindMethodTestOneComplexWithAllPrimitiveProperty()
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void FindMethodTestOneComplexWithAllPrimitiveProperty(EdmVersion edmVersion)
     {
-        this.BasicFindMethodsTest(ModelBuilder.OneComplexWithAllPrimitivePropertyEdm());
+        var model = new EdmModel();
+        var type = new EdmEntityType("NS1", "Person");
+        type.AddKeys(type.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
+
+        var complexType = new EdmComplexType("NS1", "ComplexThing");
+
+        int i = 0;
+        foreach (var primitiveType in ModelBuilderHelpers.AllNonSpatialPrimitiveEdmTypes())
+        {
+            complexType.AddStructuralProperty("prop_" + (i++), primitiveType);
+        }
+
+        model.AddElement(complexType);
+        type.AddStructuralProperty("ComplexProperty", new EdmComplexTypeReference(complexType, false));
+        model.AddElement(type);
+
+        var csdlElements = this.GetSerializerResult(model).Select(XElement.Parse);
+        csdlElements = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(csdlElements.ToArray(), edmVersion);
+
+        var isParsed = SchemaReader.TryParse(csdlElements.Select(e => e.CreateReader()), out IEdmModel testModelImmutable, out IEnumerable<EdmError> errors);
+        Assert.True(isParsed);
+        Assert.Empty(errors);
+
+        this.VerifyFindMethods(csdlElements, testModelImmutable, edmVersion);
+
+        var testModelConstructible = (new EdmToStockModelConverter()).ConvertToStockModel(testModelImmutable);
+        var testCsdls = this.GetSerializerResult(testModelConstructible, out IEnumerable<EdmError> serializationErrors).Select(n => XElement.Parse(n));
+        Assert.Empty(serializationErrors);
+
+        this.VerifyFindMethods(testCsdls, testModelConstructible, edmVersion);
     }
 
-    [Fact]
-    public void FindMethodTestOneComplexWithNestedComplex()
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void FindMethodTestOneComplexWithNestedComplex(EdmVersion edmVersion)
     {
-        this.BasicFindMethodsTest(ModelBuilder.OneComplexWithNestedComplexEdm());
+        var model = new EdmModel();
+        var entityType = new EdmEntityType("NS1", "Person");
+        entityType.AddKeys(entityType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
+        model.AddElement(entityType);
+
+        var complexType1 = new EdmComplexType("NS1", "ComplexLevel1");
+        model.AddElement(complexType1);
+        var complexType2 = new EdmComplexType("NS1", "ComplexLevel2");
+        model.AddElement(complexType2);
+        var complexType3 = new EdmComplexType("NS1", "ComplexLevel3");
+        model.AddElement(complexType3);
+
+        complexType3.AddStructuralProperty("IntProperty", EdmPrimitiveTypeKind.Int32);
+        complexType2.AddStructuralProperty("ComplexProperty", new EdmComplexTypeReference(complexType3, false));
+        complexType1.AddStructuralProperty("ComplexProperty", new EdmComplexTypeReference(complexType2, false));
+        entityType.AddStructuralProperty("ComplexProperty", new EdmComplexTypeReference(complexType1, false));
+
+        var csdlElements = this.GetSerializerResult(model).Select(XElement.Parse);
+        csdlElements = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(csdlElements.ToArray(), edmVersion);
+
+        var isParsed = SchemaReader.TryParse(csdlElements.Select(e => e.CreateReader()), out IEdmModel testModelImmutable, out IEnumerable<EdmError> errors);
+        Assert.True(isParsed);
+        Assert.Empty(errors);
+
+        this.VerifyFindMethods(csdlElements, testModelImmutable, edmVersion);
+
+        var testModelConstructible = (new EdmToStockModelConverter()).ConvertToStockModel(testModelImmutable);
+        var testCsdls = this.GetSerializerResult(testModelConstructible, out IEnumerable<EdmError> serializationErrors).Select(n => XElement.Parse(n));
+        Assert.Empty(serializationErrors);
+
+        this.VerifyFindMethods(testCsdls, testModelConstructible, edmVersion);
     }
 
-    [Fact]
-    public void FindMethodTestOneComplexWithOneProperty()
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void FindMethodTestOneComplexWithOneProperty(EdmVersion edmVersion)
     {
-        this.BasicFindMethodsTest(ModelBuilder.OneComplexWithOnePropertyEdm());
+        var model = new EdmModel();
+        var type = new EdmComplexType("NS1", "ComplexType");
+        type.AddStructuralProperty("Prop1", EdmPrimitiveTypeKind.Int32);
+        model.AddElement(type);
+
+        var csdlElements = this.GetSerializerResult(model).Select(XElement.Parse);
+        csdlElements = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(csdlElements.ToArray(), edmVersion);
+
+        var isParsed = SchemaReader.TryParse(csdlElements.Select(e => e.CreateReader()), out IEdmModel testModelImmutable, out IEnumerable<EdmError> errors);
+        Assert.True(isParsed);
+        Assert.Empty(errors);
+
+        this.VerifyFindMethods(csdlElements, testModelImmutable, edmVersion);
+
+        var testModelConstructible = (new EdmToStockModelConverter()).ConvertToStockModel(testModelImmutable);
+        var testCsdls = this.GetSerializerResult(testModelConstructible, out IEnumerable<EdmError> serializationErrors).Select(n => XElement.Parse(n));
+        Assert.Empty(serializationErrors);
+
+        this.VerifyFindMethods(testCsdls, testModelConstructible, edmVersion);
     }
 
-    [Fact]
-    public void FindMethodTestOneEntityWithAllPrimitiveProperty()
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void FindMethodTestOneEntityWithAllPrimitiveProperty(EdmVersion edmVersion)
     {
-        this.BasicFindMethodsTest(ModelBuilder.OneEntityWithAllPrimitivePropertyEdm());
+        var model = new EdmModel();
+        var type = new EdmEntityType("NS1", "Person");
+        type.AddKeys(type.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
+
+        int i = 0;
+        foreach (var primitiveType in ModelBuilderHelpers.AllNonSpatialPrimitiveEdmTypes())
+        {
+            type.AddStructuralProperty("prop_" + (i++), primitiveType);
+        }
+
+        model.AddElement(type);
+
+        var csdlElements = this.GetSerializerResult(model).Select(XElement.Parse);
+        csdlElements = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(csdlElements.ToArray(), edmVersion);
+
+        var isParsed = SchemaReader.TryParse(csdlElements.Select(e => e.CreateReader()), out IEdmModel testModelImmutable, out IEnumerable<EdmError> errors);
+        Assert.True(isParsed);
+        Assert.Empty(errors);
+
+        this.VerifyFindMethods(csdlElements, testModelImmutable, edmVersion);
+
+        var testModelConstructible = (new EdmToStockModelConverter()).ConvertToStockModel(testModelImmutable);
+        var testCsdls = this.GetSerializerResult(testModelConstructible, out IEnumerable<EdmError> serializationErrors).Select(n => XElement.Parse(n));
+        Assert.Empty(serializationErrors);
+
+        this.VerifyFindMethods(testCsdls, testModelConstructible, edmVersion);
     }
 
-    [Fact]
-    public void FindMethodTestOneEntityWithOneProperty()
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void FindMethodTestOneEntityWithOneProperty(EdmVersion edmVersion)
     {
-        this.BasicFindMethodsTest(ModelBuilder.OneEntityWithOnePropertyEdm());
+        var model = new EdmModel();
+        var type = new EdmEntityType("NS1", "Person");
+        type.AddKeys(type.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
+        model.AddElement(type);
+
+        var csdlElements = this.GetSerializerResult(model).Select(XElement.Parse);
+        csdlElements = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(csdlElements.ToArray(), edmVersion);
+
+        var isParsed = SchemaReader.TryParse(csdlElements.Select(e => e.CreateReader()), out IEdmModel testModelImmutable, out IEnumerable<EdmError> errors);
+        Assert.True(isParsed);
+        Assert.Empty(errors);
+
+        this.VerifyFindMethods(csdlElements, testModelImmutable, edmVersion);
+
+        var testModelConstructible = (new EdmToStockModelConverter()).ConvertToStockModel(testModelImmutable);
+        var testCsdls = this.GetSerializerResult(testModelConstructible, out IEnumerable<EdmError> serializationErrors).Select(n => XElement.Parse(n));
+        Assert.Empty(serializationErrors);
+
+        this.VerifyFindMethods(testCsdls, testModelConstructible, edmVersion);
     }
 
-    [Fact]
-    public void FindMethodTestPropertyFacetsCollection()
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void FindMethodTestPropertyFacetsCollection(EdmVersion edmVersion)
     {
-        this.BasicFindMethodsTest(ModelBuilder.PropertyFacetsCollectionEdm());
+        var typeReferences = new IEdmTypeReference[]
+        {
+            EdmCoreModel.Instance.GetDecimal(precision:2, scale:2, isNullable:false),
+            EdmCoreModel.Instance.GetString(isUnbounded:false, maxLength:100, isUnicode:false, isNullable:false),
+            EdmCoreModel.GetCollection(EdmCoreModel.Instance.GetString(isUnbounded:false, maxLength:100, isUnicode:false, isNullable:false)),
+        };
+
+        var model = new EdmModel();
+        var entityType = new EdmEntityType("Namespace", "EntityType1");
+        var complexType = new EdmComplexType("Namespace", "ComplexType1");
+        entityType.AddKeys(entityType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32, false));
+
+        int counter = 0;
+        foreach (var edmTypeReference in typeReferences)
+        {
+            entityType.AddStructuralProperty("prop_" + counter, edmTypeReference);
+            complexType.AddStructuralProperty("property" + counter, edmTypeReference);
+            counter++;
+        }
+
+        model.AddElements(new IEdmSchemaElement[] { entityType, complexType });
+
+        var csdlElements = this.GetSerializerResult(model).Select(XElement.Parse);
+        csdlElements = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(csdlElements.ToArray(), edmVersion);
+
+        var isParsed = SchemaReader.TryParse(csdlElements.Select(e => e.CreateReader()), out IEdmModel testModelImmutable, out IEnumerable<EdmError> errors);
+        Assert.True(isParsed);
+        Assert.Empty(errors);
+
+        this.VerifyFindMethods(csdlElements, testModelImmutable, edmVersion);
+
+        var testModelConstructible = (new EdmToStockModelConverter()).ConvertToStockModel(testModelImmutable);
+        var testCsdls = this.GetSerializerResult(testModelConstructible, out IEnumerable<EdmError> serializationErrors).Select(n => XElement.Parse(n));
+        Assert.Empty(serializationErrors);
+
+        this.VerifyFindMethods(testCsdls, testModelConstructible, edmVersion);
     }
 
-    [Fact]
-    public void FindMethodTestSimpleAllPrimtiveTypes()
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void FindMethodTestSimpleAllPrimtiveTypes(EdmVersion edmVersion)
     {
-        this.BasicFindMethodsTest(ModelBuilder.SimpleAllPrimitiveTypes(this.EdmVersion, true, true));
+        var namespaceName = "ModelBuilder.SimpleAllPrimitiveTypes";
+
+        var model = new EdmModel();
+        var entityType = new EdmEntityType(namespaceName, "validEntityType1");
+        entityType.AddKeys(entityType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32, false));
+        model.AddElement(entityType);
+
+        var complexType = new EdmComplexType(namespaceName, "V1alidcomplexType");
+        model.AddElement(complexType);
+
+        var stringBuilder = new StringBuilder();
+        var xmlWriter = XmlWriter.Create(stringBuilder);
+        model.TryWriteSchema((s) => xmlWriter, out IEnumerable<EdmError> errors);
+        Assert.Empty(errors);
+
+        xmlWriter.Close();
+        var csdlElements = new[] { XElement.Parse(stringBuilder.ToString()) };
+
+        ModelBuilderHelpers.SetNullableAttributes(csdlElements, true /* isNullable */);
+
+        var csdls = this.GetSerializerResult(model).Select(XElement.Parse);
+        csdls = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(csdlElements.ToArray(), edmVersion);
+
+        var isParsed = SchemaReader.TryParse(csdls.Select(e => e.CreateReader()), out IEdmModel testModelImmutable, out errors);
+        Assert.True(isParsed);
+        Assert.Empty(errors);
+
+        this.VerifyFindMethods(csdls, testModelImmutable, edmVersion);
+
+        var testModelConstructible = (new EdmToStockModelConverter()).ConvertToStockModel(testModelImmutable);
+        var testCsdls = this.GetSerializerResult(testModelConstructible, out IEnumerable<EdmError> serializationErrors).Select(n => XElement.Parse(n));
+        Assert.Empty(serializationErrors);
+
+        this.VerifyFindMethods(testCsdls, testModelConstructible, edmVersion);
     }
 
-    [Fact]
-    public void FindMethodTestSimpleConstrucitveApiTestModel()
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void FindMethodTestSimpleConstrucitveApiTestModel(EdmVersion edmVersion)
     {
-        this.BasicFindMethodsTest(ModelBuilder.SimpleConstructiveApiTestModel());
+        var csdl =
+@"<?xml version=""1.0"" encoding=""utf-16""?>
+<Schema Namespace=""Westwind"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+  <EntityType Name=""Customer"">
+    <Key>
+      <PropertyRef Name=""IDC"" />
+    </Key>
+    <Property Name=""IDC"" Type=""Edm.Int32"" Nullable=""false"" />
+    <Property Name=""Name"" Type=""Edm.String"" Nullable=""false"" Unicode=""true"" p3:Stumble=""Rumble"" p3:Tumble=""Bumble"" xmlns:p3=""Grumble"" />
+    <Property Name=""Address"" Type=""Edm.String"" Unicode=""true"" />
+    <NavigationProperty Name=""Orders"" Type=""Collection(Westwind.Order)"" Partner=""Customer""  />
+  </EntityType>
+  <EntityType Name=""Order"">
+    <Key>
+      <PropertyRef Name=""IDO"" />
+    </Key>
+    <Property Name=""IDO"" Type=""Edm.Int32"" Nullable=""false"" />
+    <Property Name=""CustomerID"" Type=""Edm.Int32"" Nullable=""false"" />
+    <Property Name=""Item"" Type=""Edm.Int32"" Nullable=""false"" />
+    <Property Name=""Quantity"" Type=""Edm.Int32"" Nullable=""false"" />
+    <NavigationProperty Name=""Customer"" Type=""Westwind.Customer"" Nullable=""false"" Partner=""Orders"">
+      <ReferentialConstraint Property=""CustomerID"" ReferencedProperty=""IDC"" />
+    </NavigationProperty>
+  </EntityType>
+  <EntityContainer Name=""Eastwind"">
+    <EntitySet Name=""Customers"" EntityType=""Westwind.Customer"">
+      <NavigationPropertyBinding Path=""Orders"" Target=""Orders""/>
+    </EntitySet>
+    <EntitySet Name=""Orders"" EntityType=""Westwind.Order"">
+      <NavigationPropertyBinding Path=""Customer"" Target=""Customers""/>
+    </EntitySet>
+  </EntityContainer>
+</Schema>";
+
+        var csdls = new XElement[] { XElement.Parse(csdl) };
+        var csdlElements = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(csdls, edmVersion);
+
+        var isParsed = SchemaReader.TryParse(csdlElements.Select(e => e.CreateReader()), out IEdmModel testModelImmutable, out IEnumerable<EdmError> errors);
+        Assert.True(isParsed);
+        Assert.Empty(errors);
+
+        this.VerifyFindMethods(csdlElements, testModelImmutable, edmVersion);
+
+        var testModelConstructible = (new EdmToStockModelConverter()).ConvertToStockModel(testModelImmutable);
+        var testCsdls = this.GetSerializerResult(testModelConstructible, out IEnumerable<EdmError> serializationErrors).Select(n => XElement.Parse(n));
+        Assert.Empty(serializationErrors);
+
+        this.VerifyFindMethods(testCsdls, testModelConstructible, edmVersion);
     }
 
-    [Fact]
-    public void FindMethodTestStringWithFacets()
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void FindMethodTestStringWithFacets(EdmVersion edmVersion)
     {
-        this.BasicFindMethodsTest(ModelBuilder.StringWithFacets());
+        var csdl = @"
+<Schema Namespace='ModelBuilder' xmlns='http://docs.oasis-open.org/odata/ns/edm'>
+    <EntityType Name='Content'>
+        <Key>
+            <PropertyRef Name='NullableStringUnboundedUnicode'/>
+        </Key>
+        <Property Name='NullableStringUnboundedUnicode' Type='String' Nullable='false' MaxLength='Max' Unicode='true' />
+        <Property Name='NullableStringUnbounded' Type='String' Nullable='false' MaxLength='Max' Unicode='false' />
+        <Property Name='NullableStringMaxLength10' Type='String' Nullable='false' MaxLength='10'/>
+        <Property Name='StringCollation' Type='String' MaxLength='10'/>
+        <Property Name='SimpleString' Type='String' />
+    </EntityType>
+</Schema>";
+
+        var csdls = new XElement[] { XElement.Parse(csdl) };
+        var csdlElements = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(csdls, edmVersion);
+
+        var isParsed = SchemaReader.TryParse(csdlElements.Select(e => e.CreateReader()), out IEdmModel testModelImmutable, out IEnumerable<EdmError> errors);
+        Assert.True(isParsed);
+        Assert.Empty(errors);
+
+        this.VerifyFindMethods(csdlElements, testModelImmutable, edmVersion);
+
+        var testModelConstructible = (new EdmToStockModelConverter()).ConvertToStockModel(testModelImmutable);
+        var testCsdls = this.GetSerializerResult(testModelConstructible, out IEnumerable<EdmError> serializationErrors).Select(n => XElement.Parse(n));
+        Assert.Empty(serializationErrors);
+
+        this.VerifyFindMethods(testCsdls, testModelConstructible, edmVersion);
     }
 
-    [Fact]
-    public void FindMethodTestTaupoDefaultModel()
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void FindMethodTestDuplicatePropertyName(EdmVersion edmVersion)
     {
-        this.BasicFindMethodsTest(ModelBuilder.TaupoDefaultModelEdm());
-    }
+        var csdl =
+@"<?xml version=""1.0"" encoding=""utf-16""?>
+<Schema Namespace=""CollectionAtomic"" Alias=""Self"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+  <ComplexType Name=""ComplexTypeA"">
+    <Property Name=""Id"" Type=""Int32""/>
+    <Property Name=""Collection"" Type=""Collection(Int32)""/>
+    <Property Name=""Collection"" Type=""Collection(Int32)""/>
+  </ComplexType>
+  <EntityType Name=""ComplexTypeE"">
+    <Key>
+      <PropertyRef Name=""Id"" />
+    </Key>
+    <Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false"" />
+    <Property Name=""Collection"" Type=""Collection(Int32)""/>
+    <Property Name=""Collection"" Type=""Collection(Int32)""/>
+  </EntityType>
+</Schema>";
 
-    [Fact]
-    // [EdmLib] FindProperty should return AmbiguousElementBinding when the model has duplicate properties
-    public void FindMethodTestDuplicatePropertyName()
-    {
-        var edmModel = this.GetParserResult(ValidationTestModelBuilder.DuplicatePropertyName(this.EdmVersion));
+        var csdls = new XElement[] { XElement.Parse(csdl) };
+        var csdlElements = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(csdls, edmVersion);
+
+        var isParsed = SchemaReader.TryParse(csdlElements.Select(e => e.CreateReader()), out IEdmModel edmModel, out IEnumerable<EdmError> errors);
+        Assert.True(isParsed);
+        Assert.Empty(errors);
 
         var complexType = edmModel.FindType("CollectionAtomic.ComplexTypeA") as IEdmComplexType;
         var property = complexType.FindProperty("Collection");
-        Assert.Equal(property.Name, "Collection", "FindProperty should return AmbiguousElementBinding since the name of the property is duplicate.");
+        Assert.Equal("Collection", property.Name);
 
         var entityType = edmModel.FindType("CollectionAtomic.ComplexTypeE") as IEdmEntityType;
         property = complexType.FindProperty("Collection");
-        Assert.Equal(property.Name, "Collection", "FindProperty should return AmbiguousElementBinding since the name of the property is duplicate.");
+        Assert.Equal("Collection", property.Name);
     }
 
     //[TestMethod, Variation(Id = 42, SkipReason = @"[EdmLib] When the name of an element is changed, the FindType method should fail when it is called with the old name. -- postponed")]
+    [Fact]
     public void FindMethodsTestForElementsAfterNameChange()
     {
         var model = new EdmModel();
@@ -490,22 +1330,69 @@ public class FindMethodTests : EdmLibTestCaseBase
         model.AddElement(complexType);
         complexType.Name = "ComplexType2";
 
-        Assert.True(model.SchemaElements.Any(n => n.FullName() == "MyNamespace.ComplexType2"), "There should be ComplexType2 type.");
-        Assert.True(!model.SchemaElements.Any(n => n.FullName() == "MyNamespace.ComplexType1"), "There should be no ComplexType1 type.");
-        Assert.Null(model.FindType("MyNamespace.ComplexType1"), "You should not be able to find the complex type with the old name");
-        Assert.Equal(model.FindType("MyNamespace.ComplexType2").FullName(), "MyNamespace.ComplexType2", "You should be able to find the complex type with the new name, ComplexType1");
+        Assert.Contains(model.SchemaElements, n => n.FullName() == "MyNamespace.ComplexType2");
+        Assert.True(!model.SchemaElements.Any(n => n.FullName() == "MyNamespace.ComplexType1"));
+        Assert.Null(model.FindType("MyNamespace.ComplexType1"));
+        Assert.Equal("MyNamespace.ComplexType2", model.FindType("MyNamespace.ComplexType2").FullName());
     }
 
-    [Fact]
-    public void FindMethodTestTermAndFunctionCsdl()
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void FindMethodTestTermAndFunctionCsdl(EdmVersion edmVersion)
     {
-        this.BasicFindMethodsTest(FindMethodsTestModelBuilder.TermAndFunctionCsdl());
+        var csdl = @"
+<Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+    <Term Name=""Note"" Type=""Edm.String"" />
+    <Term Name=""NotePerson"" Type=""DefaultNamespace.Person"" />
+    <Term Name=""NoteSimpleType"" Type=""DefaultNamespace.SimpleType"" />
+    <EntityType Name=""Person"">
+        <Key>
+            <PropertyRef Name=""Id"" />
+        </Key>
+        <Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false"" />
+    </EntityType>
+    <ComplexType Name=""SimpleType"">
+      <Property Name=""Data"" Type=""Edm.String"" />
+    </ComplexType>
+    <Function Name=""SimpleFunction""><ReturnType Type=""Edm.String""/>
+        <Parameter Name=""Person"" Type=""Edm.String"" />
+    </Function>
+</Schema>";
+
+        var csdls = new XElement[] { XElement.Parse(csdl) };
+        var csdlElements = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(csdls, edmVersion);
+
+        var isParsed = SchemaReader.TryParse(csdlElements.Select(e => e.CreateReader()), out IEdmModel testModelImmutable, out IEnumerable<EdmError> errors);
+        Assert.True(isParsed);
+        Assert.Empty(errors);
+
+        this.VerifyFindMethods(csdlElements, testModelImmutable, edmVersion);
+
+        var testModelConstructible = (new EdmToStockModelConverter()).ConvertToStockModel(testModelImmutable);
+        var testCsdls = this.GetSerializerResult(testModelConstructible, out IEnumerable<EdmError> serializationErrors).Select(n => XElement.Parse(n));
+        Assert.Empty(serializationErrors);
+
+        this.VerifyFindMethods(testCsdls, testModelConstructible, edmVersion);
     }
 
-    [Fact]
-    public void FindMethodTestFunctionOverloadingWithDifferentParametersCountCsdls()
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void FindMethodTestFunctionOverloadingWithDifferentParametersCountCsdls(EdmVersion edmVersion)
     {
-        var csdls = FindMethodsTestModelBuilder.FunctionOverloadingWithDifferentParametersCountCsdl();
+        var csdl = @"
+<Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+    <Function Name=""SimpleFunction""><ReturnType Type=""Edm.String""/>
+        <Parameter Name=""Person"" Type=""Edm.String"" />
+    </Function>
+    <Function Name=""SimpleFunction""><ReturnType Type=""Edm.String""/>
+        <Parameter Name=""Person"" Type=""Edm.String"" />
+        <Parameter Name=""Count"" Type=""Edm.Int32"" />
+    </Function>
+</Schema>";
+
+        var csdlElements = new string[] { csdl }.Select(e => XElement.Parse(e, LoadOptions.SetLineInfo));
 
         FunctionInfo simpleFunction1 = new FunctionInfo()
         {
@@ -520,38 +1407,128 @@ public class FindMethodTests : EdmLibTestCaseBase
                                                        { "Count", "[Edm.Int32 Nullable=True]" }}
         };
 
-        List<FunctionInfo> functionInfos = new List<FunctionInfo>() { simpleFunction1, simpleFunction2 };
+        var functionInfos = new List<FunctionInfo>() { simpleFunction1, simpleFunction2 };
 
-        FunctionOverloadingCheck(csdls, functionInfos, "DefaultNamespace");
+        var isParsed = SchemaReader.TryParse(csdlElements.Select(e => e.CreateReader()), out IEdmModel model, out IEnumerable<EdmError> errors);
+        Assert.True(isParsed);
+        Assert.Empty(errors);
+
+        var ruleset = ValidationRuleSet.GetEdmModelRuleSet(toProductVersionlookup[edmVersion]);
+        var validationResult = model.Validate(ruleset, out IEnumerable<EdmError> actualErrors);
+        Assert.True(validationResult);
+        Assert.Empty(actualErrors);
+
+        var serializedCsdls = this.GetSerializerResult(model, edmVersion, out IEnumerable<EdmError> serializationErrors).Select(n => XElement.Parse(n));
+        // if the original test model is valid, the round-tripped model should be well-formed and valid.
+        var isWellformed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel roundtrippedModel, out IEnumerable<EdmError> parserErrors);
+        Assert.True(isWellformed && !parserErrors.Any());
+
+        var isValid = roundtrippedModel.Validate(out IEnumerable<EdmError> validationErrors);
+        Assert.True(!validationErrors.Any() && isValid);
+
+        foreach (FunctionInfo functionInfo in functionInfos)
+        {
+            var functionsFound = model.FindOperations("DefaultNamespace" + "." + functionInfo.Name);
+            var functionFoundCount = GetOperationMatchedCount(functionInfo, functionsFound);
+            Assert.Equal(1, functionFoundCount);
+        }
     }
 
-    [Fact]
-    public void FindMethodTestFunctionImportOverloadingWithDifferentParametersCountCsdl()
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void FindMethodTestFunctionImportOverloadingWithDifferentParametersCountCsdl(EdmVersion edmVersion)
     {
-        var csdls = FindMethodsTestModelBuilder.FunctionImportOverloadingWithDifferentParametersCountCsdl();
+        var csdl = @"
+<Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+  <Function Name=""SimpleFunction""><ReturnType Type=""Edm.String""/>
+    <Parameter Name=""Person"" Type=""Edm.Int32"" />
+  </Function>
+  <Function Name=""SimpleFunction""><ReturnType Type=""Edm.String""/>
+    <Parameter Name=""Person"" Type=""Edm.Int32"" />
+    <Parameter Name=""Count"" Type=""Edm.Int32"" />
+  </Function>
+  <EntityContainer Name=""Container"">
+    <FunctionImport Name=""SimpleFunction"" Function=""DefaultNamespace.SimpleFunction"" />
+  </EntityContainer>
+</Schema>";
 
-        FunctionInfo simpleFunction1 = new FunctionInfo()
+        var csdlElements = new string[] { csdl }.Select(e => XElement.Parse(e, LoadOptions.SetLineInfo));
+
+        var simpleFunction1 = new FunctionInfo()
         {
             Name = "SimpleFunction",
             Parameters = new ParameterInfoList() { { "Person", "[Edm.Int32 Nullable=True]" } }
         };
 
-        FunctionInfo simpleFunction2 = new FunctionInfo()
+        var simpleFunction2 = new FunctionInfo()
         {
             Name = "SimpleFunction",
             Parameters = new ParameterInfoList() { { "Person", "[Edm.Int32 Nullable=True]" },
                                                        { "Count", "[Edm.Int32 Nullable=True]" }}
         };
 
-        List<FunctionInfo> functionInfos = new List<FunctionInfo>() { simpleFunction1, simpleFunction2 };
+        var functionInfos = new List<FunctionInfo>() { simpleFunction1, simpleFunction2 };
 
-        FunctionImportOverloadingCheck(csdls, functionInfos, "Container");
+        var isParsed = SchemaReader.TryParse(csdlElements.Select(e => e.CreateReader()), out IEdmModel model, out IEnumerable<EdmError> errors);
+        Assert.True(isParsed);
+        Assert.Empty(errors);
+
+        var ruleset = ValidationRuleSet.GetEdmModelRuleSet(toProductVersionlookup[edmVersion]);
+        var validationResult = model.Validate(ruleset, out IEnumerable<EdmError> actualErrors);
+        Assert.True(validationResult);
+        Assert.Empty(actualErrors);
+
+        var serializedCsdls = this.GetSerializerResult(model, edmVersion, out IEnumerable<EdmError> serializationErrors).Select(n => XElement.Parse(n));
+        // if the original test model is valid, the round-tripped model should be well-formed and valid.
+        var isWellformed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel roundtrippedModel, out IEnumerable<EdmError> parserErrors);
+        Assert.True(isWellformed && !parserErrors.Any());
+
+        var isValid = roundtrippedModel.Validate(out IEnumerable<EdmError> validationErrors);
+        Assert.True(!validationErrors.Any() && isValid);
+
+        foreach (FunctionInfo functionInfo in functionInfos)
+        {
+            var functionsFound = model.FindOperations("Container" + "." + functionInfo.Name);
+            var functionFoundCount = GetOperationMatchedCount(functionInfo, functionsFound);
+            Assert.Equal(1, functionFoundCount);
+        }
     }
 
-    [Fact]
-    public void FindMethodTestFunctionImportOverloadingWithComplexParameterCsdl()
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void FindMethodTestFunctionImportOverloadingWithComplexParameterCsdl(EdmVersion edmVersion)
     {
-        var csdls = FindMethodsTestModelBuilder.FunctionImportOverloadingWithComplexParameterCsdl();
+        var csdl = @"
+<Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+      <EntityType Name='MyEntityType'>
+        <Key>
+          <PropertyRef Name='Id' />
+        </Key>
+        <Property Name='Id' Type='Edm.Int32' Nullable='false' />
+      </EntityType>
+      <ComplexType Name='MyComplexType'>
+        <Property Name=""Data"" Type=""Edm.String"" />
+      </ComplexType>
+      <Function Name='MyFunction'><ReturnType Type='Edm.String'/>
+        <Parameter Name='P1' Type='Collection(DefaultNamespace.MyComplexType)' />
+        <Parameter Name='P2' Type='DefaultNamespace.MyEntityType' />
+        <Parameter Name='P3' Type='Collection(DefaultNamespace.MyEntityType)' />
+        <Parameter Name='P4' Type='Edm.Int32' />
+      </Function>
+      <Function Name='MyFunction'><ReturnType Type='Edm.String'/>
+        <Parameter Name='P1' Type='Collection(DefaultNamespace.MyComplexType)' />
+        <Parameter Name='P2' Type='DefaultNamespace.MyEntityType' />
+        <Parameter Name='P3b' Type='DefaultNamespace.MyComplexType' />
+        <Parameter Name='P4' Type='Edm.Int32' />
+      </Function>
+      <EntityContainer Name='Container'>
+        <FunctionImport Name='MyFunction' Function='DefaultNamespace.MyFunction' />
+      </EntityContainer>
+</Schema>";
+
+        var csdlElements = new string[] { csdl }.Select(e => XElement.Parse(e, LoadOptions.SetLineInfo));
 
         FunctionInfo simpleFunction1 = new FunctionInfo()
         {
@@ -573,481 +1550,1227 @@ public class FindMethodTests : EdmLibTestCaseBase
 
         List<FunctionInfo> functionInfos = new List<FunctionInfo>() { simpleFunction1, simpleFunction2 };
 
-        FunctionImportOverloadingCheck(csdls, functionInfos, "Container");
+        var isParsed = SchemaReader.TryParse(csdlElements.Select(e => e.CreateReader()), out IEdmModel model, out IEnumerable<EdmError> errors);
+        Assert.True(isParsed);
+        Assert.Empty(errors);
+
+        var ruleset = ValidationRuleSet.GetEdmModelRuleSet(toProductVersionlookup[edmVersion]);
+        var validationResult = model.Validate(ruleset, out IEnumerable<EdmError> actualErrors);
+        Assert.True(validationResult);
+        Assert.Empty(actualErrors);
+
+        var serializedCsdls = this.GetSerializerResult(model, edmVersion, out IEnumerable<EdmError> serializationErrors).Select(n => XElement.Parse(n));
+        // if the original test model is valid, the round-tripped model should be well-formed and valid.
+        var isWellformed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel roundtrippedModel, out IEnumerable<EdmError> parserErrors);
+        Assert.True(isWellformed && !parserErrors.Any());
+
+        var isValid = roundtrippedModel.Validate(out IEnumerable<EdmError> validationErrors);
+        Assert.True(!validationErrors.Any() && isValid);
+
+        foreach (FunctionInfo functionInfo in functionInfos)
+        {
+            var functionsFound = model.FindOperations("Container" + "." + functionInfo.Name);
+            var functionFoundCount = GetOperationMatchedCount(functionInfo, functionsFound);
+            Assert.Equal(1, functionFoundCount);
+        }
     }
 
     [Fact]
     public void FindMethodTestFindFunctionImportThatDoesNotExist()
     {
-        var csdls = FindMethodsTestModelBuilder.FunctionImportOverloadingWithComplexParameterCsdl();
-        var model = this.GetParserResult(csdls);
+        var csdl = @"
+<Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+      <EntityType Name='MyEntityType'>
+        <Key>
+          <PropertyRef Name='Id' />
+        </Key>
+        <Property Name='Id' Type='Edm.Int32' Nullable='false' />
+      </EntityType>
+      <ComplexType Name='MyComplexType'>
+        <Property Name=""Data"" Type=""Edm.String"" />
+      </ComplexType>
+      <Function Name='MyFunction'><ReturnType Type='Edm.String'/>
+        <Parameter Name='P1' Type='Collection(DefaultNamespace.MyComplexType)' />
+        <Parameter Name='P2' Type='DefaultNamespace.MyEntityType' />
+        <Parameter Name='P3' Type='Collection(DefaultNamespace.MyEntityType)' />
+        <Parameter Name='P4' Type='Edm.Int32' />
+      </Function>
+      <Function Name='MyFunction'><ReturnType Type='Edm.String'/>
+        <Parameter Name='P1' Type='Collection(DefaultNamespace.MyComplexType)' />
+        <Parameter Name='P2' Type='DefaultNamespace.MyEntityType' />
+        <Parameter Name='P3b' Type='DefaultNamespace.MyComplexType' />
+        <Parameter Name='P4' Type='Edm.Int32' />
+      </Function>
+      <EntityContainer Name='Container'>
+        <FunctionImport Name='MyFunction' Function='DefaultNamespace.MyFunction' />
+      </EntityContainer>
+</Schema>";
+
+        var csdlElements = new XElement[] { XElement.Parse(csdl) };
+        var isParsed = SchemaReader.TryParse(csdlElements.Select(e => e.CreateReader()), out IEdmModel model, out IEnumerable<EdmError> errors);
+        Assert.True(isParsed);
+        Assert.Empty(errors);
 
         var entityContainer = model.FindEntityContainer("Container");
         var operationImports = entityContainer.FindOperationImports("foobaz");
-        Assert.NotNull(operationImports, "Invalid find function import result.");
-        Assert.Equal(0, operationImports.Count(), "Invalid function import count.");
+        Assert.NotNull(operationImports);
+        Assert.Empty(operationImports);
     }
 
-    [Fact]
-    public void FindMethodTestEntitySetWithSingleNavigationCsdl()
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void FindMethodTestEntitySetWithSingleNavigationCsdl(EdmVersion edmVersion)
     {
-        var csdls = FindMethodsTestModelBuilder.EntitySetWithSingleNavigationCsdl();
-        var model = this.GetParserResult(csdls);
-        this.VerifySemanticValidation(model, new EdmLibTestErrors());
+        var csdl = @"
+<Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+    <EntityContainer Name=""Container"">
+        <EntitySet Name=""BuyerSet"" EntityType=""DefaultNamespace.Person"">
+          <NavigationPropertyBinding Path=""ItemPurchased"" Target=""ItemSet"" />
+        </EntitySet>
+        <EntitySet Name=""ItemSet"" EntityType=""DefaultNamespace.Item"">
+          <NavigationPropertyBinding Path=""Purchaser"" Target=""BuyerSet"" />
+        </EntitySet>
+    </EntityContainer>
+    <EntityType Name=""Person"">
+        <Key>
+            <PropertyRef Name=""Id"" />
+        </Key>
+        <Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false"" />
+        <NavigationProperty Name=""ItemPurchased"" Type=""DefaultNamespace.Item"" Nullable=""false"" Partner=""Purchaser"" />
+    </EntityType>
+    <EntityType Name=""Item"">
+        <Key>
+            <PropertyRef Name=""PersonId"" />
+        </Key>
+        <Property Name=""PersonId"" Type=""Edm.Int32"" Nullable=""false"" />
+        <NavigationProperty Name=""Purchaser"" Type=""DefaultNamespace.Person"" Nullable=""false"" Partner=""ItemPurchased"" />
+    </EntityType>
+</Schema>";
 
-        var personToItem = model.FindEntityType("DefaultNamespace.Person").NavigationProperties().Where(n => n.Name.Equals("ItemPurchased")).FirstOrDefault();
-        var itemToPerson = model.FindEntityType("DefaultNamespace.Item").NavigationProperties().Where(n => n.Name.Equals("Purchaser")).FirstOrDefault();
+        var csdlElements = new XElement[] { XElement.Parse(csdl) };
+        var isParsed = SchemaReader.TryParse(csdlElements.Select(e => e.CreateReader()), out IEdmModel model, out IEnumerable<EdmError> errors);
+        Assert.True(isParsed);
+        Assert.Empty(errors);
+
+        var ruleset = ValidationRuleSet.GetEdmModelRuleSet(toProductVersionlookup[edmVersion]);
+        var validationResult = model.Validate(ruleset, out IEnumerable<EdmError> actualErrors);
+        Assert.True(validationResult);
+        Assert.Empty(actualErrors);
+
+        var serializedCsdls = this.GetSerializerResult(model, edmVersion, out IEnumerable<EdmError> serializationErrors).Select(n => XElement.Parse(n));
+        // if the original test model is valid, the round-tripped model should be well-formed and valid.
+        var isWellformed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel roundtrippedModel, out IEnumerable<EdmError> parserErrors);
+        Assert.True(isWellformed && !parserErrors.Any());
+
+        var isValid = roundtrippedModel.Validate(out IEnumerable<EdmError> validationErrors);
+        Assert.True(!validationErrors.Any() && isValid);
+
+        var personToItem = (model.FindType("DefaultNamespace.Person") as IEdmEntityType).NavigationProperties().Where(n => n.Name.Equals("ItemPurchased")).FirstOrDefault();
+        var itemToPerson = (model.FindType("DefaultNamespace.Item") as IEdmEntityType).NavigationProperties().Where(n => n.Name.Equals("Purchaser")).FirstOrDefault();
 
         var buyerSet = model.EntityContainer.FindEntitySet("BuyerSet");
         var itemSet = model.EntityContainer.FindEntitySet("ItemSet");
 
-        FindNavigationTargetCheck(buyerSet, personToItem, itemSet, itemToPerson);
-        this.BasicFindMethodsTest(csdls);
+        var buyerEntityTarget = buyerSet.FindNavigationTarget(personToItem);
+        Assert.NotNull(buyerEntityTarget);
+        Assert.Equal(itemSet.Name, buyerEntityTarget.Name);
+        Assert.Equal(itemSet, buyerEntityTarget);
+
+        buyerEntityTarget = buyerSet.FindNavigationTarget(itemToPerson);
+        Assert.True(buyerEntityTarget is IEdmUnknownEntitySet);
+
+        var itemEntityTarget = itemSet.FindNavigationTarget(itemToPerson);
+        Assert.NotNull(itemEntityTarget);
+        Assert.Equal(buyerSet.Name, itemEntityTarget.Name);
+        Assert.Equal(buyerSet, itemEntityTarget);
+
+        itemEntityTarget = itemSet.FindNavigationTarget(personToItem);
+        Assert.True(itemEntityTarget is IEdmUnknownEntitySet);
+
+        var csdls = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(csdlElements, edmVersion);
+
+        isParsed = SchemaReader.TryParse(csdls.Select(e => e.CreateReader()), out IEdmModel testModelImmutable, out errors);
+        Assert.True(isParsed);
+        Assert.Empty(errors);
+
+        this.VerifyFindMethods(csdls, testModelImmutable, edmVersion);
+
+        var testModelConstructible = (new EdmToStockModelConverter()).ConvertToStockModel(testModelImmutable);
+        var testCsdls = this.GetSerializerResult(testModelConstructible, out serializationErrors).Select(n => XElement.Parse(n));
+        Assert.Empty(serializationErrors);
+
+        this.VerifyFindMethods(testCsdls, testModelConstructible, edmVersion);
     }
 
-    [Fact]
-    public void FindMethodTestEntitySetWithTwoNavigationCsdl()
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void FindMethodTestEntitySetWithTwoNavigationCsdl(EdmVersion edmVersion)
     {
-        var csdls = FindMethodsTestModelBuilder.EntitySetWithTwoNavigationCsdl();
-        var model = this.GetParserResult(csdls);
-        this.VerifySemanticValidation(model, new EdmLibTestErrors());
+        var csdl = @"
+<Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+    <EntityContainer Name=""Container"">
+        <EntitySet Name=""BuyerSet"" EntityType=""DefaultNamespace.Person"">
+          <NavigationPropertyBinding Path=""ItemPurchased"" Target=""ItemSet"" />
+          <NavigationPropertyBinding Path=""Pet"" Target=""PetSet"" />
+        </EntitySet>
+        <EntitySet Name=""ItemSet"" EntityType=""DefaultNamespace.Item"">
+          <NavigationPropertyBinding Path=""Purchaser"" Target=""BuyerSet"" />
+        </EntitySet>
+        <EntitySet Name=""PetSet"" EntityType=""DefaultNamespace.Pet"">
+          <NavigationPropertyBinding Path=""Owner"" Target=""BuyerSet"" />
+        </EntitySet>
+    </EntityContainer>
+    <EntityType Name=""Person"">
+        <Key>
+            <PropertyRef Name=""Id"" />
+        </Key>
+        <Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false"" />
+        <NavigationProperty Name=""ItemPurchased"" Type=""DefaultNamespace.Item"" Nullable=""false"" Partner=""Purchaser"" />
+        <NavigationProperty Name=""Pet"" Type=""DefaultNamespace.Pet"" Nullable=""false"" Partner=""Owner"" />
+    </EntityType>
+    <EntityType Name=""Item"">
+        <Key>
+            <PropertyRef Name=""PersonId"" />
+        </Key>
+        <Property Name=""PersonId"" Type=""Edm.Int32"" Nullable=""false"" />
+        <NavigationProperty Name=""Purchaser"" Type=""DefaultNamespace.Person"" Nullable=""false"" Partner=""ItemPurchased"" />
+    </EntityType>
+    <EntityType Name=""Pet"">
+        <Key>
+            <PropertyRef Name=""PersonId"" />
+        </Key>
+        <Property Name=""PersonId"" Type=""Edm.Int32"" Nullable=""false"" />
+        <NavigationProperty Name=""Owner"" Type=""DefaultNamespace.Person"" Nullable=""false"" Partner=""Pet"" />
+    </EntityType>
+</Schema>";
 
-        var personToItem = model.FindEntityType("DefaultNamespace.Person").NavigationProperties().Where(n => n.Name.Equals("ItemPurchased")).FirstOrDefault();
-        var itemToPerson = model.FindEntityType("DefaultNamespace.Item").NavigationProperties().Where(n => n.Name.Equals("Purchaser")).FirstOrDefault();
+        var csdlElements = new XElement[] { XElement.Parse(csdl) };
+        var isParsed = SchemaReader.TryParse(csdlElements.Select(e => e.CreateReader()), out IEdmModel model, out IEnumerable<EdmError> errors);
+        Assert.True(isParsed);
+        Assert.Empty(errors);
 
-        var ownerToPet = model.FindEntityType("DefaultNamespace.Person").NavigationProperties().Where(n => n.Name.Equals("Pet")).FirstOrDefault();
-        var petToOwner = model.FindEntityType("DefaultNamespace.Pet").NavigationProperties().Where(n => n.Name.Equals("Owner")).FirstOrDefault();
+        var serializedCsdls = this.GetSerializerResult(model, edmVersion, out IEnumerable<EdmError> serializationErrors).Select(n => XElement.Parse(n));
+        // if the original test model is valid, the round-tripped model should be well-formed and valid.
+        var isWellformed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel roundtrippedModel, out IEnumerable<EdmError> parserErrors);
+        Assert.True(isWellformed && !parserErrors.Any());
+
+        var isValid = roundtrippedModel.Validate(out IEnumerable<EdmError> validationErrors);
+        Assert.True(!validationErrors.Any() && isValid);
+
+        var personToItem = (model.FindType("DefaultNamespace.Person") as IEdmEntityType).NavigationProperties().Where(n => n.Name.Equals("ItemPurchased")).FirstOrDefault();
+        var itemToPerson = (model.FindType("DefaultNamespace.Item") as IEdmEntityType).NavigationProperties().Where(n => n.Name.Equals("Purchaser")).FirstOrDefault();
+
+        var ownerToPet = (model.FindType("DefaultNamespace.Person") as IEdmEntityType).NavigationProperties().Where(n => n.Name.Equals("Pet")).FirstOrDefault();
+        var petToOwner = (model.FindType("DefaultNamespace.Pet") as IEdmEntityType).NavigationProperties().Where(n => n.Name.Equals("Owner")).FirstOrDefault();
 
         var buyerSet = model.EntityContainer.FindEntitySet("BuyerSet");
         var itemSet = model.EntityContainer.FindEntitySet("ItemSet");
         var petSet = model.EntityContainer.FindEntitySet("PetSet");
 
-        FindNavigationTargetCheck(buyerSet, personToItem, itemSet, itemToPerson);
-        FindNavigationTargetCheck(buyerSet, ownerToPet, petSet, petToOwner);
-        this.BasicFindMethodsTest(csdls);
+        var buyerEntityTarget = buyerSet.FindNavigationTarget(personToItem);
+        Assert.NotNull(buyerEntityTarget);
+        Assert.Equal(itemSet.Name, buyerEntityTarget.Name);
+        Assert.Equal(itemSet, buyerEntityTarget);
+
+        buyerEntityTarget = buyerSet.FindNavigationTarget(itemToPerson);
+        Assert.True(buyerEntityTarget is IEdmUnknownEntitySet);
+
+        var itemEntityTarget = itemSet.FindNavigationTarget(itemToPerson);
+        Assert.NotNull(itemEntityTarget);
+        Assert.Equal(buyerSet.Name, itemEntityTarget.Name);
+        Assert.Equal(buyerSet, itemEntityTarget);
+
+        itemEntityTarget = itemSet.FindNavigationTarget(personToItem);
+        Assert.True(itemEntityTarget is IEdmUnknownEntitySet);
+
+        buyerEntityTarget = buyerSet.FindNavigationTarget(ownerToPet);
+        Assert.NotNull(buyerEntityTarget);
+        Assert.Equal(itemSet.Name, buyerEntityTarget.Name);
+        Assert.Equal(itemSet, buyerEntityTarget);
+
+        buyerEntityTarget = buyerSet.FindNavigationTarget(petToOwner);
+        Assert.True(buyerEntityTarget is IEdmUnknownEntitySet);
+
+        var petEntityTarget = petSet.FindNavigationTarget(ownerToPet);
+        Assert.NotNull(petEntityTarget);
+        Assert.Equal(buyerSet.Name, petEntityTarget.Name);
+        Assert.Equal(buyerSet, petEntityTarget);
+
+        petEntityTarget = petSet.FindNavigationTarget(petToOwner);
+        Assert.True(petEntityTarget is IEdmUnknownEntitySet);
+
+        var csdls = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(csdlElements, edmVersion);
+
+        isParsed = SchemaReader.TryParse(csdls.Select(e => e.CreateReader()), out IEdmModel testModelImmutable, out errors);
+        Assert.True(isParsed);
+        Assert.Empty(errors);
+
+        this.VerifyFindMethods(csdls, testModelImmutable, edmVersion);
+
+        var testModelConstructible = (new EdmToStockModelConverter()).ConvertToStockModel(testModelImmutable);
+        var testCsdls = this.GetSerializerResult(testModelConstructible, out serializationErrors).Select(n => XElement.Parse(n));
+        Assert.Empty(serializationErrors);
+
+        this.VerifyFindMethods(testCsdls, testModelConstructible, edmVersion);
     }
 
-    [Fact]
-    public void FindMethodTestEntitySetRecursiveNavigationCsdl()
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void FindMethodTestEntitySetRecursiveNavigationCsdl(EdmVersion edmVersion)
     {
-        var csdls = FindMethodsTestModelBuilder.EntitySetRecursiveNavigationCsdl();
-        var model = this.GetParserResult(csdls);
-        this.VerifySemanticValidation(model, new EdmLibTestErrors());
+        var csdl = @"
+<Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+    <EntityContainer Name=""Container"">
+        <EntitySet Name=""PersonSet"" EntityType=""DefaultNamespace.Person"">
+          <NavigationPropertyBinding Path=""ToPerson"" Target=""PersonSet"" />
+          <NavigationPropertyBinding Path=""ToFriend"" Target=""PersonSet"" />
+        </EntitySet>
+    </EntityContainer>
+    <EntityType Name=""Person"">
+        <Key>
+            <PropertyRef Name=""Id"" />
+        </Key>
+        <Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false"" />
+        <NavigationProperty Name=""ToFriend"" Type=""DefaultNamespace.Person"" Nullable=""false"" Partner=""ToPerson"" />
+        <NavigationProperty Name=""ToPerson"" Type=""DefaultNamespace.Person"" Nullable=""false"" Partner=""ToFriend"" />
+    </EntityType>
+</Schema>";
 
-        var personToFriend = model.FindEntityType("DefaultNamespace.Person").NavigationProperties().Where(n => n.Name.Equals("ToFriend")).FirstOrDefault();
-        var friendToPerson = model.FindEntityType("DefaultNamespace.Person").NavigationProperties().Where(n => n.Name.Equals("ToPerson")).FirstOrDefault();
+        var csdlElements = new XElement[] { XElement.Parse(csdl) };
+        var isParsed = SchemaReader.TryParse(csdlElements.Select(e => e.CreateReader()), out IEdmModel model, out IEnumerable<EdmError> errors);
+        Assert.True(isParsed);
+        Assert.Empty(errors);
+
+        var serializedCsdls = this.GetSerializerResult(model, edmVersion, out IEnumerable<EdmError> serializationErrors).Select(n => XElement.Parse(n));
+        // if the original test model is valid, the round-tripped model should be well-formed and valid.
+        var isWellformed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel roundtrippedModel, out IEnumerable<EdmError> parserErrors);
+        Assert.True(isWellformed && !parserErrors.Any());
+
+        var isValid = roundtrippedModel.Validate(out IEnumerable<EdmError> validationErrors);
+        Assert.True(!validationErrors.Any() && isValid);
+
+        var personToFriend =  (model.FindType("DefaultNamespace.Person") as IEdmEntityType).NavigationProperties().Where(n => n.Name.Equals("ToFriend")).FirstOrDefault();
+        var friendToPerson =  (model.FindType("DefaultNamespace.Person") as IEdmEntityType).NavigationProperties().Where(n => n.Name.Equals("ToPerson")).FirstOrDefault();
 
         var personSet = model.EntityContainer.FindEntitySet("PersonSet");
 
-        FindRecursiveNavigationTargetCheck(personSet, personToFriend, friendToPerson);
-        this.BasicFindMethodsTest(csdls);
+        var entityTarget = personSet.FindNavigationTarget(personToFriend);
+        Assert.NotNull(entityTarget);
+        Assert.Equal(personSet.Name, entityTarget.Name);
+        Assert.Equal(personSet, entityTarget);
+
+        entityTarget = personSet.FindNavigationTarget(friendToPerson);
+        Assert.NotNull(entityTarget);
+        Assert.Equal(personSet.Name, entityTarget.Name);
+        Assert.Equal(personSet, entityTarget);
+
+        var csdls = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(csdlElements, edmVersion);
+
+        isParsed = SchemaReader.TryParse(csdls.Select(e => e.CreateReader()), out IEdmModel testModelImmutable, out errors);
+        Assert.True(isParsed);
+        Assert.Empty(errors);
+
+        this.VerifyFindMethods(csdls, testModelImmutable, edmVersion);
+
+        var testModelConstructible = (new EdmToStockModelConverter()).ConvertToStockModel(testModelImmutable);
+        var testCsdls = this.GetSerializerResult(testModelConstructible, out serializationErrors).Select(n => XElement.Parse(n));
+        Assert.Empty(serializationErrors);
+
+        this.VerifyFindMethods(testCsdls, testModelConstructible, edmVersion);
     }
 
-    [Fact]
-    public void FindMethodTestEntitySetNavigationUsedTwiceCsdl()
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void FindMethodTestEntitySetNavigationUsedTwiceCsdl(EdmVersion edmVersion)
     {
-        var csdls = FindMethodsTestModelBuilder.EntitySetNavigationUsedTwiceCsdl();
-        var model = this.GetParserResult(csdls);
-        this.VerifySemanticValidation(model, new EdmLibTestErrors());
+        var csdl = @"
+<Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+    <EntityContainer Name=""Container"">
+        <EntitySet Name=""BuyerSet"" EntityType=""DefaultNamespace.Person"">
+          <NavigationPropertyBinding Path=""ItemPurchased"" Target=""ItemSet"" />
+        </EntitySet>
+        <EntitySet Name=""ItemSet"" EntityType=""DefaultNamespace.Item"">
+          <NavigationPropertyBinding Path=""Purchaser"" Target=""BuyerSet"" />
+        </EntitySet>
+        <EntitySet Name=""SecondBuyerSet"" EntityType=""DefaultNamespace.Person"">
+          <NavigationPropertyBinding Path=""ItemPurchased"" Target=""SecondItemSet"" />
+        </EntitySet>
+        <EntitySet Name=""SecondItemSet"" EntityType=""DefaultNamespace.Item"">
+          <NavigationPropertyBinding Path=""Purchaser"" Target=""SecondBuyerSet"" />
+        </EntitySet>
+    </EntityContainer>
+    <EntityType Name=""Person"">
+        <Key>
+            <PropertyRef Name=""Id"" />
+        </Key>
+        <Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false"" />
+        <NavigationProperty Name=""ItemPurchased"" Type=""DefaultNamespace.Item"" Nullable=""false"" Partner=""Purchaser"" />
+    </EntityType>
+    <EntityType Name=""Item"">
+        <Key>
+            <PropertyRef Name=""PersonId"" />
+        </Key>
+        <Property Name=""PersonId"" Type=""Edm.Int32"" Nullable=""false"" />
+        <NavigationProperty Name=""Purchaser"" Type=""DefaultNamespace.Person"" Nullable=""false"" Partner=""ItemPurchased"" />
+    </EntityType>
+</Schema>";
 
-        var personToItem = model.FindEntityType("DefaultNamespace.Person").NavigationProperties().Where(n => n.Name.Equals("ItemPurchased")).FirstOrDefault();
-        var itemToPerson = model.FindEntityType("DefaultNamespace.Item").NavigationProperties().Where(n => n.Name.Equals("Purchaser")).FirstOrDefault();
+        var csdlElements = new string[] { csdl }.Select(e => XElement.Parse(e, LoadOptions.SetLineInfo));
+        var isParsed = SchemaReader.TryParse(csdlElements.Select(e => e.CreateReader()), out IEdmModel model, out IEnumerable<EdmError> errors);
+        Assert.True(isParsed);
+        Assert.Empty(errors);
+
+        var serializedCsdls = this.GetSerializerResult(model, edmVersion, out IEnumerable<EdmError> serializationErrors).Select(n => XElement.Parse(n));
+        // if the original test model is valid, the round-tripped model should be well-formed and valid.
+        var isWellformed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel roundtrippedModel, out IEnumerable<EdmError> parserErrors);
+        Assert.True(isWellformed && !parserErrors.Any());
+
+        var isValid = roundtrippedModel.Validate(out IEnumerable<EdmError> validationErrors);
+        Assert.True(!validationErrors.Any() && isValid);
+
+        var personToItem =  (model.FindType("DefaultNamespace.Person") as IEdmEntityType).NavigationProperties().Where(n => n.Name.Equals("ItemPurchased")).FirstOrDefault();
+        var itemToPerson =  (model.FindType("DefaultNamespace.Item") as IEdmEntityType).NavigationProperties().Where(n => n.Name.Equals("Purchaser")).FirstOrDefault();
 
         var buyerSet = model.EntityContainer.FindEntitySet("BuyerSet");
         var itemSet = model.EntityContainer.FindEntitySet("ItemSet");
         var secondBuyerSet = model.EntityContainer.FindEntitySet("SecondBuyerSet");
         var secondItemSet = model.EntityContainer.FindEntitySet("SecondItemSet");
 
-        FindNavigationTargetCheck(buyerSet, personToItem, itemSet, itemToPerson);
-        FindNavigationTargetCheck(secondBuyerSet, personToItem, secondItemSet, itemToPerson);
+        var buyerEntityTarget = buyerSet.FindNavigationTarget(personToItem);
+        Assert.NotNull(buyerEntityTarget);
+        Assert.Equal(itemSet.Name, buyerEntityTarget.Name);
+        Assert.Equal(itemSet, buyerEntityTarget);
+
+        buyerEntityTarget = buyerSet.FindNavigationTarget(itemToPerson);
+        Assert.True(buyerEntityTarget is IEdmUnknownEntitySet);
+
+        var itemEntityTarget = itemSet.FindNavigationTarget(itemToPerson);
+        Assert.NotNull(itemEntityTarget);
+        Assert.Equal(buyerSet.Name, itemEntityTarget.Name);
+        Assert.Equal(buyerSet, itemEntityTarget);
+
+        itemEntityTarget = itemSet.FindNavigationTarget(personToItem);
+        Assert.True(itemEntityTarget is IEdmUnknownEntitySet);
+
+        var secondBuyerEntityTarget = secondBuyerSet.FindNavigationTarget(personToItem);
+        buyerEntityTarget = secondBuyerSet.FindNavigationTarget(itemToPerson);
+        Assert.NotNull(buyerEntityTarget);
+        Assert.Equal(secondItemSet.Name, buyerEntityTarget.Name);
+        Assert.Equal(secondItemSet, buyerEntityTarget);
+
+        secondBuyerEntityTarget = secondBuyerSet.FindNavigationTarget(itemToPerson);
+        Assert.True(secondBuyerEntityTarget is IEdmUnknownEntitySet);
+
+        var secondItemEntityTarget = secondItemSet.FindNavigationTarget(itemToPerson);
+        Assert.NotNull(secondItemEntityTarget);
+        Assert.Equal(secondBuyerSet.Name, secondItemEntityTarget.Name);
+        Assert.Equal(secondBuyerSet, secondItemEntityTarget);
+
+        secondItemEntityTarget = secondItemSet.FindNavigationTarget(personToItem);
+        Assert.True(secondItemEntityTarget is IEdmUnknownEntitySet);
     }
 
     [Fact]
     public void FindMethodTestFindVocabularyAnnotationWithTermCsdl()
     {
-        var csdls = FindMethodsTestModelBuilder.FindVocabularyAnnotationWithTermCsdl();
-        var model = this.GetParserResult(csdls);
+        var csdls = new string[] { @"
+<Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+    <ComplexType Name=""Pet"">
+        <Property Name=""OwnerId"" Type=""Edm.Int32"" />
+        <Property Name=""Name"" Type=""Edm.String"" />
+    </ComplexType>
+    <Annotations Target=""DefaultNamespace.Pet"">
+        <Annotation Term=""AnnotationNamespace.AddressObject"">
+        </Annotation>
+    </Annotations>
+</Schema>", @"
+<Schema Namespace=""AnnotationNamespace"" Alias=""foo"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+    <Term Name=""AddressObject"" Type=""AnnotationNamespace.Address"" />
+    <EntityType Name=""Person"">
+        <Key>
+            <PropertyRef Name=""Id"" />
+        </Key>
+        <Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false"" />
+        <Property Name=""FakeId"" Type=""Edm.Int32"" Nullable=""false"" />
+    </EntityType>
+    <ComplexType Name=""Address"">
+        <Property Name=""Street"" Type=""Edm.String"" Nullable=""false"" />
+        <Property Name=""City"" Type=""Edm.String"" Nullable=""true"" />
+    </ComplexType>
+</Schema>" };
+        
+        var csdlElements = csdls.Select(e => XElement.Parse(e, LoadOptions.SetLineInfo));
+        var isParsed = SchemaReader.TryParse(csdlElements.Select(e => e.CreateReader()), out IEdmModel model, out IEnumerable<EdmError> errors);
+        Assert.True(isParsed);
+        Assert.Empty(errors);
 
         var modelVocabulary = model.VocabularyAnnotations;
-        Assert.Equal(1, modelVocabulary.Count(), "Invalid vocabulary count.");
+        Assert.Single(modelVocabulary);
 
         var addressTerm = model.FindTerm("AnnotationNamespace.AddressObject");
         var petType = model.FindType("DefaultNamespace.Pet") as IEdmComplexType;
-        this.CompareVacabulraryAnnoationsVariations(model.FindDeclaredVocabularyAnnotations(addressTerm), model.FindVocabularyAnnotations(addressTerm));
-        Assert.Equal(0, model.FindDeclaredVocabularyAnnotations(addressTerm).Count(), "Invalid annotation count.");
-        this.CompareVacabulraryAnnoationsVariations(model.FindDeclaredVocabularyAnnotations(petType), model.FindVocabularyAnnotations(petType));
-        Assert.Equal(1, model.FindDeclaredVocabularyAnnotations(petType).Count(), "Invalid annotation count.");
+
+        var baseValue1 = model.FindDeclaredVocabularyAnnotations(addressTerm);
+        Assert.DoesNotContain([baseValue1, model.FindVocabularyAnnotations(addressTerm)], n => n.Count() != baseValue1.Count() || baseValue1.Except(n).Any());
+        Assert.Empty(model.FindDeclaredVocabularyAnnotations(addressTerm));
+
+        var baseValue2 = model.FindDeclaredVocabularyAnnotations(petType);
+        Assert.DoesNotContain([baseValue2, model.FindVocabularyAnnotations(petType)], n => n.Count() != baseValue2.Count() || baseValue2.Except(n).Any());
+        Assert.Single(model.FindDeclaredVocabularyAnnotations(petType));
 
         var valueAnnotationsFound = model.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(addressTerm, addressTerm);
-        Assert.Equal(0, valueAnnotationsFound.Count(), "Invalid annotation count.");
+        Assert.Empty(valueAnnotationsFound);
 
         valueAnnotationsFound = model.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(petType, "AnnotationNamespace.Person");
-        Assert.Equal(0, valueAnnotationsFound.Count(), "Invalid annotation count.");
+        Assert.Empty(valueAnnotationsFound);
 
         valueAnnotationsFound = model.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(petType, "AnnotationNamespace.Nonsense");
-        Assert.Equal(0, valueAnnotationsFound.Count(), "Invalid annotation count.");
+        Assert.Empty(valueAnnotationsFound);
 
         valueAnnotationsFound = model.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(petType, addressTerm);
-        Assert.Equal(1, valueAnnotationsFound.Count(), "Invalid annotation count.");
+        Assert.Single(valueAnnotationsFound);
 
         valueAnnotationsFound = model.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(petType, "AnnotationNamespace.AddressObject");
-        Assert.Equal(1, valueAnnotationsFound.Count(), "Invalid annotation count.");
+        Assert.Single(valueAnnotationsFound);
 
         var expectedValueAnnotation = petType.VocabularyAnnotations(model).SingleOrDefault();
-        Assert.AreSame(expectedValueAnnotation, valueAnnotationsFound.SingleOrDefault(), "Invalid annotation.");
+        Assert.Equal(expectedValueAnnotation, valueAnnotationsFound.SingleOrDefault());
     }
 
     [Fact]
     public void FindMethodTestFindVocabularyAnnotationWithEntityTypeCsdl()
     {
-        var csdls = FindMethodsTestModelBuilder.FindVocabularyAnnotationWithEntityTypeCsdl();
-        var model = this.GetParserResult(csdls);
+        var csdls = new string[] { @"
+<Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+    <ComplexType Name=""Pet"">
+        <Property Name=""OwnerId"" Type=""Edm.Int32"" />
+        <Property Name=""Name"" Type=""Edm.String"" />
+    </ComplexType>
+    <Annotations Target=""DefaultNamespace.Pet"">
+        <Annotation Term=""AnnotationNamespace.Person"">
+        </Annotation>
+    </Annotations>
+</Schema>", @"
+<Schema Namespace=""AnnotationNamespace"" Alias=""foo"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+    <Term Name=""AddressObject"" Type=""AnnotationNamespace.Address"" />
+    <EntityType Name=""Person"">
+        <Key>
+            <PropertyRef Name=""Id"" />
+        </Key>
+        <Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false"" />
+        <Property Name=""FakeId"" Type=""Edm.Int32"" Nullable=""false"" />
+    </EntityType>
+    <ComplexType Name=""Address"">
+        <Property Name=""Street"" Type=""Edm.String"" Nullable=""false"" />
+        <Property Name=""City"" Type=""Edm.String"" Nullable=""true"" />
+    </ComplexType>
+</Schema>" };
+
+        var csdlElements = csdls.Select(e => XElement.Parse(e, LoadOptions.SetLineInfo));
+        var isParsed = SchemaReader.TryParse(csdlElements.Select(e => e.CreateReader()), out IEdmModel model, out IEnumerable<EdmError> errors);
+        Assert.True(isParsed);
+        Assert.Empty(errors);
 
         var modelVocabulary = model.VocabularyAnnotations;
-        Assert.Equal(1, modelVocabulary.Count(), "Invalid vocabulary count.");
+        Assert.Single(modelVocabulary);
 
-        var personEntity = model.FindEntityType("AnnotationNamespace.Person");
+        var personEntity = model.FindType("AnnotationNamespace.Person") as IEdmEntityType;
         var addressTerm = model.FindTerm("AnnotationNamespace.AddressObject");
         var petType = model.FindType("DefaultNamespace.Pet") as IEdmComplexType;
-        this.CompareVacabulraryAnnoationsVariations(model.FindDeclaredVocabularyAnnotations(personEntity), model.FindVocabularyAnnotations(personEntity));
-        Assert.Equal(0, model.FindDeclaredVocabularyAnnotations(personEntity).Count(), "Invalid annotation count.");
-        this.CompareVacabulraryAnnoationsVariations(model.FindDeclaredVocabularyAnnotations(addressTerm), model.FindVocabularyAnnotations(addressTerm));
-        Assert.Equal(0, model.FindDeclaredVocabularyAnnotations(addressTerm).Count(), "Invalid annotation count.");
-        this.CompareVacabulraryAnnoationsVariations(model.FindDeclaredVocabularyAnnotations(petType), model.FindVocabularyAnnotations(petType));
-        Assert.Equal(1, model.FindDeclaredVocabularyAnnotations(petType).Count(), "Invalid annotation count.");
+
+        var baseValue1 = model.FindDeclaredVocabularyAnnotations(personEntity);
+        Assert.DoesNotContain([baseValue1, model.FindVocabularyAnnotations(personEntity)], n => n.Count() != baseValue1.Count() || baseValue1.Except(n).Any());
+        Assert.Empty(model.FindDeclaredVocabularyAnnotations(personEntity));
+
+        var baseValue2 = model.FindDeclaredVocabularyAnnotations(addressTerm);
+        Assert.DoesNotContain([baseValue2, model.FindVocabularyAnnotations(addressTerm)], n => n.Count() != baseValue2.Count() || baseValue2.Except(n).Any());
+        Assert.Empty(model.FindDeclaredVocabularyAnnotations(addressTerm));
+
+        var baseValue3 = model.FindDeclaredVocabularyAnnotations(petType);
+        Assert.DoesNotContain([baseValue3, model.FindVocabularyAnnotations(petType)], n => n.Count() != baseValue2.Count() || baseValue2.Except(n).Any());
+        Assert.Single(model.FindDeclaredVocabularyAnnotations(petType));
 
         var valueAnnotationsFound = model.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(addressTerm, addressTerm);
-        Assert.Equal(0, valueAnnotationsFound.Count(), "Invalid annotation count.");
+        Assert.Empty(valueAnnotationsFound);
 
         valueAnnotationsFound = model.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(petType, addressTerm);
-        Assert.Equal(0, valueAnnotationsFound.Count(), "Invalid annotation count.");
+        Assert.Empty(valueAnnotationsFound);
     }
 
     [Fact]
     public void FindMethodTestFindVocabularyAnnotationWithComplexTypeCsdl()
     {
-        var csdls = FindMethodsTestModelBuilder.FindVocabularyAnnotationWithComplexTypeCsdl();
-        var model = this.GetParserResult(csdls);
+        var csdls = new string[] { @"
+<Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+    <ComplexType Name=""Pet"">
+        <Property Name=""OwnerId"" Type=""Edm.Int32"" />
+        <Property Name=""Name"" Type=""Edm.String"" />
+    </ComplexType>
+    <Annotations Target=""DefaultNamespace.Pet"">
+        <Annotation Term=""AnnotationNamespace.Address"">
+        </Annotation>
+    </Annotations>
+</Schema>", @"
+<Schema Namespace=""AnnotationNamespace"" Alias=""foo"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+    <Term Name=""AddressObject"" Type=""AnnotationNamespace.Address"" />
+    <EntityType Name=""Person"">
+        <Key>
+            <PropertyRef Name=""Id"" />
+        </Key>
+        <Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false"" />
+        <Property Name=""FakeId"" Type=""Edm.Int32"" Nullable=""false"" />
+    </EntityType>
+    <ComplexType Name=""Address"">
+        <Property Name=""Street"" Type=""Edm.String"" Nullable=""false"" />
+        <Property Name=""City"" Type=""Edm.String"" Nullable=""true"" />
+    </ComplexType>
+</Schema>" };
+
+        var csdlElements = csdls.Select(e => XElement.Parse(e, LoadOptions.SetLineInfo));
+        var isParsed = SchemaReader.TryParse(csdlElements.Select(e => e.CreateReader()), out IEdmModel model, out IEnumerable<EdmError> errors);
+        Assert.True(isParsed);
+        Assert.Empty(errors);
 
         var modelVocabulary = model.VocabularyAnnotations;
-        Assert.Equal(1, modelVocabulary.Count(), "Invalid vocabulary count.");
+        Assert.Single(modelVocabulary);
 
         var addressTerm = model.FindTerm("AnnotationNamespace.AddressObject");
         var petType = model.FindType("DefaultNamespace.Pet") as IEdmComplexType;
-        this.CompareVacabulraryAnnoationsVariations(model.FindDeclaredVocabularyAnnotations(addressTerm), model.FindVocabularyAnnotations(addressTerm));
-        this.CompareVacabulraryAnnoationsVariations(model.FindDeclaredVocabularyAnnotations(petType), model.FindVocabularyAnnotations(petType));
+
+        var baseValue1 = model.FindDeclaredVocabularyAnnotations(addressTerm);
+        Assert.DoesNotContain([baseValue1, model.FindVocabularyAnnotations(addressTerm)], n => n.Count() != baseValue1.Count() || baseValue1.Except(n).Any());
+
+        var baseValue2 = model.FindDeclaredVocabularyAnnotations(petType);
+        Assert.DoesNotContain([baseValue2, model.FindVocabularyAnnotations(petType)], n => n.Count() != baseValue2.Count() || baseValue2.Except(n).Any());
 
         var valueAnnotationsFound = model.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(addressTerm, addressTerm);
-        Assert.Equal(0, valueAnnotationsFound.Count(), "Invalid annotation count.");
+        Assert.Empty(valueAnnotationsFound);
 
         valueAnnotationsFound = model.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(petType, addressTerm);
-        Assert.Equal(0, valueAnnotationsFound.Count(), "Invalid annotation count.");
+        Assert.Empty(valueAnnotationsFound);
     }
 
     [Fact]
     public void FindMethodTestFindVocabularyAnnotationWithMultipleTermsCsdl()
     {
-        var csdls = FindMethodsTestModelBuilder.FindVocabularyAnnotationWithMultipleTermsCsdl();
-        var model = this.GetParserResult(csdls);
+        var csdls = new string[] { @"
+<Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+    <ComplexType Name=""Pet"">
+        <Property Name=""OwnerId"" Type=""Edm.Int32"" />
+        <Property Name=""Name"" Type=""Edm.String"" />
+    </ComplexType>
+    <Annotations Target=""DefaultNamespace.Pet"">
+        <Annotation Term=""AnnotationNamespace.Address"">
+        </Annotation>
+        <Annotation Term=""AnnotationNamespace.AddressObject"">
+        </Annotation>
+        <Annotation Term=""AnnotationNamespace.AddressObject"">
+        </Annotation>
+    </Annotations>
+</Schema>", @"
+<Schema Namespace=""AnnotationNamespace"" Alias=""foo"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+    <Term Name=""AddressObject"" Type=""AnnotationNamespace.Address"" />
+    <EntityType Name=""Person"">
+        <Key>
+            <PropertyRef Name=""Id"" />
+        </Key>
+        <Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false"" />
+        <Property Name=""FakeId"" Type=""Edm.Int32"" Nullable=""false"" />
+    </EntityType>
+    <ComplexType Name=""Address"">
+        <Property Name=""Street"" Type=""Edm.String"" Nullable=""false"" />
+        <Property Name=""City"" Type=""Edm.String"" Nullable=""true"" />
+    </ComplexType>
+</Schema>" };
+
+        var csdlElements = csdls.Select(e => XElement.Parse(e, LoadOptions.SetLineInfo));
+        var isParsed = SchemaReader.TryParse(csdlElements.Select(e => e.CreateReader()), out IEdmModel model, out IEnumerable<EdmError> errors);
+        Assert.True(isParsed);
+        Assert.Empty(errors);
 
         var modelVocabulary = model.VocabularyAnnotations;
-        Assert.Equal(3, modelVocabulary.Count(), "Invalid vocabulary count.");
+        Assert.Equal(3, modelVocabulary.Count());
 
-        var personEntity = model.FindEntityType("AnnotationNamespace.Person");
+        var personEntity = model.FindType("AnnotationNamespace.Person") as IEdmEntityType;
         var addressTerm = model.FindTerm("AnnotationNamespace.AddressObject");
         var petType = model.FindType("DefaultNamespace.Pet") as IEdmComplexType;
-        this.CompareVacabulraryAnnoationsVariations(model.FindDeclaredVocabularyAnnotations(personEntity), model.FindVocabularyAnnotations(personEntity));
-        Assert.Equal(0, model.FindDeclaredVocabularyAnnotations(personEntity).Count(), "Invalid annotation count.");
-        this.CompareVacabulraryAnnoationsVariations(model.FindDeclaredVocabularyAnnotations(addressTerm), model.FindVocabularyAnnotations(addressTerm));
-        Assert.Equal(0, model.FindDeclaredVocabularyAnnotations(addressTerm).Count(), "Invalid annotation count.");
-        this.CompareVacabulraryAnnoationsVariations(model.FindDeclaredVocabularyAnnotations(petType), model.FindVocabularyAnnotations(petType));
-        Assert.Equal(3, model.FindDeclaredVocabularyAnnotations(petType).Count(), "Invalid annotation count.");
+
+        var baseValue1 = model.FindDeclaredVocabularyAnnotations(personEntity);
+        Assert.DoesNotContain([baseValue1, model.FindVocabularyAnnotations(personEntity)], n => n.Count() != baseValue1.Count() || baseValue1.Except(n).Any());
+        Assert.Empty(model.FindDeclaredVocabularyAnnotations(personEntity));
+
+        var baseValue2 = model.FindDeclaredVocabularyAnnotations(addressTerm);
+        Assert.DoesNotContain([baseValue2, model.FindVocabularyAnnotations(addressTerm)], n => n.Count() != baseValue2.Count() || baseValue2.Except(n).Any());
+        Assert.Empty(model.FindDeclaredVocabularyAnnotations(addressTerm));
+
+        var baseValue3 = model.FindDeclaredVocabularyAnnotations(petType);
+        Assert.DoesNotContain([baseValue3, model.FindVocabularyAnnotations(petType)], n => n.Count() != baseValue3.Count() || baseValue3.Except(n).Any());
+        Assert.Equal(3, model.FindDeclaredVocabularyAnnotations(petType).Count());
+
         var expectedValueAnnotation = modelVocabulary.Where(n => n.Term == addressTerm);
 
         var valueAnnotationsFound = model.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(addressTerm, addressTerm);
-        Assert.Equal(0, valueAnnotationsFound.Count(), "Invalid annotation count.");
+        Assert.Empty(valueAnnotationsFound);
 
         valueAnnotationsFound = model.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(petType, addressTerm);
-        Assert.Equal(2, valueAnnotationsFound.Count(), "Invalid annotation count.");
-        Assert.AreSame(expectedValueAnnotation.ElementAt(0), valueAnnotationsFound.ElementAt(0), "Invalid annotation.");
-        Assert.AreSame(expectedValueAnnotation.ElementAt(1), valueAnnotationsFound.ElementAt(1), "Invalid annotation.");
+        Assert.Equal(2, valueAnnotationsFound.Count());
+        Assert.Equal(expectedValueAnnotation.ElementAt(0), valueAnnotationsFound.ElementAt(0));
+        Assert.Equal(expectedValueAnnotation.ElementAt(1), valueAnnotationsFound.ElementAt(1));
     }
 
     [Fact]
     public void FindMethodTestFindVocabularyAnnotationAcrossModelOutOfLineAnnotationCsdl()
     {
-        var csdls = FindMethodsTestModelBuilder.FindVocabularyAnnotationAcrossModelOutOfLineAnnotationCsdl();
-        var model = this.GetParserResult(csdls);
-        Assert.Equal(3, model.VocabularyAnnotations.Count(), "Invalid vocabulary annotation count.");
+        var csdls = new string[] { @"
+<Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+    <ComplexType Name=""ValueAnnotationType"">
+    </ComplexType>
+    <Annotations Target=""DefaultNamespace.ValueAnnotationType"">
+        <Annotation Term=""DefaultNamespace.ValueTermInModel"">
+        </Annotation>
+        <Annotation Term=""AnnotationNamespace.ValueTermOutOfModel"">
+        </Annotation>
+        <Annotation Term=""fooNamespace.ValueTermDoesNotExist"">
+        </Annotation>
+    </Annotations>
+    <Term Name=""ValueTermInModel"" Type=""Edm.String"" />
+    <EntityType Name=""PersonInMode"">
+        <Key>
+            <PropertyRef Name=""Id"" />
+        </Key>
+        <Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false"" />
+    </EntityType>
+</Schema>", @"
+<Schema Namespace=""AnnotationNamespace"" Alias=""foo"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+    <Term Name=""ValueTermOutOfModel"" Type=""Edm.String"" />
+    <EntityType Name=""PersonOutOfMode"">
+        <Key>
+            <PropertyRef Name=""Id"" />
+        </Key>
+        <Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false"" />
+    </EntityType>
+</Schema>" };
+
+        var csdlElements = csdls.Select(e => XElement.Parse(e, LoadOptions.SetLineInfo));
+        var isParsed = SchemaReader.TryParse(csdlElements.Select(e => e.CreateReader()), out IEdmModel model, out IEnumerable<EdmError> errors);
+        Assert.True(isParsed);
+        Assert.Empty(errors);
+
+        Assert.Equal(3, model.VocabularyAnnotations.Count());
 
         var valueAnnotationType = model.FindType("DefaultNamespace.ValueAnnotationType");
-        this.CompareVacabulraryAnnoationsVariations(model.FindDeclaredVocabularyAnnotations(valueAnnotationType), model.FindVocabularyAnnotations(valueAnnotationType));
+        var baseValue1 = model.FindDeclaredVocabularyAnnotations(valueAnnotationType);
+        Assert.DoesNotContain([baseValue1, model.FindVocabularyAnnotations(valueAnnotationType)], n => n.Count() != baseValue1.Count() || baseValue1.Except(n).Any());
 
         var valueAnnotationsFound = model.FindVocabularyAnnotations(valueAnnotationType);
-        Assert.Equal(3, valueAnnotationsFound.Count(), "Invalid annotation count.");
+        Assert.Equal(3, valueAnnotationsFound.Count());
 
         var valueAnnotationFoundCount = valueAnnotationsFound.Where(n => n.Term.Name.Equals("ValueTermInModel")).Count();
-        Assert.Equal(1, valueAnnotationFoundCount, "Type annotation cannot be found.");
+        Assert.Equal(1, valueAnnotationFoundCount);
 
         valueAnnotationFoundCount = valueAnnotationsFound.Where(n => n.Term.Name.Equals("ValueTermOutOfModel")).Count();
-        Assert.Equal(1, valueAnnotationFoundCount, "Type annotation cannot be found.");
+        Assert.Equal(1, valueAnnotationFoundCount);
 
         valueAnnotationFoundCount = valueAnnotationsFound.Where(n => n.Term.Name.Equals("ValueTermDoesNotExist")).Count();
-        Assert.Equal(1, valueAnnotationFoundCount, "Type annotation cannot be found.");
+        Assert.Equal(1, valueAnnotationFoundCount);
     }
 
     [Fact]
     public void FindMethodTestFindVocabularyAnnotationAcrossModelInLineAnnotationCsdl()
     {
-        var csdls = FindMethodsTestModelBuilder.FindVocabularyAnnotationAcrossModelInLineAnnotationCsdl();
-        var model = this.GetParserResult(csdls);
-        Assert.Equal(3, model.VocabularyAnnotations.Count(), "Invalid vocabulary annotation count.");
+        var csdls = new string[] { @"
+<Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+    <ComplexType Name=""ValueAnnotationType"">
+        <Annotation Term=""DefaultNamespace.ValueTermInModel"">
+        </Annotation>
+        <Annotation Term=""AnnotationNamespace.ValueTermOutOfModel"">
+        </Annotation>
+        <Annotation Term=""fooNamespace.ValueTermDoesNotExist"">
+        </Annotation>
+    </ComplexType>
+    <Term Name=""ValueTermInModel"" Type=""Edm.String"" />
+    <EntityType Name=""PersonInMode"">
+        <Key>
+            <PropertyRef Name=""Id"" />
+        </Key>
+        <Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false"" />
+    </EntityType>
+</Schema>", @"
+<Schema Namespace=""AnnotationNamespace"" Alias=""foo"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+    <Term Name=""ValueTermOutOfModel"" Type=""Edm.String"" />
+    <EntityType Name=""PersonOutOfMode"">
+        <Key>
+            <PropertyRef Name=""Id"" />
+        </Key>
+        <Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false"" />
+    </EntityType>
+</Schema>" };
+
+        var csdlElements = csdls.Select(e => XElement.Parse(e, LoadOptions.SetLineInfo));
+        var isParsed = SchemaReader.TryParse(csdlElements.Select(e => e.CreateReader()), out IEdmModel model, out IEnumerable<EdmError> errors);
+        Assert.True(isParsed);
+        Assert.Empty(errors);
+
+        Assert.Equal(3, model.VocabularyAnnotations.Count());
 
         var valueAnnotationType = model.FindType("DefaultNamespace.ValueAnnotationType");
         var personType = model.FindType("DefaultNamespace.PersonInMode");
-        this.CompareVacabulraryAnnoationsVariations(model.FindDeclaredVocabularyAnnotations(valueAnnotationType), model.FindVocabularyAnnotations(valueAnnotationType));
-        this.CompareVacabulraryAnnoationsVariations(model.FindDeclaredVocabularyAnnotations(personType), model.FindVocabularyAnnotations(personType));
+
+        var baseValue1 = model.FindDeclaredVocabularyAnnotations(valueAnnotationType);
+        Assert.DoesNotContain([baseValue1, model.FindVocabularyAnnotations(valueAnnotationType)], n => n.Count() != baseValue1.Count() || baseValue1.Except(n).Any());
+
+        var baseValue2 = model.FindDeclaredVocabularyAnnotations(personType);
+        Assert.DoesNotContain([baseValue2, model.FindVocabularyAnnotations(personType)], n => n.Count() != baseValue2.Count() || baseValue2.Except(n).Any());
 
         var anntationFound = model.FindVocabularyAnnotations(personType);
-        Assert.Equal(0, anntationFound.Count(), "Invalid annotation count.");
+        Assert.Empty(anntationFound);
 
         anntationFound = model.FindVocabularyAnnotations(valueAnnotationType);
-        Assert.Equal(3, anntationFound.Count(), "Invalid annotation count.");
+        Assert.Equal(3, anntationFound.Count());
 
         var valueAnnotationsFound = model.FindVocabularyAnnotations(valueAnnotationType);
-        Assert.Equal(3, valueAnnotationsFound.Count(), "Invalid annotation count.");
+        Assert.Equal(3, valueAnnotationsFound.Count());
 
         var valueAnnotationFoundCount = valueAnnotationsFound.Where(n => n.Term.Name.Equals("ValueTermInModel")).Count();
-        Assert.Equal(1, valueAnnotationFoundCount, "Type annotation cannot be found.");
+        Assert.Equal(1, valueAnnotationFoundCount);
 
         valueAnnotationFoundCount = valueAnnotationsFound.Where(n => n.Term.Name.Equals("ValueTermOutOfModel")).Count();
-        Assert.Equal(1, valueAnnotationFoundCount, "Type annotation cannot be found.");
+        Assert.Equal(1, valueAnnotationFoundCount);
 
         valueAnnotationFoundCount = valueAnnotationsFound.Where(n => n.Term.Name.Equals("ValueTermDoesNotExist")).Count();
-        Assert.Equal(1, valueAnnotationFoundCount, "Type annotation cannot be found.");
+        Assert.Equal(1, valueAnnotationFoundCount);
     }
 
     [Fact]
     public void FindMethodTestFindTermSingleCsdl()
     {
-        var csdls = FindMethodsTestModelBuilder.FindTermCsdl();
-        var model = this.GetParserResult(csdls);
+        var csdls = new string[] { @"
+<Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+    <Term Name=""ValueTermInModel"" Type=""Edm.String"" />
+    <Term Name=""AmbigousValueTerm"" Type=""Edm.String"" />
+    <Term Name=""AmbigousValueTerm"" Type=""Edm.String"" />
+    <Term Name=""ReferenceAmbigousValueTerm"" Type=""Edm.String"" />
+</Schema>", @"
+<Schema Namespace=""AnnotationNamespace"" Alias=""foo"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+    <Term Name=""ValueTerm"" Type=""Edm.String"" />
+</Schema>" };
+
+        var csdlElements = csdls.Select(e => XElement.Parse(e, LoadOptions.SetLineInfo));
+        var isParsed = SchemaReader.TryParse(csdlElements.Select(e => e.CreateReader()), out IEdmModel model, out IEnumerable<EdmError> errors);
+        Assert.True(isParsed);
+        Assert.Empty(errors);
 
         var valueTermInModel = model.FindTerm("DefaultNamespace.ValueTermInModel");
-        Assert.NotNull(valueTermInModel, "Invalid term.");
-        Assert.AreSame(valueTermInModel, model.FindTerm("DefaultNamespace.ValueTermInModel"), "Invalid term.");
+        Assert.NotNull(valueTermInModel);
+        Assert.Equal(valueTermInModel, model.FindTerm("DefaultNamespace.ValueTermInModel"));
 
         var ambiguousValueTerm = model.FindTerm("DefaultNamespace.AmbigousValueTerm");
-        Assert.NotNull(ambiguousValueTerm, "Invalid ambiguous term.");
-        Assert.Equal(true, ambiguousValueTerm.IsBad(), "Invalid IsBad value.");
-        Assert.AreSame(ambiguousValueTerm, model.FindTerm("DefaultNamespace.AmbigousValueTerm"), "Invalid term.");
+        Assert.NotNull(ambiguousValueTerm);
+        Assert.True(ambiguousValueTerm.IsBad());
+        Assert.Equal(ambiguousValueTerm, model.FindTerm("DefaultNamespace.AmbigousValueTerm"));
 
         var valueTermInOtherModel = model.FindTerm("AnnotationNamespace.ValueTerm");
-        Assert.NotNull(valueTermInOtherModel, "Invalid term.");
-        Assert.AreSame(valueTermInOtherModel, model.FindTerm("AnnotationNamespace.ValueTerm"), "Invalid term.");
+        Assert.NotNull(valueTermInOtherModel);
+        Assert.Equal(valueTermInOtherModel, model.FindTerm("AnnotationNamespace.ValueTerm"));
 
         var valueTermDoesNotExist = model.FindTerm("fooNamespace.ValueTerm");
-        Assert.Null(valueTermDoesNotExist, "Invalid term.");
+        Assert.Null(valueTermDoesNotExist);
     }
 
     [Fact]
     public void FindMethodTestFindTermAmbiguousReferences()
     {
-        var model = FindMethodsTestModelBuilder.FindTermModel();
-        var referencedModel = this.GetParserResult(FindMethodsTestModelBuilder.FindTermCsdl());
+        var model = new EdmModel();
+
+        var secondValueTerm = new EdmTerm("DefaultNamespace", "SecondValueTermInModel", EdmCoreModel.Instance.GetString(true));
+        model.AddElement(secondValueTerm);
+
+        var referenceAmbigous = new EdmTerm("DefaultNamespace", "ReferenceAmbigousValueTerm", EdmCoreModel.Instance.GetString(true));
+        model.AddElement(referenceAmbigous);
+
+        var csdls = new string[] { @"
+<Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+    <Term Name=""ValueTermInModel"" Type=""Edm.String"" />
+    <Term Name=""AmbigousValueTerm"" Type=""Edm.String"" />
+    <Term Name=""AmbigousValueTerm"" Type=""Edm.String"" />
+    <Term Name=""ReferenceAmbigousValueTerm"" Type=""Edm.String"" />
+</Schema>", @"
+<Schema Namespace=""AnnotationNamespace"" Alias=""foo"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+    <Term Name=""ValueTerm"" Type=""Edm.String"" />
+</Schema>" };
+
+        var csdlElements = csdls.Select(e => XElement.Parse(e, LoadOptions.SetLineInfo));
+        var isParsed = SchemaReader.TryParse(csdlElements.Select(e => e.CreateReader()), out IEdmModel referencedModel, out IEnumerable<EdmError> errors);
+        Assert.True(isParsed);
+        Assert.Empty(errors);
+
         model.AddReferencedModel(referencedModel);
 
         var valueTermInModel = model.FindTerm("DefaultNamespace.ValueTermInModel");
-        Assert.NotNull(valueTermInModel, "Invalid term.");
-        Assert.AreSame(valueTermInModel, referencedModel.FindTerm("DefaultNamespace.ValueTermInModel"), "Invalid term.");
+        Assert.NotNull(valueTermInModel);
+        Assert.Equal(valueTermInModel, referencedModel.FindTerm("DefaultNamespace.ValueTermInModel"));
 
         var secondValueTermInModel = model.FindTerm("DefaultNamespace.SecondValueTermInModel");
-        Assert.NotNull(secondValueTermInModel, "Invalid term.");
-        Assert.AreSame(secondValueTermInModel, model.FindTerm("DefaultNamespace.SecondValueTermInModel"), "Invalid term.");
+        Assert.NotNull(secondValueTermInModel);
+        Assert.Equal(secondValueTermInModel, model.FindTerm("DefaultNamespace.SecondValueTermInModel"));
 
-        IEnumerable<EdmError> errors;
-        model.Validate(out errors);
-        Assert.AreNotEqual(0, errors.Count(), "Ambiguous error should occur.");
+        model.Validate(out IEnumerable<EdmError> validationErrors);
+        Assert.NotEmpty(validationErrors);
 
         var ambiguousValueTerm = model.FindTerm("DefaultNamespace.ReferenceAmbigousValueTerm");
-        Assert.NotNull(ambiguousValueTerm, "Invalid ambiguous term.");
-        Assert.Equal(true, ambiguousValueTerm.IsBad(), "Invalid IsBad value.");
+        Assert.NotNull(ambiguousValueTerm);
+        Assert.True(ambiguousValueTerm.IsBad());
     }
 
     [Fact]
     public void FindMethodTestFindTypeComplexTypeCsdl()
     {
-        var csdls = FindMethodsTestModelBuilder.FindTypeComplexTypeCsdl();
-        var model = this.GetParserResult(csdls);
+        var csdls = new string[] { @"
+<Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+    <ComplexType Name=""SimpleType"" />
+    <ComplexType Name=""AmbiguousType"" />
+    <ComplexType Name=""AmbiguousType"" />
+    <ComplexType Name=""ReferenceAmbiguousType"" />
+</Schema>", @"
+<Schema Namespace=""AnnotationNamespace"" Alias=""foo"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+    <ComplexType Name=""SimpleType"" />
+</Schema>" };
+
+        var csdlElements = csdls.Select(e => XElement.Parse(e, LoadOptions.SetLineInfo));
+        var isParsed = SchemaReader.TryParse(csdlElements.Select(e => e.CreateReader()), out IEdmModel model, out IEnumerable<EdmError> errors);
+        Assert.True(isParsed);
+        Assert.Empty(errors);
 
         var simpleType = model.FindType("DefaultNamespace.SimpleType");
-        Assert.NotNull(simpleType, "Invalid complex type.");
-        Assert.AreSame(simpleType, model.FindType("DefaultNamespace.SimpleType"), "Invalid complex type.");
+        Assert.NotNull(simpleType);
+        Assert.Equal(simpleType, model.FindType("DefaultNamespace.SimpleType"));
 
         var ambiguousType = model.FindType("DefaultNamespace.AmbiguousType");
-        Assert.NotNull(ambiguousType, "Invalid ambiguous complex type.");
-        Assert.Equal(true, ambiguousType.IsBad(), "Invalid IsBad value.");
-        Assert.AreSame(ambiguousType, model.FindType("DefaultNamespace.AmbiguousType"), "Invalid complex type.");
+        Assert.NotNull(ambiguousType);
+        Assert.True(ambiguousType.IsBad());
+        Assert.Equal(ambiguousType, model.FindType("DefaultNamespace.AmbiguousType"));
 
         var simpleTypeInOtherModel = model.FindType("AnnotationNamespace.SimpleType");
-        Assert.NotNull(simpleTypeInOtherModel, "Invalid complex type.");
-        Assert.AreSame(simpleTypeInOtherModel, model.FindType("AnnotationNamespace.SimpleType"), "Invalid complex type.");
+        Assert.NotNull(simpleTypeInOtherModel);
+        Assert.Equal(simpleTypeInOtherModel, model.FindType("AnnotationNamespace.SimpleType"));
 
         var complexTypeDoesNotExist = model.FindType("fooNamespace.SimpleType");
-        Assert.Null(complexTypeDoesNotExist, "Invalid complex type.");
+        Assert.Null(complexTypeDoesNotExist);
     }
 
     [Fact]
     public void FindMethodTestFindTypeEntityTypeCsdl()
     {
-        var csdls = FindMethodsTestModelBuilder.FindTypeEntityTypeCsdl();
-        var model = this.GetParserResult(csdls);
+        var csdls = new string[] { @"
+<Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+    <EntityType Name=""SimpleEntity"">
+        <Key>
+            <PropertyRef Name=""Id"" />
+        </Key>
+        <Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false"" />
+    </EntityType>
+    <EntityType Name=""AmbiguousEntity"">
+        <Key>
+            <PropertyRef Name=""Id"" />
+        </Key>
+        <Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false"" />
+    </EntityType>
+    <EntityType Name=""AmbiguousEntity"">
+        <Key>
+            <PropertyRef Name=""Id"" />
+        </Key>
+        <Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false"" />
+    </EntityType>
+    <EntityType Name=""ReferenceAmbiguousEntity"">
+        <Key>
+            <PropertyRef Name=""Id"" />
+        </Key>
+        <Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false"" />
+    </EntityType>
+</Schema>", @"
+<Schema Namespace=""AnnotationNamespace"" Alias=""foo"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+    <EntityType Name=""SimpleEntity"">
+        <Key>
+            <PropertyRef Name=""Id"" />
+        </Key>
+        <Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false"" />
+    </EntityType>
+</Schema>" };
+
+        var csdlElements = csdls.Select(e => XElement.Parse(e, LoadOptions.SetLineInfo));
+        var isParsed = SchemaReader.TryParse(csdlElements.Select(e => e.CreateReader()), out IEdmModel model, out IEnumerable<EdmError> errors);
+        Assert.True(isParsed);
+        Assert.Empty(errors);
 
         var simpleEntity = model.FindType("DefaultNamespace.SimpleEntity");
-        Assert.NotNull(simpleEntity, "Invalid entity type.");
-        Assert.AreSame(simpleEntity, model.FindType("DefaultNamespace.SimpleEntity"), "Invalid entity type.");
+        Assert.NotNull(simpleEntity);
+        Assert.Equal(simpleEntity, model.FindType("DefaultNamespace.SimpleEntity"));
 
         var ambiguousEntity = model.FindType("DefaultNamespace.AmbiguousEntity");
-        Assert.NotNull(ambiguousEntity, "Invalid ambiguous entity type.");
-        Assert.Equal(true, ambiguousEntity.IsBad(), "Invalid IsBad value.");
-        Assert.AreSame(ambiguousEntity, model.FindType("DefaultNamespace.AmbiguousEntity"), "Invalid entity type.");
+        Assert.NotNull(ambiguousEntity);
+        Assert.True(ambiguousEntity.IsBad());
+        Assert.Equal(ambiguousEntity, model.FindType("DefaultNamespace.AmbiguousEntity"));
 
         var simpleEntityInOtherModel = model.FindType("AnnotationNamespace.SimpleEntity");
-        Assert.NotNull(simpleEntityInOtherModel, "Invalid entity type.");
-        Assert.AreSame(simpleEntityInOtherModel, model.FindType("AnnotationNamespace.SimpleEntity"), "Invalid entity type.");
+        Assert.NotNull(simpleEntityInOtherModel);
+        Assert.Equal(simpleEntityInOtherModel, model.FindType("AnnotationNamespace.SimpleEntity"));
 
         var entityTypeDoesNotExist = model.FindType("fooNamespace.SimpleEntity");
-        Assert.Null(entityTypeDoesNotExist, "Invalid entity type.");
+        Assert.Null(entityTypeDoesNotExist);
     }
 
     [Fact]
     public void FindMethodTestFindTypeModel()
     {
-        var model = FindMethodsTestModelBuilder.FindTypeModel();
-        var referencedEntityTypeModel = this.GetParserResult(FindMethodsTestModelBuilder.FindTypeEntityTypeCsdl());
-        var referencedComplexTypeModel = this.GetParserResult(FindMethodsTestModelBuilder.FindTypeComplexTypeCsdl());
+        var model = new EdmModel();
+
+        model.AddElement(new EdmComplexType("DefaultNamespace", "SecondSimpleType"));
+
+        var referenceAmbiguousType = new EdmComplexType("DefaultNamespace", "ReferenceAmbiguousType");
+        model.AddElement(referenceAmbiguousType);
+
+        var secondSimpleEntity = new EdmEntityType("DefaultNamespace", "SecondSimpleEntity");
+        var secondSimpleEntityId = secondSimpleEntity.AddStructuralProperty("Id", EdmCoreModel.Instance.GetInt32(false));
+        model.AddElement(secondSimpleEntity);
+
+        var referenceAmbiguousEntity = new EdmEntityType("DefaultNamespace", "ReferenceAmbiguousEntity");
+        var referenceAmbiguousEntityId = referenceAmbiguousEntity.AddStructuralProperty("Id", EdmCoreModel.Instance.GetInt32(false));
+        model.AddElement(referenceAmbiguousEntity);
+
+        var entityTypeCsdls = new string[] { @"
+<Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+    <EntityType Name=""SimpleEntity"">
+        <Key>
+            <PropertyRef Name=""Id"" />
+        </Key>
+        <Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false"" />
+    </EntityType>
+    <EntityType Name=""AmbiguousEntity"">
+        <Key>
+            <PropertyRef Name=""Id"" />
+        </Key>
+        <Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false"" />
+    </EntityType>
+    <EntityType Name=""AmbiguousEntity"">
+        <Key>
+            <PropertyRef Name=""Id"" />
+        </Key>
+        <Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false"" />
+    </EntityType>
+    <EntityType Name=""ReferenceAmbiguousEntity"">
+        <Key>
+            <PropertyRef Name=""Id"" />
+        </Key>
+        <Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false"" />
+    </EntityType>
+</Schema>", @"
+<Schema Namespace=""AnnotationNamespace"" Alias=""foo"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+    <EntityType Name=""SimpleEntity"">
+        <Key>
+            <PropertyRef Name=""Id"" />
+        </Key>
+        <Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false"" />
+    </EntityType>
+</Schema>" };
+
+        var isParsed = SchemaReader.TryParse(entityTypeCsdls.Select(e => XElement.Parse(e, LoadOptions.SetLineInfo)).Select(e => e.CreateReader()), out IEdmModel referencedEntityTypeModel, out IEnumerable<EdmError> errors);
+        Assert.True(isParsed);
+        Assert.Empty(errors);
+
+        var complexTypeCsdls = new string[] { @"
+<Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+    <ComplexType Name=""SimpleType"" />
+    <ComplexType Name=""AmbiguousType"" />
+    <ComplexType Name=""AmbiguousType"" />
+    <ComplexType Name=""ReferenceAmbiguousType"" />
+</Schema>", @"
+<Schema Namespace=""AnnotationNamespace"" Alias=""foo"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+    <ComplexType Name=""SimpleType"" />
+</Schema>" };
+
+        isParsed = SchemaReader.TryParse(entityTypeCsdls.Select(e => XElement.Parse(e, LoadOptions.SetLineInfo)).Select(e => e.CreateReader()), out IEdmModel referencedComplexTypeModel, out errors);
+        Assert.True(isParsed);
+        Assert.Empty(errors);
+
         model.AddReferencedModel(referencedEntityTypeModel);
         model.AddReferencedModel(referencedComplexTypeModel);
 
         var secondSimpleType = model.FindType("DefaultNamespace.SecondSimpleType");
-        Assert.NotNull(secondSimpleType, "Invalid complex type.");
-        Assert.AreSame(secondSimpleType, model.FindType("DefaultNamespace.SecondSimpleType"), "Invalid complex type.");
+        Assert.NotNull(secondSimpleType);
+        Assert.Equal(secondSimpleType, model.FindType("DefaultNamespace.SecondSimpleType"));
 
         var simpleType = model.FindType("DefaultNamespace.SimpleType");
-        Assert.NotNull(simpleType, "Invalid complex type.");
-        Assert.AreSame(simpleType, referencedComplexTypeModel.FindType("DefaultNamespace.SimpleType"), "Invalid complex type.");
+        Assert.NotNull(simpleType);
+        Assert.Equal(simpleType, referencedComplexTypeModel.FindType("DefaultNamespace.SimpleType"));
 
         var ambiguousComplexType = model.FindType("DefaultNamespace.ReferenceAmbiguousType");
-        Assert.NotNull(ambiguousComplexType, "Invalid ambiguous complex type.");
-        Assert.Equal(true, ambiguousComplexType.IsBad(), "Invalid IsBad value.");
+        Assert.NotNull(ambiguousComplexType);
+        Assert.True(ambiguousComplexType.IsBad());
 
         var simpleTypeInOtherNamespace = model.FindType("AnnotationNamespace.SimpleType");
-        Assert.NotNull(simpleTypeInOtherNamespace, "Invalid complex type.");
-        Assert.AreSame(simpleTypeInOtherNamespace, referencedComplexTypeModel.FindType("AnnotationNamespace.SimpleType"), "Invalid complex type.");
+        Assert.NotNull(simpleTypeInOtherNamespace);
+        Assert.Equal(simpleTypeInOtherNamespace, referencedComplexTypeModel.FindType("AnnotationNamespace.SimpleType"));
 
-        var secondSimpleEntity = model.FindType("DefaultNamespace.SecondSimpleEntity");
-        Assert.NotNull(secondSimpleEntity, "Invalid entity type.");
-        Assert.AreSame(secondSimpleEntity, model.FindType("DefaultNamespace.SecondSimpleEntity"), "Invalid entity type.");
+        var findSecondSimpleEntity = model.FindType("DefaultNamespace.SecondSimpleEntity");
+        Assert.NotNull(findSecondSimpleEntity);
+        Assert.Equal(findSecondSimpleEntity, model.FindType("DefaultNamespace.SecondSimpleEntity"));
 
         var simpleEntity = model.FindType("DefaultNamespace.SimpleEntity");
-        Assert.NotNull(simpleEntity, "Invalid entity type.");
-        Assert.AreSame(simpleEntity, referencedEntityTypeModel.FindType("DefaultNamespace.SimpleEntity"), "Invalid entity type.");
+        Assert.NotNull(simpleEntity);
+        Assert.Equal(simpleEntity, referencedEntityTypeModel.FindType("DefaultNamespace.SimpleEntity"));
 
         var ambiguousEntityType = model.FindType("DefaultNamespace.ReferenceAmbiguousEntity");
-        Assert.NotNull(ambiguousEntityType, "Invalid ambiguous entity type.");
-        Assert.Equal(true, ambiguousEntityType.IsBad(), "Invalid IsBad value.");
+        Assert.NotNull(ambiguousEntityType);
+        Assert.True(ambiguousEntityType.IsBad());
 
         var simpleEntityInOtherNamespace = model.FindType("AnnotationNamespace.SimpleEntity");
-        Assert.NotNull(simpleEntityInOtherNamespace, "Invalid entity type.");
-        Assert.AreSame(simpleEntityInOtherNamespace, referencedEntityTypeModel.FindType("AnnotationNamespace.SimpleEntity"), "Invalid entity type.");
+        Assert.NotNull(simpleEntityInOtherNamespace);
+        Assert.Equal(simpleEntityInOtherNamespace, referencedEntityTypeModel.FindType("AnnotationNamespace.SimpleEntity"));
     }
 
     [Fact]
     public void FindMethodTestFindTypeDefinitionModel()
     {
-        var model = FindMethodsTestModelBuilder.FindTypeModel();
-        var referencedTypeDefinitionModel = this.GetParserResult(FindMethodsTestModelBuilder.FindTypeTypeDefinitionCsdl());
+        var model = new EdmModel();
+
+        var secondSimpleType = new EdmComplexType("DefaultNamespace", "SecondSimpleType");
+        model.AddElement(secondSimpleType);
+
+        var referenceAmbiguousType = new EdmComplexType("DefaultNamespace", "ReferenceAmbiguousType");
+        model.AddElement(referenceAmbiguousType);
+
+        var secondSimpleEntity = new EdmEntityType("DefaultNamespace", "SecondSimpleEntity");
+        var secondSimpleEntityId = secondSimpleEntity.AddStructuralProperty("Id", EdmCoreModel.Instance.GetInt32(false));
+        model.AddElement(secondSimpleEntity);
+
+        var referenceAmbiguousEntity = new EdmEntityType("DefaultNamespace", "ReferenceAmbiguousEntity");
+        var referenceAmbiguousEntityId = referenceAmbiguousEntity.AddStructuralProperty("Id", EdmCoreModel.Instance.GetInt32(false));
+        model.AddElement(referenceAmbiguousEntity);
+
+        var csdls = new string[] { @"
+<Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+    <TypeDefinition Name=""Length"" UnderlyingType=""Edm.String"" />
+</Schema>", @"
+<Schema Namespace=""AnnotationNamespace"" Alias=""foo"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+    <TypeDefinition Name=""Length"" UnderlyingType=""Edm.Int32"" />
+</Schema>" };
+
+        var isParsed = SchemaReader.TryParse(csdls.Select(e => XElement.Parse(e, LoadOptions.SetLineInfo)).Select(e => e.CreateReader()), out IEdmModel referencedTypeDefinitionModel, out IEnumerable<EdmError> errors);
+        Assert.True(isParsed);
+        Assert.Empty(errors);
+
         model.AddReferencedModel(referencedTypeDefinitionModel);
 
         var lengthInDefaultNamespace = model.FindType("DefaultNamespace.Length");
-        Assert.NotNull(lengthInDefaultNamespace, "Invalid type definition.");
-        Assert.AreSame(lengthInDefaultNamespace, model.FindType("DefaultNamespace.Length"), "Invalid type definition.");
+        Assert.NotNull(lengthInDefaultNamespace);
+        Assert.Equal(lengthInDefaultNamespace, model.FindType("DefaultNamespace.Length"));
 
         var lengthInOtherNamespace = model.FindType("AnnotationNamespace.Length");
-        Assert.NotNull(lengthInOtherNamespace, "Invalid type definition.");
-        Assert.AreSame(lengthInOtherNamespace, referencedTypeDefinitionModel.FindType("AnnotationNamespace.Length"), "Invalid type definition.");
+        Assert.NotNull(lengthInOtherNamespace);
+        Assert.Equal(lengthInOtherNamespace, referencedTypeDefinitionModel.FindType("AnnotationNamespace.Length"));
     }
 
     [Fact]
     public void FindMethodTestFindFunctionAcrossModelsCsdl()
     {
-        var csdls = FindMethodsTestModelBuilder.FindFunctionAcrossModelsCsdl();
-        var model = this.GetParserResult(csdls);
+        var csdls = new string[] { @"
+<Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+    <Function Name=""SimpleFunction""><ReturnType Type=""Edm.Int32"" /></Function>
+    <Function Name=""AmbiguousFunction""><ReturnType Type=""Edm.Int32"" /></Function>
+    <Function Name=""AmbiguousFunction""><ReturnType Type=""Edm.Int32"" /></Function>
+    <Function Name=""ReferenceAmbiguousFunction""><ReturnType Type=""Edm.Int32"" /></Function>
+</Schema>", @"
+<Schema Namespace=""AnnotationNamespace"" Alias=""foo"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+    <Function Name=""SimpleFunction""><ReturnType Type=""Edm.Int32"" /></Function>
+</Schema>" };
+
+        var isParsed = SchemaReader.TryParse(csdls.Select(e => XElement.Parse(e, LoadOptions.SetLineInfo)).Select(e => e.CreateReader()), out IEdmModel model, out IEnumerable<EdmError> errors);
+        Assert.True(isParsed);
+        Assert.Empty(errors);
 
         var simpleFunctions = model.FindOperations("DefaultNamespace.SimpleFunction");
-        Assert.Equal(1, simpleFunctions.Count(), "Invalid functions count.");
+        Assert.Single(simpleFunctions);
         var simpleFunction = simpleFunctions.SingleOrDefault();
-        Assert.NotNull(simpleFunction, "Invalid function.");
-        Assert.AreSame(simpleFunction, model.FindOperations("DefaultNamespace.SimpleFunction").SingleOrDefault(), "Invalid function.");
+        Assert.NotNull(simpleFunction);
+        Assert.Equal(simpleFunction, model.FindOperations("DefaultNamespace.SimpleFunction").SingleOrDefault());
 
-        IEnumerable<EdmError> errors;
         model.Validate(out errors);
-        List<EdmError> errorsList = errors.ToList();
-        Assert.Equal(2, errorsList.Count, "Invalid errors count.");
-        Assert.Equal(EdmErrorCode.DuplicateFunctions, errorsList[0].ErrorCode, "Invalid error code.");
-        Assert.Equal(EdmErrorCode.DuplicateFunctions, errorsList[1].ErrorCode, "Invalid error code.");
+        Assert.Equal(2, errors.Count());
+        Assert.Equal(EdmErrorCode.DuplicateFunctions, errors.ElementAt(0).ErrorCode);
+        Assert.Equal(EdmErrorCode.DuplicateFunctions, errors.ElementAt(1).ErrorCode);
 
         var ambiguousFunctions = model.FindOperations("DefaultNamespace.AmbiguousFunction");
-        Assert.Equal(2, ambiguousFunctions.Count(), "Invalid count of functions.");
-        Assert.AreSame(ambiguousFunctions.ElementAt(0), model.FindOperations("DefaultNamespace.AmbiguousFunction").ElementAt(0), "Invalid function.");
-        Assert.AreSame(ambiguousFunctions.ElementAt(1), model.FindOperations("DefaultNamespace.AmbiguousFunction").ElementAt(1), "Invalid function.");
+        Assert.Equal(2, ambiguousFunctions.Count());
+        Assert.Equal(ambiguousFunctions.ElementAt(0), model.FindOperations("DefaultNamespace.AmbiguousFunction").ElementAt(0));
+        Assert.Equal(ambiguousFunctions.ElementAt(1), model.FindOperations("DefaultNamespace.AmbiguousFunction").ElementAt(1));
 
         var simpleFunctionInOtherModels = model.FindOperations("AnnotationNamespace.SimpleFunction");
-        Assert.Equal(1, simpleFunctionInOtherModels.Count(), "Invalid functions count.");
+        Assert.Single(simpleFunctionInOtherModels);
         var simpleFunctionInOtherModel = simpleFunctionInOtherModels.SingleOrDefault();
-        Assert.NotNull(simpleFunctionInOtherModel, "Invalid function.");
-        Assert.AreSame(simpleFunctionInOtherModel, model.FindOperations("AnnotationNamespace.SimpleFunction").SingleOrDefault(), "Invalid function.");
+        Assert.NotNull(simpleFunctionInOtherModel);
+        Assert.Equal(simpleFunctionInOtherModel, model.FindOperations("AnnotationNamespace.SimpleFunction").SingleOrDefault());
 
         var functionsDoesNotExist = model.FindOperations("fooNamespace.SimpleFunction");
-        Assert.Equal(0, functionsDoesNotExist.Count(), "Invalid function.");
+        Assert.Empty(functionsDoesNotExist);
     }
 
     [Fact]
     public void FindMethodTestFindFunctionAcrossModelsModel()
     {
-        var model = FindMethodsTestModelBuilder.FindFunctionAcrossModelsModel();
-        var referencedFunctioneModel = this.GetParserResult(FindMethodsTestModelBuilder.FindFunctionAcrossModelsCsdl());
+        var model = new EdmModel();
+
+        model.AddElement(new EdmFunction("DefaultNamespace", "SecondSimpleFunction", EdmCoreModel.Instance.GetInt32(true)));
+        model.AddElement(new EdmFunction("DefaultNamespace", "ReferenceAmbiguousFunction", EdmCoreModel.Instance.GetInt32(true)));
+
+        var csdls = new string[] { @"
+<Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+    <Function Name=""SimpleFunction""><ReturnType Type=""Edm.Int32"" /></Function>
+    <Function Name=""AmbiguousFunction""><ReturnType Type=""Edm.Int32"" /></Function>
+    <Function Name=""AmbiguousFunction""><ReturnType Type=""Edm.Int32"" /></Function>
+    <Function Name=""ReferenceAmbiguousFunction""><ReturnType Type=""Edm.Int32"" /></Function>
+</Schema>", @"
+<Schema Namespace=""AnnotationNamespace"" Alias=""foo"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+    <Function Name=""SimpleFunction""><ReturnType Type=""Edm.Int32"" /></Function>
+</Schema>" };
+
+        var isParsed = SchemaReader.TryParse(csdls.Select(e => XElement.Parse(e, LoadOptions.SetLineInfo)).Select(e => e.CreateReader()), out IEdmModel referencedFunctioneModel, out IEnumerable<EdmError> errors);
+        Assert.True(isParsed);
+        Assert.Empty(errors);
+
         model.AddReferencedModel(referencedFunctioneModel);
 
         var simpleFunctions = model.FindOperations("DefaultNamespace.SimpleFunction");
-        Assert.Equal(1, simpleFunctions.Count(), "Invalid functions count.");
+        Assert.Single(simpleFunctions);
         var simpleFunction = simpleFunctions.SingleOrDefault();
-        Assert.NotNull(simpleFunction, "Invalid function.");
-        Assert.AreSame(simpleFunction, referencedFunctioneModel.FindOperations("DefaultNamespace.SimpleFunction").SingleOrDefault(), "Invalid function.");
+        Assert.NotNull(simpleFunction);
+        Assert.Equal(simpleFunction, referencedFunctioneModel.FindOperations("DefaultNamespace.SimpleFunction").SingleOrDefault());
 
         var secondSimpleFunctions = model.FindOperations("DefaultNamespace.SecondSimpleFunction");
-        Assert.Equal(1, secondSimpleFunctions.Count(), "Invalid functions count.");
+        Assert.Single(secondSimpleFunctions);
         var secondSimpleFunction = secondSimpleFunctions.SingleOrDefault();
-        Assert.NotNull(secondSimpleFunction, "Invalid function.");
-        Assert.AreSame(secondSimpleFunction, model.FindOperations("DefaultNamespace.SecondSimpleFunction").SingleOrDefault(), "Invalid function.");
+        Assert.NotNull(secondSimpleFunction);
+        Assert.Equal(secondSimpleFunction, model.FindOperations("DefaultNamespace.SecondSimpleFunction").SingleOrDefault());
 
         var simpleFunctionInOtherNamespaces = model.FindOperations("AnnotationNamespace.SimpleFunction");
-        Assert.Equal(1, simpleFunctionInOtherNamespaces.Count(), "Invalid functions count.");
+        Assert.Single(simpleFunctionInOtherNamespaces);
         var simpleFunctionInOtherNamespace = simpleFunctionInOtherNamespaces.SingleOrDefault();
-        Assert.NotNull(simpleFunctionInOtherNamespace, "Invalid function.");
-        Assert.AreSame(simpleFunctionInOtherNamespace, referencedFunctioneModel.FindOperations("AnnotationNamespace.SimpleFunction").SingleOrDefault(), "Invalid complex type.");
+        Assert.NotNull(simpleFunctionInOtherNamespace);
+        Assert.Equal(simpleFunctionInOtherNamespace, referencedFunctioneModel.FindOperations("AnnotationNamespace.SimpleFunction").SingleOrDefault());
 
-        IEnumerable<EdmError> errors;
         model.Validate(out errors);
-        Assert.Equal(1, errors.Count(), "Invalid errors count.");
-        Assert.Equal(EdmErrorCode.AlreadyDefined, errors.First().ErrorCode, "Invalid error code.");
+        Assert.Single(errors);
+        Assert.Equal(EdmErrorCode.AlreadyDefined, errors.First().ErrorCode);
 
         var referenceAmbiguousFunctions = model.FindOperations("DefaultNamespace.ReferenceAmbiguousFunction");
-        Assert.Equal(2, referenceAmbiguousFunctions.Count(), "Invalid count of functions.");
+        Assert.Equal(2, referenceAmbiguousFunctions.Count());
 
         foreach (var referenceAmbiguousFunction in referenceAmbiguousFunctions)
         {
-            Assert.NotNull(referenceAmbiguousFunction, "Invalid ambiguous function.");
+            Assert.NotNull(referenceAmbiguousFunction);
             Assert.False(referenceAmbiguousFunction.IsBad(), "Invalid is bad.");
         }
     }
@@ -1055,30 +2778,61 @@ public class FindMethodTests : EdmLibTestCaseBase
     [Fact]
     public void FindMethodTestFindEntityContainerCsdl()
     {
-        var csdls = FindMethodsTestModelBuilder.FindEntityContainerCsdl();
-        var model = this.GetParserResult(csdls);
+        var csdls = new string[] { @"
+<Schema Namespace=""Default"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+    <EntityContainer Name=""SimpleContainer"" />
+</Schema>", @"
+<Schema Namespace=""AnnotationNamespace"" Alias=""foo"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+</Schema>" };
+
+        var isParsed = SchemaReader.TryParse(csdls.Select(e => XElement.Parse(e, LoadOptions.SetLineInfo)).Select(e => e.CreateReader()), out IEdmModel model, out IEnumerable<EdmError> errors);
+        Assert.True(isParsed);
+        Assert.Empty(errors);
 
         var simpleContainer = model.FindEntityContainer("SimpleContainer");
-        Assert.NotNull(simpleContainer, "Invalid entity container.");
-        Assert.AreSame(simpleContainer, model.FindEntityContainer("SimpleContainer"), "Invalid entity container.");
+        Assert.NotNull(simpleContainer);
+        Assert.Equal(simpleContainer, model.FindEntityContainer("SimpleContainer"));
     }
 
     [Fact]
     public void FindMethodTestFindEntityContainerModel()
     {
-        var model = FindMethodsTestModelBuilder.FindEntityContainerModel();
-        var referencedEntityContainerModel = this.GetParserResult(FindMethodsTestModelBuilder.FindEntityContainerCsdl());
+        var model = new EdmModel();
+
+        var secondSimpleContainer = new EdmEntityContainer("", "SecondSimpleContainer");
+        model.AddElement(secondSimpleContainer);
+
+        var csdls = new string[] { @"
+<Schema Namespace=""Default"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+    <EntityContainer Name=""SimpleContainer"" />
+</Schema>", @"
+<Schema Namespace=""AnnotationNamespace"" Alias=""foo"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+</Schema>" };
+
+        var isParsed = SchemaReader.TryParse(csdls.Select(e => XElement.Parse(e, LoadOptions.SetLineInfo)).Select(e => e.CreateReader()), out IEdmModel referencedEntityContainerModel, out IEnumerable<EdmError> errors);
+        Assert.True(isParsed);
+        Assert.Empty(errors);
+
         model.AddReferencedModel(referencedEntityContainerModel);
 
         var simpleContainer = model.FindEntityContainer("SimpleContainer");
-        Assert.NotNull(simpleContainer, "Invalid entity container.");
-        Assert.AreSame(simpleContainer, referencedEntityContainerModel.FindEntityContainer("SimpleContainer"), "Invalid entity container.");
+        Assert.NotNull(simpleContainer);
+        Assert.Equal(simpleContainer, referencedEntityContainerModel.FindEntityContainer("SimpleContainer"));
     }
 
     [Fact]
     public void FindMethodTestWithReferencesInEdmxParser()
     {
-        var referencedEntityContainerModel = this.GetParserResult(FindMethodsTestModelBuilder.FindEntityContainerCsdl());
+        var csdls = new string[] { @"
+<Schema Namespace=""Default"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+    <EntityContainer Name=""SimpleContainer"" />
+</Schema>", @"
+<Schema Namespace=""AnnotationNamespace"" Alias=""foo"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+</Schema>" };
+
+        var isParsed = SchemaReader.TryParse(csdls.Select(e => XElement.Parse(e, LoadOptions.SetLineInfo)).Select(e => e.CreateReader()), out IEdmModel referencedEntityContainerModel, out IEnumerable<EdmError> errors);
+        Assert.True(isParsed);
+        Assert.Empty(errors);
 
         var edmx =
 @"<?xml version=""1.0"" encoding=""utf-16""?>
@@ -1089,60 +2843,109 @@ public class FindMethodTests : EdmLibTestCaseBase
   </edmx:DataServices>
 </edmx:Edmx>";
 
-        IEdmModel model;
-        IEnumerable<EdmError> errors;
-        bool parsed = CsdlReader.TryParse(XmlReader.Create(new StringReader(edmx)), new IEdmModel[] { referencedEntityContainerModel }, out model, out errors);
-        Assert.True(parsed, "parsed");
-        Assert.True(errors.Count() == 0, "no errors");
+        bool parsed = CsdlReader.TryParse(XmlReader.Create(new StringReader(edmx)), new IEdmModel[] { referencedEntityContainerModel }, out IEdmModel model, out errors);
+        Assert.True(parsed);
+        Assert.Empty(errors);
 
         var simpleContainer = model.FindEntityContainer("SimpleContainer");
-        Assert.NotNull(simpleContainer, "Invalid entity container.");
-        Assert.AreSame(simpleContainer, referencedEntityContainerModel.FindEntityContainer("SimpleContainer"), "Invalid entity container.");
+        Assert.NotNull(simpleContainer);
+        Assert.Equal(simpleContainer, referencedEntityContainerModel.FindEntityContainer("SimpleContainer"));
     }
 
     [Fact]
     public void FindMethodTestFindVocabularyAnnotationAcrossModelVocabularyAnnotationModel()
     {
-        var model = FindMethodsTestModelBuilder.FindVocabularyAnnotationAcrossModelAnnotationModel();
-        var referenceModel = this.GetParserResult(FindMethodsTestModelBuilder.FindVocabularyAnnotationAcrossModelAnnotationCsdl());
+        var model = new EdmModel();
+
+        var containerOne = new EdmEntityContainer("DefaultNamespace", "ContainerOne");
+        model.AddElement(containerOne);
+
+        var termOne = new EdmTerm("DefaultNamespace", "TermOne", EdmCoreModel.Instance.GetString(true));
+        model.AddElement(termOne);
+        var termTwo = new EdmTerm("DefaultNamespace", "TermTwo", EdmCoreModel.Instance.GetString(true));
+        model.AddElement(termTwo);
+
+        var valueAnnotationOne = new EdmVocabularyAnnotation(
+            containerOne,
+            termOne,
+            new EdmStringConstant("1"));
+        valueAnnotationOne.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
+        model.AddVocabularyAnnotation(valueAnnotationOne);
+
+        var csdls = new string[] { @"
+<Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+    <EntityContainer Name=""ContainerThree"">
+        <Annotation Term=""DefaultNamespace.TermThree"" String=""33"" />
+    </EntityContainer>
+    <Term Name=""TermThree"" Type=""Edm.String"" />
+    <Annotations Target=""DefaultNamespace.ContainerTwo"">
+        <Annotation Term=""DefaultNamespace.TermTwo"" String=""22"" />
+    </Annotations>
+</Schema>" };
+
+        var isParsed = SchemaReader.TryParse(csdls.Select(e => XElement.Parse(e, LoadOptions.SetLineInfo)).Select(e => e.CreateReader()), out IEdmModel referenceModel, out IEnumerable<EdmError> errors);
+        Assert.True(isParsed);
+        Assert.Empty(errors);
+
         model.AddReferencedModel(referenceModel);
 
-        var containerOne = model.FindEntityContainer("ContainerOne");
+        var entityContainerOne = model.FindEntityContainer("ContainerOne");
         var containerThree = referenceModel.FindEntityContainer("ContainerThree");
-        this.CompareVacabulraryAnnoationsVariations(model.FindDeclaredVocabularyAnnotations(containerOne), model.FindVocabularyAnnotations(containerOne));
-        this.CompareVacabulraryAnnoationsVariations(model.FindDeclaredVocabularyAnnotations(containerThree).Concat(referenceModel.FindDeclaredVocabularyAnnotations(containerThree)), model.FindVocabularyAnnotations(containerThree));
+
+        var baseValue1 = model.FindDeclaredVocabularyAnnotations(entityContainerOne);
+        Assert.DoesNotContain([baseValue1, model.FindVocabularyAnnotations(entityContainerOne)], n => n.Count() != baseValue1.Count() || baseValue1.Except(n).Any());
+
+        var baseValue2 = model.FindDeclaredVocabularyAnnotations(containerThree);
+        Assert.DoesNotContain([baseValue2, model.FindVocabularyAnnotations(containerThree)], n => n.Count() != baseValue2.Count() || baseValue2.Except(n).Any());
 
         var termOneVocabAnnotation = model.FindVocabularyAnnotations(containerOne);
-        Assert.Equal(1, termOneVocabAnnotation.Count(), "Invalid count of vocabulary annotation.");
+        Assert.Single(termOneVocabAnnotation);
 
         var containerOneVocabAnnotation = containerOne.VocabularyAnnotations(model);
-        Assert.Equal(1, containerOneVocabAnnotation.Count(), "Invalid count of vocabulary annotation.");
-        Assert.AreSame(containerOneVocabAnnotation.SingleOrDefault(), termOneVocabAnnotation.SingleOrDefault(), "Invalid vocabulary annotation.");
+        Assert.Single(containerOneVocabAnnotation);
+        Assert.Equal(containerOneVocabAnnotation.SingleOrDefault(), termOneVocabAnnotation.SingleOrDefault());
 
         var termThreeVocabAnnotation = model.FindVocabularyAnnotations(containerThree);
-        Assert.Equal(1, termThreeVocabAnnotation.Count(), "Invalid count of vocabulary annotation.");
+        Assert.Single(termThreeVocabAnnotation);
 
         var containerThreeVocabAnnotation = containerThree.VocabularyAnnotations(model);
-        Assert.Equal(1, containerThreeVocabAnnotation.Count(), "Invalid count of vocabulary annotation.");
-        Assert.AreSame(containerThreeVocabAnnotation.SingleOrDefault(), termThreeVocabAnnotation.SingleOrDefault(), "Invalid vocabulary annotation.");
+        Assert.Single(containerThreeVocabAnnotation);
+        Assert.Equal(containerThreeVocabAnnotation.SingleOrDefault(), termThreeVocabAnnotation.SingleOrDefault());
     }
 
     [Fact]
     public void FindMethodTestPrimitiveTypes()
     {
-        var parsedModel = this.GetParserResult(ModelBuilder.StringWithFacets());
+        var csdls = new string[] { @"
+<Schema Namespace='ModelBuilder' xmlns='http://docs.oasis-open.org/odata/ns/edm'>
+    <EntityType Name='Content'>
+        <Key>
+            <PropertyRef Name='NullableStringUnboundedUnicode'/>
+        </Key>
+        <Property Name='NullableStringUnboundedUnicode' Type='String' Nullable='false' MaxLength='Max' Unicode='true' />
+        <Property Name='NullableStringUnbounded' Type='String' Nullable='false' MaxLength='Max' Unicode='false' />
+        <Property Name='NullableStringMaxLength10' Type='String' Nullable='false' MaxLength='10'/>
+        <Property Name='StringCollation' Type='String' MaxLength='10'/>
+        <Property Name='SimpleString' Type='String' />
+    </EntityType>
+</Schema>" };
+
+        var isParsed = SchemaReader.TryParse(csdls.Select(e => XElement.Parse(e, LoadOptions.SetLineInfo)).Select(e => e.CreateReader()), out IEdmModel parsedModel, out IEnumerable<EdmError> errors);
+        Assert.True(isParsed);
+        Assert.Empty(errors);
+
         var constructibleModel = new EdmModel();
 
-        Assert.False(parsedModel.SchemaElements.Any(n => n.Namespace == EdmCoreModel.Namespace), "The SchemaElement property should not contain primitive types.");
-        Assert.False(constructibleModel.SchemaElements.Any(n => n.Namespace == EdmCoreModel.Namespace), "The SchemaElement property should not contain primitive types.");
+        Assert.DoesNotContain(parsedModel.SchemaElements, n => n.Namespace == EdmCoreModel.Namespace);
+        Assert.DoesNotContain(constructibleModel.SchemaElements, n => n.Namespace == EdmCoreModel.Namespace);
 
         foreach (var primitiveType in EdmCoreModel.Instance.SchemaElements)
         {
-            Assert.Null(parsedModel.FindDeclaredType(primitiveType.FullName()), "The FindType method should return null for primitive types.");
-            Assert.Null(constructibleModel.FindDeclaredType(primitiveType.FullName()), "The FindType method should return null for primitive types.");
-            Assert.NotNull(parsedModel.FindType(primitiveType.FullName()), "The FindType method should not return null for primitive types across models.");
-            Assert.NotNull(constructibleModel.FindType(primitiveType.FullName()), "The FindType method should not return null for primitive types across models.");
-            Assert.Equal(EdmCoreModel.Instance.FindDeclaredType(primitiveType.FullName()), primitiveType, "The EdmCore should contain the primitive type definitions");
+            Assert.Null(parsedModel.FindDeclaredType(primitiveType.FullName()));
+            Assert.Null(constructibleModel.FindDeclaredType(primitiveType.FullName()));
+            Assert.NotNull(parsedModel.FindType(primitiveType.FullName()));
+            Assert.NotNull(constructibleModel.FindType(primitiveType.FullName()));
+            Assert.Equal(EdmCoreModel.Instance.FindDeclaredType(primitiveType.FullName()), primitiveType);
         }
     }
 
@@ -1152,19 +2955,11 @@ public class FindMethodTests : EdmLibTestCaseBase
         var customEdmComplex = new CustomEdmComplexType("", "");
         customEdmComplex.AddStructuralProperty("Property3", EdmCoreModel.Instance.GetInt16(true));
 
-        Assert.NotNull(customEdmComplex.FindProperty("Property3"), "The custom edm complex type should have the property, Property3.");
-        Assert.Equal(
-                            customEdmComplex.FindProperty("Property1").Type.Definition,
-                            EdmCoreModel.Instance.SchemaElements.Single(n => n.FullName() == "Edm.Int32"),
-                            "The custom edm complex type should have the property, Property1."
-                         );
+        Assert.NotNull(customEdmComplex.FindProperty("Property3"));
+        Assert.Equal(customEdmComplex.FindProperty("Property1").Type.Definition, EdmCoreModel.Instance.SchemaElements.Single(n => n.FullName() == "Edm.Int32") as IEdmType);
 
-        Assert.Equal(
-                            customEdmComplex.FindProperty("Property2").Type.Definition,
-                            EdmCoreModel.Instance.SchemaElements.Single(n => n.FullName() == "Edm.Int32"),
-                            "The custom edm complex type should have the property, Property1."
-                         );
-        Assert.Equal(customEdmComplex.DeclaredProperties.Count(), 3, "The custom edm complex type should have the 3 propertes.");
+        Assert.Equal(customEdmComplex.FindProperty("Property2").Type.Definition, EdmCoreModel.Instance.SchemaElements.Single(n => n.FullName() == "Edm.Int32") as IEdmType);
+        Assert.Equal(3, customEdmComplex.DeclaredProperties.Count());
     }
 
     [Fact]
@@ -1172,61 +2967,185 @@ public class FindMethodTests : EdmLibTestCaseBase
     {
         Action<IEnumerable<IEdmVocabularyAnnotation>, IEnumerable<string>> checkAnnotationTerms = (annotations, termNames) =>
         {
-            Assert.True(!annotations.Select(n => n.Term.FullName()).Except(termNames).Any() && annotations.Count() == termNames.Count(), "The actual annotation terms are not correct.");
+            Assert.True(!annotations.Select(n => n.Term.FullName()).Except(termNames).Any() && annotations.Count() == termNames.Count());
         };
 
-        var model = this.GetParserResult(FindMethodsTestModelBuilder.FindVocabularyAnnotationsIncludingInheritedAnnotationsCsdl());
-        checkAnnotationTerms(
-                                model.FindVocabularyAnnotationsIncludingInheritedAnnotations(model.FindType("DefaultNamespace.Pet")),
-                                new string[] { "AnnotationNamespace.AddressObject", "AnnotationNamespace.Habitation", "AnnotationNamespace.Unknown" }
-                             );
+        var csdls = new string[] { @"
+<Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+    <ComplexType Name=""Pet"" BaseType=""foo.Animal"">
+        <Property Name=""OwnerId"" Type=""Edm.Int32"" />
+        <Property Name=""Name"" Type=""Edm.String"" />
+    </ComplexType>
+    <Annotations Target=""Unknown.UnresolvedTypeBase"">
+        <Annotation Term=""AnnotationNamespace.AddressObject"">
+        </Annotation>
+    </Annotations>
+    <Annotations Target=""DefaultNamespace.Pet"">
+        <Annotation Term=""AnnotationNamespace.AddressObject"">
+        </Annotation>
+    </Annotations>
+    <EntityType Name=""Child"" BaseType=""AnnotationNamespace.Person"" />
+    <EntityType Name=""UnresolvedType"" BaseType=""Unknown.UnresolvedTypeBase""/>
+</Schema>", @"
+<Schema Namespace=""AnnotationNamespace"" Alias=""foo"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+    <Term Name=""AddressObject"" Type=""Edm.Int32"" />
+    <Term Name=""Habitation"" Type=""Edm.Int32"" />
+    <EntityType Name=""Person"">
+        <Key>
+            <PropertyRef Name=""Id"" />
+        </Key>
+        <Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false"" />
+    </EntityType>
+    <ComplexType Name=""Animal"" BaseType=""AnnotationNamespace.Life"">
+        <Property Name=""Gender"" Type=""Edm.String"" Nullable=""false"" />
+    </ComplexType>
+    <ComplexType Name=""Address"">
+        <Property Name=""Street"" Type=""Edm.String"" Nullable=""false"" />
+        <Property Name=""City"" Type=""Edm.String"" Nullable=""true"" />
+    </ComplexType>
+    <Annotations Target=""AnnotationNamespace.Animal"">
+        <Annotation Term=""AnnotationNamespace.Habitation"" Int=""5"">
+        </Annotation>
+    </Annotations>
+    <Annotations Target=""AnnotationNamespace.Life"">
+        <Annotation Term=""AnnotationNamespace.Unknown"" Int=""5"">
+        </Annotation>
+    </Annotations>
+    <Annotations Target=""AnnotationNamespace.Derived"">
+        <Annotation Term=""AnnotationNamespace.Unknown"" Int=""5"">
+        </Annotation>
+    </Annotations>
+    <ComplexType Name=""Derived"" BaseType=""AnnotationNamespace.Base"">
+    </ComplexType>
+    <ComplexType Name=""Base"" BaseType=""AnnotationNamespace.Derived"">
+        <Annotation Term=""AnnotationNamespace.Habitation"" Int=""5"">
+        </Annotation>
+    </ComplexType>
+    <ComplexType Name=""ComplexTypeWithEntityTypeBase"" BaseType=""DefaultNamespace.Child"">
+        <Annotation Term=""AnnotationNamespace.Habitation"" Int=""5"">
+        </Annotation>
+    </ComplexType>
+</Schema>" };
+
+        var isParsed = SchemaReader.TryParse(csdls.Select(e => XElement.Parse(e, LoadOptions.SetLineInfo)).Select(e => e.CreateReader()), out IEdmModel model, out IEnumerable<EdmError> errors);
+        Assert.True(isParsed);
+        Assert.Empty(errors);
 
         checkAnnotationTerms(
-                                model.FindVocabularyAnnotationsIncludingInheritedAnnotations(model.FindType("AnnotationNamespace.Animal")),
-                                new string[] { "AnnotationNamespace.Habitation", "AnnotationNamespace.Unknown" }
-                             );
+            model.FindVocabularyAnnotationsIncludingInheritedAnnotations(model.FindType("DefaultNamespace.Pet")),
+            new string[] { "AnnotationNamespace.AddressObject", "AnnotationNamespace.Habitation", "AnnotationNamespace.Unknown" }
+        );
 
         checkAnnotationTerms(
-                                model.FindVocabularyAnnotationsIncludingInheritedAnnotations(model.FindType("DefaultNamespace.Child")),
-                                new string[] { }
-                             );
+            model.FindVocabularyAnnotationsIncludingInheritedAnnotations(model.FindType("AnnotationNamespace.Animal")),
+            new string[] { "AnnotationNamespace.Habitation", "AnnotationNamespace.Unknown" }
+        );
 
         checkAnnotationTerms(
-                                model.FindVocabularyAnnotationsIncludingInheritedAnnotations((IEdmEntityType)((IEdmEntityType)model.FindType("DefaultNamespace.UnresolvedType")).BaseType),
-                                new string[] { "AnnotationNamespace.AddressObject" }
-                             );
+            model.FindVocabularyAnnotationsIncludingInheritedAnnotations(model.FindType("DefaultNamespace.Child")),
+            new string[] { }
+        );
 
         checkAnnotationTerms(
-                                model.FindVocabularyAnnotationsIncludingInheritedAnnotations(model.FindType("AnnotationNamespace.ComplexTypeWithEntityTypeBase")),
-                                new string[] { "AnnotationNamespace.Habitation" }
-                             );
+            model.FindVocabularyAnnotationsIncludingInheritedAnnotations((IEdmEntityType)((IEdmEntityType)model.FindType("DefaultNamespace.UnresolvedType")).BaseType),
+            new string[] { "AnnotationNamespace.AddressObject" }
+        );
+
+        checkAnnotationTerms(
+            model.FindVocabularyAnnotationsIncludingInheritedAnnotations(model.FindType("AnnotationNamespace.ComplexTypeWithEntityTypeBase")),
+            new string[] { "AnnotationNamespace.Habitation" }
+        );
+
         Assert.Throws<ArgumentNullException>(() => model.FindVocabularyAnnotationsIncludingInheritedAnnotations(model.FindType("Unknown.Unknown")));
     }
 
 
     //[TestMethod, Variation(Id = 201, SkipReason = @"[EdmLib]  FindVocabularyAnnotationsIncludingInheritedAnnotations does not return all the annotations for the cyclic base types -- postponed")]
+    [Fact]
     public void FindVocabularyAnnotationsIncludingInheritedAnnotationsRecursiveTest()
     {
         Action<IEnumerable<IEdmVocabularyAnnotation>, IEnumerable<string>> checkAnnotationTerms = (annotations, termNames) =>
         {
-            Assert.True(!annotations.Select(n => n.Term.FullName()).Except(termNames).Any() && annotations.Count() == termNames.Count(), "The actual annotation terms are not correct.");
+            Assert.True(!annotations.Select(n => n.Term.FullName()).Except(termNames).Any() && annotations.Count() == termNames.Count());
         };
 
-        var model = this.GetParserResult(FindMethodsTestModelBuilder.FindVocabularyAnnotationsIncludingInheritedAnnotationsCsdl());
+        var csdls = new string[] { @"
+<Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+    <ComplexType Name=""Pet"" BaseType=""foo.Animal"">
+        <Property Name=""OwnerId"" Type=""Edm.Int32"" />
+        <Property Name=""Name"" Type=""Edm.String"" />
+    </ComplexType>
+    <Annotations Target=""Unknown.UnresolvedTypeBase"">
+        <Annotation Term=""AnnotationNamespace.AddressObject"">
+        </Annotation>
+    </Annotations>
+    <Annotations Target=""DefaultNamespace.Pet"">
+        <Annotation Term=""AnnotationNamespace.AddressObject"">
+        </Annotation>
+    </Annotations>
+    <EntityType Name=""Child"" BaseType=""AnnotationNamespace.Person"" />
+    <EntityType Name=""UnresolvedType"" BaseType=""Unknown.UnresolvedTypeBase""/>
+</Schema>", @"
+<Schema Namespace=""AnnotationNamespace"" Alias=""foo"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+    <Term Name=""AddressObject"" Type=""Edm.Int32"" />
+    <Term Name=""Habitation"" Type=""Edm.Int32"" />
+    <EntityType Name=""Person"">
+        <Key>
+            <PropertyRef Name=""Id"" />
+        </Key>
+        <Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false"" />
+    </EntityType>
+    <ComplexType Name=""Animal"" BaseType=""AnnotationNamespace.Life"">
+        <Property Name=""Gender"" Type=""Edm.String"" Nullable=""false"" />
+    </ComplexType>
+    <ComplexType Name=""Address"">
+        <Property Name=""Street"" Type=""Edm.String"" Nullable=""false"" />
+        <Property Name=""City"" Type=""Edm.String"" Nullable=""true"" />
+    </ComplexType>
+    <Annotations Target=""AnnotationNamespace.Animal"">
+        <Annotation Term=""AnnotationNamespace.Habitation"" Int=""5"">
+        </Annotation>
+    </Annotations>
+    <Annotations Target=""AnnotationNamespace.Life"">
+        <Annotation Term=""AnnotationNamespace.Unknown"" Int=""5"">
+        </Annotation>
+    </Annotations>
+    <Annotations Target=""AnnotationNamespace.Derived"">
+        <Annotation Term=""AnnotationNamespace.Unknown"" Int=""5"">
+        </Annotation>
+    </Annotations>
+    <ComplexType Name=""Derived"" BaseType=""AnnotationNamespace.Base"">
+    </ComplexType>
+    <ComplexType Name=""Base"" BaseType=""AnnotationNamespace.Derived"">
+        <Annotation Term=""AnnotationNamespace.Habitation"" Int=""5"">
+        </Annotation>
+    </ComplexType>
+    <ComplexType Name=""ComplexTypeWithEntityTypeBase"" BaseType=""DefaultNamespace.Child"">
+        <Annotation Term=""AnnotationNamespace.Habitation"" Int=""5"">
+        </Annotation>
+    </ComplexType>
+</Schema>" };
+
+        var isParsed = SchemaReader.TryParse(csdls.Select(e => XElement.Parse(e, LoadOptions.SetLineInfo)).Select(e => e.CreateReader()), out IEdmModel model, out IEnumerable<EdmError> errors);
+        Assert.True(isParsed);
+        Assert.Empty(errors);
 
         checkAnnotationTerms(
-                                model.FindVocabularyAnnotationsIncludingInheritedAnnotations(model.FindType("AnnotationNamespace.Base")),
-                                new string[] { "AnnotationNamespace.Unknown", "AnnotationNamespace.Habitation", }
-                             );
+            model.FindVocabularyAnnotationsIncludingInheritedAnnotations(model.FindType("AnnotationNamespace.Base")),
+            new string[] { "AnnotationNamespace.Unknown", "AnnotationNamespace.Habitation", }
+        );
 
         checkAnnotationTerms(
-                                model.FindVocabularyAnnotationsIncludingInheritedAnnotations(model.FindType("AnnotationNamespace.Derived")),
-                                new string[] { "AnnotationNamespace.Unknown", "AnnotationNamespace.Habitation", }
-                             );
+            model.FindVocabularyAnnotationsIncludingInheritedAnnotations(model.FindType("AnnotationNamespace.Derived")),
+            new string[] { "AnnotationNamespace.Unknown", "AnnotationNamespace.Habitation", }
+        );
     }
 
     //[TestMethod, Variation(Id = 202, SkipReason = @"[EdmLib] FindDirectlyDerivedTypes and FindAllDerivedTypes does not always return the types in referenced models - postponed ")]
-    public void FindDerivedTypeReferencedModelTests()
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void FindDerivedTypeReferencedModelTests(EdmVersion edmVersion)
     {
         IEdmModel masterModel = null;
         IEdmModel testModel = null;
@@ -1239,173 +3158,123 @@ public class FindMethodTests : EdmLibTestCaseBase
         Func<IEdmModel, IEdmStructuredType, IEnumerable<IEdmStructuredType>> runFindDirectlyDerivedTypes = (edmModel, type) => edmModel.FindDirectlyDerivedTypes(type);
         Func<IEdmModel, IEdmStructuredType, IEnumerable<IEdmStructuredType>> runFindAllDerivedTypes = (edmModel, type) => edmModel.FindDirectlyDerivedTypes(type);
 
-        var csdls = FindMethodsTestModelBuilder.MultipleSchemasWithDerivedTypes(this.EdmVersion);
-        masterModel = this.GetParserResult(csdls);
-        var models = new[] {
-                                  this.GetParserResult(new XElement[] { csdls.ElementAt(0) }),
-                                  this.GetParserResult(new XElement[] { csdls.ElementAt(1) }),
-                                  this.GetParserResult(new XElement[] { csdls.ElementAt(2) })
-                                };
+        var csdls = new[] {
+               @"<Schema Namespace=""FindMethodsTestModelBuilder.MultipleSchemasWithUsings.first"" p1:UseStrongSpatialTypes=""false"" xmlns:p1=""http://schemas.microsoft.com/ado/2009/02/edm/annotation"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+  <EntityType Name=""validEntityType1"">
+    <Key>
+      <PropertyRef Name=""Id"" />
+    </Key>
+    <Property Name=""Id"" Type=""Int32"" Nullable=""false"" />
+  </EntityType>
+  <ComplexType Name=""V1alidcomplexType"">
+    <Property Name=""aPropertyOne"" Type=""Int32"" Nullable=""false"" />
+  </ComplexType>
+</Schema>",
+                @"<Schema Namespace=""FindMethodsTestModelBuilder.MultipleSchemasWithUsings.second"" p1:UseStrongSpatialTypes=""false"" xmlns:p1=""http://schemas.microsoft.com/ado/2009/02/edm/annotation"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+  <EntityType Name=""VALIDeNTITYtYPE2"" BaseType=""FindMethodsTestModelBuilder.MultipleSchemasWithUsings.first.validEntityType1"" />
+  <ComplexType Name=""V1alidcomplexType"">
+    <Property Name=""aPropertyOne"" Type=""FindMethodsTestModelBuilder.MultipleSchemasWithUsings.first.V1alidcomplexType"" Nullable=""false"" />
+  </ComplexType>
+  <EntityContainer Name=""ValidEntityContainer1"" />
+</Schema>",
+                @"<Schema Namespace=""FindMethodsTestModelBuilder.MultipleSchemasWithUsings.third"" p1:UseStrongSpatialTypes=""false"" xmlns:p1=""http://schemas.microsoft.com/ado/2009/02/edm/annotation"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+  <EntityType Name=""VALIDeNTITYtYPE1"" BaseType=""FindMethodsTestModelBuilder.MultipleSchemasWithUsings.second.VALIDeNTITYtYPE2"" />
+  <ComplexType Name=""V1alidcomplexType"">
+    <Property Name=""aPropertyOne"" Type=""FindMethodsTestModelBuilder.MultipleSchemasWithUsings.second.V1alidcomplexType"" Nullable=""false"" />
+  </ComplexType>
+</Schema>",
+            };
 
-        testModel = this.GetParserResult(new[] { csdls.ElementAt(0) }, models.ElementAt(1), models.ElementAt(2));
+        var csdlElements = csdls.Select(XElement.Parse);
+        var isParsed = SchemaReader.TryParse(csdlElements.Select(e => e.CreateReader()), out masterModel, out IEnumerable<EdmError> errors);
+        Assert.True(isParsed);
+        Assert.Empty(errors);
+
+        _ = SchemaReader.TryParse(new XElement[] { csdlElements.ElementAt(0) }.Select(e => e.CreateReader()), out IEdmModel model0, out errors);
+        _ = SchemaReader.TryParse(new XElement[] { csdlElements.ElementAt(1) }.Select(e => e.CreateReader()), out IEdmModel model1, out errors);
+        _ = SchemaReader.TryParse(new XElement[] { csdlElements.ElementAt(2) }.Select(e => e.CreateReader()), out IEdmModel model2, out errors);
+
+        _ = SchemaReader.TryParse(new XElement[] { csdlElements.ElementAt(0) }.Select(e => e.CreateReader()), new[] { model1, model2 }, out testModel, out errors);
         verifyFindDerivedTypes("FindMethodsTestModelBuilder.MultipleSchemasWithDerivedTypes.first.validEntityType1", runFindAllDerivedTypes);
         verifyFindDerivedTypes("FindMethodsTestModelBuilder.MultipleSchemasWithDerivedTypes.first.validEntityType1", runFindDirectlyDerivedTypes);
         verifyFindDerivedTypes("FindMethodsTestModelBuilder.MultipleSchemasWithDerivedTypes.second.VALIDeNTITYtYPE2", runFindAllDerivedTypes);
         verifyFindDerivedTypes("FindMethodsTestModelBuilder.MultipleSchemasWithDerivedTypes.second.VALIDeNTITYtYPE2", runFindDirectlyDerivedTypes);
 
-        testModel = this.GetParserResult(new[] { csdls.ElementAt(1) }, models.ElementAt(0), models.ElementAt(2));
+        _ = SchemaReader.TryParse(new XElement[] { csdlElements.ElementAt(1) }.Select(e => e.CreateReader()), new[] { model0, model2 }, out testModel, out errors);
         verifyFindDerivedTypes("FindMethodsTestModelBuilder.MultipleSchemasWithDerivedTypes.first.validEntityType1", runFindAllDerivedTypes);
         verifyFindDerivedTypes("FindMethodsTestModelBuilder.MultipleSchemasWithDerivedTypes.first.validEntityType1", runFindDirectlyDerivedTypes);
         verifyFindDerivedTypes("FindMethodsTestModelBuilder.MultipleSchemasWithDerivedTypes.second.VALIDeNTITYtYPE2", runFindAllDerivedTypes);
         verifyFindDerivedTypes("FindMethodsTestModelBuilder.MultipleSchemasWithDerivedTypes.second.VALIDeNTITYtYPE2", runFindDirectlyDerivedTypes);
 
-        testModel = this.GetParserResult(new[] { csdls.ElementAt(2) }, models.ElementAt(0), models.ElementAt(1));
+        _ = SchemaReader.TryParse(new XElement[] { csdlElements.ElementAt(2) }.Select(e => e.CreateReader()), new[] { model0, model1 }, out testModel, out errors);
         verifyFindDerivedTypes("FindMethodsTestModelBuilder.MultipleSchemasWithDerivedTypes.first.validEntityType1", runFindAllDerivedTypes);
         verifyFindDerivedTypes("FindMethodsTestModelBuilder.MultipleSchemasWithDerivedTypes.first.validEntityType1", runFindDirectlyDerivedTypes);
         verifyFindDerivedTypes("FindMethodsTestModelBuilder.MultipleSchemasWithDerivedTypes.second.VALIDeNTITYtYPE2", runFindAllDerivedTypes);
         verifyFindDerivedTypes("FindMethodsTestModelBuilder.MultipleSchemasWithDerivedTypes.second.VALIDeNTITYtYPE2", runFindDirectlyDerivedTypes);
 
-        testModel = this.GetParserResult(new[] { csdls.ElementAt(2) }, this.GetParserResult(new[] { csdls.ElementAt(1) }, models.ElementAt(0)));
+        _ = SchemaReader.TryParse(new XElement[] { csdlElements.ElementAt(1) }.Select(e => e.CreateReader()), model0, out IEdmModel model3, out errors);
+        _ = SchemaReader.TryParse(new XElement[] { csdlElements.ElementAt(2) }.Select(e => e.CreateReader()), model3, out testModel, out errors);
         verifyFindDerivedTypes("FindMethodsTestModelBuilder.MultipleSchemasWithDerivedTypes.first.validEntityType1", runFindAllDerivedTypes);
         verifyFindDerivedTypes("FindMethodsTestModelBuilder.MultipleSchemasWithDerivedTypes.first.validEntityType1", runFindDirectlyDerivedTypes);
         verifyFindDerivedTypes("FindMethodsTestModelBuilder.MultipleSchemasWithDerivedTypes.second.VALIDeNTITYtYPE2", runFindAllDerivedTypes);
         verifyFindDerivedTypes("FindMethodsTestModelBuilder.MultipleSchemasWithDerivedTypes.second.VALIDeNTITYtYPE2", runFindDirectlyDerivedTypes);
-    }
-
-    //[TestMethod, Variation(Id = 203, SkipReason = @"[EdmLib] FindDirectlyDerivedTypes and FindAllDerivedTypes should return an ambiguous type instance when derived types are ambiguous -- postponed")]
-    public void FindDerivedTypeWithAmbigousTypesTests()
-    {
-        var csdls = FindMethodsTestModelBuilder.MultipleSchemasWithDerivedTypes(this.EdmVersion);
-        IEdmModel masterModel = null;
-        IEdmModel testModel = null;
-
-        Action<string, Func<IEdmModel, IEdmStructuredType, IEnumerable<IEdmStructuredType>>> verifyFindDerivedTypes = (typeName, findDerivedType) =>
-        {
-            this.VerifyFindDerivedTypes(masterModel, testModel, typeName, findDerivedType);
-        };
-
-        Func<IEdmModel, IEdmStructuredType, IEnumerable<IEdmStructuredType>> runFindDirectlyDerivedTypes = (edmModel, type) => edmModel.FindDirectlyDerivedTypes(type);
-        Func<IEdmModel, IEdmStructuredType, IEnumerable<IEdmStructuredType>> runFindAllDerivedTypes = (edmModel, type) => edmModel.FindDirectlyDerivedTypes(type);
-
-        var models = new[] {
-                                  this.GetParserResult(new [] { csdls.ElementAt(0) }),
-                                  this.GetParserResult(new [] { csdls.ElementAt(1) }),
-                                  this.GetParserResult(new [] { csdls.ElementAt(2) })
-                                };
-
-        testModel = this.GetParserResult(csdls.Concat(new[] { csdls.ElementAt(1) }));
-        Assert.Throws<ArgumentNullException>(() => verifyFindDerivedTypes("FindMethodsTestModelBuilder.MultipleSchemasWithDerivedTypes.second.VALIDeNTITYtYPE2", runFindAllDerivedTypes));
-        Assert.Throws<ArgumentNullException>(() => verifyFindDerivedTypes("FindMethodsTestModelBuilder.MultipleSchemasWithDerivedTypes.second.VALIDeNTITYtYPE2", runFindDirectlyDerivedTypes));
-        verifyFindDerivedTypes("FindMethodsTestModelBuilder.MultipleSchemasWithDerivedTypes.first.validEntityType1", runFindAllDerivedTypes);
-        verifyFindDerivedTypes("FindMethodsTestModelBuilder.MultipleSchemasWithDerivedTypes.first.validEntityType1", runFindDirectlyDerivedTypes);
-
-        testModel = this.GetParserResult(new[] { csdls.ElementAt(0) }, models.ElementAt(2), this.GetParserResult(new[] { csdls.ElementAt(1) }, models.ElementAt(2)));
-        verifyFindDerivedTypes("FindMethodsTestModelBuilder.MultipleSchemasWithDerivedTypes.second.VALIDeNTITYtYPE2", runFindAllDerivedTypes);
-        verifyFindDerivedTypes("FindMethodsTestModelBuilder.MultipleSchemasWithDerivedTypes.second.VALIDeNTITYtYPE2", runFindDirectlyDerivedTypes);
-        verifyFindDerivedTypes("FindMethodsTestModelBuilder.MultipleSchemasWithDerivedTypes.first.validEntityType1", runFindAllDerivedTypes);
-        verifyFindDerivedTypes("FindMethodsTestModelBuilder.MultipleSchemasWithDerivedTypes.first.validEntityType1", runFindDirectlyDerivedTypes);
     }
 
     //[TestMethod, Variation(Id = 204, SkipReason = @"[EdmLib] FindDirectlyDerivedTypes and FindAllDerivedTypes should throw ArgumentNullException instead of NullReferenceException when their parameters are null -- postponed, [EdmLib] FindDirectlyDerivedTypes and FindAllDerivedTypes should return UnresolvedEntityType or UnresolvedComplexType when it could not resolve the derived types. -- postponed")]
+    [Fact]
     public void FindDerivedTypeReferencedModelWithUnresolvedTypesTests()
     {
-        var csdls = FindMethodsTestModelBuilder.MultipleSchemasWithDerivedTypes(this.EdmVersion);
-        var testModel = this.GetParserResult(new[] { csdls.ElementAt(0), csdls.ElementAt(2) });
+        var csdls = new[]
+            {
+               @"<Schema Namespace=""FindMethodsTestModelBuilder.MultipleSchemasWithUsings.first"" p1:UseStrongSpatialTypes=""false"" xmlns:p1=""http://schemas.microsoft.com/ado/2009/02/edm/annotation"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+  <EntityType Name=""validEntityType1"">
+    <Key>
+      <PropertyRef Name=""Id"" />
+    </Key>
+    <Property Name=""Id"" Type=""Int32"" Nullable=""false"" />
+  </EntityType>
+  <ComplexType Name=""V1alidcomplexType"">
+    <Property Name=""aPropertyOne"" Type=""Int32"" Nullable=""false"" />
+  </ComplexType>
+</Schema>",
+                @"<Schema Namespace=""FindMethodsTestModelBuilder.MultipleSchemasWithUsings.second"" p1:UseStrongSpatialTypes=""false"" xmlns:p1=""http://schemas.microsoft.com/ado/2009/02/edm/annotation"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+  <EntityType Name=""VALIDeNTITYtYPE2"" BaseType=""FindMethodsTestModelBuilder.MultipleSchemasWithUsings.first.validEntityType1"" />
+  <ComplexType Name=""V1alidcomplexType"">
+    <Property Name=""aPropertyOne"" Type=""FindMethodsTestModelBuilder.MultipleSchemasWithUsings.first.V1alidcomplexType"" Nullable=""false"" />
+  </ComplexType>
+  <EntityContainer Name=""ValidEntityContainer1"" />
+</Schema>",
+                @"<Schema Namespace=""FindMethodsTestModelBuilder.MultipleSchemasWithUsings.third"" p1:UseStrongSpatialTypes=""false"" xmlns:p1=""http://schemas.microsoft.com/ado/2009/02/edm/annotation"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+  <EntityType Name=""VALIDeNTITYtYPE1"" BaseType=""FindMethodsTestModelBuilder.MultipleSchemasWithUsings.second.VALIDeNTITYtYPE2"" />
+  <ComplexType Name=""V1alidcomplexType"">
+    <Property Name=""aPropertyOne"" Type=""FindMethodsTestModelBuilder.MultipleSchemasWithUsings.second.V1alidcomplexType"" Nullable=""false"" />
+  </ComplexType>
+</Schema>",
+            }.Select(XElement.Parse);
+
+        var isParsed = SchemaReader.TryParse(new[] { csdls.ElementAt(0), csdls.ElementAt(2) }.Select(e => e.CreateReader()), out IEdmModel testModel, out IEnumerable<EdmError> errors);
+        Assert.True(isParsed);
+        Assert.Empty(errors);
+
         Assert.Throws<ArgumentNullException>(() => testModel.FindAllDerivedTypes(testModel.FindType("FindMethodsTestModelBuilder.MultipleSchemasWithDerivedTypes.second.VALIDeNTITYtYPE2") as IEdmStructuredType));
         Assert.Throws<ArgumentNullException>(() => testModel.FindDirectlyDerivedTypes(testModel.FindType("FindMethodsTestModelBuilder.MultipleSchemasWithDerivedTypes.second.VALIDeNTITYtYPE2") as IEdmStructuredType));
 
-        Assert.Equal(EdmErrorCode.BadUnresolvedEntityType, testModel.FindDirectlyDerivedTypes(testModel.FindType("FindMethodsTestModelBuilder.MultipleSchemasWithDerivedTypes.second.VALIDeNTITYtYPE2") as IEdmStructuredType).Single().Errors().Single(), "Unresolved type should be returned.");
-        Assert.Equal(EdmErrorCode.BadUnresolvedEntityType, testModel.FindAllDerivedTypes(testModel.FindType("FindMethodsTestModelBuilder.MultipleSchemasWithDerivedTypes.second.VALIDeNTITYtYPE2") as IEdmStructuredType).Single().Errors().Single(), "Unresolved type should be returned.");
+        var badUnresolvedError1 = testModel.FindDirectlyDerivedTypes(testModel.FindType("FindMethodsTestModelBuilder.MultipleSchemasWithDerivedTypes.second.VALIDeNTITYtYPE2") as IEdmStructuredType).Single().Errors().Single();
+        var badUnresolvedError2 = testModel.FindAllDerivedTypes(testModel.FindType("FindMethodsTestModelBuilder.MultipleSchemasWithDerivedTypes.second.VALIDeNTITYtYPE2") as IEdmStructuredType).Single().Errors().Single();
+        Assert.Equal(EdmErrorCode.BadUnresolvedEntityType, badUnresolvedError1.ErrorCode);
+        Assert.Equal(EdmErrorCode.BadUnresolvedEntityType, badUnresolvedError2.ErrorCode);
     }
 
     private void VerifyFindDerivedTypes(IEdmModel masterModel, IEdmModel testModel, string typeName, Func<IEdmModel, IEdmStructuredType, IEnumerable<IEdmStructuredType>> findDerivedType)
     {
         var expectedResults = findDerivedType(masterModel, masterModel.FindType(typeName) as IEdmStructuredType).Select(n => GetFullName(n));
         var actualResults = findDerivedType(testModel, testModel.FindType(typeName) as IEdmStructuredType).Select(n => GetFullName(n));
-        Assert.True(
-                            expectedResults.Count() == actualResults.Count()
-                            && !expectedResults.Except(actualResults).Any(), "FindDerivedTypes returns unexpected results."
-                        );
+        Assert.True(expectedResults.Count() == actualResults.Count() && !expectedResults.Except(actualResults).Any());
     }
 
     private string GetFullName(IEdmStructuredType type)
     {
         return type as IEdmComplexType != null ? ((IEdmComplexType)type).FullName() : type as IEdmEntityType != null ? ((IEdmEntityType)type).FullName() : null;
-    }
-
-    private void FindRecursiveNavigationTargetCheck(IEdmEntitySet entity, IEdmNavigationProperty entityToSelf, IEdmNavigationProperty selfToEntity)
-    {
-        var entityTarget = entity.FindNavigationTarget(entityToSelf);
-        Assert.NotNull(entityTarget, "Invalid navigation target.");
-        Assert.Equal(entity.Name, entityTarget.Name, "Invalid targeted set name.");
-        Assert.AreSame(entity, entityTarget, "Invalid targeted set.");
-
-        entityTarget = entity.FindNavigationTarget(selfToEntity);
-        Assert.NotNull(entityTarget, "Invalid navigation target.");
-        Assert.Equal(entity.Name, entityTarget.Name, "Invalid targeted set name.");
-        Assert.AreSame(entity, entityTarget, "Invalid targeted set.");
-    }
-
-    private void FindNavigationTargetCheck(IEdmEntitySet entityOne, IEdmNavigationProperty entityOneToEntityTwo, IEdmEntitySet entityTwo, IEdmNavigationProperty entityTwoToEntityOne)
-    {
-        var entityOneTarget = entityOne.FindNavigationTarget(entityOneToEntityTwo);
-        Assert.NotNull(entityOneTarget, "Invalid navigation target.");
-        Assert.Equal(entityTwo.Name, entityOneTarget.Name, "Invalid targeted set name.");
-        Assert.AreSame(entityTwo, entityOneTarget, "Invalid targeted set.");
-
-        entityOneTarget = entityOne.FindNavigationTarget(entityTwoToEntityOne);
-        Assert.True(entityOneTarget is IEdmUnknownEntitySet, "Invalid result.");
-
-        var entityTwoTarget = entityTwo.FindNavigationTarget(entityTwoToEntityOne);
-        Assert.NotNull(entityTwoTarget, "Invalid navigation target.");
-        Assert.Equal(entityOne.Name, entityTwoTarget.Name, "Invalid targeted set name.");
-        Assert.AreSame(entityOne, entityTwoTarget, "Invalid targeted set.");
-
-        entityTwoTarget = entityTwo.FindNavigationTarget(entityOneToEntityTwo);
-        Assert.True(entityTwoTarget is IEdmUnknownEntitySet, "Invalid result.");
-    }
-
-    private void FunctionOverloadingCheck(IEnumerable<XElement> csdls, List<FunctionInfo> functionInfos, string functionNamespace)
-    {
-        var model = this.GetParserResult(csdls);
-        this.VerifySemanticValidation(model, new EdmLibTestErrors());
-
-        foreach (FunctionInfo functionInfo in functionInfos)
-        {
-            var functionsFound = model.FindOperations(functionNamespace + "." + functionInfo.Name);
-            var functionFoundCount = GetOperationMatchedCount(functionInfo, functionsFound);
-            Assert.Equal(1, functionFoundCount, "Invalid count of function found");
-        }
-    }
-
-    private void FunctionImportOverloadingCheck(IEnumerable<XElement> csdls, List<FunctionInfo> functionInfos, string entityContainerName)
-    {
-        var model = this.GetParserResult(csdls);
-        this.VerifySemanticValidation(model, new EdmLibTestErrors());
-        var entityContainer = model.FindEntityContainer(entityContainerName);
-
-        foreach (FunctionInfo functionInfo in functionInfos)
-        {
-            var operationsFound = entityContainer.FindOperationImports(functionInfo.Name);
-            var functionFoundCount = GetOperationMatchedCount(functionInfo, operationsFound);
-            Assert.Equal(1, functionFoundCount, "Invalid count of function found");
-        }
-    }
-
-    private static int GetOperationMatchedCount(FunctionInfo operationInfo, IEnumerable<IEdmOperationImport> operationImportsFound)
-    {
-        var functionFoundCount = 0;
-
-        foreach (var function in operationImportsFound)
-        {
-            var parameters = function.Operation.Parameters.ToList();
-
-            if (IsOperationParameterMatched(operationInfo, parameters))
-            {
-                functionFoundCount++;
-            }
-        }
-        return functionFoundCount;
     }
 
     private static int GetOperationMatchedCount(FunctionInfo operationInfo, IEnumerable<IEdmOperation> operationsFound)
@@ -1452,12 +3321,6 @@ public class FindMethodTests : EdmLibTestCaseBase
         {
             return false;
         }
-    }
-
-    private void CompareVacabulraryAnnoationsVariations(params IEnumerable<IEdmVocabularyAnnotation>[] addressTerm)
-    {
-        var baseValue = addressTerm.ElementAt(0);
-        Assert.False(addressTerm.Any(n => n.Count() != baseValue.Count() || baseValue.Except(n).Any()), "The results between FindMethod and its declared version should be same.");
     }
 
     private static string RemoveParameterFacets(string parameter)
@@ -1554,23 +3417,23 @@ public class FindMethodTests : EdmLibTestCaseBase
         }
     }
 
-    private void VerifyFindMethods(IEnumerable<XElement> csdls, IEdmModel edmModel)
+    private void VerifyFindMethods(IEnumerable<XElement> csdls, IEdmModel edmModel, EdmVersion edmVersion)
     {
         foreach (var csdl in csdls)
         {
-            this.VerifyFindSchemaElementMethod(csdl, edmModel);
-            this.VerifyFindEntityContainer(csdl, edmModel);
-            this.VerifyFindEntityContainerElement(csdl, edmModel);
-            this.VerifyFindPropertyMethod(csdl, edmModel);
-            this.VerifyFindParameterMethod(csdl, edmModel);
-            this.VerifyFindNavigationPropertyMethod(csdl, edmModel);
-            this.VerifyFindTypeReferencePropertyMethod(csdl, edmModel);
+            this.VerifyFindSchemaElementMethod(csdl, edmModel, edmVersion);
+            this.VerifyFindEntityContainer(csdl, edmModel, edmVersion);
+            this.VerifyFindEntityContainerElement(csdl, edmModel, edmVersion);
+            this.VerifyFindPropertyMethod(csdl, edmModel, edmVersion);
+            this.VerifyFindParameterMethod(csdl, edmModel, edmVersion);
+            this.VerifyFindNavigationPropertyMethod(csdl, edmModel, edmVersion);
+            this.VerifyFindTypeReferencePropertyMethod(csdl, edmModel, edmVersion);
         }
 
-        this.VerifyFindDerivedType(csdls, edmModel);
+        this.VerifyFindDerivedType(csdls, edmModel, edmVersion);
     }
 
-    private void VerifyFindDerivedType(IEnumerable<XElement> sourceCsdls, IEdmModel testModel)
+    private void VerifyFindDerivedType(IEnumerable<XElement> sourceCsdls, IEdmModel testModel, EdmVersion edmVersion)
     {
         Func<IEdmStructuredType, string> getFullName = (type) =>
         {
@@ -1625,9 +3488,9 @@ public class FindMethodTests : EdmLibTestCaseBase
 
     }
 
-    private void VerifyFindNavigationPropertyMethod(XElement sourceCsdl, IEdmModel testModel)
+    private void VerifyFindNavigationPropertyMethod(XElement sourceCsdl, IEdmModel testModel, EdmVersion edmVersion)
     {
-        var csdlNamespace = EdmLibCsdlContentGenerator.GetCsdlFullNamespace(this.EdmVersion);
+        var csdlNamespace = EdmLibCsdlContentGenerator.GetCsdlFullNamespace(edmVersion);
         Assert.Equal(csdlNamespace, sourceCsdl.Name.Namespace);
 
         var namespaceValue = sourceCsdl.Attribute("Namespace")?.Value;
@@ -1641,7 +3504,7 @@ public class FindMethodTests : EdmLibTestCaseBase
             {
                 Assert.Contains(new string[] { "EntityType" }, n => n == elementTypeFound.Parent?.Name.LocalName);
 
-                var entityTypeName = elementTypeFound.Parent.Attribute("Name")?.Value;
+                var entityTypeName = elementTypeFound.Parent?.Attribute("Name")?.Value;
                 var entityType = testModel.FindType(namespaceValue + "." + entityTypeName) as IEdmEntityType;
                 var entityTypeReference = new EdmEntityTypeReference(entityType, true);
 
@@ -1652,9 +3515,9 @@ public class FindMethodTests : EdmLibTestCaseBase
         }
     }
 
-    private void VerifyFindPropertyMethod(XElement sourceCsdl, IEdmModel testModel)
+    private void VerifyFindPropertyMethod(XElement sourceCsdl, IEdmModel testModel, EdmVersion edmVersion)
     {
-        var csdlNamespace = EdmLibCsdlContentGenerator.GetCsdlFullNamespace(this.EdmVersion);
+        var csdlNamespace = EdmLibCsdlContentGenerator.GetCsdlFullNamespace(edmVersion);
         Assert.Equal(csdlNamespace, sourceCsdl.Name.Namespace);
 
         var namespaceValue = sourceCsdl.Attribute("Namespace")?.Value;
@@ -1681,9 +3544,9 @@ public class FindMethodTests : EdmLibTestCaseBase
         }
     }
 
-    private void VerifyFindTypeReferencePropertyMethod(XElement sourceCsdl, IEdmModel testModel)
+    private void VerifyFindTypeReferencePropertyMethod(XElement sourceCsdl, IEdmModel testModel, EdmVersion edmVersion)
     {
-        var csdlNamespace = EdmLibCsdlContentGenerator.GetCsdlFullNamespace(this.EdmVersion);
+        var csdlNamespace = EdmLibCsdlContentGenerator.GetCsdlFullNamespace(edmVersion);
         Assert.Equal(csdlNamespace, sourceCsdl.Name.Namespace);
 
         var namespaceValue = sourceCsdl.Attribute("Namespace")?.Value;
@@ -1725,9 +3588,9 @@ public class FindMethodTests : EdmLibTestCaseBase
         }
     }
 
-    private void VerifyFindParameterMethod(XElement sourceCsdl, IEdmModel testModel)
+    private void VerifyFindParameterMethod(XElement sourceCsdl, IEdmModel testModel, EdmVersion edmVersion)
     {
-        var csdlNamespace = EdmLibCsdlContentGenerator.GetCsdlFullNamespace(this.EdmVersion);
+        var csdlNamespace = EdmLibCsdlContentGenerator.GetCsdlFullNamespace(edmVersion);
         Assert.Equal(csdlNamespace, sourceCsdl.Name.Namespace);
 
         var namespaceValue = sourceCsdl.Attribute("Namespace")?.Value;
@@ -1754,9 +3617,9 @@ public class FindMethodTests : EdmLibTestCaseBase
         }
     }
 
-    protected void VerifyFindSchemaElementMethod(XElement sourceCsdl, IEdmModel testModel)
+    private void VerifyFindSchemaElementMethod(XElement sourceCsdl, IEdmModel testModel, EdmVersion edmVersion)
     {
-        var csdlNamespace = EdmLibCsdlContentGenerator.GetCsdlFullNamespace(this.EdmVersion);
+        var csdlNamespace = EdmLibCsdlContentGenerator.GetCsdlFullNamespace(edmVersion);
         Assert.Equal(csdlNamespace, sourceCsdl.Name.Namespace);
 
         IEnumerable<string> schemaElementTypes = new string[] { "EntityType", "ComplexType", "Function", "Term" };
@@ -1803,9 +3666,9 @@ public class FindMethodTests : EdmLibTestCaseBase
         }
     }
 
-    protected void VerifyFindEntityContainer(XElement sourceCsdl, IEdmModel testModel)
+    private void VerifyFindEntityContainer(XElement sourceCsdl, IEdmModel testModel, EdmVersion edmVersion)
     {
-        var csdlNamespace = EdmLibCsdlContentGenerator.GetCsdlFullNamespace(this.EdmVersion);
+        var csdlNamespace = EdmLibCsdlContentGenerator.GetCsdlFullNamespace(edmVersion);
         Assert.Equal(csdlNamespace, sourceCsdl.Name.Namespace);
 
         var entityContainerNames = from element in sourceCsdl.Elements(XName.Get("EntityContainer", csdlNamespace.NamespaceName))
@@ -1824,9 +3687,9 @@ public class FindMethodTests : EdmLibTestCaseBase
         }
     }
 
-    protected void VerifyFindEntityContainerElement(XElement sourceCsdl, IEdmModel testModel)
+    protected void VerifyFindEntityContainerElement(XElement sourceCsdl, IEdmModel testModel, EdmVersion edmVersion)
     {
-        var csdlNamespace = EdmLibCsdlContentGenerator.GetCsdlFullNamespace(this.EdmVersion);
+        var csdlNamespace = EdmLibCsdlContentGenerator.GetCsdlFullNamespace(edmVersion);
         Assert.Equal(csdlNamespace, sourceCsdl.Name.Namespace);
 
         Console.WriteLine("Test CSDL:\n\r{0}", sourceCsdl.ToString());

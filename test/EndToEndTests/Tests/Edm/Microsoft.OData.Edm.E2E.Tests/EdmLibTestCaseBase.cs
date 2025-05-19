@@ -7,6 +7,7 @@
 using System.Globalization;
 using System.Text;
 using System.Xml;
+using System.Xml.Linq;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Validation;
 
@@ -15,10 +16,10 @@ namespace Microsoft.OData.Edm.E2E.Tests;
 public class EdmLibTestCaseBase
 {
     protected Dictionary<EdmVersion, Version> toProductVersionlookup = new Dictionary<EdmVersion, Version>()
-        {
-            { EdmVersion.V40, EdmConstants.EdmVersion4 },
-            { EdmVersion.V401, EdmConstants.EdmVersion401 }
-        };
+    {
+        { EdmVersion.V40, EdmConstants.EdmVersion4 },
+        { EdmVersion.V401, EdmConstants.EdmVersion401 }
+    };
 
     private EdmVersion v;
     public EdmVersion EdmVersion
@@ -72,6 +73,24 @@ public class EdmLibTestCaseBase
     protected IEnumerable<string> GetSerializerResult(IEdmModel edmModel, out IEnumerable<EdmError> errors)
     {
         return GetSerializerResult(edmModel, EdmVersion, out errors);
+    }
+
+    protected static XElement ExtractElementByName(IEnumerable<XElement> inputSchemas, string elementNameToExtract)
+    {
+        XNamespace csdlXNamespace = inputSchemas.First().Name.Namespace;
+        var containers = new XElement(csdlXNamespace + "Schema",
+                                  new XAttribute("Namespace", "ExtractedElements"));
+
+        foreach (var s in inputSchemas)
+        {
+            foreach (var c in s.Elements(csdlXNamespace + elementNameToExtract).ToArray())
+            {
+                c.Remove();
+                containers.Add(c);
+            }
+        }
+
+        return containers;
     }
 
     public class EdmLibTestErrors : List<EdmError>

@@ -10,14 +10,12 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Xml;
 using System.Xml.Linq;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Validation;
 using Microsoft.OData.Edm.Vocabularies;
-using BindingFlags = System.Reflection.BindingFlags;
 
 public class SemanticValidationTests : EdmLibTestCaseBase
 {
@@ -137,11 +135,11 @@ public class SemanticValidationTests : EdmLibTestCaseBase
         IEdmModel model;
         IEnumerable<EdmError> errors;
         bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out model, out errors);
-        Assert.True(parsed, "parsed");
-        Assert.True(errors.Count() == 0, "No errors");
+        Assert.True(parsed);
+       Assert.Empty(errors);
 
         model.Validate(EdmConstants.EdmVersion4, out errors);
-        Assert.Equal(2, errors.Count(), "Correct number of errors");
+        Assert.Equal(2, errors.Count());
         // Error cannot exist on its own, so this test is somewhat dependent on rule order. If that order changes, the error checked by this test can also safely be changed
         Assert.Equal(EdmErrorCode.EntitySetTypeHasNoKeys, errors.Last().ErrorCode, "Correct error code");
     }*/

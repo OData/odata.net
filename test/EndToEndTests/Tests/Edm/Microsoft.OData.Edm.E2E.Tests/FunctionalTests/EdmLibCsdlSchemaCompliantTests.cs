@@ -4,6 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System.Reflection;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Schema;
@@ -14,28 +15,21 @@ namespace Microsoft.OData.Edm.E2E.Tests.FunctionalTests;
 
 public class EdmLibCsdlSchemaCompliantTests : EdmLibTestCaseBase
 {
-    [Fact]
-    // [EdmLib] Vocabulary annotation within vocabulary annotation can not be parsed by csdlreader but xsd does not provide parsing error - postponed
-    public void ParserVocabularyModelsCsdlSchemaCompliantTests()
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void ParserComplexTypeWithBaseTypeAbstractCsdlSchemaCompliantTest(EdmVersion edmVersion)
     {
-        this.BasicXsdValidationTestForParserInputCsdl(typeof(VocabularyTestModelBuilder));
+        this.BasicXsdValidationTestForParserInputCsdl(ModelBuilder.ComplexTypeWithBaseType(edmVersion), edmVersion);
+        this.BasicXsdValidationTestForParserInputCsdl(ValidationTestModelBuilder.ComplexTypeBaseTypeSupportInV11(edmVersion), edmVersion);
+        this.BasicXsdValidationTestForParserInputCsdl(ValidationTestModelBuilder.EdmComplexTypeInvalidIsPolymorphic(edmVersion), edmVersion);
+        this.BasicXsdValidationTestForParserInputCsdl(ValidationTestModelBuilder.ComplexTypeIsAbstractSupportInV40(edmVersion), edmVersion);
     }
 
-    [Fact]
-    public void ParserComplexTypeWithBaseTypeAbstractCsdlSchemaCompliantTest()
-    {
-        var edmVersions = new EdmVersion[] { EdmVersion.V40 };
-        foreach (var edmVersion in edmVersions)
-        {
-            this.BasicXsdValidationTestForParserInputCsdl(ModelBuilder.ComplexTypeWithBaseType(edmVersion), edmVersion);
-            this.BasicXsdValidationTestForParserInputCsdl(ValidationTestModelBuilder.ComplexTypeBaseTypeSupportInV11(edmVersion), edmVersion);
-            this.BasicXsdValidationTestForParserInputCsdl(ValidationTestModelBuilder.EdmComplexTypeInvalidIsPolymorphic(edmVersion), edmVersion);
-            this.BasicXsdValidationTestForParserInputCsdl(ValidationTestModelBuilder.ComplexTypeIsAbstractSupportInV40(edmVersion), edmVersion);
-        }
-    }
-
-    [Fact]
-    public void ParserSimpleIdentifierTypeReferenceCsdlSchemaCompliantTest()
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void ParserSimpleIdentifierTypeReferenceCsdlSchemaCompliantTest(EdmVersion edmVersion)
     {
         var edmVersions = new EdmVersion[] { EdmVersion.V40 };
         foreach (var edmVersion in edmVersions)
@@ -44,8 +38,10 @@ public class EdmLibCsdlSchemaCompliantTests : EdmLibTestCaseBase
         }
     }
 
-    [Fact]
-    public void ParserOpenTypeSupportCsdlSchemaCompliantTest()
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void ParserOpenTypeSupportCsdlSchemaCompliantTest(EdmVersion edmVersion)
     {
         var edmVersions = new EdmVersion[] { EdmVersion.V40 };
         foreach (var edmVersion in edmVersions)
@@ -55,8 +51,10 @@ public class EdmLibCsdlSchemaCompliantTests : EdmLibTestCaseBase
         }
     }
 
-    [Fact]
-    public void ParserInvalidDecimalTypePrecisionCsdlSchemaCompliantTest()
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void ParserInvalidDecimalTypePrecisionCsdlSchemaCompliantTest(EdmVersion edmVersion)
     {
         var edmVersions = new EdmVersion[] { EdmVersion.V40 };
         foreach (var edmVersion in edmVersions)
@@ -67,14 +65,18 @@ public class EdmLibCsdlSchemaCompliantTests : EdmLibTestCaseBase
         }
     }
 
-    [Fact]
-    public void SerializerVocabularyTestModelsCsdlSchemaCompliantTests()
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void SerializerVocabularyTestModelsCsdlSchemaCompliantTests(EdmVersion edmVersion)
     {
         this.BasicXsdValidationTestForSerializerOutputCsdl(typeof(VocabularyTestModelBuilder));
     }
 
-    [Fact]
-    public void SerializerModelWithAssociationEndAsInaccessibleEntityTypeCsdlSchemaCompliantTest()
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void SerializerModelWithAssociationEndAsInaccessibleEntityTypeCsdlSchemaCompliantTest(EdmVersion edmVersion)
     {
         var edmVersions = new EdmVersion[] { EdmVersion.V40 };
         foreach (var edmVersion in edmVersions)
@@ -84,8 +86,10 @@ public class EdmLibCsdlSchemaCompliantTests : EdmLibTestCaseBase
         }
     }
 
-    [Fact]
-    public void SerializerModelWithMismatchedBaseTypeCsdlSchemaCompliantTests()
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void SerializerModelWithMismatchedBaseTypeCsdlSchemaCompliantTests(EdmVersion edmVersion)
     {
         var edmVersions = new EdmVersion[] { EdmVersion.V40 };
         foreach (var edmVersion in edmVersions)
@@ -98,8 +102,10 @@ public class EdmLibCsdlSchemaCompliantTests : EdmLibTestCaseBase
         }
     }
 
-    [Fact]
-    public void SerializerOperationParameterShouldBeInboundCsdlSchemaCompliantTest()
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void SerializerOperationParameterShouldBeInboundCsdlSchemaCompliantTest(EdmVersion edmVersion)
     {
         var edmVersions = new EdmVersion[] { EdmVersion.V40 };
         foreach (var edmVersion in edmVersions)
@@ -108,8 +114,10 @@ public class EdmLibCsdlSchemaCompliantTests : EdmLibTestCaseBase
         }
     }
 
-    [Fact]
-    public void SerializerModelWithInvalidFunctionImportReturnTypeCsdlSchemaCompliantTest()
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void SerializerModelWithInvalidFunctionImportReturnTypeCsdlSchemaCompliantTest(EdmVersion edmVersion)
     {
         Console.WriteLine(DateTime.Now.ToShortDateString());
         var edmVersions = new EdmVersion[] { EdmVersion.V40 };
@@ -119,8 +127,10 @@ public class EdmLibCsdlSchemaCompliantTests : EdmLibTestCaseBase
         }
     }
 
-    [Fact]
-    public void SerializerModelWithRowTypePropertyOfTypeNoneCsdlSchemaCompliantTest()
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void SerializerModelWithRowTypePropertyOfTypeNoneCsdlSchemaCompliantTest(EdmVersion edmVersion)
     {
         var edmVersions = new EdmVersion[] { EdmVersion.V40 };
         foreach (var edmVersion in edmVersions)
@@ -130,20 +140,26 @@ public class EdmLibCsdlSchemaCompliantTests : EdmLibTestCaseBase
         }
     }
 
-    [Fact]
-    public void ParserODataTestModelsCsdlSchemaCompliantTests()
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void ParserODataTestModelsCsdlSchemaCompliantTests(EdmVersion edmVersion)
     {
         this.BasicXsdValidationTestForParserInputCsdl(typeof(ODataTestModelBuilder));
     }
 
-    [Fact]
-    public void SerializerODataTestModelBuilderCsdlSchemaCompliantTests()
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void SerializerODataTestModelBuilderCsdlSchemaCompliantTests(EdmVersion edmVersion)
     {
         this.BasicXsdValidationTestForSerializerOutputCsdl(typeof(ODataTestModelBuilder));
     }
 
-    [Fact]
-    public void ParserModelWithEnumTerm()
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void ParserModelWithEnumTerm(EdmVersion edmVersion)
     {
         var edmVersions = new EdmVersion[] { EdmVersion.V40 };
         foreach (var edmVersion in edmVersions)
@@ -152,8 +168,10 @@ public class EdmLibCsdlSchemaCompliantTests : EdmLibTestCaseBase
         }
     }
 
-    [Fact]
-    public void TermXsdValidation()
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void TermXsdValidation(EdmVersion edmVersion)
     {
         var edmVersions = new EdmVersion[] { EdmVersion.V40 };
         foreach (var edmVersion in edmVersions)
@@ -162,8 +180,10 @@ public class EdmLibCsdlSchemaCompliantTests : EdmLibTestCaseBase
         }
     }
 
-    [Fact]
-    public void ParserVocabularyAnnotationIfCsdlSchemaCompliantTest()
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void ParserVocabularyAnnotationIfCsdlSchemaCompliantTest(EdmVersion edmVersion)
     {
         var edmVersions = new EdmVersion[] { EdmVersion.V40 };
         foreach (var edmVersion in edmVersions)
@@ -172,8 +192,10 @@ public class EdmLibCsdlSchemaCompliantTests : EdmLibTestCaseBase
         }
     }
 
-    [Fact]
-    public void ParserAnnotationFunctionCsdlSchemaCompliantTest()
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void ParserAnnotationFunctionCsdlSchemaCompliantTest(EdmVersion edmVersion)
     {
         var edmVersions = new EdmVersion[] { EdmVersion.V40 };
         foreach (var edmVersion in edmVersions)
@@ -182,8 +204,10 @@ public class EdmLibCsdlSchemaCompliantTests : EdmLibTestCaseBase
         }
     }
 
-    [Fact]
-    public void ParserSimpleAnnotationCsdlSchemaCompliantTest()
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void ParserSimpleAnnotationCsdlSchemaCompliantTest(EdmVersion edmVersion)
     {
         var edmVersions = new EdmVersion[] { EdmVersion.V40 };
         foreach (var edmVersion in edmVersions)
@@ -192,8 +216,10 @@ public class EdmLibCsdlSchemaCompliantTests : EdmLibTestCaseBase
         }
     }
 
-    [Fact]
-    public void ParserOutOfLineAnnotationEntityPropertyCsdlSchemaCompliantTest()
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void ParserOutOfLineAnnotationEntityPropertyCsdlSchemaCompliantTest(EdmVersion edmVersion)
     {
         var edmVersions = new EdmVersion[] { EdmVersion.V40 };
         foreach (var edmVersion in edmVersions)
@@ -202,8 +228,10 @@ public class EdmLibCsdlSchemaCompliantTests : EdmLibTestCaseBase
         }
     }
 
-    [Fact]
-    public void ParserInlineAnnotationNavigationPropertyCsdlSchemaCompliantTest()
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void ParserInlineAnnotationNavigationPropertyCsdlSchemaCompliantTest(EdmVersion edmVersion)
     {
         var edmVersions = new EdmVersion[] { EdmVersion.V40 };
         foreach (var edmVersion in edmVersions)
@@ -212,8 +240,10 @@ public class EdmLibCsdlSchemaCompliantTests : EdmLibTestCaseBase
         }
     }
 
-    [Fact]
-    public void ParserInlineAnnotationEntityContainerCsdlSchemaCompliantTest()
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void ParserInlineAnnotationEntityContainerCsdlSchemaCompliantTest(EdmVersion edmVersion)
     {
         var edmVersions = new EdmVersion[] { EdmVersion.V40 };
         foreach (var edmVersion in edmVersions)
@@ -222,8 +252,10 @@ public class EdmLibCsdlSchemaCompliantTests : EdmLibTestCaseBase
         }
     }
 
-    [Fact]
-    public void ParserInlineAnnotationFunctionImportCsdlSchemaCompliantTest()
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void ParserInlineAnnotationFunctionImportCsdlSchemaCompliantTest(EdmVersion edmVersion)
     {
         var edmVersions = new EdmVersion[] { EdmVersion.V40 };
         foreach (var edmVersion in edmVersions)
@@ -232,8 +264,10 @@ public class EdmLibCsdlSchemaCompliantTests : EdmLibTestCaseBase
         }
     }
 
-    [Fact]
-    public void ParserInlineAnnotationFunctionImportParameterCsdlSchemaCompliantTest()
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void ParserInlineAnnotationFunctionImportParameterCsdlSchemaCompliantTest(EdmVersion edmVersion)
     {
         var edmVersions = new EdmVersion[] { EdmVersion.V40 };
         foreach (var edmVersion in edmVersions)
@@ -242,8 +276,10 @@ public class EdmLibCsdlSchemaCompliantTests : EdmLibTestCaseBase
         }
     }
 
-    [Fact]
-    public void ParserImmediateAnnotationRoundTripCsdlSchemaCompliantTest()
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void ParserImmediateAnnotationRoundTripCsdlSchemaCompliantTest(EdmVersion edmVersion)
     {
         var testCsdls = ODataTestModelBuilder.ImmediateAnnotationRoundTrip;
         var edmVersions = new EdmVersion[] { EdmVersion.V40 };
@@ -253,8 +289,10 @@ public class EdmLibCsdlSchemaCompliantTests : EdmLibTestCaseBase
         }
     }
 
-    [Fact]
-    public void ParserOutOfLineAnnotationOperationAndOperationParameterCsdlSchemaCompliantTest()
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void ParserOutOfLineAnnotationOperationAndOperationParameterCsdlSchemaCompliantTest(EdmVersion edmVersion)
     {
         var testCsdls = new List<IEnumerable<XElement>> { VocabularyTestModelBuilder.OutOfLineAnnotationFunction(), VocabularyTestModelBuilder.OutOfLineAnnotationOperationParameter() };
         var edmVersions = new EdmVersion[] { EdmVersion.V40 };
@@ -264,50 +302,66 @@ public class EdmLibCsdlSchemaCompliantTests : EdmLibTestCaseBase
         }
     }
 
-    [Fact]
-    public void ConstantExpressionModelBuilderBasicValidationConsistencyTest()
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void ConstantExpressionModelBuilderBasicValidationConsistencyTest(EdmVersion edmVersion)
     {
         this.BasicValidationConsistencyTest(typeof(ConstantExpressionModelBuilder));
     }
 
-    [Fact]
-    public void EdmxModelBuilderBasicValidationConsistencyTest()
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void EdmxModelBuilderBasicValidationConsistencyTest(EdmVersion edmVersion)
     {
         this.BasicValidationConsistencyTest(typeof(EdmxModelBuilder));
     }
 
-    [Fact]
-    public void FindMethodsTestModelBuilderBasicValidationConsistencyTest()
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void FindMethodsTestModelBuilderBasicValidationConsistencyTest(EdmVersion edmVersion)
     {
         this.BasicValidationConsistencyTest(typeof(FindMethodsTestModelBuilder));
     }
 
-    [Fact]
-    public void NavigationTestModelBuilderBasicValidationConsistencyTest()
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void NavigationTestModelBuilderBasicValidationConsistencyTest(EdmVersion edmVersion)
     {
         this.BasicValidationConsistencyTest(typeof(NavigationTestModelBuilder));
     }
 
-    [Fact]
-    public void ValidationTestModelBuilderBasicValidationConsistencyTest()
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void ValidationTestModelBuilderBasicValidationConsistencyTest(EdmVersion edmVersion)
     {
         this.BasicValidationConsistencyTest(typeof(ValidationTestModelBuilder));
     }
 
-    [Fact]
-    public void VocabularyTestModelBuilderBasicValidationConsistencyTest()
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void VocabularyTestModelBuilderBasicValidationConsistencyTest(EdmVersion edmVersion)
     {
         this.BasicValidationConsistencyTest(typeof(VocabularyTestModelBuilder));
     }
 
-    [Fact]
-    public void XElementAnnotationModelBuilderBasicValidationConsistencyTest()
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void XElementAnnotationModelBuilderBasicValidationConsistencyTest(EdmVersion edmVersion)
     {
         this.BasicValidationConsistencyTest(typeof(XElementAnnotationModelBuilder));
     }
 
-    [Fact]
-    public void ParserAnnotationTermCsdlSchemaCompliantTest()
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void ParserAnnotationTermCsdlSchemaCompliantTest(EdmVersion edmVersion)
     {
         var edmVersions = new EdmVersion[] { EdmVersion.V40 };
         foreach (var edmVersion in edmVersions)
@@ -317,8 +371,10 @@ public class EdmLibCsdlSchemaCompliantTests : EdmLibTestCaseBase
         }
     }
 
-    [Fact]
-    public void ParserAnnotationQualifiersWithNonSimpleValueCsdlSchemaCompliantTest()
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void ParserAnnotationQualifiersWithNonSimpleValueCsdlSchemaCompliantTest(EdmVersion edmVersion)
     {
         var edmVersions = new EdmVersion[] { EdmVersion.V40 };
         foreach (var edmVersion in edmVersions)
@@ -502,5 +558,43 @@ public class EdmLibCsdlSchemaCompliantTests : EdmLibTestCaseBase
         schemas.Add(annotationTargetNamespace, XmlReader.Create(this.GetXsdStream(annotationXsdFileName)));
         schemas.Add(EdmStringConstants.EdmOasisNamespace, XmlReader.Create(this.GetXsdStream("Microsoft.OData.Resources.CSDLSchema_4.xsd")));
         EdmLibXmlSchemas.Add(EdmVersion.V40, schemas);
+    }
+
+    private Dictionary<string, T> GetModels<T>(Type type, EdmVersion edmVersion) where T : class
+    {
+        return GetModels<T>(type.GetMethods().Where(n => n.IsStatic == true && n.ReturnType == typeof(T)), edmVersion);
+    }
+
+    private Dictionary<string, T> GetModels<T>(Type type, EdmVersion edmVersion, Attribute testAttribute, bool isInclusiveAttribute) where T : class
+    {
+        Func<MethodInfo, bool> isTestApplicable = (method) => !(method.GetCustomAttributes(testAttribute.GetType(), false).Any() ^ isInclusiveAttribute);
+        return GetModels<T>(type.GetMethods().Where(n => n.IsStatic == true && n.ReturnType == typeof(T) && isTestApplicable(n)), edmVersion);
+    }
+
+    private Dictionary<string, T> GetModels<T>(IEnumerable<MethodInfo> modelBuilderModethods, EdmVersion edmVersion) where T : class
+    {
+        var testModels = new Dictionary<string, T>();
+        foreach (var method in modelBuilderModethods)
+        {
+            var parameters = new List<object>();
+            if (method.GetParameters().Any())
+            {
+                if (method.GetParameters().Single().ParameterType == typeof(EdmVersion))
+                {
+                    parameters.Add(edmVersion);
+                }
+                else
+                {
+                    throw new InvalidOperationException(string.Format("The model builder method {0} can take no or only EdmVersion parameter.", method.Name));
+                }
+            }
+            var model = method.Invoke(null, parameters.ToArray<object>()) as T;
+            if (null == model)
+            {
+                throw new InvalidOperationException(string.Format("The extracted test model from {0} cannot be null.", method.Name));
+            }
+            testModels.Add(method.Name, model);
+        }
+        return testModels;
     }
 }
