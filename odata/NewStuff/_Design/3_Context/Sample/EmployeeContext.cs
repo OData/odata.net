@@ -10,16 +10,16 @@
     
     public class EmployeeContext
     {
-        private readonly IGetCollectionClr<User> usersClr;
+        private readonly ICollectionClr<User> usersClr;
 
-        public EmployeeContext(IGetCollectionClr<User> usersClr)
+        public EmployeeContext(ICollectionClr<User> usersClr)
         {
             this.usersClr = usersClr;
         }
 
         public IEnumerable<Employee> Evaluate()
         {
-            var usersWithDirectReportsClr = this.usersClr.Expand(user => user.DirectReports);
+            var usersWithDirectReportsClr = this.usersClr.Get().Expand(user => user.DirectReports);
             var usersReponse = usersWithDirectReportsClr.Evaluate();
 
             return usersReponse
@@ -27,7 +27,7 @@
                 .Select(
                     user => new Employee(
                         user.Value.DisplayName.Value, 
-                        user.Value.DirectReports.Value.Select(directReport => directReport.Id.Value)));
+                        user.Value.DirectReports.Provided.Select(directReport => directReport.Id.Value)));
         }
 
         public EmployeeContext Where(Expression<Func<Employee, bool>> predicate)

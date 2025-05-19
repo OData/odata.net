@@ -1,5 +1,6 @@
 ﻿namespace NewStuff._Design._3_Context.Sample
 {
+    using NewStuff._Design._2_Clr.Sample;
     using System.Collections.Generic;
 
     public class Employee

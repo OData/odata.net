@@ -4,10 +4,17 @@
 
     public class User
     {
-        public Property<string> DisplayName { get; }
+        public User(NullableProperty<string> displayName, NonNullableProperty<IEnumerable<User>> directReports, NonNullableProperty<string> id)
+        {
+            DisplayName = displayName;
+            DirectReports = directReports;
+            Id = id;
+        }
 
-        public Property<IEnumerable<User>> DirectReports { get; }
+        public NullableProperty<string> DisplayName { get; }
 
-        public Property<string> Id { get; } //// TODO it'd probably be good if this is marked as a key property
+        public NonNullableProperty<IEnumerable<User>> DirectReports { get; } //// TODO should there be a "collectionproperty"? //// TODO should there be a "navigationproperty"?
+
+        public NonNullableProperty<string> Id { get; } //// TODO it'd probably be good if this is marked as a key property
     }
 }

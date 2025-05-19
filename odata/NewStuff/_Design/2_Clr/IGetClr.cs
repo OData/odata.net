@@ -7,8 +7,8 @@ namespace NewStuff._Design._2_Clr
     {
         SingleValuedResponse<TEntity> Evaluate();
 
-        IGetCollectionClr<TEntity> Select<TProperty>(Expression<Func<TEntity, Property<TProperty>>> selector);
+        ICollectionClr<TEntity> Select<TProperty>(Expression<Func<TEntity, NullableProperty<TProperty>>> selector);
 
-        IGetCollectionClr<TEntity> Expand<TProperty>(Expression<Func<TEntity, Property<TProperty>>> expander);
+        ICollectionClr<TEntity> Expand<TProperty>(Expression<Func<TEntity, NullableProperty<TProperty>>> expander);
     }
 }

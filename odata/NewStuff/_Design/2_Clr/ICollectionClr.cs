@@ -2,8 +2,8 @@
 {
     public interface ICollectionClr<T>
     {
-        IGetCollectionClr<T> Get();
+        ICollectionClr<T> Get();
 
-        IPostCollectionClr<T> Post(int todo);
+        IPostCollectionClr<T> Post(T entity); //// TODO what about deep insert and deep update?
     }
 }
