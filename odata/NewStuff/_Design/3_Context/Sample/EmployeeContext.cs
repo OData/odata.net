@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Linq.Expressions;
 
     using NewStuff._Design._2_Clr;
@@ -9,21 +10,36 @@
     
     public class EmployeeContext : IContext<Employee>
     {
-        private readonly ICollectionClr<User> clr;
+        private readonly IGetCollectionClr<User> usersClr;
 
-        public EmployeeContext(ICollectionClr<User> clr)
+        public EmployeeContext(IGetCollectionClr<User> usersClr)
         {
-            this.clr = clr;
+            this.usersClr = usersClr;
         }
 
         public IEnumerable<Employee> Evaluate()
         {
-            throw new NotImplementedException();
+            var usersWithDirectReportsClr = this.usersClr.Expand(user => user.DirectReports);
+            var usersReponse = usersWithDirectReportsClr.Evaluate();
+
+            return usersReponse
+                .Values
+                .Select(
+                    user => new Employee(
+                        user.Value.DisplayName.Value, 
+                        user.Value.DirectReports.Value.Select(directReport => directReport.Id.Value)));
         }
 
         public IContext<Employee> Where(Expression<Func<Employee, bool>> predicate)
         {
-            throw new NotImplementedException();
+            var adaptedPredicate = this.Adapt(predicate);
+            var filteredClr = this.usersClr.Filter(adaptedPredicate);
+            return new EmployeeContext(filteredClr);
+        }
+
+        private Expression<Func<User, bool>> Adapt(Expression<Func<Employee, bool>> toAdapt)
+        {
+            throw new Exception("TODO");
         }
     }
 }

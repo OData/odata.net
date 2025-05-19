@@ -4,9 +4,10 @@
 
     public class Employee
     {
-        public Employee(string name)
+        public Employee(string name, IEnumerable<string> directReportIds)
         {
             this.Name = name;
+            this.DirectReportIds = directReportIds;
         }
 
         public string Name { get; }
