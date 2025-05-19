@@ -5,7 +5,7 @@ namespace NewStuff._Design._2_Clr
 {
     public interface IGetClr<TEntity>
     {
-        CollectionResponseEntity<TEntity> Evaluate();
+        ResponseEntity<TEntity> Evaluate();
 
         IGetCollectionClr<TEntity> Select<TProperty>(Expression<Func<TEntity, ResponseProperty<TProperty>>> selector);
 

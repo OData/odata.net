@@ -5,7 +5,7 @@
 
     public interface IGetCollectionClr<TEntity>
     {
-        CollectionResponseEntity<TEntity> Evaluate();
+        CollectionResponse<TEntity> Evaluate();
 
         IGetCollectionClr<TEntity> Filter(Expression<Func<TEntity, bool>> predicate);
 

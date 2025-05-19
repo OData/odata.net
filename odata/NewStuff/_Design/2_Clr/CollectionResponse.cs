@@ -5,7 +5,7 @@
 
     public class CollectionResponse<TEntity>
     {
-        public IEnumerable<ResponseEntity<TEntity>> Values { get; }
+        public IEnumerable<CollectionResponseEntity<TEntity>> Values { get; }
 
         public Uri? NextLink { get; } //// TODO the type of this property should be stronger
 
