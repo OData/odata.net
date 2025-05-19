@@ -10,9 +10,9 @@
     
     public class EmployeeContext
     {
-        private readonly ICollectionClr<User> usersClr;
+        private readonly IGetCollectionClr<User> usersClr;
 
-        public EmployeeContext(ICollectionClr<User> usersClr)
+        public EmployeeContext(IGetCollectionClr<User> usersClr)
         {
             this.usersClr = usersClr;
         }
@@ -21,7 +21,6 @@
         {
             var usersWithDirectReportsClr = this
                 .usersClr
-                .Get()
                 .Expand(user => user.DirectReports) //// TODO select id
                 .Select(user => user.DisplayName);
             var usersReponse = usersWithDirectReportsClr.Evaluate();
