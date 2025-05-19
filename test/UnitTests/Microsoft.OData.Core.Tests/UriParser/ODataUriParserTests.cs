@@ -861,7 +861,7 @@ namespace Microsoft.OData.Tests.UriParser
                 ////long* memoryPointer = stackalloc long[size];
                 ////var memorySpan = new Span<long>(memoryPointer, size);
 
-                var memoryArray = GC.AllocateArray<long>(size);
+                var memoryArray = new long[size]; ////GC.AllocateArray<long>(size);
                 var memorySpan = new Span<long>(memoryArray);
                 
                 var foo = new WithFinalizer() { First = i.ToString() };
