@@ -28,6 +28,7 @@ using System.ComponentModel;
 using System.Net.WebSockets;
 using System.Threading;
 using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics;
 
 namespace Microsoft.OData.Tests.UriParser
 {
@@ -698,35 +699,17 @@ namespace Microsoft.OData.Tests.UriParser
             Assert.Equal(9, ReferenceElementsFinalized);
         }
 
-        [Fact]
-        public void PointerListFinalizerTest2()
-        {
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
-
-            ReferenceElementsFinalized = 0;
-
-            var list = new List<WithFinalizer>();
-            for (int i = 0; i < 10; ++i)
-            {
-                var foo = new WithFinalizer();
-                list.Add(foo);
-            }
-
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
-
-            Assert.Equal(9, ReferenceElementsFinalized);
-        }
-
         private static int ReferenceElementsFinalized = 0;
 
         public class WithFinalizer
         {
+            public bool Finalized { get; private set; } = false;
+
             public string First { get; set; }
             ~WithFinalizer()
             {
                 Interlocked.Increment(ref ReferenceElementsFinalized);
+                this.Finalized = true;
             }
         }
 
@@ -771,6 +754,13 @@ namespace Microsoft.OData.Tests.UriParser
                 GC.KeepAlive(toAdd);
             }
 
+
+
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+
+            Assert.Equal(0, ReferenceElementsFinalized);
+
             Assert.Equal("asdf", Retrieve(ref stack.last).Value.First);
             var current = Retrieve(ref stack.last).Previous;
             for (int i = 0; i < 10; ++i)
@@ -786,13 +776,6 @@ namespace Microsoft.OData.Tests.UriParser
             WriteAddresses(nodePointer, 5);
             var valuePointer = (long*)nodePointer[1];
             WriteAddresses(valuePointer, 5);
-
-
-
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
-
-            Assert.Equal(0, ReferenceElementsFinalized);
         }
 
         public ref struct Stack<T> where T : allows ref struct
@@ -868,9 +851,10 @@ namespace Microsoft.OData.Tests.UriParser
             helper.WriteLine(string.Empty);
             WriteAddresses((long*)((long*)&list)[0], 5);
 
+            var size = (Unsafe.SizeOf<NewList<WithFinalizer>.Node>() + 8 + 8 + 8) / sizeof(long);
+
             for (int i = 0; i < 4; ++i)
             {
-                var size = (Unsafe.SizeOf<NewList<WithFinalizer>.Node>() + 8) / sizeof(long);
                 long* memoryPointer = stackalloc long[size];
                 var memorySpan = new Span<long>(memoryPointer, size);
                 var foo = new WithFinalizer() { First = i.ToString() };
@@ -885,12 +869,9 @@ namespace Microsoft.OData.Tests.UriParser
                 WriteAddresses(memoryPointer, 5);
                 WriteAddress((long)memoryPointer);
                 helper.WriteLine(string.Empty);
+                WriteAddress((long)(memoryPointer + 1));
+                helper.WriteLine(string.Empty);
             }
-
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
-
-            Assert.Equal(0, ReferenceElementsFinalized);
 
             Assert.Equal("asdf", list.Root.Value.First);
             var current = list.Root;
@@ -898,6 +879,47 @@ namespace Microsoft.OData.Tests.UriParser
             {
                 Assert.Equal(i.ToString(), current.Value.First);
             }
+
+            var node = list.Root.next is NewList<WithFinalizer>.Node;
+
+            var nodeType = list.Root.next.GetType();
+
+            var equal = nodeType == typeof(NewList<WithFinalizer>.Node);
+
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+
+            Assert.Equal(0, ReferenceElementsFinalized);
+
+            list.Append(new WithFinalizer() { First = "qwer" }, stackalloc long[size]);
+        }
+
+        [Fact]
+        public unsafe void NewListMemoryPlayground()
+        {
+            WriteAddress(typeof(WithFinalizer).TypeHandle.Value);
+            helper.WriteLine(string.Empty);
+
+            var foo = new WithFinalizer() { First = "asdf" };
+
+            WriteAddress((long)&foo);
+            helper.WriteLine(string.Empty);
+            var fooDataPointer = (long*)((long*)&foo)[0];
+            WriteAddresses(fooDataPointer, 5);
+            WriteAddresses(fooDataPointer - 1, 5);
+
+            var bar = new WithoutFinalizer() { First = "asdf" };
+
+            WriteAddress((long)&bar);
+            helper.WriteLine(string.Empty);
+            var barDataPointer = (long*)((long*)&bar)[0];
+            WriteAddresses(barDataPointer, 5);
+            WriteAddresses(barDataPointer - 1, 5);
+        }
+
+        public class WithoutFinalizer
+        {
+            public string First { get; set; }
         }
 
         public struct Frub
@@ -916,7 +938,7 @@ namespace Microsoft.OData.Tests.UriParser
             {
                 public T Value;
 
-                private object? next;
+                internal object? next; //// TODO make this private
 
                 public bool TryGetNext(out Node next)
                 {
@@ -956,6 +978,15 @@ namespace Microsoft.OData.Tests.UriParser
             }
 
             public void Append(T value, Span<long> memory)
+            {
+                memory[0] = 0;
+
+                this.AppendImpl(value, memory.Slice(1));
+
+                memory[memory.Length - 1] = 0;
+            }
+
+            private void AppendImpl(T value, Span<long> memory)
             {
                 var valuePointer = (long*)((long*)&value)[0];
 
