@@ -1,6 +1,6 @@
 ﻿namespace NewStuff._Design._2_Clr
 {
-    public abstract class NullableProperty<T>
+    public abstract class NullableProperty<T> : Property<T>
     {
         private NullableProperty()
         {

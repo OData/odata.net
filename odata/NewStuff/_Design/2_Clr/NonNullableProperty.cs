@@ -1,6 +1,6 @@
 ﻿namespace NewStuff._Design._2_Clr
 {
-    public abstract class NonNullableProperty<T>
+    public abstract class NonNullableProperty<T> : Property<T>
     {
         private NonNullableProperty()
         {
