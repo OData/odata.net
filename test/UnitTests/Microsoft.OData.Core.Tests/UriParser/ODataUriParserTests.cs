@@ -880,6 +880,11 @@ namespace Microsoft.OData.Tests.UriParser
                 Assert.Equal(i.ToString(), current.Value.First);
             }
 
+            ////var casted = Unsafe.BitCast<object?, NewList<WithFinalizer>.Node>(list.Root.next);
+
+            ////var node = list.Root.next as NewList<WithFinalizer>.Node;
+            ////var node = (NewList<WithFinalizer>.Node)list.Root.next;
+
             var node = list.Root.next is NewList<WithFinalizer>.Node;
 
             var nodeType = list.Root.next.GetType();
