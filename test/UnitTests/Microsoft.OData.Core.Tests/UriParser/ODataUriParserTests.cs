@@ -87,7 +87,7 @@ namespace Microsoft.OData.Tests.UriParser
             helper.WriteLine(Convert.ToHexString(BitConverter.GetBytes(pointer[2])));
             helper.WriteLine(Convert.ToHexString(BitConverter.GetBytes(pointer[3])));
             helper.WriteLine(string.Empty);
-            
+
             void* stringPointer = (void*)pointer1;
 
             long* anotherPointer = (long*)stringPointer;
@@ -573,7 +573,7 @@ namespace Microsoft.OData.Tests.UriParser
         public ref struct Node<T> where T : allows ref struct
         {
             public T Value;
-            
+
             public Pointer2<Node<T>> Previous;
         }
 
@@ -835,9 +835,12 @@ namespace Microsoft.OData.Tests.UriParser
         [Fact]
         public unsafe void NewListTest()
         {
+            var info1 = GC.GetGCMemoryInfo();
+
             GC.Collect();
             GC.WaitForPendingFinalizers();
 
+            var info2 = GC.GetGCMemoryInfo();
             ReferenceElementsFinalized = 0;
 
             var list = new NewList<WithFinalizer>(new WithFinalizer() { First = "asdf" });
@@ -851,12 +854,16 @@ namespace Microsoft.OData.Tests.UriParser
             helper.WriteLine(string.Empty);
             WriteAddresses((long*)((long*)&list)[0], 5);
 
-            var size = (Unsafe.SizeOf<NewList<WithFinalizer>.Node>() + 8 + 8 + 8) / sizeof(long);
+            var size = (Unsafe.SizeOf<NewList<WithFinalizer>.Node>() + 8) / sizeof(long);
 
             for (int i = 0; i < 4; ++i)
             {
-                long* memoryPointer = stackalloc long[size];
-                var memorySpan = new Span<long>(memoryPointer, size);
+                ////long* memoryPointer = stackalloc long[size];
+                ////var memorySpan = new Span<long>(memoryPointer, size);
+
+                var memoryArray = GC.AllocateArray<long>(size);
+                var memorySpan = new Span<long>(memoryArray);
+                
                 var foo = new WithFinalizer() { First = i.ToString() };
 
                 list.Append(foo, memorySpan);
@@ -866,10 +873,10 @@ namespace Microsoft.OData.Tests.UriParser
                 WriteAddresses((long*)&list, 5);
                 WriteAddress((long)&foo);
                 helper.WriteLine(string.Empty);
-                WriteAddresses(memoryPointer, 5);
-                WriteAddress((long)memoryPointer);
+                ////WriteAddresses(memoryPointer, 5);
+                ////WriteAddress((long)memoryPointer);
                 helper.WriteLine(string.Empty);
-                WriteAddress((long)(memoryPointer + 1));
+                ////WriteAddress((long)(memoryPointer + 1));
                 helper.WriteLine(string.Empty);
             }
 
@@ -895,6 +902,14 @@ namespace Microsoft.OData.Tests.UriParser
             GC.WaitForPendingFinalizers();
 
             Assert.Equal(0, ReferenceElementsFinalized);
+
+            /*var info3 = GC.GetGCMemoryInfo();
+
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+
+            var info4 = GC.GetGCMemoryInfo();
+            Assert.Equal(0, ReferenceElementsFinalized);*/
 
             list.Append(new WithFinalizer() { First = "qwer" }, stackalloc long[size]);
         }
@@ -984,11 +999,9 @@ namespace Microsoft.OData.Tests.UriParser
 
             public void Append(T value, Span<long> memory)
             {
-                memory[0] = 0;
+                ////memory[0] = 0;
 
-                this.AppendImpl(value, memory.Slice(1));
-
-                memory[memory.Length - 1] = 0;
+                this.AppendImpl(value, memory.Slice(0));
             }
 
             private void AppendImpl(T value, Span<long> memory)
@@ -1112,7 +1125,7 @@ namespace Microsoft.OData.Tests.UriParser
                 using (var xmlReader = XmlReader.Create(stream))
                 {
                     Assert.True(
-                        CsdlReader.TryParse(xmlReader, out model, out var errors), 
+                        CsdlReader.TryParse(xmlReader, out model, out var errors),
                         string.Join(Environment.NewLine, errors.Select(error => error.ErrorMessage)));
                 }
             }
@@ -1133,8 +1146,8 @@ namespace Microsoft.OData.Tests.UriParser
         public void AverageUint16()
         {
             var uriParser = new ODataUriParser(
-                HardCodedTestModel.TestModel, 
-                ServiceRoot, 
+                HardCodedTestModel.TestModel,
+                ServiceRoot,
                 new Uri("http://host/People?$apply=aggregate(FavoriteNumber with average as AverageFavoriteNumber)"));
 
             var odataUri = uriParser.ParseUri();
@@ -1157,7 +1170,7 @@ namespace Microsoft.OData.Tests.UriParser
         {
             var uriParser = new ODataUriParser(
                 HardCodedTestModel.TestModel,
-                ServiceRoot, 
+                ServiceRoot,
                 new Uri("http://host/People?$apply=aggregate(SecondFavoriteNumber with average as AverageFavoriteNumber)"));
 
             var odataUri = uriParser.ParseUri();
@@ -1258,7 +1271,7 @@ namespace Microsoft.OData.Tests.UriParser
             var path = uriParser.ParsePath();
             Assert.Single(path);
             path.LastSegment.ShouldBeEntitySetSegment(HardCodedTestModel.GetPeopleSet());
-            Action action  = () => uriParser.ParseFilter();
+            Action action = () => uriParser.ParseFilter();
             action.Throws<ODataException>(
                 Error.Format(SRResources.MetadataBinder_PropertyNotDeclared, "Fully.Qualified.Namespace.Person", "@my.annotation"));
         }
@@ -2232,7 +2245,7 @@ namespace Microsoft.OData.Tests.UriParser
             subCompute.Expression.ShouldBeSingleValueFunctionCallQueryNode();
             Assert.True(subCompute.Expression.TypeReference.IsEquivalentTo(typeReference));
         }
-#endregion
+        #endregion
 
         private sealed class RefModelUriResolver : ODataUriResolver
         {
@@ -2261,7 +2274,7 @@ namespace Microsoft.OData.Tests.UriParser
             Assert.Equal(fullUriString, Uri.UnescapeDataString(resultUri.OriginalString));
         }
 
-#region Escape Function Parse
+        #region Escape Function Parse
         [Theory]
         [InlineData("/root:/", "/root/NS.NormalFunction(path='')")]
         [InlineData("/root:/abc", "/root/NS.NormalFunction(path='abc')")]
@@ -2430,7 +2443,7 @@ namespace Microsoft.OData.Tests.UriParser
             Assert.True(functionPath.Equals(escapePath));
             Assert.Equal(functionPath.FirstOrDefault(s => s is KeySegment).Identifier, escapePath.FirstOrDefault(s => s is KeySegment).Identifier);
             OperationSegment segment = escapePath.First(c => c is OperationSegment) as OperationSegment;
-            Assert.Equal(isComposable ? "NS.ComposableFunction": "NS.NormalFunction", segment.Operations.First().FullName());
+            Assert.Equal(isComposable ? "NS.ComposableFunction" : "NS.NormalFunction", segment.Operations.First().FullName());
 
             if (isComposable)
             {
@@ -2459,7 +2472,7 @@ namespace Microsoft.OData.Tests.UriParser
             // Assert
             Assert.True(functionPath.Equals(escapePath));
             Assert.IsType<KeySegment>(escapePath.ElementAt(1));
-            PropertySegment proSegment = Assert.IsType<PropertySegment>(escapePath.Last());       
+            PropertySegment proSegment = Assert.IsType<PropertySegment>(escapePath.Last());
             Assert.Equal("Name", proSegment.Property.Name);
         }
 
@@ -2790,7 +2803,7 @@ namespace Microsoft.OData.Tests.UriParser
 
             IEdmBooleanConstantExpression booleanConstant = new EdmBooleanConstant(true);
             IEdmTerm term = CommunityVocabularyModel.UrlEscapeFunctionTerm;
-            foreach(var function in new[] { orderFunction, singleNonComposableFunction, singleComposableFunction, multipleFunction })
+            foreach (var function in new[] { orderFunction, singleNonComposableFunction, singleComposableFunction, multipleFunction })
             {
                 EdmVocabularyAnnotation annotation = new EdmVocabularyAnnotation(function, term, booleanConstant);
                 annotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
@@ -2799,6 +2812,6 @@ namespace Microsoft.OData.Tests.UriParser
 
             return model;
         }
-#endregion
+        #endregion
     }
 }
