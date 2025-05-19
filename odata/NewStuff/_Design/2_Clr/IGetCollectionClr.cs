@@ -7,12 +7,12 @@
     {
         CollectionResponse<TEntity> Evaluate();
 
-        ICollectionClr<TEntity> Filter(Expression<Func<TEntity, bool>> predicate); //// TODO how to prevent the use of control information in the predicate?
+        IGetCollectionClr<TEntity> Filter(Expression<Func<TEntity, bool>> predicate); //// TODO how to prevent the use of control information in the predicate?
 
-        ICollectionClr<TEntity> Select<TProperty>(Expression<Func<TEntity, Property<TProperty>>> selector);
+        IGetCollectionClr<TEntity> Select<TProperty>(Expression<Func<TEntity, Property<TProperty>>> selector);
 
-        ICollectionClr<TEntity> Expand<TProperty>(Expression<Func<TEntity, Property<TProperty>>> expander); //// TODO what about a nested filter?
+        IGetCollectionClr<TEntity> Expand<TProperty>(Expression<Func<TEntity, Property<TProperty>>> expander); //// TODO what about a nested filter?
 
-        ICollectionClr<TEntity> Skip(int count);
+        IGetCollectionClr<TEntity> Skip(int count);
     }
 }
