@@ -3,5 +3,7 @@
     public interface ICollectionClr<T>
     {
         IGetCollectionClr<T> Get();
+
+        IPostCollectionClr<T> Post(int todo);
     }
 }
