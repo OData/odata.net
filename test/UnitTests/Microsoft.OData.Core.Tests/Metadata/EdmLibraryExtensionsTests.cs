@@ -11,8 +11,8 @@ using System.Linq;
 using Microsoft.OData.Metadata;
 using Microsoft.OData.Tests.Evaluation;
 using Microsoft.OData.Edm;
-using Microsoft.Spatial;
 using Xunit;
+using Microsoft.OData.Spatial;
 
 namespace Microsoft.OData.Tests.Metadata
 {
@@ -727,7 +727,6 @@ namespace Microsoft.OData.Tests.Metadata
         [InlineData(typeof(DateOnly?))]
         [InlineData(typeof(TimeOnly))]
         [InlineData(typeof(TimeOnly?))]
-        [InlineData(typeof(Geography))]
         [InlineData(typeof(Geometry))]
         public void IsPrimitiveTypeForSupportedTypesShouldBeTrue(Type type)
         {

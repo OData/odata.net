@@ -8,10 +8,11 @@ using System;
 using System.Diagnostics;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Vocabularies;
-using Microsoft.Spatial;
 using Microsoft.OData.Core;
+using Microsoft.OData.Spatial;
+
 #if ODATA_CLIENT
-    using Microsoft.OData;
+using Microsoft.OData;
 #endif
 
 #if ODATA_CLIENT
@@ -318,7 +319,7 @@ namespace Microsoft.OData.Evaluation
                 return new EdmDurationConstant(timeType, (TimeSpan)primitiveValue);
             }
 
-            if (primitiveValue is ISpatial)
+            if (primitiveValue is Geometry || primitiveValue is Geography)
             {
                 // TODO: [Json] Add support for spatial values in ODataEdmStructuredValue
                 throw new NotImplementedException();

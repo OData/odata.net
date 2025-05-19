@@ -18,7 +18,7 @@ using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Vocabularies;
 using Microsoft.OData.Edm.Vocabularies.V1;
 using Microsoft.OData.Json;
-using Microsoft.Spatial;
+using Microsoft.OData.Spatial;
 using Xunit;
 
 namespace Microsoft.OData.Tests.Json
@@ -101,7 +101,11 @@ namespace Microsoft.OData.Tests.Json
             this.entityType = edmEntityType;
             this.declaredProperty = new ODataProperty { Name = "DeclaredProperty", Value = Guid.Empty };
             this.undeclaredProperty = new ODataProperty { Name = "UndeclaredProperty", Value = DateTimeOffset.MinValue };
-            this.declaredGeometryProperty = new ODataProperty { Name = "DeclaredGeometryProperty", Value = GeometryPoint.Create(0.0, 0.0) };
+            this.declaredGeometryProperty = new ODataProperty
+            {
+                Name = "DeclaredGeometryProperty",
+                Value = GeometryFactory.Default.CreatePoint(0.0, 0.0)
+            };
             this.declaredPropertyTimeOfDay = new ODataProperty { Name = "TimeOfDayProperty", Value = new TimeOfDay(1, 30, 5, 123) };
             this.declaredPropertyDate = new ODataProperty { Name = "DateProperty", Value = new Date(2014, 9, 17) };
 

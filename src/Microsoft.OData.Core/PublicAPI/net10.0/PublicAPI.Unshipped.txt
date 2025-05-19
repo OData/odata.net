@@ -1,3 +1,7 @@
+Microsoft.OData.IPrimitiveTypeConverter
+Microsoft.OData.IPrimitiveTypeConverter.WriteJson(object instance, Microsoft.OData.Json.IJsonWriter jsonWriter) -> void
+Microsoft.OData.IPrimitiveTypeConverter.WriteJsonAsync(object instance, Microsoft.OData.Json.IJsonWriter jsonWriter) -> System.Threading.Tasks.Task
+Microsoft.OData.ISpatialPrimitiveTypeConverter
 Microsoft.OData.UriParser.CollectionOpenPropertyAccessNode.CollectionOpenPropertyAccessNode(Microsoft.OData.UriParser.SingleValueNode source, string openPropertyName, Microsoft.OData.Edm.IEdmCollectionTypeReference collectionType) -> void
 Microsoft.OData.UriParser.SingleValueOpenPropertyAccessNode.SingleValueOpenPropertyAccessNode(Microsoft.OData.UriParser.SingleValueNode source, string openPropertyName, Microsoft.OData.Edm.IEdmTypeReference typeReference) -> void
 Microsoft.Extensions.DependencyInjection.ODataServiceCollectionExtensions

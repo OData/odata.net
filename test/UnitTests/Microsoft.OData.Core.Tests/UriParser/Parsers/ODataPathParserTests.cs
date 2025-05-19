@@ -9,9 +9,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OData.Core;
 using Microsoft.OData.Edm;
+using Microsoft.OData.Spatial;
 using Microsoft.OData.Tests.ScenarioTests.UriBuilder;
 using Microsoft.OData.UriParser;
-using Microsoft.Spatial;
 using Xunit;
 
 namespace Microsoft.OData.Tests.UriParser.Parsers
@@ -774,7 +774,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         [Fact]
         public void ParseCountAfterNonComposableFunctionShouldFail()
         {
-            var point = GeographyPoint.Create(1, 2);
+            var point = GeographyFactory.Default.CreatePoint(1, 2);
             Action parsePath = () => this.testSubject.ParsePath(new[] { "People(1)", "Fully.Qualified.Namespace.GetNearbyPriorAddresses(currentLocation=geography'" + SpatialHelpers.WriteSpatial(point) + "',limit=null)", "$count" });
             parsePath.Throws<ODataException>(Error.Format(SRResources.RequestUriProcessor_MustBeLeafSegment, "Fully.Qualified.Namespace.GetNearbyPriorAddresses"));
         }

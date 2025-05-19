@@ -12,6 +12,8 @@ using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Vocabularies;
 using Microsoft.OData.Core;
 using Xunit;
+using Microsoft.OData.Spatial;
+using NtsGeometry = NetTopologySuite.Geometries.Geometry;
 
 namespace Microsoft.OData.Tests.UriParser
 {

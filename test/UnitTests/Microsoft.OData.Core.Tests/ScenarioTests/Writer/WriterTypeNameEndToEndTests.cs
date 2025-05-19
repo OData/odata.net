@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Microsoft.OData.Edm;
+using Microsoft.OData.Spatial;
 using Xunit;
 
 namespace Microsoft.OData.Tests.ScenarioTests.Writer
@@ -73,7 +74,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer
                 new ODataProperty
                 {
                     // Note: value is more derived than the declared type.
-                    Name = "DerivedPrimitive", Value = Microsoft.Spatial.GeographyPoint.Create(42, 45)
+                    Name = "DerivedPrimitive", Value = GeographyFactory.Default.CreatePoint(42, 45)
                 },
                 new ODataProperty()
                 {

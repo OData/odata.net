@@ -10,10 +10,22 @@ namespace Microsoft.OData.Json
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using Microsoft.Spatial;
-    using Microsoft.OData.Edm;
-    using Microsoft.OData.Core;
+    using System.Diagnostics.Contracts;
+    using System.Text;
+    using System.Text.Json.Nodes;
     using System.Threading.Tasks;
+    using Microsoft.OData.Core;
+    using Microsoft.OData.Edm;
+    using Microsoft.OData.Spatial;
+    using NetTopologySuite.IO;
+    using NtsGeometry = NetTopologySuite.Geometries.Geometry;
+    using NtsGeometryCollection = NetTopologySuite.Geometries.GeometryCollection;
+    using NtsLineString = NetTopologySuite.Geometries.LineString;
+    using NtsMultiLineString = NetTopologySuite.Geometries.MultiLineString;
+    using NtsMultiPoint = NetTopologySuite.Geometries.MultiPoint;
+    using NtsMultiPolygon = NetTopologySuite.Geometries.MultiPolygon;
+    using NtsPoint = NetTopologySuite.Geometries.Point;
+    using NtsPolygon = NetTopologySuite.Geometries.Polygon;
 
     #endregion Namespaces
 
@@ -34,7 +46,7 @@ namespace Microsoft.OData.Json
         /// <param name="recursionDepth">The recursion depth to start with.</param>
         /// <param name="propertyName">The name of the property whose value is being read, if applicable (used for error reporting).</param>
         /// <returns>An instance of the spatial type.</returns>
-        internal static ISpatial ReadSpatialValue(
+        internal static object ReadSpatialValue(
             IJsonReader jsonReader,
             bool insideJsonObjectValue,
             ODataInputContext inputContext,
@@ -55,20 +67,12 @@ namespace Microsoft.OData.Json
                 return null;
             }
 
-            ISpatial spatialValue = null;
+            object spatialValue = null;
             if (insideJsonObjectValue || jsonReader.NodeType == JsonNodeType.StartObject)
             {
                 IDictionary<string, object> jsonObject = ReadObjectValue(jsonReader, insideJsonObjectValue, inputContext, recursionDepth);
-                GeoJsonObjectFormatter jsonObjectFormatter =
-                    SpatialImplementation.CurrentImplementation.CreateGeoJsonObjectFormatter();
-                if (expectedValueTypeReference.IsGeography())
-                {
-                    spatialValue = jsonObjectFormatter.Read<Geography>(jsonObject);
-                }
-                else
-                {
-                    spatialValue = jsonObjectFormatter.Read<Geometry>(jsonObject);
-                }
+
+                spatialValue = ParseSpatialValue(expectedValueTypeReference, propertyName, jsonObject);
             }
 
             if (spatialValue == null)
@@ -132,7 +136,7 @@ namespace Microsoft.OData.Json
         /// <param name="recursionDepth">The recursion depth to start with.</param>
         /// <param name="propertyName">The name of the property whose value is being read, if applicable (used for error reporting).</param>
         /// <returns>An instance of the spatial type.</returns>
-        internal static async Task<ISpatial> ReadSpatialValueAsync(
+        internal static async Task<object> ReadSpatialValueAsync(
             IJsonReader jsonReader,
             bool insideJsonObjectValue,
             ODataInputContext inputContext,
@@ -155,21 +159,13 @@ namespace Microsoft.OData.Json
                 return null;
             }
 
-            ISpatial spatialValue = null;
+            object spatialValue = null;
             if (insideJsonObjectValue || jsonReader.NodeType == JsonNodeType.StartObject)
             {
                 Dictionary<string, object> jsonObject = await ReadObjectValueAsync(jsonReader, insideJsonObjectValue, inputContext, recursionDepth)
                     .ConfigureAwait(false);
-                GeoJsonObjectFormatter jsonObjectFormatter =
-                    SpatialImplementation.CurrentImplementation.CreateGeoJsonObjectFormatter();
-                if (expectedValueTypeReference.IsGeography())
-                {
-                    spatialValue = jsonObjectFormatter.Read<Geography>(jsonObject);
-                }
-                else
-                {
-                    spatialValue = jsonObjectFormatter.Read<Geometry>(jsonObject);
-                }
+
+                spatialValue = ParseSpatialValue(expectedValueTypeReference, propertyName, jsonObject);
             }
 
             if (spatialValue == null)
@@ -178,7 +174,7 @@ namespace Microsoft.OData.Json
             }
 
             return spatialValue;
-        }
+        }        
 
         /// <summary>
         /// Asynchronously tries to read a null value from the JSON reader.
@@ -441,6 +437,57 @@ namespace Microsoft.OData.Json
                 .ConfigureAwait(false);
 
             return items;
+        }
+
+        private static object ParseSpatialValue(
+            IEdmPrimitiveTypeReference expectedValueTypeReference,
+            string propertyName,
+            IDictionary<string, object> spatialDict)
+        {
+            Contract.Assert(expectedValueTypeReference.IsGeography() || expectedValueTypeReference.IsGeometry());
+
+            NtsGeometry ntsGeometry = GeoJsonSpatialObjectFormatter.ParseGeometry(propertyName, spatialDict);
+
+            if (ntsGeometry == null)
+            {
+                Debug.Assert(false, "Parsed geometry is null.");
+                return null;
+            }
+
+            // Map NTS type to OData spatial type
+            return expectedValueTypeReference.IsGeography()
+                ? CreateGeography(ntsGeometry)
+                : CreateGeometry(ntsGeometry);
+        }
+
+        private static object CreateGeography(NtsGeometry ntsGeometry)
+        {
+            return ntsGeometry switch
+            {
+                NtsPoint point => new GeographyPoint(point),
+                NtsLineString lineString => new GeographyLineString(lineString),
+                NtsPolygon polygon => new GeographyPolygon(polygon),
+                NtsMultiPoint multiPoint => new GeographyMultiPoint(multiPoint),
+                NtsMultiLineString multiLineString => new GeographyMultiLineString(multiLineString),
+                NtsMultiPolygon multiPolygon => new GeographyMultiPolygon(multiPolygon),
+                NtsGeometryCollection geometryCollection => new GeographyCollection(geometryCollection),
+                _ => throw new ODataException(SRResources.ODataJsonReaderCoreUtils_CannotReadSpatialPropertyValue)
+            };
+        }
+
+        private static object CreateGeometry(NtsGeometry ntsGeometry)
+        {
+            return ntsGeometry switch
+            {
+                NtsPoint point => new GeometryPoint(point),
+                NtsLineString lineString => new GeometryLineString(lineString),
+                NtsPolygon polygon => new GeometryPolygon(polygon),
+                NtsMultiPoint multiPoint => new GeometryMultiPoint(multiPoint),
+                NtsMultiLineString multiLineString => new GeometryMultiLineString(multiLineString),
+                NtsMultiPolygon multiPolygon => new GeometryMultiPolygon(multiPolygon),
+                NtsGeometryCollection geometryCollection => new GeometryCollection(geometryCollection),
+                _ => throw new ODataException(SRResources.ODataJsonReaderCoreUtils_CannotReadSpatialPropertyValue)
+            };
         }
     }
 }

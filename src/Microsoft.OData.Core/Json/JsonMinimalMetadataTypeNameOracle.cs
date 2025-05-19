@@ -156,6 +156,7 @@ namespace Microsoft.OData.Json
                 fullTypeNameFromValue = valueType.FullName;
 
                 // Write type name when the type in the payload is more derived than the type from metadata.
+                // TODO: This check does not check IsAssignableFrom to determine if the type is more derived.
                 if (modelType.TypeReference != null && modelType.FullName != fullTypeNameFromValue)
                 {
                     return fullTypeNameFromValue;

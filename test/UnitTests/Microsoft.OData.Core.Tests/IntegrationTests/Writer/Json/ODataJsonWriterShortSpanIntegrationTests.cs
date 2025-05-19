@@ -10,9 +10,10 @@ using System.IO;
 using System.Text;
 using Microsoft.OData.Json;
 using Microsoft.OData.Edm;
-using Microsoft.Spatial;
 using Xunit;
 using Microsoft.OData.Core;
+using Microsoft.OData.Spatial;
+using NtsPoint = NetTopologySuite.Geometries.Point;
 
 namespace Microsoft.OData.Tests.IntegrationTests.Writer.Json
 {
@@ -1151,7 +1152,8 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.Json
         [Fact]
         public void WritePrimitivePropertyWithGeographyWithUserModel()
         {
-            var property = new ODataProperty { Name = "GeographyProperty", Value = new ODataPrimitiveValue(GeographyFactory.MultiPoint().Point(1.5, 1.0).Point(2.5, 2.0).Build()) };
+            var geographyMultiPoint = GeographyFactory.Default.CreateMultiPoint([new NtsPoint(1.0, 1.5), new NtsPoint(2.0, 2.5)]);
+            var property = new ODataProperty { Name = "GeographyProperty", Value = new ODataPrimitiveValue(geographyMultiPoint) };
             var entry = new ODataResource { TypeName = "NS.MyDerivedEntityType", Properties = new[] { property } };
             const string expectedPayload = "{\"@odata.context\":\"http://odata.org/test/$metadata#MySet/$entity\","
                 + "\"@odata.type\":\"#NS.MyDerivedEntityType\","
@@ -1163,7 +1165,8 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.Json
         [Fact]
         public void WritePrimitivePropertyWithGeometryWithUserModel()
         {
-            var property = new ODataProperty { Name = "GeometryProperty", Value = new ODataPrimitiveValue(GeometryFactory.Collection().Point(-19.99, -12.0).Build()) };
+            var geometryCollection = GeometryFactory.Default.CreateGeometryCollection([new NtsPoint(-19.99, -12.0)]);
+            var property = new ODataProperty { Name = "GeometryProperty", Value = new ODataPrimitiveValue(geometryCollection) };
             var entry = new ODataResource { TypeName = "NS.MyDerivedEntityType", Properties = new[] { property } };
             const string expectedPayload = "{\"@odata.context\":\"http://odata.org/test/$metadata#MySet/$entity\","
                 + "\"@odata.type\":\"#NS.MyDerivedEntityType\","
