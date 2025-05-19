@@ -3,7 +3,7 @@
     using System;
     using System.Linq.Expressions;
 
-    public interface ICollectionClr<TEntity>
+    public interface IGetCollectionClr<TEntity>
     {
         CollectionResponse<TEntity> Evaluate();
 

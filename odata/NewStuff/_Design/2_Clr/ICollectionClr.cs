@@ -2,7 +2,7 @@
 {
     public interface ICollectionClr<T>
     {
-        ICollectionClr<T> Get();
+        IGetCollectionClr<T> Get();
 
         IPostCollectionClr<T> Post(T entity); //// TODO what about deep insert and deep update?
     }
