@@ -1,6 +1,6 @@
 ﻿namespace NewStuff._Design._2_Clr
 {
-    public class ResponseEntity<TEntity>
+    public class SingleValuedResponse<TEntity>
     {
         public TEntity Value { get; }
 
