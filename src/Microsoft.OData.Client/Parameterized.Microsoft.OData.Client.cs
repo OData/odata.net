@@ -646,17 +646,6 @@ namespace Microsoft.OData.Client {
         }
 
         /// <summary>
-        /// A string like "The HttpMethod must be GET, POST or DELETE."
-        /// </summary>
-        internal static string Context_ExecuteExpectsGetOrPostOrDelete
-        {
-            get
-            {
-                return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.Context_ExecuteExpectsGetOrPostOrDelete);
-            }
-        }
-
-        /// <summary>
         /// A string like "EndExecute overload for void service operations and actions received a non-void response from the server."
         /// </summary>
         internal static string Context_EndExecuteExpectedVoidResponse
