@@ -7,6 +7,7 @@
 using System.Xml;
 using System.Xml.Linq;
 using Microsoft.OData.Edm.Csdl;
+using Microsoft.OData.Edm.E2E.Tests.Common;
 using Microsoft.OData.Edm.Validation;
 
 namespace Microsoft.OData.Edm.E2E.Tests.FunctionalTests;

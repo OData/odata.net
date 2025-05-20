@@ -6,6 +6,7 @@
 
 using System.Xml.Linq;
 using Microsoft.OData.Edm.Csdl;
+using Microsoft.OData.Edm.E2E.Tests.Common;
 using Microsoft.OData.Edm.Validation;
 using Microsoft.OData.Edm.Vocabularies;
 
@@ -22,7 +23,7 @@ public class ExpressionEvaluationTests : EdmLibTestCaseBase
     IEdmStructuredValue professionalValue;
 
     [Fact]
-    public void Term_Constant_OnBaseEntityTypes()
+    public void EvaluateConstantTermOnBaseEntityTypes_ReturnsExpectedValues()
     {
         this.SetupModelsAndValues();
 
@@ -52,7 +53,7 @@ public class ExpressionEvaluationTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void Term_Constant_OnBaseEntityTypesWithMultipleVocabularyAnnotation()
+    public void EvaluateConstantTermWithMultipleVocabularyAnnotationsOnBaseEntityTypes_ReturnsExpectedValues()
     {
         this.SetupModelsAndValues();
 
@@ -82,7 +83,7 @@ public class ExpressionEvaluationTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void Term_Constant_OnDerivedEntityType()
+    public void EvaluateConstantTermOnDerivedEntityType_ReturnsExpectedValues()
     {
         this.SetupModelsAndValues();
 
@@ -110,7 +111,7 @@ public class ExpressionEvaluationTests : EdmLibTestCaseBase
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void Term_Constant_BinaryWithOddDigits(EdmVersion edmVersion)
+    public void EvaluateBinaryConstantTermWithOddDigits_ReturnsEmptyAndValidationErrors(EdmVersion edmVersion)
     {
         this.SetupModelsAndValues();
 
@@ -120,6 +121,7 @@ public class ExpressionEvaluationTests : EdmLibTestCaseBase
         <Annotation Term=""bar.BinaryValue"" Binary=""123"" />
     </Annotations>
 </Schema>";
+
         IEdmModel applicationModel = this.Parse(applicationCsdl, this.baseModel, this.vocabularyDefinitionModel);
         EdmExpressionEvaluator expressionEvaluator = new EdmExpressionEvaluator(this.operationsLookup);
 
@@ -133,20 +135,18 @@ public class ExpressionEvaluationTests : EdmLibTestCaseBase
 
         Assert.True(((IEdmBinaryConstantExpression)annotationValue).IsBad());
 
-        var expectedErrors = new EdmLibTestErrors()
-        {
-            { null, null, EdmErrorCode.InvalidBinary },
-        };
-
         var ruleset = ValidationRuleSet.GetEdmModelRuleSet(toProductVersionlookup[edmVersion]);
         var validationResult = applicationModel.Validate(ruleset, out IEnumerable<EdmError> actualErrors);
-        Assert.True(validationResult);
-        Assert.Empty(actualErrors);
+        Assert.False(validationResult);
+        Assert.Single(actualErrors);
+
+        Assert.Equal(EdmErrorCode.InvalidBinary, actualErrors.First().ErrorCode);
+        Assert.Equal("The value '123' is not a valid binary value. The value must be a hexadecimal string and must not be prefixed by '0x'.", actualErrors.First().ErrorMessage);
     }
 
     // [EdmLib] missing constants for spatial
     [Fact]
-    public void Term_Constant_AllTypes_OnEntityType()
+    public void EvaluateAllSupportedConstantTypesOnEntityType_ReturnsExpectedValues()
     {
         this.SetupModelsAndValues();
 
@@ -249,7 +249,7 @@ public class ExpressionEvaluationTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void Term_Path_OnEntityType()
+    public void EvaluatePathBasedTermOnEntityType_ReturnsExpectedValues()
     {
         this.SetupModelsAndValues();
 
@@ -278,7 +278,7 @@ public class ExpressionEvaluationTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void Term_Constant_OnProperty()
+    public void EvaluateConstantTermOnProperty_ReturnsExpectedValues()
     {
         this.SetupModelsAndValues();
 
@@ -331,7 +331,7 @@ public class ExpressionEvaluationTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void Term_Path_OnProperty()
+    public void EvaluatePathBasedTermOnProperty_ReturnsExpectedValues()
     {
         this.SetupModelsAndValues();
 
@@ -357,7 +357,7 @@ public class ExpressionEvaluationTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void Term_FunctionApplication_OnNavigationProperty()
+    public void EvaluateFunctionApplicationTermOnNavigationProperty_ReturnsExpectedValues()
     {
         this.SetupModelsAndValues();
 
@@ -389,7 +389,7 @@ public class ExpressionEvaluationTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void Term_TypeTerm_If_OnEntityContainer()
+    public void EvaluateConditionalTypeTermOnEntityContainer_ReturnsExpectedValues()
     {
         this.SetupModelsAndValues();
 
@@ -418,7 +418,7 @@ public class ExpressionEvaluationTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void Term_FunctionApplication_WithOverloads_OnEntitySet()
+    public void EvaluateFunctionApplicationWithOverloadsOnEntitySet_ReturnsExpectedValues()
     {
         this.SetupModelsAndValues();
 
@@ -451,7 +451,7 @@ public class ExpressionEvaluationTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void Term_ComplexValue_OnEntityType()
+    public void EvaluateComplexValueTermOnEntityType_ReturnsExpectedStructuredValue()
     {
         this.SetupModelsAndValues();
 
@@ -483,7 +483,7 @@ public class ExpressionEvaluationTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void Term_EntityValue_OnEntityType()
+    public void EvaluateEntityValueTermOnEntityType_ReturnsExpectedStructuredValue()
     {
         this.SetupModelsAndValues();
 
@@ -517,7 +517,7 @@ public class ExpressionEvaluationTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void SingleModel_Annotation_OnEntityType()
+    public void EvaluateSingleModelAnnotationOnEntityType_ReturnsExpectedAnnotationValue()
     {
         const string applicationCsdl =
 @"<Schema Namespace=""bar"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -554,7 +554,7 @@ public class ExpressionEvaluationTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void EvaluateUnboundTerms()
+    public void EvaluateUnboundTerms_ReturnsExpectedValues()
     {
         const string applicationCsdl =
 @"<Schema Namespace=""bar"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">

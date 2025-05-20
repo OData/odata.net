@@ -7,6 +7,7 @@
 using System.Xml;
 using System.Xml.Linq;
 using Microsoft.OData.Edm.Csdl;
+using Microsoft.OData.Edm.E2E.Tests.Common;
 using Microsoft.OData.Edm.Validation;
 using Microsoft.OData.Edm.Vocabularies;
 
@@ -173,7 +174,7 @@ public class EvaluationTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void EvaluateSimpleExpressions()
+    public void ShouldEvaluateSimpleIntegerAnnotationExpression()
     {
         const string annotatingModelCsdl =
 @"<Schema Namespace=""foo"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -201,7 +202,7 @@ public class EvaluationTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void EvaluateExpressionsWithoutContext()
+    public void ShouldEvaluateConstantExpressionsWithoutContext()
     {
         EdmExpressionEvaluator expressionEvaluator = new EdmExpressionEvaluator(this.builtInFunctions);
 
@@ -216,14 +217,14 @@ public class EvaluationTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void EvaluatePathUsesFindProperty()
+    public void ShouldThrowWhenEvaluatingPathOnThrowingValue()
     {
         EdmPathExpression path = new EdmPathExpression("Gronk");
         Assert.Throws<FindPropertyValue>(() => new EdmExpressionEvaluator(this.builtInFunctions).Evaluate(path, new ThrowingValue()));
     }
 
     [Fact]
-    public void EvaluatePathOverValueWithManyProperties()
+    public void ShouldEvaluatePathExpressionOverStructuredValueWithManyProperties()
     {
         List<IEdmPropertyValue> contextValues = new List<IEdmPropertyValue>();
         for (int i = 0; i < 10000; i++)
@@ -249,7 +250,7 @@ public class EvaluationTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void EvaluateExpressionsWithQualifiers()
+    public void ShouldEvaluateAnnotationsWithQualifiers()
     {
         const string annotatingModelCsdl =
 @"<Schema Namespace=""foo"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -281,7 +282,7 @@ public class EvaluationTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void EvaluateExpressionsRoundTripWithQualifiers()
+    public void ShouldRoundTripAnnotationsWithQualifiers()
     {
         var expectedCsdl = new List<XElement>()
             {
@@ -361,7 +362,7 @@ public class EvaluationTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void EvaluateExpressionsOnBaseType()
+    public void ShouldEvaluateAnnotationsOnBaseType()
     {
         const string annotatingModelCsdl =
 @"<Schema Namespace=""foo"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -413,7 +414,7 @@ public class EvaluationTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void EvaluateFunctionApplicationExpression()
+    public void ShouldEvaluateFunctionApplicationExpression()
     {
         const string annotatingModelCsdl =
 @"<Schema Namespace=""foo"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -467,7 +468,7 @@ public class EvaluationTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void EvaluateLastChanceFunctionApplicationExpression()
+    public void ShouldEvaluateFunctionApplicationWithCustomLastChanceEvaluator()
     {
         const string annotatingModelCsdl =
 @"<Schema Namespace=""foo"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -511,7 +512,7 @@ public class EvaluationTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void EvaluateIfExpressions()
+    public void ShouldEvaluateIfExpressionsWithConditionalLogic()
     {
         const string annotatingModelCsdl =
 @"<Schema Namespace=""foo"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -557,58 +558,58 @@ public class EvaluationTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void EvaluateIsTypeExpressions()
+    public void ShouldEvaluateIsOfExpressionsForVariousCases()
     {
         const string annotatingModelCsdl =
 @"<Schema Namespace=""foo"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
     <Annotations Target=""foo.Person"">
         <Annotation Term=""foo.Punning0"">
-            <IsType Type=""Int32"">
+            <IsOf Type=""Int32"">
                 <Path>Living</Path>
-            </IsType>
+            </IsOf>
         </Annotation>
         <Annotation Term=""foo.PunningBool1"">
-            <IsType Type=""Byte"">
+            <IsOf Type=""Byte"">
                 <Int>256</Int>
-            </IsType>
+            </IsOf>
         </Annotation>
         <Annotation Term=""foo.PunningBool2"">
-            <IsType Type=""SByte"">
+            <IsOf Type=""SByte"">
                 <Int>-129</Int>
-            </IsType>
+            </IsOf>
         </Annotation>
         <Annotation Term=""foo.PunningBool3"">
-            <IsType Type=""Int16"">
+            <IsOf Type=""Int16"">
                 <Int>32768</Int>
-            </IsType>
+            </IsOf>
         </Annotation>
         <Annotation Term=""foo.PunningBool4"">
-            <IsType Type=""Int32"">
+            <IsOf Type=""Int32"">
                 <Float>1.1</Float>
-            </IsType>
+            </IsOf>
         </Annotation>
         <Annotation Term=""foo.PunningBool5"">
-            <IsType Type=""Collection(Int32)"">
+            <IsOf Type=""Collection(Int32)"">
                 <Collection>
                     <Int>1</Int>
                     <String>2</String>
                     <Int>3</Int>
                     <Float>4.1</Float>
                 </Collection>
-            </IsType>
+            </IsOf>
         </Annotation>
         <Annotation Term=""foo.PunningBool6"">
-            <IsType Type=""String"" MaxLength=""5"">
+            <IsOf Type=""String"" MaxLength=""5"">
                 <String>123456</String>
-            </IsType>
+            </IsOf>
         </Annotation>
         <Annotation Term=""foo.PunningBool7"">
-            <IsType Type=""String"" Nullable=""False"">
+            <IsOf Type=""String"" Nullable=""False"">
                 <Null />
-            </IsType>
+            </IsOf>
         </Annotation>
         <Annotation Term=""foo.PunningBool8"">
-            <IsType Type=""foo.Cartoon"">
+            <IsOf Type=""foo.Cartoon"">
                 <Record>
                     <PropertyValue Property=""Lead"" String=""Gumby"" />
                     <PropertyValue Property=""Sidekick"" Int=""144"" />
@@ -618,10 +619,10 @@ public class EvaluationTests : EdmLibTestCaseBase
                         </Record>
                     </PropertyValue>
                 </Record>
-            </IsType>
+            </IsOf>
         </Annotation>
         <Annotation Term=""foo.PunningBool9"">
-            <IsType Type=""foo.Cartoon"">
+            <IsOf Type=""foo.Cartoon"">
                 <Record>
                     <PropertyValue Property=""Lead"" String=""Fred Flintstone"" />
                     <PropertyValue Property=""Sidekick"" String=""Barney Rubble"" />
@@ -631,10 +632,10 @@ public class EvaluationTests : EdmLibTestCaseBase
                         </Record>
                     </PropertyValue>
                 </Record>
-            </IsType>
+            </IsOf>
         </Annotation>
         <Annotation Term=""foo.PunningBool11"">
-            <IsType Type=""foo.Pet"">
+            <IsOf Type=""foo.Pet"">
                 <Record>
                     <PropertyValue Property=""Name"">
                         <Null />
@@ -648,45 +649,45 @@ public class EvaluationTests : EdmLibTestCaseBase
                         </Collection>
                     </PropertyValue>
                 </Record>
-            </IsType>
+            </IsOf>
         </Annotation>
         <Annotation Term=""foo.ClearBool0"">
-            <IsType Type=""foo.Address"">
+            <IsOf Type=""foo.Address"">
                 <Path>Address</Path>
-            </IsType>
+            </IsOf>
         </Annotation>
         <Annotation Term=""foo.ClearBool1"">
-            <IsType Type=""Byte"">
+            <IsOf Type=""Byte"">
                 <Int>255</Int>
-            </IsType>
+            </IsOf>
         </Annotation>
         <Annotation Term=""foo.ClearBool2"">
-            <IsType Type=""SByte"">
+            <IsOf Type=""SByte"">
                 <Int>-128</Int>
-            </IsType>
+            </IsOf>
         </Annotation>
         <Annotation Term=""foo.ClearBool3"">
-            <IsType Type=""Int16"">
+            <IsOf Type=""Int16"">
                 <Int>32767</Int>
-            </IsType>
+            </IsOf>
         </Annotation>
         <Annotation Term=""foo.ClearBool4"">
-            <IsType Type=""Int32"">
+            <IsOf Type=""Int32"">
                 <Int>32768</Int>
-            </IsType>
+            </IsOf>
         </Annotation>
         <Annotation Term=""foo.ClearBool6"">
-            <IsType Type=""String"" MaxLength=""5"">
+            <IsOf Type=""String"" MaxLength=""5"">
                 <String>12345</String>
-            </IsType>
+            </IsOf>
         </Annotation>
         <Annotation Term=""foo.ClearBool7"">
-            <IsType Type=""String"">
+            <IsOf Type=""String"">
                 <Null />
-            </IsType>
+            </IsOf>
         </Annotation>
         <Annotation Term=""foo.ClearBool8"">
-            <IsType Type=""foo.Cartoon"">
+            <IsOf Type=""foo.Cartoon"">
                 <Record>
                     <PropertyValue Property=""Lead"" String=""Rick Dastardly"" />
                     <PropertyValue Property=""Sidekick"" String=""Muttley"" />
@@ -697,10 +698,10 @@ public class EvaluationTests : EdmLibTestCaseBase
                         </Record>
                     </PropertyValue>
                 </Record>
-            </IsType>
+            </IsOf>
         </Annotation>
         <Annotation Term=""foo.ClearBool11"">
-            <IsType Type=""foo.Pet"">
+            <IsOf Type=""foo.Pet"">
                 <Record>
                     <PropertyValue Property=""Name"">
                         <String>foo</String>
@@ -714,7 +715,7 @@ public class EvaluationTests : EdmLibTestCaseBase
                         </Collection>
                     </PropertyValue>
                 </Record>
-            </IsType>
+            </IsOf>
         </Annotation>
     </Annotations>
 </Schema>";
@@ -750,48 +751,48 @@ public class EvaluationTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void EvaluateInvalidTermIsTypeExpressions()
+    public void ShouldThrowOnInvalidIsOfExpressions()
     {
         const string annotatingModelCsdl =
 @"<Schema Namespace=""foo"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
     <Annotations Target=""foo.Person"">
         <Annotation Term=""foo.Clear0"">
-            <IsType Type=""foo.Address"">
+            <IsOf Type=""foo.Address"">
                 <Path>Address</Path>
-            </IsType>
+            </IsOf>
         </Annotation>
         <Annotation Term=""foo.Clear1"">
-            <IsType Type=""Byte"">
+            <IsOf Type=""Byte"">
                 <Int>255</Int>
-            </IsType>
+            </IsOf>
         </Annotation>
         <Annotation Term=""foo.Clear2"">
-            <IsType Type=""SByte"">
+            <IsOf Type=""SByte"">
                 <Int>-128</Int>
-            </IsType>
+            </IsOf>
         </Annotation>
         <Annotation Term=""foo.Clear3"">
-            <IsType Type=""Int16"">
+            <IsOf Type=""Int16"">
                 <Int>32767</Int>
-            </IsType>
+            </IsOf>
         </Annotation>
         <Annotation Term=""foo.Clear4"">
-            <IsType Type=""Int32"">
+            <IsOf Type=""Int32"">
                 <Int>32768</Int>
-            </IsType>
+            </IsOf>
         </Annotation>
         <Annotation Term=""foo.Clear6"">
-            <IsType Type=""String"" MaxLength=""5"">
+            <IsOf Type=""String"" MaxLength=""5"">
                 <String>12345</String>
-            </IsType>
+            </IsOf>
         </Annotation>
         <Annotation Term=""foo.Clear7"">
-            <IsType Type=""String"">
+            <IsOf Type=""String"">
                 <Null />
-            </IsType>
+            </IsOf>
         </Annotation>
         <Annotation Term=""foo.Clear8"">
-            <IsType Type=""foo.Cartoon"">
+            <IsOf Type=""foo.Cartoon"">
                 <Record>
                     <PropertyValue Property=""Lead"" String=""Rick Dastardly"" />
                     <PropertyValue Property=""Sidekick"" String=""Muttley"" />
@@ -802,10 +803,10 @@ public class EvaluationTests : EdmLibTestCaseBase
                         </Record>
                     </PropertyValue>
                 </Record>
-            </IsType>
+            </IsOf>
         </Annotation>
         <Annotation Term=""foo.Clear11"">
-            <IsType Type=""foo.Pet"">
+            <IsOf Type=""foo.Pet"">
                 <Record>
                     <PropertyValue Property=""Name"">
                         <String>foo</String>
@@ -819,7 +820,7 @@ public class EvaluationTests : EdmLibTestCaseBase
                         </Collection>
                     </PropertyValue>
                 </Record>
-            </IsType>
+            </IsOf>
         </Annotation>
     </Annotations>
 </Schema>";
@@ -844,7 +845,7 @@ public class EvaluationTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void EvaluateCastExpressions()
+    public void ShouldEvaluateCastTermExpressionsForVariousCases()
     {
         const string annotatingModelCsdl =
 @"<Schema Namespace=""foo"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -1108,7 +1109,7 @@ public class EvaluationTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void EvaluateInvalidTermCastExpressions()
+    public void ShouldThrowOnInvalidCastTermExpressions()
     {
         const string annotatingModelCsdl =
 @"<Schema Namespace=""foo"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -1212,7 +1213,7 @@ public class EvaluationTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void EvaluateRecordExpressions()
+    public void ShouldEvaluateRecordExpressionsToStructuredValues()
     {
         const string annotatingModelCsdl =
 @"<Schema Namespace=""foo"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -1260,7 +1261,7 @@ public class EvaluationTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void EvaluateCollectionExpressions()
+    public void ShouldEvaluateCollectionExpressionsToCollectionValues()
     {
         const string annotatingModelCsdl =
 @"<Schema Namespace=""foo"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -1319,7 +1320,7 @@ public class EvaluationTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void EvaluateGraphConstruction()
+    public void ShouldConstructObjectGraphFromLabeledElements()
     {
         const string annotatingModelCsdl =
 @"<Schema Namespace=""foo"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -1453,7 +1454,7 @@ public class EvaluationTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void EvaluateGraphConstructionWithoutCollection()
+    public void ShouldConstructObjectGraphWithoutCollectionRoot()
     {
         const string annotatingModelCsdl =
 @"<Schema Namespace=""foo"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -1525,7 +1526,7 @@ public class EvaluationTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void EvaluateDuplicateAndUnboundLabelsGraphConstruction()
+    public void ShouldHandleDuplicateAndUnboundLabelsInGraphConstruction()
     {
         const string annotatingModelCsdl =
 @"<Schema Namespace=""foo"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -1663,7 +1664,7 @@ public class EvaluationTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void EvaluateUnboundPathExpressions()
+    public void ShouldThrowOnUnboundPathExpressions()
     {
         const string annotatingModelCsdl =
 @"<Schema Namespace=""foo"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -1700,7 +1701,7 @@ public class EvaluationTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void EvaluateExpressionsInvalidCasesTest()
+    public void ShouldHandleInvalidCasesInExpressionEvaluation()
     {
         Action<IEnumerable<IEdmPropertyValue>, IEnumerable<IEdmPropertyValue>> compareProperties = (expected, actual) =>
         {
@@ -1761,7 +1762,7 @@ public class EvaluationTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void EvaluateEnumExpressionOfSingleValue()
+    public void ShouldEvaluateEnumExpressionWithSingleValue()
     {
         var color = new EdmEnumType("Ns", "Color");
         var blue = color.AddMember("Blue", new EdmEnumMemberValue(0));
@@ -1776,7 +1777,7 @@ public class EvaluationTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void EvaluateEnumExpressionOfMultiValues()
+    public void ShouldEvaluateEnumExpressionWithMultipleValues()
     {
         var color = new EdmEnumType("Ns", "Color", true);
         var blue = color.AddMember("Blue", new EdmEnumMemberValue(1));
@@ -1791,7 +1792,7 @@ public class EvaluationTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void EvaluateEnumExpressionOfMultiValuesWithoutFlagsShouldThrow()
+    public void ShouldThrowWhenEvaluatingEnumExpressionWithMultipleValuesWithoutFlags()
     {
         var color = new EdmEnumType("Ns", "Color");
         var blue = color.AddMember("Blue", new EdmEnumMemberValue(1));
@@ -1804,7 +1805,7 @@ public class EvaluationTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void EvaluateEnumExpression()
+    public void ShouldEvaluateEnumReferenceExpression()
     {
         var color = new EdmEnumType("Ns", "Color", true);
         var blue = color.AddMember("Blue", new EdmEnumMemberValue(1));
@@ -1819,7 +1820,7 @@ public class EvaluationTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void EvaluateExpressionsDuplicatePropertiesTest()
+    public void ShouldEvaluateExpressionsWithDuplicateProperties()
     {
         var aValue = new EdmStructuredValue(null, new IEdmPropertyValue[]
         {

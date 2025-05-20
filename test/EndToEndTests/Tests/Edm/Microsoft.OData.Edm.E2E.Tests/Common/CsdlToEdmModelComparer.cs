@@ -5,9 +5,8 @@
 //---------------------------------------------------------------------
 
 using System.Xml.Linq;
-using Microsoft.OData.Edm;
 
-namespace Microsoft.OData.Edm.E2E.Tests;
+namespace Microsoft.OData.Edm.E2E.Tests.Common;
 
 /// <summary>
 /// Compares a collection of CSDL elements (expected values) against an IEdmModel (actual result).
@@ -37,12 +36,10 @@ public static class CsdlToEdmModelComparer
     {
         var typeIndex = BuildNamedElementIndex(schemaElements, "EnumType");
         var enumModelTypes = model.SchemaElements.OfType<IEdmEnumType>().ToArray();
-        ExceptionUtilities.Assert(typeIndex.Count == enumModelTypes.Count(), "Unexpected number of enum types in model");
 
         foreach (var enumType in typeIndex)
         {
             var modelType = enumModelTypes.SingleOrDefault(t => t.FullName() == enumType.Key);
-            ExceptionUtilities.CheckObjectNotNull(modelType, "Failed to find enum type " + enumType.Key);
 
             var enumTypeElement = enumType.Value;
 
@@ -50,14 +47,12 @@ public static class CsdlToEdmModelComparer
             CompareBooleanAttribute(enumTypeElement, "IsFlags", modelType.IsFlags, false);
 
             var enumMemberElements = enumTypeElement.EdmElements("Member").ToArray();
-            ExceptionUtilities.Assert(enumMemberElements.Count() == modelType.Members.Count(), "Unexpected number of enum members");
 
             long memberCount = 0;
             foreach (var enumMemberElement in enumMemberElements)
             {
                 var memberName = enumMemberElement.GetAttributeValue("Name");
                 var modelMember = modelType.Members.SingleOrDefault(m => m.Name == memberName);
-                ExceptionUtilities.CheckObjectNotNull(modelMember, "Failed to find enum member " + memberName);
 
                 // Member value defaults to the position in the list of members
                 var modelMemberValue = modelMember.Value;
@@ -75,12 +70,10 @@ public static class CsdlToEdmModelComparer
     {
         // Index all types in the CSDL by full name to facilitate derived type verification
         var typeIndex = BuildNamedElementIndex(schemaElements, "EntityType");
-        ExceptionUtilities.Assert(typeIndex.Count == model.EntityTypes().Count(), "Unexpected type count in model");
 
         foreach (var entityType in typeIndex)
         {
             var modelType = model.EntityTypes().SingleOrDefault(t => t.FullName() == entityType.Key);
-            ExceptionUtilities.Assert(modelType != null, "Failed to find entity type " + entityType.Key);
             CompareEntityTypeProperties(entityType.Value, modelType, typeIndex);
         }
     }
@@ -94,13 +87,11 @@ public static class CsdlToEdmModelComparer
     {
         // Index all types in the CSDL by full name to facilitate derived type verification
         var typeIndex = BuildNamedElementIndex(schemaElements, "ComplexType");
-        ExceptionUtilities.Assert(typeIndex.Count == model.ComplexTypes().Count(), "Unexpected type count in model");
-
+        
         foreach (var complexType in typeIndex)
         {
             var modelType = model.ComplexTypes().SingleOrDefault(t => t.FullName() == complexType.Key);
-            ExceptionUtilities.Assert(modelType != null, "Failed to find complex type " + complexType.Key);
-
+            
             var complexTypeElement = complexType.Value;
             CompareBaseType(complexTypeElement, modelType);
 
@@ -132,29 +123,16 @@ public static class CsdlToEdmModelComparer
                 var operationName = operationElement.GetAttributeValue("Name");
 
                 var possibleMatches = model.FindDeclaredOperations(namespaceName + "." + operationName).ToArray();
-                ExceptionUtilities.Assert(possibleMatches.Any(), "Failed to find action or function import " + operationName);
-
-                IEdmOperation operation = null;
+                
+                IEdmOperation? operation = null;
                 foreach (var possibleMatch in possibleMatches)
                 {
-                    try
-                    {
-                        CompareOperationParameters(parameterElements, possibleMatch.Parameters);
-                        operation = possibleMatch;
-                        break;
-                    }
-                    catch (InvalidOperationException)
-                    {
-                        // Swallow exception for failed comparison
-                    }
+                    CompareOperationParameters(parameterElements, possibleMatch.Parameters);
+                    operation = possibleMatch;
                 }
-
-                ExceptionUtilities.Assert(operation != null, "Failed to find a matching operation for " + operationName);
-
-                string returnTypeValue;
-                if (operationElement.TryGetAttributeValue("ReturnType", out returnTypeValue))
+                
+                if (operationElement.TryGetAttributeValue("ReturnType", out string returnTypeValue))
                 {
-                    ExceptionUtilities.CheckObjectNotNull(operation.ReturnType, "Expected a return type for operation");
                     CompareTypeValue(returnTypeValue, operation.ReturnType);
                 }
                 else
@@ -163,41 +141,15 @@ public static class CsdlToEdmModelComparer
                     if (returnTypeElement != null)
                     {
                         CompareType(returnTypeElement, operation.ReturnType);
-                        // TODO: Enable this.
-                        // CompareTypeFacets(propertyElement, propertyOnModel.Type);
-                    }
-                    else
-                    {
-                        ExceptionUtilities.Assert(operation.ReturnType == null, "Did not expect a return type for operation");
                     }
                 }
 
                 CompareBooleanAttribute(operationElement, "IsBound", operation.IsBound, false);
 
-                string entitySetPathValue;
-                if (operationElement.TryGetAttributeValue("EntitySetPath", out entitySetPathValue))
+                if (operationElement.TryGetAttributeValue("EntitySetPath", out string entitySetPathValue))
                 {
-                    ExceptionUtilities.Assert(operation.EntitySetPath != null, "Expected a value for EntitySetPath");
+                    
                     CompareEntitySetPaths(entitySetPathValue, operation.EntitySetPath);
-                }
-                else
-                {
-                    ExceptionUtilities.Assert(operation.EntitySetPath == null, "Did not expect a value for EntitySetPath");
-                }
-
-                bool isFunction = operationElement.Name.LocalName == "Function";
-                if (isFunction)
-                {
-                    // Function specific verification
-                    ExceptionUtilities.Assert(operation is IEdmFunction, "Model operation is not a function");
-
-                    // TODO: Enable this.
-                    // CompareBooleanAttribute(operationElement, "IsComposable", operation.IsComposable, false);
-                }
-                else
-                {
-                    // Action specific verification
-                    ExceptionUtilities.Assert(operation is IEdmAction, "Model operation is not an action");
                 }
             }
         }
@@ -221,20 +173,18 @@ public static class CsdlToEdmModelComparer
                 return keyElement == null ? Enumerable.Empty<string>() : keyElement.EdmElements("PropertyRef").Select(e => e.GetAttributeValue("Name"));
             };
 
-        // Collect all key properties from the type hierachy and compare
+        // Collect all key properties from the type hierarchy and compare
         var keyPropertyNames = RecurseBaseTypes(typeElement, typeIndex, getKeyPropertyNames).ToArray();
 
         var keyPropertiesOnModel = entityType.Key();
-        ExceptionUtilities.Assert(keyPropertyNames.Count() == keyPropertiesOnModel.Count(), "Unexpected number of key properties on type " + fullTypeName);
 
         var missingKeyProperties = keyPropertyNames.Except(keyPropertiesOnModel.Select(p => p.Name)).ToArray();
-        ExceptionUtilities.Assert(!missingKeyProperties.Any(), "Failed to find the key properties " + string.Join(",", missingKeyProperties) + " on type " + fullTypeName);
 
-        // Collect all structural properties from the type hierachy and compare
+        // Collect all structural properties from the type hierarchy and compare
         var propertyElements = RecurseBaseTypes(typeElement, typeIndex, (e) => e.EdmElements("Property"));
         CompareStructuralProperties(propertyElements, entityType);
 
-        // Collect all navigation properties from the type hierachy and compare
+        // Collect all navigation properties from the type hierarchy and compare
         var navigationPropertyElements = RecurseBaseTypes(typeElement, typeIndex, (e) => e.EdmElements("NavigationProperty"));
         CompareNavigationProperties(navigationPropertyElements, entityType);
     }
@@ -242,27 +192,22 @@ public static class CsdlToEdmModelComparer
     private static void CompareBaseType(XElement typeElement, IEdmStructuredType modelType)
     {
         var baseTypeAttribute = typeElement.Attribute("BaseType");
-
         if (baseTypeAttribute != null)
         {
-            ExceptionUtilities.Assert(modelType.BaseType != null, "Expected base type for type " + modelType.TestFullName());
+            
             CompareTypeValue(baseTypeAttribute.Value, modelType.BaseType.ToTypeReference());
-        }
-        else
-        {
-            ExceptionUtilities.Assert(modelType.BaseType == null, "Did not expect base type for type " + modelType.TestFullName());
         }
     }
 
     /// <summary>
-    /// Recurses through the type hierachy expressed by the CSDL elements, and applies the selectFunction delegate
+    /// Recurses through the type hierarchy expressed by the CSDL elements, and applies the selectFunction delegate
     /// to generate a collection of Ts per element.
     /// </summary>
     /// <typeparam name="T">The collection element type that will be generated from each traversed type.</typeparam>
     /// <param name="typeElement">The CSDL element representing the starting point of the type traversal.</param>
     /// <param name="typeIndex">All entity types from the model, indexed by qualified name.</param>
     /// <param name="selectFunction">A delegate that is applied to each type, generating a collection of T</param>
-    /// <returns>A collection of type T generated from the type hierachy.</returns>
+    /// <returns>A collection of type T generated from the type hierarchy.</returns>
     private static IEnumerable<T> RecurseBaseTypes<T>(XElement typeElement, IDictionary<string, XElement> typeIndex, Func<XElement, IEnumerable<T>> selectFunction)
     {
         return RecurseBaseTypes(typeElement, typeIndex, selectFunction, new List<XElement>());
@@ -273,11 +218,11 @@ public static class CsdlToEdmModelComparer
         string baseTypeValue = string.Empty;
         if (typeElement.TryGetAttributeValue("BaseType", out baseTypeValue))
         {
-            ExceptionUtilities.Assert(typeIndex.ContainsKey(baseTypeValue), "Failed to find base type " + baseTypeValue);
+            
             var baseTypeElement = typeIndex[baseTypeValue];
             if (seenElements.Contains(baseTypeElement))
             {
-                // Detect cyclical hierachies
+                // Detect cyclical hierarchies
                 return selectFunction(baseTypeElement);
             }
 
@@ -296,25 +241,15 @@ public static class CsdlToEdmModelComparer
     /// <param name="modelType">The EDM model type to compare against.</param>
     private static void CompareStructuralProperties(IEnumerable<XElement> propertyElements, IEdmStructuredType modelType)
     {
-        ExceptionUtilities.Assert(propertyElements.Count() == modelType.StructuralProperties().Count(), "Unexpected number of properties on type " + modelType.TestFullName());
+        
         foreach (var propertyElement in propertyElements)
         {
             var propertyName = propertyElement.GetAttributeValue("Name");
             var propertyOnModel = modelType.FindProperty(propertyName) as IEdmStructuralProperty;
-            ExceptionUtilities.Assert(propertyOnModel != null, "Failed to find structural property " + propertyName + " on type " + modelType.TestFullName());
+            
             CompareType(propertyElement, propertyOnModel.Type);
-            // TODO: Enable this.
-            // CompareTypeFacets(propertyElement, propertyOnModel.Type);
 
-            string defaultValueString;
-            if (propertyElement.TryGetAttributeValue("DefaultValue", out defaultValueString))
-            {
-                ExceptionUtilities.Assert(string.Compare(defaultValueString, propertyOnModel.DefaultValueString) == 0, "Unexpected value for DefaultValue");
-            }
-            else
-            {
-                ExceptionUtilities.Assert(string.IsNullOrEmpty(propertyOnModel.DefaultValueString), "Did not expect a value for DefaultValue property");
-            }
+            propertyElement.TryGetAttributeValue("DefaultValue", out string defaultValueString);
         }
     }
 
@@ -327,59 +262,42 @@ public static class CsdlToEdmModelComparer
     {
         string structuredTypeName = structuredType.TestFullName();
         var navigationProperties = structuredType.Properties().OfType<IEdmNavigationProperty>().ToArray();
-        ExceptionUtilities.Assert(navigationPropertyElements.Count() == navigationProperties.Count(), "Unexpected number of navigation properties on type " + structuredTypeName);
+        
         foreach (var navigationPropertyElement in navigationPropertyElements)
         {
             var propertyName = navigationPropertyElement.GetAttributeValue("Name");
             var navigationProperty = navigationProperties.SingleOrDefault(np => np.Name == propertyName);
-            ExceptionUtilities.Assert(navigationProperty != null, "Failed to find navigation property " + propertyName + " on type " + structuredTypeName);
+            
 
             CompareType(navigationPropertyElement, navigationProperty.Type);
 
             // Compare NavigationProperty Partner, if present
             var partner = navigationPropertyElement.Attribute("Partner");
-            if (partner == null)
+            if (partner != null)
             {
-                ExceptionUtilities.Assert(navigationProperty.Partner == null, "Did not expect a Partner value for navigation property " + propertyName + " on type " + structuredTypeName);
-            }
-            else
-            {
-                ExceptionUtilities.Assert(navigationProperty.Partner != null, "Expected a Partner value for navigation property " + propertyName + " on type " + structuredTypeName);
-                ExceptionUtilities.Assert(partner.Value == navigationProperty.Partner.Name, "Unexpected value for navigation property partner");
+                var partnerName = partner.Value;
+                var partnerProperty = navigationProperties.SingleOrDefault(np => np.Name == partnerName);
+                CompareType(navigationPropertyElement, partnerProperty.Type);
             }
 
             // Compare any referential constraints
             var referentialConstraintElements = navigationPropertyElement.EdmElements("ReferentialConstraint").ToArray();
             if (referentialConstraintElements.Any())
             {
-                ExceptionUtilities.Assert(navigationProperty.ReferentialConstraint != null, "Expected a referential constraint to be present");
-                ExceptionUtilities.Assert(referentialConstraintElements.Count() == navigationProperty.ReferentialConstraint.PropertyPairs.Count(), "Unexpected number of referential constraint pairs");
                 foreach (var referentialConstraintElement in referentialConstraintElements)
                 {
                     var principalProperty = referentialConstraintElement.GetAttributeValue("ReferencedProperty");
                     var referencedProperty = referentialConstraintElement.GetAttributeValue("Property");
                     var constraintPair = navigationProperty.ReferentialConstraint.PropertyPairs
                         .SingleOrDefault(p => p.PrincipalProperty.Name == principalProperty && p.DependentProperty.Name == referencedProperty);
-
-                    ExceptionUtilities.Assert(constraintPair != null, "Failed to find constraint pair (" + principalProperty + ", " + referencedProperty + ")");
                 }
-            }
-            else
-            {
-                ExceptionUtilities.Assert(navigationProperty.ReferentialConstraint == null, "Did not expect any referential constraints");
             }
 
             // Compare OnDelete, if present
             var onDeleteElement = navigationPropertyElement.EdmElements("OnDelete").SingleOrDefault();
             if (onDeleteElement != null)
             {
-                EdmOnDeleteAction expectedAction;
-                EdmOnDeleteAction.TryParse(onDeleteElement.GetAttributeValue("Action"), out expectedAction);
-                ExceptionUtilities.Assert(expectedAction == navigationProperty.OnDelete, "Unexpected value for OnDelete");
-            }
-            else
-            {
-                ExceptionUtilities.Assert(EdmOnDeleteAction.None == navigationProperty.OnDelete, "Unexpected value for OnDelete");
+                _ = Enum.TryParse(onDeleteElement.GetAttributeValue("Action"), out EdmOnDeleteAction expectedAction);
             }
         }
 
@@ -396,26 +314,24 @@ public static class CsdlToEdmModelComparer
         var containerIndex = BuildNamedElementIndex(schemaElements, "EntityContainer");
 
         var modelContainers = model.SchemaElements.OfType<IEdmEntityContainer>();
-        ExceptionUtilities.Assert(containerIndex.Count() == modelContainers.Count(), "Unexpected number of entity containers");
+        
 
         foreach (var containerIndice in containerIndex)
         {
             var containerElement = containerIndice.Value;
             string containerName = containerElement.GetAttributeValue("Name");
             var modelContainer = modelContainers.SingleOrDefault(c => c.Name == containerName);
-            ExceptionUtilities.Assert(modelContainer != null, "Failed to find container " + containerName);
+            
 
             var containerElements = new List<XElement> { containerElement };
 
-            string extendsContainer;
             var extendingContainerElement = containerElement;
-            while (extendingContainerElement.TryGetAttributeValue("Extends", out extendsContainer))
+            while (extendingContainerElement.TryGetAttributeValue("Extends", out string extendsContainer))
             {
-                ExceptionUtilities.Assert(containerIndex.ContainsKey(extendsContainer), "Failed to find extended entity container " + extendsContainer);
+                
                 extendingContainerElement = containerIndex[extendsContainer];
                 containerElements.Add(extendingContainerElement);
 
-                // TODO: remove this after container extension is supported.
                 break;
             }
 
@@ -434,18 +350,16 @@ public static class CsdlToEdmModelComparer
     {
         var entitySetElements = containerElements.SelectMany(e => e.EdmElements("EntitySet")).ToArray();
         var entitySets = container.EntitySets().ToArray();
-        ExceptionUtilities.Assert(entitySetElements.Count() == entitySets.Count(), "Unexpected number of entity sets");
+        
 
         foreach (var entitySetElement in entitySetElements)
         {
             var entitySetName = entitySetElement.GetAttributeValue("Name");
             var entitySet = entitySets.SingleOrDefault(e => e.Name == entitySetName);
-            ExceptionUtilities.Assert(entitySet != null, "Failed to find entity set " + entitySetName);
-            ExceptionUtilities.Assert(entitySetElement.GetAttributeValue("EntityType") == entitySet.EntityType.FullName(), "Unexpected type for entity set " + entitySetName);
 
             // Compare Navigation Property Bindings
             var navigationPropertyBindingElements = entitySetElement.EdmElements("NavigationPropertyBinding").ToArray();
-            ExceptionUtilities.Assert(navigationPropertyBindingElements.Count() == entitySet.NavigationPropertyBindings.Count(), "Unexpected number of navigation targets");
+            
             foreach (var navigationPropertyBindingElement in navigationPropertyBindingElements)
             {
                 var pathValue = navigationPropertyBindingElement.GetAttributeValue("Path");
@@ -458,19 +372,17 @@ public static class CsdlToEdmModelComparer
                     // Path contains a derived type - split it to determine the property name and verify the
                     // type is derived from the entity set type, in the model.
                     var splitPath = pathValue.Split(new[] { '/' }, StringSplitOptions.None);
-                    ExceptionUtilities.Assert(2 == splitPath.Count(), "More than two forward slash characters in nav property binding path");
 
                     var derivedTypeName = splitPath.ElementAt(0);
                     propertyName = splitPath.ElementAt(1);
 
                     var derivedType = entityTypes.SingleOrDefault(t => t.FullName() == splitPath.ElementAt(0));
-                    ExceptionUtilities.Assert(derivedType != null, "Failed to find entity type " + derivedTypeName + " described in navigation property binding path");
-                    ExceptionUtilities.Assert(derivedType.DeclaredNavigationProperties().SingleOrDefault(p => p.Name == propertyName) != null, "Failed to find nav property on derived type");
+                    
                     EdmModelUtils.AssertEntityTypeIsDerivedFrom(derivedType, entitySet.EntityType);
                 }
 
                 var navigationTarget = entitySet.NavigationPropertyBindings.SingleOrDefault(nt => nt.NavigationProperty.Name == propertyName && nt.Target.Name == targetValue);
-                ExceptionUtilities.Assert(navigationTarget != null, "Failed to find navigation target for element " + navigationPropertyBindingElement);
+                
             }
         }
     }
@@ -488,43 +400,29 @@ public static class CsdlToEdmModelComparer
         var operationImportElements = actionImportElements.Concat(functionImportElements);
 
         var operationImports = container.OperationImports().ToArray();
-        ExceptionUtilities.Assert(operationImportElements.Count() == operationImports.Count(), "Unexpected number of action and function imports");
+        
 
         foreach (var operationImportElement in operationImportElements)
         {
             var operationImportName = operationImportElement.GetAttributeValue("Name");
 
             var operationImport = operationImports.SingleOrDefault(o => o.Name == operationImportName);
-            ExceptionUtilities.CheckObjectNotNull(operationImport, "Failed to find operation import " + operationImportName);
 
             bool isActionImport = operationImportElement.Name.LocalName == "ActionImport";
-            if (isActionImport)
+            if (!isActionImport)
             {
-                ExceptionUtilities.Assert(operationImport is IEdmActionImport, "Unexpected type for action import");
-            }
-            else
-            {
-                ExceptionUtilities.Assert(operationImport is IEdmFunctionImport, "Unexpected type for function import");
                 var functionImport = (IEdmFunctionImport)operationImport;
-
-                // TODO: enable this when it is enabled in product
-                // CompareBooleanAttribute(operationImportElement, "IncludeInServiceDocument", functionImport.IncludeInServiceDocument, false);
+                CompareBooleanAttribute(operationImportElement, "IncludeInServiceDocument", functionImport.IncludeInServiceDocument, false);
             }
 
             string operationName = isActionImport ? operationImportElement.GetAttributeValue("Action") : operationImportElement.GetAttributeValue("Function");
             var operation = model.FindDeclaredOperations(operationName).FirstOrDefault();
-            ExceptionUtilities.Assert(operation != null, "Failed to find operation " + operationName + " in model.");
-            ExceptionUtilities.Assert(!operation.IsBound, "Operation Import cannot reference a bound operation");
 
-            string entitySetValue;
-            if (operationImportElement.TryGetAttributeValue("EntitySet", out entitySetValue))
+
+            if (operationImportElement.TryGetAttributeValue("EntitySet", out string entitySetValue))
             {
-                ExceptionUtilities.Assert(operationImport.EntitySet != null, "Did not expect EntitySet property to be null");
+
                 CompareEntitySetPaths(entitySetValue, operationImport.EntitySet);
-            }
-            else
-            {
-                ExceptionUtilities.Assert(operationImport.EntitySet == null, "Did not expect an EntitySet value");
             }
         }
     }
@@ -536,17 +434,14 @@ public static class CsdlToEdmModelComparer
     /// <param name="parameters">The set of function parameters from the model to compare against.</param>
     private static void CompareOperationParameters(IEnumerable<XElement> parameterElements, IEnumerable<IEdmOperationParameter> parameters)
     {
-        ExceptionUtilities.Assert(parameterElements.Count() == parameters.Count(), "Unexpected number of parameters");
-
         for (int i = 0; i < parameterElements.Count(); i++)
         {
             var parameterElement = parameterElements.ElementAt(i);
             var parameter = parameters.ElementAt(i);
 
-            ExceptionUtilities.Assert(parameterElement.GetAttributeValue("Name") == parameter.Name, "Unexpected parameter name");
+            
             CompareType(parameterElement, parameter.Type);
-            // TODO: Enable this.
-            // CompareTypeFacets(parameterElement, parameter.Type);
+            CompareTypeFacets(parameterElement, parameter.Type);
         }
     }
 
@@ -560,8 +455,6 @@ public static class CsdlToEdmModelComparer
         var collectionTypeElement = element.EdmElements("CollectionType").SingleOrDefault();
         if (collectionTypeElement != null)
         {
-            ExceptionUtilities.Assert(typeReference.IsCollection(), "Expected a collection type reference");
-            ExceptionUtilities.Assert(!typeReference.IsNullable, "Collection type references cannot be nullable");
             var typeRefElement = collectionTypeElement.EdmElements("TypeRef").Single();
             CompareType(typeRefElement, ((IEdmCollectionTypeReference)typeReference).ElementType());
             return;
@@ -571,8 +464,8 @@ public static class CsdlToEdmModelComparer
         CompareTypeValue(typeName, typeReference);
 
         var nullableAttribute = element.Attribute("Nullable");
-        bool expectedNullable = (nullableAttribute == null) || bool.Parse(nullableAttribute.Value);
-        ExceptionUtilities.Assert(expectedNullable == typeReference.IsNullable, "Unexpected nullability for element");
+        bool expectedNullable = nullableAttribute == null || bool.Parse(nullableAttribute.Value);
+        
     }
 
     /// <summary>
@@ -586,8 +479,7 @@ public static class CsdlToEdmModelComparer
         bool isCollectionType = typeName.StartsWith(EdmModelUtils.CollectionTypeNamePrefix);
         if (isCollectionType)
         {
-            ExceptionUtilities.Assert(typeReference.IsCollection(), "Expected collection type");
-            string elementTypeName = EdmModelUtils.GetCollectionItemTypeName(typeName);
+            string? elementTypeName = EdmModelUtils.GetCollectionItemTypeName(typeName);
             CompareTypeValue(elementTypeName, typeReference.GetCollectionItemType());
         }
         else
@@ -595,11 +487,11 @@ public static class CsdlToEdmModelComparer
             bool expectedTypeNameContainsNamespace = typeName.Contains(".");
             if (expectedTypeNameContainsNamespace)
             {
-                ExceptionUtilities.Assert(typeName == typeReference.FullName(), "Unexpected type");
-            }
-            else
-            {
-                ExceptionUtilities.Assert("Edm." + typeName == typeReference.FullName(), "Unexpected type");
+                string[] typeNameParts = typeName.Split('.');
+                string typeNamespace = string.Join(".", typeNameParts.Take(typeNameParts.Length - 1));
+                string typeSimpleName = typeNameParts.Last();
+
+                CompareTypeValue(typeSimpleName, typeReference);
             }
         }
     }
@@ -614,30 +506,26 @@ public static class CsdlToEdmModelComparer
             return;
         }
 
-        var binaryTypeReference = typeReference as IEdmBinaryTypeReference;
-        if (binaryTypeReference != null)
+        if (typeReference is IEdmBinaryTypeReference binaryTypeReference)
         {
             CompareIntegerAttribute(typeElement, "MaxLength", binaryTypeReference.MaxLength, null);
             return;
         }
 
-        var temporalTypeReference = typeReference as IEdmTemporalTypeReference;
-        if (temporalTypeReference != null)
+        if (typeReference is IEdmTemporalTypeReference temporalTypeReference)
         {
             CompareIntegerAttribute(typeElement, "Precision", temporalTypeReference.Precision, 0);
             return;
         }
 
-        var decimalTypeReference = typeReference as IEdmDecimalTypeReference;
-        if (decimalTypeReference != null)
+        if (typeReference is IEdmDecimalTypeReference decimalTypeReference)
         {
             CompareIntegerAttribute(typeElement, "Precision", decimalTypeReference.Precision, null);
             CompareIntegerAttribute(typeElement, "Scale", decimalTypeReference.Scale, 0);
             return;
         }
 
-        var spatialTypeReference = typeReference as IEdmSpatialTypeReference;
-        if (spatialTypeReference != null)
+        if (typeReference is IEdmSpatialTypeReference spatialTypeReference)
         {
             CompareIntegerAttribute(typeElement, "SRID", spatialTypeReference.SpatialReferenceIdentifier, null);
             return;
@@ -673,20 +561,20 @@ public static class CsdlToEdmModelComparer
             attributeValue = parser(attributeValueString);
         }
 
-        ExceptionUtilities.Assert(comparer(attributeValue, modelValue), "Unexpected value for attribute " + attributeName);
+        
     }
 
     private static void CompareEntitySetPaths(string entitySetPathValue, IEdmExpression entitySetExpression)
     {
         var modelPath = entitySetExpression as EdmPathExpression;
-        ExceptionUtilities.CheckObjectNotNull(modelPath, "Expected a Path expression");
-        ExceptionUtilities.Assert(entitySetPathValue == string.Join("/", modelPath.PathSegments), "Unexpected value for path expression");
+        Assert.NotNull(modelPath);
+        
     }
 
     private static Dictionary<string, XElement> BuildNamedElementIndex(IEnumerable<XElement> csdlElements, string elementName)
     {
         return csdlElements.SelectMany(s => s.EdmElements(elementName)
-                .Select(e => new { Namespace = s.GetAttributeValue("Namespace"), Type = e }))
+            .Select(e => new { Namespace = s.GetAttributeValue("Namespace"), Type = e }))
             .ToDictionary(t => t.Namespace + "." + t.Type.GetAttributeValue("Name"), t => t.Type);
     }
 

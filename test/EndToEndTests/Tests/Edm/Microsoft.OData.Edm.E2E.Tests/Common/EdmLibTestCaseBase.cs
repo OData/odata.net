@@ -11,7 +11,7 @@ using System.Xml.Linq;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Validation;
 
-namespace Microsoft.OData.Edm.E2E.Tests;
+namespace Microsoft.OData.Edm.E2E.Tests.Common;
 
 public class EdmLibTestCaseBase
 {
@@ -37,8 +37,13 @@ public class EdmLibTestCaseBase
 
     protected IEnumerable<string> GetSerializerResult(IEdmModel edmModel, EdmVersion edmVersion, out IEnumerable<EdmError> errors)
     {
-        List<StringBuilder> stringBuilders = new List<StringBuilder>();
-        List<XmlWriter> xmlWriters = new List<XmlWriter>();
+        var writerSettings = new CsdlXmlWriterSettings
+        {
+            LibraryCompatibility = EdmLibraryCompatibility.UseLegacyVariableCasing
+        };
+
+        var stringBuilders = new List<StringBuilder>();
+        var xmlWriters = new List<XmlWriter>();
         edmModel.SetEdmVersion(toProductVersionlookup[edmVersion]);
         edmModel.TryWriteSchema(
             s =>
@@ -54,19 +59,19 @@ public class EdmLibTestCaseBase
             xmlWriters[i].Close();
         }
 
-        List<string> strings = new List<string>();
+        var strings = new List<string>();
         foreach (var sb in stringBuilders)
         {
             strings.Add(sb.ToString());
         }
+
         return strings;
     }
 
     protected IEnumerable<string> GetSerializerResult(IEdmModel edmModel)
     {
-        IEnumerable<EdmError> errors;
-        IEnumerable<string> csdls = GetSerializerResult(edmModel, out errors);
-        Assert.True(!errors.Any(), "Serialization errors were not expected: " + Environment.NewLine + string.Join(Environment.NewLine, errors));
+        var csdls = GetSerializerResult(edmModel, out IEnumerable<EdmError> errors);
+        Assert.False(errors.Any());
         return csdls;
     }
 

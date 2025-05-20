@@ -5,6 +5,7 @@
 //---------------------------------------------------------------------
 
 using System.Xml.Linq;
+using Microsoft.OData.Edm.E2E.Tests.Common;
 
 namespace Microsoft.OData.Edm.E2E.Tests.FunctionalTests;
 
@@ -13,7 +14,7 @@ public class NavigationSerializingTests : EdmLibTestCaseBase
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void SerializeNavigationWithBothContainmentEnd(EdmVersion edmVersion)
+    public void Serialize_NavigationWithBothContainmentEnds_GeneratesExpectedCsdl(EdmVersion edmVersion)
     {
         var model = new EdmModel();
 
@@ -83,7 +84,7 @@ public class NavigationSerializingTests : EdmLibTestCaseBase
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void SerializeNavigationWithOneMultiplicityContainmentEnd(EdmVersion edmVersion)
+    public void Serialize_NavigationWithOneMultiplicityContainmentEnd_GeneratesExpectedCsdl(EdmVersion edmVersion)
     {
         var model = new EdmModel();
 
@@ -169,7 +170,7 @@ public class NavigationSerializingTests : EdmLibTestCaseBase
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void SerializeNavigationWithManyMultiplicityContainmentEnd(EdmVersion edmVersion)
+    public void Serialize_NavigationWithManyMultiplicityContainmentEnd_GeneratesExpectedCsdl(EdmVersion edmVersion)
     {
         var model = new EdmModel();
 
@@ -255,7 +256,7 @@ public class NavigationSerializingTests : EdmLibTestCaseBase
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void SerializeNavigationWithZeroOrOneMultiplicityContainmentEnd(EdmVersion edmVersion)
+    public void Serialize_NavigationWithZeroOrOneMultiplicityContainmentEnd_GeneratesExpectedCsdl(EdmVersion edmVersion)
     {
         var model = new EdmModel();
 
@@ -341,7 +342,7 @@ public class NavigationSerializingTests : EdmLibTestCaseBase
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void SerializeNavigationWithValidZeroOrOneMultiplicityRecursiveContainmentEnd(EdmVersion edmVersion)
+    public void Serialize_NavigationWithValidZeroOrOneMultiplicityRecursiveContainmentEnd_GeneratesExpectedCsdl(EdmVersion edmVersion)
     {
         var model = new EdmModel();
 
@@ -407,7 +408,7 @@ public class NavigationSerializingTests : EdmLibTestCaseBase
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void SerializeNavigationWithInvaliZeroOrOnedMultiplicityRecursiveContainmentEnd(EdmVersion edmVersion)
+    public void Serialize_NavigationWithInvalidZeroOrOneMultiplicityRecursiveContainmentEnd_GeneratesExpectedCsdl(EdmVersion edmVersion)
     {
         var model = new EdmModel();
 
@@ -465,7 +466,7 @@ public class NavigationSerializingTests : EdmLibTestCaseBase
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void SerializeNavigationWithOneMultiplicityRecursiveContainmentEnd(EdmVersion edmVersion)
+    public void Serialize_NavigationWithOneMultiplicityRecursiveContainmentEnd_GeneratesExpectedCsdl(EdmVersion edmVersion)
     {
         var model = new EdmModel();
 
@@ -539,7 +540,7 @@ public class NavigationSerializingTests : EdmLibTestCaseBase
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void SerializeNavigationWithManyMultiplicityRecursiveContainmentEnd(EdmVersion edmVersion)
+    public void Serialize_NavigationWithManyMultiplicityRecursiveContainmentEnd_GeneratesExpectedCsdl(EdmVersion edmVersion)
     {
         var model = new EdmModel();
 
@@ -613,7 +614,7 @@ public class NavigationSerializingTests : EdmLibTestCaseBase
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void SerializeSingleSimpleContainmentNavigation(EdmVersion edmVersion)
+    public void Serialize_SingleSimpleContainmentNavigation_GeneratesExpectedCsdl(EdmVersion edmVersion)
     {
         var model = new EdmModel();
 
@@ -720,7 +721,7 @@ public class NavigationSerializingTests : EdmLibTestCaseBase
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void SerializeTwoContainmentNavigationWithSameEnd(EdmVersion edmVersion)
+    public void Serialize_TwoContainmentNavigationsWithSameEnd_GeneratesExpectedCsdl(EdmVersion edmVersion)
     {
         var model = new EdmModel();
 
@@ -827,7 +828,7 @@ public class NavigationSerializingTests : EdmLibTestCaseBase
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void SerializeTwoContainmentNavigationWithSameEndAddedDifferently(EdmVersion edmVersion)
+    public void Serialize_TwoContainmentNavigationsWithSameEndAddedDifferently_GeneratesExpectedCsdl(EdmVersion edmVersion)
     {
         var model = new EdmModel();
 
@@ -935,7 +936,7 @@ public class NavigationSerializingTests : EdmLibTestCaseBase
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void SerializeContainmentNavigationWithDifferentEnds(EdmVersion edmVersion)
+    public void Serialize_ContainmentNavigationWithDifferentEnds_GeneratesExpectedCsdl(EdmVersion edmVersion)
     {
         var model = new EdmModel();
 
@@ -1042,7 +1043,7 @@ public class NavigationSerializingTests : EdmLibTestCaseBase
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void SerializeRecursiveThreeContainmentNavigations(EdmVersion edmVersion)
+    public void Serialize_RecursiveThreeContainmentNavigations_GeneratesExpectedCsdl(EdmVersion edmVersion)
     {
         var model = new EdmModel();
 
@@ -1139,7 +1140,7 @@ public class NavigationSerializingTests : EdmLibTestCaseBase
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void SerializeRecursiveThreeContainmentNavigationsWithEntitySet(EdmVersion edmVersion)
+    public void Serialize_RecursiveThreeContainmentNavigationsWithEntitySet_GeneratesExpectedCsdl(EdmVersion edmVersion)
     {
         var model = new EdmModel();
 
@@ -1259,7 +1260,7 @@ public class NavigationSerializingTests : EdmLibTestCaseBase
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void SerializeRecursiveOneContainmentNavigationSelfPointingEntitySet(EdmVersion edmVersion)
+    public void Serialize_RecursiveOneContainmentNavigationSelfPointingEntitySet_GeneratesExpectedCsdl(EdmVersion edmVersion)
     {
         var model = new EdmModel();
 
@@ -1328,7 +1329,7 @@ public class NavigationSerializingTests : EdmLibTestCaseBase
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void SerializeRecursiveOneContainmentNavigationWithTwoEntitySet(EdmVersion edmVersion)
+    public void Serialize_RecursiveOneContainmentNavigationWithTwoEntitySets_GeneratesExpectedCsdl(EdmVersion edmVersion)
     {
         var model = new EdmModel();
 
@@ -1399,7 +1400,7 @@ public class NavigationSerializingTests : EdmLibTestCaseBase
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void SerializeDerivedContainmentNavigationWithBaseAssociationSet(EdmVersion edmVersion)
+    public void Serialize_DerivedContainmentNavigationWithBaseAssociationSet_GeneratesExpectedCsdl(EdmVersion edmVersion)
     {
         var model = new EdmModel();
 
@@ -1507,7 +1508,7 @@ public class NavigationSerializingTests : EdmLibTestCaseBase
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void SerializeDerivedContainmentNavigationWithDerivedAssociationSet(EdmVersion edmVersion)
+    public void Serialize_DerivedContainmentNavigationWithDerivedAssociationSet_GeneratesExpectedCsdl(EdmVersion edmVersion)
     {
         var model = new EdmModel();
 
@@ -1615,7 +1616,7 @@ public class NavigationSerializingTests : EdmLibTestCaseBase
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void SerializeDerivedContainmentNavigationWithDerivedAndBaseAssociationSet(EdmVersion edmVersion)
+    public void Serialize_DerivedContainmentNavigationWithDerivedAndBaseAssociationSet_GeneratesExpectedCsdl(EdmVersion edmVersion)
     {
         var model = new EdmModel();
 
@@ -1725,7 +1726,7 @@ public class NavigationSerializingTests : EdmLibTestCaseBase
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void SerializeMultiBindingForOneNavigationProperty(EdmVersion edmVersion)
+    public void Serialize_MultiBindingForOneNavigationProperty_GeneratesExpectedCsdl(EdmVersion edmVersion)
     {
         var model = new EdmModel();
 

@@ -7,7 +7,7 @@
 using System.Xml;
 using System.Xml.Linq;
 
-namespace Microsoft.OData.Edm.E2E.Tests;
+namespace Microsoft.OData.Edm.E2E.Tests.Common;
 
 public static class ModelBuilderHelpers
 {
@@ -27,7 +27,7 @@ public static class ModelBuilderHelpers
 
     public static IEnumerable<XElement> ReplaceCsdlNamespacesForEdmVersion(XElement[] csdls, EdmVersion edmVersion)
     {
-        var edmNamespace = EdmLibCsdlContentGenerator.GetCsdlFullNamespace(edmVersion);
+        var edmNamespace = GetCsdlFullNamespace(edmVersion);
         for (int i = 0; i < csdls.Count(); ++i)
         {
             if (edmNamespace != csdls[i].Name.Namespace)
@@ -40,7 +40,7 @@ public static class ModelBuilderHelpers
 
     public static string ReplaceCsdlNamespaceForEdmVersion(string csdl, EdmVersion edmVersion)
     {
-        var edmNamespace = EdmLibCsdlContentGenerator.GetCsdlFullNamespace(edmVersion);
+        var edmNamespace = GetCsdlFullNamespace(edmVersion);
         var xmlReader = XmlReader.Create(new StringReader(csdl));
         while (xmlReader.Read())
         {
@@ -112,5 +112,16 @@ public static class ModelBuilderHelpers
             EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.GeometryMultiLineString, nullable),
             EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.GeometryMultiPoint, nullable),
         };
+    }
+
+    public static XNamespace GetCsdlFullNamespace(EdmVersion csdlVersion)
+    {
+        if (csdlVersion == EdmVersion.V40 || csdlVersion == EdmVersion.V401)
+        {
+            return EdmStringConstants.EdmOasisNamespace;
+        }
+
+        Assert.Fail("CSDL Schema Version is not supported: " + csdlVersion.ToString());
+        return null;
     }
 }

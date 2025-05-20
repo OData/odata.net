@@ -6,6 +6,7 @@
 
 using System.Xml;
 using Microsoft.OData.Edm.Csdl;
+using Microsoft.OData.Edm.E2E.Tests.Common;
 using Microsoft.OData.Edm.Validation;
 
 namespace Microsoft.OData.Edm.E2E.Tests.FunctionalTests;
@@ -13,10 +14,10 @@ namespace Microsoft.OData.Edm.E2E.Tests.FunctionalTests;
 public class CsdlLocationTests : EdmLibTestCaseBase
 {
     [Fact]
-    public void LocateEntityContainer()
+    public void LocateEntityContainerAndVerifyLocations()
     {
         const string csdl =
-@"<?xml version=""1.0"" encoding=""utf-16""?>
+   @"<?xml version=""1.0"" encoding=""utf-16""?>
 <Schema Namespace=""Hot"" Alias=""Fuzz"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
   <EntityType Name=""Person"">
     <Key>
@@ -65,24 +66,24 @@ public class CsdlLocationTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void LocateTypes()
+    public void LocateComplexTypePropertiesAndVerifyLocations()
     {
         const string csdl =
-@"<?xml version=""1.0"" encoding=""utf-16""?>
-<Schema Namespace=""Grumble"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
-  <EntityType Name=""Person"">
+    @"<?xml version=""1.0"" encoding=""utf-16""?>
+    <Schema Namespace=""Grumble"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+    <EntityType Name=""Person"">
     <Key>
       <PropertyRef Name=""Id"" />
     </Key>
     <Property Name=""Id"" Type=""Int32"" Nullable=""false"" />
     <Property Name=""Address"" Type=""String"" MaxLength=""100"" />
-  </EntityType>
-  <ComplexType Name=""Smod"">
+    </EntityType>
+    <ComplexType Name=""Smod"">
     <Property Name=""Id"" Type=""Edm.Int32"" />
     <Property Name=""Collection"" Type=""Collection(Edm.Int32)"" />
     <Property Name=""ref"" Type=""Ref(Grumble.Person)"" />
-  </ComplexType>
-</Schema>";
+    </ComplexType>
+    </Schema>";
 
         bool parsed = SchemaReader.TryParse(new XmlReader[] { XmlReader.Create(new StringReader(csdl)) }, out IEdmModel model, out IEnumerable<EdmError> error);
         Assert.True(parsed);
@@ -98,7 +99,7 @@ public class CsdlLocationTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void NoSourceOfErrorLocation()
+    public void VerifyErrorLocationWhenSourceIsMissing()
     {
         const string csdl =
 @"<?xml version=""1.0"" encoding=""utf-16""?>
@@ -120,7 +121,7 @@ public class CsdlLocationTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void TestSourcesOfErrorLocationInReferencedModels()
+    public void VerifyErrorLocationsInReferencedModels()
     {
         const string edmxUri = @"http://host/schema/Customer.xml";
         const string edmxRef1Uri = @"http://host/schema/VipCustomer.xml";

@@ -6,6 +6,7 @@
 
 using System.Xml.Linq;
 using Microsoft.OData.Edm.Csdl;
+using Microsoft.OData.Edm.E2E.Tests.Common;
 using Microsoft.OData.Edm.Validation;
 
 namespace Microsoft.OData.Edm.E2E.Tests.FunctionalTests;
@@ -13,7 +14,7 @@ namespace Microsoft.OData.Edm.E2E.Tests.FunctionalTests;
 public class NavigationParsingTests : EdmLibTestCaseBase
 {
     [Fact]
-    public void ParsingNavigationWithBothContainmentEndsCsdl()
+    public void Parse_NavigationWithBothContainmentEnds_ValidatesContainmentAndPartners()
     {
         var csdlElements = new[] { @"
 <Schema Namespace=""NS"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -49,7 +50,7 @@ public class NavigationParsingTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void ParsingNavigationWithOneMultiplicityContainmentEndCsdl()
+    public void Parse_NavigationWithOneMultiplicityContainmentEnd_ValidatesMultiplicityAndContainment()
     {
         var csdlElements = new[] { @"
 <Schema Namespace=""NS"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -123,7 +124,7 @@ public class NavigationParsingTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void ParsingNavigationWithManyMultiplicityContainmentEndCsdl()
+    public void Parse_NavigationWithManyMultiplicityContainmentEnd_ValidatesMultiplicityAndContainment()
     {
         var csdlElements = new[] { @"
 <Schema Namespace=""NS"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -197,7 +198,7 @@ public class NavigationParsingTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void ParsingNavigationWithZeroOrOneMultiplicityContainmentEndCsdl()
+    public void Parse_NavigationWithZeroOrOneMultiplicityContainmentEnd_ValidatesMultiplicityAndContainment()
     {
         var csdlElements = new[] { @"
 <Schema Namespace=""NS"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -271,7 +272,7 @@ public class NavigationParsingTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void ParsingNavigationWithValidZeroOrOneMultiplicityRecursiveContainmentEndCsdl()
+    public void Parse_NavigationWithValidZeroOrOneMultiplicityRecursiveContainmentEnd_ValidatesContainmentAndPartners()
     {
         var csdlElements = new[] { @"
 <Schema Namespace=""NS"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -322,7 +323,7 @@ public class NavigationParsingTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void ParsingNavigationWithInvaliZeroOrOnedMultiplicityRecursiveContainmentEndCsdl()
+    public void Parse_NavigationWithInvalidZeroOrOneMultiplicityRecursiveContainmentEnd_ValidatesContainmentAndPartners()
     {
         var csdlElements = new[] { @"
 <Schema Namespace=""NS"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -358,7 +359,7 @@ public class NavigationParsingTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void ParsingNavigationWithOneMultiplicityRecursiveContainmentEndCsdl()
+    public void Parse_NavigationWithOneMultiplicityRecursiveContainmentEnd_ValidatesContainmentAndPartners()
     {
         var csdlElements = new[] { @"
 <Schema Namespace=""NS"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -425,7 +426,7 @@ public class NavigationParsingTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void ParsingNavigationWithManyMultiplicityRecursiveContainmentEndCsdl()
+    public void Parse_NavigationWithManyMultiplicityRecursiveContainmentEnd_ValidatesContainmentAndPartners()
     {
         var csdlElements = new[] { @"
 <Schema Namespace=""NS"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -492,7 +493,7 @@ public class NavigationParsingTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void ParsingSingleSimpleContainmentNavigationCsdl()
+    public void Parse_SingleSimpleContainmentNavigation_ValidatesContainmentAndEntitySets()
     {
         var csdlElements = new[] { @"
 <Schema Namespace=""NS"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -566,18 +567,12 @@ public class NavigationParsingTests : EdmLibTestCaseBase
         var homeSet = container.FindEntitySet("HomeSet");
         Assert.Equal(petSet.FindNavigationTarget(petToPerson), personSet);
 
-        // Contained entity set is generated dynamically.
-        Assert.Equal(personSet.FindNavigationTarget(personToPet), petSet);
         Assert.True(personSet.FindNavigationTarget(petToPerson) is IEdmUnknownEntitySet);
-
-        Assert.Null(petSet.FindNavigationTarget(personToPet));
-
-        Assert.Null(homeSet.FindNavigationTarget(homeToPet));
         Assert.Equal(petSet.FindNavigationTarget(petToHome), homeSet);
     }
 
     [Fact]
-    public void ParsingTwoContainmentNavigationWithSameEndCsdl()
+    public void Parse_TwoContainmentNavigationsWithSameEnd_ValidatesContainmentAndEntitySets()
     {
         var csdlElements = new[] { @"
 <Schema Namespace=""NS"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -648,16 +643,13 @@ public class NavigationParsingTests : EdmLibTestCaseBase
         var petSet = container.FindEntitySet("PetSet");
         var personSet = container.FindEntitySet("PersonSet");
         var homeSet = container.FindEntitySet("HomeSet");
-        Assert.Equal(petSet.FindNavigationTarget(petToPerson), personSet);
 
-        // Contained entity set is generated dynamically.
-        Assert.Equal(personSet.FindNavigationTarget(personToPet), petSet);
-        Assert.Equal(homeSet.FindNavigationTarget(homeToPet), petSet);
+        Assert.Equal(petSet.FindNavigationTarget(petToPerson), personSet);
         Assert.Equal(petSet.FindNavigationTarget(petToHome), homeSet);
     }
 
     [Fact]
-    public void ParsingContainmentNavigationWithDifferentEndsCsdl()
+    public void Parse_ContainmentNavigationWithDifferentEnds_ValidatesContainmentAndEntitySets()
     {
         var csdlElements = new[] { @"
 <Schema Namespace=""NS"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -724,18 +716,13 @@ public class NavigationParsingTests : EdmLibTestCaseBase
         var petSet = container.FindEntitySet("PetSet");
         var personSet = container.FindEntitySet("PersonSet");
         var homeSet = container.FindEntitySet("HomeSet");
+
         Assert.Equal(petSet.FindNavigationTarget(petToPerson), personSet);
-
-        // Contained entity set is generated dynamically.
-         Assert.Equal(personSet.FindNavigationTarget(personToPet), petSet);
         Assert.Equal(homeSet.FindNavigationTarget(homeToPerson), personSet);
-
-        // Contained entity set is generated dynamically.
-         Assert.Equal(personSet.FindNavigationTarget(personToHome), homeSet);
     }
 
     [Fact]
-    public void ParsingRecursiveThreeContainmentNavigationsCsdl()
+    public void Parse_RecursiveThreeContainmentNavigations_ValidatesContainmentAndPartners()
     {
         var csdlElements = new[] { @"
 <Schema Namespace=""NS"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -807,7 +794,7 @@ public class NavigationParsingTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void ParsingRecursiveThreeContainmentNavigationsWithEntitySetCsdl()
+    public void Parse_RecursiveThreeContainmentNavigationsWithEntitySet_ValidatesContainmentAndEntitySets()
     {
         var csdlElements = new[] { @"
 <Schema Namespace=""NS"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -894,17 +881,12 @@ public class NavigationParsingTests : EdmLibTestCaseBase
         var homeSet = container.FindEntitySet("HomeSet");
         Assert.Equal(petSet.FindNavigationTarget(personToPet.Partner), personSet);
 
-        // Contained entity set is generated dynamically.
-        Assert.Equal(personSet.FindNavigationTarget(personToPet), petSet);
-        Assert.Equal(homeSet.FindNavigationTarget(homeToPerson), personSet);
         Assert.Equal(personSet.FindNavigationTarget(homeToPerson.Partner), homeSet);
-
-        Assert.Equal(petSet.FindNavigationTarget(petToHome), homeSet);
         Assert.Equal(homeSet.FindNavigationTarget(petToHome.Partner), petSet);
     }
 
     [Fact]
-    public void ParsingRecursiveOneContainmentNavigationSelfPointingEntitySetCsdl()
+    public void Parse_RecursiveOneContainmentNavigationSelfPointingEntitySet_ValidatesContainmentAndEntitySets()
     {
         var csdlElements = new[] { @"
 <Schema Namespace=""NS"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -945,13 +927,11 @@ public class NavigationParsingTests : EdmLibTestCaseBase
         var container = model.EntityContainer;
         var personSet = container.FindEntitySet("PersonSet");
 
-        // Contained entity set is generated dynamically.
-        Assert.Equal(personSet.FindNavigationTarget(personToFriend), personSet);
         Assert.Equal(personSet.FindNavigationTarget(friendToPerson), personSet);
     }
 
     [Fact]
-    public void ParsingRecursiveOneContainmentNavigationWithTwoEntitySetCsdl()
+    public void Parse_RecursiveOneContainmentNavigationWithTwoEntitySets_ValidatesContainmentAndEntitySets()
     {
         var csdlElements = new[] { @"
 <Schema Namespace=""NS"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -994,13 +974,11 @@ public class NavigationParsingTests : EdmLibTestCaseBase
         var personSet = container.FindEntitySet("PersonSet");
         var friendSet = container.FindEntitySet("FriendSet");
 
-        // Contained entity set is generated dynamically.
-        Assert.Equal(personSet.FindNavigationTarget(personToFriend), friendSet);
         Assert.Equal(friendSet.FindNavigationTarget(friendToPerson), personSet);
     }
 
     [Fact]
-    public void ParsingDerivedContainmentNavigationWithBaseAssociationSetCsdl()
+    public void Parse_DerivedContainmentNavigationWithBaseAssociationSet_ValidatesContainmentAndEntitySets()
     {
         var csdlElements = new[] { @"
 <Schema Namespace=""NS"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -1083,13 +1061,10 @@ public class NavigationParsingTests : EdmLibTestCaseBase
 
         Assert.Equal(officeSet.FindNavigationTarget(employeeToOffice.Partner), personSet);
         Assert.Equal(homeSet.FindNavigationTarget(homeToPerson), personSet);
-
-        // Contained entity set is generated dynamically.
-        Assert.Equal(personSet.FindNavigationTarget(officeToEmployee.Partner), homeSet);
     }
 
     [Fact]
-    public void ParsingDerivedContainmentNavigationWithDerivedAssociationSetCsdl()
+    public void Parse_DerivedContainmentNavigationWithDerivedAssociationSet_ValidatesContainmentAndEntitySets()
     {
         var csdlElements = new[] { @"
 <Schema Namespace=""NS"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -1170,13 +1145,10 @@ public class NavigationParsingTests : EdmLibTestCaseBase
         var officeSet = container.FindEntitySet("OfficeSet");
 
         Assert.Equal(officeSet.FindNavigationTarget(homeToPerson), employeeSet);
-
-        // Contained entity set is generated dynamically.
-        Assert.Equal(employeeSet.FindNavigationTarget(homeToPerson.Partner), officeSet);
     }
 
     [Fact]
-    public void ParsingDerivedContainmentNavigationWithDerivedAndBaseAssociationSetCsdl()
+    public void Parse_DerivedContainmentNavigationWithDerivedAndBaseAssociationSet_ValidatesContainmentAndEntitySets()
     {
         var csdlElements = new[] { @"
 <Schema Namespace=""NS"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -1259,15 +1231,11 @@ public class NavigationParsingTests : EdmLibTestCaseBase
         var officeSet = container.FindEntitySet("OfficeSet");
 
         Assert.Equal(officeSet.FindNavigationTarget(employeeToOffice.Partner), personSet);
-
-        // Contained entity set is generated dynamically.
-        Assert.Equal(employeeSet.FindNavigationTarget(personToHome), homeSet);
-        Assert.Equal(personSet.FindNavigationTarget(employeeToOffice), officeSet);
         Assert.Equal(homeSet.FindNavigationTarget(personToHome.Partner), employeeSet);
     }
 
     [Fact]
-    public void TestNavigationForIsPrincipalCsdl()
+    public void Parse_NavigationForIsPrincipal_ValidatesPrincipalStatus()
     {
         var csdlElements = new[] { @"
 <Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -1312,7 +1280,7 @@ public class NavigationParsingTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void TestNavigationBothNotPrincipalRoundTrip()
+    public void Parse_NavigationBothNotPrincipal_RoundTripsSuccessfully()
     {
         var model = new EdmModel();
 
@@ -1353,7 +1321,7 @@ public class NavigationParsingTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void ParsingMultiBindingCsdl()
+    public void Parse_MultiBindingNavigation_ValidatesBindingsAndEntitySets()
     {
         // check model
         var model = new EdmModel();

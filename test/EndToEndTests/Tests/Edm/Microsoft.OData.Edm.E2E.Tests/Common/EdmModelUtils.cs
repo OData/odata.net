@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Edm.E2E.Tests;
+namespace Microsoft.OData.Edm.E2E.Tests.Common;
 
 /// <summary>
 /// Helper methods for working with EDM types.
@@ -26,10 +26,8 @@ public static class EdmModelUtils
     /// </summary>
     /// <param name="collectionTypeName">The collection item type name to parse.</param>
     /// <returns>The item type name or null if the <paramref name="collectionTypeName"/> is not a collection type name.</returns>
-    public static string GetCollectionItemTypeName(string collectionTypeName)
+    public static string? GetCollectionItemTypeName(string collectionTypeName)
     {
-        ExceptionUtilities.CheckArgumentNotNull(collectionTypeName, "collectionTypeName");
-
         if (collectionTypeName.StartsWith(CollectionTypeNamePrefix) && collectionTypeName.EndsWith(CollectionTypeNameSuffix))
         {
             return collectionTypeName.Substring(
@@ -57,9 +55,6 @@ public static class EdmModelUtils
     /// <param name="baseType">The base entity type.</param>
     public static void AssertEntityTypeIsDerivedFrom(IEdmEntityType derivedType, IEdmEntityType baseType)
     {
-        ExceptionUtilities.CheckArgumentNotNull(derivedType, "derivedType");
-        ExceptionUtilities.CheckArgumentNotNull(baseType, "baseType");
-
         if (derivedType == baseType)
         {
             return;
@@ -75,7 +70,5 @@ public static class EdmModelUtils
 
             entityType = entityType.BaseEntityType();
         }
-
-        ExceptionUtilities.Assert(false, "Expected entity type " + derivedType.FullName() + " to be derived from " + baseType.FullName());
     }
 }

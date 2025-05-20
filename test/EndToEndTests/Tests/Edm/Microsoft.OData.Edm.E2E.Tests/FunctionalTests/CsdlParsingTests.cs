@@ -6,6 +6,7 @@
 
 using System.Xml;
 using Microsoft.OData.Edm.Csdl;
+using Microsoft.OData.Edm.E2E.Tests.Common;
 using Microsoft.OData.Edm.Validation;
 using Microsoft.OData.Edm.Vocabularies;
 
@@ -14,7 +15,7 @@ namespace Microsoft.OData.Edm.E2E.Tests.FunctionalTests;
 public class CsdlParsingTests : EdmLibTestCaseBase
 {
     [Fact]
-    public void TryParseWithNullReferencesParameterShouldThrowArgumentNullException()
+    public void TryParse_WithNullReferencesParameter_ThrowsArgumentNullException()
     {
         string edmx =
 @"<?xml version=""1.0"" encoding=""utf-16""?>
@@ -34,19 +35,16 @@ public class CsdlParsingTests : EdmLibTestCaseBase
   </edmx:DataServices>
 </edmx:Edmx>";
 
-        IEdmModel model;
-        IEnumerable<EdmError> errors;
-        IEnumerable<IEdmModel> refs = null;
+        IEnumerable<IEdmModel>? refs = null;
+        var exception = Assert.Throws<ArgumentNullException>(() => CsdlReader.TryParse(XmlReader.Create(new StringReader(edmx)), refs, out IEdmModel model, out IEnumerable<EdmError> errors));
+        Assert.Equal("Value cannot be null. (Parameter 'references')", exception.Message);
 
-        var exception = Assert.Throws<ArgumentNullException>(() => CsdlReader.TryParse(XmlReader.Create(new StringReader(edmx)), refs, out model, out errors));
-        Assert.Equal("Value cannot be null.\r\nParameter name: references", exception.Message);
-
-        var exception2 = Assert.Throws<ArgumentNullException>(() => CsdlReader.TryParse(XmlReader.Create(new StringReader(edmx)), refs, new CsdlReaderSettings(), out model, out errors));
-        Assert.Equal("Value cannot be null.\r\nParameter name: references", exception2.Message);
+        var exception2 = Assert.Throws<ArgumentNullException>(() => CsdlReader.TryParse(XmlReader.Create(new StringReader(edmx)), refs, new CsdlReaderSettings(), out IEdmModel model, out IEnumerable<EdmError> errors));
+        Assert.Equal("Value cannot be null. (Parameter 'references')", exception2.Message);
     }
 
     [Fact]
-    public void ParseSimpleEFEdmx()
+    public void TryParse_SimpleEFEdmx_Succeeds()
     {
         var edmx =
 @"<?xml version=""1.0"" encoding=""utf-16""?>
@@ -79,7 +77,7 @@ public class CsdlParsingTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void ParseCircleReferencedModelODataEdmx()
+    public void TryParse_CircularReferencedModelODataEdmx_Succeeds()
     {
         var edmx =
 @"<?xml version=""1.0"" encoding=""utf-16""?>
@@ -168,7 +166,7 @@ public class CsdlParsingTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void ParseCircleReferencedMultipleModels_NamespaceAlias()
+    public void TryParse_CircularReferencedMultipleModels_WithNamespaceAlias_Succeeds()
     {
         // customer:
         var edmx =
@@ -320,7 +318,7 @@ public class CsdlParsingTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void ParseCircleReferencedMultipleModels_NamespaceAlias_Parse1by1()
+    public void TryParse_CircularReferencedMultipleModels_WithNamespaceAlias_ParseOneByOne()
     {
         // customer:
         var edmx =
@@ -465,7 +463,7 @@ public class CsdlParsingTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void ParseCircleReferencedModelODataEdmxShouldWorkUsingLegacyApproach()
+    public void TryParse_CircularReferencedModelODataEdmx_LegacyApproach_Succeeds()
     {
         var edmx =
 @"<?xml version=""1.0"" encoding=""utf-16""?>
@@ -551,7 +549,7 @@ public class CsdlParsingTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void BadReferenceNonIncludeTest()
+    public void TryParse_BadReferenceWithoutInclude_Fails()
     {
         var edmx =
 @"<?xml version=""1.0"" encoding=""utf-16""?>
@@ -579,7 +577,7 @@ public class CsdlParsingTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void BadReferenceNonIncludeTestWithSelfClosingElement()
+    public void TryParse_BadReferenceWithoutInclude_SelfClosingElement_Fails()
     {
         var edmx =
 @"<?xml version=""1.0"" encoding=""utf-16""?>
@@ -606,7 +604,7 @@ public class CsdlParsingTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void ParseEdmxWithEFandODataBodies()
+    public void TryParse_EdmxWithEFandODataBodies_Fails()
     {
         var edmx =
 @"<?xml version=""1.0"" encoding=""utf-16""?>
@@ -647,7 +645,7 @@ public class CsdlParsingTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void ParseSimpleEFEdmxWithGarbage()
+    public void TryParse_SimpleEFEdmxWithGarbage_Succeeds()
     {
         var edmx =
 @"<?xml version=""1.0"" encoding=""utf-8""?>
@@ -758,7 +756,7 @@ public class CsdlParsingTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void ParseEmptyEdmx()
+    public void TryParse_EmptyEdmx_FailsWithXmlError()
     {
         var edmx = @"<?xml version=""1.0"" encoding=""utf-16""?>";
         bool success = CsdlReader.TryParse(XmlReader.Create(new StringReader(edmx)), out IEdmModel model, out IEnumerable<EdmError> errors);
@@ -768,7 +766,7 @@ public class CsdlParsingTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void ParseEdmxEmptyVersion()
+    public void TryParse_EdmxWithEmptyVersion_FailsWithInvalidVersionNumber()
     {
         var edmx =
 @"<?xml version=""1.0"" encoding=""utf-16""?>
@@ -797,7 +795,7 @@ public class CsdlParsingTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void ParseEdmxBadVersion()
+    public void TryParse_EdmxWithBadVersion_FailsWithInvalidVersionNumber()
     {
         var edmx =
 @"<?xml version=""1.0"" encoding=""utf-16""?>
@@ -826,7 +824,7 @@ public class CsdlParsingTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void ParseEdmxNonIntegerVersion()
+    public void TryParse_EdmxWithNonIntegerVersion_FailsWithInvalidVersionNumber()
     {
         var edmx =
 @"<?xml version=""1.0"" encoding=""utf-16""?>
@@ -855,7 +853,7 @@ public class CsdlParsingTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void ParseMultipleAttributesInEdmxElement()
+    public void TryParse_EdmxWithMultipleAttributes_Succeeds()
     {
         var edmx =
 @"<?xml version=""1.0"" encoding=""utf-16""?>
@@ -883,7 +881,7 @@ public class CsdlParsingTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void ParseBadEdmxAndCheckErrorLocations()
+    public void TryParse_BadEdmx_ChecksErrorLocations()
     {
         var edmx =
 @"<?xml version=""1.0"" encoding=""utf-8""?>
@@ -900,13 +898,15 @@ public class CsdlParsingTests : EdmLibTestCaseBase
 
         bool parsed = CsdlReader.TryParse(XmlReader.Create(new StringReader(edmx)), out IEdmModel model, out IEnumerable<EdmError> errors);
         Assert.False(parsed);
+        Assert.Single(errors);
 
-        Assert.Equal("(6, 8)", errors.ElementAt(0).ErrorLocation.ToString());
-        Assert.Equal("(7, 17)", errors.ElementAt(1).ErrorLocation.ToString());
+        Assert.Equal(EdmErrorCode.UnexpectedXmlElement, errors.First().ErrorCode);
+        Assert.Equal("(6, 8)", errors.First().ErrorLocation.ToString());
+        Assert.Equal("The schema element 'UnExpected' was not expected in the given context.", errors.First().ErrorMessage);
     }
 
     [Fact]
-    public void ParseBadEdmxOfSingleLineAndCheckErrorLocations()
+    public void TryParse_BadEdmxSingleLine_ChecksErrorLocations()
     {
         var edmx =
             "<?xml version=\"1.0\" encoding=\"utf-8\"?>" +
@@ -923,13 +923,15 @@ public class CsdlParsingTests : EdmLibTestCaseBase
 
         bool parsed = CsdlReader.TryParse(XmlReader.Create(new StringReader(edmx)), out IEdmModel model, out IEnumerable<EdmError> errors);
         Assert.False(parsed);
+        Assert.Single(errors);
 
-        Assert.Equal("(1, 250)", errors.ElementAt(0).ErrorLocation.ToString());
-        Assert.Equal("(1, 293)", errors.ElementAt(1).ErrorLocation.ToString());
+        Assert.Equal(EdmErrorCode.UnexpectedXmlElement, errors.First().ErrorCode);
+        Assert.Equal("(1, 250)", errors.First().ErrorLocation.ToString());
+        Assert.Equal("The schema element 'UnExpected' was not expected in the given context.", errors.First().ErrorMessage);
     }
 
     [Fact]
-    public void DeclaredNamespacesAndTermShouldWork()
+    public void TryParse_DeclaredNamespacesAndTerm_Succeeds()
     {
         const string edmx = @"<?xml version=""1.0"" encoding=""utf-16""?>
 <edmx:Edmx xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"" Version=""4.0"">
@@ -972,7 +974,7 @@ public class CsdlParsingTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void IgnoreUnexpectedAttributeAndElementInSchema()
+    public void TryParse_IgnoreUnexpectedAttributeAndElementInSchema_SucceedsWithWarnings()
     {
         const string edmx =
 @"<?xml version=""1.0"" encoding=""utf-16""?>
@@ -1007,7 +1009,7 @@ public class CsdlParsingTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void IgnoreUnexpectedAttributeAndElementInReferencedSchema()
+    public void TryParse_IgnoreUnexpectedAttributeAndElementInReferencedSchema_SucceedsWithWarnings()
     {
         var edmx =
 @"<?xml version=""1.0"" encoding=""utf-16""?>
@@ -1077,7 +1079,7 @@ public class CsdlParsingTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void ParsingReferenceModelWithFuncReturnNullPassedShouldThrow()
+    public void TryParse_ReferenceModelWithFuncReturnsNull_FailsWithUnresolvedReferenceUri()
     {
         var edmx =
 @"<?xml version=""1.0"" encoding=""utf-16""?>
@@ -1113,7 +1115,7 @@ public class CsdlParsingTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void ParsingReferenceModelWithFuncReturnNullPassedWhenParsingWellKnownUriShouldNotThrown()
+    public void TryParse_ReferenceModelWithFuncReturnsNull_WellKnownUri_Succeeds()
     {
         var edmx =
 @"<?xml version=""1.0"" encoding=""utf-16""?>
@@ -1146,7 +1148,7 @@ public class CsdlParsingTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void CsdlReaderSettingsTest()
+    public void TryParse_CsdlReaderSettings_ResolvesReferences()
     {
         var edmx =
 @"<?xml version=""1.0"" encoding=""utf-16""?>
@@ -1217,7 +1219,7 @@ public class CsdlParsingTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void CsdlReaderEntitysEnumKeyTest()
+    public void TryParse_EntityWithEnumKey_SucceedsAndValidates()
     {
         var edmx =
 @"<?xml version=""1.0"" encoding=""utf-16""?>
@@ -1260,7 +1262,7 @@ public class CsdlParsingTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void ParsingReferenceModelWithAnnotationsInReferenceShouldThrowExceptionAccordingToIgnoreUnexpectedAttributesAndElements()
+    public void TryParse_ReferenceModelWithAnnotationsInReference_RespectsIgnoreUnexpectedAttributesAndElements()
     {
         var edmx =
 @"<?xml version=""1.0"" encoding=""utf-16""?>
@@ -1346,7 +1348,7 @@ public class CsdlParsingTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void ParsingAbstractComplexTypeAndValidationShouldNotThrowException()
+    public void TryParse_AbstractComplexType_ValidatesSuccessfully()
     {
         var edmx =
 @"<?xml version=""1.0"" encoding=""utf-8"" ?>
@@ -1373,7 +1375,7 @@ public class CsdlParsingTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void ParseEdmxWithAttributesAnnotationPathAndIncludeInServiceDocument()
+    public void TryParse_EdmxWithAttributesAnnotationPathAndIncludeInServiceDocument_Succeeds()
     {
         var edmx =
 @"<?xml version=""1.0"" encoding=""utf-16""?>
@@ -1434,7 +1436,7 @@ public class CsdlParsingTests : EdmLibTestCaseBase
     #region Edm.Untyped
 
     [Fact]
-    public void CsdlReaderEdmUntypedTest()
+    public void TryParse_EdmUntypedType_SucceedsAndValidates()
     {
         var edmx =
 @"<?xml version=""1.0"" encoding=""utf-16""?>

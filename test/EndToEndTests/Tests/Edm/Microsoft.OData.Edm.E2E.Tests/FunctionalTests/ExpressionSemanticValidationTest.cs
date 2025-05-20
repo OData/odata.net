@@ -6,6 +6,7 @@
 
 using System.Xml.Linq;
 using Microsoft.OData.Edm.Csdl;
+using Microsoft.OData.Edm.E2E.Tests.Common;
 using Microsoft.OData.Edm.Validation;
 using Microsoft.OData.Edm.Vocabularies;
 
@@ -16,7 +17,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void NullCannotBeAssertedToBeANonNullableType(EdmVersion edmVersion)
+    public void Validate_NullCannotBeAssertedToNonNullableType_ReturnsValidationError(EdmVersion edmVersion)
     {
         var csdl1 =
 @"<?xml version=""1.0"" encoding=""utf-16""?>
@@ -47,7 +48,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         Assert.Single(actualErrors);
 
         Assert.Equal(EdmErrorCode.NullCannotBeAssertedToBeANonNullableType, actualErrors.Last().ErrorCode);
-        Assert.Equal("The value 'foo' is not a valid integer. The value must be a valid 32 bit integer.", actualErrors.Last().ErrorMessage);
+        Assert.Equal("Null value cannot have a non-nullable type.", actualErrors.Last().ErrorMessage);
         Assert.Equal("(6, 8)", actualErrors.Last().ErrorLocation.ToString());
 
         var serializedCsdls = GetSerializerResult(model, edmVersion, out IEnumerable<EdmError> serializationErrors).Select(n => XElement.Parse(n));
@@ -62,7 +63,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void CannotReconcilePrimitiveExpressionWithNonPrimitiveType(EdmVersion edmVersion)
+    public void Validate_PrimitiveExpressionCannotBeReconciledWithNonPrimitiveType_ReturnsValidationError(EdmVersion edmVersion)
     {
         var csdl1 =
 @"<?xml version=""1.0"" encoding=""utf-16""?>
@@ -94,7 +95,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         Assert.Single(actualErrors);
 
         Assert.Equal(EdmErrorCode.PrimitiveConstantExpressionNotValidForNonPrimitiveType, actualErrors.Last().ErrorCode);
-        Assert.Equal("The value 'foo' is not a valid integer. The value must be a valid 32 bit integer.", actualErrors.Last().ErrorMessage);
+        Assert.Equal("A primitive expression is incompatible with a non-primitive type.", actualErrors.Last().ErrorMessage);
         Assert.Equal("(5, 6)", actualErrors.Last().ErrorLocation.ToString());
 
         var serializedCsdls = GetSerializerResult(model, edmVersion, out IEnumerable<EdmError> serializationErrors).Select(n => XElement.Parse(n));
@@ -109,7 +110,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void IncorrectPrimitiveTypeForTerm(EdmVersion edmVersion)
+    public void Validate_IncorrectPrimitiveTypeForTerm_ReturnsValidationError(EdmVersion edmVersion)
     {
         var csdl1 =
 @"<?xml version=""1.0"" encoding=""utf-16""?>
@@ -138,7 +139,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         Assert.Single(actualErrors);
 
         Assert.Equal(EdmErrorCode.ExpressionPrimitiveKindNotValidForAssertedType, actualErrors.Last().ErrorCode);
-        Assert.Equal("The value 'foo' is not a valid integer. The value must be a valid 32 bit integer.", actualErrors.Last().ErrorMessage);
+        Assert.Equal("The primitive expression is not compatible with the asserted type.", actualErrors.Last().ErrorMessage);
         Assert.Equal("(5, 6)", actualErrors.Last().ErrorLocation.ToString());
 
         var serializedCsdls = GetSerializerResult(model, edmVersion, out IEnumerable<EdmError> serializationErrors).Select(n => XElement.Parse(n));
@@ -153,7 +154,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void OkayPrimitiveTerm(EdmVersion edmVersion)
+    public void Validate_CorrectPrimitiveTerm_DoesNotReturnValidationError(EdmVersion edmVersion)
     {
         var csdl1 =
 @"<?xml version=""1.0"" encoding=""utf-16""?>
@@ -193,7 +194,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void OkayCollectionTerm(EdmVersion edmVersion)
+    public void Validate_CorrectCollectionTerm_DoesNotReturnValidationError(EdmVersion edmVersion)
     {
         var csdl1 =
 @"<?xml version=""1.0"" encoding=""utf-16""?>
@@ -238,7 +239,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void OkayRecordTerm(EdmVersion edmVersion)
+    public void Validate_CorrectRecordTerm_DoesNotReturnValidationError(EdmVersion edmVersion)
     {
         var csdl1 =
 @"<?xml version=""1.0"" encoding=""utf-16""?>
@@ -294,7 +295,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void BadCollectionTermItemOfIncorrectType(EdmVersion edmVersion)
+    public void Validate_CollectionTermWithIncorrectItemType_ReturnsValidationError(EdmVersion edmVersion)
     {
         var csdl1 =
 @"<?xml version=""1.0"" encoding=""utf-16""?>
@@ -329,7 +330,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         Assert.Single(actualErrors);
 
         Assert.Equal(EdmErrorCode.InvalidInteger, actualErrors.Last().ErrorCode);
-        Assert.Equal("The value 'foo' is not a valid integer. The value must be a valid 32 bit integer.", actualErrors.Last().ErrorMessage);
+        Assert.Equal("The value 'Not an Int' is not a valid integer. The value must be a valid 32 bit integer.", actualErrors.Last().ErrorMessage);
         Assert.Equal("(9, 14)", actualErrors.Last().ErrorLocation.ToString());
 
         var serializedCsdls = GetSerializerResult(model, edmVersion, out IEnumerable<EdmError> serializationErrors).Select(n => XElement.Parse(n));
@@ -344,7 +345,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void BadCollectionTermIncorrectDeclaredType(EdmVersion edmVersion)
+    public void Validate_CollectionTermWithIncorrectDeclaredType_ReturnsValidationError(EdmVersion edmVersion)
     {
         var csdl1 =
 @"<?xml version=""1.0"" encoding=""utf-16""?>
@@ -378,16 +379,16 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         Assert.Equal(3, actualErrors.Count());
 
         Assert.Equal(EdmErrorCode.ExpressionNotValidForTheAssertedType, actualErrors.ElementAt(0).ErrorCode);
-        Assert.Equal("The value 'foo' is not a valid integer. The value must be a valid 32 bit integer.", actualErrors.ElementAt(0).ErrorMessage);
+        Assert.Equal("The type of the expression is incompatible with the asserted type.", actualErrors.ElementAt(0).ErrorMessage);
         Assert.Equal("(6, 10)", actualErrors.ElementAt(0).ErrorLocation.ToString());
 
         Assert.Equal(EdmErrorCode.ExpressionPrimitiveKindNotValidForAssertedType, actualErrors.ElementAt(1).ErrorCode);
-        Assert.Equal("The value 'foo' is not a valid integer. The value must be a valid 32 bit integer.", actualErrors.ElementAt(1).ErrorMessage);
+        Assert.Equal("The primitive expression is not compatible with the asserted type.", actualErrors.ElementAt(1).ErrorMessage);
         Assert.Equal("(7, 14)", actualErrors.ElementAt(1).ErrorLocation.ToString());
 
-        Assert.Equal(EdmErrorCode.ExpressionPrimitiveKindNotValidForAssertedType, actualErrors.ElementAt(1).ErrorCode);
-        Assert.Equal("The value 'foo' is not a valid integer. The value must be a valid 32 bit integer.", actualErrors.ElementAt(1).ErrorMessage);
-        Assert.Equal("(8, 14)", actualErrors.ElementAt(1).ErrorLocation.ToString());
+        Assert.Equal(EdmErrorCode.ExpressionPrimitiveKindNotValidForAssertedType, actualErrors.ElementAt(2).ErrorCode);
+        Assert.Equal("The primitive expression is not compatible with the asserted type.", actualErrors.ElementAt(2).ErrorMessage);
+        Assert.Equal("(8, 14)", actualErrors.ElementAt(2).ErrorLocation.ToString());
 
         var serializedCsdls = GetSerializerResult(model, edmVersion, out IEnumerable<EdmError> serializationErrors).Select(n => XElement.Parse(n));
         Assert.True(serializedCsdls.Any());
@@ -401,7 +402,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void BadRecordTermRenamedProperty(EdmVersion edmVersion)
+    public void Validate_RecordTermWithRenamedProperty_ReturnsValidationError(EdmVersion edmVersion)
     {
         var csdl1 =
 @"<?xml version=""1.0"" encoding=""utf-16""?>
@@ -446,7 +447,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         Assert.Single(actualErrors);
 
         Assert.Equal(EdmErrorCode.RecordExpressionHasExtraProperties, actualErrors.ElementAt(0).ErrorCode);
-        Assert.Equal("The value 'foo' is not a valid integer. The value must be a valid 32 bit integer.", actualErrors.ElementAt(0).ErrorMessage);
+        Assert.Equal("The type of the record expression is not open and does not contain a property named 'PropBAD'.", actualErrors.ElementAt(0).ErrorMessage);
         Assert.Equal("(6, 10)", actualErrors.ElementAt(0).ErrorLocation.ToString());
 
         var serializedCsdls = GetSerializerResult(model, edmVersion, out IEnumerable<EdmError> serializationErrors).Select(n => XElement.Parse(n));
@@ -461,7 +462,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void BadRecordTermMisTypedProperty(EdmVersion edmVersion)
+    public void Validate_RecordTermWithMismatchedPropertyType_ReturnsValidationError(EdmVersion edmVersion)
     {
         var csdl1 =
 @"<?xml version=""1.0"" encoding=""utf-16""?>
@@ -506,7 +507,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         Assert.Single(actualErrors);
 
         Assert.Equal(EdmErrorCode.ExpressionPrimitiveKindNotValidForAssertedType, actualErrors.ElementAt(0).ErrorCode);
-        Assert.Equal("The value 'foo' is not a valid integer. The value must be a valid 32 bit integer.", actualErrors.ElementAt(0).ErrorMessage);
+        Assert.Equal("The primitive expression is not compatible with the asserted type.", actualErrors.ElementAt(0).ErrorMessage);
         Assert.Equal("(11, 14)", actualErrors.ElementAt(0).ErrorLocation.ToString());
 
         var serializedCsdls = GetSerializerResult(model, edmVersion, out IEnumerable<EdmError> serializationErrors).Select(n => XElement.Parse(n));
@@ -521,7 +522,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void BadCollectionElementInconsistentWithDeclaredType(EdmVersion edmVersion)
+    public void Validate_CollectionElementInconsistentWithDeclaredType_ReturnsValidationError(EdmVersion edmVersion)
     {
         var csdl1 =
 @"<?xml version=""1.0"" encoding=""utf-16""?>
@@ -555,8 +556,8 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         Assert.Single(actualErrors);
 
         Assert.Equal(EdmErrorCode.ExpressionPrimitiveKindNotValidForAssertedType, actualErrors.ElementAt(0).ErrorCode);
-        Assert.Equal("The value 'foo' is not a valid integer. The value must be a valid 32 bit integer.", actualErrors.ElementAt(0).ErrorMessage);
-        Assert.Equal("(11, 14)", actualErrors.ElementAt(0).ErrorLocation.ToString());
+        Assert.Equal("The primitive expression is not compatible with the asserted type.", actualErrors.ElementAt(0).ErrorMessage);
+        Assert.Equal("(8, 14)", actualErrors.ElementAt(0).ErrorLocation.ToString());
 
         var serializedCsdls = GetSerializerResult(model, edmVersion, out IEnumerable<EdmError> serializationErrors).Select(n => XElement.Parse(n));
         Assert.True(serializedCsdls.Any());
@@ -570,7 +571,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void BadRecordWithNonStructuredType(EdmVersion edmVersion)
+    public void Validate_RecordWithNonStructuredType_ReturnsValidationError(EdmVersion edmVersion)
     {
         var csdl1 =
 @"<?xml version=""1.0"" encoding=""utf-16""?>
@@ -617,7 +618,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         Assert.Single(actualErrors);
 
         Assert.Equal(EdmErrorCode.TypeSemanticsCouldNotConvertTypeReference, actualErrors.ElementAt(0).ErrorCode);
-        Assert.Equal("The value 'foo' is not a valid integer. The value must be a valid 32 bit integer.", actualErrors.ElementAt(0).ErrorMessage);
+        Assert.Equal("The type 'CSDL.Color' could not be converted to be a 'Structured' type.", actualErrors.ElementAt(0).ErrorMessage);
         Assert.Equal("(12, 10)", actualErrors.ElementAt(0).ErrorLocation.ToString());
 
         var serializedCsdls = GetSerializerResult(model, edmVersion, out IEnumerable<EdmError> serializationErrors).Select(n => XElement.Parse(n));
@@ -632,7 +633,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void BadRecordTermMisTypedPropertyForUntypedTerm(EdmVersion edmVersion)
+    public void Validate_RecordTermWithMismatchedPropertyTypeForUntypedTerm_ReturnsValidationError(EdmVersion edmVersion)
     {
         var csdl1 =
 @"<?xml version=""1.0"" encoding=""utf-16""?>
@@ -677,7 +678,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         Assert.Single(actualErrors);
 
         Assert.Equal(EdmErrorCode.ExpressionPrimitiveKindNotValidForAssertedType, actualErrors.ElementAt(0).ErrorCode);
-        Assert.Equal("The value 'foo' is not a valid integer. The value must be a valid 32 bit integer.", actualErrors.ElementAt(0).ErrorMessage);
+        Assert.Equal("The primitive expression is not compatible with the asserted type.", actualErrors.ElementAt(0).ErrorMessage);
         Assert.Equal("(16, 14)", actualErrors.ElementAt(0).ErrorLocation.ToString());
 
         var serializedCsdls = GetSerializerResult(model, edmVersion, out IEnumerable<EdmError> serializationErrors).Select(n => XElement.Parse(n));
@@ -692,7 +693,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void BinaryValueInHexidecimalFormat(EdmVersion edmVersion)
+    public void Validate_BinaryValueInHexadecimalFormat_ReturnsValidationError(EdmVersion edmVersion)
     {
         var csdl1 =
 @"<?xml version=""1.0"" encoding=""utf-16""?>
@@ -731,14 +732,22 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         Assert.Single(actualErrors);
 
         Assert.Equal(EdmErrorCode.InvalidBinary, actualErrors.ElementAt(0).ErrorCode);
-        Assert.Equal("The value 'foo' is not a valid integer. The value must be a valid 32 bit integer.", actualErrors.ElementAt(0).ErrorMessage);
+        Assert.Equal("The value '0x1234' is not a valid binary value. The value must be a hexadecimal string and must not be prefixed by '0x'.", actualErrors.ElementAt(0).ErrorMessage);
         Assert.Equal("(4, 10)", actualErrors.ElementAt(0).ErrorLocation.ToString());
+
+        var serializedCsdls = GetSerializerResult(model, edmVersion, out IEnumerable<EdmError> serializationErrors).Select(n => XElement.Parse(n));
+        Assert.True(serializedCsdls.Any());
+        Assert.False(serializationErrors.Any());
+
+        // if the original test model is not valid, the serializer should still generate CSDLs that parser can handle, but the round trip-ability is not guaranteed.
+        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel? roundtrippedModel, out IEnumerable<EdmError>? parserErrors);
+        Assert.True(isWellFormed);
     }
 
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void NoErrorsForComplexTypeTerm(EdmVersion edmVersion)
+    public void Validate_NoErrorsForComplexTypeTerm_DoesNotReturnValidationError(EdmVersion edmVersion)
     {
         var csdl =
 @"<?xml version=""1.0"" encoding=""utf-16""?>
@@ -790,7 +799,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void ValidateInvalidTypeUsingCastCollectionCsdl(EdmVersion edmVersion)
+    public void Validate_InvalidTypeUsingCastCollectionCsdl_ReturnsValidationError(EdmVersion edmVersion)
     {
         var csdl = @"
 <Schema Namespace=""NS"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -828,8 +837,8 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         Assert.Single(actualErrors);
 
         Assert.Equal(EdmErrorCode.ExpressionNotValidForTheAssertedType, actualErrors.ElementAt(0).ErrorCode);
-        Assert.Equal("The value 'foo' is not a valid integer. The value must be a valid 32 bit integer.", actualErrors.ElementAt(0).ErrorMessage);
-        Assert.Equal("(16, 14)", actualErrors.ElementAt(0).ErrorLocation.ToString());
+        Assert.Equal("The type of the expression is incompatible with the asserted type.", actualErrors.ElementAt(0).ErrorMessage);
+        Assert.Equal("(15, 14)", actualErrors.ElementAt(0).ErrorLocation.ToString());
 
         var serializedCsdls = GetSerializerResult(model, edmVersion, out IEnumerable<EdmError> serializationErrors).Select(n => XElement.Parse(n));
         Assert.True(serializedCsdls.Any());
@@ -843,7 +852,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void ValidateInvalidTypeUsingCastCollectionModel(EdmVersion edmVersion)
+    public void Validate_InvalidTypeUsingCastCollectionModel_ReturnsValidationError(EdmVersion edmVersion)
     {
         var model = new EdmModel();
 
@@ -876,8 +885,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         Assert.Single(actualErrors);
 
         Assert.Equal(EdmErrorCode.ExpressionNotValidForTheAssertedType, actualErrors.ElementAt(0).ErrorCode);
-        Assert.Equal("The value 'foo' is not a valid integer. The value must be a valid 32 bit integer.", actualErrors.ElementAt(0).ErrorMessage);
-        Assert.Equal("(16, 14)", actualErrors.ElementAt(0).ErrorLocation.ToString());
+        Assert.Equal("The type of the expression is incompatible with the asserted type.", actualErrors.ElementAt(0).ErrorMessage);
 
         var serializedCsdls = GetSerializerResult(model, edmVersion, out IEnumerable<EdmError> serializationErrors).Select(n => XElement.Parse(n));
         Assert.True(serializedCsdls.Any());
@@ -891,7 +899,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void ValidateCastNullableToNonNullableCsdl(EdmVersion edmVersion)
+    public void Validate_CastNullableToNonNullableCsdl_ReturnsValidationError(EdmVersion edmVersion)
     {
         var csdl = @"
 <Schema Namespace=""NS"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -929,8 +937,8 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         Assert.Single(actualErrors);
 
         Assert.Equal(EdmErrorCode.ExpressionNotValidForTheAssertedType, actualErrors.ElementAt(0).ErrorCode);
-        Assert.Equal("The value 'foo' is not a valid integer. The value must be a valid 32 bit integer.", actualErrors.ElementAt(0).ErrorMessage);
-        Assert.Equal("(16, 14)", actualErrors.ElementAt(0).ErrorLocation.ToString());
+        Assert.Equal("The type of the expression is incompatible with the asserted type.", actualErrors.ElementAt(0).ErrorMessage);
+        Assert.Equal("(15, 14)", actualErrors.ElementAt(0).ErrorLocation.ToString());
 
         var serializedCsdls = GetSerializerResult(model, edmVersion, out IEnumerable<EdmError> serializationErrors).Select(n => XElement.Parse(n));
         Assert.True(serializedCsdls.Any());
@@ -944,7 +952,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void ValidateCastNullableToNonNullableModel(EdmVersion edmVersion)
+    public void Validate_CastNullableToNonNullableModel_ReturnsValidationError(EdmVersion edmVersion)
     {
         var model = new EdmModel();
 
@@ -977,8 +985,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         Assert.Single(actualErrors);
 
         Assert.Equal(EdmErrorCode.ExpressionNotValidForTheAssertedType, actualErrors.ElementAt(0).ErrorCode);
-        Assert.Equal("The value 'foo' is not a valid integer. The value must be a valid 32 bit integer.", actualErrors.ElementAt(0).ErrorMessage);
-        Assert.Equal("(16, 14)", actualErrors.ElementAt(0).ErrorLocation.ToString());
+        Assert.Equal("The type of the expression is incompatible with the asserted type.", actualErrors.ElementAt(0).ErrorMessage);
 
         var serializedCsdls = GetSerializerResult(model, edmVersion, out IEnumerable<EdmError> serializationErrors).Select(n => XElement.Parse(n));
         Assert.True(serializedCsdls.Any());
@@ -992,7 +999,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void ValidateCastNullableToNonNullableOnInlineAnnotationCsdl(EdmVersion edmVersion)
+    public void Validate_CastNullableToNonNullableOnInlineAnnotationCsdl_ReturnsValidationError(EdmVersion edmVersion)
     {
         var csdl = @"
 <Schema Namespace=""NS"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -1029,8 +1036,8 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         Assert.Single(actualErrors);
 
         Assert.Equal(EdmErrorCode.ExpressionNotValidForTheAssertedType, actualErrors.ElementAt(0).ErrorCode);
-        Assert.Equal("The value 'foo' is not a valid integer. The value must be a valid 32 bit integer.", actualErrors.ElementAt(0).ErrorMessage);
-        Assert.Equal("(16, 14)", actualErrors.ElementAt(0).ErrorLocation.ToString());
+        Assert.Equal("The type of the expression is incompatible with the asserted type.", actualErrors.ElementAt(0).ErrorMessage);
+        Assert.Equal("(5, 14)", actualErrors.ElementAt(0).ErrorLocation.ToString());
 
         var serializedCsdls = GetSerializerResult(model, edmVersion, out IEnumerable<EdmError> serializationErrors).Select(n => XElement.Parse(n));
         Assert.True(serializedCsdls.Any());
@@ -1044,7 +1051,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void ValidateCastNullableToNonNullableOnInlineAnnotationModel(EdmVersion edmVersion)
+    public void Validate_CastNullableToNonNullableOnInlineAnnotationModel_ReturnsValidationError(EdmVersion edmVersion)
     {
         var model = new EdmModel();
 
@@ -1077,8 +1084,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         Assert.Single(actualErrors);
 
         Assert.Equal(EdmErrorCode.ExpressionNotValidForTheAssertedType, actualErrors.ElementAt(0).ErrorCode);
-        Assert.Equal("The value 'foo' is not a valid integer. The value must be a valid 32 bit integer.", actualErrors.ElementAt(0).ErrorMessage);
-        Assert.Equal("(16, 14)", actualErrors.ElementAt(0).ErrorLocation.ToString());
+        Assert.Equal("The type of the expression is incompatible with the asserted type.", actualErrors.ElementAt(0).ErrorMessage);
 
         var serializedCsdls = GetSerializerResult(model, edmVersion, out IEnumerable<EdmError> serializationErrors).Select(n => XElement.Parse(n));
         Assert.True(serializedCsdls.Any());
@@ -1092,7 +1098,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void ValidateCastResultFalseEvaluationCsdl(EdmVersion edmVersion)
+    public void Validate_CastResultFalseEvaluationCsdl_DoesNotReturnValidationError(EdmVersion edmVersion)
     {
         var csdl = @"
 <Schema Namespace=""NS"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -1148,7 +1154,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void ValidateCastResultFalseEvaluationModel(EdmVersion edmVersion)
+    public void Validate_CastResultFalseEvaluationModel_DoesNotReturnValidationError(EdmVersion edmVersion)
     {
         var model = new EdmModel();
 
@@ -1196,7 +1202,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void ValidateCastResultTrueEvaluationCsdl(EdmVersion edmVersion)
+    public void Validate_CastResultTrueEvaluationCsdl_DoesNotReturnValidationError(EdmVersion edmVersion)
     {
         var csdl = @"
 <Schema Namespace=""NS"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -1252,7 +1258,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void ValidateCastResultTrueEvaluationModel(EdmVersion edmVersion)
+    public void Validate_CastResultTrueEvaluationModel_DoesNotReturnValidationError(EdmVersion edmVersion)
     {
         var model = new EdmModel();
 
@@ -1305,16 +1311,16 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void ValidateInvalidPropertyTypeUsingIsTypeOnOutOfLineAnnotationCsdl(EdmVersion edmVersion)
+    public void Validate_InvalidPropertyTypeUsingIsOfOnOutOfLineAnnotationCsdl_ReturnsValidationError(EdmVersion edmVersion)
     {
         var csdl = @"
 <Schema Namespace=""NS"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
     <Term Name=""FriendName"" Type=""Edm.String"" />
     <Annotations Target=""NS.FriendName"">
         <Annotation Term=""NS.FriendName"">
-            <IsType Type=""Edm.String"">
+            <IsOf Type=""Edm.String"">
                 <String>foo</String>
-            </IsType>
+            </IsOf>
         </Annotation>
     </Annotations>
 </Schema>";
@@ -1331,8 +1337,8 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         Assert.Single(actualErrors);
 
         Assert.Equal(EdmErrorCode.ExpressionPrimitiveKindNotValidForAssertedType, actualErrors.ElementAt(0).ErrorCode);
-        Assert.Equal("The value 'foo' is not a valid integer. The value must be a valid 32 bit integer.", actualErrors.ElementAt(0).ErrorMessage);
-        Assert.Equal("(16, 14)", actualErrors.ElementAt(0).ErrorLocation.ToString());
+        Assert.Equal("Cannot promote the primitive type 'Edm.Boolean' to the specified primitive type 'Edm.String'.", actualErrors.ElementAt(0).ErrorMessage);
+        Assert.Equal("(6, 14)", actualErrors.ElementAt(0).ErrorLocation.ToString());
 
         var serializedCsdls = GetSerializerResult(model, edmVersion, out IEnumerable<EdmError> serializationErrors).Select(n => XElement.Parse(n));
         Assert.True(serializedCsdls.Any());
@@ -1346,7 +1352,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void ValidateInvalidPropertyTypeUsingIsTypeOnOutOfLineAnnotationModel(EdmVersion edmVersion)
+    public void Validate_InvalidPropertyTypeUsingIsOfOnOutOfLineAnnotationModel_ReturnsValidationError(EdmVersion edmVersion)
     {
         var model = new EdmModel();
 
@@ -1367,8 +1373,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         Assert.Single(actualErrors);
 
         Assert.Equal(EdmErrorCode.ExpressionPrimitiveKindNotValidForAssertedType, actualErrors.ElementAt(0).ErrorCode);
-        Assert.Equal("The value 'foo' is not a valid integer. The value must be a valid 32 bit integer.", actualErrors.ElementAt(0).ErrorMessage);
-        Assert.Equal("(16, 14)", actualErrors.ElementAt(0).ErrorLocation.ToString());
+        Assert.Equal("Cannot promote the primitive type 'Edm.Boolean' to the specified primitive type 'Edm.String'.", actualErrors.ElementAt(0).ErrorMessage);
 
         var serializedCsdls = GetSerializerResult(model, edmVersion, out IEnumerable<EdmError> serializationErrors).Select(n => XElement.Parse(n));
         Assert.True(serializedCsdls.Any());
@@ -1382,7 +1387,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void ValidateInvalidPropertyTypeUsingIsTypeOnInlineAnnotationCsdl(EdmVersion edmVersion)
+    public void Validate_InvalidPropertyTypeUsingIsOfOnInlineAnnotationCsdl_ReturnsValidationError(EdmVersion edmVersion)
     {
         var csdl = @"
 <Schema Namespace=""NS"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -1392,9 +1397,9 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         <Annotation Term=""NS.CarTerm"">
             <Record>
                 <PropertyValue Property=""Expensive"">
-                    <IsType Type=""Edm.String"">
+                    <IsOf Type=""Edm.String"">
                         <String>foo</String>
-                    </IsType>
+                    </IsOf>
                 </PropertyValue>
             </Record>
         </Annotation>
@@ -1416,8 +1421,8 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         Assert.Single(actualErrors);
 
         Assert.Equal(EdmErrorCode.ExpressionNotValidForTheAssertedType, actualErrors.ElementAt(0).ErrorCode);
-        Assert.Equal("The value 'foo' is not a valid integer. The value must be a valid 32 bit integer.", actualErrors.ElementAt(0).ErrorMessage);
-        Assert.Equal("(16, 14)", actualErrors.ElementAt(0).ErrorLocation.ToString());
+        Assert.Equal("The type of the expression is incompatible with the asserted type.", actualErrors.ElementAt(0).ErrorMessage);
+        Assert.Equal("(9, 22)", actualErrors.ElementAt(0).ErrorLocation.ToString());
 
         var serializedCsdls = GetSerializerResult(model, edmVersion, out IEnumerable<EdmError> serializationErrors).Select(n => XElement.Parse(n));
         Assert.True(serializedCsdls.Any());
@@ -1431,7 +1436,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void ValidateInvalidPropertyTypeUsingIsTypeOnInlineAnnotationModel(EdmVersion edmVersion)
+    public void Validate_InvalidPropertyTypeUsingIsOfOnInlineAnnotationModel_ReturnsValidationError(EdmVersion edmVersion)
     {
         var model = new EdmModel();
 
@@ -1461,8 +1466,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         Assert.Single(actualErrors);
 
         Assert.Equal(EdmErrorCode.ExpressionNotValidForTheAssertedType, actualErrors.ElementAt(0).ErrorCode);
-        Assert.Equal("The value 'foo' is not a valid integer. The value must be a valid 32 bit integer.", actualErrors.ElementAt(0).ErrorMessage);
-        Assert.Equal("(16, 14)", actualErrors.ElementAt(0).ErrorLocation.ToString());
+        Assert.Equal("The type of the expression is incompatible with the asserted type.", actualErrors.ElementAt(0).ErrorMessage);
 
         var serializedCsdls = GetSerializerResult(model, edmVersion, out IEnumerable<EdmError> serializationErrors).Select(n => XElement.Parse(n));
         Assert.True(serializedCsdls.Any());
@@ -1476,16 +1480,16 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void ValidateIsTypeResultFalseEvaluationCsdl(EdmVersion edmVersion)
+    public void Validate_IsOfResultFalseEvaluationCsdl_DoesNotReturnValidationError(EdmVersion edmVersion)
     {
         var csdl = @"
 <Schema Namespace=""NS"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
     <Term Name=""BooleanFlag"" Type=""Edm.Boolean"" />
     <Annotations Target=""NS.BooleanFlag"">
         <Annotation Term=""NS.BooleanFlag"">
-            <IsType Type=""Edm.String"">
+            <IsOf Type=""Edm.String"">
                 <Int>32</Int>
-            </IsType>
+            </IsOf>
         </Annotation>
     </Annotations>
 </Schema>";
@@ -1513,7 +1517,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void ValidateIsTypeResultFalseEvaluationModel(EdmVersion edmVersion)
+    public void Validate_IsOfResultFalseEvaluationModel_DoesNotReturnValidationError(EdmVersion edmVersion)
     {
         var model = new EdmModel();
 
@@ -1545,7 +1549,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void ValidateIsTypeResultTrueEvaluationCsdl(EdmVersion edmVersion)
+    public void Validate_IsOfResultTrueEvaluationCsdl_DoesNotReturnValidationError(EdmVersion edmVersion)
     {
         var csdl = @"
 <Schema Namespace=""NS"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -1557,9 +1561,9 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         <Annotation Term=""NS.BooleanFlagTerm"">
             <Record>
                 <PropertyValue Property=""Flag"">
-                    <IsType Type=""Edm.String"">
+                    <IsOf Type=""Edm.String"">
                         <String>foo</String>
-                    </IsType>
+                    </IsOf>
                 </PropertyValue>
             </Record>
         </Annotation>
@@ -1589,7 +1593,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void ValidateIsTypeResultTrueEvaluationModel(EdmVersion edmVersion)
+    public void Validate_IsOfResultTrueEvaluationModel_DoesNotReturnValidationError(EdmVersion edmVersion)
     {
         var model = new EdmModel();
 
@@ -1625,7 +1629,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void IncorrectTypeForCollectionExpression(EdmVersion edmVersion)
+    public void Validate_IncorrectTypeForCollectionExpression_ReturnsValidationError(EdmVersion edmVersion)
     {
         var csdl1 =
         @"<?xml version=""1.0"" encoding=""utf-16""?>
@@ -1658,7 +1662,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         Assert.Single(actualErrors);
 
         Assert.Equal(EdmErrorCode.CollectionExpressionNotValidForNonCollectionType, actualErrors.ElementAt(0).ErrorCode);
-        Assert.Equal("The value 'foo' is not a valid integer. The value must be a valid 32 bit integer.", actualErrors.ElementAt(0).ErrorMessage);
+        Assert.Equal("A collection expression is incompatible with a non-collection type.", actualErrors.ElementAt(0).ErrorMessage);
         Assert.Equal("(6, 10)", actualErrors.ElementAt(0).ErrorLocation.ToString());
 
         var serializedCsdls = GetSerializerResult(model, edmVersion, out IEnumerable<EdmError> serializationErrors).Select(n => XElement.Parse(n));
@@ -1673,7 +1677,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void IncorrectTypeForGuidExpression(EdmVersion edmVersion)
+    public void Validate_IncorrectTypeForGuidExpression_ReturnsValidationError(EdmVersion edmVersion)
     {
         var csdl1 =
 @"<?xml version=""1.0"" encoding=""utf-16""?>
@@ -1704,7 +1708,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         Assert.Single(actualErrors);
 
         Assert.Equal(EdmErrorCode.ExpressionPrimitiveKindNotValidForAssertedType, actualErrors.ElementAt(0).ErrorCode);
-        Assert.Equal("The value 'foo' is not a valid integer. The value must be a valid 32 bit integer.", actualErrors.ElementAt(0).ErrorMessage);
+        Assert.Equal("The primitive expression is not compatible with the asserted type.", actualErrors.ElementAt(0).ErrorMessage);
         Assert.Equal("(6, 10)", actualErrors.ElementAt(0).ErrorLocation.ToString());
 
         var serializedCsdls = GetSerializerResult(model, edmVersion, out IEnumerable<EdmError> serializationErrors).Select(n => XElement.Parse(n));
@@ -1719,7 +1723,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void IncorrectTypeForFloatingExpression(EdmVersion edmVersion)
+    public void Validate_IncorrectTypeForFloatingExpression_ReturnsValidationError(EdmVersion edmVersion)
     {
         var csdl1 =
 @"<?xml version=""1.0"" encoding=""utf-16""?>
@@ -1750,7 +1754,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         Assert.Single(actualErrors);
 
         Assert.Equal(EdmErrorCode.ExpressionPrimitiveKindNotValidForAssertedType, actualErrors.ElementAt(0).ErrorCode);
-        Assert.Equal("The value 'foo' is not a valid integer. The value must be a valid 32 bit integer.", actualErrors.ElementAt(0).ErrorMessage);
+        Assert.Equal("The primitive expression is not compatible with the asserted type.", actualErrors.ElementAt(0).ErrorMessage);
         Assert.Equal("(6, 10)", actualErrors.ElementAt(0).ErrorLocation.ToString());
 
         var serializedCsdls = GetSerializerResult(model, edmVersion, out IEnumerable<EdmError> serializationErrors).Select(n => XElement.Parse(n));
@@ -1765,7 +1769,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void IncorrectTypeForDecimalExpression(EdmVersion edmVersion)
+    public void Validate_IncorrectTypeForDecimalExpression_ReturnsValidationError(EdmVersion edmVersion)
     {
         var csdl1 =
 @"<?xml version=""1.0"" encoding=""utf-16""?>
@@ -1796,7 +1800,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         Assert.Single(actualErrors);
 
         Assert.Equal(EdmErrorCode.ExpressionPrimitiveKindNotValidForAssertedType, actualErrors.ElementAt(0).ErrorCode);
-        Assert.Equal("The value 'foo' is not a valid integer. The value must be a valid 32 bit integer.", actualErrors.ElementAt(0).ErrorMessage);
+        Assert.Equal("The primitive expression is not compatible with the asserted type.", actualErrors.ElementAt(0).ErrorMessage);
         Assert.Equal("(6, 10)", actualErrors.ElementAt(0).ErrorLocation.ToString());
 
         var serializedCsdls = GetSerializerResult(model, edmVersion, out IEnumerable<EdmError> serializationErrors).Select(n => XElement.Parse(n));
@@ -1811,7 +1815,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void IncorrectTypeForDateExpression(EdmVersion edmVersion)
+    public void Validate_IncorrectTypeForDateExpression_ReturnsValidationError(EdmVersion edmVersion)
     {
         var csdl1 =
 @"<?xml version=""1.0"" encoding=""utf-16""?>
@@ -1842,7 +1846,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         Assert.Single(actualErrors);
 
         Assert.Equal(EdmErrorCode.ExpressionPrimitiveKindNotValidForAssertedType, actualErrors.ElementAt(0).ErrorCode);
-        Assert.Equal("The value 'foo' is not a valid integer. The value must be a valid 32 bit integer.", actualErrors.ElementAt(0).ErrorMessage);
+        Assert.Equal("The primitive expression is not compatible with the asserted type.", actualErrors.ElementAt(0).ErrorMessage);
         Assert.Equal("(6, 10)", actualErrors.ElementAt(0).ErrorLocation.ToString());
 
         var serializedCsdls = GetSerializerResult(model, edmVersion, out IEnumerable<EdmError> serializationErrors).Select(n => XElement.Parse(n));
@@ -1857,7 +1861,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void IncorrectFormatForDateExpression(EdmVersion edmVersion)
+    public void Validate_IncorrectFormatForDateExpression_ReturnsValidationError(EdmVersion edmVersion)
     {
         var csdl =
 @"<?xml version=""1.0"" encoding=""utf-16""?>
@@ -1882,7 +1886,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         Assert.Single(actualErrors);
 
         Assert.Equal(EdmErrorCode.InvalidDate, actualErrors.ElementAt(0).ErrorCode);
-        Assert.Equal("The value 'foo' is not a valid integer. The value must be a valid 32 bit integer.", actualErrors.ElementAt(0).ErrorMessage);
+        Assert.Equal("The value '01-10-26' is not a valid date value.", actualErrors.ElementAt(0).ErrorMessage);
         Assert.Equal("(6, 10)", actualErrors.ElementAt(0).ErrorLocation.ToString());
 
         var serializedCsdls = GetSerializerResult(model, edmVersion, out IEnumerable<EdmError> serializationErrors).Select(n => XElement.Parse(n));
@@ -1897,7 +1901,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void IncorrectTypeForDateTimeOffsetExpression(EdmVersion edmVersion)
+    public void Validate_IncorrectTypeForDateTimeOffsetExpression_ReturnsValidationError(EdmVersion edmVersion)
     {
         var csdl1 =
 @"<?xml version=""1.0"" encoding=""utf-16""?>
@@ -1928,7 +1932,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         Assert.Single(actualErrors);
 
         Assert.Equal(EdmErrorCode.ExpressionPrimitiveKindNotValidForAssertedType, actualErrors.ElementAt(0).ErrorCode);
-        Assert.Equal("The value 'foo' is not a valid integer. The value must be a valid 32 bit integer.", actualErrors.ElementAt(0).ErrorMessage);
+        Assert.Equal("The primitive expression is not compatible with the asserted type.", actualErrors.ElementAt(0).ErrorMessage);
         Assert.Equal("(6, 10)", actualErrors.ElementAt(0).ErrorLocation.ToString());
 
         var serializedCsdls = GetSerializerResult(model, edmVersion, out IEnumerable<EdmError> serializationErrors).Select(n => XElement.Parse(n));
@@ -1943,7 +1947,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void IncorrectTypeForBooleanExpression(EdmVersion edmVersion)
+    public void Validate_IncorrectTypeForBooleanExpression_ReturnsValidationError(EdmVersion edmVersion)
     {
         var csdl1 =
 @"<?xml version=""1.0"" encoding=""utf-16""?>
@@ -1974,7 +1978,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         Assert.Single(actualErrors);
 
         Assert.Equal(EdmErrorCode.ExpressionPrimitiveKindNotValidForAssertedType, actualErrors.ElementAt(0).ErrorCode);
-        Assert.Equal("The value 'foo' is not a valid integer. The value must be a valid 32 bit integer.", actualErrors.ElementAt(0).ErrorMessage);
+        Assert.Equal("The primitive expression is not compatible with the asserted type.", actualErrors.ElementAt(0).ErrorMessage);
         Assert.Equal("(6, 10)", actualErrors.ElementAt(0).ErrorLocation.ToString());
 
         var serializedCsdls = GetSerializerResult(model, edmVersion, out IEnumerable<EdmError> serializationErrors).Select(n => XElement.Parse(n));
@@ -1989,7 +1993,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void IncorrectTypeForTimeOfDayExpression(EdmVersion edmVersion)
+    public void Validate_IncorrectTypeForTimeOfDayExpression_ReturnsValidationError(EdmVersion edmVersion)
     {
         var csdl1 =
 @"<?xml version=""1.0"" encoding=""utf-16""?>
@@ -2020,7 +2024,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         Assert.Single(actualErrors);
 
         Assert.Equal(EdmErrorCode.ExpressionPrimitiveKindNotValidForAssertedType, actualErrors.ElementAt(0).ErrorCode);
-        Assert.Equal("The value 'foo' is not a valid integer. The value must be a valid 32 bit integer.", actualErrors.ElementAt(0).ErrorMessage);
+        Assert.Equal("The primitive expression is not compatible with the asserted type.", actualErrors.ElementAt(0).ErrorMessage);
         Assert.Equal("(6, 10)", actualErrors.ElementAt(0).ErrorLocation.ToString());
 
         var serializedCsdls = GetSerializerResult(model, edmVersion, out IEnumerable<EdmError> serializationErrors).Select(n => XElement.Parse(n));
@@ -2035,7 +2039,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void IncorrectFormatForTimeOfDayExpression(EdmVersion edmVersion)
+    public void Validate_IncorrectFormatForTimeOfDayExpression_ReturnsValidationError(EdmVersion edmVersion)
     {
         var csdl =
 @"<?xml version=""1.0"" encoding=""utf-16""?>
@@ -2060,7 +2064,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         Assert.Single(actualErrors);
 
         Assert.Equal(EdmErrorCode.InvalidTimeOfDay, actualErrors.ElementAt(0).ErrorCode);
-        Assert.Equal("The value 'foo' is not a valid integer. The value must be a valid 32 bit integer.", actualErrors.ElementAt(0).ErrorMessage);
+        Assert.Equal("The value '-1:10:26' is not a valid TimeOfDay value.", actualErrors.ElementAt(0).ErrorMessage);
         Assert.Equal("(6, 10)", actualErrors.ElementAt(0).ErrorLocation.ToString());
 
         var serializedCsdls = GetSerializerResult(model, edmVersion, out IEnumerable<EdmError> serializationErrors).Select(n => XElement.Parse(n));
@@ -2075,7 +2079,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void StringTooLong(EdmVersion edmVersion)
+    public void Validate_StringTooLong_ReturnsValidationError(EdmVersion edmVersion)
     {
         var csdl1 =
 @"<?xml version=""1.0"" encoding=""utf-16""?>
@@ -2106,7 +2110,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         Assert.Single(actualErrors);
 
         Assert.Equal(EdmErrorCode.StringConstantLengthOutOfRange, actualErrors.ElementAt(0).ErrorCode);
-        Assert.Equal("The value 'foo' is not a valid integer. The value must be a valid 32 bit integer.", actualErrors.ElementAt(0).ErrorMessage);
+        Assert.Equal("The value of the string constant is '18' characters long, but the max length of its type is '5'.", actualErrors.ElementAt(0).ErrorMessage);
         Assert.Equal("(6, 10)", actualErrors.ElementAt(0).ErrorLocation.ToString());
 
         var serializedCsdls = GetSerializerResult(model, edmVersion, out IEnumerable<EdmError> serializationErrors).Select(n => XElement.Parse(n));
@@ -2121,7 +2125,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void BinaryTooLong(EdmVersion edmVersion)
+    public void Validate_BinaryTooLong_ReturnsValidationError(EdmVersion edmVersion)
     {
         var csdl1 =
 @"<?xml version=""1.0"" encoding=""utf-16""?>
@@ -2152,7 +2156,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         Assert.Single(actualErrors);
 
         Assert.Equal(EdmErrorCode.BinaryConstantLengthOutOfRange, actualErrors.ElementAt(0).ErrorCode);
-        Assert.Equal("The value 'foo' is not a valid integer. The value must be a valid 32 bit integer.", actualErrors.ElementAt(0).ErrorMessage);
+        Assert.Equal("The value of the binary constant is '6' characters long, but the max length of its type is '5'.", actualErrors.ElementAt(0).ErrorMessage);
         Assert.Equal("(6, 10)", actualErrors.ElementAt(0).ErrorLocation.ToString());
 
         var serializedCsdls = GetSerializerResult(model, edmVersion, out IEnumerable<EdmError> serializationErrors).Select(n => XElement.Parse(n));

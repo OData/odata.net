@@ -6,7 +6,7 @@
 
 using System.Xml.Linq;
 
-namespace Microsoft.OData.Edm.E2E.Tests;
+namespace Microsoft.OData.Edm.E2E.Tests.Common;
 
 /// <summary>
 /// Sorts the Csdl XElement
@@ -133,16 +133,16 @@ public class CsdlXElementSorter
     {
         if (csdlElement.Name.LocalName == "Schema")
         {
-            this.schemaNamespaceName = csdlElement.Name.NamespaceName;
+            schemaNamespaceName = csdlElement.Name.NamespaceName;
         }
 
-        return this.SortChildren(csdlElement);
+        return SortChildren(csdlElement);
     }
 
     private XElement SortChildren(XElement parentElement)
     {
         // if not in regular Csdl xml namespace, do not sort any further
-        if (parentElement.Name.NamespaceName != this.schemaNamespaceName)
+        if (parentElement.Name.NamespaceName != schemaNamespaceName)
         {
             return parentElement;
         }
@@ -154,8 +154,8 @@ public class CsdlXElementSorter
         var sortedElements = new List<XElement>();
         foreach (var e in parentElement.Elements())
         {
-            int index = this.FindInsertionIndex(e, sortedElements, parentElement.Name.LocalName);
-            sortedElements.Insert(index, this.SortChildren(e));
+            int index = FindInsertionIndex(e, sortedElements, parentElement.Name.LocalName);
+            sortedElements.Insert(index, SortChildren(e));
         }
 
         var nonElements = parentElement.Nodes().Where(n => !(n is XElement));
@@ -167,7 +167,7 @@ public class CsdlXElementSorter
     {
         int currentIndex = sortedElements.Count - 1;
         while (currentIndex >= 0 &&
-               this.ShouldInsertBefore(elementToInsert, sortedElements[currentIndex], parentElementName))
+               ShouldInsertBefore(elementToInsert, sortedElements[currentIndex], parentElementName))
         {
             currentIndex--;
         }
@@ -178,21 +178,21 @@ public class CsdlXElementSorter
     private bool ShouldInsertBefore(XElement elementToInsert, XElement elementInList, string parentElementName)
     {
         // if elementToInsert is not in regular Csdl namespace, it should always be inserted after
-        if (elementToInsert.Name.NamespaceName != this.schemaNamespaceName)
+        if (elementToInsert.Name.NamespaceName != schemaNamespaceName)
         {
             return false;
         }
 
         // if elementToInsert is in regular Csdl namespace, but elementInList is not
         // this is abnormal order, need to insert after to preserve wrong order
-        if (elementInList.Name.NamespaceName != this.schemaNamespaceName)
+        if (elementInList.Name.NamespaceName != schemaNamespaceName)
         {
             return false;
         }
 
         // now both elements are in regular Csdl namespace
-        int groupOfToInsert = this.GetOrderingGroup(parentElementName, elementToInsert.Name.LocalName);
-        int groupOfInList = this.GetOrderingGroup(parentElementName, elementInList.Name.LocalName);
+        int groupOfToInsert = GetOrderingGroup(parentElementName, elementToInsert.Name.LocalName);
+        int groupOfInList = GetOrderingGroup(parentElementName, elementInList.Name.LocalName);
 
         // for anything "unknown" (we don't want to handle), return false to preserve original ordering
         if (groupOfToInsert < 0 || groupOfInList < 0)
@@ -202,7 +202,7 @@ public class CsdlXElementSorter
 
         if (groupOfToInsert == groupOfInList)
         {
-            return this.ShouldInsertBeforeWithinSameOrderingGroup(elementToInsert, elementInList);
+            return ShouldInsertBeforeWithinSameOrderingGroup(elementToInsert, elementInList);
         }
 
         // subtle: if groupOfToInsert < groupOfInList, it's abnormal order, need to insert after to perserve wrong order
@@ -216,7 +216,7 @@ public class CsdlXElementSorter
             return 0;
         }
 
-        if (!this.elementOrderingGroupLookup.ContainsKey(parentElementName))
+        if (!elementOrderingGroupLookup.ContainsKey(parentElementName))
         {
             return -1;
         }
@@ -242,12 +242,12 @@ public class CsdlXElementSorter
             return false;
         }
 
-        return this.ShouldInsertBeforeBasedOnAttribute(elementToInsert, elementInList);
+        return ShouldInsertBeforeBasedOnAttribute(elementToInsert, elementInList);
     }
 
     private bool ShouldInsertBeforeBasedOnAttribute(XElement elementToInsert, XElement elementInList)
     {
-        string attributeName = this.GetSortingAttributeName(elementToInsert.Name.LocalName);
+        string attributeName = GetSortingAttributeName(elementToInsert.Name.LocalName);
 
         var attributeOfToInsert = elementToInsert.Attribute(attributeName);
         var attributeOfInList = elementInList.Attribute(attributeName);
@@ -260,9 +260,9 @@ public class CsdlXElementSorter
 
     private string GetSortingAttributeName(string elementName)
     {
-        if (this.elementNameToSortingAttribute.ContainsKey(elementName))
+        if (elementNameToSortingAttribute.ContainsKey(elementName))
         {
-            return this.elementNameToSortingAttribute[elementName];
+            return elementNameToSortingAttribute[elementName];
         }
         else
         {

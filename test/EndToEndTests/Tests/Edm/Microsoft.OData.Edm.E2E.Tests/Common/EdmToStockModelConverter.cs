@@ -6,7 +6,7 @@
 
 using Microsoft.OData.Edm.Vocabularies;
 
-namespace Microsoft.OData.Edm.E2E.Tests;
+namespace Microsoft.OData.Edm.E2E.Tests.Common;
 
 public interface IEdmToStockModelConverter
 {
@@ -17,7 +17,7 @@ public class EdmToStockModelConverter : IEdmToStockModelConverter
 {
     public EdmToStockModelConverter()
     {
-        this.EdmCoreModel = EdmCoreModel.Instance;
+        EdmCoreModel = EdmCoreModel.Instance;
     }
 
     public EdmCoreModel EdmCoreModel
@@ -29,9 +29,9 @@ public class EdmToStockModelConverter : IEdmToStockModelConverter
     public EdmModel ConvertToStockModel(IEdmModel edmModel)
     {
         var stockModel = new EdmModel();
-        this.CreateStocksInModel(edmModel, stockModel);
-        this.FillStockContents(edmModel, stockModel);
-        this.AddStockVocabularies(edmModel, stockModel);
+        CreateStocksInModel(edmModel, stockModel);
+        FillStockContents(edmModel, stockModel);
+        AddStockVocabularies(edmModel, stockModel);
 
         return stockModel;
     }
@@ -57,7 +57,7 @@ public class EdmToStockModelConverter : IEdmToStockModelConverter
         {
             var edmEntityType = edmAnnotatable as IEdmEntityType;
             stockAnnotatable = stockModel.FindType(edmEntityType.FullName()) as IEdmVocabularyAnnotatable;
-            ExceptionUtilities.CheckObjectNotNull(stockAnnotatable, "The FindType method must be successful.");
+            Assert.NotNull(stockAnnotatable);
         }
         else if (edmAnnotatable is IEdmProperty)
         {
@@ -65,18 +65,13 @@ public class EdmToStockModelConverter : IEdmToStockModelConverter
             if (edmProperty.DeclaringType is IEdmSchemaElement)
             {
                 var stockSchemaElement = stockModel.FindType(((IEdmSchemaElement)edmProperty.DeclaringType).FullName());
-                ExceptionUtilities.CheckObjectNotNull(stockAnnotatable, "The FindType method must be successful.");
+                Assert.NotNull(stockAnnotatable);
                 stockAnnotatable = ((IEdmStructuredType)stockSchemaElement).FindProperty(edmProperty.Name);
-            }
-            else
-            {
-                throw new NotImplementedException();
             }
         }
         else if (edmAnnotatable is IEdmEntitySet)
         {
             var edmEntitySet = edmAnnotatable as IEdmEntitySet;
-            // TODO: No backpointer to the Entity Container from EntitySet in the API. Is this OK?
             stockAnnotatable = stockModel.EntityContainer.EntitySets().Single(m => m.Name == edmEntitySet.Name);
         }
         else if (edmAnnotatable is IEdmEnumType)
@@ -96,21 +91,17 @@ public class EdmToStockModelConverter : IEdmToStockModelConverter
     {
         foreach (var valueTypeTerm in edmModel.SchemaElements.OfType<IEdmTerm>())
         {
-            var stockValueTerm = new EdmTerm(valueTypeTerm.Namespace, valueTypeTerm.Name, this.ConvertToStockTypeReference(valueTypeTerm.Type, stockModel));
+            var stockValueTerm = new EdmTerm(valueTypeTerm.Namespace, valueTypeTerm.Name, ConvertToStockTypeReference(valueTypeTerm.Type, stockModel));
             stockModel.AddElement(stockValueTerm);
         }
 
         foreach (var edmAnnotation in edmModel.VocabularyAnnotations)
         {
             var stockAnnotation = new EdmVocabularyAnnotation(
-                this.ConvertToStockVocabularyAnnotatable(edmAnnotation.Target, stockModel),
-                stockModel.FindTerm(((IEdmSchemaElement)edmAnnotation.Term).FullName()),
+                ConvertToStockVocabularyAnnotatable(edmAnnotation.Target, stockModel),
+                stockModel.FindTerm(edmAnnotation.Term.FullName()),
                 edmAnnotation.Qualifier,
-                this.ConvertToStockExpression(edmAnnotation.Value, stockModel)
-            // TODO: Do we need FullName()?  
-            // TODO: FullName() is Namespace.Name, but should it be NamespaceUri.Name? 
-            // TODO: FullName() on Annotation.Term returns Vocabulary0.TermName. Vocabulary0 is the using Alias. Is this correct? 
-            // TODO: Namepsace on Annotation.Term returns Vocabulary0, which is the using Alias. Is this correct?
+                ConvertToStockExpression(edmAnnotation.Value, stockModel)
             );
             stockModel.AddVocabularyAnnotation(stockAnnotation);
         }
@@ -133,7 +124,6 @@ public class EdmToStockModelConverter : IEdmToStockModelConverter
         foreach (var edmType in edmModel.SchemaElements.OfType<IEdmEnumType>())
         {
             var stockType = new EdmEnumType(edmType.Namespace, edmType.Name, edmType.UnderlyingType, edmType.IsFlags);
-            // TODO: IsBad, Documentation
             stockModel.AddElement(stockType);
         }
 
@@ -141,7 +131,6 @@ public class EdmToStockModelConverter : IEdmToStockModelConverter
         if (edmContainer != null)
         {
             var stockContainer = new EdmEntityContainer(edmContainer.Namespace, edmContainer.Name);
-            // TODO: IsBad, Documentation
             stockModel.AddElement(stockContainer);
         }
     }
@@ -155,11 +144,10 @@ public class EdmToStockModelConverter : IEdmToStockModelConverter
             stockType = new EdmEntityType(
                 entityType.Namespace,
                 entityType.Name,
-                entityType.BaseType != null ? this.ConstructStockEntityTypeInModel((IEdmEntityType)entityType.BaseType, stockModel, stockEntityTypes) : null,
+                entityType.BaseType != null ? ConstructStockEntityTypeInModel((IEdmEntityType)entityType.BaseType, stockModel, stockEntityTypes) : null,
                 entityType.IsAbstract,
                 entityType.IsOpen);
 
-            // TODO: IsBad, Documentation
             stockModel.AddElement(stockType);
             stockEntityTypes.Add(fullName, stockType);
         }
@@ -176,10 +164,9 @@ public class EdmToStockModelConverter : IEdmToStockModelConverter
             stockType = new EdmComplexType(
                 complexType.Namespace,
                 complexType.Name,
-                complexType.BaseType != null ? this.ConstructStockComplexTypeInModel((IEdmComplexType)complexType.BaseType, stockModel, stockComplexTypes) : null,
+                complexType.BaseType != null ? ConstructStockComplexTypeInModel((IEdmComplexType)complexType.BaseType, stockModel, stockComplexTypes) : null,
                 complexType.IsAbstract);
 
-            // TODO: IsBad, Documentation
             stockModel.AddElement(stockType);
             stockComplexTypes.Add(fullName, stockType);
         }
@@ -191,34 +178,30 @@ public class EdmToStockModelConverter : IEdmToStockModelConverter
     {
         foreach (var edmType in edmModel.SchemaElements.OfType<IEdmComplexType>())
         {
-            this.FillStockContentsForComplex(edmType, edmModel, stockModel);
-            // TODO: IsBad, Documentation
+            FillStockContentsForComplex(edmType, edmModel, stockModel);
         }
 
         foreach (var edmType in edmModel.SchemaElements.OfType<IEdmEntityType>())
         {
-            this.FillStockContentsForEntityWithoutNavigation(edmType, edmModel, stockModel);
-            // TODO: IsBad, Documentation 
+            FillStockContentsForEntityWithoutNavigation(edmType, edmModel, stockModel);
         }
 
         foreach (var edmType in edmModel.SchemaElements.OfType<IEdmEnumType>())
         {
-            this.FillStockContentsForEnum(edmType, edmModel, stockModel);
-            // TODO: IsBad, Documentation 
+            FillStockContentsForEnum(edmType, edmModel, stockModel);
         }
 
         foreach (var edmType in edmModel.SchemaElements.OfType<IEdmEntityType>())
         {
-            this.CreateNavigationPropertiesForStockEntity(edmType, edmModel, stockModel);
+            CreateNavigationPropertiesForStockEntity(edmType, edmModel, stockModel);
         }
 
-        this.CreateAndFillStockContentsForOperations(edmModel, stockModel);
+        CreateAndFillStockContentsForOperations(edmModel, stockModel);
 
         var edmContainer = edmModel.EntityContainer;
         if (edmContainer != null)
         {
-            this.FillStockContentsForEntityContainer(edmContainer, edmModel, stockModel);
-            // TODO: IsBad, Documentation
+            FillStockContentsForEntityContainer(edmContainer, edmModel, stockModel);
         }
     }
 
@@ -240,7 +223,7 @@ public class EdmToStockModelConverter : IEdmToStockModelConverter
             else
             {
                 IEdmFunction edmFunction = edmOperation as IEdmFunction;
-                ExceptionUtilities.CheckObjectNotNull(edmFunction, "edmFunction");
+                Assert.NotNull(edmFunction);
                 stockOperation = new EdmFunction(
                 edmFunction.Namespace,
                 edmFunction.Name,
@@ -262,11 +245,11 @@ public class EdmToStockModelConverter : IEdmToStockModelConverter
     private void FillStockContentsForEntityWithoutNavigation(IEdmEntityType edmType, IEdmModel edmModel, EdmModel stockModel)
     {
         var stockType = (EdmEntityType)stockModel.FindType(edmType.FullName());
-        this.SetImmediateAnnotations(edmType, stockType, edmModel, stockModel);
+        SetImmediateAnnotations(edmType, stockType, edmModel, stockModel);
 
         foreach (var edmProperty in edmType.DeclaredStructuralProperties())
         {
-            ConvertToStockStructuralProperty((IEdmStructuralProperty)edmProperty, edmModel, stockModel);
+            ConvertToStockStructuralProperty(edmProperty, edmModel, stockModel);
         }
 
         if (edmType.DeclaredKey != null)
@@ -349,7 +332,7 @@ public class EdmToStockModelConverter : IEdmToStockModelConverter
     private void FillStockContentsForEntityContainer(IEdmEntityContainer edmContainer, IEdmModel edmModel, EdmModel stockModel)
     {
         var stockContainer = (EdmEntityContainer)stockModel.FindEntityContainer(edmContainer.FullName());
-        this.SetImmediateAnnotations(edmContainer, stockContainer, edmModel, stockModel);
+        SetImmediateAnnotations(edmContainer, stockContainer, edmModel, stockModel);
 
         foreach (var edmNavigationSource in edmContainer.Elements.OfType<IEdmNavigationSource>())
         {
@@ -388,7 +371,7 @@ public class EdmToStockModelConverter : IEdmToStockModelConverter
                         var targetEntitySetFromContainer = stockContainer.Elements.OfType<EdmEntitySet>().SingleOrDefault
                             (
                                 n =>
-                                    GetBaseTypesAndSelf(((IEdmNavigationProperty)stockNavigationProperty).ToEntityType()).Select(m => GetFullName(m)).Contains(n.EntityType.FullName()) && n.Name == targetEdmEntitySet.Name
+                                    GetBaseTypesAndSelf(stockNavigationProperty.ToEntityType()).Select(m => GetFullName(m)).Contains(n.EntityType.FullName()) && n.Name == targetEdmEntitySet.Name
                             );
 
                         if (null == targetEntitySetFromContainer)
@@ -396,7 +379,7 @@ public class EdmToStockModelConverter : IEdmToStockModelConverter
                             targetEntitySetFromContainer = stockContainer.Elements.OfType<EdmEntitySet>().SingleOrDefault
                             (
                                 n =>
-                                    GetAllDerivedTypesAndSelf(((IEdmNavigationProperty)stockNavigationProperty).ToEntityType(), stockModel).Select(m => GetFullName(m)).Contains(n.EntityType.FullName()) && n.Name == targetEdmEntitySet.Name
+                                    GetAllDerivedTypesAndSelf(stockNavigationProperty.ToEntityType(), stockModel).Select(m => GetFullName(m)).Contains(n.EntityType.FullName()) && n.Name == targetEdmEntitySet.Name
                             );
                         }
 
@@ -414,26 +397,27 @@ public class EdmToStockModelConverter : IEdmToStockModelConverter
             if (edmActionImport != null)
             {
                 var newEdmAction = stockModel.FindDeclaredOperations(edmActionImport.Action.FullName()).OfType<IEdmAction>().FirstOrDefault() as EdmAction;
-                ExceptionUtilities.CheckObjectNotNull(newEdmAction, "cannot find action");
+                Assert.NotNull(newEdmAction);
                 stockEdmOperationImport = stockContainer.AddActionImport(edmOperationImport.Name, newEdmAction, edmActionImport.EntitySet);
             }
             else
             {
                 IEdmFunctionImport edmFunctionImport = edmOperationImport as IEdmFunctionImport;
-                ExceptionUtilities.CheckArgumentNotNull(edmFunctionImport, "edmFunctionImport");
+                Assert.NotNull(edmFunctionImport);
 
                 var newEdmFunction = edmModel.FindDeclaredOperations(edmFunctionImport.Function.FullName()).OfType<IEdmFunction>().FirstOrDefault();
-                ExceptionUtilities.CheckObjectNotNull(newEdmFunction, "Expected to find an function: " + edmFunctionImport.Function.FullName());
+                Assert.NotNull(newEdmFunction);
+
                 stockEdmOperationImport = stockContainer.AddFunctionImport(edmFunctionImport.Name, newEdmFunction, edmFunctionImport.EntitySet, edmFunctionImport.IncludeInServiceDocument);
             }
 
-            this.SetImmediateAnnotations(edmOperationImport, stockEdmOperationImport, edmModel, stockModel);
+            SetImmediateAnnotations(edmOperationImport, stockEdmOperationImport, edmModel, stockModel);
         }
     }
 
     private IEnumerable<IEdmNavigationProperty> GetAllNavigationFromDerivedTypesAndSelf(IEdmEntityType entityType, EdmModel model)
     {
-        var derivedTypes = this.GetAllDerivedTypesAndSelf(entityType, model);
+        var derivedTypes = GetAllDerivedTypesAndSelf(entityType, model);
 
         return derivedTypes.Select(n => n.NavigationProperties()).SelectMany(list => list).Distinct();
     }
@@ -449,7 +433,7 @@ public class EdmToStockModelConverter : IEdmToStockModelConverter
         {
             foreach (var deriveTypes in toBeDerivedTypes)
             {
-                derivedTypes.AddRange(this.GetDirectlyDerivedTypes(deriveTypes, model));
+                derivedTypes.AddRange(GetDirectlyDerivedTypes(deriveTypes, model));
             }
 
             resultingTypes.AddRange(toBeDerivedTypes.AsEnumerable());
@@ -481,22 +465,22 @@ public class EdmToStockModelConverter : IEdmToStockModelConverter
     private void FillStockContentsForComplex(IEdmComplexType edmType, IEdmModel edmModel, EdmModel stockModel)
     {
         var stockType = (EdmComplexType)stockModel.FindType(edmType.FullName());
-        this.SetImmediateAnnotations(edmType, stockType, edmModel, stockModel);
+        SetImmediateAnnotations(edmType, stockType, edmModel, stockModel);
 
         foreach (var edmProperty in edmType.DeclaredStructuralProperties())
         {
-            ConvertToStockStructuralProperty((IEdmStructuralProperty)edmProperty, edmModel, stockModel);
+            ConvertToStockStructuralProperty(edmProperty, edmModel, stockModel);
         }
     }
 
     private void FillStockContentsForEnum(IEdmEnumType edmType, IEdmModel edmModel, EdmModel stockModel)
     {
         var stockType = (IEdmEnumType)stockModel.FindType(edmType.FullName());
-        this.SetImmediateAnnotations(edmType, stockType, edmModel, stockModel);
+        SetImmediateAnnotations(edmType, stockType, edmModel, stockModel);
 
         foreach (var edmMember in edmType.Members)
         {
-            ConvertToStockMember((IEdmEnumMember)edmMember, edmModel, stockModel);
+            ConvertToStockMember(edmMember, edmModel, stockModel);
         }
     }
 
@@ -535,7 +519,7 @@ public class EdmToStockModelConverter : IEdmToStockModelConverter
     private IEdmTypeReference CreateEntityReference(IEdmTypeReference edmTypeReference, EdmModel stockModel)
     {
         var edmEntityReferenceTypeReference = edmTypeReference.AsEntityReference();
-        var stockEntityReference = new EdmEntityReferenceType((IEdmEntityType)stockModel.FindType(edmEntityReferenceTypeReference.EntityType.FullName()));
+        var stockEntityReference = new EdmEntityReferenceType((IEdmEntityType)stockModel.FindType(edmEntityReferenceTypeReference.EntityType().FullName()));
         return new EdmEntityReferenceTypeReference(stockEntityReference, edmEntityReferenceTypeReference.IsNullable);
     }
 
@@ -619,7 +603,7 @@ public class EdmToStockModelConverter : IEdmToStockModelConverter
         ((EdmStructuredType)stockPropertyDeclaringType).AddProperty(stockProperty);
 
         // TODO: Documentation
-        this.SetImmediateAnnotations(edmProperty, stockProperty, edmModel, stockModel);
+        SetImmediateAnnotations(edmProperty, stockProperty, edmModel, stockModel);
 
         return stockProperty;
     }
@@ -636,7 +620,7 @@ public class EdmToStockModelConverter : IEdmToStockModelConverter
         ((EdmEnumType)stockMemberDeclaringType).AddMember(stockMember);
 
         // TODO: Documentation
-        this.SetImmediateAnnotations(edmMember, stockMember, edmModel, stockModel);
+        SetImmediateAnnotations(edmMember, stockMember, edmModel, stockModel);
 
         return stockMember;
     }
@@ -651,22 +635,22 @@ public class EdmToStockModelConverter : IEdmToStockModelConverter
                 break;
             case EdmExpressionKind.StringConstant:
                 var tempString = (IEdmStringConstantExpression)edmExpression;
-                result = new EdmStringConstant(tempString.Type != null ? this.ConvertToStockTypeReference(tempString.Type, stockModel).AsString() : null, tempString.Value);
+                result = new EdmStringConstant(tempString.Type != null ? ConvertToStockTypeReference(tempString.Type, stockModel).AsString() : null, tempString.Value);
                 break;
             case EdmExpressionKind.IntegerConstant:
                 var tempInteger = (IEdmIntegerConstantExpression)edmExpression;
-                result = new EdmIntegerConstant(tempInteger.Type != null ? this.ConvertToStockTypeReference(tempInteger.Type, stockModel).AsPrimitive() : null, tempInteger.Value);
+                result = new EdmIntegerConstant(tempInteger.Type != null ? ConvertToStockTypeReference(tempInteger.Type, stockModel).AsPrimitive() : null, tempInteger.Value);
                 break;
             case EdmExpressionKind.Record:
                 var tempRecord = (IEdmRecordExpression)edmExpression;
                 result = new EdmRecordExpression(
-                    tempRecord.DeclaredType == null ? null : this.ConvertToStockTypeReference(tempRecord.DeclaredType, stockModel).AsStructured(),
+                    tempRecord.DeclaredType == null ? null : ConvertToStockTypeReference(tempRecord.DeclaredType, stockModel).AsStructured(),
                     tempRecord.Properties.Select(edmProperty =>
-                        (IEdmPropertyConstructor)new EdmPropertyConstructor(edmProperty.Name, this.ConvertToStockExpression(edmProperty.Value, stockModel))));
+                        (IEdmPropertyConstructor)new EdmPropertyConstructor(edmProperty.Name, ConvertToStockExpression(edmProperty.Value, stockModel))));
                 break;
             case EdmExpressionKind.Collection:
                 var tempCollection = (IEdmCollectionExpression)edmExpression;
-                result = new EdmCollectionExpression(tempCollection.Elements.Select(element => this.ConvertToStockExpression(element, stockModel)));
+                result = new EdmCollectionExpression(tempCollection.Elements.Select(element => ConvertToStockExpression(element, stockModel)));
                 break;
             default:
                 throw new NotImplementedException();

@@ -6,6 +6,7 @@
 
 using System.Xml.Linq;
 using Microsoft.OData.Edm.Csdl;
+using Microsoft.OData.Edm.E2E.Tests.Common;
 using Microsoft.OData.Edm.Validation;
 using Microsoft.OData.Edm.Vocabularies;
 
@@ -14,8 +15,10 @@ namespace Microsoft.OData.Edm.E2E.Tests.FunctionalTests;
 public class ConstantExpressionRoundTripTests : EdmLibTestCaseBase
 {
     #region Duration
-    [Fact]
-    public void RoundTrip_InvalidDurationConstantExpressionInVocabularyAnnotation_ShouldReturnDefaultDuration()
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void RoundTrip_InvalidDurationConstantExpressionInVocabularyAnnotation_ShouldReturnDefaultDuration(EdmVersion edmVersion)
     {
         // Arrange
         var expectedCsdl = new XElement[] { XElement.Parse(@"
@@ -42,13 +45,35 @@ public class ConstantExpressionRoundTripTests : EdmLibTestCaseBase
         Assert.False(errors.Any());
 
         var actualCsdl = this.GetSerializerResult(model).Select(n => XElement.Parse(n));
-        var updatedActual = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(actualCsdl.ToArray(), EdmVersion.V40);
-        var updatedExpected = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(expectedCsdl.ToArray(), EdmVersion.V40);
-        Verify(updatedExpected, updatedActual);
+
+        var actualXElements = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(actualCsdl.ToArray(), edmVersion);
+        var expectedXElements = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(expectedCsdl.ToArray(), edmVersion);
+
+        Assert.Equal(expectedXElements.Count(), actualXElements.Count());
+
+        var comparer = new CsdlXElementComparer();
+
+        // extract EntityContainers into one place
+        XElement expectedContainers = ExtractElementByName(expectedXElements, "EntityContainer");
+        XElement actualContainers = ExtractElementByName(actualXElements, "EntityContainer");
+
+        comparer.Compare(expectedContainers, actualContainers);
+
+        // compare non-EntityContainers
+        foreach (XElement expectedXElement in expectedXElements)
+        {
+            var schemaNamespace = expectedXElement.Attribute("Namespace")?.Value;
+            var actualXElement = actualXElements.FirstOrDefault(e => schemaNamespace == e.Attribute("Namespace")?.Value);
+
+            Assert.NotNull(actualXElement);
+            comparer.Compare(expectedXElement, actualXElement);
+        }
     }
 
-    [Fact]
-    public void RoundTrip_InvalidDurationConstantAttributeInVocabularyAnnotation_ShouldReturnDefaultDuration()
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void RoundTrip_InvalidDurationConstantAttributeInVocabularyAnnotation_ShouldReturnDefaultDuration(EdmVersion edmVersion)
     {
         // Arrange
         var expectedCsdl = new XElement[] { XElement.Parse(@"
@@ -73,9 +98,29 @@ public class ConstantExpressionRoundTripTests : EdmLibTestCaseBase
         Assert.False(errors.Any());
 
         var actualCsdl = this.GetSerializerResult(model).Select(n => XElement.Parse(n));
-        var updatedActual = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(actualCsdl.ToArray(), EdmVersion.V40);
-        var updatedExpected = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(expectedCsdl.ToArray(), EdmVersion.V40);
-        Verify(updatedExpected, updatedActual);
+
+        var actualXElements = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(actualCsdl.ToArray(), edmVersion);
+        var expectedXElements = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(expectedCsdl.ToArray(), edmVersion);
+
+        Assert.Equal(expectedXElements.Count(), actualXElements.Count());
+
+        var comparer = new CsdlXElementComparer();
+
+        // extract EntityContainers into one place
+        XElement expectedContainers = ExtractElementByName(expectedXElements, "EntityContainer");
+        XElement actualContainers = ExtractElementByName(actualXElements, "EntityContainer");
+
+        comparer.Compare(expectedContainers, actualContainers);
+
+        // compare non-EntityContainers
+        foreach (XElement expectedXElement in expectedXElements)
+        {
+            var schemaNamespace = expectedXElement.Attribute("Namespace")?.Value;
+            var actualXElement = actualXElements.FirstOrDefault(e => schemaNamespace == e.Attribute("Namespace")?.Value);
+
+            Assert.NotNull(actualXElement);
+            comparer.Compare(expectedXElement, actualXElement);
+        }
     }
 
     [Fact]
@@ -120,8 +165,10 @@ public class ConstantExpressionRoundTripTests : EdmLibTestCaseBase
         Assert.Empty(validationErrors);
     }
 
-    [Fact]
-    public void RoundTrip_InvalidValueDurationConstantAttributeInVocabularyAnnotation_ShouldReturnDefaultDuration()
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void RoundTrip_InvalidValueDurationConstantAttributeInVocabularyAnnotation_ShouldReturnDefaultDuration(EdmVersion edmVersion)
     {
         // Arrange
         var expectedCsdl = new XElement[] { XElement.Parse(@"
@@ -146,13 +193,35 @@ public class ConstantExpressionRoundTripTests : EdmLibTestCaseBase
         Assert.False(errors.Any());
 
         var actualCsdl = this.GetSerializerResult(model).Select(n => XElement.Parse(n));
-        var updatedActual = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(actualCsdl.ToArray(), EdmVersion.V40);
-        var updatedExpected = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(expectedCsdl.ToArray(), EdmVersion.V40);
-        Verify(updatedExpected, updatedActual);
+
+        var actualXElements = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(actualCsdl.ToArray(), edmVersion);
+        var expectedXElements = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(expectedCsdl.ToArray(), edmVersion);
+
+        Assert.Equal(expectedXElements.Count(), actualXElements.Count());
+
+        var comparer = new CsdlXElementComparer();
+
+        // extract EntityContainers into one place
+        XElement expectedContainers = ExtractElementByName(expectedXElements, "EntityContainer");
+        XElement actualContainers = ExtractElementByName(actualXElements, "EntityContainer");
+
+        comparer.Compare(expectedContainers, actualContainers);
+
+        // compare non-EntityContainers
+        foreach (XElement expectedXElement in expectedXElements)
+        {
+            var schemaNamespace = expectedXElement.Attribute("Namespace")?.Value;
+            var actualXElement = actualXElements.FirstOrDefault(e => schemaNamespace == e.Attribute("Namespace")?.Value);
+
+            Assert.NotNull(actualXElement);
+            comparer.Compare(expectedXElement, actualXElement);
+        }
     }
 
-    [Fact]
-    public void RoundTrip_InvalidFormatDurationConstantAttributeInVocabularyAnnotation_ShouldReturnDefaultDuration()
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void RoundTrip_InvalidFormatDurationConstantAttributeInVocabularyAnnotation_ShouldReturnDefaultDuration(EdmVersion edmVersion)
     {
         // Arrange
         var expectedCsdl = new XElement[] { XElement.Parse(@"
@@ -177,13 +246,35 @@ public class ConstantExpressionRoundTripTests : EdmLibTestCaseBase
         Assert.False(errors.Any());
 
         var actualCsdl = this.GetSerializerResult(model).Select(n => XElement.Parse(n));
-        var updatedActual = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(actualCsdl.ToArray(), EdmVersion.V40);
-        var updatedExpected = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(expectedCsdl.ToArray(), EdmVersion.V40);
-        Verify(updatedExpected, updatedActual);
+
+        var actualXElements = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(actualCsdl.ToArray(), edmVersion);
+        var expectedXElements = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(expectedCsdl.ToArray(), edmVersion);
+
+        Assert.Equal(expectedXElements.Count(), actualXElements.Count());
+
+        var comparer = new CsdlXElementComparer();
+
+        // extract EntityContainers into one place
+        XElement expectedContainers = ExtractElementByName(expectedXElements, "EntityContainer");
+        XElement actualContainers = ExtractElementByName(actualXElements, "EntityContainer");
+
+        comparer.Compare(expectedContainers, actualContainers);
+
+        // compare non-EntityContainers
+        foreach (XElement expectedXElement in expectedXElements)
+        {
+            var schemaNamespace = expectedXElement.Attribute("Namespace")?.Value;
+            var actualXElement = actualXElements.FirstOrDefault(e => schemaNamespace == e.Attribute("Namespace")?.Value);
+
+            Assert.NotNull(actualXElement);
+            comparer.Compare(expectedXElement, actualXElement);
+        }
     }
 
-    [Fact]
-    public void RoundTrip_ValidDurationConstantAttributeInModel_ShouldMatchExpectedCsdl()
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void RoundTrip_ValidDurationConstantAttributeInModel_ShouldMatchExpectedCsdl(EdmVersion edmVersion)
     {
         // Arrange
         var expectedCsdl = new XElement[] { XElement.Parse(@"
@@ -217,13 +308,35 @@ public class ConstantExpressionRoundTripTests : EdmLibTestCaseBase
         Assert.Empty(validationErrors);
 
         var actualCsdl = this.GetSerializerResult(model).Select(n => XElement.Parse(n));
-        var updatedActual = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(actualCsdl.ToArray(), EdmVersion.V40);
-        var updatedExpected = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(expectedCsdl.ToArray(), EdmVersion.V40);
-        Verify(updatedExpected, updatedActual);
+
+        var actualXElements = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(actualCsdl.ToArray(), edmVersion);
+        var expectedXElements = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(expectedCsdl.ToArray(), edmVersion);
+
+        Assert.Equal(expectedXElements.Count(), actualXElements.Count());
+
+        var comparer = new CsdlXElementComparer();
+
+        // extract EntityContainers into one place
+        XElement expectedContainers = ExtractElementByName(expectedXElements, "EntityContainer");
+        XElement actualContainers = ExtractElementByName(actualXElements, "EntityContainer");
+
+        comparer.Compare(expectedContainers, actualContainers);
+
+        // compare non-EntityContainers
+        foreach (XElement expectedXElement in expectedXElements)
+        {
+            var schemaNamespace = expectedXElement.Attribute("Namespace")?.Value;
+            var actualXElement = actualXElements.FirstOrDefault(e => schemaNamespace == e.Attribute("Namespace")?.Value);
+
+            Assert.NotNull(actualXElement);
+            comparer.Compare(expectedXElement, actualXElement);
+        }
     }
 
-    [Fact]
-    public void RoundTrip_ValidLargeDurationConstantInModel_ShouldMatchExpectedCsdl()
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void RoundTrip_ValidLargeDurationConstantInModel_ShouldMatchExpectedCsdl(EdmVersion edmVersion)
     {
         // Arrange
         var expectedCsdl = new XElement[] { XElement.Parse(@"
@@ -257,13 +370,35 @@ public class ConstantExpressionRoundTripTests : EdmLibTestCaseBase
         Assert.Empty(validationErrors);
 
         var actualCsdl = this.GetSerializerResult(model).Select(n => XElement.Parse(n));
-        var updatedActual = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(actualCsdl.ToArray(), EdmVersion.V40);
-        var updatedExpected = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(expectedCsdl.ToArray(), EdmVersion.V40);
-        Verify(updatedExpected, updatedActual);
+
+        var actualXElements = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(actualCsdl.ToArray(), edmVersion);
+        var expectedXElements = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(expectedCsdl.ToArray(), edmVersion);
+
+        Assert.Equal(expectedXElements.Count(), actualXElements.Count());
+
+        var comparer = new CsdlXElementComparer();
+
+        // extract EntityContainers into one place
+        XElement expectedContainers = ExtractElementByName(expectedXElements, "EntityContainer");
+        XElement actualContainers = ExtractElementByName(actualXElements, "EntityContainer");
+
+        comparer.Compare(expectedContainers, actualContainers);
+
+        // compare non-EntityContainers
+        foreach (XElement expectedXElement in expectedXElements)
+        {
+            var schemaNamespace = expectedXElement.Attribute("Namespace")?.Value;
+            var actualXElement = actualXElements.FirstOrDefault(e => schemaNamespace == e.Attribute("Namespace")?.Value);
+
+            Assert.NotNull(actualXElement);
+            comparer.Compare(expectedXElement, actualXElement);
+        }
     }
 
-    [Fact]
-    public void RoundTrip_ValidDefaultDurationConstantInModel_ShouldMatchExpectedCsdl()
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void RoundTrip_ValidDefaultDurationConstantInModel_ShouldMatchExpectedCsdl(EdmVersion edmVersion)
     {
         // Arrange
         var expectedCsdl = new XElement[] { XElement.Parse(@"
@@ -297,13 +432,35 @@ public class ConstantExpressionRoundTripTests : EdmLibTestCaseBase
         Assert.Empty(validationErrors);
 
         var actualCsdl = this.GetSerializerResult(model).Select(n => XElement.Parse(n));
-        var updatedActual = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(actualCsdl.ToArray(), EdmVersion.V40);
-        var updatedExpected = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(expectedCsdl.ToArray(), EdmVersion.V40);
-        Verify(updatedExpected, updatedActual);
+
+        var actualXElements = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(actualCsdl.ToArray(), edmVersion);
+        var expectedXElements = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(expectedCsdl.ToArray(), edmVersion);
+
+        Assert.Equal(expectedXElements.Count(), actualXElements.Count());
+
+        var comparer = new CsdlXElementComparer();
+
+        // extract EntityContainers into one place
+        XElement expectedContainers = ExtractElementByName(expectedXElements, "EntityContainer");
+        XElement actualContainers = ExtractElementByName(actualXElements, "EntityContainer");
+
+        comparer.Compare(expectedContainers, actualContainers);
+
+        // compare non-EntityContainers
+        foreach (XElement expectedXElement in expectedXElements)
+        {
+            var schemaNamespace = expectedXElement.Attribute("Namespace")?.Value;
+            var actualXElement = actualXElements.FirstOrDefault(e => schemaNamespace == e.Attribute("Namespace")?.Value);
+
+            Assert.NotNull(actualXElement);
+            comparer.Compare(expectedXElement, actualXElement);
+        }
     }
 
-    [Fact]
-    public void RoundTrip_InvalidTypeReferenceForDurationConstantInModel_ShouldMatchExpectedCsdl()
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void RoundTrip_InvalidTypeReferenceForDurationConstantInModel_ShouldMatchExpectedCsdl(EdmVersion edmVersion)
     {
         // Arrange
         var expectedCsdl = new XElement[] { XElement.Parse(@"
@@ -337,15 +494,39 @@ public class ConstantExpressionRoundTripTests : EdmLibTestCaseBase
         Assert.Empty(validationErrors);
 
         var actualCsdl = this.GetSerializerResult(model).Select(n => XElement.Parse(n));
-        var updatedActual = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(actualCsdl.ToArray(), EdmVersion.V40);
-        var updatedExpected = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(expectedCsdl.ToArray(), EdmVersion.V40);
-        Verify(updatedExpected, updatedActual);
+
+        var actualXElements = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(actualCsdl.ToArray(), edmVersion);
+        var expectedXElements = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(expectedCsdl.ToArray(), edmVersion);
+
+        Assert.Equal(expectedXElements.Count(), actualXElements.Count());
+
+        var comparer = new CsdlXElementComparer();
+
+        // extract EntityContainers into one place
+        XElement expectedContainers = ExtractElementByName(expectedXElements, "EntityContainer");
+        XElement actualContainers = ExtractElementByName(actualXElements, "EntityContainer");
+
+        comparer.Compare(expectedContainers, actualContainers);
+
+        // compare non-EntityContainers
+        foreach (XElement expectedXElement in expectedXElements)
+        {
+            var schemaNamespace = expectedXElement.Attribute("Namespace")?.Value;
+            var actualXElement = actualXElements.FirstOrDefault(e => schemaNamespace == e.Attribute("Namespace")?.Value);
+
+            Assert.NotNull(actualXElement);
+            comparer.Compare(expectedXElement, actualXElement);
+        }
     }
+
     #endregion
 
     #region Guid
-    [Fact]
-    public void RoundTrip_InvalidGuidConstantExpressionInVocabularyAnnotation_ShouldReturnDefaultGuid()
+
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void RoundTrip_InvalidGuidConstantExpressionInVocabularyAnnotation_ShouldReturnDefaultGuid(EdmVersion edmVersion)
     {
         // Arrange
         var expectedCsdl = new XElement[] { XElement.Parse(@"
@@ -372,14 +553,10 @@ public class ConstantExpressionRoundTripTests : EdmLibTestCaseBase
         Assert.False(errors.Any());
 
         var actualCsdl = this.GetSerializerResult(model).Select(n => XElement.Parse(n));
-        var updatedActual = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(actualCsdl.ToArray(), EdmVersion.V40);
-        var updatedExpected = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(expectedCsdl.ToArray(), EdmVersion.V40);
-        Verify(updatedExpected, updatedActual);
-    }
-    #endregion
 
-    private void Verify(IEnumerable<XElement> expectedXElements, IEnumerable<XElement> actualXElements)
-    {
+        var actualXElements = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(actualCsdl.ToArray(), edmVersion);
+        var expectedXElements = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(expectedCsdl.ToArray(), edmVersion);
+
         Assert.Equal(expectedXElements.Count(), actualXElements.Count());
 
         var comparer = new CsdlXElementComparer();
@@ -401,26 +578,5 @@ public class ConstantExpressionRoundTripTests : EdmLibTestCaseBase
         }
     }
 
-    private static XElement ExtractElementByName(IEnumerable<XElement> inputSchemas, string elementNameToExtract)
-    {
-        if (inputSchemas == null || !inputSchemas.Any())
-        {
-            throw new InvalidOperationException("Needs at least one schema to extract element!");
-        }
-
-        XNamespace csdlXNamespace = inputSchemas.First().Name.Namespace;
-        var containers = new XElement(csdlXNamespace + "Schema",
-                                  new XAttribute("Namespace", "ExtractedElements"));
-
-        foreach (var s in inputSchemas)
-        {
-            foreach (var c in s.Elements(csdlXNamespace + elementNameToExtract).ToArray())
-            {
-                c.Remove();
-                containers.Add(c);
-            }
-        }
-
-        return containers;
-    }
+    #endregion
 }

@@ -7,6 +7,7 @@
 using System.Xml;
 using System.Xml.Linq;
 using Microsoft.OData.Edm.Csdl;
+using Microsoft.OData.Edm.E2E.Tests.Common;
 using Microsoft.OData.Edm.E2E.Tests.StubEdm;
 using Microsoft.OData.Edm.Validation;
 using Microsoft.OData.Edm.Vocabularies;
@@ -16,18 +17,16 @@ namespace Microsoft.OData.Edm.E2E.Tests.FunctionalTests;
 public class ConstructibleModelTests : EdmLibTestCaseBase
 {
     EdmCoreModel m_coreModel;
-    private CsdlXElementComparer csdlXElementComparer;
 
     public ConstructibleModelTests()
     {
         this.m_coreModel = EdmCoreModel.Instance;
-        this.EdmVersion = EdmVersion.V40;
-        this.csdlXElementComparer = new CsdlXElementComparer();
     }
 
     [Fact]
     public void ConstructEntityWithVariousPrimitiveTypeProperties_ShouldValidateProperties()
     {
+        // Arrange
         EdmModel model = new EdmModel();
         EdmEntityType t1 = new EdmEntityType("Bunk", "T1");
         EdmStructuralProperty p1 = t1.AddStructuralProperty("P1", m_coreModel.GetBoolean(false));
@@ -37,6 +36,8 @@ public class ConstructibleModelTests : EdmLibTestCaseBase
         EdmStructuralProperty p5 = t1.AddStructuralProperty("P5", m_coreModel.GetBinary(false));
         EdmStructuralProperty p6 = t1.AddStructuralProperty("P6", m_coreModel.GetPrimitive(EdmPrimitiveTypeKind.Stream, true));
         EdmStructuralProperty p7 = t1.AddStructuralProperty("P7", m_coreModel.GetPrimitive(EdmPrimitiveTypeKind.Stream, false));
+
+        // Act
         IEdmStructuralProperty q1 = (IEdmStructuralProperty)t1.FindProperty("P1");
         IEdmStructuralProperty q2 = (IEdmStructuralProperty)t1.FindProperty("P2");
         IEdmStructuralProperty q3 = (IEdmStructuralProperty)t1.FindProperty("P3");
@@ -45,6 +46,7 @@ public class ConstructibleModelTests : EdmLibTestCaseBase
         IEdmStructuralProperty q6 = (IEdmStructuralProperty)t1.FindProperty("P6");
         IEdmStructuralProperty q7 = (IEdmStructuralProperty)t1.FindProperty("P7");
 
+        // Assert
         Assert.Equal(p1, q1);
         Assert.Equal(p2, q2);
         Assert.Equal(p3, q3);
@@ -79,6 +81,7 @@ public class ConstructibleModelTests : EdmLibTestCaseBase
     [Fact]
     public void ConstructEntityTypesWithInheritance_ShouldValidateHierarchy()
     {
+        // Arrange
         var model = new ModelWithRemovableElements<EdmModel>(new EdmModel());
         EdmEntityType t1 = new EdmEntityType("Bunk", "T1");
         EdmEntityType t2 = new EdmEntityType("Bunk", "T2");
@@ -89,20 +92,24 @@ public class ConstructibleModelTests : EdmLibTestCaseBase
         model.WrappedModel.AddElement(t1);
         model.WrappedModel.AddElements(new EdmEntityType[] { t2, t3, t4, t5 });
 
+        // Act & Assert
         Assert.Equal(5, model.SchemaElements.Count());
         Assert.Equal(model.SchemaElements.First(), t1);
         Assert.Equal(model.FindType("Bunk.T2"), t2);
         Assert.Equal(model.SchemaElements.Last(), t5);
         Assert.Equal(model.FindType("Bunk.T5"), t5);
 
+        // Act
         model.RemoveElement(t5);
 
+        // Assert
         Assert.Equal(4, model.SchemaElements.Count());
         Assert.Equal(model.SchemaElements.First(), t1);
         Assert.Equal(model.FindType("Bunk.T2"), t2);
         Assert.Equal(model.SchemaElements.Last(), t4);
         Assert.Null(model.FindType("Bunk.T5"));
 
+        // Arrange
         EdmStructuralProperty f11 = t1.AddStructuralProperty("F11", EdmPrimitiveTypeKind.String, false);
         EdmStructuralProperty f12 = t1.AddStructuralProperty("F12", EdmPrimitiveTypeKind.Int32, false);
         EdmStructuralProperty f13 = t1.AddStructuralProperty("F13", m_coreModel.GetInt32(false));
@@ -115,9 +122,11 @@ public class ConstructibleModelTests : EdmLibTestCaseBase
         t1.AddKeys(f12);
         t2.AddKeys(f32);
 
+        // Act
         t2 = new EdmEntityType("Bunk", "T2");
         model.WrappedModel.AddElement(t2);
 
+        // Assert
         Assert.Equal(2, t3.DeclaredProperties.Count());
         Assert.Empty(t4.DeclaredProperties);
         Assert.Equal(3, t4.Properties().Count());
@@ -126,29 +135,35 @@ public class ConstructibleModelTests : EdmLibTestCaseBase
         Assert.Equal(t4.Key().Single(), f32);
         Assert.Equal(t4.FindProperty("F32"), f32);
 
+        // Arrange
         model.SetAnnotationValue(f11, "Grumble", "Stumble", new EdmStringConstant(m_coreModel.GetString(false), "Rumble"));
         model.SetAnnotationValue(f11, "Grumble", "Tumble", new EdmStringConstant(m_coreModel.GetString(false), "Bumble"));
         model.SetAnnotationValue<Boxed<int>>(f11, new Boxed<int>(66));
         model.SetAnnotationValue<Boxed<string>>(f11, new Boxed<string>("Goop"));
 
+        // Assert
         Assert.Equal(4, model.DirectValueAnnotations(f11).Count());
         Assert.Equal("Rumble", ((IEdmStringValue)model.GetAnnotationValue(f11, "Grumble", "Stumble")).Value);
         Assert.Equal("Bumble", ((IEdmStringValue)model.GetAnnotationValue(f11, "Grumble", "Tumble")).Value);
         Assert.Equal(66, model.GetAnnotationValue<Boxed<int>>(f11).Value);
         Assert.Equal("Goop", model.GetAnnotationValue<Boxed<string>>(f11).Value);
 
-        // Test overwriting an existing annotation.
-
+        // Act
         model.SetAnnotationValue(f11, "Grumble", "Tumble", new EdmStringConstant(m_coreModel.GetString(false), "Fumble"));
+
+        // Assert
         Assert.Equal("Fumble", ((IEdmStringValue)model.GetAnnotationValue(f11, "Grumble", "Tumble")).Value);
 
-        // Test adding something to the Documentation namespace that is not documentation.
+        // Act
         var exception = Assert.Throws<InvalidOperationException>(() => model.GetAnnotationValue<Boxed<int>>(f11, "Grumble", "Tumble"));
+
+        // Assert
         Assert.True(exception.Message.Contains("Boxed") && exception.Message.Contains("String"));
 
-        // Test removing an annotation.
+        // Act
         model.SetAnnotationValue<Boxed<string>>(f11, null);
 
+        // Assert
         Assert.Equal(3, model.DirectValueAnnotations(f11).Count());
         Assert.Equal("Rumble", ((IEdmStringValue)model.GetAnnotationValue(f11, "Grumble", "Stumble")).Value);
         Assert.Equal("Fumble", ((IEdmStringValue)model.GetAnnotationValue(f11, "Grumble", "Tumble")).Value);
@@ -156,10 +171,12 @@ public class ConstructibleModelTests : EdmLibTestCaseBase
         Assert.Null(model.GetAnnotationValue<Boxed<string>>(f11));
         Assert.Null(model.GetAnnotationValue<Boxed<bool>>(f11));
 
+        // Act
         model.SetAnnotationValue<Boxed<int>>(f11, null);
         model.SetAnnotationValue(f11, "Grumble", "Stumble", null);
         model.SetAnnotationValue(f11, "Grumble", "Tumble", null);
 
+        // Assert
         Assert.Empty(model.DirectValueAnnotations(f11));
         Assert.Null(model.GetAnnotationValue(f11, "Grumble", "Stumble"));
         Assert.Null(model.GetAnnotationValue(f11, "Grumble", "Tumble"));
@@ -336,7 +353,7 @@ public class ConstructibleModelTests : EdmLibTestCaseBase
         Assert.Equal(p201.Partner, p101);
         Assert.Equal(p202.Partner, p102);
         Assert.Equal(p203.Partner, p103);
-        Assert.Equal(p204.Partner.Name, "P104");
+        Assert.Equal("P104", p204.Partner.Name);
 
         Assert.Equal(((IEdmNavigationProperty)p101).ToEntityType(), t2);
         Assert.Equal(((IEdmNavigationProperty)p102).ToEntityType(), t2);
@@ -1472,7 +1489,27 @@ public class ConstructibleModelTests : EdmLibTestCaseBase
 
         var roundTripCsdls = this.GetSerializerResult(roundtrippedModel).Select(n => XElement.Parse(n));
 
-        Compare(serializedCsdls.ToList(), roundTripCsdls.ToList());
+        var expectXElements = serializedCsdls.ToList();
+        var actualXElements = roundTripCsdls.ToList();
+
+        Assert.Equal(expectXElements.Count(), actualXElements.Count());
+
+        // extract EntityContainers into one place
+        XElement expectedContainers = ExtractElementByName(expectXElements, "EntityContainer");
+        XElement actualContainers = ExtractElementByName(actualXElements, "EntityContainer");
+
+        // compare just the EntityContainers
+        CsdlXElementComparer.Compare(expectedContainers, actualContainers);
+
+        foreach (var expectXElement in expectXElements)
+        {
+            var schemaNamespace = expectXElement.Attribute("Namespace") == null ? string.Empty : expectXElement.Attribute("Namespace").Value;
+            var actualXElement = actualXElements.FirstOrDefault(e => schemaNamespace == (e.Attribute("Namespace") == null ? string.Empty : e.Attribute("Namespace").Value));
+
+            Assert.NotNull(actualXElement);
+
+            CsdlXElementComparer.Compare(expectXElement, actualXElement);
+        }
     }
 
     #region Private
@@ -1547,28 +1584,6 @@ public class ConstructibleModelTests : EdmLibTestCaseBase
         public string Name
         {
             get { return this.name; }
-        }
-    }
-
-    private void Compare(List<XElement> expectXElements, List<XElement> actualXElements)
-    {
-        Assert.Equal(expectXElements.Count(), actualXElements.Count());
-
-        // extract EntityContainers into one place
-        XElement expectedContainers = ExtractElementByName(expectXElements, "EntityContainer");
-        XElement actualContainers = ExtractElementByName(actualXElements, "EntityContainer");
-
-        // compare just the EntityContainers
-        csdlXElementComparer.Compare(expectedContainers, actualContainers);
-
-        foreach (var expectXElement in expectXElements)
-        {
-            var schemaNamespace = expectXElement.Attribute("Namespace") == null ? string.Empty : expectXElement.Attribute("Namespace").Value;
-            var actualXElement = actualXElements.FirstOrDefault(e => schemaNamespace == (e.Attribute("Namespace") == null ? string.Empty : e.Attribute("Namespace").Value));
-
-            Assert.NotNull(actualXElement);
-
-            csdlXElementComparer.Compare(expectXElement, actualXElement);
         }
     }
 

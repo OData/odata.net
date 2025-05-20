@@ -7,7 +7,7 @@
 using System.Linq;
 using Microsoft.OData.Edm.Vocabularies;
 
-namespace Microsoft.OData.Edm.E2E.Tests;
+namespace Microsoft.OData.Edm.E2E.Tests.Common;
 
 internal class ModelWithRemovableElements<T> : IEdmModel
        where T : IEdmModel
@@ -24,38 +24,38 @@ internal class ModelWithRemovableElements<T> : IEdmModel
 
     public T WrappedModel
     {
-        get { return this.model; }
+        get { return model; }
     }
 
     public IEnumerable<IEdmSchemaElement> SchemaElements
     {
         get
         {
-            return this.model.SchemaElements.Except(this.removedElements.Keys);
+            return model.SchemaElements.Except(removedElements.Keys);
         }
     }
 
     public IEnumerable<string> DeclaredNamespaces
     {
-        get { return this.SchemaElements.Select(s => s.Namespace).Distinct(); }
+        get { return SchemaElements.Select(s => s.Namespace).Distinct(); }
     }
 
     public IEnumerable<IEdmVocabularyAnnotation> VocabularyAnnotations
     {
         get
         {
-            return this.model.VocabularyAnnotations.Except(this.removedVocabularyAnnotations.Keys);
+            return model.VocabularyAnnotations.Except(removedVocabularyAnnotations.Keys);
         }
     }
 
     public IEnumerable<IEdmModel> ReferencedModels
     {
-        get { return this.model.ReferencedModels.Except(this.removeReferencedModels.Keys); }
+        get { return model.ReferencedModels.Except(removeReferencedModels.Keys); }
     }
 
     public IEdmDirectValueAnnotationsManager DirectValueAnnotationsManager
     {
-        get { return this.model.DirectValueAnnotationsManager; }
+        get { return model.DirectValueAnnotationsManager; }
     }
 
     public IEdmEntityContainer EntityContainer
@@ -67,12 +67,12 @@ internal class ModelWithRemovableElements<T> : IEdmModel
                 return null;
             }
 
-            if (this.removedElements.ContainsKey(model.EntityContainer))
+            if (removedElements.ContainsKey(model.EntityContainer))
             {
                 return null;
             }
 
-            return this.model.EntityContainer;
+            return model.EntityContainer;
         }
     }
 
@@ -83,37 +83,37 @@ internal class ModelWithRemovableElements<T> : IEdmModel
     /// <returns>The requested type, or null if no such type exists.</returns>
     public IEdmSchemaType FindDeclaredType(string qualifiedName)
     {
-        IEdmSchemaType type = this.model.FindDeclaredType(qualifiedName);
-        return type != null && this.removedElements.ContainsKey(type) ? null : type;
+        IEdmSchemaType type = model.FindDeclaredType(qualifiedName);
+        return type != null && removedElements.ContainsKey(type) ? null : type;
     }
 
     public IEnumerable<IEdmOperation> FindDeclaredOperations(string qualifiedName)
     {
-        IEnumerable<IEdmOperation> functions = this.model.FindDeclaredOperations(qualifiedName);
-        return functions.Except(this.removedElements.Keys.Where(e => e.SchemaElementKind == EdmSchemaElementKind.Action || e.SchemaElementKind == EdmSchemaElementKind.Function).Cast<IEdmOperation>());
+        IEnumerable<IEdmOperation> functions = model.FindDeclaredOperations(qualifiedName);
+        return functions.Except(removedElements.Keys.Where(e => e.SchemaElementKind == EdmSchemaElementKind.Action || e.SchemaElementKind == EdmSchemaElementKind.Function).Cast<IEdmOperation>());
     }
 
     public IEnumerable<IEdmOperation> FindDeclaredBoundOperations(IEdmType bindingType)
     {
-        IEnumerable<IEdmOperation> functions = this.model.FindDeclaredBoundOperations(bindingType);
-        return functions.Except(this.removedElements.Keys.Where(e => e.SchemaElementKind == EdmSchemaElementKind.Action || e.SchemaElementKind == EdmSchemaElementKind.Function).Cast<IEdmOperation>());
+        IEnumerable<IEdmOperation> functions = model.FindDeclaredBoundOperations(bindingType);
+        return functions.Except(removedElements.Keys.Where(e => e.SchemaElementKind == EdmSchemaElementKind.Action || e.SchemaElementKind == EdmSchemaElementKind.Function).Cast<IEdmOperation>());
     }
 
     public virtual IEnumerable<IEdmOperation> FindDeclaredBoundOperations(string qualifiedName, IEdmType bindingType)
     {
-        return this.FindDeclaredOperations(qualifiedName).Where(o => o.IsBound && o.Parameters.Any() && o.HasEquivalentBindingType(bindingType));
+        return FindDeclaredOperations(qualifiedName).Where(o => o.IsBound && o.Parameters.Any() && o.HasEquivalentBindingType(bindingType));
     }
 
     public IEdmTerm FindDeclaredTerm(string qualifiedName)
     {
-        IEdmTerm term = this.model.FindDeclaredTerm(qualifiedName);
-        return term != null && this.removedElements.ContainsKey(term) ? null : term;
+        IEdmTerm term = model.FindDeclaredTerm(qualifiedName);
+        return term != null && removedElements.ContainsKey(term) ? null : term;
     }
 
     public IEnumerable<IEdmVocabularyAnnotation> FindDeclaredVocabularyAnnotations(IEdmVocabularyAnnotatable element)
     {
-        IEnumerable<IEdmVocabularyAnnotation> annotations = this.model.FindDeclaredVocabularyAnnotations(element);
-        return annotations.Except(this.removedVocabularyAnnotations.Keys);
+        IEnumerable<IEdmVocabularyAnnotation> annotations = model.FindDeclaredVocabularyAnnotations(element);
+        return annotations.Except(removedVocabularyAnnotations.Keys);
     }
 
     public IEnumerable<IEdmStructuredType> FindDirectlyDerivedTypes(IEdmStructuredType baseType)
@@ -123,20 +123,20 @@ internal class ModelWithRemovableElements<T> : IEdmModel
 
     internal void RemoveElement(IEdmSchemaElement element)
     {
-        this.removedElements[element] = true;
+        removedElements[element] = true;
     }
 
     internal void RemoveVocabularyAnnotation(IEdmVocabularyAnnotation annotation)
     {
-        this.removedVocabularyAnnotations[annotation] = true;
+        removedVocabularyAnnotations[annotation] = true;
     }
 
     internal void RemoveReference(IEdmModel reference)
     {
-        this.removeReferencedModels[reference] = true;
+        removeReferencedModels[reference] = true;
         foreach (var tmp in reference.SchemaElements)
         {
-            this.removedElements[tmp] = true;
+            removedElements[tmp] = true;
         }
     }
 }

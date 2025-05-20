@@ -4,9 +4,9 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using System.Reflection;
 using System.Xml.Linq;
 using Microsoft.OData.Edm.Csdl;
+using Microsoft.OData.Edm.E2E.Tests.Common;
 using Microsoft.OData.Edm.Validation;
 using Microsoft.OData.Edm.Vocabularies;
 
@@ -36,7 +36,7 @@ public class ExpressionSerializationTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void Term_Constant_OnEntityType()
+    public void Serialize_ConstantTermOnEntityType_GeneratesExpectedCsdl()
     {
         this.SetupModels();
 
@@ -59,16 +59,32 @@ public class ExpressionSerializationTests : EdmLibTestCaseBase
     </Annotations>
 </Schema>";
 
-        IEnumerable<XElement> expectedCsdls = new[] { expectedCsdl }.Select(s => XElement.Load(new StringReader(s)));
-        IEnumerable<XElement> actualCsdls = this.GetSerializerResult(this.baseModel).Select(s => XElement.Load(new StringReader(s)));
+        IEnumerable<XElement> expectedXElements = new[] { expectedCsdl }.Select(s => XElement.Load(new StringReader(s)));
+        IEnumerable<XElement> actualXElements = this.GetSerializerResult(this.baseModel).Select(s => XElement.Load(new StringReader(s)));
 
-        Assert.Equal(expectedCsdls.Count(), actualCsdls.Count());
+        Assert.Equal(expectedXElements.Count(), actualXElements.Count());
 
-        Verify(expectedCsdls, actualCsdls);
+        var comparer = new CsdlXElementComparer();
+
+        // extract EntityContainers into one place
+        XElement expectedContainers = ExtractElementByName(expectedXElements, "EntityContainer");
+        XElement actualContainers = ExtractElementByName(actualXElements, "EntityContainer");
+
+        comparer.Compare(expectedContainers, actualContainers);
+
+        // compare non-EntityContainers
+        foreach (XElement expectedXElement in expectedXElements)
+        {
+            var schemaNamespace = expectedXElement.Attribute("Namespace")?.Value;
+            var actualXElement = actualXElements.FirstOrDefault(e => schemaNamespace == e.Attribute("Namespace")?.Value);
+
+            Assert.NotNull(actualXElement);
+            comparer.Compare(expectedXElement, actualXElement);
+        }
     }
 
     [Fact]
-    public void Term_Constant_OnEntityType_Inline()
+    public void Serialize_ConstantTermOnEntityTypeWithInlineAnnotation_GeneratesExpectedCsdl()
     {
         this.SetupModels();
 
@@ -91,17 +107,33 @@ public class ExpressionSerializationTests : EdmLibTestCaseBase
 
         annotation.SetSerializationLocation(this.baseModel, EdmVocabularyAnnotationSerializationLocation.Inline);
 
-        IEnumerable<XElement> expectedCsdls = new[] { expectedCsdlInline }.Select(s => XElement.Load(new StringReader(s)));
-        IEnumerable<XElement> actualCsdls = this.GetSerializerResult(this.baseModel).Select(s => XElement.Load(new StringReader(s)));
+        IEnumerable<XElement> expectedXElements = new[] { expectedCsdlInline }.Select(s => XElement.Load(new StringReader(s)));
+        IEnumerable<XElement> actualXElements = this.GetSerializerResult(this.baseModel).Select(s => XElement.Load(new StringReader(s)));
+        
+        Assert.Equal(expectedXElements.Count(), actualXElements.Count());
 
-        Assert.Equal(expectedCsdls.Count(), actualCsdls.Count());
+        var comparer = new CsdlXElementComparer();
 
-        Verify(expectedCsdls, actualCsdls);
+        // extract EntityContainers into one place
+        XElement expectedContainers = ExtractElementByName(expectedXElements, "EntityContainer");
+        XElement actualContainers = ExtractElementByName(actualXElements, "EntityContainer");
+
+        comparer.Compare(expectedContainers, actualContainers);
+
+        // compare non-EntityContainers
+        foreach (XElement expectedXElement in expectedXElements)
+        {
+            var schemaNamespace = expectedXElement.Attribute("Namespace")?.Value;
+            var actualXElement = actualXElements.FirstOrDefault(e => schemaNamespace == e.Attribute("Namespace")?.Value);
+
+            Assert.NotNull(actualXElement);
+            comparer.Compare(expectedXElement, actualXElement);
+        }
     }
 
     // [EdmLib] Serializing of vocabulary annotations output incorrect <Using>s
     [Fact]
-    public void Term_Constant_OfDifferentUri_OnEntityType()
+    public void Serialize_ConstantTermWithDifferentUriOnEntityType_GeneratesExpectedCsdl()
     {
         this.SetupModels();
         var person = this.baseModel.FindType("NS1.Person") as IEdmEntityType;
@@ -127,16 +159,32 @@ public class ExpressionSerializationTests : EdmLibTestCaseBase
     </Annotations>
 </Schema>";
         
-        IEnumerable<XElement> expectedCsdls = new[] { expectedCsdl }.Select(s => XElement.Load(new StringReader(s)));
-        IEnumerable<XElement> actualCsdls = this.GetSerializerResult(this.baseModel).Select(s => XElement.Load(new StringReader(s)));
+        IEnumerable<XElement> expectedXElements = new[] { expectedCsdl }.Select(s => XElement.Load(new StringReader(s)));
+        IEnumerable<XElement> actualXElements = this.GetSerializerResult(this.baseModel).Select(s => XElement.Load(new StringReader(s)));
+        
+        Assert.Equal(expectedXElements.Count(), actualXElements.Count());
 
-        Assert.Equal(expectedCsdls.Count(), actualCsdls.Count());
+        var comparer = new CsdlXElementComparer();
 
-        Verify(expectedCsdls, actualCsdls);
+        // extract EntityContainers into one place
+        XElement expectedContainers = ExtractElementByName(expectedXElements, "EntityContainer");
+        XElement actualContainers = ExtractElementByName(actualXElements, "EntityContainer");
+
+        comparer.Compare(expectedContainers, actualContainers);
+
+        // compare non-EntityContainers
+        foreach (XElement expectedXElement in expectedXElements)
+        {
+            var schemaNamespace = expectedXElement.Attribute("Namespace")?.Value;
+            var actualXElement = actualXElements.FirstOrDefault(e => schemaNamespace == e.Attribute("Namespace")?.Value);
+
+            Assert.NotNull(actualXElement);
+            comparer.Compare(expectedXElement, actualXElement);
+        }
     }
 
     [Fact]
-    public void Term_Constant_CustomAlias_OnEntityType()
+    public void Serialize_ConstantTermWithCustomAliasOnEntityType_GeneratesExpectedCsdl()
     {
         this.SetupModels();
         var person = this.baseModel.FindType("NS1.Person") as IEdmEntityType;
@@ -162,16 +210,32 @@ public class ExpressionSerializationTests : EdmLibTestCaseBase
     </Annotations>
 </Schema>";
         
-        IEnumerable<XElement> expectedCsdls = new[] { expectedCsdl }.Select(s => XElement.Load(new StringReader(s)));
-        IEnumerable<XElement> actualCsdls = this.GetSerializerResult(this.baseModel).Select(s => XElement.Load(new StringReader(s)));
+        IEnumerable<XElement> expectedXElements = new[] { expectedCsdl }.Select(s => XElement.Load(new StringReader(s)));
+        IEnumerable<XElement> actualXElements = this.GetSerializerResult(this.baseModel).Select(s => XElement.Load(new StringReader(s)));
+        
+        Assert.Equal(expectedXElements.Count(), actualXElements.Count());
 
-        Assert.Equal(expectedCsdls.Count(), actualCsdls.Count());
+        var comparer = new CsdlXElementComparer();
 
-        Verify(expectedCsdls, actualCsdls);
+        // extract EntityContainers into one place
+        XElement expectedContainers = ExtractElementByName(expectedXElements, "EntityContainer");
+        XElement actualContainers = ExtractElementByName(actualXElements, "EntityContainer");
+
+        comparer.Compare(expectedContainers, actualContainers);
+
+        // compare non-EntityContainers
+        foreach (XElement expectedXElement in expectedXElements)
+        {
+            var schemaNamespace = expectedXElement.Attribute("Namespace")?.Value;
+            var actualXElement = actualXElements.FirstOrDefault(e => schemaNamespace == e.Attribute("Namespace")?.Value);
+
+            Assert.NotNull(actualXElement);
+            comparer.Compare(expectedXElement, actualXElement);
+        }
     }
 
     [Fact]
-    public void Term_Constant_OnEntityType_SeperateApplication()
+    public void Serialize_ConstantTermOnEntityTypeWithSeparateApplication_GeneratesExpectedCsdl()
     {
         this.SetupModels();
         var person = this.baseModel.FindType("NS1.Person") as IEdmEntityType;
@@ -196,16 +260,34 @@ public class ExpressionSerializationTests : EdmLibTestCaseBase
     </Annotations>
 </Schema>";
 
-        IEnumerable<XElement> expectedCsdls = new[] { expectedCsdl1, expectedCsdl2 }.Select(s => XElement.Load(new StringReader(s)));
-        IEnumerable<XElement> actualCsdls = this.GetSerializerResult(this.baseModel).Select(s => XElement.Load(new StringReader(s)));
+        annotation.SetSchemaNamespace(this.baseModel, "Annotation.Application");
 
-        Assert.Equal(expectedCsdls.Count(), actualCsdls.Count());
+        IEnumerable<XElement> expectedXElements = new[] { expectedCsdl1, expectedCsdl2 }.Select(s => XElement.Load(new StringReader(s)));
+        IEnumerable<XElement> actualXElements = this.GetSerializerResult(this.baseModel).Select(s => XElement.Load(new StringReader(s)));
+        
+        Assert.Equal(expectedXElements.Count(), actualXElements.Count());
 
-        Verify(expectedCsdls, actualCsdls);
+        var comparer = new CsdlXElementComparer();
+
+        // extract EntityContainers into one place
+        XElement expectedContainers = ExtractElementByName(expectedXElements, "EntityContainer");
+        XElement actualContainers = ExtractElementByName(actualXElements, "EntityContainer");
+
+        comparer.Compare(expectedContainers, actualContainers);
+
+        // compare non-EntityContainers
+        foreach (XElement expectedXElement in expectedXElements)
+        {
+            var schemaNamespace = expectedXElement.Attribute("Namespace")?.Value;
+            var actualXElement = actualXElements.FirstOrDefault(e => schemaNamespace == e.Attribute("Namespace")?.Value);
+
+            Assert.NotNull(actualXElement);
+            comparer.Compare(expectedXElement, actualXElement);
+        }
     }
 
     [Fact]
-    public void Term_Constant_AllTypes_OnProperty()
+    public void Serialize_AllConstantTypesOnProperty_GeneratesExpectedCsdl()
     {
         this.SetupModels();
         var nameProperty = (this.baseModel.FindType("NS1.Person") as IEdmEntityType)?.FindProperty("Name");
@@ -287,16 +369,32 @@ public class ExpressionSerializationTests : EdmLibTestCaseBase
 </Schema>";
 
 
-        IEnumerable<XElement> expectedCsdls = new[] { expectedCsdl }.Select(s => XElement.Load(new StringReader(s)));
-        IEnumerable<XElement> actualCsdls = this.GetSerializerResult(this.baseModel).Select(s => XElement.Load(new StringReader(s)));
+        IEnumerable<XElement> expectedXElements = new[] { expectedCsdl }.Select(s => XElement.Load(new StringReader(s)));
+        IEnumerable<XElement> actualXElements = this.GetSerializerResult(this.baseModel).Select(s => XElement.Load(new StringReader(s)));
+        
+        Assert.Equal(expectedXElements.Count(), actualXElements.Count());
 
-        Assert.Equal(expectedCsdls.Count(), actualCsdls.Count());
+        var comparer = new CsdlXElementComparer();
 
-        Verify(expectedCsdls, actualCsdls);
+        // extract EntityContainers into one place
+        XElement expectedContainers = ExtractElementByName(expectedXElements, "EntityContainer");
+        XElement actualContainers = ExtractElementByName(actualXElements, "EntityContainer");
+
+        comparer.Compare(expectedContainers, actualContainers);
+
+        // compare non-EntityContainers
+        foreach (XElement expectedXElement in expectedXElements)
+        {
+            var schemaNamespace = expectedXElement.Attribute("Namespace")?.Value;
+            var actualXElement = actualXElements.FirstOrDefault(e => schemaNamespace == e.Attribute("Namespace")?.Value);
+
+            Assert.NotNull(actualXElement);
+            comparer.Compare(expectedXElement, actualXElement);
+        }
     }
 
     [Fact]
-    public void Term_FunctionApplication_OnEntityContainer()
+    public void Serialize_FunctionApplicationTermOnEntityContainer_GeneratesExpectedCsdl()
     {
         this.SetupModels();
 
@@ -330,16 +428,32 @@ public class ExpressionSerializationTests : EdmLibTestCaseBase
     </Annotations>
 </Schema>";
         
-        IEnumerable<XElement> expectedCsdls = new[] { expectedCsdl }.Select(s => XElement.Load(new StringReader(s)));
-        IEnumerable<XElement> actualCsdls = this.GetSerializerResult(this.baseModel).Select(s => XElement.Load(new StringReader(s)));
+        IEnumerable<XElement> expectedXElements = new[] { expectedCsdl }.Select(s => XElement.Load(new StringReader(s)));
+        IEnumerable<XElement> actualXElements = this.GetSerializerResult(this.baseModel).Select(s => XElement.Load(new StringReader(s)));
+        
+        Assert.Equal(expectedXElements.Count(), actualXElements.Count());
 
-        Assert.Equal(expectedCsdls.Count(), actualCsdls.Count());
+        var comparer = new CsdlXElementComparer();
 
-        Verify(expectedCsdls, actualCsdls);
+        // extract EntityContainers into one place
+        XElement expectedContainers = ExtractElementByName(expectedXElements, "EntityContainer");
+        XElement actualContainers = ExtractElementByName(actualXElements, "EntityContainer");
+
+        comparer.Compare(expectedContainers, actualContainers);
+
+        // compare non-EntityContainers
+        foreach (XElement expectedXElement in expectedXElements)
+        {
+            var schemaNamespace = expectedXElement.Attribute("Namespace")?.Value;
+            var actualXElement = actualXElements.FirstOrDefault(e => schemaNamespace == e.Attribute("Namespace")?.Value);
+
+            Assert.NotNull(actualXElement);
+            comparer.Compare(expectedXElement, actualXElement);
+        }
     }
 
     [Fact]
-    public void Term_If_OnEntitySet()
+    public void Serialize_IfExpressionOnEntitySet_GeneratesExpectedCsdl()
     {
         this.SetupModels();
 
@@ -377,16 +491,32 @@ public class ExpressionSerializationTests : EdmLibTestCaseBase
     </Annotations>
 </Schema>";
         
-        IEnumerable<XElement> expectedCsdls = new[] { expectedCsdl }.Select(s => XElement.Load(new StringReader(s)));
-        IEnumerable<XElement> actualCsdls = this.GetSerializerResult(this.baseModel).Select(s => XElement.Load(new StringReader(s)));
+        IEnumerable<XElement> expectedXElements = new[] { expectedCsdl }.Select(s => XElement.Load(new StringReader(s)));
+        IEnumerable<XElement> actualXElements = this.GetSerializerResult(this.baseModel).Select(s => XElement.Load(new StringReader(s)));
+        
+        Assert.Equal(expectedXElements.Count(), actualXElements.Count());
 
-        Assert.Equal(expectedCsdls.Count(), actualCsdls.Count());
+        var comparer = new CsdlXElementComparer();
 
-        Verify(expectedCsdls, actualCsdls);
+        // extract EntityContainers into one place
+        XElement expectedContainers = ExtractElementByName(expectedXElements, "EntityContainer");
+        XElement actualContainers = ExtractElementByName(actualXElements, "EntityContainer");
+
+        comparer.Compare(expectedContainers, actualContainers);
+
+        // compare non-EntityContainers
+        foreach (XElement expectedXElement in expectedXElements)
+        {
+            var schemaNamespace = expectedXElement.Attribute("Namespace")?.Value;
+            var actualXElement = actualXElements.FirstOrDefault(e => schemaNamespace == e.Attribute("Namespace")?.Value);
+
+            Assert.NotNull(actualXElement);
+            comparer.Compare(expectedXElement, actualXElement);
+        }
     }
 
     [Fact]
-    public void Term_Collection_OnEntityType()
+    public void Serialize_CollectionTermOnEntityType_GeneratesExpectedCsdl()
     {
         this.SetupModels();
 
@@ -417,16 +547,32 @@ public class ExpressionSerializationTests : EdmLibTestCaseBase
     </Annotations>
 </Schema>";
         
-        IEnumerable<XElement> expectedCsdls = new[] { expectedCsdl }.Select(s => XElement.Load(new StringReader(s)));
-        IEnumerable<XElement> actualCsdls = this.GetSerializerResult(this.baseModel).Select(s => XElement.Load(new StringReader(s)));
+        IEnumerable<XElement> expectedXElements = new[] { expectedCsdl }.Select(s => XElement.Load(new StringReader(s)));
+        IEnumerable<XElement> actualXElements = this.GetSerializerResult(this.baseModel).Select(s => XElement.Load(new StringReader(s)));
+        
+        Assert.Equal(expectedXElements.Count(), actualXElements.Count());
 
-        Assert.Equal(expectedCsdls.Count(), actualCsdls.Count());
+        var comparer = new CsdlXElementComparer();
 
-        Verify(expectedCsdls, actualCsdls);
+        // extract EntityContainers into one place
+        XElement expectedContainers = ExtractElementByName(expectedXElements, "EntityContainer");
+        XElement actualContainers = ExtractElementByName(actualXElements, "EntityContainer");
+
+        comparer.Compare(expectedContainers, actualContainers);
+
+        // compare non-EntityContainers
+        foreach (XElement expectedXElement in expectedXElements)
+        {
+            var schemaNamespace = expectedXElement.Attribute("Namespace")?.Value;
+            var actualXElement = actualXElements.FirstOrDefault(e => schemaNamespace == e.Attribute("Namespace")?.Value);
+
+            Assert.NotNull(actualXElement);
+            comparer.Compare(expectedXElement, actualXElement);
+        }
     }
 
     [Fact]
-    public void Term_Record_OnEntityType()
+    public void Serialize_RecordTermOnEntityType_GeneratesExpectedCsdl()
     {
         this.SetupModels();
 
@@ -457,16 +603,32 @@ public class ExpressionSerializationTests : EdmLibTestCaseBase
     </Annotations>
 </Schema>";
         
-        IEnumerable<XElement> expectedCsdls = new[] { expectedCsdl }.Select(s => XElement.Load(new StringReader(s)));
-        IEnumerable<XElement> actualCsdls = this.GetSerializerResult(this.baseModel).Select(s => XElement.Load(new StringReader(s)));
+        IEnumerable<XElement> expectedXElements = new[] { expectedCsdl }.Select(s => XElement.Load(new StringReader(s)));
+        IEnumerable<XElement> actualXElements = this.GetSerializerResult(this.baseModel).Select(s => XElement.Load(new StringReader(s)));
+        
+        Assert.Equal(expectedXElements.Count(), actualXElements.Count());
 
-        Assert.Equal(expectedCsdls.Count(), actualCsdls.Count());
+        var comparer = new CsdlXElementComparer();
 
-        Verify(expectedCsdls, actualCsdls);
+        // extract EntityContainers into one place
+        XElement expectedContainers = ExtractElementByName(expectedXElements, "EntityContainer");
+        XElement actualContainers = ExtractElementByName(actualXElements, "EntityContainer");
+
+        comparer.Compare(expectedContainers, actualContainers);
+
+        // compare non-EntityContainers
+        foreach (XElement expectedXElement in expectedXElements)
+        {
+            var schemaNamespace = expectedXElement.Attribute("Namespace")?.Value;
+            var actualXElement = actualXElements.FirstOrDefault(e => schemaNamespace == e.Attribute("Namespace")?.Value);
+
+            Assert.NotNull(actualXElement);
+            comparer.Compare(expectedXElement, actualXElement);
+        }
     }
 
     [Fact]
-    public void Term_IsType_OnEntityType()
+    public void Serialize_IsOfExpressionOnEntityType_GeneratesExpectedCsdl()
     {
         this.SetupModels();
 
@@ -489,41 +651,74 @@ public class ExpressionSerializationTests : EdmLibTestCaseBase
     </EntityType>
     <Annotations Target=""NS1.Person"">
         <Annotation Term=""bar.StringValue"">
-            <IsType Type=""NS1.Person"">
+            <IsOf Type=""NS1.Person"">
                 <String>s1</String>
-            </IsType>
+            </IsOf>
         </Annotation>
         <Annotation Term=""bar.StringValue"">
-            <IsType Type=""Edm.String"">
+            <IsOf Type=""Edm.String"">
                 <String>s2</String>
-            </IsType>
+            </IsOf>
         </Annotation>
     </Annotations>
 </Schema>";
         
-        IEnumerable<XElement> expectedCsdls = new[] { expectedCsdl }.Select(s => XElement.Load(new StringReader(s)));
-        IEnumerable<XElement> actualCsdls = this.GetSerializerResult(this.baseModel).Select(s => XElement.Load(new StringReader(s)));
+        IEnumerable<XElement> expectedXElements = new[] { expectedCsdl }.Select(s => XElement.Load(new StringReader(s)));
+        IEnumerable<XElement> actualXElements = this.GetSerializerResult(this.baseModel).Select(s => XElement.Load(new StringReader(s)));
+        
+        Assert.Equal(expectedXElements.Count(), actualXElements.Count());
 
-        Assert.Equal(expectedCsdls.Count(), actualCsdls.Count());
+        var comparer = new CsdlXElementComparer();
 
-        Verify(expectedCsdls, actualCsdls);
+        // extract EntityContainers into one place
+        XElement expectedContainers = ExtractElementByName(expectedXElements, "EntityContainer");
+        XElement actualContainers = ExtractElementByName(actualXElements, "EntityContainer");
+
+        comparer.Compare(expectedContainers, actualContainers);
+
+        // compare non-EntityContainers
+        foreach (XElement expectedXElement in expectedXElements)
+        {
+            var schemaNamespace = expectedXElement.Attribute("Namespace")?.Value;
+            var actualXElement = actualXElements.FirstOrDefault(e => schemaNamespace == e.Attribute("Namespace")?.Value);
+
+            Assert.NotNull(actualXElement);
+            comparer.Compare(expectedXElement, actualXElement);
+        }
     }
 
-    [Fact]
-    public void Term_Definition()
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void Serialize_TermDefinition_GeneratesExpectedCsdl(EdmVersion edmVersion)
     {
         this.SetupModels();
 
-        IEnumerable<XElement> expectedCsdls = new[] { longDefinitionModelCsdl }.Select(s => XElement.Load(new StringReader(s)));
-        IEnumerable<XElement> actualCsdls = this.GetSerializerResult(this.longDefinitionModel).Select(s => XElement.Load(new StringReader(s)));
+        IEnumerable<XElement> expectedXElements = new[] { longDefinitionModelCsdl }.Select(s => XElement.Load(new StringReader(s)));
+        IEnumerable<XElement> actualXElements = this.GetSerializerResult(this.longDefinitionModel, edmVersion, out _).Select(s => XElement.Load(new StringReader(s)));
+        
+        Assert.Equal(expectedXElements.Count(), actualXElements.Count());
 
-        Assert.Equal(expectedCsdls.Count(), actualCsdls.Count());
+        var comparer = new CsdlXElementComparer();
 
-        Verify(expectedCsdls, actualCsdls);
+        // extract EntityContainers into one place
+        XElement expectedContainers = ExtractElementByName(expectedXElements, "EntityContainer");
+        XElement actualContainers = ExtractElementByName(actualXElements, "EntityContainer");
+
+        comparer.Compare(expectedContainers, actualContainers);
+
+        // compare non-EntityContainers
+        Assert.Single(expectedXElements);
+        var expectedXElement = expectedXElements.Single();
+        var schemaNamespace = expectedXElement.Attribute("Namespace")?.Value;
+        var actualXElement = actualXElements.FirstOrDefault(e => schemaNamespace == e.Attribute("Namespace")?.Value);
+
+        Assert.NotNull(actualXElement);
+        comparer.Compare(expectedXElement, actualXElement);
     }
 
     [Fact]
-    public void Term_Definition_Collection()
+    public void Serialize_CollectionTermDefinition_GeneratesExpectedCsdl()
     {
         this.SetupModels();
 
@@ -542,17 +737,33 @@ public class ExpressionSerializationTests : EdmLibTestCaseBase
     <Term Name=""CollectionOfPerson"" Type=""Collection(NS1.Person)"" />
 </Schema>";
 
-        IEnumerable<XElement> expectedCsdls = new[] { expectedCsdl }.Select(s => XElement.Load(new StringReader(s)));
-        IEnumerable<XElement> actualCsdls = this.GetSerializerResult(definitionModel).Select(s => XElement.Load(new StringReader(s)));
+        IEnumerable<XElement> expectedXElements = new[] { expectedCsdl }.Select(s => XElement.Load(new StringReader(s)));
+        IEnumerable<XElement> actualXElements = this.GetSerializerResult(definitionModel).Select(s => XElement.Load(new StringReader(s)));
+        
+        Assert.Equal(expectedXElements.Count(), actualXElements.Count());
 
-        Assert.Equal(expectedCsdls.Count(), actualCsdls.Count());
+        var comparer = new CsdlXElementComparer();
 
-        Verify(expectedCsdls, actualCsdls);
+        // extract EntityContainers into one place
+        XElement expectedContainers = ExtractElementByName(expectedXElements, "EntityContainer");
+        XElement actualContainers = ExtractElementByName(actualXElements, "EntityContainer");
+
+        comparer.Compare(expectedContainers, actualContainers);
+
+        // compare non-EntityContainers
+        foreach (XElement expectedXElement in expectedXElements)
+        {
+            var schemaNamespace = expectedXElement.Attribute("Namespace")?.Value;
+            var actualXElement = actualXElements.FirstOrDefault(e => schemaNamespace == e.Attribute("Namespace")?.Value);
+
+            Assert.NotNull(actualXElement);
+            comparer.Compare(expectedXElement, actualXElement);
+        }
     }
 
     // [EdmLib] is Edm.TypeTerm still needed? If so, please define it and use it
     [Fact]
-    public void Term_Definition_TypeInheritance()
+    public void Serialize_TypeInheritanceInTermDefinition_GeneratesExpectedCsdl()
     {
         this.SetupModels();
 
@@ -575,18 +786,34 @@ public class ExpressionSerializationTests : EdmLibTestCaseBase
     </EntityType>
 </Schema>";
 
-        IEnumerable<XElement> expectedCsdls = new[] { expectedCsdl }.Select(s => XElement.Load(new StringReader(s)));
-        IEnumerable<XElement> actualCsdls = this.GetSerializerResult(definitionModel).Select(s => XElement.Load(new StringReader(s)));
+        IEnumerable<XElement> expectedXElements = new[] { expectedCsdl }.Select(s => XElement.Load(new StringReader(s)));
+        IEnumerable<XElement> actualXElements = this.GetSerializerResult(definitionModel).Select(s => XElement.Load(new StringReader(s)));
+        
+        Assert.Equal(expectedXElements.Count(), actualXElements.Count());
 
-        Assert.Equal(expectedCsdls.Count(), actualCsdls.Count());
+        var comparer = new CsdlXElementComparer();
 
-        Verify(expectedCsdls, actualCsdls);
+        // extract EntityContainers into one place
+        XElement expectedContainers = ExtractElementByName(expectedXElements, "EntityContainer");
+        XElement actualContainers = ExtractElementByName(actualXElements, "EntityContainer");
+
+        comparer.Compare(expectedContainers, actualContainers);
+
+        // compare non-EntityContainers
+        foreach (XElement expectedXElement in expectedXElements)
+        {
+            var schemaNamespace = expectedXElement.Attribute("Namespace")?.Value;
+            var actualXElement = actualXElements.FirstOrDefault(e => schemaNamespace == e.Attribute("Namespace")?.Value);
+
+            Assert.NotNull(actualXElement);
+            comparer.Compare(expectedXElement, actualXElement);
+        }
     }
 
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void SerializeInvalidTypeUsingCastCollectionModel(EdmVersion edmVersion)
+    public void Serialize_InvalidTypeUsingCastCollectionModel_GeneratesExpectedCsdl(EdmVersion edmVersion)
     {
         var csdl = @"
 <Schema Namespace=""NS"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -636,18 +863,32 @@ public class ExpressionSerializationTests : EdmLibTestCaseBase
         valueAnnotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.OutOfLine);
         model.AddVocabularyAnnotation(valueAnnotation);
 
-        IEnumerable<XElement> expectedCsdls = new string[] { csdl }.Select(n => XElement.Parse(ModelBuilderHelpers.ReplaceCsdlNamespaceForEdmVersion(n, edmVersion), LoadOptions.SetLineInfo)).ToArray();
-        IEnumerable<XElement> actualCsdls = this.GetSerializerResult(model).Select(s => XElement.Load(new StringReader(s)));
+        IEnumerable<XElement> expectedXElements = new string[] { csdl }.Select(n => XElement.Parse(ModelBuilderHelpers.ReplaceCsdlNamespaceForEdmVersion(n, edmVersion), LoadOptions.SetLineInfo)).ToArray();
+        IEnumerable<XElement> actualXElements = this.GetSerializerResult(model).Select(s => XElement.Load(new StringReader(s)));
 
-        Assert.Equal(expectedCsdls.Count(), actualCsdls.Count());
+        var comparer = new CsdlXElementComparer();
 
-        Verify(expectedCsdls, actualCsdls);
+        // extract EntityContainers into one place
+        XElement expectedContainers = ExtractElementByName(expectedXElements, "EntityContainer");
+        XElement actualContainers = ExtractElementByName(actualXElements, "EntityContainer");
+
+        comparer.Compare(expectedContainers, actualContainers);
+
+        // compare non-EntityContainers
+        foreach (XElement expectedXElement in expectedXElements)
+        {
+            var schemaNamespace = expectedXElement.Attribute("Namespace")?.Value;
+            var actualXElement = actualXElements.FirstOrDefault(e => schemaNamespace == e.Attribute("Namespace")?.Value);
+
+            Assert.NotNull(actualXElement);
+            comparer.Compare(expectedXElement, actualXElement);
+        }
     }
 
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void SerializeCastNullableToNonNullableModel(EdmVersion edmVersion)
+    public void Serialize_CastNullableToNonNullableModel_GeneratesExpectedCsdl(EdmVersion edmVersion)
     {
         var csdl = @"
 <Schema Namespace=""NS"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -697,18 +938,34 @@ public class ExpressionSerializationTests : EdmLibTestCaseBase
         valueAnnotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.OutOfLine);
         model.AddVocabularyAnnotation(valueAnnotation);
 
-        IEnumerable<XElement> expectedCsdls = new string[] { csdl }.Select(n => XElement.Parse(ModelBuilderHelpers.ReplaceCsdlNamespaceForEdmVersion(n, edmVersion), LoadOptions.SetLineInfo)).ToArray();
-        IEnumerable<XElement> actualCsdls = this.GetSerializerResult(model).Select(s => XElement.Load(new StringReader(s)));
+        IEnumerable<XElement> expectedXElements = new string[] { csdl }.Select(n => XElement.Parse(ModelBuilderHelpers.ReplaceCsdlNamespaceForEdmVersion(n, edmVersion), LoadOptions.SetLineInfo)).ToArray();
+        IEnumerable<XElement> actualXElements = this.GetSerializerResult(model).Select(s => XElement.Load(new StringReader(s)));
+        
+        Assert.Equal(expectedXElements.Count(), actualXElements.Count());
 
-        Assert.Equal(expectedCsdls.Count(), actualCsdls.Count());
+        var comparer = new CsdlXElementComparer();
 
-        Verify(expectedCsdls, actualCsdls);
+        // extract EntityContainers into one place
+        XElement expectedContainers = ExtractElementByName(expectedXElements, "EntityContainer");
+        XElement actualContainers = ExtractElementByName(actualXElements, "EntityContainer");
+
+        comparer.Compare(expectedContainers, actualContainers);
+
+        // compare non-EntityContainers
+        foreach (XElement expectedXElement in expectedXElements)
+        {
+            var schemaNamespace = expectedXElement.Attribute("Namespace")?.Value;
+            var actualXElement = actualXElements.FirstOrDefault(e => schemaNamespace == e.Attribute("Namespace")?.Value);
+
+            Assert.NotNull(actualXElement);
+            comparer.Compare(expectedXElement, actualXElement);
+        }
     }
 
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void SerializeCastNullableToNonNullableOnInlineAnnotationModel(EdmVersion edmVersion)
+    public void Serialize_CastNullableToNonNullableOnInlineAnnotationModel_GeneratesExpectedCsdl(EdmVersion edmVersion)
     {
         var csdl = @"
 <Schema Namespace=""NS"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -757,18 +1014,34 @@ public class ExpressionSerializationTests : EdmLibTestCaseBase
         valueAnnotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
         model.AddVocabularyAnnotation(valueAnnotation);
 
-        IEnumerable<XElement> expectedCsdls = new string[] { csdl }.Select(n => XElement.Parse(ModelBuilderHelpers.ReplaceCsdlNamespaceForEdmVersion(n, edmVersion), LoadOptions.SetLineInfo)).ToArray();
-        IEnumerable<XElement> actualCsdls = this.GetSerializerResult(model).Select(s => XElement.Load(new StringReader(s)));
+        IEnumerable<XElement> expectedXElements = new string[] { csdl }.Select(n => XElement.Parse(ModelBuilderHelpers.ReplaceCsdlNamespaceForEdmVersion(n, edmVersion), LoadOptions.SetLineInfo)).ToArray();
+        IEnumerable<XElement> actualXElements = this.GetSerializerResult(model).Select(s => XElement.Load(new StringReader(s)));
+        
+        Assert.Equal(expectedXElements.Count(), actualXElements.Count());
 
-        Assert.Equal(expectedCsdls.Count(), actualCsdls.Count());
+        var comparer = new CsdlXElementComparer();
 
-        Verify(expectedCsdls, actualCsdls);
+        // extract EntityContainers into one place
+        XElement expectedContainers = ExtractElementByName(expectedXElements, "EntityContainer");
+        XElement actualContainers = ExtractElementByName(actualXElements, "EntityContainer");
+
+        comparer.Compare(expectedContainers, actualContainers);
+
+        // compare non-EntityContainers
+        foreach (XElement expectedXElement in expectedXElements)
+        {
+            var schemaNamespace = expectedXElement.Attribute("Namespace")?.Value;
+            var actualXElement = actualXElements.FirstOrDefault(e => schemaNamespace == e.Attribute("Namespace")?.Value);
+
+            Assert.NotNull(actualXElement);
+            comparer.Compare(expectedXElement, actualXElement);
+        }
     }
 
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void SerializeCastResultFalseEvaluationModel(EdmVersion edmVersion)
+    public void Serialize_CastResultFalseEvaluationModel_GeneratesExpectedCsdl(EdmVersion edmVersion)
     {
         var csdl = @"
 <Schema Namespace=""NS"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -829,18 +1102,34 @@ public class ExpressionSerializationTests : EdmLibTestCaseBase
         valueAnnotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.OutOfLine);
         model.AddVocabularyAnnotation(valueAnnotation);
 
-        IEnumerable<XElement> expectedCsdls = new string[] { csdl }.Select(n => XElement.Parse(ModelBuilderHelpers.ReplaceCsdlNamespaceForEdmVersion(n, edmVersion), LoadOptions.SetLineInfo)).ToArray();
-        IEnumerable<XElement> actualCsdls = this.GetSerializerResult(model).Select(s => XElement.Load(new StringReader(s)));
+        IEnumerable<XElement> expectedXElements = new string[] { csdl }.Select(n => XElement.Parse(ModelBuilderHelpers.ReplaceCsdlNamespaceForEdmVersion(n, edmVersion), LoadOptions.SetLineInfo)).ToArray();
+        IEnumerable<XElement> actualXElements = this.GetSerializerResult(model).Select(s => XElement.Load(new StringReader(s)));
+        
+        Assert.Equal(expectedXElements.Count(), actualXElements.Count());
 
-        Assert.Equal(expectedCsdls.Count(), actualCsdls.Count());
+        var comparer = new CsdlXElementComparer();
 
-        Verify(expectedCsdls, actualCsdls);
+        // extract EntityContainers into one place
+        XElement expectedContainers = ExtractElementByName(expectedXElements, "EntityContainer");
+        XElement actualContainers = ExtractElementByName(actualXElements, "EntityContainer");
+
+        comparer.Compare(expectedContainers, actualContainers);
+
+        // compare non-EntityContainers
+        foreach (XElement expectedXElement in expectedXElements)
+        {
+            var schemaNamespace = expectedXElement.Attribute("Namespace")?.Value;
+            var actualXElement = actualXElements.FirstOrDefault(e => schemaNamespace == e.Attribute("Namespace")?.Value);
+
+            Assert.NotNull(actualXElement);
+            comparer.Compare(expectedXElement, actualXElement);
+        }
     }
 
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void SerializeCastResultTrueEvaluationModel(EdmVersion edmVersion)
+    public void Serialize_CastResultTrueEvaluationModel_GeneratesExpectedCsdl(EdmVersion edmVersion)
     {
         var csdl = @"
 <Schema Namespace=""NS"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -906,27 +1195,43 @@ public class ExpressionSerializationTests : EdmLibTestCaseBase
         valueAnnotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.OutOfLine);
         model.AddVocabularyAnnotation(valueAnnotation);
 
-        IEnumerable<XElement> expectedCsdls = new string[] { csdl }.Select(n => XElement.Parse(ModelBuilderHelpers.ReplaceCsdlNamespaceForEdmVersion(n, edmVersion), LoadOptions.SetLineInfo)).ToArray();
-        IEnumerable<XElement> actualCsdls = this.GetSerializerResult(model).Select(s => XElement.Load(new StringReader(s)));
+        IEnumerable<XElement> expectedXElements = new string[] { csdl }.Select(n => XElement.Parse(ModelBuilderHelpers.ReplaceCsdlNamespaceForEdmVersion(n, edmVersion), LoadOptions.SetLineInfo)).ToArray();
+        IEnumerable<XElement> actualXElements = this.GetSerializerResult(model).Select(s => XElement.Load(new StringReader(s)));
+        
+        Assert.Equal(expectedXElements.Count(), actualXElements.Count());
 
-        Assert.Equal(expectedCsdls.Count(), actualCsdls.Count());
+        var comparer = new CsdlXElementComparer();
 
-        Verify(expectedCsdls, actualCsdls);
+        // extract EntityContainers into one place
+        XElement expectedContainers = ExtractElementByName(expectedXElements, "EntityContainer");
+        XElement actualContainers = ExtractElementByName(actualXElements, "EntityContainer");
+
+        comparer.Compare(expectedContainers, actualContainers);
+
+        // compare non-EntityContainers
+        foreach (XElement expectedXElement in expectedXElements)
+        {
+            var schemaNamespace = expectedXElement.Attribute("Namespace")?.Value;
+            var actualXElement = actualXElements.FirstOrDefault(e => schemaNamespace == e.Attribute("Namespace")?.Value);
+
+            Assert.NotNull(actualXElement);
+            comparer.Compare(expectedXElement, actualXElement);
+        }
     }
 
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void SerializeInvalidPropertyTypeUsingIsTypeOnOutOfLineAnnotationModel(EdmVersion edmVersion)
+    public void Serialize_InvalidPropertyTypeUsingIsOfOnOutOfLineAnnotationModel_GeneratesExpectedCsdl(EdmVersion edmVersion)
     {
         var csdl = @"
 <Schema Namespace=""NS"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
     <Term Name=""FriendName"" Type=""Edm.String"" />
     <Annotations Target=""NS.FriendName"">
         <Annotation Term=""NS.FriendName"">
-            <IsType Type=""Edm.String"">
+            <IsOf Type=""Edm.String"">
                 <String>foo</String>
-            </IsType>
+            </IsOf>
         </Annotation>
     </Annotations>
 </Schema>";
@@ -943,18 +1248,34 @@ public class ExpressionSerializationTests : EdmLibTestCaseBase
         valueAnnotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.OutOfLine);
         model.AddVocabularyAnnotation(valueAnnotation);
 
-        IEnumerable<XElement> expectedCsdls = new string[] { csdl }.Select(n => XElement.Parse(ModelBuilderHelpers.ReplaceCsdlNamespaceForEdmVersion(n, edmVersion), LoadOptions.SetLineInfo)).ToArray();
-        IEnumerable<XElement> actualCsdls = this.GetSerializerResult(model).Select(s => XElement.Load(new StringReader(s)));
+        IEnumerable<XElement> expectedXElements = new string[] { csdl }.Select(n => XElement.Parse(ModelBuilderHelpers.ReplaceCsdlNamespaceForEdmVersion(n, edmVersion), LoadOptions.SetLineInfo)).ToArray();
+        IEnumerable<XElement> actualXElements = this.GetSerializerResult(model).Select(s => XElement.Load(new StringReader(s)));
+        
+        Assert.Equal(expectedXElements.Count(), actualXElements.Count());
 
-        Assert.Equal(expectedCsdls.Count(), actualCsdls.Count());
+        var comparer = new CsdlXElementComparer();
 
-        Verify(expectedCsdls, actualCsdls);
+        // extract EntityContainers into one place
+        XElement expectedContainers = ExtractElementByName(expectedXElements, "EntityContainer");
+        XElement actualContainers = ExtractElementByName(actualXElements, "EntityContainer");
+
+        comparer.Compare(expectedContainers, actualContainers);
+
+        // compare non-EntityContainers
+        foreach (XElement expectedXElement in expectedXElements)
+        {
+            var schemaNamespace = expectedXElement.Attribute("Namespace")?.Value;
+            var actualXElement = actualXElements.FirstOrDefault(e => schemaNamespace == e.Attribute("Namespace")?.Value);
+
+            Assert.NotNull(actualXElement);
+            comparer.Compare(expectedXElement, actualXElement);
+        }
     }
 
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void SerializeInvalidPropertyTypeUsingIsTypeOnInlineAnnotationModel(EdmVersion edmVersion)
+    public void Serialize_InvalidPropertyTypeUsingIsOfOnInlineAnnotationModel_GeneratesExpectedCsdl(EdmVersion edmVersion)
     {
         var csdl = @"
 <Schema Namespace=""NS"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -964,9 +1285,9 @@ public class ExpressionSerializationTests : EdmLibTestCaseBase
         <Annotation Term=""NS.CarTerm"">
             <Record>
                 <PropertyValue Property=""Expensive"">
-                    <IsType Type=""Edm.String"">
+                    <IsOf Type=""Edm.String"">
                         <String>foo</String>
-                    </IsType>
+                    </IsOf>
                 </PropertyValue>
             </Record>
         </Annotation>
@@ -997,27 +1318,43 @@ public class ExpressionSerializationTests : EdmLibTestCaseBase
         valueAnnotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
         model.AddVocabularyAnnotation(valueAnnotation);
 
-        IEnumerable<XElement> expectedCsdls = new string[] { csdl }.Select(n => XElement.Parse(ModelBuilderHelpers.ReplaceCsdlNamespaceForEdmVersion(n, edmVersion), LoadOptions.SetLineInfo)).ToArray();
-        IEnumerable<XElement> actualCsdls = this.GetSerializerResult(model).Select(s => XElement.Load(new StringReader(s)));
+        IEnumerable<XElement> expectedXElements = new string[] { csdl }.Select(n => XElement.Parse(ModelBuilderHelpers.ReplaceCsdlNamespaceForEdmVersion(n, edmVersion), LoadOptions.SetLineInfo)).ToArray();
+        IEnumerable<XElement> actualXElements = this.GetSerializerResult(model).Select(s => XElement.Load(new StringReader(s)));
+        
+        Assert.Equal(expectedXElements.Count(), actualXElements.Count());
 
-        Assert.Equal(expectedCsdls.Count(), actualCsdls.Count());
+        var comparer = new CsdlXElementComparer();
 
-        Verify(expectedCsdls, actualCsdls);
+        // extract EntityContainers into one place
+        XElement expectedContainers = ExtractElementByName(expectedXElements, "EntityContainer");
+        XElement actualContainers = ExtractElementByName(actualXElements, "EntityContainer");
+
+        comparer.Compare(expectedContainers, actualContainers);
+
+        // compare non-EntityContainers
+        foreach (XElement expectedXElement in expectedXElements)
+        {
+            var schemaNamespace = expectedXElement.Attribute("Namespace")?.Value;
+            var actualXElement = actualXElements.FirstOrDefault(e => schemaNamespace == e.Attribute("Namespace")?.Value);
+
+            Assert.NotNull(actualXElement);
+            comparer.Compare(expectedXElement, actualXElement);
+        }
     }
 
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void SerializeIsTypeResultFalseEvaluationModel(EdmVersion edmVersion)
+    public void Serialize_IsOfResultFalseEvaluationModel_GeneratesExpectedCsdl(EdmVersion edmVersion)
     {
         var csdl = @"
 <Schema Namespace=""NS"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
     <Term Name=""BooleanFlag"" Type=""Edm.Boolean"" />
     <Annotations Target=""NS.BooleanFlag"">
         <Annotation Term=""NS.BooleanFlag"">
-            <IsType Type=""Edm.String"">
+            <IsOf Type=""Edm.String"">
                 <Int>32</Int>
-            </IsType>
+            </IsOf>
         </Annotation>
     </Annotations>
 </Schema>";
@@ -1034,18 +1371,34 @@ public class ExpressionSerializationTests : EdmLibTestCaseBase
         valueAnnotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.OutOfLine);
         model.AddVocabularyAnnotation(valueAnnotation);
 
-        IEnumerable<XElement> expectedCsdls = new string[] { csdl }.Select(n => XElement.Parse(ModelBuilderHelpers.ReplaceCsdlNamespaceForEdmVersion(n, edmVersion), LoadOptions.SetLineInfo)).ToArray();
-        IEnumerable<XElement> actualCsdls = this.GetSerializerResult(model).Select(s => XElement.Load(new StringReader(s)));
+        IEnumerable<XElement> expectedXElements = new string[] { csdl }.Select(n => XElement.Parse(ModelBuilderHelpers.ReplaceCsdlNamespaceForEdmVersion(n, edmVersion), LoadOptions.SetLineInfo)).ToArray();
+        IEnumerable<XElement> actualXElements = this.GetSerializerResult(model).Select(s => XElement.Load(new StringReader(s)));
+        
+        Assert.Equal(expectedXElements.Count(), actualXElements.Count());
 
-        Assert.Equal(expectedCsdls.Count(), actualCsdls.Count());
+        var comparer = new CsdlXElementComparer();
 
-        Verify(expectedCsdls, actualCsdls);
+        // extract EntityContainers into one place
+        XElement expectedContainers = ExtractElementByName(expectedXElements, "EntityContainer");
+        XElement actualContainers = ExtractElementByName(actualXElements, "EntityContainer");
+
+        comparer.Compare(expectedContainers, actualContainers);
+
+        // compare non-EntityContainers
+        foreach (XElement expectedXElement in expectedXElements)
+        {
+            var schemaNamespace = expectedXElement.Attribute("Namespace")?.Value;
+            var actualXElement = actualXElements.FirstOrDefault(e => schemaNamespace == e.Attribute("Namespace")?.Value);
+
+            Assert.NotNull(actualXElement);
+            comparer.Compare(expectedXElement, actualXElement);
+        }
     }
 
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void SerializeIsTypeResultTrueEvaluationModel(EdmVersion edmVersion)
+    public void Serialize_IsOfResultTrueEvaluationModel_GeneratesExpectedCsdl(EdmVersion edmVersion)
     {
         var csdl = @"
 <Schema Namespace=""NS"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -1057,9 +1410,9 @@ public class ExpressionSerializationTests : EdmLibTestCaseBase
         <Annotation Term=""NS.BooleanFlagTerm"">
             <Record>
                 <PropertyValue Property=""Flag"">
-                    <IsType Type=""Edm.String"">
+                    <IsOf Type=""Edm.String"">
                         <String>foo</String>
-                    </IsType>
+                    </IsOf>
                 </PropertyValue>
             </Record>
         </Annotation>
@@ -1083,12 +1436,28 @@ public class ExpressionSerializationTests : EdmLibTestCaseBase
         valueAnnotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.OutOfLine);
         model.AddVocabularyAnnotation(valueAnnotation);
 
-        IEnumerable<XElement> expectedCsdls = new string[] { csdl }.Select(n => XElement.Parse(ModelBuilderHelpers.ReplaceCsdlNamespaceForEdmVersion(n, edmVersion), LoadOptions.SetLineInfo)).ToArray();
-        IEnumerable<XElement> actualCsdls = this.GetSerializerResult(model).Select(s => XElement.Load(new StringReader(s)));
+        IEnumerable<XElement> expectedXElements = new string[] { csdl }.Select(n => XElement.Parse(ModelBuilderHelpers.ReplaceCsdlNamespaceForEdmVersion(n, edmVersion), LoadOptions.SetLineInfo)).ToArray();
+        IEnumerable<XElement> actualXElements = this.GetSerializerResult(model).Select(s => XElement.Load(new StringReader(s)));
+        
+        Assert.Equal(expectedXElements.Count(), actualXElements.Count());
 
-        Assert.Equal(expectedCsdls.Count(), actualCsdls.Count());
+        var comparer = new CsdlXElementComparer();
 
-        Verify(expectedCsdls, actualCsdls);
+        // extract EntityContainers into one place
+        XElement expectedContainers = ExtractElementByName(expectedXElements, "EntityContainer");
+        XElement actualContainers = ExtractElementByName(actualXElements, "EntityContainer");
+
+        comparer.Compare(expectedContainers, actualContainers);
+
+        // compare non-EntityContainers
+        foreach (XElement expectedXElement in expectedXElements)
+        {
+            var schemaNamespace = expectedXElement.Attribute("Namespace")?.Value;
+            var actualXElement = actualXElements.FirstOrDefault(e => schemaNamespace == e.Attribute("Namespace")?.Value);
+
+            Assert.NotNull(actualXElement);
+            comparer.Compare(expectedXElement, actualXElement);
+        }
     }
 
     #region Private
@@ -1100,7 +1469,7 @@ public class ExpressionSerializationTests : EdmLibTestCaseBase
     <Term Name=""ByteValue"" Type=""Byte"" />
     <Term Name=""DateValue"" Type=""Date"" />
     <Term Name=""DateTimeOffsetValue"" Type=""DateTimeOffset"" />
-    <Term Name=""DecimalValue"" Scale=""Variable"" Type=""Decimal"" />
+    <Term Name=""DecimalValue"" Scale=""variable"" Type=""Decimal"" />
     <Term Name=""DoubleValue"" Type=""Double"" />
     <Term Name=""GuidValue"" Type=""Guid"" />
     <Term Name=""Int16Value"" Type=""Int16"" />
@@ -1110,8 +1479,8 @@ public class ExpressionSerializationTests : EdmLibTestCaseBase
     <Term Name=""SingleValue"" Type=""Single"" />
     <Term Name=""StringValue"" Type=""String"" MaxLength=""512"" />
     <Term Name=""TimeOfDayValue"" Type=""TimeOfDay"" />
-    <Term Name=""GeographyValue"" Type=""Geography"" SRID=""Variable"" />
-    <Term Name=""GeometryValue"" Type=""Geometry"" SRID=""Variable"" />
+    <Term Name=""GeographyValue"" Type=""Geography"" SRID=""variable"" />
+    <Term Name=""GeometryValue"" Type=""Geometry"" SRID=""variable"" />
     <Term Name=""DurationValue"" Type=""Duration"" />
     <EntityType Name=""TransformedPerson"">
         <Property Name=""Age"" Type=""Int32"" Nullable=""false"" />
@@ -1132,6 +1501,7 @@ public class ExpressionSerializationTests : EdmLibTestCaseBase
   <Function Name=""True""><ReturnType Type=""Boolean"" /></Function>
   <Function Name=""False""><ReturnType Type=""Boolean"" /></Function>
 </Schema>";
+
     private IEdmVocabularyAnnotation CreateAndAttachVocabularyAnnotation(IEdmVocabularyAnnotatable target, IEdmTerm term, IEdmExpression value)
     {
         return this.CreateAndAttachVocabularyAnnotation(target, term, value, null);
@@ -1158,29 +1528,6 @@ public class ExpressionSerializationTests : EdmLibTestCaseBase
         Assert.Empty(errors);
 
         return edmModel;
-    }
-
-    private void Verify(IEnumerable<XElement> expectedXElements, IEnumerable<XElement> actualXElements)
-    {
-        Assert.Equal(expectedXElements.Count(), actualXElements.Count());
-
-        var comparer = new CsdlXElementComparer();
-
-        // extract EntityContainers into one place
-        XElement expectedContainers = ExtractElementByName(expectedXElements, "EntityContainer");
-        XElement actualContainers = ExtractElementByName(actualXElements, "EntityContainer");
-
-        comparer.Compare(expectedContainers, actualContainers);
-
-        // compare non-EntityContainers
-        foreach (XElement expectedXElement in expectedXElements)
-        {
-            var schemaNamespace = expectedXElement.Attribute("Namespace")?.Value;
-            var actualXElement = actualXElements.FirstOrDefault(e => schemaNamespace == e.Attribute("Namespace")?.Value);
-
-            Assert.NotNull(actualXElement);
-            comparer.Compare(expectedXElement, actualXElement);
-        }
     }
 
     #endregion

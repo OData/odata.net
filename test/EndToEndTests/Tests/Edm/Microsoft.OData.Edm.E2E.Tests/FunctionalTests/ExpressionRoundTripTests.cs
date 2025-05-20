@@ -4,9 +4,9 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using System;
 using System.Xml.Linq;
 using Microsoft.OData.Edm.Csdl;
+using Microsoft.OData.Edm.E2E.Tests.Common;
 using Microsoft.OData.Edm.Validation;
 
 namespace Microsoft.OData.Edm.E2E.Tests.FunctionalTests;
@@ -16,7 +16,7 @@ public class ExpressionRoundTripTests : EdmLibTestCaseBase
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void RoundTripInvalidTypeUsingCastCollectionCsdl(EdmVersion edmVersion)
+    public void RoundTrip_InvalidCastCollection_ReturnsExpectedCsdl(EdmVersion edmVersion)
     {
         var csdl = @"
 <Schema Namespace=""NS"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -51,14 +51,36 @@ public class ExpressionRoundTripTests : EdmLibTestCaseBase
         
         var updatedExpectedCsdls = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(expectedCsdls.ToArray(), edmVersion);
         var updatedActualCsdls = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(actualCsdls.ToArray(), edmVersion);
+        
+        var expectXElements = updatedExpectedCsdls.ToList();
+        var actualXElements = updatedActualCsdls.ToList();
+        Assert.Equal(expectXElements.Count, actualXElements.Count);
 
-        Compare(updatedExpectedCsdls.ToList(), updatedActualCsdls.ToList());
+        // extract EntityContainers into one place
+        XElement expectedContainers = ExtractElementByName(expectXElements, "EntityContainer");
+        XElement actualContainers = ExtractElementByName(actualXElements, "EntityContainer");
+
+        // compare just the EntityContainers
+        this.CsdlXElementComparer.Compare(expectedContainers, actualContainers);
+
+        foreach (var expectXElement in expectXElements)
+        {
+            var schemaNamespace = expectXElement.Attribute("Namespace") == null ? string.Empty : expectXElement.Attribute("Namespace")?.Value;
+            var actualXElement = actualXElements.FirstOrDefault(e => schemaNamespace == (e.Attribute("Namespace") == null ? string.Empty : e.Attribute("Namespace")?.Value));
+
+            Assert.NotNull(actualXElement);
+
+            Console.WriteLine("Expected: " + expectXElement.ToString());
+            Console.WriteLine("Actual: " + actualXElement.ToString());
+
+            this.CsdlXElementComparer.Compare(expectXElement, actualXElement);
+        }
     }
 
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void RoundTripCastNullableToNonNullableCsdl(EdmVersion edmVersion)
+    public void RoundTrip_CastNullableToNonNullable_ReturnsExpectedCsdl(EdmVersion edmVersion)
     {
         var csdl = @"
 <Schema Namespace=""NS"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -93,14 +115,36 @@ public class ExpressionRoundTripTests : EdmLibTestCaseBase
         
         var updatedExpectedCsdls = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(expectedCsdls.ToArray(), edmVersion);
         var updatedActualCsdls = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(actualCsdls.ToArray(), edmVersion);
+        
+        var expectXElements = updatedExpectedCsdls.ToList();
+        var actualXElements = updatedActualCsdls.ToList();
+        Assert.Equal(expectXElements.Count, actualXElements.Count);
 
-        Compare(updatedExpectedCsdls.ToList(), updatedActualCsdls.ToList());
+        // extract EntityContainers into one place
+        XElement expectedContainers = ExtractElementByName(expectXElements, "EntityContainer");
+        XElement actualContainers = ExtractElementByName(actualXElements, "EntityContainer");
+
+        // compare just the EntityContainers
+        this.CsdlXElementComparer.Compare(expectedContainers, actualContainers);
+
+        foreach (var expectXElement in expectXElements)
+        {
+            var schemaNamespace = expectXElement.Attribute("Namespace") == null ? string.Empty : expectXElement.Attribute("Namespace")?.Value;
+            var actualXElement = actualXElements.FirstOrDefault(e => schemaNamespace == (e.Attribute("Namespace") == null ? string.Empty : e.Attribute("Namespace")?.Value));
+
+            Assert.NotNull(actualXElement);
+
+            Console.WriteLine("Expected: " + expectXElement.ToString());
+            Console.WriteLine("Actual: " + actualXElement.ToString());
+
+            this.CsdlXElementComparer.Compare(expectXElement, actualXElement);
+        }
     }
 
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void RoundTripCastNullableToNonNullableOnInlineAnnotationCsdl(EdmVersion edmVersion)
+    public void RoundTrip_CastNullableToNonNullableOnInlineAnnotation_ReturnsExpectedCsdl(EdmVersion edmVersion)
     {
         var csdl = @"
 <Schema Namespace=""NS"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -134,14 +178,36 @@ public class ExpressionRoundTripTests : EdmLibTestCaseBase
         
         var updatedExpectedCsdls = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(expectedCsdls.ToArray(), edmVersion);
         var updatedActualCsdls = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(actualCsdls.ToArray(), edmVersion);
+        
+        var expectXElements = updatedExpectedCsdls.ToList();
+        var actualXElements = updatedActualCsdls.ToList();
+        Assert.Equal(expectXElements.Count, actualXElements.Count);
 
-        Compare(updatedExpectedCsdls.ToList(), updatedActualCsdls.ToList());
+        // extract EntityContainers into one place
+        XElement expectedContainers = ExtractElementByName(expectXElements, "EntityContainer");
+        XElement actualContainers = ExtractElementByName(actualXElements, "EntityContainer");
+
+        // compare just the EntityContainers
+        this.CsdlXElementComparer.Compare(expectedContainers, actualContainers);
+
+        foreach (var expectXElement in expectXElements)
+        {
+            var schemaNamespace = expectXElement.Attribute("Namespace") == null ? string.Empty : expectXElement.Attribute("Namespace")?.Value;
+            var actualXElement = actualXElements.FirstOrDefault(e => schemaNamespace == (e.Attribute("Namespace") == null ? string.Empty : e.Attribute("Namespace")?.Value));
+
+            Assert.NotNull(actualXElement);
+
+            Console.WriteLine("Expected: " + expectXElement.ToString());
+            Console.WriteLine("Actual: " + actualXElement.ToString());
+
+            this.CsdlXElementComparer.Compare(expectXElement, actualXElement);
+        }
     }
 
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void RoundTripCastResultFalseEvaluationCsdl(EdmVersion edmVersion)
+    public void RoundTrip_CastWithFalseEvaluation_ReturnsExpectedCsdl(EdmVersion edmVersion)
     {
         var csdl = @"
 <Schema Namespace=""NS"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -183,14 +249,36 @@ public class ExpressionRoundTripTests : EdmLibTestCaseBase
         
         var updatedExpectedCsdls = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(expectedCsdls.ToArray(), edmVersion);
         var updatedActualCsdls = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(actualCsdls.ToArray(), edmVersion);
+        
+        var expectXElements = updatedExpectedCsdls.ToList();
+        var actualXElements = updatedActualCsdls.ToList();
+        Assert.Equal(expectXElements.Count, actualXElements.Count);
 
-        Compare(updatedExpectedCsdls.ToList(), updatedActualCsdls.ToList());
+        // extract EntityContainers into one place
+        XElement expectedContainers = ExtractElementByName(expectXElements, "EntityContainer");
+        XElement actualContainers = ExtractElementByName(actualXElements, "EntityContainer");
+
+        // compare just the EntityContainers
+        this.CsdlXElementComparer.Compare(expectedContainers, actualContainers);
+
+        foreach (var expectXElement in expectXElements)
+        {
+            var schemaNamespace = expectXElement.Attribute("Namespace") == null ? string.Empty : expectXElement.Attribute("Namespace")?.Value;
+            var actualXElement = actualXElements.FirstOrDefault(e => schemaNamespace == (e.Attribute("Namespace") == null ? string.Empty : e.Attribute("Namespace")?.Value));
+
+            Assert.NotNull(actualXElement);
+
+            Console.WriteLine("Expected: " + expectXElement.ToString());
+            Console.WriteLine("Actual: " + actualXElement.ToString());
+
+            this.CsdlXElementComparer.Compare(expectXElement, actualXElement);
+        }
     }
 
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void RoundTripCastResultTrueEvaluationCsdl(EdmVersion edmVersion)
+    public void RoundTrip_CastWithTrueEvaluation_ReturnsExpectedCsdl(EdmVersion edmVersion)
     {
         var csdl = @"
 <Schema Namespace=""NS"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -232,147 +320,9 @@ public class ExpressionRoundTripTests : EdmLibTestCaseBase
         
         var updatedExpectedCsdls = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(expectedCsdls.ToArray(), edmVersion);
         var updatedActualCsdls = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(actualCsdls.ToArray(), edmVersion);
-
-        Compare(updatedExpectedCsdls.ToList(), updatedActualCsdls.ToList());
-    }
-
-    [Theory]
-    [InlineData(EdmVersion.V40)]
-    [InlineData(EdmVersion.V401)]
-    public void RoundTripInvalidPropertyTypeUsingIsTypeOnOutOfLineAnnotationCsdl(EdmVersion edmVersion)
-    {
-        var csdl = @"
-<Schema Namespace=""NS"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
-    <Term Name=""FriendName"" Type=""Edm.String"" />
-    <Annotations Target=""NS.FriendName"">
-        <Annotation Term=""NS.FriendName"">
-            <IsType Type=""Edm.String"">
-                <String>foo</String>
-            </IsType>
-        </Annotation>
-    </Annotations>
-</Schema>";
-
-        var expectedCsdls = new string[] { csdl }.Select(n => XElement.Parse(ModelBuilderHelpers.ReplaceCsdlNamespaceForEdmVersion(n, edmVersion), LoadOptions.SetLineInfo)).ToArray();
-        var isParsed = SchemaReader.TryParse(expectedCsdls.Select(e => e.CreateReader()), out IEdmModel model, out IEnumerable<EdmError> errors);
-        Assert.True(isParsed);
-        Assert.False(errors.Any());
-
-        var actualCsdls = this.GetSerializerResult(model).Select(n => XElement.Parse(n));
         
-        var updatedExpectedCsdls = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(expectedCsdls.ToArray(), edmVersion);
-        var updatedActualCsdls = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(actualCsdls.ToArray(), edmVersion);
-
-        Compare(updatedExpectedCsdls.ToList(), updatedActualCsdls.ToList());
-    }
-
-    [Theory]
-    [InlineData(EdmVersion.V40)]
-    [InlineData(EdmVersion.V401)]
-    public void RoundTripInvalidPropertyTypeUsingIsTypeOnInlineAnnotationCsdl(EdmVersion edmVersion)
-    {
-        var csdl = @"
-<Schema Namespace=""NS"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
-    <Term Name=""CarTerm"" Type=""NS.Car"" />
-    <ComplexType Name=""Car"">
-        <Property Name=""Expensive"" Type=""NS.Bike"" />
-        <Annotation Term=""NS.CarTerm"">
-            <Record>
-                <PropertyValue Property=""Expensive"">
-                    <IsType Type=""Edm.String"">
-                        <String>foo</String>
-                    </IsType>
-                </PropertyValue>
-            </Record>
-        </Annotation>
-    </ComplexType>
-    <ComplexType Name=""Bike"">
-        <Property Name=""Color"" Type=""String"" />
-    </ComplexType>
-</Schema>";
-
-        var expectedCsdls = new string[] { csdl }.Select(n => XElement.Parse(ModelBuilderHelpers.ReplaceCsdlNamespaceForEdmVersion(n, edmVersion), LoadOptions.SetLineInfo)).ToArray();
-        var isParsed = SchemaReader.TryParse(expectedCsdls.Select(e => e.CreateReader()), out IEdmModel model, out IEnumerable<EdmError> errors);
-        Assert.True(isParsed);
-        Assert.False(errors.Any());
-
-        var actualCsdls = this.GetSerializerResult(model).Select(n => XElement.Parse(n));
-        
-        var updatedExpectedCsdls = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(expectedCsdls.ToArray(), edmVersion);
-        var updatedActualCsdls = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(actualCsdls.ToArray(), edmVersion);
-
-        Compare(updatedExpectedCsdls.ToList(), updatedActualCsdls.ToList());
-    }
-
-    [Theory]
-    [InlineData(EdmVersion.V40)]
-    [InlineData(EdmVersion.V401)]
-    public void RoundTripIsTypeResultFalseEvaluationCsdl(EdmVersion edmVersion)
-    {
-        var csdl = @"
-<Schema Namespace=""NS"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
-    <Term Name=""BooleanFlag"" Type=""Edm.Boolean"" />
-    <Annotations Target=""NS.BooleanFlag"">
-        <Annotation Term=""NS.BooleanFlag"">
-            <IsType Type=""Edm.String"">
-                <Int>32</Int>
-            </IsType>
-        </Annotation>
-    </Annotations>
-</Schema>";
-
-        var expectedCsdls = new string[] { csdl }.Select(n => XElement.Parse(ModelBuilderHelpers.ReplaceCsdlNamespaceForEdmVersion(n, edmVersion), LoadOptions.SetLineInfo)).ToArray();
-        var isParsed = SchemaReader.TryParse(expectedCsdls.Select(e => e.CreateReader()), out IEdmModel model, out IEnumerable<EdmError> errors);
-        Assert.True(isParsed);
-        Assert.False(errors.Any());
-
-        var actualCsdls = this.GetSerializerResult(model).Select(n => XElement.Parse(n));
-        
-        var updatedExpectedCsdls = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(expectedCsdls.ToArray(), edmVersion);
-        var updatedActualCsdls = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(actualCsdls.ToArray(), edmVersion);
-
-        Compare(updatedExpectedCsdls.ToList(), updatedActualCsdls.ToList());
-    }
-
-    [Theory]
-    [InlineData(EdmVersion.V40)]
-    [InlineData(EdmVersion.V401)]
-    public void RoundTripIsTypeResultTrueEvaluationCsdl(EdmVersion edmVersion)
-    {
-        var csdl = @"
-<Schema Namespace=""NS"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
-    <ComplexType Name=""BooleanFlag"">
-        <Property Name=""Flag"" Type=""Edm.Boolean"" />
-    </ComplexType>
-    <Term Name=""BooleanFlagTerm"" Type=""NS.BooleanFlag"" />
-    <Annotations Target=""NS.BooleanFlag"">
-        <Annotation Term=""NS.BooleanFlagTerm"">
-            <Record>
-                <PropertyValue Property=""Flag"">
-                    <IsType Type=""Edm.String"">
-                        <String>foo</String>
-                    </IsType>
-                </PropertyValue>
-            </Record>
-        </Annotation>
-    </Annotations>
-</Schema>";
-
-        var expectedCsdls = new string[] { csdl }.Select(n => XElement.Parse(ModelBuilderHelpers.ReplaceCsdlNamespaceForEdmVersion(n, edmVersion), LoadOptions.SetLineInfo)).ToArray();
-        var isParsed = SchemaReader.TryParse(expectedCsdls.Select(e => e.CreateReader()), out IEdmModel model, out IEnumerable<EdmError> errors);
-        Assert.True(isParsed);
-        Assert.False(errors.Any());
-
-        var actualCsdls = this.GetSerializerResult(model).Select(n => XElement.Parse(n));
-
-        var updatedExpectedCsdls = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(expectedCsdls.ToArray(), edmVersion);
-        var updatedActualCsdls = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(actualCsdls.ToArray(), edmVersion);
-
-        Compare(updatedExpectedCsdls.ToList(), updatedActualCsdls.ToList());
-    }
-
-    private void Compare(List<XElement> expectXElements, List<XElement> actualXElements)
-    {
+        var expectXElements = updatedExpectedCsdls.ToList();
+        var actualXElements = updatedActualCsdls.ToList();
         Assert.Equal(expectXElements.Count, actualXElements.Count);
 
         // extract EntityContainers into one place
@@ -396,26 +346,226 @@ public class ExpressionRoundTripTests : EdmLibTestCaseBase
         }
     }
 
-    private static XElement ExtractElementByName(IEnumerable<XElement> inputSchemas, string elementNameToExtract)
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void RoundTrip_InvalidPropertyTypeUsingIsOfOnOutOfLineAnnotation_ReturnsExpectedCsdl(EdmVersion edmVersion)
     {
-        if (inputSchemas == null || !inputSchemas.Any())
+        var csdl = @"
+<Schema Namespace=""NS"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+    <Term Name=""FriendName"" Type=""Edm.String"" />
+    <Annotations Target=""NS.FriendName"">
+        <Annotation Term=""NS.FriendName"">
+            <IsOf Type=""Edm.String"">
+                <String>foo</String>
+            </IsOf>
+        </Annotation>
+    </Annotations>
+</Schema>";
+
+        var expectedCsdls = new string[] { csdl }.Select(n => XElement.Parse(ModelBuilderHelpers.ReplaceCsdlNamespaceForEdmVersion(n, edmVersion), LoadOptions.SetLineInfo)).ToArray();
+        var isParsed = SchemaReader.TryParse(expectedCsdls.Select(e => e.CreateReader()), out IEdmModel model, out IEnumerable<EdmError> errors);
+        Assert.True(isParsed);
+        Assert.False(errors.Any());
+
+        var actualCsdls = this.GetSerializerResult(model).Select(n => XElement.Parse(n));
+        
+        var updatedExpectedCsdls = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(expectedCsdls.ToArray(), edmVersion);
+        var updatedActualCsdls = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(actualCsdls.ToArray(), edmVersion);
+        
+        var expectXElements = updatedExpectedCsdls.ToList();
+        var actualXElements = updatedActualCsdls.ToList();
+        Assert.Equal(expectXElements.Count, actualXElements.Count);
+
+        // extract EntityContainers into one place
+        XElement expectedContainers = ExtractElementByName(expectXElements, "EntityContainer");
+        XElement actualContainers = ExtractElementByName(actualXElements, "EntityContainer");
+
+        // compare just the EntityContainers
+        this.CsdlXElementComparer.Compare(expectedContainers, actualContainers);
+
+        foreach (var expectXElement in expectXElements)
         {
-            throw new InvalidOperationException("Needs at least one schema to extract element!");
+            var schemaNamespace = expectXElement.Attribute("Namespace") == null ? string.Empty : expectXElement.Attribute("Namespace")?.Value;
+            var actualXElement = actualXElements.FirstOrDefault(e => schemaNamespace == (e.Attribute("Namespace") == null ? string.Empty : e.Attribute("Namespace")?.Value));
+
+            Assert.NotNull(actualXElement);
+
+            Console.WriteLine("Expected: " + expectXElement.ToString());
+            Console.WriteLine("Actual: " + actualXElement.ToString());
+
+            this.CsdlXElementComparer.Compare(expectXElement, actualXElement);
         }
+    }
 
-        XNamespace csdlXNamespace = inputSchemas.First().Name.Namespace;
-        var containers = new XElement(csdlXNamespace + "Schema",
-                                  new XAttribute("Namespace", "ExtractedElements"));
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void RoundTrip_InvalidPropertyTypeUsingIsOfOnInlineAnnotation_ReturnsExpectedCsdl(EdmVersion edmVersion)
+    {
+        var csdl = @"
+<Schema Namespace=""NS"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+    <Term Name=""CarTerm"" Type=""NS.Car"" />
+    <ComplexType Name=""Car"">
+        <Property Name=""Expensive"" Type=""NS.Bike"" />
+        <Annotation Term=""NS.CarTerm"">
+            <Record>
+                <PropertyValue Property=""Expensive"">
+                    <IsOf Type=""Edm.String"">
+                        <String>foo</String>
+                    </IsOf>
+                </PropertyValue>
+            </Record>
+        </Annotation>
+    </ComplexType>
+    <ComplexType Name=""Bike"">
+        <Property Name=""Color"" Type=""String"" />
+    </ComplexType>
+</Schema>";
 
-        foreach (var s in inputSchemas)
+        var expectedCsdls = new string[] { csdl }.Select(n => XElement.Parse(ModelBuilderHelpers.ReplaceCsdlNamespaceForEdmVersion(n, edmVersion), LoadOptions.SetLineInfo)).ToArray();
+        var isParsed = SchemaReader.TryParse(expectedCsdls.Select(e => e.CreateReader()), out IEdmModel model, out IEnumerable<EdmError> errors);
+        Assert.True(isParsed);
+        Assert.False(errors.Any());
+
+        var actualCsdls = this.GetSerializerResult(model).Select(n => XElement.Parse(n));
+        
+        var updatedExpectedCsdls = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(expectedCsdls.ToArray(), edmVersion);
+        var updatedActualCsdls = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(actualCsdls.ToArray(), edmVersion);
+        
+        var expectXElements = updatedExpectedCsdls.ToList();
+        var actualXElements = updatedActualCsdls.ToList();
+        Assert.Equal(expectXElements.Count, actualXElements.Count);
+
+        // extract EntityContainers into one place
+        XElement expectedContainers = ExtractElementByName(expectXElements, "EntityContainer");
+        XElement actualContainers = ExtractElementByName(actualXElements, "EntityContainer");
+
+        // compare just the EntityContainers
+        this.CsdlXElementComparer.Compare(expectedContainers, actualContainers);
+
+        foreach (var expectXElement in expectXElements)
         {
-            foreach (var c in s.Elements(csdlXNamespace + elementNameToExtract).ToArray())
-            {
-                c.Remove();
-                containers.Add(c);
-            }
-        }
+            var schemaNamespace = expectXElement.Attribute("Namespace") == null ? string.Empty : expectXElement.Attribute("Namespace")?.Value;
+            var actualXElement = actualXElements.FirstOrDefault(e => schemaNamespace == (e.Attribute("Namespace") == null ? string.Empty : e.Attribute("Namespace")?.Value));
 
-        return containers;
+            Assert.NotNull(actualXElement);
+
+            Console.WriteLine("Expected: " + expectXElement.ToString());
+            Console.WriteLine("Actual: " + actualXElement.ToString());
+
+            this.CsdlXElementComparer.Compare(expectXElement, actualXElement);
+        }
+    }
+
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void RoundTrip_IsOfWithFalseEvaluation_ReturnsExpectedCsdl(EdmVersion edmVersion)
+    {
+        var csdl = @"
+<Schema Namespace=""NS"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+    <Term Name=""BooleanFlag"" Type=""Edm.Boolean"" />
+    <Annotations Target=""NS.BooleanFlag"">
+        <Annotation Term=""NS.BooleanFlag"">
+            <IsOf Type=""Edm.String"">
+                <Int>32</Int>
+            </IsOf>
+        </Annotation>
+    </Annotations>
+</Schema>";
+
+        var expectedCsdls = new string[] { csdl }.Select(n => XElement.Parse(ModelBuilderHelpers.ReplaceCsdlNamespaceForEdmVersion(n, edmVersion), LoadOptions.SetLineInfo)).ToArray();
+        var isParsed = SchemaReader.TryParse(expectedCsdls.Select(e => e.CreateReader()), out IEdmModel model, out IEnumerable<EdmError> errors);
+        Assert.True(isParsed);
+        Assert.False(errors.Any());
+
+        var actualCsdls = this.GetSerializerResult(model).Select(n => XElement.Parse(n));
+        
+        var updatedExpectedCsdls = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(expectedCsdls.ToArray(), edmVersion);
+        var updatedActualCsdls = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(actualCsdls.ToArray(), edmVersion);
+        
+        var expectXElements = updatedExpectedCsdls.ToList();
+        var actualXElements = updatedActualCsdls.ToList();
+        Assert.Equal(expectXElements.Count, actualXElements.Count);
+
+        // extract EntityContainers into one place
+        XElement expectedContainers = ExtractElementByName(expectXElements, "EntityContainer");
+        XElement actualContainers = ExtractElementByName(actualXElements, "EntityContainer");
+
+        // compare just the EntityContainers
+        this.CsdlXElementComparer.Compare(expectedContainers, actualContainers);
+
+        foreach (var expectXElement in expectXElements)
+        {
+            var schemaNamespace = expectXElement.Attribute("Namespace") == null ? string.Empty : expectXElement.Attribute("Namespace")?.Value;
+            var actualXElement = actualXElements.FirstOrDefault(e => schemaNamespace == (e.Attribute("Namespace") == null ? string.Empty : e.Attribute("Namespace")?.Value));
+
+            Assert.NotNull(actualXElement);
+
+            Console.WriteLine("Expected: " + expectXElement.ToString());
+            Console.WriteLine("Actual: " + actualXElement.ToString());
+
+            this.CsdlXElementComparer.Compare(expectXElement, actualXElement);
+        }
+    }
+
+    [Theory]
+    [InlineData(EdmVersion.V40)]
+    [InlineData(EdmVersion.V401)]
+    public void RoundTrip_IsOfWithTrueEvaluation_ReturnsExpectedCsdl(EdmVersion edmVersion)
+    {
+        var csdl = @"
+<Schema Namespace=""NS"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+    <ComplexType Name=""BooleanFlag"">
+        <Property Name=""Flag"" Type=""Edm.Boolean"" />
+    </ComplexType>
+    <Term Name=""BooleanFlagTerm"" Type=""NS.BooleanFlag"" />
+    <Annotations Target=""NS.BooleanFlag"">
+        <Annotation Term=""NS.BooleanFlagTerm"">
+            <Record>
+                <PropertyValue Property=""Flag"">
+                    <IsOf Type=""Edm.String"">
+                        <String>foo</String>
+                    </IsOf>
+                </PropertyValue>
+            </Record>
+        </Annotation>
+    </Annotations>
+</Schema>";
+
+        var expectedCsdls = new string[] { csdl }.Select(n => XElement.Parse(ModelBuilderHelpers.ReplaceCsdlNamespaceForEdmVersion(n, edmVersion), LoadOptions.SetLineInfo)).ToArray();
+        var isParsed = SchemaReader.TryParse(expectedCsdls.Select(e => e.CreateReader()), out IEdmModel model, out IEnumerable<EdmError> errors);
+        Assert.True(isParsed);
+        Assert.False(errors.Any());
+
+        var actualCsdls = this.GetSerializerResult(model).Select(n => XElement.Parse(n));
+
+        var updatedExpectedCsdls = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(expectedCsdls.ToArray(), edmVersion);
+        var updatedActualCsdls = ModelBuilderHelpers.ReplaceCsdlNamespacesForEdmVersion(actualCsdls.ToArray(), edmVersion);
+
+        var expectXElements = updatedExpectedCsdls.ToList();
+        var actualXElements = updatedActualCsdls.ToList();
+        Assert.Equal(expectXElements.Count, actualXElements.Count);
+
+        // extract EntityContainers into one place
+        XElement expectedContainers = ExtractElementByName(expectXElements, "EntityContainer");
+        XElement actualContainers = ExtractElementByName(actualXElements, "EntityContainer");
+
+        // compare just the EntityContainers
+        this.CsdlXElementComparer.Compare(expectedContainers, actualContainers);
+
+        foreach (var expectXElement in expectXElements)
+        {
+            var schemaNamespace = expectXElement.Attribute("Namespace") == null ? string.Empty : expectXElement.Attribute("Namespace")?.Value;
+            var actualXElement = actualXElements.FirstOrDefault(e => schemaNamespace == (e.Attribute("Namespace") == null ? string.Empty : e.Attribute("Namespace")?.Value));
+
+            Assert.NotNull(actualXElement);
+
+            Console.WriteLine("Expected: " + expectXElement.ToString());
+            Console.WriteLine("Actual: " + actualXElement.ToString());
+
+            this.CsdlXElementComparer.Compare(expectXElement, actualXElement);
+        }
     }
 }

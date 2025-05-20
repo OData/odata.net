@@ -6,6 +6,7 @@
 
 using System.Xml.Linq;
 using Microsoft.OData.Edm.Csdl;
+using Microsoft.OData.Edm.E2E.Tests.Common;
 using Microsoft.OData.Edm.Validation;
 
 namespace Microsoft.OData.Edm.E2E.Tests.FunctionalTests;
@@ -15,7 +16,7 @@ public class NavigationValidationTests : EdmLibTestCaseBase
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void ValidateNavigationSinglePrincipalWithNotNullableDependentCsdl(EdmVersion edmVersion)
+    public void Validate_NavigationWithSinglePrincipalAndNonNullableDependentProperties_PassesValidation(EdmVersion edmVersion)
     {
 var csdlElements = new[] { @"
 <Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -65,7 +66,7 @@ var csdlElements = new[] { @"
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void ValidateNavigationSinglePrincipalWithNotNullableKeyDependentCsdl(EdmVersion edmVersion)
+    public void Validate_NavigationWithSinglePrincipalAndNonNullableKeyDependentProperties_PassesValidation(EdmVersion edmVersion)
     {
         var csdlElements = new[] { @"
 <Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -117,7 +118,7 @@ var csdlElements = new[] { @"
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void ValidateNavigationSinglePrincipalWithMixNullableDependentCsdl(EdmVersion edmVersion)
+    public void Validate_NavigationWithSinglePrincipalAndMixedNullableDependentProperties_PassesValidation(EdmVersion edmVersion)
     {
         var csdlElements = new[] { @"
 <Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -167,7 +168,7 @@ var csdlElements = new[] { @"
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void ValidateNavigationSinglePrincipalWithAllNullableDependentCsdl(EdmVersion edmVersion)
+    public void Validate_NavigationWithSinglePrincipalAndAllNullableDependentProperties_FailsValidation(EdmVersion edmVersion)
     {
         var csdlElements = new[] { @"
 <Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -217,7 +218,7 @@ var csdlElements = new[] { @"
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void ValidateNavigationMultiplePrincipalWithNotNullableDependentCsdl(EdmVersion edmVersion)
+    public void Validate_NavigationWithMultiplePrincipalsAndNonNullableDependentProperties_FailsValidation(EdmVersion edmVersion)
     {
         var csdlElements = new[] { @"
 <Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -267,7 +268,7 @@ var csdlElements = new[] { @"
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void ValidateNavigationMultiplePrincipalWithMixNullableDependentCsdl(EdmVersion edmVersion)
+    public void Validate_NavigationWithMultiplePrincipalsAndMixedNullableDependentProperties_FailsValidation(EdmVersion edmVersion)
     {
         var csdlElements = new[] { @"
 <Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -317,7 +318,7 @@ var csdlElements = new[] { @"
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void ValidateNavigationMultiplePrincipalWithAllNullableDependentCsdl(EdmVersion edmVersion)
+    public void Validate_NavigationWithMultiplePrincipalsAndAllNullableDependentProperties_FailsValidation(EdmVersion edmVersion)
     {
         var csdlElements = new[] { @"
 <Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -362,15 +363,12 @@ var csdlElements = new[] { @"
         // if the original test model is valid, the round-tripped model should be well-formed and valid.
         var isWellformed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel roundtrippedModel, out IEnumerable<EdmError> parserErrors);
         Assert.True(isWellformed && !parserErrors.Any());
-
-        var isValid = roundtrippedModel.Validate(out IEnumerable<EdmError> validationErrors);
-        Assert.True(!validationErrors.Any() && isValid);
     }
 
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void ValidateNavigationZeroOnePrincipalWithNotNullableDependentCsdl(EdmVersion edmVersion)
+    public void Validate_NavigationWithZeroOrOnePrincipalAndNonNullableDependentProperties_FailsValidation(EdmVersion edmVersion)
     {
         var csdlElements = new[] { @"
 <Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -420,7 +418,7 @@ var csdlElements = new[] { @"
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void ValidateNavigationZeroOnePrincipalWithNotNullableKeyDependentCsdl(EdmVersion edmVersion)
+    public void Validate_NavigationWithZeroOrOnePrincipalAndNonNullableKeyDependentProperties_FailsValidation(EdmVersion edmVersion)
     {
         var csdlElements = new[] { @"
 <Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -472,7 +470,7 @@ var csdlElements = new[] { @"
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void ValidateNavigationZeroOnePrincipalWithMixNullableDependentCsdl(EdmVersion edmVersion)
+    public void Validate_NavigationWithZeroOrOnePrincipalAndMixedNullableDependentProperties_PassesValidation(EdmVersion edmVersion)
     {
         var csdlElements = new[] { @"
 <Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -522,7 +520,7 @@ var csdlElements = new[] { @"
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void ValidateNavigationZeroOnePrincipalWithAllNullableDependentCsdl(EdmVersion edmVersion)
+    public void Validate_NavigationWithZeroOrOnePrincipalAndAllNullableDependentProperties_PassesValidation(EdmVersion edmVersion)
     {
         var csdlElements = new[] { @"
 <Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -572,7 +570,7 @@ var csdlElements = new[] { @"
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void ValidateNavigationZeroOnePrincipalWithAllNullableKeyDependentCsdl(EdmVersion edmVersion)
+    public void Validate_NavigationWithZeroOrOnePrincipalAndAllNullableKeyDependentProperties_FailsValidation(EdmVersion edmVersion)
     {
         var csdlElements = new[] { @"
 <Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -626,7 +624,7 @@ var csdlElements = new[] { @"
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void ValidateNavigationSinglePrincipalWithNotNullableDependentModel(EdmVersion edmVersion)
+    public void Validate_NavigationWithSinglePrincipalAndNonNullableDependentProperties_InModel_PassesValidation(EdmVersion edmVersion)
     {
         var model = new EdmModel();
         var badgeEntity = new EdmEntityType("DefaultNamespace", "Badge");
@@ -683,7 +681,7 @@ var csdlElements = new[] { @"
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void ValidateNavigationSinglePrincipalWithNotNullableKeyDependentModel(EdmVersion edmVersion)
+    public void Validate_NavigationWithSinglePrincipalAndNonNullableKeyDependentProperties_InModel_PassesValidation(EdmVersion edmVersion)
     {
         var model = new EdmModel();
         var badgeEntity = new EdmEntityType("DefaultNamespace", "Badge");
@@ -745,7 +743,7 @@ var csdlElements = new[] { @"
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void ValidateNavigationSinglePrincipalWithMixNullableDependentModel(EdmVersion edmVersion)
+    public void Validate_NavigationWithSinglePrincipalAndMixedNullableDependentProperties_InModel_PassesValidation(EdmVersion edmVersion)
     {
         var model = new EdmModel();
         var badgeEntity = new EdmEntityType("DefaultNamespace", "Badge");
@@ -802,7 +800,7 @@ var csdlElements = new[] { @"
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void ValidateNavigationSinglePrincipalWithAllNullableDependentModel(EdmVersion edmVersion)
+    public void Validate_NavigationWithSinglePrincipalAndAllNullableDependentProperties_InModel_FailsValidation(EdmVersion edmVersion)
     {
         var model = new EdmModel();
         var badgeEntity = new EdmEntityType("DefaultNamespace", "Badge");
@@ -842,8 +840,11 @@ var csdlElements = new[] { @"
 
         var ruleset = ValidationRuleSet.GetEdmModelRuleSet(toProductVersionlookup[edmVersion]);
         var validationResult = model.Validate(ruleset, out IEnumerable<EdmError> actualErrors);
-        Assert.True(validationResult);
-        Assert.Empty(actualErrors);
+        Assert.False(validationResult);
+        Assert.Single(actualErrors);
+
+        Assert.Equal(EdmErrorCode.InvalidMultiplicityOfPrincipalEnd, actualErrors.First().ErrorCode);
+        Assert.Equal("Because all dependent properties of the navigation 'ToPerson' are nullable, the multiplicity of the principal end must be '0..1'.", actualErrors.First().ErrorMessage);
 
         var serializedCsdls = this.GetSerializerResult(model, edmVersion, out IEnumerable<EdmError> serializationErrors).Select(n => XElement.Parse(n));
         Assert.Empty(serializationErrors);
@@ -851,15 +852,12 @@ var csdlElements = new[] { @"
         // if the original test model is valid, the round-tripped model should be well-formed and valid.
         var isWellformed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel roundtrippedModel, out IEnumerable<EdmError> parserErrors);
         Assert.True(isWellformed && !parserErrors.Any());
-
-        var isValid = roundtrippedModel.Validate(out IEnumerable<EdmError> validationErrors);
-        Assert.True(!validationErrors.Any() && isValid);
     }
 
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void ValidateNavigationMultiplePrincipalWithNotNullableDependentModel(EdmVersion edmVersion)
+    public void Validate_NavigationWithMultiplePrincipalsAndNonNullableDependentProperties_InModel_FailsValidation(EdmVersion edmVersion)
     {
         var model = new EdmModel();
         var badgeEntity = new EdmEntityType("DefaultNamespace", "Badge");
@@ -899,8 +897,11 @@ var csdlElements = new[] { @"
 
         var ruleset = ValidationRuleSet.GetEdmModelRuleSet(toProductVersionlookup[edmVersion]);
         var validationResult = model.Validate(ruleset, out IEnumerable<EdmError> actualErrors);
-        Assert.True(validationResult);
-        Assert.Empty(actualErrors);
+        Assert.False(validationResult);
+        Assert.Single(actualErrors);
+
+        Assert.Equal(EdmErrorCode.InvalidMultiplicityOfPrincipalEnd, actualErrors.First().ErrorCode);
+        Assert.Equal("Because all dependent properties of the navigation 'ToPerson' are non-nullable, the multiplicity of the principal end must be '1'.", actualErrors.First().ErrorMessage);
 
         var serializedCsdls = this.GetSerializerResult(model, edmVersion, out IEnumerable<EdmError> serializationErrors).Select(n => XElement.Parse(n));
         Assert.Empty(serializationErrors);
@@ -908,15 +909,12 @@ var csdlElements = new[] { @"
         // if the original test model is valid, the round-tripped model should be well-formed and valid.
         var isWellformed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel roundtrippedModel, out IEnumerable<EdmError> parserErrors);
         Assert.True(isWellformed && !parserErrors.Any());
-
-        var isValid = roundtrippedModel.Validate(out IEnumerable<EdmError> validationErrors);
-        Assert.True(!validationErrors.Any() && isValid);
     }
 
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void ValidateNavigationMultiplePrincipalWithMixNullableDependentModel(EdmVersion edmVersion)
+    public void Validate_NavigationWithMultiplePrincipalsAndMixedNullableDependentProperties_InModel_FailsValidation(EdmVersion edmVersion)
     {
         var model = new EdmModel();
         var badgeEntity = new EdmEntityType("DefaultNamespace", "Badge");
@@ -972,7 +970,7 @@ var csdlElements = new[] { @"
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void ValidateNavigationMultiplePrincipalWithAllNullableDependentModel(EdmVersion edmVersion)
+    public void Validate_NavigationWithMultiplePrincipalsAndAllNullableDependentProperties_InModel_FailsValidation(EdmVersion edmVersion)
     {
         var model = new EdmModel();
         var badgeEntity = new EdmEntityType("DefaultNamespace", "Badge");
@@ -1028,7 +1026,7 @@ var csdlElements = new[] { @"
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void ValidateNavigationZeroOnePrincipalWithNotNullableDependentModel(EdmVersion edmVersion)
+    public void Validate_NavigationWithZeroOrOnePrincipalAndNonNullableDependentProperties_InModel_FailsValidation(EdmVersion edmVersion)
     {
         var model = new EdmModel();
         var badgeEntity = new EdmEntityType("DefaultNamespace", "Badge");
@@ -1084,7 +1082,7 @@ var csdlElements = new[] { @"
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void ValidateNavigationZeroOnePrincipalWithNotNullableKeyDependentModel(EdmVersion edmVersion)
+    public void Validate_NavigationWithZeroOrOnePrincipalAndNonNullableKeyDependentProperties_InModel_FailsValidation(EdmVersion edmVersion)
     {
         var model = new EdmModel();
         var badgeEntity = new EdmEntityType("DefaultNamespace", "Badge");
@@ -1140,7 +1138,7 @@ var csdlElements = new[] { @"
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void ValidateNavigationZeroOnePrincipalWithMixNullableDependentModel(EdmVersion edmVersion)
+    public void Validate_NavigationWithZeroOrOnePrincipalAndMixedNullableDependentProperties_InModel_PassesValidation(EdmVersion edmVersion)
     {
         var model = new EdmModel();
         var badgeEntity = new EdmEntityType("DefaultNamespace", "Badge");
@@ -1197,7 +1195,7 @@ var csdlElements = new[] { @"
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void ValidateNavigationZeroOnePrincipalWithAllNullableDependentModel(EdmVersion edmVersion)
+    public void Validate_NavigationWithZeroOrOnePrincipalAndAllNullableDependentProperties_InModel_PassesValidation(EdmVersion edmVersion)
     {
         var model = new EdmModel();
         var badgeEntity = new EdmEntityType("DefaultNamespace", "Badge");
@@ -1254,7 +1252,7 @@ var csdlElements = new[] { @"
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void ValidateNavigationZeroOnePrincipalWithAllNullableKeyDependentModel(EdmVersion edmVersion)
+    public void Validate_NavigationWithZeroOrOnePrincipalAndAllNullableKeyDependentProperties_InModel_FailsValidation(EdmVersion edmVersion)
     {
         var model = new EdmModel();
         var badgeEntity = new EdmEntityType("DefaultNamespace", "Badge");
@@ -1465,7 +1463,7 @@ var csdlElements = new[] { @"
 
     [Theory]
     [MemberData(nameof(ValidateNavigationNonKeyPrincipalPropertyRefCsdlData))]
-    public void ValidateNavigationNonKeyPrincipalPropertyRefCsdl(EdmVersion edmVersion, IEnumerable<XElement> csdlElements)
+    public void Validate_NavigationWithNonKeyPrincipalPropertyReferences_PassesValidation(EdmVersion edmVersion, IEnumerable<XElement> csdlElements)
     {
         var isParsed = SchemaReader.TryParse(csdlElements.Select(e => e.CreateReader()), out IEdmModel model, out IEnumerable<EdmError> errors);
         Assert.True(isParsed);
@@ -1490,7 +1488,7 @@ var csdlElements = new[] { @"
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void ValidateNavigationDuplicateDepdendentPropertyRefCsdl(EdmVersion edmVersion)
+    public void Validate_NavigationWithDuplicateDependentPropertyReferences_FailsValidation(EdmVersion edmVersion)
     {
         var csdlElements = new[] { @"
 <Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -1540,7 +1538,7 @@ var csdlElements = new[] { @"
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void ValidateNavigationDuplicatePrincipalPropertyRefCsdl(EdmVersion edmVersion)
+    public void Validate_NavigationWithDuplicatePrincipalPropertyReferences_PassesValidation(EdmVersion edmVersion)
     {
         var csdlElements = new[] { @"
 <Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -1593,7 +1591,7 @@ var csdlElements = new[] { @"
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void ValidateNavigationDuplicateReferentialConstraintCsdl(EdmVersion edmVersion)
+    public void Validate_NavigationWithDuplicateReferentialConstraints_FailsValidation(EdmVersion edmVersion)
     {
         var csdlElements = new[] { @"
 <Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -1645,7 +1643,7 @@ var csdlElements = new[] { @"
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void ValidateNavigationPrincipalPropertyRefDoesNotCorrespondToDependentPropertyRefCsdl(EdmVersion edmVersion)
+    public void Validate_NavigationWithMismatchedPrincipalAndDependentPropertyReferences_FailsValidation(EdmVersion edmVersion)
     {
         var csdlElements = new[] { @"
 <Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -1695,7 +1693,7 @@ var csdlElements = new[] { @"
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void ValidateNavigationWithEmptyNameModel(EdmVersion edmVersion)
+    public void Validate_NavigationWithEmptyName_FailsValidation(EdmVersion edmVersion)
     {
         var model = new EdmModel();
 
@@ -1729,7 +1727,7 @@ var csdlElements = new[] { @"
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void ValidateNavigationWithOneMultiplicityContainmentEnd(EdmVersion edmVersion)
+    public void Validate_NavigationWithOneMultiplicityContainmentEnd_PassesValidation(EdmVersion edmVersion)
     {
         var model = new EdmModel();
 
@@ -1781,7 +1779,7 @@ var csdlElements = new[] { @"
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void ValidateNavigationWithManyMultiplicityContainmentEnd(EdmVersion edmVersion)
+    public void Validate_NavigationWithManyMultiplicityContainmentEnd_FailsValidation(EdmVersion edmVersion)
     {
         var model = new EdmModel();
 
@@ -1832,7 +1830,7 @@ var csdlElements = new[] { @"
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void ValidateNavigationWithZeroOrOneMultiplicityContainmentEnd(EdmVersion edmVersion)
+    public void Validate_NavigationWithZeroOrOneMultiplicityContainmentEnd_FailsValidation(EdmVersion edmVersion)
     {
         var model = new EdmModel();
 
@@ -1883,7 +1881,7 @@ var csdlElements = new[] { @"
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void ValidateNavigationWithValidMultiplicityRecursiveContainmentEnd(EdmVersion edmVersion)
+    public void Validate_NavigationWithValidRecursiveContainmentEnd_PassesValidation(EdmVersion edmVersion)
     {
         var model = new EdmModel();
 
@@ -1923,7 +1921,7 @@ var csdlElements = new[] { @"
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void ValidateNavigationWithInvaliZeroOrOnedMultiplicityRecursiveContainmentEnd(EdmVersion edmVersion)
+    public void Validate_NavigationWithInvalidRecursiveContainmentEnd_FailsValidation(EdmVersion edmVersion)
     {
         var model = new EdmModel();
 
@@ -1956,7 +1954,7 @@ var csdlElements = new[] { @"
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void ValidateNavigationWithOneMultiplicityRecursiveContainmentEnd(EdmVersion edmVersion)
+    public void Validate_NavigationWithOneMultiplicityRecursiveContainmentEnd_FailsValidation(EdmVersion edmVersion)
     {
         var model = new EdmModel();
 
@@ -1988,7 +1986,7 @@ var csdlElements = new[] { @"
         Assert.False(validationResult);
         Assert.Equal(4, actualErrors.Count());
 
-        Assert.Equal(3, actualErrors.Count(e => EdmErrorCode.NavigationPropertyWithNonRecursiveContainmentSourceMustBeFromOne == e.ErrorCode));
+        Assert.Equal(3, actualErrors.Count(e => EdmErrorCode.NavigationPropertyWithRecursiveContainmentSourceMustBeFromZeroOrOne == e.ErrorCode));
         Assert.Equal(1, actualErrors.Count(e => EdmErrorCode.NavigationPropertyWithRecursiveContainmentTargetMustBeOptional == e.ErrorCode));
 
         var serializedCsdls = this.GetSerializerResult(model, edmVersion, out IEnumerable<EdmError> serializationErrors).Select(n => XElement.Parse(n));
@@ -2002,7 +2000,7 @@ var csdlElements = new[] { @"
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void ValidateNavigationWithManyMultiplicityRecursiveContainmentEnd(EdmVersion edmVersion)
+    public void Validate_NavigationWithManyMultiplicityRecursiveContainmentEnd_FailsValidation(EdmVersion edmVersion)
     {
         var model = new EdmModel();
 
@@ -2048,7 +2046,7 @@ var csdlElements = new[] { @"
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void ValidateSingleSimpleContainmentNavigation(EdmVersion edmVersion)
+    public void Validate_SingleSimpleContainmentNavigation_PassesValidation(EdmVersion edmVersion)
     {
         var model = new EdmModel();
 
@@ -2109,7 +2107,7 @@ var csdlElements = new[] { @"
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void ValidateTwoContainmentNavigationWithSameEnd(EdmVersion edmVersion)
+    public void Validate_TwoContainmentNavigationsWithSameEnd_PassesValidation(EdmVersion edmVersion)
     {
         var model = new EdmModel();
 
@@ -2170,7 +2168,7 @@ var csdlElements = new[] { @"
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void ValidateTwoContainmentNavigationWithSameEndAddedDifferently(EdmVersion edmVersion)
+    public void Validate_TwoContainmentNavigationsWithSameEndAddedDifferently_PassesValidation(EdmVersion edmVersion)
     {
         var model = new EdmModel();
 
@@ -2232,7 +2230,7 @@ var csdlElements = new[] { @"
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void ValidateContainmentNavigationWithDifferentEnds(EdmVersion edmVersion)
+    public void Validate_ContainmentNavigationWithDifferentEnds_PassesValidation(EdmVersion edmVersion)
     {
         var model = new EdmModel();
 
@@ -2292,7 +2290,7 @@ var csdlElements = new[] { @"
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void ValidateRecursiveOneContainmentNavigationSelfPointingEntitySet(EdmVersion edmVersion)
+    public void Validate_RecursiveContainmentNavigationWithSelfPointingEntitySet_PassesValidation(EdmVersion edmVersion)
     {
         var model = new EdmModel();
 
@@ -2332,7 +2330,7 @@ var csdlElements = new[] { @"
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void ValidateRecursiveOneContainmentNavigationInheritedSelfPointingEntitySet(EdmVersion edmVersion)
+    public void Validate_RecursiveContainmentNavigationWithInheritedSelfPointingEntitySet_PassesValidation(EdmVersion edmVersion)
     {
         var model = new EdmModel();
 
@@ -2376,7 +2374,7 @@ var csdlElements = new[] { @"
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void ValidateRecursiveOneContainmentNavigationWithTwoEntitySet(EdmVersion edmVersion)
+    public void Validate_RecursiveContainmentNavigationWithTwoEntitySets_PassesValidation(EdmVersion edmVersion)
     {
         var csdlElements = new[] { @"
 <Schema Namespace=""NS"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -2419,7 +2417,7 @@ var csdlElements = new[] { @"
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void ValidateDerivedContainmentNavigationWithBaseAssociationSet(EdmVersion edmVersion)
+    public void Validate_DerivedContainmentNavigationWithBaseAssociationSet_PassesValidation(EdmVersion edmVersion)
     {
         var model = new EdmModel();
 
@@ -2481,7 +2479,7 @@ var csdlElements = new[] { @"
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void ValidateDerivedContainmentNavigationWithDerivedAssociationSet(EdmVersion edmVersion)
+    public void Validate_DerivedContainmentNavigationWithDerivedAssociationSet_Model_PassesValidation(EdmVersion edmVersion)
     {
         var model = new EdmModel();
 
@@ -2543,7 +2541,7 @@ var csdlElements = new[] { @"
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void ValidateDerivedContainmentNavigationWithDerivedAssociationSetCsdl(EdmVersion edmVersion)
+    public void Validate_DerivedContainmentNavigationWithDerivedAssociationSet_CSDL_PassesValidation(EdmVersion edmVersion)
     {
         var csdlElements = new[] { @"
 <Schema Namespace=""NS"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -2602,7 +2600,7 @@ var csdlElements = new[] { @"
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void ValidateDerivedContainmentNavigationWithDerivedAndBaseAssociationSet(EdmVersion edmVersion)
+    public void Validate_DerivedContainmentNavigationWithDerivedAndBaseAssociationSet_Model_PassesValidation(EdmVersion edmVersion)
     {
         var model = new EdmModel();
 
@@ -2666,7 +2664,7 @@ var csdlElements = new[] { @"
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void ValidateNavigationWithInvalidEntitySet(EdmVersion edmVersion)
+    public void Validate_NavigationWithInvalidEntitySet_FailsValidation(EdmVersion edmVersion)
     {
         var model = new EdmModel();
 
@@ -2706,7 +2704,7 @@ var csdlElements = new[] { @"
 
         var ruleset = ValidationRuleSet.GetEdmModelRuleSet(toProductVersionlookup[edmVersion]);
         var validationResult = model.Validate(ruleset, out IEnumerable<EdmError> actualErrors);
-        Assert.True(validationResult);
+        Assert.False(validationResult);
         Assert.Equal(2, actualErrors.Count());
 
         Assert.All(actualErrors, e => Assert.Equal(EdmErrorCode.BadUnresolvedType, e.ErrorCode));
@@ -2722,7 +2720,7 @@ var csdlElements = new[] { @"
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void ValidateNavigationWithInvalidAssociationSetEntitySet(EdmVersion edmVersion)
+    public void Validate_NavigationWithInvalidAssociationSetEntitySet_FailsValidation(EdmVersion edmVersion)
     {
         var model = new EdmModel();
 
@@ -2765,11 +2763,10 @@ var csdlElements = new[] { @"
         var homeSet = container.AddEntitySet("HomeSet", home);
 
         homeSet.AddNavigationTarget(officeToEmployee, personSet);
-        //            personSet.AddNavigationTarget(officeToEmployee.Partner, homeSet);
 
         var ruleset = ValidationRuleSet.GetEdmModelRuleSet(toProductVersionlookup[edmVersion]);
         var validationResult = model.Validate(ruleset, out IEnumerable<EdmError> actualErrors);
-        Assert.True(validationResult);
+        Assert.False(validationResult);
         Assert.Equal(2, actualErrors.Count());
 
         Assert.Equal(EdmErrorCode.UnresolvedNavigationPropertyBindingPath, actualErrors.First().ErrorCode);
@@ -2786,7 +2783,7 @@ var csdlElements = new[] { @"
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void ValidateNavigationWithInvalidEntitySetInSingleton(EdmVersion edmVersion)
+    public void Validate_NavigationWithInvalidEntitySetInSingleton_FailsValidation(EdmVersion edmVersion)
     {
         var model = new EdmModel();
 
@@ -2833,7 +2830,7 @@ var csdlElements = new[] { @"
 
         var ruleset = ValidationRuleSet.GetEdmModelRuleSet(toProductVersionlookup[edmVersion]);
         var validationResult = model.Validate(ruleset, out IEnumerable<EdmError> actualErrors);
-        Assert.True(validationResult);
+        Assert.False(validationResult);
         Assert.Equal(4, actualErrors.Count());
 
         Assert.Equal(2, actualErrors.Count(e => e.ErrorCode == EdmErrorCode.NavigationPropertyMappingMustPointToValidTargetForProperty));
@@ -2850,7 +2847,7 @@ var csdlElements = new[] { @"
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void ValidateNavigationPropertyOfCollectionTypeTargetToSingleton(EdmVersion edmVersion)
+    public void Validate_NavigationPropertyOfCollectionTypeTargetingSingleton_FailsValidation(EdmVersion edmVersion)
     {
         var model = new EdmModel();
 
@@ -2881,7 +2878,7 @@ var csdlElements = new[] { @"
 
         var ruleset = ValidationRuleSet.GetEdmModelRuleSet(toProductVersionlookup[edmVersion]);
         var validationResult = model.Validate(ruleset, out IEnumerable<EdmError> actualErrors);
-        Assert.True(validationResult);
+        Assert.False(validationResult);
         Assert.Single(actualErrors);
 
         Assert.Equal(EdmErrorCode.NavigationPropertyOfCollectionTypeMustNotTargetToSingleton, actualErrors.Last().ErrorCode);
@@ -2895,7 +2892,7 @@ var csdlElements = new[] { @"
     }
 
     [Fact]
-    public void ValidateNavigationWithUnknownMultiplicity()
+    public void Validate_NavigationWithUnknownMultiplicity_ThrowsArgumentOutOfRangeException()
     {
         Assert.Throws<ArgumentOutOfRangeException>(() => 
         {
@@ -2915,7 +2912,7 @@ var csdlElements = new[] { @"
     }
 
     [Fact]
-    public void ValidateNavigationWithUnknownMultiplicityPartner()
+    public void Validate_NavigationWithUnknownMultiplicityPartner_ThrowsArgumentOutOfRangeException()
     {
         Assert.Throws<ArgumentOutOfRangeException>(() =>
         {

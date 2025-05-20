@@ -6,7 +6,7 @@
 
 using System.Xml.Linq;
 
-namespace Microsoft.OData.Edm.E2E.Tests;
+namespace Microsoft.OData.Edm.E2E.Tests.Common;
 
 /// <summary>
 /// Compares two Csdl (each as an XElement), considering equivalent ordering
@@ -17,43 +17,37 @@ public class CsdlXElementComparer
 
     public CsdlXElementComparer()
     {
-        this.csdlSorter = new CsdlXElementSorter();
+        csdlSorter = new CsdlXElementSorter();
     }
 
     public void Compare(XElement expected, XElement actual)
     {
-        this.UpdateSchemasForUseStrongSpatialTypes(expected);
-        this.UpdateSchemasForUseStrongSpatialTypes(actual);
+        UpdateSchemasForUseStrongSpatialTypes(expected);
+        UpdateSchemasForUseStrongSpatialTypes(actual);
 
-        this.UpdateSchemaAliasToSchemaNamespace(expected);
-        this.UpdateSchemaAliasToSchemaNamespace(actual);
+        UpdateSchemaAliasToSchemaNamespace(expected);
+        UpdateSchemaAliasToSchemaNamespace(actual);
 
-        this.UpdatePrimitiveTypeNameForEdmFullName(expected);
-        this.UpdatePrimitiveTypeNameForEdmFullName(actual);
+        UpdatePrimitiveTypeNameForEdmFullName(expected);
+        UpdatePrimitiveTypeNameForEdmFullName(actual);
 
-        this.CompensateDefaultFacets(expected);
-        this.CompensateDefaultFacets(actual);
+        CompensateDefaultFacets(expected);
+        CompensateDefaultFacets(actual);
 
-        this.CompensateSpatialTypeSrid(expected);
-        this.CompensateSpatialTypeSrid(actual);
+        CompensateSpatialTypeSrid(expected);
+        CompensateSpatialTypeSrid(actual);
 
-        XElement sortedExpected = this.csdlSorter.SortCsdl(expected);
-        XElement sortedActual = this.csdlSorter.SortCsdl(actual);
-
-        Console.WriteLine("Sorted Expected: " + expected.ToString());
-        Console.WriteLine("Sorted Actual: " + sortedActual.ToString());
+        XElement sortedExpected = csdlSorter.SortCsdl(expected);
+        XElement sortedActual = csdlSorter.SortCsdl(actual);
 
         Assert.Equal(sortedExpected.ToString(), sortedActual.ToString());
     }
 
     private void UpdateSchemasForUseStrongSpatialTypes(XElement xElement)
     {
-        // Entity Framework always sets the UseStrongSpatialTypes attribute to false while the EdmLib serializer does not use. To compensate this diffrence, we remove this attribute. 
+        // Entity Framework always sets the UseStrongSpatialTypes attribute to false while the EdmLib serializer does not use. To compensate this difference, we remove this attribute. 
         var strongSpatialTypeAttribute = xElement.Attribute(XName.Get("UseStrongSpatialTypes", EdmStringConstants.AnnotationNamespace));
-        if (null != strongSpatialTypeAttribute)
-        {
-            strongSpatialTypeAttribute.Remove();
-        }
+        strongSpatialTypeAttribute?.Remove();
     }
 
     private void CompensateSpatialTypeSrid(XElement csdlElement)
@@ -104,7 +98,7 @@ public class CsdlXElementComparer
 
             foreach (var element in csdlElement.Elements())
             {
-                UpdateSchemaAliasToSchemaNamepsace(element, aliasValue, namespaceValue);
+                UpdateSchemaAliasToSchemaNamespace(element, aliasValue, namespaceValue);
             }
 
             // Remove the alias attribute from the schema, since this specific attribute is not expected 
@@ -113,7 +107,7 @@ public class CsdlXElementComparer
         }
     }
 
-    private void UpdateSchemaAliasToSchemaNamepsace(XElement element, string aliasValue, string namespaceValue)
+    private void UpdateSchemaAliasToSchemaNamespace(XElement element, string aliasValue, string namespaceValue)
     {
         var attributesToUpdate = new List<string> { "Target", "Type", "Term", "BaseType" };
 
@@ -129,7 +123,7 @@ public class CsdlXElementComparer
 
         foreach (var subElement in element.Elements())
         {
-            UpdateSchemaAliasToSchemaNamepsace(subElement, aliasValue, namespaceValue);
+            UpdateSchemaAliasToSchemaNamespace(subElement, aliasValue, namespaceValue);
         }
     }
 
@@ -161,7 +155,7 @@ public class CsdlXElementComparer
     private void CompensateDefaultFacets(XElement elementToUpdate)
     {
         var elementNamesToUpdate = new string[] { "Property", "TypeRef", "ReturnType", "Parameter", "Function" };
-        var attributeDefaultValues = new Dictionary<string, Boolean>() { { "Nullable", true } };
+        var attributeDefaultValues = new Dictionary<string, bool>() { { "Nullable", true } };
         var edmStringTypeName = EdmCoreModel.Instance.GetString(false).TestFullName();
         var edmBinaryTypeName = EdmCoreModel.Instance.GetBinary(false).TestFullName();
 
