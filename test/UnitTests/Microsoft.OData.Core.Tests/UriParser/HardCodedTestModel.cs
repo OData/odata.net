@@ -1027,6 +1027,7 @@ namespace Microsoft.OData.Tests.UriParser
         <Property Name=""MyOpenAddress"" Type=""Fully.Qualified.Namespace.OpenAddress"" />
         <Property Name=""PreviousAddresses"" Type=""Collection(Fully.Qualified.Namespace.Address)"" />
         <Property Name=""FavoriteColors"" Type=""Collection(Fully.Qualified.Namespace.ColorPattern)"" />
+        <Property Name=""SecondFavoriteNumber"" Type=""Edm.Int16"" />
         <Property Name=""FavoriteNumber"" Type=""Fully.Qualified.Namespace.UInt16"" />
         <Property Name=""RelatedIDs"" Type=""Collection(Edm.Int32)"" Nullable=""false"" />
         <Property Name=""RelatedSSNs"" Type=""Collection(Edm.String)"" Nullable=""true"" />
@@ -2226,6 +2227,11 @@ namespace Microsoft.OData.Tests.UriParser
         public static IEdmFunction GetFunctionForGetMyDog()
         {
             return TestModel.FindOperations("Fully.Qualified.Namespace.GetMyDog").Single() as IEdmFunction;
+        }
+
+        public static IEdmFunction GetFunctionForGetMyDogGetSomeAddressFromPerson()
+        {
+            return TestModel.FindOperations("Fully.Qualified.Namespace.GetSomeAddressFromPerson").Single() as IEdmFunction;
         }
 
         public static IEdmFunctionImport GetFunctionImportIsAddressGood()
