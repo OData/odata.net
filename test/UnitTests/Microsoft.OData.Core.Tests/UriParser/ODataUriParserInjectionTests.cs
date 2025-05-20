@@ -5,9 +5,12 @@
 //---------------------------------------------------------------------
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Xml;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OData.Core.Tests.DependencyInjection;
@@ -21,6 +24,257 @@ namespace Microsoft.OData.Tests.UriParser
 {
     public class ODataUriParserInjectionTests
     {
+#nullable enable
+
+        public interface ISpanPool<TData, TContext> where TContext : allows ref struct
+        {
+            Lease<TData, TContext> Rent(int minimumLength);
+        }
+
+        public ref struct Lease<TData, TContext> : IDisposable where TContext : allows ref struct
+        {
+            private readonly Action<TContext> @return;
+
+            private TContext context;
+
+            private bool disposed;
+
+            public Lease(Span<TData> span, Action<TContext> @return, TContext context)
+            {
+                Span = span;
+                this.@return = @return;
+                this.context = context;
+
+                this.disposed = false;
+            }
+
+            public Span<TData> Span { get; }
+
+            public void Dispose()
+            {
+                if (this.disposed)
+                {
+                    return;
+                }
+
+                this.@return(this.context);
+
+                this.disposed = true;
+            }
+        }
+
+        public sealed class HeapPool<T> : ISpanPool<T, HeapPool<T>>
+        {
+            private readonly T[]?[] arrays;
+            private readonly int lengthOfArray;
+
+            private readonly object @lock;
+
+            public HeapPool(int numberOfArrays, int lengthOfArray)
+            {
+                this.arrays = new T[]?[numberOfArrays];
+                for (int i = 0; i < this.arrays.Length; ++i)
+                {
+                    this.arrays[i] = new T[lengthOfArray];
+                }
+
+                this.lengthOfArray = lengthOfArray;
+
+                this.@lock = new object();
+            }
+
+            public Lease<T, HeapPool<T>> Rent(int minimumLength)
+            {
+                if (minimumLength > this.lengthOfArray)
+                {
+                    throw new Exception("TODO no arrays are big enough");
+                }
+
+                lock (this.@lock)
+                {
+                    for (int i = 0; i < this.arrays.Length; ++i)
+                    {
+                        var result = this.arrays[i];
+                        if (result != null)
+                        {
+                            this.arrays[i] = null;
+
+                            return new Lease<T, HeapPool<T>>(new Span<T>(result), (context) => context.Return(result), this);
+                        }
+                    }
+                }
+
+                throw new Exception("TODO no arrays are left");
+            }
+
+            private void Return(T[] rented)
+            {
+                Array.Clear(rented);
+                lock (this.@lock)
+                {
+                    for (int i = 0; i < this.arrays.Length; ++i)
+                    {
+                        if (this.arrays[i] == null)
+                        {
+                            this.arrays[i] = rented;
+                        }
+                    }
+                }
+            }
+        }
+
+        public ref struct StackPool<T> : ISpanPool<T, StackPool<T>>
+        {
+            private readonly Span<T> pool;
+            private readonly Span<bool> rented;
+            private readonly int sizeOfArray;
+
+            private readonly object @lock;
+
+            public StackPool(Span<T> pool, Span<bool> rented, int sizeOfArray)
+            {
+                if (pool.Length % sizeOfArray != 0)
+                {
+                    throw new Exception("TODO needs to be a boundary");
+                }
+
+                if (rented.Length != pool.Length / sizeOfArray)
+                {
+                    throw new Exception("TODO pool and rented have to be the same size");
+                }
+
+                this.pool = pool;
+                this.rented = rented;
+                this.sizeOfArray = sizeOfArray;
+
+                this.@lock = new object();
+            }
+
+            public Lease<T, StackPool<T>> Rent(int minimumLength)
+            {
+                if (minimumLength > this.sizeOfArray)
+                {
+                    throw new Exception("TODO no arrays are big enough");
+                }
+
+                lock (this.@lock)
+                {
+                    for (int i = 0; i < this.rented.Length; ++i)
+                    {
+                        if (!this.rented[i])
+                        {
+                            this.rented[i] = true;
+
+                            return new Lease<T, StackPool<T>>(
+                                this.pool.Slice(i * this.sizeOfArray, this.sizeOfArray), 
+                                (context) => context.Return(i),
+                                this);
+                        }
+                    }
+                }
+
+                throw new Exception("TODO no arrays are left");
+            }
+
+            private void Return(int index)
+            {
+                lock (this.@lock)
+                {
+                    this.pool.Slice(index * this.sizeOfArray, this.sizeOfArray).Clear();
+                    this.rented[index] = false;
+                }
+            }
+        }
+
+        public sealed class List<T, TContext> : IList<T>
+        {
+            private readonly ISpanPool<T, TContext> pool;
+
+            public List(ISpanPool<T, TContext> pool)
+            {
+                this.pool = pool;
+            }
+
+            public T this[int index] { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+            public int Count => throw new NotImplementedException();
+
+            public bool IsReadOnly => throw new NotImplementedException();
+
+            public void Add(T item)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void Clear()
+            {
+                throw new NotImplementedException();
+            }
+
+            public bool Contains(T item)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void CopyTo(T[] array, int arrayIndex)
+            {
+                throw new NotImplementedException();
+            }
+
+            public IEnumerator<T> GetEnumerator()
+            {
+                throw new NotImplementedException();
+            }
+
+            public int IndexOf(T item)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void Insert(int index, T item)
+            {
+                throw new NotImplementedException();
+            }
+
+            public bool Remove(T item)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void RemoveAt(int index)
+            {
+                throw new NotImplementedException();
+            }
+
+            IEnumerator IEnumerable.GetEnumerator()
+            {
+                return GetEnumerator();
+            }
+        }
+
+        [Fact]
+        public void Playground()
+        {
+        }
+#nullable disable
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         private readonly Uri ServiceRoot = new Uri("https://serviceRoot/");
 
         #region model
