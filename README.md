@@ -7,7 +7,7 @@ Nightly | <img src="https://identitydivision.visualstudio.com/_apis/public/build
 ## 1. Introduction
 
 The [OData .NET Libraries](http://odata.github.io/odata.net) (or OData .NET, for short) project includes the implementation of core functionalities of OData protocol on the .NET platform, including URI parsing, request and response reading and writing, Entity Data Model (EDM) building, and a .Net OData client which can be used to consume an OData service. It is a fully open sourced project maintained by Microsoft OData team. The libraries are used by the [WebApi](https://github.com/OData/WebApi) and [RESTier](https://github.com/odata/RESTier) libraries for building OData Services.
-
+test
 [OData](https://www.odata.org) stands for the Open Data Protocol. It was initiated by Microsoft and is now an [ISO](https://www.oasis-open.org/news/pr/iso-iec-jtc-1-approves-oasis-odata-standard-for-open-data-exchange) ratified [OASIS](http://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html) standard. OData enables the creation and consumption of REST APIs, which allow resources, identified using URLs and defined in a data model, to be published and edited by Web clients using simple HTTP requests.
 
 For more information about OData, please refer to the following resources:
