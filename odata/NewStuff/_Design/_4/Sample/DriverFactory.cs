@@ -46,7 +46,7 @@
     {
         public static ICollectionClr<User, string> Create()
         {
-
+            return new UsersClr();
         }
     }
 

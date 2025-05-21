@@ -32,7 +32,12 @@
                 return null;
             }
 
-            return new Employee(providedDisplayName.Value, Enumerable.Empty<string>());
+            if (!(response.Id is NonNullableProperty<string>.Provided providedId))
+            {
+                return null;
+            }
+
+            return new Employee(providedId.Value, providedDisplayName.Value, Enumerable.Empty<string>());
         }
     }
 }

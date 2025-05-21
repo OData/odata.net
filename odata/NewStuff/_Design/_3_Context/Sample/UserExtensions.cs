@@ -3,6 +3,7 @@
     using NewStuff._Design._2_Clr;
     using NewStuff._Design._2_Clr.Sample;
     using System.Collections.Generic;
+    using static NewStuff.Http.Header;
 
     public static class UserExtensions
     {
@@ -20,7 +21,14 @@
                 return false;
             }
 
+            if (!(user.Id is NonNullableProperty<string>.Provided id))
+            {
+                employee = default;
+                return false;
+            }
+
             employee = new Employee(
+                id.Value,
                 displayName.Value, 
                 directReports.Value.TrySelect<User, string>(UserExtensions.TryAdapt));
             return true;

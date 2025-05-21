@@ -29,7 +29,6 @@
                             new OrgChart(
                                 this.employeeGetter.Get(directReportId), 
                                 this.employeeGetter));
-                }
             }
         }
     }
