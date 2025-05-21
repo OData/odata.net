@@ -157,6 +157,10 @@ namespace Microsoft.OData.UriParser
                         //    ==>  ['1970-01-01T00:00:00Z', '1980-01-01T01:01:01+01:00']
                         bracketLiteralText = NormalizeDateTimeCollectionItems(bracketLiteralText);
                     }
+                    else if (expectedType.Definition.AsElementType().TypeKind == EdmTypeKind.Enum)
+                    {
+                        bracketLiteralText = NormalizeEnumCollectionItems(bracketLiteralText, expectedTypeFullName);
+                    }
                 }
 
                 object collection = ODataUriConversionUtils.ConvertFromCollectionValue(bracketLiteralText, model, expectedType);
@@ -424,6 +428,84 @@ namespace Microsoft.OData.UriParser
             }
 
             return "[" + String.Join(",", items) + "]";
+        }
+
+        private static string NormalizeEnumCollectionItems(string bracketLiteralText, string expectedTypeFullName)
+        {
+            string normalizedText = bracketLiteralText[1..^1].Trim().Replace(expectedTypeFullName, string.Empty, StringComparison.OrdinalIgnoreCase);
+
+            // Handle empty brackets
+            if (string.IsNullOrEmpty(normalizedText))
+            {
+                return "[]";
+            }
+
+            var sb = new StringBuilder();
+            sb.Append('[');
+
+            int start = 0, length = normalizedText.Length;
+
+            while (start < length)
+            {
+                char currentChar = normalizedText[start];
+
+                if (currentChar == '\'' || currentChar == '"')
+                {
+                    // Handle quoted items
+                    char quoteChar = currentChar;
+                    sb.Append(quoteChar);
+                    int end = ++start;
+
+                    while (end < length && normalizedText[end] != quoteChar)
+                    {
+                        sb.Append(normalizedText[end]);
+                        end++;
+                    }
+
+                    if (end < length)
+                    {
+                        sb.Append(quoteChar);
+                        start = end + 1;
+                    }
+                }
+                else if (currentChar == ',')
+                {
+                    // Handle commas
+                    sb.Append(',');
+                    start++;
+                }
+                else if (char.IsWhiteSpace(currentChar))
+                {
+                    // Skip whitespace
+                    start++;
+                }
+                else
+                {
+                    // Handle non-quoted items
+                    int end = start;
+                    while (end < length && normalizedText[end] != ',' && !char.IsWhiteSpace(normalizedText[end]))
+                    {
+                        end++;
+                    }
+
+                    string item = normalizedText[start..end].Trim();
+
+                    // Wrap non-quoted items in single quotes
+                    if (!item.StartsWith('\'') && !item.StartsWith('\"'))
+                    {
+                        sb.Append('\'').Append(item).Append('\'');
+                    }
+                    else
+                    {
+                        sb.Append(item);
+                    }
+
+                    start = end;
+                }
+            }
+
+            sb.Append(']');
+            return sb.ToString();
         }
 
         private static bool IsCollectionEmptyOrWhiteSpace(string bracketLiteralText)
