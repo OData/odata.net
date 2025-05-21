@@ -58,8 +58,6 @@ public class EnumerationTypeQueryTests : EndToEndTestBase<EnumerationTypeQueryTe
     private static string NameSpacePrefix = typeof(DefaultEdmModel).Namespace ?? "Microsoft.OData.E2E.TestCommon.Common.Server.Default";
 
     // Constants
-    private const string MimeTypeODataParameterFullMetadata = MimeTypes.ApplicationJson + MimeTypes.ODataParameterFullMetadata;
-    private const string MimeTypeODataParameterMinimalMetadata = MimeTypes.ApplicationJson + MimeTypes.ODataParameterMinimalMetadata;
     private const string MimeTypeApplicationAtomXml = MimeTypes.ApplicationAtomXml;
 
     #region Tests querying entity set and verifies the enumeration type properties
@@ -264,7 +262,7 @@ public class EnumerationTypeQueryTests : EndToEndTestBase<EnumerationTypeQueryTe
         List<ODataResource> entries = await TestsHelper.QueryResourceSetsAsync(queryText, mimeType);
 
         // Assert
-        Assert.Equal(3, entries.Count);
+        Assert.Equal(4, entries.Count);
 
         var entity0 = entries[0].Properties.ToDictionary(p => p.Name, p => p as ODataProperty);
         Assert.Equal(6, entity0["ProductID"]?.Value);
@@ -279,10 +277,16 @@ public class EnumerationTypeQueryTests : EndToEndTestBase<EnumerationTypeQueryTe
         Assert.Equal("Read", (entity1["UserAccess"]?.Value as ODataEnumValue)?.Value);
 
         var entity2 = entries[2].Properties.ToDictionary(p => p.Name, p => p as ODataProperty);
-        Assert.Equal(9, entity2["ProductID"]?.Value);
-        Assert.Equal("Computer", entity2["Name"]?.Value);
-        Assert.Equal("Green", (entity2["SkinColor"]?.Value as ODataEnumValue)?.Value);
-        Assert.Equal("Read", (entity2["UserAccess"]?.Value as ODataEnumValue)?.Value);
+        Assert.Equal(8, entity2["ProductID"]?.Value);
+        Assert.Equal("Car", entity2["Name"]?.Value);
+        Assert.Equal("Red", (entity2["SkinColor"]?.Value as ODataEnumValue)?.Value);
+        Assert.Equal("ReadWrite, Execute", (entity2["UserAccess"]?.Value as ODataEnumValue)?.Value);
+
+        var entity3 = entries[3].Properties.ToDictionary(p => p.Name, p => p as ODataProperty);
+        Assert.Equal(9, entity3["ProductID"]?.Value);
+        Assert.Equal("Computer", entity3["Name"]?.Value);
+        Assert.Equal("Green", (entity3["SkinColor"]?.Value as ODataEnumValue)?.Value);
+        Assert.Equal("Read", (entity3["UserAccess"]?.Value as ODataEnumValue)?.Value);
     }
 
     #endregion
@@ -332,6 +336,72 @@ public class EnumerationTypeQueryTests : EndToEndTestBase<EnumerationTypeQueryTe
 
         Assert.DoesNotContain(entries[0].Properties, p => p.Name != "SkinColor" && p.Name != "UserAccess");
         Assert.All(entries[0].Properties, p => Assert.Contains(p.Name, new[] { "SkinColor", "UserAccess" }));
+    }
+
+    #endregion
+
+    #region Tests Flags Enums and verifies the results.
+
+    [Theory]
+    [InlineData("UserAccess has Microsoft.OData.E2E.TestCommon.Common.Server.Default.AccessLevel'Read'", 4)]
+    [InlineData("UserAccess has Microsoft.OData.E2E.TestCommon.Common.Server.Default.AccessLevel'Execute'", 1)]
+    [InlineData("UserAccess has Microsoft.OData.E2E.TestCommon.Common.Server.Default.AccessLevel'ReadWrite'", 2)]
+    [InlineData("UserAccess has Microsoft.OData.E2E.TestCommon.Common.Server.Default.AccessLevel'Read, Write'", 2)]
+    [InlineData("UserAccess has Microsoft.OData.E2E.TestCommon.Common.Server.Default.AccessLevel'Read, Write, Execute'", 1)]
+    public async Task QueryFlagsEnumAndVerifyResults_WithHasOperator(string filter, int expectedCount)
+    {
+        // Arrange
+        var queryText = $"Products?$filter={filter}";
+
+        // Act
+        List<ODataResource> entries = await TestsHelper.QueryResourceSetsAsync(queryText, MimeTypeODataParameterFullMetadata);
+
+        // Assert
+        Assert.Equal(expectedCount, entries.Count);
+    }
+
+    [Theory]
+    [InlineData("UserAccess in (0,3,4)", 2)]
+    [InlineData("UserAccess in ('1',3,'4')", 3)]
+    [InlineData("UserAccess in ('Read', 'ReadWrite','Execute')", 3)]
+    [InlineData("UserAccess in (Microsoft.OData.E2E.TestCommon.Common.Server.Default.AccessLevel'Read', Microsoft.OData.E2E.TestCommon.Common.Server.Default.AccessLevel'ReadWrite')", 3)]
+    [InlineData("UserAccess in ('Read', 'Read, Write, Execute','Execute')", 3)]
+    [InlineData("UserAccess in ('None', 'ReadWrite, Execute','Execute')", 2)]
+    [InlineData("UserAccess in ('Read', 'ReadWrite, Execute')", 3)]
+    public async Task QueryFlagsEnumAndVerifyResults_WithInOperator(string filter, int expectedCount)
+    {
+        // Arrange
+        var queryText = $"Products?$filter={filter}";
+
+        // Act
+        List<ODataResource> entries = await TestsHelper.QueryResourceSetsAsync(queryText, MimeTypeODataParameterMinimalMetadata);
+
+        // Assert
+        var userAccessProperty = string.Join(",", entries.Select(e => e.Properties.Single(p => p.Name == "UserAccess") as ODataProperty).Select(p => (p.Value as ODataEnumValue)?.Value));
+        Assert.Equal(expectedCount, entries.Count);
+    }
+
+    [Theory]
+    [InlineData("UserAccess eq 3", 1)]
+    [InlineData("UserAccess eq '3'", 1)]
+    [InlineData("UserAccess eq 'ReadWrite'", 1)]
+    [InlineData("UserAccess eq Microsoft.OData.E2E.TestCommon.Common.Server.Default.AccessLevel'ReadWrite'", 1)]
+    [InlineData("UserAccess ne 1", 3)]
+    [InlineData("UserAccess ne 'Read'", 3)]
+    [InlineData("UserAccess ne Microsoft.OData.E2E.TestCommon.Common.Server.Default.AccessLevel'Read'", 3)]
+    [InlineData("UserAccess ne 0", 4)]
+    [InlineData("UserAccess ne 'None'", 4)]
+    [InlineData("UserAccess ne Microsoft.OData.E2E.TestCommon.Common.Server.Default.AccessLevel'None'", 4)]
+    public async Task QueryFlagsEnumAndVerifyResults_WithSeveralOperators(string filter, int expectedCount)
+    {
+        // Arrange
+        var queryText = $"Products?$filter={filter}";
+
+        // Act
+        List<ODataResource> entries = await TestsHelper.QueryResourceSetsAsync(queryText, MimeTypeODataParameterMinimalMetadata);
+
+        // Assert
+        Assert.Equal(expectedCount, entries.Count);
     }
 
     #endregion

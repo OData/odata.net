@@ -327,7 +327,7 @@ namespace Microsoft.OData.E2E.TestCommon.Common.Server.Default
                     Discontinued = false,
                     SkinColor = Color.Red,
                     CoverColors = [Color.Red, Color.Red, Color.Blue],
-                    UserAccess = AccessLevel.Execute,
+                    UserAccess = AccessLevel.Write | AccessLevel.Execute | AccessLevel.Read,
                 },
                 new Product()
                 {
