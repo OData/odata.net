@@ -20,7 +20,6 @@ namespace Microsoft.OData.Client
     using Microsoft.OData.Client.Metadata;
     using Microsoft.OData;
     using Microsoft.OData.Edm;
-    using System.Globalization;
 
     #endregion Namespaces
 
