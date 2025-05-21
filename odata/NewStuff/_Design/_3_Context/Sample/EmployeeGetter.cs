@@ -5,17 +5,17 @@
 
     public sealed class EmployeeGetter
     {
-        private readonly IClr<User, string> userClr;
+        private readonly ICollectionClr<User, string> usersClr;
 
-        public EmployeeGetter(IClr<User, string> userClr)
+        public EmployeeGetter(ICollectionClr<User, string> usersClr)
         {
-            this.userClr = userClr;
+            this.usersClr = usersClr;
         }
 
         public Employee Get(string id)
         {
             var user = this
-                .userClr
+                .usersClr
                 .Get(id)
                 //// TODO it'd be nice to be able to share the below "selectors" between the multi-valued getter and the single-valued getter
                 .Expand(user => user.DirectReports) //// TODO select id
