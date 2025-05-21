@@ -20,7 +20,9 @@
                 return false;
             }
 
-            employee = new Employee(displayName.Value, directReports.Value.TrySelect<User, string>(UserExtensions.TryAdapt));
+            employee = new Employee(
+                displayName.Value, 
+                directReports.Value.TrySelect<User, string>(UserExtensions.TryAdapt));
             return true;
         }
 

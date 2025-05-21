@@ -17,11 +17,12 @@
             var user = this
                 .userClr
                 .Get(id)
+                //// TODO it'd be nice to be able to share the below "selectors" between the multi-valued getter and the single-valued getter
                 .Expand(user => user.DirectReports) //// TODO select id
                 .Select(user => user.DisplayName)
                 .Evaluate();
 
-            if (EmployeeContext.Adapt(user.Value, out var employee))
+            if (user.Value.TryAdapt(out var employee))
             {
                 return employee;
             }
