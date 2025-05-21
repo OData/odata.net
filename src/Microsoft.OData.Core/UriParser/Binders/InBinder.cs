@@ -128,8 +128,7 @@ namespace Microsoft.OData.UriParser
                     }
 
                     Debug.Assert(expectedType.IsCollection());
-                    var expectedTypeAsElementType = expectedType.Definition.AsElementType();
-                    string expectedTypeFullName = expectedTypeAsElementType.FullTypeName();
+                    string expectedTypeFullName = expectedType.Definition.AsElementType().FullTypeName();
 
                     if (expectedTypeFullName.Equals("Edm.String", StringComparison.Ordinal) || (expectedTypeFullName.Equals("Edm.Untyped", StringComparison.Ordinal) && IsCollectionEmptyOrWhiteSpace(bracketLiteralText)))
                     {

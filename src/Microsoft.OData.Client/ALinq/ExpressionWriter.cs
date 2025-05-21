@@ -562,16 +562,7 @@ namespace Microsoft.OData.Client
 
                     try
                     {
-                        if (item.GetType().IsEnum)
-                        {
-                            string enumValue = ((int)item).ToString(CultureInfo.InvariantCulture);
-                            //string enumValue = item.ToString();
-                            uriLiteral = LiteralFormatter.ForConstants.Format(enumValue);
-                        }
-                        else
-                        {
-                            uriLiteral = LiteralFormatter.ForConstants.Format(item);
-                        }
+                        uriLiteral = LiteralFormatter.ForConstants.Format(item);
                     }
                     catch (InvalidOperationException)
                     {
