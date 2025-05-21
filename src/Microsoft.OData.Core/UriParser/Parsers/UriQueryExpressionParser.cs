@@ -1064,6 +1064,12 @@ namespace Microsoft.OData.UriParser
                 expr = this.ParsePrimaryStart();
             }
 
+            // Parse the $root path, for example: '$root/people(12)'
+            if (expr != null && expr.Kind == QueryTokenKind.RootPath)
+            {
+                return ParseRootPath((RootPathToken)expr);
+            }
+
             while (this.lexer.CurrentToken.Kind == ExpressionTokenKind.Slash)
             {
                 this.lexer.NextToken();
@@ -1136,6 +1142,66 @@ namespace Microsoft.OData.UriParser
                         return primitiveLiteralToken;
                     }
             }
+        }
+
+        private RootPathToken ParseRootPath(RootPathToken rootPathToken)
+        {
+            while (this.lexer.CurrentToken.Kind == ExpressionTokenKind.Slash)
+            {
+                this.lexer.NextToken(); // read over the '/'
+
+                // a function call or an entity with key value is treated same as function call.
+                bool identifierIsFunction = this.lexer.ExpandIdentifierAsFunction();
+                if (identifierIsFunction && TryParseIdentifierAsFunction(lexer, out string result))
+                {
+                    rootPathToken.Segments.Add(result);
+                    this.lexer.NextToken();
+                    continue;
+                }
+
+                if (this.lexer.PeekNextToken().Kind == ExpressionTokenKind.Dot)
+                {
+                    ReadOnlySpan<char> dotIdentifier = this.lexer.ReadDottedIdentifier(false);
+                    rootPathToken.Segments.Add(dotIdentifier.ToString());
+                    continue;
+                }
+
+                // Don't validate token as identifier only, It could be integerLiteral or others, for example: /people/1234
+                // lexer.ValidateToken(ExpressionTokenKind.Identifier);
+                rootPathToken.Segments.Add(this.lexer.CurrentToken.Text.ToString());
+                this.lexer.NextToken();
+            }
+
+            return rootPathToken;
+        }
+
+        private static bool TryParseIdentifierAsFunction(ExpressionLexer lexer, out string result)
+        {
+            result = null;
+            ReadOnlySpan<char> functionName;
+
+            ExpressionLexer.ExpressionLexerPosition position = lexer.SnapshotPosition();
+
+            if (lexer.PeekNextToken().Kind == ExpressionTokenKind.Dot)
+            {
+                // handle the case where we prefix a function with its namespace.
+                functionName = lexer.ReadDottedIdentifier(false);
+            }
+            else
+            {
+                functionName = lexer.CurrentToken.Span;
+                lexer.NextToken();
+            }
+
+            if (lexer.CurrentToken.Kind != ExpressionTokenKind.OpenParen)
+            {
+                lexer.RestorePosition(position);
+                return false;
+            }
+
+            string parameters = lexer.AdvanceThroughBalancedParentheticalExpression();
+            result = $"{functionName}{parameters}";
+            return true;
         }
 
         /// <summary>
@@ -1250,6 +1316,17 @@ namespace Microsoft.OData.UriParser
         {
             string propertyName = this.lexer.CurrentToken.GetIdentifier().ToString();
             this.lexer.NextToken();
+
+            if (string.Equals(propertyName, "$root", enableCaseInsensitiveBuiltinIdentifier ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal))
+            {
+                if (parent != null)
+                {
+                    throw new ODataException(SRResources.UriQueryExpressionParser_RootPathNotTopLevel);
+                }
+
+                return new RootPathToken();
+            }
+
             if (this.parameters.Contains(propertyName) && parent == null)
             {
                 return new RangeVariableToken(propertyName);
