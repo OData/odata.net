@@ -1111,6 +1111,17 @@ namespace Microsoft.OData.Json
                         nestedResourceInfo.TypeAnnotation = new ODataTypeAnnotation((string)propertyAnnotation.Value);
                         break;
 
+                    case ODataAnnotationNames.ODataCount:
+                        Debug.Assert(propertyAnnotation.Value is long && propertyAnnotation.Value != null, "The odata.count annotation should have been parsed as a non-null long.");
+                        nestedResourceInfo.Count = (long?)propertyAnnotation.Value;
+                        break;
+
+                    // TODO: do we support odata.context uri here? why?
+                    case ODataAnnotationNames.ODataContext:
+                        Debug.Assert(propertyAnnotation.Value is Uri && propertyAnnotation.Value != null, "The odata.context annotation should have been parsed as a non-null Uri.");
+                        nestedResourceInfo.ContextUrl = (Uri)propertyAnnotation.Value;
+                        break;
+
                     default:
                         throw new ODataException(Error.Format(SRResources.ODataJsonResourceDeserializer_UnexpectedDeferredLinkPropertyAnnotation, nestedResourceInfo.Name, propertyAnnotation.Key));
                 }

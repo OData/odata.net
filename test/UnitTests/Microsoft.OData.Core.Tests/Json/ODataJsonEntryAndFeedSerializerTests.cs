@@ -52,6 +52,21 @@ namespace Microsoft.OData.Tests.Json
         }
 
         [Fact]
+        public void SerializedNavigationPropertyShouldIncludeCountIfApply()
+        {
+            var jsonResult = this.SerializeJsonFragment(serializer =>
+                serializer.WriteNavigationLinkMetadata(
+                    new ODataNestedResourceInfo
+                    {
+                        Name = "NavigationProperty",
+                        Count = 42
+                    },
+                    new DuplicatePropertyNameChecker(), true));
+
+            Assert.Contains("NavigationProperty@odata.count\":42", jsonResult);
+        }
+
+        [Fact]
         public void WriteOperationsOnRequestsShouldThrow()
         {
             using (MemoryStream stream = new MemoryStream())
