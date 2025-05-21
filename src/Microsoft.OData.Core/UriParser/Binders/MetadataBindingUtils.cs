@@ -7,11 +7,7 @@
 namespace Microsoft.OData.UriParser
 {
     using System;
-    using System.Collections.Generic;
     using System.Diagnostics;
-    using System.Linq;
-    using System.Reflection.PortableExecutable;
-    using System.Xml.Linq;
     using Microsoft.OData;
     using Microsoft.OData.Core;
     using Microsoft.OData.Edm;
@@ -28,8 +24,9 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         /// <param name="source">The source node to apply the conversion to.</param>
         /// <param name="targetTypeReference">The target primitive type. May be null - this method will do nothing in that case.</param>
+        /// <param name="enableCaseInsensitive">Whether to enable case insensitive comparison for enum member names.</param>
         /// <returns>The converted query node, or the original source node unchanged.</returns>
-        internal static SingleValueNode ConvertToTypeIfNeeded(SingleValueNode source, IEdmTypeReference targetTypeReference)
+        internal static SingleValueNode ConvertToTypeIfNeeded(SingleValueNode source, IEdmTypeReference targetTypeReference, bool enableCaseInsensitive = false)
         {
             Debug.Assert(source != null, "source != null");
 
@@ -65,12 +62,15 @@ namespace Microsoft.OData.UriParser
                 // and the target type is an enum.
                 if (constantNode != null && constantNode.Value != null && (source.TypeReference.IsString() || source.TypeReference.IsIntegral()) && targetTypeReference.IsEnum())
                 {
+                    // String comparison for enum member names is case-sensitive by default.
+                    StringComparison comparison = enableCaseInsensitive ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
+
                     string memberName = constantNode.Value.ToString();
                     IEdmEnumType enumType = targetTypeReference.Definition as IEdmEnumType;
-                    if (enumType.ContainsMember(memberName, StringComparison.Ordinal))
+                    if (enumType.ContainsMember(memberName, out IEdmEnumMember edmEnumMember, comparison))
                     {
                         string literalText = ODataUriUtils.ConvertToUriLiteral(constantNode.Value, default(ODataVersion));
-                        return new ConstantNode(new ODataEnumValue(memberName, enumType.ToString()), literalText, targetTypeReference);
+                        return new ConstantNode(new ODataEnumValue(edmEnumMember.Name, enumType.ToString()), literalText, targetTypeReference);
                     }
 
                     // If the member name is an integral value, we should try to convert it to the enum member name and find the enum member with the matching integral value
@@ -81,54 +81,28 @@ namespace Microsoft.OData.UriParser
                             string literalText = ODataUriUtils.ConvertToUriLiteral(enumMember.Name, default(ODataVersion));
                             return new ConstantNode(new ODataEnumValue(enumMember.Name, enumType.ToString()), literalText, targetTypeReference);
                         }
-                        else if(enumType.IsFlags)
+                        
+                        if(enumType.IsFlags)
                         {
-                            List<string> flagsList = new List<string>();
-                            foreach (IEdmEnumMember member in enumType.Members)
+                            string flagsValue = enumType.ParseFlagsFromIntegralValue(memberIntegralValue);
+                            if(!string.IsNullOrEmpty(flagsValue))
                             {
-                                long flagValue = Convert.ToInt64(member.Value.Value);
-                                // Using bitwise operations to check if a flag is set, which is more efficient than Enum.HasFlag
-                                if (flagValue != 0 && (memberIntegralValue & flagValue) == flagValue)
-                                {
-                                    flagsList.Add(member.Name);
-                                }
+                                string literalText = ODataUriUtils.ConvertToUriLiteral(flagsValue, default(ODataVersion));
+                                return new ConstantNode(new ODataEnumValue(flagsValue, enumType.ToString()), literalText, targetTypeReference);
                             }
-
-                            string flagsValue = string.Join(", ", flagsList);
-                            string literalText = ODataUriUtils.ConvertToUriLiteral(flagsValue, default(ODataVersion));
-                            return new ConstantNode(new ODataEnumValue(flagsValue, enumType.ToString()), literalText, targetTypeReference);
                         }
                     }
 
-                    if(enumType.IsFlags && memberName is string)
+                    // If the member name is a string representation of a flags value,
+                    // we should try to convert it to the enum member name and find the enum member with the matching flags value
+                    if (enumType.IsFlags)
                     {
-                        List<string> flagsList = new List<string>();
-                        // If the enum is a flags enum, we need to handle the case where multiple flags are set
-                        int start = 0, end = 0;
-                        while (end < memberName.Length)
+                        string flagsValue = enumType.ParseFlagsFromStringValue(memberName, comparison);
+                        if (!string.IsNullOrEmpty(flagsValue))
                         {
-                            // Find the end of the current value.
-                            while (end < memberName.Length && memberName[end] != ',')
-                            {
-                                end++;
-                            }
-
-                            // Extract the current value.
-                            ReadOnlySpan<char> currentValue = memberName.AsSpan()[start..end].Trim();
-                            if (!enumType.ContainsMember(currentValue.ToString(), StringComparison.Ordinal))
-                            {
-                                throw new ODataException(Error.Format(SRResources.Binder_IsNotValidEnumConstant, currentValue.ToString()));
-                            }
-
-                            flagsList.Add(currentValue.ToString());
-
-                            start = end + 1;
-                            end = start;
+                            string literalText = ODataUriUtils.ConvertToUriLiteral(flagsValue, default(ODataVersion));
+                            return new ConstantNode(new ODataEnumValue(flagsValue, enumType.ToString()), literalText, targetTypeReference);
                         }
-
-                        string flagsValue = string.Join(", ", flagsList);
-                        string literalText = ODataUriUtils.ConvertToUriLiteral(flagsValue, default(ODataVersion));
-                        return new ConstantNode(new ODataEnumValue(flagsValue, enumType.ToString()), literalText, targetTypeReference);
                     }
 
                     throw new ODataException(Error.Format(SRResources.Binder_IsNotValidEnumConstant, memberName));
@@ -249,63 +223,36 @@ namespace Microsoft.OData.UriParser
             }
 
             IEdmEnumType enumType = collectionConstantNode.ItemType.Definition as IEdmEnumType;
-
             StringComparison comparison = enableCaseInsensitive ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
+
             foreach (ConstantNode item in collectionConstantNode.Collection)
             {
                 if (item != null && item.Value != null && item.Value is ODataEnumValue enumValue)
                 {
                     // Check if the enum value is a valid enum member name
-                    bool isValidEnumValue = enumType.ContainsMember(enumValue.Value, comparison);
-                    if (isValidEnumValue)
+                    if (enumType.ContainsMember(enumValue.Value, comparison))
                     {
                         continue;
                     }
 
-                    if(long.TryParse(enumValue.Value, out long memberIntegralValue))
+                    if (long.TryParse(enumValue.Value, out long memberIntegralValue))
                     {
                         // Check if the enum value is a valid integral value
-                        bool isValidIntegralValue = enumType.TryParse(memberIntegralValue, out IEdmEnumMember enumMember);
-                        if (isValidIntegralValue)
+                        if (enumType.TryParse(memberIntegralValue, out IEdmEnumMember _))
                         {
                             continue;
                         }
 
-                        int allFlags = enumType.Members.Aggregate(0, (current, member) => current | (int)member.Value.Value);
-                        bool isValidFlagsEnumValue = enumType.IsFlags && ((memberIntegralValue & ~allFlags) == 0);
-                        if (isValidFlagsEnumValue)
+                        // Check if the enum value is a valid flags value
+                        if (enumType.IsFlags && enumType.IsValidFlagsEnumValue(memberIntegralValue))
                         {
                             continue;
                         }
                     }
 
-                    if (enumType.IsFlags && enumValue.Value is string)
+                    if (enumType.IsFlags && !string.IsNullOrEmpty(enumType.ParseFlagsFromStringValue(enumValue.Value, comparison)))
                     {
-                        // If the enum is a flags enum, we need to handle the case where multiple flags are set
-                        int start = 0, end = 0;
-                        while (end < enumValue.Value.Length)
-                        {
-                            // Find the end of the current value.
-                            while (end < enumValue.Value.Length && enumValue.Value[end] != ',')
-                            {
-                                end++;
-                            }
-
-                            // Extract the current value.
-                            ReadOnlySpan<char> currentValue = enumValue.Value.AsSpan()[start..end].Trim();
-                            if (!enumType.ContainsMember(currentValue.ToString(), comparison))
-                            {
-                                throw new ODataException(Error.Format(SRResources.Binder_IsNotValidEnumConstant, currentValue.ToString()));
-                            }
-
-                            start = end + 1;
-                            end = start;
-                        }
-
-                        if(start == end && start == enumValue.Value.Length + 1)
-                        {
-                            continue;
-                        }
+                        continue;
                     }
 
                     throw new ODataException(Error.Format(SRResources.Binder_IsNotValidEnumConstant, enumValue.Value));
