@@ -62,6 +62,22 @@ namespace Microsoft.OData.Client.Tests
         }
 
         [Fact]
+        public void TranslatesEnumerableContainsWithEnumToInOperator()
+        {
+            // Arrange
+            var sut = new DataServiceQueryProvider(dsc);
+            var productColors = new[] { Color.None, Color.Blue, Color.Green };
+            var products = dsc.CreateQuery<Product>("Products")
+                .Where(product => productColors.Contains(product.Color));
+
+            // Act
+            var queryComponents = sut.Translate(products.Expression);
+
+            // Assert
+            Assert.Equal(@"http://root/Products?$filter=Color in ('None','Blue','Green')", queryComponents.Uri.ToString());
+        }
+
+        [Fact]
         public void TranslatesEnumerableContainsWithSpecialCharactersToInOperator()
         {
             // Arrange
@@ -93,6 +109,21 @@ namespace Microsoft.OData.Client.Tests
         }
 
         [Fact]
+        public void ThrowsForEnumerableContainsWithEmptyEnumCollection()
+        {
+            // Arrange
+            var sut = new DataServiceQueryProvider(dsc);
+            var products = dsc.CreateQuery<Product>("Products")
+                .Where(product => Enumerable.Empty<Color>().Contains(product.Color));
+
+            // Act
+            var exception = Assert.ThrowsAny<InvalidOperationException>(() => sut.Translate(products.Expression));
+
+            // Assert
+            Assert.Equal(SRResources.ALinq_ContainsNotValidOnEmptyCollection, exception.Message);
+        }
+
+        [Fact]
         public void TranslatesEnumerableContainsWithSingleItem()
         {
             // Arrange
@@ -105,6 +136,21 @@ namespace Microsoft.OData.Client.Tests
 
             // Assert
             Assert.Equal(@"http://root/Products?$filter=Name in ('Pancake mix')", queryComponents.Uri.ToString());
+        }
+
+        [Fact]
+        public void TranslatesEnumerableContainsWithSingleEnumItem()
+        {
+            // Arrange
+            var sut = new DataServiceQueryProvider(dsc);
+            var products = dsc.CreateQuery<Product>("Products")
+                .Where(product => new[] { Color.None }.Contains(product.Color));
+
+            // Act
+            var queryComponents = sut.Translate(products.Expression);
+
+            // Assert
+            Assert.Equal(@"http://root/Products?$filter=Color in ('None')", queryComponents.Uri.ToString());
         }
 
         [Fact]
@@ -369,6 +415,8 @@ namespace Microsoft.OData.Client.Tests
 
             public decimal Price { get; set; }
 
+            public Color Color { get; set; }
+
             public Edm.Date LaunchDate { get; set; }
 
             public IEnumerable<string> Comments { get; set; }
@@ -385,6 +433,14 @@ namespace Microsoft.OData.Client.Tests
             {
                 return string.IsNullOrEmpty(data);
             }
+        }
+
+        private enum Color
+        {
+            None = 0,
+            Red = 1,
+            Green = 2,
+            Blue = 3
         }
 
         private static class UriFunctions
