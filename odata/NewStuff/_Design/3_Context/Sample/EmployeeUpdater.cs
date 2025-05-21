@@ -20,7 +20,10 @@
                 NullableProperty.Provided(displayName), 
                 NonNullableProperty.NotProvided<IEnumerable<User>>(),
                 NonNullableProperty.NotProvided<string>());
-            var userClr = this.usersClr.Patch(id, user);
+            var userClr = this
+                .usersClr
+                .Patch(id, user).Expand(user => user.DirectReports) //// TODO select id
+                .Select(user => user.DisplayName);
 
             var response = userClr.Evaluate();
             if (response == null)
@@ -28,7 +31,7 @@
                 return null;
             }
 
-            if (EmployeeContext.Adapt(response, out var employee))
+            if (response.TryAdapt(out var employee))
             {
                 return employee;
             }
