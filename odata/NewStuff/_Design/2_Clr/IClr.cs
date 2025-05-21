@@ -1,7 +1,7 @@
 ﻿namespace NewStuff._Design._2_Clr
 {
-    public interface IClr<T>
+    public interface IClr<TEntity, TKey>
     {
-        IGetClr<T> Get();
+        IGetClr<TEntity, TKey> Get(TKey key);
     }
 }

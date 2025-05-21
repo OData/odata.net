@@ -34,4 +34,22 @@
             public T Value { get; }
         }
     }
+
+    public static class NullableProperty
+    {
+        public static NullableProperty<T>.NotProvided NotProvided<T>()
+        {
+            return NullableProperty<T>.NotProvided.Instance;
+        }
+
+        public static NullableProperty<T>.Null Null<T>()
+        {
+            return NullableProperty<T>.Null.Instance;
+        }
+
+        public static NullableProperty<T>.Provided Provided<T>(T value)
+        {
+            return new NullableProperty<T>.Provided(value);
+        }
+    }
 }

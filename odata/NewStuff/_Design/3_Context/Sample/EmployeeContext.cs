@@ -31,7 +31,7 @@
             return TrySelect<User, Employee>(usersReponse.Values.Select(user => user.Value.Value), Adapt);
         }
 
-        private static bool Adapt(User user, out Employee employee)
+        public static bool Adapt(User user, out Employee employee)
         {
             if (!(user.DisplayName is NullableProperty<string>.Provided displayName))
             {

@@ -25,4 +25,17 @@
             public T Value { get; }
         }
     }
+
+    public static class NonNullableProperty
+    {
+        public static NonNullableProperty<T>.NotProvided NotProvided<T>()
+        {
+            return NonNullableProperty<T>.NotProvided.Instance;
+        }
+
+        public static NonNullableProperty<T>.Provided Provided<T>(T value)
+        {
+            return new NonNullableProperty<T>.Provided(value);
+        }
+    }
 }
