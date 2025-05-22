@@ -11,10 +11,7 @@ namespace NewStuff._Design._0_Convention.Sample
             var token = requestReader.Next();
             if (token is RequestToken.Get get)
             {
-                var uriReader = get.GetRequestReader.Next();
-                var schemeReader = uriReader.Next();
-
-                requestWriter.CommitGet().Commit().Commit().Commit(schemeReader.UriScheme).Commit();
+                Convert(get.GetRequestReader, requestWriter.CommitGet());
             }
             else if (token is RequestToken.Patch patch)
             {
@@ -30,7 +27,43 @@ namespace NewStuff._Design._0_Convention.Sample
             }
         }
 
+        private static void Convert(GetRequestReader getRequestReader, GetRequestWriter getRequestWriter)
+        {
+            Convert(getRequestReader.Next(), getRequestWriter.Commit());
+        }
 
+        private static void Convert(UriReader<GetHeaderReader> uriReader, UriWriter<GetHeaderWriter> uriWriter)
+        {
+            Convert(uriReader.Next(), uriWriter.Commit());
+        }
+
+        private static void Convert(UriSchemeReader<GetHeaderReader> uriSchemeReader, UriSchemeWriter<GetHeaderWriter> uriSchemeWriter)
+        {
+            Convert(uriSchemeReader.Next(), uriSchemeWriter.Commit(uriSchemeReader.UriScheme));
+        }
+
+        private static void Convert(UriDomainReader<GetHeaderReader> uriDomainReader, UriDomainWriter<GetHeaderWriter> uriDomainWriter)
+        {
+            Convert(uriDomainReader.Next(), uriDomainWriter.Commit(uriDomainReader.UriDomain));
+        }
+
+        private static void Convert(UriPortReader<GetHeaderReader> uriPortReader, UriPortWriter<GetHeaderWriter> uriPortWriter)
+        {
+            Convert(uriPortReader.Next(), uriPortWriter.Commit(uriPortReader.UriPort));
+        }
+
+        private static void Convert(UriPathSegmentReader<GetHeaderReader> uriPathSegmentReader, UriPathSegmentWriter<GetHeaderWriter> uriPathSegmentWriter)
+        {
+            uriPathSegmentWriter.Commit(uriPathSegmentReader.UriPathSegment);
+
+            var pathSegmentToken = uriPathSegmentReader.Next();
+            if (pathSegmentToken is PathSegmentToken<GetHeaderReader>.PathSegment pathSegment)
+            {
+            }
+            else if (pathSegmentToken is PathSegmentToken<GetHeaderReader>.QueryOption queryOptions)
+            {
+            }
+        }
 
 
 

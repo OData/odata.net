@@ -174,9 +174,9 @@
             public UriPathSegmentReader<T> UriPathSegmentReader { get; }
         }
 
-        public sealed class QueryOptions : PathSegmentToken<T>
+        public sealed class QueryOption : PathSegmentToken<T>
         {
-            private QueryOptions()
+            private QueryOption()
             {
             }
 
