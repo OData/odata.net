@@ -38,10 +38,14 @@
                         new CollectionResponseEntity<User>(
                             new Entity<User>( //// TODO should the key be required to instantiate this? what does the standard say? is the key always returned?
                                 user),
-                            null, //// TODO
-                            null)); 
+                            null,
+                            null));
 
-                var collectionResponse = new CollectionResponse<User>()
+                return new CollectionResponse<User>(
+                    users, 
+                    response.NextLink, 
+                    response.Count, 
+                    null);
             }
 
             private static User Deserialize(SingleValue value)

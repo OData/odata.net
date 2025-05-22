@@ -10,9 +10,9 @@
     
     public class EmployeeContext
     {
-        private readonly IGetCollectionClr<User, string> usersClr;
+        private readonly IGetCollectionClr<User> usersClr;
 
-        public EmployeeContext(IGetCollectionClr<User, string> usersClr)
+        public EmployeeContext(IGetCollectionClr<User> usersClr)
         {
             this.usersClr = usersClr;
         }
