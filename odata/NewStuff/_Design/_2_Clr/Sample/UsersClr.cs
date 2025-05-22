@@ -27,6 +27,12 @@ namespace NewStuff._Design._2_Clr.Sample
             {
                 var response = this.multiValuedProtocol.Get();
 
+                var collectionResponse = new CollectionResponse<User, string>()
+            }
+
+            private static bool TryDeserialize(SingleValue value, out User user)
+            {
+
             }
 
             public IGetCollectionClr<User, string> Expand<TProperty>(Expression<Func<User, Property<TProperty>>> expander)

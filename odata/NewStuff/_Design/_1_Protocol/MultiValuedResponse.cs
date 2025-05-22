@@ -4,10 +4,14 @@
 
     public class MultiValuedResponse
     {
+        //// TODO mimicing the modeling of JSON is probably a good idea
+
         public IReadOnlyList<SingleValue> Value { get; }
 
         public string? NextLink { get; } //// TODO make this strongly-typed
 
         public int? Count { get; } //// TODO does this need to be strongly-typed? (maybe to avoid nullable?)
+
+        public IEnumerable<object> Annotations { get; } //// TODO make this strongly-typed
     }
 }
