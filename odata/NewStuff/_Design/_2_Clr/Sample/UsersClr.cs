@@ -1,4 +1,8 @@
-﻿namespace NewStuff._Design._2_Clr.Sample
+﻿using NewStuff._Design._1_Protocol;
+using System;
+using System.Linq.Expressions;
+
+namespace NewStuff._Design._2_Clr.Sample
 {
     public sealed class UsersClr : ICollectionClr<User, string>
     {
@@ -8,7 +12,42 @@
 
         public IGetCollectionClr<User, string> Get()
         {
-            throw new System.NotImplementedException();
+            return new GetCollectionClr();
+        }
+
+        private sealed class GetCollectionClr : IGetCollectionClr<User, string>
+        {
+            private readonly IMultiValuedProtocol multiValuedProtocol;
+
+            public GetCollectionClr()
+            {
+            }
+
+            public CollectionResponse<User, string> Evaluate()
+            {
+                var response = this.multiValuedProtocol.Get();
+
+            }
+
+            public IGetCollectionClr<User, string> Expand<TProperty>(Expression<Func<User, Property<TProperty>>> expander)
+            {
+                throw new NotImplementedException();
+            }
+
+            public IGetCollectionClr<User, string> Filter(Expression<Func<User, bool>> predicate)
+            {
+                throw new NotImplementedException();
+            }
+
+            public IGetCollectionClr<User, string> Select<TProperty>(Expression<Func<User, Property<TProperty>>> selector)
+            {
+                throw new NotImplementedException();
+            }
+
+            public IGetCollectionClr<User, string> Skip(int count)
+            {
+                throw new NotImplementedException();
+            }
         }
 
         public IGetClr<User, string> Get(string key)
