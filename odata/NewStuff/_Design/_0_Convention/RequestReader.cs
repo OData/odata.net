@@ -389,6 +389,20 @@
         private OdataMaxPageSizeHeaderReader()
         {
         }
+
+        public OdataMaxPageSize OdataMaxPageSize { get; }
+
+        public GetHeaderReader Next()
+        {
+            throw new NotImplementedException("TODO");
+        }
+    }
+
+    public sealed class OdataMaxPageSize
+    {
+        private OdataMaxPageSize()
+        {
+        }
     }
 
     public sealed class CustomHeaderReader
@@ -396,7 +410,69 @@
         private CustomHeaderReader()
         {
         }
+
+        public HeaderFieldName HeaderFieldName { get; }
+
+        public CustomHeaderToken Next()
+        {
+            throw new NotImplementedException("TODO");
+        }
     }
+
+    public sealed class HeaderFieldName
+    {
+        private HeaderFieldName()
+        {
+        }
+    }
+
+    public abstract class CustomHeaderToken
+    {
+        private CustomHeaderToken()
+        {
+        }
+
+        public sealed class FieldValue : CustomHeaderToken
+        {
+            private FieldValue()
+            {
+            }
+
+            public HeaderFieldValueReader HeaderFieldValueReader { get; }
+        }
+
+        public sealed class GetHeader : CustomHeaderToken
+        {
+            private GetHeader()
+            {
+            }
+
+            public GetHeaderReader GetHeaderReader { get; }
+        }
+    }
+
+    public sealed class HeaderFieldValueReader
+    {
+        private HeaderFieldValueReader()
+        {
+        }
+
+        public HeaderFieldValue HeaderFieldValue { get; }
+
+        public CustomHeaderReader Next()
+        {
+            throw new NotImplementedException("TODO");
+        }
+    }
+
+    public sealed class HeaderFieldValue
+    {
+        private HeaderFieldValue()
+        {
+        }
+    }
+
+
 
 
 
