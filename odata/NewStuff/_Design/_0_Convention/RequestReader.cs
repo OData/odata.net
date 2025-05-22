@@ -208,10 +208,7 @@
             {
             }
 
-            public QueryParameterReader<T> Next()
-            {
-                throw new NotImplementedException("TODO");
-            }
+            public QueryParameterReader<T> QueryParameterReader { get; }
         }
 
         public sealed class Fragment : QueryOptionToken<T>

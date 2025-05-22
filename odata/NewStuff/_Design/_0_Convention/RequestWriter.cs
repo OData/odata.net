@@ -126,7 +126,7 @@
         {
         }
 
-        public QueryParameterWriter<T> CommitParameter(QueryParameter queryParameter)
+        public QueryParameterWriter<T> CommitParameter()
         {
             throw new NotImplementedException("TODO");
         }
@@ -143,7 +143,7 @@
         {
         }
 
-        public QueryValueWriter<T> Commit(QueryValue queryValue)
+        public QueryValueWriter<T> Commit(QueryParameter queryParameter)
         {
             throw new NotImplementedException("TODO");
         }
@@ -161,6 +161,11 @@
         }
 
         public QueryOptionWriter<T> Commit()
+        {
+            throw new NotImplementedException("TODO");
+        }
+
+        public QueryOptionWriter<T> Commit(QueryValue queryValue)
         {
             throw new NotImplementedException("TODO");
         }
