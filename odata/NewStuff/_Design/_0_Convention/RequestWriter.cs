@@ -8,18 +8,59 @@
         {
         }
 
-        public VerbWriter Commit()
+        public GetRequestWriter CommitGet()
+        {
+            throw new NotImplementedException("TODO");
+        }
+
+        public PatchRequestWriter CommitPatch()
+        {
+            throw new NotImplementedException("TODO");
+        }
+
+        public PostRequestWriter CommitPost()
         {
             throw new NotImplementedException("TODO");
         }
     }
 
-    public abstract class VerbWriter
+    public sealed class GetRequestWriter
     {
-        private VerbWriter()
+        private GetRequestWriter()
+        {
+        }
+
+        public UriWriter<GetHeaderWriter> Commit()
+        {
+            throw new NotImplementedException("TODO");
+        }
+    }
+
+    public sealed class PatchRequestWriter
+    {
+        private PatchRequestWriter()
+        {
+        }
+
+        //// TODO
+    }
+
+    public sealed class PostRequestWriter
+    {
+        private PostRequestWriter()
+        {
+        }
+        
+        //// TODO
+    }
+
+    public sealed class UriWriter<T>
+    {
+        private UriWriter()
         {
         }
     }
+
 
     public sealed class UriSchemeWriter
     {
@@ -77,6 +118,38 @@
     public sealed class QueryOptionWriter
     {
         private QueryOptionWriter()
+        {
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    public sealed class GetHeaderWriter
+    {
+        private GetHeaderWriter()
         {
         }
     }
