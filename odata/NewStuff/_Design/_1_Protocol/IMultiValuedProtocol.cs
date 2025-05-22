@@ -5,5 +5,7 @@
         IGetMultiValuedProtocol Get();
 
         IGetSingleValuedProtocol Get(KeyPredicate key);
+
+        IPatchSingleValuedProtocol Patch(KeyPredicate key, SingleValuedRequest request);
     }
 }

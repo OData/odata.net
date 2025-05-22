@@ -116,7 +116,75 @@
 
         public IPatchCollectionClr<User> Patch(string key, User entity)
         {
-            throw new System.NotImplementedException();
+            return new PatchCollectionClr(
+                this.multiValuedProtocol.Patch(
+                    new KeyPredicate.SinglePart(new SinglePartKeyPredicate.Canonical(key)), 
+                    Serialize(entity)));
+        }
+
+        private static SingleValuedRequest Serialize(User user)
+        {
+            var primitiveProperties = new List<PrimitiveRequestProperty>(2);
+
+            if (user.Id is NonNullableProperty<string>.Provided providedId)
+            {
+                primitiveProperties.Add(new PrimitiveRequestProperty("id", providedId.Value));
+            }
+
+            if (user.DisplayName is NullableProperty<string>.Provided providedDisplayName)
+            {
+                primitiveProperties.Add(new PrimitiveRequestProperty("displayName", providedDisplayName.Value));
+            }
+            else if (user.DisplayName is NullableProperty<string>.Null nullDisplayName)
+            {
+                primitiveProperties.Add(new PrimitiveRequestProperty("displayName", null));
+            }
+
+            var multiValuedProperties = new List<MultiValuedRequestProperty>(1);
+
+            if (user.DirectReports is NonNullableProperty<IEnumerable<User>>.Provided providedDirectReports)
+            {
+                multiValuedProperties.Add(new MultiValuedRequestProperty("directReports", providedDirectReports.Value.Select(Serialize)));
+            }
+
+            return new SingleValuedRequest(
+                Enumerable.Empty<ComplexRequestProperty>(), 
+                multiValuedProperties, 
+                Enumerable.Empty<UntypedRequestProperty>(),
+                primitiveProperties, 
+                Enumerable.Empty<DynamicRequestProperty>());
+        }
+
+        private sealed class PatchCollectionClr : IPatchCollectionClr<User>
+        {
+            private readonly IPatchSingleValuedProtocol singleValuedProtocol;
+
+            public PatchCollectionClr(IPatchSingleValuedProtocol singleValuedProtocol)
+            {
+                this.singleValuedProtocol = singleValuedProtocol;
+            }
+
+            public User? Evaluate()
+            {
+                var response = this.singleValuedProtocol.Evaluate();
+
+                if (response.Value == null)
+                {
+                    return null;
+                }
+
+                return UserUtilities.Deserialize(response.Value);
+            }
+
+            public IPatchCollectionClr<User> Expand<TProperty>(Expression<Func<User, Property<TProperty>>> expander)
+            {
+                return new PatchCollectionClr(this.singleValuedProtocol.Expand(UserUtilities.AdaptExpand(expander)));
+            }
+
+            public IPatchCollectionClr<User> Select<TProperty>(Expression<Func<User, Property<TProperty>>> selector)
+            {
+                return new PatchCollectionClr(this.singleValuedProtocol.Select(UserUtilities.AdaptSelect(selector)));
+            }
         }
 
         public IPostCollectionClr<User> Post(User entity)
