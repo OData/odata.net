@@ -9,46 +9,55 @@
         {
         }
 
-        public VerbReader Next()
+        public RequestToken Next()
         {
             throw new NotImplementedException("TODO");
         }
     }
 
-    public abstract class VerbReader
+    public abstract class RequestToken
     {
-        private VerbReader()
+        private RequestToken()
         {
         }
 
-        public sealed class Get : VerbReader
+        public sealed class Get : RequestToken
         {
             private Get()
             {
             }
 
-            public UriReader<GetHeaderReader> Next()
-            {
-                throw new NotImplementedException("TODO");
-            }
+            public GetRequestReader GetRequestReader { get; }
         }
 
-        public sealed class Post : VerbReader
+        public sealed class Post : RequestToken
         {
             private Post()
             {
             }
-            
+
             //// TODO
         }
 
-        public sealed class Patch : VerbReader
+        public sealed class Patch : RequestToken
         {
             private Patch()
             {
             }
-            
+
             //// TODO
+        }
+    }
+
+    public sealed class GetRequestReader
+    {
+        private GetRequestReader()
+        {
+        }
+
+        public UriReader<GetHeaderReader> Next()
+        {
+            throw new NotImplementedException("TODO");
         }
     }
 
