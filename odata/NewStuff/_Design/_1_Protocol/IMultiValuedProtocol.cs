@@ -3,5 +3,7 @@
     public interface IMultiValuedProtocol
     {
         IGetMultiValuedProtocol Get();
+
+        IGetSingleValuedProtocol Get(KeyPredicate key);
     }
 }
