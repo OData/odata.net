@@ -10,21 +10,24 @@
 
     public sealed class UsersClr : ICollectionClr<User, string>
     {
+        private readonly IMultiValuedProtocol multiValuedProtocol;
+
         public UsersClr()
         {
         }
 
         public IGetCollectionClr<User> Get()
         {
-            return new GetCollectionClr();
+            return new GetCollectionClr(this.multiValuedProtocol);
         }
 
         private sealed class GetCollectionClr : IGetCollectionClr<User>
         {
             private readonly IMultiValuedProtocol multiValuedProtocol;
 
-            public GetCollectionClr()
+            public GetCollectionClr(IMultiValuedProtocol multiValuedProtocol)
             {
+                this.multiValuedProtocol = multiValuedProtocol;
             }
 
             public CollectionResponse<User> Evaluate()
