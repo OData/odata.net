@@ -59,63 +59,68 @@
         private UriWriter()
         {
         }
+
+        public UriSchemeWriter<T> Commit()
+        {
+            throw new NotImplementedException("TODO");
+        }
     }
 
 
-    public sealed class UriSchemeWriter
+    public sealed class UriSchemeWriter<T>
     {
         private UriSchemeWriter()
         {
         }
 
-        public UriDomainWriter Commit(UriScheme uriScheme)
+        public UriDomainWriter<T> Commit(UriScheme uriScheme) //// TODO i can't tell if this type should be committed in its writer, or in the "previous" writer (i.e. should this commit take a domain or a scheme?)
         {
             throw new NotImplementedException("TODO");
         }
     }
 
-    public sealed class UriDomainWriter
+    public sealed class UriDomainWriter<T>
     {
         private UriDomainWriter()
         {
         }
 
-        public UriDomainWriter Commit(UriDomain uriDomain)
+        public UriPortWriter<T> Commit(UriDomain uriDomain)
         {
             throw new NotImplementedException("TODO");
         }
     }
 
-    public sealed class UriPortWriter
+    public sealed class UriPortWriter<T>
     {
         private UriPortWriter()
         {
         }
 
-        public UriPathSegmentWriter Commit(UriPort uriPort)
+        public UriPathSegmentWriter<T> Commit(UriPort uriPort)
         {
             throw new NotImplementedException("TODO");
         }
     }
 
-    public sealed class UriPathSegmentWriter
+    public sealed class UriPathSegmentWriter<T>
     {
         private UriPathSegmentWriter()
         {
         }
 
-        public UriPathSegmentWriter Commit(UriPathSegment uriPathSegment)
+        public UriPathSegmentWriter<T> Commit(UriPathSegment uriPathSegment)
         {
             throw new NotImplementedException("TODO");
         }
 
-        public QueryOptionWriter Commit()
+        public QueryOptionWriter<T> Commit()
         {
             throw new NotImplementedException("TODO");
         }
     }
 
-    public sealed class QueryOptionWriter
+    public sealed class QueryOptionWriter<T>
     {
         private QueryOptionWriter()
         {
