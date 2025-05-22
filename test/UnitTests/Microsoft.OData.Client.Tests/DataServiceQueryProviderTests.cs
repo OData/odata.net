@@ -66,7 +66,7 @@ namespace Microsoft.OData.Client.Tests
         {
             // Arrange
             var sut = new DataServiceQueryProvider(dsc);
-            var productColors = new[] { Color.None, Color.Blue, Color.Green };
+            IEnumerable<Color> productColors = new List<Color> { Color.None, Color.Blue, Color.Green };
             var products = dsc.CreateQuery<Product>("Products")
                 .Where(product => productColors.Contains(product.Color));
 
