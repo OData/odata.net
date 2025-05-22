@@ -2,6 +2,13 @@
 {
     public class SingleValuedResponse<TEntity>
     {
+        public SingleValuedResponse(TEntity value, string? type, string? id)
+        {
+            Value = value;
+            Type = type;
+            Id = id;
+        }
+
         public TEntity Value { get; }
 
         public string? Type { get; } //// TODO this should be more strongly-typed

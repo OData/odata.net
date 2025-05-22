@@ -99,17 +99,18 @@
 
             public SingleValuedResponse<User> Evaluate()
             {
-                throw new NotImplementedException();
+                var response = this.singleValuedProtocol.Evaluate();
+                return new SingleValuedResponse<User>(UserUtilities.Deserialize(response.Value), null, null);
             }
 
             public IGetClr<User, string> Expand<TProperty>(Expression<Func<User, Property<TProperty>>> expander)
             {
-                throw new NotImplementedException();
+                return new GetClr(this.singleValuedProtocol.Expand(UserUtilities.AdaptExpand(expander)));
             }
 
             public IGetClr<User, string> Select<TProperty>(Expression<Func<User, Property<TProperty>>> selector)
             {
-                throw new NotImplementedException();
+                return new GetClr(this.singleValuedProtocol.Select(UserUtilities.AdaptSelect(selector)));
             }
         }
 
