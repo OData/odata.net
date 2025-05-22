@@ -125,8 +125,58 @@
         private QueryOptionWriter()
         {
         }
+
+        public QueryParameterWriter<T> CommitParameter(QueryParameter queryParameter)
+        {
+            throw new NotImplementedException("TODO");
+        }
+
+        public FragmentWriter<T> CommitFragment()
+        {
+            throw new NotImplementedException("TODO");
+        }
     }
 
+    public sealed class QueryParameterWriter<T>
+    {
+        private QueryParameterWriter()
+        {
+        }
+
+        public QueryValueWriter<T> Commit(QueryValue queryValue)
+        {
+            throw new NotImplementedException("TODO");
+        }
+
+        public QueryOptionWriter<T> Commit()
+        {
+            throw new NotImplementedException("TODO");
+        }
+    }
+
+    public sealed class QueryValueWriter<T>
+    {
+        private QueryValueWriter()
+        {
+        }
+
+        public QueryOptionWriter<T> Commit()
+        {
+            throw new NotImplementedException("TODO");
+        }
+    }
+
+    public sealed class FragmentWriter<T>
+    {
+        private FragmentWriter()
+        {
+        }
+
+        public T Commit(Fragment fragment)
+        {
+            throw new NotImplementedException("TODO");
+        }
+    }
 
 
 
@@ -156,6 +206,120 @@
     {
         private GetHeaderWriter()
         {
+        }
+
+        public OdataMaxVersionHeaderWriter CommitOdataMaxVersion()
+        {
+            throw new NotImplementedException("TODO");
+        }
+
+        public OdataMaxPageSizeHeaderWriter CommitOdataMaxPageSize()
+        {
+            throw new NotImplementedException("TODO");
+        }
+
+        public CustomHeaderWriter CommitCustomHeader(HeaderFieldName headerFieldName)
+        {
+            throw new NotImplementedException("TODO");
+        }
+
+        public GetBodyWriter Commit()
+        {
+            throw new NotImplementedException("TODO");
+        }
+    }
+
+    public sealed class OdataMaxVersionHeaderWriter
+    {
+        private OdataMaxVersionHeaderWriter()
+        {
+        }
+
+        public GetHeaderWriter Commit(OdataVersion odataVersion)
+        {
+            throw new NotImplementedException("TODO");
+        }
+    }
+
+    public sealed class OdataMaxPageSizeHeaderWriter
+    {
+        private OdataMaxPageSizeHeaderWriter()
+        {
+        }
+
+        public GetHeaderWriter Commit(OdataMaxPageSize odataMaxPageSize)
+        {
+            throw new NotImplementedException("TODO");
+        }
+    }
+
+    public sealed class CustomHeaderWriter
+    {
+        private CustomHeaderWriter()
+        {
+        }
+
+        public FieldValueWriter Commit(HeaderFieldValue headerFieldValue)
+        {
+            throw new NotImplementedException("TODO");
+        }
+
+        public GetHeaderWriter Commit()
+        {
+            throw new NotImplementedException("TODO");
+        }
+    }
+
+    public sealed class FieldValueWriter
+    {
+        private FieldValueWriter()
+        {
+        }
+
+        public GetHeaderWriter Commit()
+        {
+            throw new NotImplementedException("TODO");
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    public sealed class GetBodyWriter
+    {
+        private GetBodyWriter()
+        {
+        }
+
+        public string Commit() //// TODO this shouldn't return a string, it should be parameterized (and an interface)
+        {
+            throw new NotImplementedException("TODO");
         }
     }
 }

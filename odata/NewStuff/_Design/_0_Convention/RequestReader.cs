@@ -488,7 +488,7 @@
 
         public HeaderFieldValue HeaderFieldValue { get; }
 
-        public CustomHeaderReader Next()
+        public GetHeaderReader Next()
         {
             throw new NotImplementedException("TODO");
         }
