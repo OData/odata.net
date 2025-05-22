@@ -1,7 +1,6 @@
 ﻿namespace NewStuff._Design._0_Convention
 {
     using System;
-    using System.Diagnostics.Contracts;
     using System.IO;
 
     public sealed class RequestReader
