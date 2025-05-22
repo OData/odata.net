@@ -5,6 +5,10 @@
 
     public sealed class RequestReader
     {
+        private RequestReader()
+        {
+        }
+
         public VerbReader Next()
         {
             throw new NotImplementedException("TODO");
@@ -19,6 +23,10 @@
 
         public sealed class Get : VerbReader
         {
+            private Get()
+            {
+            }
+
             public UriReader<GetHeaderReader> Next()
             {
                 throw new NotImplementedException("TODO");
@@ -27,10 +35,20 @@
 
         public sealed class Post : VerbReader
         {
+            private Post()
+            {
+            }
+            
+            //// TODO
         }
 
         public sealed class Patch : VerbReader
         {
+            private Patch()
+            {
+            }
+            
+            //// TODO
         }
     }
 
@@ -382,6 +400,8 @@
         private OdataVersion()
         {
         }
+
+        //// TODO this should be a discriminated union with like an "unknown" member of something
     }
 
     public sealed class OdataMaxPageSizeHeaderReader
