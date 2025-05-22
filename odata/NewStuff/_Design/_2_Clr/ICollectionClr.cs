@@ -2,7 +2,7 @@
 {
     public interface ICollectionClr<TEntity, TKey>
     {
-        IGetCollectionClr<TEntity, TKey> Get();
+        IGetCollectionClr<TEntity> Get();
 
         IGetClr<TEntity, TKey> Get(TKey key);
 

@@ -1,21 +1,25 @@
-﻿using NewStuff._Design._1_Protocol;
-using System;
-using System.Linq.Expressions;
-
-namespace NewStuff._Design._2_Clr.Sample
+﻿namespace NewStuff._Design._2_Clr.Sample
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Linq.Expressions;
+
+    using NewStuff._Design._1_Protocol;
+    using NewStuff._Design._3_Context.Sample;
+
     public sealed class UsersClr : ICollectionClr<User, string>
     {
         public UsersClr()
         {
         }
 
-        public IGetCollectionClr<User, string> Get()
+        public IGetCollectionClr<User> Get()
         {
             return new GetCollectionClr();
         }
 
-        private sealed class GetCollectionClr : IGetCollectionClr<User, string>
+        private sealed class GetCollectionClr : IGetCollectionClr<User>
         {
             private readonly IMultiValuedProtocol multiValuedProtocol;
 
@@ -23,34 +27,86 @@ namespace NewStuff._Design._2_Clr.Sample
             {
             }
 
-            public CollectionResponse<User, string> Evaluate()
+            public CollectionResponse<User> Evaluate()
             {
                 var response = this.multiValuedProtocol.Get();
 
-                var collectionResponse = new CollectionResponse<User, string>()
+                var users = response
+                    .Value
+                    .Select(singleValue => Deserialize(singleValue))
+                    .Select(user => 
+                        new CollectionResponseEntity<User>(
+                            new Entity<User>( //// TODO should the key be required to instantiate this? what does the standard say? is the key always returned?
+                                user),
+                            null, //// TODO
+                            null)); 
+
+                var collectionResponse = new CollectionResponse<User>()
             }
 
-            private static bool TryDeserialize(SingleValue value, out User user)
+            private static User Deserialize(SingleValue value)
             {
+                //// TODO the strings in here are coming from "implicit knowledge" of the EDM model
+                var primitiveProperties = value.PrimitiveProperties.ToDictionary(property => property.Name);
 
+                NullableProperty<string> displayName;
+                if (primitiveProperties.TryGetValue("displayName", out var providedDisplayName))
+                {
+                    if (providedDisplayName.Value == null)
+                    {
+                        displayName = NullableProperty.Null<string>();
+                    }
+                    else
+                    {
+                        displayName = NullableProperty.Provided(providedDisplayName.Value);
+                    }
+                }
+                else
+                {
+                    displayName = NullableProperty.NotProvided<string>();
+                }
+
+                NonNullableProperty<string> id;
+                if (primitiveProperties.TryGetValue("id", out var providedId))
+                {
+                    id = NonNullableProperty.Provided(providedId.Value)!; //// TODO at what point should we know that this isn't nullable? //// TODO maybe this is an indication that this is the layer where the edm model is starting to be used?
+                }
+                else
+                {
+                    id = NonNullableProperty.NotProvided<string>();
+                }
+
+                var multiValuedProperties = value.MultiValuedProperties.ToDictionary(property => property.Name);
+
+                NonNullableProperty<IEnumerable<User>> directReports;
+                if (multiValuedProperties.TryGetValue("directReports", out var providedDirectReports))
+                {
+                    directReports = NonNullableProperty.Provided(providedDirectReports.Values.Select(Deserialize));
+                }
+                else
+                {
+                    directReports = NonNullableProperty.NotProvided<IEnumerable<User>>();
+                }
+
+                return new User(displayName, directReports, id);
             }
 
-            public IGetCollectionClr<User, string> Expand<TProperty>(Expression<Func<User, Property<TProperty>>> expander)
+            public IGetCollectionClr<User> Expand<TProperty>(Expression<Func<User, Property<TProperty>>> expander)
             {
                 throw new NotImplementedException();
             }
 
-            public IGetCollectionClr<User, string> Filter(Expression<Func<User, bool>> predicate)
+            public IGetCollectionClr<User> Filter(Expression<Func<User, bool>> predicate)
             {
                 throw new NotImplementedException();
             }
 
-            public IGetCollectionClr<User, string> Select<TProperty>(Expression<Func<User, Property<TProperty>>> selector)
+            public IGetCollectionClr<User> Select<TProperty>(Expression<Func<User, Property<TProperty>>> selector)
             {
                 throw new NotImplementedException();
             }
 
-            public IGetCollectionClr<User, string> Skip(int count)
+            public IGetCollectionClr<User> Skip(int count)
             {
                 throw new NotImplementedException();
             }

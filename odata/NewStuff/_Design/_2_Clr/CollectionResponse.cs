@@ -3,9 +3,9 @@
     using System;
     using System.Collections.Generic;
 
-    public class CollectionResponse<TEntity, TKey>
+    public class CollectionResponse<TEntity>
     {
-        public CollectionResponse(IEnumerable<CollectionResponseEntity<TEntity, TKey>> values, Uri? nextLink, long? count, string? type)
+        public CollectionResponse(IEnumerable<CollectionResponseEntity<TEntity>> values, Uri? nextLink, long? count, string? type)
         {
             Values = values;
             NextLink = nextLink;
@@ -13,7 +13,7 @@
             Type = type;
         }
 
-        public IEnumerable<CollectionResponseEntity<TEntity, TKey>> Values { get; }
+        public IEnumerable<CollectionResponseEntity<TEntity>> Values { get; }
 
         public Uri? NextLink { get; } //// TODO the type of this property should be stronger
 

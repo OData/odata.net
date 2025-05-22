@@ -1,9 +1,12 @@
 ﻿namespace NewStuff._Design._2_Clr
 {
-    public class Entity<TEntity, TKey>
+    public class Entity<TEntity>
     {
-        public TEntity Value { get; }
+        public Entity(TEntity value)
+        {
+            Value = value;
+        }
 
-        public TKey Key { get; }
+        public TEntity Value { get; }
     }
 }
