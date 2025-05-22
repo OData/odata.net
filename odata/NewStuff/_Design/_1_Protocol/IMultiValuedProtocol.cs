@@ -2,6 +2,6 @@
 {
     public interface IMultiValuedProtocol
     {
-        MultiValuedResponse Get();
+        IGetMultiValuedProtocol Get();
     }
 }

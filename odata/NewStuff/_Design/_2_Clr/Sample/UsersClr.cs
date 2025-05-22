@@ -18,21 +18,21 @@
 
         public IGetCollectionClr<User> Get()
         {
-            return new GetCollectionClr(this.multiValuedProtocol);
+            return new GetCollectionClr(this.multiValuedProtocol.Get());
         }
 
         private sealed class GetCollectionClr : IGetCollectionClr<User>
         {
-            private readonly IMultiValuedProtocol multiValuedProtocol;
+            private readonly IGetMultiValuedProtocol multiValuedProtocol;
 
-            public GetCollectionClr(IMultiValuedProtocol multiValuedProtocol)
+            public GetCollectionClr(IGetMultiValuedProtocol multiValuedProtocol)
             {
                 this.multiValuedProtocol = multiValuedProtocol;
             }
 
             public CollectionResponse<User> Evaluate()
             {
-                var response = this.multiValuedProtocol.Get();
+                var response = this.multiValuedProtocol.Evaluate();
 
                 var users = response
                     .Value
@@ -100,22 +100,42 @@
 
             public IGetCollectionClr<User> Expand<TProperty>(Expression<Func<User, Property<TProperty>>> expander) //// TODO this could have `navigationproperty` even
             {
-                throw new NotImplementedException();
+                return new GetCollectionClr(this.multiValuedProtocol.Expand(AdaptExpand(expander)));
+            }
+
+            private static object AdaptExpand<TProperty>(Expression<Func<User, Property<TProperty>>> expander)
+            {
+                return expander;
             }
 
             public IGetCollectionClr<User> Filter(Expression<Func<User, bool>> predicate)
             {
-                throw new NotImplementedException();
+                return new GetCollectionClr(this.multiValuedProtocol.Filter(AdaptFilter(predicate)));
+            }
+
+            private static object AdaptFilter(Expression<Func<User, bool>> predicate)
+            {
+                return predicate;
             }
 
             public IGetCollectionClr<User> Select<TProperty>(Expression<Func<User, Property<TProperty>>> selector)
             {
-                throw new NotImplementedException();
+                return new GetCollectionClr(this.multiValuedProtocol.Select(AdaptSelect(selector)));
+            }
+
+            private static object AdaptSelect<TProperty>(Expression<Func<User, Property<TProperty>>> selector)
+            {
+                return selector;
             }
 
             public IGetCollectionClr<User> Skip(int count)
             {
-                throw new NotImplementedException();
+                return new GetCollectionClr(this.multiValuedProtocol.Skip(AdaptSkip(count)));
+            }
+
+            private static object AdaptSkip(int count)
+            {
+                return count;
             }
         }
 
