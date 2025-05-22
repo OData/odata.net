@@ -277,6 +277,7 @@
 
             public static object AdaptExpand<TProperty>(Expression<Func<User, Property<TProperty>>> expander)
             {
+                //// TODO you need to implement all of the expression adapters
                 return expander;
             }
 
