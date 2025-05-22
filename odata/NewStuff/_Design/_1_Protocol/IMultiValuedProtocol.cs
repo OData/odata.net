@@ -7,5 +7,7 @@
         IGetSingleValuedProtocol Get(KeyPredicate key);
 
         IPatchSingleValuedProtocol Patch(KeyPredicate key, SingleValuedRequest request);
+
+        IPostSingleValuedProtocol Post(SingleValuedRequest request);
     }
 }
