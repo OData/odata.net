@@ -2,6 +2,7 @@
 {
     using System;
     using System.Diagnostics.Contracts;
+    using System.IO;
 
     public sealed class RequestReader
     {
@@ -332,7 +333,7 @@
             {
             }
 
-            public OdataMaxVersionHeaderReader  OdataMaxVersionHeaderReader { get; }
+            public OdataMaxVersionHeaderReader OdataMaxVersionHeaderReader { get; }
         }
 
         public sealed class OdataMaxPageSize : GetHeaderToken
@@ -492,24 +493,59 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
     public sealed class GetBodyReader
     {
         private GetBodyReader()
         {
         }
+
+        public GetBody GetBody { get; }
     }
+
+    public sealed class GetBody
+    {
+        private GetBody()
+        {
+        }
+
+        public Stream Data { get; } //// TODO there shouldn't be a body for a get request, but HTTP does allow it; i didn't add properties to any of the other "terminal" nodes, but this one seemed like it was worth setting a precedent for
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     public sealed class PatchHeadersReader
     {
