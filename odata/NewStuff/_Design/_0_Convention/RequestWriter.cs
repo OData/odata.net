@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace NewStuff._Design._0_Convention
+﻿namespace NewStuff._Design._0_Convention
 {
-    internal class RequestWriter
+    public sealed class RequestWriter
     {
+        private RequestWriter()
+        {
+        }
     }
 }
