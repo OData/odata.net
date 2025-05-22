@@ -98,7 +98,7 @@
                 return new User(displayName, directReports, id);
             }
 
-            public IGetCollectionClr<User> Expand<TProperty>(Expression<Func<User, Property<TProperty>>> expander)
+            public IGetCollectionClr<User> Expand<TProperty>(Expression<Func<User, Property<TProperty>>> expander) //// TODO this could have `navigationproperty` even
             {
                 throw new NotImplementedException();
             }
