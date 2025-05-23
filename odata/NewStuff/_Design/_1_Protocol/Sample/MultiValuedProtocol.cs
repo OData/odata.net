@@ -90,8 +90,8 @@
                 //// TODO not writing any headers...
                 var getBodyWriter = getHeaderWriter.Commit();
 
-                // send the request
-                var getResponseReader = getBodyWriter.Commit();
+                // wait for a response
+                var getResponseReader = getBodyWriter.Commit(); //// TODO this should be async
 
                 throw new Exception("tODO");
             }
@@ -103,12 +103,35 @@
 
             private static IEnumerable<Tuple<string, string?>> Split(string queryString, int currentIndex)
             {
-                var delimiterIndex = queryString.IndexOf('&', currentIndex);
-                if (delimiterIndex == -1)
+                while (true)
                 {
-                }
+                    if (currentIndex >= queryString.Length)
+                    {
+                        yield break;
+                    }
 
-                throw new Exception("tODO");
+                    var queryOptionDelimiterIndex = queryString.IndexOf('&', currentIndex);
+                    if (queryOptionDelimiterIndex == -1)
+                    {
+                        queryOptionDelimiterIndex = queryString.Length;
+                    }
+
+                    var parameterNameDelimiterIndex = queryString.IndexOf('=', currentIndex, queryOptionDelimiterIndex - currentIndex + 1);
+                    if (parameterNameDelimiterIndex == -1)
+                    {
+                        yield return Tuple.Create(
+                            queryString.Substring(currentIndex, parameterNameDelimiterIndex - currentIndex + 1),
+                            (string?)null);
+                    }
+                    else
+                    {
+                        yield return Tuple.Create(
+                            queryString.Substring(currentIndex, parameterNameDelimiterIndex - currentIndex + 1),
+                            (string?)queryString.Substring(parameterNameDelimiterIndex + 1, queryOptionDelimiterIndex - parameterNameDelimiterIndex));
+                    }
+
+                    currentIndex = queryOptionDelimiterIndex + 1;
+                }
             }
 
             public IGetMultiValuedProtocol Expand(object expander)
