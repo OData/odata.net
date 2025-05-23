@@ -181,7 +181,6 @@
 
     public interface IQueryParameterWriter<T>
     {
-        IQueryOptionWriter<T> Commit();
         IQueryValueWriter<T> Commit(QueryParameter queryParameter);
     }
 
@@ -192,11 +191,6 @@
         }
 
         public IQueryValueWriter<T> Commit(QueryParameter queryParameter)
-        {
-            throw new NotImplementedException("TODO");
-        }
-
-        public IQueryOptionWriter<T> Commit()
         {
             throw new NotImplementedException("TODO");
         }

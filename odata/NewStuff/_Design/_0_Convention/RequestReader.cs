@@ -200,9 +200,12 @@
 
     public sealed class UriPort
     {
-        private UriPort()
+        internal UriPort(int port)
         {
+            Port = port;
         }
+
+        internal int Port { get; } //// TODO is this the correct structure?
     }
 
     public interface IUriPathSegmentReader<T>
@@ -228,9 +231,12 @@
 
     public sealed class UriPathSegment
     {
-        private UriPathSegment()
+        internal UriPathSegment(string segment)
         {
+            Segment = segment;
         }
+
+        internal string Segment { get; } //// TODO do you like this just being a string? aren't there illegal characters?
     }
 
     public abstract class PathSegmentToken<T>

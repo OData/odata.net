@@ -1,7 +1,7 @@
 ﻿namespace NewStuff._Design._1_Protocol.Sample
 {
     using System;
-
+    using System.Collections.Generic;
     using NewStuff._Design._0_Convention;
 
     public sealed class MultiValuedProtocol : IMultiValuedProtocol
@@ -45,7 +45,45 @@
                 var schemeWriter = uriWriter.Commit();
                 var domainWriter = schemeWriter.Commit(new UriScheme(this.multiValuedUri.Scheme));
                 var portWriter = domainWriter.Commit(new UriDomain(this.multiValuedUri.DnsSafeHost));
-                portWriter.Commit()
+
+                IUriPathSegmentWriter<GetHeaderWriter> uriPathSegmentWriter;
+                if (this.multiValuedUri.IsDefaultPort)
+                {
+                    uriPathSegmentWriter = portWriter.Commit();
+                }
+                else
+                {
+                    uriPathSegmentWriter = portWriter.Commit(new UriPort(this.multiValuedUri.Port));
+                }
+
+                foreach (var pathSegment in this.multiValuedUri.Segments)
+                {
+                    uriPathSegmentWriter = uriPathSegmentWriter.Commit(new UriPathSegment(pathSegment));
+                }
+
+                var queryOptionWriter = uriPathSegmentWriter.Commit();
+                foreach (var queryOption in Split(this.multiValuedUri.Query))
+                {
+                    var parameterWriter = queryOptionWriter.CommitParameter();
+                    ////parameterWriter.Commit()
+                }
+
+                throw new Exception("tODO");
+            }
+
+            private static IEnumerable<Tuple<string, string?>> Split(string queryString)
+            {
+                return Split(queryString, 0);
+            }
+
+            private static IEnumerable<Tuple<string, string?>> Split(string queryString, int currentIndex)
+            {
+                var delimiterIndex = queryString.IndexOf('&', currentIndex);
+                if (delimiterIndex == -1)
+                {
+                }
+
+                throw new Exception("tODO");
             }
 
             public IGetMultiValuedProtocol Expand(object expander)
