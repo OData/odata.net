@@ -131,13 +131,124 @@
 
     public interface IOdataContextReader
     {
+        OdataContext OdataContext { get; }
+
+        IGetResponseBodyReader Next();
+    }
+
+    public sealed class OdataContext
+    {
+        private OdataContext()
+        {
+        }
     }
 
     public interface INextLinkReader
     {
+        NextLink NextLink { get; }
+
+        IGetResponseBodyReader Next();
+    }
+
+    public sealed class NextLink
+    {
+        private NextLink()
+        {
+        }
     }
 
     public interface IPropertyReader
+    {
+        IPropertyNameReader Next();
+    }
+
+    public interface IPropertyNameReader
+    {
+        PropertyName PropertyName { get; }
+
+        IPropertyValueReader Next();
+    }
+
+    public sealed class PropertyName
+    {
+        private PropertyName()
+        {
+        }
+    }
+
+    public interface IPropertyValueReader
+    {
+        PropertyValueToken Next();
+    }
+
+    public abstract class PropertyValueToken
+    {
+        private PropertyValueToken()
+        {
+        }
+
+        public sealed class Primitive : PropertyValueToken
+        {
+            private Primitive()
+            {
+            }
+
+            public IPrimitivePropertyValueReader PrimitivePropertyValueReader { get; }
+        }
+
+        public sealed class Complex : PropertyValueToken
+        {
+            private Complex()
+            {
+            }
+
+            public IComplexPropertyValueReader ComplexPropertyValueReader { get; }
+        }
+
+        public sealed class MultiValued : PropertyValueToken
+        {
+            private MultiValued()
+            {
+            }
+
+            public IMultiValuedPropertyValueReader MultiValuedPropertyValueReader { get; }
+        }
+
+        public sealed class Null : PropertyValueToken
+        {
+            private Null()
+            {
+            }
+
+            public INullPropertyValueReader NullPropertyValueReader { get; }
+        }
+    }
+
+    public interface IPrimitivePropertyValueReader
+    {
+        PrimitivePropertyValue PrimitivePropertyValue { get; }
+
+        IGetResponseBodyReader Next();
+    }
+
+    public sealed class PrimitivePropertyValue
+    {
+        private PrimitivePropertyValue()
+        {
+        }
+
+        //// TODO this should probably be a "token" and have different members for each kind of primitive property; or maybe you can't do that without the edm model so this isn't the right place?
+    }
+
+    public interface IComplexPropertyValueReader
+    {
+    }
+
+    public interface IMultiValuedPropertyValueReader
+    {
+    }
+
+    public interface INullPropertyValueReader
     {
     }
 
