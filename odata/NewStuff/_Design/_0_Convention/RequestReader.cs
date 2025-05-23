@@ -32,7 +32,7 @@
             {
             }
 
-            public GetRequestReader GetRequestReader { get; }
+            public IGetRequestReader GetRequestReader { get; }
         }
 
         public sealed class Post : RequestToken
@@ -56,7 +56,7 @@
 
     public interface IGetRequestReader
     {
-        UriReader<GetHeaderReader> Next();
+        IUriReader<GetHeaderReader> Next();
     }
 
     public sealed class GetRequestReader : IGetRequestReader
@@ -65,7 +65,7 @@
         {
         }
 
-        public UriReader<GetHeaderReader> Next()
+        public IUriReader<GetHeaderReader> Next()
         {
             throw new NotImplementedException("TODO");
         }
@@ -73,7 +73,7 @@
 
     public interface IUriReader<T>
     {
-        UriSchemeReader<T> Next();
+        IUriSchemeReader<T> Next();
     }
 
     public sealed class UriReader<T> : IUriReader<T>
@@ -82,7 +82,7 @@
         {
         }
 
-        public UriSchemeReader<T> Next()
+        public IUriSchemeReader<T> Next()
         {
             throw new NotImplementedException("TODO");
         }
@@ -92,7 +92,7 @@
     {
         UriScheme UriScheme { get; }
 
-        UriDomainReader<T> Next();
+        IUriDomainReader<T> Next();
     }
 
     public sealed class UriSchemeReader<T> : IUriSchemeReader<T>
@@ -104,7 +104,7 @@
 
         public UriScheme UriScheme { get; }
 
-        public UriDomainReader<T> Next()
+        public IUriDomainReader<T> Next()
         {
             throw new NotImplementedException("TODO");
         }
@@ -121,7 +121,7 @@
     {
         UriDomain UriDomain { get; }
 
-        UriPortReader<T> Next();
+        IUriPortReader<T> Next();
     }
 
     public sealed class UriDomainReader<T> : IUriDomainReader<T>
@@ -132,7 +132,7 @@
 
         public UriDomain UriDomain { get; }
 
-        public UriPortReader<T> Next()
+        public IUriPortReader<T> Next()
         {
             throw new NotImplementedException("TODO");
         }
@@ -150,7 +150,7 @@
     {
         UriPort UriPort { get; }
 
-        UriPathSegmentReader<T> Next();
+        IUriPathSegmentReader<T> Next();
     }
 
     public sealed class UriPortReader<T> : IUriPortReader<T>
@@ -161,7 +161,7 @@
 
         public UriPort UriPort { get; }
 
-        public UriPathSegmentReader<T> Next()
+        public IUriPathSegmentReader<T> Next()
         {
             throw new NotImplementedException("TODO");
         }
@@ -214,7 +214,7 @@
             {
             }
 
-            public UriPathSegmentReader<T> UriPathSegmentReader { get; }
+            public IUriPathSegmentReader<T> UriPathSegmentReader { get; }
         }
 
         public sealed class QueryOption : PathSegmentToken<T>
@@ -223,7 +223,7 @@
             {
             }
 
-            public QueryOptionReader<T> QueryOptionsReader { get; }
+            public IQueryOptionReader<T> QueryOptionsReader { get; }
         }
     }
 
@@ -256,7 +256,7 @@
             {
             }
 
-            public QueryParameterReader<T> QueryParameterReader { get; }
+            public IQueryParameterReader<T> QueryParameterReader { get; }
         }
 
         public sealed class Fragment : QueryOptionToken<T>
@@ -265,7 +265,7 @@
             {
             }
 
-            public FragmentReader<T> FragmentReader { get; }
+            public IFragmentReader<T> FragmentReader { get; }
         }
     }
 
@@ -309,7 +309,7 @@
             {
             }
 
-            public QueryValueReader<T> QueryValueReader { get; }
+            public IQueryValueReader<T> QueryValueReader { get; }
         }
 
         public sealed class QueryOption : QueryParameterToken<T>
@@ -318,7 +318,7 @@
             {
             }
 
-            public QueryOptionReader<T> QueryOptionReader { get; }
+            public IQueryOptionReader<T> QueryOptionReader { get; }
         }
 
         //// TODO would it make sense to have a "fragment" member? because currently (the scenario being you have a queryparameter (i.e. no value provided) that's immediately followed by the fragment) what happens is you get parameter reader, you call next to get a queryoptionreader, you call next to get a fragment reader; you could skip the intermediate queryoptionreader.next...
@@ -328,7 +328,7 @@
     {
         QueryValue QueryValue { get; }
 
-        QueryOptionReader<T> Next();
+        IQueryOptionReader<T> Next();
     }
 
     public sealed class QueryValueReader<T> : IQueryValueReader<T>
@@ -339,7 +339,7 @@
 
         public QueryValue QueryValue { get; }
 
-        public QueryOptionReader<T> Next()
+        public IQueryOptionReader<T> Next()
         {
             throw new NotImplementedException("TODO");
         }
@@ -431,7 +431,7 @@
             {
             }
 
-            public OdataMaxVersionHeaderReader OdataMaxVersionHeaderReader { get; }
+            public IOdataMaxVersionHeaderReader OdataMaxVersionHeaderReader { get; }
         }
 
         public sealed class OdataMaxPageSize : GetHeaderToken
@@ -440,7 +440,7 @@
             {
             }
 
-            public OdataMaxPageSizeHeaderReader OdataMaxPageSizeHeaderReader { get; }
+            public IOdataMaxPageSizeHeaderReader OdataMaxPageSizeHeaderReader { get; }
         }
 
         public sealed class Custom : GetHeaderToken
@@ -449,7 +449,7 @@
             {
             }
 
-            public CustomHeaderReader CustomHeaderReader { get; }
+            public ICustomHeaderReader CustomHeaderReader { get; }
         }
 
         public sealed class GetBody : GetHeaderToken
@@ -458,7 +458,7 @@
             {
             }
 
-            public GetBodyReader GetBodyReader { get; }
+            public IGetBodyReader GetBodyReader { get; }
         }
     }
 
@@ -466,7 +466,7 @@
     {
         OdataVersion OdataVersion { get; }
 
-        GetHeaderReader Next();
+        IGetHeaderReader Next();
     }
 
     public sealed class OdataMaxVersionHeaderReader : IOdataMaxVersionHeaderReader
@@ -477,7 +477,7 @@
 
         public OdataVersion OdataVersion { get; }
 
-        public GetHeaderReader Next()
+        public IGetHeaderReader Next()
         {
             throw new NotImplementedException("TODO");
         }
@@ -496,7 +496,7 @@
     {
         OdataMaxPageSize OdataMaxPageSize { get; }
 
-        GetHeaderReader Next();
+        IGetHeaderReader Next();
     }
 
     public sealed class OdataMaxPageSizeHeaderReader : IOdataMaxPageSizeHeaderReader
@@ -507,7 +507,7 @@
 
         public OdataMaxPageSize OdataMaxPageSize { get; }
 
-        public GetHeaderReader Next()
+        public IGetHeaderReader Next()
         {
             throw new NotImplementedException("TODO");
         }
@@ -560,7 +560,7 @@
             {
             }
 
-            public HeaderFieldValueReader HeaderFieldValueReader { get; }
+            public IHeaderFieldValueReader HeaderFieldValueReader { get; }
         }
 
         public sealed class GetHeader : CustomHeaderToken
@@ -569,7 +569,7 @@
             {
             }
 
-            public GetHeaderReader GetHeaderReader { get; }
+            public IGetHeaderReader GetHeaderReader { get; }
         }
     }
 
@@ -577,7 +577,7 @@
     {
         HeaderFieldValue HeaderFieldValue { get; }
 
-        GetHeaderReader Next();
+        IGetHeaderReader Next();
     }
 
     public sealed class HeaderFieldValueReader : IHeaderFieldValueReader
@@ -588,7 +588,7 @@
 
         public HeaderFieldValue HeaderFieldValue { get; }
 
-        public GetHeaderReader Next()
+        public IGetHeaderReader Next()
         {
             throw new NotImplementedException("TODO");
         }
