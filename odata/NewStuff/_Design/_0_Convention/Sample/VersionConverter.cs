@@ -96,6 +96,10 @@
             {
                 Convert(fragment.FragmentReader, queryOptionWriter.CommitFragment());
             }
+            else if (queryOptionToken is QueryOptionToken<GetHeaderReader>.Headers headers)
+            {
+                Convert(headers.HeaderReader, queryOptionWriter.Commit());
+            }
             else
             {
                 throw new Exception("TODO implement visitor");

@@ -304,6 +304,15 @@
 
             public IFragmentReader<T> FragmentReader { get; }
         }
+
+        public sealed class Headers : QueryOptionToken<T>
+        {
+            private Headers()
+            {
+            }
+
+            public T HeaderReader { get; } //// TODO this name doesn't really make sense given the generic type parameter
+        }
     }
 
     public interface IQueryParameterReader<T>
@@ -329,9 +338,12 @@
 
     public sealed class QueryParameter
     {
-        private QueryParameter()
+        internal QueryParameter(string name)
         {
+            Name = name;
         }
+
+        internal string Name { get; } //// TODO is this ok? illegal characters? do you want to differentiate between system options and custom options?
     }
 
     public abstract class QueryParameterToken<T>
@@ -384,9 +396,12 @@
 
     public sealed class QueryValue
     {
-        private QueryValue()
+        internal QueryValue(string value)
         {
+            Value = value;
         }
+
+        internal string Value { get; } //// TODO illegal characters? parsing of system options?
     }
 
     public interface IFragmentReader<T>
@@ -412,9 +427,12 @@
 
     public sealed class Fragment
     {
-        private Fragment()
+        internal Fragment(string value)
         {
+            Value = value;
         }
+
+        internal string Value { get; } //// TODO do you need more structure here?
     }
 
 

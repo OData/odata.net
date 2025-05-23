@@ -46,7 +46,7 @@
                 var domainWriter = schemeWriter.Commit(new UriScheme(this.multiValuedUri.Scheme));
                 var portWriter = domainWriter.Commit(new UriDomain(this.multiValuedUri.DnsSafeHost));
 
-                IUriPathSegmentWriter<GetHeaderWriter> uriPathSegmentWriter;
+                IUriPathSegmentWriter<IGetHeaderWriter> uriPathSegmentWriter;
                 if (this.multiValuedUri.IsDefaultPort)
                 {
                     uriPathSegmentWriter = portWriter.Commit();
@@ -65,8 +65,33 @@
                 foreach (var queryOption in Split(this.multiValuedUri.Query))
                 {
                     var parameterWriter = queryOptionWriter.CommitParameter();
-                    ////parameterWriter.Commit()
+                    var valueWriter = parameterWriter.Commit(new QueryParameter(queryOption.Item1));
+                    if (queryOption.Item2 == null)
+                    {
+                        queryOptionWriter = valueWriter.Commit();
+                    }
+                    else
+                    {
+                        queryOptionWriter = valueWriter.Commit(new QueryValue(queryOption.Item2));
+                    }
                 }
+
+                IGetHeaderWriter getHeaderWriter;
+                if (string.IsNullOrEmpty(this.multiValuedUri.Fragment))
+                {
+                    getHeaderWriter = queryOptionWriter.Commit();
+                }
+                else
+                {
+                    var fragmentWriter = queryOptionWriter.CommitFragment();
+                    getHeaderWriter = fragmentWriter.Commit(new Fragment(this.multiValuedUri.Fragment));
+                }
+
+                //// TODO not writing any headers...
+                var getBodyWriter = getHeaderWriter.Commit();
+
+                // send the request
+                var getResponseReader = getBodyWriter.Commit();
 
                 throw new Exception("tODO");
             }

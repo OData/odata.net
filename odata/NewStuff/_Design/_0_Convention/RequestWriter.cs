@@ -33,7 +33,7 @@
 
     public interface IGetRequestWriter
     {
-        IUriWriter<GetHeaderWriter> Commit();
+        IUriWriter<IGetHeaderWriter> Commit();
     }
 
     public sealed class GetRequestWriter : IGetRequestWriter
@@ -42,7 +42,7 @@
         {
         }
 
-        public IUriWriter<GetHeaderWriter> Commit()
+        public IUriWriter<IGetHeaderWriter> Commit()
         {
             throw new NotImplementedException("TODO");
         }
@@ -158,6 +158,7 @@
 
     public interface IQueryOptionWriter<T>
     {
+        T Commit();
         IFragmentWriter<T> CommitFragment();
         IQueryParameterWriter<T> CommitParameter();
     }
@@ -176,6 +177,11 @@
         public IFragmentWriter<T> CommitFragment()
         {
             throw new NotImplementedException("TODO");
+        }
+
+        public T Commit()
+        {
+            throw new NotImplementedException();
         }
     }
 
