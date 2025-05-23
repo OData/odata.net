@@ -2,176 +2,228 @@
 {
     using System;
 
-    public sealed class RequestWriter
+    public interface IRequestWriter
+    {
+        IGetRequestWriter CommitGet();
+        IPatchRequestWriter CommitPatch();
+        IPostRequestWriter CommitPost();
+    }
+
+    public sealed class RequestWriter : IRequestWriter
     {
         private RequestWriter()
         {
         }
 
-        public GetRequestWriter CommitGet()
+        public IGetRequestWriter CommitGet()
         {
             throw new NotImplementedException("TODO");
         }
 
-        public PatchRequestWriter CommitPatch()
+        public IPatchRequestWriter CommitPatch()
         {
             throw new NotImplementedException("TODO");
         }
 
-        public PostRequestWriter CommitPost()
+        public IPostRequestWriter CommitPost()
         {
             throw new NotImplementedException("TODO");
         }
     }
 
-    public sealed class GetRequestWriter
+    public interface IGetRequestWriter
+    {
+        IUriWriter<GetHeaderWriter> Commit();
+    }
+
+    public sealed class GetRequestWriter : IGetRequestWriter
     {
         private GetRequestWriter()
         {
         }
 
-        public UriWriter<GetHeaderWriter> Commit()
+        public IUriWriter<GetHeaderWriter> Commit()
         {
             throw new NotImplementedException("TODO");
         }
     }
 
-    public sealed class PatchRequestWriter
+    public interface IPatchRequestWriter
     {
-        private PatchRequestWriter()
-        {
-        }
-
         //// TODO
     }
 
-    public sealed class PostRequestWriter
+    public interface IPostRequestWriter
     {
-        private PostRequestWriter()
-        {
-        }
-        
         //// TODO
     }
 
-    public sealed class UriWriter<T>
+    public interface IUriWriter<T>
+    {
+        IUriSchemeWriter<T> Commit();
+    }
+
+    public sealed class UriWriter<T> : IUriWriter<T>
     {
         private UriWriter()
         {
         }
 
-        public UriSchemeWriter<T> Commit()
+        public IUriSchemeWriter<T> Commit()
         {
             throw new NotImplementedException("TODO");
         }
     }
 
+    public interface IUriSchemeWriter<T>
+    {
+        IUriDomainWriter<T> Commit(UriScheme uriScheme);
+    }
 
-    public sealed class UriSchemeWriter<T>
+    public sealed class UriSchemeWriter<T> : IUriSchemeWriter<T>
     {
         private UriSchemeWriter()
         {
         }
 
-        public UriDomainWriter<T> Commit(UriScheme uriScheme) //// TODO i can't tell if this type should be committed in its writer, or in the "previous" writer (i.e. should this commit take a domain or a scheme?)
+        public IUriDomainWriter<T> Commit(UriScheme uriScheme) //// TODO i can't tell if this type should be committed in its writer, or in the "previous" writer (i.e. should this commit take a domain or a scheme?)
         {
             throw new NotImplementedException("TODO");
         }
     }
 
-    public sealed class UriDomainWriter<T>
+    public interface IUriDomainWriter<T>
+    {
+        IUriPortWriter<T> Commit(UriDomain uriDomain);
+    }
+
+    public sealed class UriDomainWriter<T> : IUriDomainWriter<T>
     {
         private UriDomainWriter()
         {
         }
 
-        public UriPortWriter<T> Commit(UriDomain uriDomain)
+        public IUriPortWriter<T> Commit(UriDomain uriDomain)
         {
             throw new NotImplementedException("TODO");
         }
     }
 
-    public sealed class UriPortWriter<T>
+    public interface IUriPortWriter<T>
+    {
+        IUriPathSegmentWriter<T> Commit(UriPort uriPort);
+    }
+
+    public sealed class UriPortWriter<T> : IUriPortWriter<T>
     {
         private UriPortWriter()
         {
         }
 
-        public UriPathSegmentWriter<T> Commit(UriPort uriPort)
+        public IUriPathSegmentWriter<T> Commit(UriPort uriPort)
         {
             throw new NotImplementedException("TODO");
         }
     }
 
-    public sealed class UriPathSegmentWriter<T>
+    public interface IUriPathSegmentWriter<T>
+    {
+        IQueryOptionWriter<T> Commit();
+        IUriPathSegmentWriter<T> Commit(UriPathSegment uriPathSegment);
+    }
+
+    public sealed class UriPathSegmentWriter<T> : IUriPathSegmentWriter<T>
     {
         private UriPathSegmentWriter()
         {
         }
 
-        public UriPathSegmentWriter<T> Commit(UriPathSegment uriPathSegment)
+        public IUriPathSegmentWriter<T> Commit(UriPathSegment uriPathSegment)
         {
             throw new NotImplementedException("TODO");
         }
 
-        public QueryOptionWriter<T> Commit()
+        public IQueryOptionWriter<T> Commit()
         {
             throw new NotImplementedException("TODO");
         }
     }
 
-    public sealed class QueryOptionWriter<T>
+    public interface IQueryOptionWriter<T>
+    {
+        IFragmentWriter<T> CommitFragment();
+        IQueryParameterWriter<T> CommitParameter();
+    }
+
+    public sealed class QueryOptionWriter<T> : IQueryOptionWriter<T>
     {
         private QueryOptionWriter()
         {
         }
 
-        public QueryParameterWriter<T> CommitParameter()
+        public IQueryParameterWriter<T> CommitParameter()
         {
             throw new NotImplementedException("TODO");
         }
 
-        public FragmentWriter<T> CommitFragment()
+        public IFragmentWriter<T> CommitFragment()
         {
             throw new NotImplementedException("TODO");
         }
     }
 
-    public sealed class QueryParameterWriter<T>
+    public interface IQueryParameterWriter<T>
+    {
+        IQueryOptionWriter<T> Commit();
+        IQueryValueWriter<T> Commit(QueryParameter queryParameter);
+    }
+
+    public sealed class QueryParameterWriter<T> : IQueryParameterWriter<T>
     {
         private QueryParameterWriter()
         {
         }
 
-        public QueryValueWriter<T> Commit(QueryParameter queryParameter)
+        public IQueryValueWriter<T> Commit(QueryParameter queryParameter)
         {
             throw new NotImplementedException("TODO");
         }
 
-        public QueryOptionWriter<T> Commit()
+        public IQueryOptionWriter<T> Commit()
         {
             throw new NotImplementedException("TODO");
         }
     }
 
-    public sealed class QueryValueWriter<T>
+    public interface IQueryValueWriter<T>
+    {
+        IQueryOptionWriter<T> Commit();
+        IQueryOptionWriter<T> Commit(QueryValue queryValue);
+    }
+
+    public sealed class QueryValueWriter<T> : IQueryValueWriter<T>
     {
         private QueryValueWriter()
         {
         }
 
-        public QueryOptionWriter<T> Commit()
+        public IQueryOptionWriter<T> Commit()
         {
             throw new NotImplementedException("TODO");
         }
 
-        public QueryOptionWriter<T> Commit(QueryValue queryValue)
+        public IQueryOptionWriter<T> Commit(QueryValue queryValue)
         {
             throw new NotImplementedException("TODO");
         }
     }
 
-    public sealed class FragmentWriter<T>
+    public interface IFragmentWriter<T>
+    {
+        T Commit(Fragment fragment);
+    }
+
+    public sealed class FragmentWriter<T> : IFragmentWriter<T>
     {
         private FragmentWriter()
         {
@@ -207,81 +259,110 @@
 
 
 
-    public sealed class GetHeaderWriter
+    public interface IGetHeaderWriter
+    {
+        IGetBodyWriter Commit();
+        ICustomHeaderWriter CommitCustomHeader();
+        IOdataMaxPageSizeHeaderWriter CommitOdataMaxPageSize();
+        IOdataMaxVersionHeaderWriter CommitOdataMaxVersion();
+    }
+
+    public sealed class GetHeaderWriter : IGetHeaderWriter
     {
         private GetHeaderWriter()
         {
         }
 
-        public OdataMaxVersionHeaderWriter CommitOdataMaxVersion()
+        public IOdataMaxVersionHeaderWriter CommitOdataMaxVersion()
         {
             throw new NotImplementedException("TODO");
         }
 
-        public OdataMaxPageSizeHeaderWriter CommitOdataMaxPageSize()
+        public IOdataMaxPageSizeHeaderWriter CommitOdataMaxPageSize()
         {
             throw new NotImplementedException("TODO");
         }
 
-        public CustomHeaderWriter CommitCustomHeader()
+        public ICustomHeaderWriter CommitCustomHeader()
         {
             throw new NotImplementedException("TODO");
         }
 
-        public GetBodyWriter Commit()
+        public IGetBodyWriter Commit()
         {
             throw new NotImplementedException("TODO");
         }
     }
 
-    public sealed class OdataMaxVersionHeaderWriter
+    public interface IOdataMaxVersionHeaderWriter
+    {
+        IGetHeaderWriter Commit(OdataVersion odataVersion);
+    }
+
+    public sealed class OdataMaxVersionHeaderWriter : IOdataMaxVersionHeaderWriter
     {
         private OdataMaxVersionHeaderWriter()
         {
         }
 
-        public GetHeaderWriter Commit(OdataVersion odataVersion)
+        public IGetHeaderWriter Commit(OdataVersion odataVersion)
         {
             throw new NotImplementedException("TODO");
         }
     }
 
-    public sealed class OdataMaxPageSizeHeaderWriter
+    public interface IOdataMaxPageSizeHeaderWriter
+    {
+        IGetHeaderWriter Commit(OdataMaxPageSize odataMaxPageSize);
+    }
+
+    public sealed class OdataMaxPageSizeHeaderWriter : IOdataMaxPageSizeHeaderWriter
     {
         private OdataMaxPageSizeHeaderWriter()
         {
         }
 
-        public GetHeaderWriter Commit(OdataMaxPageSize odataMaxPageSize)
+        public IGetHeaderWriter Commit(OdataMaxPageSize odataMaxPageSize)
         {
             throw new NotImplementedException("TODO");
         }
     }
 
-    public sealed class CustomHeaderWriter
+    public interface ICustomHeaderWriter
+    {
+        IHeaderFieldValueWriter Commit(HeaderFieldName headerFieldName);
+    }
+
+    public sealed class CustomHeaderWriter : ICustomHeaderWriter
     {
         private CustomHeaderWriter()
         {
         }
 
-        public HeaderFieldValueWriter Commit(HeaderFieldName headerFieldName)
+        public IHeaderFieldValueWriter Commit(HeaderFieldName headerFieldName)
         {
             throw new NotImplementedException("TODO");
         }
     }
 
-    public sealed class HeaderFieldValueWriter
+    public interface IHeaderFieldValueWriter
+    {
+        IGetHeaderWriter Commit();
+        IGetHeaderWriter Commit(HeaderFieldValue headerFieldValue);
+    }
+
+    public sealed class HeaderFieldValueWriter : IHeaderFieldValueWriter
     {
         private HeaderFieldValueWriter()
         {
         }
 
-        public GetHeaderWriter Commit(HeaderFieldValue headerFieldValue)
+        public IGetHeaderWriter Commit(HeaderFieldValue headerFieldValue)
         {
             throw new NotImplementedException("TODO");
         }
 
-        public GetHeaderWriter Commit()
+        public IGetHeaderWriter Commit()
         {
             throw new NotImplementedException("TODO");
         }
@@ -311,12 +392,12 @@
 
 
 
+    public interface IGetBodyWriter
+    {
+        string Commit();
+    }
 
-
-
-
-
-    public sealed class GetBodyWriter
+    public sealed class GetBodyWriter : IGetBodyWriter
     {
         private GetBodyWriter()
         {
