@@ -3,7 +3,12 @@
     using System;
     using System.IO;
 
-    public sealed class RequestReader
+    public interface IRequestReader
+    {
+        RequestToken Next();
+    }
+
+    public sealed class RequestReader : IRequestReader
     {
         private RequestReader()
         {
@@ -49,7 +54,12 @@
         }
     }
 
-    public sealed class GetRequestReader
+    public interface IGetRequestReader
+    {
+        UriReader<GetHeaderReader> Next();
+    }
+
+    public sealed class GetRequestReader : IGetRequestReader
     {
         private GetRequestReader()
         {
@@ -61,7 +71,12 @@
         }
     }
 
-    public sealed class UriReader<T>
+    public interface IUriReader<T>
+    {
+        UriSchemeReader<T> Next();
+    }
+
+    public sealed class UriReader<T> : IUriReader<T>
     {
         private UriReader()
         {
@@ -73,7 +88,14 @@
         }
     }
 
-    public sealed class UriSchemeReader<T>
+    public interface IUriSchemeReader<T>
+    {
+        UriScheme UriScheme { get; }
+
+        UriDomainReader<T> Next();
+    }
+
+    public sealed class UriSchemeReader<T> : IUriSchemeReader<T>
     {
         private UriSchemeReader()
         {
@@ -95,7 +117,14 @@
         }
     }
 
-    public sealed class UriDomainReader<T>
+    public interface IUriDomainReader<T>
+    {
+        UriDomain UriDomain { get; }
+
+        UriPortReader<T> Next();
+    }
+
+    public sealed class UriDomainReader<T> : IUriDomainReader<T>
     {
         private UriDomainReader()
         {
@@ -117,7 +146,14 @@
         }
     }
 
-    public sealed class UriPortReader<T>
+    public interface IUriPortReader<T>
+    {
+        UriPort UriPort { get; }
+
+        UriPathSegmentReader<T> Next();
+    }
+
+    public sealed class UriPortReader<T> : IUriPortReader<T>
     {
         private UriPortReader()
         {
@@ -138,7 +174,14 @@
         }
     }
 
-    public sealed class UriPathSegmentReader<T>
+    public interface IUriPathSegmentReader<T>
+    {
+        UriPathSegment UriPathSegment { get; }
+
+        PathSegmentToken<T> Next();
+    }
+
+    public sealed class UriPathSegmentReader<T> : IUriPathSegmentReader<T>
     {
         private UriPathSegmentReader()
         {
@@ -184,7 +227,12 @@
         }
     }
 
-    public sealed class QueryOptionReader<T>
+    public interface IQueryOptionReader<T>
+    {
+        QueryOptionToken<T> Next();
+    }
+
+    public sealed class QueryOptionReader<T> : IQueryOptionReader<T>
     {
         private QueryOptionReader()
         {
@@ -221,7 +269,14 @@
         }
     }
 
-    public sealed class QueryParameterReader<T>
+    public interface IQueryParameterReader<T>
+    {
+        QueryParameter QueryParameter { get; }
+
+        QueryParameterToken<T> Next();
+    }
+
+    public sealed class QueryParameterReader<T> : IQueryParameterReader<T>
     {
         private QueryParameterReader()
         {
@@ -269,7 +324,14 @@
         //// TODO would it make sense to have a "fragment" member? because currently (the scenario being you have a queryparameter (i.e. no value provided) that's immediately followed by the fragment) what happens is you get parameter reader, you call next to get a queryoptionreader, you call next to get a fragment reader; you could skip the intermediate queryoptionreader.next...
     }
 
-    public sealed class QueryValueReader<T>
+    public interface IQueryValueReader<T>
+    {
+        QueryValue QueryValue { get; }
+
+        QueryOptionReader<T> Next();
+    }
+
+    public sealed class QueryValueReader<T> : IQueryValueReader<T>
     {
         private QueryValueReader()
         {
@@ -290,7 +352,14 @@
         }
     }
 
-    public sealed class FragmentReader<T>
+    public interface IFragmentReader<T>
+    {
+        Fragment Fragment { get; }
+
+        T Next();
+    }
+
+    public sealed class FragmentReader<T> : IFragmentReader<T>
     {
         private FragmentReader()
         {
@@ -332,7 +401,13 @@
 
 
 
-    public sealed class GetHeaderReader
+
+    public interface IGetHeaderReader
+    {
+        GetHeaderToken Next();
+    }
+
+    public sealed class GetHeaderReader : IGetHeaderReader
     {
         private GetHeaderReader()
         {
@@ -387,7 +462,14 @@
         }
     }
 
-    public sealed class OdataMaxVersionHeaderReader
+    public interface IOdataMaxVersionHeaderReader
+    {
+        OdataVersion OdataVersion { get; }
+
+        GetHeaderReader Next();
+    }
+
+    public sealed class OdataMaxVersionHeaderReader : IOdataMaxVersionHeaderReader
     {
         private OdataMaxVersionHeaderReader()
         {
@@ -410,7 +492,14 @@
         //// TODO this should be a discriminated union with like an "unknown" member of something
     }
 
-    public sealed class OdataMaxPageSizeHeaderReader
+    public interface IOdataMaxPageSizeHeaderReader
+    {
+        OdataMaxPageSize OdataMaxPageSize { get; }
+
+        GetHeaderReader Next();
+    }
+
+    public sealed class OdataMaxPageSizeHeaderReader : IOdataMaxPageSizeHeaderReader
     {
         private OdataMaxPageSizeHeaderReader()
         {
@@ -431,7 +520,14 @@
         }
     }
 
-    public sealed class CustomHeaderReader
+    public interface ICustomHeaderReader
+    {
+        HeaderFieldName HeaderFieldName { get; }
+
+        CustomHeaderToken Next();
+    }
+
+    public sealed class CustomHeaderReader : ICustomHeaderReader
     {
         private CustomHeaderReader()
         {
@@ -477,7 +573,14 @@
         }
     }
 
-    public sealed class HeaderFieldValueReader
+    public interface IHeaderFieldValueReader
+    {
+        HeaderFieldValue HeaderFieldValue { get; }
+
+        GetHeaderReader Next();
+    }
+
+    public sealed class HeaderFieldValueReader : IHeaderFieldValueReader
     {
         private HeaderFieldValueReader()
         {
@@ -518,7 +621,16 @@
 
 
 
-    public sealed class GetBodyReader
+
+
+
+
+    public interface IGetBodyReader
+    {
+        GetBody GetBody { get; }
+    }
+
+    public sealed class GetBodyReader : IGetBodyReader
     {
         private GetBodyReader()
         {
@@ -572,31 +684,19 @@
 
 
 
-    public sealed class PatchHeadersReader
+    public interface IPatchHeadersReader
     {
-        private PatchHeadersReader()
-        {
-        }
     }
 
-    public sealed class PatchBodyReader
+    public interface IPatchBodyReader
     {
-        private PatchBodyReader()
-        {
-        }
     }
 
-    public sealed class PostHeadersReader
+    public interface IPostHeadersReader
     {
-        private PostHeadersReader()
-        {
-        }
     }
 
-    public sealed class PostBodyReader
+    public interface IPostBodyReader
     {
-        private PostBodyReader()
-        {
-        }
     }
 }

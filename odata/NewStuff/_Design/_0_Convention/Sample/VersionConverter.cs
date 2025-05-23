@@ -144,7 +144,6 @@
 
         private static void Convert(OdataMaxVersionHeaderReader odataMaxVersionHeaderReader, OdataMaxVersionHeaderWriter odataMaxVersionHeaderWriter)
         {
-
             const OdataVersion newVersion = null!;
 
             Convert(odataMaxVersionHeaderReader.Next(), odataMaxVersionHeaderWriter.Commit(newVersion));
@@ -182,22 +181,6 @@
         {
             getBodyWriter.Commit();
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
