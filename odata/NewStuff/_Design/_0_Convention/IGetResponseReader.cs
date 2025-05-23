@@ -81,5 +81,13 @@
 
     public interface IGetResponseBodyReader
     {
+
+    }
+
+    public abstract class GetResponseBodyToken
+    {
+        private GetResponseBodyToken()
+        {
+        }
     }
 }
