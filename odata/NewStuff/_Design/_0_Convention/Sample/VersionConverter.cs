@@ -4,7 +4,7 @@
 
     public static class VersionConverter
     {
-        public static void Convert(RequestReader requestReader, RequestWriter requestWriter)
+        public static void Convert(IRequestReader requestReader, RequestWriter requestWriter)
         {
             // we are a passthrough serivce and we received a request that we need to send along, but we want to rewrite the version header
 
@@ -27,32 +27,32 @@
             }
         }
 
-        private static void Convert(GetRequestReader getRequestReader, GetRequestWriter getRequestWriter)
+        private static void Convert(IGetRequestReader getRequestReader, GetRequestWriter getRequestWriter)
         {
             Convert(getRequestReader.Next(), getRequestWriter.Commit());
         }
 
-        private static void Convert(UriReader<GetHeaderReader> uriReader, UriWriter<GetHeaderWriter> uriWriter)
+        private static void Convert(IUriReader<GetHeaderReader> uriReader, UriWriter<GetHeaderWriter> uriWriter)
         {
             Convert(uriReader.Next(), uriWriter.Commit());
         }
 
-        private static void Convert(UriSchemeReader<GetHeaderReader> uriSchemeReader, UriSchemeWriter<GetHeaderWriter> uriSchemeWriter)
+        private static void Convert(IUriSchemeReader<GetHeaderReader> uriSchemeReader, UriSchemeWriter<GetHeaderWriter> uriSchemeWriter)
         {
             Convert(uriSchemeReader.Next(), uriSchemeWriter.Commit(uriSchemeReader.UriScheme));
         }
 
-        private static void Convert(UriDomainReader<GetHeaderReader> uriDomainReader, UriDomainWriter<GetHeaderWriter> uriDomainWriter)
+        private static void Convert(IUriDomainReader<GetHeaderReader> uriDomainReader, UriDomainWriter<GetHeaderWriter> uriDomainWriter)
         {
             Convert(uriDomainReader.Next(), uriDomainWriter.Commit(uriDomainReader.UriDomain));
         }
 
-        private static void Convert(UriPortReader<GetHeaderReader> uriPortReader, UriPortWriter<GetHeaderWriter> uriPortWriter)
+        private static void Convert(IUriPortReader<GetHeaderReader> uriPortReader, UriPortWriter<GetHeaderWriter> uriPortWriter)
         {
             Convert(uriPortReader.Next(), uriPortWriter.Commit(uriPortReader.UriPort));
         }
 
-        private static void Convert(UriPathSegmentReader<GetHeaderReader> uriPathSegmentReader, UriPathSegmentWriter<GetHeaderWriter> uriPathSegmentWriter)
+        private static void Convert(IUriPathSegmentReader<GetHeaderReader> uriPathSegmentReader, UriPathSegmentWriter<GetHeaderWriter> uriPathSegmentWriter)
         {
             var nextWriter = uriPathSegmentWriter.Commit(uriPathSegmentReader.UriPathSegment);
 
@@ -71,7 +71,7 @@
             }
         }
 
-        private static void Convert(QueryOptionReader<GetHeaderReader> queryOption, QueryOptionWriter<GetHeaderWriter> queryOptionWriter)
+        private static void Convert(IQueryOptionReader<GetHeaderReader> queryOption, QueryOptionWriter<GetHeaderWriter> queryOptionWriter)
         {
             var queryOptionToken = queryOption.Next();
             if (queryOptionToken is QueryOptionToken<GetHeaderReader>.QueryParameter queryParameter)
@@ -88,7 +88,7 @@
             }
         }
 
-        private static void Convert(QueryParameterReader<GetHeaderReader> queryParameterReader, QueryParameterWriter<GetHeaderWriter> queryParameterWriter)
+        private static void Convert(IQueryParameterReader<GetHeaderReader> queryParameterReader, QueryParameterWriter<GetHeaderWriter> queryParameterWriter)
         {
             var nextWriter = queryParameterWriter.Commit(queryParameterReader.QueryParameter);
 
@@ -107,17 +107,17 @@
             }
         }
 
-        private static void Convert(QueryValueReader<GetHeaderReader> queryValueReader, QueryValueWriter<GetHeaderWriter> queryValueWriter)
+        private static void Convert(IQueryValueReader<GetHeaderReader> queryValueReader, QueryValueWriter<GetHeaderWriter> queryValueWriter)
         {
             Convert(queryValueReader.Next(), queryValueWriter.Commit(queryValueReader.QueryValue));
         }
 
-        private static void Convert(FragmentReader<GetHeaderReader> fragmentReader, FragmentWriter<GetHeaderWriter> fragmentWriter)
+        private static void Convert(IFragmentReader<GetHeaderReader> fragmentReader, FragmentWriter<GetHeaderWriter> fragmentWriter)
         {
             Convert(fragmentReader.Next(), fragmentWriter.Commit(fragmentReader.Fragment));
         }
 
-        private static void Convert(GetHeaderReader getHeaderReader, GetHeaderWriter getHeaderWriter)
+        private static void Convert(IGetHeaderReader getHeaderReader, GetHeaderWriter getHeaderWriter)
         {
             var getHeaderToken = getHeaderReader.Next();
             if (getHeaderToken is GetHeaderToken.OdataMaxVersion odataMaxVersion)
@@ -142,19 +142,19 @@
             }
         }
 
-        private static void Convert(OdataMaxVersionHeaderReader odataMaxVersionHeaderReader, OdataMaxVersionHeaderWriter odataMaxVersionHeaderWriter)
+        private static void Convert(IOdataMaxVersionHeaderReader odataMaxVersionHeaderReader, OdataMaxVersionHeaderWriter odataMaxVersionHeaderWriter)
         {
             const OdataVersion newVersion = null!;
 
             Convert(odataMaxVersionHeaderReader.Next(), odataMaxVersionHeaderWriter.Commit(newVersion));
         }
 
-        private static void Convert(OdataMaxPageSizeHeaderReader odataMaxPageSizeHeaderReader, OdataMaxPageSizeHeaderWriter odataMaxPageSizeHeaderWriter)
+        private static void Convert(IOdataMaxPageSizeHeaderReader odataMaxPageSizeHeaderReader, OdataMaxPageSizeHeaderWriter odataMaxPageSizeHeaderWriter)
         {
             Convert(odataMaxPageSizeHeaderReader.Next(), odataMaxPageSizeHeaderWriter.Commit(odataMaxPageSizeHeaderReader.OdataMaxPageSize));
         }
 
-        private static void Convert(CustomHeaderReader customHeaderReader, CustomHeaderWriter customHeaderWriter)
+        private static void Convert(ICustomHeaderReader customHeaderReader, CustomHeaderWriter customHeaderWriter)
         {
             var nextWriter = customHeaderWriter.Commit(customHeaderReader.HeaderFieldName);
             var customHeaderToken = customHeaderReader.Next();
@@ -172,12 +172,12 @@
             }
         }
 
-        private static void Convert(HeaderFieldValueReader headerFieldValueReader, HeaderFieldValueWriter headerFieldValueWriter)
+        private static void Convert(IHeaderFieldValueReader headerFieldValueReader, HeaderFieldValueWriter headerFieldValueWriter)
         {
             Convert(headerFieldValueReader.Next(), headerFieldValueWriter.Commit(headerFieldValueReader.HeaderFieldValue));
         }
 
-        private static void Convert(GetBodyReader getBodyReader, GetBodyWriter getBodyWriter)
+        private static void Convert(IGetBodyReader getBodyReader, GetBodyWriter getBodyWriter)
         {
             getBodyWriter.Commit();
         }
