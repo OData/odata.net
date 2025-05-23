@@ -268,6 +268,7 @@ namespace Microsoft.OData.Evaluation
             }
 
             var commonEnum = value as Enum;
+            if(commonEnum  != null)
             {
                 return commonEnum.ToString();
             }
