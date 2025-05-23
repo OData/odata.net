@@ -269,7 +269,7 @@
     public interface IGetHeaderWriter
     {
         IGetBodyWriter Commit();
-        ICustomHeaderWriter CommitCustomHeader();
+        ICustomHeaderWriter<IGetHeaderWriter> CommitCustomHeader();
         IOdataMaxPageSizeHeaderWriter CommitOdataMaxPageSize();
         IOdataMaxVersionHeaderWriter CommitOdataMaxVersion();
     }
@@ -290,7 +290,7 @@
             throw new NotImplementedException("TODO");
         }
 
-        public ICustomHeaderWriter CommitCustomHeader()
+        public ICustomHeaderWriter<IGetHeaderWriter> CommitCustomHeader()
         {
             throw new NotImplementedException("TODO");
         }
@@ -335,41 +335,41 @@
         }
     }
 
-    public interface ICustomHeaderWriter
+    public interface ICustomHeaderWriter<T>
     {
-        IHeaderFieldValueWriter Commit(HeaderFieldName headerFieldName);
+        IHeaderFieldValueWriter<T> Commit(HeaderFieldName headerFieldName);
     }
 
-    public sealed class CustomHeaderWriter : ICustomHeaderWriter
+    public sealed class CustomHeaderWriter<T> : ICustomHeaderWriter<T>
     {
         private CustomHeaderWriter()
         {
         }
 
-        public IHeaderFieldValueWriter Commit(HeaderFieldName headerFieldName)
+        public IHeaderFieldValueWriter<T> Commit(HeaderFieldName headerFieldName)
         {
             throw new NotImplementedException("TODO");
         }
     }
 
-    public interface IHeaderFieldValueWriter
+    public interface IHeaderFieldValueWriter<T>
     {
-        IGetHeaderWriter Commit();
-        IGetHeaderWriter Commit(HeaderFieldValue headerFieldValue);
+        T Commit();
+        T Commit(HeaderFieldValue headerFieldValue);
     }
 
-    public sealed class HeaderFieldValueWriter : IHeaderFieldValueWriter
+    public sealed class HeaderFieldValueWriter<T> : IHeaderFieldValueWriter<T>
     {
         private HeaderFieldValueWriter()
         {
         }
 
-        public IGetHeaderWriter Commit(HeaderFieldValue headerFieldValue)
+        public T Commit(HeaderFieldValue headerFieldValue)
         {
             throw new NotImplementedException("TODO");
         }
 
-        public IGetHeaderWriter Commit()
+        public T Commit()
         {
             throw new NotImplementedException("TODO");
         }
