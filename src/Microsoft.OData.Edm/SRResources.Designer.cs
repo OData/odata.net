@@ -1307,7 +1307,7 @@ namespace Microsoft.OData.Edm {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The attribute &apos;{0}&apos; is invalid. The first item of the path &apos;{2}&apos; is &apos;{3}&apos; which does not match the first parameter name {3}. The first segment of the entity set path is required to be the name of the first parameter..
+        ///   Looks up a localized string similar to The attribute &apos;{0}&apos; is invalid. The first item of the path &apos;{1}&apos; is &apos;{2}&apos; which does not match the first parameter name {3}. The first segment of the entity set path is required to be the name of the first parameter..
         /// </summary>
         internal static string EdmModel_Validator_Semantic_InvalidEntitySetPathWithFirstPathParameterNotMatchingFirstParameterName {
             get {
@@ -2193,7 +2193,7 @@ namespace Microsoft.OData.Edm {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Conversion of an edm collection value to the CLR type &apos;{0}&apos; is not supported. EDM collection values can be converted to System.Collections.Generic.IEnumerable{T}, System.Collections.Generic.IList{T} or System.Collections.Generic.ICollection{T}..
+        ///   Looks up a localized string similar to Conversion of an edm collection value to the CLR type &apos;{0}&apos; is not supported. EDM collection values can be converted to System.Collections.Generic.IEnumerable{{T}}, System.Collections.Generic.IList{{T}} or System.Collections.Generic.ICollection{{T}}..
         /// </summary>
         internal static string EdmToClr_CannotConvertEdmCollectionValueToClrType {
             get {
