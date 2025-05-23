@@ -15,7 +15,8 @@ using Microsoft.OData.Core;
 using Microsoft.OData.Core.Tests.DependencyInjection;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Json;
-using Microsoft.Spatial;
+using NetTopologySuite;
+using NetTopologySuite.Geometries;
 using Xunit;
 
 namespace Microsoft.OData.Tests.Json
@@ -485,19 +486,20 @@ namespace Microsoft.OData.Tests.Json
         [Fact]
         public async Task WriteSpatialPropertyAsync()
         {
-            var geographyValue = GeographyFactory.Point(32.0, -100.0).Build();
+            var geometryFactory = NtsGeometryServices.Instance.CreateGeometryFactory(4326);
+            var geometryValue = geometryFactory.CreatePoint(new Coordinate(-100.0, 32.0));
 
-            var geographyProperty = new ODataProperty
+            var geometryProperty = new ODataProperty
             {
-                Name = "GeographyProperty",
-                Value = new ODataPrimitiveValue(geographyValue)
+                Name = "GeometryProperty",
+                Value = new ODataPrimitiveValue(geometryValue)
             };
 
             var result = await SetupJsonOutputContextAndRunTestAsync(
-                (jsonOutputContext) => jsonOutputContext.WritePropertyAsync(geographyProperty));
+                (jsonOutputContext) => jsonOutputContext.WritePropertyAsync(geometryProperty));
 
             Assert.Equal(
-                "{\"@odata.context\":\"http://tempuri.org/$metadata#Edm.GeographyPoint\"," +
+                "{\"@odata.context\":\"http://tempuri.org/$metadata#Edm.GeometryPoint\"," +
                 "\"value\":{\"type\":\"Point\",\"coordinates\":[-100.0,32.0],\"crs\":{\"type\":\"name\",\"properties\":{\"name\":\"EPSG:4326\"}}}}",
                 result);
         }
@@ -505,33 +507,44 @@ namespace Microsoft.OData.Tests.Json
         [Fact]
         public async Task WriteSpatialCollectionPropertyAsync()
         {
-            var geographyCollection = new object[]
+            var geometryFactory = NtsGeometryServices.Instance.CreateGeometryFactory(4326);
+            var geometryCollection = new object[]
             {
-                GeographyFactory.Collection().Point(-19.99, -12.0).Build(),
-                GeographyFactory.LineString(33.1, -110.0).LineTo(35.97, -110).Build(),
-                GeographyFactory.MultiLineString().LineString(10.2, 11.2).LineTo(11.9, 11.6).LineString(16.2, 17.2).LineTo(18.9, 19.6).Build(),
-                GeographyFactory.MultiPoint().Point(10.2, 11.2).Point(11.9, 11.6).Build(),
-                GeographyFactory.MultiPolygon().Polygon().Ring(10.2, 11.2).LineTo(11.9, 11.6).LineTo(11.45, 87.75).Ring(16.2, 17.2).LineTo(18.9, 19.6).LineTo(11.45, 87.75).Build(),
-                GeographyFactory.Point(33.1, -110.0).Build(),
-                GeographyFactory.Polygon().Ring(33.1, -110.0).LineTo(35.97, -110.15).LineTo(11.45, 87.75).Ring(35.97, -110).LineTo(36.97, -110.15).LineTo(45.23, 23.18).Build(),
-                GeographyFactory.Point(32.0, -100.0).Build()
+                geometryFactory.CreateGeometryCollection([
+                    geometryFactory.CreatePoint(new Coordinate(-12.0, -19.99))]),
+                geometryFactory.CreateLineString([new Coordinate(-110.0, 33.1), new Coordinate(-110, 35.97)]),
+                geometryFactory.CreateMultiLineString([
+                    geometryFactory.CreateLineString([new Coordinate(11.2, 10.2), new Coordinate(11.6, 11.9)]),
+                    geometryFactory.CreateLineString([new Coordinate(17.2, 16.2), new Coordinate(19.6, 18.9)])]),
+                geometryFactory.CreateMultiPoint([
+                    geometryFactory.CreatePoint(new Coordinate(11.2, 10.2)),
+                    geometryFactory.CreatePoint(new Coordinate(11.6, 11.9))]),
+                geometryFactory.CreateMultiPolygon([
+                    geometryFactory.CreatePolygon(
+                        geometryFactory.CreateLinearRing([new Coordinate(11.2, 10.2), new Coordinate(11.6, 11.9), new Coordinate(87.75, 11.45), new Coordinate(11.2, 10.2)]),
+                        [geometryFactory.CreateLinearRing([new Coordinate(17.2, 16.2), new Coordinate(19.6, 18.9), new Coordinate(87.75, 11.45), new Coordinate(17.2, 16.2)])])]),
+                geometryFactory.CreatePoint(new Coordinate(-110.0, 33.1)),
+                geometryFactory.CreatePolygon(
+                    geometryFactory.CreateLinearRing([new Coordinate(-110.0, 33.1), new Coordinate(-110.15, 35.97), new Coordinate(87.75, 11.45), new Coordinate(-110.0, 33.1)]),
+                    [geometryFactory.CreateLinearRing([new Coordinate(-110, 35.97), new Coordinate(-110.15, 36.97), new Coordinate(23.18, 45.23), new Coordinate(-110, 35.97)])]),
+                geometryFactory.CreatePoint(new Coordinate(-100.0, 32.0))
             };
 
-            var geographyCollectionProperty = new ODataProperty
+            var geometryCollectionProperty = new ODataProperty
             {
-                Name = "GeographyCollectionProperty",
+                Name = "GeometryCollectionProperty",
                 Value = new ODataCollectionValue
                 {
-                    TypeName = "Collection(Edm.Geography)",
-                    Items = geographyCollection
+                    TypeName = "Collection(Edm.Geometry)",
+                    Items = geometryCollection
                 }
             };
 
             var result = await SetupJsonOutputContextAndRunTestAsync(
-                (jsonOutputContext) => jsonOutputContext.WritePropertyAsync(geographyCollectionProperty));
+                (jsonOutputContext) => jsonOutputContext.WritePropertyAsync(geometryCollectionProperty));
 
             Assert.Equal(
-                "{\"@odata.context\":\"http://tempuri.org/$metadata#Collection(Edm.Geography)\"," +
+                "{\"@odata.context\":\"http://tempuri.org/$metadata#Collection(Edm.Geometry)\"," +
                 "\"value\":[" +
                 "{\"type\":\"GeometryCollection\",\"geometries\":[{\"type\":\"Point\",\"coordinates\":[-12.0,-19.99]}],\"crs\":{\"type\":\"name\",\"properties\":{\"name\":\"EPSG:4326\"}}}," +
                 "{\"type\":\"LineString\",\"coordinates\":[[-110.0,33.1],[-110.0,35.97]],\"crs\":{\"type\":\"name\",\"properties\":{\"name\":\"EPSG:4326\"}}}," +
@@ -555,31 +568,34 @@ namespace Microsoft.OData.Tests.Json
             });
 
             var jsonOutputContext = new ODataJsonOutputContext(messageInfo, this.messageWriterSettings);
-            var geographyCollection = new object[]
+            var geometryFactory = NtsGeometryServices.Instance.CreateGeometryFactory(4326);
+            var geometryCollection = new object[]
             {
-                GeographyFactory.Point(33.1, -110.0).Build(),
-                GeographyFactory.LineString(33.1, -110.0).LineTo(35.97, -110).Build(),
-                GeographyFactory.MultiPoint().Point(10.2, 11.2).Point(11.9, 11.6).Build()
+                geometryFactory.CreatePoint(new Coordinate(-110.0, 33.1)),
+                geometryFactory.CreateLineString([new Coordinate(-110.0, 33.1), new Coordinate(-110, 35.97)]),
+                geometryFactory.CreateMultiPoint([
+                    geometryFactory.CreatePoint(new Coordinate(11.2, 10.2)),
+                    geometryFactory.CreatePoint(new Coordinate(11.6, 11.9))])
             };
 
-            var geographyCollectionProperty = new ODataProperty
+            var geometryCollectionProperty = new ODataProperty
             {
-                Name = "GeographyCollectionProperty",
+                Name = "GeometryCollectionProperty",
                 Value = new ODataCollectionValue
                 {
-                    TypeName = "Collection(Edm.Geography)",
-                    Items = geographyCollection
+                    TypeName = "Collection(Edm.Geometry)",
+                    Items = geometryCollection
                 }
             };
 
-            await jsonOutputContext.WritePropertyAsync(geographyCollectionProperty);
+            await jsonOutputContext.WritePropertyAsync(geometryCollectionProperty);
             await jsonOutputContext.FlushAsync();
 
             this.stream.Position = 0;
             var result = await new StreamReader(this.stream).ReadToEndAsync();
 
             Assert.Equal(
-                "{\"@odata.context\":\"http://tempuri.org/$metadata#Collection(Edm.Geography)\"," +
+                "{\"@odata.context\":\"http://tempuri.org/$metadata#Collection(Edm.Geometry)\"," +
                 "\"value\":[" +
                 "{\"type\":\"Point\",\"coordinates\":[-110.0,33.1],\"crs\":{\"type\":\"name\",\"properties\":{\"name\":\"EPSG:4326\"}}}," +
                 "{\"type\":\"LineString\",\"coordinates\":[[-110.0,33.1],[-110.0,35.97]],\"crs\":{\"type\":\"name\",\"properties\":{\"name\":\"EPSG:4326\"}}}," +
@@ -748,7 +764,7 @@ namespace Microsoft.OData.Tests.Json
             Assert.Equal(SRResources.ODataBatchWriter_CannotWriteInStreamErrorForBatch, exception.Message);
         }
 
-#endregion Async Tests
+        #endregion Async Tests
 
         private static void WriteAndValidate(
             Action<ODataJsonOutputContext> test,

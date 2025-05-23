@@ -13,7 +13,7 @@ namespace Microsoft.OData
     using System.Threading.Tasks;
     using Microsoft.OData.Core;
     using Microsoft.OData.Json;
-    using Microsoft.Spatial;
+    using NetTopologySuite.Geometries;
 
     /// <summary>
     /// Class that handles writing top level raw values to a stream.
@@ -146,7 +146,7 @@ namespace Microsoft.OData
             {
                 this.textWriter.Write(enumValue.Value);
             }
-            else if (value is Geometry || value is Geography)
+            else if (value is Geometry)
             {
                 PrimitiveConverter.Instance.WriteJson(value, jsonWriter);
             }
@@ -228,7 +228,7 @@ namespace Microsoft.OData
                 return this.textWriter.WriteAsync(enumValue.Value);
             }
 
-            if (value is Geometry || value is Geography)
+            if (value is Geometry)
             {
                 return TaskUtils.GetTaskForSynchronousOperation((
                     valueParam,

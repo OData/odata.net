@@ -11,7 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Json;
-using Microsoft.Spatial;
+using NetTopologySuite.Geometries;
 using Xunit;
 
 namespace Microsoft.OData.Tests.Json
@@ -51,12 +51,12 @@ namespace Microsoft.OData.Tests.Json
                 "PointProp",
                 "{\"PointProp\":{\"type\":\"Point\",\"coordinates\":[-110.0,33.1],\"crs\":{\"type\":\"name\",\"properties\":{\"name\":\"EPSG:4326\"}}}}",
                 EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.GeographyPoint, true),
-                new Action<ISpatial>((spatialValue) =>
+                new Action<Geometry>((spatialValue) =>
                 {
-                    var geographyPoint = Assert.IsAssignableFrom<GeographyPoint>(spatialValue);
-                    Assert.Equal(4326, geographyPoint.CoordinateSystem.EpsgId);
-                    Assert.Equal(-110.0d, geographyPoint.Longitude);
-                    Assert.Equal(33.1d, geographyPoint.Latitude);
+                    var geographyPoint = Assert.IsAssignableFrom<Point>(spatialValue);
+                    Assert.Equal(4326, geographyPoint.SRID);
+                    Assert.Equal(-110.0d, geographyPoint.X);
+                    Assert.Equal(33.1d, geographyPoint.Y);
                 })
             };
 
@@ -66,18 +66,18 @@ namespace Microsoft.OData.Tests.Json
                 "LineStringProp",
                 "{\"LineStringProp\":{\"type\":\"LineString\",\"coordinates\":[[-110.0,33.1],[-110.0,35.97]],\"crs\":{\"type\":\"name\",\"properties\":{\"name\":\"EPSG:4326\"}}}}",
                 EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.GeographyLineString, true),
-                new Action<ISpatial>((spatialValue) =>
+                new Action<Geometry>((spatialValue) =>
                 {
-                    var geographyLineString = Assert.IsAssignableFrom<GeographyLineString>(spatialValue);
-                    Assert.Equal(4326, geographyLineString.CoordinateSystem.EpsgId);
+                    var geographyLineString = Assert.IsAssignableFrom<LineString>(spatialValue);
+                    Assert.Equal(4326, geographyLineString.SRID);
 
                     var points = new double[,] { { -110.0, 33.1 }, { -110.0, 35.97 } };
-                    Assert.Equal(points.GetLength(0), geographyLineString.Points.Count);
+                    Assert.Equal(points.GetLength(0), geographyLineString.Coordinates.Length);
 
                     for (var i = 0; i < points.GetLength(0); i++)
                     {
-                        Assert.Equal(points[i,0], geographyLineString.Points[i].Longitude);
-                        Assert.Equal(points[i,1], geographyLineString.Points[i].Latitude);
+                        Assert.Equal(points[i,0], geographyLineString.Coordinates[i].X);
+                        Assert.Equal(points[i,1], geographyLineString.Coordinates[i].Y);
                     }
                 })
             };
@@ -88,22 +88,25 @@ namespace Microsoft.OData.Tests.Json
                 "PolygonProp",
                 "{\"PolygonProp\":{\"type\":\"Polygon\",\"coordinates\":[[[-110.0,33.1],[-110.15,35.97],[87.75,11.45],[-110.0,33.1]],[[-110.0,35.97],[-110.15,36.97],[23.18,45.23],[-110.0,35.97]]],\"crs\":{\"type\":\"name\",\"properties\":{\"name\":\"EPSG:4326\"}}}}",
                 EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.GeographyPolygon, true),
-                new Action<ISpatial>((spatialValue) =>
+                new Action<Geometry>((spatialValue) =>
                 {
-                    var geographyPolygon = Assert.IsAssignableFrom<GeographyPolygon>(spatialValue);
-                    Assert.Equal(4326, geographyPolygon.CoordinateSystem.EpsgId);
+                    var geographyPolygon = Assert.IsAssignableFrom<Polygon>(spatialValue);
+                    Assert.Equal(4326, geographyPolygon.SRID);
 
                     var rings = new double[2][,]{ new double[,] { { -110.0, 33.1 }, { -110.15, 35.97 }, { 87.75, 11.45 }, { -110.0, 33.1 } }, new double[,]{ { -110.0, 35.97 }, { -110.15, 36.97 }, { 23.18, 45.23 }, { -110.0, 35.97 } } };
-                    Assert.Equal(rings.Length, geographyPolygon.Rings.Count);
+                    Assert.Equal(rings.Length, 1 /* Exterior Ring */ + geographyPolygon.InteriorRings.Length);
 
                     for (var i = 0; i < rings.GetLength(0); i++)
                     {
-                        Assert.Equal(rings[i].GetLength(0), geographyPolygon.Rings[i].Points.Count);
+                        LineString ring = i == 0 ? geographyPolygon.ExteriorRing : geographyPolygon.InteriorRings[i - 1];
+
+                        if (i == 0)
+                        Assert.Equal(rings[i].GetLength(0), ring.Coordinates.Length);
 
                         for (var j = 0; j < rings[i].GetLength(0); j++)
                         {
-                            Assert.Equal(rings[i][j,0], geographyPolygon.Rings[i].Points[j].Longitude);
-                            Assert.Equal(rings[i][j,1], geographyPolygon.Rings[i].Points[j].Latitude);
+                            Assert.Equal(rings[i][j,0], ring.Coordinates[j].X);
+                            Assert.Equal(rings[i][j,1], ring.Coordinates[j].Y);
                         }
                     }
                 })
@@ -115,18 +118,19 @@ namespace Microsoft.OData.Tests.Json
                 "MultiPointProp",
                 "{\"MultiPointProp\":{\"type\":\"MultiPoint\",\"coordinates\":[[11.2,10.2],[11.6,11.9]],\"crs\":{\"type\":\"name\",\"properties\":{\"name\":\"EPSG:4326\"}}}}",
                 EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.GeographyMultiPoint, true),
-                new Action<ISpatial>((spatialValue) =>
+                new Action<Geometry>((spatialValue) =>
                 {
-                    var geographyMultiPoint = Assert.IsAssignableFrom<GeographyMultiPoint>(spatialValue);
-                    Assert.Equal(4326, geographyMultiPoint.CoordinateSystem.EpsgId);
+                    var geographyMultiPoint = Assert.IsAssignableFrom<MultiPoint>(spatialValue);
+                    Assert.Equal(4326, geographyMultiPoint.SRID);
 
                     var points = new double[,]{ { 11.2,10.2 }, { 11.6,11.9 } };
-                    Assert.Equal(points.GetLength(0), geographyMultiPoint.Points.Count);
+                    Assert.Equal(points.GetLength(0), geographyMultiPoint.Geometries.Length);
 
                     for (var i = 0; i < points.GetLength(0); i++)
                     {
-                        Assert.Equal(points[i,0], geographyMultiPoint.Points[i].Longitude);
-                        Assert.Equal(points[i,1], geographyMultiPoint.Points[i].Latitude);
+                        var geographyPoint = Assert.IsAssignableFrom<Point>(geographyMultiPoint.Geometries[i]);
+                        Assert.Equal(points[i,0], geographyPoint.X);
+                        Assert.Equal(points[i,1], geographyPoint.Y);
                     }
                 })
             };
@@ -137,22 +141,23 @@ namespace Microsoft.OData.Tests.Json
                 "MultiLineStringProp",
                 "{\"MultiLineStringProp\":{\"type\":\"MultiLineString\",\"coordinates\":[[[11.2,10.2],[11.6,11.9]],[[17.2,16.2],[19.6,18.9]]],\"crs\":{\"type\":\"name\",\"properties\":{\"name\":\"EPSG:4326\"}}}}",
                 EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.GeographyMultiLineString, true),
-                new Action<ISpatial>((spatialValue) =>
+                new Action<Geometry>((spatialValue) =>
                 {
-                    var geographyMultiString = Assert.IsAssignableFrom<GeographyMultiLineString>(spatialValue);
-                    Assert.Equal(4326, geographyMultiString.CoordinateSystem.EpsgId);
+                    var geographyMultiString = Assert.IsAssignableFrom<MultiLineString>(spatialValue);
+                    Assert.Equal(4326, geographyMultiString.SRID);
 
                     var lineStrings = new double[2][,]{ new double[,] { { 11.2, 10.2 }, { 11.6, 11.9 } }, new double[,]{ { 17.2, 16.2 },{ 19.6, 18.9 } } };
-                    Assert.Equal(lineStrings.GetLength(0), geographyMultiString.LineStrings.Count);
+                    Assert.Equal(lineStrings.GetLength(0), geographyMultiString.Geometries.Length);
 
                     for (var i = 0; i < lineStrings.GetLength(0); i++)
                     {
-                        Assert.Equal(lineStrings[i].GetLength(0), geographyMultiString.LineStrings[i].Points.Count);
+                        Assert.Equal(lineStrings[i].GetLength(0), geographyMultiString.Geometries[i].Coordinates.Length);
 
                         for (var j = 0; j < lineStrings[i].GetLength(0); j++)
                         {
-                            Assert.Equal(lineStrings[i][j,0], geographyMultiString.LineStrings[i].Points[j].Longitude);
-                            Assert.Equal(lineStrings[i][j,1], geographyMultiString.LineStrings[i].Points[j].Latitude);
+                            var geographyLineString = Assert.IsAssignableFrom<LineString>(geographyMultiString.Geometries[i]);
+                            Assert.Equal(lineStrings[i][j,0], geographyLineString.Coordinates[j].X);
+                            Assert.Equal(lineStrings[i][j,1], geographyLineString.Coordinates[j].Y);
                         }
                     }
                 })
@@ -164,23 +169,24 @@ namespace Microsoft.OData.Tests.Json
                 "MultiPolygonProp",
                 "{\"MultiPolygonProp\":{\"type\":\"MultiPolygon\",\"coordinates\":[[[[11.2,10.2],[11.6,11.9],[87.75,11.45],[11.2,10.2]],[[17.2,16.2],[19.6,18.9],[87.75,11.45],[17.2,16.2]]]],\"crs\":{\"type\":\"name\",\"properties\":{\"name\":\"EPSG:4326\"}}}}",
                 EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.GeographyMultiPolygon, true),
-                new Action<ISpatial>((spatialValue) =>
+                new Action<Geometry>((spatialValue) =>
                 {
-                    var geographyMultiPolygon = Assert.IsAssignableFrom<GeographyMultiPolygon>(spatialValue);
-                    Assert.Equal(4326, geographyMultiPolygon.CoordinateSystem.EpsgId);
-                    Assert.Single(geographyMultiPolygon.Polygons);
+                    var geographyMultiPolygon = Assert.IsAssignableFrom<MultiPolygon>(spatialValue);
+                    Assert.Equal(4326, geographyMultiPolygon.SRID);
+                    var geographyPolygon = Assert.IsType<Polygon>(Assert.Single(geographyMultiPolygon.Geometries));
 
                     var rings = new double[2][,] { new double[,] { { 11.2, 10.2 }, { 11.6, 11.9 }, { 87.75, 11.45 }, { 11.2, 10.2 } }, new double[,]{ { 17.2, 16.2 }, { 19.6, 18.9 }, { 87.75, 11.45 }, { 17.2, 16.2 } } };
-                    Assert.Equal(rings.GetLength(0), geographyMultiPolygon.Polygons[0].Rings.Count);
+                    Assert.Equal(rings.GetLength(0), 1 /* exterior ring */ +  geographyPolygon.InteriorRings.Length);
 
                     for (var i = 0; i < rings.GetLength(0); i++)
                     {
-                        Assert.Equal(rings[i].GetLength(0), geographyMultiPolygon.Polygons[0].Rings[i].Points.Count);
+                        var ring = i == 0 ? geographyPolygon.ExteriorRing : geographyPolygon.InteriorRings[i - 1];
+                        Assert.Equal(rings[i].GetLength(0), ring.Coordinates.Length);
 
                         for (var j = 0; j < rings[i].GetLength(0); j++)
                         {
-                            Assert.Equal(rings[i][j,0], geographyMultiPolygon.Polygons[0].Rings[i].Points[j].Longitude);
-                            Assert.Equal(rings[i][j,1], geographyMultiPolygon.Polygons[0].Rings[i].Points[j].Latitude);
+                            Assert.Equal(rings[i][j,0], ring.Coordinates[j].X);
+                            Assert.Equal(rings[i][j,1], ring.Coordinates[j].Y);
                         }
                     }
                 })
@@ -192,12 +198,12 @@ namespace Microsoft.OData.Tests.Json
                 "GeometryCollectionProp",
                 "{\"GeometryCollectionProp\":{\"type\":\"GeometryCollection\",\"geometries\":[{\"type\":\"Point\",\"coordinates\":[-12.0,-19.99]}],\"crs\":{\"type\":\"name\",\"properties\":{\"name\":\"EPSG:4326\"}}}}",
                 EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.GeometryCollection, true),
-                new Action<ISpatial>((spatialValue) =>
+                new Action<Geometry>((spatialValue) =>
                 {
                     var geometryCollection = Assert.IsAssignableFrom<GeometryCollection>(spatialValue);
-                    Assert.Equal(4326, geometryCollection.CoordinateSystem.EpsgId);
+                    Assert.Equal(4326, geometryCollection.SRID);
                     Assert.Single(geometryCollection.Geometries);
-                    var geometryPoint = Assert.IsAssignableFrom<GeometryPoint>(geometryCollection.Geometries[0]);
+                    var geometryPoint = Assert.IsAssignableFrom<Point>(geometryCollection.Geometries[0]);
                     Assert.Equal(-12.0, geometryPoint.X);
                     Assert.Equal(-19.99, geometryPoint.Y);
                 })
@@ -206,7 +212,7 @@ namespace Microsoft.OData.Tests.Json
 
         [Theory]
         [MemberData(nameof(GetReadSpatialPropertyData))]
-        public async Task ReadSpatialPropertyAsync(string propertyName, string payload, IEdmPrimitiveTypeReference edmPrimitiveTypeReference, Action<ISpatial> assertAction)
+        public async Task ReadSpatialPropertyAsync(string propertyName, string payload, IEdmPrimitiveTypeReference edmPrimitiveTypeReference, Action<Geometry> assertAction)
         {
             using (var reader = await CreateJsonReaderAsync(payload))
             {
@@ -243,7 +249,7 @@ namespace Microsoft.OData.Tests.Json
 
         [Theory]
         [MemberData(nameof(GetReadSpatialPropertyData))]
-        public void ReadSpatialProperty(string propertyName, string payload, IEdmPrimitiveTypeReference edmPrimitiveTypeReference, Action<ISpatial> assertAction)
+        public void ReadSpatialProperty(string propertyName, string payload, IEdmPrimitiveTypeReference edmPrimitiveTypeReference, Action<Geometry> assertAction)
         {
             using (var reader = CreateJsonReader(payload))
             {

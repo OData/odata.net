@@ -10,9 +10,10 @@ using System.Linq;
 using Microsoft.OData.UriParser.Aggregation;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
-using Microsoft.Spatial;
 using Xunit;
 using Microsoft.OData.Core;
+using NetTopologySuite;
+using NetTopologySuite.Geometries;
 
 namespace Microsoft.OData.Tests
 {
@@ -559,9 +560,11 @@ namespace Microsoft.OData.Tests
         [Fact]
         public void BuildPropertyContextUriForSpatialPropertyValue()
         {
+            var geometryFactory = NtsGeometryServices.Instance.CreateGeometryFactory(4326);
+
             foreach (ODataVersion version in Versions)
             {
-                var contextUri = this.CreatePropertyContextUri(GeometryPoint.Create(1, 2), version);
+                var contextUri = this.CreatePropertyContextUri(geometryFactory.CreatePoint(new Coordinate(1, 2)), version);
                 Assert.Equal(contextUri.OriginalString, BuildExpectedContextUri("#Edm.GeometryPoint"));
             }
         }

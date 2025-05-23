@@ -10,10 +10,13 @@ namespace Microsoft.OData.Json
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using Microsoft.Spatial;
-    using Microsoft.OData.Edm;
-    using Microsoft.OData.Core;
+    using System.Text;
     using System.Threading.Tasks;
+    using Microsoft.OData.Core;
+    using Microsoft.OData.Edm;
+    using NetTopologySuite.Geometries;
+    using NetTopologySuite.IO;
+    using Newtonsoft.Json;
 
     #endregion Namespaces
 
@@ -34,7 +37,7 @@ namespace Microsoft.OData.Json
         /// <param name="recursionDepth">The recursion depth to start with.</param>
         /// <param name="propertyName">The name of the property whose value is being read, if applicable (used for error reporting).</param>
         /// <returns>An instance of the spatial type.</returns>
-        internal static ISpatial ReadSpatialValue(
+        internal static Geometry ReadSpatialValue(
             IJsonReader jsonReader,
             bool insideJsonObjectValue,
             ODataInputContext inputContext,
@@ -55,20 +58,12 @@ namespace Microsoft.OData.Json
                 return null;
             }
 
-            ISpatial spatialValue = null;
+            Geometry spatialValue = null;
             if (insideJsonObjectValue || jsonReader.NodeType == JsonNodeType.StartObject)
             {
                 IDictionary<string, object> jsonObject = ReadObjectValue(jsonReader, insideJsonObjectValue, inputContext, recursionDepth);
-                GeoJsonObjectFormatter jsonObjectFormatter =
-                    SpatialImplementation.CurrentImplementation.CreateGeoJsonObjectFormatter();
-                if (expectedValueTypeReference.IsGeography())
-                {
-                    spatialValue = jsonObjectFormatter.Read<Geography>(jsonObject);
-                }
-                else
-                {
-                    spatialValue = jsonObjectFormatter.Read<Geometry>(jsonObject);
-                }
+
+                spatialValue = GeoJsonSpatialObjectFormatter.ParseGeometry(propertyName, jsonObject);
             }
 
             if (spatialValue == null)
@@ -132,7 +127,7 @@ namespace Microsoft.OData.Json
         /// <param name="recursionDepth">The recursion depth to start with.</param>
         /// <param name="propertyName">The name of the property whose value is being read, if applicable (used for error reporting).</param>
         /// <returns>An instance of the spatial type.</returns>
-        internal static async Task<ISpatial> ReadSpatialValueAsync(
+        internal static async Task<Geometry> ReadSpatialValueAsync(
             IJsonReader jsonReader,
             bool insideJsonObjectValue,
             ODataInputContext inputContext,
@@ -155,21 +150,13 @@ namespace Microsoft.OData.Json
                 return null;
             }
 
-            ISpatial spatialValue = null;
+            Geometry spatialValue = null;
             if (insideJsonObjectValue || jsonReader.NodeType == JsonNodeType.StartObject)
             {
                 Dictionary<string, object> jsonObject = await ReadObjectValueAsync(jsonReader, insideJsonObjectValue, inputContext, recursionDepth)
                     .ConfigureAwait(false);
-                GeoJsonObjectFormatter jsonObjectFormatter =
-                    SpatialImplementation.CurrentImplementation.CreateGeoJsonObjectFormatter();
-                if (expectedValueTypeReference.IsGeography())
-                {
-                    spatialValue = jsonObjectFormatter.Read<Geography>(jsonObject);
-                }
-                else
-                {
-                    spatialValue = jsonObjectFormatter.Read<Geometry>(jsonObject);
-                }
+
+                spatialValue = GeoJsonSpatialObjectFormatter.ParseGeometry(propertyName, jsonObject);
             }
 
             if (spatialValue == null)
@@ -178,7 +165,7 @@ namespace Microsoft.OData.Json
             }
 
             return spatialValue;
-        }
+        }        
 
         /// <summary>
         /// Asynchronously tries to read a null value from the JSON reader.

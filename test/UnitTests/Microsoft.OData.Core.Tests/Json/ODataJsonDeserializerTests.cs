@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 using Microsoft.OData.Core;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Json;
-using Microsoft.Spatial;
+using NetTopologySuite.Geometries;
 using Xunit;
 using PropertyParsingResult = Microsoft.OData.Json.ODataJsonDeserializer.PropertyParsingResult;
 
@@ -2209,11 +2209,11 @@ namespace Microsoft.OData.Tests.Json
                     var property = await jsonDeserializer.ReadTopLevelPropertyAsync(edmProperty.Type);
 
                     var primitiveValue = Assert.IsType<ODataPrimitiveValue>(property.ODataValue);
-                    var geographyPoint = Assert.IsAssignableFrom<GeographyPoint>(primitiveValue.Value);
+                    var geographyPoint = Assert.IsAssignableFrom<Point>(primitiveValue.Value);
 
-                    Assert.Equal(4326, geographyPoint.CoordinateSystem.EpsgId);
-                    Assert.Equal(-110.0d, geographyPoint.Longitude);
-                    Assert.Equal(33.1d, geographyPoint.Latitude);
+                    Assert.Equal(4326, geographyPoint.SRID);
+                    Assert.Equal(-110.0d, geographyPoint.X);
+                    Assert.Equal(33.1d, geographyPoint.Y);
                 });
         }
 

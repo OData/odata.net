@@ -83,6 +83,10 @@ namespace Microsoft.OData.Json
                 return null;
             }
 
+            // TODO: Should we rely on typeReferenceFromMetadata and/or typeReferenceFromValue when working with spatial types
+            // since both Edm.GeographyPoint and Edm.GeometryPoint map to NetTopologySuite.Geometries.Point?
+            // GetTypeNameFromValue will always return Edm.GeometryPoint
+
             return GetTypeNameFromValue(value);
         }
 

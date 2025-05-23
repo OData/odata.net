@@ -4,6 +4,8 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
+using System.Threading.Tasks;
 using Microsoft.OData.Json;
 using Microsoft.Spatial;
 
@@ -27,6 +29,17 @@ namespace Microsoft.OData
         {
             IGeoJsonWriter adapter = new GeoJsonWriterAdapter(jsonWriter);
             ((Geometry)instance).SendTo(GeoJsonObjectFormatter.Create().CreateWriter(adapter));
+        }
+
+        /// <summary>
+        /// Asynchronously writes the JSON representation of an instance of a primitive type to a json writer.
+        /// </summary>
+        /// <param name="instance">The instance to write.</param>
+        /// <param name="jsonWriter">Instance of JsonWriter.</param>
+        public Task WriteJsonAsync(object instance, IJsonWriter jsonWriter)
+        {
+            // This method is not implemented in this example.
+            throw new NotImplementedException("Asynchronous writing is not implemented.");
         }
     }
 }

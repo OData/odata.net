@@ -13,10 +13,11 @@ using System.Text;
 using Microsoft.OData.Json;
 using Microsoft.OData.Tests.Json;
 using Microsoft.OData.Edm;
-using Microsoft.Spatial;
 using Xunit;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OData.Core.Tests.DependencyInjection;
+using NetTopologySuite.Geometries;
+using NetTopologySuite;
 
 namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.Json
 {
@@ -359,22 +360,31 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.Json
         [Fact]
         public void GeographyMultiLineStringRoundtripJsonTest()
         {
-            var values = new GeographyMultiLineString[]
+            var geometryFactory = NtsGeometryServices.Instance.CreateGeometryFactory(4326);
+            var values = new MultiLineString[]
             {
-                GeographyFactory.MultiLineString().LineString(0, 0).LineTo(0, 0).Build(), 
-                GeographyFactory.MultiLineString().LineString(-90.0, -90.0).LineTo(0, 0).LineString(90.0, 90.0).LineTo(0, 0).Build(), 
-                GeographyFactory.MultiLineString().LineString(-90.0, 0).LineTo(0, 0).LineString(0, 0).LineTo(0, 0).LineString(0, 90.0).LineTo(0, 0).Build()
+                geometryFactory.CreateMultiLineString([
+                    geometryFactory.CreateLineString([new Coordinate(0, 0), new Coordinate(0, 0)])]),
+                geometryFactory.CreateMultiLineString([
+                    geometryFactory.CreateLineString([new Coordinate(-90.0, -90.0), new Coordinate(0, 0)]),
+                    geometryFactory.CreateLineString([new Coordinate(90.0, 90.0), new Coordinate(0, 0)])]),
+                geometryFactory.CreateMultiLineString([
+                    geometryFactory.CreateLineString([new Coordinate(-90.0, 0), new Coordinate(0, 0)]),
+                    geometryFactory.CreateLineString([new Coordinate(0, 0), new Coordinate(0, 0)]),
+                    geometryFactory.CreateLineString([new Coordinate(0, 90.0), new Coordinate(0, 0)])])
             };
-            this.VerifyPrimitiveValuesRoundtripWithTypeInformation(values, "GeographyMultiLineString");
+            this.VerifyPrimitiveValuesRoundtripWithTypeInformation(values, "GeometryMultiLineString");
         }
 
         [Fact]
         public void GeometryCollectionRoundtripJsonTest()
         {
+            var geometryFactory = NtsGeometryServices.Instance.CreateGeometryFactory(0);
             var values = new GeometryCollection[]
             {
-                GeometryFactory.Collection().Build(),
-                GeometryFactory.Collection().Point(0, 0).Build()
+                geometryFactory.CreateGeometryCollection(),
+                geometryFactory.CreateGeometryCollection([
+                    geometryFactory.CreatePoint(new Coordinate(0, 0))])
             };
             this.VerifyPrimitiveValuesRoundtripWithTypeInformation(values, "GeometryCollection");
         }
