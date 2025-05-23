@@ -223,7 +223,7 @@
             throw new NotImplementedException("TODO");
         }
 
-        public CustomHeaderWriter CommitCustomHeader(HeaderFieldName headerFieldName)
+        public CustomHeaderWriter CommitCustomHeader()
         {
             throw new NotImplementedException("TODO");
         }
@@ -264,12 +264,7 @@
         {
         }
 
-        public FieldValueWriter Commit(HeaderFieldValue headerFieldValue)
-        {
-            throw new NotImplementedException("TODO");
-        }
-
-        public GetHeaderWriter Commit()
+        public FieldValueWriter Commit(HeaderFieldName headerFieldName)
         {
             throw new NotImplementedException("TODO");
         }
@@ -279,6 +274,11 @@
     {
         private FieldValueWriter()
         {
+        }
+
+        public GetHeaderWriter Commit(HeaderFieldValue headerFieldValue)
+        {
+            throw new NotImplementedException("TODO");
         }
 
         public GetHeaderWriter Commit()

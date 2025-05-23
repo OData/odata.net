@@ -130,10 +130,11 @@
             }
             else if (getHeaderToken is GetHeaderToken.Custom custom)
             {
-                //// TODO you are here
+                Convert(custom.CustomHeaderReader, getHeaderWriter.CommitCustomHeader());
             }
             else if (getHeaderToken is GetHeaderToken.GetBody getBody)
             {
+                Convert(getBody.GetBodyReader, getHeaderWriter.Commit());
             }
             else
             {
@@ -149,6 +150,13 @@
         {
         }
 
+        private static void Convert(CustomHeaderReader customHeaderReader, CustomHeaderWriter customHeaderWriter)
+        {
+        }
+
+        private static void Convert(GetBodyReader getBodyReader, GetBodyWriter getBodyWriter)
+        {
+        }
 
 
 
