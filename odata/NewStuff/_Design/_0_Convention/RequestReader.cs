@@ -112,16 +112,19 @@
 
     public sealed class UriScheme
     {
-        private UriScheme()
+        internal UriScheme(string scheme)
         {
+            Scheme = scheme;
         }
+
+        internal string Scheme { get; } //// TODO there should be more structure to this
     }
 
     public interface IUriDomainReader<T>
     {
         UriDomain UriDomain { get; }
 
-        IUriPortReader<T> Next();
+        UriDomainToken<T> Next();
     }
 
     public sealed class UriDomainReader<T> : IUriDomainReader<T>
@@ -132,7 +135,7 @@
 
         public UriDomain UriDomain { get; }
 
-        public IUriPortReader<T> Next()
+        public UriDomainToken<T> Next()
         {
             throw new NotImplementedException("TODO");
         }
@@ -140,9 +143,37 @@
 
     public sealed class UriDomain
     {
-        private UriDomain()
+        internal UriDomain(string domain)
         {
+            Domain = domain;
             //// TODO this could probably still be readers...
+        }
+
+        internal string Domain { get; }
+    }
+
+    public abstract class UriDomainToken<T>
+    {
+        private UriDomainToken()
+        {
+        }
+
+        public sealed class Port : UriDomainToken<T>
+        {
+            private Port()
+            {
+            }
+
+            public IUriPortReader<T> UriPortReader { get; }
+        }
+
+        public sealed class PathSegment : UriDomainToken<T>
+        {
+            private PathSegment()
+            {
+            }
+
+            public IUriPathSegmentReader<T> UriPathSegmentReader { get; }
         }
     }
 

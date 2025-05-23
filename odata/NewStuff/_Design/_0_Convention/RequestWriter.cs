@@ -111,6 +111,8 @@
 
     public interface IUriPortWriter<T>
     {
+        IUriPathSegmentWriter<T> Commit();
+
         IUriPathSegmentWriter<T> Commit(UriPort uriPort);
     }
 
@@ -123,6 +125,11 @@
         public IUriPathSegmentWriter<T> Commit(UriPort uriPort)
         {
             throw new NotImplementedException("TODO");
+        }
+
+        public IUriPathSegmentWriter<T> Commit()
+        {
+            throw new NotImplementedException();
         }
     }
 
@@ -394,7 +401,7 @@
 
     public interface IGetBodyWriter
     {
-        string Commit();
+        IGetResponseReader Commit();
     }
 
     public sealed class GetBodyWriter : IGetBodyWriter
@@ -403,7 +410,7 @@
         {
         }
 
-        public string Commit() //// TODO this shouldn't return a string, it should be parameterized (and an interface)
+        public IGetResponseReader Commit() //// TODO this shouldn't return a string, it should be parameterized
         {
             throw new NotImplementedException("TODO");
         }

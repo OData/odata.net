@@ -44,7 +44,21 @@
 
         private static void Convert(IUriDomainReader<GetHeaderReader> uriDomainReader, IUriDomainWriter<GetHeaderWriter> uriDomainWriter)
         {
-            Convert(uriDomainReader.Next(), uriDomainWriter.Commit(uriDomainReader.UriDomain));
+            var nextWriter = uriDomainWriter.Commit(uriDomainReader.UriDomain);
+
+            var uriDomainToken = uriDomainReader.Next();
+            if (uriDomainToken is UriDomainToken<GetHeaderReader>.Port port)
+            {
+                Convert(port.UriPortReader, nextWriter);
+            }
+            else if (uriDomainToken is UriDomainToken<GetHeaderReader>.PathSegment pathSegment)
+            {
+                Convert(pathSegment.UriPathSegmentReader, nextWriter.Commit());
+            }
+            else
+            {
+                throw new Exception("TODO implement visitor");
+            }
         }
 
         private static void Convert(IUriPortReader<GetHeaderReader> uriPortReader, IUriPortWriter<GetHeaderWriter> uriPortWriter)
