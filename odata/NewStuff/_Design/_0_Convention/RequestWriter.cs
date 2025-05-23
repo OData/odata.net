@@ -264,15 +264,15 @@
         {
         }
 
-        public FieldValueWriter Commit(HeaderFieldName headerFieldName)
+        public HeaderFieldValueWriter Commit(HeaderFieldName headerFieldName)
         {
             throw new NotImplementedException("TODO");
         }
     }
 
-    public sealed class FieldValueWriter
+    public sealed class HeaderFieldValueWriter
     {
-        private FieldValueWriter()
+        private HeaderFieldValueWriter()
         {
         }
 

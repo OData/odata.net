@@ -144,18 +144,43 @@
 
         private static void Convert(OdataMaxVersionHeaderReader odataMaxVersionHeaderReader, OdataMaxVersionHeaderWriter odataMaxVersionHeaderWriter)
         {
+
+            const OdataVersion newVersion = null!;
+
+            Convert(odataMaxVersionHeaderReader.Next(), odataMaxVersionHeaderWriter.Commit(newVersion));
         }
 
         private static void Convert(OdataMaxPageSizeHeaderReader odataMaxPageSizeHeaderReader, OdataMaxPageSizeHeaderWriter odataMaxPageSizeHeaderWriter)
         {
+            Convert(odataMaxPageSizeHeaderReader.Next(), odataMaxPageSizeHeaderWriter.Commit(odataMaxPageSizeHeaderReader.OdataMaxPageSize));
         }
 
         private static void Convert(CustomHeaderReader customHeaderReader, CustomHeaderWriter customHeaderWriter)
         {
+            var nextWriter = customHeaderWriter.Commit(customHeaderReader.HeaderFieldName);
+            var customHeaderToken = customHeaderReader.Next();
+            if (customHeaderToken is CustomHeaderToken.FieldValue fieldValue)
+            {
+                Convert(fieldValue.HeaderFieldValueReader, nextWriter);
+            }
+            else if (customHeaderToken is CustomHeaderToken.GetHeader getHeader)
+            {
+                Convert(getHeader.GetHeaderReader, nextWriter.Commit());
+            }
+            else
+            {
+                throw new Exception("TODO implement visitor");
+            }
+        }
+
+        private static void Convert(HeaderFieldValueReader headerFieldValueReader, HeaderFieldValueWriter headerFieldValueWriter)
+        {
+            Convert(headerFieldValueReader.Next(), headerFieldValueWriter.Commit(headerFieldValueReader.HeaderFieldValue));
         }
 
         private static void Convert(GetBodyReader getBodyReader, GetBodyWriter getBodyWriter)
         {
+            getBodyWriter.Commit();
         }
 
 
