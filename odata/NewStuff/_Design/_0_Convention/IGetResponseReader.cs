@@ -81,7 +81,7 @@
 
     public interface IGetResponseBodyReader
     {
-
+        GetResponseBodyToken Next();
     }
 
     public abstract class GetResponseBodyToken
@@ -89,5 +89,59 @@
         private GetResponseBodyToken()
         {
         }
+
+        public sealed class OdataContext : GetResponseBodyToken
+        {
+            private OdataContext()
+            {
+            }
+
+            public IOdataContextReader OdataContextReader { get; }
+        }
+
+        public sealed class NextLink : GetResponseBodyToken
+        {
+            private NextLink()
+            {
+            }
+
+            //// TODO do you like that you're allowing a nextlink in a response that is otherwise single-valued? which layer should be responsible for figuring that stuff out?
+            
+            public INextLinkReader NextLinkReader { get; }
+        }
+
+        public sealed class Property : GetResponseBodyToken
+        {
+            private Property()
+            {
+            }
+
+            public IPropertyReader PropertyReader { get; }
+        }
+
+        public sealed class Annotation : GetResponseBodyToken
+        {
+            private Annotation()
+            {
+            }
+
+            public IAnnotationReader AnnotationReader { get; }
+        }
+    }
+
+    public interface IOdataContextReader
+    {
+    }
+
+    public interface INextLinkReader
+    {
+    }
+
+    public interface IPropertyReader
+    {
+    }
+
+    public interface IAnnotationReader
+    {
     }
 }
