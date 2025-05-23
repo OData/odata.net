@@ -93,7 +93,50 @@
                 // wait for a response
                 var getResponseReader = getBodyWriter.Commit(); //// TODO this should be async
 
-                throw new Exception("tODO");
+                var headerReader = getResponseReader.Next();
+                var bodyReader = SkipHeaders(headerReader);
+
+                var getResponseBodyToken = bodyReader.Next();
+                if (getResponseBodyToken is GetResponseBodyToken.NextLink nextLink)
+                {
+                }
+                else if (getResponseBodyToken is )//// TODO you are here
+
+                    
+                    throw new Exception("tODO");
+            }
+
+            private static IGetResponseBodyReader SkipHeaders(IGetResponseHeaderReader getResponseHeaderReader)
+            {
+                var headerToken = getResponseHeaderReader.Next();
+                if (headerToken is GetResponseHeaderToken.ContentType contentType)
+                {
+                    SkipHeaders(contentType.ContentTypeHeaderReader.Next());
+                }
+                else if (headerToken is GetResponseHeaderToken.Custom custom)
+                {
+                    var customHeaderToken = custom.CustomHeaderReader.Next();
+                    if (customHeaderToken is CustomHeaderToken<IGetResponseHeaderReader>.FieldValue fieldValue)
+                    {
+                        SkipHeaders(fieldValue.HeaderFieldValueReader.Next());
+                    }
+                    else if (customHeaderToken is CustomHeaderToken<IGetResponseHeaderReader>.Header header)
+                    {
+                        SkipHeaders(header.GetHeaderReader);
+                    }
+                    else
+                    {
+                        throw new Exception("TODO implement visitor");
+                    }
+                }
+                else if (headerToken is GetResponseHeaderToken.Body body)
+                {
+                    return body.GetResponseBodyReader;
+                }
+                else
+                {
+                    throw new Exception("TODO implement visitor");
+                }
             }
 
             private static IEnumerable<Tuple<string, string?>> Split(string queryString)
