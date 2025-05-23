@@ -9,3 +9,5 @@ override Microsoft.OData.UriParser.PathCountSelectItem.HandleWith(Microsoft.ODat
 override Microsoft.OData.UriParser.PathCountSelectItem.TranslateWith<T>(Microsoft.OData.UriParser.SelectItemTranslator<T> translator) -> T
 virtual Microsoft.OData.UriParser.SelectItemHandler.Handle(Microsoft.OData.UriParser.PathCountSelectItem item) -> void
 virtual Microsoft.OData.UriParser.SelectItemTranslator<T>.Translate(Microsoft.OData.UriParser.PathCountSelectItem item) -> T
+Microsoft.OData.ODataNestedResourceInfo.Count.get -> long?
+Microsoft.OData.ODataNestedResourceInfo.Count.set -> void
