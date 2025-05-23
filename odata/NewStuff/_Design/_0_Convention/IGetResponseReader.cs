@@ -302,5 +302,6 @@
     public interface INullPropertyValueReader
     {
         //// TODO you are here unless you've had an epiphany about the above todos
+        //// TODO have an "end" member of complexpropertyvaluetoken and have it return the T reader
     }
 }
