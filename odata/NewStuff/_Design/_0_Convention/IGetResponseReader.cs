@@ -116,7 +116,7 @@
             {
             }
 
-            public IPropertyReader PropertyReader { get; }
+            public IPropertyReader<IGetResponseBodyReader> PropertyReader { get; }
         }
 
         public sealed class End : GetResponseBodyToken
@@ -157,16 +157,16 @@
         }
     }
 
-    public interface IPropertyReader
+    public interface IPropertyReader<T>
     {
-        IPropertyNameReader Next();
+        IPropertyNameReader<T> Next();
     }
 
-    public interface IPropertyNameReader
+    public interface IPropertyNameReader<T>
     {
         PropertyName PropertyName { get; }
 
-        IPropertyValueReader Next();
+        IPropertyValueReader<T> Next();
     }
 
     public sealed class PropertyName
@@ -176,59 +176,59 @@
         }
     }
 
-    public interface IPropertyValueReader
+    public interface IPropertyValueReader<T>
     {
-        PropertyValueToken Next();
+        PropertyValueToken<T> Next();
     }
 
-    public abstract class PropertyValueToken
+    public abstract class PropertyValueToken<T>
     {
         private PropertyValueToken()
         {
         }
 
-        public sealed class Primitive : PropertyValueToken
+        public sealed class Primitive : PropertyValueToken<T>
         {
             private Primitive()
             {
             }
 
-            public IPrimitivePropertyValueReader PrimitivePropertyValueReader { get; }
+            public IPrimitivePropertyValueReader<T> PrimitivePropertyValueReader { get; }
         }
 
-        public sealed class Complex : PropertyValueToken
+        public sealed class Complex : PropertyValueToken<T>
         {
             private Complex()
             {
             }
 
-            public IComplexPropertyValueReader ComplexPropertyValueReader { get; }
+            public IComplexPropertyValueReader<T> ComplexPropertyValueReader { get; }
         }
 
-        public sealed class MultiValued : PropertyValueToken
+        public sealed class MultiValued : PropertyValueToken<T>
         {
             private MultiValued()
             {
             }
 
-            public IMultiValuedPropertyValueReader MultiValuedPropertyValueReader { get; }
+            public IMultiValuedPropertyValueReader<T> MultiValuedPropertyValueReader { get; }
         }
 
-        public sealed class Null : PropertyValueToken
+        public sealed class Null : PropertyValueToken<T>
         {
             private Null()
             {
             }
 
-            public INullPropertyValueReader NullPropertyValueReader { get; }
+            public INullPropertyValueReader<T> NullPropertyValueReader { get; }
         }
     }
 
-    public interface IPrimitivePropertyValueReader
+    public interface IPrimitivePropertyValueReader<T>
     {
         PrimitivePropertyValue PrimitivePropertyValue { get; }
 
-        IGetResponseBodyReader Next();
+        T Next();
     }
 
     public sealed class PrimitivePropertyValue
@@ -240,50 +240,59 @@
         //// TODO this should probably be a "token" and have different members for each kind of primitive property; or maybe you can't do that without the edm model so this isn't the right place?
     }
 
-    public interface IComplexPropertyValueReader
+    public interface IComplexPropertyValueReader<T>
     {
-        ComplexPropertyValueToken Next();
+        ComplexPropertyValueToken<T> Next();
     }
 
-    public abstract class ComplexPropertyValueToken
+    public abstract class ComplexPropertyValueToken<T>
     {
         private ComplexPropertyValueToken()
         {
         }
 
-        public sealed class OdataContext : ComplexPropertyValueToken
+        public sealed class OdataContext : ComplexPropertyValueToken<T>
         {
             private OdataContext()
             {
             }
 
-            public IOdataContextReader<IComplexPropertyValueReader> OdataContextReader { get; }
+            public IOdataContextReader<IComplexPropertyValueReader<T>> OdataContextReader { get; }
         }
 
-        public sealed class OdataId : ComplexPropertyValueToken
+        public sealed class OdataId : ComplexPropertyValueToken<T>
         {
             private OdataId()
             {
             }
 
-            public IOdataIdReader OdataIdReader { get; }
+            public IOdataIdReader<IComplexPropertyValueReader<T>> OdataIdReader { get; }
         }
 
-        public sealed class Property : ComplexPropertyValueToken
+        public sealed class Property : ComplexPropertyValueToken<T>
         {
             private Property()
             {
             }
 
-            public IPropertyReader PropertyReader { get; }
+            public IPropertyReader<IComplexPropertyValueReader<T>> PropertyReader { get; }
+        }
+
+        public sealed class End : ComplexPropertyValueToken<T>
+        {
+            private End()
+            {
+            }
+
+            public T Reader { get; }
         }
     }
 
-    public interface IOdataIdReader
+    public interface IOdataIdReader<T>
     {
         OdataId OdataId { get; }
 
-        IComplexPropertyValueReader Next();
+        T Next();
     }
 
     public sealed class OdataId
@@ -293,15 +302,38 @@
         }
     }
 
-    public interface IMultiValuedPropertyValueReader
+    public interface IMultiValuedPropertyValueReader<T>
     {
-        IComplexPropertyValueReader Next(); //// TODO what about edm.untyped nested collections?
-        //// TODO this doesn't even loop back to the next value; you need a generic somewhere
+        MultiValuedPropertyValueToken<IMultiValuedPropertyValueReader<T>> Next(); //// TODO what about edm.untyped nested collections?
     }
 
-    public interface INullPropertyValueReader
+    public abstract class MultiValuedPropertyValueToken<T>
     {
-        //// TODO you are here unless you've had an epiphany about the above todos
-        //// TODO have an "end" member of complexpropertyvaluetoken and have it return the T reader
+        private MultiValuedPropertyValueToken()
+        {
+        }
+
+        public sealed class Object : MultiValuedPropertyValueToken<T>
+        {
+            private Object()
+            {
+            }
+
+            public IComplexPropertyValueReader<IMultiValuedPropertyValueReader<T>> ComplexPropertyValueReader { get; }
+        }
+
+        public sealed class End : MultiValuedPropertyValueToken<T>
+        {
+            private End()
+            {
+            }
+
+            public T Reader { get; }
+        }
+    }
+
+    public interface INullPropertyValueReader<T>
+    {
+        T Next();
     }
 }
