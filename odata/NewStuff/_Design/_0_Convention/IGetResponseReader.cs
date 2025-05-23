@@ -96,7 +96,7 @@
             {
             }
 
-            public IOdataContextReader OdataContextReader { get; }
+            public IOdataContextReader<IGetResponseBodyReader> OdataContextReader { get; }
         }
 
         public sealed class NextLink : GetResponseBodyToken
@@ -119,21 +119,21 @@
             public IPropertyReader PropertyReader { get; }
         }
 
-        public sealed class Annotation : GetResponseBodyToken
+        public sealed class End : GetResponseBodyToken
         {
-            private Annotation()
+            private End()
             {
             }
 
-            public IAnnotationReader AnnotationReader { get; }
+            //// TODO is this a good way to model this?
         }
     }
 
-    public interface IOdataContextReader
+    public interface IOdataContextReader<T>
     {
         OdataContext OdataContext { get; }
 
-        IGetResponseBodyReader Next();
+        T Next();
     }
 
     public sealed class OdataContext
@@ -242,17 +242,65 @@
 
     public interface IComplexPropertyValueReader
     {
+        ComplexPropertyValueToken Next();
+    }
+
+    public abstract class ComplexPropertyValueToken
+    {
+        private ComplexPropertyValueToken()
+        {
+        }
+
+        public sealed class OdataContext : ComplexPropertyValueToken
+        {
+            private OdataContext()
+            {
+            }
+
+            public IOdataContextReader<IComplexPropertyValueReader> OdataContextReader { get; }
+        }
+
+        public sealed class OdataId : ComplexPropertyValueToken
+        {
+            private OdataId()
+            {
+            }
+
+            public IOdataIdReader OdataIdReader { get; }
+        }
+
+        public sealed class Property : ComplexPropertyValueToken
+        {
+            private Property()
+            {
+            }
+
+            public IPropertyReader PropertyReader { get; }
+        }
+    }
+
+    public interface IOdataIdReader
+    {
+        OdataId OdataId { get; }
+
+        IComplexPropertyValueReader Next();
+    }
+
+    public sealed class OdataId
+    {
+        private OdataId()
+        {
+        }
     }
 
     public interface IMultiValuedPropertyValueReader
     {
+        IComplexPropertyValueReader Next(); //// TODO what about edm.untyped nested collections?
+        //// TODO this doesn't even loop back to the next value; you need a generic somewhere
     }
 
     public interface INullPropertyValueReader
     {
-    }
-
-    public interface IAnnotationReader
-    {
+        //// TODO you are here unless you've had an epiphany about the above todos
     }
 }
