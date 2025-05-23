@@ -32,26 +32,26 @@
             Convert(getRequestReader.Next(), getRequestWriter.Commit());
         }
 
-        private static void Convert(IUriReader<GetHeaderReader> uriReader, IUriWriter<GetHeaderWriter> uriWriter)
+        private static void Convert(IUriReader<IGetHeaderReader> uriReader, IUriWriter<IGetHeaderWriter> uriWriter)
         {
             Convert(uriReader.Next(), uriWriter.Commit());
         }
 
-        private static void Convert(IUriSchemeReader<GetHeaderReader> uriSchemeReader, IUriSchemeWriter<GetHeaderWriter> uriSchemeWriter)
+        private static void Convert(IUriSchemeReader<IGetHeaderReader> uriSchemeReader, IUriSchemeWriter<IGetHeaderWriter> uriSchemeWriter)
         {
             Convert(uriSchemeReader.Next(), uriSchemeWriter.Commit(uriSchemeReader.UriScheme));
         }
 
-        private static void Convert(IUriDomainReader<GetHeaderReader> uriDomainReader, IUriDomainWriter<GetHeaderWriter> uriDomainWriter)
+        private static void Convert(IUriDomainReader<IGetHeaderReader> uriDomainReader, IUriDomainWriter<IGetHeaderWriter> uriDomainWriter)
         {
             var nextWriter = uriDomainWriter.Commit(uriDomainReader.UriDomain);
 
             var uriDomainToken = uriDomainReader.Next();
-            if (uriDomainToken is UriDomainToken<GetHeaderReader>.Port port)
+            if (uriDomainToken is UriDomainToken<IGetHeaderReader>.Port port)
             {
                 Convert(port.UriPortReader, nextWriter);
             }
-            else if (uriDomainToken is UriDomainToken<GetHeaderReader>.PathSegment pathSegment)
+            else if (uriDomainToken is UriDomainToken<IGetHeaderReader>.PathSegment pathSegment)
             {
                 Convert(pathSegment.UriPathSegmentReader, nextWriter.Commit());
             }
@@ -61,21 +61,21 @@
             }
         }
 
-        private static void Convert(IUriPortReader<GetHeaderReader> uriPortReader, IUriPortWriter<GetHeaderWriter> uriPortWriter)
+        private static void Convert(IUriPortReader<IGetHeaderReader> uriPortReader, IUriPortWriter<IGetHeaderWriter> uriPortWriter)
         {
             Convert(uriPortReader.Next(), uriPortWriter.Commit(uriPortReader.UriPort));
         }
 
-        private static void Convert(IUriPathSegmentReader<GetHeaderReader> uriPathSegmentReader, IUriPathSegmentWriter<GetHeaderWriter> uriPathSegmentWriter)
+        private static void Convert(IUriPathSegmentReader<IGetHeaderReader> uriPathSegmentReader, IUriPathSegmentWriter<IGetHeaderWriter> uriPathSegmentWriter)
         {
             var nextWriter = uriPathSegmentWriter.Commit(uriPathSegmentReader.UriPathSegment);
 
             var pathSegmentToken = uriPathSegmentReader.Next();
-            if (pathSegmentToken is PathSegmentToken<GetHeaderReader>.PathSegment pathSegment)
+            if (pathSegmentToken is PathSegmentToken<IGetHeaderReader>.PathSegment pathSegment)
             {
                 Convert(pathSegment.UriPathSegmentReader, nextWriter);
             }
-            else if (pathSegmentToken is PathSegmentToken<GetHeaderReader>.QueryOption queryOption)
+            else if (pathSegmentToken is PathSegmentToken<IGetHeaderReader>.QueryOption queryOption)
             {
                 Convert(queryOption.QueryOptionsReader, nextWriter.Commit());
             }
@@ -85,18 +85,18 @@
             }
         }
 
-        private static void Convert(IQueryOptionReader<GetHeaderReader> queryOption, IQueryOptionWriter<GetHeaderWriter> queryOptionWriter)
+        private static void Convert(IQueryOptionReader<IGetHeaderReader> queryOption, IQueryOptionWriter<IGetHeaderWriter> queryOptionWriter)
         {
             var queryOptionToken = queryOption.Next();
-            if (queryOptionToken is QueryOptionToken<GetHeaderReader>.QueryParameter queryParameter)
+            if (queryOptionToken is QueryOptionToken<IGetHeaderReader>.QueryParameter queryParameter)
             {
                 Convert(queryParameter.QueryParameterReader, queryOptionWriter.CommitParameter());
             }
-            else if (queryOptionToken is QueryOptionToken<GetHeaderReader>.Fragment fragment)
+            else if (queryOptionToken is QueryOptionToken<IGetHeaderReader>.Fragment fragment)
             {
                 Convert(fragment.FragmentReader, queryOptionWriter.CommitFragment());
             }
-            else if (queryOptionToken is QueryOptionToken<GetHeaderReader>.Headers headers)
+            else if (queryOptionToken is QueryOptionToken<IGetHeaderReader>.Headers headers)
             {
                 Convert(headers.HeaderReader, queryOptionWriter.Commit());
             }
@@ -106,16 +106,16 @@
             }
         }
 
-        private static void Convert(IQueryParameterReader<GetHeaderReader> queryParameterReader, IQueryParameterWriter<GetHeaderWriter> queryParameterWriter)
+        private static void Convert(IQueryParameterReader<IGetHeaderReader> queryParameterReader, IQueryParameterWriter<IGetHeaderWriter> queryParameterWriter)
         {
             var nextWriter = queryParameterWriter.Commit(queryParameterReader.QueryParameter);
 
             var queryParameterToken = queryParameterReader.Next();
-            if (queryParameterToken is QueryParameterToken<GetHeaderReader>.QueryOption queryOption)
+            if (queryParameterToken is QueryParameterToken<IGetHeaderReader>.QueryOption queryOption)
             {
                 Convert(queryOption.QueryOptionReader, nextWriter.Commit());
             }
-            else if (queryParameterToken is QueryParameterToken<GetHeaderReader>.QueryValue queryValue)
+            else if (queryParameterToken is QueryParameterToken<IGetHeaderReader>.QueryValue queryValue)
             {
                 Convert(queryValue.QueryValueReader, nextWriter);
             }
@@ -125,12 +125,12 @@
             }
         }
 
-        private static void Convert(IQueryValueReader<GetHeaderReader> queryValueReader, IQueryValueWriter<GetHeaderWriter> queryValueWriter)
+        private static void Convert(IQueryValueReader<IGetHeaderReader> queryValueReader, IQueryValueWriter<IGetHeaderWriter> queryValueWriter)
         {
             Convert(queryValueReader.Next(), queryValueWriter.Commit(queryValueReader.QueryValue));
         }
 
-        private static void Convert(IFragmentReader<GetHeaderReader> fragmentReader, IFragmentWriter<GetHeaderWriter> fragmentWriter)
+        private static void Convert(IFragmentReader<IGetHeaderReader> fragmentReader, IFragmentWriter<IGetHeaderWriter> fragmentWriter)
         {
             Convert(fragmentReader.Next(), fragmentWriter.Commit(fragmentReader.Fragment));
         }
@@ -172,15 +172,15 @@
             Convert(odataMaxPageSizeHeaderReader.Next(), odataMaxPageSizeHeaderWriter.Commit(odataMaxPageSizeHeaderReader.OdataMaxPageSize));
         }
 
-        private static void Convert(ICustomHeaderReader customHeaderReader, ICustomHeaderWriter customHeaderWriter)
+        private static void Convert(ICustomHeaderReader<IGetHeaderReader> customHeaderReader, ICustomHeaderWriter customHeaderWriter)
         {
             var nextWriter = customHeaderWriter.Commit(customHeaderReader.HeaderFieldName);
             var customHeaderToken = customHeaderReader.Next();
-            if (customHeaderToken is CustomHeaderToken.FieldValue fieldValue)
+            if (customHeaderToken is CustomHeaderToken<IGetHeaderReader>.FieldValue fieldValue)
             {
                 Convert(fieldValue.HeaderFieldValueReader, nextWriter);
             }
-            else if (customHeaderToken is CustomHeaderToken.GetHeader getHeader)
+            else if (customHeaderToken is CustomHeaderToken<IGetHeaderReader>.Header getHeader)
             {
                 Convert(getHeader.GetHeaderReader, nextWriter.Commit());
             }
@@ -190,7 +190,7 @@
             }
         }
 
-        private static void Convert(IHeaderFieldValueReader headerFieldValueReader, IHeaderFieldValueWriter headerFieldValueWriter)
+        private static void Convert(IHeaderFieldValueReader<IGetHeaderReader> headerFieldValueReader, IHeaderFieldValueWriter headerFieldValueWriter)
         {
             Convert(headerFieldValueReader.Next(), headerFieldValueWriter.Commit(headerFieldValueReader.HeaderFieldValue));
         }

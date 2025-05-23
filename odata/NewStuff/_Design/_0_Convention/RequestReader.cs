@@ -56,7 +56,7 @@
 
     public interface IGetRequestReader
     {
-        IUriReader<GetHeaderReader> Next();
+        IUriReader<IGetHeaderReader> Next();
     }
 
     public sealed class GetRequestReader : IGetRequestReader
@@ -65,7 +65,7 @@
         {
         }
 
-        public IUriReader<GetHeaderReader> Next()
+        public IUriReader<IGetHeaderReader> Next()
         {
             throw new NotImplementedException("TODO");
         }
@@ -504,7 +504,7 @@
             {
             }
 
-            public ICustomHeaderReader CustomHeaderReader { get; }
+            public ICustomHeaderReader<IGetHeaderReader> CustomHeaderReader { get; }
         }
 
         public sealed class GetBody : GetHeaderToken
@@ -575,14 +575,14 @@
         }
     }
 
-    public interface ICustomHeaderReader
+    public interface ICustomHeaderReader<T>
     {
         HeaderFieldName HeaderFieldName { get; }
 
-        CustomHeaderToken Next();
+        CustomHeaderToken<T> Next();
     }
 
-    public sealed class CustomHeaderReader : ICustomHeaderReader
+    public sealed class CustomHeaderReader<T> : ICustomHeaderReader<T>
     {
         private CustomHeaderReader()
         {
@@ -590,7 +590,7 @@
 
         public HeaderFieldName HeaderFieldName { get; }
 
-        public CustomHeaderToken Next()
+        public CustomHeaderToken<T> Next()
         {
             throw new NotImplementedException("TODO");
         }
@@ -603,39 +603,39 @@
         }
     }
 
-    public abstract class CustomHeaderToken
+    public abstract class CustomHeaderToken<T>
     {
         private CustomHeaderToken()
         {
         }
 
-        public sealed class FieldValue : CustomHeaderToken
+        public sealed class FieldValue : CustomHeaderToken<T>
         {
             private FieldValue()
             {
             }
 
-            public IHeaderFieldValueReader HeaderFieldValueReader { get; }
+            public IHeaderFieldValueReader<T> HeaderFieldValueReader { get; }
         }
 
-        public sealed class GetHeader : CustomHeaderToken
+        public sealed class Header : CustomHeaderToken<T>
         {
-            private GetHeader()
+            private Header()
             {
             }
 
-            public IGetHeaderReader GetHeaderReader { get; }
+            public T GetHeaderReader { get; }
         }
     }
 
-    public interface IHeaderFieldValueReader
+    public interface IHeaderFieldValueReader<T>
     {
         HeaderFieldValue HeaderFieldValue { get; }
 
-        IGetHeaderReader Next();
+        T Next();
     }
 
-    public sealed class HeaderFieldValueReader : IHeaderFieldValueReader
+    public sealed class HeaderFieldValueReader<T> : IHeaderFieldValueReader<T>
     {
         private HeaderFieldValueReader()
         {
@@ -643,7 +643,7 @@
 
         public HeaderFieldValue HeaderFieldValue { get; }
 
-        public IGetHeaderReader Next()
+        public T Next()
         {
             throw new NotImplementedException("TODO");
         }
