@@ -561,7 +561,13 @@ namespace Microsoft.OData.Client
 
                     try
                     {
-                        uriLiteral = LiteralFormatter.ForConstants.Format(item);
+                        object currentValue = item;
+                        if (item.GetType().IsEnum)
+                        {
+                            currentValue = item.ToString();
+                        }
+
+                        uriLiteral = LiteralFormatter.ForConstants.Format(currentValue);
                     }
                     catch (InvalidOperationException)
                     {
