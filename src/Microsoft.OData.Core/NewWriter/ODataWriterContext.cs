@@ -13,4 +13,5 @@ internal class ODataWriterContext
     public IEdmModel Model { get; set; }
     public Utf8JsonWriter JsonWriter { get; set; }
     public JsonSerializerOptions JsonSerializerOptions { get; set; }
+    public IODataValueWriterProvider WriterProvider { get; set; }
 }

@@ -33,4 +33,9 @@ internal class ODataConventionalJsonResourceWriter<T>(
         // write end
         jsonWriter.WriteEndObject();
     }
+
+    public ValueTask WriteAsync(object payload, ODataWriterState context)
+    {
+        return WriteAsync((T)payload, context);
+    }
 }

@@ -267,25 +267,28 @@ public class ExperimentTests
         ];
 
         using var stream = new MemoryStream();
-        Utf8JsonWriter writer = new(stream);
+        Utf8JsonWriter jsonWriter = new(stream);
         var propertySelector = new ClrTypeEdmPropertySelector<Customer>();
         var propertyWriter = new ClrTypeEdmJsonPropertyWriter<Customer>();
 
         var resourceWriter = new ODataConventionalJsonResourceWriter<Customer>(
-            writer,
+            jsonWriter,
             propertySelector,
             propertyWriter
             );
 
+        var writerProvider = new ClrODataValueWriterProvider();
+
         var uri = new ODataUriParser(model, new Uri("Customers?$select=Id,Name&$expand=Orders($select=Amount)", UriKind.Relative)).ParseUri();
 
-        var responseWriter = new ODataConventionalEntitySetJsonResponseWriter<Customer>(writer, resourceWriter);
+        var responseWriter = new ODataConventionalEntitySetJsonResponseWriter<Customer>(jsonWriter, resourceWriter);
 
         var context = new ODataWriterContext
         {
             Model = model,
-            JsonWriter = writer,
-            SelectExpandClause = uri.SelectAndExpand
+            JsonWriter = jsonWriter,
+            SelectExpandClause = uri.SelectAndExpand,
+            WriterProvider = writerProvider
         };
         var state = new ODataWriterState
         {
@@ -295,7 +298,7 @@ public class ExperimentTests
 
         await responseWriter.WriteAsync(data, state);
 
-        writer.Flush();
+        jsonWriter.Flush();
         stream.Position = 0;
         using var reader = new StreamReader(stream);
         var writtenPayload = await reader.ReadToEndAsync();

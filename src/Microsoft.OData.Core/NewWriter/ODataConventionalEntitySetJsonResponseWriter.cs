@@ -36,4 +36,9 @@ internal class ODataConventionalEntitySetJsonResponseWriter<TPayload>(
         jsonWriter.WriteEndArray();
         jsonWriter.WriteEndObject();
     }
+
+    public ValueTask WriteAsync(object value, ODataWriterState state)
+    {
+        return WriteAsync((IEnumerable<TPayload>)value, state);
+    }
 }
