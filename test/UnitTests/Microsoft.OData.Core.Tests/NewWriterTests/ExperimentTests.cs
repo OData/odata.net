@@ -372,7 +372,9 @@ public class ExperimentTests
             Model = model,
             JsonWriter = jsonWriter,
             SelectExpandClause = uri.SelectAndExpand,
-            WriterProvider = writerProvider
+            WriterProvider = writerProvider,
+            EdmTypeMapper = new EdmTypeMapper(),
+            DynamicPropertiesRetrieverProvider = new ClrDynamicPropertyRetrieverProvider()
         };
         var state = new ODataWriterState
         {
@@ -390,7 +392,7 @@ public class ExperimentTests
         var expectedPayload =
             "{\"@odata.context\":\"contextUrl\",\"value\":["
             + "{\"Id\":1,\"Name\":\"P1\",\"Status\":\"Active\",\"Description\":\"test\",\"Budget\":10000},"
-            + "{\"Id\":1,\"Name\":\"P2\",\"Status\":\"Complete\",\"Description\":\"Great\",\"Budget\":2000}"
+            + "{\"Id\":2,\"Name\":\"P2\",\"Status\":\"Complete\",\"Description\":\"Great\",\"Budget\":2000}"
             + "]}";
 
         Assert.Equal(expectedPayload, writtenPayload);

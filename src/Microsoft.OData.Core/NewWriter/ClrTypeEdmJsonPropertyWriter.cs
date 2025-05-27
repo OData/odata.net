@@ -1,4 +1,5 @@
 ﻿using Microsoft.OData.Edm;
+using System.Collections;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -68,5 +69,34 @@ internal class ClrTypeEdmJsonPropertyWriter<T> : IResourcePropertyWriter<T, IEdm
 
         // Susceptible to boxing, so we should avoid this if possible
         JsonSerializer.Serialize(state.WriterContext.JsonWriter, value, value.GetType(), state.WriterContext.JsonSerializerOptions);
+    }
+
+    public ValueTask WriteDynamicProperty(T resource, string propertyName, object value, IEdmTypeReference propertyType, ODataWriterState state)
+    {
+        var jsonWriter = state.WriterContext.JsonWriter;
+        state.WriterContext.JsonWriter.WritePropertyName(propertyName);
+
+        if (propertyType.IsCollection())
+        {
+            jsonWriter.WriteStartArray();
+
+            var collection = value as IEnumerable;
+            foreach (var item in collection)
+            {
+                // TODO handle complex types properly
+                JsonSerializer.Serialize(jsonWriter, item, item.GetType(), state.WriterContext.JsonSerializerOptions);
+            }
+
+
+            jsonWriter.WriteEndArray();
+        }
+        else
+        {
+            // TODO: handle complex types properly
+            // Susceptible to boxing, so we should avoid this if possible
+            JsonSerializer.Serialize(jsonWriter, value, value.GetType(), state.WriterContext.JsonSerializerOptions);
+        }
+
+        return ValueTask.CompletedTask;
     }
 }

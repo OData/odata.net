@@ -137,6 +137,21 @@ internal class ODataConventionalJsonResourceWriter<T>(
             
         }
 
+        if (state.EdmType.IsOpen())
+        {
+            // write open properties
+            var dynamicPropertiesRetrieverProvider = state.WriterContext.DynamicPropertiesRetrieverProvider;
+            var dynamicPropertiesRetriever = dynamicPropertiesRetrieverProvider.GetDynamicPropertiesRetriever<T>(
+                state.EdmType as IEdmStructuredType,
+                state.WriterContext);
+
+            var dynamicProperties = dynamicPropertiesRetriever.GetDynamicProperties(payload, state);
+            foreach (var (propertyName, propertyType, value) in dynamicProperties)
+            {
+                await propertyWriter.WriteDynamicProperty(payload, propertyName, value, propertyType , state);
+            }
+        }    
+
 
         // write end
         jsonWriter.WriteEndObject();
