@@ -398,6 +398,91 @@ public class ExperimentTests
         Assert.Equal(expectedPayload, writtenPayload);
     }
 
+    [Fact]
+    public async Task WriteClrPayloadBasedOnSelectedDynamicProperties()
+    {
+        var model = new EdmModel();
+
+        var projectEntity = model.AddEntityType("ns", "Project", baseType: null, isAbstract: false, isOpen: true);
+        projectEntity.AddKeys(projectEntity.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
+        projectEntity.AddStructuralProperty("Name", EdmPrimitiveTypeKind.String);
+
+        var projectSet = model.AddEntityContainer("ns", "DefaultContainer")
+            .AddEntitySet("Projects", projectEntity);
+
+        IEnumerable<Project> projects = [
+            new Project
+            {
+                Id = 1,
+                Name = "P1",
+                DynamicProperties = new Dictionary<string, object>
+                {
+                    { "Status", "Active" },
+                    { "Description", "test" },
+                    { "Budget", 10000 }
+                }
+            },
+            new Project
+            {
+                Id = 2,
+                Name = "P2",
+                DynamicProperties = new Dictionary<string, object>
+                {
+                    { "Status", "Complete" },
+                    { "Description", "Great" },
+                    { "Budget", 2000 }
+                }
+            }
+        ];
+
+        using var stream = new MemoryStream();
+        Utf8JsonWriter jsonWriter = new(stream);
+        var propertySelector = new ClrTypeEdmPropertySelector<Project>();
+        var propertyWriter = new ClrTypeEdmJsonPropertyWriter<Project>();
+
+        var resourceWriter = new ODataConventionalJsonResourceWriter<Project>(
+            jsonWriter,
+            propertySelector,
+            propertyWriter
+            );
+
+        var writerProvider = new ClrODataValueWriterProvider();
+
+        var uri = new ODataUriParser(model, new Uri("Projects?$select=Name,Budget", UriKind.Relative)).ParseUri();
+
+        var responseWriter = new ODataConventionalEntitySetJsonResponseWriter<Project>(jsonWriter, resourceWriter);
+
+        var context = new ODataWriterContext
+        {
+            Model = model,
+            JsonWriter = jsonWriter,
+            SelectExpandClause = uri.SelectAndExpand,
+            WriterProvider = writerProvider,
+            EdmTypeMapper = new EdmTypeMapper(),
+            DynamicPropertiesRetrieverProvider = new ClrDynamicPropertyRetrieverProvider()
+        };
+        var state = new ODataWriterState
+        {
+            EdmType = projectSet.Type,
+            WriterContext = context
+        };
+
+        await responseWriter.WriteAsync(projects, state);
+
+        jsonWriter.Flush();
+        stream.Position = 0;
+        using var reader = new StreamReader(stream);
+        var writtenPayload = await reader.ReadToEndAsync();
+
+        var expectedPayload =
+            "{\"@odata.context\":\"contextUrl\",\"value\":["
+            + "{\"Id\":1,\"Name\":\"P1\",\"Budget\":10000},"
+            + "{\"Id\":2,\"Name\":\"P2\",\"Budget\":2000}"
+            + "]}";
+
+        Assert.Equal(expectedPayload, writtenPayload);
+    }
+
     class Customer
     {
         public int Id { get; set; }
