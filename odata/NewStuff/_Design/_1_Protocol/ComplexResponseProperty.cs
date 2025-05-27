@@ -4,6 +4,13 @@
 
     public class ComplexResponseProperty
     {
+        public ComplexResponseProperty(string name, SingleValue value, IEnumerable<object> annotations)
+        {
+            Name = name;
+            Value = value;
+            Annotations = annotations;
+        }
+
         public string Name { get; }
 
         public SingleValue Value { get; }

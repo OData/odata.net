@@ -42,13 +42,13 @@
 
             private sealed class MultiValuedResponseBuilder
             {
-                public IReadOnlyList<SingleValue> Value { get; set; }
+                public List<SingleValue> Value { get; set; } = new List<SingleValue>();
 
                 public Uri? NextLink { get; set; } //// TODO make this strongly-typed
 
                 public int? Count { get; set; } //// TODO does this need to be strongly-typed? (maybe to avoid nullable?)
 
-                public IEnumerable<object> Annotations { get; set; } //// TODO make this strongly-typed
+                public IEnumerable<object> Annotations { get; set; } = new List<object>(); //// TODO make this strongly-typed
 
                 public MultiValuedResponse Build()
                 {
@@ -143,10 +143,11 @@
                             if (propertyValueToken is PropertyValueToken<IGetResponseBodyReader>.Complex complex)
                             {
                                 var complexPropertyValueReader = complex.ComplexPropertyValueReader;
-                                var complexPropertyValueToken = complexPropertyValueReader.Next();
+                                var singleValueBuilder = new SingleValueBuilder();
 
-                                new SingleValue()
-                                //// TODO you are here
+                                getResponseBodyReader = ReadComplexPropertyValue(complexPropertyValueReader, singleValueBuilder);
+
+                                multiValueResponseBuilder.Value.Add(singleValueBuilder.Build());
                             }
                             else
                             {
@@ -173,6 +174,119 @@
                 }
 
                 return multiValueResponseBuilder.Build();
+            }
+
+            private sealed class SingleValueBuilder
+            {
+                public List<ComplexResponseProperty> ComplexProperties { get; set; } = new List<ComplexResponseProperty>();
+
+                public List<MultiValuedResponseProperty> MultiValuedProperties { get; set; } = new List<MultiValuedResponseProperty>();
+
+                public List<UntypedResponseProperty> UntypedProperties { get; set; } = new List<UntypedResponseProperty>();
+
+                public List<PrimitiveResponseProperty> PrimitiveProperties { get; set; } = new List<PrimitiveResponseProperty>();
+
+                public List<DynamicResponseProperty> DynamicProperties { get; set; } = new List<DynamicResponseProperty>();
+
+                public string? Context { get; set; } //// TODO make this strongly typed
+
+                public SingleValue Build()
+                {
+                    return new SingleValue(this.ComplexProperties, this.MultiValuedProperties, this.UntypedProperties, this.PrimitiveProperties, this.DynamicProperties, this.Context);
+                }
+            }
+
+            private static T ReadComplexPropertyValue<T>(IComplexPropertyValueReader<T> complexPropertyValueReader, SingleValueBuilder singleValueBuilder)
+            {
+                while (true)
+                {
+                    var complexPropertyValueToken = complexPropertyValueReader.Next();
+                    if (complexPropertyValueToken is ComplexPropertyValueToken<T>.Property property)
+                    {
+                        var propertyReader = property.PropertyReader;
+                        var propertyNameReader = propertyReader.Next();
+
+                        var propertyName = propertyNameReader.PropertyName.Name;
+
+                        var propertyValueReader = propertyNameReader.Next();
+                        complexPropertyValueReader = ReadPropertyValue(propertyValueReader, propertyName, singleValueBuilder);
+                    }
+                    else if (complexPropertyValueToken is ComplexPropertyValueToken<T>.OdataContext odataContext)
+                    {
+                        var odataContextReader = odataContext.OdataContextReader;
+                        singleValueBuilder.Context = odataContextReader.OdataContext.Context;
+
+                        complexPropertyValueReader = odataContext.OdataContextReader.Next();
+                    }
+                    else if (complexPropertyValueToken is ComplexPropertyValueToken<T>.OdataId odataId)
+                    {
+                        //// TODO this implementation is skipping the odataid
+
+                        complexPropertyValueReader = odataId.OdataIdReader.Next();
+                    }
+                    else if (complexPropertyValueToken is ComplexPropertyValueToken<T>.End end)
+                    {
+                        return end.Reader;
+                    }
+                }
+            }
+
+            private static T ReadPropertyValue<T>(IPropertyValueReader<T> propertyValueReader, string propertyName, SingleValueBuilder singleValueBuilder)
+            {
+                //// TODO you are here
+                var propertyValueToken = propertyValueReader.Next();
+                if (propertyValueToken is PropertyValueToken<T>.Complex complex)
+                {
+                    var nestedSingleValueBuilder = new SingleValueBuilder();
+                    var nextReader = ReadComplexPropertyValue(complex.ComplexPropertyValueReader, nestedSingleValueBuilder);
+
+                    singleValueBuilder.ComplexProperties.Add(new ComplexResponseProperty(propertyName, nestedSingleValueBuilder.Build(), Enumerable.Empty<string>()));
+
+                    return nextReader;
+                }
+                else if (propertyValueToken is PropertyValueToken<T>.MultiValued multiValued)
+                {
+                    var values = new List<SingleValue>();
+
+                    var multiValuedPropertyValueReader = multiValued.MultiValuedPropertyValueReader;
+                    while (true)
+                    {
+                        var multiValuedPropertyValueToken = multiValuedPropertyValueReader.Next();
+                        if (multiValuedPropertyValueToken is MultiValuedPropertyValueToken<T>.Object @object)
+                        {
+                            var complexPropertyValueReader = @object.ComplexPropertyValueReader;
+                            var nestedSinlgeValueBuilder = new SingleValueBuilder();
+                            multiValuedPropertyValueReader = ReadComplexPropertyValue(complexPropertyValueReader, nestedSinlgeValueBuilder);
+                            values.Add(nestedSinlgeValueBuilder.Build());
+                        }
+                        else if (multiValuedPropertyValueToken is MultiValuedPropertyValueToken<T>.End end)
+                        {
+                            //// TODO nextlink isn't modeled in the readers
+                            singleValueBuilder.MultiValuedProperties.Add(new MultiValuedResponseProperty(propertyName, values, null));
+
+                            return end.Reader;
+                        }
+                        else
+                        {
+                            throw new Exception("TODO implement visitor");
+                        }
+                    }
+                }
+                else if (propertyValueToken is PropertyValueToken<T>.Null @null)
+                {
+                    //// TODO you need to add null properties to `singlevalue`
+                    return @null.NullPropertyValueReader.Next();
+                }
+                else if (propertyValueToken is PropertyValueToken<T>.Primitive primitive)
+                {
+                    var primitivePropertyValueReader = primitive.PrimitivePropertyValueReader;
+                    singleValueBuilder.PrimitiveProperties.Add(new PrimitiveResponseProperty(propertyName, primitivePropertyValueReader.PrimitivePropertyValue.Value, Enumerable.Empty<object>()));
+                    return primitivePropertyValueReader.Next();
+                }
+                else
+                {
+                    throw new Exception("TODO implement visitor");
+                }
             }
 
             private static T SkipPropertyValue<T>(IPropertyValueReader<T> propertyValueReader)

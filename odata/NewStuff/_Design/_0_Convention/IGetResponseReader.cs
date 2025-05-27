@@ -1,7 +1,8 @@
 ﻿namespace NewStuff._Design._0_Convention
 {
     using System;
-    
+    using System.IO;
+
     public interface IGetResponseReader
     {
         IGetResponseHeaderReader Next();
@@ -140,9 +141,12 @@
 
     public sealed class OdataContext
     {
-        private OdataContext()
+        internal OdataContext(string context)
         {
+            Context = context;
         }
+
+        internal string Context { get; }
     }
 
     public interface INextLinkReader
@@ -241,9 +245,12 @@
 
     public sealed class PrimitivePropertyValue
     {
-        private PrimitivePropertyValue()
+        internal PrimitivePropertyValue(string value)
         {
+            Value = value;
         }
+
+        internal string Value { get; }
 
         //// TODO this should probably be a "token" and have different members for each kind of primitive property; or maybe you can't do that without the edm model so this isn't the right place?
     }

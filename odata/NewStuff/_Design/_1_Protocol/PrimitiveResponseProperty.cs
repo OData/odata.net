@@ -4,6 +4,13 @@
 
     public class PrimitiveResponseProperty
     {
+        public PrimitiveResponseProperty(string name, string? value, IEnumerable<object> annotations)
+        {
+            Name = name;
+            Value = value;
+            Annotations = annotations;
+        }
+
         public string Name { get; }
 
         public string? Value { get; } //// TODO strongly type this? how to handle nulls?

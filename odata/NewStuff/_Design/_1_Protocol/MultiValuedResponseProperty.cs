@@ -4,6 +4,13 @@
 
     public class MultiValuedResponseProperty
     {
+        public MultiValuedResponseProperty(string name, IEnumerable<SingleValue> values, string? nextLink)
+        {
+            Name = name;
+            Values = values;
+            NextLink = nextLink;
+        }
+
         public string Name { get; }
 
         public IEnumerable<SingleValue> Values { get; }
