@@ -1,7 +1,9 @@
 ﻿using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using System;
+using System.Collections.Frozen;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -145,11 +147,35 @@ internal class ODataConventionalJsonResourceWriter<T>(
                 state.EdmType as IEdmStructuredType,
                 state.WriterContext);
 
-            var dynamicProperties = dynamicPropertiesRetriever.GetDynamicProperties(payload, state);
-            foreach (var (propertyName, propertyType, value) in dynamicProperties)
+            // should we filter selected properties or within the GetDynamicProperties
+            if (state.SelectAndExpand == null || state.SelectAndExpand.AllSelected)
             {
-                await propertyWriter.WriteDynamicProperty(payload, propertyName, value, propertyType , state);
+                var dynamicProperties = dynamicPropertiesRetriever.GetDynamicProperties(payload, state);
+                foreach (var (propertyName, propertyType, value) in dynamicProperties)
+                {
+                    await propertyWriter.WriteDynamicProperty(payload, propertyName, value, propertyType, state);
+                }
             }
+            else
+            {
+                var selectedDynamicItems = state.SelectAndExpand.SelectedItems.OfType<PathSelectItem>()
+                   .Where(item => item.SelectedPath.LastSegment is DynamicPathSegment)
+                   .Select(item => item.SelectedPath.LastSegment as DynamicPathSegment)
+                   .ToDictionary(seg => seg.Identifier);
+
+                var dynamicProperties = dynamicPropertiesRetriever.GetDynamicProperties(payload, state);
+                foreach (var (propertyName, propertyType, value) in dynamicProperties)
+                {
+                    if (!selectedDynamicItems.TryGetValue(propertyName, out var segment) || segment == null)
+                    {
+                        continue; // skip if the property is not selected
+                    }
+
+                    await propertyWriter.WriteDynamicProperty(payload, propertyName, value, propertyType, state);
+                }
+            }
+
+            
         }    
 
 
@@ -160,5 +186,18 @@ internal class ODataConventionalJsonResourceWriter<T>(
     public ValueTask WriteAsync(object payload, ODataWriterState context)
     {
         return WriteAsync((T)payload, context);
+    }
+
+    class DynamicPathSegmentEqualityComparer : IEqualityComparer<DynamicPathSegment>
+    {
+        public readonly static DynamicPathSegmentEqualityComparer Instance = new();
+        public bool Equals(DynamicPathSegment x, DynamicPathSegment y)
+        {
+            return x.Identifier == y.Identifier;
+        }
+        public int GetHashCode(DynamicPathSegment obj)
+        {
+            return obj.Identifier.GetHashCode();
+        }
     }
 }
