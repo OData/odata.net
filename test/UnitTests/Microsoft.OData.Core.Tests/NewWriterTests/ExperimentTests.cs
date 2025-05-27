@@ -304,7 +304,7 @@ public class ExperimentTests
         var writtenPayload = await reader.ReadToEndAsync();
 
         var expectedPayload =
-            "{\"@odata.context\":\"contextUrl\",\"value\":[{\"Id\":1,\"Name\":\"John Doe\",\"Orders\":[{\"Amount\":100},{\"Amount\":200}],{\"Id\":2,\"Name\":\"Jane Doe\",\"Orders\":[{\"Amount\":300}]}]}";
+            "{\"@odata.context\":\"contextUrl\",\"value\":[{\"Id\":1,\"Name\":\"John Doe\",\"Orders\":[{\"Amount\":100},{\"Amount\":200}]},{\"Id\":2,\"Name\":\"Jane Doe\",\"Orders\":[{\"Amount\":300}]}]}";
 
 
         Assert.Equal(expectedPayload, writtenPayload);

@@ -48,7 +48,7 @@ internal class ODataConventionalJsonResourceWriter<T>(
         {
             // retrieve properties from the SelectExpandClause
             var selectedItems = state.SelectAndExpand.SelectedItems;
-            List<IEdmProperty> selectedProperties = [];
+            List<ExpandedNavigationSelectItem> navigationItems = null;
             foreach (var item in selectedItems)
             {
 
@@ -64,7 +64,27 @@ internal class ODataConventionalJsonResourceWriter<T>(
                 }
                 else if (item is ExpandedNavigationSelectItem navigationItem)
                 {
-                    // Handle expanded navigation properties if needed
+                    // To preserve the order of property writes, we collect them in a separate list.
+                    // However, if this is not required by the spec, we should consider writing them
+                    // immediately for better performance.
+                    if (navigationItems == null)
+                    {
+                        navigationItems = new List<ExpandedNavigationSelectItem>();
+                    }
+
+                    navigationItems.Add(navigationItem);
+                    
+                    
+                }
+            }
+
+            if (navigationItems != null)
+            {
+                // We write nav properties after structured properties to preserve
+                // the same order as AspNetCoreOData. But if it's not required by the spec,
+                // we should consider writing them as they appear for better performance.
+                foreach (var navigationItem in navigationItems)
+                {
                     var propertySegment = navigationItem.PathToNavigationProperty.FirstSegment as NavigationPropertySegment;
                     var nestedState = new ODataWriterState
                     {
@@ -76,6 +96,7 @@ internal class ODataConventionalJsonResourceWriter<T>(
                     await propertyWriter.WriteProperty(payload, propertySegment.NavigationProperty, nestedState);
                 }
             }
+            
         }
 
 
