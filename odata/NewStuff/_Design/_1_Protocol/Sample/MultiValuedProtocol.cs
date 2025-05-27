@@ -158,35 +158,35 @@
                 return multiValueResponseBuilder.Build();
             }
 
-            private static IGetResponseBodyReader SkipPropertyValue(IPropertyValueReader<IGetResponseBodyReader> propertyValueReader)
+            private static T SkipPropertyValue<T>(IPropertyValueReader<T> propertyValueReader)
             {
                 var propertyValueToken = propertyValueReader.Next(); //// TODO do you want to add `skip` methods?
-                if (propertyValueToken is PropertyValueToken<IGetResponseBodyReader>.Complex complex)
+                if (propertyValueToken is PropertyValueToken<T>.Complex complex)
                 {
                     return SkipComplexPropertyValue(complex.ComplexPropertyValueReader);
                 }
-                else if (propertyValueToken is PropertyValueToken<IGetResponseBodyReader>.MultiValued multiValued)
+                else if (propertyValueToken is PropertyValueToken<T>.MultiValued multiValued)
                 {
                     var multiValuedPropertyValueReader = multiValued.MultiValuedPropertyValueReader;
                     while (true)
                     {
                         var multiValuedPropertyValueToken = multiValuedPropertyValueReader.Next();
-                        if (multiValuedPropertyValueToken is MultiValuedPropertyValueToken<IGetResponseBodyReader>.Object @object)
+                        if (multiValuedPropertyValueToken is MultiValuedPropertyValueToken<T>.Object @object)
                         {
                             multiValuedPropertyValueReader = SkipComplexPropertyValue(@object.ComplexPropertyValueReader);
                         }
-                        else if (multiValuedPropertyValueToken is MultiValuedPropertyValueToken<IGetResponseBodyReader>.End end)
+                        else if (multiValuedPropertyValueToken is MultiValuedPropertyValueToken<T>.End end)
                         {
                             return end.Reader;
                         }
                     }
                 }
-                else if (propertyValueToken is PropertyValueToken<IGetResponseBodyReader>.Null @null)
+                else if (propertyValueToken is PropertyValueToken<T>.Null @null)
                 {
                     var nullPropertyValueReader = @null.NullPropertyValueReader;
                     return nullPropertyValueReader.Next();
                 }
-                else if (propertyValueToken is PropertyValueToken<IGetResponseBodyReader>.Primitive primitive)
+                else if (propertyValueToken is PropertyValueToken<T>.Primitive primitive)
                 {
                     var primitivePropertyValueReader = primitive.PrimitivePropertyValueReader;
                     return primitivePropertyValueReader.Next();
@@ -223,8 +223,9 @@
 
             private static IComplexPropertyValueReader<T> SkipNestedProperty<T>(IPropertyReader<IComplexPropertyValueReader<T>> propertyReader)
             {
-                var propertyReader = property.PropertyReader;
                 var propertyNameReader = propertyReader.Next();
+                var propertyValueReader = propertyNameReader.Next();
+                return SkipPropertyValue(propertyValueReader);
             }
 
             private static IGetResponseBodyReader SkipHeaders(IGetResponseHeaderReader getResponseHeaderReader)
