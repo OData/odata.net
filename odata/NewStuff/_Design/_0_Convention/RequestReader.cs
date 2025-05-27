@@ -598,9 +598,12 @@
 
     public sealed class HeaderFieldName
     {
-        private HeaderFieldName()
+        internal HeaderFieldName(string name)
         {
+            Name = name;
         }
+
+        internal string Name { get; }
     }
 
     public abstract class CustomHeaderToken<T>
@@ -651,9 +654,12 @@
 
     public sealed class HeaderFieldValue
     {
-        private HeaderFieldValue()
+        internal HeaderFieldValue(string value)
         {
+            Value = value;
         }
+
+        internal string Value { get; }
     }
 
 

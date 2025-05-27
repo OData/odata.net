@@ -476,8 +476,16 @@
 
                 var getHeaderWriter = WriteUri(GenerateRequestedUri(), uriWriter);
 
-                //// TODO not writing any headers...
+                var customHeaderWriter = getHeaderWriter.CommitCustomHeader(); //// TODO should "content-type: application/json" really be considered "custom"?
+                var headerFieldValueWriter = customHeaderWriter.Commit(new HeaderFieldName("Content-Type"));
+                getHeaderWriter = headerFieldValueWriter.Commit(new HeaderFieldValue("application/json"));
+
                 var getBodyWriter = getHeaderWriter.Commit();
+
+                // send the request
+                var getResponseReader = getBodyWriter.Commit();
+
+                //// TODO you are here
             }
 
             public IGetSingleValuedProtocol Expand(object expander)
