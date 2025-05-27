@@ -22,7 +22,8 @@
                 NonNullableProperty.NotProvided<string>());
             var userClr = this
                 .usersClr
-                .Patch(id, user).Expand(user => user.DirectReports) //// TODO select id
+                .Patch(id, user)
+                .Expand(user => user.DirectReports) //// TODO select id
                 .Select(user => user.DisplayName);
 
             var response = userClr.Evaluate();
