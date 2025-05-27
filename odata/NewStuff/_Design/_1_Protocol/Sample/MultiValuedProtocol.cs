@@ -38,6 +38,22 @@
                 this.multiValuedUri = multiValuedUri;
             }
 
+            private sealed class MultiValuedResponseBuilder
+            {
+                public IReadOnlyList<SingleValue> Value { get; set; }
+
+                public Uri? NextLink { get; set; } //// TODO make this strongly-typed
+
+                public int? Count { get; set; } //// TODO does this need to be strongly-typed? (maybe to avoid nullable?)
+
+                public IEnumerable<object> Annotations { get; set; } //// TODO make this strongly-typed
+
+                public MultiValuedResponse Build()
+                {
+                    return new MultiValuedResponse(this.Value, this.NextLink, this.Count, this.Annotations);
+                }
+            }
+
             public MultiValuedResponse Evaluate()
             {
                 var requestWriter = this.convention.Get();
@@ -93,17 +109,41 @@
                 // wait for a response
                 var getResponseReader = getBodyWriter.Commit(); //// TODO this should be async
 
+                var multiValueResponseBuilder = new MultiValuedResponseBuilder();
+
                 var headerReader = getResponseReader.Next();
-                var bodyReader = SkipHeaders(headerReader);
+                var getResponseBodyReader = SkipHeaders(headerReader);
 
-                var getResponseBodyToken = bodyReader.Next();
-                if (getResponseBodyToken is GetResponseBodyToken.NextLink nextLink)
+                while (true)
                 {
+                    var getResponseBodyToken = getResponseBodyReader.Next();
+                    if (getResponseBodyToken is GetResponseBodyToken.NextLink nextLink)
+                    {
+                        var nextLinkReader = nextLink.NextLinkReader;
+                        multiValueResponseBuilder.NextLink = nextLinkReader.NextLink.Uri;
+                        getResponseBodyReader = nextLinkReader.Next();
+                    }
+                    else if (getResponseBodyToken is GetResponseBodyToken.OdataContext odataContext)
+                    {
+                        //// TODO this implementation is skipping the odatacontext
+                        getResponseBodyReader = odataContext.OdataContextReader.Next();
+                    }
+                    else if (getResponseBodyToken is GetResponseBodyToken.Property property)
+                    {
+                        //// TODO you are here
+                    }
+                    //// TODO count isn't available here...
+                    else if (getResponseBodyToken is GetResponseBodyToken.End end)
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        throw new Exception("TODO implement visitor");
+                    }
                 }
-                else if (getResponseBodyToken is )//// TODO you are here
 
-                    
-                    throw new Exception("tODO");
+                return multiValueResponseBuilder.Build();
             }
 
             private static IGetResponseBodyReader SkipHeaders(IGetResponseHeaderReader getResponseHeaderReader)
@@ -111,18 +151,18 @@
                 var headerToken = getResponseHeaderReader.Next();
                 if (headerToken is GetResponseHeaderToken.ContentType contentType)
                 {
-                    SkipHeaders(contentType.ContentTypeHeaderReader.Next());
+                    return SkipHeaders(contentType.ContentTypeHeaderReader.Next());
                 }
                 else if (headerToken is GetResponseHeaderToken.Custom custom)
                 {
                     var customHeaderToken = custom.CustomHeaderReader.Next();
                     if (customHeaderToken is CustomHeaderToken<IGetResponseHeaderReader>.FieldValue fieldValue)
                     {
-                        SkipHeaders(fieldValue.HeaderFieldValueReader.Next());
+                        return SkipHeaders(fieldValue.HeaderFieldValueReader.Next());
                     }
                     else if (customHeaderToken is CustomHeaderToken<IGetResponseHeaderReader>.Header header)
                     {
-                        SkipHeaders(header.GetHeaderReader);
+                        return SkipHeaders(header.GetHeaderReader);
                     }
                     else
                     {

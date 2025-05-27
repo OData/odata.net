@@ -1,5 +1,7 @@
 ﻿namespace NewStuff._Design._0_Convention
 {
+    using System;
+    
     public interface IGetResponseReader
     {
         IGetResponseHeaderReader Next();
@@ -152,9 +154,12 @@
 
     public sealed class NextLink
     {
-        private NextLink()
+        internal NextLink(Uri uri)
         {
+            Uri = uri;
         }
+
+        internal Uri Uri { get; }
     }
 
     public interface IPropertyReader<T>

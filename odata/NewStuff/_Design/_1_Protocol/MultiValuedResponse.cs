@@ -5,6 +5,14 @@
 
     public class MultiValuedResponse
     {
+        public MultiValuedResponse(IReadOnlyList<SingleValue> value, Uri? nextLink, int? count, IEnumerable<object> annotations)
+        {
+            Value = value;
+            NextLink = nextLink;
+            Count = count;
+            Annotations = annotations;
+        }
+
         //// TODO mimicing the modeling of JSON is probably a good idea
 
         public IReadOnlyList<SingleValue> Value { get; }
