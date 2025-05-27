@@ -2,7 +2,8 @@
 {
     using System;
     using System.Collections.Generic;
-    using __GeneratedOdata.CstNodes.Rules;
+    using System.Linq;
+
     using NewStuff._Design._0_Convention;
 
     public sealed class MultiValuedProtocol : IMultiValuedProtocol
@@ -111,6 +112,7 @@
                 var getResponseReader = getBodyWriter.Commit(); //// TODO this should be async
 
                 var multiValueResponseBuilder = new MultiValuedResponseBuilder();
+                multiValueResponseBuilder.Annotations = Enumerable.Empty<object>(); //// TODO annotations aren't supported yet
 
                 var headerReader = getResponseReader.Next();
                 var getResponseBodyReader = SkipHeaders(headerReader);
@@ -136,7 +138,22 @@
                         var propertyName = propertyNameReader.PropertyName;
                         if (string.Equals(propertyName.Name, "value", StringComparison.Ordinal)) //// TODO do we want to configurably ignore casing?
                         {
-                            //// TODO you are here
+                            var propertyValueReader = propertyNameReader.Next();
+                            var propertyValueToken = propertyValueReader.Next();
+                            if (propertyValueToken is PropertyValueToken<IGetResponseBodyReader>.Complex complex)
+                            {
+                                var complexPropertyValueReader = complex.ComplexPropertyValueReader;
+                                var complexPropertyValueToken = complexPropertyValueReader.Next();
+
+                                new SingleValue()
+                                //// TODO you are here
+                            }
+                            else
+                            {
+                                //// TODO have you modeled an empty collection yet?
+                                throw new Exception("TODO error occurred parsing; we expected a mulit-valued response and found a property named 'value', but that property didn't have some number of objects inside");
+                                //// TODO use a visitor
+                            }
                         }
                         else
                         {
