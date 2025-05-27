@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using __GeneratedOdata.CstNodes.Rules;
     using NewStuff._Design._0_Convention;
 
     public sealed class MultiValuedProtocol : IMultiValuedProtocol
@@ -130,7 +131,18 @@
                     }
                     else if (getResponseBodyToken is GetResponseBodyToken.Property property)
                     {
-                        //// TODO you are here
+                        var propertyReader = property.PropertyReader;
+                        var propertyNameReader = propertyReader.Next();
+                        var propertyName = propertyNameReader.PropertyName;
+                        if (string.Equals(propertyName.Name, "value", StringComparison.Ordinal)) //// TODO do we want to configurably ignore casing?
+                        {
+                            //// TODO you are here
+                        }
+                        else
+                        {
+                            var propertyValueReader = propertyNameReader.Next();
+                            getResponseBodyReader = SkipPropertyValue(propertyValueReader);
+                        }
                     }
                     //// TODO count isn't available here...
                     else if (getResponseBodyToken is GetResponseBodyToken.End end)
@@ -144,6 +156,75 @@
                 }
 
                 return multiValueResponseBuilder.Build();
+            }
+
+            private static IGetResponseBodyReader SkipPropertyValue(IPropertyValueReader<IGetResponseBodyReader> propertyValueReader)
+            {
+                var propertyValueToken = propertyValueReader.Next(); //// TODO do you want to add `skip` methods?
+                if (propertyValueToken is PropertyValueToken<IGetResponseBodyReader>.Complex complex)
+                {
+                    return SkipComplexPropertyValue(complex.ComplexPropertyValueReader);
+                }
+                else if (propertyValueToken is PropertyValueToken<IGetResponseBodyReader>.MultiValued multiValued)
+                {
+                    var multiValuedPropertyValueReader = multiValued.MultiValuedPropertyValueReader;
+                    while (true)
+                    {
+                        var multiValuedPropertyValueToken = multiValuedPropertyValueReader.Next();
+                        if (multiValuedPropertyValueToken is MultiValuedPropertyValueToken<IGetResponseBodyReader>.Object @object)
+                        {
+                            multiValuedPropertyValueReader = SkipComplexPropertyValue(@object.ComplexPropertyValueReader);
+                        }
+                        else if (multiValuedPropertyValueToken is MultiValuedPropertyValueToken<IGetResponseBodyReader>.End end)
+                        {
+                            return end.Reader;
+                        }
+                    }
+                }
+                else if (propertyValueToken is PropertyValueToken<IGetResponseBodyReader>.Null @null)
+                {
+                    var nullPropertyValueReader = @null.NullPropertyValueReader;
+                    return nullPropertyValueReader.Next();
+                }
+                else if (propertyValueToken is PropertyValueToken<IGetResponseBodyReader>.Primitive primitive)
+                {
+                    var primitivePropertyValueReader = primitive.PrimitivePropertyValueReader;
+                    return primitivePropertyValueReader.Next();
+                }
+                else
+                {
+                    throw new Exception("TODO implement visitor");
+                }
+            }
+
+            private static T SkipComplexPropertyValue<T>(IComplexPropertyValueReader<T> complexPropertyValueReader)
+            {
+                while (true)
+                {
+                    var complexPropertyValueToken = complexPropertyValueReader.Next();
+                    if (complexPropertyValueToken is ComplexPropertyValueToken<T>.Property property)
+                    {
+                        complexPropertyValueReader = SkipNestedProperty(property.PropertyReader);
+                    }
+                    else if (complexPropertyValueToken is ComplexPropertyValueToken<T>.OdataContext odataContext)
+                    {
+                        complexPropertyValueReader = odataContext.OdataContextReader.Next();
+                    }
+                    else if (complexPropertyValueToken is ComplexPropertyValueToken<T>.OdataId odataId)
+                    {
+                        complexPropertyValueReader = odataId.OdataIdReader.Next();
+                    }
+                    else if (complexPropertyValueToken is ComplexPropertyValueToken<T>.End end)
+                    {
+                        return end.Reader;
+                    }
+                }
+            }
+
+            private static IComplexPropertyValueReader<T> SkipNestedProperty<T>(IPropertyReader<IComplexPropertyValueReader<T>> propertyReader)
+            {
+                var propertyReader = property.PropertyReader;
+                var propertyNameReader = propertyReader.Next();
             }
 
             private static IGetResponseBodyReader SkipHeaders(IGetResponseHeaderReader getResponseHeaderReader)

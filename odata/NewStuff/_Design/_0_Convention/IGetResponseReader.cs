@@ -176,9 +176,12 @@
 
     public sealed class PropertyName
     {
-        private PropertyName()
+        internal PropertyName(string name)
         {
+            Name = name;
         }
+
+        internal string Name { get; }
     }
 
     public interface IPropertyValueReader<T>
@@ -309,7 +312,7 @@
 
     public interface IMultiValuedPropertyValueReader<T>
     {
-        MultiValuedPropertyValueToken<IMultiValuedPropertyValueReader<T>> Next(); //// TODO what about edm.untyped nested collections?
+        MultiValuedPropertyValueToken<T> Next(); //// TODO what about edm.untyped nested collections?
     }
 
     public abstract class MultiValuedPropertyValueToken<T>
