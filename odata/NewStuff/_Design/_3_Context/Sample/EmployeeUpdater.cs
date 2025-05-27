@@ -24,7 +24,7 @@
                 .usersClr
                 .Patch(id, user)
                 .Expand(user => user.DirectReports) //// TODO select id
-                .Select(user => user.DisplayName);
+                .Select(user => user.DisplayName); //// TODO somehow note that chaining the select after the expand is something you can't do in linq
 
             var response = userClr.Evaluate();
             if (response == null)
