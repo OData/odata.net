@@ -476,8 +476,8 @@ public class ExperimentTests
 
         var expectedPayload =
             "{\"@odata.context\":\"contextUrl\",\"value\":["
-            + "{\"Id\":1,\"Name\":\"P1\",\"Budget\":10000},"
-            + "{\"Id\":2,\"Name\":\"P2\",\"Budget\":2000}"
+            + "{\"Name\":\"P1\",\"Budget\":10000},"
+            + "{\"Name\":\"P2\",\"Budget\":2000}"
             + "]}";
 
         Assert.Equal(expectedPayload, writtenPayload);
