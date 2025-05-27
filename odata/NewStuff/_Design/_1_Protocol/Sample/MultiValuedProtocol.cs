@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
-
+    using System.Security.Cryptography.X509Certificates;
     using NewStuff._Design._0_Convention;
 
     public sealed class MultiValuedProtocol : IMultiValuedProtocol
@@ -94,53 +94,8 @@
             {
                 var requestWriter = this.convention.Get();
                 var uriWriter = requestWriter.Commit();
-                var schemeWriter = uriWriter.Commit();
 
-                var requestedUri = GenerateRequestedUri();
-
-                var domainWriter = schemeWriter.Commit(new UriScheme(requestedUri.Scheme));
-                var portWriter = domainWriter.Commit(new UriDomain(requestedUri.DnsSafeHost));
-
-                IUriPathSegmentWriter<IGetHeaderWriter> uriPathSegmentWriter;
-                if (requestedUri.IsDefaultPort)
-                {
-                    uriPathSegmentWriter = portWriter.Commit();
-                }
-                else
-                {
-                    uriPathSegmentWriter = portWriter.Commit(new UriPort(requestedUri.Port));
-                }
-
-                foreach (var pathSegment in requestedUri.Segments)
-                {
-                    uriPathSegmentWriter = uriPathSegmentWriter.Commit(new UriPathSegment(pathSegment));
-                }
-
-                var queryOptionWriter = uriPathSegmentWriter.Commit();
-                foreach (var queryOption in Split(requestedUri.Query))
-                {
-                    var parameterWriter = queryOptionWriter.CommitParameter();
-                    var valueWriter = parameterWriter.Commit(new QueryParameter(queryOption.Item1));
-                    if (queryOption.Item2 == null)
-                    {
-                        queryOptionWriter = valueWriter.Commit();
-                    }
-                    else
-                    {
-                        queryOptionWriter = valueWriter.Commit(new QueryValue(queryOption.Item2));
-                    }
-                }
-
-                IGetHeaderWriter getHeaderWriter;
-                if (string.IsNullOrEmpty(requestedUri.Fragment))
-                {
-                    getHeaderWriter = queryOptionWriter.Commit();
-                }
-                else
-                {
-                    var fragmentWriter = queryOptionWriter.CommitFragment();
-                    getHeaderWriter = fragmentWriter.Commit(new Fragment(requestedUri.Fragment));
-                }
+                var getHeaderWriter = WriteUri(GenerateRequestedUri(), uriWriter);
 
                 //// TODO not writing any headers...
                 var getBodyWriter = getHeaderWriter.Commit();
@@ -429,44 +384,6 @@
                 }
             }
 
-            private static IEnumerable<Tuple<string, string?>> Split(string queryString)
-            {
-                return Split(queryString, 0);
-            }
-
-            private static IEnumerable<Tuple<string, string?>> Split(string queryString, int currentIndex)
-            {
-                while (true)
-                {
-                    if (currentIndex >= queryString.Length)
-                    {
-                        yield break;
-                    }
-
-                    var queryOptionDelimiterIndex = queryString.IndexOf('&', currentIndex);
-                    if (queryOptionDelimiterIndex == -1)
-                    {
-                        queryOptionDelimiterIndex = queryString.Length;
-                    }
-
-                    var parameterNameDelimiterIndex = queryString.IndexOf('=', currentIndex, queryOptionDelimiterIndex - currentIndex + 1);
-                    if (parameterNameDelimiterIndex == -1)
-                    {
-                        yield return Tuple.Create(
-                            queryString.Substring(currentIndex, parameterNameDelimiterIndex - currentIndex + 1),
-                            (string?)null);
-                    }
-                    else
-                    {
-                        yield return Tuple.Create(
-                            queryString.Substring(currentIndex, parameterNameDelimiterIndex - currentIndex + 1),
-                            (string?)queryString.Substring(parameterNameDelimiterIndex + 1, queryOptionDelimiterIndex - parameterNameDelimiterIndex));
-                    }
-
-                    currentIndex = queryOptionDelimiterIndex + 1;
-                }
-            }
-
             public IGetMultiValuedProtocol Expand(object expander)
             {
                 return new GetMultiValuedProtocol(
@@ -517,6 +434,71 @@
             throw new System.NotImplementedException();
         }
 
+        private sealed class GetSingleValuedProtocol : IGetSingleValuedProtocol
+        {
+            private readonly IConvention convention;
+            private readonly Uri singleValuedUri;
+            private readonly IEnumerable<string> expands;
+            private readonly IEnumerable<string> selects;
+
+            public GetSingleValuedProtocol(IConvention convention, Uri singleValuedUri)
+                : this(convention, singleValuedUri, Enumerable.Empty<string>(), Enumerable.Empty<string>())
+            {
+            }
+
+            private GetSingleValuedProtocol(
+                IConvention convention, 
+                Uri singleValuedUri, 
+                IEnumerable<string> expands, 
+                IEnumerable<string> selects)
+            {
+                this.convention = convention;
+                this.singleValuedUri = singleValuedUri;
+
+                this.expands = expands;
+                this.selects = selects;
+            }
+
+            private Uri GenerateRequestedUri()
+            {
+                var builder = new UriBuilder(this.singleValuedUri);
+                builder.Query = string.Join(
+                    "&",
+                    string.Join(",", this.expands),
+                    string.Join(",", this.selects));
+                return builder.Uri;
+            }
+
+            public SingleValuedResponse Evaluate()
+            {
+                var requestWriter = this.convention.Get();
+                var uriWriter = requestWriter.Commit();
+
+                var getHeaderWriter = WriteUri(GenerateRequestedUri(), uriWriter);
+
+                //// TODO not writing any headers...
+                var getBodyWriter = getHeaderWriter.Commit();
+            }
+
+            public IGetSingleValuedProtocol Expand(object expander)
+            {
+                return new GetSingleValuedProtocol(
+                    this.convention,
+                    this.singleValuedUri,
+                    this.expands.Append("TODO"),
+                    this.selects);
+            }
+
+            public IGetSingleValuedProtocol Select(object selector)
+            {
+                return new GetSingleValuedProtocol(
+                    this.convention,
+                    this.singleValuedUri,
+                    this.expands,
+                    this.selects.Append("TODO"));
+            }
+        }
+
         public IPatchSingleValuedProtocol Patch(KeyPredicate key, SingleValuedRequest request)
         {
             throw new System.NotImplementedException();
@@ -525,6 +507,95 @@
         public IPostSingleValuedProtocol Post(SingleValuedRequest request)
         {
             throw new System.NotImplementedException();
+        }
+
+        private static IEnumerable<Tuple<string, string?>> SplitQueryQueryString(string queryString)
+        {
+            return MultiValuedProtocol.SplitQueryQueryString(queryString, 0);
+        }
+
+        private static IEnumerable<Tuple<string, string?>> SplitQueryQueryString(string queryString, int currentIndex)
+        {
+            while (true)
+            {
+                if (currentIndex >= queryString.Length)
+                {
+                    yield break;
+                }
+
+                var queryOptionDelimiterIndex = queryString.IndexOf('&', currentIndex);
+                if (queryOptionDelimiterIndex == -1)
+                {
+                    queryOptionDelimiterIndex = queryString.Length;
+                }
+
+                var parameterNameDelimiterIndex = queryString.IndexOf('=', currentIndex, queryOptionDelimiterIndex - currentIndex + 1);
+                if (parameterNameDelimiterIndex == -1)
+                {
+                    yield return Tuple.Create(
+                        queryString.Substring(currentIndex, parameterNameDelimiterIndex - currentIndex + 1),
+                        (string?)null);
+                }
+                else
+                {
+                    yield return Tuple.Create(
+                        queryString.Substring(currentIndex, parameterNameDelimiterIndex - currentIndex + 1),
+                        (string?)queryString.Substring(parameterNameDelimiterIndex + 1, queryOptionDelimiterIndex - parameterNameDelimiterIndex));
+                }
+
+                currentIndex = queryOptionDelimiterIndex + 1;
+            }
+        }
+
+        private static T WriteUri<T>(Uri uri, IUriWriter<T> uriWriter)
+        {
+            var schemeWriter = uriWriter.Commit();
+
+            var domainWriter = schemeWriter.Commit(new UriScheme(uri.Scheme));
+            var portWriter = domainWriter.Commit(new UriDomain(uri.DnsSafeHost));
+
+            IUriPathSegmentWriter<T> uriPathSegmentWriter;
+            if (uri.IsDefaultPort)
+            {
+                uriPathSegmentWriter = portWriter.Commit();
+            }
+            else
+            {
+                uriPathSegmentWriter = portWriter.Commit(new UriPort(uri.Port));
+            }
+
+            foreach (var pathSegment in uri.Segments)
+            {
+                uriPathSegmentWriter = uriPathSegmentWriter.Commit(new UriPathSegment(pathSegment));
+            }
+
+            var queryOptionWriter = uriPathSegmentWriter.Commit();
+            foreach (var queryOption in MultiValuedProtocol.SplitQueryQueryString(uri.Query))
+            {
+                var parameterWriter = queryOptionWriter.CommitParameter();
+                var valueWriter = parameterWriter.Commit(new QueryParameter(queryOption.Item1));
+                if (queryOption.Item2 == null)
+                {
+                    queryOptionWriter = valueWriter.Commit();
+                }
+                else
+                {
+                    queryOptionWriter = valueWriter.Commit(new QueryValue(queryOption.Item2));
+                }
+            }
+
+            T getHeaderWriter;
+            if (string.IsNullOrEmpty(uri.Fragment))
+            {
+                getHeaderWriter = queryOptionWriter.Commit();
+            }
+            else
+            {
+                var fragmentWriter = queryOptionWriter.CommitFragment();
+                getHeaderWriter = fragmentWriter.Commit(new Fragment(uri.Fragment));
+            }
+
+            return getHeaderWriter;
         }
     }
 }
