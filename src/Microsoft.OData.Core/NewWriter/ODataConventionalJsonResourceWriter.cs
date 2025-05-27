@@ -39,8 +39,22 @@ internal class ODataConventionalJsonResourceWriter<T>(
             {
                 foreach (var edmProperty in structuredType.Properties())
                 {
-                    // Does this need to be async?
-                    await propertyWriter.WriteProperty(payload, edmProperty, state);
+                    if (edmProperty.Type.IsComplex())
+                    {
+                        var nestedState = new ODataWriterState
+                        {
+                            WriterContext = state.WriterContext,
+                            EdmType = edmProperty.Type.AsComplex().Definition,
+                            SelectAndExpand = null // all nested properties are selected
+                        };
+
+                        await propertyWriter.WriteProperty(payload, edmProperty, nestedState);
+                    }
+                    else
+                    {
+                        // Does this need to be async?
+                        await propertyWriter.WriteProperty(payload, edmProperty, state);
+                    }
                 }
             }
         }
@@ -58,7 +72,31 @@ internal class ODataConventionalJsonResourceWriter<T>(
                     var propertySegment = path.FirstSegment as PropertySegment;
                     if (propertySegment != null)
                     {
-                        await propertyWriter.WriteProperty(payload, propertySegment.Property, state);
+                        if (propertySegment.Property.Type.IsComplex())
+                        {
+                            // If the property is complex, we need to write it as a nested object.
+                            // We can use the same property writer, but we need to create a new state
+                            // for the nested complex type.
+                            var nestedState = new ODataWriterState
+                            {
+                                WriterContext = state.WriterContext,
+                                EdmType = propertySegment.Property.Type.AsComplex().Definition,
+                                SelectAndExpand = pathSelectItem.SelectAndExpand
+                            };
+
+                            await propertyWriter.WriteProperty(payload, propertySegment.Property, nestedState);
+                        }
+                        else if (propertySegment.Property.Type.IsCollection())
+                        {
+                            // If the property is a collection, we should handle it as an array.
+                            // The property writer should handle this correctly.
+                            await propertyWriter.WriteProperty(payload, propertySegment.Property, state);
+                        }
+                        else
+                        {
+                            // For primitive properties, we can write them directly.
+                            await propertyWriter.WriteProperty(payload, propertySegment.Property, state);
+                        }
                     }
 
                 }

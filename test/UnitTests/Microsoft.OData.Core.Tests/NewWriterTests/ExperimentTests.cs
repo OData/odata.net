@@ -77,7 +77,8 @@ public class ExperimentTests
         var context = new ODataWriterContext
         {
             Model = model,
-            JsonWriter = writer
+            JsonWriter = writer,
+            WriterProvider = new ClrODataValueWriterProvider()
         };
         var state = new ODataWriterState
         {
@@ -166,7 +167,8 @@ public class ExperimentTests
         {
             Model = model,
             JsonWriter = writer,
-            SelectExpandClause = uri.SelectAndExpand
+            SelectExpandClause = uri.SelectAndExpand,
+            WriterProvider = new ClrODataValueWriterProvider()
         };
         var state = new ODataWriterState
         {
@@ -233,12 +235,12 @@ public class ExperimentTests
                     Country = "Kenya"
                 },
                 Orders = [
-                    new Orders {
+                    new Order {
                         Id = 1,
                         Amount = 100,
                         Currency = "USD"
                     },
-                    new Orders {
+                    new Order {
                         Id = 2,
                         Amount = 200,
                         Currency = "USD"
@@ -257,7 +259,7 @@ public class ExperimentTests
                     Country = "United States"
                 },
                 Orders = [
-                    new Orders {
+                    new Order {
                         Id = 3,
                         Amount = 300,
                         Currency = "USD"
@@ -310,6 +312,38 @@ public class ExperimentTests
         Assert.Equal(expectedPayload, writtenPayload);
     }
 
+    [Fact]
+    public async Task WriteClrPayloadWithDynamicProperties()
+    {
+                var project = new Project
+        {
+            Id = 1,
+            Name = "Sample Project",
+            DynamicProperties = new Dictionary<string, object>
+            {
+                { "Status", "Active" },
+                { "StartDate", DateTime.UtcNow },
+                { "Budget", 10000 }
+            }
+        };
+
+        var stream = new MemoryStream();
+        var jsonWriter = new Utf8JsonWriter(stream);
+        
+
+
+
+        jsonWriter.Flush();
+        stream.Position = 0;
+
+        using var reader = new StreamReader(stream);
+        var writtenPayload = await reader.ReadToEndAsync();
+
+        var expectedPayload = "{\"Id\":1,\"Name\":\"Sample Project\",\"Status\":\"Active\",\"Description\":\"Test\"}";
+
+        Assert.Equal(expectedPayload, writtenPayload);
+    }
+
     class Customer
     {
         public int Id { get; set; }
@@ -319,11 +353,11 @@ public class ExperimentTests
 
         public Address HomeAddress { get; set; }
 
-        public List<Orders> Orders { get; set; }
+        public List<Order> Orders { get; set; }
 
     }
 
-    class Orders
+    class Order
     {
         public int Id { get; set; }
         public int Amount { get; set; }
@@ -334,5 +368,13 @@ public class ExperimentTests
     {
         public string City { get; set; }
         public string Country { get; set; }
+    }
+
+    class Project
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+
+        public Dictionary<string, object> DynamicProperties { get; set; } = new Dictionary<string, object>();
     }
 }

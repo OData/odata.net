@@ -60,6 +60,7 @@ internal class ClrTypeEdmJsonPropertyWriter<T> : IResourcePropertyWriter<T, IEdm
                 property.Type.Definition,
                 clrProperty.PropertyType,
                 state.WriterContext);
+
             await writer.WriteAsync(value, state);
             return;
         }
