@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
 
     using NewStuff._Design._0_Convention;
@@ -34,10 +35,31 @@
             private readonly IConvention convention;
             private readonly Uri multiValuedUri;
 
+            private readonly IEnumerable<string> expands;
+            private readonly IEnumerable<string> selects;
+            private readonly IEnumerable<string> filters;
+            private readonly int? skip;
+
             public GetMultiValuedProtocol(IConvention convention, Uri multiValuedUri)
+                : this(convention, multiValuedUri, Enumerable.Empty<string>(), Enumerable.Empty<string>(), Enumerable.Empty<string>(), null)
+            {
+            }
+
+            private GetMultiValuedProtocol(
+                IConvention convention, 
+                Uri multiValuedUri,
+                IEnumerable<string> expands,
+                IEnumerable<string> selects,
+                IEnumerable<string> filters,
+                int? skip)
             {
                 this.convention = convention;
                 this.multiValuedUri = multiValuedUri;
+
+                this.expands = expands;
+                this.selects = selects;
+                this.filters = filters;
+                this.skip = skip;
             }
 
             private sealed class MultiValuedResponseBuilder
@@ -56,31 +78,46 @@
                 }
             }
 
+            private Uri GenerateRequestedUri()
+            {
+                var builder = new UriBuilder(this.multiValuedUri);
+                builder.Query = string.Join(
+                    "&",
+                    string.Join(",", this.expands),
+                    string.Join(",", this.selects),
+                    string.Join(" and ", this.filters),
+                    this.skip == null ? $"skip={this.skip}" : null);
+                return builder.Uri;
+            }
+
             public MultiValuedResponse Evaluate()
             {
                 var requestWriter = this.convention.Get();
                 var uriWriter = requestWriter.Commit();
                 var schemeWriter = uriWriter.Commit();
-                var domainWriter = schemeWriter.Commit(new UriScheme(this.multiValuedUri.Scheme));
-                var portWriter = domainWriter.Commit(new UriDomain(this.multiValuedUri.DnsSafeHost));
+
+                var requestedUri = GenerateRequestedUri();
+
+                var domainWriter = schemeWriter.Commit(new UriScheme(requestedUri.Scheme));
+                var portWriter = domainWriter.Commit(new UriDomain(requestedUri.DnsSafeHost));
 
                 IUriPathSegmentWriter<IGetHeaderWriter> uriPathSegmentWriter;
-                if (this.multiValuedUri.IsDefaultPort)
+                if (requestedUri.IsDefaultPort)
                 {
                     uriPathSegmentWriter = portWriter.Commit();
                 }
                 else
                 {
-                    uriPathSegmentWriter = portWriter.Commit(new UriPort(this.multiValuedUri.Port));
+                    uriPathSegmentWriter = portWriter.Commit(new UriPort(requestedUri.Port));
                 }
 
-                foreach (var pathSegment in this.multiValuedUri.Segments)
+                foreach (var pathSegment in requestedUri.Segments)
                 {
                     uriPathSegmentWriter = uriPathSegmentWriter.Commit(new UriPathSegment(pathSegment));
                 }
 
                 var queryOptionWriter = uriPathSegmentWriter.Commit();
-                foreach (var queryOption in Split(this.multiValuedUri.Query))
+                foreach (var queryOption in Split(requestedUri.Query))
                 {
                     var parameterWriter = queryOptionWriter.CommitParameter();
                     var valueWriter = parameterWriter.Commit(new QueryParameter(queryOption.Item1));
@@ -95,14 +132,14 @@
                 }
 
                 IGetHeaderWriter getHeaderWriter;
-                if (string.IsNullOrEmpty(this.multiValuedUri.Fragment))
+                if (string.IsNullOrEmpty(requestedUri.Fragment))
                 {
                     getHeaderWriter = queryOptionWriter.Commit();
                 }
                 else
                 {
                     var fragmentWriter = queryOptionWriter.CommitFragment();
-                    getHeaderWriter = fragmentWriter.Commit(new Fragment(this.multiValuedUri.Fragment));
+                    getHeaderWriter = fragmentWriter.Commit(new Fragment(requestedUri.Fragment));
                 }
 
                 //// TODO not writing any headers...
@@ -432,22 +469,46 @@
 
             public IGetMultiValuedProtocol Expand(object expander)
             {
-                throw new System.NotImplementedException();
+                return new GetMultiValuedProtocol(
+                    this.convention,
+                    this.multiValuedUri,
+                    this.expands.Append("TODO"),
+                    this.selects,
+                    this.filters,
+                    this.skip);
             }
 
             public IGetMultiValuedProtocol Filter(object predicate)
             {
-                throw new System.NotImplementedException();
+                return new GetMultiValuedProtocol(
+                    this.convention,
+                    this.multiValuedUri,
+                    this.expands,
+                    this.selects,
+                    this.filters.Append("TODO"),
+                    this.skip);
             }
 
             public IGetMultiValuedProtocol Select(object selector)
             {
-                throw new System.NotImplementedException();
+                return new GetMultiValuedProtocol(
+                    this.convention,
+                    this.multiValuedUri,
+                    this.expands,
+                    this.selects.Append("TODO"),
+                    this.filters,
+                    this.skip);
             }
 
             public IGetMultiValuedProtocol Skip(object count)
             {
-                throw new System.NotImplementedException();
+                return new GetMultiValuedProtocol(
+                    this.convention,
+                    this.multiValuedUri,
+                    this.expands,
+                    this.selects,
+                    this.filters,
+                    -1);
             }
         }
 
