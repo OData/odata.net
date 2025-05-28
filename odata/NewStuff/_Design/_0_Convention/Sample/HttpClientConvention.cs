@@ -322,7 +322,7 @@
                                                 var propertyValue = this.propertyEnumerator.Current.Value;
                                                 if (propertyValue.ValueKind == JsonValueKind.Null)
                                                 {
-                                                    return new PropertyValueToken<T>.Null(new NullPropertyValueReader(this.propertyEnumerator));
+                                                    return new PropertyValueToken<T>.Null(new NullPropertyValueReader(this.propertyEnumerator, this.nextFactory));
                                                 }
                                                 else if (propertyValue.ValueKind == JsonValueKind.Object)
                                                 {
@@ -330,7 +330,7 @@
                                                 }
                                                 else if (propertyValue.ValueKind == JsonValueKind.Array)
                                                 {
-                                                    return new PropertyValueToken<T>.MultiValued(new MultiValuedPropertyValueReader(this.propertyEnumerator));
+                                                    return new PropertyValueToken<T>.MultiValued(new MultiValuedPropertyValueReader(this.propertyEnumerator, this.nextFactory, propertyValue.EnumerateArray()));
                                                 }
                                                 else
                                                 {
@@ -451,15 +451,20 @@
 
                                             private sealed class MultiValuedPropertyValueReader : IMultiValuedPropertyValueReader<T>
                                             {
-                                                private readonly JsonElement.ObjectEnumerator propertyEnumerator;
+                                                private readonly JsonElement.ObjectEnumerator parentPropertyEnumerator;
+                                                private readonly Func<JsonElement.ObjectEnumerator, T> nextFactory;
+                                                private readonly JsonElement.ArrayEnumerator arrayEnumerator;
 
-                                                public MultiValuedPropertyValueReader(JsonElement.ObjectEnumerator propertyEnumerator)
+                                                public MultiValuedPropertyValueReader(JsonElement.ObjectEnumerator parentPropertyEnumerator, Func<JsonElement.ObjectEnumerator, T> nextFactory, JsonElement.ArrayEnumerator arrayEnumerator)
                                                 {
-                                                    this.propertyEnumerator = propertyEnumerator;
+                                                    this.parentPropertyEnumerator = parentPropertyEnumerator;
+                                                    this.nextFactory = nextFactory;
+                                                    this.arrayEnumerator = arrayEnumerator;
                                                 }
 
                                                 public MultiValuedPropertyValueToken<T> Next()
                                                 {
+                                                    //// TODO you are here
                                                 }
                                             }
 
