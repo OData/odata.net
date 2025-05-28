@@ -14,7 +14,7 @@
 
         public IGetRequestWriter Get()
         {
-            throw new System.NotImplementedException();
+            return new GetRequestWriter(this.httpClientFactory()); //// TODO you need an idispoabel for the httpclient
         }
 
         private sealed class GetRequestWriter : IGetRequestWriter
@@ -60,7 +60,15 @@
 
                     public IGetResponseReader Commit()
                     {
-                        this.httpClient.GetAsync(this.requestUri).ConfigureAwait(false).GetAwaiter().GetResult(); //// TODO you have to implement async before you get too far
+                        var httpResponseMessage = this.httpClient.GetAsync(this.requestUri).ConfigureAwait(false).GetAwaiter().GetResult(); //// TODO you have to implement async before you get too far //// TODO you need an idisposable for the message
+                    }
+
+                    private sealed class GetResponseReader : IGetResponseReader
+                    {
+                        public IGetResponseHeaderReader Next()
+                        {
+                            throw new NotImplementedException();
+                        }
                     }
                 }
 
