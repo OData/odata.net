@@ -5,6 +5,7 @@
     using System.IO;
     using System.Linq;
     using System.Security.Cryptography.X509Certificates;
+    using __GeneratedOdata.CstNodes.Rules;
     using NewStuff._Design._0_Convention;
 
     public sealed class MultiValuedProtocol : IMultiValuedProtocol
@@ -293,7 +294,44 @@
 
         public IGetSingleValuedProtocol Get(KeyPredicate key)
         {
-            throw new System.NotImplementedException();
+            var keySegments = GenerateKeySegmentsFromKeyPredicate(key);
+            return new GetSingleValuedProtocol(this.convention, new Uri(this.multiValuedUri, keySegments));
+        }
+
+        private static string GenerateKeySegmentsFromKeyPredicate(KeyPredicate keyPredicate)
+        {
+            Func<KeyArgument, string> convert = keyArgument => $"{keyArgument.PropertyName}={keyArgument.PropertyValue}";
+
+            string path;
+            if (keyPredicate is KeyPredicate.MultiPart multiPart)
+            {
+                path = string.Join(
+                    '/',
+                    multiPart
+                        .KeyArguments
+                        .Select(convert)); //// TODO what about string values? they need single quotes
+            }
+            else if (keyPredicate is KeyPredicate.SinglePart singlePart)
+            {
+                if (singlePart.KeyPredicate is SinglePartKeyPredicate.Canonical canonical)
+                {
+                    path = canonical.PropertyValue;
+                }
+                else if (singlePart.KeyPredicate is SinglePartKeyPredicate.NonCanonical nonCanonical)
+                {
+                    path = convert(nonCanonical.KeyArgument);
+                }
+                else
+                {
+                    throw new Exception("TODO implement visitor");
+                }
+            }
+            else
+            {
+                throw new Exception("TODO implement visitor");
+            }
+
+            return path;
         }
 
         private sealed class GetSingleValuedProtocol : IGetSingleValuedProtocol
@@ -420,7 +458,58 @@
 
         public IPatchSingleValuedProtocol Patch(KeyPredicate key, SingleValuedRequest request)
         {
-            throw new System.NotImplementedException();
+            var keySegments = GenerateKeySegmentsFromKeyPredicate(key);
+            return new PatchSingleValuedProtocol(this.convention, new Uri(this.multiValuedUri, keySegments), request);
+        }
+
+        private sealed class PatchSingleValuedProtocol : IPatchSingleValuedProtocol
+        {
+            private readonly IConvention convention;
+            private readonly Uri singleValuedUri;
+            private readonly SingleValuedRequest singleValuedRequest;
+
+            private readonly IEnumerable<string> expands;
+            private readonly IEnumerable<string> selects;
+
+            public PatchSingleValuedProtocol(IConvention convention, Uri singleValuedUri, SingleValuedRequest singleValuedRequest)
+                : this(
+                      convention, 
+                      singleValuedUri, 
+                      singleValuedRequest,
+                      Enumerable.Empty<string>(), 
+                      Enumerable.Empty<string>())
+            {
+            }
+
+            private PatchSingleValuedProtocol(
+                IConvention convention,
+                Uri singleValuedUri, 
+                SingleValuedRequest singleValuedRequest,
+                IEnumerable<string> expands,
+                IEnumerable<string> selects)
+            {
+                this.convention = convention;
+                this.singleValuedUri = singleValuedUri;
+                this.singleValuedRequest = singleValuedRequest;
+
+                this.expands = expands;
+                this.selects = selects;
+            }
+
+            public SingleValuedResponse Evaluate()
+            {
+                //// TODO you are here
+            }
+
+            public IPatchSingleValuedProtocol Expand(object expander)
+            {
+                throw new NotImplementedException();
+            }
+
+            public IPatchSingleValuedProtocol Select(object selector)
+            {
+                throw new NotImplementedException();
+            }
         }
 
         public IPostSingleValuedProtocol Post(SingleValuedRequest request)
