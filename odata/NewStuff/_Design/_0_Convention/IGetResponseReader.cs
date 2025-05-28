@@ -283,8 +283,9 @@
 
         public sealed class OdataContext : ComplexPropertyValueToken<T>
         {
-            private OdataContext()
+            public OdataContext(IOdataContextReader<IComplexPropertyValueReader<T>> odataContextReader)
             {
+                this.OdataContextReader = odataContextReader;
             }
 
             public IOdataContextReader<IComplexPropertyValueReader<T>> OdataContextReader { get; }
@@ -292,8 +293,9 @@
 
         public sealed class OdataId : ComplexPropertyValueToken<T>
         {
-            private OdataId()
+            public OdataId(IOdataIdReader<IComplexPropertyValueReader<T>> odataIdReader)
             {
+                this.OdataIdReader = odataIdReader;
             }
 
             public IOdataIdReader<IComplexPropertyValueReader<T>> OdataIdReader { get; }
@@ -301,8 +303,9 @@
 
         public sealed class Property : ComplexPropertyValueToken<T>
         {
-            private Property()
+            public Property(IPropertyReader<IComplexPropertyValueReader<T>> propertyReader)
             {
+                this.PropertyReader = propertyReader;
             }
 
             public IPropertyReader<IComplexPropertyValueReader<T>> PropertyReader { get; }
@@ -310,8 +313,9 @@
 
         public sealed class End : ComplexPropertyValueToken<T>
         {
-            private End()
+            public End(T reader)
             {
+                this.Reader = reader;
             }
 
             public T Reader { get; }

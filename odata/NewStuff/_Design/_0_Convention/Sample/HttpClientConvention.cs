@@ -319,7 +319,7 @@
                                                 }
                                                 else if (propertyValue.ValueKind == JsonValueKind.Object)
                                                 {
-                                                    return new PropertyValueToken<IGetResponseBodyReader>.Complex(new ComplexPropertyValueReader(this.propertyEnumerator));
+                                                    return new PropertyValueToken<IGetResponseBodyReader>.Complex(new ComplexPropertyValueReader(this.propertyEnumerator, propertyValue.EnumerateObject()));
                                                 }
                                                 else if (propertyValue.ValueKind == JsonValueKind.Array)
                                                 {
@@ -352,15 +352,25 @@
 
                                             private sealed class ComplexPropertyValueReader : IComplexPropertyValueReader<IGetResponseBodyReader>
                                             {
-                                                private readonly JsonElement.ObjectEnumerator propertyEnumerator;
+                                                private readonly JsonElement.ObjectEnumerator parentPropertyEnumerator;
+                                                private readonly JsonElement.ObjectEnumerator propertyValueEnumerator;
 
-                                                public ComplexPropertyValueReader(JsonElement.ObjectEnumerator propertyEnumerator)
+                                                public ComplexPropertyValueReader(JsonElement.ObjectEnumerator parentPropertyEnumerator, JsonElement.ObjectEnumerator propertyValueEnumerator)
                                                 {
-                                                    this.propertyEnumerator = propertyEnumerator;
+                                                    this.parentPropertyEnumerator = parentPropertyEnumerator;
+                                                    this.propertyValueEnumerator = propertyValueEnumerator;
                                                 }
 
                                                 public ComplexPropertyValueToken<IGetResponseBodyReader> Next()
                                                 {
+                                                    if (propertyValueEnumerator.MoveNext())
+                                                    {
+
+                                                    }
+                                                    else
+                                                    {
+
+                                                    }
                                                 }
                                             }
 
