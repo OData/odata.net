@@ -1,6 +1,7 @@
 ﻿namespace NewStuff._Design._0_Convention.Sample
 {
     using System;
+    using System.Collections.Generic;
     using System.Net.Http;
     using System.Text;
 
@@ -63,14 +64,36 @@
                     {
                         var httpResponseMessage = this.httpClient.GetAsync(this.requestUri).ConfigureAwait(false).GetAwaiter().GetResult(); //// TODO you have to implement async before you get too far //// TODO you need an idisposable for the message
 
-                        return new GetResponseReader();
+                        return new GetResponseReader(httpResponseMessage);
                     }
 
                     private sealed class GetResponseReader : IGetResponseReader
                     {
+                        private readonly HttpResponseMessage httpResponseMessage;
+                        private readonly IEnumerator<KeyValuePair<string, IEnumerable<string>>> headers;
+
+                        public GetResponseReader(HttpResponseMessage httpResponseMessage)
+                        {
+                            this.httpResponseMessage = httpResponseMessage;
+                        }
+
                         public IGetResponseHeaderReader Next()
                         {
-                            throw new NotImplementedException();
+                            return new GetResponseHeaderReader(this.httpResponseMessage.Headers.GetEnumerator()); //// TODO this is disposable
+                        }
+
+                        private sealed class GetResponseHeaderReader : IGetResponseHeaderReader
+                        {
+                            private readonly IEnumerator<KeyValuePair<string, IEnumerable<string>>> headers;
+
+                            public GetResponseHeaderReader(IEnumerator<KeyValuePair<string, IEnumerable<string>>> headers)
+                            {
+                                this.headers = headers;
+                            }
+
+                            public GetResponseHeaderToken Next()
+                            {
+                            }
                         }
                     }
                 }
