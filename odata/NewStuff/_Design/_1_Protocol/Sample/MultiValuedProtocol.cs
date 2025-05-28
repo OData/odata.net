@@ -498,6 +498,7 @@
 
             public SingleValuedResponse Evaluate()
             {
+                var patchRequestWriter = this.convention.Patch();
                 //// TODO you are here
             }
 

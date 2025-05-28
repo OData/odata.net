@@ -1,6 +1,7 @@
 ﻿namespace NewStuff._Design._0_Convention
 {
     using System;
+    using System.Transactions;
 
     public interface IRequestWriter
     {
@@ -50,13 +51,95 @@
 
     public interface IPatchRequestWriter
     {
-        //// TODO
+        IUriWriter<IPatchHeaderWriter> Commit();
+    }
+
+    public interface IPatchHeaderWriter
+    {
+        IPatchRequestBodyWriter Commit();
+        ICustomHeaderWriter<IPatchHeaderWriter> CommitCustomHeader();
+        IEtagWriter CommitEtag();
+    }
+
+    public interface IEtagWriter
+    {
+        IPatchHeaderWriter Commit(Etag etag);
+    }
+
+    public sealed class Etag
+    {
+        private Etag()
+        {
+        }
+    }
+
+    public interface IPatchRequestBodyWriter
+    {
+        IPropertyWriter<IPatchRequestBodyWriter> CommitProperty();
+
+        IPatchResponseReader Commit();
+    }
+
+    public interface IPropertyWriter<T>
+    {
+        IPropertyNameWriter<T> Commit();
+    }
+
+    public interface IPropertyNameWriter<T>
+    {
+        IPropertyNameWriter<T> Commit(PropertyName propertyName);
+    }
+
+    public interface IPropertyValueWriter<T>
+    {
+        IPrimitivePropertyValueWriter<T> CommitPrimitive();
+
+        IComplexPropertyValueWriter<T> CommitComplex();
+
+        INullPropertyValueWriter<T> CommitNull();
+
+        IMultiValuedPropertyValueWriter<T> CommitMultiValued();
+    }
+
+    public interface IPrimitivePropertyValueWriter<T>
+    {
+    }
+
+    public interface IComplexPropertyValueWriter<T>
+    {
+    }
+
+    public interface INullPropertyValueWriter<T>
+    {
+    }
+
+    public interface IMultiValuedPropertyValueWriter<T>
+    {
     }
 
     public interface IPostRequestWriter
     {
         //// TODO
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     public interface IUriWriter<T>
     {

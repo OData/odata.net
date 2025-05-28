@@ -3,5 +3,7 @@
     public interface IConvention
     {
         IGetRequestWriter Get();
+
+        IPatchRequestWriter Patch();
     }
 }
