@@ -127,7 +127,7 @@
 
 
 
-    public interface IUriWriter<T>
+    public interface IUriWriter<out T>
     {
         IUriSchemeWriter<T> Commit();
     }
@@ -144,7 +144,7 @@
         }
     }
 
-    public interface IUriSchemeWriter<T>
+    public interface IUriSchemeWriter<out T>
     {
         IUriDomainWriter<T> Commit(UriScheme uriScheme);
     }
@@ -161,7 +161,7 @@
         }
     }
 
-    public interface IUriDomainWriter<T>
+    public interface IUriDomainWriter<out T>
     {
         IUriPortWriter<T> Commit(UriDomain uriDomain);
     }
@@ -178,7 +178,7 @@
         }
     }
 
-    public interface IUriPortWriter<T>
+    public interface IUriPortWriter<out T>
     {
         IUriPathSegmentWriter<T> Commit();
 
@@ -202,7 +202,7 @@
         }
     }
 
-    public interface IUriPathSegmentWriter<T>
+    public interface IUriPathSegmentWriter<out T>
     {
         IQueryOptionWriter<T> Commit();
         IUriPathSegmentWriter<T> Commit(UriPathSegment uriPathSegment);
@@ -225,7 +225,7 @@
         }
     }
 
-    public interface IQueryOptionWriter<T>
+    public interface IQueryOptionWriter<out T>
     {
         T Commit();
         IFragmentWriter<T> CommitFragment();
@@ -254,7 +254,7 @@
         }
     }
 
-    public interface IQueryParameterWriter<T>
+    public interface IQueryParameterWriter<out T>
     {
         IQueryValueWriter<T> Commit(QueryParameter queryParameter);
     }
@@ -271,7 +271,7 @@
         }
     }
 
-    public interface IQueryValueWriter<T>
+    public interface IQueryValueWriter<out T>
     {
         IQueryOptionWriter<T> Commit();
         IQueryOptionWriter<T> Commit(QueryValue queryValue);
@@ -294,7 +294,7 @@
         }
     }
 
-    public interface IFragmentWriter<T>
+    public interface IFragmentWriter<out T>
     {
         T Commit(Fragment fragment);
     }
