@@ -61,6 +61,8 @@
                     public IGetResponseReader Commit()
                     {
                         var httpResponseMessage = this.httpClient.GetAsync(this.requestUri).ConfigureAwait(false).GetAwaiter().GetResult(); //// TODO you have to implement async before you get too far //// TODO you need an idisposable for the message
+
+                        return new GetResponseReader();
                     }
 
                     private sealed class GetResponseReader : IGetResponseReader
