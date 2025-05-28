@@ -352,8 +352,9 @@
 
         public sealed class Object : MultiValuedPropertyValueToken<T>
         {
-            private Object()
+            public Object(IComplexPropertyValueReader<IMultiValuedPropertyValueReader<T>> complexPropertyValueReader)
             {
+                this.ComplexPropertyValueReader = complexPropertyValueReader;
             }
 
             public IComplexPropertyValueReader<IMultiValuedPropertyValueReader<T>> ComplexPropertyValueReader { get; }
@@ -361,8 +362,9 @@
 
         public sealed class End : MultiValuedPropertyValueToken<T>
         {
-            private End()
+            public End(T reader)
             {
+                this.Reader = reader;
             }
 
             public T Reader { get; }

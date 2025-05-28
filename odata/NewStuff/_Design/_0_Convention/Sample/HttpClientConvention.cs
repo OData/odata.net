@@ -464,6 +464,16 @@
 
                                                 public MultiValuedPropertyValueToken<T> Next()
                                                 {
+                                                    if (this.arrayEnumerator.MoveNext())
+                                                    {
+                                                        return new MultiValuedPropertyValueToken<T>.Object(new ComplexPropertyValueReader(this.parentPropertyEnumerator, this.nextFactory));
+                                                        //// TODO what about collections of primitives?
+                                                    }
+                                                    else
+                                                    {
+                                                        return new MultiValuedPropertyValueToken<T>.End(this.nextFactory(this.parentPropertyEnumerator));
+                                                    }
+
                                                     //// TODO you are here
                                                 }
                                             }
