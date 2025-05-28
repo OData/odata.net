@@ -216,7 +216,7 @@
                                         }
                                         else
                                         {
-                                            return new GetResponseBodyToken.Property(new PropertyReader(this.propertyEnumerator));
+                                            return new GetResponseBodyToken.Property(new PropertyReader<IGetResponseBodyReader>(this.propertyEnumerator, enumerator => new GetResponseBodyReader(enumerator)));
                                         }
                                     }
                                     else
@@ -271,125 +271,136 @@
                                     }
                                 }
 
-                                private sealed class PropertyReader : IPropertyReader<IGetResponseBodyReader>
+                                private sealed class PropertyReader<T> : IPropertyReader<T>
                                 {
                                     private readonly JsonElement.ObjectEnumerator propertyEnumerator;
+                                    private readonly Func<JsonElement.ObjectEnumerator, T> nextFactory;
 
-                                    public PropertyReader(JsonElement.ObjectEnumerator propertyEnumerator)
+                                    public PropertyReader(JsonElement.ObjectEnumerator propertyEnumerator, Func<JsonElement.ObjectEnumerator, T> nextFactory)
                                     {
                                         this.propertyEnumerator = propertyEnumerator;
+                                        this.nextFactory = nextFactory;
                                     }
 
-                                    public IPropertyNameReader<IGetResponseBodyReader> Next()
+                                    public IPropertyNameReader<T> Next()
                                     {
-                                        return new PropertyNameReader(this.propertyEnumerator);
+                                        return new PropertyNameReader(this.propertyEnumerator, this.nextFactory);
                                     }
 
-                                    private sealed class PropertyNameReader : IPropertyNameReader<IGetResponseBodyReader>
+                                    private sealed class PropertyNameReader : IPropertyNameReader<T>
                                     {
                                         private readonly JsonElement.ObjectEnumerator propertyEnumerator;
+                                        private readonly Func<JsonElement.ObjectEnumerator, T> nextFactory;
 
-                                        public PropertyNameReader(JsonElement.ObjectEnumerator propertyEnumerator)
+                                        public PropertyNameReader(JsonElement.ObjectEnumerator propertyEnumerator, Func<JsonElement.ObjectEnumerator, T> nextFactory)
                                         {
                                             this.PropertyName = new PropertyName(propertyEnumerator.Current.Name);
                                             this.propertyEnumerator = propertyEnumerator;
+                                            this.nextFactory = nextFactory;
                                         }
 
                                         public PropertyName PropertyName { get; }
 
-                                        public IPropertyValueReader<IGetResponseBodyReader> Next()
+                                        public IPropertyValueReader<T> Next()
                                         {
-                                            return new PropertyValueReader(this.propertyEnumerator);
+                                            return new PropertyValueReader(this.propertyEnumerator, this.nextFactory);
                                         }
 
-                                        private sealed class PropertyValueReader : IPropertyValueReader<IGetResponseBodyReader>
+                                        private sealed class PropertyValueReader : IPropertyValueReader<T>
                                         {
                                             private readonly JsonElement.ObjectEnumerator propertyEnumerator;
+                                            private readonly Func<JsonElement.ObjectEnumerator, T> nextFactory;
 
-                                            public PropertyValueReader(JsonElement.ObjectEnumerator propertyEnumerator)
+                                            public PropertyValueReader(JsonElement.ObjectEnumerator propertyEnumerator, Func<JsonElement.ObjectEnumerator, T> nextFactory)
                                             {
                                                 this.propertyEnumerator = propertyEnumerator;
+                                                this.nextFactory = nextFactory;
                                             }
 
-                                            public PropertyValueToken<IGetResponseBodyReader> Next()
+                                            public PropertyValueToken<T> Next()
                                             {
                                                 var propertyValue = this.propertyEnumerator.Current.Value;
                                                 if (propertyValue.ValueKind == JsonValueKind.Null)
                                                 {
-                                                    return new PropertyValueToken<IGetResponseBodyReader>.Null(new NullPropertyValueReader(this.propertyEnumerator));
+                                                    return new PropertyValueToken<T>.Null(new NullPropertyValueReader(this.propertyEnumerator));
                                                 }
                                                 else if (propertyValue.ValueKind == JsonValueKind.Object)
                                                 {
-                                                    return new PropertyValueToken<IGetResponseBodyReader>.Complex(new ComplexPropertyValueReader(this.propertyEnumerator, propertyValue.EnumerateObject()));
+                                                    return new PropertyValueToken<T>.Complex(new ComplexPropertyValueReader(this.propertyEnumerator, this.nextFactory, propertyValue.EnumerateObject()));
                                                 }
                                                 else if (propertyValue.ValueKind == JsonValueKind.Array)
                                                 {
-                                                    return new PropertyValueToken<IGetResponseBodyReader>.MultiValued(new MultiValuedPropertyValueReader(this.propertyEnumerator));
+                                                    return new PropertyValueToken<T>.MultiValued(new MultiValuedPropertyValueReader(this.propertyEnumerator));
                                                 }
                                                 else
                                                 {
                                                     // primitive
-                                                    return new PropertyValueToken<IGetResponseBodyReader>.Primitive(new PrimitivePropertyValueReader(this.propertyEnumerator, propertyValue.GetRawText()));
+                                                    return new PropertyValueToken<T>.Primitive(new PrimitivePropertyValueReader(this.propertyEnumerator, this.nextFactory, propertyValue.GetRawText()));
                                                 }
                                             }
 
-                                            private sealed class PrimitivePropertyValueReader : IPrimitivePropertyValueReader<IGetResponseBodyReader>
+                                            private sealed class PrimitivePropertyValueReader : IPrimitivePropertyValueReader<T>
                                             {
                                                 private readonly JsonElement.ObjectEnumerator propertyEnumerator;
+                                                private readonly Func<JsonElement.ObjectEnumerator, T> nextFactory;
 
-                                                public PrimitivePropertyValueReader(JsonElement.ObjectEnumerator propertyEnumerator, string value)
+                                                public PrimitivePropertyValueReader(JsonElement.ObjectEnumerator propertyEnumerator, Func<JsonElement.ObjectEnumerator, T> nextFactory, string value)
                                                 {
                                                     this.PrimitivePropertyValue = new PrimitivePropertyValue(value);
                                                     this.propertyEnumerator = propertyEnumerator;
+                                                    this.nextFactory = nextFactory;
                                                 }
 
                                                 public PrimitivePropertyValue PrimitivePropertyValue { get; }
 
-                                                public IGetResponseBodyReader Next()
+                                                public T Next()
                                                 {
-                                                    return new GetResponseBodyReader(this.propertyEnumerator);
+                                                    return this.nextFactory(this.propertyEnumerator);
                                                 }
                                             }
 
-                                            private sealed class ComplexPropertyValueReader : IComplexPropertyValueReader<IGetResponseBodyReader>
+                                            private sealed class ComplexPropertyValueReader : IComplexPropertyValueReader<T>
                                             {
                                                 private readonly JsonElement.ObjectEnumerator parentPropertyEnumerator;
+                                                private readonly Func<JsonElement.ObjectEnumerator, T> nextFactory;
                                                 private readonly JsonElement.ObjectEnumerator propertyValueEnumerator;
 
-                                                public ComplexPropertyValueReader(JsonElement.ObjectEnumerator parentPropertyEnumerator, JsonElement.ObjectEnumerator propertyValueEnumerator)
+                                                public ComplexPropertyValueReader(JsonElement.ObjectEnumerator parentPropertyEnumerator, Func<JsonElement.ObjectEnumerator, T> nextFactory, JsonElement.ObjectEnumerator propertyValueEnumerator)
                                                 {
                                                     this.parentPropertyEnumerator = parentPropertyEnumerator;
+                                                    this.nextFactory = nextFactory;
                                                     this.propertyValueEnumerator = propertyValueEnumerator;
                                                 }
 
-                                                public ComplexPropertyValueToken<IGetResponseBodyReader> Next()
+                                                public ComplexPropertyValueToken<T> Next()
                                                 {
                                                     if (this.propertyValueEnumerator.MoveNext())
                                                     {
                                                         var property = this.propertyValueEnumerator.Current;
                                                         if (string.Equals(property.Name, "@odata.context")) //// TODO ignore case?
                                                         {
-                                                            return new ComplexPropertyValueToken<IGetResponseBodyReader>.OdataContext(new OdataContextReader(this.parentPropertyEnumerator, this.propertyValueEnumerator, property.Value));
+                                                            return new ComplexPropertyValueToken<T>.OdataContext(new OdataContextReader(this.parentPropertyEnumerator, this.nextFactory, this.propertyValueEnumerator, property.Value));
                                                         }
                                                         else if (string.Equals(property.Name, "@odata.id")) //// TODO ignore case?
                                                         {
-                                                            return new ComplexPropertyValueToken<IGetResponseBodyReader>.OdataId(new OdataIdReader(this.parentPropertyEnumerator, this.propertyValueEnumerator, property.Value));
+                                                            return new ComplexPropertyValueToken<T>.OdataId(new OdataIdReader(this.parentPropertyEnumerator, this.nextFactory, this.propertyValueEnumerator, property.Value));
                                                         }
 
-                                                        return new ComplexPropertyValueToken<IGetResponseBodyReader>.Property(new PropertyReader(this.parentPropertyEnumerator, this.propertyValueEnumerator));
+                                                        return new ComplexPropertyValueToken<T>.Property(new PropertyReader<IComplexPropertyValueReader<T>>(this.propertyValueEnumerator, enumerator => new ComplexPropertyValueReader(this.parentPropertyEnumerator, this.nextFactory, enumerator)));
                                                     }
                                                     else
                                                     {
-                                                        return new ComplexPropertyValueToken<IGetResponseBodyReader>.End(new GetResponseBodyReader(this.parentPropertyEnumerator));
+                                                        return new ComplexPropertyValueToken<T>.End(this.nextFactory(this.parentPropertyEnumerator));
                                                     }
                                                 }
 
-                                                private sealed class OdataContextReader : IOdataContextReader<IComplexPropertyValueReader<IGetResponseBodyReader>>
+                                                private sealed class OdataContextReader : IOdataContextReader<IComplexPropertyValueReader<T>>
                                                 {
                                                     private readonly JsonElement.ObjectEnumerator parentPropertyEnumerator;
+                                                    private readonly Func<JsonElement.ObjectEnumerator, T> nextFactory;
                                                     private readonly JsonElement.ObjectEnumerator propertyValueEnumerator;
 
-                                                    public OdataContextReader(JsonElement.ObjectEnumerator parentPropertyEnumerator, JsonElement.ObjectEnumerator propertyValueEnumerator, JsonElement propertyValue)
+                                                    public OdataContextReader(JsonElement.ObjectEnumerator parentPropertyEnumerator, Func<JsonElement.ObjectEnumerator, T> nextFactory, JsonElement.ObjectEnumerator propertyValueEnumerator, JsonElement propertyValue)
                                                     {
                                                         if (propertyValue.ValueKind != JsonValueKind.String)
                                                         {
@@ -398,23 +409,25 @@
 
                                                         this.OdataContext = new OdataContext(propertyValue.GetString()!);
                                                         this.parentPropertyEnumerator = parentPropertyEnumerator;
+                                                        this.nextFactory = nextFactory;
                                                         this.propertyValueEnumerator = propertyValueEnumerator;
                                                     }
 
                                                     public OdataContext OdataContext { get; }
 
-                                                    public IComplexPropertyValueReader<IGetResponseBodyReader> Next()
+                                                    public IComplexPropertyValueReader<T> Next()
                                                     {
-                                                        return new ComplexPropertyValueReader(this.parentPropertyEnumerator, this.propertyValueEnumerator);
+                                                        return new ComplexPropertyValueReader(this.parentPropertyEnumerator, this.nextFactory, this.propertyValueEnumerator);
                                                     }
                                                 }
 
-                                                private sealed class OdataIdReader : IOdataIdReader<IComplexPropertyValueReader<IGetResponseBodyReader>>
+                                                private sealed class OdataIdReader : IOdataIdReader<IComplexPropertyValueReader<T>>
                                                 {
                                                     private readonly JsonElement.ObjectEnumerator parentPropertyEnumerator;
+                                                    private readonly Func<JsonElement.ObjectEnumerator, T> nextFactory;
                                                     private readonly JsonElement.ObjectEnumerator propertyValueEnumerator;
 
-                                                    public OdataIdReader(JsonElement.ObjectEnumerator parentPropertyEnumerator, JsonElement.ObjectEnumerator propertyValueEnumerator, JsonElement propertyValue)
+                                                    public OdataIdReader(JsonElement.ObjectEnumerator parentPropertyEnumerator, Func<JsonElement.ObjectEnumerator, T> nextFactory, JsonElement.ObjectEnumerator propertyValueEnumerator, JsonElement propertyValue)
                                                     {
                                                         if (propertyValue.ValueKind != JsonValueKind.String)
                                                         {
@@ -423,56 +436,20 @@
 
                                                         this.OdataId = new OdataId(propertyValue.GetString()!);
                                                         this.parentPropertyEnumerator = parentPropertyEnumerator;
+                                                        this.nextFactory = nextFactory;
                                                         this.propertyValueEnumerator = propertyValueEnumerator;
                                                     }
 
                                                     public OdataId OdataId { get; }
 
-                                                    public IComplexPropertyValueReader<IGetResponseBodyReader> Next()
+                                                    public IComplexPropertyValueReader<T> Next()
                                                     {
-                                                        return new ComplexPropertyValueReader(this.parentPropertyEnumerator, this.propertyValueEnumerator);
-                                                    }
-                                                }
-
-                                                private sealed class PropertyReader : IPropertyReader<IComplexPropertyValueReader<IGetResponseBodyReader>>
-                                                {
-                                                    private readonly JsonElement.ObjectEnumerator parentPropertyEnumerator;
-                                                    private readonly JsonElement.ObjectEnumerator propertyValueEnumerator;
-
-                                                    public PropertyReader(JsonElement.ObjectEnumerator parentPropertyEnumerator, JsonElement.ObjectEnumerator propertyValueEnumerator)
-                                                    {
-                                                        this.parentPropertyEnumerator = parentPropertyEnumerator;
-                                                        this.propertyValueEnumerator = propertyValueEnumerator;
-                                                    }
-
-                                                    public IPropertyNameReader<IComplexPropertyValueReader<IGetResponseBodyReader>> Next()
-                                                    {
-                                                        return new PropertyNameReader(this.parentPropertyEnumerator, this.propertyValueEnumerator);
-                                                    }
-
-                                                    private sealed class PropertyNameReader : IPropertyNameReader<IComplexPropertyValueReader<IGetResponseBodyReader>>
-                                                    {
-                                                        private readonly JsonElement.ObjectEnumerator parentPropertyEnumerator;
-                                                        private readonly JsonElement.ObjectEnumerator propertyValueEnumerator;
-
-                                                        public PropertyNameReader(JsonElement.ObjectEnumerator parentPropertyEnumerator, JsonElement.ObjectEnumerator propertyValueEnumerator)
-                                                        {
-                                                            this.PropertyName = new PropertyName(this.propertyValueEnumerator.Current.Name);
-
-                                                            this.parentPropertyEnumerator = parentPropertyEnumerator;
-                                                            this.propertyValueEnumerator = propertyValueEnumerator;
-                                                        }
-
-                                                        public PropertyName PropertyName { get; }
-
-                                                        public IPropertyValueReader<IComplexPropertyValueReader<IGetResponseBodyReader>> Next()
-                                                        {
-                                                        }
+                                                        return new ComplexPropertyValueReader(this.parentPropertyEnumerator, this.nextFactory, this.propertyValueEnumerator);
                                                     }
                                                 }
                                             }
 
-                                            private sealed class MultiValuedPropertyValueReader : IMultiValuedPropertyValueReader<IGetResponseBodyReader>
+                                            private sealed class MultiValuedPropertyValueReader : IMultiValuedPropertyValueReader<T>
                                             {
                                                 private readonly JsonElement.ObjectEnumerator propertyEnumerator;
 
@@ -481,23 +458,25 @@
                                                     this.propertyEnumerator = propertyEnumerator;
                                                 }
 
-                                                public MultiValuedPropertyValueToken<IGetResponseBodyReader> Next()
+                                                public MultiValuedPropertyValueToken<T> Next()
                                                 {
                                                 }
                                             }
 
-                                            private sealed class NullPropertyValueReader : INullPropertyValueReader<IGetResponseBodyReader>
+                                            private sealed class NullPropertyValueReader : INullPropertyValueReader<T>
                                             {
                                                 private readonly JsonElement.ObjectEnumerator propertyEnumerator;
+                                                private readonly Func<JsonElement.ObjectEnumerator, T> nextFactory;
 
-                                                public NullPropertyValueReader(JsonElement.ObjectEnumerator propertyEnumerator)
+                                                public NullPropertyValueReader(JsonElement.ObjectEnumerator propertyEnumerator, Func<JsonElement.ObjectEnumerator, T> nextFactory)
                                                 {
                                                     this.propertyEnumerator = propertyEnumerator;
+                                                    this.nextFactory = nextFactory;
                                                 }
 
-                                                public IGetResponseBodyReader Next()
+                                                public T Next()
                                                 {
-                                                    return new GetResponseBodyReader(this.propertyEnumerator);
+                                                    return this.nextFactory(this.propertyEnumerator);
                                                 }
                                             }
                                         }
