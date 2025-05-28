@@ -7,29 +7,7 @@
     {
         IGetRequestWriter CommitGet();
         IPatchRequestWriter CommitPatch();
-        IPostRequestWriter CommitPost();
-    }
-
-    public sealed class RequestWriter : IRequestWriter
-    {
-        private RequestWriter()
-        {
-        }
-
-        public IGetRequestWriter CommitGet()
-        {
-            throw new NotImplementedException("TODO");
-        }
-
-        public IPatchRequestWriter CommitPatch()
-        {
-            throw new NotImplementedException("TODO");
-        }
-
-        public IPostRequestWriter CommitPost()
-        {
-            throw new NotImplementedException("TODO");
-        }
+        IPatchRequestWriter CommitPost();//// TODO TODO TODO IMPORTANT you've re-used IPatchRequestWriter for convenience here; it should really be ipostrequestwriter
     }
 
     public interface IGetRequestWriter
