@@ -404,7 +404,7 @@
         }
     }
 
-    public interface ICustomHeaderWriter<T>
+    public interface ICustomHeaderWriter<out T>
     {
         IHeaderFieldValueWriter<T> Commit(HeaderFieldName headerFieldName);
     }
@@ -421,7 +421,7 @@
         }
     }
 
-    public interface IHeaderFieldValueWriter<T>
+    public interface IHeaderFieldValueWriter<out T>
     {
         T Commit();
         T Commit(HeaderFieldValue headerFieldValue);

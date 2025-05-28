@@ -77,7 +77,56 @@
 
                 public ICustomHeaderWriter<IGetHeaderWriter> CommitCustomHeader()
                 {
-                    throw new NotImplementedException();
+                    return new CustomHeaderWriter<GetHeaderWriter>(this.httpClient, this.requestUri, (client, uri) => new GetHeaderWriter(client, uri));
+                }
+
+                private sealed class CustomHeaderWriter<T> : ICustomHeaderWriter<T>
+                {
+                    private readonly HttpClient httpClient;
+                    private readonly Uri requestUri;
+                    private readonly Func<HttpClient, Uri, T> nextFactory;
+
+                    public CustomHeaderWriter(HttpClient httpClient, Uri requestUri, Func<HttpClient, Uri, T> nextFactory)
+                    {
+                        this.httpClient = httpClient;
+                        this.requestUri = requestUri;
+                        this.nextFactory = nextFactory;
+                    }
+
+                    public IHeaderFieldValueWriter<T> Commit(HeaderFieldName headerFieldName)
+                    {
+                        return new HeaderFieldValueWriter(this.httpClient, this.requestUri, this.nextFactory, headerFieldName.Name);
+                    }
+
+                    private sealed class HeaderFieldValueWriter : IHeaderFieldValueWriter<T>
+                    {
+                        private readonly HttpClient httpClient;
+                        private readonly Uri requestUri;
+                        private readonly Func<HttpClient, Uri, T> nextFactory;
+                        private readonly string headerName;
+
+                        public HeaderFieldValueWriter(HttpClient httpClient, Uri requestUri, Func<HttpClient, Uri, T> nextFactory, string headerName)
+                        {
+                            this.httpClient = httpClient;
+                            this.requestUri = requestUri;
+                            this.nextFactory = nextFactory;
+                            this.headerName = headerName;
+                        }
+
+                        public T Commit()
+                        {
+                            this.httpClient.DefaultRequestHeaders.Add(this.headerName, (string?)null);
+
+                            return this.nextFactory(this.httpClient, this.requestUri);
+                        }
+
+                        public T Commit(HeaderFieldValue headerFieldValue)
+                        {
+                            this.httpClient.DefaultRequestHeaders.Add(this.headerName, headerFieldValue.Value);
+
+                            return this.nextFactory(this.httpClient, this.requestUri);
+                        }
+                    }
                 }
 
                 public IOdataMaxPageSizeHeaderWriter CommitOdataMaxPageSize()
