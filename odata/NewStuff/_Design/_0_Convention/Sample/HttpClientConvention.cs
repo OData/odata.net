@@ -2,6 +2,7 @@
 {
     using System;
     using System.Net.Http;
+    using System.Text;
 
     public sealed class HttpClientConvention : IConvention
     {
@@ -101,37 +102,68 @@
 
                 public IUriSchemeWriter<T> Commit()
                 {
-                    throw new System.NotImplementedException();
+                    return new UriSchemeWriter(new StringBuilder());
                 }
 
                 private sealed class UriSchemeWriter : IUriSchemeWriter<T>
                 {
+                    private readonly StringBuilder builder;
+
+                    public UriSchemeWriter(StringBuilder builder)
+                    {
+                        this.builder = builder; //// TODO this means that writer instances won't be re-usable, are you ok with that?
+                    }
+
                     public IUriDomainWriter<T> Commit(UriScheme uriScheme)
                     {
-                        throw new System.NotImplementedException();
+                        this.builder.Append($"{uriScheme.Scheme}://");
+                        return new UriDomainWriter(this.builder);
                     }
 
                     private sealed class UriDomainWriter : IUriDomainWriter<T>
                     {
+                        private readonly StringBuilder builder;
+
+                        public UriDomainWriter(StringBuilder builder)
+                        {
+                            this.builder = builder;
+                        }
+
                         public IUriPortWriter<T> Commit(UriDomain uriDomain)
                         {
-                            throw new System.NotImplementedException();
+                            this.builder.Append(uriDomain.Domain);
+                            return new UriPortWriter(this.builder);
                         }
 
                         private sealed class UriPortWriter : IUriPortWriter<T>
                         {
+                            private readonly StringBuilder builder;
+
+                            public UriPortWriter(StringBuilder builder)
+                            {
+                                this.builder = builder;
+                            }
+
                             public IUriPathSegmentWriter<T> Commit()
                             {
-                                throw new System.NotImplementedException();
+                                return new UriPathSegmentWriter(this.builder);
                             }
 
                             public IUriPathSegmentWriter<T> Commit(UriPort uriPort)
                             {
-                                throw new System.NotImplementedException();
+                                this.builder.Append($":{uriPort.Port}");
+                                return new UriPathSegmentWriter(this.builder);
                             }
 
                             private sealed class UriPathSegmentWriter : IUriPathSegmentWriter<T>
                             {
+                                private readonly StringBuilder builder;
+
+                                public UriPathSegmentWriter(StringBuilder builder)
+                                {
+                                    this.builder = builder;
+                                }
+
                                 public IQueryOptionWriter<T> Commit()
                                 {
                                     throw new System.NotImplementedException();
