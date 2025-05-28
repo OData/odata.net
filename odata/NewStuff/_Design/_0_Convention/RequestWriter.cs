@@ -77,7 +77,7 @@
     {
         IPropertyWriter<IPatchRequestBodyWriter> CommitProperty();
 
-        IPatchResponseReader Commit();
+        IGetResponseReader Commit(); //// TODO TODO TODO IMPORTANT you've re-used getresponsereader for convenience here; it should really be igetpatchresponsereader
     }
 
     public interface IPropertyWriter<T>
