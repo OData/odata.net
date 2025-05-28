@@ -103,18 +103,26 @@
 
     public interface IPrimitivePropertyValueWriter<T>
     {
+        T Commit(PrimitivePropertyValue primitivePropertyValue);
     }
 
     public interface IComplexPropertyValueWriter<T>
     {
+        IPropertyWriter<IComplexPropertyValueWriter<T>> CommitProperty();
+
+        T Commit();
     }
 
     public interface INullPropertyValueWriter<T>
     {
+        T Commit();
     }
 
     public interface IMultiValuedPropertyValueWriter<T>
     {
+        IComplexPropertyValueWriter<IMultiValuedPropertyValueWriter<T>> CommitValue();
+
+        T Commit();
     }
 
     public interface IPostRequestWriter
