@@ -499,7 +499,66 @@
             public SingleValuedResponse Evaluate()
             {
                 var patchRequestWriter = this.convention.Patch();
+
+                var uriWriter = patchRequestWriter.Commit();
+                var patchHeaderWriter = MultiValuedProtocol.WriteUri(this.singleValuedUri, uriWriter);
+
+                var customHeaderWriter = patchHeaderWriter.CommitCustomHeader();
+                var headerFieldValueWriter = customHeaderWriter.Commit(new HeaderFieldName("Content-Type")); //// TODO probably this should be a "built-in" header
+                patchHeaderWriter = headerFieldValueWriter.Commit(new HeaderFieldValue("application/json"));
+                var patchRequestBodyWriter = patchHeaderWriter.Commit();
+
+                //// TODO what about dynamic and untyped properties?
+                foreach (var complexProperty in this.singleValuedRequest.ComplexProperties)
+                {
+                    //// TODO you haven't actually fleshed out complex properties yet in the protocol layer
+                }
+
+                foreach (var multiValuedProperty in this.singleValuedRequest.MultiValuedProperties)
+                {
+                    var propertyWriter = patchRequestBodyWriter.CommitProperty();
+                    var propertyNameWriter = propertyWriter.Commit();
+                    var propertyValueWriter = propertyNameWriter.Commit(new PropertyName(multiValuedProperty.Name));
+                    var multiValuedPropertyValueWriter = propertyValueWriter.CommitMultiValued();
+
+                    var objectWriter = multiValuedPropertyValueWriter.CommitValue();
+
+                    foreach (var value in multiValuedProperty.Values)
+                    {
+                        multiValuedPropertyValueWriter = WriteSingleValuedRequest(value, objectWriter);
+                    }
+
+                    patchRequestBodyWriter = multiValuedPropertyValueWriter.Commit();
+                }
+
+                foreach (var primitiveProperty in this.singleValuedRequest.PrimitiveProperties)
+                {
+                    var propertyWriter = patchRequestBodyWriter.CommitProperty();
+                    var propertyNameWriter = propertyWriter.Commit();
+                    var propertyValueWriter = propertyNameWriter.Commit(new PropertyName(primitiveProperty.Name));
+
+                    if (primitiveProperty.Value == null)
+                    {
+                        var nullPropertyValueWriter = propertyValueWriter.CommitNull();
+                        patchRequestBodyWriter = nullPropertyValueWriter.Commit();
+                    }
+                    else
+                    {
+                        var primitivePropertyValueWriter = propertyValueWriter.CommitPrimitive();
+                        patchRequestBodyWriter = primitivePropertyValueWriter.Commit(new PrimitivePropertyValue(primitiveProperty.Value));
+                    }
+                }
+
+                // send the request
+                var patchResponseReader = patchRequestBodyWriter.Commit();
+
+
                 //// TODO you are here
+            }
+
+            private static T WriteSingleValuedRequest<T>(SingleValuedRequest singleValuedRequest, IComplexPropertyValueWriter<T> complexPropertyValueWriter)
+            {
+
             }
 
             public IPatchSingleValuedProtocol Expand(object expander)

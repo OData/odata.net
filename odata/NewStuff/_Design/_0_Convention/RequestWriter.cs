@@ -87,7 +87,7 @@
 
     public interface IPropertyNameWriter<T>
     {
-        IPropertyNameWriter<T> Commit(PropertyName propertyName);
+        IPropertyValueWriter<T> Commit(PropertyName propertyName);
     }
 
     public interface IPropertyValueWriter<T>
