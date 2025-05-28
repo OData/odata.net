@@ -5,6 +5,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Net.Http;
+    using System.Net.WebSockets;
     using System.Text;
     using System.Text.Json;
     using System.Text.Json.Nodes;
@@ -363,13 +364,110 @@
 
                                                 public ComplexPropertyValueToken<IGetResponseBodyReader> Next()
                                                 {
-                                                    if (propertyValueEnumerator.MoveNext())
+                                                    if (this.propertyValueEnumerator.MoveNext())
                                                     {
+                                                        var property = this.propertyValueEnumerator.Current;
+                                                        if (string.Equals(property.Name, "@odata.context")) //// TODO ignore case?
+                                                        {
+                                                            return new ComplexPropertyValueToken<IGetResponseBodyReader>.OdataContext(new OdataContextReader(this.parentPropertyEnumerator, this.propertyValueEnumerator, property.Value));
+                                                        }
+                                                        else if (string.Equals(property.Name, "@odata.id")) //// TODO ignore case?
+                                                        {
+                                                            return new ComplexPropertyValueToken<IGetResponseBodyReader>.OdataId(new OdataIdReader(this.parentPropertyEnumerator, this.propertyValueEnumerator, property.Value));
+                                                        }
 
+                                                        return new ComplexPropertyValueToken<IGetResponseBodyReader>.Property(new PropertyReader(this.parentPropertyEnumerator, this.propertyValueEnumerator));
                                                     }
                                                     else
                                                     {
+                                                        return new ComplexPropertyValueToken<IGetResponseBodyReader>.End(new GetResponseBodyReader(this.parentPropertyEnumerator));
+                                                    }
+                                                }
 
+                                                private sealed class OdataContextReader : IOdataContextReader<IComplexPropertyValueReader<IGetResponseBodyReader>>
+                                                {
+                                                    private readonly JsonElement.ObjectEnumerator parentPropertyEnumerator;
+                                                    private readonly JsonElement.ObjectEnumerator propertyValueEnumerator;
+
+                                                    public OdataContextReader(JsonElement.ObjectEnumerator parentPropertyEnumerator, JsonElement.ObjectEnumerator propertyValueEnumerator, JsonElement propertyValue)
+                                                    {
+                                                        if (propertyValue.ValueKind != JsonValueKind.String)
+                                                        {
+                                                            throw new Exception("TODO the context must be a string");
+                                                        }
+
+                                                        this.OdataContext = new OdataContext(propertyValue.GetString()!);
+                                                        this.parentPropertyEnumerator = parentPropertyEnumerator;
+                                                        this.propertyValueEnumerator = propertyValueEnumerator;
+                                                    }
+
+                                                    public OdataContext OdataContext { get; }
+
+                                                    public IComplexPropertyValueReader<IGetResponseBodyReader> Next()
+                                                    {
+                                                        return new ComplexPropertyValueReader(this.parentPropertyEnumerator, this.propertyValueEnumerator);
+                                                    }
+                                                }
+
+                                                private sealed class OdataIdReader : IOdataIdReader<IComplexPropertyValueReader<IGetResponseBodyReader>>
+                                                {
+                                                    private readonly JsonElement.ObjectEnumerator parentPropertyEnumerator;
+                                                    private readonly JsonElement.ObjectEnumerator propertyValueEnumerator;
+
+                                                    public OdataIdReader(JsonElement.ObjectEnumerator parentPropertyEnumerator, JsonElement.ObjectEnumerator propertyValueEnumerator, JsonElement propertyValue)
+                                                    {
+                                                        if (propertyValue.ValueKind != JsonValueKind.String)
+                                                        {
+                                                            throw new Exception("TODO the context must be a string");
+                                                        }
+
+                                                        this.OdataId = new OdataId(propertyValue.GetString()!);
+                                                        this.parentPropertyEnumerator = parentPropertyEnumerator;
+                                                        this.propertyValueEnumerator = propertyValueEnumerator;
+                                                    }
+
+                                                    public OdataId OdataId { get; }
+
+                                                    public IComplexPropertyValueReader<IGetResponseBodyReader> Next()
+                                                    {
+                                                        return new ComplexPropertyValueReader(this.parentPropertyEnumerator, this.propertyValueEnumerator);
+                                                    }
+                                                }
+
+                                                private sealed class PropertyReader : IPropertyReader<IComplexPropertyValueReader<IGetResponseBodyReader>>
+                                                {
+                                                    private readonly JsonElement.ObjectEnumerator parentPropertyEnumerator;
+                                                    private readonly JsonElement.ObjectEnumerator propertyValueEnumerator;
+
+                                                    public PropertyReader(JsonElement.ObjectEnumerator parentPropertyEnumerator, JsonElement.ObjectEnumerator propertyValueEnumerator)
+                                                    {
+                                                        this.parentPropertyEnumerator = parentPropertyEnumerator;
+                                                        this.propertyValueEnumerator = propertyValueEnumerator;
+                                                    }
+
+                                                    public IPropertyNameReader<IComplexPropertyValueReader<IGetResponseBodyReader>> Next()
+                                                    {
+                                                        return new PropertyNameReader(this.parentPropertyEnumerator, this.propertyValueEnumerator);
+                                                    }
+
+                                                    private sealed class PropertyNameReader : IPropertyNameReader<IComplexPropertyValueReader<IGetResponseBodyReader>>
+                                                    {
+                                                        private readonly JsonElement.ObjectEnumerator parentPropertyEnumerator;
+                                                        private readonly JsonElement.ObjectEnumerator propertyValueEnumerator;
+
+                                                        public PropertyNameReader(JsonElement.ObjectEnumerator parentPropertyEnumerator, JsonElement.ObjectEnumerator propertyValueEnumerator)
+                                                        {
+                                                            this.PropertyName = new PropertyName(this.propertyValueEnumerator.Current.Name);
+
+                                                            this.parentPropertyEnumerator = parentPropertyEnumerator;
+                                                            this.propertyValueEnumerator = propertyValueEnumerator;
+                                                        }
+
+                                                        public PropertyName PropertyName { get; }
+
+                                                        public IPropertyValueReader<IComplexPropertyValueReader<IGetResponseBodyReader>> Next()
+                                                        {
+                                                        }
                                                     }
                                                 }
                                             }

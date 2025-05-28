@@ -331,9 +331,12 @@
 
     public sealed class OdataId
     {
-        private OdataId()
+        internal OdataId(string value)
         {
+            Value = value;
         }
+
+        internal string Value { get; }
     }
 
     public interface IMultiValuedPropertyValueReader<T>
