@@ -101,8 +101,9 @@
 
         public sealed class OdataContext : GetResponseBodyToken
         {
-            private OdataContext()
+            public OdataContext(IOdataContextReader<IGetResponseBodyReader> odataContextReader)
             {
+                OdataContextReader = odataContextReader;
             }
 
             public IOdataContextReader<IGetResponseBodyReader> OdataContextReader { get; }
@@ -110,8 +111,9 @@
 
         public sealed class NextLink : GetResponseBodyToken
         {
-            private NextLink()
+            public NextLink(INextLinkReader nextLinkReader)
             {
+                this.NextLinkReader = nextLinkReader;
             }
 
             //// TODO do you like that you're allowing a nextlink in a response that is otherwise single-valued? which layer should be responsible for figuring that stuff out?
@@ -121,8 +123,9 @@
 
         public sealed class Property : GetResponseBodyToken
         {
-            private Property()
+            public Property(IPropertyReader<IGetResponseBodyReader> propertyReader)
             {
+                this.PropertyReader = propertyReader;
             }
 
             public IPropertyReader<IGetResponseBodyReader> PropertyReader { get; }
@@ -133,6 +136,8 @@
             private End()
             {
             }
+
+            public static End Instance { get; } = new End();
 
             //// TODO is this a good way to model this?
         }
@@ -207,8 +212,9 @@
 
         public sealed class Primitive : PropertyValueToken<T>
         {
-            private Primitive()
+            public Primitive(IPrimitivePropertyValueReader<T> primitivePropertyValueReader)
             {
+                this.PrimitivePropertyValueReader = primitivePropertyValueReader;
             }
 
             public IPrimitivePropertyValueReader<T> PrimitivePropertyValueReader { get; }
@@ -216,8 +222,9 @@
 
         public sealed class Complex : PropertyValueToken<T>
         {
-            private Complex()
+            public Complex(IComplexPropertyValueReader<T> complexPropertyValueReader)
             {
+                this.ComplexPropertyValueReader = complexPropertyValueReader;
             }
 
             public IComplexPropertyValueReader<T> ComplexPropertyValueReader { get; }
@@ -225,8 +232,9 @@
 
         public sealed class MultiValued : PropertyValueToken<T>
         {
-            private MultiValued()
+            public MultiValued(IMultiValuedPropertyValueReader<T> multiValuedPropertyValueReader)
             {
+                this.MultiValuedPropertyValueReader = multiValuedPropertyValueReader;
             }
 
             public IMultiValuedPropertyValueReader<T> MultiValuedPropertyValueReader { get; }
@@ -234,8 +242,9 @@
 
         public sealed class Null : PropertyValueToken<T>
         {
-            private Null()
+            public Null(INullPropertyValueReader<T> nullPropertyValueReader)
             {
+                this.NullPropertyValueReader = nullPropertyValueReader;
             }
 
             public INullPropertyValueReader<T> NullPropertyValueReader { get; }

@@ -1,10 +1,13 @@
 ﻿namespace NewStuff._Design._0_Convention.Sample
 {
     using System;
+    using System.Buffers;
     using System.Collections.Generic;
     using System.Linq;
     using System.Net.Http;
     using System.Text;
+    using System.Text.Json;
+    using System.Text.Json.Nodes;
 
     public sealed class HttpClientConvention : IConvention
     {
@@ -63,6 +66,7 @@
 
                     public IGetResponseReader Commit()
                     {
+                        //// TODO malformed headers will throw here
                         var httpResponseMessage = this.httpClient.GetAsync(this.requestUri).ConfigureAwait(false).GetAwaiter().GetResult(); //// TODO you have to implement async before you get too far //// TODO you need an idisposable for the message
 
                         return new GetResponseReader(httpResponseMessage);
@@ -108,7 +112,15 @@
                                 }
                                 else
                                 {
-                                    return new GetResponseHeaderToken.Body(new GetResponseBodyReader(this.httpResponseMessage));
+                                    var jsonDocument = JsonDocument.ParseAsync(this.httpResponseMessage.Content.ReadAsStreamAsync().ConfigureAwait(false).GetAwaiter().GetResult()).ConfigureAwait(false).GetAwaiter().GetResult(); //// TODO need to be async
+
+                                    var element = jsonDocument.RootElement;
+                                    if (element.ValueKind != JsonValueKind.Object)
+                                    {
+                                        throw new Exception("TODO the root needs to be an object");
+                                    }
+
+                                    return new GetResponseHeaderToken.Body(new GetResponseBodyReader(element.EnumerateObject()));
                                 }
                             }
 
@@ -181,17 +193,207 @@
 
                             private sealed class GetResponseBodyReader : IGetResponseBodyReader
                             {
-                                private readonly HttpResponseMessage httpResponseMessage;
+                                private readonly JsonElement.ObjectEnumerator propertyEnumerator;
 
-                                public GetResponseBodyReader(HttpResponseMessage httpResponseMessage)
+                                public GetResponseBodyReader(JsonElement.ObjectEnumerator propertyEnumerator)
                                 {
-                                    this.httpResponseMessage = httpResponseMessage;
+                                    this.propertyEnumerator = propertyEnumerator;
                                 }
 
                                 public GetResponseBodyToken Next()
                                 {
-                                    //// TODO you are here
-                                    throw new NotImplementedException();
+                                    if (this.propertyEnumerator.MoveNext())
+                                    {
+                                        var property = this.propertyEnumerator.Current;
+                                        if (string.Equals(property.Name, "@odata.context")) //// TODO ignore case?
+                                        {
+                                            return new GetResponseBodyToken.OdataContext(new OdataContextReader(this.propertyEnumerator, property.Value));
+                                        }
+                                        else if (string.Equals(property.Name, "@odata.nextLink")) //// TODO ignore case?
+                                        {
+                                            return new GetResponseBodyToken.NextLink(new NextLinkReader(this.propertyEnumerator, property.Value));
+                                        }
+                                        else
+                                        {
+                                            return new GetResponseBodyToken.Property(new PropertyReader(this.propertyEnumerator));
+                                        }
+                                    }
+                                    else
+                                    {
+                                        return GetResponseBodyToken.End.Instance;
+                                    }
+                                }
+
+                                private sealed class OdataContextReader : IOdataContextReader<IGetResponseBodyReader>
+                                {
+                                    private readonly JsonElement.ObjectEnumerator propertyEnumerator;
+
+                                    public OdataContextReader(JsonElement.ObjectEnumerator propertyEnumerator, JsonElement propertyValue)
+                                    {
+                                        if (propertyValue.ValueKind != JsonValueKind.String)
+                                        {
+                                            throw new Exception("TODO the context must be a string");
+                                        }
+
+                                        this.OdataContext = new OdataContext(propertyValue.GetString()!);
+                                        this.propertyEnumerator = propertyEnumerator;
+                                    }
+
+                                    public OdataContext OdataContext { get; }
+
+                                    public IGetResponseBodyReader Next()
+                                    {
+                                        return new GetResponseBodyReader(this.propertyEnumerator);
+                                    }
+                                }
+
+                                private sealed class NextLinkReader : INextLinkReader
+                                {
+                                    private readonly JsonElement.ObjectEnumerator propertyEnumerator;
+
+                                    public NextLinkReader(JsonElement.ObjectEnumerator propertyEnumerator, JsonElement propertyValue)
+                                    {
+                                        if (propertyValue.ValueKind != JsonValueKind.String)
+                                        {
+                                            throw new Exception("TODO nextlink must be a string");
+                                        }
+
+                                        this.NextLink = new NextLink(new Uri(propertyValue.GetString()!));
+                                        this.propertyEnumerator = propertyEnumerator;
+                                    }
+
+                                    public NextLink NextLink { get; }
+
+                                    public IGetResponseBodyReader Next()
+                                    {
+                                        return new GetResponseBodyReader(this.propertyEnumerator);
+                                    }
+                                }
+
+                                private sealed class PropertyReader : IPropertyReader<IGetResponseBodyReader>
+                                {
+                                    private readonly JsonElement.ObjectEnumerator propertyEnumerator;
+
+                                    public PropertyReader(JsonElement.ObjectEnumerator propertyEnumerator)
+                                    {
+                                        this.propertyEnumerator = propertyEnumerator;
+                                    }
+
+                                    public IPropertyNameReader<IGetResponseBodyReader> Next()
+                                    {
+                                        return new PropertyNameReader(this.propertyEnumerator);
+                                    }
+
+                                    private sealed class PropertyNameReader : IPropertyNameReader<IGetResponseBodyReader>
+                                    {
+                                        private readonly JsonElement.ObjectEnumerator propertyEnumerator;
+
+                                        public PropertyNameReader(JsonElement.ObjectEnumerator propertyEnumerator)
+                                        {
+                                            this.PropertyName = new PropertyName(propertyEnumerator.Current.Name);
+                                            this.propertyEnumerator = propertyEnumerator;
+                                        }
+
+                                        public PropertyName PropertyName { get; }
+
+                                        public IPropertyValueReader<IGetResponseBodyReader> Next()
+                                        {
+                                            return new PropertyValueReader(this.propertyEnumerator);
+                                        }
+
+                                        private sealed class PropertyValueReader : IPropertyValueReader<IGetResponseBodyReader>
+                                        {
+                                            private readonly JsonElement.ObjectEnumerator propertyEnumerator;
+
+                                            public PropertyValueReader(JsonElement.ObjectEnumerator propertyEnumerator)
+                                            {
+                                                this.propertyEnumerator = propertyEnumerator;
+                                            }
+
+                                            public PropertyValueToken<IGetResponseBodyReader> Next()
+                                            {
+                                                var propertyValue = this.propertyEnumerator.Current.Value;
+                                                if (propertyValue.ValueKind == JsonValueKind.Null)
+                                                {
+                                                    return new PropertyValueToken<IGetResponseBodyReader>.Null(new NullPropertyValueReader(this.propertyEnumerator));
+                                                }
+                                                else if (propertyValue.ValueKind == JsonValueKind.Object)
+                                                {
+                                                    return new PropertyValueToken<IGetResponseBodyReader>.Complex(new ComplexPropertyValueReader(this.propertyEnumerator));
+                                                }
+                                                else if (propertyValue.ValueKind == JsonValueKind.Array)
+                                                {
+                                                    return new PropertyValueToken<IGetResponseBodyReader>.MultiValued(new MultiValuedPropertyValueReader(this.propertyEnumerator));
+                                                }
+                                                else
+                                                {
+                                                    // primitive
+                                                    return new PropertyValueToken<IGetResponseBodyReader>.Primitive(new PrimitivePropertyValueReader(this.propertyEnumerator, propertyValue.GetRawText()));
+                                                }
+                                            }
+
+                                            private sealed class PrimitivePropertyValueReader : IPrimitivePropertyValueReader<IGetResponseBodyReader>
+                                            {
+                                                private readonly JsonElement.ObjectEnumerator propertyEnumerator;
+
+                                                public PrimitivePropertyValueReader(JsonElement.ObjectEnumerator propertyEnumerator, string value)
+                                                {
+                                                    this.PrimitivePropertyValue = new PrimitivePropertyValue(value);
+                                                    this.propertyEnumerator = propertyEnumerator;
+                                                }
+
+                                                public PrimitivePropertyValue PrimitivePropertyValue { get; }
+
+                                                public IGetResponseBodyReader Next()
+                                                {
+                                                    return new GetResponseBodyReader(this.propertyEnumerator);
+                                                }
+                                            }
+
+                                            private sealed class ComplexPropertyValueReader : IComplexPropertyValueReader<IGetResponseBodyReader>
+                                            {
+                                                private readonly JsonElement.ObjectEnumerator propertyEnumerator;
+
+                                                public ComplexPropertyValueReader(JsonElement.ObjectEnumerator propertyEnumerator)
+                                                {
+                                                    this.propertyEnumerator = propertyEnumerator;
+                                                }
+
+                                                public ComplexPropertyValueToken<IGetResponseBodyReader> Next()
+                                                {
+                                                }
+                                            }
+
+                                            private sealed class MultiValuedPropertyValueReader : IMultiValuedPropertyValueReader<IGetResponseBodyReader>
+                                            {
+                                                private readonly JsonElement.ObjectEnumerator propertyEnumerator;
+
+                                                public MultiValuedPropertyValueReader(JsonElement.ObjectEnumerator propertyEnumerator)
+                                                {
+                                                    this.propertyEnumerator = propertyEnumerator;
+                                                }
+
+                                                public MultiValuedPropertyValueToken<IGetResponseBodyReader> Next()
+                                                {
+                                                }
+                                            }
+
+                                            private sealed class NullPropertyValueReader : INullPropertyValueReader<IGetResponseBodyReader>
+                                            {
+                                                private readonly JsonElement.ObjectEnumerator propertyEnumerator;
+
+                                                public NullPropertyValueReader(JsonElement.ObjectEnumerator propertyEnumerator)
+                                                {
+                                                    this.propertyEnumerator = propertyEnumerator;
+                                                }
+
+                                                public IGetResponseBodyReader Next()
+                                                {
+                                                    return new GetResponseBodyReader(this.propertyEnumerator);
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }
