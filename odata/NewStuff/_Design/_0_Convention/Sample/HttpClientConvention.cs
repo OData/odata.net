@@ -281,7 +281,9 @@
 
                                 public IUriPathSegmentWriter<T> Commit(UriPathSegment uriPathSegment)
                                 {
-                                    throw new System.NotImplementedException();
+                                    this.builder.Append($"/{uriPathSegment.Segment}");
+
+                                    return new UriPathSegmentWriter(this.builder, this.nextFactory);
                                 }
                             }
                         }
