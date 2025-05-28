@@ -102,78 +102,95 @@
 
                 public IUriSchemeWriter<T> Commit()
                 {
-                    return new UriSchemeWriter(new StringBuilder());
+                    return new UriSchemeWriter(new StringBuilder(), this.nextFactory);
                 }
 
                 private sealed class UriSchemeWriter : IUriSchemeWriter<T>
                 {
                     private readonly StringBuilder builder;
+                    private readonly Func<Uri, T> nextFactory;
 
-                    public UriSchemeWriter(StringBuilder builder)
+                    public UriSchemeWriter(StringBuilder builder, Func<Uri, T> nextFactory)
                     {
                         this.builder = builder; //// TODO this means that writer instances won't be re-usable, are you ok with that?
+                        this.nextFactory = nextFactory;
                     }
 
                     public IUriDomainWriter<T> Commit(UriScheme uriScheme)
                     {
                         this.builder.Append($"{uriScheme.Scheme}://");
-                        return new UriDomainWriter(this.builder);
+                        return new UriDomainWriter(this.builder, this.nextFactory);
                     }
 
                     private sealed class UriDomainWriter : IUriDomainWriter<T>
                     {
                         private readonly StringBuilder builder;
+                        private readonly Func<Uri, T> nextFactory;
 
-                        public UriDomainWriter(StringBuilder builder)
+                        public UriDomainWriter(StringBuilder builder, Func<Uri, T> nextFactory)
                         {
                             this.builder = builder;
+                            this.nextFactory = nextFactory;
                         }
 
                         public IUriPortWriter<T> Commit(UriDomain uriDomain)
                         {
                             this.builder.Append(uriDomain.Domain);
-                            return new UriPortWriter(this.builder);
+                            return new UriPortWriter(this.builder, this.nextFactory);
                         }
 
                         private sealed class UriPortWriter : IUriPortWriter<T>
                         {
                             private readonly StringBuilder builder;
+                            private readonly Func<Uri, T> nextFactory;
 
-                            public UriPortWriter(StringBuilder builder)
+                            public UriPortWriter(StringBuilder builder, Func<Uri, T> nextFactory)
                             {
                                 this.builder = builder;
+                                this.nextFactory = nextFactory;
                             }
 
                             public IUriPathSegmentWriter<T> Commit()
                             {
-                                return new UriPathSegmentWriter(this.builder);
+                                return new UriPathSegmentWriter(this.builder, this.nextFactory);
                             }
 
                             public IUriPathSegmentWriter<T> Commit(UriPort uriPort)
                             {
                                 this.builder.Append($":{uriPort.Port}");
-                                return new UriPathSegmentWriter(this.builder);
+                                return new UriPathSegmentWriter(this.builder, this.nextFactory);
                             }
 
                             private sealed class UriPathSegmentWriter : IUriPathSegmentWriter<T>
                             {
                                 private readonly StringBuilder builder;
+                                private readonly Func<Uri, T> nextFactory;
 
-                                public UriPathSegmentWriter(StringBuilder builder)
+                                public UriPathSegmentWriter(StringBuilder builder, Func<Uri, T> nextFactory)
                                 {
                                     this.builder = builder;
+                                    this.nextFactory = nextFactory;
                                 }
 
                                 public IQueryOptionWriter<T> Commit()
                                 {
-                                    throw new System.NotImplementedException();
+                                    return new QueryOptionWriter(this.builder, this.nextFactory);
                                 }
 
                                 private sealed class QueryOptionWriter : IQueryOptionWriter<T>
                                 {
+                                    private readonly StringBuilder builder;
+                                    private readonly Func<Uri, T> nextFactory;
+
+                                    public QueryOptionWriter(StringBuilder builder, Func<Uri, T> nextFactory)
+                                    {
+                                        this.builder = builder;
+                                        this.nextFactory = nextFactory;
+                                    }
+
                                     public T Commit()
                                     {
-                                        throw new System.NotImplementedException();
+                                        return this.nextFactory(new Uri(this.builder.ToString()));
                                     }
 
                                     public IFragmentWriter<T> CommitFragment()
