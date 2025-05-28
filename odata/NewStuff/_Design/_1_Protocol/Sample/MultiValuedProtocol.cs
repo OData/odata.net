@@ -645,7 +645,67 @@
 
         public IPostSingleValuedProtocol Post(SingleValuedRequest request)
         {
-            throw new System.NotImplementedException();
+            return new PostSingleValuedProtocol(this.convention, this.multiValuedUri, request);
+        }
+
+        private sealed class PostSingleValuedProtocol : IPostSingleValuedProtocol
+        {
+            private readonly IConvention convention;
+            private readonly Uri multiValuedUri;
+            private readonly SingleValuedRequest singleValuedRequest;
+
+            private readonly IEnumerable<string> expands;
+            private readonly IEnumerable<string> selects;
+
+            public PostSingleValuedProtocol(IConvention convention, Uri multiValuedUri, SingleValuedRequest singleValuedRequest)
+                : this(
+                      convention,
+                      multiValuedUri,
+                      singleValuedRequest,
+                      Enumerable.Empty<string>(),
+                      Enumerable.Empty<string>())
+            {
+            }
+
+            private PostSingleValuedProtocol(
+                IConvention convention,
+                Uri multiValuedUri,
+                SingleValuedRequest singleValuedRequest,
+                IEnumerable<string> expands,
+                IEnumerable<string> selects)
+            {
+                this.convention = convention;
+                this.multiValuedUri = multiValuedUri;
+                this.singleValuedRequest = singleValuedRequest;
+
+                this.expands = expands;
+                this.selects = selects;
+            }
+
+            public SingleValuedResponse Evaluate()
+            {
+                throw new NotImplementedException();
+            }
+
+            public IPostSingleValuedProtocol Expand(object expander)
+            {
+                return new PostSingleValuedProtocol(
+                    this.convention,
+                    this.multiValuedUri,
+                    this.singleValuedRequest,
+                    this.expands.Append("TODO"),
+                    this.selects);
+            }
+
+            public IPostSingleValuedProtocol Select(object selector)
+            {
+                return new PostSingleValuedProtocol(
+                    this.convention,
+                    this.multiValuedUri,
+                    this.singleValuedRequest,
+                    this.expands,
+                    this.selects.Append("TODO"));
+            }
         }
 
         private sealed class SingleValuedResponseBuilder
