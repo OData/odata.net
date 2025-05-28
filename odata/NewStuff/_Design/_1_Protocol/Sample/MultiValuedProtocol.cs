@@ -369,18 +369,6 @@
                 return builder.Uri;
             }
 
-            private sealed class SingleValuedResponseBuilder
-            {
-                public SingleValue? Value { get; set; }
-
-                public List<object> Annotations { get; set; } = new List<object>();
-
-                public SingleValuedResponse Build()
-                {
-                    return new SingleValuedResponse(this.Value, this.Annotations);
-                }
-            }
-
             public SingleValuedResponse Evaluate()
             {
                 var requestWriter = this.convention.Get();
@@ -552,8 +540,44 @@
                 // send the request
                 var patchResponseReader = patchRequestBodyWriter.Commit();
 
+                var patchResponseHeaderReader = patchResponseReader.Next();
+                var patchResponseBodyReader = MultiValuedProtocol.SkipHeaders(patchResponseHeaderReader);
 
-                //// TODO you are here
+                var singleValuedResponseBuilder = new SingleValuedResponseBuilder();
+                var singleValueBuilder = new SingleValueBuilder();
+                while (true)
+                {
+                    var getResponseBodyToken = patchResponseBodyReader.Next();
+                    if (getResponseBodyToken is GetResponseBodyToken.Property property)
+                    {
+                        var propertyReader = property.PropertyReader;
+                        var propertyNameReader = propertyReader.Next();
+                        var propertyName = propertyNameReader.PropertyName;
+                        var propertyValueReader = propertyNameReader.Next();
+
+                        patchResponseBodyReader = MultiValuedProtocol.ReadPropertyValue(propertyValueReader, propertyName.Name, singleValueBuilder);
+                    }
+                    else if (getResponseBodyToken is GetResponseBodyToken.OdataContext odataContext)
+                    {
+                        //// TODO this implementation is not using the context
+                        patchResponseBodyReader = odataContext.OdataContextReader.Next();
+                    }
+                    else if (getResponseBodyToken is GetResponseBodyToken.NextLink nextLink)
+                    {
+                        throw new Exception("TODO no nextlinks for single-valued responses");
+                    }
+                    else if (getResponseBodyToken is GetResponseBodyToken.End end)
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        throw new Exception("TODO implement visitor");
+                    }
+                }
+
+                singleValuedResponseBuilder.Value = singleValueBuilder.Build();
+                return singleValuedResponseBuilder.Build();
             }
 
             private static T WriteSingleValuedRequest<T>(SingleValuedRequest singleValuedRequest, IComplexPropertyValueWriter<T> complexPropertyValueWriter)
@@ -600,18 +624,40 @@
 
             public IPatchSingleValuedProtocol Expand(object expander)
             {
-                throw new NotImplementedException();
+                return new PatchSingleValuedProtocol(
+                    this.convention,
+                    this.singleValuedUri,
+                    this.singleValuedRequest,
+                    this.expands.Append("TODO"),
+                    this.selects);
             }
 
             public IPatchSingleValuedProtocol Select(object selector)
             {
-                throw new NotImplementedException();
+                return new PatchSingleValuedProtocol(
+                    this.convention,
+                    this.singleValuedUri,
+                    this.singleValuedRequest,
+                    this.expands,
+                    this.selects.Append("TODO"));
             }
         }
 
         public IPostSingleValuedProtocol Post(SingleValuedRequest request)
         {
             throw new System.NotImplementedException();
+        }
+
+        private sealed class SingleValuedResponseBuilder
+        {
+            public SingleValue? Value { get; set; }
+
+            public List<object> Annotations { get; set; } = new List<object>();
+
+            public SingleValuedResponse Build()
+            {
+                return new SingleValuedResponse(this.Value, this.Annotations);
+            }
         }
 
         private static T ReadComplexPropertyValue<T>(IComplexPropertyValueReader<T> complexPropertyValueReader, MultiValuedProtocol.SingleValueBuilder singleValueBuilder)
