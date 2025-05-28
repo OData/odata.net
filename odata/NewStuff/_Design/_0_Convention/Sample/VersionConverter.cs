@@ -172,7 +172,7 @@
             Convert(odataMaxPageSizeHeaderReader.Next(), odataMaxPageSizeHeaderWriter.Commit(odataMaxPageSizeHeaderReader.OdataMaxPageSize));
         }
 
-        private static void Convert(ICustomHeaderReader<IGetHeaderReader> customHeaderReader, ICustomHeaderWriter customHeaderWriter)
+        private static void Convert(ICustomHeaderReader<IGetHeaderReader> customHeaderReader, ICustomHeaderWriter<IGetHeaderWriter> customHeaderWriter)
         {
             var nextWriter = customHeaderWriter.Commit(customHeaderReader.HeaderFieldName);
             var customHeaderToken = customHeaderReader.Next();
@@ -190,7 +190,7 @@
             }
         }
 
-        private static void Convert(IHeaderFieldValueReader<IGetHeaderReader> headerFieldValueReader, IHeaderFieldValueWriter headerFieldValueWriter)
+        private static void Convert(IHeaderFieldValueReader<IGetHeaderReader> headerFieldValueReader, IHeaderFieldValueWriter<IGetHeaderWriter> headerFieldValueWriter)
         {
             Convert(headerFieldValueReader.Next(), headerFieldValueWriter.Commit(headerFieldValueReader.HeaderFieldValue));
         }
