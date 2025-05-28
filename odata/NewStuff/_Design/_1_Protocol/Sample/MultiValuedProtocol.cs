@@ -107,7 +107,7 @@
                 multiValueResponseBuilder.Annotations = Enumerable.Empty<object>(); //// TODO annotations aren't supported yet
 
                 var headerReader = getResponseReader.Next();
-                var getResponseBodyReader = SkipHeaders(headerReader);
+                var getResponseBodyReader = MultiValuedProtocol.SkipHeaders(headerReader);
 
                 while (true)
                 {
@@ -135,9 +135,9 @@
                             if (propertyValueToken is PropertyValueToken<IGetResponseBodyReader>.Complex complex)
                             {
                                 var complexPropertyValueReader = complex.ComplexPropertyValueReader;
-                                var singleValueBuilder = new SingleValueBuilder();
+                                var singleValueBuilder = new MultiValuedProtocol.SingleValueBuilder();
 
-                                getResponseBodyReader = ReadComplexPropertyValue(complexPropertyValueReader, singleValueBuilder);
+                                getResponseBodyReader = MultiValuedProtocol.ReadComplexPropertyValue(complexPropertyValueReader, singleValueBuilder);
 
                                 multiValueResponseBuilder.Value.Add(singleValueBuilder.Build());
                             }
@@ -168,119 +168,6 @@
                 return multiValueResponseBuilder.Build();
             }
 
-            private sealed class SingleValueBuilder
-            {
-                public List<ComplexResponseProperty> ComplexProperties { get; set; } = new List<ComplexResponseProperty>();
-
-                public List<MultiValuedResponseProperty> MultiValuedProperties { get; set; } = new List<MultiValuedResponseProperty>();
-
-                public List<UntypedResponseProperty> UntypedProperties { get; set; } = new List<UntypedResponseProperty>();
-
-                public List<PrimitiveResponseProperty> PrimitiveProperties { get; set; } = new List<PrimitiveResponseProperty>();
-
-                public List<DynamicResponseProperty> DynamicProperties { get; set; } = new List<DynamicResponseProperty>();
-
-                public string? Context { get; set; } //// TODO make this strongly typed
-
-                public SingleValue Build()
-                {
-                    return new SingleValue(this.ComplexProperties, this.MultiValuedProperties, this.UntypedProperties, this.PrimitiveProperties, this.DynamicProperties, this.Context);
-                }
-            }
-
-            private static T ReadComplexPropertyValue<T>(IComplexPropertyValueReader<T> complexPropertyValueReader, SingleValueBuilder singleValueBuilder)
-            {
-                while (true)
-                {
-                    var complexPropertyValueToken = complexPropertyValueReader.Next();
-                    if (complexPropertyValueToken is ComplexPropertyValueToken<T>.Property property)
-                    {
-                        var propertyReader = property.PropertyReader;
-                        var propertyNameReader = propertyReader.Next();
-
-                        var propertyName = propertyNameReader.PropertyName.Name;
-
-                        var propertyValueReader = propertyNameReader.Next();
-                        complexPropertyValueReader = ReadPropertyValue(propertyValueReader, propertyName, singleValueBuilder);
-                    }
-                    else if (complexPropertyValueToken is ComplexPropertyValueToken<T>.OdataContext odataContext)
-                    {
-                        var odataContextReader = odataContext.OdataContextReader;
-                        singleValueBuilder.Context = odataContextReader.OdataContext.Context;
-
-                        complexPropertyValueReader = odataContext.OdataContextReader.Next();
-                    }
-                    else if (complexPropertyValueToken is ComplexPropertyValueToken<T>.OdataId odataId)
-                    {
-                        //// TODO this implementation is skipping the odataid
-
-                        complexPropertyValueReader = odataId.OdataIdReader.Next();
-                    }
-                    else if (complexPropertyValueToken is ComplexPropertyValueToken<T>.End end)
-                    {
-                        return end.Reader;
-                    }
-                }
-            }
-
-            private static T ReadPropertyValue<T>(IPropertyValueReader<T> propertyValueReader, string propertyName, SingleValueBuilder singleValueBuilder)
-            {
-                //// TODO you are here
-                var propertyValueToken = propertyValueReader.Next();
-                if (propertyValueToken is PropertyValueToken<T>.Complex complex)
-                {
-                    var nestedSingleValueBuilder = new SingleValueBuilder();
-                    var nextReader = ReadComplexPropertyValue(complex.ComplexPropertyValueReader, nestedSingleValueBuilder);
-
-                    singleValueBuilder.ComplexProperties.Add(new ComplexResponseProperty(propertyName, nestedSingleValueBuilder.Build(), Enumerable.Empty<string>()));
-
-                    return nextReader;
-                }
-                else if (propertyValueToken is PropertyValueToken<T>.MultiValued multiValued)
-                {
-                    var values = new List<SingleValue>();
-
-                    var multiValuedPropertyValueReader = multiValued.MultiValuedPropertyValueReader;
-                    while (true)
-                    {
-                        var multiValuedPropertyValueToken = multiValuedPropertyValueReader.Next();
-                        if (multiValuedPropertyValueToken is MultiValuedPropertyValueToken<T>.Object @object)
-                        {
-                            var complexPropertyValueReader = @object.ComplexPropertyValueReader;
-                            var nestedSinlgeValueBuilder = new SingleValueBuilder();
-                            multiValuedPropertyValueReader = ReadComplexPropertyValue(complexPropertyValueReader, nestedSinlgeValueBuilder);
-                            values.Add(nestedSinlgeValueBuilder.Build());
-                        }
-                        else if (multiValuedPropertyValueToken is MultiValuedPropertyValueToken<T>.End end)
-                        {
-                            //// TODO nextlink isn't modeled in the readers
-                            singleValueBuilder.MultiValuedProperties.Add(new MultiValuedResponseProperty(propertyName, values, null));
-
-                            return end.Reader;
-                        }
-                        else
-                        {
-                            throw new Exception("TODO implement visitor");
-                        }
-                    }
-                }
-                else if (propertyValueToken is PropertyValueToken<T>.Null @null)
-                {
-                    //// TODO you need to add null properties to `singlevalue`
-                    return @null.NullPropertyValueReader.Next();
-                }
-                else if (propertyValueToken is PropertyValueToken<T>.Primitive primitive)
-                {
-                    var primitivePropertyValueReader = primitive.PrimitivePropertyValueReader;
-                    singleValueBuilder.PrimitiveProperties.Add(new PrimitiveResponseProperty(propertyName, primitivePropertyValueReader.PrimitivePropertyValue.Value, Enumerable.Empty<object>()));
-                    return primitivePropertyValueReader.Next();
-                }
-                else
-                {
-                    throw new Exception("TODO implement visitor");
-                }
-            }
-
             private static T SkipPropertyValue<T>(IPropertyValueReader<T> propertyValueReader)
             {
                 var propertyValueToken = propertyValueReader.Next(); //// TODO do you want to add `skip` methods?
@@ -301,6 +188,10 @@
                         else if (multiValuedPropertyValueToken is MultiValuedPropertyValueToken<T>.End end)
                         {
                             return end.Reader;
+                        }
+                        else
+                        {
+                            throw new Exception("TODO implement visitor");
                         }
                     }
                 }
@@ -341,6 +232,10 @@
                     {
                         return end.Reader;
                     }
+                    else
+                    {
+                        throw new Exception("TODO implement visitor");
+                    }
                 }
             }
 
@@ -349,39 +244,6 @@
                 var propertyNameReader = propertyReader.Next();
                 var propertyValueReader = propertyNameReader.Next();
                 return SkipPropertyValue(propertyValueReader);
-            }
-
-            private static IGetResponseBodyReader SkipHeaders(IGetResponseHeaderReader getResponseHeaderReader)
-            {
-                var headerToken = getResponseHeaderReader.Next();
-                if (headerToken is GetResponseHeaderToken.ContentType contentType)
-                {
-                    return SkipHeaders(contentType.ContentTypeHeaderReader.Next());
-                }
-                else if (headerToken is GetResponseHeaderToken.Custom custom)
-                {
-                    var customHeaderToken = custom.CustomHeaderReader.Next();
-                    if (customHeaderToken is CustomHeaderToken<IGetResponseHeaderReader>.FieldValue fieldValue)
-                    {
-                        return SkipHeaders(fieldValue.HeaderFieldValueReader.Next());
-                    }
-                    else if (customHeaderToken is CustomHeaderToken<IGetResponseHeaderReader>.Header header)
-                    {
-                        return SkipHeaders(header.GetHeaderReader);
-                    }
-                    else
-                    {
-                        throw new Exception("TODO implement visitor");
-                    }
-                }
-                else if (headerToken is GetResponseHeaderToken.Body body)
-                {
-                    return body.GetResponseBodyReader;
-                }
-                else
-                {
-                    throw new Exception("TODO implement visitor");
-                }
             }
 
             public IGetMultiValuedProtocol Expand(object expander)
@@ -469,6 +331,18 @@
                 return builder.Uri;
             }
 
+            private sealed class SingleValuedResponseBuilder
+            {
+                public SingleValue? Value { get; set; }
+
+                public List<object> Annotations { get; set; } = new List<object>();
+
+                public SingleValuedResponse Build()
+                {
+                    return new SingleValuedResponse(this.Value, this.Annotations);
+                }
+            }
+
             public SingleValuedResponse Evaluate()
             {
                 var requestWriter = this.convention.Get();
@@ -485,7 +359,44 @@
                 // send the request
                 var getResponseReader = getBodyWriter.Commit();
 
-                //// TODO you are here
+                var getResponseHeaderReader = getResponseReader.Next();
+                var getResponseBodyReader = MultiValuedProtocol.SkipHeaders(getResponseHeaderReader);
+
+                var singleValuedResponseBuilder = new SingleValuedResponseBuilder();
+                var singleValueBuilder = new SingleValueBuilder();
+                while (true)
+                {
+                    var getResponseBodyToken = getResponseBodyReader.Next();
+                    if (getResponseBodyToken is GetResponseBodyToken.Property property)
+                    {
+                        var propertyReader = property.PropertyReader;
+                        var propertyNameReader = propertyReader.Next();
+                        var propertyName = propertyNameReader.PropertyName;
+                        var propertyValueReader = propertyNameReader.Next();
+
+                        getResponseBodyReader = MultiValuedProtocol.ReadPropertyValue(propertyValueReader, propertyName.Name, singleValueBuilder);
+                    }
+                    else if (getResponseBodyToken is GetResponseBodyToken.OdataContext odataContext)
+                    {
+                        //// TODO this implementation is not using the context
+                        getResponseBodyReader = odataContext.OdataContextReader.Next();
+                    }
+                    else if (getResponseBodyToken is GetResponseBodyToken.NextLink nextLink)
+                    {
+                        throw new Exception("TODO no nextlinks for single-valued responses");
+                    }
+                    else if (getResponseBodyToken is GetResponseBodyToken.End end)
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        throw new Exception("TODO implement visitor");
+                    }
+                }
+
+                singleValuedResponseBuilder.Value = singleValueBuilder.Build();
+                return singleValuedResponseBuilder.Build();
             }
 
             public IGetSingleValuedProtocol Expand(object expander)
@@ -515,6 +426,156 @@
         public IPostSingleValuedProtocol Post(SingleValuedRequest request)
         {
             throw new System.NotImplementedException();
+        }
+
+        private static T ReadComplexPropertyValue<T>(IComplexPropertyValueReader<T> complexPropertyValueReader, MultiValuedProtocol.SingleValueBuilder singleValueBuilder)
+        {
+            while (true)
+            {
+                var complexPropertyValueToken = complexPropertyValueReader.Next();
+                if (complexPropertyValueToken is ComplexPropertyValueToken<T>.Property property)
+                {
+                    var propertyReader = property.PropertyReader;
+                    var propertyNameReader = propertyReader.Next();
+
+                    var propertyName = propertyNameReader.PropertyName.Name;
+
+                    var propertyValueReader = propertyNameReader.Next();
+                    complexPropertyValueReader = MultiValuedProtocol.ReadPropertyValue(propertyValueReader, propertyName, singleValueBuilder);
+                }
+                else if (complexPropertyValueToken is ComplexPropertyValueToken<T>.OdataContext odataContext)
+                {
+                    var odataContextReader = odataContext.OdataContextReader;
+                    singleValueBuilder.Context = odataContextReader.OdataContext.Context;
+
+                    complexPropertyValueReader = odataContext.OdataContextReader.Next();
+                }
+                else if (complexPropertyValueToken is ComplexPropertyValueToken<T>.OdataId odataId)
+                {
+                    //// TODO this implementation is skipping the odataid
+
+                    complexPropertyValueReader = odataId.OdataIdReader.Next();
+                }
+                else if (complexPropertyValueToken is ComplexPropertyValueToken<T>.End end)
+                {
+                    return end.Reader;
+                }
+                else
+                {
+                    throw new Exception("TODO implement visitor");
+                }
+            }
+        }
+
+        private static T ReadPropertyValue<T>(IPropertyValueReader<T> propertyValueReader, string propertyName, MultiValuedProtocol.SingleValueBuilder singleValueBuilder)
+        {
+            //// TODO you are here
+            var propertyValueToken = propertyValueReader.Next();
+            if (propertyValueToken is PropertyValueToken<T>.Complex complex)
+            {
+                var nestedSingleValueBuilder = new MultiValuedProtocol.SingleValueBuilder();
+                var nextReader = MultiValuedProtocol.ReadComplexPropertyValue(complex.ComplexPropertyValueReader, nestedSingleValueBuilder);
+
+                singleValueBuilder.ComplexProperties.Add(new ComplexResponseProperty(propertyName, nestedSingleValueBuilder.Build(), Enumerable.Empty<string>()));
+
+                return nextReader;
+            }
+            else if (propertyValueToken is PropertyValueToken<T>.MultiValued multiValued)
+            {
+                var values = new List<SingleValue>();
+
+                var multiValuedPropertyValueReader = multiValued.MultiValuedPropertyValueReader;
+                while (true)
+                {
+                    var multiValuedPropertyValueToken = multiValuedPropertyValueReader.Next();
+                    if (multiValuedPropertyValueToken is MultiValuedPropertyValueToken<T>.Object @object)
+                    {
+                        var complexPropertyValueReader = @object.ComplexPropertyValueReader;
+                        var nestedSinlgeValueBuilder = new MultiValuedProtocol.SingleValueBuilder();
+                        multiValuedPropertyValueReader = MultiValuedProtocol.ReadComplexPropertyValue(complexPropertyValueReader, nestedSinlgeValueBuilder);
+                        values.Add(nestedSinlgeValueBuilder.Build());
+                    }
+                    else if (multiValuedPropertyValueToken is MultiValuedPropertyValueToken<T>.End end)
+                    {
+                        //// TODO nextlink isn't modeled in the readers
+                        singleValueBuilder.MultiValuedProperties.Add(new MultiValuedResponseProperty(propertyName, values, null));
+
+                        return end.Reader;
+                    }
+                    else
+                    {
+                        throw new Exception("TODO implement visitor");
+                    }
+                }
+            }
+            else if (propertyValueToken is PropertyValueToken<T>.Null @null)
+            {
+                //// TODO you need to add null properties to `singlevalue`
+                return @null.NullPropertyValueReader.Next();
+            }
+            else if (propertyValueToken is PropertyValueToken<T>.Primitive primitive)
+            {
+                var primitivePropertyValueReader = primitive.PrimitivePropertyValueReader;
+                singleValueBuilder.PrimitiveProperties.Add(new PrimitiveResponseProperty(propertyName, primitivePropertyValueReader.PrimitivePropertyValue.Value, Enumerable.Empty<object>()));
+                return primitivePropertyValueReader.Next();
+            }
+            else
+            {
+                throw new Exception("TODO implement visitor");
+            }
+        }
+
+        private sealed class SingleValueBuilder
+        {
+            public List<ComplexResponseProperty> ComplexProperties { get; set; } = new List<ComplexResponseProperty>();
+
+            public List<MultiValuedResponseProperty> MultiValuedProperties { get; set; } = new List<MultiValuedResponseProperty>();
+
+            public List<UntypedResponseProperty> UntypedProperties { get; set; } = new List<UntypedResponseProperty>();
+
+            public List<PrimitiveResponseProperty> PrimitiveProperties { get; set; } = new List<PrimitiveResponseProperty>();
+
+            public List<DynamicResponseProperty> DynamicProperties { get; set; } = new List<DynamicResponseProperty>();
+
+            public string? Context { get; set; } //// TODO make this strongly typed
+
+            public SingleValue Build()
+            {
+                return new SingleValue(this.ComplexProperties, this.MultiValuedProperties, this.UntypedProperties, this.PrimitiveProperties, this.DynamicProperties, this.Context);
+            }
+        }
+
+        private static IGetResponseBodyReader SkipHeaders(IGetResponseHeaderReader getResponseHeaderReader)
+        {
+            var headerToken = getResponseHeaderReader.Next();
+            if (headerToken is GetResponseHeaderToken.ContentType contentType)
+            {
+                return SkipHeaders(contentType.ContentTypeHeaderReader.Next());
+            }
+            else if (headerToken is GetResponseHeaderToken.Custom custom)
+            {
+                var customHeaderToken = custom.CustomHeaderReader.Next();
+                if (customHeaderToken is CustomHeaderToken<IGetResponseHeaderReader>.FieldValue fieldValue)
+                {
+                    return SkipHeaders(fieldValue.HeaderFieldValueReader.Next());
+                }
+                else if (customHeaderToken is CustomHeaderToken<IGetResponseHeaderReader>.Header header)
+                {
+                    return SkipHeaders(header.GetHeaderReader);
+                }
+                else
+                {
+                    throw new Exception("TODO implement visitor");
+                }
+            }
+            else if (headerToken is GetResponseHeaderToken.Body body)
+            {
+                return body.GetResponseBodyReader;
+            }
+            else
+            {
+                throw new Exception("TODO implement visitor");
+            }
         }
 
         private static IEnumerable<Tuple<string, string?>> SplitQueryQueryString(string queryString)

@@ -4,6 +4,12 @@
 
     public class SingleValuedResponse
     {
+        public SingleValuedResponse(SingleValue? value, IEnumerable<object> annotations)
+        {
+            Value = value;
+            Annotations = annotations;
+        }
+
         //// TODO mimicing the modeling of JSON is probably a good idea
 
         public SingleValue? Value { get; } //// TODO you don't intend this to be "nullable", you intend to indicate if the value was provided
