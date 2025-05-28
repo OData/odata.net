@@ -79,15 +79,17 @@
 
                         public IGetResponseHeaderReader Next()
                         {
-                            return new GetResponseHeaderReader(this.httpResponseMessage.Headers.GetEnumerator()); //// TODO this is disposable
+                            return new GetResponseHeaderReader(this.httpResponseMessage, this.httpResponseMessage.Headers.GetEnumerator()); //// TODO this is disposable
                         }
 
                         private sealed class GetResponseHeaderReader : IGetResponseHeaderReader
                         {
+                            private readonly HttpResponseMessage httpResponseMessage;
                             private readonly IEnumerator<KeyValuePair<string, IEnumerable<string>>> headers;
 
-                            public GetResponseHeaderReader(IEnumerator<KeyValuePair<string, IEnumerable<string>>> headers)
+                            public GetResponseHeaderReader(HttpResponseMessage httpResponseMessage, IEnumerator<KeyValuePair<string, IEnumerable<string>>> headers)
                             {
+                                this.httpResponseMessage = httpResponseMessage;
                                 this.headers = headers;
                             }
 
@@ -97,25 +99,27 @@
                                 {
                                     if (string.Equals(this.headers.Current.Key, "Content-Type", StringComparison.OrdinalIgnoreCase)) //// TODO should ignroing case be configurable
                                     {
-                                        return new GetResponseHeaderToken.ContentType(new ContentTypeHeaderReader());
+                                        return new GetResponseHeaderToken.ContentType(new ContentTypeHeaderReader(this.httpResponseMessage, this.headers));
                                     }
                                     else
                                     {
-                                        return new GetResponseHeaderToken.Custom(new CustomHeaderReader(this.headers));
+                                        return new GetResponseHeaderToken.Custom(new CustomHeaderReader(this.httpResponseMessage, this.headers));
                                     }
                                 }
                                 else
                                 {
-                                    return new GetResponseHeaderToken.Body(new GetResponseBodyReader());
+                                    return new GetResponseHeaderToken.Body(new GetResponseBodyReader(this.httpResponseMessage));
                                 }
                             }
 
                             private sealed class CustomHeaderReader : ICustomHeaderReader<IGetResponseHeaderReader>
                             {
+                                private readonly HttpResponseMessage httpResponseMessage;
                                 private readonly IEnumerator<KeyValuePair<string, IEnumerable<string>>> headers;
 
-                                public CustomHeaderReader(IEnumerator<KeyValuePair<string, IEnumerable<string>>> headers)
+                                public CustomHeaderReader(HttpResponseMessage httpResponseMessage, IEnumerator<KeyValuePair<string, IEnumerable<string>>> headers)
                                 {
+                                    this.httpResponseMessage = httpResponseMessage;
                                     this.headers = headers;
                                     this.HeaderFieldName = new HeaderFieldName(this.headers.Current.Key);
                                 }
@@ -126,20 +130,22 @@
                                 {
                                     if (this.headers.Current.Value.Any())
                                     {
-                                        return new CustomHeaderToken<IGetResponseHeaderReader>.FieldValue(new HeaderFieldValueReader(this.headers));
+                                        return new CustomHeaderToken<IGetResponseHeaderReader>.FieldValue(new HeaderFieldValueReader(this.httpResponseMessage, this.headers));
                                     }
                                     else
                                     {
-                                        return new CustomHeaderToken<IGetResponseHeaderReader>.Header(new GetResponseHeaderReader(this.headers));
+                                        return new CustomHeaderToken<IGetResponseHeaderReader>.Header(new GetResponseHeaderReader(this.httpResponseMessage, this.headers));
                                     }
                                 }
 
                                 private sealed class HeaderFieldValueReader : IHeaderFieldValueReader<IGetResponseHeaderReader>
                                 {
+                                    private readonly HttpResponseMessage httpResponseMessage;
                                     private readonly IEnumerator<KeyValuePair<string, IEnumerable<string>>> headers;
 
-                                    public HeaderFieldValueReader(IEnumerator<KeyValuePair<string, IEnumerable<string>>> headers)
+                                    public HeaderFieldValueReader(HttpResponseMessage httpResponseMessage, IEnumerator<KeyValuePair<string, IEnumerable<string>>> headers)
                                     {
+                                        this.httpResponseMessage = httpResponseMessage;
                                         this.headers = headers;
                                         this.HeaderFieldValue = new HeaderFieldValue(headers.Current.Value.First()); //// TODO `.first` is not handling duplicate headers or headers with multiple provided values
                                     }
@@ -148,23 +154,40 @@
 
                                     public IGetResponseHeaderReader Next()
                                     {
-                                        return new GetResponseHeaderReader(this.headers);
+                                        return new GetResponseHeaderReader(this.httpResponseMessage, this.headers);
                                     }
                                 }
                             }
 
                             private sealed class ContentTypeHeaderReader : IContentTypeHeaderReader
                             {
-                                public ContentType ContentType => throw new NotImplementedException();
+                                private readonly HttpResponseMessage httpResponseMessage;
+                                private readonly IEnumerator<KeyValuePair<string, IEnumerable<string>>> headers;
+
+                                public ContentTypeHeaderReader(HttpResponseMessage httpResponseMessage, IEnumerator<KeyValuePair<string, IEnumerable<string>>> headers)
+                                {
+                                    this.httpResponseMessage = httpResponseMessage;
+                                    this.headers = headers;
+                                    this.ContentType = new ContentType(this.headers.Current.Value.First()); //// TODO `.first` is not handling duplicate headers or headers with multiple provided values
+                                }
+
+                                public ContentType ContentType { get; }
 
                                 public IGetResponseHeaderReader Next()
                                 {
-                                    throw new NotImplementedException();
+                                    return new GetResponseHeaderReader(this.httpResponseMessage, this.headers);
                                 }
                             }
 
                             private sealed class GetResponseBodyReader : IGetResponseBodyReader
                             {
+                                private readonly HttpResponseMessage httpResponseMessage;
+
+                                public GetResponseBodyReader(HttpResponseMessage httpResponseMessage)
+                                {
+                                    this.httpResponseMessage = httpResponseMessage;
+                                }
+
                                 public GetResponseBodyToken Next()
                                 {
                                     throw new NotImplementedException();
