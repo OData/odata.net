@@ -21,8 +21,9 @@
 
         public sealed class ContentType : GetResponseHeaderToken
         {
-            private ContentType()
+            public ContentType(IContentTypeHeaderReader contentTypeHeaderReader)
             {
+                this.ContentTypeHeaderReader = contentTypeHeaderReader;
             }
 
             public IContentTypeHeaderReader ContentTypeHeaderReader { get; }
@@ -30,8 +31,9 @@
 
         public sealed class Custom : GetResponseHeaderToken
         {
-            private Custom()
+            public Custom(ICustomHeaderReader<IGetResponseHeaderReader> customHeaderReader)
             {
+                this.CustomHeaderReader = customHeaderReader;
             }
 
             public ICustomHeaderReader<IGetResponseHeaderReader> CustomHeaderReader { get; }
@@ -39,8 +41,9 @@
 
         public sealed class Body : GetResponseHeaderToken
         {
-            private Body()
+            public Body(IGetResponseBodyReader getResponseBodyReader)
             {
+                GetResponseBodyReader = getResponseBodyReader;
             }
 
             public IGetResponseBodyReader GetResponseBodyReader { get; }

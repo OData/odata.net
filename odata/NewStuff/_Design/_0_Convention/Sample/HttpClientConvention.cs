@@ -70,7 +70,6 @@
                     private sealed class GetResponseReader : IGetResponseReader
                     {
                         private readonly HttpResponseMessage httpResponseMessage;
-                        private readonly IEnumerator<KeyValuePair<string, IEnumerable<string>>> headers;
 
                         public GetResponseReader(HttpResponseMessage httpResponseMessage)
                         {
@@ -93,6 +92,49 @@
 
                             public GetResponseHeaderToken Next()
                             {
+                                if (this.headers.MoveNext())
+                                {
+                                    if (string.Equals(this.headers.Current.Key, "Content-Type", StringComparison.OrdinalIgnoreCase)) //// TODO should ignroing case be configurable
+                                    {
+                                        return new GetResponseHeaderToken.ContentType(new ContentTypeHeaderReader());
+                                    }
+                                    else
+                                    {
+                                        return new GetResponseHeaderToken.Custom(new CustomHeaderReader<IGetResponseHeaderReader>());
+                                    }
+                                }
+                                else
+                                {
+                                    return new GetResponseHeaderToken.Body(new GetResponseBodyReader());
+                                }
+                            }
+
+                            private sealed class CustomHeaderReader<T> : ICustomHeaderReader<T>
+                            {
+                                public HeaderFieldName HeaderFieldName => throw new NotImplementedException();
+
+                                public CustomHeaderToken<T> Next()
+                                {
+                                    throw new NotImplementedException();
+                                }
+                            }
+
+                            private sealed class ContentTypeHeaderReader : IContentTypeHeaderReader
+                            {
+                                public ContentType ContentType => throw new NotImplementedException();
+
+                                public IGetResponseHeaderReader Next()
+                                {
+                                    throw new NotImplementedException();
+                                }
+                            }
+
+                            private sealed class GetResponseBodyReader : IGetResponseBodyReader
+                            {
+                                public GetResponseBodyToken Next()
+                                {
+                                    throw new NotImplementedException();
+                                }
                             }
                         }
                     }
