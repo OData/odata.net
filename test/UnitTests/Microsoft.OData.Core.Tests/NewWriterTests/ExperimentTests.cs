@@ -483,6 +483,97 @@ public class ExperimentTests
         Assert.Equal(expectedPayload, writtenPayload);
     }
 
+    [Fact]
+    public async Task WriteClrPayloadBasedOnDynamicPropertiesWithComplexPropertiesAndCollections()
+    {
+        var model = new EdmModel();
+
+        var projectEntity = model.AddEntityType("ns", "Project", baseType: null, isAbstract: false, isOpen: true);
+        projectEntity.AddKeys(projectEntity.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
+        projectEntity.AddStructuralProperty("Name", EdmPrimitiveTypeKind.String);
+
+        var projectSet = model.AddEntityContainer("ns", "DefaultContainer")
+            .AddEntitySet("Projects", projectEntity);
+
+        IEnumerable<Project> projects = [
+            new Project
+            {
+                Id = 1,
+                Name = "P1",
+                DynamicProperties = new Dictionary<string, object>
+                {
+                    { "Status", "Active" },
+                    { "Tags", new string[] { "sports", "hobbies" } },
+                    { "Address", new Address { City = "Nairobi", Country = "Kenya" } },
+                    
+                }
+            },
+            new Project
+            {
+                Id = 2,
+                Name = "P2",
+                DynamicProperties = new Dictionary<string, object>
+                {
+                    { "Status", "Complete" },
+                    { "Tags", new object[] { 1, false, "test" } }, // we use a different types here on purpose,
+                    { "Addresses", new Address[]
+                        {
+                            new Address { City = "Redmond", Country = "United States" },
+                            new Address { City = "Seattle", Country = "United States" }
+                        }
+                    }
+                }
+            }
+        ];
+
+        using var stream = new MemoryStream();
+        Utf8JsonWriter jsonWriter = new(stream);
+        var propertySelector = new ClrTypeEdmPropertySelector<Project>();
+        var propertyWriter = new ClrTypeEdmJsonPropertyWriter<Project>();
+
+        var resourceWriter = new ODataConventionalJsonResourceWriter<Project>(
+            jsonWriter,
+            propertySelector,
+            propertyWriter
+            );
+
+        var writerProvider = new ClrODataValueWriterProvider();
+
+        var uri = new ODataUriParser(model, new Uri("Projects?$select=Name,Status,Tags,Address,Addresses", UriKind.Relative)).ParseUri();
+
+        var responseWriter = new ODataConventionalEntitySetJsonResponseWriter<Project>(jsonWriter, resourceWriter);
+
+        var context = new ODataWriterContext
+        {
+            Model = model,
+            JsonWriter = jsonWriter,
+            SelectExpandClause = uri.SelectAndExpand,
+            WriterProvider = writerProvider,
+            EdmTypeMapper = new EdmTypeMapper(),
+            DynamicPropertiesRetrieverProvider = new ClrDynamicPropertyRetrieverProvider()
+        };
+        var state = new ODataWriterState
+        {
+            EdmType = projectSet.Type,
+            WriterContext = context
+        };
+
+        await responseWriter.WriteAsync(projects, state);
+
+        jsonWriter.Flush();
+        stream.Position = 0;
+        using var reader = new StreamReader(stream);
+        var writtenPayload = await reader.ReadToEndAsync();
+
+        var expectedPayload =
+            "{\"@odata.context\":\"contextUrl\",\"value\":[" 
+            + "{\"Name\":\"P1\",\"Status\":\"Active\",\"Tags\":[\"sports\",\"hobbies\"],\"Address\":{\"City\":\"Nairobi\",\"Country\":\"Kenya\"}}," 
+            + "{\"Name\":\"P2\",\"Status\":\"Complete\",\"Tags\":[1,false,\"test\"],\"Addresses\":[{\"City\":\"Redmond\",\"Country\":\"United States\"},{\"City\":\"Seattle\",\"Country\":\"United States\"}]}" 
+            + "]}";
+
+        Assert.Equal(expectedPayload, writtenPayload);
+    }
+
     class Customer
     {
         public int Id { get; set; }
