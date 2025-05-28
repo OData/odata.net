@@ -45,7 +45,7 @@
 
                 public IGetBodyWriter Commit()
                 {
-                    throw new NotImplementedException();
+                    return new GetBodyWriter(this.httpClient, this.requestUri);
                 }
 
                 private sealed class GetBodyWriter : IGetBodyWriter
@@ -82,12 +82,50 @@
 
                 public IOdataMaxPageSizeHeaderWriter CommitOdataMaxPageSize()
                 {
-                    throw new NotImplementedException();
+                    return new OdataMaxPageSizeHeaderWriter(this.httpClient, this.requestUri);
+                }
+
+                private sealed class OdataMaxPageSizeHeaderWriter : IOdataMaxPageSizeHeaderWriter
+                {
+                    private readonly HttpClient httpClient;
+                    private readonly Uri requestUri;
+
+                    public OdataMaxPageSizeHeaderWriter(HttpClient httpClient, Uri requestUri)
+                    {
+                        this.httpClient = httpClient;
+                        this.requestUri = requestUri;
+                    }
+
+                    public IGetHeaderWriter Commit(OdataMaxPageSize odataMaxPageSize)
+                    {
+                        this.httpClient.DefaultRequestHeaders.Add("OData-MaxPageSize", "100"); //// TODO use `odatamaxpagesize` once the type has actually been implemented
+
+                        return new GetHeaderWriter(this.httpClient, this.requestUri);
+                    }
                 }
 
                 public IOdataMaxVersionHeaderWriter CommitOdataMaxVersion()
                 {
-                    throw new NotImplementedException();
+                    return new OdataMaxVersionHeaderWriter(this.httpClient, this.requestUri);
+                }
+
+                private sealed class OdataMaxVersionHeaderWriter : IOdataMaxVersionHeaderWriter
+                {
+                    private readonly HttpClient httpClient;
+                    private readonly Uri requestUri;
+
+                    public OdataMaxVersionHeaderWriter(HttpClient httpClient, Uri requestUri)
+                    {
+                        this.httpClient = httpClient;
+                        this.requestUri = requestUri;
+                    }
+
+                    public IGetHeaderWriter Commit(OdataVersion odataVersion)
+                    {
+                        this.httpClient.DefaultRequestHeaders.Add("OData-MaxVersion", "v4.01"); //// TODO use `odataversion` once you've actually implemented that type
+
+                        return new GetHeaderWriter(this.httpClient, this.requestUri);
+                    }
                 }
             }
 
