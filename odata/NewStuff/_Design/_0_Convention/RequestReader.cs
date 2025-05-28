@@ -614,8 +614,9 @@
 
         public sealed class FieldValue : CustomHeaderToken<T>
         {
-            private FieldValue()
+            public FieldValue(IHeaderFieldValueReader<T> headerFieldValueReader)
             {
+                HeaderFieldValueReader = headerFieldValueReader;
             }
 
             public IHeaderFieldValueReader<T> HeaderFieldValueReader { get; }
@@ -623,8 +624,9 @@
 
         public sealed class Header : CustomHeaderToken<T>
         {
-            private Header()
+            public Header(T getHeaderReader)
             {
+                GetHeaderReader = getHeaderReader;
             }
 
             public T GetHeaderReader { get; }

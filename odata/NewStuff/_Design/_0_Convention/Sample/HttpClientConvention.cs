@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Net.Http;
     using System.Text;
 
@@ -100,7 +101,7 @@
                                     }
                                     else
                                     {
-                                        return new GetResponseHeaderToken.Custom(new CustomHeaderReader<IGetResponseHeaderReader>());
+                                        return new GetResponseHeaderToken.Custom(new CustomHeaderReader(this.headers));
                                     }
                                 }
                                 else
@@ -109,13 +110,46 @@
                                 }
                             }
 
-                            private sealed class CustomHeaderReader<T> : ICustomHeaderReader<T>
+                            private sealed class CustomHeaderReader : ICustomHeaderReader<IGetResponseHeaderReader>
                             {
-                                public HeaderFieldName HeaderFieldName => throw new NotImplementedException();
+                                private readonly IEnumerator<KeyValuePair<string, IEnumerable<string>>> headers;
 
-                                public CustomHeaderToken<T> Next()
+                                public CustomHeaderReader(IEnumerator<KeyValuePair<string, IEnumerable<string>>> headers)
                                 {
-                                    throw new NotImplementedException();
+                                    this.headers = headers;
+                                    this.HeaderFieldName = new HeaderFieldName(this.headers.Current.Key);
+                                }
+
+                                public HeaderFieldName HeaderFieldName { get; }
+
+                                public CustomHeaderToken<IGetResponseHeaderReader> Next()
+                                {
+                                    if (this.headers.Current.Value.Any())
+                                    {
+                                        return new CustomHeaderToken<IGetResponseHeaderReader>.FieldValue(new HeaderFieldValueReader(this.headers));
+                                    }
+                                    else
+                                    {
+                                        return new CustomHeaderToken<IGetResponseHeaderReader>.Header(new GetResponseHeaderReader(this.headers));
+                                    }
+                                }
+
+                                private sealed class HeaderFieldValueReader : IHeaderFieldValueReader<IGetResponseHeaderReader>
+                                {
+                                    private readonly IEnumerator<KeyValuePair<string, IEnumerable<string>>> headers;
+
+                                    public HeaderFieldValueReader(IEnumerator<KeyValuePair<string, IEnumerable<string>>> headers)
+                                    {
+                                        this.headers = headers;
+                                        this.HeaderFieldValue = new HeaderFieldValue(headers.Current.Value.First()); //// TODO `.first` is not handling duplicate headers or headers with multiple provided values
+                                    }
+
+                                    public HeaderFieldValue HeaderFieldValue { get; }
+
+                                    public IGetResponseHeaderReader Next()
+                                    {
+                                        return new GetResponseHeaderReader(this.headers);
+                                    }
                                 }
                             }
 
