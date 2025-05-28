@@ -7,7 +7,7 @@
     {
         IGetRequestWriter CommitGet();
         IPatchRequestWriter CommitPatch();
-        IPatchRequestWriter CommitPost();//// TODO TODO TODO IMPORTANT you've re-used IPatchRequestWriter for convenience here; it should really be ipostrequestwriter
+        IPostRequestWriter CommitPost();
     }
 
     public interface IGetRequestWriter

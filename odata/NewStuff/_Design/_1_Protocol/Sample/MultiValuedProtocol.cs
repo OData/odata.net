@@ -580,48 +580,6 @@
                 return singleValuedResponseBuilder.Build();
             }
 
-            private static T WriteSingleValuedRequest<T>(SingleValuedRequest singleValuedRequest, IComplexPropertyValueWriter<T> complexPropertyValueWriter)
-            {
-                //// TODO dynamic properties, untyped properties, complex properties
-
-                foreach (var multiValuedProperty in singleValuedRequest.MultiValuedProperties)
-                {
-                    var propertyWriter = complexPropertyValueWriter.CommitProperty();
-                    var propertyNameWriter = propertyWriter.Commit();
-                    var propertyValueWriter = propertyNameWriter.Commit(new PropertyName(multiValuedProperty.Name));
-                    var multiValuedPropertyValueWriter = propertyValueWriter.CommitMultiValued();
-
-                    var objectWriter = multiValuedPropertyValueWriter.CommitValue();
-
-                    foreach (var value in multiValuedProperty.Values)
-                    {
-                        multiValuedPropertyValueWriter = WriteSingleValuedRequest(value, objectWriter);
-                    }
-
-                    complexPropertyValueWriter = multiValuedPropertyValueWriter.Commit();
-                }
-
-                foreach (var primitiveProperty in singleValuedRequest.PrimitiveProperties)
-                {
-                    var propertyWriter = complexPropertyValueWriter.CommitProperty();
-                    var propertyNameWriter = propertyWriter.Commit();
-                    var propertyValueWriter = propertyNameWriter.Commit(new PropertyName(primitiveProperty.Name));
-
-                    if (primitiveProperty.Value == null)
-                    {
-                        var nullPropertyValueWriter = propertyValueWriter.CommitNull();
-                        complexPropertyValueWriter = nullPropertyValueWriter.Commit();
-                    }
-                    else
-                    {
-                        var primitivePropertyValueWriter = propertyValueWriter.CommitPrimitive();
-                        complexPropertyValueWriter = primitivePropertyValueWriter.Commit(new PrimitivePropertyValue(primitiveProperty.Value));
-                    }
-                }
-
-                return complexPropertyValueWriter.Commit();
-            }
-
             public IPatchSingleValuedProtocol Expand(object expander)
             {
                 return new PatchSingleValuedProtocol(
@@ -684,7 +642,98 @@
 
             public SingleValuedResponse Evaluate()
             {
-                throw new NotImplementedException();
+                var patchRequestWriter = this.convention.Post();
+
+                var uriWriter = patchRequestWriter.Commit();
+                var patchHeaderWriter = MultiValuedProtocol.WriteUri(this.multiValuedUri, uriWriter);
+
+                var customHeaderWriter = patchHeaderWriter.CommitCustomHeader();
+                var headerFieldValueWriter = customHeaderWriter.Commit(new HeaderFieldName("Content-Type")); //// TODO probably this should be a "built-in" header
+                patchHeaderWriter = headerFieldValueWriter.Commit(new HeaderFieldValue("application/json"));
+                var patchRequestBodyWriter = patchHeaderWriter.Commit();
+
+                //// TODO what about dynamic and untyped properties?
+                foreach (var complexProperty in this.singleValuedRequest.ComplexProperties)
+                {
+                    //// TODO you haven't actually fleshed out complex properties yet in the protocol layer
+                }
+
+                foreach (var multiValuedProperty in this.singleValuedRequest.MultiValuedProperties)
+                {
+                    var propertyWriter = patchRequestBodyWriter.CommitProperty();
+                    var propertyNameWriter = propertyWriter.Commit();
+                    var propertyValueWriter = propertyNameWriter.Commit(new PropertyName(multiValuedProperty.Name));
+                    var multiValuedPropertyValueWriter = propertyValueWriter.CommitMultiValued();
+
+                    var objectWriter = multiValuedPropertyValueWriter.CommitValue();
+
+                    foreach (var value in multiValuedProperty.Values)
+                    {
+                        multiValuedPropertyValueWriter = WriteSingleValuedRequest(value, objectWriter);
+                    }
+
+                    patchRequestBodyWriter = multiValuedPropertyValueWriter.Commit();
+                }
+
+                foreach (var primitiveProperty in this.singleValuedRequest.PrimitiveProperties)
+                {
+                    var propertyWriter = patchRequestBodyWriter.CommitProperty();
+                    var propertyNameWriter = propertyWriter.Commit();
+                    var propertyValueWriter = propertyNameWriter.Commit(new PropertyName(primitiveProperty.Name));
+
+                    if (primitiveProperty.Value == null)
+                    {
+                        var nullPropertyValueWriter = propertyValueWriter.CommitNull();
+                        patchRequestBodyWriter = nullPropertyValueWriter.Commit();
+                    }
+                    else
+                    {
+                        var primitivePropertyValueWriter = propertyValueWriter.CommitPrimitive();
+                        patchRequestBodyWriter = primitivePropertyValueWriter.Commit(new PrimitivePropertyValue(primitiveProperty.Value));
+                    }
+                }
+
+                // send the request
+                var patchResponseReader = patchRequestBodyWriter.Commit();
+
+                var patchResponseHeaderReader = patchResponseReader.Next();
+                var patchResponseBodyReader = MultiValuedProtocol.SkipHeaders(patchResponseHeaderReader);
+
+                var singleValuedResponseBuilder = new SingleValuedResponseBuilder();
+                var singleValueBuilder = new SingleValueBuilder();
+                while (true)
+                {
+                    var getResponseBodyToken = patchResponseBodyReader.Next();
+                    if (getResponseBodyToken is GetResponseBodyToken.Property property)
+                    {
+                        var propertyReader = property.PropertyReader;
+                        var propertyNameReader = propertyReader.Next();
+                        var propertyName = propertyNameReader.PropertyName;
+                        var propertyValueReader = propertyNameReader.Next();
+
+                        patchResponseBodyReader = MultiValuedProtocol.ReadPropertyValue(propertyValueReader, propertyName.Name, singleValueBuilder);
+                    }
+                    else if (getResponseBodyToken is GetResponseBodyToken.OdataContext odataContext)
+                    {
+                        //// TODO this implementation is not using the context
+                        patchResponseBodyReader = odataContext.OdataContextReader.Next();
+                    }
+                    else if (getResponseBodyToken is GetResponseBodyToken.NextLink nextLink)
+                    {
+                        throw new Exception("TODO no nextlinks for single-valued responses");
+                    }
+                    else if (getResponseBodyToken is GetResponseBodyToken.End end)
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        throw new Exception("TODO implement visitor");
+                    }
+                }
+
+                singleValuedResponseBuilder.Value = singleValueBuilder.Build();
+                return singleValuedResponseBuilder.Build();
             }
 
             public IPostSingleValuedProtocol Expand(object expander)
@@ -706,6 +755,48 @@
                     this.expands,
                     this.selects.Append("TODO"));
             }
+        }
+
+        private static T WriteSingleValuedRequest<T>(SingleValuedRequest singleValuedRequest, IComplexPropertyValueWriter<T> complexPropertyValueWriter)
+        {
+            //// TODO dynamic properties, untyped properties, complex properties
+
+            foreach (var multiValuedProperty in singleValuedRequest.MultiValuedProperties)
+            {
+                var propertyWriter = complexPropertyValueWriter.CommitProperty();
+                var propertyNameWriter = propertyWriter.Commit();
+                var propertyValueWriter = propertyNameWriter.Commit(new PropertyName(multiValuedProperty.Name));
+                var multiValuedPropertyValueWriter = propertyValueWriter.CommitMultiValued();
+
+                var objectWriter = multiValuedPropertyValueWriter.CommitValue();
+
+                foreach (var value in multiValuedProperty.Values)
+                {
+                    multiValuedPropertyValueWriter = WriteSingleValuedRequest(value, objectWriter);
+                }
+
+                complexPropertyValueWriter = multiValuedPropertyValueWriter.Commit();
+            }
+
+            foreach (var primitiveProperty in singleValuedRequest.PrimitiveProperties)
+            {
+                var propertyWriter = complexPropertyValueWriter.CommitProperty();
+                var propertyNameWriter = propertyWriter.Commit();
+                var propertyValueWriter = propertyNameWriter.Commit(new PropertyName(primitiveProperty.Name));
+
+                if (primitiveProperty.Value == null)
+                {
+                    var nullPropertyValueWriter = propertyValueWriter.CommitNull();
+                    complexPropertyValueWriter = nullPropertyValueWriter.Commit();
+                }
+                else
+                {
+                    var primitivePropertyValueWriter = propertyValueWriter.CommitPrimitive();
+                    complexPropertyValueWriter = primitivePropertyValueWriter.Commit(new PrimitivePropertyValue(primitiveProperty.Value));
+                }
+            }
+
+            return complexPropertyValueWriter.Commit();
         }
 
         private sealed class SingleValuedResponseBuilder
