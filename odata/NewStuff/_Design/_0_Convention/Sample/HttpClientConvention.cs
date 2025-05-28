@@ -174,18 +174,20 @@
 
                                 public IQueryOptionWriter<T> Commit()
                                 {
-                                    return new QueryOptionWriter(this.builder, this.nextFactory);
+                                    return new QueryOptionWriter(this.builder, this.nextFactory, false);
                                 }
 
                                 private sealed class QueryOptionWriter : IQueryOptionWriter<T>
                                 {
                                     private readonly StringBuilder builder;
                                     private readonly Func<Uri, T> nextFactory;
+                                    private readonly bool queryParametersWritten;
 
-                                    public QueryOptionWriter(StringBuilder builder, Func<Uri, T> nextFactory)
+                                    public QueryOptionWriter(StringBuilder builder, Func<Uri, T> nextFactory, bool queryParametersWritten)
                                     {
                                         this.builder = builder;
                                         this.nextFactory = nextFactory;
+                                        this.queryParametersWritten = queryParametersWritten;
                                     }
 
                                     public T Commit()
@@ -195,39 +197,83 @@
 
                                     public IFragmentWriter<T> CommitFragment()
                                     {
-                                        throw new System.NotImplementedException();
+                                        return new FragmentWriter(this.builder, this.nextFactory);
                                     }
 
                                     private sealed class FragmentWriter : IFragmentWriter<T>
                                     {
+                                        private readonly StringBuilder builder;
+                                        private readonly Func<Uri, T> nextFactory;
+
+                                        public FragmentWriter(StringBuilder builder, Func<Uri, T> nextFactory)
+                                        {
+                                            this.builder = builder;
+                                            this.nextFactory = nextFactory;
+                                        }
+
                                         public T Commit(Fragment fragment)
                                         {
-                                            throw new System.NotImplementedException();
+                                            this.builder.Append($"#{fragment.Value}");
+
+                                            return this.nextFactory(new Uri(this.builder.ToString()));
                                         }
                                     }
 
                                     public IQueryParameterWriter<T> CommitParameter()
                                     {
-                                        throw new System.NotImplementedException();
+                                        return new QueryParameterWriter(this.builder, this.nextFactory, this.queryParametersWritten);
                                     }
 
                                     private sealed class QueryParameterWriter : IQueryParameterWriter<T>
                                     {
+                                        private readonly StringBuilder builder;
+                                        private readonly Func<Uri, T> nextFactory;
+                                        private readonly bool queryParametersWritten;
+
+                                        public QueryParameterWriter(StringBuilder builder, Func<Uri, T> nextFactory, bool queryParametersWritten)
+                                        {
+                                            this.builder = builder;
+                                            this.nextFactory = nextFactory;
+                                            this.queryParametersWritten = queryParametersWritten;
+                                        }
+
                                         public IQueryValueWriter<T> Commit(QueryParameter queryParameter)
                                         {
-                                            throw new System.NotImplementedException();
+                                            if (this.queryParametersWritten)
+                                            {
+                                                this.builder.Append("&");
+                                            }
+                                            else
+                                            {
+                                                this.builder.Append("?");
+                                            }
+
+                                            this.builder.Append(queryParameter.Name);
+
+                                            return new QueryValueWriter(this.builder, this.nextFactory);
                                         }
 
                                         private sealed class QueryValueWriter : IQueryValueWriter<T>
                                         {
+                                            private readonly StringBuilder builder;
+                                            private readonly Func<Uri, T> nextFactory;
+
+                                            public QueryValueWriter(StringBuilder builder, Func<Uri, T> nextFactory)
+                                            {
+                                                this.builder = builder;
+                                                this.nextFactory = nextFactory;
+                                            }
+
                                             public IQueryOptionWriter<T> Commit()
                                             {
-                                                throw new System.NotImplementedException();
+                                                return new QueryOptionWriter(this.builder, this.nextFactory, true);
                                             }
 
                                             public IQueryOptionWriter<T> Commit(QueryValue queryValue)
                                             {
-                                                throw new System.NotImplementedException();
+                                                this.builder.Append($"={queryValue.Value}");
+
+                                                return new QueryOptionWriter(this.builder, this.nextFactory, true);
                                             }
                                         }
                                     }
