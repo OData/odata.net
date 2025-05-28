@@ -558,7 +558,44 @@
 
             private static T WriteSingleValuedRequest<T>(SingleValuedRequest singleValuedRequest, IComplexPropertyValueWriter<T> complexPropertyValueWriter)
             {
+                //// TODO dynamic properties, untyped properties, complex properties
 
+                foreach (var multiValuedProperty in singleValuedRequest.MultiValuedProperties)
+                {
+                    var propertyWriter = complexPropertyValueWriter.CommitProperty();
+                    var propertyNameWriter = propertyWriter.Commit();
+                    var propertyValueWriter = propertyNameWriter.Commit(new PropertyName(multiValuedProperty.Name));
+                    var multiValuedPropertyValueWriter = propertyValueWriter.CommitMultiValued();
+
+                    var objectWriter = multiValuedPropertyValueWriter.CommitValue();
+
+                    foreach (var value in multiValuedProperty.Values)
+                    {
+                        multiValuedPropertyValueWriter = WriteSingleValuedRequest(value, objectWriter);
+                    }
+
+                    complexPropertyValueWriter = multiValuedPropertyValueWriter.Commit();
+                }
+
+                foreach (var primitiveProperty in singleValuedRequest.PrimitiveProperties)
+                {
+                    var propertyWriter = complexPropertyValueWriter.CommitProperty();
+                    var propertyNameWriter = propertyWriter.Commit();
+                    var propertyValueWriter = propertyNameWriter.Commit(new PropertyName(primitiveProperty.Name));
+
+                    if (primitiveProperty.Value == null)
+                    {
+                        var nullPropertyValueWriter = propertyValueWriter.CommitNull();
+                        complexPropertyValueWriter = nullPropertyValueWriter.Commit();
+                    }
+                    else
+                    {
+                        var primitivePropertyValueWriter = propertyValueWriter.CommitPrimitive();
+                        complexPropertyValueWriter = primitivePropertyValueWriter.Commit(new PrimitivePropertyValue(primitiveProperty.Value));
+                    }
+                }
+
+                return complexPropertyValueWriter.Commit();
             }
 
             public IPatchSingleValuedProtocol Expand(object expander)
