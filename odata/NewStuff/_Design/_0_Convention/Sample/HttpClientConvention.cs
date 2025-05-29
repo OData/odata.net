@@ -326,7 +326,7 @@
                                                 }
                                                 else if (propertyValue.ValueKind == JsonValueKind.Object)
                                                 {
-                                                    return new PropertyValueToken<T>.Complex(new ComplexPropertyValueReader(this.propertyEnumerator, this.nextFactory, propertyValue.EnumerateObject()));
+                                                    return new PropertyValueToken<T>.Complex(new ComplexPropertyValueReader<T>(this.propertyEnumerator, this.nextFactory, propertyValue.EnumerateObject()));
                                                 }
                                                 else if (propertyValue.ValueKind == JsonValueKind.Array)
                                                 {
@@ -359,48 +359,48 @@
                                                 }
                                             }
 
-                                            private sealed class ComplexPropertyValueReader : IComplexPropertyValueReader<T>
+                                            private sealed class ComplexPropertyValueReader<TComplex> : IComplexPropertyValueReader<TComplex>
                                             {
                                                 private readonly JsonElement.ObjectEnumerator parentPropertyEnumerator;
-                                                private readonly Func<JsonElement.ObjectEnumerator, T> nextFactory;
+                                                private readonly Func<JsonElement.ObjectEnumerator, TComplex> nextFactory;
                                                 private readonly JsonElement.ObjectEnumerator propertyValueEnumerator;
 
-                                                public ComplexPropertyValueReader(JsonElement.ObjectEnumerator parentPropertyEnumerator, Func<JsonElement.ObjectEnumerator, T> nextFactory, JsonElement.ObjectEnumerator propertyValueEnumerator)
+                                                public ComplexPropertyValueReader(JsonElement.ObjectEnumerator parentPropertyEnumerator, Func<JsonElement.ObjectEnumerator, TComplex> nextFactory, JsonElement.ObjectEnumerator propertyValueEnumerator)
                                                 {
                                                     this.parentPropertyEnumerator = parentPropertyEnumerator;
                                                     this.nextFactory = nextFactory;
                                                     this.propertyValueEnumerator = propertyValueEnumerator;
                                                 }
 
-                                                public ComplexPropertyValueToken<T> Next()
+                                                public ComplexPropertyValueToken<TComplex> Next()
                                                 {
                                                     if (this.propertyValueEnumerator.MoveNext())
                                                     {
                                                         var property = this.propertyValueEnumerator.Current;
                                                         if (string.Equals(property.Name, "@odata.context")) //// TODO ignore case?
                                                         {
-                                                            return new ComplexPropertyValueToken<T>.OdataContext(new OdataContextReader(this.parentPropertyEnumerator, this.nextFactory, this.propertyValueEnumerator, property.Value));
+                                                            return new ComplexPropertyValueToken<TComplex>.OdataContext(new OdataContextReader(this.parentPropertyEnumerator, this.nextFactory, this.propertyValueEnumerator, property.Value));
                                                         }
                                                         else if (string.Equals(property.Name, "@odata.id")) //// TODO ignore case?
                                                         {
-                                                            return new ComplexPropertyValueToken<T>.OdataId(new OdataIdReader(this.parentPropertyEnumerator, this.nextFactory, this.propertyValueEnumerator, property.Value));
+                                                            return new ComplexPropertyValueToken<TComplex>.OdataId(new OdataIdReader(this.parentPropertyEnumerator, this.nextFactory, this.propertyValueEnumerator, property.Value));
                                                         }
 
-                                                        return new ComplexPropertyValueToken<T>.Property(new PropertyReader<IComplexPropertyValueReader<T>>(this.propertyValueEnumerator, enumerator => new ComplexPropertyValueReader(this.parentPropertyEnumerator, this.nextFactory, enumerator)));
+                                                        return new ComplexPropertyValueToken<TComplex>.Property(new PropertyReader<IComplexPropertyValueReader<TComplex>>(this.propertyValueEnumerator, enumerator => new ComplexPropertyValueReader<TComplex>(this.parentPropertyEnumerator, this.nextFactory, enumerator)));
                                                     }
                                                     else
                                                     {
-                                                        return new ComplexPropertyValueToken<T>.End(this.nextFactory(this.parentPropertyEnumerator));
+                                                        return new ComplexPropertyValueToken<TComplex>.End(this.nextFactory(this.parentPropertyEnumerator));
                                                     }
                                                 }
 
-                                                private sealed class OdataContextReader : IOdataContextReader<IComplexPropertyValueReader<T>>
+                                                private sealed class OdataContextReader : IOdataContextReader<IComplexPropertyValueReader<TComplex>>
                                                 {
                                                     private readonly JsonElement.ObjectEnumerator parentPropertyEnumerator;
-                                                    private readonly Func<JsonElement.ObjectEnumerator, T> nextFactory;
+                                                    private readonly Func<JsonElement.ObjectEnumerator, TComplex> nextFactory;
                                                     private readonly JsonElement.ObjectEnumerator propertyValueEnumerator;
 
-                                                    public OdataContextReader(JsonElement.ObjectEnumerator parentPropertyEnumerator, Func<JsonElement.ObjectEnumerator, T> nextFactory, JsonElement.ObjectEnumerator propertyValueEnumerator, JsonElement propertyValue)
+                                                    public OdataContextReader(JsonElement.ObjectEnumerator parentPropertyEnumerator, Func<JsonElement.ObjectEnumerator, TComplex> nextFactory, JsonElement.ObjectEnumerator propertyValueEnumerator, JsonElement propertyValue)
                                                     {
                                                         if (propertyValue.ValueKind != JsonValueKind.String)
                                                         {
@@ -415,19 +415,19 @@
 
                                                     public OdataContext OdataContext { get; }
 
-                                                    public IComplexPropertyValueReader<T> Next()
+                                                    public IComplexPropertyValueReader<TComplex> Next()
                                                     {
-                                                        return new ComplexPropertyValueReader(this.parentPropertyEnumerator, this.nextFactory, this.propertyValueEnumerator);
+                                                        return new ComplexPropertyValueReader<TComplex>(this.parentPropertyEnumerator, this.nextFactory, this.propertyValueEnumerator);
                                                     }
                                                 }
 
-                                                private sealed class OdataIdReader : IOdataIdReader<IComplexPropertyValueReader<T>>
+                                                private sealed class OdataIdReader : IOdataIdReader<IComplexPropertyValueReader<TComplex>>
                                                 {
                                                     private readonly JsonElement.ObjectEnumerator parentPropertyEnumerator;
-                                                    private readonly Func<JsonElement.ObjectEnumerator, T> nextFactory;
+                                                    private readonly Func<JsonElement.ObjectEnumerator, TComplex> nextFactory;
                                                     private readonly JsonElement.ObjectEnumerator propertyValueEnumerator;
 
-                                                    public OdataIdReader(JsonElement.ObjectEnumerator parentPropertyEnumerator, Func<JsonElement.ObjectEnumerator, T> nextFactory, JsonElement.ObjectEnumerator propertyValueEnumerator, JsonElement propertyValue)
+                                                    public OdataIdReader(JsonElement.ObjectEnumerator parentPropertyEnumerator, Func<JsonElement.ObjectEnumerator, TComplex> nextFactory, JsonElement.ObjectEnumerator propertyValueEnumerator, JsonElement propertyValue)
                                                     {
                                                         if (propertyValue.ValueKind != JsonValueKind.String)
                                                         {
@@ -442,9 +442,9 @@
 
                                                     public OdataId OdataId { get; }
 
-                                                    public IComplexPropertyValueReader<T> Next()
+                                                    public IComplexPropertyValueReader<TComplex> Next()
                                                     {
-                                                        return new ComplexPropertyValueReader(this.parentPropertyEnumerator, this.nextFactory, this.propertyValueEnumerator);
+                                                        return new ComplexPropertyValueReader<TComplex>(this.parentPropertyEnumerator, this.nextFactory, this.propertyValueEnumerator);
                                                     }
                                                 }
                                             }
@@ -466,15 +466,18 @@
                                                 {
                                                     if (this.arrayEnumerator.MoveNext())
                                                     {
-                                                        return new MultiValuedPropertyValueToken<T>.Object(new ComplexPropertyValueReader(this.parentPropertyEnumerator, this.nextFactory));
+                                                        if (this.arrayEnumerator.Current.ValueKind != JsonValueKind.Object)
+                                                        {
+                                                            throw new Exception("TODO only objects are allowed in collections (except for the times where that's not true)");
+                                                        }
+
+                                                        return new MultiValuedPropertyValueToken<T>.Object(new ComplexPropertyValueReader<IMultiValuedPropertyValueReader<T>>(this.parentPropertyEnumerator, parentEnumerator => new MultiValuedPropertyValueReader(parentPropertyEnumerator, this.nextFactory, this.arrayEnumerator), this.arrayEnumerator.Current.EnumerateObject()));
                                                         //// TODO what about collections of primitives?
                                                     }
                                                     else
                                                     {
                                                         return new MultiValuedPropertyValueToken<T>.End(this.nextFactory(this.parentPropertyEnumerator));
                                                     }
-
-                                                    //// TODO you are here
                                                 }
                                             }
 
