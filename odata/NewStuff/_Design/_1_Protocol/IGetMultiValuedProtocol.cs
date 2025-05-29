@@ -4,7 +4,7 @@
     {
         MultiValuedResponse Evaluate();
 
-        IGetMultiValuedProtocol Expand(object expander); //// TODO what should the parameter actually look like?
+        IGetMultiValuedProtocol Expand(object expander); //// TODO what should the parameter actually look like? //// TODO from meeting, this should probably just be the parse node of an expand expression, right?
 
         IGetMultiValuedProtocol Filter(object predicate); //// TODO what should the parameter actually look like?
 
