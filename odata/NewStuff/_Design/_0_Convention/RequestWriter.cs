@@ -58,17 +58,17 @@
         IGetResponseReader Commit(); //// TODO TODO TODO IMPORTANT you've re-used getresponsereader for convenience here; it should really be igetpatchresponsereader
     }
 
-    public interface IPropertyWriter<T>
+    public interface IPropertyWriter<out T>
     {
         IPropertyNameWriter<T> Commit();
     }
 
-    public interface IPropertyNameWriter<T>
+    public interface IPropertyNameWriter<out T>
     {
         IPropertyValueWriter<T> Commit(PropertyName propertyName);
     }
 
-    public interface IPropertyValueWriter<T>
+    public interface IPropertyValueWriter<out T>
     {
         IPrimitivePropertyValueWriter<T> CommitPrimitive();
 
@@ -79,24 +79,24 @@
         IMultiValuedPropertyValueWriter<T> CommitMultiValued();
     }
 
-    public interface IPrimitivePropertyValueWriter<T>
+    public interface IPrimitivePropertyValueWriter<out T>
     {
         T Commit(PrimitivePropertyValue primitivePropertyValue);
     }
 
-    public interface IComplexPropertyValueWriter<T>
+    public interface IComplexPropertyValueWriter<out T>
     {
         IPropertyWriter<IComplexPropertyValueWriter<T>> CommitProperty();
 
         T Commit();
     }
 
-    public interface INullPropertyValueWriter<T>
+    public interface INullPropertyValueWriter<out T>
     {
         T Commit();
     }
 
-    public interface IMultiValuedPropertyValueWriter<T>
+    public interface IMultiValuedPropertyValueWriter<out T>
     {
         IComplexPropertyValueWriter<IMultiValuedPropertyValueWriter<T>> CommitValue();
 

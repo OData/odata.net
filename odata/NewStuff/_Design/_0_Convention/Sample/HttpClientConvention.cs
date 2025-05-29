@@ -162,23 +162,25 @@
 
                 public IPatchRequestBodyWriter Commit()
                 {
-                    var writeStream = this.httpClient.Patch(this.requestUri); //// TODO disposable
+                    var writeStream = this.httpClient.PatchStream(this.requestUri); //// TODO disposable
                     var streamWriter = new StreamWriter(writeStream, null, -1, true); //// TODO can you know the encoding here? should that be configurable? //// TODO dispoable
 
-                    streamWriter.WriteLine("}"); //// TODO async
+                    streamWriter.WriteLine("{"); //// TODO async
 
-                    return new PatchRequestBodyWriter(writeStream, streamWriter);
+                    return new PatchRequestBodyWriter(writeStream, streamWriter, true);
                 }
 
                 private sealed class PatchRequestBodyWriter : IPatchRequestBodyWriter
                 {
                     private readonly WriteStream writeStream;
                     private readonly StreamWriter streamWriter;
+                    private readonly bool isFirstProperty;
 
-                    public PatchRequestBodyWriter(WriteStream writeStream, StreamWriter streamWriter)
+                    public PatchRequestBodyWriter(WriteStream writeStream, StreamWriter streamWriter, bool isFirstProperty)
                     {
                         this.writeStream = writeStream;
                         this.streamWriter = streamWriter;
+                        this.isFirstProperty = isFirstProperty;
                     }
 
                     public IGetResponseReader Commit()
@@ -192,7 +194,89 @@
 
                     public IPropertyWriter<IPatchRequestBodyWriter> CommitProperty()
                     {
+                    }
 
+                    private sealed class PropertyWriter : IPropertyWriter<PatchRequestBodyWriter>
+                    {
+                        public IPropertyNameWriter<PatchRequestBodyWriter> Commit()
+                        {
+                        }
+
+                        private sealed class PropertyNameWriter : IPropertyNameWriter<PatchRequestBodyWriter>
+                        {
+                            private readonly WriteStream writeStream;
+                            private readonly StreamWriter streamWriter;
+                            private readonly bool isFirstProperty;
+
+                            public PropertyNameWriter(WriteStream writeStream, StreamWriter streamWriter, bool isFirstProperty)
+                            {
+                                this.writeStream = writeStream;
+                                this.streamWriter = streamWriter;
+                                this.isFirstProperty = isFirstProperty;
+                            }
+
+                            public IPropertyValueWriter<PatchRequestBodyWriter> Commit(PropertyName propertyName)
+                            {
+                                //// TODO async
+                                if (!this.isFirstProperty)
+                                {
+                                    this.streamWriter.WriteLine(",");
+                                }
+
+                                this.streamWriter.Write($"\"{propertyName.Name}\": ");
+                            }
+
+                            private sealed class PropertyValueWriter : IPropertyValueWriter<PatchRequestBodyWriter>
+                            {
+                                public IComplexPropertyValueWriter<PatchRequestBodyWriter> CommitComplex()
+                                {
+                                }
+
+                                private sealed class ComplexPropertyValueWriter : IComplexPropertyValueWriter<PatchRequestBodyWriter>
+                                {
+                                    public PatchRequestBodyWriter Commit()
+                                    {
+                                    }
+
+                                    public IPropertyWriter<IComplexPropertyValueWriter<PatchRequestBodyWriter>> CommitProperty()
+                                    {
+
+                                    }
+                                }
+
+                                public IMultiValuedPropertyValueWriter<PatchRequestBodyWriter> CommitMultiValued()
+                                {
+                                }
+
+                                public INullPropertyValueWriter<PatchRequestBodyWriter> CommitNull()
+                                {
+                                }
+
+                                private sealed class NullPropertyValueWriter : INullPropertyValueWriter<PatchRequestBodyWriter>
+                                {
+                                    private readonly WriteStream writeStream;
+                                    private readonly StreamWriter streamWriter;
+
+                                    public NullPropertyValueWriter(WriteStream writeStream, StreamWriter streamWriter)
+                                    {
+                                        this.writeStream = writeStream;
+                                        this.streamWriter = streamWriter;
+                                    }
+
+                                    public PatchRequestBodyWriter Commit()
+                                    {
+                                        //// TODO async
+                                        this.streamWriter.WriteLine("null");
+
+                                        return new PatchRequestBodyWriter(this.writeStream, this.streamWriter, false);
+                                    }
+                                }
+
+                                public IPrimitivePropertyValueWriter<PatchRequestBodyWriter> CommitPrimitive()
+                                {
+                                }
+                            }
+                        }
                     }
                 }
 
