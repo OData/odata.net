@@ -3,6 +3,7 @@
     using System;
     using System.Buffers;
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
     using System.Net.Http;
     using System.Net.WebSockets;
@@ -592,17 +593,86 @@
 
                 public IPatchRequestBodyWriter Commit()
                 {
-                    return new PatchRequestBodyWriter();
+                    var memoryStream = new MemoryStream(); //// TODO dispoable (probably other stuff in this method too)
+                    var streamWriter = new StreamWriter(memoryStream); //// TODO can you know the encoding here? should that be configurable?
+                    streamWriter.WriteLine("}"); //// TODO async
+                    var streamContent = new StreamContent(new ReadStream(memoryStream));
+                    var httpResponseMessage = this.httpClient.PatchAsync(this.requestUri, streamContent).ConfigureAwait(false).GetAwaiter().GetResult(); //// TODO async
+
+                    return new PatchRequestBodyWriter(this.httpClient, this.requestUri);
+                }
+
+                private sealed class ReadStream : Stream
+                {
+                    private readonly Stream stream;
+
+                    public ReadStream(Stream stream)
+                    {
+                        this.stream = stream;
+                    }
+
+                    public override bool CanRead => throw new NotImplementedException();
+
+                    public override bool CanSeek => throw new NotImplementedException();
+
+                    public override bool CanWrite => throw new NotImplementedException();
+
+                    public override long Length => throw new NotImplementedException();
+
+                    public override long Position { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+                    public override void Flush()
+                    {
+                        throw new NotImplementedException();
+                    }
+
+                    public override int Read(byte[] buffer, int offset, int count)
+                    {
+                        throw new NotImplementedException();
+                    }
+
+                    public override long Seek(long offset, SeekOrigin origin)
+                    {
+                        throw new NotImplementedException();
+                    }
+
+                    public override void SetLength(long value)
+                    {
+                        throw new NotImplementedException();
+                    }
+
+                    public override void Write(byte[] buffer, int offset, int count)
+                    {
+                        throw new NotImplementedException();
+                    }
+
+                    protected override void Dispose(bool disposing)
+                    {
+                        if (disposing)
+                        {
+
+                        }
+                    }
                 }
 
                 private sealed class PatchRequestBodyWriter : IPatchRequestBodyWriter
                 {
+                    private readonly StreamWriter streamWriter;
+
+                    public PatchRequestBodyWriter(StreamWriter streamWriter)
+                    {
+                        this.streamWriter = streamWriter;
+                    }
+
                     public IGetResponseReader Commit()
                     {
+                        streamWriter.WriteLine("}");
+                        streamWriter.Dispose(); //// TODO async
                     }
 
                     public IPropertyWriter<IPatchRequestBodyWriter> CommitProperty()
                     {
+
                     }
                 }
 
@@ -613,13 +683,24 @@
 
                 public IEtagWriter CommitEtag()
                 {
-                    return new EtagWriter();
+                    return new EtagWriter(this.httpClient, this.requestUri);
                 }
 
                 private sealed class EtagWriter : IEtagWriter
                 {
+                    private readonly HttpClient httpClient;
+                    private readonly Uri requestUri;
+
+                    public EtagWriter(HttpClient httpClient, Uri requestUri)
+                    {
+                        this.httpClient = httpClient;
+                        this.requestUri = requestUri;
+                    }
+
                     public IPatchHeaderWriter Commit(Etag etag)
                     {
+                        this.httpClient.DefaultRequestHeaders.Add("ETag", "TODO implment etag header");
+                        return new PatchHeaderWriter(this.httpClient, this.requestUri);
                     }
                 }
             }
