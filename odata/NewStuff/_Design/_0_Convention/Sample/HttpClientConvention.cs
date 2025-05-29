@@ -228,6 +228,15 @@
 
                             private sealed class PropertyValueWriter : IPropertyValueWriter<PatchRequestBodyWriter>
                             {
+                                private readonly WriteStream writeStream;
+                                private readonly StreamWriter streamWriter;
+
+                                public PropertyValueWriter(WriteStream writeStream, StreamWriter streamWriter)
+                                {
+                                    this.writeStream = writeStream;
+                                    this.streamWriter = streamWriter;
+                                }
+
                                 public IComplexPropertyValueWriter<PatchRequestBodyWriter> CommitComplex()
                                 {
                                 }
@@ -250,6 +259,7 @@
 
                                 public INullPropertyValueWriter<PatchRequestBodyWriter> CommitNull()
                                 {
+                                    return new NullPropertyValueWriter(this.writeStream, this.streamWriter);
                                 }
 
                                 private sealed class NullPropertyValueWriter : INullPropertyValueWriter<PatchRequestBodyWriter>
