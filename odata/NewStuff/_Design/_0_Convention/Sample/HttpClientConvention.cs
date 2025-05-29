@@ -607,216 +607,249 @@
                     }
                 }
             }
+        }
 
-            private sealed class UriWriter<T> : IUriWriter<T>
+        public IPatchRequestWriter Patch()
+        {
+            return new PatchRequestWriter(this.httpClientFactory());
+        }
+
+        private sealed class PatchRequestWriter : IPatchRequestWriter
+        {
+            private readonly HttpClient httpClient;
+
+            public PatchRequestWriter(HttpClient httpClient)
             {
+                this.httpClient = httpClient; //// TODO disposable
+            }
+
+            public IUriWriter<IPatchHeaderWriter> Commit()
+            {
+                throw new NotImplementedException();
+            }
+
+            private sealed class PatchHeaderWriter : IPatchHeaderWriter
+            {
+                public IPatchRequestBodyWriter Commit()
+                {
+                    throw new NotImplementedException();
+                }
+
+                public ICustomHeaderWriter<IPatchHeaderWriter> CommitCustomHeader()
+                {
+                    throw new NotImplementedException();
+                }
+
+                public IEtagWriter CommitEtag()
+                {
+                    throw new NotImplementedException();
+                }
+            }
+        }
+
+        public IPatchRequestWriter Post()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        private sealed class UriWriter<T> : IUriWriter<T>
+        {
+            private readonly Func<Uri, T> nextFactory;
+
+            public UriWriter(Func<Uri, T> nextFactory)
+            {
+                this.nextFactory = nextFactory;
+            }
+
+            public IUriSchemeWriter<T> Commit()
+            {
+                return new UriSchemeWriter(new StringBuilder(), this.nextFactory);
+            }
+
+            private sealed class UriSchemeWriter : IUriSchemeWriter<T>
+            {
+                private readonly StringBuilder builder;
                 private readonly Func<Uri, T> nextFactory;
 
-                public UriWriter(Func<Uri, T> nextFactory)
+                public UriSchemeWriter(StringBuilder builder, Func<Uri, T> nextFactory)
                 {
+                    this.builder = builder; //// TODO this means that writer instances won't be re-usable, are you ok with that?
                     this.nextFactory = nextFactory;
                 }
 
-                public IUriSchemeWriter<T> Commit()
+                public IUriDomainWriter<T> Commit(UriScheme uriScheme)
                 {
-                    return new UriSchemeWriter(new StringBuilder(), this.nextFactory);
+                    this.builder.Append($"{uriScheme.Scheme}://");
+                    return new UriDomainWriter(this.builder, this.nextFactory);
                 }
 
-                private sealed class UriSchemeWriter : IUriSchemeWriter<T>
+                private sealed class UriDomainWriter : IUriDomainWriter<T>
                 {
                     private readonly StringBuilder builder;
                     private readonly Func<Uri, T> nextFactory;
 
-                    public UriSchemeWriter(StringBuilder builder, Func<Uri, T> nextFactory)
+                    public UriDomainWriter(StringBuilder builder, Func<Uri, T> nextFactory)
                     {
-                        this.builder = builder; //// TODO this means that writer instances won't be re-usable, are you ok with that?
+                        this.builder = builder;
                         this.nextFactory = nextFactory;
                     }
 
-                    public IUriDomainWriter<T> Commit(UriScheme uriScheme)
+                    public IUriPortWriter<T> Commit(UriDomain uriDomain)
                     {
-                        this.builder.Append($"{uriScheme.Scheme}://");
-                        return new UriDomainWriter(this.builder, this.nextFactory);
+                        this.builder.Append(uriDomain.Domain);
+                        return new UriPortWriter(this.builder, this.nextFactory);
                     }
 
-                    private sealed class UriDomainWriter : IUriDomainWriter<T>
+                    private sealed class UriPortWriter : IUriPortWriter<T>
                     {
                         private readonly StringBuilder builder;
                         private readonly Func<Uri, T> nextFactory;
 
-                        public UriDomainWriter(StringBuilder builder, Func<Uri, T> nextFactory)
+                        public UriPortWriter(StringBuilder builder, Func<Uri, T> nextFactory)
                         {
                             this.builder = builder;
                             this.nextFactory = nextFactory;
                         }
 
-                        public IUriPortWriter<T> Commit(UriDomain uriDomain)
+                        public IUriPathSegmentWriter<T> Commit()
                         {
-                            this.builder.Append(uriDomain.Domain);
-                            return new UriPortWriter(this.builder, this.nextFactory);
+                            return new UriPathSegmentWriter(this.builder, this.nextFactory);
                         }
 
-                        private sealed class UriPortWriter : IUriPortWriter<T>
+                        public IUriPathSegmentWriter<T> Commit(UriPort uriPort)
+                        {
+                            this.builder.Append($":{uriPort.Port}");
+                            return new UriPathSegmentWriter(this.builder, this.nextFactory);
+                        }
+
+                        private sealed class UriPathSegmentWriter : IUriPathSegmentWriter<T>
                         {
                             private readonly StringBuilder builder;
                             private readonly Func<Uri, T> nextFactory;
 
-                            public UriPortWriter(StringBuilder builder, Func<Uri, T> nextFactory)
+                            public UriPathSegmentWriter(StringBuilder builder, Func<Uri, T> nextFactory)
                             {
                                 this.builder = builder;
                                 this.nextFactory = nextFactory;
                             }
 
-                            public IUriPathSegmentWriter<T> Commit()
+                            public IQueryOptionWriter<T> Commit()
                             {
-                                return new UriPathSegmentWriter(this.builder, this.nextFactory);
+                                return new QueryOptionWriter(this.builder, this.nextFactory, false);
                             }
 
-                            public IUriPathSegmentWriter<T> Commit(UriPort uriPort)
-                            {
-                                this.builder.Append($":{uriPort.Port}");
-                                return new UriPathSegmentWriter(this.builder, this.nextFactory);
-                            }
-
-                            private sealed class UriPathSegmentWriter : IUriPathSegmentWriter<T>
+                            private sealed class QueryOptionWriter : IQueryOptionWriter<T>
                             {
                                 private readonly StringBuilder builder;
                                 private readonly Func<Uri, T> nextFactory;
+                                private readonly bool queryParametersWritten;
 
-                                public UriPathSegmentWriter(StringBuilder builder, Func<Uri, T> nextFactory)
+                                public QueryOptionWriter(StringBuilder builder, Func<Uri, T> nextFactory, bool queryParametersWritten)
                                 {
                                     this.builder = builder;
                                     this.nextFactory = nextFactory;
+                                    this.queryParametersWritten = queryParametersWritten;
                                 }
 
-                                public IQueryOptionWriter<T> Commit()
+                                public T Commit()
                                 {
-                                    return new QueryOptionWriter(this.builder, this.nextFactory, false);
+                                    return this.nextFactory(new Uri(this.builder.ToString()));
                                 }
 
-                                private sealed class QueryOptionWriter : IQueryOptionWriter<T>
+                                public IFragmentWriter<T> CommitFragment()
+                                {
+                                    return new FragmentWriter(this.builder, this.nextFactory);
+                                }
+
+                                private sealed class FragmentWriter : IFragmentWriter<T>
+                                {
+                                    private readonly StringBuilder builder;
+                                    private readonly Func<Uri, T> nextFactory;
+
+                                    public FragmentWriter(StringBuilder builder, Func<Uri, T> nextFactory)
+                                    {
+                                        this.builder = builder;
+                                        this.nextFactory = nextFactory;
+                                    }
+
+                                    public T Commit(Fragment fragment)
+                                    {
+                                        this.builder.Append($"#{fragment.Value}");
+
+                                        return this.nextFactory(new Uri(this.builder.ToString()));
+                                    }
+                                }
+
+                                public IQueryParameterWriter<T> CommitParameter()
+                                {
+                                    return new QueryParameterWriter(this.builder, this.nextFactory, this.queryParametersWritten);
+                                }
+
+                                private sealed class QueryParameterWriter : IQueryParameterWriter<T>
                                 {
                                     private readonly StringBuilder builder;
                                     private readonly Func<Uri, T> nextFactory;
                                     private readonly bool queryParametersWritten;
 
-                                    public QueryOptionWriter(StringBuilder builder, Func<Uri, T> nextFactory, bool queryParametersWritten)
+                                    public QueryParameterWriter(StringBuilder builder, Func<Uri, T> nextFactory, bool queryParametersWritten)
                                     {
                                         this.builder = builder;
                                         this.nextFactory = nextFactory;
                                         this.queryParametersWritten = queryParametersWritten;
                                     }
 
-                                    public T Commit()
+                                    public IQueryValueWriter<T> Commit(QueryParameter queryParameter)
                                     {
-                                        return this.nextFactory(new Uri(this.builder.ToString()));
+                                        if (this.queryParametersWritten)
+                                        {
+                                            this.builder.Append("&");
+                                        }
+                                        else
+                                        {
+                                            this.builder.Append("?");
+                                        }
+
+                                        this.builder.Append(queryParameter.Name);
+
+                                        return new QueryValueWriter(this.builder, this.nextFactory);
                                     }
 
-                                    public IFragmentWriter<T> CommitFragment()
-                                    {
-                                        return new FragmentWriter(this.builder, this.nextFactory);
-                                    }
-
-                                    private sealed class FragmentWriter : IFragmentWriter<T>
+                                    private sealed class QueryValueWriter : IQueryValueWriter<T>
                                     {
                                         private readonly StringBuilder builder;
                                         private readonly Func<Uri, T> nextFactory;
 
-                                        public FragmentWriter(StringBuilder builder, Func<Uri, T> nextFactory)
+                                        public QueryValueWriter(StringBuilder builder, Func<Uri, T> nextFactory)
                                         {
                                             this.builder = builder;
                                             this.nextFactory = nextFactory;
                                         }
 
-                                        public T Commit(Fragment fragment)
+                                        public IQueryOptionWriter<T> Commit()
                                         {
-                                            this.builder.Append($"#{fragment.Value}");
-
-                                            return this.nextFactory(new Uri(this.builder.ToString()));
-                                        }
-                                    }
-
-                                    public IQueryParameterWriter<T> CommitParameter()
-                                    {
-                                        return new QueryParameterWriter(this.builder, this.nextFactory, this.queryParametersWritten);
-                                    }
-
-                                    private sealed class QueryParameterWriter : IQueryParameterWriter<T>
-                                    {
-                                        private readonly StringBuilder builder;
-                                        private readonly Func<Uri, T> nextFactory;
-                                        private readonly bool queryParametersWritten;
-
-                                        public QueryParameterWriter(StringBuilder builder, Func<Uri, T> nextFactory, bool queryParametersWritten)
-                                        {
-                                            this.builder = builder;
-                                            this.nextFactory = nextFactory;
-                                            this.queryParametersWritten = queryParametersWritten;
+                                            return new QueryOptionWriter(this.builder, this.nextFactory, true);
                                         }
 
-                                        public IQueryValueWriter<T> Commit(QueryParameter queryParameter)
+                                        public IQueryOptionWriter<T> Commit(QueryValue queryValue)
                                         {
-                                            if (this.queryParametersWritten)
-                                            {
-                                                this.builder.Append("&");
-                                            }
-                                            else
-                                            {
-                                                this.builder.Append("?");
-                                            }
+                                            this.builder.Append($"={queryValue.Value}");
 
-                                            this.builder.Append(queryParameter.Name);
-
-                                            return new QueryValueWriter(this.builder, this.nextFactory);
-                                        }
-
-                                        private sealed class QueryValueWriter : IQueryValueWriter<T>
-                                        {
-                                            private readonly StringBuilder builder;
-                                            private readonly Func<Uri, T> nextFactory;
-
-                                            public QueryValueWriter(StringBuilder builder, Func<Uri, T> nextFactory)
-                                            {
-                                                this.builder = builder;
-                                                this.nextFactory = nextFactory;
-                                            }
-
-                                            public IQueryOptionWriter<T> Commit()
-                                            {
-                                                return new QueryOptionWriter(this.builder, this.nextFactory, true);
-                                            }
-
-                                            public IQueryOptionWriter<T> Commit(QueryValue queryValue)
-                                            {
-                                                this.builder.Append($"={queryValue.Value}");
-
-                                                return new QueryOptionWriter(this.builder, this.nextFactory, true);
-                                            }
+                                            return new QueryOptionWriter(this.builder, this.nextFactory, true);
                                         }
                                     }
                                 }
+                            }
 
-                                public IUriPathSegmentWriter<T> Commit(UriPathSegment uriPathSegment)
-                                {
-                                    this.builder.Append($"/{uriPathSegment.Segment}");
+                            public IUriPathSegmentWriter<T> Commit(UriPathSegment uriPathSegment)
+                            {
+                                this.builder.Append($"/{uriPathSegment.Segment}");
 
-                                    return new UriPathSegmentWriter(this.builder, this.nextFactory);
-                                }
+                                return new UriPathSegmentWriter(this.builder, this.nextFactory);
                             }
                         }
                     }
                 }
             }
-        }
-
-        public IPatchRequestWriter Patch()
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public IPatchRequestWriter Post()
-        {
-            throw new System.NotImplementedException();
         }
     }
 }
