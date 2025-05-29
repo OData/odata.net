@@ -34,7 +34,7 @@ public class ExperimentTests
             .AddEntitySet("Customers", customerEntity);
 
 
-        var odataUri = new ODataUriParser(model, new Uri("Customers", UriKind.Relative)).ParseUri();
+        var odataUri = new ODataUriParser(model, new Uri("http://service/odata"), new Uri("Customers", UriKind.Relative)).ParseUri();
 
         List<Customer> data = [
             new Customer
@@ -79,7 +79,8 @@ public class ExperimentTests
         {
             Model = model,
             JsonWriter = writer,
-            WriterProvider = new ClrODataValueWriterProvider()
+            WriterProvider = new ClrODataValueWriterProvider(),
+            ODataUri = odataUri,
         };
         var state = new ODataWriterState
         {
@@ -95,7 +96,7 @@ public class ExperimentTests
         var writtenPayload = await reader.ReadToEndAsync();
 
         var expectedPayload =
-            "{\"@odata.context\":\"contextUrl\",\"value\":[{\"Id\":1,\"Name\":\"John Doe\",\"EmailAddresses\":[\"johndoe@mailer.com\"],\"HomeAddress\":{\"City\":\"Nairobi\",\"Country\":\"Kenya\"}},{\"Id\":2,\"Name\":\"Jane Doe\",\"EmailAddresses\":[\"janedoe@mailer.com\"],\"HomeAddress\":{\"City\":\"Redmond\",\"Country\":\"United States\"}}]}";
+            "{\"@odata.context\":\"http://service/odata/$metadata#Customers\",\"value\":[{\"Id\":1,\"Name\":\"John Doe\",\"EmailAddresses\":[\"johndoe@mailer.com\"],\"HomeAddress\":{\"City\":\"Nairobi\",\"Country\":\"Kenya\"}},{\"Id\":2,\"Name\":\"Jane Doe\",\"EmailAddresses\":[\"janedoe@mailer.com\"],\"HomeAddress\":{\"City\":\"Redmond\",\"Country\":\"United States\"}}]}";
             
 
         Assert.Equal(expectedPayload, writtenPayload);
@@ -169,6 +170,7 @@ public class ExperimentTests
             Model = model,
             JsonWriter = writer,
             SelectExpandClause = uri.SelectAndExpand,
+            ODataUri = uri,
             WriterProvider = new ClrODataValueWriterProvider()
         };
         var state = new ODataWriterState
@@ -185,7 +187,7 @@ public class ExperimentTests
         var writtenPayload = await reader.ReadToEndAsync();
 
         var expectedPayload =
-            "{\"@odata.context\":\"contextUrl\",\"value\":[{\"Id\":1,\"Name\":\"John Doe\"},{\"Id\":2,\"Name\":\"Jane Doe\"}]}";
+            "{\"@odata.context\":\"$metadata#Customers\",\"value\":[{\"Id\":1,\"Name\":\"John Doe\"},{\"Id\":2,\"Name\":\"Jane Doe\"}]}";
 
 
         Assert.Equal(expectedPayload, writtenPayload);
@@ -291,7 +293,8 @@ public class ExperimentTests
             Model = model,
             JsonWriter = jsonWriter,
             SelectExpandClause = uri.SelectAndExpand,
-            WriterProvider = writerProvider
+            WriterProvider = writerProvider,
+            ODataUri = uri,
         };
         var state = new ODataWriterState
         {
@@ -307,7 +310,7 @@ public class ExperimentTests
         var writtenPayload = await reader.ReadToEndAsync();
 
         var expectedPayload =
-            "{\"@odata.context\":\"contextUrl\",\"value\":[{\"Id\":1,\"Name\":\"John Doe\",\"Orders\":[{\"Amount\":100},{\"Amount\":200}]},{\"Id\":2,\"Name\":\"Jane Doe\",\"Orders\":[{\"Amount\":300}]}]}";
+            "{\"@odata.context\":\"$metadata#Customers\",\"value\":[{\"Id\":1,\"Name\":\"John Doe\",\"Orders\":[{\"Amount\":100},{\"Amount\":200}]},{\"Id\":2,\"Name\":\"Jane Doe\",\"Orders\":[{\"Amount\":300}]}]}";
 
 
         Assert.Equal(expectedPayload, writtenPayload);
@@ -371,10 +374,11 @@ public class ExperimentTests
         {
             Model = model,
             JsonWriter = jsonWriter,
+            ODataUri = uri,
             SelectExpandClause = uri.SelectAndExpand,
             WriterProvider = writerProvider,
             EdmTypeMapper = new EdmTypeMapper(),
-            DynamicPropertiesRetrieverProvider = new ClrDynamicPropertyRetrieverProvider()
+            DynamicPropertiesRetrieverProvider = new ClrDynamicPropertyRetrieverProvider(),
         };
         var state = new ODataWriterState
         {
@@ -390,7 +394,7 @@ public class ExperimentTests
         var writtenPayload = await reader.ReadToEndAsync();
 
         var expectedPayload =
-            "{\"@odata.context\":\"contextUrl\",\"value\":["
+            "{\"@odata.context\":\"$metadata#Projects\",\"value\":["
             + "{\"Id\":1,\"Name\":\"P1\",\"Status\":\"Active\",\"Description\":\"test\",\"Budget\":10000},"
             + "{\"Id\":2,\"Name\":\"P2\",\"Status\":\"Complete\",\"Description\":\"Great\",\"Budget\":2000}"
             + "]}";
@@ -459,7 +463,8 @@ public class ExperimentTests
             SelectExpandClause = uri.SelectAndExpand,
             WriterProvider = writerProvider,
             EdmTypeMapper = new EdmTypeMapper(),
-            DynamicPropertiesRetrieverProvider = new ClrDynamicPropertyRetrieverProvider()
+            DynamicPropertiesRetrieverProvider = new ClrDynamicPropertyRetrieverProvider(),
+            ODataUri = uri,
         };
         var state = new ODataWriterState
         {
@@ -475,7 +480,7 @@ public class ExperimentTests
         var writtenPayload = await reader.ReadToEndAsync();
 
         var expectedPayload =
-            "{\"@odata.context\":\"contextUrl\",\"value\":["
+            "{\"@odata.context\":\"$metadata#Projects\",\"value\":["
             + "{\"Name\":\"P1\",\"Budget\":10000},"
             + "{\"Name\":\"P2\",\"Budget\":2000}"
             + "]}";
@@ -547,10 +552,12 @@ public class ExperimentTests
         {
             Model = model,
             JsonWriter = jsonWriter,
+            ODataUri = uri,
             SelectExpandClause = uri.SelectAndExpand,
             WriterProvider = writerProvider,
             EdmTypeMapper = new EdmTypeMapper(),
-            DynamicPropertiesRetrieverProvider = new ClrDynamicPropertyRetrieverProvider()
+            DynamicPropertiesRetrieverProvider = new ClrDynamicPropertyRetrieverProvider(),
+            
         };
         var state = new ODataWriterState
         {
@@ -566,7 +573,7 @@ public class ExperimentTests
         var writtenPayload = await reader.ReadToEndAsync();
 
         var expectedPayload =
-            "{\"@odata.context\":\"contextUrl\",\"value\":[" 
+            "{\"@odata.context\":\"$metadata#Projects\",\"value\":[" 
             + "{\"Name\":\"P1\",\"Status\":\"Active\",\"Tags\":[\"sports\",\"hobbies\"],\"Address\":{\"City\":\"Nairobi\",\"Country\":\"Kenya\"}}," 
             + "{\"Name\":\"P2\",\"Status\":\"Complete\",\"Tags\":[1,false,\"test\"],\"Addresses\":[{\"City\":\"Redmond\",\"Country\":\"United States\"},{\"City\":\"Seattle\",\"Country\":\"United States\"}]}" 
             + "]}";

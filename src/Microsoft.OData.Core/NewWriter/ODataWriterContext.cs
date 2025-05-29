@@ -18,4 +18,6 @@ internal class ODataWriterContext
     public IDynamicPropertiesRetrieverProvider DynamicPropertiesRetrieverProvider { get; set; }
 
     public IEdmTypeMapper EdmTypeMapper { get; set; }
+
+    public ODataUri ODataUri { get; set; }
 }

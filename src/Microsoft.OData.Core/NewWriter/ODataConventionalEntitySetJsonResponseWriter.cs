@@ -14,8 +14,8 @@ internal class ODataConventionalEntitySetJsonResponseWriter<TPayload>(
     public async ValueTask WriteAsync(IEnumerable<TPayload> values, ODataWriterState state)
     {
         jsonWriter.WriteStartObject();
-        jsonWriter.WritePropertyName("@odata.context");
-        jsonWriter.WriteStringValue("contextUrl");
+
+        ContextUrlHelper.WriteContextUrl(ODataPayloadKind.ResourceSet, state);
 
         jsonWriter.WritePropertyName("value");
         jsonWriter.WriteStartArray();
