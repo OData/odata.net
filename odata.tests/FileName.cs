@@ -61,7 +61,7 @@ namespace odata.tests
             var addedEmployeePayload =
 """
 {
-  "id": "00000003",
+  "id": "00000004",
   "displayName": "some new employee",
   "directReports": []
 }
@@ -98,6 +98,19 @@ namespace odata.tests
 {
   "id": "00000002",
   "displayName": "christof",
+  "directReports": [
+    {
+      "id": "00000003",
+      "displayName": "fake"
+    }
+  ]
+}
+""";
+            var getFakePayload =
+"""
+{
+  "id": "00000003",
+  "displayName": "fake",
   "directReports": []
 }
 """;
@@ -108,6 +121,7 @@ namespace odata.tests
             using (var getCeoContent = new StringContent(getCeoPayload))
             using (var getArrettContent = new StringContent(getArrettPayload))
             using (var getChristofContent = new StringContent(getChristofPayload))
+            using (var getFakeContent = new StringContent(getFakePayload))
             {
                 using (var employeesToUpdateClient = new MockHttpClient(new[] { employeesToUpdateContent }))
                 using (var updatedEmployeeClient = new MockHttpClient(new[] { updatedEmployeeContent }))
@@ -115,8 +129,18 @@ namespace odata.tests
                 using (var getCeoClient = new MockHttpClient(new[] { getCeoContent }))
                 using (var getArrettClient = new MockHttpClient(new[] { getArrettContent }))
                 using (var getChristofClient = new MockHttpClient(new[] { getChristofContent }))
+                using (var getFakeClient = new MockHttpClient(new[] { getFakeContent }))
                 {
-                    var clients = new[] { employeesToUpdateClient, updatedEmployeeClient, addedEmployeeClient, getCeoClient, getArrettClient, getChristofClient };
+                    var clients = new[] 
+                    { 
+                        employeesToUpdateClient, 
+                        updatedEmployeeClient, 
+                        addedEmployeeClient, 
+                        getCeoClient, 
+                        getArrettClient, 
+                        getChristofClient,
+                        getFakeClient 
+                    };
                     var nextClientIndex = 0;
                     var driver = DriverFactory.Create(() => clients[nextClientIndex++]);
                     driver.DoWork();
