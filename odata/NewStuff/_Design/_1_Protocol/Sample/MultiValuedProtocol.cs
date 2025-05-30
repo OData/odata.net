@@ -963,7 +963,7 @@
 
         private static IEnumerable<Tuple<string, string?>> SplitQueryQueryString(string queryString)
         {
-            return MultiValuedProtocol.SplitQueryQueryString(queryString, 0);
+            return MultiValuedProtocol.SplitQueryQueryString(queryString, 1);
         }
 
         private static IEnumerable<Tuple<string, string?>> SplitQueryQueryString(string queryString, int currentIndex)
@@ -981,18 +981,29 @@
                     queryOptionDelimiterIndex = queryString.Length;
                 }
 
-                var parameterNameDelimiterIndex = queryString.IndexOf('=', currentIndex, queryOptionDelimiterIndex - currentIndex + 1);
+                var parameterNameDelimiterIndex = queryString.IndexOf('=', currentIndex, queryOptionDelimiterIndex - currentIndex);
                 if (parameterNameDelimiterIndex == -1)
                 {
                     yield return Tuple.Create(
-                        queryString.Substring(currentIndex, parameterNameDelimiterIndex - currentIndex + 1),
+                        queryString.Substring(currentIndex, queryOptionDelimiterIndex - currentIndex),
                         (string?)null);
                 }
                 else
                 {
+                    var name = queryString.Substring(currentIndex, parameterNameDelimiterIndex - currentIndex);
+                    string? value;
+                    if (parameterNameDelimiterIndex + 1 == queryOptionDelimiterIndex)
+                    {
+                        value = null;
+                    }
+                    else
+                    {
+                        value = queryString.Substring(parameterNameDelimiterIndex + 1, queryOptionDelimiterIndex - parameterNameDelimiterIndex);
+                    }
+
                     yield return Tuple.Create(
-                        queryString.Substring(currentIndex, parameterNameDelimiterIndex - currentIndex + 1),
-                        (string?)queryString.Substring(parameterNameDelimiterIndex + 1, queryOptionDelimiterIndex - parameterNameDelimiterIndex));
+                        name,
+                        value);
                 }
 
                 currentIndex = queryOptionDelimiterIndex + 1;

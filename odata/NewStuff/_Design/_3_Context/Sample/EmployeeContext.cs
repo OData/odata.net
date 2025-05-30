@@ -43,7 +43,8 @@
 
         private Expression<Func<User, bool>> Adapt(Expression<Func<Employee, bool>> toAdapt)
         {
-            throw new Exception("TODO");
+            //// TODO
+            return null;
         }
     }
 }

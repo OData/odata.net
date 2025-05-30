@@ -12,8 +12,9 @@
     {
         private readonly IMultiValuedProtocol multiValuedProtocol;
 
-        public UsersClr()
+        public UsersClr(IMultiValuedProtocol multiValuedProtocol)
         {
+            this.multiValuedProtocol = multiValuedProtocol;
         }
 
         public IGetCollectionClr<User> Get()
