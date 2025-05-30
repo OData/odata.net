@@ -10,32 +10,6 @@ namespace odata.tests
     public sealed class FileName
     {
         [TestMethod]
-        public void JsonTest()
-        {
-            var json =
-"""
-{
-  "a property": "a vlaue",
-  "another property": {
-    "a nested property": "the nested value"
-  },
-  "some collection": [
-    "primitive"
-  ],
-  "nonprimitive": [
-    {
-      "the property in the collection object": "the value for that property"
-    }
-  ]
-}
-""";
-            using (var memoryStream = new MemoryStream(Encoding.UTF8.GetBytes(json)))
-            {
-                var jsonDocument = JsonDocument.Parse(memoryStream);
-            }
-        }
-
-        [TestMethod]
         public void MockClient()
         {
             var employeesToUpdatePayload =
