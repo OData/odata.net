@@ -85,17 +85,38 @@ namespace odata.tests
   ]
 }
 """;
+            var getArrettPayload =
+"""
+{
+  "id": "00000000",
+  "displayName": "arrett",
+  "directReports": []
+}
+""";
+            var getChristofPayload =
+"""
+{
+  "id": "00000002",
+  "displayName": "christof",
+  "directReports": []
+}
+""";
+
             using (var employeesToUpdateContent = new StringContent(employeesToUpdatePayload))
             using (var updatedEmployeeContent = new StringContent(updatedEmployeePayload))
             using (var addedEmployeeContent = new StringContent(addedEmployeePayload))
             using (var getCeoContent = new StringContent(getCeoPayload))
+            using (var getArrettContent = new StringContent(getArrettPayload))
+            using (var getChristofContent = new StringContent(getChristofPayload))
             {
                 using (var employeesToUpdateClient = new MockHttpClient(new[] { employeesToUpdateContent }))
                 using (var updatedEmployeeClient = new MockHttpClient(new[] { updatedEmployeeContent }))
                 using (var addedEmployeeClient = new MockHttpClient(new[] { addedEmployeeContent }))
                 using (var getCeoClient = new MockHttpClient(new[] { getCeoContent }))
+                using (var getArrettClient = new MockHttpClient(new[] { getArrettContent }))
+                using (var getChristofClient = new MockHttpClient(new[] { getChristofContent }))
                 {
-                    var clients = new[] { employeesToUpdateClient, updatedEmployeeClient, addedEmployeeClient, getCeoClient };
+                    var clients = new[] { employeesToUpdateClient, updatedEmployeeClient, addedEmployeeClient, getCeoClient, getArrettClient, getChristofClient };
                     var nextClientIndex = 0;
                     var driver = DriverFactory.Create(() => clients[nextClientIndex++]);
                     driver.DoWork();

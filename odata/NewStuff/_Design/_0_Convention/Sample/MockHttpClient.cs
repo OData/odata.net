@@ -86,88 +86,95 @@
             }
         }
 
-        public async Task<HttpResponseMessage> GetAsync(Uri requestUri)
+        public Task<HttpResponseMessage> GetAsync(Uri requestUri)
         {
-            MemoryStream? stream = null;
-            try
+            return Task.Run(() =>
             {
-                stream = new MemoryStream();
-                using (var streamWriter = new StreamWriter(stream, leaveOpen: true))
-                {
-                    streamWriter.WriteLine($"GET {requestUri.ToString()} HTTP/1.1");
-                    foreach (var header in this.defaultRequestHeaders.Values)
-                    {
-                        streamWriter.WriteLine($"{header.Item1}: {header.Item2 ?? string.Empty}");
-                    }
-
-                    streamWriter.WriteLine();
-                }
-
-                HttpResponseMessage? httpResponseMessage = null;
+                MemoryStream? stream = null;
                 try
                 {
-                    httpResponseMessage = new HttpResponseMessage(HttpStatusCode.OK);
-                    httpResponseMessage.Content = this.responseContent[this.currentContentIndex];
+                    stream = new MemoryStream();
+                    using (var streamWriter = new StreamWriter(stream, leaveOpen: true))
+                    {
+                        streamWriter.WriteLine($"GET {requestUri.ToString()} HTTP/1.1");
+                        foreach (var header in this.defaultRequestHeaders.Values)
+                        {
+                            streamWriter.WriteLine($"{header.Item1}: {header.Item2 ?? string.Empty}");
+                        }
 
-                    stream.Position = 0;
-                    this.requestPayloads.Add(stream);
+                        streamWriter.WriteLine();
+                    }
 
-                    return await Task.FromResult(httpResponseMessage).ConfigureAwait(false);
+                    HttpResponseMessage? httpResponseMessage = null;
+                    try
+                    {
+                        httpResponseMessage = new HttpResponseMessage(HttpStatusCode.OK);
+                        httpResponseMessage.Content = this.responseContent[this.currentContentIndex];
+
+                        stream.Position = 0;
+                        this.requestPayloads.Add(stream);
+
+                        return httpResponseMessage;
+                    }
+                    catch
+                    {
+                        httpResponseMessage?.Dispose();
+                        throw;
+                    }
                 }
                 catch
                 {
-                    httpResponseMessage?.Dispose();
+                    stream?.Dispose();
                     throw;
                 }
-            }
-            catch
-            {
-                stream?.Dispose();
-                throw;
-            }
+            });
         }
 
-        public async Task<HttpResponseMessage> PatchAsync(Uri requestUri, HttpContent content)
+        public Task<HttpResponseMessage> PatchAsync(Uri requestUri, HttpContent content)
         {
-            MemoryStream? stream = null;
-            try
+            return Task.Run(() =>
             {
-                stream = new MemoryStream();
-                using (var streamWriter = new StreamWriter(stream, leaveOpen: true))
-                {
-                    streamWriter.WriteLine($"PATCH {requestUri.ToString()} HTTP/1.1");
-                    foreach (var header in this.defaultRequestHeaders.Values)
-                    {
-                        streamWriter.WriteLine($"{header.Item1}: {header.Item2 ?? string.Empty}");
-                    }
 
-                    streamWriter.WriteLine();
-
-                    content.CopyTo(stream, null, CancellationToken.None);
-                }
-
-                HttpResponseMessage? httpResponseMessage = null;
+                MemoryStream? stream = null;
                 try
                 {
-                    httpResponseMessage = new HttpResponseMessage(HttpStatusCode.OK);
-                    httpResponseMessage.Content = this.responseContent[this.currentContentIndex];
+                    stream = new MemoryStream();
+                    using (var streamWriter = new StreamWriter(stream, leaveOpen: true))
+                    {
+                        streamWriter.WriteLine($"PATCH {requestUri.ToString()} HTTP/1.1");
+                        foreach (var header in this.defaultRequestHeaders.Values)
+                        {
+                            streamWriter.WriteLine($"{header.Item1}: {header.Item2 ?? string.Empty}");
+                        }
 
-                    stream.Position = 0;
-                    this.requestPayloads.Add(stream);
+                        streamWriter.WriteLine();
 
-                    return await Task.FromResult(httpResponseMessage).ConfigureAwait(false);
+                        content.CopyTo(stream, null, CancellationToken.None);
+                    }
+
+                    HttpResponseMessage? httpResponseMessage = null;
+                    try
+                    {
+                        httpResponseMessage = new HttpResponseMessage(HttpStatusCode.OK);
+                        httpResponseMessage.Content = this.responseContent[this.currentContentIndex];
+
+                        stream.Position = 0;
+                        this.requestPayloads.Add(stream);
+
+                        return httpResponseMessage;
+                    }
+                    catch
+                    {
+                        httpResponseMessage?.Dispose();
+                        throw;
+                    }
                 }
                 catch
                 {
-                    httpResponseMessage?.Dispose();
+                    stream?.Dispose();
                     throw;
                 }
-            }
-            catch
-            {
-                stream?.Dispose();
-                throw;
-            }
+            });
         }
     }
 }

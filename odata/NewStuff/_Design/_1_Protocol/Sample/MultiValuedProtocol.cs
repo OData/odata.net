@@ -133,7 +133,33 @@
                         {
                             var propertyValueReader = propertyNameReader.Next();
                             var propertyValueToken = propertyValueReader.Next();
-                            if (propertyValueToken is PropertyValueToken<IGetResponseBodyReader>.Complex complex)
+                            if (propertyValueToken is PropertyValueToken<IGetResponseBodyReader>.MultiValued multiValued)
+                            {
+                                var multiValuedPropertyValueReader = multiValued.MultiValuedPropertyValueReader;
+                                while (true)
+                                {
+                                    var multiValuedPropertyValueToken = multiValuedPropertyValueReader.Next();
+                                    if (multiValuedPropertyValueToken is MultiValuedPropertyValueToken<IGetResponseBodyReader>.Object @object)
+                                    {
+                                        var complexPropertyValueReader = @object.ComplexPropertyValueReader;
+                                        var singleValueBuilder = new MultiValuedProtocol.SingleValueBuilder();
+
+                                        multiValuedPropertyValueReader = MultiValuedProtocol.ReadComplexPropertyValue(complexPropertyValueReader, singleValueBuilder);
+
+                                        multiValueResponseBuilder.Value.Add(singleValueBuilder.Build());
+                                    }
+                                    else if (multiValuedPropertyValueToken is MultiValuedPropertyValueToken<IGetResponseBodyReader>.End end)
+                                    {
+                                        getResponseBodyReader = end.Reader;
+                                        break;
+                                    }
+                                    else
+                                    {
+                                        throw new Exception("TODO implement visitor");
+                                    }
+                                }
+                            }
+                            /*if (propertyValueToken is PropertyValueToken<IGetResponseBodyReader>.Complex complex)
                             {
                                 var complexPropertyValueReader = complex.ComplexPropertyValueReader;
                                 var singleValueBuilder = new MultiValuedProtocol.SingleValueBuilder();
@@ -141,7 +167,7 @@
                                 getResponseBodyReader = MultiValuedProtocol.ReadComplexPropertyValue(complexPropertyValueReader, singleValueBuilder);
 
                                 multiValueResponseBuilder.Value.Add(singleValueBuilder.Build());
-                            }
+                            }*/
                             else
                             {
                                 //// TODO have you modeled an empty collection yet?
