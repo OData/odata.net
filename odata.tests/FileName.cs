@@ -40,9 +40,6 @@ namespace odata.tests
         {
             var employeesToUpdatePayload =
 """
-200 OK
-Content-Type: application/json
-
 {
   "value": [
     {
