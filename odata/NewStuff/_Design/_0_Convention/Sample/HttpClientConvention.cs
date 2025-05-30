@@ -312,6 +312,7 @@
 
                                 public IMultiValuedPropertyValueWriter<TNext> CommitMultiValued()
                                 {
+                                    //// TODO async
                                     this.streamWriter.WriteLine("[");
 
                                     return new MultiValuedPropertyValueWriter(this.writeStream, this.streamWriter, this.nextFactory, true);
@@ -335,7 +336,7 @@
                                     public TNext Commit()
                                     {
                                         //// TODO async
-                                        this.streamWriter.WriteLine("]");
+                                        this.streamWriter.Write("]");
 
                                         return this.nextFactory();
                                     }
@@ -444,7 +445,7 @@
 
         public IPatchRequestWriter Post()
         {
-            throw new System.NotImplementedException();
+            return new PatchRequestWriter(this.httpClientFactory());
         }
 
         private sealed class GetResponseReader : IGetResponseReader
