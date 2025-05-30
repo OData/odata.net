@@ -8,7 +8,7 @@
 
     public static class HttpClientExtensions
     {
-        public static WriteStream PatchStream(this HttpClient httpClient, Uri uri)
+        public static WriteStream PatchStream(this IHttpClient httpClient, Uri uri)
         {
             return new WriteStream(async content => await httpClient.PatchAsync(uri, content).ConfigureAwait(false));
         }

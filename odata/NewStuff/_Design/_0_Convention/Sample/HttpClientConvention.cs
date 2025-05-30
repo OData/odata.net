@@ -14,9 +14,9 @@
 
     public sealed class HttpClientConvention : IConvention
     {
-        private readonly Func<HttpClient> httpClientFactory;
+        private readonly Func<IHttpClient> httpClientFactory;
 
-        public HttpClientConvention(Func<HttpClient> httpClientFactory)
+        public HttpClientConvention(Func<IHttpClient> httpClientFactory)
         {
             this.httpClientFactory = httpClientFactory;
         }
@@ -28,9 +28,9 @@
 
         private sealed class GetRequestWriter : IGetRequestWriter
         {
-            private readonly HttpClient httpClient;
+            private readonly IHttpClient httpClient;
 
-            public GetRequestWriter(HttpClient httpClient)
+            public GetRequestWriter(IHttpClient httpClient)
             {
                 this.httpClient = httpClient;
             }
@@ -42,10 +42,10 @@
 
             private sealed class GetHeaderWriter : IGetHeaderWriter
             {
-                private readonly HttpClient httpClient;
+                private readonly IHttpClient httpClient;
                 private readonly Uri requestUri;
 
-                public GetHeaderWriter(HttpClient httpClient, Uri requestUri)
+                public GetHeaderWriter(IHttpClient httpClient, Uri requestUri)
                 {
                     this.httpClient = httpClient;
                     this.requestUri = requestUri;
@@ -58,10 +58,10 @@
 
                 private sealed class GetBodyWriter : IGetBodyWriter
                 {
-                    private readonly HttpClient httpClient;
+                    private readonly IHttpClient httpClient;
                     private readonly Uri requestUri;
 
-                    public GetBodyWriter(HttpClient httpClient, Uri requestUri)
+                    public GetBodyWriter(IHttpClient httpClient, Uri requestUri)
                     {
                         this.httpClient = httpClient;
                         this.requestUri = requestUri;
@@ -88,10 +88,10 @@
 
                 private sealed class OdataMaxPageSizeHeaderWriter : IOdataMaxPageSizeHeaderWriter
                 {
-                    private readonly HttpClient httpClient;
+                    private readonly IHttpClient httpClient;
                     private readonly Uri requestUri;
 
-                    public OdataMaxPageSizeHeaderWriter(HttpClient httpClient, Uri requestUri)
+                    public OdataMaxPageSizeHeaderWriter(IHttpClient httpClient, Uri requestUri)
                     {
                         this.httpClient = httpClient;
                         this.requestUri = requestUri;
@@ -112,10 +112,10 @@
 
                 private sealed class OdataMaxVersionHeaderWriter : IOdataMaxVersionHeaderWriter
                 {
-                    private readonly HttpClient httpClient;
+                    private readonly IHttpClient httpClient;
                     private readonly Uri requestUri;
 
-                    public OdataMaxVersionHeaderWriter(HttpClient httpClient, Uri requestUri)
+                    public OdataMaxVersionHeaderWriter(IHttpClient httpClient, Uri requestUri)
                     {
                         this.httpClient = httpClient;
                         this.requestUri = requestUri;
@@ -138,9 +138,9 @@
 
         private sealed class PatchRequestWriter : IPatchRequestWriter
         {
-            private readonly HttpClient httpClient;
+            private readonly IHttpClient httpClient;
 
-            public PatchRequestWriter(HttpClient httpClient)
+            public PatchRequestWriter(IHttpClient httpClient)
             {
                 this.httpClient = httpClient; //// TODO disposable
             }
@@ -152,10 +152,10 @@
 
             private sealed class PatchHeaderWriter : IPatchHeaderWriter
             {
-                private readonly HttpClient httpClient;
+                private readonly IHttpClient httpClient;
                 private readonly Uri requestUri;
 
-                public PatchHeaderWriter(HttpClient httpClient, Uri requestUri)
+                public PatchHeaderWriter(IHttpClient httpClient, Uri requestUri)
                 {
                     this.httpClient = httpClient;
                     this.requestUri = requestUri;
@@ -425,10 +425,10 @@
 
                 private sealed class EtagWriter : IEtagWriter
                 {
-                    private readonly HttpClient httpClient;
+                    private readonly IHttpClient httpClient;
                     private readonly Uri requestUri;
 
-                    public EtagWriter(HttpClient httpClient, Uri requestUri)
+                    public EtagWriter(IHttpClient httpClient, Uri requestUri)
                     {
                         this.httpClient = httpClient;
                         this.requestUri = requestUri;
@@ -881,11 +881,11 @@
 
         private sealed class CustomHeaderWriter<T> : ICustomHeaderWriter<T>
         {
-            private readonly HttpClient httpClient;
+            private readonly IHttpClient httpClient;
             private readonly Uri requestUri;
-            private readonly Func<HttpClient, Uri, T> nextFactory;
+            private readonly Func<IHttpClient, Uri, T> nextFactory;
 
-            public CustomHeaderWriter(HttpClient httpClient, Uri requestUri, Func<HttpClient, Uri, T> nextFactory)
+            public CustomHeaderWriter(IHttpClient httpClient, Uri requestUri, Func<IHttpClient, Uri, T> nextFactory)
             {
                 this.httpClient = httpClient;
                 this.requestUri = requestUri;
@@ -899,12 +899,12 @@
 
             private sealed class HeaderFieldValueWriter : IHeaderFieldValueWriter<T>
             {
-                private readonly HttpClient httpClient;
+                private readonly IHttpClient httpClient;
                 private readonly Uri requestUri;
-                private readonly Func<HttpClient, Uri, T> nextFactory;
+                private readonly Func<IHttpClient, Uri, T> nextFactory;
                 private readonly string headerName;
 
-                public HeaderFieldValueWriter(HttpClient httpClient, Uri requestUri, Func<HttpClient, Uri, T> nextFactory, string headerName)
+                public HeaderFieldValueWriter(IHttpClient httpClient, Uri requestUri, Func<IHttpClient, Uri, T> nextFactory, string headerName)
                 {
                     this.httpClient = httpClient;
                     this.requestUri = requestUri;
