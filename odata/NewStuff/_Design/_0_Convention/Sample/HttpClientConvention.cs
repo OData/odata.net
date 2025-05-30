@@ -3,6 +3,7 @@
     using System;
     using System.Buffers;
     using System.Collections.Generic;
+    using System.Data;
     using System.IO;
     using System.Linq;
     using System.Net.Http;
@@ -194,28 +195,44 @@
 
                     public IPropertyWriter<IPatchRequestBodyWriter> CommitProperty()
                     {
+                        return new PropertyWriter<PatchRequestBodyWriter>(this.writeStream, this.streamWriter, () => new PatchRequestBodyWriter(this.writeStream, this.streamWriter, false), this.isFirstProperty);
                     }
 
-                    private sealed class PropertyWriter : IPropertyWriter<PatchRequestBodyWriter>
+                    private sealed class PropertyWriter<TNext> : IPropertyWriter<TNext>
                     {
-                        public IPropertyNameWriter<PatchRequestBodyWriter> Commit()
+                        private readonly WriteStream writeStream;
+                        private readonly StreamWriter streamWriter;
+                        private readonly Func<TNext> nextFactory;
+                        private readonly bool isFirstProperty;
+
+                        public PropertyWriter(WriteStream writeStream, StreamWriter streamWriter, Func<TNext> nextFactory, bool isFirstProperty)
                         {
+                            this.writeStream = writeStream;
+                            this.streamWriter = streamWriter;
+                            this.nextFactory = nextFactory;
+                            this.isFirstProperty = isFirstProperty;
+                        }
+                        public IPropertyNameWriter<TNext> Commit()
+                        {
+                            return new PropertyNameWriter(this.writeStream, this.streamWriter, this.nextFactory, this.isFirstProperty);
                         }
 
-                        private sealed class PropertyNameWriter : IPropertyNameWriter<PatchRequestBodyWriter>
+                        private sealed class PropertyNameWriter : IPropertyNameWriter<TNext>
                         {
                             private readonly WriteStream writeStream;
                             private readonly StreamWriter streamWriter;
+                            private readonly Func<TNext> nextFactory;
                             private readonly bool isFirstProperty;
 
-                            public PropertyNameWriter(WriteStream writeStream, StreamWriter streamWriter, bool isFirstProperty)
+                            public PropertyNameWriter(WriteStream writeStream, StreamWriter streamWriter, Func<TNext> nextFactory, bool isFirstProperty)
                             {
                                 this.writeStream = writeStream;
                                 this.streamWriter = streamWriter;
+                                this.nextFactory = nextFactory;
                                 this.isFirstProperty = isFirstProperty;
                             }
 
-                            public IPropertyValueWriter<PatchRequestBodyWriter> Commit(PropertyName propertyName)
+                            public IPropertyValueWriter<TNext> Commit(PropertyName propertyName)
                             {
                                 //// TODO async
                                 if (!this.isFirstProperty)
@@ -224,66 +241,94 @@
                                 }
 
                                 this.streamWriter.Write($"\"{propertyName.Name}\": ");
+
+                                return new PropertyValueWriter(this.writeStream, this.streamWriter, this.nextFactory);
                             }
 
-                            private sealed class PropertyValueWriter : IPropertyValueWriter<PatchRequestBodyWriter>
+                            private sealed class PropertyValueWriter : IPropertyValueWriter<TNext>
                             {
                                 private readonly WriteStream writeStream;
                                 private readonly StreamWriter streamWriter;
+                                private readonly Func<TNext> nextFactory;
 
-                                public PropertyValueWriter(WriteStream writeStream, StreamWriter streamWriter)
+                                public PropertyValueWriter(WriteStream writeStream, StreamWriter streamWriter, Func<TNext> nextFactory)
                                 {
                                     this.writeStream = writeStream;
                                     this.streamWriter = streamWriter;
+                                    this.nextFactory = nextFactory;
                                 }
 
-                                public IComplexPropertyValueWriter<PatchRequestBodyWriter> CommitComplex()
+                                public IComplexPropertyValueWriter<TNext> CommitComplex()
                                 {
                                 }
 
-                                private sealed class ComplexPropertyValueWriter : IComplexPropertyValueWriter<PatchRequestBodyWriter>
+                                private sealed class ComplexPropertyValueWriter : IComplexPropertyValueWriter<TNext>
                                 {
-                                    public PatchRequestBodyWriter Commit()
+                                    public TNext Commit()
                                     {
                                     }
 
-                                    public IPropertyWriter<IComplexPropertyValueWriter<PatchRequestBodyWriter>> CommitProperty()
+                                    public IPropertyWriter<IComplexPropertyValueWriter<TNext>> CommitProperty()
                                     {
 
                                     }
                                 }
 
-                                public IMultiValuedPropertyValueWriter<PatchRequestBodyWriter> CommitMultiValued()
+                                public IMultiValuedPropertyValueWriter<TNext> CommitMultiValued()
                                 {
                                 }
 
-                                public INullPropertyValueWriter<PatchRequestBodyWriter> CommitNull()
+                                public INullPropertyValueWriter<TNext> CommitNull()
                                 {
-                                    return new NullPropertyValueWriter(this.writeStream, this.streamWriter);
+                                    return new NullPropertyValueWriter(this.writeStream, this.streamWriter, this.nextFactory);
                                 }
 
-                                private sealed class NullPropertyValueWriter : INullPropertyValueWriter<PatchRequestBodyWriter>
+                                private sealed class NullPropertyValueWriter : INullPropertyValueWriter<TNext>
                                 {
                                     private readonly WriteStream writeStream;
                                     private readonly StreamWriter streamWriter;
+                                    private readonly Func<TNext> nextFactory;
 
-                                    public NullPropertyValueWriter(WriteStream writeStream, StreamWriter streamWriter)
+                                    public NullPropertyValueWriter(WriteStream writeStream, StreamWriter streamWriter, Func<TNext> nextFactory)
                                     {
                                         this.writeStream = writeStream;
                                         this.streamWriter = streamWriter;
+                                        this.nextFactory = nextFactory;
                                     }
 
-                                    public PatchRequestBodyWriter Commit()
+                                    public TNext Commit()
                                     {
                                         //// TODO async
-                                        this.streamWriter.WriteLine("null");
+                                        this.streamWriter.Write("null");
 
-                                        return new PatchRequestBodyWriter(this.writeStream, this.streamWriter, false);
+                                        return this.nextFactory();
                                     }
                                 }
 
-                                public IPrimitivePropertyValueWriter<PatchRequestBodyWriter> CommitPrimitive()
+                                public IPrimitivePropertyValueWriter<TNext> CommitPrimitive()
                                 {
+                                    return new PrimitivePropertyValueWriter(this.writeStream, this.streamWriter, this.nextFactory);
+                                }
+
+                                private sealed class PrimitivePropertyValueWriter : IPrimitivePropertyValueWriter<TNext>
+                                {
+                                    private readonly WriteStream writeStream;
+                                    private readonly StreamWriter streamWriter;
+                                    private readonly Func<TNext> nextFactory;
+
+                                    public PrimitivePropertyValueWriter(WriteStream writeStream, StreamWriter streamWriter, Func<TNext> nextFactory)
+                                    {
+                                        this.writeStream = writeStream;
+                                        this.streamWriter = streamWriter;
+                                        this.nextFactory = nextFactory;
+                                    }
+
+                                    public TNext Commit(PrimitivePropertyValue primitivePropertyValue)
+                                    {
+                                        this.streamWriter.Write($"\"{primitivePropertyValue.Value}\""); //// TODO async //// TODO you need to differentiate between string and non-string primitives
+
+                                        return this.nextFactory();
+                                    }
                                 }
                             }
                         }
