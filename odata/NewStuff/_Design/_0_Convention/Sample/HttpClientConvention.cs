@@ -569,7 +569,7 @@
 
                 private sealed class GetResponseBodyReader : IGetResponseBodyReader
                 {
-                    private readonly JsonElement.ObjectEnumerator propertyEnumerator;
+                    private JsonElement.ObjectEnumerator propertyEnumerator;
 
                     public GetResponseBodyReader(JsonElement.ObjectEnumerator propertyEnumerator)
                     {
@@ -602,7 +602,7 @@
 
                     private sealed class OdataContextReader : IOdataContextReader<IGetResponseBodyReader>
                     {
-                        private readonly JsonElement.ObjectEnumerator propertyEnumerator;
+                        private JsonElement.ObjectEnumerator propertyEnumerator;
 
                         public OdataContextReader(JsonElement.ObjectEnumerator propertyEnumerator, JsonElement propertyValue)
                         {
@@ -625,7 +625,7 @@
 
                     private sealed class NextLinkReader : INextLinkReader
                     {
-                        private readonly JsonElement.ObjectEnumerator propertyEnumerator;
+                        private JsonElement.ObjectEnumerator propertyEnumerator;
 
                         public NextLinkReader(JsonElement.ObjectEnumerator propertyEnumerator, JsonElement propertyValue)
                         {
@@ -648,7 +648,7 @@
 
                     private sealed class PropertyReader<T> : IPropertyReader<T>
                     {
-                        private readonly JsonElement.ObjectEnumerator propertyEnumerator;
+                        private JsonElement.ObjectEnumerator propertyEnumerator;
                         private readonly Func<JsonElement.ObjectEnumerator, T> nextFactory;
 
                         public PropertyReader(JsonElement.ObjectEnumerator propertyEnumerator, Func<JsonElement.ObjectEnumerator, T> nextFactory)
@@ -664,7 +664,7 @@
 
                         private sealed class PropertyNameReader : IPropertyNameReader<T>
                         {
-                            private readonly JsonElement.ObjectEnumerator propertyEnumerator;
+                            private JsonElement.ObjectEnumerator propertyEnumerator;
                             private readonly Func<JsonElement.ObjectEnumerator, T> nextFactory;
 
                             public PropertyNameReader(JsonElement.ObjectEnumerator propertyEnumerator, Func<JsonElement.ObjectEnumerator, T> nextFactory)
@@ -683,7 +683,7 @@
 
                             private sealed class PropertyValueReader : IPropertyValueReader<T>
                             {
-                                private readonly JsonElement.ObjectEnumerator propertyEnumerator;
+                                private JsonElement.ObjectEnumerator propertyEnumerator;
                                 private readonly Func<JsonElement.ObjectEnumerator, T> nextFactory;
 
                                 public PropertyValueReader(JsonElement.ObjectEnumerator propertyEnumerator, Func<JsonElement.ObjectEnumerator, T> nextFactory)
@@ -716,7 +716,7 @@
 
                                 private sealed class PrimitivePropertyValueReader : IPrimitivePropertyValueReader<T>
                                 {
-                                    private readonly JsonElement.ObjectEnumerator propertyEnumerator;
+                                    private JsonElement.ObjectEnumerator propertyEnumerator;
                                     private readonly Func<JsonElement.ObjectEnumerator, T> nextFactory;
 
                                     public PrimitivePropertyValueReader(JsonElement.ObjectEnumerator propertyEnumerator, Func<JsonElement.ObjectEnumerator, T> nextFactory, string value)
@@ -736,9 +736,9 @@
 
                                 private sealed class ComplexPropertyValueReader<TComplex> : IComplexPropertyValueReader<TComplex>
                                 {
-                                    private readonly JsonElement.ObjectEnumerator parentPropertyEnumerator;
+                                    private JsonElement.ObjectEnumerator parentPropertyEnumerator;
                                     private readonly Func<JsonElement.ObjectEnumerator, TComplex> nextFactory;
-                                    private readonly JsonElement.ObjectEnumerator propertyValueEnumerator;
+                                    private JsonElement.ObjectEnumerator propertyValueEnumerator;
 
                                     public ComplexPropertyValueReader(JsonElement.ObjectEnumerator parentPropertyEnumerator, Func<JsonElement.ObjectEnumerator, TComplex> nextFactory, JsonElement.ObjectEnumerator propertyValueEnumerator)
                                     {
@@ -771,9 +771,9 @@
 
                                     private sealed class OdataContextReader : IOdataContextReader<IComplexPropertyValueReader<TComplex>>
                                     {
-                                        private readonly JsonElement.ObjectEnumerator parentPropertyEnumerator;
+                                        private JsonElement.ObjectEnumerator parentPropertyEnumerator;
                                         private readonly Func<JsonElement.ObjectEnumerator, TComplex> nextFactory;
-                                        private readonly JsonElement.ObjectEnumerator propertyValueEnumerator;
+                                        private JsonElement.ObjectEnumerator propertyValueEnumerator;
 
                                         public OdataContextReader(JsonElement.ObjectEnumerator parentPropertyEnumerator, Func<JsonElement.ObjectEnumerator, TComplex> nextFactory, JsonElement.ObjectEnumerator propertyValueEnumerator, JsonElement propertyValue)
                                         {
@@ -798,9 +798,9 @@
 
                                     private sealed class OdataIdReader : IOdataIdReader<IComplexPropertyValueReader<TComplex>>
                                     {
-                                        private readonly JsonElement.ObjectEnumerator parentPropertyEnumerator;
+                                        private JsonElement.ObjectEnumerator parentPropertyEnumerator;
                                         private readonly Func<JsonElement.ObjectEnumerator, TComplex> nextFactory;
-                                        private readonly JsonElement.ObjectEnumerator propertyValueEnumerator;
+                                        private JsonElement.ObjectEnumerator propertyValueEnumerator;
 
                                         public OdataIdReader(JsonElement.ObjectEnumerator parentPropertyEnumerator, Func<JsonElement.ObjectEnumerator, TComplex> nextFactory, JsonElement.ObjectEnumerator propertyValueEnumerator, JsonElement propertyValue)
                                         {
@@ -826,9 +826,9 @@
 
                                 private sealed class MultiValuedPropertyValueReader : IMultiValuedPropertyValueReader<T>
                                 {
-                                    private readonly JsonElement.ObjectEnumerator parentPropertyEnumerator;
+                                    private JsonElement.ObjectEnumerator parentPropertyEnumerator;
                                     private readonly Func<JsonElement.ObjectEnumerator, T> nextFactory;
-                                    private readonly JsonElement.ArrayEnumerator arrayEnumerator;
+                                    private JsonElement.ArrayEnumerator arrayEnumerator;
 
                                     public MultiValuedPropertyValueReader(JsonElement.ObjectEnumerator parentPropertyEnumerator, Func<JsonElement.ObjectEnumerator, T> nextFactory, JsonElement.ArrayEnumerator arrayEnumerator)
                                     {
@@ -858,7 +858,7 @@
 
                                 private sealed class NullPropertyValueReader : INullPropertyValueReader<T>
                                 {
-                                    private readonly JsonElement.ObjectEnumerator propertyEnumerator;
+                                    private JsonElement.ObjectEnumerator propertyEnumerator;
                                     private readonly Func<JsonElement.ObjectEnumerator, T> nextFactory;
 
                                     public NullPropertyValueReader(JsonElement.ObjectEnumerator propertyEnumerator, Func<JsonElement.ObjectEnumerator, T> nextFactory)
