@@ -186,6 +186,11 @@
 
                     public IGetResponseReader Commit()
                     {
+                        if (!this.isFirstProperty)
+                        {
+                            streamWriter.WriteLine();
+                        }
+
                         streamWriter.WriteLine("}"); //// TODO async
                         streamWriter.Dispose(); //// TODO async
 
@@ -239,6 +244,10 @@
                                 {
                                     this.streamWriter.WriteLine(",");
                                 }
+                                else
+                                {
+                                    this.streamWriter.WriteLine();
+                                }
 
                                 this.streamWriter.Write($"\"{propertyName.Name}\": ");
 
@@ -260,22 +269,90 @@
 
                                 public IComplexPropertyValueWriter<TNext> CommitComplex()
                                 {
+                                    //// TODO async
+                                    this.streamWriter.WriteLine("{");
+
+                                    return new ComplexPropertyValueWriter<TNext>(this.writeStream, this.streamWriter, this.nextFactory, true);
                                 }
 
-                                private sealed class ComplexPropertyValueWriter : IComplexPropertyValueWriter<TNext>
+                                private sealed class ComplexPropertyValueWriter<TComplex> : IComplexPropertyValueWriter<TComplex>
                                 {
-                                    public TNext Commit()
+                                    private readonly WriteStream writeStream;
+                                    private readonly StreamWriter streamWriter;
+                                    private readonly Func<TComplex> nextFactory;
+                                    private readonly bool isFirstProperty;
+
+                                    public ComplexPropertyValueWriter(WriteStream writeStream, StreamWriter streamWriter, Func<TComplex> nextFactory, bool isFirstProperty)
                                     {
+                                        this.writeStream = writeStream;
+                                        this.streamWriter = streamWriter;
+                                        this.nextFactory = nextFactory;
+                                        this.isFirstProperty = isFirstProperty;
                                     }
 
-                                    public IPropertyWriter<IComplexPropertyValueWriter<TNext>> CommitProperty()
+                                    public TComplex Commit()
                                     {
+                                        //// TODO async
 
+                                        if (!this.isFirstProperty)
+                                        {
+                                            this.streamWriter.WriteLine();
+                                        }
+
+                                        this.streamWriter.Write("}");
+
+                                        return this.nextFactory();
+                                    }
+
+                                    public IPropertyWriter<IComplexPropertyValueWriter<TComplex>> CommitProperty()
+                                    {
+                                        return new PropertyWriter<ComplexPropertyValueWriter<TComplex>>(this.writeStream, this.streamWriter, () => new ComplexPropertyValueWriter<TComplex>(this.writeStream, this.streamWriter, this.nextFactory, false), true);
                                     }
                                 }
 
                                 public IMultiValuedPropertyValueWriter<TNext> CommitMultiValued()
                                 {
+                                    this.streamWriter.WriteLine("[");
+
+                                    return new MultiValuedPropertyValueWriter(this.writeStream, this.streamWriter, this.nextFactory, true);
+                                }
+
+                                private sealed class MultiValuedPropertyValueWriter : IMultiValuedPropertyValueWriter<TNext>
+                                {
+                                    private readonly WriteStream writeStream;
+                                    private readonly StreamWriter streamWriter;
+                                    private readonly Func<TNext> nextFactory;
+                                    private readonly bool isFirstElement;
+
+                                    public MultiValuedPropertyValueWriter(WriteStream writeStream, StreamWriter streamWriter, Func<TNext> nextFactory, bool isFirstElement)
+                                    {
+                                        this.writeStream = writeStream;
+                                        this.streamWriter = streamWriter;
+                                        this.nextFactory = nextFactory;
+                                        this.isFirstElement = isFirstElement;
+                                    }
+
+                                    public TNext Commit()
+                                    {
+                                        //// TODO async
+                                        this.streamWriter.WriteLine("]");
+
+                                        return this.nextFactory();
+                                    }
+
+                                    public IComplexPropertyValueWriter<IMultiValuedPropertyValueWriter<TNext>> CommitValue()
+                                    {
+                                        //// TODO async
+
+                                        if (!this.isFirstElement)
+                                        {
+                                            this.streamWriter.WriteLine(",");
+                                        }
+
+                                        this.streamWriter.WriteLine("{");
+
+                                        return new ComplexPropertyValueWriter<MultiValuedPropertyValueWriter>(this.writeStream, this.streamWriter, () => new MultiValuedPropertyValueWriter(this.writeStream, this.streamWriter, this.nextFactory, false), true);
+                                    }
                                 }
 
                                 public INullPropertyValueWriter<TNext> CommitNull()
