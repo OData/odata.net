@@ -82,25 +82,25 @@
 
             public static async Task<PatchHeaderWriter> Create(IPatchHeaderWriter originalWriter, string authorizationToken)
             {
-                var customHeaderWriter = originalWriter.CommitCustomHeader();
+                var customHeaderWriter = await originalWriter.CommitCustomHeader().ConfigureAwait(false);
                 var headerFieldValueWriter = await customHeaderWriter.Commit(new HeaderFieldName("Authorization")).ConfigureAwait(false);
                 var nextWriter = await headerFieldValueWriter.Commit(new HeaderFieldValue(authorizationToken)).ConfigureAwait(false);
                 return new PatchHeaderWriter(nextWriter);
             }
 
-            public IPatchRequestBodyWriter Commit()
+            public async Task<IPatchRequestBodyWriter> Commit()
             {
-                return this.nextWriter.Commit();
+                return await this.nextWriter.Commit().ConfigureAwait(false);
             }
 
-            public ICustomHeaderWriter<IPatchHeaderWriter> CommitCustomHeader()
+            public async Task<ICustomHeaderWriter<IPatchHeaderWriter>> CommitCustomHeader()
             {
-                return this.nextWriter.CommitCustomHeader();
+                return await this.nextWriter.CommitCustomHeader().ConfigureAwait(false);
             }
 
-            public IEtagWriter CommitEtag()
+            public async Task<IEtagWriter> CommitEtag()
             {
-                return this.nextWriter.CommitEtag();
+                return await this.nextWriter.CommitEtag().ConfigureAwait(false);
             }
         }
 
