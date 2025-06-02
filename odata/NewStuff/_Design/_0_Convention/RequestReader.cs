@@ -2,10 +2,11 @@
 {
     using System;
     using System.IO;
+    using System.Threading.Tasks;
 
     public interface IRequestReader
     {
-        RequestToken Next();
+        Task<RequestToken> Next();
     }
 
     public abstract class RequestToken
@@ -44,19 +45,19 @@
 
     public interface IGetRequestReader
     {
-        IUriReader<IGetHeaderReader> Next();
+        Task<IUriReader<IGetHeaderReader>> Next();
     }
 
     public interface IUriReader<T>
     {
-        IUriSchemeReader<T> Next();
+        Task<IUriSchemeReader<T>> Next();
     }
 
     public interface IUriSchemeReader<T>
     {
         UriScheme UriScheme { get; }
 
-        IUriDomainReader<T> Next();
+        Task<IUriDomainReader<T>> Next();
     }
 
     public sealed class UriScheme
@@ -73,7 +74,7 @@
     {
         UriDomain UriDomain { get; }
 
-        UriDomainToken<T> Next();
+        Task<UriDomainToken<T>> Next();
     }
 
     public sealed class UriDomain
@@ -116,7 +117,7 @@
     {
         UriPort UriPort { get; }
 
-        IUriPathSegmentReader<T> Next();
+        Task<IUriPathSegmentReader<T>> Next();
     }
 
     public sealed class UriPort
@@ -133,7 +134,7 @@
     {
         UriPathSegment UriPathSegment { get; }
 
-        PathSegmentToken<T> Next();
+        Task<PathSegmentToken<T>> Next();
     }
 
     public sealed class UriPathSegment
@@ -173,7 +174,7 @@
 
     public interface IQueryOptionReader<T>
     {
-        QueryOptionToken<T> Next();
+        Task<QueryOptionToken<T>> Next();
     }
 
     public abstract class QueryOptionToken<T>
@@ -214,7 +215,7 @@
     {
         QueryParameter QueryParameter { get; }
 
-        QueryParameterToken<T> Next();
+        Task<QueryParameterToken<T>> Next();
     }
 
     public sealed class QueryParameter
@@ -258,7 +259,7 @@
     {
         QueryValue QueryValue { get; }
 
-        IQueryOptionReader<T> Next();
+        Task<IQueryOptionReader<T>> Next();
     }
 
     public sealed class QueryValue
@@ -275,7 +276,7 @@
     {
         Fragment Fragment { get; }
 
-        T Next();
+        Task<T> Next();
     }
 
     public sealed class Fragment
@@ -312,7 +313,7 @@
 
     public interface IGetHeaderReader
     {
-        GetHeaderToken Next(); //// TODO as written, it's possible for no headers to be specified; i don't know if the standard allows that; if it *doesn't*, then there needs to be something like a `getheadersstartreader` that has a `getheadersstarttoken` that has the same members as `getheaderstoken`, but *doesn't* have the `getbody` member
+        Task<GetHeaderToken> Next(); //// TODO as written, it's possible for no headers to be specified; i don't know if the standard allows that; if it *doesn't*, then there needs to be something like a `getheadersstartreader` that has a `getheadersstarttoken` that has the same members as `getheaderstoken`, but *doesn't* have the `getbody` member
     }
 
     public abstract class GetHeaderToken
@@ -362,7 +363,7 @@
     {
         OdataVersion OdataVersion { get; }
 
-        IGetHeaderReader Next();
+        Task<IGetHeaderReader> Next();
     }
 
     public sealed class OdataVersion
@@ -378,7 +379,7 @@
     {
         OdataMaxPageSize OdataMaxPageSize { get; }
 
-        IGetHeaderReader Next();
+        Task<IGetHeaderReader> Next();
     }
 
     public sealed class OdataMaxPageSize
@@ -392,7 +393,7 @@
     {
         HeaderFieldName HeaderFieldName { get; }
 
-        CustomHeaderToken<T> Next();
+        Task<CustomHeaderToken<T>> Next();
     }
 
     public sealed class HeaderFieldName
@@ -436,7 +437,7 @@
     {
         HeaderFieldValue HeaderFieldValue { get; }
 
-        T Next();
+        Task<T> Next();
     }
 
     public sealed class HeaderFieldValue
@@ -475,16 +476,7 @@
 
     public interface IGetBodyReader
     {
-        GetBody GetBody { get; }
-    }
-
-    public sealed class GetBodyReader : IGetBodyReader
-    {
-        private GetBodyReader()
-        {
-        }
-
-        public GetBody GetBody { get; }
+        Task<GetBody> GetBody { get; }
     }
 
     public sealed class GetBody
