@@ -2,10 +2,11 @@
 {
     using System;
     using System.Linq.Expressions;
+    using System.Threading.Tasks;
 
     public interface IPostCollectionClr<TEntity>
     {
-        TEntity? Evaluate(); //// TODO you need a better way to represent whether the created entity was returned
+        Task<TEntity?> Evaluate(); //// TODO you need a better way to represent whether the created entity was returned
 
         IPostCollectionClr<TEntity> Select<TProperty>(Expression<Func<TEntity, Property<TProperty>>> selector);
 

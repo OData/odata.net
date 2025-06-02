@@ -4,9 +4,9 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Linq.Expressions;
+    using System.Threading.Tasks;
 
     using NewStuff._Design._1_Protocol;
-    using NewStuff._Design._3_Context.Sample;
 
     public sealed class UsersClr : ICollectionClr<User, string>
     {
@@ -31,9 +31,9 @@
                 this.multiValuedProtocol = multiValuedProtocol;
             }
 
-            public CollectionResponse<User> Evaluate()
+            public async Task<CollectionResponse<User>> Evaluate()
             {
-                var response = this.multiValuedProtocol.Evaluate();
+                var response = await this.multiValuedProtocol.Evaluate().ConfigureAwait(false);
 
                 var users = response
                     .Value
@@ -98,9 +98,9 @@
                 this.singleValuedProtocol = singleValuedProtocol;
             }
 
-            public SingleValuedResponse<User> Evaluate()
+            public async Task<SingleValuedResponse<User>> Evaluate()
             {
-                var response = this.singleValuedProtocol.Evaluate();
+                var response = await this.singleValuedProtocol.Evaluate().ConfigureAwait(false);
                 return new SingleValuedResponse<User>(UserUtilities.Deserialize(response.Value), null, null);
             }
 
@@ -132,9 +132,9 @@
                 this.singleValuedProtocol = singleValuedProtocol;
             }
 
-            public User? Evaluate()
+            public async Task<User?> Evaluate()
             {
-                var response = this.singleValuedProtocol.Evaluate();
+                var response = await this.singleValuedProtocol.Evaluate().ConfigureAwait(false);
 
                 if (response.Value == null)
                 {
@@ -171,9 +171,9 @@
                 this.singleValuedProtocol = singleValuedProtocol;
             }
 
-            public User? Evaluate()
+            public async Task<User?> Evaluate()
             {
-                var response = this.singleValuedProtocol.Evaluate();
+                var response = await this.singleValuedProtocol.Evaluate().ConfigureAwait(false);
 
                 if (response.Value == null)
                 {

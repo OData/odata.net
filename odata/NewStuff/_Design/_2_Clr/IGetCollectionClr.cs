@@ -2,10 +2,11 @@
 {
     using System;
     using System.Linq.Expressions;
+    using System.Threading.Tasks;
 
     public interface IGetCollectionClr<TEntity>
     {
-        CollectionResponse<TEntity> Evaluate();
+        Task<CollectionResponse<TEntity>> Evaluate();
 
         IGetCollectionClr<TEntity> Filter(Expression<Func<TEntity, bool>> predicate); //// TODO how to prevent the use of control information in the predicate?
 
