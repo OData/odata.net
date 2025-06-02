@@ -21,15 +21,15 @@
                 this.writerSelector = writerSelector;
             }
 
-            public Task<IUriWriter<IGetHeaderWriter>> Commit()
+            public async Task<IUriWriter<IGetHeaderWriter>> Commit()
             {
-                return this.writerSelector(this.getRequestWriter.Commit());
+                return await this.writerSelector(await this.getRequestWriter.Commit().ConfigureAwait(false)).ConfigureAwait(false);
             }
         }
 
         public static IGetRequestWriter OverrideUriScheme(this IGetRequestWriter getRequestWriter, Func<IUriSchemeWriter<IGetHeaderWriter>, Task<IUriSchemeWriter<IGetHeaderWriter>>> writerSelector)
         {
-            return getRequestWriter.OverrideUriWriter(originalWriter => new UriWriter<IGetHeaderWriter>(originalWriter, writerSelector));
+            return getRequestWriter.OverrideUriWriter(async originalWriter => await Task.FromResult(new UriWriter<IGetHeaderWriter>(originalWriter, writerSelector)).ConfigureAwait(false));
         }
 
         private sealed class UriWriter<T> : IUriWriter<T>
@@ -43,15 +43,15 @@
                 this.writerSelector = writerSelector;
             }
 
-            public Task<IUriSchemeWriter<T>> Commit()
+            public async Task<IUriSchemeWriter<T>> Commit()
             {
-                return this.writerSelector(this.originalWriter.Commit());
+                return await this.writerSelector(await this.originalWriter.Commit().ConfigureAwait(false)).ConfigureAwait(false);
             }
         }
 
         public static IGetRequestWriter OverrideUriDomain(this IGetRequestWriter getRequestWriter, Func<IUriDomainWriter<IGetHeaderWriter>, Task<IUriDomainWriter<IGetHeaderWriter>>> writerSelector)
         {
-            return getRequestWriter.OverrideUriScheme(originalWriter => new UriSchemeWriter<IGetHeaderWriter>(originalWriter, writerSelector));
+            return getRequestWriter.OverrideUriScheme(async originalWriter => await Task.FromResult(new UriSchemeWriter<IGetHeaderWriter>(originalWriter, writerSelector)).ConfigureAwait(false));
         }
 
         private sealed class UriSchemeWriter<T> : IUriSchemeWriter<T>
@@ -65,15 +65,15 @@
                 this.writerSelector = writerSelector;
             }
 
-            public Task<IUriDomainWriter<T>> Commit(UriScheme uriScheme)
+            public async Task<IUriDomainWriter<T>> Commit(UriScheme uriScheme)
             {
-                return this.writerSelector(this.originalWriter.Commit(uriScheme));
+                return await this.writerSelector(await this.originalWriter.Commit(uriScheme).ConfigureAwait(false)).ConfigureAwait(false);
             }
         }
 
         public static IGetRequestWriter OverrideUriPort(this IGetRequestWriter getRequestWriter, Func<IUriPortWriter<IGetHeaderWriter>, Task<IUriPortWriter<IGetHeaderWriter>>> writerSelector)
         {
-            return getRequestWriter.OverrideUriDomain(originalWriter => new UriDomainWriter<IGetHeaderWriter>(originalWriter, writerSelector));
+            return getRequestWriter.OverrideUriDomain(async originalWriter => await Task.FromResult(new UriDomainWriter<IGetHeaderWriter>(originalWriter, writerSelector)).ConfigureAwait(false));
         }
 
         private sealed class UriDomainWriter<T> : IUriDomainWriter<T>
@@ -87,9 +87,9 @@
                 this.writerSelector = writerSelector;
             }
 
-            public Task<IUriPortWriter<T>> Commit(UriDomain uriDomain)
+            public async Task<IUriPortWriter<T>> Commit(UriDomain uriDomain)
             {
-                return this.writerSelector(this.originalWriter.Commit(uriDomain));
+                return await this.writerSelector(await this.originalWriter.Commit(uriDomain).ConfigureAwait(false)).ConfigureAwait(false);
             }
         }
 
