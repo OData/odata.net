@@ -162,7 +162,7 @@
                     this.requestUri = requestUri;
                 }
 
-                public IPatchRequestBodyWriter Commit()
+                public Task<IPatchRequestBodyWriter> Commit()
                 {
                     var writeStream = this.httpClient.PatchStream(this.requestUri); //// TODO disposable
                     var streamWriter = new StreamWriter(writeStream, null, -1, true); //// TODO can you know the encoding here? should that be configurable? //// TODO dispoable
@@ -185,7 +185,7 @@
                         this.isFirstProperty = isFirstProperty;
                     }
 
-                    public IGetResponseReader Commit()
+                    public Task<IGetResponseReader> Commit()
                     {
                         if (!this.isFirstProperty)
                         {
@@ -199,7 +199,7 @@
                         return new GetResponseReader(httpResponseMessage);
                     }
 
-                    public IPropertyWriter<IPatchRequestBodyWriter> CommitProperty()
+                    public Task<IPropertyWriter<IPatchRequestBodyWriter>> CommitProperty()
                     {
                         return new PropertyWriter<PatchRequestBodyWriter>(this.writeStream, this.streamWriter, () => new PatchRequestBodyWriter(this.writeStream, this.streamWriter, false), this.isFirstProperty);
                     }
@@ -218,7 +218,7 @@
                             this.nextFactory = nextFactory;
                             this.isFirstProperty = isFirstProperty;
                         }
-                        public IPropertyNameWriter<TNext> Commit()
+                        public Task<IPropertyNameWriter<TNext>> Commit()
                         {
                             return new PropertyNameWriter(this.writeStream, this.streamWriter, this.nextFactory, this.isFirstProperty);
                         }
@@ -238,7 +238,7 @@
                                 this.isFirstProperty = isFirstProperty;
                             }
 
-                            public IPropertyValueWriter<TNext> Commit(PropertyName propertyName)
+                            public Task<IPropertyValueWriter<TNext>> Commit(PropertyName propertyName)
                             {
                                 //// TODO async
                                 if (!this.isFirstProperty)
@@ -268,7 +268,7 @@
                                     this.nextFactory = nextFactory;
                                 }
 
-                                public IComplexPropertyValueWriter<TNext> CommitComplex()
+                                public Task<IComplexPropertyValueWriter<TNext>> CommitComplex()
                                 {
                                     //// TODO async
                                     this.streamWriter.WriteLine("{");
@@ -291,7 +291,7 @@
                                         this.isFirstProperty = isFirstProperty;
                                     }
 
-                                    public TComplex Commit()
+                                    public Task<TComplex> Commit()
                                     {
                                         //// TODO async
 
@@ -305,13 +305,13 @@
                                         return this.nextFactory();
                                     }
 
-                                    public IPropertyWriter<IComplexPropertyValueWriter<TComplex>> CommitProperty()
+                                    public Task<IPropertyWriter<IComplexPropertyValueWriter<TComplex>> CommitProperty()
                                     {
                                         return new PropertyWriter<ComplexPropertyValueWriter<TComplex>>(this.writeStream, this.streamWriter, () => new ComplexPropertyValueWriter<TComplex>(this.writeStream, this.streamWriter, this.nextFactory, false), true);
                                     }
                                 }
 
-                                public IMultiValuedPropertyValueWriter<TNext> CommitMultiValued()
+                                public Task<IMultiValuedPropertyValueWriter<TNext>> CommitMultiValued()
                                 {
                                     //// TODO async
                                     this.streamWriter.WriteLine("[");
@@ -334,7 +334,7 @@
                                         this.isFirstElement = isFirstElement;
                                     }
 
-                                    public TNext Commit()
+                                    public Task<TNext> Commit()
                                     {
                                         //// TODO async
                                         this.streamWriter.Write("]");
@@ -342,7 +342,7 @@
                                         return this.nextFactory();
                                     }
 
-                                    public IComplexPropertyValueWriter<IMultiValuedPropertyValueWriter<TNext>> CommitValue()
+                                    public Task<IComplexPropertyValueWriter<IMultiValuedPropertyValueWriter<TNext>>> CommitValue()
                                     {
                                         //// TODO async
 
@@ -357,7 +357,7 @@
                                     }
                                 }
 
-                                public INullPropertyValueWriter<TNext> CommitNull()
+                                public Task<INullPropertyValueWriter<TNext>> CommitNull()
                                 {
                                     return new NullPropertyValueWriter(this.writeStream, this.streamWriter, this.nextFactory);
                                 }
@@ -375,7 +375,7 @@
                                         this.nextFactory = nextFactory;
                                     }
 
-                                    public TNext Commit()
+                                    public Task<TNext> Commit()
                                     {
                                         //// TODO async
                                         this.streamWriter.Write("null");
@@ -384,7 +384,7 @@
                                     }
                                 }
 
-                                public IPrimitivePropertyValueWriter<TNext> CommitPrimitive()
+                                public Task<IPrimitivePropertyValueWriter<TNext>> CommitPrimitive()
                                 {
                                     return new PrimitivePropertyValueWriter(this.writeStream, this.streamWriter, this.nextFactory);
                                 }
@@ -402,7 +402,7 @@
                                         this.nextFactory = nextFactory;
                                     }
 
-                                    public TNext Commit(PrimitivePropertyValue primitivePropertyValue)
+                                    public Task<TNext> Commit(PrimitivePropertyValue primitivePropertyValue)
                                     {
                                         this.streamWriter.Write($"\"{primitivePropertyValue.Value}\""); //// TODO async //// TODO you need to differentiate between string and non-string primitives
 
@@ -414,12 +414,12 @@
                     }
                 }
 
-                public ICustomHeaderWriter<IPatchHeaderWriter> CommitCustomHeader()
+                public Task<ICustomHeaderWriter<IPatchHeaderWriter>> CommitCustomHeader()
                 {
                     return new CustomHeaderWriter<IPatchHeaderWriter>(this.httpClient, this.requestUri, (client, uri) => new PatchHeaderWriter(client, uri));
                 }
 
-                public IEtagWriter CommitEtag()
+                public Task<IEtagWriter> CommitEtag()
                 {
                     return new EtagWriter(this.httpClient, this.requestUri);
                 }
@@ -435,7 +435,7 @@
                         this.requestUri = requestUri;
                     }
 
-                    public IPatchHeaderWriter Commit(Etag etag)
+                    public Task<IPatchHeaderWriter> Commit(Etag etag)
                     {
                         this.httpClient.DefaultRequestHeaders.Add("ETag", "TODO implment etag header");
                         return new PatchHeaderWriter(this.httpClient, this.requestUri);
