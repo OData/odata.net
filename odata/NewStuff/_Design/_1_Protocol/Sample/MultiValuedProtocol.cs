@@ -842,7 +842,7 @@
         {
             while (true)
             {
-                var complexPropertyValueToken = complexPropertyValueReader.Next();
+                var complexPropertyValueToken = await complexPropertyValueReader.Next().ConfigureAwait(false);
                 if (complexPropertyValueToken is ComplexPropertyValueToken<T>.Property property)
                 {
                     var propertyReader = property.PropertyReader;
@@ -879,8 +879,7 @@
 
         private static async Task<T> ReadPropertyValue<T>(IPropertyValueReader<T> propertyValueReader, string propertyName, MultiValuedProtocol.SingleValueBuilder singleValueBuilder)
         {
-            //// TODO you are here
-            var propertyValueToken = propertyValueReader.Next();
+            var propertyValueToken = await propertyValueReader.Next().ConfigureAwait(false);
             if (propertyValueToken is PropertyValueToken<T>.Complex complex)
             {
                 var nestedSingleValueBuilder = new MultiValuedProtocol.SingleValueBuilder();
