@@ -1,7 +1,9 @@
 ﻿namespace NewStuff._Design._4.Sample
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading.Tasks;
 
     using NewStuff._Design._3_Context.Sample;
 
@@ -17,18 +19,25 @@
 
         public Employee Data { get; }
 
-        public IEnumerable<ITree<Employee>> Children
+        public IAsyncEnumerable<ITree<Employee>> Children
         {
             get
             {
-                return this
+                return SelectAsync(this
                     .Data
-                    .DirectReportIds
-                    .Select(
-                        directReportId => 
-                            new OrgChart(
-                                this.employeeGetter.Get(directReportId), 
-                                this.employeeGetter));
+                    .DirectReportIds,
+                    async directReportId =>
+                        new OrgChart(
+                            await this.employeeGetter.Get(directReportId).ConfigureAwait(false),
+                            this.employeeGetter));
+            }
+        }
+
+        private static async IAsyncEnumerable<TResult> SelectAsync<TSource, TResult>(IEnumerable<TSource> source, Func<TSource, Task<TResult>> selector)
+        {
+            foreach (var element in source)
+            {
+                yield return await selector(element).ConfigureAwait(false);
             }
         }
     }

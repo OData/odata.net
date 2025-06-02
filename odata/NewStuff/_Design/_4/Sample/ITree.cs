@@ -6,6 +6,6 @@
     {
         T Data { get; }
 
-        IEnumerable<ITree<T>> Children { get; }
+        IAsyncEnumerable<ITree<T>> Children { get; }
     }
 }

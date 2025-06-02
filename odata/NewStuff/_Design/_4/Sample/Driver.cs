@@ -1,6 +1,7 @@
 ﻿namespace NewStuff._Design._4.Sample
 {
     using System.IO;
+    using System.Threading.Tasks;
 
     using NewStuff._Design._3_Context.Sample;
 
@@ -26,17 +27,17 @@
             this.textWriter = textWriter;
         }
 
-        public void DoWork()
+        public async Task DoWork()
         {
-            var employeesToUpdate = employeeContext.Where(employee => employee.Name.StartsWith('g')).Evaluate();
+            var employeesToUpdate = await employeeContext.Where(employee => employee.Name.StartsWith('g')).Evaluate().ConfigureAwait(false);
             foreach (var employeeToUpdate in employeesToUpdate)
             {
-                employeeUpdater.Update(employeeToUpdate.Id, employeeToUpdate.Name.Substring(1));
+                await employeeUpdater.Update(employeeToUpdate.Id, employeeToUpdate.Name.Substring(1)).ConfigureAwait(false);
             }
 
-            employeeAdder.Add("some new employee");
+            await employeeAdder.Add("some new employee").ConfigureAwait(false);
 
-            var orgChart = new OrgChart(employeeGetter.Get("CEO id"), this.employeeGetter);
+            var orgChart = new OrgChart(await employeeGetter.Get("CEO id").ConfigureAwait(false), this.employeeGetter);
             orgChart.Write(
                 (writer, employee) =>
                 {
