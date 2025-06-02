@@ -16,7 +16,7 @@
 
     public interface IPatchRequestWriter
     {
-        IUriWriter<IPatchHeaderWriter> Commit();
+        Task<IUriWriter<IPatchHeaderWriter>> Commit();
     }
 
     public interface IPatchHeaderWriter

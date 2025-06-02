@@ -218,7 +218,7 @@
             }
         }
 
-        public static async Task<IGetRequestWriter> OverrideHeader(this IGetRequestWriter getRequestWriter, Func<IGetHeaderWriter, Task<IGetHeaderWriter>> writerSelector)
+        public static IGetRequestWriter OverrideHeader(this IGetRequestWriter getRequestWriter, Func<IGetHeaderWriter, Task<IGetHeaderWriter>> writerSelector)
         {
             return getRequestWriter
                 .OverrideQueryOption(async originalWriter => await Task.FromResult(new QueryOptionWriter2<IGetHeaderWriter>(originalWriter, writerSelector)).ConfigureAwait(false))
@@ -324,47 +324,47 @@
                 this.writerSelector = writerSelector;
             }
 
-            public Task<IUriWriter<IPatchHeaderWriter>> Commit()
+            public async Task<IUriWriter<IPatchHeaderWriter>> Commit()
             {
-                return this.writerSelector(this.patchRequestWriter.Commit());
+                return await this.writerSelector(await this.patchRequestWriter.Commit().ConfigureAwait(false)).ConfigureAwait(false);
             }
         }
 
         public static IPatchRequestWriter OverrideUriScheme(this IPatchRequestWriter getRequestWriter, Func<IUriSchemeWriter<IPatchHeaderWriter>, Task<IUriSchemeWriter<IPatchHeaderWriter>>> writerSelector)
         {
-            return getRequestWriter.OverrideUriWriter(originalWriter => new UriWriter<IPatchHeaderWriter>(originalWriter, writerSelector));
+            return getRequestWriter.OverrideUriWriter(async originalWriter => await Task.FromResult(new UriWriter<IPatchHeaderWriter>(originalWriter, writerSelector)).ConfigureAwait(false));
         }
 
         public static IPatchRequestWriter OverrideUriDomain(this IPatchRequestWriter getRequestWriter, Func<IUriDomainWriter<IPatchHeaderWriter>, Task<IUriDomainWriter<IPatchHeaderWriter>>> writerSelector)
         {
-            return getRequestWriter.OverrideUriScheme(originalWriter => new UriSchemeWriter<IPatchHeaderWriter>(originalWriter, writerSelector));
+            return getRequestWriter.OverrideUriScheme(async originalWriter => await Task.FromResult(new UriSchemeWriter<IPatchHeaderWriter>(originalWriter, writerSelector)).ConfigureAwait(false));
         }
 
         public static IPatchRequestWriter OverrideUriPort(this IPatchRequestWriter getRequestWriter, Func<IUriPortWriter<IPatchHeaderWriter>, Task<IUriPortWriter<IPatchHeaderWriter>>> writerSelector)
         {
-            return getRequestWriter.OverrideUriDomain(originalWriter => new UriDomainWriter<IPatchHeaderWriter>(originalWriter, writerSelector));
+            return getRequestWriter.OverrideUriDomain(async originalWriter => await Task.FromResult(new UriDomainWriter<IPatchHeaderWriter>(originalWriter, writerSelector)).ConfigureAwait(false));
         }
 
         public static IPatchRequestWriter OverrideUriPathSegment(this IPatchRequestWriter getRequestWriter, Func<IUriPathSegmentWriter<IPatchHeaderWriter>, Task<IUriPathSegmentWriter<IPatchHeaderWriter>>> writerSelector)
         {
-            return getRequestWriter.OverrideUriPort(originalWriter => new UriPortWriter<IPatchHeaderWriter>(originalWriter, writerSelector));
+            return getRequestWriter.OverrideUriPort(async originalWriter => await Task.FromResult(new UriPortWriter<IPatchHeaderWriter>(originalWriter, writerSelector)).ConfigureAwait(false));
         }
 
         public static IPatchRequestWriter OverrideQueryOption(this IPatchRequestWriter getRequestWriter, Func<IQueryOptionWriter<IPatchHeaderWriter>, Task<IQueryOptionWriter<IPatchHeaderWriter>>> writerSelector)
         {
-            return getRequestWriter.OverrideUriPathSegment(originalWriter => new UriPathSegmentWriter<IPatchHeaderWriter>(originalWriter, writerSelector));
+            return getRequestWriter.OverrideUriPathSegment(async originalWriter => await Task.FromResult(new UriPathSegmentWriter<IPatchHeaderWriter>(originalWriter, writerSelector)).ConfigureAwait(false));
         }
 
         public static IPatchRequestWriter OverrideFragment(this IPatchRequestWriter getRequestWriter, Func<IFragmentWriter<IPatchHeaderWriter>, Task<IFragmentWriter<IPatchHeaderWriter>>> writerSelector)
         {
-            return getRequestWriter.OverrideQueryOption(originalWriter => new QueryOptionWriter<IPatchHeaderWriter>(originalWriter, writerSelector));
+            return getRequestWriter.OverrideQueryOption(async originalWriter => await Task.FromResult(new QueryOptionWriter<IPatchHeaderWriter>(originalWriter, writerSelector)).ConfigureAwait(false));
         }
 
         public static IPatchRequestWriter OverrideHeader(this IPatchRequestWriter getRequestWriter, Func<IPatchHeaderWriter, Task<IPatchHeaderWriter>> writerSelector)
         {
             return getRequestWriter
-                .OverrideQueryOption(originalWriter => new QueryOptionWriter2<IPatchHeaderWriter>(originalWriter, writerSelector))
-                .OverrideFragment(originalWriter => new FragmentWriter<IPatchHeaderWriter>(originalWriter, writerSelector));
+                .OverrideQueryOption(async originalWriter => await Task.FromResult(new QueryOptionWriter2<IPatchHeaderWriter>(originalWriter, writerSelector)).ConfigureAwait(false))
+                .OverrideFragment(async originalWriter => await Task.FromResult(new FragmentWriter<IPatchHeaderWriter>(originalWriter, writerSelector)).ConfigureAwait(false));
         }
     }
 
