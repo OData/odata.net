@@ -1,8 +1,5 @@
 ﻿namespace NewStuff._Design._0_Convention
 {
-    using System;
-    using System.Transactions;
-
     public interface IRequestWriter
     {
         IGetRequestWriter CommitGet();
