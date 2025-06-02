@@ -95,7 +95,7 @@
 
         public static IGetRequestWriter OverrideUriPathSegment(this IGetRequestWriter getRequestWriter, Func<IUriPathSegmentWriter<IGetHeaderWriter>, Task<IUriPathSegmentWriter<IGetHeaderWriter>>> writerSelector)
         {
-            return getRequestWriter.OverrideUriPort(originalWriter => new UriPortWriter<IGetHeaderWriter>(originalWriter, writerSelector));
+            return getRequestWriter.OverrideUriPort(async originalWriter => await Task.FromResult(new UriPortWriter<IGetHeaderWriter>(originalWriter, writerSelector)).ConfigureAwait(false));
         }
 
         private sealed class UriPortWriter<T> : IUriPortWriter<T>
@@ -109,20 +109,20 @@
                 this.writerSelector = writerSelector;
             }
 
-            public Task<IUriPathSegmentWriter<T>> Commit()
+            public async Task<IUriPathSegmentWriter<T>> Commit()
             {
-                return this.writerSelector(this.originalWriter.Commit());
+                return await this.writerSelector(await this.originalWriter.Commit().ConfigureAwait(false)).ConfigureAwait(false);
             }
 
-            public Task<IUriPathSegmentWriter<T>> Commit(UriPort uriPort)
+            public async Task<IUriPathSegmentWriter<T>> Commit(UriPort uriPort)
             {
-                return this.writerSelector(this.originalWriter.Commit(uriPort));
+                return await this.writerSelector(await this.originalWriter.Commit(uriPort).ConfigureAwait(false)).ConfigureAwait(false);
             }
         }
 
         public static IGetRequestWriter OverrideQueryOption(this IGetRequestWriter getRequestWriter, Func<IQueryOptionWriter<IGetHeaderWriter>, Task<IQueryOptionWriter<IGetHeaderWriter>>> writerSelector)
         {
-            return getRequestWriter.OverrideUriPathSegment(originalWriter => new UriPathSegmentWriter<IGetHeaderWriter>(originalWriter, writerSelector));
+            return getRequestWriter.OverrideUriPathSegment(async originalWriter => await Task.FromResult(new UriPathSegmentWriter<IGetHeaderWriter>(originalWriter, writerSelector)).ConfigureAwait(false));
         }
 
         private sealed class UriPathSegmentWriter<T> : IUriPathSegmentWriter<T>
@@ -136,20 +136,20 @@
                 this.writerSelector = writerSelector;
             }
 
-            public Task<IQueryOptionWriter<T>> Commit()
+            public async Task<IQueryOptionWriter<T>> Commit()
             {
-                return this.writerSelector(this.originalWriter.Commit());
+                return await this.writerSelector(await this.originalWriter.Commit().ConfigureAwait(false)).ConfigureAwait(false);
             }
 
-            public Task<IUriPathSegmentWriter<T>> Commit(UriPathSegment uriPathSegment)
+            public async Task<IUriPathSegmentWriter<T>> Commit(UriPathSegment uriPathSegment)
             {
-                return new UriPathSegmentWriter<T>(this.originalWriter.Commit(uriPathSegment), this.writerSelector);
+                return new UriPathSegmentWriter<T>(await this.originalWriter.Commit(uriPathSegment).ConfigureAwait(false), this.writerSelector);
             }
         }
 
         public static IGetRequestWriter OverrideFragment(this IGetRequestWriter getRequestWriter, Func<IFragmentWriter<IGetHeaderWriter>, Task<IFragmentWriter<IGetHeaderWriter>>> writerSelector)
         {
-            return getRequestWriter.OverrideQueryOption(originalWriter => new QueryOptionWriter<IGetHeaderWriter>(originalWriter, writerSelector));
+            return getRequestWriter.OverrideQueryOption(async originalWriter => await Task.FromResult(new QueryOptionWriter<IGetHeaderWriter>(originalWriter, writerSelector)).ConfigureAwait(false));
         }
 
         private sealed class QueryOptionWriter<T> : IQueryOptionWriter<T>
@@ -168,14 +168,14 @@
                 return this.originalWriter.Commit();
             }
 
-            public Task<IFragmentWriter<T>> CommitFragment()
+            public async Task<IFragmentWriter<T>> CommitFragment()
             {
-                return this.writerSelector(this.originalWriter.CommitFragment());
+                return await this.writerSelector(await this.originalWriter.CommitFragment().ConfigureAwait(false)).ConfigureAwait(false);
             }
 
-            public Task<IQueryParameterWriter<T>> CommitParameter()
+            public async Task<IQueryParameterWriter<T>> CommitParameter()
             {
-                return new QueryParameterWriter(this.originalWriter.CommitParameter(), this.writerSelector);
+                return new QueryParameterWriter(await this.originalWriter.CommitParameter().ConfigureAwait(false), this.writerSelector);
             }
 
             private sealed class QueryParameterWriter : IQueryParameterWriter<T>
@@ -189,9 +189,9 @@
                     this.writerSelector = writerSelector;
                 }
 
-                public Task<IQueryValueWriter<T>> Commit(QueryParameter queryParameter)
+                public async Task<IQueryValueWriter<T>> Commit(QueryParameter queryParameter)
                 {
-                    return new QueryValueWriter(this.originalWriter.Commit(queryParameter), this.writerSelector);
+                    return new QueryValueWriter(await this.originalWriter.Commit(queryParameter).ConfigureAwait(false), this.writerSelector);
                 }
 
                 private sealed class QueryValueWriter : IQueryValueWriter<T>
@@ -205,14 +205,14 @@
                         this.writerSelector = writerSelector;
                     }
 
-                    public Task<IQueryOptionWriter<T>> Commit()
+                    public async Task<IQueryOptionWriter<T>> Commit()
                     {
-                        return new QueryOptionWriter<T>(this.originalWriter.Commit(), this.writerSelector);
+                        return new QueryOptionWriter<T>(await this.originalWriter.Commit().ConfigureAwait(false), this.writerSelector);
                     }
 
-                    public Task<IQueryOptionWriter<T>> Commit(QueryValue queryValue)
+                    public async Task<IQueryOptionWriter<T>> Commit(QueryValue queryValue)
                     {
-                        return new QueryOptionWriter<T>(this.originalWriter.Commit(queryValue), this.writerSelector);
+                        return new QueryOptionWriter<T>(await this.originalWriter.Commit(queryValue).ConfigureAwait(false), this.writerSelector);
                     }
                 }
             }
@@ -221,8 +221,8 @@
         public static async Task<IGetRequestWriter> OverrideHeader(this IGetRequestWriter getRequestWriter, Func<IGetHeaderWriter, Task<IGetHeaderWriter>> writerSelector)
         {
             return getRequestWriter
-                .OverrideQueryOption(originalWriter => new QueryOptionWriter2<IGetHeaderWriter>(originalWriter, writerSelector))
-                .OverrideFragment(originalWriter => new FragmentWriter<IGetHeaderWriter>(originalWriter, writerSelector));
+                .OverrideQueryOption(async originalWriter => await Task.FromResult(new QueryOptionWriter2<IGetHeaderWriter>(originalWriter, writerSelector)).ConfigureAwait(false))
+                .OverrideFragment(async originalWriter => await Task.FromResult(new FragmentWriter<IGetHeaderWriter>(originalWriter, writerSelector)).ConfigureAwait(false));
         }
 
         private sealed class QueryOptionWriter2<T> : IQueryOptionWriter<T>
@@ -241,14 +241,14 @@
                 return await this.writerSelector(await this.originalWriter.Commit().ConfigureAwait(false)).ConfigureAwait(false);
             }
 
-            public async Task<IFragmentWriter<T>>> CommitFragment()
+            public async Task<IFragmentWriter<T>> CommitFragment()
             {
                 return new FragmentWriter<T>(await this.originalWriter.CommitFragment().ConfigureAwait(false), this.writerSelector);
             }
 
-            public Task<IQueryParameterWriter<T>>> CommitParameter()
+            public async Task<IQueryParameterWriter<T>> CommitParameter()
             {
-                return new QueryParameterWriter(this.originalWriter.CommitParameter(), this.writerSelector);
+                return new QueryParameterWriter(await this.originalWriter.CommitParameter().ConfigureAwait(false), this.writerSelector);
             }
 
             private sealed class QueryParameterWriter : IQueryParameterWriter<T>
@@ -262,9 +262,9 @@
                     this.writerSelector = writerSelector;
                 }
 
-                public Task<IQueryValueWriter<T>> Commit(QueryParameter queryParameter)
+                public async Task<IQueryValueWriter<T>> Commit(QueryParameter queryParameter)
                 {
-                    return new QueryValueWriter(this.originalWriter.Commit(queryParameter), this.writerSelector);
+                    return new QueryValueWriter(await this.originalWriter.Commit(queryParameter).ConfigureAwait(false), this.writerSelector);
                 }
 
                 private sealed class QueryValueWriter : IQueryValueWriter<T>
@@ -278,14 +278,14 @@
                         this.writerSelector = writerSelector;
                     }
 
-                    public Task<IQueryOptionWriter<T>> Commit()
+                    public async Task<IQueryOptionWriter<T>> Commit()
                     {
-                        return new QueryOptionWriter2<T>(this.originalWriter.Commit(), this.writerSelector);
+                        return new QueryOptionWriter2<T>(await this.originalWriter.Commit().ConfigureAwait(false), this.writerSelector);
                     }
 
-                    public Task<IQueryOptionWriter<T>> Commit(QueryValue queryValue)
+                    public async Task<IQueryOptionWriter<T>> Commit(QueryValue queryValue)
                     {
-                        return new QueryOptionWriter2<T>(this.originalWriter.Commit(queryValue), this.writerSelector);
+                        return new QueryOptionWriter2<T>(await this.originalWriter.Commit(queryValue).ConfigureAwait(false), this.writerSelector);
                     }
                 }
             }
@@ -302,9 +302,9 @@
                 this.writerSelector = writerSelector;
             }
 
-            public Task<T> Commit(Fragment fragment)
+            public async Task<T> Commit(Fragment fragment)
             {
-                return this.writerSelector(this.originalWriter.Commit(fragment));
+                return await this.writerSelector(await this.originalWriter.Commit(fragment).ConfigureAwait(false)).ConfigureAwait(false);
             }
         }
 
