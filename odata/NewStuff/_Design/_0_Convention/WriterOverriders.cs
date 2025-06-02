@@ -5,7 +5,7 @@
 
     public static class WriterOverriders
     {
-        public static IGetRequestWriter OverrideUriWriter(this IGetRequestWriter getRequestWriter, Func<IUriWriter<IGetHeaderWriter>, IUriWriter<IGetHeaderWriter>> writerSelector)
+        public static IGetRequestWriter OverrideUriWriter(this IGetRequestWriter getRequestWriter, Func<IUriWriter<IGetHeaderWriter>, Task<IUriWriter<IGetHeaderWriter>>> writerSelector)
         {
             return new OverrideUriWriterGetRequestWriter(getRequestWriter, writerSelector);
         }
@@ -27,7 +27,7 @@
             }
         }
 
-        public static IGetRequestWriter OverrideUriScheme(this IGetRequestWriter getRequestWriter, Func<IUriSchemeWriter<IGetHeaderWriter>, IUriSchemeWriter<IGetHeaderWriter>> writerSelector)
+        public static IGetRequestWriter OverrideUriScheme(this IGetRequestWriter getRequestWriter, Func<IUriSchemeWriter<IGetHeaderWriter>, Task<IUriSchemeWriter<IGetHeaderWriter>>> writerSelector)
         {
             return getRequestWriter.OverrideUriWriter(originalWriter => new UriWriter<IGetHeaderWriter>(originalWriter, writerSelector));
         }
@@ -49,7 +49,7 @@
             }
         }
 
-        public static IGetRequestWriter OverrideUriDomain(this IGetRequestWriter getRequestWriter, Func<IUriDomainWriter<IGetHeaderWriter>, IUriDomainWriter<IGetHeaderWriter>> writerSelector)
+        public static IGetRequestWriter OverrideUriDomain(this IGetRequestWriter getRequestWriter, Func<IUriDomainWriter<IGetHeaderWriter>, Task<IUriDomainWriter<IGetHeaderWriter>>> writerSelector)
         {
             return getRequestWriter.OverrideUriScheme(originalWriter => new UriSchemeWriter<IGetHeaderWriter>(originalWriter, writerSelector));
         }
@@ -71,7 +71,7 @@
             }
         }
 
-        public static IGetRequestWriter OverrideUriPort(this IGetRequestWriter getRequestWriter, Func<IUriPortWriter<IGetHeaderWriter>, IUriPortWriter<IGetHeaderWriter>> writerSelector)
+        public static IGetRequestWriter OverrideUriPort(this IGetRequestWriter getRequestWriter, Func<IUriPortWriter<IGetHeaderWriter>, Task<IUriPortWriter<IGetHeaderWriter>>> writerSelector)
         {
             return getRequestWriter.OverrideUriDomain(originalWriter => new UriDomainWriter<IGetHeaderWriter>(originalWriter, writerSelector));
         }
@@ -93,7 +93,7 @@
             }
         }
 
-        public static IGetRequestWriter OverrideUriPathSegment(this IGetRequestWriter getRequestWriter, Func<IUriPathSegmentWriter<IGetHeaderWriter>, IUriPathSegmentWriter<IGetHeaderWriter>> writerSelector)
+        public static IGetRequestWriter OverrideUriPathSegment(this IGetRequestWriter getRequestWriter, Func<IUriPathSegmentWriter<IGetHeaderWriter>, Task<IUriPathSegmentWriter<IGetHeaderWriter>>> writerSelector)
         {
             return getRequestWriter.OverrideUriPort(originalWriter => new UriPortWriter<IGetHeaderWriter>(originalWriter, writerSelector));
         }
@@ -120,7 +120,7 @@
             }
         }
 
-        public static IGetRequestWriter OverrideQueryOption(this IGetRequestWriter getRequestWriter, Func<IQueryOptionWriter<IGetHeaderWriter>, IQueryOptionWriter<IGetHeaderWriter>> writerSelector)
+        public static IGetRequestWriter OverrideQueryOption(this IGetRequestWriter getRequestWriter, Func<IQueryOptionWriter<IGetHeaderWriter>, Task<IQueryOptionWriter<IGetHeaderWriter>>> writerSelector)
         {
             return getRequestWriter.OverrideUriPathSegment(originalWriter => new UriPathSegmentWriter<IGetHeaderWriter>(originalWriter, writerSelector));
         }
@@ -147,7 +147,7 @@
             }
         }
 
-        public static IGetRequestWriter OverrideFragment(this IGetRequestWriter getRequestWriter, Func<IFragmentWriter<IGetHeaderWriter>, IFragmentWriter<IGetHeaderWriter>> writerSelector)
+        public static IGetRequestWriter OverrideFragment(this IGetRequestWriter getRequestWriter, Func<IFragmentWriter<IGetHeaderWriter>, Task<IFragmentWriter<IGetHeaderWriter>>> writerSelector)
         {
             return getRequestWriter.OverrideQueryOption(originalWriter => new QueryOptionWriter<IGetHeaderWriter>(originalWriter, writerSelector));
         }
@@ -308,7 +308,7 @@
             }
         }
 
-        public static IPatchRequestWriter OverrideUriWriter(this IPatchRequestWriter getRequestWriter, Func<IUriWriter<IPatchHeaderWriter>, IUriWriter<IPatchHeaderWriter>> writerSelector)
+        public static IPatchRequestWriter OverrideUriWriter(this IPatchRequestWriter getRequestWriter, Func<IUriWriter<IPatchHeaderWriter>, Task<IUriWriter<IPatchHeaderWriter>>> writerSelector)
         {
             return new OverrideUriWriterPatchRequestWriter(getRequestWriter, writerSelector);
         }
@@ -330,32 +330,32 @@
             }
         }
 
-        public static IPatchRequestWriter OverrideUriScheme(this IPatchRequestWriter getRequestWriter, Func<IUriSchemeWriter<IPatchHeaderWriter>, IUriSchemeWriter<IPatchHeaderWriter>> writerSelector)
+        public static IPatchRequestWriter OverrideUriScheme(this IPatchRequestWriter getRequestWriter, Func<IUriSchemeWriter<IPatchHeaderWriter>, Task<IUriSchemeWriter<IPatchHeaderWriter>>> writerSelector)
         {
             return getRequestWriter.OverrideUriWriter(originalWriter => new UriWriter<IPatchHeaderWriter>(originalWriter, writerSelector));
         }
 
-        public static IPatchRequestWriter OverrideUriDomain(this IPatchRequestWriter getRequestWriter, Func<IUriDomainWriter<IPatchHeaderWriter>, IUriDomainWriter<IPatchHeaderWriter>> writerSelector)
+        public static IPatchRequestWriter OverrideUriDomain(this IPatchRequestWriter getRequestWriter, Func<IUriDomainWriter<IPatchHeaderWriter>, Task<IUriDomainWriter<IPatchHeaderWriter>>> writerSelector)
         {
             return getRequestWriter.OverrideUriScheme(originalWriter => new UriSchemeWriter<IPatchHeaderWriter>(originalWriter, writerSelector));
         }
 
-        public static IPatchRequestWriter OverrideUriPort(this IPatchRequestWriter getRequestWriter, Func<IUriPortWriter<IPatchHeaderWriter>, IUriPortWriter<IPatchHeaderWriter>> writerSelector)
+        public static IPatchRequestWriter OverrideUriPort(this IPatchRequestWriter getRequestWriter, Func<IUriPortWriter<IPatchHeaderWriter>, Task<IUriPortWriter<IPatchHeaderWriter>>> writerSelector)
         {
             return getRequestWriter.OverrideUriDomain(originalWriter => new UriDomainWriter<IPatchHeaderWriter>(originalWriter, writerSelector));
         }
 
-        public static IPatchRequestWriter OverrideUriPathSegment(this IPatchRequestWriter getRequestWriter, Func<IUriPathSegmentWriter<IPatchHeaderWriter>, IUriPathSegmentWriter<IPatchHeaderWriter>> writerSelector)
+        public static IPatchRequestWriter OverrideUriPathSegment(this IPatchRequestWriter getRequestWriter, Func<IUriPathSegmentWriter<IPatchHeaderWriter>, Task<IUriPathSegmentWriter<IPatchHeaderWriter>>> writerSelector)
         {
             return getRequestWriter.OverrideUriPort(originalWriter => new UriPortWriter<IPatchHeaderWriter>(originalWriter, writerSelector));
         }
 
-        public static IPatchRequestWriter OverrideQueryOption(this IPatchRequestWriter getRequestWriter, Func<IQueryOptionWriter<IPatchHeaderWriter>, IQueryOptionWriter<IPatchHeaderWriter>> writerSelector)
+        public static IPatchRequestWriter OverrideQueryOption(this IPatchRequestWriter getRequestWriter, Func<IQueryOptionWriter<IPatchHeaderWriter>, Task<IQueryOptionWriter<IPatchHeaderWriter>>> writerSelector)
         {
             return getRequestWriter.OverrideUriPathSegment(originalWriter => new UriPathSegmentWriter<IPatchHeaderWriter>(originalWriter, writerSelector));
         }
 
-        public static IPatchRequestWriter OverrideFragment(this IPatchRequestWriter getRequestWriter, Func<IFragmentWriter<IPatchHeaderWriter>, IFragmentWriter<IPatchHeaderWriter>> writerSelector)
+        public static IPatchRequestWriter OverrideFragment(this IPatchRequestWriter getRequestWriter, Func<IFragmentWriter<IPatchHeaderWriter>, Task<IFragmentWriter<IPatchHeaderWriter>>> writerSelector)
         {
             return getRequestWriter.OverrideQueryOption(originalWriter => new QueryOptionWriter<IPatchHeaderWriter>(originalWriter, writerSelector));
         }
