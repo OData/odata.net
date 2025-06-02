@@ -108,44 +108,44 @@
                 var multiValueResponseBuilder = new MultiValuedResponseBuilder();
                 multiValueResponseBuilder.Annotations = Enumerable.Empty<object>(); //// TODO annotations aren't supported yet
 
-                var headerReader = getResponseReader.Next();
-                var getResponseBodyReader = MultiValuedProtocol.SkipHeaders(headerReader);
+                var headerReader = await getResponseReader.Next().ConfigureAwait(false);
+                var getResponseBodyReader = await MultiValuedProtocol.SkipHeaders(headerReader).ConfigureAwait(false);
 
                 while (true)
                 {
-                    var getResponseBodyToken = getResponseBodyReader.Next();
+                    var getResponseBodyToken = await getResponseBodyReader.Next().ConfigureAwait(false);
                     if (getResponseBodyToken is GetResponseBodyToken.NextLink nextLink)
                     {
                         var nextLinkReader = nextLink.NextLinkReader;
                         multiValueResponseBuilder.NextLink = nextLinkReader.NextLink.Uri;
-                        getResponseBodyReader = nextLinkReader.Next();
+                        getResponseBodyReader = await nextLinkReader.Next().ConfigureAwait(false);
                     }
                     else if (getResponseBodyToken is GetResponseBodyToken.OdataContext odataContext)
                     {
                         //// TODO this implementation is skipping the odatacontext
-                        getResponseBodyReader = odataContext.OdataContextReader.Next();
+                        getResponseBodyReader = await odataContext.OdataContextReader.Next().ConfigureAwait(false);
                     }
                     else if (getResponseBodyToken is GetResponseBodyToken.Property property)
                     {
                         var propertyReader = property.PropertyReader;
-                        var propertyNameReader = propertyReader.Next();
+                        var propertyNameReader = await propertyReader.Next();
                         var propertyName = propertyNameReader.PropertyName;
                         if (string.Equals(propertyName.Name, "value", StringComparison.Ordinal)) //// TODO do we want to configurably ignore casing?
                         {
-                            var propertyValueReader = propertyNameReader.Next();
-                            var propertyValueToken = propertyValueReader.Next();
+                            var propertyValueReader = await propertyNameReader.Next().ConfigureAwait(false);
+                            var propertyValueToken = await propertyValueReader.Next().ConfigureAwait(false);
                             if (propertyValueToken is PropertyValueToken<IGetResponseBodyReader>.MultiValued multiValued)
                             {
                                 var multiValuedPropertyValueReader = multiValued.MultiValuedPropertyValueReader;
                                 while (true)
                                 {
-                                    var multiValuedPropertyValueToken = multiValuedPropertyValueReader.Next();
+                                    var multiValuedPropertyValueToken = await multiValuedPropertyValueReader.Next().ConfigureAwait(false);
                                     if (multiValuedPropertyValueToken is MultiValuedPropertyValueToken<IGetResponseBodyReader>.Object @object)
                                     {
                                         var complexPropertyValueReader = @object.ComplexPropertyValueReader;
                                         var singleValueBuilder = new MultiValuedProtocol.SingleValueBuilder();
 
-                                        multiValuedPropertyValueReader = MultiValuedProtocol.ReadComplexPropertyValue(complexPropertyValueReader, singleValueBuilder);
+                                        multiValuedPropertyValueReader = await MultiValuedProtocol.ReadComplexPropertyValue(complexPropertyValueReader, singleValueBuilder).ConfigureAwait(false);
 
                                         multiValueResponseBuilder.Value.Add(singleValueBuilder.Build());
                                     }
@@ -178,8 +178,8 @@
                         }
                         else
                         {
-                            var propertyValueReader = propertyNameReader.Next();
-                            getResponseBodyReader = SkipPropertyValue(propertyValueReader);
+                            var propertyValueReader = await propertyNameReader.Next().ConfigureAwait(false);
+                            getResponseBodyReader = await SkipPropertyValue(propertyValueReader).ConfigureAwait(false); 
                         }
                     }
                     //// TODO count isn't available here...
@@ -196,12 +196,12 @@
                 return multiValueResponseBuilder.Build();
             }
 
-            private static T SkipPropertyValue<T>(IPropertyValueReader<T> propertyValueReader)
+            private static async Task<T> SkipPropertyValue<T>(IPropertyValueReader<T> propertyValueReader)
             {
                 var propertyValueToken = propertyValueReader.Next(); //// TODO do you want to add `skip` methods?
                 if (propertyValueToken is PropertyValueToken<T>.Complex complex)
                 {
-                    return SkipComplexPropertyValue(complex.ComplexPropertyValueReader);
+                    return await SkipComplexPropertyValue(complex.ComplexPropertyValueReader).ConfigureAwait(false);
                 }
                 else if (propertyValueToken is PropertyValueToken<T>.MultiValued multiValued)
                 {
@@ -211,7 +211,7 @@
                         var multiValuedPropertyValueToken = multiValuedPropertyValueReader.Next();
                         if (multiValuedPropertyValueToken is MultiValuedPropertyValueToken<T>.Object @object)
                         {
-                            multiValuedPropertyValueReader = SkipComplexPropertyValue(@object.ComplexPropertyValueReader);
+                            multiValuedPropertyValueReader = await SkipComplexPropertyValue(@object.ComplexPropertyValueReader).ConfigureAwait(false);
                         }
                         else if (multiValuedPropertyValueToken is MultiValuedPropertyValueToken<T>.End end)
                         {
@@ -226,12 +226,12 @@
                 else if (propertyValueToken is PropertyValueToken<T>.Null @null)
                 {
                     var nullPropertyValueReader = @null.NullPropertyValueReader;
-                    return nullPropertyValueReader.Next();
+                    return await nullPropertyValueReader.Next().ConfigureAwait(false);
                 }
                 else if (propertyValueToken is PropertyValueToken<T>.Primitive primitive)
                 {
                     var primitivePropertyValueReader = primitive.PrimitivePropertyValueReader;
-                    return primitivePropertyValueReader.Next();
+                    return await primitivePropertyValueReader.Next().ConfigureAwait(false);
                 }
                 else
                 {
@@ -239,22 +239,22 @@
                 }
             }
 
-            private static T SkipComplexPropertyValue<T>(IComplexPropertyValueReader<T> complexPropertyValueReader)
+            private static async Task<T> SkipComplexPropertyValue<T>(IComplexPropertyValueReader<T> complexPropertyValueReader)
             {
                 while (true)
                 {
                     var complexPropertyValueToken = complexPropertyValueReader.Next();
                     if (complexPropertyValueToken is ComplexPropertyValueToken<T>.Property property)
                     {
-                        complexPropertyValueReader = SkipNestedProperty(property.PropertyReader);
+                        complexPropertyValueReader = await SkipNestedProperty(property.PropertyReader).ConfigureAwait(false);
                     }
                     else if (complexPropertyValueToken is ComplexPropertyValueToken<T>.OdataContext odataContext)
                     {
-                        complexPropertyValueReader = odataContext.OdataContextReader.Next();
+                        complexPropertyValueReader = await odataContext.OdataContextReader.Next().ConfigureAwait(false);
                     }
                     else if (complexPropertyValueToken is ComplexPropertyValueToken<T>.OdataId odataId)
                     {
-                        complexPropertyValueReader = odataId.OdataIdReader.Next();
+                        complexPropertyValueReader = await odataId.OdataIdReader.Next().ConfigureAwait(false);
                     }
                     else if (complexPropertyValueToken is ComplexPropertyValueToken<T>.End end)
                     {
@@ -267,11 +267,11 @@
                 }
             }
 
-            private static IComplexPropertyValueReader<T> SkipNestedProperty<T>(IPropertyReader<IComplexPropertyValueReader<T>> propertyReader)
+            private static async Task<IComplexPropertyValueReader<T>> SkipNestedProperty<T>(IPropertyReader<IComplexPropertyValueReader<T>> propertyReader)
             {
-                var propertyNameReader = propertyReader.Next();
-                var propertyValueReader = propertyNameReader.Next();
-                return SkipPropertyValue(propertyValueReader);
+                var propertyNameReader = await propertyReader.Next().ConfigureAwait(false);
+                var propertyValueReader = await propertyNameReader.Next().ConfigureAwait(false);
+                return await SkipPropertyValue(propertyValueReader).ConfigureAwait(false);
             }
 
             public IGetMultiValuedProtocol Expand(object expander)
@@ -412,27 +412,27 @@
                 // send the request
                 var getResponseReader = await getBodyWriter.Commit().ConfigureAwait(false);
 
-                var getResponseHeaderReader = getResponseReader.Next();
-                var getResponseBodyReader = MultiValuedProtocol.SkipHeaders(getResponseHeaderReader);
+                var getResponseHeaderReader = await getResponseReader.Next().ConfigureAwait(false);
+                var getResponseBodyReader = await MultiValuedProtocol.SkipHeaders(getResponseHeaderReader).ConfigureAwait(false);
 
                 var singleValuedResponseBuilder = new SingleValuedResponseBuilder();
                 var singleValueBuilder = new SingleValueBuilder();
                 while (true)
                 {
-                    var getResponseBodyToken = getResponseBodyReader.Next();
+                    var getResponseBodyToken = await getResponseBodyReader.Next().ConfigureAwait(false);
                     if (getResponseBodyToken is GetResponseBodyToken.Property property)
                     {
                         var propertyReader = property.PropertyReader;
-                        var propertyNameReader = propertyReader.Next();
+                        var propertyNameReader = await propertyReader.Next().ConfigureAwait(false);
                         var propertyName = propertyNameReader.PropertyName;
-                        var propertyValueReader = propertyNameReader.Next();
+                        var propertyValueReader = await propertyNameReader.Next().ConfigureAwait(false);
 
-                        getResponseBodyReader = MultiValuedProtocol.ReadPropertyValue(propertyValueReader, propertyName.Name, singleValueBuilder);
+                        getResponseBodyReader = await MultiValuedProtocol.ReadPropertyValue(propertyValueReader, propertyName.Name, singleValueBuilder).ConfigureAwait(false);
                     }
                     else if (getResponseBodyToken is GetResponseBodyToken.OdataContext odataContext)
                     {
                         //// TODO this implementation is not using the context
-                        getResponseBodyReader = odataContext.OdataContextReader.Next();
+                        getResponseBodyReader = await odataContext.OdataContextReader.Next().ConfigureAwait(false);
                     }
                     else if (getResponseBodyToken is GetResponseBodyToken.NextLink nextLink)
                     {
@@ -567,27 +567,27 @@
                 // send the request
                 var patchResponseReader = await patchRequestBodyWriter.Commit().ConfigureAwait(false);
 
-                var patchResponseHeaderReader = patchResponseReader.Next();
-                var patchResponseBodyReader = MultiValuedProtocol.SkipHeaders(patchResponseHeaderReader);
+                var patchResponseHeaderReader = await patchResponseReader.Next().ConfigureAwait(false);
+                var patchResponseBodyReader = await MultiValuedProtocol.SkipHeaders(patchResponseHeaderReader).ConfigureAwait(false);
 
                 var singleValuedResponseBuilder = new SingleValuedResponseBuilder();
                 var singleValueBuilder = new SingleValueBuilder();
                 while (true)
                 {
-                    var getResponseBodyToken = patchResponseBodyReader.Next();
+                    var getResponseBodyToken = await patchResponseBodyReader.Next().ConfigureAwait(false);
                     if (getResponseBodyToken is GetResponseBodyToken.Property property)
                     {
                         var propertyReader = property.PropertyReader;
-                        var propertyNameReader = propertyReader.Next();
+                        var propertyNameReader = await propertyReader.Next().ConfigureAwait(false);
                         var propertyName = propertyNameReader.PropertyName;
-                        var propertyValueReader = propertyNameReader.Next();
+                        var propertyValueReader = await propertyNameReader.Next().ConfigureAwait(false);
 
-                        patchResponseBodyReader = MultiValuedProtocol.ReadPropertyValue(propertyValueReader, propertyName.Name, singleValueBuilder);
+                        patchResponseBodyReader = await MultiValuedProtocol.ReadPropertyValue(propertyValueReader, propertyName.Name, singleValueBuilder).ConfigureAwait(false);
                     }
                     else if (getResponseBodyToken is GetResponseBodyToken.OdataContext odataContext)
                     {
                         //// TODO this implementation is not using the context
-                        patchResponseBodyReader = odataContext.OdataContextReader.Next();
+                        patchResponseBodyReader = await odataContext.OdataContextReader.Next().ConfigureAwait(false);
                     }
                     else if (getResponseBodyToken is GetResponseBodyToken.NextLink nextLink)
                     {
@@ -723,27 +723,27 @@
                 // send the request
                 var patchResponseReader = await patchRequestBodyWriter.Commit().ConfigureAwait(false);
 
-                var patchResponseHeaderReader = patchResponseReader.Next();
-                var patchResponseBodyReader = MultiValuedProtocol.SkipHeaders(patchResponseHeaderReader);
+                var patchResponseHeaderReader = await patchResponseReader.Next().ConfigureAwait(false);
+                var patchResponseBodyReader = await MultiValuedProtocol.SkipHeaders(patchResponseHeaderReader).ConfigureAwait(false);
 
                 var singleValuedResponseBuilder = new SingleValuedResponseBuilder();
                 var singleValueBuilder = new SingleValueBuilder();
                 while (true)
                 {
-                    var getResponseBodyToken = patchResponseBodyReader.Next();
+                    var getResponseBodyToken = await patchResponseBodyReader.Next().ConfigureAwait(false);
                     if (getResponseBodyToken is GetResponseBodyToken.Property property)
                     {
                         var propertyReader = property.PropertyReader;
-                        var propertyNameReader = propertyReader.Next();
+                        var propertyNameReader = await propertyReader.Next().ConfigureAwait(false);
                         var propertyName = propertyNameReader.PropertyName;
-                        var propertyValueReader = propertyNameReader.Next();
+                        var propertyValueReader = await propertyNameReader.Next().ConfigureAwait(false);
 
-                        patchResponseBodyReader = MultiValuedProtocol.ReadPropertyValue(propertyValueReader, propertyName.Name, singleValueBuilder);
+                        patchResponseBodyReader = await MultiValuedProtocol.ReadPropertyValue(propertyValueReader, propertyName.Name, singleValueBuilder).ConfigureAwait(false);
                     }
                     else if (getResponseBodyToken is GetResponseBodyToken.OdataContext odataContext)
                     {
                         //// TODO this implementation is not using the context
-                        patchResponseBodyReader = odataContext.OdataContextReader.Next();
+                        patchResponseBodyReader = await odataContext.OdataContextReader.Next().ConfigureAwait(false);
                     }
                     else if (getResponseBodyToken is GetResponseBodyToken.NextLink nextLink)
                     {
@@ -838,7 +838,7 @@
             }
         }
 
-        private static T ReadComplexPropertyValue<T>(IComplexPropertyValueReader<T> complexPropertyValueReader, MultiValuedProtocol.SingleValueBuilder singleValueBuilder)
+        private static async Task<T> ReadComplexPropertyValue<T>(IComplexPropertyValueReader<T> complexPropertyValueReader, MultiValuedProtocol.SingleValueBuilder singleValueBuilder)
         {
             while (true)
             {
@@ -846,25 +846,25 @@
                 if (complexPropertyValueToken is ComplexPropertyValueToken<T>.Property property)
                 {
                     var propertyReader = property.PropertyReader;
-                    var propertyNameReader = propertyReader.Next();
+                    var propertyNameReader = await propertyReader.Next().ConfigureAwait(false);
 
                     var propertyName = propertyNameReader.PropertyName.Name;
 
-                    var propertyValueReader = propertyNameReader.Next();
-                    complexPropertyValueReader = MultiValuedProtocol.ReadPropertyValue(propertyValueReader, propertyName, singleValueBuilder);
+                    var propertyValueReader = await propertyNameReader.Next().ConfigureAwait(false);
+                    complexPropertyValueReader = await MultiValuedProtocol.ReadPropertyValue(propertyValueReader, propertyName, singleValueBuilder).ConfigureAwait(false);
                 }
                 else if (complexPropertyValueToken is ComplexPropertyValueToken<T>.OdataContext odataContext)
                 {
                     var odataContextReader = odataContext.OdataContextReader;
                     singleValueBuilder.Context = odataContextReader.OdataContext.Context;
 
-                    complexPropertyValueReader = odataContext.OdataContextReader.Next();
+                    complexPropertyValueReader = await odataContext.OdataContextReader.Next().ConfigureAwait(false);
                 }
                 else if (complexPropertyValueToken is ComplexPropertyValueToken<T>.OdataId odataId)
                 {
                     //// TODO this implementation is skipping the odataid
 
-                    complexPropertyValueReader = odataId.OdataIdReader.Next();
+                    complexPropertyValueReader = await odataId.OdataIdReader.Next().ConfigureAwait(false);
                 }
                 else if (complexPropertyValueToken is ComplexPropertyValueToken<T>.End end)
                 {
@@ -877,14 +877,14 @@
             }
         }
 
-        private static T ReadPropertyValue<T>(IPropertyValueReader<T> propertyValueReader, string propertyName, MultiValuedProtocol.SingleValueBuilder singleValueBuilder)
+        private static async Task<T> ReadPropertyValue<T>(IPropertyValueReader<T> propertyValueReader, string propertyName, MultiValuedProtocol.SingleValueBuilder singleValueBuilder)
         {
             //// TODO you are here
             var propertyValueToken = propertyValueReader.Next();
             if (propertyValueToken is PropertyValueToken<T>.Complex complex)
             {
                 var nestedSingleValueBuilder = new MultiValuedProtocol.SingleValueBuilder();
-                var nextReader = MultiValuedProtocol.ReadComplexPropertyValue(complex.ComplexPropertyValueReader, nestedSingleValueBuilder);
+                var nextReader = await MultiValuedProtocol.ReadComplexPropertyValue(complex.ComplexPropertyValueReader, nestedSingleValueBuilder).ConfigureAwait(false);
 
                 singleValueBuilder.ComplexProperties.Add(new ComplexResponseProperty(propertyName, nestedSingleValueBuilder.Build(), Enumerable.Empty<string>()));
 
@@ -897,12 +897,12 @@
                 var multiValuedPropertyValueReader = multiValued.MultiValuedPropertyValueReader;
                 while (true)
                 {
-                    var multiValuedPropertyValueToken = multiValuedPropertyValueReader.Next();
+                    var multiValuedPropertyValueToken = await multiValuedPropertyValueReader.Next().ConfigureAwait(false);
                     if (multiValuedPropertyValueToken is MultiValuedPropertyValueToken<T>.Object @object)
                     {
                         var complexPropertyValueReader = @object.ComplexPropertyValueReader;
                         var nestedSinlgeValueBuilder = new MultiValuedProtocol.SingleValueBuilder();
-                        multiValuedPropertyValueReader = MultiValuedProtocol.ReadComplexPropertyValue(complexPropertyValueReader, nestedSinlgeValueBuilder);
+                        multiValuedPropertyValueReader = await MultiValuedProtocol.ReadComplexPropertyValue(complexPropertyValueReader, nestedSinlgeValueBuilder).ConfigureAwait(false);
                         values.Add(nestedSinlgeValueBuilder.Build());
                     }
                     else if (multiValuedPropertyValueToken is MultiValuedPropertyValueToken<T>.End end)
@@ -921,13 +921,13 @@
             else if (propertyValueToken is PropertyValueToken<T>.Null @null)
             {
                 //// TODO you need to add null properties to `singlevalue`
-                return @null.NullPropertyValueReader.Next();
+                return await @null.NullPropertyValueReader.Next().ConfigureAwait(false);
             }
             else if (propertyValueToken is PropertyValueToken<T>.Primitive primitive)
             {
                 var primitivePropertyValueReader = primitive.PrimitivePropertyValueReader;
                 singleValueBuilder.PrimitiveProperties.Add(new PrimitiveResponseProperty(propertyName, primitivePropertyValueReader.PrimitivePropertyValue.Value, Enumerable.Empty<object>()));
-                return primitivePropertyValueReader.Next();
+                return await primitivePropertyValueReader.Next().ConfigureAwait(false);
             }
             else
             {
@@ -955,23 +955,23 @@
             }
         }
 
-        private static IGetResponseBodyReader SkipHeaders(IGetResponseHeaderReader getResponseHeaderReader)
+        private static async Task<IGetResponseBodyReader> SkipHeaders(IGetResponseHeaderReader getResponseHeaderReader)
         {
-            var headerToken = getResponseHeaderReader.Next();
+            var headerToken = await getResponseHeaderReader.Next().ConfigureAwait(false);
             if (headerToken is GetResponseHeaderToken.ContentType contentType)
             {
-                return SkipHeaders(contentType.ContentTypeHeaderReader.Next());
+                return await SkipHeaders(await contentType.ContentTypeHeaderReader.Next().ConfigureAwait(false)).ConfigureAwait(false);
             }
             else if (headerToken is GetResponseHeaderToken.Custom custom)
             {
-                var customHeaderToken = custom.CustomHeaderReader.Next();
+                var customHeaderToken = await custom.CustomHeaderReader.Next().ConfigureAwait(false);
                 if (customHeaderToken is CustomHeaderToken<IGetResponseHeaderReader>.FieldValue fieldValue)
                 {
-                    return SkipHeaders(fieldValue.HeaderFieldValueReader.Next());
+                    return await SkipHeaders(await fieldValue.HeaderFieldValueReader.Next().ConfigureAwait(false)).ConfigureAwait(false);
                 }
                 else if (customHeaderToken is CustomHeaderToken<IGetResponseHeaderReader>.Header header)
                 {
-                    return SkipHeaders(header.GetHeaderReader);
+                    return await SkipHeaders(header.GetHeaderReader).ConfigureAwait(false);
                 }
                 else
                 {
