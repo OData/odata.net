@@ -70,18 +70,24 @@
 
         public IPatchRequestWriter Patch()
         {
-            return this.convention.Patch().OverrideHeader(originalWriter => new PatchHeaderWriter(originalWriter, this.authorizationToken));
+            return this.convention.Patch().OverrideHeader(async originalWriter => await PatchHeaderWriter.Create(originalWriter, this.authorizationToken).ConfigureAwait(false));
         }
 
         private sealed class PatchHeaderWriter : IPatchHeaderWriter
         {
             private readonly IPatchHeaderWriter nextWriter;
 
-            public PatchHeaderWriter(IPatchHeaderWriter originalWriter, string authorizationToken)
+            private PatchHeaderWriter(IPatchHeaderWriter nextWriter)
+            {
+                this.nextWriter = nextWriter;
+            }
+
+            public static async Task<PatchHeaderWriter> Create(IPatchHeaderWriter originalWriter, string authorizationToken)
             {
                 var customHeaderWriter = originalWriter.CommitCustomHeader();
-                var headerFieldValueWriter = customHeaderWriter.Commit(new HeaderFieldName("Authorization"));
-                this.nextWriter = headerFieldValueWriter.Commit(new HeaderFieldValue(authorizationToken));
+                var headerFieldValueWriter = await customHeaderWriter.Commit(new HeaderFieldName("Authorization")).ConfigureAwait(false);
+                var nextWriter = await headerFieldValueWriter.Commit(new HeaderFieldValue(authorizationToken)).ConfigureAwait(false);
+                return new PatchHeaderWriter(nextWriter);
             }
 
             public IPatchRequestBodyWriter Commit()
@@ -102,7 +108,7 @@
 
         public IPatchRequestWriter Post()
         {
-            return this.convention.Post().OverrideHeader(originalWriter => new PatchHeaderWriter(originalWriter, this.authorizationToken));
+            return this.convention.Patch().OverrideHeader(async originalWriter => await PatchHeaderWriter.Create(originalWriter, this.authorizationToken).ConfigureAwait(false));
         }
     }
 }

@@ -360,7 +360,7 @@
             return getRequestWriter.OverrideQueryOption(originalWriter => new QueryOptionWriter<IPatchHeaderWriter>(originalWriter, writerSelector));
         }
 
-        public static IPatchRequestWriter OverrideHeader(this IPatchRequestWriter getRequestWriter, Func<IPatchHeaderWriter, IPatchHeaderWriter> writerSelector)
+        public static IPatchRequestWriter OverrideHeader(this IPatchRequestWriter getRequestWriter, Func<IPatchHeaderWriter, Task<IPatchHeaderWriter>> writerSelector)
         {
             return getRequestWriter
                 .OverrideQueryOption(originalWriter => new QueryOptionWriter2<IPatchHeaderWriter>(originalWriter, writerSelector))
