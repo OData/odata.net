@@ -1,0 +1,316 @@
+﻿using System;
+using System.Runtime.CompilerServices;
+
+namespace NewStuff._Design._0_Convention
+{
+    public static class WriterOverriders
+    {
+        public static IGetRequestWriter OverrideUriWriter(this IGetRequestWriter getRequestWriter, Func<IUriWriter<IGetHeaderWriter>, IUriWriter<IGetHeaderWriter>> writerSelector)
+        {
+            return new OverrideUriWriterGetRequestWriter(getRequestWriter, writerSelector);
+        }
+
+        private sealed class OverrideUriWriterGetRequestWriter : IGetRequestWriter
+        {
+            private readonly IGetRequestWriter getRequestWriter;
+            private readonly Func<IUriWriter<IGetHeaderWriter>, IUriWriter<IGetHeaderWriter>> writerSelector;
+
+            public OverrideUriWriterGetRequestWriter(IGetRequestWriter getRequestWriter, Func<IUriWriter<IGetHeaderWriter>, IUriWriter<IGetHeaderWriter>> writerSelector)
+            {
+                this.getRequestWriter = getRequestWriter;
+                this.writerSelector = writerSelector;
+            }
+
+            public IUriWriter<IGetHeaderWriter> Commit()
+            {
+                return this.writerSelector(this.getRequestWriter.Commit());
+            }
+        }
+
+        public static IGetRequestWriter OverrideUriScheme(this IGetRequestWriter getRequestWriter, Func<IUriSchemeWriter<IGetHeaderWriter>, IUriSchemeWriter<IGetHeaderWriter>> writerSelector)
+        {
+            return getRequestWriter.OverrideUriWriter(originalWriter => new UriWriter<IGetHeaderWriter>(originalWriter, writerSelector));
+        }
+
+        private sealed class UriWriter<T> : IUriWriter<T>
+        {
+            private readonly IUriWriter<T> originalWriter;
+            private readonly Func<IUriSchemeWriter<T>, IUriSchemeWriter<T>> writerSelector;
+
+            public UriWriter(IUriWriter<T> originalWriter, Func<IUriSchemeWriter<T>, IUriSchemeWriter<T>> writerSelector)
+            {
+                this.originalWriter = originalWriter;
+                this.writerSelector = writerSelector;
+            }
+
+            public IUriSchemeWriter<T> Commit()
+            {
+                return this.writerSelector(this.originalWriter.Commit());
+            }
+        }
+
+        public static IGetRequestWriter OverrideUriDomain(this IGetRequestWriter getRequestWriter, Func<IUriDomainWriter<IGetHeaderWriter>, IUriDomainWriter<IGetHeaderWriter>> writerSelector)
+        {
+            return getRequestWriter.OverrideUriScheme(originalWriter => new UriSchemeWriter<IGetHeaderWriter>(originalWriter, writerSelector));
+        }
+
+        private sealed class UriSchemeWriter<T> : IUriSchemeWriter<T>
+        {
+            private readonly IUriSchemeWriter<T> originalWriter;
+            private readonly Func<IUriDomainWriter<T>, IUriDomainWriter<T>> writerSelector;
+
+            public UriSchemeWriter(IUriSchemeWriter<T> originalWriter, Func<IUriDomainWriter<T>, IUriDomainWriter<T>> writerSelector)
+            {
+                this.originalWriter = originalWriter;
+                this.writerSelector = writerSelector;
+            }
+
+            public IUriDomainWriter<T> Commit(UriScheme uriScheme)
+            {
+                return this.writerSelector(this.originalWriter.Commit(uriScheme));
+            }
+        }
+
+        public static IGetRequestWriter OverrideUriPort(this IGetRequestWriter getRequestWriter, Func<IUriPortWriter<IGetHeaderWriter>, IUriPortWriter<IGetHeaderWriter>> writerSelector)
+        {
+            return getRequestWriter.OverrideUriDomain(originalWriter => new UriDomainWriter<IGetHeaderWriter>(originalWriter, writerSelector));
+        }
+
+        private sealed class UriDomainWriter<T> : IUriDomainWriter<T>
+        {
+            private readonly IUriDomainWriter<T> originalWriter;
+            private readonly Func<IUriPortWriter<T>, IUriPortWriter<T>> writerSelector;
+
+            public UriDomainWriter(IUriDomainWriter<T> originalWriter, Func<IUriPortWriter<T>, IUriPortWriter<T>> writerSelector)
+            {
+                this.originalWriter = originalWriter;
+                this.writerSelector = writerSelector;
+            }
+
+            public IUriPortWriter<T> Commit(UriDomain uriDomain)
+            {
+                return this.writerSelector(this.originalWriter.Commit(uriDomain));
+            }
+        }
+
+        public static IGetRequestWriter OverrideUriPathSegment(this IGetRequestWriter getRequestWriter, Func<IUriPathSegmentWriter<IGetHeaderWriter>, IUriPathSegmentWriter<IGetHeaderWriter>> writerSelector)
+        {
+            return getRequestWriter.OverrideUriPort(originalWriter => new UriPortWriter<IGetHeaderWriter>(originalWriter, writerSelector));
+        }
+
+        private sealed class UriPortWriter<T> : IUriPortWriter<T>
+        {
+            private readonly IUriPortWriter<T> originalWriter;
+            private readonly Func<IUriPathSegmentWriter<T>, IUriPathSegmentWriter<T>> writerSelector;
+
+            public UriPortWriter(IUriPortWriter<T> originalWriter, Func<IUriPathSegmentWriter<T>, IUriPathSegmentWriter<T>> writerSelector)
+            {
+                this.originalWriter = originalWriter;
+                this.writerSelector = writerSelector;
+            }
+
+            public IUriPathSegmentWriter<T> Commit()
+            {
+                return this.writerSelector(this.originalWriter.Commit());
+            }
+
+            public IUriPathSegmentWriter<T> Commit(UriPort uriPort)
+            {
+                return this.writerSelector(this.originalWriter.Commit(uriPort));
+            }
+        }
+
+        public static IGetRequestWriter OverrideQueryOption(this IGetRequestWriter getRequestWriter, Func<IQueryOptionWriter<IGetHeaderWriter>, IQueryOptionWriter<IGetHeaderWriter>> writerSelector)
+        {
+            return getRequestWriter.OverrideUriPathSegment(originalWriter => new UriPathSegmentWriter<IGetHeaderWriter>(originalWriter, writerSelector));
+        }
+
+        private sealed class UriPathSegmentWriter<T> : IUriPathSegmentWriter<T>
+        {
+            private readonly IUriPathSegmentWriter<T> originalWriter;
+            private readonly Func<IQueryOptionWriter<T>, IQueryOptionWriter<T>> writerSelector;
+
+            public UriPathSegmentWriter(IUriPathSegmentWriter<T> originalWriter, Func<IQueryOptionWriter<T>, IQueryOptionWriter<T>> writerSelector)
+            {
+                this.originalWriter = originalWriter;
+                this.writerSelector = writerSelector;
+            }
+
+            public IQueryOptionWriter<T> Commit()
+            {
+                return this.writerSelector(this.originalWriter.Commit());
+            }
+
+            public IUriPathSegmentWriter<T> Commit(UriPathSegment uriPathSegment)
+            {
+                return new UriPathSegmentWriter<T>(this.originalWriter.Commit(uriPathSegment), this.writerSelector);
+            }
+        }
+
+        public static IGetRequestWriter OverrideFragment(this IGetRequestWriter getRequestWriter, Func<IFragmentWriter<IGetHeaderWriter>, IFragmentWriter<IGetHeaderWriter>> writerSelector)
+        {
+            return getRequestWriter.OverrideQueryOption(originalWriter => new QueryOptionWriter<IGetHeaderWriter>(originalWriter, writerSelector));
+        }
+
+        private sealed class QueryOptionWriter<T> : IQueryOptionWriter<T>
+        {
+            private readonly IQueryOptionWriter<T> originalWriter;
+            private readonly Func<IFragmentWriter<T>, IFragmentWriter<T>> writerSelector;
+
+            public QueryOptionWriter(IQueryOptionWriter<T> originalWriter, Func<IFragmentWriter<T>, IFragmentWriter<T>> writerSelector)
+            {
+                this.originalWriter = originalWriter;
+                this.writerSelector = writerSelector;
+            }
+
+            public T Commit()
+            {
+                return this.originalWriter.Commit();
+            }
+
+            public IFragmentWriter<T> CommitFragment()
+            {
+                return this.writerSelector(this.originalWriter.CommitFragment());
+            }
+
+            public IQueryParameterWriter<T> CommitParameter()
+            {
+                return new QueryParameterWriter(this.originalWriter.CommitParameter(), this.writerSelector);
+            }
+
+            private sealed class QueryParameterWriter : IQueryParameterWriter<T>
+            {
+                private readonly IQueryParameterWriter<T> originalWriter;
+                private readonly Func<IFragmentWriter<T>, IFragmentWriter<T>> writerSelector;
+
+                public QueryParameterWriter(IQueryParameterWriter<T> originalWriter, Func<IFragmentWriter<T>, IFragmentWriter<T>> writerSelector)
+                {
+                    this.originalWriter = originalWriter;
+                    this.writerSelector = writerSelector;
+                }
+
+                public IQueryValueWriter<T> Commit(QueryParameter queryParameter)
+                {
+                    return new QueryValueWriter(this.originalWriter.Commit(queryParameter), this.writerSelector);
+                }
+
+                private sealed class QueryValueWriter : IQueryValueWriter<T>
+                {
+                    private readonly IQueryValueWriter<T> originalWriter;
+                    private readonly Func<IFragmentWriter<T>, IFragmentWriter<T>> writerSelector;
+
+                    public QueryValueWriter(IQueryValueWriter<T> originalWriter, Func<IFragmentWriter<T>, IFragmentWriter<T>> writerSelector)
+                    {
+                        this.originalWriter = originalWriter;
+                        this.writerSelector = writerSelector;
+                    }
+
+                    public IQueryOptionWriter<T> Commit()
+                    {
+                        return new QueryOptionWriter<T>(this.originalWriter.Commit(), this.writerSelector);
+                    }
+
+                    public IQueryOptionWriter<T> Commit(QueryValue queryValue)
+                    {
+                        return new QueryOptionWriter<T>(this.originalWriter.Commit(queryValue), this.writerSelector);
+                    }
+                }
+            }
+        }
+
+        public static IGetRequestWriter OverrideHeader(this IGetRequestWriter getRequestWriter, Func<IGetHeaderWriter, IGetHeaderWriter> writerSelector)
+        {
+            return getRequestWriter
+                .OverrideQueryOption(originalWriter => new QueryOptionWriter2<IGetHeaderWriter>(originalWriter, writerSelector))
+                .OverrideFragment(originalWriter => new FragmentWriter<IGetHeaderWriter>(originalWriter, writerSelector));
+        }
+
+        private sealed class QueryOptionWriter2<T> : IQueryOptionWriter<T>
+        {
+            private readonly IQueryOptionWriter<T> originalWriter;
+            private readonly Func<T, T> writerSelector;
+
+            public QueryOptionWriter2(IQueryOptionWriter<T> originalWriter, Func<T, T> writerSelector)
+            {
+                this.originalWriter = originalWriter;
+                this.writerSelector = writerSelector;
+            }
+
+            public T Commit()
+            {
+                return this.writerSelector(this.originalWriter.Commit());
+            }
+
+            public IFragmentWriter<T> CommitFragment()
+            {
+                return new FragmentWriter<T>(this.originalWriter.CommitFragment(), this.writerSelector);
+            }
+
+            public IQueryParameterWriter<T> CommitParameter()
+            {
+                return new QueryParameterWriter(this.originalWriter.CommitParameter(), this.writerSelector);
+            }
+
+            private sealed class QueryParameterWriter : IQueryParameterWriter<T>
+            {
+                private readonly IQueryParameterWriter<T> originalWriter;
+                private readonly Func<T, T> writerSelector;
+
+                public QueryParameterWriter(IQueryParameterWriter<T> originalWriter, Func<T, T> writerSelector)
+                {
+                    this.originalWriter = originalWriter;
+                    this.writerSelector = writerSelector;
+                }
+
+                public IQueryValueWriter<T> Commit(QueryParameter queryParameter)
+                {
+                    return new QueryValueWriter(this.originalWriter.Commit(queryParameter), this.writerSelector);
+                }
+
+                private sealed class QueryValueWriter : IQueryValueWriter<T>
+                {
+                    private readonly IQueryValueWriter<T> originalWriter;
+                    private readonly Func<T, T> writerSelector;
+
+                    public QueryValueWriter(IQueryValueWriter<T> originalWriter, Func<T, T> writerSelector)
+                    {
+                        this.originalWriter = originalWriter;
+                        this.writerSelector = writerSelector;
+                    }
+
+                    public IQueryOptionWriter<T> Commit()
+                    {
+                        return new QueryOptionWriter2<T>(this.originalWriter.Commit(), this.writerSelector);
+                    }
+
+                    public IQueryOptionWriter<T> Commit(QueryValue queryValue)
+                    {
+                        return new QueryOptionWriter2<T>(this.originalWriter.Commit(queryValue), this.writerSelector);
+                    }
+                }
+            }
+        }
+
+        private sealed class FragmentWriter<T> : IFragmentWriter<T>
+        {
+            private readonly IFragmentWriter<T> originalWriter;
+            private readonly Func<T, T> writerSelector;
+
+            public FragmentWriter(IFragmentWriter<T> originalWriter, Func<T, T> writerSelector)
+            {
+                this.originalWriter = originalWriter;
+                this.writerSelector = writerSelector;
+            }
+
+            public T Commit(Fragment fragment)
+            {
+                return this.writerSelector(this.originalWriter.Commit(fragment));
+            }
+        }
+    }
+
+    public static class ReaderOverriders
+    {
+        //// TODO 
+    }
+}
