@@ -21,6 +21,7 @@ using System.Security;
 [assembly: AssemblyTrademark("Microsoft and Windows are either registered trademarks or trademarks of Microsoft Corporation in the U.S. and/or other countries.")]
 [assembly: AssemblyCulture("")]
 [assembly: InternalsVisibleTo("Microsoft.Test.Taupo.Astoria, PublicKey = 0024000004800000940000000602000000240000525341310004000001000100197c25d0a04f73cb271e8181dba1c0c713df8deebb25864541a66670500f34896d280484b45fe1ff6c29f2ee7aa175d8bcbd0c83cc23901a894a86996030f6292ce6eda6e6f3e6c74b3c5a3ded4903c951e6747e6102969503360f7781bf8bf015058eb89b7621798ccc85aaca036ff1bc1556bb7f62de15908484886aa8bbae")]
+[assembly: InternalsVisibleTo("Microsoft.OData.Edm.E2E.Tests, PublicKey = 0024000004800000940000000602000000240000525341310004000001000100c1b376caa4bac2fba60ec13e0eb61b0a71b3dffb0903ccd5d7cf114c1145a17f1e9dfb3c2636e4990312a80b36f5605bf37a4c53a833568f2da628f2b738a882e7e91bc11b629ed2a94b0c522afa971bf607d2c53f3c6c6dd9e1bd20e4d41b07f776d3638823dab3fe36ea3f01259fc03f8ec5153d6391fd23665f0d1dd129b6")]
 #if (DEBUG || _DEBUG)
 [assembly: AssemblyConfiguration("Debug")]
 #endif
