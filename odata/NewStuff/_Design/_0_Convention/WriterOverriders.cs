@@ -21,7 +21,7 @@
                 this.writerSelector = writerSelector;
             }
 
-            public IUriWriter<IGetHeaderWriter> Commit()
+            public Task<IUriWriter<IGetHeaderWriter>> Commit()
             {
                 return this.writerSelector(this.getRequestWriter.Commit());
             }
@@ -43,7 +43,7 @@
                 this.writerSelector = writerSelector;
             }
 
-            public IUriSchemeWriter<T> Commit()
+            public Task<IUriSchemeWriter<T>> Commit()
             {
                 return this.writerSelector(this.originalWriter.Commit());
             }
@@ -65,7 +65,7 @@
                 this.writerSelector = writerSelector;
             }
 
-            public IUriDomainWriter<T> Commit(UriScheme uriScheme)
+            public Task<IUriDomainWriter<T>> Commit(UriScheme uriScheme)
             {
                 return this.writerSelector(this.originalWriter.Commit(uriScheme));
             }
@@ -87,7 +87,7 @@
                 this.writerSelector = writerSelector;
             }
 
-            public IUriPortWriter<T> Commit(UriDomain uriDomain)
+            public Task<IUriPortWriter<T>> Commit(UriDomain uriDomain)
             {
                 return this.writerSelector(this.originalWriter.Commit(uriDomain));
             }
@@ -109,12 +109,12 @@
                 this.writerSelector = writerSelector;
             }
 
-            public IUriPathSegmentWriter<T> Commit()
+            public Task<IUriPathSegmentWriter<T>> Commit()
             {
                 return this.writerSelector(this.originalWriter.Commit());
             }
 
-            public IUriPathSegmentWriter<T> Commit(UriPort uriPort)
+            public Task<IUriPathSegmentWriter<T>> Commit(UriPort uriPort)
             {
                 return this.writerSelector(this.originalWriter.Commit(uriPort));
             }
@@ -136,12 +136,12 @@
                 this.writerSelector = writerSelector;
             }
 
-            public IQueryOptionWriter<T> Commit()
+            public Task<IQueryOptionWriter<T>> Commit()
             {
                 return this.writerSelector(this.originalWriter.Commit());
             }
 
-            public IUriPathSegmentWriter<T> Commit(UriPathSegment uriPathSegment)
+            public Task<IUriPathSegmentWriter<T>> Commit(UriPathSegment uriPathSegment)
             {
                 return new UriPathSegmentWriter<T>(this.originalWriter.Commit(uriPathSegment), this.writerSelector);
             }
@@ -163,17 +163,17 @@
                 this.writerSelector = writerSelector;
             }
 
-            public T Commit()
+            public Task<T> Commit()
             {
                 return this.originalWriter.Commit();
             }
 
-            public IFragmentWriter<T> CommitFragment()
+            public Task<IFragmentWriter<T>> CommitFragment()
             {
                 return this.writerSelector(this.originalWriter.CommitFragment());
             }
 
-            public IQueryParameterWriter<T> CommitParameter()
+            public Task<IQueryParameterWriter<T>> CommitParameter()
             {
                 return new QueryParameterWriter(this.originalWriter.CommitParameter(), this.writerSelector);
             }
@@ -189,7 +189,7 @@
                     this.writerSelector = writerSelector;
                 }
 
-                public IQueryValueWriter<T> Commit(QueryParameter queryParameter)
+                public Task<IQueryValueWriter<T>> Commit(QueryParameter queryParameter)
                 {
                     return new QueryValueWriter(this.originalWriter.Commit(queryParameter), this.writerSelector);
                 }
@@ -205,12 +205,12 @@
                         this.writerSelector = writerSelector;
                     }
 
-                    public IQueryOptionWriter<T> Commit()
+                    public Task<IQueryOptionWriter<T>> Commit()
                     {
                         return new QueryOptionWriter<T>(this.originalWriter.Commit(), this.writerSelector);
                     }
 
-                    public IQueryOptionWriter<T> Commit(QueryValue queryValue)
+                    public Task<IQueryOptionWriter<T>> Commit(QueryValue queryValue)
                     {
                         return new QueryOptionWriter<T>(this.originalWriter.Commit(queryValue), this.writerSelector);
                     }
@@ -241,12 +241,12 @@
                 return await this.writerSelector(await this.originalWriter.Commit().ConfigureAwait(false)).ConfigureAwait(false);
             }
 
-            public async Task<IFragmentWriter<T>> CommitFragment()
+            public async Task<IFragmentWriter<T>>> CommitFragment()
             {
                 return new FragmentWriter<T>(await this.originalWriter.CommitFragment().ConfigureAwait(false), this.writerSelector);
             }
 
-            public Task<IQueryParameterWriter<T>> CommitParameter()
+            public Task<IQueryParameterWriter<T>>> CommitParameter()
             {
                 return new QueryParameterWriter(this.originalWriter.CommitParameter(), this.writerSelector);
             }
@@ -262,7 +262,7 @@
                     this.writerSelector = writerSelector;
                 }
 
-                public IQueryValueWriter<T> Commit(QueryParameter queryParameter)
+                public Task<IQueryValueWriter<T>> Commit(QueryParameter queryParameter)
                 {
                     return new QueryValueWriter(this.originalWriter.Commit(queryParameter), this.writerSelector);
                 }
@@ -278,12 +278,12 @@
                         this.writerSelector = writerSelector;
                     }
 
-                    public IQueryOptionWriter<T> Commit()
+                    public Task<IQueryOptionWriter<T>> Commit()
                     {
                         return new QueryOptionWriter2<T>(this.originalWriter.Commit(), this.writerSelector);
                     }
 
-                    public IQueryOptionWriter<T> Commit(QueryValue queryValue)
+                    public Task<IQueryOptionWriter<T>> Commit(QueryValue queryValue)
                     {
                         return new QueryOptionWriter2<T>(this.originalWriter.Commit(queryValue), this.writerSelector);
                     }
@@ -302,7 +302,7 @@
                 this.writerSelector = writerSelector;
             }
 
-            public T Commit(Fragment fragment)
+            public Task<T> Commit(Fragment fragment)
             {
                 return this.writerSelector(this.originalWriter.Commit(fragment));
             }
@@ -324,7 +324,7 @@
                 this.writerSelector = writerSelector;
             }
 
-            public IUriWriter<IPatchHeaderWriter> Commit()
+            public Task<IUriWriter<IPatchHeaderWriter>> Commit()
             {
                 return this.writerSelector(this.patchRequestWriter.Commit());
             }
