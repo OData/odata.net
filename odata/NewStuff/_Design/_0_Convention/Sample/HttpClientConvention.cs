@@ -449,9 +449,9 @@
                 this.httpResponseMessage = httpResponseMessage;
             }
 
-            public Task<IGetResponseHeaderReader Next()
+            public async Task<IGetResponseHeaderReader> Next()
             {
-                return new GetResponseHeaderReader(this.httpResponseMessage, this.httpResponseMessage.Headers.GetEnumerator()); //// TODO this is disposable
+                return await Task.FromResult<IGetResponseHeaderReader>(new GetResponseHeaderReader(this.httpResponseMessage, this.httpResponseMessage.Headers.GetEnumerator())).ConfigureAwait(false); //// TODO this is disposable
             }
 
             private sealed class GetResponseHeaderReader : IGetResponseHeaderReader
@@ -465,7 +465,7 @@
                     this.headers = headers;
                 }
 
-                public Task<GetResponseHeaderToken Next()
+                public async Task<GetResponseHeaderToken> Next()
                 {
                     if (this.headers.MoveNext())
                     {
@@ -480,7 +480,7 @@
                     }
                     else
                     {
-                        var jsonDocument = JsonDocument.ParseAsync(this.httpResponseMessage.Content.ReadAsStreamAsync().ConfigureAwait(false).GetAwaiter().GetResult()).ConfigureAwait(false).GetAwaiter().GetResult(); //// TODO need to be async
+                        var jsonDocument = await JsonDocument.ParseAsync(await this.httpResponseMessage.Content.ReadAsStreamAsync().ConfigureAwait(false)).ConfigureAwait(false);
 
                         var element = jsonDocument.RootElement;
                         if (element.ValueKind != JsonValueKind.Object)
@@ -506,15 +506,15 @@
 
                     public HeaderFieldName HeaderFieldName { get; }
 
-                    public Task<CustomHeaderToken<IGetResponseHeaderReader> Next()
+                    public async Task<CustomHeaderToken<IGetResponseHeaderReader>> Next()
                     {
                         if (this.headers.Current.Value.Any())
                         {
-                            return new CustomHeaderToken<IGetResponseHeaderReader>.FieldValue(new HeaderFieldValueReader(this.httpResponseMessage, this.headers));
+                            return await Task.FromResult<CustomHeaderToken<IGetResponseHeaderReader>>(new CustomHeaderToken<IGetResponseHeaderReader>.FieldValue(new HeaderFieldValueReader(this.httpResponseMessage, this.headers))).ConfigureAwait(false);
                         }
                         else
                         {
-                            return new CustomHeaderToken<IGetResponseHeaderReader>.Header(new GetResponseHeaderReader(this.httpResponseMessage, this.headers));
+                            return await Task.FromResult<CustomHeaderToken<IGetResponseHeaderReader>>(new CustomHeaderToken<IGetResponseHeaderReader>.Header(new GetResponseHeaderReader(this.httpResponseMessage, this.headers))).ConfigureAwait(false);
                         }
                     }
 
@@ -532,9 +532,9 @@
 
                         public HeaderFieldValue HeaderFieldValue { get; }
 
-                        public Task<IGetResponseHeaderReader Next()
+                        public async Task<IGetResponseHeaderReader> Next()
                         {
-                            return new GetResponseHeaderReader(this.httpResponseMessage, this.headers);
+                            return await Task.FromResult(new GetResponseHeaderReader(this.httpResponseMessage, this.headers)).ConfigureAwait(false);
                         }
                     }
                 }
@@ -553,9 +553,9 @@
 
                     public ContentType ContentType { get; }
 
-                    public Task<IGetResponseHeaderReader Next()
+                    public async Task<IGetResponseHeaderReader> Next()
                     {
-                        return new GetResponseHeaderReader(this.httpResponseMessage, this.headers);
+                        return await Task.FromResult(new GetResponseHeaderReader(this.httpResponseMessage, this.headers)).ConfigureAwait(false);
                     }
                 }
 
@@ -568,27 +568,27 @@
                         this.propertyEnumerator = propertyEnumerator;
                     }
 
-                    public Task<GetResponseBodyToken Next()
+                    public async Task<GetResponseBodyToken> Next()
                     {
                         if (this.propertyEnumerator.MoveNext())
                         {
                             var property = this.propertyEnumerator.Current;
                             if (string.Equals(property.Name, "@odata.context")) //// TODO ignore case?
                             {
-                                return new GetResponseBodyToken.OdataContext(new OdataContextReader(this.propertyEnumerator, property.Value));
+                                return await Task.FromResult<GetResponseBodyToken>(new GetResponseBodyToken.OdataContext(new OdataContextReader(this.propertyEnumerator, property.Value))).ConfigureAwait(false);
                             }
                             else if (string.Equals(property.Name, "@odata.nextLink")) //// TODO ignore case?
                             {
-                                return new GetResponseBodyToken.NextLink(new NextLinkReader(this.propertyEnumerator, property.Value));
+                                return await Task.FromResult<GetResponseBodyToken>(new GetResponseBodyToken.NextLink(new NextLinkReader(this.propertyEnumerator, property.Value))).ConfigureAwait(false);
                             }
                             else
                             {
-                                return new GetResponseBodyToken.Property(new PropertyReader<IGetResponseBodyReader>(this.propertyEnumerator, enumerator => new GetResponseBodyReader(enumerator)));
+                                return await Task.FromResult<GetResponseBodyToken>(new GetResponseBodyToken.Property(new PropertyReader<IGetResponseBodyReader>(this.propertyEnumerator, enumerator => new GetResponseBodyReader(enumerator)))).ConfigureAwait(false);
                             }
                         }
                         else
                         {
-                            return GetResponseBodyToken.End.Instance;
+                            return await Task.FromResult<GetResponseBodyToken>(GetResponseBodyToken.End.Instance).ConfigureAwait(false);
                         }
                     }
 
@@ -609,7 +609,7 @@
 
                         public OdataContext OdataContext { get; }
 
-                        public Task<IGetResponseBodyReader Next()
+                        public Task<IGetResponseBodyReader> Next()
                         {
                             return new GetResponseBodyReader(this.propertyEnumerator);
                         }
@@ -632,7 +632,7 @@
 
                         public NextLink NextLink { get; }
 
-                        public Task<IGetResponseBodyReader Next()
+                        public Task<IGetResponseBodyReader> Next()
                         {
                             return new GetResponseBodyReader(this.propertyEnumerator);
                         }
@@ -649,7 +649,7 @@
                             this.nextFactory = nextFactory;
                         }
 
-                        public Task<IPropertyNameReader<T> Next()
+                        public Task<IPropertyNameReader<T>> Next()
                         {
                             return new PropertyNameReader(this.propertyEnumerator, this.nextFactory);
                         }
@@ -668,7 +668,7 @@
 
                             public PropertyName PropertyName { get; }
 
-                            public Task<IPropertyValueReader<T> Next()
+                            public Task<IPropertyValueReader<T>> Next()
                             {
                                 return new PropertyValueReader(this.propertyEnumerator, this.nextFactory);
                             }
@@ -684,7 +684,7 @@
                                     this.nextFactory = nextFactory;
                                 }
 
-                                public Task<PropertyValueToken<T> Next()
+                                public Task<PropertyValueToken<T>> Next()
                                 {
                                     var propertyValue = this.propertyEnumerator.Current.Value;
                                     if (propertyValue.ValueKind == JsonValueKind.Null)
@@ -720,7 +720,7 @@
 
                                     public PrimitivePropertyValue PrimitivePropertyValue { get; }
 
-                                    public Task<T Next()
+                                    public Task<T> Next()
                                     {
                                         return this.nextFactory(this.propertyEnumerator);
                                     }
@@ -739,7 +739,7 @@
                                         this.propertyValueEnumerator = propertyValueEnumerator;
                                     }
 
-                                    public Task<ComplexPropertyValueToken<TComplex> Next()
+                                    public Task<ComplexPropertyValueToken<TComplex>> Next()
                                     {
                                         if (this.propertyValueEnumerator.MoveNext())
                                         {
@@ -782,7 +782,7 @@
 
                                         public OdataContext OdataContext { get; }
 
-                                        public Task<IComplexPropertyValueReader<TComplex> Next()
+                                        public Task<IComplexPropertyValueReader<TComplex>> Next()
                                         {
                                             return new ComplexPropertyValueReader<TComplex>(this.parentPropertyEnumerator, this.nextFactory, this.propertyValueEnumerator);
                                         }
@@ -809,7 +809,7 @@
 
                                         public OdataId OdataId { get; }
 
-                                        public Task<IComplexPropertyValueReader<TComplex> Next()
+                                        public Task<IComplexPropertyValueReader<TComplex>> Next()
                                         {
                                             return new ComplexPropertyValueReader<TComplex>(this.parentPropertyEnumerator, this.nextFactory, this.propertyValueEnumerator);
                                         }
@@ -829,7 +829,7 @@
                                         this.arrayEnumerator = arrayEnumerator;
                                     }
 
-                                    public Task<MultiValuedPropertyValueToken<T> Next()
+                                    public Task<MultiValuedPropertyValueToken<T>> Next()
                                     {
                                         if (this.arrayEnumerator.MoveNext())
                                         {
@@ -859,7 +859,7 @@
                                         this.nextFactory = nextFactory;
                                     }
 
-                                    public T Next()
+                                    public Task<T> Next()
                                     {
                                         return this.nextFactory(this.propertyEnumerator);
                                     }
