@@ -97,7 +97,7 @@
                 var requestWriter = await this.convention.Get().ConfigureAwait(false);
                 var uriWriter = await requestWriter.Commit().ConfigureAwait(false);
 
-                var getHeaderWriter = WriteUri(GenerateRequestedUri(), uriWriter);
+                var getHeaderWriter = await WriteUri(GenerateRequestedUri(), uriWriter).ConfigureAwait(false);
 
                 //// TODO not writing any headers...
                 var getBodyWriter = await getHeaderWriter.Commit().ConfigureAwait(false);
@@ -401,7 +401,7 @@
                 var requestWriter = await this.convention.Get().ConfigureAwait(false);
                 var uriWriter = await requestWriter.Commit().ConfigureAwait(false);
 
-                var getHeaderWriter = WriteUri(GenerateRequestedUri(), uriWriter);
+                var getHeaderWriter = await WriteUri(GenerateRequestedUri(), uriWriter).ConfigureAwait(false);
 
                 var customHeaderWriter = await getHeaderWriter.CommitCustomHeader().ConfigureAwait(false); //// TODO should "content-type: application/json" really be considered "custom"?
                 var headerFieldValueWriter = await customHeaderWriter.Commit(new HeaderFieldName("Content-Type")).ConfigureAwait(false);
@@ -516,7 +516,7 @@
                 var patchRequestWriter = this.convention.Patch();
 
                 var uriWriter = await patchRequestWriter.Commit().ConfigureAwait(false);
-                var patchHeaderWriter = MultiValuedProtocol.WriteUri(this.singleValuedUri, uriWriter);
+                var patchHeaderWriter = await MultiValuedProtocol.WriteUri(this.singleValuedUri, uriWriter).ConfigureAwait(false);
 
                 var customHeaderWriter = patchHeaderWriter.CommitCustomHeader();
                 var headerFieldValueWriter = await customHeaderWriter.Commit(new HeaderFieldName("Content-Type")).ConfigureAwait(false); //// TODO probably this should be a "built-in" header
@@ -672,7 +672,7 @@
                 var patchRequestWriter = this.convention.Post();
 
                 var uriWriter = await patchRequestWriter.Commit().ConfigureAwait(false);
-                var patchHeaderWriter = MultiValuedProtocol.WriteUri(this.multiValuedUri, uriWriter);
+                var patchHeaderWriter = await MultiValuedProtocol.WriteUri(this.multiValuedUri, uriWriter).ConfigureAwait(false);
 
                 var customHeaderWriter = patchHeaderWriter.CommitCustomHeader();
                 var headerFieldValueWriter = await customHeaderWriter.Commit(new HeaderFieldName("Content-Type")).ConfigureAwait(false); //// TODO probably this should be a "built-in" header
