@@ -1037,52 +1037,52 @@
             }
         }
 
-        private static T WriteUri<T>(Uri uri, IUriWriter<T> uriWriter)
+        private static async Task<T> WriteUri<T>(Uri uri, IUriWriter<T> uriWriter)
         {
-            var schemeWriter = uriWriter.Commit();
+            var schemeWriter = await uriWriter.Commit().ConfigureAwait(false);
 
-            var domainWriter = schemeWriter.Commit(new UriScheme(uri.Scheme));
-            var portWriter = domainWriter.Commit(new UriDomain(uri.DnsSafeHost));
+            var domainWriter = await schemeWriter.Commit(new UriScheme(uri.Scheme)).ConfigureAwait(false);
+            var portWriter = await domainWriter.Commit(new UriDomain(uri.DnsSafeHost)).ConfigureAwait(false);
 
             IUriPathSegmentWriter<T> uriPathSegmentWriter;
             if (uri.IsDefaultPort)
             {
-                uriPathSegmentWriter = portWriter.Commit();
+                uriPathSegmentWriter = await portWriter.Commit().ConfigureAwait(false);
             }
             else
             {
-                uriPathSegmentWriter = portWriter.Commit(new UriPort(uri.Port));
+                uriPathSegmentWriter = await portWriter.Commit(new UriPort(uri.Port)).ConfigureAwait(false);
             }
 
             foreach (var pathSegment in uri.Segments)
             {
-                uriPathSegmentWriter = uriPathSegmentWriter.Commit(new UriPathSegment(pathSegment));
+                uriPathSegmentWriter = await uriPathSegmentWriter.Commit(new UriPathSegment(pathSegment)).ConfigureAwait(false);
             }
 
-            var queryOptionWriter = uriPathSegmentWriter.Commit();
+            var queryOptionWriter = await uriPathSegmentWriter.Commit().ConfigureAwait(false);
             foreach (var queryOption in MultiValuedProtocol.SplitQueryQueryString(uri.Query))
             {
-                var parameterWriter = queryOptionWriter.CommitParameter();
-                var valueWriter = parameterWriter.Commit(new QueryParameter(queryOption.Item1));
+                var parameterWriter = await queryOptionWriter.CommitParameter().ConfigureAwait(false);
+                var valueWriter = await parameterWriter.Commit(new QueryParameter(queryOption.Item1)).ConfigureAwait(false);
                 if (queryOption.Item2 == null)
                 {
-                    queryOptionWriter = valueWriter.Commit();
+                    queryOptionWriter = await valueWriter.Commit().ConfigureAwait(false);
                 }
                 else
                 {
-                    queryOptionWriter = valueWriter.Commit(new QueryValue(queryOption.Item2));
+                    queryOptionWriter = await valueWriter.Commit(new QueryValue(queryOption.Item2)).ConfigureAwait(false);
                 }
             }
 
             T getHeaderWriter;
             if (string.IsNullOrEmpty(uri.Fragment))
             {
-                getHeaderWriter = queryOptionWriter.Commit();
+                getHeaderWriter = await queryOptionWriter.Commit().ConfigureAwait(false);
             }
             else
             {
-                var fragmentWriter = queryOptionWriter.CommitFragment();
-                getHeaderWriter = fragmentWriter.Commit(new Fragment(uri.Fragment));
+                var fragmentWriter = await queryOptionWriter.CommitFragment().ConfigureAwait(false);
+                getHeaderWriter = await fragmentWriter.Commit(new Fragment(uri.Fragment)).ConfigureAwait(false);
             }
 
             return getHeaderWriter;
