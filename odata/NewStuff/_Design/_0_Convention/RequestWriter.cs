@@ -1,15 +1,17 @@
 ﻿namespace NewStuff._Design._0_Convention
 {
+    using System.Threading.Tasks;
+
     public interface IRequestWriter
     {
-        IGetRequestWriter CommitGet();
-        IPatchRequestWriter CommitPatch();
-        IPostRequestWriter CommitPost();
+        Task<IGetRequestWriter> CommitGet();
+        Task<IPatchRequestWriter> CommitPatch();
+        Task<IPostRequestWriter> CommitPost();
     }
 
     public interface IGetRequestWriter
     {
-        IUriWriter<IGetHeaderWriter> Commit();
+        Task<IUriWriter<IGetHeaderWriter>> Commit();
     }
 
     public interface IPatchRequestWriter
@@ -112,55 +114,55 @@
 
 
 
-    public interface IUriWriter<out T>
+    public interface IUriWriter<T>
     {
-        IUriSchemeWriter<T> Commit();
+        Task<IUriSchemeWriter<T>> Commit();
     }
 
-    public interface IUriSchemeWriter<out T>
+    public interface IUriSchemeWriter<T>
     {
-        IUriDomainWriter<T> Commit(UriScheme uriScheme); //// TODO i can't tell if this type should be committed in its writer, or in the "previous" writer (i.e. should this commit take a domain or a scheme?)
+        Task<IUriDomainWriter<T>> Commit(UriScheme uriScheme); //// TODO i can't tell if this type should be committed in its writer, or in the "previous" writer (i.e. should this commit take a domain or a scheme?)
     }
 
-    public interface IUriDomainWriter<out T>
+    public interface IUriDomainWriter<T>
     {
-        IUriPortWriter<T> Commit(UriDomain uriDomain);
+        Task<IUriPortWriter<T>> Commit(UriDomain uriDomain);
     }
 
-    public interface IUriPortWriter<out T>
+    public interface IUriPortWriter<T>
     {
-        IUriPathSegmentWriter<T> Commit();
+        Task<IUriPathSegmentWriter<T>> Commit();
 
-        IUriPathSegmentWriter<T> Commit(UriPort uriPort);
+        Task<IUriPathSegmentWriter<T>> Commit(UriPort uriPort);
     }
 
-    public interface IUriPathSegmentWriter<out T>
+    public interface IUriPathSegmentWriter<T>
     {
-        IQueryOptionWriter<T> Commit();
-        IUriPathSegmentWriter<T> Commit(UriPathSegment uriPathSegment);
+        Task<IQueryOptionWriter<T>> Commit();
+        Task<IUriPathSegmentWriter<T>> Commit(UriPathSegment uriPathSegment);
     }
 
-    public interface IQueryOptionWriter<out T>
+    public interface IQueryOptionWriter<T>
     {
-        T Commit();
-        IFragmentWriter<T> CommitFragment();
-        IQueryParameterWriter<T> CommitParameter();
+        Task<T> Commit();
+        Task<IFragmentWriter<T>> CommitFragment();
+        Task<IQueryParameterWriter<T>> CommitParameter();
     }
 
-    public interface IQueryParameterWriter<out T>
+    public interface IQueryParameterWriter<T>
     {
-        IQueryValueWriter<T> Commit(QueryParameter queryParameter);
+        Task<IQueryValueWriter<T>> Commit(QueryParameter queryParameter);
     }
 
-    public interface IQueryValueWriter<out T>
+    public interface IQueryValueWriter<T>
     {
-        IQueryOptionWriter<T> Commit();
-        IQueryOptionWriter<T> Commit(QueryValue queryValue);
+        Task<IQueryOptionWriter<T>> Commit();
+        Task<IQueryOptionWriter<T>> Commit(QueryValue queryValue);
     }
 
-    public interface IFragmentWriter<out T>
+    public interface IFragmentWriter<T>
     {
-        T Commit(Fragment fragment);
+        Task<T> Commit(Fragment fragment);
     }
 
 
@@ -186,31 +188,31 @@
 
     public interface IGetHeaderWriter
     {
-        IGetBodyWriter Commit();
-        ICustomHeaderWriter<IGetHeaderWriter> CommitCustomHeader();
-        IOdataMaxPageSizeHeaderWriter CommitOdataMaxPageSize();
-        IOdataMaxVersionHeaderWriter CommitOdataMaxVersion();
+        Task<IGetBodyWriter> Commit();
+        Task<ICustomHeaderWriter<IGetHeaderWriter>> CommitCustomHeader();
+        Task<IOdataMaxPageSizeHeaderWriter> CommitOdataMaxPageSize();
+        Task<IOdataMaxVersionHeaderWriter> CommitOdataMaxVersion();
     }
 
     public interface IOdataMaxVersionHeaderWriter
     {
-        IGetHeaderWriter Commit(OdataVersion odataVersion);
+        Task<IGetHeaderWriter> Commit(OdataVersion odataVersion);
     }
 
     public interface IOdataMaxPageSizeHeaderWriter
     {
-        IGetHeaderWriter Commit(OdataMaxPageSize odataMaxPageSize);
+        Task<IGetHeaderWriter> Commit(OdataMaxPageSize odataMaxPageSize);
     }
 
-    public interface ICustomHeaderWriter<out T>
+    public interface ICustomHeaderWriter<T>
     {
-        IHeaderFieldValueWriter<T> Commit(HeaderFieldName headerFieldName);
+        Task<IHeaderFieldValueWriter<T>> Commit(HeaderFieldName headerFieldName);
     }
 
-    public interface IHeaderFieldValueWriter<out T>
+    public interface IHeaderFieldValueWriter<T>
     {
-        T Commit();
-        T Commit(HeaderFieldValue headerFieldValue);
+        Task<T> Commit();
+        Task<T> Commit(HeaderFieldValue headerFieldValue);
     }
 
 
@@ -238,6 +240,6 @@
 
     public interface IGetBodyWriter
     {
-        IGetResponseReader Commit();
+        Task<IGetResponseReader> Commit();
     }
 }
