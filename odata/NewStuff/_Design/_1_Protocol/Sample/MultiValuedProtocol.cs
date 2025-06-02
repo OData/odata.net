@@ -128,7 +128,7 @@
                     else if (getResponseBodyToken is GetResponseBodyToken.Property property)
                     {
                         var propertyReader = property.PropertyReader;
-                        var propertyNameReader = await propertyReader.Next();
+                        var propertyNameReader = await propertyReader.Next().ConfigureAwait(false);
                         var propertyName = propertyNameReader.PropertyName;
                         if (string.Equals(propertyName.Name, "value", StringComparison.Ordinal)) //// TODO do we want to configurably ignore casing?
                         {
@@ -198,7 +198,7 @@
 
             private static async Task<T> SkipPropertyValue<T>(IPropertyValueReader<T> propertyValueReader)
             {
-                var propertyValueToken = propertyValueReader.Next(); //// TODO do you want to add `skip` methods?
+                var propertyValueToken = await propertyValueReader.Next().ConfigureAwait(false); //// TODO do you want to add `skip` methods?
                 if (propertyValueToken is PropertyValueToken<T>.Complex complex)
                 {
                     return await SkipComplexPropertyValue(complex.ComplexPropertyValueReader).ConfigureAwait(false);
@@ -208,7 +208,7 @@
                     var multiValuedPropertyValueReader = multiValued.MultiValuedPropertyValueReader;
                     while (true)
                     {
-                        var multiValuedPropertyValueToken = multiValuedPropertyValueReader.Next();
+                        var multiValuedPropertyValueToken = await multiValuedPropertyValueReader.Next().ConfigureAwait(false);
                         if (multiValuedPropertyValueToken is MultiValuedPropertyValueToken<T>.Object @object)
                         {
                             multiValuedPropertyValueReader = await SkipComplexPropertyValue(@object.ComplexPropertyValueReader).ConfigureAwait(false);
@@ -243,7 +243,7 @@
             {
                 while (true)
                 {
-                    var complexPropertyValueToken = complexPropertyValueReader.Next();
+                    var complexPropertyValueToken = await complexPropertyValueReader.Next().ConfigureAwait(false);
                     if (complexPropertyValueToken is ComplexPropertyValueToken<T>.Property property)
                     {
                         complexPropertyValueReader = await SkipNestedProperty(property.PropertyReader).ConfigureAwait(false);
