@@ -405,14 +405,14 @@
                     }
                 }
 
-                public Task<ICustomHeaderWriter<IPatchHeaderWriter>> CommitCustomHeader()
+                public async Task<ICustomHeaderWriter<IPatchHeaderWriter>> CommitCustomHeader()
                 {
-                    return new CustomHeaderWriter<IPatchHeaderWriter>(this.httpClient, this.requestUri, (client, uri) => new PatchHeaderWriter(client, uri));
+                    return await Task.FromResult(new CustomHeaderWriter<IPatchHeaderWriter>(this.httpClient, this.requestUri, (client, uri) => new PatchHeaderWriter(client, uri))).ConfigureAwait(false);
                 }
 
-                public Task<IEtagWriter> CommitEtag()
+                public async Task<IEtagWriter> CommitEtag()
                 {
-                    return new EtagWriter(this.httpClient, this.requestUri);
+                    return await Task.FromResult(new EtagWriter(this.httpClient, this.requestUri)).ConfigureAwait(false);
                 }
 
                 private sealed class EtagWriter : IEtagWriter
@@ -426,10 +426,10 @@
                         this.requestUri = requestUri;
                     }
 
-                    public Task<IPatchHeaderWriter> Commit(Etag etag)
+                    public async Task<IPatchHeaderWriter> Commit(Etag etag)
                     {
                         this.httpClient.DefaultRequestHeaders.Add("ETag", "TODO implment etag header");
-                        return new PatchHeaderWriter(this.httpClient, this.requestUri);
+                        return await Task.FromResult(new PatchHeaderWriter(this.httpClient, this.requestUri)).ConfigureAwait(false);
                     }
                 }
             }
