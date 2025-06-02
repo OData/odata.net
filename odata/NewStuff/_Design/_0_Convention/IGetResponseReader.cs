@@ -1,16 +1,16 @@
 ﻿namespace NewStuff._Design._0_Convention
 {
     using System;
-    using System.IO;
+    using System.Threading.Tasks;
 
     public interface IGetResponseReader
     {
-        IGetResponseHeaderReader Next();
+        Task<IGetResponseHeaderReader> Next();
     }
 
     public interface IGetResponseHeaderReader
     {
-        GetResponseHeaderToken Next();
+        Task<GetResponseHeaderToken> Next();
     }
 
     public abstract class GetResponseHeaderToken
@@ -54,7 +54,7 @@
     {
         ContentType ContentType { get; }
 
-        IGetResponseHeaderReader Next();
+        Task<IGetResponseHeaderReader> Next();
     }
 
     public sealed class ContentType
@@ -90,7 +90,7 @@
 
     public interface IGetResponseBodyReader
     {
-        GetResponseBodyToken Next();
+        Task<GetResponseBodyToken> Next();
     }
 
     public abstract class GetResponseBodyToken
@@ -147,7 +147,7 @@
     {
         OdataContext OdataContext { get; }
 
-        T Next();
+        Task<T> Next();
     }
 
     public sealed class OdataContext
@@ -164,7 +164,7 @@
     {
         NextLink NextLink { get; }
 
-        IGetResponseBodyReader Next();
+        Task<IGetResponseBodyReader> Next();
     }
 
     public sealed class NextLink
@@ -179,14 +179,14 @@
 
     public interface IPropertyReader<T>
     {
-        IPropertyNameReader<T> Next();
+        Task<IPropertyNameReader<T>> Next();
     }
 
     public interface IPropertyNameReader<T>
     {
         PropertyName PropertyName { get; }
 
-        IPropertyValueReader<T> Next();
+        Task<IPropertyValueReader<T>> Next();
     }
 
     public sealed class PropertyName
@@ -201,7 +201,7 @@
 
     public interface IPropertyValueReader<T>
     {
-        PropertyValueToken<T> Next();
+        Task<PropertyValueToken<T>> Next();
     }
 
     public abstract class PropertyValueToken<T>
@@ -255,7 +255,7 @@
     {
         PrimitivePropertyValue PrimitivePropertyValue { get; }
 
-        T Next();
+        Task<T> Next();
     }
 
     public sealed class PrimitivePropertyValue
@@ -272,7 +272,7 @@
 
     public interface IComplexPropertyValueReader<T>
     {
-        ComplexPropertyValueToken<T> Next();
+        Task<ComplexPropertyValueToken<T>> Next();
     }
 
     public abstract class ComplexPropertyValueToken<T>
@@ -326,7 +326,7 @@
     {
         OdataId OdataId { get; }
 
-        T Next();
+        Task<T> Next();
     }
 
     public sealed class OdataId
@@ -341,7 +341,7 @@
 
     public interface IMultiValuedPropertyValueReader<T>
     {
-        MultiValuedPropertyValueToken<T> Next(); //// TODO what about edm.untyped nested collections?
+        Task<MultiValuedPropertyValueToken<T>> Next(); //// TODO what about edm.untyped nested collections?
     }
 
     public abstract class MultiValuedPropertyValueToken<T>
@@ -373,6 +373,6 @@
 
     public interface INullPropertyValueReader<T>
     {
-        T Next();
+        Task<T> Next();
     }
 }
