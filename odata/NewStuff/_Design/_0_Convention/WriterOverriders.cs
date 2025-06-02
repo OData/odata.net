@@ -13,9 +13,9 @@
         private sealed class OverrideUriWriterGetRequestWriter : IGetRequestWriter
         {
             private readonly IGetRequestWriter getRequestWriter;
-            private readonly Func<IUriWriter<IGetHeaderWriter>, IUriWriter<IGetHeaderWriter>> writerSelector;
+            private readonly Func<IUriWriter<IGetHeaderWriter>, Task<IUriWriter<IGetHeaderWriter>>> writerSelector;
 
-            public OverrideUriWriterGetRequestWriter(IGetRequestWriter getRequestWriter, Func<IUriWriter<IGetHeaderWriter>, IUriWriter<IGetHeaderWriter>> writerSelector)
+            public OverrideUriWriterGetRequestWriter(IGetRequestWriter getRequestWriter, Func<IUriWriter<IGetHeaderWriter>, Task<IUriWriter<IGetHeaderWriter>>> writerSelector)
             {
                 this.getRequestWriter = getRequestWriter;
                 this.writerSelector = writerSelector;
@@ -35,9 +35,9 @@
         private sealed class UriWriter<T> : IUriWriter<T>
         {
             private readonly IUriWriter<T> originalWriter;
-            private readonly Func<IUriSchemeWriter<T>, IUriSchemeWriter<T>> writerSelector;
+            private readonly Func<IUriSchemeWriter<T>, Task<IUriSchemeWriter<T>>> writerSelector;
 
-            public UriWriter(IUriWriter<T> originalWriter, Func<IUriSchemeWriter<T>, IUriSchemeWriter<T>> writerSelector)
+            public UriWriter(IUriWriter<T> originalWriter, Func<IUriSchemeWriter<T>, Task<IUriSchemeWriter<T>>> writerSelector)
             {
                 this.originalWriter = originalWriter;
                 this.writerSelector = writerSelector;
@@ -57,9 +57,9 @@
         private sealed class UriSchemeWriter<T> : IUriSchemeWriter<T>
         {
             private readonly IUriSchemeWriter<T> originalWriter;
-            private readonly Func<IUriDomainWriter<T>, IUriDomainWriter<T>> writerSelector;
+            private readonly Func<IUriDomainWriter<T>, Task<IUriDomainWriter<T>>> writerSelector;
 
-            public UriSchemeWriter(IUriSchemeWriter<T> originalWriter, Func<IUriDomainWriter<T>, IUriDomainWriter<T>> writerSelector)
+            public UriSchemeWriter(IUriSchemeWriter<T> originalWriter, Func<IUriDomainWriter<T>, Task<IUriDomainWriter<T>>> writerSelector)
             {
                 this.originalWriter = originalWriter;
                 this.writerSelector = writerSelector;
@@ -79,9 +79,9 @@
         private sealed class UriDomainWriter<T> : IUriDomainWriter<T>
         {
             private readonly IUriDomainWriter<T> originalWriter;
-            private readonly Func<IUriPortWriter<T>, IUriPortWriter<T>> writerSelector;
+            private readonly Func<IUriPortWriter<T>, Task<IUriPortWriter<T>>> writerSelector;
 
-            public UriDomainWriter(IUriDomainWriter<T> originalWriter, Func<IUriPortWriter<T>, IUriPortWriter<T>> writerSelector)
+            public UriDomainWriter(IUriDomainWriter<T> originalWriter, Func<IUriPortWriter<T>, Task<IUriPortWriter<T>>> writerSelector)
             {
                 this.originalWriter = originalWriter;
                 this.writerSelector = writerSelector;
@@ -101,9 +101,9 @@
         private sealed class UriPortWriter<T> : IUriPortWriter<T>
         {
             private readonly IUriPortWriter<T> originalWriter;
-            private readonly Func<IUriPathSegmentWriter<T>, IUriPathSegmentWriter<T>> writerSelector;
+            private readonly Func<IUriPathSegmentWriter<T>, Task<IUriPathSegmentWriter<T>>> writerSelector;
 
-            public UriPortWriter(IUriPortWriter<T> originalWriter, Func<IUriPathSegmentWriter<T>, IUriPathSegmentWriter<T>> writerSelector)
+            public UriPortWriter(IUriPortWriter<T> originalWriter, Func<IUriPathSegmentWriter<T>, Task<IUriPathSegmentWriter<T>>> writerSelector)
             {
                 this.originalWriter = originalWriter;
                 this.writerSelector = writerSelector;
@@ -128,9 +128,9 @@
         private sealed class UriPathSegmentWriter<T> : IUriPathSegmentWriter<T>
         {
             private readonly IUriPathSegmentWriter<T> originalWriter;
-            private readonly Func<IQueryOptionWriter<T>, IQueryOptionWriter<T>> writerSelector;
+            private readonly Func<IQueryOptionWriter<T>, Task<IQueryOptionWriter<T>>> writerSelector;
 
-            public UriPathSegmentWriter(IUriPathSegmentWriter<T> originalWriter, Func<IQueryOptionWriter<T>, IQueryOptionWriter<T>> writerSelector)
+            public UriPathSegmentWriter(IUriPathSegmentWriter<T> originalWriter, Func<IQueryOptionWriter<T>, Task<IQueryOptionWriter<T>>> writerSelector)
             {
                 this.originalWriter = originalWriter;
                 this.writerSelector = writerSelector;
@@ -155,9 +155,9 @@
         private sealed class QueryOptionWriter<T> : IQueryOptionWriter<T>
         {
             private readonly IQueryOptionWriter<T> originalWriter;
-            private readonly Func<IFragmentWriter<T>, IFragmentWriter<T>> writerSelector;
+            private readonly Func<IFragmentWriter<T>, Task<IFragmentWriter<T>>> writerSelector;
 
-            public QueryOptionWriter(IQueryOptionWriter<T> originalWriter, Func<IFragmentWriter<T>, IFragmentWriter<T>> writerSelector)
+            public QueryOptionWriter(IQueryOptionWriter<T> originalWriter, Func<IFragmentWriter<T>, Task<IFragmentWriter<T>>> writerSelector)
             {
                 this.originalWriter = originalWriter;
                 this.writerSelector = writerSelector;
@@ -181,9 +181,9 @@
             private sealed class QueryParameterWriter : IQueryParameterWriter<T>
             {
                 private readonly IQueryParameterWriter<T> originalWriter;
-                private readonly Func<IFragmentWriter<T>, IFragmentWriter<T>> writerSelector;
+                private readonly Func<IFragmentWriter<T>, Task<IFragmentWriter<T>>> writerSelector;
 
-                public QueryParameterWriter(IQueryParameterWriter<T> originalWriter, Func<IFragmentWriter<T>, IFragmentWriter<T>> writerSelector)
+                public QueryParameterWriter(IQueryParameterWriter<T> originalWriter, Func<IFragmentWriter<T>, Task<IFragmentWriter<T>>> writerSelector)
                 {
                     this.originalWriter = originalWriter;
                     this.writerSelector = writerSelector;
@@ -197,9 +197,9 @@
                 private sealed class QueryValueWriter : IQueryValueWriter<T>
                 {
                     private readonly IQueryValueWriter<T> originalWriter;
-                    private readonly Func<IFragmentWriter<T>, IFragmentWriter<T>> writerSelector;
+                    private readonly Func<IFragmentWriter<T>, Task<IFragmentWriter<T>>> writerSelector;
 
-                    public QueryValueWriter(IQueryValueWriter<T> originalWriter, Func<IFragmentWriter<T>, IFragmentWriter<T>> writerSelector)
+                    public QueryValueWriter(IQueryValueWriter<T> originalWriter, Func<IFragmentWriter<T>, Task<IFragmentWriter<T>>> writerSelector)
                     {
                         this.originalWriter = originalWriter;
                         this.writerSelector = writerSelector;
@@ -254,9 +254,9 @@
             private sealed class QueryParameterWriter : IQueryParameterWriter<T>
             {
                 private readonly IQueryParameterWriter<T> originalWriter;
-                private readonly Func<T, T> writerSelector;
+                private readonly Func<T, Task<T>> writerSelector;
 
-                public QueryParameterWriter(IQueryParameterWriter<T> originalWriter, Func<T, T> writerSelector)
+                public QueryParameterWriter(IQueryParameterWriter<T> originalWriter, Func<T, Task<T>> writerSelector)
                 {
                     this.originalWriter = originalWriter;
                     this.writerSelector = writerSelector;
@@ -270,9 +270,9 @@
                 private sealed class QueryValueWriter : IQueryValueWriter<T>
                 {
                     private readonly IQueryValueWriter<T> originalWriter;
-                    private readonly Func<T, T> writerSelector;
+                    private readonly Func<T, Task<T>> writerSelector;
 
-                    public QueryValueWriter(IQueryValueWriter<T> originalWriter, Func<T, T> writerSelector)
+                    public QueryValueWriter(IQueryValueWriter<T> originalWriter, Func<T, Task<T>> writerSelector)
                     {
                         this.originalWriter = originalWriter;
                         this.writerSelector = writerSelector;
@@ -316,9 +316,9 @@
         private sealed class OverrideUriWriterPatchRequestWriter : IPatchRequestWriter
         {
             private readonly IPatchRequestWriter patchRequestWriter;
-            private readonly Func<IUriWriter<IPatchHeaderWriter>, IUriWriter<IPatchHeaderWriter>> writerSelector;
+            private readonly Func<IUriWriter<IPatchHeaderWriter>, Task<IUriWriter<IPatchHeaderWriter>>> writerSelector;
 
-            public OverrideUriWriterPatchRequestWriter(IPatchRequestWriter getRequestWriter, Func<IUriWriter<IPatchHeaderWriter>, IUriWriter<IPatchHeaderWriter>> writerSelector)
+            public OverrideUriWriterPatchRequestWriter(IPatchRequestWriter getRequestWriter, Func<IUriWriter<IPatchHeaderWriter>, Task<IUriWriter<IPatchHeaderWriter>>> writerSelector)
             {
                 this.patchRequestWriter = getRequestWriter;
                 this.writerSelector = writerSelector;
