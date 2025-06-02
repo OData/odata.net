@@ -47,24 +47,24 @@
                 return new GetHeaderWriter(nextWriter);
             }
 
-            public Task<IGetBodyWriter> Commit()
+            public async Task<IGetBodyWriter> Commit()
             {
-                return this.nextWriter.Commit();
+                return await this.nextWriter.Commit().ConfigureAwait(false);
             }
 
-            public Task<ICustomHeaderWriter<IGetHeaderWriter>> CommitCustomHeader()
+            public async Task<ICustomHeaderWriter<IGetHeaderWriter>> CommitCustomHeader()
             {
-                return this.nextWriter.CommitCustomHeader();
+                return await this.nextWriter.CommitCustomHeader().ConfigureAwait(false);
             }
 
-            public Task<IOdataMaxPageSizeHeaderWriter> CommitOdataMaxPageSize()
+            public async Task<IOdataMaxPageSizeHeaderWriter> CommitOdataMaxPageSize()
             {
-                return this.nextWriter.CommitOdataMaxPageSize();
+                return await this.nextWriter.CommitOdataMaxPageSize().ConfigureAwait(false);
             }
 
-            public Task<IOdataMaxVersionHeaderWriter> CommitOdataMaxVersion()
+            public async Task<IOdataMaxVersionHeaderWriter> CommitOdataMaxVersion()
             {
-                return this.nextWriter.CommitOdataMaxVersion();
+                return await this.nextWriter.CommitOdataMaxVersion().ConfigureAwait(false);
             }
         }
 
