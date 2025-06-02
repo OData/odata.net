@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading.Tasks;
 
     using NewStuff._Design._2_Clr;
     using NewStuff._Design._2_Clr.Sample;
@@ -15,13 +16,13 @@
             this.usersClr = usersClr;
         }
 
-        public Employee? Add(string displayName)
+        public async Task<Employee?> Add(string displayName)
         {
             var user = new User(
                 new NullableProperty<string>.Provided(displayName),
                 NonNullableProperty<IEnumerable<User>>.NotProvided.Instance,
                 NonNullableProperty<string>.NotProvided.Instance);
-            var response = this.usersClr.Post(user).Evaluate();
+            var response = await this.usersClr.Post(user).Evaluate().ConfigureAwait(false);
             if (response == null)
             {
                 return null;

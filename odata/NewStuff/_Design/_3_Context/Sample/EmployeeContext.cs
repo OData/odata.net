@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Linq.Expressions;
+    using System.Threading.Tasks;
 
     using NewStuff._Design._2_Clr;
     using NewStuff._Design._2_Clr.Sample;
@@ -17,13 +18,13 @@
             this.usersClr = usersClr;
         }
 
-        public IEnumerable<Employee> Evaluate()
+        public async Task<IEnumerable<Employee>> Evaluate()
         {
             var usersWithDirectReportsClr = this
                 .usersClr
                 .Expand(user => user.DirectReports) //// TODO select id
                 .Select(user => user.DisplayName);
-            var usersReponse = usersWithDirectReportsClr.Evaluate();
+            var usersReponse = await usersWithDirectReportsClr.Evaluate().ConfigureAwait(false);
 
             //// TODO traverse skiptokens
 

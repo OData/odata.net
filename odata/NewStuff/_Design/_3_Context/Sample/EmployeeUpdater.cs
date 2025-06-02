@@ -1,6 +1,7 @@
 ﻿namespace NewStuff._Design._3_Context.Sample
 {
     using System.Collections.Generic;
+    using System.Threading.Tasks;
 
     using NewStuff._Design._2_Clr;
     using NewStuff._Design._2_Clr.Sample;
@@ -14,7 +15,7 @@
             this.usersClr = usersClr;
         }
 
-        public Employee? Update(string id, string displayName)
+        public async Task<Employee?> Update(string id, string displayName)
         {
             var user = new User(
                 NullableProperty.Provided(displayName), 
@@ -26,7 +27,7 @@
                 .Expand(user => user.DirectReports) //// TODO select id
                 .Select(user => user.DisplayName); //// TODO somehow note that chaining the select after the expand is something you can't do in linq
 
-            var response = userClr.Evaluate();
+            var response = await userClr.Evaluate().ConfigureAwait(false);
             if (response == null)
             {
                 return null;
