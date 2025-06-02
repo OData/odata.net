@@ -451,7 +451,7 @@
 
             public async Task<IGetResponseHeaderReader> Next()
             {
-                return await Task.FromResult<IGetResponseHeaderReader>(new GetResponseHeaderReader(this.httpResponseMessage, this.httpResponseMessage.Headers.GetEnumerator())).ConfigureAwait(false); //// TODO this is disposable
+                return await Task.FromResult(new GetResponseHeaderReader(this.httpResponseMessage, this.httpResponseMessage.Headers.GetEnumerator())).ConfigureAwait(false); //// TODO this is disposable
             }
 
             private sealed class GetResponseHeaderReader : IGetResponseHeaderReader
@@ -510,11 +510,11 @@
                     {
                         if (this.headers.Current.Value.Any())
                         {
-                            return await Task.FromResult<CustomHeaderToken<IGetResponseHeaderReader>>(new CustomHeaderToken<IGetResponseHeaderReader>.FieldValue(new HeaderFieldValueReader(this.httpResponseMessage, this.headers))).ConfigureAwait(false);
+                            return await Task.FromResult(new CustomHeaderToken<IGetResponseHeaderReader>.FieldValue(new HeaderFieldValueReader(this.httpResponseMessage, this.headers))).ConfigureAwait(false);
                         }
                         else
                         {
-                            return await Task.FromResult<CustomHeaderToken<IGetResponseHeaderReader>>(new CustomHeaderToken<IGetResponseHeaderReader>.Header(new GetResponseHeaderReader(this.httpResponseMessage, this.headers))).ConfigureAwait(false);
+                            return await Task.FromResult(new CustomHeaderToken<IGetResponseHeaderReader>.Header(new GetResponseHeaderReader(this.httpResponseMessage, this.headers))).ConfigureAwait(false);
                         }
                     }
 
@@ -575,20 +575,20 @@
                             var property = this.propertyEnumerator.Current;
                             if (string.Equals(property.Name, "@odata.context")) //// TODO ignore case?
                             {
-                                return await Task.FromResult<GetResponseBodyToken>(new GetResponseBodyToken.OdataContext(new OdataContextReader(this.propertyEnumerator, property.Value))).ConfigureAwait(false);
+                                return await Task.FromResult(new GetResponseBodyToken.OdataContext(new OdataContextReader(this.propertyEnumerator, property.Value))).ConfigureAwait(false);
                             }
                             else if (string.Equals(property.Name, "@odata.nextLink")) //// TODO ignore case?
                             {
-                                return await Task.FromResult<GetResponseBodyToken>(new GetResponseBodyToken.NextLink(new NextLinkReader(this.propertyEnumerator, property.Value))).ConfigureAwait(false);
+                                return await Task.FromResult(new GetResponseBodyToken.NextLink(new NextLinkReader(this.propertyEnumerator, property.Value))).ConfigureAwait(false);
                             }
                             else
                             {
-                                return await Task.FromResult<GetResponseBodyToken>(new GetResponseBodyToken.Property(new PropertyReader<IGetResponseBodyReader>(this.propertyEnumerator, enumerator => new GetResponseBodyReader(enumerator)))).ConfigureAwait(false);
+                                return await Task.FromResult(new GetResponseBodyToken.Property(new PropertyReader<IGetResponseBodyReader>(this.propertyEnumerator, enumerator => new GetResponseBodyReader(enumerator)))).ConfigureAwait(false);
                             }
                         }
                         else
                         {
-                            return await Task.FromResult<GetResponseBodyToken>(GetResponseBodyToken.End.Instance).ConfigureAwait(false);
+                            return await Task.FromResult(GetResponseBodyToken.End.Instance).ConfigureAwait(false);
                         }
                     }
 
@@ -609,9 +609,9 @@
 
                         public OdataContext OdataContext { get; }
 
-                        public Task<IGetResponseBodyReader> Next()
+                        public async Task<IGetResponseBodyReader> Next()
                         {
-                            return new GetResponseBodyReader(this.propertyEnumerator);
+                            return await Task.FromResult(new GetResponseBodyReader(this.propertyEnumerator)).ConfigureAwait(false);
                         }
                     }
 
@@ -632,9 +632,9 @@
 
                         public NextLink NextLink { get; }
 
-                        public Task<IGetResponseBodyReader> Next()
+                        public async Task<IGetResponseBodyReader> Next()
                         {
-                            return new GetResponseBodyReader(this.propertyEnumerator);
+                            return await Task.FromResult(new GetResponseBodyReader(this.propertyEnumerator)).ConfigureAwait(false);
                         }
                     }
 
@@ -649,9 +649,9 @@
                             this.nextFactory = nextFactory;
                         }
 
-                        public Task<IPropertyNameReader<T>> Next()
+                        public async Task<IPropertyNameReader<T>> Next()
                         {
-                            return new PropertyNameReader(this.propertyEnumerator, this.nextFactory);
+                            return await Task.FromResult(new PropertyNameReader(this.propertyEnumerator, this.nextFactory)).ConfigureAwait(false);
                         }
 
                         private sealed class PropertyNameReader : IPropertyNameReader<T>
@@ -668,9 +668,9 @@
 
                             public PropertyName PropertyName { get; }
 
-                            public Task<IPropertyValueReader<T>> Next()
+                            public async Task<IPropertyValueReader<T>> Next()
                             {
-                                return new PropertyValueReader(this.propertyEnumerator, this.nextFactory);
+                                return await Task.FromResult(new PropertyValueReader(this.propertyEnumerator, this.nextFactory)).ConfigureAwait(false);
                             }
 
                             private sealed class PropertyValueReader : IPropertyValueReader<T>
@@ -684,25 +684,25 @@
                                     this.nextFactory = nextFactory;
                                 }
 
-                                public Task<PropertyValueToken<T>> Next()
+                                public async Task<PropertyValueToken<T>> Next()
                                 {
                                     var propertyValue = this.propertyEnumerator.Current.Value;
                                     if (propertyValue.ValueKind == JsonValueKind.Null)
                                     {
-                                        return new PropertyValueToken<T>.Null(new NullPropertyValueReader(this.propertyEnumerator, this.nextFactory));
+                                        return await Task.FromResult(new PropertyValueToken<T>.Null(new NullPropertyValueReader(this.propertyEnumerator, this.nextFactory))).ConfigureAwait(false);
                                     }
                                     else if (propertyValue.ValueKind == JsonValueKind.Object)
                                     {
-                                        return new PropertyValueToken<T>.Complex(new ComplexPropertyValueReader<T>(this.propertyEnumerator, this.nextFactory, propertyValue.EnumerateObject()));
+                                        return await Task.FromResult(new PropertyValueToken<T>.Complex(new ComplexPropertyValueReader<T>(this.propertyEnumerator, this.nextFactory, propertyValue.EnumerateObject()))).ConfigureAwait(false);
                                     }
                                     else if (propertyValue.ValueKind == JsonValueKind.Array)
                                     {
-                                        return new PropertyValueToken<T>.MultiValued(new MultiValuedPropertyValueReader(this.propertyEnumerator, this.nextFactory, propertyValue.EnumerateArray()));
+                                        return await Task.FromResult(new PropertyValueToken<T>.MultiValued(new MultiValuedPropertyValueReader(this.propertyEnumerator, this.nextFactory, propertyValue.EnumerateArray()))).ConfigureAwait(false);
                                     }
                                     else
                                     {
                                         // primitive
-                                        return new PropertyValueToken<T>.Primitive(new PrimitivePropertyValueReader(this.propertyEnumerator, this.nextFactory, propertyValue.GetRawText()));
+                                        return await Task.FromResult(new PropertyValueToken<T>.Primitive(new PrimitivePropertyValueReader(this.propertyEnumerator, this.nextFactory, propertyValue.GetRawText()))).ConfigureAwait(false);
                                     }
                                 }
 
@@ -720,9 +720,9 @@
 
                                     public PrimitivePropertyValue PrimitivePropertyValue { get; }
 
-                                    public Task<T> Next()
+                                    public async Task<T> Next()
                                     {
-                                        return this.nextFactory(this.propertyEnumerator);
+                                        return await Task.FromResult(this.nextFactory(this.propertyEnumerator)).ConfigureAwait(false);
                                     }
                                 }
 
@@ -739,25 +739,25 @@
                                         this.propertyValueEnumerator = propertyValueEnumerator;
                                     }
 
-                                    public Task<ComplexPropertyValueToken<TComplex>> Next()
+                                    public async Task<ComplexPropertyValueToken<TComplex>> Next()
                                     {
                                         if (this.propertyValueEnumerator.MoveNext())
                                         {
                                             var property = this.propertyValueEnumerator.Current;
                                             if (string.Equals(property.Name, "@odata.context")) //// TODO ignore case?
                                             {
-                                                return new ComplexPropertyValueToken<TComplex>.OdataContext(new OdataContextReader(this.parentPropertyEnumerator, this.nextFactory, this.propertyValueEnumerator, property.Value));
+                                                return await Task.FromResult(new ComplexPropertyValueToken<TComplex>.OdataContext(new OdataContextReader(this.parentPropertyEnumerator, this.nextFactory, this.propertyValueEnumerator, property.Value))).ConfigureAwait(false);
                                             }
                                             else if (string.Equals(property.Name, "@odata.id")) //// TODO ignore case?
                                             {
-                                                return new ComplexPropertyValueToken<TComplex>.OdataId(new OdataIdReader(this.parentPropertyEnumerator, this.nextFactory, this.propertyValueEnumerator, property.Value));
+                                                return await Task.FromResult(new ComplexPropertyValueToken<TComplex>.OdataId(new OdataIdReader(this.parentPropertyEnumerator, this.nextFactory, this.propertyValueEnumerator, property.Value))).ConfigureAwait(false);
                                             }
 
-                                            return new ComplexPropertyValueToken<TComplex>.Property(new PropertyReader<IComplexPropertyValueReader<TComplex>>(this.propertyValueEnumerator, enumerator => new ComplexPropertyValueReader<TComplex>(this.parentPropertyEnumerator, this.nextFactory, enumerator)));
+                                            return await Task.FromResult(new ComplexPropertyValueToken<TComplex>.Property(new PropertyReader<IComplexPropertyValueReader<TComplex>>(this.propertyValueEnumerator, enumerator => new ComplexPropertyValueReader<TComplex>(this.parentPropertyEnumerator, this.nextFactory, enumerator)))).ConfigureAwait(false);
                                         }
                                         else
                                         {
-                                            return new ComplexPropertyValueToken<TComplex>.End(this.nextFactory(this.parentPropertyEnumerator));
+                                            return await Task.FromResult(new ComplexPropertyValueToken<TComplex>.End(this.nextFactory(this.parentPropertyEnumerator))).ConfigureAwait(false);
                                         }
                                     }
 
@@ -782,9 +782,9 @@
 
                                         public OdataContext OdataContext { get; }
 
-                                        public Task<IComplexPropertyValueReader<TComplex>> Next()
+                                        public async Task<IComplexPropertyValueReader<TComplex>> Next()
                                         {
-                                            return new ComplexPropertyValueReader<TComplex>(this.parentPropertyEnumerator, this.nextFactory, this.propertyValueEnumerator);
+                                            return await Task.FromResult(new ComplexPropertyValueReader<TComplex>(this.parentPropertyEnumerator, this.nextFactory, this.propertyValueEnumerator)).ConfigureAwait(false);
                                         }
                                     }
 
@@ -809,9 +809,9 @@
 
                                         public OdataId OdataId { get; }
 
-                                        public Task<IComplexPropertyValueReader<TComplex>> Next()
+                                        public async Task<IComplexPropertyValueReader<TComplex>> Next()
                                         {
-                                            return new ComplexPropertyValueReader<TComplex>(this.parentPropertyEnumerator, this.nextFactory, this.propertyValueEnumerator);
+                                            return await Task.FromResult(new ComplexPropertyValueReader<TComplex>(this.parentPropertyEnumerator, this.nextFactory, this.propertyValueEnumerator)).ConfigureAwait(false);
                                         }
                                     }
                                 }
@@ -829,7 +829,7 @@
                                         this.arrayEnumerator = arrayEnumerator;
                                     }
 
-                                    public Task<MultiValuedPropertyValueToken<T>> Next()
+                                    public async Task<MultiValuedPropertyValueToken<T>> Next()
                                     {
                                         if (this.arrayEnumerator.MoveNext())
                                         {
@@ -838,12 +838,12 @@
                                                 throw new Exception("TODO only objects are allowed in collections (except for the times where that's not true)");
                                             }
 
-                                            return new MultiValuedPropertyValueToken<T>.Object(new ComplexPropertyValueReader<IMultiValuedPropertyValueReader<T>>(this.parentPropertyEnumerator, parentEnumerator => new MultiValuedPropertyValueReader(parentPropertyEnumerator, this.nextFactory, this.arrayEnumerator), this.arrayEnumerator.Current.EnumerateObject()));
+                                            return await Task.FromResult(new MultiValuedPropertyValueToken<T>.Object(new ComplexPropertyValueReader<IMultiValuedPropertyValueReader<T>>(this.parentPropertyEnumerator, parentEnumerator => new MultiValuedPropertyValueReader(parentPropertyEnumerator, this.nextFactory, this.arrayEnumerator), this.arrayEnumerator.Current.EnumerateObject()))).ConfigureAwait(false);
                                             //// TODO what about collections of primitives?
                                         }
                                         else
                                         {
-                                            return new MultiValuedPropertyValueToken<T>.End(this.nextFactory(this.parentPropertyEnumerator));
+                                            return await Task.FromResult(new MultiValuedPropertyValueToken<T>.End(this.nextFactory(this.parentPropertyEnumerator))).ConfigureAwait(false);
                                         }
                                     }
                                 }
@@ -859,9 +859,9 @@
                                         this.nextFactory = nextFactory;
                                     }
 
-                                    public Task<T> Next()
+                                    public async Task<T> Next()
                                     {
-                                        return this.nextFactory(this.propertyEnumerator);
+                                        return await Task.FromResult(this.nextFactory(this.propertyEnumerator)).ConfigureAwait(false);
                                     }
                                 }
                             }
