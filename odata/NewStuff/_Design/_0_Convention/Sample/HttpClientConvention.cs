@@ -71,7 +71,7 @@
                     public async Task<IGetResponseReader> Commit()
                     {
                         //// TODO malformed headers will throw here
-                        var httpResponseMessage = this.httpClient.GetAsync(this.requestUri).ConfigureAwait(false).GetAwaiter().GetResult(); //// TODO you have to implement async before you get too far //// TODO you need an idisposable for the message
+                        var httpResponseMessage = this.httpClient.GetAsync(this.requestUri).ConfigureAwait(false).GetAwaiter().GetResult(); //// TODO you need an idisposable for the message
 
                         return await Task.FromResult(new GetResponseReader(httpResponseMessage)).ConfigureAwait(false);
                     }

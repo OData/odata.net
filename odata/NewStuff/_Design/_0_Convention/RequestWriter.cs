@@ -21,14 +21,14 @@
 
     public interface IPatchHeaderWriter
     {
-        IPatchRequestBodyWriter Commit();
-        ICustomHeaderWriter<IPatchHeaderWriter> CommitCustomHeader();
-        IEtagWriter CommitEtag();
+        Task<IPatchRequestBodyWriter> Commit();
+        Task<ICustomHeaderWriter<IPatchHeaderWriter>> CommitCustomHeader();
+        Task<IEtagWriter> CommitEtag();
     }
 
     public interface IEtagWriter
     {
-        IPatchHeaderWriter Commit(Etag etag);
+        Task<IPatchHeaderWriter> Commit(Etag etag);
     }
 
     public sealed class Etag
@@ -40,54 +40,54 @@
 
     public interface IPatchRequestBodyWriter
     {
-        IPropertyWriter<IPatchRequestBodyWriter> CommitProperty();
+        Task<IPropertyWriter<IPatchRequestBodyWriter>> CommitProperty();
 
-        IGetResponseReader Commit(); //// TODO TODO TODO IMPORTANT you've re-used getresponsereader for convenience here; it should really be igetpatchresponsereader
+        Task<IGetResponseReader> Commit(); //// TODO TODO TODO IMPORTANT you've re-used getresponsereader for convenience here; it should really be igetpatchresponsereader
     }
 
-    public interface IPropertyWriter<out T>
+    public interface IPropertyWriter<T>
     {
-        IPropertyNameWriter<T> Commit();
+        Task<IPropertyNameWriter<T>> Commit();
     }
 
-    public interface IPropertyNameWriter<out T>
+    public interface IPropertyNameWriter<T>
     {
-        IPropertyValueWriter<T> Commit(PropertyName propertyName);
+        Task<IPropertyValueWriter<T>> Commit(PropertyName propertyName);
     }
 
-    public interface IPropertyValueWriter<out T>
+    public interface IPropertyValueWriter<T>
     {
-        IPrimitivePropertyValueWriter<T> CommitPrimitive();
+        Task<IPrimitivePropertyValueWriter<T>> CommitPrimitive();
 
-        IComplexPropertyValueWriter<T> CommitComplex();
+        Task<IComplexPropertyValueWriter<T>> CommitComplex();
 
-        INullPropertyValueWriter<T> CommitNull();
+        Task<INullPropertyValueWriter<T>> CommitNull();
 
-        IMultiValuedPropertyValueWriter<T> CommitMultiValued();
+        Task<IMultiValuedPropertyValueWriter<T>> CommitMultiValued();
     }
 
-    public interface IPrimitivePropertyValueWriter<out T>
+    public interface IPrimitivePropertyValueWriter<T>
     {
-        T Commit(PrimitivePropertyValue primitivePropertyValue);
+        Task<T> Commit(PrimitivePropertyValue primitivePropertyValue);
     }
 
-    public interface IComplexPropertyValueWriter<out T>
+    public interface IComplexPropertyValueWriter<T>
     {
-        IPropertyWriter<IComplexPropertyValueWriter<T>> CommitProperty();
+        Task<IPropertyWriter<IComplexPropertyValueWriter<T>>> CommitProperty();
 
-        T Commit();
+        Task<T> Commit();
     }
 
-    public interface INullPropertyValueWriter<out T>
+    public interface INullPropertyValueWriter<T>
     {
-        T Commit();
+        Task<T> Commit();
     }
 
-    public interface IMultiValuedPropertyValueWriter<out T>
+    public interface IMultiValuedPropertyValueWriter<T>
     {
-        IComplexPropertyValueWriter<IMultiValuedPropertyValueWriter<T>> CommitValue();
+        Task<IComplexPropertyValueWriter<IMultiValuedPropertyValueWriter<T>>> CommitValue();
 
-        T Commit();
+        Task<T> Commit();
     }
 
     public interface IPostRequestWriter
