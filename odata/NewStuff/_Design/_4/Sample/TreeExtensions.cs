@@ -2,24 +2,25 @@
 {
     using System;
     using System.IO;
+    using System.Threading.Tasks;
 
     public static class TreeExtensions
     {
-        public static void Write<T>(this ITree<T> tree, Action<Writer, T> write, TextWriter textWriter)
+        public static async Task Write<T>(this ITree<T> tree, Action<Writer, T> write, TextWriter textWriter)
         {
             var writer = new Writer(textWriter);
-            Write(tree, writer, write);
+            await Write(tree, writer, write).ConfigureAwait(false);
         }
 
-        private static void Write<T>(ITree<T> tree, Writer writer, Action<Writer, T> write)
+        private static async Task Write<T>(ITree<T> tree, Writer writer, Action<Writer, T> write)
         {
             writer.WriteLine("{");
             write(writer, tree.Data);
             writer.WriteLine("}");
             writer.Indent();
-            foreach (var child in tree.Children)
+            await foreach (var child in tree.Children.ConfigureAwait(false))
             {
-                Write(child, writer, write);
+                await Write(child, writer, write).ConfigureAwait(false);
             }
 
             writer.Unindent();

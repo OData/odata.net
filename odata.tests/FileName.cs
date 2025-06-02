@@ -10,7 +10,7 @@ namespace odata.tests
     public sealed class FileName
     {
         [TestMethod]
-        public void MockClient()
+        public async Task MockClient()
         {
             var employeesToUpdatePayload =
 """
@@ -117,7 +117,7 @@ namespace odata.tests
                     };
                     var nextClientIndex = 0;
                     var driver = DriverFactory.Create(() => clients[nextClientIndex++]);
-                    driver.DoWork();
+                    await driver.DoWork().ConfigureAwait(false);
                 }
             }
         }
