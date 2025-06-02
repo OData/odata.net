@@ -189,7 +189,7 @@
                     {
                         if (!this.isFirstProperty)
                         {
-                            streamWriter.WriteLine();
+                            await streamWriter.WriteLineAsync().ConfigureAwait(false);
                         }
 
                         await streamWriter.WriteLineAsync("}").ConfigureAwait(false);
