@@ -11,6 +11,7 @@
     using System.Text;
     using System.Text.Json;
     using System.Text.Json.Nodes;
+    using System.Threading.Tasks;
 
     public sealed class HttpClientConvention : IConvention
     {
@@ -21,9 +22,9 @@
             this.httpClientFactory = httpClientFactory;
         }
 
-        public IGetRequestWriter Get()
+        public async Task<IGetRequestWriter> Get()
         {
-            return new GetRequestWriter(this.httpClientFactory()); //// TODO you need an idispoabel for the httpclient
+            return await Task.FromResult(new GetRequestWriter(this.httpClientFactory())).ConfigureAwait(false); //// TODO you need an idispoabel for the httpclient
         }
 
         private sealed class GetRequestWriter : IGetRequestWriter
@@ -35,9 +36,9 @@
                 this.httpClient = httpClient;
             }
 
-            public IUriWriter<IGetHeaderWriter> Commit()
+            public async Task<IUriWriter<IGetHeaderWriter>> Commit()
             {
-                return new UriWriter<GetHeaderWriter>(requestUri => new GetHeaderWriter(this.httpClient, requestUri));
+                return await Task.FromResult<IUriWriter<IGetHeaderWriter>>(new UriWriter<IGetHeaderWriter>(requestUri => new GetHeaderWriter(this.httpClient, requestUri))).ConfigureAwait(false);
             }
 
             private sealed class GetHeaderWriter : IGetHeaderWriter
@@ -51,9 +52,9 @@
                     this.requestUri = requestUri;
                 }
 
-                public IGetBodyWriter Commit()
+                public async Task<IGetBodyWriter> Commit()
                 {
-                    return new GetBodyWriter(this.httpClient, this.requestUri);
+                    return await Task.FromResult<IGetBodyWriter>(new GetBodyWriter(this.httpClient, this.requestUri)).ConfigureAwait(false);
                 }
 
                 private sealed class GetBodyWriter : IGetBodyWriter
@@ -67,23 +68,23 @@
                         this.requestUri = requestUri;
                     }
 
-                    public IGetResponseReader Commit()
+                    public async Task<IGetResponseReader> Commit()
                     {
                         //// TODO malformed headers will throw here
                         var httpResponseMessage = this.httpClient.GetAsync(this.requestUri).ConfigureAwait(false).GetAwaiter().GetResult(); //// TODO you have to implement async before you get too far //// TODO you need an idisposable for the message
 
-                        return new GetResponseReader(httpResponseMessage);
+                        return await Task.FromResult(new GetResponseReader(httpResponseMessage)).ConfigureAwait(false);
                     }
                 }
 
-                public ICustomHeaderWriter<IGetHeaderWriter> CommitCustomHeader()
+                public async Task<ICustomHeaderWriter<IGetHeaderWriter>> CommitCustomHeader()
                 {
-                    return new CustomHeaderWriter<GetHeaderWriter>(this.httpClient, this.requestUri, (client, uri) => new GetHeaderWriter(client, uri));
+                    return await Task.FromResult<ICustomHeaderWriter<IGetHeaderWriter>>(new CustomHeaderWriter<IGetHeaderWriter>(this.httpClient, this.requestUri, (client, uri) => new GetHeaderWriter(client, uri))).ConfigureAwait(false);
                 }
 
-                public IOdataMaxPageSizeHeaderWriter CommitOdataMaxPageSize()
+                public async Task<IOdataMaxPageSizeHeaderWriter> CommitOdataMaxPageSize()
                 {
-                    return new OdataMaxPageSizeHeaderWriter(this.httpClient, this.requestUri);
+                    return await Task.FromResult(new OdataMaxPageSizeHeaderWriter(this.httpClient, this.requestUri)).ConfigureAwait(false);
                 }
 
                 private sealed class OdataMaxPageSizeHeaderWriter : IOdataMaxPageSizeHeaderWriter
@@ -97,17 +98,17 @@
                         this.requestUri = requestUri;
                     }
 
-                    public IGetHeaderWriter Commit(OdataMaxPageSize odataMaxPageSize)
+                    public async Task<IGetHeaderWriter> Commit(OdataMaxPageSize odataMaxPageSize)
                     {
                         this.httpClient.DefaultRequestHeaders.Add("OData-MaxPageSize", "100"); //// TODO use `odatamaxpagesize` once the type has actually been implemented
 
-                        return new GetHeaderWriter(this.httpClient, this.requestUri);
+                        return await Task.FromResult(new GetHeaderWriter(this.httpClient, this.requestUri)).ConfigureAwait(false);
                     }
                 }
 
-                public IOdataMaxVersionHeaderWriter CommitOdataMaxVersion()
+                public async Task<IOdataMaxVersionHeaderWriter> CommitOdataMaxVersion()
                 {
-                    return new OdataMaxVersionHeaderWriter(this.httpClient, this.requestUri);
+                    return await Task.FromResult(new OdataMaxVersionHeaderWriter(this.httpClient, this.requestUri)).ConfigureAwait(false);
                 }
 
                 private sealed class OdataMaxVersionHeaderWriter : IOdataMaxVersionHeaderWriter
@@ -121,11 +122,11 @@
                         this.requestUri = requestUri;
                     }
 
-                    public IGetHeaderWriter Commit(OdataVersion odataVersion)
+                    public async Task<IGetHeaderWriter> Commit(OdataVersion odataVersion)
                     {
                         this.httpClient.DefaultRequestHeaders.Add("OData-MaxVersion", "v4.01"); //// TODO use `odataversion` once you've actually implemented that type
 
-                        return new GetHeaderWriter(this.httpClient, this.requestUri);
+                        return await Task.FromResult(new GetHeaderWriter(this.httpClient, this.requestUri)).ConfigureAwait(false);
                     }
                 }
             }
@@ -147,7 +148,7 @@
 
             public IUriWriter<IPatchHeaderWriter> Commit()
             {
-                return new UriWriter<PatchHeaderWriter>(uri => new PatchHeaderWriter(this.httpClient, uri));
+                return new UriWriter<IPatchHeaderWriter>(uri => new PatchHeaderWriter(this.httpClient, uri));
             }
 
             private sealed class PatchHeaderWriter : IPatchHeaderWriter
@@ -415,7 +416,7 @@
 
                 public ICustomHeaderWriter<IPatchHeaderWriter> CommitCustomHeader()
                 {
-                    return new CustomHeaderWriter<PatchHeaderWriter>(this.httpClient, this.requestUri, (client, uri) => new PatchHeaderWriter(client, uri));
+                    return new CustomHeaderWriter<IPatchHeaderWriter>(this.httpClient, this.requestUri, (client, uri) => new PatchHeaderWriter(client, uri));
                 }
 
                 public IEtagWriter CommitEtag()
@@ -892,9 +893,9 @@
                 this.nextFactory = nextFactory;
             }
 
-            public IHeaderFieldValueWriter<T> Commit(HeaderFieldName headerFieldName)
+            public async Task<IHeaderFieldValueWriter<T>> Commit(HeaderFieldName headerFieldName)
             {
-                return new HeaderFieldValueWriter(this.httpClient, this.requestUri, this.nextFactory, headerFieldName.Name);
+                return await Task.FromResult(new HeaderFieldValueWriter(this.httpClient, this.requestUri, this.nextFactory, headerFieldName.Name)).ConfigureAwait(false);
             }
 
             private sealed class HeaderFieldValueWriter : IHeaderFieldValueWriter<T>
@@ -912,18 +913,18 @@
                     this.headerName = headerName;
                 }
 
-                public T Commit()
+                public async Task<T> Commit()
                 {
                     this.httpClient.DefaultRequestHeaders.Add(this.headerName, (string?)null);
 
-                    return this.nextFactory(this.httpClient, this.requestUri);
+                    return await Task.FromResult(this.nextFactory(this.httpClient, this.requestUri)).ConfigureAwait(false);
                 }
 
-                public T Commit(HeaderFieldValue headerFieldValue)
+                public async Task<T> Commit(HeaderFieldValue headerFieldValue)
                 {
                     this.httpClient.DefaultRequestHeaders.Add(this.headerName, headerFieldValue.Value);
 
-                    return this.nextFactory(this.httpClient, this.requestUri);
+                    return await Task.FromResult(this.nextFactory(this.httpClient, this.requestUri)).ConfigureAwait(false);
                 }
             }
         }
@@ -937,9 +938,9 @@
                 this.nextFactory = nextFactory;
             }
 
-            public IUriSchemeWriter<T> Commit()
+            public async Task<IUriSchemeWriter<T>> Commit()
             {
-                return new UriSchemeWriter(new StringBuilder(), this.nextFactory);
+                return await Task.FromResult(new UriSchemeWriter(new StringBuilder(), this.nextFactory)).ConfigureAwait(false);
             }
 
             private sealed class UriSchemeWriter : IUriSchemeWriter<T>
@@ -953,10 +954,10 @@
                     this.nextFactory = nextFactory;
                 }
 
-                public IUriDomainWriter<T> Commit(UriScheme uriScheme)
+                public async Task<IUriDomainWriter<T>> Commit(UriScheme uriScheme)
                 {
                     this.builder.Append($"{uriScheme.Scheme}://");
-                    return new UriDomainWriter(this.builder, this.nextFactory);
+                    return await Task.FromResult(new UriDomainWriter(this.builder, this.nextFactory)).ConfigureAwait(false);
                 }
 
                 private sealed class UriDomainWriter : IUriDomainWriter<T>
@@ -970,10 +971,10 @@
                         this.nextFactory = nextFactory;
                     }
 
-                    public IUriPortWriter<T> Commit(UriDomain uriDomain)
+                    public async Task<IUriPortWriter<T>> Commit(UriDomain uriDomain)
                     {
                         this.builder.Append(uriDomain.Domain);
-                        return new UriPortWriter(this.builder, this.nextFactory);
+                        return await Task.FromResult(new UriPortWriter(this.builder, this.nextFactory)).ConfigureAwait(false);
                     }
 
                     private sealed class UriPortWriter : IUriPortWriter<T>
@@ -987,15 +988,15 @@
                             this.nextFactory = nextFactory;
                         }
 
-                        public IUriPathSegmentWriter<T> Commit()
+                        public async Task<IUriPathSegmentWriter<T>> Commit()
                         {
-                            return new UriPathSegmentWriter(this.builder, this.nextFactory);
+                            return await Task.FromResult(new UriPathSegmentWriter(this.builder, this.nextFactory)).ConfigureAwait(false);
                         }
 
-                        public IUriPathSegmentWriter<T> Commit(UriPort uriPort)
+                        public async Task<IUriPathSegmentWriter<T>> Commit(UriPort uriPort)
                         {
                             this.builder.Append($":{uriPort.Port}");
-                            return new UriPathSegmentWriter(this.builder, this.nextFactory);
+                            return await Task.FromResult(new UriPathSegmentWriter(this.builder, this.nextFactory)).ConfigureAwait(false);
                         }
 
                         private sealed class UriPathSegmentWriter : IUriPathSegmentWriter<T>
@@ -1009,9 +1010,9 @@
                                 this.nextFactory = nextFactory;
                             }
 
-                            public IQueryOptionWriter<T> Commit()
+                            public async Task<IQueryOptionWriter<T>> Commit()
                             {
-                                return new QueryOptionWriter(this.builder, this.nextFactory, false);
+                                return await Task.FromResult(new QueryOptionWriter(this.builder, this.nextFactory, false)).ConfigureAwait(false);
                             }
 
                             private sealed class QueryOptionWriter : IQueryOptionWriter<T>
@@ -1027,14 +1028,14 @@
                                     this.queryParametersWritten = queryParametersWritten;
                                 }
 
-                                public T Commit()
+                                public async Task<T> Commit()
                                 {
-                                    return this.nextFactory(new Uri(this.builder.ToString()));
+                                    return await Task.FromResult(this.nextFactory(new Uri(this.builder.ToString()))).ConfigureAwait(false);
                                 }
 
-                                public IFragmentWriter<T> CommitFragment()
+                                public async Task<IFragmentWriter<T>> CommitFragment()
                                 {
-                                    return new FragmentWriter(this.builder, this.nextFactory);
+                                    return await Task.FromResult(new FragmentWriter(this.builder, this.nextFactory)).ConfigureAwait(false);
                                 }
 
                                 private sealed class FragmentWriter : IFragmentWriter<T>
@@ -1048,17 +1049,17 @@
                                         this.nextFactory = nextFactory;
                                     }
 
-                                    public T Commit(Fragment fragment)
+                                    public async Task<T> Commit(Fragment fragment)
                                     {
                                         this.builder.Append($"#{fragment.Value}");
 
-                                        return this.nextFactory(new Uri(this.builder.ToString()));
+                                        return await Task.FromResult(this.nextFactory(new Uri(this.builder.ToString()))).ConfigureAwait(false);
                                     }
                                 }
 
-                                public IQueryParameterWriter<T> CommitParameter()
+                                public async Task<IQueryParameterWriter<T>> CommitParameter()
                                 {
-                                    return new QueryParameterWriter(this.builder, this.nextFactory, this.queryParametersWritten);
+                                    return await Task.FromResult(new QueryParameterWriter(this.builder, this.nextFactory, this.queryParametersWritten)).ConfigureAwait(false);
                                 }
 
                                 private sealed class QueryParameterWriter : IQueryParameterWriter<T>
@@ -1074,7 +1075,7 @@
                                         this.queryParametersWritten = queryParametersWritten;
                                     }
 
-                                    public IQueryValueWriter<T> Commit(QueryParameter queryParameter)
+                                    public async Task<IQueryValueWriter<T>> Commit(QueryParameter queryParameter)
                                     {
                                         if (this.queryParametersWritten)
                                         {
@@ -1087,7 +1088,7 @@
 
                                         this.builder.Append(queryParameter.Name);
 
-                                        return new QueryValueWriter(this.builder, this.nextFactory);
+                                        return await Task.FromResult(new QueryValueWriter(this.builder, this.nextFactory)).ConfigureAwait(false);
                                     }
 
                                     private sealed class QueryValueWriter : IQueryValueWriter<T>
@@ -1101,26 +1102,26 @@
                                             this.nextFactory = nextFactory;
                                         }
 
-                                        public IQueryOptionWriter<T> Commit()
+                                        public async Task<IQueryOptionWriter<T>> Commit()
                                         {
-                                            return new QueryOptionWriter(this.builder, this.nextFactory, true);
+                                            return await Task.FromResult(new QueryOptionWriter(this.builder, this.nextFactory, true)).ConfigureAwait(false);
                                         }
 
-                                        public IQueryOptionWriter<T> Commit(QueryValue queryValue)
+                                        public async Task<IQueryOptionWriter<T>> Commit(QueryValue queryValue)
                                         {
                                             this.builder.Append($"={queryValue.Value}");
 
-                                            return new QueryOptionWriter(this.builder, this.nextFactory, true);
+                                            return await Task.FromResult(new QueryOptionWriter(this.builder, this.nextFactory, true)).ConfigureAwait(false);
                                         }
                                     }
                                 }
                             }
 
-                            public IUriPathSegmentWriter<T> Commit(UriPathSegment uriPathSegment)
+                            public async Task<IUriPathSegmentWriter<T>> Commit(UriPathSegment uriPathSegment)
                             {
                                 this.builder.Append($"/{uriPathSegment.Segment}");
 
-                                return new UriPathSegmentWriter(this.builder, this.nextFactory);
+                                return await Task.FromResult(new UriPathSegmentWriter(this.builder, this.nextFactory)).ConfigureAwait(false);
                             }
                         }
                     }
