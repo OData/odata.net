@@ -16,18 +16,15 @@
         public async Task<IGetRequestWriter> Get()
         {
             var getRequestWriter = await this.convention.Get().ConfigureAwait(false);
-            return 
-                await 
-                    getRequestWriter
-                        .OverrideHeader(
-                            async originalWriter => 
-                                await 
-                                    GetHeaderWriter
-                                        .Create(
-                                            originalWriter, 
-                                            this.authorizationToken)
-                                .ConfigureAwait(false))
-                .ConfigureAwait(false);
+            return getRequestWriter
+                .OverrideHeader(
+                    async originalWriter => 
+                        await 
+                            GetHeaderWriter
+                                .Create(
+                                    originalWriter, 
+                                    this.authorizationToken)
+                        .ConfigureAwait(false));
         }
 
         private sealed class GetHeaderWriter : IGetHeaderWriter
