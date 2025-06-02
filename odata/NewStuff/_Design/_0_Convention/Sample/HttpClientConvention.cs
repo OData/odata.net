@@ -193,15 +193,15 @@
                         }
 
                         await streamWriter.WriteLineAsync("}").ConfigureAwait(false);
-                        streamWriter.Dispose(); //// TODO async
+                        await streamWriter.DisposeAsync().ConfigureAwait(false);
 
                         var httpResponseMessage = await this.writeStream.Final().ConfigureAwait(false);
                         return new GetResponseReader(httpResponseMessage);
                     }
 
-                    public Task<IPropertyWriter<IPatchRequestBodyWriter>> CommitProperty()
+                    public async Task<IPropertyWriter<IPatchRequestBodyWriter>> CommitProperty()
                     {
-                        return new PropertyWriter<PatchRequestBodyWriter>(this.writeStream, this.streamWriter, () => new PatchRequestBodyWriter(this.writeStream, this.streamWriter, false), this.isFirstProperty);
+                        return await Task.FromResult(new PropertyWriter<IPatchRequestBodyWriter>(this.writeStream, this.streamWriter, () => new PatchRequestBodyWriter(this.writeStream, this.streamWriter, false), this.isFirstProperty)).ConfigureAwait(false);
                     }
 
                     private sealed class PropertyWriter<TNext> : IPropertyWriter<TNext>
@@ -218,9 +218,9 @@
                             this.nextFactory = nextFactory;
                             this.isFirstProperty = isFirstProperty;
                         }
-                        public Task<IPropertyNameWriter<TNext>> Commit()
+                        public async Task<IPropertyNameWriter<TNext>> Commit()
                         {
-                            return new PropertyNameWriter(this.writeStream, this.streamWriter, this.nextFactory, this.isFirstProperty);
+                            return await Task.FromResult(new PropertyNameWriter(this.writeStream, this.streamWriter, this.nextFactory, this.isFirstProperty)).ConfigureAwait(false);
                         }
 
                         private sealed class PropertyNameWriter : IPropertyNameWriter<TNext>
@@ -238,19 +238,18 @@
                                 this.isFirstProperty = isFirstProperty;
                             }
 
-                            public Task<IPropertyValueWriter<TNext>> Commit(PropertyName propertyName)
+                            public async Task<IPropertyValueWriter<TNext>> Commit(PropertyName propertyName)
                             {
-                                //// TODO async
                                 if (!this.isFirstProperty)
                                 {
-                                    this.streamWriter.WriteLine(",");
+                                    await this.streamWriter.WriteLineAsync(",").ConfigureAwait(false);
                                 }
                                 else
                                 {
-                                    this.streamWriter.WriteLine();
+                                    await this.streamWriter.WriteLineAsync().ConfigureAwait(false);
                                 }
 
-                                this.streamWriter.Write($"\"{propertyName.Name}\": ");
+                                await this.streamWriter.WriteAsync($"\"{propertyName.Name}\": ").ConfigureAwait(false);
 
                                 return new PropertyValueWriter(this.writeStream, this.streamWriter, this.nextFactory);
                             }
@@ -268,10 +267,9 @@
                                     this.nextFactory = nextFactory;
                                 }
 
-                                public Task<IComplexPropertyValueWriter<TNext>> CommitComplex()
+                                public async Task<IComplexPropertyValueWriter<TNext>> CommitComplex()
                                 {
-                                    //// TODO async
-                                    this.streamWriter.WriteLine("{");
+                                    await this.streamWriter.WriteLineAsync("{").ConfigureAwait(false);
 
                                     return new ComplexPropertyValueWriter<TNext>(this.writeStream, this.streamWriter, this.nextFactory, true);
                                 }
@@ -291,30 +289,27 @@
                                         this.isFirstProperty = isFirstProperty;
                                     }
 
-                                    public Task<TComplex> Commit()
+                                    public async Task<TComplex> Commit()
                                     {
-                                        //// TODO async
-
                                         if (!this.isFirstProperty)
                                         {
-                                            this.streamWriter.WriteLine();
+                                            await this.streamWriter.WriteLineAsync().ConfigureAwait(false);
                                         }
 
-                                        this.streamWriter.Write("}");
+                                        await this.streamWriter.WriteAsync("}").ConfigureAwait(false);
 
                                         return this.nextFactory();
                                     }
 
-                                    public Task<IPropertyWriter<IComplexPropertyValueWriter<TComplex>> CommitProperty()
+                                    public async Task<IPropertyWriter<IComplexPropertyValueWriter<TComplex>>> CommitProperty()
                                     {
-                                        return new PropertyWriter<ComplexPropertyValueWriter<TComplex>>(this.writeStream, this.streamWriter, () => new ComplexPropertyValueWriter<TComplex>(this.writeStream, this.streamWriter, this.nextFactory, false), true);
+                                        return await Task.FromResult(new PropertyWriter<IComplexPropertyValueWriter<TComplex>>(this.writeStream, this.streamWriter, () => new ComplexPropertyValueWriter<TComplex>(this.writeStream, this.streamWriter, this.nextFactory, false), true)).ConfigureAwait(false);
                                     }
                                 }
 
-                                public Task<IMultiValuedPropertyValueWriter<TNext>> CommitMultiValued()
+                                public async Task<IMultiValuedPropertyValueWriter<TNext>> CommitMultiValued()
                                 {
-                                    //// TODO async
-                                    this.streamWriter.WriteLine("[");
+                                    await this.streamWriter.WriteLineAsync("[").ConfigureAwait(false);
 
                                     return new MultiValuedPropertyValueWriter(this.writeStream, this.streamWriter, this.nextFactory, true);
                                 }
@@ -334,32 +329,29 @@
                                         this.isFirstElement = isFirstElement;
                                     }
 
-                                    public Task<TNext> Commit()
+                                    public async Task<TNext> Commit()
                                     {
-                                        //// TODO async
-                                        this.streamWriter.Write("]");
+                                        await this.streamWriter.WriteAsync("]").ConfigureAwait(false);
 
                                         return this.nextFactory();
                                     }
 
-                                    public Task<IComplexPropertyValueWriter<IMultiValuedPropertyValueWriter<TNext>>> CommitValue()
+                                    public async Task<IComplexPropertyValueWriter<IMultiValuedPropertyValueWriter<TNext>>> CommitValue()
                                     {
-                                        //// TODO async
-
                                         if (!this.isFirstElement)
                                         {
-                                            this.streamWriter.WriteLine(",");
+                                            await this.streamWriter.WriteLineAsync(",").ConfigureAwait(false);
                                         }
 
-                                        this.streamWriter.WriteLine("{");
+                                        await this.streamWriter.WriteLineAsync("{").ConfigureAwait(false);
 
-                                        return new ComplexPropertyValueWriter<MultiValuedPropertyValueWriter>(this.writeStream, this.streamWriter, () => new MultiValuedPropertyValueWriter(this.writeStream, this.streamWriter, this.nextFactory, false), true);
+                                        return new ComplexPropertyValueWriter<IMultiValuedPropertyValueWriter<TNext>>(this.writeStream, this.streamWriter, () => new MultiValuedPropertyValueWriter(this.writeStream, this.streamWriter, this.nextFactory, false), true);
                                     }
                                 }
 
-                                public Task<INullPropertyValueWriter<TNext>> CommitNull()
+                                public async Task<INullPropertyValueWriter<TNext>> CommitNull()
                                 {
-                                    return new NullPropertyValueWriter(this.writeStream, this.streamWriter, this.nextFactory);
+                                    return await Task.FromResult(new NullPropertyValueWriter(this.writeStream, this.streamWriter, this.nextFactory)).ConfigureAwait(false);
                                 }
 
                                 private sealed class NullPropertyValueWriter : INullPropertyValueWriter<TNext>
@@ -375,18 +367,17 @@
                                         this.nextFactory = nextFactory;
                                     }
 
-                                    public Task<TNext> Commit()
+                                    public async Task<TNext> Commit()
                                     {
-                                        //// TODO async
-                                        this.streamWriter.Write("null");
+                                        await this.streamWriter.WriteAsync("null").ConfigureAwait(false);
 
                                         return this.nextFactory();
                                     }
                                 }
 
-                                public Task<IPrimitivePropertyValueWriter<TNext>> CommitPrimitive()
+                                public async Task<IPrimitivePropertyValueWriter<TNext>> CommitPrimitive()
                                 {
-                                    return new PrimitivePropertyValueWriter(this.writeStream, this.streamWriter, this.nextFactory);
+                                    return await Task.FromResult(new PrimitivePropertyValueWriter(this.writeStream, this.streamWriter, this.nextFactory)).ConfigureAwait(false);
                                 }
 
                                 private sealed class PrimitivePropertyValueWriter : IPrimitivePropertyValueWriter<TNext>
@@ -402,9 +393,9 @@
                                         this.nextFactory = nextFactory;
                                     }
 
-                                    public Task<TNext> Commit(PrimitivePropertyValue primitivePropertyValue)
+                                    public async Task<TNext> Commit(PrimitivePropertyValue primitivePropertyValue)
                                     {
-                                        this.streamWriter.Write($"\"{primitivePropertyValue.Value}\""); //// TODO async //// TODO you need to differentiate between string and non-string primitives
+                                        await this.streamWriter.WriteAsync($"\"{primitivePropertyValue.Value}\"").ConfigureAwait(false); //// TODO you need to differentiate between string and non-string primitives
 
                                         return this.nextFactory();
                                     }
