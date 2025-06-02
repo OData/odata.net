@@ -667,16 +667,16 @@
                 this.selects = selects;
             }
 
-            public SingleValuedResponse Evaluate()
+            public async Task<SingleValuedResponse> Evaluate()
             {
                 var patchRequestWriter = this.convention.Post();
 
-                var uriWriter = patchRequestWriter.Commit();
+                var uriWriter = await patchRequestWriter.Commit().ConfigureAwait(false);
                 var patchHeaderWriter = MultiValuedProtocol.WriteUri(this.multiValuedUri, uriWriter);
 
                 var customHeaderWriter = patchHeaderWriter.CommitCustomHeader();
-                var headerFieldValueWriter = customHeaderWriter.Commit(new HeaderFieldName("Content-Type")); //// TODO probably this should be a "built-in" header
-                patchHeaderWriter = headerFieldValueWriter.Commit(new HeaderFieldValue("application/json"));
+                var headerFieldValueWriter = await customHeaderWriter.Commit(new HeaderFieldName("Content-Type")).ConfigureAwait(false); //// TODO probably this should be a "built-in" header
+                patchHeaderWriter = await headerFieldValueWriter.Commit(new HeaderFieldValue("application/json")).ConfigureAwait(false);
                 var patchRequestBodyWriter = patchHeaderWriter.Commit();
 
                 //// TODO what about dynamic and untyped properties?
