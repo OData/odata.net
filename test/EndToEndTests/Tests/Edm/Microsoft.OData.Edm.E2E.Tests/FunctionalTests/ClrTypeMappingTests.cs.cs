@@ -16,31 +16,114 @@ namespace Microsoft.OData.Edm.E2E.Tests.FunctionalTests;
 
 public class ClrTypeMappingTests : EdmLibTestCaseBase
 {
-    private void InitializeOperationDefinitions()
-    {
-        string operationCsdl = @"<Schema Namespace=""Functions"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
-  <Function Name=""IntAdd"">
-    <Parameter Name=""Int1"" Type=""Int64"" />
-    <Parameter Name=""Int2"" Type=""Int64"" />
-    <ReturnType Type=""Int64"" />
-  </Function>
-</Schema>";
-
-        bool success = SchemaReader.TryParse(new XElement[] { XElement.Parse(operationCsdl) }.Select(e => e.CreateReader()), out IEdmModel edmModel, out IEnumerable<EdmError> errors);
-        Assert.True(success, "Failed to parse operation CSDL.");
-        Assert.False(errors.Any());
-
-        this.operationDeclarationModel = edmModel;
-        this.operationDefinitions = new Dictionary<IEdmOperation, Func<IEdmValue[], IEdmValue>>();
-        this.operationDefinitions[this.operationDeclarationModel.FindOperations("Functions.IntAdd").Single(f => f.Parameters.Count() == 2)] = (a) => new EdmIntegerConstant(((IEdmIntegerValue)a[0]).Value + ((IEdmIntegerValue)a[1]).Value);
-    }
-
     [Fact]
     public void Should_ValidateBasicClrTypeMappingForVocabularyAnnotations()
     {
         this.InitializeOperationDefinitions();
+        
+        var csdl =
+@"<Schema Namespace='NS1' xmlns='http://docs.oasis-open.org/odata/ns/edm'>
+  <EntityType Name='Person'>
+    <Property Name='Id' Type='Int16' Nullable='false' />
+    <Property Name='FirstName' Type='String' Nullable='false' Unicode='true' />
+    <Property Name='LastName' Type='String' Nullable='false' Unicode='true' />
+  </EntityType>
+  <ComplexType Name='Pet'>
+    <Property Name='Name' Type='Edm.String' Nullable='false' />
+    <Property Name='Breed' Type='Edm.String' Nullable='true' />
+    <Property Name='Age' Type='Edm.Int32' Nullable='true' />
+  </ComplexType>
+  <Term Name='Title' Type='String' Unicode='true' />
+  <Term Name='DisplaySize' Type='Int32' Nullable='false' />
+  <Term Name='InspectedBy' Type='NS1.Person' Nullable='false' />
+  <Term Name='AdoptPet' Type='NS1.Pet' Nullable='false' />
+  <Annotations Target='NS1.Person'>
+    <Annotation Term=""NS1.Coordination"" Qualifier=""Display"">
+        <Record>
+            <PropertyValue Property=""X"" Int=""10"" />
+            <PropertyValue Property=""Y"">
+                <Apply Function=""Functions.IntAdd"">
+                    <Int>5</Int>
+                    <Int>15</Int>
+                </Apply>
+            </PropertyValue>
+        </Record>
+    </Annotation>
+    <Annotation Term=""NS1.InspectedBy"">
+        <Record>
+            <PropertyValue Property=""Id"" Int=""10"" />
+            <PropertyValue Property=""FirstName"">
+                <String>Young</String>
+            </PropertyValue>
+            <PropertyValue Property=""LastName"" String='Hong'>
+            </PropertyValue>
+        </Record>
+    </Annotation>
+    <Annotation Term=""NS1.AdoptPet"">
+        <Record>
+            <PropertyValue Property=""Name"" String=""Jacquine"" />
+            <PropertyValue Property=""Breed"">
+                <String>Bull Dog</String>
+            </PropertyValue>
+            <PropertyValue Property=""Age"" Int='3'>
+            </PropertyValue>
+        </Record>
+    </Annotation>
+    <Annotation Term=""NS1.TVDisplay"">
+        <Record>
+            <PropertyValue Property=""X"" Int=""10"" />
+            <PropertyValue Property=""Y"">
+                <Apply Function=""Functions.IntAdd"">
+                    <Int>5</Int>
+                    <Int>15</Int>
+                </Apply>
+            </PropertyValue>
+            <PropertyValue Property=""Origin"">
+                <Record>
+                    <PropertyValue Property=""X"" Int=""10"" />
+                    <PropertyValue Property=""Y"">
+                        <Int>20</Int>
+                    </PropertyValue>
+                </Record>
+            </PropertyValue>
+        </Record>
+    </Annotation>
+    <Annotation Term=""NS1.MultiMonitors"">
+        <Collection>
+            <Record>
+                <PropertyValue Property=""X"" Int=""10"" />
+                <PropertyValue Property=""Y"">
+                    <Int>20</Int>
+                </PropertyValue>
+            </Record>
+            <Record>
+                <PropertyValue Property=""X"" Int=""30"" />
+                <PropertyValue Property=""Y"">
+                    <Int>40</Int>
+                </PropertyValue>
+            </Record>
+        </Collection>
+    </Annotation>
+    <Annotation Term=""NS1.EmptyCollection"">
+        <Collection>
+        </Collection>
+    </Annotation>
+    <Annotation Term=""NS1.LabledMultiMonitors"">
+        <Collection>
+            <LabeledElement Name='Label1'>
+                <Record>
+                    <PropertyValue Property=""X"" Int=""10"" />
+                    <PropertyValue Property=""Y"">
+                        <Int>20</Int>
+                    </PropertyValue>
+                </Record>
+            </LabeledElement>
+        </Collection>
+    </Annotation>
+  </Annotations>
+</Schema>";
 
-        bool success = SchemaReader.TryParse(VocabularyAnnotationClassTypeBasicTest().Select(e => e.CreateReader()), this.operationDeclarationModel, out IEdmModel edmModel, out IEnumerable<EdmError> errors);
+        bool success = SchemaReader.TryParse(new XElement[] { XElement.Parse(csdl) }.Select(e => e.CreateReader()), this.operationDeclarationModel, out IEdmModel edmModel, out IEnumerable<EdmError> errors);
         Assert.True(success);
         Assert.False(errors.Any());
 
@@ -68,8 +151,110 @@ public class ClrTypeMappingTests : EdmLibTestCaseBase
 
     [Fact]
     public void Should_ThrowInvalidCastException_When_ConvertingBetweenCollectionAndSingularObject()
-    {
-        bool success = SchemaReader.TryParse(VocabularyAnnotationClassTypeBasicTest().Select(e => e.CreateReader()), out IEdmModel edmModel, out IEnumerable<EdmError> errors);
+    {       
+        var csdl =
+@"<Schema Namespace='NS1' xmlns='http://docs.oasis-open.org/odata/ns/edm'>
+  <EntityType Name='Person'>
+    <Property Name='Id' Type='Int16' Nullable='false' />
+    <Property Name='FirstName' Type='String' Nullable='false' Unicode='true' />
+    <Property Name='LastName' Type='String' Nullable='false' Unicode='true' />
+  </EntityType>
+  <ComplexType Name='Pet'>
+    <Property Name='Name' Type='Edm.String' Nullable='false' />
+    <Property Name='Breed' Type='Edm.String' Nullable='true' />
+    <Property Name='Age' Type='Edm.Int32' Nullable='true' />
+  </ComplexType>
+  <Term Name='Title' Type='String' Unicode='true' />
+  <Term Name='DisplaySize' Type='Int32' Nullable='false' />
+  <Term Name='InspectedBy' Type='NS1.Person' Nullable='false' />
+  <Term Name='AdoptPet' Type='NS1.Pet' Nullable='false' />
+  <Annotations Target='NS1.Person'>
+    <Annotation Term=""NS1.Coordination"" Qualifier=""Display"">
+        <Record>
+            <PropertyValue Property=""X"" Int=""10"" />
+            <PropertyValue Property=""Y"">
+                <Apply Function=""Functions.IntAdd"">
+                    <Int>5</Int>
+                    <Int>15</Int>
+                </Apply>
+            </PropertyValue>
+        </Record>
+    </Annotation>
+    <Annotation Term=""NS1.InspectedBy"">
+        <Record>
+            <PropertyValue Property=""Id"" Int=""10"" />
+            <PropertyValue Property=""FirstName"">
+                <String>Young</String>
+            </PropertyValue>
+            <PropertyValue Property=""LastName"" String='Hong'>
+            </PropertyValue>
+        </Record>
+    </Annotation>
+    <Annotation Term=""NS1.AdoptPet"">
+        <Record>
+            <PropertyValue Property=""Name"" String=""Jacquine"" />
+            <PropertyValue Property=""Breed"">
+                <String>Bull Dog</String>
+            </PropertyValue>
+            <PropertyValue Property=""Age"" Int='3'>
+            </PropertyValue>
+        </Record>
+    </Annotation>
+    <Annotation Term=""NS1.TVDisplay"">
+        <Record>
+            <PropertyValue Property=""X"" Int=""10"" />
+            <PropertyValue Property=""Y"">
+                <Apply Function=""Functions.IntAdd"">
+                    <Int>5</Int>
+                    <Int>15</Int>
+                </Apply>
+            </PropertyValue>
+            <PropertyValue Property=""Origin"">
+                <Record>
+                    <PropertyValue Property=""X"" Int=""10"" />
+                    <PropertyValue Property=""Y"">
+                        <Int>20</Int>
+                    </PropertyValue>
+                </Record>
+            </PropertyValue>
+        </Record>
+    </Annotation>
+    <Annotation Term=""NS1.MultiMonitors"">
+        <Collection>
+            <Record>
+                <PropertyValue Property=""X"" Int=""10"" />
+                <PropertyValue Property=""Y"">
+                    <Int>20</Int>
+                </PropertyValue>
+            </Record>
+            <Record>
+                <PropertyValue Property=""X"" Int=""30"" />
+                <PropertyValue Property=""Y"">
+                    <Int>40</Int>
+                </PropertyValue>
+            </Record>
+        </Collection>
+    </Annotation>
+    <Annotation Term=""NS1.EmptyCollection"">
+        <Collection>
+        </Collection>
+    </Annotation>
+    <Annotation Term=""NS1.LabledMultiMonitors"">
+        <Collection>
+            <LabeledElement Name='Label1'>
+                <Record>
+                    <PropertyValue Property=""X"" Int=""10"" />
+                    <PropertyValue Property=""Y"">
+                        <Int>20</Int>
+                    </PropertyValue>
+                </Record>
+            </LabeledElement>
+        </Collection>
+    </Annotation>
+  </Annotations>
+</Schema>";
+
+        bool success = SchemaReader.TryParse(new XElement[] { XElement.Parse(csdl) }.Select(e => e.CreateReader()), out IEdmModel edmModel, out IEnumerable<EdmError> errors);
         Assert.True(success);
         Assert.False(errors.Any());
 
@@ -85,8 +270,110 @@ public class ClrTypeMappingTests : EdmLibTestCaseBase
 
     [Fact]
     public void Should_ThrowInvalidCastException_When_ConvertingCollectionValueToUnsupportedCollectionType()
-    {
-        bool success = SchemaReader.TryParse(VocabularyAnnotationClassTypeBasicTest().Select(e => e.CreateReader()), out IEdmModel edmModel, out IEnumerable<EdmError> errors);
+    {       
+        var csdl =
+@"<Schema Namespace='NS1' xmlns='http://docs.oasis-open.org/odata/ns/edm'>
+  <EntityType Name='Person'>
+    <Property Name='Id' Type='Int16' Nullable='false' />
+    <Property Name='FirstName' Type='String' Nullable='false' Unicode='true' />
+    <Property Name='LastName' Type='String' Nullable='false' Unicode='true' />
+  </EntityType>
+  <ComplexType Name='Pet'>
+    <Property Name='Name' Type='Edm.String' Nullable='false' />
+    <Property Name='Breed' Type='Edm.String' Nullable='true' />
+    <Property Name='Age' Type='Edm.Int32' Nullable='true' />
+  </ComplexType>
+  <Term Name='Title' Type='String' Unicode='true' />
+  <Term Name='DisplaySize' Type='Int32' Nullable='false' />
+  <Term Name='InspectedBy' Type='NS1.Person' Nullable='false' />
+  <Term Name='AdoptPet' Type='NS1.Pet' Nullable='false' />
+  <Annotations Target='NS1.Person'>
+    <Annotation Term=""NS1.Coordination"" Qualifier=""Display"">
+        <Record>
+            <PropertyValue Property=""X"" Int=""10"" />
+            <PropertyValue Property=""Y"">
+                <Apply Function=""Functions.IntAdd"">
+                    <Int>5</Int>
+                    <Int>15</Int>
+                </Apply>
+            </PropertyValue>
+        </Record>
+    </Annotation>
+    <Annotation Term=""NS1.InspectedBy"">
+        <Record>
+            <PropertyValue Property=""Id"" Int=""10"" />
+            <PropertyValue Property=""FirstName"">
+                <String>Young</String>
+            </PropertyValue>
+            <PropertyValue Property=""LastName"" String='Hong'>
+            </PropertyValue>
+        </Record>
+    </Annotation>
+    <Annotation Term=""NS1.AdoptPet"">
+        <Record>
+            <PropertyValue Property=""Name"" String=""Jacquine"" />
+            <PropertyValue Property=""Breed"">
+                <String>Bull Dog</String>
+            </PropertyValue>
+            <PropertyValue Property=""Age"" Int='3'>
+            </PropertyValue>
+        </Record>
+    </Annotation>
+    <Annotation Term=""NS1.TVDisplay"">
+        <Record>
+            <PropertyValue Property=""X"" Int=""10"" />
+            <PropertyValue Property=""Y"">
+                <Apply Function=""Functions.IntAdd"">
+                    <Int>5</Int>
+                    <Int>15</Int>
+                </Apply>
+            </PropertyValue>
+            <PropertyValue Property=""Origin"">
+                <Record>
+                    <PropertyValue Property=""X"" Int=""10"" />
+                    <PropertyValue Property=""Y"">
+                        <Int>20</Int>
+                    </PropertyValue>
+                </Record>
+            </PropertyValue>
+        </Record>
+    </Annotation>
+    <Annotation Term=""NS1.MultiMonitors"">
+        <Collection>
+            <Record>
+                <PropertyValue Property=""X"" Int=""10"" />
+                <PropertyValue Property=""Y"">
+                    <Int>20</Int>
+                </PropertyValue>
+            </Record>
+            <Record>
+                <PropertyValue Property=""X"" Int=""30"" />
+                <PropertyValue Property=""Y"">
+                    <Int>40</Int>
+                </PropertyValue>
+            </Record>
+        </Collection>
+    </Annotation>
+    <Annotation Term=""NS1.EmptyCollection"">
+        <Collection>
+        </Collection>
+    </Annotation>
+    <Annotation Term=""NS1.LabledMultiMonitors"">
+        <Collection>
+            <LabeledElement Name='Label1'>
+                <Record>
+                    <PropertyValue Property=""X"" Int=""10"" />
+                    <PropertyValue Property=""Y"">
+                        <Int>20</Int>
+                    </PropertyValue>
+                </Record>
+            </LabeledElement>
+        </Collection>
+    </Annotation>
+  </Annotations>
+</Schema>";
+
+        bool success = SchemaReader.TryParse(new XElement[] { XElement.Parse(csdl) }.Select(e => e.CreateReader()), out IEdmModel edmModel, out IEnumerable<EdmError> errors);
         Assert.True(success);
         Assert.False(errors.Any());
 
@@ -216,8 +503,110 @@ public class ClrTypeMappingTests : EdmLibTestCaseBase
     public void Should_ValidateClrTypeMappingForInterfaces()
     {
         this.InitializeOperationDefinitions();
+        
+        var csdl =
+@"<Schema Namespace='NS1' xmlns='http://docs.oasis-open.org/odata/ns/edm'>
+  <EntityType Name='Person'>
+    <Property Name='Id' Type='Int16' Nullable='false' />
+    <Property Name='FirstName' Type='String' Nullable='false' Unicode='true' />
+    <Property Name='LastName' Type='String' Nullable='false' Unicode='true' />
+  </EntityType>
+  <ComplexType Name='Pet'>
+    <Property Name='Name' Type='Edm.String' Nullable='false' />
+    <Property Name='Breed' Type='Edm.String' Nullable='true' />
+    <Property Name='Age' Type='Edm.Int32' Nullable='true' />
+  </ComplexType>
+  <Term Name='Title' Type='String' Unicode='true' />
+  <Term Name='DisplaySize' Type='Int32' Nullable='false' />
+  <Term Name='InspectedBy' Type='NS1.Person' Nullable='false' />
+  <Term Name='AdoptPet' Type='NS1.Pet' Nullable='false' />
+  <Annotations Target='NS1.Person'>
+    <Annotation Term=""NS1.Coordination"" Qualifier=""Display"">
+        <Record>
+            <PropertyValue Property=""X"" Int=""10"" />
+            <PropertyValue Property=""Y"">
+                <Apply Function=""Functions.IntAdd"">
+                    <Int>5</Int>
+                    <Int>15</Int>
+                </Apply>
+            </PropertyValue>
+        </Record>
+    </Annotation>
+    <Annotation Term=""NS1.InspectedBy"">
+        <Record>
+            <PropertyValue Property=""Id"" Int=""10"" />
+            <PropertyValue Property=""FirstName"">
+                <String>Young</String>
+            </PropertyValue>
+            <PropertyValue Property=""LastName"" String='Hong'>
+            </PropertyValue>
+        </Record>
+    </Annotation>
+    <Annotation Term=""NS1.AdoptPet"">
+        <Record>
+            <PropertyValue Property=""Name"" String=""Jacquine"" />
+            <PropertyValue Property=""Breed"">
+                <String>Bull Dog</String>
+            </PropertyValue>
+            <PropertyValue Property=""Age"" Int='3'>
+            </PropertyValue>
+        </Record>
+    </Annotation>
+    <Annotation Term=""NS1.TVDisplay"">
+        <Record>
+            <PropertyValue Property=""X"" Int=""10"" />
+            <PropertyValue Property=""Y"">
+                <Apply Function=""Functions.IntAdd"">
+                    <Int>5</Int>
+                    <Int>15</Int>
+                </Apply>
+            </PropertyValue>
+            <PropertyValue Property=""Origin"">
+                <Record>
+                    <PropertyValue Property=""X"" Int=""10"" />
+                    <PropertyValue Property=""Y"">
+                        <Int>20</Int>
+                    </PropertyValue>
+                </Record>
+            </PropertyValue>
+        </Record>
+    </Annotation>
+    <Annotation Term=""NS1.MultiMonitors"">
+        <Collection>
+            <Record>
+                <PropertyValue Property=""X"" Int=""10"" />
+                <PropertyValue Property=""Y"">
+                    <Int>20</Int>
+                </PropertyValue>
+            </Record>
+            <Record>
+                <PropertyValue Property=""X"" Int=""30"" />
+                <PropertyValue Property=""Y"">
+                    <Int>40</Int>
+                </PropertyValue>
+            </Record>
+        </Collection>
+    </Annotation>
+    <Annotation Term=""NS1.EmptyCollection"">
+        <Collection>
+        </Collection>
+    </Annotation>
+    <Annotation Term=""NS1.LabledMultiMonitors"">
+        <Collection>
+            <LabeledElement Name='Label1'>
+                <Record>
+                    <PropertyValue Property=""X"" Int=""10"" />
+                    <PropertyValue Property=""Y"">
+                        <Int>20</Int>
+                    </PropertyValue>
+                </Record>
+            </LabeledElement>
+        </Collection>
+    </Annotation>
+  </Annotations>
+</Schema>";
 
-        bool success = SchemaReader.TryParse(VocabularyAnnotationClassTypeBasicTest().Select(e => e.CreateReader()), this.operationDeclarationModel, out IEdmModel edmModel, out IEnumerable<EdmError> errors);
+        bool success = SchemaReader.TryParse(new XElement[] { XElement.Parse(csdl) }.Select(e => e.CreateReader()), this.operationDeclarationModel, out IEdmModel edmModel, out IEnumerable<EdmError> errors);
         Assert.True(success);
         Assert.False(errors.Any());
 
@@ -233,8 +622,110 @@ public class ClrTypeMappingTests : EdmLibTestCaseBase
 
     [Fact]
     public void Should_ThrowMissingMethodException_When_ClrTypeHasNoParameterlessConstructor()
-    {
-        bool success = SchemaReader.TryParse(VocabularyAnnotationClassTypeBasicTest().Select(e => e.CreateReader()), out IEdmModel edmModel, out IEnumerable<EdmError> errors);
+    {       
+        var csdl =
+@"<Schema Namespace='NS1' xmlns='http://docs.oasis-open.org/odata/ns/edm'>
+  <EntityType Name='Person'>
+    <Property Name='Id' Type='Int16' Nullable='false' />
+    <Property Name='FirstName' Type='String' Nullable='false' Unicode='true' />
+    <Property Name='LastName' Type='String' Nullable='false' Unicode='true' />
+  </EntityType>
+  <ComplexType Name='Pet'>
+    <Property Name='Name' Type='Edm.String' Nullable='false' />
+    <Property Name='Breed' Type='Edm.String' Nullable='true' />
+    <Property Name='Age' Type='Edm.Int32' Nullable='true' />
+  </ComplexType>
+  <Term Name='Title' Type='String' Unicode='true' />
+  <Term Name='DisplaySize' Type='Int32' Nullable='false' />
+  <Term Name='InspectedBy' Type='NS1.Person' Nullable='false' />
+  <Term Name='AdoptPet' Type='NS1.Pet' Nullable='false' />
+  <Annotations Target='NS1.Person'>
+    <Annotation Term=""NS1.Coordination"" Qualifier=""Display"">
+        <Record>
+            <PropertyValue Property=""X"" Int=""10"" />
+            <PropertyValue Property=""Y"">
+                <Apply Function=""Functions.IntAdd"">
+                    <Int>5</Int>
+                    <Int>15</Int>
+                </Apply>
+            </PropertyValue>
+        </Record>
+    </Annotation>
+    <Annotation Term=""NS1.InspectedBy"">
+        <Record>
+            <PropertyValue Property=""Id"" Int=""10"" />
+            <PropertyValue Property=""FirstName"">
+                <String>Young</String>
+            </PropertyValue>
+            <PropertyValue Property=""LastName"" String='Hong'>
+            </PropertyValue>
+        </Record>
+    </Annotation>
+    <Annotation Term=""NS1.AdoptPet"">
+        <Record>
+            <PropertyValue Property=""Name"" String=""Jacquine"" />
+            <PropertyValue Property=""Breed"">
+                <String>Bull Dog</String>
+            </PropertyValue>
+            <PropertyValue Property=""Age"" Int='3'>
+            </PropertyValue>
+        </Record>
+    </Annotation>
+    <Annotation Term=""NS1.TVDisplay"">
+        <Record>
+            <PropertyValue Property=""X"" Int=""10"" />
+            <PropertyValue Property=""Y"">
+                <Apply Function=""Functions.IntAdd"">
+                    <Int>5</Int>
+                    <Int>15</Int>
+                </Apply>
+            </PropertyValue>
+            <PropertyValue Property=""Origin"">
+                <Record>
+                    <PropertyValue Property=""X"" Int=""10"" />
+                    <PropertyValue Property=""Y"">
+                        <Int>20</Int>
+                    </PropertyValue>
+                </Record>
+            </PropertyValue>
+        </Record>
+    </Annotation>
+    <Annotation Term=""NS1.MultiMonitors"">
+        <Collection>
+            <Record>
+                <PropertyValue Property=""X"" Int=""10"" />
+                <PropertyValue Property=""Y"">
+                    <Int>20</Int>
+                </PropertyValue>
+            </Record>
+            <Record>
+                <PropertyValue Property=""X"" Int=""30"" />
+                <PropertyValue Property=""Y"">
+                    <Int>40</Int>
+                </PropertyValue>
+            </Record>
+        </Collection>
+    </Annotation>
+    <Annotation Term=""NS1.EmptyCollection"">
+        <Collection>
+        </Collection>
+    </Annotation>
+    <Annotation Term=""NS1.LabledMultiMonitors"">
+        <Collection>
+            <LabeledElement Name='Label1'>
+                <Record>
+                    <PropertyValue Property=""X"" Int=""10"" />
+                    <PropertyValue Property=""Y"">
+                        <Int>20</Int>
+                    </PropertyValue>
+                </Record>
+            </LabeledElement>
+        </Collection>
+    </Annotation>
+  </Annotations>
+</Schema>";
+
+        bool success = SchemaReader.TryParse(new XElement[] { XElement.Parse(csdl) }.Select(e => e.CreateReader()), out IEdmModel edmModel, out IEnumerable<EdmError> errors);
         Assert.True(success);
         Assert.False(errors.Any());
 
@@ -252,8 +743,110 @@ public class ClrTypeMappingTests : EdmLibTestCaseBase
 
     [Fact]
     public void Should_ValidateClrTypeMappingForPrivateProperties()
-    {
-        bool success = SchemaReader.TryParse(VocabularyAnnotationClassTypeBasicTest().Select(e => e.CreateReader()), out IEdmModel edmModel, out IEnumerable<EdmError> errors);
+    {       
+        var csdl =
+@"<Schema Namespace='NS1' xmlns='http://docs.oasis-open.org/odata/ns/edm'>
+  <EntityType Name='Person'>
+    <Property Name='Id' Type='Int16' Nullable='false' />
+    <Property Name='FirstName' Type='String' Nullable='false' Unicode='true' />
+    <Property Name='LastName' Type='String' Nullable='false' Unicode='true' />
+  </EntityType>
+  <ComplexType Name='Pet'>
+    <Property Name='Name' Type='Edm.String' Nullable='false' />
+    <Property Name='Breed' Type='Edm.String' Nullable='true' />
+    <Property Name='Age' Type='Edm.Int32' Nullable='true' />
+  </ComplexType>
+  <Term Name='Title' Type='String' Unicode='true' />
+  <Term Name='DisplaySize' Type='Int32' Nullable='false' />
+  <Term Name='InspectedBy' Type='NS1.Person' Nullable='false' />
+  <Term Name='AdoptPet' Type='NS1.Pet' Nullable='false' />
+  <Annotations Target='NS1.Person'>
+    <Annotation Term=""NS1.Coordination"" Qualifier=""Display"">
+        <Record>
+            <PropertyValue Property=""X"" Int=""10"" />
+            <PropertyValue Property=""Y"">
+                <Apply Function=""Functions.IntAdd"">
+                    <Int>5</Int>
+                    <Int>15</Int>
+                </Apply>
+            </PropertyValue>
+        </Record>
+    </Annotation>
+    <Annotation Term=""NS1.InspectedBy"">
+        <Record>
+            <PropertyValue Property=""Id"" Int=""10"" />
+            <PropertyValue Property=""FirstName"">
+                <String>Young</String>
+            </PropertyValue>
+            <PropertyValue Property=""LastName"" String='Hong'>
+            </PropertyValue>
+        </Record>
+    </Annotation>
+    <Annotation Term=""NS1.AdoptPet"">
+        <Record>
+            <PropertyValue Property=""Name"" String=""Jacquine"" />
+            <PropertyValue Property=""Breed"">
+                <String>Bull Dog</String>
+            </PropertyValue>
+            <PropertyValue Property=""Age"" Int='3'>
+            </PropertyValue>
+        </Record>
+    </Annotation>
+    <Annotation Term=""NS1.TVDisplay"">
+        <Record>
+            <PropertyValue Property=""X"" Int=""10"" />
+            <PropertyValue Property=""Y"">
+                <Apply Function=""Functions.IntAdd"">
+                    <Int>5</Int>
+                    <Int>15</Int>
+                </Apply>
+            </PropertyValue>
+            <PropertyValue Property=""Origin"">
+                <Record>
+                    <PropertyValue Property=""X"" Int=""10"" />
+                    <PropertyValue Property=""Y"">
+                        <Int>20</Int>
+                    </PropertyValue>
+                </Record>
+            </PropertyValue>
+        </Record>
+    </Annotation>
+    <Annotation Term=""NS1.MultiMonitors"">
+        <Collection>
+            <Record>
+                <PropertyValue Property=""X"" Int=""10"" />
+                <PropertyValue Property=""Y"">
+                    <Int>20</Int>
+                </PropertyValue>
+            </Record>
+            <Record>
+                <PropertyValue Property=""X"" Int=""30"" />
+                <PropertyValue Property=""Y"">
+                    <Int>40</Int>
+                </PropertyValue>
+            </Record>
+        </Collection>
+    </Annotation>
+    <Annotation Term=""NS1.EmptyCollection"">
+        <Collection>
+        </Collection>
+    </Annotation>
+    <Annotation Term=""NS1.LabledMultiMonitors"">
+        <Collection>
+            <LabeledElement Name='Label1'>
+                <Record>
+                    <PropertyValue Property=""X"" Int=""10"" />
+                    <PropertyValue Property=""Y"">
+                        <Int>20</Int>
+                    </PropertyValue>
+                </Record>
+            </LabeledElement>
+        </Collection>
+    </Annotation>
+  </Annotations>
+</Schema>";
+
+        bool success = SchemaReader.TryParse(new XElement[] { XElement.Parse(csdl) }.Select(e => e.CreateReader()), out IEdmModel edmModel, out IEnumerable<EdmError> errors);
         Assert.True(success);
         Assert.False(errors.Any());
 
@@ -272,8 +865,110 @@ public class ClrTypeMappingTests : EdmLibTestCaseBase
 
     [Fact]
     public void Should_ValidateClrTypeMappingForGenericTypes()
-    {
-        bool success = SchemaReader.TryParse(VocabularyAnnotationClassTypeBasicTest().Select(e => e.CreateReader()), out IEdmModel edmModel, out IEnumerable<EdmError> errors);
+    {       
+        var csdl =
+@"<Schema Namespace='NS1' xmlns='http://docs.oasis-open.org/odata/ns/edm'>
+  <EntityType Name='Person'>
+    <Property Name='Id' Type='Int16' Nullable='false' />
+    <Property Name='FirstName' Type='String' Nullable='false' Unicode='true' />
+    <Property Name='LastName' Type='String' Nullable='false' Unicode='true' />
+  </EntityType>
+  <ComplexType Name='Pet'>
+    <Property Name='Name' Type='Edm.String' Nullable='false' />
+    <Property Name='Breed' Type='Edm.String' Nullable='true' />
+    <Property Name='Age' Type='Edm.Int32' Nullable='true' />
+  </ComplexType>
+  <Term Name='Title' Type='String' Unicode='true' />
+  <Term Name='DisplaySize' Type='Int32' Nullable='false' />
+  <Term Name='InspectedBy' Type='NS1.Person' Nullable='false' />
+  <Term Name='AdoptPet' Type='NS1.Pet' Nullable='false' />
+  <Annotations Target='NS1.Person'>
+    <Annotation Term=""NS1.Coordination"" Qualifier=""Display"">
+        <Record>
+            <PropertyValue Property=""X"" Int=""10"" />
+            <PropertyValue Property=""Y"">
+                <Apply Function=""Functions.IntAdd"">
+                    <Int>5</Int>
+                    <Int>15</Int>
+                </Apply>
+            </PropertyValue>
+        </Record>
+    </Annotation>
+    <Annotation Term=""NS1.InspectedBy"">
+        <Record>
+            <PropertyValue Property=""Id"" Int=""10"" />
+            <PropertyValue Property=""FirstName"">
+                <String>Young</String>
+            </PropertyValue>
+            <PropertyValue Property=""LastName"" String='Hong'>
+            </PropertyValue>
+        </Record>
+    </Annotation>
+    <Annotation Term=""NS1.AdoptPet"">
+        <Record>
+            <PropertyValue Property=""Name"" String=""Jacquine"" />
+            <PropertyValue Property=""Breed"">
+                <String>Bull Dog</String>
+            </PropertyValue>
+            <PropertyValue Property=""Age"" Int='3'>
+            </PropertyValue>
+        </Record>
+    </Annotation>
+    <Annotation Term=""NS1.TVDisplay"">
+        <Record>
+            <PropertyValue Property=""X"" Int=""10"" />
+            <PropertyValue Property=""Y"">
+                <Apply Function=""Functions.IntAdd"">
+                    <Int>5</Int>
+                    <Int>15</Int>
+                </Apply>
+            </PropertyValue>
+            <PropertyValue Property=""Origin"">
+                <Record>
+                    <PropertyValue Property=""X"" Int=""10"" />
+                    <PropertyValue Property=""Y"">
+                        <Int>20</Int>
+                    </PropertyValue>
+                </Record>
+            </PropertyValue>
+        </Record>
+    </Annotation>
+    <Annotation Term=""NS1.MultiMonitors"">
+        <Collection>
+            <Record>
+                <PropertyValue Property=""X"" Int=""10"" />
+                <PropertyValue Property=""Y"">
+                    <Int>20</Int>
+                </PropertyValue>
+            </Record>
+            <Record>
+                <PropertyValue Property=""X"" Int=""30"" />
+                <PropertyValue Property=""Y"">
+                    <Int>40</Int>
+                </PropertyValue>
+            </Record>
+        </Collection>
+    </Annotation>
+    <Annotation Term=""NS1.EmptyCollection"">
+        <Collection>
+        </Collection>
+    </Annotation>
+    <Annotation Term=""NS1.LabledMultiMonitors"">
+        <Collection>
+            <LabeledElement Name='Label1'>
+                <Record>
+                    <PropertyValue Property=""X"" Int=""10"" />
+                    <PropertyValue Property=""Y"">
+                        <Int>20</Int>
+                    </PropertyValue>
+                </Record>
+            </LabeledElement>
+        </Collection>
+    </Annotation>
+  </Annotations>
+</Schema>";
+
+        bool success = SchemaReader.TryParse(new XElement[] { XElement.Parse(csdl) }.Select(e => e.CreateReader()), out IEdmModel edmModel, out IEnumerable<EdmError> errors);
         Assert.True(success);
         Assert.False(errors.Any());
 
@@ -287,8 +982,110 @@ public class ClrTypeMappingTests : EdmLibTestCaseBase
     public void Should_ValidateClrTypeMappingForDifferentPropertyTypes()
     {
         this.InitializeOperationDefinitions();
+        
+        var csdl =
+@"<Schema Namespace='NS1' xmlns='http://docs.oasis-open.org/odata/ns/edm'>
+  <EntityType Name='Person'>
+    <Property Name='Id' Type='Int16' Nullable='false' />
+    <Property Name='FirstName' Type='String' Nullable='false' Unicode='true' />
+    <Property Name='LastName' Type='String' Nullable='false' Unicode='true' />
+  </EntityType>
+  <ComplexType Name='Pet'>
+    <Property Name='Name' Type='Edm.String' Nullable='false' />
+    <Property Name='Breed' Type='Edm.String' Nullable='true' />
+    <Property Name='Age' Type='Edm.Int32' Nullable='true' />
+  </ComplexType>
+  <Term Name='Title' Type='String' Unicode='true' />
+  <Term Name='DisplaySize' Type='Int32' Nullable='false' />
+  <Term Name='InspectedBy' Type='NS1.Person' Nullable='false' />
+  <Term Name='AdoptPet' Type='NS1.Pet' Nullable='false' />
+  <Annotations Target='NS1.Person'>
+    <Annotation Term=""NS1.Coordination"" Qualifier=""Display"">
+        <Record>
+            <PropertyValue Property=""X"" Int=""10"" />
+            <PropertyValue Property=""Y"">
+                <Apply Function=""Functions.IntAdd"">
+                    <Int>5</Int>
+                    <Int>15</Int>
+                </Apply>
+            </PropertyValue>
+        </Record>
+    </Annotation>
+    <Annotation Term=""NS1.InspectedBy"">
+        <Record>
+            <PropertyValue Property=""Id"" Int=""10"" />
+            <PropertyValue Property=""FirstName"">
+                <String>Young</String>
+            </PropertyValue>
+            <PropertyValue Property=""LastName"" String='Hong'>
+            </PropertyValue>
+        </Record>
+    </Annotation>
+    <Annotation Term=""NS1.AdoptPet"">
+        <Record>
+            <PropertyValue Property=""Name"" String=""Jacquine"" />
+            <PropertyValue Property=""Breed"">
+                <String>Bull Dog</String>
+            </PropertyValue>
+            <PropertyValue Property=""Age"" Int='3'>
+            </PropertyValue>
+        </Record>
+    </Annotation>
+    <Annotation Term=""NS1.TVDisplay"">
+        <Record>
+            <PropertyValue Property=""X"" Int=""10"" />
+            <PropertyValue Property=""Y"">
+                <Apply Function=""Functions.IntAdd"">
+                    <Int>5</Int>
+                    <Int>15</Int>
+                </Apply>
+            </PropertyValue>
+            <PropertyValue Property=""Origin"">
+                <Record>
+                    <PropertyValue Property=""X"" Int=""10"" />
+                    <PropertyValue Property=""Y"">
+                        <Int>20</Int>
+                    </PropertyValue>
+                </Record>
+            </PropertyValue>
+        </Record>
+    </Annotation>
+    <Annotation Term=""NS1.MultiMonitors"">
+        <Collection>
+            <Record>
+                <PropertyValue Property=""X"" Int=""10"" />
+                <PropertyValue Property=""Y"">
+                    <Int>20</Int>
+                </PropertyValue>
+            </Record>
+            <Record>
+                <PropertyValue Property=""X"" Int=""30"" />
+                <PropertyValue Property=""Y"">
+                    <Int>40</Int>
+                </PropertyValue>
+            </Record>
+        </Collection>
+    </Annotation>
+    <Annotation Term=""NS1.EmptyCollection"">
+        <Collection>
+        </Collection>
+    </Annotation>
+    <Annotation Term=""NS1.LabledMultiMonitors"">
+        <Collection>
+            <LabeledElement Name='Label1'>
+                <Record>
+                    <PropertyValue Property=""X"" Int=""10"" />
+                    <PropertyValue Property=""Y"">
+                        <Int>20</Int>
+                    </PropertyValue>
+                </Record>
+            </LabeledElement>
+        </Collection>
+    </Annotation>
+  </Annotations>
+</Schema>";
 
-        bool success = SchemaReader.TryParse(VocabularyAnnotationClassTypeBasicTest().Select(e => e.CreateReader()), this.operationDeclarationModel, out IEdmModel edmModel, out IEnumerable<EdmError> errors);
+        bool success = SchemaReader.TryParse(new XElement[] { XElement.Parse(csdl) }.Select(e => e.CreateReader()), this.operationDeclarationModel, out IEdmModel edmModel, out IEnumerable<EdmError> errors);
         Assert.True(success);
         Assert.False(errors.Any());
 
@@ -715,291 +1512,7 @@ public class ClrTypeMappingTests : EdmLibTestCaseBase
 
     [Fact]
     public void Should_ThrowInvalidCastException_When_ConvertingToStructType()
-    {
-        bool success = SchemaReader.TryParse(VocabularyAnnotationClassTypeBasicTest().Select(e => e.CreateReader()), out IEdmModel edmModel, out IEnumerable<EdmError> errors);
-        Assert.True(success);
-        Assert.False(errors.Any());
-
-        var exception = Assert.Throws<InvalidCastException>(() =>
-            this.ConvertToClrObject<Display1StructType>(this.GetVocabularyAnnotations(edmModel, edmModel.FindType("NS1.Person"), "Coordination").Single()));
-        Assert.Equal("Conversion of an EDM structured value is supported only to a CLR class.", exception.Message);
-
-        exception = Assert.Throws<InvalidCastException>(() =>
-            this.ConvertToClrObject<Display2StructTypeWithObjectProperty>(this.GetVocabularyAnnotations(edmModel, edmModel.FindType("NS1.Person"), "TVDisplay").Single()));
-        Assert.Equal("Conversion of an EDM structured value is supported only to a CLR class.", exception.Message);
-
-        exception = Assert.Throws<InvalidCastException>(() =>
-            this.ConvertToClrObject<Display2StructTypeWithStructProperty>(this.GetVocabularyAnnotations(edmModel, edmModel.FindType("NS1.Person"), "TVDisplay").Single()));
-        Assert.Equal("Conversion of an EDM structured value is supported only to a CLR class.", exception.Message);
-    }
-
-    [Fact]
-    public void Should_ThrowMissingMethodException_When_ConvertingToAbstractType()
-    {
-        this.InitializeOperationDefinitions();
-
-        bool success = SchemaReader.TryParse(VocabularyAnnotationClassTypeBasicTest().Select(e => e.CreateReader()), out IEdmModel edmModel, out IEnumerable<EdmError> errors);
-        Assert.True(success);
-        Assert.False(errors.Any());
-
-        var exception = Assert.Throws<MissingMethodException>(() =>
-            this.ConvertToClrObject<AbstractClass>(this.GetVocabularyAnnotations(edmModel, edmModel.FindType("NS1.Person"), "Coordination").Single()));
-        Assert.Equal("Cannot dynamically create an instance of type 'Microsoft.OData.Edm.E2E.Tests.FunctionalTests.ClrTypeMappingTests+AbstractClass'. Reason: Cannot create an abstract class.", exception.Message);
-    }
-
-    [Fact]
-    public void Should_HandleTryCreateObjectInstanceForClrTypeMapping()
-    {
-        this.InitializeOperationDefinitions();
-
-        EdmToClrEvaluator ev = new EdmToClrEvaluator(this.operationDefinitions);
-
-        bool success = SchemaReader.TryParse(VocabularyAnnotationClassTypeBasicTest().Select(e => e.CreateReader()), this.operationDeclarationModel, out IEdmModel edmModel, out IEnumerable<EdmError> errors);
-        Assert.True(success);
-        Assert.False(errors.Any());
-
-        var value = ev.Evaluate(this.GetVocabularyAnnotations(edmModel, edmModel.FindType("NS1.Person"), "TVDisplay").Single().Value);
-
-        var isObjectPopulated = true;
-        var isObjectInitialized = true;
-        object? createdObjectInstance = null;
-        TryCreateObjectInstance tryCreateObjectInstance = (IEdmStructuredValue edmValue, Type clrType, EdmToClrConverter converter, out object objectInstance, out bool objectInstanceInitialized) =>
-        {
-            objectInstance = createdObjectInstance;
-            objectInstanceInitialized = isObjectPopulated;
-            return isObjectInitialized;
-        };
-
-        ev.EdmToClrConverter = new EdmToClrConverter(tryCreateObjectInstance);
-        Assert.Null((Display2)ev.EdmToClrConverter.AsClrValue(value, typeof(Display2)));
-
-        isObjectPopulated = false;
-        isObjectInitialized = true;
-        ev.EdmToClrConverter = new EdmToClrConverter(tryCreateObjectInstance);
-        Assert.Null((Display2)ev.EdmToClrConverter.AsClrValue(value, typeof(Display2)));
-
-        isObjectPopulated = true;
-        isObjectInitialized = false;
-        ev.EdmToClrConverter = new EdmToClrConverter(tryCreateObjectInstance);
-        Assert.True(CompareObjects((Display2)ev.EdmToClrConverter.AsClrValue(value, typeof(Display2)), new Display2() { X = 10, Y = 20, Origin = new Display1() { X = 10, Y = 20 } }));
-
-        isObjectPopulated = false;
-        isObjectInitialized = false;
-        ev.EdmToClrConverter = new EdmToClrConverter(tryCreateObjectInstance);
-        Assert.True(CompareObjects((Display2)ev.EdmToClrConverter.AsClrValue(value, typeof(Display2)), new Display2() { X = 10, Y = 20, Origin = new Display1() { X = 10, Y = 20 } }));
-
-        createdObjectInstance = new Display2() { X = 0, Y = 1, Origin = new Display1 { X = 3, Y = 4 } };
-        isObjectPopulated = true;
-        isObjectInitialized = true;
-        ev.EdmToClrConverter = new EdmToClrConverter(tryCreateObjectInstance);
-        Assert.True(CompareObjects((Display2)ev.EdmToClrConverter.AsClrValue(value, typeof(Display2)), createdObjectInstance));
-
-        ev.EdmToClrConverter = new EdmToClrConverter((IEdmStructuredValue edmValue, Type clrType, EdmToClrConverter converter, out object? objectInstance, out bool objectInstanceInitialized) =>
-        {
-            if (clrType == typeof(Display2))
-            {
-                objectInstance = new Display2() { X = 0, Y = 1, Origin = new Display1 { X = 3, Y = 4 } };
-                objectInstanceInitialized = false;
-                return true;
-            }
-            else if (clrType == typeof(Display1))
-            {
-                objectInstance = new Display1 { X = 3, Y = 4 };
-                objectInstanceInitialized = false;
-                return true;
-            }
-            else
-            {
-                objectInstance = null;
-                objectInstanceInitialized = false;
-                return false;
-            }
-        });
-
-        Assert.True(CompareObjects((Display2)ev.EdmToClrConverter.AsClrValue(value, typeof(Display2)), new Display2() { X = 10, Y = 20, Origin = new Display1() { X = 10, Y = 20 } }));
-
-        isObjectPopulated = false;
-        isObjectInitialized = true;
-        createdObjectInstance = new DisplayCoordination();
-        ev.EdmToClrConverter = new EdmToClrConverter(tryCreateObjectInstance);
-        Coordination actual = (Coordination)ev.EdmToClrConverter.AsClrValue(value, typeof(Coordination));
-        Coordination expected = new Coordination() { X = 10, Y = 20 };
-        Assert.Equal(expected.X, actual.X);
-        Assert.Equal(expected.Y, actual.Y);
-    }
-
-    [Fact]
-    public void Should_HandleTryPopulateObjectInstanceForClrTypeMapping()
-    {
-        this.InitializeOperationDefinitions();
-
-        EdmToClrEvaluator ev = new EdmToClrEvaluator(this.operationDefinitions);
-
-        bool success = SchemaReader.TryParse(VocabularyAnnotationClassTypeBasicTest().Select(e => e.CreateReader()), this.operationDeclarationModel, out IEdmModel edmModel, out IEnumerable<EdmError> errors);
-        Assert.True(success);
-        Assert.False(errors.Any());
-
-        var value = ev.Evaluate(this.GetVocabularyAnnotations(edmModel, edmModel.FindType("NS1.Person"), "TVDisplay").Single().Value);
-
-        var isObjectPopulated = false;
-        var isObjectInitialized = true;
-        object createdObjectInstance = new Display1() { X = 0, Y = 1 };
-        TryCreateObjectInstance tryCreateObjectInstance = (IEdmStructuredValue edmValue, Type clrType, EdmToClrConverter converter, out object objectInstance, out bool objectInstanceInitialized) =>
-        {
-            objectInstance = createdObjectInstance;
-            objectInstanceInitialized = isObjectPopulated;
-            return isObjectInitialized;
-        };
-        ev.EdmToClrConverter = new EdmToClrConverter(tryCreateObjectInstance);
-
-        var exception = Assert.Throws<InvalidCastException>(() => ev.EdmToClrConverter.AsClrValue(value, typeof(Display2)));
-        Assert.Equal("The type 'Microsoft.OData.Edm.E2E.Tests.FunctionalTests.ClrTypeMappingTests+Display1' of the object returned by the TryCreateObjectInstance delegate is not assignable to the expected type 'Microsoft.OData.Edm.E2E.Tests.FunctionalTests.ClrTypeMappingTests+Display2'.", exception.Message);
-
-        isObjectPopulated = false;
-        isObjectInitialized = false;
-        createdObjectInstance = new Display1() { X = 0, Y = 1 };
-        ev.EdmToClrConverter = new EdmToClrConverter(tryCreateObjectInstance);
-        Assert.True(CompareObjects((Display2)ev.EdmToClrConverter.AsClrValue(value, typeof(Display2)), new Display2() { X = 10, Y = 20, Origin = new Display1() { X = 10, Y = 20 } }));
-
-        isObjectPopulated = true;
-        isObjectInitialized = true;
-        createdObjectInstance = new Display1() { X = 0, Y = 1 };
-        ev.EdmToClrConverter = new EdmToClrConverter(tryCreateObjectInstance);
-
-        exception = Assert.Throws<InvalidCastException>(() => ev.EdmToClrConverter.AsClrValue(value, typeof(Display2)));
-        Assert.Equal("The type 'Microsoft.OData.Edm.E2E.Tests.FunctionalTests.ClrTypeMappingTests+Display1' of the object returned by the TryCreateObjectInstance delegate is not assignable to the expected type 'Microsoft.OData.Edm.E2E.Tests.FunctionalTests.ClrTypeMappingTests+Display2'.", exception.Message);
-    }
-
-    [Fact]
-    public void Should_ThrowInvalidCastException_When_InterfacePropertyIsMapped()
-    {
-        bool success = SchemaReader.TryParse(VocabularyAnnotationClassTypeBasicTest().Select(e => e.CreateReader()), out IEdmModel edmModel, out IEnumerable<EdmError> errors);
-        Assert.True(success);
-        Assert.False(errors.Any());
-
-        var valueAnnotation = this.GetVocabularyAnnotations(edmModel, edmModel.FindType("NS1.Person"), "TVDisplay").Single();
-
-        var exception = Assert.Throws<InvalidCastException>(() => this.ConvertToClrObject<ClassWithInterfaceProperty>(valueAnnotation));
-        Assert.Equal("Conversion of an EDM structured value is supported only to a CLR class.", exception.Message);
-    }
-
-    [Fact]
-    public void Should_ValidateClrTypeMappingForVirtualMembers()
-    {
-        bool success = SchemaReader.TryParse(VocabularyAnnotationClassTypeBasicTest().Select(e => e.CreateReader()), out IEdmModel edmModel, out IEnumerable<EdmError> errors);
-        Assert.True(success);
-        Assert.False(errors.Any());
-
-        var valueAnnotation = this.GetVocabularyAnnotations(edmModel, edmModel.FindType("NS1.Person"), "TVDisplay").Single();
-
-        var actual1 = this.ConvertToClrObject<ClassWithVirtualMember>(valueAnnotation);
-        Assert.True(CompareObjects(new ClassWithVirtualMember() { X = 10 }, actual1));
-
-        var actual2 = this.ConvertToClrObject<DerivedClassWithVirtualMember>(valueAnnotation);
-        Assert.True(CompareObjects(new DerivedClassWithVirtualMember() { X = 10 }, actual2));
-    }
-
-    [Fact]
-    public void Should_ThrowInvalidCastException_When_ValueStructTypePropertyIsMapped()
-    {
-        this.InitializeOperationDefinitions();
-
-        bool success = SchemaReader.TryParse(VocabularyAnnotationClassTypeBasicTest().Select(e => e.CreateReader()), this.operationDeclarationModel, out IEdmModel edmModel, out IEnumerable<EdmError> errors);
-        Assert.True(success);
-        Assert.False(errors.Any());
-
-        var valueAnnotation = this.GetVocabularyAnnotations(edmModel, edmModel.FindType("NS1.Person"), "TVDisplay").Single();
-
-        var exception = Assert.Throws<InvalidCastException>(() => this.ConvertToClrObject<ClassWithStructProperty>(valueAnnotation));
-        Assert.Equal("Conversion of an EDM structured value is supported only to a CLR class.", exception.Message);
-    }
-
-    [Fact]
-    public void Should_ThrowArgumentException_When_CollectionPropertyIsMappedToNullList()
-    {
-        var csdl =
-@"<Schema Namespace='NS1' xmlns='http://docs.oasis-open.org/odata/ns/edm'>
-  <EntityType Name='Person'>
-    <Property Name='Id' Type='Int16' Nullable='false' />
-    <Property Name='FirstName' Type='String' Nullable='false' Unicode='true' />
-    <Property Name='LastName' Type='String' Nullable='false' Unicode='true' />
-  </EntityType>
-  <Annotations Target='NS1.Person'>
-    <Annotation Term=""NS1.PersonValueAnnotation"">
-        <Record>
-            <PropertyValue Property=""X"">
-                <Collection>
-                    <Int>4</Int>
-                    <Int>5</Int>
-                </Collection>
-            </PropertyValue>
-            <PropertyValue Property=""Y"">
-                <Collection>
-                    <Int>6</Int>
-                    <Int>7</Int>
-                </Collection>
-            </PropertyValue>
-            <PropertyValue Property=""Z"">
-                <Collection>
-                    <Int>8</Int>
-                    <Int>9</Int>
-                </Collection>
-            </PropertyValue>
-            <PropertyValue Property=""C"">
-                <Collection>
-                   <Record>
-                        <PropertyValue Property=""X"" Int=""10"" />
-                        <PropertyValue Property=""Y"">
-                            <Int>11</Int>
-                        </PropertyValue>
-                    </Record> 
-                   <Record>
-                        <PropertyValue Property=""X"" Int=""12"" />
-                        <PropertyValue Property=""Y"">
-                            <Int>13</Int>
-                        </PropertyValue>
-                    </Record> 
-                </Collection>
-            </PropertyValue>
-        </Record>
-    </Annotation>
-  </Annotations>
-</Schema>";
-
-        bool success = SchemaReader.TryParse(new XElement[] { XElement.Parse(csdl) }.Select(e => e.CreateReader()), out IEdmModel edmModel, out IEnumerable<EdmError> errors);
-        Assert.True(success);
-        Assert.False(errors.Any());
-
-        var valueAnnotation = this.GetVocabularyAnnotations(edmModel, edmModel.FindType("NS1.Person"), "PersonValueAnnotation").Single();
-
-        var exception = Assert.Throws<ArgumentException>(() => this.ConvertToClrObject<ClassWithNullCollectionProperty>(valueAnnotation));
-        Assert.Equal("Property set method not found.", exception.Message);
-    }
-
-    private IEnumerable<IEdmVocabularyAnnotation> GetVocabularyAnnotations(IEdmModel edmModel, IEdmVocabularyAnnotatable targetElement, string termName)
-    {
-        return edmModel.FindVocabularyAnnotations(targetElement).Where(n => n.Term.Name.Equals(termName));
-    }
-
-    private T ConvertToClrObject<T>(IEdmVocabularyAnnotation valueAnnotation)
-    {
-        var edmClrEvaluator = new EdmToClrEvaluator(this.operationDefinitions);
-        var edmClrConverter = new EdmToClrConverter();
-
-        var edmValue = edmClrEvaluator.Evaluate(valueAnnotation.Value);
-
-        var object1 = edmClrEvaluator.EvaluateToClrValue<T>(valueAnnotation.Value);
-        var object2 = (T)edmClrConverter.AsClrValue(edmValue, typeof(T));
-        var object3 = edmClrEvaluator.EdmToClrConverter.AsClrValue<T>(edmValue);
-
-        Assert.True(CompareObjects(object1, object2));
-        Assert.True(CompareObjects(object2, object3));
-
-        return object1;
-    }
-
-    private static IEnumerable<XElement> VocabularyAnnotationClassTypeBasicTest()
-    {
+    {       
         var csdl =
 @"<Schema Namespace='NS1' xmlns='http://docs.oasis-open.org/odata/ns/edm'>
   <EntityType Name='Person'>
@@ -1102,7 +1615,920 @@ public class ClrTypeMappingTests : EdmLibTestCaseBase
   </Annotations>
 </Schema>";
 
-        return new XElement[] { XElement.Parse(csdl) };
+        bool success = SchemaReader.TryParse(new XElement[] { XElement.Parse(csdl) }.Select(e => e.CreateReader()), out IEdmModel edmModel, out IEnumerable<EdmError> errors);
+        Assert.True(success);
+        Assert.False(errors.Any());
+
+        var exception = Assert.Throws<InvalidCastException>(() =>
+            this.ConvertToClrObject<Display1StructType>(this.GetVocabularyAnnotations(edmModel, edmModel.FindType("NS1.Person"), "Coordination").Single()));
+        Assert.Equal("Conversion of an EDM structured value is supported only to a CLR class.", exception.Message);
+
+        exception = Assert.Throws<InvalidCastException>(() =>
+            this.ConvertToClrObject<Display2StructTypeWithObjectProperty>(this.GetVocabularyAnnotations(edmModel, edmModel.FindType("NS1.Person"), "TVDisplay").Single()));
+        Assert.Equal("Conversion of an EDM structured value is supported only to a CLR class.", exception.Message);
+
+        exception = Assert.Throws<InvalidCastException>(() =>
+            this.ConvertToClrObject<Display2StructTypeWithStructProperty>(this.GetVocabularyAnnotations(edmModel, edmModel.FindType("NS1.Person"), "TVDisplay").Single()));
+        Assert.Equal("Conversion of an EDM structured value is supported only to a CLR class.", exception.Message);
+    }
+
+    [Fact]
+    public void Should_ThrowMissingMethodException_When_ConvertingToAbstractType()
+    {
+        this.InitializeOperationDefinitions();
+        
+        var csdl =
+@"<Schema Namespace='NS1' xmlns='http://docs.oasis-open.org/odata/ns/edm'>
+  <EntityType Name='Person'>
+    <Property Name='Id' Type='Int16' Nullable='false' />
+    <Property Name='FirstName' Type='String' Nullable='false' Unicode='true' />
+    <Property Name='LastName' Type='String' Nullable='false' Unicode='true' />
+  </EntityType>
+  <ComplexType Name='Pet'>
+    <Property Name='Name' Type='Edm.String' Nullable='false' />
+    <Property Name='Breed' Type='Edm.String' Nullable='true' />
+    <Property Name='Age' Type='Edm.Int32' Nullable='true' />
+  </ComplexType>
+  <Term Name='Title' Type='String' Unicode='true' />
+  <Term Name='DisplaySize' Type='Int32' Nullable='false' />
+  <Term Name='InspectedBy' Type='NS1.Person' Nullable='false' />
+  <Term Name='AdoptPet' Type='NS1.Pet' Nullable='false' />
+  <Annotations Target='NS1.Person'>
+    <Annotation Term=""NS1.Coordination"" Qualifier=""Display"">
+        <Record>
+            <PropertyValue Property=""X"" Int=""10"" />
+            <PropertyValue Property=""Y"">
+                <Apply Function=""Functions.IntAdd"">
+                    <Int>5</Int>
+                    <Int>15</Int>
+                </Apply>
+            </PropertyValue>
+        </Record>
+    </Annotation>
+    <Annotation Term=""NS1.InspectedBy"">
+        <Record>
+            <PropertyValue Property=""Id"" Int=""10"" />
+            <PropertyValue Property=""FirstName"">
+                <String>Young</String>
+            </PropertyValue>
+            <PropertyValue Property=""LastName"" String='Hong'>
+            </PropertyValue>
+        </Record>
+    </Annotation>
+    <Annotation Term=""NS1.AdoptPet"">
+        <Record>
+            <PropertyValue Property=""Name"" String=""Jacquine"" />
+            <PropertyValue Property=""Breed"">
+                <String>Bull Dog</String>
+            </PropertyValue>
+            <PropertyValue Property=""Age"" Int='3'>
+            </PropertyValue>
+        </Record>
+    </Annotation>
+    <Annotation Term=""NS1.TVDisplay"">
+        <Record>
+            <PropertyValue Property=""X"" Int=""10"" />
+            <PropertyValue Property=""Y"">
+                <Apply Function=""Functions.IntAdd"">
+                    <Int>5</Int>
+                    <Int>15</Int>
+                </Apply>
+            </PropertyValue>
+            <PropertyValue Property=""Origin"">
+                <Record>
+                    <PropertyValue Property=""X"" Int=""10"" />
+                    <PropertyValue Property=""Y"">
+                        <Int>20</Int>
+                    </PropertyValue>
+                </Record>
+            </PropertyValue>
+        </Record>
+    </Annotation>
+    <Annotation Term=""NS1.MultiMonitors"">
+        <Collection>
+            <Record>
+                <PropertyValue Property=""X"" Int=""10"" />
+                <PropertyValue Property=""Y"">
+                    <Int>20</Int>
+                </PropertyValue>
+            </Record>
+            <Record>
+                <PropertyValue Property=""X"" Int=""30"" />
+                <PropertyValue Property=""Y"">
+                    <Int>40</Int>
+                </PropertyValue>
+            </Record>
+        </Collection>
+    </Annotation>
+    <Annotation Term=""NS1.EmptyCollection"">
+        <Collection>
+        </Collection>
+    </Annotation>
+    <Annotation Term=""NS1.LabledMultiMonitors"">
+        <Collection>
+            <LabeledElement Name='Label1'>
+                <Record>
+                    <PropertyValue Property=""X"" Int=""10"" />
+                    <PropertyValue Property=""Y"">
+                        <Int>20</Int>
+                    </PropertyValue>
+                </Record>
+            </LabeledElement>
+        </Collection>
+    </Annotation>
+  </Annotations>
+</Schema>";
+
+        bool success = SchemaReader.TryParse(new XElement[] { XElement.Parse(csdl) }.Select(e => e.CreateReader()), out IEdmModel edmModel, out IEnumerable<EdmError> errors);
+        Assert.True(success);
+        Assert.False(errors.Any());
+
+        var exception = Assert.Throws<MissingMethodException>(() =>
+            this.ConvertToClrObject<AbstractClass>(this.GetVocabularyAnnotations(edmModel, edmModel.FindType("NS1.Person"), "Coordination").Single()));
+        Assert.Equal("Cannot dynamically create an instance of type 'Microsoft.OData.Edm.E2E.Tests.FunctionalTests.ClrTypeMappingTests+AbstractClass'. Reason: Cannot create an abstract class.", exception.Message);
+    }
+
+    [Fact]
+    public void Should_HandleTryCreateObjectInstanceForClrTypeMapping()
+    {
+        this.InitializeOperationDefinitions();
+
+        EdmToClrEvaluator ev = new EdmToClrEvaluator(this.operationDefinitions);
+        
+        var csdl =
+@"<Schema Namespace='NS1' xmlns='http://docs.oasis-open.org/odata/ns/edm'>
+  <EntityType Name='Person'>
+    <Property Name='Id' Type='Int16' Nullable='false' />
+    <Property Name='FirstName' Type='String' Nullable='false' Unicode='true' />
+    <Property Name='LastName' Type='String' Nullable='false' Unicode='true' />
+  </EntityType>
+  <ComplexType Name='Pet'>
+    <Property Name='Name' Type='Edm.String' Nullable='false' />
+    <Property Name='Breed' Type='Edm.String' Nullable='true' />
+    <Property Name='Age' Type='Edm.Int32' Nullable='true' />
+  </ComplexType>
+  <Term Name='Title' Type='String' Unicode='true' />
+  <Term Name='DisplaySize' Type='Int32' Nullable='false' />
+  <Term Name='InspectedBy' Type='NS1.Person' Nullable='false' />
+  <Term Name='AdoptPet' Type='NS1.Pet' Nullable='false' />
+  <Annotations Target='NS1.Person'>
+    <Annotation Term=""NS1.Coordination"" Qualifier=""Display"">
+        <Record>
+            <PropertyValue Property=""X"" Int=""10"" />
+            <PropertyValue Property=""Y"">
+                <Apply Function=""Functions.IntAdd"">
+                    <Int>5</Int>
+                    <Int>15</Int>
+                </Apply>
+            </PropertyValue>
+        </Record>
+    </Annotation>
+    <Annotation Term=""NS1.InspectedBy"">
+        <Record>
+            <PropertyValue Property=""Id"" Int=""10"" />
+            <PropertyValue Property=""FirstName"">
+                <String>Young</String>
+            </PropertyValue>
+            <PropertyValue Property=""LastName"" String='Hong'>
+            </PropertyValue>
+        </Record>
+    </Annotation>
+    <Annotation Term=""NS1.AdoptPet"">
+        <Record>
+            <PropertyValue Property=""Name"" String=""Jacquine"" />
+            <PropertyValue Property=""Breed"">
+                <String>Bull Dog</String>
+            </PropertyValue>
+            <PropertyValue Property=""Age"" Int='3'>
+            </PropertyValue>
+        </Record>
+    </Annotation>
+    <Annotation Term=""NS1.TVDisplay"">
+        <Record>
+            <PropertyValue Property=""X"" Int=""10"" />
+            <PropertyValue Property=""Y"">
+                <Apply Function=""Functions.IntAdd"">
+                    <Int>5</Int>
+                    <Int>15</Int>
+                </Apply>
+            </PropertyValue>
+            <PropertyValue Property=""Origin"">
+                <Record>
+                    <PropertyValue Property=""X"" Int=""10"" />
+                    <PropertyValue Property=""Y"">
+                        <Int>20</Int>
+                    </PropertyValue>
+                </Record>
+            </PropertyValue>
+        </Record>
+    </Annotation>
+    <Annotation Term=""NS1.MultiMonitors"">
+        <Collection>
+            <Record>
+                <PropertyValue Property=""X"" Int=""10"" />
+                <PropertyValue Property=""Y"">
+                    <Int>20</Int>
+                </PropertyValue>
+            </Record>
+            <Record>
+                <PropertyValue Property=""X"" Int=""30"" />
+                <PropertyValue Property=""Y"">
+                    <Int>40</Int>
+                </PropertyValue>
+            </Record>
+        </Collection>
+    </Annotation>
+    <Annotation Term=""NS1.EmptyCollection"">
+        <Collection>
+        </Collection>
+    </Annotation>
+    <Annotation Term=""NS1.LabledMultiMonitors"">
+        <Collection>
+            <LabeledElement Name='Label1'>
+                <Record>
+                    <PropertyValue Property=""X"" Int=""10"" />
+                    <PropertyValue Property=""Y"">
+                        <Int>20</Int>
+                    </PropertyValue>
+                </Record>
+            </LabeledElement>
+        </Collection>
+    </Annotation>
+  </Annotations>
+</Schema>";
+
+        bool success = SchemaReader.TryParse(new XElement[] { XElement.Parse(csdl) }.Select(e => e.CreateReader()), this.operationDeclarationModel, out IEdmModel edmModel, out IEnumerable<EdmError> errors);
+        Assert.True(success);
+        Assert.False(errors.Any());
+
+        var value = ev.Evaluate(this.GetVocabularyAnnotations(edmModel, edmModel.FindType("NS1.Person"), "TVDisplay").Single().Value);
+
+        var isObjectPopulated = true;
+        var isObjectInitialized = true;
+        object? createdObjectInstance = null;
+        TryCreateObjectInstance tryCreateObjectInstance = (IEdmStructuredValue edmValue, Type clrType, EdmToClrConverter converter, out object objectInstance, out bool objectInstanceInitialized) =>
+        {
+            objectInstance = createdObjectInstance;
+            objectInstanceInitialized = isObjectPopulated;
+            return isObjectInitialized;
+        };
+
+        ev.EdmToClrConverter = new EdmToClrConverter(tryCreateObjectInstance);
+        Assert.Null((Display2)ev.EdmToClrConverter.AsClrValue(value, typeof(Display2)));
+
+        isObjectPopulated = false;
+        isObjectInitialized = true;
+        ev.EdmToClrConverter = new EdmToClrConverter(tryCreateObjectInstance);
+        Assert.Null((Display2)ev.EdmToClrConverter.AsClrValue(value, typeof(Display2)));
+
+        isObjectPopulated = true;
+        isObjectInitialized = false;
+        ev.EdmToClrConverter = new EdmToClrConverter(tryCreateObjectInstance);
+        Assert.True(CompareObjects((Display2)ev.EdmToClrConverter.AsClrValue(value, typeof(Display2)), new Display2() { X = 10, Y = 20, Origin = new Display1() { X = 10, Y = 20 } }));
+
+        isObjectPopulated = false;
+        isObjectInitialized = false;
+        ev.EdmToClrConverter = new EdmToClrConverter(tryCreateObjectInstance);
+        Assert.True(CompareObjects((Display2)ev.EdmToClrConverter.AsClrValue(value, typeof(Display2)), new Display2() { X = 10, Y = 20, Origin = new Display1() { X = 10, Y = 20 } }));
+
+        createdObjectInstance = new Display2() { X = 0, Y = 1, Origin = new Display1 { X = 3, Y = 4 } };
+        isObjectPopulated = true;
+        isObjectInitialized = true;
+        ev.EdmToClrConverter = new EdmToClrConverter(tryCreateObjectInstance);
+        Assert.True(CompareObjects((Display2)ev.EdmToClrConverter.AsClrValue(value, typeof(Display2)), createdObjectInstance));
+
+        ev.EdmToClrConverter = new EdmToClrConverter((IEdmStructuredValue edmValue, Type clrType, EdmToClrConverter converter, out object? objectInstance, out bool objectInstanceInitialized) =>
+        {
+            if (clrType == typeof(Display2))
+            {
+                objectInstance = new Display2() { X = 0, Y = 1, Origin = new Display1 { X = 3, Y = 4 } };
+                objectInstanceInitialized = false;
+                return true;
+            }
+            else if (clrType == typeof(Display1))
+            {
+                objectInstance = new Display1 { X = 3, Y = 4 };
+                objectInstanceInitialized = false;
+                return true;
+            }
+            else
+            {
+                objectInstance = null;
+                objectInstanceInitialized = false;
+                return false;
+            }
+        });
+
+        Assert.True(CompareObjects((Display2)ev.EdmToClrConverter.AsClrValue(value, typeof(Display2)), new Display2() { X = 10, Y = 20, Origin = new Display1() { X = 10, Y = 20 } }));
+
+        isObjectPopulated = false;
+        isObjectInitialized = true;
+        createdObjectInstance = new DisplayCoordination();
+        ev.EdmToClrConverter = new EdmToClrConverter(tryCreateObjectInstance);
+        Coordination actual = (Coordination)ev.EdmToClrConverter.AsClrValue(value, typeof(Coordination));
+        Coordination expected = new Coordination() { X = 10, Y = 20 };
+        Assert.Equal(expected.X, actual.X);
+        Assert.Equal(expected.Y, actual.Y);
+    }
+
+    [Fact]
+    public void Should_HandleTryPopulateObjectInstanceForClrTypeMapping()
+    {
+        this.InitializeOperationDefinitions();
+
+        EdmToClrEvaluator ev = new EdmToClrEvaluator(this.operationDefinitions);
+        
+        var csdl =
+@"<Schema Namespace='NS1' xmlns='http://docs.oasis-open.org/odata/ns/edm'>
+  <EntityType Name='Person'>
+    <Property Name='Id' Type='Int16' Nullable='false' />
+    <Property Name='FirstName' Type='String' Nullable='false' Unicode='true' />
+    <Property Name='LastName' Type='String' Nullable='false' Unicode='true' />
+  </EntityType>
+  <ComplexType Name='Pet'>
+    <Property Name='Name' Type='Edm.String' Nullable='false' />
+    <Property Name='Breed' Type='Edm.String' Nullable='true' />
+    <Property Name='Age' Type='Edm.Int32' Nullable='true' />
+  </ComplexType>
+  <Term Name='Title' Type='String' Unicode='true' />
+  <Term Name='DisplaySize' Type='Int32' Nullable='false' />
+  <Term Name='InspectedBy' Type='NS1.Person' Nullable='false' />
+  <Term Name='AdoptPet' Type='NS1.Pet' Nullable='false' />
+  <Annotations Target='NS1.Person'>
+    <Annotation Term=""NS1.Coordination"" Qualifier=""Display"">
+        <Record>
+            <PropertyValue Property=""X"" Int=""10"" />
+            <PropertyValue Property=""Y"">
+                <Apply Function=""Functions.IntAdd"">
+                    <Int>5</Int>
+                    <Int>15</Int>
+                </Apply>
+            </PropertyValue>
+        </Record>
+    </Annotation>
+    <Annotation Term=""NS1.InspectedBy"">
+        <Record>
+            <PropertyValue Property=""Id"" Int=""10"" />
+            <PropertyValue Property=""FirstName"">
+                <String>Young</String>
+            </PropertyValue>
+            <PropertyValue Property=""LastName"" String='Hong'>
+            </PropertyValue>
+        </Record>
+    </Annotation>
+    <Annotation Term=""NS1.AdoptPet"">
+        <Record>
+            <PropertyValue Property=""Name"" String=""Jacquine"" />
+            <PropertyValue Property=""Breed"">
+                <String>Bull Dog</String>
+            </PropertyValue>
+            <PropertyValue Property=""Age"" Int='3'>
+            </PropertyValue>
+        </Record>
+    </Annotation>
+    <Annotation Term=""NS1.TVDisplay"">
+        <Record>
+            <PropertyValue Property=""X"" Int=""10"" />
+            <PropertyValue Property=""Y"">
+                <Apply Function=""Functions.IntAdd"">
+                    <Int>5</Int>
+                    <Int>15</Int>
+                </Apply>
+            </PropertyValue>
+            <PropertyValue Property=""Origin"">
+                <Record>
+                    <PropertyValue Property=""X"" Int=""10"" />
+                    <PropertyValue Property=""Y"">
+                        <Int>20</Int>
+                    </PropertyValue>
+                </Record>
+            </PropertyValue>
+        </Record>
+    </Annotation>
+    <Annotation Term=""NS1.MultiMonitors"">
+        <Collection>
+            <Record>
+                <PropertyValue Property=""X"" Int=""10"" />
+                <PropertyValue Property=""Y"">
+                    <Int>20</Int>
+                </PropertyValue>
+            </Record>
+            <Record>
+                <PropertyValue Property=""X"" Int=""30"" />
+                <PropertyValue Property=""Y"">
+                    <Int>40</Int>
+                </PropertyValue>
+            </Record>
+        </Collection>
+    </Annotation>
+    <Annotation Term=""NS1.EmptyCollection"">
+        <Collection>
+        </Collection>
+    </Annotation>
+    <Annotation Term=""NS1.LabledMultiMonitors"">
+        <Collection>
+            <LabeledElement Name='Label1'>
+                <Record>
+                    <PropertyValue Property=""X"" Int=""10"" />
+                    <PropertyValue Property=""Y"">
+                        <Int>20</Int>
+                    </PropertyValue>
+                </Record>
+            </LabeledElement>
+        </Collection>
+    </Annotation>
+  </Annotations>
+</Schema>";
+
+        bool success = SchemaReader.TryParse(new XElement[] { XElement.Parse(csdl) }.Select(e => e.CreateReader()), this.operationDeclarationModel, out IEdmModel edmModel, out IEnumerable<EdmError> errors);
+        Assert.True(success);
+        Assert.False(errors.Any());
+
+        var value = ev.Evaluate(this.GetVocabularyAnnotations(edmModel, edmModel.FindType("NS1.Person"), "TVDisplay").Single().Value);
+
+        var isObjectPopulated = false;
+        var isObjectInitialized = true;
+        object createdObjectInstance = new Display1() { X = 0, Y = 1 };
+        TryCreateObjectInstance tryCreateObjectInstance = (IEdmStructuredValue edmValue, Type clrType, EdmToClrConverter converter, out object objectInstance, out bool objectInstanceInitialized) =>
+        {
+            objectInstance = createdObjectInstance;
+            objectInstanceInitialized = isObjectPopulated;
+            return isObjectInitialized;
+        };
+        ev.EdmToClrConverter = new EdmToClrConverter(tryCreateObjectInstance);
+
+        var exception = Assert.Throws<InvalidCastException>(() => ev.EdmToClrConverter.AsClrValue(value, typeof(Display2)));
+        Assert.Equal("The type 'Microsoft.OData.Edm.E2E.Tests.FunctionalTests.ClrTypeMappingTests+Display1' of the object returned by the TryCreateObjectInstance delegate is not assignable to the expected type 'Microsoft.OData.Edm.E2E.Tests.FunctionalTests.ClrTypeMappingTests+Display2'.", exception.Message);
+
+        isObjectPopulated = false;
+        isObjectInitialized = false;
+        createdObjectInstance = new Display1() { X = 0, Y = 1 };
+        ev.EdmToClrConverter = new EdmToClrConverter(tryCreateObjectInstance);
+        Assert.True(CompareObjects((Display2)ev.EdmToClrConverter.AsClrValue(value, typeof(Display2)), new Display2() { X = 10, Y = 20, Origin = new Display1() { X = 10, Y = 20 } }));
+
+        isObjectPopulated = true;
+        isObjectInitialized = true;
+        createdObjectInstance = new Display1() { X = 0, Y = 1 };
+        ev.EdmToClrConverter = new EdmToClrConverter(tryCreateObjectInstance);
+
+        exception = Assert.Throws<InvalidCastException>(() => ev.EdmToClrConverter.AsClrValue(value, typeof(Display2)));
+        Assert.Equal("The type 'Microsoft.OData.Edm.E2E.Tests.FunctionalTests.ClrTypeMappingTests+Display1' of the object returned by the TryCreateObjectInstance delegate is not assignable to the expected type 'Microsoft.OData.Edm.E2E.Tests.FunctionalTests.ClrTypeMappingTests+Display2'.", exception.Message);
+    }
+
+    [Fact]
+    public void Should_ThrowInvalidCastException_When_InterfacePropertyIsMapped()
+    {       
+        var csdl =
+@"<Schema Namespace='NS1' xmlns='http://docs.oasis-open.org/odata/ns/edm'>
+  <EntityType Name='Person'>
+    <Property Name='Id' Type='Int16' Nullable='false' />
+    <Property Name='FirstName' Type='String' Nullable='false' Unicode='true' />
+    <Property Name='LastName' Type='String' Nullable='false' Unicode='true' />
+  </EntityType>
+  <ComplexType Name='Pet'>
+    <Property Name='Name' Type='Edm.String' Nullable='false' />
+    <Property Name='Breed' Type='Edm.String' Nullable='true' />
+    <Property Name='Age' Type='Edm.Int32' Nullable='true' />
+  </ComplexType>
+  <Term Name='Title' Type='String' Unicode='true' />
+  <Term Name='DisplaySize' Type='Int32' Nullable='false' />
+  <Term Name='InspectedBy' Type='NS1.Person' Nullable='false' />
+  <Term Name='AdoptPet' Type='NS1.Pet' Nullable='false' />
+  <Annotations Target='NS1.Person'>
+    <Annotation Term=""NS1.Coordination"" Qualifier=""Display"">
+        <Record>
+            <PropertyValue Property=""X"" Int=""10"" />
+            <PropertyValue Property=""Y"">
+                <Apply Function=""Functions.IntAdd"">
+                    <Int>5</Int>
+                    <Int>15</Int>
+                </Apply>
+            </PropertyValue>
+        </Record>
+    </Annotation>
+    <Annotation Term=""NS1.InspectedBy"">
+        <Record>
+            <PropertyValue Property=""Id"" Int=""10"" />
+            <PropertyValue Property=""FirstName"">
+                <String>Young</String>
+            </PropertyValue>
+            <PropertyValue Property=""LastName"" String='Hong'>
+            </PropertyValue>
+        </Record>
+    </Annotation>
+    <Annotation Term=""NS1.AdoptPet"">
+        <Record>
+            <PropertyValue Property=""Name"" String=""Jacquine"" />
+            <PropertyValue Property=""Breed"">
+                <String>Bull Dog</String>
+            </PropertyValue>
+            <PropertyValue Property=""Age"" Int='3'>
+            </PropertyValue>
+        </Record>
+    </Annotation>
+    <Annotation Term=""NS1.TVDisplay"">
+        <Record>
+            <PropertyValue Property=""X"" Int=""10"" />
+            <PropertyValue Property=""Y"">
+                <Apply Function=""Functions.IntAdd"">
+                    <Int>5</Int>
+                    <Int>15</Int>
+                </Apply>
+            </PropertyValue>
+            <PropertyValue Property=""Origin"">
+                <Record>
+                    <PropertyValue Property=""X"" Int=""10"" />
+                    <PropertyValue Property=""Y"">
+                        <Int>20</Int>
+                    </PropertyValue>
+                </Record>
+            </PropertyValue>
+        </Record>
+    </Annotation>
+    <Annotation Term=""NS1.MultiMonitors"">
+        <Collection>
+            <Record>
+                <PropertyValue Property=""X"" Int=""10"" />
+                <PropertyValue Property=""Y"">
+                    <Int>20</Int>
+                </PropertyValue>
+            </Record>
+            <Record>
+                <PropertyValue Property=""X"" Int=""30"" />
+                <PropertyValue Property=""Y"">
+                    <Int>40</Int>
+                </PropertyValue>
+            </Record>
+        </Collection>
+    </Annotation>
+    <Annotation Term=""NS1.EmptyCollection"">
+        <Collection>
+        </Collection>
+    </Annotation>
+    <Annotation Term=""NS1.LabledMultiMonitors"">
+        <Collection>
+            <LabeledElement Name='Label1'>
+                <Record>
+                    <PropertyValue Property=""X"" Int=""10"" />
+                    <PropertyValue Property=""Y"">
+                        <Int>20</Int>
+                    </PropertyValue>
+                </Record>
+            </LabeledElement>
+        </Collection>
+    </Annotation>
+  </Annotations>
+</Schema>";
+
+        bool success = SchemaReader.TryParse(new XElement[] { XElement.Parse(csdl) }.Select(e => e.CreateReader()), out IEdmModel edmModel, out IEnumerable<EdmError> errors);
+        Assert.True(success);
+        Assert.False(errors.Any());
+
+        var valueAnnotation = this.GetVocabularyAnnotations(edmModel, edmModel.FindType("NS1.Person"), "TVDisplay").Single();
+
+        var exception = Assert.Throws<InvalidCastException>(() => this.ConvertToClrObject<ClassWithInterfaceProperty>(valueAnnotation));
+        Assert.Equal("Conversion of an EDM structured value is supported only to a CLR class.", exception.Message);
+    }
+
+    [Fact]
+    public void Should_ValidateClrTypeMappingForVirtualMembers()
+    {     
+        var csdl =
+@"<Schema Namespace='NS1' xmlns='http://docs.oasis-open.org/odata/ns/edm'>
+  <EntityType Name='Person'>
+    <Property Name='Id' Type='Int16' Nullable='false' />
+    <Property Name='FirstName' Type='String' Nullable='false' Unicode='true' />
+    <Property Name='LastName' Type='String' Nullable='false' Unicode='true' />
+  </EntityType>
+  <ComplexType Name='Pet'>
+    <Property Name='Name' Type='Edm.String' Nullable='false' />
+    <Property Name='Breed' Type='Edm.String' Nullable='true' />
+    <Property Name='Age' Type='Edm.Int32' Nullable='true' />
+  </ComplexType>
+  <Term Name='Title' Type='String' Unicode='true' />
+  <Term Name='DisplaySize' Type='Int32' Nullable='false' />
+  <Term Name='InspectedBy' Type='NS1.Person' Nullable='false' />
+  <Term Name='AdoptPet' Type='NS1.Pet' Nullable='false' />
+  <Annotations Target='NS1.Person'>
+    <Annotation Term=""NS1.Coordination"" Qualifier=""Display"">
+        <Record>
+            <PropertyValue Property=""X"" Int=""10"" />
+            <PropertyValue Property=""Y"">
+                <Apply Function=""Functions.IntAdd"">
+                    <Int>5</Int>
+                    <Int>15</Int>
+                </Apply>
+            </PropertyValue>
+        </Record>
+    </Annotation>
+    <Annotation Term=""NS1.InspectedBy"">
+        <Record>
+            <PropertyValue Property=""Id"" Int=""10"" />
+            <PropertyValue Property=""FirstName"">
+                <String>Young</String>
+            </PropertyValue>
+            <PropertyValue Property=""LastName"" String='Hong'>
+            </PropertyValue>
+        </Record>
+    </Annotation>
+    <Annotation Term=""NS1.AdoptPet"">
+        <Record>
+            <PropertyValue Property=""Name"" String=""Jacquine"" />
+            <PropertyValue Property=""Breed"">
+                <String>Bull Dog</String>
+            </PropertyValue>
+            <PropertyValue Property=""Age"" Int='3'>
+            </PropertyValue>
+        </Record>
+    </Annotation>
+    <Annotation Term=""NS1.TVDisplay"">
+        <Record>
+            <PropertyValue Property=""X"" Int=""10"" />
+            <PropertyValue Property=""Y"">
+                <Apply Function=""Functions.IntAdd"">
+                    <Int>5</Int>
+                    <Int>15</Int>
+                </Apply>
+            </PropertyValue>
+            <PropertyValue Property=""Origin"">
+                <Record>
+                    <PropertyValue Property=""X"" Int=""10"" />
+                    <PropertyValue Property=""Y"">
+                        <Int>20</Int>
+                    </PropertyValue>
+                </Record>
+            </PropertyValue>
+        </Record>
+    </Annotation>
+    <Annotation Term=""NS1.MultiMonitors"">
+        <Collection>
+            <Record>
+                <PropertyValue Property=""X"" Int=""10"" />
+                <PropertyValue Property=""Y"">
+                    <Int>20</Int>
+                </PropertyValue>
+            </Record>
+            <Record>
+                <PropertyValue Property=""X"" Int=""30"" />
+                <PropertyValue Property=""Y"">
+                    <Int>40</Int>
+                </PropertyValue>
+            </Record>
+        </Collection>
+    </Annotation>
+    <Annotation Term=""NS1.EmptyCollection"">
+        <Collection>
+        </Collection>
+    </Annotation>
+    <Annotation Term=""NS1.LabledMultiMonitors"">
+        <Collection>
+            <LabeledElement Name='Label1'>
+                <Record>
+                    <PropertyValue Property=""X"" Int=""10"" />
+                    <PropertyValue Property=""Y"">
+                        <Int>20</Int>
+                    </PropertyValue>
+                </Record>
+            </LabeledElement>
+        </Collection>
+    </Annotation>
+  </Annotations>
+</Schema>";
+
+        bool success = SchemaReader.TryParse(new XElement[] { XElement.Parse(csdl) }.Select(e => e.CreateReader()), out IEdmModel edmModel, out IEnumerable<EdmError> errors);
+        Assert.True(success);
+        Assert.False(errors.Any());
+
+        var valueAnnotation = this.GetVocabularyAnnotations(edmModel, edmModel.FindType("NS1.Person"), "TVDisplay").Single();
+
+        var actual1 = this.ConvertToClrObject<ClassWithVirtualMember>(valueAnnotation);
+        Assert.True(CompareObjects(new ClassWithVirtualMember() { X = 10 }, actual1));
+
+        var actual2 = this.ConvertToClrObject<DerivedClassWithVirtualMember>(valueAnnotation);
+        Assert.True(CompareObjects(new DerivedClassWithVirtualMember() { X = 10 }, actual2));
+    }
+
+    [Fact]
+    public void Should_ThrowInvalidCastException_When_ValueStructTypePropertyIsMapped()
+    {
+        this.InitializeOperationDefinitions();
+        
+        var csdl =
+@"<Schema Namespace='NS1' xmlns='http://docs.oasis-open.org/odata/ns/edm'>
+  <EntityType Name='Person'>
+    <Property Name='Id' Type='Int16' Nullable='false' />
+    <Property Name='FirstName' Type='String' Nullable='false' Unicode='true' />
+    <Property Name='LastName' Type='String' Nullable='false' Unicode='true' />
+  </EntityType>
+  <ComplexType Name='Pet'>
+    <Property Name='Name' Type='Edm.String' Nullable='false' />
+    <Property Name='Breed' Type='Edm.String' Nullable='true' />
+    <Property Name='Age' Type='Edm.Int32' Nullable='true' />
+  </ComplexType>
+  <Term Name='Title' Type='String' Unicode='true' />
+  <Term Name='DisplaySize' Type='Int32' Nullable='false' />
+  <Term Name='InspectedBy' Type='NS1.Person' Nullable='false' />
+  <Term Name='AdoptPet' Type='NS1.Pet' Nullable='false' />
+  <Annotations Target='NS1.Person'>
+    <Annotation Term=""NS1.Coordination"" Qualifier=""Display"">
+        <Record>
+            <PropertyValue Property=""X"" Int=""10"" />
+            <PropertyValue Property=""Y"">
+                <Apply Function=""Functions.IntAdd"">
+                    <Int>5</Int>
+                    <Int>15</Int>
+                </Apply>
+            </PropertyValue>
+        </Record>
+    </Annotation>
+    <Annotation Term=""NS1.InspectedBy"">
+        <Record>
+            <PropertyValue Property=""Id"" Int=""10"" />
+            <PropertyValue Property=""FirstName"">
+                <String>Young</String>
+            </PropertyValue>
+            <PropertyValue Property=""LastName"" String='Hong'>
+            </PropertyValue>
+        </Record>
+    </Annotation>
+    <Annotation Term=""NS1.AdoptPet"">
+        <Record>
+            <PropertyValue Property=""Name"" String=""Jacquine"" />
+            <PropertyValue Property=""Breed"">
+                <String>Bull Dog</String>
+            </PropertyValue>
+            <PropertyValue Property=""Age"" Int='3'>
+            </PropertyValue>
+        </Record>
+    </Annotation>
+    <Annotation Term=""NS1.TVDisplay"">
+        <Record>
+            <PropertyValue Property=""X"" Int=""10"" />
+            <PropertyValue Property=""Y"">
+                <Apply Function=""Functions.IntAdd"">
+                    <Int>5</Int>
+                    <Int>15</Int>
+                </Apply>
+            </PropertyValue>
+            <PropertyValue Property=""Origin"">
+                <Record>
+                    <PropertyValue Property=""X"" Int=""10"" />
+                    <PropertyValue Property=""Y"">
+                        <Int>20</Int>
+                    </PropertyValue>
+                </Record>
+            </PropertyValue>
+        </Record>
+    </Annotation>
+    <Annotation Term=""NS1.MultiMonitors"">
+        <Collection>
+            <Record>
+                <PropertyValue Property=""X"" Int=""10"" />
+                <PropertyValue Property=""Y"">
+                    <Int>20</Int>
+                </PropertyValue>
+            </Record>
+            <Record>
+                <PropertyValue Property=""X"" Int=""30"" />
+                <PropertyValue Property=""Y"">
+                    <Int>40</Int>
+                </PropertyValue>
+            </Record>
+        </Collection>
+    </Annotation>
+    <Annotation Term=""NS1.EmptyCollection"">
+        <Collection>
+        </Collection>
+    </Annotation>
+    <Annotation Term=""NS1.LabledMultiMonitors"">
+        <Collection>
+            <LabeledElement Name='Label1'>
+                <Record>
+                    <PropertyValue Property=""X"" Int=""10"" />
+                    <PropertyValue Property=""Y"">
+                        <Int>20</Int>
+                    </PropertyValue>
+                </Record>
+            </LabeledElement>
+        </Collection>
+    </Annotation>
+  </Annotations>
+</Schema>";
+
+        bool success = SchemaReader.TryParse(new XElement[] { XElement.Parse(csdl) }.Select(e => e.CreateReader()), this.operationDeclarationModel, out IEdmModel edmModel, out IEnumerable<EdmError> errors);
+        Assert.True(success);
+        Assert.False(errors.Any());
+
+        var valueAnnotation = this.GetVocabularyAnnotations(edmModel, edmModel.FindType("NS1.Person"), "TVDisplay").Single();
+
+        var exception = Assert.Throws<InvalidCastException>(() => this.ConvertToClrObject<ClassWithStructProperty>(valueAnnotation));
+        Assert.Equal("Conversion of an EDM structured value is supported only to a CLR class.", exception.Message);
+    }
+
+    [Fact]
+    public void Should_ThrowArgumentException_When_CollectionPropertyIsMappedToNullList()
+    {
+        var csdl =
+@"<Schema Namespace='NS1' xmlns='http://docs.oasis-open.org/odata/ns/edm'>
+  <EntityType Name='Person'>
+    <Property Name='Id' Type='Int16' Nullable='false' />
+    <Property Name='FirstName' Type='String' Nullable='false' Unicode='true' />
+    <Property Name='LastName' Type='String' Nullable='false' Unicode='true' />
+  </EntityType>
+  <Annotations Target='NS1.Person'>
+    <Annotation Term=""NS1.PersonValueAnnotation"">
+        <Record>
+            <PropertyValue Property=""X"">
+                <Collection>
+                    <Int>4</Int>
+                    <Int>5</Int>
+                </Collection>
+            </PropertyValue>
+            <PropertyValue Property=""Y"">
+                <Collection>
+                    <Int>6</Int>
+                    <Int>7</Int>
+                </Collection>
+            </PropertyValue>
+            <PropertyValue Property=""Z"">
+                <Collection>
+                    <Int>8</Int>
+                    <Int>9</Int>
+                </Collection>
+            </PropertyValue>
+            <PropertyValue Property=""C"">
+                <Collection>
+                   <Record>
+                        <PropertyValue Property=""X"" Int=""10"" />
+                        <PropertyValue Property=""Y"">
+                            <Int>11</Int>
+                        </PropertyValue>
+                    </Record> 
+                   <Record>
+                        <PropertyValue Property=""X"" Int=""12"" />
+                        <PropertyValue Property=""Y"">
+                            <Int>13</Int>
+                        </PropertyValue>
+                    </Record> 
+                </Collection>
+            </PropertyValue>
+        </Record>
+    </Annotation>
+  </Annotations>
+</Schema>";
+
+        bool success = SchemaReader.TryParse(new XElement[] { XElement.Parse(csdl) }.Select(e => e.CreateReader()), out IEdmModel edmModel, out IEnumerable<EdmError> errors);
+        Assert.True(success);
+        Assert.False(errors.Any());
+
+        var valueAnnotation = this.GetVocabularyAnnotations(edmModel, edmModel.FindType("NS1.Person"), "PersonValueAnnotation").Single();
+
+        var exception = Assert.Throws<ArgumentException>(() => this.ConvertToClrObject<ClassWithNullCollectionProperty>(valueAnnotation));
+        Assert.Equal("Property set method not found.", exception.Message);
+    }
+
+    #region Private Helper Methods
+
+    private void InitializeOperationDefinitions()
+    {
+        string operationCsdl = @"<Schema Namespace=""Functions"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+  <Function Name=""IntAdd"">
+    <Parameter Name=""Int1"" Type=""Int64"" />
+    <Parameter Name=""Int2"" Type=""Int64"" />
+    <ReturnType Type=""Int64"" />
+  </Function>
+</Schema>";
+
+        bool success = SchemaReader.TryParse(new XElement[] { XElement.Parse(operationCsdl) }.Select(e => e.CreateReader()), out IEdmModel edmModel, out IEnumerable<EdmError> errors);
+        Assert.True(success, "Failed to parse operation CSDL.");
+        Assert.False(errors.Any());
+
+        this.operationDeclarationModel = edmModel;
+        this.operationDefinitions = new Dictionary<IEdmOperation, Func<IEdmValue[], IEdmValue>>();
+        this.operationDefinitions[this.operationDeclarationModel.FindOperations("Functions.IntAdd").Single(f => f.Parameters.Count() == 2)] = (a) => new EdmIntegerConstant(((IEdmIntegerValue)a[0]).Value + ((IEdmIntegerValue)a[1]).Value);
+    }
+
+
+    private IEnumerable<IEdmVocabularyAnnotation> GetVocabularyAnnotations(IEdmModel edmModel, IEdmVocabularyAnnotatable targetElement, string termName)
+    {
+        return edmModel.FindVocabularyAnnotations(targetElement).Where(n => n.Term.Name.Equals(termName));
+    }
+
+    private T ConvertToClrObject<T>(IEdmVocabularyAnnotation valueAnnotation)
+    {
+        var edmClrEvaluator = new EdmToClrEvaluator(this.operationDefinitions);
+        var edmClrConverter = new EdmToClrConverter();
+
+        var edmValue = edmClrEvaluator.Evaluate(valueAnnotation.Value);
+
+        var object1 = edmClrEvaluator.EvaluateToClrValue<T>(valueAnnotation.Value);
+        var object2 = (T)edmClrConverter.AsClrValue(edmValue, typeof(T));
+        var object3 = edmClrEvaluator.EdmToClrConverter.AsClrValue<T>(edmValue);
+
+        Assert.True(CompareObjects(object1, object2));
+        Assert.True(CompareObjects(object2, object3));
+
+        return object1;
     }
 
     private class CompareObjectEqualityComparer : IEqualityComparer<object>
@@ -1427,5 +2853,6 @@ public class ClrTypeMappingTests : EdmLibTestCaseBase
 
     [AttributeUsage(AttributeTargets.All)]
     private class ClrTypeMappingTestAttribute : Attribute { }
+
+    #endregion
 }
-  
