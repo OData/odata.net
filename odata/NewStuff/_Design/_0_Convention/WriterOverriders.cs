@@ -1,8 +1,8 @@
-﻿using System;
-using System.Runtime.CompilerServices;
-
-namespace NewStuff._Design._0_Convention
+﻿namespace NewStuff._Design._0_Convention
 {
+    using System;
+    using System.Threading.Tasks;
+
     public static class WriterOverriders
     {
         public static IGetRequestWriter OverrideUriWriter(this IGetRequestWriter getRequestWriter, Func<IUriWriter<IGetHeaderWriter>, IUriWriter<IGetHeaderWriter>> writerSelector)
@@ -218,7 +218,7 @@ namespace NewStuff._Design._0_Convention
             }
         }
 
-        public static IGetRequestWriter OverrideHeader(this IGetRequestWriter getRequestWriter, Func<IGetHeaderWriter, IGetHeaderWriter> writerSelector)
+        public static async Task<IGetRequestWriter> OverrideHeader(this IGetRequestWriter getRequestWriter, Func<IGetHeaderWriter, Task<IGetHeaderWriter>> writerSelector)
         {
             return getRequestWriter
                 .OverrideQueryOption(originalWriter => new QueryOptionWriter2<IGetHeaderWriter>(originalWriter, writerSelector))
@@ -228,25 +228,25 @@ namespace NewStuff._Design._0_Convention
         private sealed class QueryOptionWriter2<T> : IQueryOptionWriter<T>
         {
             private readonly IQueryOptionWriter<T> originalWriter;
-            private readonly Func<T, T> writerSelector;
+            private readonly Func<T, Task<T>> writerSelector;
 
-            public QueryOptionWriter2(IQueryOptionWriter<T> originalWriter, Func<T, T> writerSelector)
+            public QueryOptionWriter2(IQueryOptionWriter<T> originalWriter, Func<T, Task<T>> writerSelector)
             {
                 this.originalWriter = originalWriter;
                 this.writerSelector = writerSelector;
             }
 
-            public T Commit()
+            public async Task<T> Commit()
             {
-                return this.writerSelector(this.originalWriter.Commit());
+                return await this.writerSelector(await this.originalWriter.Commit().ConfigureAwait(false)).ConfigureAwait(false);
             }
 
-            public IFragmentWriter<T> CommitFragment()
+            public async Task<IFragmentWriter<T>> CommitFragment()
             {
-                return new FragmentWriter<T>(this.originalWriter.CommitFragment(), this.writerSelector);
+                return new FragmentWriter<T>(await this.originalWriter.CommitFragment().ConfigureAwait(false), this.writerSelector);
             }
 
-            public IQueryParameterWriter<T> CommitParameter()
+            public Task<IQueryParameterWriter<T>> CommitParameter()
             {
                 return new QueryParameterWriter(this.originalWriter.CommitParameter(), this.writerSelector);
             }
@@ -294,9 +294,9 @@ namespace NewStuff._Design._0_Convention
         private sealed class FragmentWriter<T> : IFragmentWriter<T>
         {
             private readonly IFragmentWriter<T> originalWriter;
-            private readonly Func<T, T> writerSelector;
+            private readonly Func<T, Task<T>> writerSelector;
 
-            public FragmentWriter(IFragmentWriter<T> originalWriter, Func<T, T> writerSelector)
+            public FragmentWriter(IFragmentWriter<T> originalWriter, Func<T, Task<T>> writerSelector)
             {
                 this.originalWriter = originalWriter;
                 this.writerSelector = writerSelector;

@@ -1,5 +1,7 @@
 ﻿namespace NewStuff._Design._0_Convention.Sample
 {
+    using System.Threading.Tasks;
+
     public sealed class GraphConvention : IConvention
     {
         private readonly IConvention convention;
@@ -11,38 +13,56 @@
             this.authorizationToken = authorizationToken;
         }
 
-        public IGetRequestWriter Get()
+        public async Task<IGetRequestWriter> Get()
         {
-            return this.convention.Get().OverrideHeader(originalWriter => new GetHeaderWriter(originalWriter, this.authorizationToken));
+            var getRequestWriter = await this.convention.Get().ConfigureAwait(false);
+            return 
+                await 
+                    getRequestWriter
+                        .OverrideHeader(
+                            async originalWriter => 
+                                await 
+                                    GetHeaderWriter
+                                        .Create(
+                                            originalWriter, 
+                                            this.authorizationToken)
+                                .ConfigureAwait(false))
+                .ConfigureAwait(false);
         }
 
         private sealed class GetHeaderWriter : IGetHeaderWriter
         {
             private readonly IGetHeaderWriter nextWriter;
 
-            public GetHeaderWriter(IGetHeaderWriter originalWriter, string authorizationToken)
+            public GetHeaderWriter(IGetHeaderWriter nextWriter)
             {
-                var customHeaderWriter = originalWriter.CommitCustomHeader();
-                var headerFieldValueWriter = customHeaderWriter.Commit(new HeaderFieldName("Authorization"));
-                this.nextWriter = headerFieldValueWriter.Commit(new HeaderFieldValue(authorizationToken));
+                this.nextWriter = nextWriter;
             }
 
-            public IGetBodyWriter Commit()
+            public static async Task<GetHeaderWriter> Create(IGetHeaderWriter originalWriter, string authorizationToken)
+            {
+                var customHeaderWriter = await originalWriter.CommitCustomHeader().ConfigureAwait(false);
+                var headerFieldValueWriter = await customHeaderWriter.Commit(new HeaderFieldName("Authorization")).ConfigureAwait(false);
+                var nextWriter = await headerFieldValueWriter.Commit(new HeaderFieldValue(authorizationToken)).ConfigureAwait(false);
+                return new GetHeaderWriter(nextWriter);
+            }
+
+            public Task<IGetBodyWriter> Commit()
             {
                 return this.nextWriter.Commit();
             }
 
-            public ICustomHeaderWriter<IGetHeaderWriter> CommitCustomHeader()
+            public Task<ICustomHeaderWriter<IGetHeaderWriter>> CommitCustomHeader()
             {
                 return this.nextWriter.CommitCustomHeader();
             }
 
-            public IOdataMaxPageSizeHeaderWriter CommitOdataMaxPageSize()
+            public Task<IOdataMaxPageSizeHeaderWriter> CommitOdataMaxPageSize()
             {
                 return this.nextWriter.CommitOdataMaxPageSize();
             }
 
-            public IOdataMaxVersionHeaderWriter CommitOdataMaxVersion()
+            public Task<IOdataMaxVersionHeaderWriter> CommitOdataMaxVersion()
             {
                 return this.nextWriter.CommitOdataMaxVersion();
             }

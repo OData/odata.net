@@ -1,8 +1,10 @@
 ﻿namespace NewStuff._Design._0_Convention
 {
+    using System.Threading.Tasks;
+
     public interface IConvention
     {
-        IGetRequestWriter Get();
+        Task<IGetRequestWriter> Get();
 
         IPatchRequestWriter Patch();
 
