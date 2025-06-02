@@ -162,12 +162,12 @@
                     this.requestUri = requestUri;
                 }
 
-                public Task<IPatchRequestBodyWriter> Commit()
+                public async Task<IPatchRequestBodyWriter> Commit()
                 {
                     var writeStream = this.httpClient.PatchStream(this.requestUri); //// TODO disposable
                     var streamWriter = new StreamWriter(writeStream, null, -1, true); //// TODO can you know the encoding here? should that be configurable? //// TODO dispoable
 
-                    streamWriter.WriteLine("{"); //// TODO async
+                    await streamWriter.WriteLineAsync("{").ConfigureAwait(false);
 
                     return new PatchRequestBodyWriter(writeStream, streamWriter, true);
                 }
@@ -185,17 +185,17 @@
                         this.isFirstProperty = isFirstProperty;
                     }
 
-                    public Task<IGetResponseReader> Commit()
+                    public async Task<IGetResponseReader> Commit()
                     {
                         if (!this.isFirstProperty)
                         {
                             streamWriter.WriteLine();
                         }
 
-                        streamWriter.WriteLine("}"); //// TODO async
+                        await streamWriter.WriteLineAsync("}").ConfigureAwait(false);
                         streamWriter.Dispose(); //// TODO async
 
-                        var httpResponseMessage = this.writeStream.Final().ConfigureAwait(false).GetAwaiter().GetResult(); //// TODO async
+                        var httpResponseMessage = await this.writeStream.Final().ConfigureAwait(false);
                         return new GetResponseReader(httpResponseMessage);
                     }
 
