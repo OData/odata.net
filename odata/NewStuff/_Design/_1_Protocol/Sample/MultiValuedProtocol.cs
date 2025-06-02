@@ -518,10 +518,10 @@
                 var uriWriter = await patchRequestWriter.Commit().ConfigureAwait(false);
                 var patchHeaderWriter = await MultiValuedProtocol.WriteUri(this.singleValuedUri, uriWriter).ConfigureAwait(false);
 
-                var customHeaderWriter = patchHeaderWriter.CommitCustomHeader();
+                var customHeaderWriter = await patchHeaderWriter.CommitCustomHeader().ConfigureAwait(false);
                 var headerFieldValueWriter = await customHeaderWriter.Commit(new HeaderFieldName("Content-Type")).ConfigureAwait(false); //// TODO probably this should be a "built-in" header
                 patchHeaderWriter = await headerFieldValueWriter.Commit(new HeaderFieldValue("application/json")).ConfigureAwait(false);
-                var patchRequestBodyWriter = patchHeaderWriter.Commit();
+                var patchRequestBodyWriter = await patchHeaderWriter.Commit().ConfigureAwait(false);
 
                 //// TODO what about dynamic and untyped properties?
                 foreach (var complexProperty in this.singleValuedRequest.ComplexProperties)
@@ -531,41 +531,41 @@
 
                 foreach (var multiValuedProperty in this.singleValuedRequest.MultiValuedProperties)
                 {
-                    var propertyWriter = patchRequestBodyWriter.CommitProperty();
-                    var propertyNameWriter = propertyWriter.Commit();
-                    var propertyValueWriter = propertyNameWriter.Commit(new PropertyName(multiValuedProperty.Name));
-                    var multiValuedPropertyValueWriter = propertyValueWriter.CommitMultiValued();
+                    var propertyWriter = await patchRequestBodyWriter.CommitProperty().ConfigureAwait(false);
+                    var propertyNameWriter = await propertyWriter.Commit().ConfigureAwait(false);
+                    var propertyValueWriter = await propertyNameWriter.Commit(new PropertyName(multiValuedProperty.Name)).ConfigureAwait(false);
+                    var multiValuedPropertyValueWriter = await propertyValueWriter.CommitMultiValued().ConfigureAwait(false);
 
-                    var objectWriter = multiValuedPropertyValueWriter.CommitValue();
+                    var objectWriter = await multiValuedPropertyValueWriter.CommitValue().ConfigureAwait(false);
 
                     foreach (var value in multiValuedProperty.Values)
                     {
-                        multiValuedPropertyValueWriter = WriteSingleValuedRequest(value, objectWriter);
+                        multiValuedPropertyValueWriter = await WriteSingleValuedRequest(value, objectWriter).ConfigureAwait(false);
                     }
 
-                    patchRequestBodyWriter = multiValuedPropertyValueWriter.Commit();
+                    patchRequestBodyWriter = await multiValuedPropertyValueWriter.Commit().ConfigureAwait(false);
                 }
 
                 foreach (var primitiveProperty in this.singleValuedRequest.PrimitiveProperties)
                 {
-                    var propertyWriter = patchRequestBodyWriter.CommitProperty();
-                    var propertyNameWriter = propertyWriter.Commit();
-                    var propertyValueWriter = propertyNameWriter.Commit(new PropertyName(primitiveProperty.Name));
+                    var propertyWriter = await patchRequestBodyWriter.CommitProperty().ConfigureAwait(false);
+                    var propertyNameWriter = await propertyWriter.Commit().ConfigureAwait(false);
+                    var propertyValueWriter = await propertyNameWriter.Commit(new PropertyName(primitiveProperty.Name)).ConfigureAwait(false);
 
                     if (primitiveProperty.Value == null)
                     {
-                        var nullPropertyValueWriter = propertyValueWriter.CommitNull();
-                        patchRequestBodyWriter = nullPropertyValueWriter.Commit();
+                        var nullPropertyValueWriter = await propertyValueWriter.CommitNull().ConfigureAwait(false);
+                        patchRequestBodyWriter = await nullPropertyValueWriter.Commit().ConfigureAwait(false);
                     }
                     else
                     {
-                        var primitivePropertyValueWriter = propertyValueWriter.CommitPrimitive();
-                        patchRequestBodyWriter = primitivePropertyValueWriter.Commit(new PrimitivePropertyValue(primitiveProperty.Value));
+                        var primitivePropertyValueWriter = await propertyValueWriter.CommitPrimitive().ConfigureAwait(false);
+                        patchRequestBodyWriter = await primitivePropertyValueWriter.Commit(new PrimitivePropertyValue(primitiveProperty.Value)).ConfigureAwait(false);
                     }
                 }
 
                 // send the request
-                var patchResponseReader = patchRequestBodyWriter.Commit();
+                var patchResponseReader = await patchRequestBodyWriter.Commit().ConfigureAwait(false);
 
                 var patchResponseHeaderReader = patchResponseReader.Next();
                 var patchResponseBodyReader = MultiValuedProtocol.SkipHeaders(patchResponseHeaderReader);
@@ -674,10 +674,10 @@
                 var uriWriter = await patchRequestWriter.Commit().ConfigureAwait(false);
                 var patchHeaderWriter = await MultiValuedProtocol.WriteUri(this.multiValuedUri, uriWriter).ConfigureAwait(false);
 
-                var customHeaderWriter = patchHeaderWriter.CommitCustomHeader();
+                var customHeaderWriter = await patchHeaderWriter.CommitCustomHeader().ConfigureAwait(false);
                 var headerFieldValueWriter = await customHeaderWriter.Commit(new HeaderFieldName("Content-Type")).ConfigureAwait(false); //// TODO probably this should be a "built-in" header
                 patchHeaderWriter = await headerFieldValueWriter.Commit(new HeaderFieldValue("application/json")).ConfigureAwait(false);
-                var patchRequestBodyWriter = patchHeaderWriter.Commit();
+                var patchRequestBodyWriter = await patchHeaderWriter.Commit().ConfigureAwait(false);
 
                 //// TODO what about dynamic and untyped properties?
                 foreach (var complexProperty in this.singleValuedRequest.ComplexProperties)
@@ -687,41 +687,41 @@
 
                 foreach (var multiValuedProperty in this.singleValuedRequest.MultiValuedProperties)
                 {
-                    var propertyWriter = patchRequestBodyWriter.CommitProperty();
-                    var propertyNameWriter = propertyWriter.Commit();
-                    var propertyValueWriter = propertyNameWriter.Commit(new PropertyName(multiValuedProperty.Name));
-                    var multiValuedPropertyValueWriter = propertyValueWriter.CommitMultiValued();
+                    var propertyWriter = await patchRequestBodyWriter.CommitProperty().ConfigureAwait(false);
+                    var propertyNameWriter = await propertyWriter.Commit().ConfigureAwait(false);
+                    var propertyValueWriter = await propertyNameWriter.Commit(new PropertyName(multiValuedProperty.Name)).ConfigureAwait(false);
+                    var multiValuedPropertyValueWriter = await propertyValueWriter.CommitMultiValued().ConfigureAwait(false);
 
-                    var objectWriter = multiValuedPropertyValueWriter.CommitValue();
+                    var objectWriter = await multiValuedPropertyValueWriter.CommitValue().ConfigureAwait(false);
 
                     foreach (var value in multiValuedProperty.Values)
                     {
-                        multiValuedPropertyValueWriter = WriteSingleValuedRequest(value, objectWriter);
+                        multiValuedPropertyValueWriter = await WriteSingleValuedRequest(value, objectWriter).ConfigureAwait(false);
                     }
 
-                    patchRequestBodyWriter = multiValuedPropertyValueWriter.Commit();
+                    patchRequestBodyWriter = await multiValuedPropertyValueWriter.Commit().ConfigureAwait(false);
                 }
 
                 foreach (var primitiveProperty in this.singleValuedRequest.PrimitiveProperties)
                 {
-                    var propertyWriter = patchRequestBodyWriter.CommitProperty();
-                    var propertyNameWriter = propertyWriter.Commit();
-                    var propertyValueWriter = propertyNameWriter.Commit(new PropertyName(primitiveProperty.Name));
+                    var propertyWriter = await patchRequestBodyWriter.CommitProperty().ConfigureAwait(false);
+                    var propertyNameWriter = await propertyWriter.Commit().ConfigureAwait(false);
+                    var propertyValueWriter = await propertyNameWriter.Commit(new PropertyName(primitiveProperty.Name)).ConfigureAwait(false);
 
                     if (primitiveProperty.Value == null)
                     {
-                        var nullPropertyValueWriter = propertyValueWriter.CommitNull();
-                        patchRequestBodyWriter = nullPropertyValueWriter.Commit();
+                        var nullPropertyValueWriter = await propertyValueWriter.CommitNull().ConfigureAwait(false);
+                        patchRequestBodyWriter = await nullPropertyValueWriter.Commit().ConfigureAwait(false);
                     }
                     else
                     {
-                        var primitivePropertyValueWriter = propertyValueWriter.CommitPrimitive();
-                        patchRequestBodyWriter = primitivePropertyValueWriter.Commit(new PrimitivePropertyValue(primitiveProperty.Value));
+                        var primitivePropertyValueWriter = await propertyValueWriter.CommitPrimitive().ConfigureAwait(false);
+                        patchRequestBodyWriter = await primitivePropertyValueWriter.Commit(new PrimitivePropertyValue(primitiveProperty.Value)).ConfigureAwait(false);
                     }
                 }
 
                 // send the request
-                var patchResponseReader = patchRequestBodyWriter.Commit();
+                var patchResponseReader = await patchRequestBodyWriter.Commit().ConfigureAwait(false);
 
                 var patchResponseHeaderReader = patchResponseReader.Next();
                 var patchResponseBodyReader = MultiValuedProtocol.SkipHeaders(patchResponseHeaderReader);
@@ -784,46 +784,46 @@
             }
         }
 
-        private static T WriteSingleValuedRequest<T>(SingleValuedRequest singleValuedRequest, IComplexPropertyValueWriter<T> complexPropertyValueWriter)
+        private static async Task<T> WriteSingleValuedRequest<T>(SingleValuedRequest singleValuedRequest, IComplexPropertyValueWriter<T> complexPropertyValueWriter)
         {
             //// TODO dynamic properties, untyped properties, complex properties
 
             foreach (var multiValuedProperty in singleValuedRequest.MultiValuedProperties)
             {
-                var propertyWriter = complexPropertyValueWriter.CommitProperty();
-                var propertyNameWriter = propertyWriter.Commit();
-                var propertyValueWriter = propertyNameWriter.Commit(new PropertyName(multiValuedProperty.Name));
-                var multiValuedPropertyValueWriter = propertyValueWriter.CommitMultiValued();
+                var propertyWriter = await complexPropertyValueWriter.CommitProperty().ConfigureAwait(false);
+                var propertyNameWriter = await propertyWriter.Commit().ConfigureAwait(false);
+                var propertyValueWriter = await propertyNameWriter.Commit(new PropertyName(multiValuedProperty.Name)).ConfigureAwait(false);
+                var multiValuedPropertyValueWriter = await propertyValueWriter.CommitMultiValued().ConfigureAwait(false);
 
-                var objectWriter = multiValuedPropertyValueWriter.CommitValue();
+                var objectWriter = await multiValuedPropertyValueWriter.CommitValue().ConfigureAwait(false);
 
                 foreach (var value in multiValuedProperty.Values)
                 {
-                    multiValuedPropertyValueWriter = WriteSingleValuedRequest(value, objectWriter);
+                    multiValuedPropertyValueWriter = await WriteSingleValuedRequest(value, objectWriter).ConfigureAwait(false);
                 }
 
-                complexPropertyValueWriter = multiValuedPropertyValueWriter.Commit();
+                complexPropertyValueWriter = await multiValuedPropertyValueWriter.Commit().ConfigureAwait(false);
             }
 
             foreach (var primitiveProperty in singleValuedRequest.PrimitiveProperties)
             {
-                var propertyWriter = complexPropertyValueWriter.CommitProperty();
-                var propertyNameWriter = propertyWriter.Commit();
-                var propertyValueWriter = propertyNameWriter.Commit(new PropertyName(primitiveProperty.Name));
+                var propertyWriter = await complexPropertyValueWriter.CommitProperty().ConfigureAwait(false);
+                var propertyNameWriter = await propertyWriter.Commit().ConfigureAwait(false);
+                var propertyValueWriter = await propertyNameWriter.Commit(new PropertyName(primitiveProperty.Name)).ConfigureAwait(false);
 
                 if (primitiveProperty.Value == null)
                 {
-                    var nullPropertyValueWriter = propertyValueWriter.CommitNull();
-                    complexPropertyValueWriter = nullPropertyValueWriter.Commit();
+                    var nullPropertyValueWriter = await propertyValueWriter.CommitNull().ConfigureAwait(false);
+                    complexPropertyValueWriter = await nullPropertyValueWriter.Commit().ConfigureAwait(false);
                 }
                 else
                 {
-                    var primitivePropertyValueWriter = propertyValueWriter.CommitPrimitive();
-                    complexPropertyValueWriter = primitivePropertyValueWriter.Commit(new PrimitivePropertyValue(primitiveProperty.Value));
+                    var primitivePropertyValueWriter = await propertyValueWriter.CommitPrimitive().ConfigureAwait(false);
+                    complexPropertyValueWriter = await primitivePropertyValueWriter.Commit(new PrimitivePropertyValue(primitiveProperty.Value)).ConfigureAwait(false);
                 }
             }
 
-            return complexPropertyValueWriter.Commit();
+            return await complexPropertyValueWriter.Commit().ConfigureAwait(false);
         }
 
         private sealed class SingleValuedResponseBuilder
