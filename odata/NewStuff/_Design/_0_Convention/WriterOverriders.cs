@@ -307,6 +307,65 @@ namespace NewStuff._Design._0_Convention
                 return this.writerSelector(this.originalWriter.Commit(fragment));
             }
         }
+
+        public static IPatchRequestWriter OverrideUriWriter(this IPatchRequestWriter getRequestWriter, Func<IUriWriter<IPatchHeaderWriter>, IUriWriter<IPatchHeaderWriter>> writerSelector)
+        {
+            return new OverrideUriWriterPatchRequestWriter(getRequestWriter, writerSelector);
+        }
+
+        private sealed class OverrideUriWriterPatchRequestWriter : IPatchRequestWriter
+        {
+            private readonly IPatchRequestWriter patchRequestWriter;
+            private readonly Func<IUriWriter<IPatchHeaderWriter>, IUriWriter<IPatchHeaderWriter>> writerSelector;
+
+            public OverrideUriWriterPatchRequestWriter(IPatchRequestWriter getRequestWriter, Func<IUriWriter<IPatchHeaderWriter>, IUriWriter<IPatchHeaderWriter>> writerSelector)
+            {
+                this.patchRequestWriter = getRequestWriter;
+                this.writerSelector = writerSelector;
+            }
+
+            public IUriWriter<IPatchHeaderWriter> Commit()
+            {
+                return this.writerSelector(this.patchRequestWriter.Commit());
+            }
+        }
+
+        public static IPatchRequestWriter OverrideUriScheme(this IPatchRequestWriter getRequestWriter, Func<IUriSchemeWriter<IPatchHeaderWriter>, IUriSchemeWriter<IPatchHeaderWriter>> writerSelector)
+        {
+            return getRequestWriter.OverrideUriWriter(originalWriter => new UriWriter<IPatchHeaderWriter>(originalWriter, writerSelector));
+        }
+
+        public static IPatchRequestWriter OverrideUriDomain(this IPatchRequestWriter getRequestWriter, Func<IUriDomainWriter<IPatchHeaderWriter>, IUriDomainWriter<IPatchHeaderWriter>> writerSelector)
+        {
+            return getRequestWriter.OverrideUriScheme(originalWriter => new UriSchemeWriter<IPatchHeaderWriter>(originalWriter, writerSelector));
+        }
+
+        public static IPatchRequestWriter OverrideUriPort(this IPatchRequestWriter getRequestWriter, Func<IUriPortWriter<IPatchHeaderWriter>, IUriPortWriter<IPatchHeaderWriter>> writerSelector)
+        {
+            return getRequestWriter.OverrideUriDomain(originalWriter => new UriDomainWriter<IPatchHeaderWriter>(originalWriter, writerSelector));
+        }
+
+        public static IPatchRequestWriter OverrideUriPathSegment(this IPatchRequestWriter getRequestWriter, Func<IUriPathSegmentWriter<IPatchHeaderWriter>, IUriPathSegmentWriter<IPatchHeaderWriter>> writerSelector)
+        {
+            return getRequestWriter.OverrideUriPort(originalWriter => new UriPortWriter<IPatchHeaderWriter>(originalWriter, writerSelector));
+        }
+
+        public static IPatchRequestWriter OverrideQueryOption(this IPatchRequestWriter getRequestWriter, Func<IQueryOptionWriter<IPatchHeaderWriter>, IQueryOptionWriter<IPatchHeaderWriter>> writerSelector)
+        {
+            return getRequestWriter.OverrideUriPathSegment(originalWriter => new UriPathSegmentWriter<IPatchHeaderWriter>(originalWriter, writerSelector));
+        }
+
+        public static IPatchRequestWriter OverrideFragment(this IPatchRequestWriter getRequestWriter, Func<IFragmentWriter<IPatchHeaderWriter>, IFragmentWriter<IPatchHeaderWriter>> writerSelector)
+        {
+            return getRequestWriter.OverrideQueryOption(originalWriter => new QueryOptionWriter<IPatchHeaderWriter>(originalWriter, writerSelector));
+        }
+
+        public static IPatchRequestWriter OverrideHeader(this IPatchRequestWriter getRequestWriter, Func<IPatchHeaderWriter, IPatchHeaderWriter> writerSelector)
+        {
+            return getRequestWriter
+                .OverrideQueryOption(originalWriter => new QueryOptionWriter2<IPatchHeaderWriter>(originalWriter, writerSelector))
+                .OverrideFragment(originalWriter => new FragmentWriter<IPatchHeaderWriter>(originalWriter, writerSelector));
+        }
     }
 
     public static class ReaderOverriders

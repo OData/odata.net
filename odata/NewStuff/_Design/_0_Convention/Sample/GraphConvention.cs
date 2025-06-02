@@ -3,40 +3,86 @@
     public sealed class GraphConvention : IConvention
     {
         private readonly IConvention convention;
+        private readonly string authorizationToken;
 
-        public GraphConvention(IConvention convention)
+        public GraphConvention(IConvention convention, string authorizationToken)
         {
             this.convention = convention;
+            this.authorizationToken = authorizationToken;
         }
 
         public IGetRequestWriter Get()
         {
-            return this.convention.Get().OverrideUriScheme(originalWriter => new SchemeWriter(originalWriter));
+            return this.convention.Get().OverrideHeader(originalWriter => new GetHeaderWriter(originalWriter, this.authorizationToken));
         }
 
-        private sealed class SchemeWriter : IUriSchemeWriter<IGetHeaderWriter>
+        private sealed class GetHeaderWriter : IGetHeaderWriter
         {
-            private readonly IUriSchemeWriter<IGetHeaderWriter> originalUriSchemeWriter;
+            private readonly IGetHeaderWriter nextWriter;
 
-            public SchemeWriter(IUriSchemeWriter<IGetHeaderWriter> originalUriSchemeWriter)
+            public GetHeaderWriter(IGetHeaderWriter originalWriter, string authorizationToken)
             {
-                this.originalUriSchemeWriter = originalUriSchemeWriter;
+                var customHeaderWriter = originalWriter.CommitCustomHeader();
+                var headerFieldValueWriter = customHeaderWriter.Commit(new HeaderFieldName("Authorization"));
+                this.nextWriter = headerFieldValueWriter.Commit(new HeaderFieldValue(authorizationToken));
             }
 
-            public IUriDomainWriter<IGetHeaderWriter> Commit(UriScheme uriScheme)
+            public IGetBodyWriter Commit()
             {
-                return this.originalUriSchemeWriter.Commit(new UriScheme("https"));
+                return this.nextWriter.Commit();
+            }
+
+            public ICustomHeaderWriter<IGetHeaderWriter> CommitCustomHeader()
+            {
+                return this.nextWriter.CommitCustomHeader();
+            }
+
+            public IOdataMaxPageSizeHeaderWriter CommitOdataMaxPageSize()
+            {
+                return this.nextWriter.CommitOdataMaxPageSize();
+            }
+
+            public IOdataMaxVersionHeaderWriter CommitOdataMaxVersion()
+            {
+                return this.nextWriter.CommitOdataMaxVersion();
             }
         }
 
         public IPatchRequestWriter Patch()
         {
-            throw new System.NotImplementedException();
+            return this.convention.Patch().OverrideHeader(originalWriter => new PatchHeaderWriter(originalWriter, this.authorizationToken));
+        }
+
+        private sealed class PatchHeaderWriter : IPatchHeaderWriter
+        {
+            private readonly IPatchHeaderWriter nextWriter;
+
+            public PatchHeaderWriter(IPatchHeaderWriter originalWriter, string authorizationToken)
+            {
+                var customHeaderWriter = originalWriter.CommitCustomHeader();
+                var headerFieldValueWriter = customHeaderWriter.Commit(new HeaderFieldName("Authorization"));
+                this.nextWriter = headerFieldValueWriter.Commit(new HeaderFieldValue(authorizationToken));
+            }
+
+            public IPatchRequestBodyWriter Commit()
+            {
+                return this.nextWriter.Commit();
+            }
+
+            public ICustomHeaderWriter<IPatchHeaderWriter> CommitCustomHeader()
+            {
+                return this.nextWriter.CommitCustomHeader();
+            }
+
+            public IEtagWriter CommitEtag()
+            {
+                return this.nextWriter.CommitEtag();
+            }
         }
 
         public IPatchRequestWriter Post()
         {
-            throw new System.NotImplementedException();
+            return this.convention.Post().OverrideHeader(originalWriter => new PatchHeaderWriter(originalWriter, this.authorizationToken));
         }
     }
 }
