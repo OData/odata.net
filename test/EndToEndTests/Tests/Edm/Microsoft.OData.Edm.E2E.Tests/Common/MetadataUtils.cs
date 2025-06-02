@@ -4,6 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System.Diagnostics;
 using System.Reflection;
 using System.Xml.Linq;
 using Microsoft.OData.Edm.Vocabularies;
