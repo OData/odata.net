@@ -8,18 +8,6 @@
         RequestToken Next();
     }
 
-    public sealed class RequestReader : IRequestReader
-    {
-        private RequestReader()
-        {
-        }
-
-        public RequestToken Next()
-        {
-            throw new NotImplementedException("TODO");
-        }
-    }
-
     public abstract class RequestToken
     {
         private RequestToken()
@@ -59,33 +47,9 @@
         IUriReader<IGetHeaderReader> Next();
     }
 
-    public sealed class GetRequestReader : IGetRequestReader
-    {
-        private GetRequestReader()
-        {
-        }
-
-        public IUriReader<IGetHeaderReader> Next()
-        {
-            throw new NotImplementedException("TODO");
-        }
-    }
-
     public interface IUriReader<T>
     {
         IUriSchemeReader<T> Next();
-    }
-
-    public sealed class UriReader<T> : IUriReader<T>
-    {
-        private UriReader()
-        {
-        }
-
-        public IUriSchemeReader<T> Next()
-        {
-            throw new NotImplementedException("TODO");
-        }
     }
 
     public interface IUriSchemeReader<T>
@@ -93,21 +57,6 @@
         UriScheme UriScheme { get; }
 
         IUriDomainReader<T> Next();
-    }
-
-    public sealed class UriSchemeReader<T> : IUriSchemeReader<T>
-    {
-        private UriSchemeReader()
-        {
-            //// TODO what about relative uris?
-        }
-
-        public UriScheme UriScheme { get; }
-
-        public IUriDomainReader<T> Next()
-        {
-            throw new NotImplementedException("TODO");
-        }
     }
 
     public sealed class UriScheme
@@ -125,20 +74,6 @@
         UriDomain UriDomain { get; }
 
         UriDomainToken<T> Next();
-    }
-
-    public sealed class UriDomainReader<T> : IUriDomainReader<T>
-    {
-        private UriDomainReader()
-        {
-        }
-
-        public UriDomain UriDomain { get; }
-
-        public UriDomainToken<T> Next()
-        {
-            throw new NotImplementedException("TODO");
-        }
     }
 
     public sealed class UriDomain
@@ -184,20 +119,6 @@
         IUriPathSegmentReader<T> Next();
     }
 
-    public sealed class UriPortReader<T> : IUriPortReader<T>
-    {
-        private UriPortReader()
-        {
-        }
-
-        public UriPort UriPort { get; }
-
-        public IUriPathSegmentReader<T> Next()
-        {
-            throw new NotImplementedException("TODO");
-        }
-    }
-
     public sealed class UriPort
     {
         internal UriPort(int port)
@@ -213,20 +134,6 @@
         UriPathSegment UriPathSegment { get; }
 
         PathSegmentToken<T> Next();
-    }
-
-    public sealed class UriPathSegmentReader<T> : IUriPathSegmentReader<T>
-    {
-        private UriPathSegmentReader()
-        {
-        }
-
-        public UriPathSegment UriPathSegment { get; }
-
-        public PathSegmentToken<T> Next()
-        {
-            throw new NotImplementedException("TODO");
-        }
     }
 
     public sealed class UriPathSegment
@@ -269,18 +176,6 @@
         QueryOptionToken<T> Next();
     }
 
-    public sealed class QueryOptionReader<T> : IQueryOptionReader<T>
-    {
-        private QueryOptionReader()
-        {
-        }
-
-        public QueryOptionToken<T> Next()
-        {
-            throw new NotImplementedException("TODO");
-        }
-    }
-
     public abstract class QueryOptionToken<T>
     {
         private QueryOptionToken()
@@ -320,20 +215,6 @@
         QueryParameter QueryParameter { get; }
 
         QueryParameterToken<T> Next();
-    }
-
-    public sealed class QueryParameterReader<T> : IQueryParameterReader<T>
-    {
-        private QueryParameterReader()
-        {
-        }
-
-        public QueryParameter QueryParameter { get; }
-
-        public QueryParameterToken<T> Next()
-        {
-            throw new NotImplementedException("TODO");
-        }
     }
 
     public sealed class QueryParameter
@@ -380,20 +261,6 @@
         IQueryOptionReader<T> Next();
     }
 
-    public sealed class QueryValueReader<T> : IQueryValueReader<T>
-    {
-        private QueryValueReader()
-        {
-        }
-
-        public QueryValue QueryValue { get; }
-
-        public IQueryOptionReader<T> Next()
-        {
-            throw new NotImplementedException("TODO");
-        }
-    }
-
     public sealed class QueryValue
     {
         internal QueryValue(string value)
@@ -409,20 +276,6 @@
         Fragment Fragment { get; }
 
         T Next();
-    }
-
-    public sealed class FragmentReader<T> : IFragmentReader<T>
-    {
-        private FragmentReader()
-        {
-        }
-
-        public Fragment Fragment { get; }
-
-        public T Next()
-        {
-            throw new NotImplementedException("TODO");
-        }
     }
 
     public sealed class Fragment
@@ -459,19 +312,7 @@
 
     public interface IGetHeaderReader
     {
-        GetHeaderToken Next();
-    }
-
-    public sealed class GetHeaderReader : IGetHeaderReader
-    {
-        private GetHeaderReader()
-        {
-        }
-
-        public GetHeaderToken Next() //// TODO as written, it's possible for no headers to be specified; i don't know if the standard allows that; if it *doesn't*, then there needs to be something like a `getheadersstartreader` that has a `getheadersstarttoken` that has the same members as `getheaderstoken`, but *doesn't* have the `getbody` member
-        {
-            throw new NotImplementedException("TODO");
-        }
+        GetHeaderToken Next(); //// TODO as written, it's possible for no headers to be specified; i don't know if the standard allows that; if it *doesn't*, then there needs to be something like a `getheadersstartreader` that has a `getheadersstarttoken` that has the same members as `getheaderstoken`, but *doesn't* have the `getbody` member
     }
 
     public abstract class GetHeaderToken
@@ -524,20 +365,6 @@
         IGetHeaderReader Next();
     }
 
-    public sealed class OdataMaxVersionHeaderReader : IOdataMaxVersionHeaderReader
-    {
-        private OdataMaxVersionHeaderReader()
-        {
-        }
-
-        public OdataVersion OdataVersion { get; }
-
-        public IGetHeaderReader Next()
-        {
-            throw new NotImplementedException("TODO");
-        }
-    }
-
     public sealed class OdataVersion
     {
         private OdataVersion()
@@ -554,20 +381,6 @@
         IGetHeaderReader Next();
     }
 
-    public sealed class OdataMaxPageSizeHeaderReader : IOdataMaxPageSizeHeaderReader
-    {
-        private OdataMaxPageSizeHeaderReader()
-        {
-        }
-
-        public OdataMaxPageSize OdataMaxPageSize { get; }
-
-        public IGetHeaderReader Next()
-        {
-            throw new NotImplementedException("TODO");
-        }
-    }
-
     public sealed class OdataMaxPageSize
     {
         private OdataMaxPageSize()
@@ -580,20 +393,6 @@
         HeaderFieldName HeaderFieldName { get; }
 
         CustomHeaderToken<T> Next();
-    }
-
-    public sealed class CustomHeaderReader<T> : ICustomHeaderReader<T>
-    {
-        private CustomHeaderReader()
-        {
-        }
-
-        public HeaderFieldName HeaderFieldName { get; }
-
-        public CustomHeaderToken<T> Next()
-        {
-            throw new NotImplementedException("TODO");
-        }
     }
 
     public sealed class HeaderFieldName
@@ -638,20 +437,6 @@
         HeaderFieldValue HeaderFieldValue { get; }
 
         T Next();
-    }
-
-    public sealed class HeaderFieldValueReader<T> : IHeaderFieldValueReader<T>
-    {
-        private HeaderFieldValueReader()
-        {
-        }
-
-        public HeaderFieldValue HeaderFieldValue { get; }
-
-        public T Next()
-        {
-            throw new NotImplementedException("TODO");
-        }
     }
 
     public sealed class HeaderFieldValue
