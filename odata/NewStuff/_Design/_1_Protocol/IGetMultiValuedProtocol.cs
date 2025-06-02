@@ -1,8 +1,10 @@
 ﻿namespace NewStuff._Design._1_Protocol
 {
+    using System.Threading.Tasks;
+
     public interface IGetMultiValuedProtocol
     {
-        MultiValuedResponse Evaluate();
+        Task<MultiValuedResponse> Evaluate();
 
         IGetMultiValuedProtocol Expand(object expander); //// TODO what should the parameter actually look like? //// TODO from meeting, this should probably just be the parse node of an expand expression, right?
 

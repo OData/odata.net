@@ -5,7 +5,8 @@
     using System.IO;
     using System.Linq;
     using System.Security.Cryptography.X509Certificates;
-    using __GeneratedOdata.CstNodes.Rules;
+    using System.Threading.Tasks;
+
     using NewStuff._Design._0_Convention;
 
     public sealed class MultiValuedProtocol : IMultiValuedProtocol
@@ -91,18 +92,18 @@
                 return builder.Uri;
             }
 
-            public MultiValuedResponse Evaluate()
+            public async Task<MultiValuedResponse> Evaluate()
             {
-                var requestWriter = this.convention.Get();
-                var uriWriter = requestWriter.Commit();
+                var requestWriter = await this.convention.Get().ConfigureAwait(false);
+                var uriWriter = await requestWriter.Commit().ConfigureAwait(false);
 
                 var getHeaderWriter = WriteUri(GenerateRequestedUri(), uriWriter);
 
                 //// TODO not writing any headers...
-                var getBodyWriter = getHeaderWriter.Commit();
+                var getBodyWriter = await getHeaderWriter.Commit().ConfigureAwait(false);
 
                 // wait for a response
-                var getResponseReader = getBodyWriter.Commit(); //// TODO this should be async
+                var getResponseReader = await getBodyWriter.Commit().ConfigureAwait(false);
 
                 var multiValueResponseBuilder = new MultiValuedResponseBuilder();
                 multiValueResponseBuilder.Annotations = Enumerable.Empty<object>(); //// TODO annotations aren't supported yet
@@ -395,21 +396,21 @@
                 return builder.Uri;
             }
 
-            public SingleValuedResponse Evaluate()
+            public async Task<SingleValuedResponse> Evaluate()
             {
-                var requestWriter = this.convention.Get();
-                var uriWriter = requestWriter.Commit();
+                var requestWriter = await this.convention.Get().ConfigureAwait(false);
+                var uriWriter = await requestWriter.Commit().ConfigureAwait(false);
 
                 var getHeaderWriter = WriteUri(GenerateRequestedUri(), uriWriter);
 
-                var customHeaderWriter = getHeaderWriter.CommitCustomHeader(); //// TODO should "content-type: application/json" really be considered "custom"?
-                var headerFieldValueWriter = customHeaderWriter.Commit(new HeaderFieldName("Content-Type"));
-                getHeaderWriter = headerFieldValueWriter.Commit(new HeaderFieldValue("application/json"));
+                var customHeaderWriter = await getHeaderWriter.CommitCustomHeader().ConfigureAwait(false); //// TODO should "content-type: application/json" really be considered "custom"?
+                var headerFieldValueWriter = await customHeaderWriter.Commit(new HeaderFieldName("Content-Type")).ConfigureAwait(false);
+                getHeaderWriter = await headerFieldValueWriter.Commit(new HeaderFieldValue("application/json")).ConfigureAwait(false);
 
-                var getBodyWriter = getHeaderWriter.Commit();
+                var getBodyWriter = await getHeaderWriter.Commit().ConfigureAwait(false);
 
                 // send the request
-                var getResponseReader = getBodyWriter.Commit();
+                var getResponseReader = await getBodyWriter.Commit().ConfigureAwait(false);
 
                 var getResponseHeaderReader = getResponseReader.Next();
                 var getResponseBodyReader = MultiValuedProtocol.SkipHeaders(getResponseHeaderReader);
@@ -510,16 +511,16 @@
                 this.selects = selects;
             }
 
-            public SingleValuedResponse Evaluate()
+            public async Task<SingleValuedResponse> Evaluate()
             {
                 var patchRequestWriter = this.convention.Patch();
 
-                var uriWriter = patchRequestWriter.Commit();
+                var uriWriter = await patchRequestWriter.Commit().ConfigureAwait(false);
                 var patchHeaderWriter = MultiValuedProtocol.WriteUri(this.singleValuedUri, uriWriter);
 
                 var customHeaderWriter = patchHeaderWriter.CommitCustomHeader();
-                var headerFieldValueWriter = customHeaderWriter.Commit(new HeaderFieldName("Content-Type")); //// TODO probably this should be a "built-in" header
-                patchHeaderWriter = headerFieldValueWriter.Commit(new HeaderFieldValue("application/json"));
+                var headerFieldValueWriter = await customHeaderWriter.Commit(new HeaderFieldName("Content-Type")).ConfigureAwait(false); //// TODO probably this should be a "built-in" header
+                patchHeaderWriter = await headerFieldValueWriter.Commit(new HeaderFieldValue("application/json")).ConfigureAwait(false);
                 var patchRequestBodyWriter = patchHeaderWriter.Commit();
 
                 //// TODO what about dynamic and untyped properties?

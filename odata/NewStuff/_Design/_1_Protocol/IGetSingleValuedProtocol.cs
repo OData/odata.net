@@ -1,8 +1,10 @@
 ﻿namespace NewStuff._Design._1_Protocol
 {
+    using System.Threading.Tasks;
+
     public interface IGetSingleValuedProtocol
     {
-        SingleValuedResponse Evaluate();
+        Task<SingleValuedResponse> Evaluate();
 
         IGetSingleValuedProtocol Expand(object expander); //// TODO what should the parameter actually look like?
 
