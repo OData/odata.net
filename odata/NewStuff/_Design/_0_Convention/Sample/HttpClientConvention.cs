@@ -146,9 +146,9 @@
                 this.httpClient = httpClient; //// TODO disposable
             }
 
-            public IUriWriter<IPatchHeaderWriter> Commit()
+            public async Task<IUriWriter<IPatchHeaderWriter>> Commit()
             {
-                return new UriWriter<IPatchHeaderWriter>(uri => new PatchHeaderWriter(this.httpClient, uri));
+                return await Task.FromResult(new UriWriter<IPatchHeaderWriter>(uri => new PatchHeaderWriter(this.httpClient, uri))).ConfigureAwait(false);
             }
 
             private sealed class PatchHeaderWriter : IPatchHeaderWriter
