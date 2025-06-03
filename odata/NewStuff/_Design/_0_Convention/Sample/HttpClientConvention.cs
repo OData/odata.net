@@ -28,6 +28,8 @@
         {
             T Register<T>(Func<T> factory) where T : IDisposable;
 
+            T Register<T>(Func<Task<T>> factory) where T : IDisposable;
+
             void Unregister<T>(T disposable) where T : IDisposable;
 
             T Register2<T>(Func<T> factory) where T : IAsyncDisposable;
@@ -226,51 +228,62 @@
             private readonly Func<IHttpClient> httpClientFactory;
 
             private readonly IDisposer disposer;
+            private bool disposed;
 
             public GetRequestWriter(Func<IHttpClient> httpClientFactory)
             {
                 this.httpClientFactory = httpClientFactory;
 
                 this.disposer = new Disposer();
+                this.disposed = false;
             }
 
             public async ValueTask DisposeAsync()
             {
+                if (this.disposed)
+                {
+                    return;
+                }
+
                 await this.disposer.DisposeAsync().ConfigureAwait(false);
+
+                this.disposed = true;
             }
 
             public async Task<IUriWriter<IGetHeaderWriter>> Commit()
             {
-                return await Task.FromResult<IUriWriter<IGetHeaderWriter>>(new UriWriter<IGetHeaderWriter>(requestUri => new GetHeaderWriter(this.disposer, requestUri, this.httpClientFactory))).ConfigureAwait(false);
+                var httpClient = this.disposer.Register(() => this.httpClientFactory());
+
+                return await Task.FromResult<IUriWriter<IGetHeaderWriter>>(new UriWriter<IGetHeaderWriter>(requestUri => new GetHeaderWriter(this.disposer, httpClient, requestUri))).ConfigureAwait(false);
             }
 
             private sealed class GetHeaderWriter : IGetHeaderWriter
             {
                 private readonly IDisposer disposer;
+                private readonly IHttpClient httpClient;
                 private readonly Uri requestUri;
 
-                private readonly IHttpClient httpClient;
-
-                public GetHeaderWriter(IDisposer disposer, Uri requestUri, Func<IHttpClient> httpClientFactory)
+                public GetHeaderWriter(IDisposer disposer, IHttpClient httpClient, Uri requestUri)
                 {
                     this.disposer = disposer;
+                    this.httpClient = httpClient;
                     this.requestUri = requestUri;
-
-                    this.httpClient = this.disposer.Register(httpClientFactory);
                 }
 
                 public async Task<IGetBodyWriter> Commit()
                 {
-                    return await Task.FromResult<IGetBodyWriter>(new GetBodyWriter(this.httpClient, this.requestUri)).ConfigureAwait(false);
+                    return await Task.FromResult<IGetBodyWriter>(new GetBodyWriter(this.disposer, this.httpClient, this.requestUri)).ConfigureAwait(false);
                 }
 
                 private sealed class GetBodyWriter : IGetBodyWriter
                 {
+                    private readonly IDisposer disposer;
                     private readonly IHttpClient httpClient;
                     private readonly Uri requestUri;
 
-                    public GetBodyWriter(IHttpClient httpClient, Uri requestUri)
+                    public GetBodyWriter(IDisposer disposer, IHttpClient httpClient, Uri requestUri)
                     {
+                        this.disposer = disposer;
                         this.httpClient = httpClient;
                         this.requestUri = requestUri;
                     }
@@ -278,15 +291,16 @@
                     public async Task<IGetResponseReader> Commit()
                     {
                         //// TODO malformed headers will throw here
-                        var httpResponseMessage = await this.httpClient.GetAsync(this.requestUri).ConfigureAwait(false); //// TODO you need an idisposable for the message
+                        var httpResponseMessage = this.disposer.Register(
+                            async () => await this.httpClient.GetAsync(this.requestUri).ConfigureAwait(false));
 
-                        return await Task.FromResult(new GetResponseReader(httpResponseMessage)).ConfigureAwait(false);
+                        return await Task.FromResult(new GetResponseReader(this.disposer, httpResponseMessage)).ConfigureAwait(false);
                     }
                 }
 
                 public async Task<ICustomHeaderWriter<IGetHeaderWriter>> CommitCustomHeader()
                 {
-                    return await Task.FromResult<ICustomHeaderWriter<IGetHeaderWriter>>(new CustomHeaderWriter<IGetHeaderWriter>(this.httpClient, this.requestUri, (client, uri) => new GetHeaderWriter(client, uri))).ConfigureAwait(false);
+                    return await Task.FromResult<ICustomHeaderWriter<IGetHeaderWriter>>(new CustomHeaderWriter<IGetHeaderWriter>(this.httpClient, this.requestUri, (client, uri) => new GetHeaderWriter(this.disposer, client, uri))).ConfigureAwait(false);
                 }
 
                 public async Task<IOdataMaxPageSizeHeaderWriter> CommitOdataMaxPageSize()
@@ -658,20 +672,29 @@
 
         private sealed class GetResponseReader : IGetResponseReader
         {
+            private readonly IDisposer disposer;
             private readonly HttpResponseMessage httpResponseMessage;
 
-            private readonly IDisposer disposer;
+            private bool disposed;
 
-            public GetResponseReader(HttpResponseMessage httpResponseMessage)
+            public GetResponseReader(IDisposer disposer, HttpResponseMessage httpResponseMessage)
             {
+                this.disposer = disposer;
                 this.httpResponseMessage = httpResponseMessage;
 
-                this.disposer = new Disposer();
+                this.disposed = false;
             }
 
             public async ValueTask DisposeAsync()
             {
+                if (this.disposed)
+                {
+                    return;
+                }
+
                 await this.disposer.DisposeAsync().ConfigureAwait(false);
+
+                this.disposed = true;
             }
 
             public async Task<IGetResponseHeaderReader> Next()
