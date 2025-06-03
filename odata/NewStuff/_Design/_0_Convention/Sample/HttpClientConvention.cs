@@ -1001,7 +1001,7 @@
                                     var propertyValue = this.propertyEnumerator.Current.Value;
                                     if (propertyValue.ValueKind == JsonValueKind.Null)
                                     {
-                                        return await Task.FromResult(new PropertyValueToken<T>.Null(new NullPropertyValueReader(this.propertyEnumerator, this.nextFactory))).ConfigureAwait(false);
+                                        return await Task.FromResult(new PropertyValueToken<T>.Null(new NullPropertyValueReader(this.disposer, this.propertyEnumerator, this.nextFactory))).ConfigureAwait(false);
                                     }
                                     else if (propertyValue.ValueKind == JsonValueKind.Object)
                                     {
