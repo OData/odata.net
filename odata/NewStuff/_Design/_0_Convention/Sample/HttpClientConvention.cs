@@ -212,7 +212,7 @@
 
             public async Task<IUriWriter<IGetHeaderWriter>> Commit()
             {
-                return await Task.FromResult<IUriWriter<IGetHeaderWriter>>(new UriWriter<IGetHeaderWriter>(requestUri => new GetHeaderWriter(this.disposer, this.httpClientFactory, requestUri))).ConfigureAwait(false);
+                return await Task.FromResult<IUriWriter<IGetHeaderWriter>>(new UriWriter<IGetHeaderWriter>(requestUri => new GetHeaderWriter(this.disposer, requestUri, this.httpClientFactory))).ConfigureAwait(false);
             }
 
             private sealed class GetHeaderWriter : IGetHeaderWriter
