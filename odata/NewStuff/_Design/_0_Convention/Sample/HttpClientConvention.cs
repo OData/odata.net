@@ -111,6 +111,35 @@
                 }
             }
 
+            public T Register<T>(Func<Task<T>> factory) where T : IDisposable
+            {
+                if (this.disposed)
+                {
+                    throw new Exception("TODO");
+                }
+
+                lock (this.@lock)
+                {
+                    if (this.disposed)
+                    {
+                        throw new Exception("TODO");
+                    }
+
+                    T? value = default;
+                    try
+                    {
+                        value = factory().ConfigureAwait(false).GetAwaiter().GetResult(); //// TODO async
+                        this.disposables.Add(value);
+                        return value;
+                    }
+                    catch
+                    {
+                        value?.Dispose();
+                        throw;
+                    }
+                }
+            }
+
             public T Register2<T>(Func<T> factory) where T : IAsyncDisposable
             {
                 if (this.disposed)
@@ -249,7 +278,7 @@
                     public async Task<IGetResponseReader> Commit()
                     {
                         //// TODO malformed headers will throw here
-                        var httpResponseMessage = this.httpClient.GetAsync(this.requestUri).ConfigureAwait(false).GetAwaiter().GetResult(); //// TODO you need an idisposable for the message
+                        var httpResponseMessage = await this.httpClient.GetAsync(this.requestUri).ConfigureAwait(false); //// TODO you need an idisposable for the message
 
                         return await Task.FromResult(new GetResponseReader(httpResponseMessage)).ConfigureAwait(false);
                     }
