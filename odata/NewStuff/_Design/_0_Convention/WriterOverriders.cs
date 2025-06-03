@@ -15,15 +15,31 @@
             private readonly IGetRequestWriter getRequestWriter;
             private readonly Func<IUriWriter<IGetHeaderWriter>, Task<IUriWriter<IGetHeaderWriter>>> writerSelector;
 
+            private bool disposed;
+
             public OverrideUriWriterGetRequestWriter(IGetRequestWriter getRequestWriter, Func<IUriWriter<IGetHeaderWriter>, Task<IUriWriter<IGetHeaderWriter>>> writerSelector)
             {
                 this.getRequestWriter = getRequestWriter;
                 this.writerSelector = writerSelector;
+
+                this.disposed = false;
             }
 
             public async Task<IUriWriter<IGetHeaderWriter>> Commit()
             {
                 return await this.writerSelector(await this.getRequestWriter.Commit().ConfigureAwait(false)).ConfigureAwait(false);
+            }
+
+            public async ValueTask DisposeAsync()
+            {
+                if (this.disposed)
+                {
+                    return;
+                }
+
+                await this.getRequestWriter.DisposeAsync().ConfigureAwait(false);
+
+                this.disposed = true;
             }
         }
 
@@ -318,15 +334,31 @@
             private readonly IPatchRequestWriter patchRequestWriter;
             private readonly Func<IUriWriter<IPatchHeaderWriter>, Task<IUriWriter<IPatchHeaderWriter>>> writerSelector;
 
+            private bool disposed;
+
             public OverrideUriWriterPatchRequestWriter(IPatchRequestWriter getRequestWriter, Func<IUriWriter<IPatchHeaderWriter>, Task<IUriWriter<IPatchHeaderWriter>>> writerSelector)
             {
                 this.patchRequestWriter = getRequestWriter;
                 this.writerSelector = writerSelector;
+
+                this.disposed = false;
             }
 
             public async Task<IUriWriter<IPatchHeaderWriter>> Commit()
             {
                 return await this.writerSelector(await this.patchRequestWriter.Commit().ConfigureAwait(false)).ConfigureAwait(false);
+            }
+
+            public async ValueTask DisposeAsync()
+            {
+                if (this.disposed)
+                {
+                    return;
+                }
+
+                await this.patchRequestWriter.DisposeAsync().ConfigureAwait(false);
+
+                this.disposed = true;
             }
         }
 
