@@ -5,6 +5,7 @@
     using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Data;
+    using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Linq;
     using System.Net.Http;
@@ -25,58 +26,164 @@
 
         private interface IDisposer : IAsyncDisposable
         {
-            void Register(IDisposable disposable);
+            T Register<T>(Func<T> factory) where T : IDisposable;
 
-            void Unregister(IDisposable disposable);
+            void Unregister<T>(T disposable) where T : IDisposable;
 
-            void Register(IAsyncDisposable disposable);
+            T Register2<T>(Func<T> factory) where T : IAsyncDisposable;
 
-            void Unregister(IAsyncDisposable disposable);
+            void Unregister2<T>(T disposable) where T : IAsyncDisposable;
         }
 
         private sealed class Disposer : IDisposer
         {
-            private readonly ConcurrentDictionary<IDisposable, bool> disposables;
+            private readonly HashSet<IDisposable> disposables;
 
-            private readonly ConcurrentDictionary<IAsyncDisposable, bool> asyncDisposables;
+            private readonly HashSet<IAsyncDisposable> asyncDisposables;
+
+            private readonly object @lock;
+
+            private bool disposed;
 
             public Disposer()
             {
-                this.disposables = new ConcurrentDictionary<IDisposable, bool>();
-                this.asyncDisposables = new ConcurrentDictionary<IAsyncDisposable, bool>();
+                this.disposables = new HashSet<IDisposable>();
+                this.asyncDisposables = new HashSet<IAsyncDisposable>();
+
+                this.@lock = new object(); //// TODO remove the lock
+                this.disposed = false;
             }
 
             public async ValueTask DisposeAsync()
             {
-                foreach (var disposable in this.disposables.Keys)
+                if (this.disposed)
                 {
-                    disposable.Dispose();
+                    return;
                 }
 
-                foreach (var disposable in this.asyncDisposables.Keys)
+                lock (this.@lock)
                 {
-                    await disposable.DisposeAsync().ConfigureAwait(false);
+                    if (this.disposed)
+                    {
+                        return;
+                    }
+
+                    foreach (var disposable in this.disposables)
+                    {
+                        disposable.Dispose();
+                    }
+
+                    foreach (var disposable in this.asyncDisposables)
+                    {
+                        disposable.DisposeAsync().ConfigureAwait(false).GetAwaiter().GetResult(); //// TODO make this async
+                    }
+
+                    this.disposed = true;
                 }
             }
 
-            public void Register(IDisposable disposable)
+            public T Register<T>(Func<T> factory) where T : IDisposable
             {
-                this.disposables.TryAdd(disposable, true);
+                if (this.disposed)
+                {
+                    throw new Exception("TODO");
+                }
+
+                lock (this.@lock)
+                {
+                    if (this.disposed)
+                    {
+                        throw new Exception("TODO");
+                    }
+
+                    T? value = default;
+                    try
+                    {
+                        value = factory();
+                        this.disposables.Add(value);
+                        return value;
+                    }
+                    catch
+                    {
+                        value?.Dispose();
+                        throw;
+                    }
+                }
             }
 
-            public void Register(IAsyncDisposable disposable)
+            public T Register2<T>(Func<T> factory) where T : IAsyncDisposable
             {
-                this.asyncDisposables.TryAdd(disposable, true);
+                if (this.disposed)
+                {
+                    throw new Exception("TODO");
+                }
+
+                lock (this.@lock)
+                {
+                    if (this.disposed)
+                    {
+                        throw new Exception("TODO");
+                    }
+
+                    T? value = default;
+                    try
+                    {
+                        value = factory();
+                        this.asyncDisposables.Add(value);
+                        return value;
+                    }
+                    catch
+                    {
+                        value?.DisposeAsync().GetAwaiter().GetResult(); //// TODO async
+                        throw;
+                    }
+                }
             }
 
-            public void Unregister(IDisposable disposable)
+            public void Unregister<T>(T disposable) where T : IDisposable
             {
-                this.disposables.TryRemove(disposable, out _);
+                if (this.disposed)
+                {
+                    throw new Exception("TODO");
+                }
+
+                lock (this.@lock)
+                {
+                    if (this.disposed)
+                    {
+                        throw new Exception("TODO");
+                    }
+
+                    using (disposable)
+                    {
+                        this.disposables.Remove(disposable);
+                    }
+                }
             }
 
-            public void Unregister(IAsyncDisposable disposable)
+            public void Unregister2<T>(T disposable) where T : IAsyncDisposable
             {
-                this.asyncDisposables.TryRemove(disposable, out _);
+                if (this.disposed)
+                {
+                    throw new Exception("TODO");
+                }
+
+                lock (this.@lock)
+                {
+                    if (this.disposed)
+                    {
+                        throw new Exception("TODO");
+                    }
+
+                    try
+                    {
+                        this.asyncDisposables.Remove(disposable);
+                    }
+                    finally
+                    {
+                        disposable.DisposeAsync().GetAwaiter().GetResult(); //// TODO async //// TODO also make this a using statement
+                    }
+                }
             }
         }
 
@@ -105,18 +212,32 @@
 
             public async Task<IUriWriter<IGetHeaderWriter>> Commit()
             {
-                return await Task.FromResult<IUriWriter<IGetHeaderWriter>>(new UriWriter<IGetHeaderWriter>(requestUri => new GetHeaderWriter(this.httpClient, requestUri))).ConfigureAwait(false);
+                return await Task.FromResult<IUriWriter<IGetHeaderWriter>>(new UriWriter<IGetHeaderWriter>(requestUri => new GetHeaderWriter(this.disposer, this.httpClientFactory, requestUri))).ConfigureAwait(false);
             }
 
             private sealed class GetHeaderWriter : IGetHeaderWriter
             {
                 private readonly IHttpClient httpClient;
+                private readonly IDisposer disposer;
                 private readonly Uri requestUri;
 
-                public GetHeaderWriter(IHttpClient httpClient, Uri requestUri)
+                public GetHeaderWriter(IDisposer disposer, Uri requestUri, Func<IHttpClient> httpClientFactory)
                 {
-                    this.httpClient = httpClient;
+                    this.disposer = disposer;
                     this.requestUri = requestUri;
+
+                    IHttpClient? httpClient = null;
+                    try
+                    {
+                        httpClient = httpClientFactory();
+                        this.disposer.Register(httpClient); //// TODO what happens is `disposer` is being disposed as we register the new value?
+                        this.httpClient = httpClient;
+                    }
+                    catch
+                    {
+                        httpClient?.Dispose();
+                        throw;
+                    }
                 }
 
                 public async Task<IGetBodyWriter> Commit()
