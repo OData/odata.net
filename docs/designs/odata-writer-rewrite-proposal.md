@@ -303,9 +303,6 @@ We could also create a `JsonConverter` that internally calls the OData payload w
 * We may end up reimplementing a less efficient version of the `JsonConverter` infrastructure (e.g., for custom type writers).
 * Users would need to learn and implement custom OData writer interfaces and concepts, instead of reusing familiar `JsonConverter`s. However, this is not significantly different from the current approach, where users already work with `ODataSerializer` and custom OData resources.
 
----
-
-Let me know if you’d like this formatted into a proper document, turned into a slide deck, or broken into talking points for a presentation.
 
 ## Support for streamining
 
