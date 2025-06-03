@@ -305,16 +305,18 @@
 
                 public async Task<IOdataMaxPageSizeHeaderWriter> CommitOdataMaxPageSize()
                 {
-                    return await Task.FromResult(new OdataMaxPageSizeHeaderWriter(this.httpClient, this.requestUri)).ConfigureAwait(false);
+                    return await Task.FromResult(new OdataMaxPageSizeHeaderWriter(this.disposer, this.httpClient, this.requestUri)).ConfigureAwait(false);
                 }
 
                 private sealed class OdataMaxPageSizeHeaderWriter : IOdataMaxPageSizeHeaderWriter
                 {
+                    private readonly IDisposer disposer;
                     private readonly IHttpClient httpClient;
                     private readonly Uri requestUri;
 
-                    public OdataMaxPageSizeHeaderWriter(IHttpClient httpClient, Uri requestUri)
+                    public OdataMaxPageSizeHeaderWriter(IDisposer disposer, IHttpClient httpClient, Uri requestUri)
                     {
+                        this.disposer = disposer;
                         this.httpClient = httpClient;
                         this.requestUri = requestUri;
                     }
@@ -323,23 +325,24 @@
                     {
                         this.httpClient.DefaultRequestHeaders.Add("OData-MaxPageSize", "100"); //// TODO use `odatamaxpagesize` once the type has actually been implemented
 
-                        //// TODO you are here
-                        return await Task.FromResult(new GetHeaderWriter(this.httpClient, this.requestUri)).ConfigureAwait(false);
+                        return await Task.FromResult(new GetHeaderWriter(this.disposer, this.httpClient, this.requestUri)).ConfigureAwait(false);
                     }
                 }
 
                 public async Task<IOdataMaxVersionHeaderWriter> CommitOdataMaxVersion()
                 {
-                    return await Task.FromResult(new OdataMaxVersionHeaderWriter(this.httpClient, this.requestUri)).ConfigureAwait(false);
+                    return await Task.FromResult(new OdataMaxVersionHeaderWriter(this.disposer, this.httpClient, this.requestUri)).ConfigureAwait(false);
                 }
 
                 private sealed class OdataMaxVersionHeaderWriter : IOdataMaxVersionHeaderWriter
                 {
+                    private readonly IDisposer disposer;
                     private readonly IHttpClient httpClient;
                     private readonly Uri requestUri;
 
-                    public OdataMaxVersionHeaderWriter(IHttpClient httpClient, Uri requestUri)
+                    public OdataMaxVersionHeaderWriter(IDisposer disposer, IHttpClient httpClient, Uri requestUri)
                     {
+                        this.disposer = disposer;
                         this.httpClient = httpClient;
                         this.requestUri = requestUri;
                     }
@@ -348,7 +351,7 @@
                     {
                         this.httpClient.DefaultRequestHeaders.Add("OData-MaxVersion", "v4.01"); //// TODO use `odataversion` once you've actually implemented that type
 
-                        return await Task.FromResult(new GetHeaderWriter(this.httpClient, this.requestUri)).ConfigureAwait(false);
+                        return await Task.FromResult(new GetHeaderWriter(this.disposer, this.httpClient, this.requestUri)).ConfigureAwait(false);
                     }
                 }
             }
@@ -364,53 +367,68 @@
             private readonly Func<IHttpClient> httpClientFactory;
 
             private readonly IDisposer disposer;
+            private bool disposed;
 
             public PatchRequestWriter(Func<IHttpClient> httpClientFactory)
             {
                 this.httpClientFactory = httpClientFactory;
 
                 this.disposer = new Disposer();
+                this.disposed = false;
             }
 
             public async ValueTask DisposeAsync()
             {
+                if (this.disposed)
+                {
+                    return;
+                }
+
                 await this.disposer.DisposeAsync().ConfigureAwait(false);
+
+                this.disposed = true;
             }
 
             public async Task<IUriWriter<IPatchHeaderWriter>> Commit()
             {
-                return await Task.FromResult(new UriWriter<IPatchHeaderWriter>(uri => new PatchHeaderWriter(this.httpClient, uri))).ConfigureAwait(false);
+                var httpClient = this.disposer.Register(this.httpClientFactory);
+
+                return await Task.FromResult(new UriWriter<IPatchHeaderWriter>(uri => new PatchHeaderWriter(this.disposer, httpClient, uri))).ConfigureAwait(false);
             }
 
             private sealed class PatchHeaderWriter : IPatchHeaderWriter
             {
+                private readonly IDisposer disposer;
                 private readonly IHttpClient httpClient;
                 private readonly Uri requestUri;
 
-                public PatchHeaderWriter(IHttpClient httpClient, Uri requestUri)
+                public PatchHeaderWriter(IDisposer disposer, IHttpClient httpClient, Uri requestUri)
                 {
+                    this.disposer = disposer;
                     this.httpClient = httpClient;
                     this.requestUri = requestUri;
                 }
 
                 public async Task<IPatchRequestBodyWriter> Commit()
                 {
-                    var writeStream = this.httpClient.PatchStream(this.requestUri); //// TODO disposable
-                    var streamWriter = new StreamWriter(writeStream, null, -1, true); //// TODO can you know the encoding here? should that be configurable? //// TODO dispoable
+                    var writeStream = this.disposer.Register(() => this.httpClient.PatchStream(this.requestUri));
+                    var streamWriter = this.disposer.Register(() => new StreamWriter(writeStream, null, -1, true)); //// TODO can you know the encoding here? should that be configurable?
 
                     await streamWriter.WriteLineAsync("{").ConfigureAwait(false);
 
-                    return new PatchRequestBodyWriter(writeStream, streamWriter, true);
+                    return new PatchRequestBodyWriter(this.disposer, writeStream, streamWriter, true);
                 }
 
                 private sealed class PatchRequestBodyWriter : IPatchRequestBodyWriter
                 {
+                    private readonly IDisposer disposer;
                     private readonly WriteStream writeStream;
                     private readonly StreamWriter streamWriter;
                     private readonly bool isFirstProperty;
 
-                    public PatchRequestBodyWriter(WriteStream writeStream, StreamWriter streamWriter, bool isFirstProperty)
+                    public PatchRequestBodyWriter(IDisposer disposer, WriteStream writeStream, StreamWriter streamWriter, bool isFirstProperty)
                     {
+                        this.disposer = disposer;
                         this.writeStream = writeStream;
                         this.streamWriter = streamWriter;
                         this.isFirstProperty = isFirstProperty;
@@ -426,43 +444,48 @@
                         await streamWriter.WriteLineAsync("}").ConfigureAwait(false);
                         await streamWriter.DisposeAsync().ConfigureAwait(false);
 
-                        var httpResponseMessage = await this.writeStream.Final().ConfigureAwait(false);
-                        return new GetResponseReader(httpResponseMessage);
+                        var httpResponseMessage = this.disposer.Register(async () => await this.writeStream.Final().ConfigureAwait(false));
+                        return new GetResponseReader(disposer, httpResponseMessage);
                     }
 
                     public async Task<IPropertyWriter<IPatchRequestBodyWriter>> CommitProperty()
                     {
-                        return await Task.FromResult(new PropertyWriter<IPatchRequestBodyWriter>(this.writeStream, this.streamWriter, () => new PatchRequestBodyWriter(this.writeStream, this.streamWriter, false), this.isFirstProperty)).ConfigureAwait(false);
+                        return await Task.FromResult(new PropertyWriter<IPatchRequestBodyWriter>(this.disposer, this.writeStream, this.streamWriter, () => new PatchRequestBodyWriter(this.disposer, this.writeStream, this.streamWriter, false), this.isFirstProperty)).ConfigureAwait(false);
                     }
 
                     private sealed class PropertyWriter<TNext> : IPropertyWriter<TNext>
                     {
+                        private readonly IDisposer disposer;
                         private readonly WriteStream writeStream;
                         private readonly StreamWriter streamWriter;
                         private readonly Func<TNext> nextFactory;
                         private readonly bool isFirstProperty;
 
-                        public PropertyWriter(WriteStream writeStream, StreamWriter streamWriter, Func<TNext> nextFactory, bool isFirstProperty)
+                        public PropertyWriter(IDisposer disposer, WriteStream writeStream, StreamWriter streamWriter, Func<TNext> nextFactory, bool isFirstProperty)
                         {
+                            this.disposer = disposer;
                             this.writeStream = writeStream;
                             this.streamWriter = streamWriter;
                             this.nextFactory = nextFactory;
                             this.isFirstProperty = isFirstProperty;
                         }
+
                         public async Task<IPropertyNameWriter<TNext>> Commit()
                         {
-                            return await Task.FromResult(new PropertyNameWriter(this.writeStream, this.streamWriter, this.nextFactory, this.isFirstProperty)).ConfigureAwait(false);
+                            return await Task.FromResult(new PropertyNameWriter(this.disposer, this.writeStream, this.streamWriter, this.nextFactory, this.isFirstProperty)).ConfigureAwait(false);
                         }
 
                         private sealed class PropertyNameWriter : IPropertyNameWriter<TNext>
                         {
+                            private readonly IDisposer disposer;
                             private readonly WriteStream writeStream;
                             private readonly StreamWriter streamWriter;
                             private readonly Func<TNext> nextFactory;
                             private readonly bool isFirstProperty;
 
-                            public PropertyNameWriter(WriteStream writeStream, StreamWriter streamWriter, Func<TNext> nextFactory, bool isFirstProperty)
+                            public PropertyNameWriter(IDisposer disposer, WriteStream writeStream, StreamWriter streamWriter, Func<TNext> nextFactory, bool isFirstProperty)
                             {
+                                this.disposer = disposer;
                                 this.writeStream = writeStream;
                                 this.streamWriter = streamWriter;
                                 this.nextFactory = nextFactory;
@@ -482,17 +505,19 @@
 
                                 await this.streamWriter.WriteAsync($"\"{propertyName.Name}\": ").ConfigureAwait(false);
 
-                                return new PropertyValueWriter(this.writeStream, this.streamWriter, this.nextFactory);
+                                return new PropertyValueWriter(this.disposer, this.writeStream, this.streamWriter, this.nextFactory);
                             }
 
                             private sealed class PropertyValueWriter : IPropertyValueWriter<TNext>
                             {
+                                private readonly IDisposer disposer;
                                 private readonly WriteStream writeStream;
                                 private readonly StreamWriter streamWriter;
                                 private readonly Func<TNext> nextFactory;
 
-                                public PropertyValueWriter(WriteStream writeStream, StreamWriter streamWriter, Func<TNext> nextFactory)
+                                public PropertyValueWriter(IDisposer disposer, WriteStream writeStream, StreamWriter streamWriter, Func<TNext> nextFactory)
                                 {
+                                    this.disposer = disposer;
                                     this.writeStream = writeStream;
                                     this.streamWriter = streamWriter;
                                     this.nextFactory = nextFactory;
@@ -502,18 +527,20 @@
                                 {
                                     await this.streamWriter.WriteLineAsync("{").ConfigureAwait(false);
 
-                                    return new ComplexPropertyValueWriter<TNext>(this.writeStream, this.streamWriter, this.nextFactory, true);
+                                    return new ComplexPropertyValueWriter<TNext>(this.disposer, this.writeStream, this.streamWriter, this.nextFactory, true);
                                 }
 
                                 private sealed class ComplexPropertyValueWriter<TComplex> : IComplexPropertyValueWriter<TComplex>
                                 {
+                                    private readonly IDisposer disposer;
                                     private readonly WriteStream writeStream;
                                     private readonly StreamWriter streamWriter;
                                     private readonly Func<TComplex> nextFactory;
                                     private readonly bool isFirstProperty;
 
-                                    public ComplexPropertyValueWriter(WriteStream writeStream, StreamWriter streamWriter, Func<TComplex> nextFactory, bool isFirstProperty)
+                                    public ComplexPropertyValueWriter(IDisposer disposer, WriteStream writeStream, StreamWriter streamWriter, Func<TComplex> nextFactory, bool isFirstProperty)
                                     {
+                                        this.disposer = disposer;
                                         this.writeStream = writeStream;
                                         this.streamWriter = streamWriter;
                                         this.nextFactory = nextFactory;
@@ -534,7 +561,7 @@
 
                                     public async Task<IPropertyWriter<IComplexPropertyValueWriter<TComplex>>> CommitProperty()
                                     {
-                                        return await Task.FromResult(new PropertyWriter<IComplexPropertyValueWriter<TComplex>>(this.writeStream, this.streamWriter, () => new ComplexPropertyValueWriter<TComplex>(this.writeStream, this.streamWriter, this.nextFactory, false), true)).ConfigureAwait(false);
+                                        return await Task.FromResult(new PropertyWriter<IComplexPropertyValueWriter<TComplex>>(this.disposer, this.writeStream, this.streamWriter, () => new ComplexPropertyValueWriter<TComplex>(this.disposer, this.writeStream, this.streamWriter, this.nextFactory, false), true)).ConfigureAwait(false);
                                     }
                                 }
 
@@ -542,18 +569,20 @@
                                 {
                                     await this.streamWriter.WriteLineAsync("[").ConfigureAwait(false);
 
-                                    return new MultiValuedPropertyValueWriter(this.writeStream, this.streamWriter, this.nextFactory, true);
+                                    return new MultiValuedPropertyValueWriter(this.disposer, this.writeStream, this.streamWriter, this.nextFactory, true);
                                 }
 
                                 private sealed class MultiValuedPropertyValueWriter : IMultiValuedPropertyValueWriter<TNext>
                                 {
+                                    private readonly IDisposer disposer;
                                     private readonly WriteStream writeStream;
                                     private readonly StreamWriter streamWriter;
                                     private readonly Func<TNext> nextFactory;
                                     private readonly bool isFirstElement;
 
-                                    public MultiValuedPropertyValueWriter(WriteStream writeStream, StreamWriter streamWriter, Func<TNext> nextFactory, bool isFirstElement)
+                                    public MultiValuedPropertyValueWriter(IDisposer disposer, WriteStream writeStream, StreamWriter streamWriter, Func<TNext> nextFactory, bool isFirstElement)
                                     {
+                                        this.disposer = disposer;
                                         this.writeStream = writeStream;
                                         this.streamWriter = streamWriter;
                                         this.nextFactory = nextFactory;
@@ -576,23 +605,25 @@
 
                                         await this.streamWriter.WriteLineAsync("{").ConfigureAwait(false);
 
-                                        return new ComplexPropertyValueWriter<IMultiValuedPropertyValueWriter<TNext>>(this.writeStream, this.streamWriter, () => new MultiValuedPropertyValueWriter(this.writeStream, this.streamWriter, this.nextFactory, false), true);
+                                        return new ComplexPropertyValueWriter<IMultiValuedPropertyValueWriter<TNext>>(this.disposer, this.writeStream, this.streamWriter, () => new MultiValuedPropertyValueWriter(this.disposer, this.writeStream, this.streamWriter, this.nextFactory, false), true);
                                     }
                                 }
 
                                 public async Task<INullPropertyValueWriter<TNext>> CommitNull()
                                 {
-                                    return await Task.FromResult(new NullPropertyValueWriter(this.writeStream, this.streamWriter, this.nextFactory)).ConfigureAwait(false);
+                                    return await Task.FromResult(new NullPropertyValueWriter(this.disposer, this.writeStream, this.streamWriter, this.nextFactory)).ConfigureAwait(false);
                                 }
 
                                 private sealed class NullPropertyValueWriter : INullPropertyValueWriter<TNext>
                                 {
+                                    private readonly IDisposer disposer;
                                     private readonly WriteStream writeStream;
                                     private readonly StreamWriter streamWriter;
                                     private readonly Func<TNext> nextFactory;
 
-                                    public NullPropertyValueWriter(WriteStream writeStream, StreamWriter streamWriter, Func<TNext> nextFactory)
+                                    public NullPropertyValueWriter(IDisposer disposer, WriteStream writeStream, StreamWriter streamWriter, Func<TNext> nextFactory)
                                     {
+                                        this.disposer = disposer;
                                         this.writeStream = writeStream;
                                         this.streamWriter = streamWriter;
                                         this.nextFactory = nextFactory;
@@ -608,17 +639,19 @@
 
                                 public async Task<IPrimitivePropertyValueWriter<TNext>> CommitPrimitive()
                                 {
-                                    return await Task.FromResult(new PrimitivePropertyValueWriter(this.writeStream, this.streamWriter, this.nextFactory)).ConfigureAwait(false);
+                                    return await Task.FromResult(new PrimitivePropertyValueWriter(this.disposer, this.writeStream, this.streamWriter, this.nextFactory)).ConfigureAwait(false);
                                 }
 
                                 private sealed class PrimitivePropertyValueWriter : IPrimitivePropertyValueWriter<TNext>
                                 {
+                                    private readonly IDisposer disposer;
                                     private readonly WriteStream writeStream;
                                     private readonly StreamWriter streamWriter;
                                     private readonly Func<TNext> nextFactory;
 
-                                    public PrimitivePropertyValueWriter(WriteStream writeStream, StreamWriter streamWriter, Func<TNext> nextFactory)
+                                    public PrimitivePropertyValueWriter(IDisposer disposer, WriteStream writeStream, StreamWriter streamWriter, Func<TNext> nextFactory)
                                     {
+                                        this.disposer = disposer;
                                         this.writeStream = writeStream;
                                         this.streamWriter = streamWriter;
                                         this.nextFactory = nextFactory;
@@ -638,21 +671,23 @@
 
                 public async Task<ICustomHeaderWriter<IPatchHeaderWriter>> CommitCustomHeader()
                 {
-                    return await Task.FromResult(new CustomHeaderWriter<IPatchHeaderWriter>(this.httpClient, this.requestUri, (client, uri) => new PatchHeaderWriter(client, uri))).ConfigureAwait(false);
+                    return await Task.FromResult(new CustomHeaderWriter<IPatchHeaderWriter>(this.httpClient, this.requestUri, (client, uri) => new PatchHeaderWriter(this.disposer, client, uri))).ConfigureAwait(false);
                 }
 
                 public async Task<IEtagWriter> CommitEtag()
                 {
-                    return await Task.FromResult(new EtagWriter(this.httpClient, this.requestUri)).ConfigureAwait(false);
+                    return await Task.FromResult(new EtagWriter(this.disposer, this.httpClient, this.requestUri)).ConfigureAwait(false);
                 }
 
                 private sealed class EtagWriter : IEtagWriter
                 {
+                    private readonly IDisposer disposer;
                     private readonly IHttpClient httpClient;
                     private readonly Uri requestUri;
 
-                    public EtagWriter(IHttpClient httpClient, Uri requestUri)
+                    public EtagWriter(IDisposer disposer, IHttpClient httpClient, Uri requestUri)
                     {
+                        this.disposer = disposer;
                         this.httpClient = httpClient;
                         this.requestUri = requestUri;
                     }
@@ -660,7 +695,7 @@
                     public async Task<IPatchHeaderWriter> Commit(Etag etag)
                     {
                         this.httpClient.DefaultRequestHeaders.Add("ETag", "TODO implment etag header");
-                        return await Task.FromResult(new PatchHeaderWriter(this.httpClient, this.requestUri)).ConfigureAwait(false);
+                        return await Task.FromResult(new PatchHeaderWriter(this.disposer, this.httpClient, this.requestUri)).ConfigureAwait(false);
                     }
                 }
             }
@@ -700,16 +735,20 @@
 
             public async Task<IGetResponseHeaderReader> Next()
             {
-                return await Task.FromResult(new GetResponseHeaderReader(this.httpResponseMessage, this.httpResponseMessage.Headers.GetEnumerator())).ConfigureAwait(false); //// TODO this is disposable
+                var headersEnumerator = this.disposer.Register(() => this.httpResponseMessage.Headers.GetEnumerator());
+
+                return await Task.FromResult(new GetResponseHeaderReader(this.disposer, this.httpResponseMessage, headersEnumerator)).ConfigureAwait(false);
             }
 
             private sealed class GetResponseHeaderReader : IGetResponseHeaderReader
             {
+                private readonly IDisposer disposer;
                 private readonly HttpResponseMessage httpResponseMessage;
                 private readonly IEnumerator<KeyValuePair<string, IEnumerable<string>>> headers;
 
-                public GetResponseHeaderReader(HttpResponseMessage httpResponseMessage, IEnumerator<KeyValuePair<string, IEnumerable<string>>> headers)
+                public GetResponseHeaderReader(IDisposer disposer, HttpResponseMessage httpResponseMessage, IEnumerator<KeyValuePair<string, IEnumerable<string>>> headers)
                 {
+                    this.disposer = disposer;
                     this.httpResponseMessage = httpResponseMessage;
                     this.headers = headers;
                 }
@@ -724,12 +763,13 @@
                         }
                         else
                         {
-                            return new GetResponseHeaderToken.Custom(new CustomHeaderReader(this.httpResponseMessage, this.headers));
+                            return new GetResponseHeaderToken.Custom(new CustomHeaderReader(this.disposer, this.httpResponseMessage, this.headers));
                         }
                     }
                     else
                     {
-                        var jsonDocument = await JsonDocument.ParseAsync(await this.httpResponseMessage.Content.ReadAsStreamAsync().ConfigureAwait(false)).ConfigureAwait(false);
+                        var responseContent = this.disposer.Register(async () => await this.httpResponseMessage.Content.ReadAsStreamAsync().ConfigureAwait(false));
+                        var jsonDocument = await JsonDocument.ParseAsync(responseContent).ConfigureAwait(false);
 
                         var element = jsonDocument.RootElement;
                         if (element.ValueKind != JsonValueKind.Object)
@@ -743,11 +783,13 @@
 
                 private sealed class CustomHeaderReader : ICustomHeaderReader<IGetResponseHeaderReader>
                 {
+                    private readonly IDisposer disposer;
                     private readonly HttpResponseMessage httpResponseMessage;
                     private readonly IEnumerator<KeyValuePair<string, IEnumerable<string>>> headers;
 
-                    public CustomHeaderReader(HttpResponseMessage httpResponseMessage, IEnumerator<KeyValuePair<string, IEnumerable<string>>> headers)
+                    public CustomHeaderReader(IDisposer disposer, HttpResponseMessage httpResponseMessage, IEnumerator<KeyValuePair<string, IEnumerable<string>>> headers)
                     {
+                        this.disposer = disposer;
                         this.httpResponseMessage = httpResponseMessage;
                         this.headers = headers;
                         this.HeaderFieldName = new HeaderFieldName(this.headers.Current.Key);
@@ -759,21 +801,23 @@
                     {
                         if (this.headers.Current.Value.Any())
                         {
-                            return await Task.FromResult(new CustomHeaderToken<IGetResponseHeaderReader>.FieldValue(new HeaderFieldValueReader(this.httpResponseMessage, this.headers))).ConfigureAwait(false);
+                            return await Task.FromResult(new CustomHeaderToken<IGetResponseHeaderReader>.FieldValue(new HeaderFieldValueReader(this.disposer, this.httpResponseMessage, this.headers))).ConfigureAwait(false);
                         }
                         else
                         {
-                            return await Task.FromResult(new CustomHeaderToken<IGetResponseHeaderReader>.Header(new GetResponseHeaderReader(this.httpResponseMessage, this.headers))).ConfigureAwait(false);
+                            return await Task.FromResult(new CustomHeaderToken<IGetResponseHeaderReader>.Header(new GetResponseHeaderReader(this.disposer, this.httpResponseMessage, this.headers))).ConfigureAwait(false);
                         }
                     }
 
                     private sealed class HeaderFieldValueReader : IHeaderFieldValueReader<IGetResponseHeaderReader>
                     {
+                        private readonly IDisposer disposer;
                         private readonly HttpResponseMessage httpResponseMessage;
                         private readonly IEnumerator<KeyValuePair<string, IEnumerable<string>>> headers;
 
-                        public HeaderFieldValueReader(HttpResponseMessage httpResponseMessage, IEnumerator<KeyValuePair<string, IEnumerable<string>>> headers)
+                        public HeaderFieldValueReader(IDisposer disposer, HttpResponseMessage httpResponseMessage, IEnumerator<KeyValuePair<string, IEnumerable<string>>> headers)
                         {
+                            this.disposer = disposer;
                             this.httpResponseMessage = httpResponseMessage;
                             this.headers = headers;
                             this.HeaderFieldValue = new HeaderFieldValue(headers.Current.Value.First()); //// TODO `.first` is not handling duplicate headers or headers with multiple provided values
@@ -783,7 +827,7 @@
 
                         public async Task<IGetResponseHeaderReader> Next()
                         {
-                            return await Task.FromResult(new GetResponseHeaderReader(this.httpResponseMessage, this.headers)).ConfigureAwait(false);
+                            return await Task.FromResult(new GetResponseHeaderReader(this.disposer, this.httpResponseMessage, this.headers)).ConfigureAwait(false);
                         }
                     }
                 }
