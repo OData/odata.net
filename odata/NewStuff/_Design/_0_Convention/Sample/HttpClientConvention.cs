@@ -217,27 +217,17 @@
 
             private sealed class GetHeaderWriter : IGetHeaderWriter
             {
-                private readonly IHttpClient httpClient;
                 private readonly IDisposer disposer;
                 private readonly Uri requestUri;
+
+                private readonly IHttpClient httpClient;
 
                 public GetHeaderWriter(IDisposer disposer, Uri requestUri, Func<IHttpClient> httpClientFactory)
                 {
                     this.disposer = disposer;
                     this.requestUri = requestUri;
 
-                    IHttpClient? httpClient = null;
-                    try
-                    {
-                        httpClient = httpClientFactory();
-                        this.disposer.Register(httpClient); //// TODO what happens is `disposer` is being disposed as we register the new value?
-                        this.httpClient = httpClient;
-                    }
-                    catch
-                    {
-                        httpClient?.Dispose();
-                        throw;
-                    }
+                    this.httpClient = this.disposer.Register(httpClientFactory);
                 }
 
                 public async Task<IGetBodyWriter> Commit()
