@@ -1,5 +1,6 @@
 ﻿namespace NewStuff._Design._0_Convention
 {
+    using System;
     using System.Threading.Tasks;
 
     public interface IRequestWriter
@@ -9,12 +10,12 @@
         Task<IPostRequestWriter> CommitPost();
     }
 
-    public interface IGetRequestWriter
+    public interface IGetRequestWriter : IAsyncDisposable
     {
         Task<IUriWriter<IGetHeaderWriter>> Commit();
     }
 
-    public interface IPatchRequestWriter
+    public interface IPatchRequestWriter : IAsyncDisposable
     {
         Task<IUriWriter<IPatchHeaderWriter>> Commit();
     }
@@ -90,7 +91,7 @@
         Task<T> Commit();
     }
 
-    public interface IPostRequestWriter
+    public interface IPostRequestWriter : IAsyncDisposable
     {
         //// TODO
     }

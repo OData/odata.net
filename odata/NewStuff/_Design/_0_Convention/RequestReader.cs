@@ -43,7 +43,7 @@
         }
     }
 
-    public interface IGetRequestReader
+    public interface IGetRequestReader : IAsyncDisposable
     {
         Task<IUriReader<IGetHeaderReader>> Next();
     }

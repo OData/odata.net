@@ -82,20 +82,25 @@
 
         public async Task<IGetRequestWriter> Get()
         {
-            return await Task.FromResult(new GetRequestWriter(this.httpClientFactory())).ConfigureAwait(false); //// TODO you need an idispoabel for the httpclient
+            return await Task.FromResult(new GetRequestWriter(this.httpClientFactory)).ConfigureAwait(false); //// TODO you need an idispoabel for the httpclient
         }
 
         private sealed class GetRequestWriter : IGetRequestWriter
         {
-            private readonly IHttpClient httpClient;
+            private readonly Func<IHttpClient> httpClientFactory;
 
             private readonly IDisposer disposer;
 
-            public GetRequestWriter(IHttpClient httpClient)
+            public GetRequestWriter(Func<IHttpClient> httpClientFactory)
             {
-                this.httpClient = httpClient;
+                this.httpClientFactory = httpClientFactory;
 
                 this.disposer = new Disposer();
+            }
+
+            public async ValueTask DisposeAsync()
+            {
+                await this.disposer.DisposeAsync().ConfigureAwait(false);
             }
 
             public async Task<IUriWriter<IGetHeaderWriter>> Commit()
@@ -196,16 +201,25 @@
 
         public IPatchRequestWriter Patch()
         {
-            return new PatchRequestWriter(this.httpClientFactory());
+            return new PatchRequestWriter(this.httpClientFactory);
         }
 
         private sealed class PatchRequestWriter : IPatchRequestWriter
         {
-            private readonly IHttpClient httpClient;
+            private readonly Func<IHttpClient> httpClientFactory;
 
-            public PatchRequestWriter(IHttpClient httpClient)
+            private readonly IDisposer disposer;
+
+            public PatchRequestWriter(Func<IHttpClient> httpClientFactory)
             {
-                this.httpClient = httpClient; //// TODO disposable
+                this.httpClientFactory = httpClientFactory;
+
+                this.disposer = new Disposer();
+            }
+
+            public async ValueTask DisposeAsync()
+            {
+                await this.disposer.DisposeAsync().ConfigureAwait(false);
             }
 
             public async Task<IUriWriter<IPatchHeaderWriter>> Commit()
@@ -499,16 +513,25 @@
 
         public IPatchRequestWriter Post()
         {
-            return new PatchRequestWriter(this.httpClientFactory());
+            return new PatchRequestWriter(this.httpClientFactory);
         }
 
         private sealed class GetResponseReader : IGetResponseReader
         {
             private readonly HttpResponseMessage httpResponseMessage;
 
+            private readonly IDisposer disposer;
+
             public GetResponseReader(HttpResponseMessage httpResponseMessage)
             {
                 this.httpResponseMessage = httpResponseMessage;
+
+                this.disposer = new Disposer();
+            }
+
+            public async ValueTask DisposeAsync()
+            {
+                await this.disposer.DisposeAsync().ConfigureAwait(false);
             }
 
             public async Task<IGetResponseHeaderReader> Next()

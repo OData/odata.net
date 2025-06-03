@@ -1,6 +1,8 @@
 ﻿namespace NewStuff._Design._0_Convention
 {
-    public interface IPatchResponseReader
+    using System;
+
+    public interface IPatchResponseReader : IAsyncDisposable
     {
     }
 }

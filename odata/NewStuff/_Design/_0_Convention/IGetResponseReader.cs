@@ -3,7 +3,7 @@
     using System;
     using System.Threading.Tasks;
 
-    public interface IGetResponseReader
+    public interface IGetResponseReader : IAsyncDisposable
     {
         Task<IGetResponseHeaderReader> Next();
     }
