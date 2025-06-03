@@ -2,6 +2,7 @@
 {
     using System;
     using System.Buffers;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Data;
     using System.IO;
@@ -22,6 +23,63 @@
             this.httpClientFactory = httpClientFactory;
         }
 
+        private interface IDisposer : IAsyncDisposable
+        {
+            void Register(IDisposable disposable);
+
+            void Unregister(IDisposable disposable);
+
+            void Register(IAsyncDisposable disposable);
+
+            void Unregister(IAsyncDisposable disposable);
+        }
+
+        private sealed class Disposer : IDisposer
+        {
+            private readonly ConcurrentDictionary<IDisposable, bool> disposables;
+
+            private readonly ConcurrentDictionary<IAsyncDisposable, bool> asyncDisposables;
+
+            public Disposer()
+            {
+                this.disposables = new ConcurrentDictionary<IDisposable, bool>();
+                this.asyncDisposables = new ConcurrentDictionary<IAsyncDisposable, bool>();
+            }
+
+            public async ValueTask DisposeAsync()
+            {
+                foreach (var disposable in this.disposables.Keys)
+                {
+                    disposable.Dispose();
+                }
+
+                foreach (var disposable in this.asyncDisposables.Keys)
+                {
+                    await disposable.DisposeAsync().ConfigureAwait(false);
+                }
+            }
+
+            public void Register(IDisposable disposable)
+            {
+                this.disposables.TryAdd(disposable, true);
+            }
+
+            public void Register(IAsyncDisposable disposable)
+            {
+                this.asyncDisposables.TryAdd(disposable, true);
+            }
+
+            public void Unregister(IDisposable disposable)
+            {
+                this.disposables.TryRemove(disposable, out _);
+            }
+
+            public void Unregister(IAsyncDisposable disposable)
+            {
+                this.asyncDisposables.TryRemove(disposable, out _);
+            }
+        }
+
         public async Task<IGetRequestWriter> Get()
         {
             return await Task.FromResult(new GetRequestWriter(this.httpClientFactory())).ConfigureAwait(false); //// TODO you need an idispoabel for the httpclient
@@ -31,9 +89,13 @@
         {
             private readonly IHttpClient httpClient;
 
+            private readonly IDisposer disposer;
+
             public GetRequestWriter(IHttpClient httpClient)
             {
                 this.httpClient = httpClient;
+
+                this.disposer = new Disposer();
             }
 
             public async Task<IUriWriter<IGetHeaderWriter>> Commit()
