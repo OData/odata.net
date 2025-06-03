@@ -759,7 +759,7 @@
                     {
                         if (string.Equals(this.headers.Current.Key, "Content-Type", StringComparison.OrdinalIgnoreCase)) //// TODO should ignroing case be configurable
                         {
-                            return new GetResponseHeaderToken.ContentType(new ContentTypeHeaderReader(this.httpResponseMessage, this.headers));
+                            return new GetResponseHeaderToken.ContentType(new ContentTypeHeaderReader(this.disposer, this.httpResponseMessage, this.headers));
                         }
                         else
                         {
@@ -768,6 +768,8 @@
                     }
                     else
                     {
+                        this.disposer.Unregister(this.headers);
+
                         var responseContent = this.disposer.Register(async () => await this.httpResponseMessage.Content.ReadAsStreamAsync().ConfigureAwait(false));
                         var jsonDocument = await JsonDocument.ParseAsync(responseContent).ConfigureAwait(false);
 
@@ -777,7 +779,8 @@
                             throw new Exception("TODO the root needs to be an object");
                         }
 
-                        return new GetResponseHeaderToken.Body(new GetResponseBodyReader(element.EnumerateObject()));
+                        var objectEnumerator = this.disposer.Register(() => element.EnumerateObject());
+                        return new GetResponseHeaderToken.Body(new GetResponseBodyReader(this.disposer, objectEnumerator));
                     }
                 }
 
@@ -834,11 +837,13 @@
 
                 private sealed class ContentTypeHeaderReader : IContentTypeHeaderReader
                 {
+                    private readonly IDisposer disposer;
                     private readonly HttpResponseMessage httpResponseMessage;
                     private readonly IEnumerator<KeyValuePair<string, IEnumerable<string>>> headers;
 
-                    public ContentTypeHeaderReader(HttpResponseMessage httpResponseMessage, IEnumerator<KeyValuePair<string, IEnumerable<string>>> headers)
+                    public ContentTypeHeaderReader(IDisposer disposer, HttpResponseMessage httpResponseMessage, IEnumerator<KeyValuePair<string, IEnumerable<string>>> headers)
                     {
+                        this.disposer = disposer;
                         this.httpResponseMessage = httpResponseMessage;
                         this.headers = headers;
                         this.ContentType = new ContentType(this.headers.Current.Value.First()); //// TODO `.first` is not handling duplicate headers or headers with multiple provided values
@@ -848,16 +853,18 @@
 
                     public async Task<IGetResponseHeaderReader> Next()
                     {
-                        return await Task.FromResult(new GetResponseHeaderReader(this.httpResponseMessage, this.headers)).ConfigureAwait(false);
+                        return await Task.FromResult(new GetResponseHeaderReader(this.disposer, this.httpResponseMessage, this.headers)).ConfigureAwait(false);
                     }
                 }
 
                 private sealed class GetResponseBodyReader : IGetResponseBodyReader
                 {
+                    private readonly IDisposer disposer;
                     private JsonElement.ObjectEnumerator propertyEnumerator;
 
-                    public GetResponseBodyReader(JsonElement.ObjectEnumerator propertyEnumerator)
+                    public GetResponseBodyReader(IDisposer disposer, JsonElement.ObjectEnumerator propertyEnumerator)
                     {
+                        this.disposer = disposer;
                         this.propertyEnumerator = propertyEnumerator;
                     }
 
@@ -868,28 +875,31 @@
                             var property = this.propertyEnumerator.Current;
                             if (string.Equals(property.Name, "@odata.context")) //// TODO ignore case?
                             {
-                                return await Task.FromResult(new GetResponseBodyToken.OdataContext(new OdataContextReader(this.propertyEnumerator, property.Value))).ConfigureAwait(false);
+                                return await Task.FromResult(new GetResponseBodyToken.OdataContext(new OdataContextReader(this.disposer, this.propertyEnumerator, property.Value))).ConfigureAwait(false);
                             }
                             else if (string.Equals(property.Name, "@odata.nextLink")) //// TODO ignore case?
                             {
-                                return await Task.FromResult(new GetResponseBodyToken.NextLink(new NextLinkReader(this.propertyEnumerator, property.Value))).ConfigureAwait(false);
+                                return await Task.FromResult(new GetResponseBodyToken.NextLink(new NextLinkReader(this.disposer, this.propertyEnumerator, property.Value))).ConfigureAwait(false);
                             }
                             else
                             {
-                                return await Task.FromResult(new GetResponseBodyToken.Property(new PropertyReader<IGetResponseBodyReader>(this.propertyEnumerator, enumerator => new GetResponseBodyReader(enumerator)))).ConfigureAwait(false);
+                                return await Task.FromResult(new GetResponseBodyToken.Property(new PropertyReader<IGetResponseBodyReader>(this.disposer, this.propertyEnumerator, enumerator => new GetResponseBodyReader(this.disposer, enumerator)))).ConfigureAwait(false);
                             }
                         }
                         else
                         {
+                            this.disposer.Unregister(this.propertyEnumerator);
+
                             return await Task.FromResult(GetResponseBodyToken.End.Instance).ConfigureAwait(false);
                         }
                     }
 
                     private sealed class OdataContextReader : IOdataContextReader<IGetResponseBodyReader>
                     {
+                        private readonly IDisposer disposer;
                         private JsonElement.ObjectEnumerator propertyEnumerator;
 
-                        public OdataContextReader(JsonElement.ObjectEnumerator propertyEnumerator, JsonElement propertyValue)
+                        public OdataContextReader(IDisposer disposer, JsonElement.ObjectEnumerator propertyEnumerator, JsonElement propertyValue)
                         {
                             if (propertyValue.ValueKind != JsonValueKind.String)
                             {
@@ -897,6 +907,7 @@
                             }
 
                             this.OdataContext = new OdataContext(propertyValue.GetString()!);
+                            this.disposer = disposer;
                             this.propertyEnumerator = propertyEnumerator;
                         }
 
@@ -904,15 +915,16 @@
 
                         public async Task<IGetResponseBodyReader> Next()
                         {
-                            return await Task.FromResult(new GetResponseBodyReader(this.propertyEnumerator)).ConfigureAwait(false);
+                            return await Task.FromResult(new GetResponseBodyReader(this.disposer, this.propertyEnumerator)).ConfigureAwait(false);
                         }
                     }
 
                     private sealed class NextLinkReader : INextLinkReader
                     {
+                        private readonly IDisposer disposer;
                         private JsonElement.ObjectEnumerator propertyEnumerator;
 
-                        public NextLinkReader(JsonElement.ObjectEnumerator propertyEnumerator, JsonElement propertyValue)
+                        public NextLinkReader(IDisposer disposer, JsonElement.ObjectEnumerator propertyEnumerator, JsonElement propertyValue)
                         {
                             if (propertyValue.ValueKind != JsonValueKind.String)
                             {
@@ -920,6 +932,7 @@
                             }
 
                             this.NextLink = new NextLink(new Uri(propertyValue.GetString()!));
+                            this.disposer = disposer;
                             this.propertyEnumerator = propertyEnumerator;
                         }
 
@@ -927,34 +940,38 @@
 
                         public async Task<IGetResponseBodyReader> Next()
                         {
-                            return await Task.FromResult(new GetResponseBodyReader(this.propertyEnumerator)).ConfigureAwait(false);
+                            return await Task.FromResult(new GetResponseBodyReader(this.disposer, this.propertyEnumerator)).ConfigureAwait(false);
                         }
                     }
 
                     private sealed class PropertyReader<T> : IPropertyReader<T>
                     {
+                        private readonly IDisposer disposer;
                         private JsonElement.ObjectEnumerator propertyEnumerator;
                         private readonly Func<JsonElement.ObjectEnumerator, T> nextFactory;
 
-                        public PropertyReader(JsonElement.ObjectEnumerator propertyEnumerator, Func<JsonElement.ObjectEnumerator, T> nextFactory)
+                        public PropertyReader(IDisposer disposer, JsonElement.ObjectEnumerator propertyEnumerator, Func<JsonElement.ObjectEnumerator, T> nextFactory)
                         {
+                            this.disposer = disposer;
                             this.propertyEnumerator = propertyEnumerator;
                             this.nextFactory = nextFactory;
                         }
 
                         public async Task<IPropertyNameReader<T>> Next()
                         {
-                            return await Task.FromResult(new PropertyNameReader(this.propertyEnumerator, this.nextFactory)).ConfigureAwait(false);
+                            return await Task.FromResult(new PropertyNameReader(this.disposer, this.propertyEnumerator, this.nextFactory)).ConfigureAwait(false);
                         }
 
                         private sealed class PropertyNameReader : IPropertyNameReader<T>
                         {
+                            private readonly IDisposer disposer;
                             private JsonElement.ObjectEnumerator propertyEnumerator;
                             private readonly Func<JsonElement.ObjectEnumerator, T> nextFactory;
 
-                            public PropertyNameReader(JsonElement.ObjectEnumerator propertyEnumerator, Func<JsonElement.ObjectEnumerator, T> nextFactory)
+                            public PropertyNameReader(IDisposer disposer, JsonElement.ObjectEnumerator propertyEnumerator, Func<JsonElement.ObjectEnumerator, T> nextFactory)
                             {
                                 this.PropertyName = new PropertyName(propertyEnumerator.Current.Name);
+                                this.disposer = disposer;
                                 this.propertyEnumerator = propertyEnumerator;
                                 this.nextFactory = nextFactory;
                             }
@@ -963,16 +980,18 @@
 
                             public async Task<IPropertyValueReader<T>> Next()
                             {
-                                return await Task.FromResult(new PropertyValueReader(this.propertyEnumerator, this.nextFactory)).ConfigureAwait(false);
+                                return await Task.FromResult(new PropertyValueReader(this.disposer, this.propertyEnumerator, this.nextFactory)).ConfigureAwait(false);
                             }
 
                             private sealed class PropertyValueReader : IPropertyValueReader<T>
                             {
+                                private readonly IDisposer disposer;
                                 private JsonElement.ObjectEnumerator propertyEnumerator;
                                 private readonly Func<JsonElement.ObjectEnumerator, T> nextFactory;
 
-                                public PropertyValueReader(JsonElement.ObjectEnumerator propertyEnumerator, Func<JsonElement.ObjectEnumerator, T> nextFactory)
+                                public PropertyValueReader(IDisposer disposer, JsonElement.ObjectEnumerator propertyEnumerator, Func<JsonElement.ObjectEnumerator, T> nextFactory)
                                 {
+                                    this.disposer = disposer;
                                     this.propertyEnumerator = propertyEnumerator;
                                     this.nextFactory = nextFactory;
                                 }
@@ -986,27 +1005,31 @@
                                     }
                                     else if (propertyValue.ValueKind == JsonValueKind.Object)
                                     {
-                                        return await Task.FromResult(new PropertyValueToken<T>.Complex(new ComplexPropertyValueReader<T>(this.propertyEnumerator, this.nextFactory, propertyValue.EnumerateObject()))).ConfigureAwait(false);
+                                        var objectEnumerator = this.disposer.Register(() => propertyValue.EnumerateObject());
+                                        return await Task.FromResult(new PropertyValueToken<T>.Complex(new ComplexPropertyValueReader<T>(this.disposer, this.propertyEnumerator, this.nextFactory, objectEnumerator))).ConfigureAwait(false);
                                     }
                                     else if (propertyValue.ValueKind == JsonValueKind.Array)
                                     {
-                                        return await Task.FromResult(new PropertyValueToken<T>.MultiValued(new MultiValuedPropertyValueReader(this.propertyEnumerator, this.nextFactory, propertyValue.EnumerateArray()))).ConfigureAwait(false);
+                                        var arrayEnumerator = this.disposer.Register(() => propertyValue.EnumerateArray());
+                                        return await Task.FromResult(new PropertyValueToken<T>.MultiValued(new MultiValuedPropertyValueReader(this.disposer, this.propertyEnumerator, this.nextFactory, arrayEnumerator))).ConfigureAwait(false);
                                     }
                                     else
                                     {
                                         // primitive
-                                        return await Task.FromResult(new PropertyValueToken<T>.Primitive(new PrimitivePropertyValueReader(this.propertyEnumerator, this.nextFactory, propertyValue.GetRawText()))).ConfigureAwait(false);
+                                        return await Task.FromResult(new PropertyValueToken<T>.Primitive(new PrimitivePropertyValueReader(this.disposer, this.propertyEnumerator, this.nextFactory, propertyValue.GetRawText()))).ConfigureAwait(false);
                                     }
                                 }
 
                                 private sealed class PrimitivePropertyValueReader : IPrimitivePropertyValueReader<T>
                                 {
+                                    private readonly IDisposer disposer;
                                     private JsonElement.ObjectEnumerator propertyEnumerator;
                                     private readonly Func<JsonElement.ObjectEnumerator, T> nextFactory;
 
-                                    public PrimitivePropertyValueReader(JsonElement.ObjectEnumerator propertyEnumerator, Func<JsonElement.ObjectEnumerator, T> nextFactory, string value)
+                                    public PrimitivePropertyValueReader(IDisposer disposer, JsonElement.ObjectEnumerator propertyEnumerator, Func<JsonElement.ObjectEnumerator, T> nextFactory, string value)
                                     {
                                         this.PrimitivePropertyValue = new PrimitivePropertyValue(value);
+                                        this.disposer = disposer;
                                         this.propertyEnumerator = propertyEnumerator;
                                         this.nextFactory = nextFactory;
                                     }
@@ -1021,12 +1044,14 @@
 
                                 private sealed class ComplexPropertyValueReader<TComplex> : IComplexPropertyValueReader<TComplex>
                                 {
+                                    private readonly IDisposer disposer;
                                     private JsonElement.ObjectEnumerator parentPropertyEnumerator;
                                     private readonly Func<JsonElement.ObjectEnumerator, TComplex> nextFactory;
                                     private JsonElement.ObjectEnumerator propertyValueEnumerator;
 
-                                    public ComplexPropertyValueReader(JsonElement.ObjectEnumerator parentPropertyEnumerator, Func<JsonElement.ObjectEnumerator, TComplex> nextFactory, JsonElement.ObjectEnumerator propertyValueEnumerator)
+                                    public ComplexPropertyValueReader(IDisposer disposer, JsonElement.ObjectEnumerator parentPropertyEnumerator, Func<JsonElement.ObjectEnumerator, TComplex> nextFactory, JsonElement.ObjectEnumerator propertyValueEnumerator)
                                     {
+                                        this.disposer = disposer;
                                         this.parentPropertyEnumerator = parentPropertyEnumerator;
                                         this.nextFactory = nextFactory;
                                         this.propertyValueEnumerator = propertyValueEnumerator;
@@ -1039,28 +1064,31 @@
                                             var property = this.propertyValueEnumerator.Current;
                                             if (string.Equals(property.Name, "@odata.context")) //// TODO ignore case?
                                             {
-                                                return await Task.FromResult(new ComplexPropertyValueToken<TComplex>.OdataContext(new OdataContextReader(this.parentPropertyEnumerator, this.nextFactory, this.propertyValueEnumerator, property.Value))).ConfigureAwait(false);
+                                                return await Task.FromResult(new ComplexPropertyValueToken<TComplex>.OdataContext(new OdataContextReader(this.disposer, this.parentPropertyEnumerator, this.nextFactory, this.propertyValueEnumerator, property.Value))).ConfigureAwait(false);
                                             }
                                             else if (string.Equals(property.Name, "@odata.id")) //// TODO ignore case?
                                             {
-                                                return await Task.FromResult(new ComplexPropertyValueToken<TComplex>.OdataId(new OdataIdReader(this.parentPropertyEnumerator, this.nextFactory, this.propertyValueEnumerator, property.Value))).ConfigureAwait(false);
+                                                return await Task.FromResult(new ComplexPropertyValueToken<TComplex>.OdataId(new OdataIdReader(this.disposer, this.parentPropertyEnumerator, this.nextFactory, this.propertyValueEnumerator, property.Value))).ConfigureAwait(false);
                                             }
 
-                                            return await Task.FromResult(new ComplexPropertyValueToken<TComplex>.Property(new PropertyReader<IComplexPropertyValueReader<TComplex>>(this.propertyValueEnumerator, enumerator => new ComplexPropertyValueReader<TComplex>(this.parentPropertyEnumerator, this.nextFactory, enumerator)))).ConfigureAwait(false);
+                                            return await Task.FromResult(new ComplexPropertyValueToken<TComplex>.Property(new PropertyReader<IComplexPropertyValueReader<TComplex>>(this.disposer, this.propertyValueEnumerator, enumerator => new ComplexPropertyValueReader<TComplex>(this.disposer, this.parentPropertyEnumerator, this.nextFactory, enumerator)))).ConfigureAwait(false);
                                         }
                                         else
                                         {
+                                            this.disposer.Unregister(this.propertyValueEnumerator);
+
                                             return await Task.FromResult(new ComplexPropertyValueToken<TComplex>.End(this.nextFactory(this.parentPropertyEnumerator))).ConfigureAwait(false);
                                         }
                                     }
 
                                     private sealed class OdataContextReader : IOdataContextReader<IComplexPropertyValueReader<TComplex>>
                                     {
+                                        private readonly IDisposer disposer;
                                         private JsonElement.ObjectEnumerator parentPropertyEnumerator;
                                         private readonly Func<JsonElement.ObjectEnumerator, TComplex> nextFactory;
                                         private JsonElement.ObjectEnumerator propertyValueEnumerator;
 
-                                        public OdataContextReader(JsonElement.ObjectEnumerator parentPropertyEnumerator, Func<JsonElement.ObjectEnumerator, TComplex> nextFactory, JsonElement.ObjectEnumerator propertyValueEnumerator, JsonElement propertyValue)
+                                        public OdataContextReader(IDisposer disposer, JsonElement.ObjectEnumerator parentPropertyEnumerator, Func<JsonElement.ObjectEnumerator, TComplex> nextFactory, JsonElement.ObjectEnumerator propertyValueEnumerator, JsonElement propertyValue)
                                         {
                                             if (propertyValue.ValueKind != JsonValueKind.String)
                                             {
@@ -1068,6 +1096,7 @@
                                             }
 
                                             this.OdataContext = new OdataContext(propertyValue.GetString()!);
+                                            this.disposer = disposer;
                                             this.parentPropertyEnumerator = parentPropertyEnumerator;
                                             this.nextFactory = nextFactory;
                                             this.propertyValueEnumerator = propertyValueEnumerator;
@@ -1077,17 +1106,18 @@
 
                                         public async Task<IComplexPropertyValueReader<TComplex>> Next()
                                         {
-                                            return await Task.FromResult(new ComplexPropertyValueReader<TComplex>(this.parentPropertyEnumerator, this.nextFactory, this.propertyValueEnumerator)).ConfigureAwait(false);
+                                            return await Task.FromResult(new ComplexPropertyValueReader<TComplex>(this.disposer, this.parentPropertyEnumerator, this.nextFactory, this.propertyValueEnumerator)).ConfigureAwait(false);
                                         }
                                     }
 
                                     private sealed class OdataIdReader : IOdataIdReader<IComplexPropertyValueReader<TComplex>>
                                     {
+                                        private readonly IDisposer disposer;
                                         private JsonElement.ObjectEnumerator parentPropertyEnumerator;
                                         private readonly Func<JsonElement.ObjectEnumerator, TComplex> nextFactory;
                                         private JsonElement.ObjectEnumerator propertyValueEnumerator;
 
-                                        public OdataIdReader(JsonElement.ObjectEnumerator parentPropertyEnumerator, Func<JsonElement.ObjectEnumerator, TComplex> nextFactory, JsonElement.ObjectEnumerator propertyValueEnumerator, JsonElement propertyValue)
+                                        public OdataIdReader(IDisposer disposer, JsonElement.ObjectEnumerator parentPropertyEnumerator, Func<JsonElement.ObjectEnumerator, TComplex> nextFactory, JsonElement.ObjectEnumerator propertyValueEnumerator, JsonElement propertyValue)
                                         {
                                             if (propertyValue.ValueKind != JsonValueKind.String)
                                             {
@@ -1095,6 +1125,7 @@
                                             }
 
                                             this.OdataId = new OdataId(propertyValue.GetString()!);
+                                            this.disposer = disposer;
                                             this.parentPropertyEnumerator = parentPropertyEnumerator;
                                             this.nextFactory = nextFactory;
                                             this.propertyValueEnumerator = propertyValueEnumerator;
@@ -1104,19 +1135,21 @@
 
                                         public async Task<IComplexPropertyValueReader<TComplex>> Next()
                                         {
-                                            return await Task.FromResult(new ComplexPropertyValueReader<TComplex>(this.parentPropertyEnumerator, this.nextFactory, this.propertyValueEnumerator)).ConfigureAwait(false);
+                                            return await Task.FromResult(new ComplexPropertyValueReader<TComplex>(this.disposer, this.parentPropertyEnumerator, this.nextFactory, this.propertyValueEnumerator)).ConfigureAwait(false);
                                         }
                                     }
                                 }
 
                                 private sealed class MultiValuedPropertyValueReader : IMultiValuedPropertyValueReader<T>
                                 {
+                                    private readonly IDisposer disposer;
                                     private JsonElement.ObjectEnumerator parentPropertyEnumerator;
                                     private readonly Func<JsonElement.ObjectEnumerator, T> nextFactory;
                                     private JsonElement.ArrayEnumerator arrayEnumerator;
 
-                                    public MultiValuedPropertyValueReader(JsonElement.ObjectEnumerator parentPropertyEnumerator, Func<JsonElement.ObjectEnumerator, T> nextFactory, JsonElement.ArrayEnumerator arrayEnumerator)
+                                    public MultiValuedPropertyValueReader(IDisposer disposer, JsonElement.ObjectEnumerator parentPropertyEnumerator, Func<JsonElement.ObjectEnumerator, T> nextFactory, JsonElement.ArrayEnumerator arrayEnumerator)
                                     {
+                                        this.disposer = disposer;
                                         this.parentPropertyEnumerator = parentPropertyEnumerator;
                                         this.nextFactory = nextFactory;
                                         this.arrayEnumerator = arrayEnumerator;
@@ -1131,11 +1164,14 @@
                                                 throw new Exception("TODO only objects are allowed in collections (except for the times where that's not true)");
                                             }
 
-                                            return await Task.FromResult(new MultiValuedPropertyValueToken<T>.Object(new ComplexPropertyValueReader<IMultiValuedPropertyValueReader<T>>(this.parentPropertyEnumerator, parentEnumerator => new MultiValuedPropertyValueReader(parentPropertyEnumerator, this.nextFactory, this.arrayEnumerator), this.arrayEnumerator.Current.EnumerateObject()))).ConfigureAwait(false);
+                                            var objectEnumerator = this.disposer.Register(() => this.arrayEnumerator.Current.EnumerateObject());
+                                            return await Task.FromResult(new MultiValuedPropertyValueToken<T>.Object(new ComplexPropertyValueReader<IMultiValuedPropertyValueReader<T>>(this.disposer, this.parentPropertyEnumerator, parentEnumerator => new MultiValuedPropertyValueReader(this.disposer, parentPropertyEnumerator, this.nextFactory, this.arrayEnumerator), objectEnumerator))).ConfigureAwait(false);
                                             //// TODO what about collections of primitives?
                                         }
                                         else
                                         {
+                                            this.disposer.Unregister(this.arrayEnumerator);
+
                                             return await Task.FromResult(new MultiValuedPropertyValueToken<T>.End(this.nextFactory(this.parentPropertyEnumerator))).ConfigureAwait(false);
                                         }
                                     }
@@ -1143,11 +1179,13 @@
 
                                 private sealed class NullPropertyValueReader : INullPropertyValueReader<T>
                                 {
+                                    private readonly IDisposer disposer;
                                     private JsonElement.ObjectEnumerator propertyEnumerator;
                                     private readonly Func<JsonElement.ObjectEnumerator, T> nextFactory;
 
-                                    public NullPropertyValueReader(JsonElement.ObjectEnumerator propertyEnumerator, Func<JsonElement.ObjectEnumerator, T> nextFactory)
+                                    public NullPropertyValueReader(IDisposer disposer, JsonElement.ObjectEnumerator propertyEnumerator, Func<JsonElement.ObjectEnumerator, T> nextFactory)
                                     {
+                                        this.disposer = disposer;
                                         this.propertyEnumerator = propertyEnumerator;
                                         this.nextFactory = nextFactory;
                                     }
