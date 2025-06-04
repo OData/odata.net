@@ -1295,11 +1295,16 @@
                         this.nextFactory = nextFactory;
                     }
 
-                    public async Task<IUriPortWriter<T>> Commit(UriDomain uriDomain)
+                    public RefTask<Nothing2, Nothing2, IUriPortWriter<T>> Commit(UriDomain uriDomain)
+                    {
+                        throw new NotImplementedException();
+                    }
+
+                    /*public async Task<IUriPortWriter<T>> Commit(UriDomain uriDomain)
                     {
                         this.builder.Append(uriDomain.Domain);
                         return await Task.FromResult(new UriPortWriter(this.builder, this.nextFactory)).ConfigureAwait(false);
-                    }
+                    }*/
 
                     private sealed class UriPortWriter : IUriPortWriter<T>
                     {
@@ -1312,15 +1317,16 @@
                             this.nextFactory = nextFactory;
                         }
 
-                        public async Task<IUriPathSegmentWriter<T>> Commit()
+                        public RefTask<Nothing2, Nothing2, IUriPathSegmentWriter<T>> Commit()
                         {
-                            return await Task.FromResult(new UriPathSegmentWriter(this.builder, this.nextFactory)).ConfigureAwait(false);
+                            return RefTask.FromFunc<IUriPathSegmentWriter<T>>(() => new UriPathSegmentWriter(this.builder, this.nextFactory));
                         }
 
-                        public async Task<IUriPathSegmentWriter<T>> Commit(UriPort uriPort)
+                        public RefTask<Nothing2, Nothing2, IUriPathSegmentWriter<T>> Commit(UriPort uriPort)
                         {
                             this.builder.Append($":{uriPort.Port}");
-                            return await Task.FromResult(new UriPathSegmentWriter(this.builder, this.nextFactory)).ConfigureAwait(false);
+
+                            return RefTask.FromFunc<IUriPathSegmentWriter<T>>(() => new UriPathSegmentWriter(this.builder, this.nextFactory));
                         }
 
                         private sealed class UriPathSegmentWriter : IUriPathSegmentWriter<T>
@@ -1334,9 +1340,9 @@
                                 this.nextFactory = nextFactory;
                             }
 
-                            public async Task<IQueryOptionWriter<T>> Commit()
+                            public RefTask<Nothing2, Nothing2, IQueryOptionWriter<T>> Commit()
                             {
-                                return await Task.FromResult(new QueryOptionWriter(this.builder, this.nextFactory, false)).ConfigureAwait(false);
+                                return RefTask.FromFunc<IQueryOptionWriter<T>>(() => new QueryOptionWriter(this.builder, this.nextFactory, false));
                             }
 
                             private sealed class QueryOptionWriter : IQueryOptionWriter<T>
@@ -1441,11 +1447,12 @@
                                 }
                             }
 
-                            public async Task<IUriPathSegmentWriter<T>> Commit(UriPathSegment uriPathSegment)
+
+                            public RefTask<Nothing2, Nothing2, IUriPathSegmentWriter<T>> Commit(UriPathSegment uriPathSegment)
                             {
                                 this.builder.Append($"/{uriPathSegment.Segment}");
 
-                                return await Task.FromResult(new UriPathSegmentWriter(this.builder, this.nextFactory)).ConfigureAwait(false);
+                                return RefTask.FromFunc<IUriPathSegmentWriter<T>>(() => new UriPathSegmentWriter(this.builder, this.nextFactory));
                             }
                         }
                     }
