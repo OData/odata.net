@@ -95,105 +95,110 @@
             public async Task<MultiValuedResponse> Evaluate()
             {
                 var requestWriter = await this.convention.Get().ConfigureAwait(false);
-                var uriWriter = await requestWriter.Commit().ConfigureAwait(false);
-
-                var getHeaderWriter = await WriteUri(GenerateRequestedUri(), uriWriter).ConfigureAwait(false);
-
-                //// TODO not writing any headers...
-                var getBodyWriter = await getHeaderWriter.Commit().ConfigureAwait(false);
-
-                // wait for a response
-                var getResponseReader = await getBodyWriter.Commit().ConfigureAwait(false);
-
-                var multiValueResponseBuilder = new MultiValuedResponseBuilder();
-                multiValueResponseBuilder.Annotations = Enumerable.Empty<object>(); //// TODO annotations aren't supported yet
-
-                var headerReader = await getResponseReader.Next().ConfigureAwait(false);
-                var getResponseBodyReader = await MultiValuedProtocol.SkipHeaders(headerReader).ConfigureAwait(false);
-
-                while (true)
+                await using (requestWriter.ConfigureAwait(false))
                 {
-                    var getResponseBodyToken = await getResponseBodyReader.Next().ConfigureAwait(false);
-                    if (getResponseBodyToken is GetResponseBodyToken.NextLink nextLink)
+                    var uriWriter = await requestWriter.Commit().ConfigureAwait(false);
+
+                    var getHeaderWriter = await WriteUri(GenerateRequestedUri(), uriWriter).ConfigureAwait(false);
+
+                    //// TODO not writing any headers...
+                    var getBodyWriter = await getHeaderWriter.Commit().ConfigureAwait(false);
+
+                    // wait for a response
+                    var getResponseReader = await getBodyWriter.Commit().ConfigureAwait(false);
+                    await using (getResponseReader.ConfigureAwait(false))
                     {
-                        var nextLinkReader = nextLink.NextLinkReader;
-                        multiValueResponseBuilder.NextLink = nextLinkReader.NextLink.Uri;
-                        getResponseBodyReader = await nextLinkReader.Next().ConfigureAwait(false);
-                    }
-                    else if (getResponseBodyToken is GetResponseBodyToken.OdataContext odataContext)
-                    {
-                        //// TODO this implementation is skipping the odatacontext
-                        getResponseBodyReader = await odataContext.OdataContextReader.Next().ConfigureAwait(false);
-                    }
-                    else if (getResponseBodyToken is GetResponseBodyToken.Property property)
-                    {
-                        var propertyReader = property.PropertyReader;
-                        var propertyNameReader = await propertyReader.Next().ConfigureAwait(false);
-                        var propertyName = propertyNameReader.PropertyName;
-                        if (string.Equals(propertyName.Name, "value", StringComparison.Ordinal)) //// TODO do we want to configurably ignore casing?
+                        var multiValueResponseBuilder = new MultiValuedResponseBuilder();
+                        multiValueResponseBuilder.Annotations = Enumerable.Empty<object>(); //// TODO annotations aren't supported yet
+
+                        var headerReader = await getResponseReader.Next().ConfigureAwait(false);
+                        var getResponseBodyReader = await MultiValuedProtocol.SkipHeaders(headerReader).ConfigureAwait(false);
+
+                        while (true)
                         {
-                            var propertyValueReader = await propertyNameReader.Next().ConfigureAwait(false);
-                            var propertyValueToken = await propertyValueReader.Next().ConfigureAwait(false);
-                            if (propertyValueToken is PropertyValueToken<IGetResponseBodyReader>.MultiValued multiValued)
+                            var getResponseBodyToken = await getResponseBodyReader.Next().ConfigureAwait(false);
+                            if (getResponseBodyToken is GetResponseBodyToken.NextLink nextLink)
                             {
-                                var multiValuedPropertyValueReader = multiValued.MultiValuedPropertyValueReader;
-                                while (true)
+                                var nextLinkReader = nextLink.NextLinkReader;
+                                multiValueResponseBuilder.NextLink = nextLinkReader.NextLink.Uri;
+                                getResponseBodyReader = await nextLinkReader.Next().ConfigureAwait(false);
+                            }
+                            else if (getResponseBodyToken is GetResponseBodyToken.OdataContext odataContext)
+                            {
+                                //// TODO this implementation is skipping the odatacontext
+                                getResponseBodyReader = await odataContext.OdataContextReader.Next().ConfigureAwait(false);
+                            }
+                            else if (getResponseBodyToken is GetResponseBodyToken.Property property)
+                            {
+                                var propertyReader = property.PropertyReader;
+                                var propertyNameReader = await propertyReader.Next().ConfigureAwait(false);
+                                var propertyName = propertyNameReader.PropertyName;
+                                if (string.Equals(propertyName.Name, "value", StringComparison.Ordinal)) //// TODO do we want to configurably ignore casing?
                                 {
-                                    var multiValuedPropertyValueToken = await multiValuedPropertyValueReader.Next().ConfigureAwait(false);
-                                    if (multiValuedPropertyValueToken is MultiValuedPropertyValueToken<IGetResponseBodyReader>.Object @object)
+                                    var propertyValueReader = await propertyNameReader.Next().ConfigureAwait(false);
+                                    var propertyValueToken = await propertyValueReader.Next().ConfigureAwait(false);
+                                    if (propertyValueToken is PropertyValueToken<IGetResponseBodyReader>.MultiValued multiValued)
                                     {
-                                        var complexPropertyValueReader = @object.ComplexPropertyValueReader;
+                                        var multiValuedPropertyValueReader = multiValued.MultiValuedPropertyValueReader;
+                                        while (true)
+                                        {
+                                            var multiValuedPropertyValueToken = await multiValuedPropertyValueReader.Next().ConfigureAwait(false);
+                                            if (multiValuedPropertyValueToken is MultiValuedPropertyValueToken<IGetResponseBodyReader>.Object @object)
+                                            {
+                                                var complexPropertyValueReader = @object.ComplexPropertyValueReader;
+                                                var singleValueBuilder = new MultiValuedProtocol.SingleValueBuilder();
+
+                                                multiValuedPropertyValueReader = await MultiValuedProtocol.ReadComplexPropertyValue(complexPropertyValueReader, singleValueBuilder).ConfigureAwait(false);
+
+                                                multiValueResponseBuilder.Value.Add(singleValueBuilder.Build());
+                                            }
+                                            else if (multiValuedPropertyValueToken is MultiValuedPropertyValueToken<IGetResponseBodyReader>.End end)
+                                            {
+                                                getResponseBodyReader = end.Reader;
+                                                break;
+                                            }
+                                            else
+                                            {
+                                                throw new Exception("TODO implement visitor");
+                                            }
+                                        }
+                                    }
+                                    /*if (propertyValueToken is PropertyValueToken<IGetResponseBodyReader>.Complex complex)
+                                    {
+                                        var complexPropertyValueReader = complex.ComplexPropertyValueReader;
                                         var singleValueBuilder = new MultiValuedProtocol.SingleValueBuilder();
 
-                                        multiValuedPropertyValueReader = await MultiValuedProtocol.ReadComplexPropertyValue(complexPropertyValueReader, singleValueBuilder).ConfigureAwait(false);
+                                        getResponseBodyReader = MultiValuedProtocol.ReadComplexPropertyValue(complexPropertyValueReader, singleValueBuilder);
 
                                         multiValueResponseBuilder.Value.Add(singleValueBuilder.Build());
-                                    }
-                                    else if (multiValuedPropertyValueToken is MultiValuedPropertyValueToken<IGetResponseBodyReader>.End end)
-                                    {
-                                        getResponseBodyReader = end.Reader;
-                                        break;
-                                    }
+                                    }*/
                                     else
                                     {
-                                        throw new Exception("TODO implement visitor");
+                                        //// TODO have you modeled an empty collection yet?
+                                        throw new Exception("TODO error occurred parsing; we expected a mulit-valued response and found a property named 'value', but that property didn't have some number of objects inside");
+                                        //// TODO use a visitor
                                     }
                                 }
+                                else
+                                {
+                                    var propertyValueReader = await propertyNameReader.Next().ConfigureAwait(false);
+                                    getResponseBodyReader = await SkipPropertyValue(propertyValueReader).ConfigureAwait(false);
+                                }
                             }
-                            /*if (propertyValueToken is PropertyValueToken<IGetResponseBodyReader>.Complex complex)
+                            //// TODO count isn't available here...
+                            else if (getResponseBodyToken is GetResponseBodyToken.End end)
                             {
-                                var complexPropertyValueReader = complex.ComplexPropertyValueReader;
-                                var singleValueBuilder = new MultiValuedProtocol.SingleValueBuilder();
-
-                                getResponseBodyReader = MultiValuedProtocol.ReadComplexPropertyValue(complexPropertyValueReader, singleValueBuilder);
-
-                                multiValueResponseBuilder.Value.Add(singleValueBuilder.Build());
-                            }*/
+                                break;
+                            }
                             else
                             {
-                                //// TODO have you modeled an empty collection yet?
-                                throw new Exception("TODO error occurred parsing; we expected a mulit-valued response and found a property named 'value', but that property didn't have some number of objects inside");
-                                //// TODO use a visitor
+                                throw new Exception("TODO implement visitor");
                             }
                         }
-                        else
-                        {
-                            var propertyValueReader = await propertyNameReader.Next().ConfigureAwait(false);
-                            getResponseBodyReader = await SkipPropertyValue(propertyValueReader).ConfigureAwait(false); 
-                        }
-                    }
-                    //// TODO count isn't available here...
-                    else if (getResponseBodyToken is GetResponseBodyToken.End end)
-                    {
-                        break;
-                    }
-                    else
-                    {
-                        throw new Exception("TODO implement visitor");
+
+                        return multiValueResponseBuilder.Build();
                     }
                 }
-
-                return multiValueResponseBuilder.Build();
             }
 
             private static async Task<T> SkipPropertyValue<T>(IPropertyValueReader<T> propertyValueReader)
@@ -399,57 +404,62 @@
             public async Task<SingleValuedResponse> Evaluate()
             {
                 var requestWriter = await this.convention.Get().ConfigureAwait(false);
-                var uriWriter = await requestWriter.Commit().ConfigureAwait(false);
-
-                var getHeaderWriter = await WriteUri(GenerateRequestedUri(), uriWriter).ConfigureAwait(false);
-
-                var customHeaderWriter = await getHeaderWriter.CommitCustomHeader().ConfigureAwait(false); //// TODO should "content-type: application/json" really be considered "custom"?
-                var headerFieldValueWriter = await customHeaderWriter.Commit(new HeaderFieldName("Content-Type")).ConfigureAwait(false);
-                getHeaderWriter = await headerFieldValueWriter.Commit(new HeaderFieldValue("application/json")).ConfigureAwait(false);
-
-                var getBodyWriter = await getHeaderWriter.Commit().ConfigureAwait(false);
-
-                // send the request
-                var getResponseReader = await getBodyWriter.Commit().ConfigureAwait(false);
-
-                var getResponseHeaderReader = await getResponseReader.Next().ConfigureAwait(false);
-                var getResponseBodyReader = await MultiValuedProtocol.SkipHeaders(getResponseHeaderReader).ConfigureAwait(false);
-
-                var singleValuedResponseBuilder = new SingleValuedResponseBuilder();
-                var singleValueBuilder = new SingleValueBuilder();
-                while (true)
+                await using (requestWriter.ConfigureAwait(false))
                 {
-                    var getResponseBodyToken = await getResponseBodyReader.Next().ConfigureAwait(false);
-                    if (getResponseBodyToken is GetResponseBodyToken.Property property)
-                    {
-                        var propertyReader = property.PropertyReader;
-                        var propertyNameReader = await propertyReader.Next().ConfigureAwait(false);
-                        var propertyName = propertyNameReader.PropertyName;
-                        var propertyValueReader = await propertyNameReader.Next().ConfigureAwait(false);
+                    var uriWriter = await requestWriter.Commit().ConfigureAwait(false);
 
-                        getResponseBodyReader = await MultiValuedProtocol.ReadPropertyValue(propertyValueReader, propertyName.Name, singleValueBuilder).ConfigureAwait(false);
-                    }
-                    else if (getResponseBodyToken is GetResponseBodyToken.OdataContext odataContext)
+                    var getHeaderWriter = await WriteUri(GenerateRequestedUri(), uriWriter).ConfigureAwait(false);
+
+                    var customHeaderWriter = await getHeaderWriter.CommitCustomHeader().ConfigureAwait(false); //// TODO should "content-type: application/json" really be considered "custom"?
+                    var headerFieldValueWriter = await customHeaderWriter.Commit(new HeaderFieldName("Content-Type")).ConfigureAwait(false);
+                    getHeaderWriter = await headerFieldValueWriter.Commit(new HeaderFieldValue("application/json")).ConfigureAwait(false);
+
+                    var getBodyWriter = await getHeaderWriter.Commit().ConfigureAwait(false);
+
+                    // send the request
+                    var getResponseReader = await getBodyWriter.Commit().ConfigureAwait(false);
+                    await using (getResponseReader.ConfigureAwait(false))
                     {
-                        //// TODO this implementation is not using the context
-                        getResponseBodyReader = await odataContext.OdataContextReader.Next().ConfigureAwait(false);
-                    }
-                    else if (getResponseBodyToken is GetResponseBodyToken.NextLink nextLink)
-                    {
-                        throw new Exception("TODO no nextlinks for single-valued responses");
-                    }
-                    else if (getResponseBodyToken is GetResponseBodyToken.End end)
-                    {
-                        break;
-                    }
-                    else
-                    {
-                        throw new Exception("TODO implement visitor");
+                        var getResponseHeaderReader = await getResponseReader.Next().ConfigureAwait(false);
+                        var getResponseBodyReader = await MultiValuedProtocol.SkipHeaders(getResponseHeaderReader).ConfigureAwait(false);
+
+                        var singleValuedResponseBuilder = new SingleValuedResponseBuilder();
+                        var singleValueBuilder = new SingleValueBuilder();
+                        while (true)
+                        {
+                            var getResponseBodyToken = await getResponseBodyReader.Next().ConfigureAwait(false);
+                            if (getResponseBodyToken is GetResponseBodyToken.Property property)
+                            {
+                                var propertyReader = property.PropertyReader;
+                                var propertyNameReader = await propertyReader.Next().ConfigureAwait(false);
+                                var propertyName = propertyNameReader.PropertyName;
+                                var propertyValueReader = await propertyNameReader.Next().ConfigureAwait(false);
+
+                                getResponseBodyReader = await MultiValuedProtocol.ReadPropertyValue(propertyValueReader, propertyName.Name, singleValueBuilder).ConfigureAwait(false);
+                            }
+                            else if (getResponseBodyToken is GetResponseBodyToken.OdataContext odataContext)
+                            {
+                                //// TODO this implementation is not using the context
+                                getResponseBodyReader = await odataContext.OdataContextReader.Next().ConfigureAwait(false);
+                            }
+                            else if (getResponseBodyToken is GetResponseBodyToken.NextLink nextLink)
+                            {
+                                throw new Exception("TODO no nextlinks for single-valued responses");
+                            }
+                            else if (getResponseBodyToken is GetResponseBodyToken.End end)
+                            {
+                                break;
+                            }
+                            else
+                            {
+                                throw new Exception("TODO implement visitor");
+                            }
+                        }
+
+                        singleValuedResponseBuilder.Value = singleValueBuilder.Build();
+                        return singleValuedResponseBuilder.Build();
                     }
                 }
-
-                singleValuedResponseBuilder.Value = singleValueBuilder.Build();
-                return singleValuedResponseBuilder.Build();
             }
 
             public IGetSingleValuedProtocol Expand(object expander)
@@ -514,97 +524,101 @@
             public async Task<SingleValuedResponse> Evaluate()
             {
                 var patchRequestWriter = this.convention.Patch();
-
-                var uriWriter = await patchRequestWriter.Commit().ConfigureAwait(false);
-                var patchHeaderWriter = await MultiValuedProtocol.WriteUri(this.singleValuedUri, uriWriter).ConfigureAwait(false);
-
-                var customHeaderWriter = await patchHeaderWriter.CommitCustomHeader().ConfigureAwait(false);
-                var headerFieldValueWriter = await customHeaderWriter.Commit(new HeaderFieldName("Content-Type")).ConfigureAwait(false); //// TODO probably this should be a "built-in" header
-                patchHeaderWriter = await headerFieldValueWriter.Commit(new HeaderFieldValue("application/json")).ConfigureAwait(false);
-                var patchRequestBodyWriter = await patchHeaderWriter.Commit().ConfigureAwait(false);
-
-                //// TODO what about dynamic and untyped properties?
-                foreach (var complexProperty in this.singleValuedRequest.ComplexProperties)
+                await using (patchRequestWriter.ConfigureAwait(false))
                 {
-                    //// TODO you haven't actually fleshed out complex properties yet in the protocol layer
+                    var uriWriter = await patchRequestWriter.Commit().ConfigureAwait(false);
+                    var patchHeaderWriter = await MultiValuedProtocol.WriteUri(this.singleValuedUri, uriWriter).ConfigureAwait(false);
+
+                    var customHeaderWriter = await patchHeaderWriter.CommitCustomHeader().ConfigureAwait(false);
+                    var headerFieldValueWriter = await customHeaderWriter.Commit(new HeaderFieldName("Content-Type")).ConfigureAwait(false); //// TODO probably this should be a "built-in" header
+                    patchHeaderWriter = await headerFieldValueWriter.Commit(new HeaderFieldValue("application/json")).ConfigureAwait(false);
+                    var patchRequestBodyWriter = await patchHeaderWriter.Commit().ConfigureAwait(false);
+
+                    //// TODO what about dynamic and untyped properties?
+                    foreach (var complexProperty in this.singleValuedRequest.ComplexProperties)
+                    {
+                        //// TODO you haven't actually fleshed out complex properties yet in the protocol layer
+                    }
+
+                    foreach (var multiValuedProperty in this.singleValuedRequest.MultiValuedProperties)
+                    {
+                        var propertyWriter = await patchRequestBodyWriter.CommitProperty().ConfigureAwait(false);
+                        var propertyNameWriter = await propertyWriter.Commit().ConfigureAwait(false);
+                        var propertyValueWriter = await propertyNameWriter.Commit(new PropertyName(multiValuedProperty.Name)).ConfigureAwait(false);
+                        var multiValuedPropertyValueWriter = await propertyValueWriter.CommitMultiValued().ConfigureAwait(false);
+
+                        var objectWriter = await multiValuedPropertyValueWriter.CommitValue().ConfigureAwait(false);
+
+                        foreach (var value in multiValuedProperty.Values)
+                        {
+                            multiValuedPropertyValueWriter = await WriteSingleValuedRequest(value, objectWriter).ConfigureAwait(false);
+                        }
+
+                        patchRequestBodyWriter = await multiValuedPropertyValueWriter.Commit().ConfigureAwait(false);
+                    }
+
+                    foreach (var primitiveProperty in this.singleValuedRequest.PrimitiveProperties)
+                    {
+                        var propertyWriter = await patchRequestBodyWriter.CommitProperty().ConfigureAwait(false);
+                        var propertyNameWriter = await propertyWriter.Commit().ConfigureAwait(false);
+                        var propertyValueWriter = await propertyNameWriter.Commit(new PropertyName(primitiveProperty.Name)).ConfigureAwait(false);
+
+                        if (primitiveProperty.Value == null)
+                        {
+                            var nullPropertyValueWriter = await propertyValueWriter.CommitNull().ConfigureAwait(false);
+                            patchRequestBodyWriter = await nullPropertyValueWriter.Commit().ConfigureAwait(false);
+                        }
+                        else
+                        {
+                            var primitivePropertyValueWriter = await propertyValueWriter.CommitPrimitive().ConfigureAwait(false);
+                            patchRequestBodyWriter = await primitivePropertyValueWriter.Commit(new PrimitivePropertyValue(primitiveProperty.Value)).ConfigureAwait(false);
+                        }
+                    }
+
+                    // send the request
+                    var patchResponseReader = await patchRequestBodyWriter.Commit().ConfigureAwait(false);
+                    await using (patchResponseReader.ConfigureAwait(false))
+                    {
+                        var patchResponseHeaderReader = await patchResponseReader.Next().ConfigureAwait(false);
+                        var patchResponseBodyReader = await MultiValuedProtocol.SkipHeaders(patchResponseHeaderReader).ConfigureAwait(false);
+
+                        var singleValuedResponseBuilder = new SingleValuedResponseBuilder();
+                        var singleValueBuilder = new SingleValueBuilder();
+                        while (true)
+                        {
+                            var getResponseBodyToken = await patchResponseBodyReader.Next().ConfigureAwait(false);
+                            if (getResponseBodyToken is GetResponseBodyToken.Property property)
+                            {
+                                var propertyReader = property.PropertyReader;
+                                var propertyNameReader = await propertyReader.Next().ConfigureAwait(false);
+                                var propertyName = propertyNameReader.PropertyName;
+                                var propertyValueReader = await propertyNameReader.Next().ConfigureAwait(false);
+
+                                patchResponseBodyReader = await MultiValuedProtocol.ReadPropertyValue(propertyValueReader, propertyName.Name, singleValueBuilder).ConfigureAwait(false);
+                            }
+                            else if (getResponseBodyToken is GetResponseBodyToken.OdataContext odataContext)
+                            {
+                                //// TODO this implementation is not using the context
+                                patchResponseBodyReader = await odataContext.OdataContextReader.Next().ConfigureAwait(false);
+                            }
+                            else if (getResponseBodyToken is GetResponseBodyToken.NextLink nextLink)
+                            {
+                                throw new Exception("TODO no nextlinks for single-valued responses");
+                            }
+                            else if (getResponseBodyToken is GetResponseBodyToken.End end)
+                            {
+                                break;
+                            }
+                            else
+                            {
+                                throw new Exception("TODO implement visitor");
+                            }
+                        }
+
+                        singleValuedResponseBuilder.Value = singleValueBuilder.Build();
+                        return singleValuedResponseBuilder.Build();
+                    }
                 }
-
-                foreach (var multiValuedProperty in this.singleValuedRequest.MultiValuedProperties)
-                {
-                    var propertyWriter = await patchRequestBodyWriter.CommitProperty().ConfigureAwait(false);
-                    var propertyNameWriter = await propertyWriter.Commit().ConfigureAwait(false);
-                    var propertyValueWriter = await propertyNameWriter.Commit(new PropertyName(multiValuedProperty.Name)).ConfigureAwait(false);
-                    var multiValuedPropertyValueWriter = await propertyValueWriter.CommitMultiValued().ConfigureAwait(false);
-
-                    var objectWriter = await multiValuedPropertyValueWriter.CommitValue().ConfigureAwait(false);
-
-                    foreach (var value in multiValuedProperty.Values)
-                    {
-                        multiValuedPropertyValueWriter = await WriteSingleValuedRequest(value, objectWriter).ConfigureAwait(false);
-                    }
-
-                    patchRequestBodyWriter = await multiValuedPropertyValueWriter.Commit().ConfigureAwait(false);
-                }
-
-                foreach (var primitiveProperty in this.singleValuedRequest.PrimitiveProperties)
-                {
-                    var propertyWriter = await patchRequestBodyWriter.CommitProperty().ConfigureAwait(false);
-                    var propertyNameWriter = await propertyWriter.Commit().ConfigureAwait(false);
-                    var propertyValueWriter = await propertyNameWriter.Commit(new PropertyName(primitiveProperty.Name)).ConfigureAwait(false);
-
-                    if (primitiveProperty.Value == null)
-                    {
-                        var nullPropertyValueWriter = await propertyValueWriter.CommitNull().ConfigureAwait(false);
-                        patchRequestBodyWriter = await nullPropertyValueWriter.Commit().ConfigureAwait(false);
-                    }
-                    else
-                    {
-                        var primitivePropertyValueWriter = await propertyValueWriter.CommitPrimitive().ConfigureAwait(false);
-                        patchRequestBodyWriter = await primitivePropertyValueWriter.Commit(new PrimitivePropertyValue(primitiveProperty.Value)).ConfigureAwait(false);
-                    }
-                }
-
-                // send the request
-                var patchResponseReader = await patchRequestBodyWriter.Commit().ConfigureAwait(false);
-
-                var patchResponseHeaderReader = await patchResponseReader.Next().ConfigureAwait(false);
-                var patchResponseBodyReader = await MultiValuedProtocol.SkipHeaders(patchResponseHeaderReader).ConfigureAwait(false);
-
-                var singleValuedResponseBuilder = new SingleValuedResponseBuilder();
-                var singleValueBuilder = new SingleValueBuilder();
-                while (true)
-                {
-                    var getResponseBodyToken = await patchResponseBodyReader.Next().ConfigureAwait(false);
-                    if (getResponseBodyToken is GetResponseBodyToken.Property property)
-                    {
-                        var propertyReader = property.PropertyReader;
-                        var propertyNameReader = await propertyReader.Next().ConfigureAwait(false);
-                        var propertyName = propertyNameReader.PropertyName;
-                        var propertyValueReader = await propertyNameReader.Next().ConfigureAwait(false);
-
-                        patchResponseBodyReader = await MultiValuedProtocol.ReadPropertyValue(propertyValueReader, propertyName.Name, singleValueBuilder).ConfigureAwait(false);
-                    }
-                    else if (getResponseBodyToken is GetResponseBodyToken.OdataContext odataContext)
-                    {
-                        //// TODO this implementation is not using the context
-                        patchResponseBodyReader = await odataContext.OdataContextReader.Next().ConfigureAwait(false);
-                    }
-                    else if (getResponseBodyToken is GetResponseBodyToken.NextLink nextLink)
-                    {
-                        throw new Exception("TODO no nextlinks for single-valued responses");
-                    }
-                    else if (getResponseBodyToken is GetResponseBodyToken.End end)
-                    {
-                        break;
-                    }
-                    else
-                    {
-                        throw new Exception("TODO implement visitor");
-                    }
-                }
-
-                singleValuedResponseBuilder.Value = singleValueBuilder.Build();
-                return singleValuedResponseBuilder.Build();
             }
 
             public IPatchSingleValuedProtocol Expand(object expander)
