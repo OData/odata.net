@@ -10,16 +10,9 @@
         Task<IPostRequestWriter> CommitPost();
     }
 
-    public interface IGetRequestWriter : IGetRequestWriter<Task<IUriWriter<IGetHeaderWriter>>, IUriWriter<IGetHeaderWriter>, IGetHeaderWriter>
+    public interface IGetRequestWriter : IAsyncDisposable
     {
-    }
-
-    public interface IGetRequestWriter<TTask, TUriWriter, TGetHeaderWriter> : IAsyncDisposable
-        where TTask : /*Task<TUriWriter>,*/ allows ref struct
-        where TUriWriter : IUriWriter<TGetHeaderWriter>, allows ref struct
-        where TGetHeaderWriter : IGetHeaderWriter, allows ref struct
-    {
-        TTask Commit();
+        Task<IUriWriter<IGetHeaderWriter>> Commit();
     }
 
     public interface IPatchRequestWriter : IAsyncDisposable
@@ -122,7 +115,7 @@
 
 
 
-    public interface IUriWriter<T> where T : allows ref struct
+    public interface IUriWriter<T>
     {
         Task<IUriSchemeWriter<T>> Commit();
     }
