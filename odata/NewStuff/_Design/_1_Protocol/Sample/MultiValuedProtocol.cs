@@ -9,6 +9,10 @@
 
     using NewStuff._Design._0_Convention;
 
+    public struct Nothing
+    {
+    }
+
     public sealed class MultiValuedProtocol : IMultiValuedProtocol
     {
         private readonly IConvention convention;
@@ -137,47 +141,44 @@
                                 {
                                     var propertyValueReader = await propertyNameReader.Next().ConfigureAwait(false);
                                     var propertyValueToken = await propertyValueReader.Next().ConfigureAwait(false);
-                                    if (propertyValueToken is PropertyValueToken<IGetResponseBodyReader>.MultiValued multiValued)
-                                    {
-                                        var multiValuedPropertyValueReader = multiValued.MultiValuedPropertyValueReader;
-                                        while (true)
-                                        {
-                                            var multiValuedPropertyValueToken = await multiValuedPropertyValueReader.Next().ConfigureAwait(false);
-                                            if (multiValuedPropertyValueToken is MultiValuedPropertyValueToken<IGetResponseBodyReader>.Object @object)
+
+                                    //// TODO have you modeled an empty collection yet?
+                                    var multiValuedParsingException = new Exception("TODO error occurred parsing; we expected a mulit-valued response and found a property named 'value', but that property didn't have some number of objects inside");
+                                    await propertyValueToken
+                                        .Dispatch(
+                                            async primitive => throw multiValuedParsingException,
+                                            async complex => throw multiValuedParsingException,
+                                            async multiValued =>
                                             {
-                                                var complexPropertyValueReader = @object.ComplexPropertyValueReader;
-                                                var singleValueBuilder = new MultiValuedProtocol.SingleValueBuilder();
+                                                var multiValuedPropertyValueReader = multiValued.MultiValuedPropertyValueReader;
+                                                var @continue = true;
+                                                while (@continue)
+                                                {
+                                                    var multiValuedPropertyValueToken = await multiValuedPropertyValueReader.Next().ConfigureAwait(false);
+                                                    @continue = await multiValuedPropertyValueToken
+                                                        .Dispatch(
+                                                            async @object =>
+                                                            {
+                                                                var complexPropertyValueReader = @object.ComplexPropertyValueReader;
+                                                                var singleValueBuilder = new MultiValuedProtocol.SingleValueBuilder();
 
-                                                multiValuedPropertyValueReader = await MultiValuedProtocol.ReadComplexPropertyValue(complexPropertyValueReader, singleValueBuilder).ConfigureAwait(false);
+                                                                multiValuedPropertyValueReader = await MultiValuedProtocol.ReadComplexPropertyValue(complexPropertyValueReader, singleValueBuilder).ConfigureAwait(false);
 
-                                                multiValueResponseBuilder.Value.Add(singleValueBuilder.Build());
-                                            }
-                                            else if (multiValuedPropertyValueToken is MultiValuedPropertyValueToken<IGetResponseBodyReader>.End end)
-                                            {
-                                                getResponseBodyReader = end.Reader;
-                                                break;
-                                            }
-                                            else
-                                            {
-                                                throw new Exception("TODO implement visitor");
-                                            }
-                                        }
-                                    }
-                                    /*if (propertyValueToken is PropertyValueToken<IGetResponseBodyReader>.Complex complex)
-                                    {
-                                        var complexPropertyValueReader = complex.ComplexPropertyValueReader;
-                                        var singleValueBuilder = new MultiValuedProtocol.SingleValueBuilder();
+                                                                multiValueResponseBuilder.Value.Add(singleValueBuilder.Build()); //// TODO having a `context` parameter on `dispatch` would prevent closures
+                                                                return true;
+                                                            },
+                                                            async end =>
+                                                            {
+                                                                getResponseBodyReader = end.Reader;
+                                                                return false;
+                                                            })
+                                                        .ConfigureAwait(false);
+                                                }
 
-                                        getResponseBodyReader = MultiValuedProtocol.ReadComplexPropertyValue(complexPropertyValueReader, singleValueBuilder);
-
-                                        multiValueResponseBuilder.Value.Add(singleValueBuilder.Build());
-                                    }*/
-                                    else
-                                    {
-                                        //// TODO have you modeled an empty collection yet?
-                                        throw new Exception("TODO error occurred parsing; we expected a mulit-valued response and found a property named 'value', but that property didn't have some number of objects inside");
-                                        //// TODO use a visitor
-                                    }
+                                                return new Nothing();
+                                            },
+                                            async @null => throw multiValuedParsingException)
+                                        .ConfigureAwait(false);
                                 }
                                 else
                                 {
