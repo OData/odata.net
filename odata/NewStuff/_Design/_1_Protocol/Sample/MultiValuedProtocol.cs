@@ -977,23 +977,22 @@
             var headerToken = await getResponseHeaderReader.Next().ConfigureAwait(false);
 
             return await headerToken.Dispatch(
-                async contentType => await SkipHeaders(await contentType.ContentTypeHeaderReader.Next().ConfigureAwait(false)).ConfigureAwait(false),
-                async custom =>
-                {
-                    var customHeaderToken = await custom.CustomHeaderReader.Next().ConfigureAwait(false);
-                    if (customHeaderToken is CustomHeaderToken<IGetResponseHeaderReader>.FieldValue fieldValue)
-                    {
-                        return await SkipHeaders(await fieldValue.HeaderFieldValueReader.Next().ConfigureAwait(false)).ConfigureAwait(false);
-                    }
-                    else if (customHeaderToken is CustomHeaderToken<IGetResponseHeaderReader>.Header header)
-                    {
-                        return await SkipHeaders(header.GetHeaderReader).ConfigureAwait(false);
-                    }
-                    else
-                    {
-                        throw new Exception("TODO implement visitor");
-                    }
-                },
+                async contentType => await 
+                    SkipHeaders(await 
+                        contentType
+                            .ContentTypeHeaderReader
+                            .Next()
+                            .ConfigureAwait(false))
+                    .ConfigureAwait(false),
+                async custom => await
+                    SkipHeaders(
+                        await 
+                            (await custom.CustomHeaderReader.Next().ConfigureAwait(false))
+                                .Dispatch(
+                                    async fieldValue => await fieldValue.HeaderFieldValueReader.Next().ConfigureAwait(false),
+                                    async header => header.GetHeaderReader)
+                                .ConfigureAwait(false))
+                    .ConfigureAwait(false),
                 async body => body.GetResponseBodyReader).ConfigureAwait(false);
         }
 

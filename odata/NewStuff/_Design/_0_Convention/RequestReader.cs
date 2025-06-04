@@ -431,6 +431,60 @@
 
             public T GetHeaderReader { get; }
         }
+
+        public interface IAccepterAsync<TResult>
+        {
+            Task<TResult> Accept(FieldValue node);
+
+            Task<TResult> Accept(Header node);
+        }
+
+        public async Task<TResult> Dispatch<TResult>(IAccepterAsync<TResult> accepter)
+        {
+            if (this is FieldValue contentType)
+            {
+                return await accepter.Accept(contentType).ConfigureAwait(false);
+            }
+            else if (this is Header custom)
+            {
+                return await accepter.Accept(custom).ConfigureAwait(false);
+            }
+            else
+            {
+                throw new Exception("TODO use a visitor");
+            }
+        }
+
+        private sealed class DelegateAccepter<TResult> : IAccepterAsync<TResult>
+        {
+            private readonly Func<FieldValue, Task<TResult>> fieldValueAccepter;
+            private readonly Func<Header, Task<TResult>> headerAccepter;
+
+            public DelegateAccepter(
+                Func<FieldValue, Task<TResult>> fieldValueAccepter,
+                Func<Header, Task<TResult>> headerAccepter)
+            {
+                this.fieldValueAccepter = fieldValueAccepter;
+                this.headerAccepter = headerAccepter;
+            }
+
+            public Task<TResult> Accept(FieldValue node)
+            {
+                return this.fieldValueAccepter(node);
+            }
+
+            public Task<TResult> Accept(Header node)
+            {
+                return this.headerAccepter(node);
+            }
+        }
+
+        public Task<TResult> Dispatch<TResult>(
+                Func<FieldValue, Task<TResult>> fieldValueAccepter,
+                Func<Header, Task<TResult>> headerAccepter)
+        {
+            return this.Dispatch(new DelegateAccepter<TResult>(fieldValueAccepter, headerAccepter));
+        }
     }
 
     public interface IHeaderFieldValueReader<T>
