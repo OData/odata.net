@@ -1,10 +1,105 @@
 ﻿namespace NewStuff._Design._0_Convention.RefTask
 {
     using NewStuff._Design._0_Convention.Sample;
+    using NewStuff._Design._1_Protocol.Sample;
     using System;
     using System.Net.Http;
     using System.Runtime.CompilerServices;
+    using System.Threading;
     using System.Threading.Tasks;
+
+    public static class Playground3
+    {
+        public interface IGetBodyWriter<TGetResponseReader>
+            where TGetResponseReader : IGetResponseReader, allows ref struct
+        {
+            ValueTask Commit();
+
+            TGetResponseReader Next();
+        }
+
+        public interface IGetBodyWriter : IGetBodyWriter<IGetResponseReader>
+        {
+        }
+
+        private sealed class GetBodyWriter : IGetBodyWriter
+        {
+            private readonly IHttpClient httpClient;
+            private readonly Uri requestUri;
+
+            private HttpResponseMessage? httpResponseMessage;
+
+            public GetBodyWriter(IHttpClient httpClient, Uri requestUri)
+            {
+                this.httpClient = httpClient;
+                this.requestUri = requestUri;
+            }
+
+            public IGetResponseReader Next()
+            {
+                throw new Exception("tODO");
+            }
+
+            public async ValueTask Commit()
+            {
+                //// TODO malformed headers will throw here
+                this.httpResponseMessage = await this.httpClient.GetAsync(this.requestUri).ConfigureAwait(false);
+            }
+        }
+
+        public ref struct RefGetBodyWriter : IGetBodyWriter<GetResponseReader>
+        {
+            private readonly IHttpClient httpClient;
+            private readonly Uri requestUri;
+
+            private HttpResponseMessage? httpResponseMessage;
+
+            public RefGetBodyWriter(IHttpClient httpClient, Uri requestUri)
+            {
+                this.httpClient = httpClient;
+                this.requestUri = requestUri;
+            }
+
+            public GetResponseReader Next()
+            {
+                if (this.httpResponseMessage == null)
+                {
+                    throw new Exception("TODO");
+                }
+
+                return new GetResponseReader(this.httpResponseMessage);
+            }
+
+            public async ValueTask Commit()
+            {
+                this.httpResponseMessage = await this.httpClient.GetAsync(this.requestUri).ConfigureAwait(false);
+            }
+        }
+
+        public ref struct GetResponseReader : IGetResponseReader
+        {
+            private readonly HttpResponseMessage httpResponseMessage;
+
+            public GetResponseReader(HttpResponseMessage httpResponseMessage)
+            {
+                this.httpResponseMessage = httpResponseMessage;
+            }
+
+            public ValueTask DisposeAsync()
+            {
+                throw new NotImplementedException();
+            }
+
+            public Task<IGetResponseHeaderReader> Next()
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public static Task ReaderTest()
+        {
+        }
+    }
 
     public ref struct RefTask<TIntermediate, TContext, TResult>
         where TContext : allows ref struct
@@ -40,7 +135,7 @@
         }
     }
 
-    public ref struct RefTaskAwaiter<TIntermediate, TContext, TResult> : ICriticalNotifyCompletion 
+    public ref struct RefTaskAwaiter<TIntermediate, TContext, TResult> : ICriticalNotifyCompletion
         where TContext : allows ref struct
         where TResult : allows ref struct
     {
@@ -79,6 +174,169 @@
         }
     }
 
+    public static class Playground2
+    {
+        public ref struct RefTask
+        {
+            public RefTaskAwaiter GetAwaiter()
+            {
+                return new RefTaskAwaiter();
+            }
+
+            public RefTask ConfigureAwait(bool continueOnCapturedContext)
+            {
+                //// TODO actually implement this
+                return this;
+            }
+        }
+
+        public ref struct RefTaskAwaiter : ICriticalNotifyCompletion
+        {
+            public bool IsCompleted
+            {
+                get
+                {
+                    throw new NotImplementedException("TODO");
+                }
+            }
+
+            public void GetResult()
+            {
+                throw new NotImplementedException("TODO");
+            }
+
+            public void OnCompleted(Action continuation)
+            {
+                throw new NotImplementedException("TODO");
+            }
+
+            public void UnsafeOnCompleted(Action continuation)
+            {
+                throw new NotImplementedException("TODO");
+            }
+        }
+
+        public ref struct RefTask<TResult>
+            where TResult : allows ref struct
+        {
+            private readonly Task doWork;
+            private readonly Func<TResult> generateResult;
+
+            public RefTask(Action doWork, Func<TResult> generateResult)
+            {
+                this.doWork = Task.Run(doWork); //// TODO is this the right way to create the task?
+                this.generateResult = generateResult;
+            }
+
+            public RefTask(Task doWork, Func<TResult> generateResult)
+            {
+                this.doWork = doWork;
+                this.generateResult = generateResult;
+            }
+
+            public RefTaskAwaiter<TResult> GetAwaiter()
+            {
+                return new RefTaskAwaiter<TResult>(this.doWork.GetAwaiter(), this.generateResult);
+            }
+
+            public RefTask<TResult> ConfigureAwait(bool continueOnCapturedContext)
+            {
+                //// TODO actually implement this
+                return this;
+            }
+        }
+
+        public ref struct RefTaskAwaiter<TResult> : INotifyCompletion //// TODO , ICriticalNotifyCompletion
+            where TResult : allows ref struct
+        {
+            private readonly TaskAwaiter doWork;
+            private readonly Func<TResult> generateResult;
+
+            public RefTaskAwaiter(TaskAwaiter doWork, Func<TResult> generateResult)
+            {
+                this.doWork = doWork;
+                this.generateResult = generateResult;
+            }
+
+            public bool IsCompleted
+            {
+                get
+                {
+                    return this.doWork.IsCompleted;
+                }
+            }
+
+            public TResult GetResult()
+            {
+                return this.generateResult();
+            }
+
+            public void OnCompleted(Action continuation)
+            {
+                this.doWork.OnCompleted(continuation);
+            }
+
+            public void UnsafeOnCompleted(Action continuation)
+            {
+                this.doWork.UnsafeOnCompleted(continuation);
+            }
+        }
+
+        public interface IGetBodyWriter<TTask, TGetResponseReader>
+            where TTask : /*TODO Task<TGetResponseReader>, */allows ref struct
+            where TGetResponseReader : IGetResponseReader, allows ref struct
+        {
+            TTask Commit();
+        }
+
+        public ref struct RefGetBodyWriter : IGetBodyWriter<RefTask<GetResponseReader>, GetResponseReader>
+        {
+            private readonly IHttpClient httpClient;
+            private readonly Uri requestUri;
+
+            public RefGetBodyWriter(IHttpClient httpClient, Uri requestUri)
+            {
+                this.httpClient = httpClient;
+                this.requestUri = requestUri;
+            }
+
+            public RefTask<GetResponseReader> Commit()
+            {
+                var message = this.httpClient.GetAsync(this.requestUri);
+                return new RefTask<GetResponseReader>(
+                    message,
+                    () => new GetResponseReader(message.Result));
+            }
+        }
+
+        public ref struct GetResponseReader : IGetResponseReader
+        {
+            private readonly HttpResponseMessage httpResponseMessage;
+
+            public GetResponseReader(HttpResponseMessage httpResponseMessage)
+            {
+                this.httpResponseMessage = httpResponseMessage;
+            }
+
+            public ValueTask DisposeAsync()
+            {
+                throw new NotImplementedException();
+            }
+
+            public Task<IGetResponseHeaderReader> Next()
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public static async Task ReaderTest()
+        {
+            var writer = new RefGetBodyWriter();
+            await writer.Commit();
+        }
+
+    }
+
     public static class Playground
     {
         public interface IGetBodyWriter : IGetBodyWriter<Task<IGetResponseReader>, IGetResponseReader>
@@ -112,7 +370,7 @@
             TTask Commit();
         }
 
-        public ref struct RefGetBodyWriter : IGetBodyWriter<RefTask<GetResponseReader>, GetResponseReader>
+        public ref struct RefGetBodyWriter : IGetBodyWriter<RefTask<HttpResponseMessage, Nothing, GetResponseReader>, GetResponseReader>
         {
             private readonly IHttpClient httpClient;
             private readonly Uri requestUri;
@@ -123,9 +381,12 @@
                 this.requestUri = requestUri;
             }
 
-            public RefTask<GetResponseReader> Commit()
+            public RefTask<HttpResponseMessage, Nothing, GetResponseReader> Commit()
             {
-
+                return new RefTask<HttpResponseMessage, Nothing, GetResponseReader>(
+                    this.httpClient.GetAsync(this.requestUri),
+                    (message, nothing) => new GetResponseReader(message),
+                    new Nothing());
             }
         }
 
@@ -147,6 +408,12 @@
             {
                 throw new NotImplementedException();
             }
+        }
+
+        public static async Task ReaderTest()
+        {
+            var writer = new RefGetBodyWriter();
+            await writer.Commit().ConfigureAwait(false);
         }
 
         public ref struct Foo
