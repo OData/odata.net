@@ -10,8 +10,9 @@ using System.IO;
 using System.Threading.Tasks;
 using Microsoft.OData.Core;
 using Microsoft.OData.Edm;
-using Microsoft.Spatial;
+using Microsoft.OData.Spatial;
 using Xunit;
+using Coordinate = NetTopologySuite.Geometries.Coordinate;
 
 namespace Microsoft.OData.Tests
 {
@@ -145,7 +146,7 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
             // Spatial
             yield return new object[]
             {
-                GeographyPoint.Create(22.2, 22.2),
+                GeographyFactory.Default.CreatePoint(new Coordinate(22.2, 22.2)),
                 "{\"type\":\"Point\",\"coordinates\":[22.2,22.2],\"crs\":{\"type\":\"name\",\"properties\":{\"name\":\"EPSG:4326\"}}}"
             };
 

@@ -9,8 +9,9 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.OData.Edm;
-using Microsoft.Spatial;
+using Microsoft.OData.Spatial;
 using Xunit;
+using Coordinate = NetTopologySuite.Geometries.Coordinate;
 
 namespace Microsoft.OData.Tests
 {
@@ -106,7 +107,7 @@ namespace Microsoft.OData.Tests
         public void WriteRawValueWritesGeographyValue()
         {
             RawValueWriter target = new RawValueWriter(this.settings, this.stream, new UTF32Encoding());
-            var value = GeographyPoint.Create(22.2, 22.2);
+            var value = GeographyFactory.Default.CreatePoint(new Coordinate(22.2, 22.2));
             target.WriteRawValue(value);
             Assert.Equal(@"{""type"":""Point"",""coordinates"":[22.2,22.2],""crs"":{""type"":""name"",""properties"":{""name"":""EPSG:4326""}}}", this.StreamAsString(target));
         }
@@ -118,7 +119,7 @@ namespace Microsoft.OData.Tests
         public void WriteRawValueWritesGeometryValue()
         {
             RawValueWriter target = new RawValueWriter(this.settings, this.stream, new UTF32Encoding());
-            var value = GeometryPoint.Create(1.2, 3.16);
+            var value = GeometryFactory.Default.CreatePoint(new Coordinate(1.2, 3.16));
             target.WriteRawValue(value);
             Assert.Equal(@"{""type"":""Point"",""coordinates"":[1.2,3.16],""crs"":{""type"":""name"",""properties"":{""name"":""EPSG:0""}}}", this.StreamAsString(target));
         }
@@ -199,7 +200,7 @@ namespace Microsoft.OData.Tests
         [Fact]
         public async Task WriteRawGeographyValueAsync()
         {
-            var value = GeographyPoint.Create(22.2, 22.2);
+            var value = GeographyFactory.Default.CreatePoint(new Coordinate(22.2, 22.2));
 
             var result = await SetupRawValueWriterAndRunTestAsync(
                 (rawValueWriter) => rawValueWriter.WriteRawValueAsync(value));
@@ -212,7 +213,7 @@ namespace Microsoft.OData.Tests
         [Fact]
         public async Task WriteRawGeometryValuesync()
         {
-            var value = GeometryPoint.Create(1.2, 3.16);
+            var value = GeometryFactory.Default.CreatePoint(new Coordinate(1.2, 3.16));
 
             var result = await SetupRawValueWriterAndRunTestAsync(
                 (rawValueWriter) => rawValueWriter.WriteRawValueAsync(value));

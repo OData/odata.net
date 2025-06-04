@@ -10,10 +10,9 @@ namespace Microsoft.OData
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using System.IO;
-    using System.Xml;
+    using System.Threading.Tasks;
     using Microsoft.OData.Json;
-    using Microsoft.Spatial;
+    using Microsoft.OData.Spatial;
     #endregion
 
     /// <summary>
@@ -21,11 +20,11 @@ namespace Microsoft.OData
     /// </summary>
     internal sealed class PrimitiveConverter
     {
-        /// <summary>Instance of GeographyTypeConverter to register for all Geography types.</summary>
-        private static readonly IPrimitiveTypeConverter geographyTypeConverter = new GeographyTypeConverter();
+        /// <summary>Instance of <see cref="SpatialPrimitiveTypeConverter"/> to register for all Geography types.</summary>
+        private static readonly IPrimitiveTypeConverter geographyTypeConverter = new SpatialPrimitiveTypeConverter();
 
-        /// <summary>Instance of GeographyTypeConverter to register for all Geography types.</summary>
-        private static readonly IPrimitiveTypeConverter geometryTypeConverter = new GeometryTypeConverter();
+        /// <summary>Instance of <see cref="SpatialPrimitiveTypeConverter"/> to register for all Geometry types.</summary>
+        private static readonly IPrimitiveTypeConverter geometryTypeConverter = new SpatialPrimitiveTypeConverter();
 
         /// <summary>Set of type converters that implement their own conversion using IPrimitiveTypeConverter.</summary>
         private static readonly PrimitiveConverter primitiveConverter =
@@ -40,7 +39,6 @@ namespace Microsoft.OData
                     new KeyValuePair<Type, IPrimitiveTypeConverter>(typeof(GeographyMultiLineString), geographyTypeConverter),
                     new KeyValuePair<Type, IPrimitiveTypeConverter>(typeof(GeographyMultiPolygon), geographyTypeConverter),
                     new KeyValuePair<Type, IPrimitiveTypeConverter>(typeof(Geography), geographyTypeConverter),
-
                     new KeyValuePair<Type, IPrimitiveTypeConverter>(typeof(GeometryPoint), geometryTypeConverter),
                     new KeyValuePair<Type, IPrimitiveTypeConverter>(typeof(GeometryLineString), geometryTypeConverter),
                     new KeyValuePair<Type, IPrimitiveTypeConverter>(typeof(GeometryPolygon), geometryTypeConverter),
@@ -95,6 +93,32 @@ namespace Microsoft.OData
         }
 
         /// <summary>
+        /// Asynchronously write the JSON representation of <paramref name="instance"/> using a registered primitive type converter
+        /// </summary>
+        /// <param name="instance">Object to convert to JSON representation.</param>
+        /// <param name="jsonWriter">JsonWriter instance to write to.</param>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        internal Task WriteJsonAsync(object instance, IJsonWriter jsonWriter)
+        {
+            Debug.Assert(instance != null, "Expected a non-null instance to write.");
+
+            Type instanceType = instance.GetType();
+
+            IPrimitiveTypeConverter primitiveTypeConverter;
+            this.TryGetConverter(instanceType, out primitiveTypeConverter);
+            Debug.Assert(primitiveTypeConverter != null, "primitiveTypeConverter != null");
+            return primitiveTypeConverter.WriteJsonAsync(instance, jsonWriter);
+        }
+
+        internal static void SetConverter(Type type, IPrimitiveTypeConverter primitiveTypeConverter)
+        {
+            Debug.Assert(type != null, "type != null");
+            Debug.Assert(primitiveTypeConverter != null, "primitiveTypeConverter != null");
+
+            primitiveConverter.spatialPrimitiveTypeConverters[type] = primitiveTypeConverter;
+        }
+
+        /// <summary>
         /// Get the primitive type converter for the given type.
         /// </summary>
         /// <param name="type">Clr type whose primitive type converter needs to be returned.</param>
@@ -102,7 +126,7 @@ namespace Microsoft.OData
         /// <returns>True if a converter was found for the given type, otherwise returns false.</returns>
         private bool TryGetConverter(Type type, out IPrimitiveTypeConverter primitiveTypeConverter)
         {
-            if (typeof(ISpatial).IsAssignableFrom(type))
+            if (type.IsSpatial())
             {
                 KeyValuePair<Type, IPrimitiveTypeConverter> bestMatch = new KeyValuePair<Type, IPrimitiveTypeConverter>(typeof(object), null);
                 foreach (KeyValuePair<Type, IPrimitiveTypeConverter> possibleMatch in this.spatialPrimitiveTypeConverters)

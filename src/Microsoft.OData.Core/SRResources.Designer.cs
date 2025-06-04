@@ -827,6 +827,141 @@ namespace Microsoft.OData.Core {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invalid &apos;{0}&apos; property: could not convert the coordinate value to double. Error: {1}.
+        /// </summary>
+        internal static string GeoJsonSpatialObjectFormatter_CoordinateParsingError {
+            get {
+                return ResourceManager.GetString("GeoJsonSpatialObjectFormatter_CoordinateParsingError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid &apos;{0}&apos; property: a null value was found in a coordinate pair..
+        /// </summary>
+        internal static string GeoJsonSpatialObjectFormatter_CoordinateParsingNullValueError {
+            get {
+                return ResourceManager.GetString("GeoJsonSpatialObjectFormatter_CoordinateParsingNullValueError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid &apos;{0}&apos; property: expected &apos;geometries&apos; to be an array of valid geometry objects for geometry type &apos;GeometryCollection&apos; (e.g., Point, LineString, Polygon, etc.)..
+        /// </summary>
+        internal static string GeoJsonSpatialObjectFormatter_InvalidGeometryCollection {
+            get {
+                return ResourceManager.GetString("GeoJsonSpatialObjectFormatter_InvalidGeometryCollection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid &apos;{0}&apos; property: expected &apos;coordinates&apos; to be an array of positions for geometry type &apos;LineString&apos; (e.g., [[x1, y1], [x2, y2]])..
+        /// </summary>
+        internal static string GeoJsonSpatialObjectFormatter_InvalidGeometryLineString {
+            get {
+                return ResourceManager.GetString("GeoJsonSpatialObjectFormatter_InvalidGeometryLineString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid &apos;{0}&apos; property: expected &apos;coordinates&apos; to be an array of line strings for geometry type &apos;MultiLineString&apos; (e.g., [[[x1, y1], [x2, y2]], [[x3, y3], [x4, y4]]])..
+        /// </summary>
+        internal static string GeoJsonSpatialObjectFormatter_InvalidGeometryMultiLineString {
+            get {
+                return ResourceManager.GetString("GeoJsonSpatialObjectFormatter_InvalidGeometryMultiLineString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid &apos;{0}&apos; property: expected &apos;coordinates&apos; to be an array of points for geometry type &apos;MultiPoint&apos; (e.g., [[x1, y1], [x2, y2]])..
+        /// </summary>
+        internal static string GeoJsonSpatialObjectFormatter_InvalidGeometryMultiPoint {
+            get {
+                return ResourceManager.GetString("GeoJsonSpatialObjectFormatter_InvalidGeometryMultiPoint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid &apos;{0}&apos; property: expected &apos;coordinates&apos; to be an array of polygons for geometry type &apos;MultiPolygon&apos; (e.g., [[[[x1, y1], [x2, y2], [x3, y3], [x1, y1]]], [[[x4, y4], [x5, y5], [x6, y6], [x4, y4]]]])..
+        /// </summary>
+        internal static string GeoJsonSpatialObjectFormatter_InvalidGeometryMultiPolygon {
+            get {
+                return ResourceManager.GetString("GeoJsonSpatialObjectFormatter_InvalidGeometryMultiPolygon", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid &apos;{0}&apos; property: expected &apos;coordinates&apos; to be [x, y] for geometry type &apos;Point&apos;, optionally with elevation [x, y, z], or with elevation and measure [x, y, z, m]..
+        /// </summary>
+        internal static string GeoJsonSpatialObjectFormatter_InvalidGeometryPoint {
+            get {
+                return ResourceManager.GetString("GeoJsonSpatialObjectFormatter_InvalidGeometryPoint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid &apos;{0}&apos; property: expected &apos;coordinates&apos; to be an array of linear rings for geometry type &apos;Polygon&apos; (e.g., [[[x1, y1], [x2, y2], [x3, y3], [x1, y1]]])..
+        /// </summary>
+        internal static string GeoJsonSpatialObjectFormatter_InvalidGeometryPolygon {
+            get {
+                return ResourceManager.GetString("GeoJsonSpatialObjectFormatter_InvalidGeometryPolygon", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid &apos;{0}&apos; property: LineString must contain two or more coordinate pairs..
+        /// </summary>
+        internal static string GeoJsonSpatialObjectFormatter_LineStringParsingTooFewCoordinatesError {
+            get {
+                return ResourceManager.GetString("GeoJsonSpatialObjectFormatter_LineStringParsingTooFewCoordinatesError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid &apos;{0}&apos; property: Polygon must contain at least one linear ring..
+        /// </summary>
+        internal static string GeoJsonSpatialObjectFormatter_PolygonParsingNoRingError {
+            get {
+                return ResourceManager.GetString("GeoJsonSpatialObjectFormatter_PolygonParsingNoRingError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid &apos;{0}&apos; property: ring of Polygon must be closed — the first and last coordinate pairs must be exactly equal..
+        /// </summary>
+        internal static string GeoJsonSpatialObjectFormatter_PolygonParsingRingNotClosedError {
+            get {
+                return ResourceManager.GetString("GeoJsonSpatialObjectFormatter_PolygonParsingRingNotClosedError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid &apos;{0}&apos; property: ring of Polygon must contain at least 4 coordinate pairs..
+        /// </summary>
+        internal static string GeoJsonSpatialObjectFormatter_PolygonParsingRingTooFewCoordinatesError {
+            get {
+                return ResourceManager.GetString("GeoJsonSpatialObjectFormatter_PolygonParsingRingTooFewCoordinatesError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid &apos;{0}&apos; property: ring of Polygon must contain at least 3 distinct coordinate pairs..
+        /// </summary>
+        internal static string GeoJsonSpatialObjectFormatter_PolygonParsingRingTooFewDistinctCoordinatesError {
+            get {
+                return ResourceManager.GetString("GeoJsonSpatialObjectFormatter_PolygonParsingRingTooFewDistinctCoordinatesError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unsupported geometry type &apos;{0}&apos;: Supported types are Point, Polygon, LineString, MultiPoint, MultiPolygon, MultiLineString, and GeometryCollection..
+        /// </summary>
+        internal static string GeoJsonSpatialObjectFormatter_UnsupportedGeometryType {
+            get {
+                return ResourceManager.GetString("GeoJsonSpatialObjectFormatter_UnsupportedGeometryType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to An error occurred when parsing the HTTP header &apos;{0}&apos;. The header value &apos;{1}&apos; is incorrect at position &apos;{2}&apos; because the header value should not end with the separator &apos;{3}&apos;..
         /// </summary>
         internal static string HttpHeaderValueLexer_EndOfFileAfterSeparator {
@@ -6360,6 +6495,15 @@ namespace Microsoft.OData.Core {
         internal static string ServiceProviderExtensions_NoServiceRegistered {
             get {
                 return ResourceManager.GetString("ServiceProviderExtensions_NoServiceRegistered", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &apos;{0}&apos; does not support &apos;{0}&apos; geometry type..
+        /// </summary>
+        internal static string SpatialPrimitiveTypeConverter_UnsupportedGeometryType {
+            get {
+                return ResourceManager.GetString("SpatialPrimitiveTypeConverter_UnsupportedGeometryType", resourceCulture);
             }
         }
         

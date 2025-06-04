@@ -4,20 +4,34 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
 using System.IO;
-using Microsoft.Spatial;
+using NetTopologySuite.Geometries;
+using NetTopologySuite.IO;
 
 namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
 {
     internal static class SpatialHelpers
     {
-        private static readonly WellKnownTextSqlFormatter WellKnownTextFormatter = WellKnownTextSqlFormatter.Create();
-
-        internal static string WriteSpatial<T>(T spatialValue) where T : ISpatial
+        internal static string WriteSpatial<T>(T spatialValue)
         {
             using (var writer = new StringWriter())
             {
-                WellKnownTextFormatter.Write(spatialValue, writer);
+                Geometry geometry;
+                if (spatialValue is Microsoft.OData.Spatial.Geography geographyValue)
+                {
+                    geometry = geographyValue;
+                }
+                else if (spatialValue is Microsoft.OData.Spatial.Geometry geometryValue)
+                {
+                    geometry = geometryValue;
+                }
+                else
+                {
+                    throw new InvalidOperationException("Unsupported spatial type.");
+                }
+
+                new WKTWriter().Write(geometry, writer);
                 return writer.ToString();
             }
         }

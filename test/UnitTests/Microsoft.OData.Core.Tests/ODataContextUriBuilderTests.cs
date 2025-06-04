@@ -10,9 +10,9 @@ using System.Linq;
 using Microsoft.OData.UriParser.Aggregation;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
-using Microsoft.Spatial;
 using Xunit;
 using Microsoft.OData.Core;
+using Microsoft.OData.Spatial;
 
 namespace Microsoft.OData.Tests
 {
@@ -561,7 +561,7 @@ namespace Microsoft.OData.Tests
         {
             foreach (ODataVersion version in Versions)
             {
-                var contextUri = this.CreatePropertyContextUri(GeometryPoint.Create(1, 2), version);
+                var contextUri = this.CreatePropertyContextUri(GeometryFactory.Default.CreatePoint(1, 2), version);
                 Assert.Equal(contextUri.OriginalString, BuildExpectedContextUri("#Edm.GeometryPoint"));
             }
         }

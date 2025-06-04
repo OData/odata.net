@@ -12,7 +12,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Json;
-using Microsoft.Spatial;
+using Microsoft.OData.Spatial;
 using Xunit;
 
 namespace Microsoft.OData.Tests
@@ -323,10 +323,11 @@ namespace Microsoft.OData.Tests
         public void TestODataInnerErrorToJsonStringForUnsupportedODataPrimitiveValues()
         {
             // Arrange
+            var geographyPoint = GeographyFactory.Default.CreatePoint(22.2, 22.2);
             var odataInnerError = new ODataInnerError(
                 new Dictionary<string, ODataValue>
                 {
-                    { "p1", new ODataPrimitiveValue(GeographyPoint.Create(22.2, 22.2)) },
+                    { "p1", new ODataPrimitiveValue(geographyPoint) },
                 });
 
             // Act
@@ -334,7 +335,7 @@ namespace Microsoft.OData.Tests
 
             // Assert
             Assert.Equal(
-                "{\"p1\":\"The value of type 'Microsoft.Spatial.GeographyPointImplementation' is not supported and cannot be converted to a JSON representation.\"}",
+                $"{{\"p1\":\"The value of type '{geographyPoint.GetType()}' is not supported and cannot be converted to a JSON representation.\"}}",
                 jsonString);
         }
 

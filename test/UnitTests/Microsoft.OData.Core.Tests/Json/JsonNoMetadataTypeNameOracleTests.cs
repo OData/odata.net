@@ -7,8 +7,8 @@
 using System;
 using Microsoft.OData.Json;
 using Microsoft.OData.Edm;
-using Microsoft.Spatial;
 using Xunit;
+using Microsoft.OData.Spatial;
 
 namespace Microsoft.OData.Tests.Json
 {
@@ -97,7 +97,7 @@ namespace Microsoft.OData.Tests.Json
         public void DerivedPrimitiveValueShouldReturnNull()
         {
             Assert.Null(this.testSubject.GetValueTypeNameForWriting(
-                new ODataPrimitiveValue(GeographyPoint.Create(42, 42)),
+                new ODataPrimitiveValue(GeographyFactory.Default.CreatePoint(42, 42)),
                 this.geographyTypeReference,
                 this.geographyPointTypeReference,
                 /*isOpen*/ false));

@@ -14,11 +14,11 @@ using Microsoft.OData.Json;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Vocabularies;
 using Microsoft.OData.Edm.Vocabularies.V1;
-using Microsoft.Spatial;
 using Xunit;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OData.Core.Tests.DependencyInjection;
 using Microsoft.OData.Core;
+using Microsoft.OData.Spatial;
 
 namespace Microsoft.OData.Tests.Json
 {
@@ -193,7 +193,7 @@ namespace Microsoft.OData.Tests.Json
         [Fact]
         public void WriteInstanceAnnotation_ForSpatialShouldUsePrimitiveCodePathWithTypeName()
         {
-            var point = new ODataPrimitiveValue(GeographyPoint.Create(10.5, 5.25));
+            var primitiveValue = new ODataPrimitiveValue(GeographyFactory.Default.CreatePoint(5.5, 10.25));
             const string term = "some.term";
             var verifierCalls = 0;
 
@@ -218,13 +218,13 @@ namespace Microsoft.OData.Tests.Json
             };
             this.valueWriter.WritePrimitiveVerifier = (value, reference) =>
             {
-                Assert.Equal(point.Value, value);
+                Assert.Equal(primitiveValue.Value, value);
                 Assert.Null(reference);
                 Assert.Equal(3, verifierCalls);
                 verifierCalls++;
             };
 
-            this.jsonInstanceAnnotationWriter.WriteInstanceAnnotation(new ODataInstanceAnnotation(term, point));
+            this.jsonInstanceAnnotationWriter.WriteInstanceAnnotation(new ODataInstanceAnnotation(term, primitiveValue));
             Assert.Equal(4, verifierCalls);
         }
 
@@ -535,7 +535,7 @@ namespace Microsoft.OData.Tests.Json
         {
             // Add a term of type Geography to the model.
             this.referencedModel.AddElement(new EdmTerm("My.Namespace", "GeographyTerm", EdmPrimitiveTypeKind.Geography));
-            var instanceAnnotation = new ODataInstanceAnnotation("My.Namespace.GeographyTerm", new ODataPrimitiveValue(GeographyPoint.Create(0.0, 0.0)));
+            var instanceAnnotation = new ODataInstanceAnnotation("My.Namespace.GeographyTerm", new ODataPrimitiveValue(GeographyFactory.Default.CreatePoint(0.0, 0.0)));
 
             bool writingTypeName = false;
             bool wroteTypeName = false;

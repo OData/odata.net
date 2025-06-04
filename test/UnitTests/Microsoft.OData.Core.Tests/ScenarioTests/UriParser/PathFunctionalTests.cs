@@ -11,9 +11,9 @@ using Microsoft.OData.Tests.ScenarioTests.UriBuilder;
 using Microsoft.OData.Tests.UriParser;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
-using Microsoft.Spatial;
 using Xunit;
 using Microsoft.OData.Core;
+using Microsoft.OData.Spatial;
 
 namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 {
@@ -1405,7 +1405,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         [Fact]
         public void GeometryAndNullParameterValuesShouldWorkInPath()
         {
-            var point = GeometryPoint.Create(1, 2);
+            var point = GeometryFactory.Default.CreatePoint(1, 2);
             var path = PathFunctionalTestsUtil.RunParsePath("Paintings(0)/Fully.Qualified.Namespace.GetColorAtPosition(position=geometry'" + SpatialHelpers.WriteSpatial(point) + "',includeAlpha=null)");
             var operationSegment = path.LastSegment.ShouldBeOperationSegment(HardCodedTestModel.GetColorAtPositionFunction());
             operationSegment.ShouldHaveConstantParameter("position", point);
@@ -1415,7 +1415,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         [Fact]
         public void GeographyAndNullParameterValuesShouldWorkInPath()
         {
-            var point = GeographyPoint.Create(1, 2);
+            var point = GeographyFactory.Default.CreatePoint(1, 2);
             var path = PathFunctionalTestsUtil.RunParsePath("People(0)/Fully.Qualified.Namespace.GetNearbyPriorAddresses(currentLocation=geography'" + SpatialHelpers.WriteSpatial(point) + "',limit=null)");
             var operationSegment = path.LastSegment.ShouldBeOperationSegment(HardCodedTestModel.GetNearbyPriorAddressesFunction());
             operationSegment.ShouldHaveConstantParameter("currentLocation", point);

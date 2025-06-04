@@ -76,6 +76,7 @@ namespace Microsoft.OData
             this.edmTypeResolver = EdmTypeWriterResolver.Instance;
             this.payloadValueConverter = ODataPayloadValueConverter.GetPayloadValueConverter(this.container);
             this.writerValidator = messageWriterSettings.Validator;
+            this.container.SetSpatialPrimitiveTypeConverters();
         }
 
         /// <summary>

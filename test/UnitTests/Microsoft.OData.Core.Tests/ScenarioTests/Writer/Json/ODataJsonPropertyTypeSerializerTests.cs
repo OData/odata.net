@@ -7,9 +7,11 @@
 using System;
 using System.IO;
 using System.Text;
-using Microsoft.OData.Json;
 using Microsoft.OData.Edm;
+using Microsoft.OData.Json;
+using Microsoft.OData.Spatial;
 using Xunit;
+using Coordinate = NetTopologySuite.Geometries.Coordinate;
 
 namespace Microsoft.OData.Tests.ScenarioTests.Writer.Json
 {
@@ -40,6 +42,137 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.Json
             this.model = TestUtils.WrapReferencedModelsToMainModel("TestNamespace", "DefaultContainer", edmModel);
             this.entityType = edmEntityType;
             this.complexType = ComplexType;
+        }
+
+        [Fact]
+        public void TestAsync()
+        {
+            var model = new EdmModel();
+            var sampleEntityType = model.AddEntityType(
+                "NS", "SampleEntity", baseType: null, isAbstract: false, isOpen: true);
+            sampleEntityType.AddKeys(
+                sampleEntityType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32, isNullable: false));
+            sampleEntityType.AddStructuralProperty(
+                "DeclaredGeographyPoint",
+                EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.GeographyPoint, false));
+            sampleEntityType.AddStructuralProperty(
+                "DeclaredGeometryPoint",
+                EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.GeometryPoint, false));
+
+            var entityContainer = model.AddEntityContainer("Default", "Container");
+
+            var stream = new MemoryStream();
+            var messageWriterSettings = new ODataMessageWriterSettings { Version = ODataVersion.V4 };
+            messageWriterSettings.SetServiceDocumentUri(new Uri("http://tempuri.org"));
+            var messageInfo = new ODataMessageInfo
+            {
+                MessageStream = new NonDisposingStream(stream),
+                MediaType = new ODataMediaType("application", "json"),
+                Encoding = Encoding.UTF8,
+                IsResponse = true,
+                IsAsync = false,
+                Model = model
+            };
+
+            var declaredGeographyProperty = new ODataProperty
+            {
+                Name = "DeclaredGeographyPoint",
+                Value = GeographyFactory.Default.CreatePoint(new Coordinate(2.2945, 48.8584))
+            };
+            var declaredGeometryProperty = new ODataProperty
+            {
+                Name = "DeclaredGeometryPoint",
+                Value = GeometryFactory.Default.CreatePoint(new Coordinate(2.2945, 48.8584))
+            };
+
+            var dynamicGeographyProperty = new ODataProperty
+            {
+                Name = "DynamicGeographyPoint",
+                Value = GeographyFactory.Default.CreatePoint(new Coordinate(-74.0445, 40.6892))
+            };
+            var dynamicGeometryProperty = new ODataProperty
+            {
+                Name = "DynamicGeometryPoint",
+                Value = GeometryFactory.Default.CreatePoint(new Coordinate(2.2945, 48.8584))
+            };
+
+            var jsonOutputContext = new ODataJsonOutputContext(messageInfo, messageWriterSettings);
+            var jsonPropertySerializer = new ODataJsonPropertySerializer(jsonOutputContext);
+
+            jsonPropertySerializer.JsonWriter.StartObjectScope();
+            jsonPropertySerializer.WriteProperties(
+                sampleEntityType,
+                [declaredGeographyProperty, declaredGeometryProperty, dynamicGeographyProperty, dynamicGeometryProperty],
+                isComplexValue: false,
+                new NullDuplicatePropertyNameChecker(),
+                metadataBuilder: null);
+            jsonPropertySerializer.JsonWriter.EndObjectScope();
+            jsonOutputContext.Flush();
+            stream.Position = 0;
+            var payload = new StreamReader(stream).ReadToEnd();
+            // {
+            //   "DeclaredPoint@odata.type": "#GeographyPoint",
+            //   "DeclaredPoint": {
+            //     "type": "Point",
+            //     "coordinates": [2.2945, 48.8584],
+            //     "crs": {"type":"name","properties":{"name":"EPSG:4326"}}
+            //   },
+            //   "DynamicPoint@odata.type": "#GeographyPoint",
+            //   "DynamicPoint": {
+            //     "type": "Point",
+            //     "coordinates": [-74.0445, 40.6892],
+            //     "crs": {"type":"name","properties":{"name":"EPSG:4326"}}
+            //   }
+            // }
+
+        }
+
+        [Fact]
+        public void Test2Async()
+        {
+            var model = new EdmModel();
+            var sampleEntityType = model.AddEntityType("NS", "SampleEntity", baseType: null, isAbstract: false, isOpen: true);
+            sampleEntityType.AddKeys(sampleEntityType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32, isNullable: false));
+            sampleEntityType.AddStructuralProperty("DeclaredPoint", EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.GeographyPoint, false));
+
+            var entityContainer = model.AddEntityContainer("Default", "Container");
+            var sampleEntitySet = entityContainer.AddEntitySet("SampleEntitySet", sampleEntityType);
+
+            var payload = "{\"@odata.context\":\"http://tempuri.org/$metadata#SampleEntitySet/$entity\"," +
+                "\"Id\":1," +
+                "\"DeclaredPoint\":{\"type\":\"Point\",\"coordinates\":[2.2945,48.8584],\"crs\":{\"type\":\"name\",\"properties\":{\"name\":\"EPSG:4326\"}}}," +
+                "\"DynamicPoint@odata.type\":\"#GeographyPoint\",\"DynamicPoint\":{\"type\":\"Point\",\"coordinates\":[-74.0445,40.6892],\"crs\":{\"type\":\"name\",\"properties\":{\"name\":\"EPSG:4326\"}}}}";
+            var stream = new MemoryStream(Encoding.UTF8.GetBytes(payload));
+            var messageReaderSettings = new ODataMessageReaderSettings { Version = ODataVersion.V4 };
+            var messageInfo = new ODataMessageInfo
+            {
+                MessageStream = new NonDisposingStream(stream),
+                MediaType = new ODataMediaType("application", "json"),
+                Encoding = Encoding.UTF8,
+                IsResponse = true,
+                IsAsync = false,
+                Model = model
+            };
+
+            var jsonInputOutputContext = new ODataJsonInputContext(messageInfo, messageReaderSettings);
+            IODataResponseMessage responseMessage = new InMemoryMessage { Stream = stream, StatusCode = 200 };
+            responseMessage.SetHeader("Content-Type", "application/json;odata.metadata=minimal");
+
+            ODataResource resource;
+
+            using (var messageReader = new ODataMessageReader(responseMessage, messageReaderSettings, model))
+            {
+                var resourceReader = messageReader.CreateODataResourceReader(sampleEntitySet, sampleEntityType);
+
+                while (resourceReader.Read())
+                {
+                    if (resourceReader.State == ODataReaderState.ResourceStart)
+                    {
+                        resource = resourceReader.Item as ODataResource;
+                    }
+                }
+            }
+
         }
 
         [Fact]
@@ -253,42 +386,42 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.Json
                 new
                 {
                     Expect = "GeometryProperty@odata.type\":\"#GeometryPoint",
-                    Value = new ODataProperty { Name = "GeometryProperty", Value= ODataSpatialTypeUtil.GeometryValue }
+                    Value = new ODataProperty { Name = "GeometryProperty", Value = ODataSpatialTypeUtil.GeometryValue }
                 },
                 new
                 {
                     Expect = "GeometryCollectionProperty@odata.type\":\"#GeometryCollection",
-                    Value = new ODataProperty { Name = "GeometryCollectionProperty", Value= ODataSpatialTypeUtil.GeometryCollectionValue }
+                    Value = new ODataProperty { Name = "GeometryCollectionProperty", Value = ODataSpatialTypeUtil.GeometryCollectionValue }
                 },
                 new
                 {
                     Expect = "GeometryLineStringProperty@odata.type\":\"#GeometryLineString",
-                    Value = new ODataProperty { Name = "GeometryLineStringProperty", Value= ODataSpatialTypeUtil.GeometryLineStringValue }
+                    Value = new ODataProperty { Name = "GeometryLineStringProperty", Value = ODataSpatialTypeUtil.GeometryLineStringValue }
                 },
                 new
                 {
                     Expect = "GeometryMultiLineStringProperty@odata.type\":\"#GeometryMultiLineString",
-                    Value = new ODataProperty { Name = "GeometryMultiLineStringProperty", Value= ODataSpatialTypeUtil.GeometryMultiLineStringValue }
+                    Value = new ODataProperty { Name = "GeometryMultiLineStringProperty", Value = ODataSpatialTypeUtil.GeometryMultiLineStringValue }
                 },
                 new
                 {
                     Expect = "GeometryMultiPointProperty@odata.type\":\"#GeometryMultiPoint",
-                    Value = new ODataProperty { Name = "GeometryMultiPointProperty", Value= ODataSpatialTypeUtil.GeometryMultiPointValue }
+                    Value = new ODataProperty { Name = "GeometryMultiPointProperty", Value = ODataSpatialTypeUtil.GeometryMultiPointValue }
                 },
                 new
                 {
                     Expect = "GeometryMultiPolygonProperty@odata.type\":\"#GeometryMultiPolygon",
-                    Value = new ODataProperty { Name = "GeometryMultiPolygonProperty", Value= ODataSpatialTypeUtil.GeometryMultiPolygonValue }
+                    Value = new ODataProperty { Name = "GeometryMultiPolygonProperty", Value = ODataSpatialTypeUtil.GeometryMultiPolygonValue }
                 },
                 new
                 {
                     Expect = "GeometryPointProperty@odata.type\":\"#GeometryPoint",
-                    Value = new ODataProperty { Name = "GeometryPointProperty", Value= ODataSpatialTypeUtil.GeometryPointValue }
+                    Value = new ODataProperty { Name = "GeometryPointProperty", Value = ODataSpatialTypeUtil.GeometryPointValue }
                 },
                 new
                 {
                     Expect = "GeometryPolygonProperty@odata.type\":\"#GeometryPolygon",
-                    Value = new ODataProperty { Name = "GeometryPolygonProperty", Value= ODataSpatialTypeUtil.GeometryPolygonValue }
+                    Value = new ODataProperty { Name = "GeometryPolygonProperty", Value = ODataSpatialTypeUtil.GeometryPolygonValue }
                 }
             };
 
@@ -308,42 +441,42 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.Json
                 new
                 {
                     Expect = "GeometryProperty@odata.type\":\"#GeographyPoint",
-                    Value = new ODataProperty { Name = "GeometryProperty", Value= ODataSpatialTypeUtil.GeographyValue }
+                    Value = new ODataProperty { Name = "GeometryProperty", Value = ODataSpatialTypeUtil.GeographyValue }
                 },
                 new
                 {
                     Expect = "GeometryCollectionProperty@odata.type\":\"#GeographyCollection",
-                    Value = new ODataProperty { Name = "GeometryCollectionProperty", Value= ODataSpatialTypeUtil.GeographyCollectionValue }
+                    Value = new ODataProperty { Name = "GeometryCollectionProperty", Value = ODataSpatialTypeUtil.GeographyCollectionValue }
                 },
                 new
                 {
                     Expect = "GeometryLineStringProperty@odata.type\":\"#GeographyLineString",
-                    Value = new ODataProperty { Name = "GeometryLineStringProperty", Value= ODataSpatialTypeUtil.GeographyLineStringValue }
+                    Value = new ODataProperty { Name = "GeometryLineStringProperty", Value = ODataSpatialTypeUtil.GeographyLineStringValue }
                 },
                 new
                 {
                     Expect = "GeometryMultiLineStringProperty@odata.type\":\"#GeographyMultiLineString",
-                    Value = new ODataProperty { Name = "GeometryMultiLineStringProperty", Value= ODataSpatialTypeUtil.GeographyMultiLineStringValue }
+                    Value = new ODataProperty { Name = "GeometryMultiLineStringProperty", Value = ODataSpatialTypeUtil.GeographyMultiLineStringValue }
                 },
                 new
                 {
                     Expect = "GeometryMultiPointProperty@odata.type\":\"#GeographyMultiPoint",
-                    Value = new ODataProperty { Name = "GeometryMultiPointProperty", Value= ODataSpatialTypeUtil.GeographyMultiPointValue }
+                    Value = new ODataProperty { Name = "GeometryMultiPointProperty", Value = ODataSpatialTypeUtil.GeographyMultiPointValue }
                 },
                 new
                 {
                     Expect = "GeometryMultiPolygonProperty@odata.type\":\"#GeographyMultiPolygon",
-                    Value = new ODataProperty { Name = "GeometryMultiPolygonProperty", Value= ODataSpatialTypeUtil.GeographyMultiPolygonValue }
+                    Value = new ODataProperty { Name = "GeometryMultiPolygonProperty", Value = ODataSpatialTypeUtil.GeographyMultiPolygonValue }
                 },
                 new
                 {
                     Expect = "GeometryPointProperty@odata.type\":\"#GeographyPoint",
-                    Value = new ODataProperty { Name = "GeometryPointProperty", Value= ODataSpatialTypeUtil.GeographyPointValue }
+                    Value = new ODataProperty { Name = "GeometryPointProperty", Value = ODataSpatialTypeUtil.GeographyPointValue }
                 },
                 new
                 {
                     Expect = "GeometryPolygonProperty@odata.type\":\"#GeographyPolygon",
-                    Value = new ODataProperty { Name = "GeometryPolygonProperty", Value= ODataSpatialTypeUtil.GeographyPolygonValue }
+                    Value = new ODataProperty { Name = "GeometryPolygonProperty", Value = ODataSpatialTypeUtil.GeographyPolygonValue }
                 }
             };
 

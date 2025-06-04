@@ -5,9 +5,9 @@
 //---------------------------------------------------------------------
 
 using System;
+using Microsoft.OData.Spatial;
 using Microsoft.OData.Tests.UriParser;
 using Microsoft.OData.UriParser;
-using Microsoft.Spatial;
 using Xunit;
 
 namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
@@ -597,7 +597,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
         [Fact]
         public void GeometryAndNullParameterValuesShouldWorkInPath()
         {
-            var point = GeometryPoint.Create(1, 2);
+            var point = GeometryFactory.Default.CreatePoint(1, 2);
             Uri queryUri = new Uri("Paintings(0)/Fully.Qualified.Namespace.GetColorAtPosition(position=geometry'" + SpatialHelpers.WriteSpatial(point) + "',includeAlpha=null)", UriKind.Relative);
             Uri actualUri = UriBuilder(queryUri, ODataUrlKeyDelimiter.Parentheses, settings);
             Assert.Equal(new Uri("http://gobbledygook/Paintings(0)/Fully.Qualified.Namespace.GetColorAtPosition(position=geometry'" + SpatialHelpers.WriteSpatial(point) + "',includeAlpha=null)"), actualUri); 
@@ -606,7 +606,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
         [Fact]
         public void GeographyAndNullParameterValuesShouldWorkInPath()
         {
-            var point = GeographyPoint.Create(1, 2);
+            var point = GeographyFactory.Default.CreatePoint(1, 2);
             Uri queryUri = new Uri("People(0)/Fully.Qualified.Namespace.GetNearbyPriorAddresses(currentLocation=geography'" + SpatialHelpers.WriteSpatial(point) + "',limit=null)", UriKind.Relative);
             Uri actualUri = UriBuilder(queryUri, ODataUrlKeyDelimiter.Parentheses, settings);
             Assert.Equal(new Uri("http://gobbledygook/People(0)/Fully.Qualified.Namespace.GetNearbyPriorAddresses(currentLocation=geography'" + SpatialHelpers.WriteSpatial(point) + "',limit=null)"), actualUri); 
