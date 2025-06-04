@@ -432,12 +432,18 @@ namespace Microsoft.OData.UriParser
 
         private static string NormalizeEnumCollectionItems(string bracketLiteralText, string expectedTypeFullName)
         {
-            string normalizedText = bracketLiteralText[1..^1].Trim().Replace(expectedTypeFullName, string.Empty, StringComparison.OrdinalIgnoreCase);
+            string normalizedText = bracketLiteralText[1..^1].Trim();
 
             // Handle empty brackets
             if (string.IsNullOrEmpty(normalizedText))
             {
                 return "[]";
+            }
+
+            // If the expected type is a fully qualified name, we need to remove it from the start of the collection items
+            if (normalizedText.StartsWith(expectedTypeFullName, StringComparison.OrdinalIgnoreCase))
+            {
+                normalizedText = normalizedText.Replace(expectedTypeFullName, string.Empty, StringComparison.OrdinalIgnoreCase);
             }
 
             var sb = new StringBuilder();
