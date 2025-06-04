@@ -5,10 +5,11 @@ namespace Microsoft.OData.Core.NewWriter2;
 
 internal class ODataJsonWriterContext
 {
-    public ODataUri ODataUri { get; set; }
-    public IEdmModel Model { get; set; }
-    public ODataPayloadKind PayloadKind { get; set; }
+    public required ODataUri ODataUri { get; set; }
+    public required IEdmModel Model { get; set; }
+    public required ODataPayloadKind PayloadKind { get; set; }
     public JsonSerializerOptions JsonSerializerOptions { get; set; }
-    public Utf8JsonWriter JsonWriter { get; set; }
-    public IResourceWriterProvider<ODataJsonWriterContext, ODataJsonWriterStack> ResourceWriterProvider { get; set; }
+    public required Utf8JsonWriter JsonWriter { get; set; }
+    public required IResourceWriterProvider<ODataJsonWriterContext, ODataJsonWriterStack> ResourceWriterProvider { get; set; }
+    public required IMetadataWriterProvider<ODataJsonWriterContext, ODataJsonWriterStack> MetadataWriterProvider { get; set; }
 }

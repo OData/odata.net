@@ -45,8 +45,9 @@ public class NewWriter2ExperimentTests
             Model = model,
             ODataUri = odataUri,
             PayloadKind = ODataPayloadKind.ResourceSet,
-            JsonWriter = new System.Text.Json.Utf8JsonWriter(output),
+            JsonWriter = jsonWriter,
             ResourceWriterProvider = new ODataResourceWriterProvider(),
+            MetadataWriterProvider = new ODataJsonMetadataWriterProvider(),
         };
 
         var writerStack = new ODataJsonWriterStack();
