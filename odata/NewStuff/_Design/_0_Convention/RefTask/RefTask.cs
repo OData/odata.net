@@ -49,6 +49,14 @@
         }
     }
 
+    public static class RefTask
+    {
+        public static RefTask<Nothing2, Nothing2, T> FromFunc<T>(Func<T> func)
+        {
+            return new RefTask<Nothing2, Nothing2, T>(() => new Nothing2(), (_, _) => func(), new Nothing2());
+        }
+    }
+
     public struct RefTaskAwaiter<TIntermediate, TContext, TResult> : ICriticalNotifyCompletion
         where TResult : allows ref struct
     {
@@ -227,7 +235,7 @@
             TTask Commit();
         }
 
-        public ref struct RefGetBodyWriter : IGetBodyWriter<RefTask<HttpResponseMessage, Nothing, GetResponseReader>, GetResponseReader>
+        public ref struct RefGetBodyWriter : IGetBodyWriter<RefTask<HttpResponseMessage, Nothing2, GetResponseReader>, GetResponseReader>
         {
             private readonly IHttpClient httpClient;
             private readonly Uri requestUri;
@@ -238,12 +246,12 @@
                 this.requestUri = requestUri;
             }
 
-            public RefTask<HttpResponseMessage, Nothing, GetResponseReader> Commit()
+            public RefTask<HttpResponseMessage, Nothing2, GetResponseReader> Commit()
             {
-                return new RefTask<HttpResponseMessage, Nothing, GetResponseReader>(
+                return new RefTask<HttpResponseMessage, Nothing2, GetResponseReader>(
                     new ValueTask<HttpResponseMessage>(this.httpClient.GetAsync(this.requestUri)),
                     (message, nothing) => new GetResponseReader(message),
-                    new Nothing());
+                    new Nothing2());
             }
         }
 

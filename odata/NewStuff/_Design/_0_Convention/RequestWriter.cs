@@ -2,8 +2,8 @@
 {
     using System;
     using System.Threading.Tasks;
-    using CombinatorParsingV2;
     using NewStuff._Design._0_Convention.RefTask;
+    using NewStuff._Design._1_Protocol.Sample;
 
     public interface IRequestWriter
     {
@@ -117,39 +117,39 @@
 
 
 
-    public interface IUriWriter<T> : IUriWriter<Nothing, Nothing, T, Nothing, Nothing, IFragmentWriter<T>, Nothing, Nothing, IQueryParameterWriter<T>, Nothing, Nothing, IQueryValueWriter<T>, Nothing, Nothing, IQueryOptionWriter<T>, Nothing, Nothing, IUriPathSegmentWriter<T>, Nothing, Nothing, IUriPortWriter<T>, Nothing, Nothing, IUriDomainWriter<T>, Nothing, Nothing, IUriSchemeWriter<T>>
+    public interface IUriWriter<T> : IUriWriter<Nothing2, Nothing2, T, Nothing2, Nothing2, IFragmentWriter<T>, Nothing2, Nothing2, IQueryParameterWriter<T>, Nothing2, Nothing2, IQueryValueWriter<T>, Nothing2, Nothing2, IQueryOptionWriter<T>, Nothing2, Nothing2, IUriPathSegmentWriter<T>, Nothing2, Nothing2, IUriPortWriter<T>, Nothing2, Nothing2, IUriDomainWriter<T>, Nothing2, Nothing2, IUriSchemeWriter<T>>
     {
     }
 
-    public interface IUriSchemeWriter<T> : IUriSchemeWriter<Nothing, Nothing, T, Nothing, Nothing, IFragmentWriter<T>, Nothing, Nothing, IQueryParameterWriter<T>, Nothing, Nothing, IQueryValueWriter<T>, Nothing, Nothing, IQueryOptionWriter<T>, Nothing, Nothing, IUriPathSegmentWriter<T>, Nothing, Nothing, IUriPortWriter<T>, Nothing, Nothing, IUriDomainWriter<T>>
+    public interface IUriSchemeWriter<T> : IUriSchemeWriter<Nothing2, Nothing2, T, Nothing2, Nothing2, IFragmentWriter<T>, Nothing2, Nothing2, IQueryParameterWriter<T>, Nothing2, Nothing2, IQueryValueWriter<T>, Nothing2, Nothing2, IQueryOptionWriter<T>, Nothing2, Nothing2, IUriPathSegmentWriter<T>, Nothing2, Nothing2, IUriPortWriter<T>, Nothing2, Nothing2, IUriDomainWriter<T>>
     {
     }
 
-    public interface IUriDomainWriter<T> : IUriDomainWriter<Nothing, Nothing, T, Nothing, Nothing, IFragmentWriter<T>, Nothing, Nothing, IQueryParameterWriter<T>, Nothing, Nothing, IQueryValueWriter<T>, Nothing, Nothing, IQueryOptionWriter<T>, Nothing, Nothing, IUriPathSegmentWriter<T>, Nothing, Nothing, IUriPortWriter<T>>
+    public interface IUriDomainWriter<T> : IUriDomainWriter<Nothing2, Nothing2, T, Nothing2, Nothing2, IFragmentWriter<T>, Nothing2, Nothing2, IQueryParameterWriter<T>, Nothing2, Nothing2, IQueryValueWriter<T>, Nothing2, Nothing2, IQueryOptionWriter<T>, Nothing2, Nothing2, IUriPathSegmentWriter<T>, Nothing2, Nothing2, IUriPortWriter<T>>
     {
     }
 
-    public interface IUriPortWriter<T> : IUriPortWriter<Nothing, Nothing, T, Nothing, Nothing, IFragmentWriter<T>, Nothing, Nothing, IQueryParameterWriter<T>, Nothing, Nothing, IQueryValueWriter<T>, Nothing, Nothing, IQueryOptionWriter<T>, Nothing, Nothing, IUriPathSegmentWriter<T>>
+    public interface IUriPortWriter<T> : IUriPortWriter<Nothing2, Nothing2, T, Nothing2, Nothing2, IFragmentWriter<T>, Nothing2, Nothing2, IQueryParameterWriter<T>, Nothing2, Nothing2, IQueryValueWriter<T>, Nothing2, Nothing2, IQueryOptionWriter<T>, Nothing2, Nothing2, IUriPathSegmentWriter<T>>
     {
     }
 
-    public interface IUriPathSegmentWriter<T> : IUriPathSegmentWriter<Nothing, Nothing, T, Nothing, Nothing, IFragmentWriter<T>, Nothing, Nothing, IQueryParameterWriter<T>, Nothing, Nothing, IQueryValueWriter<T>, Nothing, Nothing, IQueryOptionWriter<T>, Nothing, Nothing, IUriPathSegmentWriter<T>>
+    public interface IUriPathSegmentWriter<T> : IUriPathSegmentWriter<Nothing2, Nothing2, T, Nothing2, Nothing2, IFragmentWriter<T>, Nothing2, Nothing2, IQueryParameterWriter<T>, Nothing2, Nothing2, IQueryValueWriter<T>, Nothing2, Nothing2, IQueryOptionWriter<T>, Nothing2, Nothing2, IUriPathSegmentWriter<T>>
     {
     }
 
-    public interface IQueryOptionWriter<T> : IQueryOptionWriter<Nothing, Nothing, T, Nothing, Nothing, IFragmentWriter<T>, Nothing, Nothing, IQueryParameterWriter<T>, Nothing, Nothing, IQueryValueWriter<T>, Nothing, Nothing, IQueryOptionWriter<T>>
+    public interface IQueryOptionWriter<T> : IQueryOptionWriter<Nothing2, Nothing2, T, Nothing2, Nothing2, IFragmentWriter<T>, Nothing2, Nothing2, IQueryParameterWriter<T>, Nothing2, Nothing2, IQueryValueWriter<T>, Nothing2, Nothing2, IQueryOptionWriter<T>>
     {
     }
 
-    public interface IQueryParameterWriter<T> : IQueryParameterWriter<Nothing, Nothing, T, Nothing, Nothing, IFragmentWriter<T>, Nothing, Nothing, IQueryParameterWriter<T>, Nothing, Nothing, IQueryValueWriter<T>, Nothing, Nothing, IQueryOptionWriter<T>>
+    public interface IQueryParameterWriter<T> : IQueryParameterWriter<Nothing2, Nothing2, T, Nothing2, Nothing2, IFragmentWriter<T>, Nothing2, Nothing2, IQueryParameterWriter<T>, Nothing2, Nothing2, IQueryValueWriter<T>, Nothing2, Nothing2, IQueryOptionWriter<T>>
     {
     }
 
-    public interface IQueryValueWriter<T> : IQueryValueWriter<Nothing, Nothing, T, Nothing, Nothing, IFragmentWriter<T>, Nothing, Nothing, IQueryParameterWriter<T>, Nothing, Nothing, IQueryValueWriter<T>, Nothing, Nothing, IQueryOptionWriter<T>>
+    public interface IQueryValueWriter<T> : IQueryValueWriter<Nothing2, Nothing2, T, Nothing2, Nothing2, IFragmentWriter<T>, Nothing2, Nothing2, IQueryParameterWriter<T>, Nothing2, Nothing2, IQueryValueWriter<T>, Nothing2, Nothing2, IQueryOptionWriter<T>>
     {
     }
 
-    public interface IFragmentWriter<T> : IFragmentWriter<Nothing, Nothing, T>
+    public interface IFragmentWriter<T> : IFragmentWriter<Nothing2, Nothing2, T>
     {
     }
 

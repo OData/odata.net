@@ -1,5 +1,7 @@
 ﻿namespace NewStuff._Design._0_Convention.Sample
 {
+    using NewStuff._Design._0_Convention.RefTask;
+    using NewStuff._Design._1_Protocol.Sample;
     using System;
     using System.Buffers;
     using System.Collections.Concurrent;
@@ -1350,14 +1352,14 @@
                                     this.queryParametersWritten = queryParametersWritten;
                                 }
 
-                                public async Task<T> Commit()
+                                public RefTask<Nothing2, Nothing2, T> Commit()
                                 {
-                                    return await Task.FromResult(this.nextFactory(new Uri(this.builder.ToString()))).ConfigureAwait(false);
+                                    return RefTask.FromFunc(() => this.nextFactory(new Uri(this.builder.ToString())));
                                 }
 
-                                public async Task<IFragmentWriter<T>> CommitFragment()
+                                public RefTask<Nothing2, Nothing2, IFragmentWriter<T>> CommitFragment()
                                 {
-                                    return await Task.FromResult(new FragmentWriter(this.builder, this.nextFactory)).ConfigureAwait(false);
+                                    return RefTask.FromFunc<IFragmentWriter<T>>(() => new FragmentWriter(this.builder, this.nextFactory));
                                 }
 
                                 private sealed class FragmentWriter : IFragmentWriter<T>
@@ -1371,17 +1373,17 @@
                                         this.nextFactory = nextFactory;
                                     }
 
-                                    public async Task<T> Commit(Fragment fragment)
+                                    public RefTask<Nothing2, Nothing2, T> Commit(Fragment fragment)
                                     {
                                         this.builder.Append($"#{fragment.Value}");
 
-                                        return await Task.FromResult(this.nextFactory(new Uri(this.builder.ToString()))).ConfigureAwait(false);
+                                        return RefTask.FromFunc(() => this.nextFactory(new Uri(this.builder.ToString())));
                                     }
                                 }
 
-                                public async Task<IQueryParameterWriter<T>> CommitParameter()
+                                public RefTask<Nothing2, Nothing2, IQueryParameterWriter<T>> CommitParameter()
                                 {
-                                    return await Task.FromResult(new QueryParameterWriter(this.builder, this.nextFactory, this.queryParametersWritten)).ConfigureAwait(false);
+                                    return RefTask.FromFunc<IQueryParameterWriter<T>>(() => new QueryParameterWriter(this.builder, this.nextFactory, this.queryParametersWritten));
                                 }
 
                                 private sealed class QueryParameterWriter : IQueryParameterWriter<T>
@@ -1397,7 +1399,7 @@
                                         this.queryParametersWritten = queryParametersWritten;
                                     }
 
-                                    public async Task<IQueryValueWriter<T>> Commit(QueryParameter queryParameter)
+                                    public RefTask<Nothing2, Nothing2, IQueryValueWriter<T>> Commit(QueryParameter queryParameter)
                                     {
                                         if (this.queryParametersWritten)
                                         {
@@ -1410,7 +1412,7 @@
 
                                         this.builder.Append(queryParameter.Name);
 
-                                        return await Task.FromResult(new QueryValueWriter(this.builder, this.nextFactory)).ConfigureAwait(false);
+                                        return RefTask.FromFunc<IQueryValueWriter<T>>(() => new QueryValueWriter(this.builder, this.nextFactory));
                                     }
 
                                     private sealed class QueryValueWriter : IQueryValueWriter<T>
@@ -1424,16 +1426,16 @@
                                             this.nextFactory = nextFactory;
                                         }
 
-                                        public async Task<IQueryOptionWriter<T>> Commit()
+                                        public RefTask<Nothing2, Nothing2, IQueryOptionWriter<T>> Commit()
                                         {
-                                            return await Task.FromResult(new QueryOptionWriter(this.builder, this.nextFactory, true)).ConfigureAwait(false);
+                                            //// TODO `fromfunc` calls should almost certainly be `fromresult` calls
+                                            //// TODO ref tasks would also let you avoid this closure
+                                            return RefTask.FromFunc<IQueryOptionWriter<T>>(() => new QueryOptionWriter(this.builder, this.nextFactory, true));
                                         }
 
-                                        public async Task<IQueryOptionWriter<T>> Commit(QueryValue queryValue)
+                                        public RefTask<Nothing2, Nothing2, IQueryOptionWriter<T>> Commit(QueryValue queryValue)
                                         {
-                                            this.builder.Append($"={queryValue.Value}");
-
-                                            return await Task.FromResult(new QueryOptionWriter(this.builder, this.nextFactory, true)).ConfigureAwait(false);
+                                            return RefTask.FromFunc<IQueryOptionWriter<T>>(() => new QueryOptionWriter(this.builder, this.nextFactory, true));
                                         }
                                     }
                                 }

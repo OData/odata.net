@@ -10,7 +10,7 @@
 
     using NewStuff._Design._0_Convention;
 
-    public struct Nothing
+    public struct Nothing2
     {
     }
 
@@ -181,7 +181,7 @@
                                                                 .ConfigureAwait(false);
                                                         }
 
-                                                        return new Nothing();
+                                                        return new Nothing2();
                                                     },
                                                     async @null => throw multiValuedParsingException)
                                                 .ConfigureAwait(false);
