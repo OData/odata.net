@@ -8,7 +8,7 @@
     using System.Threading;
     using System.Threading.Tasks;
 
-    public static class Playground3
+    /*public static class Playground3
     {
         public interface IGetBodyWriter<TGetResponseReader>
             where TGetResponseReader : IGetResponseReader, allows ref struct
@@ -147,7 +147,7 @@
                 {
                     /*var nextWriter = ((RefGetBodyWriter)context).Next();
                     var nextNextWriter = nextWriter.Next();*/
-                    context.ToString();
+                    /*context.ToString();
                 },
                 writer);
         }
@@ -342,7 +342,7 @@
         }
 
         public interface IGetBodyWriter<TTask, TGetResponseReader>
-            where TTask : /*TODO Task<TGetResponseReader>, */allows ref struct
+            where TTask : /*TODO Task<TGetResponseReader>, *//*allows ref struct
             where TGetResponseReader : IGetResponseReader, allows ref struct
         {
             TTask Commit();
@@ -423,7 +423,7 @@
         }
 
         public interface IGetBodyWriter<TTask, TGetResponseReader>
-            where TTask : /*TODO Task<TGetResponseReader>, */allows ref struct
+            where TTask : /*TODO Task<TGetResponseReader>, *//*allows ref struct
             where TGetResponseReader : IGetResponseReader, allows ref struct
         {
             TTask Commit();
@@ -499,5 +499,5 @@
                 return new Foo(value);
             });
         }
-    }
+    }*/
 }
