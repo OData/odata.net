@@ -117,25 +117,20 @@
 
 
 
-    public interface IUriWriter<T> : IUriWriter<Nothing, Nothing, IUriSchemeWriter<T>, T>
+    public interface IUriWriter<T> : IUriWriter<Nothing, Nothing, T, Nothing, Nothing, IFragmentWriter<T>, Nothing, Nothing, IQueryParameterWriter<T>, Nothing, Nothing, IQueryValueWriter<T>, Nothing, Nothing, IQueryOptionWriter<T>, Nothing, Nothing, IUriPathSegmentWriter<T>, Nothing, Nothing, IUriPortWriter<T>, Nothing, Nothing, IUriDomainWriter<T>, Nothing, Nothing, IUriSchemeWriter<T>>
     {
     }
 
-    public interface IUriSchemeWriter<T>
+    public interface IUriSchemeWriter<T> : IUriSchemeWriter<Nothing, Nothing, T, Nothing, Nothing, IFragmentWriter<T>, Nothing, Nothing, IQueryParameterWriter<T>, Nothing, Nothing, IQueryValueWriter<T>, Nothing, Nothing, IQueryOptionWriter<T>, Nothing, Nothing, IUriPathSegmentWriter<T>, Nothing, Nothing, IUriPortWriter<T>, Nothing, Nothing, IUriDomainWriter<T>>
     {
-        Task<IUriDomainWriter<T>> Commit(UriScheme uriScheme); //// TODO i can't tell if this type should be committed in its writer, or in the "previous" writer (i.e. should this commit take a domain or a scheme?)
     }
 
-    public interface IUriDomainWriter<T>
+    public interface IUriDomainWriter<T> : IUriDomainWriter<Nothing, Nothing, T, Nothing, Nothing, IFragmentWriter<T>, Nothing, Nothing, IQueryParameterWriter<T>, Nothing, Nothing, IQueryValueWriter<T>, Nothing, Nothing, IQueryOptionWriter<T>, Nothing, Nothing, IUriPathSegmentWriter<T>, Nothing, Nothing, IUriPortWriter<T>>
     {
-        Task<IUriPortWriter<T>> Commit(UriDomain uriDomain);
     }
 
-    public interface IUriPortWriter<T> : I
+    public interface IUriPortWriter<T> : IUriPortWriter<Nothing, Nothing, T, Nothing, Nothing, IFragmentWriter<T>, Nothing, Nothing, IQueryParameterWriter<T>, Nothing, Nothing, IQueryValueWriter<T>, Nothing, Nothing, IQueryOptionWriter<T>, Nothing, Nothing, IUriPathSegmentWriter<T>>
     {
-        Task<IUriPathSegmentWriter<T>> Commit();
-
-        Task<IUriPathSegmentWriter<T>> Commit(UriPort uriPort);
     }
 
     public interface IUriPathSegmentWriter<T> : IUriPathSegmentWriter<Nothing, Nothing, T, Nothing, Nothing, IFragmentWriter<T>, Nothing, Nothing, IQueryParameterWriter<T>, Nothing, Nothing, IQueryValueWriter<T>, Nothing, Nothing, IQueryOptionWriter<T>, Nothing, Nothing, IUriPathSegmentWriter<T>>
