@@ -118,83 +118,84 @@
                         var headerReader = await getResponseReader.Next().ConfigureAwait(false);
                         var getResponseBodyReader = await MultiValuedProtocol.SkipHeaders(headerReader).ConfigureAwait(false);
 
-                        while (true)
+                        var @continue = true;
+                        while (@continue)
                         {
                             var getResponseBodyToken = await getResponseBodyReader.Next().ConfigureAwait(false);
-                            if (getResponseBodyToken is GetResponseBodyToken.NextLink nextLink)
-                            {
-                                var nextLinkReader = nextLink.NextLinkReader;
-                                multiValueResponseBuilder.NextLink = nextLinkReader.NextLink.Uri;
-                                getResponseBodyReader = await nextLinkReader.Next().ConfigureAwait(false);
-                            }
-                            else if (getResponseBodyToken is GetResponseBodyToken.OdataContext odataContext)
-                            {
-                                //// TODO this implementation is skipping the odatacontext
-                                getResponseBodyReader = await odataContext.OdataContextReader.Next().ConfigureAwait(false);
-                            }
-                            else if (getResponseBodyToken is GetResponseBodyToken.Property property)
-                            {
-                                var propertyReader = property.PropertyReader;
-                                var propertyNameReader = await propertyReader.Next().ConfigureAwait(false);
-                                var propertyName = propertyNameReader.PropertyName;
-                                if (string.Equals(propertyName.Name, "value", StringComparison.Ordinal)) //// TODO do we want to configurably ignore casing?
-                                {
-                                    var propertyValueReader = await propertyNameReader.Next().ConfigureAwait(false);
-                                    var propertyValueToken = await propertyValueReader.Next().ConfigureAwait(false);
+                            @continue = await getResponseBodyToken
+                                .Dispatch(
+                                    async odataContext =>
+                                    {
+                                        //// TODO this implementation is skipping the odatacontext
+                                        getResponseBodyReader = await odataContext.OdataContextReader.Next().ConfigureAwait(false);
+                                        return true;
+                                    },
+                                    async nextLink =>
+                                    {
+                                        var nextLinkReader = nextLink.NextLinkReader;
+                                        multiValueResponseBuilder.NextLink = nextLinkReader.NextLink.Uri;
+                                        getResponseBodyReader = await nextLinkReader.Next().ConfigureAwait(false);
+                                        return true;
+                                    },
+                                    async property =>
+                                    {
+                                        var propertyReader = property.PropertyReader;
+                                        var propertyNameReader = await propertyReader.Next().ConfigureAwait(false);
+                                        var propertyName = propertyNameReader.PropertyName;
+                                        if (string.Equals(propertyName.Name, "value", StringComparison.Ordinal)) //// TODO do we want to configurably ignore casing?
+                                        {
+                                            var propertyValueReader = await propertyNameReader.Next().ConfigureAwait(false);
+                                            var propertyValueToken = await propertyValueReader.Next().ConfigureAwait(false);
 
-                                    //// TODO have you modeled an empty collection yet?
-                                    var multiValuedParsingException = new Exception("TODO error occurred parsing; we expected a mulit-valued response and found a property named 'value', but that property didn't have some number of objects inside");
-                                    await propertyValueToken
-                                        .Dispatch(
-                                            async primitive => throw multiValuedParsingException,
-                                            async complex => throw multiValuedParsingException,
-                                            async multiValued =>
-                                            {
-                                                var multiValuedPropertyValueReader = multiValued.MultiValuedPropertyValueReader;
-                                                var @continue = true;
-                                                while (@continue)
-                                                {
-                                                    var multiValuedPropertyValueToken = await multiValuedPropertyValueReader.Next().ConfigureAwait(false);
-                                                    @continue = await multiValuedPropertyValueToken
-                                                        .Dispatch(
-                                                            async @object =>
-                                                            {
-                                                                var complexPropertyValueReader = @object.ComplexPropertyValueReader;
-                                                                var singleValueBuilder = new MultiValuedProtocol.SingleValueBuilder();
+                                            //// TODO have you modeled an empty collection yet?
+                                            var multiValuedParsingException = new Exception("TODO error occurred parsing; we expected a mulit-valued response and found a property named 'value', but that property didn't have some number of objects inside");
+                                            await propertyValueToken
+                                                .Dispatch(
+                                                    async primitive => throw multiValuedParsingException,
+                                                    async complex => throw multiValuedParsingException,
+                                                    async multiValued =>
+                                                    {
+                                                        var multiValuedPropertyValueReader = multiValued.MultiValuedPropertyValueReader;
+                                                        var @continue = true;
+                                                        while (@continue)
+                                                        {
+                                                            var multiValuedPropertyValueToken = await multiValuedPropertyValueReader.Next().ConfigureAwait(false);
+                                                            @continue = await multiValuedPropertyValueToken
+                                                                .Dispatch(
+                                                                    async @object =>
+                                                                    {
+                                                                        var complexPropertyValueReader = @object.ComplexPropertyValueReader;
+                                                                        var singleValueBuilder = new MultiValuedProtocol.SingleValueBuilder();
 
-                                                                multiValuedPropertyValueReader = await MultiValuedProtocol.ReadComplexPropertyValue(complexPropertyValueReader, singleValueBuilder).ConfigureAwait(false);
+                                                                        multiValuedPropertyValueReader = await MultiValuedProtocol.ReadComplexPropertyValue(complexPropertyValueReader, singleValueBuilder).ConfigureAwait(false);
 
-                                                                multiValueResponseBuilder.Value.Add(singleValueBuilder.Build()); //// TODO having a `context` parameter on `dispatch` would prevent closures
-                                                                return true;
-                                                            },
-                                                            async end =>
-                                                            {
-                                                                getResponseBodyReader = end.Reader;
-                                                                return false;
-                                                            })
-                                                        .ConfigureAwait(false);
-                                                }
+                                                                        multiValueResponseBuilder.Value.Add(singleValueBuilder.Build()); //// TODO having a `context` parameter on `dispatch` would prevent closures
+                                                                        return true;
+                                                                    },
+                                                                    async end =>
+                                                                    {
+                                                                        getResponseBodyReader = end.Reader;
+                                                                        return false;
+                                                                    })
+                                                                .ConfigureAwait(false);
+                                                        }
 
-                                                return new Nothing();
-                                            },
-                                            async @null => throw multiValuedParsingException)
-                                        .ConfigureAwait(false);
-                                }
-                                else
-                                {
-                                    var propertyValueReader = await propertyNameReader.Next().ConfigureAwait(false);
-                                    getResponseBodyReader = await SkipPropertyValue(propertyValueReader).ConfigureAwait(false);
-                                }
-                            }
-                            //// TODO count isn't available here...
-                            else if (getResponseBodyToken is GetResponseBodyToken.End end)
-                            {
-                                break;
-                            }
-                            else
-                            {
-                                throw new Exception("TODO implement visitor");
-                            }
+                                                        return new Nothing();
+                                                    },
+                                                    async @null => throw multiValuedParsingException)
+                                                .ConfigureAwait(false);
+                                        }
+                                        else
+                                        {
+                                            var propertyValueReader = await propertyNameReader.Next().ConfigureAwait(false);
+                                            getResponseBodyReader = await SkipPropertyValue(propertyValueReader).ConfigureAwait(false);
+                                        }
+
+                                        return true;
+                                    },
+                                    //// TODO count isn't available here yet...
+                                    async end => false)
+                                .ConfigureAwait(false);
                         }
 
                         return multiValueResponseBuilder.Build();
