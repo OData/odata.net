@@ -49,28 +49,28 @@
             public IGetResponseBodyReader GetResponseBodyReader { get; }
         }
 
-        public interface IAccepter<TResult>
+        public interface IAccepterAsync<TResult>
         {
-            TResult Accept(ContentType node);
+            Task<TResult> Accept(ContentType node);
 
-            TResult Accept(Custom node);
+            Task<TResult> Accept(Custom node);
 
-            TResult Accept(Body node);
+            Task<TResult> Accept(Body node);
         }
 
-        public TResult Dispatch<TResult>(IAccepter<TResult> accepter)
+        public async Task<TResult> Dispatch<TResult>(IAccepterAsync<TResult> accepter)
         {
             if (this is ContentType contentType)
             {
-                return accepter.Accept(contentType);
+                return await accepter.Accept(contentType).ConfigureAwait(false);
             }
             else if (this is Custom custom)
             {
-                return accepter.Accept(custom);
+                return await accepter.Accept(custom).ConfigureAwait(false);
             }
             else if (this is Body body)
             {
-                return accepter.Accept(body);
+                return await accepter.Accept(body).ConfigureAwait(false);
             }
             else
             {
@@ -78,42 +78,42 @@
             }
         }
 
-        private sealed class DelegateAccepter<TResult> : IAccepter<TResult>
+        private sealed class DelegateAccepter<TResult> : IAccepterAsync<TResult>
         {
-            private readonly Func<ContentType, TResult> contentTypeAccepter;
-            private readonly Func<Custom, TResult> customAccepter;
-            private readonly Func<Body, TResult> bodyAccepter;
+            private readonly Func<ContentType, Task<TResult>> contentTypeAccepter;
+            private readonly Func<Custom, Task<TResult>> customAccepter;
+            private readonly Func<Body, Task<TResult>> bodyAccepter;
 
             public DelegateAccepter(
-                Func<ContentType, TResult> contentTypeAccepter,
-                Func<Custom, TResult> customAccepter,
-                Func<Body, TResult> bodyAccepter)
+                Func<ContentType, Task<TResult>> contentTypeAccepter,
+                Func<Custom, Task<TResult>> customAccepter,
+                Func<Body, Task<TResult>> bodyAccepter)
             {
                 this.contentTypeAccepter = contentTypeAccepter;
                 this.customAccepter = customAccepter;
                 this.bodyAccepter = bodyAccepter;
             }
 
-            public TResult Accept(ContentType node)
+            public Task<TResult> Accept(ContentType node)
             {
                 return this.contentTypeAccepter(node);
             }
 
-            public TResult Accept(Custom node)
+            public Task<TResult> Accept(Custom node)
             {
                 return this.customAccepter(node);
             }
 
-            public TResult Accept(Body node)
+            public Task<TResult> Accept(Body node)
             {
                 return this.bodyAccepter(node);
             }
         }
 
-        public TResult Dispatch<TResult>(
-            Func<ContentType, TResult> contentTypeAccepter,
-            Func<Custom, TResult> customAccepter,
-            Func<Body, TResult> bodyAccepter)
+        public Task<TResult> Dispatch<TResult>(
+            Func<ContentType, Task<TResult>> contentTypeAccepter,
+            Func<Custom, Task<TResult>> customAccepter,
+            Func<Body, Task<TResult>> bodyAccepter)
         {
             return this.Dispatch(new DelegateAccepter<TResult>(contentTypeAccepter, customAccepter, bodyAccepter));
         }
