@@ -567,6 +567,95 @@
 
             public T Reader { get; }
         }
+
+        public interface IAccepterAsync<TResult>
+        {
+            Task<TResult> Accept(OdataContext node);
+
+            Task<TResult> Accept(OdataId node);
+
+            Task<TResult> Accept(Property node);
+
+            Task<TResult> Accept(End node);
+        }
+
+        public async Task<TResult> Dispatch<TResult>(IAccepterAsync<TResult> accepter)
+        {
+            if (this is OdataContext odataContext)
+            {
+                return await accepter.Accept(odataContext).ConfigureAwait(false);
+            }
+            else if (this is OdataId odataId)
+            {
+                return await accepter.Accept(odataId).ConfigureAwait(false);
+            }
+            else if (this is Property property)
+            {
+                return await accepter.Accept(property).ConfigureAwait(false);
+            }
+            else if (this is End end)
+            {
+                return await accepter.Accept(end).ConfigureAwait(false);
+            }
+            else
+            {
+                throw new Exception("TODO use a visitor");
+            }
+        }
+
+        private sealed class DelegateAccepter<TResult> : IAccepterAsync<TResult>
+        {
+            private readonly Func<OdataContext, Task<TResult>> odataContextAccepter;
+            private readonly Func<OdataId, Task<TResult>> odataIdAccepter;
+            private readonly Func<Property, Task<TResult>> propertyAccepter;
+            private readonly Func<End, Task<TResult>> endAccepter;
+
+            public DelegateAccepter(
+                Func<OdataContext, Task<TResult>> odataContextAccepter,
+                Func<OdataId, Task<TResult>> odataIdAccepter,
+                Func<Property, Task<TResult>> propertyAccepter,
+                Func<End, Task<TResult>> endAccepter)
+            {
+                this.odataContextAccepter = odataContextAccepter;
+                this.odataIdAccepter = odataIdAccepter;
+                this.propertyAccepter = propertyAccepter;
+                this.endAccepter = endAccepter;
+            }
+
+            public Task<TResult> Accept(OdataContext node)
+            {
+                return this.odataContextAccepter(node);
+            }
+
+            public Task<TResult> Accept(OdataId node)
+            {
+                return this.odataIdAccepter(node);
+            }
+
+            public Task<TResult> Accept(Property node)
+            {
+                return this.propertyAccepter(node);
+            }
+
+            public Task<TResult> Accept(End node)
+            {
+                return this.endAccepter(node);
+            }
+        }
+
+        public Task<TResult> Dispatch<TResult>(
+            Func<OdataContext, Task<TResult>> odataContextAccepter,
+            Func<OdataId, Task<TResult>> odataIdAccepter,
+            Func<Property, Task<TResult>> propertyAccepter,
+            Func<End, Task<TResult>> endAccepter)
+        {
+            return this.Dispatch(
+                new DelegateAccepter<TResult>(
+                    odataContextAccepter,
+                    odataIdAccepter,
+                    propertyAccepter,
+                    endAccepter));
+        }
     }
 
     public interface IOdataIdReader<T>
