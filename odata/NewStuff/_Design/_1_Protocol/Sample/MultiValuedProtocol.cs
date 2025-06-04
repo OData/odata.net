@@ -684,97 +684,101 @@
             public async Task<SingleValuedResponse> Evaluate()
             {
                 var patchRequestWriter = this.convention.Post();
-
-                var uriWriter = await patchRequestWriter.Commit().ConfigureAwait(false);
-                var patchHeaderWriter = await MultiValuedProtocol.WriteUri(this.multiValuedUri, uriWriter).ConfigureAwait(false);
-
-                var customHeaderWriter = await patchHeaderWriter.CommitCustomHeader().ConfigureAwait(false);
-                var headerFieldValueWriter = await customHeaderWriter.Commit(new HeaderFieldName("Content-Type")).ConfigureAwait(false); //// TODO probably this should be a "built-in" header
-                patchHeaderWriter = await headerFieldValueWriter.Commit(new HeaderFieldValue("application/json")).ConfigureAwait(false);
-                var patchRequestBodyWriter = await patchHeaderWriter.Commit().ConfigureAwait(false);
-
-                //// TODO what about dynamic and untyped properties?
-                foreach (var complexProperty in this.singleValuedRequest.ComplexProperties)
+                await using (patchRequestWriter.ConfigureAwait(false))
                 {
-                    //// TODO you haven't actually fleshed out complex properties yet in the protocol layer
+                    var uriWriter = await patchRequestWriter.Commit().ConfigureAwait(false);
+                    var patchHeaderWriter = await MultiValuedProtocol.WriteUri(this.multiValuedUri, uriWriter).ConfigureAwait(false);
+
+                    var customHeaderWriter = await patchHeaderWriter.CommitCustomHeader().ConfigureAwait(false);
+                    var headerFieldValueWriter = await customHeaderWriter.Commit(new HeaderFieldName("Content-Type")).ConfigureAwait(false); //// TODO probably this should be a "built-in" header
+                    patchHeaderWriter = await headerFieldValueWriter.Commit(new HeaderFieldValue("application/json")).ConfigureAwait(false);
+                    var patchRequestBodyWriter = await patchHeaderWriter.Commit().ConfigureAwait(false);
+
+                    //// TODO what about dynamic and untyped properties?
+                    foreach (var complexProperty in this.singleValuedRequest.ComplexProperties)
+                    {
+                        //// TODO you haven't actually fleshed out complex properties yet in the protocol layer
+                    }
+
+                    foreach (var multiValuedProperty in this.singleValuedRequest.MultiValuedProperties)
+                    {
+                        var propertyWriter = await patchRequestBodyWriter.CommitProperty().ConfigureAwait(false);
+                        var propertyNameWriter = await propertyWriter.Commit().ConfigureAwait(false);
+                        var propertyValueWriter = await propertyNameWriter.Commit(new PropertyName(multiValuedProperty.Name)).ConfigureAwait(false);
+                        var multiValuedPropertyValueWriter = await propertyValueWriter.CommitMultiValued().ConfigureAwait(false);
+
+                        var objectWriter = await multiValuedPropertyValueWriter.CommitValue().ConfigureAwait(false);
+
+                        foreach (var value in multiValuedProperty.Values)
+                        {
+                            multiValuedPropertyValueWriter = await WriteSingleValuedRequest(value, objectWriter).ConfigureAwait(false);
+                        }
+
+                        patchRequestBodyWriter = await multiValuedPropertyValueWriter.Commit().ConfigureAwait(false);
+                    }
+
+                    foreach (var primitiveProperty in this.singleValuedRequest.PrimitiveProperties)
+                    {
+                        var propertyWriter = await patchRequestBodyWriter.CommitProperty().ConfigureAwait(false);
+                        var propertyNameWriter = await propertyWriter.Commit().ConfigureAwait(false);
+                        var propertyValueWriter = await propertyNameWriter.Commit(new PropertyName(primitiveProperty.Name)).ConfigureAwait(false);
+
+                        if (primitiveProperty.Value == null)
+                        {
+                            var nullPropertyValueWriter = await propertyValueWriter.CommitNull().ConfigureAwait(false);
+                            patchRequestBodyWriter = await nullPropertyValueWriter.Commit().ConfigureAwait(false);
+                        }
+                        else
+                        {
+                            var primitivePropertyValueWriter = await propertyValueWriter.CommitPrimitive().ConfigureAwait(false);
+                            patchRequestBodyWriter = await primitivePropertyValueWriter.Commit(new PrimitivePropertyValue(primitiveProperty.Value)).ConfigureAwait(false);
+                        }
+                    }
+
+                    // send the request
+                    var patchResponseReader = await patchRequestBodyWriter.Commit().ConfigureAwait(false);
+                    await using (patchResponseReader.ConfigureAwait(false))
+                    {
+                        var patchResponseHeaderReader = await patchResponseReader.Next().ConfigureAwait(false);
+                        var patchResponseBodyReader = await MultiValuedProtocol.SkipHeaders(patchResponseHeaderReader).ConfigureAwait(false);
+
+                        var singleValuedResponseBuilder = new SingleValuedResponseBuilder();
+                        var singleValueBuilder = new SingleValueBuilder();
+                        while (true)
+                        {
+                            var getResponseBodyToken = await patchResponseBodyReader.Next().ConfigureAwait(false);
+                            if (getResponseBodyToken is GetResponseBodyToken.Property property)
+                            {
+                                var propertyReader = property.PropertyReader;
+                                var propertyNameReader = await propertyReader.Next().ConfigureAwait(false);
+                                var propertyName = propertyNameReader.PropertyName;
+                                var propertyValueReader = await propertyNameReader.Next().ConfigureAwait(false);
+
+                                patchResponseBodyReader = await MultiValuedProtocol.ReadPropertyValue(propertyValueReader, propertyName.Name, singleValueBuilder).ConfigureAwait(false);
+                            }
+                            else if (getResponseBodyToken is GetResponseBodyToken.OdataContext odataContext)
+                            {
+                                //// TODO this implementation is not using the context
+                                patchResponseBodyReader = await odataContext.OdataContextReader.Next().ConfigureAwait(false);
+                            }
+                            else if (getResponseBodyToken is GetResponseBodyToken.NextLink nextLink)
+                            {
+                                throw new Exception("TODO no nextlinks for single-valued responses");
+                            }
+                            else if (getResponseBodyToken is GetResponseBodyToken.End end)
+                            {
+                                break;
+                            }
+                            else
+                            {
+                                throw new Exception("TODO implement visitor");
+                            }
+                        }
+
+                        singleValuedResponseBuilder.Value = singleValueBuilder.Build();
+                        return singleValuedResponseBuilder.Build();
+                    }
                 }
-
-                foreach (var multiValuedProperty in this.singleValuedRequest.MultiValuedProperties)
-                {
-                    var propertyWriter = await patchRequestBodyWriter.CommitProperty().ConfigureAwait(false);
-                    var propertyNameWriter = await propertyWriter.Commit().ConfigureAwait(false);
-                    var propertyValueWriter = await propertyNameWriter.Commit(new PropertyName(multiValuedProperty.Name)).ConfigureAwait(false);
-                    var multiValuedPropertyValueWriter = await propertyValueWriter.CommitMultiValued().ConfigureAwait(false);
-
-                    var objectWriter = await multiValuedPropertyValueWriter.CommitValue().ConfigureAwait(false);
-
-                    foreach (var value in multiValuedProperty.Values)
-                    {
-                        multiValuedPropertyValueWriter = await WriteSingleValuedRequest(value, objectWriter).ConfigureAwait(false);
-                    }
-
-                    patchRequestBodyWriter = await multiValuedPropertyValueWriter.Commit().ConfigureAwait(false);
-                }
-
-                foreach (var primitiveProperty in this.singleValuedRequest.PrimitiveProperties)
-                {
-                    var propertyWriter = await patchRequestBodyWriter.CommitProperty().ConfigureAwait(false);
-                    var propertyNameWriter = await propertyWriter.Commit().ConfigureAwait(false);
-                    var propertyValueWriter = await propertyNameWriter.Commit(new PropertyName(primitiveProperty.Name)).ConfigureAwait(false);
-
-                    if (primitiveProperty.Value == null)
-                    {
-                        var nullPropertyValueWriter = await propertyValueWriter.CommitNull().ConfigureAwait(false);
-                        patchRequestBodyWriter = await nullPropertyValueWriter.Commit().ConfigureAwait(false);
-                    }
-                    else
-                    {
-                        var primitivePropertyValueWriter = await propertyValueWriter.CommitPrimitive().ConfigureAwait(false);
-                        patchRequestBodyWriter = await primitivePropertyValueWriter.Commit(new PrimitivePropertyValue(primitiveProperty.Value)).ConfigureAwait(false);
-                    }
-                }
-
-                // send the request
-                var patchResponseReader = await patchRequestBodyWriter.Commit().ConfigureAwait(false);
-
-                var patchResponseHeaderReader = await patchResponseReader.Next().ConfigureAwait(false);
-                var patchResponseBodyReader = await MultiValuedProtocol.SkipHeaders(patchResponseHeaderReader).ConfigureAwait(false);
-
-                var singleValuedResponseBuilder = new SingleValuedResponseBuilder();
-                var singleValueBuilder = new SingleValueBuilder();
-                while (true)
-                {
-                    var getResponseBodyToken = await patchResponseBodyReader.Next().ConfigureAwait(false);
-                    if (getResponseBodyToken is GetResponseBodyToken.Property property)
-                    {
-                        var propertyReader = property.PropertyReader;
-                        var propertyNameReader = await propertyReader.Next().ConfigureAwait(false);
-                        var propertyName = propertyNameReader.PropertyName;
-                        var propertyValueReader = await propertyNameReader.Next().ConfigureAwait(false);
-
-                        patchResponseBodyReader = await MultiValuedProtocol.ReadPropertyValue(propertyValueReader, propertyName.Name, singleValueBuilder).ConfigureAwait(false);
-                    }
-                    else if (getResponseBodyToken is GetResponseBodyToken.OdataContext odataContext)
-                    {
-                        //// TODO this implementation is not using the context
-                        patchResponseBodyReader = await odataContext.OdataContextReader.Next().ConfigureAwait(false);
-                    }
-                    else if (getResponseBodyToken is GetResponseBodyToken.NextLink nextLink)
-                    {
-                        throw new Exception("TODO no nextlinks for single-valued responses");
-                    }
-                    else if (getResponseBodyToken is GetResponseBodyToken.End end)
-                    {
-                        break;
-                    }
-                    else
-                    {
-                        throw new Exception("TODO implement visitor");
-                    }
-                }
-
-                singleValuedResponseBuilder.Value = singleValueBuilder.Build();
-                return singleValuedResponseBuilder.Build();
             }
 
             public IPostSingleValuedProtocol Expand(object expander)
