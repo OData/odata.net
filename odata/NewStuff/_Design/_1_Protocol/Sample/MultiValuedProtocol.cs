@@ -738,35 +738,34 @@
 
                         var singleValuedResponseBuilder = new SingleValuedResponseBuilder();
                         var singleValueBuilder = new SingleValueBuilder();
-                        while (true)
+
+                        var @continue = true;
+                        while (@continue)
                         {
                             var getResponseBodyToken = await patchResponseBodyReader.Next().ConfigureAwait(false);
-                            if (getResponseBodyToken is GetResponseBodyToken.Property property)
-                            {
-                                var propertyReader = property.PropertyReader;
-                                var propertyNameReader = await propertyReader.Next().ConfigureAwait(false);
-                                var propertyName = propertyNameReader.PropertyName;
-                                var propertyValueReader = await propertyNameReader.Next().ConfigureAwait(false);
+                            @continue = await getResponseBodyToken
+                                .Dispatch(
+                                    async odataContext =>
+                                    {
+                                        //// TODO this implementation is not using the context
+                                        patchResponseBodyReader = await odataContext.OdataContextReader.Next().ConfigureAwait(false);
 
-                                patchResponseBodyReader = await MultiValuedProtocol.ReadPropertyValue(propertyValueReader, propertyName.Name, singleValueBuilder).ConfigureAwait(false);
-                            }
-                            else if (getResponseBodyToken is GetResponseBodyToken.OdataContext odataContext)
-                            {
-                                //// TODO this implementation is not using the context
-                                patchResponseBodyReader = await odataContext.OdataContextReader.Next().ConfigureAwait(false);
-                            }
-                            else if (getResponseBodyToken is GetResponseBodyToken.NextLink nextLink)
-                            {
-                                throw new Exception("TODO no nextlinks for single-valued responses");
-                            }
-                            else if (getResponseBodyToken is GetResponseBodyToken.End end)
-                            {
-                                break;
-                            }
-                            else
-                            {
-                                throw new Exception("TODO implement visitor");
-                            }
+                                        return true;
+                                    },
+                                    async nextLink => throw new Exception("TODO no nextlinks for single-valued responses"),
+                                    async property =>
+                                    {
+                                        var propertyReader = property.PropertyReader;
+                                        var propertyNameReader = await propertyReader.Next().ConfigureAwait(false);
+                                        var propertyName = propertyNameReader.PropertyName;
+                                        var propertyValueReader = await propertyNameReader.Next().ConfigureAwait(false);
+
+                                        patchResponseBodyReader = await MultiValuedProtocol.ReadPropertyValue(propertyValueReader, propertyName.Name, singleValueBuilder).ConfigureAwait(false);
+
+                                        return true;
+                                    },
+                                    async end => false)
+                                .ConfigureAwait(false);
                         }
 
                         singleValuedResponseBuilder.Value = singleValueBuilder.Build();
