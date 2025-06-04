@@ -2,6 +2,8 @@
 {
     using System;
     using System.Threading.Tasks;
+    using CombinatorParsingV2;
+    using NewStuff._Design._0_Convention.RefTask;
 
     public interface IRequestWriter
     {
@@ -115,9 +117,8 @@
 
 
 
-    public interface IUriWriter<T>
+    public interface IUriWriter<T> : IUriWriter<Nothing, Nothing, IUriSchemeWriter<T>, T>
     {
-        Task<IUriSchemeWriter<T>> Commit();
     }
 
     public interface IUriSchemeWriter<T>
@@ -130,41 +131,33 @@
         Task<IUriPortWriter<T>> Commit(UriDomain uriDomain);
     }
 
-    public interface IUriPortWriter<T>
+    public interface IUriPortWriter<T> : I
     {
         Task<IUriPathSegmentWriter<T>> Commit();
 
         Task<IUriPathSegmentWriter<T>> Commit(UriPort uriPort);
     }
 
-    public interface IUriPathSegmentWriter<T>
+    public interface IUriPathSegmentWriter<T> : IUriPathSegmentWriter<Nothing, Nothing, T, Nothing, Nothing, IFragmentWriter<T>, Nothing, Nothing, IQueryParameterWriter<T>, Nothing, Nothing, IQueryValueWriter<T>, Nothing, Nothing, IQueryOptionWriter<T>, Nothing, Nothing, IUriPathSegmentWriter<T>>
     {
-        Task<IQueryOptionWriter<T>> Commit();
-        Task<IUriPathSegmentWriter<T>> Commit(UriPathSegment uriPathSegment);
     }
 
-    public interface IQueryOptionWriter<T>
+    public interface IQueryOptionWriter<T> : IQueryOptionWriter<Nothing, Nothing, T, Nothing, Nothing, IFragmentWriter<T>, Nothing, Nothing, IQueryParameterWriter<T>, Nothing, Nothing, IQueryValueWriter<T>, Nothing, Nothing, IQueryOptionWriter<T>>
     {
-        Task<T> Commit();
-        Task<IFragmentWriter<T>> CommitFragment();
-        Task<IQueryParameterWriter<T>> CommitParameter();
     }
 
-    public interface IQueryParameterWriter<T>
+    public interface IQueryParameterWriter<T> : IQueryParameterWriter<Nothing, Nothing, T, Nothing, Nothing, IFragmentWriter<T>, Nothing, Nothing, IQueryParameterWriter<T>, Nothing, Nothing, IQueryValueWriter<T>, Nothing, Nothing, IQueryOptionWriter<T>>
     {
-        Task<IQueryValueWriter<T>> Commit(QueryParameter queryParameter);
     }
 
-    public interface IQueryValueWriter<T>
+    public interface IQueryValueWriter<T> : IQueryValueWriter<Nothing, Nothing, T, Nothing, Nothing, IFragmentWriter<T>, Nothing, Nothing, IQueryParameterWriter<T>, Nothing, Nothing, IQueryValueWriter<T>, Nothing, Nothing, IQueryOptionWriter<T>>
     {
-        Task<IQueryOptionWriter<T>> Commit();
-        Task<IQueryOptionWriter<T>> Commit(QueryValue queryValue);
     }
 
-    public interface IFragmentWriter<T>
+    public interface IFragmentWriter<T> : IFragmentWriter<Nothing, Nothing, T>
     {
-        Task<T> Commit(Fragment fragment);
     }
+
 
 
 
