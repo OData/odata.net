@@ -96,12 +96,67 @@
             }
         }
 
+        public struct CurrentReader
+        {
+            private readonly IHttpClient httpClient;
+            private readonly Uri requestUri;
+
+            public CurrentReader(IHttpClient httpClient, Uri requestUri)
+            {
+                this.httpClient = httpClient;
+                this.requestUri = requestUri;
+            }
+
+            public async ValueTask<NextReader> Next()
+            {
+                return new NextReader(await this.httpClient.GetAsync(this.requestUri).ConfigureAwait(false));
+            }
+        }
+
+        public struct NextReader
+        {
+            public NextReader(HttpResponseMessage message)
+            {
+            }
+
+            public async ValueTask<NextReader> Next()
+            {
+                throw new NotImplementedException("TODO");
+            }
+        }
+
         public static async Task ReaderTest()
         {
             RefGetBodyWriter writer = new RefGetBodyWriter();
             await writer.Commit().ConfigureAwait(false);
             var nextWriter = writer.Next();
             var nextNextWriter = await nextWriter.Next().ConfigureAwait(false);
+        }
+
+        public static async Task ReaderTest2(RefGetBodyWriter writer)
+        {
+            await writer.Commit().ConfigureAwait(false);
+            var nextWriter = writer.Next();
+            var nextNextWriter = await nextWriter.Next().ConfigureAwait(false);
+        }
+
+        public static Task ReaderTest(RefGetBodyWriter writer)
+        {
+            return writer.Commit().AsTask().ContinueWith(
+                (task, context) =>
+                {
+                    /*var nextWriter = ((RefGetBodyWriter)context).Next();
+                    var nextNextWriter = nextWriter.Next();*/
+                    context.ToString();
+                },
+                writer);
+        }
+
+        public ref struct Wrapper<T> where T : allows ref struct
+        {
+            public async Task Wait(out T value)
+            {
+            }
         }
     }
 
@@ -139,7 +194,7 @@
         }
     }
 
-    public ref struct RefTaskAwaiter<TIntermediate, TContext, TResult> : ICriticalNotifyCompletion
+    public ref struct RefTaskAwaiter<TIntermediate, TContext, TResult> : INotifyCompletion
         where TContext : allows ref struct
         where TResult : allows ref struct
     {
@@ -333,7 +388,7 @@
             }
         }
 
-        public static async Task ReaderTest()
+        public static async RefTask ReaderTest()
         {
             var writer = new RefGetBodyWriter();
             await writer.Commit();
