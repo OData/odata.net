@@ -241,25 +241,29 @@
                 while (true)
                 {
                     var complexPropertyValueToken = await complexPropertyValueReader.Next().ConfigureAwait(false);
-                    if (complexPropertyValueToken is ComplexPropertyValueToken<T>.Property property)
+                    var nextReader = await complexPropertyValueToken
+                        .Dispatch(
+                            async odataContext =>
+                            {
+                                complexPropertyValueReader = await odataContext.OdataContextReader.Next().ConfigureAwait(false);
+                                return default;
+                            },
+                            async odataId =>
+                            {
+                                complexPropertyValueReader = await odataId.OdataIdReader.Next().ConfigureAwait(false);
+                                return default;
+                            },
+                            async property =>
+                            {
+                                complexPropertyValueReader = await SkipNestedProperty(property.PropertyReader).ConfigureAwait(false);
+                                return default;
+                            },
+                            async end => end.Reader)
+                        .ConfigureAwait(false);
+
+                    if (nextReader != null)
                     {
-                        complexPropertyValueReader = await SkipNestedProperty(property.PropertyReader).ConfigureAwait(false);
-                    }
-                    else if (complexPropertyValueToken is ComplexPropertyValueToken<T>.OdataContext odataContext)
-                    {
-                        complexPropertyValueReader = await odataContext.OdataContextReader.Next().ConfigureAwait(false);
-                    }
-                    else if (complexPropertyValueToken is ComplexPropertyValueToken<T>.OdataId odataId)
-                    {
-                        complexPropertyValueReader = await odataId.OdataIdReader.Next().ConfigureAwait(false);
-                    }
-                    else if (complexPropertyValueToken is ComplexPropertyValueToken<T>.End end)
-                    {
-                        return end.Reader;
-                    }
-                    else
-                    {
-                        throw new Exception("TODO implement visitor");
+                        return nextReader;
                     }
                 }
             }
