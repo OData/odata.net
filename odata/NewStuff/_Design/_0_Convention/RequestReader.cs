@@ -601,6 +601,95 @@
 
             public IGetBodyReader GetBodyReader { get; }
         }
+
+        public interface IAccepterAsync<TResult>
+        {
+            Task<TResult> Accept(OdataMaxVersion node);
+
+            Task<TResult> Accept(OdataMaxPageSize node);
+
+            Task<TResult> Accept(Custom node);
+
+            Task<TResult> Accept(GetBody node);
+        }
+
+        public async Task<TResult> Dispatch<TResult>(IAccepterAsync<TResult> accepter)
+        {
+            if (this is OdataMaxVersion odataMaxVersion)
+            {
+                return await accepter.Accept(odataMaxVersion).ConfigureAwait(false);
+            }
+            else if (this is OdataMaxPageSize odataMaxPageSize)
+            {
+                return await accepter.Accept(odataMaxPageSize).ConfigureAwait(false);
+            }
+            else if (this is Custom custom)
+            {
+                return await accepter.Accept(custom).ConfigureAwait(false);
+            }
+            else if (this is GetBody getBody)
+            {
+                return await accepter.Accept(getBody).ConfigureAwait(false);
+            }
+            else
+            {
+                throw new Exception("TODO use a visitor");
+            }
+        }
+
+        private sealed class DelegateAccepter<TResult> : IAccepterAsync<TResult>
+        {
+            private readonly Func<OdataMaxVersion, Task<TResult>> odataMaxVersionAccepter;
+            private readonly Func<OdataMaxPageSize, Task<TResult>> odataMaxPageSizeAccepter;
+            private readonly Func<Custom, Task<TResult>> customAccepter;
+            private readonly Func<GetBody, Task<TResult>> getBodyAccepter;
+
+            public DelegateAccepter(
+                Func<OdataMaxVersion, Task<TResult>> odataMaxVersionAccepter,
+                Func<OdataMaxPageSize, Task<TResult>> odataMaxPageSizeAccepter,
+                Func<Custom, Task<TResult>> customAccepter,
+                Func<GetBody, Task<TResult>> getBodyAccepter)
+            {
+                this.odataMaxVersionAccepter = odataMaxVersionAccepter;
+                this.odataMaxPageSizeAccepter = odataMaxPageSizeAccepter;
+                this.customAccepter = customAccepter;
+                this.getBodyAccepter = getBodyAccepter;
+            }
+
+            public Task<TResult> Accept(OdataMaxVersion node)
+            {
+                return this.odataMaxVersionAccepter(node);
+            }
+
+            public Task<TResult> Accept(OdataMaxPageSize node)
+            {
+                return this.odataMaxPageSizeAccepter(node);
+            }
+
+            public Task<TResult> Accept(Custom node)
+            {
+                return this.customAccepter(node);
+            }
+
+            public Task<TResult> Accept(GetBody node)
+            {
+                return this.getBodyAccepter(node);
+            }
+        }
+
+        public Task<TResult> Dispatch<TResult>(
+            Func<OdataMaxVersion, Task<TResult>> odataMaxVersionAccepter,
+            Func<OdataMaxPageSize, Task<TResult>> odataMaxPageSizeAccepter,
+            Func<Custom, Task<TResult>> customAccepter,
+            Func<GetBody, Task<TResult>> getBodyAccepter)
+        {
+            return this.Dispatch(
+                new DelegateAccepter<TResult>(
+                    odataMaxVersionAccepter,
+                    odataMaxPageSizeAccepter,
+                    customAccepter,
+                    getBodyAccepter));
+        }
     }
 
     public interface IOdataMaxVersionHeaderReader
