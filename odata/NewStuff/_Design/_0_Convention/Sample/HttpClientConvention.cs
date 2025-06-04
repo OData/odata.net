@@ -1262,9 +1262,9 @@
                 this.nextFactory = nextFactory;
             }
 
-            public async Task<IUriSchemeWriter<T>> Commit()
+            public RefTask<Nothing2, Nothing2, IUriSchemeWriter<T>> Commit()
             {
-                return await Task.FromResult(new UriSchemeWriter(new StringBuilder(), this.nextFactory)).ConfigureAwait(false);
+                return RefTask.FromFunc<IUriSchemeWriter<T>>(() => new UriSchemeWriter(new StringBuilder(), this.nextFactory));
             }
 
             private sealed class UriSchemeWriter : IUriSchemeWriter<T>
@@ -1278,10 +1278,10 @@
                     this.nextFactory = nextFactory;
                 }
 
-                public async Task<IUriDomainWriter<T>> Commit(UriScheme uriScheme)
+                public RefTask<Nothing2, Nothing2, IUriDomainWriter<T>> Commit(UriScheme uriScheme)
                 {
                     this.builder.Append($"{uriScheme.Scheme}://");
-                    return await Task.FromResult(new UriDomainWriter(this.builder, this.nextFactory)).ConfigureAwait(false);
+                    return RefTask.FromFunc<IUriDomainWriter<T>>(() => new UriDomainWriter(this.builder, this.nextFactory));
                 }
 
                 private sealed class UriDomainWriter : IUriDomainWriter<T>
@@ -1297,14 +1297,10 @@
 
                     public RefTask<Nothing2, Nothing2, IUriPortWriter<T>> Commit(UriDomain uriDomain)
                     {
-                        throw new NotImplementedException();
-                    }
-
-                    /*public async Task<IUriPortWriter<T>> Commit(UriDomain uriDomain)
-                    {
                         this.builder.Append(uriDomain.Domain);
-                        return await Task.FromResult(new UriPortWriter(this.builder, this.nextFactory)).ConfigureAwait(false);
-                    }*/
+
+                        return RefTask.FromFunc<IUriPortWriter<T>>(() => new UriPortWriter(this.builder, this.nextFactory));
+                    }
 
                     private sealed class UriPortWriter : IUriPortWriter<T>
                     {
