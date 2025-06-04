@@ -705,6 +705,63 @@
 
             public T Reader { get; }
         }
+
+        public interface IAccepterAsync<TResult>
+        {
+            Task<TResult> Accept(Object node);
+
+            Task<TResult> Accept(End node);
+        }
+
+        public async Task<TResult> Dispatch<TResult>(IAccepterAsync<TResult> accepter)
+        {
+            if (this is Object @object)
+            {
+                return await accepter.Accept(@object).ConfigureAwait(false);
+            }
+            else if (this is End end)
+            {
+                return await accepter.Accept(end).ConfigureAwait(false);
+            }
+            else
+            {
+                throw new Exception("TODO use a visitor");
+            }
+        }
+
+        private sealed class DelegateAccepter<TResult> : IAccepterAsync<TResult>
+        {
+            private readonly Func<Object, Task<TResult>> objectAccepter;
+            private readonly Func<End, Task<TResult>> endAccepter;
+
+            public DelegateAccepter(
+                Func<Object, Task<TResult>> objectAccepter,
+                Func<End, Task<TResult>> endAccepter)
+            {
+                this.objectAccepter = objectAccepter;
+                this.endAccepter = endAccepter;
+            }
+
+            public Task<TResult> Accept(Object node)
+            {
+                return this.objectAccepter(node);
+            }
+
+            public Task<TResult> Accept(End node)
+            {
+                return this.endAccepter(node);
+            }
+        }
+
+        public Task<TResult> Dispatch<TResult>(
+            Func<Object, Task<TResult>> objectAccepter,
+            Func<End, Task<TResult>> endAccepter)
+        {
+            return this.Dispatch(
+                new DelegateAccepter<TResult>(
+                    objectAccepter,
+                    endAccepter));
+        }
     }
 
     public interface INullPropertyValueReader<T>
