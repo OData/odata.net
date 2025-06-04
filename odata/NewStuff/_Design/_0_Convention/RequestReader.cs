@@ -480,8 +480,8 @@
         }
 
         public Task<TResult> Dispatch<TResult>(
-                Func<FieldValue, Task<TResult>> fieldValueAccepter,
-                Func<Header, Task<TResult>> headerAccepter)
+            Func<FieldValue, Task<TResult>> fieldValueAccepter,
+            Func<Header, Task<TResult>> headerAccepter)
         {
             return this.Dispatch(new DelegateAccepter<TResult>(fieldValueAccepter, headerAccepter));
         }
