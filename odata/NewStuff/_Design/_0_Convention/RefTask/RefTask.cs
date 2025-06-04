@@ -96,8 +96,12 @@
             }
         }
 
-        public static Task ReaderTest()
+        public static async Task ReaderTest()
         {
+            RefGetBodyWriter writer = new RefGetBodyWriter();
+            await writer.Commit().ConfigureAwait(false);
+            var nextWriter = writer.Next();
+            var nextNextWriter = await nextWriter.Next().ConfigureAwait(false);
         }
     }
 
