@@ -133,7 +133,21 @@
 
         public IPatchRequestWriter Post()
         {
-            return this.convention.Patch().OverrideHeader(async originalWriter => await PatchHeaderWriter.Create(originalWriter, this.authorizationToken).ConfigureAwait(false));
+            IPatchRequestWriter? patchRequestWriter = null;
+            try
+            {
+                patchRequestWriter = this.convention.Post();
+                return patchRequestWriter.OverrideHeader(async originalWriter => await PatchHeaderWriter.Create(originalWriter, this.authorizationToken).ConfigureAwait(false));
+            }
+            catch
+            {
+                if (patchRequestWriter != null)
+                {
+                    patchRequestWriter.DisposeAsync().ConfigureAwait(false).GetAwaiter().GetResult(); //// TODO make async
+                }
+
+                throw;
+            }
         }
     }
 }
