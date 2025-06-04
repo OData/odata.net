@@ -111,6 +111,63 @@
 
             public IUriPathSegmentReader<T> UriPathSegmentReader { get; }
         }
+
+        public interface IAccepterAsync<TResult>
+        {
+            Task<TResult> Accept(Port node);
+
+            Task<TResult> Accept(PathSegment node);
+        }
+
+        public async Task<TResult> Dispatch<TResult>(IAccepterAsync<TResult> accepter)
+        {
+            if (this is Port port)
+            {
+                return await accepter.Accept(port).ConfigureAwait(false);
+            }
+            else if (this is PathSegment pathSegment)
+            {
+                return await accepter.Accept(pathSegment).ConfigureAwait(false);
+            }
+            else
+            {
+                throw new Exception("TODO use a visitor");
+            }
+        }
+
+        private sealed class DelegateAccepter<TResult> : IAccepterAsync<TResult>
+        {
+            private readonly Func<Port, Task<TResult>> portAccepter;
+            private readonly Func<PathSegment, Task<TResult>> pathSegmentAccepter;
+
+            public DelegateAccepter(
+                Func<Port, Task<TResult>> portAccepter,
+                Func<PathSegment, Task<TResult>> pathSegmentAccepter)
+            {
+                this.portAccepter = portAccepter;
+                this.pathSegmentAccepter = pathSegmentAccepter;
+            }
+
+            public Task<TResult> Accept(Port node)
+            {
+                return this.portAccepter(node);
+            }
+
+            public Task<TResult> Accept(PathSegment node)
+            {
+                return this.pathSegmentAccepter(node);
+            }
+        }
+
+        public Task<TResult> Dispatch<TResult>(
+            Func<Port, Task<TResult>> portAccepter,
+            Func<PathSegment, Task<TResult>> pathSegmentAccepter)
+        {
+            return this.Dispatch(
+                new DelegateAccepter<TResult>(
+                    portAccepter,
+                    pathSegmentAccepter));
+        }
     }
 
     public interface IUriPortReader<T>
