@@ -15,17 +15,30 @@
 
         public async Task<IGetRequestWriter> Get()
         {
-            var getRequestWriter = await this.convention.Get().ConfigureAwait(false);
-            return
-                getRequestWriter
-                    .OverrideHeader(
-                        async originalWriter => 
-                            await 
-                                GetHeaderWriter
-                                    .Create(
-                                        originalWriter, 
-                                        this.authorizationToken)
-                            .ConfigureAwait(false));
+            IGetRequestWriter? getRequestWriter = null;
+            try
+            {
+                getRequestWriter = await this.convention.Get().ConfigureAwait(false);
+                return
+                    getRequestWriter
+                        .OverrideHeader(
+                            async originalWriter =>
+                                await
+                                    GetHeaderWriter
+                                        .Create(
+                                            originalWriter,
+                                            this.authorizationToken)
+                                .ConfigureAwait(false));
+            }
+            catch
+            {
+                if (getRequestWriter != null)
+                {
+                    await getRequestWriter.DisposeAsync().ConfigureAwait(false);
+                }
+
+                throw;
+            }
         }
 
         private sealed class GetHeaderWriter : IGetHeaderWriter
@@ -68,7 +81,21 @@
 
         public IPatchRequestWriter Patch()
         {
-            return this.convention.Patch().OverrideHeader(async originalWriter => await PatchHeaderWriter.Create(originalWriter, this.authorizationToken).ConfigureAwait(false));
+            IPatchRequestWriter? patchRequestWriter = null;
+            try
+            {
+                patchRequestWriter = this.convention.Patch();
+                return patchRequestWriter.OverrideHeader(async originalWriter => await PatchHeaderWriter.Create(originalWriter, this.authorizationToken).ConfigureAwait(false));
+            }
+            catch
+            {
+                if (patchRequestWriter != null)
+                {
+                    patchRequestWriter.DisposeAsync().ConfigureAwait(false).GetAwaiter().GetResult(); //// TODO make async
+                }
+
+                throw;
+            }
         }
 
         private sealed class PatchHeaderWriter : IPatchHeaderWriter
