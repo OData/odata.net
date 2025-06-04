@@ -976,7 +976,7 @@
         {
             var headerToken = await getResponseHeaderReader.Next().ConfigureAwait(false);
 
-            await headerToken.Dispatch(
+            return await headerToken.Dispatch(
                 async contentType => await SkipHeaders(await contentType.ContentTypeHeaderReader.Next().ConfigureAwait(false)).ConfigureAwait(false),
                 async custom =>
                 {
