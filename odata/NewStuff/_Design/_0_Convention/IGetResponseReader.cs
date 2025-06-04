@@ -48,6 +48,75 @@
 
             public IGetResponseBodyReader GetResponseBodyReader { get; }
         }
+
+        public interface IAccepter<TResult>
+        {
+            TResult Accept(ContentType node);
+
+            TResult Accept(Custom node);
+
+            TResult Accept(Body node);
+        }
+
+        public TResult Dispatch<TResult>(IAccepter<TResult> accepter)
+        {
+            if (this is ContentType contentType)
+            {
+                return accepter.Accept(contentType);
+            }
+            else if (this is Custom custom)
+            {
+                return accepter.Accept(custom);
+            }
+            else if (this is Body body)
+            {
+                return accepter.Accept(body);
+            }
+            else
+            {
+                throw new Exception("TODO use a visitor");
+            }
+        }
+
+        private sealed class DelegateAccepter<TResult> : IAccepter<TResult>
+        {
+            private readonly Func<ContentType, TResult> contentTypeAccepter;
+            private readonly Func<Custom, TResult> customAccepter;
+            private readonly Func<Body, TResult> bodyAccepter;
+
+            public DelegateAccepter(
+                Func<ContentType, TResult> contentTypeAccepter,
+                Func<Custom, TResult> customAccepter,
+                Func<Body, TResult> bodyAccepter)
+            {
+                this.contentTypeAccepter = contentTypeAccepter;
+                this.customAccepter = customAccepter;
+                this.bodyAccepter = bodyAccepter;
+            }
+
+            public TResult Accept(ContentType node)
+            {
+                return this.contentTypeAccepter(node);
+            }
+
+            public TResult Accept(Custom node)
+            {
+                return this.customAccepter(node);
+            }
+
+            public TResult Accept(Body node)
+            {
+                return this.bodyAccepter(node);
+            }
+        }
+
+        public TResult Dispatch<TResult>(
+            Func<ContentType, TResult> contentTypeAccepter,
+            Func<Custom, TResult> customAccepter,
+            Func<Body, TResult> bodyAccepter)
+        {
+            return this.Dispatch(new DelegateAccepter<TResult>(contentTypeAccepter, customAccepter, bodyAccepter));
+        }
     }
 
     public interface IContentTypeHeaderReader
