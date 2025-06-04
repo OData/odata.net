@@ -421,35 +421,32 @@
 
                         var singleValuedResponseBuilder = new SingleValuedResponseBuilder();
                         var singleValueBuilder = new SingleValueBuilder();
-                        while (true)
+
+                        var @continue = true;
+                        while (@continue)
                         {
                             var getResponseBodyToken = await getResponseBodyReader.Next().ConfigureAwait(false);
-                            if (getResponseBodyToken is GetResponseBodyToken.Property property)
-                            {
-                                var propertyReader = property.PropertyReader;
-                                var propertyNameReader = await propertyReader.Next().ConfigureAwait(false);
-                                var propertyName = propertyNameReader.PropertyName;
-                                var propertyValueReader = await propertyNameReader.Next().ConfigureAwait(false);
+                            @continue = await getResponseBodyToken
+                                .Dispatch(
+                                    async odataContext =>
+                                    {
+                                        //// TODO this implementation is not using the context
+                                        getResponseBodyReader = await odataContext.OdataContextReader.Next().ConfigureAwait(false);
+                                        return true;
+                                    },
+                                    async nextLink => throw new Exception("TODO no nextlinks for single-valued responses"),
+                                    async property =>
+                                    {
+                                        var propertyReader = property.PropertyReader;
+                                        var propertyNameReader = await propertyReader.Next().ConfigureAwait(false);
+                                        var propertyName = propertyNameReader.PropertyName;
+                                        var propertyValueReader = await propertyNameReader.Next().ConfigureAwait(false);
 
-                                getResponseBodyReader = await MultiValuedProtocol.ReadPropertyValue(propertyValueReader, propertyName.Name, singleValueBuilder).ConfigureAwait(false);
-                            }
-                            else if (getResponseBodyToken is GetResponseBodyToken.OdataContext odataContext)
-                            {
-                                //// TODO this implementation is not using the context
-                                getResponseBodyReader = await odataContext.OdataContextReader.Next().ConfigureAwait(false);
-                            }
-                            else if (getResponseBodyToken is GetResponseBodyToken.NextLink nextLink)
-                            {
-                                throw new Exception("TODO no nextlinks for single-valued responses");
-                            }
-                            else if (getResponseBodyToken is GetResponseBodyToken.End end)
-                            {
-                                break;
-                            }
-                            else
-                            {
-                                throw new Exception("TODO implement visitor");
-                            }
+                                        getResponseBodyReader = await MultiValuedProtocol.ReadPropertyValue(propertyValueReader, propertyName.Name, singleValueBuilder).ConfigureAwait(false);
+                                        return true;
+                                    },
+                                    async end => false)
+                                .ConfigureAwait(false);
                         }
 
                         singleValuedResponseBuilder.Value = singleValueBuilder.Build();
