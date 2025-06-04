@@ -323,6 +323,79 @@
 
             public T HeaderReader { get; } //// TODO this name doesn't really make sense given the generic type parameter
         }
+
+        public interface IAccepterAsync<TResult>
+        {
+            Task<TResult> Accept(QueryParameter node);
+
+            Task<TResult> Accept(Fragment node);
+
+            Task<TResult> Accept(Headers node);
+        }
+
+        public async Task<TResult> Dispatch<TResult>(IAccepterAsync<TResult> accepter)
+        {
+            if (this is QueryParameter queryParameter)
+            {
+                return await accepter.Accept(queryParameter).ConfigureAwait(false);
+            }
+            else if (this is Fragment fragment)
+            {
+                return await accepter.Accept(fragment).ConfigureAwait(false);
+            }
+            else if (this is Headers headers)
+            {
+                return await accepter.Accept(headers).ConfigureAwait(false);
+            }
+            else
+            {
+                throw new Exception("TODO use a visitor");
+            }
+        }
+
+        private sealed class DelegateAccepter<TResult> : IAccepterAsync<TResult>
+        {
+            private readonly Func<QueryParameter, Task<TResult>> queryParameterAccepter;
+            private readonly Func<Fragment, Task<TResult>> fragmentAccepter;
+            private readonly Func<Headers, Task<TResult>> headersAccepter;
+
+            public DelegateAccepter(
+                Func<QueryParameter, Task<TResult>> queryParameterAccepter,
+                Func<Fragment, Task<TResult>> fragmentAccepter,
+                Func<Headers, Task<TResult>> headersAccepter)
+            {
+                this.queryParameterAccepter = queryParameterAccepter;
+                this.fragmentAccepter = fragmentAccepter;
+                this.headersAccepter = headersAccepter;
+            }
+
+            public Task<TResult> Accept(QueryParameter node)
+            {
+                return this.queryParameterAccepter(node);
+            }
+
+            public Task<TResult> Accept(Fragment node)
+            {
+                return this.fragmentAccepter(node);
+            }
+
+            public Task<TResult> Accept(Headers node)
+            {
+                return this.headersAccepter(node);
+            }
+        }
+
+        public Task<TResult> Dispatch<TResult>(
+            Func<QueryParameter, Task<TResult>> queryParameterAccepter,
+            Func<Fragment, Task<TResult>> fragmentAccepter,
+            Func<Headers, Task<TResult>> headersAccepter)
+        {
+            return this.Dispatch(
+                new DelegateAccepter<TResult>(
+                    queryParameterAccepter,
+                    fragmentAccepter,
+                    headersAccepter));
+        }
     }
 
     public interface IQueryParameterReader<T>
