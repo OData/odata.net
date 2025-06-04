@@ -5,7 +5,9 @@ using System.Threading.Tasks;
 
 namespace Microsoft.OData.Core.NewWriter2;
 
-internal class ODataJsonMetadataWriter<TValue> : IMetadataWriter<ODataJsonWriterContext, ODataJsonWriterStack, TValue>
+internal class ODataJsonMetadataWriter<TValue>(
+    ICollectionCounterProvider<ODataJsonWriterContext, ODataJsonWriterStack> counterProvider)
+    : IMetadataWriter<ODataJsonWriterContext, ODataJsonWriterStack, TValue>
 {
     /// <summary>
     /// See:
@@ -19,7 +21,7 @@ internal class ODataJsonMetadataWriter<TValue> : IMetadataWriter<ODataJsonWriter
     /// <param name="value"></param>
     /// <returns></returns>
     /// <exception cref="NotImplementedException"></exception>
-    public ValueTask WriteContextUrlAsync(ODataJsonWriterContext context, ODataJsonWriterStack state, TValue value)
+    public ValueTask WriteContextUrlAsync(TValue value, ODataJsonWriterStack state, ODataJsonWriterContext context)
     {
         if (context.PayloadKind == ODataPayloadKind.ResourceSet && state.IsTopLevel())
         {
@@ -30,4 +32,28 @@ internal class ODataJsonMetadataWriter<TValue> : IMetadataWriter<ODataJsonWriter
         throw new NotImplementedException();
     }
 
+    /// <summary>
+    /// See:
+    /// - https://docs.oasis-open.org/odata/odata-json-format/v4.01/odata-json-format-v4.01.html#sec_ControlInformationcountodatacount
+    /// - https://docs.oasis-open.org/odata/odata-json-format/v4.0/errata03/os/odata-json-format-v4.0-errata03-os-complete.html#_Toc453766631
+    /// </summary>
+    /// <param name="context"></param>
+    /// <param name="state"></param>
+    /// <param name="value"></param>
+    /// <returns></returns>
+    /// <exception cref="NotImplementedException"></exception>
+    public ValueTask WriteCountPropertyAsync(TValue value, ODataJsonWriterStack state, ODataJsonWriterContext context)
+    {
+        var counter = counterProvider.GetCounter<TValue>(context, state);
+        if (counter.TryGetCount(value, context, state, out long count))
+        {
+            
+            context.JsonWriter.WritePropertyName("@odata.count");
+            
+            context.JsonWriter.WriteNumberValue(count);
+            
+        }
+
+        return ValueTask.CompletedTask;
+    }
 }

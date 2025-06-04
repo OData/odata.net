@@ -4,10 +4,12 @@ using System.Text;
 
 namespace Microsoft.OData.Core.NewWriter2;
 
-internal class ODataJsonMetadataWriterProvider : IMetadataWriterProvider<ODataJsonWriterContext, ODataJsonWriterStack>
+internal class ODataJsonMetadataWriterProvider(
+    ICollectionCounterProvider<ODataJsonWriterContext, ODataJsonWriterStack> counterProvider)
+    : IMetadataWriterProvider<ODataJsonWriterContext, ODataJsonWriterStack>
 {
     public IMetadataWriter<ODataJsonWriterContext, ODataJsonWriterStack, TValue> GetMetadataWriter<TValue>(ODataJsonWriterContext context, ODataJsonWriterStack state)
     {
-        return new ODataJsonMetadataWriter<TValue>();
+        return new ODataJsonMetadataWriter<TValue>(counterProvider);
     }
 }

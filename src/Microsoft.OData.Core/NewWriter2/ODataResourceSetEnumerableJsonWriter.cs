@@ -15,7 +15,15 @@ internal class ODataResourceSetEnumerableJsonWriter<T> : IODataWriter<ODataJsonW
 
             // TODO: write context url and annotations
             var metadataWriter = context.MetadataWriterProvider.GetMetadataWriter<IEnumerable<T>>(context, state);
-            await metadataWriter.WriteContextUrlAsync(context, state, value);
+            await metadataWriter.WriteContextUrlAsync(value, state, context);
+
+            if (state.IsTopLevel()
+                && context.ODataUri.QueryCount.HasValue
+                && context.ODataUri.QueryCount.Value
+                && context.MetadataLevel >= ODataMetadataLevel.Minimal)
+            {
+                await metadataWriter.WriteCountPropertyAsync(value, state, context);
+            }
 
             context.JsonWriter.WritePropertyName("value");
         }

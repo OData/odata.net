@@ -8,5 +8,6 @@ namespace Microsoft.OData.Core.NewWriter2;
 internal interface IMetadataWriter<TContext, TState, TValue>
 {
     
-    ValueTask WriteContextUrlAsync(TContext context, TState state, TValue value);
+    ValueTask WriteContextUrlAsync(TValue value, TState state, TContext context);
+    ValueTask WriteCountPropertyAsync(TValue value, TState state, TContext context);
 }
