@@ -216,17 +216,19 @@
                     while (true)
                     {
                         var multiValuedPropertyValueToken = await multiValuedPropertyValueReader.Next().ConfigureAwait(false);
-                        if (multiValuedPropertyValueToken is MultiValuedPropertyValueToken<T>.Object @object)
+                        var nextReader = await multiValuedPropertyValueToken
+                            .Dispatch(
+                                async @object =>
+                                {
+                                    multiValuedPropertyValueReader = await SkipComplexPropertyValue(@object.ComplexPropertyValueReader).ConfigureAwait(false);
+                                    return default;
+                                },
+                                async end => end.Reader)
+                            .ConfigureAwait(false);
+
+                        if (nextReader != null)
                         {
-                            multiValuedPropertyValueReader = await SkipComplexPropertyValue(@object.ComplexPropertyValueReader).ConfigureAwait(false);
-                        }
-                        else if (multiValuedPropertyValueToken is MultiValuedPropertyValueToken<T>.End end)
-                        {
-                            return end.Reader;
-                        }
-                        else
-                        {
-                            throw new Exception("TODO implement visitor");
+                            return nextReader;
                         }
                     }
                 }
