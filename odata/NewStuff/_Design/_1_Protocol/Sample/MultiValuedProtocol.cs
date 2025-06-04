@@ -975,34 +975,26 @@
         private static async Task<IGetResponseBodyReader> SkipHeaders(IGetResponseHeaderReader getResponseHeaderReader)
         {
             var headerToken = await getResponseHeaderReader.Next().ConfigureAwait(false);
-            if (headerToken is GetResponseHeaderToken.ContentType contentType)
-            {
-                return await SkipHeaders(await contentType.ContentTypeHeaderReader.Next().ConfigureAwait(false)).ConfigureAwait(false);
-            }
-            else if (headerToken is GetResponseHeaderToken.Custom custom)
-            {
-                var customHeaderToken = await custom.CustomHeaderReader.Next().ConfigureAwait(false);
-                if (customHeaderToken is CustomHeaderToken<IGetResponseHeaderReader>.FieldValue fieldValue)
+
+            await headerToken.Dispatch(
+                async contentType => await SkipHeaders(await contentType.ContentTypeHeaderReader.Next().ConfigureAwait(false)).ConfigureAwait(false),
+                async custom =>
                 {
-                    return await SkipHeaders(await fieldValue.HeaderFieldValueReader.Next().ConfigureAwait(false)).ConfigureAwait(false);
-                }
-                else if (customHeaderToken is CustomHeaderToken<IGetResponseHeaderReader>.Header header)
-                {
-                    return await SkipHeaders(header.GetHeaderReader).ConfigureAwait(false);
-                }
-                else
-                {
-                    throw new Exception("TODO implement visitor");
-                }
-            }
-            else if (headerToken is GetResponseHeaderToken.Body body)
-            {
-                return body.GetResponseBodyReader;
-            }
-            else
-            {
-                throw new Exception("TODO implement visitor");
-            }
+                    var customHeaderToken = await custom.CustomHeaderReader.Next().ConfigureAwait(false);
+                    if (customHeaderToken is CustomHeaderToken<IGetResponseHeaderReader>.FieldValue fieldValue)
+                    {
+                        return await SkipHeaders(await fieldValue.HeaderFieldValueReader.Next().ConfigureAwait(false)).ConfigureAwait(false);
+                    }
+                    else if (customHeaderToken is CustomHeaderToken<IGetResponseHeaderReader>.Header header)
+                    {
+                        return await SkipHeaders(header.GetHeaderReader).ConfigureAwait(false);
+                    }
+                    else
+                    {
+                        throw new Exception("TODO implement visitor");
+                    }
+                },
+                async body => body.GetResponseBodyReader).ConfigureAwait(false);
         }
 
         private static IEnumerable<Tuple<string, string?>> SplitQueryQueryString(string queryString)
