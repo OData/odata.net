@@ -49,6 +49,14 @@
         }
     }
 
+    public static class RefTask2
+    {
+        public static RefTask<Nothing2, Nothing2, T> FromFunc<T>(Func<T> func)
+        {
+            return new RefTask<Nothing2, Nothing2, T>(() => new Nothing2(), (_, _) => func(), new Nothing2());
+        }
+    }
+
     public static class RefTask
     {
         public static RefTask<Nothing2, Nothing2, T> FromFunc<T>(Func<T> func)
