@@ -84,7 +84,7 @@ namespace Microsoft.OData.Client.Tests.Metadata
             //Arrange
             Type employee = typeof(Employee);
 
-            int expectedNumberOfKeyProperties = 4; // 2 Primitive Known Types, 1 Enum Type, 1 Enum Nullable Generic Type
+            int expectedNumberOfKeyProperties = 3; // 2 Primitive Known Types, 1 Enum Type
 
             //Act
             PropertyInfo[] keyProperties = ClientTypeUtil.GetKeyPropertiesOnType(employee);
@@ -126,18 +126,23 @@ namespace Microsoft.OData.Client.Tests.Metadata
         }
 
         [Fact]
-        public void IFTypeProperty_HasNullableGenericTypeKeyAttribute_OfTypeEnum_GetKeyPropertiesOnType_DoesNotThrowException()
+        public void IFTypeProperty_HasNullableGenericTypeKeyAttribute_OfTypeEnum_GetKeyPropertiesOnType_ThrowException()
         {
             // Arrange
-            Type employee = typeof(Employee);
+            Type employee = typeof(EmployeeWithNullableEnumKey);
 
             //Act
-            PropertyInfo[] keyProperties = ClientTypeUtil.GetKeyPropertiesOnType(employee);
-            PropertyInfo key = keyProperties.Single(k => k.Name == "NullableEmpType");
+            var exception = Assert.Throws<InvalidOperationException>(() => ClientTypeUtil.GetKeyPropertiesOnType(employee));
 
             //Assert
-            Assert.True(key.PropertyType.IsGenericType);
-            Assert.True(key.PropertyType == typeof(System.Nullable<EmployeeType>));
+            Assert.NotNull(exception);
+            Assert.Equal(Error.Format(SRResources.ClientType_KeysCannotBeNullable, 
+                "NullableEmpType", 
+                "Microsoft.OData.Client.Tests.Metadata.ClientTypeUtilTests+EmployeeWithNullableEnumKey", 
+                "System.Nullable`1[[Microsoft.OData.Client.Tests.Metadata.ClientTypeUtilTests+EmployeeType, Microsoft.OData.Client.Tests, Version=0.0.0.0, Culture=neutral, PublicKeyToken=69c3241e6f0468ca]]"), 
+                exception.Message);
+
+            Assert.Equal("The key property 'NullableEmpType' on type 'Microsoft.OData.Client.Tests.Metadata.ClientTypeUtilTests+EmployeeWithNullableEnumKey' is of type 'System.Nullable`1[[Microsoft.OData.Client.Tests.Metadata.ClientTypeUtilTests+EmployeeType, Microsoft.OData.Client.Tests, Version=0.0.0.0, Culture=neutral, PublicKeyToken=69c3241e6f0468ca]]', which is nullable. Key properties cannot be nullable.", exception.Message);
         }
 
         [Fact]
@@ -188,10 +193,22 @@ namespace Microsoft.OData.Client.Tests.Metadata
             [System.ComponentModel.DataAnnotations.Key]
             public EmployeeType EmpType { get; set; }
 
+            public string Name { get; set; }
+
+            [System.ComponentModel.DataAnnotations.Schema.ForeignKey("DeptNumber")]
+            public Department Department { get; set; }
+        }
+
+        public class EmployeeWithNullableEnumKey
+        {
+            [System.ComponentModel.DataAnnotations.Key]
+            public string DeptNumber { get; set; }
+
+            [System.ComponentModel.DataAnnotations.Key]
+            public EmployeeType EmpType { get; set; }
+
             [System.ComponentModel.DataAnnotations.Key]
             public EmployeeType? NullableEmpType { get; set; }
-
-            public string Name { get; set; }
 
             [System.ComponentModel.DataAnnotations.Schema.ForeignKey("DeptNumber")]
             public Department Department { get; set; }

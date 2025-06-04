@@ -41,6 +41,19 @@ namespace Microsoft.OData.Client.Tests.Tracking
                     <ReferentialConstraint Property=""OrgId"" ReferencedProperty=""Id"" />
                 </NavigationProperty>
             </EntityType>
+            <EntityType Name=""EmployeeWithNullableEnumKey"">
+                <Key>
+                    <PropertyRef Name=""EmpNumber"" />
+                    <PropertyRef Name=""EmpType"" />
+                    <PropertyRef Name=""OrgId"" />
+                </Key>
+                <Property Name=""EmpNumber"" Type=""Edm.Int32"" Nullable=""false"" />
+                <Property Name=""EmpType"" Type=""Sample.API.Models.Enums.EmployeeType"" Nullable=""true"" />
+                <Property Name=""OrgId"" Type=""Edm.Int32"" Nullable=""false"" />
+                <NavigationProperty Name=""Organization"" Type=""Sample.API.Models.Organization"" Nullable=""false"">
+                    <ReferentialConstraint Property=""OrgId"" ReferencedProperty=""Id"" />
+                </NavigationProperty>
+            </EntityType>
             <EntityType Name=""Organization"">
                 <Key>
                     <PropertyRef Name=""Id"" />
@@ -60,6 +73,7 @@ namespace Microsoft.OData.Client.Tests.Tracking
         <Schema xmlns=""http://docs.oasis-open.org/odata/ns/edm"" Namespace=""Default"">
             <EntityContainer Name=""Container"">
                 <EntitySet Name=""Employees"" EntityType=""Sample.API.Models.Employee"" />
+                <EntitySet Name=""EmployeesWithNullableEnumKey"" EntityType=""Sample.API.Models.EmployeeWithNullableEnumKey"" />
             </EntityContainer>
         </Schema>
     </edmx:DataServices>
@@ -298,6 +312,170 @@ namespace Microsoft.OData.Client.Tests.Tracking
             Assert.Equal(EmployeeType.FullTime, employee.EmpType);
         }
 
+        [Fact]
+        public async Task SelectEntities_WithNullableEnumAsKey_NotThrowException()
+        {
+            // Arrange
+            var expectedUri = $"{ServiceRoot}/EmployeesWithNullableEnumKey";
+
+            string response = @"{
+    ""@odata.context"": ""http://localhost:8007/$metadata#EmployeesWithNullableEnumKey"",
+    ""value"": [
+        {
+            ""EmpNumber"": 1,
+            ""EmpType"": ""FullTime"",
+            ""OrgId"": 1
+        },
+        {
+            ""EmpNumber"": 2,
+            ""EmpType"": ""PartTime"",
+            ""OrgId"": 1
+        }
+    ]
+}";
+            SetupContextWithRequestPipeline(_defaultContext, response, "EmployeesWithNullableEnumKey");
+            _defaultContext.SendingRequest2 += (sender, args) =>
+            {
+                Assert.Equal(expectedUri, args.RequestMessage.Url.ToString());
+            };
+
+            // Act
+            DataServiceQuery<EmployeeWithNullableEnumKey> query = _defaultContext.EmployeesWithNullableEnumKey;
+            var exception = await Assert.ThrowsAsync<InvalidOperationException>(() => query.ExecuteAsync());
+
+            // Assert
+            Assert.NotNull(exception);
+            Assert.Equal("The key property 'EmpType' on type 'Microsoft.OData.Client.Tests.Tracking.EmployeeWithNullableEnumKey' is of type 'System.Nullable`1[[Microsoft.OData.Client.Tests.Tracking.EmployeeType, Microsoft.OData.Client.Tests, Version=0.0.0.0, Culture=neutral, PublicKeyToken=69c3241e6f0468ca]]', which is nullable. Key properties cannot be nullable.", exception.Message);
+        }
+
+        [Theory]
+        [InlineData("$filter=EmpNumber eq 8")]
+        [InlineData("$filter=EmpType eq Microsoft.OData.Client.Tests.Tracking.EmployeeType'PartTime'")]
+        [InlineData("$filter=OrgId eq 1")]
+        public void UseWhereToFilter_WithNullableEnumAsKey_ThrowException(string filter)
+        {
+            // Arrange
+            string expectedUri = $"{ServiceRoot}/EmployeesWithNullableEnumKey?{filter}";
+
+            string response = @"{
+    ""@odata.context"": ""http://localhost:8007/$metadata#EmployeesWithNullableEnumKey"",
+    ""value"": [
+        {
+            ""EmpNumber"": 8,
+            ""EmpType"": ""PartTime"",
+            ""OrgId"": 1
+        }
+    ]
+}";
+
+            SetupContextWithRequestPipeline(_defaultContext, response, "EmployeesWithNullableEnumKey");
+            _defaultContext.SendingRequest2 += (sender, args) =>
+            {
+                Assert.Equal($"{expectedUri}&$top=1", args.RequestMessage.Url.ToString());
+            };
+
+            // Act
+            Exception exception = null;
+            if (filter.Contains("EmpType"))
+            {
+                // If filtering by EmpType, it should throw an exception because EmpType is nullable
+                exception = Record.Exception(() => _defaultContext.EmployeesWithNullableEnumKey.Where(e => e.EmpType == EmployeeType.PartTime).First());
+            }
+            else if (filter.Contains("EmpNumber"))
+            {
+                // If filtering by EmpNumber, it should throw an exception because EmpType is nullable
+                exception = Record.Exception(() => _defaultContext.EmployeesWithNullableEnumKey.Where(e => e.EmpNumber == 8).First());
+            }
+            else if (filter.Contains("OrgId"))
+            {
+                // If filtering by OrgId, it should throw an exception because EmpType is nullable
+                exception = Record.Exception(() => _defaultContext.EmployeesWithNullableEnumKey.Where(e => e.OrgId == 1).First());
+            }
+
+            // Assert
+            Assert.NotNull(exception);
+            Assert.Contains("The key property 'EmpType' on type 'Microsoft.OData.Client.Tests.Tracking.EmployeeWithNullableEnumKey' is of type 'System.Nullable`1[[Microsoft.OData.Client.Tests.Tracking.EmployeeType, Microsoft.OData.Client.Tests, Version=0.0.0.0, Culture=neutral, PublicKeyToken=69c3241e6f0468ca]]', which is nullable. Key properties cannot be nullable.", exception.InnerException.Message);
+        }
+
+        [Theory]
+        [InlineData("$filter=EmpNumber eq 8", "http://localhost:8007/EmployeesWithNullableEnumKey(8)")]
+        [InlineData("$filter=EmpType eq Microsoft.OData.Client.Tests.Tracking.EmployeeType'PartTime'", "http://localhost:8007/EmployeesWithNullableEnumKey(Microsoft.OData.Client.Tests.Tracking.EmployeeType'PartTime')")]
+        [InlineData("$filter=OrgId eq 1", "http://localhost:8007/EmployeesWithNullableEnumKey(1)")]
+        public void FilterByKey_WithNullableEnumAsKey_ThrowException(string filter, string expectedUri)
+        {
+            // Arrange
+            string response = @"{
+    ""@odata.context"": ""http://localhost:8007/$metadata#EmployeesWithNullableEnumKey"",
+    ""value"": [
+        {
+            ""EmpNumber"": 8,
+            ""EmpType"": ""PartTime"",
+            ""OrgId"": 1
+        }
+    ]
+}";
+
+            SetupContextWithRequestPipeline(_defaultContext, response, "EmployeesWithNullableEnumKey");
+            _defaultContext.SendingRequest2 += (sender, args) =>
+            {
+                Assert.Equal(expectedUri, args.RequestMessage.Url.AbsoluteUri);
+            };
+
+            // Act
+            Exception exception = null;
+            if (filter.Contains("EmpType"))
+            {
+                // If filtering by EmpType, it should throw an exception because EmpType is nullable
+                exception = Record.Exception(() => _defaultContext.EmployeesWithNullableEnumKey.ByKey(new Dictionary<string, object>() { { "EmpType", EmployeeType.PartTime } }).GetValue());
+            }
+            else if (filter.Contains("EmpNumber"))
+            {
+                // If filtering by EmpNumber, it should throw an exception because EmpType is nullable
+                exception = Record.Exception(() => _defaultContext.EmployeesWithNullableEnumKey.ByKey(new Dictionary<string, object>() { { "EmpNumber", 8 } }).GetValue());
+            }
+
+            else if (filter.Contains("OrgId"))
+            {
+                // If filtering by OrgId, it should throw an exception because EmpType is nullable
+                exception = Record.Exception(() => _defaultContext.EmployeesWithNullableEnumKey.ByKey(new Dictionary<string, object>() { { "OrgId", 1 } }).GetValue());
+            }
+
+            // Assert
+            Assert.NotNull(exception);
+            Assert.Contains("The key property 'EmpType' on type 'Microsoft.OData.Client.Tests.Tracking.EmployeeWithNullableEnumKey' is of type 'System.Nullable`1[[Microsoft.OData.Client.Tests.Tracking.EmployeeType, Microsoft.OData.Client.Tests, Version=0.0.0.0, Culture=neutral, PublicKeyToken=69c3241e6f0468ca]]', which is nullable. Key properties cannot be nullable.", exception.InnerException.Message);
+        }
+
+        [Fact]
+        public async Task FilterByCompositeKeys_WithNullableEnumAsKey_ThrowException()
+        {
+            // Arrange
+            string response = @"{
+    ""@odata.context"": ""http://localhost:8007/$metadata#EmployeesWithNullableEnumKey"",
+    ""value"": [
+        {
+            ""EmpNumber"": 8,
+            ""EmpType"": ""PartTime"",
+            ""OrgId"": 1
+        }
+    ]
+}";
+            SetupContextWithRequestPipeline(_defaultContext, response, "EmployeesWithNullableEnumKey");
+            _defaultContext.SendingRequest2 += (sender, args) =>
+            {
+                Assert.Contains("/EmployeesWithNullableEnumKey(EmpNumber=8,EmpType=Microsoft.OData.Client.Tests.Tracking.EmployeeType'PartTime',OrgId=1)", args.RequestMessage.Url.ToString());
+            };
+
+            // Act
+            EmployeeWithNullableEnumKeySingle query = _defaultContext.EmployeesWithNullableEnumKey.ByKey(
+                new Dictionary<string, object>() { { "EmpNumber", 8 }, { "EmpType", EmployeeType.PartTime }, { "OrgId", 1 } });
+
+            var exception = await Assert.ThrowsAsync<InvalidOperationException>(() => query.GetValueAsync());
+
+            // Assert
+            Assert.NotNull(exception);
+            Assert.Equal("The key property 'EmpType' on type 'Microsoft.OData.Client.Tests.Tracking.EmployeeWithNullableEnumKey' is of type 'System.Nullable`1[[Microsoft.OData.Client.Tests.Tracking.EmployeeType, Microsoft.OData.Client.Tests, Version=0.0.0.0, Culture=neutral, PublicKeyToken=69c3241e6f0468ca]]', which is nullable. Key properties cannot be nullable.", exception.Message);
+        }
+
         private void SetupContextWithRequestPipeline(DataServiceContext context, string response, string path)
         {
             string location = $"{ServiceRoot}/{path}";
@@ -320,9 +498,11 @@ namespace Microsoft.OData.Client.Tests.Tracking
                 Format.LoadServiceModel = () => CsdlReader.Parse(XmlReader.Create(new StringReader(Edmx)));
                 Format.UseJson();
                 Employees = base.CreateQuery<Employee>("Employees");
+                EmployeesWithNullableEnumKey = base.CreateQuery<EmployeeWithNullableEnumKey>("EmployeesWithNullableEnumKey");
             }
 
             public DataServiceQuery<Employee> Employees { get; private set; }
+            public DataServiceQuery<EmployeeWithNullableEnumKey> EmployeesWithNullableEnumKey { get; private set; }
         }
     }
 
@@ -337,6 +517,22 @@ namespace Microsoft.OData.Client.Tests.Tracking
         public int OrgId { get; set; }
 
         public string Name { get; set; }
+
+        [ForeignKey("OrgId")]
+        public virtual Organization Organization { get; set; }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+    }
+
+    [Key("EmpNumber", "EmpType", "OrgId")]
+    public class EmployeeWithNullableEnumKey : BaseEntityType, INotifyPropertyChanged
+    {
+        public int EmpNumber { get; set; }
+
+        // Enum - Employee Type Key
+        public EmployeeType? EmpType { get; set; }
+
+        public int OrgId { get; set; }
 
         [ForeignKey("OrgId")]
         public virtual Organization Organization { get; set; }
@@ -366,11 +562,25 @@ namespace Microsoft.OData.Client.Tests.Tracking
             : base(context, path) { }
     }
 
+    public partial class EmployeeWithNullableEnumKeySingle : DataServiceQuerySingle<EmployeeWithNullableEnumKey>
+    {
+        /// <summary>
+        /// Initialize a new EmployeeSingle object.
+        /// </summary>
+        public EmployeeWithNullableEnumKeySingle(DataServiceContext context, string path)
+            : base(context, path) { }
+    }
+
     public static class ExtensionMethods
     {
         public static EmployeeSingle ByKey(this DataServiceQuery<Employee> _source, IDictionary<string, object> _keys)
         {
             return new EmployeeSingle(_source.Context, _source.GetKeyPath(Serializer.GetKeyString(_source.Context, _keys)));
+        }
+
+        public static EmployeeWithNullableEnumKeySingle ByKey(this DataServiceQuery<EmployeeWithNullableEnumKey> _source, IDictionary<string, object> _keys)
+        {
+            return new EmployeeWithNullableEnumKeySingle(_source.Context, _source.GetKeyPath(Serializer.GetKeyString(_source.Context, _keys)));
         }
     }
 }

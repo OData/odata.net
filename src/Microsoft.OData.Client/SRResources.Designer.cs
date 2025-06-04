@@ -691,6 +691,15 @@ namespace Microsoft.OData.Client {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The key property &apos;{0}&apos; on type &apos;{1}&apos; is of type &apos;{2}&apos;, which is nullable. Key properties cannot be nullable..
+        /// </summary>
+        internal static string ClientType_KeysCannotBeNullable {
+            get {
+                return ResourceManager.GetString("ClientType_KeysCannotBeNullable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The key property &apos;{0}&apos; on for type &apos;{1}&apos; is of type &apos;{2}&apos;, which is not a simple type. Only properties of simple type can be key properties..
         /// </summary>
         internal static string ClientType_KeysMustBeSimpleTypes {

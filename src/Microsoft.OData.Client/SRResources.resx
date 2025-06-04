@@ -341,6 +341,9 @@
   <data name="ClientType_KeysMustBeSimpleTypes" xml:space="preserve">
     <value>The key property '{0}' on for type '{1}' is of type '{2}', which is not a simple type. Only properties of simple type can be key properties.</value>
   </data>
+  <data name="ClientType_KeysCannotBeNullable" xml:space="preserve">
+    <value>The key property '{0}' on type '{1}' is of type '{2}', which is nullable. Key properties cannot be nullable.</value>
+  </data>
   <data name="ClientType_KeysOnDifferentDeclaredType" xml:space="preserve">
     <value>{0} has key properties declared at different levels within its type hierarchy.</value>
   </data>
