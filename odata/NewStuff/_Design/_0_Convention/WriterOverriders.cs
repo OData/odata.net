@@ -59,10 +59,10 @@
                 this.writerSelector = writerSelector;
             }
 
-            public async Task<IUriSchemeWriter<T>> Commit()
+            /*public async Task<IUriSchemeWriter<T>> Commit()
             {
                 return await this.writerSelector(await this.originalWriter.Commit().ConfigureAwait(false)).ConfigureAwait(false);
-            }
+            }*/
         }
 
         public static IGetRequestWriter OverrideUriDomain(this IGetRequestWriter getRequestWriter, Func<IUriDomainWriter<IGetHeaderWriter>, Task<IUriDomainWriter<IGetHeaderWriter>>> writerSelector)
