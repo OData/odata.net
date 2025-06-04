@@ -206,46 +206,34 @@
             private static async Task<T> SkipPropertyValue<T>(IPropertyValueReader<T> propertyValueReader)
             {
                 var propertyValueToken = await propertyValueReader.Next().ConfigureAwait(false); //// TODO do you want to add `skip` methods?
-                if (propertyValueToken is PropertyValueToken<T>.Complex complex)
-                {
-                    return await SkipComplexPropertyValue(complex.ComplexPropertyValueReader).ConfigureAwait(false);
-                }
-                else if (propertyValueToken is PropertyValueToken<T>.MultiValued multiValued)
-                {
-                    var multiValuedPropertyValueReader = multiValued.MultiValuedPropertyValueReader;
-                    while (true)
-                    {
-                        var multiValuedPropertyValueToken = await multiValuedPropertyValueReader.Next().ConfigureAwait(false);
-                        var nextReader = await multiValuedPropertyValueToken
-                            .Dispatch(
-                                async @object =>
-                                {
-                                    multiValuedPropertyValueReader = await SkipComplexPropertyValue(@object.ComplexPropertyValueReader).ConfigureAwait(false);
-                                    return default;
-                                },
-                                async end => end.Reader)
-                            .ConfigureAwait(false);
 
-                        if (nextReader != null)
+                return await propertyValueToken
+                    .Dispatch(
+                        async primitive => await primitive.PrimitivePropertyValueReader.Next().ConfigureAwait(false),
+                        async complex => await SkipComplexPropertyValue(complex.ComplexPropertyValueReader).ConfigureAwait(false),
+                        async multiValued =>
                         {
-                            return nextReader;
-                        }
-                    }
-                }
-                else if (propertyValueToken is PropertyValueToken<T>.Null @null)
-                {
-                    var nullPropertyValueReader = @null.NullPropertyValueReader;
-                    return await nullPropertyValueReader.Next().ConfigureAwait(false);
-                }
-                else if (propertyValueToken is PropertyValueToken<T>.Primitive primitive)
-                {
-                    var primitivePropertyValueReader = primitive.PrimitivePropertyValueReader;
-                    return await primitivePropertyValueReader.Next().ConfigureAwait(false);
-                }
-                else
-                {
-                    throw new Exception("TODO implement visitor");
-                }
+                            var multiValuedPropertyValueReader = multiValued.MultiValuedPropertyValueReader;
+                            while (true)
+                            {
+                                var multiValuedPropertyValueToken = await multiValuedPropertyValueReader.Next().ConfigureAwait(false);
+                                var nextReader = await multiValuedPropertyValueToken
+                                    .Dispatch(
+                                        async @object =>
+                                        {
+                                            multiValuedPropertyValueReader = await SkipComplexPropertyValue(@object.ComplexPropertyValueReader).ConfigureAwait(false);
+                                            return default;
+                                        },
+                                        async end => end.Reader)
+                                    .ConfigureAwait(false);
+
+                                if (nextReader != null)
+                                {
+                                    return nextReader;
+                                }
+                            }
+                        },
+                        async @null => await @null.NullPropertyValueReader.Next().ConfigureAwait(false));
             }
 
             private static async Task<T> SkipComplexPropertyValue<T>(IComplexPropertyValueReader<T> complexPropertyValueReader)
