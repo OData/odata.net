@@ -227,6 +227,63 @@
 
             public IQueryOptionReader<T> QueryOptionsReader { get; }
         }
+
+        public interface IAccepterAsync<TResult>
+        {
+            Task<TResult> Accept(PathSegment node);
+
+            Task<TResult> Accept(QueryOption node);
+        }
+
+        public async Task<TResult> Dispatch<TResult>(IAccepterAsync<TResult> accepter)
+        {
+            if (this is PathSegment pathSegment)
+            {
+                return await accepter.Accept(pathSegment).ConfigureAwait(false);
+            }
+            else if (this is QueryOption queryOption)
+            {
+                return await accepter.Accept(queryOption).ConfigureAwait(false);
+            }
+            else
+            {
+                throw new Exception("TODO use a visitor");
+            }
+        }
+
+        private sealed class DelegateAccepter<TResult> : IAccepterAsync<TResult>
+        {
+            private readonly Func<PathSegment, Task<TResult>> pathSegmentAccepter;
+            private readonly Func<QueryOption, Task<TResult>> queryOptionAccepter;
+
+            public DelegateAccepter(
+                Func<PathSegment, Task<TResult>> pathSegmentAccepter,
+                Func<QueryOption, Task<TResult>> queryOptionAccepter)
+            {
+                this.pathSegmentAccepter = pathSegmentAccepter;
+                this.queryOptionAccepter = queryOptionAccepter;
+            }
+
+            public Task<TResult> Accept(PathSegment node)
+            {
+                return this.pathSegmentAccepter(node);
+            }
+
+            public Task<TResult> Accept(QueryOption node)
+            {
+                return this.queryOptionAccepter(node);
+            }
+        }
+
+        public Task<TResult> Dispatch<TResult>(
+            Func<PathSegment, Task<TResult>> pathSegmentAccepter,
+            Func<QueryOption, Task<TResult>> queryOptionAccepter)
+        {
+            return this.Dispatch(
+                new DelegateAccepter<TResult>(
+                    pathSegmentAccepter,
+                    queryOptionAccepter));
+        }
     }
 
     public interface IQueryOptionReader<T>
