@@ -953,7 +953,7 @@
                     async @null =>
                     {
                         //// TODO you need to add null properties to `singlevalue`
-                        return await @null.NullPropertyValueReader.Next().ConfigureAwait(false)
+                        return await @null.NullPropertyValueReader.Next().ConfigureAwait(false);
                     })
                 .ConfigureAwait(false);
         }
