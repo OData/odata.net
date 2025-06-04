@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using System.Runtime.InteropServices;
     using System.Security.Cryptography.X509Certificates;
     using System.Threading.Tasks;
 
@@ -898,58 +899,63 @@
         private static async Task<T> ReadPropertyValue<T>(IPropertyValueReader<T> propertyValueReader, string propertyName, MultiValuedProtocol.SingleValueBuilder singleValueBuilder)
         {
             var propertyValueToken = await propertyValueReader.Next().ConfigureAwait(false);
-            if (propertyValueToken is PropertyValueToken<T>.Complex complex)
-            {
-                var nestedSingleValueBuilder = new MultiValuedProtocol.SingleValueBuilder();
-                var nextReader = await MultiValuedProtocol.ReadComplexPropertyValue(complex.ComplexPropertyValueReader, nestedSingleValueBuilder).ConfigureAwait(false);
-
-                singleValueBuilder.ComplexProperties.Add(new ComplexResponseProperty(propertyName, nestedSingleValueBuilder.Build(), Enumerable.Empty<string>()));
-
-                return nextReader;
-            }
-            else if (propertyValueToken is PropertyValueToken<T>.MultiValued multiValued)
-            {
-                var values = new List<SingleValue>();
-
-                var multiValuedPropertyValueReader = multiValued.MultiValuedPropertyValueReader;
-                while (true)
-                {
-                    var multiValuedPropertyValueToken = await multiValuedPropertyValueReader.Next().ConfigureAwait(false);
-                    if (multiValuedPropertyValueToken is MultiValuedPropertyValueToken<T>.Object @object)
+            return await propertyValueToken
+                .Dispatch(
+                    async primitive =>
                     {
-                        var complexPropertyValueReader = @object.ComplexPropertyValueReader;
-                        var nestedSinlgeValueBuilder = new MultiValuedProtocol.SingleValueBuilder();
-                        multiValuedPropertyValueReader = await MultiValuedProtocol.ReadComplexPropertyValue(complexPropertyValueReader, nestedSinlgeValueBuilder).ConfigureAwait(false);
-                        values.Add(nestedSinlgeValueBuilder.Build());
-                    }
-                    else if (multiValuedPropertyValueToken is MultiValuedPropertyValueToken<T>.End end)
+                        var primitivePropertyValueReader = primitive.PrimitivePropertyValueReader;
+                        singleValueBuilder.PrimitiveProperties.Add(new PrimitiveResponseProperty(propertyName, primitivePropertyValueReader.PrimitivePropertyValue.Value, Enumerable.Empty<object>()));
+                        return await primitivePropertyValueReader.Next().ConfigureAwait(false);
+                    },
+                    async complex =>
                     {
-                        //// TODO nextlink isn't modeled in the readers
-                        singleValueBuilder.MultiValuedProperties.Add(new MultiValuedResponseProperty(propertyName, values, null));
+                        var nestedSingleValueBuilder = new MultiValuedProtocol.SingleValueBuilder();
+                        var nextReader = await MultiValuedProtocol.ReadComplexPropertyValue(complex.ComplexPropertyValueReader, nestedSingleValueBuilder).ConfigureAwait(false);
 
-                        return end.Reader;
-                    }
-                    else
+                        singleValueBuilder.ComplexProperties.Add(new ComplexResponseProperty(propertyName, nestedSingleValueBuilder.Build(), Enumerable.Empty<string>()));
+
+                        return nextReader;
+                    },
+                    async multiValued =>
                     {
-                        throw new Exception("TODO implement visitor");
-                    }
-                }
-            }
-            else if (propertyValueToken is PropertyValueToken<T>.Null @null)
-            {
-                //// TODO you need to add null properties to `singlevalue`
-                return await @null.NullPropertyValueReader.Next().ConfigureAwait(false);
-            }
-            else if (propertyValueToken is PropertyValueToken<T>.Primitive primitive)
-            {
-                var primitivePropertyValueReader = primitive.PrimitivePropertyValueReader;
-                singleValueBuilder.PrimitiveProperties.Add(new PrimitiveResponseProperty(propertyName, primitivePropertyValueReader.PrimitivePropertyValue.Value, Enumerable.Empty<object>()));
-                return await primitivePropertyValueReader.Next().ConfigureAwait(false);
-            }
-            else
-            {
-                throw new Exception("TODO implement visitor");
-            }
+                        var values = new List<SingleValue>();
+
+                        var multiValuedPropertyValueReader = multiValued.MultiValuedPropertyValueReader;
+                        while (true)
+                        {
+                            var multiValuedPropertyValueToken = await multiValuedPropertyValueReader.Next().ConfigureAwait(false);
+                            var nextReader = await multiValuedPropertyValueToken
+                                .Dispatch(
+                                    async @object =>
+                                    {
+                                        var complexPropertyValueReader = @object.ComplexPropertyValueReader;
+                                        var nestedSinlgeValueBuilder = new MultiValuedProtocol.SingleValueBuilder();
+                                        multiValuedPropertyValueReader = await MultiValuedProtocol.ReadComplexPropertyValue(complexPropertyValueReader, nestedSinlgeValueBuilder).ConfigureAwait(false);
+                                        values.Add(nestedSinlgeValueBuilder.Build());
+
+                                        return default;
+                                    },
+                                    async end =>
+                                    {
+                                        //// TODO nextlink isn't modeled in the readers
+                                        singleValueBuilder.MultiValuedProperties.Add(new MultiValuedResponseProperty(propertyName, values, null));
+
+                                        return end.Reader;
+                                    })
+                                .ConfigureAwait(false);
+
+                            if (nextReader != null)
+                            {
+                                return nextReader;
+                            }
+                        }
+                    },
+                    async @null =>
+                    {
+                        //// TODO you need to add null properties to `singlevalue`
+                        return await @null.NullPropertyValueReader.Next().ConfigureAwait(false)
+                    })
+                .ConfigureAwait(false);
         }
 
         private sealed class SingleValueBuilder
