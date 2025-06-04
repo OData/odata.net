@@ -323,7 +323,7 @@ namespace Microsoft.OData.Client.Metadata
 
                 // Check if the key property's type is a known primitive, or an enum.
                 // If it doesn't meet any of these conditions, throw an InvalidOperationException.
-                if (!PrimitiveType.IsKnownType(key.PropertyType) && !key.PropertyType.IsEnum() && !key.PropertyType.GetGenericArguments().First().IsEnum())
+                if (!PrimitiveType.IsKnownType(key.PropertyType) && !key.PropertyType.IsEnum() && !(key.PropertyType.IsGenericType() && key.PropertyType.GetGenericArguments().First().IsEnum()))
                 {
                     throw Client.Error.InvalidOperation(Error.Format(SRResources.ClientType_KeysMustBeSimpleTypes, key.Name, typeName, key.PropertyType.FullName));
                 }
