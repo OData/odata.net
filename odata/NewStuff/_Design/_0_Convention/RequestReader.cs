@@ -440,6 +440,63 @@
         }
 
         //// TODO would it make sense to have a "fragment" member? because currently (the scenario being you have a queryparameter (i.e. no value provided) that's immediately followed by the fragment) what happens is you get parameter reader, you call next to get a queryoptionreader, you call next to get a fragment reader; you could skip the intermediate queryoptionreader.next...
+
+        public interface IAccepterAsync<TResult>
+        {
+            Task<TResult> Accept(QueryValue node);
+
+            Task<TResult> Accept(QueryOption node);
+        }
+
+        public async Task<TResult> Dispatch<TResult>(IAccepterAsync<TResult> accepter)
+        {
+            if (this is QueryValue QueryValue)
+            {
+                return await accepter.Accept(QueryValue).ConfigureAwait(false);
+            }
+            else if (this is QueryOption QueryOption)
+            {
+                return await accepter.Accept(QueryOption).ConfigureAwait(false);
+            }
+            else
+            {
+                throw new Exception("TODO use a visitor");
+            }
+        }
+
+        private sealed class DelegateAccepter<TResult> : IAccepterAsync<TResult>
+        {
+            private readonly Func<QueryValue, Task<TResult>> queryValueAccepter;
+            private readonly Func<QueryOption, Task<TResult>> queryOptionAccepter;
+
+            public DelegateAccepter(
+                Func<QueryValue, Task<TResult>> queryValueAccepter,
+                Func<QueryOption, Task<TResult>> queryOptionAccepter)
+            {
+                this.queryValueAccepter = queryValueAccepter;
+                this.queryOptionAccepter = queryOptionAccepter;
+            }
+
+            public Task<TResult> Accept(QueryValue node)
+            {
+                return this.queryValueAccepter(node);
+            }
+
+            public Task<TResult> Accept(QueryOption node)
+            {
+                return this.queryOptionAccepter(node);
+            }
+        }
+
+        public Task<TResult> Dispatch<TResult>(
+            Func<QueryValue, Task<TResult>> queryValueAccepter,
+            Func<QueryOption, Task<TResult>> queryOptionAccepter)
+        {
+            return this.Dispatch(
+                new DelegateAccepter<TResult>(
+                    queryValueAccepter,
+                    queryOptionAccepter));
+        }
     }
 
     public interface IQueryValueReader<T>
