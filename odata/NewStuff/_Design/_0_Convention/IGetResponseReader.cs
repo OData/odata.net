@@ -407,6 +407,95 @@
 
             public INullPropertyValueReader<T> NullPropertyValueReader { get; }
         }
+
+        public interface IAccepterAsync<TResult>
+        {
+            Task<TResult> Accept(Primitive node);
+
+            Task<TResult> Accept(Complex node);
+
+            Task<TResult> Accept(MultiValued node);
+
+            Task<TResult> Accept(Null node);
+        }
+
+        public async Task<TResult> Dispatch<TResult>(IAccepterAsync<TResult> accepter)
+        {
+            if (this is Primitive primitive)
+            {
+                return await accepter.Accept(primitive).ConfigureAwait(false);
+            }
+            else if (this is Complex complex)
+            {
+                return await accepter.Accept(complex).ConfigureAwait(false);
+            }
+            else if (this is MultiValued multiValued)
+            {
+                return await accepter.Accept(multiValued).ConfigureAwait(false);
+            }
+            else if (this is Null @null)
+            {
+                return await accepter.Accept(@null).ConfigureAwait(false);
+            }
+            else
+            {
+                throw new Exception("TODO use a visitor");
+            }
+        }
+
+        private sealed class DelegateAccepter<TResult> : IAccepterAsync<TResult>
+        {
+            private readonly Func<Primitive, Task<TResult>> primitiveAccepter;
+            private readonly Func<Complex, Task<TResult>> complexAccepter;
+            private readonly Func<MultiValued, Task<TResult>> multiValuedAccepter;
+            private readonly Func<Null, Task<TResult>> nullAccepter;
+
+            public DelegateAccepter(
+                Func<Primitive, Task<TResult>> primitiveAccepter,
+                Func<Complex, Task<TResult>> complexAccepter,
+                Func<MultiValued, Task<TResult>> multiValuedAccepter,
+                Func<Null, Task<TResult>> nullAccepter)
+            {
+                this.primitiveAccepter = primitiveAccepter;
+                this.complexAccepter = complexAccepter;
+                this.multiValuedAccepter = multiValuedAccepter;
+                this.nullAccepter = nullAccepter;
+            }
+
+            public Task<TResult> Accept(Primitive node)
+            {
+                return this.primitiveAccepter(node);
+            }
+
+            public Task<TResult> Accept(Complex node)
+            {
+                return this.complexAccepter(node);
+            }
+
+            public Task<TResult> Accept(MultiValued node)
+            {
+                return this.multiValuedAccepter(node);
+            }
+
+            public Task<TResult> Accept(Null node)
+            {
+                return this.nullAccepter(node);
+            }
+        }
+
+        public Task<TResult> Dispatch<TResult>(
+            Func<Primitive, Task<TResult>> primitiveAccepter,
+            Func<Complex, Task<TResult>> complexAccepter,
+            Func<MultiValued, Task<TResult>> multiValuedAccepter,
+            Func<Null, Task<TResult>> nullAccepter)
+        {
+            return this.Dispatch(
+                new DelegateAccepter<TResult>(
+                    primitiveAccepter,
+                    complexAccepter,
+                    multiValuedAccepter,
+                    nullAccepter));
+        }
     }
 
     public interface IPrimitivePropertyValueReader<T>
