@@ -854,36 +854,43 @@
             while (true)
             {
                 var complexPropertyValueToken = await complexPropertyValueReader.Next().ConfigureAwait(false);
-                if (complexPropertyValueToken is ComplexPropertyValueToken<T>.Property property)
-                {
-                    var propertyReader = property.PropertyReader;
-                    var propertyNameReader = await propertyReader.Next().ConfigureAwait(false);
+                var nextReader = await complexPropertyValueToken
+                    .Dispatch(
+                        async odataContext =>
+                        {
+                            var odataContextReader = odataContext.OdataContextReader;
+                            singleValueBuilder.Context = odataContextReader.OdataContext.Context;
 
-                    var propertyName = propertyNameReader.PropertyName.Name;
+                            complexPropertyValueReader = await odataContext.OdataContextReader.Next().ConfigureAwait(false);
 
-                    var propertyValueReader = await propertyNameReader.Next().ConfigureAwait(false);
-                    complexPropertyValueReader = await MultiValuedProtocol.ReadPropertyValue(propertyValueReader, propertyName, singleValueBuilder).ConfigureAwait(false);
-                }
-                else if (complexPropertyValueToken is ComplexPropertyValueToken<T>.OdataContext odataContext)
-                {
-                    var odataContextReader = odataContext.OdataContextReader;
-                    singleValueBuilder.Context = odataContextReader.OdataContext.Context;
+                            return default;
+                        },
+                        async odataId =>
+                        {
+                            //// TODO this implementation is skipping the odataid
 
-                    complexPropertyValueReader = await odataContext.OdataContextReader.Next().ConfigureAwait(false);
-                }
-                else if (complexPropertyValueToken is ComplexPropertyValueToken<T>.OdataId odataId)
-                {
-                    //// TODO this implementation is skipping the odataid
+                            complexPropertyValueReader = await odataId.OdataIdReader.Next().ConfigureAwait(false);
 
-                    complexPropertyValueReader = await odataId.OdataIdReader.Next().ConfigureAwait(false);
-                }
-                else if (complexPropertyValueToken is ComplexPropertyValueToken<T>.End end)
+                            return default;
+                        },
+                        async property =>
+                        {
+                            var propertyReader = property.PropertyReader;
+                            var propertyNameReader = await propertyReader.Next().ConfigureAwait(false);
+
+                            var propertyName = propertyNameReader.PropertyName.Name;
+
+                            var propertyValueReader = await propertyNameReader.Next().ConfigureAwait(false);
+                            complexPropertyValueReader = await MultiValuedProtocol.ReadPropertyValue(propertyValueReader, propertyName, singleValueBuilder).ConfigureAwait(false);
+
+                            return default;
+                        },
+                        async end => end.Reader)
+                    .ConfigureAwait(false);
+
+                if (nextReader != null)
                 {
-                    return end.Reader;
-                }
-                else
-                {
-                    throw new Exception("TODO implement visitor");
+                    return nextReader;
                 }
             }
         }
