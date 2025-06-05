@@ -7012,7 +7012,7 @@ namespace Microsoft.OData.E2E.TestCommon.Common.Client.EndToEnd
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("ReplacementProductId")]
-        public virtual int ReplacementProductId
+        public virtual global::System.Nullable<int> ReplacementProductId
         {
             get
             {
@@ -7027,8 +7027,8 @@ namespace Microsoft.OData.E2E.TestCommon.Common.Client.EndToEnd
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private int _ReplacementProductId;
-        partial void OnReplacementProductIdChanging(int value);
+        private global::System.Nullable<int> _ReplacementProductId;
+        partial void OnReplacementProductIdChanging(global::System.Nullable<int> value);
         partial void OnReplacementProductIdChanged();
         /// <summary>
         /// There are no comments for Property DiscontinuedPhone in the schema.
