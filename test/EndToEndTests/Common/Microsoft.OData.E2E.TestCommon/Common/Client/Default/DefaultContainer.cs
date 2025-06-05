@@ -84,7 +84,7 @@ namespace Microsoft.OData.E2E.TestCommon.Common.Client.Default
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("PersonID")]
-        public virtual global::System.Nullable<int> PersonID
+        public virtual int PersonID
         {
             get
             {
@@ -99,8 +99,8 @@ namespace Microsoft.OData.E2E.TestCommon.Common.Client.Default
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::System.Nullable<int> _PersonID;
-        partial void OnPersonIDChanging(global::System.Nullable<int> value);
+        private int _PersonID;
+        partial void OnPersonIDChanging(int value);
         partial void OnPersonIDChanged();
         /// <summary>
         /// There are no comments for Property FirstName in the schema.
@@ -729,7 +729,7 @@ namespace Microsoft.OData.E2E.TestCommon.Common.Client.Default
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("CompanyID")]
-        public virtual global::System.Nullable<int> CompanyID
+        public virtual int CompanyID
         {
             get
             {
@@ -744,8 +744,8 @@ namespace Microsoft.OData.E2E.TestCommon.Common.Client.Default
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::System.Nullable<int> _CompanyID;
-        partial void OnCompanyIDChanging(global::System.Nullable<int> value);
+        private int _CompanyID;
+        partial void OnCompanyIDChanging(int value);
         partial void OnCompanyIDChanged();
         /// <summary>
         /// There are no comments for Property Company in the schema.
@@ -1292,7 +1292,7 @@ namespace Microsoft.OData.E2E.TestCommon.Common.Client.Default
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("ProductID")]
-        public virtual global::System.Nullable<int> ProductID
+        public virtual int ProductID
         {
             get
             {
@@ -1307,8 +1307,8 @@ namespace Microsoft.OData.E2E.TestCommon.Common.Client.Default
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::System.Nullable<int> _ProductID;
-        partial void OnProductIDChanging(global::System.Nullable<int> value);
+        private int _ProductID;
+        partial void OnProductIDChanging(int value);
         partial void OnProductIDChanged();
         /// <summary>
         /// There are no comments for Property UpdatedTime in the schema.
@@ -1888,7 +1888,7 @@ namespace Microsoft.OData.E2E.TestCommon.Common.Client.Default
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("OrderID")]
-        public virtual global::System.Nullable<int> OrderID
+        public virtual int OrderID
         {
             get
             {
@@ -1903,15 +1903,15 @@ namespace Microsoft.OData.E2E.TestCommon.Common.Client.Default
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::System.Nullable<int> _OrderID;
-        partial void OnOrderIDChanging(global::System.Nullable<int> value);
+        private int _OrderID;
+        partial void OnOrderIDChanging(int value);
         partial void OnOrderIDChanged();
         /// <summary>
         /// There are no comments for Property ProductID in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("ProductID")]
-        public virtual global::System.Nullable<int> ProductID
+        public virtual int ProductID
         {
             get
             {
@@ -1926,8 +1926,8 @@ namespace Microsoft.OData.E2E.TestCommon.Common.Client.Default
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::System.Nullable<int> _ProductID;
-        partial void OnProductIDChanging(global::System.Nullable<int> value);
+        private int _ProductID;
+        partial void OnProductIDChanging(int value);
         partial void OnProductIDChanged();
         /// <summary>
         /// There are no comments for Property OrderPlaced in the schema.
@@ -6104,7 +6104,7 @@ namespace Microsoft.OData.E2E.TestCommon.Common.Client.Default
         /// <param name="_source">source entity set</param>
         /// <param name="personID">The value of personID</param>
         public static global::Microsoft.OData.E2E.TestCommon.Common.Client.Default.PersonSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.E2E.TestCommon.Common.Client.Default.Person> _source,
-            global::System.Nullable<int> personID)
+            int personID)
         {
             global::System.Collections.Generic.IDictionary<string, object> _keys = new global::System.Collections.Generic.Dictionary<string, object>
             {
@@ -6127,7 +6127,7 @@ namespace Microsoft.OData.E2E.TestCommon.Common.Client.Default
         /// <param name="_source">source entity set</param>
         /// <param name="personID">The value of personID</param>
         public static global::Microsoft.OData.E2E.TestCommon.Common.Client.Default.CustomerSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.E2E.TestCommon.Common.Client.Default.Customer> _source,
-            global::System.Nullable<int> personID)
+            int personID)
         {
             global::System.Collections.Generic.IDictionary<string, object> _keys = new global::System.Collections.Generic.Dictionary<string, object>
             {
@@ -6159,7 +6159,7 @@ namespace Microsoft.OData.E2E.TestCommon.Common.Client.Default
         /// <param name="_source">source entity set</param>
         /// <param name="personID">The value of personID</param>
         public static global::Microsoft.OData.E2E.TestCommon.Common.Client.Default.EmployeeSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.E2E.TestCommon.Common.Client.Default.Employee> _source,
-            global::System.Nullable<int> personID)
+            int personID)
         {
             global::System.Collections.Generic.IDictionary<string, object> _keys = new global::System.Collections.Generic.Dictionary<string, object>
             {
@@ -6216,7 +6216,7 @@ namespace Microsoft.OData.E2E.TestCommon.Common.Client.Default
         /// <param name="productID">The value of productID</param>
         public static global::Microsoft.OData.E2E.TestCommon.Common.Client.Default.ProductDetailSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.E2E.TestCommon.Common.Client.Default.ProductDetail> _source,
             int productDetailID,
-            global::System.Nullable<int> productID)
+            int productID)
         {
             global::System.Collections.Generic.IDictionary<string, object> _keys = new global::System.Collections.Generic.Dictionary<string, object>
             {
@@ -6305,8 +6305,8 @@ namespace Microsoft.OData.E2E.TestCommon.Common.Client.Default
         /// <param name="orderID">The value of orderID</param>
         /// <param name="productID">The value of productID</param>
         public static global::Microsoft.OData.E2E.TestCommon.Common.Client.Default.OrderDetailSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.E2E.TestCommon.Common.Client.Default.OrderDetail> _source,
-            global::System.Nullable<int> orderID,
-            global::System.Nullable<int> productID)
+            int orderID,
+            int productID)
         {
             global::System.Collections.Generic.IDictionary<string, object> _keys = new global::System.Collections.Generic.Dictionary<string, object>
             {
