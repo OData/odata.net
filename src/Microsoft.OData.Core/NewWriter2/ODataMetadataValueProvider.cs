@@ -34,8 +34,9 @@ internal class ODataMetadataValueProvider : IMetadataValueProvider<ODataJsonWrit
         }
         else
         {
+            return NoOpCollectionCounter<TValue>.Instance;
             // TODO: should we default to throwing an exception here, or should or no-op?
-            throw new InvalidOperationException($"No counter registered for type {typeof(TValue).FullName}");
+            //throw new InvalidOperationException($"No counter registered for type {typeof(TValue).FullName}");
         }
     }
 
@@ -49,7 +50,8 @@ internal class ODataMetadataValueProvider : IMetadataValueProvider<ODataJsonWrit
         }
         else
         {
-            throw new InvalidOperationException($"No next link retriever registered for type {typeof(TValue).FullName}");
+            return NoOpNextLinkRetriever<TValue>.Instance;
+            // throw new InvalidOperationException($"No next link retriever registered for type {typeof(TValue).FullName}");
         }
     }
 
@@ -81,6 +83,19 @@ internal class ODataMetadataValueProvider : IMetadataValueProvider<ODataJsonWrit
         }
     }
 
+    class NoOpCollectionCounter<TValue> : ICollectionCounter<ODataJsonWriterContext, ODataJsonWriterStack, TValue>
+    {
+        public static readonly NoOpCollectionCounter<TValue> Instance = new();
+        public bool HasCountValue(TValue value, ODataJsonWriterStack state, ODataJsonWriterContext context, out long? count)
+        {
+            count = null;
+            return false;
+        }
+        public void WriteCountValue(TValue value, ODataJsonWriterStack state, ODataJsonWriterContext context)
+        {
+        }
+    }
+
 
     class NextLinkRetriever<TValue>(Func<TValue, ODataJsonWriterStack, ODataJsonWriterContext, Uri> nextLinkFunc)
         : INextLinkRetriever<ODataJsonWriterContext, ODataJsonWriterStack, TValue>
@@ -105,6 +120,19 @@ internal class ODataMetadataValueProvider : IMetadataValueProvider<ODataJsonWrit
             Debug.Assert(hasNextLink == true, "WriteNextLinkValue should only be called if HasNextLinkValue returned true.");
             Debug.Assert(nextLink != null);
             context.JsonWriter.WriteStringValue(nextLink.AbsoluteUri);
+        }
+    }
+
+    class NoOpNextLinkRetriever<TValue> : INextLinkRetriever<ODataJsonWriterContext, ODataJsonWriterStack, TValue>
+    {
+        public static readonly NoOpNextLinkRetriever<TValue> Instance = new();
+        public bool HasNextLinkValue(TValue value, ODataJsonWriterStack state, ODataJsonWriterContext context, out Uri nextLink)
+        {
+            nextLink = null;
+            return false;
+        }
+        public void WriteNextLinkValue(TValue value, ODataJsonWriterStack state, ODataJsonWriterContext context)
+        {
         }
     }
 }
