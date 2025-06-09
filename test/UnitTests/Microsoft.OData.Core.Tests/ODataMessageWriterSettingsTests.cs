@@ -116,12 +116,6 @@ namespace Microsoft.OData.Tests
         }
 
         [Fact]
-        public void JsonPCallbackShouldBeNullByDefault()
-        {
-            Assert.Null(this.settings.JsonPCallback);
-        }
-
-        [Fact]
         public void LibraryCompatibilityShouldBeNoneByDefault()
         {
             Assert.Equal(ODataLibraryCompatibility.None, this.settings.LibraryCompatibility);
@@ -247,13 +241,6 @@ namespace Microsoft.OData.Tests
         {
             this.settings.EnableMessageStreamDisposal = false;
             Assert.False(this.settings.Clone().EnableMessageStreamDisposal);
-        }
-
-        [Fact]
-        public void CopyConstructorShouldCopyJsonPCallback()
-        {
-            this.settings.JsonPCallback = "jsonp";
-            Assert.Equal("jsonp", this.settings.Clone().JsonPCallback);
         }
 
         [Fact]

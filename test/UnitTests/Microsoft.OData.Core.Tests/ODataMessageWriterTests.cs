@@ -29,14 +29,6 @@ namespace Microsoft.OData.Tests
     public class ODataMessageWriterTests
     {
         [Fact]
-        public void ConstructorWithRequestMessageAndJsonPaddingSettingEnabledFails()
-        {
-            ODataMessageWriterSettings settings = new ODataMessageWriterSettings { JsonPCallback = "functionName" };
-            Action constructorCall = () => new ODataMessageWriter(new DummyRequestMessage(), settings);
-            constructorCall.Throws<ODataException>(SRResources.WriterValidationUtils_MessageWriterSettingsJsonPaddingOnRequestMessage);
-        }
-
-        [Fact]
         public void CreateCollectionWriterWithoutTypeShouldPassForJson()
         {
             var settings = new ODataMessageWriterSettings();

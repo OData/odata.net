@@ -1697,22 +1697,6 @@ namespace Microsoft.OData.Tests
             exception.Message);
         }
 
-        [Theory]
-        [MemberData(nameof(GetODataVersions))]
-        public async Task WriterValidationUtils_MessageWriterSettingsJsonPaddingOnRequestMessageAsync(ODataVersion odataVersion)
-        {
-            var exception = await Assert.ThrowsAsync<ODataException>(async () =>
-            {
-                this.messageWriterSettings.JsonPCallback = "callback";
-
-                await SetupRequestMessageWriterAndRunTestAsync((messageWriter) => Task.CompletedTask, odataVersion);
-            });
-
-            Assert.Equal(
-                SRResources.WriterValidationUtils_MessageWriterSettingsJsonPaddingOnRequestMessage,
-                exception.Message);
-        }
-
         #region Synchronous Tests
 
         [Theory]
@@ -3087,22 +3071,6 @@ namespace Microsoft.OData.Tests
             Assert.Equal(
             Error.Format(SRResources.WriterValidationUtils_MessageWriterSettingsBaseUriMustBeNullOrAbsolute, '/'),
             exception.Message);
-        }
-
-        [Theory]
-        [MemberData(nameof(GetODataVersions))]
-        public void WriterValidationUtils_MessageWriterSettingsJsonPaddingOnRequestMessage(ODataVersion odataVersion)
-        {
-            var exception = Assert.Throws<ODataException>(() =>
-            {
-                this.messageWriterSettings.JsonPCallback = "callback";
-
-                SetupRequestMessageWriterAndRunTest((messageWriter) => { }, odataVersion);
-            });
-
-            Assert.Equal(
-                SRResources.WriterValidationUtils_MessageWriterSettingsJsonPaddingOnRequestMessage,
-                exception.Message);
         }
 
         [Theory]
