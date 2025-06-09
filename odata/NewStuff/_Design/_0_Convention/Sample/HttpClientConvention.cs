@@ -773,7 +773,7 @@
                         this.disposer.Unregister(this.headers);
 
                         var responseContent = this.disposer.Register(async () => await this.httpResponseMessage.Content.ReadAsStreamAsync().ConfigureAwait(false));
-                        var jsonDocument = await JsonDocument.ParseAsync(responseContent).ConfigureAwait(false);
+                        var jsonDocument = await JsonDocument.ParseAsync(responseContent).ConfigureAwait(false); //// TODO this actually reads the whole stream
 
                         var element = jsonDocument.RootElement;
                         if (element.ValueKind != JsonValueKind.Object)

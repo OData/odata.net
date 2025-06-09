@@ -3,6 +3,8 @@
     using System;
     using System.Threading.Tasks;
 
+    //// TODO look into how utf8jsonwriter is handling async without having every method be async
+
     public interface IGetResponseReader : IAsyncDisposable
     {
         Task<IGetResponseHeaderReader> Next();
@@ -49,7 +51,7 @@
             public IGetResponseBodyReader GetResponseBodyReader { get; }
         }
 
-        public interface IAccepterAsync<TResult>
+        public interface IAccepterAsync<TResult> //// TODO write an example of a struct accepter to avoid a closure
         {
             Task<TResult> Accept(ContentType node);
 
@@ -287,7 +289,7 @@
         }
 
         public Task<TResult> Dispatch<TResult>(
-            Func<OdataContext, Task<TResult>> odataContextAccepter,
+            Func<OdataContext, Task<TResult>> odataContextAccepter, //// TODO what's the overhead of adapting the token structure into the input parameter (member) structure
             Func<NextLink, Task<TResult>> nextLinkAccepter,
             Func<Property, Task<TResult>> propertyAccepter,
             Func<End, Task<TResult>> endAccepter)
