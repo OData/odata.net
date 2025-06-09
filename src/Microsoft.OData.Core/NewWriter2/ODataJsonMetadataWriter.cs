@@ -45,15 +45,26 @@ internal class ODataJsonMetadataWriter<TValue>(
     public ValueTask WriteCountPropertyAsync(TValue value, ODataJsonWriterStack state, ODataJsonWriterContext context)
     {
         var counter = counterProvider.GetCounter<TValue>(context, state);
-        if (counter.TryGetCount(value, context, state, out long count))
+        if (counter.HasCountValue(value, state, context, out long? count))
         {
-            
+
             context.JsonWriter.WritePropertyName("@odata.count");
-            
-            context.JsonWriter.WriteNumberValue(count);
-            
+
+            if (count.HasValue)
+            {
+                context.JsonWriter.WriteNumberValue(count.Value);
+            }
+            else
+            {
+                counter.WriteCountValue(value, state, context);
+            }
         }
 
         return ValueTask.CompletedTask;
+    }
+
+    public ValueTask WriteNextLinkPropertyAsync(TValue value, ODataJsonWriterStack state, ODataJsonWriterContext context)
+    {
+        throw new NotImplementedException();
     }
 }

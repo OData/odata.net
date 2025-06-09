@@ -10,4 +10,5 @@ internal interface IMetadataWriter<TContext, TState, TValue>
     
     ValueTask WriteContextUrlAsync(TValue value, TState state, TContext context);
     ValueTask WriteCountPropertyAsync(TValue value, TState state, TContext context);
+    ValueTask WriteNextLinkPropertyAsync(TValue value, TState state, TContext context);
 }

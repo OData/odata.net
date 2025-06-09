@@ -49,6 +49,7 @@ public class NewWriter2ExperimentTests
             ODataUri = odataUri,
             MetadataLevel = ODataMetadataLevel.Minimal,
             PayloadKind = ODataPayloadKind.ResourceSet,
+            ODataVersion = ODataVersion.V4,
             JsonWriter = jsonWriter,
             ResourceWriterProvider = new ODataResourceWriterProvider(),
             MetadataWriterProvider = new ODataJsonMetadataWriterProvider(new ODataCounterProvider()),
@@ -104,6 +105,7 @@ public class NewWriter2ExperimentTests
         {
             Model = model,
             ODataUri = odataUri,
+            ODataVersion = ODataVersion.V4,
             MetadataLevel = ODataMetadataLevel.Minimal,
             PayloadKind = ODataPayloadKind.ResourceSet,
             JsonWriter = jsonWriter,
@@ -123,7 +125,7 @@ public class NewWriter2ExperimentTests
         using var reader = new StreamReader(output, Encoding.UTF8);
         var json = await reader.ReadToEndAsync();
 
-        var expectedJson = @"{""@odata.context"":""http://service/odata/$metadata#Projects"",""@odata.count"":2,""value"":[{""Id"":1,""Name"":""P1"",""IsActive"":true},{""Id"":2,""Name"":""P2"",""IsActive"":false}]}";
+        var expectedJson = @"{""@odata.context"":""http://service/odata/$metadata#Projects"",""@odata.count"":2,""@odata.nextLink"":""http://service/odata/Products?$skiptoken=skip"",""value"":[{""Id"":1,""Name"":""P1"",""IsActive"":true},{""Id"":2,""Name"":""P2"",""IsActive"":false}]}";
         Assert.Equal(expectedJson, json);
     }
 

@@ -9,6 +9,7 @@ internal class ODataJsonWriterContext
     public required IEdmModel Model { get; set; }
     public required ODataMetadataLevel MetadataLevel { get; set; }
     public required ODataPayloadKind PayloadKind { get; set; }
+    public required ODataVersion ODataVersion { get; set; }
     public JsonSerializerOptions JsonSerializerOptions { get; set; }
     public required Utf8JsonWriter JsonWriter { get; set; }
     public required IResourceWriterProvider<ODataJsonWriterContext, ODataJsonWriterStack> ResourceWriterProvider { get; set; }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 
 namespace Microsoft.OData.Core.NewWriter2;
@@ -33,7 +34,7 @@ internal class ODataCounterProvider : ICollectionCounterProvider<ODataJsonWriter
     class CollectionCounter<TValue>(Func<TValue, ODataJsonWriterContext, ODataJsonWriterStack, long?> countFunc)
         : ICollectionCounter<ODataJsonWriterContext, ODataJsonWriterStack, TValue>
     {
-        public bool TryGetCount(TValue value, ODataJsonWriterContext context, ODataJsonWriterStack state, out long count)
+        public bool HasCountValue(TValue value, ODataJsonWriterStack state, ODataJsonWriterContext context, out long? count)
         {
             count = default;
             long? result = countFunc(value, context, state);
@@ -44,6 +45,17 @@ internal class ODataCounterProvider : ICollectionCounterProvider<ODataJsonWriter
             }
 
             return false;
+        }
+
+        public void WriteCountValue(TValue value, ODataJsonWriterStack state, ODataJsonWriterContext context)
+        {
+            // TODO: for this implementation of CollectionProvider, we assume HasCountValue always returns the count
+            // and therefore this method should not be called. But we implement it just in case.
+            // Or should we throw an exception instead? Or have some strategy pattern that doesn't require this to be called when not needed?
+            bool hasCount = HasCountValue(value, state, context, out var count);
+            Debug.Assert(hasCount);
+            Debug.Assert(count.HasValue);
+            context.JsonWriter.WriteNumberValue(count.Value);
         }
     }
 
