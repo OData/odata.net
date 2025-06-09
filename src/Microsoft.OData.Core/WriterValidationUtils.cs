@@ -36,11 +36,6 @@ namespace Microsoft.OData
             {
                 throw new ODataException(Error.Format(SRResources.WriterValidationUtils_MessageWriterSettingsBaseUriMustBeNullOrAbsolute, UriUtils.UriToString(messageWriterSettings.BaseUri)));
             }
-
-            if (messageWriterSettings.HasJsonPaddingFunction() && !writingResponse)
-            {
-                throw new ODataException(SRResources.WriterValidationUtils_MessageWriterSettingsJsonPaddingOnRequestMessage);
-            }
         }
 
         /// <summary>
