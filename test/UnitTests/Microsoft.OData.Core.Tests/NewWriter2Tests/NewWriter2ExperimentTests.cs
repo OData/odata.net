@@ -41,7 +41,7 @@ public class NewWriter2ExperimentTests
         using var output = new MemoryStream();
         var jsonWriter = new Utf8JsonWriter(output);
 
-        var counterProvider = new ODataCounterProvider();
+        var metataProvider = new ODataMetadataValueProvider();
         
         var writerContext = new ODataJsonWriterContext
         {
@@ -52,7 +52,7 @@ public class NewWriter2ExperimentTests
             ODataVersion = ODataVersion.V4,
             JsonWriter = jsonWriter,
             ResourceWriterProvider = new ODataResourceWriterProvider(),
-            MetadataWriterProvider = new ODataJsonMetadataWriterProvider(new ODataCounterProvider()),
+            MetadataWriterProvider = new ODataJsonMetadataWriterProvider(metataProvider),
         };
 
         var writerStack = new ODataJsonWriterStack();
@@ -99,8 +99,13 @@ public class NewWriter2ExperimentTests
         var jsonWriter = new Utf8JsonWriter(output);
 
         // What a bout a generic counter for IEnumerable<T>
-        var counterProvider = new ODataCounterProvider();
-        counterProvider.MapCounter<IEnumerable<Project>>((projects, context, state) => projects.Count());
+        var metadataProvider = new ODataMetadataValueProvider();
+        metadataProvider.MapCounter<IEnumerable<Project>>((projects, context, state) => projects.Count());
+        metadataProvider.MapNextLinkRetriever<IEnumerable<Project>>((projects, context, state) =>
+        {
+            return new Uri("http://service/odata/Products?$skiptoken=skip", UriKind.Absolute);
+        });
+       
         var writerContext = new ODataJsonWriterContext
         {
             Model = model,
@@ -110,7 +115,7 @@ public class NewWriter2ExperimentTests
             PayloadKind = ODataPayloadKind.ResourceSet,
             JsonWriter = jsonWriter,
             ResourceWriterProvider = new ODataResourceWriterProvider(),
-            MetadataWriterProvider = new ODataJsonMetadataWriterProvider(counterProvider),
+            MetadataWriterProvider = new ODataJsonMetadataWriterProvider(metadataProvider),
         };
 
         var writerStack = new ODataJsonWriterStack();

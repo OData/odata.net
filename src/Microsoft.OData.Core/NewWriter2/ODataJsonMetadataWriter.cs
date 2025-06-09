@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace Microsoft.OData.Core.NewWriter2;
 
 internal class ODataJsonMetadataWriter<TValue>(
-    ICollectionCounterProvider<ODataJsonWriterContext, ODataJsonWriterStack> counterProvider)
+    IMetadataValueProvider<ODataJsonWriterContext, ODataJsonWriterStack> metadataValueProvider)
     : IMetadataWriter<ODataJsonWriterContext, ODataJsonWriterStack, TValue>
 {
     /// <summary>
@@ -44,7 +44,7 @@ internal class ODataJsonMetadataWriter<TValue>(
     /// <exception cref="NotImplementedException"></exception>
     public ValueTask WriteCountPropertyAsync(TValue value, ODataJsonWriterStack state, ODataJsonWriterContext context)
     {
-        var counter = counterProvider.GetCounter<TValue>(context, state);
+        var counter = metadataValueProvider.GetCounter<TValue>(context, state);
         if (counter.HasCountValue(value, state, context, out long? count))
         {
 
@@ -65,6 +65,20 @@ internal class ODataJsonMetadataWriter<TValue>(
 
     public ValueTask WriteNextLinkPropertyAsync(TValue value, ODataJsonWriterStack state, ODataJsonWriterContext context)
     {
-        throw new NotImplementedException();
+        var nextLinkRetriever = metadataValueProvider.GetNextLinkRetriever<TValue>(state, context);
+        if (nextLinkRetriever.HasNextLinkValue(value, state, context, out Uri? nextLink))
+        {
+            context.JsonWriter.WritePropertyName("@odata.nextLink");
+            if (nextLink is not null)
+            {
+                context.JsonWriter.WriteStringValue(nextLink.ToString());
+            }
+            else
+            {
+                nextLinkRetriever.WriteNextLinkValue(value, state, context);
+            }
+        }
+
+        return ValueTask.CompletedTask;
     }
 }

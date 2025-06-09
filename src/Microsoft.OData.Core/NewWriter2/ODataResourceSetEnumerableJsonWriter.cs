@@ -25,6 +25,8 @@ internal class ODataResourceSetEnumerableJsonWriter<T> : IODataWriter<ODataJsonW
                 await metadataWriter.WriteCountPropertyAsync(value, state, context);
             }
 
+            await metadataWriter.WriteNextLinkPropertyAsync(value, state, context);
+
             context.JsonWriter.WritePropertyName("value");
         }
 
