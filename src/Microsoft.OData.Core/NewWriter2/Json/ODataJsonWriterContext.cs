@@ -14,4 +14,5 @@ internal class ODataJsonWriterContext
     public required Utf8JsonWriter JsonWriter { get; set; }
     public required IResourceWriterProvider<ODataJsonWriterContext, ODataJsonWriterStack> ResourceWriterProvider { get; set; }
     public required IMetadataWriterProvider<ODataJsonWriterContext, ODataJsonWriterStack> MetadataWriterProvider { get; set; }
+    public required IPropertyValueWriterProvider<ODataJsonWriterContext, ODataJsonWriterStack, IEdmProperty> PropertyValueWriterProvider { get; set; }
 }

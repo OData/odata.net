@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Microsoft.OData.Core.NewWriter2;
 
-internal class ODataJsonMetadataWriterProvider(
+internal class JsonMetadataWriterProvider(
     IMetadataValueProvider<ODataJsonWriterContext, ODataJsonWriterStack> metadataValueProvider)
     : IMetadataWriterProvider<ODataJsonWriterContext, ODataJsonWriterStack>
 {
@@ -12,6 +12,7 @@ internal class ODataJsonMetadataWriterProvider(
         ODataJsonWriterContext context,
         ODataJsonWriterStack state)
     {
-        return new ODataJsonMetadataWriter<TValue>(metadataValueProvider);
+        // TODO: should be cached
+        return new JsonMetadataWriter<TValue>(metadataValueProvider);
     }
 }

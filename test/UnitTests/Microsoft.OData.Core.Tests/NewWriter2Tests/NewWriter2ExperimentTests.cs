@@ -1,4 +1,5 @@
 ﻿using Microsoft.OData.Core.NewWriter2;
+using Microsoft.OData.Core.NewWriter2.Core;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Microsoft.Test.OData.Utils.ODataLibTest;
@@ -43,7 +44,7 @@ public class NewWriter2ExperimentTests
         using var output = new MemoryStream();
         var jsonWriter = new Utf8JsonWriter(output);
 
-        var metataProvider = new ODataMetadataValueProvider();
+        var metataProvider = new JsonMetadataValueProvider();
         
         var writerContext = new ODataJsonWriterContext
         {
@@ -53,8 +54,8 @@ public class NewWriter2ExperimentTests
             PayloadKind = ODataPayloadKind.ResourceSet,
             ODataVersion = ODataVersion.V4,
             JsonWriter = jsonWriter,
-            ResourceWriterProvider = new ODataResourceWriterProvider(),
-            MetadataWriterProvider = new ODataJsonMetadataWriterProvider(metataProvider),
+            ResourceWriterProvider = new ResourceJsonWriterProvider(),
+            MetadataWriterProvider = new JsonMetadataWriterProvider(metataProvider),
         };
 
         var writerStack = new ODataJsonWriterStack();
@@ -101,7 +102,7 @@ public class NewWriter2ExperimentTests
         var jsonWriter = new Utf8JsonWriter(output);
 
         // What a bout a generic counter for IEnumerable<T>
-        var metadataProvider = new ODataMetadataValueProvider();
+        var metadataProvider = new JsonMetadataValueProvider();
         metadataProvider.MapCounter<IEnumerable<Project>>((projects, context, state) => projects.Count());
         metadataProvider.MapNextLinkRetriever<IEnumerable<Project>>((projects, context, state) =>
         {
@@ -116,8 +117,8 @@ public class NewWriter2ExperimentTests
             MetadataLevel = ODataMetadataLevel.Minimal,
             PayloadKind = ODataPayloadKind.ResourceSet,
             JsonWriter = jsonWriter,
-            ResourceWriterProvider = new ODataResourceWriterProvider(),
-            MetadataWriterProvider = new ODataJsonMetadataWriterProvider(metadataProvider),
+            ResourceWriterProvider = new ResourceJsonWriterProvider(),
+            MetadataWriterProvider = new JsonMetadataWriterProvider(metadataProvider),
         };
 
         var writerStack = new ODataJsonWriterStack();
@@ -221,10 +222,10 @@ public class NewWriter2ExperimentTests
         var jsonWriter = new Utf8JsonWriter(output);
 
         // What a bout a generic counter for IEnumerable<T>
-        var metadataProvider = new ODataMetadataValueProvider();
+        var metadataProvider = new JsonMetadataValueProvider();
         // TODO: would like to map IList<Customer> but would not work since the writer supports IEnumerable<T>
         metadataProvider.MapCounter<IList<Customer>>((customers, context, state) => customers.Count);
-        metadataProvider.MapNextLinkRetriever<IList<Customer>>((projects, context, state) =>
+        metadataProvider.MapNextLinkRetriever<IList<Customer>>((customers, context, state) =>
         {
             return new Uri("http://service/odata/Customers?$skip=2", UriKind.Absolute);
         });
@@ -241,13 +242,20 @@ public class NewWriter2ExperimentTests
             MetadataLevel = ODataMetadataLevel.Minimal,
             PayloadKind = ODataPayloadKind.ResourceSet,
             JsonWriter = jsonWriter,
-            ResourceWriterProvider = new ODataResourceWriterProvider(),
-            MetadataWriterProvider = new ODataJsonMetadataWriterProvider(metadataProvider),
+            ResourceWriterProvider = new ResourceJsonWriterProvider(),
+            MetadataWriterProvider = new JsonMetadataWriterProvider(metadataProvider),
         };
 
         var writerStack = new ODataJsonWriterStack();
+        writerStack.Push(new ODataJsonWriterStackFrame
+        {
+            EdmType = new EdmCollectionType(
+                new EdmEntityTypeReference(
+                    model.FindType("ns.Customer") as IEdmEntityType, isNullable: false)),
+            SelectExpandClause = odataUri.SelectAndExpand
+        });
 
-        var odataWriter = new ODataResourceSetEnumerableJsonWriter<IList<Customer>, Customer>();
+        var odataWriter = new EnumerableResourceSetJsonWriter<IList<Customer>, Customer>();
         await odataWriter.WriteAsync(customers, writerStack, writerContext);
 
         // TODO: should we guarantee flushing from within the writer?

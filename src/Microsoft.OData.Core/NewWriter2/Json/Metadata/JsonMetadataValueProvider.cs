@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Microsoft.OData.Core.NewWriter2;
 
-internal class ODataMetadataValueProvider : IMetadataValueProvider<ODataJsonWriterContext, ODataJsonWriterStack>
+internal class JsonMetadataValueProvider : IMetadataValueProvider<ODataJsonWriterContext, ODataJsonWriterStack>
 {
     // TODO should these be concurrent dicts? But we expect them to be set at config time. Before serialization starts.
     Dictionary<Type, object> counters = new();

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Microsoft.OData.Core.NewWriter2;
 
-internal class ODataJsonMetadataWriter<TValue>(
+internal class JsonMetadataWriter<TValue>(
     IMetadataValueProvider<ODataJsonWriterContext, ODataJsonWriterStack> metadataValueProvider)
     : IMetadataWriter<ODataJsonWriterContext, ODataJsonWriterStack, TValue>
 {

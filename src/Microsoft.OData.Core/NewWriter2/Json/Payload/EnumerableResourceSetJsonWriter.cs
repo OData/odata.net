@@ -1,21 +1,22 @@
-﻿using System;
+﻿using Microsoft.OData.Edm;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Microsoft.OData.Core.NewWriter2;
 
-internal class ODataResourceSetEnumerableJsonWriter<TColl, TElement> :
-    IODataWriter<ODataJsonWriterContext, ODataJsonWriterStack, TColl>
-    where TColl : IEnumerable<TElement>
+internal class EnumerableResourceSetJsonWriter<TCollection, TElement> :
+    IODataWriter<ODataJsonWriterContext, ODataJsonWriterStack, TCollection>
+    where TCollection : IEnumerable<TElement>
 {
-    public async ValueTask WriteAsync(TColl value, ODataJsonWriterStack state, ODataJsonWriterContext context)
+    public async ValueTask WriteAsync(TCollection value, ODataJsonWriterStack state, ODataJsonWriterContext context)
     {
         if (state.IsTopLevel())
         {
             context.JsonWriter.WriteStartObject();
 
-            var metadataWriter = context.MetadataWriterProvider.GetMetadataWriter<TColl>(context, state);
+            var metadataWriter = context.MetadataWriterProvider.GetMetadataWriter<TCollection>(context, state);
 
             // TODO: We should probably expose a ShouldWriteXXX method for metadata to give
             // users an easy way to control whether certain metadata should be written
@@ -42,10 +43,26 @@ internal class ODataResourceSetEnumerableJsonWriter<TColl, TElement> :
 
         context.JsonWriter.WriteStartArray();
 
+        // TODO: Looping over an IEnumerable requires us to allocate an enumerator.
+        // We should probably a have a layer of abstraction that allows us to bypass
+        // the allocation. The only thing we need to bypass is the loop.
+        // We should have a "WriteElementsAsync" method that abstracts away the loop
+        // so custom-implementors can optimize the loop without having to implement
+        // IEnumerable<T>.
         foreach (var item in value)
         {
+            var frame = new ODataJsonWriterStackFrame()
+            {
+                SelectExpandClause = state.Current.SelectExpandClause,
+                EdmType = state.Current.EdmType.AsElementType(),
+            };
+
+            state.Push(frame);
+
             var resourceWriter = context.ResourceWriterProvider.GetResourceWriter<TElement>(context, state);
             await resourceWriter.WriteAsync(item, state, context);
+
+            state.Pop();
         }
 
         context.JsonWriter.WriteEndArray();
@@ -57,6 +74,6 @@ internal class ODataResourceSetEnumerableJsonWriter<TColl, TElement> :
     }
 }
 
-internal class ODataResourceSetEnumerableJsonWriter<TElement> : ODataResourceSetEnumerableJsonWriter<IEnumerable<TElement>, TElement>
+internal class ODataResourceSetEnumerableJsonWriter<TElement> : EnumerableResourceSetJsonWriter<IEnumerable<TElement>, TElement>
 {
 }    

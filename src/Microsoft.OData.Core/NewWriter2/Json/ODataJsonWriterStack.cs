@@ -13,6 +13,7 @@ internal class ODataJsonWriterStack
 
     private int _count;
 
+
     public ref readonly ODataJsonWriterStackFrame Parent
     {
         get
@@ -55,6 +56,26 @@ internal class ODataJsonWriterStack
 
         _stack[_count++] = frame;
         _current = frame;
+    }
+
+    public ODataJsonWriterStackFrame Pop()
+    {
+        if (_count == 0)
+        {
+            throw new IndexOutOfRangeException("Stack is empty, cannot pop frame.");
+        }
+
+        _count--;
+        var frame = _current;
+        if (_count > 0)
+        {
+            _current = _stack[_count - 1];
+        }
+        else
+        {
+            _current = default; // Reset current when stack is empty
+        }
+        return frame;
     }
 
     public bool IsTopLevel()
