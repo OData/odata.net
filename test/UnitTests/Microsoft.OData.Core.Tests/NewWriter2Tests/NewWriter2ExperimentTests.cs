@@ -1,5 +1,4 @@
 ﻿using Microsoft.OData.Core.NewWriter2;
-using Microsoft.OData.Core.NewWriter2.Core;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Microsoft.Test.OData.Utils.ODataLibTest;

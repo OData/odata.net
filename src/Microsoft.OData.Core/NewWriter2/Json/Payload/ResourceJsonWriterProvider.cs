@@ -1,10 +1,8 @@
-﻿using Microsoft.OData.Core.NewWriter2.Core;
-using Microsoft.OData.Core.NewWriter2.Core.Resource;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Microsoft.OData.Core.NewWriter2.Json.Payload;
+namespace Microsoft.OData.Core.NewWriter2;
 
 internal class ResourceJsonWriterProvider : IResourceWriterProvider<ODataJsonWriterContext, ODataJsonWriterStack>
 {

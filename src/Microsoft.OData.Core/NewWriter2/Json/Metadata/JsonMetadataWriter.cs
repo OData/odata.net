@@ -65,8 +65,8 @@ internal class JsonMetadataWriter<TValue>(
 
     public ValueTask WriteNextLinkPropertyAsync(TValue value, ODataJsonWriterStack state, ODataJsonWriterContext context)
     {
-        var nextLinkRetriever = metadataValueProvider.GetNextLinkRetriever<TValue>(state, context);
-        if (nextLinkRetriever.HasNextLinkValue(value, state, context, out Uri? nextLink))
+        var nextLinkRetriever = metadataValueProvider.GetNextLinkHandler<TValue>(state, context);
+        if (nextLinkRetriever.HasNextLinkValue(value, state, context, out Uri nextLink))
         {
             context.JsonWriter.WritePropertyName("@odata.nextLink");
             if (nextLink is not null)
@@ -85,7 +85,7 @@ internal class JsonMetadataWriter<TValue>(
     public ValueTask WriteEtagPropertyAsync(TValue value, ODataJsonWriterStack state, ODataJsonWriterContext context)
     {
         var etagHandler = metadataValueProvider.GetEtagHandler<TValue>(state, context);
-        if (etagHandler.HasEtagValue(value, state, context, out string? etagValue))
+        if (etagHandler.HasEtagValue(value, state, context, out string etagValue))
         {
             context.JsonWriter.WritePropertyName("@odata.etag");
             context.JsonWriter.WriteStringValue(etagValue);

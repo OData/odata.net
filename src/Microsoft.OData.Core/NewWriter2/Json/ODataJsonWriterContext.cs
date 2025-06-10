@@ -1,4 +1,5 @@
-﻿using Microsoft.OData.Edm;
+﻿using Microsoft.OData;
+using Microsoft.OData.Edm;
 using System.Text.Json;
 
 namespace Microsoft.OData.Core.NewWriter2;

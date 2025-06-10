@@ -48,7 +48,7 @@ internal class JsonMetadataValueProvider : IMetadataValueProvider<ODataJsonWrite
         }
     }
 
-    public INextLinkHandler<ODataJsonWriterContext, ODataJsonWriterStack, TValue> GetNextLinkRetriever<TValue>(
+    public INextLinkHandler<ODataJsonWriterContext, ODataJsonWriterStack, TValue> GetNextLinkHandler<TValue>(
         ODataJsonWriterStack state,
         ODataJsonWriterContext context)
     {

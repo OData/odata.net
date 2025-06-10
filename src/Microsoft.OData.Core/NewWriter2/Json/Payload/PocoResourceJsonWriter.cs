@@ -1,10 +1,9 @@
-﻿using Microsoft.OData.Core.NewWriter2.Core;
-using Microsoft.OData.Edm;
+﻿using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace Microsoft.OData.Core.NewWriter2.Json.Payload;
+namespace Microsoft.OData.Core.NewWriter2;
 
 internal class PocoResourceJsonWriter<T> : IODataWriter<ODataJsonWriterContext, ODataJsonWriterStack, T>
 {

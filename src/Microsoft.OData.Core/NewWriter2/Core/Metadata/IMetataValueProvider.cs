@@ -2,7 +2,7 @@
 
 internal interface IMetadataValueProvider<TContext, TState> :
     ICollectionCounterProvider<TContext, TState>,
-    INextLinkRetrieverProvider<TContext, TState>,
+    INextLinkHandlerProvider<TContext, TState>,
     IEtagHandlerProvider<TContext, TState>
 {
 }
