@@ -222,10 +222,11 @@ public class NewWriter2ExperimentTests
 
         // What a bout a generic counter for IEnumerable<T>
         var metadataProvider = new ODataMetadataValueProvider();
+        // TODO: would like to map IList<Customer> but would not work since the writer supports IEnumerable<T>
         metadataProvider.MapCounter<IList<Customer>>((customers, context, state) => customers.Count);
         metadataProvider.MapNextLinkRetriever<IList<Customer>>((projects, context, state) =>
         {
-            return new Uri("http://service/odata/Customers?$skiptoken=skip", UriKind.Absolute);
+            return new Uri("http://service/odata/Customers?$skip=2", UriKind.Absolute);
         });
 
         var writerContext = new ODataJsonWriterContext
@@ -242,7 +243,7 @@ public class NewWriter2ExperimentTests
 
         var writerStack = new ODataJsonWriterStack();
 
-        var odataWriter = new ODataResourceSetEnumerableJsonWriter<Customer>();
+        var odataWriter = new ODataResourceSetEnumerableJsonWriter<IList<Customer>, Customer>();
         await odataWriter.WriteAsync(customers, writerStack, writerContext);
 
         // TODO: should we guarantee flushing from within the writer?
@@ -252,10 +253,12 @@ public class NewWriter2ExperimentTests
         using var reader = new StreamReader(output, Encoding.UTF8);
         var json = await reader.ReadToEndAsync();
 
+        // Actual OData context to use
+        // http://service/odata/$meadata#Customers(Id,Name,Emails,OtherAddresses,Orders,WishList,Orders(Products(Id,Name,Price)).WishList(Id,Name,Category)
         var expectedJson = NormalizeJson(
             """
             {
-              "@odata.context": "http://service/odata/$metadata#Customers(Id,Name,Emails,OtherAddresses,Orders,WishList,Orders(Products(Id,Name,Price)).WishList(Id,Name,Category)",
+              "@odata.context": "http://service/odata/$metadata#Customers",
               "@odata.nextLink": "http://service/odata/Customers?$skip=2",
               "value": [
                 {

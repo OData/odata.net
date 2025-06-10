@@ -5,15 +5,17 @@ using System.Threading.Tasks;
 
 namespace Microsoft.OData.Core.NewWriter2;
 
-internal class ODataResourceSetEnumerableJsonWriter<T> : IODataWriter<ODataJsonWriterContext, ODataJsonWriterStack, IEnumerable<T>>
+internal class ODataResourceSetEnumerableJsonWriter<TColl, TElement> :
+    IODataWriter<ODataJsonWriterContext, ODataJsonWriterStack, TColl>
+    where TColl : IEnumerable<TElement>
 {
-    public async ValueTask WriteAsync(IEnumerable<T> value, ODataJsonWriterStack state, ODataJsonWriterContext context)
+    public async ValueTask WriteAsync(TColl value, ODataJsonWriterStack state, ODataJsonWriterContext context)
     {
         if (state.IsTopLevel())
         {
             context.JsonWriter.WriteStartObject();
 
-            var metadataWriter = context.MetadataWriterProvider.GetMetadataWriter<IEnumerable<T>>(context, state);
+            var metadataWriter = context.MetadataWriterProvider.GetMetadataWriter<TColl>(context, state);
 
             // TODO: We should probably expose a ShouldWriteXXX method for metadata to give
             // users an easy way to control whether certain metadata should be written
@@ -42,7 +44,7 @@ internal class ODataResourceSetEnumerableJsonWriter<T> : IODataWriter<ODataJsonW
 
         foreach (var item in value)
         {
-            var resourceWriter = context.ResourceWriterProvider.GetResourceWriter<T>(context, state);
+            var resourceWriter = context.ResourceWriterProvider.GetResourceWriter<TElement>(context, state);
             await resourceWriter.WriteAsync(item, state, context);
         }
 
@@ -54,3 +56,7 @@ internal class ODataResourceSetEnumerableJsonWriter<T> : IODataWriter<ODataJsonW
         }
     }
 }
+
+internal class ODataResourceSetEnumerableJsonWriter<TElement> : ODataResourceSetEnumerableJsonWriter<IEnumerable<TElement>, TElement>
+{
+}    
