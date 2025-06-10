@@ -81,4 +81,16 @@ internal class ODataJsonMetadataWriter<TValue>(
 
         return ValueTask.CompletedTask;
     }
+
+    public ValueTask WriteEtagPropertyAsync(TValue value, ODataJsonWriterStack state, ODataJsonWriterContext context)
+    {
+        var etagHandler = metadataValueProvider.GetEtagHandler<TValue>(state, context);
+        if (etagHandler.HasEtagValue(value, state, context, out string? etagValue))
+        {
+            context.JsonWriter.WritePropertyName("@odata.etag");
+            context.JsonWriter.WriteStringValue(etagValue);
+        }
+
+        return ValueTask.CompletedTask;
+    }
 }

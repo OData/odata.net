@@ -6,5 +6,5 @@ namespace Microsoft.OData.Core.NewWriter2;
 
 internal interface INextLinkRetrieverProvider<TContext, TState>
 {
-    INextLinkRetriever<TContext, TState, TValue> GetNextLinkRetriever<TValue>(TState state, TContext context);
+    INextLinkHandler<TContext, TState, TValue> GetNextLinkRetriever<TValue>(TState state, TContext context);
 }

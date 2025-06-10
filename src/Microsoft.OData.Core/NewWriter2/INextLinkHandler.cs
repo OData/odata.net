@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Microsoft.OData.Core.NewWriter2;
 
-internal interface INextLinkRetriever<TContext, TState, TValue>
+internal interface INextLinkHandler<TContext, TState, TValue>
 {
     // TODO: This coupling to Uri type is not ideal and should be changed. This may lead
     // to expensive, unnecessary allocations of the Uri type in the common case

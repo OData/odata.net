@@ -228,6 +228,10 @@ public class NewWriter2ExperimentTests
         {
             return new Uri("http://service/odata/Customers?$skip=2", UriKind.Absolute);
         });
+        metadataProvider.MapEtagHandler<Customer>((customer, context, state) =>
+        {
+            return $"W/\"{customer.Id}\"";
+        });
 
         var writerContext = new ODataJsonWriterContext
         {
