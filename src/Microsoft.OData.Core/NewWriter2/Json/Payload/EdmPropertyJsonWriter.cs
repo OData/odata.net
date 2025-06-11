@@ -9,15 +9,14 @@ namespace Microsoft.OData.Core.NewWriter2;
 internal class EdmPropertyJsonWriter<TResource> :
     IResourcePropertyWriter<TResource, IEdmProperty, ODataJsonWriterStack, ODataJsonWriterContext>
 {
-    public ValueTask WriteProperty(TResource resource, IEdmProperty property, ODataJsonWriterStack state, ODataJsonWriterContext context)
+    public async ValueTask WriteProperty(TResource resource, IEdmProperty property, ODataJsonWriterStack state, ODataJsonWriterContext context)
     {
         var jsonWriter = context.JsonWriter;
         // if property is collection, we should write annotations if available
         jsonWriter.WritePropertyName(property.Name);
 
         // write property value
-        
-
-        return ValueTask.CompletedTask;
+        var valueWriter = context.GetPropertyValueWriter(resource, property, state);
+        await valueWriter.WritePropertyValue(resource, property, state, context);
     }
 }

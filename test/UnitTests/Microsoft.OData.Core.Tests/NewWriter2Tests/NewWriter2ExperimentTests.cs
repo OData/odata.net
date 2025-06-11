@@ -55,6 +55,8 @@ public class NewWriter2ExperimentTests
             JsonWriter = jsonWriter,
             ResourceWriterProvider = new ResourceJsonWriterProvider(),
             MetadataWriterProvider = new JsonMetadataWriterProvider(metataProvider),
+            PropertyValueWriterProvider = new EdmPropertyValueJsonWriterProvider(),
+            ResourcePropertyWriterProvider = new EdmPropertyJsonWriterProvider()
         };
 
         var writerStack = new ODataJsonWriterStack();
@@ -107,6 +109,8 @@ public class NewWriter2ExperimentTests
         {
             return new Uri("http://service/odata/Products?$skiptoken=skip", UriKind.Absolute);
         });
+
+        
        
         var writerContext = new ODataJsonWriterContext
         {
@@ -118,6 +122,8 @@ public class NewWriter2ExperimentTests
             JsonWriter = jsonWriter,
             ResourceWriterProvider = new ResourceJsonWriterProvider(),
             MetadataWriterProvider = new JsonMetadataWriterProvider(metadataProvider),
+            PropertyValueWriterProvider = new EdmPropertyValueJsonWriterProvider(),
+            ResourcePropertyWriterProvider = new EdmPropertyJsonWriterProvider()
         };
 
         var writerStack = new ODataJsonWriterStack();
@@ -233,6 +239,8 @@ public class NewWriter2ExperimentTests
             return $"W/\"{customer.Id}\"";
         });
 
+        
+
         var writerContext = new ODataJsonWriterContext
         {
             Model = model,
@@ -243,6 +251,8 @@ public class NewWriter2ExperimentTests
             JsonWriter = jsonWriter,
             ResourceWriterProvider = new ResourceJsonWriterProvider(),
             MetadataWriterProvider = new JsonMetadataWriterProvider(metadataProvider),
+            PropertyValueWriterProvider = new EdmPropertyValueJsonWriterProvider(),
+            ResourcePropertyWriterProvider = new EdmPropertyJsonWriterProvider()
         };
 
         var writerStack = new ODataJsonWriterStack();

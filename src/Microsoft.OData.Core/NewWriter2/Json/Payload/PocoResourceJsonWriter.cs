@@ -9,12 +9,12 @@ internal class PocoResourceJsonWriter<T> : IODataWriter<ODataJsonWriterContext, 
 {
     public async ValueTask WriteAsync(T value, ODataJsonWriterStack state, ODataJsonWriterContext context)
     {
+        // TODO: should 
         // TODO: handle null, should we check value == null? or should have an IsNull method
         var jsonWriter = context.JsonWriter;
         jsonWriter.WriteStartObject();
 
-
-        // TODO: implement field selection, annotations, etc.
+        // Note: do we need to account for metadata written before/after
         if (context.MetadataLevel >= ODataMetadataLevel.Minimal)
         {
             // Write context URL if needed
@@ -28,19 +28,26 @@ internal class PocoResourceJsonWriter<T> : IODataWriter<ODataJsonWriterContext, 
         // or other libraries, or when handling streaming scenarios where it may be beneficial to serialize
         // properties as they arrive from the source
 
+        // We also use the SelectExpandClause and IEdmModel to determine which properties to write
+        // Another approach is to go through all the properties of the resource, and then for each
+        // one decide whether to write if its expanded or selected if the caller wants some properties to always be selected.
+
         var edmType = state.Current.EdmType as IEdmStructuredType;
         var selectExpand = state.Current.SelectExpandClause;
+
+        var propertyWriter = context.ResourcePropertyWriterProvider.GetPropertyWriter<T>(state, context);
+
         if (state.Current.SelectExpandClause == null || state.Current.SelectExpandClause.AllSelected)
         {
             // If all properties are selected, we can write all properties
             foreach (var property in edmType.StructuralProperties())
             {
-
+                await WriteProperty(propertyWriter, value, property, state, context);
             }
 
             foreach (var property in edmType.NavigationProperties())
             {
-
+                await WriteProperty(propertyWriter, value, property, state, context);
             }
 
             // TODO handle dynamic properties
@@ -52,19 +59,50 @@ internal class PocoResourceJsonWriter<T> : IODataWriter<ODataJsonWriterContext, 
             {
                 if (item is PathSelectItem pathSelectItem)
                 {
-                    
+                    var propertySegment = pathSelectItem.SelectedPath.LastSegment as PropertySegment;
+                    var property = propertySegment.Property;
+                    await WriteProperty(propertyWriter, value, property, state, context);
                 }
-                else if (item is ExpandedNavigationSelectItem)
+                else if (item is ExpandedNavigationSelectItem expandedItem)
                 {
-
-                }
-                else if (item is ExpandedCountSelectItem)
-                {
-
+                    var propertySegment = expandedItem.PathToNavigationProperty.LastSegment as NavigationPropertySegment;
+                    var property = propertySegment.NavigationProperty;
+                    await WriteProperty(propertyWriter, value, property, state, context);
                 }
             }
         }
 
         jsonWriter.WriteEndObject();
+    }
+
+    // should this be virtual? protected?
+    // use case: caller could inherit this class to control the order of properties or decide
+    // to auto-select or always-hide properties regardless of SelectExpandClause
+    // having access to this method means they don't have to deal with the details
+    // of preparing the state for nested properties
+    private static async ValueTask WriteProperty(
+        IResourcePropertyWriter<T, IEdmProperty, ODataJsonWriterStack, ODataJsonWriterContext> propertyWriter,
+        T resource,
+        IEdmProperty property,
+        ODataJsonWriterStack state,
+        ODataJsonWriterContext context)
+    {
+        if (property.Type.IsStructured() || property.Type.IsStructuredCollection())
+        {             // If the property is a complex type, we need to write it as a nested object
+            var nestedState = new ODataJsonWriterStackFrame
+            {
+                SelectExpandClause = null, // all nested properties are selected
+                EdmType = property.Type.Definition
+            };
+
+            state.Push(nestedState);
+            await propertyWriter.WriteProperty(resource, property, state, context);
+            state.Pop();
+        }
+        else
+        {
+            // Do we need custom state for non-nested properties?
+            await propertyWriter.WriteProperty(resource, property, state, context);
+        }
     }
 }

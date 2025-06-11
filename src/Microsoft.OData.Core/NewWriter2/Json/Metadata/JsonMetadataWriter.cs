@@ -48,7 +48,7 @@ internal class JsonMetadataWriter<TValue>(
         if (counter.HasCountValue(value, state, context, out long? count))
         {
 
-            context.JsonWriter.WritePropertyName("@odata.count");
+            context.JsonWriter.WritePropertyName("@odata.count"u8);
 
             if (count.HasValue)
             {
@@ -68,7 +68,7 @@ internal class JsonMetadataWriter<TValue>(
         var nextLinkRetriever = metadataValueProvider.GetNextLinkHandler<TValue>(state, context);
         if (nextLinkRetriever.HasNextLinkValue(value, state, context, out Uri nextLink))
         {
-            context.JsonWriter.WritePropertyName("@odata.nextLink");
+            context.JsonWriter.WritePropertyName("@odata.nextLink"u8);
             if (nextLink is not null)
             {
                 context.JsonWriter.WriteStringValue(nextLink.ToString());
@@ -87,7 +87,7 @@ internal class JsonMetadataWriter<TValue>(
         var etagHandler = metadataValueProvider.GetEtagHandler<TValue>(state, context);
         if (etagHandler.HasEtagValue(value, state, context, out string etagValue))
         {
-            context.JsonWriter.WritePropertyName("@odata.etag");
+            context.JsonWriter.WritePropertyName("@odata.etag"u8);
             context.JsonWriter.WriteStringValue(etagValue);
         }
 
