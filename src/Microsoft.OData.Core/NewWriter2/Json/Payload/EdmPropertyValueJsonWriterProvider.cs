@@ -24,7 +24,7 @@ internal class EdmPropertyValueJsonWriterProvider : IPropertyValueWriterProvider
         // TODO: Should we dynamically create the writer if it doesn't exist?
         if (!_writers.TryGetValue(typeof(TResource), out var writerObj))
         {
-            throw new InvalidOperationException($"No writer registered for resource type {typeof(TResource)}.");
+            throw new InvalidOperationException($"No property value writer registered for resource type {typeof(TResource)}.");
         }
         
         return (IPropertyValueWriter<ODataJsonWriterContext, ODataJsonWriterStack, TResource, IEdmProperty>)writerObj;

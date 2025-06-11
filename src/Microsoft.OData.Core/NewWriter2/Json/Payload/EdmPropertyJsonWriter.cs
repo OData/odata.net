@@ -15,6 +15,7 @@ internal class EdmPropertyJsonWriter<TResource> :
         // if property is collection, we should write annotations if available
         jsonWriter.WritePropertyName(property.Name);
 
+        // TODO: handle scenario where we don't need to write the value, just annotations.
         // write property value
         var valueWriter = context.GetPropertyValueWriter(resource, property, state);
         await valueWriter.WritePropertyValue(resource, property, state, context);
