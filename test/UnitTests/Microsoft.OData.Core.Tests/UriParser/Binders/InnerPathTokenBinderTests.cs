@@ -169,11 +169,13 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             Assert.Same(HardCodedTestModel.GetAddressMyNeighborsProperty(), result);
         }
 
-        [Fact]
-        public void BindPropertyShouldBeCaseSensitive()
+        [Theory]
+        [InlineData("Shoe")]
+        [InlineData("shoe")]
+        public void BindPropertyShouldNotBeCaseSensitive(string propertyName)
         {
-            var result = InnerPathTokenBinder.BindProperty(HardCodedTestModel.GetPersonTypeReference(), "shoe", DefaultUriResolver);
-            Assert.Null(result);
+            var result = InnerPathTokenBinder.BindProperty(HardCodedTestModel.GetPersonTypeReference(), propertyName, DefaultUriResolver);
+            Assert.Same(HardCodedTestModel.GetPersonShoeProp(), result);
         }
 
         [Fact]

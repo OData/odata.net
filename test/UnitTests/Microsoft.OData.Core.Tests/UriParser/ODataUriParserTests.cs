@@ -343,9 +343,9 @@ namespace Microsoft.OData.Tests.UriParser
         }
 
         [Fact]
-        public void DefaultEnableCaseInsensitiveBuiltinIdentifierShouldBeFalse()
+        public void DefaultEnableCaseInsensitiveBuiltinIdentifierShouldBeTrue()
         {
-            Assert.False(new ODataUriResolver().EnableCaseInsensitive);
+            Assert.True(new ODataUriResolver().EnableCaseInsensitive);
         }
 
         [Fact]
