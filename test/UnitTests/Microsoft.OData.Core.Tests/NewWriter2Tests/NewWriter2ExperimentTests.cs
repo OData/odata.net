@@ -60,6 +60,13 @@ public class NewWriter2ExperimentTests
         };
 
         var writerStack = new ODataJsonWriterStack();
+        writerStack.Push(new ODataJsonWriterStackFrame
+        {
+            EdmType = new EdmCollectionType(
+                new EdmEntityTypeReference(
+                    model.FindType("ns.Project") as IEdmEntityType, isNullable: false)),
+            SelectExpandClause = odataUri.SelectAndExpand
+        });
 
         var odataWriter = new ODataResourceSetEnumerableJsonWriter<Project>();
         await odataWriter.WriteAsync(projects, writerStack, writerContext);
@@ -127,6 +134,13 @@ public class NewWriter2ExperimentTests
         };
 
         var writerStack = new ODataJsonWriterStack();
+        writerStack.Push(new ODataJsonWriterStackFrame
+        {
+            EdmType = new EdmCollectionType(
+                new EdmEntityTypeReference(
+                    model.FindType("ns.Project") as IEdmEntityType, isNullable: false)),
+            SelectExpandClause = odataUri.SelectAndExpand
+        });
 
         var odataWriter = new ODataResourceSetEnumerableJsonWriter<Project>();
         await odataWriter.WriteAsync(projects, writerStack, writerContext);
