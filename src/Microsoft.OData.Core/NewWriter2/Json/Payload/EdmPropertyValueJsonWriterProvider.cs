@@ -3,6 +3,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Microsoft.OData.Core.NewWriter2;
 
@@ -13,6 +14,16 @@ internal class EdmPropertyValueJsonWriterProvider : IPropertyValueWriterProvider
     public void Add<TResource>(IPropertyValueWriter<ODataJsonWriterContext, ODataJsonWriterStack, TResource, IEdmProperty> writer)
     {
         _writers[typeof(TResource)] = writer;
+    }
+
+    public void Add<TResource>(Action<TResource, IEdmProperty, ODataJsonWriterStack, ODataJsonWriterContext> writerAction)
+    {
+        Add(new EdmPropertyValueWriterWithAction<TResource>(writerAction));
+    }
+
+    public void Add<TResource>(Func<TResource, IEdmProperty, ODataJsonWriterStack, ODataJsonWriterContext, ValueTask> writeAsyncFunc)
+    {
+        Add(new EdmPropertyValueWriterWithAsyncFunc<TResource>(writeAsyncFunc));
     }
 
     public IPropertyValueWriter<ODataJsonWriterContext, ODataJsonWriterStack, TResource, IEdmProperty> GetPropertyValueWriter<TResource>(
@@ -29,4 +40,33 @@ internal class EdmPropertyValueJsonWriterProvider : IPropertyValueWriterProvider
         
         return (IPropertyValueWriter<ODataJsonWriterContext, ODataJsonWriterStack, TResource, IEdmProperty>)writerObj;
     }
+
+    class EdmPropertyValueWriterWithAction<TResource> : IPropertyValueWriter<ODataJsonWriterContext, ODataJsonWriterStack, TResource, IEdmProperty>
+    {
+        private readonly Action<TResource, IEdmProperty, ODataJsonWriterStack, ODataJsonWriterContext> _writeAction;
+        public EdmPropertyValueWriterWithAction(Action<TResource, IEdmProperty, ODataJsonWriterStack, ODataJsonWriterContext> writeAction)
+        {
+            _writeAction = writeAction ?? throw new ArgumentNullException(nameof(writeAction));
+        }
+
+        public ValueTask WritePropertyValue(TResource resource, IEdmProperty property, ODataJsonWriterStack state, ODataJsonWriterContext context)
+        {
+            _writeAction(resource, property, state, context);
+            return ValueTask.CompletedTask;
+        }
+    }
+
+    class EdmPropertyValueWriterWithAsyncFunc<TResource> : IPropertyValueWriter<ODataJsonWriterContext, ODataJsonWriterStack, TResource, IEdmProperty>
+    {
+        private readonly Func<TResource, IEdmProperty, ODataJsonWriterStack, ODataJsonWriterContext, ValueTask> _writeAsyncFunc;
+        public EdmPropertyValueWriterWithAsyncFunc(Func<TResource, IEdmProperty, ODataJsonWriterStack, ODataJsonWriterContext, ValueTask> writeAsyncFunc)
+        {
+            _writeAsyncFunc = writeAsyncFunc ?? throw new ArgumentNullException(nameof(writeAsyncFunc));
+        }
+        public ValueTask WritePropertyValue(TResource resource, IEdmProperty property, ODataJsonWriterStack state, ODataJsonWriterContext context)
+        {
+            return _writeAsyncFunc(resource, property, state, context);
+        }
+    }
+
 }

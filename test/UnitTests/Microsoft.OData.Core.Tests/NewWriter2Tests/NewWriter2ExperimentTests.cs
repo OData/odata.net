@@ -44,7 +44,26 @@ public class NewWriter2ExperimentTests
         var jsonWriter = new Utf8JsonWriter(output);
 
         var metataProvider = new JsonMetadataValueProvider();
-        
+        var propertyValueWriterProvider = new EdmPropertyValueJsonWriterProvider();
+        propertyValueWriterProvider.Add<Project>((resource, property, state, context) =>
+        {
+            if (property.Name == "Id")
+            {
+                context.JsonWriter.WriteNumberValue(resource.Id);
+            }
+            else if (property.Name == "Name")
+            {
+                context.JsonWriter.WriteStringValue(resource.Name);
+            }
+            else if (property.Name == "IsActive")
+            {
+                context.JsonWriter.WriteBooleanValue(resource.IsActive);
+            }
+
+            return ValueTask.CompletedTask;
+        });
+
+
         var writerContext = new ODataJsonWriterContext
         {
             Model = model,
@@ -55,7 +74,7 @@ public class NewWriter2ExperimentTests
             JsonWriter = jsonWriter,
             ResourceWriterProvider = new ResourceJsonWriterProvider(),
             MetadataWriterProvider = new JsonMetadataWriterProvider(metataProvider),
-            PropertyValueWriterProvider = new EdmPropertyValueJsonWriterProvider(),
+            PropertyValueWriterProvider = propertyValueWriterProvider,
             ResourcePropertyWriterProvider = new EdmPropertyJsonWriterProvider()
         };
 
