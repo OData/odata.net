@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Xml;
 using System.Xml.Linq;
 using Microsoft.OData.Edm.Csdl;
@@ -2533,6 +2534,64 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                 model.FindDeclaredEntitySet("defaultContainer.tasks"),
                 33,
                 10);
+        }
+
+        [Fact]
+        public void ShouldReportInvalidTypeNames()
+        {
+            var schema = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>" +
+                "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+                "<edmx:DataServices>" +
+                "<Schema Namespace=\"namespace\" Alias=\"ns\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                "<ComplexType Name=\"myPropType\"/>" +
+                "<ComplexType Name=\"myType\">" +
+                "<Property Name=\"prop1\" Type=\"ns.myType)\" />" +
+                "<Property Name=\"prop2\" Type=\"Collection(ns.myType\" />" +
+                "<Property Name=\"prop3\" Type=\"(ns.myType)\" />" +
+                "<Property Name=\"prop4\" Type=\"(ns.myType\" />" +
+                "<Property Name=\"prop5\" Type=\"Enumerable(ns.myType)\" />" +
+                "<Property Name=\"prop6\" Type=\"Collection(ns.myType)s\" />" +
+                "<Property Name=\"prop7\" Type=\"Collection)ns.myType(\" />" +
+                "<Property Name=\"prop8\" Type=\"Collection()\" />" +
+                "<Property Name=\"prop9\" Type=\"\" />" +
+                "<Property Name=\"prop10\" Type=\" \" />" +
+                "<Property Name=\"prop11\" Type=\"Ref\" />" + // Ref is not valid by itself
+                "<Property Name=\"prop12\" Type=\"Ref()\" />" +
+                "<Property Name=\"prop13\" Type=\"Collection\" />" + // TODO: Verify - Collection is valid by itself
+                "<Property Name=\"prop14\" Type=\"ns.myType\" />" + // Valid
+                "<Property Name=\"prop15\" Type=\"Collection(ns.myType)\" />" + // Valid
+                "<Property Name=\"prop16\" Type=\"Ref(ns.myType)\" />" + // Valid
+                "</ComplexType>" +
+                "</Schema>" +
+                "</edmx:DataServices>" +
+                "</edmx:Edmx>";
+
+            IEdmModel model;
+            IEnumerable<EdmError> errors;
+
+            using (var stream = new MemoryStream(Encoding.UTF8.GetBytes(schema)))
+            {
+                using (var reader = XmlReader.Create(stream))
+                {
+                    CsdlReader.TryParse(reader, out model, out errors);
+                }
+            }
+
+            Assert.Null(model);
+            Assert.NotNull(errors);
+            Assert.Equal(12, errors.Count());
+            Assert.Equal("The type name 'ns.myType)' is invalid. The type name must be that of a primitive type, a fully qualified name or an inline 'Collection' or 'Ref' type.", errors.ElementAt(0).ErrorMessage);
+            Assert.Equal("The type name 'Collection(ns.myType' is invalid. The type name must be that of a primitive type, a fully qualified name or an inline 'Collection' or 'Ref' type.", errors.ElementAt(1).ErrorMessage);
+            Assert.Equal("The type name '(ns.myType)' is invalid. The type name must be that of a primitive type, a fully qualified name or an inline 'Collection' or 'Ref' type.", errors.ElementAt(2).ErrorMessage);
+            Assert.Equal("The type name '(ns.myType' is invalid. The type name must be that of a primitive type, a fully qualified name or an inline 'Collection' or 'Ref' type.", errors.ElementAt(3).ErrorMessage);
+            Assert.Equal("The type name 'Enumerable(ns.myType)' is invalid. The type name must be that of a primitive type, a fully qualified name or an inline 'Collection' or 'Ref' type.", errors.ElementAt(4).ErrorMessage);
+            Assert.Equal("The type name 'Collection(ns.myType)s' is invalid. The type name must be that of a primitive type, a fully qualified name or an inline 'Collection' or 'Ref' type.", errors.ElementAt(5).ErrorMessage);
+            Assert.Equal("The type name 'Collection)ns.myType(' is invalid. The type name must be that of a primitive type, a fully qualified name or an inline 'Collection' or 'Ref' type.", errors.ElementAt(6).ErrorMessage);
+            Assert.Equal("The type name 'Collection()' is invalid. The type name must be that of a primitive type, a fully qualified name or an inline 'Collection' or 'Ref' type.", errors.ElementAt(7).ErrorMessage);
+            Assert.Equal("The type name '' is invalid. The type name must be that of a primitive type, a fully qualified name or an inline 'Collection' or 'Ref' type.", errors.ElementAt(8).ErrorMessage);
+            Assert.Equal("The type name ' ' is invalid. The type name must be that of a primitive type, a fully qualified name or an inline 'Collection' or 'Ref' type.", errors.ElementAt(9).ErrorMessage);
+            Assert.Equal("The type name 'Ref' is invalid. The type name must be that of a primitive type, a fully qualified name or an inline 'Collection' or 'Ref' type.", errors.ElementAt(10).ErrorMessage);
+            Assert.Equal("The type name 'Ref()' is invalid. The type name must be that of a primitive type, a fully qualified name or an inline 'Collection' or 'Ref' type.", errors.ElementAt(11).ErrorMessage);
         }
 
         static void VerifyXmlModel(IEdmModel model, string csdl)
