@@ -48,6 +48,10 @@ internal class ODataJsonWriterStack
         if (_stack == null)
         {
             _stack = new ODataJsonWriterStackFrame[4];
+            if (_count == 1)
+            {
+                _stack[0] = _current; // Preserve the current frame if it exists
+            }
         }
         else if (_count >= _stack.Length)
         {
