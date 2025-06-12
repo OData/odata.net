@@ -12,6 +12,7 @@ namespace Microsoft.OData.JsonLight
     using System.Collections.ObjectModel;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
     using System.Threading.Tasks;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Json;
@@ -1022,7 +1023,31 @@ namespace Microsoft.OData.JsonLight
             resourceState.PropertyAndAnnotationCollector.CheckForDuplicatePropertyNames(property);
             ODataResourceBase resource = resourceState.Resource;
             Debug.Assert(resource != null, "resource != null");
+
+            // The resource.Properties setter would run property verification
+            // each time a property is added to the resource. That is
+            // expensive and scales quadratically with the number of properties + number of items in collection properties.
+            // To avoid this cost, we skip property verification.
+            // Since the resource and properties are created internally by the reader,
+            // we don't need to verify the properties if we can guarantee that we are only
+            // adding properties with acceptable values (i.e. not ODataResourceValue).
+            // We use debug-time assertions instead to catch such bugs in tests.
+
+            // This is a stop-gap measure to address a performance issue. But
+            // we should rethink the current approach to property verification.
+            // See: https://github.com/OData/odata.net/issues/3263
+
+            Debug.Assert(!(property.Value is ODataResourceValue), Strings.ODataResource_PropertyValueCannotBeODataResourceValue(property.Name));
+            Debug.Assert(
+                !(property.Value is ODataCollectionValue collectionValue && collectionValue.Items.Any(item => item is ODataResourceValue)),
+                Strings.ODataResource_PropertyValueCannotBeODataResourceValue(property.Name));
+
+            bool originalSkipPropertyVerificationValue = resource.SkipPropertyVerification;
+            resource.SkipPropertyVerification = true;
+            
             resource.Properties = resource.Properties.ConcatToReadOnlyEnumerable("Properties", property);
+
+            resource.SkipPropertyVerification = originalSkipPropertyVerificationValue;
             return property;
         }
 
