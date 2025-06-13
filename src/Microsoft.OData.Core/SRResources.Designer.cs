@@ -7426,15 +7426,6 @@ namespace Microsoft.OData.Core {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to A JSON Padding function was specified on ODataMessageWriterSettings when trying to write a request message. JSON Padding is only for writing responses..
-        /// </summary>
-        internal static string WriterValidationUtils_MessageWriterSettingsJsonPaddingOnRequestMessage {
-            get {
-                return ResourceManager.GetString("WriterValidationUtils_MessageWriterSettingsJsonPaddingOnRequestMessage", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to The service document URI &apos;{0}&apos; specified is invalid; it must be either null or an absolute URI..
         /// </summary>
         internal static string WriterValidationUtils_MessageWriterSettingsServiceDocumentUriMustBeNullOrAbsolute {

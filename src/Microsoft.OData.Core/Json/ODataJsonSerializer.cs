@@ -128,7 +128,6 @@ namespace Microsoft.OData.Json
         /// </summary>
         internal void WritePayloadStart()
         {
-            ODataJsonWriterUtils.StartJsonPaddingIfRequired(this.JsonWriter, this.MessageWriterSettings);
         }
 
         /// <summary>
@@ -136,7 +135,6 @@ namespace Microsoft.OData.Json
         /// </summary>
         internal void WritePayloadEnd()
         {
-            ODataJsonWriterUtils.EndJsonPaddingIfRequired(this.JsonWriter, this.MessageWriterSettings);
         }
 
         /// <summary>
@@ -229,18 +227,7 @@ namespace Microsoft.OData.Json
         /// <returns>A task that represents the asynchronous write operation.</returns>
         internal Task WritePayloadStartAsync()
         {
-            if (this.MessageWriterSettings.HasJsonPaddingFunction())
-            {
-                return WritePayloadStartInnerAsync(this.JsonWriter, this.MessageWriterSettings.JsonPCallback);
-            }
-
             return Task.CompletedTask;
-
-            async Task WritePayloadStartInnerAsync(IJsonWriter localJsonWriter, string jsonPCallback)
-            {
-                await localJsonWriter.WritePaddingFunctionNameAsync(jsonPCallback).ConfigureAwait(false);
-                await localJsonWriter.StartPaddingFunctionScopeAsync().ConfigureAwait(false);
-            }
         }
 
         /// <summary>
@@ -249,11 +236,6 @@ namespace Microsoft.OData.Json
         /// <returns>A task that represents the asynchronous write operation.</returns>
         internal Task WritePayloadEndAsync()
         {
-            if (this.MessageWriterSettings.HasJsonPaddingFunction())
-            {
-                return this.JsonWriter.EndPaddingFunctionScopeAsync();
-            }
-
             return Task.CompletedTask;
         }
 
