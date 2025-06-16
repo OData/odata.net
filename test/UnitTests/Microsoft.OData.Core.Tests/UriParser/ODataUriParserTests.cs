@@ -349,6 +349,12 @@ namespace Microsoft.OData.Tests.UriParser
         }
 
         [Fact]
+        public void TestEnableCaseInsensitiveSetToFalse()
+        {
+            Assert.False((new ODataUriResolver { EnableCaseInsensitive = false }).EnableCaseInsensitive);
+        }
+
+        [Fact]
         public void DefaultParameterAliasNodesShouldBeEmtpy()
         {
             var uriParser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://host"), new Uri("http://host/People"));
