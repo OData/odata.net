@@ -59,7 +59,7 @@ internal class EnumerableResourceSetJsonWriter<TCollection, TElement> :
 
             state.Push(frame);
 
-            var resourceWriter = context.ResourceWriterProvider.GetResourceWriter<TElement>(context, state);
+            var resourceWriter = context.GetValueWriter<TElement>(state);
             await resourceWriter.WriteAsync(item, state, context);
 
             state.Pop();

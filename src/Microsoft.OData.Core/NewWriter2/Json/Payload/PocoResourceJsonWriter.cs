@@ -22,6 +22,14 @@ internal class PocoResourceJsonWriter<T> : IODataWriter<ODataJsonWriterContext, 
             await metadataWriter.WriteEtagPropertyAsync(value, state, context);
         }
 
+        await WriteProperties(value, state, context);
+
+        jsonWriter.WriteEndObject();
+    }
+
+    // TODO: consider making this method virtual to allow derived classes to customize the order of properties
+    private static async ValueTask WriteProperties(T value, ODataJsonWriterStack state, ODataJsonWriterContext context)
+    {
         // AspNetCoreOData serializes properties in a certain deterministic order: strucural properties first, the dynamic properties, etc.
         // However, according to the spec, the order is considered insignificant. So in this case we'll go with
         // arbitrary order for performance. But there might be cases where we want to have consistent order with AspNetCore
@@ -35,7 +43,7 @@ internal class PocoResourceJsonWriter<T> : IODataWriter<ODataJsonWriterContext, 
         var edmType = state.Current.EdmType as IEdmStructuredType;
         var selectExpand = state.Current.SelectExpandClause;
 
-        var propertyWriter = context.ResourcePropertyWriterProvider.GetPropertyWriter<T>(state, context);
+        var propertyWriter = context.GetPropertyWriter<T>(state);
 
         if (state.Current.SelectExpandClause == null || state.Current.SelectExpandClause.AllSelected)
         {
@@ -69,13 +77,13 @@ internal class PocoResourceJsonWriter<T> : IODataWriter<ODataJsonWriterContext, 
                     var property = propertySegment.NavigationProperty;
                     await WriteProperty(propertyWriter, value, property, state, context);
                 }
+
+                // TODO: handle dynamic properties
             }
         }
-
-        jsonWriter.WriteEndObject();
     }
 
-    // should this be virtual? protected?
+    // TODO: should this be virtual? protected?
     // use case: caller could inherit this class to control the order of properties or decide
     // to auto-select or always-hide properties regardless of SelectExpandClause
     // having access to this method means they don't have to deal with the details

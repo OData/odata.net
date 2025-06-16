@@ -72,7 +72,7 @@ public class NewWriter2ExperimentTests
             PayloadKind = ODataPayloadKind.ResourceSet,
             ODataVersion = ODataVersion.V4,
             JsonWriter = jsonWriter,
-            ResourceWriterProvider = new ResourceJsonWriterProvider(),
+            ValueWriterProvider = new ResourceJsonWriterProvider(),
             MetadataWriterProvider = new JsonMetadataWriterProvider(metataProvider),
             PropertyValueWriterProvider = propertyValueWriterProvider,
             ResourcePropertyWriterProvider = new EdmPropertyJsonWriterProvider()
@@ -136,8 +136,25 @@ public class NewWriter2ExperimentTests
             return new Uri("http://service/odata/Products?$skiptoken=skip", UriKind.Absolute);
         });
 
-        
-       
+        var propertyValueWriterProvider = new EdmPropertyValueJsonWriterProvider();
+        propertyValueWriterProvider.Add<Project>((resource, property, state, context) =>
+        {
+            if (property.Name == "Id")
+            {
+                context.JsonWriter.WriteNumberValue(resource.Id);
+            }
+            else if (property.Name == "Name")
+            {
+                context.JsonWriter.WriteStringValue(resource.Name);
+            }
+            else if (property.Name == "IsActive")
+            {
+                context.JsonWriter.WriteBooleanValue(resource.IsActive);
+            }
+            return ValueTask.CompletedTask;
+        });
+
+
         var writerContext = new ODataJsonWriterContext
         {
             Model = model,
@@ -146,9 +163,9 @@ public class NewWriter2ExperimentTests
             MetadataLevel = ODataMetadataLevel.Minimal,
             PayloadKind = ODataPayloadKind.ResourceSet,
             JsonWriter = jsonWriter,
-            ResourceWriterProvider = new ResourceJsonWriterProvider(),
+            ValueWriterProvider = new ResourceJsonWriterProvider(),
             MetadataWriterProvider = new JsonMetadataWriterProvider(metadataProvider),
-            PropertyValueWriterProvider = new EdmPropertyValueJsonWriterProvider(),
+            PropertyValueWriterProvider = propertyValueWriterProvider,
             ResourcePropertyWriterProvider = new EdmPropertyJsonWriterProvider()
         };
 
@@ -272,7 +289,91 @@ public class NewWriter2ExperimentTests
             return $"W/\"{customer.Id}\"";
         });
 
-        
+        var propertyValueWriterProvider = new EdmPropertyValueJsonWriterProvider();
+        propertyValueWriterProvider.Add<Customer>(async (resource, property, state, context) =>
+        {
+            if (property.Name == "Id")
+            {
+                context.JsonWriter.WriteNumberValue(resource.Id);
+            }
+            else if (property.Name == "Name")
+            {
+                context.JsonWriter.WriteStringValue(resource.Name);
+            }
+            else if (property.Name == "Emails")
+            {
+                context.JsonWriter.WriteStartArray();
+                foreach (var email in resource.Emails)
+                {
+                    context.JsonWriter.WriteStringValue(email);
+                }
+                context.JsonWriter.WriteEndArray();
+            }
+            else if (property.Name == "OtherAddresses")
+            {
+                await context.WriteValueAsync(resource.OtherAddresses, state);
+            }
+            else if (property.Name == "Orders")
+            {
+                await context.WriteValueAsync(resource.Orders, state);
+            }
+            else if (property.Name == "WishList")
+            {
+                await context.WriteValueAsync(resource.WishList, state);
+            }
+        });
+
+        propertyValueWriterProvider.Add<Order>(async (resource, property, state, context) =>
+        {
+            if (property.Name == "Id")
+            {
+                context.JsonWriter.WriteNumberValue(resource.Id);
+            }
+            else if (property.Name == "OrderDate")
+            {
+                context.JsonWriter.WriteStringValue(resource.OrderDate.ToString("o")); // ISO 8601 format
+            }
+            else if (property.Name == "Status")
+            {
+                context.JsonWriter.WriteStringValue(resource.Status.ToString());
+            }
+            else if (property.Name == "Products")
+            {
+                await context.WriteValueAsync(resource.Products, state);
+            }
+        });
+
+        propertyValueWriterProvider.Add<Product>((resource, property, state, context) =>
+        {
+            if (property.Name == "Id")
+            {
+                context.JsonWriter.WriteNumberValue(resource.Id);
+            }
+            else if (property.Name == "Name")
+            {
+                context.JsonWriter.WriteStringValue(resource.Name);
+            }
+            else if (property.Name == "Price")
+            {
+                context.JsonWriter.WriteNumberValue(resource.Price);
+            }
+            else if (property.Name == "Category")
+            {
+                context.JsonWriter.WriteStringValue(resource.Category.ToString());
+            }
+        });
+
+        propertyValueWriterProvider.Add<Address>((resource, property, state, context) =>
+        {
+            if (property.Name == "City")
+            {
+                context.JsonWriter.WriteStringValue(resource.City);
+            }
+            else if (property.Name == "Country")
+            {
+                context.JsonWriter.WriteStringValue(resource.Country);
+            }
+        });
 
         var writerContext = new ODataJsonWriterContext
         {
@@ -282,9 +383,9 @@ public class NewWriter2ExperimentTests
             MetadataLevel = ODataMetadataLevel.Minimal,
             PayloadKind = ODataPayloadKind.ResourceSet,
             JsonWriter = jsonWriter,
-            ResourceWriterProvider = new ResourceJsonWriterProvider(),
+            ValueWriterProvider = new ResourceJsonWriterProvider(),
             MetadataWriterProvider = new JsonMetadataWriterProvider(metadataProvider),
-            PropertyValueWriterProvider = new EdmPropertyValueJsonWriterProvider(),
+            PropertyValueWriterProvider = propertyValueWriterProvider,
             ResourcePropertyWriterProvider = new EdmPropertyJsonWriterProvider()
         };
 
