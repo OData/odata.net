@@ -35,7 +35,7 @@ namespace Microsoft.OData.UriParser
         /// <remarks>
         /// All extensions should look at this property and keep case sensitive behavior consistent.
         /// </remarks>
-        public virtual bool EnableCaseInsensitive { get; set; }
+        public virtual bool EnableCaseInsensitive { get; set; } = true;
 
         /// <summary>
         /// Gets and sets the optional-$-sign-prefix for OData system query option.
