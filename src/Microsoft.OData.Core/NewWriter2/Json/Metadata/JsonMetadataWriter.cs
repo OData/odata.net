@@ -1,13 +1,18 @@
-﻿using System;
+﻿using Microsoft.OData.Edm;
+using System;
+using System.Buffers;
 using System.Collections.Generic;
+using System.Diagnostics.Metrics;
 using System.Text;
+using System.Text.Json;
+using System.Text.Unicode;
 using System.Threading.Tasks;
 
 namespace Microsoft.OData.Core.NewWriter2;
 
 internal class JsonMetadataWriter<TValue>(
-    IMetadataValueProvider<ODataJsonWriterContext, ODataJsonWriterStack> metadataValueProvider)
-    : IMetadataWriter<ODataJsonWriterContext, ODataJsonWriterStack, TValue>
+    IMetadataValueProvider<ODataJsonWriterContext, ODataJsonWriterStack, IEdmProperty> metadataValueProvider)
+    : IMetadataWriter<ODataJsonWriterContext, ODataJsonWriterStack, TValue, IEdmProperty>
 {
     /// <summary>
     /// See:
@@ -92,5 +97,69 @@ internal class JsonMetadataWriter<TValue>(
         }
 
         return ValueTask.CompletedTask;
+    }
+
+    public ValueTask WriteNestedCountPropertyAsync(TValue value, IEdmProperty property, ODataJsonWriterStack state, ODataJsonWriterContext context)
+    {
+        var counter = metadataValueProvider.GetCounter<TValue>(context, state);
+        if (counter.HasNestedCountValue(value, property, state, context, out long? count))
+        {
+
+            WritePropertyAnnotationName(context.JsonWriter, property.Name, "@odata.count"u8);
+
+            if (count.HasValue)
+            {
+                context.JsonWriter.WriteNumberValue(count.Value);
+            }
+            else
+            {
+                counter.WriteNestedCountValue(value, property, state, context);
+            }
+        }
+
+        return ValueTask.CompletedTask;
+    }
+
+    public ValueTask WriteNestedNextLinkPropertyAsync(TValue value, IEdmProperty property, ODataJsonWriterStack state, ODataJsonWriterContext context)
+    {
+        var nextLinkHandler = metadataValueProvider.GetNextLinkHandler<TValue>(state, context);
+        if (nextLinkHandler.HasNestedNextLinkValue(value, property, state, context, out Uri nextLink))
+        {
+            WritePropertyAnnotationName(context.JsonWriter, property.Name, "@odata.nextLink"u8);
+            if (nextLink is not null)
+            {
+                context.JsonWriter.WriteStringValue(nextLink.ToString());
+            }
+            else
+            {
+                nextLinkHandler.WriteNestedNextLinkValue(value, property, state, context);
+            }
+        }
+
+        return ValueTask.CompletedTask;
+    }
+
+    private static void WritePropertyAnnotationName(Utf8JsonWriter writer, string propertyName, ReadOnlySpan<byte> annotationName)
+    {
+        const int StackAllocThreshold = 128;
+        int combinedLength = propertyName.Length + annotationName.Length;
+        int maxCombinedLength = propertyName.Length * 6 + annotationName.Length; // worst case for UTF-8 encoding
+
+
+        byte[] rentedArray = null; 
+
+        Span<byte> buffer = combinedLength < StackAllocThreshold ?
+            stackalloc byte[combinedLength] : ArrayPool<byte>.Shared.Rent(combinedLength);
+
+        Utf8.FromUtf16(propertyName, buffer, out _, out var propertyBytesWritten);
+        annotationName.CopyTo(buffer.Slice(propertyBytesWritten));
+
+        var fullAnnotationName = buffer.Slice(0, propertyBytesWritten + annotationName.Length);
+        writer.WritePropertyName(fullAnnotationName);
+
+        if (rentedArray is not null)
+        {
+            ArrayPool<byte>.Shared.Return(rentedArray);
+        }
     }
 }

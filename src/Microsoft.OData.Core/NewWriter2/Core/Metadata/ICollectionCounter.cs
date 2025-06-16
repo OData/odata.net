@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Microsoft.OData.Core.NewWriter2;
 
-internal interface ICollectionCounter<TContext, TState, TValue>
+internal interface ICollectionCounter<TContext, TState, TValue, TProperty>
 {
     /// <summary>
     /// Checks if the item <paramref name="value"/> has a count value to be written.
@@ -31,4 +31,8 @@ internal interface ICollectionCounter<TContext, TState, TValue>
     /// <param name="context"></param>
     /// <param name="state"></param>
     void WriteCountValue(TValue value, TState state, TContext context);
+
+    bool HasNestedCountValue(TValue value, TProperty property, TState state, TContext context, out long? count);
+
+    void WriteNestedCountValue(TValue value, TProperty property, TState state, TContext context);
 }

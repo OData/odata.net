@@ -18,7 +18,7 @@ internal class PocoResourceJsonWriter<T> : IODataWriter<ODataJsonWriterContext, 
         if (context.MetadataLevel >= ODataMetadataLevel.Minimal)
         {
             // Write context URL if needed
-            var metadataWriter = context.MetadataWriterProvider.GetMetadataWriter<T>(context, state);
+            var metadataWriter = context.GetMetadataWriter<T>(state);
             await metadataWriter.WriteEtagPropertyAsync(value, state, context);
         }
 

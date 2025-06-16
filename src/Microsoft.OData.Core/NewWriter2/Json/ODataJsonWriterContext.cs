@@ -20,11 +20,11 @@ internal class ODataJsonWriterContext
         ValueWriterProvider { private get; set; }
     public required IResourcePropertyWriterProvider<ODataJsonWriterContext, ODataJsonWriterStack, IEdmProperty>
         ResourcePropertyWriterProvider { private get; set; }
-    public required IMetadataWriterProvider<ODataJsonWriterContext, ODataJsonWriterStack> MetadataWriterProvider { get; set; }
+    public required IMetadataWriterProvider<ODataJsonWriterContext, ODataJsonWriterStack, IEdmProperty> MetadataWriterProvider { private get; set; }
     public required IPropertyValueWriterProvider<ODataJsonWriterContext, ODataJsonWriterStack, IEdmProperty>
         PropertyValueWriterProvider { private get; set; }
 
-    public IMetadataWriter<ODataJsonWriterContext, ODataJsonWriterStack, T> GetMetadataWriter<T>(ODataJsonWriterStack state)
+    public IMetadataWriter<ODataJsonWriterContext, ODataJsonWriterStack, T, IEdmProperty> GetMetadataWriter<T>(ODataJsonWriterStack state)
     {
         return MetadataWriterProvider.GetMetadataWriter<T>(this, state);
     }

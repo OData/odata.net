@@ -16,7 +16,7 @@ internal class EnumerableResourceSetJsonWriter<TCollection, TElement> :
         {
             context.JsonWriter.WriteStartObject();
 
-            var metadataWriter = context.MetadataWriterProvider.GetMetadataWriter<TCollection>(context, state);
+            var metadataWriter = context.GetMetadataWriter<TCollection>(state);
 
             // TODO: We should probably expose a ShouldWriteXXX method for metadata to give
             // users an easy way to control whether certain metadata should be written
@@ -24,7 +24,7 @@ internal class EnumerableResourceSetJsonWriter<TCollection, TElement> :
             {
                 await metadataWriter.WriteContextUrlAsync(value, state, context);
             }
-            
+
 
             if (context.ODataUri.QueryCount.HasValue
                 && context.ODataUri.QueryCount.Value)
@@ -37,9 +37,17 @@ internal class EnumerableResourceSetJsonWriter<TCollection, TElement> :
 
             context.JsonWriter.WritePropertyName("value");
         }
-
-        // TODO: if this is the value of a property, we should write annotations for the property
-        // before the array start
+        else
+        {
+            // TODO: if this is the value of a property, we should write annotations for the property
+            // before the array start. Should we write the annotations here in the parent property writer.
+            // Since the parent property writer has already written the property name by the time we get here,
+            // then we cannot write annotations here.
+            // But this creates an issue. The annotations are written by different components depending
+            // on whether this is a top-level write or not.
+            // Perhaps this component should only be responsible for writing the array and the top-level
+            // annotations moved to some parent component
+        }
 
         context.JsonWriter.WriteStartArray();
 

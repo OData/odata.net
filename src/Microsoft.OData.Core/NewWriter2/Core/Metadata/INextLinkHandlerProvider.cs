@@ -1,6 +1,6 @@
 ﻿namespace Microsoft.OData.Core.NewWriter2;
 
-internal interface INextLinkHandlerProvider<TContext, TState>
+internal interface INextLinkHandlerProvider<TContext, TState, TProperty>
 {
-    INextLinkHandler<TContext, TState, TValue> GetNextLinkHandler<TValue>(TState state, TContext context);
+    INextLinkHandler<TContext, TState, TValue, TProperty> GetNextLinkHandler<TValue>(TState state, TContext context);
 }

@@ -1,18 +1,27 @@
-﻿using System;
+﻿using Microsoft.OData.Edm;
+using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Microsoft.OData.Core.NewWriter2;
 
 internal class JsonMetadataWriterProvider(
-    IMetadataValueProvider<ODataJsonWriterContext, ODataJsonWriterStack> metadataValueProvider)
-    : IMetadataWriterProvider<ODataJsonWriterContext, ODataJsonWriterStack>
+    IMetadataValueProvider<ODataJsonWriterContext, ODataJsonWriterStack, IEdmProperty> metadataValueProvider)
+    : IMetadataWriterProvider<ODataJsonWriterContext, ODataJsonWriterStack, IEdmProperty>
 {
-    public IMetadataWriter<ODataJsonWriterContext, ODataJsonWriterStack, TValue> GetMetadataWriter<TValue>(
+    private readonly ConcurrentDictionary<Type, object> _writers = new();
+    public IMetadataWriter<ODataJsonWriterContext, ODataJsonWriterStack, TValue, IEdmProperty> GetMetadataWriter<TValue>(
         ODataJsonWriterContext context,
         ODataJsonWriterStack state)
     {
-        // TODO: should be cached
-        return new JsonMetadataWriter<TValue>(metadataValueProvider);
+        if (_writers.TryGetValue(typeof(TValue), out var writer))
+        {
+            return (IMetadataWriter<ODataJsonWriterContext, ODataJsonWriterStack, TValue, IEdmProperty>)writer;
+        }
+
+        var newWriter = new JsonMetadataWriter<TValue>(metadataValueProvider);
+        _writers.TryAdd(typeof(TValue), newWriter);
+        return newWriter;
     }
 }

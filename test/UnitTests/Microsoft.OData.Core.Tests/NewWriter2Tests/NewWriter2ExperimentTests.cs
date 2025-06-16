@@ -130,11 +130,14 @@ public class NewWriter2ExperimentTests
 
         // What a bout a generic counter for IEnumerable<T>
         var metadataProvider = new JsonMetadataValueProvider();
-        metadataProvider.MapCounter<IEnumerable<Project>>((projects, context, state) => projects.Count());
-        metadataProvider.MapNextLinkRetriever<IEnumerable<Project>>((projects, context, state) =>
+        metadataProvider.MapCounter<IEnumerable<Project>>((projects, state, context) => projects.Count());
+        metadataProvider.MapNextLinkHandler<IEnumerable<Project>>((projects, state, context) =>
         {
             return new Uri("http://service/odata/Products?$skiptoken=skip", UriKind.Absolute);
         });
+
+        metadataProvider.MapCounter<IEnumerable<Order>>((orders, state, context) => orders.Count());
+
 
         var propertyValueWriterProvider = new EdmPropertyValueJsonWriterProvider();
         propertyValueWriterProvider.Add<Project>((resource, property, state, context) =>
@@ -279,12 +282,12 @@ public class NewWriter2ExperimentTests
         // What a bout a generic counter for IEnumerable<T>
         var metadataProvider = new JsonMetadataValueProvider();
         // TODO: would like to map IList<Customer> but would not work since the writer supports IEnumerable<T>
-        metadataProvider.MapCounter<IList<Customer>>((customers, context, state) => customers.Count);
-        metadataProvider.MapNextLinkRetriever<IList<Customer>>((customers, context, state) =>
+        metadataProvider.MapCounter<IList<Customer>>((customers, state, context) => customers.Count);
+        metadataProvider.MapNextLinkHandler<IList<Customer>>((customers, state, context) =>
         {
             return new Uri("http://service/odata/Customers?$skip=2", UriKind.Absolute);
         });
-        metadataProvider.MapEtagHandler<Customer>((customer, context, state) =>
+        metadataProvider.MapEtagHandler<Customer>((customer, state, context) =>
         {
             return $"W/\"{customer.Id}\"";
         });
