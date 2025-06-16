@@ -49,17 +49,17 @@ public class NewWriter2ExperimentTests
         {
             if (property.Name == "Id")
             {
-                context.JsonWriter.WriteNumberValue(resource.Id);
+                return context.WriteValueAsync(resource.Id, state);
             }
             else if (property.Name == "Name")
             {
-                context.JsonWriter.WriteStringValue(resource.Name);
+                return context.WriteValueAsync(resource.Name, state);
             }
             else if (property.Name == "IsActive")
             {
-                context.JsonWriter.WriteBooleanValue(resource.IsActive);
+                return context.WriteValueAsync(resource.IsActive, state);
             }
-
+            
             return ValueTask.CompletedTask;
         });
 
@@ -144,16 +144,17 @@ public class NewWriter2ExperimentTests
         {
             if (property.Name == "Id")
             {
-                context.JsonWriter.WriteNumberValue(resource.Id);
+                return context.WriteValueAsync(resource.Id, state);
             }
             else if (property.Name == "Name")
             {
-                context.JsonWriter.WriteStringValue(resource.Name);
+                return context.WriteValueAsync(resource.Name, state);
             }
             else if (property.Name == "IsActive")
             {
-                context.JsonWriter.WriteBooleanValue(resource.IsActive);
+                return context.WriteValueAsync(resource.IsActive, state);
             }
+
             return ValueTask.CompletedTask;
         });
 
@@ -293,18 +294,19 @@ public class NewWriter2ExperimentTests
         });
 
         var propertyValueWriterProvider = new EdmPropertyValueJsonWriterProvider();
-        propertyValueWriterProvider.Add<Customer>(async (resource, property, state, context) =>
+        propertyValueWriterProvider.Add<Customer>((resource, property, state, context) =>
         {
             if (property.Name == "Id")
             {
-                context.JsonWriter.WriteNumberValue(resource.Id);
+                return context.WriteValueAsync(resource.Id, state);
             }
             else if (property.Name == "Name")
             {
-                context.JsonWriter.WriteStringValue(resource.Name);
+                return context.WriteValueAsync(resource.Name, state);
             }
             else if (property.Name == "Emails")
             {
+                // TODO: use context.WriteValueAsync
                 context.JsonWriter.WriteStartArray();
                 foreach (var email in resource.Emails)
                 {
@@ -314,68 +316,76 @@ public class NewWriter2ExperimentTests
             }
             else if (property.Name == "OtherAddresses")
             {
-                await context.WriteValueAsync(resource.OtherAddresses, state);
+                return context.WriteValueAsync(resource.OtherAddresses, state);
             }
             else if (property.Name == "Orders")
             {
-                await context.WriteValueAsync(resource.Orders, state);
+                return context.WriteValueAsync(resource.Orders, state);
             }
             else if (property.Name == "WishList")
             {
-                await context.WriteValueAsync(resource.WishList, state);
+                return context.WriteValueAsync(resource.WishList, state);
             }
+
+            return ValueTask.CompletedTask;
         });
 
-        propertyValueWriterProvider.Add<Order>(async (resource, property, state, context) =>
+        propertyValueWriterProvider.Add<Order>((resource, property, state, context) =>
         {
             if (property.Name == "Id")
             {
-                context.JsonWriter.WriteNumberValue(resource.Id);
+                return context.WriteValueAsync(resource.Id, state);
             }
             else if (property.Name == "OrderDate")
             {
-                context.JsonWriter.WriteStringValue(resource.OrderDate.ToString("o")); // ISO 8601 format
+                return context.WriteValueAsync(resource.OrderDate, state);
             }
             else if (property.Name == "Status")
             {
-                context.JsonWriter.WriteStringValue(resource.Status.ToString());
+                return context.WriteValueAsync(resource.Status, state);
             }
             else if (property.Name == "Products")
             {
-                await context.WriteValueAsync(resource.Products, state);
+                return context.WriteValueAsync(resource.Products, state);
             }
+
+            return ValueTask.CompletedTask;
         });
 
         propertyValueWriterProvider.Add<Product>((resource, property, state, context) =>
         {
             if (property.Name == "Id")
             {
-                context.JsonWriter.WriteNumberValue(resource.Id);
+                return context.WriteValueAsync(resource.Id, state);
             }
             else if (property.Name == "Name")
             {
-                context.JsonWriter.WriteStringValue(resource.Name);
+                return context.WriteValueAsync(resource.Name, state);
             }
             else if (property.Name == "Price")
             {
-                context.JsonWriter.WriteNumberValue(resource.Price);
+                return context.WriteValueAsync(resource.Price, state);
             }
             else if (property.Name == "Category")
             {
-                context.JsonWriter.WriteStringValue(resource.Category.ToString());
+                return context.WriteValueAsync(resource.Category, state);
             }
+
+            return ValueTask.CompletedTask;
         });
 
         propertyValueWriterProvider.Add<Address>((resource, property, state, context) =>
         {
             if (property.Name == "City")
             {
-                context.JsonWriter.WriteStringValue(resource.City);
+                return context.WriteValueAsync(resource.City, state);
             }
             else if (property.Name == "Country")
             {
-                context.JsonWriter.WriteStringValue(resource.Country);
+                return context.WriteValueAsync(resource.Country, state);
             }
+
+            return ValueTask.CompletedTask;
         });
 
         var writerContext = new ODataJsonWriterContext

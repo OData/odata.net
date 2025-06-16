@@ -24,6 +24,56 @@ internal class ResourceJsonWriterProvider : IResourceWriterProvider<ODataJsonWri
             return writer;
         }
 
+        if (type == typeof(int))
+        {
+            var writer = new IntJsonwriter();
+            _writers[type] = writer;
+            return (IODataWriter<ODataJsonWriterContext, ODataJsonWriterStack, TValue>)writer;
+        }
+
+        if (type == typeof(bool))
+        {
+            var writer = new BoolJsonWriter();
+            _writers[type] = writer;
+            return (IODataWriter<ODataJsonWriterContext, ODataJsonWriterStack, TValue>)writer;
+        }
+
+        if (type == typeof(string))
+        {
+            var writer = new StringJsonWriter();
+            _writers[type] = writer;
+            return (IODataWriter<ODataJsonWriterContext, ODataJsonWriterStack, TValue>)writer;
+        }
+
+        if (type == typeof(decimal))
+        {
+            var writer = new DecimalJsonWriter();
+            _writers[type] = writer;
+            return (IODataWriter<ODataJsonWriterContext, ODataJsonWriterStack, TValue>)writer;
+        }
+
+        if (type.IsEnum)
+        {
+            var writerType = typeof(EnumJsonWriter<>).MakeGenericType(type);
+            var writer = (IODataWriter<ODataJsonWriterContext, ODataJsonWriterStack, TValue>)Activator.CreateInstance(writerType);
+            _writers[type] = writer;
+            return writer;
+        }
+
+        if (type == typeof(DateTime))
+        {
+            var writer = new DateTimeJsonWriter();
+            _writers[type] = writer;
+            return (IODataWriter<ODataJsonWriterContext, ODataJsonWriterStack, TValue>)writer;
+        }
+
+        if (type == typeof(DateTimeOffset))
+        {
+            var writer = new DateTimeOffsetJsonWriter();
+            _writers[type] = writer;
+            return (IODataWriter<ODataJsonWriterContext, ODataJsonWriterStack, TValue>)writer;
+        }
+
         var pocoResourceWriter = new PocoResourceJsonWriter<TValue>();
         _writers[type] = pocoResourceWriter;
         return pocoResourceWriter;
