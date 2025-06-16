@@ -7593,6 +7593,7 @@ namespace Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd
                 new Order
                 {
                     OrderId = -8,
+                    CustomerId = null,
                     Concurrency = new ConcurrencyInfo
                     {
                         Token = "zjecuydplhxfzfphcfmoqlcitfxpvgqiiphyveopqieojxfspakzmoekbykuepturucfxrmbuxk",

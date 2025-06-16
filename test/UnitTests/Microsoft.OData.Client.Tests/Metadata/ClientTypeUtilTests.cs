@@ -126,6 +126,23 @@ namespace Microsoft.OData.Client.Tests.Metadata
         }
 
         [Fact]
+        public void IFTypeProperty_HasNullableForeignKey_OfTypeEnum_GetKeyPropertiesOnType_DoesNotThrowException()
+        {
+            // Arrange
+            Type employee = typeof(EmployeeWithNullableForeignKey);
+
+            //Act
+            var keyProperties = ClientTypeUtil.GetKeyPropertiesOnType(employee);
+
+            var empNumKey = keyProperties.Single(k => k.Name == "EmpNumber");
+
+            //Assert
+            Assert.Single(keyProperties);
+            Assert.NotNull(empNumKey);
+            Assert.True(PrimitiveType.IsKnownType(empNumKey.PropertyType) && empNumKey.PropertyType == typeof(string));
+        }
+
+        [Fact]
         public void IFTypeProperty_HasNullableGenericTypeKeyAttribute_OfTypeEnum_GetKeyPropertiesOnType_ThrowException()
         {
             // Arrange
@@ -214,6 +231,17 @@ namespace Microsoft.OData.Client.Tests.Metadata
             public Department Department { get; set; }
         }
 
+        public class EmployeeWithNullableForeignKey
+        {
+            [System.ComponentModel.DataAnnotations.Key]
+            public string EmpNumber { get; set; }
+
+            public DepartmentType? DeptType { get; set; }
+
+            [System.ComponentModel.DataAnnotations.Schema.ForeignKey("DeptType")]
+            public DepartmentWithEnumAsKey Department { get; set; }
+        }
+
         public class EmployeeWithNullableStruct
         {
             [System.ComponentModel.DataAnnotations.Key]
@@ -237,6 +265,20 @@ namespace Microsoft.OData.Client.Tests.Metadata
             [System.ComponentModel.DataAnnotations.Key]
             public string DeptId { get; set; }
             public string Name { get; set; }
+        }
+
+        public class DepartmentWithEnumAsKey
+        {
+            [System.ComponentModel.DataAnnotations.Key]
+            public DepartmentType DeptType { get; set; }
+            public string Name { get; set; }
+        }
+
+        public enum DepartmentType
+        {
+            HR = 1,
+            IT = 2,
+            Sales = 3
         }
 
         public struct EmployeeTypeStruct

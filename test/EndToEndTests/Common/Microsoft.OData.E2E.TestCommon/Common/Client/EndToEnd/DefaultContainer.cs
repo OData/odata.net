@@ -2204,7 +2204,7 @@ namespace Microsoft.OData.E2E.TestCommon.Common.Client.EndToEnd
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("CustomerId")]
-        public virtual int CustomerId
+        public virtual global::System.Nullable<int> CustomerId
         {
             get
             {
@@ -2219,8 +2219,8 @@ namespace Microsoft.OData.E2E.TestCommon.Common.Client.EndToEnd
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private int _CustomerId;
-        partial void OnCustomerIdChanging(int value);
+        private global::System.Nullable<int> _CustomerId;
+        partial void OnCustomerIdChanging(global::System.Nullable<int> value);
         partial void OnCustomerIdChanged();
         /// <summary>
         /// There are no comments for Property Customer in the schema.
@@ -3599,7 +3599,7 @@ namespace Microsoft.OData.E2E.TestCommon.Common.Client.EndToEnd
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("CustomerId")]
-        public virtual int CustomerId
+        public virtual global::System.Nullable<int> CustomerId
         {
             get
             {
@@ -3614,8 +3614,8 @@ namespace Microsoft.OData.E2E.TestCommon.Common.Client.EndToEnd
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private int _CustomerId;
-        partial void OnCustomerIdChanging(int value);
+        private global::System.Nullable<int> _CustomerId;
+        partial void OnCustomerIdChanging(global::System.Nullable<int> value);
         partial void OnCustomerIdChanged();
         /// <summary>
         /// There are no comments for Property Concurrency in the schema.
