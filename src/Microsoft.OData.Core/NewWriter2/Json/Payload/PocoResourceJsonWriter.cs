@@ -63,6 +63,10 @@ internal class PocoResourceJsonWriter<T> : IODataWriter<ODataJsonWriterContext, 
         }
         else
         {
+            // TODO: in the current tests, we expect structural properties before navigation properties.
+            // For some reason, the ODataUri parsers return SelectExpandClause with navigation properties first.
+            // However, if the order of properties is not significant, we could do have a single loop
+            // for better performance.
             foreach (var item in selectExpand.SelectedItems)
             {
                 if (item is PathSelectItem pathSelectItem)
@@ -71,14 +75,19 @@ internal class PocoResourceJsonWriter<T> : IODataWriter<ODataJsonWriterContext, 
                     var property = propertySegment.Property;
                     await WriteProperty(propertyWriter, value, property, state, context);
                 }
-                else if (item is ExpandedNavigationSelectItem expandedItem)
+                
+
+                // TODO: handle dynamic properties
+            }
+
+            foreach (var item in selectExpand.SelectedItems)
+            {
+                if (item is ExpandedNavigationSelectItem expandedItem)
                 {
                     var propertySegment = expandedItem.PathToNavigationProperty.LastSegment as NavigationPropertySegment;
                     var property = propertySegment.NavigationProperty;
                     await WriteProperty(propertyWriter, value, property, state, context);
                 }
-
-                // TODO: handle dynamic properties
             }
         }
     }
