@@ -17,7 +17,7 @@ internal class JsonMetadataValueProvider : IMetadataValueProvider<ODataJsonWrite
     // TODO: this approach will require us to create a new counter for each type T in generic types like IEnumerable<T>,
     // We should consider a factory pattern for such use cases. But we'll we create factories all across the library?
     public void MapCounter<TValue>(
-        Func<TValue, ODataJsonWriterStack, ODataJsonWriterContext, long?> countFunc,
+        Func<TValue, ODataJsonWriterStack, ODataJsonWriterContext, long?> countFunc = null,
         Func<TValue, IEdmProperty, ODataJsonWriterStack, ODataJsonWriterContext, long?> nestedCountFunc = null)
     {
         // TODO: double allocation, not ideal
@@ -25,11 +25,13 @@ internal class JsonMetadataValueProvider : IMetadataValueProvider<ODataJsonWrite
     }
 
     public void MapNextLinkHandler<TValue>(
-        Func<TValue, ODataJsonWriterStack, ODataJsonWriterContext, Uri> nextLinkFunc,
+        Func<TValue, ODataJsonWriterStack, ODataJsonWriterContext, Uri> nextLinkFunc = null,
         Func<TValue, IEdmProperty, ODataJsonWriterStack, ODataJsonWriterContext, Uri> nestedNextLinkFunc = null)
     {
         nextLinkRetrievers[typeof(TValue)] = new NextLinkHandler<TValue>(nextLinkFunc, nestedNextLinkFunc);
     }
+
+    
 
     public void MapEtagHandler<TValue>(Func<TValue, ODataJsonWriterStack, ODataJsonWriterContext, string> etagFunc)
     {
@@ -90,6 +92,12 @@ internal class JsonMetadataValueProvider : IMetadataValueProvider<ODataJsonWrite
     {
         public bool HasCountValue(TValue value, ODataJsonWriterStack state, ODataJsonWriterContext context, out long? count)
         {
+            if (countFunc == null)
+            {                 
+                count = null;
+                return false;
+            }
+
             count = default;
             long? result = countFunc(value, state, context);
             if (result.HasValue)
@@ -172,6 +180,11 @@ internal class JsonMetadataValueProvider : IMetadataValueProvider<ODataJsonWrite
     {
         public bool HasNextLinkValue(TValue value, ODataJsonWriterStack state, ODataJsonWriterContext context, out Uri nextLink)
         {
+            if (nextLinkFunc == null)
+            {
+                nextLink = null;
+                return false;
+            }
             nextLink = nextLinkFunc(value, state, context);
             if (nextLink != null)
             {

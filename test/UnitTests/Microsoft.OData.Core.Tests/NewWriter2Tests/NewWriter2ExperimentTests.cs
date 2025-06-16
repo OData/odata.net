@@ -226,7 +226,7 @@ public class NewWriter2ExperimentTests
             new Order
             {
                 Id = 1,
-                OrderDate = DateTime.UtcNow.AddDays(-10),
+                OrderDate = new DateTime(2025, 05, 31),
                 Status = OrderStatus.Purchased,
                 Products = products.Take(2).ToList()
             },
@@ -288,9 +288,75 @@ public class NewWriter2ExperimentTests
         {
             return new Uri("http://service/odata/Customers?$skip=2", UriKind.Absolute);
         });
+
+        metadataProvider.MapCounter<Customer>(nestedCountFunc: (customer, property, state, context) =>
+        {
+            // TODO: should use something like
+            //      context.GetCounter<IEnumerable<Order>>(state).GetCount(customer.Orders, state, context);
+            // Or: context.GetMetadataWriter<IEnumerable<Order>>(state).WriteCountProperty(customer.Orders, state, context);
+            if (property.Name == "Orders")
+            {
+                return customer.Orders.Count;
+            }
+            else if (property.Name == "WishList")
+            {
+                return customer.WishList.Count;
+            }
+            return null;
+        });
+
+        metadataProvider.MapNextLinkHandler<Customer>(nestedNextLinkFunc: (customer, property, state, context) =>
+        {
+            // TODO: should use something like
+            //      context.GetNextLinkHandler<IEnumerable<Order>>(state).GetNextLink(customer.Orders, state, context);
+            // Or: context.GetMetadataWriter<IEnumerable<Order>>(state).WriteNextLinkPropertyAsync(customer.Orders, state, context);
+            if (property.Name == "Orders")
+            {
+                return new Uri($"http://service/odata/Customers({customer.Id})/Orders?$skip=2", UriKind.Absolute);
+            }
+            else if (property.Name == "WishList")
+            {
+                return new Uri($"http://service/odata/Customers({customer.Id})/WishList?$skip=2", UriKind.Absolute);
+            }
+            return null;
+        });
+
         metadataProvider.MapEtagHandler<Customer>((customer, state, context) =>
         {
             return $"W/\"{customer.Id}\"";
+        });
+
+        metadataProvider.MapCounter<Order>(nestedCountFunc: (order, property, state, context) =>
+        {   
+            if (property.Name == "Products")
+            {
+                return order.Products.Count;
+            }
+            return null;
+        });
+
+        metadataProvider.MapNextLinkHandler<Order>(nestedNextLinkFunc: (order, property, state, context) =>
+        {
+            if (property.Name == "Products")
+            {
+                // How to get customer from product?
+                // we could get state.Parent, but that does not contain the resource Id,
+                // We could add resource Id to each stack frame so that we can reconstruct next links
+                // Or we could store the resource at each stack frame, but that could lead to boxing since
+                // the only common repreentation is object.
+                return new Uri($"http://service/odata/Customers(1)/Orders({order.Id})/Products?$skip=2", UriKind.Absolute);
+            }
+            return null;
+        });
+
+        metadataProvider.MapEtagHandler<Order>((order, state, context) =>
+        {
+            return $"W/\"order-{order.Id}\"";
+        });
+
+        metadataProvider.MapEtagHandler<Product>((product, state, context) =>
+        {
+            return $"W/\"product-{product.Id}\"";
         });
 
         var propertyValueWriterProvider = new EdmPropertyValueJsonWriterProvider();
@@ -446,7 +512,7 @@ public class NewWriter2ExperimentTests
                   "Orders@odata.nextLink": "http://service/odata/Customers(1)/Orders?$skip=2",
                   "Orders": [
                     {
-                      "@odata.etag": "W/\"1-1\"",
+                      "@odata.etag": "W/\"order-1\"",
                       "Id": 1,
                       "OrderDate": "2025-05-31T00:00:00Z",
                       "Status": "Purchased",
@@ -468,7 +534,7 @@ public class NewWriter2ExperimentTests
                       ]
                     },
                     {
-                      "@odata.etag": "W/\"1-2\"",
+                      "@odata.etag": "W/\"order-2\"",
                       "Id": 2,
                       "OrderDate": "2025-06-05T00:00:00Z",
                       "Status": "Shipped",
@@ -499,13 +565,13 @@ public class NewWriter2ExperimentTests
                   "WishList@odata.count": 2,
                   "WishList": [
                     {
-                      "@odata.etag": "W/\"wishlist-1-1\"",
+                      "@odata.etag": "W/\"wishlist-1\"",
                       "Id": 1,
                       "Name": "Laptop",
                       "category": "Electronics"
                     },
                     {
-                      "@odata.etag": "W/\"wishlist-1-2\"",
+                      "@odata.etag": "W/\"wishlist-2\"",
                       "Id": 2,
                       "Name": "T-Shirt",
                       "category": "Clothing"
@@ -527,7 +593,7 @@ public class NewWriter2ExperimentTests
                   "Orders@odata.count": 1,
                   "Orders": [
                     {
-                      "@odata.etag": "W/\"2-1\"",
+                      "@odata.etag": "W/\"order-3\"",
                       "Id": 3,
                       "OrderDate": "2025-06-08T00:00:00Z",
                       "Status": "Delivered",
@@ -558,13 +624,13 @@ public class NewWriter2ExperimentTests
                   "WishList@odata.count": 2,
                   "WishList": [
                     {
-                      "@odata.etag": "W/\"wishlist-2-1\"",
+                      "@odata.etag": "W/\"wishlist-4\"",
                       "Id": 4,
                       "Name": "Smartphone",
                       "category": "Electronics"
                     },
                     {
-                      "@odata.etag": "W/\"wishlist-2-2\"",
+                      "@odata.etag": "W/\"wishlist-6\"",
                       "Id": 6,
                       "Name": "Refrigerator",
                       "category": "HomeAppliances"

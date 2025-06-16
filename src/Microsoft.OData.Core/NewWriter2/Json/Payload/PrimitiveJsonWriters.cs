@@ -50,7 +50,7 @@ internal class DateTimeJsonWriter : IODataWriter<ODataJsonWriterContext, ODataJs
     public ValueTask WriteAsync(DateTime value, ODataJsonWriterStack state, ODataJsonWriterContext context)
     {
         var jsonWriter = context.JsonWriter;
-        jsonWriter.WriteStringValue(value); // TODO: ensure OData format is applied
+        jsonWriter.WriteStringValue(value.ToString("yyyy-MM-ddTHH:mm:ssZ")); // Ensure OData format is applied
         return ValueTask.CompletedTask;
     }
 }

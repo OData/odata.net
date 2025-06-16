@@ -27,6 +27,8 @@ internal class EdmPropertyJsonWriter<TResource> :
             // Another alternative, the metadata resource's metadata writer could be responsible for
             // writing annotations for its properties.
             var metadataWriter = context.GetMetadataWriter<TResource>(state);
+            await metadataWriter.WriteNestedCountPropertyAsync(resource, property, state, context);
+            await metadataWriter.WriteNestedNextLinkPropertyAsync(resource, property, state, context);
         }
 
         // if property is collection, we should write annotations if available

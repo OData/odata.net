@@ -50,12 +50,12 @@ internal class PocoResourceJsonWriter<T> : IODataWriter<ODataJsonWriterContext, 
             // If all properties are selected, we can write all properties
             foreach (var property in edmType.StructuralProperties())
             {
-                await WriteProperty(propertyWriter, value, property, state, context);
+                await WriteProperty(propertyWriter, value, property, null, state, context);
             }
 
             foreach (var property in edmType.NavigationProperties())
             {
-                await WriteProperty(propertyWriter, value, property, state, context);
+                await WriteProperty(propertyWriter, value, property, null, state, context);
             }
 
             // TODO handle dynamic properties
@@ -73,7 +73,7 @@ internal class PocoResourceJsonWriter<T> : IODataWriter<ODataJsonWriterContext, 
                 {
                     var propertySegment = pathSelectItem.SelectedPath.LastSegment as PropertySegment;
                     var property = propertySegment.Property;
-                    await WriteProperty(propertyWriter, value, property, state, context);
+                    await WriteProperty(propertyWriter, value, property, item, state, context);
                 }
                 
 
@@ -86,7 +86,7 @@ internal class PocoResourceJsonWriter<T> : IODataWriter<ODataJsonWriterContext, 
                 {
                     var propertySegment = expandedItem.PathToNavigationProperty.LastSegment as NavigationPropertySegment;
                     var property = propertySegment.NavigationProperty;
-                    await WriteProperty(propertyWriter, value, property, state, context);
+                    await WriteProperty(propertyWriter, value, property, item, state, context);
                 }
             }
         }
@@ -101,6 +101,7 @@ internal class PocoResourceJsonWriter<T> : IODataWriter<ODataJsonWriterContext, 
         IResourcePropertyWriter<T, IEdmProperty, ODataJsonWriterStack, ODataJsonWriterContext> propertyWriter,
         T resource,
         IEdmProperty property,
+        SelectItem selectItem,
         ODataJsonWriterStack state,
         ODataJsonWriterContext context)
     {
@@ -108,7 +109,11 @@ internal class PocoResourceJsonWriter<T> : IODataWriter<ODataJsonWriterContext, 
         {             // If the property is a complex type, we need to write it as a nested object
             var nestedState = new ODataJsonWriterStackFrame
             {
-                SelectExpandClause = null, // all nested properties are selected
+                SelectExpandClause = selectItem is PathSelectItem pathSelectItem
+                    ? pathSelectItem.SelectAndExpand
+                    : selectItem is ExpandedNavigationSelectItem expandedItem
+                        ? expandedItem.SelectAndExpand
+                        : null,
                 EdmType = property.Type.Definition
             };
 
