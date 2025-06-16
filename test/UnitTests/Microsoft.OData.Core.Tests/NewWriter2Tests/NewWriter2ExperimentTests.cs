@@ -306,13 +306,14 @@ public class NewWriter2ExperimentTests
             }
             else if (property.Name == "Emails")
             {
-                // TODO: use context.WriteValueAsync
-                context.JsonWriter.WriteStartArray();
-                foreach (var email in resource.Emails)
-                {
-                    context.JsonWriter.WriteStringValue(email);
-                }
-                context.JsonWriter.WriteEndArray();
+                return context.WriteValueAsync(resource.Emails, state);
+                //// TODO: use context.WriteValueAsync
+                //context.JsonWriter.WriteStartArray();
+                //foreach (var email in resource.Emails)
+                //{
+                //    context.JsonWriter.WriteStringValue(email);
+                //}
+                //context.JsonWriter.WriteEndArray();
             }
             else if (property.Name == "OtherAddresses")
             {
