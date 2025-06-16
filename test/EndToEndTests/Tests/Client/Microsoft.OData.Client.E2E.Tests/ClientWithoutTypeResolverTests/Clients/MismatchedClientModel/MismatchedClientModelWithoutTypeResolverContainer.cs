@@ -513,7 +513,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Client
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("OrderId")]
-        public virtual int OrderId
+        public virtual global::System.Nullable<int> OrderId
         {
             get
             {
@@ -528,15 +528,15 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Client
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private int _OrderId;
-        partial void OnOrderIdChanging(int value);
+        private global::System.Nullable<int> _OrderId;
+        partial void OnOrderIdChanging(global::System.Nullable<int> value);
         partial void OnOrderIdChanged();
         /// <summary>
         /// There are no comments for Property ProductId in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("ProductId")]
-        public virtual int ProductId
+        public virtual global::System.Nullable<int> ProductId
         {
             get
             {
@@ -551,8 +551,8 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Client
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private int _ProductId;
-        partial void OnProductIdChanging(int value);
+        private global::System.Nullable<int> _ProductId;
+        partial void OnProductIdChanging(global::System.Nullable<int> value);
         partial void OnProductIdChanged();
         /// <summary>
         /// There are no comments for Property OrderLineStream in the schema.
@@ -941,7 +941,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Client
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("PersonId")]
-        public virtual int PersonId
+        public virtual global::System.Nullable<int> PersonId
         {
             get
             {
@@ -956,8 +956,8 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Client
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private int _PersonId;
-        partial void OnPersonIdChanging(int value);
+        private global::System.Nullable<int> _PersonId;
+        partial void OnPersonIdChanging(global::System.Nullable<int> value);
         partial void OnPersonIdChanged();
         /// <summary>
         /// There are no comments for Property PropertyName in the schema.
@@ -2204,7 +2204,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Client
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("CustomerId")]
-        public virtual int CustomerId
+        public virtual global::System.Nullable<int> CustomerId
         {
             get
             {
@@ -2219,8 +2219,8 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Client
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private int _CustomerId;
-        partial void OnCustomerIdChanging(int value);
+        private global::System.Nullable<int> _CustomerId;
+        partial void OnCustomerIdChanging(global::System.Nullable<int> value);
         partial void OnCustomerIdChanged();
         /// <summary>
         /// There are no comments for Property Customer in the schema.
@@ -3599,7 +3599,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Client
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("CustomerId")]
-        public virtual int CustomerId
+        public virtual global::System.Nullable<int> CustomerId
         {
             get
             {
@@ -3614,8 +3614,8 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Client
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private int _CustomerId;
-        partial void OnCustomerIdChanging(int value);
+        private global::System.Nullable<int> _CustomerId;
+        partial void OnCustomerIdChanging(global::System.Nullable<int> value);
         partial void OnCustomerIdChanged();
         /// <summary>
         /// There are no comments for Property Concurrency in the schema.
@@ -3766,7 +3766,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Client
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("ProductId")]
-        public virtual int ProductId
+        public virtual global::System.Nullable<int> ProductId
         {
             get
             {
@@ -3781,8 +3781,8 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Client
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private int _ProductId;
-        partial void OnProductIdChanging(int value);
+        private global::System.Nullable<int> _ProductId;
+        partial void OnProductIdChanging(global::System.Nullable<int> value);
         partial void OnProductIdChanged();
         /// <summary>
         /// There are no comments for Property Details in the schema.
@@ -3925,7 +3925,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Client
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("ProductId")]
-        public virtual int ProductId
+        public virtual global::System.Nullable<int> ProductId
         {
             get
             {
@@ -3940,8 +3940,8 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Client
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private int _ProductId;
-        partial void OnProductIdChanging(int value);
+        private global::System.Nullable<int> _ProductId;
+        partial void OnProductIdChanging(global::System.Nullable<int> value);
         partial void OnProductIdChanged();
         /// <summary>
         /// There are no comments for Property ReviewId in the schema.
@@ -7010,7 +7010,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Client
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("ReplacementProductId")]
-        public virtual int ReplacementProductId
+        public virtual global::System.Nullable<int> ReplacementProductId
         {
             get
             {
@@ -7025,8 +7025,8 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Client
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private int _ReplacementProductId;
-        partial void OnReplacementProductIdChanging(int value);
+        private global::System.Nullable<int> _ReplacementProductId;
+        partial void OnReplacementProductIdChanging(global::System.Nullable<int> value);
         partial void OnReplacementProductIdChanged();
         /// <summary>
         /// There are no comments for Property DiscontinuedPhone in the schema.
@@ -7820,8 +7820,8 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Client
         /// <param name="orderId">The value of orderId</param>
         /// <param name="productId">The value of productId</param>
         public static global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.OrderLineSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.OrderLine> _source,
-            int orderId,
-            int productId)
+            global::System.Nullable<int> orderId,
+            global::System.Nullable<int> productId)
         {
             global::System.Collections.Generic.IDictionary<string, object> _keys = new global::System.Collections.Generic.Dictionary<string, object>
             {
@@ -8124,7 +8124,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Client
         /// <param name="_source">source entity set</param>
         /// <param name="productId">The value of productId</param>
         public static global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductDetailSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductDetail> _source,
-            int productId)
+            global::System.Nullable<int> productId)
         {
             global::System.Collections.Generic.IDictionary<string, object> _keys = new global::System.Collections.Generic.Dictionary<string, object>
             {
@@ -8149,7 +8149,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Client
         /// <param name="reviewId">The value of reviewId</param>
         /// <param name="revisionId">The value of revisionId</param>
         public static global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductReviewSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductReview> _source,
-            int productId,
+            global::System.Nullable<int> productId,
             int reviewId,
             string revisionId)
         {
@@ -8501,8 +8501,8 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Client
         /// <param name="orderId">The value of orderId</param>
         /// <param name="productId">The value of productId</param>
         public static global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.BackOrderLineSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.BackOrderLine> _source,
-            int orderId,
-            int productId)
+            global::System.Nullable<int> orderId,
+            global::System.Nullable<int> productId)
         {
             global::System.Collections.Generic.IDictionary<string, object> _keys = new global::System.Collections.Generic.Dictionary<string, object>
             {
@@ -8536,8 +8536,8 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Client
         /// <param name="orderId">The value of orderId</param>
         /// <param name="productId">The value of productId</param>
         public static global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.BackOrderLine2Single ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.BackOrderLine2> _source,
-            int orderId,
-            int productId)
+            global::System.Nullable<int> orderId,
+            global::System.Nullable<int> productId)
         {
             global::System.Collections.Generic.IDictionary<string, object> _keys = new global::System.Collections.Generic.Dictionary<string, object>
             {
