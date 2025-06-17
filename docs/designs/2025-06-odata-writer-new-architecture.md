@@ -722,7 +722,13 @@ However this approach has some problems:
 An alternative to handlers is to create a base class we expose granular virtual methods that handle specific concerns. The user can create a child class
 and override the methods they want to customize. This is similar to how we handle binders in AspNetCoreOData.
 
-## Metadata
+## Metadata and standard annotations
+
+## Custom annotations
+
+## Dynamic properties
+
+## Streaming
 
 ## Resource sets
 
@@ -732,4 +738,22 @@ and override the methods they want to customize. This is similar to how we handl
 
 ## Type mapping
 
+## Serializing different types of sources
+
+## Serializing other formats
+
 ## How to handle async
+
+Since we have to account for async I/O, the `Write*` methods return `ValueTask`. But we expect most of the writes to be buffered. `Utf8JsonWriter` Write* methods are all synchronous and buffered and only performs I/O when you explicitly call `FlushAsync()`. So in most cases we'll be calling async methods that do only synchronous writes.
+And in many cases we're writing small values that we don't need to flush. The fact that we return `ValueTask` instead of `Task` reduces the cost of async
+as it doesn't allocate to the heap.
+
+It's also possible that handlers perform asynchronous work besides writing to the output, e.g. some handlers may need to perform async work to read the input.
+
+However, there could be scenarios where no async work is performed, but the caller can't assume that an async method does not return async work. So have to await
+all async methods, even in cases where their implementation never performs async work.
+
+If we always await methods even when the underlying implementation is synchronous, does this become a case of paying a cost you don't benefit from?
+
+- What is the cost of the running the state machine (if the implementation is synchronous, the cost should be negligible)
+- What about `ref structs` like `Span<T>`? Using `async`/`await` means we cannot use them in async method signatures.
