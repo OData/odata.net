@@ -184,7 +184,6 @@ var propertyValueWriterProvider = new EdmPropertyValueJsonWriterProvider();
 // Register a customer property writer that only writes $select'ed properties
 propertyValueWriterProvider.Add<Customer>((customer, property, state, context) =>
 {
-    // Only write properties included in $select
     if (property.Name == "Id")
     {
         return context.WriteValueAsync(customer.Id, state);
@@ -193,6 +192,16 @@ propertyValueWriterProvider.Add<Customer>((customer, property, state, context) =
     {
         return context.WriteValueAsync(customer.Name, state);
     }
+    else if (property.Name == "Email")
+    {
+        return context.WriteValueAsync(customer.Email, state);
+    }
+    else if (property.Name == "Orders")
+    {
+        return context.WriteValueAsync(customer.Orders, state);
+    }
+
+    // etc.
 
     return ValueTask.CompletedTask;
 });
@@ -259,6 +268,70 @@ Notable improvements over the existing writer:
 - Generic implementations avoid reflection and boxing of primitive values
 - Reusable providers can be registered once and reused across requests
 - Select/expand handling is built into the resource writer based on `SelectExpandClause`, but can be customized.
+
+With additional abstractions, we can simplify the above code to something like
+
+```csharp
+var options = ODataSerializerOptions.CreateDefault();
+
+class CustomerWriter : ODataResourceJsonWriter<Customer>
+{
+    public ValueTask WritePropertyValue(Customer customer, IEdmProperty property, ODataJsonWriterStack state, ODataJsonWriterContext context)
+    {
+        if (property.Name == "Id")
+        {
+            return context.WriteValueAsync(customer.Id, state);
+        }
+        else if (property.Name == "Name")
+        {
+            return context.WriteValueAsync(customer.Name, state);
+        }
+        else if (property.Name == "Email")
+        {
+            return context.WriteValueAsync(customer.Email, state);
+        }
+        else if (property.Name == "Orders")
+        {
+            return context.WriteValueAsync(customer.Orders, state);
+        }
+    
+        // etc.
+    
+        return ValueTask.CompletedTask;
+    }
+}
+
+class OrderJsonWriter : ODataResourceJsonWriter<Order>
+{
+    public ValueTask WritePropertyValue(Order order, IEdmProperty property, ODataJsonWriterStack state, ODataJsonWriterContext context)
+    {
+        if (property.Name == "Id")
+        {
+            return context.WriteValueAsync(order.Id, state);
+        }
+        else if (property.Name == "OrderDate")
+        {
+            return context.WriteValueAsync(order.OrderDate, state);
+        }
+        else if (property.Name == "Amount")
+        {
+            return context.WriteValueAsync(order.Amount, state);
+        }
+        else if (property.Name == "Status")
+        {
+            return context.WriteValueAsync(order.Status, state);
+        }
+    
+        return ValueTask.CompletedTask;
+    }
+}
+
+options.AddValueWriter(new CustomerJsonWriter());
+options.AddValueWriter(new OrderJsonWriter());
+
+
+await ODataSerializer.WriteAsync(customers, model, ODataPayloadKing.ResourceSet, ODataVersion.V4, options);
+```
 
 ## Principles
 
