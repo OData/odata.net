@@ -757,3 +757,9 @@ If we always await methods even when the underlying implementation is synchronou
 
 - What is the cost of the running the state machine (if the implementation is synchronous, the cost should be negligible)
 - What about `ref structs` like `Span<T>`? Using `async`/`await` means we cannot use them in async method signatures.
+
+Options:
+
+- Keep everything async
+- Support different implementations
+- How does `JsonSerializer.SerializeAsync()` implement its re-entrant writing to flush occasionally?
