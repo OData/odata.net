@@ -53,10 +53,13 @@ internal class PocoResourceJsonWriter<T> : IODataWriter<ODataJsonWriterContext, 
                 await WriteProperty(propertyWriter, value, property, null, state, context);
             }
 
-            foreach (var property in edmType.NavigationProperties())
-            {
-                await WriteProperty(propertyWriter, value, property, null, state, context);
-            }
+            // TODO: we can still have PathSelectItems even if AllSelected is true.
+            // AllSelected only applies to structural properties
+            // TODO: we should not write navigation properties if they are not expanded
+            //foreach (var property in edmType.NavigationProperties())
+            //{
+            //    await WriteProperty(propertyWriter, value, property, null, state, context);
+            //}
 
             // TODO handle dynamic properties
 
@@ -73,7 +76,7 @@ internal class PocoResourceJsonWriter<T> : IODataWriter<ODataJsonWriterContext, 
                 {
                     var propertySegment = pathSelectItem.SelectedPath.LastSegment as PropertySegment;
                     var property = propertySegment.Property;
-                    await WriteProperty(propertyWriter, value, property, item, state, context);
+                    await WriteProperty(propertyWriter, value, property, pathSelectItem.SelectAndExpand, state, context);
                 }
                 
 
@@ -86,7 +89,7 @@ internal class PocoResourceJsonWriter<T> : IODataWriter<ODataJsonWriterContext, 
                 {
                     var propertySegment = expandedItem.PathToNavigationProperty.LastSegment as NavigationPropertySegment;
                     var property = propertySegment.NavigationProperty;
-                    await WriteProperty(propertyWriter, value, property, item, state, context);
+                    await WriteProperty(propertyWriter, value, property, expandedItem.SelectAndExpand, state, context);
                 }
             }
         }
@@ -101,19 +104,16 @@ internal class PocoResourceJsonWriter<T> : IODataWriter<ODataJsonWriterContext, 
         IResourcePropertyWriter<T, IEdmProperty, ODataJsonWriterStack, ODataJsonWriterContext> propertyWriter,
         T resource,
         IEdmProperty property,
-        SelectItem selectItem,
+        SelectExpandClause selectExpand,
         ODataJsonWriterStack state,
         ODataJsonWriterContext context)
     {
         if (property.Type.IsStructured() || property.Type.IsStructuredCollection())
-        {             // If the property is a complex type, we need to write it as a nested object
+        {             
+            // If the property is a complex type, we need to write it as a nested object
             var nestedState = new ODataJsonWriterStackFrame
             {
-                SelectExpandClause = selectItem is PathSelectItem pathSelectItem
-                    ? pathSelectItem.SelectAndExpand
-                    : selectItem is ExpandedNavigationSelectItem expandedItem
-                        ? expandedItem.SelectAndExpand
-                        : null,
+                SelectExpandClause = selectExpand,
                 EdmType = property.Type.Definition
             };
 
