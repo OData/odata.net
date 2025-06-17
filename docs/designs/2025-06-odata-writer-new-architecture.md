@@ -763,3 +763,10 @@ Options:
 - Keep everything async
 - Support different implementations
 - How does `JsonSerializer.SerializeAsync()` implement its re-entrant writing to flush occasionally?
+
+## Roll-out
+
+- Add preview to ODL 9 with support for
+- The new writer will be an optional alternative, will not replace the existing one.
+- How do we name it?
+- Long term plan?
