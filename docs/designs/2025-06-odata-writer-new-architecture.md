@@ -9,23 +9,256 @@ presents a more concrete architecture and sample implementation.
 ## Minimal example
 
 Assuming we want to write the following list of `Customer` objects in response
-to the request url `GET https://service/Customers?$select=Id,Name`
+to the request url `GET https://service/Customers?$select=Id,Name&$expand=Orders($select=Id,Amount,Status)`
+
+```c#
+// Sample data
+var customers = new List<Customer>
+{
+    new Customer 
+    {
+        Id = 1,
+        Name = "John Doe",
+        Email = "john@example.com",
+        RegisterDate = new DateTime(2024, 1, 15),
+        CreditLimit = 5000.00m,
+        IsPreferred = true,
+        PhoneNumbers = new[] { "+1-555-123-4567", "+1-555-987-6543" },
+        BillingAddress = new Address 
+        { 
+            Street = "123 Main St",
+            City = "Seattle",
+            Country = "USA",
+            PostalCode = "98101"
+        },
+        Orders = new List<Order>
+        {
+            new Order { Id = 101, OrderDate = new DateTime(2025, 6, 15), Amount = 150.00m, Status = "Shipped" },
+            new Order { Id = 102, OrderDate = new DateTime(2025, 6, 16), Amount = 75.50m, Status = "Processing" }
+        }
+    },
+    new Customer
+    {
+        Id = 2,
+        Name = "Jane Smith",
+        Email = "jane@example.com",
+        RegisterDate = new DateTime(2024, 3, 20),
+        CreditLimit = 7500.00m,
+        IsPreferred = false,
+        PhoneNumbers = new[] { "+1-555-789-0123" },
+        BillingAddress = new Address 
+        { 
+            Street = "456 Oak Ave",
+            City = "Portland",
+            Country = "USA",
+            PostalCode = "97201"
+        },
+        Orders = new List<Order> 
+        {
+            new Order { Id = 103, OrderDate = new DateTime(2025, 6, 17), Amount = 240.00m, Status = "Delivered" }
+        }
+    }
+};
+```
+
+### Writing the entity set payload using the existing OData writer
 
 ```csharp
 
+var settings = new ODataMessageWriterSettings
+{
+    ODataUri = odataUri }
+};
 
+var message = new ODataResponseMessage { Stream = outputStream };
+var writer = new ODataMessageWriter(message, settings, model);
+
+// Start writing a feed
+var writer = await writer.CreateODataResourceSetWriterAsync(
+    new ODataResourceSetSerializationInfo
+    {
+        NavigationSourceEntityTypeName = customerType.FullName(),
+        NavigationSourceName = "Customers",
+        SelectExpandClause = selectExpandClause
+    });
+
+await writer.WriteStartAsync(new ODataResourceSet
+{
+    Count = customers.Count
+});
+
+// Write each customer
+foreach (var customer in customers)
+{
+    // Only include properties specified in $select
+    var resource = new ODataResource
+    {
+        Properties = new[]
+        {
+            new ODataProperty { Name = "Id", Value = customer.Id },
+            new ODataProperty { Name = "Name", Value = customer.Name }
+        }
+    };
+
+    // Write nested orders
+    var ordersResource = new ODataNestedResourceInfo
+    {
+        Name = "Orders",
+        IsCollection = true
+    };
+
+    await writer.WriteStartAsync(resource);
+    await writer.WriteStartNestedResourceInfoAsync(ordersResource);
+
+    foreach (var order in customer.Orders)
+    {
+        var orderResource = new ODataResource
+        {
+            Properties = new[]
+            {
+                new ODataProperty { Name = "Id", Value = order.Id },
+                new ODataProperty { Name = "Amount", Value = order.Amount },
+                new ODataProperty { Name = "Status", Value = order.Status }
+            }
+        };
+        
+        await writer.WriteNestedResourceAsync(orderResource);
+    }
+
+    await writer.WriteEndNestedResourceInfoAsync();
+    await writer.WriteEndAsync();
+}
+
+await writer.WriteEndAsync();
 ```
 
-**Writing the entity set payload using the existing OData writer**
+This produces output like:
+
+```json
+{
+  "@odata.context": "https://service/$metadata#Customers(Id,Name,Orders(Id,Amount,status))",
+  "value": [
+    {
+      "Id": 1,
+      "Name": "John Doe",
+      "Orders": [
+        {
+          "Id": 101,
+          "Amount": 150.00,
+          "Status": "Shipped"
+        },
+        {
+          "Id": 102,
+          "Amount": 75.50,
+          "Status": "Processing"
+        }
+      ]
+    },
+    {
+      "Id": 2,
+      "Name": "Jane Smith", 
+      "Orders": [
+        {
+          "Id": 103,
+          "Amount": 240.00,
+          "Status": "Delivered"
+        }
+      ]
+    }
+  ]
+}
+```
+
+### Writing a the same entity set using the proposed writer
+
+This is just a demonstration and subject to change the as the design evolves:
 
 ```csharp
-var responseMessage = new ODataResponseMessage(outputStream);
-var settings = new ODataMessageWriterSettings { ODataUri = odataUri };
-var messageWriter = new ODataMessageWriter(responseMessage, settings, model);
+// Create EDM model (same as before)
+var model = new EdmModel();
+// ... model setup code same as above ...
+
+// Setup the writer providers
+var propertyValueWriterProvider = new EdmPropertyValueJsonWriterProvider();
+
+// Register a customer property writer that only writes $select'ed properties
+propertyValueWriterProvider.Add<Customer>((customer, property, state, context) =>
+{
+    // Only write properties included in $select
+    if (property.Name == "Id")
+    {
+        return context.WriteValueAsync(customer.Id, state);
+    }
+    else if (property.Name == "Name")
+    {
+        return context.WriteValueAsync(customer.Name, state);
+    }
+
+    return ValueTask.CompletedTask;
+});
+
+// Register order writer 
+propertyValueWriterProvider.Add<Order>((order, property, state, context) =>
+{
+    if (property.Name == "Id")
+    {
+        return context.WriteValueAsync(order.Id, state);
+    }
+    else if (property.Name == "OrderDate")
+    {
+        return context.WriteValueAsync(order.OrderDate, state);
+    }
+    else if (property.Name == "Amount")
+    {
+        return context.WriteValueAsync(order.Amount, state);
+    }
+    else if (property.Name == "Status")
+    {
+        return context.WriteValueAsync(order.Status, state);
+    }
+
+    return ValueTask.CompletedTask;
+});
+
+// Create writer context
+var writerContext = new ODataJsonWriterContext
+{
+    Model = model,
+    ODataUri = odataUri,
+    MetadataLevel = ODataMetadataLevel.Minimal,
+    PayloadKind = ODataPayloadKind.ResourceSet,
+    ODataVersion = ODataVersion.V4,
+    JsonWriter = jsonWriter,
+    ValueWriterProvider = new ResourceJsonWriterProvider(),
+    MetadataWriterProvider = new JsonMetadataWriterProvider(new JsonMetadataValueProvider()),
+    PropertyValueWriterProvider = propertyValueWriterProvider,
+    ResourcePropertyWriterProvider = new EdmPropertyJsonWriterProvider()
+};
+
+// Setup writer stack 
+var writerStack = new ODataJsonWriterStack();
+writerStack.Push(new ODataJsonWriterStackFrame
+{
+    EdmType = new EdmCollectionType(
+        new EdmEntityTypeReference(
+            model.FindType("NS.Customer") as IEdmEntityType, 
+            isNullable: false)),
+    SelectExpandClause = odataUri.SelectAndExpand
+});
+
+// Write the payload
+var odataWriter = new ODataResourceSetEnumerableJsonWriter<Customer>();
+await odataWriter.WriteAsync(customers, writerStack, writerContext);
 ```
 
+Notable improvements over the existing writer:
 
-**Writing a the same entity set using the proposed writer**
+- No intermediate ODataResource or ODataProperty allocations required
+- Properties are written directly from source objects without boxing
+- Property writers only handle properties they know about, making $select efficient and reducing the need for validating that structural properties exist in the model
+- Generic implementations avoid reflection and boxing of primitive values
+- Reusable providers can be registered once and reused across requests
+- Select/expand handling is built into the resource writer based on `SelectExpandClause`, but can be customized.
 
 ## Principles
 
@@ -113,7 +346,7 @@ void ExecuteSomeFeature()
 }
 ```
 
-If the expensive operation is not always valid, we can add some check to see if the operation is required:
+If the expensive operation is not always valid, we can add some checks to see if the operation is required:
 
 ```c#
 void ExecuteSomeFeature()
