@@ -342,12 +342,13 @@ public class NewWriter2ExperimentTests
             if (property.Name == "Products")
             {
                 int skip = order.Id == 1 ? 2 : 3;
+                int customerId = order.Id == 1 || order.Id == 2 ? 1 : 2;
                 // TODO: How to get customer from product?
                 // we could get state.Parent, but that does not contain the resource Id,
                 // We could add resource Id to each stack frame so that we can reconstruct next links
                 // Or we could store the resource at each stack frame, but that could lead to boxing since
                 // the only common repreentation is object.
-                return new Uri($"http://service/odata/Customers(1)/Orders({order.Id})/Products?$skip={skip}", UriKind.Absolute);
+                return new Uri($"http://service/odata/Customers({customerId})/Orders({order.Id})/Products?$skip={skip}", UriKind.Absolute);
             }
             return null;
         });
@@ -601,7 +602,7 @@ public class NewWriter2ExperimentTests
                       "OrderDate": "2025-06-08T00:00:00Z",
                       "Status": "Delivered",
                       "Products@odata.count": 3,
-                      "Products@odata.nextLink": "http://service/odata/Customers(2)/Orders(1)/Products?$skip=3",
+                      "Products@odata.nextLink": "http://service/odata/Customers(2)/Orders(3)/Products?$skip=3",
                       "Products": [
                         {
                           "@odata.etag": "W/\"product-1\"",
@@ -627,13 +628,13 @@ public class NewWriter2ExperimentTests
                   "WishList@odata.count": 2,
                   "WishList": [
                     {
-                      "@odata.etag": "W/\"wishlist-4\"",
+                      "@odata.etag": "W/\"product-4\"",
                       "Id": 4,
                       "Name": "Smartphone",
                       "Category": "Electronics"
                     },
                     {
-                      "@odata.etag": "W/\"wishlist-6\"",
+                      "@odata.etag": "W/\"product-6\"",
                       "Id": 6,
                       "Name": "Refrigerator",
                       "Category": "HomeAppliances"
