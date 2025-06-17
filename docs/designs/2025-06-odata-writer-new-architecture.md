@@ -18,6 +18,12 @@ to the request url `GET https://service/Customers?$select=Id,Name`
 
 **Writing the entity set payload using the existing OData writer**
 
+```csharp
+var responseMessage = new ODataResponseMessage(outputStream);
+var settings = new ODataMessageWriterSettings { ODataUri = odataUri };
+var messageWriter = new ODataMessageWriter(responseMessage, settings, model);
+```
+
 
 **Writing a the same entity set using the proposed writer**
 
