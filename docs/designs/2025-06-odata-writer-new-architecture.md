@@ -488,3 +488,17 @@ them in sync. So we'll have to evaluate where such measures are worthwhile.
 
 And finally, we could leverage code generate, e.g. using source generators,
 to generate different specialized implementations where necessary.
+
+## State, Context and global configuration
+
+This design proposes 3 layers of configuration with different scopes. 
+
+- Global configuration refers to components that can be reused throughout multiple requests, like custom resource handlers or providers. These will usually be registered as singletons in the service.
+- **Context** refers to configuration that reused across a single serialization request. A new context will be created for each request. But the context is not expected to be modified by the serializer during the request. The context may includes data like the `ODataUri` of the request, the payload kind of the request, etc. This is similar to the `OutputContext` in the existing writier implementation.
+- **State** refers to data that is available throughout the request, but can be modified by the request. This may track things like the EDM type of the current object being written, the recursion depth, etc. This is similar to the `Scope` in the current writer.
+
+In this architecture, we assume the type of the context and state are dependent on the format and specific writer implementation. Therefore, at the lowest levels,
+they'll be represented using generic types `TContext` and `TState` respectively. They will be passed as arguments to most methods and exposed to APIs that
+users customize or override to ensure that contextual data is properly propagated. We do not defined a generic type of the global configuration because
+we expect that the context will also store references to the global dependencies.
+
