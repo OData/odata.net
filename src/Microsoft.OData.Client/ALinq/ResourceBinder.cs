@@ -249,51 +249,12 @@ namespace Microsoft.OData.Client
 
                 // Earlier path components must be navigation sources, and navigation sources cannot have query options.
                 Debug.Assert(!target.HasQueryOptions, "Navigation source had query options?");
-
-                target.SetKeyPredicate(keyPredicates);
             }
 
             if (inputPredicates != null)
             {
-                List<Expression> keyPredicates = null;
-                List<Expression> nonKeyPredicates = null;
-
-                // Get the current key predicates
-                List<Expression> currentPredicates = input.KeyPredicateConjuncts.ToList();
-
-                if (input.Filter != null && input.Filter.PredicateConjuncts.Count > 0)
-                {
-                    // Get the filter predicates
-                    currentPredicates = currentPredicates.Union(input.Filter.PredicateConjuncts.Union(inputPredicates)).ToList();
-                }
-                else
-                {
-                    currentPredicates = currentPredicates.Union(inputPredicates).ToList();
-                }
-
-                if (!input.UseFilterAsPredicate && !context.KeyComparisonGeneratesFilterQuery)
-                {
-                    keyPredicates = ExtractKeyPredicate(input, currentPredicates, model, out nonKeyPredicates);
-                }
-
-                if (keyPredicates != null)
-                {
-                    input.SetKeyPredicate(keyPredicates);
-                    input.RemoveFilterExpression();
-                }
-
-                // A key predicate cannot be applied if query options other than 'Expand' are present,
-                // so merge the key predicate into the filter query option instead.
-                if (keyPredicates != null && input.HasSequenceQueryOptions)
-                {
-                    input.ConvertKeyToFilterExpression();
-                }
-
-                if (keyPredicates == null)
-                {
-                    input.ConvertKeyToFilterExpression();
-                    input.AddFilter(inputPredicates);
-                }
+                input.ConvertKeyToFilterExpression();
+                input.AddFilter(inputPredicates);
             }
 
             return input; // No need to adjust this.currentResource - filters are merged in all cases
