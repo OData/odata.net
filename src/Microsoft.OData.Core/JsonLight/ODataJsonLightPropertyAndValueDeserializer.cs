@@ -12,6 +12,7 @@ namespace Microsoft.OData.JsonLight
     using System.Collections.ObjectModel;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
     using System.Threading.Tasks;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Json;
@@ -1022,7 +1023,31 @@ namespace Microsoft.OData.JsonLight
             resourceState.PropertyAndAnnotationCollector.CheckForDuplicatePropertyNames(property);
             ODataResourceBase resource = resourceState.Resource;
             Debug.Assert(resource != null, "resource != null");
-            resource.Properties = resource.Properties.ConcatToReadOnlyEnumerable("Properties", property);
+
+            // To avoid repeated computations for the property verification logic inside the
+            // resource.Properties setter, we update the resource.Properties in-place
+            // without invoking the setter each time.
+            // Since the resource and properties are created internally by the reader,
+            // we don't need to verify the properties if we can guarantee that we are only
+            // adding properties with acceptable values (i.e. not ODataResourceValue).
+            // We use debug-time assertions instead to catch such bugs in tests.
+
+            // We should rethink the current approach to property verification.
+            // See: https://github.com/OData/odata.net/issues/3263
+
+            Debug.Assert(!(property.Value is ODataResourceValue), Strings.ODataResource_PropertyValueCannotBeODataResourceValue(property.Name));
+            Debug.Assert(
+                !(property.Value is ODataCollectionValue collectionValue && collectionValue.Items.Any(item => item is ODataResourceValue)),
+                Strings.ODataResource_PropertyValueCannotBeODataResourceValue(property.Name));
+
+            if (resource.Properties.IsEmptyReadOnlyEnumerable())
+            {
+                resource.Properties = new ReadOnlyEnumerable<ODataProperty>();
+            }
+
+            // Despite the name the resource.Properties type here is not actually
+            // readonly, it supports appending in-place.
+            resource.Properties.ConcatToReadOnlyEnumerable("Properties", property);
             return property;
         }
 
