@@ -736,6 +736,8 @@ and override the methods they want to customize. This is similar to how we handl
 
 ## Primitive collections
 
+## `IEdmModel` coupling
+
 ## Type mapping
 
 ## Serializing different types of sources
