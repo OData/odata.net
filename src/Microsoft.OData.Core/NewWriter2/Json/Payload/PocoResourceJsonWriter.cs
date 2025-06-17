@@ -45,31 +45,21 @@ internal class PocoResourceJsonWriter<T> : IODataWriter<ODataJsonWriterContext, 
 
         var propertyWriter = context.GetPropertyWriter<T>(state);
 
-        if (state.Current.SelectExpandClause == null || state.Current.SelectExpandClause.AllSelected)
+        if (selectExpand == null || selectExpand.AllSelected == true)
         {
-            // If all properties are selected, we can write all properties
+            // If all properties are selected, we can write all structural properties
             foreach (var property in edmType.StructuralProperties())
             {
                 await WriteProperty(propertyWriter, value, property, null, state, context);
             }
-
-            // TODO: we can still have PathSelectItems even if AllSelected is true.
-            // AllSelected only applies to structural properties
-            // TODO: we should not write navigation properties if they are not expanded
-            //foreach (var property in edmType.NavigationProperties())
-            //{
-            //    await WriteProperty(propertyWriter, value, property, null, state, context);
-            //}
-
-            // TODO handle dynamic properties
 
         }
         else
         {
             // TODO: in the current tests, we expect structural properties before navigation properties.
             // For some reason, the ODataUri parsers return SelectExpandClause with navigation properties first.
-            // However, if the order of properties is not significant, we could do have a single loop
-            // for better performance.
+            // However, if the order of properties is not significant, we could combine structural
+            // and navigation properties in a single loop for better performance.
             foreach (var item in selectExpand.SelectedItems)
             {
                 if (item is PathSelectItem pathSelectItem)
@@ -78,11 +68,12 @@ internal class PocoResourceJsonWriter<T> : IODataWriter<ODataJsonWriterContext, 
                     var property = propertySegment.Property;
                     await WriteProperty(propertyWriter, value, property, pathSelectItem.SelectAndExpand, state, context);
                 }
-                
-
-                // TODO: handle dynamic properties
             }
 
+        }
+
+        if (selectExpand != null)
+        {
             foreach (var item in selectExpand.SelectedItems)
             {
                 if (item is ExpandedNavigationSelectItem expandedItem)
@@ -93,6 +84,8 @@ internal class PocoResourceJsonWriter<T> : IODataWriter<ODataJsonWriterContext, 
                 }
             }
         }
+
+        // TODO: handle dynamic properties
     }
 
     // TODO: should this be virtual? protected?

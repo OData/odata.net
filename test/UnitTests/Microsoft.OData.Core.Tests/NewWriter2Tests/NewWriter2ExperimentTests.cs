@@ -233,14 +233,14 @@ public class NewWriter2ExperimentTests
             new Order
             {
                 Id = 2,
-                OrderDate = DateTime.UtcNow.AddDays(-5),
+                OrderDate = new DateTime(2025, 06, 05),
                 Status = OrderStatus.Shipped,
                 Products = products.Skip(2).Take(3).ToList()
             },
             new Order
             {
                 Id = 3,
-                                OrderDate = DateTime.UtcNow.AddDays(-2),
+                OrderDate = new DateTime(2025, 06, 08),
                 Status = OrderStatus.Delivered,
                 Products = [products[0], products[3], products[4]]
             }
@@ -312,12 +312,14 @@ public class NewWriter2ExperimentTests
             // Or: context.GetMetadataWriter<IEnumerable<Order>>(state).WriteNextLinkPropertyAsync(customer.Orders, state, context);
             if (property.Name == "Orders")
             {
+                if (customer.Id == 2)
+                {
+                    // No next link for customer 3
+                    return null;
+                }
                 return new Uri($"http://service/odata/Customers({customer.Id})/Orders?$skip=2", UriKind.Absolute);
             }
-            else if (property.Name == "WishList")
-            {
-                return new Uri($"http://service/odata/Customers({customer.Id})/WishList?$skip=2", UriKind.Absolute);
-            }
+
             return null;
         });
 
@@ -339,12 +341,13 @@ public class NewWriter2ExperimentTests
         {
             if (property.Name == "Products")
             {
-                // How to get customer from product?
+                int skip = order.Id == 1 ? 2 : 3;
+                // TODO: How to get customer from product?
                 // we could get state.Parent, but that does not contain the resource Id,
                 // We could add resource Id to each stack frame so that we can reconstruct next links
                 // Or we could store the resource at each stack frame, but that could lead to boxing since
                 // the only common repreentation is object.
-                return new Uri($"http://service/odata/Customers(1)/Orders({order.Id})/Products?$skip=2", UriKind.Absolute);
+                return new Uri($"http://service/odata/Customers(1)/Orders({order.Id})/Products?$skip={skip}", UriKind.Absolute);
             }
             return null;
         });
@@ -565,16 +568,16 @@ public class NewWriter2ExperimentTests
                   "WishList@odata.count": 2,
                   "WishList": [
                     {
-                      "@odata.etag": "W/\"wishlist-1\"",
+                      "@odata.etag": "W/\"product-1\"",
                       "Id": 1,
                       "Name": "Laptop",
-                      "category": "Electronics"
+                      "Category": "Electronics"
                     },
                     {
-                      "@odata.etag": "W/\"wishlist-2\"",
+                      "@odata.etag": "W/\"product-2\"",
                       "Id": 2,
                       "Name": "T-Shirt",
-                      "category": "Clothing"
+                      "Category": "Clothing"
                     }
                   ]
                 },
@@ -627,13 +630,13 @@ public class NewWriter2ExperimentTests
                       "@odata.etag": "W/\"wishlist-4\"",
                       "Id": 4,
                       "Name": "Smartphone",
-                      "category": "Electronics"
+                      "Category": "Electronics"
                     },
                     {
                       "@odata.etag": "W/\"wishlist-6\"",
                       "Id": 6,
                       "Name": "Refrigerator",
-                      "category": "HomeAppliances"
+                      "Category": "HomeAppliances"
                     }
                   ]
                 }
