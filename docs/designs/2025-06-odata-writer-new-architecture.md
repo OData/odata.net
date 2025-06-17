@@ -264,7 +264,7 @@ Notable improvements over the existing writer:
 
 - No intermediate ODataResource or ODataProperty allocations required
 - Properties are written directly from source objects without boxing
-- Property writers only handle properties they know about, making $select efficient and reducing the need for validating that structural properties exist in the model
+- Instead of pushing properties to the writer, the writer requests the property it wants to write based on the `IEdmModel` and `$select`, reducing the need for validation.
 - Generic implementations avoid reflection and boxing of primitive values
 - Reusable providers can be registered once and reused across requests
 - Select/expand handling is built into the resource writer based on `SelectExpandClause`, but can be customized.
@@ -274,6 +274,8 @@ With additional abstractions, we can simplify the above code to something like
 ```csharp
 var options = ODataSerializerOptions.CreateDefault();
 
+// Note: default writers for plain CLR types may be generated dynamically
+// either through runtime code generation or source generators at compile time
 class CustomerWriter : ODataResourceJsonWriter<Customer>
 {
     public ValueTask WritePropertyValue(Customer customer, IEdmProperty property, ODataJsonWriterStack state, ODataJsonWriterContext context)
@@ -345,6 +347,9 @@ have an option to sacrifice the convenience if they need more performance. This
 also means that in some cases we may sacrifice some common coding practices in favour
 of performance. For example, we may need to maintain multiple implementations of similar
 functionality in order to tune performance for different scenarios.
+
+In general, we should not shy away (safe) performance-oriented features in .NET
+(e.g. spans, structs, SIMD, array pools, stackallocs, code gen, etc.)
 
 ### Flexibility
 
@@ -502,3 +507,229 @@ they'll be represented using generic types `TContext` and `TState` respectively.
 users customize or override to ensure that contextual data is properly propagated. We do not defined a generic type of the global configuration because
 we expect that the context will also store references to the global dependencies.
 
+## Low-level `IODataWriter`
+
+At the lowest level, we defined the `IODataWriter` interface as follows:
+
+```csharp
+interface IODataWriter<TValue, TState, TContext>
+{
+    ValueTask WriteValueAsync(TValue value, TState state, TContext context);
+}
+```
+
+This is the most basic representation of an OData writer. It's generic so we can create specialized
+writers for different types of values. This means that in practice we'll instantiate a different
+writer per type. `TValue` may represent a primitive type, a custom CLR class or struct,
+a `JsonElement`, a `Dictionary<K, V>`, a `Stream`, etc.
+
+It's also format-agnostic. The same interface will be used for writing not only JSON payloads, but also
+XML values (e.g. `/$metadata`) and raw values (`/$value` endpoints). For different types of formats,
+we would defined different `TState` and `TContext` types.
+
+## JSON context and state
+
+In this iteration of the design, we'll focus on JSON payloads. The library will define built-in
+concrete `TContext` and `TState` types to be used for JSON payloads:
+`ODataJsonWriterContext` and `ODataJsonWriterStack`.
+
+The `ODataJsonWriterContext` will store references to the `IEdmModel`, `ODataUri`,
+global options, handlers and providers. It will also provides a reference to the
+actual `Utf8JsonWriter` (and possibly also the output `Stream`?).
+
+The `ODataJsonWriterStack` is a stack where a stack frame is pushed when we
+enter a nested scope. The stack frames stores a reference to the current `IEdmType`,
+`SelectExpandClause`, etc.
+
+Therefore, built-in OData JSON writers will implement the following interface:
+
+```csharp
+interface IODataJsonWriter<TValue> : IODataWriter<TValue, ODataJsonWriterStack, ODataJsonWriterContext>
+{
+    ValueTask WriteValueAsync(TValue value, ODataJsonWriterStack state, ODataJsonWriterContext context);
+}
+```
+
+### Adding custom data to state and context
+
+The user may want to add custom information to either the state or context, such that it's available
+to them in their custom handlers or hooks. Being able to add custom state may be useful in cases where
+the user needs to access some external information in order to implement custom serialization logic.
+
+If the custom data is not dynamic, then they can store that state in a custom class that implements their handlers.
+But if it's dynamic such that it changes each time the handler is invoked, it may be better to include it in the state,
+otherwise they user may have to create closures.
+
+Since the built-in JSON writer will assume the use of specific context and writer stack, we can
+consider making them extensible either through inheritance or constrained generics. I'll go with the latter
+since it avoid type casts (it also makes it possible to define the types as structs).
+
+```csharp
+interface IODataJsonWriter<TValue, TState, TContext> : IODataWriter<TValue, TState, TContext>
+    where TState: IODataJsonWriterStack, TContext: IODataJsonWriterContext
+{
+    ValueTask WriteValueAsync(TValue value, TState state, TContext context);
+}
+```
+
+Since this leads to more convoluted type declaration, I'll use the concrete context and state
+types moving forward to make the design easier to read.
+
+## Built-in OData conventions with customization through handlers, providers and overrides
+
+We don't expect customers to implement the `IODataWriter` interface directly so that would
+require them to implement the OData specifications and conventions on their own, which
+defeats the purpose of the library.
+
+The library will provide default base implementations that take care of OData conventions
+and specifications so that users don't have to deal with such details. For example,
+these default implementations will know when how to write context urls, when to write
+annotations, how to select which properties to write based on the model and SelectExpand, etc.
+
+Such base implementations should be foundational and flexible enough that users don't need
+to create custom implementations for their unique scenarios, they should provide extensibility
+points that allow the user to customize behaviour or specialize them for their data types.
+
+We'll generally expose these extensibility points through handlers and inheritance:
+
+A handler is an interface that exposes a specific, granular piece of functionality. For example,
+we may have a next link handler that knows how to write next links, a count handler that knows
+how to write the `@odata.count` property, a property writer handler that knows how to write
+properties of a given resource type, etc.
+
+The user may customize such functionality by injecting a custom implementation of a given handler.
+The handlers will be stored in a provider that is made available to the writer's context. A
+provider is a like a light-weight dependency injection mechanism with a narrow scope (e.g. next handler provider
+only provides next handlers). I opted against an `IServiceProvider` to avoid dependencies but also to make
+it clear to the caller and consumer what kinds of services can be requested. An `IServiceProvider` is too generic.
+
+With this in mind, we can conceptualize a base resource writer that handles structured types (entities and complex types)
+as follows:
+
+```c#
+internal class ODataResourceJsonWriter<T> : IODataJsonWriter<T, ODataJsonWriterStack, ODataJsonWriterContext>
+{
+    public async ValueTask WriteAsync(T value, ODataJsonWriterStack state, ODataJsonWriterContext context)
+    {
+        var jsonWriter = context.JsonWriter;
+        jsonWriter.WriteStartObject();
+
+        if (context.MetadataLevel >= ODataMetadataLevel.Minimal)
+        {
+            // metadata writer is handler that combines
+            // multiple metadata handlers. Can be replaced with custom handlers.
+            var metadataWriter = context.GetMetadataWriter<T>(state);
+            if (context.IsTopLevel())
+            {
+                await metadataWriter.WriterContextUrl(value, state, context);
+            }
+            
+            await metadataWriter.WriteEtagPropertyAsync(value, state, context);
+        }
+
+        await WriteProperties(value, state, context);
+
+        jsonWriter.WriteEndObject();
+    }
+
+    protected virtual async ValueTask WriteProperties(T value, ODataJsonWriterStack state, ODataJsonWriterContext context)
+    {
+        var edmType = state.Current.EdmType as IEdmStructuredType;
+        var selectExpand = state.Current.SelectExpandClause;
+
+        var propertyWriter = context.GetPropertyWriter<T>(state);
+
+        if (selectExpand == null || selectExpand.AllSelected == true)
+        {
+            foreach (var property in edmType.StructuralProperties())
+            {
+                await WriteProperty(propertyWriter, value, property, null, state, context);
+            }
+        }
+        else
+        {
+            foreach (var item in selectExpand.SelectedItems)
+            {
+                if (item is PathSelectItem pathSelectItem)
+                {
+                    var propertySegment = pathSelectItem.SelectedPath.LastSegment as PropertySegment;
+                    var property = propertySegment.Property;
+                    await WriteProperty(propertyWriter, value, property, pathSelectItem.SelectAndExpand, state, context);
+                }
+            }
+
+        }
+
+        if (selectExpand != null)
+        {
+            foreach (var item in selectExpand.SelectedItems)
+            {
+                if (item is ExpandedNavigationSelectItem expandedItem)
+                {
+                    var propertySegment = expandedItem.PathToNavigationProperty.LastSegment as NavigationPropertySegment;
+                    var property = propertySegment.NavigationProperty;
+                    await WriteProperty(propertyWriter, value, property, expandedItem.SelectAndExpand, state, context);
+                }
+            }
+        }
+
+        // TODO: handle dynamic properties
+    }
+
+    protected virtual async ValueTask WriteProperty(
+        IResourcePropertyWriter<T, IEdmProperty, ODataJsonWriterStack, ODataJsonWriterContext> propertyWriter,
+        T resource,
+        IEdmProperty property,
+        SelectExpandClause selectExpand,
+        ODataJsonWriterStack state,
+        ODataJsonWriterContext context)
+    {
+        if (property.Type.IsStructured() || property.Type.IsStructuredCollection())
+        {             
+            var nestedState = new ODataJsonWriterStackFrame
+            {
+                SelectExpandClause = selectExpand,
+                EdmType = property.Type.Definition
+            };
+
+            state.Push(nestedState);
+            await propertyWriter.WriteProperty(resource, property, state, context);
+            state.Pop();
+        }
+        else
+        {
+            await propertyWriter.WriteProperty(resource, property, state, context);
+        }
+    }
+}
+```
+
+And we could customize them as follows:
+
+```c#
+options.AddCountHandler<IEnumerable<Order>>((orders, state, context) => orders.Count());
+```
+
+The handler approach allows users to customize individual capabilities without having to worry
+about overall writer. It also makes it possible for different implementations to re-use the same
+providers and handlers. It provides flexibility in how handlers can be implemented.
+
+However this approach has some problems:
+
+- If we want to customize multiple things, we have to create and register multiple handlers for the same resource type. This can lead to messy code.
+- Each time we want to invoke a handler, we have to fetch it from the relevant provider. The provider will most likely have an internal cache backed by a `ConcurrentDictionary`. This means that we have to perform cache lookups for each invocation, and do this for multiple handlers. I have not benchmarked this cost, but it could add up.
+
+An alternative to handlers is to create a base class we expose granular virtual methods that handle specific concerns. The user can create a child class
+and override the methods they want to customize. This is similar to how we handle binders in AspNetCoreOData.
+
+## Metadata
+
+## Resource sets
+
+## Primitive types
+
+## Primitive collections
+
+## Type mapping
+
+## How to handle async
