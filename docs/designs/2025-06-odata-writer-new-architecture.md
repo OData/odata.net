@@ -276,7 +276,7 @@ var options = ODataSerializerOptions.CreateDefault();
 
 // Note: default writers for plain CLR types may be generated dynamically
 // either through runtime code generation or source generators at compile time
-class CustomerWriter : ODataResourceJsonWriter<Customer>
+class CustomerJsonWriter : ODataResourceJsonWriter<Customer>
 {
     public ValueTask WritePropertyValue(Customer customer, IEdmProperty property, ODataJsonWriterStack state, ODataJsonWriterContext context)
     {
@@ -332,7 +332,7 @@ options.AddValueWriter(new CustomerJsonWriter());
 options.AddValueWriter(new OrderJsonWriter());
 
 
-await ODataSerializer.WriteAsync(customers, model, ODataPayloadKing.ResourceSet, ODataVersion.V4, options);
+await ODataSerializer.WriteAsync(customers, odataUri, model, options);
 ```
 
 ## Principles
@@ -524,7 +524,7 @@ writer per type. `TValue` may represent a primitive type, a custom CLR class or 
 a `JsonElement`, a `Dictionary<K, V>`, a `Stream`, etc.
 
 It's also format-agnostic. The same interface will be used for writing not only JSON payloads, but also
-XML values (e.g. `/$metadata`) and raw values (`/$value` endpoints). For different types of formats,
+XML payloads (e.g. `/$metadata`) and raw values (`/$value` endpoints). For different types of formats,
 we would defined different `TState` and `TContext` types.
 
 ## JSON context and state
@@ -607,9 +607,9 @@ With this in mind, we can conceptualize a base resource writer that handles stru
 as follows:
 
 ```c#
-internal class ODataResourceJsonWriter<T> : IODataJsonWriter<T, ODataJsonWriterStack, ODataJsonWriterContext>
+class ODataResourceJsonWriter<T> : IODataJsonWriter<T, ODataJsonWriterStack, ODataJsonWriterContext>
 {
-    public async ValueTask WriteAsync(T value, ODataJsonWriterStack state, ODataJsonWriterContext context)
+    public virtual async ValueTask WriteAsync(T value, ODataJsonWriterStack state, ODataJsonWriterContext context)
     {
         var jsonWriter = context.JsonWriter;
         jsonWriter.WriteStartObject();
