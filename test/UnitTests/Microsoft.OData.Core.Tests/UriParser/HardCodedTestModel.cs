@@ -741,6 +741,7 @@ namespace Microsoft.OData.Tests.UriParser
             var FullyQualifiedNamespaceContextPet4Set = FullyQualifiedNamespaceContext.AddEntitySet("Pet4Set", FullyQualifiedNamespacePet4);
             var FullyQualifiedNamespaceContextPet5Set = FullyQualifiedNamespaceContext.AddEntitySet("Pet5Set", FullyQualifiedNamespacePet5);
             var FullyQualifiedNamespaceContextPet6Set = FullyQualifiedNamespaceContext.AddEntitySet("Pet6Set", FullyQualifiedNamespacePet6);
+            var FullyQualifiedNamespaceContextFilmSet = FullyQualifiedNamespaceContext.AddEntitySet("Films", FullyQualifiedNamespaceFilm);
             var FullyQualifiedNamespaceContextChimera = FullyQualifiedNamespaceContext.AddEntitySet("Chimeras", FullyQualifiedNamespaceChimera);
 
             FullyQualifiedNamespaceContext.AddEntitySet("Shapes", fullyQualifiedNamespaceShape);
@@ -913,6 +914,7 @@ namespace Microsoft.OData.Tests.UriParser
         <EntitySet Name=""Pet4Set"" EntityType=""Fully.Qualified.Namespace.Pet4"" />
         <EntitySet Name=""Pet5Set"" EntityType=""Fully.Qualified.Namespace.Pet5"" />
         <EntitySet Name=""Pet6Set"" EntityType=""Fully.Qualified.Namespace.Pet6"" />
+        <EntitySet Name=""Films"" EntityType=""Fully.Qualified.Namespace.Film"" />
         <EntitySet Name=""Chimeras"" EntityType=""Fully.Qualified.Namespace.Chimera"" />
         <Singleton Name=""Boss"" Type=""Fully.Qualified.Namespace.Person"">
           <NavigationPropertyBinding Path=""MyDog"" Target=""Dogs"" />
@@ -1658,6 +1660,11 @@ namespace Microsoft.OData.Tests.UriParser
         public static IEdmEntitySet GetPet6Set()
         {
             return TestModel.FindEntityContainer("Context").FindEntitySet("Pet6Set");
+        }
+
+        public static IEdmEntitySet GetFilmSet()
+        {
+            return TestModel.FindEntityContainer("Context").FindEntitySet("Films");
         }
 
         public static IEdmEntitySet GetPeopleSet()
