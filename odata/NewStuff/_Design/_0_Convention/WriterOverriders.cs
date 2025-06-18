@@ -7,6 +7,8 @@
 
     public static class WriterOverriders
     {
+        //// TODO it would be good to have "skip" variants that also return the stuff that was skipped in some convenient format
+        
         public static IGetRequestWriter OverrideUriWriter(this IGetRequestWriter getRequestWriter, Func<IUriWriter<IGetHeaderWriter>, Task<IUriWriter<IGetHeaderWriter>>> writerSelector)
         {
             return new OverrideUriWriterGetRequestWriter(getRequestWriter, writerSelector);
