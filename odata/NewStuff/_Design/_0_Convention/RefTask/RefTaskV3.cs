@@ -73,14 +73,14 @@ namespace NewStuff._Design._0_Convention.RefTask
     public static class PlaygroundRefV3
     {
         public static async Task<T> WriteUri<TUriWriter, T>(System.Uri uri, TUriWriter uriWriter)
-            where TUriWriter : IUriWriter<T>, allows ref struct
+            where TUriWriter : IUriWriter2<T>, allows ref struct
         {
             var schemeWriter = await uriWriter.Commit().ConfigureAwait(false);
 
             var domainWriter = await schemeWriter.Commit(new UriScheme(uri.Scheme)).ConfigureAwait(false);
             var portWriter = await domainWriter.Commit(new UriDomain(uri.DnsSafeHost)).ConfigureAwait(false);
 
-            IUriPathSegmentWriter<T> uriPathSegmentWriter;
+            IUriPathSegmentWriter2<T> uriPathSegmentWriter;
             if (uri.IsDefaultPort)
             {
                 uriPathSegmentWriter = await portWriter.Commit().ConfigureAwait(false);
