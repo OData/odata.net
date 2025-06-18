@@ -327,7 +327,6 @@ bombardier -l -d 10s https://localhost:7120/customers/JsonSerializer
 ```
 
 ```sh
-Done!
 Statistics        Avg      Stdev        Max
   Reqs/sec      5027.29    2090.85   14012.25
   Latency       25.09ms    12.55ms   396.30ms
@@ -350,7 +349,6 @@ bombardier -l -d 10s https://localhost:7120/customers/NewODataSerializer
 ```
 
 ```sh
-Done!
 Statistics        Avg      Stdev        Max
   Reqs/sec      1925.23    1678.85   11420.68
   Latency       66.20ms    32.69ms   601.98ms
@@ -373,7 +371,6 @@ bombardier -l -d 10s https://localhost:7120/customers/ODataMessageWriter-Async
 ```
 
 ```sh
-Done!
 Statistics        Avg      Stdev        Max
   Reqs/sec      1183.38    1402.75   18027.04
   Latency      119.10ms    85.04ms      1.14s
