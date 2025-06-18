@@ -1,5 +1,4 @@
 ﻿using Microsoft.OData;
-using Microsoft.OData.Core.NewWriter2.Core.Resource;
 using Microsoft.OData.Edm;
 using System.Net.NetworkInformation;
 using System.Text.Json;
