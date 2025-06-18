@@ -105,7 +105,7 @@
                 {
                     var uriWriter = await requestWriter.Commit().ConfigureAwait(false);
 
-                    var getHeaderWriter = await WriteUri<IUriWriter<IGetHeaderWriter>, IGetHeaderWriter>(GenerateRequestedUri(), uriWriter).ConfigureAwait(false);
+                    var getHeaderWriter = await WriteUri(GenerateRequestedUri(), uriWriter).ConfigureAwait(false);
 
                     //// TODO not writing any headers...
                     var getBodyWriter = await getHeaderWriter.Commit().ConfigureAwait(false);
@@ -406,7 +406,7 @@
                 {
                     var uriWriter = await requestWriter.Commit().ConfigureAwait(false);
 
-                    var getHeaderWriter = await WriteUri<IUriWriter<IGetHeaderWriter>, IGetHeaderWriter>(GenerateRequestedUri(), uriWriter).ConfigureAwait(false);
+                    var getHeaderWriter = await WriteUri(GenerateRequestedUri(), uriWriter).ConfigureAwait(false);
 
                     var customHeaderWriter = await getHeaderWriter.CommitCustomHeader().ConfigureAwait(false); //// TODO should "content-type: application/json" really be considered "custom"?
                     var headerFieldValueWriter = await customHeaderWriter.Commit(new HeaderFieldName("Content-Type")).ConfigureAwait(false);
@@ -524,7 +524,7 @@
                 await using (patchRequestWriter.ConfigureAwait(false))
                 {
                     var uriWriter = await patchRequestWriter.Commit().ConfigureAwait(false);
-                    var patchHeaderWriter = await MultiValuedProtocol.WriteUri<IUriWriter<IPatchHeaderWriter>, IPatchHeaderWriter>(this.singleValuedUri, uriWriter).ConfigureAwait(false);
+                    var patchHeaderWriter = await MultiValuedProtocol.WriteUri(this.singleValuedUri, uriWriter).ConfigureAwait(false);
 
                     var customHeaderWriter = await patchHeaderWriter.CommitCustomHeader().ConfigureAwait(false);
                     var headerFieldValueWriter = await customHeaderWriter.Commit(new HeaderFieldName("Content-Type")).ConfigureAwait(false); //// TODO probably this should be a "built-in" header
@@ -683,7 +683,7 @@
                 await using (patchRequestWriter.ConfigureAwait(false))
                 {
                     var uriWriter = await patchRequestWriter.Commit().ConfigureAwait(false);
-                    var patchHeaderWriter = await MultiValuedProtocol.WriteUri<IUriWriter<IPatchHeaderWriter>, IPatchHeaderWriter>(this.multiValuedUri, uriWriter).ConfigureAwait(false);
+                    var patchHeaderWriter = await MultiValuedProtocol.WriteUri(this.multiValuedUri, uriWriter).ConfigureAwait(false);
 
                     var customHeaderWriter = await patchHeaderWriter.CommitCustomHeader().ConfigureAwait(false);
                     var headerFieldValueWriter = await customHeaderWriter.Commit(new HeaderFieldName("Content-Type")).ConfigureAwait(false); //// TODO probably this should be a "built-in" header
@@ -1050,58 +1050,6 @@
 
                 currentIndex = queryOptionDelimiterIndex + 1;
             }
-        }
-
-        private static async Task<T> WriteUri<TUriWriter, T>(Uri uri, TUriWriter uriWriter)
-            where TUriWriter : IUriWriter<T>, allows ref struct
-        {
-            var schemeWriter = await uriWriter.Commit().ConfigureAwait(false);
-
-            var domainWriter = await schemeWriter.Commit(new UriScheme(uri.Scheme)).ConfigureAwait(false);
-            var portWriter = await domainWriter.Commit(new UriDomain(uri.DnsSafeHost)).ConfigureAwait(false);
-
-            IUriPathSegmentWriter<T> uriPathSegmentWriter;
-            if (uri.IsDefaultPort)
-            {
-                uriPathSegmentWriter = await portWriter.Commit().ConfigureAwait(false);
-            }
-            else
-            {
-                uriPathSegmentWriter = await portWriter.Commit(new UriPort(uri.Port)).ConfigureAwait(false);
-            }
-
-            foreach (var pathSegment in uri.Segments)
-            {
-                uriPathSegmentWriter = await uriPathSegmentWriter.Commit(new UriPathSegment(pathSegment)).ConfigureAwait(false);
-            }
-
-            var queryOptionWriter = await uriPathSegmentWriter.Commit().ConfigureAwait(false);
-            foreach (var queryOption in MultiValuedProtocol.SplitQueryQueryString(uri.Query))
-            {
-                var parameterWriter = await queryOptionWriter.CommitParameter().ConfigureAwait(false);
-                var valueWriter = await parameterWriter.Commit(new QueryParameter(queryOption.Item1)).ConfigureAwait(false);
-                if (queryOption.Item2 == null)
-                {
-                    queryOptionWriter = await valueWriter.Commit().ConfigureAwait(false);
-                }
-                else
-                {
-                    queryOptionWriter = await valueWriter.Commit(new QueryValue(queryOption.Item2)).ConfigureAwait(false);
-                }
-            }
-
-            T getHeaderWriter;
-            if (string.IsNullOrEmpty(uri.Fragment))
-            {
-                getHeaderWriter = await queryOptionWriter.Commit().ConfigureAwait(false);
-            }
-            else
-            {
-                var fragmentWriter = await queryOptionWriter.CommitFragment().ConfigureAwait(false);
-                getHeaderWriter = await fragmentWriter.Commit(new Fragment(uri.Fragment)).ConfigureAwait(false);
-            }
-
-            return getHeaderWriter;
         }
 
         private static async Task<T> WriteUri<T>(Uri uri, IUriWriter<T> uriWriter)
