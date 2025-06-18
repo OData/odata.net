@@ -771,6 +771,7 @@
                         this.disposer.Unregister(this.headers);
 
                         var responseContent = this.disposer.Register(async () => await this.httpResponseMessage.Content.ReadAsStreamAsync().ConfigureAwait(false));
+                        //// TODO this doesn't actually "stream" the data; use this instead: https://stackoverflow.com/questions/43747477/how-to-parse-huge-json-file-as-stream-in-json-net
                         var jsonDocument = await JsonDocument.ParseAsync(responseContent).ConfigureAwait(false);
 
                         var element = jsonDocument.RootElement;
