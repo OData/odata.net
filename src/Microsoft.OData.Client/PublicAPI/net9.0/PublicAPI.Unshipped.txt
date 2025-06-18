@@ -1,4 +1,9 @@
 abstract Microsoft.OData.Client.DataServiceClientRequestMessage.Url.set -> void
+Microsoft.OData.Client.ALinq.UriParser.ISyntacticTreeVisitor<T>.Visit(Microsoft.OData.Client.ALinq.UriParser.RootPathToken tokenIn) -> T
+Microsoft.OData.Client.ALinq.UriParser.QueryTokenKind.RootPath = 33 -> Microsoft.OData.Client.ALinq.UriParser.QueryTokenKind
+Microsoft.OData.Client.ALinq.UriParser.RootPathToken
+Microsoft.OData.Client.ALinq.UriParser.RootPathToken.RootPathToken() -> void
+Microsoft.OData.Client.ALinq.UriParser.RootPathToken.Segments.get -> System.Collections.Generic.IList<string>
 Microsoft.OData.Client.DataServiceClientRequestMessageArgs.DataServiceClientRequestMessageArgs(string method, System.Uri requestUri, bool usePostTunneling, System.Collections.Generic.IDictionary<string, string> headers) -> void
 Microsoft.OData.Client.DataServiceClientRequestMessageArgs.DataServiceClientRequestMessageArgs(string method, System.Uri requestUri, bool usePostTunneling, System.Collections.Generic.IDictionary<string, string> headers, System.Net.Http.IHttpClientFactory httpClientFactory) -> void
 Microsoft.OData.Client.DataServiceClientRequestMessageArgs.HttpClientFactory.get -> System.Net.Http.IHttpClientFactory
@@ -9,6 +14,8 @@ Microsoft.OData.Client.IBaseEntityType.DataServiceContext.set -> void
 Microsoft.OData.Client.UriFunctionAttribute
 Microsoft.OData.Client.UriFunctionAttribute.AllowClientSideEvaluation.get -> bool
 Microsoft.OData.Client.UriFunctionAttribute.UriFunctionAttribute(bool allowClientSideEvaluation = false) -> void
+override Microsoft.OData.Client.ALinq.UriParser.RootPathToken.Accept<T>(Microsoft.OData.Client.ALinq.UriParser.ISyntacticTreeVisitor<T> visitor) -> T
+override Microsoft.OData.Client.ALinq.UriParser.RootPathToken.Kind.get -> Microsoft.OData.Client.ALinq.UriParser.QueryTokenKind
 override Microsoft.OData.Client.HttpClientRequestMessage.Url.set -> void
 virtual Microsoft.OData.Client.DataServiceContext.BeginDeepInsert<T>(System.AsyncCallback callback, object state, T resource) -> System.IAsyncResult
 virtual Microsoft.OData.Client.DataServiceContext.DeepInsert<T>(T resource) -> Microsoft.OData.Client.DataServiceResponse
