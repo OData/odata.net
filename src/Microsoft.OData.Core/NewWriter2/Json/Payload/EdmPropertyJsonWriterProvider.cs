@@ -1,5 +1,4 @@
-﻿using Microsoft.OData.Core.NewWriter2.Core.Resource;
-using Microsoft.OData.Edm;
+﻿using Microsoft.OData.Edm;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;

@@ -5,7 +5,8 @@ using System;
 namespace Microsoft.OData.Core.NewWriter2;
 
 // TODO make this a struct
-internal class ODataJsonWriterStack
+[System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1711:Identifiers should not have incorrect suffix", Justification = "<Pending>")]
+public class ODataJsonWriterStack
 {
     // Don't create stack array if we only have one frame
     private ODataJsonWriterStackFrame _current;
@@ -20,7 +21,7 @@ internal class ODataJsonWriterStack
         {
             if (_count < 1)
             {
-                throw new IndexOutOfRangeException("Stack is empty, cannot access parent frame.");
+                throw new InvalidOperationException("Stack is empty, cannot access parent frame.");
             }
 
             return ref _stack[_count - 1];

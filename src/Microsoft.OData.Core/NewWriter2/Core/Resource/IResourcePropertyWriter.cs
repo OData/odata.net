@@ -5,7 +5,8 @@ using System.Threading.Tasks;
 
 namespace Microsoft.OData.Core.NewWriter2;
 
-internal interface IResourcePropertyWriter<TResource, TProperty, TState, TContext>
+[System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1005:Avoid excessive parameters on generic types", Justification = "<Pending>")]
+public interface IResourcePropertyWriter<TResource, TProperty, TState, TContext>
 {
-    ValueTask WriteProperty(TResource resource, TProperty property, TState state, TContext context);
+    ValueTask WriteProperty(TResource resource, TProperty resourceProperty, TState state, TContext context);
 }

@@ -4,7 +4,8 @@ using System.Text;
 
 namespace Microsoft.OData.Core.NewWriter2;
 
-internal interface IResourcePropertyWriterProvider<TContext, TState, TProperty>
+[System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1005:Avoid excessive parameters on generic types", Justification = "<Pending>")]
+public interface IResourcePropertyWriterProvider<TContext, TState, TProperty>
 {
     IResourcePropertyWriter<TResource, TProperty, TState, TContext> GetPropertyWriter<TResource>(
         TState state,

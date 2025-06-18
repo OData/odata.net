@@ -3,16 +3,19 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace Microsoft.OData.Core.NewWriter2;
 
-internal sealed class ODataSerializerOptions
+public sealed class ODataSerializerOptions
 {
     private IMetadataWriterProvider<ODataJsonWriterContext, ODataJsonWriterStack, IEdmProperty> _metadataWriterProvider = null;
+    private EdmPropertyValueJsonWriterProvider _propertyValueWriterProvider = new EdmPropertyValueJsonWriterProvider();
+    private ResourceJsonWriterProvider _valueWriterProvider = new ResourceJsonWriterProvider();
+
     public ODataMetadataLevel MetadataLevel { get; set; } = ODataMetadataLevel.Minimal;
     public ODataVersion ODataVersion { get; set; } = ODataVersion.V4;
-    public IResourceWriterProvider<ODataJsonWriterContext, ODataJsonWriterStack> ValueWriterProvider { get; set; }
-        = new ResourceJsonWriterProvider();
+    public IResourceWriterProvider<ODataJsonWriterContext, ODataJsonWriterStack> ValueWriterProvider => _valueWriterProvider;
     public JsonSerializerOptions JsonSerializerOptions { get; set; } = JsonSerializerOptions.Default;
 
     public IResourcePropertyWriterProvider<ODataJsonWriterContext, ODataJsonWriterStack, IEdmProperty> ResourcePropertyWriterProvider { get; set; }
@@ -27,6 +30,19 @@ internal sealed class ODataSerializerOptions
         set => _metadataWriterProvider = value;
     }
 
-    public IPropertyValueWriterProvider<ODataJsonWriterContext, ODataJsonWriterStack, IEdmProperty> PropertyValueWriterProvider { get; set; }
-        = new EdmPropertyValueJsonWriterProvider();
+    public IPropertyValueWriterProvider<ODataJsonWriterContext, ODataJsonWriterStack, IEdmProperty> PropertyValueWriterProvider
+    {
+        get => _propertyValueWriterProvider;
+        set => _propertyValueWriterProvider = value as EdmPropertyValueJsonWriterProvider ?? new EdmPropertyValueJsonWriterProvider();
+    }
+
+    public void AddPropertyValueWriter<TResource>(Func<TResource, IEdmProperty, ODataJsonWriterStack, ODataJsonWriterContext, ValueTask> writeProperty)
+    {
+        _propertyValueWriterProvider.Add(writeProperty);
+    }
+
+    public void AddValueWriter<T>(IODataWriter<ODataJsonWriterContext, ODataJsonWriterStack, T> writer)
+    {
+        _valueWriterProvider.AddValueWriter<T>(writer);
+    }
 }

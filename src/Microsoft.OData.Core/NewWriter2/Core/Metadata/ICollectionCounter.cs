@@ -4,7 +4,8 @@ using System.Text;
 
 namespace Microsoft.OData.Core.NewWriter2;
 
-internal interface ICollectionCounter<TContext, TState, TValue, TProperty>
+[System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1005:Avoid excessive parameters on generic types", Justification = "<Pending>")]
+public interface ICollectionCounter<TContext, TState, TValue, TProperty>
 {
     /// <summary>
     /// Checks if the item <paramref name="value"/> has a count value to be written.
@@ -32,7 +33,7 @@ internal interface ICollectionCounter<TContext, TState, TValue, TProperty>
     /// <param name="state"></param>
     void WriteCountValue(TValue value, TState state, TContext context);
 
-    bool HasNestedCountValue(TValue value, TProperty property, TState state, TContext context, out long? count);
+    bool HasNestedCountValue(TValue value, TProperty resourceProperty, TState state, TContext context, out long? count);
 
-    void WriteNestedCountValue(TValue value, TProperty property, TState state, TContext context);
+    void WriteNestedCountValue(TValue value, TProperty resourceProperty, TState state, TContext context);
 }

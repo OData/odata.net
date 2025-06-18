@@ -50,7 +50,9 @@ internal class DateTimeJsonWriter : IODataWriter<ODataJsonWriterContext, ODataJs
     public ValueTask WriteAsync(DateTime value, ODataJsonWriterStack state, ODataJsonWriterContext context)
     {
         var jsonWriter = context.JsonWriter;
+#pragma warning disable CA1305 // Specify IFormatProvider
         jsonWriter.WriteStringValue(value.ToString("yyyy-MM-ddTHH:mm:ssZ")); // Ensure OData format is applied
+#pragma warning restore CA1305 // Specify IFormatProvider
         return ValueTask.CompletedTask;
     }
 }
@@ -61,6 +63,16 @@ internal class DateTimeOffsetJsonWriter : IODataWriter<ODataJsonWriterContext, O
     {
         var jsonWriter = context.JsonWriter;
         jsonWriter.WriteStringValue(value); // TODO: ensure OData format is applied
+        return ValueTask.CompletedTask;
+    }
+}
+
+internal class ByteArrayJsonWriter : IODataWriter<ODataJsonWriterContext, ODataJsonWriterStack, byte[]>
+{
+    public ValueTask WriteAsync(byte[] value, ODataJsonWriterStack state, ODataJsonWriterContext context)
+    {
+        var jsonWriter = context.JsonWriter;
+        jsonWriter.WriteBase64StringValue(value);
         return ValueTask.CompletedTask;
     }
 }

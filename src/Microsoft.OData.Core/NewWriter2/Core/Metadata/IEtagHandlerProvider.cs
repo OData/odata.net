@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Microsoft.OData.Core.NewWriter2;
 
-internal interface IEtagHandlerProvider<TContext, TState>
+public interface IEtagHandlerProvider<TContext, TState>
 {
     /// <summary>
     /// Gets an ETag handler for the specified type.

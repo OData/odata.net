@@ -9,7 +9,8 @@ namespace Microsoft.OData.Core.NewWriter2;
 /// <typeparam name="TState">Represents state that changes from one scope to another.</typeparam>
 /// <typeparam name="TResource">The type of resource we're reading the property from.</typeparam>
 /// <typeparam name="TProperty">The type representing the property information.</typeparam>
-internal interface IPropertyValueWriter<TContext, TState, TResource, TProperty>
+[System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1005:Avoid excessive parameters on generic types", Justification = "<Pending>")]
+public interface IPropertyValueWriter<TContext, TState, TResource, TProperty>
 {
-    ValueTask WritePropertyValue(TResource resource, TProperty property, TState state, TContext context);
+    ValueTask WritePropertyValue(TResource resource, TProperty resourceProperty, TState state, TContext context);
 }

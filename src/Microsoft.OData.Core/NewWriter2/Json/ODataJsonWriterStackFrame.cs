@@ -3,7 +3,8 @@ using Microsoft.OData.UriParser;
 
 namespace Microsoft.OData.Core.NewWriter2;
 
-internal readonly struct ODataJsonWriterStackFrame
+[System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1815:Override equals and operator equals on value types", Justification = "<Pending>")]
+public readonly struct ODataJsonWriterStackFrame
 {
     public SelectExpandClause SelectExpandClause { get; init; }
     public IEdmType EdmType { get; init; }

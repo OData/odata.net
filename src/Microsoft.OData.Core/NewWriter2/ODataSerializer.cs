@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Microsoft.OData.Core.NewWriter2;
 
-internal static class ODataSerializer
+public static class ODataSerializer
 {
     public static async ValueTask WriteAsync<T>(T value, Stream stream, ODataUri uri, IEdmModel model, ODataSerializerOptions options)
     {
@@ -44,9 +44,7 @@ internal static class ODataSerializer
         var writerStack = new ODataJsonWriterStack();
         writerStack.Push(new ODataJsonWriterStackFrame
         {
-            EdmType = new EdmCollectionType(
-                new EdmEntityTypeReference(
-                    model.FindType("ns.Customer") as IEdmEntityType, isNullable: false)),
+            EdmType = uri.Path.LastSegment.EdmType,
             SelectExpandClause = uri.SelectAndExpand
         });
 

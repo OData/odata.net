@@ -7,7 +7,7 @@ namespace Microsoft.OData.Core.NewWriter2;
 /// <summary>
 /// See: https://docs.oasis-open.org/odata/odata-json-format/v4.01/odata-json-format-v4.01.html#sec_ControllingtheAmountofControlInforma
 /// </summary>
-internal enum ODataMetadataLevel
+public enum ODataMetadataLevel
 {
     /// <summary>
     /// See: https://docs.oasis-open.org/odata/odata-json-format/v4.01/odata-json-format-v4.01.html#sec_metadatanoneodatametadatanone

@@ -5,7 +5,8 @@ using System.Threading.Tasks;
 
 namespace Microsoft.OData.Core.NewWriter2;
 
-internal interface IEtagHandler<TContext, TState, TValue>
+[System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1005:Avoid excessive parameters on generic types", Justification = "<Pending>")]
+public interface IEtagHandler<TContext, TState, TValue>
 {
     public bool HasEtagValue(TValue value, TState state, TContext context, out string etagValue);
     public void WriteEtagValue(TValue value, TState state, TContext context);

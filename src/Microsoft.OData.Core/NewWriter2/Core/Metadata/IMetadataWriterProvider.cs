@@ -4,7 +4,8 @@ using System.Text;
 
 namespace Microsoft.OData.Core.NewWriter2;
 
-internal interface IMetadataWriterProvider<TContext, TState, TProperty>
+[System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1005:Avoid excessive parameters on generic types", Justification = "<Pending>")]
+public interface IMetadataWriterProvider<TContext, TState, TProperty>
 {
     IMetadataWriter<TContext, TState, TValue, TProperty> GetMetadataWriter<TValue>(TContext context, TState state);
 }

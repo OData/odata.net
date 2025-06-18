@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Microsoft.OData.Core.NewWriter2;
 
-internal class ODataJsonWriterContext
+public class ODataJsonWriterContext
 {
     public required ODataUri ODataUri { get; set; }
     public required IEdmModel Model { get; set; }
@@ -14,13 +14,13 @@ internal class ODataJsonWriterContext
     public required ODataPayloadKind PayloadKind { get; set; }
     public required ODataVersion ODataVersion { get; set; }
     public JsonSerializerOptions JsonSerializerOptions { get; set; }
-    public required Utf8JsonWriter JsonWriter { get; set; }
-    public required IResourceWriterProvider<ODataJsonWriterContext, ODataJsonWriterStack>
+    internal Utf8JsonWriter JsonWriter { get; set; }
+    internal IResourceWriterProvider<ODataJsonWriterContext, ODataJsonWriterStack>
         ValueWriterProvider { private get; set; }
-    public required IResourcePropertyWriterProvider<ODataJsonWriterContext, ODataJsonWriterStack, IEdmProperty>
+    internal IResourcePropertyWriterProvider<ODataJsonWriterContext, ODataJsonWriterStack, IEdmProperty>
         ResourcePropertyWriterProvider { private get; set; }
-    public required IMetadataWriterProvider<ODataJsonWriterContext, ODataJsonWriterStack, IEdmProperty> MetadataWriterProvider { private get; set; }
-    public required IPropertyValueWriterProvider<ODataJsonWriterContext, ODataJsonWriterStack, IEdmProperty>
+    internal IMetadataWriterProvider<ODataJsonWriterContext, ODataJsonWriterStack, IEdmProperty> MetadataWriterProvider { private get; set; }
+    internal IPropertyValueWriterProvider<ODataJsonWriterContext, ODataJsonWriterStack, IEdmProperty>
         PropertyValueWriterProvider { private get; set; }
 
     public IMetadataWriter<ODataJsonWriterContext, ODataJsonWriterStack, T, IEdmProperty> GetMetadataWriter<T>(ODataJsonWriterStack state)

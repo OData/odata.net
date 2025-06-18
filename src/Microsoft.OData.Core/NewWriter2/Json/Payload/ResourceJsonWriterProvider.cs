@@ -8,6 +8,13 @@ namespace Microsoft.OData.Core.NewWriter2;
 internal class ResourceJsonWriterProvider : IResourceWriterProvider<ODataJsonWriterContext, ODataJsonWriterStack>
 {
     private readonly ConcurrentDictionary<Type, object> _writers = new();
+
+    public void AddValueWriter<T>(IODataWriter<ODataJsonWriterContext, ODataJsonWriterStack, T> writer)
+    {
+        var type = typeof(T);
+       _writers[type] = writer ?? throw new ArgumentNullException(nameof(writer), "Writer cannot be null.");
+    }
+
     public IODataWriter<ODataJsonWriterContext, ODataJsonWriterStack, TValue> GetResourceWriter<TValue>(ODataJsonWriterContext context, ODataJsonWriterStack state)
     {
         if (_writers.TryGetValue(typeof(TValue), out var writerObj))
@@ -52,6 +59,13 @@ internal class ResourceJsonWriterProvider : IResourceWriterProvider<ODataJsonWri
             return (IODataWriter<ODataJsonWriterContext, ODataJsonWriterStack, TValue>)writer;
         }
 
+        if (type == typeof(byte[]))
+        {    
+            var writer = new ByteArrayJsonWriter();
+            _writers[type] = writer;
+            return (IODataWriter<ODataJsonWriterContext, ODataJsonWriterStack, TValue>)writer;
+        }
+
         if (type.IsEnum)
         {
             var writerType = typeof(EnumJsonWriter<>).MakeGenericType(type);
@@ -74,7 +88,7 @@ internal class ResourceJsonWriterProvider : IResourceWriterProvider<ODataJsonWri
             return (IODataWriter<ODataJsonWriterContext, ODataJsonWriterStack, TValue>)writer;
         }
 
-        var pocoResourceWriter = new PocoResourceJsonWriter<TValue>();
+        var pocoResourceWriter = new ODataResourceHandlerBasedJsonWriter<TValue>();
         _writers[type] = pocoResourceWriter;
         return pocoResourceWriter;
     }

@@ -1,12 +1,18 @@
 ﻿using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Microsoft.OData.Core.NewWriter2;
 
-internal class PocoResourceJsonWriter<T> : IODataWriter<ODataJsonWriterContext, ODataJsonWriterStack, T>
+// Allows extensibility through handlers
+internal class ODataResourceHandlerBasedJsonWriter<T> : IODataWriter<ODataJsonWriterContext, ODataJsonWriterStack, T>
 {
+    ConcurrentDictionary<IEdmStructuredType, List<IEdmProperty>> cachedEdmProperties = new();
+
     public async ValueTask WriteAsync(T value, ODataJsonWriterStack state, ODataJsonWriterContext context)
     {
         // TODO: should 
@@ -28,7 +34,7 @@ internal class PocoResourceJsonWriter<T> : IODataWriter<ODataJsonWriterContext, 
     }
 
     // TODO: consider making this method virtual to allow derived classes to customize the order of properties
-    private static async ValueTask WriteProperties(T value, ODataJsonWriterStack state, ODataJsonWriterContext context)
+    private async ValueTask WriteProperties(T value, ODataJsonWriterStack state, ODataJsonWriterContext context)
     {
         // AspNetCoreOData serializes properties in a certain deterministic order: strucural properties first, the dynamic properties, etc.
         // However, according to the spec, the order is considered insignificant. So in this case we'll go with
@@ -47,11 +53,24 @@ internal class PocoResourceJsonWriter<T> : IODataWriter<ODataJsonWriterContext, 
 
         if (selectExpand == null || selectExpand.AllSelected == true)
         {
+            var properties = this.GetEdmProperties(edmType);
             // If all properties are selected, we can write all structural properties
-            foreach (var property in edmType.StructuralProperties())
+            for (int i = 0; i < properties.Count; i++)
             {
-                await WriteProperty(propertyWriter, value, property, null, state, context);
+                var property = properties[i];
+                if (property.PropertyKind == EdmPropertyKind.Structural)
+                {
+                    await WriteProperty(propertyWriter, value, property, null, state, context);
+                }
             }
+            // This was too costly due to repeated enumerate allocations
+            //foreach (var property in edmType.Properties())
+            //{
+            //    if (property.PropertyKind == EdmPropertyKind.Structural)
+            //    {
+            //        await WriteProperty(propertyWriter, value, property, null, state, context);
+            //    }
+            //}
 
         }
         else
@@ -119,5 +138,17 @@ internal class PocoResourceJsonWriter<T> : IODataWriter<ODataJsonWriterContext, 
             // Do we need custom state for non-nested properties?
             await propertyWriter.WriteProperty(resource, property, state, context);
         }
+    }
+
+    private List<IEdmProperty> GetEdmProperties(IEdmStructuredType type)
+    {
+        if (cachedEdmProperties.TryGetValue(type, out var properties))
+        {
+            return properties;
+        }
+
+        properties = type.Properties().ToList();
+        cachedEdmProperties[type] = properties;
+        return properties;
     }
 }

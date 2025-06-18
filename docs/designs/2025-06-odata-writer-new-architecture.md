@@ -335,6 +335,32 @@ options.AddValueWriter(new OrderJsonWriter());
 await ODataSerializer.WriteAsync(customers, odataUri, model, options);
 ```
 
+## Preliminary benchmarks
+
+```txt
+// * Summary *
+
+BenchmarkDotNet v0.15.2, Windows 11 (10.0.26100.3775/24H2/2024Update/HudsonValley)
+Intel Xeon W-2123 CPU 3.60GHz, 1 CPU, 8 logical and 4 physical cores
+.NET SDK 10.0.100-preview.1.25120.13
+  [Host]     : .NET 10.0.0 (10.0.25.8005), X64 RyuJIT AVX-512F+CD+BW+DQ+VL
+  DefaultJob : .NET 10.0.0 (10.0.25.8005), X64 RyuJIT AVX-512F+CD+BW+DQ+VL
+```
+
+
+| Method             | WriterName                                           | Mean     | Error    | StdDev    | Median   | Gen0      | Gen1    | Gen2    | Allocated |
+|------------------- |----------------------------------------------------- |---------:|---------:|----------:|---------:|----------:|--------:|--------:|----------:|
+| WriteToMemoryAsync | JsonSerializer                                       | 11.46 ms | 0.297 ms |  0.855 ms | 11.19 ms |   46.8750 | 31.2500 | 31.2500 |    7.2 MB |
+| WriteToMemoryAsync | NewODataSerializer                                   | 22.75 ms | 0.452 ms |  1.135 ms | 22.66 ms |  125.0000 | 31.2500 | 31.2500 |  10.91 MB |
+| WriteToMemoryAsync | ODataMessageWriter                                   | 47.74 ms | 1.914 ms |  5.271 ms | 47.10 ms | 7000.0000 |       - |       - |  35.71 MB |
+| WriteToMemoryAsync | ODataMessageWriter-Async                             | 62.43 ms | 1.724 ms |  4.833 ms | 61.06 ms | 7000.0000 |       - |       - |  35.71 MB |
+| WriteToMemoryAsync | ODataMessageWriter-NoValidation                      | 38.10 ms | 0.933 ms |  2.602 ms | 37.37 ms | 7500.0000 |       - |       - |  35.71 MB |
+| WriteToMemoryAsync | ODataMessageWriter-NoValidation-Async                | 55.81 ms | 1.884 ms |  5.467 ms | 53.91 ms | 7000.0000 |       - |       - |  35.71 MB |
+| WriteToMemoryAsync | ODataMessageWriter-Utf8JsonWriter                    | 45.06 ms | 1.032 ms |  2.962 ms | 44.81 ms | 7500.0000 |       - |       - |  35.71 MB |
+| WriteToMemoryAsync | ODataMessageWriter-Utf8JsonWriter-Async              | 62.15 ms | 1.981 ms |  5.521 ms | 60.63 ms | 7000.0000 |       - |       - |  35.72 MB |
+| WriteToMemoryAsync | ODataMessageWriter-Utf8JsonWriter-NoValidation       | 72.01 ms | 1.434 ms |  1.914 ms | 72.19 ms | 7666.6667 |       - |       - |   35.7 MB |
+| WriteToMemoryAsync | ODataMessageWriter-Utf8JsonWriter-NoValidation-Async | 92.62 ms | 4.801 ms | 14.081 ms | 97.17 ms | 7000.0000 |       - |       - |  35.71 MB |
+
 ## Principles
 
 ### Performance as a feature

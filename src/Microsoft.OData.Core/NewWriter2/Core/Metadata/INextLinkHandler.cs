@@ -4,7 +4,8 @@ using System.Text;
 
 namespace Microsoft.OData.Core.NewWriter2;
 
-internal interface INextLinkHandler<TContext, TState, TValue, TProperty>
+[System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1005:Avoid excessive parameters on generic types", Justification = "<Pending>")]
+public interface INextLinkHandler<TContext, TState, TValue, TProperty>
 {
     // TODO: This coupling to Uri type is not ideal and should be changed. This may lead
     // to expensive, unnecessary allocations of the Uri type in the common case
@@ -13,6 +14,6 @@ internal interface INextLinkHandler<TContext, TState, TValue, TProperty>
     bool HasNextLinkValue(TValue value, TState state, TContext context, out Uri nextLink);
     void WriteNextLinkValue(TValue value, TState state, TContext context);
 
-    bool HasNestedNextLinkValue(TValue value, TProperty property, TState state, TContext context, out Uri nextLink);
-    void WriteNestedNextLinkValue(TValue value, TProperty property, TState state, TContext context);
+    bool HasNestedNextLinkValue(TValue value, TProperty resourceProperty, TState state, TContext context, out Uri nextLink);
+    void WriteNestedNextLinkValue(TValue value, TProperty resourceProperty, TState state, TContext context);
 }
