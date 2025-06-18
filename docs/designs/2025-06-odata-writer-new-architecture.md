@@ -276,7 +276,7 @@ excuted using the following command
 dotnet run -c Release --framework=net10.0 -- --filter *Memory*
 ```
 
-The benchmarks serialize a collection of entities of the form
+The benchmarks serialize a collection of entities to a `MemoryStream`:
 
 ```json
 {
@@ -308,36 +308,82 @@ The benchmarks serialize a collection of entities of the form
           "Misc": "This is a test B1"
         }
       ]
-    },
-    {
-      "Id": 2,
-      "Name": "Cust2 𐀅 ä",
-      "Emails": [
-        "emailA@mailer.com2",
-        "emailB@mailer.com2"
-      ],
-      "Bio": "This is a bio 2",
-      "Content": "AQIDBAI=",
-      "HomeAddress": {
-        "City": "City2 𐀅 ä",
-        "Street": "Street2\n\"escape this\"",
-        "Misc": "This is a test2"
-      },
-      "Addresses": [
-        {
-          "City": "CityA2",
-          "Street": "StreetA2",
-          "Misc": "This is a test A2"
-        },
-        {
-          "City": "CityB2",
-          "Street": "StreetB2",
-          "Misc": "This is a test B2"
-        }
-      ]
-    },
-   //...
+    }
+  ]
 }
+```
+
+The following tests are based on running the [`bombardier`](https://github.com/codesenberg/bombardier) load testing tool against the sample
+server in [`test/PerformanceTests/SerializationComparisonTests/TestServer`](../../test/PerformanceTests/SerializationComparisonsTests/TestServer/) to compare the throughput and latency of different writers when running concurrent requests
+on localhost.
+
+`JsonSerializer`:
+
+```sh
+bombardier -l -d 10s https://localhost:7120/customers/JsonSerializer
+```
+
+```sh
+Done!
+Statistics        Avg      Stdev        Max
+  Reqs/sec      5027.29    2090.85   14012.25
+  Latency       25.09ms    12.55ms   396.30ms
+  Latency Distribution
+     50%    22.01ms
+     75%    27.90ms
+     90%    37.62ms
+     95%    46.48ms
+     99%    72.33ms
+  HTTP codes:
+    1xx - 0, 2xx - 49863, 3xx - 0, 4xx - 0, 5xx - 0
+    others - 0
+  Throughput:   202.11MB/s
+```
+
+**`NewODataSerializer`**:
+
+```sh
+bombardier -l -d 10s https://localhost:7120/customers/NewODataSerializer
+```
+
+```sh
+Done!
+Statistics        Avg      Stdev        Max
+  Reqs/sec      1925.23    1678.85   11420.68
+  Latency       66.20ms    32.69ms   601.98ms
+  Latency Distribution
+     50%    57.93ms
+     75%    81.98ms
+     90%    98.72ms
+     95%   122.86ms
+     99%   266.88ms
+  HTTP codes:
+    1xx - 0, 2xx - 18911, 3xx - 0, 4xx - 0, 5xx - 0
+    others - 0
+  Throughput:    76.48MB/s
+```
+
+**`ODataMessageWriter-Async`**
+
+```sh
+bombardier -l -d 10s https://localhost:7120/customers/ODataMessageWriter-Async
+```
+
+```sh
+Done!
+Statistics        Avg      Stdev        Max
+  Reqs/sec      1183.38    1402.75   18027.04
+  Latency      119.10ms    85.04ms      1.14s
+  Latency Distribution
+     50%    85.57ms
+     75%   103.60ms
+     90%   207.79ms
+     95%   386.40ms
+     99%   753.66ms
+  HTTP codes:
+    1xx - 0, 2xx - 10538, 3xx - 0, 4xx - 0, 5xx - 0
+    others - 0
+  Throughput:    32.74MB/s
 ```
 
 ## Principles
