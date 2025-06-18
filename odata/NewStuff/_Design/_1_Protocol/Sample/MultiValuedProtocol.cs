@@ -9,6 +9,7 @@
     using System.Threading.Tasks;
 
     using NewStuff._Design._0_Convention;
+    using NewStuff._Design._0_Convention.RefTask;
 
     public struct Nothing2
     {
@@ -104,7 +105,7 @@
                 {
                     var uriWriter = await requestWriter.Commit().ConfigureAwait(false);
 
-                    var getHeaderWriter = await WriteUri(GenerateRequestedUri(), uriWriter).ConfigureAwait(false);
+                    var getHeaderWriter = await WriteUri<IUriWriter<IGetHeaderWriter>, IGetHeaderWriter>(GenerateRequestedUri(), uriWriter).ConfigureAwait(false);
 
                     //// TODO not writing any headers...
                     var getBodyWriter = await getHeaderWriter.Commit().ConfigureAwait(false);
@@ -405,7 +406,7 @@
                 {
                     var uriWriter = await requestWriter.Commit().ConfigureAwait(false);
 
-                    var getHeaderWriter = await WriteUri(GenerateRequestedUri(), uriWriter).ConfigureAwait(false);
+                    var getHeaderWriter = await WriteUri<IUriWriter<IGetHeaderWriter>, IGetHeaderWriter>(GenerateRequestedUri(), uriWriter).ConfigureAwait(false);
 
                     var customHeaderWriter = await getHeaderWriter.CommitCustomHeader().ConfigureAwait(false); //// TODO should "content-type: application/json" really be considered "custom"?
                     var headerFieldValueWriter = await customHeaderWriter.Commit(new HeaderFieldName("Content-Type")).ConfigureAwait(false);
@@ -523,7 +524,7 @@
                 await using (patchRequestWriter.ConfigureAwait(false))
                 {
                     var uriWriter = await patchRequestWriter.Commit().ConfigureAwait(false);
-                    var patchHeaderWriter = await MultiValuedProtocol.WriteUri(this.singleValuedUri, uriWriter).ConfigureAwait(false);
+                    var patchHeaderWriter = await MultiValuedProtocol.WriteUri<IUriWriter<IPatchHeaderWriter>, IPatchHeaderWriter>(this.singleValuedUri, uriWriter).ConfigureAwait(false);
 
                     var customHeaderWriter = await patchHeaderWriter.CommitCustomHeader().ConfigureAwait(false);
                     var headerFieldValueWriter = await customHeaderWriter.Commit(new HeaderFieldName("Content-Type")).ConfigureAwait(false); //// TODO probably this should be a "built-in" header
@@ -682,7 +683,7 @@
                 await using (patchRequestWriter.ConfigureAwait(false))
                 {
                     var uriWriter = await patchRequestWriter.Commit().ConfigureAwait(false);
-                    var patchHeaderWriter = await MultiValuedProtocol.WriteUri(this.multiValuedUri, uriWriter).ConfigureAwait(false);
+                    var patchHeaderWriter = await MultiValuedProtocol.WriteUri<IUriWriter<IPatchHeaderWriter>, IPatchHeaderWriter>(this.multiValuedUri, uriWriter).ConfigureAwait(false);
 
                     var customHeaderWriter = await patchHeaderWriter.CommitCustomHeader().ConfigureAwait(false);
                     var headerFieldValueWriter = await customHeaderWriter.Commit(new HeaderFieldName("Content-Type")).ConfigureAwait(false); //// TODO probably this should be a "built-in" header
@@ -1051,7 +1052,8 @@
             }
         }
 
-        private static async Task<T> WriteUri<TUriWriter, T>(Uri uri, TUriWriter uriWriter) where TUriWriter : IUriWriter<T>
+        private static async Task<T> WriteUri<TUriWriter, T>(Uri uri, TUriWriter uriWriter)
+            where TUriWriter : IUriWriter<T>, allows ref struct
         {
             var schemeWriter = await uriWriter.Commit().ConfigureAwait(false);
 
@@ -1102,7 +1104,7 @@
             return getHeaderWriter;
         }
 
-        /*private static async Task<T> WriteUri<T>(Uri uri, IUriWriter<T> uriWriter)
+        private static async Task<T> WriteUri<T>(Uri uri, IUriWriter<T> uriWriter)
         {
             var schemeWriter = await uriWriter.Commit().ConfigureAwait(false);
 
@@ -1151,6 +1153,6 @@
             }
 
             return getHeaderWriter;
-        }*/
+        }
     }
 }
