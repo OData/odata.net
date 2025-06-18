@@ -174,104 +174,6 @@ This produces output like:
 This is just a demonstration and subject to change the as the design evolves:
 
 ```csharp
-// Create EDM model (same as before)
-var model = new EdmModel();
-// ... model setup code same as above ...
-
-// Setup the writer providers
-var propertyValueWriterProvider = new EdmPropertyValueJsonWriterProvider();
-
-// Register a customer property writer that only writes $select'ed properties
-propertyValueWriterProvider.Add<Customer>((customer, property, state, context) =>
-{
-    if (property.Name == "Id")
-    {
-        return context.WriteValueAsync(customer.Id, state);
-    }
-    else if (property.Name == "Name")
-    {
-        return context.WriteValueAsync(customer.Name, state);
-    }
-    else if (property.Name == "Email")
-    {
-        return context.WriteValueAsync(customer.Email, state);
-    }
-    else if (property.Name == "Orders")
-    {
-        return context.WriteValueAsync(customer.Orders, state);
-    }
-
-    // etc.
-
-    return ValueTask.CompletedTask;
-});
-
-// Register order writer 
-propertyValueWriterProvider.Add<Order>((order, property, state, context) =>
-{
-    if (property.Name == "Id")
-    {
-        return context.WriteValueAsync(order.Id, state);
-    }
-    else if (property.Name == "OrderDate")
-    {
-        return context.WriteValueAsync(order.OrderDate, state);
-    }
-    else if (property.Name == "Amount")
-    {
-        return context.WriteValueAsync(order.Amount, state);
-    }
-    else if (property.Name == "Status")
-    {
-        return context.WriteValueAsync(order.Status, state);
-    }
-
-    return ValueTask.CompletedTask;
-});
-
-// Create writer context
-var writerContext = new ODataJsonWriterContext
-{
-    Model = model,
-    ODataUri = odataUri,
-    MetadataLevel = ODataMetadataLevel.Minimal,
-    PayloadKind = ODataPayloadKind.ResourceSet,
-    ODataVersion = ODataVersion.V4,
-    JsonWriter = jsonWriter,
-    ValueWriterProvider = new ResourceJsonWriterProvider(),
-    MetadataWriterProvider = new JsonMetadataWriterProvider(new JsonMetadataValueProvider()),
-    PropertyValueWriterProvider = propertyValueWriterProvider,
-    ResourcePropertyWriterProvider = new EdmPropertyJsonWriterProvider()
-};
-
-// Setup writer stack 
-var writerStack = new ODataJsonWriterStack();
-writerStack.Push(new ODataJsonWriterStackFrame
-{
-    EdmType = new EdmCollectionType(
-        new EdmEntityTypeReference(
-            model.FindType("NS.Customer") as IEdmEntityType, 
-            isNullable: false)),
-    SelectExpandClause = odataUri.SelectAndExpand
-});
-
-// Write the payload
-var odataWriter = new ODataResourceSetEnumerableJsonWriter<Customer>();
-await odataWriter.WriteAsync(customers, writerStack, writerContext);
-```
-
-Notable improvements over the existing writer:
-
-- No intermediate ODataResource or ODataProperty allocations required
-- Properties are written directly from source objects without boxing
-- Instead of pushing properties to the writer, the writer requests the property it wants to write based on the `IEdmModel` and `$select`, reducing the need for validation.
-- Generic implementations avoid reflection and boxing of primitive values
-- Reusable providers can be registered once and reused across requests
-- Select/expand handling is built into the resource writer based on `SelectExpandClause`, but can be customized.
-
-With additional abstractions, we can simplify the above code to something like
-
-```csharp
 var options = ODataSerializerOptions.CreateDefault();
 
 // Note: default writers for plain CLR types may be generated dynamically
@@ -334,6 +236,15 @@ options.AddValueWriter(new OrderJsonWriter());
 
 await ODataSerializer.WriteAsync(customers, odataUri, model, options);
 ```
+
+Notable improvements over the existing writer:
+
+- No intermediate ODataResource or ODataProperty allocations required
+- Properties are written directly from source objects without boxing
+- Instead of pushing properties to the writer, the writer requests the property it wants to write based on the `IEdmModel` and `$select`, reducing the need for validation.
+- Generic implementations avoid reflection and boxing of primitive values
+- Reusable providers can be registered once and reused across requests
+- Select/expand handling is built into the resource writer based on `SelectExpandClause`, but can be customized.
 
 ## Preliminary benchmarks
 
