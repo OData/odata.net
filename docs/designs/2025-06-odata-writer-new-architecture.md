@@ -248,6 +248,9 @@ Notable improvements over the existing writer:
 
 ## Preliminary benchmarks
 
+These are preliminary benchmark results to demonstrate that this design can improve performance. I'll run benchmark
+more scenarios over time. Bear in mind that there's still room for improvement as the design and implementation is improved.
+
 ```txt
 // * Summary *
 
