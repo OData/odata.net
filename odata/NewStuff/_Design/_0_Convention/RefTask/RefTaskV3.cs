@@ -176,9 +176,9 @@ namespace NewStuff._Design._0_Convention.RefTask
             return new Box<Func<System.Uri, T>, UriWriter2<T>>(this.nextFactory, _ => new UriWriter2<T>(_));
         }
 
-        public RefTaskV4<IUriSchemeWriter2<T>, Func<System.Uri, T>> Commit2()
+        public RefTaskV4<IUriSchemeWriter2<T>, Func<System.Uri, IUriSchemeWriter2<T>>> Commit2()
         {
-            return new RefTaskV4<IUriSchemeWriter2<T>, Func<System.Uri, T>>(ValueTask.FromResult(this.nextFactory), (_) => new UriSchemeWriter(new StringBuilder(), _));
+            return new RefTaskV4<IUriSchemeWriter2<T>, Func<System.Uri, IUriSchemeWriter2<T>>>(ValueTask.FromResult(this.nextFactory), (_) => new UriSchemeWriter(new StringBuilder(), _));
         }
 
         RefTaskV3<IUriSchemeWriter2<T>> IUriWriter<T, IFragmentWriter2<T>, IQueryParameterWriter2<T>, IQueryValueWriter2<T>, IQueryOptionWriter2<T>, IUriPathSegmentWriter2<T>, IUriPortWriter2<T>, IUriDomainWriter2<T>, IUriSchemeWriter2<T>>.Commit()
@@ -393,7 +393,7 @@ namespace NewStuff._Design._0_Convention.RefTask
         {
             var uriWriter = uriWriterBox.GetValue();
 
-            var schemeWriter = await uriWriter.Commit().ConfigureAwait(false);
+            var schemeWriter = await uriWriter.Commit2().ConfigureAwait(false);
 
             var domainWriter = await schemeWriter.Commit(new UriScheme(uri.Scheme)).ConfigureAwait(false);
             var portWriter = await domainWriter.Commit(new UriDomain(uri.DnsSafeHost)).ConfigureAwait(false);
@@ -511,6 +511,8 @@ namespace NewStuff._Design._0_Convention.RefTask
         where TUriScheme : IUriSchemeWriter<TNext, TFragment, TQueryParameter, TQueryValue, TQueryOption, TPathSegment, TUriPort, TUriDomain>, allows ref struct
     {
         RefTaskV3<TUriScheme> Commit();
+
+        RefTaskV4<TUriScheme, Func<System.Uri, IUriSchemeWriter2<TNext>>> Commit2();
     }
 
     public interface IUriSchemeWriter2<T> : IUriSchemeWriter<T, IFragmentWriter2<T>, IQueryParameterWriter2<T>, IQueryValueWriter2<T>, IQueryOptionWriter2<T>, IUriPathSegmentWriter2<T>, IUriPortWriter2<T>, IUriDomainWriter2<T>>
