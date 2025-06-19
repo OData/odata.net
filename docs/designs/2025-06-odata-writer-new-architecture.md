@@ -794,10 +794,21 @@ and override the methods they want to customize. This is similar to how we handl
 
 ## `IEdmModel` and `ODataUri` coupling and concerns
 
-I explained yesterday why I ended down this path. But I still this it's a valid concern. I'm still not convinced creating a new set of interfaces or abstractions to represent the data
-when need to extract. However, I want to take some time in the coming days to explore how far this can go before it becomes impractical. Another concern with the coupling the default context with IEdmModel et al is the cost of using the Edm library on performance. Working on the sample implementation, I was able to reduce the runtime and allocations within the new serializer by ~20% simply by avoiding looping over edmType.Properties() edmType.StructuredPropertypes() in favor of computing a concrete ToList() and caching the results. Of course it would be better if we didn't have to pay the cost of this cache, but that would require changing the implementation edmType.Properties().
+The default context and base writer implementations in the sample implementation are coupled to `IEdmModel` and `ODataUri`. This tight coupling may be cause of concern
+in that if a customer does not have these types available or does not want to use them, they would not be able to use the base abstractions that implement
+OData spec and conventions, they would have to implement these conventions on their own (e.g. handling `$select`/`$expand`, annotations, etc.).
 
-So if the foundational built-in base writers do assume IEdmModel and ODataUri, I'd propose committing to also make this faster, otherwise they'd become a bottleneck to the performance improvement effort. Alternatively, we could explore implementing the base writers such that these interfaces could be swapped without having to reimplement OData conventions manually. We could also start with these coupled implementations then create another layer below this in the future that can be is less loosely coupled, without breaking changes.
+On the other hand, in order to have built-in implementations of OData standard and conventions, we do make a few assumptions and have some standard ways
+of representing types, properties, navigation links, which properties should be included in the response, etc. If we do not use the existing `IEdmModel`
+and `ODataUri` types, we may end up creating alternative interfaces that play a similar role. This might lead to redundant effort that still end up
+requiring users to handle OData-specific types and constructs in order to leverage our built-in base implementations. But this path is still worth exploring
+to evaluate how far it can go before it becomes impractical.
+
+Another concern with the coupling the default context with `IEdmModel` et al is the cost of using the Edm library on performance.
+Working on the sample implementation, I was able to reduce the runtime and allocations within the new serializer by ~20% simply by avoiding looping over `edmType.Properties()` and `edmType.StructuredPropertypes()` in favor of computing a concrete ToList() and caching the results. Of course it would be better if we didn't have to pay the cost of this cache, but that would require changing the implementation `edmType.Properties()`, potentially with breaking changes. And in the past [we have also demonstrated](https://github.com/OData/odata.net/blob/eb47505f4ba406d37e0d347fc370cf1a2e5bcbe6/docs/uri-parser-rewriter-proposal.md) that `ODataUri` parser's performance could be considerably
+improved with a different architecture would require breaking changes.
+
+Therefore, if foundational built-in base writers do assume `IEdmModel` and `ODataUri`, I'd propose committing to also making these components more efficient even if some breaking or design changes might be required down the line, otherwise they'd become a bottleneck to the performance improvement effort. I will explore implementing the base writers such that these interfaces could be swapped without having to reimplement OData conventions manually. But as a start, I will proceed with these coupled implementations (unless there's strong opposition or better concrete alternatives) then create another layer below this in the future that can be is less loosely coupled, without breaking changes.
 
 ## Type mapping
 
