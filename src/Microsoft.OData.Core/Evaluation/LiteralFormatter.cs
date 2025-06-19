@@ -267,6 +267,12 @@ namespace Microsoft.OData.Evaluation
                 return enumValue.Value;
             }
 
+            var commonEnum = value as Enum;
+            if(commonEnum  != null)
+            {
+                return commonEnum.ToString();
+            }
+
             throw SharedUtils.CreateExceptionForUnconvertableType(value);
         }
 
@@ -488,6 +494,11 @@ namespace Microsoft.OData.Evaluation
                 }
 
                 string result = this.FormatAndEscapeLiteral(value);
+
+                if (value is Enum)
+                {
+                    return string.Concat("'", result, "'");
+                }
 
                 if (value is byte[])
                 {
