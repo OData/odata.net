@@ -558,6 +558,9 @@ they'll be represented using generic types `TContext` and `TState` respectively.
 users customize or override to ensure that contextual data is properly propagated. We do not defined a generic type of the global configuration because
 we expect that the context will also store references to the global dependencies.
 
+In a previous iteration, I only had a type to represent the context `TContext` and the state was assumed to be exposed through the context. This is still an option
+I'm considering. Removing one generic type from declarations may make the APIs simpler to work with and extend.
+
 ## Low-level `IODataWriter`
 
 At the lowest level, we defined the `IODataWriter` interface as follows:
@@ -789,7 +792,7 @@ and override the methods they want to customize. This is similar to how we handl
 
 ## Primitive collections
 
-## `IEdmModel` coupling
+## `IEdmModel` and `ODataUri` coupling and concerns
 
 ## Type mapping
 
