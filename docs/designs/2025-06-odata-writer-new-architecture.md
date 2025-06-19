@@ -781,6 +781,8 @@ and override the methods they want to customize. This is similar to how we handl
 
 ## Streaming
 
+## Inheritance and polymorphic payloads
+
 ## Resource sets
 
 ## Primitive types
