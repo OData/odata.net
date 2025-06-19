@@ -771,7 +771,7 @@ providers and handlers. It provides flexibility in how handlers can be implement
 However this approach has some problems:
 
 - If we want to customize multiple things, we have to create and register multiple handlers for the same resource type. This can lead to messy code.
-- Each time we want to invoke a handler, we have to fetch it from the relevant provider. The provider will most likely have an internal cache backed by a `ConcurrentDictionary`. This means that we have to perform cache lookups for each invocation, and do this for multiple handlers. I have not benchmarked this cost, but it could add up.
+- Each time we want to invoke a handler, we have to fetch it from the relevant provider. The provider will most likely have an internal cache backed by a `ConcurrentDictionary`. This means that we have to perform cache lookups for each invocation, and do this for multiple handlers. This cost adds up and we should minimize/avoid it.
 
 An alternative to handlers is to create a base class we expose granular virtual methods that handle specific concerns. The user can create a child class
 and override the methods they want to customize. This is similar to how we handle binders in AspNetCoreOData.
@@ -793,6 +793,11 @@ and override the methods they want to customize. This is similar to how we handl
 ## Primitive collections
 
 ## `IEdmModel` and `ODataUri` coupling and concerns
+
+I explained yesterday why I ended down this path. But I still this it's a valid concern. I'm still not convinced creating a new set of interfaces or abstractions to represent the data
+when need to extract. However, I want to take some time in the coming days to explore how far this can go before it becomes impractical. Another concern with the coupling the default context with IEdmModel et al is the cost of using the Edm library on performance. Working on the sample implementation, I was able to reduce the runtime and allocations within the new serializer by ~20% simply by avoiding looping over edmType.Properties() edmType.StructuredPropertypes() in favor of computing a concrete ToList() and caching the results. Of course it would be better if we didn't have to pay the cost of this cache, but that would require changing the implementation edmType.Properties().
+
+So if the foundational built-in base writers do assume IEdmModel and ODataUri, I'd propose committing to also make this faster, otherwise they'd become a bottleneck to the performance improvement effort. Alternatively, we could explore implementing the base writers such that these interfaces could be swapped without having to reimplement OData conventions manually. We could also start with these coupled implementations then create another layer below this in the future that can be is less loosely coupled, without breaking changes.
 
 ## Type mapping
 
