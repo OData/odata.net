@@ -7,7 +7,8 @@
 namespace Microsoft.OData.UriParser
 {
     /// <summary>Enumeration values for token kinds.</summary>
-    internal enum ExpressionTokenKind
+    internal enum 
+        ExpressionTokenKind
     {
         /// <summary>Unknown.</summary>
         Unknown = 0,
