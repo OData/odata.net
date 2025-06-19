@@ -9,35 +9,35 @@ using NewStuff._Design._1_Protocol.Sample;
 
 namespace NewStuff._Design._0_Convention.RefTask
 {
-    public struct RefTaskV3<T> where T : allows ref struct
+    public struct RefTaskV3<TResult> where TResult : allows ref struct
     {
         private readonly ValueTask doWork;
-        private readonly Func<T> generateResult;
+        private readonly Func<TResult> generateResult;
 
-        public RefTaskV3(ValueTask doWork, Func<T> generateResult)
+        public RefTaskV3(ValueTask doWork, Func<TResult> generateResult)
         {
             this.doWork = doWork;
             this.generateResult = generateResult;
         }
 
-        public RefTaskV3Awaiter<T> GetAwaiter()
+        public RefTaskV3Awaiter<TResult> GetAwaiter()
         {
-            return new RefTaskV3Awaiter<T>(this.doWork.GetAwaiter(), this.generateResult);
+            return new RefTaskV3Awaiter<TResult>(this.doWork.GetAwaiter(), this.generateResult);
         }
 
-        public RefTaskV3<T> ConfigureAwait(bool continueOnCapturedContext)
+        public RefTaskV3<TResult> ConfigureAwait(bool continueOnCapturedContext)
         {
             //// TODO actually implement this
             return this;
         }
     }
 
-    public struct RefTaskV3Awaiter<T> : ICriticalNotifyCompletion where T : allows ref struct
+    public struct RefTaskV3Awaiter<TResult> : ICriticalNotifyCompletion where TResult : allows ref struct
     {
         private readonly ValueTaskAwaiter doWork;
-        private readonly Func<T> generateResult;
+        private readonly Func<TResult> generateResult;
 
-        public RefTaskV3Awaiter(ValueTaskAwaiter doWork, Func<T> generateResult)
+        public RefTaskV3Awaiter(ValueTaskAwaiter doWork, Func<TResult> generateResult)
         {
             this.doWork = doWork;
             this.generateResult = generateResult;
@@ -51,7 +51,7 @@ namespace NewStuff._Design._0_Convention.RefTask
             }
         }
 
-        public T GetResult()
+        public TResult GetResult()
         {
             return this.generateResult();
         }
@@ -70,11 +70,329 @@ namespace NewStuff._Design._0_Convention.RefTask
 
 
 
+
+
+    public struct RefTaskV4<TResult, TIntermediate> where TResult : allows ref struct
+    {
+        private readonly ValueTask<TIntermediate> doWork;
+        private readonly Func<TIntermediate, TResult> generateResult;
+
+        public RefTaskV4(ValueTask<TIntermediate> doWork, Func<TIntermediate, TResult> generateResult)
+        {
+            this.doWork = doWork;
+            this.generateResult = generateResult;
+        }
+
+        public RefTaskV4Awaiter<TResult, TIntermediate> GetAwaiter()
+        {
+            return new RefTaskV4Awaiter<TResult, TIntermediate>(this.doWork.GetAwaiter(), this.generateResult);
+        }
+
+        public RefTaskV4<TResult, TIntermediate> ConfigureAwait(bool continueOnCapturedContext)
+        {
+            //// TODO actually implement this
+            return this;
+        }
+    }
+
+    public struct RefTaskV4Awaiter<TResult, TIntermediate> : ICriticalNotifyCompletion where TResult : allows ref struct
+    {
+        private readonly ValueTaskAwaiter<TIntermediate> doWork;
+        private readonly Func<TIntermediate, TResult> generateResult;
+
+        public RefTaskV4Awaiter(ValueTaskAwaiter<TIntermediate> doWork, Func<TIntermediate, TResult> generateResult)
+        {
+            this.doWork = doWork;
+            this.generateResult = generateResult;
+        }
+
+        public bool IsCompleted
+        {
+            get
+            {
+                return this.doWork.IsCompleted;
+            }
+        }
+
+        public TResult GetResult()
+        {
+            return this.generateResult(this.doWork.GetResult());
+        }
+
+        public void OnCompleted(Action continuation)
+        {
+            this.doWork.OnCompleted(continuation);
+        }
+
+        public void UnsafeOnCompleted(Action continuation)
+        {
+            this.doWork.UnsafeOnCompleted(continuation);
+        }
+    }
+
+
+
+
+
+
+
+
+
+    public interface IBoxable<TContext, TValue> where TValue : IBoxable<TContext, TValue>, allows ref struct
+    {
+        Box<TContext, TValue> Box();
+    }
+
+    public readonly struct Box<TContext, TValue>
+        where TValue : IBoxable<TContext, TValue>, allows ref struct
+    {
+        private readonly TContext context;
+        private readonly Func<TContext, TValue> func;
+
+        public Box(TContext context, Func<TContext, TValue> func)
+        {
+            this.context = context;
+            this.func = func;
+        }
+
+        public TValue GetValue()
+        {
+            return this.func(this.context);
+        }
+    }
+
+    internal readonly ref struct UriWriter2<T> : IUriWriter2<T>, IBoxable<Func<System.Uri, T>, UriWriter2<T>>
+        where T : allows ref struct
+    {
+        private readonly Func<System.Uri, T> nextFactory;
+
+        public UriWriter2(Func<System.Uri, T> nextFactory)
+        {
+            this.nextFactory = nextFactory;
+        }
+
+        public Box<Func<System.Uri, T>, UriWriter2<T>> Box()
+        {
+            return new Box<Func<System.Uri, T>, UriWriter2<T>>(this.nextFactory, _ => new UriWriter2<T>(_));
+        }
+
+        public RefTaskV4<IUriSchemeWriter2<T>, Func<System.Uri, T>> Commit2()
+        {
+            return new RefTaskV4<IUriSchemeWriter2<T>, Func<System.Uri, T>>(ValueTask.FromResult(this.nextFactory), (_) => new UriSchemeWriter(new StringBuilder(), _));
+        }
+
+        RefTaskV3<IUriSchemeWriter2<T>> IUriWriter<T, IFragmentWriter2<T>, IQueryParameterWriter2<T>, IQueryValueWriter2<T>, IQueryOptionWriter2<T>, IUriPathSegmentWriter2<T>, IUriPortWriter2<T>, IUriDomainWriter2<T>, IUriSchemeWriter2<T>>.Commit()
+        {
+            return new RefTaskV3<IUriSchemeWriter2<T>>(ValueTask.CompletedTask, () => new UriSchemeWriter(new StringBuilder(), this.nextFactory));
+        }
+
+        private sealed class UriSchemeWriter : IUriSchemeWriter2<T>
+        {
+            private readonly StringBuilder builder;
+            private readonly Func<System.Uri, T> nextFactory;
+
+            public UriSchemeWriter(StringBuilder builder, Func<System.Uri, T> nextFactory)
+            {
+                this.builder = builder; //// TODO this means that writer instances won't be re-usable, are you ok with that?
+                this.nextFactory = nextFactory;
+            }
+
+            public RefTask<Nothing2, Nothing2, IUriDomainWriter<T>> Commit(UriScheme uriScheme)
+            {
+                this.builder.Append($"{uriScheme.Scheme}://");
+                return RefTask.FromFunc<IUriDomainWriter<T>>(() => new UriDomainWriter(this.builder, this.nextFactory));
+            }
+
+            private sealed class UriDomainWriter : IUriDomainWriter<T>
+            {
+                private readonly StringBuilder builder;
+                private readonly Func<System.Uri, T> nextFactory;
+
+                public UriDomainWriter(StringBuilder builder, Func<System.Uri, T> nextFactory)
+                {
+                    this.builder = builder;
+                    this.nextFactory = nextFactory;
+                }
+
+                public RefTask<Nothing2, Nothing2, IUriPortWriter<T>> Commit(UriDomain uriDomain)
+                {
+                    this.builder.Append(uriDomain.Domain);
+
+                    return RefTask.FromFunc<IUriPortWriter<T>>(() => new UriPortWriter(this.builder, this.nextFactory));
+                }
+
+                private sealed class UriPortWriter : IUriPortWriter<T>
+                {
+                    private readonly StringBuilder builder;
+                    private readonly Func<System.Uri, T> nextFactory;
+
+                    public UriPortWriter(StringBuilder builder, Func<System.Uri, T> nextFactory)
+                    {
+                        this.builder = builder;
+                        this.nextFactory = nextFactory;
+                    }
+
+                    public RefTask<Nothing2, Nothing2, IUriPathSegmentWriter<T>> Commit()
+                    {
+                        return RefTask.FromFunc<IUriPathSegmentWriter<T>>(() => new UriPathSegmentWriter(this.builder, this.nextFactory));
+                    }
+
+                    public RefTask<Nothing2, Nothing2, IUriPathSegmentWriter<T>> Commit(UriPort uriPort)
+                    {
+                        this.builder.Append($":{uriPort.Port}");
+
+                        return RefTask.FromFunc<IUriPathSegmentWriter<T>>(() => new UriPathSegmentWriter(this.builder, this.nextFactory));
+                    }
+
+                    private sealed class UriPathSegmentWriter : IUriPathSegmentWriter<T>
+                    {
+                        private readonly StringBuilder builder;
+                        private readonly Func<System.Uri, T> nextFactory;
+
+                        public UriPathSegmentWriter(StringBuilder builder, Func<System.Uri, T> nextFactory)
+                        {
+                            this.builder = builder;
+                            this.nextFactory = nextFactory;
+                        }
+
+                        public RefTask<Nothing2, Nothing2, IQueryOptionWriter<T>> Commit()
+                        {
+                            return RefTask.FromFunc<IQueryOptionWriter<T>>(() => new QueryOptionWriter(this.builder, this.nextFactory, false));
+                        }
+
+                        private sealed class QueryOptionWriter : IQueryOptionWriter<T>
+                        {
+                            private readonly StringBuilder builder;
+                            private readonly Func<System.Uri, T> nextFactory;
+                            private readonly bool queryParametersWritten;
+
+                            public QueryOptionWriter(StringBuilder builder, Func<System.Uri, T> nextFactory, bool queryParametersWritten)
+                            {
+                                this.builder = builder;
+                                this.nextFactory = nextFactory;
+                                this.queryParametersWritten = queryParametersWritten;
+                            }
+
+                            public RefTask<Nothing2, Nothing2, T> Commit()
+                            {
+                                return RefTask.FromFunc(() => this.nextFactory(new System.Uri(this.builder.ToString())));
+                            }
+
+                            public RefTask<Nothing2, Nothing2, IFragmentWriter<T>> CommitFragment()
+                            {
+                                return RefTask.FromFunc<IFragmentWriter<T>>(() => new FragmentWriter(this.builder, this.nextFactory));
+                            }
+
+                            private sealed class FragmentWriter : IFragmentWriter<T>
+                            {
+                                private readonly StringBuilder builder;
+                                private readonly Func<System.Uri, T> nextFactory;
+
+                                public FragmentWriter(StringBuilder builder, Func<System.Uri, T> nextFactory)
+                                {
+                                    this.builder = builder;
+                                    this.nextFactory = nextFactory;
+                                }
+
+                                public RefTask<Nothing2, Nothing2, T> Commit(Fragment fragment)
+                                {
+                                    this.builder.Append($"#{fragment.Value}");
+
+                                    return RefTask.FromFunc(() => this.nextFactory(new System.Uri(this.builder.ToString())));
+                                }
+                            }
+
+                            public RefTask<Nothing2, Nothing2, IQueryParameterWriter<T>> CommitParameter()
+                            {
+                                return RefTask.FromFunc<IQueryParameterWriter<T>>(() => new QueryParameterWriter(this.builder, this.nextFactory, this.queryParametersWritten));
+                            }
+
+                            private sealed class QueryParameterWriter : IQueryParameterWriter<T>
+                            {
+                                private readonly StringBuilder builder;
+                                private readonly Func<System.Uri, T> nextFactory;
+                                private readonly bool queryParametersWritten;
+
+                                public QueryParameterWriter(StringBuilder builder, Func<System.Uri, T> nextFactory, bool queryParametersWritten)
+                                {
+                                    this.builder = builder;
+                                    this.nextFactory = nextFactory;
+                                    this.queryParametersWritten = queryParametersWritten;
+                                }
+
+                                public RefTask<Nothing2, Nothing2, IQueryValueWriter<T>> Commit(QueryParameter queryParameter)
+                                {
+                                    if (this.queryParametersWritten)
+                                    {
+                                        this.builder.Append("&");
+                                    }
+                                    else
+                                    {
+                                        this.builder.Append("?");
+                                    }
+
+                                    this.builder.Append(queryParameter.Name);
+
+                                    return RefTask.FromFunc<IQueryValueWriter<T>>(() => new QueryValueWriter(this.builder, this.nextFactory));
+                                }
+
+                                private sealed class QueryValueWriter : IQueryValueWriter<T>
+                                {
+                                    private readonly StringBuilder builder;
+                                    private readonly Func<System.Uri, T> nextFactory;
+
+                                    public QueryValueWriter(StringBuilder builder, Func<System.Uri, T> nextFactory)
+                                    {
+                                        this.builder = builder;
+                                        this.nextFactory = nextFactory;
+                                    }
+
+                                    public RefTask<Nothing2, Nothing2, IQueryOptionWriter<T>> Commit()
+                                    {
+                                        //// TODO `fromfunc` calls should almost certainly be `fromresult` calls
+                                        //// TODO ref tasks would also let you avoid this closure
+                                        return RefTask.FromFunc<IQueryOptionWriter<T>>(() => new QueryOptionWriter(this.builder, this.nextFactory, true));
+                                    }
+
+                                    public RefTask<Nothing2, Nothing2, IQueryOptionWriter<T>> Commit(QueryValue queryValue)
+                                    {
+                                        return RefTask.FromFunc<IQueryOptionWriter<T>>(() => new QueryOptionWriter(this.builder, this.nextFactory, true));
+                                    }
+                                }
+                            }
+                        }
+
+
+                        public RefTask<Nothing2, Nothing2, IUriPathSegmentWriter<T>> Commit(UriPathSegment uriPathSegment)
+                        {
+                            this.builder.Append($"/{uriPathSegment.Segment}");
+
+                            return RefTask.FromFunc<IUriPathSegmentWriter<T>>(() => new UriPathSegmentWriter(this.builder, this.nextFactory));
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
     public static class PlaygroundRefV3
     {
-        public static async Task<T> WriteUri<TUriWriter, T>(System.Uri uri, TUriWriter uriWriter)
-            where TUriWriter : IUriWriter2<T>, allows ref struct
+        public static async Task<T> WriteUri<TContext, TUriWriter, T>(System.Uri uri, TContext context, Box<TContext, TUriWriter> uriWriterBox)
+            where TUriWriter : IUriWriter2<T>, IBoxable<TContext, TUriWriter>, allows ref struct
         {
+            var uriWriter = uriWriterBox.GetValue();
+
             var schemeWriter = await uriWriter.Commit().ConfigureAwait(false);
 
             var domainWriter = await schemeWriter.Commit(new UriScheme(uri.Scheme)).ConfigureAwait(false);
