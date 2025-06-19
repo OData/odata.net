@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.OData.Core.NewWriter2.Json.Payload;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Text;
@@ -23,9 +24,18 @@ internal class ResourceJsonWriterProvider : IResourceWriterProvider<ODataJsonWri
         }
 
         var type = typeof(TValue);
-        if (TryGetEnumerableOfT(type, out Type enumerableOfT, out Type elementType))
+
+        if (TryGetCollectionOfT(type, typeof(IReadOnlyList<>), out Type listOfT, out Type elementType))
         {
-            var writerType = typeof(EnumerableResourceSetJsonWriter<,>).MakeGenericType(type, elementType);
+            var writerType = typeof(ListResourceSetJsonWriter<,>).MakeGenericType(type, elementType);
+            var writer = (IODataWriter<ODataJsonWriterContext, ODataJsonWriterStack, TValue>)Activator.CreateInstance(writerType);
+            _writers[type] = writer;
+            return writer;
+        }
+
+        if (TryGetEnumerableOfT(type, out Type enumerableOfT, out Type enumerableELementType))
+        {
+            var writerType = typeof(EnumerableResourceSetJsonWriter<,>).MakeGenericType(type, enumerableELementType);
             var writer = (IODataWriter<ODataJsonWriterContext, ODataJsonWriterStack, TValue>)Activator.CreateInstance(writerType);
             _writers[type] = writer;
             return writer;
@@ -95,21 +105,26 @@ internal class ResourceJsonWriterProvider : IResourceWriterProvider<ODataJsonWri
 
     private static bool TryGetEnumerableOfT(Type type, out Type enumerableOfT, out Type elementType)
     {
-        enumerableOfT = null;
+        return TryGetCollectionOfT(type, typeof(IEnumerable<>), out enumerableOfT, out elementType);
+    }
+
+    private static bool TryGetCollectionOfT(Type sourceType, Type collectionType, out Type collectionOfT, out Type elementType)
+    {
+        collectionOfT = null;
         elementType = null;
-        if (!type.IsGenericType)
+        if (!sourceType.IsGenericType)
         {
             return false;
         }
 
-        if (type.GenericTypeArguments.Length != 1)
+        if (sourceType.GenericTypeArguments.Length != 1)
         {
             return false;
         }
 
-        elementType = type.GenericTypeArguments[0];
+        elementType = sourceType.GenericTypeArguments[0];
 
-        enumerableOfT = typeof(IEnumerable<>).MakeGenericType([elementType]);
-        return type.IsAssignableTo(enumerableOfT);
+        collectionOfT = collectionType.MakeGenericType([elementType]);
+        return sourceType.IsAssignableTo(collectionOfT);
     }
 }
