@@ -23,24 +23,23 @@ namespace ExperimentsLib
         readonly IEdmModel model;
         readonly bool enableValidation;
         readonly Func<Stream, IODataResponseMessage> messageFactory;
+        private IEdmEntitySet entitySet;
+        private IEdmType elementType;
+        ODataMessageWriterSettings settings;
 
         public ODataMessageWriterPayloadWriter(IEdmModel model, Func<Stream, IODataResponseMessage> messageFactory, bool enableValidation = true)
         {
             this.model = model;
             this.messageFactory = messageFactory;
             this.enableValidation = enableValidation;
-        }
 
-        /// <inheritdoc/>
-        public Task WritePayloadAsync(IEnumerable<Customer> payload, Stream stream, bool includeRawValues)
-        {
-            var settings = new ODataMessageWriterSettings();
+            settings = new ODataMessageWriterSettings();
             settings.EnableMessageStreamDisposal = false;
 
             settings.ODataUri = new ODataUri
             {
                 ServiceRoot = new Uri("https://services.odata.org/V4/OData/OData.svc/"),
-                
+
             };
 
             if (!this.enableValidation)
@@ -50,10 +49,33 @@ namespace ExperimentsLib
                 settings.AlwaysAddTypeAnnotationsForDerivedTypes = false;
             }
 
+            entitySet = model.EntityContainer.FindEntitySet("Customers");
+        }
+
+
+
+        /// <inheritdoc/>
+        public Task WritePayloadAsync(IEnumerable<Customer> payload, Stream stream, bool includeRawValues)
+        {
+            //var settings = new ODataMessageWriterSettings();
+            //settings.EnableMessageStreamDisposal = false;
+
+            //settings.ODataUri = new ODataUri
+            //{
+            //    ServiceRoot = new Uri("https://services.odata.org/V4/OData/OData.svc/"),
+                
+            //};
+
+            //if (!this.enableValidation)
+            //{
+            //    settings.Validations = ValidationKinds.None;
+            //    settings.EnableCharactersCheck = false;
+            //    settings.AlwaysAddTypeAnnotationsForDerivedTypes = false;
+            //}
+
             IODataResponseMessage message = messageFactory(stream);
 
             using var messageWriter = new ODataMessageWriter(message, settings, model);
-            var entitySet = model.EntityContainer.FindEntitySet("Customers");
             var writer = messageWriter.CreateODataResourceSetWriter(entitySet);
 
             var resourceSet = new ODataResourceSet();
