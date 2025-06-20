@@ -1049,6 +1049,7 @@ namespace Microsoft.OData.Client
 
             linkDescriptor.DependsOnIds = null;
             linkDescriptor.State = EntityStates.Unchanged;
+            linkDescriptor.DependsOnIds = null;
         }
 
         /// <summary>
