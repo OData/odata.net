@@ -1047,8 +1047,8 @@ namespace Microsoft.OData.Client
                 Error.ThrowBatchUnexpectedContent(InternalError.LinkNotAddedState);
             }
 
-            linkDescriptor.DependsOnIds = null;
             linkDescriptor.State = EntityStates.Unchanged;
+            linkDescriptor.DependsOnIds = null;
         }
 
         /// <summary>
