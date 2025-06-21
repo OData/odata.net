@@ -1047,7 +1047,9 @@ namespace Microsoft.OData.Client
                 Error.ThrowBatchUnexpectedContent(InternalError.LinkNotAddedState);
             }
 
+            linkDescriptor.DependsOnIds = null;
             linkDescriptor.State = EntityStates.Unchanged;
+            linkDescriptor.DependsOnIds = null;
         }
 
         /// <summary>
@@ -1226,6 +1228,7 @@ namespace Microsoft.OData.Client
                 {
                     entityDescriptor.ETag = etag;
                     entityDescriptor.State = EntityStates.Unchanged;
+                    entityDescriptor.DependsOnIds = null;
                     entityDescriptor.PropertiesToSerialize.Clear();
                 }
 
@@ -1297,6 +1300,7 @@ namespace Microsoft.OData.Client
                         Debug.Assert(entityDescriptor.State == EntityStates.Modified, "descriptor.State == EntityStates.Modified");
                         entityDescriptor.ETag = etag;
                         entityDescriptor.State = EntityStates.Unchanged;
+                        entityDescriptor.DependsOnIds = null;
                         entityDescriptor.PropertiesToSerialize.Clear();
                     }
                 }
@@ -1306,6 +1310,7 @@ namespace Microsoft.OData.Client
                 if ((EntityStates.Added == descriptor.State) || (EntityStates.Modified == descriptor.State))
                 {
                     descriptor.State = EntityStates.Unchanged;
+                    descriptor.DependsOnIds = null;
                 }
                 else if (EntityStates.Detached != descriptor.State)
                 {   // this link may have been previously detached by a detaching entity
@@ -1317,6 +1322,7 @@ namespace Microsoft.OData.Client
                 Debug.Assert(descriptor.DescriptorKind == DescriptorKind.NamedStream, "it must be named stream");
                 Debug.Assert(descriptor.State == EntityStates.Modified, "named stream must only be in modified state");
                 descriptor.State = EntityStates.Unchanged;
+                descriptor.DependsOnIds = null;
 
                 StreamDescriptor streamDescriptor = (StreamDescriptor)descriptor;
 
