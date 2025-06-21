@@ -62,7 +62,9 @@ namespace Microsoft.OData
         /// <param name="name">Name to validate.</param>
         internal static void ValidateName(string name)
         {
-            if (name.IndexOf('.') < 0 || name[0] == '.' || name[name.Length - 1] == '.')
+            // being internal, all callers validate that the name is not empty, but don't validate anything else; here, we validate that there is a namespace, 
+            // indicated by the presence of a period and by characters before and after the period
+            if (name.Length < 3 || name[0] == '.' || name[name.Length - 1] == '.' || name.IndexOf('.', 1, name.Length - 2) < 0)
             {
                 throw new ArgumentException(Strings.ODataInstanceAnnotation_NeedPeriodInName(name));
             }

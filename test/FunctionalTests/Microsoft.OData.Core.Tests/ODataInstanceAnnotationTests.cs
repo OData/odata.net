@@ -32,6 +32,16 @@ namespace Microsoft.OData.Tests
         }
 
         [Fact]
+        public void InstanceAnnotationNameWithoutNamespaceShouldThrowArgumentException()
+        {
+            foreach (string name in new[] { ".", "f.", ".f" })
+            {
+                Action test = () => new ODataInstanceAnnotation(name, new ODataPrimitiveValue("value"));
+                test.Throws<ArgumentException>(Strings.ODataInstanceAnnotation_NeedPeriodInName(name));
+            }
+        }
+
+        [Fact]
         public void AtInInstanceAnnotationNameShouldThrowArgumentException()
         {
             foreach (string name in new[] { "@foo.bar", "foo.b@ar", "foo.bar@" })
