@@ -1,0 +1,7 @@
+Microsoft.OData.Client.ALinq.UriParser.ISyntacticTreeVisitor<T>.Visit(Microsoft.OData.Client.ALinq.UriParser.RootPathToken tokenIn) -> T
+Microsoft.OData.Client.ALinq.UriParser.QueryTokenKind.RootPath = 33 -> Microsoft.OData.Client.ALinq.UriParser.QueryTokenKind
+Microsoft.OData.Client.ALinq.UriParser.RootPathToken
+Microsoft.OData.Client.ALinq.UriParser.RootPathToken.RootPathToken() -> void
+Microsoft.OData.Client.ALinq.UriParser.RootPathToken.Segments.get -> System.Collections.Generic.IList<string>
+override Microsoft.OData.Client.ALinq.UriParser.RootPathToken.Accept<T>(Microsoft.OData.Client.ALinq.UriParser.ISyntacticTreeVisitor<T> visitor) -> T
+override Microsoft.OData.Client.ALinq.UriParser.RootPathToken.Kind.get -> Microsoft.OData.Client.ALinq.UriParser.QueryTokenKind
