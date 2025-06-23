@@ -214,6 +214,22 @@ namespace Microsoft.OData.Client.Tests
             Assert.Equal("The method 'Contains' is not supported.", exception.Message);
         }
 
+        [Fact]
+        public void ContainsMethodFromGenericCollectionTypesIsNotSupported()
+        {
+            // Arrange
+            var sut = new DataServiceQueryProvider(dsc);
+            var productColors = new List<Color> { Color.None, Color.Blue, Color.Green };
+            var products = dsc.CreateQuery<Product>("Products")
+                .Where(product => productColors.Contains(product.Color));
+
+            // Act
+            var exception = Assert.ThrowsAny<NotSupportedException>(() => sut.Translate(products.Expression));
+
+            // Assert
+            Assert.Equal(string.Format(SRResources.ALinq_CouldNotConvert, productColors.GetType()), exception.Message);
+        }
+
         #endregion
 
         #region CustomFunction tests
