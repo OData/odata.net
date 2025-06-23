@@ -344,11 +344,6 @@ namespace NewStuff._Design._0_Convention.RefTask
             {
                 this.uriSchemeWriterContext = uriSchemeWriterContext;
             }
-
-            public RefTaskV3<UriDomainWriter<T>> Commit(UriScheme uriScheme)
-            {
-                throw new NotImplementedException();
-            }
         }
 
         public readonly struct UriDomainWriterContext<T> where T : allows ref struct
@@ -364,11 +359,6 @@ namespace NewStuff._Design._0_Convention.RefTask
             public UriDomainWriter(UriDomainWriterContext<T> uriDomainWriterContext)
             {
                 this.uriDomainWriterContext = uriDomainWriterContext;
-            }
-
-            public RefTaskV3<UriPortWriter<T>> Commit(UriDomain uriDomain)
-            {
-                throw new NotImplementedException();
             }
         }
 
@@ -386,16 +376,6 @@ namespace NewStuff._Design._0_Convention.RefTask
             {
                 this.uriPortWriterContext = uriPortWriterContext;
             }
-
-            public RefTaskV3<UriPathSegmentWriter<T>> Commit()
-            {
-                throw new NotImplementedException();
-            }
-
-            public RefTaskV3<UriPathSegmentWriter<T>> Commit(UriPort uriPort)
-            {
-                throw new NotImplementedException();
-            }
         }
 
         public readonly struct UriPathSegmentWriterContext<T> where T : allows ref struct
@@ -411,16 +391,6 @@ namespace NewStuff._Design._0_Convention.RefTask
             public UriPathSegmentWriter(UriPathSegmentWriterContext<T> uriPathSegmentWriterContext)
             {
                 this.uriPathSegmentWriterContext = uriPathSegmentWriterContext;
-            }
-
-            public RefTaskV3<QueryOptionWriter<T>> Commit()
-            {
-                throw new NotImplementedException();
-            }
-
-            public RefTaskV3<UriPathSegmentWriter<T>> Commit(UriPathSegment uriPathSegment)
-            {
-                throw new NotImplementedException();
             }
         }
 
@@ -438,21 +408,6 @@ namespace NewStuff._Design._0_Convention.RefTask
             {
                 this.queryOptionWriterContext = queryOptionWriterContext;
             }
-
-            public RefTaskV3<T> Commit()
-            {
-                throw new NotImplementedException();
-            }
-
-            public RefTaskV3<FragmentWriter<T>> CommitFragment()
-            {
-                throw new NotImplementedException();
-            }
-
-            public RefTaskV3<QueryParameterWriter<T>> CommitParameter()
-            {
-                throw new NotImplementedException();
-            }
         }
 
         public readonly struct QueryParameterWriterContext<T> where T : allows ref struct
@@ -468,11 +423,6 @@ namespace NewStuff._Design._0_Convention.RefTask
             public QueryParameterWriter(QueryParameterWriterContext<T> queryParameterWriterContext)
             {
                 this.queryParameterWriterContext = queryParameterWriterContext;
-            }
-
-            public RefTaskV3<QueryValueWriter<T>> Commit(QueryParameter queryParameter)
-            {
-                throw new NotImplementedException();
             }
         }
 
@@ -490,16 +440,6 @@ namespace NewStuff._Design._0_Convention.RefTask
             {
                 this.queryValueWriterContext = queryValueWriterContext;
             }
-
-            public RefTaskV3<QueryOptionWriter<T>> Commit()
-            {
-                throw new NotImplementedException();
-            }
-
-            public RefTaskV3<QueryOptionWriter<T>> Commit(QueryValue queryValue)
-            {
-                throw new NotImplementedException();
-            }
         }
 
         public readonly struct FragmentWriterContext<T> where T : allows ref struct
@@ -515,11 +455,6 @@ namespace NewStuff._Design._0_Convention.RefTask
             public FragmentWriter(FragmentWriterContext<T> fragmentWriterContext)
             {
                 this.fragmentWriterContext = fragmentWriterContext;
-            }
-
-            public RefTaskV3<T> Commit(Fragment fragment)
-            {
-                throw new NotImplementedException();
             }
         }
     }
