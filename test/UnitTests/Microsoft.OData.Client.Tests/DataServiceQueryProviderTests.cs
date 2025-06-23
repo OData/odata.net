@@ -227,7 +227,7 @@ namespace Microsoft.OData.Client.Tests
             var exception = Assert.ThrowsAny<NotSupportedException>(() => sut.Translate(products.Expression));
 
             // Assert
-            Assert.Equal(string.Format(SRResources.ALinq_CouldNotConvert, productColors.GetType()), exception.Message);
+            Assert.Equal(Error.Format(SRResources.ALinq_CouldNotConvert, productColors.GetType()), exception.Message);
         }
 
         #endregion
