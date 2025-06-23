@@ -342,12 +342,30 @@ namespace NewStuff._Design._0_Convention.RefTask
 
             public RefTaskV4<UriDomainWriter<T>, UriDomainWriterContext<T>> Commit(UriScheme uriScheme)
             {
-                throw new NotImplementedException();
+                return new RefTaskV4<UriDomainWriter<T>, UriDomainWriterContext<T>>(
+                    CommitImpl(uriScheme),
+                    context => new UriDomainWriter<T>(context));
+            }
+
+            private ValueTask<UriDomainWriterContext<T>> CommitImpl(UriScheme uriScheme)
+            {
+                this.uriSchemeWriterContext.Builder.Append($"{uriScheme.Scheme}://");
+                return ValueTask.FromResult(new UriDomainWriterContext<T>(
+                    this.uriSchemeWriterContext.Builder,
+                    this.uriSchemeWriterContext.NextFactory));
             }
         }
 
         public readonly struct UriDomainWriterContext<T> where T : allows ref struct
         {
+            public UriDomainWriterContext(StringBuilder builder, Func<System.Uri, T> nextFactory)
+            {
+                Builder = builder;
+                NextFactory = nextFactory;
+            }
+
+            public StringBuilder Builder { get; }
+            public Func<System.Uri, T> NextFactory { get; }
         }
 
         public readonly ref struct UriDomainWriter<T> : 
