@@ -176,9 +176,9 @@ namespace NewStuff._Design._0_Convention.RefTask
             return new Box<Func<System.Uri, T>, UriWriter2<T>>(this.nextFactory, _ => new UriWriter2<T>(_));
         }
 
-        public RefTaskV4<IUriSchemeWriter2<T>, Func<System.Uri, IUriSchemeWriter2<T>>> Commit2()
+        public RefTaskV4<IUriSchemeWriter2<T>, Func<System.Uri, T>> Commit2()
         {
-            return new RefTaskV4<IUriSchemeWriter2<T>, Func<System.Uri, IUriSchemeWriter2<T>>>(ValueTask.FromResult(this.nextFactory), (_) => new UriSchemeWriter(new StringBuilder(), _));
+            return new RefTaskV4<IUriSchemeWriter2<T>, Func<System.Uri, T>>(ValueTask.FromResult(this.nextFactory), (_) => new UriSchemeWriter(new StringBuilder(), _));
         }
 
         RefTaskV3<IUriSchemeWriter2<T>> IUriWriter<T, IFragmentWriter2<T>, IQueryParameterWriter2<T>, IQueryValueWriter2<T>, IQueryOptionWriter2<T>, IUriPathSegmentWriter2<T>, IUriPortWriter2<T>, IUriDomainWriter2<T>, IUriSchemeWriter2<T>>.Commit()
@@ -512,7 +512,7 @@ namespace NewStuff._Design._0_Convention.RefTask
     {
         RefTaskV3<TUriScheme> Commit();
 
-        RefTaskV4<TUriScheme, Func<System.Uri, IUriSchemeWriter2<TNext>>> Commit2();
+        RefTaskV4<TUriScheme, Func<System.Uri, TNext>> Commit2();
     }
 
     public interface IUriSchemeWriter2<T> : IUriSchemeWriter<T, IFragmentWriter2<T>, IQueryParameterWriter2<T>, IQueryValueWriter2<T>, IQueryOptionWriter2<T>, IUriPathSegmentWriter2<T>, IUriPortWriter2<T>, IUriDomainWriter2<T>>
