@@ -308,18 +308,13 @@ namespace NewStuff._Design._0_Convention.RefTask
 
             public RefTaskV4<UriSchemeWriter<T>, UriSchemeWriterContext<T>> Commit()
             {
-                throw new NotImplementedException();
-            }
-
-            /*public RefTaskV4<IUriSchemeWriter2<TNext>, UriSchemeWriterContext<TNext>> Commit()
-            {
-                var uriSchemeWriterContext = new UriSchemeWriterContext<TNext>(
+                var uriSchemeWriterContext = new UriSchemeWriterContext<T>(
                     new StringBuilder(),
                     this.uriWriterContext.NextFactory);
-                return new RefTaskV4<IUriSchemeWriter2<TNext>, UriSchemeWriterContext<TNext>>(
+                return new RefTaskV4<UriSchemeWriter<T>, UriSchemeWriterContext<T>>(
                     ValueTask.FromResult(uriSchemeWriterContext),
-                    context => new UriSchemeWriter<TNext>(context));
-            }*/
+                    context => new UriSchemeWriter<T>(context));
+            }
         }
 
         public readonly struct UriSchemeWriterContext<T> where T : allows ref struct
@@ -344,6 +339,11 @@ namespace NewStuff._Design._0_Convention.RefTask
             {
                 this.uriSchemeWriterContext = uriSchemeWriterContext;
             }
+
+            public RefTaskV4<UriDomainWriter<T>, UriDomainWriterContext<T>> Commit(UriScheme uriScheme)
+            {
+                throw new NotImplementedException();
+            }
         }
 
         public readonly struct UriDomainWriterContext<T> where T : allows ref struct
@@ -359,6 +359,11 @@ namespace NewStuff._Design._0_Convention.RefTask
             public UriDomainWriter(UriDomainWriterContext<T> uriDomainWriterContext)
             {
                 this.uriDomainWriterContext = uriDomainWriterContext;
+            }
+
+            public RefTaskV3<UriPortWriter<T>> Commit(UriDomain uriDomain)
+            {
+                throw new NotImplementedException();
             }
         }
 
@@ -376,6 +381,16 @@ namespace NewStuff._Design._0_Convention.RefTask
             {
                 this.uriPortWriterContext = uriPortWriterContext;
             }
+
+            public RefTaskV4<UriPathSegmentWriter<T>, UriPathSegmentWriterContext<T>> Commit()
+            {
+                throw new NotImplementedException();
+            }
+
+            public RefTaskV4<UriPathSegmentWriter<T>, UriPathSegmentWriterContext<T>> Commit(UriPort uriPort)
+            {
+                throw new NotImplementedException();
+            }
         }
 
         public readonly struct UriPathSegmentWriterContext<T> where T : allows ref struct
@@ -391,6 +406,16 @@ namespace NewStuff._Design._0_Convention.RefTask
             public UriPathSegmentWriter(UriPathSegmentWriterContext<T> uriPathSegmentWriterContext)
             {
                 this.uriPathSegmentWriterContext = uriPathSegmentWriterContext;
+            }
+
+            public RefTaskV4<QueryOptionWriter<T>, QueryOptionWriterContext<T>> Commit()
+            {
+                throw new NotImplementedException();
+            }
+
+            public RefTaskV4<UriPathSegmentWriter<T>, UriPathSegmentWriterContext<T>> Commit(UriPathSegment uriPathSegment)
+            {
+                throw new NotImplementedException();
             }
         }
 
@@ -408,6 +433,21 @@ namespace NewStuff._Design._0_Convention.RefTask
             {
                 this.queryOptionWriterContext = queryOptionWriterContext;
             }
+
+            public RefTaskV4<T, Nothing2> Commit()
+            {
+                throw new NotImplementedException();
+            }
+
+            public RefTaskV4<FragmentWriter<T>, FragmentWriterContext<T>> CommitFragment()
+            {
+                throw new NotImplementedException();
+            }
+
+            public RefTaskV4<QueryParameterWriter<T>, QueryParameterWriterContext<T>> CommitParameter()
+            {
+                throw new NotImplementedException();
+            }
         }
 
         public readonly struct QueryParameterWriterContext<T> where T : allows ref struct
@@ -423,6 +463,11 @@ namespace NewStuff._Design._0_Convention.RefTask
             public QueryParameterWriter(QueryParameterWriterContext<T> queryParameterWriterContext)
             {
                 this.queryParameterWriterContext = queryParameterWriterContext;
+            }
+
+            public RefTaskV4<QueryValueWriter<T>, QueryValueWriterContext<T>> Commit(QueryParameter queryParameter)
+            {
+                throw new NotImplementedException();
             }
         }
 
@@ -440,6 +485,16 @@ namespace NewStuff._Design._0_Convention.RefTask
             {
                 this.queryValueWriterContext = queryValueWriterContext;
             }
+
+            public RefTaskV4<QueryOptionWriter<T>, QueryOptionWriterContext<T>> Commit()
+            {
+                throw new NotImplementedException();
+            }
+
+            public RefTaskV4<QueryOptionWriter<T>, QueryOptionWriterContext<T>> Commit(QueryValue queryValue)
+            {
+                throw new NotImplementedException();
+            }
         }
 
         public readonly struct FragmentWriterContext<T> where T : allows ref struct
@@ -455,6 +510,11 @@ namespace NewStuff._Design._0_Convention.RefTask
             public FragmentWriter(FragmentWriterContext<T> fragmentWriterContext)
             {
                 this.fragmentWriterContext = fragmentWriterContext;
+            }
+
+            public RefTaskV4<T, Nothing2> Commit(Fragment fragment)
+            {
+                throw new NotImplementedException();
             }
         }
     }
