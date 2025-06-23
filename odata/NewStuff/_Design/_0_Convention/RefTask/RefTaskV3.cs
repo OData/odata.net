@@ -495,7 +495,7 @@ namespace NewStuff._Design._0_Convention.RefTask
         where TUriPort : IUriPortWriter<TNext, TFragment, TFragmentContext, TQueryParameter, TQueryParameterContext, TQueryValue, TQueryValueContext, TQueryOption, TQueryOptionContext, TPathSegment, TPathSegmentContext>, allows ref struct
         where TUriDomain : IUriDomainWriter<TNext, TFragment, TFragmentContext, TQueryParameter, TQueryParameterContext, TQueryValue, TQueryValueContext, TQueryOption, TQueryOptionContext, TPathSegment, TPathSegmentContext, TUriPort, TUriPortContext>, allows ref struct
     {
-        RefTaskV3<TUriDomain> Commit(UriScheme uriScheme); //// TODO i can't tell if this type should be committed in its writer, or in the "previous" writer (i.e. should this commit take a domain or a scheme?)
+        RefTaskV4<TUriDomain, TUriDomainContext> Commit(UriScheme uriScheme); //// TODO i can't tell if this type should be committed in its writer, or in the "previous" writer (i.e. should this commit take a domain or a scheme?)
     }
 
     public interface IUriDomainWriter2<T> : IUriDomainWriter<T, IFragmentWriter2<T>, Nothing2, IQueryParameterWriter2<T>, Nothing2, IQueryValueWriter2<T>, Nothing2, IQueryOptionWriter2<T>, Nothing2, IUriPathSegmentWriter2<T>, Nothing2, IUriPortWriter2<T>, Nothing2>
@@ -528,9 +528,9 @@ namespace NewStuff._Design._0_Convention.RefTask
         where TQueryOption : IQueryOptionWriter<TNext, TFragment, TFragmentContext, TQueryParameter, TQueryParameterContext, TQueryValue, TQueryValueContext, TQueryOption, TQueryOptionContext>, allows ref struct
         where TPathSegment : IUriPathSegmentWriter<TNext, TFragment, TFragmentContext, TQueryParameter, TQueryParameterContext, TQueryValue, TQueryValueContext, TQueryOption, TQueryOptionContext, TPathSegment, TPathSegmentContext>, allows ref struct
     {
-        RefTaskV3<TPathSegment> Commit();
+        RefTaskV4<TPathSegment, TPathSegmentContext> Commit();
 
-        RefTaskV3<TPathSegment> Commit(UriPort uriPort);
+        RefTaskV4<TPathSegment, TPathSegmentContext> Commit(UriPort uriPort);
     }
 
     public interface IUriPathSegmentWriter2<T> : IUriPathSegmentWriter<T, IFragmentWriter2<T>, Nothing2, IQueryParameterWriter2<T>, Nothing2, IQueryValueWriter2<T>, Nothing2, IQueryOptionWriter2<T>, Nothing2, IUriPathSegmentWriter2<T>, Nothing2>
@@ -546,8 +546,8 @@ namespace NewStuff._Design._0_Convention.RefTask
         where TQueryOption : IQueryOptionWriter<TNext, TFragment, TFragmentContext, TQueryParameter, TQueryParameterContext, TQueryValue, TQueryValueContext, TQueryOption, TQueryOptionContext>, allows ref struct
         where TPathSegment : IUriPathSegmentWriter<TNext, TFragment, TFragmentContext, TQueryParameter, TQueryParameterContext, TQueryValue, TQueryValueContext, TQueryOption, TQueryOptionContext, TPathSegment, TPathSegmentContext>, allows ref struct
     {
-        RefTaskV3<TQueryOption> Commit();
-        RefTaskV3<TPathSegment> Commit(UriPathSegment uriPathSegment);
+        RefTaskV4<TQueryOption, TQueryOptionContext> Commit();
+        RefTaskV4<TPathSegment, TPathSegmentContext> Commit(UriPathSegment uriPathSegment);
     }
 
     public interface IQueryOptionWriter2<T> : IQueryOptionWriter<T, IFragmentWriter2<T>, Nothing2, IQueryParameterWriter2<T>, Nothing2, IQueryValueWriter2<T>, Nothing2, IQueryOptionWriter2<T>, Nothing2>
@@ -562,9 +562,9 @@ namespace NewStuff._Design._0_Convention.RefTask
         where TQueryValue : IQueryValueWriter<TNext, TFragment, TFragmentContext, TQueryParameter, TQueryParameterContext, TQueryValue, TQueryValueContext, TQueryOption, TQueryOptionContext>, allows ref struct
         where TQueryOption : IQueryOptionWriter<TNext, TFragment, TFragmentContext, TQueryParameter, TQueryParameterContext, TQueryValue, TQueryValueContext, TQueryOption, TQueryOptionContext>, allows ref struct
     {
-        RefTaskV3<TNext> Commit();
-        RefTaskV3<TFragment> CommitFragment();
-        RefTaskV3<TQueryParameter> CommitParameter();
+        RefTaskV4<TNext, Nothing2> Commit();
+        RefTaskV4<TFragment, TFragmentContext> CommitFragment();
+        RefTaskV4<TQueryParameter, TQueryParameterContext> CommitParameter();
     }
 
     public interface IQueryParameterWriter2<T> : IQueryParameterWriter<T, IFragmentWriter2<T>, Nothing2, IQueryParameterWriter2<T>, Nothing2, IQueryValueWriter2<T>, Nothing2, IQueryOptionWriter2<T>, Nothing2>
@@ -579,7 +579,7 @@ namespace NewStuff._Design._0_Convention.RefTask
         where TQueryValue : IQueryValueWriter<TNext, TFragment, TFragmentContext, TQueryParameter, TQueryParameterContext, TQueryValue, TQueryValueContext, TQueryOption, TQueryOptionContext>, allows ref struct
         where TQueryOption : IQueryOptionWriter<TNext, TFragment, TFragmentContext, TQueryParameter, TQueryParameterContext, TQueryValue, TQueryValueContext, TQueryOption, TQueryOptionContext>, allows ref struct
     {
-        RefTaskV3<TQueryValue> Commit(QueryParameter queryParameter);
+        RefTaskV4<TQueryValue, TQueryValueContext> Commit(QueryParameter queryParameter);
     }
 
     public interface IQueryValueWriter2<T> : IQueryValueWriter<T, IFragmentWriter2<T>, Nothing2, IQueryParameterWriter2<T>, Nothing2, IQueryValueWriter2<T>, Nothing2, IQueryOptionWriter2<T>, Nothing2>
@@ -594,13 +594,13 @@ namespace NewStuff._Design._0_Convention.RefTask
         where TQueryValue : IQueryValueWriter<TNext, TFragment, TFragmentContext, TQueryParameter, TQueryParameterContext, TQueryValue, TQueryValueContext, TQueryOption, TQueryOptionContext>, allows ref struct
         where TQueryOption : IQueryOptionWriter<TNext, TFragment, TFragmentContext, TQueryParameter, TQueryParameterContext, TQueryValue, TQueryValueContext, TQueryOption, TQueryOptionContext>, allows ref struct
     {
-        RefTaskV3<TQueryOption> Commit();
-        RefTaskV3<TQueryOption> Commit(QueryValue queryValue);
+        RefTaskV4<TQueryOption, TQueryOptionContext> Commit();
+        RefTaskV4<TQueryOption, TQueryOptionContext> Commit(QueryValue queryValue);
     }
 
     public interface IFragmentWriter2<TNext>
         where TNext : allows ref struct
     {
-        RefTaskV3<TNext> Commit(Fragment fragment);
+        RefTaskV4<TNext, Nothing2> Commit(Fragment fragment);
     }
 }
