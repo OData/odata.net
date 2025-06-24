@@ -21,10 +21,10 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
     public class ODataUriResolverTests : ExtensionTestBase
     {
         [Fact]
-        public void DefaultEnableCaseInsensitiveShouldbeFalse()
+        public void DefaultEnableCaseInsensitiveShouldBeTrue()
         {
             ODataQueryOptionParser parser2 = new ODataQueryOptionParser(HardCodedTestModel.TestModel, null, null, new Dictionary<string, string>()) { Resolver = new ODataUriResolver() };
-            Assert.False(parser2.Resolver.EnableCaseInsensitive);
+            Assert.True(parser2.Resolver.EnableCaseInsensitive);
         }
 
         [Fact]
