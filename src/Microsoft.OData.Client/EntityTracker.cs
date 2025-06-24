@@ -391,6 +391,7 @@ namespace Microsoft.OData.Client
             {
                 LinkDescriptor end = this.bindings[trackedEntityDescriptor.GetRelatedEnd()];
                 end.State = EntityStates.Unchanged;
+                end.DependsOnIds = null;
             }
 
             trackedEntityDescriptor.Identity = entityDescriptorFromMaterializer.Identity; // always attach the identity
@@ -429,6 +430,7 @@ namespace Microsoft.OData.Client
             {
                 LinkDescriptor end = this.bindings[resource.GetRelatedEnd()];
                 end.State = EntityStates.Unchanged;
+                end.DependsOnIds = null;
             }
 
             resource.Identity = identity; // always attach the identity
