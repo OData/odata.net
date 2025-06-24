@@ -21,6 +21,8 @@ using Microsoft.OData.UriParser;
 using Microsoft.OData.UriParser.Aggregation;
 using Microsoft.OData.UriParser.Validation;
 using Xunit;
+using Microsoft.OData.Metadata;
+using System.Diagnostics;
 
 namespace Microsoft.OData.Tests.UriParser
 {
@@ -497,6 +499,24 @@ namespace Microsoft.OData.Tests.UriParser
         }
 
         [Fact]
+        public void ParameterizedKeyShouldWork()
+        {
+            ODataPath pathSegment = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://host"), new Uri("http://host/People(ID = @id)")).ParsePath();
+
+            Assert.Equal(2, pathSegment.Count);
+            pathSegment.FirstSegment.ShouldBeEntitySetSegment(HardCodedTestModel.TestModel.FindDeclaredEntitySet("People"));
+            KeySegment keySegment = pathSegment.LastSegment as KeySegment;
+            Assert.NotNull(keySegment);
+            KeyValuePair<string, object>[] keys = keySegment.Keys.ToArray();
+            Assert.Single(keys);
+            Assert.Equal("ID", keys[0].Key);
+            FunctionParameterAliasToken parameterAliasToken = keys[0].Value as FunctionParameterAliasToken;
+            Assert.NotNull(parameterAliasToken);
+            Assert.Equal("@id", parameterAliasToken.Alias);
+            Assert.True(parameterAliasToken.ExpectedParameterType.IsInt32());
+        }
+
+        [Fact]
         public void AlternateKeyShouldWork()
         {
             ODataPath pathSegment = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://host"), new Uri("http://host/People(SocialSN = \'1\')"))
@@ -507,6 +527,27 @@ namespace Microsoft.OData.Tests.UriParser
             Assert.Equal(2, pathSegment.Count);
             pathSegment.FirstSegment.ShouldBeEntitySetSegment(HardCodedTestModel.TestModel.FindDeclaredEntitySet("People"));
             pathSegment.LastSegment.ShouldBeKeySegment(new KeyValuePair<string, object>("SocialSN", "1"));
+        }
+
+        [Fact]
+        public void ParameterizedAlternateKeyShouldWork()
+        {
+            ODataPath pathSegment = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://host"), new Uri("http://host/People(SocialSN = @SocialSN)"))
+            {
+                Resolver = new AlternateKeysODataUriResolver(HardCodedTestModel.TestModel)
+            }.ParsePath();
+
+            Assert.Equal(2, pathSegment.Count);
+            pathSegment.FirstSegment.ShouldBeEntitySetSegment(HardCodedTestModel.TestModel.FindDeclaredEntitySet("People"));
+            KeySegment keySegment = pathSegment.LastSegment as KeySegment;
+            Assert.NotNull(keySegment);
+            KeyValuePair<string,object>[] keys = keySegment.Keys.ToArray();  
+            Assert.Single(keys);
+            Assert.Equal("SocialSN", keys[0].Key);
+            FunctionParameterAliasToken parameterAliasToken = keys[0].Value as FunctionParameterAliasToken;
+            Assert.NotNull(parameterAliasToken);
+            Assert.Equal("@SocialSN", parameterAliasToken.Alias);
+            Assert.True(parameterAliasToken.ExpectedParameterType.IsString());
         }
 
         [Fact]
