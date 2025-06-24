@@ -336,7 +336,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
             XmlAttributeInfo attr = GetOptionalAttribute(this.currentElement, attributeName);
             if (!attr.IsMissing)
             {
-                return this.ValidateTypeName(attr.Value);
+                return this.CheckAndReportTypeNameValidity(attr.Value);
             }
 
             return null;
@@ -347,7 +347,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
             XmlAttributeInfo attr = this.GetRequiredAttribute(this.currentElement, attributeName);
             if (!attr.IsMissing)
             {
-                return this.ValidateTypeName(attr.Value);
+                return this.CheckAndReportTypeNameValidity(attr.Value);
             }
 
             return null;
@@ -405,42 +405,82 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
             return string.Join(" ", enumValues);
         }
 
-        private string ValidateTypeName(string name)
+        private string CheckAndReportTypeNameValidity(string name)
         {
-            string[] typeInformation = name.Split(new char[] { '(', ')' });
-            string typeName = typeInformation[0];
+            Debug.Assert(name != null, "name != null");
+            ReadOnlySpan<char> nameSpan = name.AsSpan();
 
-            // For inline types, we need to check that the name contained inside is a valid type name
-            switch (typeName)
+            int indexOfOpenParen = nameSpan.IndexOf('(');
+            int indexOfCloseParen = nameSpan.IndexOf(')');
+            ReadOnlySpan<char> collectionAsSpan = CsdlConstants.Value_Collection.AsSpan();
+            ReadOnlySpan<char> refAsSpan = CsdlConstants.Value_Ref.AsSpan();
+            ReadOnlySpan<char> namePrefixSpan = ReadOnlySpan<char>.Empty;
+            ReadOnlySpan<char> typeNameSpan = ReadOnlySpan<char>.Empty;
+
+
+            if (indexOfOpenParen >= 0)
             {
-                case CsdlConstants.Value_Collection:
-                    // 'Collection' on its own is a valid type string.
-                    if (typeInformation.Length == 1)
-                    {
-                        return name;
-                    }
-                    else
-                    {
-                        typeName = typeInformation[1];
-                    }
+                // 1. no close paren - indexOfCloseParen = -1,
+                // 2. close paren appearing before open paren - "Collection)ns.Type(",
+                // 2. close paren not at the end - "Collection(ns.Type)s"
+                if (indexOfCloseParen < indexOfOpenParen || nameSpan[indexOfCloseParen] != nameSpan[^1])
+                {
+                    this.ReportError(this.currentElement.Location, EdmErrorCode.InvalidTypeName, Error.Format(SRResources.CsdlParser_InvalidTypeName, name));
+                    return name;
+                }
 
-                    break;
-                case CsdlConstants.Value_Ref:
-                    // 'Ref' on its own is not a valid type string.
-                    if (typeInformation.Length == 1)
-                    {
-                        this.ReportError(this.currentElement.Location, EdmErrorCode.InvalidTypeName, Error.Format(SRResources.CsdlParser_InvalidTypeName, name));
-                        return name;
-                    }
-                    else
-                    {
-                        typeName = typeInformation[1];
-                    }
+                namePrefixSpan = nameSpan.Slice(0, indexOfOpenParen);
+                if (namePrefixSpan.IsEmpty || !(namePrefixSpan.SequenceEqual(collectionAsSpan) || namePrefixSpan.SequenceEqual(refAsSpan)))
+                {
+                    this.ReportError(this.currentElement.Location, EdmErrorCode.InvalidTypeName, Error.Format(SRResources.CsdlParser_InvalidTypeName, name));
+                    return name;
+                }
 
-                    break;
+                typeNameSpan = nameSpan.Slice(indexOfOpenParen + 1, nameSpan.Length - indexOfOpenParen - 2);
+                if (typeNameSpan.IndexOf('(') >= 0 || typeNameSpan.IndexOf(')') >= 0)
+                {
+                    // If there are nested parentheses, it's invalid
+                    this.ReportError(this.currentElement.Location, EdmErrorCode.InvalidTypeName, Error.Format(SRResources.CsdlParser_InvalidTypeName, name));
+                    return name;
+                }
+            }
+            else if (indexOfCloseParen >= 0)
+            {
+                // If there is a close parenthesis without an open parenthesis, it's invalid
+                this.ReportError(this.currentElement.Location, EdmErrorCode.InvalidTypeName, Error.Format(SRResources.CsdlParser_InvalidTypeName, name));
+                return name;
             }
 
-            if (EdmUtil.IsQualifiedName(typeName) || Microsoft.OData.Edm.EdmCoreModel.Instance.GetPrimitiveTypeKind(typeName) != EdmPrimitiveTypeKind.None)
+            if (typeNameSpan.IsEmpty)
+            {
+                typeNameSpan = nameSpan; // If no parentheses, the whole name is the type name
+            }
+
+            // 'Collection' on its own is a valid type string
+            if (namePrefixSpan.IsEmpty && typeNameSpan.SequenceEqual(collectionAsSpan))
+            {
+                return name;
+            }
+            // 'Ref' on its own is not a valid type string.
+            else if (namePrefixSpan.IsEmpty && typeNameSpan.SequenceEqual(refAsSpan))
+            {
+                this.ReportError(this.currentElement.Location, EdmErrorCode.InvalidTypeName, Error.Format(SRResources.CsdlParser_InvalidTypeName, name));
+                return name;
+            }
+
+            // Check for whitespace in the type name
+            for (int i = 0; i < typeNameSpan.Length; i++)
+            {
+                if (char.IsWhiteSpace(typeNameSpan[i]))
+                {
+                    this.ReportError(this.currentElement.Location, EdmErrorCode.InvalidTypeName, Error.Format(SRResources.CsdlParser_InvalidTypeName, name));
+                    return name;
+                }
+            }
+
+            string typeName = typeNameSpan.ToString();
+
+            if (EdmUtil.IsQualifiedName(typeName) || EdmCoreModel.Instance.GetPrimitiveTypeKind(typeName) != EdmPrimitiveTypeKind.None)
             {
                 return name;
             }
