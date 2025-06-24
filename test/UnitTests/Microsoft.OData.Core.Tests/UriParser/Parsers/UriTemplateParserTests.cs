@@ -11,6 +11,7 @@ using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
 using Microsoft.OData.Core;
+using Microsoft.OData.UriParser.Validation;
 
 namespace Microsoft.OData.Tests.UriParser.Parsers
 {
@@ -365,6 +366,20 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
                 var edmTypeReference = ((IEdmEntityType)keySegment.EdmType).DeclaredKey.Single().Type;
                 keypair.Value.ShouldBeUriTemplateExpression(input, edmTypeReference);
             }
+        }
+
+        [Fact]
+        public void ValidateUntypedTemplateSegment()
+        {
+            // The following URL results in an untyped URI template as the last segment.
+            // Validation needs to handle the untyped segment when validating the URL.
+            var parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://host"), new Uri("http://host/People/{myId}/MyDog/{myDogId}"))
+            {
+                EnableUriTemplateParsing = true
+            };
+
+            IEnumerable<ODataUrlValidationMessage> validationMessages;
+            Assert.True(parser.Validate(ODataUrlValidationRuleSet.AllRules, out validationMessages));
         }
 
         [Fact]
