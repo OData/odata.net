@@ -7,16 +7,16 @@
 namespace Microsoft.OData.Json
 {
     #region Namespaces
-    using Microsoft.OData;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Edm;
-    using Microsoft.OData.Evaluation;
     using System;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.Linq;
     using System.Threading.Tasks;
+    using Microsoft.OData;
+    using Microsoft.OData.Core;
+    using Microsoft.OData.Edm;
+    using Microsoft.OData.Evaluation;
     #endregion Namespaces
 
     /// <summary>
