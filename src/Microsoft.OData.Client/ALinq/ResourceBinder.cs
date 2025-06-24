@@ -249,6 +249,8 @@ namespace Microsoft.OData.Client
 
                 // Earlier path components must be navigation sources, and navigation sources cannot have query options.
                 Debug.Assert(!target.HasQueryOptions, "Navigation source had query options?");
+
+                target.SetKeyPredicate(keyPredicates);
             }
 
             if (inputPredicates != null)
