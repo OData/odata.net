@@ -11,7 +11,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml;
-using System.Transactions;
 using Microsoft.OData.Core;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Csdl;
@@ -22,7 +21,6 @@ using Microsoft.OData.UriParser.Aggregation;
 using Microsoft.OData.UriParser.Validation;
 using Xunit;
 using Microsoft.OData.Metadata;
-using System.Diagnostics;
 
 namespace Microsoft.OData.Tests.UriParser
 {
@@ -517,6 +515,51 @@ namespace Microsoft.OData.Tests.UriParser
         }
 
         [Fact]
+        public void MultiPartParameterizedKeyShouldWork()
+        {
+            ODataPath pathSegment = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://host"), new Uri("http://host/Lions(ID1=@id1,ID2=@id2)")).ParsePath();
+
+            Assert.Equal(2, pathSegment.Count);
+            pathSegment.FirstSegment.ShouldBeEntitySetSegment(HardCodedTestModel.TestModel.FindDeclaredEntitySet("Lions"));
+            KeySegment keySegment = pathSegment.LastSegment as KeySegment;
+            Assert.NotNull(keySegment);
+            KeyValuePair<string, object>[] keys = keySegment.Keys.ToArray();
+            Assert.Equal(2, keys.Length);
+
+            Assert.Equal("ID1", keys[0].Key);
+            FunctionParameterAliasToken parameterAliasToken = keys[0].Value as FunctionParameterAliasToken;
+            Assert.NotNull(parameterAliasToken);
+            Assert.Equal("@id1", parameterAliasToken.Alias);
+            Assert.True(parameterAliasToken.ExpectedParameterType.IsInt32());
+
+            Assert.Equal("ID2", keys[1].Key);
+            parameterAliasToken = keys[1].Value as FunctionParameterAliasToken;
+            Assert.NotNull(parameterAliasToken);
+            Assert.Equal("@id2", parameterAliasToken.Alias);
+            Assert.True(parameterAliasToken.ExpectedParameterType.IsInt32());
+        }
+
+        [Fact]
+        public void MultiPartSemiParameterizedKeyShouldWork()
+        {
+            ODataPath pathSegment = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://host"), new Uri("http://host/Lions(ID1=1,ID2=@id2)")).ParsePath();
+
+            Assert.Equal(2, pathSegment.Count);
+            pathSegment.FirstSegment.ShouldBeEntitySetSegment(HardCodedTestModel.TestModel.FindDeclaredEntitySet("Lions"));
+            KeySegment keySegment = pathSegment.LastSegment as KeySegment;
+            Assert.NotNull(keySegment);
+            KeyValuePair<string, object>[] keys = keySegment.Keys.ToArray();
+            Assert.Equal(2, keys.Length);
+            Assert.Equal("ID1", keys[0].Key);
+            Assert.Equal(1, keys[0].Value);
+            Assert.Equal("ID2", keys[1].Key);
+            FunctionParameterAliasToken parameterAliasToken = keys[1].Value as FunctionParameterAliasToken;
+            Assert.NotNull(parameterAliasToken);
+            Assert.Equal("@id2", parameterAliasToken.Alias);
+            Assert.True(parameterAliasToken.ExpectedParameterType.IsInt32());
+        }
+
+        [Fact]
         public void AlternateKeyShouldWork()
         {
             ODataPath pathSegment = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://host"), new Uri("http://host/People(SocialSN = \'1\')"))
@@ -548,6 +591,59 @@ namespace Microsoft.OData.Tests.UriParser
             Assert.NotNull(parameterAliasToken);
             Assert.Equal("@SocialSN", parameterAliasToken.Alias);
             Assert.True(parameterAliasToken.ExpectedParameterType.IsString());
+        }
+
+        [Fact]
+        public void MultiPartParameterizedAlternateKeyShouldWork()
+        {
+            ODataPath pathSegment = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://host"), new Uri("http://host/People(NameAlias=@nameAlias,FirstNameAlias=@firstNameAlias)"))
+            {
+                Resolver = new AlternateKeysODataUriResolver(HardCodedTestModel.TestModel)
+            }.ParsePath();
+
+            Assert.Equal(2, pathSegment.Count);
+            pathSegment.FirstSegment.ShouldBeEntitySetSegment(HardCodedTestModel.TestModel.FindDeclaredEntitySet("People"));
+            KeySegment keySegment = pathSegment.LastSegment as KeySegment;
+            Assert.NotNull(keySegment);
+            KeyValuePair<string, object>[] keys = keySegment.Keys.ToArray();
+            Assert.Equal(2, keys.Length);
+
+            Assert.Equal("NameAlias", keys[0].Key);
+            FunctionParameterAliasToken parameterAliasToken = keys[0].Value as FunctionParameterAliasToken;
+            Assert.NotNull(parameterAliasToken);
+            Assert.Equal("@nameAlias", parameterAliasToken.Alias);
+            Assert.True(parameterAliasToken.ExpectedParameterType.IsString());
+
+            Assert.Equal("FirstNameAlias", keys[1].Key);
+            parameterAliasToken = keys[1].Value as FunctionParameterAliasToken;
+            Assert.NotNull(parameterAliasToken);
+            Assert.Equal("@firstNameAlias", parameterAliasToken.Alias);
+            Assert.Equal(parameterAliasToken.ExpectedParameterType.Definition, HardCodedTestModel.TestModel.FindType("Fully.Qualified.Namespace.NameType"));
+        }
+
+        [Fact]
+        public void MultiPartSemiParameterizedAlternateKeyShouldWork()
+        {
+            ODataPath pathSegment = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://host"), new Uri("http://host/People(NameAlias='name',FirstNameAlias=@firstNameAlias)"))
+            {
+                Resolver = new AlternateKeysODataUriResolver(HardCodedTestModel.TestModel)
+            }.ParsePath();
+
+            Assert.Equal(2, pathSegment.Count);
+            pathSegment.FirstSegment.ShouldBeEntitySetSegment(HardCodedTestModel.TestModel.FindDeclaredEntitySet("People"));
+            KeySegment keySegment = pathSegment.LastSegment as KeySegment;
+            Assert.NotNull(keySegment);
+            KeyValuePair<string, object>[] keys = keySegment.Keys.ToArray();
+            Assert.Equal(2, keys.Length);
+
+            Assert.Equal("NameAlias", keys[0].Key);
+            Assert.Equal("name", keys[0].Value);
+
+            Assert.Equal("FirstNameAlias", keys[1].Key);
+            FunctionParameterAliasToken parameterAliasToken = keys[1].Value as FunctionParameterAliasToken;
+            Assert.NotNull(parameterAliasToken);
+            Assert.Equal("@firstNameAlias", parameterAliasToken.Alias);
+            Assert.Equal(parameterAliasToken.ExpectedParameterType.Definition, HardCodedTestModel.TestModel.FindType("Fully.Qualified.Namespace.NameType"));
         }
 
         [Fact]
