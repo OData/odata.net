@@ -2369,6 +2369,7 @@ namespace Microsoft.OData.Client
 
             LinkDescriptor descriptor = new LinkDescriptor(source, sourceProperty, target, this.model);
             this.entityTracker.AddLink(descriptor);
+            UpdateDescriptorWithDependsOnIds(descriptor, new[] { source, target }, this.entityTracker);
             descriptor.State = EntityStates.Added;
             this.entityTracker.IncrementChange(descriptor);
         }
@@ -2477,6 +2478,7 @@ namespace Microsoft.OData.Client
             {
                 relation = new LinkDescriptor(source, sourceProperty, target, this.model);
                 this.entityTracker.AddLink(relation);
+                UpdateDescriptorWithDependsOnIds(relation, new[] { source, target }, this.entityTracker);
             }
 
             Debug.Assert(
@@ -2539,6 +2541,7 @@ namespace Microsoft.OData.Client
 
             LinkDescriptor descriptor = new LinkDescriptor(source, sourceProperty, target, this.model);
             this.entityTracker.AddLink(descriptor);
+            UpdateDescriptorWithDependsOnIds(descriptor, new[] { source, target }, this.entityTracker);
             descriptor.State = EntityStates.Added;
             this.entityTracker.IncrementChange(descriptor);
         }
@@ -2618,13 +2621,13 @@ namespace Microsoft.OData.Client
             var targetResource = new EntityDescriptor(this.model)
             {
                 Entity = target,
-                State = EntityStates.Added,
-                DependsOnIds = new List<string> { sourceResource.ChangeOrder.ToString(CultureInfo.InvariantCulture) }
+                State = EntityStates.Added
             };
 
             targetResource.SetParentForInsert(sourceResource, sourceProperty);
 
             this.EntityTracker.AddEntityDescriptor(targetResource);
+            UpdateDescriptorWithDependsOnIds(targetResource, new[] { source }, this.entityTracker);
 
             // Add the link in the added state.
             LinkDescriptor end = targetResource.GetRelatedEnd();
@@ -2686,6 +2689,7 @@ namespace Microsoft.OData.Client
             targetResource.SetParentForInsert(sourceResource, sourceProperty);
 
             this.EntityTracker.AddEntityDescriptor(targetResource);
+            UpdateDescriptorWithDependsOnIds(targetResource, new[] { source }, this.entityTracker);
 
             // Add the link in the added state.
             LinkDescriptor end = targetResource.GetRelatedEnd();
@@ -2869,7 +2873,7 @@ namespace Microsoft.OData.Client
                 {
                     Entity = target,
                     State = EntityStates.Modified,
-                    EditLink = sourceResource.GetNestedResourceInfo(this.baseUriResolver, property)
+                    EditLink = sourceResource.GetNestedResourceInfo(this.baseUriResolver, property) 
                 };
 
                 targetResource.SetParentForUpdate(sourceResource, sourceProperty);
@@ -4285,6 +4289,43 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
+        /// Updates the <c>DependsOnIds</c> property of the given <see cref="Descriptor"/> to include the change order IDs
+        /// of any related entities that are in the <c>Added</c> state. This is used to ensure correct ordering of operations
+        /// when submitting changes that depend on newly added entities.
+        /// </summary>
+        /// <param name="descriptor">The descriptor (entity or link) to update.</param>
+        /// <param name="dependsOnObjects">An array of related objects that the descriptor depends on.</param>
+        /// <param name="entityTracker">The <see cref="EntityTracker"/> used to resolve descriptors for the related objects.</param>
+        private static void UpdateDescriptorWithDependsOnIds(
+            Descriptor descriptor,
+            object[] dependsOnObjects,
+            EntityTracker entityTracker)
+        {
+            foreach (object dependsOnResource in dependsOnObjects)
+            {
+                if (dependsOnResource == null)
+                {
+                    continue;
+                }
+
+                EntityDescriptor entityDescriptor = entityTracker.TryGetEntityDescriptor(dependsOnResource);
+                if (entityDescriptor != null && entityDescriptor.State == EntityStates.Added)
+                {
+                    if (descriptor.DependsOnIds == null)
+                    {
+                        descriptor.DependsOnIds = new List<string>();
+                    }
+
+                    string dependsOnId = entityDescriptor.ChangeOrder.ToString(CultureInfo.InvariantCulture);
+                    if (!descriptor.DependsOnIds.Contains(dependsOnId))
+                    {
+                        descriptor.DependsOnIds.Add(dependsOnId);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
         /// Sets the entity's state to unchanged.
         /// </summary>
         /// <param name="entity">The entity to set back to unchanged.</param>
@@ -4298,6 +4339,7 @@ namespace Microsoft.OData.Client
             }
 
             descriptor.State = EntityStates.Unchanged;
+            descriptor.DependsOnIds = null;
         }
 
         /// <summary>
