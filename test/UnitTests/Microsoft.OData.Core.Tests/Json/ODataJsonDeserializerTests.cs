@@ -866,9 +866,15 @@ namespace Microsoft.OData.Tests.Json
         [InlineData("{\"@odata.context\":\"/Customers(1)/Name\",\"value\":\"Joe\"}")]
         [InlineData("{\"@odata.context\":\"./Customers(1)/Name\",\"value\":\"Joe\"}")]
         [InlineData("{\"@odata.context\":\"$metadata#Customers(1)/Name\",\"value\":\"Joe\"}")]
+        [InlineData("{\"@odata.context\":\"/$metadata#Customers(1)/Name\",\"value\":\"Joe\"}")]
+        [InlineData("{\"@odata.context\":\"./$metadata#Customers(1)/Name\",\"value\":\"Joe\"}")]
         [InlineData("{\"@odata.context\":\"../$metadata#Customers(1)/Name\",\"value\":\"Joe\"}")]
         [InlineData("{\"@odata.context\":\"../../$metadata#Customers(1)/Name\",\"value\":\"Joe\"}")]
         [InlineData("{\"@odata.context\":\"../../../$metadata#Customers(1)/Name\",\"value\":\"Joe\"}")]
+        [InlineData("{\"@odata.context\":\"../../../../$metadata#Customers(1)/Name\",\"value\":\"Joe\"}")]
+        [InlineData("{\"@odata.context\":\"../../../../../$metadata#Customers(1)/Name\",\"value\":\"Joe\"}")]
+        [InlineData("{\"@odata.context\":\"../../../../../../$metadata#Customers(1)/Name\",\"value\":\"Joe\"}")]
+        [InlineData("{\"@odata.context\":\"../../../../../../../$metadata#Customers(1)/Name\",\"value\":\"Joe\"}")]
         public void TopLevelPropertyShouldReadContextUriAsRelativeUri(string payload)
         {
             // Arrange
