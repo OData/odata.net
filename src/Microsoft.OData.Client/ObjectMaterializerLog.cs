@@ -206,6 +206,7 @@ namespace Microsoft.OData.Client
                     {
                         // we should always reset descriptor's state to Unchanged (old v1 behavior)
                         descriptor.State = EntityStates.Unchanged;
+                        descriptor.DependsOnIds = null;
                         descriptor.PropertiesToSerialize.Clear();
                     }
                 }
