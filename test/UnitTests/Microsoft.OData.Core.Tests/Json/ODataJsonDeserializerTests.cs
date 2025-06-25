@@ -861,21 +861,32 @@ namespace Microsoft.OData.Tests.Json
             TestUtils.AssertODataValueAreEqual(new ODataPrimitiveValue(value), property.ODataValue);
         }
 
-        [Fact]
-        public void TopLevelPropertyShouldReadContextUriAsRelativeUri()
+        [Theory]
+        [InlineData("{\"@odata.context\":\"Customers(1)/Name\",\"value\":\"Joe\"}")]
+        [InlineData("{\"@odata.context\":\"/Customers(1)/Name\",\"value\":\"Joe\"}")]
+        [InlineData("{\"@odata.context\":\"./Customers(1)/Name\",\"value\":\"Joe\"}")]
+        [InlineData("{\"@odata.context\":\"$metadata#Customers(1)/Name\",\"value\":\"Joe\"}")]
+        [InlineData("{\"@odata.context\":\"/$metadata#Customers(1)/Name\",\"value\":\"Joe\"}")]
+        [InlineData("{\"@odata.context\":\"./$metadata#Customers(1)/Name\",\"value\":\"Joe\"}")]
+        [InlineData("{\"@odata.context\":\"../$metadata#Customers(1)/Name\",\"value\":\"Joe\"}")]
+        [InlineData("{\"@odata.context\":\"../../$metadata#Customers(1)/Name\",\"value\":\"Joe\"}")]
+        [InlineData("{\"@odata.context\":\"../../../$metadata#Customers(1)/Name\",\"value\":\"Joe\"}")]
+        [InlineData("{\"@odata.context\":\"../../../../$metadata#Customers(1)/Name\",\"value\":\"Joe\"}")]
+        [InlineData("{\"@odata.context\":\"../../../../../$metadata#Customers(1)/Name\",\"value\":\"Joe\"}")]
+        [InlineData("{\"@odata.context\":\"../../../../../../$metadata#Customers(1)/Name\",\"value\":\"Joe\"}")]
+        [InlineData("{\"@odata.context\":\"../../../../../../../$metadata#Customers(1)/Name\",\"value\":\"Joe\"}")]
+        public void TopLevelPropertyShouldReadContextUriAsRelativeUri(string payload)
         {
+            // Arrange
             var model = this.CreateEdmModelWithEntity();
             var primitiveTypeRef = ((IEdmEntityType)model.SchemaElements.First()).Properties().First().Type;
             this.messageReaderSettings = new ODataMessageReaderSettings() { BaseUri = new Uri("http://odata.org/test/") };
-            ODataJsonPropertyAndValueDeserializer deserializer = new ODataJsonPropertyAndValueDeserializer(this.CreateJsonInputContext("{\"@odata.context\":\"Customers(1)/Name\",\"value\":\"Joe\"}", model));
+
+            // Act
+            ODataJsonPropertyAndValueDeserializer deserializer = new ODataJsonPropertyAndValueDeserializer(this.CreateJsonInputContext(payload, model));
             ODataProperty property = deserializer.ReadTopLevelProperty(primitiveTypeRef);
 
-            Assert.NotNull(property);
-            Assert.Equal("http://odata.org/test/$metadata#Customers(1)/Name", deserializer.ContextUriParseResult.ContextUri.ToString());
-
-            deserializer = new ODataJsonPropertyAndValueDeserializer(this.CreateJsonInputContext("{\"@odata.context\":\"$metadata#Customers(1)/Name\",\"value\":\"Joe\"}", model));
-            property = deserializer.ReadTopLevelProperty(primitiveTypeRef);
-
+            // Assert
             Assert.NotNull(property);
             Assert.Equal("http://odata.org/test/$metadata#Customers(1)/Name", deserializer.ContextUriParseResult.ContextUri.ToString());
         }
