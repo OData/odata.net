@@ -77,6 +77,13 @@ namespace Microsoft.OData.Tests.UriParser
             NonFlagShapeType.AddMember("Triangle", new EdmEnumMemberValue(2));
             NonFlagShapeType.AddMember("foursquare", new EdmEnumMemberValue(3));
             model.AddElement(NonFlagShapeType);
+
+            var addressTypeEnum = new EdmEnumType("Fully.Qualified.Namespace", "AddressType");
+            addressTypeEnum.AddMember(new EdmEnumMember(addressTypeEnum, "Home", new EdmEnumMemberValue(0)));
+            addressTypeEnum.AddMember(new EdmEnumMember(addressTypeEnum, "Work", new EdmEnumMemberValue(1)));
+            addressTypeEnum.AddMember(new EdmEnumMember(addressTypeEnum, "Other", new EdmEnumMemberValue(2)));
+            model.AddElement(addressTypeEnum);
+            var addressTypeEnumReference = new EdmEnumTypeReference(addressTypeEnum, false);
             #endregion
 
             #region Structured Types
@@ -350,6 +357,7 @@ namespace Microsoft.OData.Tests.UriParser
             FullyQualifiedNamespaceAddress.AddStructuralProperty("City", EdmCoreModel.Instance.GetString(true));
             FullyQualifiedNamespaceAddress.AddStructuralProperty("NextHome", FullyQualifiedNamespaceAddressTypeReference);
             FullyQualifiedNamespaceAddress.AddStructuralProperty("MyNeighbors", new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetString(true))));
+            FullyQualifiedNamespaceAddress.AddStructuralProperty("AddressType", addressTypeEnumReference);
             FullyQualifiedNamespaceAddress.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo { Name = "PostBoxPainting", TargetMultiplicity = EdmMultiplicity.ZeroOrOne, Target = FullyQualifiedNamespacePainting });
             model.AddElement(FullyQualifiedNamespaceAddress);
 
@@ -978,6 +986,11 @@ namespace Microsoft.OData.Tests.UriParser
         <Member Name=""Triangle"" Value=""2"" />
         <Member Name=""foursquare"" Value=""3"" />
       </EnumType>
+      <EnumType Name=""AddressType"">
+        <Member Name=""Home"" Value=""0"" />
+        <Member Name=""Work"" Value=""1"" />
+        <Member Name=""Other"" Value=""2"" />
+      </EnumType>
       <EntityType Name=""Lion"">
         <Key>
           <PropertyRef Name=""ID1"" />
@@ -1180,6 +1193,7 @@ namespace Microsoft.OData.Tests.UriParser
         <Property Name=""City"" Type=""Edm.String"" />
         <Property Name=""NextHome"" Type=""Fully.Qualified.Namespace.Address"" />
         <Property Name=""MyNeighbors"" Type=""Collection(Edm.String)"" />
+        <Property Name=""AddressType"" Type=""Fully.Qualified.Namespace.AddressType"" Nullable=""false"" />
         <NavigationProperty Name=""PostBoxPainting"" Type=""Fully.Qualified.Namespace.Painting"" />
       </ComplexType>
       <ComplexType Name=""HomeAddress"" BaseType=""Fully.Qualified.Namespace.Address"">
@@ -1770,6 +1784,16 @@ namespace Microsoft.OData.Tests.UriParser
             return new EdmEntityTypeReference(GetDogType(), false);
         }
 
+        public static IEdmComplexType GetColorPatternType()
+        {
+            return TestModel.FindType("Fully.Qualified.Namespace.ColorPattern") as IEdmComplexType;
+        }
+
+        public static IEdmComplexTypeReference GetColorPatternTypeReference()
+        {
+            return new EdmComplexTypeReference(GetColorPatternType(), false);
+        }
+
         public static IEdmEntityType GetPaintingType()
         {
             return TestModel.FindType("Fully.Qualified.Namespace.Painting") as IEdmEntityType;
@@ -2009,6 +2033,16 @@ namespace Microsoft.OData.Tests.UriParser
             return (IEdmStructuralProperty)((IEdmStructuredType)TestModel.FindType("Fully.Qualified.Namespace.Address")).FindProperty("City");
         }
 
+        public static IEdmStructuralProperty GetMyAddressAddressTypeProperty()
+        {
+            return (IEdmStructuralProperty)((IEdmStructuredType)TestModel.FindType("Fully.Qualified.Namespace.Address")).FindProperty("AddressType");
+        }
+
+        public static IEdmStructuralProperty GetAddressHomeNOProperty()
+        {
+            return (IEdmStructuralProperty)((IEdmStructuredType)TestModel.FindType("Fully.Qualified.Namespace.HomeAddress")).FindProperty("HomeNO");
+        }
+
         public static IEdmStructuralProperty GetPet2PetColorPatternProperty()
         {
             return (IEdmStructuralProperty)((IEdmStructuredType)TestModel.FindType("Fully.Qualified.Namespace.Pet2")).FindProperty("PetColorPattern");
@@ -2024,6 +2058,11 @@ namespace Microsoft.OData.Tests.UriParser
         public static IEdmNavigationProperty GetAddressMyFavoriteNeighborNavProp()
         {
             return (IEdmNavigationProperty)((IEdmStructuredType)TestModel.FindType("Fully.Qualified.Namespace.Address")).FindProperty("MyFavoriteNeighbor");
+        }
+
+        public static IEdmStructuralProperty GetEmployeeWorkIDProperty()
+        {
+            return (IEdmStructuralProperty)((IEdmStructuredType)TestModel.FindType("Fully.Qualified.Namespace.Employee")).FindProperty("WorkID");
         }
 
         public static IEdmNavigationProperty GetDogFastestOwnerNavProp()
