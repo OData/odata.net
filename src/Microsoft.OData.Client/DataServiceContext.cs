@@ -142,9 +142,6 @@ namespace Microsoft.OData.Client
         /// <summary>The HTTP stack to use for requests.</summary>
         private HttpStack httpStack;
 
-        /// <summary>Whether a Where clause that compares only the key property, will generate a $filter query option.</summary>
-        private bool keyComparisonGeneratesFilterQuery;
-
         /// <summary>A factory class to use in selecting the the request message transport mode implementation </summary>
         private IDataServiceRequestMessageFactory requestMessageFactory = new DataServiceRequestMessageFactory();
 
@@ -264,7 +261,6 @@ namespace Microsoft.OData.Client
             this.httpStack = HttpStack.Auto;
             this.UsingDataServiceCollection = false;
             this.UsePostTunneling = false;
-            this.keyComparisonGeneratesFilterQuery = true;
             this.deleteLinkUriOption = DeleteLinkUriOption.IdQueryParam;
         }
 
@@ -663,17 +659,6 @@ namespace Microsoft.OData.Client
         /// Whether enable writing odata annotation without prefix.
         /// </summary>
         public virtual bool EnableWritingODataAnnotationWithoutPrefix { get; set; }
-
-        /// <summary>
-        /// When true, a Where clause that has only the key property in the predicate generates a $filter query option, otherwise a key segment is generated.
-        /// The default value is true.
-        /// </summary>
-        [Obsolete("This property will be removed in a future major release. The ByKey method should be used to generate an OData URL with key segment.")]
-        public virtual bool KeyComparisonGeneratesFilterQuery
-        {
-            get { return this.keyComparisonGeneratesFilterQuery; }
-            set { this.keyComparisonGeneratesFilterQuery = value; }
-        }
 
         /// <summary>Gets or sets the option for the form of Uri to be generated for a delete link request.</summary>
         public virtual DeleteLinkUriOption DeleteLinkUriOption

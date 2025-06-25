@@ -165,9 +165,7 @@ namespace Microsoft.OData.Client
             Debug.Assert(mce.Method.Name == "Where", "mce.Method.Name == 'Where' -- otherwise this isn't a predicate");
 
             // Validate that the input is a resource set and retrieve the Lambda that defines the predicate
-            QueryableResourceExpression input;
-            LambdaExpression le;
-            if (!TryGetResourceSetMethodArguments(mce, out input, out le))
+            if (!TryGetResourceSetMethodArguments(mce, out QueryableResourceExpression input, out LambdaExpression le))
             {
                 // might have failed because of singleton, so throw better error if so.
                 ValidationRules.RequireNonSingleton(mce.Arguments[0]);
@@ -212,8 +210,7 @@ namespace Microsoft.OData.Client
                     return mce;
                 }
 
-                List<Expression> targetPredicates = null;
-                if (!predicatesByTarget.TryGetValue(boundTarget, out targetPredicates))
+                if (!predicatesByTarget.TryGetValue(boundTarget, out List<Expression> targetPredicates))
                 {
                     targetPredicates = new List<Expression>();
                     predicatesByTarget[boundTarget] = targetPredicates;
@@ -224,8 +221,7 @@ namespace Microsoft.OData.Client
             }
 
             conjuncts = null;
-            List<Expression> inputPredicates;
-            if (predicatesByTarget.TryGetValue(input, out inputPredicates))
+            if (predicatesByTarget.TryGetValue(input, out List<Expression> inputPredicates))
             {
                 predicatesByTarget.Remove(input);
             }
@@ -238,8 +234,7 @@ namespace Microsoft.OData.Client
             {
                 QueryableResourceExpression target = predicates.Key;
                 List<Expression> clauses = predicates.Value;
-                List<Expression> nonKeyPredicates;
-                List<Expression> keyPredicates = ExtractKeyPredicate(target, clauses, model, out nonKeyPredicates);
+                List<Expression> keyPredicates = ExtractKeyPredicate(target, clauses, model, out List<Expression> nonKeyPredicates);
                 if (keyPredicates == null ||
                     (nonKeyPredicates != null && nonKeyPredicates.Count > 0))
                 {
@@ -255,45 +250,8 @@ namespace Microsoft.OData.Client
 
             if (inputPredicates != null)
             {
-                List<Expression> keyPredicates = null;
-                List<Expression> nonKeyPredicates = null;
-
-                // Get the current key predicates
-                List<Expression> currentPredicates = input.KeyPredicateConjuncts.ToList();
-
-                if (input.Filter != null && input.Filter.PredicateConjuncts.Count > 0)
-                {
-                    // Get the filter predicates
-                    currentPredicates = currentPredicates.Union(input.Filter.PredicateConjuncts.Union(inputPredicates)).ToList();
-                }
-                else
-                {
-                    currentPredicates = currentPredicates.Union(inputPredicates).ToList();
-                }
-
-                if (!input.UseFilterAsPredicate && !context.KeyComparisonGeneratesFilterQuery)
-                {
-                    keyPredicates = ExtractKeyPredicate(input, currentPredicates, model, out nonKeyPredicates);
-                }
-
-                if (keyPredicates != null)
-                {
-                    input.SetKeyPredicate(keyPredicates);
-                    input.RemoveFilterExpression();
-                }
-
-                // A key predicate cannot be applied if query options other than 'Expand' are present,
-                // so merge the key predicate into the filter query option instead.
-                if (keyPredicates != null && input.HasSequenceQueryOptions)
-                {
-                    input.ConvertKeyToFilterExpression();
-                }
-
-                if (keyPredicates == null)
-                {
-                    input.ConvertKeyToFilterExpression();
-                    input.AddFilter(inputPredicates);
-                }
+                input.ConvertKeyToFilterExpression();
+                input.AddFilter(inputPredicates);
             }
 
             return input; // No need to adjust this.currentResource - filters are merged in all cases
