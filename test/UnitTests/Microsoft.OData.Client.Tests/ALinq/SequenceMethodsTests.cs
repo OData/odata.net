@@ -372,9 +372,9 @@ namespace Microsoft.OData.Client.Tests.ALinq
             // Define customer type enum
             var enumType = new EdmEnumType("NS", "CustomerType");
             enumType.AddMember("None", new EdmEnumMemberValue(0));
-            enumType.AddMember("Regular", new EdmEnumMemberValue(0));
-            enumType.AddMember("Premium", new EdmEnumMemberValue(1));
-            enumType.AddMember("VIP", new EdmEnumMemberValue(2));
+            enumType.AddMember("Regular", new EdmEnumMemberValue(1));
+            enumType.AddMember("Premium", new EdmEnumMemberValue(2));
+            enumType.AddMember("VIP", new EdmEnumMemberValue(3));
             model.AddElement(enumType);
 
             // Create the Customer entity type

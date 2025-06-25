@@ -20,6 +20,7 @@ namespace Microsoft.OData.Client.Tests
             Assert.NotNull(context.Entities);
             Assert.NotNull(context.Links);
             Assert.NotNull(context.Model);
+            Assert.NotNull(context.BaseUri);
         }
 
         [Fact]
@@ -58,15 +59,6 @@ namespace Microsoft.OData.Client.Tests
 
             // Assert
             Assert.Equal(DataServiceUrlKeyDelimiter.Slash, context.UrlKeyDelimiter);
-        }
-
-        [Fact]
-        public void Constructor_InitializesProperties()
-        {
-            var context = new DataServiceContext(new Uri("http://localhost/odata/"));
-            Assert.NotNull(context.BaseUri);
-            Assert.NotNull(context.Configurations);
-            Assert.NotNull(context.Format);
         }
 
         [Fact]
