@@ -249,6 +249,14 @@ namespace Microsoft.OData.UriParser
                 return false;
             }
 
+            if (!String.IsNullOrEmpty(valueText) && valueText[0] == '@')
+            {
+                FunctionParameterAliasToken alias = new FunctionParameterAliasToken(valueText);
+                alias.ExpectedParameterType = typeReference;
+                convertedValue = alias;
+                return true;
+            }
+
             IEdmPrimitiveTypeReference primitiveType = typeReference.AsPrimitive();
             Type primitiveClrType = EdmLibraryExtensions.GetPrimitiveClrType((IEdmPrimitiveType)primitiveType.Definition, primitiveType.IsNullable);
             LiteralParser literalParser = LiteralParser.ForKeys(this.keysAsSegment);
@@ -275,7 +283,7 @@ namespace Microsoft.OData.UriParser
             List<string> positionalValues = null;
 
             // parse keys just like function parameters
-            ExpressionLexer lexer = new ExpressionLexer(string.Concat("(", text, ")"), true, false);
+            ExpressionLexer lexer = new ExpressionLexer(string.Concat("(", text, ")"), moveToFirstToken:true, useSemicolonDelimiter: false, parsingFunctionParameters: true);
             UriQueryExpressionParser exprParser = new UriQueryExpressionParser(ODataUriParserSettings.DefaultFilterLimit /* default limit for parsing key value */, lexer);
             var tmp = (new FunctionCallParser(lexer, exprParser)).ParseArgumentListOrEntityKeyList();
             if (lexer.CurrentToken.Kind != ExpressionTokenKind.End)
@@ -304,6 +312,10 @@ namespace Microsoft.OData.UriParser
                         instance = null;
                         return false;
                     }
+                }
+                else if (t.ValueToken is FunctionParameterAliasToken aliasToken)
+                {
+                    valueText = aliasToken.Alias;
                 }
                 else
                 {
