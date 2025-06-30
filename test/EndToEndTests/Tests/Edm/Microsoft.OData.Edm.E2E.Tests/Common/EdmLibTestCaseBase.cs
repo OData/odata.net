@@ -59,13 +59,7 @@ public class EdmLibTestCaseBase
             xmlWriters[i].Close();
         }
 
-        var strings = new List<string>();
-        foreach (var sb in stringBuilders)
-        {
-            strings.Add(sb.ToString());
-        }
-
-        return strings;
+        return stringBuilders.Select(sb => sb.ToString());
     }
 
     protected IEnumerable<string> GetSerializerResult(IEdmModel edmModel)
@@ -115,15 +109,9 @@ public class EdmLibTestCaseBase
         }
 
         var types = csdl.Elements(XName.Get("EntityType", csdl.Name.NamespaceName)).Where(n => n.Attribute("Name").Value == entityTypeName);
-        foreach (var type in types)
-        {
-            if (type.Attribute("BaseType") != null)
-            {
-                baseTypes.AddRange(GetBaseTypes(csdl, type.Attribute("BaseType").Value));
-                baseTypes.Add(type.Attribute("BaseType").Value);
-            }
-        }
-        return baseTypes;
+        return types
+            .Where(type => type.Attribute("BaseType") != null)
+            .SelectMany(type => GetBaseTypes(csdl, type.Attribute("BaseType").Value).Concat(new[] { type.Attribute("BaseType").Value }));
     }
 
     public static IEnumerable<string> GetDirectlyDerivedTypes(XElement csdl, string structuralTypeElementName, string fullTypeName)
@@ -131,39 +119,21 @@ public class EdmLibTestCaseBase
         var entityTypeName = fullTypeName.Split('.').Last();
         var entityTypeNamespace = fullTypeName.Substring(0, fullTypeName.Length - ('.' + entityTypeName).Length);
 
-        var derivedTypes = new List<string>();
-        var types = csdl.Elements(XName.Get(structuralTypeElementName, csdl.Name.NamespaceName)).Where(n => null != n.Attribute("BaseType") && fullTypeName == n.Attribute("BaseType").Value);
-        foreach (var type in types)
-        {
-            if (null != type.Attribute("Name"))
-            {
-                var typeFullName = csdl.Attribute("Namespace").Value + "." + type.Attribute("Name").Value;
-                derivedTypes.Add(typeFullName);
-            }
-        }
-        return derivedTypes;
+        var types = csdl.Elements(XName.Get(structuralTypeElementName, csdl.Name.NamespaceName))
+            .Where(n => null != n.Attribute("BaseType") && fullTypeName == n.Attribute("BaseType").Value);
+
+        return types.Where(type => type.Attribute("Name") != null).Select(type => csdl.Attribute("Namespace").Value + "." + type.Attribute("Name").Value);
     }
 
     public static IEnumerable<string> GetDirectlyDerivedTypes(IEnumerable<XElement> csdlElements, string structuralTypeElementName, string fullTypeName)
     {
-        var derivedTypes = new List<string>();
-        foreach (var csdlElement in csdlElements)
-        {
-            derivedTypes.AddRange(GetDirectlyDerivedTypes(csdlElement, structuralTypeElementName, fullTypeName));
-        }
-        return derivedTypes;
+        return csdlElements.SelectMany(csdlElement => GetDirectlyDerivedTypes(csdlElement, structuralTypeElementName, fullTypeName));
     }
 
     public static IEnumerable<string> GetDerivedTypes(IEnumerable<XElement> csdlElements, string structuralTypeElementName, string fullTypeName)
     {
-        var results = new List<string>();
         var derivedTypes = GetDirectlyDerivedTypes(csdlElements, structuralTypeElementName, fullTypeName);
-        results.AddRange(derivedTypes);
-        foreach (var derivedType in derivedTypes)
-        {
-            results.AddRange(GetDerivedTypes(csdlElements, structuralTypeElementName, derivedType));
-        }
-        return results;
+        return derivedTypes.Concat(derivedTypes.SelectMany(dt => GetDerivedTypes(csdlElements, structuralTypeElementName, dt)));
     }
 
     public class EdmLibTestErrors : List<EdmError>
