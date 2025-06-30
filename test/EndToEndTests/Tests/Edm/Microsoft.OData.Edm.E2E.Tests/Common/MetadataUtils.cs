@@ -838,7 +838,7 @@ public static class MetadataUtils
     /// <returns>A collection of child XML elements with the given EDM namespace based name.</returns>
     public static IEnumerable<XElement> EdmElements(this XElement parentElement, string elementName)
     {
-        Assert.Empty(elementName);
+        Assert.NotEmpty(elementName);
         Assert.NotNull(parentElement);
         return parentElement.Elements(XName.Get(elementName, EdmOasisNamespace));
     }
@@ -851,7 +851,7 @@ public static class MetadataUtils
     /// <returns>The value of the attribute as a string. Throws an exception if attribute not found.</returns>
     public static string GetAttributeValue(this XElement element, string attributeName)
     {
-        Assert.Empty(attributeName);
+        Assert.NotEmpty(attributeName);
         Assert.NotNull(attributeName);
 
         var attribute = element.Attribute(attributeName);
@@ -869,7 +869,7 @@ public static class MetadataUtils
     /// <returns>Whether or not the attribute was found.</returns>
     public static bool TryGetAttributeValue(this XElement element, string attributeName, out string? attributeValue)
     {
-        Assert.Empty(attributeName);
+        Assert.NotEmpty(attributeName);
         Assert.NotNull(attributeName);
 
         var attribute = element.Attribute(attributeName);
