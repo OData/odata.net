@@ -1834,7 +1834,7 @@ namespace Microsoft.OData.Client
             {
                 instance = null;
                 propertyPath = null;
-                uriVersion = Util.ODataVersion4;
+                uriVersion = context.MaxProtocolVersionAsVersion;
 
                 MemberExpression me = StripTo<MemberExpression>(e);
                 member = me;
@@ -1896,7 +1896,7 @@ namespace Microsoft.OData.Client
             {
                 instance = null;
                 propertyPath = null;
-                uriVersion = Util.ODataVersion4;
+                uriVersion = context.MaxProtocolVersionAsVersion;
 
                 MemberExpression me = StripTo<MemberExpression>(e);
                 member = me;
@@ -3068,7 +3068,7 @@ namespace Microsoft.OData.Client
             internal static void ValidateExpandPath(Expression input, DataServiceContext context, out string expandPath, out Version uriVersion)
             {
                 expandPath = null;
-                uriVersion = Util.ODataVersion4;
+                uriVersion = context.MaxProtocolVersionAsVersion;
                 LambdaExpression le;
                 if (PatternRules.MatchSingleArgumentLambda(input, out le))
                 {

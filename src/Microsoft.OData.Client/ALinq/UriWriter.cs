@@ -51,7 +51,7 @@ namespace Microsoft.OData.Client
         {
             Debug.Assert(context != null, "context != null");
             this.context = context;
-            this.uriVersion = Util.ODataVersion4;
+            this.uriVersion = context.MaxProtocolVersionAsVersion;
         }
 
         /// <summary>
