@@ -49,6 +49,18 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
+        /// Creates the OData entry writer.
+        /// </summary>
+        /// <param name="messageWriter">The message writer.</param>
+        /// <param name="requestPipeline">The request pipeline configuration.</param>
+        /// <param name="resourceType"> The resource type of the entry.</param>
+        /// <returns>The <see cref="ODataWriter"/> wrapper</returns>
+        internal static ODataWriterWrapper CreateForEntry(ODataMessageWriter messageWriter, DataServiceClientRequestPipelineConfiguration requestPipeline, IEdmStructuredType resourceType)
+        {
+            return new ODataWriterWrapper(messageWriter.CreateODataResourceWriter(navigationSource: null, resourceType), requestPipeline);
+        }
+
+        /// <summary>
         /// Creates the OData delta feed writer.
         /// </summary>
         /// <param name="messageWriter">The message writer.</param>
