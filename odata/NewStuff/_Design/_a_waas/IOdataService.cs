@@ -77,6 +77,40 @@
 
 
 
+    public abstract class AspNetCoreControllerBase
+    {
+        public AspNetCoreHttpRequest Request { get; }
+
+        public AspNetCoreHttpResponse Response { get; }
+    }
+
+    public abstract class AspNetCoreHttpRequest
+    {
+        public abstract Stream ToStream();
+    }
+
+    public abstract class AspNetCoreHttpResponse
+    {
+        public abstract Stream ToStream();
+    }
+
+    public sealed class ServiceController : AspNetCoreControllerBase
+    {
+        private readonly IOdataService odataService;
+
+        public ServiceController(IOdataService odataService)
+        {
+            this.odataService = odataService;
+        }
+
+        public void Get()
+        {
+            this.odataService.Send(this.Request.ToStream(), this.Response.ToStream());
+        }
+    }
+
+
+
 
 
 
@@ -201,7 +235,7 @@
     }
 
     //// TODO write the thing that leverages iodataservice
-
+    //// TODO write sample tests
 
 
 
