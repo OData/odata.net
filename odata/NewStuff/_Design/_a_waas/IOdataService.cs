@@ -75,14 +75,46 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
     public sealed class FusionOdataServiceSettings
     {
-        private FusionOdataServiceSettings(Func<Stream, IEdmModelReader> edmModelReaderFactory)
+        private FusionOdataServiceSettings(
+            Func<Stream, IEdmModelReader> edmModelReaderFactory,
+            Func<Stream, Stream, IOdataRequestReader> odataRequestReaderFactory)
         {
             EdmModelReaderFactory = edmModelReaderFactory;
+            OdataRequestReaderFactory = odataRequestReaderFactory;
         }
 
+        public static FusionOdataServiceSettings Default { get; } = new FusionOdataServiceSettings(
+            csdl => new EdmModelReader(csdl),
+            (request, response) => new OdataRequestReader(request, response));
+
         public Func<Stream, IEdmModelReader> EdmModelReaderFactory { get; }
+        public Func<Stream, Stream, IOdataRequestReader> OdataRequestReaderFactory { get; }
+
+        public sealed class Builder
+        {
+            public Func<Stream, IEdmModelReader> EdmModelReaderFactory { get; set; } = FusionOdataServiceSettings.Default.EdmModelReaderFactory;
+            public Func<Stream, Stream, IOdataRequestReader> OdataRequestReaderFactory { get; set; } = FusionOdataServiceSettings.Default.OdataRequestReaderFactory;
+
+            public FusionOdataServiceSettings Build()
+            {
+                return new FusionOdataServiceSettings(this.EdmModelReaderFactory, this.OdataRequestReaderFactory);
+            }
+        }
     }
 
     public sealed class FusionOdataService : IOdataService
@@ -90,13 +122,16 @@
         private readonly Stream edmModel;
         private readonly IDataStoreMapping dataStoreMapping;
         private readonly Func<Stream, IEdmModelReader> edmModelReaderFactory;
+        private readonly Func<Stream, Stream, IOdataRequestReader> odataRequestReaderFactory;
 
         public static IOdataService Create(Stream edmModel, IDataStoreMapping dataStoreMapping)
         {
+            return FusionOdataService.Create(edmModel, dataStoreMapping, FusionOdataServiceSettings.Default);
         }
 
         public static IOdataService Create(Stream edmModel, IDataStoreMapping dataStoreMapping, FusionOdataServiceSettings settings)
         {
+            return new FusionOdataService(edmModel, dataStoreMapping, settings);
         }
 
         private FusionOdataService(Stream edmModel, IDataStoreMapping dataStoreMapping, FusionOdataServiceSettings settings)
@@ -104,15 +139,81 @@
             this.edmModel = edmModel;
             this.dataStoreMapping = dataStoreMapping;
             this.edmModelReaderFactory = settings.EdmModelReaderFactory;
+            this.odataRequestReaderFactory = settings.OdataRequestReaderFactory;
         }
 
         public void Send(Stream request, Stream response)
         {
             var edmModelReader = this.edmModelReaderFactory(this.edmModel);
-            var fusionConventionOdataService = FusionConventionOdataService.Create(parsedEdmModel, this.dataStoreMapping);
+            var fusionConventionOdataService = FusionConventionOdataService.Create(edmModelReader, this.dataStoreMapping);
 
+            fusionConventionOdataService.Send(this.odataRequestReaderFactory(request, response));
         }
     }
+
+    public sealed class EdmModelReader : IEdmModelReader
+    {
+        public EdmModelReader(Stream csdl)
+        {
+            this.Value = default; //// TODO actually parse
+        }
+        
+        public EdmModel Value { get; }
+
+        public WaasNothing Read()
+        {
+            return new WaasNothing();
+        }
+    }
+
+    public sealed class OdataRequestReader : IOdataRequestReader
+    {
+        private readonly Stream response;
+
+        public OdataRequestReader(Stream request, Stream response)
+        {
+            this.Value = default; //// TODO parse request
+            this.response = response;
+        }
+
+        public OdataRequest Value { get; }
+
+        public IOdataResponseWriter Read()
+        {
+            return new OdataResponseWriter(this.response);
+        }
+
+        private sealed class OdataResponseWriter : IOdataResponseWriter
+        {
+            private readonly Stream response;
+
+            public OdataResponseWriter(Stream response)
+            {
+                this.response = response;
+            }
+
+            public WaasNothing Write(OdataResponse value)
+            {
+                //// TODO actually write response
+                return new WaasNothing();
+            }
+        }
+    }
+
+    //// TODO write the thing that leverages iodataservice
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
