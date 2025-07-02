@@ -18,6 +18,71 @@
 
 
 
+
+
+
+
+
+
+
+
+
+    public abstract class AspNetCoreControllerBase
+    {
+        public AspNetCoreHttpRequest Request { get; }
+
+        public AspNetCoreHttpResponse Response { get; }
+    }
+
+    public abstract class AspNetCoreHttpRequest
+    {
+        public abstract Stream ToStream();
+    }
+
+    public abstract class AspNetCoreHttpResponse
+    {
+        public abstract Stream ToStream();
+    }
+
+    public sealed class ServiceController : AspNetCoreControllerBase
+    {
+        private readonly IOdataService odataService;
+
+        public ServiceController(IOdataService odataService)
+        {
+            this.odataService = odataService;
+        }
+
+        public void Get()
+        {
+            this.odataService.Send(this.Request.ToStream(), this.Response.ToStream());
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     public struct WaasNothing
     {
     }
@@ -64,7 +129,7 @@
 
     public interface IConventionOdataService
     {
-        static abstract IConventionOdataService Create(IEdmModelReader edmModel, IDataStoreMapping dataStoreMapping);
+        static abstract IConventionOdataService Create(IEdmModelReader edmModelReader, IDataStoreMapping dataStoreMapping);
 
         void Send(IOdataRequestReader odataRequestReader);
     }
@@ -77,37 +142,7 @@
 
 
 
-    public abstract class AspNetCoreControllerBase
-    {
-        public AspNetCoreHttpRequest Request { get; }
-
-        public AspNetCoreHttpResponse Response { get; }
-    }
-
-    public abstract class AspNetCoreHttpRequest
-    {
-        public abstract Stream ToStream();
-    }
-
-    public abstract class AspNetCoreHttpResponse
-    {
-        public abstract Stream ToStream();
-    }
-
-    public sealed class ServiceController : AspNetCoreControllerBase
-    {
-        private readonly IOdataService odataService;
-
-        public ServiceController(IOdataService odataService)
-        {
-            this.odataService = odataService;
-        }
-
-        public void Get()
-        {
-            this.odataService.Send(this.Request.ToStream(), this.Response.ToStream());
-        }
-    }
+    
 
 
 
@@ -234,8 +269,6 @@
         }
     }
 
-    //// TODO write the thing that leverages iodataservice
-    //// TODO write sample tests
 
 
 
@@ -269,6 +302,10 @@
         public static IConventionOdataService Create(IEdmModelReader edmModel, IDataStoreMapping dataStoreMapping)
         {
             throw new NotImplementedException();
+        }
+
+        private FusionConventionOdataService(IEdmModelReader edmModel)
+        {
         }
 
         public void Send(IOdataRequestReader odataRequestReader)
