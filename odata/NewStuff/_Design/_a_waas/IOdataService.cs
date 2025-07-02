@@ -442,7 +442,7 @@
         }
     }
 
-    public sealed class FusionDataStoreMapping : IDataStoreMapping
+    public sealed class WaasFusionDataStoreMapping : IDataStoreMapping
     {
         // the idea is that the key of the entity is the base64 encoded and semicolon delimited series of keys of the containing entities (plus the entity itself at the end)
         // the above assumes that the entities are contained in only one navigation property, which isn't necessarily true (a single entity *instance* is only contained in one property, but that entity type can be used as the type for multiple contained properties through the model)
@@ -484,7 +484,7 @@
 
     public sealed class FusionConventionOdataService : IConventionOdataService
     {
-        private readonly FusionDataStoreMapping dataStoreMapping;
+        private readonly WaasFusionDataStoreMapping dataStoreMapping;
 
         private readonly IEdmModel2 edmModel;
 
