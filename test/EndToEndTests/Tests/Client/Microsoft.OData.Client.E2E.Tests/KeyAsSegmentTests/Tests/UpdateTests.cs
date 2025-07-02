@@ -69,6 +69,7 @@ public class UpdateTests : EndToEndTestBase<UpdateTests.TestsStartup>
         _context.IgnoreResourceNotFoundException = true;
 
         // Act & Assert
+        Assert.EndsWith("People?$filter=PersonId eq 9999", personQuery.ToString());
         var retrievedPerson = personQuery.SingleOrDefault();
         Assert.Null(retrievedPerson);
 
@@ -92,7 +93,10 @@ public class UpdateTests : EndToEndTestBase<UpdateTests.TestsStartup>
         _context.UpdateObject(specialEmployee);
         _context.SaveChanges();
 
-        var retrievedPerson = _context.People.ByKey(specialEmployee.PersonId).GetValue();
+        var personQuery = _context.People.ByKey(specialEmployee.PersonId);
+        Assert.EndsWith("People/-10", personQuery.RequestUri.AbsoluteUri);
+
+        var retrievedPerson = personQuery.GetValue();
         var retrievedBonus = (retrievedPerson as SpecialEmployee)?.Bonus;
         Assert.Equal(int.MaxValue, retrievedBonus);
     }
@@ -135,7 +139,11 @@ public class UpdateTests : EndToEndTestBase<UpdateTests.TestsStartup>
 
         // Assert
         Assert.True(savedChangesResponse.All(s => s.StatusCode == 201));
-        var customerSaved = _context.Customers.ByKey(1234).Expand(c => c.Orders).GetValue();
+
+        var query = _context.Customers.ByKey(1234).Expand(c => c.Orders);
+        Assert.EndsWith("Customers/1234?$expand=Orders", query.RequestUri.AbsoluteUri);
+
+        var customerSaved = query.GetValue();
         Assert.NotNull(customerSaved);
         Assert.Equal(1234, customerSaved.CustomerId);
         Assert.Contains(customerSaved.Orders, o => o.OrderId == 12345);
@@ -156,14 +164,19 @@ public class UpdateTests : EndToEndTestBase<UpdateTests.TestsStartup>
         _context.SaveChanges();
 
         // Order exists in customer's orders
-        var customerWithOrders = _context.Customers.ByKey(customer.CustomerId).Expand(c => c.Orders).GetValue();
+        var customerWithOrdersQuery = _context.Customers.ByKey(customer.CustomerId).Expand(c => c.Orders);
+        Assert.EndsWith("Customers/-10?$expand=Orders", customerWithOrdersQuery.RequestUri.AbsoluteUri);
+
+        var customerWithOrders = customerWithOrdersQuery.GetValue();
         Assert.Contains(customerWithOrders.Orders, o => o.OrderId == order.OrderId);
 
         _context.DeleteLink(customer, "Orders", order);
         _context.SaveChanges();
 
         // Order does not exist in customer's orders
-        var customerWithoutOrders = _context.Customers.ByKey(customer.CustomerId).Expand(c => c.Orders).GetValue();
+        var customerWithoutOrdersQuery = _context.Customers.ByKey(customer.CustomerId).Expand(c => c.Orders);
+        Assert.EndsWith("Customers/-10?$expand=Orders", customerWithoutOrdersQuery.RequestUri.AbsoluteUri);
+        var customerWithoutOrders = customerWithoutOrdersQuery.GetValue();
         Assert.DoesNotContain(customerWithoutOrders.Orders, o => o.OrderId == order.OrderId);
     }
 
@@ -205,12 +218,19 @@ public class UpdateTests : EndToEndTestBase<UpdateTests.TestsStartup>
         _context.MergeOption = MergeOption.PreserveChanges;
 
         // Act & Assert
-        var employee = _context.People.OfType<Employee>().First();
+        var employeeQuery = _context.People.OfType<Employee>();
+        Assert.EndsWith("People/$/Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.Employee", employeeQuery.ToString());
+
+        var employee = employeeQuery.First();
 
         _context.SetLink(employee, "Manager", employee);
         _context.SaveChanges();
 
-        var employeeWithManager = (_context.People.OfType<Employee>().Where(s => s.PersonId == employee.PersonId) as DataServiceQuery<Employee>)?.Expand(e => e.Manager).Single();
+        var employeeWithManagerQuery = (_context.People.OfType<Employee>().Where(s => s.PersonId == employee.PersonId) as DataServiceQuery<Employee>)?.Expand(e => e.Manager);
+        Assert.NotNull(employeeWithManagerQuery);
+        Assert.EndsWith("People/$/Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.Employee?$filter=PersonId eq -10&$expand=Manager", employeeWithManagerQuery.ToString());
+
+        var employeeWithManager = employeeWithManagerQuery.Single();
         Assert.NotNull(employeeWithManager?.Manager);
         Assert.Equal(employee.PersonId, employeeWithManager.Manager.PersonId);
     }

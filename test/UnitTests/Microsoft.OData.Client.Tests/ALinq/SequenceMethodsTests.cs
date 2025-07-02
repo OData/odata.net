@@ -19,9 +19,9 @@ namespace Microsoft.OData.Client.Tests.ALinq
     /// </summary>
     public class SequenceMethodsTests
     {
-        private const string MockCustomer1 = "{\"CustomerID\":\"ALFKI\",\"CompanyName\":\"Alfreds Futterkiste\",\"ContactName\":\"Maria Anders\",\"Address\":\"Obere Str. 57\",\"City\":\"Berlin\"}";
+        private const string MockCustomer1 = "{\"CustomerID\":\"ALFKI\",\"CustomerTypeID\":\"Regular\",\"CompanyName\":\"Alfreds Futterkiste\",\"ContactName\":\"Maria Anders\",\"Address\":\"Obere Str. 57\",\"City\":\"Berlin\"}";
 
-        private const string MockCustomer2 = "{\"CustomerID\":\"CHOPS\",\"CompanyName\":\"Chop-suey Chinese\",\"ContactName\":\"Yang Wang\",\"Address\":\"Hauptstr. 29\",\"City\":\"Bern\"}";
+        private const string MockCustomer2 = "{\"CustomerID\":\"CHOPS\",\"CustomerTypeID\":\"VIP\",\"ContactName\":\"Yang Wang\",\"Address\":\"Hauptstr. 29\",\"City\":\"Bern\"}";
 
         private readonly DataServiceQuery<Customer> _customers;
 
@@ -42,7 +42,6 @@ namespace Microsoft.OData.Client.Tests.ALinq
             EdmModel model = BuildEdmModel();
             _ctx.Format.UseJson(model);
             _ctx.ResolveName = (type) => $"NS.{type.Name}";
-            _ctx.KeyComparisonGeneratesFilterQuery = true;
 
             _ctx.BuildingRequest += (obj, args) =>
             {
@@ -235,6 +234,85 @@ namespace Microsoft.OData.Client.Tests.ALinq
         }
 
         [Fact]
+        public void CombineWhereAndSingleOrDefaultPredicate()
+        {
+            _onRequestUriBuilt = (string builtUri) =>
+            {
+                string expectedUri = BuildUriFromPath("/Customers?$filter=CustomerID eq 'CHOPS' and ContactName eq 'Yang%20Wang'&$top=2");
+                Assert.Equal(expectedUri, builtUri);
+            };
+            InterceptRequestAndMockResponseValue("Customers", "[" + MockCustomer2 + "]");
+            Customer customer = _customers.Where(c => c.Id == "CHOPS").SingleOrDefault(c => c.Name == "Yang Wang");
+            Assert.Equal("CHOPS", customer.Id);
+            Assert.Equal("Yang Wang", customer.Name);
+            Assert.Equal("Bern", customer.City);
+        }
+
+        [Fact]
+        public void WherePredicateWithCompositeKeys()
+        {
+            _onRequestUriBuilt = (string builtUri) =>
+            {
+                string expectedUri = BuildUriFromPath("/Customers?$filter=CustomerID eq 'CHOPS' and CustomerTypeID eq NS.CustomerType'VIP'&$top=2");
+                Assert.Equal(expectedUri, builtUri);
+            };
+            InterceptRequestAndMockResponseValue("Customers", "[" + MockCustomer2 + "]");
+            Customer customer = _customers.Where(c => c.Id == "CHOPS" && c.Type == CustomerType.VIP).Single();
+            Assert.Equal("CHOPS", customer.Id);
+            Assert.Equal("Yang Wang", customer.Name);
+            Assert.Equal("Bern", customer.City);
+            Assert.Equal(CustomerType.VIP, customer.Type);
+        }
+
+        [Fact]
+        public void NestedWherePredicateWithCompositeKeys()
+        {
+            _onRequestUriBuilt = (string builtUri) =>
+            {
+                string expectedUri = BuildUriFromPath("/Customers?$filter=CustomerID eq 'CHOPS' and CustomerTypeID eq NS.CustomerType'VIP'&$top=2");
+                Assert.Equal(expectedUri, builtUri);
+            };
+            InterceptRequestAndMockResponseValue("Customers", "[" + MockCustomer2 + "]");
+            Customer customer = _customers.Where(c => c.Id == "CHOPS").Where(c => c.Type == CustomerType.VIP).SingleOrDefault();
+            Assert.Equal("CHOPS", customer.Id);
+            Assert.Equal("Yang Wang", customer.Name);
+            Assert.Equal("Bern", customer.City);
+            Assert.Equal(CustomerType.VIP, customer.Type);
+        }
+
+        [Fact]
+        public void CombineNestedWhereAndSingleOrDefaultPredicateWithCompositeKeys()
+        {
+            _onRequestUriBuilt = (string builtUri) =>
+            {
+                string expectedUri = BuildUriFromPath("/Customers?$filter=CustomerID eq 'CHOPS' and CustomerTypeID eq NS.CustomerType'VIP'&$top=2");
+                Assert.Equal(expectedUri, builtUri);
+            };
+            InterceptRequestAndMockResponseValue("Customers", "[" + MockCustomer2 + "]");
+            Customer customer = _customers.Where(c => c.Id == "CHOPS").SingleOrDefault(c => c.Type == CustomerType.VIP);
+            Assert.Equal("CHOPS", customer.Id);
+            Assert.Equal("Yang Wang", customer.Name);
+            Assert.Equal("Bern", customer.City);
+            Assert.Equal(CustomerType.VIP, customer.Type);
+        }
+
+        [Fact]
+        public void CombineNestedWhereAndSinglePredicate()
+        {
+            _onRequestUriBuilt = (string builtUri) =>
+            {
+                string expectedUri = BuildUriFromPath("/Customers?$filter=CustomerID eq 'ALFKI' and CustomerTypeID eq NS.CustomerType'Regular' and City eq 'Berlin'&$top=2");
+                Assert.Equal(expectedUri, builtUri);
+            };
+            InterceptRequestAndMockResponseValue("Customers", "[" + MockCustomer1 + "]");
+            Customer customer = _customers.Where(c => c.Id == "ALFKI").Where(c => c.Type == CustomerType.Regular).Single(c => c.City.Equals("Berlin"));
+            Assert.Equal("ALFKI", customer.Id);
+            Assert.Equal("Maria Anders", customer.Name);
+            Assert.Equal("Berlin", customer.City);
+            Assert.Equal(CustomerType.Regular, customer.Type);
+        }
+
+        [Fact]
         public void SingleOrDefaultPredicate_ReturnsNull_WhenNoMatchExists()
         {
             _onRequestUriBuilt = (string builtUri) =>
@@ -291,10 +369,20 @@ namespace Microsoft.OData.Client.Tests.ALinq
         {
             var model = new EdmModel();
 
+            // Define customer type enum
+            var enumType = new EdmEnumType("NS", "CustomerType");
+            enumType.AddMember("None", new EdmEnumMemberValue(0));
+            enumType.AddMember("Regular", new EdmEnumMemberValue(1));
+            enumType.AddMember("Premium", new EdmEnumMemberValue(2));
+            enumType.AddMember("VIP", new EdmEnumMemberValue(3));
+            model.AddElement(enumType);
+
             // Create the Customer entity type
             var customerType = new EdmEntityType("NS", "Customer");
             var customerId = customerType.AddStructuralProperty("CustomerID", EdmPrimitiveTypeKind.String, false);
+            var customerTypeId = customerType.AddStructuralProperty("CustomerTypeID", new EdmEnumTypeReference(enumType, false));
             customerType.AddKeys(customerId);
+            customerType.AddKeys(customerTypeId);
             customerType.AddStructuralProperty("CompanyName", EdmPrimitiveTypeKind.String, false);
             customerType.AddStructuralProperty("ContactName", EdmPrimitiveTypeKind.String, true);
             customerType.AddStructuralProperty("City", EdmPrimitiveTypeKind.String, true);
@@ -316,10 +404,21 @@ namespace Microsoft.OData.Client.Tests.ALinq
             [OriginalName("CustomerID")]
             public string Id { get; set; }
 
+            [OriginalName("CustomerTypeID")]
+            public CustomerType Type { get; set; }
+
             public string City { get; set; }
 
             [OriginalName("ContactName")]
             public string Name { get; set; }
+        }
+
+        public enum CustomerType
+        {
+            None = 0,
+            Regular = 1,
+            Premium = 2,
+            VIP = 3
         }
     }
 }

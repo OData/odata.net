@@ -874,8 +874,6 @@ virtual Microsoft.OData.Client.DataServiceContext.GetReadStreamUri(object entity
 virtual Microsoft.OData.Client.DataServiceContext.GetReadStreamUri(object entity, string name) -> System.Uri
 virtual Microsoft.OData.Client.DataServiceContext.IgnoreResourceNotFoundException.get -> bool
 virtual Microsoft.OData.Client.DataServiceContext.IgnoreResourceNotFoundException.set -> void
-virtual Microsoft.OData.Client.DataServiceContext.KeyComparisonGeneratesFilterQuery.get -> bool
-virtual Microsoft.OData.Client.DataServiceContext.KeyComparisonGeneratesFilterQuery.set -> void
 virtual Microsoft.OData.Client.DataServiceContext.Links.get -> System.Collections.ObjectModel.ReadOnlyCollection<Microsoft.OData.Client.LinkDescriptor>
 virtual Microsoft.OData.Client.DataServiceContext.LoadProperty(object entity, string propertyName) -> Microsoft.OData.Client.QueryOperationResponse
 virtual Microsoft.OData.Client.DataServiceContext.LoadProperty(object entity, string propertyName, Microsoft.OData.Client.DataServiceQueryContinuation continuation) -> Microsoft.OData.Client.QueryOperationResponse

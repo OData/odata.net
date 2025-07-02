@@ -54,19 +54,19 @@ public class LiteralFormatTests : EndToEndTestBase<LiteralFormatTests.TestsStart
     }
 
     [Theory]
-    [InlineData("$var1")]
-    [InlineData("$$")]
-    [InlineData("$$$")]
-    [InlineData("$$$$")]
-    [InlineData("$")]
-    [InlineData("$orderby")]
-    [InlineData("$filter")]
-    [InlineData("$format")]
-    [InlineData("$top")]
-    [InlineData("$count")]
-    [InlineData("$expand")]
-    [InlineData("$select")]
-    public void PrimaryKeyValueBeginsWithDollarSign(string dollarSignKeyValue)
+    [InlineData("$var1", "Login?$filter=Username eq '%24var1'")]
+    [InlineData("$$", "Login?$filter=Username eq '%24%24'")]
+    [InlineData("$$$", "Login?$filter=Username eq '%24%24%24'")]
+    [InlineData("$$$$", "Login?$filter=Username eq '%24%24%24%24'")]
+    [InlineData("$", "Login?$filter=Username eq '%24'")]
+    [InlineData("$orderby", "Login?$filter=Username eq '%24orderby'")]
+    [InlineData("$filter", "Login?$filter=Username eq '%24filter'")]
+    [InlineData("$format", "Login?$filter=Username eq '%24format'")]
+    [InlineData("$top", "Login?$filter=Username eq '%24top'")]
+    [InlineData("$count", "Login?$filter=Username eq '%24count'")]
+    [InlineData("$expand", "Login?$filter=Username eq '%24expand'")]
+    [InlineData("$select", "Login?$filter=Username eq '%24select'")]
+    public void PrimaryKeyValueBeginsWithDollarSign(string dollarSignKeyValue, string expectedQuery)
     {
         ResetDefaultDataSource();
 
@@ -84,21 +84,24 @@ public class LiteralFormatTests : EndToEndTestBase<LiteralFormatTests.TestsStart
         _context.SaveChanges();
 
         // Act & Assert
-        var loginQuery = _context.CreateQuery<Login>("Login").Where(l => l.Username == dollarSignKeyValue).ToArray();
+        var loginQuery = _context.CreateQuery<Login>("Login").Where(l => l.Username == dollarSignKeyValue);
+        var logins = loginQuery.ToArray();
+
+        Assert.EndsWith(expectedQuery, loginQuery.ToString());
         Assert.True(newLogin == loginQuery.Single(), "Query result does not equal newly added login with key " + dollarSignKeyValue);
-        Assert.Equal(dollarSignKeyValue, loginQuery[0].Username);
+        Assert.Equal(dollarSignKeyValue, logins[0].Username);
 
         var customerQuery = _context.Execute<Customer>(new Uri(_baseUri + "Login/" + dollarSignKeyValue + "/Customer")).ToArray();
         Assert.True(customer == customerQuery.Single(), "Execute query result does not equal associated customer");
     }
 
     [Theory]
-    [InlineData(" /")]
-    [InlineData("/ ")]
-    [InlineData("var1/baz")]
-    [InlineData("//var1")]
-    [InlineData("var1//")]
-    public void PrimaryKeyValueContainsForwardSlash(string keyValue)
+    [InlineData(" /", "Login?$filter=Username eq ' %2F'")]
+    [InlineData("/ ", "Login?$filter=Username eq '%2F '")]
+    [InlineData("var1/baz", "Login?$filter=Username eq 'var1%2Fbaz'")]
+    [InlineData("//var1", "Login?$filter=Username eq '%2F%2Fvar1'")]
+    [InlineData("var1//", "Login?$filter=Username eq 'var1%2F%2F'")]
+    public void PrimaryKeyValueContainsForwardSlash(string keyValue, string expectedQuery)
     {
         // Arrange
         _context.UrlKeyDelimiter = DataServiceUrlKeyDelimiter.Slash;
@@ -114,19 +117,21 @@ public class LiteralFormatTests : EndToEndTestBase<LiteralFormatTests.TestsStart
         _context.AddLink(customer, "Logins", newLogin);
         _context.SaveChanges();
 
-        var loginQuery = _context.CreateQuery<Login>("Login").Where(l => l.Username == keyValue).ToArray();
+        var loginQuery = _context.CreateQuery<Login>("Login").Where(l => l.Username == keyValue);
+        var logins = loginQuery.ToArray();
 
         // Assert
-        Assert.Single(loginQuery);
-        Assert.Equal(keyValue, loginQuery[0].Username);
+        Assert.EndsWith(expectedQuery, loginQuery.ToString());
+        Assert.Single(logins);
+        Assert.Equal(keyValue, logins[0].Username);
 
         ResetDefaultDataSource();
     }
 
     [Theory]
-    [InlineData("var1 baz")]
-    [InlineData("  var1")]
-    public void PrimaryKeyValueContainsWhitespace(string keyValue)
+    [InlineData("var1 baz", "Login?$filter=Username eq 'var1 baz'")]
+    [InlineData("  var1", "Login?$filter=Username eq '  var1'")]
+    public void PrimaryKeyValueContainsWhitespace(string keyValue, string expectedQuery)
     {
         // Arrange
         _context.UrlKeyDelimiter = DataServiceUrlKeyDelimiter.Slash;
@@ -142,7 +147,11 @@ public class LiteralFormatTests : EndToEndTestBase<LiteralFormatTests.TestsStart
         _context.AddLink(customer, "Logins", newLogin);
         _context.SaveChanges();
 
-        var loginQuery = _context.CreateQuery<Login>("Login").Where(l => l.Username == keyValue).ToArray();
+        var loginQuery = _context.CreateQuery<Login>("Login").Where(l => l.Username == keyValue);
+        var logins = loginQuery.ToArray();
+
+        // Assert
+        Assert.EndsWith(expectedQuery, loginQuery.ToString());
         Assert.True(newLogin == loginQuery.Single(), "Query result does not equal newly added login with key " + keyValue);
 
         var customerQuery = _context.Execute<Customer>(new Uri(_baseUri + "Login/" + keyValue + "/Customer")).ToArray();
