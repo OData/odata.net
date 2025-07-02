@@ -1,6 +1,7 @@
 ﻿namespace NewStuff._Design._a_waas
 {
     using System;
+    using System.Collections.Generic;
     using System.IO;
 
 
@@ -445,6 +446,37 @@
     {
         // the idea is that the key of the entity is the base64 encoded and semicolon delimited series of keys of the containing entities (plus the entity itself at the end)
         // the above assumes that the entities are contained in only one navigation property, which isn't necessarily true (a single entity *instance* is only contained in one property, but that entity type can be used as the type for multiple contained properties through the model)
+
+
+    }
+
+    public sealed class FusionId
+    {
+        public FusionId(IEnumerable<FusionIdPart> idParts)
+        {
+            this.IdParts = idParts;
+        }
+
+        public IEnumerable<FusionIdPart> IdParts { get; }
+    }
+
+    public abstract class FusionIdPart
+    {
+        private FusionIdPart()
+        {
+        }
+
+        public sealed class Keyed : FusionIdPart
+        {
+            public string TypeName { get; }
+
+            public string Id { get; }
+        }
+
+        public sealed class Keyless : FusionIdPart
+        {
+            public string TypeName { get; }
+        }
     }
 
     public sealed class FusionConventionOdataService : IConventionOdataService
