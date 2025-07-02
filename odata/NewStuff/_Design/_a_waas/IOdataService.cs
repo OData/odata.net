@@ -28,9 +28,9 @@
     {
     }
 
-    public interface ITypedOdataService
+    public interface IConventionOdataService
     {
-        static abstract IOdataService Create(IEdmModel edmModel, IDataStoreMapping dataStoreMapping);
+        static abstract IConventionOdataService Create(IEdmModel edmModel, IDataStoreMapping dataStoreMapping);
 
         IOdataResponse Send(IOdataRequest request);
     }
