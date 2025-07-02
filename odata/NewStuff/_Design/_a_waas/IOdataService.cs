@@ -552,9 +552,19 @@
                     }
                     else if (rootEntityType.TryGetTypeOfNavigationProperty(odataUriSegment.Value, out var navigationPropertyType))
                     {
+                        if (navigationPropertyType.IsContained)
+                        {
+                            odataUriSegmentReader = GetNextIdPart(odataUriSegmentReader, navigationPropertyType, idParts);
+                        }
+                        else
+                        {
+                            idParts = new List<FusionIdPart>(); //// TODO you need to get the "root" for this non-contained navigation, probably from a navigation property binding
+                            odataUriSegmentReader = GetNextIdPart(odataUriSegmentReader, navigationPropertyType, idParts);
+                        }
                     }
                     else if (rootEntityType.TryGetTypeOfPrimitiveProperty(odataUriSegment.Value, out var primitivePropertyType))
                     {
+                        //// TODO you need to keep track of this somehow; you've got the key, sure, but you still need to return the raw primitive value
                     }
                     else
                     {
