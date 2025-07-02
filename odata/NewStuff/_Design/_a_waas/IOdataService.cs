@@ -548,6 +548,17 @@
                     odataUriSegment = odataUriSegmentReader.Value;
                     if (rootEntityType.TryGetTypeOfComplexProperty(odataUriSegment.Value, out var complexPropertyType))
                     {
+                        //// TODO you are here
+                    }
+                    else if (rootEntityType.TryGetTypeOfNavigationProperty(odataUriSegment.Value, out var navigationPropertyType))
+                    {
+                    }
+                    else if (rootEntityType.TryGetTypeOfPrimitiveProperty(odataUriSegment.Value, out var primitivePropertyType))
+                    {
+                    }
+                    else
+                    {
+                        throw new Exception("tODO invalid uri");
                     }
                 }
                 else
