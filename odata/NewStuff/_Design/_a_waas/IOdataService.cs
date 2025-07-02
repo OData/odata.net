@@ -549,6 +549,12 @@
                     if (rootEntityType.TryGetTypeOfComplexProperty(odataUriSegment.Value, out var complexPropertyType))
                     {
                         //// TODO you are here
+                        //// TODO write sample CSDLs:
+                        //// entity type contained by multiple properties
+                        //// non-contained entity type (navigation proeprty binding or otherwise)
+                        //// complex type with multiple contained navigations of the same type
+                        //// complex type that is nested for a while to a contained navigation
+                        //// complex type that is nested for a while to a non-contained navigation
                     }
                     else if (rootEntityType.TryGetTypeOfNavigationProperty(odataUriSegment.Value, out var navigationPropertyType))
                     {
