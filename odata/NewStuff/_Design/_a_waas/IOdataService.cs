@@ -16,17 +16,49 @@
 
 
 
-    //// TODO i think all 3 of these should be readers/writers?
-    public interface IEdmModel //// TODO should this be an interface or a concrete type?
+
+    public struct WaasNothing
     {
     }
 
-    public interface IOdataRequest //// TODO should this be an interface or a concrete type?
+    public sealed class EdmModel
     {
+        private EdmModel()
+        {
+        }
     }
 
-    public interface IOdataResponse //// TODO should this be an interface or a concrete type?
+    public interface IEdmModelReader
     {
+        EdmModel Value { get; } //// TODO i think this should return an interface; the caller of  the edm model is likely to be using it as a set of operations (like finding a type or something) than a data type (like traversing the edm graph)
+
+        WaasNothing Read();
+    }
+
+    public sealed class OdataRequest
+    {
+        private OdataRequest()
+        {
+        }
+    }
+
+    public interface IOdataRequestReader
+    {
+        OdataRequest Value { get; }
+
+        IOdataResponseWriter Read();
+    }
+
+    public sealed class OdataResponse
+    {
+        private OdataResponse()
+        {
+        }
+    }
+
+    public interface IOdataResponseWriter
+    {
+        WaasNothing Write(OdataResponse value);
     }
 
     public interface IConventionOdataService
