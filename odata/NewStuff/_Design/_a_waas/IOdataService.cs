@@ -2,7 +2,9 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.IO;
+    using System.Linq;
 
 
 
@@ -313,29 +315,37 @@
     {
         string TypeName { get; }
 
+        bool IsMultiValued { get; }
+
+        bool IsContained { get; } //// TODO this property really indicates that you've modeled the EDM stuff all wrong
+
         int NumberOfKeyParts { get; }
 
-        IEdmEntityType GetTypeOfNavigationProperty(string propertyName);
+        bool TryGetTypeOfNavigationProperty(string propertyName, out IEdmEntityType edmEntityType);
 
-        IEdmComplexType GetTypeOfComplexProperty(string proeprtyName);
+        bool TryGetTypeOfComplexProperty(string proeprtyName, out IEdmComplexType edmComplexType);
 
-        IEdmPrimitiveType GetTypeOfPrimitiveProperty(string propertyName);
+        bool TryGetTypeOfPrimitiveProperty(string propertyName, out IEdmPrimitiveType edmPrimitiveType);
     }
 
     public interface IEdmComplexType
     {
         string TypeName { get; }
 
-        IEdmEntityType GetTypeOfNavigationProperty(string propertyName);
+        bool IsMultiValued { get; }
 
-        IEdmComplexType GetTypeOfComplexProperty(string proeprtyName);
+        bool TryGetTypeOfNavigationProperty(string propertyName, out IEdmEntityType edmEntityType);
 
-        IEdmPrimitiveType GetTypeOfPrimitiveProperty(string propertyName);
+        bool TryGetTypeOfComplexProperty(string proeprtyName, out IEdmComplexType edmComplexType);
+
+        bool TryGetTypeOfPrimitiveProperty(string propertyName, out IEdmPrimitiveType edmPrimitiveType);
     }
 
     public interface IEdmPrimitiveType
     {
         string TypeName { get; }
+
+        bool IsMultiValued { get; }
     }
 
     public interface IOdataRequestReader2
@@ -471,6 +481,12 @@
 
         public sealed class Keyed : FusionIdPart
         {
+            public Keyed(string typeName, string id)
+            {
+                TypeName = typeName;
+                Id = id;
+            }
+
             public string TypeName { get; }
 
             public string Id { get; }
@@ -478,6 +494,11 @@
 
         public sealed class Keyless : FusionIdPart
         {
+            public Keyless(string typeName)
+            {
+                TypeName = typeName;
+            }
+
             public string TypeName { get; }
         }
     }
@@ -502,9 +523,60 @@
             var adaptedReader = Adapt(odataRequestReader);
             var odataUriReader = adaptedReader.Read();
             var _ = odataUriReader.Read();
+
             var odataUriSegmentReader = _.Read();
             var odataUriSegment = odataUriSegmentReader.Value;
 
+            var rootEntityType = this.edmModel.GetTypeOfRootSegment(odataUriSegment.Value);
+            var idParts = new List<FusionIdPart>();
+
+            odataUriSegmentReader = GetNextIdPart(odataUriSegmentReader, rootEntityType, idParts);
+            while (true)
+            {
+                var odataUriSegmentReaderToken = odataUriSegmentReader.Read();
+                var @continue = odataUriSegmentReaderToken.Apply(
+                    (segment, context) =>
+                    {
+                        odataUriSegmentReader = segment.OdataUriSegmentReader;
+                        return true;
+                    },
+                    (queryOption, context) => false,
+                    (fragment, context) => false,
+                    new WaasNothing());
+                if (@continue)
+                {
+                    odataUriSegment = odataUriSegmentReader.Value;
+                    if (rootEntityType.TryGetTypeOfComplexProperty(odataUriSegment.Value, out var complexPropertyType))
+                    {
+                    }
+                }
+                else
+                {
+                    break;
+                }
+            }
+        }
+
+        private IOdataUriSegmentReader GetNextIdPart(IOdataUriSegmentReader odataUriSegmentReader, IEdmEntityType edmEntityType, List<FusionIdPart> idParts)
+        {
+            if (edmEntityType.IsMultiValued)
+            {
+                var odataUriSegmentReaderToken = odataUriSegmentReader.Read();
+                odataUriSegmentReader = odataUriSegmentReaderToken.Apply(
+                    (segment, context) => segment.OdataUriSegmentReader,
+                    (queryOptions, context) => throw new Exception("TODO invalid uri"),
+                    (fragment, context) => throw new Exception("TODO invalid uri"),
+                    new WaasNothing());
+                var odataUriSegment = odataUriSegmentReader.Value;
+
+                idParts.Add(new FusionIdPart.Keyed(edmEntityType.TypeName, odataUriSegment.Value));
+            }
+            else
+            {
+                idParts.Add(new FusionIdPart.Keyless(edmEntityType.TypeName));
+            }
+
+            return odataUriSegmentReader;
         }
 
         private static IOdataRequestReader2 Adapt(IOdataRequestReader odataRequestReader)
