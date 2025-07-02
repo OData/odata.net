@@ -2,20 +2,36 @@
 {
     using System.IO;
 
-    public interface IEdmModel
-    {
-    }
-
     public interface IDataStoreMapping
     {
     }
 
     public interface IOdataService
     {
-        static abstract IOdataService Create(IEdmModel edmModel, IDataStoreMapping dataStoreMapping);
+        static abstract IOdataService Create(Stream edmModel, IDataStoreMapping dataStoreMapping);
 
-        Stream Send(Stream data);
+        Stream Send(Stream request);
     }
 
 
+
+
+    public interface IEdmModel //// TODO should this be an interface or a concrete type?
+    {
+    }
+
+    public interface IOdataRequest //// TODO should this be an interface or a concrete type?
+    {
+    }
+
+    public interface IOdataResponse //// TODO should this be an interface or a concrete type?
+    {
+    }
+
+    public interface ITypedOdataService
+    {
+        static abstract IOdataService Create(IEdmModel edmModel, IDataStoreMapping dataStoreMapping);
+
+        IOdataResponse Send(IOdataRequest request);
+    }
 }
