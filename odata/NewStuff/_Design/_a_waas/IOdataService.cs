@@ -303,11 +303,6 @@
 
 
 
-
-    public interface IDataStoreMapping2
-    {
-    }
-
     public interface IEdmModel2
     {
         IEdmEntityType GetTypeOfRootSegment(string segment);
@@ -400,9 +395,11 @@
             }
             else if (this is QueryOptions queryOptions)
             {
+                return queryOptionsMap(queryOptions, context);
             }
             else if (this is Fragment fragment)
             {
+                return fragmentMap(fragment, context);
             }
             else
             {
@@ -433,11 +430,26 @@
             {
             }
         }
+
+        public sealed class End : OdataUriSegmentReaderToken
+        {
+            private End()
+            {
+            }
+
+            public static End Instance { get; } = new End();
+        }
+    }
+
+    public sealed class FusionDataStoreMapping : IDataStoreMapping
+    {
+        // the idea is that the key of the entity is the base64 encoded and semicolon delimited series of keys of the containing entities (plus the entity itself at the end)
+        // the above assumes that the entities are contained in only one navigation property, which isn't necessarily true (a single entity *instance* is only contained in one property, but that entity type can be used as the type for multiple contained properties through the model)
     }
 
     public sealed class FusionConventionOdataService : IConventionOdataService
     {
-        private readonly IDataStoreMapping2 dataStoreMapping;
+        private readonly FusionDataStoreMapping dataStoreMapping;
 
         private readonly IEdmModel2 edmModel;
 
@@ -452,7 +464,17 @@
 
         public void Send(IOdataRequestReader odataRequestReader)
         {
-            throw new NotImplementedException();
+            var adaptedReader = Adapt(odataRequestReader);
+            var odataUriReader = adaptedReader.Read();
+            var _ = odataUriReader.Read();
+            var odataUriSegmentReader = _.Read();
+            var odataUriSegment = odataUriSegmentReader.Value;
+
+        }
+
+        private static IOdataRequestReader2 Adapt(IOdataRequestReader odataRequestReader)
+        {
+            throw new Exception("TODO");
         }
     }
 }
