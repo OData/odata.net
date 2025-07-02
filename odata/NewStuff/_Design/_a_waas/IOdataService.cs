@@ -3,6 +3,15 @@
     using System;
     using System.IO;
 
+
+
+
+    
+    //// TODO you need something that takes the onboarding csdl and turns it into a standalone csdl
+
+
+
+
     public interface IDataStoreMapping
     {
     }
