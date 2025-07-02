@@ -304,7 +304,9 @@
 
 
 
-
+    public interface IDataStoreMapping2
+    {
+    }
 
     public sealed class FusionConventionOdataService : IConventionOdataService
     {
