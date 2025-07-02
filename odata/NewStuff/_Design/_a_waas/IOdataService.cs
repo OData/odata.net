@@ -10,7 +10,7 @@
     {
         static abstract IOdataService Create(Stream edmModel, IDataStoreMapping dataStoreMapping);
 
-        Stream Send(Stream request);
+        void Send(Stream request, Stream response);
     }
 
 
@@ -63,9 +63,9 @@
 
     public interface IConventionOdataService
     {
-        static abstract IConventionOdataService Create(IEdmModel edmModel, IDataStoreMapping dataStoreMapping);
+        static abstract IConventionOdataService Create(IEdmModelReader edmModel, IDataStoreMapping dataStoreMapping);
 
-        IOdataResponse Send(IOdataRequest request);
+        void Send(IOdataRequestReader odataRequestReader);
     }
 
 
@@ -73,10 +73,6 @@
 
 
 
-    public interface IEdmModelParser //// TODO this should be a reader
-    {
-        IEdmModel Parse(Stream csdl);
-    }
 
     public sealed class FusionOdataServiceSettings
     {
@@ -111,7 +107,7 @@
             this.edmModelParser = settings.EdmModelParser;
         }
 
-        public Stream Send(Stream request)
+        public void Send(Stream request, Stream response)
         {
             var parsedEdmModel = this.edmModelParser.Parse(this.edmModel);
             var fusionConventionOdataService = FusionConventionOdataService.Create(parsedEdmModel, this.dataStoreMapping);
