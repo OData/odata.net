@@ -396,6 +396,7 @@
         {
             if (this is Segment segment)
             {
+                return segmentMap(segment, context);
             }
             else if (this is QueryOptions queryOptions)
             {
