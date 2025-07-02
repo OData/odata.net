@@ -15,8 +15,9 @@ using Microsoft.OData.Core;
 using Microsoft.OData.Core.Tests.DependencyInjection;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Json;
-using Microsoft.Spatial;
+using Microsoft.OData.Spatial;
 using Xunit;
+using NtsCoordinate = NetTopologySuite.Geometries.Coordinate;
 
 namespace Microsoft.OData.Tests.Json
 {
@@ -485,7 +486,7 @@ namespace Microsoft.OData.Tests.Json
         [Fact]
         public async Task WriteSpatialPropertyAsync()
         {
-            var geographyValue = GeographyFactory.Point(32.0, -100.0).Build();
+            var geographyValue = GeographyFactory.Default.CreatePoint(-100.0, 32.0);
 
             var geographyProperty = new ODataProperty
             {
@@ -507,14 +508,24 @@ namespace Microsoft.OData.Tests.Json
         {
             var geographyCollection = new object[]
             {
-                GeographyFactory.Collection().Point(-19.99, -12.0).Build(),
-                GeographyFactory.LineString(33.1, -110.0).LineTo(35.97, -110).Build(),
-                GeographyFactory.MultiLineString().LineString(10.2, 11.2).LineTo(11.9, 11.6).LineString(16.2, 17.2).LineTo(18.9, 19.6).Build(),
-                GeographyFactory.MultiPoint().Point(10.2, 11.2).Point(11.9, 11.6).Build(),
-                GeographyFactory.MultiPolygon().Polygon().Ring(10.2, 11.2).LineTo(11.9, 11.6).LineTo(11.45, 87.75).Ring(16.2, 17.2).LineTo(18.9, 19.6).LineTo(11.45, 87.75).Build(),
-                GeographyFactory.Point(33.1, -110.0).Build(),
-                GeographyFactory.Polygon().Ring(33.1, -110.0).LineTo(35.97, -110.15).LineTo(11.45, 87.75).Ring(35.97, -110).LineTo(36.97, -110.15).LineTo(45.23, 23.18).Build(),
-                GeographyFactory.Point(32.0, -100.0).Build()
+                GeographyFactory.Default.CreateGeographyCollection([
+                    GeographyFactory.Default.CreatePoint(-12.0, -19.99)]),
+                GeographyFactory.Default.CreateLineString([new NtsCoordinate(-110.0, 33.1), new NtsCoordinate(-110.0, 35.97)]),
+                GeographyFactory.Default.CreateMultiLineString(
+                    GeographyFactory.Default.CreateLineString([new NtsCoordinate(11.2, 10.2), new NtsCoordinate(11.6, 11.9)]),
+                    GeographyFactory.Default.CreateLineString([new NtsCoordinate(17.2, 16.2), new NtsCoordinate(19.6, 18.9)])),
+                GeographyFactory.Default.CreateMultiPoint(
+                    GeographyFactory.Default.CreatePoint(11.2, 10.2),
+                    GeographyFactory.Default.CreatePoint(11.6, 11.9)),
+                GeographyFactory.Default.CreateMultiPolygon(
+                    GeographyFactory.Default.CreatePolygon(
+                        [new NtsCoordinate(11.2, 10.2), new NtsCoordinate(11.6, 11.9), new NtsCoordinate(87.75, 11.45), new NtsCoordinate(11.2, 10.2)],
+                        [[new NtsCoordinate(17.2, 16.2), new NtsCoordinate(19.6, 18.9), new NtsCoordinate(87.75, 11.45), new NtsCoordinate(17.2, 16.2)]])),
+                GeographyFactory.Default.CreatePoint(-110.0, 33.1),
+                GeographyFactory.Default.CreatePolygon(
+                    [new NtsCoordinate(-110.0, 33.1), new NtsCoordinate(-110.15, 35.97), new NtsCoordinate(87.75, 11.45), new NtsCoordinate(-110.0, 33.1)],
+                    [[new NtsCoordinate(-110.0, 35.97), new NtsCoordinate(-110.15, 36.97), new NtsCoordinate(23.18, 45.23), new NtsCoordinate(-110.0, 35.97)]]),
+                GeographyFactory.Default.CreatePoint(-100.0, 32.0)
             };
 
             var geographyCollectionProperty = new ODataProperty
@@ -557,9 +568,11 @@ namespace Microsoft.OData.Tests.Json
             var jsonOutputContext = new ODataJsonOutputContext(messageInfo, this.messageWriterSettings);
             var geographyCollection = new object[]
             {
-                GeographyFactory.Point(33.1, -110.0).Build(),
-                GeographyFactory.LineString(33.1, -110.0).LineTo(35.97, -110).Build(),
-                GeographyFactory.MultiPoint().Point(10.2, 11.2).Point(11.9, 11.6).Build()
+                GeographyFactory.Default.CreatePoint(-110.0, 33.1),
+                GeographyFactory.Default.CreateLineString([new NtsCoordinate(-110.0, 33.1), new NtsCoordinate(-110, 35.97)]),
+                GeographyFactory.Default.CreateMultiPoint([
+                    GeographyFactory.Default.CreatePoint(11.2, 10.2),
+                    GeographyFactory.Default.CreatePoint(11.6, 11.9)])
             };
 
             var geographyCollectionProperty = new ODataProperty
@@ -748,7 +761,7 @@ namespace Microsoft.OData.Tests.Json
             Assert.Equal(SRResources.ODataBatchWriter_CannotWriteInStreamErrorForBatch, exception.Message);
         }
 
-#endregion Async Tests
+        #endregion Async Tests
 
         private static void WriteAndValidate(
             Action<ODataJsonOutputContext> test,

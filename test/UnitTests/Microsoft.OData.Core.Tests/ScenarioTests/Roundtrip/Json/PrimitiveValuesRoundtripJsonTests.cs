@@ -13,10 +13,12 @@ using System.Text;
 using Microsoft.OData.Json;
 using Microsoft.OData.Tests.Json;
 using Microsoft.OData.Edm;
-using Microsoft.Spatial;
 using Xunit;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OData.Core.Tests.DependencyInjection;
+using Microsoft.OData.Spatial;
+using Coordinate = NetTopologySuite.Geometries.Coordinate;
+using Point = NetTopologySuite.Geometries.Point;
 
 namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.Json
 {
@@ -361,9 +363,15 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.Json
         {
             var values = new GeographyMultiLineString[]
             {
-                GeographyFactory.MultiLineString().LineString(0, 0).LineTo(0, 0).Build(), 
-                GeographyFactory.MultiLineString().LineString(-90.0, -90.0).LineTo(0, 0).LineString(90.0, 90.0).LineTo(0, 0).Build(), 
-                GeographyFactory.MultiLineString().LineString(-90.0, 0).LineTo(0, 0).LineString(0, 0).LineTo(0, 0).LineString(0, 90.0).LineTo(0, 0).Build()
+                GeographyFactory.Default.CreateMultiLineString([
+                    GeographyFactory.Default.CreateLineString([new Coordinate(0, 0), new Coordinate(0, 0)])]),
+                GeographyFactory.Default.CreateMultiLineString([
+                    GeographyFactory.Default.CreateLineString([new Coordinate(-90.0, -90.0), new Coordinate(0, 0)]),
+                    GeographyFactory.Default.CreateLineString([new Coordinate(90.0, 90.0), new Coordinate(0, 0)])]),
+                GeographyFactory.Default.CreateMultiLineString([
+                    GeographyFactory.Default.CreateLineString([new Coordinate(-90.0, 0), new Coordinate(0, 0)]),
+                    GeographyFactory.Default.CreateLineString([new Coordinate(0, 0), new Coordinate(0, 0)]),
+                    GeographyFactory.Default.CreateLineString([new Coordinate(0, 90.0), new Coordinate(0, 0)])])
             };
             this.VerifyPrimitiveValuesRoundtripWithTypeInformation(values, "GeographyMultiLineString");
         }
@@ -373,8 +381,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.Json
         {
             var values = new GeometryCollection[]
             {
-                GeometryFactory.Collection().Build(),
-                GeometryFactory.Collection().Point(0, 0).Build()
+                GeometryFactory.Default.CreateGeometryCollection(),
+                GeometryFactory.Default.CreateGeometryCollection([new Point(new Coordinate(0, 0))])
             };
             this.VerifyPrimitiveValuesRoundtripWithTypeInformation(values, "GeometryCollection");
         }

@@ -13,8 +13,9 @@ using Microsoft.OData.Core;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Evaluation;
 using Microsoft.OData.Json;
-using Microsoft.Spatial;
+using Microsoft.OData.Spatial;
 using Xunit;
+using NtsPoint = NetTopologySuite.Geometries.Point;
 
 namespace Microsoft.OData.Tests.Json
 {
@@ -743,9 +744,10 @@ namespace Microsoft.OData.Tests.Json
 
                     var warehousePinProperty = Assert.IsType<ODataProperty>(Assert.Single(resourceState.Resource.Properties.Where(d => d.Name.Equals("WarehousePin"))));
                     var geographyPoint = Assert.IsAssignableFrom<GeographyPoint>(warehousePinProperty.Value);
-                    Assert.Equal(22.2, geographyPoint.Latitude);
-                    Assert.Equal(22.2, geographyPoint.Longitude);
-                    Assert.Equal(4326, geographyPoint.CoordinateSystem.EpsgId);
+                    var point = Assert.IsType<NtsPoint>(geographyPoint.Geometry);
+                    Assert.Equal(22.2, point.X);
+                    Assert.Equal(22.2, point.Y);
+                    Assert.Equal(4326, point.SRID);
                 });
         }
 

@@ -86,7 +86,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             Action parse = () => this.testSubject.ParseFilter("geo.intersects(GeoTag, geography'POLYGON((-148.734375 71.459124,-43.265625 71.459124,-43.265625 -8.109371,-148.734375 -8.109371))')");
             var exception = Assert.Throws<ODataException>(parse);
-            Assert.Contains("Invalid spatial data", exception.Message);
+            Assert.Contains("points must form a closed linestring", exception.Message);
         }
 
         [Fact]
@@ -94,7 +94,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             Action parse = () => this.testSubject.ParseFilter("geo.intersects(GeoTag, geometry'POLYGON((-148.734375 71.459124,-43.265625 71.459124,-43.265625 -8.109371,-148.734375 -8.109371))')");
             var exception = Assert.Throws<ODataException>(parse);
-            Assert.Contains("Invalid spatial data", exception.Message);
+            Assert.Contains("points must form a closed linestring", exception.Message);
         }
 
         [Fact]

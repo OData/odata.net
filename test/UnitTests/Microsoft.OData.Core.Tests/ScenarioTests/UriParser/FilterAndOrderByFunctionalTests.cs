@@ -13,7 +13,7 @@ using Microsoft.OData.Metadata;
 using Microsoft.OData.Tests.ScenarioTests.UriBuilder;
 using Microsoft.OData.Tests.UriParser;
 using Microsoft.OData.UriParser;
-using Microsoft.Spatial;
+using Microsoft.OData.Spatial;
 using Microsoft.Test.OData.Utils.Metadata;
 using Xunit;
 
@@ -1436,7 +1436,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         [Fact]
         public void FunctionCallWithGeometryAndNullParameterValuesShouldWorkInOrderBy()
         {
-            var point = GeometryPoint.Create(1, 2);
+            var point = GeometryFactory.Default.CreatePoint(1, 2);
             var orderByClause = ParseOrderBy("Fully.Qualified.Namespace.GetColorAtPosition(position=geometry'" + SpatialHelpers.WriteSpatial(point) + "',includeAlpha=null)", HardCodedTestModel.TestModel, HardCodedTestModel.GetPaintingType(), HardCodedTestModel.GetPaintingsSet());
             orderByClause.Expression.ShouldBeSingleValueFunctionCallQueryNode(HardCodedTestModel.GetColorAtPositionFunction())
                 .ShouldHaveConstantParameter("position", point)
@@ -1446,7 +1446,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         [Fact]
         public void FunctionCallWithGeographyAndNullParameterValuesShouldWorkInFilter()
         {
-            var point = GeographyPoint.Create(1, 2);
+            var point = GeographyFactory.Default.CreatePoint(1, 2);
             var filterClause = ParseFilter("Fully.Qualified.Namespace.GetNearbyPriorAddresses(currentLocation=geography'" + SpatialHelpers.WriteSpatial(point) + "',limit=null)/any()", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
             filterClause.Expression.ShouldBeAnyQueryNode()
                 .Source.ShouldBeCollectionResourceFunctionCallNode(HardCodedTestModel.GetNearbyPriorAddressesFunction())

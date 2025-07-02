@@ -6,7 +6,9 @@
 
 using Microsoft.OData.Json;
 using Microsoft.OData.Edm;
+using Microsoft.OData.Spatial;
 using Xunit;
+using Coordinate = NetTopologySuite.Geometries.Coordinate;
 
 namespace Microsoft.OData.Tests
 {
@@ -20,7 +22,8 @@ namespace Microsoft.OData.Tests
         {
             var typeFromMetadata = EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.Geography, true);
             var typeFromValue = EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.GeographyPoint, false);
-            var result = this.typeNameOracle.GetValueTypeNameForWriting(new ODataPrimitiveValue(Microsoft.Spatial.GeographyPoint.Create(42, 42)), 
+            var geographyPoint = GeographyFactory.Default.CreatePoint(new Coordinate(42, 42));
+            var result = this.typeNameOracle.GetValueTypeNameForWriting(new ODataPrimitiveValue(geographyPoint), 
                 typeFromMetadata, 
                 typeFromValue, 
                 /* isOpenProperty*/ false);
@@ -33,7 +36,8 @@ namespace Microsoft.OData.Tests
         {
             var typeFromMetadata = EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.Geography, true);
             var typeFromValue = EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.GeographyPoint, false);
-            var result = this.typeNameOracle.GetValueTypeNameForWriting(new ODataPrimitiveValue(Microsoft.Spatial.GeographyPoint.Create(42, 42)),
+            var geographyPoint = GeographyFactory.Default.CreatePoint(new Coordinate(42, 42));
+            var result = this.typeNameOracle.GetValueTypeNameForWriting(new ODataPrimitiveValue(geographyPoint),
                 typeFromMetadata,
                 typeFromValue,
                 /* isOpenProperty*/ false);
@@ -46,7 +50,8 @@ namespace Microsoft.OData.Tests
         {
             var typeFromMetadata = EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.GeographyPoint, true);
             var typeFromValue = EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.GeographyPoint, false);
-            Assert.Null(this.typeNameOracle.GetValueTypeNameForWriting(new ODataPrimitiveValue(Microsoft.Spatial.GeographyPoint.Create(42, 42)),
+            var geographyPoint = GeometryFactory.Default.CreatePoint(new Coordinate(42, 42));
+            Assert.Null(this.typeNameOracle.GetValueTypeNameForWriting(new ODataPrimitiveValue(geographyPoint),
                 typeFromMetadata,
                 typeFromValue,
                 /* isOpenProperty*/ false));

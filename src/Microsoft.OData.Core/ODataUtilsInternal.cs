@@ -8,12 +8,14 @@ namespace Microsoft.OData
 {
     #region Namespaces
 
+    using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
-
-    using Microsoft.OData.Edm;
+    using Microsoft.Extensions.DependencyInjection;
     using Microsoft.OData.Core;
+    using Microsoft.OData.Edm;
+    using Microsoft.OData.Spatial;
 
     #endregion Namespaces
 
@@ -131,6 +133,40 @@ namespace Microsoft.OData
         internal static bool IsNullable(this IEdmTypeReference type)
         {
             return type == null || type.IsNullable;
+        }
+
+        internal static bool IsSpatial(this Type typeToCheck)
+        {
+            if (typeToCheck == null)
+            {
+                return false;
+            }
+
+            return typeof(Geography).IsAssignableFrom(typeToCheck) || typeof(Geometry).IsAssignableFrom(typeToCheck);
+        }
+
+        internal static void SetSpatialPrimitiveTypeConverters(this IServiceProvider container)
+        {
+            ISpatialPrimitiveTypeConverter spatialPrimitiveTypeConverter;
+            if ((spatialPrimitiveTypeConverter = container?.GetService<ISpatialPrimitiveTypeConverter>()) != null)
+            {
+                PrimitiveConverter.SetConverter(typeof(GeographyPoint), spatialPrimitiveTypeConverter);
+                PrimitiveConverter.SetConverter(typeof(GeographyLineString), spatialPrimitiveTypeConverter);
+                PrimitiveConverter.SetConverter(typeof(GeographyPolygon), spatialPrimitiveTypeConverter);
+                PrimitiveConverter.SetConverter(typeof(GeographyMultiPoint), spatialPrimitiveTypeConverter);
+                PrimitiveConverter.SetConverter(typeof(GeographyMultiLineString), spatialPrimitiveTypeConverter);
+                PrimitiveConverter.SetConverter(typeof(GeographyMultiPolygon), spatialPrimitiveTypeConverter);
+                PrimitiveConverter.SetConverter(typeof(GeographyCollection), spatialPrimitiveTypeConverter);
+                PrimitiveConverter.SetConverter(typeof(Geography), spatialPrimitiveTypeConverter);
+                PrimitiveConverter.SetConverter(typeof(GeometryPoint), spatialPrimitiveTypeConverter);
+                PrimitiveConverter.SetConverter(typeof(GeometryLineString), spatialPrimitiveTypeConverter);
+                PrimitiveConverter.SetConverter(typeof(GeometryPolygon), spatialPrimitiveTypeConverter);
+                PrimitiveConverter.SetConverter(typeof(GeometryMultiPoint), spatialPrimitiveTypeConverter);
+                PrimitiveConverter.SetConverter(typeof(GeometryMultiLineString), spatialPrimitiveTypeConverter);
+                PrimitiveConverter.SetConverter(typeof(GeometryMultiPolygon), spatialPrimitiveTypeConverter);
+                PrimitiveConverter.SetConverter(typeof(GeometryCollection), spatialPrimitiveTypeConverter);
+                PrimitiveConverter.SetConverter(typeof(Geometry), spatialPrimitiveTypeConverter);
+            }
         }
     }
 }

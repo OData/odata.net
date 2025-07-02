@@ -10,7 +10,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using Microsoft.OData.Edm;
-using Microsoft.Spatial;
+using Microsoft.OData.Spatial;
 using Xunit;
 
 namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.Json
@@ -52,7 +52,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.Json
             var originaltime = new KeyValuePair<string, ODataValue>("TimeOfDay.error", new ODataPrimitiveValue(time));
             TimeSpan timeSpan = new TimeSpan(12345);
             var originalTimeSpan = new KeyValuePair<string, ODataValue>("TimeSpan.error", new ODataPrimitiveValue(timeSpan));
-            GeographyPoint geographyPoint = GeographyPoint.Create(32.0, -100.0);
+            var geographyPoint = GeographyFactory.Default.CreatePoint(-100.0, 32.0);
             var originalGeography = new KeyValuePair<string, ODataValue>("Geography.error", new ODataPrimitiveValue(geographyPoint));
             var originalNull = new KeyValuePair<string, ODataValue>("null.error", new ODataNullValue());
 

@@ -30,7 +30,7 @@ namespace Microsoft.OData.Tests
             Assert.Empty(services);
 
             services.AddDefaultODataServices();
-            Assert.True(services.Count == 11);
+            Assert.Equal(12, services.Count);
 
             var provider = services.BuildServiceProvider();
             Assert.NotNull(provider);
@@ -42,6 +42,7 @@ namespace Microsoft.OData.Tests
             Assert.NotNull(provider.GetService<ODataPayloadValueConverter>());
             Assert.NotNull(provider.GetService<IEdmModel>());
             Assert.NotNull(provider.GetService<ODataUriResolver>());
+            Assert.NotNull(provider.GetService<ISpatialPrimitiveTypeConverter>());
 
             // @robertmclaws: Test for request-scoped services.
             var scope = provider.CreateScope();
@@ -64,7 +65,7 @@ namespace Microsoft.OData.Tests
         {
             var services = new ServiceCollection();
             services.AddDefaultODataServices();
-            Assert.True(services.Count == 11);
+            Assert.True(services.Count == 12);
 
             var provider = services.BuildServiceProvider();
             Assert.NotNull(provider);
@@ -92,7 +93,7 @@ namespace Microsoft.OData.Tests
         {
             var services = new ServiceCollection();
             services.AddDefaultODataServices(ODataVersion.V401);
-            Assert.True(services.Count == 11);
+            Assert.True(services.Count == 12);
 
             var provider = services.BuildServiceProvider();
             Assert.NotNull(provider);
@@ -121,7 +122,7 @@ namespace Microsoft.OData.Tests
             var services = new ServiceCollection();
             // @robertmclaws: Configure a setting that defaults to false.
             services.AddDefaultODataServices(configureReaderAction: (reader) => reader.EnableCharactersCheck = true);
-            Assert.True(services.Count == 11);
+            Assert.True(services.Count == 12);
 
             var provider = services.BuildServiceProvider();
             Assert.NotNull(provider);
@@ -168,7 +169,7 @@ namespace Microsoft.OData.Tests
             var services = new ServiceCollection();
             // @robertmclaws: Configure a setting that defaults to false.
             services.AddDefaultODataServices(configureWriterAction: (writer) => writer.EnableCharactersCheck = true);
-            Assert.True(services.Count == 11);
+            Assert.True(services.Count == 12);
 
             var provider = services.BuildServiceProvider();
             Assert.NotNull(provider);
@@ -215,7 +216,7 @@ namespace Microsoft.OData.Tests
             var services = new ServiceCollection();
             // @robertmclaws: Configure a setting that defaults to false.
             services.AddDefaultODataServices(configureUriParserAction: (parser) => parser.MaximumExpansionCount = 1);
-            Assert.True(services.Count == 11);
+            Assert.True(services.Count == 12);
 
             var provider = services.BuildServiceProvider();
             Assert.NotNull(provider);

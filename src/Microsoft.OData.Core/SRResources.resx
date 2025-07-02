@@ -2600,4 +2600,52 @@
   <data name="TypeUtils_TypeNameIsNotQualified" xml:space="preserve">
     <value>The value '{0}' is not a qualified type name. A qualified type name is expected.</value>
   </data>
+  <data name="GeoJsonSpatialObjectFormatter_InvalidGeometryPoint" xml:space="preserve">
+    <value>Invalid '{0}' property: expected 'coordinates' to be [x, y] for geometry type 'Point', optionally with elevation [x, y, z], or with elevation and measure [x, y, z, m].</value>
+  </data>
+  <data name="GeoJsonSpatialObjectFormatter_InvalidGeometryLineString" xml:space="preserve">
+    <value>Invalid '{0}' property: expected 'coordinates' to be an array of positions for geometry type 'LineString' (e.g., [[x1, y1], [x2, y2]]).</value>
+  </data>
+  <data name="GeoJsonSpatialObjectFormatter_InvalidGeometryPolygon" xml:space="preserve">
+    <value>Invalid '{0}' property: expected 'coordinates' to be an array of linear rings for geometry type 'Polygon' (e.g., [[[x1, y1], [x2, y2], [x3, y3], [x1, y1]]]).</value>
+  </data>
+  <data name="GeoJsonSpatialObjectFormatter_InvalidGeometryMultiPoint" xml:space="preserve">
+    <value>Invalid '{0}' property: expected 'coordinates' to be an array of points for geometry type 'MultiPoint' (e.g., [[x1, y1], [x2, y2]]).</value>
+  </data>
+  <data name="GeoJsonSpatialObjectFormatter_InvalidGeometryMultiLineString" xml:space="preserve">
+    <value>Invalid '{0}' property: expected 'coordinates' to be an array of line strings for geometry type 'MultiLineString' (e.g., [[[x1, y1], [x2, y2]], [[x3, y3], [x4, y4]]]).</value>
+  </data>
+  <data name="GeoJsonSpatialObjectFormatter_InvalidGeometryMultiPolygon" xml:space="preserve">
+    <value>Invalid '{0}' property: expected 'coordinates' to be an array of polygons for geometry type 'MultiPolygon' (e.g., [[[[x1, y1], [x2, y2], [x3, y3], [x1, y1]]], [[[x4, y4], [x5, y5], [x6, y6], [x4, y4]]]]).</value>
+  </data>
+  <data name="GeoJsonSpatialObjectFormatter_InvalidGeometryCollection" xml:space="preserve">
+    <value>Invalid '{0}' property: expected 'geometries' to be an array of valid geometry objects for geometry type 'GeometryCollection' (e.g., Point, LineString, Polygon, etc.).</value>
+  </data>
+  <data name="GeoJsonSpatialObjectFormatter_UnsupportedGeometryType" xml:space="preserve">
+    <value>Unsupported geometry type '{0}': Supported types are Point, Polygon, LineString, MultiPoint, MultiPolygon, MultiLineString, and GeometryCollection.</value>
+  </data>
+  <data name="GeoJsonSpatialObjectFormatter_CoordinateParsingError" xml:space="preserve">
+    <value>Invalid '{0}' property: could not convert the coordinate value to double. Error: {1}</value>
+  </data>
+  <data name="GeoJsonSpatialObjectFormatter_CoordinateParsingNullValueError" xml:space="preserve">
+    <value>Invalid '{0}' property: a null value was found in a coordinate pair.</value>
+  </data>
+  <data name="GeoJsonSpatialObjectFormatter_LineStringParsingTooFewCoordinatesError" xml:space="preserve">
+    <value>Invalid '{0}' property: LineString must contain two or more coordinate pairs.</value>
+  </data>
+  <data name="GeoJsonSpatialObjectFormatter_PolygonParsingNoRingError" xml:space="preserve">
+    <value>Invalid '{0}' property: Polygon must contain at least one linear ring.</value>
+  </data>
+  <data name="GeoJsonSpatialObjectFormatter_PolygonParsingRingTooFewCoordinatesError" xml:space="preserve">
+    <value>Invalid '{0}' property: ring of Polygon must contain at least 4 coordinate pairs.</value>
+  </data>
+  <data name="GeoJsonSpatialObjectFormatter_PolygonParsingRingTooFewDistinctCoordinatesError" xml:space="preserve">
+    <value>Invalid '{0}' property: ring of Polygon must contain at least 3 distinct coordinate pairs.</value>
+  </data>
+  <data name="GeoJsonSpatialObjectFormatter_PolygonParsingRingNotClosedError" xml:space="preserve">
+    <value>Invalid '{0}' property: ring of Polygon must be closed — the first and last coordinate pairs must be exactly equal.</value>
+  </data>
+  <data name="SpatialPrimitiveTypeConverter_UnsupportedGeometryType" xml:space="preserve">
+    <value>'{0}' does not support '{0}' geometry type.</value>
+  </data>
 </root>

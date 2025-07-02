@@ -51,6 +51,8 @@ namespace Microsoft.Extensions.DependencyInjection
             // Now register services specific to a given request.
             services.AddScoped<ODataMessageInfo>();
             services.AddScoped<UriPathParser>();
+            // TODO: Is it necessary to call services.RemoveAll<ISpatialPrimitiveTypeConverter>() here?
+            services.AddSingleton<ISpatialPrimitiveTypeConverter, SpatialPrimitiveTypeConverter>();
 
             // Finally, register configurable settings.
             var readerSettings = new ODataMessageReaderSettings(odataVersion);

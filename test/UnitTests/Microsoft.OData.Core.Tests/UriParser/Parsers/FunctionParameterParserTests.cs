@@ -10,9 +10,9 @@ using System.Linq;
 using Microsoft.OData.Tests.ScenarioTests.UriBuilder;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
-using Microsoft.Spatial;
 using Xunit;
 using Microsoft.OData.Core;
+using Microsoft.OData.Spatial;
 
 namespace Microsoft.OData.Tests.UriParser.Parsers
 {
@@ -143,7 +143,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         [Fact]
         public void GeometryParameterShouldParseCorrectly()
         {
-            var point = GeometryPoint.Create(1.0, 2.0);
+            var point = GeometryFactory.Default.CreatePoint(1.0, 2.0);
             ICollection<OperationSegmentParameter> parsedParameters;
             var result = TryParseOperationParameters("GetColorAtPosition", "position=geometry'" + SpatialHelpers.WriteSpatial(point) + "',includeAlpha=true", null, HardCodedTestModel.GetColorAtPositionFunction(), out parsedParameters);
             Assert.True(result);
@@ -154,7 +154,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         [Fact]
         public void GeographyParameterShouldParseCorrectly()
         {
-            var point = GeographyPoint.Create(1.0, 2.0);
+            var point = GeographyFactory.Default.CreatePoint(1.0, 2.0);
             ICollection<OperationSegmentParameter> parsedParameters;
             var result = TryParseOperationParameters("GetNearbyPriorAddresses", "currentLocation=geography'" + SpatialHelpers.WriteSpatial(point) + "',limit=50", null, HardCodedTestModel.GetNearbyPriorAddressesFunction(), out parsedParameters);
             Assert.True(result);

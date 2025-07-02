@@ -13,7 +13,7 @@ namespace Microsoft.OData
     using System.Threading.Tasks;
     using Microsoft.OData.Core;
     using Microsoft.OData.Json;
-    using Microsoft.Spatial;
+    using Microsoft.OData.Spatial;
 
     /// <summary>
     /// Class that handles writing top level raw values to a stream.
@@ -203,13 +203,7 @@ namespace Microsoft.OData
 
             if (value is Geometry || value is Geography)
             {
-                return TaskUtils.GetTaskForSynchronousOperation((
-                    valueParam,
-                    jsonWriterParam) => PrimitiveConverter.Instance.WriteJson(
-                        valueParam,
-                        jsonWriterParam),
-                    value,
-                    jsonWriter);
+                return PrimitiveConverter.Instance.WriteJsonAsync(value, jsonWriter);
             }
 
             if (ODataRawValueUtils.TryConvertPrimitiveToString(value, out string valueAsString))

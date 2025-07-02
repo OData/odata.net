@@ -15,7 +15,6 @@ namespace Microsoft.OData.Metadata
     using System.Globalization;
     using System.IO;
     using System.Linq;
-    using Microsoft.Spatial;
     using Microsoft.OData.Edm;
 #if ODATA_SERVICE
     using Microsoft.OData.Service;
@@ -28,6 +27,7 @@ namespace Microsoft.OData.Metadata
     using Microsoft.OData.Json;
     using Microsoft.OData.UriParser;
     using Microsoft.OData.Core;
+    using Microsoft.OData.Spatial;
 #endif
     #endregion Namespaces
 
@@ -646,7 +646,7 @@ namespace Microsoft.OData.Metadata
                 // then it could take longer to reach the types in the last predicates than to look them up in the
                 // dictionary. So for a good balance handle common types directly and the rest in the dictionary.
                 || PrimitiveTypeReferenceMap.ContainsKey(clrType)
-                || typeof(ISpatial).IsAssignableFrom(clrType);
+                || clrType.IsSpatial();
         }
 
         /// <summary>
@@ -1582,6 +1582,10 @@ namespace Microsoft.OData.Metadata
             else if (typeof(Geometry).IsAssignableFrom(clrType))
             {
                 primitiveType = EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Geometry);
+            }
+            else if (typeof(NetTopologySuite.Geometries.Point).IsAssignableFrom(clrType))
+            {
+                primitiveType = EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.GeometryPoint);
             }
 
             if (primitiveType == null)

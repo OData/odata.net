@@ -5,15 +5,24 @@
 //---------------------------------------------------------------------
 
 using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Text;
 using System.Xml;
-using Microsoft.OData.Metadata;
-using Microsoft.OData.Edm;
-using Microsoft.Spatial;
 using Microsoft.OData.Core;
+using Microsoft.OData.Edm;
+using Microsoft.OData.Metadata;
+using Microsoft.OData.Spatial;
+using NtsGeometry = NetTopologySuite.Geometries.Geometry;
+using NtsGeometryCollection = NetTopologySuite.Geometries.GeometryCollection;
+using NtsLineString = NetTopologySuite.Geometries.LineString;
+using NtsMultiLineString = NetTopologySuite.Geometries.MultiLineString;
+using NtsMultiPoint = NetTopologySuite.Geometries.MultiPoint;
+using NtsMultiPolygon = NetTopologySuite.Geometries.MultiPolygon;
+using NtsPoint = NetTopologySuite.Geometries.Point;
+using NtsPolygon = NetTopologySuite.Geometries.Polygon;
 
 namespace Microsoft.OData.UriParser
 {
@@ -254,8 +263,8 @@ namespace Microsoft.OData.UriParser
             catch (Exception primitiveParserException)
             {
                 exception = new UriLiteralParsingException(
-                    string.Format(CultureInfo.InvariantCulture, Error.Format(SRResources.UriPrimitiveTypeParsers_FailedToParseTextToPrimitiveValue, text, targetType),
-                                                        primitiveParserException));
+                    Error.Format(SRResources.UriPrimitiveTypeParsers_FailedToParseTextToPrimitiveValue, text, targetType),
+                    primitiveParserException);
                 targetValue = null;
                 return false;
             }
@@ -368,10 +377,22 @@ namespace Microsoft.OData.UriParser
 
             try
             {
-                targetValue = LiteralUtils.ParseGeography(text);
+                NtsGeometry ntsGeometry = new NetTopologySuite.IO.WKTReader(NetTopologySuite.NtsGeometryServices.Instance).Read(text);
+                targetValue = ntsGeometry switch
+                {
+                    NtsPoint point => new GeographyPoint(point),
+                    NtsLineString lineString => new GeographyLineString(lineString),
+                    NtsPolygon polygon => new GeographyPolygon(polygon),
+                    NtsMultiPoint multiPoint => new GeographyMultiPoint(multiPoint),
+                    NtsMultiLineString multiLineString => new GeographyMultiLineString(multiLineString),
+                    NtsMultiPolygon multiPolygon => new GeographyMultiPolygon(multiPolygon),
+                    NtsGeometryCollection geometryCollection => new GeographyCollection(geometryCollection),
+                    // TODO: Determine exception to throw/return false
+                    _ => throw new UriLiteralParsingException(SRResources.ODataJsonReaderCoreUtils_CannotReadSpatialPropertyValue)
+                };
                 return true;
             }
-            catch (ParseErrorException e)
+            catch (Exception e) when (e is NetTopologySuite.IO.ParseException || e is ArgumentException)
             {
                 targetValue = default(Geography);
                 parsingException = new UriLiteralParsingException(e.Message);
@@ -404,15 +425,25 @@ namespace Microsoft.OData.UriParser
 
             try
             {
-                targetValue = LiteralUtils.ParseGeometry(text);
+                NtsGeometry ntsGeometry = new NetTopologySuite.IO.WKTReader(NetTopologySuite.NtsGeometryServices.Instance).Read(text);
+                targetValue = ntsGeometry switch
+                {
+                    NtsPoint point => new GeometryPoint(point),
+                    NtsLineString lineString => new GeometryLineString(lineString),
+                    NtsPolygon polygon => new GeometryPolygon(polygon),
+                    NtsMultiPoint multiPoint => new GeometryMultiPoint(multiPoint),
+                    NtsMultiLineString multiLineString => new GeometryMultiLineString(multiLineString),
+                    NtsMultiPolygon multiPolygon => new GeometryMultiPolygon(multiPolygon),
+                    NtsGeometryCollection geometryCollection => new GeometryCollection(geometryCollection),
+                    // TODO: Determine exception to throw/return false
+                    _ => throw new UriLiteralParsingException(SRResources.ODataJsonReaderCoreUtils_CannotReadSpatialPropertyValue)
+                };
                 return true;
             }
-            catch (ParseErrorException e)
+            catch (Exception e) when (e is NetTopologySuite.IO.ParseException || e is ArgumentException)
             {
                 targetValue = default(Geometry);
-
-                parsingFailureReasonException =
-                    new UriLiteralParsingException(e.Message);
+                parsingFailureReasonException = new UriLiteralParsingException(e.Message);
                 return false;
             }
         }
