@@ -6,7 +6,7 @@
 
 
 
-    
+
     //// TODO you need something that takes the onboarding csdl and turns it into a standalone csdl
 
 
@@ -151,7 +151,7 @@
 
 
 
-    
+
 
 
 
@@ -235,7 +235,7 @@
         {
             this.Value = default; //// TODO actually parse
         }
-        
+
         public EdmModel Value { get; }
 
         public WaasNothing Read()
@@ -308,8 +308,138 @@
     {
     }
 
+    public interface IEdmModel2
+    {
+        IEdmEntityType GetTypeOfRootSegment(string segment);
+    }
+
+    public interface IEdmEntityType
+    {
+        string TypeName { get; }
+
+        int NumberOfKeyParts { get; }
+
+        IEdmEntityType GetTypeOfNavigationProperty(string propertyName);
+
+        IEdmComplexType GetTypeOfComplexProperty(string proeprtyName);
+
+        IEdmPrimitiveType GetTypeOfPrimitiveProperty(string propertyName);
+    }
+
+    public interface IEdmComplexType
+    {
+        string TypeName { get; }
+
+        IEdmEntityType GetTypeOfNavigationProperty(string propertyName);
+
+        IEdmComplexType GetTypeOfComplexProperty(string proeprtyName);
+
+        IEdmPrimitiveType GetTypeOfPrimitiveProperty(string propertyName);
+    }
+
+    public interface IEdmPrimitiveType
+    {
+        string TypeName { get; }
+    }
+
+    public interface IOdataRequestReader2
+    {
+        IOdataUriReader Read();
+    }
+
+    public interface IOdataUriReader
+    {
+        IPrecedingSegmentsReader Read();
+    }
+
+    public sealed class PrecedingSegments
+    {
+        private PrecedingSegments()
+        {
+        }
+    }
+
+    public interface IPrecedingSegmentsReader
+    {
+        PrecedingSegments Value { get; }
+
+        IOdataUriSegmentReader Read();
+    }
+
+    public sealed class OdataUriSegment
+    {
+        private OdataUriSegment()
+        {
+        }
+
+        internal string Value { get; }
+    }
+
+    public interface IOdataUriSegmentReader
+    {
+        OdataUriSegment Value { get; }
+
+        OdataUriSegmentReaderToken Read();
+    }
+
+    public abstract class OdataUriSegmentReaderToken
+    {
+        private OdataUriSegmentReaderToken()
+        {
+        }
+
+        public TResult Apply<TResult, TContext>(
+            Func<Segment, TContext, TResult> segmentMap,
+            Func<QueryOptions, TContext, TResult> queryOptionsMap,
+            Func<Fragment, TContext, TResult> fragmentMap,
+            TContext context)
+        {
+            if (this is Segment segment)
+            {
+            }
+            else if (this is QueryOptions queryOptions)
+            {
+            }
+            else if (this is Fragment fragment)
+            {
+            }
+            else
+            {
+                throw new Exception("TODO implement a visitor");
+            }
+        }
+
+        public sealed class Segment : OdataUriSegmentReaderToken
+        {
+            public Segment(IOdataUriSegmentReader odataUriSegmentReader)
+            {
+                OdataUriSegmentReader = odataUriSegmentReader;
+            }
+
+            public IOdataUriSegmentReader OdataUriSegmentReader { get; }
+        }
+
+        public sealed class QueryOptions : OdataUriSegmentReaderToken
+        {
+            private QueryOptions()
+            {
+            }
+        }
+
+        public sealed class Fragment : OdataUriSegmentReaderToken
+        {
+            private Fragment()
+            {
+            }
+        }
+    }
+
     public sealed class FusionConventionOdataService : IConventionOdataService
     {
+        private readonly IDataStoreMapping2 dataStoreMapping;
+
+        private readonly IEdmModel2 edmModel;
+
         public static IConventionOdataService Create(IEdmModelReader edmModel, IDataStoreMapping dataStoreMapping)
         {
             throw new NotImplementedException();
