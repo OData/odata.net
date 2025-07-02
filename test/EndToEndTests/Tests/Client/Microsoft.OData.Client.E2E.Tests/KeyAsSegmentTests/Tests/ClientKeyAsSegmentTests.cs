@@ -17,6 +17,7 @@ using Customer = Microsoft.OData.E2E.TestCommon.Common.Client.EndToEnd.Customer;
 using DiscontinuedProduct = Microsoft.OData.E2E.TestCommon.Common.Client.EndToEnd.DiscontinuedProduct;
 using Employee = Microsoft.OData.E2E.TestCommon.Common.Client.EndToEnd.Employee;
 using Order = Microsoft.OData.E2E.TestCommon.Common.Client.EndToEnd.Order;
+using OrderLine = Microsoft.OData.E2E.TestCommon.Common.Client.EndToEnd.OrderLine;
 using Person = Microsoft.OData.E2E.TestCommon.Common.Client.EndToEnd.Person;
 using ProductPhoto = Microsoft.OData.E2E.TestCommon.Common.Client.EndToEnd.ProductPhoto;
 using SpecialEmployee = Microsoft.OData.E2E.TestCommon.Common.Client.EndToEnd.SpecialEmployee;
@@ -295,6 +296,67 @@ public class ClientKeyAsSegmentTests : EndToEndTestBase<ClientKeyAsSegmentTests.
         Assert.EndsWith("/Orders/0", queryable.RequestUri.OriginalString);
         Assert.NotNull(exception.InnerException);
         Assert.IsType<DataServiceClientException>(exception.InnerException);
+    }
+
+    [Fact]
+    public void UrlKeyDelimiter_WhereAndByKey_SingleKey()
+    {
+        // Arrange
+        var contextParentheses = CreateWrappedContext();
+        contextParentheses.UrlKeyDelimiter = DataServiceUrlKeyDelimiter.Parentheses;
+
+        var contextSlash = CreateWrappedContext();
+        contextSlash.UrlKeyDelimiter = DataServiceUrlKeyDelimiter.Slash;
+
+        // Act & Assert
+        var whereParentheses = contextParentheses.Customers.Where(c => c.CustomerId == 1) as DataServiceQuery<Customer>;
+        var whereSlash = contextSlash.Customers.Where(c => c.CustomerId == 1) as DataServiceQuery<Customer>;
+        Assert.EndsWith("/Customers?$filter=CustomerId eq 1", whereParentheses?.RequestUri.OriginalString);
+        Assert.EndsWith("/Customers?$filter=CustomerId eq 1", whereSlash?.RequestUri.OriginalString);
+        Assert.Equal(whereParentheses?.RequestUri.OriginalString, whereSlash?.RequestUri.OriginalString);
+
+        // BYKEY: Parentheses delimiter should use (key)
+        var byKeyParentheses = contextParentheses.Customers.ByKey(1);
+        Assert.EndsWith("/Customers(1)", byKeyParentheses.RequestUri.OriginalString);
+
+        // BYKEY: Slash delimiter should use /key
+        var byKeySlash = contextSlash.Customers.ByKey(1);
+        Assert.EndsWith("/Customers/1", byKeySlash.RequestUri.OriginalString);
+    }
+
+    [Fact]
+    public void UrlKeyDelimiter_WhereAndByKey_CompositeKey()
+    {
+        // Arrange
+        var contextParentheses = CreateWrappedContext();
+        contextParentheses.UrlKeyDelimiter = DataServiceUrlKeyDelimiter.Parentheses;
+
+        var contextSlash = CreateWrappedContext();
+        contextSlash.UrlKeyDelimiter = DataServiceUrlKeyDelimiter.Slash;
+
+        // Act & Assert
+        // WHERE: Should always generate $filter regardless of delimiter
+        var whereParentheses = contextParentheses.CreateQuery<OrderLine>("OrderLines").Where(ol => ol.OrderId == 1 && ol.ProductId == 2) as DataServiceQuery<OrderLine>;
+        var whereSlash = contextSlash.CreateQuery<OrderLine>("OrderLines").Where(ol => ol.OrderId == 1 && ol.ProductId == 2) as DataServiceQuery<OrderLine>;
+        Assert.EndsWith("/OrderLines?$filter=OrderId eq 1 and ProductId eq 2", whereParentheses?.RequestUri.OriginalString);
+        Assert.EndsWith("/OrderLines?$filter=OrderId eq 1 and ProductId eq 2", whereSlash?.RequestUri.OriginalString);
+        Assert.Equal(whereParentheses?.RequestUri.OriginalString, whereSlash?.RequestUri.OriginalString);
+
+        // BYKEY: Parentheses delimiter should use (key1=val1,key2=val2)
+        var byKeyParentheses = contextParentheses.CreateQuery<OrderLine>("OrderLines").ByKey(new Dictionary<string, object>
+        {
+            { "OrderId", 1 },
+            { "ProductId", 2 }
+        });
+        Assert.EndsWith("/OrderLines(OrderId=1,ProductId=2)", byKeyParentheses.RequestUri.OriginalString);
+
+        // BYKEY: Slash delimiter should use /key1=val1,key2=val2
+        var byKeySlash = contextSlash.CreateQuery<OrderLine>("OrderLines").ByKey(new Dictionary<string, object>
+        {
+            { "OrderId", 1 },
+            { "ProductId", 2 }
+        });
+        Assert.EndsWith("/OrderLines/OrderId=1,ProductId=2", byKeySlash.RequestUri.OriginalString);
     }
 
     #region Private methods
