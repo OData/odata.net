@@ -1,5 +1,6 @@
 ﻿namespace NewStuff._Design._a_waas
 {
+    using System;
     using System.IO;
 
     public interface IDataStoreMapping
@@ -76,40 +77,38 @@
 
     public sealed class FusionOdataServiceSettings
     {
-        private FusionOdataServiceSettings(IEdmModelParser edmModelParser)
+        private FusionOdataServiceSettings(Func<Stream, IEdmModelReader> edmModelReaderFactory)
         {
-            EdmModelParser = edmModelParser;
+            EdmModelReaderFactory = edmModelReaderFactory;
         }
 
-        public IEdmModelParser EdmModelParser { get; }
+        public Func<Stream, IEdmModelReader> EdmModelReaderFactory { get; }
     }
 
     public sealed class FusionOdataService : IOdataService
     {
         private readonly Stream edmModel;
         private readonly IDataStoreMapping dataStoreMapping;
-        private readonly IEdmModelParser edmModelParser;
+        private readonly Func<Stream, IEdmModelReader> edmModelReaderFactory;
 
         public static IOdataService Create(Stream edmModel, IDataStoreMapping dataStoreMapping)
         {
-            throw new System.NotImplementedException();
         }
 
         public static IOdataService Create(Stream edmModel, IDataStoreMapping dataStoreMapping, FusionOdataServiceSettings settings)
         {
-            throw new System.NotImplementedException();
         }
 
         private FusionOdataService(Stream edmModel, IDataStoreMapping dataStoreMapping, FusionOdataServiceSettings settings)
         {
             this.edmModel = edmModel;
             this.dataStoreMapping = dataStoreMapping;
-            this.edmModelParser = settings.EdmModelParser;
+            this.edmModelReaderFactory = settings.EdmModelReaderFactory;
         }
 
         public void Send(Stream request, Stream response)
         {
-            var parsedEdmModel = this.edmModelParser.Parse(this.edmModel);
+            var edmModelReader = this.edmModelReaderFactory(this.edmModel);
             var fusionConventionOdataService = FusionConventionOdataService.Create(parsedEdmModel, this.dataStoreMapping);
 
         }
@@ -132,14 +131,14 @@
 
     public sealed class FusionConventionOdataService : IConventionOdataService
     {
-        public static IConventionOdataService Create(IEdmModel edmModel, IDataStoreMapping dataStoreMapping)
+        public static IConventionOdataService Create(IEdmModelReader edmModel, IDataStoreMapping dataStoreMapping)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
-        public IOdataResponse Send(IOdataRequest request)
+        public void Send(IOdataRequestReader odataRequestReader)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
     }
 }
