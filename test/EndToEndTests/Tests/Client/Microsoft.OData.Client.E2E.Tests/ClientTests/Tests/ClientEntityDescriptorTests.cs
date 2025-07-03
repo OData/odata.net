@@ -181,7 +181,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests.Tests
             var ordersOnMyBirthday = (await ((DataServiceQuery<ClientDefaultModel.Order>)filterByDateTimeQuery).ExecuteAsync()).ToList();
 
             Assert.Single(ordersOnMyBirthday);
-            Assert.Equal("5/29/2011 12:00:00 AM", ordersOnMyBirthday.Single().OrderDate.Date.ToString());
+            Assert.Equal("2011-05-29T00:00:00", ordersOnMyBirthday.Single().OrderDate.Date.ToString("yyyy-MM-dd'T'HH:mm:ss"));
         }
 
         [Fact]

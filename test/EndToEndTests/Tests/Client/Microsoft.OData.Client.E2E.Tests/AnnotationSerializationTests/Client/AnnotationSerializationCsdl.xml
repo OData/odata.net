@@ -1,0 +1,53 @@
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:DataServices>
+    <Schema Namespace="Microsoft.OData.Client.E2E.Tests.AnnotationSerializationTests.Server.Models" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <EntityType Name="Order" OpenType="true">
+        <Key>
+          <PropertyRef Name="Id" />
+        </Key>
+        <Property Name="Id" Type="Edm.Int32" Nullable="false" />
+        <Property Name="Status" Type="Microsoft.OData.Client.E2E.Tests.AnnotationSerializationTests.Server.Models.OrderStatus" Nullable="false" />
+        <Property Name="StatusHistory" Type="Collection(Microsoft.OData.Client.E2E.Tests.AnnotationSerializationTests.Server.Models.OrderStatus)" Nullable="false" />
+        <Property Name="Tags" Type="Collection(Edm.String)" />
+        <Property Name="Amount" Type="Edm.Decimal" Nullable="false" Scale="variable" />
+        <Property Name="ShippingAddress" Type="Microsoft.OData.Client.E2E.Tests.AnnotationSerializationTests.Server.Models.Address" />
+        <Property Name="WarehouseAddresses" Type="Collection(Microsoft.OData.Client.E2E.Tests.AnnotationSerializationTests.Server.Models.Address)" />
+      </EntityType>
+      <ComplexType Name="Address" OpenType="true">
+        <Property Name="Street" Type="Edm.String" Nullable="false" />
+        <Property Name="City" Type="Microsoft.OData.Client.E2E.Tests.AnnotationSerializationTests.Server.Models.City" Nullable="false" />
+      </ComplexType>
+      <ComplexType Name="City" OpenType="true">
+        <Property Name="Name" Type="Edm.String" Nullable="false" />
+      </ComplexType>
+      <ComplexType Name="State">
+        <Property Name="Name" Type="Edm.String" Nullable="false" />
+      </ComplexType>
+      <EntityType Name="VipOrder" BaseType="Microsoft.OData.Client.E2E.Tests.AnnotationSerializationTests.Server.Models.Order" OpenType="true">
+        <Property Name="TrackingNumber" Type="Edm.Int32" Nullable="false" />
+      </EntityType>
+      <ComplexType Name="VipAddress" BaseType="Microsoft.OData.Client.E2E.Tests.AnnotationSerializationTests.Server.Models.Address" OpenType="true">
+        <Property Name="PostalCode" Type="Edm.String" />
+      </ComplexType>
+      <ComplexType Name="VipCity" BaseType="Microsoft.OData.Client.E2E.Tests.AnnotationSerializationTests.Server.Models.City" OpenType="true">
+        <Property Name="AreaCode" Type="Edm.String" />
+      </ComplexType>
+      <ComplexType Name="VipState" BaseType="Microsoft.OData.Client.E2E.Tests.AnnotationSerializationTests.Server.Models.State">
+        <Property Name="TwoLetterCode" Type="Edm.String" />
+      </ComplexType>
+      <EnumType Name="OrderStatus">
+        <Member Name="Pending" Value="0" />
+        <Member Name="Processing" Value="1" />
+        <Member Name="Shipped" Value="2" />
+        <Member Name="Delivered" Value="3" />
+        <Member Name="Cancelled" Value="4" />
+        <Member Name="Returned" Value="5" />
+      </EnumType>
+    </Schema>
+    <Schema Namespace="Microsoft.OData.Client.E2E.Tests.AnnotationSerializationTests.Server.Default" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <EntityContainer Name="Container">
+        <EntitySet Name="Orders" EntityType="Microsoft.OData.Client.E2E.Tests.AnnotationSerializationTests.Server.Models.Order" />
+      </EntityContainer>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>
