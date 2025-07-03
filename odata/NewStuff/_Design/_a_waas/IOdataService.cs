@@ -1062,6 +1062,8 @@
                     {
                         //// TODO you are here
                         
+                        complexPropertyType.
+
                     }
                     else if (rootEntityType.TryGetTypeOfNavigationProperty(odataUriSegment.Value, out var navigationPropertyType))
                     {
@@ -1071,7 +1073,7 @@
                         }
                         else
                         {
-                            containmentPathSegments = new List<FusionIdPart>(); //// TODO you need to get the "root" for this non-contained navigation, probably from a navigation property binding
+                            containmentPathSegments = new List<ContainmentPathSegment>(); //// TODO you need to get the "root" for this non-contained navigation, probably from a navigation property binding
                             odataUriSegmentReader = GetNextIdPart(odataUriSegmentReader, navigationPropertyType, containmentPathSegments);
                         }
                     }
