@@ -1063,7 +1063,7 @@
                         //// TODO you are here
                         //// TODO collections of complex types
                         complexPropertyType.
-
+                            //// TODO for non-containments, maybe multiple requests are required; we could have an onboarding build rule that warns about that the csdl is going to require multiple requests
                     }
                     else if (rootEntityType.TryGetTypeOfNavigationProperty(odataUriSegment.Value, out var navigationPropertyType))
                     {
