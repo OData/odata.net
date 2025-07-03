@@ -1040,9 +1040,9 @@
             var odataUriSegment = odataUriSegmentReader.Value;
 
             var rootEntityType = this.edmModel.GetTypeOfRootSegment(odataUriSegment.Value);
-            var idParts = new List<FusionIdPart>();
+            var containmentPathSegments = new List<ContainmentPathSegment>();
 
-            odataUriSegmentReader = GetNextIdPart(odataUriSegmentReader, rootEntityType, idParts);
+            odataUriSegmentReader = GetNextIdPart(odataUriSegmentReader, rootEntityType, containmentPathSegments);
             while (true)
             {
                 var odataUriSegmentReaderToken = odataUriSegmentReader.Read();
@@ -1067,12 +1067,12 @@
                     {
                         if (navigationPropertyType.IsContained)
                         {
-                            odataUriSegmentReader = GetNextIdPart(odataUriSegmentReader, navigationPropertyType, idParts);
+                            odataUriSegmentReader = GetNextIdPart(odataUriSegmentReader, navigationPropertyType, containmentPathSegments);
                         }
                         else
                         {
-                            idParts = new List<FusionIdPart>(); //// TODO you need to get the "root" for this non-contained navigation, probably from a navigation property binding
-                            odataUriSegmentReader = GetNextIdPart(odataUriSegmentReader, navigationPropertyType, idParts);
+                            containmentPathSegments = new List<FusionIdPart>(); //// TODO you need to get the "root" for this non-contained navigation, probably from a navigation property binding
+                            odataUriSegmentReader = GetNextIdPart(odataUriSegmentReader, navigationPropertyType, containmentPathSegments);
                         }
                     }
                     else if (rootEntityType.TryGetTypeOfPrimitiveProperty(odataUriSegment.Value, out var primitivePropertyType))
@@ -1091,8 +1091,9 @@
             }
         }
 
-        private IOdataUriSegmentReader GetNextIdPart(IOdataUriSegmentReader odataUriSegmentReader, IEdmEntityType edmEntityType, List<FusionIdPart> idParts)
+        private IOdataUriSegmentReader GetNextIdPart(IOdataUriSegmentReader odataUriSegmentReader, IEdmEntityType edmEntityType, List<ContainmentPathSegment> containmentPathSegments)
         {
+            var propertyName = odataUriSegmentReader.Value;
             if (edmEntityType.IsMultiValued)
             {
                 var odataUriSegmentReaderToken = odataUriSegmentReader.Read();
@@ -1103,11 +1104,11 @@
                     new WaasNothing());
                 var odataUriSegment = odataUriSegmentReader.Value;
 
-                idParts.Add(new FusionIdPart.Keyed(edmEntityType.TypeName, odataUriSegment.Value));
+                containmentPathSegments.Add(new ContainmentPathSegment.Keyed(edmEntityType.TypeName, propertyName.Value, odataUriSegment.Value));
             }
             else
             {
-                idParts.Add(new FusionIdPart.Keyless(edmEntityType.TypeName));
+                containmentPathSegments.Add(new ContainmentPathSegment.Keyless(edmEntityType.TypeName, propertyName.Value));
             }
 
             return odataUriSegmentReader;
