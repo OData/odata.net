@@ -1,10 +1,12 @@
 ﻿namespace NewStuff._Design._a_waas
 {
     using System;
+    using System.Buffers.Text;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
+    using System.Text;
 
 
 
@@ -360,9 +362,12 @@
 
     public sealed class PrecedingSegments
     {
-        private PrecedingSegments()
+        internal PrecedingSegments(string value)
         {
+            Value = value;
         }
+
+        internal string Value { get; }
     }
 
     public interface IPrecedingSegmentsReader
@@ -374,8 +379,9 @@
 
     public sealed class OdataUriSegment
     {
-        private OdataUriSegment()
+        internal OdataUriSegment(string value)
         {
+            Value = value;
         }
 
         internal string Value { get; }
@@ -454,52 +460,558 @@
 
     public sealed class WaasFusionDataStoreMapping : IDataStoreMapping
     {
+        /*
+        ### an entity type that is contained by a property of another contained entity type
+
+        <?xml version="1.0" encoding="utf-8"?>
+        <edmx:Edmx Version="4.0" xmlns:ags="http://aggregator.microsoft.com/internal" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" xmlns:odata="http://schemas.microsoft.com/oDataCapabilities">
+          <edmx:DataServices>
+            <Schema Namespace="root" xmlns="http://docs.oasis-open.org/odata/ns/edm" xmlns:ags="http://aggregator.microsoft.com/internal">
+              <EntityType Name="foo">
+                <Key>
+                  <PropertyRef Name="id" />
+                </Key>
+                <Property Name="id" Type="Edm.String" Nullable="false" />
+
+                <NavigationProperty Name="bars" Type="Collection(root.bar)" Nullable="false" ContainsTarget="true" />
+              </EntityType>
+
+              <EntityType Name="bar">
+                <Key>
+                  <PropertyRef Name="id" />
+                </Key>
+                <Property Name="id" Type="Edm.String" Nullable="false" />
+
+                <NavigationProperty Name="fizzes" Type="Collection(root.fizz)" Nullable="false" ContainsTarget="true" />
+              </EntityType>
+
+              <EntityType Name="fizz">
+                <Key>
+                  <PropertyRef Name="id" />
+                </Key>
+                <Property Name="id" Type="Edm.String" Nullable="false" />
+              </EntityType>
+
+              <EntityContainer Name="container">
+                <EntitySet Name="foos" EntityType="root.foo" />
+              </EntityContainer>
+            </Schema>
+          </edmx:DataServices>
+        </edmx:Edmx>
+
+        ### entity type that is contained by multiple properties of another entity type
+
+        <?xml version="1.0" encoding="utf-8"?>
+        <edmx:Edmx Version="4.0" xmlns:ags="http://aggregator.microsoft.com/internal" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" xmlns:odata="http://schemas.microsoft.com/oDataCapabilities">
+          <edmx:DataServices>
+            <Schema Namespace="root" xmlns="http://docs.oasis-open.org/odata/ns/edm" xmlns:ags="http://aggregator.microsoft.com/internal">
+              <EntityType Name="foo">
+                <Key>
+                  <PropertyRef Name="id" />
+                </Key>
+                <Property Name="id" Type="Edm.String" Nullable="false" />
+
+                <NavigationProperty Name="bars" Type="Collection(root.bar)" Nullable="false" ContainsTarget="true" />
+                <NavigationProperty Name="otherBars" Type="Collection(root.bar)" Nullable="false" ContainsTarget="true" />
+              </EntityType>
+
+              <EntityType Name="bar">
+                <Key>
+                  <PropertyRef Name="id" />
+                </Key>
+                <Property Name="id" Type="Edm.String" Nullable="false" />
+              </EntityType>
+
+              <EntityContainer Name="container">
+                <EntitySet Name="foos" EntityType="root.foo" />
+              </EntityContainer>
+            </Schema>
+          </edmx:DataServices>
+        </edmx:Edmx>
+        
+        ### an entity type that is contained by multiple properties of a complex type
+
+        <?xml version="1.0" encoding="utf-8"?>
+        <edmx:Edmx Version="4.0" xmlns:ags="http://aggregator.microsoft.com/internal" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" xmlns:odata="http://schemas.microsoft.com/oDataCapabilities">
+          <edmx:DataServices>
+            <Schema Namespace="root" xmlns="http://docs.oasis-open.org/odata/ns/edm" xmlns:ags="http://aggregator.microsoft.com/internal">
+              <EntityType Name="foo">
+                <Key>
+                  <PropertyRef Name="id" />
+                </Key>
+                <Property Name="id" Type="Edm.String" Nullable="false" />
+		
+		        <Property Name="someGrouping" Type="root.someGrouping" Nullable="false" />
+              </EntityType>
+
+              <ComplexType Name="someGrouping">
+	            <NavigationProperty Name="bars" Type="Collection(root.bar)" Nullable="false" ContainsTarget="true" />
+		        <NavigationProperty Name="otherBars" Type="Collection(root.bar)" Nullable="false" ContainsTarget="true" />
+	          </ComplexType>
+
+              <EntityType Name="bar">
+                <Key>
+                  <PropertyRef Name="id" />
+                </Key>
+                <Property Name="id" Type="Edm.String" Nullable="false" />
+              </EntityType>
+      
+              <EntityContainer Name="container">
+                <EntitySet Name="foos" EntityType="root.foo" />
+              </EntityContainer>
+            </Schema>
+          </edmx:DataServices>
+        </edmx:Edmx>
+
+        ### an entity type that is contained by a property of a complex type that is nested under other complex types
+
+        <?xml version="1.0" encoding="utf-8"?>
+        <edmx:Edmx Version="4.0" xmlns:ags="http://aggregator.microsoft.com/internal" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" xmlns:odata="http://schemas.microsoft.com/oDataCapabilities">
+          <edmx:DataServices>
+            <Schema Namespace="root" xmlns="http://docs.oasis-open.org/odata/ns/edm" xmlns:ags="http://aggregator.microsoft.com/internal">
+              <EntityType Name="foo">
+                <Key>
+                  <PropertyRef Name="id" />
+                </Key>
+                <Property Name="id" Type="Edm.String" Nullable="false" />
+		
+		        <Property Name="someGrouping" Type="root.someGrouping" Nullable="false" />
+              </EntityType>
+
+              <ComplexType Name="someGrouping">
+		        <Property Name="anotherGrouping" Type="root.anotherGrouping" Nullable="false" />
+	          </ComplexType>
+
+              <ComplexType Name="anotherGrouping">
+	            <NavigationProperty Name="bars" Type="Collection(root.bar)" Nullable="false" ContainsTarget="true" />
+		        <Property Name="aFinalGrouping" Type="root.aFinalGrouping" Nullable="false" />
+	          </ComplexType>
+	  
+	          <ComplexType Name="aFinalGrouping">
+	            <NavigationProperty Name="moreBars" Type="Collection(root.bar)" Nullable="false" ContainsTarget="true" />
+	          </ComplexType>
+
+              <EntityType Name="bar">
+                <Key>
+                  <PropertyRef Name="id" />
+                </Key>
+                <Property Name="id" Type="Edm.String" Nullable="false" />
+              </EntityType>
+      
+              <EntityContainer Name="container">
+                <EntitySet Name="foos" EntityType="root.foo" />
+              </EntityContainer>
+            </Schema>
+          </edmx:DataServices>
+        </edmx:Edmx>
+
+        ### an entity type that is contained *and* not contained by a property of a complex type that is nested under other complex types
+
+        <?xml version="1.0" encoding="utf-8"?>
+        <edmx:Edmx Version="4.0" xmlns:ags="http://aggregator.microsoft.com/internal" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" xmlns:odata="http://schemas.microsoft.com/oDataCapabilities">
+          <edmx:DataServices>
+            <Schema Namespace="root" xmlns="http://docs.oasis-open.org/odata/ns/edm" xmlns:ags="http://aggregator.microsoft.com/internal">
+              <EntityType Name="foo">
+                <Key>
+                  <PropertyRef Name="id" />
+                </Key>
+                <Property Name="id" Type="Edm.String" Nullable="false" />
+		
+		        <Property Name="someGrouping" Type="root.someGrouping" Nullable="false" />
+              </EntityType>
+
+              <ComplexType Name="someGrouping">
+		        <Property Name="anotherGrouping" Type="root.anotherGrouping" Nullable="false" />
+	          </ComplexType>
+
+              <ComplexType Name="anotherGrouping">
+	            <NavigationProperty Name="bars" Type="Collection(root.bar)" Nullable="false" ContainsTarget="true" />
+		        <Property Name="aFinalGrouping" Type="root.aFinalGrouping" Nullable="false" />
+	          </ComplexType>
+	  
+	          <ComplexType Name="aFinalGrouping">
+	            <NavigationProperty Name="moreBars" Type="Collection(root.bar)" Nullable="false" ContainsTarget="false" />
+                <!--TODO you need a binding or something-->
+	          </ComplexType>
+
+              <EntityType Name="bar">
+                <Key>
+                  <PropertyRef Name="id" />
+                </Key>
+                <Property Name="id" Type="Edm.String" Nullable="false" />
+              </EntityType>
+      
+              <EntityContainer Name="container">
+                <EntitySet Name="foos" EntityType="root.foo" />
+              </EntityContainer>
+            </Schema>
+          </edmx:DataServices>
+        </edmx:Edmx>
+
+        ### an entity type that is not contained by a property of a complex type that is nested under other complex types
+
+        <?xml version="1.0" encoding="utf-8"?>
+        <edmx:Edmx Version="4.0" xmlns:ags="http://aggregator.microsoft.com/internal" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" xmlns:odata="http://schemas.microsoft.com/oDataCapabilities">
+          <edmx:DataServices>
+            <Schema Namespace="root" xmlns="http://docs.oasis-open.org/odata/ns/edm" xmlns:ags="http://aggregator.microsoft.com/internal">
+              <EntityType Name="foo">
+                <Key>
+                  <PropertyRef Name="id" />
+                </Key>
+                <Property Name="id" Type="Edm.String" Nullable="false" />
+		
+		        <Property Name="someGrouping" Type="root.someGrouping" Nullable="false" />
+              </EntityType>
+
+              <ComplexType Name="someGrouping">
+		        <Property Name="anotherGrouping" Type="root.anotherGrouping" Nullable="false" />
+	          </ComplexType>
+
+              <ComplexType Name="anotherGrouping">
+	            <NavigationProperty Name="bars" Type="Collection(root.bar)" Nullable="false" ContainsTarget="false" />
+                <!--TODO you need a binding or something-->
+		        <Property Name="aFinalGrouping" Type="root.aFinalGrouping" Nullable="false" />
+	          </ComplexType>
+	  
+	          <ComplexType Name="aFinalGrouping">
+	            <NavigationProperty Name="moreBars" Type="Collection(root.bar)" Nullable="false" ContainsTarget="false" />
+                <!--TODO you need a binding or something-->
+	          </ComplexType>
+
+              <EntityType Name="bar">
+                <Key>
+                  <PropertyRef Name="id" />
+                </Key>
+                <Property Name="id" Type="Edm.String" Nullable="false" />
+              </EntityType>
+      
+              <EntityContainer Name="container">
+                <EntitySet Name="foos" EntityType="root.foo" />
+              </EntityContainer>
+            </Schema>
+          </edmx:DataServices>
+        </edmx:Edmx>
+        
+        ### an entity type that is contained by the property of another entity type and has multiple derived types
+
+        <?xml version="1.0" encoding="utf-8"?>
+        <edmx:Edmx Version="4.0" xmlns:ags="http://aggregator.microsoft.com/internal" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" xmlns:odata="http://schemas.microsoft.com/oDataCapabilities">
+            <edmx:DataServices>
+            <Schema Namespace="root" xmlns="http://docs.oasis-open.org/odata/ns/edm" xmlns:ags="http://aggregator.microsoft.com/internal">
+                <EntityType Name="foo">
+                <Key>
+                    <PropertyRef Name="id" />
+                </Key>
+                <Property Name="id" Type="Edm.String" Nullable="false" />
+		
+	            <NavigationProperty Name="bars" Type="Collection(root.bar)" Nullable="false" ContainsTarget="true" />
+                </EntityType>
+
+                <EntityType Name="bar">
+                <Key>
+                    <PropertyRef Name="id" />
+                </Key>
+                <Property Name="id" Type="Edm.String" Nullable="false" />
+                </EntityType>
+	  
+	            <EntityType Name="fizz" BaseType="root.bar">
+	            <Property Name="aFizzProperty" Type="Edm.Int32" Nullable="false" />
+	            </EntityType>
+	  
+	            <EntityType Name="buzz" BaseType="root.bar">
+	            <Property Name="aBuzzProperty" Type="Edm.DateTimeOffset" Nullable="false" />
+	            </EntityType>
+      
+                <EntityContainer Name="container">
+                <EntitySet Name="foos" EntityType="root.foo" />
+                </EntityContainer>
+            </Schema>
+            </edmx:DataServices>
+        </edmx:Edmx>
+
+        ### an entity type that is not contained by the property of another entity type
+
+        <?xml version="1.0" encoding="utf-8"?>
+        <edmx:Edmx Version="4.0" xmlns:ags="http://aggregator.microsoft.com/internal" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" xmlns:odata="http://schemas.microsoft.com/oDataCapabilities">
+          <edmx:DataServices>
+            <Schema Namespace="root" xmlns="http://docs.oasis-open.org/odata/ns/edm" xmlns:ags="http://aggregator.microsoft.com/internal">
+              <EntityType Name="foo">
+                <Key>
+                  <PropertyRef Name="id" />
+                </Key>
+                <Property Name="id" Type="Edm.String" Nullable="false" />
+
+                <NavigationProperty Name="bars" Type="Collection(root.bar)" Nullable="false" ContainsTarget="false" />
+                <!--TODO you need a binding or something-->
+              </EntityType>
+
+              <EntityType Name="bar">
+                <Key>
+                  <PropertyRef Name="id" />
+                </Key>
+                <Property Name="id" Type="Edm.String" Nullable="false" />
+              </EntityType>
+
+              <EntityContainer Name="container">
+                <EntitySet Name="foos" EntityType="root.foo" />
+              </EntityContainer>
+            </Schema>
+          </edmx:DataServices>
+        </edmx:Edmx>
+
+         */
+
         // the idea is that the key of the entity is the base64 encoded and semicolon delimited series of keys of the containing entities (plus the entity itself at the end)
         // the above assumes that the entities are contained in only one navigation property, which isn't necessarily true (a single entity *instance* is only contained in one property, but that entity type can be used as the type for multiple contained properties through the model)
 
-        public IOdataConventionClient Dereference(FusionId fusionId)
-        {
+        private readonly NewStuff._Design._0_Convention.IConvention convention;
+        private readonly Uri domainAndStuff;
 
+        public WaasFusionDataStoreMapping(NewStuff._Design._0_Convention.IConvention convention, Uri domainAndStuff)
+        {
+            this.convention = convention;
+            this.domainAndStuff = domainAndStuff;
+        }
+
+        public IQueryOptionsWriter Get(ContainmentPath containmentPath)
+        {
+            // fusion won't care about the types in the containmentpath except the last one; other data stores might (probably?) care though
+
+            var getRequestWriter = this.convention.Get2();
+            var uriWriter = getRequestWriter.Write();
+            var segmentWriter = uriWriter.Write(new PrecedingSegments(this.domainAndStuff.ToString()));
+
+            var segments = containmentPath.ContainmentPathSegments.ToList();
+
+            segmentWriter = segmentWriter.Write(new OdataUriSegment("v1.0"));
+            //// TODO any other segments here
+            segmentWriter = segmentWriter.Write(new OdataUriSegment(segments.Last().TypeName));
+
+            var fusionKey = Base64Url
+                .EncodeToString(
+                    new ReadOnlySpan<byte>(
+                        Encoding.UTF8.GetBytes(
+                            string.Join(
+                                ';',
+                                segments
+                                    .Select(segment => segment
+                                        .Apply(
+                                            keyed => $"{keyed.PropertyName};{keyed.Key}",
+                                            keylessMap => keylessMap.PropertyName))))));
+
+            IQueryOptionsWriter queryOptionsWriter;
+            if (segments.Last() is ContainmentPathSegment.Keyed)
+            {
+                segmentWriter = segmentWriter.Write(new OdataUriSegment(fusionKey));
+                queryOptionsWriter = segmentWriter.Write();
+            }
+            else
+            {
+                queryOptionsWriter = segmentWriter.Write();
+                queryOptionsWriter = new QueryOptionsWriter(queryOptionsWriter, fusionKey);
+            }
+
+            return queryOptionsWriter;
+        }
+
+        private sealed class QueryOptionsWriter : IQueryOptionsWriter
+        {
+            private readonly IQueryOptionsWriter queryOptionsWriter;
+            private readonly string key;
+
+            public QueryOptionsWriter(IQueryOptionsWriter queryOptionsWriter, string key)
+            {
+                this.queryOptionsWriter = queryOptionsWriter;
+                this.key = key;
+            }
+
+            public IQueryOptionValueWriter Write(QueryOptionParameter queryOptionParameter)
+            {
+                if (queryOptionParameter.Value == "$filter") //// TODO case sensitive, no dollar sign, etc.; you shouldn't need to worry about this actually because system query options should be strongly typed
+                {
+                    return new FilterQueryOptionValueWriter(this.queryOptionsWriter.Write(new QueryOptionParameter("$filter")), this.key);
+                }
+                else
+                {
+                    return new QueryOptionValueWriter(this.queryOptionsWriter.Write(queryOptionParameter), this.key);
+                }
+            }
+
+            private sealed class FilterQueryOptionValueWriter : IQueryOptionValueWriter
+            {
+                private readonly IQueryOptionValueWriter queryOptionValueWriter;
+                private readonly string key;
+
+                public FilterQueryOptionValueWriter(IQueryOptionValueWriter queryOptionValueWriter, string key)
+                {
+                    this.queryOptionValueWriter = queryOptionValueWriter;
+                    this.key = key;
+                }
+
+                public IQueryOptionsWriter Write(QueryOptionValue queryOptionValue)
+                {
+                    return this.queryOptionValueWriter.Write(new QueryOptionValue($"containerKey eq '{key}' and ({queryOptionValue.Value})"));
+                }
+
+                public IQueryOptionsWriter Write()
+                {
+                    return this.queryOptionValueWriter.Write(new QueryOptionValue($"containerKey eq '{key}'"));
+                }
+            }
+
+            private sealed class QueryOptionValueWriter : IQueryOptionValueWriter
+            {
+                private readonly IQueryOptionValueWriter queryOptionValueWriter;
+                private readonly string key;
+
+                public QueryOptionValueWriter(IQueryOptionValueWriter queryOptionValueWriter, string key)
+                {
+                    this.queryOptionValueWriter = queryOptionValueWriter;
+                    this.key = key;
+                }
+
+                public IQueryOptionsWriter Write(QueryOptionValue queryOptionValue)
+                {
+                    return new QueryOptionsWriter(this.queryOptionValueWriter.Write(queryOptionValue), this.key);
+                }
+
+                public IQueryOptionsWriter Write()
+                {
+                    return new QueryOptionsWriter(this.queryOptionValueWriter.Write(), this.key);
+                }
+            }
+
+            public IFragmentWriter Write()
+            {
+                var queryOptionValueWriter = this.queryOptionsWriter.Write(new QueryOptionParameter("$filter"));
+                return queryOptionValueWriter.Write(new QueryOptionValue($"containerKey eq '{key}'")).Write();
+            }
         }
     }
 
-    public sealed class FusionId
+    public static class Extensions
     {
-        public FusionId(IEnumerable<FusionIdPart> idParts)
+        public static IGetRequestWriter Get2(this NewStuff._Design._0_Convention.IConvention convention)
         {
-            this.IdParts = idParts;
+            throw new Exception("tODO");
         }
-
-        public IEnumerable<FusionIdPart> IdParts { get; }
     }
 
-    public abstract class FusionIdPart
+    public interface IGetRequestWriter
     {
-        private FusionIdPart()
+        IUriWriter Write();
+    }
+
+    public interface IUriWriter
+    {
+        ISegmentWriter Write(PrecedingSegments precedingSegments);
+    }
+
+    public interface ISegmentWriter
+    {
+        ISegmentWriter Write(OdataUriSegment odataUriSegment);
+
+        IQueryOptionsWriter Write();
+    }
+
+    public interface IQueryOptionsWriter
+    {
+        IQueryOptionValueWriter Write(QueryOptionParameter queryOptionParameter);
+
+        IFragmentWriter Write();
+    }
+
+    public sealed class QueryOptionParameter
+    {
+        internal QueryOptionParameter(string value)
         {
+            Value = value;
         }
 
-        public sealed class Keyed : FusionIdPart
+        public string Value { get; }
+    }
+
+    public interface IQueryOptionValueWriter
+    {
+        IQueryOptionsWriter Write(QueryOptionValue queryOptionValue);
+
+        IQueryOptionsWriter Write();
+    }
+
+    public sealed class QueryOptionValue
+    {
+        internal QueryOptionValue(string value)
         {
-            public Keyed(string typeName, string id)
-            {
-                TypeName = typeName;
-                Id = id;
-            }
-
-            public string TypeName { get; }
-
-            public string Id { get; }
+            Value = value;
         }
 
-        public sealed class Keyless : FusionIdPart
+        public string Value { get; }
+    }
+
+    public interface IFragmentWriter
+    {
+        //// TODO add an overload to write fragment
+
+        IOdataResponseReader Write(); // this actually sends the request
+    }
+
+    public sealed class ContainmentPath
+    {
+        public ContainmentPath(IEnumerable<ContainmentPathSegment> containmentPathSegments)
         {
-            public Keyless(string typeName)
+            ContainmentPathSegments = containmentPathSegments;
+        }
+
+        public IEnumerable<ContainmentPathSegment> ContainmentPathSegments { get; }
+    }
+
+    public abstract class ContainmentPathSegment
+    {
+        private ContainmentPathSegment(string typeName, string propertyName)
+        {
+            TypeName = typeName;
+            PropertyName = propertyName;
+        }
+
+        public string TypeName { get; }
+
+        public string PropertyName { get; }
+
+        public TResult Apply<TResult>(
+            Func<Keyed, TResult> keyedMap,
+            Func<Keyless, TResult> keylessMap)
+        {
+            if (this is Keyed keyed)
             {
-                TypeName = typeName;
+                return keyedMap(keyed);
+            }
+            else if (this is Keyless keyless)
+            {
+                return keylessMap(keyless);
+            }
+            else
+            {
+                throw new Exception("TODO implement visitor");
+            }
+        }
+
+        public sealed class Keyed : ContainmentPathSegment
+        {
+            public Keyed(string typeName, string propertyName, string key)
+                : base(typeName, propertyName)
+            {
+                Key = key;
             }
 
-            public string TypeName { get; }
+            public string Key { get; }
+        }
+
+        public sealed class Keyless : ContainmentPathSegment
+        {
+            public Keyless(string typeName, string propertyName)
+                : base(typeName, propertyName)
+            {
+            }
         }
     }
 
@@ -549,12 +1061,7 @@
                     if (rootEntityType.TryGetTypeOfComplexProperty(odataUriSegment.Value, out var complexPropertyType))
                     {
                         //// TODO you are here
-                        //// TODO write sample CSDLs:
-                        //// entity type contained by multiple properties
-                        //// non-contained entity type (navigation proeprty binding or otherwise)
-                        //// complex type with multiple contained navigations of the same type
-                        //// complex type that is nested for a while to a contained navigation
-                        //// complex type that is nested for a while to a non-contained navigation
+                        
                     }
                     else if (rootEntityType.TryGetTypeOfNavigationProperty(odataUriSegment.Value, out var navigationPropertyType))
                     {
