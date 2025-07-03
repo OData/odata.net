@@ -1064,6 +1064,7 @@
                         //// TODO collections of complex types
                         complexPropertyType.
                             //// TODO for non-containments, maybe multiple requests are required; we could have an onboarding build rule that warns about that the csdl is going to require multiple requests
+                            //// TODO odata.context is required for non-containments without bindings, so the service has to be able to tell you a containment path for each element anyway; you can do this for now (making the "two calls" approach), and have an optimization for when a binding is present; future binding variants can be added in the future and we can implement optimizations for them too
                     }
                     else if (rootEntityType.TryGetTypeOfNavigationProperty(odataUriSegment.Value, out var navigationPropertyType))
                     {
