@@ -1061,7 +1061,7 @@
                     if (rootEntityType.TryGetTypeOfComplexProperty(odataUriSegment.Value, out var complexPropertyType))
                     {
                         //// TODO you are here
-                        
+                        //// TODO collections of complex types
                         complexPropertyType.
 
                     }
