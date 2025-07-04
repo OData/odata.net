@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JsonWriterBenchmarks", "Jso
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestServer", "TestServer\TestServer.csproj", "{C04E7C60-0DDC-4EB9-A266-665B334A37A2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.OData.Edm", "..\..\..\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj", "{B14A5885-76DC-E0E2-8A5A-D91521E06F56}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{C04E7C60-0DDC-4EB9-A266-665B334A37A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C04E7C60-0DDC-4EB9-A266-665B334A37A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C04E7C60-0DDC-4EB9-A266-665B334A37A2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B14A5885-76DC-E0E2-8A5A-D91521E06F56}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B14A5885-76DC-E0E2-8A5A-D91521E06F56}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B14A5885-76DC-E0E2-8A5A-D91521E06F56}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B14A5885-76DC-E0E2-8A5A-D91521E06F56}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

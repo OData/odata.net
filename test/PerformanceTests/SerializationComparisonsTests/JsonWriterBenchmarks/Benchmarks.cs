@@ -12,10 +12,12 @@ using BenchmarkDotNet.Order;
 using BenchmarkDotNet.Diagnosers;
 using ExperimentsLib;
 using Microsoft.OData.Edm;
+using Microsoft.VSDiagnostics;
 
 namespace JsonWriterBenchmarks
 {
     [MemoryDiagnoser]
+    [CPUUsageDiagnoser]
     [Orderer(SummaryOrderPolicy.Method, MethodOrderPolicy.Declared)]
     public class Benchmarks
     {
@@ -67,30 +69,30 @@ namespace JsonWriterBenchmarks
             await writer.WritePayloadAsync(data, memoryStream);
         }
 
-        [Benchmark]
-        [BenchmarkCategory("ToFile")]
-        public async Task WriteToFileAsync()
-        {
-            // multiple writes to increase benchmark duration
-            await WritePayloadAsync(data);
-            await WritePayloadAsync(data);
-        }
+        //[Benchmark]
+        //[BenchmarkCategory("ToFile")]
+        //public async Task WriteToFileAsync()
+        //{
+        //    // multiple writes to increase benchmark duration
+        //    await WritePayloadAsync(data);
+        //    await WritePayloadAsync(data);
+        //}
 
-        [Benchmark]
-        [BenchmarkCategory("RawValues")]
-        public async Task WriteWithRawValues()
-        {
-            // multiple writes to increase benchmark duration
-            await WritePayloadAsync(data, includeRawValues: true);
-            await WritePayloadAsync(data, includeRawValues: true);
-        }
+        //[Benchmark]
+        //[BenchmarkCategory("RawValues")]
+        //public async Task WriteWithRawValues()
+        //{
+        //    // multiple writes to increase benchmark duration
+        //    await WritePayloadAsync(data, includeRawValues: true);
+        //    await WritePayloadAsync(data, includeRawValues: true);
+        //}
 
-        [Benchmark]
-        [BenchmarkCategory("ToFile")]
-        public async Task WriteToFileWithLargeValuesAsync()
-        {
-            await WritePayloadAsync(dataWithLargeValues);
-        }
+        //[Benchmark]
+        //[BenchmarkCategory("ToFile")]
+        //public async Task WriteToFileWithLargeValuesAsync()
+        //{
+        //    await WritePayloadAsync(dataWithLargeValues);
+        //}
 
         private async Task WritePayloadAsync(IEnumerable<Customer> payload, bool includeRawValues = false)
         {

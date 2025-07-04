@@ -15,7 +15,7 @@ namespace ExperimentsLib
 {
     public static class WriterHelpers
     {
-        private static readonly DefaultJsonWriterFactory jsonWriterFactory = new DefaultJsonWriterFactory();
+        private static readonly ODataJsonWriterFactory jsonWriterFactory = new ODataJsonWriterFactory();
 
         public static IJsonWriter CreateODataJsonWriter(this Stream stream, Encoding encoding = null)
         {
