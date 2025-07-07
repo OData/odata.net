@@ -555,6 +555,54 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer
             testRequestOfSingleton.Throws<ODataException>(Strings.ODataJsonLightWriter_InstanceAnnotationNotSupportedOnExpandedResourceSet);
         }
 
+        [Fact]
+        public void WriteAnnotationAndCountAtStartExpandedFeedShouldPassInJsonLight()
+        {
+            string expectedPayload =
+            "{" +
+                "\"@odata.context\":\"http://www.example.com/$metadata#TestEntitySet/$entity\"," +
+                "\"ID\":1," +
+                "\"ResourceSetNavigationProperty@odata.navigationLink\":\"http://service/navLink\"," +
+                "\"ResourceSetNavigationProperty@odata.count\":10," +
+                "\"ResourceSetNavigationProperty@custom.StartFeedAnnotation\":123" +
+            "}";
+
+            Action<ODataWriter> action = (odataWriter) =>
+            {
+                var entryToWrite = new ODataResource { Properties = new[] { new ODataProperty { Name = "ID", Value = 1 } } };
+                odataWriter.WriteStart(entryToWrite);
+
+                ODataNestedResourceInfo navLink = new ODataNestedResourceInfo { Name = "ResourceSetNavigationProperty", Url = new Uri("http://service/navLink", UriKind.RelativeOrAbsolute), IsCollection = true };
+                navLink.Count = 10;
+                navLink.InstanceAnnotations.Add(new ODataInstanceAnnotation("custom.StartFeedAnnotation", PrimitiveValue1));
+                odataWriter.WriteStart(navLink);
+
+                odataWriter.WriteEnd();
+                odataWriter.WriteEnd();
+            };
+
+            this.WriteAnnotationsAndValidatePayload(action, EntitySet, ODataFormat.Json, expectedPayload, request: false, createFeedWriter: false);
+        }
+
+        [Fact]
+        public void WriteCountOnExpandedEntryShouldFail()
+        {
+            Action<ODataWriter> action = (odataWriter) =>
+            {
+                var entryToWrite = new ODataResource { Properties = new[] { new ODataProperty { Name = "ID", Value = 1 } } };
+                odataWriter.WriteStart(entryToWrite);
+
+                ODataNestedResourceInfo navLink = new ODataNestedResourceInfo { Name = "ResourceNavigationProperty", IsCollection = false };
+                navLink.Count = 10;
+
+                odataWriter.WriteStart(navLink);
+                odataWriter.WriteEnd();
+                odataWriter.WriteEnd();
+            };
+
+            Action testResponse = () => this.WriteAnnotationsAndValidatePayload(action, EntitySet, ODataFormat.Json, null, request: false, createFeedWriter: false);
+            testResponse.Throws<ODataException>(Strings.ODataWriterCore_QueryCountInODataNestedResourceInfo);
+        }
         #endregion Writing instance annotations on expanded feeds
 
         #region Write Delta Feed

@@ -46,6 +46,7 @@ ODataWriterCore_StreamNotDisposed=ODataWriter.Write or ODataWriter.WriteEnd was 
 
 ODataWriterCore_DeltaResourceWithoutIdOrKeyProperties=No Id or key properties were found. A resource in a delta payload requires an ID or key properties be specified.
 ODataWriterCore_QueryCountInRequest=The ODataResourceSet.Count must be null for request payloads. Query counts are only supported in responses.
+ODataWriterCore_QueryCountInODataNestedResourceInfo=The ODataNestedResourceInfo.Count must be null when ODataNestedResourceInfo.IsCollection is false.
 ODataWriterCore_QueryNextLinkInRequest=The NextPageLink must be null for request payloads. Next page links are only supported in responses.
 ODataWriterCore_QueryDeltaLinkInRequest=The DeltaLink must be null for request payloads. Delta links are only supported in responses.
 ODataWriterCore_CannotWriteDeltaWithResourceSetWriter=Cannot write a deleted resource, link, deleted link, or nested delta resource set within a resource set; they must be written within a delta resource set.
