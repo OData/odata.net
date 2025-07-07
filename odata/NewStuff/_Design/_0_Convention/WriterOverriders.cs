@@ -1,6 +1,6 @@
 ﻿namespace NewStuff._Design._0_Convention
 {
-    using NewStuff._Design._0_Convention.RefTask;
+    using NewStuff._Design._0_Convention.RefTask2;
     using NewStuff._Design._1_Protocol.Sample;
     using System;
     using System.Threading.Tasks;
@@ -66,7 +66,7 @@
             public RefTask<Nothing2, Nothing2, IUriSchemeWriter<T>> Commit()
             {
                 //// TODO async
-                return RefTask2.FromFunc(() => this.writerSelector(this.originalWriter.Commit().ConfigureAwait(false).GetAwaiter().GetResult()).ConfigureAwait(false).GetAwaiter().GetResult());
+                return RefTask2.RefTask2.FromFunc(() => this.writerSelector(this.originalWriter.Commit().ConfigureAwait(false).GetAwaiter().GetResult()).ConfigureAwait(false).GetAwaiter().GetResult());
             }
         }
 
@@ -89,7 +89,7 @@
             public RefTask<Nothing2, Nothing2, IUriDomainWriter<T>> Commit(UriScheme uriScheme)
             {
                 //// TODO async
-                return RefTask2.FromFunc(() => this.writerSelector(this.originalWriter.Commit(uriScheme).ConfigureAwait(false).GetAwaiter().GetResult()).ConfigureAwait(false).GetAwaiter().GetResult());
+                return RefTask2.RefTask2.FromFunc(() => this.writerSelector(this.originalWriter.Commit(uriScheme).ConfigureAwait(false).GetAwaiter().GetResult()).ConfigureAwait(false).GetAwaiter().GetResult());
             }
         }
 
@@ -112,7 +112,7 @@
             public RefTask<Nothing2, Nothing2, IUriPortWriter<T>> Commit(UriDomain uriDomain)
             {
                 //// TODO async
-                return RefTask2.FromFunc(() => this.writerSelector(this.originalWriter.Commit(uriDomain).ConfigureAwait(false).GetAwaiter().GetResult()).ConfigureAwait(false).GetAwaiter().GetResult());
+                return RefTask2.RefTask2.FromFunc(() => this.writerSelector(this.originalWriter.Commit(uriDomain).ConfigureAwait(false).GetAwaiter().GetResult()).ConfigureAwait(false).GetAwaiter().GetResult());
             }
         }
 
@@ -135,13 +135,13 @@
             public RefTask<Nothing2, Nothing2, IUriPathSegmentWriter<T>> Commit()
             {
                 //// TODO async
-                return RefTask2.FromFunc(() => this.writerSelector(this.originalWriter.Commit().ConfigureAwait(false).GetAwaiter().GetResult()).ConfigureAwait(false).GetAwaiter().GetResult());
+                return RefTask2.RefTask2.FromFunc(() => this.writerSelector(this.originalWriter.Commit().ConfigureAwait(false).GetAwaiter().GetResult()).ConfigureAwait(false).GetAwaiter().GetResult());
             }
 
             public RefTask<Nothing2, Nothing2, IUriPathSegmentWriter<T>> Commit(UriPort uriPort)
             {
                 //// TODO async
-                return RefTask2.FromFunc(() => this.writerSelector(this.originalWriter.Commit(uriPort).ConfigureAwait(false).GetAwaiter().GetResult()).ConfigureAwait(false).GetAwaiter().GetResult());
+                return RefTask2.RefTask2.FromFunc(() => this.writerSelector(this.originalWriter.Commit(uriPort).ConfigureAwait(false).GetAwaiter().GetResult()).ConfigureAwait(false).GetAwaiter().GetResult());
             }
         }
 
@@ -164,13 +164,13 @@
             public RefTask<Nothing2, Nothing2, IQueryOptionWriter<T>> Commit()
             {
                 //// TODO async
-                return RefTask2.FromFunc(() => this.writerSelector(this.originalWriter.Commit().ConfigureAwait(false).GetAwaiter().GetResult()).ConfigureAwait(false).GetAwaiter().GetResult());
+                return RefTask2.RefTask2.FromFunc(() => this.writerSelector(this.originalWriter.Commit().ConfigureAwait(false).GetAwaiter().GetResult()).ConfigureAwait(false).GetAwaiter().GetResult());
             }
 
             public RefTask<Nothing2, Nothing2, IUriPathSegmentWriter<T>> Commit(UriPathSegment uriPathSegment)
             {
                 //// TODO async
-                return RefTask2.FromFunc<IUriPathSegmentWriter<T>>(() => new UriPathSegmentWriter<T>(this.originalWriter.Commit(uriPathSegment).ConfigureAwait(false).GetAwaiter().GetResult(), this.writerSelector));
+                return RefTask2.RefTask2.FromFunc<IUriPathSegmentWriter<T>>(() => new UriPathSegmentWriter<T>(this.originalWriter.Commit(uriPathSegment).ConfigureAwait(false).GetAwaiter().GetResult(), this.writerSelector));
             }
         }
 
@@ -193,19 +193,19 @@
             public RefTask<Nothing2, Nothing2, T> Commit()
             {
                 //// TODO async
-                return RefTask2.FromFunc(() => this.originalWriter.Commit().ConfigureAwait(false).GetAwaiter().GetResult());
+                return RefTask2.RefTask2.FromFunc(() => this.originalWriter.Commit().ConfigureAwait(false).GetAwaiter().GetResult());
             }
 
             public RefTask<Nothing2, Nothing2, IFragmentWriter<T>> CommitFragment()
             {
                 //// TODO async
-                return RefTask2.FromFunc(() => this.writerSelector(this.originalWriter.CommitFragment().ConfigureAwait(false).GetAwaiter().GetResult()).ConfigureAwait(false).GetAwaiter().GetResult());
+                return RefTask2.RefTask2.FromFunc(() => this.writerSelector(this.originalWriter.CommitFragment().ConfigureAwait(false).GetAwaiter().GetResult()).ConfigureAwait(false).GetAwaiter().GetResult());
             }
 
             public RefTask<Nothing2, Nothing2, IQueryParameterWriter<T>> CommitParameter()
             {
                 //// TODO async
-                return RefTask2.FromFunc<IQueryParameterWriter<T>>(() => new QueryParameterWriter(this.originalWriter.CommitParameter().ConfigureAwait(false).GetAwaiter().GetResult(), this.writerSelector));
+                return RefTask2.RefTask2.FromFunc<IQueryParameterWriter<T>>(() => new QueryOptionWriter<T>.QueryParameterWriter(this.originalWriter.CommitParameter().ConfigureAwait(false).GetAwaiter().GetResult(), this.writerSelector));
             }
 
             private sealed class QueryParameterWriter : IQueryParameterWriter<T>
@@ -222,7 +222,7 @@
                 public RefTask<Nothing2, Nothing2, IQueryValueWriter<T>> Commit(QueryParameter queryParameter)
                 {
                     //// TODO async
-                    return RefTask2.FromFunc<IQueryValueWriter<T>>(() => new QueryValueWriter(this.originalWriter.Commit(queryParameter).ConfigureAwait(false).GetAwaiter().GetResult(), this.writerSelector));
+                    return RefTask2.RefTask2.FromFunc<IQueryValueWriter<T>>(() => new QueryOptionWriter<T>.QueryParameterWriter.QueryValueWriter(this.originalWriter.Commit(queryParameter).ConfigureAwait(false).GetAwaiter().GetResult(), this.writerSelector));
                 }
 
                 private sealed class QueryValueWriter : IQueryValueWriter<T>
@@ -239,13 +239,13 @@
                     public RefTask<Nothing2, Nothing2, IQueryOptionWriter<T>> Commit()
                     {
                         //// TODO async
-                        return RefTask2.FromFunc<IQueryOptionWriter<T>>(() => new QueryOptionWriter<T>(this.originalWriter.Commit().ConfigureAwait(false).GetAwaiter().GetResult(), this.writerSelector));
+                        return RefTask2.RefTask2.FromFunc<IQueryOptionWriter<T>>(() => new QueryOptionWriter<T>(this.originalWriter.Commit().ConfigureAwait(false).GetAwaiter().GetResult(), this.writerSelector));
                     }
 
                     public RefTask<Nothing2, Nothing2, IQueryOptionWriter<T>> Commit(QueryValue queryValue)
                     {
                         //// TODO async
-                        return RefTask2.FromFunc<IQueryOptionWriter<T>>(() => new QueryOptionWriter<T>(this.originalWriter.Commit(queryValue).ConfigureAwait(false).GetAwaiter().GetResult(), this.writerSelector));
+                        return RefTask2.RefTask2.FromFunc<IQueryOptionWriter<T>>(() => new QueryOptionWriter<T>(this.originalWriter.Commit(queryValue).ConfigureAwait(false).GetAwaiter().GetResult(), this.writerSelector));
                     }
                 }
             }
@@ -272,19 +272,19 @@
             public RefTask<Nothing2, Nothing2, T> Commit()
             {
                 //// TODO async
-                return RefTask2.FromFunc(() => this.writerSelector(this.originalWriter.Commit().ConfigureAwait(false).GetAwaiter().GetResult()).ConfigureAwait(false).GetAwaiter().GetResult());
+                return RefTask2.RefTask2.FromFunc(() => this.writerSelector(this.originalWriter.Commit().ConfigureAwait(false).GetAwaiter().GetResult()).ConfigureAwait(false).GetAwaiter().GetResult());
             }
 
             public RefTask<Nothing2, Nothing2, IFragmentWriter<T>> CommitFragment()
             {
                 //// TODO async
-                return RefTask2.FromFunc<IFragmentWriter<T>>(() => new FragmentWriter<T>(this.originalWriter.CommitFragment().ConfigureAwait(false).GetAwaiter().GetResult(), this.writerSelector));
+                return RefTask2.RefTask2.FromFunc<IFragmentWriter<T>>(() => new FragmentWriter<T>(this.originalWriter.CommitFragment().ConfigureAwait(false).GetAwaiter().GetResult(), this.writerSelector));
             }
 
             public RefTask<Nothing2, Nothing2, IQueryParameterWriter<T>> CommitParameter()
             {
                 //// TODO async
-                return RefTask2.FromFunc<IQueryParameterWriter<T>>(() => new QueryParameterWriter(this.originalWriter.CommitParameter().ConfigureAwait(false).GetAwaiter().GetResult(), this.writerSelector));
+                return RefTask2.RefTask2.FromFunc<IQueryParameterWriter<T>>(() => new QueryOptionWriter2<T>.QueryParameterWriter(this.originalWriter.CommitParameter().ConfigureAwait(false).GetAwaiter().GetResult(), this.writerSelector));
             }
 
             private sealed class QueryParameterWriter : IQueryParameterWriter<T>
@@ -301,7 +301,7 @@
                 public RefTask<Nothing2, Nothing2, IQueryValueWriter<T>> Commit(QueryParameter queryParameter)
                 {
                     //// TODO async
-                    return RefTask2.FromFunc<IQueryValueWriter<T>>(() => new QueryValueWriter(this.originalWriter.Commit(queryParameter).ConfigureAwait(false).GetAwaiter().GetResult(), this.writerSelector));
+                    return RefTask2.RefTask2.FromFunc<IQueryValueWriter<T>>(() => new QueryOptionWriter2<T>.QueryParameterWriter.QueryValueWriter(this.originalWriter.Commit(queryParameter).ConfigureAwait(false).GetAwaiter().GetResult(), this.writerSelector));
                 }
 
                 private sealed class QueryValueWriter : IQueryValueWriter<T>
@@ -318,13 +318,13 @@
                     public RefTask<Nothing2, Nothing2, IQueryOptionWriter<T>> Commit()
                     {
                         //// TODO async
-                        return RefTask2.FromFunc<IQueryOptionWriter<T>>(() => new QueryOptionWriter2<T>(this.originalWriter.Commit().ConfigureAwait(false).GetAwaiter().GetResult(), this.writerSelector));
+                        return RefTask2.RefTask2.FromFunc<IQueryOptionWriter<T>>(() => new QueryOptionWriter2<T>(this.originalWriter.Commit().ConfigureAwait(false).GetAwaiter().GetResult(), this.writerSelector));
                     }
 
                     public RefTask<Nothing2, Nothing2, IQueryOptionWriter<T>> Commit(QueryValue queryValue)
                     {
                         //// TODO async
-                        return RefTask2.FromFunc<IQueryOptionWriter<T>>(() => new QueryOptionWriter2<T>(this.originalWriter.Commit(queryValue).ConfigureAwait(false).GetAwaiter().GetResult(), this.writerSelector));
+                        return RefTask2.RefTask2.FromFunc<IQueryOptionWriter<T>>(() => new QueryOptionWriter2<T>(this.originalWriter.Commit(queryValue).ConfigureAwait(false).GetAwaiter().GetResult(), this.writerSelector));
                     }
                 }
             }
@@ -344,7 +344,7 @@
             public RefTask<Nothing2, Nothing2, T> Commit(Fragment fragment)
             {
                 //// TODO async
-                return RefTask2.FromFunc(() => this.writerSelector(this.originalWriter.Commit(fragment).ConfigureAwait(false).GetAwaiter().GetResult()).ConfigureAwait(false).GetAwaiter().GetResult());
+                return RefTask2.RefTask2.FromFunc(() => this.writerSelector(this.originalWriter.Commit(fragment).ConfigureAwait(false).GetAwaiter().GetResult()).ConfigureAwait(false).GetAwaiter().GetResult());
             }
         }
 

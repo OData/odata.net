@@ -1,6 +1,6 @@
 ﻿namespace NewStuff._Design._0_Convention.Sample
 {
-    using NewStuff._Design._0_Convention.RefTask;
+    using NewStuff._Design._0_Convention.RefTask2;
     using NewStuff._Design._1_Protocol.Sample;
     using System;
     using System.Buffers;

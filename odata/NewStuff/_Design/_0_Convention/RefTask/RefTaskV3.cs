@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 using NewStuff._Design._1_Protocol.Sample;
 
-namespace NewStuff._Design._0_Convention.RefTask
+namespace NewStuff._Design._0_Convention.RefTask2
 {
     public struct RefTaskV3<TResult> where TResult : allows ref struct
     {

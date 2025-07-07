@@ -1,4 +1,4 @@
-﻿namespace NewStuff._Design._0_Convention.RefTask
+﻿namespace NewStuff._Design._0_Convention.RefTask2
 {
     using NewStuff._Design._0_Convention.Sample;
     using NewStuff._Design._1_Protocol.Sample;

@@ -2,7 +2,7 @@
 {
     using System;
     using System.Threading.Tasks;
-    using NewStuff._Design._0_Convention.RefTask;
+    using NewStuff._Design._0_Convention.RefTask2;
     using NewStuff._Design._1_Protocol.Sample;
 
     public interface IRequestWriter
