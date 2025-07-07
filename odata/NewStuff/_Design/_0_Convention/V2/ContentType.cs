@@ -4,6 +4,8 @@
     {
         internal ContentType(string value)
         {
+            //// TODO make these ref structs
+
             Value = value;
         }
 

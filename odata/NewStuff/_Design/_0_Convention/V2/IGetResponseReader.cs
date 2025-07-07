@@ -205,15 +205,45 @@
         //// TODO implement accpeter and dispatch
     }
 
-    public interface IOdataContextReader
+    public interface IOdataContextReader : IReader<IGetResponseBodyReader, OdataContext>
     {
     }
 
-    public interface INextLinkReader
+    public interface INextLinkReader : IReader<IGetResponseBodyReader, NextLink>
     {
     }
 
-    public interface IPropertyReader
+    public interface IPropertyReader : IReader<IPropertyNameReader>
+    {
+    }
+
+    public interface IPropertyNameReader : IReader<IPropertyValueReader, PropertyName>
+    {
+    }
+
+    public interface IPropertyValueReader : IReader<PropertyValueToken>
+    {
+    }
+
+    public readonly ref struct PropertyValueToken
+    {
+        //// TODO you are here
+        //// TODO implement the constructors for this struct, then flesh out the below interfaces
+    }
+
+    public interface IPrimitivePropertyValueReader
+    {
+    }
+
+    public interface IComplexPropertyValueReader
+    {
+    }
+
+    public interface IMultiValuedPropertyValueReader
+    {
+    }
+
+    public interface INullPropertyValueReader
     {
     }
 }
