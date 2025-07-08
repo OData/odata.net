@@ -7,6 +7,7 @@ Microsoft.OData.UriParser.PathCountSelectItem.Search.get -> Microsoft.OData.UriP
 Microsoft.OData.UriParser.PathCountSelectItem.SelectedPath.get -> Microsoft.OData.UriParser.ODataSelectPath
 override Microsoft.OData.UriParser.PathCountSelectItem.HandleWith(Microsoft.OData.UriParser.SelectItemHandler handler) -> void
 override Microsoft.OData.UriParser.PathCountSelectItem.TranslateWith<T>(Microsoft.OData.UriParser.SelectItemTranslator<T> translator) -> T
+static readonly Microsoft.OData.ODataNullValue.Instance -> Microsoft.OData.ODataNullValue
 virtual Microsoft.OData.UriParser.SelectItemHandler.Handle(Microsoft.OData.UriParser.PathCountSelectItem item) -> void
 virtual Microsoft.OData.UriParser.SelectItemTranslator<T>.Translate(Microsoft.OData.UriParser.PathCountSelectItem item) -> T
 Microsoft.OData.ODataNestedResourceInfo.Count.get -> long?

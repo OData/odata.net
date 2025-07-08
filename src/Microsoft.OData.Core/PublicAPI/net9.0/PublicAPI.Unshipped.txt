@@ -2289,6 +2289,7 @@ static Microsoft.OData.UriParser.Validation.ODataUrlValidationRules.DeprecatedPr
 static Microsoft.OData.UriParser.Validation.ODataUrlValidationRules.DeprecatedTypeRule -> Microsoft.OData.UriParser.Validation.ODataUrlValidationRule
 static Microsoft.OData.UriParser.Validation.ODataUrlValidationRules.RequireSelectRule -> Microsoft.OData.UriParser.Validation.ODataUrlValidationRule
 static Microsoft.OData.UriParser.Validation.ODataUrlValidationRuleSet.AllRules -> Microsoft.OData.UriParser.Validation.ODataUrlValidationRuleSet
+static readonly Microsoft.OData.ODataNullValue.Instance -> Microsoft.OData.ODataNullValue
 static readonly Microsoft.OData.UriParser.BatchSegment.Instance -> Microsoft.OData.UriParser.BatchSegment
 static readonly Microsoft.OData.UriParser.CountSegment.Instance -> Microsoft.OData.UriParser.CountSegment
 static readonly Microsoft.OData.UriParser.MetadataSegment.Instance -> Microsoft.OData.UriParser.MetadataSegment

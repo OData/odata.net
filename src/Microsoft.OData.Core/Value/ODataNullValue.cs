@@ -12,6 +12,11 @@ namespace Microsoft.OData
     public sealed class ODataNullValue : ODataValue
     {
         /// <summary>
+        /// Returns a singleton instance of <see cref="ODataNullValue"/>.
+        /// </summary>
+        public static readonly ODataNullValue Instance = new ODataNullValue();
+
+        /// <summary>
         /// Indicates whether the given value is a null value.
         /// </summary>
         /// <value> true, since this object always represents a null value. </value>

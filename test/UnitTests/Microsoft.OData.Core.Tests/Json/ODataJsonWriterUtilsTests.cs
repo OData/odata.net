@@ -273,9 +273,9 @@ namespace Microsoft.OData.Tests.Json
                     { JsonConstants.ODataErrorInnerErrorTypeNameName, new ODataPrimitiveValue("") },
                     { JsonConstants.ODataErrorInnerErrorStackTraceName, new ODataPrimitiveValue("") }
                 });
-            innerError.Properties.Add("ResourceValue", new ODataResourceValue() { Properties = new [] { new ODataProperty() { Name = "PropertyName", Value = "PropertyValue" }, new ODataProperty() { Name = "NullProperty", Value = new ODataNullValue() } } });
-            innerError.Properties.Add("NullProperty", new ODataNullValue());
-            innerError.Properties.Add("CollectionValue", new ODataCollectionValue() { Items = new List<object>() { new ODataNullValue(), new ODataPrimitiveValue("CollectionValue"), new ODataPrimitiveValue(1) } });
+            innerError.Properties.Add("ResourceValue", new ODataResourceValue() { Properties = new [] { new ODataProperty() { Name = "PropertyName", Value = "PropertyValue" }, new ODataProperty() { Name = "NullProperty", Value = ODataNullValue.Instance } } });
+            innerError.Properties.Add("NullProperty", ODataNullValue.Instance);
+            innerError.Properties.Add("CollectionValue", new ODataCollectionValue() { Items = new List<object>() { ODataNullValue.Instance, new ODataPrimitiveValue("CollectionValue"), new ODataPrimitiveValue(1) } });
 
             var error = new ODataError
             {
@@ -318,9 +318,9 @@ namespace Microsoft.OData.Tests.Json
         public void ODataInnerErrorToStringTest()
         {
             ODataInnerError innerError = new ODataInnerError();
-            innerError.Properties.Add("ResourceValue", new ODataResourceValue() { Properties = new[] { new ODataProperty { Name = "PropertyName", Value = "PropertyValue" }, new ODataProperty { Name = "NullProperty", Value = new ODataNullValue() } } });
-            innerError.Properties.Add("NullProperty", new ODataNullValue());
-            innerError.Properties.Add("CollectionValue", new ODataCollectionValue() { Items = new List<object>() { new ODataNullValue(), new ODataPrimitiveValue("CollectionValue"), new ODataPrimitiveValue(1) } });
+            innerError.Properties.Add("ResourceValue", new ODataResourceValue() { Properties = new[] { new ODataProperty { Name = "PropertyName", Value = "PropertyValue" }, new ODataProperty { Name = "NullProperty", Value = ODataNullValue.Instance } } });
+            innerError.Properties.Add("NullProperty", ODataNullValue.Instance);
+            innerError.Properties.Add("CollectionValue", new ODataCollectionValue() { Items = new List<object>() { ODataNullValue.Instance, new ODataPrimitiveValue("CollectionValue"), new ODataPrimitiveValue(1) } });
             innerError.Properties.Add(JsonConstants.ODataErrorInnerErrorMessageName, new ODataPrimitiveValue(""));
             innerError.Properties.Add(JsonConstants.ODataErrorInnerErrorTypeNameName, new ODataPrimitiveValue(""));
             innerError.Properties.Add(JsonConstants.ODataErrorInnerErrorStackTraceName, new ODataPrimitiveValue(""));
