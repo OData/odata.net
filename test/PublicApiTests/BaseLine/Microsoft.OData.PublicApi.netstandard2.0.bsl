@@ -5707,6 +5707,8 @@ public sealed class Microsoft.OData.ODataNestedResourceInfoSerializationInfo {
 }
 
 public sealed class Microsoft.OData.ODataNullValue : Microsoft.OData.ODataValue {
+    public static readonly Microsoft.OData.ODataNullValue Instance = Microsoft.OData.ODataNullValue
+
     public ODataNullValue ()
 }
 
