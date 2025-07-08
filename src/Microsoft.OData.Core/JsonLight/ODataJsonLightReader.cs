@@ -2231,7 +2231,7 @@ namespace Microsoft.OData.JsonLight
                             if (resourceType.TypeKind == EdmTypeKind.Primitive || resourceType.TypeKind == EdmTypeKind.Enum)
                             {
                                 // null primitive
-                                this.EnterScope(new JsonLightPrimitiveScope(new ODataNullValue(),
+                                this.EnterScope(new JsonLightPrimitiveScope(ODataNullValue.Instance,
                                     this.CurrentNavigationSource, this.CurrentResourceTypeReference, this.CurrentScope.ODataUri));
                             }
                             else
@@ -3705,7 +3705,7 @@ namespace Microsoft.OData.JsonLight
                             {
                                 // null primitive
                                 this.EnterScope(new JsonLightPrimitiveScope(
-                                    new ODataNullValue(),
+                                    ODataNullValue.Instance,
                                     this.CurrentNavigationSource,
                                     this.CurrentResourceTypeReference,
                                     this.CurrentScope.ODataUri));
