@@ -64,7 +64,7 @@ public class DynamicPropertiesTests : EndToEndTestBase<DynamicPropertiesTests.Te
                 DynamicProperties = new Dictionary<string, object>()
                 {
                     { "IntNum", 123 },
-                    { "DoubleNum", 123.45 },
+                    { "DoubleNum", 123.99 },
                     { "FloatNum", 123.56f },
                     { "DecimalNum", 123.67m },
                     { "LongNum", 123456789L },
@@ -73,7 +73,7 @@ public class DynamicPropertiesTests : EndToEndTestBase<DynamicPropertiesTests.Te
                     { "ByteNum", (byte)123 },
                     { "SByteNum", (sbyte)-123 },
                     { "String", "Sample String" },
-                    { "Char", '/' },
+                    { "Char", 'a' },
                     { "Boolean", false },
                     { "Guid", Guid.Parse("44677ffa-552a-40c4-ab4f-a6d3869d1cc6") },
                     { "DateTime", new DateTime(2023, 10, 25) },
@@ -102,41 +102,82 @@ public class DynamicPropertiesTests : EndToEndTestBase<DynamicPropertiesTests.Te
         _context.SaveChanges();
 
         // Act
-        var queried = _context.CreateQuery<Account>("Accounts")
+        var queried = _context.Accounts
             .Where(c => c.AccountID == 2222)
             .Single();
 
         // Assert
         Assert.Equal(12345, queried.AccountInfo.DynamicProperties["ShortNum"]);
+        Assert.Equal(typeof(int), queried.AccountInfo.DynamicProperties["ShortNum"].GetType());
+
         Assert.Equal(123456789L, queried.AccountInfo.DynamicProperties["LongNum"]);
-        Assert.Equal(123.45, Convert.ToDouble(queried.AccountInfo.DynamicProperties["DoubleNum"]));
+        Assert.Equal(typeof(long), queried.AccountInfo.DynamicProperties["LongNum"].GetType());
+
+        Assert.Equal(123.99, (double)queried.AccountInfo.DynamicProperties["DoubleNum"]);
+        Assert.Equal(typeof(double), queried.AccountInfo.DynamicProperties["DoubleNum"].GetType());
+
         Assert.Equal(123.56f, queried.AccountInfo.DynamicProperties["FloatNum"]);
+        Assert.Equal(typeof(float), queried.AccountInfo.DynamicProperties["FloatNum"].GetType());
+
         Assert.Equal(123.67m, queried.AccountInfo.DynamicProperties["DecimalNum"]);
+        Assert.Equal(typeof(decimal), queried.AccountInfo.DynamicProperties["DecimalNum"].GetType());
+
         Assert.Equal(1234567890123456789L, queried.AccountInfo.DynamicProperties["BigIntNum"]);
+        Assert.Equal(typeof(long), queried.AccountInfo.DynamicProperties["BigIntNum"].GetType());
+
         Assert.Equal(123, queried.AccountInfo.DynamicProperties["IntNum"]);
+        Assert.Equal(typeof(int), queried.AccountInfo.DynamicProperties["IntNum"].GetType());
 
         Assert.Equal((byte)123, queried.AccountInfo.DynamicProperties["ByteNum"]);
+        Assert.Equal(typeof(byte), queried.AccountInfo.DynamicProperties["ByteNum"].GetType());
+
         Assert.Equal((sbyte)-123, queried.AccountInfo.DynamicProperties["SByteNum"]);
+        Assert.Equal(typeof(sbyte), queried.AccountInfo.DynamicProperties["SByteNum"].GetType());
 
         Assert.Equal("Sample String", queried.AccountInfo.DynamicProperties["String"]);
-        Assert.Equal("/", queried.AccountInfo.DynamicProperties["Char"]);
+        Assert.Equal(typeof(string), queried.AccountInfo.DynamicProperties["String"].GetType());
+
+        Assert.Equal("a", queried.AccountInfo.DynamicProperties["Char"]);
+        Assert.Equal(typeof(string), queried.AccountInfo.DynamicProperties["Char"].GetType());
 
         Assert.False((bool)queried.AccountInfo.DynamicProperties["Boolean"]);
+        Assert.Equal(typeof(bool), queried.AccountInfo.DynamicProperties["Boolean"].GetType());
+
         Assert.Equal(Guid.Parse("44677ffa-552a-40c4-ab4f-a6d3869d1cc6"), queried.AccountInfo.DynamicProperties["Guid"]);
+        Assert.Equal(typeof(Guid), queried.AccountInfo.DynamicProperties["Guid"].GetType());
 
         Assert.Equal(DaysOfWeekEnum.Tuesday.ToString(), queried.AccountInfo.DynamicProperties["EnumValueString"]);
+        Assert.Equal(typeof(string), queried.AccountInfo.DynamicProperties["EnumValueString"].GetType());
+
         Assert.Equal((long)DaysOfWeekEnum.Friday, queried.AccountInfo.DynamicProperties["EnumValueInt"]);
+        Assert.Equal(typeof(long), queried.AccountInfo.DynamicProperties["EnumValueInt"].GetType());
 
         Assert.Equal(new DateTime(2023, 10, 25).Date, Convert.ToDateTime(queried.AccountInfo.DynamicProperties["DateTime"]).Date);
+        //Assert.Equal(typeof(DateTime), queried.AccountInfo.DynamicProperties["DateTime"].GetType());
+
         Assert.Equal(new DateTimeOffset(new DateTime(2023, 10, 25)), (DateTimeOffset)queried.AccountInfo.DynamicProperties["DateTimeOffset"]);
+        Assert.Equal(typeof(DateTimeOffset), queried.AccountInfo.DynamicProperties["DateTimeOffset"].GetType());
+
         Assert.Equal(new DateTime(2023, 10, 25).Date, (Convert.ToDateTime(queried.AccountInfo.DynamicProperties["Date"])).Date);
+        //Assert.Equal(typeof(DateTime), queried.AccountInfo.DynamicProperties["Date"].GetType());
+
         Assert.Equal(new DateTime(2023, 10, 25).TimeOfDay, (TimeSpan)queried.AccountInfo.DynamicProperties["TimeOfDay"]);
+        Assert.Equal(typeof(TimeSpan), queried.AccountInfo.DynamicProperties["TimeOfDay"].GetType());
+
         Assert.Equal(new Edm.TimeOfDay(new TimeOnly(2, 50, 20).Ticks), queried.AccountInfo.DynamicProperties["TimeOnly"]);
+        Assert.Equal(typeof(Edm.TimeOfDay), queried.AccountInfo.DynamicProperties["TimeOnly"].GetType());
+
         Assert.Equal(new Edm.Date(2023, 10, 25), queried.AccountInfo.DynamicProperties["DateOnly"]);
+        Assert.Equal(typeof(Edm.Date), queried.AccountInfo.DynamicProperties["DateOnly"].GetType());
+
         Assert.Equal(new TimeSpan(2, 50, 20), queried.AccountInfo.DynamicProperties["Duration"]);
+        Assert.Equal(typeof(TimeSpan), queried.AccountInfo.DynamicProperties["Duration"].GetType());
 
         Assert.Equal(new Collection<byte> { 1, 2, 3, 4, 5, 6, 7, 8, 9, 0 }, queried.AccountInfo.DynamicProperties["Binary"]);
+        Assert.Equal(typeof(Collection<byte>), queried.AccountInfo.DynamicProperties["Binary"].GetType());
+
         Assert.Equal(new Collection<long> { 56, 100L, 456, 90L }, queried.AccountInfo.DynamicProperties["CollectionOfInt"]);
+        Assert.Equal(typeof(Collection<long>), queried.AccountInfo.DynamicProperties["CollectionOfInt"].GetType());
     }
 
     [Fact]
@@ -154,15 +195,16 @@ public class DynamicPropertiesTests : EndToEndTestBase<DynamicPropertiesTests.Te
                 DynamicProperties = new Dictionary<string, object>()
                 {
                     { "IntNum", 123 },
-                    { "DoubleNum", 123.45 },
-                    { "FloatNum", 123.45f },
-                    { "DecimalNum", 123.45m },
+                    { "DoubleNum", 123.99 },
+                    { "FloatNum", 123.56f },
+                    { "DecimalNum", 123.67m },
                     { "LongNum", 123456789L },
+                    { "BigIntNum", 1234567890123456789L },
                     { "ShortNum", 12345 },
                     { "ByteNum", (byte)123 },
                     { "SByteNum", (sbyte)-123 },
                     { "String", "Sample String" },
-                    { "Char", '/' },
+                    { "Char", 'a' },
                     { "Boolean", false },
                     { "Guid", Guid.Parse("44677ffa-552a-40c4-ab4f-a6d3869d1cc6") },
                     { "DateTime", new DateTime(2023, 10, 25) },
@@ -172,8 +214,10 @@ public class DynamicPropertiesTests : EndToEndTestBase<DynamicPropertiesTests.Te
                     { "TimeOfDay", new DateTime(2023, 10, 25).TimeOfDay },
                     { "TimeOnly", new TimeOnly(2, 50, 20) },
                     { "Duration", new TimeSpan(2, 50, 20) },
-                    { "Binary", new List<byte> { 1, 2, 3, 4, 5, 6, 7 } },
-                    { "CollectionOfInt", new List<long> { 456, 90L } }
+                    { "Binary", new List<byte> { 1, 2, 3, 4, 5, 6, 7, 8, 9, 0 } },
+                    { "EnumValueString", DaysOfWeekEnum.Tuesday.ToString() },
+                    { "EnumValueInt", (long)DaysOfWeekEnum.Friday },
+                    { "CollectionOfInt", new List<long> { 56, 100L, 456, 90L } }
                 }
             }
         };
@@ -205,30 +249,84 @@ public class DynamicPropertiesTests : EndToEndTestBase<DynamicPropertiesTests.Te
         };
 
         // Act
-        var queried = _context.CreateQuery<Account>("Accounts")
+        var queried = _context.Accounts
             .Where(c => c.AccountID == 3333)
             .Single();
 
-        queried.AccountInfo.DynamicProperties = updatedProperties;
+        // Update the dynamic properties    
+        foreach (var property in updatedProperties)
+        {
+            if (queried.AccountInfo.DynamicProperties.ContainsKey(property.Key))
+            {
+                queried.AccountInfo.DynamicProperties[property.Key] = property.Value;
+            }
+        }
+
         _context.UpdateObject(queried);
         _context.SaveChanges();
 
+        var updated = _context.Accounts
+            .Where(c => c.AccountID == 3333)
+            .Single();
+
         // Assert
-        Assert.Equal(98756, queried.AccountInfo.DynamicProperties["ShortNum"]);
-        Assert.Equal(9876543210L, queried.AccountInfo.DynamicProperties["LongNum"]);
-        Assert.Equal(-999.99, queried.AccountInfo.DynamicProperties["DoubleNum"]);
-        Assert.Equal(999.99f, queried.AccountInfo.DynamicProperties["FloatNum"]);
-        Assert.Equal(999, queried.AccountInfo.DynamicProperties["IntNum"]);
-        Assert.Equal("Updated String", queried.AccountInfo.DynamicProperties["String"]);
-        Assert.Equal('!', queried.AccountInfo.DynamicProperties["Char"]);
-        Assert.True((bool)queried.AccountInfo.DynamicProperties["Boolean"]);
-        Assert.Equal(Guid.Parse("12345678-1234-1234-1234-123456789012"), queried.AccountInfo.DynamicProperties["Guid"]);
-        Assert.Equal(new DateTime(2023, 11, 1).Date, Convert.ToDateTime(queried.AccountInfo.DynamicProperties["DateTime"]).Date);
-        Assert.Equal(new DateTimeOffset(new DateTime(2023, 11, 1)), (DateTimeOffset)queried.AccountInfo.DynamicProperties["DateTimeOffset"]);
-        Assert.Equal(new DateTime(2023, 11, 1).Date, (Convert.ToDateTime(queried.AccountInfo.DynamicProperties["Date"])).Date);
-        Assert.Equal(new DateOnly(2023, 11, 1), queried.AccountInfo.DynamicProperties["DateOnly"]);
-        Assert.Equal(new TimeOnly(3, 30, 15), queried.AccountInfo.DynamicProperties["TimeOnly"]);
-        Assert.Equal(new TimeSpan(3, 30, 15), queried.AccountInfo.DynamicProperties["Duration"]);
+        Assert.Equal(98756, updated.AccountInfo.DynamicProperties["ShortNum"]);
+        Assert.Equal(typeof(int), updated.AccountInfo.DynamicProperties["ShortNum"].GetType());
+
+        Assert.Equal(9876543210L, updated.AccountInfo.DynamicProperties["LongNum"]);
+        Assert.Equal(typeof(long), updated.AccountInfo.DynamicProperties["LongNum"].GetType());
+
+        Assert.Equal(-999.99, updated.AccountInfo.DynamicProperties["DoubleNum"]);
+        Assert.Equal(typeof(double), updated.AccountInfo.DynamicProperties["DoubleNum"].GetType());
+
+        Assert.Equal(999.99f, updated.AccountInfo.DynamicProperties["FloatNum"]);
+        Assert.Equal(typeof(float), updated.AccountInfo.DynamicProperties["FloatNum"].GetType());
+
+        Assert.Equal(123.67m, updated.AccountInfo.DynamicProperties["DecimalNum"]);
+        Assert.Equal(typeof(decimal), updated.AccountInfo.DynamicProperties["DecimalNum"].GetType());
+
+        Assert.Equal(999, updated.AccountInfo.DynamicProperties["IntNum"]);
+        Assert.Equal(typeof(int), updated.AccountInfo.DynamicProperties["IntNum"].GetType());
+
+        Assert.Equal("Updated String", updated.AccountInfo.DynamicProperties["String"]);
+        Assert.Equal(typeof(string), updated.AccountInfo.DynamicProperties["String"].GetType());
+
+        Assert.Equal('!', updated.AccountInfo.DynamicProperties["Char"]);
+        Assert.Equal(typeof(char), updated.AccountInfo.DynamicProperties["Char"].GetType());
+
+        Assert.True((bool)updated.AccountInfo.DynamicProperties["Boolean"]);
+        Assert.Equal(typeof(bool), updated.AccountInfo.DynamicProperties["Boolean"].GetType());
+
+        Assert.Equal(Guid.Parse("12345678-1234-1234-1234-123456789012"), updated.AccountInfo.DynamicProperties["Guid"]);
+        Assert.Equal(typeof(Guid), updated.AccountInfo.DynamicProperties["Guid"].GetType());
+
+        Assert.Equal(new DateTime(2023, 11, 1).Date, Convert.ToDateTime(updated.AccountInfo.DynamicProperties["DateTime"]).Date);
+        Assert.Equal(typeof(DateTime), updated.AccountInfo.DynamicProperties["DateTime"].GetType());
+
+        Assert.Equal(new DateTimeOffset(new DateTime(2023, 11, 1)), (DateTimeOffset)updated.AccountInfo.DynamicProperties["DateTimeOffset"]);
+        Assert.Equal(typeof(DateTimeOffset), updated.AccountInfo.DynamicProperties["DateTimeOffset"].GetType());
+
+        Assert.Equal(new DateTime(2023, 11, 1).Date, ((DateTime)updated.AccountInfo.DynamicProperties["Date"]).Date);
+        Assert.Equal(typeof(DateTime), updated.AccountInfo.DynamicProperties["Date"].GetType());
+
+        Assert.Equal(new DateOnly(2023, 11, 1), updated.AccountInfo.DynamicProperties["DateOnly"]);
+        Assert.Equal(typeof(DateOnly), updated.AccountInfo.DynamicProperties["DateOnly"].GetType());
+
+        Assert.Equal((new DateTime(2023, 11, 1)).TimeOfDay, updated.AccountInfo.DynamicProperties["TimeOfDay"]);
+        Assert.Equal(typeof(TimeSpan), updated.AccountInfo.DynamicProperties["TimeOfDay"].GetType());
+
+        Assert.Equal(new TimeOnly(3, 30, 15), updated.AccountInfo.DynamicProperties["TimeOnly"]);
+        Assert.Equal(typeof(TimeOnly), updated.AccountInfo.DynamicProperties["TimeOnly"].GetType());
+
+
+        Assert.Equal(new TimeSpan(3, 30, 15), updated.AccountInfo.DynamicProperties["Duration"]);
+        Assert.Equal(typeof(TimeSpan), updated.AccountInfo.DynamicProperties["Duration"].GetType());
+
+        Assert.Equal(new List<byte> { 8, 7, 6, 5, 4, 3, 2 }, updated.AccountInfo.DynamicProperties["Binary"]);
+        Assert.Equal(typeof(List<byte>), updated.AccountInfo.DynamicProperties["Binary"].GetType());
+
+        Assert.Equal(new List<long> { 1000L, 2000L }, updated.AccountInfo.DynamicProperties["CollectionOfInt"]);
+        Assert.Equal(typeof(List<long>), updated.AccountInfo.DynamicProperties["CollectionOfInt"].GetType());
     }
 
     [Fact]
