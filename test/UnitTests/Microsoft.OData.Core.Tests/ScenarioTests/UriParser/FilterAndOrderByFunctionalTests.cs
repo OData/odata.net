@@ -1998,7 +1998,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             FilterClause filter = ParseFilter("Fully.Qualified.Namespace.GetPriorAddress in Fully.Qualified.Namespace.GetPriorAddresses", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
             var inNode = Assert.IsType<InNode>(filter.Expression);
-            Assert.Equal("Fully.Qualified.Namespace.GetPriorAddress", Assert.IsType<SingleValueFunctionCallNode>(inNode.Left).Name);
+            Assert.Equal("Fully.Qualified.Namespace.GetPriorAddress", Assert.IsType<SingleResourceFunctionCallNode>(inNode.Left).Name);
             Assert.Equal("Fully.Qualified.Namespace.GetPriorAddresses", Assert.IsType<CollectionResourceFunctionCallNode>(inNode.Right).Name);
         }
 
@@ -2874,7 +2874,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             OrderByClause orderby = ParseOrderBy("Fully.Qualified.Namespace.GetPriorAddress in Fully.Qualified.Namespace.GetPriorAddresses", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
 
             var inNode = Assert.IsType<InNode>(orderby.Expression);
-            Assert.Equal("Fully.Qualified.Namespace.GetPriorAddress", Assert.IsType<SingleValueFunctionCallNode>(inNode.Left).Name);
+            Assert.Equal("Fully.Qualified.Namespace.GetPriorAddress", Assert.IsType<SingleResourceFunctionCallNode>(inNode.Left).Name);
             Assert.Equal("Fully.Qualified.Namespace.GetPriorAddresses", Assert.IsType<CollectionResourceFunctionCallNode>(inNode.Right).Name);
         }
 
