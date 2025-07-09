@@ -95,6 +95,7 @@
     <Compile Include="..\Microsoft.OData.Core\UriParser\SyntacticAst\SelectToken.cs" Link="ALinq\UriParser\SyntacticAst\SelectToken.cs" />
     <Compile Include="..\Microsoft.OData.Core\UriParser\SyntacticAst\StarToken.cs" Link="ALinq\UriParser\SyntacticAst\StarToken.cs" />
     <Compile Include="..\Microsoft.OData.Core\UriParser\SyntacticAst\SystemToken.cs" Link="ALinq\UriParser\SyntacticAst\SystemToken.cs" />
+    <Compile Include="..\Microsoft.OData.Core\UriParser\SyntacticAst\RootPathToken.cs" Link="ALinq\UriParser\SyntacticAst\RootPathToken.cs" />
     <Compile Include="..\Microsoft.OData.Core\UriParser\SyntacticAst\UnaryOperatorToken.cs" Link="ALinq\UriParser\SyntacticAst\UnaryOperatorToken.cs" />
     <Compile Include="..\Microsoft.OData.Core\UriParser\Aggregation\ApplyTransformationToken.cs" Link="ALinq\UriParser\Aggregation\ApplyTransformationToken.cs" />
     <Compile Include="..\Microsoft.OData.Core\UriParser\Aggregation\EntitySetAggregateToken.cs" Link="ALinq\UriParser\Aggregation\EntitySetAggregateToken.cs" />

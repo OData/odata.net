@@ -403,9 +403,9 @@ namespace Microsoft.OData.UriParser
 
             string functionName = function.FullName();
 
-            if (returnType.IsEntity())
+            if (returnType.IsStructured())
             {
-                boundFunction = new SingleResourceFunctionCallNode(functionName, new[] { function }, boundArguments, (IEdmEntityTypeReference)returnType.Definition.ToTypeReference(), returnSet, parent);
+                boundFunction = new SingleResourceFunctionCallNode(functionName, new[] { function }, boundArguments, returnType.AsStructured(), returnSet, parent);
             }
             else if (returnType.IsStructuredCollection())
             {

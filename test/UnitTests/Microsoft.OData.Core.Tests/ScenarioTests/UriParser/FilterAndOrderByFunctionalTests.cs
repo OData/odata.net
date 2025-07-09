@@ -1352,7 +1352,58 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             anyOnPrimitiveType.Throws<ODataException>(SRResources.MetadataBinder_LambdaParentMustBeCollection);
         }
 
-#region Custom Functions
+        [Theory]
+        [InlineData("Name eq $root/People(1245)/Name")]
+        [InlineData("Name eq $root/People/1245/Name")]
+        public void ParseDollarRootPath_WithPropertyAccess_InFilter(string filter)
+        {
+            var filterQueryNode = ParseFilter(filter, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
+            BinaryOperatorNode bod = filterQueryNode.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal);
+            bod.Left.ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPersonNameProp());
+            RootPathNode rootPathNode = bod.Right.ShouldBeRootPathNode();
+            Assert.Equal(3, rootPathNode.Path.Count);
+
+            rootPathNode.Path.Segments[0].ShouldBeEntitySetSegment(HardCodedTestModel.GetPeopleSet());
+            rootPathNode.Path.Segments[1].ShouldBeKeySegment(new KeyValuePair<string, object>("ID", 1245));
+            rootPathNode.Path.Segments[2].ShouldBePropertySegment(HardCodedTestModel.GetPersonNameProp());
+        }
+
+        [Fact]
+        public void ParseDollarRootPath_WithTypeCastAndPropertyAccess_InFilter()
+        {
+            string filter = "Name eq $root/People/1245/Fully.Qualified.Namespace.Employee/WorkEmail";
+
+            var filterQueryNode = ParseFilter(filter, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
+
+            BinaryOperatorNode bod = filterQueryNode.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal);
+            bod.Left.ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPersonNameProp());
+            RootPathNode rootPathNode = bod.Right.ShouldBeRootPathNode();
+            Assert.Equal(4, rootPathNode.Path.Count);
+
+            rootPathNode.Path.Segments[0].ShouldBeEntitySetSegment(HardCodedTestModel.GetPeopleSet());
+            rootPathNode.Path.Segments[1].ShouldBeKeySegment(new KeyValuePair<string, object>("ID", 1245));
+            rootPathNode.Path.Segments[2].ShouldBeTypeSegment(HardCodedTestModel.GetEmployeeType(), HardCodedTestModel.GetPersonType());
+            rootPathNode.Path.Segments[3].ShouldBePropertySegment(HardCodedTestModel.GetEmployeeWorkEmailProp());
+        }
+
+        [Fact]
+        public void ParseDollarRootPath_WithDollarCount_InFilter()
+        {
+            string filter = "$root/People/$count lt ID";
+
+            var filterQueryNode = ParseFilter(filter, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
+            BinaryOperatorNode bod = filterQueryNode.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.LessThan);
+            ConvertNode convertNode = bod.Right.ShouldBeConvertQueryNode(EdmCoreModel.Instance.GetInt32(true));
+            convertNode.Source.ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPersonIdProp());
+
+            RootPathNode rootPathNode = bod.Left.ShouldBeRootPathNode();
+            Assert.Equal(2, rootPathNode.Path.Count);
+
+            rootPathNode.Path.Segments[0].ShouldBeEntitySetSegment(HardCodedTestModel.GetPeopleSet());
+            Assert.Same(CountSegment.Instance, rootPathNode.Path.Segments[1]);
+        }
+
+        #region Custom Functions
 
         [Fact]
         public void FunctionWithASingleOverloadWorksInFilter()

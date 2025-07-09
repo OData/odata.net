@@ -15,47 +15,112 @@ namespace Microsoft.OData.Client.E2E.Tests.Batch.Server
 {
     public class BanksController : ODataController
     {
-        private static CommonEndToEndDataSource _dataSource = CommonEndToEndDataSource.CreateInstance();
-
         [EnableQuery]
-        [HttpGet("odata/Banks")]
         public IActionResult Get()
         {
-            var banks = _dataSource.Banks;
-            return Ok(banks);
+            return Ok(Backend.DataSource.Banks);
+        }
+
+        [EnableQuery]
+        public IActionResult Get(int key)
+        {
+            var bank = Backend.DataSource.Banks.FirstOrDefault(b => b.Id == key);
+            if (bank == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(bank);
         }
 
         // POST: odata/Banks
         [EnableQuery]
-        [HttpPost("odata/Banks")]
         public IActionResult Post([FromBody] Bank bank)
         {
             if (bank == null)
             {
                 return BadRequest();
             }
-            _dataSource.Banks.Add(bank);
+
+            Backend.DataSource.Banks.Add(bank);
             return Created(bank);
         }
 
-        // POST: /odata/$1/BankAccounts
-        [HttpPost]
-        [Route("odata/Banks({id})/BankAccounts")]
-        public IActionResult PostBankAccount([FromODataUri] int id, [FromBody] BankAccount bankAccount)
+        // PUT: odata/Banks({key})/BankAccounts/$ref
+        [AcceptVerbs("POST", "PUT")]
+        public IActionResult CreateRefToBankAccounts(int key, [FromBody] Uri link)
+        {
+            if (link == null)
+            {
+                return BadRequest();
+            }
+
+            if (!Backend.TryGetKeyFromUri(link, out int relatedKey))
+            {
+                return NotFound();
+            }
+
+            var bank = Backend.DataSource.Banks.FirstOrDefault(b => b.Id == key);
+            var bankAccount = Backend.DataSource.BankAccounts.FirstOrDefault(b => b.Id == relatedKey);
+            if (bank.BankAccounts?.FirstOrDefault(d => d.Id == bankAccount.Id) != null)
+            {
+                return Conflict("The bank account is already associated with the bank.");
+            }
+
+            if (bank.BankAccounts == null)
+            {
+                bank.BankAccounts = new List<BankAccount>();
+            }
+
+            bank.BankAccounts.Add(bankAccount);
+
+            return Updated(bankAccount);
+        }
+
+        // POST: /odata/Banks({key})/BankAccounts
+        public IActionResult PostToBankAccounts([FromODataUri] int key, [FromBody] BankAccount bankAccount)
         {
             if (bankAccount == null)
             {
                 return BadRequest();
             }
 
-            var bank = _dataSource.Banks.FirstOrDefault(b => b.Id == id);
+            var bank = Backend.DataSource.Banks.FirstOrDefault(b => b.Id == key);
+
             if (bank == null)
             {
                 return NotFound();
             }
 
             bankAccount.Bank = bank;
+            Backend.DataSource.BankAccounts.Add(bankAccount);
+
             return Created(bankAccount);
+        }
+
+        // DELETE: odata/Banks({key})/BankAccounts/$ref?$id=http://localhost/odata/BankAccounts({relatedKey})
+        public IActionResult DeleteRefToBankAccounts(int key, [FromQuery(Name = "$id")] Uri link)
+        {
+            if (link == null)
+            {
+                return BadRequest();
+            }
+
+            if (!Backend.TryGetKeyFromUri(link, out int relatedKey))
+            {
+                return NotFound();
+            }
+
+            var bank = Backend.DataSource.Banks.FirstOrDefault(b => b.Id == key);
+            var bankAccount = Backend.DataSource.BankAccounts.FirstOrDefault(b => b.Id == relatedKey);
+            
+            if (bank == null || bankAccount == null || bank.BankAccounts?.FirstOrDefault(d => d.Id == bankAccount.Id) == null)
+            {
+                return NotFound();
+            }
+
+            bank.BankAccounts.Remove(bankAccount);
+            return NoContent();
         }
     }
 }
