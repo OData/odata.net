@@ -749,6 +749,7 @@ namespace Microsoft.OData.Tests.UriParser
             var FullyQualifiedNamespaceContextPet4Set = FullyQualifiedNamespaceContext.AddEntitySet("Pet4Set", FullyQualifiedNamespacePet4);
             var FullyQualifiedNamespaceContextPet5Set = FullyQualifiedNamespaceContext.AddEntitySet("Pet5Set", FullyQualifiedNamespacePet5);
             var FullyQualifiedNamespaceContextPet6Set = FullyQualifiedNamespaceContext.AddEntitySet("Pet6Set", FullyQualifiedNamespacePet6);
+            var FullyQualifiedNamespaceContextFilmSet = FullyQualifiedNamespaceContext.AddEntitySet("Films", FullyQualifiedNamespaceFilm);
             var FullyQualifiedNamespaceContextChimera = FullyQualifiedNamespaceContext.AddEntitySet("Chimeras", FullyQualifiedNamespaceChimera);
 
             FullyQualifiedNamespaceContext.AddEntitySet("Shapes", fullyQualifiedNamespaceShape);
@@ -921,6 +922,7 @@ namespace Microsoft.OData.Tests.UriParser
         <EntitySet Name=""Pet4Set"" EntityType=""Fully.Qualified.Namespace.Pet4"" />
         <EntitySet Name=""Pet5Set"" EntityType=""Fully.Qualified.Namespace.Pet5"" />
         <EntitySet Name=""Pet6Set"" EntityType=""Fully.Qualified.Namespace.Pet6"" />
+        <EntitySet Name=""Films"" EntityType=""Fully.Qualified.Namespace.Film"" />
         <EntitySet Name=""Chimeras"" EntityType=""Fully.Qualified.Namespace.Chimera"" />
         <Singleton Name=""Boss"" Type=""Fully.Qualified.Namespace.Person"">
           <NavigationPropertyBinding Path=""MyDog"" Target=""Dogs"" />
@@ -1040,6 +1042,7 @@ namespace Microsoft.OData.Tests.UriParser
         <Property Name=""MyOpenAddress"" Type=""Fully.Qualified.Namespace.OpenAddress"" />
         <Property Name=""PreviousAddresses"" Type=""Collection(Fully.Qualified.Namespace.Address)"" />
         <Property Name=""FavoriteColors"" Type=""Collection(Fully.Qualified.Namespace.ColorPattern)"" />
+        <Property Name=""SecondFavoriteNumber"" Type=""Edm.Int16"" />
         <Property Name=""FavoriteNumber"" Type=""Fully.Qualified.Namespace.UInt16"" />
         <Property Name=""RelatedIDs"" Type=""Collection(Edm.Int32)"" Nullable=""false"" />
         <Property Name=""RelatedSSNs"" Type=""Collection(Edm.String)"" Nullable=""true"" />
@@ -1673,6 +1676,11 @@ namespace Microsoft.OData.Tests.UriParser
             return TestModel.FindEntityContainer("Context").FindEntitySet("Pet6Set");
         }
 
+        public static IEdmEntitySet GetFilmSet()
+        {
+            return TestModel.FindEntityContainer("Context").FindEntitySet("Films");
+        }
+
         public static IEdmEntitySet GetPeopleSet()
         {
             return TestModel.FindEntityContainer("Context").FindEntitySet("People");
@@ -2265,6 +2273,11 @@ namespace Microsoft.OData.Tests.UriParser
         public static IEdmFunction GetFunctionForGetMyDog()
         {
             return TestModel.FindOperations("Fully.Qualified.Namespace.GetMyDog").Single() as IEdmFunction;
+        }
+
+        public static IEdmFunction GetFunctionForGetMyDogGetSomeAddressFromPerson()
+        {
+            return TestModel.FindOperations("Fully.Qualified.Namespace.GetSomeAddressFromPerson").Single() as IEdmFunction;
         }
 
         public static IEdmFunctionImport GetFunctionImportIsAddressGood()

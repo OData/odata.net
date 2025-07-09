@@ -1,2 +1,0 @@
-﻿
-<%@ ServiceHost Language="C#" Factory="Microsoft.OData.Service.DataServiceHostFactory" Service="Microsoft.Test.OData.Services.PublicProvider.EFService" %>

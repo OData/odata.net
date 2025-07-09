@@ -7,15 +7,20 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
+using System.Text;
+using System.Xml;
 using Microsoft.OData.Core;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Vocabularies;
 using Microsoft.OData.Edm.Vocabularies.Community.V1;
 using Microsoft.OData.UriParser;
+using Microsoft.OData.UriParser.Aggregation;
 using Microsoft.OData.UriParser.Validation;
 using Xunit;
+using Microsoft.OData.Metadata;
 
 namespace Microsoft.OData.Tests.UriParser
 {
@@ -26,6 +31,117 @@ namespace Microsoft.OData.Tests.UriParser
     {
         private readonly Uri ServiceRoot = new Uri("http://host");
         private readonly Uri FullUri = new Uri("http://host/People");
+
+        [Fact]
+        public void NestedFilterWithDerivedType()
+        {
+            var csdl =
+"""
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+    <edmx:DataServices>
+        <Schema Namespace="Fully.Qualified.Namespace" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+            <EntityType Name="Company">
+              <Key>
+                <PropertyRef Name="id" />
+              </Key>
+              <Property Name="id" Type="Edm.String" Nullable="false" />
+
+              <NavigationProperty Name="Employees" Type="Collection(Fully.Qualified.Namespace.Employee)" ContainsTarget="false" />
+            </EntityType>
+
+            <EntityType Name="Person">
+              <Key>
+                <PropertyRef Name="id" />
+              </Key>
+              <Property Name="id" Type="Edm.String" Nullable="false" />
+
+              <Property Name="FirstName" Type="Edm.String" Nullable="false" />
+              <Property Name="LastName" Type="Edm.String" Nullable="false" />
+            </EntityType>
+
+            <EntityType Name="Employee" BaseType="Fully.Qualified.Namespace.Person">
+              <Property Name="Salary" Type="Edm.Int32" Nullable="false" />
+            </EntityType>
+
+            <EntityContainer Name="Container">
+              <EntitySet Name="Companies" EntityType="Fully.Qualified.Namespace.Company">
+                  <NavigationPropertyBinding Path="Employees" Target="People" />
+              </EntitySet>
+              <EntitySet Name="People" EntityType="Fully.Qualified.Namespace.Person" />
+            </EntityContainer>
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>
+""";
+
+            IEdmModel model;
+            using (var stream = new MemoryStream(Encoding.UTF8.GetBytes(csdl)))
+            {
+                using (var xmlReader = XmlReader.Create(stream))
+                {
+                    Assert.True(
+                        CsdlReader.TryParse(xmlReader, out model, out var errors), 
+                        string.Join(Environment.NewLine, errors.Select(error => error.ErrorMessage)));
+                }
+            }
+
+            var uri = new Uri("/Companies?$expand=Employees($filter=Salary gt 10000)", UriKind.Relative);
+            var odataUri = new ODataUriParser(model, uri).ParseUri();
+
+            Assert.NotNull(odataUri.SelectAndExpand);
+            var selectedItem = odataUri.SelectAndExpand.SelectedItems.Single();
+            var expandedNavigationSelectItem = Assert.IsType<ExpandedNavigationSelectItem>(selectedItem);
+            Assert.NotNull(expandedNavigationSelectItem.FilterOption);
+            var binaryOperationNode = Assert.IsType<BinaryOperatorNode>(expandedNavigationSelectItem.FilterOption.Expression);
+            var singleValuePropertyAccessNode = Assert.IsType<SingleValuePropertyAccessNode>(binaryOperationNode.Left);
+            Assert.Equal("Salary", singleValuePropertyAccessNode.Property.Name);
+        }
+
+        [Fact]
+        public void AverageUint16()
+        {
+            var uriParser = new ODataUriParser(
+                HardCodedTestModel.TestModel, 
+                ServiceRoot, 
+                new Uri("http://host/People?$apply=aggregate(FavoriteNumber with average as AverageFavoriteNumber)"));
+
+            var odataUri = uriParser.ParseUri();
+
+            var apply = odataUri.Apply;
+            Assert.NotNull(apply);
+            var transformations = apply.Transformations.ToList();
+            Assert.Single(transformations);
+            var aggregateTransformationNode = transformations[0] as AggregateTransformationNode;
+            Assert.NotNull(aggregateTransformationNode);
+            var aggregateExpressions = aggregateTransformationNode.AggregateExpressions.ToList();
+            Assert.Single(aggregateExpressions);
+            var averageExpression = aggregateExpressions[0] as AggregateExpression;
+            Assert.NotNull(averageExpression);
+            Assert.Equal(AggregationMethod.Average, averageExpression.Method);
+        }
+
+        [Fact]
+        public void AverageInt16()
+        {
+            var uriParser = new ODataUriParser(
+                HardCodedTestModel.TestModel,
+                ServiceRoot, 
+                new Uri("http://host/People?$apply=aggregate(SecondFavoriteNumber with average as AverageFavoriteNumber)"));
+
+            var odataUri = uriParser.ParseUri();
+
+            var apply = odataUri.Apply;
+            Assert.NotNull(apply);
+            var transformations = apply.Transformations.ToList();
+            Assert.Single(transformations);
+            var aggregateTransformationNode = transformations[0] as AggregateTransformationNode;
+            Assert.NotNull(aggregateTransformationNode);
+            var aggregateExpressions = aggregateTransformationNode.AggregateExpressions.ToList();
+            Assert.Single(aggregateExpressions);
+            var averageExpression = aggregateExpressions[0] as AggregateExpression;
+            Assert.NotNull(averageExpression);
+            Assert.Equal(AggregationMethod.Average, averageExpression.Method);
+        }
 
         [Theory]
         [InlineData(true)]
@@ -381,6 +497,69 @@ namespace Microsoft.OData.Tests.UriParser
         }
 
         [Fact]
+        public void ParameterizedKeyShouldWork()
+        {
+            ODataPath pathSegment = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://host"), new Uri("http://host/People(ID = @id)")).ParsePath();
+
+            Assert.Equal(2, pathSegment.Count);
+            pathSegment.FirstSegment.ShouldBeEntitySetSegment(HardCodedTestModel.TestModel.FindDeclaredEntitySet("People"));
+            KeySegment keySegment = pathSegment.LastSegment as KeySegment;
+            Assert.NotNull(keySegment);
+            KeyValuePair<string, object>[] keys = keySegment.Keys.ToArray();
+            Assert.Single(keys);
+            Assert.Equal("ID", keys[0].Key);
+            FunctionParameterAliasToken parameterAliasToken = keys[0].Value as FunctionParameterAliasToken;
+            Assert.NotNull(parameterAliasToken);
+            Assert.Equal("@id", parameterAliasToken.Alias);
+            Assert.True(parameterAliasToken.ExpectedParameterType.IsInt32());
+        }
+
+        [Fact]
+        public void MultiPartParameterizedKeyShouldWork()
+        {
+            ODataPath pathSegment = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://host"), new Uri("http://host/Lions(ID1=@id1,ID2=@id2)")).ParsePath();
+
+            Assert.Equal(2, pathSegment.Count);
+            pathSegment.FirstSegment.ShouldBeEntitySetSegment(HardCodedTestModel.TestModel.FindDeclaredEntitySet("Lions"));
+            KeySegment keySegment = pathSegment.LastSegment as KeySegment;
+            Assert.NotNull(keySegment);
+            KeyValuePair<string, object>[] keys = keySegment.Keys.ToArray();
+            Assert.Equal(2, keys.Length);
+
+            Assert.Equal("ID1", keys[0].Key);
+            FunctionParameterAliasToken parameterAliasToken = keys[0].Value as FunctionParameterAliasToken;
+            Assert.NotNull(parameterAliasToken);
+            Assert.Equal("@id1", parameterAliasToken.Alias);
+            Assert.True(parameterAliasToken.ExpectedParameterType.IsInt32());
+
+            Assert.Equal("ID2", keys[1].Key);
+            parameterAliasToken = keys[1].Value as FunctionParameterAliasToken;
+            Assert.NotNull(parameterAliasToken);
+            Assert.Equal("@id2", parameterAliasToken.Alias);
+            Assert.True(parameterAliasToken.ExpectedParameterType.IsInt32());
+        }
+
+        [Fact]
+        public void MultiPartSemiParameterizedKeyShouldWork()
+        {
+            ODataPath pathSegment = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://host"), new Uri("http://host/Lions(ID1=1,ID2=@id2)")).ParsePath();
+
+            Assert.Equal(2, pathSegment.Count);
+            pathSegment.FirstSegment.ShouldBeEntitySetSegment(HardCodedTestModel.TestModel.FindDeclaredEntitySet("Lions"));
+            KeySegment keySegment = pathSegment.LastSegment as KeySegment;
+            Assert.NotNull(keySegment);
+            KeyValuePair<string, object>[] keys = keySegment.Keys.ToArray();
+            Assert.Equal(2, keys.Length);
+            Assert.Equal("ID1", keys[0].Key);
+            Assert.Equal(1, keys[0].Value);
+            Assert.Equal("ID2", keys[1].Key);
+            FunctionParameterAliasToken parameterAliasToken = keys[1].Value as FunctionParameterAliasToken;
+            Assert.NotNull(parameterAliasToken);
+            Assert.Equal("@id2", parameterAliasToken.Alias);
+            Assert.True(parameterAliasToken.ExpectedParameterType.IsInt32());
+        }
+
+        [Fact]
         public void AlternateKeyShouldWork()
         {
             ODataPath pathSegment = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://host"), new Uri("http://host/People(SocialSN = \'1\')"))
@@ -391,6 +570,80 @@ namespace Microsoft.OData.Tests.UriParser
             Assert.Equal(2, pathSegment.Count);
             pathSegment.FirstSegment.ShouldBeEntitySetSegment(HardCodedTestModel.TestModel.FindDeclaredEntitySet("People"));
             pathSegment.LastSegment.ShouldBeKeySegment(new KeyValuePair<string, object>("SocialSN", "1"));
+        }
+
+        [Fact]
+        public void ParameterizedAlternateKeyShouldWork()
+        {
+            ODataPath pathSegment = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://host"), new Uri("http://host/People(SocialSN = @SocialSN)"))
+            {
+                Resolver = new AlternateKeysODataUriResolver(HardCodedTestModel.TestModel)
+            }.ParsePath();
+
+            Assert.Equal(2, pathSegment.Count);
+            pathSegment.FirstSegment.ShouldBeEntitySetSegment(HardCodedTestModel.TestModel.FindDeclaredEntitySet("People"));
+            KeySegment keySegment = pathSegment.LastSegment as KeySegment;
+            Assert.NotNull(keySegment);
+            KeyValuePair<string,object>[] keys = keySegment.Keys.ToArray();  
+            Assert.Single(keys);
+            Assert.Equal("SocialSN", keys[0].Key);
+            FunctionParameterAliasToken parameterAliasToken = keys[0].Value as FunctionParameterAliasToken;
+            Assert.NotNull(parameterAliasToken);
+            Assert.Equal("@SocialSN", parameterAliasToken.Alias);
+            Assert.True(parameterAliasToken.ExpectedParameterType.IsString());
+        }
+
+        [Fact]
+        public void MultiPartParameterizedAlternateKeyShouldWork()
+        {
+            ODataPath pathSegment = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://host"), new Uri("http://host/People(NameAlias=@nameAlias,FirstNameAlias=@firstNameAlias)"))
+            {
+                Resolver = new AlternateKeysODataUriResolver(HardCodedTestModel.TestModel)
+            }.ParsePath();
+
+            Assert.Equal(2, pathSegment.Count);
+            pathSegment.FirstSegment.ShouldBeEntitySetSegment(HardCodedTestModel.TestModel.FindDeclaredEntitySet("People"));
+            KeySegment keySegment = pathSegment.LastSegment as KeySegment;
+            Assert.NotNull(keySegment);
+            KeyValuePair<string, object>[] keys = keySegment.Keys.ToArray();
+            Assert.Equal(2, keys.Length);
+
+            Assert.Equal("NameAlias", keys[0].Key);
+            FunctionParameterAliasToken parameterAliasToken = keys[0].Value as FunctionParameterAliasToken;
+            Assert.NotNull(parameterAliasToken);
+            Assert.Equal("@nameAlias", parameterAliasToken.Alias);
+            Assert.True(parameterAliasToken.ExpectedParameterType.IsString());
+
+            Assert.Equal("FirstNameAlias", keys[1].Key);
+            parameterAliasToken = keys[1].Value as FunctionParameterAliasToken;
+            Assert.NotNull(parameterAliasToken);
+            Assert.Equal("@firstNameAlias", parameterAliasToken.Alias);
+            Assert.Equal(parameterAliasToken.ExpectedParameterType.Definition, HardCodedTestModel.TestModel.FindType("Fully.Qualified.Namespace.NameType"));
+        }
+
+        [Fact]
+        public void MultiPartSemiParameterizedAlternateKeyShouldWork()
+        {
+            ODataPath pathSegment = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://host"), new Uri("http://host/People(NameAlias='name',FirstNameAlias=@firstNameAlias)"))
+            {
+                Resolver = new AlternateKeysODataUriResolver(HardCodedTestModel.TestModel)
+            }.ParsePath();
+
+            Assert.Equal(2, pathSegment.Count);
+            pathSegment.FirstSegment.ShouldBeEntitySetSegment(HardCodedTestModel.TestModel.FindDeclaredEntitySet("People"));
+            KeySegment keySegment = pathSegment.LastSegment as KeySegment;
+            Assert.NotNull(keySegment);
+            KeyValuePair<string, object>[] keys = keySegment.Keys.ToArray();
+            Assert.Equal(2, keys.Length);
+
+            Assert.Equal("NameAlias", keys[0].Key);
+            Assert.Equal("name", keys[0].Value);
+
+            Assert.Equal("FirstNameAlias", keys[1].Key);
+            FunctionParameterAliasToken parameterAliasToken = keys[1].Value as FunctionParameterAliasToken;
+            Assert.NotNull(parameterAliasToken);
+            Assert.Equal("@firstNameAlias", parameterAliasToken.Alias);
+            Assert.Equal(parameterAliasToken.ExpectedParameterType.Definition, HardCodedTestModel.TestModel.FindType("Fully.Qualified.Namespace.NameType"));
         }
 
         [Fact]

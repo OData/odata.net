@@ -842,6 +842,33 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.Json
                                                     "\"ContainedCollectionNavProp@odata.navigationLink\":\"http://example.org/odata.svc/navigation\"," +
                                                     "\"ContainedCollectionNavProp@odata.count\":1," +
                                                     "\"ContainedCollectionNavProp\":[]" +
+                                               "}" +
+                                            "]" +
+                                        "}";
+            Assert.Equal(expectedPayload, result);
+        }
+
+        [Fact]
+        public void WritingNestedInlinecountWithoutContentTest()
+        {
+            this.containedCollectionNavLink.Count = 42;
+            ODataItem[] itemsToWrite = new ODataItem[]
+            {
+                new ODataResourceSet(),
+                this.entryWithOnlyData1,
+                this.containedCollectionNavLink
+            };
+
+            string resourcePath = "EntitySet";
+            string result = this.GetWriterOutputForContentTypeAndKnobValue("application/json;odata.metadata=minimal", true, itemsToWrite, Model, EntitySet, EntityType, null, null, resourcePath);
+
+            string expectedPayload = "{" +
+                                            "\"@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet\"," +
+                                            "\"value\":[" +
+                                                "{" +
+                                                    "\"ID\":101,\"Name\":\"Alice\"," +
+                                                    "\"ContainedCollectionNavProp@odata.navigationLink\":\"http://example.org/odata.svc/navigation\"," +
+                                                    "\"ContainedCollectionNavProp@odata.count\":42" +
                                                 "}" +
                                             "]" +
                                         "}";
@@ -921,6 +948,53 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.Json
             Assert.Equal(1900, innerFeed.Count);
             ODataResourceSet topFeed = feedList[1];
             Assert.Null(topFeed.Count);
+        }
+
+        [Fact]
+        public void ReadingNestedInlinecountWithoutContentTest()
+        {
+            string payload = "{" +
+                                "\"@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet\"," +
+                                "\"value\":[" +
+                                    "{" +
+                                        "\"ID\":101,\"Name\":\"Alice\"," +
+                                        "\"ContainedCollectionNavProp@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet(101)/ContainedCollectionNavProp\"," +
+                                        "\"ContainedCollectionNavProp@odata.navigationLink\":\"http://example.org/odata.svc/navigation\"," +
+                                        "\"ContainedCollectionNavProp@odata.count\":51" +
+                                    "}" +
+                                "]" +
+                            "}";
+            InMemoryMessage message = new InMemoryMessage();
+            message.SetHeader("Content-Type", "application/json;odata.metadata=minimal");
+            message.Stream = new MemoryStream(Encoding.UTF8.GetBytes(payload));
+            List<ODataResourceSet> feedList = new List<ODataResourceSet>();
+
+            ODataNestedResourceInfo nestedResourceInfo = null;
+            using (var messageReader = new ODataMessageReader((IODataResponseMessage)message, null, Model))
+            {
+                var reader = messageReader.CreateODataResourceSetReader();
+                while (reader.Read())
+                {
+                    switch (reader.State)
+                    {
+                        case ODataReaderState.ResourceSetEnd:
+                            feedList.Add(reader.Item as ODataResourceSet);
+                            break;
+
+                        case ODataReaderState.NestedResourceInfoStart:
+                            //  The reader will return nested resource infos for all navigation properties since by default all properties are selected.
+                            if (reader.Item is ODataNestedResourceInfo nestedInfo && nestedInfo.Name == "ContainedCollectionNavProp")
+                            {
+                                nestedResourceInfo = nestedInfo;
+                            }
+                            break;
+                    }
+                }
+            }
+
+            Assert.Single(feedList); // only contains the toplevel
+            Assert.NotNull(nestedResourceInfo);
+            Assert.Equal(51, nestedResourceInfo.Count);
         }
         #endregion Inlinecount Tests
 

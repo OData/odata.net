@@ -454,7 +454,7 @@ namespace Microsoft.OData.UriParser
 
             ODataExpandPath pathToNavProp = new ODataExpandPath(pathSoFar);
 
-            IEdmTypeReference elementTypeReference = hasDerivedTypeSegment ? derivedType.ToTypeReference() : null;
+            IEdmTypeReference elementTypeReference = hasDerivedTypeSegment ? derivedType.ToTypeReference() : currentNavProp.ToEntityType().ToTypeReference();
 
             // $apply
             ApplyClause applyOption = BindApply(tokenIn.ApplyOptions, this.ResourcePathNavigationSource, targetNavigationSource, elementTypeReference);
