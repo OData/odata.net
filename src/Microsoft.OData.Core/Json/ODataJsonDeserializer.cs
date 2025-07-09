@@ -278,9 +278,12 @@ namespace Microsoft.OData.Json
             {
                 // If the Base uri string is http://odata.org/test
                 // The MetadataDocumentUri will be http://odata.org/test/$metadata
-                // If the contextUriAnnotation value is Customers(1)/Name or $metadata#Customers(1)/Name
+                // If the contextUriAnnotation value is Customers(1)/Name, $metadata#Customers(1)/Name, or ../$metadata#Customers(1)/Name
                 // The generated context uri will be http://odata.org/test/$metadata#Customers(1)/Name
                 ODataUri oDataUri = new ODataUri() { ServiceRoot = this.BaseUri };
+
+                contextUriAnnotationValue = contextUriAnnotationValue.TrimStart('/', '.');
+
                 contextUriAnnotationValue = contextUriAnnotationValue.StartsWith("$metadata#", StringComparison.OrdinalIgnoreCase)
                     ? this.BaseUri + contextUriAnnotationValue
                     : oDataUri.MetadataDocumentUri.ToString() + ODataConstants.ContextUriFragmentIndicator + contextUriAnnotationValue;
