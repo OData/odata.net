@@ -217,6 +217,32 @@ public class ClientKeyAsSegmentTests : EndToEndTestBase<ClientKeyAsSegmentTests.
     }
 
     [Fact]
+    public void MultipleNavigationAndOfTypeInQuery_VerifyQuery()
+    {
+        // Arrange
+        var contextWrapper = CreateWrappedContext();
+        contextWrapper.UrlKeyDelimiter = DataServiceUrlKeyDelimiter.Parentheses;
+
+        // Act
+        var query = (
+            from product in contextWrapper.Products.OfType<DiscontinuedProduct>()
+            from related in product.RelatedProducts.OfType<DiscontinuedProduct>()
+            from photo in related.Photos
+            where
+                product.ProductId == -9 &&
+                related.ProductId == -9 &&
+                photo.PhotoId == -4 &&
+                photo.ProductId == -4
+
+            select photo) as IQueryable<ProductPhoto>;
+
+        // Assert
+        Assert.EndsWith(
+            "/Products/Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.DiscontinuedProduct(-9)/RelatedProducts/Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.DiscontinuedProduct(-9)/Photos?$filter=PhotoId eq -4 and ProductId eq -4",
+            query?.ToString());
+    }
+
+    [Fact]
     public void AttachToWithKeyAsSegment()
     {
         // Arrange

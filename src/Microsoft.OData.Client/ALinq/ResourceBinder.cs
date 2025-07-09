@@ -331,8 +331,6 @@ namespace Microsoft.OData.Client
 
             if (nonKeyPredicates != null && nonKeyPredicates.Count > 0)
             {
-                // If there is any non-key predicate, everything must go in filter statement,
-                target.UseFilterAsPredicate = true;
                 keyPredicates = null;
             }
             else
