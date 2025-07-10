@@ -32,7 +32,6 @@ namespace Microsoft.OData.Client
         internal SingletonResourceExpression(Type type, Expression source, Expression memberExpression, Type resourceType, List<string> expandPaths, CountOption countOption, Dictionary<ConstantExpression, ConstantExpression> customQueryOptions, ProjectionQueryOptionExpression projection, Type resourceTypeAs, Version uriVersion) :
             base(type, source, memberExpression, resourceType, expandPaths, countOption, customQueryOptions, projection, resourceTypeAs, uriVersion)
         {
-            UseFilterAsPredicate = true;
         }
 
         /// <summary>
@@ -54,7 +53,6 @@ namespace Microsoft.OData.Client
         internal SingletonResourceExpression(Type type, Expression source, Expression memberExpression, Type resourceType, List<string> expandPaths, CountOption countOption, Dictionary<ConstantExpression, ConstantExpression> customQueryOptions, ProjectionQueryOptionExpression projection, Type resourceTypeAs, Version uriVersion, string functionName, Dictionary<string, string> functionParameters, bool isAction) :
             base(type, source, memberExpression, resourceType, expandPaths, countOption, customQueryOptions, projection, resourceTypeAs, uriVersion, functionName, functionParameters, isAction)
         {
-            UseFilterAsPredicate = true;
         }
 
         /// <summary>
