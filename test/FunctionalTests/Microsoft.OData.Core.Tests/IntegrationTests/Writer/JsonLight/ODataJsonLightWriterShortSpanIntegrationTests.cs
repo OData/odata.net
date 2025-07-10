@@ -309,7 +309,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
         [Fact]
         public void ShouldWriteNullPropertyValueForResponseEntryPayloadWithoutUserModel()
         {
-            var entry = new ODataResource { TypeName = "NS.MyDerivedEntityType", Properties = new[] { new ODataProperty { Name = "StringProperty", Value = new ODataNullValue() } } };
+            var entry = new ODataResource { TypeName = "NS.MyDerivedEntityType", Properties = new[] { new ODataProperty { Name = "StringProperty", Value = ODataNullValue.Instance } } };
             const string expectedPayload = "{\"@odata.context\":\"http://odata.org/test/$metadata#MySet/$entity\",\"@odata.type\":\"#NS.MyDerivedEntityType\",\"StringProperty\":null}";
             this.WriteNestedItemsAndValidatePayload(entitySetFullName: "MySet", derivedEntityTypeFullName: null, nestedItemToWrite: new[] { entry }, expectedPayload: expectedPayload, writingResponse: true);
         }
@@ -317,7 +317,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
         [Fact]
         public void ShouldWriteNullPropertyValueForResponseEntryPayloadWithUserModel()
         {
-            var entry = new ODataResource { TypeName = "NS.MyDerivedEntityType", Properties = new[] { new ODataProperty { Name = "StringProperty", Value = new ODataNullValue() } } };
+            var entry = new ODataResource { TypeName = "NS.MyDerivedEntityType", Properties = new[] { new ODataProperty { Name = "StringProperty", Value = ODataNullValue.Instance } } };
             const string expectedPayload = "{\"@odata.context\":\"http://odata.org/test/$metadata#MySet/$entity\",\"@odata.type\":\"#NS.MyDerivedEntityType\",\"StringProperty\":null}";
             this.WriteNestedItemsAndValidatePayload(entitySet: this.entitySet, entityType: null, nestedItemToWrite: new[] { entry }, expectedPayload: expectedPayload, writingResponse: true);
         }
@@ -325,7 +325,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
         [Fact]
         public void ShouldWriteNullPropertyValueForRequestEntryPayloadWithoutUserModel()
         {
-            var entry = new ODataResource { TypeName = "NS.MyDerivedEntityType", Properties = new[] { new ODataProperty { Name = "StringProperty", Value = new ODataNullValue() } } };
+            var entry = new ODataResource { TypeName = "NS.MyDerivedEntityType", Properties = new[] { new ODataProperty { Name = "StringProperty", Value = ODataNullValue.Instance } } };
             const string expectedPayload = "{\"@odata.type\":\"#NS.MyDerivedEntityType\",\"StringProperty\":null}";
             this.WriteNestedItemsAndValidatePayload(entitySetFullName: null, derivedEntityTypeFullName: null, nestedItemToWrite: new[] { entry }, expectedPayload: expectedPayload, writingResponse: false);
         }
@@ -333,7 +333,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
         [Fact]
         public void ShouldWriteNullPropertyValueForRequestEntryPayloadWithUserModel()
         {
-            var entry = new ODataResource { TypeName = "NS.MyDerivedEntityType", Properties = new[] { new ODataProperty { Name = "StringProperty", Value = new ODataNullValue() } } };
+            var entry = new ODataResource { TypeName = "NS.MyDerivedEntityType", Properties = new[] { new ODataProperty { Name = "StringProperty", Value = ODataNullValue.Instance } } };
             const string expectedPayload = "{\"@odata.context\":\"http://odata.org/test/$metadata#NS.MyDerivedEntityType\",\"@odata.type\":\"#NS.MyDerivedEntityType\",\"StringProperty\":null}";
             this.WriteNestedItemsAndValidatePayload(entitySet: null, entityType: null, nestedItemToWrite: new[] { entry }, expectedPayload: expectedPayload, writingResponse: false);
         }

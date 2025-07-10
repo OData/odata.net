@@ -298,7 +298,7 @@ namespace Microsoft.OData.Tests.Json
                 Assert.Equal(1, verifierCalls);
                 verifierCalls++;
             };
-            this.jsonLightInstanceAnnotationWriter.WriteInstanceAnnotation(new ODataInstanceAnnotation(term, new ODataNullValue()));
+            this.jsonLightInstanceAnnotationWriter.WriteInstanceAnnotation(new ODataInstanceAnnotation(term, ODataNullValue.Instance));
             Assert.Equal(2, verifierCalls);
         }
 
@@ -347,7 +347,7 @@ namespace Microsoft.OData.Tests.Json
                 Assert.Equal(1, verifierCalls);
                 verifierCalls++;
             };
-            this.jsonLightInstanceAnnotationWriter.WriteInstanceAnnotation(new ODataInstanceAnnotation(term, new ODataNullValue()));
+            this.jsonLightInstanceAnnotationWriter.WriteInstanceAnnotation(new ODataInstanceAnnotation(term, ODataNullValue.Instance));
             Assert.Equal(2, verifierCalls);
         }
 
@@ -361,7 +361,7 @@ namespace Microsoft.OData.Tests.Json
                 EdmCoreModel.Instance.GetInt32(isNullable: false)));
 
             string term = "My.Namespace.NotNullable";
-            Action action = () => this.jsonLightInstanceAnnotationWriter.WriteInstanceAnnotation(new ODataInstanceAnnotation(term, new ODataNullValue()));
+            Action action = () => this.jsonLightInstanceAnnotationWriter.WriteInstanceAnnotation(new ODataInstanceAnnotation(term, ODataNullValue.Instance));
             action.Throws<ODataException>(ODataErrorStrings.JsonLightInstanceAnnotationWriter_NullValueNotAllowedForInstanceAnnotation(term, "Edm.Int32"));
         }
 

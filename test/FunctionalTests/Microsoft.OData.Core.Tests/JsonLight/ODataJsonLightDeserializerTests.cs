@@ -813,7 +813,7 @@ namespace Microsoft.OData.Tests.JsonLight
             this.messageReaderSettings = new ODataMessageReaderSettings();
             ODataJsonLightPropertyAndValueDeserializer deserializer = new ODataJsonLightPropertyAndValueDeserializer(this.CreateJsonLightInputContext("{\"@odata.context\":\"http://odata.org/test/$metadata#Customers(1)/Name\",\"value\":null}", model));
             ODataProperty property = deserializer.ReadTopLevelProperty(primitiveTypeRef);
-            TestUtils.AssertODataValueAreEqual(new ODataNullValue(), property.ODataValue);
+            TestUtils.AssertODataValueAreEqual(ODataNullValue.Instance, property.ODataValue);
         }
 
         [Fact]
@@ -824,7 +824,7 @@ namespace Microsoft.OData.Tests.JsonLight
             this.messageReaderSettings = new ODataMessageReaderSettings();
             ODataJsonLightPropertyAndValueDeserializer deserializer = new ODataJsonLightPropertyAndValueDeserializer(this.CreateJsonLightInputContext("{\"@odata.context\":\"http://odata.org/test/$metadata#Customers(1)/Name\",\"@odata.null\":true}", model));
             ODataProperty property = deserializer.ReadTopLevelProperty(primitiveTypeRef);
-            TestUtils.AssertODataValueAreEqual(new ODataNullValue(), property.ODataValue);
+            TestUtils.AssertODataValueAreEqual(ODataNullValue.Instance, property.ODataValue);
         }
 
         [Fact]

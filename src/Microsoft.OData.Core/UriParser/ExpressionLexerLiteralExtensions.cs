@@ -79,8 +79,7 @@ namespace Microsoft.OData.UriParser
             Debug.Assert(expressionLexer.CurrentToken.Kind == ExpressionTokenKind.NullLiteral, "this.lexer.CurrentToken.InternalKind == ExpressionTokenKind.NullLiteral");
 
             expressionLexer.NextToken();
-            ODataNullValue nullValue = new ODataNullValue();
-            return nullValue;
+            return ODataNullValue.Instance;
         }
 
         /// <summary>
