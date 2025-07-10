@@ -54,7 +54,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.Json
             var originalTimeSpan = new KeyValuePair<string, ODataValue>("TimeSpan.error", new ODataPrimitiveValue(timeSpan));
             GeographyPoint geographyPoint = GeographyPoint.Create(32.0, -100.0);
             var originalGeography = new KeyValuePair<string, ODataValue>("Geography.error", new ODataPrimitiveValue(geographyPoint));
-            var originalNull = new KeyValuePair<string, ODataValue>("null.error", new ODataNullValue());
+            var originalNull = new KeyValuePair<string, ODataValue>("null.error", ODataNullValue.Instance);
 
             var resourceValue = new ODataResourceValue
             {
