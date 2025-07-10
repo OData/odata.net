@@ -122,7 +122,7 @@ public class DollarSegmentTests : EndToEndTestBase<DollarSegmentTests.TestsStart
 
         // Assert
         Assert.Equal(5, discontinuedProductDatesQuery.Length);
-        Assert.Single(discontinuedProductDatesQuery.Where(d => d.Discontinued.ToString() == "7/28/2005 1:09:56 PM +00:00"));
+        Assert.Single(discontinuedProductDatesQuery.Where(d => d.Discontinued.ToString("yyyy-MM-dd'T'HH:mm:sszzz") == "2005-07-28T13:09:56+00:00"));
     }
 
     [Fact]
@@ -137,7 +137,7 @@ public class DollarSegmentTests : EndToEndTestBase<DollarSegmentTests.TestsStart
 
         // Assert
         Assert.Equal(5, discontinuedProductDatesQuery.Length);
-        Assert.Single(discontinuedProductDatesQuery.Where(d => d.Discontinued.ToString() == "7/28/2005 1:09:56 PM +00:00"));
+        Assert.Single(discontinuedProductDatesQuery.Where(d => d.Discontinued.ToString("yyyy-MM-dd'T'HH:mm:sszzz") == "2005-07-28T13:09:56+00:00"));
     }
 
     [Fact]

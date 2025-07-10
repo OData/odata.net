@@ -177,14 +177,14 @@ namespace Microsoft.OData.Client
         /// <param name="serverTypeName">Name of the server type.</param>
         /// <param name="entityType">The client-side entity type.</param>
         /// <param name="clientFormat">The current client format.</param>
+        /// <param name="setTypeAnnotation">Whether to set the type annotation on the <see cref="ODataResource"/>.</param>
         /// <returns>An OData entry with its metadata filled in.</returns>
-        internal static ODataResource CreateODataEntry(EntityDescriptor entityDescriptor, string serverTypeName, ClientTypeAnnotation entityType, DataServiceClientFormat clientFormat)
+        internal static ODataResource CreateODataEntry(EntityDescriptor entityDescriptor, string serverTypeName, ClientTypeAnnotation entityType, DataServiceClientFormat clientFormat, bool setTypeAnnotation = true)
         {
             ODataResource entry = new ODataResource();
 
-            // If the client type name is different from the server type name, then add SerializationTypeNameAnnotation
-            // which tells ODataLib to write the type name in the annotation in the payload.
-            if (entityType.ElementTypeName != serverTypeName)
+            // Setting TypeAnnotation tells ODataLib to write the type name in the annotation in the payload.
+            if (setTypeAnnotation)
             {
                 entry.TypeAnnotation = new ODataTypeAnnotation(serverTypeName);
             }
@@ -314,15 +314,25 @@ namespace Microsoft.OData.Client
         internal void WriteEntry(EntityDescriptor entityDescriptor, IEnumerable<LinkDescriptor> relatedLinks, ODataRequestMessageWrapper requestMessage)
         {
             ClientEdmModel model = this.requestInfo.Model;
-            ClientTypeAnnotation entityType = model.GetClientTypeAnnotation(model.GetOrCreateEdmType(entityDescriptor.Entity.GetType()));
+            IEdmType actualResourceType = model.GetOrCreateEdmType(entityDescriptor.Entity.GetType());
+            ClientTypeAnnotation entityType = model.GetClientTypeAnnotation(actualResourceType);
             using (ODataMessageWriter messageWriter = Serializer.CreateMessageWriter(requestMessage, this.requestInfo, false /*isParameterPayload*/))
             {
-                ODataWriterWrapper entryWriter = ODataWriterWrapper.CreateForEntry(messageWriter, this.requestInfo.Configurations.RequestPipeline);
+                ODataWriterWrapper entryWriter = ODataWriterWrapper.CreateForEntry(messageWriter, this.requestInfo.Configurations.RequestPipeline, actualResourceType as IEdmStructuredType);
 
                 // Get the server type name using the type resolver or from the entity descriptor
                 string serverTypeName = this.requestInfo.GetServerTypeName(entityDescriptor);
 
-                var entry = CreateODataEntry(entityDescriptor, serverTypeName, entityType, this.requestInfo.Format);
+                // We don't need to set the TypeAnnotation if the instance type we're writing corresponds to the entity set's type
+                bool setTypeAnnotation = true;
+                IEdmEntitySet entitySet;
+                if (!string.IsNullOrEmpty(entityDescriptor.EntitySetName)
+                    && (entitySet = this.requestInfo.Format.ServiceModel.FindDeclaredEntitySet(entityDescriptor.EntitySetName)) != null)
+                {
+                    setTypeAnnotation = entitySet.EntityType.FullTypeName() != serverTypeName;
+                }
+
+                var entry = CreateODataEntry(entityDescriptor, serverTypeName, entityType, this.requestInfo.Format, setTypeAnnotation);
 
                 if (serverTypeName == null)
                 {
