@@ -8,12 +8,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Common\Client\ODataModelRef\CoreTerms.csdl" />
-    <None Remove="Common\Client\ODataModelRef\DeviceModelTerms.csdl" />
-    <None Remove="Common\Client\ODataModelRef\GPS.csdl" />
-    <None Remove="Common\Client\ODataModelRef\Location.csdl" />
-    <None Remove="Common\Client\ODataModelRef\Map.csdl" />
-    <None Remove="Common\Client\ODataModelRef\ODataModelRefServiceCsdl.xml" />
     <None Remove="Common\Client\Operations\OperationsServiceCsdl.xml" />
   </ItemGroup>
 
@@ -25,24 +19,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Common\Client\MultipleKeys\MultipleKeysEnumKeyServiceCsdl.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Common\Client\ODataModelRef\CoreTerms.csdl">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Common\Client\ODataModelRef\DeviceModelTerms.csdl">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Common\Client\ODataModelRef\GPS.csdl">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Common\Client\ODataModelRef\Location.csdl">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Common\Client\ODataModelRef\Map.csdl">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Common\Client\ODataModelRef\ODataModelRefServiceCsdl.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Common\Client\OpenTypes\OpenTypesODataServiceCsdl.xml">
