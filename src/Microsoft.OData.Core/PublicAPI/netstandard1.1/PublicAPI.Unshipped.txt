@@ -1,1 +1,0 @@
-static readonly Microsoft.OData.ODataNullValue.Instance -> Microsoft.OData.ODataNullValue
