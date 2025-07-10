@@ -2514,5 +2514,3 @@ override Microsoft.OData.UriParser.RootPathNode.TypeReference.get -> Microsoft.O
 override Microsoft.OData.UriParser.RootPathToken.Accept<T>(Microsoft.OData.UriParser.ISyntacticTreeVisitor<T> visitor) -> T
 override Microsoft.OData.UriParser.RootPathToken.Kind.get -> Microsoft.OData.UriParser.QueryTokenKind
 virtual Microsoft.OData.UriParser.QueryNodeVisitor<T>.Visit(Microsoft.OData.UriParser.RootPathNode nodeIn) -> T
-Microsoft.OData.ODataNestedResourceInfo.Count.get -> long?
-Microsoft.OData.ODataNestedResourceInfo.Count.set -> void
