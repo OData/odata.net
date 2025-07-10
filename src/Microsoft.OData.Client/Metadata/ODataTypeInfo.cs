@@ -321,11 +321,17 @@ namespace Microsoft.OData.Client.Metadata
                     throw Client.Error.InvalidOperation(Error.Format(SRResources.ClientType_KeysOnDifferentDeclaredType, typeName));
                 }
 
-                // Check if the key property's type is a known primitive, an enum, or a nullable generic.
+                // Check if the key property's type is a known primitive, or an enum.
                 // If it doesn't meet any of these conditions, throw an InvalidOperationException.
-                if (!PrimitiveType.IsKnownType(key.PropertyType) && !key.PropertyType.IsEnum() && !(key.PropertyType.IsGenericType() && key.PropertyType.GetGenericTypeDefinition() == typeof(System.Nullable<>) && key.PropertyType.GetGenericArguments().First().IsEnum()))
+                if (!PrimitiveType.IsKnownType(key.PropertyType) && !key.PropertyType.IsEnum() && !(key.PropertyType.IsGenericType() && key.PropertyType.GetGenericArguments()[0].IsEnum()))
                 {
                     throw Client.Error.InvalidOperation(Error.Format(SRResources.ClientType_KeysMustBeSimpleTypes, key.Name, typeName, key.PropertyType.FullName));
+                }
+
+                // Check if the key property is nullable.
+                if (key.PropertyType.IsGenericType() && key.PropertyType.GetGenericTypeDefinition() == typeof(System.Nullable<>))
+                {
+                    throw Client.Error.InvalidOperation(Error.Format(SRResources.ClientType_KeysCannotBeNullable, key.Name, typeName, key.PropertyType.FullName));
                 }
             }
 

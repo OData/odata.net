@@ -1729,7 +1729,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Client
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("CustomerId")]
-        public virtual global::System.Nullable<int> CustomerId
+        public virtual int CustomerId
         {
             get
             {
@@ -1744,8 +1744,8 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Client
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::System.Nullable<int> _CustomerId;
-        partial void OnCustomerIdChanging(global::System.Nullable<int> value);
+        private int _CustomerId;
+        partial void OnCustomerIdChanging(int value);
         partial void OnCustomerIdChanged();
         /// <summary>
         /// There are no comments for Property Thumbnail in the schema.
@@ -7937,7 +7937,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Client
         /// <param name="_source">source entity set</param>
         /// <param name="customerId">The value of customerId</param>
         public static global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.CustomerSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Customer> _source,
-            global::System.Nullable<int> customerId)
+            int customerId)
         {
             global::System.Collections.Generic.IDictionary<string, object> _keys = new global::System.Collections.Generic.Dictionary<string, object>
             {
