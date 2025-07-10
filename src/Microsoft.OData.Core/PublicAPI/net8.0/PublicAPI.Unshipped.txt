@@ -1,3 +1,7 @@
+Microsoft.OData.UriParser.CustomQueryOptionNode
+Microsoft.OData.UriParser.CustomQueryOptionNode.CustomQueryOptionNode(string name, string value) -> void
+Microsoft.OData.UriParser.CustomQueryOptionNode.Name.get -> string
+Microsoft.OData.UriParser.CustomQueryOptionNode.Value.get -> string
 Microsoft.OData.UriParser.PathCountSelectItem
 Microsoft.OData.UriParser.PathCountSelectItem.Filter.get -> Microsoft.OData.UriParser.FilterClause
 Microsoft.OData.UriParser.PathCountSelectItem.NavigationSource.get -> Microsoft.OData.Edm.IEdmNavigationSource
@@ -5,8 +9,12 @@ Microsoft.OData.UriParser.PathCountSelectItem.PathCountSelectItem(Microsoft.ODat
 Microsoft.OData.UriParser.PathCountSelectItem.PathCountSelectItem(Microsoft.OData.UriParser.ODataSelectPath selectedPath, Microsoft.OData.Edm.IEdmNavigationSource navigationSource, Microsoft.OData.UriParser.FilterClause filter, Microsoft.OData.UriParser.SearchClause search) -> void
 Microsoft.OData.UriParser.PathCountSelectItem.Search.get -> Microsoft.OData.UriParser.SearchClause
 Microsoft.OData.UriParser.PathCountSelectItem.SelectedPath.get -> Microsoft.OData.UriParser.ODataSelectPath
+Microsoft.OData.UriParser.QueryNodeKind.CustomQueryOption = 35 -> Microsoft.OData.UriParser.QueryNodeKind
+override Microsoft.OData.UriParser.CustomQueryOptionNode.Accept<T>(Microsoft.OData.UriParser.QueryNodeVisitor<T> visitor) -> T
+override Microsoft.OData.UriParser.CustomQueryOptionNode.Kind.get -> Microsoft.OData.UriParser.QueryNodeKind
 override Microsoft.OData.UriParser.PathCountSelectItem.HandleWith(Microsoft.OData.UriParser.SelectItemHandler handler) -> void
 override Microsoft.OData.UriParser.PathCountSelectItem.TranslateWith<T>(Microsoft.OData.UriParser.SelectItemTranslator<T> translator) -> T
+virtual Microsoft.OData.UriParser.QueryNodeVisitor<T>.Visit(Microsoft.OData.UriParser.CustomQueryOptionNode nodeIn) -> T
 virtual Microsoft.OData.UriParser.SelectItemHandler.Handle(Microsoft.OData.UriParser.PathCountSelectItem item) -> void
 virtual Microsoft.OData.UriParser.SelectItemTranslator<T>.Translate(Microsoft.OData.UriParser.PathCountSelectItem item) -> T
 Microsoft.OData.ODataNestedResourceInfo.Count.get -> long?
