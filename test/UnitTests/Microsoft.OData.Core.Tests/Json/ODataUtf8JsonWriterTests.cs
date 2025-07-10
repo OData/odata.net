@@ -388,7 +388,7 @@ namespace Microsoft.OData.Tests.Json
         [Fact]
         public void WriteODataValueWritesNullValue()
         {
-            var value = new ODataNullValue();
+            var value = ODataNullValue.Instance;
             this.writer.WriteODataValue(value);
             Assert.Equal("null", this.ReadStream());
         }
