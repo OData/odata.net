@@ -1,3 +1,4 @@
+static readonly Microsoft.OData.ODataNullValue.Instance -> Microsoft.OData.ODataNullValue
 Microsoft.OData.ODataResourceBase.SkipPropertyVerification.get -> bool
 Microsoft.OData.ODataResourceBase.SkipPropertyVerification.set -> void
 Microsoft.OData.UriParser.ODataPath.this[int index].get -> Microsoft.OData.UriParser.ODataPathSegment
