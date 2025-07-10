@@ -835,8 +835,8 @@ public class AsynchronousQueryTests : AsynchronousEndToEndTestBase<AsynchronousQ
 
                 Assert.Equal(9, customers.Count);
 
-                // Because the customer id is not projected, it is null -> Customer { Id = null } -> can be null
-                Assert.All(customers, c => Assert.Null(c.CustomerId));
+                // Because the customer id is not projected, it is 0 -> Customer { Id = 0 }
+                Assert.All(customers, c => Assert.Equal(0, c.CustomerId));
                 Assert.All(customers, c => Assert.NotNull(c.Name));
 
                 Assert.Equal("commastartedtotalnormaloffsetsregisteredgroupcelestialexposureconventionsimportcastclass", customers[0].Name);
@@ -871,7 +871,6 @@ public class AsynchronousQueryTests : AsynchronousEndToEndTestBase<AsynchronousQ
                 var customers = query.EndExecute(ar).ToList();
                 Assert.Equal(9, customers.Count);
 
-                Assert.All(customers, c => Assert.NotNull(c.CustomerId));
                 Assert.All(customers, c => Assert.NotEqual(0, c.CustomerId));
                 Assert.All(customers, c => Assert.NotNull(c.Name));
 
@@ -1289,7 +1288,8 @@ public class AsynchronousQueryTests : AsynchronousEndToEndTestBase<AsynchronousQ
             {
                 var customer = query.EndExecute(ar).Single();
 
-                Assert.Null(customer.CustomerId);
+                // 0 since customer id is not projected
+                Assert.Equal(0, customer.CustomerId);
                 Assert.Equal("commastartedtotalnormaloffsetsregisteredgroupcelestialexposureconventionsimportcastclass", customer.Name);
                 this.EnqueueTestComplete();
             },
