@@ -237,6 +237,20 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 });
         }
 
+        [Fact]
+        public void ParsePath_AliasInUnboundFunction_WithinDollarRootPath()
+        {
+            ParseUriAndVerify(
+                new Uri("http://gobbledygook/GetRatings(films=@c)?@c=[$root/Films(1),$root/Films(3)]"),
+                (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
+                {
+                    oDataPath.LastSegment.ShouldBeOperationImportSegment(HardCodedTestModel.GetFunctionImportForGetRatings());
+
+                    var constNode = Assert.IsType<ConstantNode>(aliasNodes["@c"]);
+                    Assert.Equal("[$root/Films(1),$root/Films(3)]", constNode.Value);
+                });
+        }
+
         #endregion
 
         #region alias in filter
