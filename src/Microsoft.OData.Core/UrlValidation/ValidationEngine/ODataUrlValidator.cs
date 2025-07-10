@@ -442,7 +442,7 @@ namespace Microsoft.OData.UriParser.Validation
         private void ValidateProperties(IEdmType edmType, ODataUrlValidationContext context)
         {
             // true if the element is added to the set; false if the element is already in the set.
-            if (edmType.TypeKind != EdmTypeKind.Primitive && context.ValidatedTypes.Add(edmType))
+            if (edmType?.TypeKind != EdmTypeKind.Primitive && context.ValidatedTypes.Add(edmType))
             {
                 IEdmStructuredType structuredType = edmType as IEdmStructuredType;
                 if (structuredType != null)
