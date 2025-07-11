@@ -494,11 +494,7 @@ namespace Microsoft.OData.UriParser
             bool? count = this.ParseCount();
             string skipToken = this.ParseSkipToken();
             string deltaToken = this.ParseDeltaToken();
-
-            // TODO:  check it shouldn't be empty
-            List<QueryNode> boundQueryOptions = new List<QueryNode>();
-
-            ODataUri odataUri = new ODataUri(this.ParameterAliasValueAccessor, path, boundQueryOptions, selectExpand, filter, orderBy, search, apply, skip, top, index, count, compute);
+            ODataUri odataUri = new ODataUri(this.ParameterAliasValueAccessor, path, CreateCustomQueryOptionNodes(this.CustomQueryOptions), selectExpand, filter, orderBy, search, apply, skip, top, index, count, compute);
             odataUri.ServiceRoot = this.serviceRoot;
             odataUri.SkipToken = skipToken;
             odataUri.DeltaToken = deltaToken;
@@ -605,6 +601,26 @@ namespace Microsoft.OData.UriParser
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Generate a list of <see cref="CustomQueryOptionNode"/> from the custom query options.
+        /// </summary>
+        /// <param name="customQueryOptions"></param>
+        /// <returns></returns>
+        private static List<CustomQueryOptionNode> CreateCustomQueryOptionNodes(IList<KeyValuePair<string, string>> customQueryOptions)
+        {
+            var customQueryOptionNodes = new List<CustomQueryOptionNode>();
+
+            if (customQueryOptions != null)
+            {
+                foreach (KeyValuePair<string,string> option in customQueryOptions)
+                {
+                    customQueryOptionNodes.Add(new CustomQueryOptionNode(option.Key, option.Value));
+                }
+            }
+
+            return customQueryOptionNodes;
         }
 
         /// <summary>

@@ -121,6 +121,13 @@ namespace Microsoft.OData
                 writeQueryPrefix = false;
             }
 
+            if (odataUri.CustomQueryOptions != null)
+            {
+                string customQueryOptionsNode = nodeToStringBuilder.TranslateCustomQueryOptions(odataUri.CustomQueryOptions);
+                queryOptions = String.IsNullOrEmpty(customQueryOptionsNode) ? queryOptions : String.Concat(WriteQueryPrefixOrSeparator(writeQueryPrefix, queryOptions), customQueryOptionsNode);
+                writeQueryPrefix = false;
+            }
+
             string res = String.Concat(odataUri.Path.ToResourcePathString(urlKeyDelimiter), queryOptions);
             return odataUri.ServiceRoot == null ? new Uri(res, UriKind.Relative) : new Uri(odataUri.ServiceRoot, new Uri(res, UriKind.Relative));
         }
