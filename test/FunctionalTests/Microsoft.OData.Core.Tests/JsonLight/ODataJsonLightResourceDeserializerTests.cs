@@ -248,6 +248,44 @@ namespace Microsoft.OData.Tests.JsonLight
         }
 
         [Fact]
+        public async Task ReadResourceContentWithODataId()
+        {
+            var payload = "{\"@odata.context\":\"http://tempuri.org/$metadata#Categories/$entity\"," +
+                "\"@odata.id\":\"http://tempuri.org/Categories(1)\"," +
+                "\"Name\":\"Food\"}";
+
+            await SetupJsonLightResourceSerializerAndRunReadResourceContextTestAsync(
+                payload,
+                this.categoriesEntitySet,
+                this.categoryEntityType,
+                (resourceState) =>
+                {
+                    var resource = resourceState.Resource;
+                    Assert.Equal(new Uri("http://tempuri.org/Categories(1)"), resource.Id);
+                    Assert.True(resource.HasExplicitODataId);
+                });
+        }
+
+        [Fact]
+        public async Task ReadResourceContentWithIdProperty()
+        {
+            var payload = "{\"@odata.context\":\"http://tempuri.org/$metadata#Categories/$entity\"," +
+                "\"Id\":1," +
+                "\"Name\":\"Food\"}";
+
+            await SetupJsonLightResourceSerializerAndRunReadResourceContextTestAsync(
+                payload,
+                this.categoriesEntitySet,
+                this.categoryEntityType,
+                (resourceState) =>
+                {
+                    var resource = resourceState.Resource;
+                    Assert.Null(resource.Id); // Null since Id is computed at ODataReaderState.ResourceEnd
+                    Assert.False(resource.HasExplicitODataId);
+                });
+        }
+
+        [Fact]
         public async Task ReadResourceContentWithODataAnnotationsAsync()
         {
             var payload = "{\"@odata.context\":\"http://tempuri.org/$metadata#Categories/$entity\"," +
