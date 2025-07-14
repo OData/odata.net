@@ -17,6 +17,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
     /// <summary>
     /// Provides semantics for a CsdlNavigationProperty.
     /// </summary>
+    [DebuggerDisplay("CsdlSemanticsNavigationProperty({Name})")]
     internal class CsdlSemanticsNavigationProperty : CsdlSemanticsElement, IEdmNavigationProperty, IEdmCheckable
     {
         private readonly CsdlNavigationProperty navigationProperty;

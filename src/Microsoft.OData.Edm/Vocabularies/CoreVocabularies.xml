@@ -492,7 +492,7 @@ Any simple identifier | Any type listed in `Validation.OpenPropertyTypeConstrain
     <Annotation Term="Core.Description" String="A symbolic name for a model element" />
   </Term>
 
-  <TypeDefinition Name="SimpleIdentifier" UnderlyingType="Edm.String">
+  <TypeDefinition Name="SimpleIdentifier" UnderlyingType="Edm.String" MaxLength="128">
     <Annotation Term="Core.Description" String="A [simple identifier](https://docs.oasis-open.org/odata/odata-csdl-xml/v4.01/odata-csdl-xml-v4.01.html#sec_SimpleIdentifier)" />
     <Annotation Term="Validation.Pattern" String="^[\p{L}\p{Nl}_][\p{L}\p{Nl}\p{Nd}\p{Mn}\p{Mc}\p{Pc}\p{Cf}]{0,}$" />
   </TypeDefinition>

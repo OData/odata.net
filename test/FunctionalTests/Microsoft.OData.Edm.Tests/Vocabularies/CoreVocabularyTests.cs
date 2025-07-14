@@ -65,7 +65,7 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
     <Annotation Term=""Core.Description"" String=""A string representing a Local Date-Time value with no offset."" />
     <Annotation Term=""Validation.Pattern"" String=""^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9](\\.[0-9]+)?)?$"" />
   </TypeDefinition>
-  <TypeDefinition Name=""SimpleIdentifier"" UnderlyingType=""Edm.String"">
+  <TypeDefinition Name=""SimpleIdentifier"" UnderlyingType=""Edm.String"" MaxLength=""128"">
     <Annotation Term=""Core.Description"" String=""A [simple identifier](https://docs.oasis-open.org/odata/odata-csdl-xml/v4.01/odata-csdl-xml-v4.01.html#sec_SimpleIdentifier)"" />
     <Annotation Term=""Validation.Pattern"" String=""^[\p{L}\p{Nl}_][\p{L}\p{Nl}\p{Nd}\p{Mn}\p{Mc}\p{Pc}\p{Cf}]{0,}$"" />
   </TypeDefinition>
@@ -449,6 +449,11 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
             var qualifiedBoundOperationNameType = coreVocModel.FindType("Org.OData.Core.V1.QualifiedBoundOperationName");
             Assert.NotNull(qualifiedBoundOperationNameType);
             Assert.Equal(qualifiedBoundOperationNameType, explicitOperationBindingsType.AsElementType());
+
+            var simpleIdentifierTypeDefinition = coreVocModel.FindType("Org.OData.Core.V1.SimpleIdentifier");
+            Assert.NotNull(simpleIdentifierTypeDefinition);
+            var facetedTypeDefinition = Assert.IsAssignableFrom<IEdmFacetedTypeDefinition>(simpleIdentifierTypeDefinition);
+            Assert.Equal(128, facetedTypeDefinition.MaxLength);
 
             StringWriter sw = new StringWriter();
             XmlWriterSettings settings = new XmlWriterSettings();

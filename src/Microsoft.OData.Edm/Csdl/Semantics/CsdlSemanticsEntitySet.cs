@@ -6,12 +6,14 @@
 
 namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 {
+    using System.Diagnostics;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Csdl.Parsing.Ast;
 
     /// <summary>
     /// Provides semantics for CsdlEntitySet.
     /// </summary>
+    [DebuggerDisplay("CsdlSemanticsEntitySet({Name})")]
     internal class CsdlSemanticsEntitySet : CsdlSemanticsNavigationSource, IEdmEntitySet
     {
         public CsdlSemanticsEntitySet(CsdlSemanticsEntityContainer container, CsdlEntitySet entitySet)
