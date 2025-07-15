@@ -26,11 +26,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="AnnotationSerializationTests\Client\AnnotationSerializationCsdl.xml" />
     <None Remove="ClientWithoutTypeResolverTests\Clients\MismatchedClientModel\MismatchedClientModelCsdl.xml" />
     <None Remove="PayloadValueConverterTests\Client\PayloadValueConverterCsdl.xml" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="AnnotationSerializationTests\Client\AnnotationSerializationCsdl.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
     <EmbeddedResource Include="ClientWithoutTypeResolverTests\Clients\MismatchedClientModel\MismatchedClientModelCsdl.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>

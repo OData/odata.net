@@ -349,7 +349,7 @@
     <value>The attribute '{0}' has an invalid value. The path doesn't contain the binding parameter name.</value>
   </data>
   <data name="EdmModel_Validator_Semantic_InvalidEntitySetPathWithFirstPathParameterNotMatchingFirstParameterName" xml:space="preserve">
-    <value>The attribute '{0}' is invalid. The first item of the path '{2}' is '{3}' which does not match the first parameter name {3}. The first segment of the entity set path is required to be the name of the first parameter.</value>
+    <value>The attribute '{0}' is invalid. The first item of the path '{1}' is '{2}' which does not match the first parameter name {3}. The first segment of the entity set path is required to be the name of the first parameter.</value>
   </data>
   <data name="EdmModel_Validator_Semantic_InvalidEntitySetPathTypeCastSegmentMustBeEntityType" xml:space="preserve">
     <value>The attribute '{0}' has an invalid value. The path '{1}' has a type cast segment '{2}' that is not an entity type.</value>
@@ -997,7 +997,7 @@
     <value>Conversion of an EDM value of the type '{0}' to the CLR type '{1}' is not supported.</value>
   </data>
   <data name="EdmToClr_CannotConvertEdmCollectionValueToClrType" xml:space="preserve">
-    <value>Conversion of an edm collection value to the CLR type '{0}' is not supported. EDM collection values can be converted to System.Collections.Generic.IEnumerable{T}, System.Collections.Generic.IList{T} or System.Collections.Generic.ICollection{T}.</value>
+    <value>Conversion of an edm collection value to the CLR type '{0}' is not supported. EDM collection values can be converted to System.Collections.Generic.IEnumerable{{T}}, System.Collections.Generic.IList{{T}} or System.Collections.Generic.ICollection{{T}}.</value>
   </data>
   <data name="EdmToClr_TryCreateObjectInstanceReturnedWrongObject" xml:space="preserve">
     <value>The type '{0}' of the object returned by the TryCreateObjectInstance delegate is not assignable to the expected type '{1}'.</value>

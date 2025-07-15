@@ -1,3 +1,5 @@
+Microsoft.OData.ODataNestedResourceInfo.Count.get -> long?
+Microsoft.OData.ODataNestedResourceInfo.Count.set -> void
 Microsoft.OData.UriParser.CollectionOpenPropertyAccessNode.CollectionOpenPropertyAccessNode(Microsoft.OData.UriParser.SingleValueNode source, string openPropertyName, Microsoft.OData.Edm.IEdmCollectionTypeReference collectionType) -> void
 Microsoft.OData.UriParser.SingleValueOpenPropertyAccessNode.SingleValueOpenPropertyAccessNode(Microsoft.OData.UriParser.SingleValueNode source, string openPropertyName, Microsoft.OData.Edm.IEdmTypeReference typeReference) -> void
 Microsoft.Extensions.DependencyInjection.ODataServiceCollectionExtensions
