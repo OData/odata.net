@@ -16,7 +16,7 @@
     }
 
     public interface IReader<TNext, TValue> : IReader<TNext>
-        where TNext : allows ref struct 
+        where TNext : allows ref struct
         where TValue : allows ref struct
     {
         TValue Value { get; }
@@ -180,21 +180,17 @@
     {
     }
 
-    public interface IGetResponseBodyReader : IReader<GetResponseBodyToken>
+    public interface IGetResponseBodyReader : IComplexObjectReader
     {
     }
 
     public readonly ref struct GetResponseBodyToken
     {
-        public GetResponseBodyToken(IOdataContextReader dataContextReader)
-        {
-        }
-
         public GetResponseBodyToken(INextLinkReader nextLinkReader)
         {
         }
 
-        public GetResponseBodyToken(IPropertyReader propertyReader)
+        public GetResponseBodyToken(ComplexObjectToken<IGetResponseBodyReader> complexObjectToken)
         {
         }
 
@@ -205,42 +201,83 @@
         //// TODO implement accpeter and dispatch
     }
 
-    public interface IOdataContextReader : IReader<IGetResponseBodyReader, OdataContext>
+    public interface IComplexObjectReader : IReader<ComplexObjectToken<IComplexObjectReader>>
     {
+    }
+
+    public readonly ref struct ComplexObjectToken<T>
+    {
+        public ComplexObjectToken(IOdataContextReader<T> dataContextReader)
+        {
+        }
+
+        public ComplexObjectToken(IOdataIdReader<T> odataIdReader)
+        {
+        }
+
+        public ComplexObjectToken(IPropertyReader<T> propertyReader)
+        {
+        }
+
+        public ComplexObjectToken()
+        {
+        }
+
+        //// TODO implement accpeter and dispatch
     }
 
     public interface INextLinkReader : IReader<IGetResponseBodyReader, NextLink>
     {
     }
 
-    public interface IPropertyReader : IReader<IPropertyNameReader>
+    public interface IOdataContextReader<T> : IReader<T, OdataContext>
     {
     }
 
-    public interface IPropertyNameReader : IReader<IPropertyValueReader, PropertyName>
+    public interface IOdataIdReader<T> : IReader<T, OdataId>
     {
     }
 
-    public interface IPropertyValueReader : IReader<PropertyValueToken>
+    public interface IPropertyReader<T> : IReader<IPropertyNameReader<T>>
     {
     }
 
-    public readonly ref struct PropertyValueToken
-    {
-        //// TODO you are here
-        //// TODO implement the constructors for this struct, then flesh out the below interfaces
-    }
-
-    public interface IPrimitivePropertyValueReader
+    public interface IPropertyNameReader<T> : IReader<IPropertyValueReader<T>, PropertyName>
     {
     }
 
-    public interface IComplexPropertyValueReader
+    public interface IPropertyValueReader<T> : IReader<PropertyValueToken<T>>
+    {
+    }
+
+    public readonly ref struct PropertyValueToken<T>
+    {
+        public PropertyValueToken(IPrimitivePropertyValueReader<T> primitivePropertyValueReader)
+        {
+        }
+
+        public PropertyValueToken(IComplexObjectReader complexObjectReader)
+        {
+        }
+
+        public PropertyValueToken(IMultiValuedPropertyValueReader multiValuedPropertyValueReader)
+        {
+        }
+
+        public PropertyValueToken(INullPropertyValueReader nullPropertyValueReader)
+        {
+        }
+
+        //// TODO implement accpeter and dispatch
+    }
+
+    public interface IPrimitivePropertyValueReader<T> : IReader<T, PrimitivePropertyValue>
     {
     }
 
     public interface IMultiValuedPropertyValueReader
     {
+        //// TODO you are here, you probably will need generics for this
     }
 
     public interface INullPropertyValueReader
