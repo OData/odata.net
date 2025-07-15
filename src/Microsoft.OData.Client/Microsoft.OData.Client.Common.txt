@@ -75,7 +75,6 @@ Context_MissingOperationParameterName=The Name property of an OperationParameter
 Context_DuplicateUriOperationParameterName=Multiple uri operation parameters were found with the same name. Uri operation parameter names must be unique.
 Context_DuplicateBodyOperationParameterName=Multiple body operation parameters were found with the same name. Body operation parameter names must be unique.
 Context_NullKeysAreNotSupported=The serialized resource has a null value in key member '{0}'. Null values are not supported in key members.
-Context_ExecuteExpectsGetOrPostOrDelete=The HttpMethod must be GET, POST or DELETE.
 Context_EndExecuteExpectedVoidResponse=EndExecute overload for void service operations and actions received a non-void response from the server.
 Context_NullElementInOperationParameterArray=The operation parameters array contains a null element which is not allowed.
 Context_EntityMetadataBuilderIsRequired=An implementation of ODataEntityMetadataBuilder is required, but a null value was returned from GetEntityMetadataBuilder.

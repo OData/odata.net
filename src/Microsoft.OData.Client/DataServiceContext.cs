@@ -3836,7 +3836,7 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <typeparam name="TElement">element type. See Execute method for more details.</typeparam>
         /// <param name="requestUri">request to execute</param>
-        /// <param name="httpMethod">HttpMethod to use. Only GET and POST are supported if operation parameters are not empty.</param>
+        /// <param name="httpMethod">HttpMethod to use</param>
         /// <param name="singleResult">If set to true, indicates that a single result is expected as a response.</param>
         /// <param name="bodyOperationParameters">The list of body operation parameters to be returned.</param>
         /// <param name="uriOperationParameters">The list of uri operation parameters to be returned.</param>
@@ -3849,13 +3849,6 @@ namespace Microsoft.OData.Client
             out List<UriOperationParameter> uriOperationParameters,
             params OperationParameter[] operationParameters)
         {
-            if (string.CompareOrdinal(XmlConstants.HttpMethodGet, httpMethod) != 0 &&
-                string.CompareOrdinal(XmlConstants.HttpMethodPost, httpMethod) != 0 &&
-                string.CompareOrdinal(XmlConstants.HttpMethodDelete, httpMethod) != 0)
-            {
-                throw new ArgumentException(Strings.Context_ExecuteExpectsGetOrPostOrDelete, nameof(httpMethod));
-            }
-
             if (ClientTypeUtil.TypeOrElementTypeIsStructured(typeof(TElement)))
             {
                 singleResult = null;
