@@ -184,7 +184,7 @@ namespace Microsoft.OData.Tests.Json
         [Fact]
         public async Task WriteODataValueAsyncWritesNullValue()
         {
-            var value = new ODataNullValue();
+            var value = ODataNullValue.Instance;
             await this.writer.WriteODataValueAsync(value);
             Assert.Equal("null", this.builder.ToString());
         }

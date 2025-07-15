@@ -144,7 +144,7 @@ namespace Microsoft.OData
         {
             if (value == null)
             {
-                value = new ODataNullValue();
+                value = ODataNullValue.Instance;
             }
 
             if (model == null)

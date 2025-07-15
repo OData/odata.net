@@ -207,6 +207,14 @@ namespace Microsoft.OData.Tests.UriParser
             return propertyAccessNode;
         }
 
+        public static RootPathNode ShouldBeRootPathNode(this QueryNode node)
+        {
+            Assert.NotNull(node);
+            var rootPathNode = Assert.IsType<RootPathNode>(node);
+            Assert.NotNull(rootPathNode.Path);
+            return rootPathNode;
+        }
+
         public static SingleComplexNode ShouldBeSingleComplexNode(this QueryNode node, IEdmProperty expectedProperty)
         {
             Assert.NotNull(node);

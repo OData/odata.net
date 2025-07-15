@@ -864,7 +864,7 @@ namespace Microsoft.OData.Tests
                             new Dictionary<string, ODataValue>
                             {
                                 { "p1", null },
-                                { "p2", new ODataNullValue() },
+                                { "p2", ODataNullValue.Instance },
                                 { "p3", new ODataPrimitiveValue(true) },
                                 { "p4", new ODataPrimitiveValue((byte)10) },
                                 { "p5", new ODataPrimitiveValue(130M) },

@@ -288,5 +288,15 @@ namespace Microsoft.OData.UriParser
         {
             throw new NotImplementedException();
         }
+
+        /// <summary>
+        /// Visits a RootPathToken
+        /// </summary>
+        /// <param name="tokenIn">The RootPathToken to bind</param>
+        /// <returns>A user defined value</returns>
+        public virtual T Visit(RootPathToken tokenIn)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

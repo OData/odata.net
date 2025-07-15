@@ -70,7 +70,7 @@ namespace Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd
             PopulatePerson_PersonMetadata();
             PopulateEmployee_Manager();
             PopulateSpecialEmployee_Car();
-            PopulateBank();
+            PopulateBanks();
         }
 
         private void ResetData()
@@ -128,27 +128,83 @@ namespace Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd
         public IList<Bank>? Banks { get; private set; }
         public IList<BankAccount>? BankAccounts { get; private set; }
 
-        private void PopulateBank()
+        private void PopulateBanks()
         {
+            this.BankAccounts = new List<BankAccount>
+            {
+                new ()
+                {
+                    Id = 1001,
+                    AccountNumber = "1001",
+                    BankId = 301
+                },
+                new ()
+                {
+                    Id = 1002,
+                    AccountNumber = "1002",
+                    BankId = 301
+                },
+                new ()
+                {
+                    Id = 1003,
+                    AccountNumber = "1003",
+                    BankId = 302
+                },
+                new ()
+                {
+                    Id = 1004,
+                    AccountNumber = "1004",
+                    BankId = 303
+                },
+                new ()
+                {
+                    Id = 1005,
+                    AccountNumber = "1005",
+                    BankId = 303
+                },
+            };
+
             Banks =
                 [
-                 new (){
-                     Id = 300,
-                     Name = "ICM",
+                 new ()
+                 {
+                     Id = 301,
+                     Name = "ICM1",
                      Location = "KE",
-                     BankAccounts = new List<BankAccount>()
+                     BankAccounts = new List<BankAccount>
+                     {
+                         this.BankAccounts[0],
+                         this.BankAccounts[1],
+                     }
+                 },
+                 new ()
+                 {
+                     Id = 302,
+                     Name = "ICM2",
+                     Location = "KE",
+                     BankAccounts = new List<BankAccount>
+                     {
+                         this.BankAccounts[2],
+                     }
+                 },
+                 new ()
+                 {
+                     Id = 303,
+                     Name = "ICM3",
+                     Location = "KE",
+                     BankAccounts = new List<BankAccount>
+                     {
+                         this.BankAccounts[3],
+                         this.BankAccounts[4]
+                     }
                  }
                 ];
 
-        }
-
-        private void PopulateBankAccount()
-        {
-            AddBankAccountToBank(300, new BankAccount()
-            {
-                AccountNumber = "2002",
-                BankId = 300
-            });
+            this.BankAccounts[0].Bank = Banks[0];
+            this.BankAccounts[1].Bank = Banks[0];
+            this.BankAccounts[2].Bank = Banks[1];
+            this.BankAccounts[3].Bank = Banks[2];
+            this.BankAccounts[4].Bank = Banks[2];
         }
 
         private void PopulateAllTypesSet()

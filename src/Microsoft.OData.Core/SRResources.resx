@@ -1865,6 +1865,9 @@
   <data name="UriQueryExpressionParser_WithExpected" xml:space="preserve">
     <value>'with' expected at position {0} in '{1}'.</value>
   </data>
+  <data name="UriQueryExpressionParser_RootPathNotTopLevel" xml:space="preserve">
+    <value>$root should be the top-level segment.</value>
+  </data>
   <data name="UriQueryExpressionParser_UnrecognizedWithMethod" xml:space="preserve">
     <value>Unrecognized with '{0}' at '{1}' in '{2}'.</value>
   </data>
@@ -1969,6 +1972,12 @@
   </data>
   <data name="MetadataBinder_BoundNodeCannotBeNull" xml:space="preserve">
     <value>A token of kind '{0}' was bound to the value null; this is invalid. A query token must always be bound to a non-null query node.</value>
+  </data>
+  <data name="MetadataBinder_EmptyRootPath" xml:space="preserve">
+    <value>An empty root path is not valid.</value>
+  </data>
+  <data name="MetadataBinder_InvalidRootPath" xml:space="preserve">
+    <value>The $root literal can be used in expressions to refer to resources of the same service. It can be used as a single-valued expression or within complex or collection literals.</value>
   </data>
   <data name="MetadataBinder_TopRequiresNonNegativeInteger" xml:space="preserve">
     <value>The value '{0}' is not a non-negative integer value. In OData, the $top query option must specify a non-negative integer value.</value>

@@ -267,15 +267,15 @@ namespace Microsoft.OData.Tests.Json
                 Properties = new ODataProperty[]
                 {
                     new ODataProperty { Name = "PropertyName", Value = "PropertyValue" },
-                    new ODataProperty { Name = "NullProperty", Value = new ODataNullValue() }
+                    new ODataProperty { Name = "NullProperty", Value = ODataNullValue.Instance }
                 }
             });
-            innerError.Properties.Add("NullProperty", new ODataNullValue());
+            innerError.Properties.Add("NullProperty", ODataNullValue.Instance);
             innerError.Properties.Add("CollectionValue", new ODataCollectionValue
             { 
                 Items = new List<object>
                 {
-                    new ODataNullValue(),
+                    ODataNullValue.Instance,
                     new ODataPrimitiveValue("CollectionValue"), new ODataPrimitiveValue(1)
                 }
             });

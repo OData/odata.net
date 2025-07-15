@@ -91,7 +91,7 @@ public static class ODataValueAssertEqualHelper
     {
         if (value == null)
         {
-            return new ODataNullValue();
+            return ODataNullValue.Instance;
         }
 
         var odataValue = value as ODataValue;

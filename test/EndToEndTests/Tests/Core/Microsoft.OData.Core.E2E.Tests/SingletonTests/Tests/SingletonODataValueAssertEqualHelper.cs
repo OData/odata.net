@@ -107,7 +107,7 @@ public static class SingletonODataValueAssertEqualHelper
     {
         if (value == null)
         {
-            return new ODataNullValue();
+            return ODataNullValue.Instance;
         }
 
         if (value is ODataValue odataValue)

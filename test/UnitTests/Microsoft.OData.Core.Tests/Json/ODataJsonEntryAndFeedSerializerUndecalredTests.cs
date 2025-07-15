@@ -587,7 +587,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Writer.Json
                         new ODataProperty {Name="prop",
                             Value = new ODataPrimitiveValue(1) },       //            "prop": 1,
                         new ODataProperty {Name="nullProp",
-                            Value = new ODataNullValue() },             //            "nullProp": "null",
+                            Value = ODataNullValue.Instance },             //            "nullProp": "null",
                         new ODataProperty {Name="collectionProp",       //            "collectionProp@odata.type":"#Collection(String)"
                             Value = new ODataCollectionValue {          //            "collectionProp":
                                 TypeName="Collection(Edm.String)",      //             [

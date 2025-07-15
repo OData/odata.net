@@ -12,6 +12,8 @@ namespace Microsoft.OData.UriParser
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using Microsoft.OData.Core;
+    using Microsoft.OData.Edm;
+    using Microsoft.OData.Metadata;
 
     #endregion Namespaces
 
@@ -201,6 +203,9 @@ namespace Microsoft.OData.UriParser
                 case QueryTokenKind.CountSegment:
                     result = this.BindCountSegment((CountSegmentToken)token);
                     break;
+                case QueryTokenKind.RootPath:
+                    result = this.BindRootPath((RootPathToken)token);
+                    break;
                 default:
                     throw new ODataException(Error.Format(SRResources.MetadataBinder_UnsupportedQueryTokenKind, token.Kind));
             }
@@ -383,6 +388,32 @@ namespace Microsoft.OData.UriParser
         {
             CountSegmentBinder countSegmentBinder = new CountSegmentBinder(this.Bind, this.BindingState);
             return countSegmentBinder.BindCountSegment(countSegmentToken);
+        }
+
+        /// <summary>
+        /// Binds a RootPathToken.
+        /// </summary>
+        /// <param name="rootPathToken">The RootPath token to bind.</param>
+        /// <returns>The bound RootPath token.</returns>
+        protected virtual QueryNode BindRootPath(RootPathToken rootPathToken)
+        {
+            ODataPath path = ODataPathFactory.BindPath(rootPathToken.Segments, this.BindingState.Configuration);
+
+            ODataPathSegment lastSegment = path.LastSegment;
+            if (lastSegment == null)
+            {
+                throw new ODataException(SRResources.MetadataBinder_EmptyRootPath);
+            }
+
+            // The $root literal can be used in expressions to refer to resources of the same service. It can be used as a single-valued expression or within complex or collection literals.
+            if (!lastSegment.SingleResult)
+            {
+                throw new ODataException(SRResources.MetadataBinder_InvalidRootPath);
+            }
+
+            // The EdmType could be null for Dynamic path segment
+            IEdmTypeReference typeReference = lastSegment.EdmType == null ? null : lastSegment.EdmType.ToTypeReference(true);
+            return new RootPathNode(path, typeReference);
         }
     }
 }
