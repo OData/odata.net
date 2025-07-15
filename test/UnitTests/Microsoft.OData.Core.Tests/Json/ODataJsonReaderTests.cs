@@ -98,6 +98,22 @@ namespace Microsoft.OData.Tests.Json
         }
 
         [Fact]
+        public void DecodeBase64UrlEncodedString()
+        {
+            var binaryTypeReference = EdmCoreModel.Instance.GetBinary(false);
+
+            object payloadValue;
+
+            payloadValue = new ODataPayloadValueConverter().ConvertFromPayloadValue("fn5+", binaryTypeReference);
+
+            Assert.Equal(Encoding.UTF8.GetBytes("~~~"), payloadValue);
+
+            payloadValue = new ODataPayloadValueConverter().ConvertFromPayloadValue("fn5-", binaryTypeReference);
+
+            Assert.Equal(Encoding.UTF8.GetBytes("~~~"), payloadValue);
+        }
+
+        [Fact]
         public async Task ReadTopLevelResourceSetWithDeltaLinkAsync()
         {
             var payload = "{\"@odata.context\":\"http://tempuri.org/$metadata#Customers\"," +

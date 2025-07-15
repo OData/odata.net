@@ -148,6 +148,7 @@ namespace Microsoft.OData
             // COMPAT 53: Support for System.Data.Linq.Binary and System.Xml.Linq.XElement
             if (targetType == typeof(byte[]))
             {
+                stringValue = stringValue.Replace('-', '+').Replace('_', '/');
                 return Convert.FromBase64String(stringValue);
             }
 
