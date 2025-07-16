@@ -180,7 +180,7 @@
     {
     }
 
-    public interface IGetResponseBodyReader : IComplexObjectReader
+    public interface IGetResponseBodyReader : IComplexObjectReader<Nothing>
     {
     }
 
@@ -194,14 +194,10 @@
         {
         }
 
-        public GetResponseBodyToken()
-        {
-        }
-
         //// TODO implement accpeter and dispatch
     }
 
-    public interface IComplexObjectReader : IReader<ComplexObjectToken<IComplexObjectReader>>
+    public interface IComplexObjectReader<T> : IReader<ComplexObjectToken<T>>
     {
     }
 
@@ -219,7 +215,7 @@
         {
         }
 
-        public ComplexObjectToken()
+        public ComplexObjectToken(T next)
         {
         }
 
@@ -256,15 +252,15 @@
         {
         }
 
-        public PropertyValueToken(IComplexObjectReader complexObjectReader)
+        public PropertyValueToken(IComplexObjectReader<T> complexObjectReader)
         {
         }
 
-        public PropertyValueToken(IMultiValuedPropertyValueReader multiValuedPropertyValueReader)
+        public PropertyValueToken(IMultiValuedPropertyValueReader<T> multiValuedPropertyValueReader)
         {
         }
 
-        public PropertyValueToken(INullPropertyValueReader nullPropertyValueReader)
+        public PropertyValueToken(INullPropertyValueReader<T> nullPropertyValueReader)
         {
         }
 
@@ -275,12 +271,28 @@
     {
     }
 
-    public interface IMultiValuedPropertyValueReader
+    public interface IMultiValuedPropertyValueReader<T> : IReader<MultiValuedPropertyValueToken<T>>
     {
-        //// TODO you are here, you probably will need generics for this
     }
 
-    public interface INullPropertyValueReader
+    public readonly ref struct MultiValuedPropertyValueToken<T>
+    {
+        public MultiValuedPropertyValueToken(IComplexObjectReader<T> complexObjectReader)
+        {
+        }
+
+        public MultiValuedPropertyValueToken(IPrimitivePropertyValueReader<T> primitivePropertyValueReader)
+        {
+        }
+
+        public MultiValuedPropertyValueToken(T next)
+        {
+        }
+    }
+
+    public interface INullPropertyValueReader<T> : IReader<T>
     {
     }
+
+    //// TODO i think you want to go back through the above just to be thorough and *not* reuse types; so, for example, don't use a complexobjectreader as part of the getresponsebodyreader, and don't use a complexobjectreader for complex multivalued elements, and don't use a primitivepropertyvaluereader for primitive multivalued elements
 }
