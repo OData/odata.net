@@ -87,7 +87,7 @@ public class NewWriter2ExperimentTests
             SelectExpandClause = odataUri.SelectAndExpand
         });
 
-        var odataWriter = new ODataResourceSetEnumerableJsonWriter<Project>();
+        var odataWriter = new EnumerableResourceSetJsonWriter<IEnumerable<Project>, Project>();
         await odataWriter.WriteAsync(projects, writerStack, writerContext);
 
         // TODO: should we guarantee flushing from within the writer?
@@ -182,7 +182,7 @@ public class NewWriter2ExperimentTests
             SelectExpandClause = odataUri.SelectAndExpand
         });
 
-        var odataWriter = new ODataResourceSetEnumerableJsonWriter<Project>();
+        var odataWriter = new EnumerableResourceSetJsonWriter<IEnumerable<Project>, Project>();
         await odataWriter.WriteAsync(projects, writerStack, writerContext);
 
         // TODO: should we guarantee flushing from within the writer?
@@ -347,7 +347,7 @@ public class NewWriter2ExperimentTests
                 // we could get state.Parent, but that does not contain the resource Id,
                 // We could add resource Id to each stack frame so that we can reconstruct next links
                 // Or we could store the resource at each stack frame, but that could lead to boxing since
-                // the only common repreentation is object.
+                // the only common representation is object.
                 return new Uri($"http://service/odata/Customers({customerId})/Orders({order.Id})/Products?$skip={skip}", UriKind.Absolute);
             }
             return null;
