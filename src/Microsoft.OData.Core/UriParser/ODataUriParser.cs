@@ -573,10 +573,6 @@ namespace Microsoft.OData.UriParser
                 foreach (var queryOption in queryOptions)
                 {
                     string queryOptionName = queryOption.Name;
-                    if (queryOptionName == null)
-                    {
-                        continue;
-                    }
 
                     // If EnableNoDollarQueryOptions is true, we will treat all reserved OData query options without "$" prefix as odata query options.
                     // Or, they will be treated as custom query options which could be duplicated.
@@ -606,11 +602,11 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// Generate a list of <see cref="CustomQueryOptionNode"/> from the custom query options.
         /// </summary>
-        /// <param name="customQueryOptions"></param>
-        /// <returns></returns>
+        /// <param name="customQueryOptions">List of custom query options as key-value pairs.</param>
+        /// <returns>Custom query options as a list of <see cref="CustomQueryOptionNode"/>.</returns>
         private static List<CustomQueryOptionNode> CreateCustomQueryOptionNodes(IList<KeyValuePair<string, string>> customQueryOptions)
         {
-            var customQueryOptionNodes = new List<CustomQueryOptionNode>();
+            List<CustomQueryOptionNode> customQueryOptionNodes = new List<CustomQueryOptionNode>();
 
             if (customQueryOptions != null)
             {

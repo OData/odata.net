@@ -238,7 +238,7 @@ namespace Microsoft.OData
         public override String Visit(CustomQueryOptionNode node)
         {
             ExceptionUtils.CheckArgumentNotNull(node, "node");
-            return string.Concat(node.Name, "=", node.Value);
+            return string.IsNullOrEmpty(node.Name) ? node.Value : string.Concat(node.Name,"=", node.Value);
         }
 
         /// <summary>

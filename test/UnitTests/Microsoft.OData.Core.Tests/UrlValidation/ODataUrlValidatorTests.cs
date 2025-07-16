@@ -154,7 +154,7 @@ namespace Microsoft.OData.Tests
         }
 
         [Fact]
-        public static void ValidatesQueryOptions()
+        public static void ValidatorValidatesCustomQueryOptions()
         {
             string request = "company?customQueryOption=value";
 

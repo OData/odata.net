@@ -32,37 +32,23 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// Create a NameValueCustomQueryOptionNode
         /// </summary>
-        /// <param name="name">This node's primitive value.</param>
-        /// <param name="value">The literal text for this node's value, formatted according to the OData URI literal formatting rules.</param>
+        /// <param name="name">This node's primitive value. May be null.</param>
+        /// <param name="value">The literal text for this node's value. May be null.</param>
         /// <exception cref="System.ArgumentNullException">Throws if the input value is null.</exception>
         public CustomQueryOptionNode(string name, string value)
         {
-            ExceptionUtils.CheckArgumentStringNotNullOrEmpty(name, "name");
-            ExceptionUtils.CheckArgumentStringNotNullOrEmpty(value, "value");
             this.optionName = name;
             this.optionValue = value;
         }
 
         /// Gets the Query Option Name.
         /// </summary>
-        public string Name
-        {
-            get
-            {
-                return this.optionName;
-            }
-        }
+        public string Name => this.optionName;
 
         /// <summary>
         /// Gets the Query Option Value.
         /// </summary>
-        public string Value
-        {
-            get
-            {
-                return this.optionValue;
-            }
-        }
+        public string Value => this.optionValue;
 
         /// <summary>
         /// Gets the kind of this node.
@@ -72,13 +58,7 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// Gets the kind of the query node.
         /// </summary>
-        internal override InternalQueryNodeKind InternalKind
-        {
-            get
-            {
-                return InternalQueryNodeKind.CustomQueryOption;
-            }
-        }
+        internal override InternalQueryNodeKind InternalKind => InternalQueryNodeKind.CustomQueryOption;
 
         /// <summary>
         /// Accept a <see cref="QueryNodeVisitor{T}"/> to walk a tree of <see cref="QueryNode"/>s.
