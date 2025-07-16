@@ -287,9 +287,44 @@
     {
     }
 
-    public interface IRootComplexElementReader
+    public interface IRootComplexElementReader : IReader<RootComplexElementToken>
     {
     }
+
+    public readonly ref struct RootComplexElementToken
+    {
+        public RootComplexElementToken(IRootComplexElementOdataContextReader dataContextReader)
+        {
+        }
+
+        public RootComplexElementToken(IRootComplexElementOdataIdReader odataIdReader)
+        {
+        }
+
+        public RootComplexElementToken(IRootComplexElementPropertyReader propertyReader)
+        {
+        }
+
+        public RootComplexElementToken(IRootMultiValuedPropertyValueReader next)
+        {
+        }
+
+        //// TODO implement accpeter and dispatch
+    }
+
+    public interface IRootComplexElementOdataContextReader : IReader<IRootComplexElementReader, RootComplexElementOdataContext>
+    {
+    }
+
+    public interface IRootComplexElementOdataIdReader : IReader<IRootComplexElementReader, RootComplexElementOdataId>
+    {
+    }
+
+    public interface IRootComplexElementPropertyReader
+    {
+    }
+
+
 
 
 
