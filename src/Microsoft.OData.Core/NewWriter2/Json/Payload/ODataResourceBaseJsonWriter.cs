@@ -25,9 +25,9 @@ public abstract class ODataResourceBaseJsonWriter<T> : IODataWriter<ODataJsonWri
         // Note: do we need to account for metadata written before/after
         if (context.MetadataLevel >= ODataMetadataLevel.Minimal)
         {
-            // Write context URL if needed
-            var metadataWriter = context.GetMetadataWriter<T>(state);
-            await metadataWriter.WriteEtagPropertyAsync(value, state, context);
+            // TODO: Write context URL if needed
+
+            await this.WriteEtagProperty(value, state, context);
         }
 
         await WriteProperties(value, state, context);
@@ -171,6 +171,46 @@ public abstract class ODataResourceBaseJsonWriter<T> : IODataWriter<ODataJsonWri
         // TODO: handle scenario where we don't need to write the value, just annotations.
         // write property value
         await WritePropertyValue(resource, propertyToWrite, state, context);
+    }
+
+    protected virtual ValueTask WriteEtagProperty(
+        T value,
+        ODataJsonWriterStack state,
+        ODataJsonWriterContext context)
+    {
+        if (HasEtagValue(value, state, context, out string etagValue))
+        {
+            context.JsonWriter.WritePropertyName("@odata.etag"u8);
+
+            if (etagValue != null)
+            {
+                context.JsonWriter.WriteStringValue(etagValue);
+            }
+            else
+            {
+                // If etagValue is null, it means the caller acknowledges
+                // there's an etag, but did not read the value yet.
+                // So let's ask them to write it.
+                // TODO: I'm not really pleased with this pattern
+                WriteEtagValue(value, state, context);
+            }
+
+        }
+
+        return ValueTask.CompletedTask;
+    }
+
+    protected virtual bool HasEtagValue(T value, ODataJsonWriterStack state, ODataJsonWriterContext context, out string etagValue)
+    {
+        etagValue = null;
+        return false;
+    }
+    public void WriteEtagValue(T value, ODataJsonWriterStack state, ODataJsonWriterContext context)
+    {
+        bool hasEtag = HasEtagValue(value, state, context, out var etagValue);
+        Debug.Assert(hasEtag);
+        Debug.Assert(etagValue != null);
+        context.JsonWriter.WriteStringValue(etagValue);
     }
 
     protected virtual ValueTask WriteNestedCountProperty(

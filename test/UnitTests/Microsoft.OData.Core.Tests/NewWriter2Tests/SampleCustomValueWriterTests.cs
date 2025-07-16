@@ -415,6 +415,12 @@ public class SampleCustomValueWriterTests
 
             return ValueTask.CompletedTask;
         }
+
+        protected override bool HasEtagValue(Customer value, ODataJsonWriterStack state, ODataJsonWriterContext context, out string etagValue)
+        {
+            etagValue = $"W/\"{value.Id}\"";
+            return true;
+        }
     }
 
     class OrderWriter : ODataResourceBaseJsonWriter<Order>
