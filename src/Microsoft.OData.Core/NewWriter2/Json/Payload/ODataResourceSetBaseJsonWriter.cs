@@ -1,6 +1,7 @@
 ﻿using Microsoft.OData.Edm;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -15,25 +16,7 @@ internal abstract class ODataResourceSetBaseJsonWriter<TCollection, TElement> : 
         {
             context.JsonWriter.WriteStartObject();
 
-            // TODO: consider virtual methods instead of handlers/providers
-            var metadataWriter = context.GetMetadataWriter<TCollection>(state);
-
-            // TODO: We should probably expose a ShouldWriteXXX method for metadata to give
-            // users an easy way to control whether certain metadata should be written
-            if (context.MetadataLevel >= ODataMetadataLevel.Minimal)
-            {
-                await metadataWriter.WriteContextUrlAsync(value, state, context);
-            }
-
-
-            if (context.ODataUri.QueryCount.HasValue
-                && context.ODataUri.QueryCount.Value)
-            {
-                await metadataWriter.WriteCountPropertyAsync(value, state, context);
-            }
-
-            await metadataWriter.WriteNextLinkPropertyAsync(value, state, context);
-
+            await WritePreValueMetadata(value, state, context);
 
             context.JsonWriter.WritePropertyName("value");
         }
@@ -77,5 +60,104 @@ internal abstract class ODataResourceSetBaseJsonWriter<TCollection, TElement> : 
         await resourceWriter.WriteAsync(element, state, context);
 
         state.Pop();
+    }
+
+    protected virtual async ValueTask WritePreValueMetadata(TCollection value, ODataJsonWriterStack state, ODataJsonWriterContext context)
+    {
+        // TODO: We should probably expose a ShouldWriteXXX method for metadata to give
+        // users an easy way to control whether certain metadata should be written
+        if (context.MetadataLevel >= ODataMetadataLevel.Minimal)
+        {
+            await WriteContextUrl(value, state, context);
+        }
+
+        // TODO: should this condition be implemented by the WriteCountProperty method?
+        if (context.ODataUri.QueryCount.HasValue
+            && context.ODataUri.QueryCount.Value)
+        {
+            await WriteCountProperty(value, state, context);
+        }
+
+        await WriteNextLinkProperty(value, state, context);
+    }
+
+    protected virtual async ValueTask WriteContextUrl(TCollection value, ODataJsonWriterStack state, ODataJsonWriterContext context)
+    {
+        var metadataWriter = context.GetMetadataWriter<TCollection>(state);
+        await metadataWriter.WriteContextUrlAsync(value, state, context);
+    }
+
+    protected virtual async ValueTask WriteCountProperty(TCollection value, ODataJsonWriterStack state, ODataJsonWriterContext context)
+    {
+        var metadataWriter = context.GetMetadataWriter<TCollection>(state);
+        await metadataWriter.WriteCountPropertyAsync(value, state, context);
+    }
+
+    protected virtual ValueTask WriteNextLinkProperty(
+        TCollection value,
+        ODataJsonWriterStack state,
+        ODataJsonWriterContext context)
+    {
+        if (HasNextLinkValue(value, state, context, out var nextLink))
+        {
+            context.JsonWriter.WritePropertyName("@odata.nextLink");
+            if (nextLink == null)
+            {
+                // If nextLink is null, it means the caller acknowleges
+                // there's a next link, but did not read the value yet.
+                // So let's ask them to write it.
+                WriteNextLinkValue(value, state, context);
+            }
+            else
+            {
+                context.JsonWriter.WriteStringValue(nextLink.AbsoluteUri);
+            }
+        }
+
+        return ValueTask.CompletedTask;
+    }
+
+    protected virtual bool HasNextLinkValue(
+        TCollection value,
+        ODataJsonWriterStack state,
+        ODataJsonWriterContext context,
+        out Uri nextLink) // TODO: We should not couple ourselves to the Uri type, too expensive.
+    {
+        nextLink = null;
+        return false;
+    }
+
+    protected virtual void WriteNextLinkValue(
+        TCollection value,
+        ODataJsonWriterStack state,
+        ODataJsonWriterContext context)
+    {
+        // TODO: for this implementation of NextLinkRetriever, we assume HasNextLink always returns the nextLink
+        // and therefore this method should not be called. But we implement it just in case.
+        // Or should we throw an exception instead? Or have some strategy pattern that doesn't require this to be called when not needed?
+        bool hasNextLink = HasNextLinkValue(value, state, context, out var nextLink);
+        Debug.Assert(hasNextLink == true, "WriteNextLinkValue should only be called if HasNextLinkValue returned true.");
+        Debug.Assert(nextLink != null);
+        context.JsonWriter.WriteStringValue(nextLink.AbsoluteUri);
+    }
+
+    protected virtual bool HasNestedNextLinkValue(
+        TCollection value,
+        IEdmProperty property,
+        ODataJsonWriterStack state,
+        ODataJsonWriterContext context,
+        out Uri nextLink) // TODO: We should not couple ourselves to the Uri type, too expensive.
+    {
+        nextLink = null;
+        return false;
+    }
+
+    protected virtual void WriteNestedNextLinkValue(
+        TCollection value,
+        IEdmProperty property,
+        ODataJsonWriterStack state,
+        ODataJsonWriterContext context)
+    {
+        throw new NotImplementedException();
     }
 }

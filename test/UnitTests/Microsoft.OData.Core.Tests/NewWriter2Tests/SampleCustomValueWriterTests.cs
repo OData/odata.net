@@ -102,6 +102,7 @@ public class SampleCustomValueWriterTests
 
         var options = new NewWriter2.ODataSerializerOptions();
 
+        options.AddValueWriter(new CustomerCollectionWriter());
         options.AddValueWriter(new CustomerWriter());
         options.AddValueWriter(new OrderWriter());
         options.AddValueWriter(new ProductWriter());
@@ -364,6 +365,19 @@ public class SampleCustomValueWriterTests
         container.AddEntitySet("Products", productEntity);
 
         return model;
+    }
+
+    class CustomerCollectionWriter : EnumerableResourceSetJsonWriter<IList<Customer>, Customer>
+    {
+        protected override bool HasNextLinkValue(
+            IList<Customer> value,
+            ODataJsonWriterStack state,
+            ODataJsonWriterContext context,
+            out Uri nextLink)
+        {
+            nextLink = new Uri("http://service/odata/Customers?$skip=2", UriKind.Absolute);
+            return true;
+        }
     }
 
     class CustomerWriter : ODataResourceBaseJsonWriter<Customer>
