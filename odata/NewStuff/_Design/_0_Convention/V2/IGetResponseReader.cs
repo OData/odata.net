@@ -4,6 +4,8 @@
     using System.Diagnostics.CodeAnalysis;
     using System.Threading.Tasks;
 
+    using NewStuff._Design._0_Convention.V2;
+
     public interface IReader<TNext> where TNext : allows ref struct
     {
         ValueTask Read();
@@ -180,22 +182,134 @@
     {
     }
 
-    public interface IGetResponseBodyReader : IComplexObjectReader<Nothing>
+    public interface IGetResponseBodyReader : IReader<GetResponseBodyToken>
     {
     }
 
     public readonly ref struct GetResponseBodyToken
     {
-        public GetResponseBodyToken(INextLinkReader nextLinkReader)
+        public GetResponseBodyToken(IRootNextLinkReader nextLinkReader)
         {
         }
 
-        public GetResponseBodyToken(ComplexObjectToken<IGetResponseBodyReader> complexObjectToken)
+        public GetResponseBodyToken(IRootOdataContextReader dataContextReader)
+        {
+        }
+
+        public GetResponseBodyToken(IRootOdataIdReader odataIdReader)
+        {
+        }
+
+        public GetResponseBodyToken(IRootPropertyReader propertyReader)
+        {
+        }
+
+        public GetResponseBodyToken()
         {
         }
 
         //// TODO implement accpeter and dispatch
     }
+
+    public interface IRootNextLinkReader : IReader<IGetResponseBodyReader, RootNextLink>
+    {
+    }
+
+    public interface IRootOdataContextReader : IReader<IGetResponseBodyReader, RootOdataContext>
+    {
+    }
+
+    public interface IRootOdataIdReader : IReader<IGetResponseBodyReader, RootOdataId>
+    {
+    }
+
+    public interface IRootPropertyReader : IReader<IRootPropertyNameReader>
+    {
+    }
+
+    public interface IRootPropertyNameReader : IReader<IRootPropertyValueReader, RootPropertyName>
+    {
+    }
+
+    public interface IRootPropertyValueReader : IReader<RootPropertyValueToken>
+    {
+    }
+
+    public readonly ref struct RootPropertyValueToken
+    {
+        public RootPropertyValueToken(IRootPrimitivePropertyValueReader primitivePropertyValueReader)
+        {
+        }
+
+        public RootPropertyValueToken(IRootNullPropertyValueReader nullPropertyValueReader)
+        {
+        }
+
+        public RootPropertyValueToken(IRootMultiValuedPropertyValueReader multiValuedPropertyValueReader)
+        {
+        }
+
+        public RootPropertyValueToken(IRootComplexPropertyValueReader complexObjectReader)
+        {
+        }
+
+        //// TODO implement accpeter and dispatch
+    }
+
+    public interface IRootPrimitivePropertyValueReader : IReader<IGetResponseBodyReader, RootPrimitivePropertyValue>
+    {
+    }
+
+    public interface IRootNullPropertyValueReader : IReader<IGetResponseBodyReader>
+    {
+    }
+
+    public interface IRootMultiValuedPropertyValueReader : IReader<RootMultiValuedPropertyValueToken>
+    {
+    }
+
+    public readonly ref struct RootMultiValuedPropertyValueToken
+    {
+        public RootMultiValuedPropertyValueToken(IRootPrimitiveElementReader primitivePropertyValueReader)
+        {
+        }
+
+        public RootMultiValuedPropertyValueToken(IRootComplexElementReader complexObjectReader)
+        {
+        }
+
+        public RootMultiValuedPropertyValueToken(IGetResponseBodyReader getResponseBodyReader)
+        {
+        }
+    }
+
+    public interface IRootPrimitiveElementReader : IReader<IRootMultiValuedPropertyValueReader, RootPrimitiveElement>
+    {
+    }
+
+    public interface IRootComplexElementReader
+    {
+    }
+
+
+
+
+    public interface IRootComplexPropertyValueReader
+    {
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     public interface IComplexObjectReader<T> : IReader<ComplexObjectToken<T>>
     {
@@ -222,15 +336,15 @@
         //// TODO implement accpeter and dispatch
     }
 
-    public interface INextLinkReader : IReader<IGetResponseBodyReader, NextLink>
+    public interface INextLinkReader : IReader<IGetResponseBodyReader, RootNextLink>
     {
     }
 
-    public interface IOdataContextReader<T> : IReader<T, OdataContext>
+    public interface IOdataContextReader<T> : IReader<T, RootOdataContext>
     {
     }
 
-    public interface IOdataIdReader<T> : IReader<T, OdataId>
+    public interface IOdataIdReader<T> : IReader<T, RootOdataId>
     {
     }
 
@@ -238,7 +352,7 @@
     {
     }
 
-    public interface IPropertyNameReader<T> : IReader<IPropertyValueReader<T>, PropertyName>
+    public interface IPropertyNameReader<T> : IReader<IPropertyValueReader<T>, RootPropertyName>
     {
     }
 
@@ -267,7 +381,7 @@
         //// TODO implement accpeter and dispatch
     }
 
-    public interface IPrimitivePropertyValueReader<T> : IReader<T, PrimitivePropertyValue>
+    public interface IPrimitivePropertyValueReader<T> : IReader<T, RootPrimitivePropertyValue>
     {
     }
 

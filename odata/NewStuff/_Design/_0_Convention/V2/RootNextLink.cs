@@ -2,9 +2,9 @@
 {
     using System;
 
-    public sealed class NextLink
+    public sealed class RootNextLink
     {
-        internal NextLink(Uri uri)
+        internal RootNextLink(Uri uri)
         {
             Uri = uri;
         }
