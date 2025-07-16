@@ -1554,7 +1554,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
 
             var value = Assert.IsType<ODataProperty>(entry.Properties.First(p => p.Name == "id")).Value;
             Assert.IsType<Int64>(value);
-            Assert.Equal(99999991L, value);
+            Assert.Equal(1002147483646L, value);
         }
 
         #endregion
@@ -1670,7 +1670,10 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
             });
 
             Assert.Single(resourceMember.Properties);
-            Assert.Equal(1m, Assert.IsType<ODataProperty>(resourceMember.Properties.First(p => p.Name == "id")).Value);
+
+            var value = Assert.IsType<ODataProperty>(resourceMember.Properties.First(p => p.Name == "id")).Value;
+            Assert.IsType<Int32>(value);
+            Assert.Equal(1, value);
             Assert.Equal("primitiveString", primitiveMember.Value);
         }
 
