@@ -228,7 +228,79 @@
     {
     }
 
-    public interface IRootObjectPropertyReader
+    public interface IRootObjectPropertyReader : IReader<IRootObjectPropertyNameReader>
+    {
+    }
+
+    public interface IRootObjectPropertyNameReader : IReader<PropertyName, IRootObjectPropertyValueReader>
+    {
+    }
+
+    public interface IRootObjectPropertyValueReader : IReader<RootObjectPropertyValueToken>
+    {
+    }
+
+    public readonly ref struct RootObjectPropertyValueToken
+    {
+        public RootObjectPropertyValueToken(IRootObjectPrimitivePropertyValueReader rootObjectPrimitivePropertyValueReader)
+        {
+        }
+
+        public RootObjectPropertyValueToken(IRootObjectNullPropertyValueReader rootObjectNullPropertyValueReader)
+        {
+        }
+
+        public RootObjectPropertyValueToken(IRootObjectMultiValuedPropertyValueReader rootObjectMultiValuedPropertyValueReader)
+        {
+        }
+
+        public RootObjectPropertyValueToken(IRootObjectComplexPropertyValueReader rootObjectComplexPropertyValueReader)
+        {
+        }
+
+        //// TODO implement accpeter and dispatch
+    }
+
+    public interface IRootObjectPrimitivePropertyValueReader : IReader<IRootObjectReader, PrimitivePropertyValue>
+    {
+    }
+
+    public interface IRootObjectNullPropertyValueReader : IReader<IRootObjectReader>
+    {
+    }
+
+    public interface IRootObjectMultiValuedPropertyValueReader : IReader<RootObjectPropertyValueToken>
+    {
+    }
+
+    public readonly ref struct RootObjectMultiValuedPropertyValueToken
+    {
+        public RootObjectMultiValuedPropertyValueToken(IRootObjectPrimitiveElementReader rootObjectPrimitiveElementReader)
+        {
+        }
+
+        public RootObjectMultiValuedPropertyValueToken(IRootObjectComplexElementReader rootObjectComplexElementReader)
+        {
+        }
+
+        public RootObjectMultiValuedPropertyValueToken(IRootObjectReader rootObjectReader)
+        {
+        }
+    }
+
+    public interface IRootObjectPrimitiveElementReader : IReader<IRootObjectReader, PrimitiveElement>
+    {
+    }
+
+    public interface IRootObjectComplexElementReader : IReader<INonRootObjectReader<IRootObjectReader>>
+    {
+    }
+
+    public interface IRootObjectComplexPropertyValueReader : IReader<INonRootObjectReader<IRootObjectReader>>
+    {
+    }
+
+    public interface INonRootObjectReader<T>
     {
     }
 
