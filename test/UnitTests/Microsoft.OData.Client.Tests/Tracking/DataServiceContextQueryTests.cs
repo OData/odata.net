@@ -4,15 +4,16 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using Microsoft.OData.Edm.Csdl;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using System.Xml;
+using Microsoft.OData.Edm.Csdl;
 using Xunit;
 
 namespace Microsoft.OData.Client.Tests.Tracking
@@ -476,9 +477,128 @@ namespace Microsoft.OData.Client.Tests.Tracking
             Assert.Equal("The key property 'EmpType' on type 'Microsoft.OData.Client.Tests.Tracking.EmployeeWithNullableEnumKey' is of type 'System.Nullable`1[[Microsoft.OData.Client.Tests.Tracking.EmployeeType, Microsoft.OData.Client.Tests, Version=0.0.0.0, Culture=neutral, PublicKeyToken=69c3241e6f0468ca]]', which is nullable. Key properties cannot be nullable.", exception.Message);
         }
 
+        [Theory]
+        [InlineData(30)]
+        [InlineData(160)]
+        [InlineData(1000)]
+        [InlineData(10000)]
+        [InlineData(1000000)]
+        public async Task SelectAllEntities_ReturnsResults_When_HttpClientTimeout_IsExplicitlySet(int timeoutInSeconds)
+        {
+            // Arrange
+            var expectedUri = $"{ServiceRoot}/Employees";
+
+            var httpClient = new HttpClient
+            {
+                Timeout = TimeSpan.FromSeconds(timeoutInSeconds)
+            };
+
+            var httpClientFactory = new CustomHttpClientFactory(httpClient);
+            _defaultContext.HttpClientFactory = httpClientFactory;
+
+            string response = @"{
+    ""@odata.context"": ""http://localhost:8007/$metadata#Employees"",
+    ""value"": [
+        {
+            ""EmpNumber"": 1,
+            ""EmpType"": ""FullTime"",
+            ""OrgId"": 1,
+            ""Name"": ""John Doe""
+        },
+        {
+            ""EmpNumber"": 2,
+            ""EmpType"": ""PartTime"",
+            ""OrgId"": 1,
+            ""Name"": ""Jane Doe""
+        }
+    ]
+}";
+            SetupContextWithRequestPipeline(_defaultContext, response, "Employees");
+            _defaultContext.SendingRequest2 += (sender, args) =>
+            {
+                Assert.Equal(expectedUri, args.RequestMessage.Url.ToString());
+                Assert.Equal(timeoutInSeconds, ((DataServiceClientRequestMessage)args.RequestMessage).Timeout);
+            };
+
+            // Act
+            DataServiceQuery<Employee> query = _defaultContext.Employees;
+            IEnumerable<Employee> employees = await query.ExecuteAsync();
+
+            // Assert
+            Assert.Equal(expectedUri, query.ToString());
+            Assert.Equal(2, employees.Count());
+        }
+
+        [Fact]
+        public async Task SelectAllEntities_UsesDefaultTimeout_When_HttpClientTimeout_IsNotSet()
+        {
+            // Arrange
+            var expectedUri = $"{ServiceRoot}/Employees";
+
+            var httpClient = new HttpClient();
+
+            var httpClientFactory = new CustomHttpClientFactory(httpClient);
+            _defaultContext.HttpClientFactory = httpClientFactory;
+
+            string response = @"{
+    ""@odata.context"": ""http://localhost:8007/$metadata#Employees"",
+    ""value"": [
+        {
+            ""EmpNumber"": 1,
+            ""EmpType"": ""FullTime"",
+            ""OrgId"": 1,
+            ""Name"": ""John Doe""
+        },
+        {
+            ""EmpNumber"": 2,
+            ""EmpType"": ""PartTime"",
+            ""OrgId"": 1,
+            ""Name"": ""Jane Doe""
+        }
+    ]
+}";
+            SetupContextWithRequestPipeline(_defaultContext, response, "Employees");
+            _defaultContext.SendingRequest2 += (sender, args) =>
+            {
+                Assert.Equal(expectedUri, args.RequestMessage.Url.ToString());
+
+                // Default timeout for HttpClient is 100 seconds
+                Assert.Equal(100, ((DataServiceClientRequestMessage)args.RequestMessage).Timeout);
+            };
+
+            // Act
+            DataServiceQuery<Employee> query = _defaultContext.Employees;
+            IEnumerable<Employee> employees = await query.ExecuteAsync();
+
+            // Assert
+            Assert.Equal(expectedUri, query.ToString());
+            Assert.Equal(2, employees.Count());
+        }
+
+        [Theory]
+        [InlineData(0, "00:00:00")]
+        [InlineData(-1, "-00:00:01")]
+        [InlineData(-30, "-00:00:30")]
+        public void SelectAllEntities_Throws_When_HttpClientTimeout_IsZeroOrNegative(int timeoutInSeconds, string timespan)
+        {
+            // Arrange & Act
+            var exception = Record.Exception(() =>
+            {
+                var httpClient = new HttpClient
+                {
+                    Timeout = TimeSpan.FromSeconds(timeoutInSeconds)
+                };
+            });
+
+            // Assert
+            Assert.NotNull(exception);
+            Assert.IsType<ArgumentOutOfRangeException>(exception);
+            Assert.Contains($"value ('{timespan}') must be greater than '00:00:00'.", ((ArgumentOutOfRangeException)exception).Message);
+        }
+
         private void SetupContextWithRequestPipeline(DataServiceContext context, string response, string path)
         {
-            string location = $"{ServiceRoot}/{path}";
+            string location = $"{ ServiceRoot}/{path}";
 
             context.Configurations.RequestPipeline.OnMessageCreating = (args) => new CustomizedRequestMessage(
                 args,
@@ -503,6 +623,21 @@ namespace Microsoft.OData.Client.Tests.Tracking
 
             public DataServiceQuery<Employee> Employees { get; private set; }
             public DataServiceQuery<EmployeeWithNullableEnumKey> EmployeesWithNullableEnumKey { get; private set; }
+        }
+
+        class CustomHttpClientFactory : IHttpClientFactory
+        {
+            private readonly HttpClient _httpClient;
+
+            public CustomHttpClientFactory(HttpClient httpClient)
+            {
+                _httpClient = httpClient;
+            }
+
+            public HttpClient CreateClient(string name)
+            {
+                return _httpClient;
+            }
         }
     }
 

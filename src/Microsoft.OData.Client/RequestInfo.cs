@@ -133,14 +133,6 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Get the timeout span in seconds to use for the underlying HTTP request to the data service.
-        /// </summary>
-        internal int Timeout
-        {
-            get { return this.Context.Timeout; }
-        }
-
-        /// <summary>
         /// Whether to use post-tunneling for PUT/DELETE.
         /// </summary>
         internal bool UsePostTunneling

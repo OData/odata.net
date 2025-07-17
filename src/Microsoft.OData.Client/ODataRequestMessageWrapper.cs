@@ -152,13 +152,7 @@ namespace Microsoft.OData.Client
         {
             Debug.Assert(requestMessageArgs != null, "requestMessageArgs != null");
 
-            var requestMessage = requestInfo.CreateRequestMessage(requestMessageArgs);
-
-            if (requestInfo.Timeout != 0)
-            {
-                requestMessage.Timeout = requestInfo.Timeout;
-               
-            }
+            DataServiceClientRequestMessage requestMessage = requestInfo.CreateRequestMessage(requestMessageArgs);
 
             return new TopLevelRequestMessageWrapper(requestMessage, requestInfo, requestMessageArgs.Descriptor);
         }
