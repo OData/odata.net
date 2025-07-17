@@ -1,8 +1,8 @@
 ﻿namespace NewStuff._Design._0_Convention.V2
 {
-    public sealed class OdataIdAtTheRootOfTheResponseBody
+    public sealed class OdataId
     {
-        internal OdataIdAtTheRootOfTheResponseBody(string value)
+        internal OdataId(string value)
         {
             Value = value;
         }

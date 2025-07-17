@@ -182,219 +182,53 @@
     {
     }
 
-    public interface IGetResponseBodyReader : IReader<GetResponseBodyToken>
+    public interface IGetResponseBodyReader : IReader<IRootObjectReader>
     {
     }
 
-    public readonly ref struct GetResponseBodyToken
-    {
-        public GetResponseBodyToken(IReaderOfANextLinkAtTheRootOfTheResponseBody nextLinkReader)
-        {
-        }
-
-        public GetResponseBodyToken(IReaderOfAOdataContextAtTheRootOfTheResponseBody dataContextReader)
-        {
-        }
-
-        public GetResponseBodyToken(IReaderOfAOdataIdAtTheRootOfTheResponseBody odataIdReader)
-        {
-        }
-
-        public GetResponseBodyToken(IReaderOfAPropertyAtTheRootOfTheResponseBody propertyReader)
-        {
-        }
-
-        public GetResponseBodyToken()
-        {
-        }
-
-        //// TODO implement accpeter and dispatch
-    }
-
-    public interface IReaderOfANextLinkAtTheRootOfTheResponseBody : IReader<IGetResponseBodyReader, NextLinkAtTheRootOfTheResponseBody>
+    public interface IRootObjectReader : IReader<RootObjectToken>
     {
     }
 
-    public interface IReaderOfAOdataContextAtTheRootOfTheResponseBody : IReader<IGetResponseBodyReader, OdataContextAtTheRootOfTheResponseBody>
+    public readonly ref struct RootObjectToken
     {
-    }
-
-    public interface IReaderOfAOdataIdAtTheRootOfTheResponseBody : IReader<IGetResponseBodyReader, OdataIdAtTheRootOfTheResponseBody>
-    {
-    }
-
-    public interface IReaderOfAPropertyAtTheRootOfTheResponseBody : IReader<IReaderOfAPropertyNameAtTheRootOfTheResponseBody>
-    {
-    }
-
-    public interface IReaderOfAPropertyNameAtTheRootOfTheResponseBody : IReader<IReaderOfAPropertyValueAtTheRootOfTheResponseBody, PropertyNameAtTheRootOfTheResponseBody>
-    {
-    }
-
-    public interface IReaderOfAPropertyValueAtTheRootOfTheResponseBody : IReader<TokenForAPropertyValueAtTheRootOfTheResponseBody>
-    {
-    }
-
-    public readonly ref struct TokenForAPropertyValueAtTheRootOfTheResponseBody
-    {
-        public TokenForAPropertyValueAtTheRootOfTheResponseBody(IReaderOfAPrimitivePropertyValueAtTheRootOfTheResponseBody primitivePropertyValueReader)
+        public RootObjectToken(IRootObjectOdataNextLinkReader nextLinkReader)
         {
         }
 
-        public TokenForAPropertyValueAtTheRootOfTheResponseBody(IReaderOfANullPropertyValueAtTheRootOfTheResponseBody nullPropertyValueReader)
+        public RootObjectToken(IRootObjectOdataContextReader odataContextReader)
         {
         }
 
-        public TokenForAPropertyValueAtTheRootOfTheResponseBody(IReaderOfAMultiValuedPropertyValueAtTheRootOfTheResponseBody multiValuedPropertyValueReader)
+        public RootObjectToken(IRootObjectOdataIdReader odataIdReader)
         {
         }
 
-        public TokenForAPropertyValueAtTheRootOfTheResponseBody(IReaderOfAComplexPropertyValueAtTheRootOfTheResponseBody complexObjectReader)
+        public RootObjectToken(IRootObjectPropertyReader propertyReader)
+        {
+        }
+
+        public RootObjectToken()
         {
         }
 
         //// TODO implement accpeter and dispatch
     }
 
-    public interface IReaderOfAPrimitivePropertyValueAtTheRootOfTheResponseBody : IReader<IGetResponseBodyReader, PrimitivePropertyValueAtTheRootOfTheResponseBody>
+    public interface IRootObjectOdataNextLinkReader : IReader<IRootObjectReader, OdataNextLink> //// TODO note that you are sharing the concrete types between root object and non-root object; you are assuming that just there's just a different syntax to "get at" the "odatanextlink", but ultimately the nextlink always has a consistent syntax
+
     {
     }
 
-    public interface IReaderOfANullPropertyValueAtTheRootOfTheResponseBody : IReader<IGetResponseBodyReader>
+    public interface IRootObjectOdataContextReader : IReader<IRootObjectReader, OdataContext>
     {
     }
 
-    public interface IReaderOfAMultiValuedPropertyValueAtTheRootOfTheResponseBody : IReader<TokenForAMultiValuedPropertyValueAtTheRootOfTheResponseBody>
+    public interface IRootObjectOdataIdReader : IReader<IRootObjectReader, OdataId>
     {
     }
 
-    public readonly ref struct TokenForAMultiValuedPropertyValueAtTheRootOfTheResponseBody
-    {
-        public TokenForAMultiValuedPropertyValueAtTheRootOfTheResponseBody(IReaderOfAPrimitiveElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody primitivePropertyValueReader)
-        {
-        }
-
-        public TokenForAMultiValuedPropertyValueAtTheRootOfTheResponseBody(IReaderOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody complexObjectReader)
-        {
-        }
-
-        public TokenForAMultiValuedPropertyValueAtTheRootOfTheResponseBody(IGetResponseBodyReader getResponseBodyReader)
-        {
-        }
-    }
-
-    public interface IReaderOfAPrimitiveElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody : IReader<IReaderOfAMultiValuedPropertyValueAtTheRootOfTheResponseBody, PrimitiveElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody>
-    {
-    }
-
-    public interface IReaderOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody : IReader<TokenForAComplexElementWithinAMultiValuedPropertyValueAtTheRootOfTheResponseBody>
-    {
-    }
-
-    public readonly ref struct TokenForAComplexElementWithinAMultiValuedPropertyValueAtTheRootOfTheResponseBody
-    {
-        public TokenForAComplexElementWithinAMultiValuedPropertyValueAtTheRootOfTheResponseBody(IReaderOfAOdataContextInsideOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody dataContextReader)
-        {
-        }
-
-        public TokenForAComplexElementWithinAMultiValuedPropertyValueAtTheRootOfTheResponseBody(IReaderOfAOdataIdInsideOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody odataIdReader)
-        {
-        }
-
-        public TokenForAComplexElementWithinAMultiValuedPropertyValueAtTheRootOfTheResponseBody(IReaderOfAPropertyInsideOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody propertyReader)
-        {
-        }
-
-        public TokenForAComplexElementWithinAMultiValuedPropertyValueAtTheRootOfTheResponseBody(IReaderOfAMultiValuedPropertyValueAtTheRootOfTheResponseBody next)
-        {
-        }
-
-        //// TODO implement accpeter and dispatch
-    }
-
-    public interface IReaderOfAOdataContextInsideOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody : IReader<IReaderOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody, OdataContextInsideOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody>
-    {
-    }
-
-    public interface IReaderOfAOdataIdInsideOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody : IReader<IReaderOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody, OdataIdInsideOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody>
-    {
-    }
-
-    public interface IReaderOfAPropertyInsideOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody : IReader<IReaderOfAPropertyNameInsideOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody>
-    {
-    }
-
-    public interface IReaderOfAPropertyNameInsideOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody : IReader<IReaderOfAPropertyValueInsideOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody, PropertyNameInsideOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody>
-    {
-    }
-
-    public interface IReaderOfAPropertyValueInsideOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody : IReader<TokenForAPropertyValueInsideOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody>
-    {
-    }
-
-    public readonly ref struct TokenForAPropertyValueInsideOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody
-    {
-        public TokenForAPropertyValueInsideOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody(IReaderOfAPrimitivePropertyValueInsideOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody primitivePropertyValueReader)
-        {
-        }
-
-        public TokenForAPropertyValueInsideOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody(IReaderOfANullPropertyValueInsideOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody nullPropertyValueReader)
-        {
-        }
-
-        public TokenForAPropertyValueInsideOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody(IReaderOfAMulitValuedPropertyValueInsideOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody multiValuedPropertyValueReader)
-        {
-        }
-
-        public TokenForAPropertyValueInsideOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody(IReaderOfAComplexPropertyValueInsideOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody complexObjectReader)
-        {
-        }
-
-        //// TODO implement accpeter and dispatch
-    }
-
-    public interface IReaderOfAPrimitivePropertyValueInsideOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody : IReader<IReaderOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody, PrimitivePropertyValueInsideOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody>
-    {
-    }
-
-    public interface IReaderOfANullPropertyValueInsideOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody : IReader<IReaderOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody>
-    {
-    }
-
-    public interface IReaderOfAMulitValuedPropertyValueInsideOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody : IReader<TokenForAMulitValuedPropertyValueInsideOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody>
-    {
-        //// TODO you are here
-        //// TODO you are trying to implement this, but you're getting confused by the naming at this point and so you don't know where the recursion is happening; this might mean that it's actually not worth it to have different types for the different "levels" within the payload, but it might also mean that this is exactly *why* you need the different types (if there can actually be differences between the levels, which currently there is for nextlink being only available in the root, but who's to say that there aren't future versions of the standard which further separate the "levels"
-    }
-
-    public readonly ref struct TokenForAMulitValuedPropertyValueInsideOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody
-    {
-        public TokenForAMulitValuedPropertyValueInsideOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody(IReaderOfAPrimitiveElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody primitivePropertyValueReader)
-        {
-        }
-
-        public TokenForAMulitValuedPropertyValueInsideOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody(IReaderOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody complexObjectReader)
-        {
-        }
-
-        public TokenForAMulitValuedPropertyValueInsideOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody(IGetResponseBodyReader getResponseBodyReader)
-        {
-        }
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-    
-    public interface IReaderOfAComplexPropertyValueInsideOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody
+    public interface IRootObjectPropertyReader
     {
     }
 
@@ -402,13 +236,6 @@
 
 
 
-
-
-
-    
-    public interface IReaderOfAComplexPropertyValueAtTheRootOfTheResponseBody
-    {
-    }
 
 
 
@@ -453,15 +280,15 @@
         //// TODO implement accpeter and dispatch
     }
 
-    public interface INextLinkReader : IReader<IGetResponseBodyReader, NextLinkAtTheRootOfTheResponseBody>
+    public interface INextLinkReader : IReader<IGetResponseBodyReader, OdataNextLink>
     {
     }
 
-    public interface IOdataContextReader<T> : IReader<T, OdataContextAtTheRootOfTheResponseBody>
+    public interface IOdataContextReader<T> : IReader<T, OdataContext>
     {
     }
 
-    public interface IOdataIdReader<T> : IReader<T, OdataIdAtTheRootOfTheResponseBody>
+    public interface IOdataIdReader<T> : IReader<T, OdataId>
     {
     }
 
