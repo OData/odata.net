@@ -338,7 +338,7 @@
         {
         }
 
-        public TokenForAPropertyValueInsideOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody(IRootComplexElementNullPropertyValueReader nullPropertyValueReader)
+        public TokenForAPropertyValueInsideOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody(IReaderOfANullPropertyValueInsideOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody nullPropertyValueReader)
         {
         }
 
@@ -357,7 +357,7 @@
     {
     }
 
-    public interface IRootComplexElementNullPropertyValueReader : IReader<IReaderOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody>
+    public interface IReaderOfANullPropertyValueInsideOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody : IReader<IReaderOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody>
     {
     }
 
