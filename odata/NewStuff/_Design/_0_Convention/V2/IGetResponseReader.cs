@@ -68,6 +68,8 @@
 
 
 
+    //// TODO you are here
+    //// TODO you've updated 2 interfaces to allow ref struct, but i think you need to do this bottom up actually
 
     public interface IGetResponseReader : IGetResponseReader<IGetResponseHeaderReader>
     {
