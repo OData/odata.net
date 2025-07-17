@@ -188,19 +188,19 @@
 
     public readonly ref struct GetResponseBodyToken
     {
-        public GetResponseBodyToken(IRootNextLinkReader nextLinkReader)
+        public GetResponseBodyToken(IReaderOfANextLinkAtTheRootOfTheResponseBody nextLinkReader)
         {
         }
 
-        public GetResponseBodyToken(IRootOdataContextReader dataContextReader)
+        public GetResponseBodyToken(IReaderOfAOdataContextAtTheRootOfTheResponseBody dataContextReader)
         {
         }
 
-        public GetResponseBodyToken(IRootOdataIdReader odataIdReader)
+        public GetResponseBodyToken(IReaderOfAOdataIdAtTheRootOfTheResponseBody odataIdReader)
         {
         }
 
-        public GetResponseBodyToken(IRootPropertyReader propertyReader)
+        public GetResponseBodyToken(IReaderOfAPropertyAtTheRootOfTheResponseBody propertyReader)
         {
         }
 
@@ -211,23 +211,23 @@
         //// TODO implement accpeter and dispatch
     }
 
-    public interface IRootNextLinkReader : IReader<IGetResponseBodyReader, RootNextLink>
+    public interface IReaderOfANextLinkAtTheRootOfTheResponseBody : IReader<IGetResponseBodyReader, RootNextLink>
     {
     }
 
-    public interface IRootOdataContextReader : IReader<IGetResponseBodyReader, RootOdataContext>
+    public interface IReaderOfAOdataContextAtTheRootOfTheResponseBody : IReader<IGetResponseBodyReader, RootOdataContext>
     {
     }
 
-    public interface IRootOdataIdReader : IReader<IGetResponseBodyReader, RootOdataId>
+    public interface IReaderOfAOdataIdAtTheRootOfTheResponseBody : IReader<IGetResponseBodyReader, RootOdataId>
     {
     }
 
-    public interface IRootPropertyReader : IReader<IRootPropertyNameReader>
+    public interface IReaderOfAPropertyAtTheRootOfTheResponseBody : IReader<IReaderOfAPropertyNameAtTheRootOfTheResponseBody>
     {
     }
 
-    public interface IRootPropertyNameReader : IReader<IRootPropertyValueReader, RootPropertyName>
+    public interface IReaderOfAPropertyNameAtTheRootOfTheResponseBody : IReader<IRootPropertyValueReader, RootPropertyName>
     {
     }
 
