@@ -56,7 +56,20 @@
     }
 
 
-    public interface IGetResponseReader : IReader<IGetResponseHeaderReader>, IAsyncDisposable
+
+
+
+
+
+
+
+
+
+
+
+
+
+    public interface IGetResponseReader : IGetResponseReader<IGetResponseHeaderReader>
     {
     }
 
