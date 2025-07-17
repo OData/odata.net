@@ -360,7 +360,7 @@
         {
         }
 
-        public NonRootObjectPropertyValueToken(INonRootObjectMultiValuedPropertyValueReader nonRootObjectMultiValuedPropertyValueReader)
+        public NonRootObjectPropertyValueToken(INonRootObjectMultiValuedPropertyValueReader<T> nonRootObjectMultiValuedPropertyValueReader)
         {
         }
 
