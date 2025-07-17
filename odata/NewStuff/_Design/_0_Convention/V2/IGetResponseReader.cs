@@ -274,7 +274,7 @@
         {
         }
 
-        public TokenForAMultiValuedPropertyValueAtTheRootOfTheResponseBody(IRootComplexElementReader complexObjectReader)
+        public TokenForAMultiValuedPropertyValueAtTheRootOfTheResponseBody(IReaderOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody complexObjectReader)
         {
         }
 
@@ -287,36 +287,36 @@
     {
     }
 
-    public interface IRootComplexElementReader : IReader<RootComplexElementToken>
+    public interface IReaderOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody : IReader<TokenForAComplexElementWithinAMultiValuedPropertyValueAtTheRootOfTheResponseBody>
     {
     }
 
-    public readonly ref struct RootComplexElementToken
+    public readonly ref struct TokenForAComplexElementWithinAMultiValuedPropertyValueAtTheRootOfTheResponseBody
     {
-        public RootComplexElementToken(IRootComplexElementOdataContextReader dataContextReader)
+        public TokenForAComplexElementWithinAMultiValuedPropertyValueAtTheRootOfTheResponseBody(IRootComplexElementOdataContextReader dataContextReader)
         {
         }
 
-        public RootComplexElementToken(IRootComplexElementOdataIdReader odataIdReader)
+        public TokenForAComplexElementWithinAMultiValuedPropertyValueAtTheRootOfTheResponseBody(IRootComplexElementOdataIdReader odataIdReader)
         {
         }
 
-        public RootComplexElementToken(IRootComplexElementPropertyReader propertyReader)
+        public TokenForAComplexElementWithinAMultiValuedPropertyValueAtTheRootOfTheResponseBody(IRootComplexElementPropertyReader propertyReader)
         {
         }
 
-        public RootComplexElementToken(IReaderOfAMultiValuedPropertyValueAtTheRootOfTheResponseBody next)
+        public TokenForAComplexElementWithinAMultiValuedPropertyValueAtTheRootOfTheResponseBody(IReaderOfAMultiValuedPropertyValueAtTheRootOfTheResponseBody next)
         {
         }
 
         //// TODO implement accpeter and dispatch
     }
 
-    public interface IRootComplexElementOdataContextReader : IReader<IRootComplexElementReader, RootComplexElementOdataContext>
+    public interface IRootComplexElementOdataContextReader : IReader<IReaderOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody, RootComplexElementOdataContext>
     {
     }
 
-    public interface IRootComplexElementOdataIdReader : IReader<IRootComplexElementReader, RootComplexElementOdataId>
+    public interface IRootComplexElementOdataIdReader : IReader<IReaderOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody, RootComplexElementOdataId>
     {
     }
 
@@ -353,11 +353,11 @@
         //// TODO implement accpeter and dispatch
     }
 
-    public interface IRootComplexElementPrimitivePropertyValueReader : IReader<IRootComplexElementReader, RootComplexElementPrimitivePropertyValue>
+    public interface IRootComplexElementPrimitivePropertyValueReader : IReader<IReaderOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody, RootComplexElementPrimitivePropertyValue>
     {
     }
 
-    public interface IRootComplexElementNullPropertyValueReader : IReader<IRootComplexElementReader>
+    public interface IRootComplexElementNullPropertyValueReader : IReader<IReaderOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody>
     {
     }
 
