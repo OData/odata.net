@@ -82,7 +82,10 @@
     {
     }
 
-    public readonly ref struct GetResponseHeaderToken
+    public readonly ref struct GetResponseHeaderToken<TContentTypeHeaderReader, TCustomHeaderReader, TGetResponseBodyReader>
+        where TContentTypeHeaderReader : IContentTypeHeaderReader, allows ref struct
+        where TCustomHeaderReader : ICustomHeaderReader, allows ref struct
+        where TGetResponseBodyReader : IGetResponseBodyReader, allows ref struct
     {
         private enum Type
         {
@@ -95,46 +98,34 @@
 
         private readonly Type type;
 
-        public GetResponseHeaderToken(IContentTypeHeaderReader contentTypeHeaderReader)
+        public GetResponseHeaderToken(TContentTypeHeaderReader contentTypeHeaderReader)
         {
-            this.value = contentTypeHeaderReader;
-
             this.type = Type.ContentType;
         }
 
-        public GetResponseHeaderToken(ICustomHeaderReader customHeaderReader)
+        public GetResponseHeaderToken(TCustomHeaderReader customHeaderReader)
         {
-            this.value = customHeaderReader;
-
             this.type = Type.Custom;
         }
 
-        public GetResponseHeaderToken(IGetResponseBodyReader getResponseBodyReader)
+        public GetResponseHeaderToken(TGetResponseBodyReader getResponseBodyReader)
         {
-            this.value = getResponseBodyReader;
-
             this.type = Type.Body;
         }
 
         public interface IAccepter<TResult>
         {
-            TResult Accept(IContentTypeHeaderReader contentTypeHeaderReader);
+            TResult Accept(TContentTypeHeaderReader contentTypeHeaderReader);
 
-            TResult Accept(ICustomHeaderReader customHeaderReader);
+            TResult Accept(TCustomHeaderReader customHeaderReader);
 
-            TResult Accept(IGetResponseBodyReader getResponseBodyReader);
+            TResult Accept(TGetResponseBodyReader getResponseBodyReader);
         }
 
         public TResult Dispatch<TResult>(IAccepter<TResult> accepter)
         {
             switch (this.type)
             {
-                case Type.ContentType:
-                    return accepter.Accept((IContentTypeHeaderReader)this.value);
-                case Type.Custom:
-                    return accepter.Accept((ICustomHeaderReader)this.value);
-                case Type.Body:
-                    return accepter.Accept((IGetResponseBodyReader)this.value);
                 default:
                     throw new Exception("TODO a visitor would prevent this");
             }
