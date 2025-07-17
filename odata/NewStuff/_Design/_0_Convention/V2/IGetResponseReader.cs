@@ -334,7 +334,7 @@
 
     public readonly ref struct TokenForAPropertyValueInsideOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody
     {
-        public TokenForAPropertyValueInsideOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody(IRootComplexElementPrimitivePropertyValueReader primitivePropertyValueReader)
+        public TokenForAPropertyValueInsideOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody(IReaderOfAPrimitivePropertyValueInsideOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody primitivePropertyValueReader)
         {
         }
 
@@ -353,7 +353,7 @@
         //// TODO implement accpeter and dispatch
     }
 
-    public interface IRootComplexElementPrimitivePropertyValueReader : IReader<IReaderOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody, RootComplexElementPrimitivePropertyValue>
+    public interface IReaderOfAPrimitivePropertyValueInsideOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody : IReader<IReaderOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody, PrimitivePropertyValueInsideOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody>
     {
     }
 
