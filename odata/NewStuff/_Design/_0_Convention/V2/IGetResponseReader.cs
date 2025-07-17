@@ -428,9 +428,6 @@
     {
     }
 
-    //// TODO you are here
-    //// TODO i think you are done with the interfaces, now add ref structs to them
-
 
 
 
