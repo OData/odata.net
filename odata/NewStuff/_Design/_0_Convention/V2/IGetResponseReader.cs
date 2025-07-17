@@ -308,15 +308,15 @@
 
     public readonly ref struct NonRootObjectToken<T>
     {
-        public NonRootObjectToken(INonRootObjectOdataContextReader nonRootObjectOdataContextReader)
+        public NonRootObjectToken(INonRootObjectOdataContextReader<T> nonRootObjectOdataContextReader)
         {
         }
 
-        public NonRootObjectToken(INonRootObjectOdataIdReader nonRootObjectOdataIdReader)
+        public NonRootObjectToken(INonRootObjectOdataIdReader<T> nonRootObjectOdataIdReader)
         {
         }
 
-        public NonRootObjectToken(INonRootObjectPropertyReader nonRootObjectPropertyReader)
+        public NonRootObjectToken(INonRootObjectPropertyReader<T> nonRootObjectPropertyReader)
         {
         }
 
@@ -330,15 +330,85 @@
         //// TODO you need to flesh out the below interfaces
     }
 
-    public interface INonRootObjectOdataContextReader
+    public interface INonRootObjectOdataContextReader<T> : IReader<INonRootObjectReader<T>, OdataContext>
     {
     }
 
-    public interface INonRootObjectOdataIdReader
+    public interface INonRootObjectOdataIdReader<T> : IReader<INonRootObjectReader<T>, OdataId>
     {
     }
 
-    public interface INonRootObjectPropertyReader
+    public interface INonRootObjectPropertyReader<T>
+    {
+    }
+
+    public interface INonRootObjectPropertyNameReader<T> : IReader<PropertyName, INonRootObjectPropertyValueReader<T>>
+    {
+    }
+
+    public interface INonRootObjectPropertyValueReader<T> : IReader<NonRootObjectPropertyValueToken<T>>
+    {
+    }
+
+    public readonly ref struct NonRootObjectPropertyValueToken<T>
+    {
+        public NonRootObjectPropertyValueToken(INonRootObjectPrimitivePropertyValueReader nonRootObjectPrimitivePropertyValueReader)
+        {
+        }
+
+        public NonRootObjectPropertyValueToken(INonRootObjectNullPropertyValueReader nonRootObjectNullPropertyValueReader)
+        {
+        }
+
+        public NonRootObjectPropertyValueToken(INonRootObjectMultiValuedPropertyValueReader nonRootObjectMultiValuedPropertyValueReader)
+        {
+        }
+
+        public NonRootObjectPropertyValueToken(INonRootObjectComplexPropertyValueReader nonRootObjectComplexPropertyValueReader)
+        {
+        }
+
+        //// TODO implement accpeter and dispatch
+    }
+
+    public interface INonRootObjectPrimitivePropertyValueReader : IReader<IRootObjectReader, PrimitivePropertyValue>
+    {
+    }
+
+    public interface INonRootObjectNullPropertyValueReader : IReader<IRootObjectReader>
+    {
+    }
+
+    public interface INonRootObjectMultiValuedPropertyValueReader : IReader<RootObjectPropertyValueToken>
+    {
+    }
+
+    public readonly ref struct RootObjectMultiValuedPropertyValueToken
+    {
+        public RootObjectMultiValuedPropertyValueToken(IRootObjectPrimitiveElementReader rootObjectPrimitiveElementReader)
+        {
+        }
+
+        public RootObjectMultiValuedPropertyValueToken(IRootObjectComplexElementReader rootObjectComplexElementReader)
+        {
+        }
+
+        public RootObjectMultiValuedPropertyValueToken(IRootObjectReader rootObjectReader)
+        {
+        }
+
+        //// TODO implement accpeter and dispatch
+    }
+
+    public interface IRootObjectPrimitiveElementReader : IReader<IRootObjectReader, PrimitiveElement>
+    {
+    }
+
+    public interface IRootObjectComplexElementReader : IReader<INonRootObjectReader<IRootObjectReader>>
+    {
+    }
+
+    public interface INonRootObjectComplexPropertyValueReader : IReader<INonRootObjectReader<IRootObjectReader>>
     {
     }
 
