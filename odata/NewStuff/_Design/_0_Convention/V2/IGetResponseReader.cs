@@ -301,7 +301,7 @@
         {
         }
 
-        public TokenForAComplexElementWithinAMultiValuedPropertyValueAtTheRootOfTheResponseBody(IRootComplexElementPropertyReader propertyReader)
+        public TokenForAComplexElementWithinAMultiValuedPropertyValueAtTheRootOfTheResponseBody(IReaderOfAPropertyInsideOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody propertyReader)
         {
         }
 
@@ -320,7 +320,7 @@
     {
     }
 
-    public interface IRootComplexElementPropertyReader : IReader<IRootComplexElementPropertyNameReader>
+    public interface IReaderOfAPropertyInsideOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody : IReader<IRootComplexElementPropertyNameReader>
     {
     }
 
