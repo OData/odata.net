@@ -241,11 +241,11 @@
         {
         }
 
-        public TokenForAPropertyValueAtTheRootOfTheResponseBody(IRootNullPropertyValueReader nullPropertyValueReader)
+        public TokenForAPropertyValueAtTheRootOfTheResponseBody(IReaderOfANullPropertyValueAtTheRootOfTheResponseBody nullPropertyValueReader)
         {
         }
 
-        public TokenForAPropertyValueAtTheRootOfTheResponseBody(IRootMultiValuedPropertyValueReader multiValuedPropertyValueReader)
+        public TokenForAPropertyValueAtTheRootOfTheResponseBody(IReaderOfAMultiValuedPropertyValueAtTheRootOfTheResponseBody multiValuedPropertyValueReader)
         {
         }
 
@@ -260,30 +260,30 @@
     {
     }
 
-    public interface IRootNullPropertyValueReader : IReader<IGetResponseBodyReader>
+    public interface IReaderOfANullPropertyValueAtTheRootOfTheResponseBody : IReader<IGetResponseBodyReader>
     {
     }
 
-    public interface IRootMultiValuedPropertyValueReader : IReader<RootMultiValuedPropertyValueToken>
+    public interface IReaderOfAMultiValuedPropertyValueAtTheRootOfTheResponseBody : IReader<TokenForAMultiValuedPropertyValueAtTheRootOfTheResponseBody>
     {
     }
 
-    public readonly ref struct RootMultiValuedPropertyValueToken
+    public readonly ref struct TokenForAMultiValuedPropertyValueAtTheRootOfTheResponseBody
     {
-        public RootMultiValuedPropertyValueToken(IRootPrimitiveElementReader primitivePropertyValueReader)
+        public TokenForAMultiValuedPropertyValueAtTheRootOfTheResponseBody(IRootPrimitiveElementReader primitivePropertyValueReader)
         {
         }
 
-        public RootMultiValuedPropertyValueToken(IRootComplexElementReader complexObjectReader)
+        public TokenForAMultiValuedPropertyValueAtTheRootOfTheResponseBody(IRootComplexElementReader complexObjectReader)
         {
         }
 
-        public RootMultiValuedPropertyValueToken(IGetResponseBodyReader getResponseBodyReader)
+        public TokenForAMultiValuedPropertyValueAtTheRootOfTheResponseBody(IGetResponseBodyReader getResponseBodyReader)
         {
         }
     }
 
-    public interface IRootPrimitiveElementReader : IReader<IRootMultiValuedPropertyValueReader, RootPrimitiveElement>
+    public interface IRootPrimitiveElementReader : IReader<IReaderOfAMultiValuedPropertyValueAtTheRootOfTheResponseBody, RootPrimitiveElement>
     {
     }
 
@@ -305,7 +305,7 @@
         {
         }
 
-        public RootComplexElementToken(IRootMultiValuedPropertyValueReader next)
+        public RootComplexElementToken(IReaderOfAMultiValuedPropertyValueAtTheRootOfTheResponseBody next)
         {
         }
 
@@ -361,7 +361,7 @@
     {
     }
 
-    public interface IRootComplexElementMultiValuedPropertyValueReader : IReader<RootMultiValuedPropertyValueToken>
+    public interface IRootComplexElementMultiValuedPropertyValueReader : IReader<TokenForAMultiValuedPropertyValueAtTheRootOfTheResponseBody>
     {
         //// TODO you are here
         //// TODO you are trying to implement this, but you're getting confused by the naming at this point and so you don't know where the recursion is happening; this might mean that it's actually not worth it to have different types for the different "levels" within the payload, but it might also mean that this is exactly *why* you need the different types (if there can actually be differences between the levels, which currently there is for nextlink being only available in the root, but who's to say that there aren't future versions of the standard which further separate the "levels"
