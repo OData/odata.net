@@ -325,9 +325,6 @@
         }
 
         //// TODO implement accpeter and dispatch
-
-        //// TODO you are here
-        //// TODO you need to flesh out the below interfaces
     }
 
     public interface INonRootObjectOdataContextReader<T> : IReader<INonRootObjectReader<T>, OdataContext>
