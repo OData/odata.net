@@ -78,7 +78,15 @@
     {
     }
 
-    public interface IGetResponseHeaderReader : IReader<GetResponseHeaderToken>
+    public interface IGetResponseHeaderReader : IGetResponseHeaderReader<IContentTypeHeaderReader, ICustomHeaderReader, IGetResponseBodyReader>
+    {
+    }
+
+    public interface IGetResponseHeaderReader<TContentTypeHeaderReader, TCustomHeaderReader, TGetResponseBodyReader>
+        : IReader<GetResponseHeaderToken<TContentTypeHeaderReader, TCustomHeaderReader, TGetResponseBodyReader>>
+        where TContentTypeHeaderReader : IContentTypeHeaderReader, allows ref struct
+        where TCustomHeaderReader : ICustomHeaderReader, allows ref struct
+        where TGetResponseBodyReader : IGetResponseBodyReader, allows ref struct
     {
     }
 
