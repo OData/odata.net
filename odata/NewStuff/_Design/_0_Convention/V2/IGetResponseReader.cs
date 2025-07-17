@@ -270,7 +270,7 @@
 
     public readonly ref struct TokenForAMultiValuedPropertyValueAtTheRootOfTheResponseBody
     {
-        public TokenForAMultiValuedPropertyValueAtTheRootOfTheResponseBody(IRootPrimitiveElementReader primitivePropertyValueReader)
+        public TokenForAMultiValuedPropertyValueAtTheRootOfTheResponseBody(IReaderOfAPrimitiveElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody primitivePropertyValueReader)
         {
         }
 
@@ -283,7 +283,7 @@
         }
     }
 
-    public interface IRootPrimitiveElementReader : IReader<IReaderOfAMultiValuedPropertyValueAtTheRootOfTheResponseBody, RootPrimitiveElement>
+    public interface IReaderOfAPrimitiveElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody : IReader<IReaderOfAMultiValuedPropertyValueAtTheRootOfTheResponseBody, PrimitiveElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody>
     {
     }
 
