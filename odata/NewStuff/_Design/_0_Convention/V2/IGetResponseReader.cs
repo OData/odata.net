@@ -300,10 +300,43 @@
     {
     }
 
-    public interface INonRootObjectReader<T>
+    public interface INonRootObjectReader<T> : IReader<NonRootObjectToken<T>>
     {
     }
 
+    public readonly ref struct NonRootObjectToken<T>
+    {
+        public NonRootObjectToken(INonRootObjectOdataContextReader nonRootObjectOdataContextReader)
+        {
+        }
+
+        public NonRootObjectToken(INonRootObjectOdataIdReader nonRootObjectOdataIdReader)
+        {
+        }
+
+        public NonRootObjectToken(INonRootObjectPropertyReader nonRootObjectPropertyReader)
+        {
+        }
+
+        public NonRootObjectToken(T next)
+        {
+        }
+
+        //// TODO you are here
+        //// TODO you need to flesh out the below interfaces
+    }
+
+    public interface INonRootObjectOdataContextReader
+    {
+    }
+
+    public interface INonRootObjectOdataIdReader
+    {
+    }
+
+    public interface INonRootObjectPropertyReader
+    {
+    }
 
 
 
