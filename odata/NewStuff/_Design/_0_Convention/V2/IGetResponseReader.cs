@@ -297,7 +297,7 @@
         {
         }
 
-        public TokenForAComplexElementWithinAMultiValuedPropertyValueAtTheRootOfTheResponseBody(IRootComplexElementOdataIdReader odataIdReader)
+        public TokenForAComplexElementWithinAMultiValuedPropertyValueAtTheRootOfTheResponseBody(IReaderOfAOdataIdInsideOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody odataIdReader)
         {
         }
 
@@ -316,7 +316,7 @@
     {
     }
 
-    public interface IRootComplexElementOdataIdReader : IReader<IReaderOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody, RootComplexElementOdataId>
+    public interface IReaderOfAOdataIdInsideOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody : IReader<IReaderOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody, OdataIdInsideOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody>
     {
     }
 
