@@ -1,8 +1,8 @@
 ﻿namespace NewStuff._Design._0_Convention.V2
 {
-    public sealed class PrimitivePropertyValueAtTheRootOfTheResponseBody
+    public sealed class PrimitivePropertyValue
     {
-        internal PrimitivePropertyValueAtTheRootOfTheResponseBody(string value)
+        internal PrimitivePropertyValue(string value)
         {
             Value = value;
         }

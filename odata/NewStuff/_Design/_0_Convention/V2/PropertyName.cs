@@ -1,8 +1,8 @@
 ﻿namespace NewStuff._Design._0_Convention.V2
 {
-    public sealed class PropertyNameAtTheRootOfTheResponseBody
+    public sealed class PropertyName
     {
-        internal PropertyNameAtTheRootOfTheResponseBody(string name)
+        internal PropertyName(string name)
         {
             Name = name;
         }

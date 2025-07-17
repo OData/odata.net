@@ -325,7 +325,7 @@
         //// TODO implement accpeter and dispatch
     }
 
-    public interface IPrimitivePropertyValueReader<T> : IReader<T, PrimitivePropertyValueAtTheRootOfTheResponseBody>
+    public interface IPrimitivePropertyValueReader<T> : IReader<T, PrimitivePropertyValue>
     {
     }
 
