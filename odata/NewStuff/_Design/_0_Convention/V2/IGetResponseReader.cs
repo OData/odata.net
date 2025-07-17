@@ -321,11 +321,13 @@
     {
     }
 
-    public interface INonRootObjectReader<T> : IReader<NonRootObjectToken<T>>
+    public interface INonRootObjectReader<TObjectReader> : IReader<NonRootObjectToken<TObjectReader>>
+        where TObjectReader : allows ref struct //// TODO
     {
     }
 
     public readonly ref struct NonRootObjectToken<TObjectReader>
+        where TObjectReader : allows ref struct
     {
         public NonRootObjectToken(INonRootObjectOdataContextReader<TObjectReader> nonRootObjectOdataContextReader)
         {
@@ -396,6 +398,7 @@
     }
 
     public interface INonRootObjectMultiValuedPropertyValueReader<TObjectReader> : IReader<NonRootObjectMultiValuedPropertyValueToken<TObjectReader>>
+        where TObjectReader : allows ref struct //// TODO
     {
     }
 
@@ -418,13 +421,29 @@
 
     public interface INonRootObjectPrimitiveElementReader<TObjectReader> : IReader<INonRootObjectMultiValuedPropertyValueReader<TObjectReader>, PrimitiveElement>
     {
+        //// TODO you are ref structing this interface
     }
 
     public interface INonRootObjectComplexElementReader<TObjectReader> : IReader<INonRootObjectReader<INonRootObjectMultiValuedPropertyValueReader<TObjectReader>>>
     {
     }
 
-    public interface INonRootObjectComplexPropertyValueReader<TObjectReader> : IReader<INonRootObjectReader<TObjectReader>>
+    public interface INonRootObjectComplexElementReader<TNonRootObjectReader, TNonRootObjectMultiValuedPropertyValueReader, TObjectReader> 
+        : IReader<INonRootObjectReader<INonRootObjectMultiValuedPropertyValueReader<TObjectReader>>>
+        where TNonRootObjectReader : INonRootObjectReader<TNonRootObjectMultiValuedPropertyValueReader>, allows ref struct
+        where TNonRootObjectMultiValuedPropertyValueReader : INonRootObjectMultiValuedPropertyValueReader<TObjectReader>, allows ref struct
+        where TObjectReader : allows ref struct
+    {
+    }
+
+    public interface INonRootObjectComplexPropertyValueReader<TObjectReader> : INonRootObjectComplexPropertyValueReader<INonRootObjectReader<TObjectReader>, TObjectReader>
+    {
+    }
+
+    public interface INonRootObjectComplexPropertyValueReader<TNonRootObjectReader, TObjectReader> 
+        : IReader<TNonRootObjectReader>
+        where TNonRootObjectReader : INonRootObjectReader<TObjectReader>, allows ref struct
+        where TObjectReader : allows ref struct
     {
     }
 
