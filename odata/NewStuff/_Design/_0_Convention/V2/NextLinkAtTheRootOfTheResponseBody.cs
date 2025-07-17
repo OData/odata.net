@@ -2,9 +2,9 @@
 {
     using System;
 
-    public sealed class RootNextLink
+    public sealed class NextLinkAtTheRootOfTheResponseBody
     {
-        internal RootNextLink(Uri uri)
+        internal NextLinkAtTheRootOfTheResponseBody(Uri uri)
         {
             Uri = uri;
         }

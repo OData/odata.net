@@ -1,8 +1,8 @@
 ﻿namespace NewStuff._Design._0_Convention.V2
 {
-    public sealed class RootOdataContext
+    public sealed class OdataContextAtTheRootOfTheResponseBody
     {
-        internal RootOdataContext(string context)
+        internal OdataContextAtTheRootOfTheResponseBody(string context)
         {
             Context = context;
         }
