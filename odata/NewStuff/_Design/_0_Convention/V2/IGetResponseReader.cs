@@ -293,7 +293,7 @@
 
     public readonly ref struct TokenForAComplexElementWithinAMultiValuedPropertyValueAtTheRootOfTheResponseBody
     {
-        public TokenForAComplexElementWithinAMultiValuedPropertyValueAtTheRootOfTheResponseBody(IRootComplexElementOdataContextReader dataContextReader)
+        public TokenForAComplexElementWithinAMultiValuedPropertyValueAtTheRootOfTheResponseBody(IReaderOfAOdataContextInsideOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody dataContextReader)
         {
         }
 
@@ -312,7 +312,7 @@
         //// TODO implement accpeter and dispatch
     }
 
-    public interface IRootComplexElementOdataContextReader : IReader<IReaderOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody, RootComplexElementOdataContext>
+    public interface IReaderOfAOdataContextInsideOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody : IReader<IReaderOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody, OdataContextInsideOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody>
     {
     }
 
