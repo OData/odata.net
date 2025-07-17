@@ -237,7 +237,7 @@
 
     public readonly ref struct TokenForAPropertyValueAtTheRootOfTheResponseBody
     {
-        public TokenForAPropertyValueAtTheRootOfTheResponseBody(IRootPrimitivePropertyValueReader primitivePropertyValueReader)
+        public TokenForAPropertyValueAtTheRootOfTheResponseBody(IReaderOfAPrimitivePropertyValueAtTheRootOfTheResponseBody primitivePropertyValueReader)
         {
         }
 
@@ -256,7 +256,7 @@
         //// TODO implement accpeter and dispatch
     }
 
-    public interface IRootPrimitivePropertyValueReader : IReader<IGetResponseBodyReader, RootPrimitivePropertyValue>
+    public interface IReaderOfAPrimitivePropertyValueAtTheRootOfTheResponseBody : IReader<IGetResponseBodyReader, PrimitivePropertyValueAtTheRootOfTheResponseBody>
     {
     }
 
@@ -472,7 +472,7 @@
         //// TODO implement accpeter and dispatch
     }
 
-    public interface IPrimitivePropertyValueReader<T> : IReader<T, RootPrimitivePropertyValue>
+    public interface IPrimitivePropertyValueReader<T> : IReader<T, PrimitivePropertyValueAtTheRootOfTheResponseBody>
     {
     }
 
