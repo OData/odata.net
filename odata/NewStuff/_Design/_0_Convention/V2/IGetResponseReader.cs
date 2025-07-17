@@ -290,11 +290,11 @@
         //// TODO implement accpeter and dispatch
     }
 
-    public interface IRootObjectPrimitiveElementReader : IReader<IRootObjectReader, PrimitiveElement>
+    public interface IRootObjectPrimitiveElementReader : IReader<IRootObjectMultiValuedPropertyValueReader, PrimitiveElement>
     {
     }
 
-    public interface IRootObjectComplexElementReader : IReader<INonRootObjectReader<IRootObjectReader>>
+    public interface IRootObjectComplexElementReader : IReader<INonRootObjectReader<IRootObjectMultiValuedPropertyValueReader>>
     {
     }
 
@@ -364,7 +364,7 @@
         {
         }
 
-        public NonRootObjectPropertyValueToken(INonRootObjectComplexPropertyValueReader nonRootObjectComplexPropertyValueReader)
+        public NonRootObjectPropertyValueToken(INonRootObjectComplexPropertyValueReader<T> nonRootObjectComplexPropertyValueReader)
         {
         }
 
@@ -385,11 +385,11 @@
 
     public readonly ref struct NonRootObjectMultiValuedPropertyValueToken<T>
     {
-        public NonRootObjectMultiValuedPropertyValueToken(INonRootObjectPrimitiveElementReader nonRootObjectPrimitiveElementReader)
+        public NonRootObjectMultiValuedPropertyValueToken(INonRootObjectPrimitiveElementReader<T> nonRootObjectPrimitiveElementReader)
         {
         }
 
-        public NonRootObjectMultiValuedPropertyValueToken(INonRootObjectComplexElementReader nonRootObjectComplexElementReader)
+        public NonRootObjectMultiValuedPropertyValueToken(INonRootObjectComplexElementReader<T> nonRootObjectComplexElementReader)
         {
         }
 
@@ -400,15 +400,15 @@
         //// TODO implement accpeter and dispatch
     }
 
-    public interface INonRootObjectPrimitiveElementReader : IReader<IRootObjectReader, PrimitiveElement>
+    public interface INonRootObjectPrimitiveElementReader<T> : IReader<INonRootObjectMultiValuedPropertyValueReader<T>, PrimitiveElement>
     {
     }
 
-    public interface INonRootObjectComplexElementReader : IReader<INonRootObjectReader<IRootObjectReader>>
+    public interface INonRootObjectComplexElementReader<T> : IReader<INonRootObjectReader<INonRootObjectMultiValuedPropertyValueReader<T>>>
     {
     }
 
-    public interface INonRootObjectComplexPropertyValueReader : IReader<INonRootObjectReader<IRootObjectReader>>
+    public interface INonRootObjectComplexPropertyValueReader<T> : IReader<INonRootObjectReader<T>>
     {
     }
 
