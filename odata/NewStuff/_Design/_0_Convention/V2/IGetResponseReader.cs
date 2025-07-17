@@ -324,29 +324,29 @@
     {
     }
 
-    public interface IReaderOfAPropertyNameInsideOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody : IReader<IRootComplexElementPropertyValueReader, PropertyNameInsideOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody>
+    public interface IReaderOfAPropertyNameInsideOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody : IReader<IReaderOfAPropertyValueInsideOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody, PropertyNameInsideOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody>
     {
     }
 
-    public interface IRootComplexElementPropertyValueReader : IReader<RootComplexElementPropertyValueToken>
+    public interface IReaderOfAPropertyValueInsideOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody : IReader<TokenForAPropertyValueInsideOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody>
     {
     }
 
-    public readonly ref struct RootComplexElementPropertyValueToken
+    public readonly ref struct TokenForAPropertyValueInsideOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody
     {
-        public RootComplexElementPropertyValueToken(IRootComplexElementPrimitivePropertyValueReader primitivePropertyValueReader)
+        public TokenForAPropertyValueInsideOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody(IRootComplexElementPrimitivePropertyValueReader primitivePropertyValueReader)
         {
         }
 
-        public RootComplexElementPropertyValueToken(IRootComplexElementNullPropertyValueReader nullPropertyValueReader)
+        public TokenForAPropertyValueInsideOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody(IRootComplexElementNullPropertyValueReader nullPropertyValueReader)
         {
         }
 
-        public RootComplexElementPropertyValueToken(IRootComplexElementMultiValuedPropertyValueReader multiValuedPropertyValueReader)
+        public TokenForAPropertyValueInsideOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody(IRootComplexElementMultiValuedPropertyValueReader multiValuedPropertyValueReader)
         {
         }
 
-        public RootComplexElementPropertyValueToken(IRootComplexElementComplexPropertyValueReader complexObjectReader)
+        public TokenForAPropertyValueInsideOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody(IRootComplexElementComplexPropertyValueReader complexObjectReader)
         {
         }
 
