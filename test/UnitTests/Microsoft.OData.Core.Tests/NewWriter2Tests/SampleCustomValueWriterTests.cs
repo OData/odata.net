@@ -421,6 +421,23 @@ public class SampleCustomValueWriterTests
             etagValue = $"W/\"{value.Id}\"";
             return true;
         }
+
+        protected override bool HasNestedCountValue(
+            Customer value,
+            IEdmProperty resourceProperty,
+            ODataJsonWriterStack state,
+            ODataJsonWriterContext context,
+            out long? count)
+        {
+            if (resourceProperty.Name == "Orders")
+            {
+                count = value.Orders.Count;
+                return true;
+            }
+
+            count = null;
+            return false;
+        }
     }
 
     class OrderWriter : ODataResourceBaseJsonWriter<Order>

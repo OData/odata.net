@@ -1,4 +1,5 @@
-﻿using Microsoft.OData.Edm;
+﻿using Microsoft.OData.Core.NewWriter2.Json.Metadata;
+using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using System;
 using System.Collections.Concurrent;
@@ -150,7 +151,6 @@ public abstract class ODataResourceBaseJsonWriter<T> : IODataWriter<ODataJsonWri
 
         if (propertyToWrite.Type.IsCollection())
         {
-            // TODO: wh
             // The challenge here is that we don't know the value of the type of the property at this point.
             // We could move this logic to the value writer, but we would have written the property name already.
             // That's only reasonable if we either move all property writing logic to the value writer and do away with the property writer,
@@ -173,7 +173,7 @@ public abstract class ODataResourceBaseJsonWriter<T> : IODataWriter<ODataJsonWri
         await WritePropertyValue(resource, propertyToWrite, state, context);
     }
 
-    protected virtual ValueTask WriteEtagProperty(
+    protected virtual async ValueTask WriteEtagProperty(
         T value,
         ODataJsonWriterStack state,
         ODataJsonWriterContext context)
@@ -192,12 +192,10 @@ public abstract class ODataResourceBaseJsonWriter<T> : IODataWriter<ODataJsonWri
                 // there's an etag, but did not read the value yet.
                 // So let's ask them to write it.
                 // TODO: I'm not really pleased with this pattern
-                WriteEtagValue(value, state, context);
+                await WriteEtagValue(value, state, context);
             }
 
         }
-
-        return ValueTask.CompletedTask;
     }
 
     protected virtual bool HasEtagValue(T value, ODataJsonWriterStack state, ODataJsonWriterContext context, out string etagValue)
@@ -205,22 +203,64 @@ public abstract class ODataResourceBaseJsonWriter<T> : IODataWriter<ODataJsonWri
         etagValue = null;
         return false;
     }
-    public void WriteEtagValue(T value, ODataJsonWriterStack state, ODataJsonWriterContext context)
+    protected virtual ValueTask WriteEtagValue(T value, ODataJsonWriterStack state, ODataJsonWriterContext context)
     {
         bool hasEtag = HasEtagValue(value, state, context, out var etagValue);
         Debug.Assert(hasEtag);
         Debug.Assert(etagValue != null);
         context.JsonWriter.WriteStringValue(etagValue);
+        return ValueTask.CompletedTask;
     }
 
-    protected virtual ValueTask WriteNestedCountProperty(
-        T resource,
+    protected virtual async ValueTask WriteNestedCountProperty(
+        T value,
+        IEdmProperty resourceProperty,
+        ODataJsonWriterStack state,
+        ODataJsonWriterContext context)
+    {
+        if (HasNestedCountValue(value, resourceProperty, state, context, out long? count))
+        {
+
+            JsonMetadataHelpers.WritePropertyAnnotationName(
+                context.JsonWriter,
+                resourceProperty.Name,
+                "@odata.count"u8);
+
+            if (count.HasValue)
+            {
+                context.JsonWriter.WriteNumberValue(count.Value);
+            }
+            else
+            {
+                await WriteNestedCountValue(value, resourceProperty, state, context);
+            }
+        }
+    }
+
+    protected virtual bool HasNestedCountValue(
+        T value,
+        IEdmProperty resourceProperty,
+        ODataJsonWriterStack state,
+        ODataJsonWriterContext context,
+        out long? count)
+    {
+        count = null;
+        return false;
+    }
+
+    protected virtual ValueTask WriteNestedCountValue(
+        T value,
         IEdmProperty propertyToWrite,
         ODataJsonWriterStack state,
         ODataJsonWriterContext context)
     {
+        bool hasCount = HasNestedCountValue(value, propertyToWrite, state, context, out var count);
+        Debug.Assert(hasCount);
+        Debug.Assert(count.HasValue);
+        context.JsonWriter.WriteNumberValue(count.Value);
         return ValueTask.CompletedTask;
     }
+
 
     protected virtual ValueTask WriteNestedNextLinkProperty(
         T resource,

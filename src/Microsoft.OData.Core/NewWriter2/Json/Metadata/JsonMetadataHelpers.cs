@@ -9,7 +9,7 @@ namespace Microsoft.OData.Core.NewWriter2.Json.Metadata;
 
 internal static class JsonMetadataHelpers
 {
-    private static void WritePropertyAnnotationName(
+    public static void WritePropertyAnnotationName(
         Utf8JsonWriter writer,
         ReadOnlySpan<char> propertyName,
         ReadOnlySpan<byte> annotationName)
