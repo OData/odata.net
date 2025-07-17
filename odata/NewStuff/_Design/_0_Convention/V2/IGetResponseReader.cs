@@ -296,7 +296,7 @@
     {
     }
 
-    public interface IPropertyNameReader<T> : IReader<IPropertyValueReader<T>, PropertyNameAtTheRootOfTheResponseBody>
+    public interface IPropertyNameReader<T> : IReader<IPropertyValueReader<T>, PropertyName>
     {
     }
 
