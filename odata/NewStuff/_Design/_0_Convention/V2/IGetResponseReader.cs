@@ -249,7 +249,7 @@
         {
         }
 
-        public TokenForAPropertyValueAtTheRootOfTheResponseBody(IRootComplexPropertyValueReader complexObjectReader)
+        public TokenForAPropertyValueAtTheRootOfTheResponseBody(IReaderOfAComplexPropertyValueAtTheRootOfTheResponseBody complexObjectReader)
         {
         }
 
@@ -342,11 +342,11 @@
         {
         }
 
-        public TokenForAPropertyValueInsideOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody(IRootComplexElementMultiValuedPropertyValueReader multiValuedPropertyValueReader)
+        public TokenForAPropertyValueInsideOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody(IReaderOfAMulitValuedPropertyValueInsideOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody multiValuedPropertyValueReader)
         {
         }
 
-        public TokenForAPropertyValueInsideOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody(IRootComplexElementComplexPropertyValueReader complexObjectReader)
+        public TokenForAPropertyValueInsideOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody(IReaderOfAComplexPropertyValueInsideOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody complexObjectReader)
         {
         }
 
@@ -361,20 +361,25 @@
     {
     }
 
-    public interface IRootComplexElementMultiValuedPropertyValueReader : IReader<TokenForAMultiValuedPropertyValueAtTheRootOfTheResponseBody>
+    public interface IReaderOfAMulitValuedPropertyValueInsideOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody : IReader<TokenForAMulitValuedPropertyValueInsideOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody>
     {
         //// TODO you are here
         //// TODO you are trying to implement this, but you're getting confused by the naming at this point and so you don't know where the recursion is happening; this might mean that it's actually not worth it to have different types for the different "levels" within the payload, but it might also mean that this is exactly *why* you need the different types (if there can actually be differences between the levels, which currently there is for nextlink being only available in the root, but who's to say that there aren't future versions of the standard which further separate the "levels"
     }
 
-
-
-
-
-
-
-    public interface IRootComplexElementComplexPropertyValueReader
+    public readonly ref struct TokenForAMulitValuedPropertyValueInsideOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody
     {
+        public TokenForAMulitValuedPropertyValueInsideOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody(IReaderOfAPrimitiveElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody primitivePropertyValueReader)
+        {
+        }
+
+        public TokenForAMulitValuedPropertyValueInsideOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody(IReaderOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody complexObjectReader)
+        {
+        }
+
+        public TokenForAMulitValuedPropertyValueInsideOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody(IGetResponseBodyReader getResponseBodyReader)
+        {
+        }
     }
 
 
@@ -385,9 +390,30 @@
 
 
 
-    public interface IRootComplexPropertyValueReader
+
+
+
+    
+    public interface IReaderOfAComplexPropertyValueInsideOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody
     {
     }
+
+
+
+
+
+
+
+
+    
+    public interface IReaderOfAComplexPropertyValueAtTheRootOfTheResponseBody
+    {
+    }
+
+
+
+
+
 
 
 
