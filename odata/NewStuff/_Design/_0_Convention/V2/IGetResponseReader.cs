@@ -352,11 +352,11 @@
 
     public readonly ref struct NonRootObjectPropertyValueToken<T>
     {
-        public NonRootObjectPropertyValueToken(INonRootObjectPrimitivePropertyValueReader nonRootObjectPrimitivePropertyValueReader)
+        public NonRootObjectPropertyValueToken(INonRootObjectPrimitivePropertyValueReader<T> nonRootObjectPrimitivePropertyValueReader)
         {
         }
 
-        public NonRootObjectPropertyValueToken(INonRootObjectNullPropertyValueReader nonRootObjectNullPropertyValueReader)
+        public NonRootObjectPropertyValueToken(INonRootObjectNullPropertyValueReader<T> nonRootObjectNullPropertyValueReader)
         {
         }
 
@@ -371,11 +371,11 @@
         //// TODO implement accpeter and dispatch
     }
 
-    public interface INonRootObjectPrimitivePropertyValueReader : IReader<IRootObjectReader, PrimitivePropertyValue>
+    public interface INonRootObjectPrimitivePropertyValueReader<T> : IReader<T, PrimitivePropertyValue>
     {
     }
 
-    public interface INonRootObjectNullPropertyValueReader : IReader<IRootObjectReader>
+    public interface INonRootObjectNullPropertyValueReader<T> : IReader<T>
     {
     }
 
