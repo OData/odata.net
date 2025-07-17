@@ -6,7 +6,7 @@
 
     using NewStuff._Design._0_Convention.V2;
 
-    public interface IReader<TNext> where TNext : allows ref struct
+    public interface IReader<TNext> where TNext : allows ref struct //// TODO can you get covariance on this?
     {
         ValueTask Read();
 
@@ -17,7 +17,7 @@
         RefNullable<TNext> Next();
     }
 
-    public interface IReader<TNext, TValue> : IReader<TNext>
+    public interface IReader<TNext, out TValue> : IReader<TNext> //// TODO can you get covariance on this?
         where TNext : allows ref struct
         where TValue : allows ref struct
     {
@@ -57,6 +57,11 @@
 
 
     public interface IGetResponseReader : IReader<IGetResponseHeaderReader>, IAsyncDisposable
+    {
+    }
+
+    public interface IGetResponseReader<TGetResponseHeaderReader> : IReader<TGetResponseHeaderReader>, IAsyncDisposable
+        where TGetResponseHeaderReader : IGetResponseHeaderReader, allows ref struct
     {
     }
 
