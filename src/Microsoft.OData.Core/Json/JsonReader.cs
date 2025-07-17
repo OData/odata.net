@@ -1209,7 +1209,7 @@ namespace Microsoft.OData.Json
             int intValue;
             decimal decimalValue;
 
-            // We will first try and convert the value to Int32 and Int64. If it succeeds, use that.
+            // We will first try and convert the value to Int32 or Int64. If it succeeds, use that.
             // And then, we will try Decimal, since it will lose precision while expected type is specified.
             // Otherwise, we will try and convert the value into a double.
             if (Int32.TryParse(numberString, NumberStyles.Integer, NumberFormatInfo.InvariantInfo, out intValue))
