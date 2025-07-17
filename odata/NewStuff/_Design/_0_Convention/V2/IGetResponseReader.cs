@@ -286,6 +286,8 @@
         public RootObjectMultiValuedPropertyValueToken(IRootObjectReader rootObjectReader)
         {
         }
+
+        //// TODO implement accpeter and dispatch
     }
 
     public interface IRootObjectPrimitiveElementReader : IReader<IRootObjectReader, PrimitiveElement>
@@ -321,6 +323,8 @@
         public NonRootObjectToken(T next)
         {
         }
+
+        //// TODO implement accpeter and dispatch
 
         //// TODO you are here
         //// TODO you need to flesh out the below interfaces
