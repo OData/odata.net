@@ -320,11 +320,11 @@
     {
     }
 
-    public interface IReaderOfAPropertyInsideOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody : IReader<IRootComplexElementPropertyNameReader>
+    public interface IReaderOfAPropertyInsideOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody : IReader<IReaderOfAPropertyNameInsideOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody>
     {
     }
 
-    public interface IRootComplexElementPropertyNameReader : IReader<IRootComplexElementPropertyValueReader, RootComplexElementPropertyName>
+    public interface IReaderOfAPropertyNameInsideOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody : IReader<IRootComplexElementPropertyValueReader, PropertyNameInsideOfAComplexElementWithinAMultivaluedPropertyAtTheRootOfTheResponseBody>
     {
     }
 
