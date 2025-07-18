@@ -231,6 +231,17 @@ namespace Microsoft.OData
         }
 
         /// <summary>
+        /// Translates a <see cref="CustomQueryOptionNode"/> into a corresponding <see cref="String"/>.
+        /// </summary>
+        /// <param name="node">The node to translate.</param>
+        /// <returns>The translated String.</returns>
+        public override String Visit(CustomQueryOptionNode node)
+        {
+            ExceptionUtils.CheckArgumentNotNull(node, "node");
+            return string.IsNullOrEmpty(node.Name) ? node.Value : string.Concat(node.Name,"=", node.Value);
+        }
+
+        /// <summary>
         /// Translates a <see cref="NonResourceRangeVariableReferenceNode"/> into a corresponding <see cref="String"/>.
         /// </summary>
         /// <param name="node">The node to translate.</param>
@@ -570,6 +581,30 @@ namespace Microsoft.OData
                     {
                         String tmp = this.TranslateNode(keyValuePair.Value);
                         result = string.IsNullOrEmpty(tmp) ? result : string.Concat(result, String.IsNullOrEmpty(result) ? null : ExpressionConstants.SymbolQueryConcatenate, keyValuePair.Key, ExpressionConstants.SymbolEqual, Uri.EscapeDataString(tmp));
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Translates a collection of custom query options into a query string representation.
+        /// </summary>
+        /// <param name="customQueryOptions">A collection of <see cref="QueryNode"/> objects representing the custom query options to be translated.</param>
+        /// <returns>A string containing the translated query options in a query string format.  Returns <see langword="null"/>
+        /// if no valid query options are provided.</returns>
+        internal string TranslateCustomQueryOptions(IEnumerable<QueryNode> customQueryOptions)
+        {
+            String result = null;
+            if (customQueryOptions != null)
+            {
+                foreach (QueryNode queryNode in customQueryOptions)
+                {
+                    if (queryNode != null)
+                    {
+                        String tmp = this.TranslateNode(queryNode);
+                        result = string.IsNullOrEmpty(tmp) ? result : string.Concat(result, String.IsNullOrEmpty(result) ? null : ExpressionConstants.SymbolQueryConcatenate, tmp);
                     }
                 }
             }
