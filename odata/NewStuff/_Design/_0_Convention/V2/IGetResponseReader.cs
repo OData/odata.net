@@ -357,7 +357,11 @@
     {
     }
 
-    public interface INonRootObjectPropertyReader<TObjectReader>
+    public interface INonRootObjectPropertyReader<TObjectReader> : IReader<INonRootObjectPropertyNameReader<TObjectReader>>
+    {
+    }
+
+    public interface INonRootObjectPropertyReader<TObjectReader> : IReader<INonRootObjectPropertyNameReader<TObjectReader>>
     {
     }
 
