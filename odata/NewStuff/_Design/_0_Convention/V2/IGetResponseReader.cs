@@ -402,6 +402,10 @@
     {
     }
 
+    public interface INonRootObjectMultiValuedPropertyValueReader<TObjectReader> : IReader<NonRootObjectMultiValuedPropertyValueToken<TObjectReader>>
+    {
+    }
+
     public readonly ref struct NonRootObjectMultiValuedPropertyValueToken<TObjectReader>
     {
         public NonRootObjectMultiValuedPropertyValueToken(INonRootObjectPrimitiveElementReader<TObjectReader> nonRootObjectPrimitiveElementReader)
@@ -458,7 +462,7 @@
     }
 
     public interface INonRootObjectComplexElementReader<TNonRootObjectReader, TNonRootObjectMultiValuedPropertyValueReader, TObjectReader> 
-        : IReader<INonRootObjectReader<INonRootObjectMultiValuedPropertyValueReader<TObjectReader>>>
+        : IReader<TNonRootObjectReader>
         where TNonRootObjectReader : INonRootObjectReader<TNonRootObjectMultiValuedPropertyValueReader>, allows ref struct
         where TNonRootObjectMultiValuedPropertyValueReader : INonRootObjectMultiValuedPropertyValueReader<TObjectReader>, allows ref struct
         where TObjectReader : allows ref struct
