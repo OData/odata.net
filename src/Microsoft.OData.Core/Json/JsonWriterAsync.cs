@@ -412,7 +412,7 @@ namespace Microsoft.OData.Json
             // IMPORTANT: The Dispose method of the returned stream does the following:
             // - Writes trailing bytes to the writer synchronously
             // - Flushes the buffer of the writer synchronously
-            // ODL supports net45 and netstandard1.1 (in addition to .netstandard2.0)
+            // ODL supports net452 and netstandard1.1 (in addition to .netstandard2.0)
             // This makes it complicated to implement IAsyncDisposable in ODataBinaryStreamWriter
             // TODO: Can the returned stream be safely used asynchronously?
             this.binaryValueStream = new ODataBinaryStreamWriter(writer, this.wrappedBuffer, this.ArrayPool);

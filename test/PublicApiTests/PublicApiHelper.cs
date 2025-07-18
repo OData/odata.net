@@ -17,6 +17,7 @@ using System.Reflection;
 using System.Runtime;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Runtime.Loader;
 using System.Text;
 
 namespace Microsoft.OData.PublicApi.Tests
@@ -42,43 +43,67 @@ namespace Microsoft.OData.PublicApi.Tests
 
         public static void DumpPublicApi(StreamWriter streamWriter, params string[] assemblyNames)
         {
-            IList<Assembly> assemblies = new List<Assembly>();
-            for (int k = 0; k < assemblyNames.Length; ++k)
+            // Framework-specific assemblies share identities, so they must not share a load context.
+            var loadContext = new PublicApiLoadContext(assemblyNames);
+            try
             {
-                try
+                IList<Assembly> assemblies = new List<Assembly>();
+                for (int k = 0; k < assemblyNames.Length; ++k)
                 {
-                    Assembly assembly;
                     try
                     {
+                        Assembly assembly;
                         if (File.Exists(assemblyNames[k]))
                         {
-                            assembly = Assembly.LoadFrom(assemblyNames[k]);
+                            assembly = loadContext.LoadFromAssemblyPath(Path.GetFullPath(assemblyNames[k]));
                         }
                         else
                         {
-                            assembly = Assembly.Load(assemblyNames[k]);
+                            assembly = loadContext.LoadFromAssemblyName(new AssemblyName(assemblyNames[k]));
                         }
-                    }
-                    catch (FileLoadException)
-                    {
-                        // the assembly is already loaded, so find it from loaded assemblies
-                        assembly = AppDomain
-                            .CurrentDomain
-                            .GetAssemblies()
-                            .First(_ => _.FullName.StartsWith(Path.GetFileNameWithoutExtension(assemblyNames[k]), StringComparison.OrdinalIgnoreCase));
-                    }
 
-                    assemblies.Add(assembly);
+                        assemblies.Add(assembly);
+                    }
+                    catch (Exception e)
+                    {
+                        streamWriter.WriteLine(@"Error loading types from assembly '{0}':", assemblyNames[k]);
+                        streamWriter.WriteLine(e.ToString());
+                        throw;
+                    }
                 }
-                catch (Exception e)
-                {
-                    streamWriter.WriteLine(@"Error loading types from assembly '{0}':", assemblyNames[k]);
-                    streamWriter.WriteLine(e.ToString());
-                    throw;
-                }
+
+                DumpPublicApi(streamWriter, assemblies.ToArray());
+            }
+            finally
+            {
+                Reset();
+                loadContext.Unload();
+            }
+        }
+
+        private sealed class PublicApiLoadContext : AssemblyLoadContext
+        {
+            private readonly string[] assemblyDirectories;
+
+            public PublicApiLoadContext(string[] assemblyNames)
+                : base(isCollectible: true)
+            {
+                assemblyDirectories = assemblyNames.Where(File.Exists).Select(name => Path.GetDirectoryName(Path.GetFullPath(name))).Distinct().ToArray();
             }
 
-            DumpPublicApi(streamWriter, assemblies.ToArray());
+            protected override Assembly Load(AssemblyName assemblyName)
+            {
+                foreach (string directory in assemblyDirectories)
+                {
+                    string path = Path.Combine(directory, assemblyName.Name + ".dll");
+                    if (File.Exists(path))
+                    {
+                        return LoadFromAssemblyPath(path);
+                    }
+                }
+
+                return null;
+            }
         }
 
         public static void DumpPublicApi(StreamWriter streamWriter, params Assembly[] assemblies)
