@@ -402,17 +402,55 @@
     {
     }
 
-    public interface INonRootObjectMultiValuedPropertyValueReader<TObjectReader> : IReader<NonRootObjectMultiValuedPropertyValueToken<TObjectReader>>
+    public interface INonRootObjectMultiValuedPropertyValueReader
+        <
+            TNonRootObjectPrimitiveElementReader, TNonRootObjectMultiValuedPropertyValueReader,
+            TNonRootObjectComplexElementReader, TNonRootObjectReader, TNonRootObjectMultiValuedPropertyValueReader2, //// TODO can this "2" one actually re-use the original?
+            TObjectReader
+        > 
+        : IReader
+            <
+                NonRootObjectMultiValuedPropertyValueToken
+                    <
+                        TNonRootObjectPrimitiveElementReader, 
+                        TNonRootObjectMultiValuedPropertyValueReader,
+                        TNonRootObjectComplexElementReader,
+                        TNonRootObjectReader, 
+                        TNonRootObjectMultiValuedPropertyValueReader2,
+                        TObjectReader
+                    >
+            >
+        where TNonRootObjectPrimitiveElementReader : INonRootObjectPrimitiveElementReader<TNonRootObjectMultiValuedPropertyValueReader, TObjectReader>, allows ref struct
+        where TNonRootObjectMultiValuedPropertyValueReader : INonRootObjectMultiValuedPropertyValueReader<TObjectReader>, allows ref struct
+
+        where TNonRootObjectComplexElementReader : INonRootObjectComplexElementReader<TNonRootObjectReader, TNonRootObjectMultiValuedPropertyValueReader2, TObjectReader>, allows ref struct
+        where TNonRootObjectReader : INonRootObjectReader<TNonRootObjectMultiValuedPropertyValueReader2>, allows ref struct
+        where TNonRootObjectMultiValuedPropertyValueReader2 : INonRootObjectMultiValuedPropertyValueReader<TObjectReader>, allows ref struct
+
+        where TObjectReader : allows ref struct
     {
     }
 
-    public readonly ref struct NonRootObjectMultiValuedPropertyValueToken<TObjectReader>
+    public readonly ref struct NonRootObjectMultiValuedPropertyValueToken
+        <
+            TNonRootObjectPrimitiveElementReader, TNonRootObjectMultiValuedPropertyValueReader,
+            TNonRootObjectComplexElementReader, TNonRootObjectReader, TNonRootObjectMultiValuedPropertyValueReader2, //// TODO can this "2" one actually re-use the original?
+            TObjectReader
+        >
+        where TNonRootObjectPrimitiveElementReader : INonRootObjectPrimitiveElementReader<TNonRootObjectMultiValuedPropertyValueReader, TObjectReader>, allows ref struct
+        where TNonRootObjectMultiValuedPropertyValueReader : INonRootObjectMultiValuedPropertyValueReader<TObjectReader>, allows ref struct
+
+        where TNonRootObjectComplexElementReader : INonRootObjectComplexElementReader<TNonRootObjectReader, TNonRootObjectMultiValuedPropertyValueReader2, TObjectReader>, allows ref struct
+        where TNonRootObjectReader : INonRootObjectReader<TNonRootObjectMultiValuedPropertyValueReader2>, allows ref struct
+        where TNonRootObjectMultiValuedPropertyValueReader2 : INonRootObjectMultiValuedPropertyValueReader<TObjectReader>, allows ref struct
+
+        where TObjectReader : allows ref struct
     {
-        public NonRootObjectMultiValuedPropertyValueToken(INonRootObjectPrimitiveElementReader<TObjectReader> nonRootObjectPrimitiveElementReader)
+        public NonRootObjectMultiValuedPropertyValueToken(TNonRootObjectPrimitiveElementReader nonRootObjectPrimitiveElementReader)
         {
         }
 
-        public NonRootObjectMultiValuedPropertyValueToken(INonRootObjectComplexElementReader<TObjectReader> nonRootObjectComplexElementReader)
+        public NonRootObjectMultiValuedPropertyValueToken(TNonRootObjectComplexElementReader nonRootObjectComplexElementReader)
         {
         }
 
