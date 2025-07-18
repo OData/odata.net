@@ -397,52 +397,6 @@
     {
     }
 
-    public interface INonRootObjectMultiValuedPropertyValueReader<TObjectReader> 
-        : INonRootObjectMultiValuedPropertyValueReader
-            <
-                INonRootObjectPrimitiveElementReader
-                    <
-                        INonRootObjectMultiValuedPropertyValueReader
-                            <
-                                TObjectReader
-                            >, 
-                        TObjectReader
-                    >,
-                INonRootObjectMultiValuedPropertyValueReader
-                    <
-                        TObjectReader
-                    >,
-                INonRootObjectComplexElementReader
-                    <
-                        INonRootObjectReader
-                            <
-                                INonRootObjectMultiValuedPropertyValueReader
-                                    <
-                                        TObjectReader
-                                    >
-                            >, 
-                        INonRootObjectMultiValuedPropertyValueReader
-                            <
-                                TObjectReader
-                            >, 
-                        TObjectReader
-                    >,
-                INonRootObjectReader
-                    <
-                        INonRootObjectMultiValuedPropertyValueReader
-                            <
-                                TObjectReader
-                            >
-                    >,
-                INonRootObjectMultiValuedPropertyValueReader
-                    <
-                        TObjectReader
-                    >,
-                TObjectReader
-            >
-    {
-    }
-
     public interface INonRootObjectMultiValuedPropertyValueReader
         <
             TNonRootObjectPrimitiveElementReader, TNonRootObjectMultiValuedPropertyValueReader,
@@ -504,52 +458,6 @@
         //// TODO implement accpeter and dispatch
     }
 
-    public interface INonRootObjectPrimitiveElementReader<TObjectReader> 
-        : INonRootObjectPrimitiveElementReader
-            <
-                INonRootObjectPrimitiveElementReader
-                    <
-                        INonRootObjectMultiValuedPropertyValueReader
-                            <
-                                TObjectReader
-                            >,
-                        TObjectReader
-                    >,
-                INonRootObjectMultiValuedPropertyValueReader
-                    <
-                        TObjectReader
-                    >,
-                INonRootObjectComplexElementReader
-                    <
-                        INonRootObjectReader
-                            <
-                                INonRootObjectMultiValuedPropertyValueReader
-                                    <
-                                        TObjectReader
-                                    >
-                            >,
-                        INonRootObjectMultiValuedPropertyValueReader
-                            <
-                                TObjectReader
-                            >,
-                        TObjectReader
-                    >,
-                INonRootObjectReader
-                    <
-                        INonRootObjectMultiValuedPropertyValueReader
-                            <
-                                TObjectReader
-                            >
-                    >,
-                INonRootObjectMultiValuedPropertyValueReader
-                    <
-                        TObjectReader
-                    >,
-                TObjectReader
-            >
-    {
-    }
-
     public interface INonRootObjectPrimitiveElementReader
         <
             TNonRootObjectPrimitiveElementReader, TNonRootObjectMultiValuedPropertyValueReader,
@@ -568,52 +476,6 @@
     {
     }
 
-    public interface INonRootObjectComplexElementReader<TObjectReader> 
-        : INonRootObjectComplexElementReader
-            <
-                INonRootObjectPrimitiveElementReader
-                    <
-                        INonRootObjectMultiValuedPropertyValueReader
-                            <
-                                TObjectReader
-                            >,
-                        TObjectReader
-                    >,
-                INonRootObjectMultiValuedPropertyValueReader
-                    <
-                        TObjectReader
-                    >,
-                INonRootObjectComplexElementReader
-                    <
-                        INonRootObjectReader
-                            <
-                                INonRootObjectMultiValuedPropertyValueReader
-                                    <
-                                        TObjectReader
-                                    >
-                            >,
-                        INonRootObjectMultiValuedPropertyValueReader
-                            <
-                                TObjectReader
-                            >,
-                        TObjectReader
-                    >,
-                INonRootObjectReader
-                    <
-                        INonRootObjectMultiValuedPropertyValueReader
-                            <
-                                TObjectReader
-                            >
-                    >,
-                INonRootObjectMultiValuedPropertyValueReader
-                    <
-                        TObjectReader
-                    >,
-                TObjectReader
-            >
-    {
-    }
-
     public interface INonRootObjectComplexElementReader
         <
             TNonRootObjectPrimitiveElementReader, TNonRootObjectMultiValuedPropertyValueReader,
@@ -629,18 +491,6 @@
         where TNonRootObjectMultiValuedPropertyValueReader2 : INonRootObjectMultiValuedPropertyValueReader<TNonRootObjectPrimitiveElementReader, TNonRootObjectMultiValuedPropertyValueReader, TNonRootObjectComplexElementReader, TNonRootObjectReader, TNonRootObjectMultiValuedPropertyValueReader2, TObjectReader>, allows ref struct //// TODO i'm not clear that this recursion actually works
 
         where TObjectReader : allows ref struct
-    {
-    }
-
-    public interface INonRootObjectComplexPropertyValueReader<TObjectReader>
-        : INonRootObjectComplexPropertyValueReader
-            <
-                INonRootObjectReader
-                    <
-                        TObjectReader
-                    >, 
-                TObjectReader
-            >
     {
     }
 
