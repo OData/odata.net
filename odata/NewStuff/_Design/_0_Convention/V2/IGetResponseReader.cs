@@ -419,7 +419,15 @@
         //// TODO implement accpeter and dispatch
     }
 
-    public interface INonRootObjectPrimitiveElementReader<TObjectReader> : IReader<INonRootObjectMultiValuedPropertyValueReader<TObjectReader>, PrimitiveElement>
+    public interface INonRootObjectPrimitiveElementReader<TObjectReader> 
+        : INonRootObjectPrimitiveElementReader
+            <
+                INonRootObjectMultiValuedPropertyValueReader
+                    <
+                        TObjectReader
+                    >, 
+                TObjectReader
+            >
     {
     }
 
