@@ -327,7 +327,11 @@
     {
     }
 
-    public readonly ref struct NonRootObjectToken<TObjectReader>
+    public readonly ref struct NonRootObjectToken
+        <
+            TObjectReader
+        >
+
         where TObjectReader : allows ref struct
     {
         public NonRootObjectToken(INonRootObjectOdataContextReader<TObjectReader> nonRootObjectOdataContextReader)
