@@ -421,10 +421,31 @@
 
     public interface INonRootObjectPrimitiveElementReader<TObjectReader> : IReader<INonRootObjectMultiValuedPropertyValueReader<TObjectReader>, PrimitiveElement>
     {
-        //// TODO you are ref structing this interface
     }
 
-    public interface INonRootObjectComplexElementReader<TObjectReader> : IReader<INonRootObjectReader<INonRootObjectMultiValuedPropertyValueReader<TObjectReader>>>
+    public interface INonRootObjectPrimitiveElementReader<TNonRootObjectMultiValuedPropertyValueReader, TObjectReader> 
+        : IReader<TNonRootObjectMultiValuedPropertyValueReader<TObjectReader>, PrimitiveElement>
+        where TNonRootObjectMultiValuedPropertyValueReader : INonRootObjectMultiValuedPropertyValueReader<TObjectReader>, allows ref struct
+        where TObjectReader : allows ref struct
+    {
+    }
+
+    public interface INonRootObjectComplexElementReader<TObjectReader> 
+        : INonRootObjectComplexElementReader
+            <
+                INonRootObjectReader
+                    <
+                        INonRootObjectMultiValuedPropertyValueReader
+                            <
+                                TObjectReader
+                            >
+                    >, 
+                INonRootObjectMultiValuedPropertyValueReader
+                    <
+                        TObjectReader
+                    >, 
+                TObjectReader
+            >
     {
     }
 
@@ -436,7 +457,15 @@
     {
     }
 
-    public interface INonRootObjectComplexPropertyValueReader<TObjectReader> : INonRootObjectComplexPropertyValueReader<INonRootObjectReader<TObjectReader>, TObjectReader>
+    public interface INonRootObjectComplexPropertyValueReader<TObjectReader>
+        : INonRootObjectComplexPropertyValueReader
+            <
+                INonRootObjectReader
+                    <
+                        TObjectReader
+                    >, 
+                TObjectReader
+            >
     {
     }
 
