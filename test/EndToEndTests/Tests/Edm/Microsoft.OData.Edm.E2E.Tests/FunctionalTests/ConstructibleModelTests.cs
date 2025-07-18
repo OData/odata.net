@@ -1033,7 +1033,7 @@ public class ConstructibleModelTests : EdmLibTestCaseBase
         model.AddElement(bazAction);
         container.AddActionImport("baz", bazAction, null);
 
-        Assert.Equal(bazAction.FindParameter("Betty").Name, "Betty");
+        Assert.Equal("Betty", bazAction.FindParameter("Betty")?.Name);
         Assert.Null(bazAction.FindParameter("Barney"));
 
         this.CompareEdmModelToCsdl(
