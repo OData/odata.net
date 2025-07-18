@@ -916,7 +916,7 @@ namespace Microsoft.OData.Client
 
             HeaderCollection headers = new HeaderCollection();
 
-            headers.SetRequestVersion(Util.ODataVersion4, this.RequestInfo.MaxProtocolVersionAsVersion);
+            headers.SetRequestVersion(this.RequestInfo.MaxProtocolVersionAsVersion, this.RequestInfo.MaxProtocolVersionAsVersion);
             this.RequestInfo.Format.SetRequestAcceptHeader(headers);
 
             // if (EntityStates.Deleted || (EntityState.Modifed && null == TargetResource))
@@ -947,7 +947,8 @@ namespace Microsoft.OData.Client
 
             ClientEdmModel model = this.RequestInfo.Model;
             ClientTypeAnnotation clientType = model.GetClientTypeAnnotation(model.GetOrCreateEdmType(entityDescriptor.Entity.GetType()));
-            Version requestVersion = DetermineRequestVersion(clientType);
+            //Version requestVersion = DetermineRequestVersion(clientType);
+            Version requestVersion = this.RequestInfo.MaxProtocolVersionAsVersion;
             string httpMethod = this.GetHttpMethod(state, ref requestVersion);
 
             HeaderCollection headers = new HeaderCollection();

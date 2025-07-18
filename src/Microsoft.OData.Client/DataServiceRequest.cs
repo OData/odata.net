@@ -198,7 +198,7 @@ namespace Microsoft.OData.Client
             Version requestVersion = queryComponents.Version;
             if (requestVersion == null)
             {
-                requestVersion = Util.ODataVersion4;
+                requestVersion = context.MaxProtocolVersionAsVersion;
             }
 
             Uri requestUri = queryComponents.Uri;

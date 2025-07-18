@@ -327,8 +327,8 @@ namespace Microsoft.OData.Client
         {
             if (mediaType == MimeApplicationJsonODataLight)
             {
-                // set the request version to 4.0
-                headers.SetRequestVersion(Util.ODataVersion4, this.context.MaxProtocolVersionAsVersion);
+                // set the request version to 4.0 or 4.01 depending on what is set in tha DataServiceContext.
+                headers.SetRequestVersion(this.context.MaxProtocolVersionAsVersion, this.context.MaxProtocolVersionAsVersion);
             }
 
             headers.SetHeaderIfUnset(XmlConstants.HttpContentType, mediaType);
