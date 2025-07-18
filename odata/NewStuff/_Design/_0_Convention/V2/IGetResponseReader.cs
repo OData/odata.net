@@ -397,8 +397,49 @@
     {
     }
 
-    public interface INonRootObjectMultiValuedPropertyValueReader<TObjectReader> : IReader<NonRootObjectMultiValuedPropertyValueToken<TObjectReader>>
-        where TObjectReader : allows ref struct //// TODO
+    public interface INonRootObjectMultiValuedPropertyValueReader<TObjectReader> 
+        : INonRootObjectMultiValuedPropertyValueReader
+            <
+                INonRootObjectPrimitiveElementReader
+                    <
+                        INonRootObjectMultiValuedPropertyValueReader
+                            <
+                                TObjectReader
+                            >, 
+                        TObjectReader
+                    >,
+                INonRootObjectMultiValuedPropertyValueReader
+                    <
+                        TObjectReader
+                    >,
+                INonRootObjectComplexElementReader
+                    <
+                        INonRootObjectReader
+                            <
+                                INonRootObjectMultiValuedPropertyValueReader
+                                    <
+                                        TObjectReader
+                                    >
+                            >, 
+                        INonRootObjectMultiValuedPropertyValueReader
+                            <
+                                TObjectReader
+                            >, 
+                        TObjectReader
+                    >,
+                INonRootObjectReader
+                    <
+                        INonRootObjectMultiValuedPropertyValueReader
+                            <
+                                TObjectReader
+                            >
+                    >,
+                INonRootObjectMultiValuedPropertyValueReader
+                    <
+                        TObjectReader
+                    >,
+                TObjectReader
+            >
     {
     }
 
@@ -431,6 +472,8 @@
     {
     }
 
+    //// TODO should the tokens use interfaces?
+    
     public readonly ref struct NonRootObjectMultiValuedPropertyValueToken
         <
             TNonRootObjectPrimitiveElementReader, TNonRootObjectMultiValuedPropertyValueReader,
