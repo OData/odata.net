@@ -353,11 +353,22 @@
     {
     }
 
-    public interface INonRootObjectOdataIdReader<TObjectReader> : IReader<INonRootObjectReader<TObjectReader>, OdataId>
-    {
-    }
-
-    public interface INonRootObjectOdataIdReader<TObjectReader> : IReader<INonRootObjectReader<TObjectReader>, OdataId>
+    public interface INonRootObjectOdataIdReader
+        <
+            TNonRootObjectReader,
+            TObjectReader
+        > 
+        : IReader
+            <
+                INonRootObjectReader
+                    <
+                        TObjectReader
+                    >,
+                OdataId
+            >
+        where TNonRootObjectReader : INonRootObjectReader<TObjectReader>, allows ref struct
+        
+        where TObjectReader : allows ref struct
     {
     }
 
