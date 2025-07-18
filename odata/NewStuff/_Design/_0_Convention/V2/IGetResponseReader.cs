@@ -390,12 +390,13 @@
     }
 
     public interface INonRootObjectPrimitivePropertyValueReader<TObjectReader> : IReader<TObjectReader, PrimitivePropertyValue>
+        where TObjectReader : allows ref struct
     {
     }
 
     public interface INonRootObjectNullPropertyValueReader<TObjectReader> : IReader<TObjectReader>
+        where TObjectReader : allows ref struct
     {
-        //// TODO you are here, going up
     }
 
     public interface INonRootObjectMultiValuedPropertyValueReader
