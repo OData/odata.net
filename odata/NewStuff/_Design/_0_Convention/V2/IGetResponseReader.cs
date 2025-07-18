@@ -507,10 +507,44 @@
     public interface INonRootObjectPrimitiveElementReader<TObjectReader> 
         : INonRootObjectPrimitiveElementReader
             <
+                INonRootObjectPrimitiveElementReader
+                    <
+                        INonRootObjectMultiValuedPropertyValueReader
+                            <
+                                TObjectReader
+                            >,
+                        TObjectReader
+                    >,
                 INonRootObjectMultiValuedPropertyValueReader
                     <
                         TObjectReader
-                    >, 
+                    >,
+                INonRootObjectComplexElementReader
+                    <
+                        INonRootObjectReader
+                            <
+                                INonRootObjectMultiValuedPropertyValueReader
+                                    <
+                                        TObjectReader
+                                    >
+                            >,
+                        INonRootObjectMultiValuedPropertyValueReader
+                            <
+                                TObjectReader
+                            >,
+                        TObjectReader
+                    >,
+                INonRootObjectReader
+                    <
+                        INonRootObjectMultiValuedPropertyValueReader
+                            <
+                                TObjectReader
+                            >
+                    >,
+                INonRootObjectMultiValuedPropertyValueReader
+                    <
+                        TObjectReader
+                    >,
                 TObjectReader
             >
     {
@@ -537,17 +571,44 @@
     public interface INonRootObjectComplexElementReader<TObjectReader> 
         : INonRootObjectComplexElementReader
             <
+                INonRootObjectPrimitiveElementReader
+                    <
+                        INonRootObjectMultiValuedPropertyValueReader
+                            <
+                                TObjectReader
+                            >,
+                        TObjectReader
+                    >,
+                INonRootObjectMultiValuedPropertyValueReader
+                    <
+                        TObjectReader
+                    >,
+                INonRootObjectComplexElementReader
+                    <
+                        INonRootObjectReader
+                            <
+                                INonRootObjectMultiValuedPropertyValueReader
+                                    <
+                                        TObjectReader
+                                    >
+                            >,
+                        INonRootObjectMultiValuedPropertyValueReader
+                            <
+                                TObjectReader
+                            >,
+                        TObjectReader
+                    >,
                 INonRootObjectReader
                     <
                         INonRootObjectMultiValuedPropertyValueReader
                             <
                                 TObjectReader
                             >
-                    >, 
+                    >,
                 INonRootObjectMultiValuedPropertyValueReader
                     <
                         TObjectReader
-                    >, 
+                    >,
                 TObjectReader
             >
     {
