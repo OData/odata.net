@@ -920,8 +920,6 @@ virtual Microsoft.OData.Client.DataServiceContext.SetSaveStream(object entity, s
 virtual Microsoft.OData.Client.DataServiceContext.SetSaveStream(object entity, string name, System.IO.Stream stream, bool closeStream, string contentType) -> void
 virtual Microsoft.OData.Client.DataServiceContext.SetSaveStream(object entity, System.IO.Stream stream, bool closeStream, Microsoft.OData.Client.DataServiceRequestArgs args) -> void
 virtual Microsoft.OData.Client.DataServiceContext.SetSaveStream(object entity, System.IO.Stream stream, bool closeStream, string contentType, string slug) -> void
-virtual Microsoft.OData.Client.DataServiceContext.Timeout.get -> int
-virtual Microsoft.OData.Client.DataServiceContext.Timeout.set -> void
 virtual Microsoft.OData.Client.DataServiceContext.TryGetAnnotation<TFunc, TResult>(System.Linq.Expressions.Expression<TFunc> expression, string term, out TResult annotation) -> bool
 virtual Microsoft.OData.Client.DataServiceContext.TryGetAnnotation<TFunc, TResult>(System.Linq.Expressions.Expression<TFunc> expression, string term, string qualifier, out TResult annotation) -> bool
 virtual Microsoft.OData.Client.DataServiceContext.TryGetAnnotation<TResult>(object source, string term, out TResult annotation) -> bool
