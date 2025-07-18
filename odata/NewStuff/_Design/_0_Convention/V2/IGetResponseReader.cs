@@ -461,12 +461,12 @@
                         TObjectReader
                     >
             >
-        where TNonRootObjectPrimitiveElementReader : INonRootObjectPrimitiveElementReader<TNonRootObjectMultiValuedPropertyValueReader, TObjectReader>, allows ref struct
-        where TNonRootObjectMultiValuedPropertyValueReader : INonRootObjectMultiValuedPropertyValueReader<TObjectReader>, allows ref struct
+        where TNonRootObjectPrimitiveElementReader : INonRootObjectPrimitiveElementReader<TNonRootObjectPrimitiveElementReader, TNonRootObjectMultiValuedPropertyValueReader, TNonRootObjectComplexElementReader, TNonRootObjectReader, TNonRootObjectMultiValuedPropertyValueReader2, TObjectReader>, allows ref struct
+        where TNonRootObjectMultiValuedPropertyValueReader : INonRootObjectMultiValuedPropertyValueReader<TNonRootObjectPrimitiveElementReader, TNonRootObjectMultiValuedPropertyValueReader, TNonRootObjectComplexElementReader, TNonRootObjectReader, TNonRootObjectMultiValuedPropertyValueReader2, TObjectReader>, allows ref struct //// TODO i'm not clear that this recursion actually works
 
-        where TNonRootObjectComplexElementReader : INonRootObjectComplexElementReader<TNonRootObjectReader, TNonRootObjectMultiValuedPropertyValueReader2, TObjectReader>, allows ref struct
+        where TNonRootObjectComplexElementReader : INonRootObjectComplexElementReader<TNonRootObjectPrimitiveElementReader, TNonRootObjectMultiValuedPropertyValueReader, TNonRootObjectComplexElementReader, TNonRootObjectReader, TNonRootObjectMultiValuedPropertyValueReader2, TObjectReader>, allows ref struct
         where TNonRootObjectReader : INonRootObjectReader<TNonRootObjectMultiValuedPropertyValueReader2>, allows ref struct
-        where TNonRootObjectMultiValuedPropertyValueReader2 : INonRootObjectMultiValuedPropertyValueReader<TObjectReader>, allows ref struct
+        where TNonRootObjectMultiValuedPropertyValueReader2 : INonRootObjectMultiValuedPropertyValueReader<TNonRootObjectPrimitiveElementReader, TNonRootObjectMultiValuedPropertyValueReader, TNonRootObjectComplexElementReader, TNonRootObjectReader, TNonRootObjectMultiValuedPropertyValueReader2, TObjectReader>, allows ref struct //// TODO i'm not clear that this recursion actually works
 
         where TObjectReader : allows ref struct
     {
@@ -480,12 +480,12 @@
             TNonRootObjectComplexElementReader, TNonRootObjectReader, TNonRootObjectMultiValuedPropertyValueReader2, //// TODO can this "2" one actually re-use the original?
             TObjectReader
         >
-        where TNonRootObjectPrimitiveElementReader : INonRootObjectPrimitiveElementReader<TNonRootObjectMultiValuedPropertyValueReader, TObjectReader>, allows ref struct
-        where TNonRootObjectMultiValuedPropertyValueReader : INonRootObjectMultiValuedPropertyValueReader<TObjectReader>, allows ref struct
+        where TNonRootObjectPrimitiveElementReader : INonRootObjectPrimitiveElementReader<TNonRootObjectPrimitiveElementReader, TNonRootObjectMultiValuedPropertyValueReader, TNonRootObjectComplexElementReader, TNonRootObjectReader, TNonRootObjectMultiValuedPropertyValueReader2, TObjectReader>, allows ref struct
+        where TNonRootObjectMultiValuedPropertyValueReader : INonRootObjectMultiValuedPropertyValueReader<TNonRootObjectPrimitiveElementReader, TNonRootObjectMultiValuedPropertyValueReader, TNonRootObjectComplexElementReader, TNonRootObjectReader, TNonRootObjectMultiValuedPropertyValueReader2, TObjectReader>, allows ref struct //// TODO i'm not clear that this recursion actually works
 
-        where TNonRootObjectComplexElementReader : INonRootObjectComplexElementReader<TNonRootObjectReader, TNonRootObjectMultiValuedPropertyValueReader2, TObjectReader>, allows ref struct
+        where TNonRootObjectComplexElementReader : INonRootObjectComplexElementReader<TNonRootObjectPrimitiveElementReader, TNonRootObjectMultiValuedPropertyValueReader, TNonRootObjectComplexElementReader, TNonRootObjectReader, TNonRootObjectMultiValuedPropertyValueReader2, TObjectReader>, allows ref struct
         where TNonRootObjectReader : INonRootObjectReader<TNonRootObjectMultiValuedPropertyValueReader2>, allows ref struct
-        where TNonRootObjectMultiValuedPropertyValueReader2 : INonRootObjectMultiValuedPropertyValueReader<TObjectReader>, allows ref struct
+        where TNonRootObjectMultiValuedPropertyValueReader2 : INonRootObjectMultiValuedPropertyValueReader<TNonRootObjectPrimitiveElementReader, TNonRootObjectMultiValuedPropertyValueReader, TNonRootObjectComplexElementReader, TNonRootObjectReader, TNonRootObjectMultiValuedPropertyValueReader2, TObjectReader>, allows ref struct //// TODO i'm not clear that this recursion actually works
 
         where TObjectReader : allows ref struct
     {
@@ -516,9 +516,20 @@
     {
     }
 
-    public interface INonRootObjectPrimitiveElementReader<TNonRootObjectMultiValuedPropertyValueReader, TObjectReader> 
+    public interface INonRootObjectPrimitiveElementReader
+        <
+            TNonRootObjectPrimitiveElementReader, TNonRootObjectMultiValuedPropertyValueReader,
+            TNonRootObjectComplexElementReader, TNonRootObjectReader, TNonRootObjectMultiValuedPropertyValueReader2, //// TODO can this "2" one actually re-use the original?
+            TObjectReader
+        > 
         : IReader<TNonRootObjectMultiValuedPropertyValueReader, PrimitiveElement>
-        where TNonRootObjectMultiValuedPropertyValueReader : INonRootObjectMultiValuedPropertyValueReader<TObjectReader>, allows ref struct
+        where TNonRootObjectPrimitiveElementReader : INonRootObjectPrimitiveElementReader<TNonRootObjectPrimitiveElementReader, TNonRootObjectMultiValuedPropertyValueReader, TNonRootObjectComplexElementReader, TNonRootObjectReader, TNonRootObjectMultiValuedPropertyValueReader2, TObjectReader>, allows ref struct
+        where TNonRootObjectMultiValuedPropertyValueReader : INonRootObjectMultiValuedPropertyValueReader<TNonRootObjectPrimitiveElementReader, TNonRootObjectMultiValuedPropertyValueReader, TNonRootObjectComplexElementReader, TNonRootObjectReader, TNonRootObjectMultiValuedPropertyValueReader2, TObjectReader>, allows ref struct //// TODO i'm not clear that this recursion actually works
+
+        where TNonRootObjectComplexElementReader : INonRootObjectComplexElementReader<TNonRootObjectPrimitiveElementReader, TNonRootObjectMultiValuedPropertyValueReader, TNonRootObjectComplexElementReader, TNonRootObjectReader, TNonRootObjectMultiValuedPropertyValueReader2, TObjectReader>, allows ref struct
+        where TNonRootObjectReader : INonRootObjectReader<TNonRootObjectMultiValuedPropertyValueReader2>, allows ref struct
+        where TNonRootObjectMultiValuedPropertyValueReader2 : INonRootObjectMultiValuedPropertyValueReader<TNonRootObjectPrimitiveElementReader, TNonRootObjectMultiValuedPropertyValueReader, TNonRootObjectComplexElementReader, TNonRootObjectReader, TNonRootObjectMultiValuedPropertyValueReader2, TObjectReader>, allows ref struct //// TODO i'm not clear that this recursion actually works
+
         where TObjectReader : allows ref struct
     {
     }
@@ -542,10 +553,20 @@
     {
     }
 
-    public interface INonRootObjectComplexElementReader<TNonRootObjectReader, TNonRootObjectMultiValuedPropertyValueReader, TObjectReader> 
+    public interface INonRootObjectComplexElementReader
+        <
+            TNonRootObjectPrimitiveElementReader, TNonRootObjectMultiValuedPropertyValueReader,
+            TNonRootObjectComplexElementReader, TNonRootObjectReader, TNonRootObjectMultiValuedPropertyValueReader2, //// TODO can this "2" one actually re-use the original?
+            TObjectReader
+        > 
         : IReader<TNonRootObjectReader>
-        where TNonRootObjectReader : INonRootObjectReader<TNonRootObjectMultiValuedPropertyValueReader>, allows ref struct
-        where TNonRootObjectMultiValuedPropertyValueReader : INonRootObjectMultiValuedPropertyValueReader<TObjectReader>, allows ref struct
+        where TNonRootObjectPrimitiveElementReader : INonRootObjectPrimitiveElementReader<TNonRootObjectPrimitiveElementReader, TNonRootObjectMultiValuedPropertyValueReader, TNonRootObjectComplexElementReader, TNonRootObjectReader, TNonRootObjectMultiValuedPropertyValueReader2, TObjectReader>, allows ref struct
+        where TNonRootObjectMultiValuedPropertyValueReader : INonRootObjectMultiValuedPropertyValueReader<TNonRootObjectPrimitiveElementReader, TNonRootObjectMultiValuedPropertyValueReader, TNonRootObjectComplexElementReader, TNonRootObjectReader, TNonRootObjectMultiValuedPropertyValueReader2, TObjectReader>, allows ref struct //// TODO i'm not clear that this recursion actually works
+
+        where TNonRootObjectComplexElementReader : INonRootObjectComplexElementReader<TNonRootObjectPrimitiveElementReader, TNonRootObjectMultiValuedPropertyValueReader, TNonRootObjectComplexElementReader, TNonRootObjectReader, TNonRootObjectMultiValuedPropertyValueReader2, TObjectReader>, allows ref struct
+        where TNonRootObjectReader : INonRootObjectReader<TNonRootObjectMultiValuedPropertyValueReader2>, allows ref struct
+        where TNonRootObjectMultiValuedPropertyValueReader2 : INonRootObjectMultiValuedPropertyValueReader<TNonRootObjectPrimitiveElementReader, TNonRootObjectMultiValuedPropertyValueReader, TNonRootObjectComplexElementReader, TNonRootObjectReader, TNonRootObjectMultiValuedPropertyValueReader2, TObjectReader>, allows ref struct //// TODO i'm not clear that this recursion actually works
+
         where TObjectReader : allows ref struct
     {
     }
