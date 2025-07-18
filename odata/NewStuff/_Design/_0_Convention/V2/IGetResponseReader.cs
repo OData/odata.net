@@ -357,6 +357,10 @@
     {
     }
 
+    public interface INonRootObjectOdataIdReader<TObjectReader> : IReader<INonRootObjectReader<TObjectReader>, OdataId>
+    {
+    }
+
     public interface INonRootObjectPropertyReader
         <
             TNonRootObjectPropertyNameReader,
