@@ -424,7 +424,7 @@
     }
 
     public interface INonRootObjectPrimitiveElementReader<TNonRootObjectMultiValuedPropertyValueReader, TObjectReader> 
-        : IReader<TNonRootObjectMultiValuedPropertyValueReader<TObjectReader>, PrimitiveElement>
+        : IReader<TNonRootObjectMultiValuedPropertyValueReader, PrimitiveElement>
         where TNonRootObjectMultiValuedPropertyValueReader : INonRootObjectMultiValuedPropertyValueReader<TObjectReader>, allows ref struct
         where TObjectReader : allows ref struct
     {
