@@ -1,11 +1,13 @@
 ﻿using Microsoft.OData.Edm;
+using Microsoft.OData.Serializer.Core;
+using Microsoft.OData.Serializer.Json;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace Microsoft.OData.Serializer
+namespace Microsoft.OData.Serializer;
 
 public sealed class ODataSerializerOptions
 {

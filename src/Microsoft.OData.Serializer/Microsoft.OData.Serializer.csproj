@@ -6,4 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Microsoft.OData.Core" Version="7.22.0" />
+    <PackageReference Include="Microsoft.OData.Edm" Version="7.22.0" />
+  </ItemGroup>
+
 </Project>

@@ -1,14 +1,10 @@
 ﻿using Microsoft.OData.Edm;
 using Microsoft.OData.Serializer.Core;
-using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Microsoft.OData.Serializer.Json;
 
-internal class EdmPropertyValueJsonWriterProvider : IPropertyValueWriterProvider<ODataJsonWriterContext, ODataJsonWriterStack, IEdmProperty>
+public class EdmPropertyValueJsonWriterProvider : IPropertyValueWriterProvider<ODataJsonWriterContext, ODataJsonWriterStack, IEdmProperty>
 {
     private readonly ConcurrentDictionary<Type, object> _writers = new();
 

@@ -1,13 +1,9 @@
-﻿using Microsoft.OData.Core.NewWriter2.Json.Payload;
-using Microsoft.OData.Serializer.Core;
-using System;
+﻿using Microsoft.OData.Serializer.Core;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Microsoft.OData.Serializer.Json;
 
-internal class ResourceJsonWriterProvider : IResourceWriterProvider<ODataJsonWriterContext, ODataJsonWriterStack>
+public class ResourceJsonWriterProvider : IResourceWriterProvider<ODataJsonWriterContext, ODataJsonWriterStack>
 {
     private readonly ConcurrentDictionary<Type, object> _writers = new();
 

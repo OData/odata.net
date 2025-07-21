@@ -9,7 +9,7 @@ using System.Xml.Linq;
 
 namespace Microsoft.OData.Serializer.Json;
 
-internal abstract class ODataResourceSetBaseJsonWriter<TCollection, TElement> : IODataWriter<ODataJsonWriterContext, ODataJsonWriterStack, TCollection>
+public abstract class ODataResourceSetBaseJsonWriter<TCollection, TElement> : IODataWriter<ODataJsonWriterContext, ODataJsonWriterStack, TCollection>
 {
     public async ValueTask WriteAsync(TCollection value, ODataJsonWriterStack state, ODataJsonWriterContext context)
     {
@@ -144,7 +144,7 @@ internal abstract class ODataResourceSetBaseJsonWriter<TCollection, TElement> : 
 
     protected virtual bool HasNestedNextLinkValue(
         TCollection value,
-        IEdmProperty property,
+        IEdmProperty prop,
         ODataJsonWriterStack state,
         ODataJsonWriterContext context,
         out Uri nextLink) // TODO: We should not couple ourselves to the Uri type, too expensive.
@@ -155,7 +155,7 @@ internal abstract class ODataResourceSetBaseJsonWriter<TCollection, TElement> : 
 
     protected virtual void WriteNestedNextLinkValue(
         TCollection value,
-        IEdmProperty property,
+        IEdmProperty prop,
         ODataJsonWriterStack state,
         ODataJsonWriterContext context)
     {

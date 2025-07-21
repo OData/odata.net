@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Microsoft.OData.Serializer.Json;
 
-internal class EdmPropertyJsonWriterProvider :
+public class EdmPropertyJsonWriterProvider :
     IResourcePropertyWriterProvider<ODataJsonWriterContext, ODataJsonWriterStack, IEdmProperty>
 {
     private readonly ConcurrentDictionary<Type, object> _writers = new ConcurrentDictionary<Type, object>();

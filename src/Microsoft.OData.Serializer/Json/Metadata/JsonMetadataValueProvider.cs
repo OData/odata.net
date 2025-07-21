@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Microsoft.OData.Serializer.Json;
 
-internal class JsonMetadataValueProvider : IMetadataValueProvider<ODataJsonWriterContext, ODataJsonWriterStack, IEdmProperty>
+public class JsonMetadataValueProvider : IMetadataValueProvider<ODataJsonWriterContext, ODataJsonWriterStack, IEdmProperty>
 {
     // TODO should these be concurrent dicts? But we expect them to be set at config time. Before serialization starts.
     Dictionary<Type, object> counters = new();

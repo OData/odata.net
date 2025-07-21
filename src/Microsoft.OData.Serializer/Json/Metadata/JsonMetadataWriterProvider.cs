@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Microsoft.OData.Serializer.Json;
 
-internal class JsonMetadataWriterProvider(
+public class JsonMetadataWriterProvider(
     IMetadataValueProvider<ODataJsonWriterContext, ODataJsonWriterStack, IEdmProperty> metadataValueProvider)
     : IMetadataWriterProvider<ODataJsonWriterContext, ODataJsonWriterStack, IEdmProperty>
 {

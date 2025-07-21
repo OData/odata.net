@@ -39,15 +39,15 @@ internal static class ContextUrlHelper
         uri.Append(odataUri.ServiceRoot?.AbsoluteUri);
         uri.Append("$metadata#");
 
-        if (odataUri.Path.Segments.Count > 0)
+        if (odataUri.Path.Count > 0)
         {
-            uri.Append(odataUri.Path.Segments[0].Identifier);
+            uri.Append(odataUri.Path[0].Identifier);
         }
 
-        for (int i = 1; i < odataUri.Path.Segments.Count; i++)
+        for (int i = 1; i < odataUri.Path.Count; i++)
         {
             uri.Append('/');
-            uri.Append(odataUri.Path.Segments[i].Identifier);
+            uri.Append(odataUri.Path[i].Identifier);
         }
 
         writer.WriteString("@odata.context", uri.ToString());
