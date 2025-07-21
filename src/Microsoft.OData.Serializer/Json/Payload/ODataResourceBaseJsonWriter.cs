@@ -31,8 +31,7 @@ public abstract class ODataResourceBaseJsonWriter<T> : IODataWriter<ODataJsonWri
         jsonWriter.WriteEndObject();
     }
 
-    // TODO: consider making this method virtual to allow derived classes to customize the order of properties
-    private async ValueTask WriteProperties(T value, ODataJsonWriterStack state, ODataJsonWriterContext context)
+    protected virtual async ValueTask WriteProperties(T value, ODataJsonWriterStack state, ODataJsonWriterContext context)
     {
         // AspNetCoreOData serializes properties in a certain deterministic order: strucural properties first, the dynamic properties, etc.
         // However, according to the spec, the order is considered insignificant. So in this case we'll go with
