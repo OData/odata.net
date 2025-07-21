@@ -90,8 +90,38 @@ public abstract class ODataResourceSetBaseJsonWriter<TCollection, TElement> : IO
 
     protected virtual async ValueTask WriteCountProperty(TCollection value, ODataJsonWriterStack state, ODataJsonWriterContext context)
     {
-        var metadataWriter = context.GetMetadataWriter<TCollection>(state);
-        await metadataWriter.WriteCountPropertyAsync(value, state, context);
+        if (this.HasCountValue(value, state, context, out long? count))
+        {
+
+            context.JsonWriter.WritePropertyName("@odata.count"u8);
+
+            if (count.HasValue)
+            {
+                context.JsonWriter.WriteNumberValue(count.Value);
+            }
+            else
+            {
+                await this.WriteCountValue(value, state, context);
+            }
+        }
+    }
+
+    protected virtual bool HasCountValue(
+        TCollection value,
+        ODataJsonWriterStack state,
+        ODataJsonWriterContext context,
+        out long? count)
+    {
+        count = null;
+        return false;
+    }
+
+    protected virtual ValueTask WriteCountValue(
+        TCollection value,
+        ODataJsonWriterStack state,
+        ODataJsonWriterContext context)
+    {
+        return ValueTask.CompletedTask;
     }
 
     protected virtual ValueTask WriteNextLinkProperty(

@@ -371,6 +371,12 @@ public class SampleCustomValueWriterTests
             nextLink = new Uri("http://service/odata/Customers?$skip=2", UriKind.Absolute);
             return true;
         }
+
+        protected override bool HasCountValue(IList<Customer> value, ODataJsonWriterStack state, ODataJsonWriterContext context, out long? count)
+        {
+            count = value.Count;
+            return true;
+        }
     }
 
     class CustomerWriter : ODataResourceBaseJsonWriter<Customer>
