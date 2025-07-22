@@ -168,12 +168,39 @@ public abstract class ODataResourceBasePlainJsonWriter<T, TProperty> : IODataWri
             await WriteNestedNextLinkProperty(resource, propertyToWrite, state, context);
         }
 
+        await this.WritePropertyAnnotations(resource, propertyToWrite, state, context);
+
         // if property is collection, we should write annotations if available
         this.WritePropertyName(resource, propertyToWrite, state, context);
 
         // TODO: handle scenario where we don't need to write the value, just annotations.
         // write property value
         await WritePropertyValue(resource, propertyToWrite, state, context);
+    }
+
+    protected virtual ValueTask WritePropertyAnnotations(
+        T value,
+        TProperty resourceProperty,
+        ODataJsonWriterStack state,
+        ODataJsonWriterContext context)
+    {
+        return ValueTask.CompletedTask;
+    }
+
+    protected virtual ValueTask WritePropertyAnnotation<TAnnotation>(
+        T value,
+        TProperty resourceProperty,
+        ReadOnlySpan<char> annotationName,
+        TAnnotation annotation,
+        ODataJsonWriterStack state,
+        ODataJsonWriterContext context)
+    {
+       JsonMetadataHelpers.WritePropertyAnnotationName(
+           context.JsonWriter,
+           this.GetPropertyName(value, resourceProperty, state, context),
+           annotationName);
+
+        return context.WriteValueAsync(annotation, state);
     }
 
     protected virtual async ValueTask WriteEtagProperty(

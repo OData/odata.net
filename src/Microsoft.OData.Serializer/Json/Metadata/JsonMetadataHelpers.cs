@@ -12,7 +12,7 @@ internal static class JsonMetadataHelpers
     public static void WritePropertyAnnotationName(
         Utf8JsonWriter writer,
         ReadOnlySpan<char> propertyName,
-        ReadOnlySpan<byte> annotationName)
+        ReadOnlySpan<byte> annotationName) // annotationName should include @separator
     {
         // TODO: if we have access to Utf8JsonWriter's underlying IBufferWriter,
         // we could write directly to and avoid performing this concatenation
@@ -27,8 +27,8 @@ internal static class JsonMetadataHelpers
 
         byte[] rentedArray = null;
 
-        Span<byte> buffer = combinedLength < StackAllocThreshold ?
-            stackalloc byte[combinedLength] : ArrayPool<byte>.Shared.Rent(combinedLength);
+        Span<byte> buffer = maxCombinedLength < StackAllocThreshold ?
+            stackalloc byte[maxCombinedLength] : ArrayPool<byte>.Shared.Rent(maxCombinedLength);
 
         Utf8.FromUtf16(propertyName, buffer, out _, out var propertyBytesWritten);
         annotationName.CopyTo(buffer.Slice(propertyBytesWritten));
@@ -39,6 +39,43 @@ internal static class JsonMetadataHelpers
         if (rentedArray is not null)
         {
             ArrayPool<byte>.Shared.Return(rentedArray);
+        }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="writer"></param>
+    /// <param name="propertyName">The name of the property the annotation belongs to.</param>
+    /// <param name="annotationName">The annotation name, without the leading @ separator.</param>
+    public static void WritePropertyAnnotationName(
+        Utf8JsonWriter writer,
+        ReadOnlySpan<char> propertyName,
+        ReadOnlySpan<char> annotationName)
+    {
+        // TODO: if we have access to Utf8JsonWriter's underlying IBufferWriter,
+        // we could write directly to and avoid performing this concatenation
+        // but that then Utf8JsonWriter will not know about this write
+        // and it may lead to corrupted writes or unexpected behaviour.
+        // It becomes very error-prone and hard to maintain.
+
+        const int StackAllocThreshold = 128;
+        int combinedLength = propertyName.Length + annotationName.Length + 1;
+
+
+        char[] rentedArray = null;
+
+        Span<char> buffer = combinedLength < StackAllocThreshold ?
+            stackalloc char[combinedLength] : ArrayPool<char>.Shared.Rent(combinedLength);
+
+        propertyName.CopyTo(buffer);
+        buffer[propertyName.Length] = '@'; // Add the @ separator
+        annotationName.CopyTo(buffer.Slice(propertyName.Length + 1));
+        writer.WritePropertyName(buffer);
+
+        if (rentedArray is not null)
+        {
+            ArrayPool<char>.Shared.Return(rentedArray);
         }
     }
 }
