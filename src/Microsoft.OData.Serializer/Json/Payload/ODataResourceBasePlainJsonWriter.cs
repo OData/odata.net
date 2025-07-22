@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Microsoft.OData.Serializer.Json.Payload;
+namespace Microsoft.OData.Serializer.Json;
 
 public abstract class ODataResourceBasePlainJsonWriter<T, TProperty> : IODataWriter<ODataJsonWriterContext, ODataJsonWriterStack, T>
 {
