@@ -736,6 +736,23 @@ namespace Microsoft.OData.Tests.UriParser
             Assert.Equal("def", parser.ParseDeltaToken());
         }
 
+        [Fact]
+        public static void ParseCustomQueryOptionsShouldWork()
+        {
+            string request = "People?customQueryOption=value&customQueryOption2=value2";
+            var parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri(request, UriKind.Relative));
+            ODataUri odataUri = parser.ParseUri();
+
+            Assert.NotEmpty(odataUri.CustomQueryOptions);
+            var customQueryOption = Assert.IsType<CustomQueryOptionNode>(odataUri.CustomQueryOptions.FirstOrDefault());
+            Assert.Equal("customQueryOption", customQueryOption.Name);
+            Assert.Equal("value", customQueryOption.Value);
+
+            customQueryOption = Assert.IsType<CustomQueryOptionNode>(odataUri.CustomQueryOptions.Skip(1).FirstOrDefault());
+            Assert.Equal("customQueryOption2", customQueryOption.Name);
+            Assert.Equal("value2", customQueryOption.Value);
+        }
+
         [Theory]
         [InlineData("People(1)/RelatedIDs?index=42", true)]
         [InlineData("People(1)/RelatedIDs?$index=42", true)]
