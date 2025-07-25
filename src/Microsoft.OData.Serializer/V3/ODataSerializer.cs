@@ -1,12 +1,49 @@
-﻿using System;
+﻿using Microsoft.OData.Edm;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Microsoft.OData.Serializer.V3
+namespace Microsoft.OData.Serializer.V3;
+
+public class ODataSerializer
 {
-    internal class ODataSerializer
+    public static async ValueTask WriteAsync<T>(T value, Stream stream, ODataUri uri, IEdmModel model, ODataSerializerOptions options)
     {
+        // this is rough structure of what we expect the writer to do
+        // based on payload kind, determine the appropirate state, context and underlying writer.
+
+        // init state
+        var state = false;
+        // get writer
+        var writer = options.GetWriter<T>(state); // should we pass the value as well?
+
+        bool isDone = false;
+        do
+        {
+            // write value
+            isDone = writer.Write(value, state);
+            // might also need to fetch more data from value (e.g. if source is a stream or IAsyncEnumerable)
+            
+            if (!isDone)
+            {
+                if (typeof(IAsyncSource).IsAssignableFrom(typeof(T));
+                {
+                    IAsyncSource source = (IAsyncSource)value;
+                    if (source.NeedsMoreData)
+                    {
+                        await source.AdvanceAsync();
+                    }
+                }
+
+                if (ShouldFlush())
+                {
+                    // if not done, we might need to flush the stream or do some async operation
+                    // to continue writing later.
+                    await stream.FlushAsync();
+                } 
+            }
+        } while (!isDone);
     }
 }
