@@ -9,11 +9,10 @@ using System.Threading.Tasks;
 
 namespace Microsoft.OData.Serializer.V3.Json;
 
-internal class ODataResourceJsonWriter<T> : ODataWriter<T, ODataJsonWriterState>
+internal class ODataResourceJsonWriter<T>(ODataResourceTypeInfo<T> resourceInfo) : ODataWriter<T, ODataJsonWriterState>
 {
     public override bool Write(T value, ODataJsonWriterState state)
     {
-        ODataResourceTypeInfo<T> resourceInfo = state.GetResourceInfo(value);
         var jsonWriter = state.JsonWriter;
         jsonWriter.WriteStartObject();
         // This makes the following assumptions:
@@ -68,5 +67,6 @@ internal class ODataResourceJsonWriter<T> : ODataWriter<T, ODataJsonWriterState>
         }
 
         jsonWriter.WriteEndObject();
+        return true;
     }
 }

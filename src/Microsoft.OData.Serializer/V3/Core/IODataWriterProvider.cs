@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Microsoft.OData.Serializer.V3.Core;
 
-public interface IODataWriterProvider
+public interface IODataWriterProvider<TState>
 {
-    public IODataWriter<T, TState> GetWriter<T, TState>(TState state); // TODO should we pass the state here?
+    public IODataWriter<T, TState> GetWriter<T>(); // TODO should we pass the state here?
 }

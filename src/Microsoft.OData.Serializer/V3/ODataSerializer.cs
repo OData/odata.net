@@ -1,4 +1,5 @@
 ﻿using Microsoft.OData.Edm;
+using Microsoft.OData.Serializer.V3.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Microsoft.OData.Serializer.V3;
 
-public class ODataSerializer
+public static class ODataSerializer
 {
     public static async ValueTask WriteAsync<T>(T value, Stream stream, ODataUri uri, IEdmModel model, ODataSerializerOptions options)
     {
@@ -15,7 +16,7 @@ public class ODataSerializer
         // based on payload kind, determine the appropirate state, context and underlying writer.
 
         // init state
-        var state = false;
+        var state = new ODataJsonWriterState(options);
         // get writer
         var writer = options.GetWriter<T>(state); // should we pass the value as well?
 
@@ -37,7 +38,7 @@ public class ODataSerializer
                     }
                 }
 
-                if (ShouldFlush())
+                if (state.ShouldFlush())
                 {
                     // if not done, we might need to flush the stream or do some async operation
                     // to continue writing later.

@@ -8,9 +8,11 @@ namespace Microsoft.OData.Serializer.V3.Core;
 
 public abstract class ODataWriter<T, TState> : IODataWriter<T, TState>
 {
+    public Type? Type { get; } = typeof(T);
+
     public virtual bool CanWrite(Type type)
     {
-        return type == typeof(T);
+        return type == this.Type;
     }
 
     public abstract bool Write(T value, TState state);

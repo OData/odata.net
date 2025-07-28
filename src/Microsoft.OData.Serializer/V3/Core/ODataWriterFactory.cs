@@ -8,6 +8,8 @@ namespace Microsoft.OData.Serializer.V3.Core;
 
 public abstract class ODataWriterFactory : IODataWriter
 {
+    public Type? Type => null;
+
     public abstract bool CanWrite(Type type);
 
     public abstract IODataWriter CreateWriter(Type type); // TODO pass options or context
