@@ -15,7 +15,7 @@ public class CustomFilterBinder : FilterBinder
     /// - If the property being accessed is "LifeTimeInSeconds", it returns the property access expression without converting it to Int64.
     /// - For other properties, it uses the default behavior from the base class.
     /// </remarks>
-    public override Expression BindPropertyAccessQueryNode(UriParser.SingleValuePropertyAccessNode propertyAccessNode, QueryBinderContext context)
+    public override Expression BindPropertyAccessQueryNode(OData.UriParser.SingleValuePropertyAccessNode propertyAccessNode, QueryBinderContext context)
     {
         // Check if the property being accessed is "LifeTimeInSeconds"
         if (propertyAccessNode.Property.Name == "LifeTimeInSeconds")
@@ -39,7 +39,7 @@ public class CustomOrderByBinder : OrderByBinder
     /// - If the property being accessed is "LifeTimeInSeconds", it returns the property access expression without converting it to Int64.
     /// - For other properties, it uses the default behavior from the base class.
     /// </remarks>
-    public override Expression BindPropertyAccessQueryNode(UriParser.SingleValuePropertyAccessNode propertyAccessNode, QueryBinderContext context)
+    public override Expression BindPropertyAccessQueryNode(OData.UriParser.SingleValuePropertyAccessNode propertyAccessNode, QueryBinderContext context)
     {
         // Check if the property being accessed is "LifeTimeInSeconds"
         if (propertyAccessNode.Property.Name == "LifeTimeInSeconds")

@@ -7,11 +7,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.OData.UriParser;
+using Microsoft.OData.Core;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Tests.UriParser;
+using Microsoft.OData.UriParser;
 using Xunit;
-using Microsoft.OData.Core;
 
 namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 {
@@ -40,7 +40,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void AddCustomFunction_FunctionCannotBeNull()
         {
             Action addNullFunctionAction = () =>
-                CustomUriFunctions.AddCustomUriFunction("my.MyNullCustomFunction", null);
+                HardCodedTestModel.TestModel.AddCustomUriFunction("my.MyNullCustomFunction", null);
 
             Assert.Throws<ArgumentNullException>("functionSignature", addNullFunctionAction);
         }
@@ -52,7 +52,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 new FunctionSignatureWithReturnType(EdmCoreModel.Instance.GetBoolean(false), EdmCoreModel.Instance.GetInt32(false));
 
             Action addNullFunctionNameAction = () =>
-                CustomUriFunctions.AddCustomUriFunction(null, customFunctionSignature);
+                HardCodedTestModel.TestModel.AddCustomUriFunction(null, customFunctionSignature);
 
             Assert.Throws<ArgumentNullException>("functionName", addNullFunctionNameAction);
         }
@@ -64,7 +64,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 new FunctionSignatureWithReturnType(EdmCoreModel.Instance.GetBoolean(false), EdmCoreModel.Instance.GetInt32(false));
 
             Action addCustomFunctionSignature = () =>
-                CustomUriFunctions.AddCustomUriFunction(string.Empty, customFunctionSignature);
+                HardCodedTestModel.TestModel.AddCustomUriFunction(string.Empty, customFunctionSignature);
 
             Assert.Throws<ArgumentNullException>("functionName", addCustomFunctionSignature);
         }
@@ -76,7 +76,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 new FunctionSignatureWithReturnType(null, EdmCoreModel.Instance.GetInt32(false));
 
             Action addCustomFunctionSignature = () =>
-                CustomUriFunctions.AddCustomUriFunction("my.customFunctionWithNoReturnType",
+                HardCodedTestModel.TestModel.AddCustomUriFunction("my.customFunctionWithNoReturnType",
                                                         customFunctionSignatureWithNullReturnType);
 
             Assert.Throws<ArgumentNullException>("functionSignatureWithReturnType must contain a return type", addCustomFunctionSignature);
@@ -91,7 +91,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             {
                 // Add exisiting with 'addAsOverload' 'true'
                 Action addCustomFunction = () =>
-                    CustomUriFunctions.AddCustomUriFunction(BUILT_IN_GEODISTANCE_FUNCTION_NAME,
+                    HardCodedTestModel.TestModel.AddCustomUriFunction(BUILT_IN_GEODISTANCE_FUNCTION_NAME,
                                                             GEO_DISTANCE_BUILTIN_FUNCTION_SIGNATURE);
 
                 // Assert
@@ -100,7 +100,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             finally
             {
                 // Clean from CustomUriFunctions cache
-                CustomUriFunctions.RemoveCustomUriFunction(BUILT_IN_GEODISTANCE_FUNCTION_NAME);
+                HardCodedTestModel.TestModel.RemoveCustomUriFunction(BUILT_IN_GEODISTANCE_FUNCTION_NAME);
             }
         }
 
@@ -114,7 +114,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                                                         EdmCoreModel.Instance.GetBoolean(false));
 
                 // Add with 'addAsOverload' 'true'
-                CustomUriFunctions.AddCustomUriFunction(BUILT_IN_GEODISTANCE_FUNCTION_NAME, customFunctionSignature);
+                HardCodedTestModel.TestModel.AddCustomUriFunction(BUILT_IN_GEODISTANCE_FUNCTION_NAME, customFunctionSignature);
 
                 FunctionSignatureWithReturnType[] resultFunctionSignaturesWithReturnType =
                     this.GetCustomFunctionSignaturesOrNull(BUILT_IN_GEODISTANCE_FUNCTION_NAME);
@@ -127,7 +127,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             finally
             {
                 // Clean from CustomUriFunctions cache
-                CustomUriFunctions.RemoveCustomUriFunction(BUILT_IN_GEODISTANCE_FUNCTION_NAME);
+                HardCodedTestModel.TestModel.RemoveCustomUriFunction(BUILT_IN_GEODISTANCE_FUNCTION_NAME);
             }
         }
 
@@ -140,13 +140,13 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             {
                 // Prepare
                 var existingCustomFunctionSignature = new FunctionSignatureWithReturnType(EdmCoreModel.Instance.GetDouble(false), EdmCoreModel.Instance.GetBoolean(false));
-                CustomUriFunctions.AddCustomUriFunction(customFunctionName, existingCustomFunctionSignature);
+                HardCodedTestModel.TestModel.AddCustomUriFunction(customFunctionName, existingCustomFunctionSignature);
 
                 // Test
                 var newCustomFunctionSignature = new FunctionSignatureWithReturnType(EdmCoreModel.Instance.GetDouble(false), EdmCoreModel.Instance.GetBoolean(false));
 
                 Action addCustomFunction = () =>
-                    CustomUriFunctions.AddCustomUriFunction(customFunctionName, newCustomFunctionSignature);
+                    HardCodedTestModel.TestModel.AddCustomUriFunction(customFunctionName, newCustomFunctionSignature);
 
                 // Assert
                 addCustomFunction.Throws<ODataException>(Error.Format(SRResources.CustomUriFunctions_AddCustomUriFunction_CustomFunctionOverloadExists, customFunctionName));
@@ -154,7 +154,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             finally
             {
                 // Clean from CustomUriFunctions cache
-                CustomUriFunctions.RemoveCustomUriFunction(customFunctionName);
+                HardCodedTestModel.TestModel.RemoveCustomUriFunction(customFunctionName);
             }
         }
 
@@ -166,13 +166,13 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             {
                 // Prepare
                 var existingCustomFunctionSignature = new FunctionSignatureWithReturnType(EdmCoreModel.Instance.GetDouble(false), EdmCoreModel.Instance.GetBoolean(false));
-                CustomUriFunctions.AddCustomUriFunction(customFunctionName, existingCustomFunctionSignature);
+                HardCodedTestModel.TestModel.AddCustomUriFunction(customFunctionName, existingCustomFunctionSignature);
 
                 // Test
                 var newCustomFunctionSignature = new FunctionSignatureWithReturnType(EdmCoreModel.Instance.GetDouble(false), EdmCoreModel.Instance.GetBoolean(false));
 
                 Action addCustomFunction = () =>
-                    CustomUriFunctions.AddCustomUriFunction(customFunctionName, newCustomFunctionSignature);
+                    HardCodedTestModel.TestModel.AddCustomUriFunction(customFunctionName, newCustomFunctionSignature);
 
                 // Asserts
                 addCustomFunction.Throws<ODataException>(Error.Format(SRResources.CustomUriFunctions_AddCustomUriFunction_CustomFunctionOverloadExists, customFunctionName));
@@ -180,7 +180,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             finally
             {
                 // Clean from CustomUriFunctions cache
-                CustomUriFunctions.RemoveCustomUriFunction(customFunctionName);
+                HardCodedTestModel.TestModel.RemoveCustomUriFunction(customFunctionName);
             }
         }
 
@@ -193,7 +193,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 // New not existing custom function
                 var newCustomFunctionSignature =
                     new FunctionSignatureWithReturnType(EdmCoreModel.Instance.GetDouble(false), EdmCoreModel.Instance.GetInt32(false), EdmCoreModel.Instance.GetBoolean(false));
-                CustomUriFunctions.AddCustomUriFunction(customFunctionName, newCustomFunctionSignature);
+                HardCodedTestModel.TestModel.AddCustomUriFunction(customFunctionName, newCustomFunctionSignature);
 
                 // Assert
                 // Make sure both signatures exists
@@ -206,7 +206,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             finally
             {
                 // Clean from CustomUriFunctions cache
-                CustomUriFunctions.RemoveCustomUriFunction(customFunctionName);
+                HardCodedTestModel.TestModel.RemoveCustomUriFunction(customFunctionName);
             }
         }
 
@@ -219,7 +219,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 // New not existing custom function - function without any argumnets
                 var newCustomFunctionSignature =
                     new FunctionSignatureWithReturnType(EdmCoreModel.Instance.GetDouble(false));
-                CustomUriFunctions.AddCustomUriFunction(customFunctionName, newCustomFunctionSignature);
+                HardCodedTestModel.TestModel.AddCustomUriFunction(customFunctionName, newCustomFunctionSignature);
 
                 // Assert
                 // Make sure both signatures exists
@@ -232,7 +232,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             finally
             {
                 // Clean from CustomUriFunctions cache
-                CustomUriFunctions.RemoveCustomUriFunction(customFunctionName);
+                HardCodedTestModel.TestModel.RemoveCustomUriFunction(customFunctionName);
             }
         }
 
@@ -245,13 +245,13 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 // Prepare
                 FunctionSignatureWithReturnType existingCustomFunctionSignature =
                     new FunctionSignatureWithReturnType(EdmCoreModel.Instance.GetDouble(false), EdmCoreModel.Instance.GetBoolean(false));
-                CustomUriFunctions.AddCustomUriFunction(customFunctionName, existingCustomFunctionSignature);
+                HardCodedTestModel.TestModel.AddCustomUriFunction(customFunctionName, existingCustomFunctionSignature);
 
                 //Test
                 // Same name, but different signature
                 var newCustomFunctionSignature =
                     new FunctionSignatureWithReturnType(EdmCoreModel.Instance.GetDouble(false), EdmCoreModel.Instance.GetInt32(false), EdmCoreModel.Instance.GetBoolean(false));
-                CustomUriFunctions.AddCustomUriFunction(customFunctionName, newCustomFunctionSignature);
+                HardCodedTestModel.TestModel.AddCustomUriFunction(customFunctionName, newCustomFunctionSignature);
 
                 // Assert
                 // Make sure both signatures exists
@@ -264,7 +264,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             finally
             {
                 // Clean both signatures from CustomUriFunctions cache
-                Assert.True(CustomUriFunctions.RemoveCustomUriFunction(customFunctionName));
+                Assert.True(HardCodedTestModel.TestModel.RemoveCustomUriFunction(customFunctionName));
             }
         }
 
@@ -281,7 +281,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             // Test
             Action removeFunction = () =>
-                CustomUriFunctions.RemoveCustomUriFunction(null);
+                HardCodedTestModel.TestModel.RemoveCustomUriFunction(null);
 
             // Assert
             Assert.Throws<ArgumentNullException>("functionName", removeFunction);
@@ -292,7 +292,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             // Test
             Action removeFunction = () =>
-                CustomUriFunctions.RemoveCustomUriFunction(string.Empty);
+                HardCodedTestModel.TestModel.RemoveCustomUriFunction(string.Empty);
 
             // Assert
             Assert.Throws<ArgumentNullException>("functionName", removeFunction);
@@ -303,7 +303,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             // Test
             Action removeFunction = () =>
-                CustomUriFunctions.RemoveCustomUriFunction("FunctionName", null);
+                HardCodedTestModel.TestModel.RemoveCustomUriFunction("FunctionName", null);
 
             // Assert
             Assert.Throws<ArgumentNullException>("functionSignature", removeFunction);
@@ -317,7 +317,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             // Test
             Action removeFunction = () =>
-                CustomUriFunctions.RemoveCustomUriFunction("FunctionName", existingCustomFunctionSignature);
+                HardCodedTestModel.TestModel.RemoveCustomUriFunction("FunctionName", existingCustomFunctionSignature);
 
             // Assert
             Assert.Throws<ArgumentNullException>("functionSignatureWithReturnType must contain a return type", removeFunction);
@@ -334,12 +334,12 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             // Prepare
             FunctionSignatureWithReturnType existingCustomFunctionSignature =
                     new FunctionSignatureWithReturnType(EdmCoreModel.Instance.GetDouble(false), EdmCoreModel.Instance.GetBoolean(false));
-            CustomUriFunctions.AddCustomUriFunction(customFunctionName, existingCustomFunctionSignature);
+            HardCodedTestModel.TestModel.AddCustomUriFunction(customFunctionName, existingCustomFunctionSignature);
 
             Assert.True(GetCustomFunctionSignaturesOrNull(customFunctionName)[0].Equals(existingCustomFunctionSignature));
 
             // Test
-            bool isRemoveSucceeded = CustomUriFunctions.RemoveCustomUriFunction(customFunctionName);
+            bool isRemoveSucceeded = HardCodedTestModel.TestModel.RemoveCustomUriFunction(customFunctionName);
 
             // Assert
             Assert.True(isRemoveSucceeded);
@@ -354,7 +354,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             string customFunctionName = "my.ExistingCustomFunction";
 
             // Test
-            bool isRemoveSucceeded = CustomUriFunctions.RemoveCustomUriFunction(customFunctionName);
+            bool isRemoveSucceeded = HardCodedTestModel.TestModel.RemoveCustomUriFunction(customFunctionName);
 
             // Assert
             Assert.False(isRemoveSucceeded);
@@ -369,7 +369,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                  new FunctionSignatureWithReturnType(EdmCoreModel.Instance.GetDouble(false), EdmCoreModel.Instance.GetBoolean(false));
 
             // Test
-            bool isRemoveSucceeded = CustomUriFunctions.RemoveCustomUriFunction(customFunctionName, customFunctionSignature);
+            bool isRemoveSucceeded = HardCodedTestModel.TestModel.RemoveCustomUriFunction(customFunctionName, customFunctionSignature);
 
             // Assert
             Assert.False(isRemoveSucceeded);
@@ -386,7 +386,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 // Prepare
                 FunctionSignatureWithReturnType existingCustomFunctionSignature =
                         new FunctionSignatureWithReturnType(EdmCoreModel.Instance.GetDouble(false), EdmCoreModel.Instance.GetBoolean(false));
-                CustomUriFunctions.AddCustomUriFunction(customFunctionName, existingCustomFunctionSignature);
+                HardCodedTestModel.TestModel.AddCustomUriFunction(customFunctionName, existingCustomFunctionSignature);
 
                 Assert.True(GetCustomFunctionSignaturesOrNull(customFunctionName)[0].Equals(existingCustomFunctionSignature));
 
@@ -397,7 +397,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 // Test
 
                 // Try Remove a function with the same name but different siganture
-                bool isRemoveSucceeded = CustomUriFunctions.RemoveCustomUriFunction(customFunctionName, customFunctionSignatureToRemove);
+                bool isRemoveSucceeded = HardCodedTestModel.TestModel.RemoveCustomUriFunction(customFunctionName, customFunctionSignatureToRemove);
 
                 // Assert
                 Assert.False(isRemoveSucceeded);
@@ -405,7 +405,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             finally
             {
                 // Clean up cahce
-                CustomUriFunctions.RemoveCustomUriFunction(customFunctionName);
+                HardCodedTestModel.TestModel.RemoveCustomUriFunction(customFunctionName);
             }
 
         }
@@ -421,12 +421,12 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 // Prepare
                 FunctionSignatureWithReturnType existingCustomFunctionSignature =
                         new FunctionSignatureWithReturnType(EdmCoreModel.Instance.GetDouble(false), EdmCoreModel.Instance.GetBoolean(false));
-                CustomUriFunctions.AddCustomUriFunction(customFunctionName, existingCustomFunctionSignature);
+                HardCodedTestModel.TestModel.AddCustomUriFunction(customFunctionName, existingCustomFunctionSignature);
 
                 Assert.True(GetCustomFunctionSignaturesOrNull(customFunctionName)[0].Equals(existingCustomFunctionSignature));
 
                 // Test
-                bool isRemoveSucceeded = CustomUriFunctions.RemoveCustomUriFunction(customFunctionName, existingCustomFunctionSignature);
+                bool isRemoveSucceeded = HardCodedTestModel.TestModel.RemoveCustomUriFunction(customFunctionName, existingCustomFunctionSignature);
 
                 // Assert
                 Assert.True(isRemoveSucceeded);
@@ -435,7 +435,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             }
             finally
             {
-                CustomUriFunctions.RemoveCustomUriFunction(customFunctionName);
+                HardCodedTestModel.TestModel.RemoveCustomUriFunction(customFunctionName);
             }
         }
 
@@ -450,11 +450,11 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 // Prepare
                 FunctionSignatureWithReturnType existingCustomFunctionSignature =
                         new FunctionSignatureWithReturnType(EdmCoreModel.Instance.GetDouble(false), EdmCoreModel.Instance.GetBoolean(false));
-                CustomUriFunctions.AddCustomUriFunction(customFunctionName, existingCustomFunctionSignature);
+                HardCodedTestModel.TestModel.AddCustomUriFunction(customFunctionName, existingCustomFunctionSignature);
 
                 FunctionSignatureWithReturnType existingCustomFunctionSignatureTwo =
                     new FunctionSignatureWithReturnType(EdmCoreModel.Instance.GetBoolean(false), EdmCoreModel.Instance.GetDate(false));
-                CustomUriFunctions.AddCustomUriFunction(customFunctionName, existingCustomFunctionSignatureTwo);
+                HardCodedTestModel.TestModel.AddCustomUriFunction(customFunctionName, existingCustomFunctionSignatureTwo);
 
                 // Validate that the two overloads as
                 Assert.True(GetCustomFunctionSignaturesOrNull(customFunctionName).
@@ -462,7 +462,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                                             funcSignature.Equals(existingCustomFunctionSignatureTwo)));
 
                 // Remove the first overload, second overload should not be removed
-                bool isRemoveSucceeded = CustomUriFunctions.RemoveCustomUriFunction(customFunctionName, existingCustomFunctionSignature);
+                bool isRemoveSucceeded = HardCodedTestModel.TestModel.RemoveCustomUriFunction(customFunctionName, existingCustomFunctionSignature);
 
                 // Assert
                 Assert.True(isRemoveSucceeded);
@@ -474,7 +474,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             finally
             {
                 // Clean up cache
-                CustomUriFunctions.RemoveCustomUriFunction(customFunctionName);
+                HardCodedTestModel.TestModel.RemoveCustomUriFunction(customFunctionName);
             }
         }
 
@@ -491,7 +491,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                     = new FunctionSignatureWithReturnType(EdmCoreModel.Instance.GetBoolean(true), EdmCoreModel.Instance.GetString(true), EdmCoreModel.Instance.GetString(true));
 
                 // Add a custom uri function
-                CustomUriFunctions.AddCustomUriFunction("mystringfunction", myStringFunction);
+                HardCodedTestModel.TestModel.AddCustomUriFunction("mystringfunction", myStringFunction);
 
                 var fullUri = new Uri("http://www.odata.com/OData/People" + "?$filter=mystringfunction(Name, 'BlaBla')");
                 ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://www.odata.com/OData/"), fullUri);
@@ -502,7 +502,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             }
             finally
             {
-                Assert.True(CustomUriFunctions.RemoveCustomUriFunction("mystringfunction"));
+                Assert.True(HardCodedTestModel.TestModel.RemoveCustomUriFunction("mystringfunction"));
             }
         }
 
@@ -515,7 +515,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                     = new FunctionSignatureWithReturnType(EdmCoreModel.Instance.GetBoolean(true), EdmCoreModel.Instance.GetString(true), EdmCoreModel.Instance.GetString(true));
 
                 // Add a custom uri function
-                CustomUriFunctions.AddCustomUriFunction("myFirstMixedCasestringfunction", myStringFunction);
+                HardCodedTestModel.TestModel.AddCustomUriFunction("myFirstMixedCasestringfunction", myStringFunction);
 
                 // Uri with mixed-case, should work for resolver with case insensitive enabled.
                 var fullUri = new Uri("http://www.odata.com/OData/People" + "?$filter=mYFirstMixedCasesTrInGfUnCtIoN(Name, 'BlaBla')");
@@ -529,7 +529,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             }
             finally
             {
-                Assert.True(CustomUriFunctions.RemoveCustomUriFunction("myFirstMixedCasestringfunction"));
+                Assert.True(HardCodedTestModel.TestModel.RemoveCustomUriFunction("myFirstMixedCasestringfunction"));
             }
         }
 
@@ -543,8 +543,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 = new FunctionSignatureWithReturnType(EdmCoreModel.Instance.GetBoolean(true), EdmCoreModel.Instance.GetString(true), EdmCoreModel.Instance.GetString(true));
 
             // Add two customer uri functions with same argument types, with names different in cases.
-            CustomUriFunctions.AddCustomUriFunction(lowerCaseName, myStringFunction);
-            CustomUriFunctions.AddCustomUriFunction(upperCaseName, myStringFunction);
+            HardCodedTestModel.TestModel.AddCustomUriFunction(lowerCaseName, myStringFunction);
+            HardCodedTestModel.TestModel.AddCustomUriFunction(upperCaseName, myStringFunction);
             string rootUri = "http://www.odata.com/OData/";
             string uriTemplate = rootUri + "People?$filter={0}(Name,'BlaBla')";
 
@@ -566,8 +566,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             }
             finally
             {
-                Assert.True(CustomUriFunctions.RemoveCustomUriFunction(lowerCaseName));
-                Assert.True(CustomUriFunctions.RemoveCustomUriFunction(upperCaseName));
+                Assert.True(HardCodedTestModel.TestModel.RemoveCustomUriFunction(lowerCaseName));
+                Assert.True(HardCodedTestModel.TestModel.RemoveCustomUriFunction(upperCaseName));
             }
         }
 
@@ -581,8 +581,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 = new FunctionSignatureWithReturnType(EdmCoreModel.Instance.GetBoolean(true), EdmCoreModel.Instance.GetString(true), EdmCoreModel.Instance.GetString(true));
 
             // Add two customer uri functions with same argument types, with names different in cases.
-            CustomUriFunctions.AddCustomUriFunction(lowerCaseName, myStringFunction);
-            CustomUriFunctions.AddCustomUriFunction(upperCaseName, myStringFunction);
+            HardCodedTestModel.TestModel.AddCustomUriFunction(lowerCaseName, myStringFunction);
+            HardCodedTestModel.TestModel.AddCustomUriFunction(upperCaseName, myStringFunction);
             string rootUri = "http://www.odata.com/OData/";
             string uriTemplate = rootUri + "People?$filter={0}(Name,'BlaBla')";
 
@@ -601,15 +601,14 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             }
             finally
             {
-                Assert.True(CustomUriFunctions.RemoveCustomUriFunction(lowerCaseName));
-                Assert.True(CustomUriFunctions.RemoveCustomUriFunction(upperCaseName));
+                Assert.True(HardCodedTestModel.TestModel.RemoveCustomUriFunction(lowerCaseName));
+                Assert.True(HardCodedTestModel.TestModel.RemoveCustomUriFunction(upperCaseName));
             }
         }
 
         [Fact]
         public void ParseWithMixedCaseCustomUriFunction_DisableCaseInsensitive_ShouldFailed()
         {
-            bool exceptionThrown = false;
             try
             {
                 FunctionSignatureWithReturnType myStringFunction
@@ -617,7 +616,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                         EdmCoreModel.Instance.GetString(true), EdmCoreModel.Instance.GetString(true));
 
                 // Add a custom uri function
-                CustomUriFunctions.AddCustomUriFunction("myMixedCasestringfunction", myStringFunction);
+                HardCodedTestModel.TestModel.AddCustomUriFunction("myMixedCasestringfunction", myStringFunction);
 
                 // Uri with mixed-case, should fail for default resolver with case-insensitive disabled.
                 var fullUri = new Uri("http://www.odata.com/OData/People" + "?$filter=mYMixedCasesTrInGfUnCtIoN(Name, 'BlaBla')");
@@ -625,20 +624,14 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                     new Uri("http://www.odata.com/OData/"), fullUri);
                 parser.Resolver.EnableCaseInsensitive = false;
 
-                parser.ParseFilter();
-            }
-            catch (ODataException e)
-            {
+                var exception = Assert.Throws<ODataException>(() => parser.ParseFilter());
                 Assert.Equal("An unknown function with name 'mYMixedCasesTrInGfUnCtIoN' was found. " +
-                    "This may also be a function import or a key lookup on a navigation property, which is not allowed.", e.Message);
-                exceptionThrown = true;
+                    "This may also be a function import or a key lookup on a navigation property, which is not allowed.", exception.Message);
             }
             finally
             {
-                Assert.True(CustomUriFunctions.RemoveCustomUriFunction("myMixedCasestringfunction"));
+                Assert.True(HardCodedTestModel.TestModel.RemoveCustomUriFunction("myMixedCasestringfunction"));
             }
-
-            Assert.True(exceptionThrown, "Exception should be thrown trying to parse mixed-case uri function when case-insensitive is disabled.");
         }
 
         [Fact]
@@ -651,7 +644,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             try
             {
                 // Add with override 'true'
-                CustomUriFunctions.AddCustomUriFunction("startswith", customStartWithFunctionSignature);
+                HardCodedTestModel.TestModel.AddCustomUriFunction("startswith", customStartWithFunctionSignature);
 
                 var fullUri = new Uri("http://www.odata.com/OData/People" + "?$filter=startswith(Name, 66)");
                 ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://www.odata.com/OData/"), fullUri);
@@ -662,7 +655,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             }
             finally
             {
-                Assert.True(CustomUriFunctions.RemoveCustomUriFunction("startswith"));
+                Assert.True(HardCodedTestModel.TestModel.RemoveCustomUriFunction("startswith"));
             }
         }
 
@@ -680,7 +673,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 FunctionSignatureWithReturnType signature =
                     new FunctionSignatureWithReturnType(EdmCoreModel.Instance.GetBoolean(false), enumTypeRef);
 
-                CustomUriFunctions.AddCustomUriFunction("enumFunc", signature);
+                HardCodedTestModel.TestModel.AddCustomUriFunction("enumFunc", signature);
 
                 var fullUri = new Uri("http://www.odata.com/OData/People" + "?$filter=enumFunc('Rectangle')");
                 ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://www.odata.com/OData/"), fullUri);
@@ -690,8 +683,59 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             }
             finally
             {
-                Assert.True(CustomUriFunctions.RemoveCustomUriFunction("enumFunc"));
+                Assert.True(HardCodedTestModel.TestModel.RemoveCustomUriFunction("enumFunc"));
             }
+        }
+
+        [Fact]
+        public void ParseWithCustomUriFunction_OverloadsWithDifferentSignatures()
+        {
+            var functionName = "equals";
+            var functionSignature1 =
+                new FunctionSignatureWithReturnType(EdmCoreModel.Instance.GetBoolean(false), EdmCoreModel.Instance.GetString(false), EdmCoreModel.Instance.GetString(false));
+            var functionSignature2 =
+                new FunctionSignatureWithReturnType(EdmCoreModel.Instance.GetBoolean(false), EdmCoreModel.Instance.GetString(false), EdmCoreModel.Instance.GetString(false), EdmCoreModel.Instance.GetBoolean(false));
+
+            try
+            {
+                HardCodedTestModel.TestModel.AddCustomUriFunction(functionName, functionSignature1);
+                HardCodedTestModel.TestModel.AddCustomUriFunction(functionName, functionSignature2);
+
+                var odataUri1 = new Uri("http://tempuri.org/People" + "?$filter=equals(Name,'Sue')");
+                var uriParser1 = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://tempuri.org/"), odataUri1);
+
+                var equals1Args = uriParser1.ParseFilter().Expression.ShouldBeSingleValueFunctionCallQueryNode("equals").Parameters.ToList();
+                Assert.Equal(2, equals1Args.Count);
+
+                var convertNamePropNode1 = equals1Args[0].ShouldBeConvertQueryNode(EdmCoreModel.Instance.GetString(false));
+                var convertLiteralNode1 = equals1Args[1].ShouldBeConvertQueryNode(EdmCoreModel.Instance.GetString(false));
+                convertNamePropNode1.Source.ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPersonNameProp());
+                convertLiteralNode1.Source.ShouldBeConstantQueryNode("Sue");
+
+                var odataUri2 = new Uri("http://tempuri.org/People" + "?$filter=equals(Name,'bob',false)");
+                var uriParser2 = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://tempuri.org/"), odataUri2);
+
+                var equals2Args = uriParser2.ParseFilter().Expression.ShouldBeSingleValueFunctionCallQueryNode("equals").Parameters.ToList();
+                Assert.Equal(3, equals2Args.Count);
+
+                var convertNamePropNode2 = equals2Args[0].ShouldBeConvertQueryNode(EdmCoreModel.Instance.GetString(false));
+                var convertLiteralNode2 = equals2Args[1].ShouldBeConvertQueryNode(EdmCoreModel.Instance.GetString(false));
+                convertNamePropNode2.Source.ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPersonNameProp());
+                convertLiteralNode2.Source.ShouldBeConstantQueryNode("bob");
+                equals2Args[2].ShouldBeConstantQueryNode(false);
+            }
+            finally
+            {
+                Assert.True(HardCodedTestModel.TestModel.RemoveCustomUriFunction(functionName));
+            }
+        }
+
+        [Fact]
+        public void ParseWithCustomUriFunction_TryGetNonExistentCustomUriFunction()
+        {
+            Assert.False(HardCodedTestModel.TestModel.TryGetCustomUriFunction(
+                Guid.NewGuid().ToString(),
+                out IList<KeyValuePair<string, FunctionSignatureWithReturnType>> _));
         }
 
         #endregion
@@ -701,7 +745,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         private FunctionSignatureWithReturnType[] GetCustomFunctionSignaturesOrNull(string customFunctionName)
         {
             IList<KeyValuePair<string, FunctionSignatureWithReturnType>> resultFunctionSignaturesWithReturnType = null;
-            CustomUriFunctions.TryGetCustomFunction(customFunctionName, out resultFunctionSignaturesWithReturnType);
+            HardCodedTestModel.TestModel.TryGetCustomUriFunction(customFunctionName, out resultFunctionSignaturesWithReturnType);
 
             return resultFunctionSignaturesWithReturnType?.Select( _ => _.Value).ToArray();
         }
