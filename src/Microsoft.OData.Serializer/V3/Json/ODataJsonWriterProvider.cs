@@ -16,6 +16,8 @@ internal class ODataJsonWriterProvider(ODataSerializerOptions options) : IODataW
     private static readonly ODataJsonBoolWriter boolWriter = new();
     private static readonly ODataJsonInt32Writer int32Writer = new();
     private static readonly ODataJsonStringWriter stringWriter = new();
+    private static readonly ODataJsonDateTimeWriter dateTimeWriter = new();
+    private static readonly ODataJsonDecimalWriter decimalWriter = new();
 
 
     private static Dictionary<Type, IODataWriter> simpleWriters = InitPrimitiveWriters();
@@ -62,6 +64,8 @@ internal class ODataJsonWriterProvider(ODataSerializerOptions options) : IODataW
         Add(boolWriter);
         Add(int32Writer);
         Add(stringWriter);
+        Add(dateTimeWriter);
+        Add(decimalWriter);
 
         Debug.Assert(NumSimpleWriters <= writers.Count);
 
@@ -75,9 +79,9 @@ internal class ODataJsonWriterProvider(ODataSerializerOptions options) : IODataW
 
     private static List<ODataWriterFactory> InitDefaultFactories()
     {
-        return new List<ODataWriterFactory>
-        {
+        return [
+            new ODataJsonEnumWriterFactory(),
             new ODataJsonEnumerableWriterFactory()
-        };
+        ];
     }
 }

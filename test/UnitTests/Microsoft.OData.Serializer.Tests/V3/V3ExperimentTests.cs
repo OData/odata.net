@@ -136,6 +136,23 @@ public class V3ODataSerializerTests
             ]
         });
 
+        options.AddTypeInfo<Address>(new()
+        {
+            Properties =
+            [
+                new()
+                {
+                    Name = "City",
+                    WriteValue = (address, state) => state.WriteValue(address.City)
+                },
+                new()
+                {
+                    Name = "Country",
+                    WriteValue = (address, state) => state.WriteValue(address.Country)
+                }
+            ]
+        });
+
         options.AddTypeInfo<Order>(new()
         {
             Properties =
