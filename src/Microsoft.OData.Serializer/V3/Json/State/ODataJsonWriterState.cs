@@ -1,4 +1,5 @@
 ﻿using Microsoft.OData.Serializer.V3.Adapters;
+using Microsoft.OData.Serializer.V3.Json.State;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,8 @@ public sealed class ODataJsonWriterState
 {
     private ODataSerializerOptions options;
     private ODataJsonWriterProvider writers;
+    
+    internal WriteStack Stack { get; } = new WriteStack();
 
     internal ODataJsonWriterState(ODataSerializerOptions options, ODataJsonWriterProvider writers, Utf8JsonWriter jsonWriter)
     {
@@ -30,7 +33,7 @@ public sealed class ODataJsonWriterState
 
     public bool IsTopLevel()
     {
-        throw new NotImplementedException("Implement IsTopLevel()");
+        return this.Stack.IsTopLevel();
     }
 
     public ValueTask WriteValue<T>(T value)
