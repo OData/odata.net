@@ -42,10 +42,36 @@ public abstract class ODataResourceSetBaseJsonWriter<TCollection, TElement> : OD
         }
     }
 
-    protected virtual ValueTask WritePreValueMetadata(TCollection value, ODataJsonWriterState state)
+    protected abstract ValueTask WriteElements(TCollection value, ODataJsonWriterState state);
+
+    protected virtual async ValueTask WritePreValueMetadata(TCollection value, ODataJsonWriterState state)
     {
-        return ValueTask.CompletedTask;
+        // TODO: We should probably expose a ShouldWriteXXX method for metadata to give
+        // users an easy way to control whether certain metadata should be written
+        if (state.MetadataLevel >= ODataMetadataLevel.Minimal)
+        {
+            await WriteContextUrl(value, state);
+        }
+
+        //// TODO: should this condition be implemented by the WriteCountProperty method?
+        //if (context.ODataUri.QueryCount.HasValue
+        //    && context.ODataUri.QueryCount.Value)
+        //{
+        //    await WriteCountProperty(value, state, context);
+        //}
+
+        //await WriteNextLinkProperty(value, state, context);
     }
 
-    protected abstract ValueTask WriteElements(TCollection value, ODataJsonWriterState state);
+    protected virtual ValueTask WriteContextUrl(TCollection value, ODataJsonWriterState state)
+    {
+        if (state.PayloadKind == ODataPayloadKind.ResourceSet && state.IsTopLevel())
+        {
+            ContextUrlHelper.WriteContextUrlProperty(state.PayloadKind, state);
+        }
+
+        // TODO: nested context and other payload kinds
+
+        return ValueTask.CompletedTask;
+    }
 }

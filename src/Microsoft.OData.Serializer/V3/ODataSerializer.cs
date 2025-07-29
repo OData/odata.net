@@ -19,7 +19,11 @@ public static class ODataSerializer
         // init state
         var jsonWriter = new Utf8JsonWriter(stream);
         var writerProvider = new ODataJsonWriterProvider(options);
-        var state = new ODataJsonWriterState(options, writerProvider, jsonWriter);
+        var state = new ODataJsonWriterState(options, writerProvider, jsonWriter)
+        {
+            ODataUri = uri,
+            PayloadKind = ODataPayloadKind.ResourceSet
+        };
         // get writer
         var writer = writerProvider.GetWriter<T>(); // should we pass the value as well?
 

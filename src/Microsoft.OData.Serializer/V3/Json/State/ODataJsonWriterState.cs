@@ -13,7 +13,12 @@ public sealed class ODataJsonWriterState
 {
     private ODataSerializerOptions options;
     private ODataJsonWriterProvider writers;
-    
+
+    public ODataUri ODataUri { get; set; }
+
+    public ODataPayloadKind PayloadKind { get; set; }
+    public ODataMetadataLevel MetadataLevel { get; set; } = ODataMetadataLevel.Minimal;
+
     internal WriteStack Stack { get; } = new WriteStack();
 
     internal ODataJsonWriterState(ODataSerializerOptions options, ODataJsonWriterProvider writers, Utf8JsonWriter jsonWriter)

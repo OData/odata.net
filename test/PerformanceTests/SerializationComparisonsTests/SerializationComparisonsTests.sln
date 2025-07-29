@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestServer", "TestServer\Te
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.OData.Edm", "..\..\..\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj", "{B14A5885-76DC-E0E2-8A5A-D91521E06F56}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.OData.Serializer", "..\..\..\src\Microsoft.OData.Serializer\Microsoft.OData.Serializer.csproj", "{71CDFB76-D1CE-6991-419D-35334431C50C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{B14A5885-76DC-E0E2-8A5A-D91521E06F56}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B14A5885-76DC-E0E2-8A5A-D91521E06F56}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B14A5885-76DC-E0E2-8A5A-D91521E06F56}.Release|Any CPU.Build.0 = Release|Any CPU
+		{71CDFB76-D1CE-6991-419D-35334431C50C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{71CDFB76-D1CE-6991-419D-35334431C50C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{71CDFB76-D1CE-6991-419D-35334431C50C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{71CDFB76-D1CE-6991-419D-35334431C50C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
