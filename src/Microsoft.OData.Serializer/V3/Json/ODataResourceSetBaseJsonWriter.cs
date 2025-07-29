@@ -6,17 +6,17 @@ using System.Threading.Tasks;
 
 namespace Microsoft.OData.Serializer.V3.Json;
 
-internal class ODataResourceSetBaseJsonWriter<TCollection, TElement> : ODataJsonWriter<TCollection>
+public abstract class ODataResourceSetBaseJsonWriter<TCollection, TElement> : ODataJsonWriter<TCollection>
 {
-    public override bool Write(TCollection value, ODataJsonWriterState state)
+    public override async ValueTask Write(TCollection value, ODataJsonWriterState state)
     {
         if (state.IsTopLevel())
         {
-            context.JsonWriter.WriteStartObject();
+            state.JsonWriter.WriteStartObject();
 
-            await WritePreValueMetadata(value, state, context);
+            await WritePreValueMetadata(value, state);
 
-            context.JsonWriter.WritePropertyName("value");
+            state.JsonWriter.WritePropertyName("value");
         }
         else
         {
@@ -30,15 +30,22 @@ internal class ODataResourceSetBaseJsonWriter<TCollection, TElement> : ODataJson
             // annotations moved to some parent component
         }
 
-        context.JsonWriter.WriteStartArray();
+        state.JsonWriter.WriteStartArray();
 
-        await WriteElements(value, state, context);
+        await WriteElements(value, state);
 
-        context.JsonWriter.WriteEndArray();
+        state.JsonWriter.WriteEndArray();
 
         if (state.IsTopLevel())
         {
-            context.JsonWriter.WriteEndObject();
+            state.JsonWriter.WriteEndObject();
         }
     }
+
+    protected virtual ValueTask WritePreValueMetadata(TCollection value, ODataJsonWriterState state)
+    {
+        return ValueTask.CompletedTask;
+    }
+
+    protected abstract ValueTask WriteElements(TCollection value, ODataJsonWriterState state);
 }

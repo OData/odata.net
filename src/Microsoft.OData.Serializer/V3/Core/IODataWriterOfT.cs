@@ -24,6 +24,9 @@ namespace Microsoft.OData.Serializer.V3.Core;
 public interface IODataWriter<T, TState> : IODataWriter
 {
     // TODO might consider making the return value a struct if we need to encaspulate more info in the return result.
+    // Temporarily reverted to return ValueTask instead of bool to simplify the design of the initial API surface
+    // abstractions, then I'll go back to returning bool or other re-entrancy mechanism once I have
+    // other things figured out.
     /// <summary>
     /// Writes the specified value to the output.
     /// </summary>
@@ -42,5 +45,5 @@ public interface IODataWriter<T, TState> : IODataWriter
     /// This allows us to support async scenarios without having to make methods async and do async/await in the fast path of the serializer
     /// that is expected to do in-memory writes for the most part.
     /// </returns>
-    bool Write(T value, TState state);
+    ValueTask Write(T value, TState state);
 }

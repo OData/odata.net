@@ -18,7 +18,7 @@ public sealed class ODataSerializerOptions
 
     internal Dictionary<Type, object> ResourceTypeInfos { get; } = new();
 
-    public void AddResourceInfo<T>(ODataResourceTypeInfo<T> resourceTypeInfo)
+    public void AddTypeInfo<T>(ODataResourceTypeInfo<T> resourceTypeInfo)
     {
         if (resourceTypeInfo is null)
         {

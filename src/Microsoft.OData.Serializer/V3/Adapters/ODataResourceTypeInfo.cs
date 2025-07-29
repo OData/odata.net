@@ -9,7 +9,7 @@ namespace Microsoft.OData.Serializer.V3.Adapters;
 
 public class ODataResourceTypeInfo<T>
 {
-    public required Type ClrType { get; init; }
+    public Type ClrType { get; set; } = typeof(T);
 
     public required IReadOnlyList<ODataPropertyInfo<T>> Properties { get; init; }
 }

@@ -8,10 +8,10 @@ namespace Microsoft.OData.Serializer.V3.Json.Writers;
 
 internal class ODataJsonStringWriter : ODataJsonWriter<string>
 {
-    public override bool Write(string value, ODataJsonWriterState state)
+    public override ValueTask Write(string value, ODataJsonWriterState state)
     {
         // TODO: We should handle resumable writes for long strings.
         state.JsonWriter.WriteStringValue(value);
-        return true;
+        return ValueTask.CompletedTask;
     }
 }

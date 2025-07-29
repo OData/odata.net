@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace Microsoft.OData.Serializer.V3.Adapters;
 
-public class ODataPropertyInfo<TDeclaringType>
+public class ODataPropertyInfo<TDeclaringType> : ODataBasePropertyInfo
 {
-    public required string Name { get; init; }
+    public override string Name { get; set; }
 
     // TODO if we write JSON, we need to specify JsonState so that it can access the JsonWriter
     // but what if we want to write primitive raw values (e.g. $value)? then we need to specify two separate
@@ -26,5 +26,5 @@ public class ODataPropertyInfo<TDeclaringType>
     // Or we could have a single method and define a base state that all states must inherit from and to have this base
     // state only used for primitive values which we handle directly, other values should use the writer-specific state?
     // Sounds a bit convoluted, needs more thought.
-    public required Func<TDeclaringType, ODataJsonWriterState, bool> WriteValue { get; init; }
+    public required Func<TDeclaringType, ODataJsonWriterState, ValueTask> WriteValue { get; init; }
 }

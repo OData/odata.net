@@ -11,7 +11,7 @@ namespace Microsoft.OData.Serializer.V3.Json;
 
 internal class ODataResourceJsonWriter<T>(ODataResourceTypeInfo<T> resourceInfo) : ODataWriter<T, ODataJsonWriterState>
 {
-    public override bool Write(T value, ODataJsonWriterState state)
+    public override async ValueTask Write(T value, ODataJsonWriterState state)
     {
         var jsonWriter = state.JsonWriter;
         jsonWriter.WriteStartObject();
@@ -34,7 +34,7 @@ internal class ODataResourceJsonWriter<T>(ODataResourceTypeInfo<T> resourceInfo)
             //   - this might rely on the implementation accessing the property value twice (e.g. to check whether null or missing)
             //   - should we assume that property access is O(1)? If not, might not be a good idea to force multiple lookups of the same value
             jsonWriter.WritePropertyName(propertyInfo.Name);
-            
+
             // Another option is for propertyInfo to expose a GetXX method, e.g.
             // if propertyInfo.IsString(), string value = propertyInfo.GetString(value);
             // then we take care of writing it.
@@ -50,23 +50,26 @@ internal class ODataResourceJsonWriter<T>(ODataResourceTypeInfo<T> resourceInfo)
             // so it would check the string property name in an if statement chain like in v2??
             // If we expose WriteValue, are we sure the user will preserve the state correctly
             // on resumable writes?
-            bool propertyWritten = propertyInfo.WriteValue(value, state);
+            //bool propertyWritten = propertyInfo.WriteValue(value, state);
+            await propertyInfo.WriteValue(value, state);
             
-            if (!propertyWritten)
-            {
-                // assume the property has stored enough state to resume writing later
-                return false;
-            }
+            // when we implement re-entrancy, we should
+            // return if property was not written completely.
+            //if (!propertyWritten)
+            //{
+            //    // assume the property has stored enough state to resume writing later
+            //    return false;
+            //}
 
             if (state.ShouldFlush())
             {
-                return false;
+                // return false; // TODO: store state and return false if re-entrancy implemented
+                // TODO: flush or return if re-entrancy implemented
             }
 
             // if async source needs more data, we should return false as well
         }
 
         jsonWriter.WriteEndObject();
-        return true;
     }
 }

@@ -8,13 +8,34 @@ using System.Threading.Tasks;
 
 namespace Microsoft.OData.Serializer.V3.Json;
 
-public sealed class ODataJsonWriterState(ODataSerializerOptions options)
+public sealed class ODataJsonWriterState
 {
+    private ODataSerializerOptions options;
+    private ODataJsonWriterProvider writers;
+
+    internal ODataJsonWriterState(ODataSerializerOptions options, ODataJsonWriterProvider writers, Utf8JsonWriter jsonWriter)
+    {
+        this.options = options ?? throw new ArgumentNullException(nameof(options));
+        this.writers = writers ?? throw new ArgumentNullException(nameof(writers));
+        this.JsonWriter = jsonWriter;
+    }
+
     internal ODataSerializerOptions Options => options;
     internal Utf8JsonWriter JsonWriter { get; init; }
 
     internal bool ShouldFlush()
     {
         return JsonWriter.BytesPending > 0.9 * this.Options.BufferSize;
+    }
+
+    public bool IsTopLevel()
+    {
+        throw new NotImplementedException("Implement IsTopLevel()");
+    }
+
+    public ValueTask WriteValue<T>(T value)
+    {
+        var writer = writers.GetWriter<T>();
+        return writer.Write(value, this);
     }
 }

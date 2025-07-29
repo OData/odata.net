@@ -7,6 +7,6 @@ using System.Threading.Tasks;
 
 namespace Microsoft.OData.Serializer.V3.Json;
 
-internal abstract class ODataJsonWriter<T> : ODataWriter<T, ODataJsonWriterState>
+public abstract class ODataJsonWriter<T> : ODataWriter<T, ODataJsonWriterState>
 {
 }
