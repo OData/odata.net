@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Microsoft.OData.Serializer.Json;
 
+[SuppressMessage("Performance", "CA1812:Avoid uninstantiated internal classes", Justification = "This class is instantiated via reflection.")]
 internal class ListResourceSetJsonWriter<TCollection, TElement> :
     ODataResourceSetBaseJsonWriter<TCollection, TElement>
     where TCollection : IReadOnlyList<TElement>

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Buffers;
 using System.Collections.Generic;
 using System.Text;
 
@@ -35,21 +36,58 @@ internal static class ContextUrlHelper
 
         // TODO for perf, we could replace StringBuilder with custom builder that avoids allocations via stackalloc array or pooled array
         // and uses utf-8 encoding directly for smaller memory footprint and reduced need for
-        StringBuilder uri = new();
-        uri.Append(odataUri.ServiceRoot?.AbsoluteUri);
-        uri.Append("$metadata#");
+
+        // TODO: in .NET 10 we can write consider Utf8JsonWriter.WriteStringValueSegment
+        // to write the string in chunks
+
+        var absoluteUri = odataUri.ServiceRoot?.AbsoluteUri;
+        const string metadata = "$metadata#";
+        char separator = '/';
+
+
+        int totalSize = (absoluteUri?.Length ?? 0)
+            + metadata.Length;
 
         if (odataUri.Path.Count > 0)
         {
-            uri.Append(odataUri.Path[0].Identifier);
+            totalSize += odataUri.Path[0].Identifier.Length;
         }
 
         for (int i = 1; i < odataUri.Path.Count; i++)
         {
-            uri.Append('/');
-            uri.Append(odataUri.Path[i].Identifier);
+            totalSize += odataUri.Path[i].Identifier.Length + 1; // +1 for the separator
         }
 
-        writer.WriteString("@odata.context", uri.ToString());
+        char[] array = null;
+        Span<char> buffer = totalSize <= 128 ?
+            stackalloc char[totalSize] :
+            (array = ArrayPool<char>.Shared.Rent(totalSize));
+
+        buffer = buffer[..totalSize]; // in case we rented something bigger than needed
+        int offset = 0;
+        absoluteUri.AsSpan().CopyTo(buffer);
+        offset += absoluteUri?.Length ?? 0;
+        metadata.AsSpan().CopyTo(buffer.Slice(offset));
+        offset += metadata.Length;
+
+        if (odataUri.Path.Count > 0)
+        {
+            odataUri.Path[0].Identifier.AsSpan().CopyTo(buffer.Slice(offset));
+            offset += odataUri.Path[0].Identifier.Length;
+        }
+
+        for (int i = 1; i < odataUri.Path.Count; i++)
+        {
+            buffer[offset] = '/';
+            odataUri.Path[i].Identifier.AsSpan().CopyTo(buffer.Slice(offset + 1));
+            offset += 1 + odataUri.Path[i].Identifier.Length;
+        }
+
+        writer.WriteString("@odata.context", buffer);
+
+        if (array != null)
+        {
+            ArrayPool<char>.Shared.Return(array);
+        }
     }
 }

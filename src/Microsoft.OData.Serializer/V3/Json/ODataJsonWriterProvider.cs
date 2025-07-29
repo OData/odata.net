@@ -18,6 +18,7 @@ internal class ODataJsonWriterProvider(ODataSerializerOptions options) : IODataW
     private static readonly ODataJsonStringWriter stringWriter = new();
     private static readonly ODataJsonDateTimeWriter dateTimeWriter = new();
     private static readonly ODataJsonDecimalWriter decimalWriter = new();
+    private static readonly ODataJsonByteArrayWriter byteArrayWriter = new();
 
 
     private static Dictionary<Type, IODataWriter> simpleWriters = InitPrimitiveWriters();
@@ -27,7 +28,17 @@ internal class ODataJsonWriterProvider(ODataSerializerOptions options) : IODataW
 
     public IODataWriter<T, ODataJsonWriterState> GetWriter<T>()
     {
-        return (IODataWriter<T, ODataJsonWriterState>)writersCache.GetOrAdd(typeof(T), this.GetWriterNoCache<T>());
+        //return (IODataWriter<T, ODataJsonWriterState>)writersCache.GetOrAdd(typeof(T), this.GetWriterNoCache<T>());
+        // TODO: use GetOrAdd() instead, would require refactoring GetWriterNoCache
+        // to be non-generic
+        if (!writersCache.TryGetValue(typeof(T), out var writer))
+        {
+            writer = this.GetWriterNoCache<T>();
+            writersCache.TryAdd(typeof(T), writer);
+            return (IODataWriter<T, ODataJsonWriterState>)writer;
+        }
+
+        return (IODataWriter<T, ODataJsonWriterState>)writer;
     }
 
     private IODataWriter<T, ODataJsonWriterState> GetWriterNoCache<T>()
@@ -58,7 +69,7 @@ internal class ODataJsonWriterProvider(ODataSerializerOptions options) : IODataW
 
     private static Dictionary<Type, IODataWriter> InitPrimitiveWriters()
     {
-        const int NumSimpleWriters = 3; // Update this when adding more writers. Keeps the dict size exact.
+        const int NumSimpleWriters = 6; // Update this when adding more writers. Keeps the dict size exact.
         Dictionary<Type, IODataWriter> writers = new(NumSimpleWriters);
 
         Add(boolWriter);
@@ -66,6 +77,7 @@ internal class ODataJsonWriterProvider(ODataSerializerOptions options) : IODataW
         Add(stringWriter);
         Add(dateTimeWriter);
         Add(decimalWriter);
+        Add(byteArrayWriter);
 
         Debug.Assert(NumSimpleWriters <= writers.Count);
 

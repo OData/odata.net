@@ -19,8 +19,9 @@ internal class ODataResourceJsonWriter<T>(ODataResourceTypeInfo<T> resourceInfo)
         // - all properties defined in the resourceInfo should be written
         // - the properties are written in the order they are defined in the resource info
         // - each property to be written is available (e.g. could be null or missing)
-        foreach (var propertyInfo in resourceInfo.Properties)
+        for (int i = 0; i < resourceInfo.Properties.Count; i++)
         {
+            var propertyInfo = resourceInfo.Properties[i];
             // add this property to the state, including current index
             // TODO: check annotations.
 
