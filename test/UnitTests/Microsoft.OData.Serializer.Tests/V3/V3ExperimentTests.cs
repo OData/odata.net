@@ -99,14 +99,14 @@ public class V3ODataSerializerTests
         using var output = new MemoryStream();
 
         var options = new ODataSerializerOptions();
-        options.AddTypeInfo<Customer>(new()
+        options.AddTypeInfo<JsonObject>(new()
         {
             Properties =
             [
                 new()
                 {
                     Name = "Id",
-                    WriteValue = (customer, state) => state.WriteValue(customer.Id)
+                    WriteValue = (customer, state) => state.WriteValue(customer.GetProperty("Name"))
                 },
                 new()
                 {
