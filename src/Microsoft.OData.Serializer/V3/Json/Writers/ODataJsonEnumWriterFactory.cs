@@ -14,7 +14,7 @@ internal class ODataJsonEnumWriterFactory : ODataWriterFactory
         return type.IsEnum;
     }
 
-    public override IODataWriter CreateWriter(Type type)
+    public override IODataWriter CreateWriter(Type type, ODataSerializerOptions options)
     {
         var writerType = typeof(ODataJsonEnumWriter<>).MakeGenericType(type);
         return (IODataWriter)Activator.CreateInstance(writerType);

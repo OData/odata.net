@@ -19,6 +19,7 @@ internal class ODataJsonWriterProvider(ODataSerializerOptions options) : IODataW
     private static readonly ODataJsonDateTimeWriter dateTimeWriter = new();
     private static readonly ODataJsonDecimalWriter decimalWriter = new();
     private static readonly ODataJsonByteArrayWriter byteArrayWriter = new();
+    private static readonly ODataJsonUriWriter uriWriter = new();
 
 
     private static Dictionary<Type, IODataWriter> simpleWriters = InitPrimitiveWriters();
@@ -49,19 +50,20 @@ internal class ODataJsonWriterProvider(ODataSerializerOptions options) : IODataW
             return (IODataWriter<T, ODataJsonWriterState>)writer;
         }
 
-
-        ODataResourceTypeInfo<T>? typeInfo = options.TryGetResourceInfo<T>();
-        if (typeInfo != null)
-        {
-            return new ODataResourceJsonWriter<T>(typeInfo);
-        }
-
         foreach (var factory in defaultFactories)
         {
             if (factory.CanWrite(type))
             {
-                return (IODataWriter<T, ODataJsonWriterState>)factory.CreateWriter(type);
+                return (IODataWriter<T, ODataJsonWriterState>)factory.CreateWriter(type, options);
             }
+        }
+
+        // TODO: we could consider generating a custom writer for the poco
+        // but we'd need to map it to an OData type.
+        ODataResourceTypeInfo<T>? typeInfo = options.TryGetResourceInfo<T>();
+        if (typeInfo != null)
+        {
+            return new ODataResourceJsonWriter<T>(typeInfo);
         }
 
         throw new Exception($"Could not find a suitable writer for {type.FullName}");
@@ -78,6 +80,7 @@ internal class ODataJsonWriterProvider(ODataSerializerOptions options) : IODataW
         Add(dateTimeWriter);
         Add(decimalWriter);
         Add(byteArrayWriter);
+        Add(uriWriter);
 
         Debug.Assert(NumSimpleWriters <= writers.Count);
 

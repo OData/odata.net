@@ -6,7 +6,25 @@ using System.Threading.Tasks;
 
 namespace Microsoft.OData.Serializer.V3.Adapters;
 
-public class ODataBasePropertyInfo
+public class ODataPropertyInfo
 {
-    public virtual string Name { get; set; }
+    private string name;
+    // TODO: cache a ReadOnlySpan<char> representation of the name for perf to avoid repeated transcoding when writing to JSON
+    public string? Name
+    {
+        get => name;
+        set
+        {
+            ArgumentNullException.ThrowIfNullOrEmpty(value);
+            if (!Utf8Name.IsEmpty)
+            {
+                throw new Exception("Cannot modify property info name");
+            }
+
+            Utf8Name = Encoding.UTF8.GetBytes(value);
+            name = value;
+        }
+    }
+
+    public Memory<byte> Utf8Name { get; private set; }
 }

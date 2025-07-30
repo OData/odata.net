@@ -99,14 +99,22 @@ public class V3ODataSerializerTests
         using var output = new MemoryStream();
 
         var options = new ODataSerializerOptions();
-        options.AddTypeInfo<JsonObject>(new()
+
+        options.AddTypeInfo<IList<Customer>>(new()
+        {
+            HasNextLink = (customers, state) => true,
+            WriteNextLink = (customers, state) => state.WriteValue(new Uri("http://service/odata/Customers?$skip=2", UriKind.Absolute))
+        });
+
+
+        options.AddTypeInfo<Customer>(new()
         {
             Properties =
             [
                 new()
                 {
                     Name = "Id",
-                    WriteValue = (customer, state) => state.WriteValue(customer.GetProperty("Name"))
+                    WriteValue = (customer, state) => state.WriteValue(customer.Id)
                 },
                 new()
                 {

@@ -1,4 +1,5 @@
 ﻿using Microsoft.OData.Edm;
+using Microsoft.OData.Serializer.V3.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,11 @@ namespace Microsoft.OData.Serializer.V3.Adapters;
 
 public class ODataResourceTypeInfo<T> : ODataResourceTypeInfo
 {
-    public required override Type Type { get; init; } = typeof(T);
+    public override Type Type { get; init; } = typeof(T);
 
-    public required IReadOnlyList<ODataPropertyInfo<T>> Properties { get; init; }
+    public IReadOnlyList<ODataPropertyInfo<T>> Properties { get; init; }
+
+    public Func<T, ODataJsonWriterState, bool>? HasNextLink { get; init; }
+
+    public Func<T, ODataJsonWriterState, ValueTask>? WriteNextLink { get; init; }
 }

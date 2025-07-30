@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.OData.Serializer.V3.Adapters;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,10 +7,12 @@ using System.Threading.Tasks;
 
 namespace Microsoft.OData.Serializer.V3.Json;
 
-public abstract class ODataResourceSetBaseJsonWriter<TCollection, TElement> : ODataJsonWriter<TCollection>
+public abstract class ODataResourceSetBaseJsonWriter<TCollection, TElement>(ODataResourceTypeInfo<TCollection>? typeInfo = null) : ODataJsonWriter<TCollection>
 {
     public override async ValueTask Write(TCollection value, ODataJsonWriterState state)
     {
+        state.Stack.Push();
+        state.Stack.Current.ResourceTypeInfo = typeInfo;
         if (state.IsTopLevel())
         {
             state.JsonWriter.WriteStartObject();
@@ -40,6 +43,8 @@ public abstract class ODataResourceSetBaseJsonWriter<TCollection, TElement> : OD
         {
             state.JsonWriter.WriteEndObject();
         }
+
+        state.Stack.Pop();
     }
 
     protected abstract ValueTask WriteElements(TCollection value, ODataJsonWriterState state);
@@ -60,7 +65,7 @@ public abstract class ODataResourceSetBaseJsonWriter<TCollection, TElement> : OD
         //    await WriteCountProperty(value, state, context);
         //}
 
-        //await WriteNextLinkProperty(value, state, context);
+        await WriteNextLinkProperty(value, state);
     }
 
     protected virtual ValueTask WriteContextUrl(TCollection value, ODataJsonWriterState state)
@@ -74,4 +79,30 @@ public abstract class ODataResourceSetBaseJsonWriter<TCollection, TElement> : OD
 
         return ValueTask.CompletedTask;
     }
+
+    protected virtual ValueTask WriteNextLinkProperty(TCollection value, ODataJsonWriterState state)
+    {
+        var jsonWriter = state.JsonWriter;
+        if (typeInfo?.HasNextLink == null)
+        {
+            // What should be the default?
+            return ValueTask.CompletedTask;
+        }
+
+        if (typeInfo.HasNextLink(value, state))
+        {
+            var propertyInfo = state.Stack.Current.PropertyInfo;
+            if (propertyInfo != null)
+            {
+                JsonMetadataHelpers.WritePropertyAnnotationName(jsonWriter, propertyInfo.Utf8Name.Span, "odata.nextLink"u8);
+            }
+            else
+            {
+                state.JsonWriter.WritePropertyName("@odata.nextLink"u8);
+            }
+        }
+
+        return ValueTask.CompletedTask;
+    }
 }
+

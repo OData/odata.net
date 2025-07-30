@@ -6,5 +6,5 @@ namespace Microsoft.OData.Serializer.V3.Adapters;
 
 public abstract class ODataResourceTypeInfo
 {
-    public required virtual Type Type { get; init; }
+    public virtual Type Type { get; init; }
 }

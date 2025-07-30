@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.OData.Serializer.V3.Adapters;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -12,6 +13,10 @@ namespace Microsoft.OData.Serializer.V3.Json.Writers;
 internal class ODataJsonListWriter<TCollection, TElement> : ODataResourceSetBaseJsonWriter<TCollection, TElement>
     where TCollection : IList<TElement>
 {
+    public ODataJsonListWriter(ODataResourceTypeInfo<TCollection>? typeInfo = null)
+        : base(typeInfo)
+    {
+    }
     protected override async ValueTask WriteElements(TCollection value, ODataJsonWriterState state)
     {
         for (int i = 0; i < value.Count; i++)

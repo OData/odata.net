@@ -10,4 +10,5 @@ namespace Microsoft.OData.Serializer.V3.Json.State;
 internal struct WriteStackFrame
 {
     public ODataResourceTypeInfo? ResourceTypeInfo { get; set; }
+    public Adapters.ODataPropertyInfo? PropertyInfo { get; set; }
 }

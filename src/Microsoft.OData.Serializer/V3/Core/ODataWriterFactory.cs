@@ -12,5 +12,5 @@ public abstract class ODataWriterFactory : IODataWriter
 
     public abstract bool CanWrite(Type type);
 
-    public abstract IODataWriter CreateWriter(Type type); // TODO pass options or context
+    public abstract IODataWriter CreateWriter(Type type, ODataSerializerOptions options);
 }

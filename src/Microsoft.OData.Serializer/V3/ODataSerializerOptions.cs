@@ -16,7 +16,7 @@ public sealed class ODataSerializerOptions
     public ODataVersion ODataVersion { get; set; } = ODataVersion.V4;
     public int BufferSize { get; set; } = 16 * 1024;
 
-    internal Dictionary<Type, object> ResourceTypeInfos { get; } = new();
+    internal Dictionary<Type, ODataResourceTypeInfo> ResourceTypeInfos { get; } = new();
 
     public void AddTypeInfo<T>(ODataResourceTypeInfo<T> resourceTypeInfo)
     {
@@ -37,6 +37,16 @@ public sealed class ODataSerializerOptions
         if (ResourceTypeInfos.TryGetValue(typeof(T), out var typeInfo))
         {
             return (ODataResourceTypeInfo<T>)typeInfo;
+        }
+
+        return null;
+    }
+
+    public ODataResourceTypeInfo? TryGetResourceInfo(Type type)
+    {
+        if (ResourceTypeInfos.TryGetValue(type, out var typeInfo))
+        {
+            return typeInfo;
         }
 
         return null;
