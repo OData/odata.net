@@ -50,4 +50,6 @@ public class ODataPropertyInfo<TDeclaringType> : ODataPropertyInfo
     public Func<TDeclaringType, ODataJsonWriterState, bool>? HasNextLink { get; init; }
 
     public Func<TDeclaringType, ODataJsonWriterState, ValueTask>? WriteNextLink { get; init; }
+
+    public Func<TDeclaringType, ODataJsonWriterState, bool>? ShouldSkip { get; init; }
 }

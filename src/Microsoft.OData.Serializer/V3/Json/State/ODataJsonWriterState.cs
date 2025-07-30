@@ -46,4 +46,19 @@ public sealed class ODataJsonWriterState
         var writer = writers.GetWriter<T>();
         return writer.Write(value, this);
     }
+
+    public Adapters.ODataPropertyInfo? CurrentPropertyInfo()
+    {
+        return this.Stack.Current.PropertyInfo;
+    }
+
+    public Adapters.ODataPropertyInfo? ParentPropertyInfo()
+    {
+        if (this.IsTopLevel())
+        {
+            return null;
+        }
+
+        return this.Stack.Parent.PropertyInfo;
+    }
 }

@@ -16,6 +16,7 @@ public abstract class ODataResourceSetBaseJsonWriter<TCollection, TElement>(ODat
             : state.Stack.Current.PropertyInfo;
         state.Stack.Push();
         state.Stack.Current.ResourceTypeInfo = typeInfo;
+        state.Stack.Current.PropertyInfo = parentProperty;
         if (state.IsTopLevel())
         {
             state.JsonWriter.WriteStartObject();

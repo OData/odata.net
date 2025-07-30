@@ -21,14 +21,14 @@ internal class WriteStack
     {
         get
         {
-            if (_count < 1)
+            if (_count < 2)
             {
-                throw new InvalidOperationException("Stack is empty, cannot access parent frame.");
+                throw new InvalidOperationException("Stack is at the root or empty, cannot access parent frame.");
             }
 
             Debug.Assert(_stack != null && _stack.Length > 0);
 
-            return ref _stack![_count - 1];
+            return ref _stack![_count - 2];
         }
     }
 

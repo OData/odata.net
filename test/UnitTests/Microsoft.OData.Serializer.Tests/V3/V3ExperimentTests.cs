@@ -138,17 +138,24 @@ public class V3ODataSerializerTests
                     Name = "Orders",
                     WriteValue = (customer, state) => state.WriteValue(customer.Orders),
                     // TODO: Considering whether to have the count annotation of the orders type info instead.
+                    // TODO: this should be dynamic logic that e.g. checks that the $count=true is present in the $expand.
+                    // But it would be expensive to compute here unless the $expand is already parsed internally.
                     HasCount = (customer, state) => true,
                     WriteCount = (customer, state) => state.WriteValue(customer.Orders.Count),
 
-                    HasNextLink = (customer, state) => true,
-                    // The advantage of nested annotation handlers on the declaring type is that you still have access to the parent object.
+                    // TODO: Realistically, this information would be computed from the result of the orders collection computation.
+                    HasNextLink = (customer, state) => customer.Id == 1,
+                    // A slight advantage of nested annotation handlers on the declaring type is that you still have access to the parent object.
+                    // But this advantage breaks apart if we need a value from a grandparent object.
                     WriteNextLink = (customer, state) => state.WriteValue(new Uri($"http://service/odata/Customers({customer.Id})/Orders?$skip=2", UriKind.Absolute))
     },
                 new()
                 {
                     Name = "WishList",
-                    WriteValue = (customer, state) => state.WriteValue(customer.WishList)
+                    WriteValue = (customer, state) => state.WriteValue(customer.WishList),
+
+                    HasCount = (customer, state) => true,
+                    WriteCount = (customer, state) => state.WriteValue(customer.WishList.Count),
                 }
             ]
         });
@@ -209,7 +216,17 @@ public class V3ODataSerializerTests
                     WriteCount = (order, state) => state.WriteValue(order.Products.Count),
 
                     HasNextLink = (order, state) => true,
-                    WriteNextLink = (order, state) => state.WriteValue(new Uri($"http://service/odata/Customers({order.Id})/Orders({order.Id})/Products?$skip=2", UriKind.Absolute))
+                    // TODO: we don't have access to the customer here do we compute the correct next link?
+                    // We need a performant, customizable and generalizable way to handle this.
+                    // Perhaps we need a mechanism for passing and modifying custom state,
+                    // as well as exposing some state to the user.
+                    WriteNextLink = (order, state) =>
+                    {
+                        // TODO: hack
+                        int skip = order.Id == 1 ? 2 : 3;
+                        int customerId = order.Id == 1 || order.Id == 2 ? 1 : 2;
+                        return state.WriteValue(new Uri($"http://service/odata/Customers({customerId})/Orders({order.Id})/Products?$skip={skip}", UriKind.Absolute));
+                    }
                 }
             ]
         });
@@ -234,12 +251,23 @@ public class V3ODataSerializerTests
                 new()
                 {
                     Name = "Price",
-                    WriteValue = (product, state) => state.WriteValue(product.Price)
+                    WriteValue = (product, state) => state.WriteValue(product.Price),
+
+                    // TODO: This should be more dynamic logic, that e.g. takes the $SelectExpand into consideration
+                    // SelectExpand traversal would be expensive here, unless it's already stored into the state.
+                    // Need to think about how to handle this in a performant, customizable and generalizable way.
+                    // Hack: Skip Price property when the product is part of the "Customer.WishList" property
+                    ShouldSkip = (product, state) => state.ParentPropertyInfo()?.Name == "WishList"
                 },
                 new()
                 {
                     Name = "Category",
-                    WriteValue = (product, state) => state.WriteValue(product.Category)
+                    WriteValue = (product, state) => state.WriteValue(product.Category),
+                    // TODO: This should be more dynamic logic, that e.g. takes the $SelectExpand into consideration
+                    // SelectExpand traversal would be expensive here, unless it's already stored into the state.
+                    // Need to think about how to handle this in a performant, customizable and generalizable way.
+                    // Hack: Skip property when the product is part of the "Order.Products" property
+                    ShouldSkip = (product, state) => state.ParentPropertyInfo()?.Name == "Products"
                 }
             ]
         });

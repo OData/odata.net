@@ -32,6 +32,18 @@ internal class ODataResourceJsonWriter<T>(ODataResourceTypeInfo<T> typeInfo) : O
         for (int i = 0; i < typeInfo.Properties.Count; i++)
         {
             var propertyInfo = typeInfo.Properties[i];
+            state.Stack.Current.PropertyInfo = propertyInfo;
+
+            // This is crude property skipping logic. Might not be efficient in all cases.
+            // For example if the propertys are key/vals in a dictionary and we only
+            // write those properties in the dictionary, then we'll do a lookup here
+            // and another lookup when writing the value.
+            // Perf would be even worse if the properties are stored in an IEnumerable<(Property, Value)>
+            // without higher than O(1) lookup.
+            if (propertyInfo.ShouldSkip?.Invoke(value, state) == true)
+            {
+                continue; // skip this property
+            }
 
             await this.WriteProperty(value, propertyInfo, state);
 
