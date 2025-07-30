@@ -10,8 +10,8 @@ namespace Microsoft.OData.Serializer.V3.Json.State;
 // TODO: should this be a struct?
 internal class WriteStack
 {
-    // Don't create stack array if we only have one frame
-    private WriteStackFrame _current;
+    // TODO: Don't create stack array if we only have one frame
+    //private WriteStackFrame _current;
     private WriteStackFrame[]? _stack;
 
     private int _count;
@@ -36,7 +36,12 @@ internal class WriteStack
     {
         get
         {
-            return ref _current;
+            if (_count == 0)
+            {
+                throw new InvalidOperationException("Stack is empty, cannot access current frame.");
+            }
+
+            return ref _stack![_count - 1];
         }
     }
 
@@ -72,46 +77,73 @@ internal class WriteStack
     // to avoid copying the entire struct into the stack on each Push.
     // Instead, Push() prepares inits space for the next frame
     // and the caller is expected to modify directly using Stack.Current.
+    //public void Push()
+    //{
+    //    if (_count == 0)
+    //    {
+    //        _count++;
+    //        return;
+    //    }
+
+    //    if (_stack == null)
+    //    {
+    //        _stack = new WriteStackFrame[4];
+    //        if (_count == 1)
+    //        {
+    //            _stack[0] = _current; // Preserve the current frame if it exists
+    //        }
+    //    }
+    //    else if (_count >= _stack.Length)
+    //    {
+    //        Array.Resize(ref _stack, _stack.Length * 2);
+    //    }
+
+    //    _stack[_count++] = _current;
+    //    _current = default;
+    //}
+
+    //public void Pop()
+    //{
+    //    if (_count == 0)
+    //    {
+    //        throw new IndexOutOfRangeException("Stack is empty, cannot pop frame.");
+    //    }
+
+    //    if (_count == 1)
+    //    {
+    //        _current = default;
+    //    }
+    //    else if (_count > 1)
+    //    {
+    //        Debug.Assert(_stack != null && _stack.Length > 0);
+    //        _current = _stack[_count];
+    //    }
+
+    //    _count--;
+    //}
+
     public void Push()
     {
-        if (_count == 0)
-        {
-            _count++;
-            return;
-        }
-
         if (_stack == null)
         {
             _stack = new WriteStackFrame[4];
-            if (_count == 1)
-            {
-                _stack[0] = _current; // Preserve the current frame if it exists
-            }
+            _count = 1;
+            return;
         }
-        else if (_count >= _stack.Length)
+
+        if (_count == _stack.Length)
         {
             Array.Resize(ref _stack, _stack.Length * 2);
         }
 
-        _stack[_count++] = _current;
-        _current = default;
+        _count++;
     }
 
     public void Pop()
     {
         if (_count == 0)
         {
-            throw new IndexOutOfRangeException("Stack is empty, cannot pop frame.");
-        }
-
-        if (_count == 1)
-        {
-            _current = default;
-        }
-        else if (_count > 1)
-        {
-            Debug.Assert(_stack != null && _stack.Length > 0);
-            _current = _stack[_count];
+            throw new InvalidOperationException("Stack is empty, cannot pop frame.");
         }
 
         _count--;
