@@ -65,13 +65,30 @@ internal class ODataResourceJsonWriter<T>(ODataResourceTypeInfo<T> typeInfo) : O
         // what if the property doesn't exist on the value (e.g. dictionary where only some properties are present)
         // do we expect to write null those properties as null or skip them?
 
+        if (propertyInfo.HasCount != null && propertyInfo.HasCount(resource, state))
+        {
+            if (propertyInfo.WriteCount == null)
+            {
+                throw new Exception("WriteValue function must be provided if HasCount returns true");
+            }
+
+            JsonMetadataHelpers.WritePropertyAnnotationName(jsonWriter, propertyInfo.Utf8Name.Span, "odata.count"u8);
+            await propertyInfo.WriteCount(resource, state);
+        }
+
+        if (propertyInfo.HasNextLink?.Invoke(resource, state) == true && propertyInfo.WriteNextLink != null)
+        {
+            JsonMetadataHelpers.WritePropertyAnnotationName(jsonWriter, propertyInfo.Utf8Name.Span, "odata.nextLink"u8);
+            await propertyInfo.WriteNextLink(resource, state);
+        }
+
         // How do we handle property selection?
         // examples:
         // - resource exposes a SelectProperties() that returns IEnumerable<ODataPropertyInfo<TDeclaringType>>
         // - resource or property exposes a ShouldWrite() or ShouldSkipProperty() that is evaluated per property?
         //   - this might rely on the implementation accessing the property value twice (e.g. to check whether null or missing)
         //   - should we assume that property access is O(1)? If not, might not be a good idea to force multiple lookups of the same value
-        jsonWriter.WritePropertyName(propertyInfo.Name);
+        jsonWriter.WritePropertyName(propertyInfo.Utf8Name.Span);
 
         // Another option is for propertyInfo to expose a GetXX method, e.g.
         // if propertyInfo.IsString(), string value = propertyInfo.GetString(value);

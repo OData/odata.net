@@ -11,13 +11,16 @@ public abstract class ODataResourceSetBaseJsonWriter<TCollection, TElement>(ODat
 {
     public override async ValueTask Write(TCollection value, ODataJsonWriterState state)
     {
+        Adapters.ODataPropertyInfo? parentProperty = state.IsTopLevel()
+            ? null
+            : state.Stack.Current.PropertyInfo;
         state.Stack.Push();
         state.Stack.Current.ResourceTypeInfo = typeInfo;
         if (state.IsTopLevel())
         {
             state.JsonWriter.WriteStartObject();
 
-            await WritePreValueMetadata(value, state);
+            await WritePreValueMetadata(value, null, state);
 
             state.JsonWriter.WritePropertyName("value");
         }
@@ -31,6 +34,7 @@ public abstract class ODataResourceSetBaseJsonWriter<TCollection, TElement>(ODat
             // on whether this is a top-level write or not.
             // Perhaps this component should only be responsible for writing the array and the top-level
             // annotations moved to some parent component
+            await WritePreValueMetadata(value, parentProperty, state);
         }
 
         state.JsonWriter.WriteStartArray();
@@ -49,11 +53,11 @@ public abstract class ODataResourceSetBaseJsonWriter<TCollection, TElement>(ODat
 
     protected abstract ValueTask WriteElements(TCollection value, ODataJsonWriterState state);
 
-    protected virtual async ValueTask WritePreValueMetadata(TCollection value, ODataJsonWriterState state)
+    protected virtual async ValueTask WritePreValueMetadata(TCollection value, Adapters.ODataPropertyInfo? propertyInfo, ODataJsonWriterState state)
     {
         // TODO: We should probably expose a ShouldWriteXXX method for metadata to give
         // users an easy way to control whether certain metadata should be written
-        if (state.MetadataLevel >= ODataMetadataLevel.Minimal)
+        if (state.IsTopLevel() && state.MetadataLevel >= ODataMetadataLevel.Minimal)
         {
             await WriteContextUrl(value, state);
         }
@@ -65,7 +69,8 @@ public abstract class ODataResourceSetBaseJsonWriter<TCollection, TElement>(ODat
         //    await WriteCountProperty(value, state, context);
         //}
 
-        await WriteNextLinkProperty(value, state);
+        await WriteNextLinkProperty(value, propertyInfo,  state);
+        await WriteCountProperty(value, propertyInfo, state);
     }
 
     protected virtual ValueTask WriteContextUrl(TCollection value, ODataJsonWriterState state)
@@ -80,8 +85,44 @@ public abstract class ODataResourceSetBaseJsonWriter<TCollection, TElement>(ODat
         return ValueTask.CompletedTask;
     }
 
-    protected virtual ValueTask WriteNextLinkProperty(TCollection value, ODataJsonWriterState state)
+    protected virtual ValueTask WriteCountProperty(TCollection value, Adapters.ODataPropertyInfo? propertyInfo, ODataJsonWriterState state)
     {
+        var jsonWriter = state.JsonWriter;
+        if (typeInfo?.HasCount == null)
+        {
+            // What should be the default?
+            return ValueTask.CompletedTask;
+        }
+
+        if (typeInfo.HasCount(value, state))
+        {
+            // TODO: Currently this is handled in the parent type info. But perhaps it's better to handle it here.
+            //if (propertyInfo != null)
+            //{
+            //    JsonMetadataHelpers.WritePropertyAnnotationName(jsonWriter, propertyInfo.Utf8Name.Span, "odata.count"u8);
+            //}
+            //else
+            //{
+            //    state.JsonWriter.WritePropertyName("@odata.count"u8);
+            //}
+            
+            state.JsonWriter.WritePropertyName("odata.count"u8);
+
+            // TODO: this should be validated when type info is registered.
+            if (typeInfo.WriteCount == null)
+            {
+                throw new Exception("WriteCount function must be provided if HasCount returns true");
+            }
+
+            return typeInfo.WriteCount(value, state);
+        }
+
+        return ValueTask.CompletedTask;
+    }
+
+    protected virtual ValueTask WriteNextLinkProperty(TCollection value, Adapters.ODataPropertyInfo? propertyInfo, ODataJsonWriterState state)
+    {
+
         var jsonWriter = state.JsonWriter;
         if (typeInfo?.HasNextLink == null)
         {
@@ -91,7 +132,6 @@ public abstract class ODataResourceSetBaseJsonWriter<TCollection, TElement>(ODat
 
         if (typeInfo.HasNextLink(value, state))
         {
-            var propertyInfo = state.Stack.Current.PropertyInfo;
             if (propertyInfo != null)
             {
                 JsonMetadataHelpers.WritePropertyAnnotationName(jsonWriter, propertyInfo.Utf8Name.Span, "odata.nextLink"u8);

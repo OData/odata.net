@@ -136,8 +136,15 @@ public class V3ODataSerializerTests
                 new()
                 {
                     Name = "Orders",
-                    WriteValue = (customer, state) => state.WriteValue(customer.Orders)
-                },
+                    WriteValue = (customer, state) => state.WriteValue(customer.Orders),
+                    // TODO: Considering whether to have the count annotation of the orders type info instead.
+                    HasCount = (customer, state) => true,
+                    WriteCount = (customer, state) => state.WriteValue(customer.Orders.Count),
+
+                    HasNextLink = (customer, state) => true,
+                    // The advantage of nested annotation handlers on the declaring type is that you still have access to the parent object.
+                    WriteNextLink = (customer, state) => state.WriteValue(new Uri($"http://service/odata/Customers({customer.Id})/Orders?$skip=2", UriKind.Absolute))
+    },
                 new()
                 {
                     Name = "WishList",
@@ -163,8 +170,19 @@ public class V3ODataSerializerTests
             ]
         });
 
+
+        // TODO: Currently this is handled in the parent type info. But perhaps it's better to handle it here.
+        //options.AddTypeInfo<IList<Order>>(new()
+        //{
+        //    // TODO: should be able to control whether it occurs above or below the collection value
+        //    HasCount = (orders, state) => true,
+        //    WriteCount = (orders, state) => state.WriteValue(orders.Count),
+        //});
+
         options.AddTypeInfo<Order>(new()
         {
+            HasEtag = (order, state) => true,
+            WriteEtag = (order, state) => state.WriteValue($"W/\"order-{order.Id}\""),
             Properties =
             [
                 new()
@@ -185,13 +203,22 @@ public class V3ODataSerializerTests
                 new()
                 {
                     Name = "Products",
-                    WriteValue = (order, state) => state.WriteValue(order.Products)
+                    WriteValue = (order, state) => state.WriteValue(order.Products),
+
+                    HasCount = (order, state) => true,
+                    WriteCount = (order, state) => state.WriteValue(order.Products.Count),
+
+                    HasNextLink = (order, state) => true,
+                    WriteNextLink = (order, state) => state.WriteValue(new Uri($"http://service/odata/Customers({order.Id})/Orders({order.Id})/Products?$skip=2", UriKind.Absolute))
                 }
             ]
         });
 
         options.AddTypeInfo<Product>(new()
         {
+            HasEtag = (product, state) => true,
+            WriteEtag = (product, state) => state.WriteValue($"W/\"product-{product.Id}\""),
+
             Properties =
             [
                 new()

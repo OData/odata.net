@@ -14,6 +14,9 @@ public class ODataResourceTypeInfo<T> : ODataResourceTypeInfo
 
     public IReadOnlyList<ODataPropertyInfo<T>> Properties { get; init; }
 
+    public Func<T, ODataJsonWriterState, bool>? HasCount { get; init; }
+    public Func<T, ODataJsonWriterState, ValueTask>? WriteCount { get; init; }
+
     public Func<T, ODataJsonWriterState, bool>? HasNextLink { get; init; }
 
     public Func<T, ODataJsonWriterState, ValueTask>? WriteNextLink { get; init; }
@@ -21,4 +24,5 @@ public class ODataResourceTypeInfo<T> : ODataResourceTypeInfo
     public Func<T, ODataJsonWriterState, bool>? HasEtag { get; init; }
 
     public Func<T, ODataJsonWriterState, ValueTask>? WriteEtag { get; init; }
+
 }
