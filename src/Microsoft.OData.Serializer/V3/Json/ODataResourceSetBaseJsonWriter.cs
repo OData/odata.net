@@ -100,6 +100,14 @@ public abstract class ODataResourceSetBaseJsonWriter<TCollection, TElement>(ODat
             {
                 state.JsonWriter.WritePropertyName("@odata.nextLink"u8);
             }
+
+            // TODO: this should be validated when type info is registered.
+            if (typeInfo.WriteNextLink == null)
+            {
+                throw new Exception("WriteNextLink function must be provided if HastNextLink returns true");
+            }
+
+            return typeInfo.WriteNextLink(value, state);
         }
 
         return ValueTask.CompletedTask;
