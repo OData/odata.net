@@ -17,4 +17,8 @@ public class ODataResourceTypeInfo<T> : ODataResourceTypeInfo
     public Func<T, ODataJsonWriterState, bool>? HasNextLink { get; init; }
 
     public Func<T, ODataJsonWriterState, ValueTask>? WriteNextLink { get; init; }
+
+    public Func<T, ODataJsonWriterState, bool>? HasEtag { get; init; }
+
+    public Func<T, ODataJsonWriterState, ValueTask>? WriteEtag { get; init; }
 }

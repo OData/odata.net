@@ -13,10 +13,18 @@ internal class ODataResourceJsonWriter<T>(ODataResourceTypeInfo<T> typeInfo) : O
 {
     public override async ValueTask Write(T value, ODataJsonWriterState state)
     {
+        Adapters.ODataPropertyInfo? parentProperty = state.Stack.Current.PropertyInfo;
+
         state.Stack.Push();
         state.Stack.Current.ResourceTypeInfo = typeInfo;
         var jsonWriter = state.JsonWriter;
+
         jsonWriter.WriteStartObject();
+
+        // No need to write the property name since there's a value.
+        // But how do we handle annotation-only resources?
+        await WritePreValueAnnotations(value, state);
+
         // This makes the following assumptions:
         // - all properties defined in the resourceInfo should be written
         // - the properties are written in the order they are defined in the resource info
@@ -90,5 +98,29 @@ internal class ODataResourceJsonWriter<T>(ODataResourceTypeInfo<T> typeInfo) : O
         //    // assume the property has stored enough state to resume writing later
         //    return false;
         //}
+    }
+
+    private async ValueTask WritePreValueAnnotations(T value, ODataJsonWriterState state)
+    {
+        await WriteEtag(value, state);
+    }
+
+    private ValueTask WriteEtag(T value,  ODataJsonWriterState state)
+    {
+        var jsonWriter = state.JsonWriter;
+        if (typeInfo.HasEtag != null && typeInfo.HasEtag(value, state))
+        {
+            jsonWriter.WritePropertyName("@odata.etag"u8);
+
+
+            if (typeInfo.WriteEtag == null)
+            {
+                throw new Exception("WriteEtag function must be provided if HasEtag returns true");
+            }
+
+            return typeInfo.WriteEtag(value, state);
+        }
+        
+        return ValueTask.CompletedTask;
     }
 }

@@ -109,6 +109,8 @@ public class V3ODataSerializerTests
 
         options.AddTypeInfo<Customer>(new()
         {
+            HasEtag = (customers, state) => true,
+            WriteEtag = (customer, state) => state.WriteValue($"W/\"{customer.Id}\""),
             Properties =
             [
                 new()
