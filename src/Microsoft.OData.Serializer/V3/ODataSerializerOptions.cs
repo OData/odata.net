@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Microsoft.OData.Serializer.V3;
 
-public sealed class ODataSerializerOptions
+public class ODataSerializerOptions<TCustomState>
 {
     public ODataMetadataLevel MetadataLevel { get; set; } = ODataMetadataLevel.Minimal;
     public ODataVersion ODataVersion { get; set; } = ODataVersion.V4;
@@ -18,7 +18,7 @@ public sealed class ODataSerializerOptions
 
     internal Dictionary<Type, ODataResourceTypeInfo> ResourceTypeInfos { get; } = new();
 
-    public void AddTypeInfo<T>(ODataResourceTypeInfo<T> resourceTypeInfo)
+    public void AddTypeInfo<T>(ODataResourceTypeInfo<T, TCustomState> resourceTypeInfo)
     {
         if (resourceTypeInfo is null)
         {
@@ -32,11 +32,11 @@ public sealed class ODataSerializerOptions
         ResourceTypeInfos[typeof(T)] = resourceTypeInfo;
     }
 
-    public ODataResourceTypeInfo<T>? TryGetResourceInfo<T>()
+    public ODataResourceTypeInfo<T, TCustomState>? TryGetResourceInfo<T>()
     {
         if (ResourceTypeInfos.TryGetValue(typeof(T), out var typeInfo))
         {
-            return (ODataResourceTypeInfo<T>)typeInfo;
+            return (ODataResourceTypeInfo<T, TCustomState>)typeInfo;
         }
 
         return null;

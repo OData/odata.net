@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Microsoft.OData.Serializer.V3.Json.Writers;
 
-internal class ODataJsonStringWriter : ODataJsonWriter<string>
+internal class ODataJsonStringWriter<TCustomState> : ODataJsonWriter<string, TCustomState>
 {
-    public override ValueTask Write(string value, ODataJsonWriterState state)
+    public override ValueTask Write(string value, ODataJsonWriterState<TCustomState> state)
     {
         // TODO: We should handle resumable writes for long strings.
         state.JsonWriter.WriteStringValue(value);

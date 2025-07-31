@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace Microsoft.OData.Serializer.V3.Json;
 
-internal class ODataResourceJsonWriter<T>(ODataResourceTypeInfo<T> typeInfo) : ODataWriter<T, ODataJsonWriterState>
+internal class ODataResourceJsonWriter<T, TCustomState>(ODataResourceTypeInfo<T, TCustomState> typeInfo) : ODataWriter<T, ODataJsonWriterState<TCustomState>>
 {
-    public override async ValueTask Write(T value, ODataJsonWriterState state)
+    public override async ValueTask Write(T value, ODataJsonWriterState<TCustomState> state)
     {
         Adapters.ODataPropertyInfo? parentProperty = state.Stack.Current.PropertyInfo;
 
@@ -68,7 +68,7 @@ internal class ODataResourceJsonWriter<T>(ODataResourceTypeInfo<T> typeInfo) : O
         state.Stack.Pop();
     }
 
-    private async ValueTask WriteProperty(T resource, ODataPropertyInfo<T> propertyInfo, ODataJsonWriterState state)
+    private async ValueTask WriteProperty(T resource, ODataPropertyInfo<T, TCustomState> propertyInfo, ODataJsonWriterState<TCustomState> state)
     {
         var jsonWriter = state.JsonWriter;
         // add this property to the state, including current index
@@ -129,12 +129,12 @@ internal class ODataResourceJsonWriter<T>(ODataResourceTypeInfo<T> typeInfo) : O
         //}
     }
 
-    private async ValueTask WritePreValueAnnotations(T value, ODataJsonWriterState state)
+    private async ValueTask WritePreValueAnnotations(T value, ODataJsonWriterState<TCustomState> state)
     {
         await WriteEtag(value, state);
     }
 
-    private ValueTask WriteEtag(T value,  ODataJsonWriterState state)
+    private ValueTask WriteEtag(T value, ODataJsonWriterState<TCustomState> state)
     {
         var jsonWriter = state.JsonWriter;
         if (typeInfo.HasEtag != null && typeInfo.HasEtag(value, state))

@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Microsoft.OData.Serializer.V3.Json.Writers;
 
-internal class ODataJsonDecimalWriter : ODataJsonWriter<decimal>
+internal class ODataJsonDecimalWriter<TCustomState> : ODataJsonWriter<decimal, TCustomState>
 {
-    public override ValueTask Write(decimal value, ODataJsonWriterState state)
+    public override ValueTask Write(decimal value, ODataJsonWriterState<TCustomState> state)
     {
         // TODO: support write as string
         state.JsonWriter.WriteNumberValue(value);

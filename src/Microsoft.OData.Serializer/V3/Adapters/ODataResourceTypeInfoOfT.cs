@@ -8,21 +8,21 @@ using System.Threading.Tasks;
 
 namespace Microsoft.OData.Serializer.V3.Adapters;
 
-public class ODataResourceTypeInfo<T> : ODataResourceTypeInfo
+public class ODataResourceTypeInfo<T, TCustomState> : ODataResourceTypeInfo
 {
     public override Type Type { get; init; } = typeof(T);
 
-    public IReadOnlyList<ODataPropertyInfo<T>> Properties { get; init; }
+    public IReadOnlyList<ODataPropertyInfo<T, TCustomState>> Properties { get; init; }
 
-    public Func<T, ODataJsonWriterState, bool>? HasCount { get; init; }
-    public Func<T, ODataJsonWriterState, ValueTask>? WriteCount { get; init; }
+    public Func<T, ODataJsonWriterState<TCustomState>, bool>? HasCount { get; init; }
+    public Func<T, ODataJsonWriterState<TCustomState>, ValueTask>? WriteCount { get; init; }
 
-    public Func<T, ODataJsonWriterState, bool>? HasNextLink { get; init; }
+    public Func<T, ODataJsonWriterState<TCustomState>, bool>? HasNextLink { get; init; }
 
-    public Func<T, ODataJsonWriterState, ValueTask>? WriteNextLink { get; init; }
+    public Func<T, ODataJsonWriterState<TCustomState>, ValueTask>? WriteNextLink { get; init; }
 
-    public Func<T, ODataJsonWriterState, bool>? HasEtag { get; init; }
+    public Func<T, ODataJsonWriterState<TCustomState>, bool>? HasEtag { get; init; }
 
-    public Func<T, ODataJsonWriterState, ValueTask>? WriteEtag { get; init; }
+    public Func<T, ODataJsonWriterState<TCustomState>, ValueTask>? WriteEtag { get; init; }
 
 }

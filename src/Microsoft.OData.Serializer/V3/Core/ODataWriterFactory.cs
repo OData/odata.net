@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace Microsoft.OData.Serializer.V3.Core;
 
-public abstract class ODataWriterFactory : IODataWriter
+public abstract class ODataWriterFactory<TCustomState> : IODataWriter
 {
     public Type? Type => null;
 
     public abstract bool CanWrite(Type type);
 
-    public abstract IODataWriter CreateWriter(Type type, ODataSerializerOptions options);
+    public abstract IODataWriter CreateWriter(Type type, ODataSerializerOptions<TCustomState> options);
 }

@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Microsoft.OData.Serializer.V3.Json.Writers;
 
-internal class ODataJsonUriWriter : ODataJsonWriter<Uri>
+internal class ODataJsonUriWriter<TCustomState> : ODataJsonWriter<Uri, TCustomState>
 {
-    public override ValueTask Write(Uri value, ODataJsonWriterState state)
+    public override ValueTask Write(Uri value, ODataJsonWriterState<TCustomState> state)
     {
         state.JsonWriter.WriteStringValue(value.ToString());
         return ValueTask.CompletedTask;

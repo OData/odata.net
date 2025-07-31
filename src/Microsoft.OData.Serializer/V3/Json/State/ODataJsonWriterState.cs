@@ -9,26 +9,26 @@ using System.Threading.Tasks;
 
 namespace Microsoft.OData.Serializer.V3.Json;
 
-public sealed class ODataJsonWriterState
+public sealed class ODataJsonWriterState<TCustomState>
 {
-    private ODataSerializerOptions options;
-    private ODataJsonWriterProvider writers;
+    private ODataSerializerOptions<TCustomState> options;
+    private ODataJsonWriterProvider<TCustomState> writers;
 
     public ODataUri ODataUri { get; set; }
 
     public ODataPayloadKind PayloadKind { get; set; }
     public ODataMetadataLevel MetadataLevel { get; set; } = ODataMetadataLevel.Minimal;
 
-    internal WriteStack Stack { get; } = new WriteStack();
+    internal WriteStack<TCustomState> Stack { get; } = new WriteStack<TCustomState>();
 
-    internal ODataJsonWriterState(ODataSerializerOptions options, ODataJsonWriterProvider writers, Utf8JsonWriter jsonWriter)
+    internal ODataJsonWriterState(ODataSerializerOptions<TCustomState> options, ODataJsonWriterProvider<TCustomState> writers, Utf8JsonWriter jsonWriter)
     {
         this.options = options ?? throw new ArgumentNullException(nameof(options));
         this.writers = writers ?? throw new ArgumentNullException(nameof(writers));
         this.JsonWriter = jsonWriter;
     }
 
-    internal ODataSerializerOptions Options => options;
+    internal ODataSerializerOptions<TCustomState> Options => options;
     internal Utf8JsonWriter JsonWriter { get; init; }
 
     internal bool ShouldFlush()
@@ -60,5 +60,10 @@ public sealed class ODataJsonWriterState
         }
 
         return this.Stack.Parent.PropertyInfo;
+    }
+
+    public ref TCustomState CurrentCustomState()
+    {
+        return ref this.Stack.CurrentCustomState;
     }
 }

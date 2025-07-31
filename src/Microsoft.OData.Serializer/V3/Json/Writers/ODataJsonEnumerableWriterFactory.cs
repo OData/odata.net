@@ -8,8 +8,9 @@ using System.Threading.Tasks;
 
 namespace Microsoft.OData.Serializer.V3.Json.Writers;
 
-internal class ODataJsonEnumerableWriterFactory : ODataWriterFactory
+internal class ODataJsonEnumerableWriterFactory<TCustomState> : ODataWriterFactory<TCustomState>
 {
+    private static readonly Type CustomStateType = typeof(TCustomState);
     public override bool CanWrite(Type type)
     {
         if (TryGetEnumerableElementType(type, out _))
@@ -20,7 +21,7 @@ internal class ODataJsonEnumerableWriterFactory : ODataWriterFactory
         return type.IsAssignableTo(typeof(IEnumerable));
     }
 
-    public override IODataWriter CreateWriter(Type type, ODataSerializerOptions options)
+    public override IODataWriter CreateWriter(Type type, ODataSerializerOptions<TCustomState> options)
     {
         if (TryGetEnumerableElementType(type, out Type? elementType))
         {
@@ -30,19 +31,19 @@ internal class ODataJsonEnumerableWriterFactory : ODataWriterFactory
             var listType = typeof(IList<>).MakeGenericType(elementType!);
             if (listType.IsAssignableFrom(type))
             {
-                var listWriterType = typeof(ODataJsonListWriter<,>).MakeGenericType(type, elementType!);
+                var listWriterType = typeof(ODataJsonListWriter<,,>).MakeGenericType(type, elementType!, CustomStateType);
                 return (IODataWriter)Activator.CreateInstance(listWriterType, [typeInfo]);
             }
 
             var readOnlyListType = typeof(IReadOnlyList<>).MakeGenericType(elementType!);
             if (readOnlyListType.IsAssignableFrom(type))
             {
-                var readOnlyListWriterType = typeof(ODataJsonReadOnlyListWriter<,>).MakeGenericType(type, elementType!);
+                var readOnlyListWriterType = typeof(ODataJsonReadOnlyListWriter<,,>).MakeGenericType(type, elementType!, CustomStateType);
                 return (IODataWriter)Activator.CreateInstance(readOnlyListWriterType, [typeInfo]);
             }
 
             var enumerableType = typeof(IEnumerable<>).MakeGenericType(elementType!);
-            var enumerableWriterType = typeof(ODataJsonEnumerableWriter<,>).MakeGenericType(type, elementType!);
+            var enumerableWriterType = typeof(ODataJsonEnumerableWriter<,,>).MakeGenericType(type, elementType!, CustomStateType);
             return (IODataWriter)Activator.CreateInstance(enumerableWriterType, [typeInfo]);
         }
 

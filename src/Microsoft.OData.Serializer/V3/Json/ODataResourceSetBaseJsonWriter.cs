@@ -7,9 +7,11 @@ using System.Threading.Tasks;
 
 namespace Microsoft.OData.Serializer.V3.Json;
 
-public abstract class ODataResourceSetBaseJsonWriter<TCollection, TElement>(ODataResourceTypeInfo<TCollection>? typeInfo = null) : ODataJsonWriter<TCollection>
+#pragma warning disable CA1005 // Avoid excessive parameters on generic types
+public abstract class ODataResourceSetBaseJsonWriter<TCollection, TElement, TCustomState>(ODataResourceTypeInfo<TCollection, TCustomState>? typeInfo = null) : ODataJsonWriter<TCollection, TCustomState>
+#pragma warning restore CA1005 // Avoid excessive parameters on generic types
 {
-    public override async ValueTask Write(TCollection value, ODataJsonWriterState state)
+    public override async ValueTask Write(TCollection value, ODataJsonWriterState<TCustomState> state)
     {
         Adapters.ODataPropertyInfo? parentProperty = state.IsTopLevel()
             ? null
@@ -52,9 +54,9 @@ public abstract class ODataResourceSetBaseJsonWriter<TCollection, TElement>(ODat
         state.Stack.Pop();
     }
 
-    protected abstract ValueTask WriteElements(TCollection value, ODataJsonWriterState state);
+    protected abstract ValueTask WriteElements(TCollection value, ODataJsonWriterState<TCustomState> state);
 
-    protected virtual async ValueTask WritePreValueMetadata(TCollection value, Adapters.ODataPropertyInfo? propertyInfo, ODataJsonWriterState state)
+    protected virtual async ValueTask WritePreValueMetadata(TCollection value, Adapters.ODataPropertyInfo? propertyInfo, ODataJsonWriterState<TCustomState> state)
     {
         // TODO: We should probably expose a ShouldWriteXXX method for metadata to give
         // users an easy way to control whether certain metadata should be written
@@ -74,11 +76,11 @@ public abstract class ODataResourceSetBaseJsonWriter<TCollection, TElement>(ODat
         await WriteCountProperty(value, propertyInfo, state);
     }
 
-    protected virtual ValueTask WriteContextUrl(TCollection value, ODataJsonWriterState state)
+    protected virtual ValueTask WriteContextUrl(TCollection value, ODataJsonWriterState<TCustomState> state)
     {
         if (state.PayloadKind == ODataPayloadKind.ResourceSet && state.IsTopLevel())
         {
-            ContextUrlHelper.WriteContextUrlProperty(state.PayloadKind, state);
+            ContextUrlHelper.WriteContextUrlProperty(state.PayloadKind, state.ODataUri, state.JsonWriter);
         }
 
         // TODO: nested context and other payload kinds
@@ -86,7 +88,7 @@ public abstract class ODataResourceSetBaseJsonWriter<TCollection, TElement>(ODat
         return ValueTask.CompletedTask;
     }
 
-    protected virtual ValueTask WriteCountProperty(TCollection value, Adapters.ODataPropertyInfo? propertyInfo, ODataJsonWriterState state)
+    protected virtual ValueTask WriteCountProperty(TCollection value, Adapters.ODataPropertyInfo? propertyInfo, ODataJsonWriterState<TCustomState> state)
     {
         var jsonWriter = state.JsonWriter;
         if (typeInfo?.HasCount == null)
@@ -121,7 +123,7 @@ public abstract class ODataResourceSetBaseJsonWriter<TCollection, TElement>(ODat
         return ValueTask.CompletedTask;
     }
 
-    protected virtual ValueTask WriteNextLinkProperty(TCollection value, Adapters.ODataPropertyInfo? propertyInfo, ODataJsonWriterState state)
+    protected virtual ValueTask WriteNextLinkProperty(TCollection value, Adapters.ODataPropertyInfo? propertyInfo, ODataJsonWriterState<TCustomState> state)
     {
 
         var jsonWriter = state.JsonWriter;

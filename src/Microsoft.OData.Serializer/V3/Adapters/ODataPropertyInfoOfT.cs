@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Microsoft.OData.Serializer.V3.Adapters;
 
-public class ODataPropertyInfo<TDeclaringType> : ODataPropertyInfo
+public class ODataPropertyInfo<TDeclaringType, TCustomState> : ODataPropertyInfo
 {
     // TODO if we write JSON, we need to specify JsonState so that it can access the JsonWriter
     // but what if we want to write primitive raw values (e.g. $value)? then we need to specify two separate
@@ -24,7 +24,7 @@ public class ODataPropertyInfo<TDeclaringType> : ODataPropertyInfo
     // Or we could have a single method and define a base state that all states must inherit from and to have this base
     // state only used for primitive values which we handle directly, other values should use the writer-specific state?
     // Sounds a bit convoluted, needs more thought.
-    public required Func<TDeclaringType, ODataJsonWriterState, ValueTask> WriteValue { get; init; }
+    public required Func<TDeclaringType, ODataJsonWriterState<TCustomState>, ValueTask> WriteValue { get; init; }
 
     // TODO: Should nested count handlers be defined on the property info or the type info?
     // We already have count handlers on the type info, keeping them there would provide
@@ -43,13 +43,13 @@ public class ODataPropertyInfo<TDeclaringType> : ODataPropertyInfo
     // the state to see if there's a property in scope, or if it's top-level, etc.
     // there might a cost to performing these if-checks on the hot path, but not sure it's significant.
     // It simplifies the configuration for the end user, the annotations are always on the type info.
-    public Func<TDeclaringType, ODataJsonWriterState, bool>? HasCount { get; init; }
+    public Func<TDeclaringType, ODataJsonWriterState<TCustomState>, bool>? HasCount { get; init; }
 
-    public Func<TDeclaringType, ODataJsonWriterState, ValueTask>? WriteCount { get; init; }
+    public Func<TDeclaringType, ODataJsonWriterState<TCustomState>, ValueTask>? WriteCount { get; init; }
 
-    public Func<TDeclaringType, ODataJsonWriterState, bool>? HasNextLink { get; init; }
+    public Func<TDeclaringType, ODataJsonWriterState<TCustomState>, bool>? HasNextLink { get; init; }
 
-    public Func<TDeclaringType, ODataJsonWriterState, ValueTask>? WriteNextLink { get; init; }
+    public Func<TDeclaringType, ODataJsonWriterState<TCustomState>, ValueTask>? WriteNextLink { get; init; }
 
-    public Func<TDeclaringType, ODataJsonWriterState, bool>? ShouldSkip { get; init; }
+    public Func<TDeclaringType, ODataJsonWriterState<TCustomState>, bool>? ShouldSkip { get; init; }
 }

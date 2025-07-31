@@ -10,14 +10,14 @@ using System.Xml.Linq;
 namespace Microsoft.OData.Serializer.V3.Json.Writers;
 
 [SuppressMessage("Performance", "CA1812:Avoid uninstantiated internal classes", Justification = "This class is instantiated via reflection.")]
-internal class ODataJsonListWriter<TCollection, TElement> : ODataResourceSetBaseJsonWriter<TCollection, TElement>
+internal class ODataJsonListWriter<TCollection, TElement, TCustomState> : ODataResourceSetBaseJsonWriter<TCollection, TElement, TCustomState>
     where TCollection : IList<TElement>
 {
-    public ODataJsonListWriter(ODataResourceTypeInfo<TCollection>? typeInfo = null)
+    public ODataJsonListWriter(ODataResourceTypeInfo<TCollection, TCustomState>? typeInfo = null)
         : base(typeInfo)
     {
     }
-    protected override async ValueTask WriteElements(TCollection value, ODataJsonWriterState state)
+    protected override async ValueTask WriteElements(TCollection value, ODataJsonWriterState<TCustomState> state)
     {
         for (int i = 0; i < value.Count; i++)
         {

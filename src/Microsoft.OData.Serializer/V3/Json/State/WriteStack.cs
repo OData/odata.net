@@ -8,16 +8,16 @@ using System.Threading.Tasks;
 namespace Microsoft.OData.Serializer.V3.Json.State;
 
 // TODO: should this be a struct?
-internal class WriteStack
+internal class WriteStack<TCustomState>
 {
     // TODO: Don't create stack array if we only have one frame
     //private WriteStackFrame _current;
-    private WriteStackFrame[]? _stack;
+    private WriteStackFrame<TCustomState>[]? _stack;
 
     private int _count;
 
 
-    public ref readonly WriteStackFrame Parent
+    public ref readonly WriteStackFrame<TCustomState> Parent
     {
         get
         {
@@ -32,7 +32,7 @@ internal class WriteStack
         }
     }
 
-    internal ref WriteStackFrame Current
+    internal ref WriteStackFrame<TCustomState> Current
     {
         get
         {
@@ -42,6 +42,18 @@ internal class WriteStack
             }
 
             return ref _stack![_count - 1];
+        }
+    }
+
+    internal ref TCustomState CurrentCustomState
+    {
+        get
+        {
+            if (_count == 0)
+            {
+                throw new InvalidOperationException("Stack is empty, cannot access current custom state.");
+            }
+            return ref _stack![_count - 1].CustomState;
         }
     }
 
@@ -126,7 +138,7 @@ internal class WriteStack
     {
         if (_stack == null)
         {
-            _stack = new WriteStackFrame[4];
+            _stack = new WriteStackFrame<TCustomState>[4];
             _count = 1;
             return;
         }

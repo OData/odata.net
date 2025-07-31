@@ -11,23 +11,23 @@ using System.Threading.Tasks;
 
 namespace Microsoft.OData.Serializer.V3.Json;
 
-internal class ODataJsonWriterProvider(ODataSerializerOptions options) : IODataWriterProvider<ODataJsonWriterState>
+internal class ODataJsonWriterProvider<TCustomState>(ODataSerializerOptions<TCustomState> options) : IODataWriterProvider<ODataJsonWriterState<TCustomState>>
 {
-    private static readonly ODataJsonBoolWriter boolWriter = new();
-    private static readonly ODataJsonInt32Writer int32Writer = new();
-    private static readonly ODataJsonStringWriter stringWriter = new();
-    private static readonly ODataJsonDateTimeWriter dateTimeWriter = new();
-    private static readonly ODataJsonDecimalWriter decimalWriter = new();
-    private static readonly ODataJsonByteArrayWriter byteArrayWriter = new();
-    private static readonly ODataJsonUriWriter uriWriter = new();
+    private static readonly ODataJsonBoolWriter<TCustomState> boolWriter = new();
+    private static readonly ODataJsonInt32Writer<TCustomState> int32Writer = new();
+    private static readonly ODataJsonStringWriter<TCustomState> stringWriter = new();
+    private static readonly ODataJsonDateTimeWriter<TCustomState> dateTimeWriter = new();
+    private static readonly ODataJsonDecimalWriter<TCustomState> decimalWriter = new();
+    private static readonly ODataJsonByteArrayWriter<TCustomState> byteArrayWriter = new();
+    private static readonly ODataJsonUriWriter<TCustomState> uriWriter = new();
 
 
     private static Dictionary<Type, IODataWriter> simpleWriters = InitPrimitiveWriters();
-    private static List<ODataWriterFactory> defaultFactories = InitDefaultFactories();
+    private static List<ODataWriterFactory<TCustomState>> defaultFactories = InitDefaultFactories();
 
     private ConcurrentDictionary<Type, IODataWriter> writersCache = new();
 
-    public IODataWriter<T, ODataJsonWriterState> GetWriter<T>()
+    public IODataWriter<T, ODataJsonWriterState<TCustomState>> GetWriter<T>()
     {
         //return (IODataWriter<T, ODataJsonWriterState>)writersCache.GetOrAdd(typeof(T), this.GetWriterNoCache<T>());
         // TODO: use GetOrAdd() instead, would require refactoring GetWriterNoCache
@@ -36,34 +36,34 @@ internal class ODataJsonWriterProvider(ODataSerializerOptions options) : IODataW
         {
             writer = this.GetWriterNoCache<T>();
             writersCache.TryAdd(typeof(T), writer);
-            return (IODataWriter<T, ODataJsonWriterState>)writer;
+            return (IODataWriter<T, ODataJsonWriterState<TCustomState>>)writer;
         }
 
-        return (IODataWriter<T, ODataJsonWriterState>)writer;
+        return (IODataWriter<T, ODataJsonWriterState<TCustomState>>)writer;
     }
 
-    private IODataWriter<T, ODataJsonWriterState> GetWriterNoCache<T>()
+    private IODataWriter<T, ODataJsonWriterState<TCustomState>> GetWriterNoCache<T>()
     {
         var type = typeof(T);
         if (simpleWriters.TryGetValue(type, out var writer))
         {
-            return (IODataWriter<T, ODataJsonWriterState>)writer;
+            return (IODataWriter<T, ODataJsonWriterState<TCustomState>>)writer;
         }
 
         foreach (var factory in defaultFactories)
         {
             if (factory.CanWrite(type))
             {
-                return (IODataWriter<T, ODataJsonWriterState>)factory.CreateWriter(type, options);
+                return (IODataWriter<T, ODataJsonWriterState<TCustomState>>)factory.CreateWriter(type, options);
             }
         }
 
         // TODO: we could consider generating a custom writer for the poco
         // but we'd need to map it to an OData type.
-        ODataResourceTypeInfo<T>? typeInfo = options.TryGetResourceInfo<T>();
+        ODataResourceTypeInfo<T, TCustomState>? typeInfo = options.TryGetResourceInfo<T>();
         if (typeInfo != null)
         {
-            return new ODataResourceJsonWriter<T>(typeInfo);
+            return new ODataResourceJsonWriter<T, TCustomState>(typeInfo);
         }
 
         throw new Exception($"Could not find a suitable writer for {type.FullName}");
@@ -92,11 +92,11 @@ internal class ODataJsonWriterProvider(ODataSerializerOptions options) : IODataW
         }
     }
 
-    private static List<ODataWriterFactory> InitDefaultFactories()
+    private static List<ODataWriterFactory<TCustomState>> InitDefaultFactories()
     {
         return [
-            new ODataJsonEnumWriterFactory(),
-            new ODataJsonEnumerableWriterFactory()
+            new ODataJsonEnumWriterFactory<TCustomState>(),
+            new ODataJsonEnumerableWriterFactory<TCustomState>()
         ];
     }
 }

@@ -2,17 +2,18 @@
 using System.Buffers;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.Json;
 
 namespace Microsoft.OData.Serializer.V3.Json;
 
 internal static class ContextUrlHelper
 {
-    public static void WriteContextUrlProperty(ODataPayloadKind payloadKind, ODataJsonWriterState state)
+    public static void WriteContextUrlProperty(ODataPayloadKind payloadKind, ODataUri uri, Utf8JsonWriter jsonWriter)
     {
         switch (payloadKind)
         {
             case ODataPayloadKind.ResourceSet:
-                WriteResourceSetContextUrl(state);
+                WriteResourceSetContextUrl(uri, jsonWriter);
                 break;
 
             default:
@@ -21,15 +22,14 @@ internal static class ContextUrlHelper
         }
     }
 
-    internal static void WriteResourceSetContextUrl(ODataJsonWriterState state)
+    internal static void WriteResourceSetContextUrl(ODataUri odataUri, Utf8JsonWriter jsonWriter)
     {
-        if (state.ODataUri == null)
+        if (odataUri == null)
         {
             return;
         }
 
-        var odataUri = state.ODataUri;
-        var writer = state.JsonWriter;
+        var writer = jsonWriter;
 
         // TODO: This is a naive, incorrect, incomplete implementation of the context URL.
         // It's just a placeholder to show how it might be constructed.

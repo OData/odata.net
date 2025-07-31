@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Microsoft.OData.Serializer.V3.Json.Writers;
 
-internal class ODataJsonDateTimeWriter : ODataJsonWriter<DateTime>
+internal class ODataJsonDateTimeWriter<TCustomState> : ODataJsonWriter<DateTime, TCustomState>
 {
-    public override ValueTask Write(DateTime value, ODataJsonWriterState state)
+    public override ValueTask Write(DateTime value, ODataJsonWriterState<TCustomState> state)
     {
 #pragma warning disable CA1305 // Specify IFormatProvider
         state.JsonWriter.WriteStringValue(value.ToString("yyyy-MM-ddTHH:mm:ssZ")); // Ensure OData format is applied
