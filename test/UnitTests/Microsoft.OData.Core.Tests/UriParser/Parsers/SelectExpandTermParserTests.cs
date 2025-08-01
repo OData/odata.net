@@ -6,6 +6,7 @@
 
 using System;
 using Microsoft.OData.Core;
+using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Xunit;
 
@@ -312,7 +313,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         /// </summary>
         private static PathSegmentToken ParseSelectTerm(string term)
         {
-            var lexer = new ExpressionLexer(term, true /*moveToFirstToken*/, true/*useSemicolonDelimiter*/);
+            var lexer = new ExpressionLexer(EdmCoreModel.Instance, expression: term, moveToFirstToken: true, useSemicolonDelimiter: true);
             var parser = new SelectExpandTermParser(lexer, 100 /*maxPathLength*/, true /*isSelect*/);
             return parser.ParseTerm();
         }
@@ -331,7 +332,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         /// </summary>
         private PathSegmentToken ParseExpandTerm(string term, out ExpressionLexer lexer)
         {
-            lexer = new ExpressionLexer(term, true /*moveToFirstToken*/, true/*useSemicolonDelimiter*/);
+            lexer = new ExpressionLexer(EdmCoreModel.Instance, expression: term, moveToFirstToken: true, useSemicolonDelimiter: true);
             var parser = new SelectExpandTermParser(lexer, 100 /*maxPathLength*/, false /*isSelect*/);
             return parser.ParseTerm(allowRef: true);
         }

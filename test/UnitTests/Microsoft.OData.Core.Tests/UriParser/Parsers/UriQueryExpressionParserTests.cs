@@ -16,7 +16,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 {
     public class UriQueryExpressionParserTests
     {
-        private readonly UriQueryExpressionParser testSubject = new UriQueryExpressionParser(50);
+        private readonly UriQueryExpressionParser testSubject = new UriQueryExpressionParser(HardCodedTestModel.TestModel, 50);
 
         [Fact]
         public void AnyAllSyntacticParsingShouldCheckSeperatorTokenIsColon()

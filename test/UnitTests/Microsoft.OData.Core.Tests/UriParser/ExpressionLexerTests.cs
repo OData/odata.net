@@ -30,6 +30,12 @@ namespace Microsoft.OData.Tests.UriParser
         private static readonly ExpressionToken ColonToken = new ExpressionToken() { Kind = ExpressionTokenKind.Colon, Text = ":".AsMemory() };
         private static readonly ExpressionToken ItToken = new ExpressionToken() { Kind = ExpressionTokenKind.Identifier, Text = "$it".AsMemory() };
         private static readonly ExpressionToken NullLiteralToken = new ExpressionToken() { Kind = ExpressionTokenKind.NullLiteral, Text = "null".AsMemory() };
+        private readonly IEdmModel model;
+
+        public ExpressionLexerTests()
+        {
+            this.model = EdmCoreModel.Instance;
+        }
 
         // internal static bool IsNumeric(ExpressionTokenKind id) tests
         [Fact]
@@ -202,7 +208,7 @@ namespace Microsoft.OData.Tests.UriParser
         [Fact]
         public void ShouldOutputTokenAndTrueWhenNoError()
         {
-            ExpressionLexer lexer = new ExpressionLexer("null", false, false);
+            ExpressionLexer lexer = new ExpressionLexer(this.model, expression: "null", moveToFirstToken: false, useSemicolonDelimiter: false);
             ExpressionToken resultToken;
             Exception error = null;
             bool result = lexer.TryPeekNextToken(out resultToken, out error);
@@ -215,7 +221,7 @@ namespace Microsoft.OData.Tests.UriParser
         [Fact]
         public void ShouldErrorWhenIncorrectCharacterAtStart()
         {
-            ExpressionLexer lexer = new ExpressionLexer("#$*@#", false, false);
+            ExpressionLexer lexer = new ExpressionLexer(this.model, expression: "#$*@#", moveToFirstToken: false, useSemicolonDelimiter: false);
             ExpressionToken resultToken;
             Exception error = null;
             bool result = lexer.TryPeekNextToken(out resultToken, out error);
@@ -228,7 +234,7 @@ namespace Microsoft.OData.Tests.UriParser
         [Fact]
         public void ShouldOutputNextTokenWhenItExists()
         {
-            ExpressionLexer lexer = new ExpressionLexer("5", false, false);
+            ExpressionLexer lexer = new ExpressionLexer(this.model, expression: "5", moveToFirstToken: false, useSemicolonDelimiter: false);
 
             ExpressionToken result = lexer.NextToken();
             Assert.Equal(ExpressionTokenKind.IntegerLiteral, result.Kind);
@@ -239,7 +245,7 @@ namespace Microsoft.OData.Tests.UriParser
         [Fact]
         public void ShouldThrowWhenIncorrectCharacterAtStart()
         {
-            ExpressionLexer lexer = new ExpressionLexer("#$*@#", false, false);
+            ExpressionLexer lexer = new ExpressionLexer(this.model, expression: "#$*@#", moveToFirstToken: false, useSemicolonDelimiter: false);
             Action nextToken = () => lexer.NextToken();
             nextToken.Throws<ODataException>(Error.Format(SRResources.ExpressionLexer_InvalidCharacter, "#", "0", "#$*@#"));
         }
@@ -248,8 +254,8 @@ namespace Microsoft.OData.Tests.UriParser
         [Fact]
         public void ShouldReturnLiteralWhenNoSuffixLiteralTokenInt()
         {
-            ExpressionLexer lexer = new ExpressionLexer("5", false, false);
-            object result = lexer.ReadLiteralToken();
+            ExpressionLexer lexer = new ExpressionLexer(this.model, expression: "5", moveToFirstToken: false, useSemicolonDelimiter: false);
+            object result = lexer.ReadLiteralToken(this.model);
             int intResult = Assert.IsType<int>(result);
             Assert.Equal(5, intResult);
         }
@@ -257,8 +263,8 @@ namespace Microsoft.OData.Tests.UriParser
         [Fact]
         public void ShouldReturnDateTimeOffSetLiteralWhenNoSuffixDateLiteralToken()
         {
-            ExpressionLexer lexer = new ExpressionLexer("2014-09-19T12:13:14+00:00", false, false);
-            object result = lexer.ReadLiteralToken();
+            ExpressionLexer lexer = new ExpressionLexer(this.model, expression: "2014-09-19T12:13:14+00:00", moveToFirstToken: false, useSemicolonDelimiter: false);
+            object result = lexer.ReadLiteralToken(this.model);
             var dto = Assert.IsType<DateTimeOffset>(result);
             Assert.Equal(new DateTimeOffset(2014, 9, 19, 12, 13, 14, new TimeSpan(0, 0, 0)), dto);
         }
@@ -266,8 +272,8 @@ namespace Microsoft.OData.Tests.UriParser
         [Fact]
         public void ShouldReturnDateLiteralWhenNoSuffixDateLiteralToken()
         {
-            ExpressionLexer lexer = new ExpressionLexer("2014-09-19", false, false);
-            object result = lexer.ReadLiteralToken();
+            ExpressionLexer lexer = new ExpressionLexer(this.model, expression: "2014-09-19", moveToFirstToken: false, useSemicolonDelimiter: false);
+            object result = lexer.ReadLiteralToken(this.model);
             var date = Assert.IsType<Date>(result);
             Assert.Equal(new Date(2014, 9, 19), date);
         }
@@ -275,8 +281,8 @@ namespace Microsoft.OData.Tests.UriParser
         [Fact]
         public void ShouldReturnLiteralWhenNoSuffixLiteralTokenTimeOfDay()
         {
-            ExpressionLexer lexer = new ExpressionLexer("12:30:03.900", false, false);
-            object result = lexer.ReadLiteralToken();
+            ExpressionLexer lexer = new ExpressionLexer(this.model, expression: "12:30:03.900", moveToFirstToken: false, useSemicolonDelimiter: false);
+            object result = lexer.ReadLiteralToken(this.model);
             var timeOfDay = Assert.IsType<TimeOfDay>(result);
             Assert.Equal(new TimeOfDay(12, 30, 3, 900), timeOfDay);
         }
@@ -284,8 +290,8 @@ namespace Microsoft.OData.Tests.UriParser
         [Fact]
         public void ShouldReturnLiteralWhenNoSuffixLiteralTokenShortTimeOfDay()
         {
-            ExpressionLexer lexer = new ExpressionLexer("12:30:03", false, false);
-            object result = lexer.ReadLiteralToken();
+            ExpressionLexer lexer = new ExpressionLexer(this.model, expression: "12:30:03", moveToFirstToken: false, useSemicolonDelimiter: false);
+            object result = lexer.ReadLiteralToken(this.model);
             var timeOfDay = Assert.IsType<TimeOfDay>(result);
             Assert.Equal(new TimeOfDay(12, 30, 3, 0), timeOfDay);
         }
@@ -293,8 +299,8 @@ namespace Microsoft.OData.Tests.UriParser
         [Fact]
         public void ShouldReturnLiteralWhenNoSuffixLiteralTokenLong()
         {
-            ExpressionLexer lexer = new ExpressionLexer(int.MaxValue + "000", false, false);
-            object result = lexer.ReadLiteralToken();
+            ExpressionLexer lexer = new ExpressionLexer(this.model, expression: int.MaxValue + "000", moveToFirstToken: false, useSemicolonDelimiter: false);
+            object result = lexer.ReadLiteralToken(this.model);
             var longValue = Assert.IsType<long>(result);
             Assert.Equal(((long)int.MaxValue) * 1000, longValue);
         }
@@ -303,8 +309,8 @@ namespace Microsoft.OData.Tests.UriParser
         public void ShouldReturnLiteralWhenNoSuffixLiteralTokenFloat()
         {
             // significant figures: float is 7, double is 15/16, decimal is 28
-            ExpressionLexer lexer = new ExpressionLexer("123.001", false, false);
-            object result = lexer.ReadLiteralToken();
+            ExpressionLexer lexer = new ExpressionLexer(this.model, expression: "123.001", moveToFirstToken: false, useSemicolonDelimiter: false);
+            object result = lexer.ReadLiteralToken(this.model);
             var floatValue = Assert.IsType<float>(result);
             Assert.Equal(123.001f, floatValue);
         }
@@ -313,8 +319,8 @@ namespace Microsoft.OData.Tests.UriParser
         public void ShouldReturnLiteralWhenNoSuffixLiteralTokenDouble()
         {
             // significant figures: float is 7, double is 15/16, decimal is 28
-            ExpressionLexer lexer = new ExpressionLexer("1234567.001", false, false);
-            object result = lexer.ReadLiteralToken();
+            ExpressionLexer lexer = new ExpressionLexer(this.model, expression: "1234567.001", moveToFirstToken: false, useSemicolonDelimiter: false);
+            object result = lexer.ReadLiteralToken(this.model);
             var doubleValue = Assert.IsType<double>(result);
             Assert.Equal(1234567.001d, doubleValue);
         }
@@ -322,8 +328,8 @@ namespace Microsoft.OData.Tests.UriParser
         [Fact]
         public void ShouldReturnLiteralWhenNoSuffixLiteralTokenDecimal()
         {
-            ExpressionLexer lexer = new ExpressionLexer("3258.678765765489753678965390", false, false);
-            object result = lexer.ReadLiteralToken();
+            ExpressionLexer lexer = new ExpressionLexer(this.model, expression: "3258.678765765489753678965390", moveToFirstToken: false, useSemicolonDelimiter: false);
+            object result = lexer.ReadLiteralToken(this.model);
             var decimalValue = Assert.IsType<decimal>(result);
             Assert.Equal(3258.678765765489753678965390m, decimalValue);
         }
@@ -331,8 +337,8 @@ namespace Microsoft.OData.Tests.UriParser
         [Fact]
         public void ShouldThrowWhenNotLiteralToken()
         {
-            ExpressionLexer lexer = new ExpressionLexer("potato", false, false);
-            Action read = () => lexer.ReadLiteralToken();
+            ExpressionLexer lexer = new ExpressionLexer(this.model, expression: "potato", moveToFirstToken: false, useSemicolonDelimiter: false);
+            Action read = () => lexer.ReadLiteralToken(this.model);
             read.Throws<ODataException>(Error.Format(SRResources.ExpressionLexer_ExpectedLiteralToken, "potato"));
         }
 
@@ -340,7 +346,7 @@ namespace Microsoft.OData.Tests.UriParser
         [Fact]
         public void ShouldReturnStringIdentifierWhenGivenIdentifierToken()
         {
-            ExpressionLexer lexer = new ExpressionLexer("misomethingk", true, false);
+            ExpressionLexer lexer = new ExpressionLexer(this.model, expression: "misomethingk", moveToFirstToken: true, useSemicolonDelimiter: false);
             string result = lexer.ReadDottedIdentifier(false).ToString();
             Assert.Equal("misomethingk", result);
         }
@@ -348,7 +354,7 @@ namespace Microsoft.OData.Tests.UriParser
         [Fact]
         public void ShouldReturnStringIdentifierWhenGivenIdentifierTokenContainingDot()
         {
-            ExpressionLexer lexer = new ExpressionLexer("m.i.something.k", true, false);
+            ExpressionLexer lexer = new ExpressionLexer(this.model, expression: "m.i.something.k", moveToFirstToken: true, useSemicolonDelimiter: false);
             string result = lexer.ReadDottedIdentifier(false).ToString();
             Assert.Equal("m.i.something.k", result);
         }
@@ -356,7 +362,7 @@ namespace Microsoft.OData.Tests.UriParser
         [Fact]
         public void ShouldReturnStringIdentifierWhenGivenIdentifierTokenContainingWhitespace()
         {
-            ExpressionLexer lexer = new ExpressionLexer("    m.i.something.k", true, false);
+            ExpressionLexer lexer = new ExpressionLexer(this.model, expression: "    m.i.something.k", moveToFirstToken: true, useSemicolonDelimiter: false);
             string result = lexer.ReadDottedIdentifier(false).ToString();
             Assert.Equal("m.i.something.k", result);
         }
@@ -364,7 +370,7 @@ namespace Microsoft.OData.Tests.UriParser
         [Fact]
         public void ShouldThrowWhenNotGivenIdentifierToken()
         {
-            ExpressionLexer lexer = new ExpressionLexer("2.43", false, false);
+            ExpressionLexer lexer = new ExpressionLexer(this.model, expression: "2.43", moveToFirstToken: false, useSemicolonDelimiter: false);
             Action read = () => lexer.ReadDottedIdentifier(false);
             read.Throws<ODataException>(Error.Format(SRResources.ExpressionLexer_SyntaxError, "0", "2.43"));
         }
@@ -372,7 +378,7 @@ namespace Microsoft.OData.Tests.UriParser
         [Fact]
         public void ShouldNotThrowWhenGivenStarInAcceptStarMode()
         {
-            ExpressionLexer lexer = new ExpressionLexer("m.*", true, false);
+            ExpressionLexer lexer = new ExpressionLexer(this.model, expression: "m.*", moveToFirstToken: true, useSemicolonDelimiter: false);
             string result = lexer.ReadDottedIdentifier(true).ToString();
             Assert.Equal("m.*", result);
         }
@@ -380,7 +386,7 @@ namespace Microsoft.OData.Tests.UriParser
         [Fact]
         public void ShouldThrowWhenGivenStarInDontAcceptStarMode()
         {
-            ExpressionLexer lexer = new ExpressionLexer("m.*", true, false);
+            ExpressionLexer lexer = new ExpressionLexer(this.model, expression: "m.*", moveToFirstToken: true, useSemicolonDelimiter: false);
             Action read = () => lexer.ReadDottedIdentifier(false);
             read.Throws<ODataException>(Error.Format(SRResources.ExpressionLexer_SyntaxError, "3", "m.*"));
         }
@@ -388,7 +394,7 @@ namespace Microsoft.OData.Tests.UriParser
         [Fact]
         public void StarMustBeLastTokenInDottedIdentifier()
         {
-            ExpressionLexer lexer = new ExpressionLexer("m.*.blah", true, false);
+            ExpressionLexer lexer = new ExpressionLexer(this.model, expression: "m.*.blah", moveToFirstToken: true, useSemicolonDelimiter: false);
             Action read = () => lexer.ReadDottedIdentifier(true);
             read.Throws<ODataException>(Error.Format(SRResources.ExpressionLexer_SyntaxError, "3", "m.*.blah"));
         }
@@ -397,7 +403,7 @@ namespace Microsoft.OData.Tests.UriParser
         [Fact]
         public void ShouldOutputTokenWhenNoError()
         {
-            ExpressionLexer lexer = new ExpressionLexer("null", false, false);
+            ExpressionLexer lexer = new ExpressionLexer(this.model, expression: "null", moveToFirstToken: false, useSemicolonDelimiter: false);
             ExpressionToken result = lexer.PeekNextToken();
             Assert.NotEqual(result, lexer.CurrentToken);
             Assert.Equal(ExpressionTokenKind.NullLiteral, result.Kind);
@@ -406,7 +412,7 @@ namespace Microsoft.OData.Tests.UriParser
         [Fact]
         public void PeekingShouldThrowWhenIncorrectCharacterAtStart()
         {
-            ExpressionLexer lexer = new ExpressionLexer("#$*@#", false, false);
+            ExpressionLexer lexer = new ExpressionLexer(this.model, expression: "#$*@#", moveToFirstToken: false, useSemicolonDelimiter: false);
             Action peek = () => lexer.PeekNextToken();
             peek.Throws<ODataException>(Error.Format(SRResources.ExpressionLexer_InvalidCharacter, "#", "0", "#$*@#"));
         }
@@ -415,7 +421,7 @@ namespace Microsoft.OData.Tests.UriParser
         [Fact]
         public void ShouldNotThrowWhenCurrentTokenIsExpressionKind()
         {
-            ExpressionLexer lexer = new ExpressionLexer("null", true, false);
+            ExpressionLexer lexer = new ExpressionLexer(this.model, expression: "null", moveToFirstToken: true, useSemicolonDelimiter: false);
             Action validate = () => lexer.ValidateToken(ExpressionTokenKind.NullLiteral);
             validate.DoesNotThrow();
         }
@@ -423,7 +429,7 @@ namespace Microsoft.OData.Tests.UriParser
         [Fact]
         public void ShouldThrowWhenCurrentTokenIsNotExpressionKind()
         {
-            ExpressionLexer lexer = new ExpressionLexer("null", true, false);
+            ExpressionLexer lexer = new ExpressionLexer(this.model, expression: "null", moveToFirstToken: true, useSemicolonDelimiter: false);
             Action validate = () => lexer.ValidateToken(ExpressionTokenKind.Question);
             validate.Throws<ODataException>(Error.Format(SRResources.ExpressionLexer_SyntaxError, 4, "null"));
         }
@@ -431,12 +437,12 @@ namespace Microsoft.OData.Tests.UriParser
         [Fact]
         public void SpatialLiteralInBinaryExprTest()
         {
-            ValidateTokenSequence("Property eq geography'SRID=1234;POINT(10 20)'",
+            ValidateTokenSequence(this.model, "Property eq geography'SRID=1234;POINT(10 20)'",
                 IdentifierToken("Property"),
                 ExpressionToken.EqualsTo,
                 SpatialLiteralToken("geography'SRID=1234;POINT(10 20)'"));
 
-            ValidateTokenSequence("geography'SRID=1234;POINT(10 20)' eq Property",
+            ValidateTokenSequence(this.model, "geography'SRID=1234;POINT(10 20)' eq Property",
                 SpatialLiteralToken("geography'SRID=1234;POINT(10 20)'"),
                 ExpressionToken.EqualsTo,
                 IdentifierToken("Property"));
@@ -457,7 +463,7 @@ namespace Microsoft.OData.Tests.UriParser
 
             foreach (string s in testCases)
             {
-                ValidateTokenSequence(s, SpatialLiteralToken(s));
+                ValidateTokenSequence(this.model, s, SpatialLiteralToken(s));
             }
         }
 
@@ -473,14 +479,14 @@ namespace Microsoft.OData.Tests.UriParser
 
             foreach (string s in testCases)
             {
-                ValidateTokenSequence(s, SpatialLiteralToken(s, geography: false));
+                ValidateTokenSequence(this.model, s, SpatialLiteralToken(s, geography: false));
             }
         }
 
         [Fact]
         public void SpatialLiteralNegative()
         {
-            ValidateTokenSequence("POINT 10 20",
+            ValidateTokenSequence(this.model, "POINT 10 20",
                 IdentifierToken("POINT"),
                 IntegerToken("10"),
                 IntegerToken("20"));
@@ -490,7 +496,7 @@ namespace Microsoft.OData.Tests.UriParser
         public void SpatialLiteralNegative_InvalidSrid()
         {
             // invalid SRID sequence should not be expanded into the spatial token
-            ValidateTokenSequence("SRID=1234(POINT(10 20))",
+            ValidateTokenSequence(this.model, "SRID=1234(POINT(10 20))",
                 IdentifierToken("SRID"),
                 EqualsToken,
                 IntegerToken("1234"),
@@ -506,31 +512,31 @@ namespace Microsoft.OData.Tests.UriParser
         [Fact]
         public void SpatialLiteralNegative_MissingQuotes()
         {
-            ValidateTokenSequence("geography",
+            ValidateTokenSequence(this.model, "geography",
                 IdentifierToken("geography"));
 
-            ValidateTokenSequence("geometry",
+            ValidateTokenSequence(this.model, "geometry",
                 IdentifierToken("geometry"));
         }
 
         [Fact]
         public void SpatialLiteralNegative_WrongQuotes()
         {
-            ValidateLexerException<ODataException>("geography\"foo\"", Error.Format(SRResources.ExpressionLexer_InvalidCharacter, "\"", 9, "geography\"foo\""));
-            ValidateLexerException<ODataException>("geometry\"foo\"", Error.Format(SRResources.ExpressionLexer_InvalidCharacter, "\"", 8, "geometry\"foo\""));
+            ValidateLexerException<ODataException>(this.model, "geography\"foo\"", Error.Format(SRResources.ExpressionLexer_InvalidCharacter, "\"", 9, "geography\"foo\""));
+            ValidateLexerException<ODataException>(this.model, "geometry\"foo\"", Error.Format(SRResources.ExpressionLexer_InvalidCharacter, "\"", 8, "geometry\"foo\""));
         }
 
         [Fact]
         public void SpatialLiteralNegative_UnterminatedQuote()
         {
-            ValidateLexerException<ODataException>("geography'foo", Error.Format(SRResources.ExpressionLexer_UnterminatedLiteral, 13, "geography'foo"));
-            ValidateLexerException<ODataException>("geometry'foo", Error.Format(SRResources.ExpressionLexer_UnterminatedLiteral, 12, "geometry'foo"));
+            ValidateLexerException<ODataException>(this.model, "geography'foo", Error.Format(SRResources.ExpressionLexer_UnterminatedLiteral, 13, "geography'foo"));
+            ValidateLexerException<ODataException>(this.model, "geometry'foo", Error.Format(SRResources.ExpressionLexer_UnterminatedLiteral, 12, "geometry'foo"));
         }
 
         [Fact]
         public void ExpandIdAsFunctionWithDot()
         {
-            ExpressionLexer l = new ExpressionLexer("id1.id2.id3(", moveToFirstToken: true, useSemicolonDelimiter: false);
+            ExpressionLexer l = new ExpressionLexer(this.model, expression: "id1.id2.id3(", moveToFirstToken: true, useSemicolonDelimiter: false);
             Assert.True(l.ExpandIdentifierAsFunction());
             Assert.Equal("id1.id2.id3", l.CurrentToken.Span.ToString());
             Assert.Equal(0, l.CurrentToken.Position);
@@ -539,7 +545,7 @@ namespace Microsoft.OData.Tests.UriParser
         [Fact]
         public void ExpandIdAsFunction()
         {
-            ExpressionLexer l = new ExpressionLexer("id1(", moveToFirstToken: true, useSemicolonDelimiter: false);
+            ExpressionLexer l = new ExpressionLexer(this.model, expression: "id1(", moveToFirstToken: true, useSemicolonDelimiter: false);
             Assert.True(l.ExpandIdentifierAsFunction());
             Assert.Equal("id1", l.CurrentToken.Span.ToString());
             Assert.Equal(0, l.CurrentToken.Position);
@@ -548,7 +554,7 @@ namespace Microsoft.OData.Tests.UriParser
         [Fact]
         public void ExpandIdAsFunctionFail_DoesNotEndWithId()
         {
-            ExpressionLexer l = new ExpressionLexer("id1.(", moveToFirstToken: true, useSemicolonDelimiter: false);
+            ExpressionLexer l = new ExpressionLexer(this.model, expression: "id1.(", moveToFirstToken: true, useSemicolonDelimiter: false);
             Assert.False(l.ExpandIdentifierAsFunction());
             Assert.Equal("id1", l.CurrentToken.Span.ToString());
             Assert.Equal(0, l.CurrentToken.Position);
@@ -557,7 +563,7 @@ namespace Microsoft.OData.Tests.UriParser
         [Fact]
         public void ExpandIdAsFunctionFail_DoesNotEndWithParen()
         {
-            ExpressionLexer l = new ExpressionLexer("id1.id2.id3", moveToFirstToken: true, useSemicolonDelimiter: false);
+            ExpressionLexer l = new ExpressionLexer(this.model, expression: "id1.id2.id3", moveToFirstToken: true, useSemicolonDelimiter: false);
             Assert.False(l.ExpandIdentifierAsFunction());
             Assert.Equal("id1", l.CurrentToken.Span.ToString());
             Assert.Equal(0, l.CurrentToken.Position);
@@ -566,7 +572,7 @@ namespace Microsoft.OData.Tests.UriParser
         [Fact]
         public void ExpandIdAsFunctionFail_WhitespaceBeforeParen()
         {
-            ExpressionLexer l = new ExpressionLexer("id1.id2.id3 (", moveToFirstToken: true, useSemicolonDelimiter: false);
+            ExpressionLexer l = new ExpressionLexer(this.model, expression: "id1.id2.id3 (", moveToFirstToken: true, useSemicolonDelimiter: false);
             Assert.False(l.ExpandIdentifierAsFunction());
             Assert.Equal("id1", l.CurrentToken.Span.ToString());
             Assert.Equal(0, l.CurrentToken.Position);
@@ -575,7 +581,7 @@ namespace Microsoft.OData.Tests.UriParser
         [Fact]
         public void ExpandIdAsFunctionFail_WhitespaceInBetween()
         {
-            ExpressionLexer l = new ExpressionLexer("id1.id2 .id3(", moveToFirstToken: true, useSemicolonDelimiter: false);
+            ExpressionLexer l = new ExpressionLexer(this.model, expression: "id1.id2 .id3(", moveToFirstToken: true, useSemicolonDelimiter: false);
             Assert.False(l.ExpandIdentifierAsFunction());
             Assert.Equal("id1", l.CurrentToken.Span.ToString());
             Assert.Equal(0, l.CurrentToken.Position);
@@ -604,7 +610,7 @@ namespace Microsoft.OData.Tests.UriParser
 
             foreach (var token in specialTokens)
             {
-                ValidateTokenSequence(identifier + token.Text, IdentifierToken(identifier), token);
+                ValidateTokenSequence(this.model, identifier + token.Text, IdentifierToken(identifier), token);
             }
         }
 
@@ -683,28 +689,28 @@ namespace Microsoft.OData.Tests.UriParser
         [Fact]
         public void ExpressionLexerShouldFailByDefaultForAtSymbol()
         {
-            Action lex = () => new ExpressionLexer("@", moveToFirstToken: true, useSemicolonDelimiter: false);
+            Action lex = () => new ExpressionLexer(this.model, expression: "@", moveToFirstToken: true, useSemicolonDelimiter: false);
             lex.Throws<ODataException>(Error.Format(SRResources.ExpressionLexer_SyntaxError, 1, "@"));
         }
 
         [Fact]
         public void ExpressionLexerShouldFailAtSymbolIsLastCharacter()
         {
-            Action lex = () => new ExpressionLexer("@", moveToFirstToken: true, useSemicolonDelimiter: false, parsingFunctionParameters: true);
+            Action lex = () => new ExpressionLexer(this.model, expression: "@", moveToFirstToken: true, useSemicolonDelimiter: false, parsingFunctionParameters: true);
             lex.Throws<ODataException>(Error.Format(SRResources.ExpressionLexer_SyntaxError, 1, "@"));
         }
 
         [Fact]
         public void ExpressionLexerShouldExpectIdentifierStartAfterAtSymbol()
         {
-            Action lex = () => new ExpressionLexer("@1", moveToFirstToken: true, useSemicolonDelimiter: false, parsingFunctionParameters: true);
+            Action lex = () => new ExpressionLexer(this.model, expression: "@1", moveToFirstToken: true, useSemicolonDelimiter: false, parsingFunctionParameters: true);
             lex.Throws<ODataException>(Error.Format(SRResources.ExpressionLexer_InvalidCharacter, "1", 1, "@1"));
         }
 
         [Fact]
         public void ExpressionLexerShouldParseValidAliasCorrectly()
         {
-            ValidateTokenSequence("@foo", true /*parsingFunctionParameters*/, ParameterAliasToken("@foo"));
+            ValidateTokenSequence(this.model, "@foo", true /*parsingFunctionParameters*/, ParameterAliasToken("@foo"));
         }
 
         [Fact]
@@ -717,7 +723,7 @@ namespace Microsoft.OData.Tests.UriParser
                 }
             )
             {
-                ValidateTokenSequence(expr, true /*parsingFunctionParameters*/,
+                ValidateTokenSequence(this.model, expr, true /*parsingFunctionParameters*/,
                     ParameterAliasToken("@foo"),
                     IdentifierToken("eq"),
                     SingleLiteralToken("1.23"));
@@ -728,14 +734,14 @@ namespace Microsoft.OData.Tests.UriParser
         public void ExpressionLexerShouldParseValidAnnotationCorrectly()
         {
             string exprAnnotation = "@NS.myAnnotation1";
-            ValidateTokenSequence(exprAnnotation, true /*parsingFunctionParameters*/,
+            ValidateTokenSequence(this.model, exprAnnotation, true /*parsingFunctionParameters*/,
                 IdentifierToken("@NS.myAnnotation1"));
         }
 
         [Fact]
         public void ExpressionLexerShouldGrabEntireIdentifierForAliasUntilANonIdentifierCharacter()
         {
-            ValidateTokenSequence(
+            ValidateTokenSequence(this.model, 
                 "@a?b",
                 true /*parsingFunctionParameters*/,
                 ParameterAliasToken("@a"),
@@ -746,7 +752,7 @@ namespace Microsoft.OData.Tests.UriParser
         [Fact]
         public void ExpressionLexerShouldParseFunctionCallWithAliases()
         {
-            ValidateTokenSequence(
+            ValidateTokenSequence(this.model, 
                 "Function(foo=@x,bar=1,baz=@y)",
                 true /*parsingFunctionParameters*/,
                 IdentifierToken("Function"),
@@ -769,54 +775,54 @@ namespace Microsoft.OData.Tests.UriParser
         [Fact]
         public void BracesIsParsedAsBracketedExpression()
         {
-            ValidateTokenSequence("{complex:value}", BracedToken("{complex:value}"));
+            ValidateTokenSequence(this.model, "{complex:value}", BracedToken("{complex:value}"));
         }
 
         [Fact]
         public void BracesWithInnerBracesIsOneToken()
         {
-            ValidateTokenSequence("{complex:value, subComplex : {subComplexParameter : subComplexValue}}",
+            ValidateTokenSequence(this.model, "{complex:value, subComplex : {subComplexParameter : subComplexValue}}",
                 BracedToken("{complex:value, subComplex : {subComplexParameter : subComplexValue}}"));
         }
 
         [Fact]
         public void BracesWithInnerBracketsIsParsedAsOneToken()
         {
-            ValidateTokenSequence("{complex:value,InnerArray:[1,2,3]}", BracedToken("{complex:value,InnerArray:[1,2,3]}"));
+            ValidateTokenSequence(this.model, "{complex:value,InnerArray:[1,2,3]}", BracedToken("{complex:value,InnerArray:[1,2,3]}"));
         }
 
         [Fact]
         public void BracketsIsParsedAsBracketedExpression()
         {
-            ValidateTokenSequence("[1,2,3]",
+            ValidateTokenSequence(this.model, "[1,2,3]",
                 BracketToken("[1,2,3]"));
         }
 
         [Fact]
         public void BracketsWithInnerBracketsIsOneToken()
         {
-            ValidateTokenSequence("[[1,2],[30,40],[500,600]]",
+            ValidateTokenSequence(this.model, "[[1,2],[30,40],[500,600]]",
                 BracketToken("[[1,2],[30,40],[500,600]]"));
         }
 
         [Fact]
         public void BracketsWithInnerBracesIsOneToken()
         {
-            ValidateTokenSequence("[{complex:value},{complex:value}]",
+            ValidateTokenSequence(this.model, "[{complex:value},{complex:value}]",
                 BracketToken("[{complex:value},{complex:value}]"));
         }
 
         [Fact]
         public void BracketedExpressionsCanHaveCrazyStuffInsideStringLiteral()
         {
-            ValidateTokenSequence("{ 'asdf!@#$%^&*()[]{}<>?:\";,./%1%2%3%4%5\t\n\r' }",
+            ValidateTokenSequence(this.model, "{ 'asdf!@#$%^&*()[]{}<>?:\";,./%1%2%3%4%5\t\n\r' }",
                 BracedToken("{ 'asdf!@#$%^&*()[]{}<>?:\";,./%1%2%3%4%5\t\n\r' }"));
         }
 
         [Fact]
         public void FunctionWithComplexParameter()
         {
-            ValidateTokenSequence("Function(param={complex : value})",
+            ValidateTokenSequence(this.model, "Function(param={complex : value})",
                 IdentifierToken("Function"),
                 OpenParenToken,
                 IdentifierToken("param"),
@@ -828,7 +834,7 @@ namespace Microsoft.OData.Tests.UriParser
         [Fact]
         public void FunctionWithCollectionParameter()
         {
-            ValidateTokenSequence("Function(param=[1,2,3,4])",
+            ValidateTokenSequence(this.model, "Function(param=[1,2,3,4])",
                 IdentifierToken("Function"),
                 OpenParenToken,
                 IdentifierToken("param"),
@@ -840,19 +846,19 @@ namespace Microsoft.OData.Tests.UriParser
         [Fact]
         public void ComplexValueMustBeEndedByBracket()
         {
-            ValidateLexerException<ODataException>("{stuff : morestuff", SRResources.ExpressionLexer_UnbalancedBracketExpression);
+            ValidateLexerException<ODataException>(this.model, "{stuff : morestuff", SRResources.ExpressionLexer_UnbalancedBracketExpression);
         }
 
         [Fact]
         public void OverClosedBracketsThrow()
         {
-            ValidateLexerException<ODataException>("{stuff: morestuff}}", Error.Format(SRResources.ExpressionLexer_InvalidCharacter, "}", "18", "{stuff: morestuff}}"));
+            ValidateLexerException<ODataException>(this.model, "{stuff: morestuff}}", Error.Format(SRResources.ExpressionLexer_InvalidCharacter, "}", "18", "{stuff: morestuff}}"));
         }
 
         [Fact]
         public void ArbitraryTextCanGoBetweenDoubleQuotesInComplex()
         {
-            ValidateTokenSequence("{\'}}}}}}}}}}}}}}}}}}}}}}}}}}}}}\'}",
+            ValidateTokenSequence(this.model, "{\'}}}}}}}}}}}}}}}}}}}}}}}}}}}}}\'}",
                 false,
                 BracedToken("{\'}}}}}}}}}}}}}}}}}}}}}}}}}}}}}\'}"));
         }
@@ -860,7 +866,7 @@ namespace Microsoft.OData.Tests.UriParser
         [Fact]
         public void AdvanceThroughExpandOptionStopsAtSemi()
         {
-            var lexer = CreateLexerForAdvanceThroughExpandOptionTest("abc;def");
+            var lexer = CreateLexerForAdvanceThroughExpandOptionTest(this.model, "abc;def");
             string result = lexer.AdvanceThroughExpandOption();
             Assert.Equal("abc", result);
             Assert.Equal(3, lexer.Position);
@@ -870,7 +876,7 @@ namespace Microsoft.OData.Tests.UriParser
         [Fact]
         public void AdvanceThroughExpandOptionStopsAtCloseParen()
         {
-            var lexer = CreateLexerForAdvanceThroughExpandOptionTest("abc)def");
+            var lexer = CreateLexerForAdvanceThroughExpandOptionTest(this.model, "abc)def");
             string result = lexer.AdvanceThroughExpandOption();
             Assert.Equal("abc", result);
             Assert.Equal(3, lexer.Position);
@@ -880,7 +886,7 @@ namespace Microsoft.OData.Tests.UriParser
         [Fact]
         public void AdvanceThroughExpandOptionWillReadUntilEnd()
         {
-            var lexer = CreateLexerForAdvanceThroughExpandOptionTest("entirestring");
+            var lexer = CreateLexerForAdvanceThroughExpandOptionTest(this.model, "entirestring");
             string result = lexer.AdvanceThroughExpandOption();
             Assert.Equal("entirestring", result);
             Assert.Equal(ExpressionTokenKind.End, lexer.CurrentToken.Kind);
@@ -889,7 +895,7 @@ namespace Microsoft.OData.Tests.UriParser
         [Fact]
         public void AdvanceThroughExpandOptionWorksWhenDelimiterIsAtEnd()
         {
-            var lexer = CreateLexerForAdvanceThroughExpandOptionTest("foo;");
+            var lexer = CreateLexerForAdvanceThroughExpandOptionTest(this.model, "foo;");
             string result = lexer.AdvanceThroughExpandOption();
             Assert.Equal("foo", result);
             Assert.Equal(ExpressionTokenKind.SemiColon, lexer.CurrentToken.Kind);
@@ -898,7 +904,7 @@ namespace Microsoft.OData.Tests.UriParser
         [Fact]
         public void AdvanceThroughExpandOptionSkipsBalancedParens()
         {
-            var lexer = CreateLexerForAdvanceThroughExpandOptionTest("abc()def;");
+            var lexer = CreateLexerForAdvanceThroughExpandOptionTest(this.model, "abc()def;");
             string result = lexer.AdvanceThroughExpandOption();
             Assert.Equal("abc()def", result);
             Assert.Equal(8, lexer.Position);
@@ -908,7 +914,7 @@ namespace Microsoft.OData.Tests.UriParser
         [Fact]
         public void AdvanceThroughExpandOptionHandlesNestedParensRightNextToCheckOther()
         {
-            var lexer = CreateLexerForAdvanceThroughExpandOptionTest("abc(())def;");
+            var lexer = CreateLexerForAdvanceThroughExpandOptionTest(this.model, "abc(())def;");
             string result = lexer.AdvanceThroughExpandOption();
             Assert.Equal("abc(())def", result);
             Assert.Equal(10, lexer.Position);
@@ -918,7 +924,7 @@ namespace Microsoft.OData.Tests.UriParser
         [Fact]
         public void AdvanceThroughExpandOptionHandlesNestedParensRightNextToFinalClosingParen()
         {
-            var lexer = CreateLexerForAdvanceThroughExpandOptionTest("abc(()))");
+            var lexer = CreateLexerForAdvanceThroughExpandOptionTest(this.model, "abc(()))");
             string result = lexer.AdvanceThroughExpandOption();
             Assert.Equal("abc(())", result);
             Assert.Equal(7, lexer.Position);
@@ -928,7 +934,7 @@ namespace Microsoft.OData.Tests.UriParser
         [Fact]
         public void AdvanceThroughExpandOptionSkipsSemisInParenthesis()
         {
-            var lexer = CreateLexerForAdvanceThroughExpandOptionTest("abc(;;;)def;next");
+            var lexer = CreateLexerForAdvanceThroughExpandOptionTest(this.model, "abc(;;;)def;next");
             string result = lexer.AdvanceThroughExpandOption();
             Assert.Equal("abc(;;;)def", result);
             Assert.Equal(11, lexer.Position);
@@ -938,7 +944,7 @@ namespace Microsoft.OData.Tests.UriParser
         [Fact]
         public void AdvanceThroughExpandOptionSkipsOverInnerOptionsSuccessfully()
         {
-            var lexer = CreateLexerForAdvanceThroughExpandOptionTest("prop(inner(a=b;c=d(e=deep)))");
+            var lexer = CreateLexerForAdvanceThroughExpandOptionTest(this.model, "prop(inner(a=b;c=d(e=deep)))");
             string result = lexer.AdvanceThroughExpandOption();
             Assert.Equal("prop(inner(a=b;c=d(e=deep)))", result);
             Assert.Equal(ExpressionTokenKind.End, lexer.CurrentToken.Kind);
@@ -947,7 +953,7 @@ namespace Microsoft.OData.Tests.UriParser
         [Fact]
         public void AdvanceThroughExpandOptionThrowsIfTooManyOpenParenthesis()
         {
-            var lexer = CreateLexerForAdvanceThroughExpandOptionTest("abc(q(w(e)r)");
+            var lexer = CreateLexerForAdvanceThroughExpandOptionTest(this.model, "abc(q(w(e)r)");
             Action advance = () => lexer.AdvanceThroughExpandOption();
             Assert.Throws<ODataException>(advance);
         }
@@ -955,7 +961,7 @@ namespace Microsoft.OData.Tests.UriParser
         [Fact]
         public void AdvanceUntilRecognizesSkipsStringLiterals()
         {
-            var lexer = CreateLexerForAdvanceThroughExpandOptionTest("'str with ; and () in it' eq StringProperty)");
+            var lexer = CreateLexerForAdvanceThroughExpandOptionTest(this.model, "'str with ; and () in it' eq StringProperty)");
             string result = lexer.AdvanceThroughExpandOption();
             Assert.Equal("'str with ; and () in it' eq StringProperty", result);
             Assert.Equal(43, lexer.Position);
@@ -966,7 +972,7 @@ namespace Microsoft.OData.Tests.UriParser
         [Fact]
         public void AdvanceThroughBalancedParentheticalExpressionWorks()
         {
-            ExpressionLexer lexer = new ExpressionLexer("(expression)next", moveToFirstToken: true, useSemicolonDelimiter: true, parsingFunctionParameters: false);
+            ExpressionLexer lexer = new ExpressionLexer(this.model, "(expression)next", moveToFirstToken: true, useSemicolonDelimiter: true, parsingFunctionParameters: false);
             string result = lexer.AdvanceThroughBalancedParentheticalExpression();
             Assert.Equal("(expression)", result);
             // TODO: the state of the lexer is weird right now, see note in AdvanceThroughBalancedParentheticalExpression.
@@ -991,7 +997,7 @@ namespace Microsoft.OData.Tests.UriParser
 
         private void EdmValidNamesNotAllowedInUri(string propertyName)
         {
-            ValidateTokenSequence(propertyName, IdentifierToken(propertyName));
+            ValidateTokenSequence(this.model, propertyName, IdentifierToken(propertyName));
         }
 
         private static ExpressionToken IdentifierToken(string id)
@@ -1034,11 +1040,11 @@ namespace Microsoft.OData.Tests.UriParser
             return new ExpressionToken() { Kind = ExpressionTokenKind.StringLiteral, Text = text.AsMemory() };
         }
 
-        private static void ValidateLexerException<T>(string expression, string message) where T : Exception
+        private static void ValidateLexerException<T>(IEdmModel edmModel, string expression, string message) where T : Exception
         {
             Action test = () =>
             {
-                ExpressionLexer l = new ExpressionLexer(expression, moveToFirstToken: true, useSemicolonDelimiter: false);
+                ExpressionLexer l = new ExpressionLexer(edmModel, expression, moveToFirstToken: true, useSemicolonDelimiter: false);
                 while (l.CurrentToken.Kind != ExpressionTokenKind.End)
                 {
                     l.NextToken();
@@ -1048,14 +1054,14 @@ namespace Microsoft.OData.Tests.UriParser
             test.Throws<T>(message);
         }
 
-        private static void ValidateTokenSequence(string expression, params ExpressionToken[] expectTokens)
+        private static void ValidateTokenSequence(IEdmModel edmModel, string expression, params ExpressionToken[] expectTokens)
         {
-            ValidateTokenSequence(expression, false, expectTokens);
+            ValidateTokenSequence(edmModel, expression, false, expectTokens);
         }
 
-        private static void ValidateTokenSequence(string expression, bool parsingFunctionParameters, params ExpressionToken[] expectTokens)
+        private static void ValidateTokenSequence(IEdmModel edmModel, string expression, bool parsingFunctionParameters, params ExpressionToken[] expectTokens)
         {
-            ExpressionLexer l = new ExpressionLexer(expression, moveToFirstToken: true, useSemicolonDelimiter: false, parsingFunctionParameters: parsingFunctionParameters);
+            ExpressionLexer l = new ExpressionLexer(edmModel, expression, moveToFirstToken: true, useSemicolonDelimiter: false, parsingFunctionParameters: parsingFunctionParameters);
             for (int i = 0; i < expectTokens.Length; ++i)
             {
                 Assert.Equal(expectTokens[i].Kind, l.CurrentToken.Kind);
@@ -1066,9 +1072,9 @@ namespace Microsoft.OData.Tests.UriParser
             Assert.Equal(ExpressionTokenKind.End, l.CurrentToken.Kind);
         }
 
-        private static ExpressionLexer CreateLexerForAdvanceThroughExpandOptionTest(string text)
+        private static ExpressionLexer CreateLexerForAdvanceThroughExpandOptionTest(IEdmModel edmModel, string text)
         {
-            return new ExpressionLexer(text, moveToFirstToken: false, useSemicolonDelimiter: true, parsingFunctionParameters: false);
+            return new ExpressionLexer(edmModel, expression: text, moveToFirstToken: false, useSemicolonDelimiter: true, parsingFunctionParameters: false);
         }
 
     }

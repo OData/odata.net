@@ -615,7 +615,7 @@ namespace Microsoft.OData.UriParser
                 string valueStr = null;
                 if (valueToken != null && (valueStr = valueToken.Value as string) != null && !string.IsNullOrEmpty(valueToken.OriginalText))
                 {
-                    ExpressionLexer lexer = new ExpressionLexer(valueToken.OriginalText, true /*moveToFirstToken*/, false /*useSemicolonDelimiter*/, true /*parsingFunctionParameters*/);
+                    ExpressionLexer lexer = new ExpressionLexer(model, expression: valueToken.OriginalText, moveToFirstToken: true, useSemicolonDelimiter: false, parsingFunctionParameters: true);
                     if (lexer.CurrentToken.Kind == ExpressionTokenKind.BracketedExpression || lexer.CurrentToken.Kind == ExpressionTokenKind.BracedExpression)
                     {
                         object result;
@@ -633,7 +633,7 @@ namespace Microsoft.OData.UriParser
                         }
                         else
                         {
-                            // For complex & colleciton of complex directly return the raw string.
+                            // For complex & collection of complex directly return the raw string.
                             partiallyParsedParametersWithComplexOrCollection.Add(funcParaToken);
                             continue;
                         }

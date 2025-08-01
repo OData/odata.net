@@ -29,7 +29,7 @@ namespace Microsoft.OData.UriParser
         /// <param name="keySegment">The key segment that was created if the key was non-empty.</param>
         /// <param name="enableUriTemplateParsing">Whether Uri template parsing is enabled.</param>
         /// <returns>Whether the key was non-empty.</returns>
-        internal static bool TryCreateKeySegmentFromParentheses(ODataPathSegment previous, KeySegment previousKeySegment, string parenthesisExpression, ODataUriResolver resolver, out ODataPathSegment keySegment, bool enableUriTemplateParsing = false)
+        internal static bool TryCreateKeySegmentFromParentheses(IEdmModel model, ODataPathSegment previous, KeySegment previousKeySegment, string parenthesisExpression, ODataUriResolver resolver, out ODataPathSegment keySegment, bool enableUriTemplateParsing = false)
         {
             Debug.Assert(parenthesisExpression != null, "parenthesisExpression != null");
             Debug.Assert(previous != null, "segment!= null");
@@ -41,7 +41,7 @@ namespace Microsoft.OData.UriParser
             }
 
             SegmentArgumentParser key;
-            if (!SegmentArgumentParser.TryParseKeysFromUri(parenthesisExpression, out key, enableUriTemplateParsing))
+            if (!SegmentArgumentParser.TryParseKeysFromUri(model, parenthesisExpression, out key, enableUriTemplateParsing))
             {
                 throw ExceptionUtil.CreateSyntaxError();
             }

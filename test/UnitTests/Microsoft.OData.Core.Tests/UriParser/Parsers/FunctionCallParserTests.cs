@@ -6,6 +6,7 @@
 
 using System;
 using System.Linq;
+using System.Linq.Expressions;
 using Microsoft.OData.Core;
 using Microsoft.OData.UriParser;
 using Xunit;
@@ -20,15 +21,16 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         [Fact]
         public void LexerCannotBeNull()
         {
-            UriQueryExpressionParser parser = new UriQueryExpressionParser(345, new ExpressionLexer("stuff", true, false));
-            Action createWithNullLexer = () => new FunctionCallParser(null, parser  /*resolveAlias*/);
+            ExpressionLexer lexer = new ExpressionLexer(HardCodedTestModel.TestModel, expression: "stuff", moveToFirstToken: true, useSemicolonDelimiter: false);
+            UriQueryExpressionParser parser = new UriQueryExpressionParser(HardCodedTestModel.TestModel, 345, lexer);
+            Action createWithNullLexer = () => new FunctionCallParser(null, parser);
             Assert.Throws<ArgumentNullException>("lexer", createWithNullLexer);
         }
 
         [Fact]
         public void ParserCannotBeNull()
         {
-            Action createWithNullLexer = () => new FunctionCallParser(new ExpressionLexer("foo", true, false), null /*resolveAlias*/);
+            Action createWithNullLexer = () => new FunctionCallParser(new ExpressionLexer(HardCodedTestModel.TestModel, expression: "foo", moveToFirstToken: true, useSemicolonDelimiter: false), parser: null);
             Assert.Throws<ArgumentNullException>("parser", createWithNullLexer);
         }
 
@@ -258,9 +260,9 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 
         private static FunctionCallParser GetFunctionCallParser(string expression)
         {
-            ExpressionLexer lexer = new ExpressionLexer(expression, true, false);
-            UriQueryExpressionParser parser = new UriQueryExpressionParser(345, lexer);
-            return new FunctionCallParser(lexer, parser /*resolveAlias*/);
+            ExpressionLexer lexer = new ExpressionLexer(HardCodedTestModel.TestModel, expression, moveToFirstToken: true, useSemicolonDelimiter: false);
+            UriQueryExpressionParser parser = new UriQueryExpressionParser(HardCodedTestModel.TestModel, 345, lexer);
+            return new FunctionCallParser(lexer, parser);
         }
     }
 }

@@ -22,12 +22,14 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         private static readonly ODataUriResolver DefaultUriResolver = ODataUriResolver.GetUriResolver(null);
         private readonly ODataUrlKeyDelimiter defaultConvention = ODataUrlKeyDelimiter.Parentheses;
         private readonly ODataUrlKeyDelimiter keyAsSegmentConvention = ODataUrlKeyDelimiter.Slash;
+        private readonly IEdmModel model;
         private ODataPathSegment singleResultSegmentWithSingleKey;
         private ODataPathSegment multipleResultSegmentWithCompositeKey;
         private ODataPathSegment multipleResultSegmentWithSingleKey;
 
         public SegmentKeyHandlerTests()
         {
+            this.model = HardCodedTestModel.TestModel;
             var typeWithStringKey = new EdmEntityType("NS.Foo", "TypeWithStringKey");
             var originalType = new EdmEntityType("NS.Foo", "SourceType");
             var keyProp = typeWithStringKey.AddStructuralProperty("KeyProp", EdmPrimitiveTypeKind.String);
@@ -89,6 +91,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             ODataPathSegment keySegment;
             var result = SegmentKeyHandler.TryCreateKeySegmentFromParentheses(
+                this.model,
                 new NavigationPropertySegment(
                     HardCodedTestModel.GetPersonMyLionsNavProp(),
                     HardCodedTestModel.GetLionSet()),
@@ -110,6 +113,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             ODataPathSegment keySegment;
             Action implicitKeyWithOutRefIntegrityConstraint = () => SegmentKeyHandler.TryCreateKeySegmentFromParentheses(
+                this.model,
                 new NavigationPropertySegment(
                     HardCodedTestModel.GetPersonMyLionsNavProp(),
                     HardCodedTestModel.GetLionSet()),
