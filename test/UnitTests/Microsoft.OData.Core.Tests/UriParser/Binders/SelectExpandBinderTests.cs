@@ -141,13 +141,13 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         #region helpers
         public static ExpandToken ParseExpandToken(string expand)
         {
-            SelectExpandParser parser = new SelectExpandParser(expand, ODataUriParserSettings.DefaultSelectExpandLimit);
+            SelectExpandParser parser = new SelectExpandParser(HardCodedTestModel.TestModel, expand, ODataUriParserSettings.DefaultSelectExpandLimit);
             return parser.ParseExpand();
         }
 
         public static SelectToken ParseSelectToken(string select)
         {
-            SelectExpandParser parser = new SelectExpandParser(select, ODataUriParserSettings.DefaultSelectExpandLimit);
+            SelectExpandParser parser = new SelectExpandParser(HardCodedTestModel.TestModel, select, ODataUriParserSettings.DefaultSelectExpandLimit);
             return parser.ParseSelect();
         }
         #endregion

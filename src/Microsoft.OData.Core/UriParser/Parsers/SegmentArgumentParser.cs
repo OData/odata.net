@@ -148,9 +148,9 @@ namespace Microsoft.OData.UriParser
         /// The returned instance contains only string values. To get typed values, a call to
         /// TryConvertValues is necessary.
         /// </remarks>
-        public static bool TryParseKeysFromUri(string text, out SegmentArgumentParser instance, bool enableUriTemplateParsing)
+        public static bool TryParseKeysFromUri(IEdmModel model, string text, out SegmentArgumentParser instance, bool enableUriTemplateParsing)
         {
-            return TryParseFromUri(text, out instance, enableUriTemplateParsing);
+            return TryParseFromUri(model, text, out instance, enableUriTemplateParsing);
         }
 
         /// <summary>
@@ -175,9 +175,9 @@ namespace Microsoft.OData.UriParser
         /// The returned instance contains only string values. To get typed values, a call to
         /// TryConvertValues is necessary.
         /// </remarks>
-        public static bool TryParseNullableTokens(string text, out SegmentArgumentParser instance)
+        public static bool TryParseNullableTokens(IEdmModel model, string text, out SegmentArgumentParser instance)
         {
-            return TryParseFromUri(text, out instance, false);
+            return TryParseFromUri(model, text, out instance, false);
         }
 
         /// <summary>Tries to convert values to the keys of the specified type.</summary>
@@ -275,7 +275,7 @@ namespace Microsoft.OData.UriParser
         /// The returned instance contains only string values. To get typed values, a call to
         /// TryConvertValues is necessary.
         /// </remarks>
-        private static bool TryParseFromUri(string text, out SegmentArgumentParser instance, bool enableUriTemplateParsing)
+        private static bool TryParseFromUri(IEdmModel model, string text, out SegmentArgumentParser instance, bool enableUriTemplateParsing)
         {
             Debug.Assert(text != null, "text != null");
 
@@ -283,8 +283,8 @@ namespace Microsoft.OData.UriParser
             List<string> positionalValues = null;
 
             // parse keys just like function parameters
-            ExpressionLexer lexer = new ExpressionLexer(string.Concat("(", text, ")"), moveToFirstToken:true, useSemicolonDelimiter: false, parsingFunctionParameters: true);
-            UriQueryExpressionParser exprParser = new UriQueryExpressionParser(ODataUriParserSettings.DefaultFilterLimit /* default limit for parsing key value */, lexer);
+            ExpressionLexer lexer = new ExpressionLexer(model, expression: string.Concat("(", text, ")"), moveToFirstToken:true, useSemicolonDelimiter: false, parsingFunctionParameters: true);
+            UriQueryExpressionParser exprParser = new UriQueryExpressionParser(model, ODataUriParserSettings.DefaultFilterLimit /* default limit for parsing key value */, lexer);
             var tmp = (new FunctionCallParser(lexer, exprParser)).ParseArgumentListOrEntityKeyList();
             if (lexer.CurrentToken.Kind != ExpressionTokenKind.End)
             {

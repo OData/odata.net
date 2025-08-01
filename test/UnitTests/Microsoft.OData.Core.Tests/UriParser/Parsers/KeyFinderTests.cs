@@ -17,11 +17,18 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
     /// </summary>
     public class KeyFinderTests
     {
+        private readonly IEdmModel model;
+
+        public KeyFinderTests()
+        {
+            this.model = HardCodedTestModel.TestModel;
+        }
+
         [Fact]
         public void CurrentNavigaitionPropertyMustBePopulated()
         {
             SegmentArgumentParser key;
-            SegmentArgumentParser.TryParseKeysFromUri("0,1", out key, false);
+            SegmentArgumentParser.TryParseKeysFromUri(this.model, "0,1", out key, false);
             Action callWithNullNavProp = () => KeyFinder.FindAndUseKeysFromRelatedSegment(
                 key,
                 new List<IEdmStructuralProperty>()
@@ -62,7 +69,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void RawKeyWithMoreThanOnePositionalValueIsUnchanged()
         {
             SegmentArgumentParser key;
-            SegmentArgumentParser.TryParseKeysFromUri("0,1", out key, false);
+            SegmentArgumentParser.TryParseKeysFromUri(this.model, "0,1", out key, false);
             var newKey = KeyFinder.FindAndUseKeysFromRelatedSegment(
                 key,
                 new List<IEdmStructuralProperty>()
@@ -83,7 +90,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void IfValueExistsInTargetPropertiesAndNotExistingKeysItIsNotWritten()
         {
             SegmentArgumentParser key;
-            SegmentArgumentParser.TryParseKeysFromUri("0", out key, false);
+            SegmentArgumentParser.TryParseKeysFromUri(this.model, "0", out key, false);
             var newKey = KeyFinder.FindAndUseKeysFromRelatedSegment(
                 key,
                 new List<IEdmStructuralProperty>()
@@ -106,7 +113,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void IfValueExistsinExistingKeysButNotTargetPropertiesItIsNotWritten()
         {
             SegmentArgumentParser key;
-            SegmentArgumentParser.TryParseKeysFromUri("0", out key, false);
+            SegmentArgumentParser.TryParseKeysFromUri(this.model, "0", out key, false);
             var newKey = KeyFinder.FindAndUseKeysFromRelatedSegment(
                 key,
                 new List<IEdmStructuralProperty>()
@@ -129,7 +136,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void IfValueAlreadySpecifiedInRawKeyItIsNotOverwritten()
         {
             SegmentArgumentParser key;
-            SegmentArgumentParser.TryParseKeysFromUri("ID1=6", out key, false);
+            SegmentArgumentParser.TryParseKeysFromUri(this.model, "ID1=6", out key, false);
             var newKey = KeyFinder.FindAndUseKeysFromRelatedSegment(
                 key,
                 new List<IEdmStructuralProperty>()
@@ -153,7 +160,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void PositionalValueAddedAsMissingValueIfOnlyOneMissingValueExists()
         {
             SegmentArgumentParser key;
-            SegmentArgumentParser.TryParseKeysFromUri("6", out key, false);
+            SegmentArgumentParser.TryParseKeysFromUri(this.model, "6", out key, false);
             var newKey = KeyFinder.FindAndUseKeysFromRelatedSegment(
                 key,
                 new List<IEdmStructuralProperty>()
@@ -177,7 +184,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void PositionalValueNotAddedIfMoreThanOneMissingValueExists()
         {
             SegmentArgumentParser key;
-            SegmentArgumentParser.TryParseKeysFromUri("6", out key, false);
+            SegmentArgumentParser.TryParseKeysFromUri(this.model, "6", out key, false);
             var newKey = KeyFinder.FindAndUseKeysFromRelatedSegment(
                 key,
                 new List<IEdmStructuralProperty>()
@@ -201,7 +208,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void PositionalValuesArrayIsCleared()
         {
             SegmentArgumentParser key;
-            SegmentArgumentParser.TryParseKeysFromUri("6", out key, false);
+            SegmentArgumentParser.TryParseKeysFromUri(this.model, "6", out key, false);
             var newKey = KeyFinder.FindAndUseKeysFromRelatedSegment(
                 key,
                 new List<IEdmStructuralProperty>()
@@ -224,7 +231,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void AreValuesNamedIsAlwaysSet()
         {
             SegmentArgumentParser key;
-            SegmentArgumentParser.TryParseKeysFromUri("6", out key, false);
+            SegmentArgumentParser.TryParseKeysFromUri(this.model, "6", out key, false);
             var newKey = KeyFinder.FindAndUseKeysFromRelatedSegment(
                 key,
                 new List<IEdmStructuralProperty>()
@@ -247,7 +254,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void LookForKeysOnBothCurrentNavPropAndPartnerIfItExists()
         {
             SegmentArgumentParser key;
-            SegmentArgumentParser.TryParseKeysFromUri("6", out key, false);
+            SegmentArgumentParser.TryParseKeysFromUri(this.model, "6", out key, false);
             var newKey = KeyFinder.FindAndUseKeysFromRelatedSegment(
                 key,
                 new List<IEdmStructuralProperty>()
@@ -272,7 +279,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void LookForKeysOnBothCurrentNavPropAndPartnerIfItExistsWorksForTemplate()
         {
             SegmentArgumentParser key;
-            SegmentArgumentParser.TryParseKeysFromUri("{6}", out key, true);
+            SegmentArgumentParser.TryParseKeysFromUri(this.model, "{6}", out key, true);
             var newKey = KeyFinder.FindAndUseKeysFromRelatedSegment(
                 key,
                 new List<IEdmStructuralProperty>()
@@ -297,7 +304,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void IfNoKeyExistsOnNavPropAndNoPartnerExistsKeyIsUnchanged()
         {
             SegmentArgumentParser key;
-            SegmentArgumentParser.TryParseKeysFromUri("", out key, false);
+            SegmentArgumentParser.TryParseKeysFromUri(this.model, "", out key, false);
             var newKey = KeyFinder.FindAndUseKeysFromRelatedSegment(
                 key,
                 new List<IEdmStructuralProperty>()
@@ -319,7 +326,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void IfNoReferentialIntegrityConstraintExistsOnPartnerKeyIsUnchanged()
         {
             SegmentArgumentParser key;
-            SegmentArgumentParser.TryParseKeysFromUri("", out key, false);
+            SegmentArgumentParser.TryParseKeysFromUri(this.model, "", out key, false);
             var newKey = KeyFinder.FindAndUseKeysFromRelatedSegment(
                 key,
                 new List<IEdmStructuralProperty>()

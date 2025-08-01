@@ -5,239 +5,147 @@
 //---------------------------------------------------------------------
 
 using System;
-using System.Linq;
-using Microsoft.OData.Edm;
+using System.Collections.Generic;
+using System.Diagnostics;
 using Microsoft.OData.Core;
+using Microsoft.OData.Edm;
 
 namespace Microsoft.OData.UriParser
 {
     /// <summary>
-    /// This class is the custom literal parser manager and parser.
-    /// Add a Uri custom literal parser through this class.
-    /// This class is also used as an UriLiteralParser.
+    /// Provides extension methods for managing custom URI literal parsers in an <see cref="IEdmModel"/>.
     /// </summary>
-    public sealed class CustomUriLiteralParsers : IUriLiteralParser
+    /// <remarks>These methods allow adding, removing, and associating custom URI literal parsers with
+    /// specific Edm types or for general use during the URI parsing process. Custom parsers can be used to handle
+    /// specialized literal parsing scenarios in OData services.</remarks>
+    public static class CustomUriLiteralParsers
     {
-        #region Fields
-
-        private static readonly object Locker = new object();
-
-
-        /// <summary>
-        /// Used for General uri literal parsers. These parsers will be called for every text that has to parsed.
-        /// The parses could parse multiple EdmTypes.
-        /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1825:Avoid zero-length array allocations.", Justification = "<Pending>")]
-        private static IUriLiteralParser[] customUriLiteralParsers = new IUriLiteralParser[0];
-
-        /// <summary>
-        /// "Registered" uri literal parser to an EdmType. These parsers will be called when the text has to be parsed to the
-        /// specific EdmType they had registered to. Each of these parsers could parse only one EdmType. Better performance.
-        /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1825:Avoid zero-length array allocations.", Justification = "<Pending>")]
-        private static UriLiteralParserPerEdmType[] customUriLiteralParserPerEdmType = new UriLiteralParserPerEdmType[0];
-
-        //// TODO: Consider use Dictionary<EmdTypeReference,IUriLiteralParser> which is a better solution.
-        //// The problem with dictionary is to generate an HashCode for an EdmTypeReference.
-
-        #endregion
-
-        #region Singleton
-
-        // Internal Singleton so only interal assemblies could parse by the custom parsers.
-        private static CustomUriLiteralParsers singleInstance;
-
-        private CustomUriLiteralParsers()
-        {
-        }
-
-        internal static CustomUriLiteralParsers Instance
-        {
-            get
-            {
-                if (CustomUriLiteralParsers.singleInstance == null)
-                {
-                    CustomUriLiteralParsers.singleInstance = new CustomUriLiteralParsers();
-                }
-
-                return CustomUriLiteralParsers.singleInstance;
-            }
-        }
-
-        #endregion
-
-        #region IUriLiteralParser Implementation - Internal
-
-        /// <summary>
-        /// Parse the given uri text.
-        /// Try to parse with a specific Uri literal parser registered for the target EdmType.
-        /// If no parser is registered, try to parse with the general parsers.
-        /// This method is public because of the Interface, but the Singleton instance in internal so it could not be accessed by clients.
-        /// </summary>
-        /// <param name="text">Part of the Uri which has to be parsed to a value of EdmType <paramref name="targetType"/></param>
-        /// <param name="targetType">The type which the uri text has to be parsed to</param>
-        /// <param name="parsingException">Assign the exception only in case the text could be parsed to the <paramref name="targetType"/> but failed during the parsing process</param>
-        /// <returns>If parsing process has succeeded, returns the parsed object, otherwise returns 'Null'</returns>
-        public object ParseUriStringToType(string text, IEdmTypeReference targetType, out UriLiteralParsingException parsingException)
-        {
-            IUriLiteralParser uriLiteralParserForEdmType = CustomUriLiteralParsers.GetUriLiteralParserByEdmType(targetType);
-
-            // Search for Uri literal parser which is registered for the given EdmType
-            if (uriLiteralParserForEdmType != null)
-            {
-                return uriLiteralParserForEdmType.ParseUriStringToType(text, targetType, out parsingException);
-            }
-
-            // Parse with all the general parsers
-            // Stop when a parser succeeded parsing the text.
-            IUriLiteralParser[] localCustomUriLiteralParsers = CustomUriLiteralParsers.customUriLiteralParsers;
-            foreach (IUriLiteralParser customUriLiteralParser in localCustomUriLiteralParsers)
-            {
-                // Try to parse
-                object targetValue = customUriLiteralParser.ParseUriStringToType(text, targetType, out parsingException);
-
-                // The uriCustomParser could parse the given targetType but failed during the parsing process
-                if (parsingException != null)
-                {
-                    return null;
-                }
-
-                // In case of no exception and no value - The parse cannot parse the given text
-                if (targetValue != null)
-                {
-                    return targetValue;
-                }
-            }
-
-            // No uriCustomParser could parse the requested uri text.
-            parsingException = null;
-            return null;
-        }
-
-        #endregion
-
         #region Public Static Methods
 
         /// <summary>
-        /// Add a custom 'IUriLiteralParser' which will be called to parse uri values during the uri parsing process.
+        /// Adds a custom URI literal parser which will be called to parse URI literals during the URI parsing process.
         /// </summary>
-        /// <param name="customUriLiteralParser">The custom uri parser</param>
-        /// <exception cref="ArgumentNullException"><paramref name="customUriLiteralParser"/> is null</exception>
-        /// <exception cref="ODataException">The given IUriLiteralParser instance already exists</exception>
-        public static void AddCustomUriLiteralParser(IUriLiteralParser customUriLiteralParser)
+        /// <param name="model">Edm model to which the custom URI literal parser will be added.</param>
+        /// <param name="customUriLiteralParser">The custom URI literal parser.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="model"/>  is null.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="customUriLiteralParser"/> is null.</exception>
+        /// <exception cref="ODataException">The specified custom URI literal parser already exists.</exception>
+        public static void AddCustomUriLiteralParser(this IEdmModel model, IUriLiteralParser customUriLiteralParser)
         {
+            ExceptionUtils.CheckArgumentNotNull(model, "model");
             ExceptionUtils.CheckArgumentNotNull(customUriLiteralParser, "customUriLiteralParser");
 
-            lock (CustomUriLiteralParsers.Locker)
-            {
-                if (CustomUriLiteralParsers.customUriLiteralParsers.Contains(customUriLiteralParser))
-                {
-                    throw new ODataException(SRResources.UriCustomTypeParsers_AddCustomUriTypeParserAlreadyExists);
-                }
+            CustomUriLiteralParsersAnnotation customUriLiteralParsersAnnotation =
+                model.GetOrSetCustomUriLiteralParsersAnnotation();
 
-                CustomUriLiteralParsers.customUriLiteralParsers = CustomUriLiteralParsers.customUriLiteralParsers.Concat(new IUriLiteralParser[] { customUriLiteralParser }).ToArray();
+            if (customUriLiteralParsersAnnotation.CustomUriLiteralParsers.TryGetValue(customUriLiteralParser, out _))
+            {
+                throw new ODataException(SRResources.UriCustomTypeParsers_AddCustomUriTypeParserAlreadyExists);
+            }
+            else
+            {
+                // Add the custom parser to the model's annotation
+                customUriLiteralParsersAnnotation.CustomUriLiteralParsers.TryAdd(customUriLiteralParser, 0);
             }
         }
 
         /// <summary>
-        /// Add a custom 'IUriLiteralParser' which will be called to parse a value of the given EdmType during the UriParsing process.
+        /// Adds a custom URI literal parser which will be called to parse a literal of the given Edm type during the URI parsing process.
         /// </summary>
-        /// <param name="edmTypeReference">The EdmType the Uri literal parser can parse.</param>
-        /// <param name="customUriLiteralParser">The custom uri type parser to add.</param>
+        /// <param name="model">Edm model to which the custom URI literal parser will be added.</param>
+        /// <param name="edmTypeReference">The Edm type that the custom URI literal parser can parse.</param>
+        /// <param name="customUriLiteralParser">The custom URI literal parser to add.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="model"/>  is null.</exception>
         /// <exception cref="ArgumentNullException"><paramref name="customUriLiteralParser"/> is null.</exception>
         /// <exception cref="ArgumentNullException"><paramref name="edmTypeReference"/> is null.</exception>
-        /// <exception cref="ODataException">Another Uri literal parser is already registered for the given EdmType</exception>
-        public static void AddCustomUriLiteralParser(IEdmTypeReference edmTypeReference, IUriLiteralParser customUriLiteralParser)
+        /// <exception cref="ODataException">Another custom URI literal parser is already registered for the given Edm type.</exception>
+        public static void AddCustomUriLiteralParser(this IEdmModel model, IEdmTypeReference edmTypeReference, IUriLiteralParser customUriLiteralParser)
         {
+            ExceptionUtils.CheckArgumentNotNull(model, "model");
             ExceptionUtils.CheckArgumentNotNull(edmTypeReference, "edmTypeReference");
             ExceptionUtils.CheckArgumentNotNull(customUriLiteralParser, "customUriLiteralParser");
 
-            lock (CustomUriLiteralParsers.Locker)
-            {
-                if (CustomUriLiteralParsers.IsEdmTypeAlreadyRegistered(edmTypeReference))
-                {
-                    throw new ODataException(Error.Format(SRResources.UriCustomTypeParsers_AddCustomUriTypeParserEdmTypeExists, edmTypeReference.FullName()));
-                }
+            CustomUriLiteralParsersAnnotation customUriLiteralParsersAnnotation =
+                model.GetOrSetCustomUriLiteralParsersAnnotation();
 
-                CustomUriLiteralParsers.customUriLiteralParserPerEdmType = CustomUriLiteralParsers.customUriLiteralParserPerEdmType.Concat(
-                    new UriLiteralParserPerEdmType[]
-                    {
-                        new UriLiteralParserPerEdmType
-                        {
-                            EdmTypeOfUriParser = edmTypeReference,
-                            UriLiteralParser = customUriLiteralParser
-                        }
-                    })
-                    .ToArray();
+            if (customUriLiteralParsersAnnotation.CustomUriLiteralParsersByEdmType.TryGetValue(edmTypeReference, out _))
+            {
+                // If the parser already exists for this EdmType, throw an exception
+                throw new ODataException(Error.Format(SRResources.UriCustomTypeParsers_AddCustomUriTypeParserEdmTypeExists, edmTypeReference.FullName()));
+            }
+            else
+            {
+                // Add the custom parser to the model's annotation
+                customUriLiteralParsersAnnotation.CustomUriLiteralParsersByEdmType.TryAdd(edmTypeReference, customUriLiteralParser);
             }
         }
 
         /// <summary>
-        /// Remove the given custom 'IUriLiteralParser' form cache.
-        /// It will be removed from both regular parsers and parsers registered with EdmType.
+        /// Removes the given custom URI literal parser from the cache.
+        /// It will be removed from both general parsers and parsers associated with specific Edm type.
         /// </summary>
-        /// <param name="customUriLiteralParser">The custom uri type parser to remove</param>
-        /// <returns>'False' if the given parser to remove doesn't exist. 'True' if the parser has successfully removed</returns>
-        /// <exception cref="ArgumentNullException">Uri literal parser is null</exception>
-        public static bool RemoveCustomUriLiteralParser(IUriLiteralParser customUriLiteralParser)
+        /// <param name="model">Edm model from which the custom URI literal parser will be removed.</param>
+        /// <param name="customUriLiteralParser">The custom URI literal parser to remove.</param>
+        /// <returns><c>true</c> if the custom URI literal parser is successfully removed; otherwise <c>false</c>.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="model"/>  is null.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="customUriLiteralParser"/>  is null.</exception>
+        public static bool RemoveCustomUriLiteralParser(this IEdmModel model, IUriLiteralParser customUriLiteralParser)
         {
+            ExceptionUtils.CheckArgumentNotNull(model, "model");
             ExceptionUtils.CheckArgumentNotNull(customUriLiteralParser, "customUriLiteralParser");
 
-            lock (CustomUriLiteralParsers.Locker)
+            List<IEdmTypeReference> edmTypeMappedToUriLiteralParser = new List<IEdmTypeReference>();
+            CustomUriLiteralParsersAnnotation customUriLiteralParsersAnnotation =
+                model.GetOrSetCustomUriLiteralParsersAnnotation();
+
+            bool removed = false;
+
+            foreach (KeyValuePair<IEdmTypeReference, IUriLiteralParser> kvPair in customUriLiteralParsersAnnotation.CustomUriLiteralParsersByEdmType)
             {
-                // Remove parser from the customUriLiteralParserPerEdmType. Same instance can be registered to multiple EdmTypes.
-                UriLiteralParserPerEdmType[] newCustomUriLiteralParserPerEdmType = CustomUriLiteralParsers.customUriLiteralParserPerEdmType
-                    .Where((parser) => !parser.UriLiteralParser.Equals(customUriLiteralParser))
-                    .ToArray();
-
-                // Remove parser from the general custom uri literal parsers. Same instance can be add only once.
-                IUriLiteralParser[] newCustomUriLiteralParsers = CustomUriLiteralParsers.customUriLiteralParsers
-                    .Where((parser) => !parser.Equals(customUriLiteralParser))
-                    .ToArray();
-
-                // Returns 'True' if at least one parser has been removed from the general parser of those registered to EdmType
-                bool removed = newCustomUriLiteralParserPerEdmType.Length < CustomUriLiteralParsers.customUriLiteralParserPerEdmType.Length ||
-                    newCustomUriLiteralParsers.Length < CustomUriLiteralParsers.customUriLiteralParsers.Length;
-
-                CustomUriLiteralParsers.customUriLiteralParserPerEdmType = newCustomUriLiteralParserPerEdmType;
-                CustomUriLiteralParsers.customUriLiteralParsers = newCustomUriLiteralParsers;
-
-                return removed;
+                if (kvPair.Value.Equals(customUriLiteralParser))
+                {
+                    edmTypeMappedToUriLiteralParser.Add(kvPair.Key);
+                }
             }
+
+
+            foreach (IEdmTypeReference edmTypeReference in edmTypeMappedToUriLiteralParser)
+            {
+                // Remove the parser from the model's annotation
+                removed |= customUriLiteralParsersAnnotation.CustomUriLiteralParsersByEdmType.TryRemove(edmTypeReference, out _);
+            }
+
+            removed |= customUriLiteralParsersAnnotation.CustomUriLiteralParsers.TryRemove(customUriLiteralParser, out _);
+
+            return removed;
         }
 
         #endregion
 
-        #region Private Methods
+        #region Internal Static Methods
 
-        private static bool IsEdmTypeAlreadyRegistered(IEdmTypeReference edmTypeReference)
+        /// <summary>
+        /// Retrieves the <see cref="CustomUriLiteralParsersAnnotation"/> from the Edm model,
+        /// or creates and attaches a new one if it does not already exist.
+        /// </summary>
+        /// <param name="model">The Edm model to retrieve or update with the annotation.</param>
+        /// <returns>
+        /// The existing or newly created <see cref="CustomUriLiteralParsersAnnotation"/> instance associated with the model.
+        /// </returns
+        internal static CustomUriLiteralParsersAnnotation GetOrSetCustomUriLiteralParsersAnnotation(this IEdmModel model)
         {
-            return CustomUriLiteralParsers.customUriLiteralParserPerEdmType.Any(uriParserOfEdmType =>
-                EdmElementComparer.IsEquivalentTo(uriParserOfEdmType.EdmTypeOfUriParser, edmTypeReference));
-        }
+            Debug.Assert(model != null, "model != null");
 
-        private static IUriLiteralParser GetUriLiteralParserByEdmType(IEdmTypeReference edmTypeReference)
-        {
-            UriLiteralParserPerEdmType requestedUriLiteralParser =
-                CustomUriLiteralParsers.customUriLiteralParserPerEdmType.FirstOrDefault(uriParserOfEdmType =>
-                uriParserOfEdmType.EdmTypeOfUriParser.IsEquivalentTo(edmTypeReference));
-
-            if (requestedUriLiteralParser == null)
+            CustomUriLiteralParsersAnnotation annotation = model.GetAnnotationValue<CustomUriLiteralParsersAnnotation>(model);
+            if (annotation == null)
             {
-                return null;
+                annotation = new CustomUriLiteralParsersAnnotation();
+                model.SetAnnotationValue(model, annotation);
             }
 
-            return requestedUriLiteralParser.UriLiteralParser;
+            return annotation;
         }
 
-
-        #endregion
-
-        private sealed class UriLiteralParserPerEdmType
-        {
-            internal IEdmTypeReference EdmTypeOfUriParser { get; set; }
-
-            internal IUriLiteralParser UriLiteralParser { get; set; }
-        }
+        #endregion Internal Static Methods
     }
 }

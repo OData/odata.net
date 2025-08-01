@@ -31,6 +31,7 @@ namespace Microsoft.OData.UriParser
             out SelectToken selectTree)
         {
             SelectExpandParser selectParser = new SelectExpandParser(
+                configuration.Model,
                 selectClause,
                 configuration.Settings.SelectExpandLimit,
                 configuration.EnableCaseInsensitiveUriFunctionIdentifier,
@@ -41,6 +42,7 @@ namespace Microsoft.OData.UriParser
             selectTree = selectParser.ParseSelect();
 
             SelectExpandParser expandParser = new SelectExpandParser(
+                configuration.Model,
                 configuration.Resolver,
                 expandClause,
                 parentStructuredType,

@@ -10,6 +10,7 @@ namespace Microsoft.OData.UriParser
     using System;
     using System.Diagnostics;
     using Microsoft.OData.Core;
+    using Microsoft.OData.Edm;
 
     #endregion Namespaces
 
@@ -18,6 +19,11 @@ namespace Microsoft.OData.UriParser
     /// </summary>
     internal sealed class SearchParser
     {
+        /// <summary>
+        /// The Edm model associated with this parser, used when resolving custom URI literal prefixes.
+        /// </summary>
+        private readonly IEdmModel model;
+
         /// <summary>
         /// The maximum number of recursion nesting allowed.
         /// </summary>
@@ -36,11 +42,14 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// Constructor.
         /// </summary>
+        /// <param name="model">The Edm model associated with this parser, used when resolving custom URI literal prefixes.</param>
         /// <param name="maxDepth">The maximum depth of each part of the query - a recursion limit.</param>
-        internal SearchParser(int maxDepth)
+        internal SearchParser(IEdmModel model, int maxDepth)
         {
+            Debug.Assert(model != null, "model != null");
             Debug.Assert(maxDepth >= 0, "maxDepth >= 0");
 
+            this.model = model;
             this.maxDepth = maxDepth;
         }
 
@@ -54,7 +63,7 @@ namespace Microsoft.OData.UriParser
             Debug.Assert(expressionText != null, "expressionText != null");
 
             this.recursionDepth = 0;
-            this.lexer = new SearchLexer(expressionText);
+            this.lexer = new SearchLexer(this.model, expressionText);
             QueryToken result = this.ParseExpression();
             this.lexer.ValidateToken(ExpressionTokenKind.End);
 

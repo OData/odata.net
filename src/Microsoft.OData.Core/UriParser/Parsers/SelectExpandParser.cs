@@ -18,6 +18,11 @@ namespace Microsoft.OData.UriParser
     internal sealed class SelectExpandParser
     {
         /// <summary>
+        /// The Edm model which will be used when parsing the select/expand expressions.
+        /// </summary>
+        private readonly IEdmModel model;
+
+        /// <summary>
         /// The URI resolver which will resolve different kinds of Uri parsing context
         /// </summary>
         private readonly ODataUriResolver resolver;
@@ -66,11 +71,13 @@ namespace Microsoft.OData.UriParser
         /// <param name="enableCaseInsensitiveBuiltinIdentifier">Whether to allow case insensitive for builtin identifier.</param>
         /// <param name="enableNoDollarQueryOptions">Whether to enable no dollar query options.</param>
         public SelectExpandParser(
+            IEdmModel model,
             string clauseToParse,
             int maxRecursiveDepth,
             bool enableCaseInsensitiveBuiltinIdentifier = false,
             bool enableNoDollarQueryOptions = false)
         {
+            this.model = model;
             this.maxRecursiveDepth = maxRecursiveDepth;
 
             // Set max recursive depth for path, $filter, $orderby and $search to maxRecursiveDepth in case they were not be be specified.
@@ -81,7 +88,7 @@ namespace Microsoft.OData.UriParser
 
             // Sets up our lexer. We don't turn useSemicolonDelimiter on since the parsing code for expand options,
             // which is the only thing that needs it, is in a different class that uses it's own lexer.
-            this.lexer = clauseToParse != null ? new ExpressionLexer(clauseToParse, false /*moveToFirstToken*/, false /*useSemicolonDelimiter*/) : null;
+            this.lexer = clauseToParse != null ? new ExpressionLexer(this.model, clauseToParse, moveToFirstToken: false, useSemicolonDelimiter: false) : null;
 
             this.enableCaseInsensitiveBuiltinIdentifier = enableCaseInsensitiveBuiltinIdentifier;
 
@@ -98,13 +105,14 @@ namespace Microsoft.OData.UriParser
         /// <param name="enableCaseInsensitiveBuiltinIdentifier">Whether to allow case insensitive for builtin identifier.</param>
         /// <param name="enableNoDollarQueryOptions">Whether to enable no dollar query options.</param>
         public SelectExpandParser(
+            IEdmModel model,
             ODataUriResolver resolver,
             string clauseToParse,
             IEdmStructuredType parentStructuredType,
             int maxRecursiveDepth,
             bool enableCaseInsensitiveBuiltinIdentifier = false,
             bool enableNoDollarQueryOptions = false)
-            : this(clauseToParse, maxRecursiveDepth, enableCaseInsensitiveBuiltinIdentifier, enableNoDollarQueryOptions)
+            : this(model, clauseToParse, maxRecursiveDepth, enableCaseInsensitiveBuiltinIdentifier, enableNoDollarQueryOptions)
         {
             this.resolver = resolver;
             this.parentStructuredType = parentStructuredType;
@@ -120,6 +128,7 @@ namespace Microsoft.OData.UriParser
                 if (this.selectExpandOptionParser == null)
                 {
                     this.selectExpandOptionParser = new SelectExpandOptionParser(
+                        this.model,
                         this.resolver,
                         this.parentStructuredType,
                         this.maxRecursiveDepth,

@@ -89,7 +89,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         [Fact]
         public void FunctionParameterParserShouldSupportBracketedExpressionsInFilterOrderby()
         {
-            ExpressionLexer lexer = new ExpressionLexer("address={\'City\' : \'Seattle\'})", true, false, false);
+            ExpressionLexer lexer = new ExpressionLexer(HardCodedTestModel.TestModel, expression: "address={\'City\' : \'Seattle\'})", moveToFirstToken: true, useSemicolonDelimiter: false, parsingFunctionParameters: false);
             ICollection<NamedFunctionParameterNode> parameterNodes;
             var result = TryParseFunctionParameters(lexer, null, out parameterNodes);
             Assert.True(result);
@@ -108,7 +108,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
                 { "@a", "null" }
             };
             ParameterAliasValueAccessor paramAliasAccessor = new ParameterAliasValueAccessor(aliasValues);
-            ExpressionLexer lexer = new ExpressionLexer("address=@a)", true, false, true);
+            ExpressionLexer lexer = new ExpressionLexer(HardCodedTestModel.TestModel, expression: "address=@a)", moveToFirstToken: true, useSemicolonDelimiter: false, parsingFunctionParameters: true);
             ICollection<NamedFunctionParameterNode> parameterTokens;
             var result = TryParseFunctionParameters(lexer, paramAliasAccessor, out parameterTokens);
             Assert.True(result);
@@ -122,7 +122,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         [Fact]
         public void FunctionParameterParserShoulHandleUnResolvedAliasesInFilterOrderby()
         {
-            ExpressionLexer lexer = new ExpressionLexer("address=@a)", true, false, true);
+            ExpressionLexer lexer = new ExpressionLexer(HardCodedTestModel.TestModel, expression: "address=@a)", moveToFirstToken: true, useSemicolonDelimiter: false, parsingFunctionParameters: true);
             ICollection<NamedFunctionParameterNode> parameterTokens;
             var result = TryParseFunctionParameters(lexer, null, out parameterTokens);
             Assert.True(result);
@@ -166,7 +166,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         [Fact]
         public void FunctionParameterParserShouldNotAdvanceLexerIfNotANamedValue()
         {
-            ExpressionLexer lexer = new ExpressionLexer("a?foo,bar", true, false, true);
+            ExpressionLexer lexer = new ExpressionLexer(HardCodedTestModel.TestModel, expression: "a?foo,bar", moveToFirstToken: true, useSemicolonDelimiter: false, parsingFunctionParameters: true);
             ICollection<NamedFunctionParameterNode> parameterTokens;
             var result = TryParseFunctionParameters(lexer, null, out parameterTokens);
             Assert.False(result);
@@ -258,7 +258,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 
         private static bool TryParseFunctionParameters(ExpressionLexer lexer, ParameterAliasValueAccessor paramAliasAccessor, out ICollection<NamedFunctionParameterNode> parsedParameterNodes)
         {
-            UriQueryExpressionParser parser = new UriQueryExpressionParser(345, lexer);
+            UriQueryExpressionParser parser = new UriQueryExpressionParser(HardCodedTestModel.TestModel, 345, lexer);
             ICollection<FunctionParameterToken> splitParameters;
             parsedParameterNodes = null;
             if (parser.TrySplitFunctionParameters(out splitParameters))

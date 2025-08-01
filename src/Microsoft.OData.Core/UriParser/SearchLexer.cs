@@ -7,6 +7,7 @@
 namespace Microsoft.OData.UriParser
 {
     using Microsoft.OData.Core;
+    using Microsoft.OData.Edm;
     #region Namespaces
     using System;
     using System.Collections.Generic;
@@ -52,9 +53,10 @@ namespace Microsoft.OData.UriParser
         private bool isEscape;
 
         /// <summary>Initializes a new <see cref="SearchLexer"/>.</summary>
+        /// <param name="model">The Edm model associated with this lexer, used when resolving custom URI literal prefixes.</param>
         /// <param name="expression">Expression to parse.</param>
-        internal SearchLexer(string expression)
-            : base(expression, true /*moveToFirstToken*/, false /*useSemicolonDelimiter*/)
+        internal SearchLexer(IEdmModel model, string expression)
+            : base(model, expression, moveToFirstToken: true, useSemicolonDelimiter: false)
         {
         }
 

@@ -23,6 +23,11 @@ namespace Microsoft.OData.UriParser
     public sealed class UriQueryExpressionParser
     {
         /// <summary>
+        /// The Edm model which will be used when parsing the query expression.
+        /// </summary>
+        private readonly IEdmModel model;
+
+        /// <summary>
         /// The maximum number of recursion nesting allowed.
         /// </summary>
         private readonly int maxDepth;
@@ -75,8 +80,8 @@ namespace Microsoft.OData.UriParser
         /// Creates a UriQueryExpressionParser.
         /// </summary>
         /// <param name="maxDepth">The maximum depth of each part of the query - a recursion limit.</param>
-        public UriQueryExpressionParser(int maxDepth)
-            : this(maxDepth, false)
+        public UriQueryExpressionParser(IEdmModel model, int maxDepth)
+            : this(model, maxDepth, false)
         {
         }
 
@@ -85,8 +90,8 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         /// <param name="maxDepth">The maximum depth of each part of the query - a recursion limit.</param>
         /// <param name="enableCaseInsensitiveBuiltinIdentifier">Whether to allow case insensitive for builtin identifier.</param>
-        internal UriQueryExpressionParser(int maxDepth, bool enableCaseInsensitiveBuiltinIdentifier = false)
-            : this(maxDepth, enableCaseInsensitiveBuiltinIdentifier, false)
+        internal UriQueryExpressionParser(IEdmModel model, int maxDepth, bool enableCaseInsensitiveBuiltinIdentifier = false)
+            : this(model, maxDepth, enableCaseInsensitiveBuiltinIdentifier, false)
         {
         }
 
@@ -96,10 +101,12 @@ namespace Microsoft.OData.UriParser
         /// <param name="maxDepth">The maximum depth of each part of the query - a recursion limit.</param>
         /// <param name="enableCaseInsensitiveBuiltinIdentifier">Whether to allow case insensitive for builtin identifier.</param>
         /// <param name="enableNoDollarQueryOptions">Whether to allow no-dollar query options.</param>
-        internal UriQueryExpressionParser(int maxDepth, bool enableCaseInsensitiveBuiltinIdentifier = false, bool enableNoDollarQueryOptions = false)
+        internal UriQueryExpressionParser(IEdmModel model, int maxDepth, bool enableCaseInsensitiveBuiltinIdentifier = false, bool enableNoDollarQueryOptions = false)
         {
+            ExceptionUtils.CheckArgumentNotNull(model, "model");
             Debug.Assert(maxDepth >= 0, "maxDepth >= 0");
 
+            this.model = model;
             this.maxDepth = maxDepth;
             this.enableCaseInsensitiveBuiltinIdentifier = enableCaseInsensitiveBuiltinIdentifier;
             this.enableNoDollarQueryOptions = enableNoDollarQueryOptions;
@@ -110,7 +117,7 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         /// <param name="maxDepth">The maximum depth of each part of the query - a recursion limit.</param>
         /// <param name="lexer">The ExpressionLexer containing text to be parsed.</param>
-        internal UriQueryExpressionParser(int maxDepth, ExpressionLexer lexer) : this(maxDepth)
+        internal UriQueryExpressionParser(IEdmModel model, int maxDepth, ExpressionLexer lexer) : this(model, maxDepth)
         {
             Debug.Assert(lexer != null, "lexer != null");
             this.lexer = lexer;
@@ -158,6 +165,14 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
+        /// Gets the model used by this parser.
+        /// </summary>
+        internal IEdmModel Model
+        {
+            get { return this.model; }
+        }
+
+        /// <summary>
         /// Parses the $filter expression.
         /// </summary>
         /// <param name="filter">The $filter expression string to parse.</param>
@@ -172,7 +187,7 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         /// <param name="lexer">The lexer to use.</param>
         /// <returns>The literal query token or null if something else was found.</returns>
-        internal static LiteralToken TryParseLiteral(ExpressionLexer lexer)
+        internal static LiteralToken TryParseLiteral(ExpressionLexer lexer, IEdmModel model)
         {
             Debug.Assert(lexer != null, "lexer != null");
 
@@ -199,7 +214,7 @@ namespace Microsoft.OData.UriParser
 
                     // Why not using EdmTypeReference.FullName? (literalEdmTypeReference.FullName)
                     string edmConstantName = GetEdmConstantNames(literalEdmTypeReference);
-                    return ParseTypedLiteral(lexer, literalEdmTypeReference, edmConstantName);
+                    return ParseTypedLiteral(lexer, model, literalEdmTypeReference, edmConstantName);
 
                 case ExpressionTokenKind.BracedExpression:
                 case ExpressionTokenKind.BracketedExpression:
@@ -313,7 +328,7 @@ namespace Microsoft.OData.UriParser
             }
 
             this.recursionDepth = 0;
-            this.lexer = CreateLexerForFilterOrOrderByOrApplyExpression(compute);
+            this.lexer = CreateLexerForFilterOrOrderByOrApplyExpression(this.model, compute);
 
             while (true)
             {
@@ -411,7 +426,7 @@ namespace Microsoft.OData.UriParser
             }
 
             this.recursionDepth = 0;
-            this.lexer = CreateLexerForFilterOrOrderByOrApplyExpression(apply);
+            this.lexer = CreateLexerForFilterOrOrderByOrApplyExpression(this.model, apply);
 
             while (true)
             {
@@ -655,7 +670,7 @@ namespace Microsoft.OData.UriParser
             Debug.Assert(expressionText != null, "expressionText != null");
 
             this.recursionDepth = 0;
-            this.lexer = CreateLexerForFilterOrOrderByOrApplyExpression(expressionText);
+            this.lexer = CreateLexerForFilterOrOrderByOrApplyExpression(this.model, expressionText);
             QueryToken result = this.ParseExpression();
             this.lexer.ValidateToken(ExpressionTokenKind.End);
 
@@ -672,7 +687,7 @@ namespace Microsoft.OData.UriParser
             Debug.Assert(orderBy != null, "orderBy != null");
 
             this.recursionDepth = 0;
-            this.lexer = CreateLexerForFilterOrOrderByOrApplyExpression(orderBy);
+            this.lexer = CreateLexerForFilterOrOrderByOrApplyExpression(this.model, orderBy);
 
             List<OrderByToken> orderByTokens = new List<OrderByToken>();
             while (true)
@@ -721,9 +736,9 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         /// <param name="expression">The expression.</param>
         /// <returns>The lexer for the expression, which will have already moved to the first token.</returns>
-        private static ExpressionLexer CreateLexerForFilterOrOrderByOrApplyExpression(string expression)
+        private static ExpressionLexer CreateLexerForFilterOrOrderByOrApplyExpression(IEdmModel edmModel, string expression)
         {
-            return new ExpressionLexer(expression, true /*moveToFirstToken*/, true /*useSemicolonDelimiter*/, true /*parsingFunctionParameters*/);
+            return new ExpressionLexer(edmModel, expression, moveToFirstToken: true, useSemicolonDelimiter: true, parsingFunctionParameters: true);
         }
 
         /// <summary>Creates an exception for a parse error.</summary>
@@ -764,13 +779,13 @@ namespace Microsoft.OData.UriParser
         /// <param name="targetTypeReference">Expected type to be parsed.</param>
         /// <param name="targetTypeName">The EDM type name of the expected type to be parsed.</param>
         /// <returns>The literal token produced by building the given literal.</returns>
-        private static LiteralToken ParseTypedLiteral(ExpressionLexer lexer, IEdmTypeReference targetTypeReference, string targetTypeName)
+        private static LiteralToken ParseTypedLiteral(ExpressionLexer lexer, IEdmModel model, IEdmTypeReference targetTypeReference, string targetTypeName)
         {
             Debug.Assert(lexer != null, "lexer != null");
 
             string tokenText = lexer.CurrentToken.Text.ToString();
             UriLiteralParsingException typeParsingException;
-            object targetValue = DefaultUriLiteralParser.Instance.ParseUriStringToType(tokenText, targetTypeReference, out typeParsingException);
+            object targetValue = DefaultUriLiteralParser.GetOrCreate(model).ParseUriStringToType(tokenText, targetTypeReference, out typeParsingException);
 
             if (targetValue == null)
             {
@@ -1133,7 +1148,7 @@ namespace Microsoft.OData.UriParser
 
                 default:
                     {
-                        QueryToken primitiveLiteralToken = TryParseLiteral(this.lexer);
+                        QueryToken primitiveLiteralToken = TryParseLiteral(this.lexer, this.model);
                         if (primitiveLiteralToken == null)
                         {
                             throw ParseError(Error.Format(SRResources.UriQueryExpressionParser_ExpressionExpected, this.lexer.CurrentToken.Position, this.lexer.ExpressionText));

@@ -6,6 +6,7 @@
 
 using System;
 using Microsoft.OData.Core;
+using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Xunit;
 
@@ -13,10 +14,17 @@ namespace Microsoft.OData.Tests.UriParser
 {
     public class SearchLexerTests
     {
+        private readonly IEdmModel model;
+
+        public SearchLexerTests()
+        {
+            this.model = EdmCoreModel.Instance;
+        }
+
         [Fact]
         public void BasicTest()
         {
-            ExpressionLexer lexer = new SearchLexer("rd");
+            ExpressionLexer lexer = new SearchLexer(this.model, "rd");
             ValidateStringLiteralToken(lexer, "rd");
             ValidateTokenKind(lexer, ExpressionTokenKind.End);
         }
@@ -24,7 +32,7 @@ namespace Microsoft.OData.Tests.UriParser
         [Fact]
         public void SpaceTest()
         {
-            ExpressionLexer lexer = new SearchLexer("st    dn rd");
+            ExpressionLexer lexer = new SearchLexer(this.model, "st    dn rd");
             ValidateStringLiteralToken(lexer, "st");
             ValidateStringLiteralToken(lexer, "dn");
             ValidateStringLiteralToken(lexer, "rd");
@@ -34,7 +42,7 @@ namespace Microsoft.OData.Tests.UriParser
         [Fact]
         public void ParenTest()
         {
-            ExpressionLexer lexer = new SearchLexer("st    (dn   rd)");
+            ExpressionLexer lexer = new SearchLexer(this.model, "st    (dn   rd)");
             ValidateStringLiteralToken(lexer, "st");
             ValidateTokenKind(lexer, ExpressionTokenKind.OpenParen);
             ValidateStringLiteralToken(lexer, "dn");
@@ -46,7 +54,7 @@ namespace Microsoft.OData.Tests.UriParser
         [Fact]
         public void QuoteTest()
         {
-            ExpressionLexer lexer = new SearchLexer("a \"AND bc OR \" def");
+            ExpressionLexer lexer = new SearchLexer(this.model, "a \"AND bc OR \" def");
             ValidateStringLiteralToken(lexer, "a");
             ValidateStringLiteralToken(lexer, "AND bc OR ");
             ValidateStringLiteralToken(lexer, "def");
@@ -56,7 +64,7 @@ namespace Microsoft.OData.Tests.UriParser
         [Fact]
         public void QuoteAndEscapeTest()
         {
-            ExpressionLexer lexer = new SearchLexer("a \"AND \\\"bc\\\\ OR \" def");
+            ExpressionLexer lexer = new SearchLexer(this.model, "a \"AND \\\"bc\\\\ OR \" def");
             ValidateStringLiteralToken(lexer, "a");
             ValidateStringLiteralToken(lexer, "AND \"bc\\ OR ");
             ValidateStringLiteralToken(lexer, "def");
@@ -66,7 +74,7 @@ namespace Microsoft.OData.Tests.UriParser
         [Fact]
         public void ContinuousQuoteTest()
         {
-            ExpressionLexer lexer = new SearchLexer("a \"AND \\\"bc\\\\ OR \"\"VV\" def");
+            ExpressionLexer lexer = new SearchLexer(this.model, "a \"AND \\\"bc\\\\ OR \"\"VV\" def");
             ValidateStringLiteralToken(lexer, "a");
             ValidateStringLiteralToken(lexer, "AND \"bc\\ OR ");
             ValidateStringLiteralToken(lexer, "VV");
@@ -77,7 +85,7 @@ namespace Microsoft.OData.Tests.UriParser
         [Fact]
         public void TermTest()
         {
-            ExpressionLexer lexer = new SearchLexer("a AND bc OR  def");
+            ExpressionLexer lexer = new SearchLexer(this.model, "a AND bc OR  def");
             ValidateStringLiteralToken(lexer, "a");
             ValidateIdentifierToken(lexer, "AND");
             ValidateStringLiteralToken(lexer, "bc");
@@ -89,53 +97,53 @@ namespace Microsoft.OData.Tests.UriParser
         [Fact]
         public void InvalidCharWithOutQuoteTest()
         {
-            ExpressionLexer lexer = new SearchLexer("\"b\\\"cd a3\"");
+            ExpressionLexer lexer = new SearchLexer(this.model, "\"b\\\"cd a3\"");
             ValidateStringLiteralToken(lexer, "b\"cd a3");
             ValidateTokenKind(lexer, ExpressionTokenKind.End);
-            lexer = new SearchLexer("\"bcd za3\"");
+            lexer = new SearchLexer(this.model, "\"bcd za3\"");
             ValidateStringLiteralToken(lexer, "bcd za3");
             ValidateTokenKind(lexer, ExpressionTokenKind.End);
 
-            Action action = () => new SearchLexer("b\\\"cd a3").NextToken();
+            Action action = () => new SearchLexer(this.model, "b\\\"cd a3").NextToken();
             action.Throws<ODataException>(Error.Format(SRResources.ExpressionLexer_InvalidCharacter, "\\", 1, "b\\\"cd a3"));
-            action = () => new SearchLexer("bcd za3").NextToken();
+            action = () => new SearchLexer(this.model, "bcd za3").NextToken();
             action.Throws<ODataException>(Error.Format(SRResources.ExpressionLexer_InvalidCharacter, "3", 6, "bcd za3"));
-            action = () => new SearchLexer("\" za\"\\").NextToken();
+            action = () => new SearchLexer(this.model, "\" za\"\\").NextToken();
             action.Throws<ODataException>(Error.Format(SRResources.ExpressionLexer_InvalidCharacter, "\\", 5, "\" za\"\\"));
         }
 
         [Fact]
         public void InvalidEscapeTest()
         {
-            Action action = () => new SearchLexer("\"t a\\A\"").NextToken();
+            Action action = () => new SearchLexer(this.model, "\"t a\\A\"").NextToken();
             action.Throws<ODataException>(Error.Format(SRResources.ExpressionLexer_InvalidEscapeSequence, "A", 5, "\"t a\\A\""));
-            action = () => new SearchLexer("\"a\\A t\"");
+            action = () => new SearchLexer(this.model, "\"a\\A t\"");
             action.Throws<ODataException>(Error.Format(SRResources.ExpressionLexer_InvalidEscapeSequence, "A", 3, "\"a\\A t\""));
-            action = () => new SearchLexer("\"\\Aa t\"");
+            action = () => new SearchLexer(this.model, "\"\\Aa t\"");
             action.Throws<ODataException>(Error.Format(SRResources.ExpressionLexer_InvalidEscapeSequence, "A", 2, "\"\\Aa t\""));
         }
 
         [Fact]
         public void EmptyInputTest()
         {
-            ExpressionLexer lexer = new SearchLexer("");
+            ExpressionLexer lexer = new SearchLexer(this.model, "");
             ValidateTokenKind(lexer, ExpressionTokenKind.End);
         }
 
         [Fact]
         public void EmptyPhraseInputTest()
         {
-            ExpressionLexer lexer = new SearchLexer("A \"\"");
+            ExpressionLexer lexer = new SearchLexer(this.model, "A \"\"");
             Action action = () => lexer.NextToken();
             action.Throws<ODataException>(Error.Format(SRResources.ExpressionToken_IdentifierExpected, 2));
-            action = () => new SearchLexer("\"\" A");
+            action = () => new SearchLexer(this.model, "\"\" A");
             action.Throws<ODataException>(Error.Format(SRResources.ExpressionToken_IdentifierExpected, 0));
         }
 
         [Fact]
         public void UnmatchedParenTest()
         {
-            ExpressionLexer lexer = new SearchLexer("kit )");
+            ExpressionLexer lexer = new SearchLexer(this.model, "kit )");
             ValidateStringLiteralToken(lexer, "kit");
             ValidateTokenKind(lexer, ExpressionTokenKind.CloseParen);
             ValidateTokenKind(lexer, ExpressionTokenKind.End);
