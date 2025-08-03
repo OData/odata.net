@@ -328,6 +328,20 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             Action test = () => this.testSubject.SaveChanges(SaveChangesOptions.BatchWithIndependentOperations | SaveChangesOptions.ContinueOnError);
             test.ShouldThrow<ArgumentOutOfRangeException>().WithMessage("options", ComparisonMode.Substring);
         }
+
+        [Fact]
+        public void SaveChangesWithUseRelativeUriAndNonBatchOptionsShouldThrow()
+        {
+            Action test = () => this.testSubject.SaveChanges(SaveChangesOptions.UseRelativeUri | SaveChangesOptions.ContinueOnError);
+            test.ShouldThrow<ArgumentOutOfRangeException>().WithMessage("options", ComparisonMode.Substring);
+        }
+
+        [Fact]
+        public void SaveChangesWithUseJsonBatchAndNonBatchOptionsShouldThrow()
+        {
+            Action test = () => this.testSubject.SaveChanges(SaveChangesOptions.UseJsonBatch | SaveChangesOptions.ContinueOnError);
+            test.ShouldThrow<ArgumentOutOfRangeException>().WithMessage("options", ComparisonMode.Substring);
+        }
 #endif
 
         [Fact]
