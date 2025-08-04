@@ -127,6 +127,24 @@ namespace NewStuff._Design._0_Convention.V3
 
         namespace V2
         {
+            public sealed class EntityIdHeaderValueReader<TNextReader> : IEntityIdHeaderValueReader<TNextReader>
+            {
+                public ValueTask Read()
+                {
+                    throw new NotImplementedException();
+                }
+
+                public IEntityIdStartReader<TNextReader> TryMoveNext(out bool moved)
+                {
+                    throw new NotImplementedException();
+                }
+
+                V1.IEntityIdReader<TNextReader> IReader<V1.IEntityIdReader<TNextReader>>.TryMoveNext(out bool moved)
+                {
+                    return this.ToV1<TNextReader>().TryMoveNext(out moved);
+                }
+            }
+
             public interface IEntityIdHeaderValueReader<out TNextReader> : IReader<IEntityIdStartReader<TNextReader>>, IReader<V1.IEntityIdReader<TNextReader>>
             {
             }
@@ -141,9 +159,29 @@ namespace NewStuff._Design._0_Convention.V3
 
             public static class Extensions
             {
-                public static IReader<IEntityIdStartReader<TNextReader>> AsV1<TNextReader>(this IEntityIdHeaderValueReader<TNextReader> reader)
+                public static IReader<V1.IEntityIdReader<TNextReader>> ToV1<TNextReader>(this IReader<IEntityIdStartReader<TNextReader>> reader)
                 {
-                    return reader;
+                    return new EntityIdReader<TNextReader>(reader);
+                }
+
+                private sealed class EntityIdReader<TNextReader> : IReader<V1.IEntityIdReader<TNextReader>>
+                {
+                    private readonly IReader<IEntityIdStartReader<TNextReader>> reader;
+
+                    public EntityIdReader(IReader<IEntityIdStartReader<TNextReader>> reader)
+                    {
+                        this.reader = reader;
+                    }
+
+                    public ValueTask Read()
+                    {
+                        throw new NotImplementedException();
+                    }
+
+                    public V1.IEntityIdReader<TNextReader> TryMoveNext(out bool moved)
+                    {
+                        throw new NotImplementedException();
+                    }
                 }
             }
         }
