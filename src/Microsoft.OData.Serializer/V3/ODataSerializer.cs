@@ -1,5 +1,4 @@
-﻿using Microsoft.OData.Core.NewWriter2;
-using Microsoft.OData.Edm;
+﻿using Microsoft.OData.Edm;
 using Microsoft.OData.Serializer.V3.Json;
 using Microsoft.OData.Serializer.V3.Json.State;
 using System;

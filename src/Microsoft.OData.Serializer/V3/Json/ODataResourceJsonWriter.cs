@@ -4,12 +4,14 @@ using Microsoft.OData.Serializer.V3.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Microsoft.OData.Serializer.V3.Json;
 
-internal class ODataResourceJsonWriter<T, TCustomState>(ODataResourceTypeInfo<T, TCustomState> typeInfo) : ODataWriter<T, ODataJsonWriterState<TCustomState>>
+internal class ODataResourceJsonWriter<T, TCustomState>(ODataResourceTypeInfo<T, TCustomState> typeInfo)
+    : ODataWriter<T, ODataJsonWriterState<TCustomState>>, IPropertyWriter<T, TCustomState>
 {
     public override async ValueTask Write(T value, ODataJsonWriterState<TCustomState> state)
     {
@@ -17,6 +19,9 @@ internal class ODataResourceJsonWriter<T, TCustomState>(ODataResourceTypeInfo<T,
 
         state.Stack.Push();
         state.Stack.Current.ResourceTypeInfo = typeInfo;
+
+        typeInfo.OnSerializing?.Invoke(value, state);
+
         var jsonWriter = state.JsonWriter;
 
         jsonWriter.WriteStartObject();
@@ -25,10 +30,26 @@ internal class ODataResourceJsonWriter<T, TCustomState>(ODataResourceTypeInfo<T,
         // But how do we handle annotation-only resources?
         await WritePreValueAnnotations(value, state);
 
-        // This makes the following assumptions:
-        // - all properties defined in the resourceInfo should be written
-        // - the properties are written in the order they are defined in the resource info
-        // - each property to be written is available (e.g. could be null or missing)
+        if (typeInfo.WriteProperties != null)
+        {
+            // User-driven iteration and selection.
+            await typeInfo.WriteProperties(value, this, state);
+        }
+        else
+        {
+            // Library-drive iteration and selection.
+            await WriteProperties(value, typeInfo, state);
+        }
+
+        jsonWriter.WriteEndObject();
+        state.Stack.Pop();
+    }
+
+    private static async ValueTask WriteProperties(
+        T value,
+        ODataResourceTypeInfo<T, TCustomState> typeInfo,
+        ODataJsonWriterState<TCustomState> state)
+    {
         for (int i = 0; i < typeInfo.Properties.Count; i++)
         {
             var propertyInfo = typeInfo.Properties[i];
@@ -45,7 +66,7 @@ internal class ODataResourceJsonWriter<T, TCustomState>(ODataResourceTypeInfo<T,
                 continue; // skip this property
             }
 
-            await this.WriteProperty(value, propertyInfo, state);
+            await WriteProperty(value, propertyInfo, state);
 
             // when we implement re-entrancy, we should
             // return if property was not written completely.
@@ -63,36 +84,15 @@ internal class ODataResourceJsonWriter<T, TCustomState>(ODataResourceTypeInfo<T,
 
             // if async source needs more data, we should return false as well
         }
-
-        jsonWriter.WriteEndObject();
-        state.Stack.Pop();
     }
 
-    private async ValueTask WriteProperty(T resource, ODataPropertyInfo<T, TCustomState> propertyInfo, ODataJsonWriterState<TCustomState> state)
+    private static async ValueTask WriteProperty(T resource, ODataPropertyInfo<T, TCustomState> propertyInfo, ODataJsonWriterState<TCustomState> state)
     {
         var jsonWriter = state.JsonWriter;
         // add this property to the state, including current index
         // TODO: check annotations.
 
-        // what if the property doesn't exist on the value (e.g. dictionary where only some properties are present)
-        // do we expect to write null those properties as null or skip them?
-
-        if (propertyInfo.HasCount != null && propertyInfo.HasCount(resource, state))
-        {
-            if (propertyInfo.WriteCount == null)
-            {
-                throw new Exception("WriteValue function must be provided if HasCount returns true");
-            }
-
-            JsonMetadataHelpers.WritePropertyAnnotationName(jsonWriter, propertyInfo.Utf8Name.Span, "odata.count"u8);
-            await propertyInfo.WriteCount(resource, state);
-        }
-
-        if (propertyInfo.HasNextLink?.Invoke(resource, state) == true && propertyInfo.WriteNextLink != null)
-        {
-            JsonMetadataHelpers.WritePropertyAnnotationName(jsonWriter, propertyInfo.Utf8Name.Span, "odata.nextLink"u8);
-            await propertyInfo.WriteNextLink(resource, state);
-        }
+        await WritePropertyAnnotations(resource, propertyInfo, state);
 
         // How do we handle property selection?
         // examples:
@@ -151,5 +151,50 @@ internal class ODataResourceJsonWriter<T, TCustomState>(ODataResourceTypeInfo<T,
         }
         
         return ValueTask.CompletedTask;
+    }
+
+    private static async ValueTask WritePropertyAnnotations(T resource, ODataPropertyInfo<T, TCustomState> propertyInfo, ODataJsonWriterState<TCustomState> state)
+    {
+        var jsonWriter = state.JsonWriter;
+        // add this property to the state, including current index
+        // TODO: check annotations.
+
+        // what if the property doesn't exist on the value (e.g. dictionary where only some properties are present)
+        // do we expect to write null those properties as null or skip them?
+
+        if (propertyInfo.HasCount != null && propertyInfo.HasCount(resource, state))
+        {
+            if (propertyInfo.WriteCount == null)
+            {
+                throw new Exception("WriteValue function must be provided if HasCount returns true");
+            }
+
+            JsonMetadataHelpers.WritePropertyAnnotationName(jsonWriter, propertyInfo.Utf8Name.Span, "odata.count"u8);
+            await propertyInfo.WriteCount(resource, state);
+        }
+
+        if (propertyInfo.HasNextLink?.Invoke(resource, state) == true && propertyInfo.WriteNextLink != null)
+        {
+            JsonMetadataHelpers.WritePropertyAnnotationName(jsonWriter, propertyInfo.Utf8Name.Span, "odata.nextLink"u8);
+            await propertyInfo.WriteNextLink(resource, state);
+        }
+    }
+
+    ValueTask IPropertyWriter<T, TCustomState>.WriteProperty<TValue>(T resource, string name, TValue value, ODataJsonWriterState<TCustomState> state)
+    {
+        var property = typeInfo.GetPropertyInfo(name);
+        return (this as IPropertyWriter<T, TCustomState>).WriteProperty(resource, property, value, state);
+    }
+
+    async ValueTask IPropertyWriter<T, TCustomState>.WriteProperty<TValue>(T resource, ODataPropertyInfo<T, TCustomState> propertyInfo, TValue value, ODataJsonWriterState<TCustomState> state)
+    {
+        await WritePropertyAnnotations(resource, propertyInfo, state);
+        state.JsonWriter.WritePropertyName(propertyInfo.Utf8Name.Span);
+        await state.WriteValue(value);
+    }
+
+    ValueTask IPropertyWriter<T, TCustomState>.WriteProperty(T resource, ODataPropertyInfo<T, TCustomState> propertyInfo, ODataJsonWriterState<TCustomState> state)
+    {
+        return WriteProperty(resource, propertyInfo, state);
     }
 }

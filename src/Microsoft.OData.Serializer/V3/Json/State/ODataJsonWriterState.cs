@@ -41,6 +41,8 @@ public sealed class ODataJsonWriterState<TCustomState>
         return this.Stack.IsTopLevel();
     }
 
+    // TODO: Make this internal and instead of expose writer interfaces to public hooks
+    // so that we can still the flow of how and where things are written.
     public ValueTask WriteValue<T>(T value)
     {
         var writer = writers.GetWriter<T>();
