@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Threading.Tasks;
 
 namespace NewStuff._Design._0_Convention.V3
 {
@@ -110,6 +112,16 @@ namespace NewStuff._Design._0_Convention.V3
 
             public interface IEntityIdReader<out TNextReader> : IReader<EntityId, TNextReader>
             {
+            }
+
+            public static class Extensions
+            {
+                public static bool TryToV2<TNextReader>(this IEntityIdHeaderValueReader<TNextReader> reader, [MaybeNullWhen(false)] out V2.IEntityIdHeaderValueReader<TNextReader> v2)
+                {
+                    ArgumentNullException.ThrowIfNull(reader);
+
+                    return (v2 = reader as V2.IEntityIdHeaderValueReader<TNextReader>) != null;
+                }
             }
         }
 
