@@ -140,7 +140,7 @@ namespace NewStuff._Design._0_Convention.V3
             }
 
 
-            public interface IEntityIdHeaderValueReader<out TNextReader> : IReader<IEntityIdReader<TNextReader>> where TNextReader : allows ref struct
+            public interface IEntityIdHeaderValueReader<TNextReader> : IReader<EntityIdReader<TNextReader>> where TNextReader : allows ref struct
             {
             }
 
@@ -150,6 +150,53 @@ namespace NewStuff._Design._0_Convention.V3
             }
 
             public interface IEntityIdReader<out TNextReader> : IReader<EntityId, TNextReader> where TNextReader : allows ref struct
+            {
+            }
+        }
+
+        namespace V2
+        {
+            public readonly ref struct EntityIdHeaderValueReader<TNextReader> where TNextReader : allows ref struct
+            {
+                public IEntityIdHeaderValueReader<TNextReader> Reader { get; }
+
+                public IEntityIdHeaderValueReaderV2<TNextReader> ReaderV2 { get; }
+            }
+
+
+
+
+
+
+            public interface IEntityIdHeaderValueReader<TNextReader> : IReader<EntityIdReader<TNextReader>> where TNextReader : allows ref struct
+            {
+            }
+
+            public readonly ref struct EntityIdReader<TNextReader> where TNextReader : allows ref struct
+            {
+                public IEntityIdReader<TNextReader> Reader { get; }
+            }
+
+            public interface IEntityIdReader<out TNextReader> : IReader<EntityId, TNextReader> where TNextReader : allows ref struct
+            {
+            }
+
+
+
+
+
+
+
+            public interface IEntityIdHeaderValueReaderV2<TNextReader> : IReader<IriSchemeReader<TNextReader>> where TNextReader : allows ref struct
+            {
+            }
+
+            public readonly ref struct IriSchemeReader<TNextReader> where TNextReader : allows ref struct
+            {
+                public IIriSchemeReader<TNextReader> Reader { get; }
+            }
+
+            public interface IIriSchemeReader<out TNextReader> : IReader<TNextReader> where TNextReader : allows ref struct
             {
             }
         }
