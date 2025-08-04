@@ -127,7 +127,7 @@ namespace NewStuff._Design._0_Convention.V3
 
         namespace V2
         {
-            public interface IEntityIdHeaderValueReader<out TNextReader> : IReader<IEntityIdStartReader<TNextReader>>
+            public interface IEntityIdHeaderValueReader<out TNextReader> : IReader<IEntityIdStartReader<TNextReader>>, IReader<V1.IEntityIdReader<TNextReader>>
             {
             }
 
@@ -138,80 +138,13 @@ namespace NewStuff._Design._0_Convention.V3
             public interface IIriSchemeReader<out TNextReader> : IReader<TNextReader>
             {
             }
-        }
-    }
 
-
-    namespace Attempt3
-    {
-        namespace V1
-        {
-            public readonly ref struct EntityIdHeaderValueReader<TNextReader> where TNextReader : allows ref struct
+            public static class Extensions
             {
-                public IEntityIdHeaderValueReader<TNextReader> Reader { get; }
-            }
-
-
-            public interface IEntityIdHeaderValueReader<TNextReader> : IReader<EntityIdReader<TNextReader>> where TNextReader : allows ref struct
-            {
-            }
-
-            public readonly ref struct EntityIdReader<TNextReader> where TNextReader : allows ref struct
-            {
-                public IEntityIdReader<TNextReader> Reader { get; }
-            }
-
-            public interface IEntityIdReader<out TNextReader> : IReader<EntityId, TNextReader> where TNextReader : allows ref struct
-            {
-            }
-        }
-
-        namespace V2
-        {
-            public readonly ref struct EntityIdHeaderValueReader<TNextReader> where TNextReader : allows ref struct
-            {
-                //// TODO this doesn't work because the constructor for this type will still have a breaking change
-
-                public IEntityIdHeaderValueReader<TNextReader> Reader { get; }
-
-                public IEntityIdHeaderValueReaderV2<TNextReader> ReaderV2 { get; }
-            }
-
-
-
-
-
-
-            public interface IEntityIdHeaderValueReader<TNextReader> : IReader<EntityIdReader<TNextReader>> where TNextReader : allows ref struct
-            {
-            }
-
-            public readonly ref struct EntityIdReader<TNextReader> where TNextReader : allows ref struct
-            {
-                public IEntityIdReader<TNextReader> Reader { get; }
-            }
-
-            public interface IEntityIdReader<out TNextReader> : IReader<EntityId, TNextReader> where TNextReader : allows ref struct
-            {
-            }
-
-
-
-
-
-
-
-            public interface IEntityIdHeaderValueReaderV2<TNextReader> : IReader<IriSchemeReader<TNextReader>> where TNextReader : allows ref struct
-            {
-            }
-
-            public readonly ref struct IriSchemeReader<TNextReader> where TNextReader : allows ref struct
-            {
-                public IIriSchemeReader<TNextReader> Reader { get; }
-            }
-
-            public interface IIriSchemeReader<out TNextReader> : IReader<TNextReader> where TNextReader : allows ref struct
-            {
+                public static IReader<IEntityIdStartReader<TNextReader>> AsV1<TNextReader>(this IEntityIdHeaderValueReader<TNextReader> reader)
+                {
+                    return reader;
+                }
             }
         }
     }
