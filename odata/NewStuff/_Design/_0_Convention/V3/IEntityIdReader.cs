@@ -158,6 +158,8 @@ namespace NewStuff._Design._0_Convention.V3
         {
             public readonly ref struct EntityIdHeaderValueReader<TNextReader> where TNextReader : allows ref struct
             {
+                //// TODO this doesn't work because the constructor for this type will still have a breaking change
+
                 public IEntityIdHeaderValueReader<TNextReader> Reader { get; }
 
                 public IEntityIdHeaderValueReaderV2<TNextReader> ReaderV2 { get; }
