@@ -46,8 +46,6 @@ namespace NewStuff._Design._0_Convention.V3
 
             public EntityIdHeader TryGetValue(out bool moved)
             {
-                this.entityIdHeaderStartReader.
-
                 throw new System.NotImplementedException();
             }
 
@@ -93,6 +91,67 @@ namespace NewStuff._Design._0_Convention.V3
     }
 
     public interface IIriSchemeReader<out TNextReader>
+    {
+    }
+
+
+
+
+
+
+
+    namespace V1
+    {
+        public interface IEntityIdHeaderValueReaderV1<out TNextReader> : IReader<IEntityIdReaderV1<TNextReader>>
+        {
+        }
+
+        public interface IEntityIdReaderV1<out TNextReader> : IReader<EntityId, TNextReader>
+        {
+        }
+    }
+
+
+
+
+
+    public interface IEntityIdHeaderValueReaderV2<out TNextReader> : IReader<IEntityIdStartReaderV2<TNextReader>>
+    {
+    }
+
+    public interface IEntityIdStartReaderV2<out TNextReader> : IReader<IIriSchemeReaderV2<TNextReader>>
+    {
+    }
+
+    public interface IIriSchemeReaderV2<out TNextReader> : IReader<TNextReader>
+    {
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    public readonly ref struct EntityIdHeaderValueReader<TNextReader>
+    {
+    }
+
+    public interface IEntityIdHeaderValueReaderV1<out TNextReader> : IReader<IEntityIdReaderV1<TNextReader>>
+    {
+    }
+
+    public interface IEntityIdReaderV1<out TNextReader> : IReader<EntityId, TNextReader>
     {
     }
 }
