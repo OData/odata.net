@@ -19,6 +19,20 @@
         where TValue : allows ref struct
         where TNext : allows ref struct
     {
-        TValue Value { get; }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="moved"><see langword="false"/> if <see cref="IReader{TNext}.Read"/> needs to be called first</param>
+        /// <returns></returns>
+        TValue TryGetValue(out bool moved);
+    }
+
+    public static class ReaderExtensions
+    {
+        public static bool TryMoveNext2<TNext>(this IReader<TNext> reader, out TNext next)
+        {
+            next = reader.TryMoveNext(out var moved);
+            return moved;
+        }
     }
 }
