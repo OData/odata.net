@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace NewStuff._Design._0_Convention.V3
@@ -8,6 +9,57 @@ namespace NewStuff._Design._0_Convention.V3
     //// you are trying to decide if you should go ahead and dive into iri parsing (and if you don't, what will it look like when you decide that you want to, because up to this point, you would have called the entry point reader for the "broken down" version `ientityidreader`, but then that would conflict with the current name); and also, how it's going to look to write an `entityid` when you can only write uris and not iris; basically, what should you do when reading and writing are not symmetric
 
     //// TODO i think the `attempt2` namespace is the right track; finish the extension method, then implement some readers, and then write some fake calling code
+
+
+    public static class ForMike
+    {
+        public struct Nothing
+        {
+        }
+
+        public interface IGetResponseReader : IReader<IEntityIdHeaderReader<IGetResponseBodyReader>>
+        {
+        }
+
+        public interface IGetResponseBodyReader
+        {
+        }
+
+        public static async Task Main(IGetResponseReader reader)
+        {
+            reader.TryMoveNext2(out var entityIdHeaderReader);
+
+            EntityIdHeader entityIdHeader;
+            while (!entityIdHeaderReader.TryGetValue2(out entityIdHeader))
+            {
+                await reader.Read().ConfigureAwait(false);
+            }
+
+            Console.WriteLine(entityIdHeader.HeaderName);
+
+            while (!entityIdHeaderReader.TryMoveNext2(out var getResponseBodyReader))
+            {
+                await reader.Read().ConfigureAwait(false);
+            }
+
+            // do something with getResponseBodyReader
+        }
+
+        public static async Task<TNextReader> Main<TNextReader>(IEntityIdHeaderReader<TNextReader> reader)
+        {
+            EntityIdHeader entityIdHeader;
+            while (!reader.TryGetValue2(out entityIdHeader))
+            {
+                await reader.Read().ConfigureAwait(false);
+            }
+
+            Console.WriteLine(entityIdHeader.HeaderName);
+
+            reader.TryMoveNext2(out var nextReader);
+
+            return nextReader;
+        }
+    }
 
     public interface IEntityIdHeaderReader<out TNextReader> : IReader<EntityIdHeader, TNextReader>
     {

@@ -34,5 +34,10 @@
             next = reader.TryMoveNext(out var moved);
             return moved;
         }
+        public static bool TryGetValue2<TValue, TNext>(this IReader<TValue, TNext> reader, [MaybeNullWhen(false)] out TValue value)
+        {
+            value = reader.TryGetValue(out var moved);
+            return moved;
+        }
     }
 }
