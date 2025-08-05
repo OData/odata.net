@@ -261,6 +261,11 @@ namespace Microsoft.OData.Client.Metadata
             }
         }
 
+        internal Type CollectionGenericType
+        {
+            get { return this.collectionGenericType; }
+        }
+
         /// <summary>Type of items in the primitive or complex collection.</summary>
         internal Type PrimitiveOrComplexCollectionItemType
         {
