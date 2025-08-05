@@ -20,25 +20,26 @@ public abstract class ODataResourceSetBaseJsonWriter<TCollection, TElement, TCus
         state.Stack.Push();
         state.Stack.Current.ResourceTypeInfo = typeInfo;
         state.Stack.Current.PropertyInfo = parentProperty;
+
+        typeInfo?.OnSerializing?.Invoke(value, state);
+
         if (state.IsTopLevel())
         {
             state.JsonWriter.WriteStartObject();
 
-            await WritePreValueMetadata(value, null, state);
+            await WritePreValueMetadata(value, state);
 
             state.JsonWriter.WritePropertyName("value");
         }
         else
         {
-            // TODO: if this is the value of a property, we should write annotations for the property
-            // before the array start. Should we write the annotations here in the parent property writer.
-            // Since the parent property writer has already written the property name by the time we get here,
-            // then we cannot write annotations here.
-            // But this creates an issue. The annotations are written by different components depending
-            // on whether this is a top-level write or not.
-            // Perhaps this component should only be responsible for writing the array and the top-level
-            // annotations moved to some parent component
-            await WritePreValueMetadata(value, parentProperty, state);
+            // In a previous iteration, this was writing nested annotations
+            // in this case, annotations are stored on the parent object's propertyInfo
+            // and they're prefixed using the property name. But I've changed
+            // the model, now the nested annotations of the property that current
+            // valu belongs to are written by the parent writer.
+            // I'm still evaluating to see which models makes more sense.
+            //await WritePreValueMetadata(value, parentProperty, state);
         }
 
         state.JsonWriter.WriteStartArray();
@@ -52,18 +53,18 @@ public abstract class ODataResourceSetBaseJsonWriter<TCollection, TElement, TCus
             state.JsonWriter.WriteEndObject();
         }
 
+        typeInfo?.OnSerialized?.Invoke(value, state);
+
         state.Stack.Pop();
     }
 
     protected abstract ValueTask WriteElements(TCollection value, ODataJsonWriterState<TCustomState> state);
 
-    protected virtual  ValueTask WritePreValueMetadata(TCollection value, Adapters.ODataPropertyInfo? propertyInfo, ODataJsonWriterState<TCustomState> state)
+    protected virtual  ValueTask WritePreValueMetadata(TCollection value, ODataJsonWriterState<TCustomState> state)
     {
-        // TODO: We should probably expose a ShouldWriteXXX method for metadata to give
-        // users an easy way to control whether certain metadata should be written
         if (state.IsTopLevel() && state.MetadataLevel >= ODataMetadataLevel.Minimal)
         {
-            return WriteContextUrl(value, state);
+            WriteContextUrl(value, state);
         }
 
         //// TODO: should this condition be implemented by the WriteCountProperty method?
@@ -73,13 +74,13 @@ public abstract class ODataResourceSetBaseJsonWriter<TCollection, TElement, TCus
         //    await WriteCountProperty(value, state, context);
         //}
 
-        WriteNextLinkProperty(value, propertyInfo,  state);
-        WriteCountProperty(value, propertyInfo, state);
+        WriteNextLinkProperty(value, state);
+        WriteCountProperty(value, state);
 
         return ValueTask.CompletedTask;
     }
 
-    protected virtual ValueTask WriteContextUrl(TCollection value, ODataJsonWriterState<TCustomState> state)
+    protected virtual void WriteContextUrl(TCollection value, ODataJsonWriterState<TCustomState> state)
     {
         if (state.PayloadKind == ODataPayloadKind.ResourceSet && state.IsTopLevel())
         {
@@ -87,11 +88,9 @@ public abstract class ODataResourceSetBaseJsonWriter<TCollection, TElement, TCus
         }
 
         // TODO: nested context and other payload kinds
-
-        return ValueTask.CompletedTask;
     }
 
-    protected virtual void WriteCountProperty(TCollection value, Adapters.ODataPropertyInfo? propertyInfo, ODataJsonWriterState<TCustomState> state)
+    protected virtual void WriteCountProperty(TCollection value, ODataJsonWriterState<TCustomState> state)
     {
         var jsonWriter = state.JsonWriter;
         if (typeInfo?.GetCount != null)
@@ -99,7 +98,7 @@ public abstract class ODataResourceSetBaseJsonWriter<TCollection, TElement, TCus
             var count = typeInfo.GetCount(value, state);
             if (count.HasValue)
             {
-                jsonWriter.WritePropertyName("odata.count"u8);
+                jsonWriter.WritePropertyName("@odata.count"u8);
                 jsonWriter.WriteNumberValue(count.Value);
             }
         }
@@ -109,7 +108,7 @@ public abstract class ODataResourceSetBaseJsonWriter<TCollection, TElement, TCus
         }
     }
 
-    protected virtual void WriteNextLinkProperty(TCollection value, Adapters.ODataPropertyInfo? propertyInfo, ODataJsonWriterState<TCustomState> state)
+    protected virtual void WriteNextLinkProperty(TCollection value, ODataJsonWriterState<TCustomState> state)
     {
 
         var jsonWriter = state.JsonWriter;
@@ -118,7 +117,7 @@ public abstract class ODataResourceSetBaseJsonWriter<TCollection, TElement, TCus
             var nextLink = typeInfo.GetNextLink(value, state);
             if (!string.IsNullOrEmpty(nextLink))
             {
-                jsonWriter.WritePropertyName("odata.nextLink"u8);
+                jsonWriter.WritePropertyName("@odata.nextLink"u8);
                 jsonWriter.WriteStringValue(nextLink);
             }
         }

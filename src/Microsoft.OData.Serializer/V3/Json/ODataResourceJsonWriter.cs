@@ -43,6 +43,9 @@ internal class ODataResourceJsonWriter<T, TCustomState>(ODataResourceTypeInfo<T,
         }
 
         jsonWriter.WriteEndObject();
+
+        typeInfo.OnSerialized?.Invoke(value, state);
+
         state.Stack.Pop();
     }
 
