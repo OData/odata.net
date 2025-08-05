@@ -49,6 +49,17 @@ namespace Microsoft.OData
             set;
         }
 
+        /// <summary>Gets or sets the number of items for this nested resource info.
+        /// Be noted, this count property is for nested resource info without content.
+        /// For nested resource info with content, please specify the count on ODataResourceSetBase.Count.
+        /// </summary>
+        /// <returns>The number of items in the resource set.</returns>
+        public long? Count
+        {
+            get;
+            set;
+        }
+
         /// <summary>Gets or sets the URI representing the Unified Resource Locator (URL) of the link.</summary>
         /// <returns>The URI representing the Unified Resource Locator (URL) of the link.</returns>
         public Uri Url

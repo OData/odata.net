@@ -14,7 +14,7 @@ namespace Microsoft.OData.Tests
 
         public ODataNullValueTests()
         {
-            this.nullValue = new ODataNullValue();
+            this.nullValue = ODataNullValue.Instance;
         }
 
         [Fact]

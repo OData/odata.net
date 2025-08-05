@@ -183,6 +183,16 @@ namespace Microsoft.OData.UriParser
         /// Node that represents a collection of constants.
         /// </summary>
         CollectionConstant = InternalQueryNodeKind.CollectionConstant,
+
+       /// <summary>
+       /// Node that represents a $root path
+       /// </summary>
+        RootPath = InternalQueryNodeKind.RootPath,
+
+        /// <summary>
+        /// Node that represents a custom query option
+        /// </summary>
+        CustomQueryOption = InternalQueryNodeKind.CustomQueryOption,
     }
 
     /// <summary>
@@ -359,5 +369,15 @@ namespace Microsoft.OData.UriParser
         /// Node that represents a collection of constants.
         /// </summary>
         CollectionConstant = 33,
+
+        /// <summary>
+        /// Node that represetns a $root path
+        /// </summary>
+        RootPath = 34,
+
+        /// <summary>
+        /// Node that represents a custom query option
+        /// </summary>
+        CustomQueryOption = 35,
     }
 }

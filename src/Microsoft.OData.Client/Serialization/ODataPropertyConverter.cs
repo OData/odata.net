@@ -618,7 +618,7 @@ namespace Microsoft.OData.Client
         {
             if (propertyValue == null)
             {
-                return new ODataNullValue();
+                return ODataNullValue.Instance;
             }
 
             propertyValue = ConvertPrimitiveValueToRecognizedODataType(propertyValue, property.PropertyType);
@@ -636,7 +636,7 @@ namespace Microsoft.OData.Client
         {
             if (propertyValue == null)
             {
-                return new ODataNullValue();
+                return ODataNullValue.Instance;
             }
 
             object convertedValue = ConvertPrimitiveValueToRecognizedODataType(propertyValue, propertyType);
@@ -784,7 +784,7 @@ namespace Microsoft.OData.Client
                 return true;
             }
 
-            odataValue = new ODataNullValue();
+            odataValue = ODataNullValue.Instance;
             return false;
         }
 

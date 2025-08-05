@@ -34,7 +34,7 @@ namespace Microsoft.OData
         {
             if (objectToConvert == null)
             {
-                return new ODataNullValue();
+                return ODataNullValue.Instance;
             }
 
             // If the given object is already an ODataValue, return it as is.

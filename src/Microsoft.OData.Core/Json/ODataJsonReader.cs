@@ -2163,7 +2163,7 @@ namespace Microsoft.OData.Json
                             if (resourceType.TypeKind == EdmTypeKind.Primitive || resourceType.TypeKind == EdmTypeKind.Enum)
                             {
                                 // null primitive
-                                this.EnterScope(new JsonPrimitiveScope(new ODataNullValue(),
+                                this.EnterScope(new JsonPrimitiveScope(ODataNullValue.Instance,
                                     this.CurrentNavigationSource, this.CurrentResourceTypeReference, this.CurrentScope.ODataUri));
                             }
                             else
@@ -3637,7 +3637,7 @@ namespace Microsoft.OData.Json
                             {
                                 // null primitive
                                 this.EnterScope(new JsonPrimitiveScope(
-                                    new ODataNullValue(),
+                                    ODataNullValue.Instance,
                                     this.CurrentNavigationSource,
                                     this.CurrentResourceTypeReference,
                                     this.CurrentScope.ODataUri));

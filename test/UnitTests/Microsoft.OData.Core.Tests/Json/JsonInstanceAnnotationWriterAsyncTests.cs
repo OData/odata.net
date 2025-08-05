@@ -82,7 +82,7 @@ namespace Microsoft.OData.Tests.Json
             {
                 new ODataInstanceAnnotation(
                     "favorite.City",
-                    new ODataNullValue()),
+                    ODataNullValue.Instance),
                 "{\"FunFacts@favorite.City\":null"
             };
 
@@ -176,7 +176,7 @@ namespace Microsoft.OData.Tests.Json
         {
             var instanceAnnotation = new ODataInstanceAnnotation(
                     "favorite.Person",
-                    new ODataNullValue());
+                    ODataNullValue.Instance);
 
             var result = await SetupJsonInstanceAnnotationWriterAndRunTestAsync(
                 (jsonInstanceAnnotationWriter) =>

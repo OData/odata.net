@@ -139,46 +139,45 @@ namespace Microsoft.OData.Evaluation
         {
             Debug.Assert(value != null, "value != null");
 
-            string stringValue = value as string;
-            if (stringValue != null)
+            if (value is string stringValue)
             {
                 return stringValue;
             }
 
-            if (value is bool)
+            if (value is bool boolValue)
             {
-                return XmlConvert.ToString((bool)value);
+                return XmlConvert.ToString(boolValue);
             }
 
-            if (value is byte)
+            if (value is byte byteValue)
             {
-                return XmlConvert.ToString((byte)value);
+                return XmlConvert.ToString(byteValue);
             }
 
 #if ODATA_SERVICE || ODATA_CLIENT
-            if (value is DateTime)
+            if (value is DateTime dateTimeValue)
             {
                 // Since the server/client supports DateTime values, convert the DateTime value
                 // to DateTimeOffset and use XmlConvert to convert to String.
                 // If datetime kind is unspecified, then treat it as UTC.
 #if ODATA_SERVICE
-                DateTimeOffset dto = WebUtil.ConvertDateTimeToDateTimeOffset((DateTime)value);
+                DateTimeOffset dto = WebUtil.ConvertDateTimeToDateTimeOffset(dateTimeValue);
 #elif ODATA_CLIENT
-                DateTimeOffset dto = PlatformHelper.ConvertDateTimeToDateTimeOffset((DateTime)value);
+                DateTimeOffset dto = PlatformHelper.ConvertDateTimeToDateTimeOffset(dateTimeValue);
 #endif
 
                 return XmlConvert.ToString(dto);
             }
 #endif
 
-            if (value is decimal)
+            if (value is decimal decimalValue)
             {
-                return XmlConvert.ToString((decimal)value);
+                return XmlConvert.ToString(decimalValue);
             }
 
-            if (value is double)
+            if (value is double doubleValue)
             {
-                string formattedDouble = XmlConvert.ToString((double)value);
+                string formattedDouble = XmlConvert.ToString(doubleValue);
                 formattedDouble = SharedUtils.AppendDecimalMarkerToDouble(formattedDouble);
                 return formattedDouble;
             }
@@ -188,29 +187,29 @@ namespace Microsoft.OData.Evaluation
                 return value.ToString();
             }
 
-            if (value is short)
+            if (value is short shortValue)
             {
-                return XmlConvert.ToString((Int16)value);
+                return XmlConvert.ToString(shortValue);
             }
 
-            if (value is int)
+            if (value is int intValue)
             {
-                return XmlConvert.ToString((Int32)value);
+                return XmlConvert.ToString(intValue);
             }
 
-            if (value is long)
+            if (value is long longValue)
             {
-                return XmlConvert.ToString((Int64)value);
+                return XmlConvert.ToString(longValue);
             }
 
-            if (value is sbyte)
+            if (value is sbyte sbyteValue)
             {
-                return XmlConvert.ToString((SByte)value);
+                return XmlConvert.ToString(sbyteValue);
             }
 
-            if (value is float)
+            if (value is float floatValue)
             {
-                return XmlConvert.ToString((Single)value);
+                return XmlConvert.ToString(floatValue);
             }
 
             byte[] array = value as byte[];
@@ -229,9 +228,9 @@ namespace Microsoft.OData.Evaluation
                 return ((Date)dateOnly).ToString();
             }
 
-            if (value is DateTimeOffset)
+            if (value is DateTimeOffset dateTimeOffset)
             {
-                return XmlConvert.ToString((DateTimeOffset)value);
+                return XmlConvert.ToString(dateTimeOffset);
             }
 
             if (value is TimeOfDay)
@@ -244,27 +243,29 @@ namespace Microsoft.OData.Evaluation
                 return ((TimeOfDay)timeOnly).ToString();
             }
 
-            if (value is TimeSpan)
+            if (value is TimeSpan timespan)
             {
-                return EdmValueWriter.DurationAsXml((TimeSpan)value);
+                return EdmValueWriter.DurationAsXml(timespan);
             }
 
-            Geography geography = value as Geography;
-            if (geography != null)
+            if (value is Geography geography)
             {
                 return WellKnownTextSqlFormatter.Create(true).Write(geography);
             }
 
-            Geometry geometry = value as Geometry;
-            if (geometry != null)
+            if (value is Geometry geometry)
             {
                 return WellKnownTextSqlFormatter.Create(true).Write(geometry);
             }
 
-            ODataEnumValue enumValue = value as ODataEnumValue;
-            if (enumValue != null)
+            if (value is ODataEnumValue oDataEnum)
             {
-                return enumValue.Value;
+                return oDataEnum.Value;
+            }
+
+            if (value is Enum commonEnum)
+            {
+                return commonEnum.ToString();
             }
 
             throw SharedUtils.CreateExceptionForUnconvertableType(value);
@@ -488,6 +489,11 @@ namespace Microsoft.OData.Evaluation
                 }
 
                 string result = this.FormatAndEscapeLiteral(value);
+
+                if (value is Enum)
+                {
+                    return string.Concat("'", result, "'");
+                }
 
                 if (value is byte[])
                 {

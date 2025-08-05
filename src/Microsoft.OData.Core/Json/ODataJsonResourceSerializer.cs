@@ -208,7 +208,7 @@ namespace Microsoft.OData.Json
                 Debug.Assert(resource.MetadataBuilder != null, "resource.MetadataBuilder != null");
                 navigationLinkInfo.NestedResourceInfo.MetadataBuilder = resource.MetadataBuilder;
 
-                this.WriteNavigationLinkMetadata(navigationLinkInfo.NestedResourceInfo, duplicatePropertyNameChecker);
+                this.WriteNavigationLinkMetadata(navigationLinkInfo.NestedResourceInfo, duplicatePropertyNameChecker, count: false);
                 navigationLinkInfo = resource.MetadataBuilder.GetNextUnprocessedNavigationLink();
             }
 
@@ -240,7 +240,8 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="nestedResourceInfo">The navigation link to write the metadata for.</param>
         /// <param name="duplicatePropertyNameChecker">The DuplicatePropertyNameChecker to use.</param>
-        internal void WriteNavigationLinkMetadata(ODataNestedResourceInfo nestedResourceInfo, IDuplicatePropertyNameChecker duplicatePropertyNameChecker)
+        /// <param name="count">The boolean value indicating to write the count value if has.</param>
+        internal void WriteNavigationLinkMetadata(ODataNestedResourceInfo nestedResourceInfo, IDuplicatePropertyNameChecker duplicatePropertyNameChecker, bool count = false)
         {
             Debug.Assert(nestedResourceInfo != null, "nestedResourceInfo != null");
             Debug.Assert(!string.IsNullOrEmpty(nestedResourceInfo.Name), "The nested resource info Name should have been validated by now.");
@@ -260,6 +261,12 @@ namespace Microsoft.OData.Json
                 // The navigation link URL is a property annotation "NestedResourceInfoName@odata.navigationLinkUrl: 'url'"
                 this.ODataAnnotationWriter.WritePropertyAnnotationName(navigationLinkName, ODataAnnotationNames.ODataNavigationLinkUrl);
                 this.JsonWriter.WriteValue(this.UriToString(navigationLinkUrl));
+            }
+
+            if (count && nestedResourceInfo.Count != null)
+            {
+                this.ODataAnnotationWriter.WritePropertyAnnotationName(navigationLinkName, ODataAnnotationNames.ODataCount);
+                this.JsonWriter.WriteValue(nestedResourceInfo.Count.Value);
             }
         }
 
@@ -567,8 +574,9 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="nestedResourceInfo">The navigation link to write the metadata for.</param>
         /// <param name="duplicatePropertyNameChecker">The DuplicatePropertyNameChecker to use.</param>
+        /// <param name="count">he boolean value indicating to write the count value if has.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        internal async Task WriteNavigationLinkMetadataAsync(ODataNestedResourceInfo nestedResourceInfo, IDuplicatePropertyNameChecker duplicatePropertyNameChecker)
+        internal async Task WriteNavigationLinkMetadataAsync(ODataNestedResourceInfo nestedResourceInfo, IDuplicatePropertyNameChecker duplicatePropertyNameChecker, bool count = false)
         {
             Debug.Assert(nestedResourceInfo != null, "nestedResourceInfo != null");
             Debug.Assert(!string.IsNullOrEmpty(nestedResourceInfo.Name), "The nested resource info Name should have been validated by now.");
@@ -591,6 +599,12 @@ namespace Microsoft.OData.Json
                     .ConfigureAwait(false);
                 await this.JsonWriter.WriteValueAsync(this.UriToString(navigationLinkUrl))
                     .ConfigureAwait(false);
+            }
+
+            if (count && nestedResourceInfo.Count.HasValue)
+            {
+                await this.ODataAnnotationWriter.WritePropertyAnnotationNameAsync(navigationLinkName, ODataAnnotationNames.ODataCount).ConfigureAwait(false);
+                await this.JsonWriter.WriteValueAsync(nestedResourceInfo.Count.Value).ConfigureAwait(false);
             }
         }
 
