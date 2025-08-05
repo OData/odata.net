@@ -41,37 +41,37 @@ internal class ODataSerializerV3PayloadWriter : IPayloadWriter<IEnumerable<Custo
                 new()
                 {
                     Name = "Id",
-                    WriteValue = (customer, state) => state.WriteValue(customer.Id)
+                    WriteValue = (customer, writer, state) => writer.WriteValue(customer.Id, state)
                 },
                 new()
                 {
                     Name = "Name",
-                    WriteValue = (customer, state) => state.WriteValue(customer.Name)
+                    WriteValue = (customer, writer, state) => writer.WriteValue(customer.Name, state)
                 },
                 new()
                 {
                     Name = "Emails",
-                    WriteValue = (customer, state) => state.WriteValue(customer.Emails)
+                    WriteValue = (customer, writer, state) => writer.WriteValue(customer.Emails, state)
                 },
                 new()
                 {
                     Name = "Bio",
-                    WriteValue = (customer, state) => state.WriteValue(customer.Bio)
+                    WriteValue = (customer, writer, state) => writer.WriteValue(customer.Bio, state)
                 },
                 new()
                 {
                     Name = "Content",
-                    WriteValue = (customer, state) => state.WriteValue(customer.Content)
+                    WriteValue = (customer, writer, state) => writer.WriteValue(customer.Content, state)
                 },
                 new()
                 {
                     Name = "HomeAddress",
-                    WriteValue = (customer, state) => state.WriteValue(customer.HomeAddress)
+                    WriteValue = (customer, writer, state) => writer.WriteValue(customer.HomeAddress, state)
                 },
                 new()
                 {
                     Name = "Addresses",
-                    WriteValue = (customer, state) => state.WriteValue(customer.Addresses)
+                    WriteValue = (customer, writer, state) => writer.WriteValue(customer.Addresses, state)
                 }
             ]
         });
@@ -82,18 +82,18 @@ internal class ODataSerializerV3PayloadWriter : IPayloadWriter<IEnumerable<Custo
                 new()
                 {
                     Name = "Street",
-                    WriteValue = (address, state) => state.WriteValue(address.Street)
+                    WriteValue = (address, writer, state) => writer.WriteValue(address.Street, state)
                 },
                 new()
                 {
                     Name = "City",
-                    WriteValue = (address, state) => state.WriteValue(address.City)
+                    WriteValue = (address, writer, state) => writer.WriteValue(address.City, state)
                 },
                 new()
                 {
                     Name = "Misc",
                     // hack
-                    WriteValue = (address, state) => state.WriteValue(address.Misc.ToString())
+                    WriteValue = (address, writer, state) => writer.WriteValue(address.Misc.ToString(), state)
                 }
             ]
         });
