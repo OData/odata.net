@@ -67,11 +67,6 @@ namespace Microsoft.OData.UriParser
 
                     string memberName = constantNode.Value.ToString();
                     IEdmEnumType enumType = targetTypeReference.Definition as IEdmEnumType;
-                    if (enumType.ContainsMember(memberName, out IEdmEnumMember edmEnumMember, comparison))
-                    {
-                        string literalText = ODataUriUtils.ConvertToUriLiteral(constantNode.Value, default(ODataVersion));
-                        return new ConstantNode(new ODataEnumValue(edmEnumMember.Name, enumType.ToString()), literalText, targetTypeReference);
-                    }
 
                     // If the member name is an integral value, we should try to convert it to the enum member name and find the enum member with the matching integral value
                     if (long.TryParse(memberName, out long memberIntegralValue))
@@ -91,6 +86,13 @@ namespace Microsoft.OData.UriParser
                                 return new ConstantNode(new ODataEnumValue(flagsValue, enumType.ToString()), literalText, targetTypeReference);
                             }
                         }
+                    }
+
+                    // Check if the member name is a valid enum member name
+                    if (enumType.ContainsMember(memberName, out IEdmEnumMember edmEnumMember, comparison))
+                    {
+                        string literalText = ODataUriUtils.ConvertToUriLiteral(constantNode.Value, default(ODataVersion));
+                        return new ConstantNode(new ODataEnumValue(edmEnumMember.Name, enumType.ToString()), literalText, targetTypeReference);
                     }
 
                     // If the member name is a string representation of a flags value,
