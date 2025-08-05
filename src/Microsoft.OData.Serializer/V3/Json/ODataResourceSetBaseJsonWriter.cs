@@ -8,7 +8,8 @@ using System.Threading.Tasks;
 namespace Microsoft.OData.Serializer.V3.Json;
 
 #pragma warning disable CA1005 // Avoid excessive parameters on generic types
-public abstract class ODataResourceSetBaseJsonWriter<TCollection, TElement, TCustomState>(ODataResourceTypeInfo<TCollection, TCustomState>? typeInfo = null) : ODataJsonWriter<TCollection, TCustomState>
+public abstract class ODataResourceSetBaseJsonWriter<TCollection, TElement, TCustomState>(ODataResourceTypeInfo<TCollection, TCustomState>? typeInfo = null) :
+    ODataJsonWriter<TCollection, TCustomState>, ICountWriter<TCustomState>, INextLinkWriter<TCustomState>
 #pragma warning restore CA1005 // Avoid excessive parameters on generic types
 {
     public override async ValueTask Write(TCollection value, ODataJsonWriterState<TCustomState> state)
@@ -56,13 +57,13 @@ public abstract class ODataResourceSetBaseJsonWriter<TCollection, TElement, TCus
 
     protected abstract ValueTask WriteElements(TCollection value, ODataJsonWriterState<TCustomState> state);
 
-    protected virtual async ValueTask WritePreValueMetadata(TCollection value, Adapters.ODataPropertyInfo? propertyInfo, ODataJsonWriterState<TCustomState> state)
+    protected virtual  ValueTask WritePreValueMetadata(TCollection value, Adapters.ODataPropertyInfo? propertyInfo, ODataJsonWriterState<TCustomState> state)
     {
         // TODO: We should probably expose a ShouldWriteXXX method for metadata to give
         // users an easy way to control whether certain metadata should be written
         if (state.IsTopLevel() && state.MetadataLevel >= ODataMetadataLevel.Minimal)
         {
-            await WriteContextUrl(value, state);
+            return WriteContextUrl(value, state);
         }
 
         //// TODO: should this condition be implemented by the WriteCountProperty method?
@@ -72,8 +73,10 @@ public abstract class ODataResourceSetBaseJsonWriter<TCollection, TElement, TCus
         //    await WriteCountProperty(value, state, context);
         //}
 
-        await WriteNextLinkProperty(value, propertyInfo,  state);
-        await WriteCountProperty(value, propertyInfo, state);
+        WriteNextLinkProperty(value, propertyInfo,  state);
+        WriteCountProperty(value, propertyInfo, state);
+
+        return ValueTask.CompletedTask;
     }
 
     protected virtual ValueTask WriteContextUrl(TCollection value, ODataJsonWriterState<TCustomState> state)
@@ -88,72 +91,69 @@ public abstract class ODataResourceSetBaseJsonWriter<TCollection, TElement, TCus
         return ValueTask.CompletedTask;
     }
 
-    protected virtual ValueTask WriteCountProperty(TCollection value, Adapters.ODataPropertyInfo? propertyInfo, ODataJsonWriterState<TCustomState> state)
+    protected virtual void WriteCountProperty(TCollection value, Adapters.ODataPropertyInfo? propertyInfo, ODataJsonWriterState<TCustomState> state)
     {
         var jsonWriter = state.JsonWriter;
-        if (typeInfo?.HasCount == null)
+        if (typeInfo?.GetCount != null)
         {
-            // What should be the default?
-            return ValueTask.CompletedTask;
-        }
-
-        if (typeInfo.HasCount(value, state))
-        {
-            // TODO: Currently this is handled in the parent type info. But perhaps it's better to handle it here.
-            //if (propertyInfo != null)
-            //{
-            //    JsonMetadataHelpers.WritePropertyAnnotationName(jsonWriter, propertyInfo.Utf8Name.Span, "odata.count"u8);
-            //}
-            //else
-            //{
-            //    state.JsonWriter.WritePropertyName("@odata.count"u8);
-            //}
-            
-            state.JsonWriter.WritePropertyName("odata.count"u8);
-
-            // TODO: this should be validated when type info is registered.
-            if (typeInfo.WriteCount == null)
+            var count = typeInfo.GetCount(value, state);
+            if (count.HasValue)
             {
-                throw new Exception("WriteCount function must be provided if HasCount returns true");
+                jsonWriter.WritePropertyName("odata.count"u8);
+                jsonWriter.WriteNumberValue(count.Value);
             }
-
-            return typeInfo.WriteCount(value, state);
         }
-
-        return ValueTask.CompletedTask;
+        else
+        {
+            typeInfo?.WriteCount?.Invoke(value, this, state);
+        }
     }
 
-    protected virtual ValueTask WriteNextLinkProperty(TCollection value, Adapters.ODataPropertyInfo? propertyInfo, ODataJsonWriterState<TCustomState> state)
+    protected virtual void WriteNextLinkProperty(TCollection value, Adapters.ODataPropertyInfo? propertyInfo, ODataJsonWriterState<TCustomState> state)
     {
 
         var jsonWriter = state.JsonWriter;
-        if (typeInfo?.HasNextLink == null)
+        if (typeInfo?.GetNextLink != null)
         {
-            // What should be the default?
-            return ValueTask.CompletedTask;
+            var nextLink = typeInfo.GetNextLink(value, state);
+            if (!string.IsNullOrEmpty(nextLink))
+            {
+                jsonWriter.WritePropertyName("odata.nextLink"u8);
+                jsonWriter.WriteStringValue(nextLink);
+            }
         }
-
-        if (typeInfo.HasNextLink(value, state))
+        else
         {
-            if (propertyInfo != null)
-            {
-                JsonMetadataHelpers.WritePropertyAnnotationName(jsonWriter, propertyInfo.Utf8Name.Span, "odata.nextLink"u8);
-            }
-            else
-            {
-                state.JsonWriter.WritePropertyName("@odata.nextLink"u8);
-            }
-
-            // TODO: this should be validated when type info is registered.
-            if (typeInfo.WriteNextLink == null)
-            {
-                throw new Exception("WriteNextLink function must be provided if HastNextLink returns true");
-            }
-
-            return typeInfo.WriteNextLink(value, state);
+            typeInfo?.WriteNextLink?.Invoke(value, this, state);
         }
+    }
 
-        return ValueTask.CompletedTask;
+    public void WriteCount(long count, ODataJsonWriterState<TCustomState> state)
+    {
+        var jsonWriter = state.JsonWriter;
+        jsonWriter.WritePropertyName("odata.count"u8);
+        jsonWriter.WriteNumberValue(count);
+    }
+
+    public void WriteNextLink(ReadOnlySpan<char> nextLink, ODataJsonWriterState<TCustomState> state)
+    {
+        var jsonWriter = state.JsonWriter;
+        jsonWriter.WritePropertyName("odata.nextLink"u8);
+        jsonWriter.WriteStringValue(nextLink);
+    }
+
+    public void WriteNextLink(ReadOnlySpan<byte> nextLink, ODataJsonWriterState<TCustomState> state)
+    {
+        var jsonWriter = state.JsonWriter;
+        jsonWriter.WritePropertyName("odata.nextLink"u8);
+        jsonWriter.WriteStringValue(nextLink);
+    }
+
+    public void WriteNextLink(Uri nextLink, ODataJsonWriterState<TCustomState> state)
+    {
+        var jsonWriter = state.JsonWriter;
+        jsonWriter.WritePropertyName("odata.nextLink"u8);
+        jsonWriter.WriteStringValue(nextLink.AbsoluteUri);
     }
 }
 

@@ -39,18 +39,18 @@ public class ODataResourceTypeInfo<T, TCustomState> : ODataResourceTypeInfo
     // - The user should pick only on of these per annotation. Ideally, when initializing the serialzer options, we should throw if both are set for the same annotation.
 
     public Func<T, ODataJsonWriterState<TCustomState>, long?>? GetCount { get; init; }
-    public Func<T, ICountWriter<TCustomState>, ODataJsonWriterState<TCustomState>, ValueTask>? WriteCount { get; init; }
+    public Action<T, ICountWriter<TCustomState>, ODataJsonWriterState<TCustomState>>? WriteCount { get; init; }
 
     // Opted to use string for next link as the "common" representation, since Uri is expensive and I don't want to force it as the default.
     // Need to review this with the team because some may argue that Uri as default makes more sense since the intent is clearer and we're sure
     // what we're writing is a valid uri.
     public Func<T, ODataJsonWriterState<TCustomState>, string>? GetNextLink { get; init; }
 
-    public Func<T, INextLinkWriter<TCustomState>, ODataJsonWriterState<TCustomState>, ValueTask>? WriteNextLink { get; init; }
+    public Action<T, INextLinkWriter<TCustomState>, ODataJsonWriterState<TCustomState>>? WriteNextLink { get; init; }
 
     public Func<T, ODataJsonWriterState<TCustomState>, string>? GetEtag { get; init; }
 
-    public Func<T, IEtagWriter<TCustomState>, ODataJsonWriterState<TCustomState>, ValueTask>? WriteEtag { get; init; }
+    public Action<T, IEtagWriter<TCustomState>, ODataJsonWriterState<TCustomState>>? WriteEtag { get; init; }
 
     public Func<T, IPropertyWriter<T, TCustomState>, ODataJsonWriterState<TCustomState>, ValueTask>? WriteProperties { get; init; }
 

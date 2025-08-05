@@ -5,6 +5,6 @@ using System.Text;
 
 namespace Microsoft.OData.Serializer.V3.Adapters;
 
-public class ODataPropertyInfo<TDeclaringType> : ODataPropertyInfo<TDeclaringType, object, DefaultState>
-{
-}
+//public class ODataPropertyInfo<TDeclaringType> : ODataPropertyInfo<TDeclaringType, object, DefaultState>
+//{
+//}

@@ -9,12 +9,17 @@ using System.Threading.Tasks;
 namespace Microsoft.OData.Serializer.V3.Adapters;
 
 #pragma warning disable CA1005 // Avoid excessive parameters on generic types
-public class ODataPropertyInfo<TDeclaringType, TValue, TCustomState> : ODataPropertyInfo
+public class ODataPropertyInfo<TDeclaringType, TCustomState> :
+    ODataPropertyInfo, IValueWriter<TCustomState>, ICountWriter<TCustomState>, INextLinkWriter<TCustomState>
 #pragma warning restore CA1005 // Avoid excessive parameters on generic types
 {
-    public  Func<TDeclaringType, IValueWriter<TCustomState>, ODataJsonWriterState<TCustomState>, ValueTask> WriteValue { get; init; }
+    // TODO: this property name conflicts with the method WriteValue from IValueWriter. Perhaps IValueWriter.WriteValue should be renamed?
+    public required Func<TDeclaringType, IValueWriter<TCustomState>, ODataJsonWriterState<TCustomState>, ValueTask> WriteValue { get; init; }
 
-    public Func<TDeclaringType, ODataJsonWriterState<TCustomState>, TValue>? GetValue { get; init; }
+    // TODO: implement a shorthad GetValue hook of type Func<TDeclaringType, ODataJsonWriterState<TCustomState>, TValue>
+    // which would require an extra generic type parameter TValue that's a bit hard to defined since we'd
+    // also want a default cause that only takes 2 parameters <TDeclaringType, TValue>
+    // which would conflict with the current <TDeclaringType, TCustomState> definition.
 
     // TODO: Should nested count handlers be defined on the property info or the type info?
     // We already have count handlers on the type info, keeping them there would provide
@@ -35,12 +40,117 @@ public class ODataPropertyInfo<TDeclaringType, TValue, TCustomState> : ODataProp
     // It simplifies the configuration for the end user, the annotations are always on the type info.
     public Func<TDeclaringType, ODataJsonWriterState<TCustomState>, long?>? GetCount { get; init; }
 
-    public Func<TDeclaringType, ICountWriter<TCustomState>, ODataJsonWriterState<TCustomState>, ValueTask>? WriteCount { get; init; }
+    public Action<TDeclaringType, ICountWriter<TCustomState>, ODataJsonWriterState<TCustomState>>? WriteCount { get; init; }
 
     public Func<TDeclaringType, ODataJsonWriterState<TCustomState>, string?>? GetNextLink { get; init; }
 
-    public Func<TDeclaringType, INextLinkWriter<TCustomState>, ODataJsonWriterState<TCustomState>, ValueTask>? WriteNextLink { get; init; }
+    public Action<TDeclaringType, INextLinkWriter<TCustomState>, ODataJsonWriterState<TCustomState>>? WriteNextLink { get; init; }
 
     public Func<TDeclaringType, ODataJsonWriterState<TCustomState>, bool>? ShouldSkip { get; init; }
 
+    internal async ValueTask WriteProperty(TDeclaringType resource, ODataJsonWriterState<TCustomState> state)
+    {
+        await this.WritePreValueAnnotations(resource, state);
+        await this.WritePropertyValue(resource, state);
+    }
+
+    internal async ValueTask WriteProperty<TValue>(TDeclaringType resource, TValue value, ODataJsonWriterState<TCustomState> state)
+    {
+        await this.WritePreValueAnnotations(resource, state);
+        await this.WritePropertyValue(resource, value, state);
+    }
+
+    internal ValueTask WritePreValueAnnotations(TDeclaringType resource, ODataJsonWriterState<TCustomState> state)
+    {
+        this.WriteCountInternal(resource, state);
+        this.WriteNextLinkInternal(resource, state);
+        return ValueTask.CompletedTask;
+    }
+
+    private ValueTask WritePropertyValue(TDeclaringType resource, ODataJsonWriterState<TCustomState> state)
+    {
+        return this.WriteValue(resource, this, state);
+    }
+
+    private ValueTask WritePropertyValue<TValue>(TDeclaringType resource, TValue value, ODataJsonWriterState<TCustomState> state)
+    {
+        state.JsonWriter.WritePropertyName(this.Utf8Name.Span);
+        return state.WriteValue(value);
+    }
+
+    private void WriteCountInternal(TDeclaringType resource, ODataJsonWriterState<TCustomState> state)
+    {
+        if (this.GetCount != null)
+        {
+            var count = this.GetCount(resource, state);
+            if (count.HasValue)
+            {
+                JsonMetadataHelpers.WritePropertyAnnotationName(state.JsonWriter, this.Utf8Name.Span, "odata.count"u8);
+                state.JsonWriter.WriteNumberValue(count.Value);
+            }
+        }
+        else
+        {
+            this.WriteCount?.Invoke(resource, this, state);
+        }
+    }
+
+    private void WriteNextLinkInternal(TDeclaringType resource, ODataJsonWriterState<TCustomState> state)
+    {
+        if (this.GetNextLink != null)
+        {
+            var nextLink = this.GetNextLink(resource, state);
+            if (!string.IsNullOrEmpty(nextLink))
+            {
+                JsonMetadataHelpers.WritePropertyAnnotationName(state.JsonWriter, this.Utf8Name.Span, "odata.nextLink"u8);
+                state.JsonWriter.WriteStringValue(nextLink);
+            }
+        }
+        else
+        {
+            this.WriteNextLink?.Invoke(resource, this, state);
+        }
+    }
+
+    void ICountWriter<TCustomState>.WriteCount(long count, ODataJsonWriterState<TCustomState> state)
+    {
+        var jsonWriter = state.JsonWriter;
+        JsonMetadataHelpers.WritePropertyAnnotationName(jsonWriter, this.Utf8Name.Span, "odata.count"u8);
+        jsonWriter.WriteNumberValue(count);
+    }
+
+    void INextLinkWriter<TCustomState>.WriteNextLink(ReadOnlySpan<char> nextLink, ODataJsonWriterState<TCustomState> state)
+    {
+        var jsonWriter = state.JsonWriter;
+        JsonMetadataHelpers.WritePropertyAnnotationName(jsonWriter, this.Utf8Name.Span, "odata.nextLink"u8);
+        jsonWriter.WriteStringValue(nextLink);
+    }
+
+    void INextLinkWriter<TCustomState>.WriteNextLink(ReadOnlySpan<byte> nextLink, ODataJsonWriterState<TCustomState> state)
+    {
+        var jsonWriter = state.JsonWriter;
+        JsonMetadataHelpers.WritePropertyAnnotationName(jsonWriter, this.Utf8Name.Span, "odata.nextLink"u8);
+        jsonWriter.WriteStringValue(nextLink);
+    }
+
+    void INextLinkWriter<TCustomState>.WriteNextLink(Uri nextLink, ODataJsonWriterState<TCustomState> state)
+    {
+        var jsonWriter = state.JsonWriter;
+        JsonMetadataHelpers.WritePropertyAnnotationName(jsonWriter, this.Utf8Name.Span, "odata.nextLink"u8);
+        jsonWriter.WriteStringValue(nextLink.AbsoluteUri);
+    }
+
+    ValueTask IValueWriter<TCustomState>.WriteValue<T>(T value, ODataJsonWriterState<TCustomState> state)
+    {
+        var jsonWriter = state.JsonWriter;
+        jsonWriter.WritePropertyName(this.Utf8Name.Span);
+        return state.WriteValue(value);
+    }
+}
+
+#pragma warning disable CA1005 // Avoid excessive parameters on generic types
+public class ODataPropertyInfo<TDeclaringType, TValue, TCustomState> : ODataPropertyInfo<TDeclaringType, TCustomState>
+#pragma warning restore CA1005 // Avoid excessive parameters on generic types
+{
+    public Func<TDeclaringType, TValue, ODataJsonWriterState<TCustomState>, TValue>? GetValue { get; init; }
 }
