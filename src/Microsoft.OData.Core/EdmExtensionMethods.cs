@@ -172,8 +172,7 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="enumType">The <see cref="IEdmEnumType"/> to search for the member.</param>
         /// <param name="memberName">The name of the member to locate within the enum type.</param>
-        /// <param name="exactMemberName">When this method returns, contains the <see cref="IEdmEnumMember"/> that matches the specified name, if a
-        /// match is found; otherwise, <see langword="null"/>.</param>
+        /// <param name="exactMemberName">When this method returns, contains the <see cref="IEdmEnumMember"/> that matches the specified name, if a match is found; otherwise, null.</param>
         /// <param name="comparison">The comparison type to use for string comparison. Default is Ordinal.</param>
         /// <returns>True if the member name exists in the enum type; otherwise, false.</returns>
         public static bool ContainsMember(this IEdmEnumType enumType, string memberName, out IEdmEnumMember exactMemberName, StringComparison comparison = StringComparison.Ordinal)
@@ -196,8 +195,7 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="enumType">The enum type to search for the member.</param>
         /// <param name="memberName">The name of the member to locate, represented as a <see cref="ReadOnlySpan{T}"/> of characters.</param>
-        /// <param name="comparison">The <see cref="StringComparison"/> to use when comparing the member names. The default is <see
-        /// cref="StringComparison.Ordinal"/>.</param>
+        /// <param name="comparison">The <see cref="StringComparison"/> to use when comparing the member names. The default is <see cref="StringComparison.Ordinal"/>.</param>
         /// <returns>True if the member name exists in the enum type; otherwise, false.</returns>
         public static bool ContainsMember(this IEdmEnumType enumType, ReadOnlySpan<char> memberName, StringComparison comparison = StringComparison.Ordinal)
         {
@@ -217,10 +215,8 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="enumType">The enum type to search for the member.</param>
         /// <param name="memberName">The name of the member to locate, represented as a <see cref="ReadOnlySpan{T}"/> of characters.</param>
-        /// <param name="exactMemberName">When this method returns, contains the <see cref="IEdmEnumMember"/> that matches the specified name, if a
-        /// match is found; otherwise, <see langword="null"/>.</param>
-        /// <param name="comparison">The <see cref="StringComparison"/> to use when comparing the member names. The default is <see
-        /// cref="StringComparison.Ordinal"/>.</param>
+        /// <param name="exactMemberName">When this method returns, contains the <see cref="IEdmEnumMember"/> that matches the specified name, if a match is found; otherwise, null.</param>
+        /// <param name="comparison">The <see cref="StringComparison"/> to use when comparing the member names. The default is <see cref="StringComparison.Ordinal"/>.</param>
         /// <returns>True if the member name exists in the enum type; otherwise, false.</returns>
         public static bool ContainsMember(this IEdmEnumType enumType, ReadOnlySpan<char> memberName, out IEdmEnumMember exactMemberName, StringComparison comparison = StringComparison.Ordinal)
         {
