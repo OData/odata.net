@@ -102,60 +102,64 @@ public class V3ODataSerializerTests
 
         options.AddTypeInfo<IList<Customer>>(new()
         {
-            HasNextLink = (customers, state) => true,
-            WriteNextLink = (customers, state) => state.WriteValue(new Uri("http://service/odata/Customers?$skip=2", UriKind.Absolute))
+            GetNextLink = (customers, state) => new Uri("http://service/odata/Customers?$skip=2", UriKind.Absolute).AbsoluteUri
         });
 
 
         options.AddTypeInfo<Customer>(new()
         {
-            HasEtag = (customers, state) => true,
-            WriteEtag = (customer, state) => state.WriteValue($"W/\"{customer.Id}\""),
+            WriteEtag = (customer, writer, state) => writer.WriteEtag($"W/\"{customer.Id}\"", state),
             Properties =
             [
                 new()
                 {
                     Name = "Id",
-                    WriteValue = (customer, state) => state.WriteValue(customer.Id)
+                    WriteValue = (customer, writer, state) => writer.WriteValue(customer.Id, state)
                 },
                 new()
                 {
                     Name = "Name",
-                    WriteValue = (customer, state) => state.WriteValue(customer.Name)
+                    WriteValue = (customer, writer, state) => writer.WriteValue(customer.Name, state)
                 },
                 new()
                 {
                     Name = "Emails",
-                    WriteValue = (customer, state) => state.WriteValue(customer.Emails)
+                    WriteValue = (customer, writer, state) => writer.WriteValue(customer.Emails, state)
                 },
                 new()
                 {
                     Name = "OtherAddresses",
-                    WriteValue = (customer, state) => state.WriteValue(customer.OtherAddresses)
+                    WriteValue = (customer, writer, state) => writer.WriteValue(customer.OtherAddresses, state)
                 },
                 new()
                 {
                     Name = "Orders",
-                    WriteValue = (customer, state) => state.WriteValue(customer.Orders),
+                    WriteValue = (customer, writer, state) => writer.WriteValue(customer.Orders, state),
                     // TODO: Considering whether to have the count annotation of the orders type info instead.
                     // TODO: this should be dynamic logic that e.g. checks that the $count=true is present in the $expand.
                     // But it would be expensive to compute here unless the $expand is already parsed internally.
-                    HasCount = (customer, state) => true,
-                    WriteCount = (customer, state) => state.WriteValue(customer.Orders.Count),
+                    WriteCount = (customer, writer, state) => writer.WriteCount(customer.Orders.Count, state),
 
-                    // TODO: Realistically, this information would be computed from the result of the orders collection computation.
-                    HasNextLink = (customer, state) => customer.Id == 1,
                     // A slight advantage of nested annotation handlers on the declaring type is that you still have access to the parent object.
-                    // But this advantage breaks apart if we need a value from a grandparent object.
-                    WriteNextLink = (customer, state) => state.WriteValue(new Uri($"http://service/odata/Customers({customer.Id})/Orders?$skip=2", UriKind.Absolute))
+                    // But this advantage breaks apart if we need a value from a grandparent object. But that's where custom state would come in handy.
+                    GetNextLink = (customer, state) =>
+                    {
+                        // TODO: Realistically, this information would be computed from the result of the orders collection computation.
+                        if (customer.Id == 1)
+                        {
+                            return new Uri($"http://service/odata/Customers({customer.Id})/Orders?$skip=2", UriKind.Absolute).AbsoluteUri;
+                        }
+
+                        return null;
+                    }
+                        
     },
                 new()
                 {
                     Name = "WishList",
-                    WriteValue = (customer, state) => state.WriteValue(customer.WishList),
+                    WriteValue = (customer, writer, state) => writer.WriteValue(customer.WishList, state),
 
-                    HasCount = (customer, state) => true,
-                    WriteCount = (customer, state) => state.WriteValue(customer.WishList.Count),
+                    GetCount = (customer, state) => customer.WishList.Count,
                 }
             ]
         });
@@ -167,12 +171,12 @@ public class V3ODataSerializerTests
                 new()
                 {
                     Name = "City",
-                    WriteValue = (address, state) => state.WriteValue(address.City)
+                    WriteValue = (address, writer, state) => writer.WriteValue(address.City, state)
                 },
                 new()
                 {
                     Name = "Country",
-                    WriteValue = (address, state) => state.WriteValue(address.Country)
+                    WriteValue = (address, writer, state) => writer.WriteValue(address.Country, state)
                 }
             ]
         });
@@ -188,44 +192,40 @@ public class V3ODataSerializerTests
 
         options.AddTypeInfo<Order>(new()
         {
-            HasEtag = (order, state) => true,
-            WriteEtag = (order, state) => state.WriteValue($"W/\"order-{order.Id}\""),
+            GetEtag = (order, state) => $"W/\"order-{order.Id}\"",
             Properties =
             [
                 new()
                 {
                     Name = "Id",
-                    WriteValue = (order, state) => state.WriteValue(order.Id)
+                    WriteValue = (order, writer, state) => writer.WriteValue(order.Id, state)
                 },
                 new()
                 {
                     Name = "OrderDate",
-                    WriteValue = (order, state) => state.WriteValue(order.OrderDate)
+                    WriteValue = (order, writer, state) => writer.WriteValue(order.OrderDate, state)
                 },
                 new()
                 {
                     Name = "Status",
-                    WriteValue = (order, state) => state.WriteValue(order.Status)
+                    WriteValue = (order, writer, state) => writer.WriteValue(order.Status, state)
                 },
                 new()
                 {
                     Name = "Products",
-                    WriteValue = (order, state) => state.WriteValue(order.Products),
+                    WriteValue = (order, writer, state) => writer.WriteValue(order.Products, state),
 
-                    HasCount = (order, state) => true,
-                    WriteCount = (order, state) => state.WriteValue(order.Products.Count),
-
-                    HasNextLink = (order, state) => true,
+                    WriteCount = (order, writer, state) => writer.WriteCount(order.Products.Count, state),
                     // TODO: we don't have access to the customer here do we compute the correct next link?
                     // We need a performant, customizable and generalizable way to handle this.
                     // Perhaps we need a mechanism for passing and modifying custom state,
                     // as well as exposing some state to the user.
-                    WriteNextLink = (order, state) =>
+                    WriteNextLink = (order, writer, state) =>
                     {
                         // TODO: hack
                         int skip = order.Id == 1 ? 2 : 3;
                         int customerId = order.Id == 1 || order.Id == 2 ? 1 : 2;
-                        return state.WriteValue(new Uri($"http://service/odata/Customers({customerId})/Orders({order.Id})/Products?$skip={skip}", UriKind.Absolute));
+                        writer.WriteNextLink(new Uri($"http://service/odata/Customers({customerId})/Orders({order.Id})/Products?$skip={skip}", UriKind.Absolute), state);
                     }
                 }
             ]
@@ -233,25 +233,24 @@ public class V3ODataSerializerTests
 
         options.AddTypeInfo<Product>(new()
         {
-            HasEtag = (product, state) => true,
-            WriteEtag = (product, state) => state.WriteValue($"W/\"product-{product.Id}\""),
+            WriteEtag = (product, writer, state) => writer.WriteEtag($"W/\"product-{product.Id}\"", state),
 
             Properties =
             [
                 new()
                 {
                     Name = "Id",
-                    WriteValue = (product, state) => state.WriteValue(product.Id)
+                    WriteValue = (product, writer, state) => writer.WriteValue(product.Id, state)
                 },
                 new()
                 {
                     Name = "Name",
-                    WriteValue = (product, state) => state.WriteValue(product.Name)
+                    WriteValue = (product, writer, state) => writer.WriteValue(product.Name, state)
                 },
                 new()
                 {
                     Name = "Price",
-                    WriteValue = (product, state) => state.WriteValue(product.Price),
+                    WriteValue = (product, writer, state) => writer.WriteValue(product.Price, state),
 
                     // TODO: This should be more dynamic logic, that e.g. takes the $SelectExpand into consideration
                     // SelectExpand traversal would be expensive here, unless it's already stored into the state.
@@ -262,7 +261,7 @@ public class V3ODataSerializerTests
                 new()
                 {
                     Name = "Category",
-                    WriteValue = (product, state) => state.WriteValue(product.Category),
+                    WriteValue = (product, writer, state) => writer.WriteValue(product.Category, state),
                     // TODO: This should be more dynamic logic, that e.g. takes the $SelectExpand into consideration
                     // SelectExpand traversal would be expensive here, unless it's already stored into the state.
                     // Need to think about how to handle this in a performant, customizable and generalizable way.
