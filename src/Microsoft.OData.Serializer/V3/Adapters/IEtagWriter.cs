@@ -7,7 +7,8 @@ using System.Threading.Tasks;
 
 namespace Microsoft.OData.Serializer.V3.Adapters;
 
-public interface IValueWriter<TCustomState>
+public interface IEtagWriter<TCustomState>
 {
-    ValueTask WriteValue<T>(T value, ODataJsonWriterState<TCustomState> state);
+    void WriteEtag(ReadOnlySpan<char> etag, ODataJsonWriterState<TCustomState> state);
+    void WriteEtag(ReadOnlySpan<byte> etag, ODataJsonWriterState<TCustomState> state);
 }

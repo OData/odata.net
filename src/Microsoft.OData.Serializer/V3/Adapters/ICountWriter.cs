@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Microsoft.OData.Serializer.V3.Adapters;
 
-public interface IValueWriter<TCustomState>
+public interface ICountWriter<TCustomState>
 {
-    ValueTask WriteValue<T>(T value, ODataJsonWriterState<TCustomState> state);
+    void WriteCount(long count, ODataJsonWriterState<TCustomState> state);
 }
