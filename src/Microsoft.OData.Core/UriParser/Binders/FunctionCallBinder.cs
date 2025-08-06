@@ -720,7 +720,7 @@ namespace Microsoft.OData.UriParser
                     Error.Format(SRResources.MetadataBinder_CastOrIsOfExpressionWithWrongNumberOfOperands, args.Count));
             }
 
-            QueryNode queryNode = args[args.Count - 1];
+            QueryNode queryNode = args[^1];
 
             string typeArgumentFullName = null;
             IEdmTypeReference returnType = null;
