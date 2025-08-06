@@ -186,8 +186,7 @@ namespace Microsoft.OData.UriParser
             // Store the parent expression of the current argument.
             Stack<QueryToken> expressionParents = new Stack<QueryToken>();
             bool isFunctionCallNameCastOrIsOf = functionName.Length > 0 &&
-                functionName.SequenceEqual(ExpressionConstants.UnboundFunctionCast.AsSpan()) || functionName.SequenceEqual(ExpressionConstants.UnboundFunctionIsOf.AsSpan());
-
+                (functionName.SequenceEqual(ExpressionConstants.UnboundFunctionCast.AsSpan()) || functionName.SequenceEqual(ExpressionConstants.UnboundFunctionIsOf.AsSpan()));
             List<FunctionParameterToken> argList = new List<FunctionParameterToken>();
             while (true)
             {
