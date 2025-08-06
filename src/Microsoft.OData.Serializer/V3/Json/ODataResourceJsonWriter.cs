@@ -4,6 +4,7 @@ using Microsoft.OData.Serializer.V3.Core;
 using Microsoft.OData.Serializer.V3.Json.Writers;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -12,7 +13,8 @@ using System.Threading.Tasks;
 namespace Microsoft.OData.Serializer.V3.Json;
 
 internal class ODataResourceJsonWriter<T, TCustomState>(ODataTypeInfo<T, TCustomState> typeInfo)
-    : ODataWriter<T, ODataJsonWriterState<TCustomState>>, IPropertyWriter<T, TCustomState>,
+    : ODataWriter<T, ODataJsonWriterState<TCustomState>>,
+    IPropertyWriter<T, TCustomState>,
     IEtagWriter<TCustomState>
 {
     public override async ValueTask Write(T value, ODataJsonWriterState<TCustomState> state)
@@ -57,6 +59,7 @@ internal class ODataResourceJsonWriter<T, TCustomState>(ODataTypeInfo<T, TCustom
         ODataTypeInfo<T, TCustomState> typeInfo,
         ODataJsonWriterState<TCustomState> state)
     {
+        Debug.Assert(typeInfo.Properties != null, "TypeInfo should have properties defined.");
         for (int i = 0; i < typeInfo.Properties.Count; i++)
         {
             var propertyInfo = typeInfo.Properties[i];
@@ -90,6 +93,15 @@ internal class ODataResourceJsonWriter<T, TCustomState>(ODataTypeInfo<T, TCustom
             }
 
             // if async source needs more data, we should return false as well
+        }
+
+        object? dynamicProperties = typeInfo.GetDynamicProperties?.Invoke(value, state);
+        if (dynamicProperties != null)
+        {
+            // Should allow a GetDynamicProperties to return a different container type for the same typeInfo?
+            // If it can't change, then we could cache the handler on the typeInfo.
+            var handler = state.GetDynamicPropertiesHandler(dynamicProperties.GetType());
+            await handler.WriteDynamicProperties(dynamicProperties, DefaultDynamicPropertyWriter<TCustomState>.Instance, state);
         }
     }
 
@@ -150,7 +162,9 @@ internal class ODataResourceJsonWriter<T, TCustomState>(ODataTypeInfo<T, TCustom
             var annotations = typeInfo.GetCustomPreValueAnnotations(value, state);
             if (annotations != null)
             {
-                var handler = state.GetCustomAnnotationsHandler(annotations);
+                // TODO: Should we allow GetCustomPreValueAnnotations to return
+                // a different type on different calls? If not, we could cache the handler on the type info or resource writer.
+                var handler = state.GetCustomAnnotationsHandler(annotations.GetType());
                 await handler.WriteAnnotations(annotations, CustomInstanceAnnotationWriter<TCustomState>.Instance, state);
             }
         }
@@ -204,6 +218,8 @@ internal class ODataResourceJsonWriter<T, TCustomState>(ODataTypeInfo<T, TCustom
     {
         return WriteProperty(resource, propertyInfo, state);
     }
+
+    // TODO: The etag writer should probably be a singleton since it doesn't access any state.
 
     void IEtagWriter<TCustomState>.WriteEtag(ReadOnlySpan<char> etag, ODataJsonWriterState<TCustomState> state)
     {

@@ -97,10 +97,10 @@ public abstract class ODataResourceSetBaseJsonWriter<TCollection, TElement, TCus
             var annotations = typeInfo.GetCustomPreValueAnnotations(value, state);
             if (annotations is not null)
             {
-                // TODO: We should consider retrieving the handler by annotatons container type
-                // then cache the handler on the type info.
+                // TODO: Should we allow GetCustomPreValueAnnotations to return
+                // a different type on different calls? If not, we could cache the handler on the writer or type info.
                 var jsonWriter = state.JsonWriter;
-                var handler = state.GetCustomAnnotationsHandler(annotations);
+                var handler = state.GetCustomAnnotationsHandler(annotations.GetType());
                 await handler.WriteAnnotations(annotations, CustomInstanceAnnotationWriter<TCustomState>.Instance, state);
             }
         }
@@ -128,8 +128,10 @@ public abstract class ODataResourceSetBaseJsonWriter<TCollection, TElement, TCus
             var annotations = typeInfo.GetCustomPostValueAnnotations(value, state);
             if (annotations is not null)
             {
+                // TODO: Should we allow GetCustomPreValueAnnotations to return
+                // a different type on different calls? If not, we could cache the handler on the type info or writer.
                 var jsonWriter = state.JsonWriter;
-                var handler = state.GetCustomAnnotationsHandler(annotations);
+                var handler = state.GetCustomAnnotationsHandler(annotations.GetType());
                 await handler.WriteAnnotations(annotations, CustomInstanceAnnotationWriter<TCustomState>.Instance, state);
             }
         }

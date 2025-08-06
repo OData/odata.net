@@ -16,6 +16,9 @@ public class ODataSerializerOptions<TCustomState>
     public ODataVersion ODataVersion { get; set; } = ODataVersion.V4;
     public int BufferSize { get; set; } = 16 * 1024;
 
+    internal ICustomAnnotationsHandlerResolver<TCustomState> CustomAnnotationsHandlerResolver { get; set; } = new DefaultCustomAnnotationsHandlerResolver<TCustomState>();
+    internal IDynamicPropertiesHandlerResolver<TCustomState> DynamicPropertiesHandlerResolver { get; set; } = new DefaultDynamicPropertiesHandlerResolver<TCustomState>();
+
     internal Dictionary<Type, ODataTypeInfo> ResourceTypeInfos { get; } = new();
 
     public void AddTypeInfo<T>(ODataTypeInfo<T, TCustomState> resourceTypeInfo)

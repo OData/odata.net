@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Microsoft.OData.Serializer.V3.Adapters;
 
-internal interface ICustomAnnotationsHandlerResolver<TCustomState>
+internal interface IDynamicPropertiesHandlerResolver<TCustomState>
 {
-    ICustomAnnotationsHandler<TCustomState>? Resolve(Type annotationsContainerType);
+    IDynamicPropertiesHandler<TCustomState>? Resolve(Type dynamicPropertiesContainerType);
 }

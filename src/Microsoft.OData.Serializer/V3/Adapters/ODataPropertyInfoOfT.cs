@@ -100,8 +100,9 @@ public class ODataPropertyInfo<TDeclaringType, TCustomState> :
             var customAnnotations = this.GetCustomPreValueAnnotations(resource, state);
             if (customAnnotations != null)
             {
-                // TODO: handler should be based on type and cached.
-                var handler = state.GetCustomAnnotationsHandler(customAnnotations);
+                // TODO: Should we allow GetCustomPreValueAnnotations to return
+                // a different type on different calls? If not, we could cache the handler on the property info
+                var handler = state.GetCustomAnnotationsHandler(customAnnotations.GetType());
                 return handler.WriteAnnotations(customAnnotations, this, state);
             }
         }
@@ -131,8 +132,9 @@ public class ODataPropertyInfo<TDeclaringType, TCustomState> :
             var customAnnotations = this.GetCustomPostValueAnnotations(resource, state);
             if (customAnnotations != null)
             {
-                // TODO: handler should be based on annotations container type (instead of instance) and cached.
-                var handler = state.GetCustomAnnotationsHandler(customAnnotations);
+                // TODO: Should we allow GetCustomPreValueAnnotations to return
+                // a different type on different calls? If not, we could cache the handler on the property info
+                var handler = state.GetCustomAnnotationsHandler(customAnnotations.GetType());
                 return handler.WriteAnnotations(customAnnotations, this, state);
             }
         }

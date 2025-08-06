@@ -13,7 +13,6 @@ public sealed class ODataJsonWriterState<TCustomState>
 {
     private ODataSerializerOptions<TCustomState> options;
     private ODataJsonWriterProvider<TCustomState> writers;
-    private readonly DefaultCustomAnnotationsHandlerResolver<TCustomState> customAnnotationsHandlerResolver = new();
 
     public ODataUri ODataUri { get; set; }
 
@@ -70,11 +69,18 @@ public sealed class ODataJsonWriterState<TCustomState>
         return ref this.Stack.CurrentCustomState;
     }
 
-    internal ICustomAnnotationsHandler<TCustomState> GetCustomAnnotationsHandler(object annotations)
+    internal ICustomAnnotationsHandler<TCustomState> GetCustomAnnotationsHandler(Type annotationsType)
     {
-        var handler = customAnnotationsHandlerResolver.Resolve(annotations)
-            ?? throw new InvalidOperationException($"No custom annotations handler found for type {annotations.GetType().FullName}");
+        var handler = options.CustomAnnotationsHandlerResolver.Resolve(annotationsType)
+            ?? throw new InvalidOperationException($"No custom annotations handler found for type {annotationsType.FullName}");
 
+        return handler;
+    }
+
+    internal IDynamicPropertiesHandler<TCustomState> GetDynamicPropertiesHandler(Type dynamicPropertiesType)
+    {
+        var handler = options.DynamicPropertiesHandlerResolver.Resolve(dynamicPropertiesType)
+            ?? throw new InvalidOperationException($"No dynamic properties handler found for type {dynamicPropertiesType.FullName}");
         return handler;
     }
 }
