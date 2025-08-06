@@ -10,7 +10,11 @@ namespace Microsoft.OData.Serializer.V3.Adapters;
 
 #pragma warning disable CA1005 // Avoid excessive parameters on generic types
 public class ODataPropertyInfo<TDeclaringType, TCustomState> :
-    ODataPropertyInfo, IValueWriter<TCustomState>, ICountWriter<TCustomState>, INextLinkWriter<TCustomState>
+    ODataPropertyInfo,
+    IValueWriter<TCustomState>,
+    ICountWriter<TCustomState>,
+    INextLinkWriter<TCustomState>,
+    IAnnotationWriter<TCustomState>
 #pragma warning restore CA1005 // Avoid excessive parameters on generic types
 {
     // TODO: this property name conflicts with the method WriteValue from IValueWriter. Perhaps IValueWriter.WriteValue should be renamed?
@@ -91,6 +95,22 @@ public class ODataPropertyInfo<TDeclaringType, TCustomState> :
             this.WriteNextLinkInternal(resource, state);
         }
 
+        if (this.GetCustomPreValueAnnotations != null)
+        {
+            var customAnnotations = this.GetCustomPreValueAnnotations(resource, state);
+            if (customAnnotations != null)
+            {
+                // TODO: handler should be based on type and cached.
+                var handler = state.GetCustomAnnotationsHandler(customAnnotations);
+                return handler.WriteAnnotations(customAnnotations, this, state);
+            }
+        }
+        else if (this.WriteCustomPreValueAnnotations != null)
+        {
+            // annotations writer.
+            return this.WriteCustomPreValueAnnotations(resource, this, state);
+        }
+
         return ValueTask.CompletedTask;
     }
 
@@ -104,6 +124,21 @@ public class ODataPropertyInfo<TDeclaringType, TCustomState> :
         if (this.NextLinkPosition == AnnotationPosition.PostValue)
         {
             this.WriteNextLinkInternal(resource, state);
+        }
+
+        if (this.GetCustomPostValueAnnotations != null)
+        {
+            var customAnnotations = this.GetCustomPostValueAnnotations(resource, state);
+            if (customAnnotations != null)
+            {
+                // TODO: handler should be based on annotations container type (instead of instance) and cached.
+                var handler = state.GetCustomAnnotationsHandler(customAnnotations);
+                return handler.WriteAnnotations(customAnnotations, this, state);
+            }
+        }
+        else if (this.WriteCustomPostValueAnnotations != null)
+        {
+            return this.WriteCustomPostValueAnnotations(resource, this, state);
         }
 
         return ValueTask.CompletedTask;
@@ -186,6 +221,21 @@ public class ODataPropertyInfo<TDeclaringType, TCustomState> :
     {
         var jsonWriter = state.JsonWriter;
         jsonWriter.WritePropertyName(this.Utf8Name.Span);
+        return state.WriteValue(value);
+    }
+
+    // The IAnnotationwriter.WriteAnnotation methods are only called when writing custom annotations
+    ValueTask IAnnotationWriter<TCustomState>.WriteAnnotation<TValue>(ReadOnlySpan<char> name, TValue value, ODataJsonWriterState<TCustomState> state)
+    {
+        var jsonWriter = state.JsonWriter;
+        JsonMetadataHelpers.WriteCustomPropertyAnnotationName(jsonWriter, this.Name, name);
+        return state.WriteValue(value);
+    }
+
+    ValueTask IAnnotationWriter<TCustomState>.WriteAnnotation<TValue>(ReadOnlySpan<byte> name, TValue value, ODataJsonWriterState<TCustomState> state)
+    {
+        var jsonWriter = state.JsonWriter;
+        JsonMetadataHelpers.WriteCustomPropertyAnnotationName(jsonWriter, this.Utf8Name.Span, name);
         return state.WriteValue(value);
     }
 }

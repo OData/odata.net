@@ -1,6 +1,7 @@
 ﻿using Microsoft.OData.Serializer.Core;
 using Microsoft.OData.Serializer.V3.Adapters;
 using Microsoft.OData.Serializer.V3.Core;
+using Microsoft.OData.Serializer.V3.Json.Writers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -137,14 +138,26 @@ internal class ODataResourceJsonWriter<T, TCustomState>(ODataTypeInfo<T, TCustom
         //}
     }
 
-    private ValueTask WritePreValueAnnotations(T value, ODataJsonWriterState<TCustomState> state)
+    private async ValueTask WritePreValueAnnotations(T value, ODataJsonWriterState<TCustomState> state)
     {
         if (typeInfo.EtagPosition != AnnotationPosition.PostValue)
         {
             WriteEtag(value, state);
         }
 
-        return ValueTask.CompletedTask;
+        if (typeInfo.GetCustomPreValueAnnotations != null)
+        {
+            var annotations = typeInfo.GetCustomPreValueAnnotations(value, state);
+            if (annotations != null)
+            {
+                var handler = state.GetCustomAnnotationsHandler(annotations);
+                await handler.WriteAnnotations(annotations, CustomInstanceAnnotationWriter<TCustomState>.Instance, state);
+            }
+        }
+        else if (typeInfo.WriteCustomPreValueAnnotations != null)
+        {
+            await typeInfo.WriteCustomPreValueAnnotations(value, CustomInstanceAnnotationWriter<TCustomState>.Instance, state);
+        }
     }
 
     private ValueTask WritePostValueAnnotations(T value, ODataJsonWriterState<TCustomState> state)

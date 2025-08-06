@@ -1,4 +1,5 @@
 ﻿using Microsoft.OData.Serializer.V3.Adapters;
+using Microsoft.OData.Serializer.V3.Json.Writers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -64,7 +65,8 @@ public abstract class ODataResourceSetBaseJsonWriter<TCollection, TElement, TCus
 
     protected virtual  ValueTask WritePreValueMetadata(TCollection value, ODataJsonWriterState<TCustomState> state)
     {
-        if (state.IsTopLevel() && state.MetadataLevel >= ODataMetadataLevel.Minimal)
+        // Since this is only called when top-level, let's also write the context URL
+        if (state.MetadataLevel >= ODataMetadataLevel.Minimal)
         {
             WriteContextUrl(value, state);
         }
@@ -79,7 +81,7 @@ public abstract class ODataResourceSetBaseJsonWriter<TCollection, TElement, TCus
         return WritePreValueAnnotaitons(value, state);
     }
 
-    protected virtual ValueTask WritePreValueAnnotaitons(TCollection value, ODataJsonWriterState<TCustomState> state)
+    protected virtual async ValueTask WritePreValueAnnotaitons(TCollection value, ODataJsonWriterState<TCustomState> state)
     {
         if (typeInfo?.CountPosition != AnnotationPosition.PostValue)
         {
@@ -90,10 +92,25 @@ public abstract class ODataResourceSetBaseJsonWriter<TCollection, TElement, TCus
             WriteNextLinkProperty(value, state);
         }
 
-        return ValueTask.CompletedTask;
+        if (typeInfo?.GetCustomPreValueAnnotations != null)
+        {
+            var annotations = typeInfo.GetCustomPreValueAnnotations(value, state);
+            if (annotations is not null)
+            {
+                // TODO: We should consider retrieving the handler by annotatons container type
+                // then cache the handler on the type info.
+                var jsonWriter = state.JsonWriter;
+                var handler = state.GetCustomAnnotationsHandler(annotations);
+                await handler.WriteAnnotations(annotations, CustomInstanceAnnotationWriter<TCustomState>.Instance, state);
+            }
+        }
+        else if (typeInfo?.WriteCustomPreValueAnnotations != null)
+        {
+            await typeInfo.WriteCustomPreValueAnnotations(value, CustomInstanceAnnotationWriter<TCustomState>.Instance, state);
+        }
     }
 
-    protected virtual ValueTask WritePostValueAnnotaitons(TCollection value, ODataJsonWriterState<TCustomState> state)
+    protected virtual async ValueTask WritePostValueAnnotaitons(TCollection value, ODataJsonWriterState<TCustomState> state)
     {
         if (typeInfo?.CountPosition == AnnotationPosition.PostValue)
         {
@@ -105,7 +122,21 @@ public abstract class ODataResourceSetBaseJsonWriter<TCollection, TElement, TCus
             WriteNextLinkProperty(value, state);
         }
 
-        return ValueTask.CompletedTask;
+        // TODO: perhaps this logic should be moved to the type info?
+        if (typeInfo?.GetCustomPostValueAnnotations != null)
+        {
+            var annotations = typeInfo.GetCustomPostValueAnnotations(value, state);
+            if (annotations is not null)
+            {
+                var jsonWriter = state.JsonWriter;
+                var handler = state.GetCustomAnnotationsHandler(annotations);
+                await handler.WriteAnnotations(annotations, CustomInstanceAnnotationWriter<TCustomState>.Instance, state);
+            }
+        }
+        else if (typeInfo?.WriteCustomPostValueAnnotations != null)
+        {
+            await typeInfo.WriteCustomPostValueAnnotations(value, CustomInstanceAnnotationWriter<TCustomState>.Instance, state);
+        }
     }
 
     protected virtual void WriteContextUrl(TCollection value, ODataJsonWriterState<TCustomState> state)

@@ -13,6 +13,7 @@ public sealed class ODataJsonWriterState<TCustomState>
 {
     private ODataSerializerOptions<TCustomState> options;
     private ODataJsonWriterProvider<TCustomState> writers;
+    private readonly DefaultCustomAnnotationsHandlerResolver<TCustomState> customAnnotationsHandlerResolver = new();
 
     public ODataUri ODataUri { get; set; }
 
@@ -67,5 +68,13 @@ public sealed class ODataJsonWriterState<TCustomState>
     public ref TCustomState CurrentCustomState()
     {
         return ref this.Stack.CurrentCustomState;
+    }
+
+    internal ICustomAnnotationsHandler<TCustomState> GetCustomAnnotationsHandler(object annotations)
+    {
+        var handler = customAnnotationsHandlerResolver.Resolve(annotations)
+            ?? throw new InvalidOperationException($"No custom annotations handler found for type {annotations.GetType().FullName}");
+
+        return handler;
     }
 }
