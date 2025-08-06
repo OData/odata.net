@@ -45,12 +45,6 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Represents a static, read-only singleton instance of normalized model elements for the EDM core model. This cache is initialized with the EDM core model instance and is used to store
-        /// normalized representations of model elements for efficient reuse.
-        /// </summary>
-        private readonly static NormalizedModelElementsCache NormalizedSchemaElementsCacheInstance = new NormalizedModelElementsCache(EdmCoreModel.Instance);
-
-        /// <summary>
         /// Create a new FunctionCallParser.
         /// </summary>
         /// <param name="lexer">Lexer positioned at a function identifier.</param>
@@ -259,10 +253,11 @@ namespace Microsoft.OData.UriParser
             }
 
             // Check if the identifier is a primitive type
-            List<IEdmSchemaType> schemaTypes = NormalizedSchemaElementsCacheInstance.FindSchemaTypes(dottedIdentifierToken.Identifier);
+            IEdmSchemaElement schemaElement = EdmCoreModel.Instance.SchemaElements
+                .FirstOrDefault(e => string.Equals(dottedIdentifierToken.Identifier, e.FullName(), StringComparison.OrdinalIgnoreCase));
 
             // If the identifier is a primitive type
-            if (schemaTypes != null && schemaTypes.Count > 0 && schemaTypes[0] is IEdmPrimitiveType)
+            if (schemaElement is IEdmPrimitiveType)
             {
                 return parameterToken;
             }
