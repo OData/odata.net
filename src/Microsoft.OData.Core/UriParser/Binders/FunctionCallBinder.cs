@@ -720,7 +720,15 @@ namespace Microsoft.OData.UriParser
                     Error.Format(SRResources.MetadataBinder_CastOrIsOfExpressionWithWrongNumberOfOperands, args.Count));
             }
 
-            QueryNode queryNode = args.Last();
+            QueryNode queryNode;
+            if (args.Count == 1)
+            {
+                queryNode = args[0];
+            }
+            else
+            {
+                queryNode = args[1];
+            }
 
             string typeArgumentFullName = null;
             IEdmTypeReference returnType = null;
@@ -765,7 +773,7 @@ namespace Microsoft.OData.UriParser
             {
                 // throw if cast enum to not-string :
                 if ((args[0].GetEdmTypeReference() is IEdmEnumTypeReference)
-                    && !string.Equals(typeArgumentFullName, Microsoft.OData.Metadata.EdmConstants.EdmStringTypeName, state.Configuration.Resolver.EnableCaseInsensitive ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal))
+                    && !string.Equals(typeArgumentFullName, Microsoft.OData.Metadata.EdmConstants.EdmStringTypeName, state.Configuration.Resolver?.EnableCaseInsensitive == true ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal))
                 {
                     throw new ODataException(SRResources.CastBinder_EnumOnlyCastToOrFromString);
                 }

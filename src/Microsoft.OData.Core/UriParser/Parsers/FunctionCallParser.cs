@@ -186,8 +186,7 @@ namespace Microsoft.OData.UriParser
             // Store the parent expression of the current argument.
             Stack<QueryToken> expressionParents = new Stack<QueryToken>();
             bool isFunctionCallNameCastOrIsOf = functionName.Length > 0 &&
-                functionName.SequenceEqual(ExpressionConstants.UnboundFunctionCast.AsSpan()) || functionName.SequenceEqual(ExpressionConstants.UnboundFunctionIsOf.AsSpan());
-
+                (functionName.SequenceEqual(ExpressionConstants.UnboundFunctionCast.AsSpan()) || functionName.SequenceEqual(ExpressionConstants.UnboundFunctionIsOf.AsSpan()));
             List<FunctionParameterToken> argList = new List<FunctionParameterToken>();
             while (true)
             {
@@ -248,25 +247,24 @@ namespace Microsoft.OData.UriParser
         /// <returns>The updated parameter token.</returns>
         private static QueryToken SetParentForCurrentParameterToken(QueryToken parentExpression, QueryToken parameterToken)
         {
-            // If the parameter is a dotted identifier, we need to set the parent of the next argument to the current argument.
-            // But if it is primitive literal, no need to set the parent.
-            if (parameterToken is DottedIdentifierToken dottedIdentifierToken && dottedIdentifierToken.NextToken == null)
+            if (parameterToken is not DottedIdentifierToken dottedIdentifierToken || dottedIdentifierToken?.NextToken is not null)
             {
-                // Check if the dottedIdentifier is a primitive type
-                IEdmSchemaElement schemaElement = EdmCoreModel.Instance.SchemaElements.Where(e => string.Equals(dottedIdentifierToken.Identifier, e.FullName(), StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
-
-                // If the dottedIdentifier is not a primitive type, set the parent of the next argument to the current argument.
-                //  cast(1, Edm.Int32) -> Edm.Int32 is a dottedIdentifierToken but a primitive type
-                //  isof(1, edm.int64) -> edm.int64 is a dottedIdentifierToken but a primitive type
-                //  isof(MyAddress, NS.Address) -> NS.Address is a dottedIdentifierToken but not a primitive type
-                if (schemaElement is null or not IEdmPrimitiveType)
-                {
-                    dottedIdentifierToken.NextToken = parentExpression;
-                    parameterToken = dottedIdentifierToken;
-                }
+                return parameterToken;
             }
 
-            return parameterToken;
+            // Check if the identifier is a primitive type
+            IEdmSchemaElement schemaElement = EdmCoreModel.Instance.SchemaElements
+                .FirstOrDefault(e => string.Equals(dottedIdentifierToken.Identifier, e.FullName(), StringComparison.OrdinalIgnoreCase));
+
+            // If the identifier is a primitive type
+            if (schemaElement is IEdmPrimitiveType)
+            {
+                return parameterToken;
+            }
+
+            // Set the parent of the next argument to the current argument
+            dottedIdentifierToken.NextToken = parentExpression;
+            return dottedIdentifierToken;
         }
     }
 }
