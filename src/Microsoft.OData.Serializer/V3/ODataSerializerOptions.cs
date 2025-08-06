@@ -16,9 +16,9 @@ public class ODataSerializerOptions<TCustomState>
     public ODataVersion ODataVersion { get; set; } = ODataVersion.V4;
     public int BufferSize { get; set; } = 16 * 1024;
 
-    internal Dictionary<Type, ODataResourceTypeInfo> ResourceTypeInfos { get; } = new();
+    internal Dictionary<Type, ODataTypeInfo> ResourceTypeInfos { get; } = new();
 
-    public void AddTypeInfo<T>(ODataResourceTypeInfo<T, TCustomState> resourceTypeInfo)
+    public void AddTypeInfo<T>(ODataTypeInfo<T, TCustomState> resourceTypeInfo)
     {
         if (resourceTypeInfo is null)
         {
@@ -32,17 +32,17 @@ public class ODataSerializerOptions<TCustomState>
         ResourceTypeInfos[typeof(T)] = resourceTypeInfo;
     }
 
-    public ODataResourceTypeInfo<T, TCustomState>? TryGetResourceInfo<T>()
+    public ODataTypeInfo<T, TCustomState>? TryGetResourceInfo<T>()
     {
         if (ResourceTypeInfos.TryGetValue(typeof(T), out var typeInfo))
         {
-            return (ODataResourceTypeInfo<T, TCustomState>)typeInfo;
+            return (ODataTypeInfo<T, TCustomState>)typeInfo;
         }
 
         return null;
     }
 
-    public ODataResourceTypeInfo? TryGetResourceInfo(Type type)
+    public ODataTypeInfo? TryGetResourceInfo(Type type)
     {
         if (ResourceTypeInfos.TryGetValue(type, out var typeInfo))
         {

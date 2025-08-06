@@ -5,6 +5,6 @@ using System.Text;
 
 namespace Microsoft.OData.Serializer.V3.Adapters;
 
-public class ODataResourceTypeInfo<T> : ODataResourceTypeInfo<T, DefaultState>
+public class ODataTypeInfo<T> : ODataTypeInfo<T, DefaultState>
 {
 }

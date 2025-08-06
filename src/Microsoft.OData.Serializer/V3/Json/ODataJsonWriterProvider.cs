@@ -60,7 +60,7 @@ internal class ODataJsonWriterProvider<TCustomState>(ODataSerializerOptions<TCus
 
         // TODO: we could consider generating a custom writer for the poco
         // but we'd need to map it to an OData type.
-        ODataResourceTypeInfo<T, TCustomState>? typeInfo = options.TryGetResourceInfo<T>();
+        ODataTypeInfo<T, TCustomState>? typeInfo = options.TryGetResourceInfo<T>();
         if (typeInfo != null)
         {
             return new ODataResourceJsonWriter<T, TCustomState>(typeInfo);

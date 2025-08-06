@@ -9,7 +9,7 @@ namespace Microsoft.OData.Serializer.V3.Json.State;
 
 internal struct WriteStackFrame<TCustomState>
 {
-    public ODataResourceTypeInfo? ResourceTypeInfo { get; set; }
+    public ODataTypeInfo? ResourceTypeInfo { get; set; }
     public Adapters.ODataPropertyInfo? PropertyInfo { get; set; }
 
     public TCustomState CustomState;

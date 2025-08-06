@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Microsoft.OData.Serializer.V3.Json;
 
-internal class ODataResourceJsonWriter<T, TCustomState>(ODataResourceTypeInfo<T, TCustomState> typeInfo)
+internal class ODataResourceJsonWriter<T, TCustomState>(ODataTypeInfo<T, TCustomState> typeInfo)
     : ODataWriter<T, ODataJsonWriterState<TCustomState>>, IPropertyWriter<T, TCustomState>,
     IEtagWriter<TCustomState>
 {
@@ -51,7 +51,7 @@ internal class ODataResourceJsonWriter<T, TCustomState>(ODataResourceTypeInfo<T,
 
     private static async ValueTask WriteProperties(
         T value,
-        ODataResourceTypeInfo<T, TCustomState> typeInfo,
+        ODataTypeInfo<T, TCustomState> typeInfo,
         ODataJsonWriterState<TCustomState> state)
     {
         for (int i = 0; i < typeInfo.Properties.Count; i++)

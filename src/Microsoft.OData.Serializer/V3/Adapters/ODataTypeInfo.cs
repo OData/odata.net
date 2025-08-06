@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Microsoft.OData.Serializer.V3.Adapters;
 
-public abstract class ODataResourceTypeInfo
+public abstract class ODataTypeInfo
 {
     public virtual Type Type { get; init; }
 }

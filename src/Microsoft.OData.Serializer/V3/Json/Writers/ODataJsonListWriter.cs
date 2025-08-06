@@ -13,7 +13,7 @@ namespace Microsoft.OData.Serializer.V3.Json.Writers;
 internal class ODataJsonListWriter<TCollection, TElement, TCustomState> : ODataResourceSetBaseJsonWriter<TCollection, TElement, TCustomState>
     where TCollection : IList<TElement>
 {
-    public ODataJsonListWriter(ODataResourceTypeInfo<TCollection, TCustomState>? typeInfo = null)
+    public ODataJsonListWriter(ODataTypeInfo<TCollection, TCustomState>? typeInfo = null)
         : base(typeInfo)
     {
     }

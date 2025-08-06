@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Microsoft.OData.Serializer.V3.Adapters;
 
-public class ODataResourceTypeInfo<T, TCustomState> : ODataResourceTypeInfo
+public class ODataTypeInfo<T, TCustomState> : ODataTypeInfo
 {
     private IReadOnlyList<ODataPropertyInfo<T, TCustomState>>? _properties;
     // TODO use alternate key and also support Utf8-based lookups if necessary

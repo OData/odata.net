@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace Microsoft.OData.Serializer.V3.Json;
 
 #pragma warning disable CA1005 // Avoid excessive parameters on generic types
-public abstract class ODataResourceSetBaseJsonWriter<TCollection, TElement, TCustomState>(ODataResourceTypeInfo<TCollection, TCustomState>? typeInfo = null) :
+public abstract class ODataResourceSetBaseJsonWriter<TCollection, TElement, TCustomState>(ODataTypeInfo<TCollection, TCustomState>? typeInfo = null) :
     ODataJsonWriter<TCollection, TCustomState>, ICountWriter<TCustomState>, INextLinkWriter<TCustomState>
 #pragma warning restore CA1005 // Avoid excessive parameters on generic types
 {
