@@ -42,6 +42,8 @@ internal class ODataResourceJsonWriter<T, TCustomState>(ODataTypeInfo<T, TCustom
             await WriteProperties(value, typeInfo, state);
         }
 
+        await WritePostValueAnnotations(value, state);
+
         jsonWriter.WriteEndObject();
 
         typeInfo.OnSerialized?.Invoke(value, state);
@@ -137,7 +139,21 @@ internal class ODataResourceJsonWriter<T, TCustomState>(ODataTypeInfo<T, TCustom
 
     private ValueTask WritePreValueAnnotations(T value, ODataJsonWriterState<TCustomState> state)
     {
-        WriteEtag(value, state);
+        if (typeInfo.EtagPosition != AnnotationPosition.PostValue)
+        {
+            WriteEtag(value, state);
+        }
+
+        return ValueTask.CompletedTask;
+    }
+
+    private ValueTask WritePostValueAnnotations(T value, ODataJsonWriterState<TCustomState> state)
+    {
+        if (typeInfo.EtagPosition == AnnotationPosition.PostValue)
+        {
+            WriteEtag(value, state);
+        }
+
         return ValueTask.CompletedTask;
     }
 

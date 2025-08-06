@@ -38,13 +38,30 @@ public class ODataPropertyInfo<TDeclaringType, TCustomState> :
     // the state to see if there's a property in scope, or if it's top-level, etc.
     // there might a cost to performing these if-checks on the hot path, but not sure it's significant.
     // It simplifies the configuration for the end user, the annotations are always on the type info.
+
+    // TODO: I considered whether the position should be a func or property. I should evaluate cost of calling the func vs property/field.
+    // Do we expect the position to change per value? I think for a given type or property, the position of the annotation is likely
+    // to be fixed. Consult with team.
+    public AnnotationPosition CountPosition { get; init; } = AnnotationPosition.Auto;
+
     public Func<TDeclaringType, ODataJsonWriterState<TCustomState>, long?>? GetCount { get; init; }
 
+
     public Action<TDeclaringType, ICountWriter<TCustomState>, ODataJsonWriterState<TCustomState>>? WriteCount { get; init; }
+
+    public AnnotationPosition NextLinkPosition { get; init; } = AnnotationPosition.Auto;
 
     public Func<TDeclaringType, ODataJsonWriterState<TCustomState>, string?>? GetNextLink { get; init; }
 
     public Action<TDeclaringType, INextLinkWriter<TCustomState>, ODataJsonWriterState<TCustomState>>? WriteNextLink { get; init; }
+
+    public Func<TDeclaringType, ODataJsonWriterState<TCustomState>, object?>? GetCustomPreValueAnnotations { get; init; }
+
+    public Func<TDeclaringType, IAnnotationWriter<TCustomState>, ODataJsonWriterState<TCustomState>, ValueTask>? WriteCustomPreValueAnnotations { get; init; }
+
+    public Func<TDeclaringType, ODataJsonWriterState<TCustomState>, object?>? GetCustomPostValueAnnotations { get; init; }
+
+    public Func<TDeclaringType, IAnnotationWriter<TCustomState>, ODataJsonWriterState<TCustomState>, ValueTask>? WriteCustomPostValueAnnotations { get; init; }
 
     public Func<TDeclaringType, ODataJsonWriterState<TCustomState>, bool>? ShouldSkip { get; init; }
 
@@ -52,18 +69,43 @@ public class ODataPropertyInfo<TDeclaringType, TCustomState> :
     {
         await this.WritePreValueAnnotations(resource, state);
         await this.WritePropertyValue(resource, state);
+        await this.WritePostValueAnnotations(resource, state);
     }
 
     internal async ValueTask WriteProperty<TValue>(TDeclaringType resource, TValue value, ODataJsonWriterState<TCustomState> state)
     {
         await this.WritePreValueAnnotations(resource, state);
         await this.WritePropertyValue(resource, value, state);
+        await this.WritePostValueAnnotations(resource, state);
     }
 
-    internal ValueTask WritePreValueAnnotations(TDeclaringType resource, ODataJsonWriterState<TCustomState> state)
+    private ValueTask WritePreValueAnnotations(TDeclaringType resource, ODataJsonWriterState<TCustomState> state)
     {
-        this.WriteCountInternal(resource, state);
-        this.WriteNextLinkInternal(resource, state);
+        if (this.CountPosition != AnnotationPosition.PostValue)
+        {
+            this.WriteCountInternal(resource, state);
+        }
+
+        if (this.NextLinkPosition != AnnotationPosition.PostValue)
+        {
+            this.WriteNextLinkInternal(resource, state);
+        }
+
+        return ValueTask.CompletedTask;
+    }
+
+    private ValueTask WritePostValueAnnotations(TDeclaringType resource, ODataJsonWriterState<TCustomState> state)
+    {
+        if (this.CountPosition == AnnotationPosition.PostValue)
+        {
+            this.WriteCountInternal(resource, state);
+        }
+
+        if (this.NextLinkPosition == AnnotationPosition.PostValue)
+        {
+            this.WriteNextLinkInternal(resource, state);
+        }
+
         return ValueTask.CompletedTask;
     }
 

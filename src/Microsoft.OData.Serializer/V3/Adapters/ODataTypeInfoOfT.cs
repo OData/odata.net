@@ -38,21 +38,35 @@ public class ODataTypeInfo<T, TCustomState> : ODataTypeInfo
     // - WriteXXXValue that accepts a constrained writer that can write the value. The write may have overloads that support different types for more flexibility and performance.
     // - The user should pick only on of these per annotation. Ideally, when initializing the serialzer options, we should throw if both are set for the same annotation.
 
+    // TODO: I considered whether the position should be a func or property. I should evaluate cost of calling the func vs property/field.
+    // Do we expect the position to change per value? I think for a given type or property, the position of the annotation is likely
+    // to be fixed. Consult with team.
+    public AnnotationPosition CountPosition { get; init; } = AnnotationPosition.Auto;
     public Func<T, ODataJsonWriterState<TCustomState>, long?>? GetCount { get; init; }
     public Action<T, ICountWriter<TCustomState>, ODataJsonWriterState<TCustomState>>? WriteCount { get; init; }
 
-    // Opted to use string for next link as the "common" representation, since Uri is expensive and I don't want to force it as the default.
-    // Need to review this with the team because some may argue that Uri as default makes more sense since the intent is clearer and we're sure
-    // what we're writing is a valid uri.
+    public AnnotationPosition NextLinkPosition { get; init; } = AnnotationPosition.Auto;
     public Func<T, ODataJsonWriterState<TCustomState>, string>? GetNextLink { get; init; }
 
     public Action<T, INextLinkWriter<TCustomState>, ODataJsonWriterState<TCustomState>>? WriteNextLink { get; init; }
+
+    public AnnotationPosition EtagPosition { get; init; } = AnnotationPosition.Auto;
 
     public Func<T, ODataJsonWriterState<TCustomState>, string>? GetEtag { get; init; }
 
     public Action<T, IEtagWriter<TCustomState>, ODataJsonWriterState<TCustomState>>? WriteEtag { get; init; }
 
     public Func<T, IPropertyWriter<T, TCustomState>, ODataJsonWriterState<TCustomState>, ValueTask>? WriteProperties { get; init; }
+
+    public Func<T, ODataJsonWriterState<TCustomState>, object?>? GetCustomPreValueAnnotations { get; init; }
+
+    public Func<T, IAnnotationWriter<TCustomState>, ODataJsonWriterState<TCustomState>, ValueTask>? WriteCustomPreValueAnnotations { get; init; }
+
+    public Func<T, ODataJsonWriterState<TCustomState>, object?>? GetCustomPostValueAnnotations { get; init; }
+
+    public Func<T, IAnnotationWriter<TCustomState>, ODataJsonWriterState<TCustomState>, ValueTask>? WriteCustomPostValueAnnotations { get; init; }
+
+    public Func<T, ODataJsonWriterState<TCustomState>, object?>? GetDynamicProperties { get; init; }
 
     /// <summary>
     /// Custom hook that's called before the value is written. If the value

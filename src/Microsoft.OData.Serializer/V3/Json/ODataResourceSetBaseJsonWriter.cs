@@ -50,6 +50,8 @@ public abstract class ODataResourceSetBaseJsonWriter<TCollection, TElement, TCus
 
         if (state.IsTopLevel())
         {
+
+            await WritePostValueAnnotaitons(value, state);
             state.JsonWriter.WriteEndObject();
         }
 
@@ -74,8 +76,34 @@ public abstract class ODataResourceSetBaseJsonWriter<TCollection, TElement, TCus
         //    await WriteCountProperty(value, state, context);
         //}
 
-        WriteNextLinkProperty(value, state);
-        WriteCountProperty(value, state);
+        return WritePreValueAnnotaitons(value, state);
+    }
+
+    protected virtual ValueTask WritePreValueAnnotaitons(TCollection value, ODataJsonWriterState<TCustomState> state)
+    {
+        if (typeInfo?.CountPosition != AnnotationPosition.PostValue)
+        {
+            WriteCountProperty(value, state);
+        }
+        if (typeInfo?.NextLinkPosition != AnnotationPosition.PostValue)
+        {
+            WriteNextLinkProperty(value, state);
+        }
+
+        return ValueTask.CompletedTask;
+    }
+
+    protected virtual ValueTask WritePostValueAnnotaitons(TCollection value, ODataJsonWriterState<TCustomState> state)
+    {
+        if (typeInfo?.CountPosition == AnnotationPosition.PostValue)
+        {
+            WriteCountProperty(value, state);
+        }
+
+        if (typeInfo?.NextLinkPosition == AnnotationPosition.PostValue)
+        {
+            WriteNextLinkProperty(value, state);
+        }
 
         return ValueTask.CompletedTask;
     }
