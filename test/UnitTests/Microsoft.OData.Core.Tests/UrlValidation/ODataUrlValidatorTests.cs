@@ -153,6 +153,55 @@ namespace Microsoft.OData.Tests
             });
         }
 
+        [Fact]
+        public static void ValidatorValidatesCustomQueryOptions()
+        {
+            string request = "company?customQueryOption=value";
+
+            IEdmModel model = CreateModel();
+
+            Uri uri = new Uri(request, UriKind.Relative);
+            IEnumerable<ODataUrlValidationMessage> errors;
+            uri.ValidateODataUrl(model, GetQueryOptionRuleSet(), out errors);
+            Assert.Collection<ODataUrlValidationMessage>(errors, (error) =>
+            {
+                Assert.Equal("customQueryOptionCode", error.MessageCode);
+                Assert.Equal("customQueryOption=value", error.Message);
+                Assert.Equal(OData.UriParser.Validation.Severity.Warning, error.Severity);
+            });
+        }
+
+        [InlineData("$filter=name eq 'bob'")]
+        [InlineData("filter=name eq 'bob'")]
+        [Theory]
+        public static void SystemQueryOptionsNotInCustom(string queryOption)
+        {
+            string request = String.Format("company?{0}", queryOption);
+
+            IEdmModel model = CreateModel();
+            ODataUriParser parser = new ODataUriParser(model, new Uri(request, UriKind.Relative));
+            parser.EnableNoDollarQueryOptions = true;
+
+            Uri uri = new Uri(request, UriKind.Relative);
+
+            IEnumerable<ODataUrlValidationMessage> errors;
+
+            parser.Validate(GetQueryOptionRuleSet(), out errors);
+            Assert.Empty(errors);
+        }
+
+        private static ODataUrlValidationRuleSet GetQueryOptionRuleSet()
+        {
+            return new ODataUrlValidationRuleSet(new ODataUrlValidationRule[]{
+                new ODataUrlValidationRule<CustomQueryOptionNode>(
+                    "customQueryOptionNode",
+                    (context, segment) =>
+                    {
+                        context.AddMessage("customQueryOptionCode", string.Concat(segment.Name, "=", segment.Value), OData.UriParser.Validation.Severity.Warning);
+                    })
+                });
+        }
+
         public static IEnumerable<object[]> GetAddMessageTestData()
         {
             yield return new object[]

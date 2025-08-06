@@ -323,5 +323,15 @@ namespace Microsoft.OData.UriParser
         {
             throw new NotImplementedException();
         }
+
+        /// <summary>
+        /// Visit an CustomQueryOptionNode
+        /// </summary>
+        /// <param name="nodeIn">the node to visit</param>
+        /// <returns>Defined by the implementer</returns>
+        public virtual T Visit(CustomQueryOptionNode nodeIn)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
