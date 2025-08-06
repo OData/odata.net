@@ -8,6 +8,7 @@ namespace Microsoft.OData.Serializer.Tests.V3;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Serializer.V3;
 using Microsoft.OData.Serializer.V3.Adapters;
+using Microsoft.OData.Serializer.V3.Json.State;
 using Microsoft.OData.UriParser;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
@@ -116,10 +117,10 @@ public class V3ODataSerializerTests
                     Name = "Id",
                     WriteValue = (customer, writer, state) => writer.WriteValue(customer.Id, state)
                 },
-                new()
+                new ODataPropertyInfo<Customer, string, DefaultState>
                 {
                     Name = "Name",
-                    WriteValue = (customer, writer, state) => writer.WriteValue(customer.Name, state)
+                    GetValue = (customer, state) => customer.Name,
                 },
                 new()
                 {
@@ -153,7 +154,7 @@ public class V3ODataSerializerTests
                         return null;
                     }
                         
-    },
+                },
                 new()
                 {
                     Name = "WishList",

@@ -9,7 +9,7 @@ namespace Microsoft.OData.Serializer.V3.Adapters;
 public class ODataPropertyInfo
 {
     private string name;
-    // TODO: cache a ReadOnlySpan<char> representation of the name for perf to avoid repeated transcoding when writing to JSON
+
     public string? Name
     {
         get => name;

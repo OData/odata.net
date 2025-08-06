@@ -14,7 +14,7 @@ public class ODataPropertyInfo<TDeclaringType, TCustomState> :
 #pragma warning restore CA1005 // Avoid excessive parameters on generic types
 {
     // TODO: this property name conflicts with the method WriteValue from IValueWriter. Perhaps IValueWriter.WriteValue should be renamed?
-    public required Func<TDeclaringType, IValueWriter<TCustomState>, ODataJsonWriterState<TCustomState>, ValueTask> WriteValue { get; init; }
+    public Func<TDeclaringType, IValueWriter<TCustomState>, ODataJsonWriterState<TCustomState>, ValueTask> WriteValue { get; init; }
 
     // TODO: implement a shorthad GetValue hook of type Func<TDeclaringType, ODataJsonWriterState<TCustomState>, TValue>
     // which would require an extra generic type parameter TValue that's a bit hard to defined since we'd
@@ -67,12 +67,12 @@ public class ODataPropertyInfo<TDeclaringType, TCustomState> :
         return ValueTask.CompletedTask;
     }
 
-    private ValueTask WritePropertyValue(TDeclaringType resource, ODataJsonWriterState<TCustomState> state)
+    internal protected virtual ValueTask WritePropertyValue(TDeclaringType resource, ODataJsonWriterState<TCustomState> state)
     {
         return this.WriteValue(resource, this, state);
     }
 
-    private ValueTask WritePropertyValue<TValue>(TDeclaringType resource, TValue value, ODataJsonWriterState<TCustomState> state)
+    internal protected ValueTask WritePropertyValue<TValue>(TDeclaringType resource, TValue value, ODataJsonWriterState<TCustomState> state)
     {
         state.JsonWriter.WritePropertyName(this.Utf8Name.Span);
         return state.WriteValue(value);
@@ -146,11 +146,4 @@ public class ODataPropertyInfo<TDeclaringType, TCustomState> :
         jsonWriter.WritePropertyName(this.Utf8Name.Span);
         return state.WriteValue(value);
     }
-}
-
-#pragma warning disable CA1005 // Avoid excessive parameters on generic types
-public class ODataPropertyInfo<TDeclaringType, TValue, TCustomState> : ODataPropertyInfo<TDeclaringType, TCustomState>
-#pragma warning restore CA1005 // Avoid excessive parameters on generic types
-{
-    public Func<TDeclaringType, TValue, ODataJsonWriterState<TCustomState>, TValue>? GetValue { get; init; }
 }
