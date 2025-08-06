@@ -1,6 +1,8 @@
 ﻿using Microsoft.OData.Serializer.V3.Json;
+using Microsoft.OData.Serializer.V3.Json.State;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net.Http.Headers;
 using System.Text;
@@ -18,7 +20,8 @@ public class ODataPropertyInfo<TDeclaringType, TCustomState> :
 #pragma warning restore CA1005 // Avoid excessive parameters on generic types
 {
     // TODO: this property name conflicts with the method WriteValue from IValueWriter. Perhaps IValueWriter.WriteValue should be renamed?
-    public Func<TDeclaringType, IValueWriter<TCustomState>, ODataJsonWriterState<TCustomState>, ValueTask> WriteValue { get; init; }
+    // TODO: should we support resumability in custom writes?
+    public Func<TDeclaringType, IValueWriter<TCustomState>, ODataJsonWriterState<TCustomState>, bool> WriteValue { get; init; }
 
     // TODO: implement a shorthad GetValue hook of type Func<TDeclaringType, ODataJsonWriterState<TCustomState>, TValue>
     // which would require an extra generic type parameter TValue that's a bit hard to defined since we'd
@@ -61,29 +64,73 @@ public class ODataPropertyInfo<TDeclaringType, TCustomState> :
 
     public Func<TDeclaringType, ODataJsonWriterState<TCustomState>, object?>? GetCustomPreValueAnnotations { get; init; }
 
-    public Func<TDeclaringType, IAnnotationWriter<TCustomState>, ODataJsonWriterState<TCustomState>, ValueTask>? WriteCustomPreValueAnnotations { get; init; }
+    public Action<TDeclaringType, IAnnotationWriter<TCustomState>, ODataJsonWriterState<TCustomState>>? WriteCustomPreValueAnnotations { get; init; }
 
     public Func<TDeclaringType, ODataJsonWriterState<TCustomState>, object?>? GetCustomPostValueAnnotations { get; init; }
 
-    public Func<TDeclaringType, IAnnotationWriter<TCustomState>, ODataJsonWriterState<TCustomState>, ValueTask>? WriteCustomPostValueAnnotations { get; init; }
+    public Action<TDeclaringType, IAnnotationWriter<TCustomState>, ODataJsonWriterState<TCustomState>>? WriteCustomPostValueAnnotations { get; init; }
 
     public Func<TDeclaringType, ODataJsonWriterState<TCustomState>, bool>? ShouldSkip { get; init; }
 
-    internal async ValueTask WriteProperty(TDeclaringType resource, ODataJsonWriterState<TCustomState> state)
+    internal bool WriteProperty(TDeclaringType resource, ODataJsonWriterState<TCustomState> state)
     {
-        await this.WritePreValueAnnotations(resource, state);
-        await this.WritePropertyValue(resource, state);
-        await this.WritePostValueAnnotations(resource, state);
+        if (state.Stack.Current.PropertyProgress < PropertyProgress.PreValueMetadata)
+        {
+            this.WritePreValueAnnotations(resource, state);
+            state.Stack.Current.PropertyProgress = PropertyProgress.PreValueMetadata;
+            // TODO: check whether to flush.
+        }
+        
+        if (state.Stack.Current.PropertyProgress < PropertyProgress.Value)
+        {
+            bool success = this.WritePropertyValue(resource, state);
+            if (!success)
+            {
+                return false;
+            }
+
+            state.Stack.Current.PropertyProgress = PropertyProgress.Value;
+        }
+
+        if (state.Stack.Current.PropertyProgress < PropertyProgress.PostValueMetadata)
+        {
+            this.WritePostValueAnnotations(resource, state);
+            state.Stack.Current.PropertyProgress = PropertyProgress.PostValueMetadata;
+        }
+
+        return true;
     }
 
-    internal async ValueTask WriteProperty<TValue>(TDeclaringType resource, TValue value, ODataJsonWriterState<TCustomState> state)
+    internal bool WriteProperty<TValue>(TDeclaringType resource, TValue value, ODataJsonWriterState<TCustomState> state)
     {
-        await this.WritePreValueAnnotations(resource, state);
-        await this.WritePropertyValue(resource, value, state);
-        await this.WritePostValueAnnotations(resource, state);
+        if (state.Stack.Current.PropertyProgress < PropertyProgress.PreValueMetadata)
+        {
+            this.WritePreValueAnnotations(resource, state);
+            state.Stack.Current.PropertyProgress = PropertyProgress.PreValueMetadata;
+            // TODO: check whether to flush.
+        }
+
+        if (state.Stack.Current.PropertyProgress < PropertyProgress.Value)
+        {
+            bool success = this.WritePropertyValue(resource, value, state);
+            if (!success)
+            {
+                return false;
+            }
+
+            state.Stack.Current.PropertyProgress = PropertyProgress.Value;
+        }
+
+        if (state.Stack.Current.PropertyProgress < PropertyProgress.PostValueMetadata)
+        {
+            this.WritePostValueAnnotations(resource, state);
+            state.Stack.Current.PropertyProgress = PropertyProgress.PostValueMetadata;
+        }
+
+        return true;
     }
 
-    private ValueTask WritePreValueAnnotations(TDeclaringType resource, ODataJsonWriterState<TCustomState> state)
+    private void WritePreValueAnnotations(TDeclaringType resource, ODataJsonWriterState<TCustomState> state)
     {
         if (this.CountPosition != AnnotationPosition.PostValue)
         {
@@ -103,19 +150,17 @@ public class ODataPropertyInfo<TDeclaringType, TCustomState> :
                 // TODO: Should we allow GetCustomPreValueAnnotations to return
                 // a different type on different calls? If not, we could cache the handler on the property info
                 var handler = state.GetCustomAnnotationsHandler(customAnnotations.GetType());
-                return handler.WriteAnnotations(customAnnotations, this, state);
+                handler.WriteAnnotations(customAnnotations, this, state);
             }
         }
         else if (this.WriteCustomPreValueAnnotations != null)
         {
             // annotations writer.
-            return this.WriteCustomPreValueAnnotations(resource, this, state);
+            WriteCustomPreValueAnnotations(resource, this, state);
         }
-
-        return ValueTask.CompletedTask;
     }
 
-    private ValueTask WritePostValueAnnotations(TDeclaringType resource, ODataJsonWriterState<TCustomState> state)
+    private void WritePostValueAnnotations(TDeclaringType resource, ODataJsonWriterState<TCustomState> state)
     {
         if (this.CountPosition == AnnotationPosition.PostValue)
         {
@@ -135,25 +180,25 @@ public class ODataPropertyInfo<TDeclaringType, TCustomState> :
                 // TODO: Should we allow GetCustomPreValueAnnotations to return
                 // a different type on different calls? If not, we could cache the handler on the property info
                 var handler = state.GetCustomAnnotationsHandler(customAnnotations.GetType());
-                return handler.WriteAnnotations(customAnnotations, this, state);
+                handler.WriteAnnotations(customAnnotations, this, state);
             }
         }
         else if (this.WriteCustomPostValueAnnotations != null)
         {
-            return this.WriteCustomPostValueAnnotations(resource, this, state);
+            this.WriteCustomPostValueAnnotations(resource, this, state);
         }
-
-        return ValueTask.CompletedTask;
     }
 
-    internal protected virtual ValueTask WritePropertyValue(TDeclaringType resource, ODataJsonWriterState<TCustomState> state)
+    internal protected bool WritePropertyValue(TDeclaringType resource, ODataJsonWriterState<TCustomState> state)
     {
-        return this.WriteValue(resource, this, state);
+        return WriteValue(resource, this, state);
     }
 
-    internal protected ValueTask WritePropertyValue<TValue>(TDeclaringType resource, TValue value, ODataJsonWriterState<TCustomState> state)
+    internal protected bool WritePropertyValue<TValue>(TDeclaringType resource, TValue value, ODataJsonWriterState<TCustomState> state)
     {
         state.JsonWriter.WritePropertyName(this.Utf8Name.Span);
+        state.Stack.Current.PropertyProgress = PropertyProgress.Name;
+
         return state.WriteValue(value);
     }
 
@@ -219,7 +264,7 @@ public class ODataPropertyInfo<TDeclaringType, TCustomState> :
         jsonWriter.WriteStringValue(nextLink.AbsoluteUri);
     }
 
-    ValueTask IValueWriter<TCustomState>.WriteValue<T>(T value, ODataJsonWriterState<TCustomState> state)
+    bool IValueWriter<TCustomState>.WriteValue<T>(T value, ODataJsonWriterState<TCustomState> state)
     {
         var jsonWriter = state.JsonWriter;
         jsonWriter.WritePropertyName(this.Utf8Name.Span);
@@ -227,17 +272,19 @@ public class ODataPropertyInfo<TDeclaringType, TCustomState> :
     }
 
     // The IAnnotationwriter.WriteAnnotation methods are only called when writing custom annotations
-    ValueTask IAnnotationWriter<TCustomState>.WriteAnnotation<TValue>(ReadOnlySpan<char> name, TValue value, ODataJsonWriterState<TCustomState> state)
+    void IAnnotationWriter<TCustomState>.WriteAnnotation<TValue>(ReadOnlySpan<char> name, TValue value, ODataJsonWriterState<TCustomState> state)
     {
         var jsonWriter = state.JsonWriter;
         JsonMetadataHelpers.WriteCustomPropertyAnnotationName(jsonWriter, this.Name, name);
-        return state.WriteValue(value);
+        var success = state.WriteValue(value);
+        Debug.Assert(success, "Annotation value write did not complete. Resumable writes are not currently supported for annotations.");
     }
 
-    ValueTask IAnnotationWriter<TCustomState>.WriteAnnotation<TValue>(ReadOnlySpan<byte> name, TValue value, ODataJsonWriterState<TCustomState> state)
+    void IAnnotationWriter<TCustomState>.WriteAnnotation<TValue>(ReadOnlySpan<byte> name, TValue value, ODataJsonWriterState<TCustomState> state)
     {
         var jsonWriter = state.JsonWriter;
         JsonMetadataHelpers.WriteCustomPropertyAnnotationName(jsonWriter, this.Utf8Name.Span, name);
-        return state.WriteValue(value);
+        var success = state.WriteValue(value);
+        Debug.Assert(success, "Annotation value write did not complete. Resumable writes are not currently supported for annotations.");
     }
 }

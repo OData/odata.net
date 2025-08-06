@@ -45,5 +45,5 @@ public interface IODataWriter<T, TState> : IODataWriter
     /// This allows us to support async scenarios without having to make methods async and do async/await in the fast path of the serializer
     /// that is expected to do in-memory writes for the most part.
     /// </returns>
-    ValueTask Write(T value, TState state);
+    bool Write(T value, TState state);
 }

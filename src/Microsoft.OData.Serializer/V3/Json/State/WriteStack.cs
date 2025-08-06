@@ -151,14 +151,34 @@ internal class WriteStack<TCustomState>
         _count++;
     }
 
-    public void Pop()
+    public void Pop(bool success)
     {
         if (_count == 0)
         {
             throw new InvalidOperationException("Stack is empty, cannot pop frame.");
         }
 
+        // If success is false, then the write at this position did not complete,
+        // it was suspended, e.g. so that we can flush the buffer.
+        // So we should not clear the current frame so then when we resume writing,
+        // the write at this position can use the stack frame to restore its state
+        // and pick up from where it left off.
+        // If success is true, then we completed writing the value at the current position,
+        // so we should clear the frame so that if we push the stack back to this frame,
+        // we'll treat is as a fresh slate and not a continuation.
+        if (success)
+        {
+            // If we've successfully completed, let's clear the current frame
+            Current = default;
+        }
+
         _count--;
+    }
+
+    public void EndProperty()
+    {
+        Current.PropertyInfo = default;
+        Current.PropertyProgress = default;
     }
 
     public bool IsTopLevel()

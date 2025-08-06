@@ -10,9 +10,9 @@ namespace Microsoft.OData.Serializer.V3.Adapters;
 public interface IPropertyWriter<TDeclaringType, TCustomState>
 {
     // TODO: consider overloads that accept ReadOnlySpan<char> and ReadOnlySpan<byte>
-    ValueTask WriteProperty<T>(TDeclaringType resource, string name, T Value, ODataJsonWriterState<TCustomState> state);
-    ValueTask WriteProperty<T>(TDeclaringType resource, ODataPropertyInfo<TDeclaringType, TCustomState> propertyInfo, T value, ODataJsonWriterState<TCustomState> state);
-    ValueTask WriteProperty(
+    bool WriteProperty<T>(TDeclaringType resource, string name, T Value, ODataJsonWriterState<TCustomState> state);
+    bool WriteProperty<T>(TDeclaringType resource, ODataPropertyInfo<TDeclaringType, TCustomState> propertyInfo, T value, ODataJsonWriterState<TCustomState> state);
+    bool WriteProperty(
         TDeclaringType resource,
         ODataPropertyInfo<TDeclaringType, TCustomState> propertyInfo,
         ODataJsonWriterState<TCustomState> state);

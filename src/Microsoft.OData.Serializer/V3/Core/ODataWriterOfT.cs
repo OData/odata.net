@@ -15,5 +15,5 @@ public abstract class ODataWriter<T, TState> : IODataWriter<T, TState>
         return type == this.Type;
     }
 
-    public abstract ValueTask Write(T value, TState state);
+    public abstract bool Write(T value, TState state);
 }

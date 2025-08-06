@@ -13,4 +13,12 @@ internal struct WriteStackFrame<TCustomState>
     public Adapters.ODataPropertyInfo? PropertyInfo { get; set; }
 
     public TCustomState CustomState;
+
+    public bool IsContinuation { get; set; }
+
+    public ResourceWriteProgress ResourceProgress { get; set; }
+
+    public PropertyProgress PropertyProgress { get; set; }
+
+    public int EnumeratorIndex { get; set; }
 }

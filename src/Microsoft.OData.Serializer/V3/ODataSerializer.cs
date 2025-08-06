@@ -33,7 +33,16 @@ public static class ODataSerializer
         // get writer
         var writer = writerProvider.GetWriter<T>(); // should we pass the value as well?
 
-        await writer.Write(value, state);
+        bool isDone = false;
+        while (!isDone)
+        {
+            isDone = writer.Write(value, state);
+
+            if (state.ShouldFlush())
+            {
+                await jsonWriter.FlushAsync();
+            }
+        }
 
         await jsonWriter.FlushAsync();
 

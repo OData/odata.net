@@ -56,7 +56,7 @@ public class ODataTypeInfo<T, TCustomState> : ODataTypeInfo
 
     public Action<T, IEtagWriter<TCustomState>, ODataJsonWriterState<TCustomState>>? WriteEtag { get; init; }
 
-    public Func<T, IPropertyWriter<T, TCustomState>, ODataJsonWriterState<TCustomState>, ValueTask>? WriteProperties { get; init; }
+    public Func<T, IPropertyWriter<T, TCustomState>, ODataJsonWriterState<TCustomState>, bool>? WriteProperties { get; init; }
 
     public Func<T, ODataJsonWriterState<TCustomState>, object?>? GetCustomPreValueAnnotations { get; init; }
 

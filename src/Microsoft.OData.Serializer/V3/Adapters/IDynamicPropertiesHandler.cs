@@ -9,5 +9,5 @@ namespace Microsoft.OData.Serializer.V3.Adapters;
 
 internal interface IDynamicPropertiesHandler<TCustomState>
 {
-    ValueTask WriteDynamicProperties(object dynamicProperties, IDynamicPropertyWriter<TCustomState> writer, ODataJsonWriterState<TCustomState> state);
+    void WriteDynamicProperties(object dynamicProperties, IDynamicPropertyWriter<TCustomState> writer, ODataJsonWriterState<TCustomState> state);
 }
