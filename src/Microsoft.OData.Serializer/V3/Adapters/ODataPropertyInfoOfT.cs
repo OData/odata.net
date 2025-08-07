@@ -196,8 +196,11 @@ public class ODataPropertyInfo<TDeclaringType, TCustomState> :
 
     internal protected bool WritePropertyValue<TValue>(TDeclaringType resource, TValue value, ODataJsonWriterState<TCustomState> state)
     {
-        state.JsonWriter.WritePropertyName(this.Utf8Name.Span);
-        state.Stack.Current.PropertyProgress = PropertyProgress.Name;
+        if (state.Stack.Current.PropertyProgress < PropertyProgress.Name)
+        {
+            state.JsonWriter.WritePropertyName(this.Utf8Name.Span);
+            state.Stack.Current.PropertyProgress = PropertyProgress.Name;
+        }
 
         return state.WriteValue(value);
     }
@@ -266,8 +269,13 @@ public class ODataPropertyInfo<TDeclaringType, TCustomState> :
 
     bool IValueWriter<TCustomState>.WriteValue<T>(T value, ODataJsonWriterState<TCustomState> state)
     {
-        var jsonWriter = state.JsonWriter;
-        jsonWriter.WritePropertyName(this.Utf8Name.Span);
+        if (state.Stack.Current.PropertyProgress < PropertyProgress.Name)
+        {
+            var jsonWriter = state.JsonWriter;
+            jsonWriter.WritePropertyName(this.Utf8Name.Span);
+            state.Stack.Current.PropertyProgress = PropertyProgress.Name;
+        }
+
         return state.WriteValue(value);
     }
 
