@@ -35,7 +35,7 @@ internal class ODataSerializerV3PayloadWriter : IPayloadWriter<IEnumerable<Custo
 
         _options = new ODataSerializerOptions();
 
-        _options.AddTypeInfo<Customer>(new ODataResourceTypeInfo<Customer>
+        _options.AddTypeInfo<Customer>(new ODataTypeInfo<Customer>
         {
             Properties = [
                 new()
@@ -76,7 +76,7 @@ internal class ODataSerializerV3PayloadWriter : IPayloadWriter<IEnumerable<Custo
             ]
         });
 
-        _options.AddTypeInfo<Address>(new ODataResourceTypeInfo<Address>
+        _options.AddTypeInfo<Address>(new ODataTypeInfo<Address>
         {
             Properties = [
                 new()
