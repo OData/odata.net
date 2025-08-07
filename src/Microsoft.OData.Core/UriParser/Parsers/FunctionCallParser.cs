@@ -253,7 +253,7 @@ namespace Microsoft.OData.UriParser
             }
 
             // Check if the identifier is a primitive type
-            IEdmSchemaType schemaType = NormalizedModelElementsCache.EdmCoreModelCacheInstance.FindSchemaTypes(dottedIdentifierToken.Identifier).FirstOrDefault();
+            IEdmSchemaType schemaType = NormalizedModelElementsCache.EdmCoreModelCacheInstance.FindSchemaTypes(dottedIdentifierToken.Identifier)?.FirstOrDefault();
 
             // If the identifier is a primitive type
             if (schemaType is IEdmPrimitiveType)
