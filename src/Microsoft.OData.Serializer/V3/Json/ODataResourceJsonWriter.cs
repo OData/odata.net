@@ -183,14 +183,13 @@ internal class ODataResourceJsonWriter<T, TCustomState>(ODataTypeInfo<T, TCustom
             //    return false;
             //}
 
-            if (state.ShouldFlush())
-            {
-                return false;
-            }
-
             state.Stack.EndProperty();
 
-            // if async source needs more data, we should return false as well
+            if (state.ShouldFlush())
+            {
+                state.Stack.Current.EnumeratorIndex = i + 1;
+                return false;
+            }
         }
 
         object? dynamicProperties = typeInfo.GetDynamicProperties?.Invoke(value, state);

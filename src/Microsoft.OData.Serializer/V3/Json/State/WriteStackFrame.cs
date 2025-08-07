@@ -1,5 +1,6 @@
 ﻿using Microsoft.OData.Serializer.V3.Adapters;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,4 +22,6 @@ internal struct WriteStackFrame<TCustomState>
     public PropertyProgress PropertyProgress { get; set; }
 
     public int EnumeratorIndex { get; set; }
+
+    public IEnumerator CurrentEnumerator { get; set; }
 }

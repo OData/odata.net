@@ -18,11 +18,26 @@ internal class ODataJsonReadOnlyListWriter<TCollection, TElement, TCustomState> 
     {
     }
 
-    protected override async ValueTask WriteElements(TCollection value, ODataJsonWriterState<TCustomState> state)
+    protected override bool WriteElements(TCollection value, ODataJsonWriterState<TCustomState> state)
     {
-        for (int i = 0; i < value.Count; i++)
+        var propIndex = state.Stack.Current.EnumeratorIndex;
+        for (int i = propIndex; i < value.Count; i++)
         {
-            await state.WriteValue(value[i]);
+            state.Stack.Current.EnumeratorIndex = i;
+            bool success = state.WriteValue(value[i]);
+            if (!success)
+            {
+                // If the write was not complete, we need to return false to indicate that we need to resume later.
+                return false;
+            }
+
+            if (state.ShouldFlush())
+            {
+                state.Stack.Current.EnumeratorIndex = i + 1;
+                return false;
+            }
         }
+
+        return true;
     }
 }
