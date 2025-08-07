@@ -184,7 +184,7 @@ namespace Microsoft.OData.UriParser
         private List<FunctionParameterToken> ReadArgumentsAsPositionalValues(ReadOnlySpan<char> functionName = default)
         {
             // Store the parent expression of the current argument.
-            Stack<QueryToken> expressionParents = new Stack<QueryToken>();
+            StackStruct<QueryToken> expressionParents = new StackStruct<QueryToken>();
             bool isFunctionCallNameCastOrIsOf = functionName.Length > 0 &&
                 (functionName.SequenceEqual(ExpressionConstants.UnboundFunctionCast.AsSpan()) || functionName.SequenceEqual(ExpressionConstants.UnboundFunctionIsOf.AsSpan()));
             List<FunctionParameterToken> argList = new List<FunctionParameterToken>();

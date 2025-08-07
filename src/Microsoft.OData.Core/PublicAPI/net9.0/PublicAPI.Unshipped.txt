@@ -1,0 +1,13 @@
+Microsoft.OData.UriParser.StackStruct<T>
+Microsoft.OData.UriParser.StackStruct<T>.Count.get -> int
+Microsoft.OData.UriParser.StackStruct<T>.Equals(Microsoft.OData.UriParser.StackStruct<T> other) -> bool
+Microsoft.OData.UriParser.StackStruct<T>.IsEmpty.get -> bool
+Microsoft.OData.UriParser.StackStruct<T>.Peek() -> T
+Microsoft.OData.UriParser.StackStruct<T>.Pop() -> T
+Microsoft.OData.UriParser.StackStruct<T>.Push(T item) -> void
+Microsoft.OData.UriParser.StackStruct<T>.StackStruct() -> void
+Microsoft.OData.UriParser.StackStruct<T>.StackStruct(int capacity) -> void
+override Microsoft.OData.UriParser.StackStruct<T>.Equals(object obj) -> bool
+override Microsoft.OData.UriParser.StackStruct<T>.GetHashCode() -> int
+static Microsoft.OData.UriParser.StackStruct<T>.operator !=(Microsoft.OData.UriParser.StackStruct<T> left, Microsoft.OData.UriParser.StackStruct<T> right) -> bool
+static Microsoft.OData.UriParser.StackStruct<T>.operator ==(Microsoft.OData.UriParser.StackStruct<T> left, Microsoft.OData.UriParser.StackStruct<T> right) -> bool

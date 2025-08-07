@@ -2462,6 +2462,9 @@
   <data name="ExceptionUtils_ArgumentStringNullOrEmpty" xml:space="preserve">
     <value>Value cannot be null or empty.</value>
   </data>
+  <data name="ExceptionUtils_IsEmpty" xml:space="preserve">
+    <value>{0} is empty.</value>
+  </data>
   <data name="ExpressionToken_OnlyRefAllowWithStarInExpand" xml:space="preserve">
     <value>Only $ref is allowed with star in $expand option.</value>
   </data>
