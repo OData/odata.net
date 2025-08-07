@@ -189,7 +189,7 @@ public class ODataPropertyInfo<TDeclaringType, TCustomState> :
         }
     }
 
-    internal protected bool WritePropertyValue(TDeclaringType resource, ODataJsonWriterState<TCustomState> state)
+    internal protected virtual bool WritePropertyValue(TDeclaringType resource, ODataJsonWriterState<TCustomState> state)
     {
         return WriteValue(resource, this, state);
     }

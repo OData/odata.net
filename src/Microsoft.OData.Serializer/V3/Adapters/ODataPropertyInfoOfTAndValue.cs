@@ -17,7 +17,7 @@ public class ODataPropertyInfo<TDeclaringType, TValue, TCustomState> : ODataProp
 {
     public Func<TDeclaringType, ODataJsonWriterState<TCustomState>, TValue>? GetValue { get; init; }
 
-    internal protected override ValueTask WritePropertyValue(TDeclaringType resource, ODataJsonWriterState<TCustomState> state)
+    internal protected override bool WritePropertyValue(TDeclaringType resource, ODataJsonWriterState<TCustomState> state)
     {
         if (this.GetValue != null)
         {

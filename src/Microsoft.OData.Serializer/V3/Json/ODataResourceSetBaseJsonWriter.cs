@@ -34,6 +34,7 @@ public abstract class ODataResourceSetBaseJsonWriter<TCollection, TElement, TCus
 
             if (state.IsTopLevel())
             {
+                jsonWriter.WriteStartObject();
 
                 WritePreValueMetadata(value, state);
 
