@@ -9,9 +9,9 @@ namespace Microsoft.OData.Serializer.V3.Json.Writers;
 
 internal class ODataJsonBoolWriter<TCustomState> : ODataJsonWriter<bool, TCustomState>
 {
-    public override ValueTask Write(bool value, ODataJsonWriterState<TCustomState> state)
+    public override bool Write(bool value, ODataJsonWriterState<TCustomState> state)
     {
         state.JsonWriter.WriteBooleanValue(value);
-        return ValueTask.CompletedTask;
+        return true;
     }
 }

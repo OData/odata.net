@@ -181,6 +181,12 @@ internal class WriteStack<TCustomState>
         Current.PropertyProgress = default;
     }
 
+    public void EndCollectionElement()
+    {
+        Current.EnumeratorIndex = default;
+        Current.CurrentEnumerator = default;
+    }
+
     public bool IsTopLevel()
     {
         return _count < 2;

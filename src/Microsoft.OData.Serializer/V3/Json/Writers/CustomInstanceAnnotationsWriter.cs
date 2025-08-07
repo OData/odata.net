@@ -11,18 +11,26 @@ internal class CustomInstanceAnnotationWriter<TCustomState> : IAnnotationWriter<
 {
     public static readonly CustomInstanceAnnotationWriter<TCustomState> Instance = new();
 
-    public ValueTask WriteAnnotation<TValue>(ReadOnlySpan<char> name, TValue value, ODataJsonWriterState<TCustomState> state)
+    public void WriteAnnotation<TValue>(ReadOnlySpan<char> name, TValue value, ODataJsonWriterState<TCustomState> state)
     {
         // TODO: prefix annotation withs @ and ensure name includes . but does not start with odata.
         var jsonWriter = state.JsonWriter;
         JsonMetadataHelpers.WriteCustomAnnotationName(jsonWriter, name);
-        return state.WriteValue(value);
+        bool completed = state.WriteValue(value);
+        if (!completed)
+        {
+            throw new InvalidOperationException("Resumable annotation writes are not supported.");
+        }
     }
 
-    public ValueTask WriteAnnotation<TValue>(ReadOnlySpan<byte> name, TValue value, ODataJsonWriterState<TCustomState> state)
+    public void WriteAnnotation<TValue>(ReadOnlySpan<byte> name, TValue value, ODataJsonWriterState<TCustomState> state)
     {
         var jsonWriter = state.JsonWriter;
         JsonMetadataHelpers.WriteCustomAnnotationName(jsonWriter, name);
-        return state.WriteValue(value);
+        bool completed = state.WriteValue(value);
+        if (!completed)
+        {
+            throw new InvalidOperationException("Resumable annotation writes are not supported.");
+        }
     }
 }
