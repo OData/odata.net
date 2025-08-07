@@ -9,5 +9,6 @@ namespace Microsoft.OData.Serializer.V3.Adapters;
 
 internal interface IDynamicPropertiesHandler<TCustomState>
 {
+    // TODO: support resumability for dynamic properties
     void WriteDynamicProperties(object dynamicProperties, IDynamicPropertyWriter<TCustomState> writer, ODataJsonWriterState<TCustomState> state);
 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.OData.Serializer.V3.Adapters;
+using Microsoft.OData.Serializer.V3.Json.State;
 using Microsoft.OData.Serializer.V3.Json.Writers;
 using System;
 using System.Collections.Generic;
@@ -13,57 +14,99 @@ public abstract class ODataResourceSetBaseJsonWriter<TCollection, TElement, TCus
     ODataJsonWriter<TCollection, TCustomState>, ICountWriter<TCustomState>, INextLinkWriter<TCustomState>
 #pragma warning restore CA1005 // Avoid excessive parameters on generic types
 {
-    public override async ValueTask Write(TCollection value, ODataJsonWriterState<TCustomState> state)
+    public override bool Write(TCollection value, ODataJsonWriterState<TCustomState> state)
     {
         Adapters.ODataPropertyInfo? parentProperty = state.IsTopLevel()
             ? null
             : state.Stack.Current.PropertyInfo;
         state.Stack.Push();
-        state.Stack.Current.ResourceTypeInfo = typeInfo;
-        state.Stack.Current.PropertyInfo = parentProperty;
 
-        typeInfo?.OnSerializing?.Invoke(value, state);
+        var jsonWriter = state.JsonWriter;
 
-        if (state.IsTopLevel())
+        var progress = state.Stack.Current.ResourceProgress;
+
+        if (progress < ResourceWriteProgress.PreValueMetadata)
         {
-            state.JsonWriter.WriteStartObject();
+            state.Stack.Current.ResourceTypeInfo = typeInfo;
+            state.Stack.Current.PropertyInfo = parentProperty;
 
-            await WritePreValueMetadata(value, state);
+            typeInfo?.OnSerializing?.Invoke(value, state);
 
-            state.JsonWriter.WritePropertyName("value");
+            if (state.IsTopLevel())
+            {
+
+                WritePreValueMetadata(value, state);
+
+                state.JsonWriter.WritePropertyName("value");
+            }
+            else
+            {
+                // In a previous iteration, this was writing nested annotations
+                // in this case, annotations are stored on the parent object's propertyInfo
+                // and they're prefixed using the property name. But I've changed
+                // the model, now the nested annotations of the property that current
+                // valu belongs to are written by the parent writer.
+                // I'm still evaluating to see which models makes more sense.
+                //await WritePreValueMetadata(value, parentProperty, state);
+            }
+
+
+            state.JsonWriter.WriteStartArray();
+
+            state.Stack.Current.ResourceProgress = ResourceWriteProgress.PreValueMetadata;
+
+            if (state.ShouldFlush())
+            {
+                state.Stack.Pop(false);
+                return false;
+            }
         }
-        else
+
+        if (progress < ResourceWriteProgress.Value)
         {
-            // In a previous iteration, this was writing nested annotations
-            // in this case, annotations are stored on the parent object's propertyInfo
-            // and they're prefixed using the property name. But I've changed
-            // the model, now the nested annotations of the property that current
-            // valu belongs to are written by the parent writer.
-            // I'm still evaluating to see which models makes more sense.
-            //await WritePreValueMetadata(value, parentProperty, state);
+            if (WriteElements(value, state))
+            {
+                state.Stack.Current.ResourceProgress = ResourceWriteProgress.Value;
+
+                if (state.ShouldFlush())
+                {
+                    state.Stack.Pop(false);
+                    return false;
+                }
+            }
+            else
+            {
+                state.Stack.Pop(false);
+                return false;
+            }
         }
 
-        state.JsonWriter.WriteStartArray();
-
-        await WriteElements(value, state);
-
-        state.JsonWriter.WriteEndArray();
-
-        if (state.IsTopLevel())
+        if (progress < ResourceWriteProgress.PostValueMetadata)
         {
+            state.JsonWriter.WriteEndArray();
 
-            await WritePostValueAnnotaitons(value, state);
-            state.JsonWriter.WriteEndObject();
+            if (state.IsTopLevel())
+            {
+                WritePostValueAnnotaitons(value, state);
+                state.JsonWriter.WriteEndObject();
+            }
+
+            state.Stack.Current.ResourceProgress = ResourceWriteProgress.PostValueMetadata;
+            if (state.ShouldFlush())
+            {
+                state.Stack.Pop(false);
+                return false;
+            }
         }
 
         typeInfo?.OnSerialized?.Invoke(value, state);
-
-        state.Stack.Pop();
+        state.Stack.Pop(true);
+        return true;
     }
 
-    protected abstract ValueTask WriteElements(TCollection value, ODataJsonWriterState<TCustomState> state);
+    protected abstract bool WriteElements(TCollection value, ODataJsonWriterState<TCustomState> state);
 
-    protected virtual  ValueTask WritePreValueMetadata(TCollection value, ODataJsonWriterState<TCustomState> state)
+    protected virtual void WritePreValueMetadata(TCollection value, ODataJsonWriterState<TCustomState> state)
     {
         // Since this is only called when top-level, let's also write the context URL
         if (state.MetadataLevel >= ODataMetadataLevel.Minimal)
@@ -78,10 +121,10 @@ public abstract class ODataResourceSetBaseJsonWriter<TCollection, TElement, TCus
         //    await WriteCountProperty(value, state, context);
         //}
 
-        return WritePreValueAnnotaitons(value, state);
+        WritePreValueAnnotaitons(value, state);
     }
 
-    protected virtual async ValueTask WritePreValueAnnotaitons(TCollection value, ODataJsonWriterState<TCustomState> state)
+    protected virtual void WritePreValueAnnotaitons(TCollection value, ODataJsonWriterState<TCustomState> state)
     {
         if (typeInfo?.CountPosition != AnnotationPosition.PostValue)
         {
@@ -101,16 +144,16 @@ public abstract class ODataResourceSetBaseJsonWriter<TCollection, TElement, TCus
                 // a different type on different calls? If not, we could cache the handler on the writer or type info.
                 var jsonWriter = state.JsonWriter;
                 var handler = state.GetCustomAnnotationsHandler(annotations.GetType());
-                await handler.WriteAnnotations(annotations, CustomInstanceAnnotationWriter<TCustomState>.Instance, state);
+                handler.WriteAnnotations(annotations, CustomInstanceAnnotationWriter<TCustomState>.Instance, state);
             }
         }
         else if (typeInfo?.WriteCustomPreValueAnnotations != null)
         {
-            await typeInfo.WriteCustomPreValueAnnotations(value, CustomInstanceAnnotationWriter<TCustomState>.Instance, state);
+            typeInfo.WriteCustomPreValueAnnotations(value, CustomInstanceAnnotationWriter<TCustomState>.Instance, state);
         }
     }
 
-    protected virtual async ValueTask WritePostValueAnnotaitons(TCollection value, ODataJsonWriterState<TCustomState> state)
+    protected virtual void WritePostValueAnnotaitons(TCollection value, ODataJsonWriterState<TCustomState> state)
     {
         if (typeInfo?.CountPosition == AnnotationPosition.PostValue)
         {
@@ -132,12 +175,12 @@ public abstract class ODataResourceSetBaseJsonWriter<TCollection, TElement, TCus
                 // a different type on different calls? If not, we could cache the handler on the type info or writer.
                 var jsonWriter = state.JsonWriter;
                 var handler = state.GetCustomAnnotationsHandler(annotations.GetType());
-                await handler.WriteAnnotations(annotations, CustomInstanceAnnotationWriter<TCustomState>.Instance, state);
+                handler.WriteAnnotations(annotations, CustomInstanceAnnotationWriter<TCustomState>.Instance, state);
             }
         }
         else if (typeInfo?.WriteCustomPostValueAnnotations != null)
         {
-            await typeInfo.WriteCustomPostValueAnnotations(value, CustomInstanceAnnotationWriter<TCustomState>.Instance, state);
+            typeInfo.WriteCustomPostValueAnnotations(value, CustomInstanceAnnotationWriter<TCustomState>.Instance, state);
         }
     }
 

@@ -9,14 +9,14 @@ namespace Microsoft.OData.Serializer.V3.Adapters;
 
 internal class EnumerableCustomAnnotationsHandler<TValue, TCustomState> : ICustomAnnotationsHandler<TCustomState>
 {
-    public async ValueTask WriteAnnotations(object annotations, IAnnotationWriter<TCustomState> writer, ODataJsonWriterState<TCustomState> state)
+    public void WriteAnnotations(object annotations, IAnnotationWriter<TCustomState> writer, ODataJsonWriterState<TCustomState> state)
     {
         
         var enumerable = (IEnumerable<KeyValuePair<string, TValue>>)annotations;
         
         foreach (var kvp in enumerable)
         {
-            await writer.WriteAnnotation(kvp.Key, kvp.Value, state);
+            writer.WriteAnnotation(kvp.Key, kvp.Value, state);
         }
     }
 }

@@ -9,7 +9,8 @@ namespace Microsoft.OData.Serializer.V3.Adapters;
 
 internal interface IDynamicPropertyWriter<TCustomState>
 {
-    ValueTask WriteDynamicProperty<TValue>(ReadOnlySpan<char> name, TValue value, ODataJsonWriterState<TCustomState> state);
+    // TODO: support resumability for dynamic properties
+    void WriteDynamicProperty<TValue>(ReadOnlySpan<char> name, TValue value, ODataJsonWriterState<TCustomState> state);
 
-    ValueTask WriteDynamicProperty<TValue>(ReadOnlySpan<byte> name, TValue value, ODataJsonWriterState<TCustomState> state);
+    void WriteDynamicProperty<TValue>(ReadOnlySpan<byte> name, TValue value, ODataJsonWriterState<TCustomState> state);
 }

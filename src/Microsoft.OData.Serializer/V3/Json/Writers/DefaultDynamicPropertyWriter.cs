@@ -11,15 +11,23 @@ internal class DefaultDynamicPropertyWriter<TCustomState> : IDynamicPropertyWrit
 {
     internal static readonly DefaultDynamicPropertyWriter<TCustomState> Instance = new();
 
-    public ValueTask WriteDynamicProperty<TValue>(ReadOnlySpan<char> name, TValue value, ODataJsonWriterState<TCustomState> state)
+    public void WriteDynamicProperty<TValue>(ReadOnlySpan<char> name, TValue value, ODataJsonWriterState<TCustomState> state)
     {
         state.JsonWriter.WritePropertyName(name);
-        return state.WriteValue(value);
+        bool complete = state.WriteValue(value);
+        if (!complete)
+        {
+            throw new InvalidOperationException("Resumable dynamic property writes are not yet supported.");
+        }
     }
 
-    public ValueTask WriteDynamicProperty<TValue>(ReadOnlySpan<byte> name, TValue value, ODataJsonWriterState<TCustomState> state)
+    public void WriteDynamicProperty<TValue>(ReadOnlySpan<byte> name, TValue value, ODataJsonWriterState<TCustomState> state)
     {
         state.JsonWriter.WritePropertyName(name);
-        return state.WriteValue(value);
+        bool complete = state.WriteValue(value);
+        if (!complete)
+        {
+            throw new InvalidOperationException("Resumable dynamic property writes are not yet supported.");
+        }
     }
 }

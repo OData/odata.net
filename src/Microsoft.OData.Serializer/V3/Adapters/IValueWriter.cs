@@ -9,5 +9,5 @@ namespace Microsoft.OData.Serializer.V3.Adapters;
 
 public interface IValueWriter<TCustomState>
 {
-    ValueTask WriteValue<T>(T value, ODataJsonWriterState<TCustomState> state);
+    bool WriteValue<T>(T value, ODataJsonWriterState<TCustomState> state);
 }
