@@ -963,7 +963,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         [InlineData("isof(MyAddress,Fully.Qualified.Namespace.Pet1)", "'Fully.Qualified.Namespace.Pet1' is not assignable from 'Fully.Qualified.Namespace.Address'.")]
         [InlineData("isof(null,Fully.Qualified.Namespace.Person)", "'Fully.Qualified.Namespace.Person' is not assignable from '<null>'.")]
         [InlineData("isof('',Fully.Qualified.Namespace.Person)", "'Fully.Qualified.Namespace.Person' is not assignable from 'Edm.String'.")]
-        public void IsOfFunctionsWithUnquotedTypeParameter_WithIncorrectType_DoesNotThrowException(string filterQuery, string errorMessage)
+        public void IsOfFunctionsWithUnquotedTypeParameter_WithIncorrectType_ThrowException(string filterQuery, string errorMessage)
         {
             // Arrange & Act
             var exception = Record.Exception(() => ParseFilter(filterQuery, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet()));
@@ -979,7 +979,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         [InlineData("cast(MyAddress,Fully.Qualified.Namespace.Employee)/WorkID eq 345", "'Fully.Qualified.Namespace.Employee' is not assignable from 'Fully.Qualified.Namespace.Address'.")]
         [InlineData("cast(null,Fully.Qualified.Namespace.Employee)/WorkID eq 345", "'Fully.Qualified.Namespace.Employee' is not assignable from '<null>'.")]
         [InlineData("cast('',Fully.Qualified.Namespace.Employee)/WorkID eq 345", "'Fully.Qualified.Namespace.Employee' is not assignable from 'Edm.String'.")]
-        public void CastFunctionWithUnquotedTypeParameter_WithIncorrectType_DoesNotThrowException(string filterQuery, string errorMessage)
+        public void CastFunctionWithUnquotedTypeParameter_WithIncorrectType_ThrowException(string filterQuery, string errorMessage)
         {
             // Arrange & Act
             var exception = Record.Exception(() => ParseFilter(filterQuery, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet()));
