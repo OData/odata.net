@@ -15,7 +15,7 @@ namespace Microsoft.OData.UriParser;
 /// Provides efficient push, pop, and peek operations with dynamic resizing.
 /// </summary>
 /// <typeparam name="T">The type of elements in the stack.</typeparam>
-public struct StackStruct<T>
+internal struct StackStruct<T>
 {
     private T[] _items;
     private int _count;
