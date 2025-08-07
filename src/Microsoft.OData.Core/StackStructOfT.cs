@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="StructStackOfT.cs" company="Microsoft">
+// <copyright file="StackStructOfT.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -8,7 +8,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.OData.Core;
 
-namespace Microsoft.OData.UriParser;
+namespace Microsoft.OData;
 
 /// <summary>
 /// A lightweight, struct-based generic stack implementation for value and reference types.
@@ -126,7 +126,7 @@ internal struct StackStruct<T>
         hash = hash * 31 + _count.GetHashCode();
         for (int i = 0; i < _count; i++)
         {
-            hash = hash * 31 + (comparer.GetHashCode(_items[i]));
+            hash = hash * 31 + comparer.GetHashCode(_items[i]);
         }
         return hash;
     }
