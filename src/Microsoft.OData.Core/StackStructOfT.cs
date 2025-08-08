@@ -57,7 +57,7 @@ internal struct StackStruct<T>
     /// <exception cref="InvalidOperationException">Thrown if the stack is empty.</exception>
     public T Pop()
     {
-        ThrowIfEmpty();
+        ThrowIfNullOrEmpty();
         return _items[--_count];
     }
 
@@ -68,7 +68,7 @@ internal struct StackStruct<T>
     /// <exception cref="InvalidOperationException">Thrown if the stack is empty.</exception>
     public T Peek()
     {
-        ThrowIfEmpty();
+        ThrowIfNullOrEmpty();
         return _items[_count - 1];
     }
 
@@ -90,7 +90,9 @@ internal struct StackStruct<T>
     public override bool Equals(object obj)
     {
         if (obj is not StackStruct<T> other)
+        {
             return false;
+        }
 
         return Equals(other);
     }
@@ -101,16 +103,18 @@ internal struct StackStruct<T>
     /// </summary>
     /// <param name="other">The stack to compare with the current stack.</param>
     /// <returns>true if the stacks are equal; otherwise, false.</returns>
-    public bool Equals(StackStruct<T> other)
+    public readonly bool Equals(StackStruct<T> other)
     {
         if (_count != other._count)
             return false;
 
-        var comparer = EqualityComparer<T>.Default;
+        EqualityComparer<T> comparer = EqualityComparer<T>.Default;
         for (int i = 0; i < _count; i++)
         {
             if (!comparer.Equals(_items[i], other._items[i]))
+            {
                 return false;
+            }
         }
         return true;
     }
@@ -121,7 +125,7 @@ internal struct StackStruct<T>
     /// <returns>A hash code for the current stack.</returns>
     public override int GetHashCode()
     {
-        var comparer = EqualityComparer<T>.Default;
+        EqualityComparer<T> comparer = EqualityComparer<T>.Default;
         int hash = 17;
         hash = hash * 31 + _count.GetHashCode();
         for (int i = 0; i < _count; i++)
@@ -161,11 +165,11 @@ internal struct StackStruct<T>
         }
     }
 
-    private readonly void ThrowIfEmpty()
+    private readonly void ThrowIfNullOrEmpty()
     {
         if (_count == 0)
         {
-            throw new InvalidOperationException(Error.Format(SRResources.ExceptionUtils_IsEmpty, "StackStruct"));
+            throw new InvalidOperationException(Error.Format(SRResources.ExceptionUtils_IsNullOrEmpty, "StackStruct"));
         }
     }
 }

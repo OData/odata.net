@@ -512,11 +512,11 @@ namespace Microsoft.OData.Core {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0} is empty..
+        ///   Looks up a localized string similar to {0} is null or empty..
         /// </summary>
-        internal static string ExceptionUtils_IsEmpty {
+        internal static string ExceptionUtils_IsNullOrEmpty {
             get {
-                return ResourceManager.GetString("ExceptionUtils_IsEmpty", resourceCulture);
+                return ResourceManager.GetString("ExceptionUtils_IsNullOrEmpty", resourceCulture);
             }
         }
         
