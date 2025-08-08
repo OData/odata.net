@@ -184,7 +184,7 @@ namespace Microsoft.OData.UriParser
         private List<FunctionParameterToken> ReadArgumentsAsPositionalValues(ReadOnlySpan<char> functionName = default)
         {
             // Store the parent expression of the current argument.
-            StackStruct<QueryToken> expressionParents = new StackStruct<QueryToken>();
+            Stack<QueryToken> expressionParents = new Stack<QueryToken>();
             bool isFunctionCallNameCastOrIsOf = functionName.Length > 0 &&
                 (functionName.SequenceEqual(ExpressionConstants.UnboundFunctionCast.AsSpan()) || functionName.SequenceEqual(ExpressionConstants.UnboundFunctionIsOf.AsSpan()));
             List<FunctionParameterToken> argList = new List<FunctionParameterToken>();
@@ -253,7 +253,7 @@ namespace Microsoft.OData.UriParser
             }
 
             // Check if the identifier is a primitive type
-            IEdmSchemaType schemaType = NormalizedModelElementsCache.EdmCoreModelCacheInstance.FindSchemaTypes(dottedIdentifierToken.Identifier)?.FirstOrDefault();
+            IEdmSchemaType schemaType = NormalizedModelElementsCache.EdmCoreModelInstance.FindSchemaTypes(dottedIdentifierToken.Identifier)?.FirstOrDefault();
 
             // If the identifier is a primitive type
             if (schemaType is IEdmPrimitiveType)

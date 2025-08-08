@@ -512,15 +512,6 @@ namespace Microsoft.OData.Core {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0} is null or empty..
-        /// </summary>
-        internal static string ExceptionUtils_IsNullOrEmpty {
-            get {
-                return ResourceManager.GetString("ExceptionUtils_IsNullOrEmpty", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to The type &apos;{0}&apos; is not defined in the model..
         /// </summary>
         internal static string ExpandItemBinder_CannotFindType {
