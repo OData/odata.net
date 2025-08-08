@@ -23,7 +23,7 @@ namespace Microsoft.OData.Edm
         /// <summary>
         /// Provides a shared, normalized case-insensitive cache of model elements for the EDM core model.
         /// </summary>
-        public static NormalizedModelElementsCache EdmCoreModelCacheInstance = new NormalizedModelElementsCache(EdmCoreModel.Instance);
+        public static readonly NormalizedModelElementsCache EdmCoreModelInstance = new NormalizedModelElementsCache(EdmCoreModel.Instance);
 
         // We create different caches for different types of schema elements because all current usage request schema elements
         // of specific types. If we were to use a single dictionary <string, ISchemaElement> we would need
