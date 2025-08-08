@@ -598,7 +598,7 @@ namespace Microsoft.OData.Client.Tests.Tracking
 
         private void SetupContextWithRequestPipeline(DataServiceContext context, string response, string path)
         {
-            string location = $"{ ServiceRoot}/{path}";
+            string location = $"{ServiceRoot}/{path}";
 
             context.Configurations.RequestPipeline.OnMessageCreating = (args) => new CustomizedRequestMessage(
                 args,
