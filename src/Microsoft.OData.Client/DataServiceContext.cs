@@ -112,9 +112,6 @@ namespace Microsoft.OData.Client
         /// <summary>resolve typename from a type</summary>
         private Func<string, Type> resolveType;
 
-        /// <summary>time-out value in seconds, 0 for default</summary>
-        private int timeout;
-
         /// <summary>read or write time-out value in seconds, 0 for default</summary>
         private int readWriteTimeout;
 
@@ -481,34 +478,6 @@ namespace Microsoft.OData.Client
         {
             get { return this.resolveType; }
             set { this.resolveType = value; }
-        }
-
-        /// <summary>Gets or sets the time-out option (in seconds) that is used for the underlying HTTP request to the data service.</summary>
-        /// <returns>An integer that indicates the time interval (in seconds) before time-out of a service request.</returns>
-        /// <remarks>
-        /// A value of 0 will use the default timeout of the underlying HTTP request.
-        /// This value must be set before executing any query or update operations against
-        /// the target data service for it to have effect on the on the request.
-        /// The value may be changed between requests to a data service and the new value
-        /// will be picked up by the next data service request.
-        /// </remarks>
-        [Obsolete("The Timeout property is obsolete. Use IHttpClientFactory to configure the timeout.")]
-        public virtual int Timeout
-        {
-            get
-            {
-                return this.timeout;
-            }
-
-            set
-            {
-                if (value < 0)
-                {
-                    throw Error.ArgumentOutOfRange("Timeout");
-                }
-
-                this.timeout = value;
-            }
         }
 
         /// <summary>Gets or sets the readwrite time-out option (in seconds) that is used for the underlying HTTP request to the data service.</summary>
