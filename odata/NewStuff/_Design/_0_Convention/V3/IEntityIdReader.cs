@@ -4,6 +4,7 @@ using System.IO;
 using System.Threading.Tasks;
 
 using NewStuff._Design._0_Convention.V3.Attempt2.V2;
+using NewStuff._Design._0_Convention.V3.Attempt3.V2;
 
 namespace NewStuff._Design._0_Convention.V3
 {
@@ -568,7 +569,6 @@ namespace NewStuff._Design._0_Convention.V3
                 }
             }
 
-
             namespace V2IsReleasedButTheyHaventAddedAnyFeatures
             {
                 public sealed class EntityIdHeaderValueReader<TNextReader> : Attempt3.V2.IEntityIdHeaderValueReader<TNextReader>
@@ -620,7 +620,7 @@ namespace NewStuff._Design._0_Convention.V3
                                 return default;
                             }
 
-                            // manipulate entityid in some way
+                            // manipulate entityid to always use the "https://" scheme
                             return entityId;
                         }
 
@@ -634,7 +634,122 @@ namespace NewStuff._Design._0_Convention.V3
                 // NOTE: we didn't actually implement this in v1 either: public sealed class V2Placeholder<TNextReader> : Attempt3.V2.IV2Placeholder<TNextReader>
             }
 
-            //// TODO you are here; implement v2isreleased and they leverage it
+            namespace V2IsReleasedAndLeveraged
+            {
+                public sealed class EntityIdHeaderValueReader<TNextReader> : Attempt3.V2.IEntityIdHeaderValueReader<TNextReader>
+                {
+                    private readonly Attempt3.V2.IEntityIdHeaderValueReader<TNextReader> delegateReader;
+
+                    public EntityIdHeaderValueReader(Attempt3.V2.IEntityIdHeaderValueReader<TNextReader> delegateReader)
+                    {
+                        this.delegateReader = delegateReader;
+                    }
+
+                    public Attempt3.V2.IV2Placeholder<TNextReader> V2Placeholder
+                    {
+                        get
+                        {
+                            return new Placeholder(this.delegateReader);
+                        }
+                    }
+
+                    private sealed class Placeholder : IV2Placeholder<TNextReader>
+                    {
+                        private readonly Attempt3.V2.IEntityIdHeaderValueReader<TNextReader> delegateReader;
+
+                        public Placeholder(Attempt3.V2.IEntityIdHeaderValueReader<TNextReader> delegateReader)
+                        {
+                            this.delegateReader = delegateReader;
+                        }
+
+                        public async ValueTask Read()
+                        {
+                            await this.delegateReader.Read().ConfigureAwait(false);
+                        }
+
+                        public V2.IEntityIdStartReader<TNextReader> TryMoveNext(out bool moved)
+                        {
+                            var entityIdStartReader = this.delegateReader.V2Placeholder.TryMoveNext(out moved);
+                            if (!moved)
+                            {
+                                return default;
+                            }
+
+                            return new EntityIdStartReader(entityIdStartReader);
+                        }
+
+                        private sealed class EntityIdStartReader : V2.IEntityIdStartReader<TNextReader>
+                        {
+                            private readonly Attempt3.V2.IEntityIdStartReader<TNextReader> entityIdStartReader;
+
+                            public EntityIdStartReader(Attempt3.V2.IEntityIdStartReader<TNextReader> entityIdStartReader)
+                            {
+                                this.entityIdStartReader = entityIdStartReader;
+                            }
+
+                            public async ValueTask Read()
+                            {
+                                await this.entityIdStartReader.Read().ConfigureAwait(false);
+                            }
+
+                            public V2.IIriSchemeReader<TNextReader> TryMoveNext(out bool moved)
+                            {
+                                var iriSchemeReader = this.entityIdStartReader.TryMoveNext(out moved);
+                                if (!moved)
+                                {
+                                    return default;
+                                }
+
+                                return new IriSchemeReader(iriSchemeReader);
+                            }
+
+                            private sealed class IriSchemeReader : V2.IIriSchemeReader<TNextReader>
+                            {
+                                private readonly V2.IIriSchemeReader<TNextReader> iriSchemeReader;
+
+                                public IriSchemeReader(V2.IIriSchemeReader<TNextReader> iriSchemeReader)
+                                {
+                                    this.iriSchemeReader = iriSchemeReader;
+                                }
+
+                                public async ValueTask Read()
+                                {
+                                    await this.iriSchemeReader.Read().ConfigureAwait(false);
+                                }
+
+                                public IriScheme TryGetValue(out bool moved)
+                                {
+                                    var iriScheme = this.iriSchemeReader.TryGetValue(out moved);
+                                    if (!moved)
+                                    {
+                                        return default;
+                                    }
+
+                                    // manipulate `irischeme` to be "https://"
+                                    return iriScheme;
+                                }
+
+                                public TNextReader TryMoveNext(out bool moved)
+                                {
+                                    return this.iriSchemeReader.TryMoveNext(out moved);
+                                }
+                            }
+                        }
+                    }
+
+                    public async ValueTask Read()
+                    {
+                        await this.ToV1().Read().ConfigureAwait(false);
+                    }
+
+                    public Attempt3.V2.IEntityIdReader<TNextReader> TryMoveNext(out bool moved)
+                    {
+                        return this.ToV1().TryMoveNext(out moved);
+                    }
+                }
+
+                // NOTE: we didn't actually implement this in v1 either: public sealed class V2Placeholder<TNextReader> : Attempt3.V2.IV2Placeholder<TNextReader>
+            }
         }
 
 
