@@ -36,6 +36,14 @@ public sealed class ODataJsonWriterState<TCustomState>
         return JsonWriter.BytesPending > 0.9 * this.Options.BufferSize;
     }
 
+    internal async ValueTask FlushIfNecessaryAsync()
+    {
+        if (ShouldFlush())
+        {
+            await JsonWriter.FlushAsync().ConfigureAwait(false);
+        }
+    }
+
     public bool IsTopLevel()
     {
         return this.Stack.IsTopLevel();

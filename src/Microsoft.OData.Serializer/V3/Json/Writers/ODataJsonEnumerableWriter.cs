@@ -22,6 +22,7 @@ internal class ODataJsonEnumerableWriter<TCollection, TElement, TCustomState> : 
         foreach (var item in value)
         {
             await state.WriteValue(item);
+            await state.FlushIfNecessaryAsync();
         }
     }
 }

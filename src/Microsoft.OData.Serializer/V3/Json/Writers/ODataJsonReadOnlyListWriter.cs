@@ -23,6 +23,7 @@ internal class ODataJsonReadOnlyListWriter<TCollection, TElement, TCustomState> 
         for (int i = 0; i < value.Count; i++)
         {
             await state.WriteValue(value[i]);
+            await state.FlushIfNecessaryAsync();
         }
     }
 }

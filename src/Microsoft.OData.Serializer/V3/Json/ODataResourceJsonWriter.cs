@@ -34,6 +34,8 @@ internal class ODataResourceJsonWriter<T, TCustomState>(ODataTypeInfo<T, TCustom
         // But how do we handle annotation-only resources?
         await WritePreValueAnnotations(value, state);
 
+        await state.FlushIfNecessaryAsync();
+
         if (typeInfo.WriteProperties != null)
         {
             // User-driven iteration and selection.
@@ -45,7 +47,11 @@ internal class ODataResourceJsonWriter<T, TCustomState>(ODataTypeInfo<T, TCustom
             await WriteProperties(value, typeInfo, state);
         }
 
+        await state.FlushIfNecessaryAsync();
+
         await WritePostValueAnnotations(value, state);
+
+        await state.FlushIfNecessaryAsync();
 
         jsonWriter.WriteEndObject();
 
@@ -86,11 +92,7 @@ internal class ODataResourceJsonWriter<T, TCustomState>(ODataTypeInfo<T, TCustom
             //    return false;
             //}
 
-            if (state.ShouldFlush())
-            {
-                // return false; // TODO: store state and return false if re-entrancy implemented
-                // TODO: flush or return if re-entrancy implemented
-            }
+            await state.FlushIfNecessaryAsync();
 
             // if async source needs more data, we should return false as well
         }

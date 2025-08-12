@@ -22,6 +22,7 @@ internal class ODataJsonListWriter<TCollection, TElement, TCustomState> : ODataR
         for (int i = 0; i < value.Count; i++)
         {
             await state.WriteValue(value[i]);
+            await state.FlushIfNecessaryAsync();
         }
     }
 }
