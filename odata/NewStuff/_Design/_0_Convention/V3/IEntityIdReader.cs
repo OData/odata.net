@@ -3,6 +3,8 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Threading.Tasks;
 
+using NewStuff._Design._0_Convention.V3.Attempt2.V2;
+
 namespace NewStuff._Design._0_Convention.V3
 {
     //// TODO you are in 4.1 of this doc: https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html
@@ -315,6 +317,114 @@ namespace NewStuff._Design._0_Convention.V3
             public struct IriScheme
             {
             }
+
+            public static class Extensions
+            {
+                public static IEntityIdHeaderValueReader<TNextReader> ToV1<TNextReader>(this IEntityIdHeaderValueReader<TNextReader> entityIdHeaderValueReader)
+                {
+                    var placeholder = entityIdHeaderValueReader.V2Placeholder;
+                    placeholder.TryMoveNext2(out var entityIdStartReader);
+                    entityIdStartReader.TryMoveNext2(out var iriSchemeReader);
+                    iriSchemeReader.TryGetValue2(out var iriScheme);
+                }
+
+                private sealed class EntityIdHeaderValueReader<TNextReader> : IEntityIdHeaderValueReader<TNextReader>
+                {
+                    private readonly IV2Placeholder<TNextReader> v2Placeholder;
+
+                    public EntityIdHeaderValueReader(IV2Placeholder<TNextReader> v2Placeholder)
+                    {
+                        this.v2Placeholder = v2Placeholder;
+                    }
+
+                    public IV2Placeholder<TNextReader> V2Placeholder
+                    {
+                        get
+                        {
+                            return this.v2Placeholder;
+                        }
+                    }
+
+                    public ValueTask Read()
+                    {
+                        return ValueTask.CompletedTask;
+                    }
+
+                    public IEntityIdReader<TNextReader> TryMoveNext(out bool moved)
+                    {
+                        moved = true;
+                        return new EntityIdReader(this.v2Placeholder);
+                    }
+
+                    private sealed class EntityIdReader : IEntityIdReader<TNextReader>
+                    {
+                        private readonly IV2Placeholder<TNextReader> v2Placeholder;
+
+                        private IEntityIdStartReader<TNextReader>? entityIdStartReader;
+                        private IIriSchemeReader<TNextReader>? iriSchemeReader;
+
+                        public EntityIdReader(IV2Placeholder<TNextReader> v2Placeholder)
+                        {
+                            this.v2Placeholder = v2Placeholder;
+                        }
+
+                        public async ValueTask Read()
+                        {
+                            if (this.iriSchemeReader != null)
+                            {
+                                await this.iriSchemeReader.Read().ConfigureAwait(false);
+                            }
+                            else if (this.entityIdStartReader != null)
+                            {
+                                await this.entityIdStartReader.Read().ConfigureAwait(false);
+                            }
+                            else
+                            {
+                                await this.v2Placeholder.Read().ConfigureAwait(false);
+                            }
+                        }
+
+                        public EntityId TryGetValue(out bool moved)
+                        {
+                            if (this.entityIdStartReader == null)
+                            {
+                                this.entityIdStartReader = this.v2Placeholder.TryMoveNext(out moved);
+                                if (!moved)
+                                {
+                                    return default;
+                                }
+                            }
+
+                            if (this.iriSchemeReader == null)
+                            {
+                                this.iriSchemeReader = entityIdStartReader.TryMoveNext(out moved);
+                                if (!moved)
+                                {
+                                    return default;
+                                }
+                            }
+
+                            var iriScheme = this.iriSchemeReader.TryGetValue(out moved);
+                            return default; // TODO create entity id from irischeme and other iri types
+                        }
+
+                        public TNextReader TryMoveNext(out bool moved)
+                        {
+                            if (this.iriSchemeReader == null)
+                            {
+                                this.TryGetValue(out moved);
+                                if (!moved)
+                                {
+                                    return default;
+                                }
+                            }
+
+                            //// TODO i think you can mark up `trygetvalue` to show that `irischemereader` is not null here
+                            return this.iriSchemeReader.TryMoveNext(out moved);
+                        }
+                    }
+                }
+            }
         }
 
 
@@ -388,16 +498,41 @@ namespace NewStuff._Design._0_Convention.V3
             {
                 public sealed class EntityIdHeaderValueReader<TNextReader> : Attempt3.V1.IEntityIdHeaderValueReader<TNextReader>
                 {
+                    private readonly Attempt3.V1.IEntityIdHeaderValueReader<TNextReader> delegateReader;
+
+                    public EntityIdHeaderValueReader(Attempt3.V1.IEntityIdHeaderValueReader<TNextReader> delegateReader)
+                    {
+                        this.delegateReader = delegateReader;
+                    }
+
                     public Attempt3.V1.IV2Placeholder<TNextReader> V2Placeholder => throw new NotImplementedException("TODO this exception is by design actually");
 
-                    public ValueTask Read()
+                    public async ValueTask Read()
                     {
-                        throw new NotImplementedException();
+                        await this.delegateReader.Read().ConfigureAwait(false);
                     }
 
                     public Attempt3.V1.IEntityIdReader<TNextReader> TryMoveNext(out bool moved)
                     {
-                        throw new NotImplementedException();
+                        var delegateEntityIdReader = this.delegateReader.
+                    }
+
+                    private sealed class EntityIdReader : Attempt3.V1.IEntityIdReader<TNextReader>
+                    {
+                        public ValueTask Read()
+                        {
+                            throw new NotImplementedException();
+                        }
+
+                        public EntityId TryGetValue(out bool moved)
+                        {
+                            throw new NotImplementedException();
+                        }
+
+                        public TNextReader TryMoveNext(out bool moved)
+                        {
+                            throw new NotImplementedException();
+                        }
                     }
                 }
 
