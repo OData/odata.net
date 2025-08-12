@@ -265,124 +265,155 @@ namespace NewStuff._Design._0_Convention.V3
                 }
             }
         }
+    }
 
-        namespace Attempt3
+    namespace Attempt3
+    {
+        namespace V1
+        {
+            public interface IEntityIdHeaderValueReader<out TNextReader> : IReader<IEntityIdReader<TNextReader>>
+            {
+                IV2Placeholder<TNextReader> V2Placeholder { get; }
+            }
+
+            public interface IEntityIdReader<out TNextReader> : IReader<EntityId, TNextReader>
+            {
+            }
+
+            public interface IV2Placeholder<out TNextReader>
+            {
+                internal void NoImplementation();
+            }
+        }
+
+        namespace V2
+        {
+            public interface IEntityIdHeaderValueReader<out TNextReader> : IReader<IEntityIdReader<TNextReader>>
+            {
+                /// <summary>
+                /// TODO throws
+                /// </summary>
+                IV2Placeholder<TNextReader> V2Placeholder { get; }
+            }
+
+            public interface IEntityIdReader<out TNextReader> : IReader<EntityId, TNextReader>
+            {
+            }
+
+            public interface IV2Placeholder<out TNextReader> : IReader<IEntityIdStartReader<TNextReader>>
+            {
+            }
+
+            public interface IEntityIdStartReader<out TNextReader> : IReader<IIriSchemeReader<TNextReader>>
+            {
+            }
+
+            public interface IIriSchemeReader<out TNextReader> : IReader<IriScheme, TNextReader>
+            {
+            }
+
+            public struct IriScheme
+            {
+            }
+        }
+
+
+        namespace ReaderCaller
+        {
+            namespace OnlyV1IsReleased
+            {
+                public static class Play
+                {
+                    public static TNextReader Read<TNextReader>(Attempt3.V1.IEntityIdHeaderValueReader<TNextReader> entityIdHeaderValueReader)
+                    {
+                        // no reason to call `entityIdHeaderValueReader.V2Placeholder`; it doesn't go anywhere, and it's supposed to throw anyway
+
+                        entityIdHeaderValueReader.TryMoveNext2(out var entityIdReader);
+
+                        entityIdReader.TryGetValue2(out var entityId);
+
+                        // process `entityid`
+
+                        entityIdReader.TryMoveNext2(out var next);
+
+                        return next;
+                    }
+                }
+            }
+
+            namespace V2IsReleasedByTheyAreStillOnlyUsingV1Features
+            {
+                public static class Play
+                {
+                    public static TNextReader Read<TNextReader>(Attempt3.V2.IEntityIdHeaderValueReader<TNextReader> entityIdHeaderValueReader)
+                    {
+                        // no reason to call `entityIdHeaderValueReader.V2Placeholder`; it doesn't go anywhere, and it's supposed to throw anyway
+
+                        entityIdHeaderValueReader.TryMoveNext2(out var entityIdReader);
+
+                        entityIdReader.TryGetValue2(out var entityId);
+
+                        // process `entityid`
+
+                        entityIdReader.TryMoveNext2(out var next);
+
+                        return next;
+                    }
+                }
+            }
+
+            namespace V2IsReleasedAndTheyUseV2Features
+            {
+                public static class Play
+                {
+                    public static TNextReader Read<TNextReader>(Attempt3.V2.IEntityIdHeaderValueReader<TNextReader> entityIdHeaderValueReader)
+                    {
+                        entityIdHeaderValueReader.V2Placeholder.TryMoveNext2(out var entityIdStartReader);
+                        entityIdStartReader.TryMoveNext2(out var iriSchemeReader);
+                        iriSchemeReader.TryGetValue2(out var iriScheme);
+
+                        // process irischeme
+
+                        iriSchemeReader.TryMoveNext2(out var next);
+
+                        return next;
+                    }
+                }
+            }
+        }
+
+        namespace ReaderImplementer
         {
             namespace V1
             {
-                public interface IEntityIdHeaderValueReader<out TNextReader> : IReader<IEntityIdReader<TNextReader>>
+                public sealed class EntityIdHeaderValueReader<TNextReader> : Attempt3.V1.IEntityIdHeaderValueReader<TNextReader>
                 {
-                    IV2Placeholder<TNextReader> V2Placeholder { get; }
-                }
+                    public Attempt3.V1.IV2Placeholder<TNextReader> V2Placeholder => throw new NotImplementedException("TODO this exception is by design actually");
 
-                public interface IEntityIdReader<out TNextReader> : IReader<EntityId, TNextReader>
-                {
-                }
-
-                public interface IV2Placeholder<out TNextReader>
-                {
-                    internal void NoImplementation();
-                }
-            }
-
-            namespace V2
-            {
-                public interface IEntityIdHeaderValueReader<out TNextReader> : IReader<IEntityIdReader<TNextReader>>
-                {
-                    /// <summary>
-                    /// TODO throws
-                    /// </summary>
-                    IV2Placeholder<TNextReader> V2Placeholder { get; }
-                }
-
-                public interface IEntityIdReader<out TNextReader> : IReader<EntityId, TNextReader>
-                {
-                }
-
-                public interface IV2Placeholder<out TNextReader> : IReader<IEntityIdStartReader<TNextReader>>
-                {
-                }
-
-                public interface IEntityIdStartReader<out TNextReader> : IReader<IIriSchemeReader<TNextReader>>
-                {
-                }
-
-                public interface IIriSchemeReader<out TNextReader> : IReader<IriScheme, TNextReader>
-                {
-                }
-
-                public struct IriScheme
-                {
-                }
-            }
-
-
-            namespace ReaderCaller
-            {
-                namespace OnlyV1IsReleased
-                {
-                    public static class Play
+                    public ValueTask Read()
                     {
-                        public static TNextReader Read<TNextReader>(Attempt3.V1.IEntityIdHeaderValueReader<TNextReader> entityIdHeaderValueReader)
-                        {
-                            // no reason to call `entityIdHeaderValueReader.V2Placeholder`; it doesn't go anywhere, and it's supposed to throw anyway
+                        throw new NotImplementedException();
+                    }
 
-                            entityIdHeaderValueReader.TryMoveNext2(out var entityIdReader);
-
-                            entityIdReader.TryGetValue2(out var entityId);
-
-                            // process `entityid`
-
-                            entityIdReader.TryMoveNext2(out var next);
-
-                            return next;
-                        }
+                    public Attempt3.V1.IEntityIdReader<TNextReader> TryMoveNext(out bool moved)
+                    {
+                        throw new NotImplementedException();
                     }
                 }
 
-                namespace V2IsReleasedByTheyAreStillOnlyUsingV1Features
+                public sealed class V2Placeholder<TNextReader> : Attempt3.V1.IV2Placeholder<TNextReader>
                 {
-                    public static class Play
+                    void Attempt3.V1.IV2Placeholder<TNextReader>.NoImplementation()
                     {
-                        public static TNextReader Read<TNextReader>(Attempt3.V2.IEntityIdHeaderValueReader<TNextReader> entityIdHeaderValueReader)
-                        {
-                            // no reason to call `entityIdHeaderValueReader.V2Placeholder`; it doesn't go anywhere, and it's supposed to throw anyway
-
-                            entityIdHeaderValueReader.TryMoveNext2(out var entityIdReader);
-
-                            entityIdReader.TryGetValue2(out var entityId);
-
-                            // process `entityid`
-
-                            entityIdReader.TryMoveNext2(out var next);
-
-                            return next;
-                        }
+                        // NOTE: this can't actually be implemented in external projects; this is by design
+                        throw new NotImplementedException();
                     }
                 }
 
-                namespace V2IsReleasedAndTheyUseV2Features
-                {
-                    public static class Play
-                    {
-                        public static TNextReader Read<TNextReader>(Attempt3.V2.IEntityIdHeaderValueReader<TNextReader> entityIdHeaderValueReader)
-                        {
-                            entityIdHeaderValueReader.V2Placeholder.TryMoveNext2(out var entityIdStartReader);
-                            entityIdStartReader.TryMoveNext2(out var iriSchemeReader);
-                            iriSchemeReader.TryGetValue2(out var iriScheme);
-
-                            // process irischeme
-
-                            iriSchemeReader.TryMoveNext2(out var next);
-
-                            return next;
-                        }
-                    }
-                }
             }
-
-
-            //// TODO 3 personas: odata maintainer, reader implementer, reader caller
         }
+
+
+        //// TODO 3 personas: odata maintainer, reader implementer, reader caller
     }
 }
