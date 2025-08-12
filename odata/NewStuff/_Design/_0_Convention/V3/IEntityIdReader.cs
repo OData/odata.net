@@ -514,24 +514,44 @@ namespace NewStuff._Design._0_Convention.V3
 
                     public Attempt3.V1.IEntityIdReader<TNextReader> TryMoveNext(out bool moved)
                     {
-                        var delegateEntityIdReader = this.delegateReader.
+                        var delegateEntityIdReader = this.delegateReader.TryMoveNext(out moved);
+                        if (!moved)
+                        {
+                            return default;
+                        }
+
+                        return new EntityIdReader(delegateEntityIdReader);
                     }
 
                     private sealed class EntityIdReader : Attempt3.V1.IEntityIdReader<TNextReader>
                     {
-                        public ValueTask Read()
+                        private readonly Attempt3.V1.IEntityIdReader<TNextReader> delegateReader;
+
+                        public EntityIdReader(Attempt3.V1.IEntityIdReader<TNextReader> delegateReader)
                         {
-                            throw new NotImplementedException();
+                            this.delegateReader = delegateReader;
+                        }
+
+                        public async ValueTask Read()
+                        {
+                            await this.delegateReader.Read().ConfigureAwait(false);
                         }
 
                         public EntityId TryGetValue(out bool moved)
                         {
-                            throw new NotImplementedException();
+                            var entityId = this.delegateReader.TryGetValue(out moved);
+                            if (!moved)
+                            {
+                                return default;
+                            }
+
+                            // manipulate entityid in some way
+                            return entityId;
                         }
 
                         public TNextReader TryMoveNext(out bool moved)
                         {
-                            throw new NotImplementedException();
+                            return this.delegateReader.TryMoveNext(out moved);
                         }
                     }
                 }
