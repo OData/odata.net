@@ -287,6 +287,20 @@ namespace NewStuff._Design._0_Convention.V3
             {
                 internal void NoImplementation();
             }
+
+            public abstract class Version
+            {
+                private Version()
+                {
+                }
+
+                public sealed class V1 : Version
+                {
+                    private V1()
+                    {
+                    }
+                }
+            }
         }
 
         namespace V2
@@ -323,10 +337,7 @@ namespace NewStuff._Design._0_Convention.V3
             {
                 public static IEntityIdHeaderValueReader<TNextReader> ToV1<TNextReader>(this IEntityIdHeaderValueReader<TNextReader> entityIdHeaderValueReader)
                 {
-                    var placeholder = entityIdHeaderValueReader.V2Placeholder;
-                    placeholder.TryMoveNext2(out var entityIdStartReader);
-                    entityIdStartReader.TryMoveNext2(out var iriSchemeReader);
-                    iriSchemeReader.TryGetValue2(out var iriScheme);
+                    return new EntityIdHeaderValueReader<TNextReader>(entityIdHeaderValueReader.V2Placeholder);
                 }
 
                 private sealed class EntityIdHeaderValueReader<TNextReader> : IEntityIdHeaderValueReader<TNextReader>
