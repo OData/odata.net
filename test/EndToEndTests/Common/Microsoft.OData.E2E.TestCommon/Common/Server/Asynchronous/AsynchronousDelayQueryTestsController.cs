@@ -119,7 +119,7 @@ public class AsynchronousDelayQueryTestsController : ODataController
     [HttpGet("odata/GetProductsByAccessLevel(accessLevel={accessLevel})")]
     public IActionResult GetProductsByAccessLevel([FromODataUri] AccessLevel accessLevel)
     {
-        var count = _dataSource.Products?.Where(p => (p.UserAccess & accessLevel) == accessLevel).Count();
+        var count = _dataSource.Products?.Where(p => p.UserAccess == accessLevel).Count();
         return Ok((double)count);
     }
 

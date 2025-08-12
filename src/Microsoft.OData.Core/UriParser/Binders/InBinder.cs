@@ -70,7 +70,7 @@ namespace Microsoft.OData.UriParser
             // Calls the MetadataBindingUtils.ConvertToTypeIfNeeded() method to convert the left operand to the same enum type as the right operand.
             if ((!(right is CollectionConstantNode) && right.ItemType.IsEnum()) && (left.TypeReference != null && (left.TypeReference.IsString() || left.TypeReference.IsIntegral())))
             {
-                left = MetadataBindingUtils.ConvertToTypeIfNeeded(left, right.ItemType);
+                left = MetadataBindingUtils.ConvertToTypeIfNeeded(left, right.ItemType, this.resolver.EnableCaseInsensitive);
             }
 
             MetadataBindingUtils.VerifyCollectionNode(right, this.resolver.EnableCaseInsensitive);
@@ -156,6 +156,10 @@ namespace Microsoft.OData.UriParser
                         // Sample: [1970-01-01T00:00:00Z, 1980-01-01T01:01:01+01:00]
                         //    ==>  ['1970-01-01T00:00:00Z', '1980-01-01T01:01:01+01:00']
                         bracketLiteralText = NormalizeDateTimeCollectionItems(bracketLiteralText);
+                    }
+                    else if (expectedType.Definition.AsElementType().TypeKind == EdmTypeKind.Enum)
+                    {
+                        bracketLiteralText = NormalizeEnumCollectionItems(bracketLiteralText, expectedTypeFullName);
                     }
                 }
 
@@ -423,6 +427,90 @@ namespace Microsoft.OData.UriParser
             }
 
             return "[" + String.Join(",", items) + "]";
+        }
+
+        private static string NormalizeEnumCollectionItems(string bracketLiteralText, string expectedTypeFullName)
+        {
+            string normalizedText = bracketLiteralText[1..^1].Trim();
+
+            // Handle empty brackets
+            if (string.IsNullOrEmpty(normalizedText))
+            {
+                return "[]";
+            }
+
+            // If the expected type is a fully qualified name, we need to remove it from the start of the collection items
+            if (normalizedText.StartsWith(expectedTypeFullName, StringComparison.OrdinalIgnoreCase))
+            {
+                normalizedText = normalizedText.Replace(expectedTypeFullName, string.Empty, StringComparison.OrdinalIgnoreCase);
+            }
+
+            var sb = new StringBuilder();
+            sb.Append('[');
+
+            int start = 0, length = normalizedText.Length;
+
+            while (start < length)
+            {
+                char currentChar = normalizedText[start];
+
+                if (currentChar == '\'' || currentChar == '"')
+                {
+                    // Handle quoted items
+                    char quoteChar = currentChar;
+                    sb.Append(quoteChar);
+                    int end = ++start;
+
+                    while (end < length && normalizedText[end] != quoteChar)
+                    {
+                        sb.Append(normalizedText[end]);
+                        end++;
+                    }
+
+                    if (end < length)
+                    {
+                        sb.Append(quoteChar);
+                        start = end + 1;
+                    }
+                }
+                else if (currentChar == ',')
+                {
+                    // Handle commas
+                    sb.Append(',');
+                    start++;
+                }
+                else if (char.IsWhiteSpace(currentChar))
+                {
+                    // Skip whitespace
+                    start++;
+                }
+                else
+                {
+                    // Handle non-quoted items
+                    int end = start;
+                    while (end < length && normalizedText[end] != ',' && !char.IsWhiteSpace(normalizedText[end]))
+                    {
+                        end++;
+                    }
+
+                    string item = normalizedText[start..end].Trim();
+
+                    // Wrap non-quoted items in single quotes
+                    if (!item.StartsWith('\'') && !item.StartsWith('\"'))
+                    {
+                        sb.Append('\'').Append(item).Append('\'');
+                    }
+                    else
+                    {
+                        sb.Append(item);
+                    }
+
+                    start = end;
+                }
+            }
+
+            sb.Append(']');
+            return sb.ToString();
         }
 
         private static bool IsCollectionEmptyOrWhiteSpace(string bracketLiteralText)
