@@ -478,6 +478,8 @@ namespace NewStuff._Design._0_Convention.V3
                 {
                     public static TNextReader Read<TNextReader>(Attempt3.V2.IEntityIdHeaderValueReader<TNextReader> entityIdHeaderValueReader)
                     {
+                        // NOTE: the caller here has to know whether they are receiving something that supports v2...
+                        // TODO what you could do is have a TVersion type parameter in all of the readers
                         entityIdHeaderValueReader.V2Placeholder.TryMoveNext2(out var entityIdStartReader);
                         entityIdStartReader.TryMoveNext2(out var iriSchemeReader);
                         iriSchemeReader.TryGetValue2(out var iriScheme);
@@ -631,6 +633,8 @@ namespace NewStuff._Design._0_Convention.V3
 
                 // NOTE: we didn't actually implement this in v1 either: public sealed class V2Placeholder<TNextReader> : Attempt3.V2.IV2Placeholder<TNextReader>
             }
+
+            //// TODO you are here; implement v2isreleased and they leverage it
         }
 
 
