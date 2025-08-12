@@ -52,7 +52,7 @@ namespace Microsoft.OData.Client
         /// <exception cref="InvalidOperationException">Problem materializing result of query into object.</exception>
         public T GetValue()
         {
-            return context.Execute<T>(this.RequestUri, XmlConstants.HttpMethodPost, true, parameters).Single();
+            return context.Execute<T>(this.RequestUri, XmlConstants.HttpMethodPost, true, parameters).SingleOrDefault();
         }
 
         /// <summary>Asynchronously sends a request to the data service to execute a specific URI.</summary>
@@ -92,7 +92,7 @@ namespace Microsoft.OData.Client
         public T EndGetValue(IAsyncResult asyncResult)
         {
             Util.CheckArgumentNull(asyncResult, "asyncResult");
-            return context.EndExecute<T>(asyncResult).Single();
+            return context.EndExecute<T>(asyncResult).SingleOrDefault();
         }
     }
 }
