@@ -305,7 +305,8 @@ namespace NewStuff._Design._0_Convention.V3
 
         namespace V2
         {
-            public interface IEntityIdHeaderValueReader<out TNextReader> : IReader<IEntityIdReader<TNextReader>>
+            //// TODO you are here trying to do the version thing; make sure that ireader<v2> can be cast to ireader<v1>; you also thought about exploring if the `v1`, `v2`, etc. classes could have the "get extended reader" methods, so for example, ientityidheadervaluereader would have a `TVersion Version { get; }` and then this could be called to say `reader.Version.GetExtended(entityIdHeaderValueReader)` and it'd give you back the irireader instead of the entityidreader
+            public interface IEntityIdHeaderValueReader<TVersion, out TNextReader> : IReader<IEntityIdReader<TNextReader>>
             {
                 /// <summary>
                 /// TODO throws
