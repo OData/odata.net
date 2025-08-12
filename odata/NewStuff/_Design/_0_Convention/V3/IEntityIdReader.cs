@@ -545,7 +545,7 @@ namespace NewStuff._Design._0_Convention.V3
                                 return default;
                             }
 
-                            // manipulate entityid in some way
+                            // manipulate entityid to always use the "https://" scheme
                             return entityId;
                         }
 
@@ -564,7 +564,72 @@ namespace NewStuff._Design._0_Convention.V3
                         throw new NotImplementedException();
                     }
                 }
+            }
 
+
+            namespace V2IsReleasedButTheyHaventAddedAnyFeatures
+            {
+                public sealed class EntityIdHeaderValueReader<TNextReader> : Attempt3.V2.IEntityIdHeaderValueReader<TNextReader>
+                {
+                    private readonly Attempt3.V2.IEntityIdHeaderValueReader<TNextReader> delegateReader;
+
+                    public EntityIdHeaderValueReader(Attempt3.V2.IEntityIdHeaderValueReader<TNextReader> delegateReader)
+                    {
+                        this.delegateReader = delegateReader;
+                    }
+
+                    public Attempt3.V2.IV2Placeholder<TNextReader> V2Placeholder => throw new NotImplementedException("TODO this exception is by design actually");
+
+                    public async ValueTask Read()
+                    {
+                        await this.delegateReader.Read().ConfigureAwait(false);
+                    }
+
+                    public Attempt3.V2.IEntityIdReader<TNextReader> TryMoveNext(out bool moved)
+                    {
+                        var delegateEntityIdReader = this.delegateReader.TryMoveNext(out moved);
+                        if (!moved)
+                        {
+                            return default;
+                        }
+
+                        return new EntityIdReader(delegateEntityIdReader);
+                    }
+
+                    private sealed class EntityIdReader : Attempt3.V2.IEntityIdReader<TNextReader>
+                    {
+                        private readonly Attempt3.V2.IEntityIdReader<TNextReader> delegateReader;
+
+                        public EntityIdReader(Attempt3.V2.IEntityIdReader<TNextReader> delegateReader)
+                        {
+                            this.delegateReader = delegateReader;
+                        }
+
+                        public async ValueTask Read()
+                        {
+                            await this.delegateReader.Read().ConfigureAwait(false);
+                        }
+
+                        public EntityId TryGetValue(out bool moved)
+                        {
+                            var entityId = this.delegateReader.TryGetValue(out moved);
+                            if (!moved)
+                            {
+                                return default;
+                            }
+
+                            // manipulate entityid in some way
+                            return entityId;
+                        }
+
+                        public TNextReader TryMoveNext(out bool moved)
+                        {
+                            return this.delegateReader.TryMoveNext(out moved);
+                        }
+                    }
+                }
+
+                // NOTE: we didn't actually implement this in v1 either: public sealed class V2Placeholder<TNextReader> : Attempt3.V2.IV2Placeholder<TNextReader>
             }
         }
 
