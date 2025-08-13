@@ -293,7 +293,10 @@ namespace NewStuff._Design._0_Convention.V3
             public interface IEntityIdHeaderValueReader<out TVersion, out TNextReader> : IReader<IEntityIdReader<TVersion, TNextReader>>
                 where TVersion : Version
             {
-                IV2Placeholder<TVersion, TNextReader> V2Placeholder { get; }
+                /// <summary>
+                /// TODO throws
+                /// </summary>
+                IEntityIdStartReader<TVersion, TNextReader> EntityIdStartReader { get; }
             }
 
             public interface IEntityIdReader<out TVersion, out TNextReader> : IReader<EntityId, TNextReader>
@@ -301,7 +304,7 @@ namespace NewStuff._Design._0_Convention.V3
             {
             }
 
-            public interface IV2Placeholder<out TVersion, out TNextReader>
+            public interface IEntityIdStartReader<out TVersion, out TNextReader>
                 where TVersion : Version
             {
                 internal void NoImplementation();
@@ -334,21 +337,17 @@ namespace NewStuff._Design._0_Convention.V3
             }
 
             //// TODO you are here trying to do the version thing; make sure that ireader<v2> can be cast to ireader<v1>; you also thought about exploring if the `v1`, `v2`, etc. classes could have the "get extended reader" methods, so for example, ientityidheadervaluereader would have a `TVersion Version { get; }` and then this could be called to say `reader.Version.GetExtended(entityIdHeaderValueReader)` and it'd give you back the irireader instead of the entityidreader
+
             public interface IEntityIdHeaderValueReader<out TVersion, out TNextReader> : IReader<IEntityIdReader<TVersion, TNextReader>>
                 where TVersion : Version
             {
                 /// <summary>
                 /// TODO throws
                 /// </summary>
-                IV2Placeholder<TVersion, TNextReader> V2Placeholder { get; }
+                IEntityIdStartReader<TVersion, TNextReader> EntityIdStartReader { get; }
             }
 
             public interface IEntityIdReader<out TVersion, out TNextReader> : IReader<EntityId, TNextReader>
-                where TVersion : Version
-            {
-            }
-
-            public interface IV2Placeholder<out TVersion, out TNextReader> : IReader<IEntityIdStartReader<TVersion, TNextReader>>
                 where TVersion : Version
             {
             }
@@ -372,20 +371,20 @@ namespace NewStuff._Design._0_Convention.V3
                 public static IEntityIdHeaderValueReader<TVersion, TNextReader> ToV1<TVersion, TNextReader>(this IEntityIdHeaderValueReader<TVersion, TNextReader> entityIdHeaderValueReader)
                     where TVersion : Version.V2
                 {
-                    return new EntityIdHeaderValueReader<TVersion, TNextReader>(entityIdHeaderValueReader.V2Placeholder);
+                    return new EntityIdHeaderValueReader<TVersion, TNextReader>(entityIdHeaderValueReader.EntityIdStartReader);
                 }
 
                 private sealed class EntityIdHeaderValueReader<TVersion, TNextReader> : IEntityIdHeaderValueReader<TVersion, TNextReader>
                     where TVersion : Version.V2
                 {
-                    private readonly IV2Placeholder<TVersion, TNextReader> v2Placeholder;
+                    private readonly IEntityIdStartReader<TVersion, TNextReader> v2Placeholder;
 
-                    public EntityIdHeaderValueReader(IV2Placeholder<TVersion, TNextReader> v2Placeholder)
+                    public EntityIdHeaderValueReader(IEntityIdStartReader<TVersion, TNextReader> v2Placeholder)
                     {
                         this.v2Placeholder = v2Placeholder;
                     }
 
-                    public IV2Placeholder<TVersion, TNextReader> V2Placeholder
+                    public IEntityIdStartReader<TVersion, TNextReader> EntityIdStartReader
                     {
                         get
                         {
@@ -406,12 +405,11 @@ namespace NewStuff._Design._0_Convention.V3
 
                     private sealed class EntityIdReader : IEntityIdReader<TVersion, TNextReader>
                     {
-                        private readonly IV2Placeholder<TVersion, TNextReader> v2Placeholder;
+                        private readonly IEntityIdStartReader<TVersion, TNextReader> v2Placeholder;
 
-                        private IEntityIdStartReader<TVersion, TNextReader>? entityIdStartReader;
                         private IIriSchemeReader<TVersion, TNextReader>? iriSchemeReader;
 
-                        public EntityIdReader(IV2Placeholder<TVersion, TNextReader> v2Placeholder)
+                        public EntityIdReader(IEntityIdStartReader<TVersion, TNextReader> v2Placeholder)
                         {
                             this.v2Placeholder = v2Placeholder;
                         }
@@ -422,10 +420,6 @@ namespace NewStuff._Design._0_Convention.V3
                             {
                                 await this.iriSchemeReader.Read().ConfigureAwait(false);
                             }
-                            else if (this.entityIdStartReader != null)
-                            {
-                                await this.entityIdStartReader.Read().ConfigureAwait(false);
-                            }
                             else
                             {
                                 await this.v2Placeholder.Read().ConfigureAwait(false);
@@ -434,18 +428,9 @@ namespace NewStuff._Design._0_Convention.V3
 
                         public EntityId TryGetValue(out bool moved)
                         {
-                            if (this.entityIdStartReader == null)
-                            {
-                                this.entityIdStartReader = this.v2Placeholder.TryMoveNext(out moved);
-                                if (!moved)
-                                {
-                                    return default;
-                                }
-                            }
-
                             if (this.iriSchemeReader == null)
                             {
-                                this.iriSchemeReader = entityIdStartReader.TryMoveNext(out moved);
+                                this.iriSchemeReader = this.v2Placeholder.TryMoveNext(out moved);
                                 if (!moved)
                                 {
                                     return default;
@@ -555,7 +540,7 @@ namespace NewStuff._Design._0_Convention.V3
                         this.delegateReader = delegateReader;
                     }
 
-                    public Attempt3.V1.IV2Placeholder<Attempt3.V1.Version.V1, TNextReader> V2Placeholder => throw new NotImplementedException("TODO this exception is by design actually");
+                    public Attempt3.V1.IEntityIdStartReader<Attempt3.V1.Version.V1, TNextReader> EntityIdStartReader => throw new NotImplementedException("TODO this exception is by design actually");
 
                     public async ValueTask Read()
                     {
@@ -606,9 +591,9 @@ namespace NewStuff._Design._0_Convention.V3
                     }
                 }
 
-                public sealed class V2Placeholder<TNextReader> : Attempt3.V1.IV2Placeholder<Attempt3.V1.Version.V1, TNextReader>
+                public sealed class V2Placeholder<TNextReader> : Attempt3.V1.IEntityIdStartReader<Attempt3.V1.Version.V1, TNextReader>
                 {
-                    void Attempt3.V1.IV2Placeholder<Attempt3.V1.Version.V1, TNextReader>.NoImplementation()
+                    void Attempt3.V1.IEntityIdStartReader<Attempt3.V1.Version.V1, TNextReader>.NoImplementation()
                     {
                         // NOTE: this can't actually be implemented in external projects; this is by design
                         throw new NotImplementedException();
@@ -627,7 +612,7 @@ namespace NewStuff._Design._0_Convention.V3
                         this.delegateReader = delegateReader;
                     }
 
-                    public Attempt3.V2.IV2Placeholder<Attempt3.V2.Version.V1, TNextReader> V2Placeholder => throw new NotImplementedException("TODO this exception is by design actually");
+                    public Attempt3.V2.IEntityIdStartReader<Attempt3.V2.Version.V1, TNextReader> EntityIdStartReader => throw new NotImplementedException("TODO this exception is by design actually");
 
                     public async ValueTask Read()
                     {
@@ -692,7 +677,7 @@ namespace NewStuff._Design._0_Convention.V3
                         this.delegateReader = delegateReader;
                     }
 
-                    public Attempt3.V2.IV2Placeholder<Attempt3.V2.Version.V2, TNextReader> V2Placeholder
+                    public Attempt3.V2.IEntityIdStartReader<Attempt3.V2.Version.V2, TNextReader> EntityIdStartReader
                     {
                         get
                         {
@@ -700,7 +685,7 @@ namespace NewStuff._Design._0_Convention.V3
                         }
                     }
 
-                    private sealed class Placeholder : IV2Placeholder<Attempt3.V2.Version.V2, TNextReader>
+                    private sealed class Placeholder : IEntityIdStartReader<Attempt3.V2.Version.V2, TNextReader>
                     {
                         private readonly Attempt3.V2.IEntityIdHeaderValueReader<Attempt3.V2.Version.V2, TNextReader> delegateReader;
 
@@ -714,72 +699,46 @@ namespace NewStuff._Design._0_Convention.V3
                             await this.delegateReader.Read().ConfigureAwait(false);
                         }
 
-                        public V2.IEntityIdStartReader<Attempt3.V2.Version.V2, TNextReader> TryMoveNext(out bool moved)
+                        public V2.IIriSchemeReader<Attempt3.V2.Version.V2, TNextReader> TryMoveNext(out bool moved)
                         {
-                            var entityIdStartReader = this.delegateReader.V2Placeholder.TryMoveNext(out moved);
+                            var iriSchemeReader = this.delegateReader.EntityIdStartReader.TryMoveNext(out moved);
                             if (!moved)
                             {
                                 return default;
                             }
 
-                            return new EntityIdStartReader(entityIdStartReader);
+                            return new IriSchemeReader(iriSchemeReader);
                         }
 
-                        private sealed class EntityIdStartReader : V2.IEntityIdStartReader<Attempt3.V2.Version.V2, TNextReader>
+                        private sealed class IriSchemeReader : V2.IIriSchemeReader<Attempt3.V2.Version.V2, TNextReader>
                         {
-                            private readonly Attempt3.V2.IEntityIdStartReader<Attempt3.V2.Version.V2, TNextReader> entityIdStartReader;
+                            private readonly V2.IIriSchemeReader<Attempt3.V2.Version.V2, TNextReader> iriSchemeReader;
 
-                            public EntityIdStartReader(Attempt3.V2.IEntityIdStartReader<Attempt3.V2.Version.V2, TNextReader> entityIdStartReader)
+                            public IriSchemeReader(V2.IIriSchemeReader<Attempt3.V2.Version.V2, TNextReader> iriSchemeReader)
                             {
-                                this.entityIdStartReader = entityIdStartReader;
+                                this.iriSchemeReader = iriSchemeReader;
                             }
 
                             public async ValueTask Read()
                             {
-                                await this.entityIdStartReader.Read().ConfigureAwait(false);
+                                await this.iriSchemeReader.Read().ConfigureAwait(false);
                             }
 
-                            public V2.IIriSchemeReader<Attempt3.V2.Version.V2, TNextReader> TryMoveNext(out bool moved)
+                            public IriScheme TryGetValue(out bool moved)
                             {
-                                var iriSchemeReader = this.entityIdStartReader.TryMoveNext(out moved);
+                                var iriScheme = this.iriSchemeReader.TryGetValue(out moved);
                                 if (!moved)
                                 {
                                     return default;
                                 }
 
-                                return new IriSchemeReader(iriSchemeReader);
+                                // manipulate `irischeme` to be "https://"
+                                return iriScheme;
                             }
 
-                            private sealed class IriSchemeReader : V2.IIriSchemeReader<Attempt3.V2.Version.V2, TNextReader>
+                            public TNextReader TryMoveNext(out bool moved)
                             {
-                                private readonly V2.IIriSchemeReader<Attempt3.V2.Version.V2, TNextReader> iriSchemeReader;
-
-                                public IriSchemeReader(V2.IIriSchemeReader<Attempt3.V2.Version.V2, TNextReader> iriSchemeReader)
-                                {
-                                    this.iriSchemeReader = iriSchemeReader;
-                                }
-
-                                public async ValueTask Read()
-                                {
-                                    await this.iriSchemeReader.Read().ConfigureAwait(false);
-                                }
-
-                                public IriScheme TryGetValue(out bool moved)
-                                {
-                                    var iriScheme = this.iriSchemeReader.TryGetValue(out moved);
-                                    if (!moved)
-                                    {
-                                        return default;
-                                    }
-
-                                    // manipulate `irischeme` to be "https://"
-                                    return iriScheme;
-                                }
-
-                                public TNextReader TryMoveNext(out bool moved)
-                                {
-                                    return this.iriSchemeReader.TryMoveNext(out moved);
-                                }
+                                return this.iriSchemeReader.TryMoveNext(out moved);
                             }
                         }
                     }
