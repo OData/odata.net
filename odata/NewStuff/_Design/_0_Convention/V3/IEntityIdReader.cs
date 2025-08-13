@@ -513,7 +513,7 @@ namespace NewStuff._Design._0_Convention.V3
                     {
                         // NOTE: the caller here has to know whether they are receiving something that supports v2...
                         // TODO what you could do is have a TVersion type parameter in all of the readers
-                        entityIdHeaderValueReader.V2Placeholder.TryMoveNext2(out var entityIdStartReader);
+                        var entityIdStartReader = entityIdHeaderValueReader.EntityIdStartReader;
                         entityIdStartReader.TryMoveNext2(out var iriSchemeReader);
                         iriSchemeReader.TryGetValue2(out var iriScheme);
 
