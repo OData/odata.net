@@ -482,7 +482,7 @@ namespace NewStuff._Design._0_Convention.V3
             {
                 public static class Play
                 {
-                    public static TNextReader Read<TNextReader>(Attempt3.V1.IEntityIdHeaderValueReader<TNextReader> entityIdHeaderValueReader)
+                    public static TNextReader Read<TNextReader>(Attempt3.V1.IEntityIdHeaderValueReader<V1.Version.V1, TNextReader> entityIdHeaderValueReader)
                     {
                         // no reason to call `entityIdHeaderValueReader.V2Placeholder`; it doesn't go anywhere, and it's supposed to throw anyway
 
@@ -503,7 +503,7 @@ namespace NewStuff._Design._0_Convention.V3
             {
                 public static class Play
                 {
-                    public static TNextReader Read<TNextReader>(Attempt3.V2.IEntityIdHeaderValueReader<TNextReader> entityIdHeaderValueReader)
+                    public static TNextReader Read<TNextReader>(Attempt3.V2.IEntityIdHeaderValueReader<V2.Version.V1, TNextReader> entityIdHeaderValueReader)
                     {
                         // no reason to call `entityIdHeaderValueReader.V2Placeholder`; it doesn't go anywhere, and it's supposed to throw anyway
 
@@ -524,7 +524,7 @@ namespace NewStuff._Design._0_Convention.V3
             {
                 public static class Play
                 {
-                    public static TNextReader Read<TNextReader>(Attempt3.V2.IEntityIdHeaderValueReader<TNextReader> entityIdHeaderValueReader)
+                    public static TNextReader Read<TNextReader>(Attempt3.V2.IEntityIdHeaderValueReader<V2.Version.V2,    TNextReader> entityIdHeaderValueReader)
                     {
                         // NOTE: the caller here has to know whether they are receiving something that supports v2...
                         // TODO what you could do is have a TVersion type parameter in all of the readers
@@ -546,23 +546,23 @@ namespace NewStuff._Design._0_Convention.V3
         {
             namespace V1
             {
-                public sealed class EntityIdHeaderValueReader<TNextReader> : Attempt3.V1.IEntityIdHeaderValueReader<TNextReader>
+                public sealed class EntityIdHeaderValueReader<TNextReader> : Attempt3.V1.IEntityIdHeaderValueReader<Attempt3.V1.Version.V1, TNextReader>
                 {
-                    private readonly Attempt3.V1.IEntityIdHeaderValueReader<TNextReader> delegateReader;
+                    private readonly Attempt3.V1.IEntityIdHeaderValueReader<Attempt3.V1.Version.V1, TNextReader> delegateReader;
 
-                    public EntityIdHeaderValueReader(Attempt3.V1.IEntityIdHeaderValueReader<TNextReader> delegateReader)
+                    public EntityIdHeaderValueReader(Attempt3.V1.IEntityIdHeaderValueReader<Attempt3.V1.Version.V1, TNextReader> delegateReader)
                     {
                         this.delegateReader = delegateReader;
                     }
 
-                    public Attempt3.V1.IV2Placeholder<TNextReader> V2Placeholder => throw new NotImplementedException("TODO this exception is by design actually");
+                    public Attempt3.V1.IV2Placeholder<Attempt3.V1.Version.V1, TNextReader> V2Placeholder => throw new NotImplementedException("TODO this exception is by design actually");
 
                     public async ValueTask Read()
                     {
                         await this.delegateReader.Read().ConfigureAwait(false);
                     }
 
-                    public Attempt3.V1.IEntityIdReader<TNextReader> TryMoveNext(out bool moved)
+                    public Attempt3.V1.IEntityIdReader<Attempt3.V1.Version.V1, TNextReader> TryMoveNext(out bool moved)
                     {
                         var delegateEntityIdReader = this.delegateReader.TryMoveNext(out moved);
                         if (!moved)
@@ -573,11 +573,11 @@ namespace NewStuff._Design._0_Convention.V3
                         return new EntityIdReader(delegateEntityIdReader);
                     }
 
-                    private sealed class EntityIdReader : Attempt3.V1.IEntityIdReader<TNextReader>
+                    private sealed class EntityIdReader : Attempt3.V1.IEntityIdReader<Attempt3.V1.Version.V1, TNextReader>
                     {
-                        private readonly Attempt3.V1.IEntityIdReader<TNextReader> delegateReader;
+                        private readonly Attempt3.V1.IEntityIdReader<Attempt3.V1.Version.V1, TNextReader> delegateReader;
 
-                        public EntityIdReader(Attempt3.V1.IEntityIdReader<TNextReader> delegateReader)
+                        public EntityIdReader(Attempt3.V1.IEntityIdReader<Attempt3.V1.Version.V1, TNextReader> delegateReader)
                         {
                             this.delegateReader = delegateReader;
                         }
@@ -606,9 +606,9 @@ namespace NewStuff._Design._0_Convention.V3
                     }
                 }
 
-                public sealed class V2Placeholder<TNextReader> : Attempt3.V1.IV2Placeholder<TNextReader>
+                public sealed class V2Placeholder<TNextReader> : Attempt3.V1.IV2Placeholder<Attempt3.V1.Version.V1, TNextReader>
                 {
-                    void Attempt3.V1.IV2Placeholder<TNextReader>.NoImplementation()
+                    void Attempt3.V1.IV2Placeholder<Attempt3.V1.Version.V1, TNextReader>.NoImplementation()
                     {
                         // NOTE: this can't actually be implemented in external projects; this is by design
                         throw new NotImplementedException();
