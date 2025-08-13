@@ -296,13 +296,16 @@ namespace NewStuff._Design._0_Convention.V3
 
                 public abstract class V1 : Version
                 {
-                    protected V1()
+                    protected internal V1()
                     {
                     }
                 }
 
-                public abstract class V2 : V1
+                public sealed class V2 : V1
                 {
+                    private V2()
+                    {
+                    }
                 }
             }
 
