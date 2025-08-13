@@ -11,9 +11,7 @@ namespace Microsoft.OData.UriParser
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using System.Linq;
     using Microsoft.OData.Core;
-    using Microsoft.OData.Core.UriParser;
     using Microsoft.OData.Edm;
 
     #endregion
@@ -26,10 +24,10 @@ namespace Microsoft.OData.UriParser
         #region Public Methods
 
         /// <summary>
-        /// Adds a custom URI function to the EDM model with the specified name and signature.
+        /// Adds a custom URI function to the Edm model with the specified name and signature.
         /// Throws an exception if a built-in function or an existing custom function with the same signature already exists.
         /// </summary>
-        /// <param name="model">The EDM model to which the custom function will be added.</param>
+        /// <param name="model">The Edm model to which the custom function will be added.</param>
         /// <param name="functionName">The name of the custom function.</param>
         /// <param name="functionSignature">The signature and return type of the custom function.</param>
         /// <exception cref="ODataException">
@@ -57,17 +55,12 @@ namespace Microsoft.OData.UriParser
                 }
             }
 
-            CustomUriFunctionsAnnotation customUriFunctionsAnnotation = model.GetOrSetCustomUriFunctionsAnnotation();
+            CustomUriFunctionsStore store = model.GetOrCreateStore();
 
-            if (!customUriFunctionsAnnotation.CustomUriFunctions.TryGetValue(functionName, out FunctionSignatureWithReturnType[] existingSignatures))
+            // Check existing overloads (case-sensitive per store)
+            if (store.TryGet(functionName, ignoreCase: false, out IReadOnlyList<FunctionSignatureWithReturnType> existingSignatures))
             {
-                // Add the new function with its signature
-                customUriFunctionsAnnotation.CustomUriFunctions.TryAdd(functionName, [functionSignature]);
-            }
-            else
-            {
-                // Check if function signature is one of the overloads
-                for (int i = 0; i < existingSignatures.Length; i++)
+                for (int i = 0; i < existingSignatures.Count; i++)
                 {
                     if (AreFunctionsSignatureEqual(existingSignatures[i], functionSignature))
                     {
@@ -75,17 +68,16 @@ namespace Microsoft.OData.UriParser
                             Error.Format(SRResources.CustomUriFunctions_AddCustomUriFunction_CustomFunctionOverloadExists, functionName));
                     }
                 }
-
-                // Add the new signature as an overload
-                customUriFunctionsAnnotation.CustomUriFunctions[functionName] =
-                    existingSignatures.Concat([functionSignature]).ToArray();
             }
+
+            // Add new overload
+            store.Add(functionName, functionSignature);
         }
 
         /// <summary>
-        /// Removes a specific overload of a custom URI function from the EDM model.
+        /// Removes a specific overload of a custom URI function from the Edm model.
         /// </summary>
-        /// <param name="model">The EDM model from which to remove the custom function.</param>
+        /// <param name="model">The Edm model from which to remove the custom function.</param>
         /// <param name="functionName">The name of the custom function.</param>
         /// <param name="functionSignature">The signature and return type of the custom function to remove.</param>
         /// <returns>
@@ -99,56 +91,40 @@ namespace Microsoft.OData.UriParser
             ExceptionUtils.CheckArgumentNotNull(model, "model");
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(functionName, "functionName");
             ExceptionUtils.CheckArgumentNotNull(functionSignature, "functionSignature");
+
             ValidateFunctionWithReturnType(functionSignature);
 
-            CustomUriFunctionsAnnotation customUriFunctionsAnnotation = model.GetOrSetCustomUriFunctionsAnnotation();
+            CustomUriFunctionsStore store = model.GetOrCreateStore();
 
-            if (!customUriFunctionsAnnotation.CustomUriFunctions.TryGetValue(functionName, out FunctionSignatureWithReturnType[] existingSignatures))
+            // Get existing signatures
+            if (!store.TryGet(functionName, ignoreCase: false, out IReadOnlyList<FunctionSignatureWithReturnType> existingSignature))
             {
                 return false;
             }
 
-            int indexOfFunctionSignatureFound = -1;
-            for (int i = 0; i < existingSignatures.Length; i++)
+            // Find the *stored instance* that is structurally equal, so removal succeeds
+            FunctionSignatureWithReturnType functionSignatureToRemove = null;
+            for (int i = 0; i < existingSignature.Count; i++)
             {
-                if (AreFunctionsSignatureEqual(existingSignatures[i], functionSignature))
+                if (AreFunctionsSignatureEqual(existingSignature[i], functionSignature))
                 {
-                    // Found the function signature to remove
-                    indexOfFunctionSignatureFound = i;
+                    functionSignatureToRemove = existingSignature[i];
+                    break;
                 }
             }
 
-            if (indexOfFunctionSignatureFound == -1)
+            if (functionSignatureToRemove == null)
             {
-                // Function signature to remove was not found
-                return false;
+                return false; // structurally equal signature not found
             }
 
-            if (existingSignatures.Length == 1)
-            {
-                // Only one function signature exists, remove the whole function name
-                return customUriFunctionsAnnotation.CustomUriFunctions.TryRemove(functionName, out _);
-            }
-
-            FunctionSignatureWithReturnType[] functionSignatures = new FunctionSignatureWithReturnType[existingSignatures.Length - 1];
-            for (int i = 0, j = 0; i < existingSignatures.Length; i++)
-            {
-                // Skip the function signature to remove
-                if (i != indexOfFunctionSignatureFound)
-                {
-                    functionSignatures[j++] = existingSignatures[i];
-                }
-            }
-
-            customUriFunctionsAnnotation.CustomUriFunctions[functionName] = functionSignatures;
-
-            return true;
+            return store.Remove(functionName, functionSignatureToRemove);
         }
 
         /// <summary>
-        /// Removes all overloads of a custom URI function with the specified name from the EDM model.
+        /// Removes all overloads of a custom URI function with the specified name from the Edm model.
         /// </summary>
-        /// <param name="model">The EDM model from which to remove the custom function.</param>
+        /// <param name="model">The Edm model from which to remove the custom function.</param>
         /// <param name="functionName">The name of the custom function to remove.</param>
         /// <returns>
         /// <c>true</c> if the function was found and removed; <c>false</c> otherwise.
@@ -158,14 +134,15 @@ namespace Microsoft.OData.UriParser
             ExceptionUtils.CheckArgumentNotNull(model, "model");
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(functionName, "functionName");
 
-            CustomUriFunctionsAnnotation customUriFunctionsAnnotation = model.GetOrSetCustomUriFunctionsAnnotation();
-            return customUriFunctionsAnnotation.CustomUriFunctions.TryRemove(functionName, out _);
+            CustomUriFunctionsStore store = model.GetOrCreateStore();
+
+            return store.Remove(functionName);
         }
 
         /// <summary>
-        /// Attempts to retrieve all overloads of a custom URI function with the specified name from the EDM model.
+        /// Attempts to retrieve all overloads of a custom URI function with the specified name from the Edm model.
         /// </summary>
-        /// <param name="model">The EDM model to search for the custom function.</param>
+        /// <param name="model">The Edm model to search for the custom function.</param>
         /// <param name="functionName">The name of the custom function to retrieve.</param>
         /// <param name="functionSignatures">
         /// When this method returns, contains a list of key-value pairs of function names and their signatures, if found; otherwise, null.
@@ -185,31 +162,84 @@ namespace Microsoft.OData.UriParser
 
             functionSignatures = null;
 
-            CustomUriFunctionsAnnotation customUriFunctionsAnnotation = model.GetAnnotationValue<CustomUriFunctionsAnnotation>(model);
+            CustomUriFunctionsStore store = model.TryGetStore();
 
-            if (customUriFunctionsAnnotation == null)
+            if (store == null)
             {
                 return false;
             }
 
-            foreach (KeyValuePair<string, FunctionSignatureWithReturnType[]> customUriFunction in customUriFunctionsAnnotation.CustomUriFunctions)
+            if (!ignoreCase)
             {
-                if (customUriFunction.Key.Equals(functionName, ignoreCase ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal))
+                // Case-sensitive: Exact matches only
+                if (!store.TryGet(functionName, ignoreCase: false, out IReadOnlyList<FunctionSignatureWithReturnType> exactMatchSignatures))
                 {
-                    foreach (FunctionSignatureWithReturnType functionSignature in customUriFunction.Value)
+                    return false; // No exact match found
+                }
+
+                for (int i = 0; i < exactMatchSignatures.Count; i++)
+                {
+                    functionSignatures ??= new List<KeyValuePair<string, FunctionSignatureWithReturnType>>(exactMatchSignatures.Count);
+
+                    functionSignatures.Add(new KeyValuePair<string, FunctionSignatureWithReturnType>(functionName, exactMatchSignatures[i]));
+                }
+
+                return true;
+            }
+            else
+            {
+                // Case-insensitive: All matches regardless of case
+                IReadOnlyDictionary<string, IReadOnlyList<FunctionSignatureWithReturnType>> snapshot = store.Snapshot();
+                StringComparer comparer = StringComparer.OrdinalIgnoreCase;
+
+                foreach (KeyValuePair<string, IReadOnlyList<FunctionSignatureWithReturnType>> kvPair in snapshot)
+                {
+                    if (comparer.Equals(kvPair.Key, functionName))
                     {
                         functionSignatures ??= new List<KeyValuePair<string, FunctionSignatureWithReturnType>>();
 
-                        functionSignatures.Add(new KeyValuePair<string, FunctionSignatureWithReturnType>(customUriFunction.Key, functionSignature));
+                        for (int i = 0; i < kvPair.Value.Count; i++)
+                        {
+                            functionSignatures.Add(new KeyValuePair<string, FunctionSignatureWithReturnType>(kvPair.Key, kvPair.Value[i]));
+                        }
                     }
                 }
-            }
 
-            return functionSignatures != null;
+                return functionSignatures != null && functionSignatures.Count > 0;
+            }
         }
 
         #endregion
 
+        #region Internal Methods
+
+        /// <summary>
+        /// Retrieves the <see cref="CustomUriFunctionsStore"/> instance associated with the given Edm model,
+        /// creating and annotating it on the model if it does not already exist.
+        /// </summary>
+        /// <param name="model">The Edm model for which to get or create the custom URI functions store.</param>
+        /// <returns>The <see cref="CustomUriFunctionsStore"/> instance for the model.</returns>
+        internal static CustomUriFunctionsStore GetOrCreateStore(this IEdmModel model)
+        {
+            return CustomUriFunctionsStore.GetOrCreate(model);
+        }
+
+        /// <summary>
+        /// Attempts to retrieve the <see cref="CustomUriFunctionsStore"/> instance associated with the given Edm model,
+        /// or returns <c>null</c> if no store has been created or annotated on the model.
+        /// </summary>
+        /// <param name="model">The Edm model for which to retrieve the custom URI functions store.</param>
+        /// <returns>
+        /// The <see cref="CustomUriFunctionsStore"/> instance if it exists on the model; otherwise, <c>null</c>.
+        /// </returns>
+        internal static CustomUriFunctionsStore TryGetStore(this IEdmModel model)
+        {
+            ExceptionUtils.CheckArgumentNotNull(model, "model");
+
+            return model.GetAnnotationValue<CustomUriFunctionsStore>(model);
+        }
+
+        #endregion Internal Methods
 
         #region Private Methods
 
@@ -255,20 +285,6 @@ namespace Microsoft.OData.UriParser
             }
 
             ExceptionUtils.CheckArgumentNotNull(functionSignature.ReturnType, "functionSignatureWithReturnType must contain a return type");
-        }
-
-        private static CustomUriFunctionsAnnotation GetOrSetCustomUriFunctionsAnnotation(this IEdmModel model)
-        {
-            Debug.Assert(model != null, "model != null");
-
-            CustomUriFunctionsAnnotation annotation = model.GetAnnotationValue<CustomUriFunctionsAnnotation>(model);
-            if (annotation == null)
-            {
-                annotation = new CustomUriFunctionsAnnotation();
-                model.SetAnnotationValue(model, annotation);
-            }
-
-            return annotation;
         }
 
         #endregion
