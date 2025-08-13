@@ -294,11 +294,31 @@ namespace NewStuff._Design._0_Convention.V3
                 {
                 }
 
-                public sealed class V1 : Version
+                public abstract class V1 : Version
                 {
-                    private V1()
+                    protected V1()
                     {
                     }
+                }
+
+                public abstract class V2 : V1
+                {
+                }
+            }
+
+            public interface IFoo<out TVersion, out TNextReader> : IReader<IEntityIdReader<TNextReader>>
+            {
+            }
+
+            public static class Play
+            {
+                public static void DoWork<TNextReader>(IFoo<Version.V1, TNextReader> foo)
+                {
+                }
+
+                public static void Caller<TNextReader>(IFoo<Version.V2, TNextReader> foo)
+                {
+                    DoWork(foo);
                 }
             }
         }
@@ -306,7 +326,7 @@ namespace NewStuff._Design._0_Convention.V3
         namespace V2
         {
             //// TODO you are here trying to do the version thing; make sure that ireader<v2> can be cast to ireader<v1>; you also thought about exploring if the `v1`, `v2`, etc. classes could have the "get extended reader" methods, so for example, ientityidheadervaluereader would have a `TVersion Version { get; }` and then this could be called to say `reader.Version.GetExtended(entityIdHeaderValueReader)` and it'd give you back the irireader instead of the entityidreader
-            public interface IEntityIdHeaderValueReader<TVersion, out TNextReader> : IReader<IEntityIdReader<TNextReader>>
+            public interface IEntityIdHeaderValueReader<out TNextReader> : IReader<IEntityIdReader<TNextReader>>
             {
                 /// <summary>
                 /// TODO throws
