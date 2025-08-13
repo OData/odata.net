@@ -274,20 +274,42 @@ namespace NewStuff._Design._0_Convention.V3
     {
         namespace V1
         {
-            public interface IEntityIdHeaderValueReader<out TNextReader> : IReader<IEntityIdReader<TNextReader>>
+            public abstract class Version
             {
-                IV2Placeholder<TNextReader> V2Placeholder { get; }
+                private Version()
+                {
+                }
+
+                public abstract class V1 : Version
+                {
+                    private V1()
+                    {
+                    }
+
+                    internal abstract void NoImplementation();
+                }
             }
 
-            public interface IEntityIdReader<out TNextReader> : IReader<EntityId, TNextReader>
+            public interface IEntityIdHeaderValueReader<out TVersion, out TNextReader> : IReader<IEntityIdReader<TVersion, TNextReader>>
+                where TVersion : Version
+            {
+                IV2Placeholder<TVersion, TNextReader> V2Placeholder { get; }
+            }
+
+            public interface IEntityIdReader<out TVersion, out TNextReader> : IReader<EntityId, TNextReader>
+                where TVersion : Version
             {
             }
 
-            public interface IV2Placeholder<out TNextReader>
+            public interface IV2Placeholder<out TVersion, out TNextReader>
+                where TVersion : Version
             {
                 internal void NoImplementation();
             }
+        }
 
+        namespace V2
+        {
             public abstract class Version
             {
                 private Version()
@@ -301,55 +323,43 @@ namespace NewStuff._Design._0_Convention.V3
                     }
                 }
 
-                public sealed class V2 : V1
+                public abstract class V2 : V1
                 {
                     private V2()
                     {
                     }
+
+                    internal abstract void NoImplementation();
                 }
             }
 
-            public interface IFoo<out TVersion, out TNextReader> : IReader<IEntityIdReader<TNextReader>>
-            {
-            }
-
-            public static class Play
-            {
-                public static void DoWork<TNextReader>(IFoo<Version.V1, TNextReader> foo)
-                {
-                }
-
-                public static void Caller<TNextReader>(IFoo<Version.V2, TNextReader> foo)
-                {
-                    DoWork(foo);
-                }
-            }
-        }
-
-        namespace V2
-        {
             //// TODO you are here trying to do the version thing; make sure that ireader<v2> can be cast to ireader<v1>; you also thought about exploring if the `v1`, `v2`, etc. classes could have the "get extended reader" methods, so for example, ientityidheadervaluereader would have a `TVersion Version { get; }` and then this could be called to say `reader.Version.GetExtended(entityIdHeaderValueReader)` and it'd give you back the irireader instead of the entityidreader
-            public interface IEntityIdHeaderValueReader<out TNextReader> : IReader<IEntityIdReader<TNextReader>>
+            public interface IEntityIdHeaderValueReader<out TVersion, out TNextReader> : IReader<IEntityIdReader<TVersion, TNextReader>>
+                where TVersion : Version
             {
                 /// <summary>
                 /// TODO throws
                 /// </summary>
-                IV2Placeholder<TNextReader> V2Placeholder { get; }
+                IV2Placeholder<TVersion, TNextReader> V2Placeholder { get; }
             }
 
-            public interface IEntityIdReader<out TNextReader> : IReader<EntityId, TNextReader>
+            public interface IEntityIdReader<out TVersion, out TNextReader> : IReader<EntityId, TNextReader>
+                where TVersion : Version
             {
             }
 
-            public interface IV2Placeholder<out TNextReader> : IReader<IEntityIdStartReader<TNextReader>>
+            public interface IV2Placeholder<out TVersion, out TNextReader> : IReader<IEntityIdStartReader<TVersion, TNextReader>>
+                where TVersion : Version
             {
             }
 
-            public interface IEntityIdStartReader<out TNextReader> : IReader<IIriSchemeReader<TNextReader>>
+            public interface IEntityIdStartReader<out TVersion, out TNextReader> : IReader<IIriSchemeReader<TVersion, TNextReader>>
+                where TVersion : Version
             {
             }
 
-            public interface IIriSchemeReader<out TNextReader> : IReader<IriScheme, TNextReader>
+            public interface IIriSchemeReader<out TVersion, out TNextReader> : IReader<IriScheme, TNextReader>
+                where TVersion : Version
             {
             }
 
@@ -359,21 +369,23 @@ namespace NewStuff._Design._0_Convention.V3
 
             public static class Extensions
             {
-                public static IEntityIdHeaderValueReader<TNextReader> ToV1<TNextReader>(this IEntityIdHeaderValueReader<TNextReader> entityIdHeaderValueReader)
+                public static IEntityIdHeaderValueReader<Version.V1, TNextReader> ToV1<TVersion, TNextReader>(this IEntityIdHeaderValueReader<TVersion, TNextReader> entityIdHeaderValueReader)
+                    where TVersion : Version.V2
                 {
-                    return new EntityIdHeaderValueReader<TNextReader>(entityIdHeaderValueReader.V2Placeholder);
+                    return new EntityIdHeaderValueReader<TVersion, TNextReader>(entityIdHeaderValueReader.V2Placeholder);
                 }
 
-                private sealed class EntityIdHeaderValueReader<TNextReader> : IEntityIdHeaderValueReader<TNextReader>
+                private sealed class EntityIdHeaderValueReader<TVersion, TNextReader> : IEntityIdHeaderValueReader<Version.V1, TNextReader>
+                    where TVersion : Version.V2
                 {
-                    private readonly IV2Placeholder<TNextReader> v2Placeholder;
+                    private readonly IV2Placeholder<TVersion, TNextReader> v2Placeholder;
 
-                    public EntityIdHeaderValueReader(IV2Placeholder<TNextReader> v2Placeholder)
+                    public EntityIdHeaderValueReader(IV2Placeholder<TVersion, TNextReader> v2Placeholder)
                     {
                         this.v2Placeholder = v2Placeholder;
                     }
 
-                    public IV2Placeholder<TNextReader> V2Placeholder
+                    public IV2Placeholder<Version.V1, TNextReader> V2Placeholder
                     {
                         get
                         {
@@ -386,20 +398,20 @@ namespace NewStuff._Design._0_Convention.V3
                         return ValueTask.CompletedTask;
                     }
 
-                    public IEntityIdReader<TNextReader> TryMoveNext(out bool moved)
+                    public IEntityIdReader<Version.V1, TNextReader> TryMoveNext(out bool moved)
                     {
                         moved = true;
                         return new EntityIdReader(this.v2Placeholder);
                     }
 
-                    private sealed class EntityIdReader : IEntityIdReader<TNextReader>
+                    private sealed class EntityIdReader : IEntityIdReader<TVersion, TNextReader>
                     {
-                        private readonly IV2Placeholder<TNextReader> v2Placeholder;
+                        private readonly IV2Placeholder<TVersion, TNextReader> v2Placeholder;
 
-                        private IEntityIdStartReader<TNextReader>? entityIdStartReader;
-                        private IIriSchemeReader<TNextReader>? iriSchemeReader;
+                        private IEntityIdStartReader<TVersion, TNextReader>? entityIdStartReader;
+                        private IIriSchemeReader<TVersion, TNextReader>? iriSchemeReader;
 
-                        public EntityIdReader(IV2Placeholder<TNextReader> v2Placeholder)
+                        public EntityIdReader(IV2Placeholder<TVersion, TNextReader> v2Placeholder)
                         {
                             this.v2Placeholder = v2Placeholder;
                         }
