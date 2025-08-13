@@ -11,9 +11,11 @@ using System.Buffers;
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Text;
 
+[SuppressMessage("Performance", "CA1812:Avoid uninstantiated internal classes", Justification = "Still evaluating its utility.")]
 internal class PooledByteSegmentBufferWriter(int initialCapacity) : IBufferWriter<byte>, IDisposable
 {
     private BufferSegmentCollection _segments = new(initialCapacity);
@@ -59,83 +61,20 @@ internal class PooledByteSegmentBufferWriter(int initialCapacity) : IBufferWrite
 
         public Span<byte> GetSpan(int minSize)
         {
-            if (_numSegments == 0)
-            {
-                if (_numSegments == _allocatedSegments)
-                {
-                    _inlineSegments[0] = new BufferSegment(initialCapacity);
-                    _allocatedSegments++;
-                }
-
-                _currSegment = 0;
-                _numSegments = 1;
-
-                return _inlineSegments[0].GetSpan(minSize);
-            }
+            this.EnsureCurrentSegmentHasFreeSpace(minSize);
 
             if (_currSegment < MaxInlineSegments)
             {
-                ref var segment = ref _inlineSegments[_currSegment];
-                if (segment.FreeSpace >= minSize)
-                {
-                    return segment.GetSpan(minSize);
-                }
+                var inlineSpan = _inlineSegments[_currSegment].GetSpan(minSize);
+                Debug.Assert(inlineSpan.Length >= minSize, "Not enough free space in the current inline segment");
 
-                // Not enough space, check next segment
-                _currSegment++;
+                return inlineSpan;
             }
 
-            if (_currSegment < MaxInlineSegments)
-            {
-                // if we get here, it means we've just incremented
-                // _currSegment because it did not have enough space, so let's allocated a new one
-                if (_currSegment == _allocatedSegments)
-                {
-                    _inlineSegments[_currSegment] = new BufferSegment(Math.Max(initialCapacity, minSize));
-                    _allocatedSegments++;
-                }
-
-                _numSegments++;
-                return _inlineSegments[_currSegment].GetSpan(minSize);
-            }
-
-            // We have exhausted inline segments,
-            // let's check if we have any array segments
-            if (_segments == null)
-            {
-                _segments = ArrayPool<BufferSegment>.Shared.Rent(MaxInlineSegments * 2);
-                _segments[0] = new BufferSegment(Math.Max(initialCapacity, minSize));
-                _numSegments++;
-                _currSegment++;
-                return _segments[0].GetSpan(minSize);
-            }
-
-            if (_currSegment < (MaxInlineSegments + _segments.Length))
-            {
-                ref var segment = ref _segments[_currSegment - MaxInlineSegments];
-                if (segment.FreeSpace >= minSize)
-                {
-                    return segment.GetSpan(minSize);
-                }
-
-                // Not enough space, check next segment, resize if necessary
-                _currSegment++;
-                EnsureSufficientSegments();
-            }
-
-            Debug.Assert(_currSegment < (MaxInlineSegments + _segments.Length));
-
-            // if we get here, it means we've just incremented
-            // _currSegment because it did not have enough space, so let's allocated a new
-            // buffer segment in the heap array
-            if (_currSegment == _allocatedSegments)
-            {
-                _segments[_currSegment - MaxInlineSegments] = new BufferSegment(Math.Max(initialCapacity, minSize));
-                _allocatedSegments++;
-            }
-
-            _numSegments++;
-            return _segments[_currSegment - MaxInlineSegments].GetSpan(minSize);
+            Debug.Assert(_segments != null);
+            var span = _segments[_currSegment - MaxInlineSegments].GetSpan(minSize);
+            Debug.Assert(span.Length >= minSize, "Not enough free space in the current array segment");
+            return span;
         }
 
         public Memory<byte> GetMemory(int minSize)
@@ -150,7 +89,8 @@ internal class PooledByteSegmentBufferWriter(int initialCapacity) : IBufferWrite
                 return inlineMemory;
             }
 
-            var memory = _segments![_currSegment - MaxInlineSegments].GetMemory(minSize);
+            Debug.Assert(_segments != null);
+            var memory = _segments[_currSegment - MaxInlineSegments].GetMemory(minSize);
             Debug.Assert(memory.Length >= minSize, "Not enough free space in the current array segment");
             return memory;
         }
