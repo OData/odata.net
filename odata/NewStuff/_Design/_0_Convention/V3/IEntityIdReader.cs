@@ -369,13 +369,13 @@ namespace NewStuff._Design._0_Convention.V3
 
             public static class Extensions
             {
-                public static IEntityIdHeaderValueReader<Version.V1, TNextReader> ToV1<TVersion, TNextReader>(this IEntityIdHeaderValueReader<TVersion, TNextReader> entityIdHeaderValueReader)
+                public static IEntityIdHeaderValueReader<TVersion, TNextReader> ToV1<TVersion, TNextReader>(this IEntityIdHeaderValueReader<TVersion, TNextReader> entityIdHeaderValueReader)
                     where TVersion : Version.V2
                 {
                     return new EntityIdHeaderValueReader<TVersion, TNextReader>(entityIdHeaderValueReader.V2Placeholder);
                 }
 
-                private sealed class EntityIdHeaderValueReader<TVersion, TNextReader> : IEntityIdHeaderValueReader<Version.V1, TNextReader>
+                private sealed class EntityIdHeaderValueReader<TVersion, TNextReader> : IEntityIdHeaderValueReader<TVersion, TNextReader>
                     where TVersion : Version.V2
                 {
                     private readonly IV2Placeholder<TVersion, TNextReader> v2Placeholder;
@@ -385,7 +385,7 @@ namespace NewStuff._Design._0_Convention.V3
                         this.v2Placeholder = v2Placeholder;
                     }
 
-                    public IV2Placeholder<Version.V1, TNextReader> V2Placeholder
+                    public IV2Placeholder<TVersion, TNextReader> V2Placeholder
                     {
                         get
                         {
@@ -398,7 +398,7 @@ namespace NewStuff._Design._0_Convention.V3
                         return ValueTask.CompletedTask;
                     }
 
-                    public IEntityIdReader<Version.V1, TNextReader> TryMoveNext(out bool moved)
+                    public IEntityIdReader<TVersion, TNextReader> TryMoveNext(out bool moved)
                     {
                         moved = true;
                         return new EntityIdReader(this.v2Placeholder);
@@ -618,23 +618,23 @@ namespace NewStuff._Design._0_Convention.V3
 
             namespace V2IsReleasedButTheyHaventAddedAnyFeatures
             {
-                public sealed class EntityIdHeaderValueReader<TNextReader> : Attempt3.V2.IEntityIdHeaderValueReader<TNextReader>
+                public sealed class EntityIdHeaderValueReader<TNextReader> : Attempt3.V2.IEntityIdHeaderValueReader<Attempt3.V2.Version.V1, TNextReader>
                 {
-                    private readonly Attempt3.V2.IEntityIdHeaderValueReader<TNextReader> delegateReader;
+                    private readonly Attempt3.V2.IEntityIdHeaderValueReader<Attempt3.V2.Version.V1, TNextReader> delegateReader;
 
-                    public EntityIdHeaderValueReader(Attempt3.V2.IEntityIdHeaderValueReader<TNextReader> delegateReader)
+                    public EntityIdHeaderValueReader(Attempt3.V2.IEntityIdHeaderValueReader<Attempt3.V2.Version.V1, TNextReader> delegateReader)
                     {
                         this.delegateReader = delegateReader;
                     }
 
-                    public Attempt3.V2.IV2Placeholder<TNextReader> V2Placeholder => throw new NotImplementedException("TODO this exception is by design actually");
+                    public Attempt3.V2.IV2Placeholder<Attempt3.V2.Version.V1, TNextReader> V2Placeholder => throw new NotImplementedException("TODO this exception is by design actually");
 
                     public async ValueTask Read()
                     {
                         await this.delegateReader.Read().ConfigureAwait(false);
                     }
 
-                    public Attempt3.V2.IEntityIdReader<TNextReader> TryMoveNext(out bool moved)
+                    public Attempt3.V2.IEntityIdReader<Attempt3.V2.Version.V1, TNextReader> TryMoveNext(out bool moved)
                     {
                         var delegateEntityIdReader = this.delegateReader.TryMoveNext(out moved);
                         if (!moved)
@@ -645,11 +645,11 @@ namespace NewStuff._Design._0_Convention.V3
                         return new EntityIdReader(delegateEntityIdReader);
                     }
 
-                    private sealed class EntityIdReader : Attempt3.V2.IEntityIdReader<TNextReader>
+                    private sealed class EntityIdReader : Attempt3.V2.IEntityIdReader<Attempt3.V2.Version.V1, TNextReader>
                     {
-                        private readonly Attempt3.V2.IEntityIdReader<TNextReader> delegateReader;
+                        private readonly Attempt3.V2.IEntityIdReader<Attempt3.V2.Version.V1, TNextReader> delegateReader;
 
-                        public EntityIdReader(Attempt3.V2.IEntityIdReader<TNextReader> delegateReader)
+                        public EntityIdReader(Attempt3.V2.IEntityIdReader<Attempt3.V2.Version.V1, TNextReader> delegateReader)
                         {
                             this.delegateReader = delegateReader;
                         }
@@ -683,16 +683,16 @@ namespace NewStuff._Design._0_Convention.V3
 
             namespace V2IsReleasedAndLeveraged
             {
-                public sealed class EntityIdHeaderValueReader<TNextReader> : Attempt3.V2.IEntityIdHeaderValueReader<TNextReader>
+                public sealed class EntityIdHeaderValueReader<TNextReader> : Attempt3.V2.IEntityIdHeaderValueReader<Attempt3.V2.Version.V2, TNextReader>
                 {
-                    private readonly Attempt3.V2.IEntityIdHeaderValueReader<TNextReader> delegateReader;
+                    private readonly Attempt3.V2.IEntityIdHeaderValueReader<Attempt3.V2.Version.V2, TNextReader> delegateReader;
 
-                    public EntityIdHeaderValueReader(Attempt3.V2.IEntityIdHeaderValueReader<TNextReader> delegateReader)
+                    public EntityIdHeaderValueReader(Attempt3.V2.IEntityIdHeaderValueReader<Attempt3.V2.Version.V2, TNextReader> delegateReader)
                     {
                         this.delegateReader = delegateReader;
                     }
 
-                    public Attempt3.V2.IV2Placeholder<TNextReader> V2Placeholder
+                    public Attempt3.V2.IV2Placeholder<Attempt3.V2.Version.V2, TNextReader> V2Placeholder
                     {
                         get
                         {
@@ -700,11 +700,11 @@ namespace NewStuff._Design._0_Convention.V3
                         }
                     }
 
-                    private sealed class Placeholder : IV2Placeholder<TNextReader>
+                    private sealed class Placeholder : IV2Placeholder<Attempt3.V2.Version.V2, TNextReader>
                     {
-                        private readonly Attempt3.V2.IEntityIdHeaderValueReader<TNextReader> delegateReader;
+                        private readonly Attempt3.V2.IEntityIdHeaderValueReader<Attempt3.V2.Version.V2, TNextReader> delegateReader;
 
-                        public Placeholder(Attempt3.V2.IEntityIdHeaderValueReader<TNextReader> delegateReader)
+                        public Placeholder(Attempt3.V2.IEntityIdHeaderValueReader<Attempt3.V2.Version.V2, TNextReader> delegateReader)
                         {
                             this.delegateReader = delegateReader;
                         }
@@ -714,7 +714,7 @@ namespace NewStuff._Design._0_Convention.V3
                             await this.delegateReader.Read().ConfigureAwait(false);
                         }
 
-                        public V2.IEntityIdStartReader<TNextReader> TryMoveNext(out bool moved)
+                        public V2.IEntityIdStartReader<Attempt3.V2.Version.V2, TNextReader> TryMoveNext(out bool moved)
                         {
                             var entityIdStartReader = this.delegateReader.V2Placeholder.TryMoveNext(out moved);
                             if (!moved)
@@ -725,11 +725,11 @@ namespace NewStuff._Design._0_Convention.V3
                             return new EntityIdStartReader(entityIdStartReader);
                         }
 
-                        private sealed class EntityIdStartReader : V2.IEntityIdStartReader<TNextReader>
+                        private sealed class EntityIdStartReader : V2.IEntityIdStartReader<Attempt3.V2.Version.V2, TNextReader>
                         {
-                            private readonly Attempt3.V2.IEntityIdStartReader<TNextReader> entityIdStartReader;
+                            private readonly Attempt3.V2.IEntityIdStartReader<Attempt3.V2.Version.V2, TNextReader> entityIdStartReader;
 
-                            public EntityIdStartReader(Attempt3.V2.IEntityIdStartReader<TNextReader> entityIdStartReader)
+                            public EntityIdStartReader(Attempt3.V2.IEntityIdStartReader<Attempt3.V2.Version.V2, TNextReader> entityIdStartReader)
                             {
                                 this.entityIdStartReader = entityIdStartReader;
                             }
@@ -739,7 +739,7 @@ namespace NewStuff._Design._0_Convention.V3
                                 await this.entityIdStartReader.Read().ConfigureAwait(false);
                             }
 
-                            public V2.IIriSchemeReader<TNextReader> TryMoveNext(out bool moved)
+                            public V2.IIriSchemeReader<Attempt3.V2.Version.V2, TNextReader> TryMoveNext(out bool moved)
                             {
                                 var iriSchemeReader = this.entityIdStartReader.TryMoveNext(out moved);
                                 if (!moved)
@@ -750,11 +750,11 @@ namespace NewStuff._Design._0_Convention.V3
                                 return new IriSchemeReader(iriSchemeReader);
                             }
 
-                            private sealed class IriSchemeReader : V2.IIriSchemeReader<TNextReader>
+                            private sealed class IriSchemeReader : V2.IIriSchemeReader<Attempt3.V2.Version.V2, TNextReader>
                             {
-                                private readonly V2.IIriSchemeReader<TNextReader> iriSchemeReader;
+                                private readonly V2.IIriSchemeReader<Attempt3.V2.Version.V2, TNextReader> iriSchemeReader;
 
-                                public IriSchemeReader(V2.IIriSchemeReader<TNextReader> iriSchemeReader)
+                                public IriSchemeReader(V2.IIriSchemeReader<Attempt3.V2.Version.V2, TNextReader> iriSchemeReader)
                                 {
                                     this.iriSchemeReader = iriSchemeReader;
                                 }
@@ -789,7 +789,7 @@ namespace NewStuff._Design._0_Convention.V3
                         await this.ToV1().Read().ConfigureAwait(false);
                     }
 
-                    public Attempt3.V2.IEntityIdReader<TNextReader> TryMoveNext(out bool moved)
+                    public Attempt3.V2.IEntityIdReader<Attempt3.V2.Version.V2, TNextReader> TryMoveNext(out bool moved)
                     {
                         return this.ToV1().TryMoveNext(out moved);
                     }
