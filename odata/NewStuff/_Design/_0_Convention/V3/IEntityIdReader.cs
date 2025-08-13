@@ -134,6 +134,15 @@ namespace NewStuff._Design._0_Convention.V3
     {
     }
 
+    public interface IEntityIdHeaderValueReaderV1<out TNextReader> : IReader<IEntityIdReader<TNextReader>>
+    {
+    }
+
+    public interface IEntityIdHeaderValueReaderV2<out TNextReader> : IReader<IEntityIdReader<TNextReader>>
+    {
+        IEntityIdStartReader<TNextReader> Next { get; }
+    }
+
     public interface IEntityIdReader<out TNextReader> : IReader<EntityId, TNextReader>
     {
     }
@@ -342,7 +351,7 @@ namespace NewStuff._Design._0_Convention.V3
                 where TVersion : Version
             {
                 /// <summary>
-                /// TODO throws
+                /// TODO throws //// TODO returns null (make it nullable)
                 /// </summary>
                 IEntityIdStartReader<TVersion, TNextReader> EntityIdStartReader { get; }
             }
