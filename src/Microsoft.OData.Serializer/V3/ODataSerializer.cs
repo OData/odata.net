@@ -23,7 +23,9 @@ public static class ODataSerializer
         // based on payload kind, determine the appropirate state, context and underlying writer.
 
         // init state
-        var jsonWriter = new Utf8JsonWriter(stream);
+        using var bufferWriter = new PooledByteBufferWriter(options.BufferSize);
+        //using var bufferWriter = new PooledByteSegmentBufferWriter(options.BufferSize);
+        var jsonWriter = new Utf8JsonWriter(bufferWriter);
         var writerProvider = new ODataJsonWriterProvider<TCustomState>(options);
         var state = new ODataJsonWriterState<TCustomState>(options, writerProvider, jsonWriter)
         {
@@ -40,11 +42,24 @@ public static class ODataSerializer
 
             if (state.ShouldFlush())
             {
-                await jsonWriter.FlushAsync();
+                jsonWriter.Flush();
+                //await bufferWriter.WriteToStreamAsync(stream, cancellationToken: default).ConfigureAwait(false);
+                await stream.WriteAsync(bufferWriter.WrittenMemory, cancellationToken: default).ConfigureAwait(false);
+                bufferWriter.Clear();
             }
         }
 
-        await jsonWriter.FlushAsync();
+        if (jsonWriter.BytesPending > 0)
+        {
+            // write any remaining data
+            jsonWriter.Flush();
+            //await bufferWriter.WriteToStreamAsync(stream, cancellationToken: default).ConfigureAwait(false);
+            await stream.WriteAsync(bufferWriter.WrittenMemory, cancellationToken: default).ConfigureAwait(false);
+        }
+
+        //bufferWriter.Dispose();
+        await stream.FlushAsync().ConfigureAwait(false);
+
 
 
         // TODO: brainstorming re-entrancy support
