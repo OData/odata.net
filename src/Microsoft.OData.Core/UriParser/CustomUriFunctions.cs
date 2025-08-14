@@ -6,7 +6,7 @@
 
 namespace Microsoft.OData.UriParser
 {
-    #region NameSpaces
+    #region Namespaces
 
     using System;
     using System.Collections.Generic;
@@ -14,7 +14,7 @@ namespace Microsoft.OData.UriParser
     using Microsoft.OData.Core;
     using Microsoft.OData.Edm;
 
-    #endregion
+    #endregion Namespaces
 
     /// <summary>
     /// Class represents functions signatures of custom uri functions.
@@ -55,7 +55,7 @@ namespace Microsoft.OData.UriParser
                 }
             }
 
-            CustomUriFunctionsStore store = model.GetOrCreateStore();
+            CustomUriFunctionsStore store = CustomUriFunctionsStore.GetOrCreate(model);
 
             // Check existing overloads (case-sensitive per store)
             if (store.TryGet(functionName, ignoreCase: false, out IReadOnlyList<FunctionSignatureWithReturnType> existingSignatures))
@@ -94,7 +94,7 @@ namespace Microsoft.OData.UriParser
 
             ValidateFunctionWithReturnType(functionSignature);
 
-            CustomUriFunctionsStore store = model.GetOrCreateStore();
+            CustomUriFunctionsStore store = CustomUriFunctionsStore.GetOrCreate(model);
 
             // Get existing signatures
             if (!store.TryGet(functionName, ignoreCase: false, out IReadOnlyList<FunctionSignatureWithReturnType> existingSignature))
@@ -134,7 +134,7 @@ namespace Microsoft.OData.UriParser
             ExceptionUtils.CheckArgumentNotNull(model, "model");
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(functionName, "functionName");
 
-            CustomUriFunctionsStore store = model.GetOrCreateStore();
+            CustomUriFunctionsStore store = CustomUriFunctionsStore.GetOrCreate(model);
 
             return store.Remove(functionName);
         }
@@ -162,7 +162,7 @@ namespace Microsoft.OData.UriParser
 
             functionSignatures = null;
 
-            CustomUriFunctionsStore store = model.TryGetStore();
+            CustomUriFunctionsStore store = model.GetAnnotationValue<CustomUriFunctionsStore>(model);
 
             if (store == null)
             {
@@ -210,36 +210,6 @@ namespace Microsoft.OData.UriParser
         }
 
         #endregion
-
-        #region Internal Methods
-
-        /// <summary>
-        /// Retrieves the <see cref="CustomUriFunctionsStore"/> instance associated with the given Edm model,
-        /// creating and annotating it on the model if it does not already exist.
-        /// </summary>
-        /// <param name="model">The Edm model for which to get or create the custom URI functions store.</param>
-        /// <returns>The <see cref="CustomUriFunctionsStore"/> instance for the model.</returns>
-        internal static CustomUriFunctionsStore GetOrCreateStore(this IEdmModel model)
-        {
-            return CustomUriFunctionsStore.GetOrCreate(model);
-        }
-
-        /// <summary>
-        /// Attempts to retrieve the <see cref="CustomUriFunctionsStore"/> instance associated with the given Edm model,
-        /// or returns <c>null</c> if no store has been created or annotated on the model.
-        /// </summary>
-        /// <param name="model">The Edm model for which to retrieve the custom URI functions store.</param>
-        /// <returns>
-        /// The <see cref="CustomUriFunctionsStore"/> instance if it exists on the model; otherwise, <c>null</c>.
-        /// </returns>
-        internal static CustomUriFunctionsStore TryGetStore(this IEdmModel model)
-        {
-            ExceptionUtils.CheckArgumentNotNull(model, "model");
-
-            return model.GetAnnotationValue<CustomUriFunctionsStore>(model);
-        }
-
-        #endregion Internal Methods
 
         #region Private Methods
 

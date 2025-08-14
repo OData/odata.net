@@ -11,6 +11,7 @@ namespace Microsoft.OData.UriParser
     using System;
     using System.Collections.Generic;
     using System.Collections.Immutable;
+    using System.Runtime.CompilerServices;
     using System.Threading;
     using Microsoft.OData.Edm;
 
@@ -22,9 +23,17 @@ namespace Microsoft.OData.UriParser
     /// </summary>
     internal sealed class CustomUriFunctionsStore
     {
+        // Invariant: Lists stored in 'map' are treated as immutable after publication.
+        // All updates create a new List<T> and install it via a new ImmutableDictionary using CAS.
+        // Do NOT mutate any list retrieved from 'map'.
         private ImmutableDictionary<string, List<FunctionSignatureWithReturnType>> map
             = ImmutableDictionary<string, List<FunctionSignatureWithReturnType>>.Empty
             .WithComparers(StringComparer.Ordinal);
+
+        // One private gate per model instance to serialize creation of the store.
+        // Using CWT keeps the gate's lifetime tied to the model (no leaks) and
+        // avoids global contention across different models.
+        private static readonly ConditionalWeakTable<IEdmModel, object> lockPerModel = new ConditionalWeakTable<IEdmModel, object>();
 
         // Store can only be created via GetOrCreate
         private CustomUriFunctionsStore() { }
@@ -39,25 +48,27 @@ namespace Microsoft.OData.UriParser
         {
             ExceptionUtils.CheckArgumentNotNull(model, "model");
 
-            while (true)
+            // Try to get the typed direct-value annotation from the model element
+            CustomUriFunctionsStore existing = model.GetAnnotationValue<CustomUriFunctionsStore>(model);
+            if (existing != null)
             {
-                // Try to get the typed direct-value annotation from the model element
-                CustomUriFunctionsStore existing = model.GetAnnotationValue<CustomUriFunctionsStore>(model);
+                return existing;
+            }
+
+            object gate = lockPerModel.GetValue(model, _ => new object());
+            lock (gate)
+            {
+                existing = model.GetAnnotationValue<CustomUriFunctionsStore>(model);
                 if (existing != null)
                 {
+                    // Another thread already created the store while we were waiting for the lock
                     return existing;
                 }
 
-                // Create and store direct-value annotation
                 CustomUriFunctionsStore created = new CustomUriFunctionsStore();
                 model.SetAnnotationValue(model, created);
 
-                // Re-read to ensure we return the instance that actually "won" the race
-                CustomUriFunctionsStore after = model.GetAnnotationValue<CustomUriFunctionsStore>(model);
-                if (after != null)
-                {
-                    return after;
-                }
+                return created;
             }
         }
 

@@ -178,7 +178,10 @@ namespace Microsoft.OData.UriParser
                 throw new ODataException(Error.Format(SRResources.MetadataBinder_UnknownFunction, functionCallToken));
             }
 
-            List<KeyValuePair<string, FunctionSignatureWithReturnType>> uriFunctionNameSignatures = new List<KeyValuePair<string, FunctionSignatureWithReturnType>>();
+            int capacity = (builtInUriFunctionFound ? builtInUriFunctionSignatures.Length : 0)
+                + (customUriFunctionFound ? customUriFunctionNameSignatures.Count : 0);
+            List<KeyValuePair<string, FunctionSignatureWithReturnType>> uriFunctionNameSignatures =
+                new List<KeyValuePair<string, FunctionSignatureWithReturnType>>(capacity);
 
             // Populate the matched names found for built-in function
             if (builtInUriFunctionFound)
