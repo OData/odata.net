@@ -21,6 +21,14 @@ namespace Microsoft.OData.UriParser
     /// Thread-safe store for managing custom URI function signatures associated with an Edm model.
     /// This class allows adding, removing, and retrieving custom function signatures for use in OData URI parsing.
     /// </summary>
+    /// <remarks>
+    /// Invariants:
+    /// 1) <c>map</c> is an immutable dictionary instance published atomically.
+    /// 2) Each value is a list that is treated as immutable once stored in <c>map</c>
+    ///    (never mutate in place; always clone, modify, then publish via CAS).
+    /// 3) All updates occur inside <c>CompareExchangeLoop</c>.
+    /// These invariants allow lock‑free, thread‑safe publication and consistent snapshots.
+    /// </remarks>
     internal sealed class CustomUriFunctionsStore
     {
         // Invariant: Lists stored in 'map' are treated as immutable after publication.
@@ -140,6 +148,15 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         /// <param name="functionName">The name of the custom function.</param>
         /// <param name="functionSignature">The function signature to add.</param>
+        /// <remarks>
+        /// Thread‑safety: This method updates <c>map</c> via a CAS‑based CompareExchange loop.
+        /// The dictionary is treated as immutable and replaced atomically; the per‑key lists
+        /// are also treated as immutable once published (copy‑on‑write only). Do not mutate a
+        /// list instance after it is stored in <c>map</c>.
+        /// Performance: When appending, we pre‑size the new list to <c>Count + 1</c> to avoid
+        /// internal resizing/allocations. We also avoid calling <c>SetItem</c> if no change
+        /// is required.
+        /// </remarks>
         public void Add(string functionName, FunctionSignatureWithReturnType functionSignature)
         {
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(functionName, "functionName");
@@ -151,17 +168,29 @@ namespace Microsoft.OData.UriParser
                 {
                     if (!snapshot.TryGetValue(functionName, out List<FunctionSignatureWithReturnType> existingSignatures))
                     {
-                        return snapshot.Add(functionName, new List<FunctionSignatureWithReturnType> { functionSignature });
+                        // We create the list with a capacity of 1 because don't append to this instance later;
+                        // it will be replaced on the next update.
+                        return snapshot.Add(functionName, new List<FunctionSignatureWithReturnType>(1) { functionSignature });
                     }
                     else
                     {
-                        List<FunctionSignatureWithReturnType> updatedSignatures = new List<FunctionSignatureWithReturnType>(existingSignatures);
-                        if (!updatedSignatures.Contains(functionSignature))
+                        if (!existingSignatures.Contains(functionSignature))
                         {
+                            // NOTE: We treat the snapshot's list as immutable. Pre‑size to Count + 1 so the
+                            // subsequent Add won't cause an internal resize. Using a collection expression
+                            // (e.g., [..existingSignatures, functionSignature]) may not always pre‑size,
+                            // depending on compiler/runtime optimizations. This explicit capacity avoids
+                            // extra allocations on this hot path.
+                            List<FunctionSignatureWithReturnType> updatedSignatures = new List<FunctionSignatureWithReturnType>(existingSignatures.Count + 1);
+
+                            updatedSignatures.AddRange(existingSignatures);
                             updatedSignatures.Add(functionSignature);
+
+                            return snapshot.SetItem(functionName, updatedSignatures);
                         }
 
-                        return snapshot.SetItem(functionName, updatedSignatures);
+                        // No update required -> null will signal CompareExchangeLoop to exit without CAS
+                        return null;
                     }
                 });
         }
