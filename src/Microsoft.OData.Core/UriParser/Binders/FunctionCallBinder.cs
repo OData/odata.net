@@ -147,7 +147,7 @@ namespace Microsoft.OData.UriParser
         /// <param name="ignoreCase">Optional flag for whether case insensitive match is enabled.</param>
         /// <returns>The signatures which match the supplied function name.</returns>
         [SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase", Justification = "need to use lower characters for built-in functions.")]
-        internal static IList<KeyValuePair<string, FunctionSignatureWithReturnType>> GetUriFunctionSignatures(
+        internal static List<KeyValuePair<string, FunctionSignatureWithReturnType>> GetUriFunctionSignatures(
             string functionCallToken,
             IEdmModel model = null,
             bool ignoreCase = false)
@@ -317,7 +317,7 @@ namespace Microsoft.OData.UriParser
             }
 
             // Do some validation and get potential Uri functions that could match what we saw
-            IList<KeyValuePair<string, FunctionSignatureWithReturnType>> nameSignatures = GetUriFunctionSignatures(
+            List<KeyValuePair<string, FunctionSignatureWithReturnType>> nameSignatures = GetUriFunctionSignatures(
                 functionCallToken.Name,
                 this.state.Model,
                 this.state.Configuration.EnableCaseInsensitiveUriFunctionIdentifier);
