@@ -412,16 +412,16 @@ namespace NewStuff._Design._0_Convention.V3
 
                     internal abstract void NoImplementation();
 
-                    public bool TryMoveNext<TVersion, TNextReader>(out IEntityIdStartReader<TVersion, TNextReader> entityIdStartReader)
+                    public bool TryMoveNext<TVersion, TNextReader>(IEntityIdHeaderValueReader<TVersion, TNextReader> entityIdHeaderValueReader, out IEntityIdStartReader<TVersion, TNextReader> entityIdStartReader)
                         where TVersion : Version.V2
                     {
-                        return this.v2Implementations.TryMoveNext(out entityIdStartReader);
+                        return this.v2Implementations.TryMoveNext(entityIdHeaderValueReader, out entityIdStartReader);
                     }
                 }
 
                 public interface IV2Implementations
                 {
-                    bool TryMoveNext<TVersion, TNextReader>(out IEntityIdStartReader<TVersion, TNextReader> entityIdStartReader)
+                    bool TryMoveNext<TVersion, TNextReader>(IEntityIdHeaderValueReader<TVersion, TNextReader> entityIdHeaderValueReader, out IEntityIdStartReader<TVersion, TNextReader> entityIdStartReader)
                         where TVersion : Version.V2;
                 }
             }
@@ -461,7 +461,9 @@ namespace NewStuff._Design._0_Convention.V3
                 public static IEntityIdHeaderValueReader<TVersion, TNextReader> ToV1<TVersion, TNextReader>(this IEntityIdHeaderValueReader<TVersion, TNextReader> entityIdHeaderValueReader)
                     where TVersion : Version.V2
                 {
-                    return new EntityIdHeaderValueReader<TVersion, TNextReader>(entityIdHeaderValueReader.EntityIdStartReader);
+                    entityIdHeaderValueReader.Version.TryMoveNext(entityIdHeaderValueReader, out var entityIdStartReader);
+
+                    return new EntityIdHeaderValueReader<TVersion, TNextReader>(entityIdStartReader);
                 }
 
                 private sealed class EntityIdHeaderValueReader<TVersion, TNextReader> : IEntityIdHeaderValueReader<TVersion, TNextReader>
@@ -479,6 +481,25 @@ namespace NewStuff._Design._0_Convention.V3
                         get
                         {
                             return this.v2Placeholder;
+                        }
+                    }
+
+                    public TVersion Version
+                    {
+                        get
+                        {
+                            return Attempt3.V2.Version.V2.Create(new Implementations());
+                        }
+                    }
+
+                    private sealed class Implementations : Attempt3.V2.Version.V2.IV2Implementations
+                    {
+
+
+                        public bool TryMoveNext<TVersion1, TNextReader1>(IEntityIdHeaderValueReader<TVersion1, TNextReader1> entityIdHeaderValueReader, out IEntityIdStartReader<TVersion1, TNextReader1> entityIdStartReader) where TVersion1 : Version.V2
+                        {
+                            entityIdStartReader = new EntityIdReader();
+                            return true;
                         }
                     }
 
@@ -603,7 +624,7 @@ namespace NewStuff._Design._0_Convention.V3
                     {
                         // NOTE: the caller here has to know whether they are receiving something that supports v2...
                         // TODO what you could do is have a TVersion type parameter in all of the readers
-                        var entityIdStartReader = entityIdHeaderValueReader.EntityIdStartReader;
+                        entityIdHeaderValueReader.Version.TryMoveNext(entityIdHeaderValueReader, out var entityIdStartReader);
                         entityIdStartReader.TryMoveNext2(out var iriSchemeReader);
                         iriSchemeReader.TryGetValue2(out var iriScheme);
 
