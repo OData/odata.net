@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Threading.Tasks;
 
 using NewStuff._Design._0_Convention.V3.Attempt2.V2;
+using NewStuff._Design._0_Convention.V3.Attempt3.V1;
 using NewStuff._Design._0_Convention.V3.Attempt3.V2;
 
 namespace NewStuff._Design._0_Convention.V3
@@ -12,6 +14,60 @@ namespace NewStuff._Design._0_Convention.V3
     //// you are trying to decide if you should go ahead and dive into iri parsing (and if you don't, what will it look like when you decide that you want to, because up to this point, you would have called the entry point reader for the "broken down" version `ientityidreader`, but then that would conflict with the current name); and also, how it's going to look to write an `entityid` when you can only write uris and not iris; basically, what should you do when reading and writing are not symmetric
 
     //// TODO i think the `attempt2` namespace is the right track; finish the extension method, then implement some readers, and then write some fake calling code
+
+
+
+
+    public static class ForClement
+    {
+        public class Customer
+        {
+            public string Name { get; }
+        }
+
+        public class GetNextLinkImplementation<TState>
+        {
+            private readonly object globalState;
+
+            public GetNextLinkImplementation(object globalState)
+            {
+                this.globalState = globalState;
+            }
+
+            public string GetNextLink(Customer customer, TState state)
+            {
+                return customer.Name;
+            }
+        }
+
+        public static void Play()
+        {
+            var typeInfo = new OdataTypeInfo<Customer, bool>()
+            {
+                Properties = new List<OdataPropertyInfo<Customer, bool>>()
+                {
+                    new OdataPropertyInfo<Customer, bool, string>()
+                    {
+                        GetNextLink = new GetNextLinkImplementation<bool>(new object()).GetNextLink,
+                    }
+                },
+            };
+        }
+
+        public class OdataTypeInfo<T1, T2>
+        {
+            public List<OdataPropertyInfo<T1, T2>> Properties { get; set; }
+        }
+
+        public class OdataPropertyInfo<T1, T2>
+        {
+        }
+
+        public class OdataPropertyInfo<T1, T2, T3> : OdataPropertyInfo<T1, T2>
+        {
+            public Func<T1, T2, T3> GetNextLink { get; set; }
+        }
+    }
 
 
     public static class ForMike
@@ -302,21 +358,13 @@ namespace NewStuff._Design._0_Convention.V3
             public interface IEntityIdHeaderValueReader<out TVersion, out TNextReader> : IReader<IEntityIdReader<TVersion, TNextReader>>
                 where TVersion : Version
             {
-                /// <summary>
-                /// TODO throws
-                /// </summary>
-                IEntityIdStartReader<TVersion, TNextReader> EntityIdStartReader { get; }
+                TVersion Version { get; }
             }
 
             public interface IEntityIdReader<out TVersion, out TNextReader> : IReader<EntityId, TNextReader>
                 where TVersion : Version
             {
-            }
-
-            public interface IEntityIdStartReader<out TVersion, out TNextReader>
-                where TVersion : Version
-            {
-                internal void NoImplementation();
+                TVersion Version { get; }
             }
         }
 
@@ -337,11 +385,44 @@ namespace NewStuff._Design._0_Convention.V3
 
                 public abstract class V2 : V1
                 {
-                    private V2()
+                    private readonly IV2Implementations v2Implementations;
+
+                    private V2(IV2Implementations v2Implementations)
                     {
+                        this.v2Implementations = v2Implementations;
+                    }
+
+                    public static V2 Create(IV2Implementations v2Implementations)
+                    {
+                        return new Instance(v2Implementations);
+                    }
+
+                    private sealed class Instance : V2
+                    {
+                        public Instance(IV2Implementations v2Implementations)
+                            : base(v2Implementations)
+                        {
+                        }
+
+                        internal override void NoImplementation()
+                        {
+                            throw new NotImplementedException();
+                        }
                     }
 
                     internal abstract void NoImplementation();
+
+                    public bool TryMoveNext<TVersion, TNextReader>(out IEntityIdStartReader<TVersion, TNextReader> entityIdStartReader)
+                        where TVersion : Version.V2
+                    {
+                        return this.v2Implementations.TryMoveNext(out entityIdStartReader);
+                    }
+                }
+
+                public interface IV2Implementations
+                {
+                    bool TryMoveNext<TVersion, TNextReader>(out IEntityIdStartReader<TVersion, TNextReader> entityIdStartReader)
+                        where TVersion : Version.V2;
                 }
             }
 
@@ -350,25 +431,25 @@ namespace NewStuff._Design._0_Convention.V3
             public interface IEntityIdHeaderValueReader<out TVersion, out TNextReader> : IReader<IEntityIdReader<TVersion, TNextReader>>
                 where TVersion : Version
             {
-                /// <summary>
-                /// TODO throws //// TODO returns null (make it nullable)
-                /// </summary>
-                IEntityIdStartReader<TVersion, TNextReader> EntityIdStartReader { get; }
+                TVersion Version { get; }
             }
 
             public interface IEntityIdReader<out TVersion, out TNextReader> : IReader<EntityId, TNextReader>
                 where TVersion : Version
             {
+                TVersion Version { get; }
             }
 
             public interface IEntityIdStartReader<out TVersion, out TNextReader> : IReader<IIriSchemeReader<TVersion, TNextReader>>
                 where TVersion : Version
             {
+                TVersion Version { get; }
             }
 
             public interface IIriSchemeReader<out TVersion, out TNextReader> : IReader<IriScheme, TNextReader>
                 where TVersion : Version
             {
+                TVersion Version { get; }
             }
 
             public struct IriScheme
