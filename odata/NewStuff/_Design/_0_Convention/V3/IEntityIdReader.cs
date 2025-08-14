@@ -352,17 +352,27 @@ namespace NewStuff._Design._0_Convention.V3
                     }
 
                     internal abstract void NoImplementation();
+
+                    private sealed class Impl : V1
+                    {
+                        internal override void NoImplementation()
+                        {
+                            throw new NotImplementedException();
+                        }
+                    }
+
+                    public static V1 Instance { get; } = new Impl();
                 }
             }
 
             public interface IEntityIdHeaderValueReader<out TVersion, out TNextReader> : IReader<IEntityIdReader<TVersion, TNextReader>>
-                where TVersion : Version
+                where TVersion : Version.V1
             {
                 TVersion Version { get; }
             }
 
             public interface IEntityIdReader<out TVersion, out TNextReader> : IReader<EntityId, TNextReader>
-                where TVersion : Version
+                where TVersion : Version.V1
             {
                 TVersion Version { get; }
             }
@@ -419,7 +429,7 @@ namespace NewStuff._Design._0_Convention.V3
                     }
                 }
 
-                public interface IV2Implementations
+                public interface IV2Implementations //// TODO newer versions shold probably implement the previous versions so that the reader implementer doesn't have to chain those together themselves
                 {
                     bool TryMoveNext<TVersion, TNextReader>(IEntityIdHeaderValueReader<TVersion, TNextReader> entityIdHeaderValueReader, out IEntityIdStartReader<TVersion, TNextReader> entityIdStartReader)
                         where TVersion : Version.V2;

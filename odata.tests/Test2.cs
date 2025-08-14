@@ -2,6 +2,14 @@
 {
     using System.Collections;
 
+    class Derived : NewStuff._Design._0_Convention.V3.Attempt3.V1.Version.V1
+    {
+        internal override void NoImplementation()
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     public ref struct Foo : IDisposable
     {
         public void Dispose()
