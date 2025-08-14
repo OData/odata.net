@@ -5,7 +5,6 @@
 //---------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using Microsoft.OData.Core;
 using Microsoft.OData.Edm;
@@ -35,17 +34,17 @@ namespace Microsoft.OData.UriParser
             ExceptionUtils.CheckArgumentNotNull(model, "model");
             ExceptionUtils.CheckArgumentNotNull(customUriLiteralParser, "customUriLiteralParser");
 
-            CustomUriLiteralParsersAnnotation customUriLiteralParsersAnnotation =
-                model.GetOrSetCustomUriLiteralParsersAnnotation();
+            CustomUriLiteralParsersStore store = model.GetOrCreateStore();
 
-            if (customUriLiteralParsersAnnotation.CustomUriLiteralParsers.TryGetValue(customUriLiteralParser, out _))
+            if (store.Contains(customUriLiteralParser))
             {
                 throw new ODataException(SRResources.UriCustomTypeParsers_AddCustomUriTypeParserAlreadyExists);
             }
-            else
+            
+            // If a race occurs, throw the same exception for consistent behaviour
+            if (!store.Add(customUriLiteralParser))
             {
-                // Add the custom parser to the model's annotation
-                customUriLiteralParsersAnnotation.CustomUriLiteralParsers.TryAdd(customUriLiteralParser, 0);
+                throw new ODataException(SRResources.UriCustomTypeParsers_AddCustomUriTypeParserAlreadyExists);
             }
         }
 
@@ -65,18 +64,18 @@ namespace Microsoft.OData.UriParser
             ExceptionUtils.CheckArgumentNotNull(edmTypeReference, "edmTypeReference");
             ExceptionUtils.CheckArgumentNotNull(customUriLiteralParser, "customUriLiteralParser");
 
-            CustomUriLiteralParsersAnnotation customUriLiteralParsersAnnotation =
-                model.GetOrSetCustomUriLiteralParsersAnnotation();
+            CustomUriLiteralParsersStore store = model.GetOrCreateStore();
 
-            if (customUriLiteralParsersAnnotation.CustomUriLiteralParsersByEdmType.TryGetValue(edmTypeReference, out _))
+            if (store.TryGet(edmTypeReference, out _))
             {
                 // If the parser already exists for this EdmType, throw an exception
                 throw new ODataException(Error.Format(SRResources.UriCustomTypeParsers_AddCustomUriTypeParserEdmTypeExists, edmTypeReference.FullName()));
             }
-            else
+            
+            if (!store.Add(edmTypeReference, customUriLiteralParser))
             {
-                // Add the custom parser to the model's annotation
-                customUriLiteralParsersAnnotation.CustomUriLiteralParsersByEdmType.TryAdd(edmTypeReference, customUriLiteralParser);
+                // Another thread registered for this type first — throw same exception
+                throw new ODataException(Error.Format(SRResources.UriCustomTypeParsers_AddCustomUriTypeParserEdmTypeExists, edmTypeReference.FullName()));
             }
         }
 
@@ -87,65 +86,29 @@ namespace Microsoft.OData.UriParser
         /// <param name="model">Edm model from which the custom URI literal parser will be removed.</param>
         /// <param name="customUriLiteralParser">The custom URI literal parser to remove.</param>
         /// <returns><c>true</c> if the custom URI literal parser is successfully removed; otherwise <c>false</c>.</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="model"/>  is null.</exception>
-        /// <exception cref="ArgumentNullException"><paramref name="customUriLiteralParser"/>  is null.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="model"/> is null.</exception>
+        /// <exception cref="ArgumentNullException"><paramref name="customUriLiteralParser"/> is null.</exception>
         public static bool RemoveCustomUriLiteralParser(this IEdmModel model, IUriLiteralParser customUriLiteralParser)
         {
             ExceptionUtils.CheckArgumentNotNull(model, "model");
             ExceptionUtils.CheckArgumentNotNull(customUriLiteralParser, "customUriLiteralParser");
 
-            List<IEdmTypeReference> edmTypeMappedToUriLiteralParser = new List<IEdmTypeReference>();
-            CustomUriLiteralParsersAnnotation customUriLiteralParsersAnnotation =
-                model.GetOrSetCustomUriLiteralParsersAnnotation();
+            CustomUriLiteralParsersStore store = model.GetOrCreateStore();
 
-            bool removed = false;
-
-            foreach (KeyValuePair<IEdmTypeReference, IUriLiteralParser> kvPair in customUriLiteralParsersAnnotation.CustomUriLiteralParsersByEdmType)
-            {
-                if (kvPair.Value.Equals(customUriLiteralParser))
-                {
-                    edmTypeMappedToUriLiteralParser.Add(kvPair.Key);
-                }
-            }
-
-
-            foreach (IEdmTypeReference edmTypeReference in edmTypeMappedToUriLiteralParser)
-            {
-                // Remove the parser from the model's annotation
-                removed |= customUriLiteralParsersAnnotation.CustomUriLiteralParsersByEdmType.TryRemove(edmTypeReference, out _);
-            }
-
-            removed |= customUriLiteralParsersAnnotation.CustomUriLiteralParsers.TryRemove(customUriLiteralParser, out _);
-
-            return removed;
+            return store.Remove(customUriLiteralParser);
         }
 
         #endregion
 
-        #region Internal Static Methods
+        #region Private Methods
 
-        /// <summary>
-        /// Retrieves the <see cref="CustomUriLiteralParsersAnnotation"/> from the Edm model,
-        /// or creates and attaches a new one if it does not already exist.
-        /// </summary>
-        /// <param name="model">The Edm model to retrieve or update with the annotation.</param>
-        /// <returns>
-        /// The existing or newly created <see cref="CustomUriLiteralParsersAnnotation"/> instance associated with the model.
-        /// </returns
-        internal static CustomUriLiteralParsersAnnotation GetOrSetCustomUriLiteralParsersAnnotation(this IEdmModel model)
+        internal static CustomUriLiteralParsersStore GetOrCreateStore(this IEdmModel model)
         {
             Debug.Assert(model != null, "model != null");
-
-            CustomUriLiteralParsersAnnotation annotation = model.GetAnnotationValue<CustomUriLiteralParsersAnnotation>(model);
-            if (annotation == null)
-            {
-                annotation = new CustomUriLiteralParsersAnnotation();
-                model.SetAnnotationValue(model, annotation);
-            }
-
-            return annotation;
+            return CustomUriLiteralParsersStore.GetOrCreate(model);
         }
 
-        #endregion Internal Static Methods
+
+        #endregion Private Methods
     }
 }

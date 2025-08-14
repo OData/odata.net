@@ -53,15 +53,18 @@ namespace Microsoft.OData.UriParser
 
             UriParserHelper.ValidatePrefixLiteral(literalPrefix);
 
-            CustomUriLiteralPrefixesAnnotation customUriLiteralPrefixesAnnotation =
-               model.GetOrSetCustomUriLiteralPrefixesAnnotation();
+            CustomUriLiteralPrefixesStore store = model.GetOrCreateStore();
 
-            if (customUriLiteralPrefixesAnnotation.CustomUriLiteralPrefixes.TryGetValue(literalPrefix, out _))
+            if (store.TryGet(literalPrefix, out _))
             {
                 throw new ODataException(Error.Format(SRResources.CustomUriTypePrefixLiterals_AddCustomUriTypePrefixLiteralAlreadyExists, literalPrefix));
             }
 
-            customUriLiteralPrefixesAnnotation.CustomUriLiteralPrefixes.TryAdd(literalPrefix, literalEdmTypeReference);
+            if (!store.Add(literalPrefix, literalEdmTypeReference))
+            {
+                // Another thread won the race; throw consistently
+                throw new ODataException(Error.Format(SRResources.CustomUriTypePrefixLiterals_AddCustomUriTypePrefixLiteralAlreadyExists, literalPrefix));
+            }
         }
 
 
@@ -87,10 +90,9 @@ namespace Microsoft.OData.UriParser
 
             UriParserHelper.ValidatePrefixLiteral(literalPrefix);
 
-            CustomUriLiteralPrefixesAnnotation customUriLiteralPrefixesAnnotation =
-               model.GetOrSetCustomUriLiteralPrefixesAnnotation();
+            CustomUriLiteralPrefixesStore store = model.GetOrCreateStore();
 
-            return customUriLiteralPrefixesAnnotation.CustomUriLiteralPrefixes.TryRemove(literalPrefix, out _);
+            return store.Remove(literalPrefix);
         }
 
         #endregion
@@ -114,39 +116,22 @@ namespace Microsoft.OData.UriParser
             ExceptionUtils.CheckArgumentNotNull(model, "model");
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(literalPrefix, "literalPrefix");
 
-            CustomUriLiteralPrefixesAnnotation customUriLiteralPrefixesAnnotation =
-               model.GetOrSetCustomUriLiteralPrefixesAnnotation();
+            CustomUriLiteralPrefixesStore store = model.GetOrCreateStore();
 
-            if (customUriLiteralPrefixesAnnotation.CustomUriLiteralPrefixes.TryGetValue(literalPrefix, out IEdmTypeReference literalEdmTypeReference))
-            {
-                return literalEdmTypeReference;
-            }
-
-            return null;
-        }
-
-        /// <summary>
-        /// Retrieves the <see cref="CustomUriLiteralPrefixesAnnotation"/> from the Edm model,
-        /// or creates and attaches a new one if it does not already exist.
-        /// </summary>
-        /// <param name="model">The Edm model to retrieve or update with the annotation.</param>
-        /// <returns>
-        /// The existing or newly created <see cref="CustomUriLiteralPrefixesAnnotation"/> instance associated with the model.
-        /// </returns
-        internal static CustomUriLiteralPrefixesAnnotation GetOrSetCustomUriLiteralPrefixesAnnotation(this IEdmModel model)
-        {
-            Debug.Assert(model != null, "model != null");
-
-            CustomUriLiteralPrefixesAnnotation annotation = model.GetAnnotationValue<CustomUriLiteralPrefixesAnnotation>(model);
-            if (annotation == null)
-            {
-                annotation = new CustomUriLiteralPrefixesAnnotation();
-                model.SetAnnotationValue(model, annotation);
-            }
-
-            return annotation;
+            return store.TryGet(literalPrefix, out IEdmTypeReference edmType) ? edmType : null;
         }
 
         #endregion
+
+        #region Private Methods
+
+        private static CustomUriLiteralPrefixesStore GetOrCreateStore(this IEdmModel model)
+        {
+            Debug.Assert(model != null, "model != null");
+
+            return CustomUriLiteralPrefixesStore.GetOrCreate(model);
+        }
+
+        #endregion Private Methods
     }
 }
