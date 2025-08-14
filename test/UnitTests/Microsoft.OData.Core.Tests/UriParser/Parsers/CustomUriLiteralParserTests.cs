@@ -407,7 +407,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 
             HardCodedTestModel.TestModel.AddCustomUriLiteralParser(customBooleanUriTypeParser);
             HardCodedTestModel.TestModel.AddCustomUriLiteralParser(booleanTypeReference, customBooleanUriTypeParser);
-            var annotation = HardCodedTestModel.TestModel.GetAnnotationValue<CustomUriLiteralParsersAnnotation>(HardCodedTestModel.TestModel);
+            var annotation = HardCodedTestModel.TestModel.GetAnnotationValue<CustomUriLiteralParsersStore>(HardCodedTestModel.TestModel);
             bool isRemoved = HardCodedTestModel.TestModel.RemoveCustomUriLiteralParser(customBooleanUriTypeParser);
             Assert.True(isRemoved);
 
@@ -802,12 +802,11 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             }
         }
 
-
         /// <summary>
         /// In fact, this test shows the real power of the customization of UriLiteralParser and LiteralPrefix.
         /// Here we can see a special parsing for an EdmType 'Heartbeat' which is a complex type.
         /// The 'Heartbeat' type has it's own LiteralPrefix.
-        /// The result is an instacne object of 'Heartbeat' class. 
+        /// The result is an instance object of 'Heartbeat' class. 
         /// </summary>
         [Fact]
         public void CustomUriLiteralPrefix_CanSetCustomLiteralWithCustomLiteralParserCustomType()

@@ -125,7 +125,7 @@ namespace Microsoft.OData.UriParser
             /// </remarks>
             public object ParseUriStringToType(string text, IEdmTypeReference targetType, out UriLiteralParsingException parsingException)
             {
-                CustomUriLiteralParsersAnnotation customUriLiteralParsersAnnotation =
+                CustomUriLiteralParsersStore customUriLiteralParsersAnnotation =
                     this.model.GetOrSetCustomUriLiteralParsersAnnotation();
 
                 // Search for custom URI literal parser which is registered for the given Edm type
