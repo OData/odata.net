@@ -735,7 +735,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             Assert.False(HardCodedTestModel.TestModel.TryGetCustomUriFunction(
                 Guid.NewGuid().ToString(),
-                out IList<KeyValuePair<string, FunctionSignatureWithReturnType>> _));
+                out IReadOnlyList<KeyValuePair<string, FunctionSignatureWithReturnType>> _));
         }
 
         #endregion
@@ -744,7 +744,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
         private FunctionSignatureWithReturnType[] GetCustomFunctionSignaturesOrNull(string customFunctionName)
         {
-            IList<KeyValuePair<string, FunctionSignatureWithReturnType>> resultFunctionSignaturesWithReturnType = null;
+            IReadOnlyList<KeyValuePair<string, FunctionSignatureWithReturnType>> resultFunctionSignaturesWithReturnType = null;
             HardCodedTestModel.TestModel.TryGetCustomUriFunction(customFunctionName, out resultFunctionSignaturesWithReturnType);
 
             return resultFunctionSignaturesWithReturnType?.Select( _ => _.Value).ToArray();

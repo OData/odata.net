@@ -95,8 +95,10 @@ namespace Microsoft.OData.UriParser
         /// <param name="argumentNodes">The nodes of the arguments, can be new {null,null}.</param>
         /// <param name="nameSignatures">The name-signature pairs to match against</param>
         /// <returns>Returns the matching signature or throws</returns>
-        internal static KeyValuePair<string, FunctionSignatureWithReturnType> MatchSignatureToUriFunction(string functionCallToken, SingleValueNode[] argumentNodes,
-            IList<KeyValuePair<string, FunctionSignatureWithReturnType>> nameSignatures)
+        internal static KeyValuePair<string, FunctionSignatureWithReturnType> MatchSignatureToUriFunction(
+            string functionCallToken,
+            SingleValueNode[] argumentNodes,
+            IReadOnlyList<KeyValuePair<string, FunctionSignatureWithReturnType>> nameSignatures)
         {
             KeyValuePair<string, FunctionSignatureWithReturnType> nameSignature;
 
@@ -147,7 +149,7 @@ namespace Microsoft.OData.UriParser
         /// <param name="ignoreCase">Optional flag for whether case insensitive match is enabled.</param>
         /// <returns>The signatures which match the supplied function name.</returns>
         [SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase", Justification = "need to use lower characters for built-in functions.")]
-        internal static List<KeyValuePair<string, FunctionSignatureWithReturnType>> GetUriFunctionSignatures(
+        internal static IReadOnlyList<KeyValuePair<string, FunctionSignatureWithReturnType>> GetUriFunctionSignatures(
             string functionCallToken,
             IEdmModel model = null,
             bool ignoreCase = false)
@@ -156,7 +158,7 @@ namespace Microsoft.OData.UriParser
 
             // Try to find the function in the user custom functions
             bool customUriFunctionFound = false;
-            IList<KeyValuePair<string, FunctionSignatureWithReturnType>> customUriFunctionNameSignatures = null;
+            IReadOnlyList<KeyValuePair<string, FunctionSignatureWithReturnType>> customUriFunctionNameSignatures = null;
             if (model != null)
             {
                 customUriFunctionFound = CustomUriFunctions.TryGetCustomUriFunction(
@@ -178,6 +180,12 @@ namespace Microsoft.OData.UriParser
                 throw new ODataException(Error.Format(SRResources.MetadataBinder_UnknownFunction, functionCallToken));
             }
 
+            // Exit early without initializing new list if its only custom URI functions
+            if (!builtInUriFunctionFound)
+            {
+                return customUriFunctionNameSignatures;
+            }
+
             int capacity = (builtInUriFunctionFound ? builtInUriFunctionSignatures.Length : 0)
                 + (customUriFunctionFound ? customUriFunctionNameSignatures.Count : 0);
             List<KeyValuePair<string, FunctionSignatureWithReturnType>> uriFunctionNameSignatures =
@@ -186,6 +194,7 @@ namespace Microsoft.OData.UriParser
             // Populate the matched names found for built-in function
             if (builtInUriFunctionFound)
             {
+                Debug.Assert(builtInUriFunctionSignatures != null, "builtInUriFunctionSignatures != null");
                 for (int i = 0; i < builtInUriFunctionSignatures.Length; i++)
                 {
                     uriFunctionNameSignatures.Add(new KeyValuePair<string, FunctionSignatureWithReturnType>(builtInUriFunctionName, builtInUriFunctionSignatures[i]));
@@ -196,17 +205,14 @@ namespace Microsoft.OData.UriParser
             if (customUriFunctionFound)
             {
                 Debug.Assert(customUriFunctionNameSignatures != null, "customUriFunctionsNameSignatures != null");
-                for (int i = 0; i < customUriFunctionNameSignatures.Count; i++)
-                {
-                    uriFunctionNameSignatures.Add(customUriFunctionNameSignatures[i]);
-                }
+                uriFunctionNameSignatures.AddRange(customUriFunctionNameSignatures);
             }
 
             return uriFunctionNameSignatures;
         }
 
         internal static FunctionSignatureWithReturnType[] ExtractSignatures(
-            IList<KeyValuePair<string, FunctionSignatureWithReturnType>> nameSignatures)
+            IReadOnlyList<KeyValuePair<string, FunctionSignatureWithReturnType>> nameSignatures)
         {
             return nameSignatures.Select(nameSig => nameSig.Value).ToArray();
         }
@@ -317,7 +323,7 @@ namespace Microsoft.OData.UriParser
             }
 
             // Do some validation and get potential Uri functions that could match what we saw
-            List<KeyValuePair<string, FunctionSignatureWithReturnType>> nameSignatures = GetUriFunctionSignatures(
+            IReadOnlyList<KeyValuePair<string, FunctionSignatureWithReturnType>> nameSignatures = GetUriFunctionSignatures(
                 functionCallToken.Name,
                 this.state.Model,
                 this.state.Configuration.EnableCaseInsensitiveUriFunctionIdentifier);

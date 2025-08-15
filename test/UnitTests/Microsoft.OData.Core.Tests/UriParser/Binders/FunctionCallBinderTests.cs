@@ -1435,7 +1435,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         }
 
         //Support Methods
-        internal IList<KeyValuePair<string, FunctionSignatureWithReturnType>> GetHardCodedYearFunctionSignatureForTest()
+        internal List<KeyValuePair<string, FunctionSignatureWithReturnType>> GetHardCodedYearFunctionSignatureForTest()
         {
             FunctionSignatureWithReturnType[] signatures = null;
             BuiltInUriFunctions.TryGetBuiltInFunction("year", out signatures);
@@ -1443,12 +1443,12 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             return signatures.Select(sig => new KeyValuePair<string, FunctionSignatureWithReturnType>("year", sig)).ToList();
         }
 
-        internal IList<KeyValuePair<string, FunctionSignatureWithReturnType>> GetDuplicateIndexOfFunctionSignatureForTest()
+        internal List<KeyValuePair<string, FunctionSignatureWithReturnType>> GetDuplicateIndexOfFunctionSignatureForTest()
         {
             FunctionSignatureWithReturnType[] signatures = null;
             BuiltInUriFunctions.TryGetBuiltInFunction("indexof", out signatures);
 
-            IList<KeyValuePair<string, FunctionSignatureWithReturnType>> nameSignatures = new List<KeyValuePair<string, FunctionSignatureWithReturnType>>();
+            List<KeyValuePair<string, FunctionSignatureWithReturnType>> nameSignatures = new List<KeyValuePair<string, FunctionSignatureWithReturnType>>();
             const string sampleName = "indexof";
             nameSignatures.Add(new KeyValuePair<string, FunctionSignatureWithReturnType>(sampleName, signatures[0]));
             nameSignatures.Add(new KeyValuePair<string, FunctionSignatureWithReturnType>(sampleName, signatures[0]));

@@ -154,7 +154,7 @@ namespace Microsoft.OData.UriParser
         public static bool TryGetCustomUriFunction(
             this IEdmModel model,
             string functionName,
-            out IList<KeyValuePair<string, FunctionSignatureWithReturnType>> functionSignatures,
+            out IReadOnlyList<KeyValuePair<string, FunctionSignatureWithReturnType>> functionSignatures,
             bool ignoreCase = false)
         {
             ExceptionUtils.CheckArgumentNotNull(model, "model");
@@ -177,13 +177,13 @@ namespace Microsoft.OData.UriParser
                     return false; // No exact match found
                 }
 
+                List<KeyValuePair<string, FunctionSignatureWithReturnType>> signatures = new List<KeyValuePair<string, FunctionSignatureWithReturnType>>(exactMatchSignatures.Count);
                 for (int i = 0; i < exactMatchSignatures.Count; i++)
                 {
-                    functionSignatures ??= new List<KeyValuePair<string, FunctionSignatureWithReturnType>>(exactMatchSignatures.Count);
-
-                    functionSignatures.Add(new KeyValuePair<string, FunctionSignatureWithReturnType>(functionName, exactMatchSignatures[i]));
+                    signatures.Add(new KeyValuePair<string, FunctionSignatureWithReturnType>(functionName, exactMatchSignatures[i]));
                 }
 
+                functionSignatures = signatures.AsReadOnly();
                 return true;
             }
             else
@@ -192,17 +192,25 @@ namespace Microsoft.OData.UriParser
                 IReadOnlyDictionary<string, IReadOnlyList<FunctionSignatureWithReturnType>> snapshot = store.Snapshot();
                 StringComparer comparer = StringComparer.OrdinalIgnoreCase;
 
+                List<KeyValuePair<string, FunctionSignatureWithReturnType>> signatures = null;
                 foreach (KeyValuePair<string, IReadOnlyList<FunctionSignatureWithReturnType>> kvPair in snapshot)
                 {
-                    if (comparer.Equals(kvPair.Key, functionName))
+                    if (!comparer.Equals(kvPair.Key, functionName))
                     {
-                        functionSignatures ??= new List<KeyValuePair<string, FunctionSignatureWithReturnType>>();
-
-                        for (int i = 0; i < kvPair.Value.Count; i++)
-                        {
-                            functionSignatures.Add(new KeyValuePair<string, FunctionSignatureWithReturnType>(kvPair.Key, kvPair.Value[i]));
-                        }
+                        continue;
                     }
+
+                    signatures ??= new List<KeyValuePair<string, FunctionSignatureWithReturnType>>();
+
+                    for (int i = 0; i < kvPair.Value.Count; i++)
+                    {
+                        signatures.Add(new KeyValuePair<string, FunctionSignatureWithReturnType>(kvPair.Key, kvPair.Value[i]));
+                    }
+                }
+
+                if (signatures is { Count: > 0 })
+                {
+                    functionSignatures = signatures.AsReadOnly();
                 }
 
                 return functionSignatures != null && functionSignatures.Count > 0;
