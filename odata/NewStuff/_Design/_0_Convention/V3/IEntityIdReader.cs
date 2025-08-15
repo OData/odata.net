@@ -337,6 +337,9 @@ namespace NewStuff._Design._0_Convention.V3
 
     namespace Attempt3
     {
+        //// TODO make sure that a single customer can have 2 packages, each of which using a different version
+        //// TODO go ahead and add a v3 to this as well just to really be sure
+
         namespace V1
         {
             public abstract class Version
@@ -364,6 +367,18 @@ namespace NewStuff._Design._0_Convention.V3
                     public static V1 Instance { get; } = new Impl();
                 }
             }
+
+            //// TODO iversionedreader<TVerseion, TNext> : IREader<TNExt>
+            ///{
+            ///  TVersion Version { get; }
+            ///}
+            ///
+            ///iodatareader<tversion, tnext> : iversionreader<tversion, tnext>
+            ///  whjere Tversion : Version.V1
+            ///{
+            ///
+            ///}
+
 
             public interface IEntityIdHeaderValueReader<out TVersion, out TNextReader> : IReader<IEntityIdReader<TVersion, TNextReader>>
                 where TVersion : Version.V1
