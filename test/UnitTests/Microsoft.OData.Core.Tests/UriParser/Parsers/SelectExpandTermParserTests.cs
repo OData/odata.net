@@ -313,7 +313,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         /// </summary>
         private static PathSegmentToken ParseSelectTerm(string term)
         {
-            var lexer = new ExpressionLexer(EdmCoreModel.Instance, expression: term, moveToFirstToken: true, useSemicolonDelimiter: true);
+            var lexer = new ExpressionLexer(HardCodedTestModel.TestModel, expression: term, moveToFirstToken: true, useSemicolonDelimiter: true);
             var parser = new SelectExpandTermParser(lexer, 100 /*maxPathLength*/, true /*isSelect*/);
             return parser.ParseTerm();
         }
@@ -332,7 +332,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         /// </summary>
         private PathSegmentToken ParseExpandTerm(string term, out ExpressionLexer lexer)
         {
-            lexer = new ExpressionLexer(EdmCoreModel.Instance, expression: term, moveToFirstToken: true, useSemicolonDelimiter: true);
+            lexer = new ExpressionLexer(HardCodedTestModel.TestModel, expression: term, moveToFirstToken: true, useSemicolonDelimiter: true);
             var parser = new SelectExpandTermParser(lexer, 100 /*maxPathLength*/, false /*isSelect*/);
             return parser.ParseTerm(allowRef: true);
         }

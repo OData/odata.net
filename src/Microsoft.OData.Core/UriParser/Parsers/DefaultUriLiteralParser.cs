@@ -10,12 +10,17 @@ using Microsoft.OData.Edm;
 
 namespace Microsoft.OData.UriParser
 {
+    /// <summary>
+    /// Default <see cref="IUriLiteralParser"/> that coordinates parsing of URI literal values
+    /// against a model. It attempts custom model-registered literal parsers before falling back
+    /// to built-in primitive literal parsing.
+    /// </summary>
     internal sealed class DefaultUriLiteralParser : IUriLiteralParser
     {
         #region Fields
 
-        // All Uri Literal Parsers
-        private List<IUriLiteralParser> uriTypeParsers;
+        // All URI literal parsers consulted in order.
+        private readonly List<IUriLiteralParser> uriTypeParsers;
 
         #endregion
 
@@ -25,14 +30,16 @@ namespace Microsoft.OData.UriParser
         private static readonly ConditionalWeakTable<IEdmModel, DefaultUriLiteralParser> _cwTable
                 = new ConditionalWeakTable<IEdmModel, DefaultUriLiteralParser>();
 
+        /// <summary>
+        /// Returns the model-scoped parser instance, creating one if none has been associated yet.
+        /// </summary>
+        /// <param name="model">The EDM model for which a literal parser is required.</param>
+        /// <returns>A parser instance tied to the supplied model.</returns>
         public static DefaultUriLiteralParser GetOrCreate(IEdmModel model)
         {
-            if (model == null)
-            {
-                throw new System.ArgumentNullException(nameof(model));
-            }
+            ExceptionUtils.CheckArgumentNotNull(model, nameof(model));
 
-            // The idea is to have a single DefaultUriLiteralParser instance for each model
+            // Single DefaultUriLiteralParser instance for each model
             return _cwTable.GetValue(model, m => new DefaultUriLiteralParser(m));
         }
 
@@ -125,21 +132,18 @@ namespace Microsoft.OData.UriParser
             /// </remarks>
             public object ParseUriStringToType(string text, IEdmTypeReference targetType, out UriLiteralParsingException parsingException)
             {
-                CustomUriLiteralParsersStore customUriLiteralParsersAnnotation =
-                    this.model.GetOrSetCustomUriLiteralParsersAnnotation();
+                CustomUriLiteralParsersStore store = CustomUriLiteralParsersStore.GetOrCreate(this.model);
 
                 // Search for custom URI literal parser which is registered for the given Edm type
-                if (customUriLiteralParsersAnnotation.CustomUriLiteralParsersByEdmType.TryGetValue(targetType, out IUriLiteralParser uriLiteralParserForEdmType))
+                if (store.TryGet(targetType, out IUriLiteralParser customUriLiteralParserForEdmType))
                 {
-                    return uriLiteralParserForEdmType.ParseUriStringToType(text, targetType, out parsingException);
+                    return customUriLiteralParserForEdmType.ParseUriStringToType(text, targetType, out parsingException);
                 }
 
                 // Parse with the general URI literal parsers
                 // Stop when a custom URI literal parser succeeded parsing the text.
-                foreach (KeyValuePair<IUriLiteralParser, byte> kvPair in customUriLiteralParsersAnnotation.CustomUriLiteralParsers)
+                foreach (IUriLiteralParser customUriLiteralParser in store.Snapshot())
                 {
-                    IUriLiteralParser customUriLiteralParser = kvPair.Key;
-
                     // Try to parse
                     object targetValue = customUriLiteralParser.ParseUriStringToType(text, targetType, out parsingException);
 

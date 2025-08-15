@@ -48,8 +48,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 
         public CustomUriLiteralParserUnitTests()
         {
-            // NOTE: Tests that don't really depend on the static HardCodedTestModel.TestModel use a new model instance to avoid concurrency issues
-            this.model = new EdmModel();
+            this.model = HardCodedTestModel.TestModel;
         }
 
         #region AddCustomUriLiteralParser Method
@@ -405,13 +404,13 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             IUriLiteralParser customBooleanUriTypeParser = new MyCustomBooleanUriLiteralParser();
             IEdmTypeReference booleanTypeReference = EdmCoreModel.Instance.GetBoolean(false);
 
-            HardCodedTestModel.TestModel.AddCustomUriLiteralParser(customBooleanUriTypeParser);
-            HardCodedTestModel.TestModel.AddCustomUriLiteralParser(booleanTypeReference, customBooleanUriTypeParser);
-            var annotation = HardCodedTestModel.TestModel.GetAnnotationValue<CustomUriLiteralParsersStore>(HardCodedTestModel.TestModel);
-            bool isRemoved = HardCodedTestModel.TestModel.RemoveCustomUriLiteralParser(customBooleanUriTypeParser);
+            this.model.AddCustomUriLiteralParser(customBooleanUriTypeParser);
+            this.model.AddCustomUriLiteralParser(booleanTypeReference, customBooleanUriTypeParser);
+            var annotation = this.model.GetAnnotationValue<CustomUriLiteralParsersStore>(this.model);
+            bool isRemoved = this.model.RemoveCustomUriLiteralParser(customBooleanUriTypeParser);
             Assert.True(isRemoved);
 
-            this.NoParsesForNonConvetionalBooleanValue(HardCodedTestModel.TestModel);
+            this.NoParsesForNonConvetionalBooleanValue(this.model);
         }
 
         /// <summary>
@@ -425,15 +424,15 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             IEdmTypeReference booleanTypeReference = EdmCoreModel.Instance.GetBoolean(false);
             IEdmTypeReference intTypeReference = EdmCoreModel.Instance.GetInt32(false);
 
-            HardCodedTestModel.TestModel.AddCustomUriLiteralParser(customIntBooleanUriTypeParser);
-            HardCodedTestModel.TestModel.AddCustomUriLiteralParser(booleanTypeReference, customIntBooleanUriTypeParser);
-            HardCodedTestModel.TestModel.AddCustomUriLiteralParser(intTypeReference, customIntBooleanUriTypeParser);
+            this.model.AddCustomUriLiteralParser(customIntBooleanUriTypeParser);
+            this.model.AddCustomUriLiteralParser(booleanTypeReference, customIntBooleanUriTypeParser);
+            this.model.AddCustomUriLiteralParser(intTypeReference, customIntBooleanUriTypeParser);
 
-            bool isRemoved = HardCodedTestModel.TestModel.RemoveCustomUriLiteralParser(customIntBooleanUriTypeParser);
+            bool isRemoved = this.model.RemoveCustomUriLiteralParser(customIntBooleanUriTypeParser);
             Assert.True(isRemoved);
 
-            this.NoParsesForNonConvetionalBooleanValue(HardCodedTestModel.TestModel);
-            this.NoParsesForNonConvetionalIntValue(HardCodedTestModel.TestModel);
+            this.NoParsesForNonConvetionalBooleanValue(this.model);
+            this.NoParsesForNonConvetionalIntValue(this.model);
         }
 
         #endregion
@@ -691,17 +690,17 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             IUriLiteralParser customStringLiteralParser = new MyCustomStringUriLiteralParser();
             try
             {
-                HardCodedTestModel.TestModel.AddCustomUriLiteralParser(customStringLiteralParser);
+                this.model.AddCustomUriLiteralParser(customStringLiteralParser);
 
                 var fullUri = new Uri("http://www.odata.com/OData/People" + string.Format("?$filter=Name eq '{0}'", CUSTOM_PARSER_STRING_VALID_VALUE));
-                ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://www.odata.com/OData/"), fullUri);
+                ODataUriParser parser = new ODataUriParser(this.model, new Uri("http://www.odata.com/OData/"), fullUri);
 
                 parser.ParseFilter().Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal)
                     .Right.ShouldBeConstantQueryNode(CUSTOM_PARSER_STRING_VALID_VALUE + CUSTOM_PARSER_STRING_ADDED_VALUE);
             }
             finally
             {
-                Assert.True(HardCodedTestModel.TestModel.RemoveCustomUriLiteralParser(customStringLiteralParser));
+                Assert.True(this.model.RemoveCustomUriLiteralParser(customStringLiteralParser));
             }
         }
 
@@ -712,17 +711,17 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             IUriLiteralParser customStringLiteralParser = new MyCustomStringUriLiteralParser();
             try
             {
-                HardCodedTestModel.TestModel.AddCustomUriLiteralParser(EdmCoreModel.Instance.GetString(true), customStringLiteralParser);
+                this.model.AddCustomUriLiteralParser(EdmCoreModel.Instance.GetString(true), customStringLiteralParser);
 
                 var fullUri = new Uri("http://www.odata.com/OData/People" + string.Format("?$filter=Name eq '{0}'", CUSTOM_PARSER_STRING_VALID_VALUE));
-                ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://www.odata.com/OData/"), fullUri);
+                ODataUriParser parser = new ODataUriParser(this.model, new Uri("http://www.odata.com/OData/"), fullUri);
 
                 parser.ParseFilter().Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal)
                     .Right.ShouldBeConstantQueryNode(CUSTOM_PARSER_STRING_VALID_VALUE + CUSTOM_PARSER_STRING_ADDED_VALUE);
             }
             finally
             {
-                Assert.True(HardCodedTestModel.TestModel.RemoveCustomUriLiteralParser(customStringLiteralParser));
+                Assert.True(this.model.RemoveCustomUriLiteralParser(customStringLiteralParser));
             }
         }
 
@@ -733,10 +732,10 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             IUriLiteralParser customStringLiteralParser = new MyCustomStringUriLiteralParser();
             try
             {
-                HardCodedTestModel.TestModel.AddCustomUriLiteralParser(customStringLiteralParser);
+                this.model.AddCustomUriLiteralParser(customStringLiteralParser);
 
                 var fullUri = new Uri("http://www.odata.com/OData/People" + string.Format("?$filter=Name eq '{0}'", CUSTOM_PARSER_STRING_VALUE_CAUSEBUG));
-                ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://www.odata.com/OData/"), fullUri);
+                ODataUriParser parser = new ODataUriParser(this.model, new Uri("http://www.odata.com/OData/"), fullUri);
 
                 Action parseUriAction = () =>
                     parser.ParseFilter();
@@ -746,7 +745,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             }
             finally
             {
-                Assert.True(HardCodedTestModel.TestModel.RemoveCustomUriLiteralParser(customStringLiteralParser));
+                Assert.True(this.model.RemoveCustomUriLiteralParser(customStringLiteralParser));
             }
         }
 
@@ -757,10 +756,10 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             IUriLiteralParser customStringLiteralParser = new MyCustomStringUriLiteralParser();
             try
             {
-                HardCodedTestModel.TestModel.AddCustomUriLiteralParser(EdmCoreModel.Instance.GetString(true), customStringLiteralParser);
+                this.model.AddCustomUriLiteralParser(EdmCoreModel.Instance.GetString(true), customStringLiteralParser);
 
                 var fullUri = new Uri("http://www.odata.com/OData/People" + string.Format("?$filter=Name eq '{0}'", CUSTOM_PARSER_STRING_VALUE_CAUSEBUG));
-                ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://www.odata.com/OData/"), fullUri);
+                ODataUriParser parser = new ODataUriParser(this.model, new Uri("http://www.odata.com/OData/"), fullUri);
 
                 Action parseUriAction = () =>
                     parser.ParseFilter();
@@ -770,7 +769,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             }
             finally
             {
-                Assert.True(HardCodedTestModel.TestModel.RemoveCustomUriLiteralParser(customStringLiteralParser));
+                Assert.True(this.model.RemoveCustomUriLiteralParser(customStringLiteralParser));
             }
         }
 
@@ -785,10 +784,10 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             IUriLiteralParser customStringLiteralParser = new MyCustomStringUriLiteralParser();
             try
             {
-                HardCodedTestModel.TestModel.AddCustomUriLiteralParser(EdmCoreModel.Instance.GetString(true), customStringLiteralParser);
+                this.model.AddCustomUriLiteralParser(EdmCoreModel.Instance.GetString(true), customStringLiteralParser);
 
                 var fullUri = new Uri("http://www.odata.com/OData/People" + string.Format("?$filter=Name eq '{0}'", CUSTOM_PARSER_STRING_VALUE_CAUSEBUG));
-                ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://www.odata.com/OData/"), fullUri);
+                ODataUriParser parser = new ODataUriParser(this.model, new Uri("http://www.odata.com/OData/"), fullUri);
 
                 Action parseUriAction = () =>
                     parser.ParseFilter();
@@ -798,7 +797,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             }
             finally
             {
-                Assert.True(HardCodedTestModel.TestModel.RemoveCustomUriLiteralParser(customStringLiteralParser));
+                Assert.True(this.model.RemoveCustomUriLiteralParser(customStringLiteralParser));
             }
         }
 
@@ -818,11 +817,11 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 
             try
             {
-                CustomUriLiteralPrefixes.AddCustomLiteralPrefix(HardCodedTestModel.TestModel, HEARTBEAT_LITERAL_PREFIX, heartbeatTypeReference);
-                HardCodedTestModel.TestModel.AddCustomUriLiteralParser(heartbeatTypeReference, customHeartbeatUriTypeParser);
+                CustomUriLiteralPrefixes.AddCustomLiteralPrefix(this.model, HEARTBEAT_LITERAL_PREFIX, heartbeatTypeReference);
+                this.model.AddCustomUriLiteralParser(heartbeatTypeReference, customHeartbeatUriTypeParser);
 
                 var fullUri = new Uri("http://www.odata.com/OData/Lions" + string.Format("?$filter=LionHeartbeat eq {0}'55.9'", HEARTBEAT_LITERAL_PREFIX));
-                ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://www.odata.com/OData/"), fullUri);
+                ODataUriParser parser = new ODataUriParser(this.model, new Uri("http://www.odata.com/OData/"), fullUri);
 
                 HeatBeatCustomUriLiteralParser.HeatBeat heartbeatValue = Assert.IsType<HeatBeatCustomUriLiteralParser.HeatBeat>(
                   (parser.ParseFilter().Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).Right.ShouldBeConvertQueryNode(heartbeatTypeReference).Source as ConstantNode).Value);
@@ -832,8 +831,8 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             }
             finally
             {
-                CustomUriLiteralPrefixes.RemoveCustomLiteralPrefix(HardCodedTestModel.TestModel, HEARTBEAT_LITERAL_PREFIX);
-                HardCodedTestModel.TestModel.RemoveCustomUriLiteralParser(customHeartbeatUriTypeParser);
+                CustomUriLiteralPrefixes.RemoveCustomLiteralPrefix(this.model, HEARTBEAT_LITERAL_PREFIX);
+                this.model.RemoveCustomUriLiteralParser(customHeartbeatUriTypeParser);
             }
         }
 
@@ -846,19 +845,19 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 
             try
             {
-                CustomUriLiteralPrefixes.AddCustomLiteralPrefix(HardCodedTestModel.TestModel, STRING_LITERAL_PREFIX, stringTypeReference);
-                HardCodedTestModel.TestModel.AddCustomUriLiteralParser(stringTypeReference, customstringUriTypeParser);
+                CustomUriLiteralPrefixes.AddCustomLiteralPrefix(this.model, STRING_LITERAL_PREFIX, stringTypeReference);
+                this.model.AddCustomUriLiteralParser(stringTypeReference, customstringUriTypeParser);
 
                 var fullUri = new Uri("http://www.odata.com/OData/People" + string.Format("?$filter=Name eq {0}'{1}'", STRING_LITERAL_PREFIX, CUSTOM_PARSER_STRING_VALID_VALUE));
-                ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://www.odata.com/OData/"), fullUri);
+                ODataUriParser parser = new ODataUriParser(this.model, new Uri("http://www.odata.com/OData/"), fullUri);
 
                 parser.ParseFilter().Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal)
                     .Right.ShouldBeConstantQueryNode(CUSTOM_PARSER_STRING_VALID_VALUE + CUSTOM_PARSER_STRING_ADDED_VALUE);
             }
             finally
             {
-                CustomUriLiteralPrefixes.RemoveCustomLiteralPrefix(HardCodedTestModel.TestModel, STRING_LITERAL_PREFIX);
-                HardCodedTestModel.TestModel.RemoveCustomUriLiteralParser(customstringUriTypeParser);
+                CustomUriLiteralPrefixes.RemoveCustomLiteralPrefix(this.model, STRING_LITERAL_PREFIX);
+                this.model.RemoveCustomUriLiteralParser(customstringUriTypeParser);
             }
         }
 
@@ -871,20 +870,20 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             try
             {
                 IEdmTypeReference booleanTypeReference = EdmCoreModel.Instance.GetBoolean(false);
-                CustomUriLiteralPrefixes.AddCustomLiteralPrefix(HardCodedTestModel.TestModel, BOOLEAN_LITERAL_PREFIX, booleanTypeReference);
-                HardCodedTestModel.TestModel.AddCustomUriLiteralParser(customBooleanAndIntUriLiteralParser);
+                CustomUriLiteralPrefixes.AddCustomLiteralPrefix(this.model, BOOLEAN_LITERAL_PREFIX, booleanTypeReference);
+                this.model.AddCustomUriLiteralParser(customBooleanAndIntUriLiteralParser);
 
 
                 var fullUri = new Uri("http://www.odata.com/OData/Chimeras" + string.Format("?$filter=Upgraded eq {0}'{1}'", BOOLEAN_LITERAL_PREFIX, CUSTOM_PARSER_BOOLEAN_VALID_VALUE_TRUE));
-                ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://www.odata.com/OData/"), fullUri);
+                ODataUriParser parser = new ODataUriParser(this.model, new Uri("http://www.odata.com/OData/"), fullUri);
 
                 parser.ParseFilter().Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal)
                     .Right.ShouldBeConvertQueryNode(EdmCoreModel.Instance.GetBoolean(true)).Source.ShouldBeConstantQueryNode(true);
             }
             finally
             {
-                CustomUriLiteralPrefixes.RemoveCustomLiteralPrefix(HardCodedTestModel.TestModel, BOOLEAN_LITERAL_PREFIX);
-                HardCodedTestModel.TestModel.RemoveCustomUriLiteralParser(customBooleanAndIntUriLiteralParser);
+                CustomUriLiteralPrefixes.RemoveCustomLiteralPrefix(this.model, BOOLEAN_LITERAL_PREFIX);
+                this.model.RemoveCustomUriLiteralParser(customBooleanAndIntUriLiteralParser);
             }
         }
 
@@ -896,19 +895,19 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             try
             {
                 IEdmTypeReference booleanTypeReference = EdmCoreModel.Instance.GetBoolean(false);
-                CustomUriLiteralPrefixes.AddCustomLiteralPrefix(HardCodedTestModel.TestModel, CustomUriLiteralParserUnitTests.BOOLEAN_LITERAL_PREFIX, booleanTypeReference);
-                HardCodedTestModel.TestModel.AddCustomUriLiteralParser(booleanTypeReference, customBooleanUriLiteralParser);
+                CustomUriLiteralPrefixes.AddCustomLiteralPrefix(this.model, CustomUriLiteralParserUnitTests.BOOLEAN_LITERAL_PREFIX, booleanTypeReference);
+                this.model.AddCustomUriLiteralParser(booleanTypeReference, customBooleanUriLiteralParser);
 
                 var fullUri = new Uri("http://www.odata.com/OData/Chimeras" + string.Format("?$filter=Upgraded eq {0}'{1}'", CustomUriLiteralParserUnitTests.BOOLEAN_LITERAL_PREFIX, CustomUriLiteralParserUnitTests.CUSTOM_PARSER_BOOLEAN_VALID_VALUE_TRUE));
-                ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://www.odata.com/OData/"), fullUri) { Resolver = new ODataUriResolver() { EnableCaseInsensitive = false } };
+                ODataUriParser parser = new ODataUriParser(this.model, new Uri("http://www.odata.com/OData/"), fullUri) { Resolver = new ODataUriResolver() { EnableCaseInsensitive = false } };
 
                 parser.ParseFilter().Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal)
                     .Right.ShouldBeConvertQueryNode(EdmCoreModel.Instance.GetBoolean(true)).Source.ShouldBeConstantQueryNode(true);
             }
             finally
             {
-                CustomUriLiteralPrefixes.RemoveCustomLiteralPrefix(HardCodedTestModel.TestModel, CustomUriLiteralParserUnitTests.BOOLEAN_LITERAL_PREFIX);
-                HardCodedTestModel.TestModel.RemoveCustomUriLiteralParser(customBooleanUriLiteralParser);
+                CustomUriLiteralPrefixes.RemoveCustomLiteralPrefix(this.model, CustomUriLiteralParserUnitTests.BOOLEAN_LITERAL_PREFIX);
+                this.model.RemoveCustomUriLiteralParser(customBooleanUriLiteralParser);
             }
         }
 
@@ -922,20 +921,20 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 
             try
             {
-                CustomUriLiteralPrefixes.AddCustomLiteralPrefix(HardCodedTestModel.TestModel, LITERAL_PREFIX, stringTypeReference);
-                HardCodedTestModel.TestModel.AddCustomUriLiteralParser(stringTypeReference, customstringUriTypeParser);
+                CustomUriLiteralPrefixes.AddCustomLiteralPrefix(this.model, LITERAL_PREFIX, stringTypeReference);
+                this.model.AddCustomUriLiteralParser(stringTypeReference, customstringUriTypeParser);
 
 
                 var fullUri = new Uri("http://www.odata.com/OData/People" + string.Format("?$filter=Name eq {0}'{1}'", LITERAL_PREFIX, CUSTOM_PARSER_STRING_VALID_VALUE));
-                ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://www.odata.com/OData/"), fullUri);
+                ODataUriParser parser = new ODataUriParser(this.model, new Uri("http://www.odata.com/OData/"), fullUri);
 
                 parser.ParseFilter().Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal)
                     .Right.ShouldBeConstantQueryNode(CUSTOM_PARSER_STRING_VALID_VALUE + CUSTOM_PARSER_STRING_ADDED_VALUE);
             }
             finally
             {
-                CustomUriLiteralPrefixes.RemoveCustomLiteralPrefix(HardCodedTestModel.TestModel, LITERAL_PREFIX);
-                HardCodedTestModel.TestModel.RemoveCustomUriLiteralParser(customstringUriTypeParser);
+                CustomUriLiteralPrefixes.RemoveCustomLiteralPrefix(this.model, LITERAL_PREFIX);
+                this.model.RemoveCustomUriLiteralParser(customstringUriTypeParser);
             }
         }
 

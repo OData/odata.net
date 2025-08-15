@@ -18,7 +18,7 @@ namespace Microsoft.OData.Tests.UriParser
 
         public SearchLexerTests()
         {
-            this.model = EdmCoreModel.Instance;
+            this.model = HardCodedTestModel.TestModel;
         }
 
         [Fact]

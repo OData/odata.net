@@ -14,7 +14,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 {
     public class SearchParserTests
     {
-        private readonly SearchParser searchParser = new SearchParser(EdmCoreModel.Instance, 50);
+        private readonly SearchParser searchParser = new SearchParser(HardCodedTestModel.TestModel, 50);
 
         [Fact]
         public void SearchWordTest()

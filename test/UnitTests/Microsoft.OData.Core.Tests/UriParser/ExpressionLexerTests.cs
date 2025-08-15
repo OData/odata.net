@@ -34,7 +34,7 @@ namespace Microsoft.OData.Tests.UriParser
 
         public ExpressionLexerTests()
         {
-            this.model = EdmCoreModel.Instance;
+            this.model = HardCodedTestModel.TestModel;
         }
 
         // internal static bool IsNumeric(ExpressionTokenKind id) tests

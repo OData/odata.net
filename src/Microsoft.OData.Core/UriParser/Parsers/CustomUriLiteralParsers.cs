@@ -5,7 +5,6 @@
 //---------------------------------------------------------------------
 
 using System;
-using System.Diagnostics;
 using Microsoft.OData.Core;
 using Microsoft.OData.Edm;
 
@@ -34,7 +33,7 @@ namespace Microsoft.OData.UriParser
             ExceptionUtils.CheckArgumentNotNull(model, "model");
             ExceptionUtils.CheckArgumentNotNull(customUriLiteralParser, "customUriLiteralParser");
 
-            CustomUriLiteralParsersStore store = model.GetOrCreateStore();
+            CustomUriLiteralParsersStore store = CustomUriLiteralParsersStore.GetOrCreate(model);
 
             if (store.Contains(customUriLiteralParser))
             {
@@ -64,7 +63,7 @@ namespace Microsoft.OData.UriParser
             ExceptionUtils.CheckArgumentNotNull(edmTypeReference, "edmTypeReference");
             ExceptionUtils.CheckArgumentNotNull(customUriLiteralParser, "customUriLiteralParser");
 
-            CustomUriLiteralParsersStore store = model.GetOrCreateStore();
+            CustomUriLiteralParsersStore store = CustomUriLiteralParsersStore.GetOrCreate(model);
 
             if (store.TryGet(edmTypeReference, out _))
             {
@@ -81,7 +80,7 @@ namespace Microsoft.OData.UriParser
 
         /// <summary>
         /// Removes the given custom URI literal parser from the cache.
-        /// It will be removed from both general parsers and parsers associated with specific Edm type.
+        /// It will be removed from both unbound parsers and parsers associated with specific Edm type.
         /// </summary>
         /// <param name="model">Edm model from which the custom URI literal parser will be removed.</param>
         /// <param name="customUriLiteralParser">The custom URI literal parser to remove.</param>
@@ -93,22 +92,11 @@ namespace Microsoft.OData.UriParser
             ExceptionUtils.CheckArgumentNotNull(model, "model");
             ExceptionUtils.CheckArgumentNotNull(customUriLiteralParser, "customUriLiteralParser");
 
-            CustomUriLiteralParsersStore store = model.GetOrCreateStore();
+            CustomUriLiteralParsersStore store = CustomUriLiteralParsersStore.GetOrCreate(model);
 
             return store.Remove(customUriLiteralParser);
         }
 
         #endregion
-
-        #region Private Methods
-
-        internal static CustomUriLiteralParsersStore GetOrCreateStore(this IEdmModel model)
-        {
-            Debug.Assert(model != null, "model != null");
-            return CustomUriLiteralParsersStore.GetOrCreate(model);
-        }
-
-
-        #endregion Private Methods
     }
 }
