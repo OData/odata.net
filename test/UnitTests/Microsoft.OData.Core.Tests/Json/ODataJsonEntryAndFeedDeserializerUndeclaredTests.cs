@@ -1516,7 +1516,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
         [Theory]
         [InlineData("Edm.Untyped")]
         [InlineData("Server.NS.UndefinedType")]
-        public void ReadUntypedResource(string fragment)
+        public void ReadUntypedResource_asInt32(string fragment)
         {
             string payload = "{\"@odata.context\":\"http://www.sampletest.com/$metadata#" + fragment + "\",\"id\":1}";
             ODataResource entry = null;
@@ -1529,7 +1529,32 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
             });
 
             Assert.Single(entry.Properties);
-            Assert.Equal(1m, Assert.IsType<ODataProperty>(entry.Properties.First(p => p.Name == "id")).Value);
+
+            var value = Assert.IsType<ODataProperty>(entry.Properties.First(p => p.Name == "id")).Value;
+            Assert.IsType<Int32>(value);
+            Assert.Equal(1, value);
+        }
+
+        [Theory]
+        [InlineData("Edm.Untyped")]
+        [InlineData("Server.NS.UndefinedType")]
+        public void ReadUntypedResource_asInt64(string fragment)
+        {
+            string payload = "{\"@odata.context\":\"http://www.sampletest.com/$metadata#" + fragment + "\",\"id\":1002147483646}";
+            ODataResource entry = null;
+            this.ReadResourcePayload(payload, reader =>
+            {
+                if (reader.State == ODataReaderState.ResourceStart)
+                {
+                    entry = (reader.Item as ODataResource);
+                }
+            });
+
+            Assert.Single(entry.Properties);
+
+            var value = Assert.IsType<ODataProperty>(entry.Properties.First(p => p.Name == "id")).Value;
+            Assert.IsType<Int64>(value);
+            Assert.Equal(1002147483646L, value);
         }
 
         #endregion
@@ -1613,7 +1638,10 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
             });
 
             Assert.Single(entry.Properties);
-            Assert.Equal(1m, Assert.IsType<ODataProperty>(entry.Properties.First(p=>p.Name == "id")).Value);
+
+            var value = Assert.IsType<ODataProperty>(entry.Properties.First(p => p.Name == "id")).Value;
+            Assert.IsType<Int32>(value);
+            Assert.Equal(1, value);
         }
 
         [Theory]
@@ -1642,7 +1670,10 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
             });
 
             Assert.Single(resourceMember.Properties);
-            Assert.Equal(1m, Assert.IsType<ODataProperty>(resourceMember.Properties.First(p => p.Name == "id")).Value);
+
+            var value = Assert.IsType<ODataProperty>(resourceMember.Properties.First(p => p.Name == "id")).Value;
+            Assert.IsType<Int32>(value);
+            Assert.Equal(1, value);
             Assert.Equal("primitiveString", primitiveMember.Value);
         }
 
