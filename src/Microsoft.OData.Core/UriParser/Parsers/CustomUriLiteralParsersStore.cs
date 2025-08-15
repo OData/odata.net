@@ -12,32 +12,59 @@ namespace Microsoft.OData.UriParser
     using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Collections.Immutable;
+    using System.Runtime.CompilerServices;
     using System.Runtime.Serialization;
     using System.Threading;
     using Microsoft.OData.Edm;
 
     #endregion Namespaces
 
-    /// Thread-safe store for custom URI literal parsers associated with an EDM model.
-    /// Maintains both:
-    ///  - global parsers (called for any literal),
-    ///  - type-specific parsers (called when a target IEdmTypeReference is known).
+    /// <summary>
+    /// Thread-safe, per-<see cref="IEdmModel"/> store for custom URI literal parsers.
+    /// Supports:
+    ///  - Unbound parsers (invoked for any literal, regardless of type).
+    ///  - Type-specific parsers (used when a target <see cref="IEdmTypeReference"/> is known).
     /// </summary>
+    /// <remarks>
+    /// Concurrency guarantees:
+    /// 1. All operations are thread-safe.
+    /// 2. Updates are atomic and readers always observe a consistent snapshot.
+    /// 3. Mutations replace an immutable state object, ensuring no partial updates are visible.
+    /// 4. Store instance creation per model is serialized using a per-model gate to avoid duplicate instances.
+    /// </remarks>
     internal sealed class CustomUriLiteralParsersStore
     {
+        // Entire logical state (both maps) is swapped atomically.
         private State state = State.Empty;
+
+        // Per-model gate (lazy) for first-time store creation.
+        private static readonly ConditionalWeakTable<IEdmModel, object> lockPerModel =
+            new ConditionalWeakTable<IEdmModel, object>();
 
         private CustomUriLiteralParsersStore()
         {
         }
 
+        /// <summary>
+        /// Gets the store instance associated with the specified <paramref name="model"/>, creating and annotating it if it does not exist.
+        /// A per-model lock ensures only one instance is created under concurrent access.
+        /// </summary>
+        /// <param name="model">The Edm model for which to obtain the store.</param>
+        /// <returns>The existing or newly created <see cref="CustomUriLiteralParsersStore"/>.</returns>
         public static CustomUriLiteralParsersStore GetOrCreate(IEdmModel model)
         {
             ExceptionUtils.CheckArgumentNotNull(model, nameof(model));
 
-            while (true)
+            CustomUriLiteralParsersStore existing = model.GetAnnotationValue<CustomUriLiteralParsersStore>(model);
+            if (existing != null)
             {
-                CustomUriLiteralParsersStore existing = model.GetAnnotationValue<CustomUriLiteralParsersStore>(model);
+                return existing;
+            }
+
+            object gate = lockPerModel.GetValue(model, _ => new object());
+            lock (gate)
+            {
+                existing = model.GetAnnotationValue<CustomUriLiteralParsersStore>(model);
                 if (existing != null)
                 {
                     return existing;
@@ -46,19 +73,41 @@ namespace Microsoft.OData.UriParser
                 CustomUriLiteralParsersStore created = new CustomUriLiteralParsersStore();
                 model.SetAnnotationValue(model, created);
 
-                CustomUriLiteralParsersStore after = model.GetAnnotationValue<CustomUriLiteralParsersStore>(model);
-                if (after != null)
-                {
-                    return after;
-                }
-
+                return created;
             }
         }
 
-        public ImmutableDictionary<IEdmTypeReference, IUriLiteralParser> SnapshotByType => this.state.CustomUriLiteralParsersByEdmType;
+        /// <summary>
+        /// Returns a point-in-time snapshot of the registered type-specific parsers.
+        /// </summary>
+        /// <returns>
+        /// A read-only dictionary mapping <see cref="IEdmTypeReference"/> to the associated parser
+        /// at the time of the call.
+        /// </returns>
+        /// <remarks>
+        /// Thread safety: Safe to call concurrently. The returned dictionary is immutable; subsequent updates
+        /// to the store are not reflected unless <see cref="SnapshotByEdmType()"/> is called again.
+        /// </remarks>
+        public IReadOnlyDictionary<IEdmTypeReference, IUriLiteralParser> SnapshotByEdmType() => this.state.CustomUriLiteralParsersByEdmType;
 
-        public ImmutableHashSet<IUriLiteralParser> Snapshot => this.state.CustomUriLiteralParsers;
+        /// <summary>
+        /// Returns a point-in-time snapshot of the registered unbound parsers.
+        /// </summary>
+        /// <returns>
+        /// A read-only set of <see cref="IUriLiteralParser"/> instances representing the unbound parsers
+        /// at the time of the call.
+        /// </returns>
+        /// <remarks>
+        /// Thread safety: Safe to call concurrently. The returned set is immutable; subsequent updates
+        /// to the store are not reflected unless <see cref="Snapshot()"/> is called again.
+        /// </remarks>
+        public IReadOnlySet<IUriLiteralParser> Snapshot() => this.state.CustomUriLiteralParsers;
 
+        /// <summary>
+        /// Determines whether the store contains the specified unbound parser.
+        /// </summary>
+        /// <param name="parser">The custom URI literal parser to check.</param>
+        /// <returns><c>true</c> if the parser is registered; otherwise <c>false</c>.</returns>
         public bool Contains(IUriLiteralParser parser)
         {
             ExceptionUtils.CheckArgumentNotNull(parser, nameof(parser));
@@ -66,6 +115,12 @@ namespace Microsoft.OData.UriParser
             return this.state.CustomUriLiteralParsers.Contains(parser);
         }
 
+        /// <summary>
+        /// Attempts to retrieve a type-specific parser for the given Edm type.
+        /// </summary>
+        /// <param name="edmTypeReference">The Edm type.</param>
+        /// <param name="parser">When this method returns, contains the parser associated with the Edm type, if found.</param>
+        /// <returns><c>true</c> if a parser for the specified Edm type was found; otherwise <c>false</c>.</returns>
         public bool TryGet(IEdmTypeReference edmTypeReference, out IUriLiteralParser parser)
         {
             ExceptionUtils.CheckArgumentNotNull(edmTypeReference, nameof(edmTypeReference));
@@ -73,6 +128,15 @@ namespace Microsoft.OData.UriParser
             return state.CustomUriLiteralParsersByEdmType.TryGetValue(edmTypeReference, out parser);
         }
 
+        /// <summary>
+        /// Registers an unbound parser if it is not already registered.
+        /// </summary>
+        /// <param name="parser">The custom URI literal parser to register.</param>
+        /// <returns><c>true</c> if the parser was successfully registered; otherwise <c>false</c>.</returns>
+        /// <remarks>
+        /// Thread safety: All operations are atomic and readers always observe a consistent snapshot.
+        /// Updates are applied by replacing an immutable state object, ensuring no partial updates are visible.
+        /// </remarks>
         public bool Add(IUriLiteralParser parser)
         {
             ExceptionUtils.CheckArgumentNotNull(parser, nameof(parser));
@@ -92,6 +156,16 @@ namespace Microsoft.OData.UriParser
                 }) != null;
         }
 
+        /// <summary>
+        /// Registers a parser for a specific Edm type if one is not already registered for that type.
+        /// </summary>
+        /// <param name="edmTypeReference">The Edm type.</param>
+        /// <param name="parser">The custom URI literal parser to register.</param>
+        /// <returns><c>true</c> if the parser was successfully registered; otherwise <c>false</c>.</returns>
+        /// <remarks>
+        /// Thread safety: All operations are atomic and readers always observe a consistent snapshot.
+        /// Updates are applied by replacing an immutable state object, ensuring no partial updates are visible.
+        /// </remarks>
         public bool Add(IEdmTypeReference edmTypeReference, IUriLiteralParser parser)
         {
             ExceptionUtils.CheckArgumentNotNull(edmTypeReference, nameof(edmTypeReference));
@@ -112,6 +186,15 @@ namespace Microsoft.OData.UriParser
                 }) != null;
         }
 
+        /// <summary>
+        /// Removes the specified unbound parser and any associated type-specific parsers.
+        /// </summary>
+        /// <param name="parser">The custom URI literal parser to remove.</param>
+        /// <returns><c>true</c> if the parser existed and was removed; otherwise <c>false</c>.</returns>
+        /// <remarks>
+        /// Thread safety: All operations are atomic and readers always observe a consistent snapshot.
+        /// Updates are applied by replacing an immutable state object, ensuring no partial updates are visible.
+        /// </remarks>
         public bool Remove(IUriLiteralParser parser)
         {
             ExceptionUtils.CheckArgumentNotNull(parser, nameof(parser));
@@ -127,7 +210,7 @@ namespace Microsoft.OData.UriParser
                     int numRemoved = 0;
                     foreach (KeyValuePair<IEdmTypeReference, IUriLiteralParser> kvPair in snapshot.CustomUriLiteralParsersByEdmType)
                     {
-                        if (Equals(kvPair.Key, parser)) // Value equality?
+                        if (Equals(kvPair.Value, parser)) // Value equality?
                         {
                             builder.Remove(kvPair.Key);
                             numRemoved++;
@@ -149,6 +232,15 @@ namespace Microsoft.OData.UriParser
             return mutatedState != null;
         }
 
+        /// <summary>
+        /// Removes the parser associated with the specified Edm type.
+        /// </summary>
+        /// <param name="edmTypeReference">The Edm type whose parser should be removed.</param>
+        /// <returns><c>true</c> if the parser existed and was removed; otherwise, <c>false</c>.</returns>
+        /// <remarks>
+        /// Thread safety: All operations are atomic and readers always observe a consistent snapshot.
+        /// Updates are applied by replacing an immutable state object, ensuring no partial updates are visible.
+        /// </remarks>
         public bool Remove(IEdmTypeReference edmTypeReference)
         {
             ExceptionUtils.CheckArgumentNotNull(edmTypeReference, nameof(edmTypeReference));
@@ -169,6 +261,14 @@ namespace Microsoft.OData.UriParser
                 }) != null;
         }
 
+        /// <summary>
+        /// Repeatedly applies <paramref name="updateFunc"/> to the current reference until an atomic compare–exchange succeeds
+        /// or <paramref name="updateFunc"/> signals no update (by returning <c>null</c>).
+        /// </summary>
+        /// <typeparam name="T">The reference type being updated.</typeparam>
+        /// <param name="location">The reference to update.</param>
+        /// <param name="updateFunc">A function that takes the current value and returns the updated value, or <c>null</c> to indicate no update.</param>
+        /// <returns>The updated value if the update succeeded; otherwise, <c>null</c>.</returns>
         private static T CompareExchangeLoop<T>(ref T location, Func<T, T> updateFunc) where T : class
         {
             while (true)
@@ -226,9 +326,10 @@ namespace Microsoft.OData.UriParser
             }
         }
 
+        #region Internal State
 
         /// <summary>
-        /// Single immutable state for atomic updates of both maps.
+        /// Single immutable state for atomic publication of both collections.
         /// </summary
         private sealed class State
         {
@@ -247,5 +348,7 @@ namespace Microsoft.OData.UriParser
                 CustomUriLiteralParsers = customUriLiteralParsers;
             }
         }
+        
+        #endregion Internal State
     }
 }

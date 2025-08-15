@@ -9,58 +9,92 @@ namespace Microsoft.OData.UriParser
     #region Namespaces
 
     using System;
+    using System.Collections.Generic;
     using System.Collections.Immutable;
+    using System.Runtime.CompilerServices;
     using System.Threading;
     using Microsoft.OData.Edm;
 
     #endregion Namespaces
 
     /// <summary>
-    /// Thread-safe store for managing custom URI literal prefixes associated with an Edm model.
+    /// Thread-safe, per-<see cref="IEdmModel"/> store for custom URI literal prefixes.
+    /// Each registered prefix maps (ordinal, case-sensitive) to an <see cref="IEdmTypeReference"/> used by the URI parser
+    /// to interpret prefix-qualified literal values.
     /// </summary>
+    /// <remarks>
+    /// Concurrency guarantees:
+    /// 1) <c>map</c> is an immutable dictionary reference; readers always see a fully-formed snapshot.
+    /// 2) All mutations replace <c>map</c> atomically via a CAS loop (<see cref="CompareExchangeLoop{T}"/>).
+    /// 3) A single store instance is created per model and cached as a direct-value annotation; creation is serialized
+    ///    with a per‑model lock (held in a <see cref="ConditionalWeakTable{TKey, TValue}"/> to avoid leaking).
+    /// These guarantees allow lock-free reads (<see cref="TryGet"/> / <see cref="Snapshot"/>)
+    /// and contention-minimized writes (<see cref="Add"/> / <see cref="Remove"/>).
+    /// </remarks>
     internal sealed class CustomUriLiteralPrefixesStore
     {
         private ImmutableDictionary<string, IEdmTypeReference> map =
             ImmutableDictionary.Create<string, IEdmTypeReference>(StringComparer.Ordinal);
 
+        // One private gate per model instance to serialize creation of the store.
+        // Using CWT keeps the gate's lifetime tied to the model (no leaks) and
+        // avoids global contention across different models.
+        private static readonly ConditionalWeakTable<IEdmModel, object> lockPerModel = new ConditionalWeakTable<IEdmModel, object>();
+
         // Only creatable through GetOrCreate
-        private CustomUriLiteralPrefixesStore() { }
+        private CustomUriLiteralPrefixesStore()
+        {
+        }
 
         /// <summary>
-        /// Get or create the model-scoped store via direct-value annotation.
-        /// Uses a CAS loop to ensure we return the winning instance under races.
+        /// Gets the store instance associated with <paramref name="model"/>, creating and annotating it if it does not yet exist.
+        /// A per‑model lock ensures only one instance is created under concurrent access.
         /// </summary>
+        /// <param name="model">The Edm model for which to obtain the store.</param>
+        /// <returns>The existing or newly created <see cref="CustomUriLiteralPrefixesStore"/>.</returns>
         public static CustomUriLiteralPrefixesStore GetOrCreate(IEdmModel model)
         {
             ExceptionUtils.CheckArgumentNotNull(model, nameof(model));
 
-            while (true)
+            CustomUriLiteralPrefixesStore existing = model.GetAnnotationValue<CustomUriLiteralPrefixesStore>(model);
+            if (existing != null)
             {
-                var existing = model.GetAnnotationValue<CustomUriLiteralPrefixesStore>(model);
+                return existing;
+            }
+
+            object gate = lockPerModel.GetValue(model, _ => new object());
+            lock (gate)
+            {
+                // Try to get the typed direct-value annotation from the model element
+                existing = model.GetAnnotationValue<CustomUriLiteralPrefixesStore>(model);
                 if (existing != null)
                 {
+                    // Another thread already created the store while we were waiting for the lock
                     return existing;
                 }
 
-                var created = new CustomUriLiteralPrefixesStore();
+                CustomUriLiteralPrefixesStore created = new CustomUriLiteralPrefixesStore();
                 model.SetAnnotationValue(model, created);
 
-                var after = model.GetAnnotationValue<CustomUriLiteralPrefixesStore>(model);
-                if (after != null)
-                {
-                    return after;
-                }
+                return created;
             }
         }
 
         /// <summary>
-        /// Returns an immutable snapshot of all registered prefixes.
+        /// Returns an immutable, point‑in‑time snapshot of the current prefix mapping.
         /// </summary>
-        public ImmutableDictionary<string, IEdmTypeReference> Snapshot() => this.map;
+        /// <remarks>
+        /// Thread safety: Safe to call concurrently. The returned dictionary is immutable; subsequent updates
+        /// to the store are not reflected unless <see cref="Snapshot()"/> is called again.
+        /// </remarks>
+        public IReadOnlyDictionary<string, IEdmTypeReference> Snapshot() => this.map;
 
         /// <summary>
-        /// Try to get the Edm type reference associated with a literal prefix.
+        /// Attempts to resolve a registered literal prefix to its associated Edm type.
         /// </summary>
+        /// <param name="literalPrefix">The prefix to look up (ordinal, case-sensitive).</param>
+        /// <param name="edmType">When successful, receives the associated type; otherwise <c>null</c>.</param>
+        /// <returns><c>true</c> if the prefix is registered; otherwise <c>false</c>.</returns>
         public bool TryGet(string literalPrefix, out IEdmTypeReference edmType)
         {
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(literalPrefix, nameof(literalPrefix));
@@ -69,9 +103,14 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Adds a literal prefix and associated Edm type if not already present.
+        /// Registers a new literal prefix mapping if it does not already exist.
         /// </summary>
-        /// <returns><c>true</c> if added; <c>false</c> if it already existed.</returns>
+        /// <param name="literalPrefix">The prefix to register (ordinal, case-sensitive).</param>
+        /// <param name="edmType">The Edm type the prefix represents.</param>
+        /// <returns><c>true</c> if the prefix was added; otherwise <c>false</c>.</returns>
+        /// <remarks>
+        /// Thread safety: Implemented via an immutable snapshot + CAS replacement; no global locks required.
+        /// </remarks>
         public bool Add(string literalPrefix, IEdmTypeReference edmType)
         {
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(literalPrefix, nameof(literalPrefix));
@@ -91,9 +130,13 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Remove a literal prefix by name.
+        /// Unregisters a previously added literal prefix.
         /// </summary>
-        /// <returns><c>true</c> if removed; <c>false</c> if not found.</returns>>
+        /// <param name="literalPrefix">The prefix to remove.</param>
+        /// <returns><c>true</c> if the prefix existed and was removed; otherwise <c>false</c>.</returns>
+        /// <remarks>
+        /// Thread safety: Uses immutable snapshot + CAS replacement to publish updates atomically.
+        /// </remarks>
         public bool Remove(string literalPrefix)
         {
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(literalPrefix, nameof(literalPrefix));
@@ -112,9 +155,13 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Generic CAS loop for immutable references.
-        /// Returns the updated value on success; null indicates no update.
+        /// Repeatedly applies <paramref name="updateFunc"/> to the current reference until an atomic compare–exchange succeeds
+        /// or <paramref name="updateFunc"/> signals no update (by returning <c>null</c>).
         /// </summary>
+        /// <typeparam name="T">The reference type being updated.</typeparam>
+        /// <param name="location">The reference to update.</param>
+        /// <param name="updateFunc">A function that takes the current value and returns the updated value, or <c>null</c> to indicate no update.</param>
+        /// <returns>The updated value if the update succeeded; otherwise, <c>null</c>.</returns>
         private static T CompareExchangeLoop<T>(ref T location, Func<T, T> updateFunc) where T : class
         {
             while (true)
@@ -133,5 +180,4 @@ namespace Microsoft.OData.UriParser
             }
         }
     }
-
 }
