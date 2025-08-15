@@ -337,6 +337,7 @@ namespace NewStuff._Design._0_Convention.V3
 
     namespace Attempt3
     {
+        //// TODO do all of the below with actual binaries
         //// TODO make sure that a single customer can have 2 packages, each of which using a different version
         //// TODO go ahead and add a v3 to this as well just to really be sure
 
