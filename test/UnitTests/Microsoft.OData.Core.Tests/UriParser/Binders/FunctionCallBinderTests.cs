@@ -77,7 +77,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             Action bindWithEmptyArguments = () => functionCallBinder.BindFunctionCall(token);
 
             FunctionSignatureWithReturnType[] signatures = FunctionCallBinder.ExtractSignatures(
-                FunctionCallBinder.GetUriFunctionSignatures("day")); // to match the error message... blah
+                FunctionCallBinder.GetUriFunctionSignatures("day", HardCodedTestModel.TestModel)); // to match the error message... blah
             bindWithEmptyArguments.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_NoApplicableFunctionFound,
                     "day",
                     UriFunctionsHelper.BuildFunctionSignatureListDescription("day", signatures)));
@@ -92,7 +92,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             Action bindWithEmptyArguments = () => functionCallBinder.BindFunctionCall(token);
 
             FunctionSignatureWithReturnType[] signatures = FunctionCallBinder.ExtractSignatures(
-                FunctionCallBinder.GetUriFunctionSignatures("day")); // to match the error message... blah
+                FunctionCallBinder.GetUriFunctionSignatures("day", HardCodedTestModel.TestModel)); // to match the error message... blah
             bindWithEmptyArguments.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_NoApplicableFunctionFound,
                     "day",
                     UriFunctionsHelper.BuildFunctionSignatureListDescription("day", signatures)));
@@ -393,7 +393,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
                  new SingleValueNode[] {
                      new SingleValuePropertyAccessNode(new ConstantNode(null)/*parent*/, new EdmStructuralProperty(new EdmEntityType("MyNamespace", "MyEntityType"), "myPropertyName", EdmCoreModel.Instance.GetString(true))),
                      new SingleValueOpenPropertyAccessNode(new ConstantNode(null)/*parent*/, "myOpenPropertyname")}, // open property's TypeReference is null
-                 FunctionCallBinder.GetUriFunctionSignatures("substring"));
+                 FunctionCallBinder.GetUriFunctionSignatures("substring", HardCodedTestModel.TestModel));
 
             FunctionSignatureWithReturnType sig = result.Value;
             Assert.True(sig.ReturnType.IsEquivalentTo(EdmCoreModel.Instance.GetString(true)));
@@ -623,7 +623,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             Action createWithMoreThanOneArg = () => this.functionCallBinder.BindFunctionCall(function);
 
             FunctionSignatureWithReturnType[] signatures = FunctionCallBinder.ExtractSignatures(
-                FunctionCallBinder.GetUriFunctionSignatures(function.Name));
+                FunctionCallBinder.GetUriFunctionSignatures(function.Name, HardCodedTestModel.TestModel));
             createWithMoreThanOneArg.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_NoApplicableFunctionFound,
                     function.Name,
                     UriFunctionsHelper.BuildFunctionSignatureListDescription(function.Name, signatures)));
@@ -1242,7 +1242,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         [Fact]
         public void GetFunctionSignaturesShouldThrowOnIncorrectName()
         {
-            Action bind = () => FunctionCallBinder.GetUriFunctionSignatures("rarg");
+            Action bind = () => FunctionCallBinder.GetUriFunctionSignatures("rarg", HardCodedTestModel.TestModel);
 
             bind.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_UnknownFunction, "rarg"));
         }
@@ -1299,10 +1299,10 @@ namespace Microsoft.OData.Tests.UriParser.Binders
                                                         EdmCoreModel.Instance.GetBoolean(false));
 
                 // Add with 'addAsOverload' 'true'
-                CustomUriFunctions.AddCustomUriFunction(BUILT_IN_GEODISTANCE_FUNCTION_NAME, customFunctionSignature);
+                HardCodedTestModel.TestModel.AddCustomUriFunction(BUILT_IN_GEODISTANCE_FUNCTION_NAME, customFunctionSignature);
 
                 FunctionSignatureWithReturnType[] resultUriFunctionSignatures = FunctionCallBinder.ExtractSignatures(
-                    FunctionCallBinder.GetUriFunctionSignatures(BUILT_IN_GEODISTANCE_FUNCTION_NAME));
+                    FunctionCallBinder.GetUriFunctionSignatures(BUILT_IN_GEODISTANCE_FUNCTION_NAME, HardCodedTestModel.TestModel));
 
                 // Assert
                 FunctionSignatureWithReturnType[] existsBuiltInSignature;
@@ -1315,7 +1315,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             finally
             {
                 // Clean from CustomFunctions cache
-                CustomUriFunctions.RemoveCustomUriFunction(BUILT_IN_GEODISTANCE_FUNCTION_NAME);
+                HardCodedTestModel.TestModel.RemoveCustomUriFunction(BUILT_IN_GEODISTANCE_FUNCTION_NAME);
             }
         }
 
@@ -1325,7 +1325,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             const string BUILT_IN_FUNCTION_NAME = "geo.intersects";
 
             FunctionSignatureWithReturnType[] resultUriFunctionSignatures = FunctionCallBinder.ExtractSignatures(
-                FunctionCallBinder.GetUriFunctionSignatures(BUILT_IN_FUNCTION_NAME));
+                FunctionCallBinder.GetUriFunctionSignatures(BUILT_IN_FUNCTION_NAME, HardCodedTestModel.TestModel));
 
             // Assert
             FunctionSignatureWithReturnType[] existsBuiltInSignature;
@@ -1348,11 +1348,11 @@ namespace Microsoft.OData.Tests.UriParser.Binders
                                                         EdmCoreModel.Instance.GetBoolean(false));
 
                 // Add with override 'true'
-                CustomUriFunctions.AddCustomUriFunction(CUSTOM_FUNCTION_NAME, customFunctionSignature);
+                HardCodedTestModel.TestModel.AddCustomUriFunction(CUSTOM_FUNCTION_NAME, customFunctionSignature);
 
 
                 FunctionSignatureWithReturnType[] resultUriFunctionSignatures = FunctionCallBinder.ExtractSignatures(
-                    FunctionCallBinder.GetUriFunctionSignatures(CUSTOM_FUNCTION_NAME));
+                    FunctionCallBinder.GetUriFunctionSignatures(CUSTOM_FUNCTION_NAME, HardCodedTestModel.TestModel));
 
                 // Assert
                 Assert.NotNull(resultUriFunctionSignatures);
@@ -1362,7 +1362,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             finally
             {
                 // Clean from CustomFunctions cache
-                CustomUriFunctions.RemoveCustomUriFunction(CUSTOM_FUNCTION_NAME);
+                HardCodedTestModel.TestModel.RemoveCustomUriFunction(CUSTOM_FUNCTION_NAME);
             }
         }
 
@@ -1382,7 +1382,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
                 FunctionSignatureWithReturnType customFunctionSignature =
                     new FunctionSignatureWithReturnType(EdmCoreModel.Instance.GetDouble(false), enumTypeRef);
 
-                CustomUriFunctions.AddCustomUriFunction(CUSTOM_FUNCTION_NAME, customFunctionSignature);
+                HardCodedTestModel.TestModel.AddCustomUriFunction(CUSTOM_FUNCTION_NAME, customFunctionSignature);
 
                 var arguments = explicitEnum ? new List<QueryToken>() { new LiteralToken("MyValue", "MyNS.MyName'MyValue'", enumTypeRef) }
                                              : new List<QueryToken>() { new LiteralToken("MyValue") };
@@ -1392,7 +1392,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             finally
             {
                 // Clean from CustomFunctions cache
-                CustomUriFunctions.RemoveCustomUriFunction(CUSTOM_FUNCTION_NAME);
+                HardCodedTestModel.TestModel.RemoveCustomUriFunction(CUSTOM_FUNCTION_NAME);
             }
         }
 
@@ -1435,7 +1435,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         }
 
         //Support Methods
-        internal IList<KeyValuePair<string, FunctionSignatureWithReturnType>> GetHardCodedYearFunctionSignatureForTest()
+        internal List<KeyValuePair<string, FunctionSignatureWithReturnType>> GetHardCodedYearFunctionSignatureForTest()
         {
             FunctionSignatureWithReturnType[] signatures = null;
             BuiltInUriFunctions.TryGetBuiltInFunction("year", out signatures);
@@ -1443,12 +1443,12 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             return signatures.Select(sig => new KeyValuePair<string, FunctionSignatureWithReturnType>("year", sig)).ToList();
         }
 
-        internal IList<KeyValuePair<string, FunctionSignatureWithReturnType>> GetDuplicateIndexOfFunctionSignatureForTest()
+        internal List<KeyValuePair<string, FunctionSignatureWithReturnType>> GetDuplicateIndexOfFunctionSignatureForTest()
         {
             FunctionSignatureWithReturnType[] signatures = null;
             BuiltInUriFunctions.TryGetBuiltInFunction("indexof", out signatures);
 
-            IList<KeyValuePair<string, FunctionSignatureWithReturnType>> nameSignatures = new List<KeyValuePair<string, FunctionSignatureWithReturnType>>();
+            List<KeyValuePair<string, FunctionSignatureWithReturnType>> nameSignatures = new List<KeyValuePair<string, FunctionSignatureWithReturnType>>();
             const string sampleName = "indexof";
             nameSignatures.Add(new KeyValuePair<string, FunctionSignatureWithReturnType>(sampleName, signatures[0]));
             nameSignatures.Add(new KeyValuePair<string, FunctionSignatureWithReturnType>(sampleName, signatures[0]));

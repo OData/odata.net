@@ -95,8 +95,10 @@ namespace Microsoft.OData.UriParser
         /// <param name="argumentNodes">The nodes of the arguments, can be new {null,null}.</param>
         /// <param name="nameSignatures">The name-signature pairs to match against</param>
         /// <returns>Returns the matching signature or throws</returns>
-        internal static KeyValuePair<string, FunctionSignatureWithReturnType> MatchSignatureToUriFunction(string functionCallToken, SingleValueNode[] argumentNodes,
-            IList<KeyValuePair<string, FunctionSignatureWithReturnType>> nameSignatures)
+        internal static KeyValuePair<string, FunctionSignatureWithReturnType> MatchSignatureToUriFunction(
+            string functionCallToken,
+            SingleValueNode[] argumentNodes,
+            IReadOnlyList<KeyValuePair<string, FunctionSignatureWithReturnType>> nameSignatures)
         {
             KeyValuePair<string, FunctionSignatureWithReturnType> nameSignature;
 
@@ -143,53 +145,74 @@ namespace Microsoft.OData.UriParser
         /// Combine and return the signatures overloads of the results.
         /// </summary>
         /// <param name="functionCallToken">The function call token to get the signatures for.</param>
-        /// <param name="enableCaseInsensitive">Optional flag for whether case insensitive match is enabled.</param>
+        /// <param name="model">The Edm model.</param>
+        /// <param name="ignoreCase">Optional flag for whether case insensitive match is enabled.</param>
         /// <returns>The signatures which match the supplied function name.</returns>
         [SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase", Justification = "need to use lower characters for built-in functions.")]
-        internal static IList<KeyValuePair<string, FunctionSignatureWithReturnType>> GetUriFunctionSignatures(string functionCallToken, bool enableCaseInsensitive = false)
+        internal static IReadOnlyList<KeyValuePair<string, FunctionSignatureWithReturnType>> GetUriFunctionSignatures(
+            string functionCallToken,
+            IEdmModel model = null,
+            bool ignoreCase = false)
         {
-            IList<KeyValuePair<string, FunctionSignatureWithReturnType>> customUriFunctionsNameSignatures = null;
-            string builtInUriFunctionName = null;
-            FunctionSignatureWithReturnType[] builtInUriFunctionsSignatures = null;
-            IList<KeyValuePair<string, FunctionSignatureWithReturnType>> builtInUriFunctionsNameSignatures = null;
+            ExceptionUtils.CheckArgumentNotNull(functionCallToken, "functionCallToken");
 
             // Try to find the function in the user custom functions
-            bool customFound = CustomUriFunctions.TryGetCustomFunction(functionCallToken, out customUriFunctionsNameSignatures,
-                enableCaseInsensitive);
-
-            bool builtInFound = BuiltInUriFunctions.TryGetBuiltInFunction(functionCallToken, enableCaseInsensitive, out builtInUriFunctionName, 
-                out builtInUriFunctionsSignatures);
-
-            // Populate the matched names found for built-in function
-            if (builtInFound)
+            bool customUriFunctionFound = false;
+            IReadOnlyList<KeyValuePair<string, FunctionSignatureWithReturnType>> customUriFunctionNameSignatures = null;
+            if (model != null)
             {
-                builtInUriFunctionsNameSignatures =
-                    builtInUriFunctionsSignatures.Select(sig => new KeyValuePair<string, FunctionSignatureWithReturnType>(builtInUriFunctionName, sig)).ToList();
+                customUriFunctionFound = CustomUriFunctions.TryGetCustomUriFunction(
+                    model,
+                    functionCallToken,
+                    out customUriFunctionNameSignatures,
+                    ignoreCase);
             }
 
-            if (!customFound && !builtInFound)
+            bool builtInUriFunctionFound = BuiltInUriFunctions.TryGetBuiltInFunction(
+                functionCallToken,
+                ignoreCase,
+                out string builtInUriFunctionName, 
+                out FunctionSignatureWithReturnType[] builtInUriFunctionSignatures);
+
+            if (!customUriFunctionFound && !builtInUriFunctionFound)
             {
                 // Not found in both built-in and custom.
                 throw new ODataException(Error.Format(SRResources.MetadataBinder_UnknownFunction, functionCallToken));
             }
 
-            if (!customFound)
+            // Exit early without initializing new list if its only custom URI functions
+            if (!builtInUriFunctionFound)
             {
-                Debug.Assert(builtInUriFunctionsNameSignatures != null, "No Built-in functions found");
-                return builtInUriFunctionsNameSignatures;
+                return customUriFunctionNameSignatures;
             }
 
-            if (!builtInFound)
+            int capacity = (builtInUriFunctionFound ? builtInUriFunctionSignatures.Length : 0)
+                + (customUriFunctionFound ? customUriFunctionNameSignatures.Count : 0);
+            List<KeyValuePair<string, FunctionSignatureWithReturnType>> uriFunctionNameSignatures =
+                new List<KeyValuePair<string, FunctionSignatureWithReturnType>>(capacity);
+
+            // Populate the matched names found for built-in function
+            if (builtInUriFunctionFound)
             {
-                Debug.Assert(customUriFunctionsNameSignatures != null, "No Custom functions found");
-                return customUriFunctionsNameSignatures;
+                Debug.Assert(builtInUriFunctionSignatures != null, "builtInUriFunctionSignatures != null");
+                for (int i = 0; i < builtInUriFunctionSignatures.Length; i++)
+                {
+                    uriFunctionNameSignatures.Add(new KeyValuePair<string, FunctionSignatureWithReturnType>(builtInUriFunctionName, builtInUriFunctionSignatures[i]));
+                }
             }
 
-            return builtInUriFunctionsNameSignatures.Concat(customUriFunctionsNameSignatures).ToArray();
+            // Populate the matched names found for custom function
+            if (customUriFunctionFound)
+            {
+                Debug.Assert(customUriFunctionNameSignatures != null, "customUriFunctionsNameSignatures != null");
+                uriFunctionNameSignatures.AddRange(customUriFunctionNameSignatures);
+            }
+
+            return uriFunctionNameSignatures;
         }
 
         internal static FunctionSignatureWithReturnType[] ExtractSignatures(
-            IList<KeyValuePair<string, FunctionSignatureWithReturnType>> nameSignatures)
+            IReadOnlyList<KeyValuePair<string, FunctionSignatureWithReturnType>> nameSignatures)
         {
             return nameSignatures.Select(nameSig => nameSig.Value).ToArray();
         }
@@ -300,7 +323,9 @@ namespace Microsoft.OData.UriParser
             }
 
             // Do some validation and get potential Uri functions that could match what we saw
-            IList<KeyValuePair<string, FunctionSignatureWithReturnType>> nameSignatures = GetUriFunctionSignatures(functionCallToken.Name,
+            IReadOnlyList<KeyValuePair<string, FunctionSignatureWithReturnType>> nameSignatures = GetUriFunctionSignatures(
+                functionCallToken.Name,
+                this.state.Model,
                 this.state.Configuration.EnableCaseInsensitiveUriFunctionIdentifier);
 
             SingleValueNode[] argumentNodeArray = ValidateArgumentsAreSingleValue(functionCallToken.Name, argumentNodes);

@@ -889,10 +889,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void EmptyFunctionCallParametersAreProperlyValidated()
         {
             // regression test for: [UriParser] day() allowed. What does that mean?
-            // make sure that, if we do find a cannonical function, we match its parameters.
+            // make sure that, if we do find a canonical function, we match its parameters.
             Action parseWithInvalidParameters = () => ParseFilter("day() eq 20", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
             FunctionSignatureWithReturnType[] signatures = FunctionCallBinder.ExtractSignatures(
-                FunctionCallBinder.GetUriFunctionSignatures("day")); // to match the error message... blah
+                FunctionCallBinder.GetUriFunctionSignatures("day", HardCodedTestModel.TestModel)); // to match the error message... blah
             parseWithInvalidParameters.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_NoApplicableFunctionFound,
                     "day",
                     UriFunctionsHelper.BuildFunctionSignatureListDescription("day", signatures)));
@@ -902,10 +902,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void FunctionCallParametersAreValidated()
         {
             // regression test for: [UriParser] day() allowed. What does that mean?
-            // make sure that, if we do find a cannonical function, we match its parameters.
+            // make sure that, if we do find a canonical function, we match its parameters.
             Action parseWithInvalidParameters = () => ParseFilter("day(1) eq 20", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
             FunctionSignatureWithReturnType[] signatures = FunctionCallBinder.ExtractSignatures(
-                FunctionCallBinder.GetUriFunctionSignatures("day")); // to match the error message... blah
+                FunctionCallBinder.GetUriFunctionSignatures("day", HardCodedTestModel.TestModel)); // to match the error message... blah
             parseWithInvalidParameters.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_NoApplicableFunctionFound,
                     "day",
                     UriFunctionsHelper.BuildFunctionSignatureListDescription("day", signatures)));

@@ -2274,9 +2274,6 @@ static Microsoft.OData.UriParser.Aggregation.AggregationMethodDefinition.Min -> 
 static Microsoft.OData.UriParser.Aggregation.AggregationMethodDefinition.Sum -> Microsoft.OData.UriParser.Aggregation.AggregationMethodDefinition
 static Microsoft.OData.UriParser.Aggregation.AggregationMethodDefinition.VirtualPropertyCount -> Microsoft.OData.UriParser.Aggregation.AggregationMethodDefinition
 static Microsoft.OData.UriParser.Aggregation.EntitySetAggregateToken.Merge(Microsoft.OData.UriParser.Aggregation.EntitySetAggregateToken token1, Microsoft.OData.UriParser.Aggregation.EntitySetAggregateToken token2) -> Microsoft.OData.UriParser.Aggregation.EntitySetAggregateToken
-static Microsoft.OData.UriParser.CustomUriFunctions.AddCustomUriFunction(string functionName, Microsoft.OData.UriParser.FunctionSignatureWithReturnType functionSignature) -> void
-static Microsoft.OData.UriParser.CustomUriFunctions.RemoveCustomUriFunction(string functionName) -> bool
-static Microsoft.OData.UriParser.CustomUriFunctions.RemoveCustomUriFunction(string functionName, Microsoft.OData.UriParser.FunctionSignatureWithReturnType functionSignature) -> bool
 static Microsoft.OData.UriParser.CustomUriLiteralParsers.AddCustomUriLiteralParser(Microsoft.OData.Edm.IEdmTypeReference edmTypeReference, Microsoft.OData.UriParser.IUriLiteralParser customUriLiteralParser) -> void
 static Microsoft.OData.UriParser.CustomUriLiteralParsers.AddCustomUriLiteralParser(Microsoft.OData.UriParser.IUriLiteralParser customUriLiteralParser) -> void
 static Microsoft.OData.UriParser.CustomUriLiteralParsers.RemoveCustomUriLiteralParser(Microsoft.OData.UriParser.IUriLiteralParser customUriLiteralParser) -> bool

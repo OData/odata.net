@@ -6,211 +6,220 @@
 
 namespace Microsoft.OData.UriParser
 {
-    #region NameSpaces
+    #region Namespaces
 
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using System.Linq;
     using Microsoft.OData.Core;
     using Microsoft.OData.Edm;
 
-    #endregion
+    #endregion Namespaces
 
     /// <summary>
     /// Class represents functions signatures of custom uri functions.
     /// </summary>
     public static class CustomUriFunctions
     {
-        #region Static Fields
-
-        /// <summary>
-        /// Dictionary of the name of the custom function and all the signatures.
-        /// </summary>
-        private static readonly Dictionary<string, FunctionSignatureWithReturnType[]> CustomFunctions
-            = new Dictionary<string, FunctionSignatureWithReturnType[]>(StringComparer.Ordinal);
-
-        private static readonly object Locker = new object();
-
-        #endregion
-
         #region Public Methods
 
         /// <summary>
-        /// Add a custom uri function to extend uri functions.
-        /// In case the function name already exists as a custom function, the signature will be added as an another overload.
+        /// Adds a custom URI function to the Edm model with the specified name and signature.
+        /// Throws an exception if a built-in function or an existing custom function with the same signature already exists.
         /// </summary>
-        /// <param name="functionName">The new custom function name</param>
-        /// <param name="functionSignature">The new custom function signature</param>
-        /// <exception cref="ArgumentNullException">Arguments are null, or function signature return type is null</exception>
-        /// <exception cref="ODataException">Throws if built-in function name already exists.</exception>
-        /// <exception cref="ODataException">Throws if built-in function signature overload already exists.</exception>
-        /// <exception cref="ODataException">Throws if custom function signature overload already exists</exception>
-        public static void AddCustomUriFunction(string functionName, FunctionSignatureWithReturnType functionSignature)
+        /// <param name="model">The Edm model to which the custom function will be added.</param>
+        /// <param name="functionName">The name of the custom function.</param>
+        /// <param name="functionSignature">The signature and return type of the custom function.</param>
+        /// <exception cref="ODataException">
+        /// Thrown if a built-in function or an existing custom function with the same signature already exists.
+        /// </exception>
+        public static void AddCustomUriFunction(this IEdmModel model, string functionName, FunctionSignatureWithReturnType functionSignature)
         {
-            // Parameters validation
+            ExceptionUtils.CheckArgumentNotNull(model, "model");
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(functionName, "functionName");
             ExceptionUtils.CheckArgumentNotNull(functionSignature, "functionSignature");
 
             ValidateFunctionWithReturnType(functionSignature);
 
-            // Thread safety - before using the custom functions dictionary
-            lock (Locker)
+            // Check if the function exists as a built-in function
+            if (BuiltInUriFunctions.TryGetBuiltInFunction(functionName, out FunctionSignatureWithReturnType[] builtInFunctionSignatures))
             {
-                // Check if the function does already exists in the Built-In functions
-                // If 'addAsOverloadToBuiltInFunction' parameter is false - throw expectation
-                // Else, add as a custom function
-                FunctionSignatureWithReturnType[] existingBuiltInFunctionOverload;
-                if (BuiltInUriFunctions.TryGetBuiltInFunction(functionName, out existingBuiltInFunctionOverload))
+                // Check if function signature is one of the overloads
+                for (int i = 0; i < builtInFunctionSignatures.Length; i++)
                 {
-                    // Function name exists, check if full signature exists among the overloads.
-                    if (existingBuiltInFunctionOverload.Any(builtInFunction =>
-                            AreFunctionsSignatureEqual(functionSignature, builtInFunction)))
+                    if (AreFunctionsSignatureEqual(builtInFunctionSignatures[i], functionSignature))
                     {
-                        throw new ODataException(Error.Format(SRResources.CustomUriFunctions_AddCustomUriFunction_BuiltInExistsFullSignature, functionName));
+                        throw new ODataException(
+                            Error.Format(SRResources.CustomUriFunctions_AddCustomUriFunction_BuiltInExistsFullSignature, functionName));
                     }
                 }
-
-                AddCustomFunction(functionName, functionSignature);
             }
+
+            CustomUriFunctionsStore store = CustomUriFunctionsStore.GetOrCreate(model);
+
+            // Check existing overloads (case-sensitive per store)
+            if (store.TryGet(functionName, ignoreCase: false, out IReadOnlyList<FunctionSignatureWithReturnType> existingSignatures))
+            {
+                for (int i = 0; i < existingSignatures.Count; i++)
+                {
+                    if (AreFunctionsSignatureEqual(existingSignatures[i], functionSignature))
+                    {
+                        throw new ODataException(
+                            Error.Format(SRResources.CustomUriFunctions_AddCustomUriFunction_CustomFunctionOverloadExists, functionName));
+                    }
+                }
+            }
+
+            // Add new overload
+            store.Add(functionName, functionSignature);
         }
 
         /// <summary>
-        /// Removes the specific function overload from the custom uri functions.
+        /// Removes a specific overload of a custom URI function from the Edm model.
         /// </summary>
-        /// <param name="functionName">Custom function name to remove</param>
-        /// <param name="functionSignature">The specific signature overload of the function to remove</param>
-        /// <returns>'False' if custom function signature doesn't exist. 'True' if function has been removed successfully</returns>
-        /// <exception cref="ArgumentNullException">Arguments are null, or function signature return type is null</exception>
-        public static bool RemoveCustomUriFunction(string functionName, FunctionSignatureWithReturnType functionSignature)
+        /// <param name="model">The Edm model from which to remove the custom function.</param>
+        /// <param name="functionName">The name of the custom function.</param>
+        /// <param name="functionSignature">The signature and return type of the custom function to remove.</param>
+        /// <returns>
+        /// <c>true</c> if the function overload was found and removed; <c>false</c> otherwise.
+        /// </returns>
+        public static bool RemoveCustomUriFunction(
+            this IEdmModel model,
+            string functionName,
+            FunctionSignatureWithReturnType functionSignature)
         {
+            ExceptionUtils.CheckArgumentNotNull(model, "model");
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(functionName, "functionName");
             ExceptionUtils.CheckArgumentNotNull(functionSignature, "functionSignature");
 
             ValidateFunctionWithReturnType(functionSignature);
 
-            lock (Locker)
+            CustomUriFunctionsStore store = CustomUriFunctionsStore.GetOrCreate(model);
+
+            // Get existing signatures
+            if (!store.TryGet(functionName, ignoreCase: false, out IReadOnlyList<FunctionSignatureWithReturnType> existingSignature))
             {
-                FunctionSignatureWithReturnType[] existingCustomFunctionOverloads;
-                if (!CustomFunctions.TryGetValue(functionName, out existingCustomFunctionOverloads))
-                {
-                    return false;
-                }
+                return false;
+            }
 
-                // Get all function sigature overloads without the overload which is requested to be removed
-                FunctionSignatureWithReturnType[] customFunctionOverloadsWithoutTheOneToRemove =
-                    existingCustomFunctionOverloads.SkipWhile(funcOverload => AreFunctionsSignatureEqual(funcOverload, functionSignature)).ToArray();
-
-                // Nothing was removed - Requested overload doesn't exist
-                if (customFunctionOverloadsWithoutTheOneToRemove.Length == existingCustomFunctionOverloads.Length)
+            // Find the *stored instance* that is structurally equal, so removal succeeds
+            FunctionSignatureWithReturnType functionSignatureToRemove = null;
+            for (int i = 0; i < existingSignature.Count; i++)
+            {
+                if (AreFunctionsSignatureEqual(existingSignature[i], functionSignature))
                 {
-                    return false;
-                }
-
-                // No overloads have left in this function name. Delete the function name
-                if (customFunctionOverloadsWithoutTheOneToRemove.Length == 0)
-                {
-                    return CustomFunctions.Remove(functionName);
-                }
-                else
-                {
-                    // Requested overload has been removed.
-                    // Update the custom functions to the overloads without that one requested to be removed
-                    CustomFunctions[functionName] = customFunctionOverloadsWithoutTheOneToRemove;
-                    return true;
+                    functionSignatureToRemove = existingSignature[i];
+                    break;
                 }
             }
+
+            if (functionSignatureToRemove == null)
+            {
+                return false; // structurally equal signature not found
+            }
+
+            return store.Remove(functionName, functionSignatureToRemove);
         }
 
         /// <summary>
-        /// Removes all the function overloads from the custom uri functions.
+        /// Removes all overloads of a custom URI function with the specified name from the Edm model.
         /// </summary>
-        /// <param name="functionName">The custom function name</param>
-        /// <returns>'False' if custom function signature doesn't exist. 'True' if function has been removed successfully</returns>
-        /// <exception cref="ArgumentNullException">Arguments are null, or function signature return type is null</exception>
-        public static bool RemoveCustomUriFunction(string functionName)
+        /// <param name="model">The Edm model from which to remove the custom function.</param>
+        /// <param name="functionName">The name of the custom function to remove.</param>
+        /// <returns>
+        /// <c>true</c> if the function was found and removed; <c>false</c> otherwise.
+        /// </returns>
+        public static bool RemoveCustomUriFunction(this IEdmModel model, string functionName)
         {
+            ExceptionUtils.CheckArgumentNotNull(model, "model");
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(functionName, "functionName");
 
-            lock (Locker)
-            {
-                return CustomFunctions.Remove(functionName);
-            }
+            CustomUriFunctionsStore store = CustomUriFunctionsStore.GetOrCreate(model);
+
+            return store.Remove(functionName);
         }
 
-        #endregion
-
-        #region Internal Methods
-
         /// <summary>
-        /// Returns a list of name-signature pairs for a function name.
+        /// Attempts to retrieve all overloads of a custom URI function with the specified name from the Edm model.
         /// </summary>
-        /// <param name="functionCallToken">The name of the function to look for.</param>
-        /// <param name="nameSignatures">
-        /// Output for the list of signature objects for matched function names, with canonical name of the function;
-        /// null if no matches found.
+        /// <param name="model">The Edm model to search for the custom function.</param>
+        /// <param name="functionName">The name of the custom function to retrieve.</param>
+        /// <param name="functionSignatures">
+        /// When this method returns, contains a list of key-value pairs of function names and their signatures, if found; otherwise, null.
         /// </param>
-        /// <param name="enableCaseInsensitive">Whether to perform case-insensitive match for function name.</param>
-        /// <returns>true if the function was found, or false otherwise.</returns>
-        internal static bool TryGetCustomFunction(string functionCallToken, out IList<KeyValuePair<string, FunctionSignatureWithReturnType>> nameSignatures,
-            bool enableCaseInsensitive = false)
+        /// <param name="ignoreCase">Whether to ignore case when matching the function name.</param>
+        /// <returns>
+        /// <c>true</c> if one or more overloads of the function were found; <c>false</c> otherwise.
+        /// </returns>
+        public static bool TryGetCustomUriFunction(
+            this IEdmModel model,
+            string functionName,
+            out IReadOnlyList<KeyValuePair<string, FunctionSignatureWithReturnType>> functionSignatures,
+            bool ignoreCase = false)
         {
-            Debug.Assert(functionCallToken != null, "name != null");
+            ExceptionUtils.CheckArgumentNotNull(model, "model");
+            ExceptionUtils.CheckArgumentStringNotNullOrEmpty(functionName, "functionName");
 
-            lock (Locker)
+            functionSignatures = null;
+
+            CustomUriFunctionsStore store = model.GetAnnotationValue<CustomUriFunctionsStore>(model);
+
+            if (store == null)
             {
-                IList<KeyValuePair<string, FunctionSignatureWithReturnType>> bufferedKeyValuePairs
-                    = new List<KeyValuePair<string, FunctionSignatureWithReturnType>>();
+                return false;
+            }
 
-                foreach (KeyValuePair<string, FunctionSignatureWithReturnType[]> func in CustomFunctions)
+            if (!ignoreCase)
+            {
+                // Case-sensitive: Exact matches only
+                if (!store.TryGet(functionName, ignoreCase: false, out IReadOnlyList<FunctionSignatureWithReturnType> exactMatchSignatures))
                 {
-                    if (func.Key.Equals(functionCallToken, enableCaseInsensitive ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal))
+                    return false; // No exact match found
+                }
+
+                List<KeyValuePair<string, FunctionSignatureWithReturnType>> signatures = new List<KeyValuePair<string, FunctionSignatureWithReturnType>>(exactMatchSignatures.Count);
+                for (int i = 0; i < exactMatchSignatures.Count; i++)
+                {
+                    signatures.Add(new KeyValuePair<string, FunctionSignatureWithReturnType>(functionName, exactMatchSignatures[i]));
+                }
+
+                functionSignatures = signatures.AsReadOnly();
+                return true;
+            }
+            else
+            {
+                // Case-insensitive: All matches regardless of case
+                IReadOnlyDictionary<string, IReadOnlyList<FunctionSignatureWithReturnType>> snapshot = store.Snapshot();
+                StringComparer comparer = StringComparer.OrdinalIgnoreCase;
+
+                List<KeyValuePair<string, FunctionSignatureWithReturnType>> signatures = null;
+                foreach (KeyValuePair<string, IReadOnlyList<FunctionSignatureWithReturnType>> kvPair in snapshot)
+                {
+                    if (!comparer.Equals(kvPair.Key, functionName))
                     {
-                        foreach (FunctionSignatureWithReturnType sig in func.Value)
-                        {
-                            bufferedKeyValuePairs.Add(new KeyValuePair<string, FunctionSignatureWithReturnType>(func.Key, sig));
-                        }
+                        continue;
+                    }
+
+                    signatures ??= new List<KeyValuePair<string, FunctionSignatureWithReturnType>>();
+
+                    for (int i = 0; i < kvPair.Value.Count; i++)
+                    {
+                        signatures.Add(new KeyValuePair<string, FunctionSignatureWithReturnType>(kvPair.Key, kvPair.Value[i]));
                     }
                 }
 
-                // Setup the output values.
-                nameSignatures = bufferedKeyValuePairs.Count != 0 ? bufferedKeyValuePairs : null;
+                if (signatures is { Count: > 0 })
+                {
+                    functionSignatures = signatures.AsReadOnly();
+                }
 
-                return nameSignatures != null;
+                return functionSignatures != null && functionSignatures.Count > 0;
             }
         }
 
         #endregion
 
         #region Private Methods
-
-        private static void AddCustomFunction(string customFunctionName, FunctionSignatureWithReturnType newCustomFunctionSignature)
-        {
-            FunctionSignatureWithReturnType[] existingCustomFunctionOverloads;
-
-            // In case the function doesn't already exist
-            if (!CustomFunctions.TryGetValue(customFunctionName, out existingCustomFunctionOverloads))
-            {
-                CustomFunctions.Add(customFunctionName, new FunctionSignatureWithReturnType[] { newCustomFunctionSignature });
-            }
-            else
-            {
-                // Function does already exist as a custom function in cache
-                // Check if the function overload doesn't already exist
-                bool isOverloadAlreadyExist =
-                    existingCustomFunctionOverloads.Any(existingFunction => AreFunctionsSignatureEqual(existingFunction, newCustomFunctionSignature));
-
-                if (isOverloadAlreadyExist)
-                {
-                    // Throw if already exists - User is stupid (inserted the same function twice)
-                    throw new ODataException(Error.Format(SRResources.CustomUriFunctions_AddCustomUriFunction_CustomFunctionOverloadExists, customFunctionName));
-                }
-
-                // Add the custom function as an overload to the same function name
-                CustomFunctions[customFunctionName] =
-                    existingCustomFunctionOverloads.Concat(new FunctionSignatureWithReturnType[] { newCustomFunctionSignature }).ToArray();
-            }
-        }
 
         private static bool AreFunctionsSignatureEqual(FunctionSignatureWithReturnType functionOne, FunctionSignatureWithReturnType functionTwo)
         {

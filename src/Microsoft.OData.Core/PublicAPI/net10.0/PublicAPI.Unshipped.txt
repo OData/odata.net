@@ -1,0 +1,4 @@
+static Microsoft.OData.UriParser.CustomUriFunctions.AddCustomUriFunction(this Microsoft.OData.Edm.IEdmModel model, string functionName, Microsoft.OData.UriParser.FunctionSignatureWithReturnType functionSignature) -> void
+static Microsoft.OData.UriParser.CustomUriFunctions.RemoveCustomUriFunction(this Microsoft.OData.Edm.IEdmModel model, string functionName) -> bool
+static Microsoft.OData.UriParser.CustomUriFunctions.RemoveCustomUriFunction(this Microsoft.OData.Edm.IEdmModel model, string functionName, Microsoft.OData.UriParser.FunctionSignatureWithReturnType functionSignature) -> bool
+static Microsoft.OData.UriParser.CustomUriFunctions.TryGetCustomUriFunction(this Microsoft.OData.Edm.IEdmModel model, string functionName, out System.Collections.Generic.IReadOnlyList<System.Collections.Generic.KeyValuePair<string, Microsoft.OData.UriParser.FunctionSignatureWithReturnType>> functionSignatures, bool ignoreCase = false) -> bool

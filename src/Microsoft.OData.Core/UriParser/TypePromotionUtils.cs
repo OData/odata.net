@@ -382,7 +382,7 @@ namespace Microsoft.OData.UriParser
         /// <param name="functionCallToken">Function call token used for case-sensitive matching to resolve ambiguous cases.</param>
         /// <returns>The best fitting function; null if none found or ambiguous.</returns>
         internal static KeyValuePair<string, FunctionSignatureWithReturnType> FindBestFunctionSignature(
-            IList<KeyValuePair<string, FunctionSignatureWithReturnType>> nameFunctions,
+            IReadOnlyList<KeyValuePair<string, FunctionSignatureWithReturnType>> nameFunctions,
             SingleValueNode[] argumentNodes, string functionCallToken)
         {
             IEdmTypeReference[] argumentTypes = argumentNodes.Select(s => s.TypeReference).ToArray();
@@ -429,7 +429,7 @@ namespace Microsoft.OData.UriParser
             else
             {
                 // Find a single function which is better than all others.
-                IList<KeyValuePair<string, FunctionSignatureWithReturnType>> equallyArgumentsMatchingNameFunctions =
+                List<KeyValuePair<string, FunctionSignatureWithReturnType>> equallyArgumentsMatchingNameFunctions =
                     new List<KeyValuePair<string, FunctionSignatureWithReturnType>>();
                 for (int i = 0; i < applicableNameFunctions.Count; i++)
                 {
