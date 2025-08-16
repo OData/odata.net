@@ -22,12 +22,19 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
     /// </summary>
     public class SelectExpandParserTests
     {
+        private readonly IEdmModel model;
+
+        public SelectExpandParserTests()
+        {
+            this.model = HardCodedTestModel.TestModel;
+        }
+
         #region ParseSelect
         [Fact]
         public void SelectParsesEachTermOnce()
         {
             // Arrange
-            SelectExpandParser parser = new SelectExpandParser("foo,bar,thing,prop,yoda", ODataUriParserSettings.DefaultSelectExpandLimit);
+            SelectExpandParser parser = new SelectExpandParser(this.model, "foo,bar,thing,prop,yoda", ODataUriParserSettings.DefaultSelectExpandLimit);
 
             // Act
             SelectToken selectToken = parser.ParseSelect();
@@ -44,7 +51,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void NullOrEmptyOrWhiteSpaceSelectBecomesEmptyList(string clauseToParse)
         {
             // Arrange
-            SelectExpandParser parser = new SelectExpandParser(clauseToParse, ODataUriParserSettings.DefaultSelectExpandLimit);
+            SelectExpandParser parser = new SelectExpandParser(this.model, clauseToParse, ODataUriParserSettings.DefaultSelectExpandLimit);
 
             // Act
             SelectToken selectToken = parser.ParseSelect();
@@ -60,7 +67,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void EmptySelectTermShouldThrow()
         {
             // Arrange
-            SelectExpandParser parser = new SelectExpandParser("one,,two", ODataUriParserSettings.DefaultSelectExpandLimit);
+            SelectExpandParser parser = new SelectExpandParser(this.model, "one,,two", ODataUriParserSettings.DefaultSelectExpandLimit);
 
             // Act
             Action test = () => parser.ParseSelect();
@@ -73,7 +80,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void MaxRecursionDepthIsEnforcedInSelect()
         {
             // Arrange
-            SelectExpandParser parser = new SelectExpandParser("stuff/stuff/stuff/stuff", 3);
+            SelectExpandParser parser = new SelectExpandParser(this.model, "stuff/stuff/stuff/stuff", 3);
 
             // Act
             Action test = () => parser.ParseSelect();
@@ -86,7 +93,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void SemicolonOnlyAllowedInParensInSelect()
         {
             // Arrange
-            SelectExpandParser parser = new SelectExpandParser("one;two", 3);
+            SelectExpandParser parser = new SelectExpandParser(this.model, "one;two", 3);
 
             // Act
             Action test = () => parser.ParseSelect();
@@ -99,7 +106,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void WhitespaceInMiddleOfSegmentShouldThrowInSelect()
         {
             // Arrange
-            SelectExpandParser parser = new SelectExpandParser("what happens here/foo", 3);
+            SelectExpandParser parser = new SelectExpandParser(this.model, "what happens here/foo", 3);
 
             // Act
             Action test = () => parser.ParseSelect();
@@ -115,7 +122,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void ExpandParsesEachTermOnce()
         {
             // Arrange
-            SelectExpandParser parser = new SelectExpandParser("foo,bar,thing,prop,yoda", ODataUriParserSettings.DefaultSelectExpandLimit);
+            SelectExpandParser parser = new SelectExpandParser(this.model, "foo,bar,thing,prop,yoda", ODataUriParserSettings.DefaultSelectExpandLimit);
 
             // Act
             ExpandToken expandToken = parser.ParseExpand();
@@ -131,7 +138,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void NullOrEmptyOrWhitespaceExpandBecomesEmptyList(string clauseToParse)
         {
             // Arrange
-            SelectExpandParser parser = new SelectExpandParser(clauseToParse, ODataUriParserSettings.DefaultSelectExpandLimit);
+            SelectExpandParser parser = new SelectExpandParser(this.model, clauseToParse, ODataUriParserSettings.DefaultSelectExpandLimit);
 
             // Act
             ExpandToken expandToken = parser.ParseExpand();
@@ -145,7 +152,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void EmptyExpandTermShouldThrow()
         {
             // Arrange
-            SelectExpandParser parser = new SelectExpandParser("one,,two", ODataUriParserSettings.DefaultSelectExpandLimit);
+            SelectExpandParser parser = new SelectExpandParser(this.model, "one,,two", ODataUriParserSettings.DefaultSelectExpandLimit);
 
             // Act
             Action test = () => parser.ParseExpand();
@@ -158,7 +165,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void NestedOptionsOnMultipleExpansionsIsOk()
         {
             // Arrange
-            SelectExpandParser parser = new SelectExpandParser("one($filter=true), two($filter=false)", ODataUriParserSettings.DefaultSelectExpandLimit);
+            SelectExpandParser parser = new SelectExpandParser(this.model, "one($filter=true), two($filter=false)", ODataUriParserSettings.DefaultSelectExpandLimit);
 
             // Act
             ExpandToken expandToken = parser.ParseExpand();
@@ -175,7 +182,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void NestedOptionsWithoutClosingParenthesisShouldThrow()
         {
             // Arrange
-            SelectExpandParser parser = new SelectExpandParser("one($filter=true", ODataUriParserSettings.DefaultSelectExpandLimit);
+            SelectExpandParser parser = new SelectExpandParser(this.model, "one($filter=true", ODataUriParserSettings.DefaultSelectExpandLimit);
 
             // Act
             Action test = () => parser.ParseExpand();
@@ -188,7 +195,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void NestedOptionsWithExtraCloseParenShouldThrow()
         {
             // Arrange
-            SelectExpandParser parser = new SelectExpandParser("one($filter=true)), two", ODataUriParserSettings.DefaultSelectExpandLimit);
+            SelectExpandParser parser = new SelectExpandParser(this.model, "one($filter=true)), two", ODataUriParserSettings.DefaultSelectExpandLimit);
 
             // Act
             Action test = () => parser.ParseExpand();
@@ -201,7 +208,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void OpenCloseParensAfterNavPropShouldThrow()
         {
             // Arrange
-            SelectExpandParser parser = new SelectExpandParser("NavProp()", ODataUriParserSettings.DefaultSelectExpandLimit);
+            SelectExpandParser parser = new SelectExpandParser(this.model, "NavProp()", ODataUriParserSettings.DefaultSelectExpandLimit);
 
             // Act
             Action test = () => parser.ParseExpand();
@@ -214,7 +221,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void MaxRecursionDepthIsEnforcedInExpand()
         {
             // Arrange
-            SelectExpandParser parser = new SelectExpandParser("stuff/stuff/stuff/stuff", 3);
+            SelectExpandParser parser = new SelectExpandParser(this.model, "stuff/stuff/stuff/stuff", 3);
 
             // Act
             Action test = () => parser.ParseExpand();
@@ -227,7 +234,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void SemicolonOnlyAllowedInParensInExpand()
         {
             // Arrange
-            SelectExpandParser parser = new SelectExpandParser("one;two", 3);
+            SelectExpandParser parser = new SelectExpandParser(this.model, "one;two", 3);
 
             // Act
             Action test = () => parser.ParseExpand();
@@ -240,7 +247,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void WhitespaceInMiddleOfSegmentShouldThrowInExpand()
         {
             // Arrange
-            SelectExpandParser parser = new SelectExpandParser("what happens here/foo", 3);
+            SelectExpandParser parser = new SelectExpandParser(this.model, "what happens here/foo", 3);
 
             // Act
             Action test = () => parser.ParseExpand();
@@ -402,7 +409,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
                 Settings = { PathLimit = 10, FilterLimit = 20, OrderByLimit = 10, SearchLimit = 10, SelectExpandLimit = 10 }
             };
 
-            SelectExpandParser expandParser = new SelectExpandParser(select, configuration.Settings.SelectExpandLimit, configuration.EnableCaseInsensitiveUriFunctionIdentifier)
+            SelectExpandParser expandParser = new SelectExpandParser(this.model, select, configuration.Settings.SelectExpandLimit, configuration.EnableCaseInsensitiveUriFunctionIdentifier)
             {
                 MaxPathDepth = configuration.Settings.PathLimit,
                 MaxFilterDepth = configuration.Settings.FilterLimit,
@@ -702,7 +709,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             };
 
             var parentStructuredType = configuration.Resolver.ResolveType(model, "TestModel." + typeName) as IEdmStructuredType;
-            SelectExpandParser expandParser = new SelectExpandParser(configuration.Resolver, expand, parentStructuredType, configuration.Settings.SelectExpandLimit, configuration.EnableCaseInsensitiveUriFunctionIdentifier)
+            SelectExpandParser expandParser = new SelectExpandParser(this.model, configuration.Resolver, expand, parentStructuredType, configuration.Settings.SelectExpandLimit, configuration.EnableCaseInsensitiveUriFunctionIdentifier)
             {
                 MaxPathDepth = configuration.Settings.PathLimit,
                 MaxFilterDepth = configuration.Settings.FilterLimit,
@@ -724,7 +731,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
                 Settings = { PathLimit = 10, FilterLimit = 10, OrderByLimit = 10, SearchLimit = 10, SelectExpandLimit = 10 }
             };
 
-            SelectExpandParser expandParser = new SelectExpandParser(configuration.Resolver, expand, null, configuration.Settings.SelectExpandLimit, configuration.EnableCaseInsensitiveUriFunctionIdentifier)
+            SelectExpandParser expandParser = new SelectExpandParser(this.model, configuration.Resolver, expand, null, configuration.Settings.SelectExpandLimit, configuration.EnableCaseInsensitiveUriFunctionIdentifier)
             {
                 MaxPathDepth = configuration.Settings.PathLimit,
                 MaxFilterDepth = configuration.Settings.FilterLimit,

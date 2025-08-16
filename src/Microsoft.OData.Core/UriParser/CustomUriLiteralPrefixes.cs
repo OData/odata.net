@@ -6,14 +6,14 @@
 
 namespace Microsoft.OData.UriParser
 {
-    #region NameSpaces
+    #region Namespaces
 
     using System;
-    using System.Collections.Generic;
-    using Microsoft.OData.Edm;
+    using System.Diagnostics;
     using Microsoft.OData.Core;
+    using Microsoft.OData.Edm;
 
-    #endregion
+    #endregion Namespaces
 
     /// <summary>
     /// Extends the uri parsing system of Literal Prefix.
@@ -21,66 +21,78 @@ namespace Microsoft.OData.UriParser
     /// </summary>
     public static class CustomUriLiteralPrefixes
     {
-        #region Fields
-
-        private static readonly object Locker = new object();
-
-        private static Dictionary<string, IEdmTypeReference> CustomLiteralPrefixesOfEdmTypes = new Dictionary<string, IEdmTypeReference>(StringComparer.Ordinal);
-
-        #endregion
-
         #region Public Static Methods
 
         /// <summary>
-        /// Add a literal prefix for the given EdmType.
+        /// Registers a custom literal prefix for a specific Edm type in the given <see cref="IEdmModel"/>.
+        /// This allows the OData URI parser to recognize and correctly parse literals with the specified prefix
+        /// as instances of the provided EDM type during query parsing.
         /// </summary>
-        /// <example>filter=MyProperty eq MyCustomLiteral'VALUE'.
-        /// "MyCustomLiteral" is the literal prefix and the <paramref name="literalEdmTypeReference"/> is the type of the "VALUE".</example>
-        /// <param name="literalPrefix">The custom name of the literal prefix</param>
-        /// <param name="literalEdmTypeReference">The edm type of the custom literal</param>
-        /// <exception cref="ArgumentNullException">Arguments are null or empty</exception>
-        /// <exception cref="ArgumentException">The given literal prefix is not valid</exception>
-        /// <exception cref="ODataException">The given literal prefix already exists</exception>
-        public static void AddCustomLiteralPrefix(string literalPrefix, IEdmTypeReference literalEdmTypeReference)
+        /// <example>
+        /// For example, in the filter expression: <c>MyProperty eq MyCustomLiteral'VALUE'</c>,
+        /// "MyCustomLiteral" is the literal prefix, and <paramref name="literalEdmTypeReference"/> specifies the type of "VALUE".
+        /// </example>
+        /// <param name="model">The Edm model to which the custom literal prefix will be added.</param>
+        /// <param name="literalPrefix">The custom literal prefix to register (e.g., "MyCustomLiteral").</param>
+        /// <param name="literalEdmTypeReference">The Edm type reference that the prefix maps to.</param>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown if <paramref name="model"/>, <paramref name="literalPrefix"/>, or <paramref name="literalEdmTypeReference"/> is null or empty.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        /// Thrown if <paramref name="literalPrefix"/> is not a valid literal prefix.
+        /// </exception>
+        /// <exception cref="ODataException">
+        /// Thrown if a custom literal prefix with the same name already exists in the model.
+        /// </exception>
+        public static void AddCustomLiteralPrefix(this IEdmModel model, string literalPrefix, IEdmTypeReference literalEdmTypeReference)
         {
             // Arguments validation
+            ExceptionUtils.CheckArgumentNotNull(model, "model");
             ExceptionUtils.CheckArgumentNotNull(literalEdmTypeReference, "literalEdmTypeReference");
-
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(literalPrefix, "literalPrefix");
 
             UriParserHelper.ValidatePrefixLiteral(literalPrefix);
 
-            // Try to add the custom uri literal to cache
-            lock (Locker)
-            {
-                // Check if literal does already exists
-                if (CustomLiteralPrefixesOfEdmTypes.ContainsKey(literalPrefix))
-                {
-                    throw new ODataException(Error.Format(SRResources.CustomUriTypePrefixLiterals_AddCustomUriTypePrefixLiteralAlreadyExists, literalPrefix));
-                }
+            CustomUriLiteralPrefixesStore store = model.GetOrCreateStore();
 
-                CustomLiteralPrefixesOfEdmTypes.Add(literalPrefix, literalEdmTypeReference);
+            if (store.TryGet(literalPrefix, out _))
+            {
+                throw new ODataException(Error.Format(SRResources.CustomUriTypePrefixLiterals_AddCustomUriTypePrefixLiteralAlreadyExists, literalPrefix));
+            }
+
+            if (!store.Add(literalPrefix, literalEdmTypeReference))
+            {
+                // Another thread won the race; throw consistently
+                throw new ODataException(Error.Format(SRResources.CustomUriTypePrefixLiterals_AddCustomUriTypePrefixLiteralAlreadyExists, literalPrefix));
             }
         }
 
+
         /// <summary>
-        /// Remove the given literal prefix
+        /// Removes a custom literal prefix from the given <see cref="IEdmModel"/>.
         /// </summary>
-        /// <param name="literalPrefix">The custom name of the literal prefix</param>
-        /// <returns>'true' if the literal prefix is successfully found and removed; otherwise, 'false'.</returns>
-        /// <exception cref="ArgumentNullException">Argument is null or empty</exception>
-        public static bool RemoveCustomLiteralPrefix(string literalPrefix)
+        /// <param name="model"> The Edm model from which the custom literal prefix will be removed.</param>
+        /// <param name="literalPrefix">The name of the literal prefix to remove.</param>
+        /// <returns>
+        /// <c>true</c> if the literal prefix was found and successfully removed; otherwise, <c>false</c>.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="model"/> is <c>null</c> or <paramref name="literalPrefix"/> is <c>null</c> or empty.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        /// Thrown if <paramref name="literalPrefix"/> is not a valid literal prefix.
+        /// </exception>
+        public static bool RemoveCustomLiteralPrefix(this IEdmModel model, string literalPrefix)
         {
             // Arguments validation
+            ExceptionUtils.CheckArgumentNotNull(model, "model");
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(literalPrefix, "literalPrefix");
 
             UriParserHelper.ValidatePrefixLiteral(literalPrefix);
 
-            // Try to remove the custom uri literal prefix from cache
-            lock (Locker)
-            {
-                return CustomLiteralPrefixesOfEdmTypes.Remove(literalPrefix);
-            }
+            CustomUriLiteralPrefixesStore store = model.GetOrCreateStore();
+
+            return store.Remove(literalPrefix);
         }
 
         #endregion
@@ -88,25 +100,38 @@ namespace Microsoft.OData.UriParser
         #region Internal Methods
 
         /// <summary>
-        /// Gets the EdmTypeReference of the given literal prefix
+        /// Retrieves the <see cref="IEdmTypeReference"/> associated with a custom literal prefix from the given <see cref="IEdmModel"/>.
         /// </summary>
-        /// <param name="literalPrefix">The literal prefix of the EdmType</param>
-        /// <returns>Null if the custom literal prefix has no registered EdmType.</returns>
-        internal static IEdmTypeReference GetEdmTypeByCustomLiteralPrefix(ReadOnlySpan<char> literalPrefix)
+        /// <param name="model">The Edm model to search for the custom literal prefix.</param>
+        /// <param name="literalPrefix">The custom literal prefix whose associated Edm type is to be retrieved.</param>
+        /// <returns>
+        /// The <see cref="IEdmTypeReference"/> associated with the specified literal prefix, or <c>null</c> if no type is registered for the prefix.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="model"/> is <c>null</c> or <paramref name="literalPrefix"/> is <c>null</c> or empty.
+        /// </exception>
+        internal static IEdmTypeReference GetEdmTypeByCustomLiteralPrefix(this IEdmModel model, string literalPrefix)
         {
-            lock (Locker)
-            {
-                IEdmTypeReference edmTypeReference;
-                string literal = literalPrefix.ToString();
-                if (CustomLiteralPrefixesOfEdmTypes.TryGetValue(literal, out edmTypeReference))
-                {
-                    return edmTypeReference;
-                }
-            }
+            // Arguments validation
+            ExceptionUtils.CheckArgumentNotNull(model, "model");
+            ExceptionUtils.CheckArgumentStringNotNullOrEmpty(literalPrefix, "literalPrefix");
 
-            return null;
+            CustomUriLiteralPrefixesStore store = model.GetOrCreateStore();
+
+            return store.TryGet(literalPrefix, out IEdmTypeReference edmType) ? edmType : null;
         }
 
         #endregion
+
+        #region Private Methods
+
+        private static CustomUriLiteralPrefixesStore GetOrCreateStore(this IEdmModel model)
+        {
+            Debug.Assert(model != null, "model != null");
+
+            return CustomUriLiteralPrefixesStore.GetOrCreate(model);
+        }
+
+        #endregion Private Methods
     }
 }

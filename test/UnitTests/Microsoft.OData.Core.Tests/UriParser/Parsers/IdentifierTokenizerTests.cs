@@ -107,9 +107,9 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 
         private static IFunctionCallParser GetRealFunctionCallParser(string expression)
         {
-            ExpressionLexer lexer = new ExpressionLexer(expression, true, false);
-            UriQueryExpressionParser parser = new UriQueryExpressionParser(345, lexer);
-            return new FunctionCallParser(lexer, parser /*resolveAlias*/);
+            ExpressionLexer lexer = new ExpressionLexer(HardCodedTestModel.TestModel, expression, moveToFirstToken: true, useSemicolonDelimiter: false);
+            UriQueryExpressionParser parser = new UriQueryExpressionParser(HardCodedTestModel.TestModel, 345, lexer);
+            return new FunctionCallParser(lexer, parser);
         }
     }
 }
