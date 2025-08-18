@@ -4,6 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Threading.Tasks;
 
+using NewStuff._Design._0_Convention.Readers;
 using NewStuff._Design._0_Convention.V3.Attempt2.V2;
 using NewStuff._Design._0_Convention.V3.Attempt3.V1;
 using NewStuff._Design._0_Convention.V3.Attempt3.V2;
@@ -369,28 +370,26 @@ namespace NewStuff._Design._0_Convention.V3
                 }
             }
 
-            //// TODO iversionedreader<TVerseion, TNext> : IREader<TNExt>
-            ///{
-            ///  TVersion Version { get; }
-            ///}
-            ///
-            ///iodatareader<tversion, tnext> : iversionreader<tversion, tnext>
-            ///  whjere Tversion : Version.V1
-            ///{
-            ///
-            ///}
-
-
-            public interface IEntityIdHeaderValueReader<out TVersion, out TNextReader> : IReader<IEntityIdReader<TVersion, TNextReader>>
+            public interface IOdataReader<out TVersion, out TNext> : IReader<TNext>
                 where TVersion : Version.V1
             {
                 TVersion Version { get; }
             }
 
-            public interface IEntityIdReader<out TVersion, out TNextReader> : IReader<EntityId, TNextReader>
+            public interface IOdataReader<out TVersion, out TValue, out TNext> : IOdataReader<TVersion, TNext>, IReader<TValue, TNext>
                 where TVersion : Version.V1
             {
-                TVersion Version { get; }
+            }
+
+
+            public interface IEntityIdHeaderValueReader<out TVersion, out TNextReader> : IOdataReader<TVersion, IEntityIdReader<TVersion, TNextReader>>
+                where TVersion : Version.V1
+            {
+            }
+
+            public interface IEntityIdReader<out TVersion, out TNextReader> : IOdataReader<TVersion, EntityId, TNextReader>
+                where TVersion : Version.V1
+            {
             }
         }
 
