@@ -75,10 +75,18 @@
             }
 
             internal abstract void NoImplementationV2();
+
+            public bool TryMoveNext<TVersion, TNextReader>(IEntityIdHeaderValueReader<TVersion, TNextReader> entityIdHeaderValueReader, out IEntityIdStartReader<TVersion, TNextReader> entityIdStartReader)
+                where TVersion : Version.V2
+            {
+                return this.v2Implementations.TryMoveNext(entityIdHeaderValueReader, out entityIdStartReader);
+            }
         }
     }
 
     public interface IV2Implementations
     {
+        bool TryMoveNext<TVersion, TNextReader>(IEntityIdHeaderValueReader<TVersion, TNextReader> entityIdHeaderValueReader, out IEntityIdStartReader<TVersion, TNextReader> entityIdStartReader)
+            where TVersion : Version.V2;
     }
 }
