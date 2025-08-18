@@ -391,6 +391,73 @@ namespace NewStuff._Design._0_Convention.V3
                 where TVersion : Version.V1
             {
             }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            public interface IEntityIdReader4<out TNextReader> : IReader<EntityId2, TNextReader>
+            {
+            }
+
+            public class EntityId2
+            {
+                public EntityId2(string entityId)
+                {
+                    EntityId = entityId;
+                }
+
+                public string EntityId { get; }
+            }
+
+
+
+            public interface IEntityIdReader5<out TNextReader> : IReader<IEntityIdSchemeReader<TNextReader>>
+            {
+            }
+
+            public interface IEntityIdSchemeReader<out TNext> : IReader<IriScheme, IEntityIdDomainReader<TNext>>
+            {
+            }
+
+            public interface IEntityIdDomainReader<out TNext> : IReader<IriDomain, ...>
+            {
+            }
+
+
+
+
+
+
+
+
+
+
         }
 
         namespace V2
@@ -406,6 +473,16 @@ namespace NewStuff._Design._0_Convention.V3
                     protected internal V1()
                     {
                     }
+                    internal abstract void NoImplementationV1();
+                    private sealed class Impl : V1
+                    {
+                        internal override void NoImplementation()
+                        {
+                            throw new NotImplementedException();
+                        }
+                    }
+
+                    public static V1 Instance { get; } = new Impl();
                 }
 
                 public abstract class V2 : V1
@@ -429,13 +506,18 @@ namespace NewStuff._Design._0_Convention.V3
                         {
                         }
 
-                        internal override void NoImplementation()
+                        internal override void NoImplementationV1()
+                        {
+                            throw new NotImplementedException();
+                        }
+
+                        internal override void NoImplementationV2()
                         {
                             throw new NotImplementedException();
                         }
                     }
 
-                    internal abstract void NoImplementation();
+                    internal abstract void NoImplementationV2();
 
                     public bool TryMoveNext<TVersion, TNextReader>(IEntityIdHeaderValueReader<TVersion, TNextReader> entityIdHeaderValueReader, out IEntityIdStartReader<TVersion, TNextReader> entityIdStartReader)
                         where TVersion : Version.V2
@@ -683,7 +765,9 @@ namespace NewStuff._Design._0_Convention.V3
                         this.delegateReader = delegateReader;
                     }
 
-                    public Attempt3.V1.IEntityIdStartReader<Attempt3.V1.Version.V1, TNextReader> EntityIdStartReader => throw new NotImplementedException("TODO this exception is by design actually");
+                    ///public Attempt3.V1.IEntityIdStartReader<Attempt3.V1.Version.V1, TNextReader> EntityIdStartReader => throw new NotImplementedException("TODO this exception is by design actually");
+
+                    public Attempt3.V1.Version.V1 Version { get; } = Attempt3.V1.Version.V1.Instance;
 
                     public async ValueTask Read()
                     {
@@ -709,6 +793,8 @@ namespace NewStuff._Design._0_Convention.V3
                         {
                             this.delegateReader = delegateReader;
                         }
+
+                        public Attempt3.V1.Version.V1 Version { get; } = Attempt3.V1.Version.V1.Instance;
 
                         public async ValueTask Read()
                         {
@@ -754,6 +840,8 @@ namespace NewStuff._Design._0_Convention.V3
                     {
                         this.delegateReader = delegateReader;
                     }
+                    public Attempt3.V2.Version.V1 Version { get; } = Attempt3.V2.Version.V1.Instance;
+
 
                     public Attempt3.V2.IEntityIdStartReader<Attempt3.V2.Version.V1, TNextReader> EntityIdStartReader => throw new NotImplementedException("TODO this exception is by design actually");
 
@@ -781,6 +869,8 @@ namespace NewStuff._Design._0_Convention.V3
                         {
                             this.delegateReader = delegateReader;
                         }
+                        public Attempt3.V2.Version.V1 Version { get; } = Attempt3.V2.Version.V1.Instance;
+
 
                         public async ValueTask Read()
                         {
@@ -820,13 +910,15 @@ namespace NewStuff._Design._0_Convention.V3
                         this.delegateReader = delegateReader;
                     }
 
-                    public Attempt3.V2.IEntityIdStartReader<Attempt3.V2.Version.V2, TNextReader> EntityIdStartReader
+                    /*public Attempt3.V2.IEntityIdStartReader<Attempt3.V2.Version.V2, TNextReader> EntityIdStartReader
                     {
                         get
                         {
                             return new Placeholder(this.delegateReader);
                         }
-                    }
+                    }*/
+
+                    public Attempt3.V2.Version.V2 Version { get; } = Attempt3.V2.Version.V2.Create(...);
 
                     private sealed class Placeholder : IEntityIdStartReader<Attempt3.V2.Version.V2, TNextReader>
                     {
