@@ -16,7 +16,8 @@ namespace Microsoft.OData.Serializer.V3.Json;
 internal class ODataResourceJsonWriter<T, TCustomState>(ODataTypeInfo<T, TCustomState> typeInfo)
     : ODataWriter<T, ODataJsonWriterState<TCustomState>>,
     IPropertyWriter<T, TCustomState>,
-    IEtagWriter<TCustomState>
+    IEtagWriter<TCustomState>,
+    IODataIdWriter<TCustomState>
 {
     public override bool Write(T value, ODataJsonWriterState<TCustomState> state)
     {
@@ -61,7 +62,7 @@ internal class ODataResourceJsonWriter<T, TCustomState>(ODataTypeInfo<T, TCustom
             // For simplicity, we don't support suspending between annotations.
             // We expect that the annotations are will be few and short and should be within the buffer size
             // most of the time.
-            WritePreValueAnnotations(value, state);
+            WritePreValueMetadataData(value, state);
 
             state.Stack.Current.ResourceProgress = ResourceWriteProgress.PreValueMetadata;
 
@@ -117,7 +118,7 @@ internal class ODataResourceJsonWriter<T, TCustomState>(ODataTypeInfo<T, TCustom
 
         if (resourceProgress < ResourceWriteProgress.PostValueMetadata)
         {
-            WritePostValueAnnotations(value, state);
+            WritePostValueMetadata(value, state);
 
             state.Stack.Current.ResourceProgress = ResourceWriteProgress.PostValueMetadata;
 
@@ -251,12 +252,10 @@ internal class ODataResourceJsonWriter<T, TCustomState>(ODataTypeInfo<T, TCustom
         //}
     }
 
-    private void WritePreValueAnnotations(T value, ODataJsonWriterState<TCustomState> state)
+    private void WritePreValueMetadataData(T value, ODataJsonWriterState<TCustomState> state)
     {
-        if (typeInfo.EtagPosition != AnnotationPosition.PostValue)
-        {
-            WriteEtag(value, state);
-        }
+        WriteId(value, state);
+        WriteEtag(value, state);
 
         if (typeInfo.GetCustomPreValueAnnotations != null)
         {
@@ -275,11 +274,41 @@ internal class ODataResourceJsonWriter<T, TCustomState>(ODataTypeInfo<T, TCustom
         }
     }
 
-    private void WritePostValueAnnotations(T value, ODataJsonWriterState<TCustomState> state)
+    private void WritePostValueMetadata(T value, ODataJsonWriterState<TCustomState> state)
     {
-        if (typeInfo.EtagPosition == AnnotationPosition.PostValue)
+        if (typeInfo.GetCustomPostValueAnnotations != null)
         {
-            WriteEtag(value, state);
+            var annotations = typeInfo.GetCustomPostValueAnnotations(value, state);
+            if (annotations != null)
+            {
+                // TODO: Should we allow GetCustomPostValueAnnotations to return
+                // a different type on different calls? If not, we could cache the handler on the type info or resource writer.
+                var handler = state.GetCustomAnnotationsHandler(annotations.GetType());
+                handler.WriteAnnotations(annotations, CustomInstanceAnnotationWriter<TCustomState>.Instance, state);
+            }
+        }
+        else if (typeInfo.WriteCustomPostValueAnnotations != null)
+        {
+            typeInfo.WriteCustomPostValueAnnotations(value, CustomInstanceAnnotationWriter<TCustomState>.Instance, state);
+        }
+    }
+
+    private void WriteId(T value, ODataJsonWriterState<TCustomState> state)
+    {
+        var jsonWriter = state.JsonWriter;
+        if (typeInfo.GetId != null)
+        {
+            var id = typeInfo.GetId(value, state);
+            if (id != null)
+            {
+                jsonWriter.WritePropertyName("@odata.id"u8);
+                jsonWriter.WriteStringValue(id);
+            }
+        }
+
+        if (typeInfo.WriteId != null)
+        {
+            typeInfo.WriteId(value, this, state);
         }
     }
 
@@ -332,5 +361,26 @@ internal class ODataResourceJsonWriter<T, TCustomState>(ODataTypeInfo<T, TCustom
         var jsonWriter = state.JsonWriter;
         jsonWriter.WritePropertyName("@odata.etag"u8);
         jsonWriter.WriteStringValue(etag);
+    }
+
+    void IODataIdWriter<TCustomState>.WriteId(ReadOnlySpan<char> id, ODataJsonWriterState<TCustomState> state)
+    {
+        var jsonWriter = state.JsonWriter;
+        jsonWriter.WritePropertyName("@odata.id"u8);
+        jsonWriter.WriteStringValue(id);
+    }
+
+    void IODataIdWriter<TCustomState>.WriteId(ReadOnlySpan<byte> id, ODataJsonWriterState<TCustomState> state)
+    {
+        var jsonWriter = state.JsonWriter;
+        jsonWriter.WritePropertyName("@odata.id"u8);
+        jsonWriter.WriteStringValue(id);
+    }
+
+    void IODataIdWriter<TCustomState>.WriteId(Uri id, ODataJsonWriterState<TCustomState> state)
+    {
+        var jsonWriter = state.JsonWriter;
+        jsonWriter.WritePropertyName("@odata.id"u8);
+        jsonWriter.WriteStringValue(id.OriginalString);
     }
 }

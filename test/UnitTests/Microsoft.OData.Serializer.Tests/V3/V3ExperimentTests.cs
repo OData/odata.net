@@ -11,6 +11,7 @@ using Microsoft.OData.Serializer.V3.Adapters;
 using Microsoft.OData.Serializer.V3.Json.State;
 using Microsoft.OData.UriParser;
 using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
 using System.Text;
 using System.Text.Json;
 
@@ -103,9 +104,13 @@ public class V3ODataSerializerTests
 
         options.AddTypeInfo<IList<Customer>>(new()
         {
-            GetNextLink = (customers, state) => new Uri("http://service/odata/Customers?$skip=2", UriKind.Absolute).AbsoluteUri
+            GetNextLink = (customers, state) => new Uri("http://service/odata/Customers?$skip=2", UriKind.Absolute).AbsoluteUri,
         });
 
+        options.AddTypeInfo<IList<Order>>(new()
+        {
+            GetCount = (orders, state) => orders.Count,
+        });
 
         options.AddTypeInfo<Customer>(new()
         {
@@ -115,7 +120,9 @@ public class V3ODataSerializerTests
                 new()
                 {
                     Name = "Id",
-                    WriteValue = (customer, writer, state) => writer.WriteValue(customer.Id, state)
+                    WriteValue = (customer, writer, state) => writer.WriteValue(customer.Id, state),
+                    //GetValue = (customer, state) => customer.Id,
+
                 },
                 new ODataPropertyInfo<Customer, string, DefaultState>
                 {
@@ -153,7 +160,7 @@ public class V3ODataSerializerTests
 
                         return null;
                     }
-                        
+
                 },
                 new()
                 {

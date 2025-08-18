@@ -50,11 +50,16 @@ public class ODataTypeInfo<T, TCustomState> : ODataTypeInfo
 
     public Action<T, INextLinkWriter<TCustomState>, ODataJsonWriterState<TCustomState>>? WriteNextLink { get; init; }
 
-    public AnnotationPosition EtagPosition { get; init; } = AnnotationPosition.Auto;
+    // Etag is always written before the value, so it doesn't have a position override.
 
     public Func<T, ODataJsonWriterState<TCustomState>, string>? GetEtag { get; init; }
 
     public Action<T, IEtagWriter<TCustomState>, ODataJsonWriterState<TCustomState>>? WriteEtag { get; init; }
+
+    // The Id annotation is always written before the value, so it doesn't have a position override.
+    public Func<T, ODataJsonWriterState<TCustomState>, string>? GetId { get; init; }
+
+    public Action<T, IODataIdWriter<TCustomState>, ODataJsonWriterState<TCustomState>>? WriteId { get; init; }
 
     public Func<T, IPropertyWriter<T, TCustomState>, ODataJsonWriterState<TCustomState>, bool>? WriteProperties { get; init; }
 
