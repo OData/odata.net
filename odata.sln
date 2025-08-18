@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "odata", "odata\odata.csproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "odata.tests", "odata.tests\odata.tests.csproj", "{07CA58E0-3FA7-4BC2-8CB1-6974049CB5CF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "_ReaderPocV1", "_ReaderPocV1\_ReaderPocV1.csproj", "{2B278DA4-168B-4C91-8D24-6DA476F8A2B9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,8 +23,15 @@ Global
 		{07CA58E0-3FA7-4BC2-8CB1-6974049CB5CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{07CA58E0-3FA7-4BC2-8CB1-6974049CB5CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{07CA58E0-3FA7-4BC2-8CB1-6974049CB5CF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2B278DA4-168B-4C91-8D24-6DA476F8A2B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2B278DA4-168B-4C91-8D24-6DA476F8A2B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2B278DA4-168B-4C91-8D24-6DA476F8A2B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2B278DA4-168B-4C91-8D24-6DA476F8A2B9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F26B2362-B912-4D8C-B0B4-38286990BD9B}
 	EndGlobalSection
 EndGlobal
