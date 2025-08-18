@@ -530,8 +530,53 @@ namespace NewStuff._Design._0_Convention.V3
                 {
                     bool TryMoveNext<TVersion, TNextReader>(IEntityIdHeaderValueReader<TVersion, TNextReader> entityIdHeaderValueReader, out IEntityIdStartReader<TVersion, TNextReader> entityIdStartReader)
                         where TVersion : Version.V2;
+
+                    internal void Nothing();
                 }
             }
+
+
+
+
+
+            public class PersonDeserializer
+            {
+                public PersonDeserializer(OdataTypeInfo<Person> odataTypeInfo)
+                {
+                }
+
+                public (Person, TNext) Deserialize<TVersion, TNext>(IOdataResponseObjectReader<TVersion, TNext> objectReader)
+                    where TVersion : Version.V2
+                {
+
+                }
+            }
+
+
+
+            public class Deserializer<T>
+            {
+                public Deserializer(OdataTypeInfo<T> odataTypeInfo)
+                {
+                }
+
+                public (T, TNext) Deserialize<TVersion, TNext>(IOdataResponseObjectReader<TVersion, TNext> objectReader)
+                    where TVersion : Version.V2
+                {
+
+                }
+            }
+
+
+
+
+
+            public class Person
+            {
+            }
+
+
+
 
             public interface IOdataReader<out TVersion, out TNext> : IReader<TNext>
                 where TVersion : Version.V1
