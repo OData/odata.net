@@ -19,11 +19,11 @@
 
         public abstract class V1 : Version
         {
-            private V1()
+            protected internal V1()
             {
             }
 
-            internal abstract void NoImplementation();
+            internal abstract void NoImplementationV1();
 
             private sealed class Impl : V1
             {
@@ -33,7 +33,7 @@
 
                 public static new Impl Instance { get; } = new Impl();
 
-                internal override void NoImplementation()
+                internal override void NoImplementationV1()
                 {
                     throw new NotImplementedException();
                 }
@@ -41,5 +41,44 @@
 
             public static V1 Instance { get; } = Impl.Instance;
         }
+
+        public abstract class V2 : V1
+        {
+            private readonly IV2Implementations v2Implementations;
+
+            private V2(IV2Implementations v2Implementations)
+            {
+                this.v2Implementations = v2Implementations;
+            }
+
+            private sealed class Impl : V2
+            {
+                public Impl(IV2Implementations v2Implementations)
+                    : base(v2Implementations)
+                {
+                }
+
+                internal override void NoImplementationV1()
+                {
+                    throw new NotImplementedException();
+                }
+
+                internal override void NoImplementationV2()
+                {
+                    throw new NotImplementedException();
+                }
+            }
+
+            public static V2 Create(IV2Implementations v2Implementations)
+            {
+                return new Impl(v2Implementations);
+            }
+
+            internal abstract void NoImplementationV2();
+        }
+    }
+
+    public interface IV2Implementations
+    {
     }
 }
