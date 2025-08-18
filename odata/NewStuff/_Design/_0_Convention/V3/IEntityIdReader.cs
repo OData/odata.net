@@ -451,30 +451,37 @@ namespace NewStuff._Design._0_Convention.V3
                 }
             }
 
+            public interface IOdataReader<out TVersion, out TNext> : IReader<TNext>
+                where TVersion : Version.V1
+            {
+                TVersion Version { get; }
+            }
+
+            public interface IOdataReader<out TVersion, out TValue, out TNext> : IOdataReader<TVersion, TNext>, IReader<TValue, TNext>
+                where TVersion : Version.V1
+            {
+            }
+
             //// TODO you are here trying to do the version thing; make sure that ireader<v2> can be cast to ireader<v1>; you also thought about exploring if the `v1`, `v2`, etc. classes could have the "get extended reader" methods, so for example, ientityidheadervaluereader would have a `TVersion Version { get; }` and then this could be called to say `reader.Version.GetExtended(entityIdHeaderValueReader)` and it'd give you back the irireader instead of the entityidreader
 
-            public interface IEntityIdHeaderValueReader<out TVersion, out TNextReader> : IReader<IEntityIdReader<TVersion, TNextReader>>
-                where TVersion : Version
+            public interface IEntityIdHeaderValueReader<out TVersion, out TNextReader> : IOdataReader<TVersion, IEntityIdReader<TVersion, TNextReader>>
+                where TVersion : Version.V1
             {
-                TVersion Version { get; }
             }
 
-            public interface IEntityIdReader<out TVersion, out TNextReader> : IReader<EntityId, TNextReader>
-                where TVersion : Version
+            public interface IEntityIdReader<out TVersion, out TNextReader> : IOdataReader<TVersion, EntityId, TNextReader>
+                where TVersion : Version.V1
             {
-                TVersion Version { get; }
             }
 
-            public interface IEntityIdStartReader<out TVersion, out TNextReader> : IReader<IIriSchemeReader<TVersion, TNextReader>>
-                where TVersion : Version
+            public interface IEntityIdStartReader<out TVersion, out TNextReader> : IOdataReader<TVersion, IIriSchemeReader<TVersion, TNextReader>>
+                where TVersion : Version.V1
             {
-                TVersion Version { get; }
             }
 
-            public interface IIriSchemeReader<out TVersion, out TNextReader> : IReader<IriScheme, TNextReader>
-                where TVersion : Version
+            public interface IIriSchemeReader<out TVersion, out TNextReader> : IOdataReader<TVersion, IriScheme, TNextReader>
+                where TVersion : Version.V1
             {
-                TVersion Version { get; }
             }
 
             public struct IriScheme
