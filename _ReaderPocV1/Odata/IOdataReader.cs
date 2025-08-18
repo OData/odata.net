@@ -1,11 +1,13 @@
 ﻿namespace Odata
 {
     public interface IOdataReader<out TVersion, out TNext> : IReader<TNext>
+        where TVersion : Version.V1
     {
         TVersion Version { get; }
     }
 
     public interface IOdataReader<out TVersion, out TValue, out TNext> : IOdataReader<TVersion, TNext>, IReader<TValue, TNext>
+        where TVersion : Version.V1
     {
     }
 
