@@ -2291,6 +2291,18 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
+        /// Adds a vocabulary annotation to this model.
+        /// </summary>
+        /// <param name="model">The model the annotation is added to.</param>
+        /// <param name="annotation">The annotation to be added.</param>
+        /// <param name="location">The location to add the allocation</param>
+        public static void AddVocabularyAnnotation(this EdmModel model, IEdmVocabularyAnnotation annotation, Csdl.EdmVocabularyAnnotationSerializationLocation location)
+        {
+            model.AddVocabularyAnnotation(annotation);
+            annotation.SetSerializationLocation(model, location);
+        }
+
+        /// <summary>
         /// Checks whether the given entity type has the <paramref name="property"/> as one of the key properties.
         /// </summary>
         /// <param name="entityType">Given entity type.</param>
