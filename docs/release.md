@@ -52,3 +52,15 @@
     and repacing `7.9.4` with the new version number
 12. Create a [new release](https://github.com/OData/odata.net/releases) in GitHub with the name "ODL 7.9.4", replacing "7.9.4" with the new version number. Also choose the newly created tag. Add links to the new NuGet packages in the description. (Note that the assets files will be generated automatically by GitHub when the release is created.)
 13. Cherry-pick the change log commit in the [Docs](https://github.com/MicrosoftDocs/OData-docs/) repo from the `main` branch to the `live` branch.
+
+# Accidental Breaking Change
+
+In the event of an accidental breaking change, we will deprecate the package version, specify an alternate version, and unlist the package version. To do this:
+1. Go to the "management" page for the package version, something like this: `https://www.nuget.org/packages/Microsoft.OData.Edm/7.18.0/Manage`
+2. In the "Deprecation" section:
+    1. Check "Other"
+    2. Indicate the alternate version by entering the package name (e.g. Microsoft.OData.Edm)
+    3. Select "Latest" as the version.
+    4. Add the custom message of "This version contains a breaking change in the {TODO} API."
+    5. Click "Save"
+3. In the "Listing" section, unselect "List in search results" and click "Save"
