@@ -660,6 +660,9 @@ namespace Microsoft.OData.JsonLight
 
                 if (this.writingResponse)
                 {
+                    // Write the count if it's available.
+                    this.WriteResourceSetCount(resourceSet.Count, /*propertyName*/null);
+
                     // Write the next link if it's available.
                     this.WriteResourceSetNextLink(resourceSet.NextPageLink, /*propertyName*/null);
 
@@ -687,6 +690,9 @@ namespace Microsoft.OData.JsonLight
                     //       when we hit the nested resource info end since a nested resource info
                     //       can contain multiple resource sets that get collapsed into a single array value.
                     this.jsonWriter.EndArrayScope();
+
+                    // Write the count if it's available.
+                    this.WriteResourceSetCount(resourceSet.Count, propertyName);
 
                     // Write the next link if it's available.
                     this.WriteResourceSetNextLink(resourceSet.NextPageLink, propertyName);
@@ -767,6 +773,9 @@ namespace Microsoft.OData.JsonLight
 
                 // Write custom instance annotations
                 this.instanceAnnotationWriter.WriteInstanceAnnotations(deltaResourceSet.InstanceAnnotations, this.CurrentDeltaResourceSetScope.InstanceAnnotationWriteTracker);
+
+                // Write the count if it's available.
+                this.WriteResourceSetCount(deltaResourceSet.Count, /*propertyName*/ null);
 
                 // Write the next link if it's available.
                 this.WriteResourceSetNextLink(deltaResourceSet.NextPageLink, /*propertynamne*/ null);
@@ -1668,6 +1677,10 @@ namespace Microsoft.OData.JsonLight
 
                 if (this.writingResponse)
                 {
+                    // Write the count if it's available.
+                    await this.WriteResourceSetCountAsync(resourceSet.Count, /*propertyName*/null)
+                        .ConfigureAwait(false);
+
                     // Write the next link if it's available.
                     await this.WriteResourceSetNextLinkAsync(resourceSet.NextPageLink, /*propertyName*/null)
                         .ConfigureAwait(false);
@@ -1699,6 +1712,10 @@ namespace Microsoft.OData.JsonLight
                     //       when we hit the nested resource info end since a nested resource info
                     //       can contain multiple resource sets that get collapsed into a single array value.
                     await this.asynchronousJsonWriter.EndArrayScopeAsync()
+                        .ConfigureAwait(false);
+
+                    // Write the count if it's available.
+                    await this.WriteResourceSetCountAsync(resourceSet.Count, propertyName)
                         .ConfigureAwait(false);
 
                     // Write the next link if it's available.
@@ -2456,7 +2473,8 @@ namespace Microsoft.OData.JsonLight
         /// <param name="propertyName">The name of the expanded nav property or null for a top-level resource set.</param>
         private void WriteResourceSetCount(long? count, string propertyName)
         {
-            if (count.HasValue)
+            bool countWritten = this.State == WriterState.ResourceSet ? this.CurrentResourceSetScope.CountWritten : this.CurrentDeltaResourceSetScope.CountWritten;
+            if (count.HasValue && !countWritten)
             {
                 if (propertyName == null)
                 {
@@ -2468,6 +2486,15 @@ namespace Microsoft.OData.JsonLight
                 }
 
                 this.jsonWriter.WriteValue(count.Value);
+
+                if (this.State == WriterState.ResourceSet)
+                {
+                    this.CurrentResourceSetScope.CountWritten = true;
+                }
+                else
+                {
+                    this.CurrentDeltaResourceSetScope.CountWritten = true;
+                }
             }
         }
 
@@ -2736,7 +2763,11 @@ namespace Microsoft.OData.JsonLight
         /// <returns>A task that represents the asynchronous write operation.</returns>
         private Task WriteResourceSetCountAsync(long? count, string propertyName)
         {
-            if (count.HasValue)
+            bool countWritten = this.State == WriterState.ResourceSet ?
+                this.CurrentResourceSetScope.CountWritten :
+                this.CurrentDeltaResourceSetScope.CountWritten;
+
+            if (count.HasValue && !countWritten)
             {
                 return WriteResourceSetCountInnerAsync(count.Value, propertyName);
 
@@ -2756,6 +2787,15 @@ namespace Microsoft.OData.JsonLight
 
                     await this.asynchronousJsonWriter.WriteValueAsync(innerCount)
                         .ConfigureAwait(false);
+
+                    if (this.State == WriterState.ResourceSet)
+                    {
+                        this.CurrentResourceSetScope.CountWritten = true;
+                    }
+                    else
+                    {
+                        this.CurrentDeltaResourceSetScope.CountWritten = true;
+                    }
                 }
             }
 
@@ -3060,6 +3100,9 @@ namespace Microsoft.OData.JsonLight
         /// </summary>
         private sealed class JsonLightResourceSetScope : ResourceSetScope
         {
+            /// <summary>true if the odata.count was already written, false otherwise.</summary>
+            private bool countWritten;
+
             /// <summary>true if the odata.nextLink was already written, false otherwise.</summary>
             private bool nextLinkWritten;
 
@@ -3083,6 +3126,22 @@ namespace Microsoft.OData.JsonLight
                 : base(resourceSet, navigationSource, itemType, skipWriting, selectedProperties, odataUri)
             {
                 this.isUndeclared = isUndeclared;
+            }
+
+            /// <summary>
+            /// true if the odata.count annotation was already written, false otherwise.
+            /// </summary>
+            internal bool CountWritten
+            {
+                get
+                {
+                    return this.countWritten;
+                }
+
+                set
+                {
+                    this.countWritten = value;
+                }
             }
 
             /// <summary>
@@ -3373,6 +3432,9 @@ namespace Microsoft.OData.JsonLight
         /// </summary>
         private sealed class JsonLightDeltaResourceSetScope : DeltaResourceSetScope
         {
+            /// <summary>true if the odata.count was already written, false otherwise.</summary>
+            private bool countWritten;
+
             /// <summary>true if the odata.nextLink was already written, false otherwise.</summary>
             private bool nextLinkWritten;
 
@@ -3390,6 +3452,22 @@ namespace Microsoft.OData.JsonLight
             public JsonLightDeltaResourceSetScope(ODataDeltaResourceSet resourceSet, IEdmNavigationSource navigationSource, IEdmStructuredType resourceType, SelectedPropertiesNode selectedProperties, in ODataUriSlim odataUri)
                 : base(resourceSet, navigationSource, resourceType, selectedProperties, odataUri)
             {
+            }
+
+            /// <summary>
+            /// true if the odata.count annotation was already written, false otherwise.
+            /// </summary>
+            internal bool CountWritten
+            {
+                get
+                {
+                    return this.countWritten;
+                }
+
+                set
+                {
+                    this.countWritten = value;
+                }
             }
 
             /// <summary>

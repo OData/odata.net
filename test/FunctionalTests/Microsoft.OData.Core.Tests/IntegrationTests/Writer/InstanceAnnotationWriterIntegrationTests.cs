@@ -6,6 +6,7 @@
 
 using System;
 using System.IO;
+using System.Threading.Tasks;
 using Microsoft.OData.Edm;
 using Microsoft.Test.OData.DependencyInjection;
 using Xunit;
@@ -145,6 +146,22 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer
             WriteAnnotationAtEndOnTopLevelFeed(expectedPayload, ODataFormat.Json, null, tempUri, request: false);
         }
 
+        [Fact]
+        public void WriteAnnotationAtEndOnTopLevelFeedForResponseInJsonLightWithCountAndNextPageLink()
+        {
+            string expectedPayload =
+            "{" +
+                "\"@odata.context\":\"http://www.example.com/$metadata#TestEntitySet\"," +
+                "\"value\":[" +
+                "]," +
+                 "\"@Custom.EndAnnotation\":123," +
+                "\"@odata.count\":4321," +
+                "\"@odata.nextLink\":\"http://tempuri.org/\"" +
+           "}";
+
+            WriteAnnotationAtEndOnTopLevelFeed(expectedPayload, ODataFormat.Json, 4321, tempUri, request: false);
+        }
+
         private void WriteAnnotationAtEndOnTopLevelFeed(string expectedPayload, ODataFormat format, long? count, Uri nextLink, bool request)
         {
             Action<ODataWriter> action = (odataWriter) =>
@@ -158,6 +175,37 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer
             };
 
             WriteAnnotationsAndValidatePayload(action, EntitySet, format, expectedPayload, request, createFeedWriter: true);
+        }
+
+        [Fact]
+        public async Task WriteAnnotationAtEndOnTopLevelFeedForResponseInJsonLightWithCountAndNextPageLinkAsync()
+        {
+            string expectedPayload =
+            "{" +
+                "\"@odata.context\":\"http://www.example.com/$metadata#TestEntitySet\"," +
+                "\"value\":[" +
+                "]," +
+                 "\"@Custom.EndAnnotation\":123," +
+                "\"@odata.count\":4321," +
+                "\"@odata.nextLink\":\"http://tempuri.org/\"" +
+           "}";
+
+            await WriteAnnotationAtEndOnTopLevelFeedAsync(expectedPayload, ODataFormat.Json, 4321, tempUri, request: false);
+        }
+
+        private async Task WriteAnnotationAtEndOnTopLevelFeedAsync(string expectedPayload, ODataFormat format, long? count, Uri nextLink, bool request)
+        {
+            Func<ODataWriter, Task> action = async (odataWriter) =>
+            {
+                var feedToWrite = new ODataResourceSet { Id = new Uri("urn:feedId") };
+                await odataWriter.WriteStartAsync(feedToWrite);
+                feedToWrite.InstanceAnnotations.Add(new ODataInstanceAnnotation("Custom.EndAnnotation", PrimitiveValue1));
+                feedToWrite.Count = count;
+                feedToWrite.NextPageLink = nextLink;
+                await odataWriter.WriteEndAsync();
+            };
+
+            await WriteAnnotationsAndValidatePayloadAsync(action, EntitySet, format, expectedPayload, request, createFeedWriter: true);
         }
 
         #endregion Writing instance annotations on top level feed
@@ -555,6 +603,68 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer
             testRequestOfSingleton.Throws<ODataException>(Strings.ODataJsonLightWriter_InstanceAnnotationNotSupportedOnExpandedResourceSet);
         }
 
+        [Fact]
+        public void WriteAnnotationAtEndExpandedFeedInJsonLightWithCountAndNextPageLink()
+        {
+            Action<ODataWriter> action = (odataWriter) =>
+            {
+                var entryToWrite = new ODataResource { Properties = new[] { new ODataProperty { Name = "ID", Value = 1 } } };
+                odataWriter.WriteStart(entryToWrite);
+
+                ODataNestedResourceInfo navLink = new ODataNestedResourceInfo { Name = "ResourceSetNavigationProperty", Url = new Uri("http://service/navLink", UriKind.RelativeOrAbsolute), IsCollection = true };
+                odataWriter.WriteStart(navLink);
+
+                var feedToWrite = new ODataResourceSet { Id = new Uri("urn:feedId") };
+                odataWriter.WriteStart(feedToWrite);
+
+                feedToWrite.Count = 4321;
+                feedToWrite.NextPageLink = new Uri("http://tempuri.org/");
+
+                odataWriter.WriteEnd();
+            };
+
+            string expectedPayload =
+                "{\"@odata.context\":\"http://www.example.com/$metadata#TestEntitySet/$entity\"," +
+                "\"ID\":1," +
+                "\"ResourceSetNavigationProperty@odata.navigationLink\":\"http://service/navLink\"," +
+                "\"ResourceSetNavigationProperty\":[]," +
+                "\"ResourceSetNavigationProperty@odata.count\":4321," +
+                "\"ResourceSetNavigationProperty@odata.nextLink\":\"http://tempuri.org/\"";
+
+            this.WriteAnnotationsAndValidatePayload(action, EntitySet, ODataFormat.Json, expectedPayload, request: false, createFeedWriter: false);
+        }
+
+        [Fact]
+        public async Task WriteAnnotationAtEndExpandedFeedInJsonLightWithCountAndNextPageLinkAsync()
+        {
+            Func<ODataWriter, Task> action = async (odataWriter) =>
+            {
+                var entryToWrite = new ODataResource { Properties = new[] { new ODataProperty { Name = "ID", Value = 1 } } };
+                await odataWriter.WriteStartAsync(entryToWrite);
+
+                ODataNestedResourceInfo navLink = new ODataNestedResourceInfo { Name = "ResourceSetNavigationProperty", Url = new Uri("http://service/navLink", UriKind.RelativeOrAbsolute), IsCollection = true };
+                await odataWriter.WriteStartAsync(navLink);
+
+                var feedToWrite = new ODataResourceSet { Id = new Uri("urn:feedId") };
+                await odataWriter.WriteStartAsync(feedToWrite);
+
+                feedToWrite.Count = 4321;
+                feedToWrite.NextPageLink = new Uri("http://tempuri.org/");
+
+                await odataWriter.WriteEndAsync();
+            };
+
+            string expectedPayload =
+                "{\"@odata.context\":\"http://www.example.com/$metadata#TestEntitySet/$entity\"," +
+                "\"ID\":1," +
+                "\"ResourceSetNavigationProperty@odata.navigationLink\":\"http://service/navLink\"," +
+                "\"ResourceSetNavigationProperty\":[]," +
+                "\"ResourceSetNavigationProperty@odata.count\":4321," +
+                "\"ResourceSetNavigationProperty@odata.nextLink\":\"http://tempuri.org/\"";
+
+            await this.WriteAnnotationsAndValidatePayloadAsync(action, EntitySet, ODataFormat.Json, expectedPayload, request: false, createFeedWriter: false);
+        }
+
         #endregion Writing instance annotations on expanded feeds
 
         #region Write Delta Feed
@@ -603,6 +713,36 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer
             "}";
 
             WriteAnnotationAtEndInDeltaFeed(expectedPayload, null, tempUri, null);
+        }
+
+        [Fact]
+        public void WriteCountAndNextLinkEndInDeltaFeed()
+        {
+            string expectedPayload =
+            "{" +
+                "\"@odata.context\":\"http://www.example.com/$metadata#TestEntitySet/$delta\"," +
+                "\"value\":[]," +
+                "\"@Custom.EndAnnotation\":123," +
+                "\"@odata.count\":4321," +
+                "\"@odata.nextLink\":\"http://tempuri.org/\"" +
+            "}";
+
+            WriteAnnotationAtEndInDeltaFeed(expectedPayload, 4321, tempUri, null);
+        }
+
+        [Fact]
+        public async Task WriteCountAndNextLinkEndInDeltaFeedAsync()
+        {
+            string expectedPayload =
+            "{" +
+                "\"@odata.context\":\"http://www.example.com/$metadata#TestEntitySet/$delta\"," +
+                "\"value\":[]," +
+                "\"@Custom.EndAnnotation\":123," +
+                "\"@odata.count\":4321," +
+                "\"@odata.nextLink\":\"http://tempuri.org/\"" +
+            "}";
+
+            await WriteAnnotationAtEndInDeltaFeedAsync(expectedPayload, 4321, tempUri, null);
         }
 
         [Fact]
@@ -749,6 +889,58 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer
             Assert.Equal(expectedPayload, payload);
         }
 
+        private async Task WriteAnnotationsAndValidatePayloadAsync(Func<ODataWriter, Task> action, IEdmNavigationSource navigationSource, ODataFormat format, string expectedPayload, bool request, bool createFeedWriter, bool enableWritingODataAnnotationWithoutPrefix = false, IEdmStructuredType resourceType = null)
+        {
+            var writerSettings = new ODataMessageWriterSettings { EnableMessageStreamDisposal = false };
+            writerSettings.SetContentType(format);
+            writerSettings.SetServiceDocumentUri(new Uri("http://www.example.com/"));
+
+            var container = ContainerBuilderHelper.BuildContainer(null);
+            container.GetRequiredService<ODataSimplifiedOptions>().SetOmitODataPrefix(
+                enableWritingODataAnnotationWithoutPrefix);
+
+            MemoryStream stream = new MemoryStream();
+            if (request)
+            {
+
+                IODataRequestMessage requestMessageToWrite = new InMemoryMessage
+                {
+                    Method = "GET",
+                    Stream = stream,
+                    Container = container
+                };
+                using (var messageWriter = new ODataMessageWriter(requestMessageToWrite, writerSettings, Model))
+                {
+                    ODataWriter odataWriter = (createFeedWriter && !(navigationSource is EdmSingleton))
+                        ? await messageWriter.CreateODataResourceSetWriterAsync(navigationSource as EdmEntitySet, EntityType)
+                        : await messageWriter.CreateODataResourceWriterAsync(navigationSource, resourceType ?? EntityType);
+                    await action(odataWriter);
+                }
+            }
+            else
+            {
+                IODataResponseMessage responseMessageToWrite = new InMemoryMessage
+                {
+                    StatusCode = 200,
+                    Stream = stream,
+                    Container = container
+                };
+                responseMessageToWrite.PreferenceAppliedHeader().AnnotationFilter = "*";
+                using (var messageWriter = new ODataMessageWriter(responseMessageToWrite, writerSettings, Model))
+                {
+                    ODataWriter odataWriter = (createFeedWriter && !(navigationSource is EdmSingleton))
+                        ? await messageWriter.CreateODataResourceSetWriterAsync(navigationSource as EdmEntitySet, EntityType)
+                        : await messageWriter.CreateODataResourceWriterAsync(navigationSource, resourceType ?? EntityType);
+                    await action(odataWriter);
+                }
+            }
+
+            stream.Position = 0;
+            string payload = (new StreamReader(stream)).ReadToEnd();
+
+            Assert.Equal(expectedPayload, payload);
+        }
+
         private void WriteAnnotationAtStartInDeltaFeed(string expectedPayload, long? count, Uri nextLink, Uri deltaLink)
         {
             Action<ODataWriter> action = (odataWriter) =>
@@ -781,6 +973,22 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer
             WriteDeltaFeedAnnotationsAndValidatePayload(action, EntitySet, expectedPayload);
         }
 
+        private async Task WriteAnnotationAtEndInDeltaFeedAsync(string expectedPayload, long? count, Uri nextLink, Uri deltaLink)
+        {
+            Func<ODataWriter, Task> action = async (odataWriter) =>
+            {
+                var feedToWrite = new ODataDeltaResourceSet { Id = new Uri("urn:feedId") };
+                await odataWriter.WriteStartAsync(feedToWrite);
+                feedToWrite.InstanceAnnotations.Add(new ODataInstanceAnnotation("Custom.EndAnnotation", PrimitiveValue1));
+                feedToWrite.Count = count;
+                feedToWrite.NextPageLink = nextLink;
+                feedToWrite.DeltaLink = deltaLink;
+                await odataWriter.WriteEndAsync();
+            };
+
+            WriteDeltaFeedAnnotationsAndValidatePayloadAsync(action, EntitySet, expectedPayload);
+        }
+
         private void WriteDeltaFeedAnnotationsAndValidatePayload(Action<ODataWriter> action, IEdmEntitySet entitySet, string expectedPayload)
         {
             var writerSettings = new ODataMessageWriterSettings { EnableMessageStreamDisposal = false };
@@ -794,6 +1002,27 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer
             {
                 ODataWriter odataDeltaWriter = messageWriter.CreateODataDeltaResourceSetWriter(entitySet, EntityType);
                 action(odataDeltaWriter);
+            }
+
+            stream.Position = 0;
+            string payload = (new StreamReader(stream)).ReadToEnd();
+
+            Assert.Equal(expectedPayload, payload);
+        }
+
+        private async Task WriteDeltaFeedAnnotationsAndValidatePayloadAsync(Func<ODataWriter, Task> action, IEdmEntitySet entitySet, string expectedPayload)
+        {
+            var writerSettings = new ODataMessageWriterSettings { EnableMessageStreamDisposal = false };
+            writerSettings.SetServiceDocumentUri(new Uri("http://www.example.com/"));
+
+            MemoryStream stream = new MemoryStream();
+
+            IODataResponseMessage responseMessageToWrite = new InMemoryMessage { StatusCode = 200, Stream = stream };
+            responseMessageToWrite.PreferenceAppliedHeader().AnnotationFilter = "*";
+            using (var messageWriter = new ODataMessageWriter(responseMessageToWrite, writerSettings, Model))
+            {
+                ODataWriter odataDeltaWriter = await messageWriter.CreateODataDeltaResourceSetWriterAsync(entitySet, EntityType);
+                await action(odataDeltaWriter);
             }
 
             stream.Position = 0;
