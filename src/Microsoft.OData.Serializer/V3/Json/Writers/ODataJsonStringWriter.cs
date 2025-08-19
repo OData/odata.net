@@ -10,8 +10,32 @@ internal class ODataJsonStringWriter<TCustomState> : ODataJsonWriter<string, TCu
 {
     public override bool Write(string value, ODataJsonWriterState<TCustomState> state)
     {
-        // TODO: We should handle resumable writes for long strings.
-        state.JsonWriter.WriteStringValue(value);
-        return true;
+        if (value.Length < state.BufferCapacity)
+        {
+            state.JsonWriter.WriteStringValue(value);
+            return true;
+        }
+
+        if (state.ShouldFlush())
+        {
+            return false;
+        }
+
+        state.Stack.Push();
+        bool success = LargeStringJsonWriter<TCustomState>.WriteNextChunkFromString(value, state);
+
+        // In .NET 10, we can leverage Utf8JsonWriter.WriteStringSegment
+        // to write chunks. But in < .NET 10, we have to handle
+        // that manually.
+
+        // Select chunk size.
+        // Commit current Utf8JsonWriter contents to buffer writer.
+        // Find next chunk to write from the state.
+        // Transcode and write chunk to buffer.
+        // state.JsonWriter.Flush();
+
+
+        state.Stack.Pop(success);
+        return success;
     }
 }

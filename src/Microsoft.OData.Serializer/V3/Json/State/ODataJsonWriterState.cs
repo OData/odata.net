@@ -1,9 +1,11 @@
 ﻿using Microsoft.OData.Serializer.V3.Adapters;
 using Microsoft.OData.Serializer.V3.Json.State;
 using System;
+using System.Buffers;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -31,10 +33,16 @@ public sealed class ODataJsonWriterState<TCustomState>
     internal ODataSerializerOptions<TCustomState> Options => options;
     internal Utf8JsonWriter JsonWriter { get; init; }
 
+    internal PooledByteBufferWriter BufferWriter { get; init; }
+
+    internal JavaScriptEncoder JavaScriptEncoder { get; init; }
+
     internal bool ShouldFlush()
     {
         return JsonWriter.BytesPending > 0.9 * this.Options.BufferSize;
     }
+
+    internal int BufferCapacity => this.options.BufferSize - JsonWriter.BytesPending;
 
     public bool IsTopLevel()
     {

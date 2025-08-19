@@ -62,7 +62,7 @@ internal class ODataResourceJsonWriter<T, TCustomState>(ODataTypeInfo<T, TCustom
             // For simplicity, we don't support suspending between annotations.
             // We expect that the annotations are will be few and short and should be within the buffer size
             // most of the time.
-            WritePreValueMetadataData(value, state);
+            WritePreValueMetadata(value, state);
 
             state.Stack.Current.ResourceProgress = ResourceWriteProgress.PreValueMetadata;
 
@@ -252,7 +252,7 @@ internal class ODataResourceJsonWriter<T, TCustomState>(ODataTypeInfo<T, TCustom
         //}
     }
 
-    private void WritePreValueMetadataData(T value, ODataJsonWriterState<TCustomState> state)
+    private void WritePreValueMetadata(T value, ODataJsonWriterState<TCustomState> state)
     {
         WriteId(value, state);
         WriteEtag(value, state);

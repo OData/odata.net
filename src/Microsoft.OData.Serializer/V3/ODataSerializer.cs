@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -12,7 +13,13 @@ namespace Microsoft.OData.Serializer.V3;
 
 public static class ODataSerializer
 {
-    public static ValueTask WriteAsync<T>(T value, Stream stream, ODataUri uri, IEdmModel model, ODataSerializerOptions options)
+    private static readonly JsonWriterOptions DefaultJsonWriterOptions = new()
+    {
+        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+        SkipValidation = true, // Important because we bypass the writer in some cases
+    };
+
+public static ValueTask WriteAsync<T>(T value, Stream stream, ODataUri uri, IEdmModel model, ODataSerializerOptions options)
     {
         return WriteAsync<T, DefaultState>(value, stream, uri, model, options);
     }
@@ -25,12 +32,14 @@ public static class ODataSerializer
         // init state
         using var bufferWriter = new PooledByteBufferWriter(options.BufferSize);
         //using var bufferWriter = new PooledByteSegmentBufferWriter(options.BufferSize);
-        var jsonWriter = new Utf8JsonWriter(bufferWriter);
+        var jsonWriter = new Utf8JsonWriter(bufferWriter, DefaultJsonWriterOptions); // TODO: make this configurable in options
         var writerProvider = new ODataJsonWriterProvider<TCustomState>(options);
         var state = new ODataJsonWriterState<TCustomState>(options, writerProvider, jsonWriter)
         {
             ODataUri = uri,
-            PayloadKind = ODataPayloadKind.ResourceSet
+            PayloadKind = ODataPayloadKind.ResourceSet,
+            JavaScriptEncoder = DefaultJsonWriterOptions.Encoder,
+            BufferWriter = bufferWriter,
         };
         // get writer
         var writer = writerProvider.GetWriter<T>(); // should we pass the value as well?
