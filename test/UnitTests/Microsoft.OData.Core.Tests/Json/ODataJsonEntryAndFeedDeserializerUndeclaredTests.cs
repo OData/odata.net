@@ -1647,6 +1647,29 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
         [Theory]
         [InlineData("Edm.Untyped")]
         [InlineData("Collection(Edm.Untyped)")]
+        [InlineData("Collection(Server.NS.UndefinedType)")]
+        public void ReadUntypedCollectionContainingResourceWithInt64Value(string fragment)
+        {
+            string payload = "{\"@odata.context\":\"http://www.sampletest.com/$metadata#" + fragment + "\",\"value\":[{\"id\":1002147483646}]}";
+            ODataResource entry = null;
+            this.ReadCollectionPayload(payload, reader =>
+            {
+                if (reader.State == ODataReaderState.ResourceStart)
+                {
+                    entry = (reader.Item as ODataResource);
+                }
+            });
+
+            Assert.Single(entry.Properties);
+
+            var value = Assert.IsType<ODataProperty>(entry.Properties.First(p => p.Name == "id")).Value;
+            Assert.IsType<Int64>(value);
+            Assert.Equal(1002147483646L, value);
+        }
+
+        [Theory]
+        [InlineData("Edm.Untyped")]
+        [InlineData("Collection(Edm.Untyped)")]
         public void ReadUntypedCollectionContainingCollection(string fragment)
         {
             string payload = "{\"@odata.context\":\"http://www.sampletest.com/$metadata#" + fragment +"\",\"value\":[[\"primitiveString\",{\"id\":1}]]}";
@@ -1674,6 +1697,39 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
             var value = Assert.IsType<ODataProperty>(resourceMember.Properties.First(p => p.Name == "id")).Value;
             Assert.IsType<Int32>(value);
             Assert.Equal(1, value);
+            Assert.Equal("primitiveString", primitiveMember.Value);
+        }
+
+        [Theory]
+        [InlineData("Edm.Untyped")]
+        [InlineData("Collection(Edm.Untyped)")]
+        public void ReadUntypedCollectionContainingNestedCollectionWithInt64Values(string fragment)
+        {
+            string payload = "{\"@odata.context\":\"http://www.sampletest.com/$metadata#" + fragment + "\",\"value\":[[\"primitiveString\",{\"id\":1002147483646}]]}";
+            ODataPrimitiveValue primitiveMember = null;
+            ODataResource resourceMember = null;
+            int level = 0;
+            this.ReadCollectionPayload(payload, reader =>
+            {
+                if (reader.State == ODataReaderState.ResourceSetStart)
+                {
+                    level++;
+                }
+                else if (reader.State == ODataReaderState.ResourceStart && level == 2)
+                {
+                    resourceMember = (reader.Item as ODataResource);
+                }
+                else if (reader.State == ODataReaderState.Primitive && level == 2)
+                {
+                    primitiveMember = (reader.Item as ODataPrimitiveValue);
+                }
+            });
+
+            Assert.Single(resourceMember.Properties);
+
+            var value = Assert.IsType<ODataProperty>(resourceMember.Properties.First(p => p.Name == "id")).Value;
+            Assert.IsType<Int64>(value);
+            Assert.Equal(1002147483646L, value);
             Assert.Equal("primitiveString", primitiveMember.Value);
         }
 
