@@ -1182,18 +1182,51 @@ namespace Microsoft.OData.Json
                 this.tokenStartIndex < this.storedCharacterCount && (this.characterBuffer[this.tokenStartIndex] == '.' || this.characterBuffer[this.tokenStartIndex] == '-' || Char.IsDigit(this.characterBuffer[this.tokenStartIndex])),
                 "The method should only be called when a digit, dash or dot character is the start of the token.");
 
+            bool hasDecimalPoint = false;
+            bool hasExponent = false;
+
+            int decimalPlaces = 0;
+            int exponentValue = 0;
+
             // Walk over all characters which might belong to the number
             // Skip the first one since we already verified it belongs to the number.
             int currentCharacterTokenRelativeIndex = 1;
+            int countOfDigits = 1;
+
+            bool inExponent = false;
+            bool afterDecimalPoint = false;
+
             while ((this.tokenStartIndex + currentCharacterTokenRelativeIndex) < this.storedCharacterCount || this.ReadInput())
             {
                 char character = this.characterBuffer[this.tokenStartIndex + currentCharacterTokenRelativeIndex];
-                if (Char.IsDigit(character) ||
-                    (character == '.') ||
-                    (character == 'E') ||
-                    (character == 'e') ||
-                    (character == '-') ||
-                    (character == '+'))
+                if (Char.IsDigit(character))
+                {
+                    if (afterDecimalPoint && !inExponent)
+                    {
+                        decimalPlaces++;
+                    }
+
+                    if (hasExponent)
+                    {
+                        exponentValue = (exponentValue * 10) + (character - '0');
+                    }
+                    countOfDigits++;
+                    currentCharacterTokenRelativeIndex++;
+                }
+                else if (character == '.')
+                {
+                    hasDecimalPoint = true;
+                    afterDecimalPoint = true;
+                    currentCharacterTokenRelativeIndex++;
+                }
+                else if (character == 'e' || character == 'E')
+                {
+                    hasExponent = true;
+                    inExponent = true;
+                    afterDecimalPoint = false; // After the exponent, we can't have a decimal point.
+                    currentCharacterTokenRelativeIndex++;
+                }
+                else if (character == '-' || character == '+')
                 {
                     currentCharacterTokenRelativeIndex++;
                 }
@@ -1205,21 +1238,34 @@ namespace Microsoft.OData.Json
 
             // We now have all the characters which belong to the number, consume it into a string.
             string numberString = this.ConsumeTokenToString(currentCharacterTokenRelativeIndex);
-            double doubleValue;
-            int intValue;
             decimal decimalValue;
 
-            // We will first try and convert the value to Int32 or Int64. If it succeeds, use that.
-            // And then, we will try Decimal, since it will lose precision while expected type is specified.
-            // Otherwise, we will try and convert the value into a double.
-            if (Int32.TryParse(numberString, NumberStyles.Integer, NumberFormatInfo.InvariantInfo, out intValue))
+            // Case 1: Pure integer (no decimal, no exponent)
+            if (!hasDecimalPoint && !hasExponent)
             {
-                return intValue;
-            }
+                // If the number is too long, we will parse it as a decimal.
+                if (countOfDigits > 19 && Decimal.TryParse(numberString, NumberStyles.Number, CultureInfo.InvariantCulture, out decimalValue))
+                {
+                    return decimalValue;
+                }
 
-            if (Int64.TryParse(numberString, NumberStyles.Integer, NumberFormatInfo.InvariantInfo, out long longValue))
-            {
-                return longValue;
+                // Try int32
+                if (Int32.TryParse(numberString, NumberStyles.Integer, CultureInfo.InvariantCulture, out int intValue))
+                {
+                    return intValue;
+                }
+
+                // Then try int64
+                if (Int64.TryParse(numberString, NumberStyles.Integer, CultureInfo.InvariantCulture, out long longValue))
+                {
+                    return longValue;
+                }
+
+                // If it's a very large integer, fallback to decimal
+                if (Decimal.TryParse(numberString, NumberStyles.Integer, CultureInfo.InvariantCulture, out decimalValue))
+                {
+                    return decimalValue;
+                }
             }
 
             // if it is not Ieee754Compatible, decimal will be parsed before double to keep precision
@@ -1228,6 +1274,19 @@ namespace Microsoft.OData.Json
                 return decimalValue;
             }
 
+            // For very large or very small numbers (scientific notation)
+            if (hasExponent && Math.Abs(exponentValue) > 15 && (Double.TryParse(numberString, NumberStyles.Float, NumberFormatInfo.InvariantInfo, out double doubleValue)))
+            {
+                return doubleValue;
+            }
+
+            // For moderate precision requirements
+            if (decimalPlaces <= 7 && !hasExponent && Single.TryParse(numberString, NumberStyles.Float, NumberFormatInfo.InvariantInfo, out float floatValue))
+            {
+                return floatValue;
+            }
+
+            // Default to double for good balance of range and precision
             if (Double.TryParse(numberString, NumberStyles.Float, NumberFormatInfo.InvariantInfo, out doubleValue))
             {
                 return doubleValue;
