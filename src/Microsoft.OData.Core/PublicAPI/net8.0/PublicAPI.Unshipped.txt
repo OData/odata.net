@@ -1,3 +1,6 @@
+Microsoft.OData.UriParser.Aggregation.AggregateExpression.AggregateExpression(Microsoft.OData.UriParser.QueryNode expression, Microsoft.OData.UriParser.Aggregation.AggregationMethodDefinition methodDefinition, string alias, Microsoft.OData.Edm.IEdmTypeReference typeReference) -> void
+Microsoft.OData.UriParser.Aggregation.AggregateExpression.ExpressionNode.get -> Microsoft.OData.UriParser.QueryNode
+Microsoft.OData.UriParser.Aggregation.AggregateExpression.ExpressionNode.set -> void
 Microsoft.OData.UriParser.PathCountSelectItem
 Microsoft.OData.UriParser.PathCountSelectItem.Filter.get -> Microsoft.OData.UriParser.FilterClause
 Microsoft.OData.UriParser.PathCountSelectItem.NavigationSource.get -> Microsoft.OData.Edm.IEdmNavigationSource

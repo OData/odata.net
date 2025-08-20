@@ -135,11 +135,18 @@ namespace Microsoft.OData.UriParser.Aggregation
                 case QueryTokenKind.AggregateExpression:
                     {
                         AggregateExpressionToken token = aggregateToken as AggregateExpressionToken;
-                        SingleValueNode expression = this.bindMethod(token.Expression) as SingleValueNode;
-                        IEdmTypeReference typeReference = CreateAggregateExpressionTypeReference(expression, token.MethodDefinition);
+                        QueryNode expression = this.bindMethod(token.Expression);
+                        SingleValueNode singleValueNode = expression as SingleValueNode;
+
+                        IEdmTypeReference typeReference = CreateAggregateExpressionTypeReference(singleValueNode, token.MethodDefinition);
 
                         // TODO: Determine source
-                        return new AggregateExpression(expression, token.MethodDefinition, token.Alias, typeReference);
+                        if (singleValueNode == null)
+                        {
+                            return new AggregateExpression(queryNode: expression, token.MethodDefinition, token.Alias, typeReference);
+                        }
+
+                        return new AggregateExpression(singleValueNode, token.MethodDefinition, token.Alias, typeReference);
                     }
 
                 case QueryTokenKind.EntitySetAggregateExpression:
@@ -202,6 +209,15 @@ namespace Microsoft.OData.UriParser.Aggregation
                 case AggregationMethod.Sum:
                     return expressionType;
                 default:
+
+                    bool customFound = CustomUriFunctions.TryGetCustomFunction(method.MethodLabel, out IList<KeyValuePair<string, FunctionSignatureWithReturnType>> customUriFunctionsNameSignatures, configuration.EnableCaseInsensitiveUriFunctionIdentifier);
+                    if (customFound && customUriFunctionsNameSignatures.Count >= 1)
+                    {
+                        // use the QueryNode and FunctionSignatureWithReturnType to determine the overload function. Here, just assume only one overload exists.
+                        var customFunction = customUriFunctionsNameSignatures.First();
+                        return customFunction.Value.ReturnType;
+                    }
+
                     // Only the EdmModel knows which type the custom aggregation methods returns.
                     // Since we do not have a reference for it, right now we are assuming that all custom aggregation methods returns Doubles
                     // TODO: find a appropriate way of getting the return type.

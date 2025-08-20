@@ -55,6 +55,20 @@ namespace Microsoft.OData.UriParser.Aggregation
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="expression"></param>
+        /// <param name="methodDefinition"></param>
+        /// <param name="alias"></param>
+        /// <param name="typeReference"></param>
+        internal AggregateExpression(QueryNode queryNode, AggregationMethodDefinition methodDefinition, string alias, IEdmTypeReference typeReference)
+            : this(queryNode as SingleValueNode, methodDefinition.MethodKind, alias, typeReference)
+        {
+            this.methodDefinition = methodDefinition;
+            ExpressionNode = queryNode;
+        }
+
+        /// <summary>
         /// Gets the aggregation expression.
         /// </summary>
         public SingleValueNode Expression
@@ -64,6 +78,8 @@ namespace Microsoft.OData.UriParser.Aggregation
                 return expression;
             }
         }
+
+        internal QueryNode ExpressionNode { get; set; }
 
         /// <summary>
         /// Gets the <see cref="AggregationMethod"/>.
