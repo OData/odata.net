@@ -263,9 +263,33 @@ namespace Microsoft.OData.Json
 
                         typeReference = EdmCoreModel.Instance.GetString(/*isNullable*/ true);
                     }
+                    else if (jsonReaderValue is bool)
+                    {
+                        typeReference = EdmCoreModel.Instance.GetBoolean(/*isNullable*/ true);
+                    }
+                    else if (jsonReaderValue is string)
+                    {
+                        typeReference = EdmCoreModel.Instance.GetString(/*isNullable*/ true);
+                    }
+                    else if (jsonReaderValue is int)
+                    {
+                        typeReference = EdmCoreModel.Instance.GetInt32(/*isNullable*/ true);
+                    }
+                    else if (jsonReaderValue is long)
+                    {
+                        typeReference = EdmCoreModel.Instance.GetInt64(/*isNullable*/ true);
+                    }
+                    else if (jsonReaderValue is double)
+                    {
+                        typeReference = EdmCoreModel.Instance.GetDouble(/*isNullable*/ true);
+                    }
+                    else if (jsonReaderValue is float)
+                    {
+                        typeReference = EdmCoreModel.Instance.GetSingle(/*isNullable*/ true);
+                    }
                     else
                     {
-                        typeReference = GetEdmTypeReferenceFor(jsonReaderValue, /*isNullable*/ true);
+                        typeReference = EdmCoreModel.Instance.GetDecimal(/*isNullable*/ true);
                     }
 
                     if (payloadTypeName != null)
@@ -3641,57 +3665,6 @@ namespace Microsoft.OData.Json
         private void AssertRecursionDepthIsZero()
         {
             Debug.Assert(this.recursionDepth == 0, "The current recursion depth must be 0.");
-        }
-
-        /// <summary>
-        /// Gets the IEdmTypeReference for the specified JSON value.
-        /// </summary>
-        /// <param name="jsonReaderValue">The current JsonReader Value.</param>
-        /// <param name="isNullable">True if the type reference is nullable; otherwise, false.</param>
-        /// <returns>The corresponding IEdmTypeReference for the JSON value.</returns>
-        private static IEdmTypeReference GetEdmTypeReferenceFor(object jsonReaderValue, bool isNullable = false)
-        {
-            switch (jsonReaderValue)
-            {
-                case bool:
-                    return EdmCoreModel.Instance.GetBoolean(isNullable);
-                case string:
-                case char:
-                    return EdmCoreModel.Instance.GetString(isNullable);
-                case double:
-                    return EdmCoreModel.Instance.GetDouble(isNullable);
-                case decimal:
-                    return EdmCoreModel.Instance.GetDecimal(isNullable);
-                case float:
-                    return EdmCoreModel.Instance.GetSingle(isNullable);
-                case short:
-                    return EdmCoreModel.Instance.GetInt16(isNullable);
-                case int:
-                    return EdmCoreModel.Instance.GetInt32(isNullable);
-                case long:
-                    return EdmCoreModel.Instance.GetInt64(isNullable);
-                case byte:
-                    return EdmCoreModel.Instance.GetByte(isNullable);
-                case sbyte:
-                    return EdmCoreModel.Instance.GetSByte(isNullable);
-                case DateTimeOffset:
-                case DateTime:
-                    return EdmCoreModel.Instance.GetDateTimeOffset(isNullable);
-                case Date:
-                case DateOnly:
-                    return EdmCoreModel.Instance.GetDate(isNullable);
-                case TimeOfDay:
-                case TimeOnly:
-                    return EdmCoreModel.Instance.GetTimeOfDay(isNullable);
-                case TimeSpan:
-                    return EdmCoreModel.Instance.GetDuration(isNullable);
-                case Guid:
-                    return EdmCoreModel.Instance.GetGuid(isNullable);
-                case byte[]:
-                    return EdmCoreModel.Instance.GetBinary(isNullable);
-                default:
-                    return EdmCoreModel.Instance.GetUntyped(isNullable);
-            }
         }
     }
 }
