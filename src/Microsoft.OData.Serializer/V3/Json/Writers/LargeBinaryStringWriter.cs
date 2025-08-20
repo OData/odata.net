@@ -9,7 +9,6 @@ namespace Microsoft.OData.Serializer.V3.Json.Writers;
 
 internal class LargeBinaryStringWriter<TCustomState>
 {
-    private const byte DoubleQuote = (byte)'"';
 
     internal const int ChunkSize = 2048;
 
@@ -39,7 +38,7 @@ internal class LargeBinaryStringWriter<TCustomState>
         if (state.Stack.Current.ResourceProgress != State.ResourceWriteProgress.Value)
         {
             state.JsonWriter.Flush(); // Commit pending bytes to the buffer writer before we start writing to it.
-            bufferWriter.Write([DoubleQuote]);
+            bufferWriter.Write([JsonConstants.DoubleQuote]);
             state.Stack.Current.ResourceProgress = State.ResourceWriteProgress.Value;
         }
 
@@ -50,8 +49,8 @@ internal class LargeBinaryStringWriter<TCustomState>
         //    // enough data for a full escape. But that should not happen
         //    // if string value has > 6 chars. If string < 6 chars, we should
         //    // not reach this method, whe should write single pass.
-        //    // TODO: so we must ensure that 
-        //    bufferWriter.Write([DoubleQuote]);
+        //    // TODO: so we must ensure that
+        //    bufferWriter.Write([JsonConstants.DoubleQuote]);
         //}
 
         int chunkEnd = Math.Min(chunkStart + ChunkSize, value.Length);
@@ -75,7 +74,7 @@ internal class LargeBinaryStringWriter<TCustomState>
             return false; // More chunks to write.
         }
 
-        bufferWriter.Write([DoubleQuote]);
+        bufferWriter.Write([JsonConstants.DoubleQuote]);
 
         return true;
     }

@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO.Pipelines;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,4 +25,6 @@ internal struct WriteStackFrame<TCustomState>
     public int EnumeratorIndex { get; set; }
 
     public IEnumerator CurrentEnumerator { get; set; }
+
+    public PipeReader? PipeReader { get; set; }
 }

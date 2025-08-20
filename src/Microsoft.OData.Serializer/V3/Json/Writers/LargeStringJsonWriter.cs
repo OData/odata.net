@@ -10,7 +10,6 @@ namespace Microsoft.OData.Serializer.V3.Json.Writers;
 
 internal static class LargeStringJsonWriter<TCustomState>
 {
-    private const byte DoubleQuote = (byte)'"';
 
     /// <summary>
     /// Represents the threshold value used for determining whether to use stackalloc for char arrays.
@@ -51,7 +50,7 @@ internal static class LargeStringJsonWriter<TCustomState>
         if (state.Stack.Current.ResourceProgress != State.ResourceWriteProgress.Value)
         {
             state.JsonWriter.Flush(); // Commit pending bytes to the buffer writer before we start writing to it.
-            bufferWriter.Write([DoubleQuote]);
+            bufferWriter.Write([JsonConstants.DoubleQuote]);
             state.Stack.Current.ResourceProgress = State.ResourceWriteProgress.Value;
         }
 
@@ -80,7 +79,7 @@ internal static class LargeStringJsonWriter<TCustomState>
             return false; // More chunks to write.
         }
 
-        bufferWriter.Write([DoubleQuote]);
+        bufferWriter.Write([JsonConstants.DoubleQuote]);
 
         return true;
     }
