@@ -7,17 +7,17 @@
 namespace Microsoft.OData.Json
 {
     #region Namespaces
+    using Microsoft.OData.Core;
+    using Microsoft.OData.Edm;
+    using Microsoft.OData.Metadata;
+    using Microsoft.VisualBasic;
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.IO;
-    using System.Numerics;
+    using System.Linq;
     using System.Threading.Tasks;
-    using Microsoft.OData.Core;
-    using Microsoft.OData.Edm;
-    using Microsoft.OData.Metadata;
     #endregion Namespaces
 
     /// <summary>
@@ -263,9 +263,33 @@ namespace Microsoft.OData.Json
 
                         typeReference = EdmCoreModel.Instance.GetString(/*isNullable*/ true);
                     }
+                    else if (jsonReaderValue is bool)
+                    {
+                        typeReference = EdmCoreModel.Instance.GetBoolean(/*isNullable*/ true);
+                    }
+                    else if (jsonReaderValue is string)
+                    {
+                        typeReference = EdmCoreModel.Instance.GetString(/*isNullable*/ true);
+                    }
+                    else if (jsonReaderValue is int)
+                    {
+                        typeReference = EdmCoreModel.Instance.GetInt32(/*isNullable*/ true);
+                    }
+                    else if (jsonReaderValue is long)
+                    {
+                        typeReference = EdmCoreModel.Instance.GetInt64(/*isNullable*/ true);
+                    }
+                    else if (jsonReaderValue is double)
+                    {
+                        typeReference = EdmCoreModel.Instance.GetDouble(/*isNullable*/ true);
+                    }
+                    else if (jsonReaderValue is float)
+                    {
+                        typeReference = EdmCoreModel.Instance.GetSingle(/*isNullable*/ true);
+                    }
                     else
                     {
-                        typeReference = GetEdmTypeReferenceFor(jsonReaderValue, /*isNullable*/ true);
+                        typeReference = EdmCoreModel.Instance.GetDecimal(/*isNullable*/ true);
                     }
 
                     if (payloadTypeName != null)
@@ -1021,7 +1045,32 @@ namespace Microsoft.OData.Json
             resourceState.PropertyAndAnnotationCollector.CheckForDuplicatePropertyNames(property);
             ODataResourceBase resource = resourceState.Resource;
             Debug.Assert(resource != null, "resource != null");
-            resource.Properties = resource.Properties.ConcatToReadOnlyEnumerable("Properties", property);
+
+            // To avoid repeated computations for the property verification logic inside the
+            // resource.Properties setter, we update the resource.Properties in-place
+            // without invoking the setter each time.
+            // Since the resource and properties are created internally by the reader,
+            // we don't need to verify the properties if we can guarantee that we are only
+            // adding properties with acceptable values (i.e. not ODataResourceValue).
+            // We use debug-time assertions instead to catch such bugs in tests.
+
+            // We should rethink the current approach to property verification.
+            // See: https://github.com/OData/odata.net/issues/3263
+
+            Debug.Assert(!(property is ODataProperty propertyWithValue && propertyWithValue.Value is ODataResourceValue),
+                Error.Format(SRResources.ODataResource_PropertyValueCannotBeODataResourceValue, property.Name));
+            Debug.Assert(
+                !(property is ODataProperty collectionProp && collectionProp.Value is ODataCollectionValue collectionValue && collectionValue.Items.Any(item => item is ODataResourceValue)),
+                Error.Format(SRResources.ODataResource_PropertyValueCannotBeODataResourceValue, property.Name));
+
+            if (resource.Properties.IsEmptyReadOnlyEnumerable())
+            {
+                resource.Properties = new ReadOnlyEnumerable<ODataPropertyInfo>();
+            }
+
+            // Despite the name the resource.Properties type here is not actually
+            // readonly, it supports appending in-place.
+            resource.Properties.ConcatToReadOnlyEnumerable("Properties", property);
         }
 
         /// <summary>
@@ -3616,60 +3665,6 @@ namespace Microsoft.OData.Json
         private void AssertRecursionDepthIsZero()
         {
             Debug.Assert(this.recursionDepth == 0, "The current recursion depth must be 0.");
-        }
-
-        /// <summary>
-        /// Gets the IEdmTypeReference for the specified JSON value.
-        /// </summary>
-        /// <param name="jsonReaderValue">The current JsonReader Value.</param>
-        /// <param name="isNullable">True if the type reference is nullable; otherwise, false.</param>
-        /// <returns>The corresponding IEdmTypeReference for the JSON value.</returns>
-        private static IEdmTypeReference GetEdmTypeReferenceFor(object jsonReaderValue, bool isNullable = false)
-        {
-            switch (jsonReaderValue)
-            {
-                case bool:
-                    return EdmCoreModel.Instance.GetBoolean(isNullable);
-                case string:
-                case char:
-                    return EdmCoreModel.Instance.GetString(isNullable);
-                case double:
-                    return EdmCoreModel.Instance.GetDouble(isNullable);
-                case BigInteger:
-                case decimal:
-                    return EdmCoreModel.Instance.GetDecimal(isNullable);
-                case float:
-                    return EdmCoreModel.Instance.GetSingle(isNullable);
-                case short:
-                    return EdmCoreModel.Instance.GetInt16(isNullable);
-                case int:
-                    return EdmCoreModel.Instance.GetInt32(isNullable);
-                case long:
-                    return EdmCoreModel.Instance.GetInt64(isNullable);
-                case byte:
-                    return EdmCoreModel.Instance.GetByte(isNullable);
-                case sbyte:
-                    return EdmCoreModel.Instance.GetSByte(isNullable);
-                case DateTimeOffset:
-                case DateTime:
-                    return EdmCoreModel.Instance.GetDateTimeOffset(isNullable);
-                case Date:
-                case DateOnly:
-                    return EdmCoreModel.Instance.GetDate(isNullable);
-                case TimeOfDay:
-                case TimeOnly:
-                    return EdmCoreModel.Instance.GetTimeOfDay(isNullable);
-                case TimeSpan:
-                    return EdmCoreModel.Instance.GetDuration(isNullable);
-                case Guid:
-                    return EdmCoreModel.Instance.GetGuid(isNullable);
-                case Stream:
-                    return EdmCoreModel.Instance.GetStream(isNullable);
-                case byte[]:
-                    return EdmCoreModel.Instance.GetBinary(isNullable);
-                default:
-                    return EdmCoreModel.Instance.GetUntyped(isNullable);
-            }
         }
     }
 }
