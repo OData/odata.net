@@ -8,7 +8,27 @@ internal class ODataJsonByteArrayWriter<TCustomState> : ODataJsonWriter<byte[], 
 {
     public override bool Write(byte[] value, ODataJsonWriterState<TCustomState> state)
     {
-        state.JsonWriter.WriteBase64StringValue(value);
-        return true;
+        // Base64 encoding expands length by 4/3
+        if (value.Length * 4.0 / 3 < state.BufferCapacity)
+        {
+            state.JsonWriter.WriteStringValue(value);
+            return true;
+        }
+
+        if (state.ShouldFlush())
+        {
+            return false;
+        }
+
+        state.Stack.Push();
+        bool success = LargeBinaryStringWriter<TCustomState>.WriteNextChunkFromByteArray(value, state);
+
+        // In .NET 10, we can leverage Utf8JsonWriter.WriteBase64ValueSegment
+        // to write chunks. But in < .NET 10, we have to handle
+        // that manually.
+
+
+        state.Stack.Pop(success);
+        return success;
     }
 }
