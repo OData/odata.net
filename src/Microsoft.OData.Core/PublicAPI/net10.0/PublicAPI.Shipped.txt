@@ -1350,8 +1350,6 @@ Microsoft.OData.UriParser.CustomQueryOptionToken.CustomQueryOptionToken(string n
 Microsoft.OData.UriParser.CustomQueryOptionToken.Name.get -> string
 Microsoft.OData.UriParser.CustomQueryOptionToken.Value.get -> string
 Microsoft.OData.UriParser.CustomUriFunctions
-Microsoft.OData.UriParser.CustomUriLiteralParsers
-Microsoft.OData.UriParser.CustomUriLiteralParsers.ParseUriStringToType(string text, Microsoft.OData.Edm.IEdmTypeReference targetType, out Microsoft.OData.UriParser.UriLiteralParsingException parsingException) -> object
 Microsoft.OData.UriParser.CustomUriLiteralPrefixes
 Microsoft.OData.UriParser.DottedIdentifierToken
 Microsoft.OData.UriParser.DottedIdentifierToken.DottedIdentifierToken(string identifier, Microsoft.OData.UriParser.QueryToken nextToken) -> void
@@ -1911,7 +1909,6 @@ Microsoft.OData.UriParser.UriPathParser
 Microsoft.OData.UriParser.UriPathParser.UriPathParser(Microsoft.OData.UriParser.ODataUriParserSettings settings) -> void
 Microsoft.OData.UriParser.UriQueryExpressionParser
 Microsoft.OData.UriParser.UriQueryExpressionParser.ParseFilter(string filter) -> Microsoft.OData.UriParser.QueryToken
-Microsoft.OData.UriParser.UriQueryExpressionParser.UriQueryExpressionParser(int maxDepth) -> void
 Microsoft.OData.UriParser.UriTemplateExpression
 Microsoft.OData.UriParser.UriTemplateExpression.ExpectedType.get -> Microsoft.OData.Edm.IEdmTypeReference
 Microsoft.OData.UriParser.UriTemplateExpression.LiteralText.get -> string
@@ -2274,11 +2271,6 @@ static Microsoft.OData.UriParser.Aggregation.AggregationMethodDefinition.Min -> 
 static Microsoft.OData.UriParser.Aggregation.AggregationMethodDefinition.Sum -> Microsoft.OData.UriParser.Aggregation.AggregationMethodDefinition
 static Microsoft.OData.UriParser.Aggregation.AggregationMethodDefinition.VirtualPropertyCount -> Microsoft.OData.UriParser.Aggregation.AggregationMethodDefinition
 static Microsoft.OData.UriParser.Aggregation.EntitySetAggregateToken.Merge(Microsoft.OData.UriParser.Aggregation.EntitySetAggregateToken token1, Microsoft.OData.UriParser.Aggregation.EntitySetAggregateToken token2) -> Microsoft.OData.UriParser.Aggregation.EntitySetAggregateToken
-static Microsoft.OData.UriParser.CustomUriLiteralParsers.AddCustomUriLiteralParser(Microsoft.OData.Edm.IEdmTypeReference edmTypeReference, Microsoft.OData.UriParser.IUriLiteralParser customUriLiteralParser) -> void
-static Microsoft.OData.UriParser.CustomUriLiteralParsers.AddCustomUriLiteralParser(Microsoft.OData.UriParser.IUriLiteralParser customUriLiteralParser) -> void
-static Microsoft.OData.UriParser.CustomUriLiteralParsers.RemoveCustomUriLiteralParser(Microsoft.OData.UriParser.IUriLiteralParser customUriLiteralParser) -> bool
-static Microsoft.OData.UriParser.CustomUriLiteralPrefixes.AddCustomLiteralPrefix(string literalPrefix, Microsoft.OData.Edm.IEdmTypeReference literalEdmTypeReference) -> void
-static Microsoft.OData.UriParser.CustomUriLiteralPrefixes.RemoveCustomLiteralPrefix(string literalPrefix) -> bool
 static Microsoft.OData.UriParser.FunctionParameterToken.EmptyParameterList -> Microsoft.OData.UriParser.FunctionParameterToken[]
 static Microsoft.OData.UriParser.Validation.ODataUrlValidationExtensions.ValidateODataUrl(this System.Uri uri, Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.UriParser.Validation.ODataUrlValidationRuleSet rules, out System.Collections.Generic.IEnumerable<Microsoft.OData.UriParser.Validation.ODataUrlValidationMessage> validationMessages) -> bool
 static Microsoft.OData.UriParser.Validation.ODataUrlValidationRules.DeprecatedNavigationSourceRule -> Microsoft.OData.UriParser.Validation.ODataUrlValidationRule

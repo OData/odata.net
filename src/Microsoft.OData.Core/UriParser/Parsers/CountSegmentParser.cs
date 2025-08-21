@@ -120,7 +120,7 @@ namespace Microsoft.OData.UriParser
             this.lexer.NextToken();
             string filterText = UriParserHelper.ReadQueryOption(this.lexer);
 
-            UriQueryExpressionParser filterParser = new UriQueryExpressionParser(ODataUriParserSettings.DefaultFilterLimit, this.UriQueryExpressionParser.EnableCaseInsensitiveBuiltinIdentifier);
+            UriQueryExpressionParser filterParser = new UriQueryExpressionParser(this.UriQueryExpressionParser.Model, ODataUriParserSettings.DefaultFilterLimit, this.UriQueryExpressionParser.EnableCaseInsensitiveBuiltinIdentifier);
             return filterParser.ParseFilter(filterText);
         }
 
@@ -134,7 +134,7 @@ namespace Microsoft.OData.UriParser
             this.lexer.NextToken();
             string searchText = UriParserHelper.ReadQueryOption(this.lexer);
 
-            SearchParser searchParser = new SearchParser(ODataUriParserSettings.DefaultSearchLimit);
+            SearchParser searchParser = new SearchParser(this.UriQueryExpressionParser.Model, ODataUriParserSettings.DefaultSearchLimit);
             return searchParser.ParseSearch(searchText);
         }
     }

@@ -63,6 +63,9 @@ namespace Microsoft.OData.UriParser
         /// <summary>Token being processed.</summary>
         protected ExpressionToken token;
 
+        /// <summary>The Edm model associated with this lexer, used when resolving custom URI literal prefixes.</summary>
+        private readonly IEdmModel model;
+
         /// <summary>
         /// For an identifier, EMD supports chars that match the regex  [\p{Ll}\p{Lu}\p{Lt}\p{Lo}\p{Lm}\p{Nl}\p{Mn}\p{Mc}\p{Nd}\p{Pc}\p{Cf}]
         /// IsLetterOrDigit covers Ll, Lu, Lt, Lo, Lm, Nd, this set covers the rest
@@ -93,23 +96,27 @@ namespace Microsoft.OData.UriParser
         #region Constructors
 
         /// <summary>Initializes a new <see cref="ExpressionLexer"/>.</summary>
+        /// <param name="model">The Edm model associated with this lexer, used when resolving custom URI literal prefixes.</param>
         /// <param name="expression">Expression to parse.</param>
         /// <param name="moveToFirstToken">If true, this constructor will call NextToken() to move to the first token.</param>
         /// <param name="useSemicolonDelimiter">If true, the lexer will tokenize based on semicolons as well.</param>
-        internal ExpressionLexer(string expression, bool moveToFirstToken, bool useSemicolonDelimiter)
-            : this(expression, moveToFirstToken, useSemicolonDelimiter, false /*parsingFunctionParameters*/)
+        internal ExpressionLexer(IEdmModel model, string expression, bool moveToFirstToken, bool useSemicolonDelimiter)
+            : this(model, expression, moveToFirstToken, useSemicolonDelimiter, parsingFunctionParameters: false)
         {
         }
 
         /// <summary>Initializes a new <see cref="ExpressionLexer"/>.</summary>
+        /// <param name="model">The Edm model associated with this lexer, used when resolving custom URI literal prefixes.</param>
         /// <param name="expression">Expression to parse.</param>
         /// <param name="moveToFirstToken">If true, this constructor will call NextToken() to move to the first token.</param>
         /// <param name="useSemicolonDelimiter">If true, the lexer will tokenize based on semicolons as well.</param>
         /// <param name="parsingFunctionParameters">Whether the lexer is being used to parse function parameters. If true, will allow/recognize parameter aliases and typed nulls.</param>
-        internal ExpressionLexer(string expression, bool moveToFirstToken, bool useSemicolonDelimiter, bool parsingFunctionParameters)
+        internal ExpressionLexer(IEdmModel model, string expression, bool moveToFirstToken, bool useSemicolonDelimiter, bool parsingFunctionParameters)
         {
+            Debug.Assert(model != null, "model != null");
             Debug.Assert(expression != null, "expression != null");
 
+            this.model = model;
             this.ignoreWhitespace = true;
             this.Text = expression;
             this.TextLen = this.Text.Length;
@@ -775,7 +782,7 @@ namespace Microsoft.OData.UriParser
             if (this.ch == '\'')
             {
                 // Get custom literal if exists.
-                IEdmTypeReference edmTypeOfCustomLiteral = CustomUriLiteralPrefixes.GetEdmTypeByCustomLiteralPrefix(this.token.Span);
+                IEdmTypeReference edmTypeOfCustomLiteral = CustomUriLiteralPrefixes.GetEdmTypeByCustomLiteralPrefix(this.model, this.token.Span.ToString());
                 if (edmTypeOfCustomLiteral != null)
                 {
                     this.token.SetCustomEdmTypeLiteral(edmTypeOfCustomLiteral);

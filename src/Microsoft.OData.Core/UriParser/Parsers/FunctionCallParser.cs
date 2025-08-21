@@ -40,7 +40,7 @@ namespace Microsoft.OData.UriParser
         /// <param name="lexer">Lexer positioned at a function identifier.</param>
         /// <param name="parser">The UriQueryExpressionParser.</param>
         public FunctionCallParser(ExpressionLexer lexer, UriQueryExpressionParser parser)
-            : this(lexer, parser, false /* restoreStateIfFail */)
+            : this(lexer, parser, restoreStateIfFail: false)
         {
         }
 

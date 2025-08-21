@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OData.Core;
+using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.UriParser.Aggregation;
 using Xunit;
@@ -19,6 +20,13 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
     /// </summary>
     public class SelectExpandOptionParserTests
     {
+        private readonly IEdmModel model;
+
+        public SelectExpandOptionParserTests()
+        {
+            this.model = HardCodedTestModel.TestModel;
+        }
+
         #region Select
 
         [Fact]
@@ -26,7 +34,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             // Arrange
             PathSegmentToken pathToken = new NonSystemToken("SomeProp", null, null);
-            SelectExpandOptionParser optionParser = new SelectExpandOptionParser(5);
+            SelectExpandOptionParser optionParser = new SelectExpandOptionParser(this.model, 5);
 
             // Act
             SelectTermToken selectTermToken = optionParser.BuildSelectTermToken(pathToken, "");
@@ -286,7 +294,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             PathSegmentToken pathToken = new NonSystemToken("Property", null, null);
 
-            SelectExpandOptionParser optionParser = new SelectExpandOptionParser(maxDepth)
+            SelectExpandOptionParser optionParser = new SelectExpandOptionParser(this.model, maxDepth)
             {
                 MaxFilterDepth = 9,
                 MaxSearchDepth = 9,
@@ -305,7 +313,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             // Arrange
             PathSegmentToken pathToken = new NonSystemToken("SomeNavProp", null, null);
-            SelectExpandOptionParser optionParser = new SelectExpandOptionParser(5);
+            SelectExpandOptionParser optionParser = new SelectExpandOptionParser(this.model, 5);
 
             // Act
             IList<ExpandTermToken> expandTerms = optionParser.BuildExpandTermToken(pathToken, "");
@@ -723,7 +731,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             PathSegmentToken pathToken = new NonSystemToken("NavProp", null, null);
 
-            SelectExpandOptionParser optionParser = new SelectExpandOptionParser(maxDepth)
+            SelectExpandOptionParser optionParser = new SelectExpandOptionParser(this.model, maxDepth)
             {
                 MaxFilterDepth = 9,
                 MaxSearchDepth = 9,

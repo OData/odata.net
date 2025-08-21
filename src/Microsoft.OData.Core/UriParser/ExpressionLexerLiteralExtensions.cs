@@ -57,13 +57,13 @@ namespace Microsoft.OData.UriParser
         /// <summary>Reads the next token, checks that it is a literal token type, converts to to a Common Language Runtime value as appropriate, and returns the value.</summary>
         /// <param name="expressionLexer">The expression lexer.</param>
         /// <returns>The value represented by the next token.</returns>
-        internal static object ReadLiteralToken(this ExpressionLexer expressionLexer)
+        internal static object ReadLiteralToken(this ExpressionLexer expressionLexer, IEdmModel model)
         {
             expressionLexer.NextToken();
 
             if (expressionLexer.CurrentToken.Kind.IsLiteralType())
             {
-                return TryParseLiteral(expressionLexer);
+                return TryParseLiteral(expressionLexer, model);
             }
 
             throw new ODataException(Error.Format(SRResources.ExpressionLexer_ExpectedLiteralToken, expressionLexer.CurrentToken.Text.ToString()));
@@ -89,11 +89,11 @@ namespace Microsoft.OData.UriParser
         /// <param name="expressionLexer">The expression lexer.</param>
         /// <param name="targetTypeReference">Expected type to be parsed.</param>
         /// <returns>The literal token produced by building the given literal.</returns>
-        private static object ParseTypedLiteral(this ExpressionLexer expressionLexer, IEdmTypeReference targetTypeReference)
+        private static object ParseTypedLiteral(this ExpressionLexer expressionLexer, IEdmModel model, IEdmTypeReference targetTypeReference)
         {
             UriLiteralParsingException typeParsingException;
             string tokenText = expressionLexer.CurrentToken.Text.ToString();
-            object targetValue = DefaultUriLiteralParser.Instance.ParseUriStringToType(tokenText, targetTypeReference, out typeParsingException);
+            object targetValue = DefaultUriLiteralParser.GetOrCreate(model).ParseUriStringToType(tokenText, targetTypeReference, out typeParsingException);
             if (targetValue == null)
             {
                 string message;
@@ -131,7 +131,7 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         /// <param name="expressionLexer">The expression lexer.</param>
         /// <returns>The literal query token or null if something else was found.</returns>
-        private static object TryParseLiteral(this ExpressionLexer expressionLexer)
+        private static object TryParseLiteral(this ExpressionLexer expressionLexer, IEdmModel model)
         {
             Debug.Assert(expressionLexer.CurrentToken.Kind.IsLiteralType(), "TryParseLiteral called when not at a literal type token");
 
@@ -156,7 +156,7 @@ namespace Microsoft.OData.UriParser
                 case ExpressionTokenKind.QuotedLiteral:
                 case ExpressionTokenKind.TimeOfDayLiteral:
                 case ExpressionTokenKind.CustomTypeLiteral:
-                    return ParseTypedLiteral(expressionLexer, expressionLexer.CurrentToken.GetLiteralEdmTypeReference());
+                    return ParseTypedLiteral(expressionLexer, model, expressionLexer.CurrentToken.GetLiteralEdmTypeReference());
                 default:
                     return null;
             }

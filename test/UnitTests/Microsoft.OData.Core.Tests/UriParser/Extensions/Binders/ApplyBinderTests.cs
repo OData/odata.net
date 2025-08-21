@@ -16,7 +16,7 @@ namespace Microsoft.OData.Tests.UriParser.Extensions.Binders
 {
     public class ApplyBinderTests
     {
-        UriQueryExpressionParser _parser = new UriQueryExpressionParser(50);
+        UriQueryExpressionParser _parser = new UriQueryExpressionParser(HardCodedTestModel.TestModel, 50);
 
         private static readonly ODataUriParserConfiguration _configuration =
             new ODataUriParserConfiguration(HardCodedTestModel.TestModel);
