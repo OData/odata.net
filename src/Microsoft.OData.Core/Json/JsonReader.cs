@@ -1185,45 +1185,25 @@ namespace Microsoft.OData.Json
             bool hasDecimalPoint = false;
             bool hasExponent = false;
 
-            int decimalPlaces = 0;
-            int exponentValue = 0;
-
             // Walk over all characters which might belong to the number
             // Skip the first one since we already verified it belongs to the number.
             int currentCharacterTokenRelativeIndex = 1;
-            int countOfDigits = 1;
-
-            bool inExponent = false;
-            bool afterDecimalPoint = false;
 
             while ((this.tokenStartIndex + currentCharacterTokenRelativeIndex) < this.storedCharacterCount || this.ReadInput())
             {
                 char character = this.characterBuffer[this.tokenStartIndex + currentCharacterTokenRelativeIndex];
                 if (Char.IsDigit(character))
                 {
-                    if (afterDecimalPoint && !inExponent)
-                    {
-                        decimalPlaces++;
-                    }
-
-                    if (hasExponent)
-                    {
-                        exponentValue = (exponentValue * 10) + (character - '0');
-                    }
-                    countOfDigits++;
                     currentCharacterTokenRelativeIndex++;
                 }
                 else if (character == '.')
                 {
                     hasDecimalPoint = true;
-                    afterDecimalPoint = true;
                     currentCharacterTokenRelativeIndex++;
                 }
                 else if (character == 'e' || character == 'E')
                 {
                     hasExponent = true;
-                    inExponent = true;
-                    afterDecimalPoint = false; // After the exponent, we can't have a decimal point.
                     currentCharacterTokenRelativeIndex++;
                 }
                 else if (character == '-' || character == '+')
@@ -1243,13 +1223,7 @@ namespace Microsoft.OData.Json
             // Case 1: Pure integer (no decimal, no exponent)
             if (!hasDecimalPoint && !hasExponent)
             {
-                // If the number is too long, we will parse it as a decimal.
-                if (countOfDigits > 19 && Decimal.TryParse(numberString, NumberStyles.Number, CultureInfo.InvariantCulture, out decimalValue))
-                {
-                    return decimalValue;
-                }
-
-                // Try int32
+                // Try int32 first
                 if (Int32.TryParse(numberString, NumberStyles.Integer, CultureInfo.InvariantCulture, out int intValue))
                 {
                     return intValue;
@@ -1274,20 +1248,8 @@ namespace Microsoft.OData.Json
                 return decimalValue;
             }
 
-            // For very large or very small numbers (scientific notation)
-            if (hasExponent && Math.Abs(exponentValue) > 15 && (Double.TryParse(numberString, NumberStyles.Float, NumberFormatInfo.InvariantInfo, out double doubleValue)))
-            {
-                return doubleValue;
-            }
-
-            // For moderate precision requirements
-            if (decimalPlaces <= 7 && !hasExponent && Single.TryParse(numberString, NumberStyles.Float, NumberFormatInfo.InvariantInfo, out float floatValue))
-            {
-                return floatValue;
-            }
-
             // Default to double for good balance of range and precision
-            if (Double.TryParse(numberString, NumberStyles.Float, NumberFormatInfo.InvariantInfo, out doubleValue))
+            if (Double.TryParse(numberString, NumberStyles.Float, NumberFormatInfo.InvariantInfo, out double doubleValue))
             {
                 return doubleValue;
             }
