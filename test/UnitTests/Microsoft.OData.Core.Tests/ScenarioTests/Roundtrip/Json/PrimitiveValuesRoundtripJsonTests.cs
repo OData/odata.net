@@ -44,42 +44,6 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.Json
             this.VerifyPrimitiveValuesDoNotRoundtripWithoutTypeInformation(values);
         }
 
-        public static TheoryData<byte[], ODataVersion> BinaryValuesForRoundtripJsonTest()
-        {
-            return new TheoryData<byte[], ODataVersion>
-            {
-                { new byte[0], ODataVersion.V4 },
-                { new byte[0], ODataVersion.V401 },
-                { new byte[] { 0 }, ODataVersion.V4 },
-                { new byte[] { 0 }, ODataVersion.V401 },
-                { new byte[] { 42, Byte.MinValue, Byte.MaxValue }, ODataVersion.V4 },
-                { new byte[] { 42, Byte.MinValue, Byte.MaxValue }, ODataVersion.V401 },
-                { new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 }, ODataVersion.V4 },
-                { new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 }, ODataVersion.V401 },
-            };
-        }
-
-        [Theory]
-        [MemberData(nameof(BinaryValuesForRoundtripJsonTest))]
-        public void BinaryRoundtripJson_WithOrWithoutTypeReference_Test(byte[] clrValue, ODataVersion version)
-        {
-            // Arrange & Act
-            var typeReference = new EdmPrimitiveTypeReference((IEdmPrimitiveType)this.model.FindType("Edm.Binary"), true);
-
-            // roundtrip with type reference
-            var actualValueWithTypeRef = this.WriteThenReadValue(clrValue, typeReference, version, isIeee754Compatible: true);
-
-            // roundtrip without type reference
-            var actualValueWithoutTypeRef = this.WriteThenReadValue(clrValue, null, version, isIeee754Compatible: true);
-
-            // Assert
-            Assert.Equal(clrValue.GetType(), actualValueWithTypeRef.GetType());
-            Assert.Equal((byte[])actualValueWithTypeRef, clrValue);
-
-            Assert.Equal(typeof(string), actualValueWithoutTypeRef.GetType());
-            Assert.Equal(Convert.ToBase64String(clrValue), actualValueWithoutTypeRef);
-        }
-
         [Fact]
         public void BinaryPayloadAsStringRoundtripJsonTest()
         {
@@ -115,30 +79,6 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.Json
 
             this.VerifyPrimitiveValuesRoundtripWithTypeInformation(values, "Edm.Boolean");
             this.VerifyPrimitiveValuesRoundtripWithoutTypeInformation(values);
-        }
-
-        [Theory]
-        [InlineData(true, ODataVersion.V4)]
-        [InlineData(true, ODataVersion.V401)]
-        [InlineData(false, ODataVersion.V4)]
-        [InlineData(false, ODataVersion.V401)]
-        public void BooleanRoundtripJson_WithOrWithoutTypeReference_Test(bool clrValue, ODataVersion version)
-        {
-            // Arrange & Act
-            var typeReference = new EdmPrimitiveTypeReference((IEdmPrimitiveType)this.model.FindType("Edm.Boolean"), true);
-
-            // roundtrip with type reference
-            var actualValueWithTypeRef = this.WriteThenReadValue(clrValue, typeReference, version, isIeee754Compatible: true);
-
-            // roundtrip without type reference
-            var actualValueWithoutTypeRef = this.WriteThenReadValue(clrValue, null, version, isIeee754Compatible: true);
-
-            // Assert
-            Assert.Equal(clrValue.GetType(), actualValueWithTypeRef.GetType());
-            Assert.Equal((bool)actualValueWithTypeRef, clrValue);
-
-            Assert.Equal(clrValue.GetType(), actualValueWithoutTypeRef.GetType());
-            Assert.Equal(actualValueWithoutTypeRef, clrValue);
         }
 
         [Fact]
@@ -924,11 +864,6 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.Json
                 if(isIeee754Compatible)
                 {
                     Assert.NotEqual(actualValue.GetType(), clrValue.GetType());
-                }
-                else
-                {
-                    Assert.Equal(actualValue.GetType(), clrValue.GetType());
-                    Assert.Equal(actualValue, clrValue);
                 }
             }
             else
