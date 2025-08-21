@@ -1182,31 +1182,18 @@ namespace Microsoft.OData.Json
                 this.tokenStartIndex < this.storedCharacterCount && (this.characterBuffer[this.tokenStartIndex] == '.' || this.characterBuffer[this.tokenStartIndex] == '-' || Char.IsDigit(this.characterBuffer[this.tokenStartIndex])),
                 "The method should only be called when a digit, dash or dot character is the start of the token.");
 
-            bool hasDecimalPoint = false;
-            bool hasExponent = false;
-
             // Walk over all characters which might belong to the number
             // Skip the first one since we already verified it belongs to the number.
             int currentCharacterTokenRelativeIndex = 1;
-
             while ((this.tokenStartIndex + currentCharacterTokenRelativeIndex) < this.storedCharacterCount || this.ReadInput())
             {
                 char character = this.characterBuffer[this.tokenStartIndex + currentCharacterTokenRelativeIndex];
-                if (Char.IsDigit(character))
-                {
-                    currentCharacterTokenRelativeIndex++;
-                }
-                else if (character == '.')
-                {
-                    hasDecimalPoint = true;
-                    currentCharacterTokenRelativeIndex++;
-                }
-                else if (character == 'e' || character == 'E')
-                {
-                    hasExponent = true;
-                    currentCharacterTokenRelativeIndex++;
-                }
-                else if (character == '-' || character == '+')
+                if (Char.IsDigit(character) ||
+                    (character == '.') ||
+                    (character == 'E') ||
+                    (character == 'e') ||
+                    (character == '-') ||
+                    (character == '+'))
                 {
                     currentCharacterTokenRelativeIndex++;
                 }
@@ -1218,31 +1205,17 @@ namespace Microsoft.OData.Json
 
             // We now have all the characters which belong to the number, consume it into a string.
             string numberString = this.ConsumeTokenToString(currentCharacterTokenRelativeIndex);
+            double doubleValue;
+            int intValue;
             decimal decimalValue;
 
-            // Case 1: Pure integer (no decimal, no exponent)
-            if (!hasDecimalPoint && !hasExponent)
+            // We will first try and convert the value to Int32. If it succeeds, use that.
+            // And then, we will try Decimal, since it will lose precision while expected type is specified.
+            // Otherwise, we will try and convert the value into a double.
+            if (Int32.TryParse(numberString, NumberStyles.Integer, NumberFormatInfo.InvariantInfo, out intValue))
             {
-                // Try int32 first
-                if (Int32.TryParse(numberString, NumberStyles.Integer, CultureInfo.InvariantCulture, out int intValue))
-                {
-                    return intValue;
-                }
-
-                // Then try int64
-                if (Int64.TryParse(numberString, NumberStyles.Integer, CultureInfo.InvariantCulture, out long longValue))
-                {
-                    return longValue;
-                }
-
-                // If it's a very large integer, fallback to decimal
-                if (Decimal.TryParse(numberString, NumberStyles.Integer, CultureInfo.InvariantCulture, out decimalValue))
-                {
-                    return decimalValue;
-                }
+                return intValue;
             }
-
-            // Case 2: Decimal or double (has decimal point or exponent)
 
             // if it is not Ieee754Compatible, decimal will be parsed before double to keep precision
             if (!isIeee754Compatible && Decimal.TryParse(numberString, NumberStyles.Number, NumberFormatInfo.InvariantInfo, out decimalValue))
@@ -1250,8 +1223,7 @@ namespace Microsoft.OData.Json
                 return decimalValue;
             }
 
-            // Default to double for good balance of range and precision
-            if (Double.TryParse(numberString, NumberStyles.Float, NumberFormatInfo.InvariantInfo, out double doubleValue))
+            if (Double.TryParse(numberString, NumberStyles.Float, NumberFormatInfo.InvariantInfo, out doubleValue))
             {
                 return doubleValue;
             }
