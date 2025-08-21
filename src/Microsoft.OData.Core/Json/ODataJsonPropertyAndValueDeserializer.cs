@@ -208,6 +208,7 @@ namespace Microsoft.OData.Json
         /// <param name="primitiveTypeResolver">Function that takes a primitive value and returns an <see cref="IEdmTypeReference"/>.</param>
         /// <param name="readUntypedAsString">Whether unknown properties should be read as a raw string value.</param>
         /// <param name="generateTypeIfMissing">Whether to generate a type if not already part of the model.</param>
+        /// <param name="preserveUntypedNumericAsDecimal">Whether untyped numeric values should be preserved as decimals. Default is <see langword="true"/></param>
         /// <returns>The <see cref="IEdmTypeReference"/> of the current value to be read.</returns>
         [SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Justification = "Each code path casts to bool at most one time, and only if needed.")]
         internal static IEdmTypeReference ResolveUntypedType(
@@ -217,7 +218,8 @@ namespace Microsoft.OData.Json
                 IEdmTypeReference payloadTypeReference,
                 Func<object, string, IEdmTypeReference> primitiveTypeResolver,
                 bool readUntypedAsString,
-                bool generateTypeIfMissing)
+                bool generateTypeIfMissing,
+                bool preserveUntypedNumericAsDecimal = true)
         {
             if (payloadTypeReference != null && (payloadTypeReference.TypeKind() != EdmTypeKind.Untyped || readUntypedAsString))
             {
@@ -257,39 +259,35 @@ namespace Microsoft.OData.Json
                             TypeUtils.ParseQualifiedTypeName(payloadTypeName, out namespaceName, out name, out isCollection);
                             Debug.Assert(namespaceName != Metadata.EdmConstants.EdmNamespace, "If type was in the edm namespace it should already have been resolved");
 
-                            typeReference = new EdmUntypedStructuredType(namespaceName, name).ToTypeReference(/*isNullable*/ true);
-                            return isCollection ? new EdmCollectionType(typeReference).ToTypeReference(/*isNullable*/ true) : typeReference;
+                            typeReference = new EdmUntypedStructuredType(namespaceName, name).ToTypeReference(nullable: true);
+                            return isCollection ? new EdmCollectionType(typeReference).ToTypeReference(nullable: true) : typeReference;
                         }
 
-                        typeReference = EdmCoreModel.Instance.GetString(/*isNullable*/ true);
+                        typeReference = EdmCoreModel.Instance.GetString(isNullable: true);
                     }
                     else if (jsonReaderValue is bool)
                     {
-                        typeReference = EdmCoreModel.Instance.GetBoolean(/*isNullable*/ true);
+                        typeReference = EdmCoreModel.Instance.GetBoolean(isNullable: true);
                     }
                     else if (jsonReaderValue is string)
                     {
-                        typeReference = EdmCoreModel.Instance.GetString(/*isNullable*/ true);
+                        typeReference = EdmCoreModel.Instance.GetString(isNullable: true);
                     }
-                    else if (jsonReaderValue is int)
+                    // This is for backward compatibility with untyped numeric values.
+                    else if (preserveUntypedNumericAsDecimal)
                     {
-                        typeReference = EdmCoreModel.Instance.GetInt32(/*isNullable*/ true);
-                    }
-                    else if (jsonReaderValue is long)
-                    {
-                        typeReference = EdmCoreModel.Instance.GetInt64(/*isNullable*/ true);
-                    }
-                    else if (jsonReaderValue is double)
-                    {
-                        typeReference = EdmCoreModel.Instance.GetDouble(/*isNullable*/ true);
-                    }
-                    else if (jsonReaderValue is float)
-                    {
-                        typeReference = EdmCoreModel.Instance.GetSingle(/*isNullable*/ true);
+                        typeReference = EdmCoreModel.Instance.GetDecimal(isNullable: true);
                     }
                     else
                     {
-                        typeReference = EdmCoreModel.Instance.GetDecimal(/*isNullable*/ true);
+                        typeReference = jsonReaderValue switch
+                        {
+                            int _ => EdmCoreModel.Instance.GetInt32(isNullable: true),
+                            long _ => EdmCoreModel.Instance.GetInt64(isNullable: true),
+                            double _ => EdmCoreModel.Instance.GetDouble(isNullable: true),
+                            float _ => EdmCoreModel.Instance.GetSingle(isNullable: true),
+                            _ => EdmCoreModel.Instance.GetDecimal(isNullable: true),
+                        };
                     }
 
                     if (payloadTypeName != null)
@@ -300,7 +298,7 @@ namespace Microsoft.OData.Json
                             throw new ODataException(Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_CollectionTypeNotExpected, payloadTypeName));
                         }
 
-                        typeReference = new EdmTypeDefinition(namespaceName, name, typeReference.PrimitiveKind()).ToTypeReference(/*isNullable*/ true);
+                        typeReference = new EdmTypeDefinition(namespaceName, name, typeReference.PrimitiveKind()).ToTypeReference(nullable: true);
                     }
 
                     return typeReference;
@@ -314,10 +312,10 @@ namespace Microsoft.OData.Json
                             throw new ODataException(Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_CollectionTypeNotExpected, payloadTypeName));
                         }
 
-                        return new EdmUntypedStructuredType(namespaceName, name).ToTypeReference(/*isNullable*/ true);
+                        return new EdmUntypedStructuredType(namespaceName, name).ToTypeReference(nullable:  true);
                     }
 
-                    return new EdmUntypedStructuredType().ToTypeReference(/*isNullable*/ true);
+                    return new EdmUntypedStructuredType().ToTypeReference(nullable:  true);
 
                 case JsonNodeType.StartArray:
                     if (payloadTypeName != null && generateTypeIfMissing)
@@ -328,10 +326,10 @@ namespace Microsoft.OData.Json
                             throw new ODataException(Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_CollectionTypeExpected, payloadTypeName));
                         }
 
-                        return new EdmCollectionType(new EdmUntypedStructuredType(namespaceName, name).ToTypeReference(/*isNullable*/ true)).ToTypeReference(/*isNullable*/true);
+                        return new EdmCollectionType(new EdmUntypedStructuredType(namespaceName, name).ToTypeReference(nullable:  true)).ToTypeReference(nullable: true);
                     }
 
-                    return new EdmCollectionType(new EdmUntypedStructuredType().ToTypeReference(/*isNullable*/ true)).ToTypeReference(/*isNullable*/true);
+                    return new EdmCollectionType(new EdmUntypedStructuredType().ToTypeReference(nullable:  true)).ToTypeReference(nullable: true);
 
                 default:
                     return EdmCoreModel.Instance.GetUntyped();
@@ -528,7 +526,8 @@ namespace Microsoft.OData.Json
                 payloadTypeReference,
                 this.MessageReaderSettings.PrimitiveTypeResolver,
                 this.MessageReaderSettings.ReadUntypedAsString,
-                !this.MessageReaderSettings.ThrowIfTypeConflictsWithMetadata);
+                !this.MessageReaderSettings.ThrowIfTypeConflictsWithMetadata,
+                this.MessageReaderSettings.PreserveUntypedNumericAsDecimal);
 
             if (payloadTypeReference.ToStructuredType() != null)
             {
@@ -1967,7 +1966,8 @@ namespace Microsoft.OData.Json
                     expectedTypeReference,
                     this.MessageReaderSettings.PrimitiveTypeResolver,
                     this.MessageReaderSettings.ReadUntypedAsString,
-                    !this.MessageReaderSettings.ThrowIfTypeConflictsWithMetadata);
+                    !this.MessageReaderSettings.ThrowIfTypeConflictsWithMetadata,
+                    this.MessageReaderSettings.PreserveUntypedNumericAsDecimal);
 
                 targetTypeKind = targetTypeReference.TypeKind();
             }
@@ -2344,7 +2344,8 @@ namespace Microsoft.OData.Json
                 payloadTypeReference,
                 this.MessageReaderSettings.PrimitiveTypeResolver,
                 this.MessageReaderSettings.ReadUntypedAsString,
-                !this.MessageReaderSettings.ThrowIfTypeConflictsWithMetadata);
+                !this.MessageReaderSettings.ThrowIfTypeConflictsWithMetadata,
+                this.MessageReaderSettings.PreserveUntypedNumericAsDecimal);
 
             if (payloadTypeReference.ToStructuredType() != null)
             {
@@ -3301,7 +3302,8 @@ namespace Microsoft.OData.Json
                     expectedTypeReference,
                     this.MessageReaderSettings.PrimitiveTypeResolver,
                     this.MessageReaderSettings.ReadUntypedAsString,
-                    !this.MessageReaderSettings.ThrowIfTypeConflictsWithMetadata);
+                    !this.MessageReaderSettings.ThrowIfTypeConflictsWithMetadata, 
+                    this.MessageReaderSettings.PreserveUntypedNumericAsDecimal);
 
                 targetTypeKind = targetTypeReference.TypeKind();
             }

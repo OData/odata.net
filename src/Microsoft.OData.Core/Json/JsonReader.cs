@@ -1242,6 +1242,8 @@ namespace Microsoft.OData.Json
                 }
             }
 
+            // Case 2: Decimal or double (has decimal point or exponent)
+
             // if it is not Ieee754Compatible, decimal will be parsed before double to keep precision
             if (!isIeee754Compatible && Decimal.TryParse(numberString, NumberStyles.Number, NumberFormatInfo.InvariantInfo, out decimalValue))
             {
