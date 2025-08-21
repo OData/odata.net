@@ -1,0 +1,2 @@
+Microsoft.OData.ODataMessageReaderSettings.PreserveUntypedNumericAsDecimal.get -> bool
+Microsoft.OData.ODataMessageReaderSettings.PreserveUntypedNumericAsDecimal.set -> void

@@ -1600,7 +1600,8 @@ namespace Microsoft.OData.Json
                 payloadTypeReference,
                 this.MessageReaderSettings.PrimitiveTypeResolver,
                 this.MessageReaderSettings.ReadUntypedAsString,
-                !this.MessageReaderSettings.ThrowIfTypeConflictsWithMetadata);
+                !this.MessageReaderSettings.ThrowIfTypeConflictsWithMetadata, 
+                this.MessageReaderSettings.PreserveUntypedNumericAsDecimal);
 
             bool isCollection = payloadTypeReference.IsCollection();
             IEdmStructuredType payloadTypeOrItemType = payloadTypeReference.ToStructuredType();
@@ -3824,7 +3825,8 @@ namespace Microsoft.OData.Json
                 payloadTypeReference,
                 this.MessageReaderSettings.PrimitiveTypeResolver,
                 this.MessageReaderSettings.ReadUntypedAsString,
-                !this.MessageReaderSettings.ThrowIfTypeConflictsWithMetadata);
+                !this.MessageReaderSettings.ThrowIfTypeConflictsWithMetadata, 
+                this.MessageReaderSettings.PreserveUntypedNumericAsDecimal);
 
             bool isCollection = payloadTypeReference.IsCollection();
             IEdmStructuredType payloadTypeOrItemType = payloadTypeReference.ToStructuredType();
