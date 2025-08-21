@@ -144,8 +144,8 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void TryParseIdentifierAsFunction_CastAndIsOfFunctions_Works(string expression, string functionName)
         {
             // Arrange
-            var lexer = new ExpressionLexer(expression, true, false);
-            var parser = new UriQueryExpressionParser(345, lexer);
+            var lexer = new ExpressionLexer(HardCodedTestModel.TestModel, expression, moveToFirstToken: true, useSemicolonDelimiter: false);
+            var parser = new UriQueryExpressionParser(HardCodedTestModel.TestModel, 345, lexer);
             var functionCallParser = new FunctionCallParser(lexer, parser);
 
             // Act
@@ -171,8 +171,8 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void TryParseIdentifierAsFunction_CastAndIsOfFunctions_WithQuotesParameters(string expression, string functionName)
         {
             // Arrange
-            var lexer = new ExpressionLexer(expression, true, false);
-            var parser = new UriQueryExpressionParser(345, lexer);
+            var lexer = new ExpressionLexer(HardCodedTestModel.TestModel, expression, moveToFirstToken: true, useSemicolonDelimiter: false);
+            var parser = new UriQueryExpressionParser(HardCodedTestModel.TestModel, 345, lexer);
             var functionCallParser = new FunctionCallParser(lexer, parser);
 
             // Act
@@ -201,8 +201,8 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void ParseArgumentListOrEntityKeyList_CastAndIsOfFunctions(string expression, string expectedFunctionName)
         {
             // Arrange
-            var lexer = new ExpressionLexer(expression, true, false);
-            var parser = new UriQueryExpressionParser(345, lexer);
+            var lexer = new ExpressionLexer(HardCodedTestModel.TestModel, expression, moveToFirstToken: true, useSemicolonDelimiter: false);
+            var parser = new UriQueryExpressionParser(HardCodedTestModel.TestModel, 345, lexer);
             var functionCallParser = new FunctionCallParser(lexer, parser);
 
             var functionName = lexer.CurrentToken.Span;
@@ -231,8 +231,8 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void ParseArgumentListOrEntityKeyList_CastAndIsOfFunctions_WithQuotesParameters(string expression, string expectedFunctionName)
         {
             // Arrange
-            var lexer = new ExpressionLexer(expression, true, false);
-            var parser = new UriQueryExpressionParser(345, lexer);
+            var lexer = new ExpressionLexer(HardCodedTestModel.TestModel, expression, moveToFirstToken: true, useSemicolonDelimiter: false);
+            var parser = new UriQueryExpressionParser(HardCodedTestModel.TestModel, 345, lexer);
             var functionCallParser = new FunctionCallParser(lexer, parser);
 
             var functionName = lexer.CurrentToken.Span;
