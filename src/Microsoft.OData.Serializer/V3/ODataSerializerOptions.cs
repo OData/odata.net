@@ -1,7 +1,4 @@
-﻿using Microsoft.OData.Edm;
-using Microsoft.OData.Serializer.Core;
-using Microsoft.OData.Serializer.Json;
-using Microsoft.OData.Serializer.V3.Adapters;
+﻿using Microsoft.OData.Serializer.V3.Adapters;
 using System;
 using System.Collections.Generic;
 using System.Text;
