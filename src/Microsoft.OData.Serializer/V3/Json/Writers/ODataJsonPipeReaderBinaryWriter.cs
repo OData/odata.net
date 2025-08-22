@@ -68,10 +68,12 @@ internal class ODataJsonPipeReaderBinaryWriter<TCustomState> : ODataJsonWriter<P
 
         if (isFinalBlock)
         {
+            // Should we dispose the reader? We should have a flag for this.
             Debug.Assert(bytesConsumed == dataToRead.Length, "All bytes should be consumed in the final block.");
             state.Stack.Pop(true);
             return true;
         }
+
 
         state.Stack.Pop(false);
         return false;

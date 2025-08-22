@@ -14,7 +14,25 @@ internal class WriteStack<TCustomState>
     //private WriteStackFrame _current;
     private WriteStackFrame<TCustomState>[]? _stack;
 
+    /// <summary>
+    /// The number of frames currently in the stack.
+    /// But since the stack can be pushed and popped without losing state,
+    /// this count represents the current depth of the stack. Its always
+    /// updated when the stack is pushed or popped.
+    /// </summary>
     private int _count;
+
+    /// <summary>
+    /// The total number of active or pending frames in the stack.
+    /// This includes the frames that have been "soft" popped
+    /// when writing a value is suspended before the value is completed
+    /// so that we can flush the buffer or fetch data and resume.
+    /// This _pending length therefore allows us to know at what
+    /// frame the suspension/pause started so that the root
+    /// of the serializer can be able to access the state in the frame
+    /// without calling Push().
+    /// </summary>
+    private int _suspendedLength;
 
 
     public ref readonly WriteStackFrame<TCustomState> Parent
@@ -42,6 +60,19 @@ internal class WriteStack<TCustomState>
             }
 
             return ref _stack![_count - 1];
+        }
+    }
+
+    internal ref WriteStackFrame<TCustomState> LastSuspendedFrame
+    {
+        get
+        {
+            if (_suspendedLength == 0)
+            {
+                throw new InvalidOperationException("Stack is empty, cannot access suspended frame.");
+            }
+
+            return ref _stack![_suspendedLength - 1];
         }
     }
 
@@ -140,6 +171,7 @@ internal class WriteStack<TCustomState>
         {
             _stack = new WriteStackFrame<TCustomState>[4];
             _count = 1;
+            _suspendedLength = Math.Max(_suspendedLength, _count);
             return;
         }
 
@@ -149,6 +181,7 @@ internal class WriteStack<TCustomState>
         }
 
         _count++;
+        _suspendedLength = Math.Max(_suspendedLength, _count);
     }
 
     public void Pop(bool success)
@@ -170,6 +203,8 @@ internal class WriteStack<TCustomState>
         {
             // If we've successfully completed, let's clear the current frame
             Current = default;
+
+            _suspendedLength--;
         }
 
         _count--;
@@ -190,5 +225,10 @@ internal class WriteStack<TCustomState>
     public bool IsTopLevel()
     {
         return _count < 2;
+    }
+
+    public bool HasSuspendedFrames()
+    {
+        return _suspendedLength > 0;
     }
 }

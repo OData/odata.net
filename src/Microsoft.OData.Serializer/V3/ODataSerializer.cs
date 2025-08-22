@@ -2,7 +2,9 @@
 using Microsoft.OData.Serializer.V3.Json;
 using Microsoft.OData.Serializer.V3.Json.State;
 using System;
+using System.Buffers;
 using System.Collections.Generic;
+using System.IO.Pipelines;
 using System.Linq;
 using System.Text;
 using System.Text.Encodings.Web;
@@ -56,6 +58,22 @@ public static ValueTask WriteAsync<T>(T value, Stream stream, ODataUri uri, IEdm
                 await stream.WriteAsync(bufferWriter.WrittenMemory, cancellationToken: default).ConfigureAwait(false);
                 bufferWriter.Clear();
             }
+
+
+            if (state.Stack.HasSuspendedFrames())
+            {
+                var suspendedPipeReader = state.Stack.LastSuspendedFrame.PipeReader;
+                if (suspendedPipeReader != null)
+                {
+                    // We should prob. check if we need more data before calling this.
+                    // It's possible that we reached here not because we need more data,
+                    // but because we needed to clear the buffer.
+                    await suspendedPipeReader.ReadAsync(cancellationToken: default);
+                }
+            }
+
+            // We might need to dispose the pipe reader, where should we do that? Here?
+            // How do we know we need to dispose?
         }
 
         if (jsonWriter.BytesPending > 0)
