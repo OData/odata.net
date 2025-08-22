@@ -55,7 +55,7 @@ namespace Microsoft.OData
             }
 
             // Let ExpressionLexer try to get a primitive
-            ExpressionLexer lexer = new ExpressionLexer(value, false /*moveToFirstToken*/, false /*useSemicolonDelimiter*/);
+            ExpressionLexer lexer = new ExpressionLexer(model, expression: value, moveToFirstToken: false, useSemicolonDelimiter: false);
             Exception error;
             ExpressionToken token;
 
@@ -78,7 +78,7 @@ namespace Microsoft.OData
                 return ((ConstantNode)enumConstNode).Value;
             }
 
-            object result = lexer.ReadLiteralToken();
+            object result = lexer.ReadLiteralToken(model);
 
             // If we have a typeReference then perform verification and convert if necessary
             if (typeReference != null)

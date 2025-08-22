@@ -6,6 +6,7 @@
 
 using System;
 using Microsoft.OData.Core;
+using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Xunit;
 
@@ -13,7 +14,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 {
     public class SearchParserTests
     {
-        private readonly SearchParser searchParser = new SearchParser(50);
+        private readonly SearchParser searchParser = new SearchParser(HardCodedTestModel.TestModel, 50);
 
         [Fact]
         public void SearchWordTest()

@@ -5,7 +5,7 @@
     <VersionMajor Condition="'$(VersionMajor)' == ''">9</VersionMajor>
     <VersionMinor Condition="'$(VersionMinor)' == ''">0</VersionMinor>
     <VersionBuildNumber Condition="'$(VersionBuildNumber)' == ''">0</VersionBuildNumber>
-    <VersionRelease Condition="'$(VersionRelease)' == ''">preview.1</VersionRelease>
+    <VersionRelease Condition="'$(VersionRelease)' == ''">preview.2</VersionRelease>
   </PropertyGroup>
 
   <!--
