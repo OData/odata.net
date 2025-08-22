@@ -76,18 +76,6 @@ internal class WriteStack<TCustomState>
         }
     }
 
-    internal ref TCustomState CurrentCustomState
-    {
-        get
-        {
-            if (_count == 0)
-            {
-                throw new InvalidOperationException("Stack is empty, cannot access current custom state.");
-            }
-            return ref _stack![_count - 1].CustomState;
-        }
-    }
-
     //public void Push(ref WriteStackFrame frame)
     //{
     //    if (_count == 0)

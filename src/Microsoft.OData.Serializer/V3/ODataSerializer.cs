@@ -21,12 +21,17 @@ public static class ODataSerializer
         SkipValidation = true, // Important because we bypass the writer in some cases
     };
 
-public static ValueTask WriteAsync<T>(T value, Stream stream, ODataUri uri, IEdmModel model, ODataSerializerOptions options)
+    public static ValueTask WriteAsync<T>(T value, Stream stream, ODataUri uri, IEdmModel model, ODataSerializerOptions options)
     {
         return WriteAsync<T, DefaultState>(value, stream, uri, model, options);
     }
 
-    public static async ValueTask WriteAsync<T, TCustomState>(T value, Stream stream, ODataUri uri, IEdmModel model, ODataSerializerOptions<TCustomState> options)
+    public static ValueTask WriteAsync<T, TCustomState>(T value, Stream stream, ODataUri uri, IEdmModel model, ODataSerializerOptions<TCustomState> options)
+    {
+        return WriteAsync<T, TCustomState>(value, stream, uri, model, options, default);
+    }
+
+    public static async ValueTask WriteAsync<T, TCustomState>(T value, Stream stream, ODataUri uri, IEdmModel model, ODataSerializerOptions<TCustomState> options, TCustomState customState)
     {
         // this is rough structure of what we expect the writer to do
         // based on payload kind, determine the appropirate state, context and underlying writer.
@@ -43,6 +48,8 @@ public static ValueTask WriteAsync<T>(T value, Stream stream, ODataUri uri, IEdm
             JavaScriptEncoder = DefaultJsonWriterOptions.Encoder,
             BufferWriter = bufferWriter,
         };
+
+        state.SetCustomSate(in customState);
         // get writer
         var writer = writerProvider.GetWriter<T>(); // should we pass the value as well?
 

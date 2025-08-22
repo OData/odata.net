@@ -15,6 +15,7 @@ public sealed class ODataJsonWriterState<TCustomState>
 {
     private ODataSerializerOptions<TCustomState> options;
     private ODataJsonWriterProvider<TCustomState> writers;
+    private TCustomState customState;
 
     public ODataUri ODataUri { get; set; }
 
@@ -36,6 +37,16 @@ public sealed class ODataJsonWriterState<TCustomState>
     internal PooledByteBufferWriter BufferWriter { get; init; }
 
     internal JavaScriptEncoder JavaScriptEncoder { get; init; }
+
+    public ref TCustomState CustomState
+    {
+        get => ref customState;
+    }
+
+    internal void SetCustomSate(in TCustomState state)
+    {
+        customState = state;
+    }
 
     internal bool ShouldFlush()
     {
@@ -72,11 +83,6 @@ public sealed class ODataJsonWriterState<TCustomState>
         }
 
         return this.Stack.Parent.PropertyInfo;
-    }
-
-    public ref TCustomState CurrentCustomState()
-    {
-        return ref this.Stack.CurrentCustomState;
     }
 
     internal ICustomAnnotationsHandler<TCustomState> GetCustomAnnotationsHandler(Type annotationsType)

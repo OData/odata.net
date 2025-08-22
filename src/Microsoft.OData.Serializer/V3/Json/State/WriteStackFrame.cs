@@ -14,8 +14,6 @@ internal struct WriteStackFrame<TCustomState>
     public ODataTypeInfo? ResourceTypeInfo { get; set; }
     public Adapters.ODataPropertyInfo? PropertyInfo { get; set; }
 
-    public TCustomState CustomState;
-
     public bool IsContinuation { get; set; }
 
     public ResourceWriteProgress ResourceProgress { get; set; }
