@@ -19,9 +19,9 @@ public class DataServiceActionQuerySingleTests
     public void GetValue_ExecutesActionAndReturnsSingleResult()
     {
         // Arrange
-        var context = new TestDataServiceContext(new Uri("http://service/"))
+        var context = new TestDataServiceContext<int>(new Uri("http://service/"))
         {
-            ExecuteIntFunc = (uri, method, single, parameters) => new[] { 42 }
+            ExecuteFunc = (uri, method, single, parameters) => new[] { 42 }
         };
 
         var query = new DataServiceActionQuerySingle<int>(
@@ -37,15 +37,15 @@ public class DataServiceActionQuerySingleTests
     }
 
     [Fact]
-    public void GetValue_ReturnsDefaultIfNoResult()
+    public void GetValue_ReturnsNullIfNoResult_ForNullableTypeInt()
     {
         // Arrange
-        var context = new TestDataServiceContext(new Uri("http://service/"))
+        var context = new TestDataServiceContext<int?>(new Uri("http://service/"))
         {
-            ExecuteIntFunc = (uri, method, single, parameters) => Enumerable.Empty<int>()
+            ExecuteFunc = (uri, method, single, parameters) => []
         };
 
-        var query = new DataServiceActionQuerySingle<int>(
+        var query = new DataServiceActionQuerySingle<int?>(
             context,
             "http://service/Action");
 
@@ -54,15 +54,180 @@ public class DataServiceActionQuerySingleTests
 
         // Assert
         Assert.Equal(default, result);
+        Assert.Null(result);
+    }
+
+    [Fact]
+    public void GetValue_ReturnsNullIfNoResult_ForNullableTypeGuid()
+    {
+        // Arrange
+        var context = new TestDataServiceContext<Guid?>(new Uri("http://service/"))
+        {
+            ExecuteFunc = (uri, method, single, parameters) => []
+        };
+
+        var query = new DataServiceActionQuerySingle<Guid?>(
+            context,
+            "http://service/Action");
+
+        // Act
+        var result = query.GetValue();
+
+        // Assert
+        Assert.Equal(default, result);
+        Assert.Null(result);
+    }
+
+    [Fact]
+    public void GetValue_ReturnsNullIfNoResult_ForNullableTypeDateTime()
+    {
+        // Arrange
+        var context = new TestDataServiceContext<DateTime?>(new Uri("http://service/"))
+        {
+            ExecuteFunc = (uri, method, single, parameters) => []
+        };
+
+        var query = new DataServiceActionQuerySingle<DateTime?>(
+            context,
+            "http://service/Action");
+
+        // Act
+        var result = query.GetValue();
+
+        // Assert
+        Assert.Equal(default, result);
+        Assert.Null(result);
+    }
+
+    [Fact]
+    public void GetValue_ReturnsNullIfNoResult_ForNullableTypeByte()
+    {
+        // Arrange
+        var context = new TestDataServiceContext<byte?>(new Uri("http://service/"))
+        {
+            ExecuteFunc = (uri, method, single, parameters) => []
+        };
+
+        var query = new DataServiceActionQuerySingle<byte?>(
+            context,
+            "http://service/Action");
+
+        // Act
+        var result = query.GetValue();
+
+        // Assert
+        Assert.Equal(default, result);
+        Assert.Null(result);
+    }
+
+    [Fact]
+    public void GetValue_ReturnsNullIfNoResult_ForNullableTypeChar()
+    {
+        // Arrange
+        var context = new TestDataServiceContext<char?>(new Uri("http://service/"))
+        {
+            ExecuteFunc = (uri, method, single, parameters) => []
+        };
+
+        var query = new DataServiceActionQuerySingle<char?>(
+            context,
+            "http://service/Action");
+
+        // Act
+        var result = query.GetValue();
+
+        // Assert
+        Assert.Equal(default, result);
+        Assert.Null(result);
+    }
+
+    [Fact]
+    public void GetValue_ReturnsNullIfNoResult_ForNullableTypeDecimal()
+    {
+        // Arrange
+        var context = new TestDataServiceContext<decimal?>(new Uri("http://service/"))
+        {
+            ExecuteFunc = (uri, method, single, parameters) => []
+        };
+
+        var query = new DataServiceActionQuerySingle<decimal?>(
+            context,
+            "http://service/Action");
+
+        // Act
+        var result = query.GetValue();
+
+        // Assert
+        Assert.Equal(default, result);
+        Assert.Null(result);
+    }
+
+    public static TheoryData<string, IEnumerable<string>> StringData => new()
+    {
+        { "This is string", new List<string> { "This is string" } },
+        { null, Enumerable.Empty<string>() }
+    };
+
+    [Theory]
+    [MemberData(nameof(StringData))]
+    public void GetValue_ReturnsNullIfNoResult_ForNullableTypeString(string expectedResult, IEnumerable<string> mockData)
+    {
+        // Arrange
+        var context = new TestDataServiceContext<string>(new Uri("http://service/"))
+        {
+            ExecuteFunc = (uri, method, single, parameters) => mockData
+        };
+
+        var query = new DataServiceActionQuerySingle<string>(
+            context,
+            "http://service/Action");
+
+        // Act
+        var result = query.GetValue();
+
+        // Assert
+        Assert.Equal(expectedResult, result);
+    }
+
+    public static TheoryData<object, IEnumerable<object>> ObjectData => new()
+    {
+        { "This is string", new List<object> { "This is string" } },
+        { null, Enumerable.Empty<object>() },
+        { 100934, new List<object> { 100934 } },
+        { 3.14159, new List<object> { 3.14159 } },
+        { true, new List<object> { true } },
+        { DateTime.Parse("2024-01-01T12:00:00Z"), new List<object> { DateTime.Parse("2024-01-01T12:00:00Z") } },
+        { Guid.Parse("12345678-1234-1234-1234-1234567890ab"), new List<object> { Guid.Parse("12345678-1234-1234-1234-1234567890ab") } }
+    };
+
+    [Theory]
+    [MemberData(nameof(ObjectData))]
+    public void GetValue_ReturnsNullIfNoResult_ForNullableTypeObject(object expectedResult, IEnumerable<object> mockData)
+    {
+        // Arrange
+        var context = new TestDataServiceContext<object>(new Uri("http://service/"))
+        {
+            ExecuteFunc = (uri, method, single, parameters) => mockData
+        };
+
+        var query = new DataServiceActionQuerySingle<object>(
+            context,
+            "http://service/Action");
+
+        // Act
+        var result = query.GetValue();
+
+        // Assert
+        Assert.Equal(expectedResult, result);
     }
 
     [Fact]
     public void GetValue_Throws_WhenMultipleResults()
     {
         // Arrange
-        var context = new TestDataServiceContext(new Uri("http://service/"))
+        var context = new TestDataServiceContext<int>(new Uri("http://service/"))
         {
-            ExecuteIntFunc = (uri, method, single, parameters) => new[] { 1, 2 }
+            ExecuteFunc = (uri, method, single, parameters) => new[] { 1, 2 }
         };
         var query = new DataServiceActionQuerySingle<int>(context, "http://service/Action");
 
@@ -75,9 +240,9 @@ public class DataServiceActionQuerySingleTests
     {
         // Arrange
         var asyncResult = new TestAsyncResult();
-        var context = new TestDataServiceContext(new Uri("http://service/"))
+        var context = new TestDataServiceContext<int>(new Uri("http://service/"))
         {
-            BeginExecuteIntFunc = (uri, callback, state, method, single, parameters) => asyncResult
+            BeginExecuteFunc = (uri, callback, state, method, single, parameters) => asyncResult
         };
 
         var query = new DataServiceActionQuerySingle<int>(
@@ -96,9 +261,9 @@ public class DataServiceActionQuerySingleTests
     {
         // Arrange
         var asyncResult = new TestAsyncResult();
-        var context = new TestDataServiceContext(new Uri("http://service/"))
+        var context = new TestDataServiceContext<int>(new Uri("http://service/"))
         {
-            EndExecuteIntFunc = (ar) => new[] { 99 }
+            EndExecuteFunc = (ar) => new[] { 99 }
         };
 
         var query = new DataServiceActionQuerySingle<int>(
@@ -113,31 +278,28 @@ public class DataServiceActionQuerySingleTests
     }
 
     [Fact]
-    public void EndGetValue_ReturnsDefault_WhenNoResults()
+    public void EndGetValue_ThrowsInvalidOperationException_WhenNoResultsForNonNullableType()
     {
         // Arrange
         var asyncResult = new TestAsyncResult();
-        var context = new TestDataServiceContext(new Uri("http://service/"))
+        var context = new TestDataServiceContext<int>(new Uri("http://service/"))
         {
-            EndExecuteIntFunc = (ar) => Enumerable.Empty<int>()
+            EndExecuteFunc = (ar) => Enumerable.Empty<int>()
         };
         var query = new DataServiceActionQuerySingle<int>(context, "http://service/Action");
 
-        // Act
-        var result = query.EndGetValue(asyncResult);
-
-        // Assert
-        Assert.Equal(default, result);
+        // Assert & Act
+        Assert.Throws<InvalidOperationException>(() => query.EndGetValue(asyncResult));
     }
 
     [Fact]
-    public void EndGetValue_Throws_WhenMultipleResults()
+    public void EndGetValue_ThrowsInvalidOperationException_WhenMultipleResults()
     {
         // Arrange
         var asyncResult = new TestAsyncResult();
-        var context = new TestDataServiceContext(new Uri("http://service/"))
+        var context = new TestDataServiceContext<int>(new Uri("http://service/"))
         {
-            EndExecuteIntFunc = (ar) => new[] { 1, 2 }
+            EndExecuteFunc = (ar) => new[] { 1, 2 }
         };
         var query = new DataServiceActionQuerySingle<int>(context, "http://service/Action");
 
@@ -150,14 +312,14 @@ public class DataServiceActionQuerySingleTests
     {
         // Arrange
         var asyncResult = new TestAsyncResult();
-        var context = new TestDataServiceContext(new Uri("http://service/"))
+        var context = new TestDataServiceContext<int>(new Uri("http://service/"))
         {
-            BeginExecuteIntFunc = (uri, callback, state, method, single, parameters) =>
+            BeginExecuteFunc = (uri, callback, state, method, single, parameters) =>
             {
                 callback?.Invoke(asyncResult);
                 return asyncResult;
             },
-            EndExecuteIntFunc = (ar) => new[] { 567 }
+            EndExecuteFunc = (ar) => new[] { 567 }
         };
 
         var query = new DataServiceActionQuerySingle<int>(
@@ -172,29 +334,26 @@ public class DataServiceActionQuerySingleTests
     }
 
     [Fact]
-    public async Task GetValueAsync_UsesBeginEndPattern_ReturnsDefault_WhenNoResults()
+    public async Task GetValueAsync_UsesBeginEndPattern_ThrowsInvalidOperationException_WhenNoResultsForNonNullableType()
     {
         // Arrange
         var asyncResult = new TestAsyncResult();
-        var context = new TestDataServiceContext(new Uri("http://service/"))
+        var context = new TestDataServiceContext<int>(new Uri("http://service/"))
         {
-            BeginExecuteIntFunc = (uri, callback, state, method, single, parameters) =>
+            BeginExecuteFunc = (uri, callback, state, method, single, parameters) =>
             {
                 callback?.Invoke(asyncResult);
                 return asyncResult;
             },
-            EndExecuteIntFunc = (ar) => Enumerable.Empty<int>()
+            EndExecuteFunc = (ar) => Enumerable.Empty<int>()
         };
 
         var query = new DataServiceActionQuerySingle<int>(
             context,
             "http://service/Action");
 
-        // Act
-        var result = await query.GetValueAsync();
-
-        // Assert
-        Assert.Equal(default, result);
+        // Act & Assert
+        await Assert.ThrowsAsync<InvalidOperationException>(async () => await query.GetValueAsync());
     }
 
     [Fact]
@@ -202,14 +361,14 @@ public class DataServiceActionQuerySingleTests
     {
         // Arrange
         var asyncResult = new TestAsyncResult();
-        var context = new TestDataServiceContext(new Uri("http://service/"))
+        var context = new TestDataServiceContext<int>(new Uri("http://service/"))
         {
-            BeginExecuteIntFunc = (uri, callback, state, method, single, parameters) =>
+            BeginExecuteFunc = (uri, callback, state, method, single, parameters) =>
             {
                 callback?.Invoke(asyncResult);
                 return asyncResult;
             },
-            EndExecuteIntFunc = (ar) => new[] { 1, 2 }
+            EndExecuteFunc = (ar) => new[] { 1, 2 }
         };
 
         var query = new DataServiceActionQuerySingle<int>(
@@ -225,14 +384,14 @@ public class DataServiceActionQuerySingleTests
     {
         // Arrange
         var asyncResult = new TestAsyncResult();
-        var context = new TestDataServiceContext(new Uri("http://service/"))
+        var context = new TestDataServiceContext<int>(new Uri("http://service/"))
         {
-            BeginExecuteIntFunc = (uri, callback, state, method, single, parameters) =>
+            BeginExecuteFunc = (uri, callback, state, method, single, parameters) =>
             {
                 callback?.Invoke(asyncResult);
                 return asyncResult;
             },
-            EndExecuteIntFunc = (ar) => new[] { 888 }
+            EndExecuteFunc = (ar) => new[] { 888 }
         };
         var query = new DataServiceActionQuerySingle<int>(context, "http://service/Action");
 
@@ -249,9 +408,9 @@ public class DataServiceActionQuerySingleTests
         // Arrange
         var called = false;
         var param = new BodyOperationParameter("p", 5);
-        var context = new TestDataServiceContext(new Uri("http://service/"))
+        var context = new TestDataServiceContext<int>(new Uri("http://service/"))
         {
-            BeginExecuteIntFunc = (uri, callback, state, method, single, parameters) =>
+            BeginExecuteFunc = (uri, callback, state, method, single, parameters) =>
             {
                 called = true;
                 Assert.Single(parameters);
@@ -273,7 +432,7 @@ public class DataServiceActionQuerySingleTests
     public void Constructor_SetsRequestUri()
     {
         // Arrange
-        var context = new TestDataServiceContext(new Uri("http://service/"));
+        var context = new TestDataServiceContext<int>(new Uri("http://service/"));
 
         // Act
         var query = new DataServiceActionQuerySingle<int>(context, "http://service/Action");
@@ -286,9 +445,9 @@ public class DataServiceActionQuerySingleTests
     public void GetValue_ThrowsIfContextThrows()
     {
         // Arrange
-        var context = new TestDataServiceContext(new Uri("http://service/"))
+        var context = new TestDataServiceContext<int>(new Uri("http://service/"))
         {
-            ExecuteIntFunc = (uri, method, single, parameters) => throw new InvalidOperationException("fail")
+            ExecuteFunc = (uri, method, single, parameters) => throw new InvalidOperationException("fail")
         };
         var query = new DataServiceActionQuerySingle<int>(context, "http://service/Action");
 
@@ -301,9 +460,9 @@ public class DataServiceActionQuerySingleTests
     public void EndGetValue_ThrowsIfAsyncResultIsNull()
     {
         // Arrange
-        var context = new TestDataServiceContext(new Uri("http://service/"))
+        var context = new TestDataServiceContext<int>(new Uri("http://service/"))
         {
-            EndExecuteIntFunc = (ar) => new[] { 1 }
+            EndExecuteFunc = (ar) => new[] { 1 }
         };
         var query = new DataServiceActionQuerySingle<int>(context, "http://service/Action");
 
@@ -318,34 +477,34 @@ public class DataServiceActionQuerySingleTests
     /// This class allows customization of data service execution behavior by exposing delegates that can be set to control the results 
     /// of Execute, BeginExecute, and EndExecute methods.
     /// </summary>
-    private class TestDataServiceContext : DataServiceContext
+    private class TestDataServiceContext<T> : DataServiceContext
     {
-        public Func<Uri, string, bool, BodyOperationParameter[], IEnumerable<int>> ExecuteIntFunc { get; set; }
-        public Func<Uri, AsyncCallback, object, string, bool, BodyOperationParameter[], IAsyncResult> BeginExecuteIntFunc { get; set; }
-        public Func<IAsyncResult, IEnumerable<int>> EndExecuteIntFunc { get; set; }
+        public Func<Uri, string, bool, BodyOperationParameter[], IEnumerable<T>> ExecuteFunc { get; set; }
+        public Func<Uri, AsyncCallback, object, string, bool, BodyOperationParameter[], IAsyncResult> BeginExecuteFunc { get; set; }
+        public Func<IAsyncResult, IEnumerable<T>> EndExecuteFunc { get; set; }
 
         public TestDataServiceContext(Uri serviceRoot) : base(serviceRoot) { }
 
         public override IEnumerable<TElement> Execute<TElement>(Uri requestUri, string httpMethod, bool singleResult, params OperationParameter[] operationParameters)
         {
-            if (typeof(TElement) == typeof(int) && ExecuteIntFunc != null)
-                return (IEnumerable<TElement>)ExecuteIntFunc(requestUri, httpMethod, singleResult, operationParameters.Cast<BodyOperationParameter>().ToArray());
+            if (typeof(TElement) == typeof(T) && ExecuteFunc != null)
+                return (IEnumerable<TElement>)ExecuteFunc(requestUri, httpMethod, singleResult, operationParameters.Cast<BodyOperationParameter>().ToArray());
 
             throw new NotImplementedException();
         }
 
         public override IAsyncResult BeginExecute<TElement>(Uri requestUri, AsyncCallback callback, object state, string httpMethod, bool singleResult, params OperationParameter[] operationParameters)
         {
-            if (typeof(TElement) == typeof(int) && BeginExecuteIntFunc != null)
-                return BeginExecuteIntFunc(requestUri, callback, state, httpMethod, singleResult, operationParameters.Cast<BodyOperationParameter>().ToArray());
+            if (typeof(TElement) == typeof(T) && BeginExecuteFunc != null)
+                return BeginExecuteFunc(requestUri, callback, state, httpMethod, singleResult, operationParameters.Cast<BodyOperationParameter>().ToArray());
 
             throw new NotImplementedException();
         }
 
         public override IEnumerable<TElement> EndExecute<TElement>(IAsyncResult asyncResult)
         {
-            if (typeof(TElement) == typeof(int) && EndExecuteIntFunc != null)
-                return (IEnumerable<TElement>)EndExecuteIntFunc(asyncResult);
+            if (typeof(TElement) == typeof(T) && EndExecuteFunc != null)
+                return (IEnumerable<TElement>)EndExecuteFunc(asyncResult);
 
             throw new NotImplementedException();
         }
