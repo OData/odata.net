@@ -7,9 +7,11 @@
 namespace Microsoft.OData.Client
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
+    using Microsoft.OData.Client.Metadata;
 
     /// <summary>
     /// Object of an action which returns a single item.
@@ -52,7 +54,8 @@ namespace Microsoft.OData.Client
         /// <exception cref="InvalidOperationException">Problem materializing result of query into object.</exception>
         public T GetValue()
         {
-            return context.Execute<T>(this.RequestUri, XmlConstants.HttpMethodPost, true, parameters).SingleOrDefault();
+            IEnumerable<T> result = context.Execute<T>(this.RequestUri, XmlConstants.HttpMethodPost, true, parameters);
+            return ClientTypeUtil.CanAssignNull(typeof(T)) ? result.SingleOrDefault() : result.Single();
         }
 
         /// <summary>Asynchronously sends a request to the data service to execute a specific URI.</summary>
@@ -92,7 +95,8 @@ namespace Microsoft.OData.Client
         public T EndGetValue(IAsyncResult asyncResult)
         {
             Util.CheckArgumentNull(asyncResult, "asyncResult");
-            return context.EndExecute<T>(asyncResult).SingleOrDefault();
+            IEnumerable<T> result = context.EndExecute<T>(asyncResult);
+            return ClientTypeUtil.CanAssignNull(typeof(T)) ? result.SingleOrDefault() : result.Single();
         }
     }
 }
