@@ -4,6 +4,7 @@ using Microsoft.OData.Serializer.V3.Adapters;
 using Microsoft.OData.Serializer.V3.Json.State;
 using Microsoft.OData.UriParser;
 using System;
+using System.Buffers;
 using System.Collections.Generic;
 using System.IO.Pipelines;
 using System.Linq;
@@ -15,14 +16,16 @@ namespace Microsoft.OData.Serializer.Tests.V3;
 
 public class PipeReaderBase64WriterTests
 {
-    [Fact]
-    public async Task CanWriteSmallBinaryStringFromPipeReader()
+    [Theory]
+    [InlineData(512)]
+    [InlineData(50_000)]
+    public async Task CanWriteBinaryStringFromPipeReader(int binaryDataSize)
     {
         var entity = new BlogPost
         {
             Id = 1,
             Title = "First Post",
-            CoverImage = CreateByteArray(512)
+            CoverImage = CreateByteArray(binaryDataSize)
         };
 
         var readerFactory = new PipeReaderFactory();
@@ -96,17 +99,7 @@ public class PipeReaderBase64WriterTests
         public PipeReaderFactory ReaderFactory { get; set; }
     }
 
-    private static byte[] CreateByteArray(int size)
-    {
-        var array = new byte[size];
-
-        for (int i = 0; i < size; i++)
-        {
-            array[i] = (byte)(i % 256);
-        }
-
-        return array;
-    }
+    private static byte[] CreateByteArray(int size) => [.. Enumerable.Range(0, size).Select(i => (byte)i)];
 
     private static IEdmModel CreateBlogPostModel()
     {

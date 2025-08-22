@@ -75,7 +75,12 @@ public static class ODataSerializer
                     // We should prob. check if we need more data before calling this.
                     // It's possible that we reached here not because we need more data,
                     // but because we needed to clear the buffer.
-                    await suspendedPipeReader.ReadAsync(cancellationToken: default);
+                    var result = await suspendedPipeReader.ReadAsync(cancellationToken: default);
+
+                    // TODO: check for buffer cancellation.
+                    // We call to advance to allow the continuation to call TryRead() again.
+                    // Since we've advanced by 0 bytes, the next TryRead() will return the same buffer again.
+                    suspendedPipeReader.AdvanceTo(result.Buffer.GetPosition(0));
                 }
             }
 
