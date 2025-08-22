@@ -11,7 +11,7 @@ internal class ODataJsonByteArrayWriter<TCustomState> : ODataJsonWriter<byte[], 
         // Base64 encoding expands length by 4/3
         if (value.Length * 4.0 / 3 < state.BufferCapacity)
         {
-            state.JsonWriter.WriteStringValue(value);
+            state.JsonWriter.WriteBase64StringValue(value);
             return true;
         }
 
