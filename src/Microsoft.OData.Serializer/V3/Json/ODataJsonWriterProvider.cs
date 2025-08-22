@@ -20,6 +20,7 @@ internal class ODataJsonWriterProvider<TCustomState>(ODataSerializerOptions<TCus
     private static readonly ODataJsonDecimalWriter<TCustomState> decimalWriter = new();
     private static readonly ODataJsonByteArrayWriter<TCustomState> byteArrayWriter = new();
     private static readonly ODataJsonUriWriter<TCustomState> uriWriter = new();
+    private static readonly ODataJsonPipeReaderBinaryWriter<TCustomState> pipeReaderWriter = new();
 
 
     private static Dictionary<Type, IODataWriter> simpleWriters = InitPrimitiveWriters();
@@ -81,6 +82,7 @@ internal class ODataJsonWriterProvider<TCustomState>(ODataSerializerOptions<TCus
         Add(decimalWriter);
         Add(byteArrayWriter);
         Add(uriWriter);
+        Add(pipeReaderWriter);
 
         Debug.Assert(NumSimpleWriters <= writers.Count);
 
