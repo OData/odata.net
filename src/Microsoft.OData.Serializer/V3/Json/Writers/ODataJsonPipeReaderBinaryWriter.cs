@@ -61,6 +61,7 @@ internal class ODataJsonPipeReaderBinaryWriter<TCustomState> : ODataJsonWriter<P
             out int bytesWritten,
             isFinalBlock: isFinalBlock);
         Debug.Assert(encodingResult == OperationStatus.Done || encodingResult == OperationStatus.NeedMoreData);
+        state.BufferWriter.Advance(bytesWritten);
 
         // Since the pipe reader is stateful, we don't need to track in the state how much we've read, or trailing bytes.
         // We tell the reader how much we consumed and how much we examined so that it knows whether to fetch more data.
@@ -68,6 +69,7 @@ internal class ODataJsonPipeReaderBinaryWriter<TCustomState> : ODataJsonWriter<P
 
         if (isFinalBlock)
         {
+            state.BufferWriter.Write([JsonConstants.DoubleQuote]);
             // Should we dispose the reader? We should have a flag for this.
             Debug.Assert(bytesConsumed == dataToRead.Length, "All bytes should be consumed in the final block.");
             state.Stack.Pop(true);

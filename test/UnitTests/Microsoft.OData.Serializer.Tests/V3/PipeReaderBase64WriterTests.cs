@@ -48,7 +48,9 @@ public class PipeReaderBase64WriterTests
                 new ODataPropertyInfo<BlogPost, PipeReader, CustomState>()
                 {
                     Name = "CoverImage",
-                    GetValue = (post, state) => state.CustomState.ReaderFactory.GetContentsPipeReader(post)
+                    
+                    // TODO: Not pleased with this tight coupling to PipeReader
+                    GetValuePipeReader = (post, state) => state.CustomState.ReaderFactory.GetContentsPipeReader(post)
                 }
             ]
         });
@@ -66,6 +68,7 @@ public class PipeReaderBase64WriterTests
         {
             ReaderFactory = readerFactory
         };
+
         await ODataSerializer.WriteAsync(payload, output, odataUri, model, options, customState);
 
         output.Position = 0;

@@ -3,6 +3,7 @@ using Microsoft.OData.Serializer.V3.Json.State;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO.Pipelines;
 using System.Linq;
 using System.Net.Http.Headers;
 using System.Text;
@@ -22,6 +23,10 @@ public class ODataPropertyInfo<TDeclaringType, TCustomState> :
     // TODO: this property name conflicts with the method WriteValue from IValueWriter. Perhaps IValueWriter.WriteValue should be renamed?
     // TODO: should we support resumability in custom writes?
     public Func<TDeclaringType, IValueWriter<TCustomState>, ODataJsonWriterState<TCustomState>, bool> WriteValue { get; init; }
+
+    // Streaming support via PipeReader. We should provide a mechanism for supporting custom streaming providers,
+    // e.g. streams, IAsyncEnumerable, etc.
+    public Func<TDeclaringType, ODataJsonWriterState<TCustomState>, PipeReader?>? GetValuePipeReader { get; init; }
 
     // TODO: implement a shorthad GetValue hook of type Func<TDeclaringType, ODataJsonWriterState<TCustomState>, TValue>
     // which would require an extra generic type parameter TValue that's a bit hard to defined since we'd
@@ -191,6 +196,21 @@ public class ODataPropertyInfo<TDeclaringType, TCustomState> :
 
     internal protected virtual bool WritePropertyValue(TDeclaringType resource, ODataJsonWriterState<TCustomState> state)
     {
+        if (this.GetValuePipeReader != null)
+        {
+            var pipeReader = state.Stack.Current.PipeReader ?? this.GetValuePipeReader(resource, state);
+            state.Stack.Current.PipeReader = pipeReader;
+
+            // TODO: What should be expected behaviour if GetValuePipeReader returns null? Should it fall back
+            // to WriteValue/GetValue? Or throw?
+            if (pipeReader == null)
+            {
+                throw new InvalidOperationException($"The {nameof(GetValuePipeReader)} returned null.");
+            }
+
+            return WritePropertyValue(resource, pipeReader, state);
+        }
+
         return WriteValue(resource, this, state);
     }
 

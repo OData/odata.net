@@ -86,6 +86,7 @@ internal class ODataResourceJsonWriter<T, TCustomState>(ODataTypeInfo<T, TCustom
                     // considering that they do not have access to everything in the state.
                     // But they do have access to custom state, so they could store anything they want there.
                     // But they don't control when the stack is pushed or popped.
+                    // TODO: how to communicate to downstream writers that they should not be resumable then?
                     throw new Exception("Resumable writes are currently not supported for custom WriteProperties hook.");
                     // assume the properties writer has stored enough state to resume writing later
                     //state.Stack.Current.IsContinuation = true;
