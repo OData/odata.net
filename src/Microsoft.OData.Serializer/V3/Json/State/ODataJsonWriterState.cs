@@ -39,10 +39,12 @@ public sealed class ODataJsonWriterState<TCustomState>
 
     internal bool ShouldFlush()
     {
-        return JsonWriter.BytesPending > 0.9 * this.Options.BufferSize;
+        return JsonWriter.BytesPending + BufferWriter.WrittenCount > 0.9 * this.BufferWriter.Capacity;
     }
 
-    internal int BufferCapacity => this.options.BufferSize - JsonWriter.BytesPending;
+    internal int UsedBufferSize => JsonWriter.BytesPending + BufferWriter.WrittenCount;
+
+    internal int FreeBufferCapacity => this.BufferWriter.Capacity - this.UsedBufferSize;
 
     public bool IsTopLevel()
     {

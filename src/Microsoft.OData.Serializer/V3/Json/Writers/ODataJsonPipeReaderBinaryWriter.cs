@@ -24,7 +24,7 @@ internal class ODataJsonPipeReaderBinaryWriter<TCustomState> : ODataJsonWriter<P
 
         // See: https://learn.microsoft.com/en-us/dotnet/standard/io/pipelines
 
-        int chunkSize = Math.Min(LargeBinaryStringWriter<TCustomState>.ChunkSize, (int)Math.Floor(state.BufferCapacity * 3 / 4.0));
+        int chunkSize = Math.Min(LargeBinaryStringWriter<TCustomState>.ChunkSize, (int)Math.Floor(state.FreeBufferCapacity * 3 / 4.0));
 
         bool success = value.TryRead(out ReadResult readResult);
         if (!success)

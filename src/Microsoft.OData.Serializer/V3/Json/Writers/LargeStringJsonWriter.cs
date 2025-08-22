@@ -47,7 +47,7 @@ internal static class LargeStringJsonWriter<TCustomState>
 
         // This is a "safer" option of the commented version below, but if the commented
         // version is faster, we can consider using it and extra checks in debug mode.
-        if (state.Stack.Current.ResourceProgress != State.ResourceWriteProgress.Value)
+        if (state.Stack.Current.ResourceProgress < State.ResourceWriteProgress.Value)
         {
             state.JsonWriter.Flush(); // Commit pending bytes to the buffer writer before we start writing to it.
             bufferWriter.Write([JsonConstants.DoubleQuote]);

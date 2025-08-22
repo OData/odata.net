@@ -35,29 +35,24 @@ internal class LargeBinaryStringWriter<TCustomState>
 
         // This is a "safer" option of the commented version below, but if the commented
         // version is faster, we can consider using it and extra checks in debug mode.
-        if (state.Stack.Current.ResourceProgress != State.ResourceWriteProgress.Value)
+        if (state.Stack.Current.ResourceProgress < State.ResourceWriteProgress.Value)
         {
             state.JsonWriter.Flush(); // Commit pending bytes to the buffer writer before we start writing to it.
             bufferWriter.Write([JsonConstants.DoubleQuote]);
             state.Stack.Current.ResourceProgress = State.ResourceWriteProgress.Value;
         }
 
-        //if (chunkStart == 0)
-        //{
-        //    // Is it possible to re-enter this method with chunkStart == 0?
-        //    // That would only be possible if the first chunk did not contain
-        //    // enough data for a full escape. But that should not happen
-        //    // if string value has > 6 chars. If string < 6 chars, we should
-        //    // not reach this method, whe should write single pass.
-        //    // TODO: so we must ensure that
-        //    bufferWriter.Write([JsonConstants.DoubleQuote]);
-        //}
-
         int chunkEnd = Math.Min(chunkStart + ChunkSize, value.Length);
         ReadOnlySpan<byte> chunk = value[chunkStart..chunkEnd];
 
         bool isFinalBlock = chunkEnd == value.Length;
 
+        // It's possible that max encoded length could end up larger than the free buffer capacity.
+        // In this case the bufferWriter will grow the underlying buffer.
+        // If we want to avoid the resizing, we could either return false and signal the caller to flush,
+        // but the free capacity is still below the flush threshold, so we would need to add another flag
+        // to force the caller to flush. Alternatively, we could adjust the chunk size downwards
+        // so that the encoded length fits within the capacity. If we can't do that, then we could fall back to growing the buffer.
         var maxEncodedLength = Base64.GetMaxEncodedToUtf8Length(chunk.Length);
         Span<byte> destination = bufferWriter.GetSpan(maxEncodedLength);
         OperationStatus result = Base64.EncodeToUtf8(chunk, destination, out int bytesConsumed, out int bytesWritten, isFinalBlock);

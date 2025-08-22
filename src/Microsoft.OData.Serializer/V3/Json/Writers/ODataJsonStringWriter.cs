@@ -10,7 +10,7 @@ internal class ODataJsonStringWriter<TCustomState> : ODataJsonWriter<string, TCu
 {
     public override bool Write(string value, ODataJsonWriterState<TCustomState> state)
     {
-        if (value.Length < state.BufferCapacity)
+        if (value.Length < state.FreeBufferCapacity)
         {
             state.JsonWriter.WriteStringValue(value);
             return true;
