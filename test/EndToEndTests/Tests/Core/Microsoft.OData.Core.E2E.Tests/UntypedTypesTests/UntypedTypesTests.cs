@@ -38,6 +38,7 @@ public class UntypedTypesTests : EndToEndTestBase<UntypedTypesTests.TestsStartup
         : base(fixture)
     {
         _baseUri = new Uri(Client.BaseAddress, "odata/");
+        _model = UntypedTypesEdmModel.GetEdmModel();
 
         ResetDefaultDataSource();
     }
@@ -88,6 +89,53 @@ public class UntypedTypesTests : EndToEndTestBase<UntypedTypesTests.TestsStartup
               ]
             }
             """, responseContent);
+    }
+
+    [Theory]
+    [InlineData(MimeTypeODataParameterFullMetadata)]
+    [InlineData(MimeTypeODataParameterMinimalMetadata)]
+    public async Task QueryEntryWithUntypedTypes_WherePreserveUntypedNumericAsDecimalIsFalse(string mimeType)
+    {
+        // Arrange
+        var readerSettings = new ODataMessageReaderSettings() 
+        { 
+            BaseUri = _baseUri, 
+            EnablePrimitiveTypeConversion = true, 
+            EnableMessageStreamDisposal = false,
+            PreserveUntypedNumericAsDecimal = false,
+            ShouldIncludeAnnotation = (annotationName) => true,
+            Validations = ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType
+        };
+
+        var requestUrl = new Uri(_baseUri.AbsoluteUri + "Customers(17)", UriKind.Absolute);
+        var requestMessage = new TestHttpClientRequestMessage(requestUrl, Client);
+        requestMessage.SetHeader("Accept", mimeType);
+
+        // Act
+        var queryResponseMessage = await requestMessage.GetResponseAsync();
+
+        // Assert
+        Assert.Equal(200, queryResponseMessage.StatusCode);
+
+        ODataResource? entry = null;
+        using (var messageReader = new ODataMessageReader(queryResponseMessage, readerSettings, _model))
+        {
+            var reader = await messageReader.CreateODataResourceReaderAsync();
+            while (await reader.ReadAsync())
+            {
+                if (reader.State == ODataReaderState.ResourceEnd)
+                {
+                    entry = reader.Item as ODataResource;
+                }
+            }
+
+            Assert.Equal(ODataReaderState.Completed, reader.State);
+        }
+
+        Assert.NotNull(entry);
+        var value = Assert.IsType<ODataProperty>(entry.Properties.First(p => p.Name == "UntypedProperty")).Value;
+        Assert.IsType<Decimal>(value);
+        Assert.Equal(123456789012345.12345678901234M, value);
     }
 
     #region Private Members

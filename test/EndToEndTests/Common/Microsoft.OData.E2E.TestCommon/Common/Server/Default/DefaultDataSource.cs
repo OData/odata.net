@@ -743,17 +743,7 @@ namespace Microsoft.OData.E2E.TestCommon.Common.Server.Default
                     AccountInfo = new AccountInfo()
                     {
                         FirstName = "James",
-                        LastName = "Bunder",
-                        DynamicProperties = new Dictionary<string, object>()
-                        {
-                            { "IntNum", 123 },
-                            { "DoubleNum", 123.45 },
-                            { "DecimalNum", 123.67m },
-                            { "LongNum", 123456789L },
-                            { "BigIntNum", 1234567890123456789L },
-                            { "ShortNum", 12345 },
-                            { "CollectionOfInt", new List<long> { 56, 100L, 456, 90L } }
-                        }
+                        LastName = "Bunder"
                     },
                     MyGiftCard = new GiftCard()
                     {

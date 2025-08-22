@@ -259,12 +259,7 @@ public class UntypedTypesDataSource
             }
         ];
 
-        this.Orders =
-        [
-            new Order { Id = 1, Amount = 100 },
-            new Order { Id = 2, Amount = 200 },
-            new Order { Id = 3, Amount = 300 }
-        ];
+        this.Orders = this.Customers.SelectMany(c => c.Orders).Distinct().ToList();
     }
 
     private void ResetDataSource()

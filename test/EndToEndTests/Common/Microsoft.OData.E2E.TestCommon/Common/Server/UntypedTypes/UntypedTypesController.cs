@@ -28,39 +28,39 @@ public class UntypedTypesController : ODataController
     [HttpGet("odata/Customers({key})")]
     public IActionResult GetCustomer([FromODataUri] int key)
     {
-        var account = _dataSource.Customers?.FirstOrDefault(a => a.Id == key);
-        if (account == null)
+        var res = _dataSource.Customers?.FirstOrDefault(a => a.Id == key);
+        if (res == null)
         {
             return NotFound();
         }
 
-        return Ok(account);
+        return Ok(res);
     }
 
     [EnableQuery]
     [HttpGet("odata/Customers({key})/UntypedProperty")]
     public IActionResult GetCustomersUntypedProperty([FromODataUri] int key)
     {
-        var account = _dataSource.Customers?.FirstOrDefault(a => a.Id == key);
-        if (account == null)
+        var res = _dataSource.Customers?.FirstOrDefault(a => a.Id == key);
+        if (res == null)
         {
             return NotFound();
         }
 
-        return Ok(account.UntypedProperty);
+        return Ok(res.UntypedProperty);
     }
 
     [EnableQuery]
     [HttpGet("odata/Customers({key})/UntypedList")]
     public IActionResult GetCustomersUntypedList([FromODataUri] int key)
     {
-        var account = _dataSource.Customers?.FirstOrDefault(a => a.Id == key);
-        if (account == null)
+        var res = _dataSource.Customers?.FirstOrDefault(a => a.Id == key);
+        if (res == null)
         {
             return NotFound();
         }
 
-        return Ok(account.UntypedList);
+        return Ok(res.UntypedList);
     }
 
     [HttpPost("odata/Customers")]
@@ -73,13 +73,13 @@ public class UntypedTypesController : ODataController
     [HttpPatch("odata/Customers({key})")]
     public IActionResult UpdateAccount([FromODataUri] int key, [FromBody] Delta<Customer> delta)
     {
-        var existingAccount = _dataSource.Customers?.FirstOrDefault(a => a.Id == key);
-        if (existingAccount == null)
+        var existing = _dataSource.Customers?.FirstOrDefault(a => a.Id == key);
+        if (existing == null)
         {
             return NotFound();
         }
 
-        var updated = delta.Patch(existingAccount);
+        var updated = delta.Patch(existing);
         return Updated(updated);
     }
 
