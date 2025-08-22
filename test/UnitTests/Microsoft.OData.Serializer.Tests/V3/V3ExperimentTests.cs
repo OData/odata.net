@@ -288,7 +288,7 @@ public class V3ODataSerializerTests
 
         output.Seek(0, SeekOrigin.Begin);
         using var reader = new StreamReader(output, Encoding.UTF8);
-        var json = await reader.ReadToEndAsync();
+        var json = NormalizeJson(await reader.ReadToEndAsync());
 
         // Actual OData context to use
         // http://service/odata/$meadata#Customers(Id,Name,Emails,OtherAddresses,Orders,WishList,Orders(Products(Id,Name,Price)).WishList(Id,Name,Category)
