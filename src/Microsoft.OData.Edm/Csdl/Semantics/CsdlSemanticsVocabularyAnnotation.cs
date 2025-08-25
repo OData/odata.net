@@ -398,7 +398,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                         {
                             if (operation.Return?.Type != null)
                             {
-                                return operation.GetReturn();
+                                return operation.Return;
                             }
 
                             return new UnresolvedReturn(operation, this.Location);
@@ -434,7 +434,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                             {
                                 if (operationImport.Operation.Return?.Type != null)
                                 {
-                                    return operationImport.Operation.GetReturn();
+                                    return operationImport.Operation.Return;
                                 }
 
                                 return new UnresolvedReturn(operationImport.Operation, this.Location);

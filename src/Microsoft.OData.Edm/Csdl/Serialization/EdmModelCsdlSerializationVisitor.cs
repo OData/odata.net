@@ -1395,7 +1395,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             this.VisitOperationParameters(operation.Parameters);
             this.schemaWriter.WriteOperationParametersEnd(operation.Parameters);
 
-            IEdmOperationReturn operationReturn = operation.GetReturn();
+            IEdmOperationReturn operationReturn = operation.Return;
             this.ProcessOperationReturn(operationReturn);
 
             this.EndElement(operation);
@@ -1415,7 +1415,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             await this.VisitOperationParametersAsync(operation.Parameters).ConfigureAwait(false);
             await this.schemaWriter.WriteOperationParametersEndAsync(operation.Parameters).ConfigureAwait(false);
 
-            IEdmOperationReturn operationReturn = operation.GetReturn();
+            IEdmOperationReturn operationReturn = operation.Return;
             await this.ProcessOperationReturnAsync(operationReturn).ConfigureAwait(false);
 
             await this.EndElementAsync(operation).ConfigureAwait(false);

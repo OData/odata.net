@@ -165,7 +165,7 @@ public class AmbiguousTypeTests : EdmLibTestCaseBase
         var ambiguousOperation = annotation.Target as IEdmOperation;
         Assert.NotNull(ambiguousOperation);
         Assert.Equal(EdmSchemaElementKind.Function, ambiguousOperation.SchemaElementKind);
-        Assert.Null(ambiguousOperation.ReturnType);
+        Assert.Null(ambiguousOperation.Return?.Type);
         Assert.Equal("DefaultNamespace", ambiguousOperation.Namespace);
         Assert.Equal(firstOperation.Parameters.First(), ambiguousOperation.Parameters.First());
         Assert.Equal(firstOperation.FindParameter("Parameter"), ambiguousOperation.FindParameter("Parameter"));
@@ -205,7 +205,7 @@ public class AmbiguousTypeTests : EdmLibTestCaseBase
         var ambiguousOperationImport = annotation.Target as IEdmOperationImport;
         Assert.NotNull(ambiguousOperationImport);
         Assert.Equal(EdmContainerElementKind.ActionImport, ambiguousOperationImport.ContainerElementKind);
-        Assert.Equal(firstOperationImport.Operation.ReturnType, ambiguousOperationImport.Operation.ReturnType);
+        Assert.Equal(firstOperationImport.Operation.Return.Type, ambiguousOperationImport.Operation.Return.Type);
         Assert.Equal(firstOperationImport.Operation.Parameters.First(), ambiguousOperationImport.Operation.Parameters.First());
         Assert.Equal(firstOperationImport.Operation.FindParameter("Parameter"), ambiguousOperationImport.Operation.FindParameter("Parameter"));
         Assert.Equal(container, ambiguousOperationImport.Container);
