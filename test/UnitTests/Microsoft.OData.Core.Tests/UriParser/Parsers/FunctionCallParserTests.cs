@@ -136,6 +136,126 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             parse.Throws<ODataException>(Error.Format(SRResources.UriQueryExpressionParser_ExpressionExpected, 5, "func("));
         }
 
+        [Theory]
+        [InlineData("cast(Location, NS.HomeAddress)", "cast")]
+        [InlineData("isof(Location, NS.HomeAddress)", "isof")]
+        public void TryParseIdentifierAsFunction_CastAndIsOfFunctions_Works(string expression, string functionName)
+        {
+            // Arrange
+            var lexer = new ExpressionLexer(expression, true, false);
+            var parser = new UriQueryExpressionParser(345, lexer);
+            var functionCallParser = new FunctionCallParser(lexer, parser);
+
+            // Act
+            bool success = functionCallParser.TryParseIdentifierAsFunction(null, out QueryToken result);
+
+            // Assert
+            Assert.True(success);
+            Assert.NotNull(result);
+            Assert.Equal(QueryTokenKind.FunctionCall, result.Kind);
+            var functionCall = Assert.IsType<FunctionCallToken>(result);
+            Assert.Equal(functionName, functionCall.Name);
+            Assert.Equal(2, functionCall.Arguments.Count());
+
+            var secondArgumentValueToken = functionCall.Arguments.ElementAt(1).ValueToken as DottedIdentifierToken;
+            Assert.NotNull(secondArgumentValueToken);
+            Assert.Equal("NS.HomeAddress", secondArgumentValueToken.Identifier);
+            Assert.Equal("Location", (secondArgumentValueToken.NextToken as EndPathToken).Identifier);
+        }
+
+        [Theory]
+        [InlineData("cast(Location, 'NS.HomeAddress')", "cast")]
+        [InlineData("isof(Location, 'NS.HomeAddress')", "isof")]
+        public void TryParseIdentifierAsFunction_CastAndIsOfFunctions_WithQuotesParameters(string expression, string functionName)
+        {
+            // Arrange
+            var lexer = new ExpressionLexer(expression, true, false);
+            var parser = new UriQueryExpressionParser(345, lexer);
+            var functionCallParser = new FunctionCallParser(lexer, parser);
+
+            // Act
+            bool success = functionCallParser.TryParseIdentifierAsFunction(null, out QueryToken result);
+
+            // Assert
+            Assert.True(success);
+            Assert.NotNull(result);
+            Assert.Equal(QueryTokenKind.FunctionCall, result.Kind);
+            var functionCall = Assert.IsType<FunctionCallToken>(result);
+            Assert.Equal(functionName, functionCall.Name);
+            Assert.Equal(2, functionCall.Arguments.Count());
+
+            var secondArgumentValueToken = functionCall.Arguments.ElementAt(1).ValueToken as LiteralToken;
+            Assert.NotNull(secondArgumentValueToken);
+            Assert.Equal("NS.HomeAddress", secondArgumentValueToken.Value);
+
+            var firstArgumentEndPathToken = functionCall.Arguments.ElementAt(0).ValueToken as EndPathToken;
+            Assert.NotNull(firstArgumentEndPathToken);
+            Assert.Equal("Location", firstArgumentEndPathToken.Identifier);
+        }
+
+        [Theory]
+        [InlineData("cast(Location, NS.HomeAddress)", "cast")]
+        [InlineData("isof(Location, NS.HomeAddress)", "isof")]
+        public void ParseArgumentListOrEntityKeyList_CastAndIsOfFunctions(string expression, string expectedFunctionName)
+        {
+            // Arrange
+            var lexer = new ExpressionLexer(expression, true, false);
+            var parser = new UriQueryExpressionParser(345, lexer);
+            var functionCallParser = new FunctionCallParser(lexer, parser);
+
+            var functionName = lexer.CurrentToken.Span;
+
+            // Move to the open paren
+            lexer.NextToken();
+
+            // Act
+            var arguments = functionCallParser.ParseArgumentListOrEntityKeyList(null, functionName);
+
+            // Assert
+            Assert.Equal(expectedFunctionName, functionName.ToString());
+            Assert.NotNull(arguments);
+            Assert.Equal(2, arguments.Length);
+            Assert.All(arguments, arg => Assert.IsType<FunctionParameterToken>(arg));
+
+            var secondArgumentValueToken = arguments.ElementAt(1).ValueToken as DottedIdentifierToken;
+            Assert.NotNull(secondArgumentValueToken);
+            Assert.Equal("NS.HomeAddress", secondArgumentValueToken.Identifier);
+            Assert.Equal("Location", (secondArgumentValueToken.NextToken as EndPathToken).Identifier);
+        }
+
+        [Theory]
+        [InlineData("cast(Location, 'NS.HomeAddress')", "cast")]
+        [InlineData("isof(Location, 'NS.HomeAddress')", "isof")]
+        public void ParseArgumentListOrEntityKeyList_CastAndIsOfFunctions_WithQuotesParameters(string expression, string expectedFunctionName)
+        {
+            // Arrange
+            var lexer = new ExpressionLexer(expression, true, false);
+            var parser = new UriQueryExpressionParser(345, lexer);
+            var functionCallParser = new FunctionCallParser(lexer, parser);
+
+            var functionName = lexer.CurrentToken.Span;
+
+            // Move to the open paren
+            lexer.NextToken();
+
+            // Act
+            var arguments = functionCallParser.ParseArgumentListOrEntityKeyList(null, functionName);
+
+            // Assert
+            Assert.Equal(expectedFunctionName, functionName.ToString());
+            Assert.NotNull(arguments);
+            Assert.Equal(2, arguments.Length);
+            Assert.All(arguments, arg => Assert.IsType<FunctionParameterToken>(arg));
+
+            var secondArgumentValueToken = arguments.ElementAt(1).ValueToken as LiteralToken;
+            Assert.NotNull(secondArgumentValueToken);
+            Assert.Equal("NS.HomeAddress", secondArgumentValueToken.Value);
+
+            var firstArgumentEndPathToken = arguments.ElementAt(0).ValueToken as EndPathToken;
+            Assert.NotNull(firstArgumentEndPathToken);
+            Assert.Equal("Location", firstArgumentEndPathToken.Identifier);
+        }
+
         private static FunctionCallParser GetFunctionCallParser(string expression)
         {
             ExpressionLexer lexer = new ExpressionLexer(expression, true, false);
