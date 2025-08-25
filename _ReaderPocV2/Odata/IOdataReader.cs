@@ -1,5 +1,7 @@
 ﻿namespace Odata
 {
+    using System;
+
     public interface IOdataReader<out TVersion, out TNext> : IReader<TNext>
         where TVersion : Version.V1
     {
