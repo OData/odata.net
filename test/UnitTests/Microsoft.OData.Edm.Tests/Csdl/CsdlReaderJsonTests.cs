@@ -857,7 +857,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
         {
             var function = model.FindDeclaredOperations("NS.TestFunction").FirstOrDefault();
             Assert.NotNull(function);
-            Assert.NotNull(function.ReturnType);
+            Assert.NotNull(function.Return?.Type);
             IEdmOperationReturn returnType = function.GetReturn();
             Assert.NotNull(returnType);
             Assert.Same(returnType.DeclaringOperation, function);

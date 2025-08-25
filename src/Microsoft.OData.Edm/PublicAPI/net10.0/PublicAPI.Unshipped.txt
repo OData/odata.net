@@ -1,0 +1,2 @@
+Microsoft.OData.Edm.EdmOperation.Return.get -> Microsoft.OData.Edm.IEdmOperationReturn
+Microsoft.OData.Edm.IEdmOperation.Return.get -> Microsoft.OData.Edm.IEdmOperationReturn

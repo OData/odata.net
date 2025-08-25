@@ -101,7 +101,7 @@ namespace Microsoft.OData.Edm
         /// <summary>
         /// Gets the return of this operation.
         /// </summary>
-        internal IEdmOperationReturn Return { get; private set; }
+        public IEdmOperationReturn Return { get; }
 
         /// <summary>
         /// Searches for a parameter with the given name in this operation and returns null if no such parameter exists.

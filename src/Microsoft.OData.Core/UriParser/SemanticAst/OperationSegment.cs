@@ -60,7 +60,7 @@ namespace Microsoft.OData.UriParser
             ExceptionUtils.CheckArgumentNotNull(operation, "operation");
             this.operations = new ReadOnlyCollection<IEdmOperation>(new[] { operation });
             this.entitySet = entitySet;
-            this.computedReturnEdmType = operation.ReturnType != null ? operation.ReturnType.Definition : null;
+            this.computedReturnEdmType = operation.Return?.Type != null ? operation.Return.Type.Definition : null;
             this.EnsureTypeAndSetAreCompatable();
 
             if (this.computedReturnEdmType != null)
@@ -110,18 +110,18 @@ namespace Microsoft.OData.UriParser
 
             // Determine the return type of the operation. This is only possible if all the candidate operations agree on the return type.
             // TODO: Because we work on types and not type references, if there are nullability differences we'd ignore them...
-            IEdmType typeSoFar = this.operations.First().ReturnType != null
-                                     ? this.operations.First().ReturnType.Definition
+            IEdmType typeSoFar = this.operations.First().Return?.Type != null
+                                     ? this.operations.First().Return.Type.Definition
                                      : null;
             if (typeSoFar == null)
             {
                 // This is for void operations
-                if (this.operations.Any(operation => operation.ReturnType != null))
+                if (this.operations.Any(operation => operation.Return?.Type != null))
                 {
                     typeSoFar = UnknownSentinel;
                 }
             }
-            else if (this.operations.Any(operationImport => !typeSoFar.IsEquivalentTo(operationImport.ReturnType.Definition)))
+            else if (this.operations.Any(operationImport => !typeSoFar.IsEquivalentTo(operationImport.Return.Type.Definition)))
             {
                 typeSoFar = UnknownSentinel;
             }
