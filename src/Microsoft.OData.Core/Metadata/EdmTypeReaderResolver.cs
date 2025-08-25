@@ -60,7 +60,7 @@ namespace Microsoft.OData.Metadata
         {
             if (operationImport != null && operationImport.Operation.Return?.Type != null)
             {
-                return this.ResolveTypeReference(operationImport.Operation.Return?.Type);
+                return this.ResolveTypeReference(operationImport.Operation.Return.Type);
             }
 
             return null;
