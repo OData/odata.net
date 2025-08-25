@@ -1,4 +1,5 @@
 ﻿using Microsoft.OData.Serializer.V3.Core;
+using Microsoft.OData.Serializer.V3.IO;
 using System;
 using System.Buffers;
 using System.Buffers.Text;
@@ -11,7 +12,7 @@ namespace Microsoft.OData.Serializer.V3.Json.Writers;
 
 internal class ODataJsonPipeReaderBinaryWriter<TCustomState> : ODataJsonWriter<PipeReader, TCustomState>
 {
-    public override bool Write(PipeReader value, ODataJsonWriterState<TCustomState> state)
+    public override bool Write(IBufferedReader<byte> value, ODataJsonWriterState<TCustomState> state)
     {
         state.Stack.Push();
         if (state.Stack.Current.ResourceProgress < State.ResourceWriteProgress.Value)
@@ -26,7 +27,7 @@ internal class ODataJsonPipeReaderBinaryWriter<TCustomState> : ODataJsonWriter<P
 
         int chunkSize = Math.Min(LargeBinaryStringWriter<TCustomState>.ChunkSize, (int)Math.Floor(state.FreeBufferCapacity * 3 / 4.0));
 
-        bool success = value.TryRead(out ReadResult readResult);
+        bool success = value.TryRead(out BufferedReadResult<byte> readResult);
         if (!success)
         {
             state.Stack.Pop(false);

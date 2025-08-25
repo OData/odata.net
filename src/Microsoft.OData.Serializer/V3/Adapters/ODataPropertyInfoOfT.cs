@@ -1,4 +1,5 @@
-﻿using Microsoft.OData.Serializer.V3.Json;
+﻿using Microsoft.OData.Serializer.V3.IO;
+using Microsoft.OData.Serializer.V3.Json;
 using Microsoft.OData.Serializer.V3.Json.State;
 using System;
 using System.Collections.Generic;
@@ -198,7 +199,27 @@ public class ODataPropertyInfo<TDeclaringType, TCustomState> :
     {
         if (this.GetStreamingValue != null)
         {
-            object? stream = state.Stack.Current.StreamingValueSource ?? this.GetStreamingValue(resource, state);
+            object? stream = state.Stack.Current.StreamingValueSource;
+            if (stream == null)
+            {
+                stream = this.GetStreamingValue(resource, state);
+                
+                // TODO: This tight coupling of different types is too messy
+                // and should ideally not be here.
+                if (stream is IAsyncEnumerable<ReadOnlyMemory<byte>> byteEnumerable)
+                {
+                    stream = new AsyncEnumerableReader<byte>(byteEnumerable);
+                }
+                else if (stream is IAsyncEnumerable<ReadOnlyMemory<char>> charEnumerable)
+                {
+                    stream = new AsyncEnumerableReader<char>(charEnumerable);
+                }
+                else if (stream is Stream basicStream)
+                {
+                    stream = PipeReader.Create(basicStream);
+                }
+            }
+
             state.Stack.Current.StreamingValueSource = stream;
 
             // TODO: What should be expected behaviour if GetValuePipeReader returns null? Should it fall back
