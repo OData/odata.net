@@ -23,14 +23,42 @@
 
         public Version.V1 Version { get; } = Odata.Version.V1.Instance;
 
-        public ValueTask Read()
+        public async ValueTask Read()
         {
-            throw new System.NotImplementedException();
+            await this.delegateReader.Read().ConfigureAwait(false);
         }
 
         public IEntityIdReader<Version.V1, TNextReader> TryMoveNext(out bool moved)
         {
-            throw new System.NotImplementedException();
+            //// TODO you are here
+            this.delegateReader = 
+        }
+
+        private sealed class EntityIdReader : IEntityIdReader<Version.V1, TNextReader>
+        {
+            private readonly IEntityIdReader<Version.V1, TNextReader> delegateReader;
+
+            public EntityIdReader(IEntityIdReader<Version.V1, TNextReader> delegateReader)
+            {
+                this.delegateReader = delegateReader;
+            }
+
+            public Version.V1 Version => throw new System.NotImplementedException();
+
+            public ValueTask Read()
+            {
+                throw new System.NotImplementedException();
+            }
+
+            public EntityId TryGetValue(out bool moved)
+            {
+                throw new System.NotImplementedException();
+            }
+
+            public TNextReader TryMoveNext(out bool moved)
+            {
+                throw new System.NotImplementedException();
+            }
         }
     }
 }
