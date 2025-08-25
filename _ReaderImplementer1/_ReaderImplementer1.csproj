@@ -8,4 +8,10 @@
     <AssemblyName>ReaderCaller2</AssemblyName>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Reference Include="ReaderPoc">
+      <HintPath>ReaderPoc.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>
