@@ -1,18 +1,21 @@
-﻿using Microsoft.OData.Serializer.V3.Core;
-using Microsoft.OData.Serializer.V3.IO;
+﻿using Microsoft.OData.Serializer.V3.IO;
 using System;
 using System.Buffers;
 using System.Buffers.Text;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO.Pipelines;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Microsoft.OData.Serializer.V3.Json.Writers;
 
-internal class ODataJsonPipeReaderBinaryWriter<TCustomState> : ODataJsonWriter<PipeReader, TCustomState>
+internal class ODataJsonBufferedReaderByteWriter<TCustomState> :
+    ODataJsonWriter<IBufferedReader<byte>, TCustomState>
 {
-    public override bool Write(PipeReader value, ODataJsonWriterState<TCustomState> state)
+    public override bool Write(
+        IBufferedReader<byte> value,
+        ODataJsonWriterState<TCustomState> state)
     {
         state.Stack.Push();
         if (state.Stack.Current.ResourceProgress < State.ResourceWriteProgress.Value)
@@ -27,7 +30,7 @@ internal class ODataJsonPipeReaderBinaryWriter<TCustomState> : ODataJsonWriter<P
 
         int chunkSize = Math.Min(LargeBinaryStringWriter<TCustomState>.ChunkSize, (int)Math.Floor(state.FreeBufferCapacity * 3 / 4.0));
 
-        bool success = value.TryRead(out ReadResult readResult);
+        bool success = value.TryRead(out BufferedReadResult<byte> readResult);
         if (!success)
         {
             state.Stack.Pop(false);
@@ -35,11 +38,11 @@ internal class ODataJsonPipeReaderBinaryWriter<TCustomState> : ODataJsonWriter<P
         }
 
         bool isFinalChunk = readResult.IsCompleted;
-        if (readResult.IsCanceled)
-        {
-            state.Stack.Pop(false);
-            return false;
-        }
+        //if (readResult.IsCanceled)
+        //{
+        //    state.Stack.Pop(false);
+        //    return false;
+        //}
 
         Span<byte> trailingBytesBuffer = stackalloc byte[3];
         int numTrailingBytes = 0;
@@ -173,7 +176,7 @@ internal class ODataJsonPipeReaderBinaryWriter<TCustomState> : ODataJsonWriter<P
 
                 reachedEnd = isFinalBlock || !readResult.Buffer.TryGet(ref currSeqPos, out currentSegment, advance: true);
             }
-                
+
 
         } while (!reachedEnd);
 
