@@ -15,6 +15,7 @@ internal class AsyncEnumerableReader<T>(
     private int indexInFirst = 0;
 
     bool examinedEverything = false;
+    bool reachedEnd = false;
 
     IAsyncEnumerator<ReadOnlyMemory<T>> enumerator = source.GetAsyncEnumerator();
 
@@ -61,6 +62,7 @@ internal class AsyncEnumerableReader<T>(
                 var moreData = await reader.enumerator.MoveNextAsync();
                 if (!moreData)
                 {
+                    reader.reachedEnd = true;
                     return new(
                         reader.GetCurrentSequence(),
                         isCompleted: true);
@@ -105,7 +107,7 @@ internal class AsyncEnumerableReader<T>(
         // return everything that has not yet been consumed
         result = new BufferedReadResult<T>(
             curSeq,
-            isCompleted: false);
+            isCompleted: reachedEnd);
 
         return true;
     }
