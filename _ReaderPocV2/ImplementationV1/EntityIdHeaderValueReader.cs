@@ -6,13 +6,7 @@
 
     public sealed class EntityIdHeaderValueReader<TNextReader> : IEntityIdHeaderValueReader<Version.V1, TNextReader>
     {
-        public Version.V1 Version
-        {
-            get
-            {
-                return Odata.Version.V1.Instance;
-            }
-        }
+        public Version.V1 Version { get; } = Odata.Version.V1.Instance;
 
         public async ValueTask Read()
         {
@@ -27,13 +21,7 @@
 
         private sealed class EntityIdReader : IEntityIdReader<Version.V1, TNextReader>
         {
-            public Version.V1 Version
-            {
-                get
-                {
-                    return Odata.Version.V1.Instance;
-                }
-            }
+            public Version.V1 Version { get; } = Odata.Version.V1.Instance;
 
             public async ValueTask Read()
             {
