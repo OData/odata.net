@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "_ReaderPocV2", "_ReaderPocV
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "_ReaderCaller1", "ReaderCaller1\_ReaderCaller1.csproj", "{8576B936-39EF-4D2D-A5E5-32A0F57D1390}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "_ReaderImplementer1", "_ReaderImplementer\_ReaderImplementer1.csproj", "{AF67D8EF-D920-422C-A60D-452D0B2E1E40}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{8576B936-39EF-4D2D-A5E5-32A0F57D1390}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8576B936-39EF-4D2D-A5E5-32A0F57D1390}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8576B936-39EF-4D2D-A5E5-32A0F57D1390}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AF67D8EF-D920-422C-A60D-452D0B2E1E40}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF67D8EF-D920-422C-A60D-452D0B2E1E40}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AF67D8EF-D920-422C-A60D-452D0B2E1E40}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AF67D8EF-D920-422C-A60D-452D0B2E1E40}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

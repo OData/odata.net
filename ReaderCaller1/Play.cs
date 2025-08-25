@@ -2,10 +2,19 @@
 {
     using System.Threading.Tasks;
 
+    using ImplementationV1;
     using Odata;
 
-    public static class Play
+    [TestClass]
+    public class Play
     {
+        [TestMethod]
+        public async Task Test1()
+        {
+            var entityIdHeaderValueReader = new EntityIdHeaderValueReader<object>();
+            var nextReader = await Read(entityIdHeaderValueReader).ConfigureAwait(false);
+        }
+
         public static async Task<TNextReader> Read<TNextReader>(IEntityIdHeaderValueReader<Version.V1, TNextReader> entityIdHeaderValueReader)
         {
             IEntityIdReader<Version.V1, TNextReader> entityIdReader;
