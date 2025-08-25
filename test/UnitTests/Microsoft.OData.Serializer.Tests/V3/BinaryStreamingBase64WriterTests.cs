@@ -52,8 +52,7 @@ public class BinaryStreamingBase64WriterTests
                 {
                     Name = "CoverImage",
                     
-                    // TODO: Not pleased with this tight coupling to PipeReader
-                    GetValuePipeReader = (post, state) => state.CustomState.ReaderFactory.GetContentsPipeReader(post)
+                    GetStreamingValue = (post, state) => state.CustomState.ReaderFactory.GetContentsPipeReader(post)
                 }
             ]
         });
@@ -119,8 +118,7 @@ public class BinaryStreamingBase64WriterTests
                 {
                     Name = "CoverImage",
                     
-                    // TODO: Not pleased with this tight coupling to PipeReader
-                    GetValuePipeReader = (post, state) => state.CustomState.ReaderFactory.GetContentStream(post)
+                    GetStreamingValue = (post, state) => state.CustomState.ReaderFactory.GetContentStream(post)
                 }
             ]
         });

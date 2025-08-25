@@ -19,7 +19,7 @@ internal class ODataJsonPipeReaderBinaryWriter<TCustomState> : ODataJsonWriter<P
             state.JsonWriter.Flush(); // Commit pending bytes to the buffer writer before we start writing to it.
             state.BufferWriter.Write([JsonConstants.DoubleQuote]);
             state.Stack.Current.ResourceProgress = State.ResourceWriteProgress.Value;
-            state.Stack.Current.PipeReader = value;
+            state.Stack.Current.StreamingValueSource = value;
         }
 
         // See: https://learn.microsoft.com/en-us/dotnet/standard/io/pipelines

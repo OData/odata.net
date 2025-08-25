@@ -1,4 +1,5 @@
 ﻿using Microsoft.OData.Edm;
+using Microsoft.OData.Serializer.V3.IO;
 using Microsoft.OData.Serializer.V3.Json;
 using Microsoft.OData.Serializer.V3.Json.State;
 using System;
@@ -34,7 +35,7 @@ public static class ODataSerializer
     public static async ValueTask WriteAsync<T, TCustomState>(T value, Stream stream, ODataUri uri, IEdmModel model, ODataSerializerOptions<TCustomState> options, TCustomState customState)
     {
         // this is rough structure of what we expect the writer to do
-        // based on payload kind, determine the appropirate state, context and underlying writer.
+        // based on payload kind, determine the appropriate state, context and underlying writer.
 
         // init state
         using var bufferWriter = new PooledByteBufferWriter(options.BufferSize);
@@ -69,8 +70,10 @@ public static class ODataSerializer
 
             if (state.Stack.HasSuspendedFrames())
             {
-                var suspendedPipeReader = state.Stack.LastSuspendedFrame.PipeReader;
-                if (suspendedPipeReader != null)
+                object? suspendedValueStream = state.Stack.LastSuspendedFrame.StreamingValueSource;
+                
+                // This is really messy
+                if (suspendedValueStream is PipeReader suspendedPipeReader)
                 {
                     // We should prob. check if we need more data before calling this.
                     // It's possible that we reached here not because we need more data,
@@ -81,6 +84,18 @@ public static class ODataSerializer
                     // We call to advance to allow the continuation to call TryRead() again.
                     // Since we've advanced by 0 bytes, the next TryRead() will return the same buffer again.
                     suspendedPipeReader.AdvanceTo(result.Buffer.GetPosition(0));
+                }
+                // TODO: Have a common non-generic interface for IBufferedReader to avoid
+                // creating multiple branches for each supported type
+                else if (suspendedValueStream is IBufferedReader<byte> suspendedByteReader)
+                {
+                    var result = await suspendedByteReader.ReadAsync();
+                    suspendedByteReader.AdvanceTo(result.Buffer.GetPosition(0));
+                }
+                else if (suspendedValueStream is IBufferedReader<char> suspendedCharReader)
+                {
+                    var result = await suspendedCharReader.ReadAsync();
+                    suspendedCharReader.AdvanceTo(result.Buffer.GetPosition(0));
                 }
             }
 
