@@ -6,6 +6,7 @@
 
 namespace Microsoft.OData.Edm
 {
+    using System;
     using System.Collections.Generic;
 
     /// <summary>
@@ -16,6 +17,7 @@ namespace Microsoft.OData.Edm
         /// <summary>
         /// Gets the return type of this operation.
         /// </summary>
+        [Obsolete("Use 'GetReturn()' to get 'IEdmOperationReturn'. This will be dropped in the 9.x release when 'IEdmOperation' exposes 'IEdmOperationReturn' directly. See: https://github.com/OData/odata.net/issues/3085", false)]
         IEdmTypeReference ReturnType { get; }
 
         /// <summary>
