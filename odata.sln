@@ -11,8 +11,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "_ReaderPocV1", "_ReaderPocV
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "_ReaderPocV2", "_ReaderPocV2\_ReaderPocV2.csproj", "{B9A7B754-4242-4DF6-83F4-6387CEB0C7A1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "_ReaderImplementer1", "_ReaderImplementer\_ReaderImplementer1.csproj", "{AF67D8EF-D920-422C-A60D-452D0B2E1E40}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "_ReaderCaller1", "_ReaderCaller\_ReaderCaller1.csproj", "{735D7524-26D6-441E-A36B-F91B82EBFD62}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}"
@@ -44,10 +42,6 @@ Global
 		{B9A7B754-4242-4DF6-83F4-6387CEB0C7A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B9A7B754-4242-4DF6-83F4-6387CEB0C7A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B9A7B754-4242-4DF6-83F4-6387CEB0C7A1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{AF67D8EF-D920-422C-A60D-452D0B2E1E40}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AF67D8EF-D920-422C-A60D-452D0B2E1E40}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AF67D8EF-D920-422C-A60D-452D0B2E1E40}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AF67D8EF-D920-422C-A60D-452D0B2E1E40}.Release|Any CPU.Build.0 = Release|Any CPU
 		{735D7524-26D6-441E-A36B-F91B82EBFD62}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{735D7524-26D6-441E-A36B-F91B82EBFD62}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{735D7524-26D6-441E-A36B-F91B82EBFD62}.Release|Any CPU.ActiveCfg = Release|Any CPU
