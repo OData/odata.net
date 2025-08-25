@@ -1,7 +1,8 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-namespace Odata
+﻿namespace Odata
 {
+    using System.Diagnostics.CodeAnalysis;
+    using System.Threading.Tasks;
+
     public interface IReader<out TNext>
     {
         ValueTask Read();
