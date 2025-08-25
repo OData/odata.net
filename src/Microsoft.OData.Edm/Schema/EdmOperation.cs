@@ -87,7 +87,7 @@ namespace Microsoft.OData.Edm
         /// </summary>
         public IEdmTypeReference ReturnType
         {
-            get { return Return == null ? null : Return.Type; }
+            get { return Return?.Type; }
         }
 
         /// <summary>
