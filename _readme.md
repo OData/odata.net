@@ -15,5 +15,5 @@ TODO make sure to update the hard-coded binaries in each project
 
 ### someone is calling the odata reader v2 implementation
 
-1. build `_readercaller1`
-2. execute `_readercaller1.exe`; this is using `_readerpocv2`; it should output "success!"
+1. build `_readercaller2`
+2. execute `_readercaller2.exe`; this is using `_readerpocv2`; it should output "success!"
