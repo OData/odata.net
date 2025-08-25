@@ -7,4 +7,10 @@
     <AssemblyName>ReaderCaller1</AssemblyName>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Reference Include="ReaderPoc">
+      <HintPath>ReaderPoc.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>

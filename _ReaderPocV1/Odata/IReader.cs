@@ -27,12 +27,12 @@
 
     public static class ReaderExtensions
     {
-        public static bool TryMoveNext2<TNext>(this IReader<TNext> reader, [MaybeNullWhen(false)] out TNext next)
+        public static bool TryMoveNext2<TNext>(this IReader<TNext> reader, [NotNullWhen(true)] out TNext next)
         {
             next = reader.TryMoveNext(out var moved);
             return moved;
         }
-        public static bool TryGetValue2<TValue, TNext>(this IReader<TValue, TNext> reader, [MaybeNullWhen(false)] out TValue value)
+        public static bool TryGetValue2<TValue, TNext>(this IReader<TValue, TNext> reader, [NotNullWhen(true)] out TValue value)
         {
             value = reader.TryGetValue(out var moved);
             return moved;
