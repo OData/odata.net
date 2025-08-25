@@ -17,7 +17,7 @@ namespace Microsoft.OData.Edm
         /// <summary>
         /// Gets the return type of this operation.
         /// </summary>
-        [Obsolete("Use 'GetReturn()' extension method to get the 'IEdmOperationReturn' instead. This will be dropped in the 9.x release.: https://github.com/OData/odata.net/issues/3085", false)]
+        [Obsolete("Use 'GetReturn()' to get 'IEdmOperationReturn'. This will be dropped in the 9.x release when 'IEdmOperation' exposes 'IEdmOperationReturn' directly. See: https://github.com/OData/odata.net/issues/3085", false)]
         IEdmTypeReference ReturnType { get; }
 
         /// <summary>
