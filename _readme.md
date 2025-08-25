@@ -1,5 +1,6 @@
 
 
+TODO finish Attempt3.ReaderImplementer.V1
 TODO make sure that a single customer can have 2 packages, each of which using a different version
 TODO try the case where a customer is using the an old version of the framework and a package that uses a new version of the framework
 TODO go ahead and add a v3 to this as well just to really be sure
