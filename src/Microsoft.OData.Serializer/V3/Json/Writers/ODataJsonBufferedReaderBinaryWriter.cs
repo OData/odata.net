@@ -10,9 +10,10 @@ using System.Threading.Tasks;
 
 namespace Microsoft.OData.Serializer.V3.Json.Writers;
 
-internal class ODataJsonBufferedReaderByteWriter<TCustomState> :
+internal class ODataJsonBufferedReaderBinaryWriter<TCustomState> :
     ODataJsonWriter<IBufferedReader<byte>, TCustomState>
 {
+    
     public override bool Write(
         IBufferedReader<byte> value,
         ODataJsonWriterState<TCustomState> state)

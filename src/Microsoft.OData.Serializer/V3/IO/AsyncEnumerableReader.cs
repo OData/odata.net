@@ -38,7 +38,7 @@ internal class AsyncEnumerableReader<T>(
         Debug.Assert(examinedTo != null);
         var indexInExamined = examined.GetInteger();
 
-        examinedEverything = examinedTo == last && indexInExamined == last.Memory.Length - 1;
+        examinedEverything = examinedTo == last && indexInExamined == last.Memory.Length;
     }
 
     public ValueTask DisposeAsync()
@@ -121,7 +121,7 @@ internal class AsyncEnumerableReader<T>(
         }
 
         Debug.Assert(last != null);
-        return new ReadOnlySequence<T>(first, indexInFirst, last, last.Memory.Length - 1);
+        return new ReadOnlySequence<T>(first, indexInFirst, last, last.Memory.Length);
     }
 
     class BufferSegment : ReadOnlySequenceSegment<T>

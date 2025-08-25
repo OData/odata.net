@@ -13,6 +13,7 @@ namespace Microsoft.OData.Serializer.V3.Json;
 
 internal class ODataJsonWriterProvider<TCustomState>(ODataSerializerOptions<TCustomState> options) : IODataWriterProvider<ODataJsonWriterState<TCustomState>>
 {
+    private static readonly Type ObjectType = typeof(object);
     private static readonly ODataJsonBoolWriter<TCustomState> boolWriter = new();
     private static readonly ODataJsonInt32Writer<TCustomState> int32Writer = new();
     private static readonly ODataJsonStringWriter<TCustomState> stringWriter = new();
@@ -21,6 +22,7 @@ internal class ODataJsonWriterProvider<TCustomState>(ODataSerializerOptions<TCus
     private static readonly ODataJsonByteArrayWriter<TCustomState> byteArrayWriter = new();
     private static readonly ODataJsonUriWriter<TCustomState> uriWriter = new();
     private static readonly ODataJsonPipeReaderBinaryWriter<TCustomState> pipeReaderWriter = new();
+    private static readonly ODataJsonBufferedReaderBinaryWriter<TCustomState> bufferedReaderBinaryWriter = new();
 
 
     private static Dictionary<Type, IODataWriter> simpleWriters = InitPrimitiveWriters();
@@ -83,6 +85,7 @@ internal class ODataJsonWriterProvider<TCustomState>(ODataSerializerOptions<TCus
         Add(byteArrayWriter);
         Add(uriWriter);
         Add(pipeReaderWriter);
+        Add(bufferedReaderBinaryWriter);
 
         Debug.Assert(NumSimpleWriters <= writers.Count);
 

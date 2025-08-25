@@ -203,9 +203,14 @@ public class ODataPropertyInfo<TDeclaringType, TCustomState> :
             if (stream == null)
             {
                 stream = this.GetStreamingValue(resource, state);
-                
+
                 // TODO: This tight coupling of different types is too messy
                 // and should ideally not be here.
+                // We should allow custom to provide custom values and writers.
+                // But we if we pass object to WritePropertyValue, it won't find the writer
+                // since it doesn't use object.GetType() to find the writer, but rather typeof(object).
+                // We need to review this approach and decide whether it makes
+                // sense moving forward.
                 if (stream is IAsyncEnumerable<ReadOnlyMemory<byte>> byteEnumerable)
                 {
                     stream = new AsyncEnumerableReader<byte>(byteEnumerable);
@@ -229,7 +234,29 @@ public class ODataPropertyInfo<TDeclaringType, TCustomState> :
                 throw new InvalidOperationException($"The {nameof(GetStreamingValue)} returned null.");
             }
 
-            return WritePropertyValue(resource, stream, state);
+            // TODO this is temporary hack since WritePropertyValue(resource, object, state) will not find the writer
+            // since the value is not passed to the writer provider, just the static type. So to fix this,
+            // we would either need to create a version of WriterProvider.GetWriter that accepts a Type parameter,
+            // which also mean caching or calling GetType() on the value each time, or we would
+            // need another approach altogether.
+            // But this shows that this is approach to streaming is probably not a good idea.
+            else if (stream is PipeReader pipeReader)
+            {
+                return WritePropertyValue(resource, pipeReader, state);
+            }
+            else if (stream is IBufferedReader<byte> byteReader)
+            {
+                return WritePropertyValue(resource, byteReader, state);
+            }
+            else if (stream is IBufferedReader<char> charReader)
+            {
+                return WritePropertyValue(resource, charReader, state);
+            }
+            else
+            {
+                throw new NotSupportedException($"The type '{stream.GetType()}' returned by {nameof(GetStreamingValue)} is not supported. Supported types are PipeReader and IBufferedReader<byte>.");
+            }
+ 
         }
 
         return WriteValue(resource, this, state);
