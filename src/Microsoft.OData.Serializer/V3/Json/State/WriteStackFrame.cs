@@ -24,5 +24,5 @@ internal struct WriteStackFrame<TCustomState>
 
     public IEnumerator CurrentEnumerator { get; set; }
 
-    public PipeReader? PipeReader { get; set; }
+    public object? StreamingValueSource { get; set; }
 }

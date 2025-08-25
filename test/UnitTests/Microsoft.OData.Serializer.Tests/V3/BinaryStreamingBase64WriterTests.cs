@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace Microsoft.OData.Serializer.Tests.V3;
 
-public class PipeReaderBase64WriterTests
+public class BinaryStreamingBase64WriterTests
 {
     [Theory]
     [InlineData(512)]
@@ -32,28 +32,27 @@ public class PipeReaderBase64WriterTests
 
         var payload = new List<BlogPost> { entity };
 
-        var options = new ODataSerializerOptions<CustomState>();
+        var options = new ODataSerializerOptions<PipeReaderState>();
 
 
         options.AddTypeInfo<BlogPost>(new()
         {
             Properties = [
-                new ODataPropertyInfo<BlogPost, int, CustomState>()
+                new ODataPropertyInfo<BlogPost, int, PipeReaderState>()
                 {
                     Name = "Id",
                     GetValue = (post, state) => post.Id
                 },
-                new ODataPropertyInfo<BlogPost, string, CustomState>()
+                new ODataPropertyInfo<BlogPost, string, PipeReaderState>()
                 {
                     Name = "Title",
                     GetValue = (post, state) => post.Title
                 },
-                new ODataPropertyInfo<BlogPost, PipeReader, CustomState>()
+                new ODataPropertyInfo<BlogPost, PipeReader, PipeReaderState>()
                 {
                     Name = "CoverImage",
                     
-                    // TODO: Not pleased with this tight coupling to PipeReader
-                    GetValuePipeReader = (post, state) => state.CustomState.ReaderFactory.GetContentsPipeReader(post)
+                    GetStreamingValue = (post, state) => state.CustomState.ReaderFactory.GetContentsPipeReader(post)
                 }
             ]
         });
@@ -67,7 +66,73 @@ public class PipeReaderBase64WriterTests
             new Uri("BlogPosts", UriKind.Relative)
         ).ParseUri();
 
-        var customState = new CustomState
+        var customState = new PipeReaderState
+        {
+            ReaderFactory = readerFactory
+        };
+
+        await ODataSerializer.WriteAsync(payload, output, odataUri, model, options, customState);
+
+        output.Position = 0;
+        var decoded = JsonDocument.Parse(output);
+        var actualBase64String = decoded.RootElement.GetProperty("value")[0].GetProperty("CoverImage").GetString();
+        var expectedBase64String = Convert.ToBase64String(entity.CoverImage);
+
+        Assert.Equal(expectedBase64String, actualBase64String);
+    }
+
+
+    [Theory]
+    [InlineData(512)]
+    [InlineData(50_000)]
+    public async Task CanWriteBinaryStringFromAsyncEnumerable(int binaryDataSize)
+    {
+        var entity = new BlogPost
+        {
+            Id = 1,
+            Title = "First Post",
+            CoverImage = CreateByteArray(binaryDataSize)
+        };
+
+        var readerFactory = new AsyncEnumerableFactory();
+
+        var payload = new List<BlogPost> { entity };
+
+        var options = new ODataSerializerOptions<AsyncEnumerableState>();
+
+
+        options.AddTypeInfo<BlogPost>(new()
+        {
+            Properties = [
+                new ODataPropertyInfo<BlogPost, int, AsyncEnumerableState>()
+                {
+                    Name = "Id",
+                    GetValue = (post, state) => post.Id
+                },
+                new ODataPropertyInfo<BlogPost, string, AsyncEnumerableState>()
+                {
+                    Name = "Title",
+                    GetValue = (post, state) => post.Title
+                },
+                new ODataPropertyInfo<BlogPost, PipeReader, AsyncEnumerableState>()
+                {
+                    Name = "CoverImage",
+                    
+                    GetStreamingValue = (post, state) => state.CustomState.ReaderFactory.GetContentStream(post)
+                }
+            ]
+        });
+
+        var output = new MemoryStream();
+
+        var model = CreateBlogPostModel();
+        var odataUri = new ODataUriParser(
+            model,
+            new Uri("http://service/odata"),
+            new Uri("BlogPosts", UriKind.Relative)
+        ).ParseUri();
+
+        var customState = new AsyncEnumerableState
         {
             ReaderFactory = readerFactory
         };
@@ -94,9 +159,32 @@ public class PipeReaderBase64WriterTests
         }
     }
 
-    struct CustomState
+    class AsyncEnumerableFactory
+    {
+        public async IAsyncEnumerable<ReadOnlyMemory<byte>> GetContentStream(BlogPost post)
+        {
+            const int bufferSize = 4096;
+            int offset = 0;
+            while (offset < post.CoverImage.Length)
+            {
+                int segmentSize = Math.Min(post.CoverImage.Length - offset, bufferSize);
+                var segment = post.CoverImage.AsMemory().Slice(offset, segmentSize);
+                yield return segment;
+                await Task.Yield();
+
+                offset += segment.Length;
+            }
+        }
+    }
+
+    struct PipeReaderState
     {
         public PipeReaderFactory ReaderFactory { get; set; }
+    }
+
+    struct AsyncEnumerableState
+    {
+        public AsyncEnumerableFactory ReaderFactory { get; set; }
     }
 
     private static byte[] CreateByteArray(int size) => [.. Enumerable.Range(0, size).Select(i => (byte)i)];

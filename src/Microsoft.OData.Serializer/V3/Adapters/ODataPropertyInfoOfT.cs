@@ -1,4 +1,5 @@
-﻿using Microsoft.OData.Serializer.V3.Json;
+﻿using Microsoft.OData.Serializer.V3.IO;
+using Microsoft.OData.Serializer.V3.Json;
 using Microsoft.OData.Serializer.V3.Json.State;
 using System;
 using System.Collections.Generic;
@@ -24,18 +25,18 @@ public class ODataPropertyInfo<TDeclaringType, TCustomState> :
     // TODO: should we support resumability in custom writes?
     public Func<TDeclaringType, IValueWriter<TCustomState>, ODataJsonWriterState<TCustomState>, bool> WriteValue { get; init; }
 
-    // Streaming support via PipeReader. We should provide a mechanism for supporting custom streaming providers,
+    // Streaming support via objects like PipeReader, Stream, AsyncEnumerable, etc. We should provide a mechanism for supporting custom streaming providers,
     // e.g. streams, IAsyncEnumerable, etc.
-    public Func<TDeclaringType, ODataJsonWriterState<TCustomState>, PipeReader?>? GetValuePipeReader { get; init; }
+    public Func<TDeclaringType, ODataJsonWriterState<TCustomState>, object?>? GetStreamingValue { get; init; }
 
-    // TODO: implement a shorthad GetValue hook of type Func<TDeclaringType, ODataJsonWriterState<TCustomState>, TValue>
+    // TODO: implement a shorthand GetValue hook of type Func<TDeclaringType, ODataJsonWriterState<TCustomState>, TValue>
     // which would require an extra generic type parameter TValue that's a bit hard to defined since we'd
     // also want a default cause that only takes 2 parameters <TDeclaringType, TValue>
     // which would conflict with the current <TDeclaringType, TCustomState> definition.
 
     // TODO: Should nested count handlers be defined on the property info or the type info?
     // We already have count handlers on the type info, keeping them there would provide
-    // uniformit. It might be cause of confusion to have to set it multiple places.
+    // uniformity. It might be cause of confusion to have to set it multiple places.
     // The challenge with having it on the type info is that when comes to writing
     // nested annotations, e.g. PropertyName@odata.count, we need to write this before
     // the value. We need to write this annotation before the value, so at this time
@@ -196,19 +197,39 @@ public class ODataPropertyInfo<TDeclaringType, TCustomState> :
 
     internal protected virtual bool WritePropertyValue(TDeclaringType resource, ODataJsonWriterState<TCustomState> state)
     {
-        if (this.GetValuePipeReader != null)
+        if (this.GetStreamingValue != null)
         {
-            var pipeReader = state.Stack.Current.PipeReader ?? this.GetValuePipeReader(resource, state);
-            state.Stack.Current.PipeReader = pipeReader;
+            object? stream = state.Stack.Current.StreamingValueSource;
+            if (stream == null)
+            {
+                stream = this.GetStreamingValue(resource, state);
+                
+                // TODO: This tight coupling of different types is too messy
+                // and should ideally not be here.
+                if (stream is IAsyncEnumerable<ReadOnlyMemory<byte>> byteEnumerable)
+                {
+                    stream = new AsyncEnumerableReader<byte>(byteEnumerable);
+                }
+                else if (stream is IAsyncEnumerable<ReadOnlyMemory<char>> charEnumerable)
+                {
+                    stream = new AsyncEnumerableReader<char>(charEnumerable);
+                }
+                else if (stream is Stream basicStream)
+                {
+                    stream = PipeReader.Create(basicStream);
+                }
+            }
+
+            state.Stack.Current.StreamingValueSource = stream;
 
             // TODO: What should be expected behaviour if GetValuePipeReader returns null? Should it fall back
             // to WriteValue/GetValue? Or throw?
-            if (pipeReader == null)
+            if (stream == null)
             {
-                throw new InvalidOperationException($"The {nameof(GetValuePipeReader)} returned null.");
+                throw new InvalidOperationException($"The {nameof(GetStreamingValue)} returned null.");
             }
 
-            return WritePropertyValue(resource, pipeReader, state);
+            return WritePropertyValue(resource, stream, state);
         }
 
         return WriteValue(resource, this, state);

@@ -46,7 +46,7 @@ public abstract class ODataResourceSetBaseJsonWriter<TCollection, TElement, TCus
                 // in this case, annotations are stored on the parent object's propertyInfo
                 // and they're prefixed using the property name. But I've changed
                 // the model, now the nested annotations of the property that current
-                // valu belongs to are written by the parent writer.
+                // value belongs to are written by the parent writer.
                 // I'm still evaluating to see which models makes more sense.
                 //await WritePreValueMetadata(value, parentProperty, state);
             }
