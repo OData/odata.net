@@ -11,6 +11,7 @@
         {
             var entityIdHeaderValueReader = new EntityIdHeaderValueReader<object>();
             var nextReader = await Read(entityIdHeaderValueReader).ConfigureAwait(false);
+            System.Console.WriteLine("success!");
         }
         
         public static async Task<TNextReader> Read<TNextReader>(IEntityIdHeaderValueReader<Version.V1, TNextReader> entityIdHeaderValueReader)
