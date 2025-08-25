@@ -95,7 +95,7 @@ public class BinaryStreamingBase64WriterTests
             CoverImage = CreateByteArray(binaryDataSize)
         };
 
-        var readerFactory = new PipeReaderFactory();
+        var readerFactory = new AsyncEnumerableFactory();
 
         var payload = new List<BlogPost> { entity };
 
@@ -134,7 +134,7 @@ public class BinaryStreamingBase64WriterTests
             new Uri("BlogPosts", UriKind.Relative)
         ).ParseUri();
 
-        var customState = new PipeReaderState
+        var customState = new AsyncEnumerableState
         {
             ReaderFactory = readerFactory
         };
