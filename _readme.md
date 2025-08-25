@@ -1,3 +1,10 @@
+
+
+TODO make sure to update the hard-coded binaries in each project
+
+
+
+
 ### someone is calling the odata reader v1 implementation and updates their odata nuget package
 
 1. build `_readercaller1`
