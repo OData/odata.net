@@ -26,6 +26,11 @@ namespace Microsoft.OData.Edm
             get { return null; }
         }
 
+        public IEdmOperationReturn Return
+        {
+            get { return null; }
+        }
+
         public string Namespace
         {
             get { return this.first.Namespace; }
