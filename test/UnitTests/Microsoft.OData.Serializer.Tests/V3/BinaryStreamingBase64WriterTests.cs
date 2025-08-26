@@ -147,6 +147,66 @@ public class BinaryStreamingBase64WriterTests
         Assert.Equal(expectedBase64String, actualBase64String);
     }
 
+    [Theory]
+    [InlineData(512)]
+    [InlineData(50_000)]
+    public async Task CanWriteBinaryStringFromStream(int binaryDataSize)
+    {
+        var entity = new BlogPost
+        {
+            Id = 1,
+            Title = "First Post",
+            CoverImage = CreateByteArray(binaryDataSize)
+        };
+
+        var readerFactory = new AsyncEnumerableFactory();
+
+        var payload = new List<BlogPost> { entity };
+
+        var options = new ODataSerializerOptions();
+
+
+        options.AddTypeInfo<BlogPost>(new()
+        {
+            Properties = [
+                new ODataPropertyInfo<BlogPost, int, DefaultState>()
+                {
+                    Name = "Id",
+                    GetValue = (post, state) => post.Id
+                },
+                new ODataPropertyInfo<BlogPost, string, DefaultState>()
+                {
+                    Name = "Title",
+                    GetValue = (post, state) => post.Title
+                },
+                new ODataPropertyInfo<BlogPost, Stream, DefaultState>()
+                {
+                    Name = "CoverImage",
+
+                    GetStreamingValue = (post, state) => new MemoryStream(post.CoverImage)
+                }
+            ]
+        });
+
+        var output = new MemoryStream();
+
+        var model = CreateBlogPostModel();
+        var odataUri = new ODataUriParser(
+            model,
+            new Uri("http://service/odata"),
+            new Uri("BlogPosts", UriKind.Relative)
+        ).ParseUri();
+
+        await ODataSerializer.WriteAsync(payload, output, odataUri, model, options);
+
+        output.Position = 0;
+        var decoded = JsonDocument.Parse(output);
+        var actualBase64String = decoded.RootElement.GetProperty("value")[0].GetProperty("CoverImage").GetString();
+        var expectedBase64String = Convert.ToBase64String(entity.CoverImage);
+
+        Assert.Equal(expectedBase64String, actualBase64String);
+    }
+
     class PipeReaderFactory
     {
 
