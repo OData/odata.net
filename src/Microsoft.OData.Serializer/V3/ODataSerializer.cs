@@ -49,6 +49,7 @@ public static class ODataSerializer
             PayloadKind = ODataPayloadKind.ResourceSet,
             JavaScriptEncoder = DefaultJsonWriterOptions.Encoder,
             BufferWriter = bufferWriter,
+            OutputStream = stream,
         };
 
         state.SetCustomSate(in customState);

@@ -3,6 +3,7 @@ using Microsoft.OData.Serializer.V3.Json.State;
 using System;
 using System.Buffers;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.Encodings.Web;
@@ -36,6 +37,8 @@ public sealed class ODataJsonWriterState<TCustomState>
 
     internal PooledByteBufferWriter BufferWriter { get; init; }
 
+    internal Stream OutputStream { get; init; }
+
     internal JavaScriptEncoder JavaScriptEncoder { get; init; }
 
     internal HashSet<object>? _disposableObjects;
@@ -53,6 +56,14 @@ public sealed class ODataJsonWriterState<TCustomState>
     internal bool ShouldFlush()
     {
         return JsonWriter.BytesPending + BufferWriter.WrittenCount > 0.9 * this.BufferWriter.Capacity;
+    }
+
+    internal async ValueTask FlushAsync()
+    {
+        JsonWriter.Flush();
+        //await bufferWriter.WriteToStreamAsync(stream, cancellationToken: default).ConfigureAwait(false);
+        await OutputStream.WriteAsync(BufferWriter.WrittenMemory, cancellationToken: default).ConfigureAwait(false);
+        BufferWriter.Clear();
     }
 
     internal int UsedBufferSize => JsonWriter.BytesPending + BufferWriter.WrittenCount;
