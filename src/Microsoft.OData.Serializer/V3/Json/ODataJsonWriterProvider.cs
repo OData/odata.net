@@ -13,7 +13,7 @@ namespace Microsoft.OData.Serializer.V3.Json;
 
 internal class ODataJsonWriterProvider<TCustomState>(ODataSerializerOptions<TCustomState> options) : IODataWriterProvider<ODataJsonWriterState<TCustomState>>
 {
-    private static readonly Type ObjectType = typeof(object);
+    //private static readonly Type ObjectType = typeof(object);
     private static readonly ODataJsonBoolWriter<TCustomState> boolWriter = new();
     private static readonly ODataJsonInt32Writer<TCustomState> int32Writer = new();
     private static readonly ODataJsonStringWriter<TCustomState> stringWriter = new();

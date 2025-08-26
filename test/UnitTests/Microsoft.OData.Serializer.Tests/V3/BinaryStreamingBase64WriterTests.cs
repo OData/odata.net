@@ -207,6 +207,241 @@ public class BinaryStreamingBase64WriterTests
         Assert.Equal(expectedBase64String, actualBase64String);
     }
 
+    [Fact]
+    public async Task CompletesPipeReaderByDefault()
+    {
+        var entity = new BlogPost
+        {
+            Id = 1,
+            Title = "First Post",
+            CoverImage = CreateByteArray(512)
+        };
+
+        var payload = new List<BlogPost> { entity };
+
+        var options = new ODataSerializerOptions<Dictionary<int, PipeReader>>();
+
+        var stream = new MemoryStream(entity.CoverImage);
+        var reader = PipeReader.Create(stream);
+        var state = new Dictionary<int, PipeReader>
+        {
+            { entity.Id, reader }
+        };
+
+
+        options.AddTypeInfo<BlogPost>(new()
+        {
+            Properties = [
+                new ODataPropertyInfo<BlogPost, int, Dictionary<int, PipeReader>>()
+                {
+                    Name = "Id",
+                    GetValue = (post, state) => post.Id
+                },
+                new ODataPropertyInfo<BlogPost, string, Dictionary<int, PipeReader>>()
+                {
+                    Name = "Title",
+                    GetValue = (post, state) => post.Title
+                },
+                new ODataPropertyInfo<BlogPost, Stream, Dictionary<int, PipeReader>>()
+                {
+                    Name = "CoverImage",
+
+                    GetStreamingValue = (post, state) => state.CustomState[post.Id]
+                }
+            ]
+        });
+
+        var output = new MemoryStream();
+
+        var model = CreateBlogPostModel();
+        var odataUri = new ODataUriParser(
+            model,
+            new Uri("http://service/odata"),
+            new Uri("BlogPosts", UriKind.Relative)
+        ).ParseUri();
+
+        await ODataSerializer.WriteAsync(payload, output, odataUri, model, options, state);
+
+        Assert.Throws<InvalidOperationException>(() => reader.TryRead(out _));
+        Assert.Throws<ObjectDisposedException>(() => stream.ReadByte());
+    }
+
+
+    [Fact]
+    public async Task DisposesStreamByDefault()
+    {
+        var entity = new BlogPost
+        {
+            Id = 1,
+            Title = "First Post",
+            CoverImage = CreateByteArray(512)
+        };
+
+        var payload = new List<BlogPost> { entity };
+
+        var options = new ODataSerializerOptions<Dictionary<int, Stream>>();
+
+        var stream = new MemoryStream(entity.CoverImage);
+        var state = new Dictionary<int, Stream>
+        {
+            { entity.Id, stream }
+        };
+
+
+        options.AddTypeInfo<BlogPost>(new()
+        {
+            Properties = [
+                new ODataPropertyInfo<BlogPost, int, Dictionary<int, Stream>>()
+                {
+                    Name = "Id",
+                    GetValue = (post, state) => post.Id
+                },
+                new ODataPropertyInfo<BlogPost, string, Dictionary<int, Stream>>()
+                {
+                    Name = "Title",
+                    GetValue = (post, state) => post.Title
+                },
+                new ODataPropertyInfo<BlogPost, Stream, Dictionary<int, Stream>>()
+                {
+                    Name = "CoverImage",
+
+                    GetStreamingValue = (post, state) => state.CustomState[post.Id]
+                }
+            ]
+        });
+
+        var output = new MemoryStream();
+
+        var model = CreateBlogPostModel();
+        var odataUri = new ODataUriParser(
+            model,
+            new Uri("http://service/odata"),
+            new Uri("BlogPosts", UriKind.Relative)
+        ).ParseUri();
+
+        await ODataSerializer.WriteAsync(payload, output, odataUri, model, options, state);
+
+        Assert.Throws<ObjectDisposedException>(() => stream.ReadByte());
+    }
+
+    [Fact]
+    public async Task DisposesStreamEvenIfExceptionOccurs()
+    {
+        var entity = new BlogPost
+        {
+            Id = 1,
+            Title = "First Post",
+            CoverImage = []
+        };
+
+        var payload = new List<BlogPost> { entity };
+
+        var options = new ODataSerializerOptions<Dictionary<int, Stream>>();
+
+        var stream = new StreamWithException();
+        var state = new Dictionary<int, Stream>
+        {
+            { entity.Id, stream }
+        };
+
+
+        options.AddTypeInfo<BlogPost>(new()
+        {
+            Properties = [
+                new ODataPropertyInfo<BlogPost, int, Dictionary<int, Stream>>()
+                {
+                    Name = "Id",
+                    GetValue = (post, state) => post.Id
+                },
+                new ODataPropertyInfo<BlogPost, string, Dictionary<int, Stream>>()
+                {
+                    Name = "Title",
+                    GetValue = (post, state) => post.Title
+                },
+                new ODataPropertyInfo<BlogPost, Stream, Dictionary<int, Stream>>()
+                {
+                    Name = "CoverImage",
+
+                    GetStreamingValue = (post, state) => state.CustomState[post.Id]
+                }
+            ]
+        });
+
+        var output = new MemoryStream();
+
+        var model = CreateBlogPostModel();
+        var odataUri = new ODataUriParser(
+            model,
+            new Uri("http://service/odata"),
+            new Uri("BlogPosts", UriKind.Relative)
+        ).ParseUri();
+
+        await Assert.ThrowsAnyAsync<Exception>(async () => await ODataSerializer.WriteAsync(payload, output, odataUri, model, options, state));
+
+        Assert.Throws<ObjectDisposedException>(() => stream.ReadByte());
+    }
+
+    [Fact]
+    public async Task DoesNotDisposeStreamIfLeaveOpenSetToTrue()
+    {
+        var entity = new BlogPost
+        {
+            Id = 1,
+            Title = "First Post",
+            CoverImage = CreateByteArray(512)
+        };
+
+        var readerFactory = new AsyncEnumerableFactory();
+
+        var payload = new List<BlogPost> { entity };
+
+        var options = new ODataSerializerOptions<Dictionary<int, Stream>>();
+
+        var stream = new MemoryStream(entity.CoverImage);
+        var state = new Dictionary<int, Stream>
+        {
+            { entity.Id, stream }
+        };
+
+
+        options.AddTypeInfo<BlogPost>(new()
+        {
+            Properties = [
+                new ODataPropertyInfo<BlogPost, int, Dictionary<int, Stream>>()
+                {
+                    Name = "Id",
+                    GetValue = (post, state) => post.Id
+                },
+                new ODataPropertyInfo<BlogPost, string, Dictionary<int, Stream>>()
+                {
+                    Name = "Title",
+                    GetValue = (post, state) => post.Title
+                },
+                new ODataPropertyInfo<BlogPost, Stream, Dictionary<int, Stream>>()
+                {
+                    Name = "CoverImage",
+
+                    GetStreamingValue = (post, state) => state.CustomState[post.Id],
+                    LeaveStreamOpen = true
+                }
+            ]
+        });
+
+        var output = new MemoryStream();
+
+        var model = CreateBlogPostModel();
+        var odataUri = new ODataUriParser(
+            model,
+            new Uri("http://service/odata"),
+            new Uri("BlogPosts", UriKind.Relative)
+        ).ParseUri();
+
+        await ODataSerializer.WriteAsync(payload, output, odataUri, model, options, state);
+
+        stream.Position = 0;
+        Assert.Equal(0, stream.ReadByte());
+    }
+
     class PipeReaderFactory
     {
 
@@ -269,5 +504,66 @@ public class BinaryStreamingBase64WriterTests
         public string Title { get; set; }
 
         public byte[] CoverImage { get; set; }
+    }
+
+    class StreamWithException : Stream
+    {
+        bool disposed;
+        public override bool CanRead => throw new NotImplementedException();
+
+        public override bool CanSeek => throw new NotImplementedException();
+
+        public override bool CanWrite => throw new NotImplementedException();
+
+        public override long Length => throw new NotImplementedException();
+
+        public override long Position { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+        public override void Flush()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override int Read(byte[] buffer, int offset, int count)
+        {
+            ObjectDisposedException.ThrowIf(disposed, nameof(StreamWithException));
+            throw new NotImplementedException();
+        }
+
+        public override int ReadByte()
+        {
+            ObjectDisposedException.ThrowIf(disposed, nameof(StreamWithException));
+            return base.ReadByte();
+        }
+
+        public override long Seek(long offset, SeekOrigin origin)
+        {
+            ObjectDisposedException.ThrowIf(disposed, nameof(StreamWithException));
+            throw new NotImplementedException();
+        }
+
+        public override void SetLength(long value)
+        {
+            ObjectDisposedException.ThrowIf(disposed, nameof(StreamWithException));
+            throw new NotImplementedException();
+        }
+
+        public override void Write(byte[] buffer, int offset, int count)
+        {
+            ObjectDisposedException.ThrowIf(disposed, nameof(StreamWithException));
+            throw new NotImplementedException();
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            disposed = true;
+            base.Dispose(disposing);
+        }
+
+        public override ValueTask DisposeAsync()
+        {
+            disposed = true;
+            return base.DisposeAsync();
+        }
     }
 }

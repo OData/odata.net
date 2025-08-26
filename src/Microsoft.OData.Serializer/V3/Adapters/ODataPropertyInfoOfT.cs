@@ -199,7 +199,7 @@ public class ODataPropertyInfo<TDeclaringType, TCustomState> :
     {
         if (this.GetStreamingValue != null)
         {
-            if (state.Stack.Current.CleanUpState == ResourceCleanupState.Cleanup)
+            if (state.Stack.Current.CleanUpState == ResourceCleanupState.CleanupComplete)
             {
                 // If we got here it means that we had completed consuming the stream
                 // value and writing it, then we suspended the frame to perform cleanup.
@@ -232,14 +232,21 @@ public class ODataPropertyInfo<TDeclaringType, TCustomState> :
                     stream = PipeReader.Create(basicStream);
                 }
 
+                state.Stack.Current.StreamingValueSource = stream;
+
                 if (this.LeaveStreamOpen == null || this.LeaveStreamOpen == false)
                 {
                     state.Stack.Current.CleanUpState = ResourceCleanupState.NeedCleanup;
+                    if (stream != null)
+                    {
+                        state.RegisterForDispose(stream); // just in case we get an exception before completing the write
+                    }
                 }
+
+
             }
 
-            state.Stack.Current.StreamingValueSource = stream;
-
+            bool result;
             // TODO: What should be expected behaviour if GetValuePipeReader returns null? Should it fall back
             // to WriteValue/GetValue? Or throw?
             if (stream == null)
@@ -253,33 +260,35 @@ public class ODataPropertyInfo<TDeclaringType, TCustomState> :
             // which also mean caching or calling GetType() on the value each time, or we would
             // need another approach altogether.
             // But this shows that this is approach to streaming is probably not a good idea.
+            
             else if (stream is PipeReader pipeReader)
             {
-                return WritePropertyValue(resource, pipeReader, state);
+                result = WritePropertyValue(resource, pipeReader, state);
             }
             else if (stream is IBufferedReader<byte> byteReader)
             {
-                return WritePropertyValue(resource, byteReader, state);
+                result = WritePropertyValue(resource, byteReader, state);
             }
             else if (stream is IBufferedReader<char> charReader)
             {
-                return WritePropertyValue(resource, charReader, state);
+                result = WritePropertyValue(resource, charReader, state);
             }
             else
             {
                 throw new NotSupportedException($"The type '{stream.GetType()}' returned by {nameof(GetStreamingValue)} is not supported. Supported types are PipeReader and IBufferedReader<byte>.");
             }
- 
+
+            if (result == true && state.Stack.Current.CleanUpState == ResourceCleanupState.NeedCleanup)
+            {
+                state.Stack.Current.CleanUpState = ResourceCleanupState.Cleanup;
+                return false; // suspend to allow cleanup
+            }
+
+            return result;
+
         }
 
-        var result = WriteValue(resource, this, state);
-        if (result == true && state.Stack.Current.StreamingValueSource != null && state.Stack.Current.CleanUpState == ResourceCleanupState.NeedCleanup)
-        {
-            state.Stack.Current.CleanUpState = ResourceCleanupState.Cleanup;
-            return false; // suspend to allow cleanup
-        }
-
-        return result;
+        return WriteValue(resource, this, state);
     }
 
     internal protected bool WritePropertyValue<TValue>(TDeclaringType resource, TValue value, ODataJsonWriterState<TCustomState> state)

@@ -38,6 +38,8 @@ public sealed class ODataJsonWriterState<TCustomState>
 
     internal JavaScriptEncoder JavaScriptEncoder { get; init; }
 
+    internal HashSet<object>? disposableObjects;
+
     public ref TCustomState CustomState
     {
         get => ref customState;
@@ -57,6 +59,8 @@ public sealed class ODataJsonWriterState<TCustomState>
 
     internal int FreeBufferCapacity => this.BufferWriter.Capacity - this.UsedBufferSize;
 
+    public HashSet<object>? DisposableObjects => disposableObjects;
+
     public bool IsTopLevel()
     {
         return this.Stack.IsTopLevel();
@@ -74,6 +78,7 @@ public sealed class ODataJsonWriterState<TCustomState>
     {
         return this.Stack.Current.PropertyInfo;
     }
+
 
     public Adapters.ODataPropertyInfo? ParentPropertyInfo()
     {
@@ -98,5 +103,15 @@ public sealed class ODataJsonWriterState<TCustomState>
         var handler = options.DynamicPropertiesHandlerResolver.Resolve(dynamicPropertiesType)
             ?? throw new InvalidOperationException($"No dynamic properties handler found for type {dynamicPropertiesType.FullName}");
         return handler;
+    }
+
+    public void RegisterForDispose(object obj)
+    {
+        if (disposableObjects == null)
+        {
+            disposableObjects = new HashSet<object>();
+        }
+
+        disposableObjects.Add(obj);
     }
 }

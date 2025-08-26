@@ -5,6 +5,7 @@ using Microsoft.OData.Serializer.V3.Json.State;
 using System;
 using System.Buffers;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO.Pipelines;
 using System.Linq;
 using System.Text;
@@ -84,13 +85,17 @@ public static class ODataSerializer
                         if (suspendedValueStream is PipeReader suspendedPipeReader)
                         {
                             await suspendedPipeReader.CompleteAsync();
+                            Debug.Assert(state.DisposableObjects != null, "We should have tracked the object for disposal.");
+                            state.DisposableObjects.Remove(suspendedValueStream!);
                         }
                         else if (suspendedValueStream is IAsyncDisposable asyncDisposable)
                         {
                             await asyncDisposable.DisposeAsync();
+                            Debug.Assert(state.DisposableObjects != null, "We should have tracked the object for disposal.");
+                            state.DisposableObjects.Remove(suspendedValueStream!);
                         }
 
-                        state.Stack.LastSuspendedFrame.CleanUpState = ResourceCleanupState.NoCleanupNeeded;
+                        state.Stack.LastSuspendedFrame.CleanUpState = ResourceCleanupState.CleanupComplete;
                     }
                     else
                     {
@@ -141,20 +146,19 @@ public static class ODataSerializer
         }
         finally
         {
-            // ensure we dispose any suspended resource
-            if (state.Stack.HasSuspendedFrames() && state.Stack.LastSuspendedFrame.CleanUpState == ResourceCleanupState.Cleanup)
+            if (state.DisposableObjects != null)
             {
-                object? suspendedValueStream = state.Stack.LastSuspendedFrame.StreamingValueSource;
-                if (suspendedValueStream is PipeReader suspendedPipeReader)
+                foreach (var resource in state.DisposableObjects)
                 {
-                    await suspendedPipeReader.CompleteAsync();
+                    if (resource is PipeReader pipeReader)
+                    {
+                        await pipeReader.CompleteAsync();
+                    }
+                    else if (resource is IAsyncDisposable asyncDisposable)
+                    {
+                        await asyncDisposable.DisposeAsync();
+                    }
                 }
-                else if (suspendedValueStream is IAsyncDisposable asyncDisposable)
-                {
-                    await asyncDisposable.DisposeAsync();
-                }
-
-                state.Stack.LastSuspendedFrame.CleanUpState = ResourceCleanupState.NoCleanupNeeded;
             }
         }
 
