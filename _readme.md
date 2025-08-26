@@ -33,3 +33,8 @@ TODO make sure to update the hard-coded binaries in each project
 
 1. build `_readerimplementer2`
 2. execute `readerimplementer2.exe`; this is using `_readerpocv2`; it should output "success!"
+
+### someone is calling an implementation that leverages the v1 package *and* an implementation that leverages the v2 package
+
+1. build `_readercaller3`
+2. execute `_readercaller3.exe`; this is using `_readerpocv2`; it should output "success!\r\nsuccess!\r\nsuccess!"

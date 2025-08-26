@@ -3,8 +3,15 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <RootNamespace />
+    <AssemblyName>ReaderCaller3</AssemblyName>
   </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\_ReaderImplementer1\_ReaderImplementer1.csproj" />
+    <ProjectReference Include="..\_ReaderImplementer2\_ReaderImplementer2.csproj" />
+    <ProjectReference Include="..\_ReaderPocV2\_ReaderPocV2.csproj" />
+  </ItemGroup>
 
 </Project>
