@@ -37,3 +37,6 @@ TODO make sure to update the hard-coded binaries in each project
 
 1. build `_readercaller3`
 2. execute `_readercaller3.exe`; this is using `_readerpocv2`; it should output "success!\r\nsuccess!\r\nsuccess!"
+3. build `_readerpocv2`
+4. copy `_readerpocv2.dll` to the folder of `_readercaller3.exe`
+5. execute `_readercaller3.exe`; this is now using `_readerpocv2`; it should output "success!" and then a `typeloadexception`
