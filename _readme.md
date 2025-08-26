@@ -1,7 +1,6 @@
 
 
 TODO go ahead and add a v3 to this as well just to really be sure
-TODO make sure to update the hard-coded binaries in each project
 
 
 
