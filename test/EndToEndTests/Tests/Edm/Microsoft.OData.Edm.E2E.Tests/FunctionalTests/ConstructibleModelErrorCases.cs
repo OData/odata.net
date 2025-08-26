@@ -418,11 +418,6 @@ public class ConstructibleModelErrorCases : EdmLibTestCaseBase
             get { throw new NotImplementedException(); }
         }
 
-        public IEdmOperationReturn Return
-        {
-            get { throw new NotImplementedException(); }
-        }
-
         public IEnumerable<IEdmOperationParameter> Parameters
         {
             get { throw new NotImplementedException(); }
@@ -439,6 +434,11 @@ public class ConstructibleModelErrorCases : EdmLibTestCaseBase
         }
 
         IEdmPathExpression IEdmOperation.EntitySetPath
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        public IEdmOperationReturn Return
         {
             get { throw new NotImplementedException(); }
         }

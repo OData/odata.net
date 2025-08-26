@@ -19,7 +19,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         private readonly string name;
         private readonly string fullName;
         private readonly IEdmTypeReference returnType;
-        private readonly EdmOperationReturn operationReturn;
+        private readonly IEdmOperationReturn operationReturn;
 
         public UnresolvedOperation(string qualifiedName, string errorMessage, EdmLocation location)
             : base(new EdmError[] { new EdmError(location, EdmErrorCode.BadUnresolvedOperation, errorMessage) })
@@ -55,7 +55,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 
         public IEdmOperationReturn Return
         {
-            get { return operationReturn; }
+            get { return this.operationReturn; }
         }
 
         public IEnumerable<IEdmOperationParameter> Parameters
