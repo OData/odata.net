@@ -199,6 +199,14 @@ public class ODataPropertyInfo<TDeclaringType, TCustomState> :
     {
         if (this.GetStreamingValue != null)
         {
+            if (state.Stack.Current.CleanUpState == ResourceCleanupState.Cleanup)
+            {
+                // If we got here it means that we had completed consuming the stream
+                // value and writing it, then we suspended the frame to perform cleanup.
+                // And now cleanup is concluded, so we're done here.
+                return true;
+            }
+
             object? stream = state.Stack.Current.StreamingValueSource;
             if (stream == null)
             {
@@ -222,6 +230,11 @@ public class ODataPropertyInfo<TDeclaringType, TCustomState> :
                 else if (stream is Stream basicStream)
                 {
                     stream = PipeReader.Create(basicStream);
+                }
+
+                if (this.LeaveStreamOpen == null || this.LeaveStreamOpen == false)
+                {
+                    state.Stack.Current.CleanUpState = ResourceCleanupState.NeedCleanup;
                 }
             }
 
@@ -259,7 +272,14 @@ public class ODataPropertyInfo<TDeclaringType, TCustomState> :
  
         }
 
-        return WriteValue(resource, this, state);
+        var result = WriteValue(resource, this, state);
+        if (result == true && state.Stack.Current.StreamingValueSource != null && state.Stack.Current.CleanUpState == ResourceCleanupState.NeedCleanup)
+        {
+            state.Stack.Current.CleanUpState = ResourceCleanupState.Cleanup;
+            return false; // suspend to allow cleanup
+        }
+
+        return result;
     }
 
     internal protected bool WritePropertyValue<TValue>(TDeclaringType resource, TValue value, ODataJsonWriterState<TCustomState> state)

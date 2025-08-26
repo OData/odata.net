@@ -187,7 +187,6 @@ internal class ODataJsonBufferedReaderBinaryWriter<TCustomState> :
         if (isFinalChunk && totalConsumed == readResult.Buffer.Length)
         {
             state.BufferWriter.Write([JsonConstants.DoubleQuote]);
-            // Should we dispose the reader? We should have a flag for this.
             state.Stack.Pop(true);
             return true;
         }

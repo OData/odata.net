@@ -39,5 +39,5 @@ internal enum ResourceWriteProgress : byte
     /// <summary>
     /// The end token has been written.
     /// </summary>
-    EndToken
+    EndToken,
 }

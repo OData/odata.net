@@ -54,65 +54,109 @@ public static class ODataSerializer
         // get writer
         var writer = writerProvider.GetWriter<T>(); // should we pass the value as well?
 
-        bool isDone = false;
-        while (!isDone)
+        try
         {
-            isDone = writer.Write(value, state);
 
-            if (state.ShouldFlush())
+            bool isDone = false;
+            while (!isDone)
             {
+                isDone = writer.Write(value, state);
+
+                if (state.ShouldFlush())
+                {
+                    jsonWriter.Flush();
+                    //await bufferWriter.WriteToStreamAsync(stream, cancellationToken: default).ConfigureAwait(false);
+                    await stream.WriteAsync(bufferWriter.WrittenMemory, cancellationToken: default).ConfigureAwait(false);
+                    bufferWriter.Clear();
+                }
+
+
+                if (state.Stack.HasSuspendedFrames())
+                {
+                    ResourceCleanupState cleanupState = state.Stack.LastSuspendedFrame.CleanUpState;
+
+                    // TODO: ideally we should not be checking the progress value outside
+                    // the writer that set it since each writer might have a different
+                    // interpretation of the progress value. Another code smell?
+                    if (cleanupState == ResourceCleanupState.Cleanup)
+                    {
+                        object? suspendedValueStream = state.Stack.LastSuspendedFrame.StreamingValueSource;
+                        if (suspendedValueStream is PipeReader suspendedPipeReader)
+                        {
+                            await suspendedPipeReader.CompleteAsync();
+                        }
+                        else if (suspendedValueStream is IAsyncDisposable asyncDisposable)
+                        {
+                            await asyncDisposable.DisposeAsync();
+                        }
+
+                        state.Stack.LastSuspendedFrame.CleanUpState = ResourceCleanupState.NoCleanupNeeded;
+                    }
+                    else
+                    {
+                        object? suspendedValueStream = state.Stack.LastSuspendedFrame.StreamingValueSource;
+
+                        // This is really messy
+                        if (suspendedValueStream is PipeReader suspendedPipeReader)
+                        {
+                            // We should prob. check if we need more data before calling this.
+                            // It's possible that we reached here not because we need more data,
+                            // but because we needed to clear the buffer.
+                            var result = await suspendedPipeReader.ReadAsync(cancellationToken: default);
+
+                            // TODO: check for buffer cancellation.
+                            // We call to advance to allow the continuation to call TryRead() again.
+                            // Since we've advanced by 0 bytes, the next TryRead() will return the same buffer again.
+                            suspendedPipeReader.AdvanceTo(result.Buffer.GetPosition(0));
+                        }
+                        // TODO: Have a common non-generic interface for IBufferedReader to avoid
+                        // creating multiple branches for each supported type
+                        else if (suspendedValueStream is IBufferedReader<byte> suspendedByteReader)
+                        {
+                            var result = await suspendedByteReader.ReadAsync();
+                            suspendedByteReader.AdvanceTo(result.Buffer.GetPosition(0));
+                        }
+                        else if (suspendedValueStream is IBufferedReader<char> suspendedCharReader)
+                        {
+                            var result = await suspendedCharReader.ReadAsync();
+                            suspendedCharReader.AdvanceTo(result.Buffer.GetPosition(0));
+                        }
+                    }
+                }
+
+                // We might need to dispose the pipe reader, where should we do that? Here?
+                // How do we know we need to dispose?
+            }
+
+            if (jsonWriter.BytesPending > 0)
+            {
+                // write any remaining data
                 jsonWriter.Flush();
                 //await bufferWriter.WriteToStreamAsync(stream, cancellationToken: default).ConfigureAwait(false);
                 await stream.WriteAsync(bufferWriter.WrittenMemory, cancellationToken: default).ConfigureAwait(false);
-                bufferWriter.Clear();
             }
 
-
-            if (state.Stack.HasSuspendedFrames())
+            //bufferWriter.Dispose();
+            await stream.FlushAsync().ConfigureAwait(false);
+        }
+        finally
+        {
+            // ensure we dispose any suspended resource
+            if (state.Stack.HasSuspendedFrames() && state.Stack.LastSuspendedFrame.CleanUpState == ResourceCleanupState.Cleanup)
             {
                 object? suspendedValueStream = state.Stack.LastSuspendedFrame.StreamingValueSource;
-                
-                // This is really messy
                 if (suspendedValueStream is PipeReader suspendedPipeReader)
                 {
-                    // We should prob. check if we need more data before calling this.
-                    // It's possible that we reached here not because we need more data,
-                    // but because we needed to clear the buffer.
-                    var result = await suspendedPipeReader.ReadAsync(cancellationToken: default);
+                    await suspendedPipeReader.CompleteAsync();
+                }
+                else if (suspendedValueStream is IAsyncDisposable asyncDisposable)
+                {
+                    await asyncDisposable.DisposeAsync();
+                }
 
-                    // TODO: check for buffer cancellation.
-                    // We call to advance to allow the continuation to call TryRead() again.
-                    // Since we've advanced by 0 bytes, the next TryRead() will return the same buffer again.
-                    suspendedPipeReader.AdvanceTo(result.Buffer.GetPosition(0));
-                }
-                // TODO: Have a common non-generic interface for IBufferedReader to avoid
-                // creating multiple branches for each supported type
-                else if (suspendedValueStream is IBufferedReader<byte> suspendedByteReader)
-                {
-                    var result = await suspendedByteReader.ReadAsync();
-                    suspendedByteReader.AdvanceTo(result.Buffer.GetPosition(0));
-                }
-                else if (suspendedValueStream is IBufferedReader<char> suspendedCharReader)
-                {
-                    var result = await suspendedCharReader.ReadAsync();
-                    suspendedCharReader.AdvanceTo(result.Buffer.GetPosition(0));
-                }
+                state.Stack.LastSuspendedFrame.CleanUpState = ResourceCleanupState.NoCleanupNeeded;
             }
-
-            // We might need to dispose the pipe reader, where should we do that? Here?
-            // How do we know we need to dispose?
         }
-
-        if (jsonWriter.BytesPending > 0)
-        {
-            // write any remaining data
-            jsonWriter.Flush();
-            //await bufferWriter.WriteToStreamAsync(stream, cancellationToken: default).ConfigureAwait(false);
-            await stream.WriteAsync(bufferWriter.WrittenMemory, cancellationToken: default).ConfigureAwait(false);
-        }
-
-        //bufferWriter.Dispose();
-        await stream.FlushAsync().ConfigureAwait(false);
 
 
 
