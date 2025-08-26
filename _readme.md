@@ -1,6 +1,5 @@
 
 
-TODO try the case where a customer is using the an old version of the framework and a package that uses a new version of the framework
 TODO go ahead and add a v3 to this as well just to really be sure
 TODO make sure to update the hard-coded binaries in each project
 
