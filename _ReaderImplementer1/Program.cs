@@ -31,7 +31,13 @@
         public IEntityIdReader<Version.V1, TNextReader> TryMoveNext(out bool moved)
         {
             //// TODO you are here
-            this.delegateReader = 
+            var delegatedEntityIdReader = this.delegateReader.TryMoveNext(out moved);
+            if (!moved)
+            {
+                return delegatedEntityIdReader;
+            }
+
+            return new EntityIdReader(delegatedEntityIdReader);
         }
 
         private sealed class EntityIdReader : IEntityIdReader<Version.V1, TNextReader>
