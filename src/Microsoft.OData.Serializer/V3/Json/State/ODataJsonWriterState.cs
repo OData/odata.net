@@ -38,7 +38,7 @@ public sealed class ODataJsonWriterState<TCustomState>
 
     internal JavaScriptEncoder JavaScriptEncoder { get; init; }
 
-    internal HashSet<object>? disposableObjects;
+    internal HashSet<object>? _disposableObjects;
 
     public ref TCustomState CustomState
     {
@@ -59,7 +59,7 @@ public sealed class ODataJsonWriterState<TCustomState>
 
     internal int FreeBufferCapacity => this.BufferWriter.Capacity - this.UsedBufferSize;
 
-    public HashSet<object>? DisposableObjects => disposableObjects;
+    public HashSet<object>? DisposableObjects => _disposableObjects;
 
     public bool IsTopLevel()
     {
@@ -107,11 +107,11 @@ public sealed class ODataJsonWriterState<TCustomState>
 
     public void RegisterForDispose(object obj)
     {
-        if (disposableObjects == null)
+        if (_disposableObjects == null)
         {
-            disposableObjects = new HashSet<object>();
+            _disposableObjects = new HashSet<object>();
         }
 
-        disposableObjects.Add(obj);
+        _disposableObjects.Add(obj);
     }
 }
