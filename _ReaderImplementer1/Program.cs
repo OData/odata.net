@@ -30,7 +30,6 @@
 
         public IEntityIdReader<Version.V1, TNextReader> TryMoveNext(out bool moved)
         {
-            //// TODO you are here
             var delegatedEntityIdReader = this.delegateReader.TryMoveNext(out moved);
             if (!moved)
             {
@@ -49,21 +48,27 @@
                 this.delegateReader = delegateReader;
             }
 
-            public Version.V1 Version => throw new System.NotImplementedException();
+            public Version.V1 Version { get; } = Odata.Version.V1.Instance;
 
-            public ValueTask Read()
+            public async ValueTask Read()
             {
-                throw new System.NotImplementedException();
+                await this.delegateReader.Read().ConfigureAwait(false);
             }
 
             public EntityId TryGetValue(out bool moved)
             {
-                throw new System.NotImplementedException();
+                var entityId = this.delegateReader.TryGetValue(out moved);
+                if (!moved)
+                {
+                    return entityId;
+                }
+
+                return default; //// TODO the idea is that some transform happens here
             }
 
             public TNextReader TryMoveNext(out bool moved)
             {
-                throw new System.NotImplementedException();
+                return this.delegateReader.TryMoveNext(out moved);
             }
         }
     }
