@@ -27,18 +27,50 @@ internal class StreamValueWriter<TCustomState> : IStreamValueWriter<TCustomState
         throw new NotImplementedException();
     }
 
-    public void WriteStringSegment(ReadOnlySpan<char> value, ODataJsonWriterState<TCustomState> state)
+    public void WriteBinarySegment(ReadOnlySpan<byte> value, bool isFinalBlock, ODataJsonWriterState<TCustomState> state)
     {
         throw new NotImplementedException();
     }
 
-    public void WriteStringSegment(ReadOnlySpan<byte> value, ODataJsonWriterState<TCustomState> state)
+    public void WriteStringSegment(ReadOnlySpan<char> value, bool isFinalBlock, ODataJsonWriterState<TCustomState> state)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void WriteStringSegment(ReadOnlySpan<byte> value, bool isFinalBlock, ODataJsonWriterState<TCustomState> state)
     {
         throw new NotImplementedException();
     }
 
     public void WriteValue<T>(T value, ODataJsonWriterState<TCustomState> state)
     {
-        throw new NotImplementedException();
+        // Write to completion. This can overflow the buffer and cause
+        // a resize.
+        while (!state.WriteValue(value)) { }
+    }
+
+    public ValueTask WriteValueAsync<T>(T value, ODataJsonWriterState<TCustomState> state)
+    {
+        while (!state.WriteValue(value))
+        {
+            if (state.ShouldFlush())
+            {
+                return FlushAndWriteRemainderAsync(value, state);
+            }
+        }
+
+        return ValueTask.CompletedTask;
+
+        static async ValueTask FlushAndWriteRemainderAsync(T value, ODataJsonWriterState<TCustomState> state)
+        {
+            await state.FlushAsync();
+            while (!state.WriteValue(value))
+            {
+                if (state.ShouldFlush())
+                {
+                    await state.FlushAsync();
+                }
+            }
+        }
     }
 }
