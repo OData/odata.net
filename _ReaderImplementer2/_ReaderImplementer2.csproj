@@ -5,13 +5,11 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <RootNamespace />
-    <AssemblyName>ReaderImplementer1</AssemblyName>
+    <AssemblyName>ReaderImplementer2</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
-    <Reference Include="ReaderPoc">
-      <HintPath>ReaderPoc.dll</HintPath>
-    </Reference>
+    <ProjectReference Include="..\_ReaderPocV2\_ReaderPocV2.csproj" />
   </ItemGroup>
 
 </Project>

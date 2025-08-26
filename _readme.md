@@ -21,3 +21,11 @@ TODO make sure to update the hard-coded binaries in each project
 
 1. build `_readercaller2`
 2. execute `_readercaller2.exe`; this is using `_readerpocv2`; it should output "success!"
+
+### someone is implementing a v1 reader and updates their nuget package
+
+1. build `_readerimplementation1`
+2. execute `readerimplementation1.exe`; this is using `_readerpocv1`; it should output "success!"
+3. build `_readerpocv2`
+4. copy `_readerpocv2.dll` to the folder of `readerimplementation1.exe`
+5. execute `readerimplementation1.exe`; this is now using `_readerpocv2`; it should output "success!"
