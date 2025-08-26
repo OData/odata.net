@@ -2,8 +2,6 @@
 {
     using System.Threading.Tasks;
 
-    using Microsoft.VisualBasic;
-
     using Odata;
 
     internal class Program
