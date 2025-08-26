@@ -23,8 +23,13 @@ TODO make sure to update the hard-coded binaries in each project
 
 ### someone is implementing a v1 reader and updates their nuget package
 
-1. build `_readerimplementation1`
-2. execute `readerimplementation1.exe`; this is using `_readerpocv1`; it should output "success!"
+1. build `_readerimplementer1`
+2. execute `_readerimplementer1.exe`; this is using `_readerpocv1`; it should output "success!"
 3. build `_readerpocv2`
-4. copy `_readerpocv2.dll` to the folder of `readerimplementation1.exe`
-5. execute `readerimplementation1.exe`; this is now using `_readerpocv2`; it should output "success!"
+4. copy `_readerpocv2.dll` to the folder of `_readerimplementer1.exe`
+5. execute `_readerimplementer1.exe`; this is now using `_readerpocv2`; it should output "success!"
+
+### someone is implementing a v2 reader
+
+1. build `_readerimplementer2`
+2. execute `readerimplementer2.exe`; this is using `_readerpocv2`; it should output "success!"

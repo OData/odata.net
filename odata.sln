@@ -24,6 +24,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "_ReaderImplementer1", "_Rea
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "_ReaderImplementer2", "_ReaderImplementer2\_ReaderImplementer2.csproj", "{2C28B92A-9F05-4179-9886-3BE5019DE9FE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "_ReaderCaller3", "_ReaderCaller3\_ReaderCaller3.csproj", "{8454FBC7-A942-4F4F-8030-595FBD8CC98D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -62,6 +64,10 @@ Global
 		{2C28B92A-9F05-4179-9886-3BE5019DE9FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2C28B92A-9F05-4179-9886-3BE5019DE9FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2C28B92A-9F05-4179-9886-3BE5019DE9FE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8454FBC7-A942-4F4F-8030-595FBD8CC98D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8454FBC7-A942-4F4F-8030-595FBD8CC98D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8454FBC7-A942-4F4F-8030-595FBD8CC98D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8454FBC7-A942-4F4F-8030-595FBD8CC98D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
