@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace Microsoft.OData.Serializer.V3.Json.Writers;
 
-internal sealed class ODataJsonInt32Writer<TCustomState> : ODataWriter<int, ODataJsonWriterState<TCustomState>>
+internal sealed class ODataJsonInt32Writer<TCustomState> : ODataWriter<int, ODataWriterState<TCustomState>>
 {
 
-    public override bool Write(int value, ODataJsonWriterState<TCustomState> state)
+    public override bool Write(int value, ODataWriterState<TCustomState> state)
     {
         state.JsonWriter.WriteNumberValue(value);
         return true;

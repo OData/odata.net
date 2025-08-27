@@ -43,7 +43,7 @@ public static class ODataSerializer
         //using var bufferWriter = new PooledByteSegmentBufferWriter(options.BufferSize);
         var jsonWriter = new Utf8JsonWriter(bufferWriter, DefaultJsonWriterOptions); // TODO: make this configurable in options
         var writerProvider = new ODataJsonWriterProvider<TCustomState>(options);
-        var state = new ODataJsonWriterState<TCustomState>(options, writerProvider, jsonWriter)
+        var state = new ODataWriterState<TCustomState>(options, writerProvider, jsonWriter)
         {
             ODataUri = uri,
             PayloadKind = ODataPayloadKind.ResourceSet,

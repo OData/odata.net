@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Microsoft.OData.Serializer.V3.Json;
 
-public sealed class ODataJsonWriterState<TCustomState>
+public sealed class ODataWriterState<TCustomState>
 {
     private ODataSerializerOptions<TCustomState> options;
     private ODataJsonWriterProvider<TCustomState> writers;
@@ -25,7 +25,7 @@ public sealed class ODataJsonWriterState<TCustomState>
 
     internal WriteStack<TCustomState> Stack { get; } = new WriteStack<TCustomState>();
 
-    internal ODataJsonWriterState(ODataSerializerOptions<TCustomState> options, ODataJsonWriterProvider<TCustomState> writers, Utf8JsonWriter jsonWriter)
+    internal ODataWriterState(ODataSerializerOptions<TCustomState> options, ODataJsonWriterProvider<TCustomState> writers, Utf8JsonWriter jsonWriter)
     {
         this.options = options ?? throw new ArgumentNullException(nameof(options));
         this.writers = writers ?? throw new ArgumentNullException(nameof(writers));

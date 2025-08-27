@@ -24,7 +24,7 @@ internal static class LargeStringJsonWriter<TCustomState>
 
     internal const int ChunkSize = 2048;
 
-    public static bool WriteNextChunkFromString(ReadOnlySpan<char> value, ODataJsonWriterState<TCustomState> state)
+    public static bool WriteNextChunkFromString(ReadOnlySpan<char> value, ODataWriterState<TCustomState> state)
     {
         // TODO: In .NET 10, we should use WriteStringValueSegment to write chunks.
         // In < .NET 10 we bypass the Utf8JsonWriter and write directly to the buffer writer.

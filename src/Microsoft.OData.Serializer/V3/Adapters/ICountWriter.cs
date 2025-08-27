@@ -9,5 +9,5 @@ namespace Microsoft.OData.Serializer.V3.Adapters;
 
 public interface ICountWriter<TCustomState>
 {
-    void WriteCount(long count, ODataJsonWriterState<TCustomState> state);
+    void WriteCount(long count, ODataWriterState<TCustomState> state);
 }

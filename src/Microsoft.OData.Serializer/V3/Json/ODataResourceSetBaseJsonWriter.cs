@@ -14,7 +14,7 @@ public abstract class ODataResourceSetBaseJsonWriter<TCollection, TElement, TCus
     ODataJsonWriter<TCollection, TCustomState>, ICountWriter<TCustomState>, INextLinkWriter<TCustomState>
 #pragma warning restore CA1005 // Avoid excessive parameters on generic types
 {
-    public override bool Write(TCollection value, ODataJsonWriterState<TCustomState> state)
+    public override bool Write(TCollection value, ODataWriterState<TCustomState> state)
     {
         Adapters.ODataPropertyInfo? parentProperty = state.IsTopLevel()
             ? null
@@ -105,9 +105,9 @@ public abstract class ODataResourceSetBaseJsonWriter<TCollection, TElement, TCus
         return true;
     }
 
-    protected abstract bool WriteElements(TCollection value, ODataJsonWriterState<TCustomState> state);
+    protected abstract bool WriteElements(TCollection value, ODataWriterState<TCustomState> state);
 
-    protected virtual void WritePreValueMetadata(TCollection value, ODataJsonWriterState<TCustomState> state)
+    protected virtual void WritePreValueMetadata(TCollection value, ODataWriterState<TCustomState> state)
     {
         // Since this is only called when top-level, let's also write the context URL
         if (state.MetadataLevel >= ODataMetadataLevel.Minimal)
@@ -125,7 +125,7 @@ public abstract class ODataResourceSetBaseJsonWriter<TCollection, TElement, TCus
         WritePreValueAnnotaitons(value, state);
     }
 
-    protected virtual void WritePreValueAnnotaitons(TCollection value, ODataJsonWriterState<TCustomState> state)
+    protected virtual void WritePreValueAnnotaitons(TCollection value, ODataWriterState<TCustomState> state)
     {
         if (typeInfo?.CountPosition != AnnotationPosition.PostValue)
         {
@@ -154,7 +154,7 @@ public abstract class ODataResourceSetBaseJsonWriter<TCollection, TElement, TCus
         }
     }
 
-    protected virtual void WritePostValueAnnotaitons(TCollection value, ODataJsonWriterState<TCustomState> state)
+    protected virtual void WritePostValueAnnotaitons(TCollection value, ODataWriterState<TCustomState> state)
     {
         if (typeInfo?.CountPosition == AnnotationPosition.PostValue)
         {
@@ -185,7 +185,7 @@ public abstract class ODataResourceSetBaseJsonWriter<TCollection, TElement, TCus
         }
     }
 
-    protected virtual void WriteContextUrl(TCollection value, ODataJsonWriterState<TCustomState> state)
+    protected virtual void WriteContextUrl(TCollection value, ODataWriterState<TCustomState> state)
     {
         if (state.PayloadKind == ODataPayloadKind.ResourceSet && state.IsTopLevel())
         {
@@ -195,7 +195,7 @@ public abstract class ODataResourceSetBaseJsonWriter<TCollection, TElement, TCus
         // TODO: nested context and other payload kinds
     }
 
-    protected virtual void WriteCountProperty(TCollection value, ODataJsonWriterState<TCustomState> state)
+    protected virtual void WriteCountProperty(TCollection value, ODataWriterState<TCustomState> state)
     {
         var jsonWriter = state.JsonWriter;
         if (typeInfo?.GetCount != null)
@@ -213,7 +213,7 @@ public abstract class ODataResourceSetBaseJsonWriter<TCollection, TElement, TCus
         }
     }
 
-    protected virtual void WriteNextLinkProperty(TCollection value, ODataJsonWriterState<TCustomState> state)
+    protected virtual void WriteNextLinkProperty(TCollection value, ODataWriterState<TCustomState> state)
     {
 
         var jsonWriter = state.JsonWriter;
@@ -232,28 +232,28 @@ public abstract class ODataResourceSetBaseJsonWriter<TCollection, TElement, TCus
         }
     }
 
-    public void WriteCount(long count, ODataJsonWriterState<TCustomState> state)
+    public void WriteCount(long count, ODataWriterState<TCustomState> state)
     {
         var jsonWriter = state.JsonWriter;
         jsonWriter.WritePropertyName("odata.count"u8);
         jsonWriter.WriteNumberValue(count);
     }
 
-    public void WriteNextLink(ReadOnlySpan<char> nextLink, ODataJsonWriterState<TCustomState> state)
+    public void WriteNextLink(ReadOnlySpan<char> nextLink, ODataWriterState<TCustomState> state)
     {
         var jsonWriter = state.JsonWriter;
         jsonWriter.WritePropertyName("odata.nextLink"u8);
         jsonWriter.WriteStringValue(nextLink);
     }
 
-    public void WriteNextLink(ReadOnlySpan<byte> nextLink, ODataJsonWriterState<TCustomState> state)
+    public void WriteNextLink(ReadOnlySpan<byte> nextLink, ODataWriterState<TCustomState> state)
     {
         var jsonWriter = state.JsonWriter;
         jsonWriter.WritePropertyName("odata.nextLink"u8);
         jsonWriter.WriteStringValue(nextLink);
     }
 
-    public void WriteNextLink(Uri nextLink, ODataJsonWriterState<TCustomState> state)
+    public void WriteNextLink(Uri nextLink, ODataWriterState<TCustomState> state)
     {
         var jsonWriter = state.JsonWriter;
         jsonWriter.WritePropertyName("odata.nextLink"u8);

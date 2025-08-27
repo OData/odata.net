@@ -12,7 +12,7 @@ namespace Microsoft.OData.Serializer.V3.Json.Writers;
 
 internal class ODataJsonPipeReaderBinaryWriter<TCustomState> : ODataJsonWriter<PipeReader, TCustomState>
 {
-    public override bool Write(PipeReader value, ODataJsonWriterState<TCustomState> state)
+    public override bool Write(PipeReader value, ODataWriterState<TCustomState> state)
     {
         state.Stack.Push();
         if (state.Stack.Current.ResourceProgress < State.ResourceWriteProgress.Value)

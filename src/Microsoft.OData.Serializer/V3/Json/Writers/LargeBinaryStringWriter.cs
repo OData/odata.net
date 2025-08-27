@@ -12,7 +12,7 @@ internal class LargeBinaryStringWriter<TCustomState>
 
     internal const int ChunkSize = 2048;
 
-    public static bool WriteNextChunkFromByteArray(ReadOnlySpan<byte> value, ODataJsonWriterState<TCustomState> state)
+    public static bool WriteNextChunkFromByteArray(ReadOnlySpan<byte> value, ODataWriterState<TCustomState> state)
     {
         // TODO: In .NET 10, we should use WriteBase64ValueSegment to write chunks.
         // In < .NET 10 we bypass the Utf8JsonWriter and write directly to the buffer writer.

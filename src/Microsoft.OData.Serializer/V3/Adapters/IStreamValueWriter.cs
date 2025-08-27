@@ -10,16 +10,16 @@ internal interface IStreamValueWriter<TCustomState>
     // Writes a value completely, does not perform I/O. Entire value will be buffered.
     // Suitable to efficiently write values that can fit in the buffer or when
     // you don't mind growing the buffer.
-    void WriteValue<T>(T value, ODataJsonWriterState<TCustomState> state);
+    void WriteValue<T>(T value, ODataWriterState<TCustomState> state);
     // Writes value completely, flushes if buffer fills up to avoid resizing.
     // flushing may perform async I/O depending on the underlying stream implementation.
-    ValueTask WriteValueAsync<T>(T value, ODataJsonWriterState<TCustomState> state);
+    ValueTask WriteValueAsync<T>(T value, ODataWriterState<TCustomState> state);
     // The WriteXXSegment APIs give the caller control on how to handle chunking.
     // They're expected to call the API iteratively one chunk at time.
     // They're also responsible for flushing if they want to keep buffer size from growing.
-    void WriteStringSegment(ReadOnlySpan<char> value, bool isFinalBlock, ODataJsonWriterState<TCustomState> state);
-    void WriteStringSegment(ReadOnlySpan<byte> value, bool isFinalBlock, ODataJsonWriterState<TCustomState> state);
-    void WriteBinarySegment(ReadOnlySpan<byte> value, bool isFinalBlock,ODataJsonWriterState<TCustomState> state);
+    void WriteStringSegment(ReadOnlySpan<char> value, bool isFinalBlock, ODataWriterState<TCustomState> state);
+    void WriteStringSegment(ReadOnlySpan<byte> value, bool isFinalBlock, ODataWriterState<TCustomState> state);
+    void WriteBinarySegment(ReadOnlySpan<byte> value, bool isFinalBlock,ODataWriterState<TCustomState> state);
 
     // Tentatively, does it make sense to have these "convenience" APIs for common case?
     // They could also be implemented as extension methods on top of the WriteXXSegment APIs
@@ -30,8 +30,8 @@ internal interface IStreamValueWriter<TCustomState>
     // ValueTask WriteBinaryValueAsync(IAsyncEnumerable<ReadOnlyMemory<byte>>, state);
 
     // Flushes the contents of the buffer to the underlying output stream
-    ValueTask FlushAsync(ODataJsonWriterState<TCustomState> state);
+    ValueTask FlushAsync(ODataWriterState<TCustomState> state);
     // Flushes the contents of the buffer if it's (almost) full. Otherwise it does nothing.
     // Not sure if it's a good idea to expose this to caller. Code smell.
-    ValueTask FlushIfFull(ODataJsonWriterState<TCustomState> state);
+    ValueTask FlushIfFull(ODataWriterState<TCustomState> state);
 }

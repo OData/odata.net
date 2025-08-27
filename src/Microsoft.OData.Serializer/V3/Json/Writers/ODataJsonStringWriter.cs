@@ -8,7 +8,7 @@ namespace Microsoft.OData.Serializer.V3.Json.Writers;
 
 internal class ODataJsonStringWriter<TCustomState> : ODataJsonWriter<string, TCustomState>
 {
-    public override bool Write(string value, ODataJsonWriterState<TCustomState> state)
+    public override bool Write(string value, ODataWriterState<TCustomState> state)
     {
         if (value.Length < state.FreeBufferCapacity)
         {

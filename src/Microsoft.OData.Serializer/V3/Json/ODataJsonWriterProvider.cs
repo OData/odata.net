@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Microsoft.OData.Serializer.V3.Json;
 
-internal class ODataJsonWriterProvider<TCustomState>(ODataSerializerOptions<TCustomState> options) : IODataWriterProvider<ODataJsonWriterState<TCustomState>>
+internal class ODataJsonWriterProvider<TCustomState>(ODataSerializerOptions<TCustomState> options) : IODataWriterProvider<ODataWriterState<TCustomState>>
 {
     //private static readonly Type ObjectType = typeof(object);
     private static readonly ODataJsonBoolWriter<TCustomState> boolWriter = new();
@@ -30,7 +30,7 @@ internal class ODataJsonWriterProvider<TCustomState>(ODataSerializerOptions<TCus
 
     private ConcurrentDictionary<Type, IODataWriter> writersCache = new();
 
-    public IODataWriter<T, ODataJsonWriterState<TCustomState>> GetWriter<T>()
+    public IODataWriter<T, ODataWriterState<TCustomState>> GetWriter<T>()
     {
         //return (IODataWriter<T, ODataJsonWriterState>)writersCache.GetOrAdd(typeof(T), this.GetWriterNoCache<T>());
         // TODO: use GetOrAdd() instead, would require refactoring GetWriterNoCache
@@ -39,25 +39,25 @@ internal class ODataJsonWriterProvider<TCustomState>(ODataSerializerOptions<TCus
         {
             writer = this.GetWriterNoCache<T>();
             writersCache.TryAdd(typeof(T), writer);
-            return (IODataWriter<T, ODataJsonWriterState<TCustomState>>)writer;
+            return (IODataWriter<T, ODataWriterState<TCustomState>>)writer;
         }
 
-        return (IODataWriter<T, ODataJsonWriterState<TCustomState>>)writer;
+        return (IODataWriter<T, ODataWriterState<TCustomState>>)writer;
     }
 
-    private IODataWriter<T, ODataJsonWriterState<TCustomState>> GetWriterNoCache<T>()
+    private IODataWriter<T, ODataWriterState<TCustomState>> GetWriterNoCache<T>()
     {
         var type = typeof(T);
         if (simpleWriters.TryGetValue(type, out var writer))
         {
-            return (IODataWriter<T, ODataJsonWriterState<TCustomState>>)writer;
+            return (IODataWriter<T, ODataWriterState<TCustomState>>)writer;
         }
 
         foreach (var factory in defaultFactories)
         {
             if (factory.CanWrite(type))
             {
-                return (IODataWriter<T, ODataJsonWriterState<TCustomState>>)factory.CreateWriter(type, options);
+                return (IODataWriter<T, ODataWriterState<TCustomState>>)factory.CreateWriter(type, options);
             }
         }
 

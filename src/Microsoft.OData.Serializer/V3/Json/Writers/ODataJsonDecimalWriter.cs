@@ -8,7 +8,7 @@ namespace Microsoft.OData.Serializer.V3.Json.Writers;
 
 internal class ODataJsonDecimalWriter<TCustomState> : ODataJsonWriter<decimal, TCustomState>
 {
-    public override bool Write(decimal value, ODataJsonWriterState<TCustomState> state)
+    public override bool Write(decimal value, ODataWriterState<TCustomState> state)
     {
         // TODO: support write as string
         state.JsonWriter.WriteNumberValue(value);

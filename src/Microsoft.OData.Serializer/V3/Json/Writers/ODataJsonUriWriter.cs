@@ -8,7 +8,7 @@ namespace Microsoft.OData.Serializer.V3.Json.Writers;
 
 internal class ODataJsonUriWriter<TCustomState> : ODataJsonWriter<Uri, TCustomState>
 {
-    public override bool Write(Uri value, ODataJsonWriterState<TCustomState> state)
+    public override bool Write(Uri value, ODataWriterState<TCustomState> state)
     {
         state.JsonWriter.WriteStringValue(value.ToString());
         return true;

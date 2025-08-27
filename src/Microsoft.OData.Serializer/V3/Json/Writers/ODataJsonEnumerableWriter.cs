@@ -18,7 +18,7 @@ internal class ODataJsonEnumerableWriter<TCollection, TElement, TCustomState> : 
     {
     }
 
-    protected override bool WriteElements(TCollection value, ODataJsonWriterState<TCustomState> state)
+    protected override bool WriteElements(TCollection value, ODataWriterState<TCustomState> state)
     {
         IEnumerator<TElement> enumerator;
         if (state.Stack.Current.CurrentEnumerator == null)

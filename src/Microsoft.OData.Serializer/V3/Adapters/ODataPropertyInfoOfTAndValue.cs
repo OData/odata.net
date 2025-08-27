@@ -15,9 +15,9 @@ namespace Microsoft.OData.Serializer.V3.Adapters;
 public class ODataPropertyInfo<TDeclaringType, TValue, TCustomState> : ODataPropertyInfo<TDeclaringType, TCustomState>
 #pragma warning restore CA1005 // Avoid excessive parameters on generic types
 {
-    public Func<TDeclaringType, ODataJsonWriterState<TCustomState>, TValue>? GetValue { get; init; }
+    public Func<TDeclaringType, ODataWriterState<TCustomState>, TValue>? GetValue { get; init; }
 
-    internal protected override bool WritePropertyValue(TDeclaringType resource, ODataJsonWriterState<TCustomState> state)
+    internal protected override bool WritePropertyValue(TDeclaringType resource, ODataWriterState<TCustomState> state)
     {
         if (this.GetValue != null)
         {

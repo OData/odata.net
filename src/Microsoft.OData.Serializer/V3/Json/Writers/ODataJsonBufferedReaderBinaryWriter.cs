@@ -16,7 +16,7 @@ internal class ODataJsonBufferedReaderBinaryWriter<TCustomState> :
     
     public override bool Write(
         IBufferedReader<byte> value,
-        ODataJsonWriterState<TCustomState> state)
+        ODataWriterState<TCustomState> state)
     {
         state.Stack.Push();
         if (state.Stack.Current.ResourceProgress < State.ResourceWriteProgress.Value)

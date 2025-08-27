@@ -18,7 +18,7 @@ internal class ODataJsonReadOnlyListWriter<TCollection, TElement, TCustomState> 
     {
     }
 
-    protected override bool WriteElements(TCollection value, ODataJsonWriterState<TCustomState> state)
+    protected override bool WriteElements(TCollection value, ODataWriterState<TCustomState> state)
     {
         var propIndex = state.Stack.Current.EnumeratorIndex;
         for (int i = propIndex; i < value.Count; i++)

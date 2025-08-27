@@ -6,7 +6,7 @@ namespace Microsoft.OData.Serializer.V3.Json.Writers;
 
 internal class ODataJsonByteArrayWriter<TCustomState> : ODataJsonWriter<byte[], TCustomState>
 {
-    public override bool Write(byte[] value, ODataJsonWriterState<TCustomState> state)
+    public override bool Write(byte[] value, ODataWriterState<TCustomState> state)
     {
         // Base64 encoding expands length by 4/3
         if (value.Length * 4.0 / 3 < state.FreeBufferCapacity)

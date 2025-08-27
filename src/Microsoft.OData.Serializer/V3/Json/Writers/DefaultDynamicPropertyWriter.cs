@@ -11,7 +11,7 @@ internal class DefaultDynamicPropertyWriter<TCustomState> : IDynamicPropertyWrit
 {
     internal static readonly DefaultDynamicPropertyWriter<TCustomState> Instance = new();
 
-    public void WriteDynamicProperty<TValue>(ReadOnlySpan<char> name, TValue value, ODataJsonWriterState<TCustomState> state)
+    public void WriteDynamicProperty<TValue>(ReadOnlySpan<char> name, TValue value, ODataWriterState<TCustomState> state)
     {
         state.JsonWriter.WritePropertyName(name);
         bool complete = state.WriteValue(value);
@@ -21,7 +21,7 @@ internal class DefaultDynamicPropertyWriter<TCustomState> : IDynamicPropertyWrit
         }
     }
 
-    public void WriteDynamicProperty<TValue>(ReadOnlySpan<byte> name, TValue value, ODataJsonWriterState<TCustomState> state)
+    public void WriteDynamicProperty<TValue>(ReadOnlySpan<byte> name, TValue value, ODataWriterState<TCustomState> state)
     {
         state.JsonWriter.WritePropertyName(name);
         bool complete = state.WriteValue(value);

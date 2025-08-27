@@ -13,12 +13,12 @@ using System.Threading.Tasks;
 namespace Microsoft.OData.Serializer.V3.Json;
 
 internal class ODataResourceJsonWriter<T, TCustomState>(ODataTypeInfo<T, TCustomState> typeInfo)
-    : ODataWriter<T, ODataJsonWriterState<TCustomState>>,
+    : ODataWriter<T, ODataWriterState<TCustomState>>,
     IPropertyWriter<T, TCustomState>,
     IEtagWriter<TCustomState>,
     IODataIdWriter<TCustomState>
 {
-    public override bool Write(T value, ODataJsonWriterState<TCustomState> state)
+    public override bool Write(T value, ODataWriterState<TCustomState> state)
     {
         Adapters.ODataPropertyInfo? parentProperty = state.Stack.Current.PropertyInfo;
 
@@ -147,7 +147,7 @@ internal class ODataResourceJsonWriter<T, TCustomState>(ODataTypeInfo<T, TCustom
     private static bool WriteProperties(
         T value,
         ODataTypeInfo<T, TCustomState> typeInfo,
-        ODataJsonWriterState<TCustomState> state)
+        ODataWriterState<TCustomState> state)
     {
         Debug.Assert(typeInfo.Properties != null, "TypeInfo should have properties defined.");
 
@@ -207,7 +207,7 @@ internal class ODataResourceJsonWriter<T, TCustomState>(ODataTypeInfo<T, TCustom
         return true;
     }
 
-    private static bool WriteProperty(T resource, ODataPropertyInfo<T, TCustomState> propertyInfo, ODataJsonWriterState<TCustomState> state)
+    private static bool WriteProperty(T resource, ODataPropertyInfo<T, TCustomState> propertyInfo, ODataWriterState<TCustomState> state)
     {
         var jsonWriter = state.JsonWriter;
         // add this property to the state, including current index
@@ -252,7 +252,7 @@ internal class ODataResourceJsonWriter<T, TCustomState>(ODataTypeInfo<T, TCustom
         //}
     }
 
-    private void WritePreValueMetadata(T value, ODataJsonWriterState<TCustomState> state)
+    private void WritePreValueMetadata(T value, ODataWriterState<TCustomState> state)
     {
         WriteId(value, state);
         WriteEtag(value, state);
@@ -274,7 +274,7 @@ internal class ODataResourceJsonWriter<T, TCustomState>(ODataTypeInfo<T, TCustom
         }
     }
 
-    private void WritePostValueMetadata(T value, ODataJsonWriterState<TCustomState> state)
+    private void WritePostValueMetadata(T value, ODataWriterState<TCustomState> state)
     {
         if (typeInfo.GetCustomPostValueAnnotations != null)
         {
@@ -293,7 +293,7 @@ internal class ODataResourceJsonWriter<T, TCustomState>(ODataTypeInfo<T, TCustom
         }
     }
 
-    private void WriteId(T value, ODataJsonWriterState<TCustomState> state)
+    private void WriteId(T value, ODataWriterState<TCustomState> state)
     {
         var jsonWriter = state.JsonWriter;
         if (typeInfo.GetId != null)
@@ -312,7 +312,7 @@ internal class ODataResourceJsonWriter<T, TCustomState>(ODataTypeInfo<T, TCustom
         }
     }
 
-    private void WriteEtag(T value, ODataJsonWriterState<TCustomState> state)
+    private void WriteEtag(T value, ODataWriterState<TCustomState> state)
     {
         var jsonWriter = state.JsonWriter;
         if (typeInfo.GetEtag != null)
@@ -331,53 +331,53 @@ internal class ODataResourceJsonWriter<T, TCustomState>(ODataTypeInfo<T, TCustom
         }
     }
 
-    bool IPropertyWriter<T, TCustomState>.WriteProperty<TValue>(T resource, string name, TValue value, ODataJsonWriterState<TCustomState> state)
+    bool IPropertyWriter<T, TCustomState>.WriteProperty<TValue>(T resource, string name, TValue value, ODataWriterState<TCustomState> state)
     {
         var property = typeInfo.GetPropertyInfo(name);
         return (this as IPropertyWriter<T, TCustomState>).WriteProperty(resource, property, value, state);
     }
 
-    bool IPropertyWriter<T, TCustomState>.WriteProperty<TValue>(T resource, ODataPropertyInfo<T, TCustomState> propertyInfo, TValue value, ODataJsonWriterState<TCustomState> state)
+    bool IPropertyWriter<T, TCustomState>.WriteProperty<TValue>(T resource, ODataPropertyInfo<T, TCustomState> propertyInfo, TValue value, ODataWriterState<TCustomState> state)
     {
         return propertyInfo.WriteProperty(resource, value, state);
     }
 
-    bool IPropertyWriter<T, TCustomState>.WriteProperty(T resource, ODataPropertyInfo<T, TCustomState> propertyInfo, ODataJsonWriterState<TCustomState> state)
+    bool IPropertyWriter<T, TCustomState>.WriteProperty(T resource, ODataPropertyInfo<T, TCustomState> propertyInfo, ODataWriterState<TCustomState> state)
     {
         return WriteProperty(resource, propertyInfo, state);
     }
 
     // TODO: The etag writer should probably be a singleton since it doesn't access any state.
 
-    void IEtagWriter<TCustomState>.WriteEtag(ReadOnlySpan<char> etag, ODataJsonWriterState<TCustomState> state)
+    void IEtagWriter<TCustomState>.WriteEtag(ReadOnlySpan<char> etag, ODataWriterState<TCustomState> state)
     {
         var jsonWriter = state.JsonWriter;
         jsonWriter.WritePropertyName("@odata.etag"u8);
         jsonWriter.WriteStringValue(etag);
     }
 
-    void IEtagWriter<TCustomState>.WriteEtag(ReadOnlySpan<byte> etag, ODataJsonWriterState<TCustomState> state)
+    void IEtagWriter<TCustomState>.WriteEtag(ReadOnlySpan<byte> etag, ODataWriterState<TCustomState> state)
     {
         var jsonWriter = state.JsonWriter;
         jsonWriter.WritePropertyName("@odata.etag"u8);
         jsonWriter.WriteStringValue(etag);
     }
 
-    void IODataIdWriter<TCustomState>.WriteId(ReadOnlySpan<char> id, ODataJsonWriterState<TCustomState> state)
+    void IODataIdWriter<TCustomState>.WriteId(ReadOnlySpan<char> id, ODataWriterState<TCustomState> state)
     {
         var jsonWriter = state.JsonWriter;
         jsonWriter.WritePropertyName("@odata.id"u8);
         jsonWriter.WriteStringValue(id);
     }
 
-    void IODataIdWriter<TCustomState>.WriteId(ReadOnlySpan<byte> id, ODataJsonWriterState<TCustomState> state)
+    void IODataIdWriter<TCustomState>.WriteId(ReadOnlySpan<byte> id, ODataWriterState<TCustomState> state)
     {
         var jsonWriter = state.JsonWriter;
         jsonWriter.WritePropertyName("@odata.id"u8);
         jsonWriter.WriteStringValue(id);
     }
 
-    void IODataIdWriter<TCustomState>.WriteId(Uri id, ODataJsonWriterState<TCustomState> state)
+    void IODataIdWriter<TCustomState>.WriteId(Uri id, ODataWriterState<TCustomState> state)
     {
         var jsonWriter = state.JsonWriter;
         jsonWriter.WritePropertyName("@odata.id"u8);

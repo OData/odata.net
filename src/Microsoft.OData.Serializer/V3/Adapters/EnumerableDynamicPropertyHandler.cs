@@ -12,7 +12,7 @@ namespace Microsoft.OData.Serializer.V3.Adapters;
 [SuppressMessage("Performance", "CA1812:Avoid uninstantiated internal classes", Justification = "This class is instantiated via reflection.")]
 internal class EnumerableDynamicPropertyHandler<TValue, TCustomState> : IDynamicPropertiesHandler<TCustomState>
 {
-    public void WriteDynamicProperties(object dynamicProperties, IDynamicPropertyWriter<TCustomState> writer, ODataJsonWriterState<TCustomState> state)
+    public void WriteDynamicProperties(object dynamicProperties, IDynamicPropertyWriter<TCustomState> writer, ODataWriterState<TCustomState> state)
     {
         // TODO: support resumability in dynamic properties
         // We can store the enumerator in the state and use it to resume for where it left off.

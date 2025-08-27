@@ -11,7 +11,7 @@ namespace Microsoft.OData.Serializer.V3.Adapters;
 [SuppressMessage("Performance", "CA1812:Avoid uninstantiated internal classes", Justification = "This class is instantiated via reflection.")]
 internal class EnumerableCustomAnnotationsHandler<TValue, TCustomState> : ICustomAnnotationsHandler<TCustomState>
 {
-    public void WriteAnnotations(object annotations, IAnnotationWriter<TCustomState> writer, ODataJsonWriterState<TCustomState> state)
+    public void WriteAnnotations(object annotations, IAnnotationWriter<TCustomState> writer, ODataWriterState<TCustomState> state)
     {
         
         var enumerable = (IEnumerable<KeyValuePair<string, TValue>>)annotations;

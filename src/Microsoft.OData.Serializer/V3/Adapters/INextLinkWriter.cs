@@ -9,7 +9,7 @@ namespace Microsoft.OData.Serializer.V3.Adapters;
 
 public interface INextLinkWriter<TCustomState>
 {
-    void WriteNextLink(ReadOnlySpan<char> nextLink, ODataJsonWriterState<TCustomState> state);
-    void WriteNextLink(ReadOnlySpan<byte> nextLink, ODataJsonWriterState<TCustomState> state);
-    void WriteNextLink(Uri nextLink, ODataJsonWriterState<TCustomState> state);
+    void WriteNextLink(ReadOnlySpan<char> nextLink, ODataWriterState<TCustomState> state);
+    void WriteNextLink(ReadOnlySpan<byte> nextLink, ODataWriterState<TCustomState> state);
+    void WriteNextLink(Uri nextLink, ODataWriterState<TCustomState> state);
 }

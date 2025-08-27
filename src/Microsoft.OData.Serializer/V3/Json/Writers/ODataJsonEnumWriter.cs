@@ -11,7 +11,7 @@ namespace Microsoft.OData.Serializer.V3.Json.Writers;
 internal class ODataJsonEnumWriter<T, TCustomState> : ODataJsonWriter<T, TCustomState>
     where T : Enum
 {
-    public override bool Write(T value, ODataJsonWriterState<TCustomState> state)
+    public override bool Write(T value, ODataWriterState<TCustomState> state)
     {
         // TODO: optimize this instead of calling value.ToString()
         // What if the enum value does not 

@@ -42,36 +42,36 @@ public class ODataTypeInfo<T, TCustomState> : ODataTypeInfo
     // Do we expect the position to change per value? I think for a given type or property, the position of the annotation is likely
     // to be fixed. Consult with team.
     public AnnotationPosition CountPosition { get; init; } = AnnotationPosition.Auto;
-    public Func<T, ODataJsonWriterState<TCustomState>, long?>? GetCount { get; init; }
-    public Action<T, ICountWriter<TCustomState>, ODataJsonWriterState<TCustomState>>? WriteCount { get; init; }
+    public Func<T, ODataWriterState<TCustomState>, long?>? GetCount { get; init; }
+    public Action<T, ICountWriter<TCustomState>, ODataWriterState<TCustomState>>? WriteCount { get; init; }
 
     public AnnotationPosition NextLinkPosition { get; init; } = AnnotationPosition.Auto;
-    public Func<T, ODataJsonWriterState<TCustomState>, string>? GetNextLink { get; init; }
+    public Func<T, ODataWriterState<TCustomState>, string>? GetNextLink { get; init; }
 
-    public Action<T, INextLinkWriter<TCustomState>, ODataJsonWriterState<TCustomState>>? WriteNextLink { get; init; }
+    public Action<T, INextLinkWriter<TCustomState>, ODataWriterState<TCustomState>>? WriteNextLink { get; init; }
 
     // Etag is always written before the value, so it doesn't have a position override.
 
-    public Func<T, ODataJsonWriterState<TCustomState>, string>? GetEtag { get; init; }
+    public Func<T, ODataWriterState<TCustomState>, string>? GetEtag { get; init; }
 
-    public Action<T, IEtagWriter<TCustomState>, ODataJsonWriterState<TCustomState>>? WriteEtag { get; init; }
+    public Action<T, IEtagWriter<TCustomState>, ODataWriterState<TCustomState>>? WriteEtag { get; init; }
 
     // The Id annotation is always written before the value, so it doesn't have a position override.
-    public Func<T, ODataJsonWriterState<TCustomState>, string>? GetId { get; init; }
+    public Func<T, ODataWriterState<TCustomState>, string>? GetId { get; init; }
 
-    public Action<T, IODataIdWriter<TCustomState>, ODataJsonWriterState<TCustomState>>? WriteId { get; init; }
+    public Action<T, IODataIdWriter<TCustomState>, ODataWriterState<TCustomState>>? WriteId { get; init; }
 
-    public Func<T, IPropertyWriter<T, TCustomState>, ODataJsonWriterState<TCustomState>, bool>? WriteProperties { get; init; }
+    public Func<T, IPropertyWriter<T, TCustomState>, ODataWriterState<TCustomState>, bool>? WriteProperties { get; init; }
 
-    public Func<T, ODataJsonWriterState<TCustomState>, object?>? GetCustomPreValueAnnotations { get; init; }
+    public Func<T, ODataWriterState<TCustomState>, object?>? GetCustomPreValueAnnotations { get; init; }
 
-    public Func<T, IAnnotationWriter<TCustomState>, ODataJsonWriterState<TCustomState>, ValueTask>? WriteCustomPreValueAnnotations { get; init; }
+    public Func<T, IAnnotationWriter<TCustomState>, ODataWriterState<TCustomState>, ValueTask>? WriteCustomPreValueAnnotations { get; init; }
 
-    public Func<T, ODataJsonWriterState<TCustomState>, object?>? GetCustomPostValueAnnotations { get; init; }
+    public Func<T, ODataWriterState<TCustomState>, object?>? GetCustomPostValueAnnotations { get; init; }
 
-    public Func<T, IAnnotationWriter<TCustomState>, ODataJsonWriterState<TCustomState>, ValueTask>? WriteCustomPostValueAnnotations { get; init; }
+    public Func<T, IAnnotationWriter<TCustomState>, ODataWriterState<TCustomState>, ValueTask>? WriteCustomPostValueAnnotations { get; init; }
 
-    public Func<T, ODataJsonWriterState<TCustomState>, object?>? GetDynamicProperties { get; init; }
+    public Func<T, ODataWriterState<TCustomState>, object?>? GetDynamicProperties { get; init; }
 
     /// <summary>
     /// Custom hook that's called before the value is written. If the value
@@ -79,14 +79,14 @@ public class ODataTypeInfo<T, TCustomState> : ODataTypeInfo
     /// TODO: Determine whether this is called before annotations even for nested annotations of primitive values.
     /// Ideally, I think it should.
     /// </summary>
-    public Action<T, ODataJsonWriterState<TCustomState>>? OnSerializing { get; init; }
+    public Action<T, ODataWriterState<TCustomState>>? OnSerializing { get; init; }
 
     /// <summary>
     /// Custom hook that's called after the value is written. If the value represents a resource/object,
     /// this is called after the closing brace is written.
     /// </summary>
 
-    public Action<T, ODataJsonWriterState<TCustomState>>? OnSerialized { get; init; }
+    public Action<T, ODataWriterState<TCustomState>>? OnSerialized { get; init; }
 
     public ODataPropertyInfo<T, TCustomState> GetPropertyInfo(string name)
     {
