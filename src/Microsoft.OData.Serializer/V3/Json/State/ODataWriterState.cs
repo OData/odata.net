@@ -3,6 +3,7 @@ using Microsoft.OData.Serializer.V3.Json.State;
 using System;
 using System.Buffers;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -43,9 +44,54 @@ public sealed class ODataWriterState<TCustomState>
 
     internal HashSet<object>? _disposableObjects;
 
+    // Most-significant bit tells us if we're in the middle of writing base64 segments
+    // Remainder is the length of the trailing bytes
+    private int trailingBase64BytesLength;
+    internal TrailingBase64BytesBuffer trailingBase64BytesBuffer;
+
     public ref TCustomState CustomState
     {
         get => ref customState;
+    }
+
+    /// <summary>
+    /// If we're not already in a base64 segment scope, start one. Returns true if this call started a new scope, false otherwise.
+    /// </summary>
+    /// <returns>Return true if this call has started a new scope or false if already in the middle of an ongoing scope.</returns>
+    internal bool TryStartBase64SegmentScope()
+    {
+        // if msb od trailingBase64BytesLength is 1, keep it as 1, if it's 0, set it to 1 and return whether it was 0
+        if (trailingBase64BytesLength < 0)
+        {
+            return false;
+        }
+
+        trailingBase64BytesLength = -1;
+        return true;
+    }
+
+    internal void EndBase64SegmentScope()
+    {
+        trailingBase64BytesLength = 0;
+    }
+
+    internal void SetTrailingBase64Bytes(ReadOnlySpan<byte> bytes)
+    {
+        Debug.Assert(bytes.Length < 3, "Base64 encoding should not leave 3 or more trailing bytes.");
+        bytes.CopyTo(trailingBase64BytesBuffer);
+
+        // Overwrite the current length while preserving the msb
+        trailingBase64BytesLength = (trailingBase64BytesLength & (1 << 31)) | bytes.Length;
+    }
+
+    internal Span<byte> GetTrailingBase64BytesBuffer()
+    {
+        return trailingBase64BytesBuffer[..trailingBase64BytesLength];
+    }
+
+    internal int GetTrailingBase64BytesLength()
+    {
+        return trailingBase64BytesLength & ~(1 << 31);
     }
 
     internal void SetCustomSate(in TCustomState state)
