@@ -15,14 +15,16 @@ namespace Microsoft.OData.Serializer.Tests.V3;
 
 public class StreamWriterChunkedByteStreamingTests
 {
-    [Fact]
-    public async Task CanWriteByteArrayChunksInAsyncAPI()
+    [Theory]
+    [InlineData(525)]
+    [InlineData(50_000)]
+    public async Task CanWriteByteArrayChunksInAsyncAPI(int contentLength)
     {
         var entity = new BlogPost
         {
             Id = 1,
             Title = "Title",
-            ContentLength = 512
+            ContentLength = contentLength
         };
 
         var payload = new List<BlogPost> { entity };
