@@ -62,12 +62,34 @@ internal class StreamValueWriter<TCustomState> : IStreamValueWriter<TCustomState
                 Debug.Assert(trailingBytesConsumed == 3, "All 3 bytes should be consumed.");
                 state.BufferWriter.Advance(trailingBytesWritten);
                 value = value[bytesNeeded..];
+                state.ClearTrailingBase64Bytes();
             }
             else
             {
-                // Not enough bytes to complete a 3-byte block, just store them and return.
+                // Not enough bytes to complete a 3-byte block
                 Debug.Assert(value.Length <= 2);
                 value.CopyTo(state.trailingBase64BytesBuffer[numTrailingBytes..]);
+                
+                // If it's the final block, encode them anyway, otherwise just store them and return
+                if (isFinalBlock)
+                {
+                    var trailingDestination = bufferWriter.GetSpan(Base64.GetMaxEncodedToUtf8Length(numTrailingBytes + value.Length));
+                    OperationStatus encodingResult = Base64.EncodeToUtf8(
+                        state.trailingBase64BytesBuffer[..(numTrailingBytes + value.Length)],
+                        trailingDestination,
+                        out int trailingBytesConsumed,
+                        out int trailingBytesWritten,
+                        isFinalBlock: true
+                        );
+
+                    Debug.Assert(encodingResult == OperationStatus.Done, "Encoding 3 bytes should always succeed.");
+                    Debug.Assert(trailingBytesConsumed == numTrailingBytes + value.Length, "All bytes should be consumed.");
+                    state.BufferWriter.Advance(trailingBytesWritten);
+                    bufferWriter.Write([JsonConstants.DoubleQuote]);
+                    state.EndBase64SegmentScope();
+                    return;
+                }
+
                 state.SetTrailingBase64Bytes(state.trailingBase64BytesBuffer[..(numTrailingBytes + value.Length)]);
                 return;
             }
@@ -90,6 +112,10 @@ internal class StreamValueWriter<TCustomState> : IStreamValueWriter<TCustomState
         {
             Debug.Assert(value.Length - bytesConsumed < 3, "Base64 encoding should only leave up to 2 trailing bytes.");
             state.SetTrailingBase64Bytes(value[bytesConsumed..]);
+        }
+        else
+        {
+            state.ClearTrailingBase64Bytes();
         }
 
         if (isFinalBlock)

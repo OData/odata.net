@@ -81,7 +81,12 @@ public sealed class ODataWriterState<TCustomState>
         bytes.CopyTo(trailingBase64BytesBuffer);
 
         // Overwrite the current length while preserving the msb
-        trailingBase64BytesLength = (trailingBase64BytesLength & (1 << 31)) | bytes.Length;
+        trailingBase64BytesLength = -1 - bytes.Length;// (trailingBase64BytesLength & (1 << 31)) | bytes.Length;
+    }
+
+    internal void ClearTrailingBase64Bytes()
+    {
+        trailingBase64BytesLength = -1;
     }
 
     internal Span<byte> GetTrailingBase64BytesBuffer()
@@ -91,7 +96,8 @@ public sealed class ODataWriterState<TCustomState>
 
     internal int GetTrailingBase64BytesLength()
     {
-        return trailingBase64BytesLength & ~(1 << 31);
+        //return trailingBase64BytesLength & ~(1 << 31);
+        return -(trailingBase64BytesLength + 1);
     }
 
     internal void SetCustomSate(in TCustomState state)
