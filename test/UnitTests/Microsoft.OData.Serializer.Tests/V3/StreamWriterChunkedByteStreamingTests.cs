@@ -17,6 +17,7 @@ public class StreamWriterChunkedByteStreamingTests
 {
     [Theory]
     [InlineData(525)]
+    [InlineData(15_000)]
     [InlineData(50_000)]
     public async Task CanWriteByteArrayChunksInAsyncAPI(int contentLength)
     {
