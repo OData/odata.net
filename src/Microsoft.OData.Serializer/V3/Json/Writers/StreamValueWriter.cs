@@ -10,6 +10,7 @@ namespace Microsoft.OData.Serializer.V3.Json.Writers;
 
 internal class StreamValueWriter<TCustomState> : IStreamValueWriter<TCustomState>
 {
+    public static StreamValueWriter<TCustomState> Instance { get; } = new StreamValueWriter<TCustomState>();
     public ValueTask FlushAsync(ODataWriterState<TCustomState> state)
     {
         return state.FlushAsync();

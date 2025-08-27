@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Microsoft.OData.Serializer.V3.Adapters;
 
-internal interface IStreamValueWriter<TCustomState>
+public interface IStreamValueWriter<TCustomState>
 {
     // Writes a value completely, does not perform I/O. Entire value will be buffered.
     // Suitable to efficiently write values that can fit in the buffer or when

@@ -26,4 +26,5 @@ internal struct WriteStackFrame<TCustomState>
 
     public object? StreamingValueSource { get; set; }
     public ResourceCleanupState CleanUpState { get; set; }
+    public ValueTask? PendingTask { get; set; }
 }

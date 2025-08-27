@@ -1,6 +1,7 @@
 ﻿using Microsoft.OData.Serializer.V3.IO;
 using Microsoft.OData.Serializer.V3.Json;
 using Microsoft.OData.Serializer.V3.Json.State;
+using Microsoft.OData.Serializer.V3.Json.Writers;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -24,6 +25,8 @@ public class ODataPropertyInfo<TDeclaringType, TCustomState> :
     // TODO: this property name conflicts with the method WriteValue from IValueWriter. Perhaps IValueWriter.WriteValue should be renamed?
     // TODO: should we support resumability in custom writes?
     public Func<TDeclaringType, IValueWriter<TCustomState>, ODataWriterState<TCustomState>, bool> WriteValue { get; init; }
+
+    public Func<TDeclaringType, IStreamValueWriter<TCustomState>, ODataWriterState<TCustomState>, ValueTask> WriteValueAsync { get; init; }
 
     // Streaming support via objects like PipeReader, Stream, AsyncEnumerable, etc. We should provide a mechanism for supporting custom streaming providers,
     // e.g. streams, IAsyncEnumerable, etc.
@@ -80,6 +83,12 @@ public class ODataPropertyInfo<TDeclaringType, TCustomState> :
 
     internal bool WriteProperty(TDeclaringType resource, ODataWriterState<TCustomState> state)
     {
+        if (WriteValueAsync != null)
+        {
+            // TODO: should probably just have WritePropertyValueAsync below.
+            return this.WritePropertyAsync(resource, state);
+        }
+
         if (state.Stack.Current.PropertyProgress < PropertyProgress.PreValueMetadata)
         {
             this.WritePreValueAnnotations(resource, state);
@@ -134,6 +143,52 @@ public class ODataPropertyInfo<TDeclaringType, TCustomState> :
         }
 
         return true;
+    }
+
+    internal bool WritePropertyAsync(TDeclaringType resource, ODataWriterState<TCustomState> state)
+    {
+        Debug.Assert(this.WriteValueAsync != null, "WriteValueAsync should not be null.");
+
+        if (state.Stack.Current.PropertyProgress < PropertyProgress.PreValueMetadata)
+        {
+            this.WritePreValueAnnotations(resource, state);
+            state.Stack.Current.PropertyProgress = PropertyProgress.PreValueMetadata;
+            // TODO: check whether to flush.
+        }
+
+        if (state.Stack.Current.PropertyProgress < PropertyProgress.Value)
+        {
+            ValueTask task = this.WritePropertyValueAsync(resource, state);
+
+            state.Stack.Current.PendingTask = task;
+
+            // We expect the task to be consumed completely so we can mark the value
+            // as read so the next time we get here, we don't attempt to write the property again.
+            state.Stack.Current.PropertyProgress = PropertyProgress.Value;
+            // store task in the state;
+            return false;
+        }
+
+        if (state.Stack.Current.PropertyProgress < PropertyProgress.PostValueMetadata)
+        {
+            this.WritePostValueAnnotations(resource, state);
+            state.Stack.Current.PropertyProgress = PropertyProgress.PostValueMetadata;
+        }
+
+        return true;
+    }
+
+    internal ValueTask WritePropertyValueAsync(TDeclaringType resource, ODataWriterState<TCustomState> state)
+    {
+        Debug.Assert(this.WriteValueAsync != null, "WriteValueAsync should not be null.");
+
+        if (state.Stack.Current.PropertyProgress < PropertyProgress.Name)
+        {
+            state.JsonWriter.WritePropertyName(this.Utf8Name.Span);
+            state.Stack.Current.PropertyProgress = PropertyProgress.Name;
+        }
+
+        return WriteValueAsync(resource, StreamValueWriter<TCustomState>.Instance, state);
     }
 
     private void WritePreValueAnnotations(TDeclaringType resource, ODataWriterState<TCustomState> state)
@@ -242,8 +297,6 @@ public class ODataPropertyInfo<TDeclaringType, TCustomState> :
                         state.RegisterForDispose(stream); // just in case we get an exception before completing the write
                     }
                 }
-
-
             }
 
             bool result;

@@ -64,6 +64,7 @@ public static class ODataSerializer
             {
                 isDone = writer.Write(value, state);
 
+
                 if (state.ShouldFlush())
                 {
                     jsonWriter.Flush();
@@ -72,8 +73,11 @@ public static class ODataSerializer
                     bufferWriter.Clear();
                 }
 
-
-                if (state.Stack.HasSuspendedFrames())
+                if (state.Stack.HasSuspendedFrames() && state.Stack.LastSuspendedFrame.PendingTask.HasValue)
+                {
+                    await state.Stack.LastSuspendedFrame.PendingTask.Value;
+                }
+                else if (state.Stack.HasSuspendedFrames())
                 {
                     ResourceCleanupState cleanupState = state.Stack.LastSuspendedFrame.CleanUpState;
 
