@@ -32,5 +32,5 @@ public interface IStreamValueWriter<TCustomState>
     ValueTask FlushAsync(ODataWriterState<TCustomState> state);
     // Flushes the contents of the buffer if it's (almost) full. Otherwise it does nothing.
     // Not sure if it's a good idea to expose this to caller. Code smell.
-    ValueTask FlushIfFull(ODataWriterState<TCustomState> state);
+    ValueTask FlushIfBufferGettingFullAsync(ODataWriterState<TCustomState> state);
 }
