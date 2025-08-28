@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
@@ -44,10 +46,12 @@ public sealed class ODataWriterState<TCustomState>
 
     internal HashSet<object>? _disposableObjects;
 
-    // Most-significant bit tells us if we're in the middle of writing base64 segments
-    // Remainder is the length of the trailing bytes
-    private int trailingBase64BytesLength;
-    internal TrailingBase64BytesBuffer trailingBase64BytesBuffer;
+    // Stores both the length of trailing bytes and whether we're in a segmented value scope
+    private int trailingSegmentedBytesLength;
+    internal InlineByteBuffer3 _partialTrailingBytesBuffer;
+
+    internal Span<byte> PartialTrailingBytesBuffer => _partialTrailingBytesBuffer;
+    internal Span<char> PartialTrailingCharsBuffer => MemoryMarshal.Cast<byte, char>(_partialTrailingBytesBuffer);
 
     public ref TCustomState CustomState
     {
@@ -58,46 +62,48 @@ public sealed class ODataWriterState<TCustomState>
     /// If we're not already in a base64 segment scope, start one. Returns true if this call started a new scope, false otherwise.
     /// </summary>
     /// <returns>Return true if this call has started a new scope or false if already in the middle of an ongoing scope.</returns>
-    internal bool TryStartBase64SegmentScope()
+    internal bool TryStartSegmentedValueScope()
     {
         // if msb od trailingBase64BytesLength is 1, keep it as 1, if it's 0, set it to 1 and return whether it was 0
-        if (trailingBase64BytesLength < 0)
+        if (trailingSegmentedBytesLength < 0)
         {
             return false;
         }
 
-        trailingBase64BytesLength = -1;
+        trailingSegmentedBytesLength = -1;
         return true;
     }
 
-    internal void EndBase64SegmentScope()
+    internal void EndSegmentedValueScope()
     {
-        trailingBase64BytesLength = 0;
+        trailingSegmentedBytesLength = 0;
     }
 
     internal void SetTrailingBase64Bytes(ReadOnlySpan<byte> bytes)
     {
         Debug.Assert(bytes.Length < 3, "Base64 encoding should not leave 3 or more trailing bytes.");
-        bytes.CopyTo(trailingBase64BytesBuffer);
+        bytes.CopyTo(PartialTrailingBytesBuffer);
 
-        // Overwrite the current length while preserving the msb
-        trailingBase64BytesLength = -1 - bytes.Length;// (trailingBase64BytesLength & (1 << 31)) | bytes.Length;
+        trailingSegmentedBytesLength = -1 - bytes.Length;
     }
 
-    internal void ClearTrailingBase64Bytes()
+    internal void SetTrailingChars(ReadOnlySpan<char> chars)
     {
-        trailingBase64BytesLength = -1;
+        Debug.Assert(chars.Length < 2, "String escaping should not leave 2 or more trailing chars.");
+        chars.CopyTo(PartialTrailingCharsBuffer);
+
+        trailingSegmentedBytesLength = -1 - chars.Length;
     }
 
-    internal Span<byte> GetTrailingBase64BytesBuffer()
+    internal void ClearTrailingPartialData()
     {
-        return trailingBase64BytesBuffer[..trailingBase64BytesLength];
+        trailingSegmentedBytesLength = -1;
     }
 
-    internal int GetTrailingBase64BytesLength()
+    internal int GetTrailingPartialDataLength()
     {
         //return trailingBase64BytesLength & ~(1 << 31);
-        return -(trailingBase64BytesLength + 1);
+        return -(trailingSegmentedBytesLength + 1);
     }
 
     internal void SetCustomSate(in TCustomState state)
@@ -176,5 +182,11 @@ public sealed class ODataWriterState<TCustomState>
         }
 
         _disposableObjects.Add(obj);
+    }
+
+    [InlineArray(3)]
+    internal struct InlineByteBuffer3
+    {
+        byte _byte;
     }
 }

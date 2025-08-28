@@ -18,7 +18,6 @@ public interface IStreamValueWriter<TCustomState>
     // They're expected to call the API iteratively one chunk at time.
     // They're also responsible for flushing if they want to keep buffer size from growing.
     void WriteStringSegment(ReadOnlySpan<char> value, bool isFinalBlock, ODataWriterState<TCustomState> state);
-    void WriteStringSegment(ReadOnlySpan<byte> value, bool isFinalBlock, ODataWriterState<TCustomState> state);
     void WriteBinarySegment(ReadOnlySpan<byte> value, bool isFinalBlock,ODataWriterState<TCustomState> state);
 
     // Tentatively, does it make sense to have these "convenience" APIs for common case?

@@ -26,16 +26,6 @@ internal partial class StreamValueWriter<TCustomState> : IStreamValueWriter<TCus
         return ValueTask.CompletedTask;
     }
 
-    public void WriteStringSegment(ReadOnlySpan<char> value, bool isFinalBlock, ODataWriterState<TCustomState> state)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void WriteStringSegment(ReadOnlySpan<byte> value, bool isFinalBlock, ODataWriterState<TCustomState> state)
-    {
-        throw new NotImplementedException();
-    }
-
     public void WriteValue<T>(T value, ODataWriterState<TCustomState> state)
     {
         // Write to completion. This can overflow the buffer and cause

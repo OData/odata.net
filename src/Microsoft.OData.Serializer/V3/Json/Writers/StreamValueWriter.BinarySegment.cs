@@ -8,20 +8,20 @@ using System.Text;
 
 namespace Microsoft.OData.Serializer.V3.Json.Writers;
 
-internal partial class StreamValueWriter<TCustomState> : IStreamValueWriter<TCustomState>
+internal partial class StreamValueWriter<TCustomState>
 {
     public void WriteBinarySegment(ReadOnlySpan<byte> value, bool isFinalBlock, ODataWriterState<TCustomState> state)
     {
         var bufferWriter = state.BufferWriter;
 
         // TODO how to tell if first segment
-        if (state.TryStartBase64SegmentScope())
+        if (state.TryStartSegmentedValueScope())
         {
             state.JsonWriter.Flush(); // Commit pending bytes to the buffer writer before we start writing to it.
             bufferWriter.Write([JsonConstants.DoubleQuote]);
         }
 
-        int numTrailingBytes = state.GetTrailingBase64BytesLength();
+        int numTrailingBytes = state.GetTrailingPartialDataLength();
         // If we have trailing bytes from previous segment, we need to prepend them to this segment.
         if (numTrailingBytes > 0)
         {
@@ -32,49 +32,47 @@ internal partial class StreamValueWriter<TCustomState> : IStreamValueWriter<TCus
             {
                 int bytesNeeded = 3 - numTrailingBytes;
 
-                value[..bytesNeeded].CopyTo(state.trailingBase64BytesBuffer[numTrailingBytes..]);
+                value[..bytesNeeded].CopyTo(state.PartialTrailingBytesBuffer[numTrailingBytes..]);
                 var trailingDestination = bufferWriter.GetSpan(Base64.GetMaxEncodedToUtf8Length(3));
 
                 OperationStatus encodingResult = Base64.EncodeToUtf8(
-                    state.trailingBase64BytesBuffer,
+                    state.PartialTrailingBytesBuffer,
                     trailingDestination,
                     out int trailingBytesConsumed,
-                    out int trailingBytesWritten
-                    );
+                    out int trailingBytesWritten);
 
                 Debug.Assert(encodingResult == OperationStatus.Done, "Encoding 3 bytes should always succeed.");
                 Debug.Assert(trailingBytesConsumed == 3, "All 3 bytes should be consumed.");
                 state.BufferWriter.Advance(trailingBytesWritten);
                 value = value[bytesNeeded..];
-                state.ClearTrailingBase64Bytes();
+                state.ClearTrailingPartialData();
             }
             else
             {
                 // Not enough bytes to complete a 3-byte block
                 Debug.Assert(value.Length <= 2);
-                value.CopyTo(state.trailingBase64BytesBuffer[numTrailingBytes..]);
+                value.CopyTo(state.PartialTrailingBytesBuffer[numTrailingBytes..]);
                 
                 // If it's the final block, encode them anyway, otherwise just store them and return
                 if (isFinalBlock)
                 {
                     var trailingDestination = bufferWriter.GetSpan(Base64.GetMaxEncodedToUtf8Length(numTrailingBytes + value.Length));
                     OperationStatus encodingResult = Base64.EncodeToUtf8(
-                        state.trailingBase64BytesBuffer[..(numTrailingBytes + value.Length)],
+                        state.PartialTrailingBytesBuffer[..(numTrailingBytes + value.Length)],
                         trailingDestination,
                         out int trailingBytesConsumed,
                         out int trailingBytesWritten,
-                        isFinalBlock: true
-                        );
+                        isFinalBlock: true);
 
                     Debug.Assert(encodingResult == OperationStatus.Done, "Encoding 3 bytes should always succeed.");
                     Debug.Assert(trailingBytesConsumed == numTrailingBytes + value.Length, "All bytes should be consumed.");
                     state.BufferWriter.Advance(trailingBytesWritten);
                     bufferWriter.Write([JsonConstants.DoubleQuote]);
-                    state.EndBase64SegmentScope();
+                    state.EndSegmentedValueScope();
                     return;
                 }
 
-                state.SetTrailingBase64Bytes(state.trailingBase64BytesBuffer[..(numTrailingBytes + value.Length)]);
+                state.SetTrailingBase64Bytes(state.PartialTrailingBytesBuffer[..(numTrailingBytes + value.Length)]);
                 return;
             }
         }
@@ -99,13 +97,13 @@ internal partial class StreamValueWriter<TCustomState> : IStreamValueWriter<TCus
         }
         else
         {
-            state.ClearTrailingBase64Bytes();
+            state.ClearTrailingPartialData();
         }
 
         if (isFinalBlock)
         {
             bufferWriter.Write([JsonConstants.DoubleQuote]);
-            state.EndBase64SegmentScope();
+            state.EndSegmentedValueScope();
         }
     }
 }
