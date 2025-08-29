@@ -70,7 +70,7 @@ namespace Microsoft.OData.UriParser
             // Calls the MetadataBindingUtils.ConvertToTypeIfNeeded() method to convert the left operand to the same enum type as the right operand.
             if ((!(right is CollectionConstantNode) && right.ItemType.IsEnum()) && (left.TypeReference != null && (left.TypeReference.IsString() || left.TypeReference.IsIntegral())))
             {
-                left = MetadataBindingUtils.ConvertToTypeIfNeeded(left, right.ItemType);
+                left = MetadataBindingUtils.ConvertToTypeIfNeeded(left, right.ItemType, this.resolver.EnableCaseInsensitive);
             }
 
             MetadataBindingUtils.VerifyCollectionNode(right, this.resolver.EnableCaseInsensitive);
@@ -156,6 +156,10 @@ namespace Microsoft.OData.UriParser
                         // Sample: [1970-01-01T00:00:00Z, 1980-01-01T01:01:01+01:00]
                         //    ==>  ['1970-01-01T00:00:00Z', '1980-01-01T01:01:01+01:00']
                         bracketLiteralText = NormalizeDateTimeCollectionItems(bracketLiteralText);
+                    }
+                    else if (expectedType.Definition.AsElementType().TypeKind == EdmTypeKind.Enum)
+                    {
+                        bracketLiteralText = NormalizeEnumCollectionItems(bracketLiteralText, expectedTypeFullName);
                     }
                 }
 
@@ -423,6 +427,111 @@ namespace Microsoft.OData.UriParser
             }
 
             return "[" + String.Join(",", items) + "]";
+        }
+
+        private static string NormalizeEnumCollectionItems(string bracketLiteralText, string expectedTypeFullName)
+        {
+            // Remove the '[' and ']' or '(' and ')' and trim the content
+            ReadOnlySpan<char> normalizedText = bracketLiteralText.AsSpan(1, bracketLiteralText.Length - 2).Trim();
+
+            // Trim leading/trailing whitespace
+            int left = 0;
+            int right = normalizedText.Length - 1;
+            while (left <= right && char.IsWhiteSpace(normalizedText[left]))
+            {
+                left++;
+            }
+
+            while (right >= left && char.IsWhiteSpace(normalizedText[right]))
+            {
+                right--;
+            }
+
+            if (left > right)
+            {
+                return "[]";
+            }
+
+            int expectedTypeFullNameLen = string.IsNullOrEmpty(expectedTypeFullName) ? 0 : expectedTypeFullName.Length;
+            ReadOnlySpan<char> content = normalizedText.Slice(left, right - left + 1);
+            int start = 0;
+            int length = content.Length;
+
+            StringBuilder result = new StringBuilder();
+            result.Append('[');
+
+            while (start < length)
+            {
+                char currentChar = content[start];
+
+                if (currentChar == '\'' || currentChar == '"')
+                {
+                    // Handle quoted items
+                    char quoteChar = currentChar;
+                    result.Append(quoteChar);
+                    int end = ++start;
+
+                    while (end < length && content[end] != quoteChar)
+                    {
+                        result.Append(content[end]);
+                        end++;
+                    }
+
+                    if (end < length)
+                    {
+                        result.Append(quoteChar);
+                        start = end + 1;
+                    }
+                }
+                else if (currentChar == ',')
+                {
+                    // Handle commas
+                    result.Append(',');
+                    start++;
+                }
+                else if (char.IsWhiteSpace(currentChar))
+                {
+                    // Skip whitespace
+                    start++;
+                }
+                else
+                {
+                    // Handle non-quoted items
+                    int end = start;
+                    while (end < length && content[end] != ',' && !char.IsWhiteSpace(content[end]))
+                    {
+                        end++;
+                    }
+
+                    ReadOnlySpan<char> token = content[start..end];
+                    if (expectedTypeFullNameLen > 0 && token.Length > expectedTypeFullNameLen && 
+                        token.StartsWith(expectedTypeFullName, StringComparison.Ordinal))
+                    {
+                        char next = token[expectedTypeFullNameLen];
+                        if (next == '\'' || next == '\"')
+                        {
+                            token = token.Slice(expectedTypeFullNameLen);
+                        }
+                    }
+
+                    // If item is already quoted, keep it; otherwise wrap in single quotes
+                    if (token.Length > 0 && (token[0] == '\'' || token[0] == '"'))
+                    {
+                        result.Append(token);
+                    }
+                    else
+                    {
+                        result.Append('\'');
+                        result.Append(token);
+                        result.Append('\'');
+                    }
+
+                    start = end;
+                }
+            }
+
+            result.Append(']');
+            return result.ToString();
         }
 
         private static bool IsCollectionEmptyOrWhiteSpace(string bracketLiteralText)
