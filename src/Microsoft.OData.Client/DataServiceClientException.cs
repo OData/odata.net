@@ -7,19 +7,15 @@
 namespace Microsoft.OData.Client
 {
     using System;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Runtime.Serialization;
-    using System.Security.Permissions;
 
     /// <summary>
     /// The exception that is thrown when the server returns an error.
     /// </summary>
-    [Serializable]
     [System.Diagnostics.DebuggerDisplay("{Message}")]
-    [SuppressMessage("Microsoft.Design", "CA1032:ImplementStandardExceptionConstructors", Justification = "No longer relevant after .NET 4 introduction of SerializeObjectState event and ISafeSerializationData interface.")]
     public sealed class DataServiceClientException : InvalidOperationException
     {
         private readonly int statusCode;
+
         #region Constructors
 
         /// <summary>Initializes a new instance of the <see cref="Microsoft.OData.Client.DataServiceClientException" /> class with a system-supplied message that describes the error. </summary>
@@ -61,12 +57,6 @@ namespace Microsoft.OData.Client
             this.statusCode = statusCode;
         }
 
-        private DataServiceClientException(SerializationInfo info, StreamingContext context)
-: base(info, context)
-        {
-            this.statusCode = info.GetInt32("StatusCode");
-        }
-
         #endregion Constructors
 
 
@@ -80,20 +70,5 @@ namespace Microsoft.OData.Client
         }
 
         #endregion Public properties
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        public override void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            if (info == null)
-            {
-                throw new ArgumentNullException(nameof(info));
-            }
-
-            info.AddValue("StatusCode", this.statusCode);
-
-            // MUST call through to the base class to let it save its own state
-            base.GetObjectData(info, context);
-        }
-
     }
 }

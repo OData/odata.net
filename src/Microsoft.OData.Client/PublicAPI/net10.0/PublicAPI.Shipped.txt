@@ -745,7 +745,6 @@ override Microsoft.OData.Client.ALinq.UriParser.SystemToken.Identifier.get -> st
 override Microsoft.OData.Client.ALinq.UriParser.SystemToken.IsNamespaceOrContainerQualified() -> bool
 override Microsoft.OData.Client.ALinq.UriParser.UnaryOperatorToken.Accept<T>(Microsoft.OData.Client.ALinq.UriParser.ISyntacticTreeVisitor<T> visitor) -> T
 override Microsoft.OData.Client.ALinq.UriParser.UnaryOperatorToken.Kind.get -> Microsoft.OData.Client.ALinq.UriParser.QueryTokenKind
-override Microsoft.OData.Client.DataServiceClientException.GetObjectData(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) -> void
 override Microsoft.OData.Client.DataServiceCollection<T>.InsertItem(int index, T item) -> void
 override Microsoft.OData.Client.DataServiceQuery<TElement>.ElementType.get -> System.Type
 override Microsoft.OData.Client.DataServiceQuery<TElement>.Expression.get -> System.Linq.Expressions.Expression
