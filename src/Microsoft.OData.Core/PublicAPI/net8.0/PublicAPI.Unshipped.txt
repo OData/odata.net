@@ -1,0 +1,7 @@
+Microsoft.OData.UriParser.Aggregation.AggregateCollectionExpression
+Microsoft.OData.UriParser.Aggregation.AggregateCollectionExpression.AggregateCollectionExpression(Microsoft.OData.UriParser.CollectionNode expression, Microsoft.OData.UriParser.Aggregation.AggregationMethodDefinition methodDefinition, string alias, Microsoft.OData.Edm.IEdmTypeReference typeReference) -> void
+Microsoft.OData.UriParser.Aggregation.AggregateCollectionExpression.Expression.get -> Microsoft.OData.UriParser.CollectionNode
+Microsoft.OData.UriParser.Aggregation.AggregateCollectionExpression.Method.get -> Microsoft.OData.UriParser.Aggregation.AggregationMethod
+Microsoft.OData.UriParser.Aggregation.AggregateCollectionExpression.MethodDefinition.get -> Microsoft.OData.UriParser.Aggregation.AggregationMethodDefinition
+Microsoft.OData.UriParser.Aggregation.AggregateCollectionExpression.TypeReference.get -> Microsoft.OData.Edm.IEdmTypeReference
+Microsoft.OData.UriParser.Aggregation.AggregateExpressionKind.CollectionPropertyAggregate = 3 -> Microsoft.OData.UriParser.Aggregation.AggregateExpressionKind
