@@ -59,6 +59,8 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             new SingleValuePropertyAccessNode(
                 new SingleNavigationNode(FakePersonNode, HardCodedTestModel.GetPersonMyDogNavProp(), new EdmPathExpression("MyDog")), HardCodedTestModel.GetDogColorProp());
 
+        public static readonly CollectionPropertyAccessNode FakeCollectionPropertyAccessNode =
+            new CollectionPropertyAccessNode(FakePersonNode, HardCodedTestModel.GetPersonMyDatesProp());
 
         public static readonly CollectionComplexNode FakeCollectionComplexProperty =
             new CollectionComplexNode(FakePersonNode, HardCodedTestModel.GetPersonPreviousAddressesProp());

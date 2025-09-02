@@ -13,6 +13,7 @@ using Microsoft.OData.Metadata;
 using Microsoft.OData.Tests.ScenarioTests.UriBuilder;
 using Microsoft.OData.Tests.UriParser;
 using Microsoft.OData.UriParser;
+using Microsoft.OData.UriParser.Aggregation;
 using Microsoft.Spatial;
 using Microsoft.Test.OData.Utils.Metadata;
 using Microsoft.VisualBasic;
@@ -1677,6 +1678,43 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             odataQueryOptionParser.ParseApply();
             var filterClause = odataQueryOptionParser.ParseFilter();
             filterClause.Expression.ShouldBeSingleValueOpenPropertyAccessQueryNode("Total");
+        }
+
+        [Fact]
+        public void AggregatedPropertyTreatedAsOpenProperty2()
+        {
+            EdmModel model = new EdmModel();
+            EdmComplexType tagType = new EdmComplexType("NS", "Tag");
+            tagType.AddStructuralProperty("Name", EdmCoreModel.Instance.GetString(true));
+            tagType.AddStructuralProperty("Description", EdmCoreModel.Instance.GetString(true));
+            model.AddElement(tagType);
+
+            EdmEntityType articleType = new EdmEntityType("NS", "Article");
+            articleType.AddKeys(articleType.AddStructuralProperty("Id", EdmCoreModel.Instance.GetInt32(true)));
+            var collectionTagsType = new EdmCollectionTypeReference(new EdmCollectionType(new EdmComplexTypeReference(tagType, true)));
+
+            articleType.AddStructuralProperty("Tags", collectionTagsType);
+            model.AddElement(articleType);
+            EdmEntityContainer container = new EdmEntityContainer("NS", "Default");
+            EdmEntitySet articleSet = container.AddEntitySet("Articles", articleType);
+            model.AddElement(container);
+
+            EdmCollectionTypeReference stringCollectionType =
+                new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetString(true)));
+
+            FunctionSignatureWithReturnType customFunctionSignature =
+                new FunctionSignatureWithReturnType(stringCollectionType, collectionTagsType);
+            CustomUriFunctions.AddCustomUriFunction("microsoft.union", customFunctionSignature);
+
+            var odataQueryOptionParser = new ODataQueryOptionParser(model,
+                articleType, articleSet,
+                new Dictionary<string, string>()
+                {
+                    {"$apply", "aggregate(Tags with microsoft.union as uniqueValues)"}
+                });
+
+            ApplyClause applyClause = odataQueryOptionParser.ParseApply();
+
         }
 
         [Fact]

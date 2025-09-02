@@ -22,7 +22,7 @@ namespace Microsoft.OData.UriParser.Aggregation
         private readonly IEdmTypeReference typeReference;
 
         /// <summary>
-        /// Create a PropertyAggregateExpression.
+        /// Create a AggregateExpression.
         /// </summary>
         /// <param name="expression">The aggregation expression.</param>
         /// <param name="method">The <see cref="AggregationMethod"/>.</param>
