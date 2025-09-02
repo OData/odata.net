@@ -133,7 +133,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         public void EdmTypeComputedFromOperationReturnTypeForSingleOperation()
         {
             OperationImportSegment segment = new OperationImportSegment(HardCodedTestModel.GetFunctionImportForGetCoolestPerson(), HardCodedTestModel.GetPeopleSet());
-            Assert.Same(HardCodedTestModel.GetFunctionImportForGetCoolestPerson().Operation.ReturnType.Definition, segment.EdmType);
+            Assert.Same(HardCodedTestModel.GetFunctionImportForGetCoolestPerson().Operation.Return.Type.Definition, segment.EdmType);
         }
 
         [Fact]
@@ -148,7 +148,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             var segment = new OperationImportSegment(operations, null);
 
             // All operations in the list return int, so we can set the return type to that.
-            Assert.Same(operations.First().Operation.ReturnType.Definition, segment.EdmType);
+            Assert.Same(operations.First().Operation.Return.Type.Definition, segment.EdmType);
         }
 
         [Fact]

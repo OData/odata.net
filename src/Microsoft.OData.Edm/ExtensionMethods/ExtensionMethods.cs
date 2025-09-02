@@ -2733,12 +2733,12 @@ namespace Microsoft.OData.Edm
                 return csdlOperation.Return;
             }
 
-            if (operation == null || operation.ReturnType == null)
+            if (operation == null)
             {
                 return null;
             }
 
-            return new EdmOperationReturn(operation, operation.ReturnType);
+            return operation.Return;
         }
 
         /// <summary>
