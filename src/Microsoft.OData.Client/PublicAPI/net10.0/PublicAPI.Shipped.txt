@@ -454,7 +454,6 @@ Microsoft.OData.Client.DataServiceStreamResponse.Headers.get -> System.Collectio
 Microsoft.OData.Client.DataServiceStreamResponse.Stream.get -> System.IO.Stream
 Microsoft.OData.Client.DataServiceTransportException
 Microsoft.OData.Client.DataServiceTransportException.DataServiceTransportException(Microsoft.OData.IODataResponseMessage response, System.Exception innerException) -> void
-Microsoft.OData.Client.DataServiceTransportException.DataServiceTransportException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) -> void
 Microsoft.OData.Client.DataServiceTransportException.Response.get -> Microsoft.OData.IODataResponseMessage
 Microsoft.OData.Client.DataServiceUrlKeyDelimiter
 Microsoft.OData.Client.DeleteLinkUriOption
@@ -755,7 +754,6 @@ override Microsoft.OData.Client.DataServiceQueryContinuation.ToString() -> strin
 override Microsoft.OData.Client.DataServiceRequest<TElement>.ElementType.get -> System.Type
 override Microsoft.OData.Client.DataServiceRequest<TElement>.RequestUri.get -> System.Uri
 override Microsoft.OData.Client.DataServiceRequest<TElement>.ToString() -> string
-override Microsoft.OData.Client.DataServiceTransportException.GetObjectData(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) -> void
 override Microsoft.OData.Client.HttpClientRequestMessage.Abort() -> void
 override Microsoft.OData.Client.HttpClientRequestMessage.BeginGetRequestStream(System.AsyncCallback callback, object state) -> System.IAsyncResult
 override Microsoft.OData.Client.HttpClientRequestMessage.BeginGetResponse(System.AsyncCallback callback, object state) -> System.IAsyncResult

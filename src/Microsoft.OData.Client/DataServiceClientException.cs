@@ -7,11 +7,12 @@
 namespace Microsoft.OData.Client
 {
     using System;
+    using System.Diagnostics;
 
     /// <summary>
     /// The exception that is thrown when the server returns an error.
     /// </summary>
-    [System.Diagnostics.DebuggerDisplay("{Message}")]
+    [DebuggerDisplay("{Message}")]
     public sealed class DataServiceClientException : InvalidOperationException
     {
         private readonly int statusCode;
