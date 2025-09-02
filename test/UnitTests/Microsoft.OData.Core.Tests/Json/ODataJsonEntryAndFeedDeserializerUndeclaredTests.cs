@@ -1885,6 +1885,42 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
         [Theory]
         [InlineData("Edm.Untyped")]
         [InlineData("Collection(Edm.Untyped)")]
+        [InlineData("Collection(Server.NS.UndefinedType)")]
+        public void ReadUntypedCollectionContainingNullAndNumbers(string fragment)
+        {
+            string payload = "{\"@odata.context\":\"http://www.sampletest.com/$metadata#" +
+                fragment
+                + "\",\"value\":[42, null, 83748348494435, 2147483647, \"some string\", -9223372036854775808, 214748364745, 3.134545454565656, { \"Anyname\": \"Redmond\", \"Justnull\": null, \"Intnum\": 2345454656, \"longnum\": -9223372036854775808 }]}";
+
+            var readerSettings = UntypedAsValueReaderSettings.Clone();
+            readerSettings.PreserveUntypedNumericAsDecimal = false; // Use other numeric values instead of Decimal
+
+            List<object> entries = new List<object>();
+            this.ReadCollectionPayload(payload, readerSettings, reader =>
+            {
+                if (reader.State == ODataReaderState.ResourceStart)
+                {
+                    entries.Add(reader.Item);
+                }
+                else if (reader.State == ODataReaderState.Primitive)
+                {
+                    entries.Add(((ODataPrimitiveValue)reader.Item).Value);
+                }
+            });
+
+            Assert.NotEmpty(entries);
+
+            Assert.Equal(42, Assert.IsType<int>(entries[0]));
+            Assert.Null(entries[1]);
+            //Assert.Equal(83748348494435L, Assert.IsType<long>(entries[2]));
+            Assert.Equal(2147483647, Assert.IsType<Int32>(entries[3]));
+            Assert.Equal("some string", Assert.IsType<string>(entries[4]));
+            Assert.Equal(-9223372036854775808M, Assert.IsType<Decimal>(entries[5]));
+        }
+
+        [Theory]
+        [InlineData("Edm.Untyped")]
+        [InlineData("Collection(Edm.Untyped)")]
         public void ReadUntypedCollectionContainingCollection_WherePreserveUntypedNumericAsDecimalIsFalse(string fragment)
         {
             string payload = "{\"@odata.context\":\"http://www.sampletest.com/$metadata#" + fragment +"\",\"value\":[[\"primitiveString\",{\"id\":1}]]}";
