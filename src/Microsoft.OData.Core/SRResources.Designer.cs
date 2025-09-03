@@ -6958,6 +6958,15 @@ namespace Microsoft.OData.Core {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to This operation is not supported for a relative URI. (parameter: &apos;{0}&apos;)..
+        /// </summary>
+        internal static string UriUtils_RequiresAbsoluteUri {
+            get {
+                return ResourceManager.GetString("UriUtils_RequiresAbsoluteUri", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to The UrlValidator used to validate an ODataUri must use the same Model as the ODataUriParser..
         /// </summary>
         internal static string UriValidator_ValidatorMustUseSameModelAsParser {

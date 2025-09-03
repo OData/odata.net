@@ -2612,4 +2612,7 @@
   <data name="TypeUtils_TypeNameIsNotQualified" xml:space="preserve">
     <value>The value '{0}' is not a qualified type name. A qualified type name is expected.</value>
   </data>
+  <data name="UriUtils_RequiresAbsoluteUri" xml:space="preserve">
+    <value>This operation is not supported for a relative URI. (parameter: '{0}').</value>
+  </data>
 </root>
