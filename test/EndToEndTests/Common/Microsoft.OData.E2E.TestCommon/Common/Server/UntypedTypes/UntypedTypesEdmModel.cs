@@ -20,22 +20,9 @@ public static class UntypedTypesEdmModel
 
     public static IEdmModel GetEdmModel()
     {
-        Func<Uri, XmlReader?> getReferencedSchemaFunc = uri =>
-        {
-            if (uri.AbsoluteUri.StartsWith(_baseUri.AbsoluteUri))
-            {
-                string filename = uri.AbsoluteUri.Substring(_baseUri.AbsoluteUri.Length, uri.AbsoluteUri.Length - _baseUri.AbsoluteUri.Length);
-                return XmlReader.Create(ReadResourceFromAssembly(filename));
-            }
-            else
-            {
-                return null;
-            }
-        };
-
-        IEdmModel model = ReadModel("UntypedTypesODataServiceCsdl.xml", getReferencedSchemaFunc);
+        var model = ReadModel("UntypedTypesODataServiceCsdl.xml");
         model.Validate(out var errors);
-        if (errors != null && errors.Count() > 0)
+        if (errors != null && errors.Any())
         {
             throw new InvalidOperationException("Failed to load model : " + string.Join(Environment.NewLine, errors.Select(e => e.ErrorMessage)));
         }
@@ -43,21 +30,12 @@ public static class UntypedTypesEdmModel
         return model;
     }
 
-    private static IEdmModel ReadModel(string fileName, Func<Uri, XmlReader?>? getReferencedSchemaFunc = null)
+    private static IEdmModel ReadModel(string fileName)
     {
         IEdmModel model;
         using (Stream csdlStream = ReadResourceFromAssembly(fileName))
         {
-            bool parseResult;
-            IEnumerable<EdmError> errors;
-            if (getReferencedSchemaFunc == null)
-            {
-                parseResult = CsdlReader.TryParse(XmlReader.Create(csdlStream), out model, out errors);
-            }
-            else
-            {
-                parseResult = CsdlReader.TryParse(XmlReader.Create(csdlStream), getReferencedSchemaFunc, out model, out errors);
-            }
+            bool parseResult = CsdlReader.TryParse(XmlReader.Create(csdlStream), out model, out IEnumerable<EdmError> errors);
 
             if (!parseResult)
             {
