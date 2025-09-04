@@ -1,0 +1,29 @@
+﻿<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+	<edmx:DataServices>
+		<Schema Namespace="Microsoft.OData.E2E.TestCommon.Common.Server.UntypedTypes" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+			<EntityType Name="Customer">
+				<Key>
+					<PropertyRef Name="Id" />
+				</Key>
+				<Property Name="Id" Type="Edm.Int32" Nullable="false" />
+				<Property Name="Name" Type="Edm.String" />
+				<Property Name="UntypedProperty" Type="Edm.Untyped" />
+				<Property Name="UntypedList" Type="Collection(Edm.Untyped)" />
+				<NavigationProperty Name="Orders" Type="Collection(Microsoft.OData.E2E.TestCommon.Common.Server.UntypedTypes.Order)" />
+			</EntityType>
+			<EntityType Name="Order">
+				<Key>
+					<PropertyRef Name="Id" />
+				</Key>
+				<Property Name="Id" Type="Edm.Int32" Nullable="false" />
+				<Property Name="Amount" Type="Edm.Decimal" Nullable="false" Scale="variable" />
+			</EntityType>
+			<EntityContainer Name="Container">
+				<EntitySet Name="Customers" EntityType="Microsoft.OData.E2E.TestCommon.Common.Server.UntypedTypes.Customer">
+					<NavigationPropertyBinding Path="Orders" Target="Orders" />
+				</EntitySet>
+				<EntitySet Name="Orders" EntityType="Microsoft.OData.E2E.TestCommon.Common.Server.UntypedTypes.Order" />
+			</EntityContainer>
+		</Schema>
+	</edmx:DataServices>
+</edmx:Edmx>
