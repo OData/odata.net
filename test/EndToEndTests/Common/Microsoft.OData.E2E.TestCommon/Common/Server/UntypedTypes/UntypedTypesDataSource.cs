@@ -165,8 +165,8 @@ public class UntypedTypesDataSource
             {
                 Id = 17,
                 Name = "1. Large decimal with high precision",
-                UntypedProperty = 123456789012345.123456789012345m,
-                UntypedList = new List<object> { "123456789012345.123456789012345", 123456789012345.123456789012345m, "1. Large decimal with high precision" },
+                UntypedProperty = 123456789012345.123456789012345,
+                UntypedList = new List<object> { "123456789012345.123456789012345", 123456789012345.123456789012345, "1. Large decimal with high precision" },
                 Orders = new List<Order> { new Order { Id = 19, Amount = 123456789012345m } }
             },
             new Customer

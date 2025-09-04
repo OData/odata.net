@@ -219,7 +219,7 @@ namespace Microsoft.OData.Json
                 Func<object, string, IEdmTypeReference> primitiveTypeResolver,
                 bool readUntypedAsString,
                 bool generateTypeIfMissing,
-                bool preserveUntypedNumericAsDecimal = true)
+                bool readUntypedNumericAsDecimal = true)
         {
             if (payloadTypeReference != null && (payloadTypeReference.TypeKind() != EdmTypeKind.Untyped || readUntypedAsString))
             {
@@ -274,7 +274,7 @@ namespace Microsoft.OData.Json
                         typeReference = EdmCoreModel.Instance.GetString(isNullable: true);
                     }
                     // This is for backward compatibility with untyped numeric values.
-                    else if (preserveUntypedNumericAsDecimal)
+                    else if (readUntypedNumericAsDecimal)
                     {
                         typeReference = EdmCoreModel.Instance.GetDecimal(isNullable: true);
                     }
@@ -284,9 +284,8 @@ namespace Microsoft.OData.Json
                         {
                             int _ => EdmCoreModel.Instance.GetInt32(isNullable: true),
                             long _ => EdmCoreModel.Instance.GetInt64(isNullable: true),
-                            double _ => EdmCoreModel.Instance.GetDouble(isNullable: true),
-                            float _ => EdmCoreModel.Instance.GetSingle(isNullable: true),
-                            _ => EdmCoreModel.Instance.GetDecimal(isNullable: true),
+                            decimal _ => EdmCoreModel.Instance.GetDecimal(isNullable: true),
+                            _ => EdmCoreModel.Instance.GetDouble(isNullable: true),
                         };
                     }
 
@@ -527,7 +526,7 @@ namespace Microsoft.OData.Json
                 this.MessageReaderSettings.PrimitiveTypeResolver,
                 this.MessageReaderSettings.ReadUntypedAsString,
                 !this.MessageReaderSettings.ThrowIfTypeConflictsWithMetadata,
-                this.MessageReaderSettings.PreserveUntypedNumericAsDecimal);
+                this.MessageReaderSettings.LibraryCompatibility.HasFlag(ODataLibraryCompatibility.ReadUntypedNumericAsDecimal));
 
             if (payloadTypeReference.ToStructuredType() != null)
             {
@@ -1967,7 +1966,7 @@ namespace Microsoft.OData.Json
                     this.MessageReaderSettings.PrimitiveTypeResolver,
                     this.MessageReaderSettings.ReadUntypedAsString,
                     !this.MessageReaderSettings.ThrowIfTypeConflictsWithMetadata,
-                    this.MessageReaderSettings.PreserveUntypedNumericAsDecimal);
+                    this.MessageReaderSettings.LibraryCompatibility.HasFlag(ODataLibraryCompatibility.ReadUntypedNumericAsDecimal));
 
                 targetTypeKind = targetTypeReference.TypeKind();
             }
@@ -2345,7 +2344,7 @@ namespace Microsoft.OData.Json
                 this.MessageReaderSettings.PrimitiveTypeResolver,
                 this.MessageReaderSettings.ReadUntypedAsString,
                 !this.MessageReaderSettings.ThrowIfTypeConflictsWithMetadata,
-                this.MessageReaderSettings.PreserveUntypedNumericAsDecimal);
+                this.MessageReaderSettings.LibraryCompatibility.HasFlag(ODataLibraryCompatibility.ReadUntypedNumericAsDecimal));
 
             if (payloadTypeReference.ToStructuredType() != null)
             {
@@ -3303,7 +3302,7 @@ namespace Microsoft.OData.Json
                     this.MessageReaderSettings.PrimitiveTypeResolver,
                     this.MessageReaderSettings.ReadUntypedAsString,
                     !this.MessageReaderSettings.ThrowIfTypeConflictsWithMetadata, 
-                    this.MessageReaderSettings.PreserveUntypedNumericAsDecimal);
+                    this.MessageReaderSettings.LibraryCompatibility.HasFlag(ODataLibraryCompatibility.ReadUntypedNumericAsDecimal));
 
                 targetTypeKind = targetTypeReference.TypeKind();
             }
