@@ -1,2 +1,3 @@
-Microsoft.OData.ODataMessageReaderSettings.PreserveUntypedNumericAsDecimal.get -> bool
-Microsoft.OData.ODataMessageReaderSettings.PreserveUntypedNumericAsDecimal.set -> void
+Microsoft.OData.ODataLibraryCompatibility.ReadUntypedNumericAsDecimal = 32 -> Microsoft.OData.ODataLibraryCompatibility
+Microsoft.OData.ODataLibraryCompatibility.Version7 = Microsoft.OData.ODataLibraryCompatibility.UseLegacyVariableCasing | Microsoft.OData.ODataLibraryCompatibility.UseLegacyODataInnerErrorSerialization | Microsoft.OData.ODataLibraryCompatibility.ReadUntypedNumericAsDecimal -> Microsoft.OData.ODataLibraryCompatibility
+Microsoft.OData.ODataLibraryCompatibility.Version8 = 32 -> Microsoft.OData.ODataLibraryCompatibility

@@ -48,7 +48,6 @@ namespace Microsoft.OData
             this.Version = odataVersion;
             this.LibraryCompatibility = ODataLibraryCompatibility.None;
             this.EnablePropertyNameCaseInsensitive = false; // for back-compatible
-            this.PreserveUntypedNumericAsDecimal = true; // for back-compatible
 
             Validator = new ReaderValidator(this);
             if (odataVersion < ODataVersion.V401)
@@ -125,12 +124,6 @@ namespace Microsoft.OData
         /// Gets or sets a boolean value indicating whether or not supports property name case insensitive in reading.
         /// </summary>
         public bool EnablePropertyNameCaseInsensitive { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether untyped numeric values should be preserved as decimals during. Default is <see langword="true"/>.
-        /// When set to <see langword="true"/>, numeric values without an explicit type are treated as decimals to maintain precision. 
-        /// When set to <see langword="false"/>, such values may be converted to other numeric types.
-        public bool PreserveUntypedNumericAsDecimal { get; set; }
 
         /// <summary>
         /// Gets or sets custom type resolver used by the Client.
@@ -326,7 +319,6 @@ namespace Microsoft.OData
             this.ReadAsStreamFunc = other.ReadAsStreamFunc;
             this.ArrayPool = other.ArrayPool;
             this.EnablePropertyNameCaseInsensitive = other.EnablePropertyNameCaseInsensitive;
-            this.PreserveUntypedNumericAsDecimal = other.PreserveUntypedNumericAsDecimal;
             this.EnableUntypedCollections = other.EnableUntypedCollections;
             this.EnableReadingKeyAsSegment = other.EnableReadingKeyAsSegment;
             this.EnableReadingODataAnnotationWithoutPrefix = other.EnableReadingODataAnnotationWithoutPrefix;
