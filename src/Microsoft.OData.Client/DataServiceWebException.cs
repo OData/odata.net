@@ -8,59 +8,47 @@ namespace Microsoft.OData.Client
 {
     using System;
     using System.Diagnostics.CodeAnalysis;
-    using System.Runtime.Serialization;
-    using System.Security.Permissions;
     using Microsoft.OData;
 
     /// <summary>
-    /// Class to describe errors thrown by transport layer.
+    /// Exception thrown when the underlying transport layer encounters an error while sending a request
+    /// or receiving a response.
     /// </summary>
-    [Serializable]
-    [SuppressMessage("Microsoft.Design", "CA1032:ImplementStandardExceptionConstructors", Justification = "No longer relevant after .NET 4 introduction of SerializeObjectState event and ISafeSerializationData interface.")]
+    /// <remarks>
+    /// This exception wraps the original transport error (<see cref="Exception.InnerException"/>).
+    /// When available, the raw response is exposed via <see cref="Response"/> to allow callers to inspect
+    /// status code, headers, or read an error payload.
+    /// </remarks>
+    [SuppressMessage("Microsoft.Design", "CA1032:ImplementStandardExceptionConstructors",
+        Justification = "Intentionally specialized transport-layer exception. It requires an inner exception and optionally an IODataResponseMessage to preserve response details (status code, headers, and error payload) for diagnostics.")]
     public class DataServiceTransportException : InvalidOperationException
     {
-        private readonly IODataResponseMessage ResponseMessage;
+        private readonly IODataResponseMessage responseMessage;
+
         /// <summary>
-        /// Constructs a new instance of DataServiceTransportException.
+        /// Initializes a new instance of the <see cref="DataServiceTransportException"/> class with the response
+        /// message and the underlying transport exception.
         /// </summary>
-        /// <param name="response">ResponseMessage from the exception so that the error payload can be read.</param>
-        /// <param name="innerException">Actual exception that this exception is wrapping.</param>
+        /// <param name="response">
+        /// The <see cref="IODataResponseMessage"/> associated with the failure, if available.
+        /// This enables callers to inspect status code, headers, or read an error payload.
+        /// May be <c>null</c> if no response was produced.
+        /// </param>
+        /// <param name="innerException">The exception that caused this transport error.</param>
         public DataServiceTransportException(IODataResponseMessage response, Exception innerException)
             : base(innerException.Message, innerException)
         {
             Util.CheckArgumentNull(innerException, "innerException");
 
-            this.ResponseMessage = response;
-
-        }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        protected DataServiceTransportException(SerializationInfo info, StreamingContext context)
-   : base(info, context)
-        {
-            this.ResponseMessage = (IODataResponseMessage)info.GetValue("ResponseMessage", typeof(IODataResponseMessage));
+            this.responseMessage = response;
         }
 
         /// <summary>
-        /// Gets the response message for this exception.
+        /// Gets the response message associated with this exception.
         /// </summary>
         public IODataResponseMessage Response
         {
-            get { return this.ResponseMessage; }
+            get { return this.responseMessage; }
         }
-
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        public override void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            if (info == null)
-            {
-                throw new ArgumentNullException(nameof(info));
-            }
-            info.AddValue("ResponseMessage", this.ResponseMessage, typeof(IODataResponseMessage));
-            // MUST call through to the base class to let it save its own state
-            base.GetObjectData(info, context);
-        }
-
-
     }
 }
