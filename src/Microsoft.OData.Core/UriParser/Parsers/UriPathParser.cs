@@ -91,22 +91,200 @@ namespace Microsoft.OData.UriParser
 
                 List<string> segments = new List<string>(4);
                 StringBuilder sb = new StringBuilder(Math.Min(256, Math.Max(0, fullPath.Length - startIndex)));
-                bool inQuotes = false;
                 bool hasEscapedSequence = false;
 
                 // Local helpers
-                static bool IsPercent27(string s, int i) // %27 = single quote encoded
-                {
-                    // Matches "%27" at position i
-                    return i + 2 < s.Length
-                        && s[i] == '%'
-                        && s[i + 1] == '2'
-                        && s[i + 2] == '7';
-                }
+                // Matches "%27" (single quote encoded) at position i
+                static bool IsPercent27(string s, int i) => i + 2 < s.Length && s[i] == '%' && s[i + 1] == '2' && s[i + 2] == '7';
+                // Matches "%28" (left paren encoded) at position i
+                static bool IsPercent28(string s, int i) => i + 2 < s.Length && s[i] == '%' && s[i + 1] == '2' && s[i + 2] == '8';
+                // Matches "%29" (right paren encoded) at position i
+                static bool IsPercent29(string s, int i) => i + 2 < s.Length && s[i] == '%' && s[i + 1] == '2' && s[i + 2] == '9';
 
-                static bool IsDoublePercent27(string s, int i)
+                // Consume a *balanced* parenthetical block that begins at a raw '(' or encoded '%28'.
+                // - Honors single-quoted strings inside the block so that '/' within quotes is treated as data
+                //   and does not split path segments.
+                // - Supports raw/encoded parentheses and quotes: '(' / ')' / %28 / %29, and quotes '\'' / %27.
+                // - Recognizes escaped quotes: '' (raw), %27%27 (encoded), and mixed forms ('%27 and %27').
+                // - Allows commas, equals, whitespace, and nested parentheses.
+                // - Returns true and sets `exclusiveEnd` to the index *after* the matching ')' or '%29'.
+                // - Sets `containsEscapeSequence` to true if any percent-escape (%XX) occurs anywhere in the block.
+                // - Returns false for unbalanced parentheses or unterminated quotes; caller should then
+                //   treat characters literally
+                static bool TryConsumeBalancedParentheticalSegment(string s, int i, out int exclusiveEnd, out bool containsEscapeSequence)
                 {
-                    return IsPercent27(s, i) && IsPercent27(s, i + 3);
+                    exclusiveEnd = i;
+                    containsEscapeSequence = false;
+
+                    int j = i;
+
+                    // Opening paren: raw "(" or encoded "%28"
+                    if (j < s.Length && s[j] == '(')
+                    {
+                        j++;
+                    }
+                    else if (IsPercent28(s, j))
+                    {
+                        containsEscapeSequence = true;
+                        j += 3;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+
+                    int parenDepth = 1;
+                    bool inQuote = false;
+
+                    while (j < s.Length && parenDepth > 0)
+                    {
+                        char ch = s[j];
+
+                        if (inQuote)
+                        {
+                            // Raw quote (escape or close)
+                            if (ch == '\'')
+                            {
+                                if (j + 1 < s.Length && s[j + 1] == '\'')
+                                {
+                                    j += 2; // Raw escape: ''
+                                    continue;
+                                }
+                                else if (j + 1 < s.Length && IsPercent27(s, j + 1))
+                                {
+                                    j += 4; // Mixed escaped pair: '%27
+                                    containsEscapeSequence = true;
+                                    continue;
+                                }
+
+                                // Closing raw quote
+                                inQuote = false;
+                                j++;
+                                continue;
+                            }
+
+                            // Encoded quote (escape or close)
+                            if (IsPercent27(s, j))
+                            {
+                                containsEscapeSequence = true;
+
+                                if (j + 3 < s.Length && IsPercent27(s, j + 3))
+                                {
+                                    j += 6; // Encoded escape: %27%27
+                                    continue;
+                                }
+                                else if (j + 3 < s.Length && s[j + 3] == '\'')
+                                {
+                                    j += 4; // Mixed escaped pair: %27'
+                                    continue;
+                                }
+
+                                // Closing encoded quote
+                                inQuote = false;
+                                j += 3;
+                                continue;
+                            }
+
+                            // Any other escape sequence: step as %XX and mark
+                            if (ch == '%')
+                            {
+                                containsEscapeSequence = true;
+
+                                if (j + 2 < s.Length)
+                                {
+                                    j += 3; // %XX
+                                }
+                                else
+                                {
+                                    // Malformed tail like "%" or "%X": append as-is, let UnescapeDataString handle that later
+                                    j++;
+                                }
+
+                                continue;
+                            }
+
+                            j++;
+                            continue;
+                        }
+                        else
+                        {
+                            // Enter quote
+                            if (ch == '\'')
+                            {
+                                inQuote = true;
+                                j++;
+                                continue;
+                            }
+
+                            if (IsPercent27(s, j))
+                            {
+                                containsEscapeSequence = true;
+                                inQuote = true;
+                                j += 3;
+                                continue;
+                            }
+
+                            // Nested paren (rare but legal)
+                            if (ch == '(')
+                            {
+                                parenDepth++;
+                                j++;
+                                continue;
+                            }
+
+                            if (ch == ')')
+                            {
+                                parenDepth--;
+                                j++;
+                                continue;
+                            }
+
+                            if (IsPercent28(s, j))
+                            {
+                                containsEscapeSequence = true;
+                                parenDepth++;
+                                j += 3;
+                                continue;
+                            }
+
+                            if (IsPercent29(s, j))
+                            {
+                                containsEscapeSequence = true;
+                                parenDepth--;
+                                j += 3;
+                                continue;
+                            }
+
+                            // Any other escape sequence: step as %XX and mark
+                            if (ch == '%')
+                            {
+                                containsEscapeSequence = true;
+                                if (j + 2 < s.Length)
+                                {
+                                    j += 3; // %XX
+                                }
+                                else
+                                {
+                                    // Malformed tail like "%" or "%X": append as-is, let UnescapeDataString handle that later
+                                    j++;
+                                }
+
+                                continue;
+                            }
+
+                            // Any other char (including '/', ',', '=', spaces, ect)
+                            j++;
+                        }
+                    }
+
+                    if (parenDepth == 0 && !inQuote)
+                    {
+                        exclusiveEnd = j;
+                        return true; // Found the matching closing paren
+                    }
+
+                    // Unbalanced or unterminated quote -> fail (caller will treat chars normally)
+                    return false;
                 }
 
                 void AddSegmentIfAny()
@@ -119,9 +297,9 @@ namespace Microsoft.OData.UriParser
                     // Depending on internal implementation, Uri.UnescapeDataString when there's no
                     // escaping might result into two strings so we optimize for that case, i.e.,
                     // one allocation for sb.ToString() and for Uri.UnescapeDataString
-                    string rawString = sb.ToString();
+                    string raw = sb.ToString();
                     // Unescape percent-encoded characters for the final segment if necessary
-                    string segment = hasEscapedSequence ? Uri.UnescapeDataString(rawString) : rawString;
+                    string segment = hasEscapedSequence ? Uri.UnescapeDataString(raw) : raw;
 
                     // Skip empties and any stray "/" segment
                     if (segment.Length > 0 && segment != "/")
@@ -139,81 +317,58 @@ namespace Microsoft.OData.UriParser
                 }
 
                 // Walk the path after the basePath and split on unquoted '/'
+                // We don't want something like api/a'/b'/c to give us a'/b' and c instead of a', b' and c
                 for (int i = startIndex; i < fullPath.Length;)
                 {
                     char c = fullPath[i];
 
-                    // Per the OData V4 spec, forward slashes that are not path separators must be percent-encoded,
-                    // even when inside quoted literals. This would allow simple parsing by splitting on '/'.
-                    // Spec reference: https://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part2-url-conventions/odata-v4.0-errata03-os-part2-url-conventions-complete.html#_Toc453752335
-                    //
-                    // In practice, some clients (e.g., Excel or other external integrations) emit unencoded slashes inside quoted literals.
-                    // To ensure compatibility, we must handle both encoded and unencoded cases.
-
-                    // Treat '/' as path segment separators only when not inside quotes
-                    if (!inQuotes && c == '/')
+                    // Split on '/' unless inside a "protected" region (detected via lookahead)
+                    if (c == '/')
                     {
+                        // Path segment separator
                         AddSegmentIfAny();
                         i++; // Consume path segment separator
                         continue;
                     }
 
-                    // Literal quote handling (e.g., People('foo/bar'))
-                    if (c == '\'')
+                    if (c == '(' || IsPercent28(fullPath, i))
                     {
-                        // OData escape inside quotes: double single-quote (e.g. People('O''Neal'))
-                        if (inQuotes && i + 1 < fullPath.Length && fullPath[i + 1] == '\'')
+                        // Attempt to consume a *balanced* parenthetical (key/function args). If successful,
+                        // append it as a whole so that any '/' within quoted literals does not split the segment.
+                        // If not successful (unbalanced/unterminated), fall back to literal scanning.
+                        if (TryConsumeBalancedParentheticalSegment(fullPath, i, out int endParen, out bool containsEscapedSequence))
                         {
-                            sb.Append('\'').Append('\''); // Zero string allocations; Better than: sb.Append("''");
-                            i += 2; // Consume both quotes
+                            sb.Append(fullPath, i, endParen - i);
+                            if (containsEscapedSequence)
+                            {
+                                hasEscapedSequence = true;
+                            }
+
+                            i = endParen;
                             continue;
                         }
 
-                        inQuotes = !inQuotes; // Toggle quote state
-                        sb.Append(c); // Keep the quote in the segment
-                        i++; // Consume quote
-                        continue;
+                        // Fall through: treat as normal characters (unbalanced -> do not protect '/' enclosed in single quote)
                     }
 
-                    // Percent-encoded single quote handling (e.g., People(%27foo/bar%27))
+                    // Copy escaped sequences as a unit, mark for unescape
                     if (c == '%')
                     {
-                        // Double-encoded quote: %27%27 = '' (escaped single quote inside quoted literal - e.g. People(%27O%27%27Neil%27) or People('O%27%27Neil'))
-                        if (IsDoublePercent27(fullPath, i))
-                        {
-                            // Preserve as-is; don't toggle quote state
-                            sb.Append(fullPath, i, 6); // Copy %27%27 directly from source
-                            i += 6; // Consume both %27
-                            hasEscapedSequence = true; // Mark that we saw an escape sequence
-                            continue;
-                        }
+                        hasEscapedSequence = true; // Mark that we saw an escape sequence
 
-                        // Single-encoded quote: %27 = ' (quote start/end - e.g. People(%27foo/bar%27))
-                        if (IsPercent27(fullPath, i))
-                        {
-                            inQuotes = !inQuotes; // Toggle quote state
-                            sb.Append(fullPath, i, 3); // Copy %27 directly from source
-                            i += 3; // Consume %27
-                            hasEscapedSequence = true; // Mark that we saw an escape sequence
-                            continue;
-                        }
-
-                        // Any other percent-escape (e.g., %2F for '/') - just append as-is
                         if (i + 2 < fullPath.Length)
                         {
                             sb.Append(fullPath, i, 3);
-                            i += 3; // Consume entire escape sequence
-                            hasEscapedSequence = true; // Mark that we saw an escape sequence
-                            continue;
+                            i += 3; // %XX - consume entire escape sequence
                         }
                         else
                         {
-                            // Malformed percent-escape - be conservative and append what remains. Let Uri.UnescapeDataString handle any errors.
+                            // Malformed tail like "%" or "%X": append as-is, let UnescapeDataString handle that later
                             sb.Append(c);
-                            i++; // Consume '%'
-                            hasEscapedSequence = true; // To ensure that UnescapeDataString runs and throws
-                            continue;
+                            i++;
                         }
+
+                        continue;
                     }
 
                     // Regular character - just append
@@ -223,12 +378,6 @@ namespace Microsoft.OData.UriParser
 
                 // Flush last segment
                 AddSegmentIfAny();
-
-                // If we ended while still in quotes, that's a syntax error
-                if (inQuotes)
-                {
-                    throw new ODataException(SRResources.UriQueryPathParser_SyntaxError);
-                }
 
                 return segments;
             }
