@@ -59,14 +59,44 @@ public class AutomaticPocoWriterTests
         output.Position = 0;
 
         var actual = new StreamReader(output).ReadToEnd();
-        var decoded = JsonDocument.Parse(actual);
+        var actualNormalized = JsonSerializer.Serialize(JsonDocument.Parse(actual));
         var expected =
-            @"""
-
+            """
+            {
+              "@odata.context": "http://service/odata/$metadata#Customers",
+              "value": [
+                {
+                  "Id": 1,
+                  "Name": "Alice",
+                  "BirthDate": "1990-01-01T00:00:00Z",
+                  "IsActive": true,
+                  "Balance": 100.50,
+                  "Orders": [
+                    {
+                      "Id": 1,
+                      "TotalAmount": 150.00
+                    },
+                    {
+                      "Id": 2,
+                      "TotalAmount": 300.25
+                    }
+                  ]
+                },
+                {
+                  "Id": 2,
+                  "Name": "Bob",
+                  "BirthDate": "1985-05-20T00:00:00Z",
+                  "IsActive": false,
+                  "Balance": 250.75,
+                  "Orders": []
+                }
+              ]
+            }
             """;
 
 
-        Assert.Equal(JsonDocument.Parse(expected).RootElement.ToString(), decoded.RootElement.ToString());
+        var expectedNormalized = JsonSerializer.Serialize(JsonDocument.Parse(expected));
+        Assert.Equal(expectedNormalized, actualNormalized);
     }
 
     public class Customer
