@@ -69,12 +69,20 @@ internal class ODataJsonWriterProvider<TCustomState>(ODataSerializerOptions<TCus
             return new ODataResourceJsonWriter<T, TCustomState>(typeInfo);
         }
 
+        // Attempts to generate a type info on the fly.
+        // TODO: This currently only works with POCOs.
+        typeInfo = ODataTypeInfoFactory<TCustomState>.CreateTypeInfo<T>();
+        if (typeInfo != null)
+        {
+            return new ODataResourceJsonWriter<T, TCustomState>(typeInfo);
+        }
+
         throw new Exception($"Could not find a suitable writer for {type.FullName}");
     }
 
     private static Dictionary<Type, IODataWriter> InitPrimitiveWriters()
     {
-        const int NumSimpleWriters = 6; // Update this when adding more writers. Keeps the dict size exact.
+        const int NumSimpleWriters = 9; // Update this when adding more writers. Keeps the dict size exact.
         Dictionary<Type, IODataWriter> writers = new(NumSimpleWriters);
 
         Add(boolWriter);
@@ -87,7 +95,7 @@ internal class ODataJsonWriterProvider<TCustomState>(ODataSerializerOptions<TCus
         Add(pipeReaderWriter);
         Add(bufferedReaderBinaryWriter);
 
-        Debug.Assert(NumSimpleWriters <= writers.Count);
+        Debug.Assert(NumSimpleWriters == writers.Count);
 
         return writers;
 
