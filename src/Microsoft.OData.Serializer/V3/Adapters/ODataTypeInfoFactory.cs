@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.OData.Serializer.V3.Json;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
@@ -22,12 +23,14 @@ internal class ODataTypeInfoFactory<TCustomState>
 
         var typeInfo = new ODataTypeInfo<T, TCustomState>();
 
-        
+        var customStateType = typeof(TCustomState);
+        var stateType = typeof(ODataWriterState<>).MakeGenericType(customStateType);
+
         var properties = type.GetProperties();
         var propertyInfos = new List<ODataPropertyInfo<T, TCustomState>>(properties.Length);
         foreach (var property in properties)
         {
-            var propertyInfo = CreateODataPropertyInfo(type, property);
+            var propertyInfo = CreateODataPropertyInfo(type, property, stateType, customStateType);
             propertyInfos.Add((ODataPropertyInfo<T, TCustomState>)propertyInfo);
         }
         
@@ -36,7 +39,11 @@ internal class ODataTypeInfoFactory<TCustomState>
     }
     public static ODataTypeInfo CreateTypeInfo(Type type)
     {
-        var typeInfoType = typeof(ODataTypeInfo<,>).MakeGenericType(type, typeof(TCustomState));
+        var customStateType = typeof(TCustomState);
+        var stateType = typeof(ODataWriterState<>).MakeGenericType(customStateType);
+
+        // ODataTypeInfo<TDeclaringType, TCustomState>
+        var typeInfoType = typeof(ODataTypeInfo<,>).MakeGenericType(type, customStateType);
         Debug.Assert(typeInfoType != null);
 
         var typeInfo = Activator.CreateInstance(typeInfoType);
@@ -47,20 +54,21 @@ internal class ODataTypeInfoFactory<TCustomState>
 
         foreach (var prop in type.GetProperties())
         {
-            var propertyInfo = CreateODataPropertyInfo(type, prop);
+            var propertyInfo = CreateODataPropertyInfo(type, prop, stateType, customStateType);
             propertyInfos.Add(propertyInfo);
         }
 
         return (ODataTypeInfo)typeInfo;
     }
 
-    private static ODataPropertyInfo CreateODataPropertyInfo(Type instanceType, PropertyInfo property)
+    private static ODataPropertyInfo CreateODataPropertyInfo(Type instanceType, PropertyInfo property, Type stateType, Type customStateType)
     {
         var propertyType = property.PropertyType;
-        var getterFunc = CreateGetter(instanceType, property);
+        var getterFunc = CreateGetValueDelegate(CreateGetter(instanceType, property, stateType), instanceType, propertyType, stateType);
 
 
-        var propertyInfoType = typeof(ODataPropertyInfo<,,>).MakeGenericType(instanceType, propertyType, typeof(TCustomState));
+        // ODataPropertyInfo<TDeclaringType, TProperty, TCustomState>
+        var propertyInfoType = typeof(ODataPropertyInfo<,,>).MakeGenericType(instanceType, propertyType, customStateType);
         var propertyInfo = Activator.CreateInstance(propertyInfoType);
         propertyInfoType.GetProperty("Name")!.SetValue(propertyInfo, property.Name);
         propertyInfoType.GetProperty("GetValue")!.SetValue(propertyInfo, getterFunc);
@@ -69,9 +77,10 @@ internal class ODataTypeInfoFactory<TCustomState>
         return (ODataPropertyInfo)propertyInfo;
     }
 
-    private static Delegate CreateDelegate<TDeclaringType, TProperty>(DynamicMethod dynamicMethod, Type instanceType, Type propertyType)
+    private static Delegate CreateGetValueDelegate(DynamicMethod dynamicMethod, Type instanceType, Type propertyType, Type stateType)
     {
-        var funcType = typeof(Func<,,>).MakeGenericType(instanceType, typeof(TCustomState), propertyType);
+        // Func<TDeclaringType, ODataWriterState<TCustomState>, TProperty>
+        var funcType = typeof(Func<,,>).MakeGenericType(instanceType, stateType, propertyType);
         return dynamicMethod.CreateDelegate(funcType);
     }
 
@@ -80,7 +89,7 @@ internal class ODataTypeInfoFactory<TCustomState>
         return (Func<TDeclaringType, TCustomState, TProperty>)dynamicMethod.CreateDelegate(typeof(Func<TDeclaringType, TCustomState, TProperty>));
     }
 
-    private static DynamicMethod CreateGetter(Type instanceType, PropertyInfo property)
+    private static DynamicMethod CreateGetter(Type instanceType, PropertyInfo property, Type stateType)
     {
         // Borrowed from: https://source.dot.net/#System.Text.Json/System/Text/Json/Serialization/Metadata/ReflectionEmitMemberAccessor.cs,95714f469f4e501d
         var getMethod = property.GetGetMethod();
@@ -88,7 +97,7 @@ internal class ODataTypeInfoFactory<TCustomState>
         var dynamicMethod = new DynamicMethod(
             property.Name + "Getter",
             property.PropertyType,
-            [instanceType],
+            [instanceType, stateType],
             typeof(ODataTypeInfoFactory<TCustomState>).Module,
             skipVisibility: true);
 
@@ -97,6 +106,8 @@ internal class ODataTypeInfoFactory<TCustomState>
 
         // TODO: support for value types
         // DO we really need to cast?
+       // ((T)this).Property_get()
+        generator.Emit(OpCodes.Ldarg_0);
         generator.Emit(OpCodes.Castclass, instanceType);
         generator.Emit(OpCodes.Callvirt, getMethod);
 

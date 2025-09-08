@@ -73,7 +73,7 @@ public class AutomaticPocoWriterTests
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public DateTimeOffset BirthDate { get; set; }
+        public DateTime BirthDate { get; set; }
         public bool IsActive { get; set; }
         public decimal Balance { get; set; }
         public List<Order> Orders { get; set; }
