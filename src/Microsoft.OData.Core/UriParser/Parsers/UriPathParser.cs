@@ -91,7 +91,10 @@ namespace Microsoft.OData.UriParser
                 }
 
                 List<string> segments = new List<string>(4);
-                StringBuilder sb = new StringBuilder(Math.Min(256, Math.Max(0, fullPath.Length - startIndex)));
+                // Seed capacity: typical paths are short; cap to avoid large upfront allocation.
+                // Increase if profiling shows frequent growth.
+                int estimatedCapacity = fullPath.Length - startIndex;
+                StringBuilder sb = new StringBuilder(estimatedCapacity > 256 ? 256 : estimatedCapacity);
                 bool hasEncodedChars = false;
 
                 // Local helpers
