@@ -8,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OData.Core;
-using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Xunit;
 
@@ -294,79 +293,98 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         }
 
         [Theory]
-        [InlineData("http://localhost/api/Ps('a/b')", "Ps('a/b')")]
-        [InlineData("http://localhost/api/Ps(%27a/b%27)", "Ps('a/b')")]
-        [InlineData("http://localhost/api/Ps%28'a/b'%29", "Ps('a/b')")]
-        [InlineData("http://localhost/api/Ps%28%27a/b%27%29", "Ps('a/b')")]
-        [InlineData("http://localhost/api/Ps(%27a/b%27%29", "Ps('a/b')")]
-        [InlineData("http://localhost/api/Ps%28%27a/b%27)", "Ps('a/b')")]
-        [InlineData("http://localhost/api/Ps(%27a/b')", "Ps('a/b')")]
-        [InlineData("http://localhost/api/Ps('a/b%27)", "Ps('a/b')")]
-        [InlineData("http://localhost/api/Ps('a%2Fb')", "Ps('a/b')")]
-        [InlineData("http://localhost/api/Ps(%27a%2Fb%27)", "Ps('a/b')")]
-        [InlineData("http://localhost/api/Ps%28%27a%2Fb%27%29", "Ps('a/b')")]
-        [InlineData("http://localhost/api/Ps('a%2fb')", "Ps('a/b')")]        // lowercase 'f'
-        [InlineData("http://localhost/api/Ps(%27a%2fb%27)", "Ps('a/b')")]    // lowercase 'f'
-        [InlineData("http://localhost/api/Ps%28%27O'%27Neil/Jack%27%29", "Ps('O''Neil/Jack')")]
-        [InlineData("http://localhost/api/Ps%28%27O%27'Neil/Jack%27%29", "Ps('O''Neil/Jack')")]
-        [InlineData("http://localhost/api/Ps(%27O%27'Neil/Jack%27%29", "Ps('O''Neil/Jack')")]
-        [InlineData("http://localhost/api/Ps%28%27O%27'Neil/Jack%27)", "Ps('O''Neil/Jack')")]
-        [InlineData("http://localhost/api/Ps('O%27'Neil/Jack%27)", "Ps('O''Neil/Jack')")]
-        [InlineData("http://localhost/api/Ps(%27O%27'Neil/Jack')", "Ps('O''Neil/Jack')")]
-        [InlineData("http://localhost/api/Ps(%27O''Neil/Jack')", "Ps('O''Neil/Jack')")]
-        [InlineData("http://localhost/api/Ps%28'O%27'Neil/Jack%27%29", "Ps('O''Neil/Jack')")]
-        [InlineData("http://localhost/api/Ps%28'O%27'Neil/Jack'%29", "Ps('O''Neil/Jack')")]
-        [InlineData("http://localhost/api/Ps%28'O''Neil/Jack'%29", "Ps('O''Neil/Jack')")]
-        [InlineData("http://localhost/api/Ps%28%27Jack/O'%27Neil%27%29", "Ps('Jack/O''Neil')")]
-        [InlineData("http://localhost/api/Ps%28%27Jack/O%27'Neil%27%29", "Ps('Jack/O''Neil')")]
-        [InlineData("http://localhost/api/Ps(%27Jack/O%27'Neil%27%29", "Ps('Jack/O''Neil')")]
-        [InlineData("http://localhost/api/Ps%28%27Jack/O%27'Neil%27)", "Ps('Jack/O''Neil')")]
-        [InlineData("http://localhost/api/Ps('Jack/O%27'Neil%27)", "Ps('Jack/O''Neil')")]
-        [InlineData("http://localhost/api/Ps(%27Jack/O%27'Neil')", "Ps('Jack/O''Neil')")]
-        [InlineData("http://localhost/api/Ps(%27Jack/O''Neil')", "Ps('Jack/O''Neil')")]
-        [InlineData("http://localhost/api/Ps%28'Jack/O%27'Neil%27%29", "Ps('Jack/O''Neil')")]
-        [InlineData("http://localhost/api/Ps%28'Jack/O%27'Neil'%29", "Ps('Jack/O''Neil')")]
-        [InlineData("http://localhost/api/Ps%28'Jack/O''Neil'%29", "Ps('Jack/O''Neil')")]
-        [InlineData("http://localhost/api/Ps%28%20%27O'%27Neil/Jack%27%20%29", "Ps( 'O''Neil/Jack' )")]
-        [InlineData("http://localhost/api/Ps%28%20%27O%27'Neil/Jack%27%20%29", "Ps( 'O''Neil/Jack' )")]
-        [InlineData("http://localhost/api/Ps(%20%27O%27'Neil/Jack%27%20%29", "Ps( 'O''Neil/Jack' )")]
-        [InlineData("http://localhost/api/Ps%28%20%27O%27'Neil/Jack%27%20)", "Ps( 'O''Neil/Jack' )")]
-        [InlineData("http://localhost/api/Ps(%20'O%27'Neil/Jack%27%20)", "Ps( 'O''Neil/Jack' )")]
-        [InlineData("http://localhost/api/Ps(%20%27O%27'Neil/Jack'%20)", "Ps( 'O''Neil/Jack' )")]
-        [InlineData("http://localhost/api/Ps(%20%27O''Neil/Jack'%20)", "Ps( 'O''Neil/Jack' )")]
-        [InlineData("http://localhost/api/Ps%28%20'O%27'Neil/Jack%27%20%29", "Ps( 'O''Neil/Jack' )")]
-        [InlineData("http://localhost/api/Ps%28%20'O%27'Neil/Jack'%20%29", "Ps( 'O''Neil/Jack' )")]
-        [InlineData("http://localhost/api/Ps%28%20'O''Neil/Jack'%20%29", "Ps( 'O''Neil/Jack' )")]
-        [InlineData("http://localhost/api/Ps%28 %27O'%27Neil/Jack%27 %29", "Ps( 'O''Neil/Jack' )")]
-        [InlineData("http://localhost/api/Ps%28 %27O%27'Neil/Jack%27 %29", "Ps( 'O''Neil/Jack' )")]
-        [InlineData("http://localhost/api/Ps( %27O%27'Neil/Jack%27 %29", "Ps( 'O''Neil/Jack' )")]
-        [InlineData("http://localhost/api/Ps%28 %27O%27'Neil/Jack%27 )", "Ps( 'O''Neil/Jack' )")]
-        [InlineData("http://localhost/api/Ps( 'O%27'Neil/Jack%27 )", "Ps( 'O''Neil/Jack' )")]
-        [InlineData("http://localhost/api/Ps( %27O%27'Neil/Jack' )", "Ps( 'O''Neil/Jack' )")]
-        [InlineData("http://localhost/api/Ps( %27O''Neil/Jack' )", "Ps( 'O''Neil/Jack' )")]
-        [InlineData("http://localhost/api/Ps%28 'O%27'Neil/Jack%27 %29", "Ps( 'O''Neil/Jack' )")]
-        [InlineData("http://localhost/api/Ps%28 'O%27'Neil/Jack' %29", "Ps( 'O''Neil/Jack' )")]
-        [InlineData("http://localhost/api/Ps%28 'O''Neil/Jack' %29", "Ps( 'O''Neil/Jack' )")]
-        [InlineData("http://localhost/api/Ps(%27O'%27Neil%20(Jack)%27)", "Ps('O''Neil (Jack)')")]
-        [InlineData("http://localhost/api/Ps%28%27O'%27Neil%20(Jack)%27%29", "Ps('O''Neil (Jack)')")]
-        [InlineData("http://localhost/api/Ps(%27O'%27Neil%20%28Jack%29%27)", "Ps('O''Neil (Jack)')")]
-        [InlineData("http://localhost/api/Ps%28%27O'%27Neil%20%28Jack%29%27%29", "Ps('O''Neil (Jack)')")]
-        [InlineData("http://localhost/api/Ps(%27O'%27Neil%20(Jack%29%27)", "Ps('O''Neil (Jack)')")]
-        [InlineData("http://localhost/api/Ps%28%27O'%27Neil%20%28Jack)%27%29", "Ps('O''Neil (Jack)')")]
-        [InlineData("http://localhost/api/Ps('O%20Neil/Jack')", "Ps('O Neil/Jack')")] // space inside literal (encoded)
-        [InlineData("http://localhost/api/Ps(%27O%20Neil/Jack%27)", "Ps('O Neil/Jack')")]
-        [InlineData("http://localhost/api/Ps(%20%20%27a/b%27%20%20)", "Ps(  'a/b'  )")] // multiple spaces around literal
-        [InlineData("http://localhost/api/Ps('a%2Cb')", "Ps('a,b')")] // comma
-        [InlineData("http://localhost/api/Ps(%27caf%C3%A9/b%27)", "Ps('café/b')")] // UTF-8 é
-        [InlineData("http://localhost/api/Ps('')", "Ps('')")] // empty literal
-        [InlineData("http://localhost/api/Ps(%27%27)", "Ps('')")] // empty literal encoded
-        [InlineData("http://localhost/api/Ps('''/x')", "Ps('''/x')")] // literal contains an escaped quote then slash
-        [InlineData("http://localhost/api/Ps(%27%27%27/x%27)", "Ps('''/x')")] // encoded then raw
-        [InlineData("http://localhost/api/Ps(%27%27%27%2Fx%27)", "Ps('''/x')")] // encoded slash
-        [InlineData("http://localhost/api/Ps('a/b')/", "Ps('a/b')")] // trailing slash
-        [InlineData("http://localhost/api//Ps('a/b')", "Ps('a/b')")] // trailing slash
+        [InlineData("http://localhost/api/People('Foo/Bar')", "People('Foo/Bar')")]
+        [InlineData("http://localhost/api/People(%27Foo/Bar%27)", "People('Foo/Bar')")]
+        [InlineData("http://localhost/api/People%28'Foo/Bar'%29", "People('Foo/Bar')")]
+        [InlineData("http://localhost/api/People%28%27Foo/Bar%27%29", "People('Foo/Bar')")]
+        [InlineData("http://localhost/api/People(%27Foo/Bar%27%29", "People('Foo/Bar')")]
+        [InlineData("http://localhost/api/People%28%27Foo/Bar%27)", "People('Foo/Bar')")]
+        [InlineData("http://localhost/api/People(%27Foo/Bar')", "People('Foo/Bar')")]
+        [InlineData("http://localhost/api/People('Foo/Bar%27)", "People('Foo/Bar')")]
+        [InlineData("http://localhost/api/People('Foo%2FBar')", "People('Foo/Bar')")]
+        [InlineData("http://localhost/api/People(%27Foo%2FBar%27)", "People('Foo/Bar')")]
+        [InlineData("http://localhost/api/People%28%27Foo%2FBar%27%29", "People('Foo/Bar')")]
+        [InlineData("http://localhost/api/People('Foo%2fBar')", "People('Foo/Bar')")]        // lowercase 'f'
+        [InlineData("http://localhost/api/People(%27Foo%2fBar%27)", "People('Foo/Bar')")]    // lowercase 'f'
+        [InlineData("http://localhost/api/People%28%27O'%27Neil/Jack%27%29", "People('O''Neil/Jack')")]
+        [InlineData("http://localhost/api/People%28%27O%27'Neil/Jack%27%29", "People('O''Neil/Jack')")]
+        [InlineData("http://localhost/api/People(%27O%27'Neil/Jack%27%29", "People('O''Neil/Jack')")]
+        [InlineData("http://localhost/api/People%28%27O%27'Neil/Jack%27)", "People('O''Neil/Jack')")]
+        [InlineData("http://localhost/api/People('O%27'Neil/Jack%27)", "People('O''Neil/Jack')")]
+        [InlineData("http://localhost/api/People(%27O%27'Neil/Jack')", "People('O''Neil/Jack')")]
+        [InlineData("http://localhost/api/People(%27O''Neil/Jack')", "People('O''Neil/Jack')")]
+        [InlineData("http://localhost/api/People%28'O%27'Neil/Jack%27%29", "People('O''Neil/Jack')")]
+        [InlineData("http://localhost/api/People%28'O%27'Neil/Jack'%29", "People('O''Neil/Jack')")]
+        [InlineData("http://localhost/api/People%28'O''Neil/Jack'%29", "People('O''Neil/Jack')")]
+        [InlineData("http://localhost/api/People%28%27Jack/O'%27Neil%27%29", "People('Jack/O''Neil')")]
+        [InlineData("http://localhost/api/People%28%27Jack/O%27'Neil%27%29", "People('Jack/O''Neil')")]
+        [InlineData("http://localhost/api/People(%27Jack/O%27'Neil%27%29", "People('Jack/O''Neil')")]
+        [InlineData("http://localhost/api/People%28%27Jack/O%27'Neil%27)", "People('Jack/O''Neil')")]
+        [InlineData("http://localhost/api/People('Jack/O%27'Neil%27)", "People('Jack/O''Neil')")]
+        [InlineData("http://localhost/api/People(%27Jack/O%27'Neil')", "People('Jack/O''Neil')")]
+        [InlineData("http://localhost/api/People(%27Jack/O''Neil')", "People('Jack/O''Neil')")]
+        [InlineData("http://localhost/api/People%28'Jack/O%27'Neil%27%29", "People('Jack/O''Neil')")]
+        [InlineData("http://localhost/api/People%28'Jack/O%27'Neil'%29", "People('Jack/O''Neil')")]
+        [InlineData("http://localhost/api/People%28'Jack/O''Neil'%29", "People('Jack/O''Neil')")]
+        [InlineData("http://localhost/api/People%28%20%27O'%27Neil/Jack%27%20%29", "People( 'O''Neil/Jack' )")]
+        [InlineData("http://localhost/api/People%28%20%27O%27'Neil/Jack%27%20%29", "People( 'O''Neil/Jack' )")]
+        [InlineData("http://localhost/api/People(%20%27O%27'Neil/Jack%27%20%29", "People( 'O''Neil/Jack' )")]
+        [InlineData("http://localhost/api/People%28%20%27O%27'Neil/Jack%27%20)", "People( 'O''Neil/Jack' )")]
+        [InlineData("http://localhost/api/People(%20'O%27'Neil/Jack%27%20)", "People( 'O''Neil/Jack' )")]
+        [InlineData("http://localhost/api/People(%20%27O%27'Neil/Jack'%20)", "People( 'O''Neil/Jack' )")]
+        [InlineData("http://localhost/api/People(%20%27O''Neil/Jack'%20)", "People( 'O''Neil/Jack' )")]
+        [InlineData("http://localhost/api/People%28%20'O%27'Neil/Jack%27%20%29", "People( 'O''Neil/Jack' )")]
+        [InlineData("http://localhost/api/People%28%20'O%27'Neil/Jack'%20%29", "People( 'O''Neil/Jack' )")]
+        [InlineData("http://localhost/api/People%28%20'O''Neil/Jack'%20%29", "People( 'O''Neil/Jack' )")]
+        [InlineData("http://localhost/api/People%28 %27O'%27Neil/Jack%27 %29", "People( 'O''Neil/Jack' )")]
+        [InlineData("http://localhost/api/People%28 %27O%27'Neil/Jack%27 %29", "People( 'O''Neil/Jack' )")]
+        [InlineData("http://localhost/api/People( %27O%27'Neil/Jack%27 %29", "People( 'O''Neil/Jack' )")]
+        [InlineData("http://localhost/api/People%28 %27O%27'Neil/Jack%27 )", "People( 'O''Neil/Jack' )")]
+        [InlineData("http://localhost/api/People( 'O%27'Neil/Jack%27 )", "People( 'O''Neil/Jack' )")]
+        [InlineData("http://localhost/api/People( %27O%27'Neil/Jack' )", "People( 'O''Neil/Jack' )")]
+        [InlineData("http://localhost/api/People( %27O''Neil/Jack' )", "People( 'O''Neil/Jack' )")]
+        [InlineData("http://localhost/api/People%28 'O%27'Neil/Jack%27 %29", "People( 'O''Neil/Jack' )")]
+        [InlineData("http://localhost/api/People%28 'O%27'Neil/Jack' %29", "People( 'O''Neil/Jack' )")]
+        [InlineData("http://localhost/api/People%28 'O''Neil/Jack' %29", "People( 'O''Neil/Jack' )")]
+        [InlineData("http://localhost/api/People(%27O'%27Neil%20(Jack)%27)", "People('O''Neil (Jack)')")]
+        [InlineData("http://localhost/api/People%28%27O'%27Neil%20(Jack)%27%29", "People('O''Neil (Jack)')")]
+        [InlineData("http://localhost/api/People(%27O'%27Neil%20%28Jack%29%27)", "People('O''Neil (Jack)')")]
+        [InlineData("http://localhost/api/People%28%27O'%27Neil%20%28Jack%29%27%29", "People('O''Neil (Jack)')")]
+        [InlineData("http://localhost/api/People(%27O'%27Neil%20(Jack%29%27)", "People('O''Neil (Jack)')")]
+        [InlineData("http://localhost/api/People%28%27O'%27Neil%20%28Jack)%27%29", "People('O''Neil (Jack)')")]
+        [InlineData("http://localhost/api/People('O%20Neil/Jack')", "People('O Neil/Jack')")] // space inside literal (encoded)
+        [InlineData("http://localhost/api/People(%27O%20Neil/Jack%27)", "People('O Neil/Jack')")]
+        [InlineData("http://localhost/api/People(%20%20%27Foo/Bar%27%20%20)", "People(  'Foo/Bar'  )")] // multiple spaces around literal
+        [InlineData("http://localhost/api/People('Foo%2CBar')", "People('Foo,Bar')")] // comma
+        [InlineData("http://localhost/api/People(%27caf%C3%A9/Bar%27)", "People('café/Bar')")] // UTF-8 é
+        [InlineData("http://localhost/api/People('')", "People('')")] // empty literal
+        [InlineData("http://localhost/api/People(%27%27)", "People('')")] // empty literal encoded
+        [InlineData("http://localhost/api/People('''/Bar')", "People('''/Bar')")] // literal contains an escaped quote then slash
+        [InlineData("http://localhost/api/People(%27%27%27/Bar%27)", "People('''/Bar')")] // encoded then raw
+        [InlineData("http://localhost/api/People(%27%27%27%2FBar%27)", "People('''/Bar')")] // encoded slash
+        [InlineData("http://localhost/api/People('Foo/Bar')/", "People('Foo/Bar')")] // trailing slash
+        [InlineData("http://localhost/api//People('Foo/Bar')", "People('Foo/Bar')")] // trailing slash
         [InlineData("http://localhost/api/People(logonName='Foo/Bar')", "People(logonName='Foo/Bar')")]// key=value containing slash
         [InlineData("http://localhost/api/People(logonName='Foo/Bar',city='Juarez/Border')", "People(logonName='Foo/Bar',city='Juarez/Border')")] // key=value containing slash, multiple keys
+        [InlineData("http://localhost/api/People('Foo+Bar')", "People('Foo+Bar')")] // + in quote stays literal
+        [InlineData("http://localhost/api/People('Foo%0ABar')", "People('Foo\nBar')")] // Encoded newline in quote becomes newline
+        [InlineData("http://localhost/api/People('Foo%0DBar')", "People('Foo\rBar')")] // Encoded carriage return in quote becomes carriage return
+        [InlineData("http://localhost/api/People('Foo%0D%0ABar')", "People('Foo\r\nBar')")] // Encoded CRLF in quote becomes CRLF
+        [InlineData("http://localhost/api/People('Foo''Bar''Baz')", "People('Foo''Bar''Baz')")] // Repeated escaped quotes
+        [InlineData("http://localhost/api/People(%27Foo%27%27Bar%27%27Baz%27)", "People('Foo''Bar''Baz')")] // Repeated encoded quotes
+        [InlineData("http://localhost/api/People('Foo😊')", "People('Foo😊')")] // Surrogate pair (emoji)
+        [InlineData("http://localhost/api/People('é')", "People('é')")] // Combination of base character + accent
+        [InlineData("http://localhost/api/People('مرحبا')", "People('مرحبا')")] // CJK literals
+        [InlineData("http://localhost/api/People('日本')", "People('日本')")]
+        [InlineData("http://localhost/api/People('Foo%252FBar')", "People('Foo%2FBar')")] // Double encoded
+        [InlineData("http://localhost/api/People%28%27%61%62%63%64%65%66%67%68%69%6A%6B%6C%6D%2F%6E%6F%70%71%72%73%74%75%66%77%78%79%7A%27%29", "People('abcdefghijklm/nopqrstufwxyz')")]
+        [InlineData("http://localhost/api/People%28%27%61%62%63%64%65%66%67%68%69%6a%6b%6c%6d%2f%6e%6f%70%71%72%73%74%75%66%77%78%79%7a%27%29", "People('abcdefghijklm/nopqrstufwxyz')")]
+        [InlineData("http://localhost/api/People%28%27%61%62%63%64%65%66%67%68%69%6A%6B%6C%6D%2f%6e%6f%70%71%72%73%74%75%66%77%78%79%7a%27%29", "People('abcdefghijklm/nopqrstufwxyz')")]
+        [InlineData("http://localhost/api/People('abcdefghijklm/%6e%6f%70%71%72%73%74%75%66%77%78%79%7a%27%29", "People('abcdefghijklm/nopqrstufwxyz')")]
+        [InlineData("http://localhost/api/People%28%27%41%42%43%44%45%46%47%48%49%4A%4B%4C%4D%2F%4E%4F%50%51%52%53%54%55%56%57%58%59%5A%27%29", "People('ABCDEFGHIJKLM/NOPQRSTUVWXYZ')")]
+        [InlineData("http://localhost/api/People%28%27%41%42%43%44%45%46%47%48%49%4a%4b%4c%4d%2f%4e%4f%50%51%52%53%54%55%56%57%58%59%5a%27%29", "People('ABCDEFGHIJKLM/NOPQRSTUVWXYZ')")]
+        [InlineData("http://localhost/api/People%28%27%41%42%43%44%45%46%47%48%49%4a%4b%4c%4d%2F%4E%4F%50%51%52%53%54%55%56%57%58%59%5A%27%29", "People('ABCDEFGHIJKLM/NOPQRSTUVWXYZ')")]
+        [InlineData("http://localhost/api/People%28%27%41%42%43%44%45%46%47%48%49%4a%4b%4c%4d%2FNOPQRSTUVWXYZ')", "People('ABCDEFGHIJKLM/NOPQRSTUVWXYZ')")]
         public void ParsePathParenthesizedSegmentNormalization(string uriString, string expectedSegment)
         {
             // Arrange
@@ -379,6 +397,12 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             // Assert
             var segment = Assert.Single(segments);
             Assert.Equal(expectedSegment, segment);
+        }
+
+        [Fact]
+        public void ParsePathIntoSegments()
+        {
+            var segments = this.pathParser.ParsePathIntoSegments(new Uri("./People('Foo/Bar')", UriKind.RelativeOrAbsolute), new Uri("./", UriKind.RelativeOrAbsolute));
         }
 
         [Theory]
@@ -422,13 +446,11 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         [InlineData("http://localhost/API/", "http://localhost/api/People('O''Neil')", "People('O''Neil')")]
         // Base without trailing slash vs with it in full
         [InlineData("http://localhost/api", "http://localhost/api/Products(1)", "Products(1)")]
-        // Base equals full path (no segments returned) -> still a valid call returning zero segments.
-        // Keep expected as empty? (handled by separate test method below)
-        // Relative base/null base with absolute uri (mocking path)
-        [InlineData(null, "People('X')", "People('X')")] // only if your test framework allows null; otherwise split into different test method
         // Encoded slash at start/end inside quotes
         [InlineData("http://localhost/api/", "http://localhost/api/Names('%2Falpha')", "Names('/alpha')")]
         [InlineData("http://localhost/api/", "http://localhost/api/Names('omega%2F')", "Names('omega/')")]
+        [InlineData("http://localhost/api/", "http://localhost/api/$metadata", "$metadata")]
+        [InlineData("http://localhost/api/", "http://localhost/api/%24metadata", "$metadata")]
         // Customer reported cases
         [InlineData("api/", "api/entity('/subscriptions/00000000-0000-0000-0000-000000000000')", "entity('/subscriptions/00000000-0000-0000-0000-000000000000')")]
         [InlineData("https://myservice/odata/", "https://myservice/odata/MyEntity('key/with/slashes')", "MyEntity('key/with/slashes')")]
@@ -464,8 +486,18 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         [InlineData("http://localhost/api/", "http://localhost/api/People%28%27Foo/Bar%27%29/Friends", new[] { "People('Foo/Bar')", "Friends" })]
         [InlineData("http://localhost/api/", "http://localhost/api/People('O%27'Neil/Jack')/Next", new[] { "People('O''Neil/Jack')", "Next" })]
         [InlineData("http://localhost/api/", "http://localhost/api/People('Foo/Bar)/Friends", new[] { "People('Foo", "Bar)", "Friends" })]
+        [InlineData("http://localhost/api/", "http://localhost/api/People('Foo/Bar)", new[] { "People('Foo", "Bar)" })]
+        [InlineData("http://localhost/api/", "http://localhost/api/People(%22Foo/Bar%22)", new[] { "People(\"Foo", "Bar\")" })]
+        [InlineData("http://localhost/api/", "http://localhost/api/People(Foo=1/Bar=2)", new[] { "People(Foo=1", "Bar=2)" })]
         [InlineData("http://localhost/api/", "http://localhost/api/Foo'/Bar", new[] { "Foo'", "Bar" })]
         [InlineData("http://localhost/api/", "http://localhost/api/Foo%27/Bar", new[] { "Foo'", "Bar" })]
+        [InlineData("http://localhost/api/", "http://localhost/api/Customers('abc%2F/''efg')/ abc /'%2F", new[] { "Customers('abc//''efg')", " abc ", "'/" })]
+        [InlineData("http://localhost/api/", "http://localhost/api/Customers(%27abc%2F/'%27efg')/ abc' /'%2F", new[] { "Customers('abc//''efg')", " abc' ", "'/" })]
+        [InlineData("http://localhost/api/", "http://localhost/api/Customers(%27abc%2F/'%27efg')/ 'abc /'%2F", new[] { "Customers('abc//''efg')", " 'abc ", "'/" })]
+        [InlineData("http://localhost/api/", "http://localhost/api/Customers(%27abc%2F/'%27efg')/ 'abc/ijk /'%2F", new[] { "Customers('abc//''efg')", " 'abc", "ijk ", "'/" })]
+        [InlineData("http://localhost/api/", "http://localhost/api/Customers(%27abc%2F/'%27efg')/ 'abc/ijk /'pqr/xyz'", new[] { "Customers('abc//''efg')", " 'abc", "ijk ", "'pqr", "xyz'" })]
+        [InlineData("http://localhost/api/", "http://localhost/api/Products(1)/$metadata", new[] { "Products(1)", "$metadata" })]
+        [InlineData("http://localhost/api/", "http://localhost/api/Products(1)/%24metadata", new[] { "Products(1)", "$metadata" })]
         // Customer reported cases
         [InlineData("security/", "security/zones('b288f9e672c04efeb31ec39276ec4928')/environments('/subscriptions/bf92c6ed78d24690919bfb93e84682bf')", new[] { "zones('b288f9e672c04efeb31ec39276ec4928')", "environments('/subscriptions/bf92c6ed78d24690919bfb93e84682bf')" })]
         [InlineData("odata/", "/odata/entity/search('abc/123')", new[] { "entity", "search('abc/123')" })]
@@ -489,10 +521,14 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         [InlineData("http://localhost/api", "http://localhost/api")]
         public void ParsePathNoSegmentsReturnsEmpty(string baseUriString, string uriString)
         {
+            // Arrange
             var baseUri = new Uri(baseUriString, UriKind.RelativeOrAbsolute);
             var uri = new Uri(uriString, UriKind.RelativeOrAbsolute);
 
+            // Act
             var segments = this.pathParser.ParsePathIntoSegments(uri, baseUri);
+
+            // Assert
             Assert.Empty(segments);
         }
 
@@ -501,10 +537,14 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         [InlineData("http://localhost/api/", "http://localhost/api///", new string[0])]
         public void ParsePathDuplicateOrTrailingSlashesOmitsEmptySegments(string baseUriString, string uriString, string[] expected)
         {
+            // Arrange
             var baseUri = new Uri(baseUriString, UriKind.RelativeOrAbsolute);
             var uri = new Uri(uriString, UriKind.RelativeOrAbsolute);
 
+            // Act
             var segments = this.pathParser.ParsePathIntoSegments(uri, baseUri);
+
+            // Assert
             Assert.Equal(expected, segments);
         }
 
@@ -514,25 +554,44 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         [InlineData("http://localhost/api/", "http://localhost/api/Products(1)?x=y#z", new[] { "Products(1)" })]
         public void ParsePathIgnoresQueryAndFragment(string baseUriString, string uriString, string[] expected)
         {
+            // Arrange
             var baseUri = new Uri(baseUriString, UriKind.RelativeOrAbsolute);
             var uri = new Uri(uriString, UriKind.RelativeOrAbsolute);
 
+            // Act
             var segments = this.pathParser.ParsePathIntoSegments(uri, baseUri);
+
+            // Assert
             Assert.Equal(expected, segments);
         }
 
         [Theory]
+        [InlineData("api/", "api/People()", "People()")] // both relative, empty parens
         [InlineData("api/", "api/People('X')", "People('X')")] // both relative
+        [InlineData("api", "api/People('X')", "People('X')")] // both relative, base no trailing slash
         [InlineData("api/", "http://host/api/People('X')", "People('X')")] // base rel, full abs
         [InlineData("http://host/api/", "api/People('X')", "People('X')")] // base abs, full rel
+        [InlineData("/", "People('X')", "People('X')")] // base root + relative full -> mock base
+        [InlineData("/", "./People('X')", "People('X')")]
+        [InlineData("/", "../People('X')", "People('X')")]
+        [InlineData("./", "People('X')", "People('X')")]
+        [InlineData("./", "./People('X')", "People('X')")]
+        [InlineData("./", "../People('X')", "People('X')")]
+        [InlineData("../", "People('X')", "People('X')")]
+        [InlineData("../", "./People('X')", "People('X')")]
+        [InlineData("../", "../People('X')", "People('X')")]
         [InlineData(null, "People('X')", "People('X')")] // null base + relative full -> mock base
         public void ParsePathMockingCombinations(string baseUriString, string uriString, string expectedSegment)
         {
+            // Arrange
             var baseUri = baseUriString is null ? null : new Uri(baseUriString, UriKind.RelativeOrAbsolute);
             var uri = new Uri(uriString, UriKind.RelativeOrAbsolute);
 
+            // Act
             var segments = this.pathParser.ParsePathIntoSegments(uri, baseUri);
             var segment = Assert.Single(segments);
+
+            // Assert
             Assert.Equal(expectedSegment, segment);
         }
 
@@ -541,11 +600,15 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         [InlineData("http://localhost/api/", "http://localhost/api/Files('a;b;c')", "Files('a;b;c')")]
         public void ParsePathSemicolonParamsInsideLiteral(string baseUriString, string uriString, string expected)
         {
+            // Arrange
             var baseUri = new Uri(baseUriString, UriKind.RelativeOrAbsolute);
             var uri = new Uri(uriString, UriKind.RelativeOrAbsolute);
 
+            // Act
             var segments = this.pathParser.ParsePathIntoSegments(uri, baseUri);
             var segment = Assert.Single(segments);
+
+            // Assert
             Assert.Equal(expected, segment);
         }
 
@@ -555,48 +618,120 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         [InlineData("http://localhost/api/", "http://localhost/api/%27A%27", "'A'")] // entire segment is an encoded quoted literal
         public void ParsePathEdgeEncodings(string baseUriString, string uriString, string expectedSegment)
         {
+            // Arrange
             var baseUri = new Uri(baseUriString, UriKind.RelativeOrAbsolute);
             var uri = new Uri(uriString, UriKind.RelativeOrAbsolute);
 
+            // Act
             var segments = this.pathParser.ParsePathIntoSegments(uri, baseUri);
             var segment = Assert.Single(segments);
+
+            // Assert
             Assert.Equal(expectedSegment, segment);
         }
 
         [Fact]
         public void ParsePathBaseCaseInsensitivity()
         {
+            // Arrange
             var baseUri = new Uri("http://localhost/API/", UriKind.Absolute);
             var uri = new Uri("http://localhost/api/Products", UriKind.Absolute);
 
+            // Act
             var segments = this.pathParser.ParsePathIntoSegments(uri, baseUri);
             var segment = Assert.Single(segments);
+
+            // Assert
             Assert.Equal("Products", segment);
         }
 
         [Theory]
-        [InlineData("http://localhost:80/api/", "https://localhost:443/api/People('X')", "People('X')")]
-        [InlineData("https://LOCALHOST/API/", "http://localhost/api/People('X')", "People('X')")]
+        [InlineData("http://localhost:80/api/", "https://localhost:443/api/People('X')", "People('X')")] // scheme and default port difference ignored
+        [InlineData("http://localhost:80/api/", "http://localhost/api/People('X')", "People('X')")] // default port omitted
+        [InlineData("https://LOCALHOST/API/", "http://localhost/api/People('X')", "People('X')")] // scheme and case difference ignored
         public void ParsePathSchemePortHostVariance(string baseUriString, string uriString, string expected)
         {
+            // Arrange
             var baseUri = new Uri(baseUriString, UriKind.Absolute);
             var uri = new Uri(uriString, UriKind.Absolute);
 
+            // Act
             var segment = Assert.Single(this.pathParser.ParsePathIntoSegments(uri, baseUri));
+
+            // Assert
             Assert.Equal(expected, segment);
         }
 
         [Fact]
         public void ParsePathLongSegmentWithManyEscapes()
         {
+            // Arrange
             var baseUri = new Uri("http://localhost/api/", UriKind.Absolute);
             var repeated = string.Concat(Enumerable.Repeat("%2F%27%32%30", 50)); // "/'20" repeated (odd but valid)
             var uri = new Uri($"http://localhost/api/Doc('{repeated}')", UriKind.Absolute);
 
+            // Act
             var segment = Assert.Single(this.pathParser.ParsePathIntoSegments(uri, baseUri));
+
+            // Assert
             Assert.StartsWith("Doc('", segment);
             Assert.EndsWith("')", segment);
             Assert.Contains("/'20", segment); // verifies decode
+        }
+
+        [Theory]
+        [InlineData("http://localhost/api/?Foo=Bar", "http://localhost/api/People('Foo/Bar')")]
+        [InlineData("http://localhost/api/#Foo", "http://localhost/api/People('Foo/Bar')")]
+        public void ParsePathBaseUriWithQueryOrFragment(string baseUriString, string uriString)
+        {
+            // Arrange
+            var baseUri = new Uri(baseUriString);
+            var uri = new Uri(uriString);
+
+            // Act
+            var segments = this.pathParser.ParsePathIntoSegments(uri, baseUri);
+
+            // Assert
+            var segment = Assert.Single(segments);
+            Assert.Equal("People('Foo/Bar')", segment);
+        }
+
+        [Theory]
+        [InlineData("http://localhost/api/People('Foo%2')", "People('Foo%2')")]
+        [InlineData("http://localhost/api/People('Foo%GG')", "People('Foo%GG')")]
+        [InlineData("http://localhost/api/People('Foo%C3')", "People('Foo%C3')")]
+        [InlineData("http://localhost/api/People('Foo%C3%28')", "People('Foo%C3(')")]
+        public void ParsePathPercentEncodingNotValidOrUtf8SequenceMalformed(string uriString, string expected)
+        {
+            // Arrange
+            var baseUri = new Uri("http://localhost/api/");
+            var uri = new Uri(uriString);
+            
+            // Act
+            var segments = this.pathParser.ParsePathIntoSegments(uri, baseUri); // Uri.UnescapeDataString is lenient - does not throw
+
+            // Assert
+            var segment = Assert.Single(segments);
+            Assert.Equal(expected, segment);
+        }
+
+        [Fact]
+        public void ParsePathSegmentsAtPathLimit()
+        {
+            // Arrange
+            var localPathParser = new UriPathParser(new ODataUriParserSettings { PathLimit = 2 });
+            var baseUri = new Uri("http://localhost/api/");
+            var uri = new Uri("http://localhost/api/People('Foo/Bar')/Orders");
+
+            // Act
+            var segments = localPathParser.ParsePathIntoSegments(uri, baseUri);
+
+            // Assert
+            this.VerifyPath(segments,
+            [
+                s => Assert.Equal("People('Foo/Bar')", s),
+                s => Assert.Equal("Orders", s),
+            ]);
         }
 
         [Fact]

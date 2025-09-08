@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Numerics;
 using System.Text;
 using Microsoft.OData.Core;
 
@@ -91,7 +92,7 @@ namespace Microsoft.OData.UriParser
 
                 List<string> segments = new List<string>(4);
                 StringBuilder sb = new StringBuilder(Math.Min(256, Math.Max(0, fullPath.Length - startIndex)));
-                bool hasEscapedSequence = false;
+                bool hasEncodedChars = false;
 
                 // Local helpers
                 // Matches "%27" (single quote encoded) at position i
@@ -100,6 +101,29 @@ namespace Microsoft.OData.UriParser
                 static bool IsPercent28(string s, int i) => i + 2 < s.Length && s[i] == '%' && s[i + 1] == '2' && s[i + 2] == '8';
                 // Matches "%29" (right paren encoded) at position i
                 static bool IsPercent29(string s, int i) => i + 2 < s.Length && s[i] == '%' && s[i + 1] == '2' && s[i + 2] == '9';
+                // Matches "%XX" escape sequence at position i
+                // Returns true and sets nextIndex to index after the escape if found
+                static bool TryConsumeEncodedChar(string s, int i, out int nextIndex)
+                {
+                    if (i < s.Length && s[i] == '%')
+                    {
+                        if (i + 2 < s.Length)
+                        {
+                            nextIndex = i + 3; // %XX
+                        }
+                        else
+                        {
+                            // Malformed tail like "%" or "%X": append as-is, let UnescapeDataString handle that later
+                            nextIndex = i + 1;
+                        }
+
+                        return true;
+                    }
+
+                    nextIndex = i;
+
+                    return false;
+                }
 
                 // Consume a *balanced* parenthetical block that begins at a raw '(' or encoded '%28'.
                 // - Honors single-quoted strings inside the block so that '/' within quotes is treated as data
@@ -108,13 +132,13 @@ namespace Microsoft.OData.UriParser
                 // - Recognizes escaped quotes: '' (raw), %27%27 (encoded), and mixed forms ('%27 and %27').
                 // - Allows commas, equals, whitespace, and nested parentheses.
                 // - Returns true and sets `exclusiveEnd` to the index *after* the matching ')' or '%29'.
-                // - Sets `containsEscapeSequence` to true if any percent-escape (%XX) occurs anywhere in the block.
+                // - Sets `hasEncodedChars` to true if any percent-escape (%XX) occurs anywhere in the block.
                 // - Returns false for unbalanced parentheses or unterminated quotes; caller should then
                 //   treat characters literally
-                static bool TryConsumeBalancedParentheticalSegment(string s, int i, out int exclusiveEnd, out bool containsEscapeSequence)
+                static bool TryConsumeParenBlock(string s, int i, out int exclusiveEnd, out bool hasEncodedChars)
                 {
                     exclusiveEnd = i;
-                    containsEscapeSequence = false;
+                    hasEncodedChars = false;
 
                     int j = i;
 
@@ -125,7 +149,7 @@ namespace Microsoft.OData.UriParser
                     }
                     else if (IsPercent28(s, j))
                     {
-                        containsEscapeSequence = true;
+                        hasEncodedChars = true;
                         j += 3;
                     }
                     else
@@ -153,7 +177,7 @@ namespace Microsoft.OData.UriParser
                                 else if (j + 1 < s.Length && IsPercent27(s, j + 1))
                                 {
                                     j += 4; // Mixed escaped pair: '%27
-                                    containsEscapeSequence = true;
+                                    hasEncodedChars = true;
                                     continue;
                                 }
 
@@ -166,7 +190,7 @@ namespace Microsoft.OData.UriParser
                             // Encoded quote (escape or close)
                             if (IsPercent27(s, j))
                             {
-                                containsEscapeSequence = true;
+                                hasEncodedChars = true;
 
                                 if (j + 3 < s.Length && IsPercent27(s, j + 3))
                                 {
@@ -185,21 +209,11 @@ namespace Microsoft.OData.UriParser
                                 continue;
                             }
 
-                            // Any other escape sequence: step as %XX and mark
-                            if (ch == '%')
+                            // Any other escape sequence
+                            if (TryConsumeEncodedChar(s, j, out int nextIndex))
                             {
-                                containsEscapeSequence = true;
-
-                                if (j + 2 < s.Length)
-                                {
-                                    j += 3; // %XX
-                                }
-                                else
-                                {
-                                    // Malformed tail like "%" or "%X": append as-is, let UnescapeDataString handle that later
-                                    j++;
-                                }
-
+                                hasEncodedChars = true;
+                                j = nextIndex;
                                 continue;
                             }
 
@@ -208,6 +222,12 @@ namespace Microsoft.OData.UriParser
                         }
                         else
                         {
+                            // Slash outside quote invalidates the block (cannot protect it)
+                            if (ch == '/')
+                            {
+                                return false; // Slash becomes a segment separator
+                            }
+
                             // Enter quote
                             if (ch == '\'')
                             {
@@ -218,7 +238,7 @@ namespace Microsoft.OData.UriParser
 
                             if (IsPercent27(s, j))
                             {
-                                containsEscapeSequence = true;
+                                hasEncodedChars = true;
                                 inQuote = true;
                                 j += 3;
                                 continue;
@@ -241,7 +261,7 @@ namespace Microsoft.OData.UriParser
 
                             if (IsPercent28(s, j))
                             {
-                                containsEscapeSequence = true;
+                                hasEncodedChars = true;
                                 parenDepth++;
                                 j += 3;
                                 continue;
@@ -249,26 +269,17 @@ namespace Microsoft.OData.UriParser
 
                             if (IsPercent29(s, j))
                             {
-                                containsEscapeSequence = true;
+                                hasEncodedChars = true;
                                 parenDepth--;
                                 j += 3;
                                 continue;
                             }
 
-                            // Any other escape sequence: step as %XX and mark
-                            if (ch == '%')
+                            // Any other escape sequence
+                            if (TryConsumeEncodedChar(s, j, out int nextIndex))
                             {
-                                containsEscapeSequence = true;
-                                if (j + 2 < s.Length)
-                                {
-                                    j += 3; // %XX
-                                }
-                                else
-                                {
-                                    // Malformed tail like "%" or "%X": append as-is, let UnescapeDataString handle that later
-                                    j++;
-                                }
-
+                                hasEncodedChars = true;
+                                j = nextIndex;
                                 continue;
                             }
 
@@ -299,7 +310,7 @@ namespace Microsoft.OData.UriParser
                     // one allocation for sb.ToString() and for Uri.UnescapeDataString
                     string raw = sb.ToString();
                     // Unescape percent-encoded characters for the final segment if necessary
-                    string segment = hasEscapedSequence ? Uri.UnescapeDataString(raw) : raw;
+                    string segment = hasEncodedChars ? Uri.UnescapeDataString(raw) : raw;
 
                     // Skip empties and any stray "/" segment
                     if (segment.Length > 0 && segment != "/")
@@ -313,7 +324,7 @@ namespace Microsoft.OData.UriParser
                     }
 
                     sb.Clear();
-                    hasEscapedSequence = false; // Reset for next segment
+                    hasEncodedChars = false; // Reset for next segment
                 }
 
                 // Walk the path after the basePath and split on unquoted '/'
@@ -336,12 +347,12 @@ namespace Microsoft.OData.UriParser
                         // Attempt to consume a *balanced* parenthetical (key/function args). If successful,
                         // append it as a whole so that any '/' within quoted literals does not split the segment.
                         // If not successful (unbalanced/unterminated), fall back to literal scanning.
-                        if (TryConsumeBalancedParentheticalSegment(fullPath, i, out int endParen, out bool containsEscapedSequence))
+                        if (TryConsumeParenBlock(fullPath, i, out int endParen, out bool blockHasEncodedChars))
                         {
                             sb.Append(fullPath, i, endParen - i);
-                            if (containsEscapedSequence)
+                            if (blockHasEncodedChars)
                             {
-                                hasEscapedSequence = true;
+                                hasEncodedChars = true;
                             }
 
                             i = endParen;
@@ -354,7 +365,7 @@ namespace Microsoft.OData.UriParser
                     // Copy escaped sequences as a unit, mark for unescape
                     if (c == '%')
                     {
-                        hasEscapedSequence = true; // Mark that we saw an escape sequence
+                        hasEncodedChars = true; // Mark that we saw an escape sequence
 
                         if (i + 2 < fullPath.Length)
                         {
