@@ -1,0 +1,115 @@
+﻿using Microsoft.OData.Edm;
+using Microsoft.OData.Serializer.V3;
+using Microsoft.OData.UriParser;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Text.Json;
+using System.Threading.Tasks;
+
+namespace Microsoft.OData.Serializer.Tests.V3;
+
+public class AutomaticPocoWriterTests
+{
+    [Fact]
+    public async Task CanSerializePocosWithoutDefiningWriters()
+    {
+        var model = CreateModel();
+
+        var orders = new List<Order>
+        {
+            new Order { Id = 1, TotalAmount = 150.00m },
+            new Order { Id = 2, TotalAmount = 300.25m }
+        };
+
+        var customers = new List<Customer>
+        {
+            new Customer
+            {
+                Id = 1,
+                Name = "Alice",
+                BirthDate = new DateTime(1990, 1, 1),
+                IsActive = true,
+                Balance = 100.50m,
+                Orders = orders
+            },
+            new Customer
+            {
+                Id = 2,
+                Name = "Bob",
+                BirthDate = new DateTime(1985, 5, 20),
+                IsActive = false,
+                Balance = 250.75m,
+                Orders = new List<Order>()
+            }
+        };
+
+        var options = new ODataSerializerOptions();
+        var output = new MemoryStream();
+
+        var odataUri = new ODataUriParser(
+            model,
+            new Uri("http://service/odata"),
+            new Uri("Customers", UriKind.Relative)
+        ).ParseUri();
+
+        await ODataSerializer.WriteAsync(customers, output, odataUri, model, options);
+
+        output.Position = 0;
+
+        var actual = new StreamReader(output).ReadToEnd();
+        var decoded = JsonDocument.Parse(actual);
+        var expected =
+            @"""
+
+            """;
+
+
+        Assert.Equal(JsonDocument.Parse(expected).RootElement.ToString(), decoded.RootElement.ToString());
+    }
+
+    public class Customer
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public DateTimeOffset BirthDate { get; set; }
+        public bool IsActive { get; set; }
+        public decimal Balance { get; set; }
+        public List<Order> Orders { get; set; }
+    }
+
+    public class Order
+    {
+        public int Id { get; set; }
+        public decimal TotalAmount { get; set; }
+    }
+
+    private static IEdmModel CreateModel()
+    {
+        var model = new EdmModel();
+
+        var customer = model.AddEntityType("ns", "Customer");
+        customer.AddKeys(customer.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
+        customer.AddStructuralProperty("Name", EdmPrimitiveTypeKind.String);
+        customer.AddStructuralProperty("BirthDate", EdmPrimitiveTypeKind.DateTimeOffset);
+        customer.AddStructuralProperty("IsActive", EdmPrimitiveTypeKind.Boolean);
+        customer.AddStructuralProperty("Balance", EdmPrimitiveTypeKind.Decimal);
+
+        var order = model.AddEntityType("ns", "Order");
+        order.AddKeys(order.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
+        order.AddStructuralProperty("TotalAmount", EdmPrimitiveTypeKind.Decimal);
+
+        customer.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo
+        {
+            Name = "Orders",
+            Target = order,
+            TargetMultiplicity = EdmMultiplicity.Many
+        });
+
+        var container = model.AddEntityContainer("ns", "DefaultContainer");
+        container.AddEntitySet("Customers", customer);
+        container.AddEntitySet("Orders", order);
+        return model;
+    }
+}

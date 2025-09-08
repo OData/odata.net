@@ -10,11 +10,19 @@ namespace Microsoft.OData.Serializer.V3.Adapters;
 
 internal class ODataTypeInfoFactory<TCustomState>
 {
-    public static ODataTypeInfo<T, TCustomState> CreateTypeInfo<T>()
+    public static ODataTypeInfo<T, TCustomState>? CreateTypeInfo<T>()
     {
+        var type = typeof(T);
+
+        if (type.IsValueType)
+        {
+            // TODO: Add support for structs later. Need to boxing, by val,etc.
+            return null;
+        }
+
         var typeInfo = new ODataTypeInfo<T, TCustomState>();
 
-        var type = typeof(T);
+        
         var properties = type.GetProperties();
         var propertyInfos = new List<ODataPropertyInfo<T, TCustomState>>(properties.Length);
         foreach (var property in properties)
@@ -88,7 +96,7 @@ internal class ODataTypeInfoFactory<TCustomState>
         ILGenerator generator = dynamicMethod.GetILGenerator();
 
         // TODO: support for value types
-        // DO we need to cast?
+        // DO we really need to cast?
         generator.Emit(OpCodes.Castclass, instanceType);
         generator.Emit(OpCodes.Callvirt, getMethod);
 
