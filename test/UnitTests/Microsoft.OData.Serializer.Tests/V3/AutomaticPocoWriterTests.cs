@@ -99,6 +99,91 @@ public class AutomaticPocoWriterTests
         Assert.Equal(expectedNormalized, actualNormalized);
     }
 
+    [Fact]
+    public async Task SkipsPropertiesNotFoundInODataModel()
+    {
+        var model = CreateModel();
+
+        var orders = new List<Order>
+        {
+            new Order { Id = 1, TotalAmount = 150.00m },
+            new Order { Id = 2, TotalAmount = 300.25m }
+        };
+
+        var customers = new List<Customer>
+        {
+            new Customer
+            {
+                Id = 1,
+                Name = "Alice",
+                BirthDate = new DateTime(1990, 1, 1),
+                IsActive = true,
+                Balance = 100.50m,
+                Orders = orders
+            },
+            new Customer
+            {
+                Id = 2,
+                Name = "Bob",
+                BirthDate = new DateTime(1985, 5, 20),
+                IsActive = false,
+                Balance = 250.75m,
+                Orders = new List<Order>()
+            }
+        };
+
+        var options = new ODataSerializerOptions();
+        var output = new MemoryStream();
+
+        var odataUri = new ODataUriParser(
+            model,
+            new Uri("http://service/odata"),
+            new Uri("Customers", UriKind.Relative)
+        ).ParseUri();
+
+        await ODataSerializer.WriteAsync(customers, output, odataUri, model, options);
+
+        output.Position = 0;
+
+        var actual = new StreamReader(output).ReadToEnd();
+        var actualNormalized = JsonSerializer.Serialize(JsonDocument.Parse(actual));
+        var expected =
+            """
+            {
+              "@odata.context": "http://service/odata/$metadata#Customers",
+              "value": [
+                {
+                  "Id": 1,
+                  "Name": "Alice",
+                  "IsActive": true,
+                  "Balance": 100.50,
+                  "Orders": [
+                    {
+                      "Id": 1,
+                      "TotalAmount": 150.00
+                    },
+                    {
+                      "Id": 2,
+                      "TotalAmount": 300.25
+                    }
+                  ]
+                },
+                {
+                  "Id": 2,
+                  "Name": "Bob",
+                  "IsActive": false,
+                  "Balance": 250.75,
+                  "Orders": []
+                }
+              ]
+            }
+            """;
+
+
+        var expectedNormalized = JsonSerializer.Serialize(JsonDocument.Parse(expected));
+        Assert.Equal(expectedNormalized, actualNormalized);
+    }
+
     public class Customer
     {
         public int Id { get; set; }
@@ -123,6 +208,33 @@ public class AutomaticPocoWriterTests
         customer.AddKeys(customer.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
         customer.AddStructuralProperty("Name", EdmPrimitiveTypeKind.String);
         customer.AddStructuralProperty("BirthDate", EdmPrimitiveTypeKind.DateTimeOffset);
+        customer.AddStructuralProperty("IsActive", EdmPrimitiveTypeKind.Boolean);
+        customer.AddStructuralProperty("Balance", EdmPrimitiveTypeKind.Decimal);
+
+        var order = model.AddEntityType("ns", "Order");
+        order.AddKeys(order.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
+        order.AddStructuralProperty("TotalAmount", EdmPrimitiveTypeKind.Decimal);
+
+        customer.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo
+        {
+            Name = "Orders",
+            Target = order,
+            TargetMultiplicity = EdmMultiplicity.Many
+        });
+
+        var container = model.AddEntityContainer("ns", "DefaultContainer");
+        container.AddEntitySet("Customers", customer);
+        container.AddEntitySet("Orders", order);
+        return model;
+    }
+
+    private static IEdmModel CreateModelWithoutBirthDate()
+    {
+        var model = new EdmModel();
+
+        var customer = model.AddEntityType("ns", "Customer");
+        customer.AddKeys(customer.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
+        customer.AddStructuralProperty("Name", EdmPrimitiveTypeKind.String);
         customer.AddStructuralProperty("IsActive", EdmPrimitiveTypeKind.Boolean);
         customer.AddStructuralProperty("Balance", EdmPrimitiveTypeKind.Decimal);
 
