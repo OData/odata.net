@@ -28,8 +28,23 @@ public class ODataPropertyInfo<TDeclaringType, TCustomState> :
 
     public Func<TDeclaringType, IStreamValueWriter<TCustomState>, ODataWriterState<TCustomState>, ValueTask> WriteValueAsync { get; init; }
 
+    /// <summary>
+    /// Custom writer provided by the user via [ODataPropertyValueWriter] attribute.
+    /// Should extend one of:
+    /// ODataPropertyValueWriter<..> variants or ODataAsyncPropertyValueWriter<..> variants.
+    /// </summary>
+    internal object? CustomPropertyValueWriter { get; set; }
+
+    // The value of this delegate is generated automatically by the library based on the
+    // [ODataPropertyValueWriter] attribute. The second object parameter represents the actual writer
+    // type provided by the user. It should extend one of:
+    // ODataPropertyValueWriter<..> variants or ODataAsyncPropertyValueWriter<..> variants.
+    internal Func<TDeclaringType, object, IStreamValueWriter<TCustomState>, ODataWriterState<TCustomState>, ValueTask>?
+        WriteValueWithCustomWriterAsync { get; set; }
+
     // Streaming support via objects like PipeReader, Stream, AsyncEnumerable, etc. We should provide a mechanism for supporting custom streaming providers,
     // e.g. streams, IAsyncEnumerable, etc.
+    // TODO: Consider removing this in favour of WriteValueAsync which provides more flexibility and more preferred by early users.
     public Func<TDeclaringType, ODataWriterState<TCustomState>, object?>? GetStreamingValue { get; init; }
 
     // TODO: implement a shorthand GetValue hook of type Func<TDeclaringType, ODataJsonWriterState<TCustomState>, TValue>
@@ -147,7 +162,8 @@ public class ODataPropertyInfo<TDeclaringType, TCustomState> :
 
     internal bool WritePropertyAsync(TDeclaringType resource, ODataWriterState<TCustomState> state)
     {
-        Debug.Assert(this.WriteValueAsync != null, "WriteValueAsync should not be null.");
+        Debug.Assert(this.WriteValueAsync != null || this.WriteValueWithCustomWriterAsync != null,
+            "WriteValueAsync should not be null.");
 
         if (state.Stack.Current.PropertyProgress < PropertyProgress.PreValueMetadata)
         {
@@ -180,7 +196,8 @@ public class ODataPropertyInfo<TDeclaringType, TCustomState> :
 
     internal ValueTask WritePropertyValueAsync(TDeclaringType resource, ODataWriterState<TCustomState> state)
     {
-        Debug.Assert(this.WriteValueAsync != null, "WriteValueAsync should not be null.");
+        Debug.Assert(this.WriteValueAsync != null || this.WriteValueWithCustomWriterAsync != null, 
+            "WriteValueAsync should not be null.");
 
         if (state.Stack.Current.PropertyProgress < PropertyProgress.Name)
         {
@@ -188,8 +205,17 @@ public class ODataPropertyInfo<TDeclaringType, TCustomState> :
             state.Stack.Current.PropertyProgress = PropertyProgress.Name;
         }
 
-        return WriteValueAsync(resource, StreamValueWriter<TCustomState>.Instance, state);
+        if (this.WriteValueAsync != null)
+        {
+            return WriteValueAsync(resource, StreamValueWriter<TCustomState>.Instance, state);
+        }
+
+        Debug.Assert(this.CustomPropertyValueWriter != null, "CustomPropertyValueWriter should not be null if WriteValueWithCustomWriterAsync is set.");
+        Debug.Assert(WriteValueWithCustomWriterAsync != null);
+        return WriteValueWithCustomWriterAsync(resource, this.CustomPropertyValueWriter, StreamValueWriter<TCustomState>.Instance, state);
     }
+
+    
 
     private void WritePreValueAnnotations(TDeclaringType resource, ODataWriterState<TCustomState> state)
     {
