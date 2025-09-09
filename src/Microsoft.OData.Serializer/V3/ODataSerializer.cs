@@ -46,6 +46,7 @@ public static class ODataSerializer
         var state = new ODataWriterState<TCustomState>(options, writerProvider, jsonWriter)
         {
             ODataUri = uri,
+            EdmModel = model,
             PayloadKind = ODataPayloadKind.ResourceSet,
             JavaScriptEncoder = DefaultJsonWriterOptions.Encoder,
             BufferWriter = bufferWriter,
@@ -54,7 +55,7 @@ public static class ODataSerializer
 
         state.SetCustomSate(in customState);
         // get writer
-        var writer = writerProvider.GetWriter<T>(); // should we pass the value as well?
+        var writer = writerProvider.GetWriter<T>(model); // should we pass the value as well?
 
         try
         {

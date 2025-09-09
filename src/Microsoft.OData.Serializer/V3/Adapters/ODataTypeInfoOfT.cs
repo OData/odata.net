@@ -15,6 +15,15 @@ public class ODataTypeInfo<T, TCustomState> : ODataTypeInfo
     private Dictionary<string, ODataPropertyInfo<T, TCustomState>> _propertiesCache = new();
     public override Type Type { get; init; } = typeof(T);
 
+    /// <summary>
+    /// Gets or sets a function that returns the EDM type associated with the CLR type
+    /// represented by this <see cref="ODataTypeInfo"/>. This should be set
+    /// if the CLR type can map to different EDM types based on the value or state.
+    /// If the CLR type always maps to the same EDM type, consider using the
+    /// <see cref="ODataTypeInfo.ODataTypeInfo"/> property instead.
+    /// </summary>
+    public Func<T, ODataWriterState<TCustomState>, IEdmType>? GetEdmType { get; set; }
+
     public IReadOnlyList<ODataPropertyInfo<T, TCustomState>>? Properties
     {
         get
@@ -99,4 +108,9 @@ public class ODataTypeInfo<T, TCustomState> : ODataTypeInfo
         throw new Exception($"Property '{name}' not found in type '{Type.Name}'");
     }
 
+    public IEdmType? GetEffectiveEdmType(T value, ODataWriterState<TCustomState> state)
+    {
+        IEdmType? edmType = this.EdmType ?? this.GetEdmType?.Invoke(value, state);
+        return edmType;
+    }
 }

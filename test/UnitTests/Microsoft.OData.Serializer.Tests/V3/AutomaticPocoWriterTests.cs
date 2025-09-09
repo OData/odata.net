@@ -102,7 +102,7 @@ public class AutomaticPocoWriterTests
     [Fact]
     public async Task SkipsPropertiesNotFoundInODataModel()
     {
-        var model = CreateModel();
+        var model = CreateModelWithoutBirthDate();
 
         var orders = new List<Order>
         {

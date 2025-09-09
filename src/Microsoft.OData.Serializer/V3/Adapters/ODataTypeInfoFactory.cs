@@ -1,4 +1,5 @@
-﻿using Microsoft.OData.Serializer.V3.Json;
+﻿using Microsoft.OData.Edm;
+using Microsoft.OData.Serializer.V3.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -11,17 +12,22 @@ namespace Microsoft.OData.Serializer.V3.Adapters;
 
 internal class ODataTypeInfoFactory<TCustomState>
 {
-    public static ODataTypeInfo<T, TCustomState>? CreateTypeInfo<T>()
+    public static ODataTypeInfo<T, TCustomState>? CreateTypeInfo<T>(IEdmModel? model, IODataTypeMapper typeMapper)
     {
         var type = typeof(T);
 
         if (type.IsValueType)
         {
-            // TODO: Add support for structs later. Need to boxing, by val,etc.
+            // TODO: Add support for structs later. Need for boxing, by val,etc.
             return null;
         }
 
-        var typeInfo = new ODataTypeInfo<T, TCustomState>();
+        var typeInfo = new ODataTypeInfo<T, TCustomState>()
+        {
+            // TODO: we may need to support dynamic EDM type resolution, i.e. typeInfo.GetEdmType func property
+            EdmType = GetEdmType(type, model, typeMapper)
+        };
+        
 
         var customStateType = typeof(TCustomState);
         var stateType = typeof(ODataWriterState<>).MakeGenericType(customStateType);
@@ -30,35 +36,21 @@ internal class ODataTypeInfoFactory<TCustomState>
         var propertyInfos = new List<ODataPropertyInfo<T, TCustomState>>(properties.Length);
         foreach (var property in properties)
         {
+            // By default, skip properties not mapped to OData
+            if (typeInfo.EdmType is IEdmStructuredType structuredType)
+            {
+                if (structuredType.FindProperty(property.Name) == null)
+                {
+                    continue;
+                }
+            }
+
             var propertyInfo = CreateODataPropertyInfo(type, property, stateType, customStateType);
             propertyInfos.Add((ODataPropertyInfo<T, TCustomState>)propertyInfo);
         }
         
         typeInfo.Properties = propertyInfos;
         return typeInfo;
-    }
-    public static ODataTypeInfo CreateTypeInfo(Type type)
-    {
-        var customStateType = typeof(TCustomState);
-        var stateType = typeof(ODataWriterState<>).MakeGenericType(customStateType);
-
-        // ODataTypeInfo<TDeclaringType, TCustomState>
-        var typeInfoType = typeof(ODataTypeInfo<,>).MakeGenericType(type, customStateType);
-        Debug.Assert(typeInfoType != null);
-
-        var typeInfo = Activator.CreateInstance(typeInfoType);
-        Debug.Assert(typeInfo != null);
-
-        var propertiesProp = typeInfoType.GetProperty("Properties")!;
-        var propertyInfos = (IList<ODataPropertyInfo>)propertiesProp.GetValue(Activator.CreateInstance(typeInfoType))!;
-
-        foreach (var prop in type.GetProperties())
-        {
-            var propertyInfo = CreateODataPropertyInfo(type, prop, stateType, customStateType);
-            propertyInfos.Add(propertyInfo);
-        }
-
-        return (ODataTypeInfo)typeInfo;
     }
 
     private static ODataPropertyInfo CreateODataPropertyInfo(Type instanceType, PropertyInfo property, Type stateType, Type customStateType)
@@ -116,5 +108,15 @@ internal class ODataTypeInfoFactory<TCustomState>
         generator.Emit(OpCodes.Ret);
 
         return dynamicMethod;
+    }
+
+    private static IEdmType? GetEdmType(Type type, IEdmModel? model, IODataTypeMapper typeMapper)
+    {
+        if (model == null)
+        {
+            return null;
+        }
+
+        return typeMapper.GetEdmType(type, model);
     }
 }

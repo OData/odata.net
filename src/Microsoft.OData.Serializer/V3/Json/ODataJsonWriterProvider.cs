@@ -1,4 +1,5 @@
-﻿using Microsoft.OData.Serializer.V3.Adapters;
+﻿using Microsoft.OData.Edm;
+using Microsoft.OData.Serializer.V3.Adapters;
 using Microsoft.OData.Serializer.V3.Core;
 using Microsoft.OData.Serializer.V3.Json.Writers;
 using System;
@@ -30,14 +31,14 @@ internal class ODataJsonWriterProvider<TCustomState>(ODataSerializerOptions<TCus
 
     private ConcurrentDictionary<Type, IODataWriter> writersCache = new();
 
-    public IODataWriter<T, ODataWriterState<TCustomState>> GetWriter<T>()
+    public IODataWriter<T, ODataWriterState<TCustomState>> GetWriter<T>(IEdmModel? model)
     {
         //return (IODataWriter<T, ODataJsonWriterState>)writersCache.GetOrAdd(typeof(T), this.GetWriterNoCache<T>());
         // TODO: use GetOrAdd() instead, would require refactoring GetWriterNoCache
         // to be non-generic
         if (!writersCache.TryGetValue(typeof(T), out var writer))
         {
-            writer = this.GetWriterNoCache<T>();
+            writer = this.GetWriterNoCache<T>(model);
             writersCache.TryAdd(typeof(T), writer);
             return (IODataWriter<T, ODataWriterState<TCustomState>>)writer;
         }
@@ -45,7 +46,7 @@ internal class ODataJsonWriterProvider<TCustomState>(ODataSerializerOptions<TCus
         return (IODataWriter<T, ODataWriterState<TCustomState>>)writer;
     }
 
-    private IODataWriter<T, ODataWriterState<TCustomState>> GetWriterNoCache<T>()
+    private IODataWriter<T, ODataWriterState<TCustomState>> GetWriterNoCache<T>(IEdmModel? model)
     {
         var type = typeof(T);
         if (simpleWriters.TryGetValue(type, out var writer))
@@ -71,7 +72,7 @@ internal class ODataJsonWriterProvider<TCustomState>(ODataSerializerOptions<TCus
 
         // Attempts to generate a type info on the fly.
         // TODO: This currently only works with POCOs.
-        typeInfo = ODataTypeInfoFactory<TCustomState>.CreateTypeInfo<T>();
+        typeInfo = ODataTypeInfoFactory<TCustomState>.CreateTypeInfo<T>(model, options.TypeMapper);
         if (typeInfo != null)
         {
             return new ODataResourceJsonWriter<T, TCustomState>(typeInfo);

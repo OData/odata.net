@@ -13,6 +13,8 @@ public class ODataSerializerOptions<TCustomState>
     public ODataVersion ODataVersion { get; set; } = ODataVersion.V4;
     public int BufferSize { get; set; } = 16 * 1024;
 
+    public IODataTypeMapper TypeMapper { get; set; } = new DefaultODataTypeMapper();
+
     internal ICustomAnnotationsHandlerResolver<TCustomState> CustomAnnotationsHandlerResolver { get; set; } = new DefaultCustomAnnotationsHandlerResolver<TCustomState>();
     internal IDynamicPropertiesHandlerResolver<TCustomState> DynamicPropertiesHandlerResolver { get; set; } = new DefaultDynamicPropertiesHandlerResolver<TCustomState>();
 

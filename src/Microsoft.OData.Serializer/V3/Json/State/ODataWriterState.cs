@@ -1,4 +1,5 @@
-﻿using Microsoft.OData.Serializer.V3.Adapters;
+﻿using Microsoft.OData.Edm;
+using Microsoft.OData.Serializer.V3.Adapters;
 using Microsoft.OData.Serializer.V3.Json.State;
 using System;
 using System.Buffers;
@@ -22,6 +23,7 @@ public sealed class ODataWriterState<TCustomState>
     private TCustomState customState;
 
     public ODataUri ODataUri { get; set; }
+    public IEdmModel EdmModel { get; set; } // Should this be set on the state or options?
 
     public ODataPayloadKind PayloadKind { get; set; }
     public ODataMetadataLevel MetadataLevel { get; set; } = ODataMetadataLevel.Minimal;
@@ -135,11 +137,11 @@ public sealed class ODataWriterState<TCustomState>
         return this.Stack.IsTopLevel();
     }
 
-    // TODO: Make this internal and instead of expose writer interfaces to public hooks
-    // so that we can still the flow of how and where things are written.
+    // TODO: Make this internal and instead of exposing writer interfaces to public hooks
+    // so that we can still control the flow of how and where things are written.
     internal bool WriteValue<T>(T value)
     {
-        var writer = writers.GetWriter<T>();
+        var writer = writers.GetWriter<T>(this.EdmModel);
         return writer.Write(value, this);
     }
 
