@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace Microsoft.OData.Serializer.V3.Adapters;
 
-public abstract class ODataPropertyValueWriter<TDeclaringType> : ODataPropertyValueWriter<TDeclaringType, DefaultState>
+// TODO: internal because this is not yet supported by the ODataTypeInfoFactory.
+internal abstract class ODataPropertyValueWriter<TDeclaringType> : ODataPropertyValueWriter<TDeclaringType, DefaultState>
 {
 }
