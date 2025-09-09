@@ -1,5 +1,6 @@
 ﻿using Microsoft.OData.Edm;
 using Microsoft.OData.Serializer.V3;
+using Microsoft.OData.Serializer.V3.Attributes;
 using Microsoft.OData.UriParser;
 using System;
 using System.Collections.Generic;
@@ -184,6 +185,7 @@ public class AutomaticPocoWriterTests
         Assert.Equal(expectedNormalized, actualNormalized);
     }
 
+    [ODataType("ns.Customer")]
     public class Customer
     {
         public int Id { get; set; }
