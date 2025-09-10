@@ -1,10 +1,12 @@
-﻿using System;
+﻿using Microsoft.OData.UriParser;
+using System;
 using System.Buffers;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 using System.Text.Json;
 
-namespace Microsoft.OData.Serializer.V3.Json;
+namespace Microsoft.OData.Serializer.V3.ContextUrl;
 
 internal static class ContextUrlHelper
 {
@@ -26,6 +28,12 @@ internal static class ContextUrlHelper
     {
         if (odataUri == null)
         {
+            return;
+        }
+
+        if (odataUri.Path.Count == 1)
+        {
+            WriteContextUrlPropertyForEntitySet(odataUri, jsonWriter);
             return;
         }
 
@@ -85,5 +93,25 @@ internal static class ContextUrlHelper
         {
             ArrayPool<char>.Shared.Return(array);
         }
+    }
+
+    internal static void WriteContextUrlPropertyForEntitySet(ODataUri odataUri, Utf8JsonWriter jsonWriter)
+    {
+        var absoluteUri = odataUri.ServiceRoot?.AbsoluteUri;
+        const string metadata = "$metadata#";
+
+        // inefficient version to focus on correctness first
+
+        var builder = new StringBuilder();
+
+        builder.Append(absoluteUri);
+        builder.Append(metadata);
+        Debug.Assert(odataUri.Path.Count == 1);
+        var segment = odataUri.Path[0] as EntitySetSegment;
+        Debug.Assert(segment != null);
+
+        builder.Append(segment.EntitySet.Name);
+
+        jsonWriter.WriteString("@odata.context", builder.ToString());
     }
 }

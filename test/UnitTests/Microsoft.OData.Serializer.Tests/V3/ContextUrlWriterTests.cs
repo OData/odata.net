@@ -15,6 +15,7 @@ public class ContextUrlWriterTests
 {
     [Theory]
     [InlineData("Users", "Users")]
+    [InlineData("users", "Users")]
     [InlineData("Users?$select=Id,Name", "Users(Id,Name)")]
     [InlineData("Users?$select=*", "Users(*)")]
     [InlineData("Users?$expand=Files", "Users(Files())")]
@@ -31,11 +32,15 @@ public class ContextUrlWriterTests
         var output = new MemoryStream();
 
         var model = CreateModel();
-        var odataUri = new ODataUriParser(
+        var uriParser = new ODataUriParser(
             model,
             new Uri("http://service/odata"),
             new Uri(requestUrl, UriKind.Relative)
-        ).ParseUri();
+        )
+        {
+            Resolver = new UnqualifiedODataUriResolver { EnableCaseInsensitive = true }
+        };
+        var odataUri = uriParser.ParseUri();
 
         await ODataSerializer.WriteAsync(users, output, odataUri, model, options);
 

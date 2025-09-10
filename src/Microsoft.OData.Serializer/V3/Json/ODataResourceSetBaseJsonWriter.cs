@@ -1,4 +1,5 @@
 ﻿using Microsoft.OData.Serializer.V3.Adapters;
+using Microsoft.OData.Serializer.V3.ContextUrl;
 using Microsoft.OData.Serializer.V3.Json.State;
 using Microsoft.OData.Serializer.V3.Json.Writers;
 using System;
