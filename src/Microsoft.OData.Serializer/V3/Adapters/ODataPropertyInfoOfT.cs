@@ -47,6 +47,7 @@ public class ODataPropertyInfo<TDeclaringType, TCustomState> :
     // Streaming support via objects like PipeReader, Stream, AsyncEnumerable, etc. We should provide a mechanism for supporting custom streaming providers,
     // e.g. streams, IAsyncEnumerable, etc.
     // TODO: Consider removing this in favour of WriteValueAsync which provides more flexibility and more preferred by early users.
+    [Obsolete("Not recommended. Might not be supported post-prevew. Consider using WriteValueAsync instead which provides more flexibility.")]
     public Func<TDeclaringType, ODataWriterState<TCustomState>, object?>? GetStreamingValue { get; init; }
 
     // TODO: implement a shorthand GetValue hook of type Func<TDeclaringType, ODataJsonWriterState<TCustomState>, TValue>
