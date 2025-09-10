@@ -1,4 +1,5 @@
-﻿using Microsoft.OData.UriParser;
+﻿using Microsoft.OData.Serializer.V3.Utils;
+using Microsoft.OData.UriParser;
 using System;
 using System.Buffers;
 using System.Collections.Generic;
@@ -33,7 +34,7 @@ internal static class ContextUrlHelper
 
         if (odataUri.Path.Count == 1)
         {
-            WriteContextUrlPropertyForEntitySet(odataUri, jsonWriter);
+            WriteContextUrlPropertyForSimpleEntitySet(odataUri, jsonWriter);
             return;
         }
 
@@ -95,23 +96,37 @@ internal static class ContextUrlHelper
         }
     }
 
-    internal static void WriteContextUrlPropertyForEntitySet(ODataUri odataUri, Utf8JsonWriter jsonWriter)
+    internal static void WriteContextUrlPropertyForSimpleEntitySet(ODataUri odataUri, Utf8JsonWriter jsonWriter)
     {
-        var absoluteUri = odataUri.ServiceRoot?.AbsoluteUri;
+        Debug.Assert(odataUri.SelectAndExpand == null);
+        Debug.Assert(odataUri.Apply == null);
+
+        var absoluteUri = odataUri.ServiceRoot?.AbsoluteUri ?? string.Empty;
+        
         const string metadata = "$metadata#";
 
-        // inefficient version to focus on correctness first
-
-        var builder = new StringBuilder();
-
-        builder.Append(absoluteUri);
-        builder.Append(metadata);
         Debug.Assert(odataUri.Path.Count == 1);
         var segment = odataUri.Path[0] as EntitySetSegment;
         Debug.Assert(segment != null);
 
-        builder.Append(segment.EntitySet.Name);
+        int totalLength = absoluteUri.Length + metadata.Length + segment.EntitySet.Name.Length;
 
-        jsonWriter.WriteString("@odata.context", builder.ToString());
+        (string AbsoluteUri, string SegmentName, Utf8JsonWriter Writer) state = (absoluteUri, segment.EntitySet.Name, jsonWriter);
+
+        ShortLivedArrayHelpers.WriteCharArray(totalLength, state, static (uriStringBuffer, state) =>
+        {
+            var builder = new SpanStringBuilder(uriStringBuffer);
+            builder.Append(state.AbsoluteUri);
+            builder.Append(metadata);
+            builder.Append(state.SegmentName);
+
+            state.Writer.WriteString("@odata.context", builder.WrittenSpan);
+        });
+    }
+
+    internal static void WriteContextUrlPropertyForEntitySetWithSelectExpand(ODataUri odataUri, Utf8JsonWriter writer)
+    {
+        var absoluteUri = odataUri.ServiceRoot?.AbsoluteUri;
+        const string metadata = "$metadata#";
     }
 }

@@ -20,9 +20,14 @@ public class ContextUrlWriterTests
     [InlineData("Users?$select=*", "Users(*)")]
     [InlineData("Users?$expand=Files", "Users(Files())")]
     [InlineData("Users?$expand=Files($select=Id,FileName)", "Users(Files(Id,FileName))")]
+    [InlineData("Users?$select=Name,Address/Coordinates", "Users(Name,Address/Coordinates)")]
+    [InlineData("Users?$select=Name,Address/Coordinates,Address", "Users(Name,Address)")]
+    [InlineData("Users?$select=Name,Address/Coordinates/Longitude,Address/City,Address/Coordinates", "Users(Name,Address/City,Address/Coordinates)")]
+    [InlineData("Users?$select=Name,*,Address/Coordinates/Longitude,Address/City,Address/Coordinates", "Users(*)")]
     [InlineData("Users?$select=Id,Name$expand=Files($select=Id,FileName)", "Users(Id,Name,Files(Id,FileName))")]
     [InlineData("Users?$select=*$expand=Files($select=Id,FileName)", "Users(*,Files(Id,FileName))")]
     [InlineData("Users?$select=Name$expand=Files($select=*;$expand=Stats)", "Users(Name,Files(*,Stats()))")]
+
     public async Task WritesCorrectContextUrl_WhenResponseIsEntitySet(string requestUrl, string expectedContextUrl)
     {
         List<User> users = [];
@@ -76,9 +81,19 @@ public class ContextUrlWriterTests
         });
         model.AddElement(fileType);
 
+        var coordinatesType = model.AddComplexType("NS", "Coordinates");
+        coordinatesType.AddStructuralProperty("Latitude", EdmPrimitiveTypeKind.Double);
+        coordinatesType.AddStructuralProperty("Longitude", EdmPrimitiveTypeKind.Double);
+
+        var addressType = model.AddComplexType("NS", "Address");
+        addressType.AddStructuralProperty("Street", EdmPrimitiveTypeKind.String);
+        addressType.AddStructuralProperty("City", EdmPrimitiveTypeKind.String);
+        addressType.AddStructuralProperty("Coordinates", new EdmComplexTypeReference(coordinatesType, isNullable: false));
+
         var userType = model.AddEntityType("NS", "User");
         userType.AddKeys(userType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.String));
         userType.AddStructuralProperty("Name", EdmPrimitiveTypeKind.String);
+        userType.AddStructuralProperty("Address", new EdmComplexTypeReference(addressType, isNullable: false));
         userType.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo
         {
             Name = "Files",
@@ -99,6 +114,7 @@ public class ContextUrlWriterTests
     {
         public string Id { get; set; }
         public string Name { get; set; }
+        public Address Address { get; set; }
         public List<FileItem> Files { get; set; }
     }
 
@@ -115,5 +131,19 @@ public class ContextUrlWriterTests
         public string Id { get; set; }
         public bool Opened { get; set; }
         public bool Read { get; set; }
+    }
+
+    class Address
+    {
+        public string Street { get; set; }
+        public string City { get; set; }
+
+        public Coordinates Coordinates { get; set; }
+    }
+
+    class Coordinates
+    {
+        public double Latitude { get; set; }
+        public double Longitude { get; set; }
     }
 }
