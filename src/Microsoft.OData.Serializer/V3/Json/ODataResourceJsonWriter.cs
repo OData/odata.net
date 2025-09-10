@@ -296,9 +296,9 @@ internal class ODataResourceJsonWriter<T, TCustomState>(ODataTypeInfo<T, TCustom
     private void WriteId(T value, ODataWriterState<TCustomState> state)
     {
         var jsonWriter = state.JsonWriter;
-        if (typeInfo.GetId != null)
+        if (typeInfo.GetODataId != null)
         {
-            var id = typeInfo.GetId(value, state);
+            var id = typeInfo.GetODataId(value, state);
             if (id != null)
             {
                 jsonWriter.WritePropertyName("@odata.id"u8);
@@ -306,9 +306,9 @@ internal class ODataResourceJsonWriter<T, TCustomState>(ODataTypeInfo<T, TCustom
             }
         }
 
-        if (typeInfo.WriteId != null)
+        if (typeInfo.WriteODataId != null)
         {
-            typeInfo.WriteId(value, this, state);
+            typeInfo.WriteODataId(value, this, state);
         }
     }
 
