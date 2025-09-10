@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Microsoft.OData.Serializer.V3.Attributes;
 
 
-[AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
+[AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
 public sealed class ODataValueWriterAttribute(Type writerType) : Attribute
 {
     public Type WriterType { get; } = writerType;

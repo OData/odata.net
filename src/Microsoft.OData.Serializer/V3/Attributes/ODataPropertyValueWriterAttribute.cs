@@ -13,7 +13,8 @@ namespace Microsoft.OData.Serializer.V3.Attributes;
 /// <param name="propertyName"></param>
 /// <param name="writerType">A custom type that extends one of the ODataPropertyValueWriter variants.</param>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
-public sealed class ODataPropertyValueWriterAttribute(string propertyName, Type writerType) : Attribute
+// TODO: internal because it's not yet supported.
+internal sealed class ODataPropertyValueWriterAttribute(string propertyName, Type writerType) : Attribute
 {
     public string PropertyName { get; } = propertyName;
     public Type WriterType { get; } = writerType;
