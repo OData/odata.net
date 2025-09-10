@@ -26,7 +26,7 @@ public class SupportForCustomAsyncPropertyValueWriterWithPropertyValue
             new() { Id = 2, FileName = "file2.txt", HasContentStream = true },
         ];
 
-        var options = new ODataSerializerOptions();
+        var options = new ODataSerializerOptions<CustomState>();
         var output = new MemoryStream();
 
         var model = GetEdmModel();
@@ -36,7 +36,9 @@ public class SupportForCustomAsyncPropertyValueWriterWithPropertyValue
             new Uri("FileAttachments", UriKind.Relative)
         ).ParseUri();
 
-        await ODataSerializer.WriteAsync(customers, output, odataUri, model, options);
+        var customState = new CustomState(new ContentStreamProvider());
+
+        await ODataSerializer.WriteAsync(customers, output, odataUri, model, options, customState);
 
         output.Position = 0;
 
@@ -83,13 +85,15 @@ public class SupportForCustomAsyncPropertyValueWriterWithPropertyValue
         return model;
     }
 
+    [ODataType("NS.FileAttachment")]
     class FileAttachment
     {
         public int Id { get; set; }
         public string FileName { get; set; }
-        public string? Content { get; set; }
 
         [ODataValueWriter(typeof(StreamContentWriter))]
+        public string? Content { get; set; }
+
         public bool HasContentStream { get; set; }
     }
 
@@ -112,6 +116,7 @@ public class SupportForCustomAsyncPropertyValueWriterWithPropertyValue
                 using var reader = new StreamReader(stream, Encoding.UTF8);
                 var content = await reader.ReadToEndAsync();
                 await writer.WriteValueAsync(content, state);
+                return;
             }
 
             writer.WriteValue(propertyValue, state);

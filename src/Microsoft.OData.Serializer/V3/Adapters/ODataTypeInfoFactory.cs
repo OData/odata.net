@@ -18,6 +18,9 @@ internal static class ODataTypeInfoFactory<TCustomState>
     private static Type StateType { get; } = typeof(ODataWriterState<>).MakeGenericType(CustomStateType);
     private static Type StreamValueWriterType { get; } = typeof(IStreamValueWriter<>).MakeGenericType(CustomStateType);
 
+    private static Type ValueTaskType { get; } = typeof(ValueTask);
+    private static Type ObjectType { get; } = typeof(object);
+
     private static ConcurrentDictionary<Type, object> CustomValueWriterInstanceCache { get; } = new();
 
     public static ODataTypeInfo<T, TCustomState>? CreateTypeInfo<T>(IEdmModel? model, IODataTypeMapper typeMapper)
@@ -81,34 +84,38 @@ internal static class ODataTypeInfoFactory<TCustomState>
         PropertyInfo clrProperty,
         Type instanceType)
     {
-        var propertyWriterAttribute = clrProperty.GetCustomAttribute<ODataPropertyValueWriterAttribute>();
-        if (propertyWriterAttribute?.WriterType != null)
+        var valueWriterAttribute = clrProperty.GetCustomAttribute<ODataValueWriterAttribute>();
+        if (valueWriterAttribute?.WriterType != null)
         {
             var baseWriterTypeWithValue = typeof(ODataAsyncPropertyWriter<,,>).MakeGenericType(instanceType, clrProperty.PropertyType, CustomStateType);
-            if (propertyWriterAttribute.WriterType.IsAssignableTo(baseWriterTypeWithValue))
+            if (valueWriterAttribute.WriterType.IsAssignableTo(baseWriterTypeWithValue))
             {
                 var writeValueAsyncDelegate = CreateWriteValueAsyncFromCustomWriterWithValueDelegate(
                     instanceType,
                     clrProperty,
-                    propertyWriterAttribute.WriterType);
+                    valueWriterAttribute.WriterType);
 
-                var writeValueWithCustomWriterAsyncProp = odataPropertyInfoType.GetProperty(nameof(ODataPropertyInfo<bool, bool>.WriteValueWithCustomWriterAsync));
+                var writeValueWithCustomWriterAsyncProp = odataPropertyInfoType.GetProperty(
+                    nameof(ODataPropertyInfo<bool, bool>.WriteValueWithCustomWriterAsync),
+                    BindingFlags.Instance|BindingFlags.NonPublic);
                 Debug.Assert(writeValueWithCustomWriterAsyncProp != null, "WriteValueWithCustomWriterAsync property not found");
 
                 writeValueWithCustomWriterAsyncProp.SetValue(odataPropertyInfo, writeValueAsyncDelegate);
 
-                var customValueWriterProp = odataPropertyInfoType.GetProperty(nameof(ODataPropertyInfo<bool, bool>.CustomPropertyValueWriter));
+                var customValueWriterProp = odataPropertyInfoType.GetProperty(
+                    nameof(ODataPropertyInfo<bool, bool>.CustomPropertyValueWriter),
+                    BindingFlags.Instance|BindingFlags.NonPublic);
                 Debug.Assert(customValueWriterProp != null, "CustomPropertyValueWriter property not found");
 
                 // The custom writer type should be stateless. This expectation should be well documented.
                 // Since it's stateless we can create one instance per type instead of per property it's used on.
-                if (!CustomValueWriterInstanceCache.TryGetValue(propertyWriterAttribute.WriterType, out object? customWriterInstance))
+                if (!CustomValueWriterInstanceCache.TryGetValue(valueWriterAttribute.WriterType, out object? customWriterInstance))
                 {
                     // TODO: validate that custom writer type has parameterless constructor.
                     // that's somethign we require.
-                    customWriterInstance = Activator.CreateInstance(propertyWriterAttribute.WriterType);
+                    customWriterInstance = Activator.CreateInstance(valueWriterAttribute.WriterType);
                     Debug.Assert(customWriterInstance != null);
-                    CustomValueWriterInstanceCache[propertyWriterAttribute.WriterType] = customWriterInstance;
+                    CustomValueWriterInstanceCache[valueWriterAttribute.WriterType] = customWriterInstance;
                 }
 
                 // Store the writer instance on the property info
@@ -117,7 +124,7 @@ internal static class ODataTypeInfoFactory<TCustomState>
             else
             {
                 throw new InvalidOperationException(
-                    $"The WriterType {propertyWriterAttribute.WriterType.FullName} specified in ODataPropertyValueWriterAttribute on property {clrProperty.Name} does not inherit from {baseWriterTypeWithValue.FullName}");
+                    $"The WriterType {valueWriterAttribute.WriterType.FullName} specified in ODataPropertyValueWriterAttribute on property {clrProperty.Name} does not inherit from {baseWriterTypeWithValue.FullName}");
             }
 
             return;
@@ -173,9 +180,13 @@ internal static class ODataTypeInfoFactory<TCustomState>
         Type writerType)
     {
         var dynamicMethod = CreateWriteValueAsyncFromCustomWriterWithValue(instanceType, property, writerType);
+        // Func<TDeclaringType, object, IStreamValueWriter<TCustomState>, ODataWriterState<TCustomState>, ValueTask>
         var actionType = typeof(Func<,,,,>).MakeGenericType(
             instanceType,
-            typeof(object));
+            ObjectType,
+            StreamValueWriterType,
+            StateType,
+            ValueTaskType);
         return dynamicMethod.CreateDelegate(actionType);
     }
 
@@ -223,8 +234,8 @@ internal static class ODataTypeInfoFactory<TCustomState>
 
         var dynamicMethod = new DynamicMethod(
             $"Write{property.Name}WithCustomWriterAsync",
-            property.PropertyType,
-            [instanceType, writerType, StreamValueWriterType, StateType],
+            ValueTaskType,
+            [instanceType, ObjectType, StreamValueWriterType, StateType],
             typeof(ODataTypeInfoFactory<TCustomState>).Module,
             skipVisibility: true);
 

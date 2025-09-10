@@ -98,7 +98,7 @@ public class ODataPropertyInfo<TDeclaringType, TCustomState> :
 
     internal bool WriteProperty(TDeclaringType resource, ODataWriterState<TCustomState> state)
     {
-        if (WriteValueAsync != null)
+        if (WriteValueAsync != null || WriteValueWithCustomWriterAsync != null)
         {
             // TODO: should probably just have WritePropertyValueAsync below.
             return this.WritePropertyAsync(resource, state);
@@ -367,6 +367,7 @@ public class ODataPropertyInfo<TDeclaringType, TCustomState> :
 
         }
 
+        Debug.Assert(this.WriteValue != null, "WriteValue should not be null.");
         return WriteValue(resource, this, state);
     }
 
