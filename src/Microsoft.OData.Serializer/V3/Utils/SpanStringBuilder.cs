@@ -16,7 +16,7 @@ internal ref struct SpanStringBuilder(Span<char> buffer)
 
     public void Append(char value)
     {
-        Debug.Assert(_buffer.Length > _pos + 1);
+        Debug.Assert(_buffer.Length >= _pos + 1);
         _buffer[_pos++] = value;
     }
 

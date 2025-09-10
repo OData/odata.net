@@ -171,7 +171,7 @@ internal static class ContextUrlHelper
             if (selectItem is ExpandedNavigationSelectItem expandedNavSelectItem)
             {
                 // No nested expands
-                if (expandedNavSelectItem.SelectAndExpand != null)
+                if (expandedNavSelectItem.SelectAndExpand.SelectedItems.Any())
                 {
                     return false;
                 }
@@ -256,6 +256,7 @@ internal static class ContextUrlHelper
         {
             totalStringLength += 2 * expandedProperties.Length; // we'll wrap the expanded properties between ( ) and add commas
             totalStringLength += expandedProperties.Length - 1; // we'll add commas between expanded properties
+            totalStringLength += runningExpandLength;
         }
 
         if (hasWildcard)
@@ -264,7 +265,8 @@ internal static class ContextUrlHelper
         }
         else if (selectedProperties.Length > 0)
         {
-            totalStringLength += selectedProperties.Length - 1;
+            totalStringLength += selectedProperties.Length - 1; // we'll add commas between selected properties
+            totalStringLength += runningSelectLength;
         }
 
         // if we have both select and expand, then we'll need a comma between the last select and first expand
