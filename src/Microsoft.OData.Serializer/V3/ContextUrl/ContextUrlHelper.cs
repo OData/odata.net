@@ -32,9 +32,13 @@ internal static class ContextUrlHelper
             return;
         }
 
-        if (odataUri.Path.Count == 1)
+        if (TryWriteContextUrlPropertyForSimpleEntitySet(odataUri, jsonWriter))
         {
-            WriteContextUrlPropertyForSimpleEntitySet(odataUri, jsonWriter);
+            return;
+        }
+
+        if (TryWriteContextUrlPropertyForEntitySetWithSimpleSelectExpand(odataUri, jsonWriter))
+        {
             return;
         }
 
@@ -96,13 +100,18 @@ internal static class ContextUrlHelper
         }
     }
 
-    internal static void WriteContextUrlPropertyForSimpleEntitySet(ODataUri odataUri, Utf8JsonWriter jsonWriter)
+    internal static bool TryWriteContextUrlPropertyForSimpleEntitySet(ODataUri odataUri, Utf8JsonWriter jsonWriter)
     {
+        if (!IsSimpleEntitySet(odataUri))
+        {
+            return false;
+        }
+
         Debug.Assert(odataUri.SelectAndExpand == null);
         Debug.Assert(odataUri.Apply == null);
 
         var absoluteUri = odataUri.ServiceRoot?.AbsoluteUri ?? string.Empty;
-        
+
         const string metadata = "$metadata#";
 
         Debug.Assert(odataUri.Path.Count == 1);
@@ -122,11 +131,218 @@ internal static class ContextUrlHelper
 
             state.Writer.WriteString("@odata.context", builder.WrittenSpan);
         });
+
+        return true;
     }
 
-    internal static void WriteContextUrlPropertyForEntitySetWithSelectExpand(ODataUri odataUri, Utf8JsonWriter writer)
+    internal static bool TryWriteContextUrlPropertyForEntitySetWithSimpleSelectExpand(ODataUri odataUri, Utf8JsonWriter writer)
     {
-        var absoluteUri = odataUri.ServiceRoot?.AbsoluteUri;
+        // Simple select expand means:
+        // We have <= X selects and <= X expands
+        // No nested selects (e.g. selecting nested properties of a complex type)
+        // No nested expands (no $select or $expand inside an $expand)
+        // No duplicates (how do we check for duplicates)
+        // wild card is supported
+
+        if (odataUri.Path.Count != 1 || odataUri.Apply != null) 
+        {
+            return false;
+        }
+
+        if (odataUri.Path[0] is not EntitySetSegment entitySet)
+        {
+            return false;
+        }
+
+        //Debug.Assert(odataUri.SelectAndExpand);
+
+        var absoluteUri = odataUri.ServiceRoot?.AbsoluteUri ?? string.Empty;
         const string metadata = "$metadata#";
+        var duplicateChecker = new PossibleDuplicateStringChecker();
+        var selectedProperties = new InlineStringList10();
+        var expandedProperties = new InlineStringList10();
+        bool hasWildcard = false;
+        int runningExpandLength = 0;
+        int runningSelectLength = 0;
+
+        foreach (var selectItem in odataUri.SelectAndExpand.SelectedItems)
+        {
+            // Check for nested selects
+            if (selectItem is ExpandedNavigationSelectItem expandedNavSelectItem)
+            {
+                // No nested expands
+                if (expandedNavSelectItem.SelectAndExpand != null)
+                {
+                    return false;
+                }
+
+                if (expandedNavSelectItem.PathToNavigationProperty.Count != 1)
+                {
+                    return false;
+                }
+
+                var nav = expandedNavSelectItem.PathToNavigationProperty.LastSegment as NavigationPropertySegment;
+                Debug.Assert(nav != null);
+
+                var navPropertyName = nav.NavigationProperty.Name;
+                if (!duplicateChecker.TryAdd(navPropertyName))
+                {
+                    return false;
+                }
+
+                if (!expandedProperties.TryAdd(navPropertyName))
+                {
+                    return false;
+                }
+
+                runningExpandLength += navPropertyName.Length;
+            }
+            else if (selectItem is PathSelectItem pathSelectItem)
+            {
+                // No nested selects
+                if (pathSelectItem.SelectedPath.Count != 1)
+                {
+                    return false;
+                }
+
+                if (pathSelectItem.SelectAndExpand != null)
+                {
+                    return false;
+                }
+
+                var property = pathSelectItem.SelectedPath[0] as PropertySegment;
+                Debug.Assert(property != null);
+
+
+                // if we've seen a wildcard, then we don't need to worry about duplicates
+                // or number of select properties because every selected item will be absorbed in the wildcard
+                if (hasWildcard)
+                {
+                    continue;
+                }
+
+                if (!duplicateChecker.TryAdd(property.Property.Name))
+                {
+                    return false;
+                }
+
+                if (!selectedProperties.TryAdd(property.Property.Name))
+                {
+                    return false;
+                }
+
+                runningSelectLength += property.Property.Name.Length;
+            }
+            else if (selectItem is WildcardSelectItem)
+            {
+                hasWildcard = true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        int totalStringLength = absoluteUri.Length + entitySet.EntitySet.Name.Length + metadata.Length;
+
+        if (runningExpandLength + runningSelectLength > 0 || hasWildcard)
+        {
+            totalStringLength += 2; // we'll wrapp the selected/expanded properties between ( )
+        }
+
+        // Since no we don't need nested expands, then each expand will be written as ( )
+        // We'll have comma between expands
+        if (expandedProperties.Length > 0)
+        {
+            totalStringLength += 2 * expandedProperties.Length; // we'll wrap the expanded properties between ( ) and add commas
+            totalStringLength += expandedProperties.Length - 1; // we'll add commas between expanded properties
+        }
+
+        if (hasWildcard)
+        {
+            totalStringLength += 1;
+        }
+        else if (selectedProperties.Length > 0)
+        {
+            totalStringLength += selectedProperties.Length - 1;
+        }
+
+        // if we have both select and expand, then we'll need a comma between the last select and first expand
+        if ((hasWildcard || selectedProperties.Length > 0) && expandedProperties.Length > 0)
+        {
+            totalStringLength += 1;
+        }
+
+        (
+            string ServiceRoot,
+            string EntitySet,
+            bool HasWildCard,
+            InlineStringList10 SelectedProperties,
+            InlineStringList10 ExpandedProperties,
+            Utf8JsonWriter Writer
+        ) state = (absoluteUri, entitySet.EntitySet.Name, hasWildcard, selectedProperties, expandedProperties, writer);
+
+        ShortLivedArrayHelpers.WriteCharArray(totalStringLength, state, static (buffer, state) =>
+        {
+            var builder = new SpanStringBuilder(buffer);
+            builder.Append(state.ServiceRoot);
+            builder.Append(metadata);
+            builder.Append(state.EntitySet);
+
+            bool hasSelect = state.HasWildCard || state.SelectedProperties.Length > 0;
+
+            if (hasSelect|| state.ExpandedProperties.Length > 0)
+            {
+                builder.Append('(');
+
+                if (state.HasWildCard)
+                {
+                    builder.Append('*');
+                }
+                else if (state.SelectedProperties.Length > 0)
+                {
+                    builder.Append(state.SelectedProperties[0]);
+                    for (int i = 1; i < state.SelectedProperties.Length; i++)
+                    {
+                        builder.Append(',');
+                        builder.Append(state.SelectedProperties[i]);
+                    }
+                }
+
+                if (state.ExpandedProperties.Length > 0)
+                {
+                    if (hasSelect)
+                    {
+                        builder.Append(',');
+                    }
+
+                    builder.Append(state.ExpandedProperties[0]);
+                    builder.Append('(');
+                    builder.Append(')');
+
+                    for (int i = 1; i < state.ExpandedProperties.Length; i++)
+                    {
+                        builder.Append(')');
+                        builder.Append(state.ExpandedProperties[i]);
+                        builder.Append('(');
+                        builder.Append(')');
+                    }
+                }
+
+                builder.Append(')');
+            }
+
+            state.Writer.WriteString("@odata.context"u8, builder.WrittenSpan);
+        });
+
+        return true;
+    }
+
+    private static bool IsSimpleEntitySet(ODataUri odataUri)
+    {
+        return odataUri.Path.Count == 1
+            && odataUri.Path[0] is EntitySetSegment
+            && odataUri.SelectAndExpand == null
+            && odataUri.Apply == null;
     }
 }

@@ -26,3 +26,9 @@ internal static class ShortLivedArrayHelpers
         }
     }
 }
+
+// TODO: this would allow us to pass the TArg as an in parameter, i.e. by ref
+// and could be more efficient for passing large structs by ref instead
+// of copies, since we're passing multiple values in a tuple in most scenarios.
+// However, using parameter modifies in lambda functions is still in preview.
+//delegate void SpanActionWithRefArg<T, TArg>(Span<T> span, in TArg arg);
