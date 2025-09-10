@@ -28,6 +28,7 @@ public class ODataPropertyInfo<TDeclaringType, TCustomState> :
 
     public Func<TDeclaringType, IStreamValueWriter<TCustomState>, ODataWriterState<TCustomState>, ValueTask> WriteValueAsync { get; init; }
 
+    // TODO: this tight coupling between attribute handling and the core serializer internals is not ideal and should be revised.
     /// <summary>
     /// Custom writer provided by the user via [ODataPropertyValueWriter] attribute.
     /// Should extend one of:
@@ -39,6 +40,7 @@ public class ODataPropertyInfo<TDeclaringType, TCustomState> :
     // [ODataPropertyValueWriter] attribute. The second object parameter represents the actual writer
     // type provided by the user. It should extend one of:
     // ODataPropertyValueWriter<..> variants or ODataAsyncPropertyValueWriter<..> variants.
+    // TODO: this tight coupling between attribute handling and the core serializer internals is not ideal and should be revised.
     internal Func<TDeclaringType, object, IStreamValueWriter<TCustomState>, ODataWriterState<TCustomState>, ValueTask>?
         WriteValueWithCustomWriterAsync { get; set; }
 

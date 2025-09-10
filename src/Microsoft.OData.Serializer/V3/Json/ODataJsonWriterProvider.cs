@@ -70,6 +70,15 @@ internal class ODataJsonWriterProvider<TCustomState>(ODataSerializerOptions<TCus
             return new ODataResourceJsonWriter<T, TCustomState>(typeInfo);
         }
 
+        // TODO: automatic generation of type infos should not be tightly coupled to
+        // the core writer, it should be a pluggable extension on top of the core writer.
+        // However, currently it depends on internal details of ODataTypeInfo and ODataPropertyInfo,
+        // e.g. the internal ODataPropertyInfo<,>.WriteValueWithCustomWriterAsync property.
+        // To promote an extensible design, we should either refactor the implementation such
+        // that these internal properties are not needed, or not stored in the core serializer components
+        // like ODataTypeInfo/ODataPropertyInfo, or it we should consider whether it makes sense
+        // to make them public such that extensions we write do not have special access than
+        // extensions written by library consumers.
         // Attempts to generate a type info on the fly.
         // TODO: This currently only works with POCOs.
         typeInfo = ODataTypeInfoFactory<TCustomState>.CreateTypeInfo<T>(model, options.TypeMapper);
