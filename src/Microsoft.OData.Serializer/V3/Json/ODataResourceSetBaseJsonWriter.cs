@@ -113,7 +113,7 @@ public abstract class ODataResourceSetBaseJsonWriter<TCollection, TElement, TCus
         // Since this is only called when top-level, let's also write the context URL
         if (state.MetadataLevel >= ODataMetadataLevel.Minimal)
         {
-            WriteContextUrl(value, state);
+            WriteContextUrl(state);
         }
 
         //// TODO: should this condition be implemented by the WriteCountProperty method?
@@ -186,7 +186,7 @@ public abstract class ODataResourceSetBaseJsonWriter<TCollection, TElement, TCus
         }
     }
 
-    protected virtual void WriteContextUrl(TCollection value, ODataWriterState<TCustomState> state)
+    private static void WriteContextUrl(ODataWriterState<TCustomState> state)
     {
         if (state.PayloadKind == ODataPayloadKind.ResourceSet && state.IsTopLevel())
         {

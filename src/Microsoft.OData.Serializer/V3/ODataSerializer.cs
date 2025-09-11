@@ -2,6 +2,7 @@
 using Microsoft.OData.Serializer.V3.IO;
 using Microsoft.OData.Serializer.V3.Json;
 using Microsoft.OData.Serializer.V3.Json.State;
+using Microsoft.OData.UriParser;
 using System;
 using System.Buffers;
 using System.Collections.Generic;
@@ -43,11 +44,12 @@ public static class ODataSerializer
         //using var bufferWriter = new PooledByteSegmentBufferWriter(options.BufferSize);
         var jsonWriter = new Utf8JsonWriter(bufferWriter, DefaultJsonWriterOptions); // TODO: make this configurable in options
         var writerProvider = new ODataJsonWriterProvider<TCustomState>(options);
+        var payloadKind = GetPayloadKindFromUri(uri);
         var state = new ODataWriterState<TCustomState>(options, writerProvider, jsonWriter)
         {
             ODataUri = uri,
             EdmModel = model,
-            PayloadKind = ODataPayloadKind.ResourceSet,
+            PayloadKind = payloadKind,
             JavaScriptEncoder = DefaultJsonWriterOptions.Encoder,
             BufferWriter = bufferWriter,
             OutputStream = stream,
@@ -197,5 +199,19 @@ public static class ODataSerializer
         //        } 
         //    }
         //} while (!isDone);
+    }
+
+    private static ODataPayloadKind GetPayloadKindFromUri(ODataUri uri)
+    {
+        var lastSegment = uri.Path.LastSegment;
+        return lastSegment switch
+        {
+            EntitySetSegment => ODataPayloadKind.ResourceSet,
+            NavigationPropertySegment navSeg =>
+                navSeg.EdmType.TypeKind == EdmTypeKind.Collection ? ODataPayloadKind.ResourceSet : ODataPayloadKind.Resource,
+            KeySegment => ODataPayloadKind.Resource,
+            SingletonSegment => ODataPayloadKind.Resource,
+            _ => ODataPayloadKind.Unsupported
+        };
     }
 }

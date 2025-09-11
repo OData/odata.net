@@ -16,7 +16,10 @@ internal static class ContextUrlHelper
         switch (payloadKind)
         {
             case ODataPayloadKind.ResourceSet:
-                WriteResourceSetContextUrl(uri, jsonWriter);
+                WriteResourceSetContextUrl(uri, new ODataPathRange(uri.Path, uri.Path.Count), jsonWriter);
+                break;
+            case ODataPayloadKind.Resource:
+                WriteResourceContextUrl(uri, jsonWriter);
                 break;
 
             default:
@@ -25,19 +28,19 @@ internal static class ContextUrlHelper
         }
     }
 
-    internal static void WriteResourceSetContextUrl(ODataUri odataUri, Utf8JsonWriter jsonWriter)
+    internal static void WriteResourceSetContextUrl(ODataUri odataUri, ODataPathRange path, Utf8JsonWriter jsonWriter, string appendFragment = "")
     {
         if (odataUri == null)
         {
             return;
         }
 
-        if (TryWriteContextUrlPropertyForSimpleEntitySet(odataUri, jsonWriter))
+        if (TryWriteContextUrlPropertyForSimpleEntitySet(odataUri, path, jsonWriter, appendFragment))
         {
             return;
         }
 
-        if (TryWriteContextUrlPropertyForEntitySetWithSimpleSelectExpand(odataUri, jsonWriter))
+        if (TryWriteContextUrlPropertyForEntitySetWithSimpleSelectExpand(odataUri, path, jsonWriter, appendFragment))
         {
             return;
         }
@@ -100,9 +103,33 @@ internal static class ContextUrlHelper
         }
     }
 
-    internal static bool TryWriteContextUrlPropertyForSimpleEntitySet(ODataUri odataUri, Utf8JsonWriter jsonWriter)
+    internal static void WriteResourceContextUrl(ODataUri odataUri, Utf8JsonWriter jsonWriter)
     {
-        if (!IsSimpleEntitySet(odataUri))
+        if (odataUri == null)
+        {
+            return;
+        }
+
+        if (odataUri.Path.Count == 0)
+        {
+            return;
+        }
+
+        // TODO: we only support entityCollection/{id} for now, not singletons
+        if (odataUri.Path[^1] is not KeySegment keySegment)
+        {
+            // Perhaps we should write some "default" context URL?
+            return;
+        }
+
+        // piggy back on resource set context URL writer
+        ODataPathRange path = new(odataUri.Path, odataUri.Path.Count - 1);
+        WriteResourceSetContextUrl(odataUri, path, jsonWriter, "/$entity");
+    }
+
+    internal static bool TryWriteContextUrlPropertyForSimpleEntitySet(ODataUri odataUri, ODataPathRange path, Utf8JsonWriter jsonWriter, string appendFragment = "")
+    {
+        if (!IsSimpleEntitySet(odataUri, path))
         {
             return false;
         }
@@ -114,24 +141,29 @@ internal static class ContextUrlHelper
 
         const string metadata = "$metadata#";
 
-        Debug.Assert(odataUri.Path.Count == 1);
-        var segment = odataUri.Path[0] as EntitySetSegment;
+        Debug.Assert(path.Count == 1);
+        var segment = path[0] as EntitySetSegment;
         Debug.Assert(segment != null);
 
-        int totalLength = absoluteUri.Length + metadata.Length + segment.EntitySet.Name.Length;
+        int totalLength = absoluteUri.Length + metadata.Length + segment.EntitySet.Name.Length + appendFragment.Length;
 
-        (string AbsoluteUri, string SegmentName, Utf8JsonWriter Writer) state = (absoluteUri, segment.EntitySet.Name, jsonWriter);
+        (
+            string AbsoluteUri,
+            string SegmentName,
+            string AppendFragment,
+            Utf8JsonWriter Writer) state = (absoluteUri, segment.EntitySet.Name, appendFragment, jsonWriter);
 
         // Cannot use a lambda action since we need to pass an in parameter
         // Parameter modifiers in lambdas are still in preview
         ShortLivedArrayHelpers.CreateCharArray(totalLength, state, WriteContextUrl);
 
-        static void WriteContextUrl(Span<char> buffer, in (string AbsoluteUri, string SegmentName, Utf8JsonWriter Writer) state)
+        static void WriteContextUrl(Span<char> buffer, in (string AbsoluteUri, string SegmentName, string AppendFragment, Utf8JsonWriter Writer) state)
         {
             var builder = new SpanStringBuilder(buffer);
             builder.Append(state.AbsoluteUri);
             builder.Append(metadata);
             builder.Append(state.SegmentName);
+            builder.Append(state.AppendFragment);
 
             state.Writer.WriteString("@odata.context"u8, builder.WrittenSpan);
         }
@@ -139,7 +171,7 @@ internal static class ContextUrlHelper
         return true;
     }
 
-    internal static bool TryWriteContextUrlPropertyForEntitySetWithSimpleSelectExpand(ODataUri odataUri, Utf8JsonWriter writer)
+    internal static bool TryWriteContextUrlPropertyForEntitySetWithSimpleSelectExpand(ODataUri odataUri, ODataPathRange path, Utf8JsonWriter writer, string appendFragment = "")
     {
         // Simple select expand means:
         // We have <= X selects and <= X expands
@@ -148,12 +180,12 @@ internal static class ContextUrlHelper
         // No duplicates (how do we check for duplicates)
         // wild card is supported
 
-        if (odataUri.Path.Count != 1 || odataUri.Apply != null) 
+        if (path.Count != 1 || odataUri.Apply != null) 
         {
             return false;
         }
 
-        if (odataUri.Path[0] is not EntitySetSegment entitySet)
+        if (path[0] is not EntitySetSegment entitySet)
         {
             return false;
         }
@@ -247,7 +279,7 @@ internal static class ContextUrlHelper
             }
         }
 
-        int totalStringLength = absoluteUri.Length + entitySet.EntitySet.Name.Length + metadata.Length;
+        int totalStringLength = absoluteUri.Length + entitySet.EntitySet.Name.Length + metadata.Length + appendFragment.Length;
 
         if (runningExpandLength + runningSelectLength > 0 || hasWildcard)
         {
@@ -282,11 +314,12 @@ internal static class ContextUrlHelper
         (
             string ServiceRoot,
             string EntitySet,
+            string AppendFragment,
             bool HasWildCard,
             InlineStringList10 SelectedProperties,
             InlineStringList10 ExpandedProperties,
             Utf8JsonWriter Writer
-        ) state = (absoluteUri, entitySet.EntitySet.Name, hasWildcard, selectedProperties, expandedProperties, writer);
+        ) state = (absoluteUri, entitySet.EntitySet.Name, appendFragment, hasWildcard, selectedProperties, expandedProperties, writer);
 
         ShortLivedArrayHelpers.CreateCharArray(totalStringLength, state, WriteContextUrl);
 
@@ -295,6 +328,7 @@ internal static class ContextUrlHelper
             in (
                 string ServiceRoot,
                 string EntitySet,
+                string AppendFragment,
                 bool HasWildCard,
                 InlineStringList10 SelectedProperties,
                 InlineStringList10 ExpandedProperties,
@@ -349,16 +383,18 @@ internal static class ContextUrlHelper
                 builder.Append(')');
             }
 
+            builder.Append(state.AppendFragment);
+
             state.Writer.WriteString("@odata.context"u8, builder.WrittenSpan);
         }
 
         return true;
     }
 
-    private static bool IsSimpleEntitySet(ODataUri odataUri)
+    private static bool IsSimpleEntitySet(ODataUri odataUri, ODataPathRange path)
     {
-        return odataUri.Path.Count == 1
-            && odataUri.Path[0] is EntitySetSegment
+        return path.Count == 1
+            && path[0] is EntitySetSegment
             && odataUri.SelectAndExpand == null
             && odataUri.Apply == null;
     }

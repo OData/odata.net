@@ -1,4 +1,5 @@
 ﻿using Microsoft.OData.Serializer.V3.Adapters;
+using Microsoft.OData.Serializer.V3.ContextUrl;
 using Microsoft.OData.Serializer.V3.Core;
 using Microsoft.OData.Serializer.V3.Json.State;
 using Microsoft.OData.Serializer.V3.Json.Writers;
@@ -254,6 +255,11 @@ internal class ODataResourceJsonWriter<T, TCustomState>(ODataTypeInfo<T, TCustom
 
     private void WritePreValueMetadata(T value, ODataWriterState<TCustomState> state)
     {
+        if (state.IsTopLevel())
+        {
+            WriteContextUrl(state);
+        }
+
         WriteId(value, state);
         WriteEtag(value, state);
 
@@ -291,6 +297,12 @@ internal class ODataResourceJsonWriter<T, TCustomState>(ODataTypeInfo<T, TCustom
         {
             typeInfo.WriteCustomPostValueAnnotations(value, CustomInstanceAnnotationWriter<TCustomState>.Instance, state);
         }
+    }
+
+    private static void WriteContextUrl(ODataWriterState<TCustomState> state)
+    {
+        var jsonWriter = state.JsonWriter;
+        ContextUrlHelper.WriteContextUrlProperty(state.PayloadKind, state.ODataUri, state.JsonWriter);
     }
 
     private void WriteId(T value, ODataWriterState<TCustomState> state)
