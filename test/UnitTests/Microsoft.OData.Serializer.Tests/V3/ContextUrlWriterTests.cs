@@ -160,6 +160,49 @@ public class ContextUrlWriterTests
         Assert.Equal($"http://service/odata/$metadata#{expectedContextUrl}", actualContextUrl);
     }
 
+    [Theory]
+    [InlineData("Users('id')/Files('fileId')", "Users('id')/Files/$entity")]
+    [InlineData("users('id')/files('fileId')", "Users('id')/Files/$entity")]
+    [InlineData("Users('id')/Files('fileId')?$select=Id,FileName", "Users('id')/Files(Id,FileName)/$entity")]
+    [InlineData("Users('id')/Files('fileId')?$select=Id,FileName,*", "Users('id')/Files(*)/$entity")]
+    [InlineData("Users('id')/Files('fileId')?$select=Id,FileName&$expand=ActivityStats", "Users('id')/Files(Id,FileName,ActivityStats())/$entity")]
+    [InlineData("Users('id')/Files('fileId')?$expand=ActivityStats", "Users('id')/Files(ActivityStats())/$entity")]
+    public async Task WritesCorrectContextUrl_WhenResponseIsEntityByIdFromContainedCollectionNavigationProperty(string requestUrl, string expectedContextUrl)
+    {
+        var file = new FileItem
+        {
+            Id = "fileId",
+            FileName = "Document",
+            Extension = "docx",
+            Stats = []
+        };
+
+
+        var options = new ODataSerializerOptions();
+        var output = new MemoryStream();
+
+        var model = CreateModel();
+        var uriParser = new ODataUriParser(
+            model,
+            new Uri("http://service/odata"),
+            new Uri(requestUrl, UriKind.Relative)
+        )
+        {
+            Resolver = new UnqualifiedODataUriResolver { EnableCaseInsensitive = true }
+        };
+        var odataUri = uriParser.ParseUri();
+
+        await ODataSerializer.WriteAsync(file, output, odataUri, model, options);
+
+        output.Position = 0;
+
+        var actual = new StreamReader(output).ReadToEnd();
+        var actualParsed = JsonDocument.Parse(actual);
+        var actualContextUrl = actualParsed.RootElement.GetProperty("@odata.context").GetString();
+
+        Assert.Equal($"http://service/odata/$metadata#{expectedContextUrl}", actualContextUrl);
+    }
+
     private static IEdmModel CreateModel()
     {
         var model = new EdmModel();
