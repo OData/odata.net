@@ -11,14 +11,14 @@ internal static class ShortLivedArrayHelpers
 {
     const int StackAllocCharThreshold = 256;
 
-    public static void WriteCharArray<TState>(int maxLength, TState state, SpanAction<char, TState> writeAction)
+    public static void WriteCharArray<TState>(int maxLength, TState state, SpanActionWithRefArg<char, TState> writeAction)
     {
         char[]? allocatedArray = null;
         Span<char> buffer = maxLength <= StackAllocCharThreshold ?
             stackalloc char[maxLength]
             : allocatedArray = ArrayPool<char>.Shared.Rent(maxLength);
 
-        writeAction(buffer[..maxLength], state);
+        writeAction(buffer[..maxLength], in state);
 
         if (allocatedArray != null)
         {
@@ -31,4 +31,4 @@ internal static class ShortLivedArrayHelpers
 // and could be more efficient for passing large structs by ref instead
 // of copies, since we're passing multiple values in a tuple in most scenarios.
 // However, using parameter modifies in lambda functions is still in preview.
-//delegate void SpanActionWithRefArg<T, TArg>(Span<T> span, in TArg arg);
+delegate void SpanActionWithRefArg<T, TArg>(Span<T> span, in TArg arg);

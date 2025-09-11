@@ -18,6 +18,7 @@ public class ContextUrlWriterTests
     [InlineData("users", "Users")]
     [InlineData("Users?$select=Id,Name", "Users(Id,Name)")]
     [InlineData("Users?$select=Id,Name,Address", "Users(Id,Name,Address)")]
+    [InlineData("Users?$select=id, name, address", "Users(Id,Name,Address)")]
     [InlineData("Users?$select=*", "Users(*)")]
     [InlineData("Users?$expand=Files", "Users(Files())")]
     [InlineData("Users?$select=Id,Name,Address&$expand=Files", "Users(Id,Name,Address,Files())")]

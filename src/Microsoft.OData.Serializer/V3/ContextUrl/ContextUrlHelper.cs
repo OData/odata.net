@@ -122,15 +122,19 @@ internal static class ContextUrlHelper
 
         (string AbsoluteUri, string SegmentName, Utf8JsonWriter Writer) state = (absoluteUri, segment.EntitySet.Name, jsonWriter);
 
-        ShortLivedArrayHelpers.WriteCharArray(totalLength, state, static (uriStringBuffer, state) =>
+        // Cannot use a lambda action since we need to pass an in parameter
+        // Parameter modifiers in lambdas are still in preview
+        ShortLivedArrayHelpers.WriteCharArray(totalLength, state, WriteContextUrl);
+
+        static void WriteContextUrl(Span<char> buffer, in (string AbsoluteUri, string SegmentName, Utf8JsonWriter Writer) state)
         {
-            var builder = new SpanStringBuilder(uriStringBuffer);
+            var builder = new SpanStringBuilder(buffer);
             builder.Append(state.AbsoluteUri);
             builder.Append(metadata);
             builder.Append(state.SegmentName);
 
             state.Writer.WriteString("@odata.context"u8, builder.WrittenSpan);
-        });
+        }
 
         return true;
     }
@@ -284,7 +288,18 @@ internal static class ContextUrlHelper
             Utf8JsonWriter Writer
         ) state = (absoluteUri, entitySet.EntitySet.Name, hasWildcard, selectedProperties, expandedProperties, writer);
 
-        ShortLivedArrayHelpers.WriteCharArray(totalStringLength, state, static (buffer, state) =>
+        ShortLivedArrayHelpers.WriteCharArray(totalStringLength, state, WriteContextUrl);
+
+        static void WriteContextUrl(
+            Span<char> buffer,
+            in (
+                string ServiceRoot,
+                string EntitySet,
+                bool HasWildCard,
+                InlineStringList10 SelectedProperties,
+                InlineStringList10 ExpandedProperties,
+                Utf8JsonWriter Writer
+            ) state)
         {
             var builder = new SpanStringBuilder(buffer);
             builder.Append(state.ServiceRoot);
@@ -293,7 +308,7 @@ internal static class ContextUrlHelper
 
             bool hasSelect = state.HasWildCard || state.SelectedProperties.Length > 0;
 
-            if (hasSelect|| state.ExpandedProperties.Length > 0)
+            if (hasSelect || state.ExpandedProperties.Length > 0)
             {
                 builder.Append('(');
 
@@ -335,7 +350,7 @@ internal static class ContextUrlHelper
             }
 
             state.Writer.WriteString("@odata.context"u8, builder.WrittenSpan);
-        });
+        }
 
         return true;
     }
