@@ -19,11 +19,13 @@ internal class ODataJsonWriterProvider<TCustomState>(ODataSerializerOptions<TCus
     private static readonly ODataJsonInt32Writer<TCustomState> int32Writer = new();
     private static readonly ODataJsonStringWriter<TCustomState> stringWriter = new();
     private static readonly ODataJsonDateTimeWriter<TCustomState> dateTimeWriter = new();
+    private static readonly ODataJsonDoubleWriter<TCustomState> doubleWriter = new();
     private static readonly ODataJsonDecimalWriter<TCustomState> decimalWriter = new();
     private static readonly ODataJsonByteArrayWriter<TCustomState> byteArrayWriter = new();
     private static readonly ODataJsonUriWriter<TCustomState> uriWriter = new();
     private static readonly ODataJsonPipeReaderBinaryWriter<TCustomState> pipeReaderWriter = new();
     private static readonly ODataJsonBufferedReaderBinaryWriter<TCustomState> bufferedReaderBinaryWriter = new();
+    
 
 
     private static Dictionary<Type, IODataWriter> simpleWriters = InitPrimitiveWriters();
@@ -92,13 +94,14 @@ internal class ODataJsonWriterProvider<TCustomState>(ODataSerializerOptions<TCus
 
     private static Dictionary<Type, IODataWriter> InitPrimitiveWriters()
     {
-        const int NumSimpleWriters = 9; // Update this when adding more writers. Keeps the dict size exact.
+        const int NumSimpleWriters = 10; // Update this when adding more writers. Keeps the dict size exact.
         Dictionary<Type, IODataWriter> writers = new(NumSimpleWriters);
 
         Add(boolWriter);
         Add(int32Writer);
         Add(stringWriter);
         Add(dateTimeWriter);
+        Add(doubleWriter);
         Add(decimalWriter);
         Add(byteArrayWriter);
         Add(uriWriter);

@@ -20,7 +20,7 @@ internal class ODataResourceJsonWriter<T, TCustomState>(ODataTypeInfo<T, TCustom
 {
     public override bool Write(T value, ODataWriterState<TCustomState> state)
     {
-        Adapters.ODataPropertyInfo? parentProperty = state.Stack.Current.PropertyInfo;
+        Adapters.ODataPropertyInfo? parentProperty = state.IsTopLevel() ? null : state.Stack.Current.PropertyInfo;
 
         // if we're resuming, then we should not push the stack again.
         // but how do we know if we're resuming?
