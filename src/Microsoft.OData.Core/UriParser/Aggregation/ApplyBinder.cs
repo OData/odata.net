@@ -288,7 +288,7 @@ namespace Microsoft.OData.UriParser.Aggregation
                 }
 
                 IEdmTypeReference parameterType = candidate.Value.ArgumentTypes[0];
-                if (CanPromotParameterTo(expressionType, parameterType))
+                if (CanPromoteParameterTo(expressionType, parameterType))
                 {
                     // First match wins.
                     return candidate.Value.ReturnType;
@@ -302,7 +302,7 @@ namespace Microsoft.OData.UriParser.Aggregation
         /// <param name="sourceType">The actual argument type.</param>
         /// <param name="targetType">The required type to promote to.</param>
         /// <returns>True if the <paramref name="sourceType"/> could be promoted; otherwise false.</returns>
-        private static bool CanPromotParameterTo(IEdmTypeReference sourceType, IEdmTypeReference targetType)
+        private static bool CanPromoteParameterTo(IEdmTypeReference sourceType, IEdmTypeReference targetType)
         {
             Debug.Assert(sourceType != null, "sourceType != null");
             Debug.Assert(targetType != null, "targetType != null");
