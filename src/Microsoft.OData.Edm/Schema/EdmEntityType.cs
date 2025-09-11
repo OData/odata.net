@@ -4,10 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-
 namespace Microsoft.OData.Edm
 {
     /// <summary>
@@ -19,7 +15,7 @@ namespace Microsoft.OData.Edm
         private readonly string name;
         private readonly string fullName;
         private readonly bool hasStream;
-        private List<IEdmStructuralProperty> declaredKey;
+        private List<IEdmPropertyRef> declaredKeyRef;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EdmEntityType"/> class.
@@ -79,7 +75,7 @@ namespace Microsoft.OData.Edm
         /// <summary>
         /// Gets the structural properties of the entity type that make up the entity key.
         /// </summary>
-        public virtual IEnumerable<IEdmStructuralProperty> DeclaredKey
+        public virtual IEnumerable<IEdmPropertyRef> DeclaredKeyRef
         {
             get { return this.declaredKey; }
         }
@@ -137,9 +133,37 @@ namespace Microsoft.OData.Edm
         /// Adds the <paramref name="keyProperties"/> to the key of this entity type.
         /// </summary>
         /// <param name="keyProperties">The key properties.</param>
+        public void AddKeys(params IEdmPropertyRef[] keyProperties)
+        {
+            this.AddKeys((IEnumerable<IEdmPropertyRef>)keyProperties);
+        }
+
+        /// <summary>
+        /// Adds the <paramref name="keyProperties"/> to the key of this entity type.
+        /// </summary>
+        /// <param name="keyProperties">The key properties.</param>
+        public void AddKeys(IEnumerable<IEdmPropertyRef> keyProperties)
+        {
+            EdmUtil.CheckArgumentNull(keyProperties, "keyProperties");
+
+            foreach (IEdmPropertyRef key in keyProperties)
+            {
+                if (this.declaredKeyRef == null)
+                {
+                    this.declaredKeyRef = new List<IEdmPropertyRef>();
+                }
+
+                this.declaredKeyRef.Add(key);
+            }
+        }
+
+        /// <summary>
+        /// Adds the <paramref name="keyProperties"/> to the key of this entity type.
+        /// </summary>
+        /// <param name="keyProperties">The key properties without alais.</param>
         public void AddKeys(params IEdmStructuralProperty[] keyProperties)
         {
-            this.AddKeys((IEnumerable<IEdmStructuralProperty>)keyProperties);
+            this.AddKeys(keyProperties.Select(k => new EdmPropertyRef(k)));
         }
 
         /// <summary>
@@ -149,16 +173,7 @@ namespace Microsoft.OData.Edm
         public void AddKeys(IEnumerable<IEdmStructuralProperty> keyProperties)
         {
             EdmUtil.CheckArgumentNull(keyProperties, "keyProperties");
-
-            foreach (IEdmStructuralProperty property in keyProperties)
-            {
-                if (this.declaredKey == null)
-                {
-                    this.declaredKey = new List<IEdmStructuralProperty>();
-                }
-
-                this.declaredKey.Add(property);
-            }
+            this.AddKeys(keyProperties.Select(k => new EdmPropertyRef(k)));
         }
 
         /// <summary>
