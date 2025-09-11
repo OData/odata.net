@@ -11,7 +11,7 @@ internal static class ShortLivedArrayHelpers
 {
     const int StackAllocCharThreshold = 256;
 
-    public static void WriteCharArray<TState>(int maxLength, TState state, SpanActionWithRefArg<char, TState> writeAction)
+    public static void CreateCharArray<TState>(int maxLength, TState state, SpanActionWithRefArg<char, TState> writeAction)
     {
         char[]? allocatedArray = null;
         Span<char> buffer = maxLength <= StackAllocCharThreshold ?
@@ -27,8 +27,8 @@ internal static class ShortLivedArrayHelpers
     }
 }
 
-// TODO: this would allow us to pass the TArg as an in parameter, i.e. by ref
-// and could be more efficient for passing large structs by ref instead
-// of copies, since we're passing multiple values in a tuple in most scenarios.
-// However, using parameter modifies in lambda functions is still in preview.
+// TODO: using this custom delegate instead of System.Buffers.SpanAction<T, TArg>
+// so that I can pass the custom state by ref using in keyword since
+// we mostly use tuples with multiple properties to pass the state.
+// TODO: should do some benchmarks to see whether this actually improves things.
 delegate void SpanActionWithRefArg<T, TArg>(Span<T> span, in TArg arg);

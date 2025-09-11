@@ -124,7 +124,7 @@ internal static class ContextUrlHelper
 
         // Cannot use a lambda action since we need to pass an in parameter
         // Parameter modifiers in lambdas are still in preview
-        ShortLivedArrayHelpers.WriteCharArray(totalLength, state, WriteContextUrl);
+        ShortLivedArrayHelpers.CreateCharArray(totalLength, state, WriteContextUrl);
 
         static void WriteContextUrl(Span<char> buffer, in (string AbsoluteUri, string SegmentName, Utf8JsonWriter Writer) state)
         {
@@ -288,7 +288,7 @@ internal static class ContextUrlHelper
             Utf8JsonWriter Writer
         ) state = (absoluteUri, entitySet.EntitySet.Name, hasWildcard, selectedProperties, expandedProperties, writer);
 
-        ShortLivedArrayHelpers.WriteCharArray(totalStringLength, state, WriteContextUrl);
+        ShortLivedArrayHelpers.CreateCharArray(totalStringLength, state, WriteContextUrl);
 
         static void WriteContextUrl(
             Span<char> buffer,

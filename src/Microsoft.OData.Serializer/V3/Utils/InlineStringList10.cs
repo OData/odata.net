@@ -8,6 +8,10 @@ using System.Threading.Tasks;
 
 namespace Microsoft.OData.Serializer.V3.Utils;
 
+/// <summary>
+/// Small inline zero-allocation that stores up to 10 strings.
+/// 
+/// </summary>
 internal struct InlineStringList10
 {
     private InlineStringArray10 _array;

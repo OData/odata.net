@@ -61,6 +61,67 @@ public class ContextUrlWriterTests
         Assert.Equal($"http://service/odata/$metadata#{expectedContextUrl}", actualContextUrl);
     }
 
+    [Theory]
+    [InlineData("Users('id')", "Users/$entity")]
+    [InlineData("users('id')", "Users/$entity")]
+    [InlineData("Users('id')?$select=Id,Name", "Users(Id,Name)/$entity")]
+    [InlineData("Users('id')?$select=Id,Name,Address", "Users(Id,Name,Address)/$entity")]
+    [InlineData("Users('id')?$select=id, name, address", "Users(Id,Name,Address)/$entity")]
+    [InlineData("Users('id')?$select=*", "Users(*)/$entity")]
+    [InlineData("Users('id')?$expand=Files", "Users(Files())/$entity")]
+    [InlineData("Users('id')?$select=Id,Name,Address&$expand=Files", "Users(Id,Name,Address,Files())/$entity")]
+    [InlineData("Users('id')?$expand=Files($select=Id,FileName)", "Users(Files(Id,FileName))/$entity")]
+    [InlineData("Users('id')?$select=Name,Address/Coordinates", "Users(Name,Address/Coordinates)/$entity")]
+    [InlineData("Users('id')?$select=Name,Address/Coordinates,Address", "Users(Name,Address)/$entity")]
+    [InlineData("Users('id')?$select=Name,Address/Coordinates/Longitude,Address/City,Address/Coordinates", "Users(Name,Address/City,Address/Coordinates)/$entity")]
+    [InlineData("Users('id')?$select=Name,*,Address/Coordinates/Longitude,Address/City,Address/Coordinates", "Users(*)/$entity")]
+    [InlineData("Users('id')?$select=Id,Name&$expand=Files($select=Id,FileName)", "Users(Id,Name,Files(Id,FileName))/$entity")]
+    [InlineData("Users('id')?$select=*$expand=Files($select=Id,FileName)", "Users(*,Files(Id,FileName))/$entity")]
+    [InlineData("Users('id')?$select=Name&$expand=Files($select=*;$expand=Stats)", "Users(Name,Files(*,Stats()))/$entity")]
+    public async Task WritesCorrectContextUrl_WhenResponseIsEntityFromEntitySet(string requestUrl, string expectedContextUrl)
+    {
+        var user = new User
+        {
+            Id = "id",
+            Name = "Name",
+            Address = new Address
+            {
+                Street = "123 Main St",
+                City = "Metropolis",
+                Coordinates = new Coordinates
+                {
+                    Latitude = 40.7128,
+                    Longitude = -74.0060
+                }
+            },
+            Files = []
+        };
+
+
+        var options = new ODataSerializerOptions();
+        var output = new MemoryStream();
+
+        var model = CreateModel();
+        var uriParser = new ODataUriParser(
+            model,
+            new Uri("http://service/odata"),
+            new Uri(requestUrl, UriKind.Relative)
+        )
+        {
+            Resolver = new UnqualifiedODataUriResolver { EnableCaseInsensitive = true }
+        };
+        var odataUri = uriParser.ParseUri();
+
+        await ODataSerializer.WriteAsync(user, output, odataUri, model, options);
+
+        output.Position = 0;
+
+        var actual = new StreamReader(output).ReadToEnd();
+        var actualParsed = JsonDocument.Parse(actual);
+        var actualContextUrl = actualParsed.RootElement.GetProperty("@odata.context").GetString();
+
+        Assert.Equal($"http://service/odata/$metadata#{expectedContextUrl}", actualContextUrl);
+    }
 
     private static IEdmModel CreateModel()
     {
