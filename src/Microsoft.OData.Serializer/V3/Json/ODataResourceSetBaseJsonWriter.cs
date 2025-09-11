@@ -190,7 +190,7 @@ public abstract class ODataResourceSetBaseJsonWriter<TCollection, TElement, TCus
     {
         if (state.PayloadKind == ODataPayloadKind.ResourceSet && state.IsTopLevel())
         {
-            ContextUrlHelper.WriteContextUrlProperty(state.PayloadKind, state.ODataUri, state.JsonWriter);
+            ContextUrlWriter.WriteContextUrlProperty(state.PayloadKind, state.ODataUri, state.JsonWriter);
         }
 
         // TODO: nested context and other payload kinds

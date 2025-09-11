@@ -302,7 +302,7 @@ internal class ODataResourceJsonWriter<T, TCustomState>(ODataTypeInfo<T, TCustom
     private static void WriteContextUrl(ODataWriterState<TCustomState> state)
     {
         var jsonWriter = state.JsonWriter;
-        ContextUrlHelper.WriteContextUrlProperty(state.PayloadKind, state.ODataUri, state.JsonWriter);
+        ContextUrlWriter.WriteContextUrlProperty(state.PayloadKind, state.ODataUri, state.JsonWriter);
     }
 
     private void WriteId(T value, ODataWriterState<TCustomState> state)

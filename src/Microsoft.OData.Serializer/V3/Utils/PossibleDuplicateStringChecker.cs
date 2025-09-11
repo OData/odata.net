@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Microsoft.OData.Serializer.V3.Utils;
 
-internal struct PossibleDuplicateStringChecker(StringComparison comparison = default)
+internal struct PossibleDuplicateStringChecker()
 {
     const int NumBuckets = sizeof(ulong);
     private ulong _buckets;
@@ -20,7 +20,7 @@ internal struct PossibleDuplicateStringChecker(StringComparison comparison = def
     /// <returns></returns>
     public bool TryAdd(string item)
     {
-        int hash = item.GetHashCode(comparison) & 0x7FFFFFFF; // avoid negative hash codes
+        int hash = item.GetHashCode() & 0x7FFFFFFF; // avoid negative hash codes otherwise we'll get negative modulo
         int bucket = hash % NumBuckets;
         ulong mask = 1UL << bucket;
 

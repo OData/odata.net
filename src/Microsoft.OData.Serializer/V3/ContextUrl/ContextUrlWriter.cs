@@ -11,7 +11,7 @@ using System.Text.Json;
 
 namespace Microsoft.OData.Serializer.V3.ContextUrl;
 
-internal static class ContextUrlHelper
+internal static class ContextUrlWriter
 {
     public static void WriteContextUrlProperty(ODataPayloadKind payloadKind, ODataUri uri, Utf8JsonWriter jsonWriter)
     {
@@ -127,12 +127,12 @@ internal static class ContextUrlHelper
 
     internal static bool TryWriteContextUrlPropertyForSimpleResourceSet(ODataUri odataUri, ODataPathRange path, Utf8JsonWriter jsonWriter, string appendFragment = "")
     {
-        if (odataUri.SelectAndExpand == null)
+        if (odataUri.SelectAndExpand != null)
         {
             return false;
         }
 
-        if (odataUri.Apply == null)
+        if (odataUri.Apply != null)
         {
             return false;
         }
@@ -143,12 +143,15 @@ internal static class ContextUrlHelper
         for (int i = 0; i < path.Count; i++)
         {
             var segment = path[i];
-            if (!segments.TryAdd(segment.Identifier))
+
+            // TODO: this method might allocate and should be refactored!
+            var segmentText = GetTextForSegment(segment);
+            if (!segments.TryAdd(segmentText))
             {
                 return false;
             }
 
-            runningSegmentsLength += segment.Identifier.Length;
+            runningSegmentsLength += segmentText.Length;
         }
 
         var absoluteUri = odataUri.ServiceRoot?.AbsoluteUri ?? string.Empty;
@@ -158,15 +161,9 @@ internal static class ContextUrlHelper
         int totalLength = absoluteUri.Length + metadata.Length + appendFragment.Length;
         totalLength += runningSegmentsLength + (path.Count - 1); // segments and the separators between them
 
-        (
-            InlineStringList10 Segments,
-            string AbsoluteUri,
-            string AppendFragment,
-            Utf8JsonWriter Writer) state = (segments, absoluteUri, appendFragment, jsonWriter);
-
         // Cannot use a lambda action since we need to pass an in parameter
         // Parameter modifiers in lambdas are still in preview
-        ShortLivedArrayHelpers.CreateCharArray(totalLength, state, WriteContextUrl);
+        ShortLivedArrayHelpers.CreateCharArray(totalLength, (segments, absoluteUri, appendFragment, jsonWriter), WriteContextUrl);
 
         static void WriteContextUrl(
             Span<char> buffer,
@@ -179,7 +176,14 @@ internal static class ContextUrlHelper
             builder.Append(state.Segments[0]);
             for (int i = 1; i < state.Segments.Length; i++)
             {
-                builder.Append('/');
+                // Since we conditionally append '/',
+                // we might end up using fewer chars than "totalLength",
+                // but that's okay
+                if (state.Segments[i][0] != '(') // don't add separator before key segment
+                {
+                    builder.Append('/');
+                }
+
                 builder.Append(state.Segments[i]);
             }
 
@@ -709,11 +713,19 @@ internal static class ContextUrlHelper
             && odataUri.Apply == null;
     }
 
-    private static bool IsSimpleResourceSet(ODataUri odataUri, ODataPathRange path)
+    private static string GetTextForSegment(ODataPathSegment segment)
     {
-        return path.Count > 0
-            && path[^1].EdmType.TypeKind == EdmTypeKind.Collection
-            && odataUri.SelectAndExpand == null
-            && odataUri.Apply == null;
+        return segment switch
+        {
+            EntitySetSegment entitySet => entitySet.EntitySet.Name,
+            NavigationPropertySegment navSeg => navSeg.NavigationProperty.Name,
+            PropertySegment prop => prop.Property.Name,
+            SingletonSegment singleton => singleton.Singleton.Name,
+            // TODO we support only single key for now
+            // TODO: BAD, avoid this alloc. Might need refactor.
+            // TODO: Need to make sure key is escaped properly
+            KeySegment key => $"('{key.Keys.First().Value}')",
+            _ => segment.Identifier
+        };
     }
 }
