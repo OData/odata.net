@@ -13,6 +13,8 @@ namespace Microsoft.OData.Serializer.V3.ContextUrl;
 
 internal static class ContextUrlWriter
 {
+    // TODO: should consult spec https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_ContextURL
+    // and reference implementation in old OData library to make sure we cover all cases correctly
     public static void WriteContextUrlProperty(ODataPayloadKind payloadKind, ODataUri uri, Utf8JsonWriter jsonWriter)
     {
         switch (payloadKind)
@@ -144,6 +146,9 @@ internal static class ContextUrlWriter
         var segments = new InlineStringList10();
         int runningSegmentsLength = 0;
 
+        // TODO: Here we're using the path in the URL as the context URL path,
+        // but we should use the canonical path instead (e.g. in case this
+        // is a non-contained navigation property with a navigation binding path)
         for (int i = 0; i < path.Count; i++)
         {
             var segment = path[i];
