@@ -123,6 +123,43 @@ public class ContextUrlWriterTests
         Assert.Equal($"http://service/odata/$metadata#{expectedContextUrl}", actualContextUrl);
     }
 
+    [Theory]
+    [InlineData("Users('id')/Files", "Users('id')/Files")]
+    [InlineData("users('id')/files", "Users('id')/Files")]
+    [InlineData("Users('id')/Files?$select=Id,FileName", "Users('id')/Files(Id,FileName)")]
+    [InlineData("Users('id')/Files?$select=Id,FileName,*", "Users('id')/Files(*)")]
+    [InlineData("Users('id')/Files?$select=Id,FileName&$expand=ActivityStats", "Users('id')/Files(Id,FileName,ActivityStats())")]
+    [InlineData("Users('id')/Files?$expand=ActivityStats", "Users('id')/Files(ActivityStats())")]
+    public async Task WritesCorrectContextUrl_WhenResponseIsContainedCollectionNavigationProperty(string requestUrl, string expectedContextUrl)
+    {
+        List<FileItem> files = [];
+
+
+        var options = new ODataSerializerOptions();
+        var output = new MemoryStream();
+
+        var model = CreateModel();
+        var uriParser = new ODataUriParser(
+            model,
+            new Uri("http://service/odata"),
+            new Uri(requestUrl, UriKind.Relative)
+        )
+        {
+            Resolver = new UnqualifiedODataUriResolver { EnableCaseInsensitive = true }
+        };
+        var odataUri = uriParser.ParseUri();
+
+        await ODataSerializer.WriteAsync(files, output, odataUri, model, options);
+
+        output.Position = 0;
+
+        var actual = new StreamReader(output).ReadToEnd();
+        var actualParsed = JsonDocument.Parse(actual);
+        var actualContextUrl = actualParsed.RootElement.GetProperty("@odata.context").GetString();
+
+        Assert.Equal($"http://service/odata/$metadata#{expectedContextUrl}", actualContextUrl);
+    }
+
     private static IEdmModel CreateModel()
     {
         var model = new EdmModel();
