@@ -13,7 +13,7 @@ namespace Microsoft.OData.Serializer.V3.Utils;
 /// starting from the beginning of the path up
 /// to the specified number of segments.
 /// </summary>
-internal ref struct ODataPathRange(ODataPath path, int count)
+internal struct ODataPathRange(ODataPath path, int count)
 {
     public int Count { get; } = count;
     public ODataPathSegment this[int index]

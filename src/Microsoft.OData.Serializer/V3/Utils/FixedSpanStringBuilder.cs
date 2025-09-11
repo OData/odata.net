@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Microsoft.OData.Serializer.V3.Utils;
 
-internal ref struct SpanStringBuilder(Span<char> buffer)
+internal ref struct FixedSpanStringBuilder(Span<char> buffer)
 {
     Span<char> _buffer = buffer;
     private int _pos = 0;

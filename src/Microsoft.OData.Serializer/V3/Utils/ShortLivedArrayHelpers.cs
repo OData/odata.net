@@ -11,7 +11,7 @@ internal static class ShortLivedArrayHelpers
 {
     const int StackAllocCharThreshold = 256;
 
-    public static void CreateCharArray<TState>(int maxLength, TState state, SpanActionWithRefArg<char, TState> writeAction)
+    public static void CreateCharArray<TState>(int maxLength, in TState state, SpanActionWithRefArg<char, TState> writeAction)
     {
         char[]? allocatedArray = null;
         Span<char> buffer = maxLength <= StackAllocCharThreshold ?
@@ -31,4 +31,4 @@ internal static class ShortLivedArrayHelpers
 // so that I can pass the custom state by ref using in keyword since
 // we mostly use tuples with multiple properties to pass the state.
 // TODO: should do some benchmarks to see whether this actually improves things.
-delegate void SpanActionWithRefArg<T, TArg>(Span<T> span, in TArg arg);
+delegate void SpanActionWithRefArg<T, TArg>(Span<T> span, in TArg arg); // TODO: allow ref struct in .NET 10
