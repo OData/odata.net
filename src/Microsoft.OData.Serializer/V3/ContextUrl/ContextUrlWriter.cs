@@ -53,6 +53,10 @@ internal static class ContextUrlWriter
         {
             return;
         }
+        else if (TryWriteContextUrlPropertyForResourcesetSetWithSimpleSelectExpand(odataUri, path, jsonWriter, appendFragment))
+        {
+            return;
+        }
 
         FallbackWriteContextUrl(odataUri, path, jsonWriter, appendFragment);
     }
@@ -442,6 +446,23 @@ internal static class ContextUrlWriter
         int runningExpandLength = 0;
         int runningSelectLength = 0;
 
+        var segments = new InlineStringList10();
+        int runningSegmentsLength = 0;
+
+        for (int i = 0; i < path.Count; i++)
+        {
+            var segment = path[i];
+
+            // TODO: this method might allocate and should be refactored!
+            var segmentText = GetTextForSegment(segment);
+            if (!segments.TryAdd(segmentText))
+            {
+                return false;
+            }
+
+            runningSegmentsLength += segmentText.Length;
+        }
+
         foreach (var selectItem in odataUri.SelectAndExpand.SelectedItems)
         {
             // Check for nested selects
@@ -520,16 +541,8 @@ internal static class ContextUrlWriter
             }
         }
 
-        int totalStringLength = absoluteUri.Length + appendFragment.Length;
-
-        // TODO: This is naive and incorrect since it writes the identifiers
-        // from the url, instead of from the model.
-        totalStringLength += path[0].Identifier.Length;
-        for (int i = 0; i < path.Count; i++)
-        {
-            totalStringLength += path[i].Identifier.Length;
-            totalStringLength += 1; // for the separator
-        }
+        int totalStringLength = absoluteUri.Length + metadata.Length + appendFragment.Length;
+        totalStringLength += runningSegmentsLength + (segments.Length - 1); // segments and the separators between them
 
         if (runningExpandLength + runningSelectLength > 0 || hasWildcard)
         {
@@ -567,15 +580,15 @@ internal static class ContextUrlWriter
         // we create a custom ref struct state and store references to the properties lists.
         ShortLivedArrayHelpers.CreateCharArray(
             totalStringLength,
-            (selectedProperties, expandedProperties, path, absoluteUri, appendFragment, hasWildcard, writer),
+            (segments, selectedProperties, expandedProperties, absoluteUri, appendFragment, hasWildcard, writer),
             WriteContextUrl);
 
         static void WriteContextUrl(
             Span<char> buffer,
             in (
+                InlineStringList10 Segments,
                 InlineStringList10 SelectedProperties,
                 InlineStringList10 ExpandedProperties,
-                ODataPathRange Path,
                 string ServiceRoot,
                 string AppendFragment,
                 bool HasWildCard,
@@ -586,11 +599,15 @@ internal static class ContextUrlWriter
             builder.Append(state.ServiceRoot);
             builder.Append(metadata);
 
-            builder.Append(state.Path[0].Identifier);
-            for (int i = 0; i < state.Path.Count; i++)
+            builder.Append(state.Segments[0]);
+            for (int i = 1; i < state.Segments.Length; i++)
             {
-                builder.Append('/');
-                builder.Append(state.Path[i].Identifier);
+                if (state.Segments[i][0] != '(') // don't add separator before key segment)
+                {
+                    builder.Append('/');
+                }
+
+                builder.Append(state.Segments[i]);
             }
 
             bool hasSelect = state.HasWildCard || state.SelectedProperties.Length > 0;

@@ -175,7 +175,7 @@ public class ContextUrlWriterTests
         fileType.AddStructuralProperty("Extension", EdmPrimitiveTypeKind.String);
         fileType.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo
         {
-            Name = "Stats",
+            Name = "ActivityStats",
             Target = activityStatType,
             TargetMultiplicity = EdmMultiplicity.Many,
             ContainsTarget = true
