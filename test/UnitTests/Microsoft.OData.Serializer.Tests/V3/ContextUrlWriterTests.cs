@@ -17,16 +17,18 @@ public class ContextUrlWriterTests
     [InlineData("Users", "Users")]
     [InlineData("users", "Users")]
     [InlineData("Users?$select=Id,Name", "Users(Id,Name)")]
+    [InlineData("Users?$select=Id,Name,Address", "Users(Id,Name,Address)")]
     [InlineData("Users?$select=*", "Users(*)")]
     [InlineData("Users?$expand=Files", "Users(Files())")]
+    [InlineData("Users?$select=Id,Name,Address&$expand=Files", "Users(Id,Name,Address,Files())")]
     [InlineData("Users?$expand=Files($select=Id,FileName)", "Users(Files(Id,FileName))")]
     [InlineData("Users?$select=Name,Address/Coordinates", "Users(Name,Address/Coordinates)")]
     [InlineData("Users?$select=Name,Address/Coordinates,Address", "Users(Name,Address)")]
     [InlineData("Users?$select=Name,Address/Coordinates/Longitude,Address/City,Address/Coordinates", "Users(Name,Address/City,Address/Coordinates)")]
     [InlineData("Users?$select=Name,*,Address/Coordinates/Longitude,Address/City,Address/Coordinates", "Users(*)")]
-    [InlineData("Users?$select=Id,Name$expand=Files($select=Id,FileName)", "Users(Id,Name,Files(Id,FileName))")]
+    [InlineData("Users?$select=Id,Name&$expand=Files($select=Id,FileName)", "Users(Id,Name,Files(Id,FileName))")]
     [InlineData("Users?$select=*$expand=Files($select=Id,FileName)", "Users(*,Files(Id,FileName))")]
-    [InlineData("Users?$select=Name$expand=Files($select=*;$expand=Stats)", "Users(Name,Files(*,Stats()))")]
+    [InlineData("Users?$select=Name&$expand=Files($select=*;$expand=Stats)", "Users(Name,Files(*,Stats()))")]
 
     public async Task WritesCorrectContextUrl_WhenResponseIsEntitySet(string requestUrl, string expectedContextUrl)
     {

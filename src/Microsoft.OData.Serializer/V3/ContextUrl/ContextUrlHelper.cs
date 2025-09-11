@@ -129,7 +129,7 @@ internal static class ContextUrlHelper
             builder.Append(metadata);
             builder.Append(state.SegmentName);
 
-            state.Writer.WriteString("@odata.context", builder.WrittenSpan);
+            state.Writer.WriteString("@odata.context"u8, builder.WrittenSpan);
         });
 
         return true;
@@ -205,7 +205,7 @@ internal static class ContextUrlHelper
                     return false;
                 }
 
-                if (pathSelectItem.SelectAndExpand != null)
+                if (pathSelectItem.SelectAndExpand.SelectedItems.Any())
                 {
                     return false;
                 }
