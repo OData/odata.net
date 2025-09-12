@@ -5,6 +5,7 @@
 //---------------------------------------------------------------------
 
 using System;
+using Microsoft.OData.Edm;
 using Microsoft.OData.Tests.ScenarioTests.UriBuilder;
 using Microsoft.OData.Tests.UriParser;
 using Microsoft.OData.UriParser;
@@ -39,6 +40,30 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriBuilder
 
             Uri result = odataUri.BuildUri(ODataUrlKeyDelimiter.Parentheses);
             Assert.Equal(query, Uri.UnescapeDataString(result.OriginalString));
+        }
+
+        [Fact]
+        public void BuildUrlWithApplyAggregateOnCollectionProperty()
+        {
+            string customFunctionName = "NS.UnionDate";
+            string query = $"http://gobbledygook/People?$apply=aggregate(MyDates with {customFunctionName} as UnionDate)";
+
+            try
+            {
+                var argument = EdmCoreModel.GetCollection(EdmCoreModel.Instance.GetDate(/*isNullable*/false));
+                var existingCustomFunctionSignature = new FunctionSignatureWithReturnType(argument, argument);
+                CustomUriFunctions.AddCustomUriFunction(customFunctionName, existingCustomFunctionSignature);
+
+                var parser = new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, new Uri(query));
+                ODataUri odataUri = parser.ParseUri();
+
+                Uri result = odataUri.BuildUri(ODataUrlKeyDelimiter.Parentheses);
+                Assert.Equal(query, Uri.UnescapeDataString(result.OriginalString));
+            }
+            finally
+            {
+                CustomUriFunctions.RemoveCustomUriFunction(customFunctionName);
+            }
         }
     }
 }

@@ -18,7 +18,10 @@ namespace Microsoft.OData.UriParser.Aggregation
         PropertyAggregate = 1,
 
         /// <summary>Aggregation of a entity set property.</summary>
-        EntitySetAggregate = 2
+        EntitySetAggregate = 2,
+
+        /// <summary>Aggregation of a collection value property.</summary>
+        CollectionPropertyAggregate = 3
     }
 
     /// <summary>
