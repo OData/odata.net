@@ -53,6 +53,11 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             get { return this.operationReturn; }
         }
 
+        public IEdmOperationReturn Return
+        {
+            get { return this.operationReturn; }
+        }
+
         public IEnumerable<IEdmOperationParameter> Parameters
         {
             get { return Enumerable.Empty<IEdmOperationParameter>(); }
