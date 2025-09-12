@@ -19,6 +19,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         private readonly string name;
         private readonly string fullName;
         private readonly IEdmTypeReference returnType;
+        private readonly IEdmOperationReturn operationReturn;
 
         public UnresolvedOperation(string qualifiedName, string errorMessage, EdmLocation location)
             : base(new EdmError[] { new EdmError(location, EdmErrorCode.BadUnresolvedOperation, errorMessage) })
@@ -26,6 +27,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             qualifiedName = qualifiedName ?? string.Empty;
             EdmUtil.TryGetNamespaceNameFromQualifiedName(qualifiedName, out this.namespaceName, out this.name, out this.fullName);
             this.returnType = new BadTypeReference(new BadType(this.Errors), true);
+            this.operationReturn = new EdmOperationReturn(this, this.returnType);
         }
 
         public string Namespace
@@ -46,9 +48,9 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             get { return this.fullName; }
         }
 
-        public IEdmTypeReference ReturnType
+        public IEdmOperationReturn Return
         {
-            get { return this.returnType; }
+            get { return this.operationReturn; }
         }
 
         public IEnumerable<IEdmOperationParameter> Parameters

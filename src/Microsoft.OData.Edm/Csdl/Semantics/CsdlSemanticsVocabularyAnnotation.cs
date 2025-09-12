@@ -396,9 +396,9 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                         // $ReturnType
                         if (targetSegments[1] == CsdlConstants.OperationReturnExternalTarget)
                         {
-                            if (operation.ReturnType != null)
+                            if (operation.Return?.Type != null)
                             {
-                                return operation.GetReturn();
+                                return operation.Return;
                             }
 
                             return new UnresolvedReturn(operation, this.Location);
@@ -432,9 +432,9 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                             // $ReturnType
                             if (parameterName == CsdlConstants.OperationReturnExternalTarget)
                             {
-                                if (operationImport.Operation.ReturnType != null)
+                                if (operationImport.Operation.Return?.Type != null)
                                 {
-                                    return operationImport.Operation.GetReturn();
+                                    return operationImport.Operation.Return;
                                 }
 
                                 return new UnresolvedReturn(operationImport.Operation, this.Location);

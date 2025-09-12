@@ -507,7 +507,7 @@ namespace Microsoft.OData.Tests.UriParser
             var operation = oneDriveModel.SchemaElements.OfType<IEdmOperation>().FirstOrDefault(o => o.Name == "recent");
             uriParser.ParseDynamicPathSegmentFunc = (previous, identifier, parenthesisExpression) =>
             {
-                var dynamicPathSeg = new DynamicPathSegment(identifier, operation.ReturnType.Definition, containedItemsNav, false);
+                var dynamicPathSeg = new DynamicPathSegment(identifier, operation.Return.Type.Definition, containedItemsNav, false);
 
                 var segments = new List<ODataPathSegment>
                 {
