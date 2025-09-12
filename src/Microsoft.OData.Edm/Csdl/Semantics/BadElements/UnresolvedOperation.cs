@@ -48,11 +48,6 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             get { return this.fullName; }
         }
 
-        public IEdmTypeReference ReturnType
-        {
-            get { return this.returnType; }
-        }
-
         public IEdmOperationReturn Return
         {
             get { return this.operationReturn; }

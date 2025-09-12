@@ -147,7 +147,7 @@ namespace Microsoft.OData.UriParser.Validation.ValidationEngine
             foreach (IEdmOperation operation in segment.Operations)
             {
                 ValidateItem(operation);
-                ValidateItem(operation.Return.Type);
+                ValidateItem(operation.Return?.Type);
             }
         }
 
@@ -167,7 +167,7 @@ namespace Microsoft.OData.UriParser.Validation.ValidationEngine
             foreach (IEdmOperationImport operation in segment.OperationImports)
             {
                 ValidateItem(operation);
-                ValidateItem(operation.Operation.Return.Type);
+                ValidateItem(operation.Operation.Return?.Type);
             }
         }
 

@@ -110,9 +110,8 @@ namespace Microsoft.OData.UriParser
 
             // Determine the return type of the operation. This is only possible if all the candidate operations agree on the return type.
             // TODO: Because we work on types and not type references, if there are nullability differences we'd ignore them...
-            IEdmType typeSoFar = this.operations.First().Return?.Type != null
-                                     ? this.operations.First().Return.Type.Definition
-                                     : null;
+            IEdmOperationReturn firstOperationReturn = this.operations.First().Return;
+            IEdmType typeSoFar = firstOperationReturn?.Type != null ? firstOperationReturn.Type.Definition : null;
             if (typeSoFar == null)
             {
                 // This is for void operations
@@ -121,7 +120,7 @@ namespace Microsoft.OData.UriParser
                     typeSoFar = UnknownSentinel;
                 }
             }
-            else if (this.operations.Any(operationImport => !typeSoFar.IsEquivalentTo(operationImport.Return.Type.Definition)))
+            else if (this.operations.Any(operationImport => !typeSoFar.IsEquivalentTo(operationImport.Return?.Type.Definition)))
             {
                 typeSoFar = UnknownSentinel;
             }

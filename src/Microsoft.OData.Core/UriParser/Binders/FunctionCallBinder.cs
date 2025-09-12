@@ -418,7 +418,7 @@ namespace Microsoft.OData.UriParser
 
             IEnumerable<QueryNode> boundArguments = parsedParameters.Select(p => this.bindMethod(p));
             boundArguments = boundArguments.ToList(); // force enumerable to run : will immediately evaluate all this.bindMethod(p).
-            IEdmTypeReference returnType = function.Return.Type;
+            IEdmTypeReference returnType = function.Return?.Type;
             IEdmEntitySetBase returnSet = null;
             SingleResourceNode singleEntityNode = parent as SingleResourceNode;
             if (singleEntityNode != null)
@@ -428,16 +428,16 @@ namespace Microsoft.OData.UriParser
 
             string functionName = function.FullName();
 
-            if (returnType.IsStructured())
+            if (returnType != null && returnType.IsStructured())
             {
                 boundFunction = new SingleResourceFunctionCallNode(functionName, new[] { function }, boundArguments, returnType.AsStructured(), returnSet, parent);
             }
-            else if (returnType.IsStructuredCollection())
+            else if (returnType != null && returnType.IsStructuredCollection())
             {
                 IEdmCollectionTypeReference collectionTypeReference = (IEdmCollectionTypeReference)returnType;
                 boundFunction = new CollectionResourceFunctionCallNode(functionName, new[] { function }, boundArguments, collectionTypeReference, returnSet, parent);
             }
-            else if (returnType.IsCollection())
+            else if (returnType != null && returnType.IsCollection())
             {
                 IEdmCollectionTypeReference collectionTypeReference = (IEdmCollectionTypeReference)returnType;
                 boundFunction = new CollectionFunctionCallNode(functionName, new[] { function }, boundArguments, collectionTypeReference, parent);
