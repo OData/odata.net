@@ -433,7 +433,7 @@ namespace Microsoft.OData.UriParser
         private static string NormalizeEnumCollectionItems(string bracketLiteralText, string expectedTypeFullName)
         {
             // Remove the '[' and ']' or '(' and ')' and trim the content
-            ReadOnlySpan<char> normalizedText = bracketLiteralText.AsSpan(1, bracketLiteralText.Length - 2).Trim();
+            ReadOnlySpan<char> normalizedText = bracketLiteralText.AsSpan(1, bracketLiteralText.Length - 2);
 
             // Trim leading/trailing whitespace
             int left = 0;
@@ -455,56 +455,51 @@ namespace Microsoft.OData.UriParser
 
             int expectedTypeFullNameLen = string.IsNullOrEmpty(expectedTypeFullName) ? 0 : expectedTypeFullName.Length;
             ReadOnlySpan<char> content = normalizedText.Slice(left, right - left + 1);
-            int start = 0;
+            int startIndex = 0;
             int length = content.Length;
 
-            StringBuilder result = new StringBuilder();
+            StringBuilder result = new StringBuilder(length + 2);
             result.Append('[');
 
-            while (start < length)
+            while (startIndex < length)
             {
-                char currentChar = content[start];
+                char currentChar = content[startIndex];
 
                 if (currentChar == '\'' || currentChar == '"')
                 {
                     // Handle quoted items
-                    char quoteChar = currentChar;
-                    result.Append(quoteChar);
-                    int end = ++start;
-
-                    while (end < length && content[end] != quoteChar)
+                    int relativeEnd = content.Slice(startIndex + 1).IndexOf(currentChar);
+                    if (relativeEnd < 0)
                     {
-                        result.Append(content[end]);
-                        end++;
+                        throw new ODataException(Error.Format("Found unbalanced quotes '{0}'", currentChar));
                     }
 
-                    if (end < length)
-                    {
-                        result.Append(quoteChar);
-                        start = end + 1;
-                    }
+                    // Include closing quote
+                    int endIndex = startIndex + 1 + relativeEnd;
+                    result.Append(content.Slice(startIndex, endIndex - startIndex + 1)); 
+                    startIndex = endIndex + 1;
                 }
                 else if (currentChar == ',')
                 {
                     // Handle commas
                     result.Append(',');
-                    start++;
+                    startIndex++;
                 }
                 else if (char.IsWhiteSpace(currentChar))
                 {
                     // Skip whitespace
-                    start++;
+                    startIndex++;
                 }
                 else
                 {
                     // Handle non-quoted items
-                    int end = start;
+                    int end = startIndex;
                     while (end < length && content[end] != ',' && !char.IsWhiteSpace(content[end]))
                     {
                         end++;
                     }
 
-                    ReadOnlySpan<char> token = content[start..end];
+                    ReadOnlySpan<char> token = content[startIndex..end];
                     if (expectedTypeFullNameLen > 0 && token.Length > expectedTypeFullNameLen && 
                         token.StartsWith(expectedTypeFullName, StringComparison.Ordinal))
                     {
@@ -527,7 +522,7 @@ namespace Microsoft.OData.UriParser
                         result.Append('\'');
                     }
 
-                    start = end;
+                    startIndex = end;
                 }
             }
 

@@ -361,17 +361,17 @@ public class EnumerationTypeQueryTests : EndToEndTestBase<EnumerationTypeQueryTe
     }
 
     [Theory]
-    [InlineData("UserAccess in (0,3,4)", 2, new object[] { AccessLevel.None, AccessLevel.ReadWrite })]
-    [InlineData("UserAccess in ('1',3,'4')", 3, new object[] { AccessLevel.Read, AccessLevel.ReadWrite, AccessLevel.Read })]
-    [InlineData("UserAccess in ('Read', 'ReadWrite','Execute')", 3, new object[] { AccessLevel.Read, AccessLevel.ReadWrite, AccessLevel.Read })]
-    [InlineData("UserAccess in (Microsoft.OData.E2E.TestCommon.Common.Server.Default.AccessLevel'Read', Microsoft.OData.E2E.TestCommon.Common.Server.Default.AccessLevel'ReadWrite')", 3, new object[] { AccessLevel.Read, AccessLevel.ReadWrite, AccessLevel.Read })]
-    [InlineData("UserAccess in (   Microsoft.OData.E2E.TestCommon.Common.Server.Default.AccessLevel'Read',   Microsoft.OData.E2E.TestCommon.Common.Server.Default.AccessLevel'ReadWrite')", 3, new object[] { AccessLevel.Read, AccessLevel.ReadWrite, AccessLevel.Read })]
-    [InlineData("UserAccess in ('Read', 'Read, Write, Execute','Execute')", 3, new object[] { AccessLevel.Read, AccessLevel.ReadWrite | AccessLevel.Execute, AccessLevel.Read })]
-    [InlineData("UserAccess in ('Read', 'Read, Write,    Execute','Execute')", 3, new object[] { AccessLevel.Read, AccessLevel.ReadWrite | AccessLevel.Execute, AccessLevel.Read })]
-    [InlineData("UserAccess in ('None', 'ReadWrite, Execute','Execute')", 2, new object[] { AccessLevel.None, AccessLevel.ReadWrite | AccessLevel.Execute })]
-    [InlineData("UserAccess in ('None', '  ReadWrite, Execute',  'Execute')", 2, new object[] { AccessLevel.None, AccessLevel.ReadWrite | AccessLevel.Execute })]
-    [InlineData("UserAccess in ('Read', 'ReadWrite, Execute')", 3, new object[] { AccessLevel.Read, AccessLevel.ReadWrite | AccessLevel.Execute, AccessLevel.Read })]
-    public async Task QueryFlagsEnumAndVerifyResults_WithInOperator(string filter, int expectedCount, object[] expectedUserAccess)
+    [InlineData("UserAccess in (0,3,4)", new object[] { AccessLevel.None, AccessLevel.ReadWrite })]
+    [InlineData("UserAccess in ('1',3,'4')", new object[] { AccessLevel.Read, AccessLevel.ReadWrite, AccessLevel.Read })]
+    [InlineData("UserAccess in ('Read', 'ReadWrite','Execute')", new object[] { AccessLevel.Read, AccessLevel.ReadWrite, AccessLevel.Read })]
+    [InlineData("UserAccess in (Microsoft.OData.E2E.TestCommon.Common.Server.Default.AccessLevel'Read', Microsoft.OData.E2E.TestCommon.Common.Server.Default.AccessLevel'ReadWrite')", new object[] { AccessLevel.Read, AccessLevel.ReadWrite, AccessLevel.Read })]
+    [InlineData("UserAccess in (   Microsoft.OData.E2E.TestCommon.Common.Server.Default.AccessLevel'Read',   Microsoft.OData.E2E.TestCommon.Common.Server.Default.AccessLevel'ReadWrite')", new object[] { AccessLevel.Read, AccessLevel.ReadWrite, AccessLevel.Read })]
+    [InlineData("UserAccess in ('Read', 'Read, Write, Execute','Execute')", new object[] { AccessLevel.Read, AccessLevel.ReadWrite | AccessLevel.Execute, AccessLevel.Read })]
+    [InlineData("UserAccess in ('Read', 'Read, Write,    Execute','Execute')", new object[] { AccessLevel.Read, AccessLevel.ReadWrite | AccessLevel.Execute, AccessLevel.Read })]
+    [InlineData("UserAccess in ('None', 'ReadWrite, Execute','Execute')", new object[] { AccessLevel.None, AccessLevel.ReadWrite | AccessLevel.Execute })]
+    [InlineData("UserAccess in ('None', '  ReadWrite, Execute',  'Execute')", new object[] { AccessLevel.None, AccessLevel.ReadWrite | AccessLevel.Execute })]
+    [InlineData("UserAccess in ('Read', 'ReadWrite, Execute')", new object[] { AccessLevel.Read, AccessLevel.ReadWrite | AccessLevel.Execute, AccessLevel.Read })]
+    public async Task QueryFlagsEnumAndVerifyResults_WithInOperator(string filter, object[] expectedUserAccess)
     {
         // Arrange
         var queryText = $"Products?$filter={filter}";
@@ -384,6 +384,146 @@ public class EnumerationTypeQueryTests : EndToEndTestBase<EnumerationTypeQueryTe
 
         var userAccessValues = entries.Select(e => e.Properties.Single(p => p.Name == "UserAccess") as ODataProperty).Select(p => (p.Value as ODataEnumValue)?.Value);
         Assert.All(expectedUserAccess, ua => Assert.Contains(ua.ToString(), userAccessValues));
+    }
+
+    [Fact]
+    public async Task QueryFlagsEnumAndVerifyResults_InOperator_StringNumbers()
+    {
+        var filter = @"UserAccess in (""1"",3,""4"")";
+        var expectedUserAccess = new object[] { AccessLevel.Read, AccessLevel.ReadWrite, AccessLevel.Read };
+
+        var queryText = $"Products?$filter={filter}";
+        List<ODataResource> entries = await TestsHelper.QueryResourceSetsAsync(queryText, MimeTypeODataParameterMinimalMetadata);
+
+        Assert.Equal(expectedUserAccess.Length, entries.Count);
+        var userAccessValues = entries.Select(e => e.Properties.Single(p => p.Name == "UserAccess") as ODataProperty)
+                                      .Select(p => (p.Value as ODataEnumValue)?.Value);
+        Assert.All(expectedUserAccess, ua => Assert.Contains(ua.ToString(), userAccessValues));
+    }
+
+    [Fact]
+    public async Task QueryFlagsEnumAndVerifyResults_InOperator_WorksWithMixedDoubleAndSingleQuotes()
+    {
+        var filter = @"UserAccess in (""Read"", 'ReadWrite',""Execute"")";
+        var expectedUserAccess = new object[] { AccessLevel.Read, AccessLevel.ReadWrite, AccessLevel.Read };
+
+        var queryText = $"Products?$filter={filter}";
+        List<ODataResource> entries = await TestsHelper.QueryResourceSetsAsync(queryText, MimeTypeODataParameterMinimalMetadata);
+
+        Assert.Equal(expectedUserAccess.Length, entries.Count);
+        var userAccessValues = entries.Select(e => e.Properties.Single(p => p.Name == "UserAccess") as ODataProperty)
+                                      .Select(p => (p.Value as ODataEnumValue)?.Value);
+        Assert.All(expectedUserAccess, ua => Assert.Contains(ua.ToString(), userAccessValues));
+    }
+
+    [Fact]
+    public async Task QueryFlagsEnumAndVerifyResults_InOperator_FullQualifiedNameWorksWithDoubleQuotes()
+    {
+        var filter = @"UserAccess in (Microsoft.OData.E2E.TestCommon.Common.Server.Default.AccessLevel""Read"", Microsoft.OData.E2E.TestCommon.Common.Server.Default.AccessLevel""ReadWrite"")";
+        var expectedUserAccess = new object[] { AccessLevel.Read, AccessLevel.ReadWrite, AccessLevel.Read };
+
+        var queryText = $"Products?$filter={filter}";
+        List<ODataResource> entries = await TestsHelper.QueryResourceSetsAsync(queryText, MimeTypeODataParameterMinimalMetadata);
+
+        Assert.Equal(expectedUserAccess.Length, entries.Count);
+        var userAccessValues = entries.Select(e => e.Properties.Single(p => p.Name == "UserAccess") as ODataProperty)
+                                      .Select(p => (p.Value as ODataEnumValue)?.Value);
+        Assert.All(expectedUserAccess, ua => Assert.Contains(ua.ToString(), userAccessValues));
+    }
+
+    [Fact]
+    public async Task QueryFlagsEnumAndVerifyResults_InOperator_WorksWithDoubleQuotes()
+    {
+        var filter = @"UserAccess in (""None"", ""  ReadWrite, Execute"",  ""Execute"")";
+        var expectedUserAccess = new object[] { AccessLevel.None, AccessLevel.ReadWrite | AccessLevel.Execute };
+
+        var queryText = $"Products?$filter={filter}";
+        List<ODataResource> entries = await TestsHelper.QueryResourceSetsAsync(queryText, MimeTypeODataParameterMinimalMetadata);
+
+        Assert.Equal(expectedUserAccess.Length, entries.Count);
+        var userAccessValues = entries.Select(e => e.Properties.Single(p => p.Name == "UserAccess") as ODataProperty)
+                                      .Select(p => (p.Value as ODataEnumValue)?.Value);
+        Assert.All(expectedUserAccess, ua => Assert.Contains(ua.ToString(), userAccessValues));
+    }
+
+    [Fact]
+    public async Task QueryFlagsEnumAndVerifyResults_InOperator_MissingDoubleQuote1()
+    {
+        var filter = @"UserAccess in ('Read', ""ReadWrite, Execute)";
+        var queryText = $"Products?$filter={filter}";
+        ODataMessageReaderSettings readerSettings = new() { BaseUri = _baseUri };
+        var requestUrl = new Uri(_baseUri.AbsoluteUri + queryText, UriKind.Absolute);
+
+        var requestMessage = new TestHttpClientRequestMessage(requestUrl, Client);
+        requestMessage.SetHeader("Accept", MimeTypeODataParameterMinimalMetadata);
+
+        var responseMessage = await requestMessage.GetResponseAsync();
+
+        Assert.Equal(400, responseMessage.StatusCode);
+    }
+
+    [Fact]
+    public async Task QueryFlagsEnumAndVerifyResults_InOperator_MissingDoubleQuote2()
+    {
+        var filter = @"UserAccess in (""Read, ""ReadWrite, Execute"")";
+        var queryText = $"Products?$filter={filter}";
+        ODataMessageReaderSettings readerSettings = new() { BaseUri = _baseUri };
+        var requestUrl = new Uri(_baseUri.AbsoluteUri + queryText, UriKind.Absolute);
+
+        var requestMessage = new TestHttpClientRequestMessage(requestUrl, Client);
+        requestMessage.SetHeader("Accept", MimeTypeODataParameterMinimalMetadata);
+
+        var responseMessage = await requestMessage.GetResponseAsync();
+
+        Assert.Equal(400, responseMessage.StatusCode);
+    }
+
+    [Fact]
+    public async Task QueryFlagsEnumAndVerifyResults_InOperator_MissingSingleQuote1()
+    {
+        var filter = @"UserAccess in ('Read, 'ReadWrite, Execute')";
+        var queryText = $"Products?$filter={filter}";
+        ODataMessageReaderSettings readerSettings = new() { BaseUri = _baseUri };
+        var requestUrl = new Uri(_baseUri.AbsoluteUri + queryText, UriKind.Absolute);
+
+        var requestMessage = new TestHttpClientRequestMessage(requestUrl, Client);
+        requestMessage.SetHeader("Accept", MimeTypeODataParameterMinimalMetadata);
+
+        var responseMessage = await requestMessage.GetResponseAsync();
+
+        Assert.Equal(400, responseMessage.StatusCode);
+    }
+
+    [Fact]
+    public async Task QueryFlagsEnumAndVerifyResults_InOperator_MissingSingleQuote2()
+    {
+        var filter = @"UserAccess in ('Read', ReadWrite, Execute')";
+        var queryText = $"Products?$filter={filter}";
+        ODataMessageReaderSettings readerSettings = new() { BaseUri = _baseUri };
+        var requestUrl = new Uri(_baseUri.AbsoluteUri + queryText, UriKind.Absolute);
+
+        var requestMessage = new TestHttpClientRequestMessage(requestUrl, Client);
+        requestMessage.SetHeader("Accept", MimeTypeODataParameterMinimalMetadata);
+
+        var responseMessage = await requestMessage.GetResponseAsync();
+
+        Assert.Equal(400, responseMessage.StatusCode);
+    }
+
+    [Fact]
+    public async Task QueryFlagsEnumAndVerifyResults_InOperator_MissingSingleQuote3()
+    {
+        var filter = @"UserAccess in (Read', ReadWrite, Execute')";
+        var queryText = $"Products?$filter={filter}";
+        ODataMessageReaderSettings readerSettings = new() { BaseUri = _baseUri };
+        var requestUrl = new Uri(_baseUri.AbsoluteUri + queryText, UriKind.Absolute);
+
+        var requestMessage = new TestHttpClientRequestMessage(requestUrl, Client);
+        requestMessage.SetHeader("Accept", MimeTypeODataParameterMinimalMetadata);
+
+        var responseMessage = await requestMessage.GetResponseAsync();
+
+        Assert.Equal(400, responseMessage.StatusCode);
     }
 
     [Theory]
