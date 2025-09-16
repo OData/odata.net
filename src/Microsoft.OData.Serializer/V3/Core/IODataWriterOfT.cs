@@ -21,7 +21,7 @@ namespace Microsoft.OData.Serializer.V3.Core;
 /// Encapsulates the current state of the serialization.
 /// The state should provide access to the writer or output and other contextual information.
 /// </typeparam>
-public interface IODataWriter<T, TState> : IODataWriter
+public interface IODataWriter<T, TState> : IODataWriter<TState>
 {
     // TODO might consider making the return value a struct if we need to encaspulate more info in the return result.
     // Temporarily reverted to return ValueTask instead of bool to simplify the design of the initial API surface
