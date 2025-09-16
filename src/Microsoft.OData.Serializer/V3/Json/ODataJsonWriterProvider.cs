@@ -7,6 +7,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -28,10 +29,10 @@ internal class ODataJsonWriterProvider<TCustomState>(ODataSerializerOptions<TCus
     
 
 
-    private static Dictionary<Type, IODataWriter> simpleWriters = InitPrimitiveWriters();
+    private static Dictionary<Type, IODataWriter<ODataWriterState<TCustomState>>> simpleWriters = InitPrimitiveWriters();
     private static List<ODataWriterFactory<TCustomState>> defaultFactories = InitDefaultFactories();
 
-    private ConcurrentDictionary<Type, IODataWriter> writersCache = new();
+    private ConcurrentDictionary<Type, IODataWriter<ODataWriterState<TCustomState>>> writersCache = new();
 
     public IODataWriter<T, ODataWriterState<TCustomState>> GetWriter<T>(IEdmModel? model)
     {
@@ -46,6 +47,36 @@ internal class ODataJsonWriterProvider<TCustomState>(ODataSerializerOptions<TCus
         }
 
         return (IODataWriter<T, ODataWriterState<TCustomState>>)writer;
+    }
+
+    public IODataWriter<ODataWriterState<TCustomState>> GetWriter(Type type, IEdmModel? model)
+    {
+        if (type == typeof(object))
+        {
+            return this.GetWriter<object>(model);
+        }
+
+        if (writersCache.TryGetValue(type, out var writer))
+        {
+            return (IODataWriter<object, ODataWriterState<TCustomState>>)writer;
+        }
+
+        var getWriterMethod = this.GetType()
+            .GetMethod(
+                nameof(GetWriter),
+                genericParameterCount: 1,
+                bindingAttr: BindingFlags.Instance | BindingFlags.NonPublic,
+                binder: null,
+                [typeof(IEdmModel)],
+                null)
+            ?.MakeGenericMethod([type]);
+
+        Debug.Assert(getWriterMethod != null);
+
+        var generatedWriter = getWriterMethod.Invoke(this, [model]);
+        Debug.Assert(generatedWriter != null);
+
+        return (IODataWriter<ODataWriterState<TCustomState>>)generatedWriter;
     }
 
     private IODataWriter<T, ODataWriterState<TCustomState>> GetWriterNoCache<T>(IEdmModel? model)
@@ -64,8 +95,6 @@ internal class ODataJsonWriterProvider<TCustomState>(ODataSerializerOptions<TCus
             }
         }
 
-        // TODO: we could consider generating a custom writer for the poco
-        // but we'd need to map it to an OData type.
         ODataTypeInfo<T, TCustomState>? typeInfo = options.TryGetResourceInfo<T>();
         if (typeInfo != null)
         {
@@ -92,10 +121,10 @@ internal class ODataJsonWriterProvider<TCustomState>(ODataSerializerOptions<TCus
         throw new Exception($"Could not find a suitable writer for {type.FullName}");
     }
 
-    private static Dictionary<Type, IODataWriter> InitPrimitiveWriters()
+    private static Dictionary<Type, IODataWriter<ODataWriterState<TCustomState>>> InitPrimitiveWriters()
     {
         const int NumSimpleWriters = 10; // Update this when adding more writers. Keeps the dict size exact.
-        Dictionary<Type, IODataWriter> writers = new(NumSimpleWriters);
+        Dictionary<Type, IODataWriter<ODataWriterState<TCustomState>>> writers = new(NumSimpleWriters);
 
         Add(boolWriter);
         Add(int32Writer);
@@ -112,7 +141,7 @@ internal class ODataJsonWriterProvider<TCustomState>(ODataSerializerOptions<TCus
 
         return writers;
 
-        void Add(IODataWriter writer)
+        void Add(IODataWriter<ODataWriterState<TCustomState>> writer)
         {
             writers.Add(writer.Type!, writer);
         }

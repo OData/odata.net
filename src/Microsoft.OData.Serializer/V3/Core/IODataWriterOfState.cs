@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 
 namespace Microsoft.OData.Serializer.V3.Core;
 
-public interface IODataWriter
+public interface IODataWriter<TState> : IODataWriter
 {
-    Type? Type { get; }
-    bool CanWrite(Type type);
+    bool Write(object value, TState state);
 }
