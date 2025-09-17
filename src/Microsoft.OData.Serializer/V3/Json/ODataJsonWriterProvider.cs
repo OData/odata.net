@@ -26,7 +26,8 @@ internal class ODataJsonWriterProvider<TCustomState>(ODataSerializerOptions<TCus
     private static readonly ODataJsonUriWriter<TCustomState> uriWriter = new();
     private static readonly ODataJsonPipeReaderBinaryWriter<TCustomState> pipeReaderWriter = new();
     private static readonly ODataJsonBufferedReaderBinaryWriter<TCustomState> bufferedReaderBinaryWriter = new();
-    
+    private static readonly ODataJsonObjectWriter<TCustomState> objectWriter = new();
+
 
 
     private static Dictionary<Type, IODataWriter<ODataWriterState<TCustomState>>> simpleWriters = InitPrimitiveWriters();
@@ -58,17 +59,14 @@ internal class ODataJsonWriterProvider<TCustomState>(ODataSerializerOptions<TCus
 
         if (writersCache.TryGetValue(type, out var writer))
         {
-            return (IODataWriter<object, ODataWriterState<TCustomState>>)writer;
+            return writer;
         }
 
         var getWriterMethod = this.GetType()
             .GetMethod(
                 nameof(GetWriter),
                 genericParameterCount: 1,
-                bindingAttr: BindingFlags.Instance | BindingFlags.NonPublic,
-                binder: null,
-                [typeof(IEdmModel)],
-                null)
+                [typeof(IEdmModel)])
             ?.MakeGenericMethod([type]);
 
         Debug.Assert(getWriterMethod != null);
@@ -123,7 +121,7 @@ internal class ODataJsonWriterProvider<TCustomState>(ODataSerializerOptions<TCus
 
     private static Dictionary<Type, IODataWriter<ODataWriterState<TCustomState>>> InitPrimitiveWriters()
     {
-        const int NumSimpleWriters = 10; // Update this when adding more writers. Keeps the dict size exact.
+        const int NumSimpleWriters = 11; // Update this when adding more writers. Keeps the dict size exact.
         Dictionary<Type, IODataWriter<ODataWriterState<TCustomState>>> writers = new(NumSimpleWriters);
 
         Add(boolWriter);
@@ -136,6 +134,7 @@ internal class ODataJsonWriterProvider<TCustomState>(ODataSerializerOptions<TCus
         Add(uriWriter);
         Add(pipeReaderWriter);
         Add(bufferedReaderBinaryWriter);
+        Add(objectWriter);
 
         Debug.Assert(NumSimpleWriters == writers.Count);
 

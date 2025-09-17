@@ -17,7 +17,7 @@ public abstract class ODataWriter<T, TState> : IODataWriter<T, TState>
 
     public abstract bool Write(T value, TState state);
 
-    public bool Write(object value, TState state)
+    public virtual bool WriteObject(object value, TState state)
     {
         return this.Write((T)value, state);
     }

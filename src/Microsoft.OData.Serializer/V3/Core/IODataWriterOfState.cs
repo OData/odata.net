@@ -8,5 +8,6 @@ namespace Microsoft.OData.Serializer.V3.Core;
 
 public interface IODataWriter<TState> : IODataWriter
 {
-    bool Write(object value, TState state);
+    // Named this WriteObject to avoid conflict with the generic Write<T> in IODataWriter<T, TState>
+    bool WriteObject(object value, TState state);
 }

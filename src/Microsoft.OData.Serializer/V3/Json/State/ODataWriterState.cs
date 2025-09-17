@@ -1,5 +1,6 @@
 ﻿using Microsoft.OData.Edm;
 using Microsoft.OData.Serializer.V3.Adapters;
+using Microsoft.OData.Serializer.V3.Core;
 using Microsoft.OData.Serializer.V3.Json.State;
 using System;
 using System.Buffers;
@@ -135,6 +136,11 @@ public sealed class ODataWriterState<TCustomState>
     public bool IsTopLevel()
     {
         return this.Stack.IsTopLevel();
+    }
+
+    internal IODataWriter<ODataWriterState<TCustomState>> GetWriter(Type type)
+    {
+        return writers.GetWriter(type, this.EdmModel);
     }
 
     // TODO: Make this internal and instead of exposing writer interfaces to public hooks
