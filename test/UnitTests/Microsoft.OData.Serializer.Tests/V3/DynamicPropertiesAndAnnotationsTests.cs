@@ -80,6 +80,121 @@ public class DynamicPropertiesAndAnnotationsTests
 
     }
 
+    [Fact]
+    public async Task CanWriteAnnotationsOfDynamicProperties()
+    {
+        var item = new Item
+        {
+            Id = 1,
+            Name = "Item 1",
+            Data = new Dictionary<string, object>
+            {
+                { "DynamicString", "A dynamic string" },
+                { "DynamicInt", 42 },
+                { "DynamicBool", true }
+            },
+            PreAnnotations = {
+                {
+                    "DynamicString",
+                    new()
+                    {
+                        { "ns.ann1", "Annotation for dynamic string" },
+                        { "ns.ann2", 10 },
+                        { "n2.ann3", false }
+                    } 
+                },
+                { 
+                    "DynamicInt",
+                    new()
+                    {
+                        { "ns.ann2", 12345 }
+                    }
+                },
+            },
+            PostAnnotations = {
+                {
+                    "DynamicBool",
+                    new()
+                    {
+                        ("ns.post1", "Post annotation for bool"),
+                        ("ns.post2", 3.14),
+                        ("ns.post3", true)
+                    }
+                },
+                {
+                    "DynamicInt",
+                    new()
+                    {
+                        ("ns.post1", "Post annotation for int")
+                    }
+                }
+            }
+        };
+
+        var options = new ODataSerializerOptions();
+
+        options.AddTypeInfo<Item>(new()
+        {
+            Properties = [
+                new()
+                {
+                    Name = "Id",
+                    WriteValue = (item, writer, state) => writer.WriteValue(item.Id, state)
+                },
+                new()
+                {
+                    Name = "Name",
+                    WriteValue = (item, writer, state) => writer.WriteValue(item.Name, state)
+                }
+            ],
+            GetDynamicProperties = (item, state) => item.Data,
+            GetPropertyPreValueAnnotations = (item, propName, state) => item.PreAnnotations[propName],
+            GetPropertyPostValueAnnotations = (item, propName, state) => item.PostAnnotations[propName]
+            
+        });
+
+
+        var model = CreateModel();
+
+        var stream = new MemoryStream();
+
+        var odataUri = new ODataUriParser(
+            model,
+            new Uri("http://service/odata"),
+            new Uri("Items(1)", UriKind.Relative)
+        ).ParseUri();
+
+        await ODataSerializer.WriteAsync(item, stream, odataUri, model, options);
+
+        stream.Position = 0;
+        var actual = new StreamReader(stream).ReadToEnd();
+        var normalizedActual = JsonSerializer.Serialize(JsonDocument.Parse(actual));
+
+        var expected =
+            """
+            {
+              "@odata.context": "http://service/odata/$metadata#Items/$entity",
+              "Id": 1,
+              "Name": "Item 1",
+              "DynamicString@ns.ann1": "Annotation for dynamic string",
+              "DynamicString@ns.ann2": 10,
+              "DynamicString@ns.ann3": false,
+              "DynamicString": "A dynamic string",
+              "DynamicInt@ns.ann2": 12345,
+              "DynamicInt": 42,
+              "DynamicInt@ns.post1": "Post annotation for int",
+              "DynamicBool": true,
+              "DynamicBool@ns.post1": "Post annotation for bool",
+              "DynamicBool@ns.post2": 3.14,
+              "DynamicBool@ns.post3": true
+            }
+            """;
+        var normalizedExpected = JsonSerializer.Serialize(JsonDocument.Parse(expected));
+
+        Assert.Equal(normalizedExpected, normalizedActual);
+
+    }
+
     private static IEdmModel CreateModel()
     {
         var model = new EdmModel();
@@ -97,5 +212,7 @@ public class DynamicPropertiesAndAnnotationsTests
         public int Id { get; set; }
         public string Name { get; set; }
         public Dictionary<string, object> Data { get; set; }
+        public Dictionary<string, Dictionary<string, object>> PreAnnotations { get; set; }
+        public Dictionary<string, List<(string, object)>> PostAnnotations { get; set; }
     }
 }

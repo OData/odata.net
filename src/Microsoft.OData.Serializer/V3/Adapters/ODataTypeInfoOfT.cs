@@ -82,6 +82,10 @@ public class ODataTypeInfo<T, TCustomState> : ODataTypeInfo
 
     public Func<T, ODataWriterState<TCustomState>, object?>? GetDynamicProperties { get; init; }
 
+    // TODO: add WriteAnnotations variants
+    public Func<T, string, ODataWriterState<TCustomState>, object?>? GetPropertyPreValueAnnotations { get; init; }
+    public Func<T, string, ODataWriterState<TCustomState>, object?>? GetPropertyPostValueAnnotations { get; init; }
+
     /// <summary>
     /// Custom hook that's called before the value is written. If the value
     /// represents an resource/object, this is called before the opening brace is written.
