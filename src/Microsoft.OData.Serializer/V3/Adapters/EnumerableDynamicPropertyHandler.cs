@@ -10,18 +10,64 @@ using System.Threading.Tasks;
 namespace Microsoft.OData.Serializer.V3.Adapters;
 
 [SuppressMessage("Performance", "CA1812:Avoid uninstantiated internal classes", Justification = "This class is instantiated via reflection.")]
-internal class EnumerableDynamicPropertyHandler<TValue, TCustomState> : IDynamicPropertiesHandler<TCustomState>
+internal class EnumerableDynamicPropertyHandler<TDynamicValue, TCustomState> : IDynamicPropertiesHandler<TCustomState>
 {
-    public void WriteDynamicProperties(object dynamicProperties, IDynamicPropertyWriter<TCustomState> writer, ODataWriterState<TCustomState> state)
+    public void WriteDynamicProperties<TResource>(
+        TResource resource,
+        object dynamicProperties,
+        Func<TResource, string, ODataWriterState<TCustomState>, object?>? getPropertyPreValueAnnotations,
+        Func<TResource, string, ODataWriterState<TCustomState>, object?>? getPropertyPostValueAnnotations,
+        IDynamicPropertyWriter<TCustomState> writer,
+        ODataWriterState<TCustomState> state)
     {
         // TODO: support resumability in dynamic properties
         // We can store the enumerator in the state and use it to resume for where it left off.
-        var enumerable = dynamicProperties as IEnumerable<KeyValuePair<string, TValue>>;
+        var enumerable = dynamicProperties as IEnumerable<KeyValuePair<string, TDynamicValue>>;
         Debug.Assert(enumerable != null, "Dynamic properties should be of type IEnumerable<KeyValuePair<string, TValue>>");
 
-        foreach (var kvp in enumerable)
+        bool noAnnotations = getPropertyPreValueAnnotations == null && getPropertyPostValueAnnotations == null;
+
+        if (noAnnotations)
         {
-            writer.WriteDynamicProperty(kvp.Key.AsSpan(), kvp.Value, state);
+            // avoid extra checks in the loop if there are no annotations
+            foreach (var kvp in enumerable)
+            {
+                writer.WriteDynamicProperty(kvp.Key.AsSpan(), kvp.Value, state);
+            }
+        }
+        else
+        {
+            foreach (var kvp in enumerable)
+            {
+                // write pre annotations
+                if (getPropertyPreValueAnnotations != null)
+                {
+                    var preAnnotations = getPropertyPreValueAnnotations(resource, kvp.Key, state);
+                    if (preAnnotations != null)
+                    {
+                        // TODO: we should use a resolve to get the annotations writer for the type of preAnnotations,
+                        // but for convenience and expediency, we will just use the default one, expecting the type
+                        // to be compatible with IEnumerable<KeyValuePair<string, object>>
+                        EnumerableOfObjectCustomPropertyAnnotationsHandler<TCustomState>.Instance.WriteCustomPropertyAnnotations(
+                            kvp.Key,
+                            preAnnotations,
+                            state);
+                    }
+                }
+                writer.WriteDynamicProperty(kvp.Key.AsSpan(), kvp.Value, state);
+                // write post annotations
+                if (getPropertyPostValueAnnotations != null)
+                {
+                    var postAnnotations = getPropertyPostValueAnnotations(resource, kvp.Key, state);
+                    if (postAnnotations != null)
+                    {
+                        EnumerableOfObjectCustomPropertyAnnotationsHandler<TCustomState>.Instance.WriteCustomPropertyAnnotations(
+                            kvp.Key,
+                            postAnnotations,
+                            state);
+                    }
+                }
+            }
         }
     }
 }

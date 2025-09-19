@@ -101,7 +101,7 @@ public class DynamicPropertiesAndAnnotationsTests
                     {
                         { "ns.ann1", "Annotation for dynamic string" },
                         { "ns.ann2", 10 },
-                        { "n2.ann3", false }
+                        { "ns.ann3", false }
                     }
                 },
                 {
@@ -112,22 +112,22 @@ public class DynamicPropertiesAndAnnotationsTests
                     }
                 },
             },
-            PostAnnotations = new Dictionary<string, List<(string, object)>>
+            PostAnnotations = new Dictionary<string, List<KeyValuePair<string, object>>>
             {
                 {
                     "DynamicBool",
-                    new List<(string, object)>
+                    new List<KeyValuePair<string, object>>
                     {
-                        ("ns.post1", "Post annotation for bool"),
-                        ("ns.post2", 3.14),
-                        ("ns.post3", true)
+                        new("ns.post1", "Post annotation for bool"),
+                        new("ns.post2", 3.14),
+                        new("ns.post3", true)
                     }
                 },
                 {
                     "DynamicInt",
                     new()
                     {
-                        ("ns.post1", "Post annotation for int")
+                        new("ns.post1", "Post annotation for int")
                     }
                 }
             }
@@ -150,8 +150,8 @@ public class DynamicPropertiesAndAnnotationsTests
                 }
             ],
             GetDynamicProperties = (item, state) => item.Data,
-            GetPropertyPreValueAnnotations = (item, propName, state) => item.PreAnnotations[propName],
-            GetPropertyPostValueAnnotations = (item, propName, state) => item.PostAnnotations[propName]
+            GetPropertyPreValueAnnotations = (item, propName, state) => item.PreAnnotations.GetValueOrDefault(propName),
+            GetPropertyPostValueAnnotations = (item, propName, state) => item.PostAnnotations.GetValueOrDefault(propName)
 
         });
 
@@ -215,6 +215,6 @@ public class DynamicPropertiesAndAnnotationsTests
         public string Name { get; set; }
         public Dictionary<string, object> Data { get; set; }
         public Dictionary<string, Dictionary<string, object>> PreAnnotations { get; set; }
-        public Dictionary<string, List<(string, object)>> PostAnnotations { get; set; }
+        public Dictionary<string, List<KeyValuePair<string, object>>> PostAnnotations { get; set; }
     }
 }

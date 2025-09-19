@@ -14,20 +14,14 @@ internal class DefaultDynamicPropertyWriter<TCustomState> : IDynamicPropertyWrit
     public void WriteDynamicProperty<TValue>(ReadOnlySpan<char> name, TValue value, ODataWriterState<TCustomState> state)
     {
         state.JsonWriter.WritePropertyName(name);
-        bool complete = state.WriteValue(value);
-        if (!complete)
-        {
-            throw new InvalidOperationException("Resumable dynamic property writes are not yet supported.");
-        }
+
+        // TODO: consider supporting resumability in dynamic properties
+        while (!state.WriteValue(value)) { } // Write to completion
     }
 
     public void WriteDynamicProperty<TValue>(ReadOnlySpan<byte> name, TValue value, ODataWriterState<TCustomState> state)
     {
         state.JsonWriter.WritePropertyName(name);
-        bool complete = state.WriteValue(value);
-        if (!complete)
-        {
-            throw new InvalidOperationException("Resumable dynamic property writes are not yet supported.");
-        }
+        while (!state.WriteValue(value)) { } // Write to completion
     }
 }

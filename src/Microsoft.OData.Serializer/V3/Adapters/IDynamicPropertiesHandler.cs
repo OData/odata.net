@@ -10,5 +10,11 @@ namespace Microsoft.OData.Serializer.V3.Adapters;
 internal interface IDynamicPropertiesHandler<TCustomState>
 {
     // TODO: support resumability for dynamic properties
-    void WriteDynamicProperties(object dynamicProperties, IDynamicPropertyWriter<TCustomState> writer, ODataWriterState<TCustomState> state);
+    void WriteDynamicProperties<TResource>(
+        TResource resource,
+        object dynamicProperties,
+        Func<TResource, string, ODataWriterState<TCustomState>, object?>? getPropertyPreValueAnnotations,
+        Func<TResource, string, ODataWriterState<TCustomState>, object?>? getPropertyPostValueAnnotations,
+        IDynamicPropertyWriter<TCustomState> writer,
+        ODataWriterState<TCustomState> state);
 }
