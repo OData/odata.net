@@ -93,17 +93,18 @@ public class DynamicPropertiesAndAnnotationsTests
                 { "DynamicInt", 42 },
                 { "DynamicBool", true }
             },
-            PreAnnotations = {
+            PreAnnotations = new Dictionary<string, Dictionary<string, object>>
+            {
                 {
                     "DynamicString",
-                    new()
+                    new Dictionary<string, object>()
                     {
                         { "ns.ann1", "Annotation for dynamic string" },
                         { "ns.ann2", 10 },
                         { "n2.ann3", false }
-                    } 
+                    }
                 },
-                { 
+                {
                     "DynamicInt",
                     new()
                     {
@@ -111,10 +112,11 @@ public class DynamicPropertiesAndAnnotationsTests
                     }
                 },
             },
-            PostAnnotations = {
+            PostAnnotations = new Dictionary<string, List<(string, object)>>
+            {
                 {
                     "DynamicBool",
-                    new()
+                    new List<(string, object)>
                     {
                         ("ns.post1", "Post annotation for bool"),
                         ("ns.post2", 3.14),
@@ -150,7 +152,7 @@ public class DynamicPropertiesAndAnnotationsTests
             GetDynamicProperties = (item, state) => item.Data,
             GetPropertyPreValueAnnotations = (item, propName, state) => item.PreAnnotations[propName],
             GetPropertyPostValueAnnotations = (item, propName, state) => item.PostAnnotations[propName]
-            
+
         });
 
 
