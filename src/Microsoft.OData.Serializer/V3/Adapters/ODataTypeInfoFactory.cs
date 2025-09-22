@@ -45,12 +45,9 @@ internal static class ODataTypeInfoFactory<TCustomState>
         {
             // By default, skip properties not mapped to OData
             // TODO: should also skip based on [IgnoreMember] or [ODataIgnore]
-            if (typeInfo.EdmType is IEdmStructuredType structuredType)
+            if (ShouldSkipProperty(property, typeInfo))
             {
-                if (structuredType.FindProperty(property.Name) == null)
-                {
-                    continue;
-                }
+                continue;
             }
 
             var propertyInfo = CreateODataPropertyInfo(type, property);
@@ -59,6 +56,25 @@ internal static class ODataTypeInfoFactory<TCustomState>
         
         typeInfo.Properties = propertyInfos;
         return typeInfo;
+    }
+
+    private static bool ShouldSkipProperty<TResource>(PropertyInfo property, ODataTypeInfo<TResource, TCustomState> typeInfo)
+    {
+        if (property.GetCustomAttribute<ODataIgnoreAttribute>() != null)
+        {
+            return true;
+        }
+
+        if (typeInfo.EdmType is IEdmStructuredType structuredType)
+        {
+            if (structuredType.FindProperty(property.Name) == null)
+            {
+                return true;
+            }
+        }
+
+
+        return false;
     }
 
     private static ODataPropertyInfo CreateODataPropertyInfo(Type instanceType, PropertyInfo clrProperty)
