@@ -1,5 +1,6 @@
 ﻿using Microsoft.OData.Edm;
 using Microsoft.OData.Serializer.V3;
+using Microsoft.OData.Serializer.V3.Attributes;
 using Microsoft.OData.UriParser;
 using System.Runtime.Serialization;
 using System.Text.Json;
@@ -68,6 +69,7 @@ public class SupportForIgnoreDataMember
         return model;
     }
 
+    [ODataType("ns.Customer")]
     class Customer
     {
         public int Id { get; set; }

@@ -73,6 +73,7 @@ public class SupportForODataIgnoreAttribute
         return model;
     }
 
+    [ODataType("ns.Customer")]
     class Customer
     {
         public int Id { get; set; }

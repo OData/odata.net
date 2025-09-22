@@ -196,6 +196,7 @@ public class AutomaticPocoWriterTests
         public List<Order> Orders { get; set; }
     }
 
+    [ODataType("ns.Order")]
     public class Order
     {
         public int Id { get; set; }
