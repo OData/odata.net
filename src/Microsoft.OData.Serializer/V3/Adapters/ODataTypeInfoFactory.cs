@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
 using System.Reflection.Emit;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Text.Json.Serialization.Metadata;
 
@@ -43,8 +44,6 @@ internal static class ODataTypeInfoFactory<TCustomState>
         var propertyInfos = new List<ODataPropertyInfo<T, TCustomState>>(properties.Length);
         foreach (var property in properties)
         {
-            // By default, skip properties not mapped to OData
-            // TODO: should also skip based on [IgnoreMember] or [ODataIgnore]
             if (ShouldSkipProperty(property, typeInfo))
             {
                 continue;
@@ -60,7 +59,13 @@ internal static class ODataTypeInfoFactory<TCustomState>
 
     private static bool ShouldSkipProperty<TResource>(PropertyInfo property, ODataTypeInfo<TResource, TCustomState> typeInfo)
     {
+        // TODO: check whether it's better for perf to call GetCustomAttributes() then filter the attributes manually.
         if (property.GetCustomAttribute<ODataIgnoreAttribute>() != null)
+        {
+            return true;
+        }
+
+        if (property.GetCustomAttribute<IgnoreDataMemberAttribute>() != null)
         {
             return true;
         }
