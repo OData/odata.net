@@ -5,6 +5,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Runtime.Serialization;
@@ -44,12 +45,12 @@ internal static class ODataTypeInfoFactory<TCustomState>
         var propertyInfos = new List<ODataPropertyInfo<T, TCustomState>>(properties.Length);
         foreach (var property in properties)
         {
-            if (ShouldSkipProperty(property, typeInfo))
+            if (!ShouldIncludeProperty(property, typeInfo, out IEdmProperty? edmProperty))
             {
                 continue;
             }
 
-            var propertyInfo = CreateODataPropertyInfo(type, property);
+            var propertyInfo = CreateODataPropertyInfo(type, property, edmProperty);
             propertyInfos.Add((ODataPropertyInfo<T, TCustomState>)propertyInfo);
         }
         
@@ -57,32 +58,46 @@ internal static class ODataTypeInfoFactory<TCustomState>
         return typeInfo;
     }
 
-    private static bool ShouldSkipProperty<TResource>(PropertyInfo property, ODataTypeInfo<TResource, TCustomState> typeInfo)
+    private static bool ShouldIncludeProperty<TResource>(
+        PropertyInfo property,
+        ODataTypeInfo<TResource, TCustomState> typeInfo,
+        [NotNullWhen(true)] out IEdmProperty? edmProperty)
     {
-        // TODO: check whether it's better for perf to call GetCustomAttributes() then filter the attributes manually.
+        edmProperty = null;
+
+        // Checking attributes individually instead of using GetCustomAttributes()
+        // via cause we're betting that ODataIgnoreAttribute will be the most common.
         if (property.GetCustomAttribute<ODataIgnoreAttribute>() != null)
         {
-            return true;
+            return false;
         }
 
         if (property.GetCustomAttribute<IgnoreDataMemberAttribute>() != null)
         {
-            return true;
+            return false;
         }
+
+        var propertyNameAttribute = property.GetCustomAttribute<ODataPropertyNameAttribute>();
+        var propertyName = propertyNameAttribute != null ? propertyNameAttribute.Name : property.Name;
 
         if (typeInfo.EdmType is IEdmStructuredType structuredType)
         {
-            if (structuredType.FindProperty(property.Name) == null)
+            edmProperty = structuredType.FindProperty(propertyName);
+            // TODO: if property name was specified via [ODataPropertyName] and it doesn't exist
+            // on the EDM type, we should throw.
+            if (edmProperty == null)
             {
-                return true;
+                return false;
             }
+
+            return true;
         }
 
 
         return false;
     }
 
-    private static ODataPropertyInfo CreateODataPropertyInfo(Type instanceType, PropertyInfo clrProperty)
+    private static ODataPropertyInfo CreateODataPropertyInfo(Type instanceType, PropertyInfo clrProperty, IEdmProperty edmProperty)
     {
         var clrPropertyType = clrProperty.PropertyType;
 
@@ -91,7 +106,7 @@ internal static class ODataTypeInfoFactory<TCustomState>
         var odataPropertyInfo = Activator.CreateInstance(odataPropertyInfoType);
         Debug.Assert(odataPropertyInfo != null);
 
-        odataPropertyInfoType.GetProperty(nameof(ODataPropertyInfo.Name))!.SetValue(odataPropertyInfo, clrProperty.Name);
+        odataPropertyInfoType.GetProperty(nameof(ODataPropertyInfo.Name))!.SetValue(odataPropertyInfo, edmProperty.Name);
 
         SetODataPropertyInfoValueHandler(odataPropertyInfo, odataPropertyInfoType, clrProperty, instanceType);
 
