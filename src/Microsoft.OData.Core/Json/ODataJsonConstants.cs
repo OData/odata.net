@@ -30,6 +30,9 @@ namespace Microsoft.OData.Json
         /// <summary>The value 'true' for the OData null annotation.</summary>
         internal const string ODataNullAnnotationTrueValue = "true";
 
+        /// <summary>The value 'false' for the OData null annotation.</summary>
+        internal const string ODataNullAnnotationFalseValue = "false";
+
         /// <summary>The 'value' property name for the Json value property.</summary>
         internal const string ODataValuePropertyName = "value";
 
@@ -47,6 +50,9 @@ namespace Microsoft.OData.Json
 
         /// <summary>The 'id' property name for the Json value property.</summary>
         internal const string ODataIdPropertyName = "id";
+
+        /// <summary>The 'id' property name for the Json value property.</summary>
+        internal const string ODataIdPascalCasePropertyName = "Id";
 
         /// <summary>The 'delta' property name for the Json value property.</summary>
         internal const string ODataDeltaPropertyName = "delta";

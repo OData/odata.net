@@ -13,6 +13,7 @@ namespace Microsoft.OData.Json
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.IO;
+    using System.Runtime.CompilerServices;
     using System.Text;
     using System.Threading.Tasks;
     using Microsoft.OData.Buffers;
@@ -1079,11 +1080,11 @@ namespace Microsoft.OData.Json
                                 throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_UnrecognizedEscapeSequence, "\\uXXXX"));
                             }
 
-                            string unicodeHexValue = this.ConsumeTokenToString(4);
+                            ReadOnlySpan<char> unicodeHexValue = this.ConsumeTokenToSpan(4);
                             int characterValue;
                             if (!Int32.TryParse(unicodeHexValue, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out characterValue))
                             {
-                                throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_UnrecognizedEscapeSequence, "\\u" + unicodeHexValue));
+                                throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_UnrecognizedEscapeSequence, "\\u" + unicodeHexValue.ToString()));
                             }
 
                             valueBuilder.Append((char)characterValue);
@@ -1103,7 +1104,16 @@ namespace Microsoft.OData.Json
                     }
                     else
                     {
-                        result = this.ConsumeTokenToString(currentCharacterTokenRelativeIndex);
+                        ReadOnlySpan<char> currentNameSpan = this.characterBuffer.AsSpan(this.tokenStartIndex, currentCharacterTokenRelativeIndex);
+                        if (TryInternCommonPropertyNames(currentNameSpan, out string interned))
+                        {
+                            this.tokenStartIndex += currentCharacterTokenRelativeIndex;
+                            result = interned;
+                        }
+                        else
+                        {
+                            result = this.ConsumeTokenToString(currentCharacterTokenRelativeIndex);
+                        }
                     }
 
                     Debug.Assert(this.characterBuffer[this.tokenStartIndex] == openingQuoteCharacter, "We should have consumed everything up to the quote character.");
@@ -1134,11 +1144,11 @@ namespace Microsoft.OData.Json
                 "The method should only be called when the 'n' character is the start of the token.");
 
             // We can call ParseName since we know the first character is 'n' and thus it won't be quoted.
-            string token = this.ParseName();
+            ReadOnlySpan<char> token = this.ParseNameOrValue();
 
-            if (!string.Equals(token, JsonConstants.JsonNullLiteral, StringComparison.Ordinal))
+            if (!token.SequenceEqual(JsonConstants.JsonNullLiteral.AsSpan()))
             {
-                throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_UnexpectedToken, token));
+                throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_UnexpectedToken, token.ToString()));
             }
 
             return null;
@@ -1156,19 +1166,19 @@ namespace Microsoft.OData.Json
                 "The method should only be called when the 't' or 'f' character is the start of the token.");
 
             // We can call ParseName since we know the first character is 't' or 'f' and thus it won't be quoted.
-            string token = this.ParseName();
+            ReadOnlySpan<char> token = this.ParseNameOrValue();
 
-            if (string.Equals(token, JsonConstants.JsonFalseLiteral, StringComparison.Ordinal))
+            if (token.SequenceEqual(JsonConstants.JsonFalseLiteral.AsSpan()))
             {
                 return false;
             }
 
-            if (string.Equals(token, JsonConstants.JsonTrueLiteral, StringComparison.Ordinal))
+            if (token.SequenceEqual(JsonConstants.JsonTrueLiteral.AsSpan()))
             {
                 return true;
             }
 
-            throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_UnexpectedToken, token));
+            throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_UnexpectedToken, token.ToString()));
         }
 
         /// <summary>
@@ -1204,7 +1214,7 @@ namespace Microsoft.OData.Json
             }
 
             // We now have all the characters which belong to the number, consume it into a string.
-            string numberString = this.ConsumeTokenToString(currentCharacterTokenRelativeIndex);
+            ReadOnlySpan<char> numberSpan = this.ConsumeTokenToSpan(currentCharacterTokenRelativeIndex);
             double doubleValue;
             int intValue;
             decimal decimalValue;
@@ -1212,23 +1222,23 @@ namespace Microsoft.OData.Json
             // We will first try and convert the value to Int32. If it succeeds, use that.
             // And then, we will try Decimal, since it will lose precision while expected type is specified.
             // Otherwise, we will try and convert the value into a double.
-            if (Int32.TryParse(numberString, NumberStyles.Integer, NumberFormatInfo.InvariantInfo, out intValue))
+            if (Int32.TryParse(numberSpan, NumberStyles.Integer, NumberFormatInfo.InvariantInfo, out intValue))
             {
                 return intValue;
             }
 
             // if it is not Ieee754Compatible, decimal will be parsed before double to keep precision
-            if (!isIeee754Compatible && Decimal.TryParse(numberString, NumberStyles.Number, NumberFormatInfo.InvariantInfo, out decimalValue))
+            if (!isIeee754Compatible && Decimal.TryParse(numberSpan, NumberStyles.Number, NumberFormatInfo.InvariantInfo, out decimalValue))
             {
                 return decimalValue;
             }
 
-            if (Double.TryParse(numberString, NumberStyles.Float, NumberFormatInfo.InvariantInfo, out doubleValue))
+            if (Double.TryParse(numberSpan, NumberStyles.Float, NumberFormatInfo.InvariantInfo, out doubleValue))
             {
                 return doubleValue;
             }
 
-            throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_InvalidNumberFormat, numberString));
+            throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_InvalidNumberFormat, numberSpan.ToString()));
         }
 
         /// <summary>
@@ -1268,7 +1278,61 @@ namespace Microsoft.OData.Json
             }
             while ((this.tokenStartIndex + currentCharacterTokenRelativeIndex) < this.storedCharacterCount || this.ReadInput());
 
-            return this.ConsumeTokenToString(currentCharacterTokenRelativeIndex);
+            Debug.Assert(currentCharacterTokenRelativeIndex >= 0, "characterCount >= 0");
+            Debug.Assert(this.tokenStartIndex + currentCharacterTokenRelativeIndex <= this.storedCharacterCount, "characterCount specified characters outside of the available range.");
+            
+            ReadOnlySpan<char> currentNameSpan = this.characterBuffer.AsSpan(this.tokenStartIndex, currentCharacterTokenRelativeIndex);
+            if (TryInternCommonPropertyNames(currentNameSpan, out string interned))
+            {
+                this.tokenStartIndex += currentCharacterTokenRelativeIndex;
+                return interned;
+            }
+
+            this.tokenStartIndex += currentCharacterTokenRelativeIndex;
+            return currentNameSpan.ToString();
+        }
+
+        private ReadOnlySpan<char> ParseNameOrValue()
+        {
+            Debug.Assert(this.tokenStartIndex < this.storedCharacterCount, "Must have at least one character available.");
+
+            char firstCharacter = this.characterBuffer[this.tokenStartIndex];
+            if ((firstCharacter == '"') || (firstCharacter == '\''))
+            {
+                return this.ParseStringPrimitiveValue();
+            }
+
+            int currentCharacterTokenRelativeIndex = 0;
+            do
+            {
+                Debug.Assert(this.tokenStartIndex < this.storedCharacterCount, "Must have at least one character available.");
+
+                char character = this.characterBuffer[this.tokenStartIndex + currentCharacterTokenRelativeIndex];
+
+                // COMPAT 46: JSON property names don't require quotes and they allow any letter, digit, underscore or dollar sign in them.
+                if (IsCharacterAllowedInPropertyName(character))
+                {
+                    currentCharacterTokenRelativeIndex++;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            while ((this.tokenStartIndex + currentCharacterTokenRelativeIndex) < this.storedCharacterCount || this.ReadInput());
+
+            Debug.Assert(currentCharacterTokenRelativeIndex >= 0, "characterCount >= 0");
+            Debug.Assert(this.tokenStartIndex + currentCharacterTokenRelativeIndex <= this.storedCharacterCount, "characterCount specified characters outside of the available range.");
+
+            ReadOnlySpan<char> currentNameSpan = this.characterBuffer.AsSpan(this.tokenStartIndex, currentCharacterTokenRelativeIndex);
+            if (TryInternCommonPropertyNames(currentNameSpan, out string interned))
+            {
+                this.tokenStartIndex += currentCharacterTokenRelativeIndex;
+                return interned;
+            }
+
+            this.tokenStartIndex += currentCharacterTokenRelativeIndex;
+            return currentNameSpan;
         }
 
         /// <summary>
@@ -1528,8 +1592,33 @@ namespace Microsoft.OData.Json
         {
             Debug.Assert(characterCount >= 0, "characterCount >= 0");
             Debug.Assert(this.tokenStartIndex + characterCount <= this.storedCharacterCount, "characterCount specified characters outside of the available range.");
+            string result = string.Create(characterCount, (this.characterBuffer, this.tokenStartIndex), (span, state) =>
+            {
+                var (buffer, start) = state;
+                new ReadOnlySpan<char>(buffer, start, span.Length).CopyTo(span);
+            });
+            this.tokenStartIndex += characterCount;
 
-            string result = new string(this.characterBuffer, this.tokenStartIndex, characterCount);
+            return result;
+        }
+
+        private ReadOnlySpan<char> ConsumeTokenToSpan(int characterCount)
+        {
+            Debug.Assert(characterCount >= 0, "characterCount >= 0");
+            Debug.Assert(this.tokenStartIndex + characterCount <= this.storedCharacterCount, "characterCount specified characters outside of the available range.");
+
+            ReadOnlySpan<char> result = this.characterBuffer.AsSpan(this.tokenStartIndex, characterCount);
+            this.tokenStartIndex += characterCount;
+
+            return result;
+        }
+
+        private ReadOnlyMemory<char> ConsumeTokenToMemory(int characterCount)
+        {
+            Debug.Assert(characterCount >= 0, "characterCount >= 0");
+            Debug.Assert(this.tokenStartIndex + characterCount <= this.storedCharacterCount, "characterCount specified characters outside of the available range.");
+
+            ReadOnlyMemory<char> result = this.characterBuffer.AsMemory(this.tokenStartIndex, characterCount);
             this.tokenStartIndex += characterCount;
 
             return result;
@@ -1811,11 +1900,11 @@ namespace Microsoft.OData.Json
                                 throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_UnrecognizedEscapeSequence, "\\uXXXX"));
                             }
 
-                            string unicodeHexValue = this.ConsumeTokenToString(4);
+                            ReadOnlyMemory<char> unicodeHexValue = this.ConsumeTokenToMemory(4);
                             int characterValue;
-                            if (!Int32.TryParse(unicodeHexValue, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out characterValue))
+                            if (!Int32.TryParse(unicodeHexValue.Span, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out characterValue))
                             {
-                                throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_UnrecognizedEscapeSequence, "\\u" + unicodeHexValue));
+                                throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_UnrecognizedEscapeSequence, "\\u" + unicodeHexValue.Span.ToString()));
                             }
 
                             valueBuilder.Append((char)characterValue);
@@ -1835,7 +1924,16 @@ namespace Microsoft.OData.Json
                     }
                     else
                     {
-                        result = this.ConsumeTokenToString(currentCharacterTokenRelativeIndex);
+                        ReadOnlyMemory<char> currentNameMemory = this.characterBuffer.AsMemory(this.tokenStartIndex, currentCharacterTokenRelativeIndex);
+                        if (TryInternCommonPropertyNames(currentNameMemory.Span, out string interned))
+                        {
+                            this.tokenStartIndex += currentCharacterTokenRelativeIndex;
+                            result = interned;
+                        }
+                        else
+                        {
+                            result = this.ConsumeTokenToString(currentCharacterTokenRelativeIndex);
+                        }
                     }
 
                     Debug.Assert(this.characterBuffer[this.tokenStartIndex] == openingQuoteCharacter, "We should have consumed everything up to the quote character.");
@@ -1940,7 +2038,7 @@ namespace Microsoft.OData.Json
             }
 
             // We now have all the characters which belong to the number, consume it into a string.
-            string numberString = this.ConsumeTokenToString(currentCharacterTokenRelativeIndex);
+            ReadOnlyMemory<char> numberMemory = this.ConsumeTokenToMemory(currentCharacterTokenRelativeIndex);
             double doubleValue;
             int intValue;
             decimal decimalValue;
@@ -1948,23 +2046,23 @@ namespace Microsoft.OData.Json
             // We will first try and convert the value to Int32. If it succeeds, use that.
             // And then, we will try Decimal, since it will lose precision while expected type is specified.
             // Otherwise, we will try and convert the value into a double.
-            if (Int32.TryParse(numberString, NumberStyles.Integer, NumberFormatInfo.InvariantInfo, out intValue))
+            if (Int32.TryParse(numberMemory.Span, NumberStyles.Integer, NumberFormatInfo.InvariantInfo, out intValue))
             {
                 return intValue;
             }
 
             // if it is not Ieee754Compatible, decimal will be parsed before double to keep precision
-            if (!isIeee754Compatible && Decimal.TryParse(numberString, NumberStyles.Number, NumberFormatInfo.InvariantInfo, out decimalValue))
+            if (!isIeee754Compatible && Decimal.TryParse(numberMemory.Span, NumberStyles.Number, NumberFormatInfo.InvariantInfo, out decimalValue))
             {
                 return decimalValue;
             }
 
-            if (Double.TryParse(numberString, NumberStyles.Float, NumberFormatInfo.InvariantInfo, out doubleValue))
+            if (Double.TryParse(numberMemory.Span, NumberStyles.Float, NumberFormatInfo.InvariantInfo, out doubleValue))
             {
                 return doubleValue;
             }
 
-            throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_InvalidNumberFormat, numberString));
+            throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_InvalidNumberFormat, numberMemory.Span.ToString()));
         }
 
         /// <summary>
@@ -2007,8 +2105,21 @@ namespace Microsoft.OData.Json
             }
             while ((this.tokenStartIndex + currentCharacterTokenRelativeIndex) < this.storedCharacterCount || await this.ReadInputAsync().ConfigureAwait(false));
 
-            return this.ConsumeTokenToString(currentCharacterTokenRelativeIndex);
+            Debug.Assert(currentCharacterTokenRelativeIndex >= 0, "characterCount >= 0");
+            Debug.Assert(this.tokenStartIndex + currentCharacterTokenRelativeIndex <= this.storedCharacterCount, "characterCount specified characters outside of the available range.");
+
+            ReadOnlyMemory<char> currentNameMemory = this.characterBuffer.AsMemory(this.tokenStartIndex, currentCharacterTokenRelativeIndex);
+            if (TryInternCommonPropertyNames(currentNameMemory.Span, out string interned))
+            {
+
+                this.tokenStartIndex += currentCharacterTokenRelativeIndex;
+                return interned;
+            }
+
+            this.tokenStartIndex += currentCharacterTokenRelativeIndex;
+            return currentNameMemory.Span.ToString();
         }
+
 
         /// <summary>
         /// Asynchronously reads bytes from the current string value.
@@ -2284,14 +2395,224 @@ namespace Microsoft.OData.Json
         /// <returns>32-bit signed integer equivalent.</returns>
         private int ParseUnicodeHexValue()
         {
-            string unicodeHexValue = this.ConsumeTokenToString(4);
+            ReadOnlySpan<char> unicodeHexValue = this.ConsumeTokenToSpan(4);
             int characterValue;
             if (!Int32.TryParse(unicodeHexValue, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out characterValue))
             {
-                throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_UnrecognizedEscapeSequence, "\\u" + unicodeHexValue));
+                throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_UnrecognizedEscapeSequence, "\\u" + unicodeHexValue.ToString()));
             }
 
             return characterValue;
+        }
+
+        /// <summary>
+        /// Determines whether the specified span of characters is equal to the expected span of characters.
+        /// </summary>
+        /// <param name="current">The span of characters to compare.</param>
+        /// <param name="expect">The span of characters to compare against.</param>
+        /// <returns><see langword="true"/> if the spans are of equal length and contain the same characters in the same order; otherwise, <see langword="false"/>.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static bool Is(ReadOnlySpan<char> current, ReadOnlySpan<char> expect) =>
+            current.Length == expect.Length && current.SequenceEqual(expect);
+
+        /// <summary>
+        /// Attempts to match a given span of characters to a predefined set of common OData property names and returns the corresponding interned string if a match is found.
+        /// The method is intended to reduce memory usage by  interning commonly used property names in OData payloads
+        /// </summary>
+        /// <param name="span">The span of characters to evaluate. This span is compared against known OData property names.</param>
+        /// <param name="value">When this method returns, contains the interned string corresponding to the matched OData property name,  if
+        /// the match is successful; otherwise, <see langword="null"/>.</param>
+        /// <returns><see langword="true"/> if the span matches one of the predefined OData property names;  otherwise, <see langword="false"/>.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static bool TryInternCommonPropertyNames(ReadOnlySpan<char> span, out string value)
+        {
+            switch (span.Length)
+            {
+                case 2: // id, Id
+                    if (span[0] == 'i' && span[1] == 'd')
+                    {
+                        value = ODataJsonConstants.ODataIdPropertyName;
+                        return true;
+                    }
+                    if (span[0] == 'I' && span[1] == 'd')
+                    {
+                        value = ODataJsonConstants.ODataIdPascalCasePropertyName;
+                        return true;
+                    }
+                    break;
+
+                case 3: // url, @id
+                    if (Is(span, ODataJsonConstants.ODataServiceDocumentElementUrlName))
+                    {
+                        value = ODataJsonConstants.ODataServiceDocumentElementUrlName;
+                        return true;
+                    }
+                    if (Is(span, ODataJsonConstants.SimplifiedODataIdPropertyName))
+                    {
+                        value = ODataJsonConstants.SimplifiedODataIdPropertyName; 
+                        return true;
+                    }
+                    break;
+
+                case 4: // null, name, true
+                    if (Is(span, ODataJsonConstants.ODataNullPropertyName))
+                    {
+                        value = ODataJsonConstants.ODataNullPropertyName;
+                        return true;
+                    }
+                    if (Is(span, ODataJsonConstants.ODataServiceDocumentElementName))
+                    {
+                        value = ODataJsonConstants.ODataServiceDocumentElementName;
+                        return true;
+                    }
+                    if (Is(span, ODataJsonConstants.ODataNullAnnotationTrueValue))
+                    {
+                        value = ODataJsonConstants.ODataNullAnnotationTrueValue;
+                        return true;
+                    }
+                    break;
+
+                case 5: // value, error, delta, kind, title, source, target, @type, false
+                    if (Is(span, ODataJsonConstants.ODataValuePropertyName))
+                    {
+                        value = ODataJsonConstants.ODataValuePropertyName; 
+                        return true;
+                    }
+                    if (Is(span, ODataJsonConstants.ODataErrorPropertyName))
+                    {
+                        value = ODataJsonConstants.ODataErrorPropertyName; 
+                        return true;
+                    }
+                    if (Is(span, ODataJsonConstants.ODataDeltaPropertyName))
+                    {
+                        value = ODataJsonConstants.ODataDeltaPropertyName;
+                        return true;
+                    }
+                    if (Is(span, ODataJsonConstants.ODataServiceDocumentElementKind))
+                    {
+                        value = ODataJsonConstants.ODataServiceDocumentElementKind;
+                        return true;
+                    }
+                    if (Is(span, ODataJsonConstants.ODataServiceDocumentElementTitle))
+                    {
+                        value = ODataJsonConstants.ODataServiceDocumentElementTitle;
+                        return true;
+                    }
+                    if (Is(span, ODataJsonConstants.ODataSourcePropertyName))
+                    {
+                        value = ODataJsonConstants.ODataSourcePropertyName;
+                        return true;
+                    }
+                    if (Is(span, ODataJsonConstants.ODataTargetPropertyName))
+                    {
+                        value = ODataJsonConstants.ODataTargetPropertyName;
+                        return true;
+                    }
+                    if (Is(span, ODataJsonConstants.SimplifiedODataTypePropertyName))
+                    {
+                        value = ODataJsonConstants.SimplifiedODataTypePropertyName; 
+                        return true;
+                    }
+                    if (Is(span, ODataJsonConstants.ODataNullAnnotationFalseValue))
+                    {
+                        value = ODataJsonConstants.ODataNullAnnotationFalseValue;
+                        return true;
+                    }
+                    break;
+
+                case 6: // reason
+                    if (Is(span, ODataJsonConstants.ODataReasonPropertyName))
+                    {
+                        value = ODataJsonConstants.ODataReasonPropertyName;
+                        return true;
+                    }
+                    break;
+
+                case 7: // changed, deleted
+                    if (Is(span, ODataJsonConstants.ODataReasonChangedValue))
+                    {
+                        value = ODataJsonConstants.ODataReasonChangedValue;
+                        return true;
+                    }
+                    if (Is(span, ODataJsonConstants.ODataReasonDeletedValue))
+                    {
+                        value = ODataJsonConstants.ODataReasonDeletedValue;
+                        return true;
+                    }
+                    break;
+
+                case 8: // @context, @removed
+                    if (Is(span, ODataJsonConstants.SimplifiedODataContextPropertyName))
+                    {
+                        value = ODataJsonConstants.SimplifiedODataContextPropertyName;
+                        return true;
+                    }
+                    if (Is(span, ODataJsonConstants.SimplifiedODataRemovedPropertyName))
+                    {
+                        value = ODataJsonConstants.SimplifiedODataRemovedPropertyName; return true;
+                    }
+                    break;
+
+                case 9: // @odata.id, Singleton, EntitySet
+                    if (Is(span, ODataJsonConstants.PrefixedODataIdPropertyName)) 
+                    { 
+                        value = ODataJsonConstants.PrefixedODataIdPropertyName; 
+                        return true;
+                    }
+                    if (Is(span, ODataJsonConstants.ServiceDocumentSingletonKindName))
+                    {
+                        value = ODataJsonConstants.ServiceDocumentSingletonKindName;
+                        return true;
+                    }
+                    if (Is(span, ODataJsonConstants.ServiceDocumentEntitySetKindName))
+                    {
+                        value = ODataJsonConstants.ServiceDocumentEntitySetKindName;
+                        return true;
+                    }
+                    break;
+
+                case 11: // @odata.type, @odata.null
+                    if (Is(span, ODataJsonConstants.PrefixedODataTypePropertyName))
+                    {
+                        value = ODataJsonConstants.PrefixedODataTypePropertyName;
+                        return true;
+                    }
+                    if (Is(span, ODataJsonConstants.PrefixedODataNullPropertyName))
+                    {
+                        value = ODataJsonConstants.PrefixedODataNullPropertyName;
+                        return true;
+                    }
+                    break;
+
+                case 12: // relationship
+                    if (Is(span, ODataJsonConstants.ODataRelationshipPropertyName))
+                    {
+                        value = ODataJsonConstants.ODataRelationshipPropertyName; 
+                        return true;
+                    }
+                    break;
+
+                case 14: // @odata.context, @odata.removed, FunctionImport
+                    if (Is(span, ODataJsonConstants.PrefixedODataContextPropertyName))
+                    {
+                        value = ODataJsonConstants.PrefixedODataContextPropertyName;
+                        return true;
+                    }
+                    if (Is(span, ODataJsonConstants.PrefixedODataRemovedPropertyName))
+                    {
+                        value = ODataJsonConstants.PrefixedODataRemovedPropertyName;
+                        return true;
+                    }
+                    if (Is(span, ODataJsonConstants.ServiceDocumentFunctionImportKindName))
+                    {
+                        value = ODataJsonConstants.ServiceDocumentFunctionImportKindName;
+                        return true;
+                    }
+                    break;
+            }
+
+            value = null;
+            return false;
         }
 
         /// <summary>
