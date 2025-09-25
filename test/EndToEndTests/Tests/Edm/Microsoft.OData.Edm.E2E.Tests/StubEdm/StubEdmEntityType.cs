@@ -12,7 +12,7 @@ namespace Microsoft.OData.Edm.E2E.Tests.StubEdm;
 public class StubEdmEntityType : StubEdmElement, IEdmEntityType
 {
     private List<IEdmProperty> declaredProperties = new List<IEdmProperty>();
-    private List<IEdmStructuralProperty> declaredKeyProperties = null;
+    private List<IEdmPropertyRef> declaredKeyProperties = null;
 
     /// <summary>
     /// Initializes a new instance of the StubEdmEntityType class.
@@ -56,13 +56,7 @@ public class StubEdmEntityType : StubEdmElement, IEdmEntityType
     /// <summary>
     /// Gets the key
     /// </summary>
-    public IEnumerable<IEdmStructuralProperty> DeclaredKey
-    {
-        get 
-        {
-            return this.declaredKeyProperties.AsEnumerable();
-        }
-    }
+    public IEnumerable<IEdmPropertyRef> DeclaredKeyRef => this.declaredKeyProperties;
 
     /// <summary>
     /// Gets the type kind
@@ -148,11 +142,11 @@ public class StubEdmEntityType : StubEdmElement, IEdmEntityType
     {
         if (this.declaredKeyProperties == null)
         {
-            this.declaredKeyProperties = new List<IEdmStructuralProperty>();
+            this.declaredKeyProperties = new List<IEdmPropertyRef>();
         }
 
         this.declaredKeyProperties.Clear();
-        this.declaredKeyProperties.AddRange(keyProperties);
+        this.declaredKeyProperties.AddRange(keyProperties.Select(k => new EdmPropertyRef(k)));
     }
 
     /// <summary>

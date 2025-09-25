@@ -1,2 +1,19 @@
 Microsoft.OData.Edm.EdmOperation.Return.get -> Microsoft.OData.Edm.IEdmOperationReturn
 Microsoft.OData.Edm.IEdmOperation.Return.get -> Microsoft.OData.Edm.IEdmOperationReturn
+Microsoft.OData.Edm.EdmEntityType.AddKeys(params Microsoft.OData.Edm.IEdmPropertyRef[] keyProperties) -> void
+Microsoft.OData.Edm.EdmEntityType.AddKeys(System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmPropertyRef> keyProperties) -> void
+Microsoft.OData.Edm.EdmPropertyRef
+Microsoft.OData.Edm.EdmPropertyRef.EdmPropertyRef(Microsoft.OData.Edm.IEdmStructuralProperty property) -> void
+Microsoft.OData.Edm.EdmPropertyRef.EdmPropertyRef(Microsoft.OData.Edm.IEdmStructuralProperty property, Microsoft.OData.Edm.IEdmPathExpression path, string alias) -> void
+Microsoft.OData.Edm.EdmPropertyRef.EdmPropertyRef(Microsoft.OData.Edm.IEdmStructuralProperty property, string alias) -> void
+Microsoft.OData.Edm.EdmPropertyRef.Path.get -> Microsoft.OData.Edm.IEdmPathExpression
+Microsoft.OData.Edm.EdmPropertyRef.PropertyAlias.get -> string
+Microsoft.OData.Edm.EdmPropertyRef.ReferencedProperty.get -> Microsoft.OData.Edm.IEdmStructuralProperty
+Microsoft.OData.Edm.IEdmEntityType.DeclaredKeyRef.get -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmPropertyRef>
+Microsoft.OData.Edm.IEdmPropertyRef
+Microsoft.OData.Edm.IEdmPropertyRef.Path.get -> Microsoft.OData.Edm.IEdmPathExpression
+Microsoft.OData.Edm.IEdmPropertyRef.PropertyAlias.get -> string
+Microsoft.OData.Edm.IEdmPropertyRef.ReferencedProperty.get -> Microsoft.OData.Edm.IEdmStructuralProperty
+Microsoft.OData.Edm.Validation.EdmErrorCode.BadUnresolvedPropertyRef = 412 -> Microsoft.OData.Edm.Validation.EdmErrorCode
+virtual Microsoft.OData.Edm.EdmEntityType.DeclaredKey.get -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmStructuralProperty>
+virtual Microsoft.OData.Edm.EdmEntityType.DeclaredKeyRef.get -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmPropertyRef>

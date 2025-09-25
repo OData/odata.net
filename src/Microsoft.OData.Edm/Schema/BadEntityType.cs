@@ -20,7 +20,7 @@ namespace Microsoft.OData.Edm
         {
         }
 
-        public IEnumerable<IEdmStructuralProperty> DeclaredKey
+        public IEnumerable<IEdmPropertyRef> DeclaredKeyRef
         {
             get { return null; }
         }

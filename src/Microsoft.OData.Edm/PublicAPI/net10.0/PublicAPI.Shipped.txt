@@ -1961,7 +1961,6 @@ virtual Microsoft.OData.Edm.EdmEntityContainer.AddFunctionImport(string name, Mi
 virtual Microsoft.OData.Edm.EdmEntityContainer.AddSingleton(string name, Microsoft.OData.Edm.IEdmEntityType entityType) -> Microsoft.OData.Edm.EdmSingleton
 virtual Microsoft.OData.Edm.EdmEntityContainer.FindEntitySet(string setName) -> Microsoft.OData.Edm.IEdmEntitySet
 virtual Microsoft.OData.Edm.EdmEntityContainer.FindSingleton(string singletonName) -> Microsoft.OData.Edm.IEdmSingleton
-virtual Microsoft.OData.Edm.EdmEntityType.DeclaredKey.get -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmStructuralProperty>
 virtual Microsoft.OData.Edm.EdmEnumType.Members.get -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmEnumMember>
 virtual Microsoft.OData.Edm.EdmModelBase.FindDeclaredBoundOperations(Microsoft.OData.Edm.IEdmType bindingType) -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmOperation>
 virtual Microsoft.OData.Edm.EdmModelBase.FindDeclaredBoundOperations(string qualifiedName, Microsoft.OData.Edm.IEdmType bindingType) -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmOperation>

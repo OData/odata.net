@@ -84,8 +84,8 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         internal abstract void WriteDeclaredKeyPropertiesElementHeader();
         internal abstract Task WriteDeclaredKeyPropertiesElementHeaderAsync();
 
-        internal abstract void WritePropertyRefElement(IEdmStructuralProperty property);
-        internal abstract Task WritePropertyRefElementAsync(IEdmStructuralProperty property);
+        internal abstract void WritePropertyRefElement(IEdmPropertyRef propertyRef);
+        internal abstract Task WritePropertyRefElementAsync(IEdmPropertyRef propertyRef);
 
         internal abstract void WriteNavigationPropertyElementHeader(IEdmNavigationProperty property);
         internal abstract Task WriteNavigationPropertyElementHeaderAsync(IEdmNavigationProperty property);

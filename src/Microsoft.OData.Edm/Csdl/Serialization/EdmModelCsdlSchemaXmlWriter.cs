@@ -400,23 +400,35 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <summary>
         /// Writes the PropertyRef element.
         /// </summary>
-        /// <param name="property">The Edm Structural Property.</param>
-        internal override void WritePropertyRefElement(IEdmStructuralProperty property)
+        /// <param name="propertyRef">The Edm Property reference.</param>
+        internal override void WritePropertyRefElement(IEdmPropertyRef propertyRef)
         {
             this.xmlWriter.WriteStartElement(CsdlConstants.Element_PropertyRef);
-            this.WriteRequiredAttribute(CsdlConstants.Attribute_Name, property.Name, EdmValueWriter.StringAsXml);
+            this.WriteRequiredAttribute(CsdlConstants.Attribute_Name, propertyRef.Path.Path, EdmValueWriter.StringAsXml);
+
+            if (propertyRef.PropertyAlias != null && propertyRef.PropertyAlias != propertyRef.Path.Path)
+            {
+                this.WriteRequiredAttribute(CsdlConstants.Attribute_Alias, propertyRef.PropertyAlias, EdmValueWriter.StringAsXml);
+            }
+
             this.WriteEndElement();
         }
 
         /// <summary>
         /// Asynchronously writes the PropertyRef element.
         /// </summary>
-        /// <param name="property">The Edm Structural Property.</param>
+        /// <param name="propertyRef">The Edm Property reference.</param>
         /// <returns>Task represents an asynchronous operation.</returns>
-        internal override async Task WritePropertyRefElementAsync(IEdmStructuralProperty property)
+        internal override async Task WritePropertyRefElementAsync(IEdmPropertyRef propertyRef)
         {
             await this.xmlWriter.WriteStartElementAsync(null, CsdlConstants.Element_PropertyRef, null).ConfigureAwait(false);
-            await this.WriteRequiredAttributeAsync(CsdlConstants.Attribute_Name, property.Name, EdmValueWriter.StringAsXml).ConfigureAwait(false);
+            await this.WriteRequiredAttributeAsync(CsdlConstants.Attribute_Name, propertyRef.Path.Path, EdmValueWriter.StringAsXml).ConfigureAwait(false);
+
+            if (propertyRef.PropertyAlias != null && propertyRef.PropertyAlias != propertyRef.Path.Path)
+            {
+                await this.WriteRequiredAttributeAsync(CsdlConstants.Attribute_Name, propertyRef.PropertyAlias, EdmValueWriter.StringAsXml).ConfigureAwait(false);
+            }
+
             await this.WriteEndElementAsync().ConfigureAwait(false);
         }
 

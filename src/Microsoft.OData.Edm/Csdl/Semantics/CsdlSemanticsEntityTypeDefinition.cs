@@ -8,6 +8,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OData.Edm.Csdl.Parsing.Ast;
+using Microsoft.OData.Edm.Vocabularies;
+
 
 namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 {
@@ -23,8 +25,8 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         private static readonly Func<CsdlSemanticsEntityTypeDefinition, IEdmEntityType> ComputeBaseTypeFunc = (me) => me.ComputeBaseType();
         private static readonly Func<CsdlSemanticsEntityTypeDefinition, IEdmEntityType> OnCycleBaseTypeFunc = (me) => new CyclicEntityType(me.GetCyclicBaseTypeName(me.entity.BaseTypeName), me.Location);
 
-        private readonly Cache<CsdlSemanticsEntityTypeDefinition, IEnumerable<IEdmStructuralProperty>> declaredKeyCache = new Cache<CsdlSemanticsEntityTypeDefinition, IEnumerable<IEdmStructuralProperty>>();
-        private static readonly Func<CsdlSemanticsEntityTypeDefinition, IEnumerable<IEdmStructuralProperty>> ComputeDeclaredKeyFunc = (me) => me.ComputeDeclaredKey();
+        private readonly Cache<CsdlSemanticsEntityTypeDefinition, IEnumerable<IEdmPropertyRef>> declaredKeyRefCache = new Cache<CsdlSemanticsEntityTypeDefinition, IEnumerable<IEdmPropertyRef>>();
+        private static readonly Func<CsdlSemanticsEntityTypeDefinition, IEnumerable<IEdmPropertyRef>> ComputeDeclaredKeyRefFunc = (me) => me.ComputeDeclaredKeyRef();
 
         public CsdlSemanticsEntityTypeDefinition(CsdlSemanticsSchema context, CsdlEntityType entity)
             : base(context, entity)
@@ -71,11 +73,11 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             get { return this.entity.HasStream; }
         }
 
-        public IEnumerable<IEdmStructuralProperty> DeclaredKey
+        public IEnumerable<IEdmPropertyRef> DeclaredKeyRef
         {
             get
             {
-                return this.declaredKeyCache.GetValue(this, ComputeDeclaredKeyFunc, null);
+                return this.declaredKeyRefCache.GetValue(this, ComputeDeclaredKeyRefFunc, null);
             }
         }
 
@@ -105,17 +107,24 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             return null;
         }
 
-        private IEnumerable<IEdmStructuralProperty> ComputeDeclaredKey()
+        private IEnumerable<IEdmPropertyRef> ComputeDeclaredKeyRef()
         {
             if (this.entity.Key != null)
             {
-                List<IEdmStructuralProperty> key = new List<IEdmStructuralProperty>();
+                List<IEdmPropertyRef> key = new List<IEdmPropertyRef>();
                 foreach (CsdlPropertyReference keyProperty in this.entity.Key.Properties)
                 {
-                    IEdmStructuralProperty structuralProperty = this.FindProperty(keyProperty.PropertyName) as IEdmStructuralProperty;
+                    IEdmStructuralProperty structuralProperty = this.FindKeyProperty(keyProperty.PropertyName);
                     if (structuralProperty != null)
                     {
-                        key.Add(structuralProperty);
+                        if (keyProperty.PropertyAlias != null)
+                        {
+                            key.Add(new EdmPropertyRef(structuralProperty, new EdmPropertyPathExpression(keyProperty.PropertyName), keyProperty.PropertyAlias));
+                        }
+                        else
+                        {
+                            key.Add(new EdmPropertyRef(structuralProperty));
+                        }
                     }
                     else
                     {
@@ -125,11 +134,11 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                         structuralProperty = this.DeclaredProperties.FirstOrDefault(p => p.Name == keyProperty.PropertyName) as IEdmStructuralProperty;
                         if (structuralProperty != null)
                         {
-                            key.Add(structuralProperty);
+                            key.Add(new EdmPropertyRef(structuralProperty));
                         }
                         else
                         {
-                            key.Add(new UnresolvedProperty(this, keyProperty.PropertyName, this.Location));
+                            key.Add(new UnresolvedPropertyRef(this, keyProperty.PropertyName, keyProperty.PropertyAlias, this.Location));
                         }
                     }
                 }
@@ -138,6 +147,73 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             }
 
             return null;
+        }
+
+        private IEdmStructuralProperty FindKeyProperty(string nameOrPath)
+        {
+            if (string.IsNullOrWhiteSpace(nameOrPath))
+            {
+                return null;
+            }
+
+            string[] segments = nameOrPath.Split('/');
+            if (segments.Length == 1)
+            {
+                return FindPropertyOnType(this, nameOrPath) as IEdmStructuralProperty;
+            }
+            else
+            {
+                // OData spec says "The value of Name is a path expression leading to a primitive property."
+                // The segment in a path expression could be single value property name, collection value property name, type cast, ...
+                // However, for the key property reference path expression:
+                // 1) Collection value property name segment is invalid, right?
+                // 2) Type cast? reference a key on the sub type? it's valid but So far, let's skip it.
+                IEdmStructuredType edmStructuredType = this;
+                for (int i = 0; i < segments.Length; ++i)
+                {
+                    if (edmStructuredType == null)
+                    {
+                        return null;
+                    }
+
+                    string segment = segments[i];
+                    if (segment.Contains('.', StringComparison.Ordinal))
+                    {
+                        // a type cast, let's skip it for key reference now.
+                        continue;
+                    }
+
+                    IEdmProperty edmProperty = FindPropertyOnType(edmStructuredType, segment);
+                    if (i == segments.Length - 1)
+                    {
+                        return edmProperty as IEdmStructuralProperty;
+                    }
+                    else if (edmProperty != null)
+                    {
+                        // If the property is a collection value, let's move on using the element type of this collection
+                        edmStructuredType = edmProperty.Type.ToStructuredType();
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
+            }
+
+            return null;
+        }
+
+
+        private static IEdmProperty FindPropertyOnType(IEdmStructuredType structuredType, string name)
+        {
+            IEdmProperty property = structuredType.FindProperty(name);
+
+            if (property == null)
+            {
+                property = structuredType.DeclaredProperties.FirstOrDefault(p => p.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+            }
+
+            return property;
         }
     }
 }
