@@ -156,6 +156,9 @@
   <data name="PathSegmentMustNotContainSlash" xml:space="preserve">
     <value>Path segments must not contain '/' character.</value>
   </data>
+	<data name="PropertyPathMustEndingWithCorrectPropertyName" xml:space="preserve">
+    <value>Property Path '{0}' is not ended with '{1}'.</value>
+  </data>
   <data name="Constructable_DependentPropertyCountMustMatchNumberOfPropertiesOnPrincipalType" xml:space="preserve">
     <value>The number of dependent properties must match the number of key properties on the principal entity type. '{0}' principal properties were provided, but {1} dependent properties were provided.</value>
   </data>
@@ -965,6 +968,9 @@
   </data>
   <data name="Bad_UnresolvedLabeledElement" xml:space="preserve">
     <value>The labeled element '{0}' could not be found.</value>
+  </data>
+	<data name="Bad_UnresolvedPropertyRef" xml:space="preserve">
+    <value>The property ref on type '{0}' with name '{1}' and alias '{2}' could not be resolved.</value>
   </data>
   <data name="Bad_CyclicEntity" xml:space="preserve">
     <value>The entity '{0}' is invalid because its base type is cyclic.</value>

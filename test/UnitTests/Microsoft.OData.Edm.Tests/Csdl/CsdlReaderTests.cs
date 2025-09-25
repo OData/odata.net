@@ -968,6 +968,48 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             Assert.Equal("Smith", optionalParamWithDefault.DefaultValueString);
         }
 
+        [Fact]
+        public void ParsingXmlWithKeyAliasOnPropertyOnComplex()
+        {
+            // Arrange
+            string csdlWithKeyAlias = "<?xml version=\"1.0\" encoding=\"utf-16\"?><edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+"<edmx:DataServices><Schema Namespace=\"DefaultNs\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+  "<EntityType Name=\"EntityType\">" +
+    "<Key>" +
+      "<PropertyRef Alias=\"ComID\" Name=\"Info/ID\" />" +
+    "</Key>" +
+    "<Property Name=\"ID\" Type=\"Edm.String\" Nullable=\"false\" />" +
+    "<Property Name=\"Info\" Type=\"DefaultNs.ComplexType\" Nullable=\"false\" />" +
+  "</EntityType>" +
+  "<ComplexType Name=\"ComplexType\">" +
+    "<Property Name=\"ID\" Type=\"Edm.Int32\" Nullable=\"false\" />" +
+  "</ComplexType>" +
+  "</Schema>" +
+  "</edmx:DataServices>" +
+"</edmx:Edmx>";
+
+            // Act
+            IEdmModel model = CsdlReader.Parse(XElement.Parse(csdlWithKeyAlias).CreateReader());
+
+            // Assert
+            // There's only one entity type and one complex type
+            IEdmEntityType entityType = model.SchemaElements.OfType<IEdmEntityType>().First();
+            IEdmComplexType complexType = model.SchemaElements.OfType<IEdmComplexType>().First();
+
+            IEdmProperty complexIdProperty = complexType.FindProperty("ID");
+
+            IEdmStructuralProperty keyProperty = Assert.Single(entityType.DeclaredKey);
+            Assert.Same(complexIdProperty, keyProperty);
+
+            IEdmPropertyRef keyPropertyRef = Assert.Single(entityType.DeclaredKeyRef);
+            Assert.Same(complexIdProperty, keyPropertyRef.ReferencedProperty);
+            Assert.Equal("Info/ID", keyPropertyRef.Path.Path);
+            Assert.Equal("ComID", keyPropertyRef.PropertyAlias);
+
+            IEdmStructuralProperty property = Assert.Single(entityType.DeclaredKey);
+            Assert.Same(complexType.FindProperty("ID"), property);
+        }
+
         [Theory]
         [InlineData(EdmVocabularyAnnotationSerializationLocation.Inline)]
         [InlineData(EdmVocabularyAnnotationSerializationLocation.OutOfLine)]

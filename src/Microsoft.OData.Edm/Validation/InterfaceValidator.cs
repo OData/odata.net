@@ -727,7 +727,7 @@ namespace Microsoft.OData.Edm.Validation
                 List<EdmError> errors = null;
                 if (type.DeclaredKey != null)
                 {
-                    ProcessEnumerable(type, type.DeclaredKey, "DeclaredKey", references, ref errors);
+                    ProcessEnumerable(type, type.DeclaredKeyRef, "DeclaredKeyRef", references, ref errors);
                 }
 
                 return errors;

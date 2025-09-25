@@ -282,9 +282,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         protected override void ProcessEntityType(IEdmEntityType element)
         {
             this.BeginElement(element, this.schemaWriter.WriteEntityTypeElementHeader);
-            if (element.DeclaredKey != null && element.DeclaredKey.Any())
+            if (element.DeclaredKeyRef != null && element.DeclaredKeyRef.Any())
             {
-                this.VisitEntityTypeDeclaredKey(element.DeclaredKey);
+                this.VisitEntityTypeDeclaredKeyRef(element.DeclaredKeyRef);
             }
 
             this.VisitProperties(element.DeclaredStructuralProperties().Cast<IEdmProperty>());
@@ -299,9 +299,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         protected override async Task ProcessEntityTypeAsync(IEdmEntityType element)
         {
             await this.BeginElementAsync(element, this.schemaWriter.WriteEntityTypeElementHeaderAsync).ConfigureAwait(false);
-            if (element.DeclaredKey != null && element.DeclaredKey.Any())
+            if (element.DeclaredKeyRef != null && element.DeclaredKeyRef.Any())
             {
-                await this.VisitEntityTypeDeclaredKeyAsync(element.DeclaredKey).ConfigureAwait(false);
+                await this.VisitEntityTypeDeclaredKeyRefAsync(element.DeclaredKeyRef).ConfigureAwait(false);
             }
 
             await this.VisitPropertiesAsync(element.DeclaredStructuralProperties().Cast<IEdmProperty>()).ConfigureAwait(false);
@@ -1512,7 +1512,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             }
         }
 
-        private void VisitEntityTypeDeclaredKey(IEnumerable<IEdmStructuralProperty> keyProperties)
+        private void VisitEntityTypeDeclaredKeyRef(IEnumerable<IEdmPropertyRef> keyProperties)
         {
             this.schemaWriter.WriteDeclaredKeyPropertiesElementHeader();
             this.VisitPropertyRefs(keyProperties);
@@ -1523,16 +1523,16 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// Asynchronously visits the entity type declared key.
         /// </summary>
         /// <param name="keyProperties">Collection of Edm structural properties.</param>
-        private async Task VisitEntityTypeDeclaredKeyAsync(IEnumerable<IEdmStructuralProperty> keyProperties)
+        private async Task VisitEntityTypeDeclaredKeyRefAsync(IEnumerable<IEdmPropertyRef> keyProperties)
         {
             await this.schemaWriter.WriteDeclaredKeyPropertiesElementHeaderAsync().ConfigureAwait(false);
             await this.VisitPropertyRefsAsync(keyProperties).ConfigureAwait(false);
             await this.schemaWriter.WriteArrayEndElementAsync().ConfigureAwait(false);
         }
 
-        private void VisitPropertyRefs(IEnumerable<IEdmStructuralProperty> properties)
+        private void VisitPropertyRefs(IEnumerable<IEdmPropertyRef> properties)
         {
-            foreach (IEdmStructuralProperty property in properties)
+            foreach (IEdmPropertyRef property in properties)
             {
                 this.schemaWriter.WritePropertyRefElement(property);
             }
@@ -1542,9 +1542,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// Asynchronously visits the property references.
         /// </summary>
         /// <param name="properties">Collection of Edm structural properties.</param>
-        private async Task VisitPropertyRefsAsync(IEnumerable<IEdmStructuralProperty> properties)
+        private async Task VisitPropertyRefsAsync(IEnumerable<IEdmPropertyRef> properties)
         {
-            foreach (IEdmStructuralProperty property in properties)
+            foreach (IEdmPropertyRef property in properties)
             {
                 await this.schemaWriter.WritePropertyRefElementAsync(property).ConfigureAwait(false);
             }
