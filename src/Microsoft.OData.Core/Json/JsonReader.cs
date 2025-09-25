@@ -1112,7 +1112,7 @@ namespace Microsoft.OData.Json
                         }
                         else
                         {
-                            result = this.ConsumeTokenToString(currentCharacterTokenRelativeIndex);
+                            result = currentNameSpan.ToString();
                         }
                     }
 
@@ -1278,8 +1278,8 @@ namespace Microsoft.OData.Json
             }
             while ((this.tokenStartIndex + currentCharacterTokenRelativeIndex) < this.storedCharacterCount || this.ReadInput());
 
-            Debug.Assert(currentCharacterTokenRelativeIndex >= 0, "characterCount >= 0");
-            Debug.Assert(this.tokenStartIndex + currentCharacterTokenRelativeIndex <= this.storedCharacterCount, "characterCount specified characters outside of the available range.");
+            Debug.Assert(currentCharacterTokenRelativeIndex >= 0, "currentCharacterTokenRelativeIndex >= 0");
+            Debug.Assert(this.tokenStartIndex + currentCharacterTokenRelativeIndex <= this.storedCharacterCount, "currentCharacterTokenRelativeIndex specified characters outside of the available range.");
             
             ReadOnlySpan<char> currentNameSpan = this.characterBuffer.AsSpan(this.tokenStartIndex, currentCharacterTokenRelativeIndex);
             if (TryInternCommonPropertyNames(currentNameSpan, out string interned))
@@ -1299,7 +1299,7 @@ namespace Microsoft.OData.Json
             char firstCharacter = this.characterBuffer[this.tokenStartIndex];
             if ((firstCharacter == '"') || (firstCharacter == '\''))
             {
-                return this.ParseStringPrimitiveValue();
+                return this.ParseStringPrimitiveValue().AsSpan();
             }
 
             int currentCharacterTokenRelativeIndex = 0;
@@ -1321,8 +1321,8 @@ namespace Microsoft.OData.Json
             }
             while ((this.tokenStartIndex + currentCharacterTokenRelativeIndex) < this.storedCharacterCount || this.ReadInput());
 
-            Debug.Assert(currentCharacterTokenRelativeIndex >= 0, "characterCount >= 0");
-            Debug.Assert(this.tokenStartIndex + currentCharacterTokenRelativeIndex <= this.storedCharacterCount, "characterCount specified characters outside of the available range.");
+            Debug.Assert(currentCharacterTokenRelativeIndex >= 0, "currentCharacterTokenRelativeIndex >= 0");
+            Debug.Assert(this.tokenStartIndex + currentCharacterTokenRelativeIndex <= this.storedCharacterCount, "currentCharacterTokenRelativeIndex specified characters outside of the available range.");
 
             ReadOnlySpan<char> currentNameSpan = this.characterBuffer.AsSpan(this.tokenStartIndex, currentCharacterTokenRelativeIndex);
             if (TryInternCommonPropertyNames(currentNameSpan, out string interned))
@@ -1584,24 +1584,10 @@ namespace Microsoft.OData.Json
 
         /// <summary>
         /// Consumes the <paramref name="characterCount"/> characters starting at the start of the token
-        /// and returns them as a string.
+        /// and returns them as ReadOnlySpan.
         /// </summary>
         /// <param name="characterCount">The number of characters after the token start to consume.</param>
-        /// <returns>The string value of the consumed token.</returns>
-        private string ConsumeTokenToString(int characterCount)
-        {
-            Debug.Assert(characterCount >= 0, "characterCount >= 0");
-            Debug.Assert(this.tokenStartIndex + characterCount <= this.storedCharacterCount, "characterCount specified characters outside of the available range.");
-            string result = string.Create(characterCount, (this.characterBuffer, this.tokenStartIndex), (span, state) =>
-            {
-                var (buffer, start) = state;
-                new ReadOnlySpan<char>(buffer, start, span.Length).CopyTo(span);
-            });
-            this.tokenStartIndex += characterCount;
-
-            return result;
-        }
-
+        /// <returns>The ReadOnlySpan value of the consumed token.</returns>
         private ReadOnlySpan<char> ConsumeTokenToSpan(int characterCount)
         {
             Debug.Assert(characterCount >= 0, "characterCount >= 0");
@@ -1613,6 +1599,12 @@ namespace Microsoft.OData.Json
             return result;
         }
 
+        /// <summary>
+        /// Consumes the <paramref name="characterCount"/> characters starting at the start of the token
+        /// and returns them as ReadOnlyMemory.
+        /// </summary>
+        /// <param name="characterCount">The number of characters after the token start to consume.</param>
+        /// <returns>The ReadOnlyMemory value of the consumed token.</returns>
         private ReadOnlyMemory<char> ConsumeTokenToMemory(int characterCount)
         {
             Debug.Assert(characterCount >= 0, "characterCount >= 0");
@@ -1924,6 +1916,9 @@ namespace Microsoft.OData.Json
                     }
                     else
                     {
+                        Debug.Assert(currentCharacterTokenRelativeIndex >= 0, "currentCharacterTokenRelativeIndex >= 0");
+                        Debug.Assert(this.tokenStartIndex + currentCharacterTokenRelativeIndex <= this.storedCharacterCount, "currentCharacterTokenRelativeIndex specified characters outside of the available range.");
+
                         ReadOnlyMemory<char> currentNameMemory = this.characterBuffer.AsMemory(this.tokenStartIndex, currentCharacterTokenRelativeIndex);
                         if (TryInternCommonPropertyNames(currentNameMemory.Span, out string interned))
                         {
@@ -1932,7 +1927,8 @@ namespace Microsoft.OData.Json
                         }
                         else
                         {
-                            result = this.ConsumeTokenToString(currentCharacterTokenRelativeIndex);
+                            this.tokenStartIndex += currentCharacterTokenRelativeIndex;
+                            result = currentNameMemory.Span.ToString();
                         }
                     }
 
@@ -1966,11 +1962,11 @@ namespace Microsoft.OData.Json
                 "The method should only be called when the 'n' character is the start of the token.");
 
             // We can call ParseName since we know the first character is 'n' and thus it won't be quoted.
-            string token = await this.ParseNameAsync().ConfigureAwait(false);
+            ReadOnlyMemory<char> token = await this.ParseNameOrValueAsync().ConfigureAwait(false);
 
-            if (!string.Equals(token, JsonConstants.JsonNullLiteral, StringComparison.Ordinal))
+            if (!token.Span.SequenceEqual(JsonConstants.JsonNullLiteral.AsSpan()))
             {
-                throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_UnexpectedToken, token));
+                throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_UnexpectedToken, token.Span.ToString()));
             }
 
             return null;
@@ -1989,14 +1985,14 @@ namespace Microsoft.OData.Json
                 "The method should only be called when the 't' or 'f' character is the start of the token.");
 
             // We can call ParseName since we know the first character is 't' or 'f' and thus it won't be quoted.
-            string token = await this.ParseNameAsync().ConfigureAwait(false);
+            ReadOnlyMemory<char> token = await this.ParseNameOrValueAsync().ConfigureAwait(false);
 
-            if (string.Equals(token, JsonConstants.JsonFalseLiteral, StringComparison.Ordinal))
+            if (!token.Span.SequenceEqual(JsonConstants.JsonFalseLiteral.AsSpan()))
             {
                 return false;
             }
 
-            if (string.Equals(token, JsonConstants.JsonTrueLiteral, StringComparison.Ordinal))
+            if (!token.Span.SequenceEqual(JsonConstants.JsonTrueLiteral.AsSpan()))
             {
                 return true;
             }
@@ -2120,6 +2116,51 @@ namespace Microsoft.OData.Json
             return currentNameMemory.Span.ToString();
         }
 
+        private async Task<ReadOnlyMemory<char>> ParseNameOrValueAsync()
+        {
+            Debug.Assert(this.tokenStartIndex < this.storedCharacterCount, "Must have at least one character available.");
+
+            char firstCharacter = this.characterBuffer[this.tokenStartIndex];
+            if ((firstCharacter == '"') || (firstCharacter == '\''))
+            {
+                var parseResult = await this.ParseStringPrimitiveValueAsync()
+                    .ConfigureAwait(false);
+                return parseResult.Item1.AsMemory();
+            }
+
+            int currentCharacterTokenRelativeIndex = 0;
+            do
+            {
+                Debug.Assert(this.tokenStartIndex < this.storedCharacterCount, "Must have at least one character available.");
+
+                char character = this.characterBuffer[this.tokenStartIndex + currentCharacterTokenRelativeIndex];
+
+                // COMPAT 46: JSON property names don't require quotes and they allow any letter, digit, underscore or dollar sign in them.
+                if (IsCharacterAllowedInPropertyName(character))
+                {
+                    currentCharacterTokenRelativeIndex++;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            while ((this.tokenStartIndex + currentCharacterTokenRelativeIndex) < this.storedCharacterCount || await this.ReadInputAsync().ConfigureAwait(false));
+
+            Debug.Assert(currentCharacterTokenRelativeIndex >= 0, "currentCharacterTokenRelativeIndex >= 0");
+            Debug.Assert(this.tokenStartIndex + currentCharacterTokenRelativeIndex <= this.storedCharacterCount, "currentCharacterTokenRelativeIndex specified characters outside of the available range.");
+
+            ReadOnlyMemory<char> currentNameMemory = this.characterBuffer.AsMemory(this.tokenStartIndex, currentCharacterTokenRelativeIndex);
+            if (TryInternCommonPropertyNames(currentNameMemory.Span, out string interned))
+            {
+
+                this.tokenStartIndex += currentCharacterTokenRelativeIndex;
+                return interned.AsMemory();
+            }
+
+            this.tokenStartIndex += currentCharacterTokenRelativeIndex;
+            return currentNameMemory;
+        }
 
         /// <summary>
         /// Asynchronously reads bytes from the current string value.
