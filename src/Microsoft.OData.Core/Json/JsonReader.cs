@@ -1104,15 +1104,19 @@ namespace Microsoft.OData.Json
                     }
                     else
                     {
+                        Debug.Assert(currentCharacterTokenRelativeIndex >= 0, "currentCharacterTokenRelativeIndex >= 0");
+                        Debug.Assert(this.tokenStartIndex + currentCharacterTokenRelativeIndex <= this.storedCharacterCount, "currentCharacterTokenRelativeIndex specified characters outside of the available range.");
+
                         ReadOnlySpan<char> currentNameSpan = this.characterBuffer.AsSpan(this.tokenStartIndex, currentCharacterTokenRelativeIndex);
                         if (TryGetMatchingCommonValueString(currentNameSpan, out string interned))
                         {
-                            this.tokenStartIndex += currentCharacterTokenRelativeIndex;
                             result = interned;
+                            this.tokenStartIndex += currentCharacterTokenRelativeIndex;
                         }
                         else
                         {
                             result = currentNameSpan.ToString();
+                            this.tokenStartIndex += currentCharacterTokenRelativeIndex;
                         }
                     }
 
@@ -1922,13 +1926,13 @@ namespace Microsoft.OData.Json
                         ReadOnlyMemory<char> currentNameMemory = this.characterBuffer.AsMemory(this.tokenStartIndex, currentCharacterTokenRelativeIndex);
                         if (TryGetMatchingCommonValueString(currentNameMemory.Span, out string interned))
                         {
-                            this.tokenStartIndex += currentCharacterTokenRelativeIndex;
                             result = interned;
+                            this.tokenStartIndex += currentCharacterTokenRelativeIndex;
                         }
                         else
                         {
-                            this.tokenStartIndex += currentCharacterTokenRelativeIndex;
                             result = currentNameMemory.Span.ToString();
+                            this.tokenStartIndex += currentCharacterTokenRelativeIndex;
                         }
                     }
 
@@ -2101,8 +2105,8 @@ namespace Microsoft.OData.Json
             }
             while ((this.tokenStartIndex + currentCharacterTokenRelativeIndex) < this.storedCharacterCount || await this.ReadInputAsync().ConfigureAwait(false));
 
-            Debug.Assert(currentCharacterTokenRelativeIndex >= 0, "characterCount >= 0");
-            Debug.Assert(this.tokenStartIndex + currentCharacterTokenRelativeIndex <= this.storedCharacterCount, "characterCount specified characters outside of the available range.");
+            Debug.Assert(currentCharacterTokenRelativeIndex >= 0, "currentCharacterTokenRelativeIndex >= 0");
+            Debug.Assert(this.tokenStartIndex + currentCharacterTokenRelativeIndex <= this.storedCharacterCount, "currentCharacterTokenRelativeIndex specified characters outside of the available range.");
 
             ReadOnlyMemory<char> currentNameMemory = this.characterBuffer.AsMemory(this.tokenStartIndex, currentCharacterTokenRelativeIndex);
             if (TryGetMatchingCommonValueString(currentNameMemory.Span, out string interned))
@@ -2553,9 +2557,9 @@ namespace Microsoft.OData.Json
                         value = ODataJsonConstants.SimplifiedODataTypePropertyName; 
                         return true;
                     }
-                    if (Is(span, ODataJsonConstants.ODataNullAnnotationFalseValue))
+                    if (Is(span, ODataJsonConstants.LowercaseFalseStringValue))
                     {
-                        value = ODataJsonConstants.ODataNullAnnotationFalseValue;
+                        value = ODataJsonConstants.LowercaseFalseStringValue;
                         return true;
                     }
                     break;

@@ -30,8 +30,8 @@ namespace Microsoft.OData.Json
         /// <summary>The value 'true' for the OData null annotation.</summary>
         internal const string ODataNullAnnotationTrueValue = "true";
 
-        /// <summary>The value 'false' for the OData null annotation.</summary>
-        internal const string ODataNullAnnotationFalseValue = "false";
+        /// <summary>The value 'false' for the OData.</summary>
+        internal const string LowercaseFalseStringValue = "false";
 
         /// <summary>The 'value' property name for the Json value property.</summary>
         internal const string ODataValuePropertyName = "value";
