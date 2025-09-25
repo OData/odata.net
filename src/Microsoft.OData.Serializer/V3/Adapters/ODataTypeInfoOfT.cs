@@ -42,6 +42,8 @@ public class ODataTypeInfo<T, TCustomState> : ODataTypeInfo
         }
     }
 
+    public ODataPropertySelector<T, TCustomState>? PropertySelector { get; set; }
+
     // We expose two approaches to writing annotations:
     // - shorthand GetXXXValue that returns the value, here we select a common, but "cheap" type to represent the value.
     // - WriteXXXValue that accepts a constrained writer that can write the value. The write may have overloads that support different types for more flexibility and performance.
