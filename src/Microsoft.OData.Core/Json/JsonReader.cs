@@ -1105,7 +1105,7 @@ namespace Microsoft.OData.Json
                     else
                     {
                         ReadOnlySpan<char> currentNameSpan = this.characterBuffer.AsSpan(this.tokenStartIndex, currentCharacterTokenRelativeIndex);
-                        if (TryInternCommonPropertyNames(currentNameSpan, out string interned))
+                        if (TryGetMatchingCommonValueString(currentNameSpan, out string interned))
                         {
                             this.tokenStartIndex += currentCharacterTokenRelativeIndex;
                             result = interned;
@@ -1282,7 +1282,7 @@ namespace Microsoft.OData.Json
             Debug.Assert(this.tokenStartIndex + currentCharacterTokenRelativeIndex <= this.storedCharacterCount, "currentCharacterTokenRelativeIndex specified characters outside of the available range.");
             
             ReadOnlySpan<char> currentNameSpan = this.characterBuffer.AsSpan(this.tokenStartIndex, currentCharacterTokenRelativeIndex);
-            if (TryInternCommonPropertyNames(currentNameSpan, out string interned))
+            if (TryGetMatchingCommonValueString(currentNameSpan, out string interned))
             {
                 this.tokenStartIndex += currentCharacterTokenRelativeIndex;
                 return interned;
@@ -1325,7 +1325,7 @@ namespace Microsoft.OData.Json
             Debug.Assert(this.tokenStartIndex + currentCharacterTokenRelativeIndex <= this.storedCharacterCount, "currentCharacterTokenRelativeIndex specified characters outside of the available range.");
 
             ReadOnlySpan<char> currentNameSpan = this.characterBuffer.AsSpan(this.tokenStartIndex, currentCharacterTokenRelativeIndex);
-            if (TryInternCommonPropertyNames(currentNameSpan, out string interned))
+            if (TryGetMatchingCommonValueString(currentNameSpan, out string interned))
             {
                 this.tokenStartIndex += currentCharacterTokenRelativeIndex;
                 return interned;
@@ -1920,7 +1920,7 @@ namespace Microsoft.OData.Json
                         Debug.Assert(this.tokenStartIndex + currentCharacterTokenRelativeIndex <= this.storedCharacterCount, "currentCharacterTokenRelativeIndex specified characters outside of the available range.");
 
                         ReadOnlyMemory<char> currentNameMemory = this.characterBuffer.AsMemory(this.tokenStartIndex, currentCharacterTokenRelativeIndex);
-                        if (TryInternCommonPropertyNames(currentNameMemory.Span, out string interned))
+                        if (TryGetMatchingCommonValueString(currentNameMemory.Span, out string interned))
                         {
                             this.tokenStartIndex += currentCharacterTokenRelativeIndex;
                             result = interned;
@@ -2105,7 +2105,7 @@ namespace Microsoft.OData.Json
             Debug.Assert(this.tokenStartIndex + currentCharacterTokenRelativeIndex <= this.storedCharacterCount, "characterCount specified characters outside of the available range.");
 
             ReadOnlyMemory<char> currentNameMemory = this.characterBuffer.AsMemory(this.tokenStartIndex, currentCharacterTokenRelativeIndex);
-            if (TryInternCommonPropertyNames(currentNameMemory.Span, out string interned))
+            if (TryGetMatchingCommonValueString(currentNameMemory.Span, out string interned))
             {
 
                 this.tokenStartIndex += currentCharacterTokenRelativeIndex;
@@ -2151,7 +2151,7 @@ namespace Microsoft.OData.Json
             Debug.Assert(this.tokenStartIndex + currentCharacterTokenRelativeIndex <= this.storedCharacterCount, "currentCharacterTokenRelativeIndex specified characters outside of the available range.");
 
             ReadOnlyMemory<char> currentNameMemory = this.characterBuffer.AsMemory(this.tokenStartIndex, currentCharacterTokenRelativeIndex);
-            if (TryInternCommonPropertyNames(currentNameMemory.Span, out string interned))
+            if (TryGetMatchingCommonValueString(currentNameMemory.Span, out string interned))
             {
 
                 this.tokenStartIndex += currentCharacterTokenRelativeIndex;
@@ -2453,8 +2453,7 @@ namespace Microsoft.OData.Json
         /// <param name="expect">The span of characters to compare against.</param>
         /// <returns><see langword="true"/> if the spans are of equal length and contain the same characters in the same order; otherwise, <see langword="false"/>.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static bool Is(ReadOnlySpan<char> current, ReadOnlySpan<char> expect) =>
-            current.Length == expect.Length && current.SequenceEqual(expect);
+        private static bool Is(ReadOnlySpan<char> current, ReadOnlySpan<char> expect) => current.SequenceEqual(expect);
 
         /// <summary>
         /// Attempts to match a given span of characters to a predefined set of common OData property names and returns the corresponding interned string if a match is found.
@@ -2465,7 +2464,7 @@ namespace Microsoft.OData.Json
         /// the match is successful; otherwise, <see langword="null"/>.</param>
         /// <returns><see langword="true"/> if the span matches one of the predefined OData property names;  otherwise, <see langword="false"/>.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static bool TryInternCommonPropertyNames(ReadOnlySpan<char> span, out string value)
+        private static bool TryGetMatchingCommonValueString(ReadOnlySpan<char> span, out string value)
         {
             switch (span.Length)
             {
