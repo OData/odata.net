@@ -840,18 +840,13 @@ namespace Microsoft.OData.Json
         /// returns true for all characters defined as whitespace by the Unicode spec (which is a lot of characters),
         /// this one on the other hand recognizes just the whitespaces as defined by the JSON spec.</remarks>
         [DebuggerStepThrough]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static bool IsWhitespaceCharacter(char character)
         {
-            // The whitespace characters are 0x20 (space), 0x09 (tab), 0x0A (new line), 0x0D (carriage return)
-            // Anything above 0x20 is a non-whitespace character.
-            if (character > (char)0x20 || character != (char)0x20 && character != (char)0x09 && character != (char)0x0A && character != (char)0x0D)
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
+            return character == ' ' || // 0x20 (space)
+                character == '\t' ||   // 0x09 (tab)
+                character == '\n' ||   // 0x0A (new line)
+                character == '\r';     // 0x0D (carriage return)
         }
 
         /// <summary>
@@ -909,7 +904,7 @@ namespace Microsoft.OData.Json
                 default:
                     // COMPAT 47: JSON number can start with dot.
                     // The JSON spec doesn't allow numbers to start with ., but WCF DS does. We will follow the WCF DS behavior for compatibility.
-                    if (Char.IsDigit(currentCharacter) || (currentCharacter == '-') || (currentCharacter == '.'))
+                    if ((currentCharacter >= '0' && currentCharacter <= '9') || (currentCharacter == '-') || (currentCharacter == '.'))
                     {
                         this.nodeValue = this.ParseNumberPrimitiveValue();
                         break;
@@ -1202,7 +1197,7 @@ namespace Microsoft.OData.Json
             while ((this.tokenStartIndex + currentCharacterTokenRelativeIndex) < this.storedCharacterCount || this.ReadInput())
             {
                 char character = this.characterBuffer[this.tokenStartIndex + currentCharacterTokenRelativeIndex];
-                if (Char.IsDigit(character) ||
+                if ((character >= '0' && character <= '9') ||
                     (character == '.') ||
                     (character == 'E') ||
                     (character == 'e') ||
@@ -1219,25 +1214,22 @@ namespace Microsoft.OData.Json
 
             // We now have all the characters which belong to the number, consume it into a string.
             ReadOnlySpan<char> numberSpan = this.ConsumeTokenToSpan(currentCharacterTokenRelativeIndex);
-            double doubleValue;
-            int intValue;
-            decimal decimalValue;
 
             // We will first try and convert the value to Int32. If it succeeds, use that.
             // And then, we will try Decimal, since it will lose precision while expected type is specified.
             // Otherwise, we will try and convert the value into a double.
-            if (Int32.TryParse(numberSpan, NumberStyles.Integer, NumberFormatInfo.InvariantInfo, out intValue))
+            if (Int32.TryParse(numberSpan, NumberStyles.Integer, NumberFormatInfo.InvariantInfo, out int intValue))
             {
                 return intValue;
             }
 
             // if it is not Ieee754Compatible, decimal will be parsed before double to keep precision
-            if (!isIeee754Compatible && Decimal.TryParse(numberSpan, NumberStyles.Number, NumberFormatInfo.InvariantInfo, out decimalValue))
+            if (!isIeee754Compatible && Decimal.TryParse(numberSpan, NumberStyles.Number, NumberFormatInfo.InvariantInfo, out decimal decimalValue))
             {
                 return decimalValue;
             }
 
-            if (Double.TryParse(numberSpan, NumberStyles.Float, NumberFormatInfo.InvariantInfo, out doubleValue))
+            if (Double.TryParse(numberSpan, NumberStyles.Float, NumberFormatInfo.InvariantInfo, out double doubleValue))
             {
                 return doubleValue;
             }
@@ -1573,7 +1565,26 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="characterCountAfterTokenStart">The number of character after the token to make available.</param>
         /// <returns>true if at least the required number of characters is available; false if end of input was reached.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private bool EnsureAvailableCharacters(int characterCountAfterTokenStart)
+        {
+            // Fast path: Check if we already have enough characters in the buffer.
+            if (this.tokenStartIndex + characterCountAfterTokenStart <= this.storedCharacterCount)
+            {
+                return true;
+            }
+
+            // Slow path: We need to read more characters from the input.
+            return EnsureAvailableCharactersSlow(characterCountAfterTokenStart);
+        }
+
+        /// <summary>
+        /// Ensures that a specified number of characters after the token start is available in the buffer.
+        /// </summary>
+        /// <param name="characterCountAfterTokenStart">The number of character after the token to make available.</param>
+        /// <returns>true if at least the required number of characters is available; false if end of input was reached.</returns>
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        private bool EnsureAvailableCharactersSlow(int characterCountAfterTokenStart)
         {
             while (this.tokenStartIndex + characterCountAfterTokenStart > this.storedCharacterCount)
             {
@@ -2111,7 +2122,6 @@ namespace Microsoft.OData.Json
             ReadOnlyMemory<char> currentNameMemory = this.characterBuffer.AsMemory(this.tokenStartIndex, currentCharacterTokenRelativeIndex);
             if (TryGetMatchingCommonValueString(currentNameMemory.Span, out string interned))
             {
-
                 this.tokenStartIndex += currentCharacterTokenRelativeIndex;
                 return interned;
             }
@@ -2157,7 +2167,6 @@ namespace Microsoft.OData.Json
             ReadOnlyMemory<char> currentNameMemory = this.characterBuffer.AsMemory(this.tokenStartIndex, currentCharacterTokenRelativeIndex);
             if (TryGetMatchingCommonValueString(currentNameMemory.Span, out string interned))
             {
-
                 this.tokenStartIndex += currentCharacterTokenRelativeIndex;
                 return interned.AsMemory();
             }
@@ -2323,7 +2332,26 @@ namespace Microsoft.OData.Json
         /// <returns>A task that represents the asynchronous operation.
         /// The value of the TResult parameter contains true if at least the required number of characters is available; 
         /// otherwise false if end of input was reached.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private async ValueTask<bool> EnsureAvailableCharactersAsync(int characterCountAfterTokenStart)
+        {
+            if (this.tokenStartIndex + characterCountAfterTokenStart <= this.storedCharacterCount)
+            {
+                return true;
+            }
+
+            return await EnsureAvailableCharactersSlowAsync(characterCountAfterTokenStart).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Asynchronously ensures that a specified number of characters after the token start is available in the buffer.
+        /// </summary>
+        /// <param name="characterCountAfterTokenStart">The number of character after the token to make available.</param>
+        /// <returns>A task that represents the asynchronous operation.
+        /// The value of the TResult parameter contains true if at least the required number of characters is available; 
+        /// otherwise false if end of input was reached.</returns>
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        private async ValueTask<bool> EnsureAvailableCharactersSlowAsync(int characterCountAfterTokenStart)
         {
             while (this.tokenStartIndex + characterCountAfterTokenStart > this.storedCharacterCount)
             {
@@ -2516,15 +2544,15 @@ namespace Microsoft.OData.Json
                     }
                     break;
 
-                case 5: // value, error, delta, kind, title, source, target, @type, false
+                case 5: // value, error, delta, @type, false
+                    if (Is(span, ODataJsonConstants.LowercaseFalseStringValue))
+                    {
+                        value = ODataJsonConstants.LowercaseFalseStringValue;
+                        return true;
+                    }
                     if (Is(span, ODataJsonConstants.ODataValuePropertyName))
                     {
                         value = ODataJsonConstants.ODataValuePropertyName; 
-                        return true;
-                    }
-                    if (Is(span, ODataJsonConstants.ODataErrorPropertyName))
-                    {
-                        value = ODataJsonConstants.ODataErrorPropertyName; 
                         return true;
                     }
                     if (Is(span, ODataJsonConstants.ODataDeltaPropertyName))
@@ -2532,14 +2560,22 @@ namespace Microsoft.OData.Json
                         value = ODataJsonConstants.ODataDeltaPropertyName;
                         return true;
                     }
-                    if (Is(span, ODataJsonConstants.ODataServiceDocumentElementKind))
+                    if (Is(span, ODataJsonConstants.ODataErrorPropertyName))
                     {
-                        value = ODataJsonConstants.ODataServiceDocumentElementKind;
+                        value = ODataJsonConstants.ODataErrorPropertyName; 
                         return true;
                     }
-                    if (Is(span, ODataJsonConstants.ODataServiceDocumentElementTitle))
+                    if (Is(span, ODataJsonConstants.SimplifiedODataTypePropertyName))
                     {
-                        value = ODataJsonConstants.ODataServiceDocumentElementTitle;
+                        value = ODataJsonConstants.SimplifiedODataTypePropertyName; 
+                        return true;
+                    }
+                    break;
+
+                case 6: // reason, source, target
+                    if (Is(span, ODataJsonConstants.ODataReasonPropertyName))
+                    {
+                        value = ODataJsonConstants.ODataReasonPropertyName;
                         return true;
                     }
                     if (Is(span, ODataJsonConstants.ODataSourcePropertyName))
@@ -2550,24 +2586,6 @@ namespace Microsoft.OData.Json
                     if (Is(span, ODataJsonConstants.ODataTargetPropertyName))
                     {
                         value = ODataJsonConstants.ODataTargetPropertyName;
-                        return true;
-                    }
-                    if (Is(span, ODataJsonConstants.SimplifiedODataTypePropertyName))
-                    {
-                        value = ODataJsonConstants.SimplifiedODataTypePropertyName; 
-                        return true;
-                    }
-                    if (Is(span, ODataJsonConstants.LowercaseFalseStringValue))
-                    {
-                        value = ODataJsonConstants.LowercaseFalseStringValue;
-                        return true;
-                    }
-                    break;
-
-                case 6: // reason
-                    if (Is(span, ODataJsonConstants.ODataReasonPropertyName))
-                    {
-                        value = ODataJsonConstants.ODataReasonPropertyName;
                         return true;
                     }
                     break;
@@ -2603,16 +2621,6 @@ namespace Microsoft.OData.Json
                         value = ODataJsonConstants.PrefixedODataIdPropertyName; 
                         return true;
                     }
-                    if (Is(span, ODataJsonConstants.ServiceDocumentSingletonKindName))
-                    {
-                        value = ODataJsonConstants.ServiceDocumentSingletonKindName;
-                        return true;
-                    }
-                    if (Is(span, ODataJsonConstants.ServiceDocumentEntitySetKindName))
-                    {
-                        value = ODataJsonConstants.ServiceDocumentEntitySetKindName;
-                        return true;
-                    }
                     break;
 
                 case 11: // @odata.type, @odata.null
@@ -2628,14 +2636,6 @@ namespace Microsoft.OData.Json
                     }
                     break;
 
-                case 12: // relationship
-                    if (Is(span, ODataJsonConstants.ODataRelationshipPropertyName))
-                    {
-                        value = ODataJsonConstants.ODataRelationshipPropertyName; 
-                        return true;
-                    }
-                    break;
-
                 case 14: // @odata.context, @odata.removed, FunctionImport
                     if (Is(span, ODataJsonConstants.PrefixedODataContextPropertyName))
                     {
@@ -2645,11 +2645,6 @@ namespace Microsoft.OData.Json
                     if (Is(span, ODataJsonConstants.PrefixedODataRemovedPropertyName))
                     {
                         value = ODataJsonConstants.PrefixedODataRemovedPropertyName;
-                        return true;
-                    }
-                    if (Is(span, ODataJsonConstants.ServiceDocumentFunctionImportKindName))
-                    {
-                        value = ODataJsonConstants.ServiceDocumentFunctionImportKindName;
                         return true;
                     }
                     break;
@@ -2664,12 +2659,14 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="character">The character to check.</param>
         /// <returns>true if the character is allowed in a JSON property name; otherwise false.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private bool IsCharacterAllowedInPropertyName(char character)
         {
-            return Char.IsLetterOrDigit(character) ||
-                character == '_' ||
-                character == '$' ||
-                (this.allowAnnotations && (character == '.' || character == '@'));
+            return (character >= 'a' && character <= 'z') ||
+                   (character >= 'A' && character <= 'Z') ||
+                   (character >= '0' && character <= '9') ||
+                   character == '_' || character == '$' ||
+                   (this.allowAnnotations && (character == '.' || character == '@'));
         }
 
         /// <summary>
