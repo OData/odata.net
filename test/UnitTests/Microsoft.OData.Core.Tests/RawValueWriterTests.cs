@@ -38,14 +38,6 @@ namespace Microsoft.OData.Tests
         }
 
         [Fact]
-        public void StartWithJsonPadding()
-        {
-            RawValueWriter target = new RawValueWriter(this.settings, this.stream, new UTF32Encoding());
-            target.Start();
-            Assert.Equal("foo(", this.StreamAsString(target));
-        }
-
-        [Fact]
         public void EndDoesNothingNormally()
         {
             RawValueWriter target = new RawValueWriter(this.settings, this.stream, new UTF32Encoding());
@@ -131,14 +123,6 @@ namespace Microsoft.OData.Tests
             Assert.Equal("", result);
         }
 
-        [Fact]
-        public async Task RawValueWriterEndAsyncWithJsonPadding()
-        {
-            var result = await SetupRawValueWriterAndRunTestAsync(
-                (rawValueWriter) => rawValueWriter.EndAsync());
-
-            Assert.Equal(")", result);
-        }
 
         [Fact]
         public async Task WriteRawStringValueAsync()

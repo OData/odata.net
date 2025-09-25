@@ -829,7 +829,6 @@ public class SRResourcesTests
     [InlineData("WriterValidationUtils_ExpandedLinkWithResourcePayloadAndResourceSetMetadata", new object[] { "Value" })]
     [InlineData("WriterValidationUtils_ExpandedLinkWithResourceSetPayloadAndResourceMetadata", new object[] { "Value" })]
     [InlineData("WriterValidationUtils_MessageWriterSettingsBaseUriMustBeNullOrAbsolute", new object[] { "Value" })]
-    [InlineData("WriterValidationUtils_MessageWriterSettingsJsonPaddingOnRequestMessage", new object[] { })]
     [InlineData("WriterValidationUtils_MessageWriterSettingsServiceDocumentUriMustBeNullOrAbsolute", new object[] { "Value" })]
     [InlineData("WriterValidationUtils_MissingTypeNameWithMetadata", new object[] { })]
     [InlineData("WriterValidationUtils_NavigationLinkMustSpecifyUrl", new object[] { "Value" })]
