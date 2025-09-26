@@ -1,12 +1,11 @@
 ﻿using Microsoft.OData.Serializer.V3.Json;
 using Microsoft.OData.Serializer.V3.Json.State;
-using System.Collections;
-using System.Diagnostics;
-using System.Text.Json;
+
 namespace Microsoft.OData.Serializer.V3.Adapters;
 
-public class ODataPropertySelector<TResource, TProperty, TValue, TCustomState>
-    : ODataPropertySelector<TResource, TProperty, TCustomState>
+public class ODataPropertyEnumeratorSelector<TResource, TPropertyEnumerator, TProperty, TValue, TCustomState>
+    : ODataPropertyEnumeratorSelector<TResource, TPropertyEnumerator, TProperty, TCustomState>
+    where TPropertyEnumerator : IEnumerator<TProperty>
 {
     public required Func<TResource, TProperty, ODataWriterState<TCustomState>, string>
         GetPropertyName { get; set; }
