@@ -1,5 +1,9 @@
-﻿namespace ODataSamples.FileServiceLib.Models;
+﻿using Microsoft.OData.Serializer;
+using ODataSamples.FileServiceLib.Schema;
 
+namespace ODataSamples.FileServiceLib.Models;
+
+[ODataType($"{SchemaConstants.Namespace}.ActivityStat")]
 public class ActivityStat
 {
     public string Id { get; set; }
