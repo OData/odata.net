@@ -1,8 +1,7 @@
 ﻿using Microsoft.OData.Edm;
-using Microsoft.OData.Serializer.Attributes;
 using System.Reflection;
 
-namespace Microsoft.OData.Serializer.Adapters;
+namespace Microsoft.OData.Serializer;
 
 public class DefaultODataTypeMapper : IODataTypeMapper
 {

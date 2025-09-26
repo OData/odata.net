@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace Microsoft.OData.Serializer.Utils;
+namespace Microsoft.OData.Serializer;
 
 internal ref struct FixedSpanStringBuilder(Span<char> buffer)
 {

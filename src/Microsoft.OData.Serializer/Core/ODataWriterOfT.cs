@@ -1,4 +1,4 @@
-﻿namespace Microsoft.OData.Serializer.Core;
+﻿namespace Microsoft.OData.Serializer;
 
 public abstract class ODataWriter<T, TState> : IODataWriter<T, TState>
 {

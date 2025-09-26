@@ -1,11 +1,7 @@
-﻿using Microsoft.OData.Serializer.IO;
-using Microsoft.OData.Serializer.Json;
-using Microsoft.OData.Serializer.Json.State;
-using Microsoft.OData.Serializer.Json.Writers;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.IO.Pipelines;
 
-namespace Microsoft.OData.Serializer.Adapters;
+namespace Microsoft.OData.Serializer;
 
 #pragma warning disable CA1005 // Avoid excessive parameters on generic types
 public class ODataPropertyInfo<TDeclaringType, TCustomState> :

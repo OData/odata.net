@@ -1,6 +1,6 @@
 ﻿using System.Collections.Concurrent;
 
-namespace Microsoft.OData.Serializer.Adapters;
+namespace Microsoft.OData.Serializer;
 
 internal class DefaultCustomAnnotationsHandlerResolver<TCustomState> : ICustomAnnotationsHandlerResolver<TCustomState>
 {

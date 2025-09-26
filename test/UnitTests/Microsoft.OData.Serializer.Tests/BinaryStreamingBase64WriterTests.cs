@@ -1,6 +1,4 @@
 ﻿using Microsoft.OData.Edm;
-using Microsoft.OData.Serializer.Adapters;
-using Microsoft.OData.Serializer.Json.State;
 using Microsoft.OData.UriParser;
 using System.IO.Pipelines;
 using System.Text.Json;

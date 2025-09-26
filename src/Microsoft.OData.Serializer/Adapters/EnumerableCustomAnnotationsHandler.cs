@@ -1,7 +1,6 @@
-﻿using Microsoft.OData.Serializer.Json.State;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 
-namespace Microsoft.OData.Serializer.Adapters;
+namespace Microsoft.OData.Serializer;
 
 [SuppressMessage("Performance", "CA1812:Avoid uninstantiated internal classes", Justification = "This class is instantiated via reflection.")]
 internal class EnumerableCustomAnnotationsHandler<TValue, TCustomState> : ICustomAnnotationsHandler<TCustomState>

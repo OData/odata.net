@@ -1,7 +1,5 @@
-﻿using Microsoft.OData.Serializer.Json;
-using Microsoft.OData.Serializer.Json.State;
-
-namespace Microsoft.OData.Serializer.Adapters;
+﻿
+namespace Microsoft.OData.Serializer;
 
 internal class EnumerableOfObjectCustomPropertyAnnotationsHandler<TCustomState> : ICustomPropertyAnnotationsHandler<TCustomState>
 {

@@ -1,4 +1,4 @@
-﻿namespace Microsoft.OData.Serializer.Attributes;
+﻿namespace Microsoft.OData.Serializer;
 
 
 [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]

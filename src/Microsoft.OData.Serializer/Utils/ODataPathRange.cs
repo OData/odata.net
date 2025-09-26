@@ -1,7 +1,7 @@
 ﻿using Microsoft.OData.UriParser;
 using System.Diagnostics;
 
-namespace Microsoft.OData.Serializer.Utils;
+namespace Microsoft.OData.Serializer;
 
 /// <summary>
 /// A slice of an ODataPath

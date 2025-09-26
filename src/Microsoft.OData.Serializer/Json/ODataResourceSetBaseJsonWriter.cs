@@ -1,9 +1,5 @@
-﻿using Microsoft.OData.Serializer.Adapters;
-using Microsoft.OData.Serializer.ContextUrl;
-using Microsoft.OData.Serializer.Json.State;
-using Microsoft.OData.Serializer.Json.Writers;
-
-namespace Microsoft.OData.Serializer.Json;
+﻿
+namespace Microsoft.OData.Serializer;
 
 #pragma warning disable CA1005 // Avoid excessive parameters on generic types
 public abstract class ODataResourceSetBaseJsonWriter<TCollection, TElement, TCustomState>(ODataTypeInfo<TCollection, TCustomState>? typeInfo = null) :
@@ -12,7 +8,7 @@ public abstract class ODataResourceSetBaseJsonWriter<TCollection, TElement, TCus
 {
     public override bool Write(TCollection value, ODataWriterState<TCustomState> state)
     {
-        Adapters.ODataPropertyInfo? parentProperty = state.IsTopLevel()
+        ODataPropertyInfo? parentProperty = state.IsTopLevel()
             ? null
             : state.Stack.Current.PropertyInfo;
         state.Stack.Push();

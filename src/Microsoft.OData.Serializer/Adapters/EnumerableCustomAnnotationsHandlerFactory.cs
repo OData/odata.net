@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace Microsoft.OData.Serializer.Adapters;
+namespace Microsoft.OData.Serializer;
 
 internal class EnumerableCustomAnnotationsHandlerFactory<TCustomState> : CustomAnnotationsHandlerFactory<TCustomState>
 {

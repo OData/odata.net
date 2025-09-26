@@ -1,6 +1,5 @@
-﻿using Microsoft.OData.Serializer.Json.State;
-
-namespace Microsoft.OData.Serializer.Adapters;
+﻿
+namespace Microsoft.OData.Serializer;
 
 // TODO: internal because this is not yet supported by the ODataTypeInfoFactory.
 #pragma warning disable CA1005 // Avoid excessive parameters on generic types

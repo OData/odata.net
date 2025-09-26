@@ -1,6 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 
-namespace Microsoft.OData.Serializer.Utils;
+namespace Microsoft.OData.Serializer;
 
 /// <summary>
 /// Small inline zero-allocation that stores up to 10 strings.

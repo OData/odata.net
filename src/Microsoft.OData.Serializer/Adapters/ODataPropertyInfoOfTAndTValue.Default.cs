@@ -1,4 +1,4 @@
-﻿namespace Microsoft.OData.Serializer.Adapters;
+﻿namespace Microsoft.OData.Serializer;
 
 // TODO: I'd want to create a default version of this with DefaultState,
 // i.e. ODataPropertyInfo<TDeclaringType, TValue> : ODataPropertyInfo<TDeclaringType, TValue, DefaultState>

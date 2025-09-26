@@ -1,6 +1,5 @@
-﻿using Microsoft.OData.Serializer.Json.State;
-
-namespace Microsoft.OData.Serializer.Adapters;
+﻿
+namespace Microsoft.OData.Serializer;
 
 [System.Diagnostics.CodeAnalysis.SuppressMessage(
     "Design",

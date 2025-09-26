@@ -1,6 +1,6 @@
 ﻿using Microsoft.OData.Edm;
 
-namespace Microsoft.OData.Serializer.Adapters;
+namespace Microsoft.OData.Serializer;
 
 public abstract class ODataTypeInfo
 {

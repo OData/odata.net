@@ -1,6 +1,5 @@
-﻿using Microsoft.OData.Serializer.Json.State;
-
-namespace Microsoft.OData.Serializer.Adapters;
+﻿
+namespace Microsoft.OData.Serializer;
 
 // TODO: perhaps this should be an interface instead of abstract class.
 // Abstract class makes it easier to add common functionality or optional methods

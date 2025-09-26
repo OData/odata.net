@@ -1,4 +1,4 @@
-﻿namespace Microsoft.OData.Serializer.Core;
+﻿namespace Microsoft.OData.Serializer;
 
 // In the previous version, I separated TState and TContext where TState
 // represents the state a "this time", expected to be backed by a stack

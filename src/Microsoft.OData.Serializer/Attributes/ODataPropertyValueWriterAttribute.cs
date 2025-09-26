@@ -1,4 +1,4 @@
-﻿namespace Microsoft.OData.Serializer.Attributes;
+﻿namespace Microsoft.OData.Serializer;
 
 /// <summary>
 /// The attribute is applied on a class to specify a custom writer for a specific property

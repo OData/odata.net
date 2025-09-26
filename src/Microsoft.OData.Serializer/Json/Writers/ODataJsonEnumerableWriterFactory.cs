@@ -1,7 +1,6 @@
-﻿using Microsoft.OData.Serializer.Core;
-using System.Collections;
+﻿using System.Collections;
 
-namespace Microsoft.OData.Serializer.Json.Writers;
+namespace Microsoft.OData.Serializer;
 
 internal class ODataJsonEnumerableWriterFactory<TCustomState> : ODataWriterFactory<TCustomState>
 {

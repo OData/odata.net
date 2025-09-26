@@ -1,4 +1,4 @@
-﻿namespace Microsoft.OData.Serializer.Json.Writers;
+﻿namespace Microsoft.OData.Serializer;
 
 internal static class JsonConstants
 {

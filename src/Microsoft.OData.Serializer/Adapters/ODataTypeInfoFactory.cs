@@ -1,6 +1,4 @@
 ﻿using Microsoft.OData.Edm;
-using Microsoft.OData.Serializer.Attributes;
-using Microsoft.OData.Serializer.Json.State;
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -8,7 +6,7 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.Runtime.Serialization;
 
-namespace Microsoft.OData.Serializer.Adapters;
+namespace Microsoft.OData.Serializer;
 
 internal static class ODataTypeInfoFactory<TCustomState>
 {

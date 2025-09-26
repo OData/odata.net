@@ -4,7 +4,7 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Unicode;
 
-namespace Microsoft.OData.Serializer.Json.Writers;
+namespace Microsoft.OData.Serializer;
 
 internal static class JsonStringChunkWriter
 {

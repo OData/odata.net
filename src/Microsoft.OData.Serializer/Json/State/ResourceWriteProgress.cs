@@ -1,4 +1,4 @@
-﻿namespace Microsoft.OData.Serializer.Json.State;
+﻿namespace Microsoft.OData.Serializer;
 
 /// <summary>
 /// Represents the progress of writing a resource or collection.

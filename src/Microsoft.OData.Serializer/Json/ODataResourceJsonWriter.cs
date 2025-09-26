@@ -1,11 +1,6 @@
-﻿using Microsoft.OData.Serializer.Adapters;
-using Microsoft.OData.Serializer.ContextUrl;
-using Microsoft.OData.Serializer.Core;
-using Microsoft.OData.Serializer.Json.State;
-using Microsoft.OData.Serializer.Json.Writers;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 
-namespace Microsoft.OData.Serializer.Json;
+namespace Microsoft.OData.Serializer;
 
 internal class ODataResourceJsonWriter<T, TCustomState>(ODataTypeInfo<T, TCustomState> typeInfo)
     : ODataWriter<T, ODataWriterState<TCustomState>>,
@@ -15,7 +10,7 @@ internal class ODataResourceJsonWriter<T, TCustomState>(ODataTypeInfo<T, TCustom
 {
     public override bool Write(T value, ODataWriterState<TCustomState> state)
     {
-        Adapters.ODataPropertyInfo? parentProperty = state.IsTopLevel() ? null : state.Stack.Current.PropertyInfo;
+        ODataPropertyInfo? parentProperty = state.IsTopLevel() ? null : state.Stack.Current.PropertyInfo;
 
         // if we're resuming, then we should not push the stack again.
         // but how do we know if we're resuming?

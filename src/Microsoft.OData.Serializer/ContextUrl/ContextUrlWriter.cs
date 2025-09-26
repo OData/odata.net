@@ -1,9 +1,8 @@
-﻿using Microsoft.OData.Serializer.Utils;
-using Microsoft.OData.UriParser;
+﻿using Microsoft.OData.UriParser;
 using System.Diagnostics;
 using System.Text.Json;
 
-namespace Microsoft.OData.Serializer.ContextUrl;
+namespace Microsoft.OData.Serializer;
 
 internal static class ContextUrlWriter
 {

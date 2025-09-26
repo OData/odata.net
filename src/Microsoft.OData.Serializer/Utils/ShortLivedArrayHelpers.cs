@@ -1,6 +1,6 @@
 ﻿using System.Buffers;
 
-namespace Microsoft.OData.Serializer.Utils;
+namespace Microsoft.OData.Serializer;
 
 internal static class ShortLivedArrayHelpers
 {

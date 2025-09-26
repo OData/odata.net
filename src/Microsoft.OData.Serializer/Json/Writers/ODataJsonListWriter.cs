@@ -1,8 +1,6 @@
-﻿using Microsoft.OData.Serializer.Adapters;
-using Microsoft.OData.Serializer.Json.State;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 
-namespace Microsoft.OData.Serializer.Json.Writers;
+namespace Microsoft.OData.Serializer;
 
 [SuppressMessage("Performance", "CA1812:Avoid uninstantiated internal classes", Justification = "This class is instantiated via reflection.")]
 internal class ODataJsonListWriter<TCollection, TElement, TCustomState> : ODataResourceSetBaseJsonWriter<TCollection, TElement, TCustomState>

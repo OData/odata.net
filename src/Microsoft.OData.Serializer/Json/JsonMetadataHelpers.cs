@@ -3,7 +3,7 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Unicode;
 
-namespace Microsoft.OData.Serializer.Json;
+namespace Microsoft.OData.Serializer;
 
 internal static class JsonMetadataHelpers
 {

@@ -1,7 +1,6 @@
 ﻿using Microsoft.OData.Edm;
-using Microsoft.OData.Serializer.Json.State;
 
-namespace Microsoft.OData.Serializer.Adapters;
+namespace Microsoft.OData.Serializer;
 
 public class ODataTypeInfo<T, TCustomState> : ODataTypeInfo
 {

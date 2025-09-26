@@ -1,6 +1,5 @@
-﻿using Microsoft.OData.Serializer.Json.State;
-
-namespace Microsoft.OData.Serializer.Json.Writers;
+﻿
+namespace Microsoft.OData.Serializer;
 
 internal sealed class ODataJsonObjectWriter<TCustomState> : ODataJsonWriter<object, TCustomState>
 {

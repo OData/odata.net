@@ -1,4 +1,4 @@
-﻿namespace Microsoft.OData.Serializer.Utils;
+﻿namespace Microsoft.OData.Serializer;
 
 internal struct PossibleDuplicateStringChecker()
 {

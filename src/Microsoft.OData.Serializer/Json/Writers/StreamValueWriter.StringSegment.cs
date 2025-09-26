@@ -1,6 +1,5 @@
-﻿namespace Microsoft.OData.Serializer.Json.Writers;
+﻿namespace Microsoft.OData.Serializer;
 
-using Microsoft.OData.Serializer.Json.State;
 using System;
 using System.Buffers;
 using System.Diagnostics;

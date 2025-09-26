@@ -1,12 +1,8 @@
 ﻿using Microsoft.OData.Edm;
-using Microsoft.OData.Serializer.Adapters;
-using Microsoft.OData.Serializer.Core;
-using Microsoft.OData.Serializer.Json.State;
-using Microsoft.OData.Serializer.Json.Writers;
 using System.Collections.Concurrent;
 using System.Diagnostics;
 
-namespace Microsoft.OData.Serializer.Json;
+namespace Microsoft.OData.Serializer;
 
 internal class ODataJsonWriterProvider<TCustomState>(ODataSerializerOptions<TCustomState> options) : IODataWriterProvider<ODataWriterState<TCustomState>>
 {

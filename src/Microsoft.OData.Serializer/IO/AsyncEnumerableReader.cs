@@ -1,7 +1,7 @@
 ﻿using System.Buffers;
 using System.Diagnostics;
 
-namespace Microsoft.OData.Serializer.IO;
+namespace Microsoft.OData.Serializer;
 
 internal class AsyncEnumerableReader<T>(
     IAsyncEnumerable<ReadOnlyMemory<T>> source)

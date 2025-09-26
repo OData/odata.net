@@ -1,12 +1,11 @@
-﻿using Microsoft.OData.Serializer.Adapters;
-using System.Collections;
+﻿using System.Collections;
 
-namespace Microsoft.OData.Serializer.Json.State;
+namespace Microsoft.OData.Serializer;
 
 internal struct WriteStackFrame<TCustomState>
 {
     public ODataTypeInfo? ResourceTypeInfo { get; set; }
-    public Adapters.ODataPropertyInfo? PropertyInfo { get; set; }
+    public ODataPropertyInfo? PropertyInfo { get; set; }
 
     public bool IsContinuation { get; set; }
 

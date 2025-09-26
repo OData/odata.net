@@ -1,6 +1,5 @@
-﻿using Microsoft.OData.Serializer.Json.State;
-
-namespace Microsoft.OData.Serializer.Adapters;
+﻿
+namespace Microsoft.OData.Serializer;
 
 public class ODataPropertyEnumeratorSelector<TResource, TPropertyEnumerator, TProperty, TValue, TCustomState>
     : ODataPropertyEnumeratorSelector<TResource, TPropertyEnumerator, TProperty, TCustomState>

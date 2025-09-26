@@ -1,6 +1,6 @@
 ﻿using Microsoft.OData.Edm;
 
-namespace Microsoft.OData.Serializer.Adapters;
+namespace Microsoft.OData.Serializer;
 
 // TODO: this interface assumes a 1:1 mapping between CLR type and EDM type. This is not always the case.
 // For example, if CLR type is a dictionary or some other dynamic type, we may need more info, like

@@ -1,6 +1,6 @@
 ﻿using System.Buffers;
 
-namespace Microsoft.OData.Serializer.IO;
+namespace Microsoft.OData.Serializer;
 
 internal readonly struct ReadResult<T>(ReadOnlySequence<T> buffer, bool isCompleted)
 {

@@ -1,2 +1,2 @@
-﻿namespace Microsoft.OData.Serializer.Json.State;
+﻿namespace Microsoft.OData.Serializer;
 

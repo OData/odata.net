@@ -1,4 +1,4 @@
-﻿namespace Microsoft.OData.Serializer.Adapters;
+﻿namespace Microsoft.OData.Serializer;
 
 internal interface IDynamicPropertiesHandlerResolver<TCustomState>
 {

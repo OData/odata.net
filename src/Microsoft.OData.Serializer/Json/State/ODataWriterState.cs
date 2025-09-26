@@ -1,13 +1,11 @@
 ﻿using Microsoft.OData.Edm;
-using Microsoft.OData.Serializer.Adapters;
-using Microsoft.OData.Serializer.Core;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 
-namespace Microsoft.OData.Serializer.Json.State;
+namespace Microsoft.OData.Serializer;
 
 public sealed class ODataWriterState<TCustomState>
 {
@@ -143,13 +141,13 @@ public sealed class ODataWriterState<TCustomState>
         return writer.Write(value, this);
     }
 
-    public Adapters.ODataPropertyInfo? CurrentPropertyInfo()
+    public ODataPropertyInfo? CurrentPropertyInfo()
     {
         return Stack.Current.PropertyInfo;
     }
 
 
-    public Adapters.ODataPropertyInfo? ParentPropertyInfo()
+    public ODataPropertyInfo? ParentPropertyInfo()
     {
         if (IsTopLevel())
         {

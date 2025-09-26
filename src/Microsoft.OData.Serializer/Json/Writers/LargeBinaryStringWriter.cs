@@ -1,9 +1,8 @@
-﻿using Microsoft.OData.Serializer.Json.State;
-using System.Buffers;
+﻿using System.Buffers;
 using System.Buffers.Text;
 using System.Diagnostics;
 
-namespace Microsoft.OData.Serializer.Json.Writers;
+namespace Microsoft.OData.Serializer;
 
 internal class LargeBinaryStringWriter<TCustomState>
 {

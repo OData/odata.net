@@ -1,7 +1,5 @@
-﻿using Microsoft.OData.Serializer.Adapters;
-using Microsoft.OData.Serializer.Json.State;
-
-namespace Microsoft.OData.Serializer.Json.Writers;
+﻿
+namespace Microsoft.OData.Serializer;
 
 internal partial class StreamValueWriter<TCustomState> : IStreamValueWriter<TCustomState>
 {

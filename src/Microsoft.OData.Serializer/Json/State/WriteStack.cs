@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace Microsoft.OData.Serializer.Json.State;
+namespace Microsoft.OData.Serializer;
 
 // TODO: should this be a struct?
 internal class WriteStack<TCustomState>

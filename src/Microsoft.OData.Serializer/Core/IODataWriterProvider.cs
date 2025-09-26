@@ -1,6 +1,6 @@
 ﻿using Microsoft.OData.Edm;
 
-namespace Microsoft.OData.Serializer.Core;
+namespace Microsoft.OData.Serializer;
 
 public interface IODataWriterProvider<TState>
 {

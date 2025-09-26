@@ -1,4 +1,4 @@
-﻿namespace Microsoft.OData.Serializer.Json.State;
+﻿namespace Microsoft.OData.Serializer;
 
 internal enum ResourceCleanupState : byte
 {

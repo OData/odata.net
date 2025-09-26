@@ -1,4 +1,4 @@
-﻿namespace Microsoft.OData.Serializer.IO;
+﻿namespace Microsoft.OData.Serializer;
 
 internal interface IBufferedReader<T> : IAsyncDisposable where T : struct
 {

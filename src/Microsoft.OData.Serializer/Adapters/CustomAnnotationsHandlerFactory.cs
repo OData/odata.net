@@ -1,4 +1,4 @@
-﻿namespace Microsoft.OData.Serializer.Adapters;
+﻿namespace Microsoft.OData.Serializer;
 
 internal abstract class CustomAnnotationsHandlerFactory<TCustomState>
 {

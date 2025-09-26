@@ -1,5 +1,4 @@
 ﻿using Microsoft.OData.Edm;
-using Microsoft.OData.Serializer.Attributes;
 using Microsoft.OData.UriParser;
 using System.Runtime.Serialization;
 using System.Text.Json;
