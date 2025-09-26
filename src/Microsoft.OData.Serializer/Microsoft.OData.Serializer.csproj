@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="V3\Adapters\ODataPropertyInfoOfT.cs" />
+    <None Include="Adapters\ODataPropertyInfoOfT.cs" />
   </ItemGroup>
 
   <!-- enable when running unit tests -->
