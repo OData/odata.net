@@ -1,10 +1,5 @@
 ﻿using Microsoft.OData.Serializer.V3.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+using Microsoft.OData.Serializer.V3.Json.State;
 namespace Microsoft.OData.Serializer.V3.Adapters;
 
 #pragma warning disable CA1005 // Avoid excessive parameters on generic types
@@ -12,6 +7,23 @@ public class ODataPropertySelector<TResource, TProperty, TValue, TCustomState>
     : ODataPropertySelector<TResource, TProperty, TCustomState>
 #pragma warning restore CA1005 // Avoid excessive parameters on generic types
 {
-    public Func<TResource, TProperty, ODataWriterState<TCustomState>, TValue>?
-        GetPropertyValue {get; set; }
+    public required Func<TResource, TProperty, ODataWriterState<TCustomState>, string>
+        GetPropertyName { get; set; }
+
+    public required Func<TResource, TProperty, ODataWriterState<TCustomState>, TValue>
+        GetPropertyValue { get; set; }
+
+    protected override bool WritePropertyImplementation(TResource resource, TProperty propertyItem, ODataWriterState<TCustomState> state)
+    {
+        var jsonWriter = state.JsonWriter;
+        if (state.Stack.Current.PropertyProgress < PropertyProgress.Name)
+        {
+            var propertyName = this.GetPropertyName(resource, propertyItem, state);
+            jsonWriter.WritePropertyName(propertyName);
+            state.Stack.Current.PropertyProgress = PropertyProgress.Name;
+        }
+
+        var value = this.GetPropertyValue(resource, propertyItem, state);
+        return state.WriteValue(value);
+    }
 }

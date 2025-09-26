@@ -7,13 +7,7 @@ using System.Threading.Tasks;
 
 namespace Microsoft.OData.Serializer.V3.Adapters;
 
-public interface IPropertyWriter<TDeclaringType, TCustomState>
+public interface IPropertyWriter<TCustomState>
 {
-    // TODO: consider overloads that accept ReadOnlySpan<char> and ReadOnlySpan<byte>
-    bool WriteProperty<T>(TDeclaringType resource, string name, T Value, ODataWriterState<TCustomState> state);
-    bool WriteProperty<T>(TDeclaringType resource, ODataPropertyInfo<TDeclaringType, TCustomState> propertyInfo, T value, ODataWriterState<TCustomState> state);
-    bool WriteProperty(
-        TDeclaringType resource,
-        ODataPropertyInfo<TDeclaringType, TCustomState> propertyInfo,
-        ODataWriterState<TCustomState> state);
+    bool WriteProperty<T>(ReadOnlySpan<char> propertyName, T value, ODataWriterState<TCustomState> state);
 }

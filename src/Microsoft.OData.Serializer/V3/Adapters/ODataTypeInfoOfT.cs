@@ -72,7 +72,7 @@ public class ODataTypeInfo<T, TCustomState> : ODataTypeInfo
 
     public Action<T, IODataIdWriter<TCustomState>, ODataWriterState<TCustomState>>? WriteODataId { get; init; }
 
-    public Func<T, IPropertyWriter<T, TCustomState>, ODataWriterState<TCustomState>, bool>? WriteProperties { get; init; }
+    public Func<T, IResourcePopertyWriter<T, TCustomState>, ODataWriterState<TCustomState>, bool>? WriteProperties { get; init; }
 
     public Func<T, ODataWriterState<TCustomState>, object?>? GetCustomPreValueAnnotations { get; init; }
 

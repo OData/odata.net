@@ -198,12 +198,25 @@ internal class WriteStack<TCustomState>
         _count--;
     }
 
+    /// <summary>
+    /// Resets property-related state in the current frame,
+    /// such as property info and progress. This method
+    /// should be called after writing a property based on
+    /// PropertyInfo or PropertySelector.
+    /// Using this method means we don't have to push()/pop()
+    /// the stack for every property scope.
+    /// </summary>
     public void EndProperty()
     {
         Current.PropertyInfo = default;
         Current.PropertyProgress = default;
     }
 
+    /// <summary>
+    /// Resets collection-related state in the current frame,
+    /// such as enumerator index and current enumerator.
+    /// This method should be called after writing a resumabe collection.
+    /// </summary>
     public void EndCollectionElement()
     {
         Current.EnumeratorIndex = default;

@@ -15,7 +15,7 @@ namespace Microsoft.OData.Serializer.V3.Json;
 
 internal class ODataResourceJsonWriter<T, TCustomState>(ODataTypeInfo<T, TCustomState> typeInfo)
     : ODataWriter<T, ODataWriterState<TCustomState>>,
-    IPropertyWriter<T, TCustomState>,
+    IResourcePopertyWriter<T, TCustomState>,
     IEtagWriter<TCustomState>,
     IODataIdWriter<TCustomState>
 {
@@ -77,7 +77,18 @@ internal class ODataResourceJsonWriter<T, TCustomState>(ODataTypeInfo<T, TCustom
 
         if (resourceProgress < ResourceWriteProgress.Value)
         {
-            if (typeInfo.WriteProperties != null)
+            if (typeInfo.PropertySelector != null)
+            {
+                bool success = typeInfo.PropertySelector.WriteProperties(value, state);
+                if (!success)
+                {
+                    state.Stack.Current.IsContinuation = true;
+                    state.Stack.Pop(false);
+                    return false;
+                }
+
+            }
+            else if (typeInfo.WriteProperties != null)
             {
                 
                 bool success = typeInfo.WriteProperties(value, this, state);
@@ -97,7 +108,7 @@ internal class ODataResourceJsonWriter<T, TCustomState>(ODataTypeInfo<T, TCustom
             }
             else
             {
-                // Library-drive iteration and selection.
+                // Library-driven iteration and selection.
                 bool success = WriteProperties(value, typeInfo, state);
                 if (!success)
                 {
@@ -350,18 +361,18 @@ internal class ODataResourceJsonWriter<T, TCustomState>(ODataTypeInfo<T, TCustom
         }
     }
 
-    bool IPropertyWriter<T, TCustomState>.WriteProperty<TValue>(T resource, string name, TValue value, ODataWriterState<TCustomState> state)
+    bool IResourcePopertyWriter<T, TCustomState>.WriteProperty<TValue>(T resource, string name, TValue value, ODataWriterState<TCustomState> state)
     {
         var property = typeInfo.GetPropertyInfo(name);
-        return (this as IPropertyWriter<T, TCustomState>).WriteProperty(resource, property, value, state);
+        return (this as IResourcePopertyWriter<T, TCustomState>).WriteProperty(resource, property, value, state);
     }
 
-    bool IPropertyWriter<T, TCustomState>.WriteProperty<TValue>(T resource, ODataPropertyInfo<T, TCustomState> propertyInfo, TValue value, ODataWriterState<TCustomState> state)
+    bool IResourcePopertyWriter<T, TCustomState>.WriteProperty<TValue>(T resource, ODataPropertyInfo<T, TCustomState> propertyInfo, TValue value, ODataWriterState<TCustomState> state)
     {
         return propertyInfo.WriteProperty(resource, value, state);
     }
 
-    bool IPropertyWriter<T, TCustomState>.WriteProperty(T resource, ODataPropertyInfo<T, TCustomState> propertyInfo, ODataWriterState<TCustomState> state)
+    bool IResourcePopertyWriter<T, TCustomState>.WriteProperty(T resource, ODataPropertyInfo<T, TCustomState> propertyInfo, ODataWriterState<TCustomState> state)
     {
         return WriteProperty(resource, propertyInfo, state);
     }
