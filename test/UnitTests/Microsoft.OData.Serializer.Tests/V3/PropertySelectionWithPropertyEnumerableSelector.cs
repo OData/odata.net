@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Microsoft.OData.Serializer.Tests.V3;
 
-public class SupportForDictionaryBasedPropertySelection
+public class PropertySelectionWithPropertyEnumerableSelector
 {
     [Fact]
     public async Task SerializesDataFromDictionaryUsingPropertyEnumerableSelector()
