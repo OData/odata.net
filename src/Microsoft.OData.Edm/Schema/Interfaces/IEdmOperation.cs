@@ -6,7 +6,6 @@
 
 namespace Microsoft.OData.Edm
 {
-    using System;
     using System.Collections.Generic;
 
     /// <summary>
@@ -15,10 +14,9 @@ namespace Microsoft.OData.Edm
     public interface IEdmOperation : IEdmSchemaElement
     {
         /// <summary>
-        /// Gets the return information of this operation.
+        /// Gets the return type of this operation.
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords", MessageId = "Return")]
-        IEdmOperationReturn Return { get; }
+        IEdmTypeReference ReturnType { get; }
 
         /// <summary>
         /// Gets the collection of parameters for this operation.

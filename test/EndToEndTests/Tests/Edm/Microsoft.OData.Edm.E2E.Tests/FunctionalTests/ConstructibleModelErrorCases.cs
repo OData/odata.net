@@ -438,7 +438,7 @@ public class ConstructibleModelErrorCases : EdmLibTestCaseBase
             get { throw new NotImplementedException(); }
         }
 
-        public IEdmOperationReturn Return
+        IEdmTypeReference IEdmOperation.ReturnType
         {
             get { throw new NotImplementedException(); }
         }

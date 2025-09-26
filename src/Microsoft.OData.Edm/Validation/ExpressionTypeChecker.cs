@@ -89,9 +89,9 @@ namespace Microsoft.OData.Edm.Validation
                     if (applyExpression.AppliedFunction != null)
                     {
                         IEdmOperation operation = applyExpression.AppliedFunction as IEdmOperation;
-                        if (operation != null && operation.Return != null)
+                        if (operation != null)
                         {
-                            return TestTypeReferenceMatch(operation.Return.Type, type, expression.Location(), matchExactly, out discoveredErrors);
+                            return TestTypeReferenceMatch(operation.ReturnType, type, expression.Location(), matchExactly, out discoveredErrors);
                         }
                     }
 

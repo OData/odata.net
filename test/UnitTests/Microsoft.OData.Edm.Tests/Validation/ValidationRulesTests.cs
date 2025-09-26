@@ -1658,7 +1658,6 @@ namespace Microsoft.OData.Edm.Tests.Validation
                 this.FullName = this.Namespace + "." + this.Name;
                 this.IsComposable = false;
                 this.ReturnType = null;
-                this.Return = null;
                 this.Parameters = new Collection<IEdmOperationParameter>();
                 this.IsBound = false;
             }
@@ -1666,8 +1665,6 @@ namespace Microsoft.OData.Edm.Tests.Validation
             public bool IsComposable { get; set; }
 
             public IEdmTypeReference ReturnType { get; set; }
-
-            public IEdmOperationReturn Return { get; set; }
 
             public IEnumerable<IEdmOperationParameter> Parameters { get; set; }
 

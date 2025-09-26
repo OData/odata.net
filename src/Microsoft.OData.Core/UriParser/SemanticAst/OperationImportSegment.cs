@@ -61,7 +61,7 @@ namespace Microsoft.OData.UriParser
             this.operationImports = new ReadOnlyCollection<IEdmOperationImport>(new[] { operationImport });
             this.Identifier = operationImport.Name;
             this.entitySet = entitySet;
-            this.computedReturnEdmType = operationImport.Operation.Return?.Type != null ? operationImport.Operation.Return.Type.Definition : null;
+            this.computedReturnEdmType = operationImport.Operation.ReturnType != null ? operationImport.Operation.ReturnType.Definition : null;
             this.EnsureTypeAndSetAreCompatable();
 
             if (this.computedReturnEdmType != null)
@@ -111,17 +111,18 @@ namespace Microsoft.OData.UriParser
 
             // Determine the return type of the operation. This is only possible if all the candidate operations agree on the return type.
             // TODO: Because we work on types and not type references, if there are nullability differences we'd ignore them...
-            IEdmOperationReturn firstOperationImportReturn = this.operationImports.First().Operation.Return;
-            IEdmType typeSoFar = firstOperationImportReturn?.Type != null ? firstOperationImportReturn.Type.Definition : null;
+            IEdmType typeSoFar = this.operationImports.First().Operation.ReturnType != null
+                                     ? this.operationImports.First().Operation.ReturnType.Definition
+                                     : null;
             if (typeSoFar == null)
             {
                 // This is for void operations
-                if (this.operationImports.Any(operation => operation.Operation.Return?.Type != null))
+                if (this.operationImports.Any(operation => operation.Operation.ReturnType != null))
                 {
                     typeSoFar = UnknownSentinel;
                 }
             }
-            else if (this.operationImports.Any(operationImport => !typeSoFar.IsEquivalentTo(operationImport.Operation.Return?.Type.Definition)))
+            else if (this.operationImports.Any(operationImport => !typeSoFar.IsEquivalentTo(operationImport.Operation.ReturnType.Definition)))
             {
                 typeSoFar = UnknownSentinel;
             }

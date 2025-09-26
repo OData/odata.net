@@ -131,16 +131,16 @@ public static class CsdlToEdmModelComparer
                     operation = possibleMatch;
                 }
                 
-                if (operationElement.TryGetAttributeValue("ReturnType", out string? returnTypeValue) && returnTypeValue != null)
+                if (operationElement.TryGetAttributeValue("ReturnType", out string returnTypeValue))
                 {
-                    CompareTypeValue(returnTypeValue, operation.Return.Type);
+                    CompareTypeValue(returnTypeValue, operation.ReturnType);
                 }
                 else
                 {
                     var returnTypeElement = operationElement.EdmElements("ReturnType").SingleOrDefault();
                     if (returnTypeElement != null)
                     {
-                        CompareType(returnTypeElement, operation.Return.Type);
+                        CompareType(returnTypeElement, operation.ReturnType);
                     }
                 }
 

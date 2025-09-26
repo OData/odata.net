@@ -526,7 +526,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
             this.model.AddElement(action);
             this.model.SetDescriptionAnnotation(action, "action annotation");
             this.model.SetDescriptionAnnotation(parameter, "parameter annotation");
-            this.model.SetDescriptionAnnotation(action.Return, "return annotation");
+            this.model.SetDescriptionAnnotation(action.GetReturn(), "return annotation");
 
             // Act & Assert for XML
             VisitAndVerifyXml(v => v.VisitSchemaElement(action),
@@ -694,7 +694,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
             this.model.AddElement(function);
             this.model.SetDescriptionAnnotation(function, "action annotation");
             this.model.SetDescriptionAnnotation(parameter, "parameter annotation");
-            this.model.SetDescriptionAnnotation(function.Return, "return annotation");
+            this.model.SetDescriptionAnnotation(function.GetReturn(), "return annotation");
 
             // Act & Assert for XML
             VisitAndVerifyXml(v => v.VisitSchemaElement(function),

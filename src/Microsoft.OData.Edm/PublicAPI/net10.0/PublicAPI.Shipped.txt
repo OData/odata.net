@@ -692,6 +692,7 @@ Microsoft.OData.Edm.IEdmOperation.EntitySetPath.get -> Microsoft.OData.Edm.IEdmP
 Microsoft.OData.Edm.IEdmOperation.FindParameter(string name) -> Microsoft.OData.Edm.IEdmOperationParameter
 Microsoft.OData.Edm.IEdmOperation.IsBound.get -> bool
 Microsoft.OData.Edm.IEdmOperation.Parameters.get -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmOperationParameter>
+Microsoft.OData.Edm.IEdmOperation.ReturnType.get -> Microsoft.OData.Edm.IEdmTypeReference
 Microsoft.OData.Edm.IEdmOperationImport
 Microsoft.OData.Edm.IEdmOperationImport.EntitySet.get -> Microsoft.OData.Edm.IEdmExpression
 Microsoft.OData.Edm.IEdmOperationImport.Operation.get -> Microsoft.OData.Edm.IEdmOperation

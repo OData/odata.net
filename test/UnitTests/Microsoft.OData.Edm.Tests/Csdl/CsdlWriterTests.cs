@@ -1311,7 +1311,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             model.AddElement(function);
 
             IEdmCollectionExpression collectionExpression = new EdmCollectionExpression(new EdmStringConstant("Edm.Int32"), new EdmStringConstant("Edm.Boolean"));
-            IEdmOperationReturn returnType = function.Return;
+            IEdmOperationReturn returnType = function.GetReturn();
             EdmVocabularyAnnotation annotation = new EdmVocabularyAnnotation(returnType, termType, collectionExpression);
             annotation.SetSerializationLocation(model, location);
             model.SetVocabularyAnnotation(annotation);

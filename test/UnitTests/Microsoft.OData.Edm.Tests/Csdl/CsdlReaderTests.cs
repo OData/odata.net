@@ -1002,8 +1002,8 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             var model = CsdlReader.Parse(XElement.Parse(csdl).CreateReader());
             var function = model.FindDeclaredOperations("NS.TestFunction").FirstOrDefault();
             Assert.NotNull(function);
-            Assert.NotNull(function.Return?.Type);
-            IEdmOperationReturn returnType = function.Return;
+            Assert.NotNull(function.ReturnType);
+            IEdmOperationReturn returnType = function.GetReturn();
             Assert.NotNull(returnType);
             Assert.Same(returnType.DeclaringOperation, function);
             Assert.Equal("Edm.PrimitiveType", returnType.Type.FullName());

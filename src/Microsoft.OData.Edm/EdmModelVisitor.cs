@@ -1582,7 +1582,7 @@ namespace Microsoft.OData.Edm
             // Do not visit vocabularyAnnotatable because functions and operation imports are always going to be either a schema element or a container element and will be visited through those paths.
             this.VisitOperationParameters(operation.Parameters);
 
-            IEdmOperationReturn operationReturn = operation.Return;
+            IEdmOperationReturn operationReturn = operation.GetReturn();
             this.ProcessOperationReturn(operationReturn);
         }
 
@@ -1591,7 +1591,7 @@ namespace Microsoft.OData.Edm
             // Do not visit vocabularyAnnotatable because functions and operation imports are always going to be either a schema element or a container element and will be visited through those paths.
             await this.VisitOperationParametersAsync(operation.Parameters).ConfigureAwait(false);
 
-            IEdmOperationReturn operationReturn = operation.Return;
+            IEdmOperationReturn operationReturn = operation.GetReturn();
             await this.ProcessOperationReturnAsync(operationReturn).ConfigureAwait(false);
         }
 

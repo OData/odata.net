@@ -181,7 +181,7 @@ namespace Microsoft.OData.UriParser
                     // Look for an overload that returns an entity collection by the specified name. If so parenthesis is just key parameters.
                     if (FunctionOverloadResolver.ResolveOperationImportFromList(identifier, EmptyList, configuration.Model, out possibleMatchingOperationImport, configuration.Resolver))
                     {
-                        IEdmCollectionTypeReference collectionReturnType = possibleMatchingOperationImport.Operation.Return?.Type as IEdmCollectionTypeReference;
+                        IEdmCollectionTypeReference collectionReturnType = possibleMatchingOperationImport.Operation.ReturnType as IEdmCollectionTypeReference;
                         if (collectionReturnType != null && collectionReturnType.ElementType().IsEntity())
                         {
                             matchingFunctionImport = possibleMatchingOperationImport;
@@ -248,7 +248,7 @@ namespace Microsoft.OData.UriParser
                     // Look for an overload that returns an entity collection by the specified name. If so parenthesis is just key parameters.
                     if (FunctionOverloadResolver.ResolveOperationFromList(identifier, new List<string>(), bindingType, configuration.Model, out possibleMatchingOperation, configuration.Resolver))
                     {
-                        IEdmCollectionTypeReference collectionReturnType = possibleMatchingOperation.Return?.Type as IEdmCollectionTypeReference;
+                        IEdmCollectionTypeReference collectionReturnType = possibleMatchingOperation.ReturnType as IEdmCollectionTypeReference;
                         if (collectionReturnType != null && collectionReturnType.ElementType().IsEntity())
                         {
                             matchingOperation = possibleMatchingOperation;
@@ -1069,7 +1069,7 @@ namespace Microsoft.OData.UriParser
                 return false;
             }
 
-            IEdmTypeReference returnType = singleImport.Operation.Return?.Type;
+            IEdmTypeReference returnType = singleImport.Operation.ReturnType;
             IEdmEntitySetBase targetset = null;
 
             if (returnType != null)
@@ -1148,7 +1148,7 @@ namespace Microsoft.OData.UriParser
 
         private void CreateOperationSegment(ODataPathSegment previousSegment, IEdmOperation singleOperation, ICollection<OperationSegmentParameter> resolvedParameters, string identifier, string parenthesisExpression)
         {
-            IEdmTypeReference returnType = singleOperation.Return?.Type;
+            IEdmTypeReference returnType = singleOperation.ReturnType;
             IEdmEntitySetBase targetset = null;
 
             if (returnType != null)

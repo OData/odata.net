@@ -275,55 +275,55 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
             // Functions
             Assert.True(operations[0] is IEdmFunction);
             Assert.Equal("FunctionWithComplexReturnType", operations[0].Name);
-            Assert.Equal("Test.Complex", operations[0].Return.Type.FullName());
-            Assert.False(operations[0].Return.Type.IsNullable);
+            Assert.Equal("Test.Complex", operations[0].ReturnType.FullName());
+            Assert.False(operations[0].ReturnType.IsNullable);
 
             Assert.True(operations[1] is IEdmFunction);
             Assert.Equal("FunctionWithComplexCollectionReturnType", operations[1].Name);
-            Assert.Equal("Collection(Test.Complex)", operations[1].Return.Type.FullName());
-            Assert.False(operations[1].Return.Type.AsCollection().ElementType().IsNullable);
+            Assert.Equal("Collection(Test.Complex)", operations[1].ReturnType.FullName());
+            Assert.False(operations[1].ReturnType.AsCollection().ElementType().IsNullable);
 
             Assert.True(operations[2] is IEdmFunction);
             Assert.Equal("FunctionWithPrimitiveReturnType", operations[2].Name);
-            Assert.Equal("Edm.String", operations[2].Return.Type.FullName());
-            Assert.False(operations[2].Return.Type.IsNullable);
-            Assert.Equal(10, operations[2].Return.Type.AsString().MaxLength);
+            Assert.Equal("Edm.String", operations[2].ReturnType.FullName());
+            Assert.False(operations[2].ReturnType.IsNullable);
+            Assert.Equal(10, operations[2].ReturnType.AsString().MaxLength);
 
             Assert.True(operations[3] is IEdmFunction);
             Assert.Equal("FunctionWithPrimitiveCollectionReturnType", operations[3].Name);
-            Assert.Equal("Collection(Edm.String)", operations[3].Return.Type.FullName());
-            Assert.False(operations[3].Return.Type.AsCollection().ElementType().IsNullable);
-            Assert.Equal(20, operations[3].Return.Type.AsCollection().ElementType().AsString().MaxLength);
+            Assert.Equal("Collection(Edm.String)", operations[3].ReturnType.FullName());
+            Assert.False(operations[3].ReturnType.AsCollection().ElementType().IsNullable);
+            Assert.Equal(20, operations[3].ReturnType.AsCollection().ElementType().AsString().MaxLength);
 
             // Actions
             Assert.True(operations[4] is IEdmAction);
             Assert.Equal("ActionWithComplexReturnType", operations[4].Name);
-            Assert.Equal("Test.Complex", operations[4].Return.Type.FullName());
-            Assert.False(operations[4].Return.Type.IsNullable);
+            Assert.Equal("Test.Complex", operations[4].ReturnType.FullName());
+            Assert.False(operations[4].ReturnType.IsNullable);
 
             Assert.True(operations[5] is IEdmAction);
             Assert.Equal("ActionWithComplexCollectionReturnType", operations[5].Name);
-            Assert.Equal("Collection(Test.Complex)", operations[5].Return.Type.FullName());
-            Assert.False(operations[5].Return.Type.AsCollection().ElementType().IsNullable);
+            Assert.Equal("Collection(Test.Complex)", operations[5].ReturnType.FullName());
+            Assert.False(operations[5].ReturnType.AsCollection().ElementType().IsNullable);
 
             Assert.True(operations[6] is IEdmAction);
             Assert.Equal("ActionWithPrimitiveReturnType", operations[6].Name);
-            Assert.Equal("Edm.String", operations[6].Return.Type.FullName());
-            Assert.False(operations[6].Return.Type.IsNullable);
-            Assert.Equal(10, operations[6].Return.Type.AsString().MaxLength);
+            Assert.Equal("Edm.String", operations[6].ReturnType.FullName());
+            Assert.False(operations[6].ReturnType.IsNullable);
+            Assert.Equal(10, operations[6].ReturnType.AsString().MaxLength);
 
             Assert.True(operations[7] is IEdmAction);
             Assert.Equal("ActionWithPrimitiveCollectionReturnType", operations[7].Name);
-            Assert.Equal("Collection(Edm.String)", operations[7].Return.Type.FullName());
-            Assert.False(operations[7].Return.Type.AsCollection().ElementType().IsNullable);
-            Assert.Equal(20, operations[7].Return.Type.AsCollection().ElementType().AsString().MaxLength);
+            Assert.Equal("Collection(Edm.String)", operations[7].ReturnType.FullName());
+            Assert.False(operations[7].ReturnType.AsCollection().ElementType().IsNullable);
+            Assert.Equal(20, operations[7].ReturnType.AsCollection().ElementType().AsString().MaxLength);
         }
 
         [Fact]
         public void ReturnTypePathReturnsCorrectly()
         {
-            Assert.NotNull(this.TestModel.RemoveBadCarAction.Return.Type);
-            var personType = this.TestModel.RemoveBadCarAction.Return.Type.AsCollection().ElementType().Definition;
+            Assert.NotNull(this.TestModel.RemoveBadCarAction.ReturnType);
+            var personType = this.TestModel.RemoveBadCarAction.ReturnType.AsCollection().ElementType().Definition;
             Assert.Equal(this.TestModel.CarType, personType);
         }
 
