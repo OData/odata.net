@@ -2016,12 +2016,12 @@ namespace Microsoft.OData.Json
             // We can call ParseName since we know the first character is 't' or 'f' and thus it won't be quoted.
             ReadOnlyMemory<char> token = await this._ParseNameAsync().ConfigureAwait(false);
 
-            if (!token.Span.SequenceEqual(JsonConstants.JsonFalseLiteral.AsSpan()))
+            if (token.Span.SequenceEqual(JsonConstants.JsonFalseLiteral.AsSpan()))
             {
                 return false;
             }
 
-            if (!token.Span.SequenceEqual(JsonConstants.JsonTrueLiteral.AsSpan()))
+            if (token.Span.SequenceEqual(JsonConstants.JsonTrueLiteral.AsSpan()))
             {
                 return true;
             }
