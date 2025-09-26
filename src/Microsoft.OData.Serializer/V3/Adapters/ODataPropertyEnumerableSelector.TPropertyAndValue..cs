@@ -5,8 +5,8 @@ using System.Diagnostics;
 using System.Text.Json;
 namespace Microsoft.OData.Serializer.V3.Adapters;
 
-public class ODataPropertySelector<TResource, TProperty, TValue, TCustomState>
-    : ODataPropertySelector<TResource, TProperty, TCustomState>
+public class ODataPropertyEnumerableSelector<TResource, TProperty, TValue, TCustomState>
+    : ODataPropertyEnumerableSelector<TResource, TProperty, TCustomState>
 {
     public required Func<TResource, TProperty, ODataWriterState<TCustomState>, string>
         GetPropertyName { get; set; }

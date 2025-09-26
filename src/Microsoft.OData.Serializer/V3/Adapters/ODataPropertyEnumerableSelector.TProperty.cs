@@ -12,9 +12,7 @@ using System.Xml.Linq;
 
 namespace Microsoft.OData.Serializer.V3.Adapters;
 
-#pragma warning disable CA1005 // Avoid excessive parameters on generic types
-public class ODataPropertySelector<TResource, TProperty, TCustomState>
-#pragma warning restore CA1005 // Avoid excessive parameters on generic types
+public class ODataPropertyEnumerableSelector<TResource, TProperty, TCustomState>
     : ODataPropertySelector<TResource, TCustomState>
 {
     public required Func<TResource, ODataWriterState<TCustomState>, IEnumerable<TProperty>>
@@ -52,11 +50,12 @@ public class ODataPropertySelector<TResource, TProperty, TCustomState>
             }
 
             var item = enumerator.Current;
-            if (!state.WriteValue(item))
+            if (!this.WritePropertyImplementation(resource, item, state))
             {
                 return false;
             }
 
+            state.Stack.EndProperty();
 
         } while (enumerator.MoveNext());
 
