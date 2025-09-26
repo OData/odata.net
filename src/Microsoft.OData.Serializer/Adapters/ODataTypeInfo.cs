@@ -12,4 +12,6 @@ public abstract class ODataTypeInfo
     /// should be set if the same EDM type is always used for this CLR type.
     /// </summary>
     public virtual IEdmType? EdmType { get; init; }
+
+    public virtual string? EdmTypeName { get; init; }
 }

@@ -57,12 +57,12 @@ public class ODataTypeInfo<T, TCustomState> : ODataTypeInfo
 
     // Etag is always written before the value, so it doesn't have a position override.
 
-    public Func<T, ODataWriterState<TCustomState>, string>? GetEtag { get; init; }
+    public Func<T, ODataWriterState<TCustomState>, string?>? GetEtag { get; init; }
 
     public Action<T, IEtagWriter<TCustomState>, ODataWriterState<TCustomState>>? WriteEtag { get; init; }
 
     // The Id annotation is always written before the value, so it doesn't have a position override.
-    public Func<T, ODataWriterState<TCustomState>, string>? GetODataId { get; init; }
+    public Func<T, ODataWriterState<TCustomState>, string?>? GetODataId { get; init; }
 
     public Action<T, IODataIdWriter<TCustomState>, ODataWriterState<TCustomState>>? WriteODataId { get; init; }
 
