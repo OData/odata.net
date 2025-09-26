@@ -87,7 +87,7 @@ namespace Microsoft.OData.Edm
         /// </summary>
         public IEdmTypeReference ReturnType
         {
-            get { return Return == null ? null : Return.Type; }
+            get { return Return?.Type; }
         }
 
         /// <summary>
@@ -101,7 +101,7 @@ namespace Microsoft.OData.Edm
         /// <summary>
         /// Gets the return of this operation.
         /// </summary>
-        internal IEdmOperationReturn Return { get; private set; }
+        public IEdmOperationReturn Return { get; private set; }
 
         /// <summary>
         /// Searches for a parameter with the given name in this operation and returns null if no such parameter exists.

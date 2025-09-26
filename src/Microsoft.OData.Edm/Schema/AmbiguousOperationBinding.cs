@@ -20,9 +20,9 @@ namespace Microsoft.OData.Edm
             this.fullName = EdmUtil.GetFullNameForSchemaElement(this.Namespace, this.Name);
         }
 
-        public IEdmTypeReference ReturnType
+        public IEdmOperationReturn Return
         {
-            // Not using the typical behavior for first.ReturnType as returning null is the old behavior.
+            // Not using the typical behavior for first.Return as returning null is the old behavior.
             get { return null; }
         }
 

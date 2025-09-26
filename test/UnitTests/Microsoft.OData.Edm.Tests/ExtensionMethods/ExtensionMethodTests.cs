@@ -229,7 +229,7 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
         {
             IEdmTypeReference typeReference = EdmCoreModel.Instance.GetString(true);
             var function = new EdmFunction("d.s", "checkout", typeReference);
-            IEdmOperationReturn operationReturn = function.GetReturn();
+            IEdmOperationReturn operationReturn = function.Return;
             Assert.NotNull(operationReturn);
             Assert.Same(operationReturn, function.Return);
             Assert.Same(operationReturn.Type, function.ReturnType);

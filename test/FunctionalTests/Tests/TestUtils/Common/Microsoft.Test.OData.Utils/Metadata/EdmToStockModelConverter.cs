@@ -238,7 +238,7 @@ namespace Microsoft.Test.OData.Utils.Metadata
                     stockOperation = new EdmAction(
                         edmAction.Namespace,
                         edmAction.Name,
-                        edmAction.ReturnType == null ? edmOperation.ReturnType : ConvertToStockTypeReference(edmOperation.ReturnType, stockModel),
+                        edmAction.Return.Type == null ? edmOperation.Return.Type : ConvertToStockTypeReference(edmOperation.Return.Type, stockModel),
                         edmAction.IsBound,
                         edmAction.EntitySetPath);
                 }
@@ -249,7 +249,7 @@ namespace Microsoft.Test.OData.Utils.Metadata
                     stockOperation = new EdmFunction(
                     edmFunction.Namespace,
                     edmFunction.Name,
-                    edmFunction.ReturnType == null ? edmFunction.ReturnType : ConvertToStockTypeReference(edmFunction.ReturnType, stockModel),
+                    edmFunction.Return.Type == null ? edmFunction.Return.Type : ConvertToStockTypeReference(edmFunction.Return.Type, stockModel),
                     edmFunction.IsBound,
                     edmFunction.EntitySetPath,
                     edmFunction.IsComposable);
