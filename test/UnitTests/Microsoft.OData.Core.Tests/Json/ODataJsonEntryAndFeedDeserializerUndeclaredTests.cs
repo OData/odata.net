@@ -1549,7 +1549,6 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
             string payload = "{\"@odata.context\":\"http://www.sampletest.com/$metadata#" + fragment + "\",\"id\":1}";
 
             var readerSettings = UntypedAsValueReaderSettings.Clone();
-            readerSettings.LibraryCompatibility = ~ODataLibraryCompatibility.ReadUntypedNumericAsDecimal; // Disable the behavior to read untyped numeric as decimal
 
             ODataResource entry = null;
             this.ReadResourcePayload(payload, readerSettings, reader =>
@@ -1586,7 +1585,6 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
             string payload = "{\"@odata.context\":\"http://www.sampletest.com/$metadata#Edm.Untyped\",\"id\":" + number + "}";
 
             var readerSettings = UntypedAsValueReaderSettings.Clone();
-            readerSettings.LibraryCompatibility = ~ODataLibraryCompatibility.ReadUntypedNumericAsDecimal;
 
             ODataResource entry = null;
             this.ReadResourcePayload(payload, readerSettings, reader =>
@@ -1704,7 +1702,6 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
             string payload = "{\"@odata.context\":\"http://www.sampletest.com/$metadata#Edm.Untyped\",\"id\":" + number + "}";
 
             var readerSettings = UntypedAsValueReaderSettings.Clone();
-            readerSettings.LibraryCompatibility = ~ODataLibraryCompatibility.ReadUntypedNumericAsDecimal;
 
             ODataResource entry = null;
             this.ReadResourcePayload(payload, readerSettings, reader =>
@@ -1763,7 +1760,6 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
             string payload = "{\"@odata.context\":\"http://www.sampletest.com/$metadata#Edm.Untyped\",\"id\":" + number + "}";
 
             var readerSettings = UntypedAsValueReaderSettings.Clone();
-            readerSettings.LibraryCompatibility = ~ODataLibraryCompatibility.ReadUntypedNumericAsDecimal;
 
             ODataResource entry = null;
             this.ReadResourcePayload(payload, readerSettings, reader =>
@@ -1927,7 +1923,6 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
         {
             string payload = "{\"@odata.context\":\"http://www.sampletest.com/$metadata#" + fragment +"\",\"value\":[[\"primitiveString\",{\"id\":1}]]}";
             var readerSettings = UntypedAsValueReaderSettings.Clone();
-            readerSettings.LibraryCompatibility = ~ODataLibraryCompatibility.ReadUntypedNumericAsDecimal; // Use other numeric values instead of Decimal
 
             ODataPrimitiveValue primitiveMember = null;
             ODataResource resourceMember = null;
@@ -1974,7 +1969,6 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
         {
             var payload = "{\"@odata.context\":\"http://www.sampletest.com/$metadata#Collection(Edm.Untyped)\",\"value\":[[\"primitiveString\",{\"id\":1, \"num\":" + number + "}]]}";
             var readerSettings = UntypedAsValueReaderSettings.Clone();
-            readerSettings.LibraryCompatibility = ~ODataLibraryCompatibility.ReadUntypedNumericAsDecimal;
 
             ODataPrimitiveValue primitiveMember = null;
             ODataResource resourceMember = null;
@@ -2092,7 +2086,6 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
         {
             var payload = "{\"@odata.context\":\"http://www.sampletest.com/$metadata#Collection(Edm.Untyped)\",\"value\":[[\"primitiveString\",{\"id\":1, \"num\":" + number + "}]]}";
             var readerSettings = UntypedAsValueReaderSettings.Clone();
-            readerSettings.LibraryCompatibility = ~ODataLibraryCompatibility.ReadUntypedNumericAsDecimal;
 
             ODataPrimitiveValue primitiveMember = null;
             ODataResource resourceMember = null;
@@ -2168,7 +2161,6 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
         {
             var payload = "{\"@odata.context\":\"http://www.sampletest.com/$metadata#Collection(Edm.Untyped)\",\"value\":[[\"primitiveString\",{\"id\":1, \"num\":" + number + "}]]}";
             var readerSettings = UntypedAsValueReaderSettings.Clone();
-            readerSettings.LibraryCompatibility = ~ODataLibraryCompatibility.ReadUntypedNumericAsDecimal;
 
             ODataPrimitiveValue primitiveMember = null;
             ODataResource resourceMember = null;
