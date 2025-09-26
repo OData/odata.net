@@ -63,7 +63,7 @@ public class StreamWriterChunkedTextStreamingTests
                             // TODO to avoid growing the internal buffer, you may want to trigger manual flushes in-between writes
                             // e.g. if (checkIfSomeThresholdIsMet) { await writer.FlushAsync(state) };
                             // But we also tentatively provide convenience below. Not sure if this is a good idea to expose, not sure if it'll be final release
-                            await writer.FlushIfBufferGettingFullAsync(state);
+                            await writer.FlushIfBufferFullAsync(state);
                         } while (bytesRead > 0);
 
                         int finalChars = decoder.GetChars([], decodedBuffer, flush: true);

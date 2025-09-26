@@ -24,9 +24,19 @@ public interface IStreamValueWriter<TCustomState>
     // ValueTask WriteBinaryValueAsync(PipeReader, state);
     // ValueTask WriteBinaryValueAsync(IAsyncEnumerable<ReadOnlyMemory<byte>>, state);
 
+    /// <summary>
+    /// Returns whether it's recommended to flush the internal buffer to the
+    /// output stream. If this returns true, then consider calling <see cref="FlushAsync"/>.
+    /// If you continue writing to the buffer without flushing, the buffer may grow
+    /// which may impact performance and memory use.
+    /// </summary>
+    /// <param name="state"></param>
+    /// <returns></returns>
+    bool ShouldFlush(ODataWriterState<TCustomState> state);
+
     // Flushes the contents of the buffer to the underlying output stream
     ValueTask FlushAsync(ODataWriterState<TCustomState> state);
     // Flushes the contents of the buffer if it's (almost) full. Otherwise it does nothing.
     // Not sure if it's a good idea to expose this to caller. Code smell.
-    ValueTask FlushIfBufferGettingFullAsync(ODataWriterState<TCustomState> state);
+    ValueTask FlushIfBufferFullAsync(ODataWriterState<TCustomState> state);
 }

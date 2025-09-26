@@ -9,7 +9,7 @@ internal partial class StreamValueWriter<TCustomState> : IStreamValueWriter<TCus
         return state.FlushAsync();
     }
 
-    public ValueTask FlushIfBufferGettingFullAsync(ODataWriterState<TCustomState> state)
+    public ValueTask FlushIfBufferFullAsync(ODataWriterState<TCustomState> state)
     {
         if (state.ShouldFlush())
         {
@@ -17,6 +17,11 @@ internal partial class StreamValueWriter<TCustomState> : IStreamValueWriter<TCus
         }
 
         return ValueTask.CompletedTask;
+    }
+
+    public bool ShouldFlush(ODataWriterState<TCustomState> state)
+    {
+        return state.ShouldFlush();
     }
 
     public void WriteValue<T>(T value, ODataWriterState<TCustomState> state)

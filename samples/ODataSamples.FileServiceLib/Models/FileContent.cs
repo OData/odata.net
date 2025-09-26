@@ -1,17 +1,17 @@
 ﻿using Microsoft.OData.Serializer;
 using ODataSamples.FileServiceLib.Schema;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using ODataSamples.FileServiceLib.Serialization.OData;
+using ODataSamples.FileServiceLib.Streaming;
 
 namespace ODataSamples.FileServiceLib.Models;
 
 [ODataType($"{SchemaConstants.Namespace}.FileContent")]
-public class FileContent
+public class FileContent : StreamingEnabled
 {
+    [ODataValueWriter(typeof(StreamingTextPropertyWriter<FileContent, string>))]
     public string? Text { get; set; }
+
+    [ODataValueWriter(typeof(StreamingTextPropertyWriter<FileContent, string>))]
     public string? Annotation { get; set; }
 
     [ODataIgnore] // This attribute is unnecessary since OData will automatically ignore any property not defined in the EDM model
