@@ -1,0 +1,76 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+	<edmx:DataServices>
+		<Schema Namespace="OData.Samples.FileService" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+			<EntityType Name="User">
+				<Key>
+					<PropertyRef Name="Id" />
+				</Key>
+				<Property Name="Id" Type="Edm.String" />
+				<NavigationProperty Name="WorkingSet" Type="Collection(ODataSamples.FileService.FileItem)" ContainsTarget="true" />
+				<NavigationProperty Name="Files" Type="Collection(ODataSamples.FileService.FileItem)" ContainsTarget="true" />
+			</EntityType>
+			<EntityType Name="FileItem" BaseType="ODataSamples.FileService.BaseItem" OpenType="true">
+				<Property Name="FileExtension" Type="Edm.String" />
+				<Property Name="FileSize" Type="Edm.Int64" />
+				<Property Name="Version" Type="Edm.Int32" />
+			</EntityType>
+			<EntityType Name="BaseItem" Abstract="true">
+				<Key>
+					<PropertyRef Name="Id" />
+				</Key>
+				<Property Name="Id" Type="Edm.String" />
+				<Property Name="IsProtected" Type="Edm.Boolean" />
+				<Property Name="FileName" Type="Edm.String" />
+				<Property Name="Description" Type="Edm.String" Nullable="true" />
+				<Property Name="ExternalId" Type="Edm.Guid" />
+				<Property Name="Tags" Type="Collection(Edm.String)" />
+				<Property Name="FileContent" Type="ODataSamples.FileService.FileContent" />
+				<Property Name="AllExtensions" Type="ODataSamples.FileService.ExtensionContainer" />
+				<Property Name="ItemProperties" Type="ODataSamples.FileService.ExtensionContainer" />
+				<Property Name="CreatedAt" Type="Edm.DateTimeOffset" />
+				<Property Name="EntityACL" Type="ODataSamples.FileService.AccessControlList" />
+				<Property Name="BinaryData" Type="Edm.Binary" />
+				<Property Name="ByteCollection" Type="Collection(Edm.Byte)" />
+				<NavigationProperty Name="ActivityStats" Type="Collection(ODataSamples.FileService.ActivityStat)" ContainsTarget="true">
+				</NavigationProperty>
+			</EntityType>
+			<EntityType Name="ActivityStat">
+				<Key>
+					<PropertyRef Name="Id" />
+				</Key>
+				<Property Name="Id" Type="Edm.String" />
+				<Property Name="ActivityType" Type="ODataSamples.FileService.FileAccessType" />
+				<Property Name="Actor" Type="Edm.String" />
+				<Property Name="ActivityDateTime" Type="Edm.DateTimeOffset" />
+			</EntityType>
+			<ComplexType Name="FileContent">
+				<Property Name="Text" Type="Edm.String" />
+				<Property Name="Annotation" Type="Edm.String" />
+			</ComplexType>
+			<ComplexType Name="ExtensionContainer" OpenType="true" />
+			<ComplexType Name="AccessControlList">
+				<Property Name="AccessControlEntries" Type="Collection(ODataSamples.FileService.AccessControlEntry)" />
+			</ComplexType>
+			<ComplexType Name="AccessControlEntry">
+				<Property Name="AccessRight" Type="ODataSamples.FileService.AccessControlRight" />
+				<Property Name="Claim" Type="ODataSamples.FileService.Claim" />
+			</ComplexType>
+			<ComplexType Name="Claim">
+				<Property Name="Type" Type="Edm.String" />
+				<Property Name="Value" Type="Edm.String" />
+			</ComplexType>
+			<EnumType Name="FileAccessType">
+				<Member Name="Unknown" Value="0" />
+				<Member Name="Access" Value="1" />
+			</EnumType>
+			<EnumType Name="AccessControlRight">
+				<Member Name="Read" Value="1" />
+				<Member Name="Write" Value="2" />
+			</EnumType>
+			<EntityContainer Name="EntityContainer">
+				<EntitySet Name="Users" EntityType="ODataSamples.FileService.User" />
+			</EntityContainer>
+		</Schema>
+	</edmx:DataServices>
+</edmx:Edmx>
