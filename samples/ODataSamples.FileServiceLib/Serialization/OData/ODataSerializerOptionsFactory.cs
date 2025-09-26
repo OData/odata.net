@@ -1,7 +1,6 @@
 ﻿using Microsoft.OData.Serializer;
 using ODataSamples.FileServiceLib.Models;
 using ODataSamples.FileServiceLib.Schema.Abstractions;
-using ODataSamples.FileServiceLib.Schema.Common;
 using ISchematizedFileItem = ODataSamples.FileServiceLib.Schema.Abstractions.ISchematizedObject<ODataSamples.FileServiceLib.Schema.Common.IFileItemSchema>;
 
 namespace ODataSamples.FileServiceLib.Serialization.OData;
@@ -11,11 +10,12 @@ public static class ODataSerializerOptionsFactory
     public static ODataSerializerOptions<ODataCustomState> Create()
     {
         var options = new ODataSerializerOptions<ODataCustomState>();
-        AddFileItemTypeInfo(options);
+        MapFileItem(options);
+        MapOpenPropertyValue(options);
         return options;
     }
 
-    private static void AddFileItemTypeInfo(ODataSerializerOptions<ODataCustomState> options)
+    private static void MapFileItem(ODataSerializerOptions<ODataCustomState> options)
     {
         options.AddTypeInfo<ISchematizedFileItem>(new()
         {
@@ -43,6 +43,16 @@ public static class ODataSerializerOptionsFactory
                 GetProperties = (item, state) => item.Data,
                 WriteProperty = (item, property, writer, state) => writer.WriteProperty(property.Key.Name, property.Value, state)
             }
+        });
+    }
+
+    private static void MapOpenPropertyValue(ODataSerializerOptions<ODataCustomState> options)
+    {
+        options.AddTypeInfo<IOpenPropertyValue>(new()
+        {
+            GetEdmTypeName = (item, state) => $"OData.Samples.FileService.{item.GetType().Name}",
+            GetDynamicProperties = (item, state) => item.GetAllOpenProperties(),
+            GetPropertyPreValueAnnotations = (item, propertyName, state) => item.GetODataAnnotations(propertyName)
         });
     }
 }

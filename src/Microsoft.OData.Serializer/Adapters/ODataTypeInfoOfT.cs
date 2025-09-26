@@ -16,7 +16,9 @@ public class ODataTypeInfo<T, TCustomState> : ODataTypeInfo
     /// If the CLR type always maps to the same EDM type, consider using the
     /// <see cref="ODataTypeInfo.ODataTypeInfo"/> property instead.
     /// </summary>
-    public Func<T, ODataWriterState<TCustomState>, IEdmType>? GetEdmType { get; set; }
+    public Func<T, ODataWriterState<TCustomState>, IEdmType>? GetEdmType { get; init; }
+
+    public Func<T, ODataWriterState<TCustomState>, string>? GetEdmTypeName { get; init; }
 
     public IReadOnlyList<ODataPropertyInfo<T, TCustomState>>? Properties
     {
@@ -36,7 +38,7 @@ public class ODataTypeInfo<T, TCustomState> : ODataTypeInfo
         }
     }
 
-    public ODataPropertySelector<T, TCustomState>? PropertySelector { get; set; }
+    public ODataPropertySelector<T, TCustomState>? PropertySelector { get; init; }
 
     // We expose two approaches to writing annotations:
     // - shorthand GetXXXValue that returns the value, here we select a common, but "cheap" type to represent the value.
