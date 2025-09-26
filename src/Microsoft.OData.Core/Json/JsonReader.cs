@@ -843,10 +843,16 @@ namespace Microsoft.OData.Json
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static bool IsWhitespaceCharacter(char character)
         {
-            return character == ' ' || // 0x20 (space)
-                character == '\t' ||   // 0x09 (tab)
-                character == '\n' ||   // 0x0A (new line)
-                character == '\r';     // 0x0D (carriage return)
+            // The whitespace characters are 0x20 (space), 0x09 (tab), 0x0A (new line), 0x0D (carriage return)
+            // Anything above 0x20 is a non-whitespace character.
+            if (character > (char)0x20 || character != (char)0x20 && character != (char)0x09 && character != (char)0x0A && character != (char)0x0D)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
         }
 
         /// <summary>
@@ -904,7 +910,7 @@ namespace Microsoft.OData.Json
                 default:
                     // COMPAT 47: JSON number can start with dot.
                     // The JSON spec doesn't allow numbers to start with ., but WCF DS does. We will follow the WCF DS behavior for compatibility.
-                    if ((currentCharacter >= '0' && currentCharacter <= '9') || (currentCharacter == '-') || (currentCharacter == '.'))
+                    if (Char.IsDigit(currentCharacter) || (currentCharacter == '-') || (currentCharacter == '.'))
                     {
                         this.nodeValue = this.ParseNumberPrimitiveValue();
                         break;
@@ -1197,7 +1203,7 @@ namespace Microsoft.OData.Json
             while ((this.tokenStartIndex + currentCharacterTokenRelativeIndex) < this.storedCharacterCount || this.ReadInput())
             {
                 char character = this.characterBuffer[this.tokenStartIndex + currentCharacterTokenRelativeIndex];
-                if ((character >= '0' && character <= '9') ||
+                if (Char.IsDigit(character) ||
                     (character == '.') ||
                     (character == 'E') ||
                     (character == 'e') ||
@@ -2058,25 +2064,22 @@ namespace Microsoft.OData.Json
 
             // We now have all the characters which belong to the number, consume it into a string.
             ReadOnlyMemory<char> numberMemory = this.ConsumeTokenToMemory(currentCharacterTokenRelativeIndex);
-            double doubleValue;
-            int intValue;
-            decimal decimalValue;
 
             // We will first try and convert the value to Int32. If it succeeds, use that.
             // And then, we will try Decimal, since it will lose precision while expected type is specified.
             // Otherwise, we will try and convert the value into a double.
-            if (Int32.TryParse(numberMemory.Span, NumberStyles.Integer, NumberFormatInfo.InvariantInfo, out intValue))
+            if (Int32.TryParse(numberMemory.Span, NumberStyles.Integer, NumberFormatInfo.InvariantInfo, out int intValue))
             {
                 return intValue;
             }
 
             // if it is not Ieee754Compatible, decimal will be parsed before double to keep precision
-            if (!isIeee754Compatible && Decimal.TryParse(numberMemory.Span, NumberStyles.Number, NumberFormatInfo.InvariantInfo, out decimalValue))
+            if (!isIeee754Compatible && Decimal.TryParse(numberMemory.Span, NumberStyles.Number, NumberFormatInfo.InvariantInfo, out decimal decimalValue))
             {
                 return decimalValue;
             }
 
-            if (Double.TryParse(numberMemory.Span, NumberStyles.Float, NumberFormatInfo.InvariantInfo, out doubleValue))
+            if (Double.TryParse(numberMemory.Span, NumberStyles.Float, NumberFormatInfo.InvariantInfo, out double doubleValue))
             {
                 return doubleValue;
             }
@@ -2477,8 +2480,7 @@ namespace Microsoft.OData.Json
         private int ParseUnicodeHexValue()
         {
             ReadOnlySpan<char> unicodeHexValue = this.ConsumeTokenToSpan(4);
-            int characterValue;
-            if (!Int32.TryParse(unicodeHexValue, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out characterValue))
+            if (!Int32.TryParse(unicodeHexValue, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out int characterValue))
             {
                 throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_UnrecognizedEscapeSequence, "\\u" + unicodeHexValue.ToString()));
             }
@@ -2661,11 +2663,10 @@ namespace Microsoft.OData.Json
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private bool IsCharacterAllowedInPropertyName(char character)
         {
-            return (character >= 'a' && character <= 'z') ||
-                   (character >= 'A' && character <= 'Z') ||
-                   (character >= '0' && character <= '9') ||
-                   character == '_' || character == '$' ||
-                   (this.allowAnnotations && (character == '.' || character == '@'));
+            return Char.IsLetterOrDigit(character) ||
+                character == '_' ||
+                character == '$' ||
+                (this.allowAnnotations && (character == '.' || character == '@'));
         }
 
         /// <summary>
