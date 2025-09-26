@@ -1,14 +1,15 @@
 ﻿using Microsoft.OData.Edm;
 using Microsoft.OData.Serializer.Attributes;
 using Microsoft.OData.UriParser;
+using System.Runtime.Serialization;
 using System.Text.Json;
 
-namespace Microsoft.OData.Serializer.Tests.V3;
+namespace Microsoft.OData.Serializer.Tests;
 
-public class SupportForODataIgnoreAttribute
+public class SupportForIgnoreDataMember
 {
     [Fact]
-    public async Task SkipPropertiesWithODataIgnoreAttribute()
+    public async Task SkipPropertiesWithIgnoreDataMemberAttribute()
     {
         // Arrange
         var customer = new Customer
@@ -73,7 +74,7 @@ public class SupportForODataIgnoreAttribute
         public int Id { get; set; }
         public string Name { get; set; }
 
-        [ODataIgnore]
+        [IgnoreDataMember]
         public string Password { get; set; }
     }
 }

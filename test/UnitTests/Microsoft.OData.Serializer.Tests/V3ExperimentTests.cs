@@ -1,4 +1,4 @@
-﻿namespace Microsoft.OData.Serializer.Tests.V3;
+﻿namespace Microsoft.OData.Serializer.Tests;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Serializer;
 using Microsoft.OData.Serializer.Adapters;

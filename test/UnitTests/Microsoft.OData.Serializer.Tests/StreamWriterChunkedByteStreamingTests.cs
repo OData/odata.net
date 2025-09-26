@@ -2,30 +2,32 @@
 using Microsoft.OData.Serializer.Adapters;
 using Microsoft.OData.Serializer.Json.State;
 using Microsoft.OData.UriParser;
+using System.Buffers;
 using System.Text.Json;
 
-namespace Microsoft.OData.Serializer.Tests.V3;
+namespace Microsoft.OData.Serializer.Tests;
 
-public class ByteArrayBase64WriterTests
+public class StreamWriterChunkedByteStreamingTests
 {
     [Theory]
-    [InlineData(512)]
+    [InlineData(525)]
+    [InlineData(15_000)]
     [InlineData(50_000)]
-    public async Task CanWriteByteArrayField(int binaryDataSize)
+    public async Task CanWriteByteArrayChunksInAsyncAPI(int contentLength)
     {
         var entity = new BlogPost
         {
             Id = 1,
-            Title = "First Post",
-            CoverImage = CreateByteArray(binaryDataSize)
+            Title = "Title",
+            ContentLength = contentLength
         };
 
         var payload = new List<BlogPost> { entity };
 
         var options = new ODataSerializerOptions();
 
-        
-        options.AddTypeInfo<BlogPost>(new ()
+
+        options.AddTypeInfo<BlogPost>(new()
         {
             Properties = [
                 new ODataPropertyInfo<BlogPost, int, DefaultState>()
@@ -38,10 +40,28 @@ public class ByteArrayBase64WriterTests
                     Name = "Title",
                     GetValue = (post, state) => post.Title
                 },
-                new ODataPropertyInfo<BlogPost, byte[], DefaultState>()
+                new()
                 {
-                    Name = "CoverImage",
-                    GetValue = (post, state) => post.CoverImage
+                    Name = "Contents",
+                    WriteValueAsync = static async (post, writer, state) =>
+                    {
+                        using var stream = post.GetContents();
+                        var buffer = ArrayPool<byte>.Shared.Rent(4096);
+
+                        var bytesRead = await stream.ReadAsync(buffer);
+                        do
+                        {
+                            var read = buffer[..bytesRead];
+                            writer.WriteBinarySegment(read, isFinalBlock: false, state);
+                            bytesRead = await stream.ReadAsync(buffer);
+
+                            // TODO check for flushing
+                        } while (bytesRead > 0);
+
+                        writer.WriteBinarySegment(ReadOnlySpan<byte>.Empty, isFinalBlock: true, state);
+
+                        ArrayPool<byte>.Shared.Return(buffer);
+                    }
                 }
             ]
         });
@@ -54,27 +74,16 @@ public class ByteArrayBase64WriterTests
             new Uri("http://service/odata"),
             new Uri("BlogPosts", UriKind.Relative)
         ).ParseUri();
-        
+
         await ODataSerializer.WriteAsync(payload, output, odataUri, model, options);
 
         output.Position = 0;
         var decoded = JsonDocument.Parse(output);
-        var actualBase64String = decoded.RootElement.GetProperty("value")[0].GetProperty("CoverImage").GetString();
-        var expectedBase64String = Convert.ToBase64String(entity.CoverImage);
+        var actualBase64String = decoded.RootElement.GetProperty("value")[0].GetProperty("Contents").GetString();
+  
+        var expectedBase64String = Convert.ToBase64String(entity.GetContents().ToArray());
 
         Assert.Equal(expectedBase64String, actualBase64String);
-    }
-
-    private static byte[] CreateByteArray(int size)
-    {
-        var array = new byte[size];
-
-        for (int i = 0; i < size; i++)
-        {
-            array[i] = (byte)(i % 256);
-        }
-
-        return array;
     }
 
     private static IEdmModel CreateBlogPostModel()
@@ -84,7 +93,7 @@ public class ByteArrayBase64WriterTests
         var entityType = model.AddEntityType("ns", "BlogPost");
         entityType.AddKeys(entityType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
         entityType.AddStructuralProperty("Title", EdmPrimitiveTypeKind.String);
-        entityType.AddStructuralProperty("CoverImage", EdmPrimitiveTypeKind.Binary);
+        entityType.AddStructuralProperty("Contents", EdmPrimitiveTypeKind.Binary);
 
         var container = model.AddEntityContainer("ns", "DefaultContainer");
         container.AddEntitySet("BlogPosts", entityType);
@@ -95,7 +104,13 @@ public class ByteArrayBase64WriterTests
     {
         public int Id { get; set; }
         public string Title { get; set; }
-        public byte[] CoverImage { get; set; }
-    }
 
+        public required int ContentLength { get; set; }
+
+        public MemoryStream GetContents()
+        {
+            var data = Enumerable.Range(0, ContentLength).Select(i => (byte)(i % 256)).ToArray();
+            return new MemoryStream(data);
+        }
+    }
 }

@@ -3,19 +3,19 @@ using Microsoft.OData.Serializer.Attributes;
 using Microsoft.OData.UriParser;
 using System.Text.Json;
 
-namespace Microsoft.OData.Serializer.Tests.V3;
+namespace Microsoft.OData.Serializer.Tests;
 
-public class NullSerializationSupport
+public class SupportForODataIgnoreAttribute
 {
     [Fact]
-    public async Task WhenStringPropertyIsNull_WritesNullValue()
+    public async Task SkipPropertiesWithODataIgnoreAttribute()
     {
         // Arrange
-        var post = new Post
+        var customer = new Customer
         {
             Id = 1,
-            Title = "Test Post",
-            Description = null
+            Name = "John Doe",
+            Password = "SecretPassword"
         };
 
         var options = new ODataSerializerOptions();
@@ -23,51 +23,57 @@ public class NullSerializationSupport
         var odataUri = new ODataUriParser(
             CreateModel(),
             new Uri("http://service/odata"),
-            new Uri("Posts(1)", UriKind.Relative)
+            new Uri("Customers(1)", UriKind.Relative)
         ).ParseUri();
 
         var model = CreateModel();
 
         var stream = new MemoryStream();
+
         // Act
-        await ODataSerializer.WriteAsync(post, stream, odataUri, model, options);
+        await ODataSerializer.WriteAsync(customer, stream, odataUri, model, options);
 
         // Assert
         stream.Position = 0;
         var actual = new StreamReader(stream).ReadToEnd();
         var normalizedActual = JsonSerializer.Serialize(JsonDocument.Parse(actual));
+
         var expected =
             """
             {
-              "@odata.context": "http://service/odata/$metadata#Posts/$entity",
+              "@odata.context": "http://service/odata/$metadata#Customers/$entity",
               "Id": 1,
-              "Title": "Test Post",
-              "Description": null
+              "Name": "John Doe"
             }
             """;
         var normalizedExpected = JsonSerializer.Serialize(JsonDocument.Parse(expected));
-
         Assert.Equal(normalizedExpected, normalizedActual);
     }
 
     private static IEdmModel CreateModel()
     {
         var model = new EdmModel();
-        var entityType = model.AddEntityType("ns", "Post");
+        var entityType = model.AddEntityType("ns", "Customer");
+
         entityType.AddKeys(entityType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32, isNullable: false));
-        entityType.AddStructuralProperty("Title", EdmPrimitiveTypeKind.String, isNullable: false);
-        entityType.AddStructuralProperty("Description", EdmPrimitiveTypeKind.String, isNullable: true);
+        entityType.AddStructuralProperty("Name", EdmPrimitiveTypeKind.String, isNullable: true);
+
+        // Adding this property to ensure ODataIgnore works, since by default properties not defined in the model  will be skipped
+        entityType.AddStructuralProperty("Password", EdmPrimitiveTypeKind.String, isNullable: true);
 
         var container = model.AddEntityContainer("ns", "DefaultContainer");
-        container.AddEntitySet("Posts", entityType);
+        container.AddEntitySet("Customers", entityType);
+
         return model;
     }
 
-    [ODataType("ns.Post")]
-    class Post
+    [ODataType("ns.Customer")]
+    class Customer
     {
         public int Id { get; set; }
-        public string Title { get; set; }
-        public string? Description { get; set; }
+        public string Name { get; set; }
+
+        [ODataIgnore]
+        public string Password { get; set; }
     }
 }

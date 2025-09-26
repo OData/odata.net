@@ -2,7 +2,7 @@
 using Microsoft.OData.UriParser;
 using System.Text.Json;
 
-namespace Microsoft.OData.Serializer.Tests.V3;
+namespace Microsoft.OData.Serializer.Tests;
 
 public class DynamicPropertiesAndAnnotationsTests
 {
