@@ -208,7 +208,7 @@ namespace Microsoft.OData.Json
         /// <param name="primitiveTypeResolver">Function that takes a primitive value and returns an <see cref="IEdmTypeReference"/>.</param>
         /// <param name="readUntypedAsString">Whether unknown properties should be read as a raw string value.</param>
         /// <param name="generateTypeIfMissing">Whether to generate a type if not already part of the model.</param>
-        /// <param name="preserveUntypedNumericAsDecimal">Whether untyped numeric values should be preserved as decimals. Default is <see langword="true"/></param>
+        /// <param name="readUntypedNumericAsDecimal">Whether untyped numeric values should be preserved as decimals. Default is <see langword="true"/></param>
         /// <returns>The <see cref="IEdmTypeReference"/> of the current value to be read.</returns>
         [SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Justification = "Each code path casts to bool at most one time, and only if needed.")]
         internal static IEdmTypeReference ResolveUntypedType(
@@ -219,7 +219,7 @@ namespace Microsoft.OData.Json
                 Func<object, string, IEdmTypeReference> primitiveTypeResolver,
                 bool readUntypedAsString,
                 bool generateTypeIfMissing,
-                bool readUntypedNumericAsDecimal = true)
+                bool readUntypedNumericAsDecimal)
         {
             if (payloadTypeReference != null && (payloadTypeReference.TypeKind() != EdmTypeKind.Untyped || readUntypedAsString))
             {

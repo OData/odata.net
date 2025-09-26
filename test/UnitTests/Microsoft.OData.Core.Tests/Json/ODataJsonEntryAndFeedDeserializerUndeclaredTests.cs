@@ -1618,11 +1618,12 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
         [InlineData("000123", 123)] // Leading zeros
         [InlineData("2147483647", 2147483647)]
         [InlineData("-2147483648", -2147483648)]
-        public void ReadUntypedResourceForInt32_ExpectedTypeAsDecimal_WhenReadUntypedNumericAsDecimalFlagIsSetOrDefault(object number, object expectedValue)
+        public void ReadUntypedResourceForInt32_ExpectedTypeAsDecimal_WhenReadUntypedNumericAsDecimalFlagIsSet(object number, object expectedValue)
         {
             string payload = "{\"@odata.context\":\"http://www.sampletest.com/$metadata#Edm.Untyped\",\"id\":" + number + "}";
 
             var readerSettings = UntypedAsValueReaderSettings.Clone();
+            readerSettings.LibraryCompatibility |= ODataLibraryCompatibility.ReadUntypedNumericAsDecimal;
 
             ODataResource entry = null;
             this.ReadResourcePayload(payload, readerSettings, reader =>
@@ -1797,10 +1798,11 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
         [InlineData(2.2250738585072014E-308, 2.2250738585072014E-308d)]
         [InlineData("-2.2250738585072014E-308", -2.2250738585072014E-308d)]
         [InlineData("1e10", 10000000000d)]
-        public void ReadUntypedResourceForDouble_ExpectedTypeAsDecimal_WhenReadUntypedNumericAsDecimalFlagIsSetOrDefault(object number, object expectedValue)
+        public void ReadUntypedResourceForDouble_ExpectedTypeAsDecimal_WhenReadUntypedNumericAsDecimalFlagIsSet(object number, object expectedValue)
         {
             string payload = "{\"@odata.context\":\"http://www.sampletest.com/$metadata#Edm.Untyped\",\"id\":" + number + "}";
             var readerSettings = UntypedAsValueReaderSettings.Clone();
+            readerSettings.LibraryCompatibility |= ODataLibraryCompatibility.ReadUntypedNumericAsDecimal;
 
             ODataResource entry = null;
             this.ReadResourcePayload(payload, readerSettings, reader =>
@@ -2013,10 +2015,11 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
         [InlineData("000123", 123)] // Leading zeros
         [InlineData("2147483647", 2147483647)]
         [InlineData("-2147483648", -2147483648)]
-        public void ReadUntypedCollectionForInt32_ExpectedTypeAsDecimal_WhenReadUntypedNumericAsDecimalFlagIsSetOrDefault(object number, object expectedValue)
+        public void ReadUntypedCollectionForInt32_ExpectedTypeAsDecimal_WhenReadUntypedNumericAsDecimalFlagIsSet(object number, object expectedValue)
         {
             var payload = "{\"@odata.context\":\"http://www.sampletest.com/$metadata#Collection(Edm.Untyped)\",\"value\":[[\"primitiveString\",{\"id\":1, \"num\":" + number + "}]]}";
             var readerSettings = UntypedAsValueReaderSettings.Clone();
+            readerSettings.LibraryCompatibility |= ODataLibraryCompatibility.ReadUntypedNumericAsDecimal;
 
             ODataPrimitiveValue primitiveMember = null;
             ODataResource resourceMember = null;
@@ -2209,10 +2212,11 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
         [InlineData(2.2250738585072014E-308, 2.2250738585072014E-308d)]
         [InlineData("-2.2250738585072014E-308", -2.2250738585072014E-308d)]
         [InlineData("1e10", 10000000000d)]
-        public void ReadUntypedCollectionForDouble_ExpectedTypeAsDecimal_WhenReadUntypedNumericAsDecimalFlagIsSetOrDefault(object number, object expectedValue)
+        public void ReadUntypedCollectionForDouble_ExpectedTypeAsDecimal_WhenReadUntypedNumericAsDecimalFlagIsSet(object number, object expectedValue)
         {
             var payload = "{\"@odata.context\":\"http://www.sampletest.com/$metadata#Collection(Edm.Untyped)\",\"value\":[[\"primitiveString\",{\"id\":1, \"num\":" + number + "}]]}";
             var readerSettings = UntypedAsValueReaderSettings.Clone();
+            readerSettings.LibraryCompatibility |= ODataLibraryCompatibility.ReadUntypedNumericAsDecimal;
 
             ODataPrimitiveValue primitiveMember = null;
             ODataResource resourceMember = null;
