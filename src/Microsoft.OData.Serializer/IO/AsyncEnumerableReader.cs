@@ -1,6 +1,4 @@
-﻿using Microsoft.OData.Serializer.V3.Json.Writers;
-using System;
-using System.Buffers;
+﻿using System.Buffers;
 using System.Diagnostics;
 
 namespace Microsoft.OData.Serializer.IO;

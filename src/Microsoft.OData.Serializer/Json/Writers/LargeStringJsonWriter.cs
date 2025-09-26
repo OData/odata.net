@@ -1,11 +1,5 @@
 ﻿using Microsoft.OData.Serializer.Json.State;
-using System;
 using System.Buffers;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Text;
-using System.Text.Encodings.Web;
-using System.Text.Unicode;
 
 namespace Microsoft.OData.Serializer.Json.Writers;
 

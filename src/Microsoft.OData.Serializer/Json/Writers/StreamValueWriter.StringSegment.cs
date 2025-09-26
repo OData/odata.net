@@ -1,20 +1,9 @@
-﻿using System;
-using System.Buffers;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Microsoft.OData.Serializer.V3.Json.Writers;
+﻿namespace Microsoft.OData.Serializer.Json.Writers;
 
 using Microsoft.OData.Serializer.Json.State;
-using Microsoft.OData.Serializer.Json.Writers;
 using System;
 using System.Buffers;
-using System.Buffers.Text;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Text;
 
 internal partial class StreamValueWriter<TCustomState>
 {

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Microsoft.OData.Serializer.Attributes;
+﻿namespace Microsoft.OData.Serializer.Attributes;
 
 /// <summary>
 /// The attribute is applied on a class to specify a custom writer for a specific property

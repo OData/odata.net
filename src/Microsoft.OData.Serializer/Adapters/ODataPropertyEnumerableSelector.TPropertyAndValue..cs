@@ -1,7 +1,4 @@
 ﻿using Microsoft.OData.Serializer.Json.State;
-using System.Collections;
-using System.Diagnostics;
-using System.Text.Json;
 namespace Microsoft.OData.Serializer.Adapters;
 
 public class ODataPropertyEnumerableSelector<TResource, TProperty, TValue, TCustomState>

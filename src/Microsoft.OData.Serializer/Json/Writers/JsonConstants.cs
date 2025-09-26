@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Microsoft.OData.Serializer.Json.Writers;
+﻿namespace Microsoft.OData.Serializer.Json.Writers;
 
 internal static class JsonConstants
 {

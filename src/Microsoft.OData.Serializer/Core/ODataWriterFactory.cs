@@ -1,11 +1,4 @@
-﻿using Microsoft.OData.Serializer.V3.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Microsoft.OData.Serializer.Core;
+﻿namespace Microsoft.OData.Serializer.Core;
 
 public abstract class ODataWriterFactory<TCustomState> : IODataWriter
 {

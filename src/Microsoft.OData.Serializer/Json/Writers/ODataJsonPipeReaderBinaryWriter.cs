@@ -1,14 +1,8 @@
-﻿using Microsoft.OData.Serializer.Json;
-using Microsoft.OData.Serializer.Json.State;
-using Microsoft.OData.Serializer.V3.Core;
-using Microsoft.OData.Serializer.V3.IO;
-using System;
+﻿using Microsoft.OData.Serializer.Json.State;
 using System.Buffers;
 using System.Buffers.Text;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO.Pipelines;
-using System.Text;
 
 namespace Microsoft.OData.Serializer.Json.Writers;
 

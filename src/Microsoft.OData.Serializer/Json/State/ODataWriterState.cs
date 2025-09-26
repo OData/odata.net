@@ -1,19 +1,11 @@
 ﻿using Microsoft.OData.Edm;
 using Microsoft.OData.Serializer.Adapters;
 using Microsoft.OData.Serializer.Core;
-using Microsoft.OData.Serializer.Json;
-using System;
-using System.Buffers;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace Microsoft.OData.Serializer.Json.State;
 

@@ -1,13 +1,6 @@
 ﻿using Microsoft.OData.Serializer.Adapters;
-using Microsoft.OData.Serializer.Json;
 using Microsoft.OData.Serializer.Json.State;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
 
 namespace Microsoft.OData.Serializer.Json.Writers;
 

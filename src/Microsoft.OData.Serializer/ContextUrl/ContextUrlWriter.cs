@@ -1,12 +1,6 @@
-﻿using Microsoft.OData.Edm;
-using Microsoft.OData.Serializer.Utils;
+﻿using Microsoft.OData.Serializer.Utils;
 using Microsoft.OData.UriParser;
-using System;
-using System.Buffers;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using System.Text;
 using System.Text.Json;
 
 namespace Microsoft.OData.Serializer.ContextUrl;

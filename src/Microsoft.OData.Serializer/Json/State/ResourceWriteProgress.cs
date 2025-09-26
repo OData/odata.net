@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Microsoft.OData.Serializer.Json.State;
+﻿namespace Microsoft.OData.Serializer.Json.State;
 
 /// <summary>
 /// Represents the progress of writing a resource or collection.

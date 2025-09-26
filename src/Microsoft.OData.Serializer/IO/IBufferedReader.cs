@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Microsoft.OData.Serializer.IO;
+﻿namespace Microsoft.OData.Serializer.IO;
 
 internal interface IBufferedReader<T> : IAsyncDisposable where T : struct
 {

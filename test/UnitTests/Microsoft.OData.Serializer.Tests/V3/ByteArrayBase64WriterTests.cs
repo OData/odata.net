@@ -1,9 +1,7 @@
 ﻿using Microsoft.OData.Edm;
+using Microsoft.OData.Serializer.Adapters;
 using Microsoft.OData.Serializer.Json.State;
-using Microsoft.OData.Serializer.V3;
-using Microsoft.OData.Serializer.V3.Adapters;
 using Microsoft.OData.UriParser;
-using System.Reflection;
 using System.Text.Json;
 
 namespace Microsoft.OData.Serializer.Tests.V3;

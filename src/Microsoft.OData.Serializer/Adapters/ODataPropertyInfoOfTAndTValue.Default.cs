@@ -1,11 +1,4 @@
-﻿using Microsoft.OData.Serializer.V3.Json.State;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Microsoft.OData.Serializer.Adapters;
+﻿namespace Microsoft.OData.Serializer.Adapters;
 
 // TODO: I'd want to create a default version of this with DefaultState,
 // i.e. ODataPropertyInfo<TDeclaringType, TValue> : ODataPropertyInfo<TDeclaringType, TValue, DefaultState>

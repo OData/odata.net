@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Microsoft.OData.Serializer.Core;
+﻿namespace Microsoft.OData.Serializer.Core;
 
 // In the previous version, I separated TState and TContext where TState
 // represents the state a "this time", expected to be backed by a stack

@@ -1,19 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Microsoft.OData.Serializer;
+﻿namespace Microsoft.OData.Serializer;
 
 using System;
 using System.Buffers;
-using System.Collections.Generic;
-using System.Data;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
-using System.Text;
 
 [SuppressMessage("Performance", "CA1812:Avoid uninstantiated internal classes", Justification = "Still evaluating its utility.")]
 internal class PooledByteSegmentBufferWriter(int initialCapacity) : IBufferWriter<byte>, IDisposable

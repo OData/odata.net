@@ -1,9 +1,4 @@
 ﻿using Microsoft.OData.Serializer.Adapters;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace Microsoft.OData.Serializer;
 

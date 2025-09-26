@@ -3,14 +3,7 @@ using Microsoft.OData.Serializer.ContextUrl;
 using Microsoft.OData.Serializer.Core;
 using Microsoft.OData.Serializer.Json.State;
 using Microsoft.OData.Serializer.Json.Writers;
-using Microsoft.OData.Serializer.V3.Adapters;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Microsoft.OData.Serializer.Json;
 
