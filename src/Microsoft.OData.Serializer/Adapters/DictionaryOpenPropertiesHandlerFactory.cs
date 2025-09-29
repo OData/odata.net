@@ -2,7 +2,7 @@
 
 namespace Microsoft.OData.Serializer;
 
-internal class DictionaryDynamicPropertiesHandlerFactory<TCustomState> : DynamicPropertiesHandlerFactory<TCustomState>
+internal class DictionaryOpenPropertiesHandlerFactory<TCustomState> : OpenPropertiesHandlerFactory<TCustomState>
 {
     private static readonly Type[] _supportedGenericTypeDefs = [
         typeof(Dictionary<,>),
@@ -30,11 +30,11 @@ internal class DictionaryDynamicPropertiesHandlerFactory<TCustomState> : Dynamic
         return false;
     }
 
-    public override IDynamicPropertiesHandler<TCustomState> CreateHandler(Type type)
+    public override IOpenPropertiesHandler<TCustomState> CreateHandler(Type type)
     {
         var valueType = type.GenericTypeArguments[1];
         var handlerType = typeof(EnumerableDynamicPropertyHandler<,>).MakeGenericType(valueType, typeof(TCustomState));
-        var handler = Activator.CreateInstance(handlerType) as IDynamicPropertiesHandler<TCustomState>;
+        var handler = Activator.CreateInstance(handlerType) as IOpenPropertiesHandler<TCustomState>;
         Debug.Assert(handler != null, "Handler should not be null");
         return handler!;
     }

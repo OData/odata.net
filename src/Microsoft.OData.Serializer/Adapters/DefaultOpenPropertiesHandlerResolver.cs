@@ -2,18 +2,18 @@
 
 namespace Microsoft.OData.Serializer;
 
-internal class DefaultDynamicPropertiesHandlerResolver<TCustomState> : IDynamicPropertiesHandlerResolver<TCustomState>
+internal class DefaultOpenPropertiesHandlerResolver<TCustomState> : IOpenPropertiesHandlerResolver<TCustomState>
 {
-    private static readonly DynamicPropertiesHandlerFactory<TCustomState>[] _factories =
+    private static readonly OpenPropertiesHandlerFactory<TCustomState>[] _factories =
     [
-        new DictionaryDynamicPropertiesHandlerFactory<TCustomState>()
+        new DictionaryOpenPropertiesHandlerFactory<TCustomState>()
     ];
 
     // TODO: since this is expected to be read far more than written, explore
     // whether using a normal Dictionary behind a ReaderWriterLockSlim would be more efficient. 
-    private readonly ConcurrentDictionary<Type, IDynamicPropertiesHandler<TCustomState>> _handlerCache = new();
+    private readonly ConcurrentDictionary<Type, IOpenPropertiesHandler<TCustomState>> _handlerCache = new();
 
-    public IDynamicPropertiesHandler<TCustomState>? Resolve(Type dynamicPropertiesContainerType)
+    public IOpenPropertiesHandler<TCustomState>? Resolve(Type dynamicPropertiesContainerType)
     {
         if (_handlerCache.TryGetValue(dynamicPropertiesContainerType, out var handler))
         {

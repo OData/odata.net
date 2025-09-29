@@ -165,7 +165,7 @@ public sealed class ODataWriterState<TCustomState>
         return handler;
     }
 
-    internal IDynamicPropertiesHandler<TCustomState> GetDynamicPropertiesHandler(Type dynamicPropertiesType)
+    internal IOpenPropertiesHandler<TCustomState> GetOpenPropertiesHandler(Type dynamicPropertiesType)
     {
         var handler = options.DynamicPropertiesHandlerResolver.Resolve(dynamicPropertiesType)
             ?? throw new InvalidOperationException($"No dynamic properties handler found for type {dynamicPropertiesType.FullName}");

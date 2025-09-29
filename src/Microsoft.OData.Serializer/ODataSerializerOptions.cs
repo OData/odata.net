@@ -10,7 +10,7 @@ public class ODataSerializerOptions<TCustomState>
     public IODataTypeMapper TypeMapper { get; set; } = new DefaultODataTypeMapper();
 
     internal ICustomAnnotationsHandlerResolver<TCustomState> CustomAnnotationsHandlerResolver { get; set; } = new DefaultCustomAnnotationsHandlerResolver<TCustomState>();
-    internal IDynamicPropertiesHandlerResolver<TCustomState> DynamicPropertiesHandlerResolver { get; set; } = new DefaultDynamicPropertiesHandlerResolver<TCustomState>();
+    internal IOpenPropertiesHandlerResolver<TCustomState> DynamicPropertiesHandlerResolver { get; set; } = new DefaultOpenPropertiesHandlerResolver<TCustomState>();
 
     internal Dictionary<Type, ODataTypeInfo> ResourceTypeInfos { get; } = new();
 

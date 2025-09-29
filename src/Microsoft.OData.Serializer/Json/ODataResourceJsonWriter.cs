@@ -197,21 +197,21 @@ internal class ODataResourceJsonWriter<T, TCustomState>(ODataTypeInfo<T, TCustom
             }
         }
 
-        object? dynamicProperties = typeInfo.GetOpenProperties?.Invoke(value, state);
-        if (dynamicProperties != null)
+        object? openProperties = typeInfo.GetOpenProperties?.Invoke(value, state);
+        if (openProperties != null)
         {
             // TODO: For now we don't support resumable writes for dynamic properties, but we should.
 
             // Should allow a GetDynamicProperties to return a different container type for the same typeInfo?
             // If it can't change, then we could cache the handler on the typeInfo.
-            var handler = state.GetDynamicPropertiesHandler(dynamicProperties.GetType());
-            handler.WriteDynamicProperties(
+            var handler = state.GetOpenPropertiesHandler(openProperties.GetType());
+            handler.WriteOpenProperties(
                 value,
-                dynamicProperties,
+                openProperties,
                 typeInfo.GetPropertyPreValueAnnotations,
                 typeInfo.GetPropertyPostValueAnnotations,
                 // TODO: Get dynamic property writer from options?
-                DefaultDynamicPropertyWriter<TCustomState>.Instance,
+                DefaultOpenPropertyWriter<TCustomState>.Instance,
                 state);
         }
 

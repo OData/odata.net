@@ -4,14 +4,14 @@ using System.Diagnostics.CodeAnalysis;
 namespace Microsoft.OData.Serializer;
 
 [SuppressMessage("Performance", "CA1812:Avoid uninstantiated internal classes", Justification = "This class is instantiated via reflection.")]
-internal class EnumerableDynamicPropertyHandler<TDynamicValue, TCustomState> : IDynamicPropertiesHandler<TCustomState>
+internal class EnumerableDynamicPropertyHandler<TDynamicValue, TCustomState> : IOpenPropertiesHandler<TCustomState>
 {
-    public void WriteDynamicProperties<TResource>(
+    public void WriteOpenProperties<TResource>(
         TResource resource,
         object dynamicProperties,
         Func<TResource, string, ODataWriterState<TCustomState>, object?>? getPropertyPreValueAnnotations,
         Func<TResource, string, ODataWriterState<TCustomState>, object?>? getPropertyPostValueAnnotations,
-        IDynamicPropertyWriter<TCustomState> writer,
+        IOpenPropertyHandler<TCustomState> writer,
         ODataWriterState<TCustomState> state)
     {
         // TODO: support resumability in dynamic properties
@@ -26,7 +26,7 @@ internal class EnumerableDynamicPropertyHandler<TDynamicValue, TCustomState> : I
             // avoid extra checks in the loop if there are no annotations
             foreach (var kvp in enumerable)
             {
-                writer.WriteDynamicProperty(kvp.Key.AsSpan(), kvp.Value, state);
+                writer.WriteOpenProperty(kvp.Key.AsSpan(), kvp.Value, state);
             }
         }
         else
@@ -48,7 +48,7 @@ internal class EnumerableDynamicPropertyHandler<TDynamicValue, TCustomState> : I
                             state);
                     }
                 }
-                writer.WriteDynamicProperty(kvp.Key.AsSpan(), kvp.Value, state);
+                writer.WriteOpenProperty(kvp.Key.AsSpan(), kvp.Value, state);
                 // write post annotations
                 if (getPropertyPostValueAnnotations != null)
                 {
