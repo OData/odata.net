@@ -70,7 +70,7 @@ public static class DataGenerator
                 }
             };
             data[schema.ActivityStats] = activityStats;
-            
+
             // Create sample binary data
             var sampleBinaryDataAsString = $"Sample content for file {i + 1} - {department} department";
             if (options.LargeBinaryPayload)
@@ -99,7 +99,7 @@ public static class DataGenerator
                 Text = fileContentText,
                 Annotation = fileContentAnnotation
             };
-            
+
 
             var accessControlEntries = new List<AccessControlEntry>
             {

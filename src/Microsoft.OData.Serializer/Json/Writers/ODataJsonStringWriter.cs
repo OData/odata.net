@@ -11,11 +11,17 @@ internal class ODataJsonStringWriter<TCustomState> : ODataJsonWriter<string, TCu
             return true;
         }
 
-        if (value.Length < state.FreeBufferCapacity)
+        // We use a fixed threshold here to ensure that the condition always returns the same result
+        // for the same input value. Ideally, we should write value if it can fit the buffer capacity,
+        // but if's possibly that the buffer capacity changes between calls such that the if statement
+        // is not taken the first iteration, but taken the second and lead to invalid values.
+        // Perhaps we should hold some state that tells us whether we are in chunking mode or not.
+        if (value.Length < 1024 * 16) //state.FreeBufferCapacity)
         {
             state.JsonWriter.WriteStringValue(value);
             return true;
         }
+
 
         if (state.ShouldFlush())
         {

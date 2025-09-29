@@ -20,7 +20,7 @@ internal class StreamingTextPropertyWriter<TEntity, TValue>
     : ODataAsyncPropertyWriter<TEntity, TValue, ODataCustomState>
     where TEntity : StreamingEnabled
 {
-    public override ValueTask WriteValueAsync(
+    public override async ValueTask WriteValueAsync(
         TEntity resource,
         TValue propertyValue,
         IStreamValueWriter<ODataCustomState> writer,
@@ -31,10 +31,10 @@ internal class StreamingTextPropertyWriter<TEntity, TValue>
 
         if (resource.StreamableProperties != null && resource.StreamableProperties.TryGetValue(property.Name, out var streamingSource))
         {
-            return StreamingSourceWriter.WriteTextStreamAsync(streamingSource, writer, state);
+            await StreamingSourceWriter.WriteTextStreamAsync(streamingSource, writer, state);
+            return;
         }
 
-        writer.WriteValue(propertyValue, state);
-        return ValueTask.CompletedTask;
+        await writer.WriteValueAsync(propertyValue, state);
     }
 }

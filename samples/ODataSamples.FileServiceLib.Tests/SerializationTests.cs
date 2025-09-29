@@ -300,16 +300,16 @@ public class SerializationTests
             "pdf"
             ],
             "ActivityStats": [
-            {
-                "Id": "activity-1-1",
-                "Actor": "user1@example.com",
-                "ActivityDateTime": "2024-01-01T09:00:00Z"
-            },
-            {
-                "Id": "activity-1-2",
-                "Actor": "editor1@example.com",
-                "ActivityDateTime": "2024-01-01T09:00:00Z"
-            }
+                {
+                    "Id": "activity-1-1",
+                    "Actor": "user1@example.com",
+                    "ActivityDateTime": "2024-01-01T09:00:00Z"
+                },
+                {
+                    "Id": "activity-1-2",
+                    "Actor": "editor1@example.com",
+                    "ActivityDateTime": "2024-01-01T09:00:00Z"
+                }
             ],
             "BinaryData": "U2FtcGxlIGNvbnRlbnQgZm9yIGZpbGUgMSAtIE1hcmtldGluZyBkZXBhcnRtZW50",
             "ByteCollection": [10,20,13,42,54],

@@ -1,4 +1,5 @@
 ﻿using Microsoft.OData.Edm;
+using System.Buffers;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -119,7 +120,7 @@ public sealed class ODataWriterState<TCustomState>
 
     internal int UsedBufferSize => JsonWriter.BytesPending + BufferWriter.WrittenCount;
 
-    internal int FreeBufferCapacity => BufferWriter.Capacity - UsedBufferSize;
+    internal int FreeBufferCapacity => BufferWriter.FreeCapacity;
 
     public HashSet<object>? DisposableObjects => _disposableObjects;
 
