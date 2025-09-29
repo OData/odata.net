@@ -6,4 +6,16 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="Schema\FileServiceSchema.csdl" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Schema\FileServiceSchema.csdl" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Microsoft.OData.Serializer\Microsoft.OData.Serializer.csproj" />
+  </ItemGroup>
+
 </Project>

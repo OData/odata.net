@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace ODataSamples.FileServiceLib.SampleData;
 
-public static class SampleData
+public static class DataGenerator
 {
     public static FindFileResponse CreateMultiFileResponseData(int count)
     {
