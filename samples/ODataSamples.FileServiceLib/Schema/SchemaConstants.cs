@@ -8,5 +8,5 @@ namespace ODataSamples.FileServiceLib.Schema;
 
 internal static class SchemaConstants
 {
-    public const string Namespace = "OData.Samples.FileService";
+    public const string Namespace = "ODataSamples.FileService";
 }

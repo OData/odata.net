@@ -24,7 +24,7 @@ public class SerializationTests
         var odataUri = new ODataUriParser(
             model,
             new Uri("http://service/odata"),
-            new Uri("Users('userId')/Files", UriKind.Relative)
+            new Uri("Users('id')/Files", UriKind.Relative)
         ).ParseUri();
 
         var customState = new ODataCustomState

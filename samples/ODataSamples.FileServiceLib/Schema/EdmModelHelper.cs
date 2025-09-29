@@ -14,7 +14,7 @@ public static class EdmModelHelper
     public static IEdmModel EdmModel { get; } = LoadEdmModel();
     private static IEdmModel LoadEdmModel()
     {
-        var resourceName = "ODataSamples.FileServiceLib.Schema.FileServiceModel.xml";
+        var resourceName = "ODataSamples.FileServiceLib.Schema.FileServiceSchema.csdl";
         using var stream = typeof(EdmModelHelper).Assembly.
                GetManifestResourceStream(resourceName)
                ?? throw new Exception($"Could not load embedded schema at '{resourceName}'");

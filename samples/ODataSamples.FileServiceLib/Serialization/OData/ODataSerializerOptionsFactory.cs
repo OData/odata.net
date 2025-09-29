@@ -1,5 +1,6 @@
 ﻿using Microsoft.OData.Serializer;
 using ODataSamples.FileServiceLib.Models;
+using ODataSamples.FileServiceLib.Schema;
 using ODataSamples.FileServiceLib.Schema.Abstractions;
 using ISchematizedFileItem = ODataSamples.FileServiceLib.Schema.Abstractions.ISchematizedObject<ODataSamples.FileServiceLib.Schema.Common.IFileItemSchema>;
 
@@ -19,7 +20,7 @@ public static class ODataSerializerOptionsFactory
     {
         options.AddTypeInfo<ISchematizedFileItem>(new()
         {
-            EdmTypeName = "OData.Samples.FileService.FileItem",
+            EdmTypeName = $"{SchemaConstants.Namespace}.FileItem",
             GetODataId = (item, state) => {
                 if (item is SchematizedFileItem fileItem)
                 {
@@ -50,7 +51,7 @@ public static class ODataSerializerOptionsFactory
     {
         options.AddTypeInfo<IOpenPropertyValue>(new()
         {
-            GetEdmTypeName = (item, state) => $"OData.Samples.FileService.{item.GetType().Name}",
+            GetEdmTypeName = (item, state) => $"{SchemaConstants.Namespace}.{item.GetType().Name}",
             GetDynamicProperties = (item, state) => item.GetAllOpenProperties(),
             GetPropertyPreValueAnnotations = (item, propertyName, state) => item.GetODataAnnotations(propertyName)
         });
