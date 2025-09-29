@@ -9,7 +9,7 @@ internal static class StreamingSourceWriter
 {
     private const int DefaultBufferSize = 8192;
 
-    public static async ValueTask WriteTextStream(IStreamingSource source, IStreamValueWriter<ODataCustomState> writer, ODataWriterState<ODataCustomState> state)
+    public static async ValueTask WriteTextStreamAsync(IStreamingSource source, IStreamValueWriter<ODataCustomState> writer, ODataWriterState<ODataCustomState> state)
     {
         Decoder decoder = Encoding.Unicode.GetDecoder();
 

@@ -27,10 +27,11 @@ internal class StreamingTextPropertyWriter<TEntity, TValue>
         ODataWriterState<ODataCustomState> state)
     {
         ODataPropertyInfo? property = state.CurrentPropertyInfo();
-        Debug.Assert(property != null);
+        Debug.Assert(property != null && property.Name != null);
 
-        if (resource.StreamableProperties.TryGetValue(property.Name, out var streamingSource))
+        if (resource.StreamableProperties != null && resource.StreamableProperties.TryGetValue(property.Name, out var streamingSource))
         {
+            return StreamingSourceWriter.WriteTextStreamAsync(streamingSource, writer, state);
         }
 
         writer.WriteValue(propertyValue, state);
