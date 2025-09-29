@@ -1257,7 +1257,7 @@ public class SchemaParsingTests : EdmLibTestCaseBase
         Assert.NotNull(getAge);
         Assert.Equal("GetAge", getAge.Name);
         Assert.Equal("foo", getAge.Namespace);
-        Assert.Equal(EdmPrimitiveTypeKind.Int32, getAge.ReturnType.AsPrimitive().PrimitiveKind());
+        Assert.Equal(EdmPrimitiveTypeKind.Int32, getAge.Return?.Type.AsPrimitive().PrimitiveKind());
         Assert.Equal(EdmSchemaElementKind.Function, getAge.SchemaElementKind);
 
         IEdmOperationParameter getAgeParameter = getAge.Parameters.First();
@@ -1384,8 +1384,8 @@ public class SchemaParsingTests : EdmLibTestCaseBase
         Assert.True(peopleWhoAreAwesome.TryGetStaticEntitySet(model, out IEdmEntitySetBase fiEntitySet), "peopleWhoAreAwesome.TryGetStaticEntitySet");
         Assert.Equal(personType, fiEntitySet.EntityType);
         Assert.Equal("peopleWhoAreAwesomeAction", peopleWhoAreAwesome.Name);
-        Assert.Equal(EdmTypeKind.Collection, peopleWhoAreAwesome.Operation.ReturnType.Definition.TypeKind);
-        Assert.Equal(personType, peopleWhoAreAwesome.Operation.ReturnType.AsCollection().ElementType().Definition);
+        Assert.Equal(EdmTypeKind.Collection, peopleWhoAreAwesome.Operation.Return?.Type.Definition.TypeKind);
+        Assert.Equal(personType, peopleWhoAreAwesome.Operation.Return?.Type.AsCollection().ElementType().Definition);
 
         IEdmOperationParameter peopleWhoAreAwesomeParameter = peopleWhoAreAwesome.Operation.Parameters.First();
         Assert.Equal(peopleWhoAreAwesomeParameter, peopleWhoAreAwesome.Operation.FindParameter("awesomeName"));
@@ -1514,30 +1514,30 @@ public class SchemaParsingTests : EdmLibTestCaseBase
         var operationImports = model.EntityContainer.OperationImports().ToArray();
         Assert.Equal(11, operationImports.Length);
 
-        Assert.Equal(EdmTypeKind.Entity, operationImports[0].Operation.ReturnType.AsCollection().ElementType().TypeKind());
+        Assert.Equal(EdmTypeKind.Entity, operationImports[0].Operation.Return?.Type.AsCollection().ElementType().TypeKind());
         Assert.Equal(EdmTypeKind.Entity, operationImports[0].Operation.Parameters.Single().Type.AsCollection().ElementType().TypeKind());
 
         Assert.True(operationImports[0].TryGetStaticEntitySet(model, out IEdmEntitySetBase eset), "operationImports[0].TryGetStaticEntitySet");
         Assert.False(operationImports[0].TryGetRelativeEntitySetPath(model, out IEdmOperationParameter p, out Dictionary<IEdmNavigationProperty, IEdmPathExpression> np, out IEnumerable<EdmError> entitySetPathErrors));
         Assert.Equal(people, eset);
 
-        Assert.Equal(EdmTypeKind.Complex, operationImports[1].Operation.ReturnType.AsCollection().ElementType().TypeKind());
+        Assert.Equal(EdmTypeKind.Complex, operationImports[1].Operation.Return?.Type.AsCollection().ElementType().TypeKind());
         Assert.Equal(EdmTypeKind.Complex, operationImports[1].Operation.Parameters.Single().Type.AsCollection().ElementType().TypeKind());
 
-        Assert.Equal(EdmTypeKind.Primitive, operationImports[2].Operation.ReturnType.AsCollection().ElementType().TypeKind());
+        Assert.Equal(EdmTypeKind.Primitive, operationImports[2].Operation.Return?.Type.AsCollection().ElementType().TypeKind());
         Assert.Equal(EdmTypeKind.Primitive, operationImports[2].Operation.Parameters.Single().Type.AsCollection().ElementType().TypeKind());
 
-        Assert.Equal(EdmTypeKind.Entity, operationImports[3].Operation.ReturnType.TypeKind());
+        Assert.Equal(EdmTypeKind.Entity, operationImports[3].Operation.Return?.Type.TypeKind());
         Assert.Equal(EdmTypeKind.Entity, operationImports[3].Operation.Parameters.Single().Type.TypeKind());
 
         Assert.True(operationImports[3].TryGetStaticEntitySet(model, out IEdmEntitySetBase eset2));
         Assert.False(operationImports[0].TryGetRelativeEntitySetPath(model, out p, out np, out entitySetPathErrors));
         Assert.Equal(people, eset2);
 
-        Assert.Equal(EdmTypeKind.Complex, operationImports[4].Operation.ReturnType.TypeKind());
+        Assert.Equal(EdmTypeKind.Complex, operationImports[4].Operation.Return?.Type.TypeKind());
         Assert.Equal(EdmTypeKind.Complex, operationImports[4].Operation.Parameters.Single().Type.TypeKind());
 
-        Assert.Equal(EdmTypeKind.Primitive, operationImports[5].Operation.ReturnType.TypeKind());
+        Assert.Equal(EdmTypeKind.Primitive, operationImports[5].Operation.Return?.Type.TypeKind());
         Assert.Equal(EdmTypeKind.Primitive, operationImports[5].Operation.Parameters.Single().Type.TypeKind());
 
         Assert.False(operationImports[6].TryGetStaticEntitySet(model, out eset));
@@ -1924,7 +1924,7 @@ public class SchemaParsingTests : EdmLibTestCaseBase
         Assert.True(parsed);
 
         IEdmOperation operation = (IEdmOperation)model.SchemaElements.First();
-        IEdmTypeReference returnType = operation.ReturnType;
+        IEdmTypeReference? returnType = operation.Return?.Type;
         IEdmTypeReference parameterType = operation.Parameters.First().Type;
 
         Assert.False(returnType.IsBad());
@@ -1953,7 +1953,7 @@ public class SchemaParsingTests : EdmLibTestCaseBase
         Assert.True(parsed);
 
         IEdmOperation operation = (IEdmOperation)model.SchemaElements.First();
-        IEdmTypeReference returnType = operation.ReturnType;
+        IEdmTypeReference? returnType = operation.Return?.Type;
         IEdmTypeReference parameterType = operation.Parameters.First().Type;
 
         Assert.False(returnType.IsBad());
