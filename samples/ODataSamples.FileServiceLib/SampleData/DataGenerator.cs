@@ -12,8 +12,11 @@ namespace ODataSamples.FileServiceLib.SampleData;
 
 public static class DataGenerator
 {
-    public static FindFileResponse CreateMultiFileResponseData(int count)
+    public const int LargeFieldMultiplier = 16 * 1024; // 16K // makes sure the size exceeds default buffer size
+
+    public static FindFileResponse CreateMultiFileResponseData(int count, DataGenerationOptions? options = null)
     {
+        options ??= new DataGenerationOptions();
         var schema = new FileItemSchema();
         var fileItems = new List<ISchematizedObject<IFileItemSchema>>();
         
@@ -69,22 +72,35 @@ public static class DataGenerator
             data[schema.ActivityStats] = activityStats;
             
             // Create sample binary data
-            var sampleText = $"Sample content for file {i + 1} - {department} department";
-            data[schema.BinaryData] = Encoding.UTF8.GetBytes(sampleText);
+            var sampleBinaryDataAsString = $"Sample content for file {i + 1} - {department} department";
+            if (options.LargeBinaryPayload)
+            {
+                sampleBinaryDataAsString = RepeatString(sampleBinaryDataAsString, LargeFieldMultiplier);
+            }
+
+            data[schema.BinaryData] = Encoding.UTF8.GetBytes(sampleBinaryDataAsString);
 
             // TODO: We use List<byte> to represent a byte collection because
             // byte[] is automatically treated as binary data that will be base64-encoded.
             // This might change in a future iteration.
             data[schema.ByteCollection] = new List<byte> { 10, 20, 13, 42, 54 };
-            
+
             // Create file content
+            var fileContentText = $"File content for {department} report {i + 1}";
+            var fileContentAnnotation = $"Generated sample data - Item {i + 1}";
+            if (options.LargeTextPayload)
+            {
+                fileContentText = RepeatString(fileContentText, LargeFieldMultiplier);
+                fileContentAnnotation = RepeatString(fileContentAnnotation, LargeFieldMultiplier);
+            }
+
             data[schema.FileContent] = new FileContent
             {
-                Text = $"File content for {department} report {i + 1}",
-                Annotation = $"Generated sample data - Item {i + 1}"
+                Text = fileContentText,
+                Annotation = fileContentAnnotation
             };
             
-            // Create EntityACL (Access Control List)
+
             var accessControlEntries = new List<AccessControlEntry>
             {
                 new AccessControlEntry 
@@ -106,6 +122,7 @@ public static class DataGenerator
                     }
                 }
             };
+
             data[schema.EntityACL] = new AccessControlList 
             { 
                 Version = 1, 
@@ -178,5 +195,11 @@ public static class DataGenerator
         }
         
         return new FindFileResponse(fileItems, $"skip-token-{count}");
+    }
+
+    private static string RepeatString(string str, int count)
+    {
+        if (count <= 0) return string.Empty;
+        return string.Concat(Enumerable.Repeat(str, count));
     }
 }
