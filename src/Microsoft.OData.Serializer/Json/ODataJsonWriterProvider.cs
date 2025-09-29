@@ -1,4 +1,5 @@
 ﻿using Microsoft.OData.Edm;
+using Microsoft.OData.Serializer.Json.Writers;
 using System.Collections.Concurrent;
 using System.Diagnostics;
 
@@ -8,10 +9,19 @@ internal class ODataJsonWriterProvider<TCustomState>(ODataSerializerOptions<TCus
 {
     //private static readonly Type ObjectType = typeof(object);
     private static readonly ODataJsonBoolWriter<TCustomState> boolWriter = new();
+    private static readonly ODataJsonByteWriter<TCustomState> byteWriter = new();
+    private static readonly ODataJsonSByteWriter<TCustomState> sbyteWriter = new();
+    private static readonly ODataJsonShortWriter<TCustomState> shortWriter = new();
+    private static readonly ODataJsonUshortWriter<TCustomState> ushortWriter = new();
     private static readonly ODataJsonInt32Writer<TCustomState> int32Writer = new();
+    private static readonly ODataJsonUintWriter<TCustomState> uint32Writer = new();
+    private static readonly ODataJsonInt64Writer<TCustomState> int64Writer = new();
+    private static readonly ODataJsonUlongWriter<TCustomState> uint64Writer = new();
     private static readonly ODataJsonStringWriter<TCustomState> stringWriter = new();
+    private static readonly ODataJsonGuidWriter<TCustomState> guidWriter = new();
     private static readonly ODataJsonDateTimeWriter<TCustomState> dateTimeWriter = new();
     private static readonly ODataJsonDateTimeOffsetWriter<TCustomState> dateTimeOffsetWriter = new();
+    private static readonly ODataJsonFloatWriter<TCustomState> floatWriter = new();
     private static readonly ODataJsonDoubleWriter<TCustomState> doubleWriter = new();
     private static readonly ODataJsonDecimalWriter<TCustomState> decimalWriter = new();
     private static readonly ODataJsonByteArrayWriter<TCustomState> byteArrayWriter = new();
@@ -113,16 +123,25 @@ internal class ODataJsonWriterProvider<TCustomState>(ODataSerializerOptions<TCus
 
     private static Dictionary<Type, IODataWriter<ODataWriterState<TCustomState>>> InitPrimitiveWriters()
     {
-        const int NumSimpleWriters = 12; // Update this when adding more writers. Keeps the dict size exact.
+        const int NumSimpleWriters = 21; // Update this when adding more writers. Keeps the dict size exact.
         Dictionary<Type, IODataWriter<ODataWriterState<TCustomState>>> writers = new(NumSimpleWriters);
 
         Add(boolWriter);
         Add(int32Writer);
+        Add(int64Writer);
         Add(stringWriter);
+        Add(guidWriter);
         Add(dateTimeWriter);
         Add(dateTimeOffsetWriter);
         Add(doubleWriter);
         Add(decimalWriter);
+        Add(byteWriter);
+        Add(sbyteWriter);
+        Add(shortWriter);
+        Add(ushortWriter);
+        Add(uint32Writer);
+        Add(uint64Writer);
+        Add(floatWriter);
         Add(byteArrayWriter);
         Add(uriWriter);
         Add(pipeReaderWriter);
