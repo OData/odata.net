@@ -78,7 +78,7 @@ public static class ODataSerializerOptionsFactory
         options.AddTypeInfo<ExtensionOpenPropertyValue>(new()
         {
             GetEdmTypeName = (item, state) => $"{SchemaConstants.Namespace}.{item.GetType().Name}",
-            GetDynamicProperties = (item, state) => item.GetAllOpenProperties(),
+            GetOpenProperties = (item, state) => item.GetAllOpenProperties(),
             GetPropertyPreValueAnnotations = (item, propertyName, state) => item.GetODataAnnotations(propertyName)
         });
     }

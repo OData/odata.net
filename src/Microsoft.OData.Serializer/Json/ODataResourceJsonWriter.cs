@@ -150,7 +150,7 @@ internal class ODataResourceJsonWriter<T, TCustomState>(ODataTypeInfo<T, TCustom
         ODataTypeInfo<T, TCustomState> typeInfo,
         ODataWriterState<TCustomState> state)
     {
-        Debug.Assert(typeInfo.Properties != null || typeInfo.GetDynamicProperties != null, "TypeInfo should have properties defined.");
+        Debug.Assert(typeInfo.Properties != null || typeInfo.GetOpenProperties != null, "TypeInfo should have properties defined.");
 
         if (typeInfo.Properties != null)
         {
@@ -197,7 +197,7 @@ internal class ODataResourceJsonWriter<T, TCustomState>(ODataTypeInfo<T, TCustom
             }
         }
 
-        object? dynamicProperties = typeInfo.GetDynamicProperties?.Invoke(value, state);
+        object? dynamicProperties = typeInfo.GetOpenProperties?.Invoke(value, state);
         if (dynamicProperties != null)
         {
             // TODO: For now we don't support resumable writes for dynamic properties, but we should.
