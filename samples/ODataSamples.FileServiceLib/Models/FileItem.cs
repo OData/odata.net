@@ -69,6 +69,12 @@ public class FileItem(IFileItemSchema schema, IDictionary<IPropertyDefinition, o
         set => this.Data[this.Schema.FileContent] = value;
     }
 
+    public IEnumerable<string>? AllExtensionsNames
+    {
+        get => (IEnumerable<string>?)this.Data[this.Schema.AllExtensionsNames];
+        set => this.Data[this.Schema.AllExtensionsNames] = value;
+    }
+
     public IOpenPropertyValue? AllExtensions
     {
         get => (IOpenPropertyValue?)this.Data[this.Schema.AllExtensions];

@@ -16,6 +16,7 @@ public interface IBaseItemSchema : ISchema
     IPropertyDefinition ExternalId { get; }
     IPropertyDefinition Tags { get; }
     IPropertyDefinition FileContent { get; }
+    IPropertyDefinition AllExtensionsNames { get; }
     IPropertyDefinition AllExtensions { get; }
     IPropertyDefinition ItemProperties { get; }
     IPropertyDefinition CreatedAt { get; }

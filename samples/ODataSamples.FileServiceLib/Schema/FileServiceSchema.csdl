@@ -26,6 +26,7 @@
 				<Property Name="ExternalId" Type="Edm.Guid" />
 				<Property Name="Tags" Type="Collection(Edm.String)" />
 				<Property Name="FileContent" Type="ODataSamples.FileService.FileContent" />
+				<Property Name="AllExtensionsNames" Type="Collection(Edm.String)" />
 				<Property Name="AllExtensions" Type="ODataSamples.FileService.ExtensionContainer" />
 				<Property Name="ItemProperties" Type="ODataSamples.FileService.ExtensionContainer" />
 				<Property Name="CreatedAt" Type="Edm.DateTimeOffset" />

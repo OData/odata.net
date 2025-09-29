@@ -43,6 +43,8 @@ internal class FileItemSchema : IFileItemSchema
 
     public IPropertyDefinition FileContent { get; } = new PropertyDefinition("FileContent", typeof(FileContent));
 
+    public IPropertyDefinition AllExtensionsNames { get; } = new PropertyDefinition("AllExtensionsNames", typeof(IEnumerable<string>));
+
     public IPropertyDefinition AllExtensions { get; } = new PropertyDefinition("AllExtensions", typeof(IOpenPropertyValue));
 
     public IPropertyDefinition ItemProperties { get; } = new PropertyDefinition("ItemProperties", typeof(IOpenPropertyValue));
