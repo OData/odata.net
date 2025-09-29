@@ -78,7 +78,7 @@ public class SerializationTests
                 }
               ],
               "BinaryData": "U2FtcGxlIGNvbnRlbnQgZm9yIGZpbGUgMSAtIE1hcmtldGluZyBkZXBhcnRtZW50",
-              "ByteCollection": "QWRkaXRpb25hbCBiaW5hcnkgZGF0YSAx",
+              "ByteCollection": [10,20,13,42,54],
               "FileContent": {
                 "Text": "File content for Marketing report 1",
                 "Annotation": "Generated sample data - Item 1"
@@ -173,7 +173,7 @@ public class SerializationTests
                 }
               ],
               "BinaryData": "U2FtcGxlIGNvbnRlbnQgZm9yIGZpbGUgMiAtIEVuZ2luZWVyaW5nIGRlcGFydG1lbnQ=",
-              "ByteCollection": "QWRkaXRpb25hbCBiaW5hcnkgZGF0YSAy",
+              "ByteCollection": [10,20,13,42,54],
               "FileContent": {
                 "Text": "File content for Engineering report 2",
                 "Annotation": "Generated sample data - Item 2"

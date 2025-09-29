@@ -115,9 +115,14 @@ public class FileItem(IFileItemSchema schema, IDictionary<IPropertyDefinition, o
         set => this.Data[this.Schema.BinaryData] = value;
     }
 
-    public byte[]? ByteCollection
+    // TODO: byte[] is currently treated as binary data
+    // that will be serialized as base64 string.
+    // So we use a different collection type to represent a
+    // collection of numerical bytes.
+    // This restriction might be removed in a future iteration.
+    public ICollection<byte>? ByteCollection
     {
-        get => (byte[]?)this.Data[this.Schema.ByteCollection];
+        get => (ICollection<byte>?)this.Data[this.Schema.ByteCollection];
         set => this.Data[this.Schema.ByteCollection] = value;
     }
 

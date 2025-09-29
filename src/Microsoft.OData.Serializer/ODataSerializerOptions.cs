@@ -1,4 +1,6 @@
 ﻿
+using Microsoft.OData.Edm;
+
 namespace Microsoft.OData.Serializer;
 
 public class ODataSerializerOptions<TCustomState>
@@ -21,18 +23,33 @@ public class ODataSerializerOptions<TCustomState>
 
     internal Dictionary<Type, ODataTypeInfo> ResourceTypeInfos { get; } = new();
 
-    public void AddTypeInfo<T>(ODataTypeInfo<T, TCustomState> resourceTypeInfo)
+    public void AddTypeInfo<T>(ODataTypeInfo<T, TCustomState> typeInfo)
     {
-        if (resourceTypeInfo is null)
+        if (typeInfo is null)
         {
-            throw new ArgumentNullException(nameof(resourceTypeInfo));
+            throw new ArgumentNullException(nameof(typeInfo));
         }
 
         if (ResourceTypeInfos.ContainsKey(typeof(T)))
         {
             throw new InvalidOperationException($"Resource type info for {typeof(T).FullName} is already registered.");
         }
-        ResourceTypeInfos[typeof(T)] = resourceTypeInfo;
+
+        ResourceTypeInfos[typeof(T)] = typeInfo;
+
+        if (typeInfo.Properties != null)
+        {
+            var fixedEdmType = typeInfo.EdmType; // The type info always maps to the same IEdmType
+            foreach (var property in typeInfo.Properties)
+            {
+                if (fixedEdmType != null && fixedEdmType is IEdmEntityType fixedEntityType)
+                {
+                    var fixedEdmProperty = fixedEntityType.FindProperty(property.Name);
+                    property.FixedEdmProperty = fixedEdmProperty;
+                }
+            }
+        }
+        
     }
 
     public ODataTypeInfo<T, TCustomState>? TryGetResourceInfo<T>()

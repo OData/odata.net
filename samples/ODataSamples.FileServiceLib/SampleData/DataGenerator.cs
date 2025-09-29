@@ -71,7 +71,11 @@ public static class DataGenerator
             // Create sample binary data
             var sampleText = $"Sample content for file {i + 1} - {department} department";
             data[schema.BinaryData] = Encoding.UTF8.GetBytes(sampleText);
-            data[schema.ByteCollection] = Encoding.UTF8.GetBytes($"Additional binary data {i + 1}");
+
+            // TODO: We use List<byte> to represent a byte collection because
+            // byte[] is automatically treated as binary data that will be base64-encoded.
+            // This might change in a future iteration.
+            data[schema.ByteCollection] = new List<byte> { 10, 20, 13, 42, 54 };
             
             // Create file content
             data[schema.FileContent] = new FileContent

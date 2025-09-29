@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using Microsoft.OData.Edm;
+using System.Text;
 
 namespace Microsoft.OData.Serializer;
 
@@ -32,4 +33,11 @@ public class ODataPropertyInfo
     /// the stream will be disposed after the writer finishes reading from it.
     /// </summary>
     public bool? LeaveStreamOpen { get; init; }
+
+    /// <summary>
+    /// The EDM property defined in the OData <see cref="IEdmModel"/> that corresponds to this
+    /// <see cref="ODataPropertyInfo"/>. This property is only set if the property info
+    /// always maps to the same <see cref="IEdmProperty"/> instance.
+    /// </summary>
+    internal IEdmProperty? FixedEdmProperty { get; set; }
 }
