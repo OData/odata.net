@@ -4,7 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace Microsoft.OData.Serializer;
 
 [SuppressMessage("Performance", "CA1812:Avoid uninstantiated internal classes", Justification = "This class is instantiated via reflection.")]
-internal class EnumerableDynamicPropertyHandler<TDynamicValue, TCustomState> : IOpenPropertiesHandler<TCustomState>
+internal class EnumerableOpenPropertiesHandler<TDynamicValue, TCustomState> : IOpenPropertiesHandler<TCustomState>
 {
     public void WriteOpenProperties<TResource>(
         TResource resource,

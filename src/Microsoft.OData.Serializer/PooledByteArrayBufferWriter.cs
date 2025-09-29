@@ -136,6 +136,11 @@ namespace Microsoft.OData.Serializer
         }
 #endif
 
+        public void GrowBuffer()
+        {
+            CheckAndResizeBuffer(_rentedBuffer.Length);
+        }
+
         private void CheckAndResizeBuffer(int sizeHint)
         {
             Debug.Assert(_rentedBuffer != null);

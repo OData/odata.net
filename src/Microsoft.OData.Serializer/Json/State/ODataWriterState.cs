@@ -141,6 +141,25 @@ public sealed class ODataWriterState<TCustomState>
         return writer.Write(value, this);
     }
 
+    /// <summary>
+    /// Writes the value completely in memory, without
+    /// breaking for resumability if the buffer is full.
+    /// This will potentially grow the buffer until
+    /// the value is written completely.
+    /// TODO: Since this can cause memory issues, we should
+    /// generally avoid its use.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="value"></param>
+    internal void WriteValueToCompletionInMemory<T>(T value)
+    {
+        var writer = writers.GetWriter<T>(EdmModel);
+        while (!writer.Write(value, this))
+        {
+            BufferWriter.GrowBuffer();
+        }
+    }
+
     public ODataPropertyInfo? CurrentPropertyInfo()
     {
         return Stack.Current.PropertyInfo;

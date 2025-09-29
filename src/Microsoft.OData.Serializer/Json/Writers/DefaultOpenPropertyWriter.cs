@@ -10,12 +10,12 @@ internal class DefaultOpenPropertyWriter<TCustomState> : IOpenPropertyHandler<TC
         state.JsonWriter.WritePropertyName(name);
 
         // TODO: consider supporting resumability in dynamic properties
-        while (!state.WriteValue(value)) { } // Write to completion
+        state.WriteValueToCompletionInMemory(value);
     }
 
     public void WriteOpenProperty<TValue>(ReadOnlySpan<byte> name, TValue value, ODataWriterState<TCustomState> state)
     {
         state.JsonWriter.WritePropertyName(name);
-        while (!state.WriteValue(value)) { } // Write to completion
+        state.WriteValueToCompletionInMemory(value);
     }
 }

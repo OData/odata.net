@@ -33,7 +33,7 @@ internal class DictionaryOpenPropertiesHandlerFactory<TCustomState> : OpenProper
     public override IOpenPropertiesHandler<TCustomState> CreateHandler(Type type)
     {
         var valueType = type.GenericTypeArguments[1];
-        var handlerType = typeof(EnumerableDynamicPropertyHandler<,>).MakeGenericType(valueType, typeof(TCustomState));
+        var handlerType = typeof(EnumerableOpenPropertiesHandler<,>).MakeGenericType(valueType, typeof(TCustomState));
         var handler = Activator.CreateInstance(handlerType) as IOpenPropertiesHandler<TCustomState>;
         Debug.Assert(handler != null, "Handler should not be null");
         return handler!;
