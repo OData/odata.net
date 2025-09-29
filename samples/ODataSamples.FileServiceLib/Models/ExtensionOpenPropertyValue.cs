@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.OData.Serializer;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,6 +16,9 @@ internal class ExtensionOpenPropertyValue(Dictionary<string, object>? data = nul
     {
         return odataProperties;
     }
+
+    [ODataOpenProperties]
+    public IEnumerable<KeyValuePair<string, object>> AllOpenProperties => this.GetAllOpenProperties();
 
     public object? GetPropertyValue(string propertyName)
     {

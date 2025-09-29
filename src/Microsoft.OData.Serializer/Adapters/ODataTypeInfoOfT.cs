@@ -78,7 +78,7 @@ public class ODataTypeInfo<T, TCustomState> : ODataTypeInfo
 
     public Func<T, IAnnotationWriter<TCustomState>, ODataWriterState<TCustomState>, ValueTask>? WriteCustomPostValueAnnotations { get; init; }
 
-    public Func<T, ODataWriterState<TCustomState>, object?>? GetOpenProperties { get; init; }
+    public Func<T, ODataWriterState<TCustomState>, object?>? GetOpenProperties { get; set; }
 
     // TODO: add WriteAnnotations variants
     public Func<T, string, ODataWriterState<TCustomState>, object?>? GetPropertyPreValueAnnotations { get; init; }

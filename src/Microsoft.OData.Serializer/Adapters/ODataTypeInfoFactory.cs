@@ -22,6 +22,7 @@ internal static class ODataTypeInfoFactory<TCustomState>
     public static ODataTypeInfo<T, TCustomState>? CreateTypeInfo<T>(IEdmModel? model, IODataTypeMapper typeMapper)
     {
         var type = typeof(T);
+        var typeName = type.Name; // for debugging
 
         if (type.IsValueType)
         {
@@ -37,8 +38,20 @@ internal static class ODataTypeInfoFactory<TCustomState>
 
         var properties = type.GetProperties();
         var propertyInfos = new List<ODataPropertyInfo<T, TCustomState>>(properties.Length);
+        PropertyInfo? openPropertiesContainerProperty = null;
         foreach (var property in properties)
         {
+            if (property.GetCustomAttribute<ODataOpenPropertiesAttribute>() != null)
+            {
+                if (openPropertiesContainerProperty != null)
+                {
+                    throw new Exception($"Found duplicate open property container on property {property.Name} of type {type.FullName}");
+                }
+
+                openPropertiesContainerProperty = property;
+                continue;
+            }
+
             if (!ShouldIncludeProperty(property, typeInfo, out IEdmProperty? edmProperty))
             {
                 continue;
@@ -49,6 +62,15 @@ internal static class ODataTypeInfoFactory<TCustomState>
         }
         
         typeInfo.Properties = propertyInfos;
+
+        if (openPropertiesContainerProperty != null)
+        {
+            typeInfo.GetOpenProperties = (Func<T, ODataWriterState<TCustomState>, object?>)CreateGetValueDelegate(
+                CreateGetter(type, openPropertiesContainerProperty),
+                type,
+                openPropertiesContainerProperty.PropertyType);
+        }
+
         return typeInfo;
     }
 
