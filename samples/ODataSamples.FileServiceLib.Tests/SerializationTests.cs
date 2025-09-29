@@ -127,9 +127,18 @@ public class SerializationTests
                 "fileAge": 1,
                 "lastModifiedBy": "editor1@example.com",
                 "links": [
-                  {},
-                  {},
-                  {}
+                  {
+                    "rel": "self",
+                    "href": "http://service/odata/Users('id')/Files('file-1')"
+                  },
+                  {
+                    "rel": "download",
+                    "href": "http://service/odata/Users('id')/Files('file-1')/$value"
+                  },
+                  {
+                    "rel": "website",
+                    "href": "http://example.com/files/MarketingReport01.pdf"
+                  }
                 ]
               }
             },
@@ -213,9 +222,18 @@ public class SerializationTests
                 "fileAge": 2,
                 "lastModifiedBy": "editor2@example.com",
                 "links": [
-                  {},
-                  {},
-                  {}
+                  {
+                    "rel": "self",
+                    "href": "http://service/odata/Users('id')/Files('file-2')"
+                  },
+                  {
+                    "rel": "download",
+                    "href": "http://service/odata/Users('id')/Files('file-2')/$value"
+                  },
+                  {
+                    "rel": "website",
+                    "href": "http://example.com/files/EngineeringReport02.docx"
+                  }
                 ]
               }
             }
