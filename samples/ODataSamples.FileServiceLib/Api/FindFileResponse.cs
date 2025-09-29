@@ -11,6 +11,7 @@ namespace ODataSamples.FileServiceLib.Api;
 
 public sealed class FindFileResponse(IEnumerable<ISchematizedObject<IFileItemSchema>> items, string skipToken, int? count = null)
     // For now, you need to inherit IEnumerable<T> or other collection interfaces for the type to be treated like a collection
+    // In a future iteration of the OData serializer, this will not be necessary.
     : IEnumerable<ISchematizedObject<IFileItemSchema>>
 {
     public IEnumerable<ISchematizedObject<IFileItemSchema>> Items { get; } = items;

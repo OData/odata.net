@@ -7,6 +7,13 @@ public class ODataSerializerOptions<TCustomState>
     public ODataVersion ODataVersion { get; set; } = ODataVersion.V4;
     public int BufferSize { get; set; } = 16 * 1024;
 
+    // TODO: this setting should be per serialization session rather than global.
+    /// <summary>
+    /// When set to true, Edm.Int64 and Edm.Decimal values will be serialized as strings,
+    /// otherwise they will be serialized as JSON numbers.
+    /// </summary>
+    public bool Ieee754Compatible { get; set; } = false;
+
     public IODataTypeMapper TypeMapper { get; set; } = new DefaultODataTypeMapper();
 
     internal ICustomAnnotationsHandlerResolver<TCustomState> CustomAnnotationsHandlerResolver { get; set; } = new DefaultCustomAnnotationsHandlerResolver<TCustomState>();
