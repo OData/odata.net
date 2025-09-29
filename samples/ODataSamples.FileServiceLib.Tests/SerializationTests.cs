@@ -49,6 +49,7 @@ public class SerializationTests
           "value": [
             {
               "@odata.id": "http://service/odata/Users('id')/Files('file-1')",
+              "@odata.etag": "W/\"1\"",
               "Id": "file-1",
               "FileName": "MarketingReport01.pdf",
               "FileExtension": ".pdf",
@@ -81,10 +82,36 @@ public class SerializationTests
               "FileContent": {
                 "Text": "File content for Marketing report 1",
                 "Annotation": "Generated sample data - Item 1"
-              }
+              },
+              "EntityACL": {
+                "AccessControlEntries": [
+                  {
+                    "AccessRight": "Read",
+                    "Claim": {
+                      "Type": "user",
+                      "Value": "user1@example.com"
+                    }
+                  },
+                  {
+                    "AccessRight": "Read",
+                    "Claim": {
+                      "Type": "group",
+                      "Value": "marketing-group"
+                    }
+                  }
+                ]
+              },
+              "AllExtensionsNames": [
+                "CustomMetadata",
+                "ProcessingInfo",
+                "MarketingExtension"
+              ],
+              "AllExtensions": {},
+              "ItemProperties": {}
             },
             {
               "@odata.id": "http://service/odata/Users('id')/Files('file-2')",
+              "@odata.etag": "W/\"2\"",
               "Id": "file-2",
               "FileName": "EngineeringReport02.docx",
               "FileExtension": ".docx",
@@ -117,7 +144,32 @@ public class SerializationTests
               "FileContent": {
                 "Text": "File content for Engineering report 2",
                 "Annotation": "Generated sample data - Item 2"
-              }
+              },
+              "EntityACL": {
+                "AccessControlEntries": [
+                  {
+                    "AccessRight": "Write",
+                    "Claim": {
+                      "Type": "user",
+                      "Value": "user2@example.com"
+                    }
+                  },
+                  {
+                    "AccessRight": "Read",
+                    "Claim": {
+                      "Type": "group",
+                      "Value": "engineering-group"
+                    }
+                  }
+                ]
+              },
+              "AllExtensionsNames": [
+                "CustomMetadata",
+                "ProcessingInfo",
+                "EngineeringExtension"
+              ],
+              "AllExtensions": {},
+              "ItemProperties": {}
             }
           ],
           "@odata.nextLink": "http://service/odata/Users/id/Files?$skiptoken=skip-token-2"

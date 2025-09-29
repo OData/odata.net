@@ -80,6 +80,78 @@ public static class DataGenerator
                 Annotation = $"Generated sample data - Item {i + 1}"
             };
             
+            // Create EntityACL (Access Control List)
+            var accessControlEntries = new List<AccessControlEntry>
+            {
+                new AccessControlEntry 
+                { 
+                    AccessRight = (i % 2) == 0 ? AccessRight.Read : AccessRight.Write,
+                    Claim = new Claim 
+                    { 
+                        Type = "user", 
+                        Value = $"user{(i % 5) + 1}@example.com" 
+                    }
+                },
+                new AccessControlEntry 
+                { 
+                    AccessRight = AccessRight.Read,
+                    Claim = new Claim 
+                    { 
+                        Type = "group", 
+                        Value = $"{department.ToLower()}-group" 
+                    }
+                }
+            };
+            data[schema.EntityACL] = new AccessControlList 
+            { 
+                Version = 1, 
+                AccessControlEntries = accessControlEntries 
+            };
+            
+            // Create AllExtensionsNames collection
+            var extensionNames = new List<string> 
+            { 
+                "CustomMetadata", 
+                "ProcessingInfo", 
+                $"{department}Extension" 
+            };
+            data[schema.AllExtensionsNames] = extensionNames;
+            
+            // Create AllExtensions open property value
+            var allExtensions = new ExtensionOpenPropertyValue();
+            allExtensions.SetODataProperty("CustomMetadata", new Dictionary<string, object> 
+            { 
+                ["author"] = $"user{(i % 5) + 1}@example.com",
+                ["category"] = department,
+                ["priority"] = (i % 3) + 1
+            });
+            allExtensions.SetODataProperty("ProcessingInfo", new Dictionary<string, object> 
+            { 
+                ["processed"] = (i % 2) == 0,
+                ["processedDate"] = baseDate.AddDays(i).AddHours(2),
+                ["processingEngine"] = "SampleEngine v1.0"
+            });
+            allExtensions.SetODataProperty($"{department}Extension", new Dictionary<string, object> 
+            { 
+                ["departmentId"] = i % departments.Length,
+                ["budget"] = 1000.0 * (i + 1),
+                ["approved"] = (i % 3) == 0
+            });
+            data[schema.AllExtensions] = allExtensions;
+            
+            // Create ItemProperties dynamic open property value
+            var itemProperties = new ExtensionOpenPropertyValue();
+            itemProperties.SetODataProperty("customField1", $"value-{i + 1}");
+            itemProperties.SetODataProperty("customField2", (i + 1) * 100);
+            itemProperties.SetODataProperty("customField3", (i % 2) == 0);
+            itemProperties.SetODataProperty("department", department);
+            itemProperties.SetODataProperty("fileAge", i + 1);
+            itemProperties.SetODataProperty("lastModifiedBy", $"editor{(i % 3) + 1}@example.com");
+            
+            // Add annotations for some properties
+            itemProperties.SetODataAnnotation("customField1", "is.queryable", true);
+            data[schema.ItemProperties] = itemProperties;
+            
             // Create FileItem instance
             var fileItem = new FileItem(schema, data);
             fileItems.Add(fileItem);

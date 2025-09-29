@@ -11,9 +11,9 @@ public class FileItem(IFileItemSchema schema, IDictionary<IPropertyDefinition, o
 
     public string? GetEtag()
     {
-        if (this.Data.TryGetValue(this.Schema.Version, out var version) && version is string versionString)
+        if (this.Data.TryGetValue(this.Schema.Version, out var version))
         {
-            return $"W/\"{versionString}\"";
+            return $"W/\"{version}\"";
         }
 
         return null;
