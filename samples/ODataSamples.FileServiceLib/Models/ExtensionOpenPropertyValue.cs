@@ -17,9 +17,6 @@ internal class ExtensionOpenPropertyValue(Dictionary<string, object>? data = nul
         return odataProperties;
     }
 
-    [ODataOpenProperties]
-    public IEnumerable<KeyValuePair<string, object>> AllOpenProperties => this.GetAllOpenProperties();
-
     public object? GetPropertyValue(string propertyName)
     {
         if (odataProperties.TryGetValue(propertyName, out var value))

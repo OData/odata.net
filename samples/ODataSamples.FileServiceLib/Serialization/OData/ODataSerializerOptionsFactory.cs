@@ -78,20 +78,20 @@ public static class ODataSerializerOptionsFactory
         // doesn't know to use the IOpenPropertyValue mapping.
         // TODO: Need to provide a solution for this, would be too tedious to add a mapping for
         // each concrete type.
-        //options.AddTypeInfo<ExtensionOpenPropertyValue>(new()
-        //{
-        //    GetEdmTypeName = (item, state) => $"{SchemaConstants.Namespace}.{item.GetType().Name}",
-        //    GetOpenProperties = (item, state) => item.GetAllOpenProperties(),
-        //    GetPropertyPreValueAnnotations = (item, propertyName, state) => item.GetODataAnnotations(propertyName)
-        //});
+        options.AddTypeInfo<ExtensionOpenPropertyValue>(new()
+        {
+            GetEdmTypeName = (item, state) => $"{SchemaConstants.Namespace}.{item.GetType().Name}",
+            GetOpenProperties = (item, state) => item.GetAllOpenProperties(),
+            GetPropertyPreValueAnnotations = (item, propertyName, state) => item.GetODataAnnotations(propertyName)
+        });
 
-        //// Here we use the interface IOpenPropertyValue to cover cases where the declared type that
-        //// the serializer sees is IOpenPropertyValue, such as when we use IOpenPropertyValue[] arrays.
-        //options.AddTypeInfo<IOpenPropertyValue>(new()
-        //{
-        //    GetEdmTypeName = (item, state) => $"{SchemaConstants.Namespace}.{item.GetType().Name}",
-        //    GetOpenProperties = (item, state) => item.GetAllOpenProperties(),
-        //    GetPropertyPreValueAnnotations = (item, propertyName, state) => item.GetODataAnnotations(propertyName)
-        //});
+        // Here we use the interface IOpenPropertyValue to cover cases where the declared type that
+        // the serializer sees is IOpenPropertyValue, such as when we use IOpenPropertyValue[] arrays.
+        options.AddTypeInfo<IOpenPropertyValue>(new()
+        {
+            GetEdmTypeName = (item, state) => $"{SchemaConstants.Namespace}.{item.GetType().Name}",
+            GetOpenProperties = (item, state) => item.GetAllOpenProperties(),
+            GetPropertyPreValueAnnotations = (item, propertyName, state) => item.GetODataAnnotations(propertyName)
+        });
     }
 }

@@ -12,8 +12,6 @@ public interface IOpenPropertyValue
     object? GetPropertyValue(string propertyName);
     IEnumerable<KeyValuePair<string, object>> GetAllOpenProperties();
 
-    [ODataOpenProperties]
-    IEnumerable<KeyValuePair<string, object>> AllOpenProperties { get; }
     void SetODataProperty(string propertyName, object propertyValue);
     IDictionary<string, object>? GetODataAnnotations(string propertyName);
     void SetODataAnnotation(string propertyName, string annotationName, object annotationValue);
