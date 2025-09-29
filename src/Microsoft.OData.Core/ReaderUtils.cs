@@ -8,10 +8,11 @@ namespace Microsoft.OData
 {
     #region Namespaces
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using Microsoft.OData.Metadata;
     using Microsoft.OData.Edm;
+    using Microsoft.OData.Metadata;
     #endregion Namespaces
 
     /// <summary>
@@ -66,14 +67,32 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="id">The id of the deleted resource, or null if not yet known.</param>
         /// <param name="reason">The <see cref="DeltaDeletedEntryReason"/> for the deleted resource.</param>
+        /// <param name="keyValue">The key of the deleted resource, or null if not yet known.</param>
         /// <returns>The newly created deleted resource.</returns>
         /// <remarks>The method populates the Properties property with an empty read only enumeration.</remarks>
-        internal static ODataDeletedResource CreateDeletedResource(Uri id, DeltaDeletedEntryReason reason)
+        internal static ODataDeletedResource CreateDeletedResource(Uri id, DeltaDeletedEntryReason reason, KeyValuePair<string, object>? keyValue = null)
         {
-            return new ODataDeletedResource(id, reason)
+            if (keyValue == null)
             {
-                Properties = new ReadOnlyEnumerable<ODataPropertyInfo>()
-            };
+                return new ODataDeletedResource(id, reason)
+                {
+                    Properties = new ReadOnlyEnumerable<ODataPropertyInfo>()
+                };
+            }
+            else
+            {
+                return new ODataDeletedResource(id, reason)
+                {
+                    Properties = new ReadOnlyEnumerable<ODataPropertyInfo>(new ODataPropertyInfo[]
+                    {
+                        new ODataProperty()
+                        {
+                            Name = keyValue.Value.Key,
+                            Value = keyValue.Value.Value,
+                        }
+                    })
+                };
+            }
         }
 
         /// <summary>Checks for duplicate navigation links and if there already is an association link with the same name
