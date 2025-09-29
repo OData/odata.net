@@ -9,7 +9,6 @@ namespace ODataSamples.FileServiceLib.Models;
 public interface IOpenPropertyValue
 {
     object? GetPropertyValue(string propertyName);
-
     IEnumerable<KeyValuePair<string, object>> GetAllOpenProperties();
     void SetODataProperty(string propertyName, object propertyValue);
     IDictionary<string, object>? GetODataAnnotations(string propertyName);

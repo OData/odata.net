@@ -150,47 +150,50 @@ internal class ODataResourceJsonWriter<T, TCustomState>(ODataTypeInfo<T, TCustom
         ODataTypeInfo<T, TCustomState> typeInfo,
         ODataWriterState<TCustomState> state)
     {
-        Debug.Assert(typeInfo.Properties != null, "TypeInfo should have properties defined.");
+        Debug.Assert(typeInfo.Properties != null || typeInfo.GetDynamicProperties != null, "TypeInfo should have properties defined.");
 
-        // resume from last property.
-        var propIndex = state.Stack.Current.EnumeratorIndex;
-        for (int i = propIndex; i < typeInfo.Properties.Count; i++)
+        if (typeInfo.Properties != null)
         {
-            state.Stack.Current.EnumeratorIndex = i;
-            var propertyInfo = typeInfo.Properties[i];
-            state.Stack.Current.PropertyInfo = propertyInfo;
-
-            // This is crude property skipping logic. Might not be efficient in all cases.
-            // For example if the propertys are key/vals in a dictionary and we only
-            // write those properties in the dictionary, then we'll do a lookup here
-            // and another lookup when writing the value.
-            // Perf would be even worse if the properties are stored in an IEnumerable<(Property, Value)>
-            // without higher than O(1) lookup.
-            if (propertyInfo.ShouldSkip?.Invoke(value, state) == true)
+            // resume from last property.
+            var propIndex = state.Stack.Current.EnumeratorIndex;
+            for (int i = propIndex; i < typeInfo.Properties.Count; i++)
             {
-                continue; // skip this property
-            }
+                state.Stack.Current.EnumeratorIndex = i;
+                var propertyInfo = typeInfo.Properties[i];
+                state.Stack.Current.PropertyInfo = propertyInfo;
 
-            bool success = WriteProperty(value, propertyInfo, state);
-            if (!success)
-            {
-                return false;
-            }
+                // This is crude property skipping logic. Might not be efficient in all cases.
+                // For example if the propertys are key/vals in a dictionary and we only
+                // write those properties in the dictionary, then we'll do a lookup here
+                // and another lookup when writing the value.
+                // Perf would be even worse if the properties are stored in an IEnumerable<(Property, Value)>
+                // without higher than O(1) lookup.
+                if (propertyInfo.ShouldSkip?.Invoke(value, state) == true)
+                {
+                    continue; // skip this property
+                }
 
-            // when we implement re-entrancy, we should
-            // return if property was not written completely.
-            //if (!propertyWritten)
-            //{
-            //    // assume the property has stored enough state to resume writing later
-            //    return false;
-            //}
+                bool success = WriteProperty(value, propertyInfo, state);
+                if (!success)
+                {
+                    return false;
+                }
 
-            state.Stack.EndProperty();
+                // when we implement re-entrancy, we should
+                // return if property was not written completely.
+                //if (!propertyWritten)
+                //{
+                //    // assume the property has stored enough state to resume writing later
+                //    return false;
+                //}
 
-            if (state.ShouldFlush())
-            {
-                state.Stack.Current.EnumeratorIndex = i + 1;
-                return false;
+                state.Stack.EndProperty();
+
+                if (state.ShouldFlush())
+                {
+                    state.Stack.Current.EnumeratorIndex = i + 1;
+                    return false;
+                }
             }
         }
 

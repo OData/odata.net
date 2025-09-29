@@ -119,24 +119,19 @@ public static class DataGenerator
             
             // Create AllExtensions open property value
             var allExtensions = new ExtensionOpenPropertyValue();
-            allExtensions.SetODataProperty("CustomMetadata", new Dictionary<string, object> 
+            allExtensions.SetODataProperty("CustomMetadata", new ExtensionOpenPropertyValue(new Dictionary<string, object> 
             { 
                 ["author"] = $"user{(i % 5) + 1}@example.com",
                 ["category"] = department,
                 ["priority"] = (i % 3) + 1
-            });
-            allExtensions.SetODataProperty("ProcessingInfo", new Dictionary<string, object> 
+            }));
+            allExtensions.SetODataProperty("ProcessingInfo", new ExtensionOpenPropertyValue(new Dictionary<string, object> 
             { 
                 ["processed"] = (i % 2) == 0,
                 ["processedDate"] = baseDate.AddDays(i).AddHours(2),
                 ["processingEngine"] = "SampleEngine v1.0"
-            });
-            allExtensions.SetODataProperty($"{department}Extension", new Dictionary<string, object> 
-            { 
-                ["departmentId"] = i % departments.Length,
-                ["budget"] = 1000.0 * (i + 1),
-                ["approved"] = (i % 3) == 0
-            });
+            }));
+
             data[schema.AllExtensions] = allExtensions;
             
             // Create ItemProperties dynamic open property value
@@ -147,6 +142,27 @@ public static class DataGenerator
             itemProperties.SetODataProperty("department", department);
             itemProperties.SetODataProperty("fileAge", i + 1);
             itemProperties.SetODataProperty("lastModifiedBy", $"editor{(i % 3) + 1}@example.com");
+            itemProperties.SetODataProperty(
+                "links",
+                new IOpenPropertyValue[]
+                {
+                    new ExtensionOpenPropertyValue(new Dictionary<string, object>
+                    {
+                        ["rel"] = "self",
+                        ["href"] = $"http://service/odata/Users('id')/Files('file-{i + 1}')"
+                    }),
+                    new ExtensionOpenPropertyValue(new Dictionary<string, object>
+                    {
+                        ["rel"] = "download",
+                        ["href"] = $"http://service/odata/Users('id')/Files('file-{i + 1}')/$value"
+                    }),
+                    new ExtensionOpenPropertyValue(new Dictionary<string, object>
+                    {
+                        ["rel"] = "website",
+                        ["href"] = $"http://example.com/files/{data[schema.FileName]}"
+                    })
+                }
+             );
             
             // Add annotations for some properties
             itemProperties.SetODataAnnotation("customField1", "is.queryable", true);

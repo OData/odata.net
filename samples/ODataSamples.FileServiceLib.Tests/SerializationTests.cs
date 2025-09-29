@@ -106,8 +106,32 @@ public class SerializationTests
                 "ProcessingInfo",
                 "MarketingExtension"
               ],
-              "AllExtensions": {},
-              "ItemProperties": {}
+              "AllExtensions": {
+                "CustomMetadata": {
+                  "author": "user1@example.com",
+                  "category": "Marketing",
+                  "priority": 1
+                },
+                "ProcessingInfo": {
+                  "processed": true,
+                  "processedDate": "2024-01-01T11:00:00Z",
+                  "processingEngine": "SampleEngine v1.0"
+                }
+              },
+              "ItemProperties": {
+                "customField1@is.queryable": true,
+                "customField1": "value-1",
+                "customField2": 100,
+                "customField3": true,
+                "department": "Marketing",
+                "fileAge": 1,
+                "lastModifiedBy": "editor1@example.com",
+                "links": [
+                  {},
+                  {},
+                  {}
+                ]
+              }
             },
             {
               "@odata.id": "http://service/odata/Users('id')/Files('file-2')",
@@ -168,8 +192,32 @@ public class SerializationTests
                 "ProcessingInfo",
                 "EngineeringExtension"
               ],
-              "AllExtensions": {},
-              "ItemProperties": {}
+              "AllExtensions": {
+                "CustomMetadata": {
+                  "author": "user2@example.com",
+                  "category": "Engineering",
+                  "priority": 2
+                },
+                "ProcessingInfo": {
+                  "processed": false,
+                  "processedDate": "2024-01-02T11:00:00Z",
+                  "processingEngine": "SampleEngine v1.0"
+                }
+              },
+              "ItemProperties": {
+                "customField1@is.queryable": true,
+                "customField1": "value-2",
+                "customField2": 200,
+                "customField3": false,
+                "department": "Engineering",
+                "fileAge": 2,
+                "lastModifiedBy": "editor2@example.com",
+                "links": [
+                  {},
+                  {},
+                  {}
+                ]
+              }
             }
           ],
           "@odata.nextLink": "http://service/odata/Users/id/Files?$skiptoken=skip-token-2"

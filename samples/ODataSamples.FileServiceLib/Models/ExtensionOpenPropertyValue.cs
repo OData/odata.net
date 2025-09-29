@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace ODataSamples.FileServiceLib.Models;
 
-internal class ExtensionOpenPropertyValue : IOpenPropertyValue
+internal class ExtensionOpenPropertyValue(Dictionary<string, object>? data = null) : IOpenPropertyValue
 {
-    private Dictionary<string, object> odataProperties = new();
+    private Dictionary<string, object> odataProperties = data ?? [];
     private Dictionary<string, Dictionary<string, object>> odataAnnotations = new();
 
     public IEnumerable<KeyValuePair<string, object>> GetAllOpenProperties()

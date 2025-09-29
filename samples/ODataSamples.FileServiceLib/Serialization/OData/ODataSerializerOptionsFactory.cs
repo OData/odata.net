@@ -73,7 +73,9 @@ public static class ODataSerializerOptionsFactory
 
     private static void MapOpenPropertyValue(ODataSerializerOptions<ODataCustomState> options)
     {
-        options.AddTypeInfo<IOpenPropertyValue>(new()
+        // Here we use the concrete type instead of the IOpenPropertyValue interface because
+        // the serializer never s
+        options.AddTypeInfo<ExtensionOpenPropertyValue>(new()
         {
             GetEdmTypeName = (item, state) => $"{SchemaConstants.Namespace}.{item.GetType().Name}",
             GetDynamicProperties = (item, state) => item.GetAllOpenProperties(),
