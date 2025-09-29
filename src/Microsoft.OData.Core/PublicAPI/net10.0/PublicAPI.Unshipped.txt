@@ -1,104 +1,3 @@
-abstract Microsoft.OData.Core.NewWriter2.Json.Payload.ODataResourceBaseJsonWriter<T>.WritePropertyValue(T resource, Microsoft.OData.Edm.IEdmProperty propertyToWrite, Microsoft.OData.Core.NewWriter2.ODataJsonWriterStack state, Microsoft.OData.Core.NewWriter2.ODataJsonWriterContext context) -> System.Threading.Tasks.ValueTask
-Microsoft.OData.Core.NewWriter2.ICollectionCounter<TContext, TState, TValue, TProperty>
-Microsoft.OData.Core.NewWriter2.ICollectionCounter<TContext, TState, TValue, TProperty>.HasCountValue(TValue value, TState state, TContext context, out long? count) -> bool
-Microsoft.OData.Core.NewWriter2.ICollectionCounter<TContext, TState, TValue, TProperty>.HasNestedCountValue(TValue value, TProperty resourceProperty, TState state, TContext context, out long? count) -> bool
-Microsoft.OData.Core.NewWriter2.ICollectionCounter<TContext, TState, TValue, TProperty>.WriteCountValue(TValue value, TState state, TContext context) -> void
-Microsoft.OData.Core.NewWriter2.ICollectionCounter<TContext, TState, TValue, TProperty>.WriteNestedCountValue(TValue value, TProperty resourceProperty, TState state, TContext context) -> void
-Microsoft.OData.Core.NewWriter2.ICollectionCounterProvider<TContext, TState, TProperty>
-Microsoft.OData.Core.NewWriter2.ICollectionCounterProvider<TContext, TState, TProperty>.GetCounter<TValue>(TContext context, TState state) -> Microsoft.OData.Core.NewWriter2.ICollectionCounter<TContext, TState, TValue, TProperty>
-Microsoft.OData.Core.NewWriter2.IEtagHandler<TContext, TState, TValue>
-Microsoft.OData.Core.NewWriter2.IEtagHandler<TContext, TState, TValue>.HasEtagValue(TValue value, TState state, TContext context, out string etagValue) -> bool
-Microsoft.OData.Core.NewWriter2.IEtagHandler<TContext, TState, TValue>.WriteEtagValue(TValue value, TState state, TContext context) -> void
-Microsoft.OData.Core.NewWriter2.IEtagHandlerProvider<TContext, TState>
-Microsoft.OData.Core.NewWriter2.IEtagHandlerProvider<TContext, TState>.GetEtagHandler<T>(TState state, TContext context) -> Microsoft.OData.Core.NewWriter2.IEtagHandler<TContext, TState, T>
-Microsoft.OData.Core.NewWriter2.IMetadataValueProvider<TContext, TState, TProperty>
-Microsoft.OData.Core.NewWriter2.IMetadataWriter<TContext, TState, TValue, TProperty>
-Microsoft.OData.Core.NewWriter2.IMetadataWriter<TContext, TState, TValue, TProperty>.WriteContextUrlAsync(TValue value, TState state, TContext context) -> System.Threading.Tasks.ValueTask
-Microsoft.OData.Core.NewWriter2.IMetadataWriter<TContext, TState, TValue, TProperty>.WriteCountPropertyAsync(TValue value, TState state, TContext context) -> System.Threading.Tasks.ValueTask
-Microsoft.OData.Core.NewWriter2.IMetadataWriter<TContext, TState, TValue, TProperty>.WriteEtagPropertyAsync(TValue value, TState state, TContext context) -> System.Threading.Tasks.ValueTask
-Microsoft.OData.Core.NewWriter2.IMetadataWriter<TContext, TState, TValue, TProperty>.WriteNestedCountPropertyAsync(TValue value, TProperty resourceProperty, TState state, TContext context) -> System.Threading.Tasks.ValueTask
-Microsoft.OData.Core.NewWriter2.IMetadataWriter<TContext, TState, TValue, TProperty>.WriteNestedNextLinkPropertyAsync(TValue value, TProperty resourceProperty, TState state, TContext context) -> System.Threading.Tasks.ValueTask
-Microsoft.OData.Core.NewWriter2.IMetadataWriter<TContext, TState, TValue, TProperty>.WriteNextLinkPropertyAsync(TValue value, TState state, TContext context) -> System.Threading.Tasks.ValueTask
-Microsoft.OData.Core.NewWriter2.IMetadataWriterProvider<TContext, TState, TProperty>
-Microsoft.OData.Core.NewWriter2.IMetadataWriterProvider<TContext, TState, TProperty>.GetMetadataWriter<TValue>(TContext context, TState state) -> Microsoft.OData.Core.NewWriter2.IMetadataWriter<TContext, TState, TValue, TProperty>
-Microsoft.OData.Core.NewWriter2.INextLinkHandler<TContext, TState, TValue, TProperty>
-Microsoft.OData.Core.NewWriter2.INextLinkHandler<TContext, TState, TValue, TProperty>.HasNestedNextLinkValue(TValue value, TProperty resourceProperty, TState state, TContext context, out System.Uri nextLink) -> bool
-Microsoft.OData.Core.NewWriter2.INextLinkHandler<TContext, TState, TValue, TProperty>.HasNextLinkValue(TValue value, TState state, TContext context, out System.Uri nextLink) -> bool
-Microsoft.OData.Core.NewWriter2.INextLinkHandler<TContext, TState, TValue, TProperty>.WriteNestedNextLinkValue(TValue value, TProperty resourceProperty, TState state, TContext context) -> void
-Microsoft.OData.Core.NewWriter2.INextLinkHandler<TContext, TState, TValue, TProperty>.WriteNextLinkValue(TValue value, TState state, TContext context) -> void
-Microsoft.OData.Core.NewWriter2.INextLinkHandlerProvider<TContext, TState, TProperty>
-Microsoft.OData.Core.NewWriter2.INextLinkHandlerProvider<TContext, TState, TProperty>.GetNextLinkHandler<TValue>(TState state, TContext context) -> Microsoft.OData.Core.NewWriter2.INextLinkHandler<TContext, TState, TValue, TProperty>
-Microsoft.OData.Core.NewWriter2.IODataWriter<TContext, TState, TValue>
-Microsoft.OData.Core.NewWriter2.IODataWriter<TContext, TState, TValue>.WriteAsync(TValue value, TState state, TContext context) -> System.Threading.Tasks.ValueTask
-Microsoft.OData.Core.NewWriter2.IPropertyValueWriter<TContext, TState, TResource, TProperty>
-Microsoft.OData.Core.NewWriter2.IPropertyValueWriter<TContext, TState, TResource, TProperty>.WritePropertyValue(TResource resource, TProperty resourceProperty, TState state, TContext context) -> System.Threading.Tasks.ValueTask
-Microsoft.OData.Core.NewWriter2.IPropertyValueWriterProvider<TContext, TState, TProperty>
-Microsoft.OData.Core.NewWriter2.IPropertyValueWriterProvider<TContext, TState, TProperty>.GetPropertyValueWriter<TResource>(TResource resource, TProperty resourceProperty, TState state, TContext context) -> Microsoft.OData.Core.NewWriter2.IPropertyValueWriter<TContext, TState, TResource, TProperty>
-Microsoft.OData.Core.NewWriter2.IResourcePropertyWriter<TResource, TProperty, TState, TContext>
-Microsoft.OData.Core.NewWriter2.IResourcePropertyWriter<TResource, TProperty, TState, TContext>.WriteProperty(TResource resource, TProperty resourceProperty, TState state, TContext context) -> System.Threading.Tasks.ValueTask
-Microsoft.OData.Core.NewWriter2.IResourcePropertyWriterProvider<TContext, TState, TProperty>
-Microsoft.OData.Core.NewWriter2.IResourcePropertyWriterProvider<TContext, TState, TProperty>.GetPropertyWriter<TResource>(TState state, TContext context) -> Microsoft.OData.Core.NewWriter2.IResourcePropertyWriter<TResource, TProperty, TState, TContext>
-Microsoft.OData.Core.NewWriter2.IResourceWriterProvider<TContext, TState>
-Microsoft.OData.Core.NewWriter2.IResourceWriterProvider<TContext, TState>.GetResourceWriter<TValue>(TContext context, TState state) -> Microsoft.OData.Core.NewWriter2.IODataWriter<TContext, TState, TValue>
-Microsoft.OData.Core.NewWriter2.Json.Payload.ODataResourceBaseJsonWriter<T>
-Microsoft.OData.Core.NewWriter2.Json.Payload.ODataResourceBaseJsonWriter<T>.ODataResourceBaseJsonWriter() -> void
-Microsoft.OData.Core.NewWriter2.Json.Payload.ODataResourceBaseJsonWriter<T>.WriteAsync(T value, Microsoft.OData.Core.NewWriter2.ODataJsonWriterStack state, Microsoft.OData.Core.NewWriter2.ODataJsonWriterContext context) -> System.Threading.Tasks.ValueTask
-Microsoft.OData.Core.NewWriter2.ODataJsonWriterContext
-Microsoft.OData.Core.NewWriter2.ODataJsonWriterContext.GetMetadataWriter<T>(Microsoft.OData.Core.NewWriter2.ODataJsonWriterStack state) -> Microsoft.OData.Core.NewWriter2.IMetadataWriter<Microsoft.OData.Core.NewWriter2.ODataJsonWriterContext, Microsoft.OData.Core.NewWriter2.ODataJsonWriterStack, T, Microsoft.OData.Edm.IEdmProperty>
-Microsoft.OData.Core.NewWriter2.ODataJsonWriterContext.GetPropertyValueWriter<T>(T resource, Microsoft.OData.Edm.IEdmProperty property, Microsoft.OData.Core.NewWriter2.ODataJsonWriterStack state) -> Microsoft.OData.Core.NewWriter2.IPropertyValueWriter<Microsoft.OData.Core.NewWriter2.ODataJsonWriterContext, Microsoft.OData.Core.NewWriter2.ODataJsonWriterStack, T, Microsoft.OData.Edm.IEdmProperty>
-Microsoft.OData.Core.NewWriter2.ODataJsonWriterContext.GetPropertyWriter<T>(Microsoft.OData.Core.NewWriter2.ODataJsonWriterStack state) -> Microsoft.OData.Core.NewWriter2.IResourcePropertyWriter<T, Microsoft.OData.Edm.IEdmProperty, Microsoft.OData.Core.NewWriter2.ODataJsonWriterStack, Microsoft.OData.Core.NewWriter2.ODataJsonWriterContext>
-Microsoft.OData.Core.NewWriter2.ODataJsonWriterContext.GetValueWriter<T>(Microsoft.OData.Core.NewWriter2.ODataJsonWriterStack state) -> Microsoft.OData.Core.NewWriter2.IODataWriter<Microsoft.OData.Core.NewWriter2.ODataJsonWriterContext, Microsoft.OData.Core.NewWriter2.ODataJsonWriterStack, T>
-Microsoft.OData.Core.NewWriter2.ODataJsonWriterContext.JsonSerializerOptions.get -> System.Text.Json.JsonSerializerOptions
-Microsoft.OData.Core.NewWriter2.ODataJsonWriterContext.JsonSerializerOptions.set -> void
-Microsoft.OData.Core.NewWriter2.ODataJsonWriterContext.MetadataLevel.get -> Microsoft.OData.Core.NewWriter2.ODataMetadataLevel
-Microsoft.OData.Core.NewWriter2.ODataJsonWriterContext.MetadataLevel.set -> void
-Microsoft.OData.Core.NewWriter2.ODataJsonWriterContext.Model.get -> Microsoft.OData.Edm.IEdmModel
-Microsoft.OData.Core.NewWriter2.ODataJsonWriterContext.Model.set -> void
-Microsoft.OData.Core.NewWriter2.ODataJsonWriterContext.ODataJsonWriterContext() -> void
-Microsoft.OData.Core.NewWriter2.ODataJsonWriterContext.ODataUri.get -> Microsoft.OData.ODataUri
-Microsoft.OData.Core.NewWriter2.ODataJsonWriterContext.ODataUri.set -> void
-Microsoft.OData.Core.NewWriter2.ODataJsonWriterContext.ODataVersion.get -> Microsoft.OData.ODataVersion
-Microsoft.OData.Core.NewWriter2.ODataJsonWriterContext.ODataVersion.set -> void
-Microsoft.OData.Core.NewWriter2.ODataJsonWriterContext.PayloadKind.get -> Microsoft.OData.ODataPayloadKind
-Microsoft.OData.Core.NewWriter2.ODataJsonWriterContext.PayloadKind.set -> void
-Microsoft.OData.Core.NewWriter2.ODataJsonWriterContext.WriteValueAsync<T>(T value, Microsoft.OData.Core.NewWriter2.ODataJsonWriterStack state) -> System.Threading.Tasks.ValueTask
-Microsoft.OData.Core.NewWriter2.ODataJsonWriterStack
-Microsoft.OData.Core.NewWriter2.ODataJsonWriterStack.Current.get -> Microsoft.OData.Core.NewWriter2.ODataJsonWriterStackFrame
-Microsoft.OData.Core.NewWriter2.ODataJsonWriterStack.IsTopLevel() -> bool
-Microsoft.OData.Core.NewWriter2.ODataJsonWriterStack.ODataJsonWriterStack() -> void
-Microsoft.OData.Core.NewWriter2.ODataJsonWriterStack.Parent.get -> Microsoft.OData.Core.NewWriter2.ODataJsonWriterStackFrame
-Microsoft.OData.Core.NewWriter2.ODataJsonWriterStack.Pop() -> Microsoft.OData.Core.NewWriter2.ODataJsonWriterStackFrame
-Microsoft.OData.Core.NewWriter2.ODataJsonWriterStack.Push(Microsoft.OData.Core.NewWriter2.ODataJsonWriterStackFrame frame) -> void
-Microsoft.OData.Core.NewWriter2.ODataJsonWriterStackFrame
-Microsoft.OData.Core.NewWriter2.ODataJsonWriterStackFrame.EdmType.get -> Microsoft.OData.Edm.IEdmType
-Microsoft.OData.Core.NewWriter2.ODataJsonWriterStackFrame.EdmType.init -> void
-Microsoft.OData.Core.NewWriter2.ODataJsonWriterStackFrame.ODataJsonWriterStackFrame() -> void
-Microsoft.OData.Core.NewWriter2.ODataJsonWriterStackFrame.SelectExpandClause.get -> Microsoft.OData.UriParser.SelectExpandClause
-Microsoft.OData.Core.NewWriter2.ODataJsonWriterStackFrame.SelectExpandClause.init -> void
-Microsoft.OData.Core.NewWriter2.ODataMetadataLevel
-Microsoft.OData.Core.NewWriter2.ODataMetadataLevel.Full = 2 -> Microsoft.OData.Core.NewWriter2.ODataMetadataLevel
-Microsoft.OData.Core.NewWriter2.ODataMetadataLevel.Minimal = 1 -> Microsoft.OData.Core.NewWriter2.ODataMetadataLevel
-Microsoft.OData.Core.NewWriter2.ODataMetadataLevel.None = 0 -> Microsoft.OData.Core.NewWriter2.ODataMetadataLevel
-Microsoft.OData.Core.NewWriter2.ODataSerializer
-Microsoft.OData.Core.NewWriter2.ODataSerializerOptions
-Microsoft.OData.Core.NewWriter2.ODataSerializerOptions.AddPropertyValueWriter<TResource>(System.Func<TResource, Microsoft.OData.Edm.IEdmProperty, Microsoft.OData.Core.NewWriter2.ODataJsonWriterStack, Microsoft.OData.Core.NewWriter2.ODataJsonWriterContext, System.Threading.Tasks.ValueTask> writeProperty) -> void
-Microsoft.OData.Core.NewWriter2.ODataSerializerOptions.AddValueWriter<T>(Microsoft.OData.Core.NewWriter2.IODataWriter<Microsoft.OData.Core.NewWriter2.ODataJsonWriterContext, Microsoft.OData.Core.NewWriter2.ODataJsonWriterStack, T> writer) -> void
-Microsoft.OData.Core.NewWriter2.ODataSerializerOptions.JsonSerializerOptions.get -> System.Text.Json.JsonSerializerOptions
-Microsoft.OData.Core.NewWriter2.ODataSerializerOptions.JsonSerializerOptions.set -> void
-Microsoft.OData.Core.NewWriter2.ODataSerializerOptions.MetadataLevel.get -> Microsoft.OData.Core.NewWriter2.ODataMetadataLevel
-Microsoft.OData.Core.NewWriter2.ODataSerializerOptions.MetadataLevel.set -> void
-Microsoft.OData.Core.NewWriter2.ODataSerializerOptions.MetadataValueProvider.get -> Microsoft.OData.Core.NewWriter2.IMetadataValueProvider<Microsoft.OData.Core.NewWriter2.ODataJsonWriterContext, Microsoft.OData.Core.NewWriter2.ODataJsonWriterStack, Microsoft.OData.Edm.IEdmProperty>
-Microsoft.OData.Core.NewWriter2.ODataSerializerOptions.MetadataValueProvider.set -> void
-Microsoft.OData.Core.NewWriter2.ODataSerializerOptions.MetadataWriterProvider.get -> Microsoft.OData.Core.NewWriter2.IMetadataWriterProvider<Microsoft.OData.Core.NewWriter2.ODataJsonWriterContext, Microsoft.OData.Core.NewWriter2.ODataJsonWriterStack, Microsoft.OData.Edm.IEdmProperty>
-Microsoft.OData.Core.NewWriter2.ODataSerializerOptions.MetadataWriterProvider.set -> void
-Microsoft.OData.Core.NewWriter2.ODataSerializerOptions.ODataSerializerOptions() -> void
-Microsoft.OData.Core.NewWriter2.ODataSerializerOptions.ODataVersion.get -> Microsoft.OData.ODataVersion
-Microsoft.OData.Core.NewWriter2.ODataSerializerOptions.ODataVersion.set -> void
-Microsoft.OData.Core.NewWriter2.ODataSerializerOptions.PropertyValueWriterProvider.get -> Microsoft.OData.Core.NewWriter2.IPropertyValueWriterProvider<Microsoft.OData.Core.NewWriter2.ODataJsonWriterContext, Microsoft.OData.Core.NewWriter2.ODataJsonWriterStack, Microsoft.OData.Edm.IEdmProperty>
-Microsoft.OData.Core.NewWriter2.ODataSerializerOptions.PropertyValueWriterProvider.set -> void
-Microsoft.OData.Core.NewWriter2.ODataSerializerOptions.ResourcePropertyWriterProvider.get -> Microsoft.OData.Core.NewWriter2.IResourcePropertyWriterProvider<Microsoft.OData.Core.NewWriter2.ODataJsonWriterContext, Microsoft.OData.Core.NewWriter2.ODataJsonWriterStack, Microsoft.OData.Edm.IEdmProperty>
-Microsoft.OData.Core.NewWriter2.ODataSerializerOptions.ResourcePropertyWriterProvider.set -> void
-Microsoft.OData.Core.NewWriter2.ODataSerializerOptions.ValueWriterProvider.get -> Microsoft.OData.Core.NewWriter2.IResourceWriterProvider<Microsoft.OData.Core.NewWriter2.ODataJsonWriterContext, Microsoft.OData.Core.NewWriter2.ODataJsonWriterStack>
 Microsoft.OData.UriParser.CollectionOpenPropertyAccessNode.CollectionOpenPropertyAccessNode(Microsoft.OData.UriParser.SingleValueNode source, string openPropertyName, Microsoft.OData.Edm.IEdmCollectionTypeReference collectionType) -> void
 Microsoft.OData.UriParser.SingleValueOpenPropertyAccessNode.SingleValueOpenPropertyAccessNode(Microsoft.OData.UriParser.SingleValueNode source, string openPropertyName, Microsoft.OData.Edm.IEdmTypeReference typeReference) -> void
 Microsoft.Extensions.DependencyInjection.ODataServiceCollectionExtensions
@@ -199,7 +98,6 @@ Microsoft.OData.UriParser.SingletonSegment.NavigationSource.get -> Microsoft.ODa
 Microsoft.OData.UriParser.Validation.ODataUrlValidationContext.AddMessage(Microsoft.OData.UriParser.Validation.ODataUrlValidationMessage odataUrlValidationMessage) -> void
 Microsoft.OData.UriParser.Validation.ODataUrlValidationContext.Messages.get -> System.Collections.Generic.IReadOnlyList<Microsoft.OData.UriParser.Validation.ODataUrlValidationMessage>
 static Microsoft.Extensions.DependencyInjection.ODataServiceCollectionExtensions.AddDefaultODataServices(this Microsoft.Extensions.DependencyInjection.IServiceCollection services, Microsoft.OData.ODataVersion odataVersion = Microsoft.OData.ODataVersion.V4, System.Action<Microsoft.OData.ODataMessageReaderSettings> configureReaderAction = null, System.Action<Microsoft.OData.ODataMessageWriterSettings> configureWriterAction = null, System.Action<Microsoft.OData.UriParser.ODataUriParserSettings> configureUriParserAction = null) -> Microsoft.Extensions.DependencyInjection.IServiceCollection
-static Microsoft.OData.Core.NewWriter2.ODataSerializer.WriteAsync<T>(T value, System.IO.Stream stream, Microsoft.OData.ODataUri uri, Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Core.NewWriter2.ODataSerializerOptions options) -> System.Threading.Tasks.ValueTask
 static Microsoft.OData.Json.ODataUtf8JsonWriterFactory.Default.get -> Microsoft.OData.Json.ODataUtf8JsonWriterFactory
 static Microsoft.OData.UriParser.ODataPathExtensions.TrimEndingTypeAndKeySegments(this Microsoft.OData.UriParser.ODataPath path) -> Microsoft.OData.UriParser.ODataPath
 Microsoft.OData.Json.IJsonWriter.WriteValue(System.Text.Json.JsonElement value) -> void
@@ -2395,15 +2293,6 @@ static readonly Microsoft.OData.UriParser.BatchSegment.Instance -> Microsoft.ODa
 static readonly Microsoft.OData.UriParser.CountSegment.Instance -> Microsoft.OData.UriParser.CountSegment
 static readonly Microsoft.OData.UriParser.MetadataSegment.Instance -> Microsoft.OData.UriParser.MetadataSegment
 static readonly Microsoft.OData.UriParser.QueryToken.EmptyTokens -> Microsoft.OData.UriParser.QueryToken[]
-virtual Microsoft.OData.Core.NewWriter2.Json.Payload.ODataResourceBaseJsonWriter<T>.HasEtagValue(T value, Microsoft.OData.Core.NewWriter2.ODataJsonWriterStack state, Microsoft.OData.Core.NewWriter2.ODataJsonWriterContext context, out string etagValue) -> bool
-virtual Microsoft.OData.Core.NewWriter2.Json.Payload.ODataResourceBaseJsonWriter<T>.HasNestedCountValue(T value, Microsoft.OData.Edm.IEdmProperty resourceProperty, Microsoft.OData.Core.NewWriter2.ODataJsonWriterStack state, Microsoft.OData.Core.NewWriter2.ODataJsonWriterContext context, out long? count) -> bool
-virtual Microsoft.OData.Core.NewWriter2.Json.Payload.ODataResourceBaseJsonWriter<T>.WriteEtagProperty(T value, Microsoft.OData.Core.NewWriter2.ODataJsonWriterStack state, Microsoft.OData.Core.NewWriter2.ODataJsonWriterContext context) -> System.Threading.Tasks.ValueTask
-virtual Microsoft.OData.Core.NewWriter2.Json.Payload.ODataResourceBaseJsonWriter<T>.WriteEtagValue(T value, Microsoft.OData.Core.NewWriter2.ODataJsonWriterStack state, Microsoft.OData.Core.NewWriter2.ODataJsonWriterContext context) -> System.Threading.Tasks.ValueTask
-virtual Microsoft.OData.Core.NewWriter2.Json.Payload.ODataResourceBaseJsonWriter<T>.WriteNestedCountProperty(T value, Microsoft.OData.Edm.IEdmProperty resourceProperty, Microsoft.OData.Core.NewWriter2.ODataJsonWriterStack state, Microsoft.OData.Core.NewWriter2.ODataJsonWriterContext context) -> System.Threading.Tasks.ValueTask
-virtual Microsoft.OData.Core.NewWriter2.Json.Payload.ODataResourceBaseJsonWriter<T>.WriteNestedCountValue(T value, Microsoft.OData.Edm.IEdmProperty propertyToWrite, Microsoft.OData.Core.NewWriter2.ODataJsonWriterStack state, Microsoft.OData.Core.NewWriter2.ODataJsonWriterContext context) -> System.Threading.Tasks.ValueTask
-virtual Microsoft.OData.Core.NewWriter2.Json.Payload.ODataResourceBaseJsonWriter<T>.WriteNestedNextLinkProperty(T resource, Microsoft.OData.Edm.IEdmProperty propertyToWrite, Microsoft.OData.Core.NewWriter2.ODataJsonWriterStack state, Microsoft.OData.Core.NewWriter2.ODataJsonWriterContext context) -> System.Threading.Tasks.ValueTask
-virtual Microsoft.OData.Core.NewWriter2.Json.Payload.ODataResourceBaseJsonWriter<T>.WriteProperty(T resource, Microsoft.OData.Edm.IEdmProperty propertyToWrite, Microsoft.OData.Core.NewWriter2.ODataJsonWriterStack state, Microsoft.OData.Core.NewWriter2.ODataJsonWriterContext context) -> System.Threading.Tasks.ValueTask
-virtual Microsoft.OData.Core.NewWriter2.Json.Payload.ODataResourceBaseJsonWriter<T>.WriteProperty(T resource, Microsoft.OData.Edm.IEdmProperty propertyToWrite, Microsoft.OData.UriParser.SelectExpandClause selectExpand, Microsoft.OData.Core.NewWriter2.ODataJsonWriterStack state, Microsoft.OData.Core.NewWriter2.ODataJsonWriterContext context) -> System.Threading.Tasks.ValueTask
 virtual Microsoft.OData.Evaluation.ODataMetadataSelector.SelectBindableOperations(Microsoft.OData.Edm.IEdmStructuredType type, System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmOperation> bindableOperations) -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmOperation>
 virtual Microsoft.OData.Evaluation.ODataMetadataSelector.SelectNavigationProperties(Microsoft.OData.Edm.IEdmStructuredType type, System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmNavigationProperty> navigationProperties) -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmNavigationProperty>
 virtual Microsoft.OData.Evaluation.ODataMetadataSelector.SelectStreamProperties(Microsoft.OData.Edm.IEdmStructuredType type, System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmStructuralProperty> selectedStreamProperties) -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmStructuralProperty>
