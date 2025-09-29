@@ -46,7 +46,7 @@ public static class ODataSerializerOptionsFactory
         {
             EdmTypeName = $"{SchemaConstants.Namespace}.FileItem",
             GetODataId = (item, state) => {
-                if (item is SchematizedFileItem fileItem)
+                if (item is FileItem fileItem)
                 {
                     return state.CustomState.IdSerializer?.GetODataId(fileItem).AbsoluteUri;
                 }
@@ -55,7 +55,7 @@ public static class ODataSerializerOptionsFactory
             },
             GetEtag = (item, state) =>
             {
-                if (item is SchematizedFileItem fileItem)
+                if (item is FileItem fileItem)
                 {
                     return fileItem.GetEtag();
                 }

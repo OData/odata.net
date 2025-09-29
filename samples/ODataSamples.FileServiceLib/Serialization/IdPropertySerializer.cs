@@ -9,9 +9,9 @@ namespace ODataSamples.FileServiceLib.Serialization;
 
 public class IdPropertySerializer(string rootUrl)
 {
-    public Uri GetODataId(SchematizedFileItem fileItem)
+    public Uri GetODataId(FileItem fileItem)
     {
         var id = fileItem.Id;
-        return new Uri($"{rootUrl}/Files({id})", UriKind.Absolute);
+        return new Uri($"{rootUrl}/Files('{id}')", UriKind.Absolute);
     }
 }

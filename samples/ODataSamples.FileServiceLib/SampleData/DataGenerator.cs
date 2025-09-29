@@ -29,7 +29,7 @@ public static class DataGenerator
             var department = departments[i % departments.Length];
             
             // Set required properties
-            data[schema.Id] = $"file-{i + 1:D3}";
+            data[schema.Id] = $"file-{i + 1}";
             data[schema.FileName] = $"{department}Report{i + 1:D2}{fileType}";
             data[schema.FileExtension] = fileType;
             data[schema.FileSize] = (long)(1024 * (i + 1) * 10); // Incremental file sizes

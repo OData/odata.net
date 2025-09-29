@@ -9,6 +9,16 @@ public class FileItem(IFileItemSchema schema, IDictionary<IPropertyDefinition, o
 
     public IDictionary<IPropertyDefinition, object?> Data => data;
 
+    public string? GetEtag()
+    {
+        if (this.Data.TryGetValue(this.Schema.Version, out var version) && version is string versionString)
+        {
+            return $"W/\"{versionString}\"";
+        }
+
+        return null;
+    }
+
     public string Id
     {
         get => (string)this.Data[this.Schema.Id]!;

@@ -29,7 +29,7 @@ public class SerializationTests
 
         var customState = new ODataCustomState
         {
-            IdSerializer = new IdPropertySerializer("http://service/odata")
+            IdSerializer = new IdPropertySerializer("http://service/odata/Users('id')")
         };
 
         var stream = new MemoryStream();
@@ -48,7 +48,8 @@ public class SerializationTests
           "@odata.context": "http://service/odata/$metadata#Users('id')/Files",
           "value": [
             {
-              "Id": "file-001",
+              "@odata.id": "http://service/odata/Users('id')/Files('file-1')",
+              "Id": "file-1",
               "FileName": "MarketingReport01.pdf",
               "FileExtension": ".pdf",
               "FileSize": 10240,
@@ -83,7 +84,8 @@ public class SerializationTests
               }
             },
             {
-              "Id": "file-002",
+              "@odata.id": "http://service/odata/Users('id')/Files('file-2')",
+              "Id": "file-2",
               "FileName": "EngineeringReport02.docx",
               "FileExtension": ".docx",
               "FileSize": 20480,
