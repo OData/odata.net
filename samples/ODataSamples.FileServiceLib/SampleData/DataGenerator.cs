@@ -2,6 +2,7 @@
 using ODataSamples.FileServiceLib.Models;
 using ODataSamples.FileServiceLib.Schema.Abstractions;
 using ODataSamples.FileServiceLib.Schema.Common;
+using ODataSamples.FileServiceLib.Streaming;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -92,6 +93,19 @@ public static class DataGenerator
             {
                 fileContentText = RepeatString(fileContentText, LargeFieldMultiplier);
                 fileContentAnnotation = RepeatString(fileContentAnnotation, LargeFieldMultiplier);
+            }
+
+            var fileContent = new FileContent();
+            if (options.StreamFileContentText)
+            {
+                fileContent.StreamableProperties ??= new Dictionary<string, IStreamingSource>();
+                fileContent.StreamableProperties[nameof(FileContent.Text)] = new ByteArrayStreamingSource(Encoding.Unicode.GetBytes(fileContentText));
+            }
+
+            if (options.StreamFileContentAnnotation)
+            {
+                fileContent.StreamableProperties ??= new Dictionary<string, IStreamingSource>();
+                fileContent.StreamableProperties[nameof(FileContent.Annotation)] = new ByteArrayStreamingSource(Encoding.Unicode.GetBytes(fileContentAnnotation));
             }
 
             data[schema.FileContent] = new FileContent
