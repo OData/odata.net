@@ -34,7 +34,9 @@ public static class ODataSerializerOptionsFactory
                 }
 
                 return null;
-            }
+            },
+            // Places the next link after the value array
+            NextLinkPosition = AnnotationPosition.PostValue
         });
     }
 

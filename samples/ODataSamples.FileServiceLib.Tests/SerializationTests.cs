@@ -45,7 +45,80 @@ public class SerializationTests
 
         var expectedOutput = """
         {
-
+          "@odata.context": "http://service/odata/$metadata#Users('id')/Files",
+          "value": [
+            {
+              "Id": "file-001",
+              "FileName": "MarketingReport01.pdf",
+              "FileExtension": ".pdf",
+              "FileSize": 10240,
+              "Version": 1,
+              "IsProtected": true,
+              "Description": "Sample marketing document for testing and demonstration purposes - Item 1",
+              "ExternalId": "00000000-0000-0000-0000-000000000001",
+              "CreatedAt": "2024-01-01T09:00:00Z",
+              "Tags": [
+                "marketing",
+                "sample",
+                "priority-1",
+                "pdf"
+              ],
+              "ActivityStats": [
+                {
+                  "Id": "activity-1-1",
+                  "Actor": "user1@example.com",
+                  "ActivityDateTime": "2024-01-01T09:00:00Z"
+                },
+                {
+                  "Id": "activity-1-2",
+                  "Actor": "editor1@example.com",
+                  "ActivityDateTime": "2024-01-01T09:00:00Z"
+                }
+              ],
+              "BinaryData": "U2FtcGxlIGNvbnRlbnQgZm9yIGZpbGUgMSAtIE1hcmtldGluZyBkZXBhcnRtZW50",
+              "ByteCollection": "QWRkaXRpb25hbCBiaW5hcnkgZGF0YSAx",
+              "FileContent": {
+                "Text": "File content for Marketing report 1",
+                "Annotation": "Generated sample data - Item 1"
+              }
+            },
+            {
+              "Id": "file-002",
+              "FileName": "EngineeringReport02.docx",
+              "FileExtension": ".docx",
+              "FileSize": 20480,
+              "Version": 2,
+              "IsProtected": false,
+              "Description": "Sample engineering document for testing and demonstration purposes - Item 2",
+              "ExternalId": "00000000-0000-0000-0000-000000000002",
+              "CreatedAt": "2024-01-02T10:00:00Z",
+              "Tags": [
+                "engineering",
+                "sample",
+                "priority-2",
+                "docx"
+              ],
+              "ActivityStats": [
+                {
+                  "Id": "activity-2-1",
+                  "Actor": "user2@example.com",
+                  "ActivityDateTime": "2024-01-02T10:00:00Z"
+                },
+                {
+                  "Id": "activity-2-2",
+                  "Actor": "editor2@example.com",
+                  "ActivityDateTime": "2024-01-03T10:00:00Z"
+                }
+              ],
+              "BinaryData": "U2FtcGxlIGNvbnRlbnQgZm9yIGZpbGUgMiAtIEVuZ2luZWVyaW5nIGRlcGFydG1lbnQ=",
+              "ByteCollection": "QWRkaXRpb25hbCBiaW5hcnkgZGF0YSAy",
+              "FileContent": {
+                "Text": "File content for Engineering report 2",
+                "Annotation": "Generated sample data - Item 2"
+              }
+            }
+          ],
+          "@odata.nextLink": "http://service/odata/Users/id/Files?$skiptoken=skip-token-2"
         }
         """;
         var normalizedExpectedOutput = JsonSerializer.Serialize(JsonDocument.Parse(expectedOutput).RootElement);
