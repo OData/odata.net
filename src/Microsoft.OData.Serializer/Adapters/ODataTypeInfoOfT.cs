@@ -53,7 +53,7 @@ public class ODataTypeInfo<T, TCustomState> : ODataTypeInfo
     public Action<T, ICountWriter<TCustomState>, ODataWriterState<TCustomState>>? WriteCount { get; init; }
 
     public AnnotationPosition NextLinkPosition { get; init; } = AnnotationPosition.Auto;
-    public Func<T, ODataWriterState<TCustomState>, string>? GetNextLink { get; init; }
+    public Func<T, ODataWriterState<TCustomState>, string?>? GetNextLink { get; init; }
 
     public Action<T, INextLinkWriter<TCustomState>, ODataWriterState<TCustomState>>? WriteNextLink { get; init; }
 

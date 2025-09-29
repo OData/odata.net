@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Reflection;
 
 namespace Microsoft.OData.Serializer;
 
@@ -50,7 +51,10 @@ internal class ODataJsonEnumerableWriterFactory<TCustomState> : ODataWriterFacto
         elementType = null;
         if (!type.IsGenericType)
         {
-            return false;
+            if (TryGetNonGenericEnumerableElementType(type, out elementType))
+            {
+                return true;
+            }
         }
 
         var args = type.GetGenericArguments();
@@ -64,5 +68,28 @@ internal class ODataJsonEnumerableWriterFactory<TCustomState> : ODataWriterFacto
         var enumerableType = typeof(IEnumerable<>).MakeGenericType(elementType);
         
         return enumerableType.IsAssignableFrom(type);
+    }
+
+    private static bool TryGetNonGenericEnumerableElementType(Type type, out Type? elementType)
+    {
+        elementType = null;
+        var enumerable = typeof(IEnumerable);
+        if (!type.IsAssignableTo(enumerable))
+        {
+            return false;
+        }
+
+        var enumerableInterfaces = type.FindInterfaces(
+            (t, _) => t.IsGenericType && t.GetGenericTypeDefinition() == typeof(IEnumerable<>),
+            filterCriteria: null);
+
+        if (enumerableInterfaces.Length == 0)
+        {
+            return false;
+        }
+
+        var enumerableInterface = enumerableInterfaces[0];
+        elementType = enumerableInterface.GetGenericArguments()[0];
+        return true;
     }
 }

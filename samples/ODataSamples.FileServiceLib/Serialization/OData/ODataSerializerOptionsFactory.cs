@@ -1,4 +1,6 @@
-﻿using Microsoft.OData.Serializer;
+﻿using Microsoft.OData;
+using Microsoft.OData.Serializer;
+using ODataSamples.FileServiceLib.Api;
 using ODataSamples.FileServiceLib.Models;
 using ODataSamples.FileServiceLib.Schema;
 using ODataSamples.FileServiceLib.Schema.Abstractions;
@@ -11,9 +13,29 @@ public static class ODataSerializerOptionsFactory
     public static ODataSerializerOptions<ODataCustomState> Create()
     {
         var options = new ODataSerializerOptions<ODataCustomState>();
+        MapFindFileResponse(options);
         MapFileItem(options);
         MapOpenPropertyValue(options);
         return options;
+    }
+
+    private static void MapFindFileResponse(ODataSerializerOptions<ODataCustomState> options)
+    {
+        options.AddTypeInfo<FindFileResponse>(new()
+        {
+            GetCount = (response, state) => response.Count,
+            GetNextLink = (response, state) =>
+            {
+                if (!string.IsNullOrEmpty(response.SkipToken))
+                {
+                    // TODO: not a good idea to modify the uri from there
+                    state.ODataUri.SkipToken = response.SkipToken;
+                    return state.ODataUri.BuildUri(ODataUrlKeyDelimiter.Slash).AbsoluteUri;
+                }
+
+                return null;
+            }
+        });
     }
 
     private static void MapFileItem(ODataSerializerOptions<ODataCustomState> options)
