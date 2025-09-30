@@ -6,11 +6,23 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <AssemblyName>Microsoft.OData.Serializer</AssemblyName>
+    <RootNamespace>Microsoft.OData.Serializer</RootNamespace>
   </PropertyGroup>
 
-  <ItemGroup>
-    <None Include="Adapters\ODataPropertyInfoOfT.cs" />
-  </ItemGroup>
+  <PropertyGroup>
+    <PackageId>Microsoft.OData.Serializer</PackageId>
+    <PackageVersion>0.1.0-preview.1</PackageVersion>
+    <Title>OData Serializer</Title>
+    <Authors>Microsoft</Authors>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <Description>Preview of the new high-performance OData serializer for .NET 8 and later.</Description>
+    <PackageTags>odata;serialization</PackageTags>
+    <PackageProjectUrl>https://github.com/OData/odata.net</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/OData/odata.net</RepositoryUrl>
+    <PackageIcon>icon.png</PackageIcon>
+  </PropertyGroup>
 
   <!-- enable when running unit tests -->
   <ItemGroup>
@@ -23,11 +35,11 @@
     <PackageReference Include="Microsoft.OData.Edm" Version="7.22.0" PrivateAssets="All" ExcludeAssets="runtime" />
     <PackageReference Include="System.IO.Pipelines" Version="9.0.8" />
   </ItemGroup>
-  <!--<ItemGroup>
-    <ProjectReference Include="..\Microsoft.OData.Core\Microsoft.OData.Core.csproj" />
-    <ProjectReference Include="..\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj" />
-  </ItemGroup>-->
 
-  <!-- enable when running benchmarks -->
 
+  <ItemGroup>
+    <None Update="Docs\README.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 </Project>
