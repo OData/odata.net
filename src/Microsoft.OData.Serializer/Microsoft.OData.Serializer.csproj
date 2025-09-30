@@ -21,6 +21,9 @@
     <PackageTags>odata;serialization</PackageTags>
     <PackageProjectUrl>https://github.com/OData/odata.net</PackageProjectUrl>
     <RepositoryUrl>https://github.com/OData/odata.net</RepositoryUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <IncludeContentInPack>True</IncludeContentInPack>
+    <Copyright>© Microsoft Corporation. All rights reserved.</Copyright>
   </PropertyGroup>
 
   <PropertyGroup>
