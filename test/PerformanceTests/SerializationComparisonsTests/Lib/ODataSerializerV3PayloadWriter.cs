@@ -1,7 +1,6 @@
 ﻿using Microsoft.OData;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Serializer.V3;
-using Microsoft.OData.Serializer.V3.Adapters;
+using Microsoft.OData.Serializer;
 using Microsoft.OData.UriParser;
 using System;
 using System.Collections;
