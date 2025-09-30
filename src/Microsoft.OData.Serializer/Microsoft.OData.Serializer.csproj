@@ -41,7 +41,6 @@
 	-->
     <PackageReference Include="Microsoft.OData.Core" Version="7.22.0" PrivateAssets="All" ExcludeAssets="runtime" />
     <PackageReference Include="Microsoft.OData.Edm" Version="7.22.0" PrivateAssets="All" ExcludeAssets="runtime" />
-    <PackageReference Include="System.IO.Pipelines" Version="9.0.8" />
   </ItemGroup>
 
 

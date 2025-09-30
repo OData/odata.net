@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using System.IO.Pipelines;
 
 namespace Microsoft.OData.Serializer;
 
@@ -33,12 +32,6 @@ public class ODataPropertyInfo<TDeclaringType, TCustomState> :
     // TODO: this tight coupling between attribute handling and the core serializer internals is not ideal and should be revised.
     internal Func<TDeclaringType, object, IStreamValueWriter<TCustomState>, ODataWriterState<TCustomState>, ValueTask>?
         WriteValueWithCustomWriterAsync { get; set; }
-
-    // Streaming support via objects like PipeReader, Stream, AsyncEnumerable, etc. We should provide a mechanism for supporting custom streaming providers,
-    // e.g. streams, IAsyncEnumerable, etc.
-    // TODO: Consider removing this in favour of WriteValueAsync which provides more flexibility and more preferred by early users.
-    [Obsolete("Not recommended. Might not be supported post-prevew. Consider using WriteValueAsync instead which provides more flexibility.")]
-    public Func<TDeclaringType, ODataWriterState<TCustomState>, object?>? GetStreamingValue { get; init; }
 
     // TODO: implement a shorthand GetValue hook of type Func<TDeclaringType, ODataJsonWriterState<TCustomState>, TValue>
     // which would require an extra generic type parameter TValue that's a bit hard to defined since we'd
@@ -271,95 +264,6 @@ public class ODataPropertyInfo<TDeclaringType, TCustomState> :
 
     internal protected virtual bool WritePropertyValue(TDeclaringType resource, ODataWriterState<TCustomState> state)
     {
-        if (this.GetStreamingValue != null)
-        {
-            if (state.Stack.Current.CleanUpState == ResourceCleanupState.CleanupComplete)
-            {
-                // If we got here it means that we had completed consuming the stream
-                // value and writing it, then we suspended the frame to perform cleanup.
-                // And now cleanup is concluded, so we're done here.
-                return true;
-            }
-
-            object? stream = state.Stack.Current.StreamingValueSource;
-            if (stream == null)
-            {
-                stream = this.GetStreamingValue(resource, state);
-
-                // TODO: This tight coupling of different types is too messy
-                // and should ideally not be here.
-                // We should allow custom to provide custom values and writers.
-                // But we if we pass object to WritePropertyValue, it won't find the writer
-                // since it doesn't use object.GetType() to find the writer, but rather typeof(object).
-                // We need to review this approach and decide whether it makes
-                // sense moving forward.
-                if (stream is IAsyncEnumerable<ReadOnlyMemory<byte>> byteEnumerable)
-                {
-                    stream = new AsyncEnumerableReader<byte>(byteEnumerable);
-                }
-                else if (stream is IAsyncEnumerable<ReadOnlyMemory<char>> charEnumerable)
-                {
-                    stream = new AsyncEnumerableReader<char>(charEnumerable);
-                }
-                else if (stream is Stream basicStream)
-                {
-                    stream = PipeReader.Create(basicStream);
-                }
-
-                state.Stack.Current.StreamingValueSource = stream;
-
-                if (this.LeaveStreamOpen == null || this.LeaveStreamOpen == false)
-                {
-                    state.Stack.Current.CleanUpState = ResourceCleanupState.NeedCleanup;
-                    if (stream != null)
-                    {
-                        state.RegisterForDispose(stream); // just in case we get an exception before completing the write
-                    }
-                }
-            }
-
-            bool result;
-            // TODO: What should be expected behaviour if GetValuePipeReader returns null? Should it fall back
-            // to WriteValue/GetValue? Or throw?
-            if (stream == null)
-            {
-                throw new InvalidOperationException($"The {nameof(GetStreamingValue)} returned null.");
-            }
-
-            // TODO this is temporary hack since WritePropertyValue(resource, object, state) will not find the writer
-            // since the value is not passed to the writer provider, just the static type. So to fix this,
-            // we would either need to create a version of WriterProvider.GetWriter that accepts a Type parameter,
-            // which also mean caching or calling GetType() on the value each time, or we would
-            // need another approach altogether.
-            // But this shows that this is approach to streaming is probably not a good idea.
-            
-            else if (stream is PipeReader pipeReader)
-            {
-                result = WritePropertyValue(resource, pipeReader, state);
-            }
-            else if (stream is IBufferedReader<byte> byteReader)
-            {
-                result = WritePropertyValue(resource, byteReader, state);
-            }
-            else if (stream is IBufferedReader<char> charReader)
-            {
-                result = WritePropertyValue(resource, charReader, state);
-            }
-            else
-            {
-                throw new NotSupportedException($"The type '{stream.GetType()}' returned by {nameof(GetStreamingValue)} is not supported. Supported types are PipeReader and IBufferedReader<byte>.");
-            }
-
-            if (result == true && state.Stack.Current.CleanUpState == ResourceCleanupState.NeedCleanup)
-            {
-                state.Stack.Current.CleanUpState = ResourceCleanupState.Cleanup;
-                return false; // suspend to allow cleanup
-            }
-
-            return result;
-
-        }
-
         Debug.Assert(this.WriteValue != null, "WriteValue should not be null.");
         return WriteValue(resource, this, state);
     }

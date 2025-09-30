@@ -1,8 +1,6 @@
 ﻿using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
-using System.Buffers;
 using System.Diagnostics;
-using System.IO.Pipelines;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 
@@ -71,62 +69,6 @@ public static class ODataSerializer
                 {
                     await state.Stack.LastSuspendedFrame.PendingTask.Value;
                 }
-                else if (state.Stack.HasSuspendedFrames())
-                {
-                    ResourceCleanupState cleanupState = state.Stack.LastSuspendedFrame.CleanUpState;
-
-                    // TODO: ideally we should not be checking the progress value outside
-                    // the writer that set it since each writer might have a different
-                    // interpretation of the progress value. Another code smell?
-                    if (cleanupState == ResourceCleanupState.Cleanup)
-                    {
-                        object? suspendedValueStream = state.Stack.LastSuspendedFrame.StreamingValueSource;
-                        if (suspendedValueStream is PipeReader suspendedPipeReader)
-                        {
-                            await suspendedPipeReader.CompleteAsync();
-                            Debug.Assert(state.DisposableObjects != null, "We should have tracked the object for disposal.");
-                            state.DisposableObjects.Remove(suspendedValueStream!);
-                        }
-                        else if (suspendedValueStream is IAsyncDisposable asyncDisposable)
-                        {
-                            await asyncDisposable.DisposeAsync();
-                            Debug.Assert(state.DisposableObjects != null, "We should have tracked the object for disposal.");
-                            state.DisposableObjects.Remove(suspendedValueStream!);
-                        }
-
-                        state.Stack.LastSuspendedFrame.CleanUpState = ResourceCleanupState.CleanupComplete;
-                    }
-                    else
-                    {
-                        object? suspendedValueStream = state.Stack.LastSuspendedFrame.StreamingValueSource;
-
-                        // This is really messy
-                        if (suspendedValueStream is PipeReader suspendedPipeReader)
-                        {
-                            // We should prob. check if we need more data before calling this.
-                            // It's possible that we reached here not because we need more data,
-                            // but because we needed to clear the buffer.
-                            var result = await suspendedPipeReader.ReadAsync(cancellationToken: default);
-
-                            // TODO: check for buffer cancellation.
-                            // We call to advance to allow the continuation to call TryRead() again.
-                            // Since we've advanced by 0 bytes, the next TryRead() will return the same buffer again.
-                            suspendedPipeReader.AdvanceTo(result.Buffer.GetPosition(0));
-                        }
-                        // TODO: Have a common non-generic interface for IBufferedReader to avoid
-                        // creating multiple branches for each supported type
-                        else if (suspendedValueStream is IBufferedReader<byte> suspendedByteReader)
-                        {
-                            var result = await suspendedByteReader.ReadAsync();
-                            suspendedByteReader.AdvanceTo(result.Buffer.GetPosition(0));
-                        }
-                        else if (suspendedValueStream is IBufferedReader<char> suspendedCharReader)
-                        {
-                            var result = await suspendedCharReader.ReadAsync();
-                            suspendedCharReader.AdvanceTo(result.Buffer.GetPosition(0));
-                        }
-                    }
-                }
 
                 // We might need to dispose the pipe reader, where should we do that? Here?
                 // How do we know we need to dispose?
@@ -149,11 +91,7 @@ public static class ODataSerializer
             {
                 foreach (var resource in state.DisposableObjects)
                 {
-                    if (resource is PipeReader pipeReader)
-                    {
-                        await pipeReader.CompleteAsync();
-                    }
-                    else if (resource is IAsyncDisposable asyncDisposable)
+                    if (resource is IAsyncDisposable asyncDisposable)
                     {
                         await asyncDisposable.DisposeAsync();
                     }

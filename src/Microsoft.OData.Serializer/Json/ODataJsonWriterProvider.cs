@@ -26,8 +26,6 @@ internal class ODataJsonWriterProvider<TCustomState>(ODataSerializerOptions<TCus
     private static readonly ODataJsonDecimalWriter<TCustomState> decimalWriter = new();
     private static readonly ODataJsonByteArrayWriter<TCustomState> byteArrayWriter = new();
     private static readonly ODataJsonUriWriter<TCustomState> uriWriter = new();
-    private static readonly ODataJsonPipeReaderBinaryWriter<TCustomState> pipeReaderWriter = new();
-    private static readonly ODataJsonBufferedReaderBinaryWriter<TCustomState> bufferedReaderBinaryWriter = new();
     private static readonly ODataJsonObjectWriter<TCustomState> objectWriter = new();
 
 
@@ -123,7 +121,7 @@ internal class ODataJsonWriterProvider<TCustomState>(ODataSerializerOptions<TCus
 
     private static Dictionary<Type, IODataWriter<ODataWriterState<TCustomState>>> InitPrimitiveWriters()
     {
-        const int NumSimpleWriters = 21; // Update this when adding more writers. Keeps the dict size exact.
+        const int NumSimpleWriters = 19; // Update this when adding more writers. Keeps the dict size exact.
         Dictionary<Type, IODataWriter<ODataWriterState<TCustomState>>> writers = new(NumSimpleWriters);
 
         Add(boolWriter);
@@ -144,8 +142,6 @@ internal class ODataJsonWriterProvider<TCustomState>(ODataSerializerOptions<TCus
         Add(floatWriter);
         Add(byteArrayWriter);
         Add(uriWriter);
-        Add(pipeReaderWriter);
-        Add(bufferedReaderBinaryWriter);
         Add(objectWriter);
 
         Debug.Assert(NumSimpleWriters == writers.Count);
