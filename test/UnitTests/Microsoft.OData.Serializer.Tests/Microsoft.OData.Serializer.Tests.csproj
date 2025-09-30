@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 
@@ -17,8 +17,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj" />
-    <ProjectReference Include="..\..\..\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj" />
+	<PackageReference Include="Microsoft.OData.Core" Version="7.22.0" />
+	<PackageReference Include="Microsoft.OData.Edm" Version="7.22.0" />
+  </ItemGroup>
+	
+	
+  <ItemGroup>
+	<!-- enable when we have .net10.0 in the pipeline -->
+    <!--<ProjectReference Include="..\..\..\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj" />
+    <ProjectReference Include="..\..\..\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj" />-->
     <ProjectReference Include="..\..\..\src\Microsoft.OData.Serializer\Microsoft.OData.Serializer.csproj" />
   </ItemGroup>
 
