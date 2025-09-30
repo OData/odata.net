@@ -37,7 +37,7 @@ public class DynamicPropertiesAndAnnotationsTests
                     WriteValue = (item, writer, state) => writer.WriteValue(item.Name, state)
                 }
             ],
-            GetDynamicProperties = (item, state) => item.Data
+            GetOpenProperties = (item, state) => item.Data
         });
 
 
@@ -143,7 +143,7 @@ public class DynamicPropertiesAndAnnotationsTests
                     WriteValue = (item, writer, state) => writer.WriteValue(item.Name, state)
                 }
             ],
-            GetDynamicProperties = (item, state) => item.Data,
+            GetOpenProperties = (item, state) => item.Data,
             GetPropertyPreValueAnnotations = (item, propName, state) => item.PreAnnotations.GetValueOrDefault(propName),
             GetPropertyPostValueAnnotations = (item, propName, state) => item.PostAnnotations.GetValueOrDefault(propName)
 
