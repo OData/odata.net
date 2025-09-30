@@ -14,10 +14,19 @@
 
   <!-- enable when running unit tests -->
   <ItemGroup>
-    <PackageReference Include="Microsoft.OData.Core" Version="7.22.0" />
-    <PackageReference Include="Microsoft.OData.Edm" Version="7.22.0" />
+	<!--
+	Compile-time reference only. Customers should install their own versions of ODL 7.x, 8.x or 9.x.
+	This allows customers to test the preview release serializer without forcing an ODL version upgrade.
+	But the final release will be tied to ODL 9.
+	-->
+    <PackageReference Include="Microsoft.OData.Core" Version="7.22.0" PrivateAssets="All" ExcludeAssets="runtime" />
+    <PackageReference Include="Microsoft.OData.Edm" Version="7.22.0" PrivateAssets="All" ExcludeAssets="runtime" />
     <PackageReference Include="System.IO.Pipelines" Version="9.0.8" />
   </ItemGroup>
+  <!--<ItemGroup>
+    <ProjectReference Include="..\Microsoft.OData.Core\Microsoft.OData.Core.csproj" />
+    <ProjectReference Include="..\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj" />
+  </ItemGroup>-->
 
   <!-- enable when running benchmarks -->
 
