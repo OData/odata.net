@@ -23,6 +23,12 @@
     <RepositoryUrl>https://github.com/OData/odata.net</RepositoryUrl>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <DelaySign>true</DelaySign>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\tools\StrongNamePublicKeys\35MSSharedLib1024.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+
   <!-- enable when running unit tests -->
   <ItemGroup>
 	<!--
