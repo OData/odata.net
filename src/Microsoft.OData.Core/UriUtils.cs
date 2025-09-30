@@ -160,9 +160,6 @@ namespace Microsoft.OData
             ReadOnlySpan<char> basePath = absBase.GetComponents(UriComponents.Path, UriFormat.UriEscaped);
             ReadOnlySpan<char> uriPath = absUri.GetComponents(UriComponents.Path, UriFormat.UriEscaped);
 
-            basePath = TrimSingleLeadingSlash(basePath);
-            uriPath = TrimSingleLeadingSlash(uriPath);
-
             // Treat empty or root base path as a base of any path on any host
             if (basePath.Length == 0)
             {
