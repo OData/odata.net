@@ -1,18 +1,14 @@
-name: $(TeamProject)_$(BuildDefinitionName)_$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
-
 trigger:
-# Set batch to true, it means to let system waits to run until current run is completed,
-# Then starts another run with all changes.
-  batch: true
   branches:
     include:
+    - odl-9-new-writer
     - main
-    - dev-9.x
-   
-# Pull request (PR) triggers
+    - release/*
+
 pr:
-- main
-- dev-8.x
+  - odl-9-new-writer
+  - main
+  - release/*
 
 resources:
   repositories:
@@ -23,61 +19,88 @@ resources:
     type: git
     name: 1ESPipelineTemplates/1ESPipelineTemplates
     ref: refs/tags/release
-
+name: $(Date:yyyyMMdd).$(Rev:r)
 variables:
 - name: __NugetSecurityAnalysisWarningLevel__
   value: none
+- name: BuildConfiguration
+  value: release
+- name: BuildPlatform
+  value: anycpu
+- name: ProductBinPath
+  value: $(Build.SourcesDirectory)\artifacts\bin\$(BuildPlatform)\$(BuildConfiguration)
 - name: runCodesignValidationInjection
   value: false
-
 extends:
   template: v1/1ES.Official.PipelineTemplate.yml@1ESPipelineTemplates
   parameters:
     pool:
       name: MSSecurity-1ES-Build-Agents-Pool
-      image: MSSecurity-1ES-Windows-2019
+      image: MSSecurity-1ES-Windows-2022
       os: windows
     customBuildTags:
     - ES365AIMigrationTooling
     stages:
     - stage: build
       jobs:
-      - job:  Debug	
-        variables:	
-          buildPlatform: 'Any CPU'	
-          buildConfiguration: 'Debug'	
-          skipComponentGovernanceDetection: true	
-          snExe: 'C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.8 Tools\sn.exe'	
-          snExe64: 'C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.8 Tools\x64\sn.exe'	
-          gacUtil: '$(Build.SourcesDirectory)\test\CommonAssemblies\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll'	
-          productBinPathEdm: '$(Build.SourcesDirectory)\src\Microsoft.OData.Edm\bin\$(buildConfiguration)'	
-          mainDllEdm: 'Microsoft.OData.Edm.dll'	
-          productBinPathCore: '$(Build.SourcesDirectory)\src\Microsoft.OData.Core\bin\$(buildConfiguration)'	
-          mainDllCore: 'Microsoft.OData.Core.dll'	
-          productBinPathSpatial: '$(Build.SourcesDirectory)\src\Microsoft.Spatial\bin\$(buildConfiguration)'	
-          mainDllSpatial: 'Microsoft.Spatial.dll'	
-          productBinPathClient: '$(Build.SourcesDirectory)\src\Microsoft.OData.Client\bin\$(buildConfiguration)'	
-          mainDllClient: 'Microsoft.OData.Client.dll'
-        steps:	
-          - template: /buildandtest.yml@self	
-          - template: /credscan.yml@self
-      - job:  Release
-        variables:
-          buildPlatform: 'Any CPU'
-          buildConfiguration: 'Release'
-          skipComponentGovernanceDetection: true
-          snExe: 'C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.8 Tools\sn.exe'
-          snExe64: 'C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.8 Tools\x64\sn.exe'
-          gacUtil: '$(Build.SourcesDirectory)\test\CommonAssemblies\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll'
-          productBinPathEdm: '$(Build.SourcesDirectory)\src\Microsoft.OData.Edm\bin\$(buildConfiguration)'
-          mainDllEdm: 'Microsoft.OData.Edm.dll'
-          productBinPathCore: '$(Build.SourcesDirectory)\src\Microsoft.OData.Core\bin\$(buildConfiguration)'
-          mainDllCore: 'Microsoft.OData.Core.dll'
-          productBinPathSpatial: '$(Build.SourcesDirectory)\src\Microsoft.Spatial\bin\$(buildConfiguration)'
-          mainDllSpatial: 'Microsoft.Spatial.dll'
-          productBinPathClient: '$(Build.SourcesDirectory)\src\Microsoft.OData.Client\bin\$(buildConfiguration)'
-          mainDllClient: 'Microsoft.OData.Client.dll'
+      - job: Main
+        displayName: Main Build
+        timeoutInMinutes: 120
         steps:
-          - template: /buildandtest.yml@self
-          - template: /credscan.yml@self
-      
+        - checkout: self
+          fetchTags: false
+        - task: NuGetToolInstaller@1
+          displayName: Use NuGet >=5.2.0
+          inputs:
+            versionSpec: '>=5.2.0'
+            checkLatest: true
+        - task: UseDotNet@2
+          displayName: Use .NET Core SDK 8.x
+          inputs:
+            version: 8.x
+            includePreviewVersions: true
+        - task: UseDotNet@2
+          displayName: Use .NET Core SDK 9.x
+          inputs:
+            version: 9.x
+            includePreviewVersions: true
+        - task: DotNetCoreCLI@2
+          displayName: Build Microsoft.OData.Serializer
+          inputs:
+            projects: $(Build.SourcesDirectory)\src\Microsoft.OData.Serializer\Microsoft.OData.Serializer.csproj
+            arguments: --configuration $(BuildConfiguration) --no-incremental -p:GeneratePackageOnBuild=true
+        - task: DotNetCoreCLI@2
+          displayName: Build Tests Project (Microsoft.OData.Serializer.Tests)
+          inputs:
+            projects: $(Build.SourcesDirectory)\test\UnitTests\Microsoft.OData.Serializer.Tests\Microsoft.OData.Serializer.Tests.csproj
+            arguments: --configuration $(BuildConfiguration) --no-incremental
+        - task: DotNetCoreCLI@2
+          displayName: Microsoft.OData.Serializer Unit Tests
+          inputs:
+            command: test
+            projects: $(Build.SourcesDirectory)\test\UnitTests\Microsoft.OData.Serializer.Tests\Microsoft.OData.Serializer.Tests.csproj
+            arguments: --configuration $(BuildConfiguration) --no-build --collect "XPlat Code coverage" -l "console;verbosity=detailed"
+        - task: DotNetCoreCLI@2
+          displayName: Build Samples project tests (ODataSamples.FileServiceLib.Tests)
+          inputs:
+            projects: $(Build.SourcesDirectory)\samples\ODataSamples.FileServiceLib.Tests\ODataSamples.FileServiceLib.Tests.csproj
+            arguments: --configuration $(BuildConfiguration) --no-incremental
+        - task: DotNetCoreCLI@2
+          displayName: FileServiceLib sample project Tests
+          inputs:
+            command: test
+            projects: $(Build.SourcesDirectory)\samples\ODataSamples.FileServiceLib.Tests\ODataSamples.FileServiceLib.Tests.csproj
+            arguments: --configuration $(BuildConfiguration) --no-build --collect "XPlat Code coverage" -l "console;verbosity=detailed"
+        - task: CmdLine@2
+          displayName: Install ReportGenerator tool for code coverage
+          inputs:
+            script: dotnet tool install --global dotnet-reportgenerator-globaltool --version 4.5.8
+        - task: CmdLine@2
+          displayName: Create code coverage report
+          inputs:
+            script: reportgenerator -reports:$(Agent.TempDirectory)/**/coverage.cobertura.xml -targetdir:$(Build.SourcesDirectory)/coverlet/reports -reporttypes:"Cobertura"
+        - task: PublishCodeCoverageResults@1
+          displayName: 'Publish code coverage '
+          inputs:
+            codeCoverageTool: Cobertura
+            summaryFileLocation: $(Build.SourcesDirectory)/coverlet/reports/Cobertura.xml

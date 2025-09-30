@@ -1,20 +1,11 @@
-name: $(TeamProject)_$(BuildDefinitionName)_$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
-
-# No trigger for nightly
 trigger: none
-
-# No Pull request (PR) triggers for nightly
-pr: none
-
-# Nightly using schedules
 schedules:
-- cron: "0 0 * * Mon,Tue,Wed,Thu,Fri"
-  displayName: midnightly build
+- cron: 0 5 * * 1,2,3,4,5
   branches:
-   include:
+    include:
+    - odl-9-new-writer
+    - release/*
     - main
-    - dev-9.x
-
 resources:
   repositories:
   - repository: self
@@ -24,12 +15,16 @@ resources:
     type: git
     name: 1ESPipelineTemplates/1ESPipelineTemplates
     ref: refs/tags/release
-
+name: $(Date:yyyyMMdd).$(Rev:r)
 variables:
-- name: __NugetSecurityAnalysisWarningLevel__
-  value: none
-- name: runCodesignValidationInjection
-  value: false
+- name: AzureServicesAuthConnectionString
+  value: ''
+- name: BuildConfiguration
+  value: release
+- name: BuildPlatform
+  value: anycpu
+- name: ProductBinPath
+  value: $(Build.SourcesDirectory)\artifacts\bin\$(BuildPlatform)\$(BuildConfiguration)
 - group: OData-ESRP-CodeSigning
 
 extends:
@@ -37,69 +32,202 @@ extends:
   parameters:
     pool:
       name: MSSecurity-1ES-Build-Agents-Pool
-      image: MSSecurity-1ES-Windows-2019
+      image: MSSecurity-1ES-Windows-2022
       os: windows
     customBuildTags:
     - ES365AIMigrationTooling
     stages:
     - stage: build
       jobs:
-      - job:  Debug	
-        timeoutInMinutes: 120
-        variables:	
-            buildPlatform: 'Any CPU'	
-            buildConfiguration: 'Debug'	
-            skipComponentGovernanceDetection: true	
-            snExe: 'C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.8 Tools\sn.exe'	
-            snExe64: 'C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.8 Tools\x64\sn.exe'	
-            gacUtil: '$(Build.SourcesDirectory)\test\CommonAssemblies\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll'	
-            productBinPathEdm: '$(Build.SourcesDirectory)\src\Microsoft.OData.Edm\bin\$(buildConfiguration)'	
-            mainDllEdm: 'Microsoft.OData.Edm.dll'	
-            productBinPathCore: '$(Build.SourcesDirectory)\src\Microsoft.OData.Core\bin\$(buildConfiguration)'	
-            mainDllCore: 'Microsoft.OData.Core.dll'	
-            productBinPathSpatial: '$(Build.SourcesDirectory)\src\Microsoft.Spatial\bin\$(buildConfiguration)'	
-            mainDllSpatial: 'Microsoft.Spatial.dll'	
-            productBinPathClient: '$(Build.SourcesDirectory)\src\Microsoft.OData.Client\bin\$(buildConfiguration)'	
-            mainDllClient: 'Microsoft.OData.Client.dll'	
-            nugetArtifactsDir: 'Nuget-Debug'	
-        templateContext:	
-          outputs:	
-          - output: pipelineArtifact	
-            displayName: 'Publish Artifact - NuGet Debug Packages'	
-            targetPath: '$(Build.ArtifactStagingDirectory)\NuGet-Debug'	
-            artifactName: NuGetDebug	
-        steps:	
-          - template: /nightly.yml@self
-      - job:  Release
-        timeoutInMinutes: 120
-        variables:
-            buildPlatform: 'Any CPU'
-            buildConfiguration: 'Release'
-            skipComponentGovernanceDetection: true
-            snExe: 'C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.8 Tools\sn.exe'
-            snExe64: 'C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.8 Tools\x64\sn.exe'
-            gacUtil: '$(Build.SourcesDirectory)\test\CommonAssemblies\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll'
-            productBinPathEdm: '$(Build.SourcesDirectory)\src\Microsoft.OData.Edm\bin\$(buildConfiguration)'
-            mainDllEdm: 'Microsoft.OData.Edm.dll'
-            productBinPathCore: '$(Build.SourcesDirectory)\src\Microsoft.OData.Core\bin\$(buildConfiguration)'
-            mainDllCore: 'Microsoft.OData.Core.dll'
-            productBinPathSpatial: '$(Build.SourcesDirectory)\src\Microsoft.Spatial\bin\$(buildConfiguration)'
-            mainDllSpatial: 'Microsoft.Spatial.dll'
-            productBinPathClient: '$(Build.SourcesDirectory)\src\Microsoft.OData.Client\bin\$(buildConfiguration)'
-            mainDllClient: 'Microsoft.OData.Client.dll'
-            nugetArtifactsDir: 'Nuget-Release'
+      - job: Main
+        displayName: Main Build
+        timeoutInMinutes: 360
         templateContext:
           outputs:
-            - output: pipelineArtifact
-              displayName: 'Publish Artifact - NuGet Release Packages'
-              targetPath: '$(Build.ArtifactStagingDirectory)\NuGet-Release'
-              artifactName: NuGetRelease
-            - output: nuget
-              displayName: 'MyGet push - Nightly packages to MyGet'
-              packageParentPath: '$(Build.ArtifactStagingDirectory)'
-              packagesToPush: $(Build.ArtifactStagingDirectory)\Nuget-Release\*Nightly*.nupkg
-              nuGetFeedType: external
-              publishFeedCredentials: 'MyGet.org - ODL Feed'
+          - output: pipelineArtifact
+            displayName: 'Publish Artifact - .NET output Build'
+            targetPath: $(Build.ArtifactStagingDirectory)\output
+            artifactName: dropOutput
+          - output: pipelineArtifact
+            displayName: 'Publish Artifact - SBOM'
+            targetPath: $(Build.ArtifactStagingDirectory)\output
+            artifactName: dropSBOM
+          - output: pipelineArtifact
+            displayName: 'Publish Artifact - Nuget Packages'
+            targetPath: $(Build.ArtifactStagingDirectory)\Nuget
+            artifactName: drop
+          - output: nuget
+            displayName: 'MyGet push - Nightly packages to MyGet'
+            packageParentPath: '$(Build.ArtifactStagingDirectory)'
+            packagesToPush: $(Build.ArtifactStagingDirectory)\Nuget\*Nightly*.nupkg
+            nuGetFeedType: external
+            publishFeedCredentials: 'MyGet.org - AspNetCoreOData Feed'
         steps:
-          - template: /nightly.yml@self
-
+        - checkout: self
+          fetchTags: true
+        - task: NuGetToolInstaller@1
+          displayName: Use NuGet >=5.2.0
+          inputs:
+            versionSpec: '>=5.2.0'
+            checkLatest: true
+        - task: UseDotNet@2
+          displayName: Use .NET Core SDK 8.x
+          inputs:
+            version: 8.x
+            includePreviewVersions: true
+        - task: UseDotNet@2
+          displayName: Use .NET Core SDK 9.x
+          inputs:
+            version: 9.x
+            includePreviewVersions: true
+        - task: DotNetCoreCLI@2
+          displayName: Build Microsoft.OData.Serializer
+          inputs:
+            projects: $(Build.SourcesDirectory)\src\Microsoft.OData.Serializer\Microsoft.OData.Serializer.csproj
+            arguments: --configuration $(BuildConfiguration) --no-incremental -p:GeneratePackageOnBuild=true
+        - task: CopyFiles@2
+          displayName: 'Copy Files to: $(Build.ArtifactStagingDirectory)\output - from: $(Build.SourcesDirectory)\artifacts\bin\$(BuildPlatform)'
+          inputs:
+            SourceFolder: $(Build.SourcesDirectory)\artifacts\bin\$(BuildPlatform)\
+            Contents: '**\Microsoft.OData.Serializer.*'
+            TargetFolder: $(Build.ArtifactStagingDirectory)\output
+        - task: DotNetCoreCLI@2
+          displayName: Build Tests Project (Microsoft.OData.Serializer.Tests)
+          inputs:
+            projects: $(Build.SourcesDirectory)\test\UnitTests\Microsoft.OData.Serializer.Tests\Microsoft.OData.Serializer.Tests.csproj
+            arguments: --configuration $(BuildConfiguration) --no-incremental
+        - task: DotNetCoreCLI@2
+          displayName: Microsoft.OData.Serializer Unit Tests
+          inputs:
+            command: test
+            projects: $(Build.SourcesDirectory)\test\UnitTests\Microsoft.OData.Serializer.Tests\Microsoft.OData.Serializer.Tests.csproj
+            arguments: --configuration $(BuildConfiguration) --no-build --collect "XPlat Code coverage" -l "console;verbosity=detailed"
+        - task: DotNetCoreCLI@2
+          displayName: Build Samples project tests (ODataSamples.FileServiceLib.Tests)
+          inputs:
+            projects: $(Build.SourcesDirectory)\samples\ODataSamples.FileServiceLib.Tests\ODataSamples.FileServiceLib.Tests.csproj
+            arguments: --configuration $(BuildConfiguration) --no-incremental
+        - task: DotNetCoreCLI@2
+          displayName: FileServiceLib sample project Tests
+          inputs:
+            command: test
+            projects: $(Build.SourcesDirectory)\samples\ODataSamples.FileServiceLib.Tests\ODataSamples.FileServiceLib.Tests.csproj
+            arguments: --configuration $(BuildConfiguration) --no-build --collect "XPlat Code coverage" -l "console;verbosity=detailed"
+        - task: UseDotNet@2
+          displayName: Use .NET Core SDK 2.x
+          inputs:
+            version: 2.x
+        - task: EsrpCodeSigning@5
+          displayName: ESRP CodeSigning - OData Product Signing
+          inputs:
+            ConnectedServiceName: $(ODataEsrpConnectionServiceName)
+            AppRegistrationClientId: '$(ODataEsrpAppRegistrationClientId)'
+            AppRegistrationTenantId: '$(ODataEsrpAppRegistrationTenantId)'
+            AuthAKVName: $(ODataEsrpAuthAKVName)
+            AuthCertName: $(ODataEsrpAuthCertName)
+            AuthSignCertName: $(ODataEsrpAuthSignCertName)
+            ServiceEndpointUrl: '$(ODataEsrpServiceEndpointUrl)'
+            FolderPath: $(ProductBinPath)
+            Pattern: Microsoft.OData.Serializer.dll
+            signConfigType: inlineSignParams
+            inlineOperation: |-
+              [
+                {
+                  "keyCode": "MSSharedLibSnKey",
+                  "operationSetCode": "StrongNameSign",
+                  "parameters": null,
+                  "toolName": "sn.exe",
+                  "toolVersion": "V4.6.1586.0"
+                },
+                {
+                  "keyCode": "MSSharedLibSnKey",
+                  "operationSetCode": "StrongNameVerify",
+                  "parameters": null,
+                  "toolName": "sn.exe",
+                  "toolVersion": "V4.6.1586.0"
+                },
+                {
+                  "keyCode": "CP-230012",
+                  "operationSetCode": "SigntoolSign",
+                  "parameters": [
+                  {
+                    "parameterName": "OpusName",
+                    "parameterValue": "Microsoft"
+                  },
+                  {
+                    "parameterName": "OpusInfo",
+                    "parameterValue": "http://www.microsoft.com"
+                  },
+                  {
+                    "parameterName": "PageHash",
+                    "parameterValue": "/NPH"
+                  },
+                  {
+                    "parameterName": "FileDigest",
+                    "parameterValue": "/fd sha256"
+                  },
+                  {
+                    "parameterName": "TimeStamp",
+                    "parameterValue": "/tr \"http://rfc3161.gtm.corp.microsoft.com/TSS/HttpTspServer\" /td sha256"
+                  }
+                  ],
+                  "toolName": "signtool.exe",
+                  "toolVersion": "6.2.9304.0"
+                },
+                {
+                  "keyCode": "CP-230012",
+                  "operationSetCode": "SigntoolVerify",
+                  "parameters": [
+                  {
+                    "parameterName": "VerifyAll",
+                    "parameterValue": "/all"
+                  }
+                  ],
+                  "toolName": "signtool.exe",
+                  "toolVersion": "6.2.9304.0"
+                }
+              ]
+            VerboseLogin: true
+        - task: DotNetCoreCLI@2
+          displayName: Dotnet - Pack Microsoft.OData.Serializer Nightly
+          inputs:
+            command: custom
+            custom: 'pack'
+            arguments: '$(Build.SourcesDirectory)\src\Microsoft.OData.Serializer\Microsoft.OData.Serializer.csproj -c $(BuildConfiguration) -o $(Build.ArtifactStagingDirectory)\Nuget -v Detailed -p:IsNightlyBuild=true -p:IncludeSymbols=true'
+        - task: DotNetCoreCLI@2
+          displayName: Dotnet - Pack Microsoft.OData.Serializer Release
+          inputs:
+            command: custom
+            custom: 'pack'
+            arguments: '$(Build.SourcesDirectory)\src\Microsoft.OData.Serializer\Microsoft.OData.Serializer.csproj -c $(BuildConfiguration) -o $(Build.ArtifactStagingDirectory)\Nuget -v Detailed -p:IncludeSymbols=true'
+        - task: EsrpCodeSigning@5
+          displayName: ESRP CodeSigning - OData Packages Signing
+          inputs:
+            ConnectedServiceName: $(ODataEsrpConnectionServiceName)
+            AppRegistrationClientId: '$(ODataEsrpAppRegistrationClientId)'
+            AppRegistrationTenantId: '$(ODataEsrpAppRegistrationTenantId)'
+            AuthAKVName: $(ODataEsrpAuthAKVName)
+            AuthCertName: $(ODataEsrpAuthCertName)
+            AuthSignCertName: $(ODataEsrpAuthSignCertName)
+            ServiceEndpointUrl: '$(ODataEsrpServiceEndpointUrl)'
+            FolderPath: $(Build.ArtifactStagingDirectory)\Nuget
+            Pattern: '*.nupkg'
+            signConfigType: inlineSignParams
+            inlineOperation: |-
+              [
+                  {
+                      "keyCode": "CP-401405",
+                      "operationSetCode": "NuGetSign",
+                      "parameters": [ ],
+                      "toolName": "sign",
+                      "toolVersion": "1.0"
+                  },
+                  {
+                      "keyCode": "CP-401405",
+                      "operationSetCode": "NuGetVerify",
+                      "parameters": [ ],
+                      "toolName": "sign",
+                      "toolVersion": "1.0"
+                  }
+              ]
+            VersboseLogin: true

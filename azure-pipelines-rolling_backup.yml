@@ -1,0 +1,83 @@
+name: $(TeamProject)_$(BuildDefinitionName)_$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
+
+trigger:
+# Set batch to true, it means to let system waits to run until current run is completed,
+# Then starts another run with all changes.
+  batch: true
+  branches:
+    include:
+    - main
+    - dev-9.x
+   
+# Pull request (PR) triggers
+pr:
+- main
+- dev-8.x
+
+resources:
+  repositories:
+  - repository: self
+    type: git
+    ref: refs/heads/main
+  - repository: 1ESPipelineTemplates
+    type: git
+    name: 1ESPipelineTemplates/1ESPipelineTemplates
+    ref: refs/tags/release
+
+variables:
+- name: __NugetSecurityAnalysisWarningLevel__
+  value: none
+- name: runCodesignValidationInjection
+  value: false
+
+extends:
+  template: v1/1ES.Official.PipelineTemplate.yml@1ESPipelineTemplates
+  parameters:
+    pool:
+      name: MSSecurity-1ES-Build-Agents-Pool
+      image: MSSecurity-1ES-Windows-2019
+      os: windows
+    customBuildTags:
+    - ES365AIMigrationTooling
+    stages:
+    - stage: build
+      jobs:
+      - job:  Debug	
+        variables:	
+          buildPlatform: 'Any CPU'	
+          buildConfiguration: 'Debug'	
+          skipComponentGovernanceDetection: true	
+          snExe: 'C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.8 Tools\sn.exe'	
+          snExe64: 'C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.8 Tools\x64\sn.exe'	
+          gacUtil: '$(Build.SourcesDirectory)\test\CommonAssemblies\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll'	
+          productBinPathEdm: '$(Build.SourcesDirectory)\src\Microsoft.OData.Edm\bin\$(buildConfiguration)'	
+          mainDllEdm: 'Microsoft.OData.Edm.dll'	
+          productBinPathCore: '$(Build.SourcesDirectory)\src\Microsoft.OData.Core\bin\$(buildConfiguration)'	
+          mainDllCore: 'Microsoft.OData.Core.dll'	
+          productBinPathSpatial: '$(Build.SourcesDirectory)\src\Microsoft.Spatial\bin\$(buildConfiguration)'	
+          mainDllSpatial: 'Microsoft.Spatial.dll'	
+          productBinPathClient: '$(Build.SourcesDirectory)\src\Microsoft.OData.Client\bin\$(buildConfiguration)'	
+          mainDllClient: 'Microsoft.OData.Client.dll'
+        steps:	
+          - template: /buildandtest.yml@self	
+          - template: /credscan.yml@self
+      - job:  Release
+        variables:
+          buildPlatform: 'Any CPU'
+          buildConfiguration: 'Release'
+          skipComponentGovernanceDetection: true
+          snExe: 'C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.8 Tools\sn.exe'
+          snExe64: 'C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.8 Tools\x64\sn.exe'
+          gacUtil: '$(Build.SourcesDirectory)\test\CommonAssemblies\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll'
+          productBinPathEdm: '$(Build.SourcesDirectory)\src\Microsoft.OData.Edm\bin\$(buildConfiguration)'
+          mainDllEdm: 'Microsoft.OData.Edm.dll'
+          productBinPathCore: '$(Build.SourcesDirectory)\src\Microsoft.OData.Core\bin\$(buildConfiguration)'
+          mainDllCore: 'Microsoft.OData.Core.dll'
+          productBinPathSpatial: '$(Build.SourcesDirectory)\src\Microsoft.Spatial\bin\$(buildConfiguration)'
+          mainDllSpatial: 'Microsoft.Spatial.dll'
+          productBinPathClient: '$(Build.SourcesDirectory)\src\Microsoft.OData.Client\bin\$(buildConfiguration)'
+          mainDllClient: 'Microsoft.OData.Client.dll'
+        steps:
+          - template: /buildandtest.yml@self
+          - template: /credscan.yml@self
+      

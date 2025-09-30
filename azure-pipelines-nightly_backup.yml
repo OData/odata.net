@@ -1,0 +1,105 @@
+name: $(TeamProject)_$(BuildDefinitionName)_$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
+
+# No trigger for nightly
+trigger: none
+
+# No Pull request (PR) triggers for nightly
+pr: none
+
+# Nightly using schedules
+schedules:
+- cron: "0 0 * * Mon,Tue,Wed,Thu,Fri"
+  displayName: midnightly build
+  branches:
+   include:
+    - main
+    - dev-9.x
+
+resources:
+  repositories:
+  - repository: self
+    type: git
+    ref: refs/heads/main
+  - repository: 1ESPipelineTemplates
+    type: git
+    name: 1ESPipelineTemplates/1ESPipelineTemplates
+    ref: refs/tags/release
+
+variables:
+- name: __NugetSecurityAnalysisWarningLevel__
+  value: none
+- name: runCodesignValidationInjection
+  value: false
+- group: OData-ESRP-CodeSigning
+
+extends:
+  template: v1/1ES.Official.PipelineTemplate.yml@1ESPipelineTemplates
+  parameters:
+    pool:
+      name: MSSecurity-1ES-Build-Agents-Pool
+      image: MSSecurity-1ES-Windows-2019
+      os: windows
+    customBuildTags:
+    - ES365AIMigrationTooling
+    stages:
+    - stage: build
+      jobs:
+      - job:  Debug	
+        timeoutInMinutes: 120
+        variables:	
+            buildPlatform: 'Any CPU'	
+            buildConfiguration: 'Debug'	
+            skipComponentGovernanceDetection: true	
+            snExe: 'C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.8 Tools\sn.exe'	
+            snExe64: 'C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.8 Tools\x64\sn.exe'	
+            gacUtil: '$(Build.SourcesDirectory)\test\CommonAssemblies\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll'	
+            productBinPathEdm: '$(Build.SourcesDirectory)\src\Microsoft.OData.Edm\bin\$(buildConfiguration)'	
+            mainDllEdm: 'Microsoft.OData.Edm.dll'	
+            productBinPathCore: '$(Build.SourcesDirectory)\src\Microsoft.OData.Core\bin\$(buildConfiguration)'	
+            mainDllCore: 'Microsoft.OData.Core.dll'	
+            productBinPathSpatial: '$(Build.SourcesDirectory)\src\Microsoft.Spatial\bin\$(buildConfiguration)'	
+            mainDllSpatial: 'Microsoft.Spatial.dll'	
+            productBinPathClient: '$(Build.SourcesDirectory)\src\Microsoft.OData.Client\bin\$(buildConfiguration)'	
+            mainDllClient: 'Microsoft.OData.Client.dll'	
+            nugetArtifactsDir: 'Nuget-Debug'	
+        templateContext:	
+          outputs:	
+          - output: pipelineArtifact	
+            displayName: 'Publish Artifact - NuGet Debug Packages'	
+            targetPath: '$(Build.ArtifactStagingDirectory)\NuGet-Debug'	
+            artifactName: NuGetDebug	
+        steps:	
+          - template: /nightly.yml@self
+      - job:  Release
+        timeoutInMinutes: 120
+        variables:
+            buildPlatform: 'Any CPU'
+            buildConfiguration: 'Release'
+            skipComponentGovernanceDetection: true
+            snExe: 'C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.8 Tools\sn.exe'
+            snExe64: 'C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.8 Tools\x64\sn.exe'
+            gacUtil: '$(Build.SourcesDirectory)\test\CommonAssemblies\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll'
+            productBinPathEdm: '$(Build.SourcesDirectory)\src\Microsoft.OData.Edm\bin\$(buildConfiguration)'
+            mainDllEdm: 'Microsoft.OData.Edm.dll'
+            productBinPathCore: '$(Build.SourcesDirectory)\src\Microsoft.OData.Core\bin\$(buildConfiguration)'
+            mainDllCore: 'Microsoft.OData.Core.dll'
+            productBinPathSpatial: '$(Build.SourcesDirectory)\src\Microsoft.Spatial\bin\$(buildConfiguration)'
+            mainDllSpatial: 'Microsoft.Spatial.dll'
+            productBinPathClient: '$(Build.SourcesDirectory)\src\Microsoft.OData.Client\bin\$(buildConfiguration)'
+            mainDllClient: 'Microsoft.OData.Client.dll'
+            nugetArtifactsDir: 'Nuget-Release'
+        templateContext:
+          outputs:
+            - output: pipelineArtifact
+              displayName: 'Publish Artifact - NuGet Release Packages'
+              targetPath: '$(Build.ArtifactStagingDirectory)\NuGet-Release'
+              artifactName: NuGetRelease
+            - output: nuget
+              displayName: 'MyGet push - Nightly packages to MyGet'
+              packageParentPath: '$(Build.ArtifactStagingDirectory)'
+              packagesToPush: $(Build.ArtifactStagingDirectory)\Nuget-Release\*Nightly*.nupkg
+              nuGetFeedType: external
+              publishFeedCredentials: 'MyGet.org - ODL Feed'
+        steps:
+          - template: /nightly.yml@self
+
