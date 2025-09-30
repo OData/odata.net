@@ -1,0 +1,45 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+	  <!--<TargetFramework>net10.0</TargetFramework>-->
+	  <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <AssemblyName>Microsoft.OData.Serializer</AssemblyName>
+    <RootNamespace>Microsoft.OData.Serializer</RootNamespace>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageId>Microsoft.OData.Serializer</PackageId>
+    <PackageVersion>0.1.0-preview.1</PackageVersion>
+    <Title>OData Serializer</Title>
+    <Authors>Microsoft</Authors>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <Description>Preview of the new high-performance OData serializer for .NET 8 and later.</Description>
+    <PackageTags>odata;serialization</PackageTags>
+    <PackageProjectUrl>https://github.com/OData/odata.net</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/OData/odata.net</RepositoryUrl>
+    <PackageIcon>icon.png</PackageIcon>
+  </PropertyGroup>
+
+  <!-- enable when running unit tests -->
+  <ItemGroup>
+	<!--
+	Compile-time reference only. Customers should install their own versions of ODL 7.x, 8.x or 9.x.
+	This allows customers to test the preview release serializer without forcing an ODL version upgrade.
+	But the final release will be tied to ODL 9.
+	-->
+    <PackageReference Include="Microsoft.OData.Core" Version="7.22.0" PrivateAssets="All" ExcludeAssets="runtime" />
+    <PackageReference Include="Microsoft.OData.Edm" Version="7.22.0" PrivateAssets="All" ExcludeAssets="runtime" />
+    <PackageReference Include="System.IO.Pipelines" Version="9.0.8" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <None Update="Docs\README.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+</Project>

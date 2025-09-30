@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj" />
+    <ProjectReference Include="..\..\..\..\src\Microsoft.OData.Serializer\Microsoft.OData.Serializer.csproj" />
   </ItemGroup>
 
 </Project>
