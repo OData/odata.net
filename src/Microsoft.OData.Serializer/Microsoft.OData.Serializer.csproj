@@ -19,10 +19,10 @@
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <Description>Preview of the new high-performance OData serializer for .NET 8 and later.</Description>
     <PackageTags>odata;serialization</PackageTags>
-    <PackageIcon>$(MSBuildProjectDirectory)\..\..\images\icon.png</PackageIcon>
+    <PackageIcon>icon.png</PackageIcon>
     <PackageProjectUrl>https://github.com/OData/odata.net</PackageProjectUrl>
     <RepositoryUrl>https://github.com/OData/odata.net</RepositoryUrl>
-    <PackageReadmeFile>$(MSBuildProjectDirectory)\README.md</PackageReadmeFile>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <IncludeContentInPack>True</IncludeContentInPack>
     <Copyright>© Microsoft Corporation. All rights reserved.</Copyright>
   </PropertyGroup>
@@ -46,8 +46,7 @@
 
 
   <ItemGroup>
-    <None Update="Docs\README.md">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <None Include="..\..\images\icon.png" Pack="true" PackagePath="icon.png" />
+    <None Include="README.md" Pack="true" PackagePath="README.md" />
   </ItemGroup>
 </Project>
