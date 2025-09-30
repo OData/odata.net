@@ -13,12 +13,12 @@ namespace Microsoft.OData.Json
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Threading.Tasks;
+    using Microsoft.OData.Core;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Vocabularies;
     using Microsoft.OData.Edm.Vocabularies.V1;
     using Microsoft.OData.Evaluation;
     using Microsoft.OData.Metadata;
-    using Microsoft.OData.Core;
 
     #endregion Namespaces
 
@@ -178,13 +178,13 @@ namespace Microsoft.OData.Json
                     deletedResource = ReaderUtils.CreateDeletedResource(id, reason);
                 }
                 // Case 2: id property first
-                else if (string.Equals(ODataJsonConstants.ODataIdPropertyName, propertyName, StringComparison.OrdinalIgnoreCase))
+                else if (this.JsonReader.NodeType == JsonNodeType.Property && !propertyName.EndsWith(ODataJsonConstants.SimplifiedODataDeltaPropertyName))
                 {
                     // read over end object or null value
                     this.JsonReader.Read();
 
                     ReadOnlyMemory<char> idPropertyName = propertyName.AsMemory();
-                    object idValue = this.JsonReader.ReadPrimitiveValue();
+                    object value = this.JsonReader.ReadPrimitiveValue();
 
                     // If the next property is the removed property - read it.
                     propertyName = this.JsonReader.GetPropertyName();
@@ -199,7 +199,7 @@ namespace Microsoft.OData.Json
                         // Read over end object or null value
                         this.JsonReader.Read();
 
-                        deletedResource = ReaderUtils.CreateDeletedResource(id, reason, KeyValuePair.Create<string, object>(idPropertyName.Span.ToString(), idValue));
+                        deletedResource = ReaderUtils.CreateDeletedResource(id, reason, KeyValuePair.Create<string, object>(idPropertyName.Span.ToString(), value));
                     }
                 }
             }
@@ -2474,19 +2474,13 @@ namespace Microsoft.OData.Json
                 deletedResource = ReaderUtils.CreateDeletedResource(id, reason);
             }
             // Case 2: id property first
-            else if (string.Equals(ODataJsonConstants.ODataIdPropertyName, propertyName, StringComparison.OrdinalIgnoreCase))
+            else if(this.JsonReader.NodeType == JsonNodeType.Property && !propertyName.EndsWith(ODataJsonConstants.SimplifiedODataDeltaPropertyName))
             {
-                // A deleted object must have at least either the odata id annotation or the key values
-                if (this.JsonReader.NodeType != JsonNodeType.Property)
-                {
-                    throw new ODataException(SRResources.ODataWriterCore_DeltaResourceWithoutIdOrKeyProperties);
-                }
-
                 // Read over the property to move to its value.
                 await this.JsonReader.ReadAsync().ConfigureAwait(false);
 
                 ReadOnlyMemory<char> idPropertyName = propertyName.AsMemory();
-                object idValue = await this.JsonReader.ReadPrimitiveValueAsync().ConfigureAwait(false);
+                object value = await this.JsonReader.ReadPrimitiveValueAsync().ConfigureAwait(false);
 
                 // If the next property is the removed property - read it.
                 propertyName = await this.JsonReader.GetPropertyNameAsync().ConfigureAwait(false);
@@ -2496,13 +2490,13 @@ namespace Microsoft.OData.Json
                 {
                     // Read over the property to move to its value.
                     await this.JsonReader.ReadAsync().ConfigureAwait(false);
-                    
+
                     reason = await ReadDeletedReasonAsync();
 
                     // Read over end object or null value
                     await this.JsonReader.ReadAsync().ConfigureAwait(false);
 
-                    deletedResource = ReaderUtils.CreateDeletedResource(id, reason, KeyValuePair.Create<string, object>(idPropertyName.Span.ToString(), idValue));
+                    deletedResource = ReaderUtils.CreateDeletedResource(id, reason, KeyValuePair.Create<string, object>(idPropertyName.Span.ToString(), value));
                 }
             }
 
