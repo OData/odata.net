@@ -61,7 +61,7 @@ extends:
             packageParentPath: '$(Build.ArtifactStagingDirectory)'
             packagesToPush: $(Build.ArtifactStagingDirectory)\Nuget\*Nightly*.nupkg
             nuGetFeedType: external
-            publishFeedCredentials: 'MyGet.org - AspNetCoreOData Feed'
+            publishFeedCredentials: 'MyGet.org - ODL Feed'
         steps:
         - checkout: self
           fetchTags: true
@@ -86,9 +86,9 @@ extends:
             projects: $(Build.SourcesDirectory)\src\Microsoft.OData.Serializer\Microsoft.OData.Serializer.csproj
             arguments: --configuration $(BuildConfiguration) --no-incremental -p:GeneratePackageOnBuild=true
         - task: CopyFiles@2
-          displayName: 'Copy Files to: $(Build.ArtifactStagingDirectory)\output - from: $(Build.SourcesDirectory)\artifacts\bin\$(BuildPlatform)'
+          displayName: 'Copy Files to: $(Build.ArtifactStagingDirectory)\output - from: $(Build.SourcesDirectory)\src\Microsoft.OData.Serializer\bin\$(BuildPlatform)'
           inputs:
-            SourceFolder: $(Build.SourcesDirectory)\artifacts\bin\$(BuildPlatform)\
+            SourceFolder: $(Build.SourcesDirectory)\src\Microsoft.OData.Serializer\bin\$(BuildPlatform)\
             Contents: '**\Microsoft.OData.Serializer.*'
             TargetFolder: $(Build.ArtifactStagingDirectory)\output
         - task: DotNetCoreCLI@2
