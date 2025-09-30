@@ -129,3 +129,5 @@ If you run the application, you'll see the following output printed on the conso
   ]
 }
 ```
+
+For more examples, check out the [project's tests](../../test/UnitTests/Microsoft.OData.Serializer.Tests/) and the [`FileService` sample project](../../samples/ODataSamples.FileServiceLib/) and [its tests](../../samples/ODataSamples.FileServiceLib.Tests/).
