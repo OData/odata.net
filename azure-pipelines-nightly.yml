@@ -61,7 +61,7 @@ extends:
             packageParentPath: '$(Build.ArtifactStagingDirectory)'
             packagesToPush: $(Build.ArtifactStagingDirectory)\Nuget\*Nightly*.nupkg
             nuGetFeedType: external
-            publishFeedCredentials: 'MyGet.org - AspNetCoreOData Feed'
+            publishFeedCredentials: 'MyGet.org - ODL Feed'
         steps:
         - checkout: self
           fetchTags: true
