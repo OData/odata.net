@@ -22,15 +22,20 @@ public sealed class ODataWriterState<TCustomState>
 
     internal WriteStack<TCustomState> Stack { get; } = new WriteStack<TCustomState>();
 
-    internal ODataWriterState(ODataSerializerOptions<TCustomState> options, ODataJsonWriterProvider<TCustomState> writers, Utf8JsonWriter jsonWriter)
+    internal ODataWriterState(
+        ODataSerializerOptions<TCustomState> options,
+        ODataJsonWriterProvider<TCustomState> writers,
+        Utf8JsonWriter jsonWriter,
+        PooledByteBufferWriter bufferWriter)
     {
         this.options = options ?? throw new ArgumentNullException(nameof(options));
         this.writers = writers ?? throw new ArgumentNullException(nameof(writers));
-        JsonWriter = jsonWriter;
+        JsonWriter = new Utf8JsonWriterWrapper(jsonWriter, bufferWriter);
+        BufferWriter = bufferWriter;
     }
 
     internal ODataSerializerOptions<TCustomState> Options => options;
-    internal Utf8JsonWriter JsonWriter { get; init; }
+    internal Utf8JsonWriterWrapper JsonWriter { get; init; }
 
     internal PooledByteBufferWriter BufferWriter { get; init; }
 

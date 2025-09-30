@@ -43,6 +43,12 @@ internal class ODataJsonStringWriter<TCustomState> : ODataJsonWriter<string, TCu
 
 
         state.Stack.Pop(success);
+
+        if (success)
+        {
+            state.JsonWriter.SignalWriteThatBypassedWriter();
+        }
+
         return success;
     }
 }

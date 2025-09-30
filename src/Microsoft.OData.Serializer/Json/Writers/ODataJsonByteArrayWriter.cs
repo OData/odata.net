@@ -36,6 +36,12 @@ internal class ODataJsonByteArrayWriter<TCustomState> : ODataJsonWriter<byte[], 
 
 
         state.Stack.Pop(success);
+
+        if (success)
+        {
+            state.JsonWriter.SignalWriteThatBypassedWriter();
+        }
+
         return success;
     }
 }

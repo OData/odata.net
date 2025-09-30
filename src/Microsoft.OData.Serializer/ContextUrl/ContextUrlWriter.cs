@@ -8,7 +8,7 @@ internal static class ContextUrlWriter
 {
     // TODO: should consult spec https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_ContextURL
     // and reference implementation in old OData library to make sure we cover all cases correctly
-    public static void WriteContextUrlProperty(ODataPayloadKind payloadKind, ODataUri uri, Utf8JsonWriter jsonWriter)
+    public static void WriteContextUrlProperty(ODataPayloadKind payloadKind, ODataUri uri, Utf8JsonWriterWrapper jsonWriter)
     {
         switch (payloadKind)
         {
@@ -25,7 +25,7 @@ internal static class ContextUrlWriter
         }
     }
 
-    internal static void WriteResourceSetContextUrl(ODataUri odataUri, ODataPathRange path, Utf8JsonWriter jsonWriter, string appendFragment = "")
+    internal static void WriteResourceSetContextUrl(ODataUri odataUri, ODataPathRange path, Utf8JsonWriterWrapper jsonWriter, string appendFragment = "")
     {
         if (odataUri == null)
         {
@@ -56,7 +56,7 @@ internal static class ContextUrlWriter
         FallbackWriteContextUrl(odataUri, path, jsonWriter, appendFragment);
     }
 
-    internal static void WriteResourceContextUrl(ODataUri odataUri, Utf8JsonWriter jsonWriter)
+    internal static void WriteResourceContextUrl(ODataUri odataUri, Utf8JsonWriterWrapper jsonWriter)
     {
         if (odataUri == null)
         {
@@ -80,7 +80,7 @@ internal static class ContextUrlWriter
         WriteResourceSetContextUrl(odataUri, path, jsonWriter, "/$entity");
     }
 
-    internal static bool TryWriteContextUrlPropertyForSimpleEntitySet(ODataUri odataUri, ODataPathRange path, Utf8JsonWriter jsonWriter, string appendFragment = "")
+    internal static bool TryWriteContextUrlPropertyForSimpleEntitySet(ODataUri odataUri, ODataPathRange path, Utf8JsonWriterWrapper jsonWriter, string appendFragment = "")
     {
         if (!IsSimpleEntitySet(odataUri, path))
         {
@@ -104,13 +104,13 @@ internal static class ContextUrlWriter
             string AbsoluteUri,
             string SegmentName,
             string AppendFragment,
-            Utf8JsonWriter Writer) state = (absoluteUri, segment.EntitySet.Name, appendFragment, jsonWriter);
+            Utf8JsonWriterWrapper Writer) state = (absoluteUri, segment.EntitySet.Name, appendFragment, jsonWriter);
 
         // Cannot use a lambda action since we need to pass an in parameter
         // Parameter modifiers in lambdas are still in preview
         ShortLivedArrayHelpers.CreateCharArray(totalLength, state, WriteContextUrl);
 
-        static void WriteContextUrl(Span<char> buffer, in (string AbsoluteUri, string SegmentName, string AppendFragment, Utf8JsonWriter Writer) state)
+        static void WriteContextUrl(Span<char> buffer, in (string AbsoluteUri, string SegmentName, string AppendFragment, Utf8JsonWriterWrapper Writer) state)
         {
             var builder = new FixedSpanStringBuilder(buffer);
             builder.Append(state.AbsoluteUri);
@@ -124,7 +124,7 @@ internal static class ContextUrlWriter
         return true;
     }
 
-    internal static bool TryWriteContextUrlPropertyForSimpleResourceSet(ODataUri odataUri, ODataPathRange path, Utf8JsonWriter jsonWriter, string appendFragment = "")
+    internal static bool TryWriteContextUrlPropertyForSimpleResourceSet(ODataUri odataUri, ODataPathRange path, Utf8JsonWriterWrapper jsonWriter, string appendFragment = "")
     {
         if (odataUri.SelectAndExpand != null)
         {
@@ -169,7 +169,7 @@ internal static class ContextUrlWriter
 
         static void WriteContextUrl(
             Span<char> buffer,
-            in (InlineStringList10 Segments, string AbsoluteUri, string AppendFragment, Utf8JsonWriter Writer) state)
+            in (InlineStringList10 Segments, string AbsoluteUri, string AppendFragment, Utf8JsonWriterWrapper Writer) state)
         {
             var builder = new FixedSpanStringBuilder(buffer);
             builder.Append(state.AbsoluteUri);
@@ -197,7 +197,7 @@ internal static class ContextUrlWriter
         return true;
     }
 
-    internal static bool TryWriteContextUrlPropertyForEntitySetWithSimpleSelectExpand(ODataUri odataUri, ODataPathRange path, Utf8JsonWriter writer, string appendFragment = "")
+    internal static bool TryWriteContextUrlPropertyForEntitySetWithSimpleSelectExpand(ODataUri odataUri, ODataPathRange path, Utf8JsonWriterWrapper writer, string appendFragment = "")
     {
         // Simple select expand means:
         // We have <= X selects and <= X expands
@@ -344,7 +344,7 @@ internal static class ContextUrlWriter
             bool HasWildCard,
             InlineStringList10 SelectedProperties,
             InlineStringList10 ExpandedProperties,
-            Utf8JsonWriter Writer
+            Utf8JsonWriterWrapper Writer
         ) state = (absoluteUri, entitySet.EntitySet.Name, appendFragment, hasWildcard, selectedProperties, expandedProperties, writer);
 
         ShortLivedArrayHelpers.CreateCharArray(totalStringLength, state, WriteContextUrl);
@@ -358,7 +358,7 @@ internal static class ContextUrlWriter
                 bool HasWildCard,
                 InlineStringList10 SelectedProperties,
                 InlineStringList10 ExpandedProperties,
-                Utf8JsonWriter Writer
+                Utf8JsonWriterWrapper Writer
             ) state)
         {
             var builder = new FixedSpanStringBuilder(buffer);
@@ -417,7 +417,7 @@ internal static class ContextUrlWriter
         return true;
     }
 
-    internal static bool TryWriteContextUrlPropertyForResourcesetSetWithSimpleSelectExpand(ODataUri odataUri, ODataPathRange path, Utf8JsonWriter writer, string appendFragment = "")
+    internal static bool TryWriteContextUrlPropertyForResourcesetSetWithSimpleSelectExpand(ODataUri odataUri, ODataPathRange path, Utf8JsonWriterWrapper writer, string appendFragment = "")
     {
         // Simple select expand means:
         // We have <= X selects and <= X expands
@@ -590,7 +590,7 @@ internal static class ContextUrlWriter
                 string ServiceRoot,
                 string AppendFragment,
                 bool HasWildCard,
-                Utf8JsonWriter Writer
+                Utf8JsonWriterWrapper Writer
             ) state)
         {
             var builder = new FixedSpanStringBuilder(buffer);
@@ -659,7 +659,7 @@ internal static class ContextUrlWriter
         return true;
     }
 
-    private static void FallbackWriteContextUrl(ODataUri odataUri, ODataPathRange path, Utf8JsonWriter writer, string appendFragment = "")
+    private static void FallbackWriteContextUrl(ODataUri odataUri, ODataPathRange path, Utf8JsonWriterWrapper writer, string appendFragment = "")
     {
         // Fallback to generic context URL construction
 
@@ -697,7 +697,7 @@ internal static class ContextUrlWriter
                 ODataPathRange Path,
                 string? AbsoluteUri,
                 string AppendFragment,
-                Utf8JsonWriter Writer) state)
+                Utf8JsonWriterWrapper Writer) state)
         {
             var builder = new FixedSpanStringBuilder(buffer);
             builder.Append(state.AbsoluteUri);

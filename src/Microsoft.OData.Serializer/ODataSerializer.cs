@@ -37,13 +37,12 @@ public static class ODataSerializer
         var jsonWriter = new Utf8JsonWriter(bufferWriter, DefaultJsonWriterOptions); // TODO: make this configurable in options
         var writerProvider = new ODataJsonWriterProvider<TCustomState>(options);
         var payloadKind = GetPayloadKindFromUri(uri);
-        var state = new ODataWriterState<TCustomState>(options, writerProvider, jsonWriter)
+        var state = new ODataWriterState<TCustomState>(options, writerProvider, jsonWriter, bufferWriter)
         {
             ODataUri = uri,
             EdmModel = model,
             PayloadKind = payloadKind,
             JavaScriptEncoder = DefaultJsonWriterOptions.Encoder,
-            BufferWriter = bufferWriter,
             OutputStream = stream,
         };
 

@@ -8,7 +8,7 @@ namespace Microsoft.OData.Serializer;
 internal static class JsonMetadataHelpers
 {
     public static void WritePropertyAnnotationName(
-        Utf8JsonWriter writer,
+        Utf8JsonWriterWrapper writer,
         ReadOnlySpan<char> propertyName,
         ReadOnlySpan<byte> annotationName) // annotationName should include @separator
     {
@@ -47,7 +47,7 @@ internal static class JsonMetadataHelpers
     /// <param name="propertyName">The name of the property the annotation belongs to.</param>
     /// <param name="annotationName">The annotation name, without the leading @ separator.</param>
     public static void WritePropertyAnnotationName(
-        Utf8JsonWriter writer,
+        Utf8JsonWriterWrapper writer,
         ReadOnlySpan<char> propertyName,
         ReadOnlySpan<char> annotationName)
     {
@@ -86,7 +86,7 @@ internal static class JsonMetadataHelpers
     /// <param name="propertyName">The name of the property the annotation belongs to.</param>
     /// <param name="annotationName">The annotation name, without the leading @ separator.</param>
     public static void WritePropertyAnnotationName(
-        Utf8JsonWriter writer,
+        Utf8JsonWriterWrapper writer,
         ReadOnlySpan<byte> propertyName,
         ReadOnlySpan<byte> annotationName)
     {
@@ -127,7 +127,7 @@ internal static class JsonMetadataHelpers
     /// <param name="writer"></param>
     /// <param name="annotationName">The custom annotation name. Should inclued a namespace and should not include the leading @.</param>
     public static void WriteCustomAnnotationName(
-        Utf8JsonWriter writer,
+        Utf8JsonWriterWrapper writer,
         ReadOnlySpan<char> annotationName)
     {
         ValidateCustomAnnotationName(annotationName);
@@ -161,7 +161,7 @@ internal static class JsonMetadataHelpers
     /// <param name="writer"></param>
     /// <param name="annotationName">The custom annotation name. Should inclued a namespace and should not include the leading @.</param>
     public static void WriteCustomAnnotationName(
-        Utf8JsonWriter writer,
+        Utf8JsonWriterWrapper writer,
         ReadOnlySpan<byte> annotationName)
     {
 
@@ -203,7 +203,7 @@ internal static class JsonMetadataHelpers
     }
 
     public static void WriteCustomPropertyAnnotationName(
-        Utf8JsonWriter writer,
+        Utf8JsonWriterWrapper writer,
         ReadOnlySpan<char> propertyName,
         ReadOnlySpan<char> annotationName)
     {
@@ -219,7 +219,7 @@ internal static class JsonMetadataHelpers
     }
 
     public static void WriteCustomPropertyAnnotationName(
-        Utf8JsonWriter writer,
+        Utf8JsonWriterWrapper writer,
         ReadOnlySpan<byte> propertyName,
         ReadOnlySpan<byte> annotationName)
     {
