@@ -19,9 +19,10 @@
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <Description>Preview of the new high-performance OData serializer for .NET 8 and later.</Description>
     <PackageTags>odata;serialization</PackageTags>
+    <PackageIcon>$(MSBuildProjectDirectory)\..\..\images\icon.png</PackageIcon>
     <PackageProjectUrl>https://github.com/OData/odata.net</PackageProjectUrl>
     <RepositoryUrl>https://github.com/OData/odata.net</RepositoryUrl>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageReadmeFile>$(MSBuildProjectDirectory)\README.md</PackageReadmeFile>
     <IncludeContentInPack>True</IncludeContentInPack>
     <Copyright>© Microsoft Corporation. All rights reserved.</Copyright>
   </PropertyGroup>
