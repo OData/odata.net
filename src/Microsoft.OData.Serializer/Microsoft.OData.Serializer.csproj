@@ -21,7 +21,6 @@
     <PackageTags>odata;serialization</PackageTags>
     <PackageProjectUrl>https://github.com/OData/odata.net</PackageProjectUrl>
     <RepositoryUrl>https://github.com/OData/odata.net</RepositoryUrl>
-    <PackageIcon>icon.png</PackageIcon>
   </PropertyGroup>
 
   <!-- enable when running unit tests -->
