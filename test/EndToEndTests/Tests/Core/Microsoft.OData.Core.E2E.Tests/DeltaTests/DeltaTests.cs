@@ -850,7 +850,8 @@ namespace Microsoft.OData.Core.E2E.Tests.DeltaTests
         [InlineData("Customers(1)", "{\"FirstName\": \"Jane\", \"Orders@delta\": [{\"OrderID\": 8, \"@removed\": { \"reason\": \"deleted\" }}]}", 8)]
         [InlineData("Customers(2)", "{\"FirstName\": \"Doe\", \"Orders@delta\": [{\"@removed\": { \"reason\": \"deleted\" }, \"OrderID\": 7}, {\"OrderID\": 9, \"@removed\": { \"reason\": \"deleted\" }}]}", 9)]
         [InlineData("Customers(2)", "{\"FirstName\": \"Doe\", \"Orders@delta\": [{\"@removed\": { \"reason\": \"changed\" }, \"OrderID\": 7}, {\"OrderID\": 9, \"@removed\": { \"reason\": \"deleted\" }}]}", 7)]
-        public async Task DeltaDeleteWithOrderedAndUndorderedPayload_WorksAsExpected_Async(string query, string payload, int removedID)
+        [InlineData("Customers(2)", "{\"FirstName\": \"Doe\", \"Orders@delta\": [{\"@removed\": { \"reason\": \"changed\" }, \"OrderID\": 7}, {\"@removed\": { \"reason\": \"deleted\" }, \"OrderID\": 9}]}", 7)]
+        public async Task DeltaDeleteWithOrderedAndUnorderedPayload_WorksAsExpected_Async(string query, string payload, int removedID)
         {
             // Arrange
             var requestUri = new Uri(_baseUri, query);

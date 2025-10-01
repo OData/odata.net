@@ -134,5 +134,8 @@ namespace Microsoft.OData.Json
 
         /// <summary>The prefixed OData Removed property name.</summary>
         internal const string PrefixedODataRemovedPropertyName = "@odata.removed";
+
+        /// <summary>The OData Removed property name.</summary>
+        internal const string ODataRemovedPropertyName = "odata.removed";
     }
 }
