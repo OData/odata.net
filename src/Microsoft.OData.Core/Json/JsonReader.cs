@@ -1081,9 +1081,9 @@ namespace Microsoft.OData.Json
                                 throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_UnrecognizedEscapeSequence, "\\uXXXX"));
                             }
 
-                            ReadOnlySpan<char> unicodeHexValue = this.ConsumeTokenToSpan(4);
-                            int characterValue;
-                            if (!Int32.TryParse(unicodeHexValue, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out characterValue))
+                            ReadOnlySpan<char> unicodeHexValue = this.characterBuffer.AsSpan(this.tokenStartIndex, 4);
+                            this.tokenStartIndex += 4;
+                            if (!int.TryParse(unicodeHexValue, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out int characterValue))
                             {
                                 throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_UnrecognizedEscapeSequence, "\\u" + unicodeHexValue.ToString()));
                             }
@@ -1112,13 +1112,12 @@ namespace Microsoft.OData.Json
                         if (TryGetMatchingCommonValueString(currentNameSpan, out string interned))
                         {
                             result = interned;
-                            this.tokenStartIndex += currentCharacterTokenRelativeIndex;
                         }
                         else
                         {
                             result = currentNameSpan.ToString();
-                            this.tokenStartIndex += currentCharacterTokenRelativeIndex;
                         }
+                        this.tokenStartIndex += currentCharacterTokenRelativeIndex;
                     }
 
                     Debug.Assert(this.characterBuffer[this.tokenStartIndex] == openingQuoteCharacter, "We should have consumed everything up to the quote character.");
@@ -1219,7 +1218,11 @@ namespace Microsoft.OData.Json
             }
 
             // We now have all the characters which belong to the number, consume it into a string.
-            ReadOnlySpan<char> numberSpan = this.ConsumeTokenToSpan(currentCharacterTokenRelativeIndex);
+            Debug.Assert(currentCharacterTokenRelativeIndex >= 0, "currentCharacterTokenRelativeIndex >= 0");
+            Debug.Assert(this.tokenStartIndex + currentCharacterTokenRelativeIndex <= this.storedCharacterCount, "currentCharacterTokenRelativeIndex specified characters outside of the available range.");
+
+            ReadOnlySpan<char> numberSpan = this.characterBuffer.AsSpan(this.tokenStartIndex, currentCharacterTokenRelativeIndex);
+            this.tokenStartIndex += currentCharacterTokenRelativeIndex;
 
             // We will first try and convert the value to Int32. If it succeeds, use that.
             // And then, we will try Decimal, since it will lose precision while expected type is specified.
@@ -1441,7 +1444,16 @@ namespace Microsoft.OData.Json
                                 throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_UnrecognizedEscapeSequence, "\\uXXXX"));
                             }
 
-                            int characterValue = ParseUnicodeHexValue();
+                            Debug.Assert(this.tokenStartIndex + 4 <= this.storedCharacterCount, "characterCount specified characters outside of the available range.");
+
+                            ReadOnlySpan<char> unicodeHexValue = this.characterBuffer.AsSpan(this.tokenStartIndex, 4);
+                            this.tokenStartIndex += 4;
+
+                            if (!int.TryParse(unicodeHexValue, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out int characterValue))
+                            {
+                                throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_UnrecognizedEscapeSequence, "\\u" + unicodeHexValue.ToString()));
+                            }
+
                             character = (char)characterValue;
 
                             // We are already positioned on the next character, so don't advance at the end
@@ -1609,40 +1621,6 @@ namespace Microsoft.OData.Json
             }
 
             return true;
-        }
-
-        /// <summary>
-        /// Consumes the <paramref name="characterCount"/> characters starting at the start of the token
-        /// and returns them as ReadOnlySpan.
-        /// </summary>
-        /// <param name="characterCount">The number of characters after the token start to consume.</param>
-        /// <returns>The ReadOnlySpan value of the consumed token.</returns>
-        private ReadOnlySpan<char> ConsumeTokenToSpan(int characterCount)
-        {
-            Debug.Assert(characterCount >= 0, "characterCount >= 0");
-            Debug.Assert(this.tokenStartIndex + characterCount <= this.storedCharacterCount, "characterCount specified characters outside of the available range.");
-
-            ReadOnlySpan<char> result = this.characterBuffer.AsSpan(this.tokenStartIndex, characterCount);
-            this.tokenStartIndex += characterCount;
-
-            return result;
-        }
-
-        /// <summary>
-        /// Consumes the <paramref name="characterCount"/> characters starting at the start of the token
-        /// and returns them as ReadOnlyMemory.
-        /// </summary>
-        /// <param name="characterCount">The number of characters after the token start to consume.</param>
-        /// <returns>The ReadOnlyMemory value of the consumed token.</returns>
-        private ReadOnlyMemory<char> ConsumeTokenToMemory(int characterCount)
-        {
-            Debug.Assert(characterCount >= 0, "characterCount >= 0");
-            Debug.Assert(this.tokenStartIndex + characterCount <= this.storedCharacterCount, "characterCount specified characters outside of the available range.");
-
-            ReadOnlyMemory<char> result = this.characterBuffer.AsMemory(this.tokenStartIndex, characterCount);
-            this.tokenStartIndex += characterCount;
-
-            return result;
         }
 
         /// <summary>
@@ -1921,9 +1899,9 @@ namespace Microsoft.OData.Json
                                 throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_UnrecognizedEscapeSequence, "\\uXXXX"));
                             }
 
-                            ReadOnlyMemory<char> unicodeHexValue = this.ConsumeTokenToMemory(4);
-                            int characterValue;
-                            if (!Int32.TryParse(unicodeHexValue.Span, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out characterValue))
+                            ReadOnlyMemory<char> unicodeHexValue = this.characterBuffer.AsMemory(this.tokenStartIndex, 4);
+                            this.tokenStartIndex += 4;
+                            if (!Int32.TryParse(unicodeHexValue.Span, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out int characterValue))
                             {
                                 throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_UnrecognizedEscapeSequence, "\\u" + unicodeHexValue.Span.ToString()));
                             }
@@ -1952,13 +1930,13 @@ namespace Microsoft.OData.Json
                         if (TryGetMatchingCommonValueString(currentNameMemory.Span, out string interned))
                         {
                             result = interned;
-                            this.tokenStartIndex += currentCharacterTokenRelativeIndex;
                         }
                         else
                         {
                             result = currentNameMemory.Span.ToString();
-                            this.tokenStartIndex += currentCharacterTokenRelativeIndex;
                         }
+
+                        this.tokenStartIndex += currentCharacterTokenRelativeIndex;
                     }
 
                     Debug.Assert(this.characterBuffer[this.tokenStartIndex] == openingQuoteCharacter, "We should have consumed everything up to the quote character.");
@@ -2063,7 +2041,11 @@ namespace Microsoft.OData.Json
             }
 
             // We now have all the characters which belong to the number, consume it into a string.
-            ReadOnlyMemory<char> numberMemory = this.ConsumeTokenToMemory(currentCharacterTokenRelativeIndex);
+            Debug.Assert(currentCharacterTokenRelativeIndex >= 0, "currentCharacterTokenRelativeIndex >= 0");
+            Debug.Assert(this.tokenStartIndex + currentCharacterTokenRelativeIndex <= this.storedCharacterCount, "currentCharacterTokenRelativeIndex specified characters outside of the available range.");
+
+            ReadOnlyMemory<char> numberMemory = this.characterBuffer.AsMemory(this.tokenStartIndex, currentCharacterTokenRelativeIndex);
+            this.tokenStartIndex += currentCharacterTokenRelativeIndex;
 
             // We will first try and convert the value to Int32. If it succeeds, use that.
             // And then, we will try Decimal, since it will lose precision while expected type is specified.
@@ -2283,7 +2265,16 @@ namespace Microsoft.OData.Json
                                 throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_UnrecognizedEscapeSequence, "\\uXXXX"));
                             }
 
-                            int characterValue = ParseUnicodeHexValue();
+                            Debug.Assert(this.tokenStartIndex + 4 <= this.storedCharacterCount, "characterCount specified characters outside of the available range.");
+
+                            ReadOnlyMemory<char> unicodeHexValue = this.characterBuffer.AsMemory(this.tokenStartIndex, 4);
+                            this.tokenStartIndex += 4;
+
+                            if (!int.TryParse(unicodeHexValue.Span, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out int characterValue))
+                            {
+                                throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_UnrecognizedEscapeSequence, "\\u" + unicodeHexValue.ToString()));
+                            }
+
                             character = (char)characterValue;
 
                             // We are already positioned on the next character, so don't advance at the end
@@ -2471,21 +2462,6 @@ namespace Microsoft.OData.Json
             Debug.Assert(
                 this.storedCharacterCount < this.characterBuffer.Length,
                 "We should have more room in the buffer by now.");
-        }
-
-        /// <summary>
-        /// Parses a unicode hex value.
-        /// </summary>
-        /// <returns>32-bit signed integer equivalent.</returns>
-        private int ParseUnicodeHexValue()
-        {
-            ReadOnlySpan<char> unicodeHexValue = this.ConsumeTokenToSpan(4);
-            if (!Int32.TryParse(unicodeHexValue, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out int characterValue))
-            {
-                throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_UnrecognizedEscapeSequence, "\\u" + unicodeHexValue.ToString()));
-            }
-
-            return characterValue;
         }
 
         /// <summary>
