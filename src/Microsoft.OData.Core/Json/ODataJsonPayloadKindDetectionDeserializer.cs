@@ -232,14 +232,14 @@ namespace Microsoft.OData.Json
                             }
                             else
                             {
-                                (bool IsReadSuccessfully, ODataError Error) readInStreamErrorPropertyResult = await this.JsonReader.StartBufferingAndTryToReadInStreamErrorPropertyValueAsync()
+                                (bool isReadSuccessfully, ODataError inStreamError) = await this.JsonReader.StartBufferingAndTryToReadInStreamErrorPropertyValueAsync()
                                     .ConfigureAwait(false);
-                                if (!readInStreamErrorPropertyResult.IsReadSuccessfully)
+                                if (!isReadSuccessfully)
                                 {
                                     return Enumerable.Empty<ODataPayloadKind>();
                                 }
 
-                                error = readInStreamErrorPropertyResult.Error;
+                                error = inStreamError;
                             }
 
                             // At this point we successfully read the first error property.
