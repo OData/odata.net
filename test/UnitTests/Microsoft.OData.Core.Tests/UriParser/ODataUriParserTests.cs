@@ -16,11 +16,11 @@ using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Vocabularies;
 using Microsoft.OData.Edm.Vocabularies.Community.V1;
+using Microsoft.OData.Metadata;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.UriParser.Aggregation;
 using Microsoft.OData.UriParser.Validation;
 using Xunit;
-using Microsoft.OData.Metadata;
 
 namespace Microsoft.OData.Tests.UriParser
 {
@@ -771,6 +771,23 @@ namespace Microsoft.OData.Tests.UriParser
             Assert.NotNull(parser.ParseSearch());
             Assert.Equal("abc", parser.ParseSkipToken());
             Assert.Equal("def", parser.ParseDeltaToken());
+            Assert.Equal(2, parser.CustomQueryOptions.Count);
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void ParseQueryOptionsShouldWorkForUnknownQueryOptions(bool enableNoDollarQueryOptions)
+        {
+            string relativeUriString = "People?$filter=Name eq 'Foo'&unknown&whatif&unknown=&$top=5";
+            var parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri(relativeUriString, UriKind.Relative));
+            parser.EnableNoDollarQueryOptions = enableNoDollarQueryOptions;
+
+            Assert.NotNull(parser.ParseFilter());
+            Assert.Equal(3, parser.CustomQueryOptions.Count);
+            Assert.Equal(new KeyValuePair<string, string>(null, "unknown"), parser.CustomQueryOptions.ElementAt(0));
+            Assert.Equal(new KeyValuePair<string, string>(null, "whatif"), parser.CustomQueryOptions.ElementAt(1));
+            Assert.Equal(new KeyValuePair<string, string>("unknown", ""), parser.CustomQueryOptions.ElementAt(2));
         }
 
         [Fact]
