@@ -572,6 +572,14 @@ namespace Microsoft.OData.UriParser
             {
                 foreach (var queryOption in queryOptions)
                 {
+                    // for scenario like: ?$filter=Name eq 'Foo'&unknown&$top=5
+                    // for 'unknown', the query option name is 'null', in this case, we can definitely add it as custom query option.
+                    if (string.IsNullOrEmpty(queryOption.Name))
+                    {
+                        customQueryOptions.Add(new KeyValuePair<string, string>(queryOption.Name, queryOption.Value));
+                        continue;
+                    }
+
                     string queryOptionName = queryOption.Name;
 
                     // If EnableNoDollarQueryOptions is true, we will treat all reserved OData query options without "$" prefix as odata query options.
