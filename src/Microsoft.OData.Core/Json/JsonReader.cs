@@ -976,18 +976,22 @@ namespace Microsoft.OData.Json
             this.PushScope(ScopeType.Property);
 
             // Parse the name of the property
-            this.nodeValue = this.ParseName();
+            ReadOnlySpan<char> token = this.ParseName();
 
-            if (string.IsNullOrEmpty((string)this.nodeValue))
+            if (token.IsEmpty || token.Length == 0)
             {
+                this.nodeValue = token.ToString();
+
                 // The name can't be empty.
-                throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_InvalidPropertyNameOrUnexpectedComma, (string)this.nodeValue));
+                throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_InvalidPropertyNameOrUnexpectedComma, this.nodeValue));
             }
 
             if (!this.SkipWhitespaces() || this.characterBuffer[this.tokenStartIndex] != ':')
             {
+                this.nodeValue = token.ToString();
+
                 // We need the colon character after the property name
-                throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_MissingColon, (string)this.nodeValue));
+                throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_MissingColon, this.nodeValue));
             }
 
             // Consume the colon.
@@ -997,6 +1001,9 @@ namespace Microsoft.OData.Json
 
             // if the content is nested json, we can stream
             this.canStream = this.characterBuffer[this.tokenStartIndex] == '{' || this.characterBuffer[this.tokenStartIndex] == '[';
+
+            this.nodeValue = token.ToString();
+
             return JsonNodeType.Property;
         }
 
@@ -1118,11 +1125,11 @@ namespace Microsoft.OData.Json
                                 throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_UnrecognizedEscapeSequence, "\\uXXXX"));
                             }
 
-                            string unicodeHexValue = this.ConsumeTokenToString(4);
+                            ReadOnlySpan<char> unicodeHexValue = this.ConsumeTokenToSpan(4);
                             int characterValue;
                             if (!Int32.TryParse(unicodeHexValue, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out characterValue))
                             {
-                                throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_UnrecognizedEscapeSequence, "\\u" + unicodeHexValue));
+                                throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_UnrecognizedEscapeSequence, "\\u" + unicodeHexValue.ToString()));
                             }
 
                             valueBuilder.Append((char)characterValue);
@@ -1142,7 +1149,15 @@ namespace Microsoft.OData.Json
                     }
                     else
                     {
-                        result = this.ConsumeTokenToString(currentCharacterTokenRelativeIndex);
+                        ReadOnlySpan<char> currentNameSpan = this.ConsumeTokenToSpan(currentCharacterTokenRelativeIndex);
+                        if (TryGetMatchingCommonValueString(currentNameSpan, out string interned))
+                        {
+                            result = interned;
+                        }
+                        else
+                        {
+                            result = currentNameSpan.ToString();
+                        }
                     }
 
                     Debug.Assert(this.characterBuffer[this.tokenStartIndex] == openingQuoteCharacter, "We should have consumed everything up to the quote character.");
@@ -1173,11 +1188,11 @@ namespace Microsoft.OData.Json
                 "The method should only be called when the 'n' character is the start of the token.");
 
             // We can call ParseName since we know the first character is 'n' and thus it won't be quoted.
-            string token = this.ParseName();
+            ReadOnlySpan<char> token = this.ParseName();
 
-            if (!string.Equals(token, JsonConstants.JsonNullLiteral, StringComparison.Ordinal))
+            if (!token.SequenceEqual(JsonConstants.JsonNullLiteral.AsSpan()))
             {
-                throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_UnexpectedToken, token));
+                throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_UnexpectedToken, token.ToString()));
             }
 
             return null;
@@ -1195,19 +1210,19 @@ namespace Microsoft.OData.Json
                 "The method should only be called when the 't' or 'f' character is the start of the token.");
 
             // We can call ParseName since we know the first character is 't' or 'f' and thus it won't be quoted.
-            string token = this.ParseName();
+            ReadOnlySpan<char> token = this.ParseName();
 
-            if (string.Equals(token, JsonConstants.JsonFalseLiteral, StringComparison.Ordinal))
+            if (token.SequenceEqual(JsonConstants.JsonFalseLiteral.AsSpan()))
             {
                 return false;
             }
 
-            if (string.Equals(token, JsonConstants.JsonTrueLiteral, StringComparison.Ordinal))
+            if (token.SequenceEqual(JsonConstants.JsonTrueLiteral.AsSpan()))
             {
                 return true;
             }
 
-            throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_UnexpectedToken, token));
+            throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_UnexpectedToken, token.ToString()));
         }
 
         /// <summary>
@@ -1238,9 +1253,9 @@ namespace Microsoft.OData.Json
             }
 
             // We now have all the characters which belong to the number, consume it into a string.
-            string numberString = this.ConsumeTokenToString(currentCharacterTokenRelativeIndex);
+            ReadOnlySpan<char> numberSpan = this.ConsumeTokenToSpan(currentCharacterTokenRelativeIndex);
             
-            return ParseNumericToken(numberString);
+            return ParseNumericToken(numberSpan);
         }
 
         /// <summary>
@@ -1251,14 +1266,14 @@ namespace Microsoft.OData.Json
         /// - string value quoted with double quotes.
         /// - string value quoted with single quotes.
         /// - sequence of letters, digits, underscores and dollar signs (without quoted and in any order).</remarks>
-        private string ParseName()
+        private ReadOnlySpan<char> ParseName()
         {
             Debug.Assert(this.tokenStartIndex < this.storedCharacterCount, "Must have at least one character available.");
 
             char firstCharacter = this.characterBuffer[this.tokenStartIndex];
             if ((firstCharacter == '"') || (firstCharacter == '\''))
             {
-                return this.ParseStringPrimitiveValue();
+                return this.ParseStringPrimitiveValue().AsSpan();
             }
 
             int currentCharacterTokenRelativeIndex = 0;
@@ -1280,7 +1295,7 @@ namespace Microsoft.OData.Json
             }
             while ((this.tokenStartIndex + currentCharacterTokenRelativeIndex) < this.storedCharacterCount || this.ReadInput());
 
-            return this.ConsumeTokenToString(currentCharacterTokenRelativeIndex);
+            return this.ConsumeTokenToSpan(currentCharacterTokenRelativeIndex);
         }
 
         /// <summary>
@@ -1517,7 +1532,26 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="characterCountAfterTokenStart">The number of character after the token to make available.</param>
         /// <returns>true if at least the required number of characters is available; false if end of input was reached.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private bool EnsureAvailableCharacters(int characterCountAfterTokenStart)
+        {
+            // Fast path: Check if we already have enough characters in the buffer.
+            if (this.tokenStartIndex + characterCountAfterTokenStart <= this.storedCharacterCount)
+            {
+                return true;
+            }
+
+            // Slow path: We need to read more characters from the input.
+            return EnsureAvailableCharactersSlow(characterCountAfterTokenStart);
+        }
+
+        /// <summary>
+        /// Ensures that a specified number of characters after the token start is available in the buffer.
+        /// </summary>
+        /// <param name="characterCountAfterTokenStart">The number of character after the token to make available.</param>
+        /// <returns>true if at least the required number of characters is available; false if end of input was reached.</returns>
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        private bool EnsureAvailableCharactersSlow(int characterCountAfterTokenStart)
         {
             while (this.tokenStartIndex + characterCountAfterTokenStart > this.storedCharacterCount)
             {
@@ -1532,16 +1566,35 @@ namespace Microsoft.OData.Json
 
         /// <summary>
         /// Consumes the <paramref name="characterCount"/> characters starting at the start of the token
-        /// and returns them as a string.
+        /// and returns them as a <see cref="ReadOnlySpan<char>"/>.
         /// </summary>
         /// <param name="characterCount">The number of characters after the token start to consume.</param>
         /// <returns>The string value of the consumed token.</returns>
-        private string ConsumeTokenToString(int characterCount)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private ReadOnlySpan<char> ConsumeTokenToSpan(int characterCount)
         {
             Debug.Assert(characterCount >= 0, "characterCount >= 0");
             Debug.Assert(this.tokenStartIndex + characterCount <= this.storedCharacterCount, "characterCount specified characters outside of the available range.");
 
-            string result = new string(this.characterBuffer, this.tokenStartIndex, characterCount);
+            ReadOnlySpan<char> result = this.characterBuffer.AsSpan(this.tokenStartIndex, characterCount);
+            this.tokenStartIndex += characterCount;
+
+            return result;
+        }
+
+        /// <summary>
+        /// Consumes the <paramref name="characterCount"/> characters starting at the start of the token
+        /// and returns them as a <see cref="ReadOnlyMemory<char>"/>.
+        /// </summary>
+        /// <param name="characterCount">The number of characters after the token start to consume.</param>
+        /// <returns>The string value of the consumed token.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private ReadOnlyMemory<char> ConsumeTokenToMemory(int characterCount)
+        {
+            Debug.Assert(characterCount >= 0, "characterCount >= 0");
+            Debug.Assert(this.tokenStartIndex + characterCount <= this.storedCharacterCount, "characterCount specified characters outside of the available range.");
+
+            ReadOnlyMemory<char> result = this.characterBuffer.AsMemory(this.tokenStartIndex, characterCount);
             this.tokenStartIndex += characterCount;
 
             return result;
@@ -1737,18 +1790,22 @@ namespace Microsoft.OData.Json
             this.PushScope(ScopeType.Property);
 
             // Parse the name of the property
-            this.nodeValue = await this.ParseNameAsync().ConfigureAwait(false);
+            ReadOnlyMemory<char> token = await this.ParseNameAsync().ConfigureAwait(false);
 
-            if (string.IsNullOrEmpty((string)this.nodeValue))
+            if (token.Span.IsEmpty || token.Span.Length == 0)
             {
+                this.nodeValue = token.Span.ToString();
+
                 // The name can't be empty.
-                throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_InvalidPropertyNameOrUnexpectedComma, (string)this.nodeValue));
+                throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_InvalidPropertyNameOrUnexpectedComma, this.nodeValue));
             }
 
             if (!await this.SkipWhitespacesAsync().ConfigureAwait(false) || this.characterBuffer[this.tokenStartIndex] != ':')
             {
+                this.nodeValue = token.Span.ToString();
+
                 // We need the colon character after the property name
-                throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_MissingColon, (string)this.nodeValue));
+                throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_MissingColon, this.nodeValue));
             }
 
             // Consume the colon.
@@ -1758,6 +1815,8 @@ namespace Microsoft.OData.Json
 
             // if the content is nested json, we can stream
             this.canStream = this.characterBuffer[this.tokenStartIndex] == '{' || this.characterBuffer[this.tokenStartIndex] == '[';
+
+            this.nodeValue = token.Span.ToString();
 
             return JsonNodeType.Property;
         }
@@ -1869,11 +1928,11 @@ namespace Microsoft.OData.Json
                                 throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_UnrecognizedEscapeSequence, "\\uXXXX"));
                             }
 
-                            string unicodeHexValue = this.ConsumeTokenToString(4);
+                            ReadOnlyMemory<char> unicodeHexValue = this.ConsumeTokenToMemory(4);
                             int characterValue;
-                            if (!Int32.TryParse(unicodeHexValue, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out characterValue))
+                            if (!Int32.TryParse(unicodeHexValue.Span, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out characterValue))
                             {
-                                throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_UnrecognizedEscapeSequence, "\\u" + unicodeHexValue));
+                                throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_UnrecognizedEscapeSequence, "\\u" + unicodeHexValue.Span.ToString()));
                             }
 
                             valueBuilder.Append((char)characterValue);
@@ -1893,7 +1952,15 @@ namespace Microsoft.OData.Json
                     }
                     else
                     {
-                        result = this.ConsumeTokenToString(currentCharacterTokenRelativeIndex);
+                        ReadOnlyMemory<char> currentNameMemory = this.ConsumeTokenToMemory(currentCharacterTokenRelativeIndex);
+                        if (TryGetMatchingCommonValueString(currentNameMemory.Span, out string interned))
+                        {
+                            result = interned;
+                        }
+                        else
+                        {
+                            result = currentNameMemory.Span.ToString();
+                        }
                     }
 
                     Debug.Assert(this.characterBuffer[this.tokenStartIndex] == openingQuoteCharacter, "We should have consumed everything up to the quote character.");
@@ -1926,11 +1993,11 @@ namespace Microsoft.OData.Json
                 "The method should only be called when the 'n' character is the start of the token.");
 
             // We can call ParseNameAsync since we know the first character is 'n' and thus it won't be quoted.
-            ValueTask<string> parseNameTask = this.ParseNameAsync();
+            ValueTask<ReadOnlyMemory<char>> parseNameTask = this.ParseNameAsync();
             if (parseNameTask.IsCompletedSuccessfully)
             {
-                string token = parseNameTask.Result;
-                if (!string.Equals(token, JsonConstants.JsonNullLiteral, StringComparison.Ordinal))
+                ReadOnlyMemory<char> token = parseNameTask.Result;
+                if (!token.Span.SequenceEqual(JsonConstants.JsonNullLiteral.AsSpan()))
                 {
                     // Return a faulted Task (rather than throw synchronously).
                     return ValueTask.FromException<object>(
@@ -1943,11 +2010,11 @@ namespace Microsoft.OData.Json
             // Slow path: allocate state machine only if we really have to await.
             return AwaitParseNameAsync(this, parseNameTask);
 
-            static async ValueTask<object> AwaitParseNameAsync(JsonReader thisParam, ValueTask<string> pendingParseNameTask)
+            static async ValueTask<object> AwaitParseNameAsync(JsonReader thisParam, ValueTask<ReadOnlyMemory<char>> pendingParseNameTask)
             {
-                string token = await pendingParseNameTask.ConfigureAwait(false);
+                ReadOnlyMemory<char> token = await pendingParseNameTask.ConfigureAwait(false);
 
-                if (!string.Equals(token, JsonConstants.JsonNullLiteral, StringComparison.Ordinal))
+                if (!token.Span.SequenceEqual(JsonConstants.JsonNullLiteral.AsSpan()))
                 {
                     throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_UnexpectedToken, token));
                 }
@@ -1969,17 +2036,17 @@ namespace Microsoft.OData.Json
                 "The method should only be called when the 't' or 'f' character is the start of the token.");
 
             // We can call ParseNameAsync since we know the first character is 't' or 'f' and thus it won't be quoted.
-            ValueTask<string> parseNameTask = this.ParseNameAsync();
+            ValueTask<ReadOnlyMemory<char>> parseNameTask = this.ParseNameAsync();
             if (parseNameTask.IsCompletedSuccessfully)
             {
-                string token = parseNameTask.Result;
+                ReadOnlyMemory<char> token = parseNameTask.Result;
 
-                if (string.Equals(token, JsonConstants.JsonFalseLiteral, StringComparison.Ordinal))
+                if (token.Span.SequenceEqual(JsonConstants.JsonFalseLiteral.AsSpan()))
                 {
                     return ValueTask.FromResult<object>(false);
                 }
 
-                if (string.Equals(token, JsonConstants.JsonTrueLiteral, StringComparison.Ordinal))
+                if (token.Span.SequenceEqual(JsonConstants.JsonTrueLiteral.AsSpan()))
                 {
                     return ValueTask.FromResult<object>(true);
                 }
@@ -1991,16 +2058,16 @@ namespace Microsoft.OData.Json
             // Slow path: allocate state machine only if we really have to await.
             return AwaitParseNameAsync(parseNameTask);
 
-            static async ValueTask<object> AwaitParseNameAsync(ValueTask<string> pendingParseNameTask)
+            static async ValueTask<object> AwaitParseNameAsync(ValueTask<ReadOnlyMemory<char>> pendingParseNameTask)
             {
-                string token = await pendingParseNameTask.ConfigureAwait(false);
+                ReadOnlyMemory<char> token = await pendingParseNameTask.ConfigureAwait(false);
 
-                if (string.Equals(token, JsonConstants.JsonFalseLiteral, StringComparison.Ordinal))
+                if (token.Span.SequenceEqual(JsonConstants.JsonFalseLiteral.AsSpan()))
                 {
                     return false;
                 }
 
-                if (string.Equals(token, JsonConstants.JsonTrueLiteral, StringComparison.Ordinal))
+                if (token.Span.SequenceEqual(JsonConstants.JsonTrueLiteral.AsSpan()))
                 {
                     return true;
                 }
@@ -2057,9 +2124,9 @@ namespace Microsoft.OData.Json
 
             try
             {
-                string numberString = this.ConsumeTokenToString(currentCharacterTokenRelativeIndex);
+                ReadOnlyMemory<char> numberMemory = this.ConsumeTokenToMemory(currentCharacterTokenRelativeIndex);
 
-                return ValueTask.FromResult(this.ParseNumericToken(numberString));
+                return ValueTask.FromResult(this.ParseNumericToken(numberMemory.Span));
             }
             catch (ODataException ex)
             {
@@ -2086,8 +2153,8 @@ namespace Microsoft.OData.Json
                             continue;
                         }
 
-                        string numString = thisParam.ConsumeTokenToString(relativeIndex);
-                        return thisParam.ParseNumericToken(numString);
+                        ReadOnlyMemory<char> numMemory = thisParam.ConsumeTokenToMemory(relativeIndex);
+                        return thisParam.ParseNumericToken(numMemory.Span);
                     }
 
                     // Need to read more input
@@ -2096,8 +2163,8 @@ namespace Microsoft.OData.Json
                 }
 
                 // EOF: Parse what we have
-                string numberString = thisParam.ConsumeTokenToString(relativeIndex);
-                return thisParam.ParseNumericToken(numberString);
+                ReadOnlyMemory<char> numberMemory = thisParam.ConsumeTokenToMemory(relativeIndex);
+                return thisParam.ParseNumericToken(numberMemory.Span);
             }
         }
 
@@ -2110,7 +2177,7 @@ namespace Microsoft.OData.Json
         /// - string value quoted with double quotes.
         /// - string value quoted with single quotes.
         /// - sequence of letters, digits, underscores and dollar signs (without quoted and in any order).</remarks>
-        private ValueTask<string> ParseNameAsync()
+        private ValueTask<ReadOnlyMemory<char>> ParseNameAsync()
         {
             Debug.Assert(this.tokenStartIndex < this.storedCharacterCount, "Must have at least one character available.");
 
@@ -2120,9 +2187,9 @@ namespace Microsoft.OData.Json
                 ValueTask<(string Value, bool HasLeadingBackslash)> parseQuotedNameTask = this.ParseStringPrimitiveValueAsync();
                 if (parseQuotedNameTask.IsCompletedSuccessfully)
                 {
-                    return ValueTask.FromResult(parseQuotedNameTask.Result.Value);
+                    return ValueTask.FromResult(parseQuotedNameTask.Result.Value.AsMemory());
                 }
-                
+
                 return AwaitParseQuotedNameAsync(this, parseQuotedNameTask);
             }
 
@@ -2158,16 +2225,22 @@ namespace Microsoft.OData.Json
                 }
             }
 
-            return ValueTask.FromResult(this.ConsumeTokenToString(currentCharacterTokenRelativeIndex));
+            ReadOnlyMemory<char> nameMemory = this.ConsumeTokenToMemory(currentCharacterTokenRelativeIndex);
+            if (TryGetMatchingCommonValueString(nameMemory.Span, out string interned))
+            {
+                return ValueTask.FromResult(interned.AsMemory());
+            }
 
-            static async ValueTask<string> AwaitParseQuotedNameAsync(JsonReader thisParam, ValueTask<(string Value, bool HasLeadingBackslash)> pendingParseQuotedNameTask)
+            return ValueTask.FromResult(nameMemory);
+
+            static async ValueTask<ReadOnlyMemory<char>> AwaitParseQuotedNameAsync(JsonReader thisParam, ValueTask<(string Value, bool HasLeadingBackslash)> pendingParseQuotedNameTask)
             {
                 (string Value, bool HasLeadingBackslash) result = await pendingParseQuotedNameTask.ConfigureAwait(false);
 
-                return result.Value;
+                return result.Value.AsMemory();
             }
 
-            static async ValueTask<string> AwaitParseUnquotedNameAsync(JsonReader thisParam, ValueTask<bool> pendingReadInputTask, int relativeIndex)
+            static async ValueTask<ReadOnlyMemory<char>> AwaitParseUnquotedNameAsync(JsonReader thisParam, ValueTask<bool> pendingReadInputTask, int relativeIndex)
             {
                 while (true)
                 {
@@ -2187,15 +2260,26 @@ namespace Microsoft.OData.Json
                             continue;
                         }
 
-                        // Hit a non-name character. Return the accumulated name
-                        return thisParam.ConsumeTokenToString(relativeIndex);
+                        ReadOnlyMemory<char> currentNameMemory = thisParam.ConsumeTokenToMemory(relativeIndex);
+                        if (TryGetMatchingCommonValueString(currentNameMemory.Span, out string knownName))
+                        {
+                            return knownName.AsMemory();
+                        }
+
+                        return currentNameMemory;
                     }
 
                     pendingReadInputTask = thisParam.ReadInputAsync();
                 }
 
                 // EOF: Return whatever we have accumulated so far
-                return thisParam.ConsumeTokenToString(relativeIndex);
+                ReadOnlyMemory<char> nameMemory = thisParam.ConsumeTokenToMemory(relativeIndex);
+                if (TryGetMatchingCommonValueString(nameMemory.Span, out string interned))
+                {
+                    return interned.AsMemory();
+                }
+
+                return nameMemory;
             }
         }
 
@@ -2579,11 +2663,10 @@ namespace Microsoft.OData.Json
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private int ParseUnicodeHexValue()
         {
-            string unicodeHexValue = this.ConsumeTokenToString(4);
-            int characterValue;
-            if (!Int32.TryParse(unicodeHexValue, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out characterValue))
+            ReadOnlySpan<char> unicodeHexValue = this.ConsumeTokenToSpan(4);
+            if (!Int32.TryParse(unicodeHexValue, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out int characterValue))
             {
-                throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_UnrecognizedEscapeSequence, "\\u" + unicodeHexValue));
+                throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_UnrecognizedEscapeSequence, "\\u" + unicodeHexValue.ToString()));
             }
 
             return characterValue;
@@ -2610,28 +2693,28 @@ namespace Microsoft.OData.Json
         /// <param name="numberString">Canonical numeric token (no surrounding whitespace).</param>
         /// <returns>Boxed int, decimal or double.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private object ParseNumericToken(string numberString)
+        private object ParseNumericToken(ReadOnlySpan<char> numberSpan)
         {
             // We will first try and convert the value to Int32. If it succeeds, use that.
             // And then, we will try Decimal, since it will lose precision while expected type is specified.
             // Otherwise, we will try and convert the value into a double.
-            if (Int32.TryParse(numberString, NumberStyles.Integer, NumberFormatInfo.InvariantInfo, out int intValue))
+            if (Int32.TryParse(numberSpan, NumberStyles.Integer, NumberFormatInfo.InvariantInfo, out int intValue))
             {
                 return intValue;
             }
 
             // if it is not Ieee754Compatible, decimal will be parsed before double to keep precision
-            if (!this.isIeee754Compatible && Decimal.TryParse(numberString, NumberStyles.Number, NumberFormatInfo.InvariantInfo, out decimal decimalValue))
+            if (!this.isIeee754Compatible && Decimal.TryParse(numberSpan, NumberStyles.Number, NumberFormatInfo.InvariantInfo, out decimal decimalValue))
             {
                 return decimalValue;
             }
 
-            if (Double.TryParse(numberString, NumberStyles.Float, NumberFormatInfo.InvariantInfo, out double doubleValue))
+            if (Double.TryParse(numberSpan, NumberStyles.Float, NumberFormatInfo.InvariantInfo, out double doubleValue))
             {
                 return doubleValue;
             }
 
-            throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_InvalidNumberFormat, numberString));
+            throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_InvalidNumberFormat, numberSpan.ToString()));
         }
 
         /// <summary>
@@ -2650,6 +2733,179 @@ namespace Microsoft.OData.Json
                 ch == '-' || ch == '+';
         }
 
+
+
+        /// <summary>
+        /// Attempts to match a given span of characters to a predefined set of common OData property names and returns the corresponding interned string if a match is found.
+        /// The method is intended to reduce memory usage by  interning commonly used property names in OData payloads
+        /// </summary>
+        /// <param name="span">The span of characters to evaluate. This span is compared against known OData property names.</param>
+        /// <param name="value">When this method returns, contains the interned string corresponding to the matched OData property name,  if
+        /// the match is successful; otherwise, <see langword="null"/>.</param>
+        /// <returns><see langword="true"/> if the span matches one of the predefined OData property names;  otherwise, <see langword="false"/>.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static bool TryGetMatchingCommonValueString(ReadOnlySpan<char> span, out string value)
+        {
+            switch (span.Length)
+            {
+                case 2: // id, Id
+                    if (span[0] == 'i' && span[1] == 'd')
+                    {
+                        value = ODataJsonConstants.ODataIdPropertyName;
+                        return true;
+                    }
+                    if (span[0] == 'I' && span[1] == 'd')
+                    {
+                        value = ODataJsonConstants.ODataIdPascalCasePropertyName;
+                        return true;
+                    }
+                    break;
+
+                case 3: // url, @id
+                    if (span[0] == 'u' && span.SequenceEqual(ODataJsonConstants.ODataServiceDocumentElementUrlName.AsSpan()))
+                    {
+                        value = ODataJsonConstants.ODataServiceDocumentElementUrlName;
+                        return true;
+                    }
+                    if (span[0] == '@' && span.SequenceEqual(ODataJsonConstants.SimplifiedODataIdPropertyName.AsSpan()))
+                    {
+                        value = ODataJsonConstants.SimplifiedODataIdPropertyName;
+                        return true;
+                    }
+                    break;
+
+                case 4: // null, name, true, type
+                    if (span[1] == 'u' && span.SequenceEqual(ODataJsonConstants.ODataNullPropertyName.AsSpan()))
+                    {
+                        value = ODataJsonConstants.ODataNullPropertyName;
+                        return true;
+                    }
+                    if (span[1] == 'r' && span.SequenceEqual(ODataJsonConstants.ODataNullAnnotationTrueValue.AsSpan()))
+                    {
+                        value = ODataJsonConstants.ODataNullAnnotationTrueValue;
+                        return true;
+                    }
+                    if (span[1] == 'a' && span.SequenceEqual(ODataJsonConstants.ODataServiceDocumentElementName.AsSpan()))
+                    {
+                        value = ODataJsonConstants.ODataServiceDocumentElementName;
+                        return true;
+                    }
+                    if (span[1] == 'y' && span.SequenceEqual(ODataJsonConstants.ODataTypePropertyName.AsSpan()))
+                    {
+                        value = ODataJsonConstants.ODataTypePropertyName;
+                        return true;
+                    }
+                    break;
+
+                case 5: // value, error, delta, @type, false
+                    if (span[0] == 'f' && span.SequenceEqual(JsonConstants.JsonFalseLiteral.AsSpan()))
+                    {
+                        value = JsonConstants.JsonFalseLiteral;
+                        return true;
+                    }
+                    if (span[0] == 'v' && span.SequenceEqual(ODataJsonConstants.ODataValuePropertyName.AsSpan()))
+                    {
+                        value = ODataJsonConstants.ODataValuePropertyName;
+                        return true;
+                    }
+                    if (span[1] == 't' && span.SequenceEqual(ODataJsonConstants.SimplifiedODataTypePropertyName.AsSpan()))
+                    {
+                        value = ODataJsonConstants.SimplifiedODataTypePropertyName;
+                        return true;
+                    }
+                    if (span[0] == 'd' && span.SequenceEqual(ODataJsonConstants.ODataDeltaPropertyName.AsSpan()))
+                    {
+                        value = ODataJsonConstants.ODataDeltaPropertyName;
+                        return true;
+                    }
+                    if (span[0] == 'e' && span.SequenceEqual(ODataJsonConstants.ODataErrorPropertyName.AsSpan()))
+                    {
+                        value = ODataJsonConstants.ODataErrorPropertyName;
+                        return true;
+                    }
+                    break;
+
+                case 6: // reason, source, target
+                    if (span[0] == 'r' && span.SequenceEqual(ODataJsonConstants.ODataReasonPropertyName.AsSpan()))
+                    {
+                        value = ODataJsonConstants.ODataReasonPropertyName;
+                        return true;
+                    }
+                    if (span[0] == 's' && span.SequenceEqual(ODataJsonConstants.ODataSourcePropertyName.AsSpan()))
+                    {
+                        value = ODataJsonConstants.ODataSourcePropertyName;
+                        return true;
+                    }
+                    if (span[0] == 't' && span.SequenceEqual(ODataJsonConstants.ODataTargetPropertyName.AsSpan()))
+                    {
+                        value = ODataJsonConstants.ODataTargetPropertyName;
+                        return true;
+                    }
+                    break;
+
+                case 7: // changed, deleted
+                    if (span[0] == 'c' && span.SequenceEqual(ODataJsonConstants.ODataReasonChangedValue.AsSpan()))
+                    {
+                        value = ODataJsonConstants.ODataReasonChangedValue;
+                        return true;
+                    }
+                    if (span[0] == 'd' && span.SequenceEqual(ODataJsonConstants.ODataReasonDeletedValue.AsSpan()))
+                    {
+                        value = ODataJsonConstants.ODataReasonDeletedValue;
+                        return true;
+                    }
+                    break;
+
+                case 8: // @context, @removed
+                    if (span[1] == 'c' && span.SequenceEqual(ODataJsonConstants.SimplifiedODataContextPropertyName.AsSpan()))
+                    {
+                        value = ODataJsonConstants.SimplifiedODataContextPropertyName;
+                        return true;
+                    }
+                    if (span[0] == 'r' && span.SequenceEqual(ODataJsonConstants.SimplifiedODataRemovedPropertyName.AsSpan()))
+                    {
+                        value = ODataJsonConstants.SimplifiedODataRemovedPropertyName; return true;
+                    }
+                    break;
+
+                case 9: // @odata.id
+                    if (span.SequenceEqual(ODataJsonConstants.PrefixedODataIdPropertyName.AsSpan()))
+                    {
+                        value = ODataJsonConstants.PrefixedODataIdPropertyName;
+                        return true;
+                    }
+                    break;
+
+                case 11: // @odata.type, @odata.null
+                    if (span.SequenceEqual(ODataJsonConstants.PrefixedODataTypePropertyName.AsSpan()))
+                    {
+                        value = ODataJsonConstants.PrefixedODataTypePropertyName;
+                        return true;
+                    }
+                    if (span.SequenceEqual(ODataJsonConstants.PrefixedODataNullPropertyName.AsSpan()))
+                    {
+                        value = ODataJsonConstants.PrefixedODataNullPropertyName;
+                        return true;
+                    }
+                    break;
+
+                case 14: // @odata.context, @odata.removed
+                    if (span.SequenceEqual(ODataJsonConstants.PrefixedODataContextPropertyName.AsSpan()))
+                    {
+                        value = ODataJsonConstants.PrefixedODataContextPropertyName;
+                        return true;
+                    }
+                    if (span.SequenceEqual(ODataJsonConstants.PrefixedODataRemovedPropertyName.AsSpan()))
+                    {
+                        value = ODataJsonConstants.PrefixedODataRemovedPropertyName;
+                        return true;
+                    }
+                    break;
+            }
+
+            value = null;
+            return false;
+        }
 
         /// <summary>
         /// Returns the result of a <see cref="ValueTask{TResult}"/> if already completed successfully; otherwise, awaits it.
