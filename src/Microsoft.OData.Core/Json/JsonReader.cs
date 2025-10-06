@@ -13,6 +13,7 @@ namespace Microsoft.OData.Json
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.IO;
+    using System.Runtime.CompilerServices;
     using System.Text;
     using System.Threading.Tasks;
     using Microsoft.OData.Buffers;
@@ -22,7 +23,8 @@ namespace Microsoft.OData.Json
     /// <summary>
     /// Reader for the JSON format. http://www.json.org
     /// </summary>
-    [DebuggerDisplay("{NodeType}: {GetValue()}")]
+    // NOTE: Do NOT call GetValue()/GetValueAsync() from DebuggerDisplay. The methods mutate internal state (like canStream), obscuring real values while debugging.
+    [DebuggerDisplay("{NodeType}")]
     internal class JsonReader : IJsonReader, IDisposable, IAsyncDisposable
     {
         /// <summary>
@@ -518,37 +520,73 @@ namespace Microsoft.OData.Json
         /// - Double if a number which doesn't fit into Int32 was found.
         /// If the last node is a Property this property returns a string which is the name of the property.
         /// </remarks>
-        public virtual async Task<object> GetValueAsync()
+        public virtual Task<object> GetValueAsync()
         {
             if (this.readingStream)
             {
                 throw JsonReaderExtensions.CreateException(SRResources.JsonReader_CannotAccessValueInStreamState);
             }
 
-            if (this.canStream)
+            // Fast path: if we are not in a streamable state just return the cached value (already materialized)
+            if (!this.canStream)
             {
-                if (this.nodeType != JsonNodeType.Property)
-                {
-                    this.canStream = false;
-                }
-
-                if (this.nodeType == JsonNodeType.PrimitiveValue)
-                {
-                    if (this.characterBuffer[this.tokenStartIndex] == 'n')
-                    {
-                        this.nodeValue = await this.ParseNullPrimitiveValueAsync()
-                            .ConfigureAwait(false);
-                    }
-                    else
-                    {
-                        var parseResult = await this.ParseStringPrimitiveValueAsync()
-                            .ConfigureAwait(false);
-                        this.nodeValue = parseResult.Item1;
-                    }
-                }
+                return Task.FromResult(this.nodeValue);
             }
 
-            return this.nodeValue;
+            // If we are on a property name we leave canStream true (the value will be parsed later)
+            if (this.nodeType != JsonNodeType.Property)
+            {
+                this.canStream = false;
+            }
+
+            // Only primitive values require deferred materialization
+            if (this.nodeType != JsonNodeType.PrimitiveValue)
+            {
+                return Task.FromResult(this.nodeValue);
+            }
+
+            // We are on a primitive value whose raw characters are still in the buffer.
+            // Decide between 'null' literal and string literal.
+            char firstChar = this.characterBuffer[this.tokenStartIndex];
+
+            if (firstChar == 'n')
+            {
+                // Null literal; usually buffer already contains 'null' so the task completes synchronously.
+                ValueTask<object> parseNullTask = this.ParseNullPrimitiveValueAsync();
+                if (parseNullTask.IsCompletedSuccessfully)
+                {
+                    this.nodeValue = parseNullTask.Result; // always null
+                    return Task.FromResult(this.nodeValue);
+                }
+
+                return AwaitNullValueAsync(this, parseNullTask);
+            }
+            else
+            {
+                // Quoted string (or single‑quoted for compat); fast-path if already completed.
+                ValueTask<(string Value, bool HasLeadingBackslash)> parseStringTask = this.ParseStringPrimitiveValueAsync();
+                if (parseStringTask.IsCompletedSuccessfully)
+                {
+                    this.nodeValue = parseStringTask.Result.Value;
+                    return Task.FromResult(this.nodeValue);
+                }
+
+                return AwaitStringValueAsync(this, parseStringTask);
+            }
+
+            // Local static helpers so no closure allocations when slow path triggers.
+            static async Task<object> AwaitNullValueAsync(JsonReader thisParam, ValueTask<object> pendingParseNullTask)
+            {
+                thisParam.nodeValue = await pendingParseNullTask.ConfigureAwait(false); // will be null
+                return thisParam.nodeValue;
+            }
+
+            static async Task<object> AwaitStringValueAsync(JsonReader thisParam, ValueTask<(string Value, bool HasLeadingBackslash)> pendingParseStringTask)
+            {
+                (string Value, bool HasLeadingBackslash) result = await pendingParseStringTask.ConfigureAwait(false);
+                thisParam.nodeValue = result.Value;
+                return thisParam.nodeValue;
+            }
         }
 
         /// <summary>
@@ -560,11 +598,11 @@ namespace Microsoft.OData.Json
         {
             if (this.canStream)
             {
-                return Task.FromResult(true);
+                return CachedTasks.True;
             }
             else
             {
-                return Task.FromResult(false);
+                return CachedTasks.False;
             }
         }
 
@@ -839,6 +877,7 @@ namespace Microsoft.OData.Json
         /// returns true for all characters defined as whitespace by the Unicode spec (which is a lot of characters),
         /// this one on the other hand recognizes just the whitespaces as defined by the JSON spec.</remarks>
         [DebuggerStepThrough]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static bool IsWhitespaceCharacter(char character)
         {
             // The whitespace characters are 0x20 (space), 0x09 (tab), 0x0A (new line), 0x0D (carriage return)
@@ -1188,12 +1227,7 @@ namespace Microsoft.OData.Json
             while ((this.tokenStartIndex + currentCharacterTokenRelativeIndex) < this.storedCharacterCount || this.ReadInput())
             {
                 char character = this.characterBuffer[this.tokenStartIndex + currentCharacterTokenRelativeIndex];
-                if (Char.IsDigit(character) ||
-                    (character == '.') ||
-                    (character == 'E') ||
-                    (character == 'e') ||
-                    (character == '-') ||
-                    (character == '+'))
+                if (IsNumberChar(character))
                 {
                     currentCharacterTokenRelativeIndex++;
                 }
@@ -1205,30 +1239,8 @@ namespace Microsoft.OData.Json
 
             // We now have all the characters which belong to the number, consume it into a string.
             string numberString = this.ConsumeTokenToString(currentCharacterTokenRelativeIndex);
-            double doubleValue;
-            int intValue;
-            decimal decimalValue;
-
-            // We will first try and convert the value to Int32. If it succeeds, use that.
-            // And then, we will try Decimal, since it will lose precision while expected type is specified.
-            // Otherwise, we will try and convert the value into a double.
-            if (Int32.TryParse(numberString, NumberStyles.Integer, NumberFormatInfo.InvariantInfo, out intValue))
-            {
-                return intValue;
-            }
-
-            // if it is not Ieee754Compatible, decimal will be parsed before double to keep precision
-            if (!isIeee754Compatible && Decimal.TryParse(numberString, NumberStyles.Number, NumberFormatInfo.InvariantInfo, out decimalValue))
-            {
-                return decimalValue;
-            }
-
-            if (Double.TryParse(numberString, NumberStyles.Float, NumberFormatInfo.InvariantInfo, out doubleValue))
-            {
-                return doubleValue;
-            }
-
-            throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_InvalidNumberFormat, numberString));
+            
+            return ParseNumericToken(numberString);
         }
 
         /// <summary>
@@ -1592,7 +1604,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <returns>A task that represents the asynchronous operation.
         /// The value of the TResult parameter contains the node type to report to the user.</returns>
-        private async Task<JsonNodeType> ParseValueAsync()
+        private Task<JsonNodeType> ParseValueAsync()
         {
             Debug.Assert(
                 this.tokenStartIndex < this.storedCharacterCount && !IsWhitespaceCharacter(this.characterBuffer[this.tokenStartIndex]),
@@ -1609,61 +1621,106 @@ namespace Microsoft.OData.Json
                     // Start of object
                     this.PushScope(ScopeType.Object);
                     this.tokenStartIndex++;
-                    return JsonNodeType.StartObject;
+                    return CachedTasks.StartObject;
 
                 case '[':
                     // Start of array
                     this.PushScope(ScopeType.Array);
                     this.tokenStartIndex++;
-                    await this.SkipWhitespacesAsync().ConfigureAwait(false);
-                    this.canStream =
-                        this.characterBuffer[this.tokenStartIndex] == '"' ||
-                        this.characterBuffer[this.tokenStartIndex] == '\'' ||
-                        this.characterBuffer[this.tokenStartIndex] == 'n';
-                    return JsonNodeType.StartArray;
+                    {
+                        ValueTask<bool> skipWhitespacesTask = this.SkipWhitespacesAsync();
+                        if (!skipWhitespacesTask.IsCompletedSuccessfully)
+                        {
+                            return AwaitArrayAsync(this, skipWhitespacesTask);
+                        }
+
+                        this.canStream =
+                            this.characterBuffer[this.tokenStartIndex] == '"' ||
+                            this.characterBuffer[this.tokenStartIndex] == '\'' ||
+                            this.characterBuffer[this.tokenStartIndex] == 'n';
+
+                        return CachedTasks.StartArray;
+                    }
 
                 case '"':
                 case '\'':
                     // String primitive value
                     // Don't parse yet, as it may be a stream. Defer parsing until .Value is called.
                     this.canStream = true;
-                    break;
+                    this.TryPopPropertyScope();
+                    return CachedTasks.PrimitiveValue;
 
                 case 'n':
                     // Null value
                     // Don't parse yet, as user may be streaming a stream. Defer parsing until .Value is called.
                     this.canStream = true;
-                    break;
+                    this.TryPopPropertyScope();
+                    return CachedTasks.PrimitiveValue;
 
                 case 't':
                 case 'f':
-                    this.nodeValue = await this.ParseBooleanPrimitiveValueAsync()
-                        .ConfigureAwait(false);
-                    break;
+                    {
+                        ValueTask<object> parseBooleanTask = this.ParseBooleanPrimitiveValueAsync();
+                        if (parseBooleanTask.IsCompletedSuccessfully)
+                        {
+                            this.nodeValue = parseBooleanTask.Result;
+                            this.TryPopPropertyScope();
+                            return CachedTasks.PrimitiveValue;
+                        }
 
-                case '-':
-                case '.':
+                        return AwaitParseBooleanAsync(this, parseBooleanTask);
+                    }
+                default:
                     // COMPAT 47: JSON number can start with dot.
                     // The JSON spec doesn't allow numbers to start with ., but WCF DS does. We will follow the WCF DS behavior for compatibility.
-                    this.nodeValue = this.ParseNumberPrimitiveValue();
-                    break;
-
-                default:
-                    if (Char.IsDigit(currentCharacter))
+                    if (Char.IsDigit(currentCharacter) || (currentCharacter == '-') || (currentCharacter == '.'))
                     {
-                        this.nodeValue = await this.ParseNumberPrimitiveValueAsync()
-                            .ConfigureAwait(false);
-                        break;
+                        ValueTask<object> parseNumberTask = this.ParseNumberPrimitiveValueAsync();
+                        if (parseNumberTask.IsCompletedSuccessfully)
+                        {
+                            this.nodeValue = parseNumberTask.Result;
+                            this.TryPopPropertyScope();
+                            return CachedTasks.PrimitiveValue;
+                        }
+
+                        return AwaitParseNumberAsync(this, parseNumberTask);
                     }
                     else
                     {
                         // Unknown token - fail.
-                        throw JsonReaderExtensions.CreateException(SRResources.JsonReader_UnrecognizedToken);
+                        return Task.FromException<JsonNodeType>(
+                            JsonReaderExtensions.CreateException(SRResources.JsonReader_UnrecognizedToken));
                     }
             }
 
-            this.TryPopPropertyScope();
-            return JsonNodeType.PrimitiveValue;
+            static async Task<JsonNodeType> AwaitArrayAsync(JsonReader thisParam, ValueTask<bool> pendingSkipWhitespacesTask)
+            {
+                if (!pendingSkipWhitespacesTask.IsCompletedSuccessfully)
+                {
+                    await pendingSkipWhitespacesTask.ConfigureAwait(false);
+                }
+
+                thisParam.canStream =
+                    thisParam.characterBuffer[thisParam.tokenStartIndex] == '"' ||
+                    thisParam.characterBuffer[thisParam.tokenStartIndex] == '\'' ||
+                    thisParam.characterBuffer[thisParam.tokenStartIndex] == 'n';
+
+                return JsonNodeType.StartArray;
+            }
+
+            static async Task<JsonNodeType> AwaitParseBooleanAsync(JsonReader thisParam, ValueTask<object> pendingParseBooleanTask)
+            {
+                thisParam.nodeValue = await pendingParseBooleanTask.ConfigureAwait(false);
+                thisParam.TryPopPropertyScope();
+                return JsonNodeType.PrimitiveValue;
+            }
+
+            static async Task<JsonNodeType> AwaitParseNumberAsync(JsonReader thisParam, ValueTask<object> pendingParseNumberTask)
+            {
+                thisParam.nodeValue = await pendingParseNumberTask.ConfigureAwait(false);
+                thisParam.TryPopPropertyScope();
+                return JsonNodeType.PrimitiveValue;
+            }
         }
 
         /// <summary>
@@ -1671,7 +1728,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <returns>A task that represents the asynchronous operation.
         /// The value of the TResult parameter contains the node type to report to the user.</returns>
-        private async Task<JsonNodeType> ParsePropertyAsync()
+        private async ValueTask<JsonNodeType> ParsePropertyAsync()
         {
             // Increase the count of values under the object (the number of properties).
             Debug.Assert(this.scopes.Count >= 1 && this.scopes.Peek().Type == ScopeType.Object, "Property can only occur in an object.");
@@ -1701,6 +1758,7 @@ namespace Microsoft.OData.Json
 
             // if the content is nested json, we can stream
             this.canStream = this.characterBuffer[this.tokenStartIndex] == '{' || this.characterBuffer[this.tokenStartIndex] == '[';
+
             return JsonNodeType.Property;
         }
 
@@ -1717,7 +1775,7 @@ namespace Microsoft.OData.Json
         /// Note that the string parsing can never end with EndOfInput, since we're already seen the quote.
         /// So it can either return a string successfully or fail.</remarks>
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "Splitting the function would make it hard to understand.")]
-        private async Task<Tuple<string, bool>> ParseStringPrimitiveValueAsync()
+        private async ValueTask<(string Value, bool HasLeadingBackslash)> ParseStringPrimitiveValueAsync()
         {
             Debug.Assert(this.tokenStartIndex < this.storedCharacterCount, "At least the quote must be present.");
 
@@ -1843,7 +1901,7 @@ namespace Microsoft.OData.Json
                     // Consume the quote character as well.
                     this.tokenStartIndex++;
 
-                    return Tuple.Create(result, hasLeadingBackslash);
+                    return (result, hasLeadingBackslash);
                 }
                 else
                 {
@@ -1861,21 +1919,41 @@ namespace Microsoft.OData.Json
         /// <returns>A task that represents the asynchronous operation.
         /// The value of the TResult parameter contains null if successful; otherwise throws.</returns>
         /// <remarks>Assumes that the current token position points to the 'n' character.</remarks>
-        private async Task<object> ParseNullPrimitiveValueAsync()
+        private ValueTask<object> ParseNullPrimitiveValueAsync()
         {
             Debug.Assert(
                 this.tokenStartIndex < this.storedCharacterCount && this.characterBuffer[this.tokenStartIndex] == 'n',
                 "The method should only be called when the 'n' character is the start of the token.");
 
-            // We can call ParseName since we know the first character is 'n' and thus it won't be quoted.
-            string token = await this.ParseNameAsync().ConfigureAwait(false);
-
-            if (!string.Equals(token, JsonConstants.JsonNullLiteral, StringComparison.Ordinal))
+            // We can call ParseNameAsync since we know the first character is 'n' and thus it won't be quoted.
+            ValueTask<string> parseNameTask = this.ParseNameAsync();
+            if (parseNameTask.IsCompletedSuccessfully)
             {
-                throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_UnexpectedToken, token));
+                string token = parseNameTask.Result;
+                if (!string.Equals(token, JsonConstants.JsonNullLiteral, StringComparison.Ordinal))
+                {
+                    // Return a faulted Task (rather than throw synchronously).
+                    return ValueTask.FromException<object>(
+                        JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_UnexpectedToken, token)));
+                }
+
+                return ValueTask.FromResult<object>(null);
             }
 
-            return null;
+            // Slow path: allocate state machine only if we really have to await.
+            return AwaitParseNameAsync(this, parseNameTask);
+
+            static async ValueTask<object> AwaitParseNameAsync(JsonReader thisParam, ValueTask<string> pendingParseNameTask)
+            {
+                string token = await pendingParseNameTask.ConfigureAwait(false);
+
+                if (!string.Equals(token, JsonConstants.JsonNullLiteral, StringComparison.Ordinal))
+                {
+                    throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_UnexpectedToken, token));
+                }
+
+                return null;
+            }
         }
 
         /// <summary>
@@ -1884,26 +1962,51 @@ namespace Microsoft.OData.Json
         /// <returns>A task that represents the asynchronous operation.
         /// The value of the TResult parameter contains true or false if successful; otherwise throws.</returns>
         /// <remarks>Assumes that the current token position points to the 't' or 'f' character.</remarks>
-        private async Task<object> ParseBooleanPrimitiveValueAsync()
+        private ValueTask<object> ParseBooleanPrimitiveValueAsync()
         {
             Debug.Assert(
                 this.tokenStartIndex < this.storedCharacterCount && (this.characterBuffer[this.tokenStartIndex] == 't' || this.characterBuffer[this.tokenStartIndex] == 'f'),
                 "The method should only be called when the 't' or 'f' character is the start of the token.");
 
-            // We can call ParseName since we know the first character is 't' or 'f' and thus it won't be quoted.
-            string token = await this.ParseNameAsync().ConfigureAwait(false);
-
-            if (string.Equals(token, JsonConstants.JsonFalseLiteral, StringComparison.Ordinal))
+            // We can call ParseNameAsync since we know the first character is 't' or 'f' and thus it won't be quoted.
+            ValueTask<string> parseNameTask = this.ParseNameAsync();
+            if (parseNameTask.IsCompletedSuccessfully)
             {
-                return false;
+                string token = parseNameTask.Result;
+
+                if (string.Equals(token, JsonConstants.JsonFalseLiteral, StringComparison.Ordinal))
+                {
+                    return ValueTask.FromResult<object>(false);
+                }
+
+                if (string.Equals(token, JsonConstants.JsonTrueLiteral, StringComparison.Ordinal))
+                {
+                    return ValueTask.FromResult<object>(true);
+                }
+
+                return ValueTask.FromException<object>(
+                    JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_UnexpectedToken, token)));
             }
 
-            if (string.Equals(token, JsonConstants.JsonTrueLiteral, StringComparison.Ordinal))
-            {
-                return true;
-            }
+            // Slow path: allocate state machine only if we really have to await.
+            return AwaitParseNameAsync(parseNameTask);
 
-            throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_UnexpectedToken, token));
+            static async ValueTask<object> AwaitParseNameAsync(ValueTask<string> pendingParseNameTask)
+            {
+                string token = await pendingParseNameTask.ConfigureAwait(false);
+
+                if (string.Equals(token, JsonConstants.JsonFalseLiteral, StringComparison.Ordinal))
+                {
+                    return false;
+                }
+
+                if (string.Equals(token, JsonConstants.JsonTrueLiteral, StringComparison.Ordinal))
+                {
+                    return true;
+                }
+
+                throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_UnexpectedToken, token));
+            }
         }
 
         /// <summary>
@@ -1912,7 +2015,7 @@ namespace Microsoft.OData.Json
         /// <returns>A task that represents the asynchronous operation.
         /// The value of the TResult parameter contains an Int32, Decimal or Double value; otherwise throws.</returns>
         /// <remarks>Assumes that the current token position points to the first character of the number, so either digit, dot or dash.</remarks>
-        private async Task<object> ParseNumberPrimitiveValueAsync()
+        private ValueTask<object> ParseNumberPrimitiveValueAsync()
         {
             Debug.Assert(
                 this.tokenStartIndex < this.storedCharacterCount && (this.characterBuffer[this.tokenStartIndex] == '.' || this.characterBuffer[this.tokenStartIndex] == '-' || Char.IsDigit(this.characterBuffer[this.tokenStartIndex])),
@@ -1921,50 +2024,81 @@ namespace Microsoft.OData.Json
             // Walk over all characters which might belong to the number
             // Skip the first one since we already verified it belongs to the number.
             int currentCharacterTokenRelativeIndex = 1;
-            while ((this.tokenStartIndex + currentCharacterTokenRelativeIndex) < this.storedCharacterCount || await this.ReadInputAsync().ConfigureAwait(false))
+
+            // Fast path: consume what is already buffered, performing only synchronous refills
+            while (true)
             {
-                char character = this.characterBuffer[this.tokenStartIndex + currentCharacterTokenRelativeIndex];
-                if (Char.IsDigit(character) ||
-                    (character == '.') ||
-                    (character == 'E') ||
-                    (character == 'e') ||
-                    (character == '-') ||
-                    (character == '+'))
+                if ((this.tokenStartIndex + currentCharacterTokenRelativeIndex) < this.storedCharacterCount)
                 {
-                    currentCharacterTokenRelativeIndex++;
+                    char character = this.characterBuffer[this.tokenStartIndex + currentCharacterTokenRelativeIndex];
+                    if (IsNumberChar(character))
+                    {
+                        currentCharacterTokenRelativeIndex++;
+                        continue;
+                    }
+
+                    break; // Not a number char
                 }
-                else
+
+                // Need more data
+                ValueTask<bool> readInputTask = this.ReadInputAsync();
+                if (!readInputTask.IsCompletedSuccessfully)
+                {
+                    // Slow path: Await operation
+                    return AwaitParseNumberAsync(this, readInputTask, currentCharacterTokenRelativeIndex);
+                }
+
+                // EOF
+                if (!readInputTask.Result)
                 {
                     break;
                 }
             }
 
-            // We now have all the characters which belong to the number, consume it into a string.
-            string numberString = this.ConsumeTokenToString(currentCharacterTokenRelativeIndex);
-            double doubleValue;
-            int intValue;
-            decimal decimalValue;
-
-            // We will first try and convert the value to Int32. If it succeeds, use that.
-            // And then, we will try Decimal, since it will lose precision while expected type is specified.
-            // Otherwise, we will try and convert the value into a double.
-            if (Int32.TryParse(numberString, NumberStyles.Integer, NumberFormatInfo.InvariantInfo, out intValue))
+            try
             {
-                return intValue;
+                string numberString = this.ConsumeTokenToString(currentCharacterTokenRelativeIndex);
+
+                return ValueTask.FromResult(this.ParseNumericToken(numberString));
+            }
+            catch (ODataException ex)
+            {
+                return ValueTask.FromException<object>(ex);
             }
 
-            // if it is not Ieee754Compatible, decimal will be parsed before double to keep precision
-            if (!isIeee754Compatible && Decimal.TryParse(numberString, NumberStyles.Number, NumberFormatInfo.InvariantInfo, out decimalValue))
+            static async ValueTask<object> AwaitParseNumberAsync(JsonReader thisParam, ValueTask<bool> pendingReadInputTask, int relativeIndex)
             {
-                return decimalValue;
-            }
+                while (true)
+                {
+                    bool moreInputAvailable = await GetOrAwait(pendingReadInputTask).ConfigureAwait(false);
+                    if (!moreInputAvailable)
+                    {
+                        break; // EOF
+                    }
 
-            if (Double.TryParse(numberString, NumberStyles.Float, NumberFormatInfo.InvariantInfo, out doubleValue))
-            {
-                return doubleValue;
-            }
+                    // Consume as much as possible from buffer
+                    while ((thisParam.tokenStartIndex + relativeIndex) < thisParam.storedCharacterCount)
+                    {
+                        char character = thisParam.characterBuffer[thisParam.tokenStartIndex + relativeIndex];
+                        if (IsNumberChar(character))
+                        {
+                            relativeIndex++;
+                            continue;
+                        }
 
-            throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_InvalidNumberFormat, numberString));
+                        string numString = thisParam.ConsumeTokenToString(relativeIndex);
+                        return thisParam.ParseNumericToken(numString);
+                    }
+
+                    // Need to read more input
+                    pendingReadInputTask = thisParam.ReadInputAsync();
+                    continue;
+                }
+
+                // EOF: Parse what we have
+                string numberString = thisParam.ConsumeTokenToString(relativeIndex);
+                return thisParam.ParseNumericToken(numberString);
+            }
         }
 
         /// <summary>
@@ -1976,38 +2110,93 @@ namespace Microsoft.OData.Json
         /// - string value quoted with double quotes.
         /// - string value quoted with single quotes.
         /// - sequence of letters, digits, underscores and dollar signs (without quoted and in any order).</remarks>
-        private async Task<string> ParseNameAsync()
+        private ValueTask<string> ParseNameAsync()
         {
             Debug.Assert(this.tokenStartIndex < this.storedCharacterCount, "Must have at least one character available.");
 
             char firstCharacter = this.characterBuffer[this.tokenStartIndex];
             if ((firstCharacter == '"') || (firstCharacter == '\''))
             {
-                var parseResult = await this.ParseStringPrimitiveValueAsync()
-                    .ConfigureAwait(false);
-                return parseResult.Item1;
+                ValueTask<(string Value, bool HasLeadingBackslash)> parseQuotedNameTask = this.ParseStringPrimitiveValueAsync();
+                if (parseQuotedNameTask.IsCompletedSuccessfully)
+                {
+                    return ValueTask.FromResult(parseQuotedNameTask.Result.Value);
+                }
+                
+                return AwaitParseQuotedNameAsync(this, parseQuotedNameTask);
             }
 
+            // Pass unquoted string
             int currentCharacterTokenRelativeIndex = 0;
-            do
+            while (true)
             {
                 Debug.Assert(this.tokenStartIndex < this.storedCharacterCount, "Must have at least one character available.");
 
-                char character = this.characterBuffer[this.tokenStartIndex + currentCharacterTokenRelativeIndex];
+                if ((this.tokenStartIndex + currentCharacterTokenRelativeIndex) < this.storedCharacterCount)
+                {
+                    char character = this.characterBuffer[this.tokenStartIndex + currentCharacterTokenRelativeIndex];
+                    // COMPAT 46: JSON property names don't require quotes and they allow any letter, digit, underscore or dollar sign in them.
+                    if (IsCharacterAllowedInPropertyName(character))
+                    {
+                        currentCharacterTokenRelativeIndex++;
+                        continue;
+                    }
 
-                // COMPAT 46: JSON property names don't require quotes and they allow any letter, digit, underscore or dollar sign in them.
-                if (IsCharacterAllowedInPropertyName(character))
-                {
-                    currentCharacterTokenRelativeIndex++;
+                    break; // Not a valid property name character
                 }
-                else
+
+                // Read more data
+                ValueTask<bool> readInputTask = this.ReadInputAsync();
+                if (!readInputTask.IsCompletedSuccessfully)
                 {
-                    break;
+                    return AwaitParseUnquotedNameAsync(this, readInputTask, currentCharacterTokenRelativeIndex);
+                }
+
+                if (!readInputTask.Result)
+                {
+                    break; // EOF
                 }
             }
-            while ((this.tokenStartIndex + currentCharacterTokenRelativeIndex) < this.storedCharacterCount || await this.ReadInputAsync().ConfigureAwait(false));
 
-            return this.ConsumeTokenToString(currentCharacterTokenRelativeIndex);
+            return ValueTask.FromResult(this.ConsumeTokenToString(currentCharacterTokenRelativeIndex));
+
+            static async ValueTask<string> AwaitParseQuotedNameAsync(JsonReader thisParam, ValueTask<(string Value, bool HasLeadingBackslash)> pendingParseQuotedNameTask)
+            {
+                (string Value, bool HasLeadingBackslash) result = await pendingParseQuotedNameTask.ConfigureAwait(false);
+
+                return result.Value;
+            }
+
+            static async ValueTask<string> AwaitParseUnquotedNameAsync(JsonReader thisParam, ValueTask<bool> pendingReadInputTask, int relativeIndex)
+            {
+                while (true)
+                {
+                    bool moreInputAvailable = await GetOrAwait(pendingReadInputTask).ConfigureAwait(false);
+                    if (!moreInputAvailable)
+                    {
+                        break; // EOF
+                    }
+
+                    // Consume as many allowed characters as possible
+                    while (thisParam.tokenStartIndex + relativeIndex < thisParam.storedCharacterCount)
+                    {
+                        char character = thisParam.characterBuffer[thisParam.tokenStartIndex + relativeIndex];
+                        if (thisParam.IsCharacterAllowedInPropertyName(character))
+                        {
+                            relativeIndex++;
+                            continue;
+                        }
+
+                        // Hit a non-name character. Return the accumulated name
+                        return thisParam.ConsumeTokenToString(relativeIndex);
+                    }
+
+                    pendingReadInputTask = thisParam.ReadInputAsync();
+                }
+
+                // EOF: Return whatever we have accumulated so far
+                return thisParam.ConsumeTokenToString(relativeIndex);
+            }
         }
 
         /// <summary>
@@ -2143,21 +2332,69 @@ namespace Microsoft.OData.Json
         /// The value of the TResult parameter contains true if a non-whitespace character was found,
         /// in which case the <see cref="tokenStartIndex"/> is pointing at that character;
         /// otherwise false if there are no non-whitespace characters left in the input.</returns>
-        private async ValueTask<bool> SkipWhitespacesAsync()
+        private ValueTask<bool> SkipWhitespacesAsync()
         {
-            do
+            // Fast path: scan currently buffered characters without awaiting.
+            while (this.tokenStartIndex < this.storedCharacterCount)
             {
-                for (; this.tokenStartIndex < this.storedCharacterCount; this.tokenStartIndex++)
+                if (!IsWhitespaceCharacter(this.characterBuffer[this.tokenStartIndex]))
+                {
+                    return ValueTask.FromResult(true);
+                }
+
+                this.tokenStartIndex++;
+            }
+
+            // No more buffered characters - attempt to read. ReadInputAsync may complete synchronously.
+            while (true)
+            {
+                ValueTask<bool> readInputTask = this.ReadInputAsync();
+                if (!readInputTask.IsCompletedSuccessfully)
+                {
+                    return AwaitReadInputAsync(this, readInputTask);
+                }
+
+                if (!readInputTask.Result)
+                {
+                    // EOF (only whitespace was left)
+                    return ValueTask.FromResult(false);
+                }
+
+                while (this.tokenStartIndex < this.storedCharacterCount)
                 {
                     if (!IsWhitespaceCharacter(this.characterBuffer[this.tokenStartIndex]))
                     {
-                        return true;
+                        return ValueTask.FromResult(true);
                     }
+
+                    this.tokenStartIndex++;
                 }
             }
-            while (await this.ReadInputAsync().ConfigureAwait(false));
 
-            return false;
+            // Async slow path: only allocated when an awaited read is pending.
+            static async ValueTask<bool> AwaitReadInputAsync(JsonReader thisParam, ValueTask<bool> pendingReadInputTask)
+            {
+                while (true)
+                {
+                    bool moreInputAvailable = await GetOrAwait(pendingReadInputTask).ConfigureAwait(false);
+                    if (!moreInputAvailable)
+                    {
+                        return false; // EOF
+                    }
+
+                    while (thisParam.tokenStartIndex < thisParam.storedCharacterCount)
+                    {
+                        if (!IsWhitespaceCharacter(thisParam.characterBuffer[thisParam.tokenStartIndex]))
+                        {
+                            return true;
+                        }
+
+                        thisParam.tokenStartIndex++;
+                    }
+
+                    pendingReadInputTask = thisParam.ReadInputAsync();
+                }
+            }
         }
 
         /// <summary>
@@ -2167,17 +2404,53 @@ namespace Microsoft.OData.Json
         /// <returns>A task that represents the asynchronous operation.
         /// The value of the TResult parameter contains true if at least the required number of characters is available; 
         /// otherwise false if end of input was reached.</returns>
-        private async ValueTask<bool> EnsureAvailableCharactersAsync(int characterCountAfterTokenStart)
+        private ValueTask<bool> EnsureAvailableCharactersAsync(int characterCountAfterTokenStart)
         {
-            while (this.tokenStartIndex + characterCountAfterTokenStart > this.storedCharacterCount)
+            // Fast path: already have enough buffered characters.
+            if (this.tokenStartIndex + characterCountAfterTokenStart <= this.storedCharacterCount)
             {
-                if (!await this.ReadInputAsync().ConfigureAwait(false))
+                return ValueTask.FromResult(true);
+            }
+
+            while (true)
+            {
+                // Need to read more data. This may complete synchronously.
+                ValueTask<bool> readInputTask = this.ReadInputAsync();
+                if (!readInputTask.IsCompletedSuccessfully)
                 {
-                    return false;
+                    return AwaitReadInputAsync(this, readInputTask, characterCountAfterTokenStart);
+                }
+
+                if (!readInputTask.Result)
+                {
+                    // EOF
+                    return ValueTask.FromResult(false);
+                }
+
+                if (this.tokenStartIndex + characterCountAfterTokenStart <= this.storedCharacterCount)
+                {
+                    return ValueTask.FromResult(true);
                 }
             }
 
-            return true;
+            static async ValueTask<bool> AwaitReadInputAsync(JsonReader thisParam, ValueTask<bool> pendingReadInputTask, int neededCharactersAfterTokenStart)
+            {
+                while (true)
+                {
+                    bool moreInputAvailable = await GetOrAwait(pendingReadInputTask).ConfigureAwait(false);
+                    if (!moreInputAvailable)
+                    {
+                        return false; // EOF
+                    }
+
+                    if (thisParam.tokenStartIndex + neededCharactersAfterTokenStart <= thisParam.storedCharacterCount)
+                    {
+                        return true;
+                    }
+
+                    pendingReadInputTask = thisParam.ReadInputAsync();
+                }
+            }
         }
 
         /// <summary>
@@ -2188,13 +2461,13 @@ namespace Microsoft.OData.Json
         /// otherwise false if end of input was reached.</returns>
         /// <remarks>This may move characters in the <see cref="characterBuffer"/>, so after this is called
         /// all indices to the <see cref="characterBuffer"/> are invalid except for <see cref="tokenStartIndex"/>.</remarks>
-        private async ValueTask<bool> ReadInputAsync()
+        private ValueTask<bool> ReadInputAsync()
         {
             Debug.Assert(this.tokenStartIndex >= 0 && this.tokenStartIndex <= this.storedCharacterCount, "The token start is out of stored characters range.");
 
             if (this.endOfInputReached)
             {
-                return false;
+                return ValueTask.FromResult(false);
             }
 
             this.CopyInputToBuffer();
@@ -2203,20 +2476,41 @@ namespace Microsoft.OData.Json
             // Use the Read method which returns any character as soon as it's available
             // we don't want to wait for the entire buffer to fill if the input doesn't have
             // the characters ready.
-            int readCount = await this.reader.ReadAsync(
+            Task<int> readTask = this.reader.ReadAsync(
                 this.characterBuffer,
                 this.storedCharacterCount,
-                this.characterBuffer.Length - this.storedCharacterCount).ConfigureAwait(false);
+                this.characterBuffer.Length - this.storedCharacterCount);
 
-            if (readCount == 0)
+            if (readTask.IsCompletedSuccessfully)
             {
-                // No more characters available, end of input.
-                this.endOfInputReached = true;
-                return false;
+                int readCount = readTask.Result;
+                if (readCount == 0)
+                {
+                    // No more characters available, end of input.
+                    this.endOfInputReached = true;
+                    return ValueTask.FromResult(false);
+                }
+
+                this.storedCharacterCount += readCount;
+                return ValueTask.FromResult(true);
             }
 
-            this.storedCharacterCount += readCount;
-            return true;
+            // Slow path: asynchronously await the read task.
+            return AwaitReadInputAsync(this, readTask);
+
+            static async ValueTask<bool> AwaitReadInputAsync(JsonReader thisParam, Task<int> pendingReadTask)
+            {
+                int readCount = await pendingReadTask.ConfigureAwait(false);
+                if (readCount == 0)
+                {
+                    // No more characters available, end of input.
+                    thisParam.endOfInputReached = true;
+                    return false;
+                }
+
+                thisParam.storedCharacterCount += readCount;
+                return true;
+            }
         }
 
         private void CopyInputToBuffer()
@@ -2282,6 +2576,7 @@ namespace Microsoft.OData.Json
         /// Parses a unicode hex value.
         /// </summary>
         /// <returns>32-bit signed integer equivalent.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private int ParseUnicodeHexValue()
         {
             string unicodeHexValue = this.ConsumeTokenToString(4);
@@ -2299,12 +2594,74 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="character">The character to check.</param>
         /// <returns>true if the character is allowed in a JSON property name; otherwise false.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private bool IsCharacterAllowedInPropertyName(char character)
         {
             return Char.IsLetterOrDigit(character) ||
                 character == '_' ||
                 character == '$' ||
                 (this.allowAnnotations && (character == '.' || character == '@'));
+        }
+
+        /// <summary>
+        /// Converts the JSON number text to a boxed numeric value.
+        /// Order: Int32 (if fits) -> Decimal (when not IEEE754 compatible) -> Double; throws if none succeed.
+        /// </summary>
+        /// <param name="numberString">Canonical numeric token (no surrounding whitespace).</param>
+        /// <returns>Boxed int, decimal or double.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private object ParseNumericToken(string numberString)
+        {
+            // We will first try and convert the value to Int32. If it succeeds, use that.
+            // And then, we will try Decimal, since it will lose precision while expected type is specified.
+            // Otherwise, we will try and convert the value into a double.
+            if (Int32.TryParse(numberString, NumberStyles.Integer, NumberFormatInfo.InvariantInfo, out int intValue))
+            {
+                return intValue;
+            }
+
+            // if it is not Ieee754Compatible, decimal will be parsed before double to keep precision
+            if (!this.isIeee754Compatible && Decimal.TryParse(numberString, NumberStyles.Number, NumberFormatInfo.InvariantInfo, out decimal decimalValue))
+            {
+                return decimalValue;
+            }
+
+            if (Double.TryParse(numberString, NumberStyles.Float, NumberFormatInfo.InvariantInfo, out double doubleValue))
+            {
+                return doubleValue;
+            }
+
+            throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_InvalidNumberFormat, numberString));
+        }
+
+        /// <summary>
+        /// Determines whether the specified character is valid within a numeric literal.
+        /// </summary>
+        /// <param name="ch">The character to evaluate.</param>
+        /// <returns>
+        /// <c>true</c> if the character is a digit, decimal point, exponent indicator ('e' or 'E'), or sign ('+' or '-'); otherwise, <c>false</c>.
+        /// </returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static bool IsNumberChar(char ch)
+        {
+            return Char.IsDigit(ch) ||
+                ch == '.' ||
+                ch == 'E' || ch == 'e' ||
+                ch == '-' || ch == '+';
+        }
+
+
+        /// <summary>
+        /// Returns the result of a <see cref="ValueTask{TResult}"/> if already completed successfully; otherwise, awaits it.
+        /// </summary>
+        /// <param name="pendingTask">The <see cref="ValueTask{TResult}"/> to evaluate or await.</param>
+        /// <returns>A <see cref="ValueTask{TResult}"/> that completes with the result of the original task.</returns
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        static ValueTask<bool> GetOrAwait(ValueTask<bool> pendingTask)
+        {
+            return pendingTask.IsCompletedSuccessfully
+                ? ValueTask.FromResult(pendingTask.Result)
+                : pendingTask;
         }
 
         /// <summary>
