@@ -1125,14 +1125,7 @@ namespace Microsoft.OData.Json
                                 throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_UnrecognizedEscapeSequence, "\\uXXXX"));
                             }
 
-                            ReadOnlySpan<char> unicodeHexValue = this.ConsumeTokenToSpan(4);
-                            int characterValue;
-                            if (!Int32.TryParse(unicodeHexValue, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out characterValue))
-                            {
-                                throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_UnrecognizedEscapeSequence, "\\u" + unicodeHexValue.ToString()));
-                            }
-
-                            valueBuilder.Append((char)characterValue);
+                            valueBuilder.Append((char)this.ParseUnicodeHexValue());
                             break;
                         default:
                             throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_UnrecognizedEscapeSequence, "\\" + character));
@@ -1394,8 +1387,7 @@ namespace Microsoft.OData.Json
                                 throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_UnrecognizedEscapeSequence, "\\uXXXX"));
                             }
 
-                            int characterValue = ParseUnicodeHexValue();
-                            character = (char)characterValue;
+                            character = (char)this.ParseUnicodeHexValue();
 
                             // We are already positioned on the next character, so don't advance at the end
                             advance = false;
@@ -1570,7 +1562,6 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="characterCount">The number of characters after the token start to consume.</param>
         /// <returns>The string value of the consumed token.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private ReadOnlySpan<char> ConsumeTokenToSpan(int characterCount)
         {
             Debug.Assert(characterCount >= 0, "characterCount >= 0");
@@ -1588,7 +1579,6 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="characterCount">The number of characters after the token start to consume.</param>
         /// <returns>The string value of the consumed token.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private ReadOnlyMemory<char> ConsumeTokenToMemory(int characterCount)
         {
             Debug.Assert(characterCount >= 0, "characterCount >= 0");
@@ -1929,8 +1919,7 @@ namespace Microsoft.OData.Json
                             }
 
                             ReadOnlyMemory<char> unicodeHexValue = this.ConsumeTokenToMemory(4);
-                            int characterValue;
-                            if (!Int32.TryParse(unicodeHexValue.Span, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out characterValue))
+                            if (!Int32.TryParse(unicodeHexValue.Span, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out int characterValue))
                             {
                                 throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_UnrecognizedEscapeSequence, "\\u" + unicodeHexValue.Span.ToString()));
                             }
@@ -2380,8 +2369,7 @@ namespace Microsoft.OData.Json
                                 throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_UnrecognizedEscapeSequence, "\\uXXXX"));
                             }
 
-                            int characterValue = ParseUnicodeHexValue();
-                            character = (char)characterValue;
+                            character = (char)this.ParseUnicodeHexValue();
 
                             // We are already positioned on the next character, so don't advance at the end
                             advance = false;
@@ -2767,7 +2755,7 @@ namespace Microsoft.OData.Json
                         value = ODataJsonConstants.ODataServiceDocumentElementUrlName;
                         return true;
                     }
-                    if (span[0] == '@' && span.SequenceEqual(ODataJsonConstants.SimplifiedODataIdPropertyName.AsSpan()))
+                    if (span[1] == 'i' && span.SequenceEqual(ODataJsonConstants.SimplifiedODataIdPropertyName.AsSpan()))
                     {
                         value = ODataJsonConstants.SimplifiedODataIdPropertyName;
                         return true;
