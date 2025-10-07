@@ -1002,7 +1002,14 @@ namespace Microsoft.OData.Json
             // if the content is nested json, we can stream
             this.canStream = this.characterBuffer[this.tokenStartIndex] == '{' || this.characterBuffer[this.tokenStartIndex] == '[';
 
-            this.nodeValue = token.ToString();
+            if (TryGetMatchingCommonValueString(token, out string commonValue))
+            {
+                this.nodeValue = commonValue;
+            }
+            else
+            {
+                this.nodeValue = token.ToString();
+            }
 
             return JsonNodeType.Property;
         }
@@ -1072,7 +1079,7 @@ namespace Microsoft.OData.Json
                         }
                         else
                         {
-                            this.stringValueBuilder.Length = 0;
+                            this.stringValueBuilder.Clear();
                         }
 
                         valueBuilder = this.stringValueBuilder;
@@ -1134,30 +1141,31 @@ namespace Microsoft.OData.Json
                 else if (character == openingQuoteCharacter)
                 {
                     // Consume everything up to the quote character
-                    string result;
                     if (valueBuilder != null)
                     {
                         this.ConsumeTokenAppendToBuilder(valueBuilder, currentCharacterTokenRelativeIndex);
-                        result = valueBuilder.ToString();
+
+                        Debug.Assert(this.characterBuffer[this.tokenStartIndex] == openingQuoteCharacter, "We should have consumed everything up to the quote character.");
+
+                        // Consume the quote character as well.
+                        this.tokenStartIndex++;
+
+                        return valueBuilder.ToString();
                     }
-                    else
-                    {
-                        ReadOnlySpan<char> currentNameSpan = this.ConsumeTokenToSpan(currentCharacterTokenRelativeIndex);
-                        if (TryGetMatchingCommonValueString(currentNameSpan, out string interned))
-                        {
-                            result = interned;
-                        }
-                        else
-                        {
-                            result = currentNameSpan.ToString();
-                        }
-                    }
+
+                    ReadOnlySpan<char> result = this.ConsumeTokenToSpan(currentCharacterTokenRelativeIndex);
 
                     Debug.Assert(this.characterBuffer[this.tokenStartIndex] == openingQuoteCharacter, "We should have consumed everything up to the quote character.");
 
                     // Consume the quote character as well.
                     this.tokenStartIndex++;
-                    return result;
+
+                    if (TryGetMatchingCommonValueString(result, out string commonValue))
+                    {
+                        return commonValue;
+                    }
+
+                    return new string(result);
                 }
                 else
                 {
@@ -1806,7 +1814,14 @@ namespace Microsoft.OData.Json
             // if the content is nested json, we can stream
             this.canStream = this.characterBuffer[this.tokenStartIndex] == '{' || this.characterBuffer[this.tokenStartIndex] == '[';
 
-            this.nodeValue = token.Span.ToString();
+            if (TryGetMatchingCommonValueString(token.Span, out string commonValue))
+            {
+                this.nodeValue = commonValue;
+            }
+            else
+            {
+                this.nodeValue = token.Span.ToString();
+            }
 
             return JsonNodeType.Property;
         }
@@ -1865,7 +1880,7 @@ namespace Microsoft.OData.Json
                         }
                         else
                         {
-                            this.stringValueBuilder.Length = 0;
+                            this.stringValueBuilder.Clear();
                         }
 
                         valueBuilder = this.stringValueBuilder;
@@ -1933,31 +1948,31 @@ namespace Microsoft.OData.Json
                 else if (character == openingQuoteCharacter)
                 {
                     // Consume everything up to the quote character
-                    string result;
                     if (valueBuilder != null)
                     {
                         this.ConsumeTokenAppendToBuilder(valueBuilder, currentCharacterTokenRelativeIndex);
-                        result = valueBuilder.ToString();
+
+                        Debug.Assert(this.characterBuffer[this.tokenStartIndex] == openingQuoteCharacter, "We should have consumed everything up to the quote character.");
+
+                        // Consume the quote character as well.
+                        this.tokenStartIndex++;
+
+                        return (valueBuilder.ToString(), hasLeadingBackslash);
                     }
-                    else
-                    {
-                        ReadOnlyMemory<char> currentNameMemory = this.ConsumeTokenToMemory(currentCharacterTokenRelativeIndex);
-                        if (TryGetMatchingCommonValueString(currentNameMemory.Span, out string interned))
-                        {
-                            result = interned;
-                        }
-                        else
-                        {
-                            result = currentNameMemory.Span.ToString();
-                        }
-                    }
+
+                    ReadOnlyMemory<char> result = this.ConsumeTokenToMemory(currentCharacterTokenRelativeIndex);
 
                     Debug.Assert(this.characterBuffer[this.tokenStartIndex] == openingQuoteCharacter, "We should have consumed everything up to the quote character.");
 
                     // Consume the quote character as well.
                     this.tokenStartIndex++;
 
-                    return (result, hasLeadingBackslash);
+                    if (TryGetMatchingCommonValueString(result.Span, out string commonValue))
+                    {
+                        return (commonValue, hasLeadingBackslash);
+                    }
+
+                    return (new string(result.Span), hasLeadingBackslash);
                 }
                 else
                 {
@@ -2215,11 +2230,6 @@ namespace Microsoft.OData.Json
             }
 
             ReadOnlyMemory<char> nameMemory = this.ConsumeTokenToMemory(currentCharacterTokenRelativeIndex);
-            if (TryGetMatchingCommonValueString(nameMemory.Span, out string interned))
-            {
-                return ValueTask.FromResult(interned.AsMemory());
-            }
-
             return ValueTask.FromResult(nameMemory);
 
             static async ValueTask<ReadOnlyMemory<char>> AwaitParseQuotedNameAsync(JsonReader thisParam, ValueTask<(string Value, bool HasLeadingBackslash)> pendingParseQuotedNameTask)
@@ -2249,26 +2259,14 @@ namespace Microsoft.OData.Json
                             continue;
                         }
 
-                        ReadOnlyMemory<char> currentNameMemory = thisParam.ConsumeTokenToMemory(relativeIndex);
-                        if (TryGetMatchingCommonValueString(currentNameMemory.Span, out string knownName))
-                        {
-                            return knownName.AsMemory();
-                        }
-
-                        return currentNameMemory;
+                        return thisParam.ConsumeTokenToMemory(relativeIndex);
                     }
 
                     pendingReadInputTask = thisParam.ReadInputAsync();
                 }
 
                 // EOF: Return whatever we have accumulated so far
-                ReadOnlyMemory<char> nameMemory = thisParam.ConsumeTokenToMemory(relativeIndex);
-                if (TryGetMatchingCommonValueString(nameMemory.Span, out string interned))
-                {
-                    return interned.AsMemory();
-                }
-
-                return nameMemory;
+                return thisParam.ConsumeTokenToMemory(relativeIndex);
             }
         }
 
@@ -2721,8 +2719,6 @@ namespace Microsoft.OData.Json
                 ch == '-' || ch == '+';
         }
 
-
-
         /// <summary>
         /// Attempts to match a given span of characters to a predefined set of common OData property names and returns the corresponding interned string if a match is found.
         /// The method is intended to reduce memory usage by  interning commonly used property names in OData payloads
@@ -2734,6 +2730,12 @@ namespace Microsoft.OData.Json
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static bool TryGetMatchingCommonValueString(ReadOnlySpan<char> span, out string value)
         {
+            if (span.IsEmpty || span.Length == 0)
+            {
+                value = null;
+                return false;
+            }
+
             switch (span.Length)
             {
                 case 2: // id, Id
