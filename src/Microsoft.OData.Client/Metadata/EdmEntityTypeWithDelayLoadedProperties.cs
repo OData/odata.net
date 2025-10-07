@@ -66,6 +66,18 @@ namespace Microsoft.OData.Service.Providers
         }
 
         /// <summary>
+        /// Gets or sets the key property of the entity type that make up the entity key.
+        /// </summary>
+        public override IEnumerable<IEdmStructuralProperty> DeclaredKey
+        {
+            get
+            {
+                this.EnsurePropertyLoaded();
+                return base.DeclaredKey;
+            }
+        }
+
+        /// <summary>
         /// Gets the properties declared immediately within this type.
         /// </summary>
         public override IEnumerable<IEdmProperty> DeclaredProperties
