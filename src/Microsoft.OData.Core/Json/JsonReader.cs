@@ -2730,9 +2730,9 @@ namespace Microsoft.OData.Json
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static bool TryGetMatchingCommonValueString(ReadOnlySpan<char> span, out string value)
         {
-            if (span.IsEmpty || span.Length == 0)
+            value = null;
+            if (span.Length == 0)
             {
-                value = null;
                 return false;
             }
 
@@ -2752,18 +2752,17 @@ namespace Microsoft.OData.Json
                     break;
 
                 case 3: // url, @id
-                    if (span[0] == 'u' && span.SequenceEqual(ODataJsonConstants.ODataServiceDocumentElementUrlName.AsSpan()))
+                    if (span[0] == 'u' && span[1] == 'r' && span[2] == 'l')
                     {
                         value = ODataJsonConstants.ODataServiceDocumentElementUrlName;
                         return true;
                     }
-                    if (span[1] == 'i' && span.SequenceEqual(ODataJsonConstants.SimplifiedODataIdPropertyName.AsSpan()))
+                    if (span[0] == '@' && span[1] == 'i' && span[1] == 'd')
                     {
                         value = ODataJsonConstants.SimplifiedODataIdPropertyName;
                         return true;
                     }
                     break;
-
                 case 4: // null, name, true, type
                     if (span[1] == 'u' && span.SequenceEqual(ODataJsonConstants.ODataNullPropertyName.AsSpan()))
                     {
@@ -2786,7 +2785,6 @@ namespace Microsoft.OData.Json
                         return true;
                     }
                     break;
-
                 case 5: // value, error, delta, @type, false
                     if (span[0] == 'f' && span.SequenceEqual(JsonConstants.JsonFalseLiteral.AsSpan()))
                     {
@@ -2798,7 +2796,7 @@ namespace Microsoft.OData.Json
                         value = ODataJsonConstants.ODataValuePropertyName;
                         return true;
                     }
-                    if (span[1] == 't' && span.SequenceEqual(ODataJsonConstants.SimplifiedODataTypePropertyName.AsSpan()))
+                    if (span[0] == '@' && span[1] == 't' && span.SequenceEqual(ODataJsonConstants.SimplifiedODataTypePropertyName.AsSpan()))
                     {
                         value = ODataJsonConstants.SimplifiedODataTypePropertyName;
                         return true;
@@ -2814,7 +2812,6 @@ namespace Microsoft.OData.Json
                         return true;
                     }
                     break;
-
                 case 6: // reason, source, target
                     if (span[0] == 'r' && span.SequenceEqual(ODataJsonConstants.ODataReasonPropertyName.AsSpan()))
                     {
@@ -2832,7 +2829,6 @@ namespace Microsoft.OData.Json
                         return true;
                     }
                     break;
-
                 case 7: // changed, deleted
                     if (span[0] == 'c' && span.SequenceEqual(ODataJsonConstants.ODataReasonChangedValue.AsSpan()))
                     {
@@ -2845,47 +2841,44 @@ namespace Microsoft.OData.Json
                         return true;
                     }
                     break;
-
                 case 8: // @context, @removed
-                    if (span[1] == 'c' && span.SequenceEqual(ODataJsonConstants.SimplifiedODataContextPropertyName.AsSpan()))
+                    if (span[0] == '@' && span[1] == 'c' && span.SequenceEqual(ODataJsonConstants.SimplifiedODataContextPropertyName.AsSpan()))
                     {
                         value = ODataJsonConstants.SimplifiedODataContextPropertyName;
                         return true;
                     }
-                    if (span[0] == 'r' && span.SequenceEqual(ODataJsonConstants.SimplifiedODataRemovedPropertyName.AsSpan()))
+                    if (span[0] == '@' && span[1] == 'r' && span.SequenceEqual(ODataJsonConstants.SimplifiedODataRemovedPropertyName.AsSpan()))
                     {
-                        value = ODataJsonConstants.SimplifiedODataRemovedPropertyName; return true;
+                        value = ODataJsonConstants.SimplifiedODataRemovedPropertyName;
+                        return true;
                     }
                     break;
-
                 case 9: // @odata.id
-                    if (span.SequenceEqual(ODataJsonConstants.PrefixedODataIdPropertyName.AsSpan()))
+                    if (span[0] == '@' && span.SequenceEqual(ODataJsonConstants.PrefixedODataIdPropertyName.AsSpan()))
                     {
                         value = ODataJsonConstants.PrefixedODataIdPropertyName;
                         return true;
                     }
                     break;
-
                 case 11: // @odata.type, @odata.null
-                    if (span.SequenceEqual(ODataJsonConstants.PrefixedODataTypePropertyName.AsSpan()))
+                    if (span[0] == '@' && span[8] == 't' && span[9] == 'y' && span.SequenceEqual(ODataJsonConstants.PrefixedODataTypePropertyName.AsSpan()))
                     {
                         value = ODataJsonConstants.PrefixedODataTypePropertyName;
                         return true;
                     }
-                    if (span.SequenceEqual(ODataJsonConstants.PrefixedODataNullPropertyName.AsSpan()))
+                    if (span[0] == '@' && span[8] == 'n' && span[9] == 'u' && span.SequenceEqual(ODataJsonConstants.PrefixedODataNullPropertyName.AsSpan()))
                     {
                         value = ODataJsonConstants.PrefixedODataNullPropertyName;
                         return true;
                     }
                     break;
-
                 case 14: // @odata.context, @odata.removed
-                    if (span.SequenceEqual(ODataJsonConstants.PrefixedODataContextPropertyName.AsSpan()))
+                    if (span[0] == '@' && span[8] == 'c' && span[9] == 'o' && span.SequenceEqual(ODataJsonConstants.PrefixedODataContextPropertyName.AsSpan()))
                     {
                         value = ODataJsonConstants.PrefixedODataContextPropertyName;
                         return true;
                     }
-                    if (span.SequenceEqual(ODataJsonConstants.PrefixedODataRemovedPropertyName.AsSpan()))
+                    if (span[0] == '@' && span[8] == 'r' && span[9] == 'e' && span.SequenceEqual(ODataJsonConstants.PrefixedODataRemovedPropertyName.AsSpan()))
                     {
                         value = ODataJsonConstants.PrefixedODataRemovedPropertyName;
                         return true;
@@ -2893,7 +2886,6 @@ namespace Microsoft.OData.Json
                     break;
             }
 
-            value = null;
             return false;
         }
 
