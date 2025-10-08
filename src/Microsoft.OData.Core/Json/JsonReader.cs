@@ -2720,6 +2720,34 @@ namespace Microsoft.OData.Json
         }
 
         /// <summary>
+        /// Returns an interned string if the input matches a common value or is short; otherwise, returns a new string
+        /// instance.
+        /// </summary>
+        /// <remarks>This method optimizes memory usage by interning strings that are either commonly used
+        /// or short in length. For longer or unique strings, it returns a new string instance to avoid unnecessary
+        /// interning overhead.</remarks>
+        /// <param name="span">A read-only span of characters representing the input string to process.</param>
+        /// <returns>An interned string if the input matches a predefined common value or if its length is 10 characters or
+        /// fewer; otherwise, a new string instance representing the input.</returns>
+        private static string InterningIfCommon(ReadOnlySpan<char> span)
+        {
+            // For known property names, return static interned instances
+            if (TryGetMatchingCommonValueString(span, out string commonValue))
+            {
+                return commonValue;
+            }
+
+            // Otherwise, intern only if the string is short
+            if (span.Length <= 10)
+            {
+                return string.Intern(span.ToString());
+            }
+
+            // For long/unique strings, just allocate
+            return span.ToString();
+        }
+
+        /// <summary>
         /// Attempts to match a given span of characters to a predefined set of common OData property names and returns the corresponding interned string if a match is found.
         /// The method is intended to reduce memory usage by  interning commonly used property names in OData payloads
         /// </summary>
