@@ -141,6 +141,30 @@ namespace Microsoft.OData.Tests
         }
 
         [Fact]
+        public void FeedContextUriWithApplyAggreagateOnCollectionProperty()
+        {
+            string customFunctionName = "microsoft.union";
+            try
+            {
+                var argument = EdmCoreModel.GetCollection(EdmCoreModel.Instance.GetString(/*isNullable*/false));
+                var existingCustomFunctionSignature = new FunctionSignatureWithReturnType(EdmCoreModel.Instance.GetString(false), argument);
+                CustomUriFunctions.AddCustomUriFunction(customFunctionName, existingCustomFunctionSignature);
+
+                string applyClause = $"aggregate(Restaurants with {customFunctionName} as DisctRestaurants)";
+
+                foreach (ODataVersion version in Versions)
+                {
+                    Assert.Equal(this.CreateFeedContextUri(null, null, applyClause, null, version).OriginalString, MetadataDocumentUriString + "#Cities(DisctRestaurants)");
+                }
+            }
+            finally
+            {
+                // Clean from CustomUriFunctions cache
+                CustomUriFunctions.RemoveCustomUriFunction(customFunctionName);
+            }
+        }
+
+        [Fact]
         public void FeedContextUriWithApplyGroupBy()
         {
             string applyClause = "groupby((Name, Address/Street))";

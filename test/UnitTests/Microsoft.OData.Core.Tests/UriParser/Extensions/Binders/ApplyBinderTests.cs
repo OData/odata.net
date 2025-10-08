@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.OData.Edm;
 using Microsoft.OData.Tests.UriParser.Binders;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.UriParser.Aggregation;
@@ -37,6 +38,41 @@ namespace Microsoft.OData.Tests.UriParser.Extensions.Binders
             ApplyBinder binder = new ApplyBinder(FakeBindMethods.BindSingleComplexProperty, _bindingState);
             Action bind = () => binder.BindApply(null);
             Assert.Throws<ArgumentNullException>("tokens", bind);
+        }
+
+        [Fact]
+        public void BindApplyWithAggregateOnCollectionPropertyShouldReturnApplyClause()
+        {
+            string customFunctionName = "NS.UnionDate";
+            try
+            {
+                var argument = EdmCoreModel.GetCollection(EdmCoreModel.Instance.GetDate(/*isNullable*/false));
+                var existingCustomFunctionSignature = new FunctionSignatureWithReturnType(argument, argument);
+                CustomUriFunctions.AddCustomUriFunction(customFunctionName, existingCustomFunctionSignature);
+
+                IEnumerable<QueryToken> tokens = _parser.ParseApply($"aggregate(MyDates with {customFunctionName} as UnionDate)");
+
+                ApplyBinder binder = new ApplyBinder(q => FakeBindMethods.FakeCollectionPropertyAccessNode, _bindingState);
+                ApplyClause actual = binder.BindApply(tokens);
+
+                Assert.NotNull(actual);
+                AggregateTransformationNode aggregate = Assert.IsType<AggregateTransformationNode>(Assert.Single(actual.Transformations));
+
+                Assert.Equal(TransformationNodeKind.Aggregate, aggregate.Kind);
+                Assert.NotNull(aggregate.AggregateExpressions);
+
+                AggregateCollectionExpression statement = Assert.IsType<AggregateCollectionExpression>(Assert.Single(aggregate.AggregateExpressions));
+                Assert.Same(statement.Expression, FakeBindMethods.FakeCollectionPropertyAccessNode);
+
+                Assert.Equal(AggregationMethod.Custom, statement.Method);
+                Assert.Equal(customFunctionName, statement.MethodDefinition.MethodLabel);
+                Assert.Equal("Collection(Edm.Date)", statement.TypeReference.FullName());
+                Assert.Equal("UnionDate", statement.Alias);
+            }
+            finally
+            {
+                CustomUriFunctions.RemoveCustomUriFunction(customFunctionName);
+            }
         }
 
         [Fact]

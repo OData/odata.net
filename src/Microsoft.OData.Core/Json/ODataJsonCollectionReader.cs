@@ -330,18 +330,15 @@ namespace Microsoft.OData.Json
         {
             Debug.Assert(propertyAndAnnotationCollector != null, "propertyAndAnnotationCollector != null");
 
-            IEdmTypeReference actualItemTypeReference;
             this.ExpectedItemTypeReference = ReaderValidationUtils.ValidateCollectionContextUriAndGetPayloadItemTypeReference(
                 this.jsonCollectionDeserializer.ContextUriParseResult,
                 this.ExpectedItemTypeReference);
 
             // Read the start of the collection until we find the content array for top-level collections
-            Tuple<ODataCollectionStart, IEdmTypeReference> readCollectionStartResult = await this.jsonCollectionDeserializer.ReadCollectionStartAsync(
+            (ODataCollectionStart collectionStart, IEdmTypeReference actualItemTypeReference) = await this.jsonCollectionDeserializer.ReadCollectionStartAsync(
                 propertyAndAnnotationCollector,
                 this.IsReadingNestedPayload,
                 this.ExpectedItemTypeReference).ConfigureAwait(false);
-            ODataCollectionStart collectionStart = readCollectionStartResult.Item1;
-            actualItemTypeReference = readCollectionStartResult.Item2;
 
             if (actualItemTypeReference != null)
             {

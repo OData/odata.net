@@ -57,6 +57,12 @@ namespace Microsoft.OData
             query.Append(text);
         }
 
+        private void AppendExpression(CollectionNode expression)
+        {
+            string text = Uri.EscapeDataString(nodeToStringBuilder.TranslateNode(expression));
+            query.Append(text);
+        }
+
         private void AppendExpression(ODataExpandPath path)
         {
             string text = path.ToContextUrlPathString();
@@ -129,6 +135,17 @@ namespace Microsoft.OData
                         AppendWord(ExpressionConstants.KeywordAs);
                         query.Append(aggExpression.Alias);
                         break;
+
+                    case AggregateExpressionKind.CollectionPropertyAggregate:
+                        AggregateCollectionExpression aggregateCollectionExpression = expression as AggregateCollectionExpression;
+                        AppendExpression(aggregateCollectionExpression.Expression);
+                        query.Append(ExpressionConstants.SymbolEscapedSpace); // a whitespace
+                        AppendWord(ExpressionConstants.KeywordWith); // keyword 'with'
+                        AppendWord(aggregateCollectionExpression.MethodDefinition.MethodLabel);
+                        AppendWord(ExpressionConstants.KeywordAs); // keyword 'as'
+                        query.Append(aggregateCollectionExpression.Alias);
+                        break;
+
                     case AggregateExpressionKind.EntitySetAggregate:
                         EntitySetAggregateExpression entitySetExpression = expression as EntitySetAggregateExpression;
                         query.Append(entitySetExpression.Alias);

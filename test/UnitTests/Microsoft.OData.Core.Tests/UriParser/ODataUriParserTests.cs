@@ -16,11 +16,11 @@ using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Vocabularies;
 using Microsoft.OData.Edm.Vocabularies.Community.V1;
+using Microsoft.OData.Metadata;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.UriParser.Aggregation;
 using Microsoft.OData.UriParser.Validation;
 using Xunit;
-using Microsoft.OData.Metadata;
 
 namespace Microsoft.OData.Tests.UriParser
 {
@@ -141,6 +141,43 @@ namespace Microsoft.OData.Tests.UriParser
             var averageExpression = aggregateExpressions[0] as AggregateExpression;
             Assert.NotNull(averageExpression);
             Assert.Equal(AggregationMethod.Average, averageExpression.Method);
+        }
+
+        [Fact]
+        public void CanParseAggregateOnCollectionProperty()
+        {
+            string customFunctionName = "NS.UnionDate";
+            try
+            {
+                var argument = EdmCoreModel.GetCollection(EdmCoreModel.Instance.GetDate(/*isNullable*/false));
+                var existingCustomFunctionSignature = new FunctionSignatureWithReturnType(argument, argument);
+                CustomUriFunctions.AddCustomUriFunction(customFunctionName, existingCustomFunctionSignature);
+
+                var uriParser = new ODataUriParser(
+                    HardCodedTestModel.TestModel,
+                    ServiceRoot,
+                    new Uri($"http://host/People?$apply=aggregate(MyDates with {customFunctionName} as UnionDate)"));
+
+                var odataUri = uriParser.ParseUri();
+
+                var apply = odataUri.Apply;
+                Assert.NotNull(apply);
+                var transformations = apply.Transformations.ToList();
+                Assert.Single(transformations);
+                var aggregateTransformationNode = transformations[0] as AggregateTransformationNode;
+                Assert.NotNull(aggregateTransformationNode);
+                var aggregateExpressions = aggregateTransformationNode.AggregateExpressions.ToList();
+                Assert.Single(aggregateExpressions);
+                var averageExpression = aggregateExpressions[0] as AggregateCollectionExpression;
+                Assert.NotNull(averageExpression);
+                Assert.Equal(AggregationMethod.Custom, averageExpression.Method);
+                Assert.Equal(customFunctionName, averageExpression.MethodDefinition.MethodLabel);
+                averageExpression.Expression.ShouldBeCollectionPropertyAccessQueryNode(HardCodedTestModel.GetPersonMyDatesProp());
+            }
+            finally
+            {
+                CustomUriFunctions.RemoveCustomUriFunction(customFunctionName);
+            }
         }
 
         [Theory]
@@ -734,6 +771,23 @@ namespace Microsoft.OData.Tests.UriParser
             Assert.NotNull(parser.ParseSearch());
             Assert.Equal("abc", parser.ParseSkipToken());
             Assert.Equal("def", parser.ParseDeltaToken());
+            Assert.Equal(2, parser.CustomQueryOptions.Count);
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void ParseQueryOptionsShouldWorkForUnknownQueryOptions(bool enableNoDollarQueryOptions)
+        {
+            string relativeUriString = "People?$filter=Name eq 'Foo'&unknown&whatif&unknown=&$top=5";
+            var parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri(relativeUriString, UriKind.Relative));
+            parser.EnableNoDollarQueryOptions = enableNoDollarQueryOptions;
+
+            Assert.NotNull(parser.ParseFilter());
+            Assert.Equal(3, parser.CustomQueryOptions.Count);
+            Assert.Equal(new KeyValuePair<string, string>(null, "unknown"), parser.CustomQueryOptions.ElementAt(0));
+            Assert.Equal(new KeyValuePair<string, string>(null, "whatif"), parser.CustomQueryOptions.ElementAt(1));
+            Assert.Equal(new KeyValuePair<string, string>("unknown", ""), parser.CustomQueryOptions.ElementAt(2));
         }
 
         [Fact]

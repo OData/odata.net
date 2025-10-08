@@ -1345,6 +1345,10 @@ Microsoft.OData.UriParser.CountSegmentToken.SearchOption.get -> Microsoft.OData.
 Microsoft.OData.UriParser.CountSegmentToken.SearchOption.set -> void
 Microsoft.OData.UriParser.CountVirtualPropertyNode
 Microsoft.OData.UriParser.CountVirtualPropertyNode.CountVirtualPropertyNode() -> void
+Microsoft.OData.UriParser.CustomQueryOptionNode
+Microsoft.OData.UriParser.CustomQueryOptionNode.CustomQueryOptionNode(string name, string value) -> void
+Microsoft.OData.UriParser.CustomQueryOptionNode.Name.get -> string
+Microsoft.OData.UriParser.CustomQueryOptionNode.Value.get -> string
 Microsoft.OData.UriParser.CustomQueryOptionToken
 Microsoft.OData.UriParser.CustomQueryOptionToken.CustomQueryOptionToken(string name, string value) -> void
 Microsoft.OData.UriParser.CustomQueryOptionToken.Name.get -> string
@@ -1724,6 +1728,7 @@ Microsoft.OData.UriParser.QueryNodeKind.CollectionResourceFunctionCall = 19 -> M
 Microsoft.OData.UriParser.QueryNodeKind.Constant = 1 -> Microsoft.OData.UriParser.QueryNodeKind
 Microsoft.OData.UriParser.QueryNodeKind.Convert = 2 -> Microsoft.OData.UriParser.QueryNodeKind
 Microsoft.OData.UriParser.QueryNodeKind.Count = 28 -> Microsoft.OData.UriParser.QueryNodeKind
+Microsoft.OData.UriParser.QueryNodeKind.CustomQueryOption = 35 -> Microsoft.OData.UriParser.QueryNodeKind
 Microsoft.OData.UriParser.QueryNodeKind.EntitySet = 22 -> Microsoft.OData.UriParser.QueryNodeKind
 Microsoft.OData.UriParser.QueryNodeKind.In = 32 -> Microsoft.OData.UriParser.QueryNodeKind
 Microsoft.OData.UriParser.QueryNodeKind.KeyLookup = 23 -> Microsoft.OData.UriParser.QueryNodeKind
@@ -2054,6 +2059,8 @@ override Microsoft.OData.UriParser.CountSegmentToken.NextToken.get -> Microsoft.
 override Microsoft.OData.UriParser.CountSegmentToken.NextToken.set -> void
 override Microsoft.OData.UriParser.CountVirtualPropertyNode.Kind.get -> Microsoft.OData.UriParser.QueryNodeKind
 override Microsoft.OData.UriParser.CountVirtualPropertyNode.TypeReference.get -> Microsoft.OData.Edm.IEdmTypeReference
+override Microsoft.OData.UriParser.CustomQueryOptionNode.Accept<T>(Microsoft.OData.UriParser.QueryNodeVisitor<T> visitor) -> T
+override Microsoft.OData.UriParser.CustomQueryOptionNode.Kind.get -> Microsoft.OData.UriParser.QueryNodeKind
 override Microsoft.OData.UriParser.CustomQueryOptionToken.Accept<T>(Microsoft.OData.UriParser.ISyntacticTreeVisitor<T> visitor) -> T
 override Microsoft.OData.UriParser.CustomQueryOptionToken.Kind.get -> Microsoft.OData.UriParser.QueryTokenKind
 override Microsoft.OData.UriParser.DottedIdentifierToken.Accept<T>(Microsoft.OData.UriParser.ISyntacticTreeVisitor<T> visitor) -> T
@@ -2451,6 +2458,7 @@ virtual Microsoft.OData.UriParser.QueryNodeVisitor<T>.Visit(Microsoft.OData.UriP
 virtual Microsoft.OData.UriParser.QueryNodeVisitor<T>.Visit(Microsoft.OData.UriParser.ConstantNode nodeIn) -> T
 virtual Microsoft.OData.UriParser.QueryNodeVisitor<T>.Visit(Microsoft.OData.UriParser.ConvertNode nodeIn) -> T
 virtual Microsoft.OData.UriParser.QueryNodeVisitor<T>.Visit(Microsoft.OData.UriParser.CountNode nodeIn) -> T
+virtual Microsoft.OData.UriParser.QueryNodeVisitor<T>.Visit(Microsoft.OData.UriParser.CustomQueryOptionNode nodeIn) -> T
 virtual Microsoft.OData.UriParser.QueryNodeVisitor<T>.Visit(Microsoft.OData.UriParser.InNode nodeIn) -> T
 virtual Microsoft.OData.UriParser.QueryNodeVisitor<T>.Visit(Microsoft.OData.UriParser.NamedFunctionParameterNode nodeIn) -> T
 virtual Microsoft.OData.UriParser.QueryNodeVisitor<T>.Visit(Microsoft.OData.UriParser.NonResourceRangeVariableReferenceNode nodeIn) -> T

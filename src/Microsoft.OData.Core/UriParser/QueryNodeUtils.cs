@@ -22,77 +22,47 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// Pre-look map for BinaryOperator kind resolver
         /// </summary>
-        private static Dictionary<Tuple<BinaryOperatorKind, EdmPrimitiveTypeKind, EdmPrimitiveTypeKind>, EdmPrimitiveTypeKind> additionalMap =
-                new Dictionary<Tuple<BinaryOperatorKind, EdmPrimitiveTypeKind, EdmPrimitiveTypeKind>, EdmPrimitiveTypeKind>(EqualityComparer<Tuple<BinaryOperatorKind, EdmPrimitiveTypeKind, EdmPrimitiveTypeKind>>.Default)
+        private static Dictionary<(BinaryOperatorKind, EdmPrimitiveTypeKind, EdmPrimitiveTypeKind), EdmPrimitiveTypeKind> additionalMap =
+                new Dictionary<(BinaryOperatorKind Op, EdmPrimitiveTypeKind Left, EdmPrimitiveTypeKind Right), EdmPrimitiveTypeKind>(EqualityComparer<(BinaryOperatorKind, EdmPrimitiveTypeKind, EdmPrimitiveTypeKind)>.Default)
                 {
                     {
-                        new Tuple<BinaryOperatorKind, EdmPrimitiveTypeKind, EdmPrimitiveTypeKind>(
-                            BinaryOperatorKind.Add,
-                            EdmPrimitiveTypeKind.DateTimeOffset,
-                            EdmPrimitiveTypeKind.Duration),
+                        (BinaryOperatorKind.Add, EdmPrimitiveTypeKind.DateTimeOffset, EdmPrimitiveTypeKind.Duration),
                         EdmPrimitiveTypeKind.DateTimeOffset
                     },
                     {
-                        new Tuple<BinaryOperatorKind, EdmPrimitiveTypeKind, EdmPrimitiveTypeKind>(
-                            BinaryOperatorKind.Add,
-                            EdmPrimitiveTypeKind.Duration,
-                            EdmPrimitiveTypeKind.DateTimeOffset),
+                        (BinaryOperatorKind.Add, EdmPrimitiveTypeKind.Duration, EdmPrimitiveTypeKind.DateTimeOffset),
                         EdmPrimitiveTypeKind.DateTimeOffset
                     },
                     {
-                        new Tuple<BinaryOperatorKind, EdmPrimitiveTypeKind, EdmPrimitiveTypeKind>(
-                            BinaryOperatorKind.Add,
-                            EdmPrimitiveTypeKind.Date,
-                            EdmPrimitiveTypeKind.Duration),
+                        (BinaryOperatorKind.Add, EdmPrimitiveTypeKind.Date, EdmPrimitiveTypeKind.Duration),
                         EdmPrimitiveTypeKind.Date
                     },
                     {
-                        new Tuple<BinaryOperatorKind, EdmPrimitiveTypeKind, EdmPrimitiveTypeKind>(
-                            BinaryOperatorKind.Add,
-                            EdmPrimitiveTypeKind.Duration,
-                            EdmPrimitiveTypeKind.Date),
+                        (BinaryOperatorKind.Add, EdmPrimitiveTypeKind.Duration, EdmPrimitiveTypeKind.Date),
                         EdmPrimitiveTypeKind.Date
                     },
                     {
-                        new Tuple<BinaryOperatorKind, EdmPrimitiveTypeKind, EdmPrimitiveTypeKind>(
-                            BinaryOperatorKind.Add,
-                            EdmPrimitiveTypeKind.Duration,
-                            EdmPrimitiveTypeKind.Duration),
+                        (BinaryOperatorKind.Add, EdmPrimitiveTypeKind.Duration, EdmPrimitiveTypeKind.Duration),
                         EdmPrimitiveTypeKind.Duration
                     },
                     {
-                        new Tuple<BinaryOperatorKind, EdmPrimitiveTypeKind, EdmPrimitiveTypeKind>(
-                            BinaryOperatorKind.Subtract,
-                            EdmPrimitiveTypeKind.DateTimeOffset,
-                            EdmPrimitiveTypeKind.Duration),
+                        (BinaryOperatorKind.Subtract, EdmPrimitiveTypeKind.DateTimeOffset, EdmPrimitiveTypeKind.Duration),
                         EdmPrimitiveTypeKind.DateTimeOffset
                     },
                     {
-                        new Tuple<BinaryOperatorKind, EdmPrimitiveTypeKind, EdmPrimitiveTypeKind>(
-                            BinaryOperatorKind.Subtract,
-                            EdmPrimitiveTypeKind.DateTimeOffset,
-                            EdmPrimitiveTypeKind.DateTimeOffset),
+                        (BinaryOperatorKind.Subtract, EdmPrimitiveTypeKind.DateTimeOffset, EdmPrimitiveTypeKind.DateTimeOffset),
                         EdmPrimitiveTypeKind.Duration
                     },
                     {
-                        new Tuple<BinaryOperatorKind, EdmPrimitiveTypeKind, EdmPrimitiveTypeKind>(
-                            BinaryOperatorKind.Subtract,
-                            EdmPrimitiveTypeKind.Date,
-                            EdmPrimitiveTypeKind.Duration),
+                        (BinaryOperatorKind.Subtract, EdmPrimitiveTypeKind.Date, EdmPrimitiveTypeKind.Duration),
                         EdmPrimitiveTypeKind.Date
                     },
                     {
-                        new Tuple<BinaryOperatorKind, EdmPrimitiveTypeKind, EdmPrimitiveTypeKind>(
-                            BinaryOperatorKind.Subtract,
-                            EdmPrimitiveTypeKind.Date,
-                            EdmPrimitiveTypeKind.Date),
+                        (BinaryOperatorKind.Subtract, EdmPrimitiveTypeKind.Date, EdmPrimitiveTypeKind.Date),
                         EdmPrimitiveTypeKind.Duration
                     },
                     {
-                        new Tuple<BinaryOperatorKind, EdmPrimitiveTypeKind, EdmPrimitiveTypeKind>(
-                            BinaryOperatorKind.Subtract,
-                            EdmPrimitiveTypeKind.Duration,
-                            EdmPrimitiveTypeKind.Duration),
+                        (BinaryOperatorKind.Subtract, EdmPrimitiveTypeKind.Duration, EdmPrimitiveTypeKind.Duration),
                         EdmPrimitiveTypeKind.Duration
                     },
                 };
@@ -110,7 +80,7 @@ namespace Microsoft.OData.UriParser
             Debug.Assert(right != null, "type != null");
 
             EdmPrimitiveTypeKind kind;
-            if (additionalMap.TryGetValue(new Tuple<BinaryOperatorKind, EdmPrimitiveTypeKind, EdmPrimitiveTypeKind>(operatorKind, left.PrimitiveKind(), right.PrimitiveKind()), out kind))
+            if (additionalMap.TryGetValue((operatorKind, left.PrimitiveKind(), right.PrimitiveKind()), out kind))
             {
                 return EdmCoreModel.Instance.GetPrimitive(kind, left.IsNullable);
             }

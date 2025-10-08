@@ -173,6 +173,7 @@ Microsoft.OData.Client.ALinq.UriParser.ISyntacticTreeVisitor<T>.Visit(Microsoft.
 Microsoft.OData.Client.ALinq.UriParser.ISyntacticTreeVisitor<T>.Visit(Microsoft.OData.Client.ALinq.UriParser.LiteralToken tokenIn) -> T
 Microsoft.OData.Client.ALinq.UriParser.ISyntacticTreeVisitor<T>.Visit(Microsoft.OData.Client.ALinq.UriParser.OrderByToken tokenIn) -> T
 Microsoft.OData.Client.ALinq.UriParser.ISyntacticTreeVisitor<T>.Visit(Microsoft.OData.Client.ALinq.UriParser.RangeVariableToken tokenIn) -> T
+Microsoft.OData.Client.ALinq.UriParser.ISyntacticTreeVisitor<T>.Visit(Microsoft.OData.Client.ALinq.UriParser.RootPathToken tokenIn) -> T
 Microsoft.OData.Client.ALinq.UriParser.ISyntacticTreeVisitor<T>.Visit(Microsoft.OData.Client.ALinq.UriParser.SelectTermToken tokenIn) -> T
 Microsoft.OData.Client.ALinq.UriParser.ISyntacticTreeVisitor<T>.Visit(Microsoft.OData.Client.ALinq.UriParser.SelectToken tokenIn) -> T
 Microsoft.OData.Client.ALinq.UriParser.ISyntacticTreeVisitor<T>.Visit(Microsoft.OData.Client.ALinq.UriParser.StarToken tokenIn) -> T
@@ -229,6 +230,7 @@ Microsoft.OData.Client.ALinq.UriParser.QueryTokenKind.InnerPath = 16 -> Microsof
 Microsoft.OData.Client.ALinq.UriParser.QueryTokenKind.Literal = 5 -> Microsoft.OData.Client.ALinq.UriParser.QueryTokenKind
 Microsoft.OData.Client.ALinq.UriParser.QueryTokenKind.OrderBy = 8 -> Microsoft.OData.Client.ALinq.UriParser.QueryTokenKind
 Microsoft.OData.Client.ALinq.UriParser.QueryTokenKind.RangeVariable = 18 -> Microsoft.OData.Client.ALinq.UriParser.QueryTokenKind
+Microsoft.OData.Client.ALinq.UriParser.QueryTokenKind.RootPath = 33 -> Microsoft.OData.Client.ALinq.UriParser.QueryTokenKind
 Microsoft.OData.Client.ALinq.UriParser.QueryTokenKind.Select = 10 -> Microsoft.OData.Client.ALinq.UriParser.QueryTokenKind
 Microsoft.OData.Client.ALinq.UriParser.QueryTokenKind.SelectTerm = 31 -> Microsoft.OData.Client.ALinq.UriParser.QueryTokenKind
 Microsoft.OData.Client.ALinq.UriParser.QueryTokenKind.Star = 11 -> Microsoft.OData.Client.ALinq.UriParser.QueryTokenKind
@@ -238,6 +240,9 @@ Microsoft.OData.Client.ALinq.UriParser.QueryTokenKind.UnaryOperator = 4 -> Micro
 Microsoft.OData.Client.ALinq.UriParser.RangeVariableToken
 Microsoft.OData.Client.ALinq.UriParser.RangeVariableToken.Name.get -> string
 Microsoft.OData.Client.ALinq.UriParser.RangeVariableToken.RangeVariableToken(string name) -> void
+Microsoft.OData.Client.ALinq.UriParser.RootPathToken
+Microsoft.OData.Client.ALinq.UriParser.RootPathToken.RootPathToken() -> void
+Microsoft.OData.Client.ALinq.UriParser.RootPathToken.Segments.get -> System.Collections.Generic.IList<string>
 Microsoft.OData.Client.ALinq.UriParser.SelectExpandTermToken
 Microsoft.OData.Client.ALinq.UriParser.SelectExpandTermToken.ComputeOption.get -> Microsoft.OData.Client.ALinq.UriParser.ComputeToken
 Microsoft.OData.Client.ALinq.UriParser.SelectExpandTermToken.CountQueryOption.get -> bool?
@@ -723,6 +728,8 @@ override Microsoft.OData.Client.ALinq.UriParser.RangeVariableToken.Accept<T>(Mic
 override Microsoft.OData.Client.ALinq.UriParser.RangeVariableToken.Equals(object obj) -> bool
 override Microsoft.OData.Client.ALinq.UriParser.RangeVariableToken.GetHashCode() -> int
 override Microsoft.OData.Client.ALinq.UriParser.RangeVariableToken.Kind.get -> Microsoft.OData.Client.ALinq.UriParser.QueryTokenKind
+override Microsoft.OData.Client.ALinq.UriParser.RootPathToken.Accept<T>(Microsoft.OData.Client.ALinq.UriParser.ISyntacticTreeVisitor<T> visitor) -> T
+override Microsoft.OData.Client.ALinq.UriParser.RootPathToken.Kind.get -> Microsoft.OData.Client.ALinq.UriParser.QueryTokenKind
 override Microsoft.OData.Client.ALinq.UriParser.SelectTermToken.Accept<T>(Microsoft.OData.Client.ALinq.UriParser.ISyntacticTreeVisitor<T> visitor) -> T
 override Microsoft.OData.Client.ALinq.UriParser.SelectTermToken.Kind.get -> Microsoft.OData.Client.ALinq.UriParser.QueryTokenKind
 override Microsoft.OData.Client.ALinq.UriParser.SelectToken.Accept<T>(Microsoft.OData.Client.ALinq.UriParser.ISyntacticTreeVisitor<T> visitor) -> T

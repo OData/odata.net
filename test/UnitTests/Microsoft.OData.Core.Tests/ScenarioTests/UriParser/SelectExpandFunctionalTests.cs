@@ -2305,6 +2305,33 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Fact]
+        public void ApplyAggregateCollectionPropertyTreatedAsOpenPropertyInSelect()
+        {
+            string customFunctionName = "NS.UnionDate";
+            try
+            {
+                var argument = EdmCoreModel.GetCollection(EdmCoreModel.Instance.GetDate(/*isNullable*/false));
+                var existingCustomFunctionSignature = new FunctionSignatureWithReturnType(argument, argument);
+                CustomUriFunctions.AddCustomUriFunction(customFunctionName, existingCustomFunctionSignature);
+
+                var odataQueryOptionParser = new ODataQueryOptionParser(HardCodedTestModel.TestModel,
+                    HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet(),
+                    new Dictionary<string, string>()
+                    {
+                        {"$select", "UnionDate"},
+                        {"$apply", $"aggregate(MyDates with {customFunctionName} as UnionDate)"}
+                    });
+                odataQueryOptionParser.ParseApply();
+                var selectClause = odataQueryOptionParser.ParseSelectAndExpand();
+                AssertSelectString("UnionDate", selectClause);
+            }
+            finally
+            {
+                CustomUriFunctions.RemoveCustomUriFunction(customFunctionName);
+            }
+        }
+
+        [Fact]
         public void SelectAfterApplyReferencingCollapsedPropertyThrows()
         {
             var odataQueryOptionParser = new ODataQueryOptionParser(HardCodedTestModel.TestModel,

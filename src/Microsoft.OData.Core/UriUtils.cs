@@ -20,6 +20,8 @@ namespace Microsoft.OData
     /// </summary>
     internal static class UriUtils
     {
+        private static readonly Uri DefaultMockBase = new("http://host/");
+
         /// <summary>
         /// Returns an absolute URI constructed from the specified base URI and a relative URI
         /// </summary>
@@ -74,6 +76,10 @@ namespace Microsoft.OData
         {
             Debug.Assert(uri != null, "uri != null");
 
+            // TODO: AbsoluteUri is escaped, OriginalString is not escaped
+            // Doc comment says: "Return the unescaped string representation of the Uri" We'd need to use
+            // Uri.UnescapeDataString on GetComponents(UriComponents.AbsoluteUri, UriFormat.UriEscaped) to achieve that for absolute Uris.
+            // Fixing this would be a breaking change?
             return uri.IsAbsoluteUri ? uri.AbsoluteUri : uri.OriginalString;
         }
 
@@ -121,25 +127,60 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Determines whether the <paramref name="baseUri"/> Uri instance is a
-        /// base of the specified Uri instance.
+        /// Determines whether the <paramref name="baseUri"/> Uri instance is a base of the specified Uri instance.
         /// </summary>
         /// <remarks>
-        /// The check is host agnostic. For example, "http://host1.com/Service.svc" is a valid base Uri of "https://host2.org/Service.svc/Bla"
-        /// but is not a valid base for "http://host1.com/OtherService.svc/Bla".
+        /// The check is host agnostic. For example, "http://host1.com/Service.svc" is a valid base Uri of
+        /// "https://host2.org/Service.svc/Bla" but is not a valid base for "http://host1.com/OtherService.svc/Bla".
+        /// Path comparison is case-insensitive and segment-aware to align with OData path name resolution.
         /// </remarks>
         /// <param name="baseUri">The candidate base URI.</param>
         /// <param name="uri">The specified Uri instance to test.</param>
         /// <returns>true if the baseUri Uri instance is a base of uri; otherwise false.</returns>
         internal static bool UriInvariantInsensitiveIsBaseOf(Uri baseUri, Uri uri)
         {
-            Debug.Assert(baseUri != null, "baseUri != null");
-            Debug.Assert(uri != null, "uri != null");
+            ExceptionUtils.CheckArgumentNotNull(baseUri, nameof(baseUri));
+            ExceptionUtils.CheckArgumentNotNull(uri, nameof(uri));
 
-            Uri upperCurrent = CreateBaseComparableUri(baseUri);
-            Uri upperUri = CreateBaseComparableUri(uri);
+            // Require both Uris to be absolute
+            if (!baseUri.IsAbsoluteUri)
+            {
+                throw new InvalidOperationException(Error.Format(SRResources.UriUtils_RequiresAbsoluteUri, nameof(baseUri)));
+            }
 
-            return upperCurrent.IsBaseOf(upperUri);
+            if (!uri.IsAbsoluteUri)
+            {
+                throw new InvalidOperationException(Error.Format(SRResources.UriUtils_RequiresAbsoluteUri, nameof(uri)));
+            }
+
+            Uri absBase = baseUri.IsAbsoluteUri ? baseUri : new Uri(DefaultMockBase, baseUri);
+            Uri absUri = uri.IsAbsoluteUri ? uri : new Uri(DefaultMockBase, uri);
+
+            // Host-agnostic path comparison (escaped, OrdinalIgnoreCase)
+            ReadOnlySpan<char> basePath = absBase.GetComponents(UriComponents.Path, UriFormat.UriEscaped);
+            ReadOnlySpan<char> uriPath = absUri.GetComponents(UriComponents.Path, UriFormat.UriEscaped);
+
+            // Treat empty or root base path as a base of any path on any host
+            if (basePath.Length == 0)
+            {
+                return true;
+            }
+
+            // Fast prefix check (case-insensitive)
+            if (!uriPath.StartsWith(basePath, StringComparison.OrdinalIgnoreCase))
+            {
+                return false;
+            }
+
+            // If equal length, it's an exact match => base-of
+            if (uriPath.Length == basePath.Length)
+            {
+                return true;
+            }
+
+            // Boundary check: "/odata" is not a base of "/odata2"
+            // If base ends with '/', it represents a complete segment; otherwise the next char must be '/'.
+            return basePath[^1] == '/' || uriPath[basePath.Length] == '/';
         }
 
         /// <summary>
@@ -229,37 +270,19 @@ namespace Microsoft.OData
         /// <returns>The mock Uri, the base Uri if given <paramref name="uri"/> is null</returns>
         internal static Uri CreateMockAbsoluteUri(Uri uri = null)
         {
-            Uri BaseMockUri = new Uri("http://host/");
-
             if (uri == null)
             {
-                return BaseMockUri;
+                return DefaultMockBase;
             }
 
-            if (uri.IsAbsoluteUri)
-            {
-                return uri;
-            }
-            else
-            {
-                return new Uri(BaseMockUri, uri);
-            }
+            return uri.IsAbsoluteUri ? uri : new Uri(DefaultMockBase, uri);
         }
 
-        /// <summary>Creates a URI suitable for host-agnostic comparison purposes.</summary>
-        /// <param name="uri">URI to compare.</param>
-        /// <returns>URI suitable for comparison.</returns>
-        private static Uri CreateBaseComparableUri(Uri uri)
+        private static ReadOnlySpan<char> TrimSingleLeadingSlash(ReadOnlySpan<char> input)
         {
-            Debug.Assert(uri != null, "uri != null");
-
-            uri = new Uri(UriUtils.UriToString(uri).ToUpperInvariant(), UriKind.RelativeOrAbsolute);
-
-            UriBuilder builder = new UriBuilder(uri);
-            builder.Host = "h";
-            builder.Port = 80;
-            builder.Scheme = "http";
-            return builder.Uri;
+            // GetComponents(Path, Escaped) typically returns a leading slash for absolute URIs.
+            // We can normalize away a single leading slash to make boundary logic simpler.
+            return input.Length > 0 && input[0] == '/' ? input.Slice(1) : input;
         }
     }
 }
