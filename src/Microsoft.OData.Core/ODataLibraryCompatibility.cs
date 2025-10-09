@@ -45,13 +45,23 @@ namespace Microsoft.OData
         UseLegacyODataInnerErrorSerialization = 1 << 4,
 
         /// <summary>
+        /// When enabled, untyped numeric values are read as decimal.
+        /// </summary>
+        ReadUntypedNumericAsDecimal = 1 << 5,
+
+        /// <summary>
         /// Version 6.x
         /// </summary>
-        Version6 = UseLegacyVariableCasing | WriteTopLevelODataNullAnnotation | WriteODataContextAnnotationForNavProperty | DoNotThrowExceptionForTopLevelNullProperty | UseLegacyODataInnerErrorSerialization,
+        Version6 = UseLegacyVariableCasing | WriteTopLevelODataNullAnnotation | WriteODataContextAnnotationForNavProperty | DoNotThrowExceptionForTopLevelNullProperty | UseLegacyODataInnerErrorSerialization | ReadUntypedNumericAsDecimal,
 
         /// <summary>
         /// Version 7.x
         /// </summary>
-        Version7 = UseLegacyVariableCasing | UseLegacyODataInnerErrorSerialization
+        Version7 = UseLegacyVariableCasing | UseLegacyODataInnerErrorSerialization | ReadUntypedNumericAsDecimal,
+
+        /// <summary>
+        /// Version 8.x
+        /// </summary>
+        Version8 = ReadUntypedNumericAsDecimal,
     }
 }
