@@ -291,7 +291,7 @@ public class ConstructibleModelErrorCases : EdmLibTestCaseBase
             get { return "MyName"; }
         }
 
-        public IEnumerable<IEdmStructuralProperty> DeclaredKey
+        public IEnumerable<IEdmPropertyRef> DeclaredKeyRef
         {
             get { throw new NotImplementedException(); }
         }

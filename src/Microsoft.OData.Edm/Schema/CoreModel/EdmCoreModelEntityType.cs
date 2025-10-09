@@ -117,9 +117,9 @@ namespace Microsoft.OData.Edm
         /// Gets the structural properties of the entity type that make up the entity key.
         /// The Edm.EntityType is always without any declared keys.
         /// </summary>
-        public IEnumerable<IEdmStructuralProperty> DeclaredKey
+        public IEnumerable<IEdmPropertyRef> DeclaredKeyRef
         {
-            get { return Enumerable.Empty<IEdmStructuralProperty>(); }
+            get { return Enumerable.Empty<IEdmPropertyRef>(); }
         }
 
         /// <summary>

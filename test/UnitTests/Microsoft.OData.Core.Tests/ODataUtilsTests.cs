@@ -363,7 +363,7 @@ namespace Microsoft.OData.Tests
             var u2 = new Uri("http://x/odata/Products"); // different normalization
 
             Assert.True(UriUtils.UriInvariantInsensitiveIsBaseOf(b, u1));
-            Assert.True(UriUtils.UriInvariantInsensitiveIsBaseOf(b, u2));
+            Assert.False(UriUtils.UriInvariantInsensitiveIsBaseOf(b, u2));
         }
 
         [Fact]

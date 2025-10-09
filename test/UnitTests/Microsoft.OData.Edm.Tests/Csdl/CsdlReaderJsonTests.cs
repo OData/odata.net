@@ -24,6 +24,56 @@ namespace Microsoft.OData.Edm.Tests.Csdl
     public class CsdlReaderJsonTests
     {
         [Fact]
+        public void ReadKeyAliasInJsonTest()
+        {
+            var jsonCsdl = @"{
+  ""$Version"": ""4.0"",
+  ""NS"": {
+    ""EntityInfo"": {
+      ""$Kind"": ""ComplexType"",
+      ""ID"": {
+        ""$Type"": ""Edm.Int32""
+      },
+      ""Created"": {
+        ""$Type"": ""Edm.DateTimeOffset"",
+        ""$Nullable"": true,
+        ""$Precision"": 0
+      }
+    },
+    ""Category"": {
+      ""$Kind"": ""EntityType"",
+      ""$Key"": [
+        ""ID"",
+        {
+          ""EntityInfoID"": ""Info/ID""
+        }
+      ],
+      ""Info"": {
+        ""$Type"": ""NS.EntityInfo""
+      },
+      ""Name"": {
+        ""$Nullable"": true
+      },
+      ""ID"": {}
+    }
+  }
+}";
+
+            IEdmModel model = Parse(jsonCsdl);
+
+            // Act & Assert
+            IEdmEntityType categoryType = model.SchemaElements.OfType<IEdmEntityType>().First();
+
+            // Two "ID" because the referenced property names are "ID" in entity type and complex type.
+            Assert.Equal(["NS.Category.ID", "NS.EntityInfo.ID"],
+                categoryType.DeclaredKey.Select(k => $"{k.DeclaringType.FullTypeName()}.{k.Name}"));
+
+            IEnumerable<IEdmPropertyRef> propertyRefs = categoryType.DeclaredKeyRef;
+            Assert.Equal(["ID", "Info/ID"], propertyRefs.Select(k => k.Path.Path));
+            Assert.Equal(["--", "EntityInfoID"], propertyRefs.Select(k => k.PropertyAlias ?? "--"));
+        }
+
+        [Fact]
         public void ReadNavigationPropertyPartnerInJsonTest()
         {
             var csdl = @"{

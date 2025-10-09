@@ -5,7 +5,7 @@
 //---------------------------------------------------------------------
 
 using System.Collections.Generic;
-using Microsoft.OData.Edm.Vocabularies;
+using System.Linq;
 
 namespace Microsoft.OData.Edm
 {
@@ -15,9 +15,14 @@ namespace Microsoft.OData.Edm
     public interface IEdmEntityType : IEdmStructuredType, IEdmSchemaType
     {
         /// <summary>
+        /// Gets the key ref of the entity type that make up the entity key.
+        /// </summary>
+        IEnumerable<IEdmPropertyRef> DeclaredKeyRef { get; }
+
+        /// <summary>
         /// Gets the structural properties of the entity type that make up the entity key.
         /// </summary>
-        IEnumerable<IEdmStructuralProperty> DeclaredKey { get; }
+        IEnumerable<IEdmStructuralProperty> DeclaredKey { get => DeclaredKeyRef?.Select(x => x.ReferencedProperty); }
 
         /// <summary>
         /// Gets the value indicating whether or not this type is a media entity.

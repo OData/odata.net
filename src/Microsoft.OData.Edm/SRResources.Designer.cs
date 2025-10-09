@@ -19,7 +19,7 @@ namespace Microsoft.OData.Edm {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "18.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class SRResources {
@@ -228,6 +228,15 @@ namespace Microsoft.OData.Edm {
         internal static string Bad_UnresolvedProperty {
             get {
                 return ResourceManager.GetString("Bad_UnresolvedProperty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The property ref on type &apos;{0}&apos; with name &apos;{1}&apos; and alias &apos;{2}&apos; could not be resolved..
+        /// </summary>
+        internal static string Bad_UnresolvedPropertyRef {
+            get {
+                return ResourceManager.GetString("Bad_UnresolvedPropertyRef", resourceCulture);
             }
         }
         
@@ -2378,6 +2387,15 @@ namespace Microsoft.OData.Edm {
         internal static string PlatformHelper_DateTimeOffsetMustContainTimeZone {
             get {
                 return ResourceManager.GetString("PlatformHelper_DateTimeOffsetMustContainTimeZone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Property Path &apos;{0}&apos; is not ended with &apos;{1}&apos;..
+        /// </summary>
+        internal static string PropertyPathMustEndingWithCorrectPropertyName {
+            get {
+                return ResourceManager.GetString("PropertyPathMustEndingWithCorrectPropertyName", resourceCulture);
             }
         }
         
