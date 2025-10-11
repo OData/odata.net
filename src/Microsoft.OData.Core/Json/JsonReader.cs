@@ -297,7 +297,7 @@ namespace Microsoft.OData.Json
                     }
                     else
                     {
-                        this.ParseStringPrimitiveValue().ToString();
+                        this.ParseStringPrimitiveValue();
                     }
                 }
             }
@@ -632,7 +632,7 @@ namespace Microsoft.OData.Json
                     }
                     else
                     {
-                        await this.ReadParseStringPrimitiveValueAsync().ConfigureAwait(false);
+                        await this.ParseStringPrimitiveValueAsync().ConfigureAwait(false);
                     }
                 }
             }
@@ -1798,19 +1798,6 @@ namespace Microsoft.OData.Json
             this.canStream = this.characterBuffer[this.tokenStartIndex] == '{' || this.characterBuffer[this.tokenStartIndex] == '[';
 
             return JsonNodeType.Property;
-        }
-
-        /// <summary>
-        /// Asynchronously parses a primitive string value from the current token position and returns its string representation.
-        /// </summary>
-        /// <returns>
-        /// A <see cref="ValueTask{String}"/> that represents the asynchronous operation.
-        /// The value of the task contains the string value of the parsed JSON primitive string.
-        /// </returns>
-        private async ValueTask<string> ReadParseStringPrimitiveValueAsync()
-        {
-            (ReadOnlyMemory<char> Value, bool _) = await ParseStringPrimitiveValueAsync().ConfigureAwait(false);
-            return Value.ToString();
         }
 
         /// <summary>
