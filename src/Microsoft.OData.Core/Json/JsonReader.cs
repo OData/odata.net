@@ -1816,8 +1816,6 @@ namespace Microsoft.OData.Json
         /// <summary>
         /// Asynchronously parses a primitive string value.
         /// </summary>
-        /// <param name="hasLeadingBackslash">Set to true if the first character in the string was a backslash. This is used when parsing DateTime values
-        /// since they must start with an escaped slash character (\/).</param>
         /// <returns>A task that represents the asynchronous operation.
         /// The value of the TResult parameter contains a tuple comprising of the value of the string primitive value 
         /// and a value of true if the first character in the string has a backlash; otherwise false.</returns>
