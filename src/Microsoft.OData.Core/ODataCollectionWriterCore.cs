@@ -388,11 +388,11 @@ namespace Microsoft.OData
             this.StartPayloadInStartState();
             this.EnterScope(CollectionWriterState.Collection, collectionStart);
             this.InterceptException(
-                (thisParam, collectionStartParam) =>
+                static (thisParam, collectionStartParam) =>
                 {
                     if (thisParam.expectedItemType == null)
                     {
-                        thisParam.collectionValidator = new CollectionWithoutExpectedTypeValidator(/*expectedItemTypeName*/ null);
+                        thisParam.collectionValidator = new CollectionWithoutExpectedTypeValidator(itemTypeNameFromCollection: null);
                     }
 
                     thisParam.StartCollection(collectionStartParam);
@@ -422,7 +422,7 @@ namespace Microsoft.OData
             }
 
             this.InterceptException(
-                (thisParam, itemParam) =>
+                static (thisParam, itemParam) =>
                 {
                     ValidationUtils.ValidateCollectionItem(itemParam, true /* isNullable */);
                     thisParam.WriteCollectionItem(itemParam, thisParam.expectedItemType);
@@ -445,7 +445,7 @@ namespace Microsoft.OData
         private void WriteEndImplementation()
         {
             this.InterceptException(
-                (thisParam) =>
+                static (thisParam) =>
                 {
                     Scope currentScope = thisParam.scopes.Peek();
 
@@ -511,7 +511,7 @@ namespace Microsoft.OData
             Scope current = this.scopes.Peek();
             if (current.State == CollectionWriterState.Start)
             {
-                this.InterceptException((thisParam) => thisParam.StartPayload());
+                this.InterceptException(static (thisParam) => thisParam.StartPayload());
             }
         }
 
@@ -596,7 +596,7 @@ namespace Microsoft.OData
         /// <param name="item">The item to associate with the new scope.</param>
         private void EnterScope(CollectionWriterState newState, object item)
         {
-            this.InterceptException((thisParam, newStateParam) => thisParam.ValidateTransition(newStateParam), newState);
+            this.InterceptException(static (thisParam, newStateParam) => thisParam.ValidateTransition(newStateParam), newState);
             this.scopes.Push(new Scope(newState, item));
             this.NotifyListener(newState);
         }
@@ -617,7 +617,7 @@ namespace Microsoft.OData
             {
                 this.scopes.Pop();
                 this.scopes.Push(new Scope(CollectionWriterState.Completed, null));
-                this.InterceptException((thisParam) => thisParam.EndPayload());
+                this.InterceptException(static (thisParam) => thisParam.EndPayload());
                 this.NotifyListener(CollectionWriterState.Completed);
             }
         }
@@ -750,7 +750,7 @@ namespace Microsoft.OData
             Scope current = this.scopes.Peek();
             if (current.State == CollectionWriterState.Start)
             {
-                return this.InterceptExceptionAsync((thisParam) => thisParam.StartPayloadAsync());
+                return this.InterceptExceptionAsync(static (thisParam) => thisParam.StartPayloadAsync());
             }
 
             return TaskUtils.CompletedTask;
@@ -767,7 +767,7 @@ namespace Microsoft.OData
                 .ConfigureAwait(false);
             this.EnterScope(CollectionWriterState.Collection, collectionStart);
             await this.InterceptExceptionAsync(
-                async (thisParam, collectionStartParam) =>
+                static async (thisParam, collectionStartParam) =>
                 {
                     if (thisParam.expectedItemType == null)
                     {
@@ -786,7 +786,7 @@ namespace Microsoft.OData
         /// <returns>A task that represents the asynchronous write operation.</returns>
         private Task WriteEndImplementationAsync()
         {
-            return this.InterceptExceptionAsync(async (thisParam) =>
+            return this.InterceptExceptionAsync(static async (thisParam) =>
             {
                 Scope currentScope = thisParam.scopes.Peek();
 
@@ -827,7 +827,7 @@ namespace Microsoft.OData
             }
 
             await this.InterceptExceptionAsync(
-                async(thisParam, itemParam) =>
+                static async (thisParam, itemParam) =>
                 {
                     ValidationUtils.ValidateCollectionItem(itemParam, true /* isNullable */);
                     await thisParam.WriteCollectionItemAsync(itemParam, thisParam.expectedItemType)
@@ -853,7 +853,7 @@ namespace Microsoft.OData
             {
                 this.scopes.Pop();
                 this.scopes.Push(new Scope(CollectionWriterState.Completed, null));
-                await this.InterceptExceptionAsync((thisParam) => thisParam.EndPayloadAsync())
+                await this.InterceptExceptionAsync(static (thisParam) => thisParam.EndPayloadAsync())
                     .ConfigureAwait(false);
                 this.NotifyListener(CollectionWriterState.Completed);
             }
