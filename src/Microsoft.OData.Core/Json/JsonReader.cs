@@ -13,7 +13,9 @@ namespace Microsoft.OData.Json
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.IO;
+    using System.Numerics;
     using System.Runtime.CompilerServices;
+    using System.Runtime.InteropServices;
     using System.Text;
     using System.Threading.Tasks;
     using Microsoft.OData.Buffers;
@@ -133,6 +135,31 @@ namespace Microsoft.OData.Json
         /// <remarks>The string builder instance is cached to avoid excessive allocation when many string values with escape sequences
         /// are found in the payload.</remarks>
         private StringBuilder stringValueBuilder;
+
+        /// <summary>
+        /// Represents a vector initialized with the space character. Represented by 0x20 (space).
+        /// </summary>
+        private static readonly Vector<ushort> spaceCharVector = new(' ');
+
+        /// <summary>
+        /// Represents a vector initialized with the tab character. Represented by 0x09 (tab).
+        /// </summary>
+        private static readonly Vector<ushort> tabCharVector = new('\t');
+
+        /// <summary>
+        /// Represents a vector initialized with the new line character. Represented by 0x0A (new line).
+        /// </summary>
+        private static readonly Vector<ushort> newlineCharVector = new('\n');
+
+        /// <summary>
+        /// Represents a vector initialized with the carriage return character. Represented by 0x0D (carriage return).
+        /// </summary>
+        private static readonly Vector<ushort> carriageCharVector = new('\r');
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private static readonly Vector<ushort> ushortMaxValueVector = new Vector<ushort>(ushort.MaxValue);
 
         /// <summary>
         /// Constructor.
@@ -1781,6 +1808,63 @@ namespace Microsoft.OData.Json
                     if (!IsWhitespaceCharacter(this.characterBuffer[this.tokenStartIndex]))
                     {
                         return true;
+                    }
+                }
+            }
+            while (this.ReadInput());
+
+            return false;
+        }
+
+        private bool SkipWhitespaces_()
+        {
+            do
+            {
+                int remaining = this.storedCharacterCount - this.tokenStartIndex;
+                int vectorSize = Vector<ushort>.Count;
+                if (remaining >= vectorSize)
+                {
+                    Span<char> span = new Span<char>(this.characterBuffer, this.tokenStartIndex, vectorSize);
+                    Span<ushort> vectorSpan = MemoryMarshal.Cast<char, ushort>(span);
+                    Vector<ushort> vector = new Vector<ushort>(vectorSpan);
+
+                    Vector<ushort> isWhitespace = Vector.Equals(vector, spaceCharVector) |
+                                   Vector.Equals(vector, tabCharVector) |
+                                   Vector.Equals(vector, newlineCharVector) |
+                                   Vector.Equals(vector, carriageCharVector);
+
+                    if (Vector.EqualsAll(isWhitespace, Vector<ushort>.Zero))
+                    {
+                        // No whitespace in this block, break out
+                        return true;
+                    }
+                    // All are whitespaces, advance the entire vector
+                    else if (Vector.EqualsAll(isWhitespace, ushortMaxValueVector))
+                    {
+                        this.tokenStartIndex += vectorSize;
+                    }
+                    else
+                    {
+                        // At least one whitespace found, advance to first non-whitespace
+                        for (int i = 0; i < vectorSize; i++)
+                        {
+                            if (isWhitespace[i] == 0)
+                            {
+                                this.tokenStartIndex += i;
+                                return true;
+                            }
+                        }
+                        this.tokenStartIndex += vectorSize;
+                    }
+                }
+                else
+                {
+                    for (; this.tokenStartIndex < this.storedCharacterCount; this.tokenStartIndex++)
+                    {
+                        if (!IsWhitespaceCharacter(this.characterBuffer[this.tokenStartIndex]))
+                        {
+                            return true;
+                        }
                     }
                 }
             }
