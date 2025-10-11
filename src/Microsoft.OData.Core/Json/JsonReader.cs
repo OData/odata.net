@@ -1795,78 +1795,93 @@ namespace Microsoft.OData.Json
         }
 
         /// <summary>
-        /// Skips all whitespace characters in the input.
+        /// Vectorized implementation of whitespace skipping using Vector for cross-platform SIMD.
         /// </summary>
-        /// <returns>true if a non-whitespace character was found in which case the tokenStartIndex is pointing at that character.
-        /// false if there are no non-whitespace characters left in the input.</returns>
+        /// <returns>true if a non-whitespace character was found; false if end of input was reached.</returns>
         private bool SkipWhitespaces()
-        {
-            do
-            {
-                for (; this.tokenStartIndex < this.storedCharacterCount; this.tokenStartIndex++)
-                {
-                    if (!IsWhitespaceCharacter(this.characterBuffer[this.tokenStartIndex]))
-                    {
-                        return true;
-                    }
-                }
-            }
-            while (this.ReadInput());
-
-            return false;
-        }
-
-        private bool SkipWhitespaces_()
         {
             do
             {
                 int remaining = this.storedCharacterCount - this.tokenStartIndex;
                 int vectorSize = Vector<ushort>.Count;
+
+                // Process using vector operations when we have enough characters
                 if (remaining >= vectorSize)
                 {
-                    Span<char> span = new Span<char>(this.characterBuffer, this.tokenStartIndex, vectorSize);
-                    Span<ushort> vectorSpan = MemoryMarshal.Cast<char, ushort>(span);
-                    Vector<ushort> vector = new Vector<ushort>(vectorSpan);
+                    // Process as many full vectors as possible
+                    int vectorsToProcess = remaining / vectorSize;
+                    int processedVectors = 0;
 
-                    Vector<ushort> isWhitespace = Vector.Equals(vector, spaceCharVector) |
-                                   Vector.Equals(vector, tabCharVector) |
-                                   Vector.Equals(vector, newlineCharVector) |
-                                   Vector.Equals(vector, carriageCharVector);
+                    while (processedVectors < vectorsToProcess)
+                    {
+                        int currentPosition = this.tokenStartIndex + (processedVectors * vectorSize);
 
-                    if (Vector.EqualsAll(isWhitespace, Vector<ushort>.Zero))
-                    {
-                        // No whitespace in this block, break out
-                        return true;
-                    }
-                    // All are whitespaces, advance the entire vector
-                    else if (Vector.EqualsAll(isWhitespace, ushortMaxValueVector))
-                    {
-                        this.tokenStartIndex += vectorSize;
-                    }
-                    else
-                    {
-                        // At least one whitespace found, advance to first non-whitespace
-                        for (int i = 0; i < vectorSize; i++)
+                        // Load vector from character buffer
+                        Span<char> span = new Span<char>(this.characterBuffer, currentPosition, vectorSize);
+                        Span<ushort> vectorSpan = MemoryMarshal.Cast<char, ushort>(span);
+                        Vector<ushort> currentVector = new Vector<ushort>(vectorSpan);
+
+                        Vector<ushort> isWhitespace = Vector.Equals(currentVector, spaceCharVector) |
+                                   Vector.Equals(currentVector, tabCharVector) |
+                                   Vector.Equals(currentVector, newlineCharVector) |
+                                   Vector.Equals(currentVector, carriageCharVector);
+
+                        // Check if ALL characters in this vector are whitespace
+                        if (Vector.EqualsAll(isWhitespace, ushortMaxValueVector))
                         {
-                            if (isWhitespace[i] == 0)
-                            {
-                                this.tokenStartIndex += i;
-                                return true;
-                            }
+                            // All characters in this vector are whitespace, continue to next vector
+                            processedVectors++;
                         }
-                        this.tokenStartIndex += vectorSize;
-                    }
-                }
-                else
-                {
-                    for (; this.tokenStartIndex < this.storedCharacterCount; this.tokenStartIndex++)
-                    {
-                        if (!IsWhitespaceCharacter(this.characterBuffer[this.tokenStartIndex]))
+                        else
                         {
+                            // Found at least one non-whitespace character in this vector
+                            // Find the exact position within this vector
+                            for (int i = 0; i < vectorSize; i++)
+                            {
+                                // 0 means NOT whitespace
+                                if (isWhitespace[i] == 0) 
+                                {
+                                    this.tokenStartIndex += (processedVectors * vectorSize) + i;
+
+                                    // Found non-whitespace character
+                                    return true; 
+                                }
+                            }
+
+                            // This should never happen due to the EqualsAll check above
+                            // But if it does, advance and return
+                            this.tokenStartIndex += (processedVectors + 1) * vectorSize;
                             return true;
                         }
                     }
+
+                    // Advance tokenStartIndex by the number of vectors we processed
+                    this.tokenStartIndex += processedVectors * vectorSize;
+
+                    // Update remaining count after vector processing
+                    remaining = this.storedCharacterCount - this.tokenStartIndex;
                 }
+
+                // Process any remaining characters (less than a full vector) using scalar approach
+                if (remaining > 0)
+                {
+                    for (int i = 0; i < remaining; i++)
+                    {
+                        if (!IsWhitespaceCharacter(this.characterBuffer[this.tokenStartIndex + i]))
+                        {
+                            this.tokenStartIndex += i;
+
+                            // Found non-whitespace character
+                            return true; 
+                        }
+                    }
+
+                    // All remaining characters were whitespace
+                    this.tokenStartIndex += remaining;
+                }
+
+                // If we get here, we've processed all available characters in the buffer
+                // and they were all whitespace. We need to read more input.
             }
             while (this.ReadInput());
 
