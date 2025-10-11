@@ -105,7 +105,7 @@ namespace Microsoft.OData
             this.VerifyCanFlush(true /*synchronousCall*/);
 
             // make sure we switch to writer state Error if an exception is thrown during flushing.
-            this.InterceptException((thisParam) => thisParam.FlushSynchronously());
+            this.InterceptException(static (thisParam) => thisParam.FlushSynchronously());
         }
 
 
@@ -118,7 +118,7 @@ namespace Microsoft.OData
             this.VerifyCanFlush(false /*synchronousCall*/);
 
             // make sure we switch to writer state Error if an exception is thrown during flushing.
-            return this.InterceptExceptionAsync((thisParam) => thisParam.FlushAsynchronously());
+            return this.InterceptExceptionAsync(static (thisParam) => thisParam.FlushAsynchronously());
         }
 
         /// <summary>
@@ -127,7 +127,7 @@ namespace Microsoft.OData
         public sealed override void WriteStart()
         {
             this.VerifyCanWriteStart(true /*synchronousCall*/);
-            this.InterceptException((thisParam) => thisParam.WriteStartImplementation());
+            this.InterceptException(static (thisParam) => thisParam.WriteStartImplementation());
         }
 
 
@@ -139,7 +139,7 @@ namespace Microsoft.OData
         {
             this.VerifyCanWriteStart(false /*synchronousCall*/);
             return this.InterceptExceptionAsync(
-                (thisParam) => thisParam.WriteStartImplementationAsync());
+                static (thisParam) => thisParam.WriteStartImplementationAsync());
         }
 
         /// <summary>
@@ -152,8 +152,8 @@ namespace Microsoft.OData
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(parameterName, "parameterName");
             IEdmTypeReference expectedTypeReference = this.VerifyCanWriteValueParameter(true /*synchronousCall*/, parameterName, parameterValue);
             this.InterceptException(
-                (thisParam, parameterNameParam, parameterValueParam, expectedTypeReferenceParam) => 
-                    thisParam.WriteValueImplementation(parameterName, parameterValue, expectedTypeReference),
+                static (thisParam, parameterNameParam, parameterValueParam, expectedTypeReferenceParam) => 
+                    thisParam.WriteValueImplementation(parameterNameParam, parameterValueParam, expectedTypeReferenceParam),
                 parameterName, parameterValue, expectedTypeReference);
         }
 
@@ -169,7 +169,7 @@ namespace Microsoft.OData
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(parameterName, "parameterName");
             IEdmTypeReference expectedTypeReference = this.VerifyCanWriteValueParameter(false /*synchronousCall*/, parameterName, parameterValue);
             return this.InterceptExceptionAsync(
-                (thisParam, parameterNameParam, parameterValueParam, expectedTypeReferenceParam) => 
+                static (thisParam, parameterNameParam, parameterValueParam, expectedTypeReferenceParam) => 
                     thisParam.WriteValueImplementationAsync(parameterNameParam, parameterValueParam, expectedTypeReferenceParam),
                 parameterName, parameterValue, expectedTypeReference);
         }
@@ -184,7 +184,7 @@ namespace Microsoft.OData
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(parameterName, "parameterName");
             IEdmTypeReference itemTypeReference = this.VerifyCanCreateCollectionWriter(true /*synchronousCall*/, parameterName);
             return this.InterceptException(
-                (thisParam, parameterNameParam, itemTypeReferenceParam) => 
+                static (thisParam, parameterNameParam, itemTypeReferenceParam) => 
                     thisParam.CreateCollectionWriterImplementation(parameterNameParam, itemTypeReferenceParam),
                 parameterName, itemTypeReference);
         }
@@ -201,7 +201,7 @@ namespace Microsoft.OData
             IEdmTypeReference itemTypeReference = this.VerifyCanCreateCollectionWriter(false /*synchronousCall*/, parameterName);
 
             return this.InterceptExceptionAsync(
-                (thisParam, parameterNameParam, itemTypeReferenceParam) =>
+                static (thisParam, parameterNameParam, itemTypeReferenceParam) =>
                     thisParam.CreateCollectionWriterImplementationAsync(parameterNameParam, itemTypeReferenceParam),
                 parameterName, itemTypeReference);
         }
@@ -214,7 +214,7 @@ namespace Microsoft.OData
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(parameterName, "parameterName");
             IEdmTypeReference itemTypeReference = this.VerifyCanCreateResourceWriter(true /*synchronousCall*/, parameterName);
             return this.InterceptException(
-                (thisParam, parameterNameParam, itemTypeReferenceParam) =>
+                static (thisParam, parameterNameParam, itemTypeReferenceParam) =>
                     thisParam.CreateResourceWriterImplementation(parameterNameParam, itemTypeReferenceParam),
                 parameterName, itemTypeReference);
         }
@@ -229,7 +229,7 @@ namespace Microsoft.OData
             IEdmTypeReference itemTypeReference = this.VerifyCanCreateResourceWriter(false /*synchronousCall*/, parameterName);
 
             return this.InterceptExceptionAsync(
-                (thisParam, parameterNameParam, itemTypeReferenceParam) =>
+                static (thisParam, parameterNameParam, itemTypeReferenceParam) =>
                     thisParam.CreateResourceWriterImplementationAsync(parameterNameParam, itemTypeReferenceParam),
                 parameterName, itemTypeReference);
         }
@@ -242,7 +242,7 @@ namespace Microsoft.OData
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(parameterName, "parameterName");
             IEdmTypeReference itemTypeReference = this.VerifyCanCreateResourceSetWriter(true /*synchronousCall*/, parameterName);
             return this.InterceptException(
-                (thisParam, parameterNameParam, itemTypeReferenceParam) =>
+                static (thisParam, parameterNameParam, itemTypeReferenceParam) =>
                     thisParam.CreateResourceSetWriterImplementation(parameterNameParam, itemTypeReferenceParam),
                 parameterName, itemTypeReference);
         }
@@ -257,7 +257,7 @@ namespace Microsoft.OData
             IEdmTypeReference itemTypeReference = this.VerifyCanCreateResourceSetWriter(false /*synchronousCall*/, parameterName);
 
             return this.InterceptExceptionAsync(
-                (thisParam, parameterNameParam, itemTypeReferenceParam) =>
+                static (thisParam, parameterNameParam, itemTypeReferenceParam) =>
                     thisParam.CreateResourceSetWriterImplementationAsync(parameterNameParam, itemTypeReferenceParam),
                 parameterName, itemTypeReference);
         }
@@ -268,7 +268,7 @@ namespace Microsoft.OData
         public sealed override void WriteEnd()
         {
             this.VerifyCanWriteEnd(true /*synchronousCall*/);
-            this.InterceptException((thisParam) => thisParam.WriteEndImplementation());
+            this.InterceptException(static (thisParam) => thisParam.WriteEndImplementation());
             if (this.State == ParameterWriterState.Completed)
             {
                 // Note that we intentionally go through the public API so that if the Flush fails the writer moves to the Error state.
@@ -284,7 +284,7 @@ namespace Microsoft.OData
         {
             this.VerifyCanWriteEnd(false /*synchronousCall*/);
             return this.InterceptExceptionAsync(
-                async (thisParam) =>
+                static async (thisParam) =>
                 {
                     await thisParam.WriteEndImplementationAsync()
                         .ConfigureAwait(false);
@@ -462,7 +462,7 @@ namespace Microsoft.OData
         private void WriteStartImplementation()
         {
             Debug.Assert(this.State == ParameterWriterState.Start, "this.State == ParameterWriterState.Start");
-            this.InterceptException((thisParam) => thisParam.StartPayload());
+            this.InterceptException(static (thisParam) => thisParam.StartPayload());
             this.EnterScope(ParameterWriterState.CanWriteParameter);
         }
 
@@ -604,8 +604,8 @@ namespace Microsoft.OData
         {
             Debug.Assert(this.State == ParameterWriterState.CanWriteParameter, "this.State == ParameterWriterState.CanWriteParameter");
             this.InterceptException(
-                (thisParam, parameterNameParam, parameterValueParam, expectedTypeReferenceParam) =>
-                    thisParam.WriteValueParameter(parameterName, parameterValue, expectedTypeReference),
+                static (thisParam, parameterNameParam, parameterValueParam, expectedTypeReferenceParam) =>
+                    thisParam.WriteValueParameter(parameterNameParam, parameterValueParam, expectedTypeReferenceParam),
                 parameterName, parameterValue, expectedTypeReference);
         }
 
@@ -706,7 +706,7 @@ namespace Microsoft.OData
         /// </summary>
         private void WriteEndImplementation()
         {
-            this.InterceptException((thisParam) => thisParam.EndPayload());
+            this.InterceptException(static (thisParam) => thisParam.EndPayload());
             this.LeaveScope();
         }
 
@@ -1060,7 +1060,7 @@ namespace Microsoft.OData
         {
             Debug.Assert(this.State == ParameterWriterState.Start, "this.State == ParameterWriterState.Start");
 
-            await this.InterceptExceptionAsync((thisParam) => thisParam.StartPayloadAsync())
+            await this.InterceptExceptionAsync(static (thisParam) => thisParam.StartPayloadAsync())
                 .ConfigureAwait(false);
             this.EnterScope(ParameterWriterState.CanWriteParameter);
         }
@@ -1076,7 +1076,7 @@ namespace Microsoft.OData
         {
             Debug.Assert(this.State == ParameterWriterState.CanWriteParameter, "this.State == ParameterWriterState.CanWriteParameter");
 
-            return this.InterceptExceptionAsync((
+            return this.InterceptExceptionAsync(static (
                 thisParam,
                 parameterNameParam,
                 parameterValueParam,
@@ -1148,7 +1148,7 @@ namespace Microsoft.OData
         /// <returns>A task that represents the asynchronous write operation.</returns>
         private async Task WriteEndImplementationAsync()
         {
-            await this.InterceptExceptionAsync((thisParam) => thisParam.EndPayloadAsync())
+            await this.InterceptExceptionAsync(static (thisParam) => thisParam.EndPayloadAsync())
                 .ConfigureAwait(false);
             this.LeaveScope();
         }

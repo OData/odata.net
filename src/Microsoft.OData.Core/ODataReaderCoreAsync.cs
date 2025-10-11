@@ -332,7 +332,7 @@ namespace Microsoft.OData
 
             scope.StreamingState = StreamingState.Streaming;
             return new ODataNotificationStream(
-                underlyingStream: await this.InterceptExceptionAsync(thisParam => thisParam.CreateReadStreamImplementationAsync()).ConfigureAwait(false),
+                underlyingStream: await this.InterceptExceptionAsync(static (thisParam) => thisParam.CreateReadStreamImplementationAsync()).ConfigureAwait(false),
                 listener: this,
                 synchronous: false);
         }
@@ -358,7 +358,7 @@ namespace Microsoft.OData
 
             scope.StreamingState = StreamingState.Streaming;
             return new ODataNotificationReader(
-                textReader: await this.InterceptExceptionAsync(thisParam => thisParam.CreateTextReaderImplementationAsync()).ConfigureAwait(false),
+                textReader: await this.InterceptExceptionAsync(static (thisParam) => thisParam.CreateTextReaderImplementationAsync()).ConfigureAwait(false),
                 listener: this,
                 synchronous: false);
         }

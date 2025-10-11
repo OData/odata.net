@@ -185,7 +185,7 @@ namespace Microsoft.OData
         public override sealed bool Read()
         {
             this.VerifyCanRead(true);
-            return this.InterceptException((thisParam) => thisParam.ReadSynchronously());
+            return this.InterceptException(static (thisParam) => thisParam.ReadSynchronously());
         }
 
         /// <summary>
@@ -195,7 +195,7 @@ namespace Microsoft.OData
         public override sealed Task<bool> ReadAsync()
         {
             this.VerifyCanRead(false);
-            return this.InterceptExceptionAsync((thisParam) => thisParam.ReadAsynchronously());
+            return this.InterceptExceptionAsync(static (thisParam) => thisParam.ReadAsynchronously());
         }
 
         /// <summary>
