@@ -232,7 +232,7 @@ namespace Microsoft.OData.Json
                     }
                     else
                     {
-                        this.nodeValue = InternIfCommon(this.ParseStringPrimitiveValue());
+                        this.nodeValue = InternIfCommon(this.ParseStringPrimitiveValue(out _));
                     }
                 }
             }
