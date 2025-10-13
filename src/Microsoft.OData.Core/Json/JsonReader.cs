@@ -157,7 +157,7 @@ namespace Microsoft.OData.Json
         private static readonly Vector<ushort> carriageCharVector = new Vector<ushort>('\r');
 
         /// <summary>
-        /// 
+        /// Represents a vector where all elements are set to ushort.MaxValue (all 1s). Used for efficient whitespace comparison operations.
         /// </summary>
         private static readonly Vector<ushort> ushortMaxValueVector = new Vector<ushort>(ushort.MaxValue);
 
@@ -3256,12 +3256,9 @@ namespace Microsoft.OData.Json
                 return -1;
             }
 
-            else
-            {
-                // Use scalar approach for small buffers
-                return SkipWhitespacesScalar(
-                    this.characterBuffer.AsSpan(this.tokenStartIndex, remaining));
-            }
+            // Use scalar approach for small buffers
+            return SkipWhitespacesScalar(
+                this.characterBuffer.AsSpan(this.tokenStartIndex, remaining));
         }
 
         /// <summary>
