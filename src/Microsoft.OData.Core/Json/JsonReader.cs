@@ -14,9 +14,7 @@ namespace Microsoft.OData.Json
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.IO;
-    using System.Numerics;
     using System.Runtime.CompilerServices;
-    using System.Runtime.InteropServices;
     using System.Text;
     using System.Threading.Tasks;
     using Microsoft.OData.Buffers;
