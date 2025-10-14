@@ -106,9 +106,19 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 
         public CsdlSemanticsSchema Context { get; private set; }
 
-        public IEdmOperationParameter FindParameter(string name)
+        public IEdmOperationParameter FindParameter(string name) => string.IsNullOrEmpty(name) ? null : FindParameter(name.AsSpan());
+
+        public IEdmOperationParameter FindParameter(ReadOnlySpan<char> name)
         {
-            return this.Parameters.SingleOrDefault(p => p.Name == name);
+            foreach (var p in this.Parameters)
+            {
+                if (name.Equals(p.Name, StringComparison.Ordinal))
+                {
+                    return p;
+                }
+            }
+
+            return null;
         }
 
         internal static string ParameterizedTargetName(IList<IEdmOperationParameter> parameters)

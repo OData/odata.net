@@ -85,7 +85,25 @@ public class StubEdmComplexType : StubEdmElement, IEdmComplexType
             throw new ArgumentNullException("name");
         }
 
-        return this.StructuralProperties().FirstOrDefault(p => p.Name == name);
+        return FindProperty(name.AsSpan());
+    }
+
+    /// <summary>
+    /// Finds a property
+    /// </summary>
+    /// <param name="name">The name of the property</param>
+    /// <returns>The property.</returns>
+    public IEdmProperty FindProperty(ReadOnlySpan<char> name)
+    {
+        foreach (var p in this.StructuralProperties())
+        {
+            if (name.Equals(p.Name, StringComparison.Ordinal))
+            {
+                return p;
+            }
+        }
+
+        return null;
     }
 
     /// <summary>

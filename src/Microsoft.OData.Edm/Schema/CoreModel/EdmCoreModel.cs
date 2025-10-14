@@ -31,7 +31,7 @@ namespace Microsoft.OData.Edm
 
         private readonly IList<IEdmSchemaElement> coreSchemaElements = new List<IEdmSchemaElement>();
 
-        private readonly IDictionary<string, IEdmSchemaType> coreSchemaTypes = new Dictionary<string, IEdmSchemaType>();
+        private readonly Dictionary<string, IEdmSchemaType> coreSchemaTypes = new Dictionary<string, IEdmSchemaType>();
 
         private readonly EdmCoreModelComplexType complexType = EdmCoreModelComplexType.Instance;
         private readonly EdmCoreModelEntityType entityType = EdmCoreModelEntityType.Instance;
@@ -195,14 +195,19 @@ namespace Microsoft.OData.Edm
         /// <param name="qualifiedName">The qualified name of the type being found.</param>
         /// <returns>The requested type, or null if no such type exists.</returns>
         public IEdmSchemaType FindDeclaredType(string qualifiedName)
-        {
-            IEdmSchemaType element;
-            if (coreSchemaTypes.TryGetValue(qualifiedName, out element))
-            {
-                return element;
-            }
+            => FindDeclaredType(qualifiedName.AsSpan());
 
-            return null;
+        /// <summary>
+        /// Searches for a type with the given name in this model only and returns null if no such type exists.
+        /// </summary>
+        /// <param name="qualifiedName">The qualified name of the type being found.</param>
+        /// <returns>The requested type, or null if no such type exists.</returns>
+        public IEdmSchemaType FindDeclaredType(ReadOnlySpan<char> qualifiedName)
+        {
+            Dictionary<string, IEdmSchemaType>.AlternateLookup<ReadOnlySpan<char>> lookup
+                = coreSchemaTypes.GetAlternateLookup<ReadOnlySpan<char>>();
+            lookup.TryGetValue(qualifiedName, out IEdmSchemaType element);
+            return element;
         }
 
         /// <summary>
@@ -224,6 +229,17 @@ namespace Microsoft.OData.Edm
         /// A set of operations that share the qualified name and binding type or empty enumerable if no such operation exists.
         /// </returns>
         public IEnumerable<IEdmOperation> FindDeclaredBoundOperations(string qualifiedName, IEdmType bindingType)
+            => FindDeclaredBoundOperations(qualifiedName.AsSpan(), bindingType);
+
+        /// <summary>
+        /// Searches for bound operations based on the qualified name and binding type, returns an empty enumerable if no operation exists.
+        /// </summary>
+        /// <param name="qualifiedName">The qualified name of the operation.</param>
+        /// <param name="bindingType">Type of the binding.</param>
+        /// <returns>
+        /// A set of operations that share the qualified name and binding type or empty enumerable if no such operation exists.
+        /// </returns>
+        public IEnumerable<IEdmOperation> FindDeclaredBoundOperations(ReadOnlySpan<char> qualifiedName, IEdmType bindingType)
         {
             return Enumerable.Empty<IEdmOperation>();
         }
@@ -239,11 +255,28 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
+        /// Searches for a term with the given name in this model and returns null if no such term exists.
+        /// </summary>
+        /// <param name="qualifiedName">The qualified name of the term being found.</param>
+        /// <returns>The requested term, or null if no such term exists.</returns>
+        public IEdmTerm FindDeclaredTerm(ReadOnlySpan<char> qualifiedName)
+        {
+            return null;
+        }
+
+        /// <summary>
         /// Searches for operations with the given name in this model and returns an empty enumerable if no such operation exists.
         /// </summary>
         /// <param name="qualifiedName">The qualified name of the operation being found.</param>
         /// <returns>A set operations sharing the specified qualified name, or an empty enumerable if no such operation exists.</returns>
-        public IEnumerable<IEdmOperation> FindDeclaredOperations(string qualifiedName)
+        public IEnumerable<IEdmOperation> FindDeclaredOperations(string qualifiedName) => FindDeclaredOperations(qualifiedName.AsSpan());
+
+        /// <summary>
+        /// Searches for operations with the given name in this model and returns an empty enumerable if no such operation exists.
+        /// </summary>
+        /// <param name="qualifiedName">The qualified name of the operation being found.</param>
+        /// <returns>A set operations sharing the specified qualified name, or an empty enumerable if no such operation exists.</returns>
+        public IEnumerable<IEdmOperation> FindDeclaredOperations(ReadOnlySpan<char> qualifiedName)
         {
             return Enumerable.Empty<IEdmOperation>();
         }
