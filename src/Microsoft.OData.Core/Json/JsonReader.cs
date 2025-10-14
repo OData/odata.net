@@ -3157,7 +3157,7 @@ namespace Microsoft.OData.Json
                         // Process as many full vectors as possible
                         int vectorsToProcess = remaining / vectorSize;
                         int nonWhitespaceIndex = SkipWhitespacesVectorized(
-                            thisParam.characterBuffer.AsSpan(thisParam.tokenStartIndex, vectorsToProcess * vectorSize));
+                            thisParam.characterBuffer.AsSpan(thisParam.tokenStartIndex, vectorsToProcess * vectorSize), vectorSize);
 
                         if (nonWhitespaceIndex >= 0)
                         {
@@ -3205,6 +3205,13 @@ namespace Microsoft.OData.Json
             }
         }
 
+        /// <summary>
+        /// Skips all whitespace characters in the currently buffered input using vectorized and scalar approaches.
+        /// </summary>
+        /// <remarks>
+        /// Uses SIMD vectorization when possible for performance, falling back to scalar processing for small buffers.
+        /// </remarks>
+        /// <returns>The index of the first non-whitespace character relative to <see cref="tokenStartIndex"/>, or -1 if only whitespace remains.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private int SkipWhitespacesInCurrentBuffer()
         {
@@ -3223,7 +3230,7 @@ namespace Microsoft.OData.Json
                 // Process as many full vectors as possible
                 int vectorsToProcess = remaining / vectorSize;
                 int nonWhitespaceIndex = SkipWhitespacesVectorized(
-                    this.characterBuffer.AsSpan(this.tokenStartIndex, vectorsToProcess * vectorSize));
+                    this.characterBuffer.AsSpan(this.tokenStartIndex, vectorsToProcess * vectorSize), vectorSize);
 
                 if (nonWhitespaceIndex >= 0)
                 {
@@ -3257,10 +3264,15 @@ namespace Microsoft.OData.Json
             }
         }
 
+        /// <summary>
+        /// Scans the given character span for whitespace using SIMD vectorization.
+        /// </summary>
+        /// <param name="span">The span of characters to scan.</param>
+        /// <param name="vectorSize">The size of the SIMD vector. For <see cref="Vector<ushort></ushort>"/> is 16.</param>
+        /// <returns>Index of the first non-whitespace character, or -1 if none found.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static int SkipWhitespacesVectorized(ReadOnlySpan<char> span)
+        private static int SkipWhitespacesVectorized(ReadOnlySpan<char> span, int vectorSize)
         {
-            int vectorSize = Vector<ushort>.Count;
             int processed = 0;
 
             while (processed < span.Length)
@@ -3293,6 +3305,12 @@ namespace Microsoft.OData.Json
             return -1;
         }
 
+        /// <summary>
+        /// Scans the given character span for whitespace using a scalar approach.
+        /// Returns the index of the first non-whitespace character, or -1 if all are whitespace.
+        /// </summary>
+        /// <param name="span">The span of characters to scan.</param>
+        /// <returns>Index of the first non-whitespace character, or -1 if none found.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static int SkipWhitespacesScalar(ReadOnlySpan<char> span)
         {
