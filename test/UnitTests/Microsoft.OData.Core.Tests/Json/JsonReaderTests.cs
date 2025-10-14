@@ -240,6 +240,38 @@ namespace Microsoft.OData.Tests.Json
             }
         }
 
+        [Theory]
+        [InlineData(" {\"Data\":   \"The \\r character\"}    ", "The \r character")]
+        [InlineData("   {\"Data\":\"The \\n   \\t\r character\"   }", "The \n   \t\r character")]
+        [InlineData("{    \"Data\":\"The \\t character  \n\r   \r\"}", "The \t character  \n\r   \r")]
+        [InlineData("{\"Data\"      :\"    The    character     \"}", "    The    character     ")]
+        public void ReadPrimitiveValueWithWhitespaces(string payload, string expected)
+        {
+            using (var reader = new JsonReader(new StringReader(payload), isIeee754Compatible: false))
+            {
+                reader.Read(); // Read start of object
+                reader.Read(); // Read property name - Data
+                reader.Read(); // Position reader at the beginning of string value
+                Assert.Equal(expected, reader.GetValue());
+            }
+        }
+
+        [Theory]
+        [InlineData(" {\"Data\":   \"The \\r character\"}    ", "The \r character")]
+        [InlineData("   {\"Data\":\"The \\n   \\t\r character\"   }", "The \n   \t\r character")]
+        [InlineData("{    \"Data\":\"The \\t character  \n\r   \r\"}", "The \t character  \n\r   \r")]
+        [InlineData("{\"Data\"      :\"    The    character     \"}", "    The    character     ")]
+        public async Task ReadPrimitiveValueAsyncWithWhitespaces(string payload, string expected)
+        {
+            using (var reader = new JsonReader(new StringReader(payload), isIeee754Compatible: false))
+            {
+                await reader.ReadAsync(); // Read start of object
+                await reader.ReadAsync(); // Read property name - Data
+                await reader.ReadAsync(); // Position reader at the beginning of string value
+                Assert.Equal(expected, await reader.GetValueAsync());
+            }
+        }
+
         [Fact]
         public async Task ReadNullValue()
         {
