@@ -59,7 +59,7 @@ public class UntypedTypesTests : EndToEndTestBase<UntypedTypesTests.TestsStartup
         Assert.Equal(200, responseMessage.StatusCode);
         Assert.Equal(
             """
-                        {
+            {
               "@odata.context": "http://localhost/odata/$metadata#Customers",
               "value": [
                 {
