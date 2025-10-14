@@ -1826,32 +1826,26 @@ namespace Microsoft.OData.Json
                                    Vector.Equals(currentVector, newlineCharVector) |
                                    Vector.Equals(currentVector, carriageCharVector);
 
-                        // Check if ALL characters in this vector are whitespace
-                        if (Vector.EqualsAll(isWhitespace, ushortMaxValueVector))
-                        {
-                            // All characters in this vector are whitespace, continue to next vector
-                            processedVectors++;
-                        }
-                        else
+                        // If not all characters are whitespace, find the first non-whitespace character
+                        if (!Vector.EqualsAll(isWhitespace, ushortMaxValueVector))
                         {
                             // Found at least one non-whitespace character in this vector
-                            // Find the exact position within this vector
                             for (int i = 0; i < vectorSize; i++)
                             {
                                 // 0 means NOT whitespace
-                                if (isWhitespace[i] == 0) 
+                                if (isWhitespace[i] == ushort.MinValue)
                                 {
                                     this.tokenStartIndex += (processedVectors * vectorSize) + i;
 
                                     // Found non-whitespace character
-                                    return true; 
+                                    return true;
                                 }
                             }
-
-                            // This should never happen due to the EqualsAll check above
-                            // But if it does, advance and return
-                            this.tokenStartIndex += (processedVectors + 1) * vectorSize;
-                            return true;
+                        }
+                        else 
+                        {
+                            // All characters in this vector are whitespace, continue to next vector
+                            processedVectors++;
                         }
                     }
 
@@ -3288,7 +3282,7 @@ namespace Microsoft.OData.Json
                     // Found a non-whitespace character in the vector
                     for (int i = 0; i < vectorSize; i++)
                     {
-                        if (isWhitespace[i] == 0)
+                        if (isWhitespace[i] == ushort.MinValue)
                         {
                             return processed + i;
                         }
