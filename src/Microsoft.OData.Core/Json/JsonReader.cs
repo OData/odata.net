@@ -1795,7 +1795,7 @@ namespace Microsoft.OData.Json
         }
 
         /// <summary>
-        /// Vectorized implementation of whitespace skipping using Vector for cross-platform SIMD.
+        /// Skips all whitespace characters in the input.
         /// </summary>
         /// <returns>true if a non-whitespace character was found; false if end of input was reached.</returns>
         private bool SkipWhitespaces()
