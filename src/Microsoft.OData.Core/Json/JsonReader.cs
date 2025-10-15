@@ -232,7 +232,7 @@ namespace Microsoft.OData.Json
                     }
                     else
                     {
-                        this.nodeValue = InternIfCommon(this.ParseStringPrimitiveValue(out _));
+                        this.nodeValue = GetCommonOrNewString(this.ParseStringPrimitiveValue(out _));
                     }
                 }
             }
@@ -567,7 +567,7 @@ namespace Microsoft.OData.Json
                 ValueTask<(ReadOnlyMemory<char> Value, bool HasLeadingBackslash)> parseStringTask = this.ParseStringPrimitiveValueAsync();
                 if (parseStringTask.IsCompletedSuccessfully)
                 {
-                    this.nodeValue = InternIfCommon(parseStringTask.Result.Value.Span);
+                    this.nodeValue = GetCommonOrNewString(parseStringTask.Result.Value.Span);
                     return Task.FromResult(this.nodeValue);
                 }
 
@@ -584,7 +584,7 @@ namespace Microsoft.OData.Json
             static async Task<object> AwaitStringValueAsync(JsonReader thisParam, ValueTask<(ReadOnlyMemory<char> Value, bool HasLeadingBackslash)> pendingParseStringTask)
             {
                 (ReadOnlyMemory<char> Value, bool HasLeadingBackslash) result = await pendingParseStringTask.ConfigureAwait(false);
-                thisParam.nodeValue = InternIfCommon(result.Value.Span);
+                thisParam.nodeValue = GetCommonOrNewString(result.Value.Span);
                 return thisParam.nodeValue;
             }
         }
@@ -986,7 +986,7 @@ namespace Microsoft.OData.Json
                 throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_InvalidPropertyNameOrUnexpectedComma, this.nodeValue));
             }
 
-            this.nodeValue = InternIfCommon(token);
+            this.nodeValue = GetCommonOrNewString(token);
 
             if (!this.SkipWhitespaces() || this.characterBuffer[this.tokenStartIndex] != ':')
             {
@@ -1781,7 +1781,7 @@ namespace Microsoft.OData.Json
                 throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_InvalidPropertyNameOrUnexpectedComma, this.nodeValue));
             }
 
-            this.nodeValue = InternIfCommon(token.Span);
+            this.nodeValue = GetCommonOrNewString(token.Span);
 
             if (!await this.SkipWhitespacesAsync().ConfigureAwait(false) || this.characterBuffer[this.tokenStartIndex] != ':')
             {
@@ -2733,55 +2733,28 @@ namespace Microsoft.OData.Json
         }
 
         /// <summary>
-        /// Returns an interned string if the input matches a common value or is short; otherwise, returns a new string
-        /// instance.
+        /// Returns a shared string instance for common OData property names or values, otherwise returns a new string.
         /// </summary>
-        /// <remarks>This method optimizes memory usage by interning strings that are either commonly used
-        /// or short in length. For longer or unique strings, it returns a new string instance to avoid unnecessary
-        /// interning overhead.</remarks>
+        /// <remarks>
+        /// This method reduces memory usage by returning static instances for known property names or values.
+        /// For uncommon or unique strings, it returns a new string instance.
+        /// </remarks>
         /// <param name="span">A read-only span of characters representing the input string to process.</param>
-        /// <returns>An interned string if the input matches a predefined common value or if its length is 10 characters or
-        /// fewer; otherwise, a new string instance representing the input.</returns>
+        /// <returns>
+        /// A shared string instance if the input matches a predefined common value or property name; otherwise, a new string instance representing the input.
+        /// </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static string InternIfCommon(ReadOnlySpan<char> span)
+        private static string GetCommonOrNewString(ReadOnlySpan<char> span)
         {
             if (span.IsEmpty)
             {
                 return string.Empty;
             }
 
-            if (span.Length == 1)
-            {
-                char c = span[0];
-                if ((c >= '0' && c <= '9') || (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'))
-                {
-                    return c.ToString();
-                }
-
-                if (c == '-') return "-";
-                if (c == '_') return "_";
-                if (c == '.') return ".";
-                if (c == ',') return ",";
-                if (c == ':') return ":";
-            }
-
             // For known property names, return static interned instances
             if (TryGetMatchingCommonValueString(span, out string commonValue))
             {
                 return commonValue;
-            }
-
-            // For strings up to length 10, intern if they start with '@' (common for OData annotations)
-            if (span.Length <= 10 && span[0] == '@')
-            {
-                // These are common starting characters for OData properties/values
-                return string.Intern(span.ToString());
-            }
-
-            // If the string is namespace (contains a dot), intern it
-            if (span.Length <= 20 && span.IndexOf('.') >= 0)
-            {
-                return string.Intern(span.ToString());
             }
 
             return span.ToString();
