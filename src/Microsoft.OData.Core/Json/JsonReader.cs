@@ -2613,13 +2613,62 @@ namespace Microsoft.OData.Json
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private int ParseUnicodeHexValue()
         {
-            ReadOnlySpan<char> unicodeHexValue = this.ConsumeTokenToSpan(4);
-            if (!Int32.TryParse(unicodeHexValue, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out int characterValue))
+            Debug.Assert(this.tokenStartIndex + 4 <= this.storedCharacterCount, "4 specified characters outside of the available range.");
+
+            char hexChar1 = this.characterBuffer[this.tokenStartIndex];
+            char hexChar2 = this.characterBuffer[++this.tokenStartIndex];
+            char hexChar3 = this.characterBuffer[++this.tokenStartIndex];
+            char hexChar4 = this.characterBuffer[++this.tokenStartIndex];
+
+            int characterValue = ParseFourHexDigits(hexChar1, hexChar2, hexChar3, hexChar4);
+            if (characterValue < 0)
             {
-                throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_UnrecognizedEscapeSequence, "\\u" + unicodeHexValue.ToString()));
+                throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_UnrecognizedEscapeSequence, "\\u" + new string(new char[] {hexChar1, hexChar2, hexChar3, hexChar4})));
             }
 
             return characterValue;
+        }
+
+        /// <summary>
+        /// Converts four hexadecimal characters to their integer value.
+        /// </summary>
+        /// <param name="hexChar1">The first hexadecimal character.</param>
+        /// <param name="hexChar2">The second hexadecimal character.</param>
+        /// <param name="hexChar3">The third hexadecimal character.</param>
+        /// <param name="hexChar4">The fourth hexadecimal character.</param>
+        /// <returns>
+        /// The integer value represented by the four hexadecimal characters, or -1 if any character is not a valid hexadecimal digit.
+        /// </returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static int ParseFourHexDigits(char hexChar1, char hexChar2, char hexChar3, char hexChar4)
+        {
+            int digit1 = HexCharToInt(hexChar1);
+            int digit2 = HexCharToInt(hexChar2);
+            int digit3 = HexCharToInt(hexChar3);
+            int digit4 = HexCharToInt(hexChar4);
+
+            if ((digit1 | digit2 | digit3 | digit4) < 0)
+            {
+                return -1;
+            }
+
+            return (digit1 << 12) | (digit2 << 8) | (digit3 << 4) | digit4;
+        }
+
+        /// <summary>
+        /// Converts a single hexadecimal character to its integer value.
+        /// </summary>
+        /// <param name="hexChar">The hexadecimal character to convert.</param>
+        /// <returns>
+        /// The integer value of the hexadecimal character (0-15), or -1 if the character is not a valid hexadecimal digit.
+        /// </returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static int HexCharToInt(char hexChar)
+        {
+            if ((uint)(hexChar - '0') <= 9u) return hexChar - '0';
+            if ((uint)(hexChar - 'A') <= 5u) return hexChar - 'A' + 10;
+            if ((uint)(hexChar - 'a') <= 5u) return hexChar - 'a' + 10;
+            return -1;
         }
 
         /// <summary>
@@ -2693,6 +2742,7 @@ namespace Microsoft.OData.Json
         /// <param name="span">A read-only span of characters representing the input string to process.</param>
         /// <returns>An interned string if the input matches a predefined common value or if its length is 10 characters or
         /// fewer; otherwise, a new string instance representing the input.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static string InternIfCommon(ReadOnlySpan<char> span)
         {
             if (span.IsEmpty)
