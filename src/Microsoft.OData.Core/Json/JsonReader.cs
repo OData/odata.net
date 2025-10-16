@@ -1905,12 +1905,7 @@ namespace Microsoft.OData.Json
                                 throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_UnrecognizedEscapeSequence, "\\uXXXX"));
                             }
 
-                            ReadOnlyMemory<char> unicodeHexValue = this.ConsumeTokenToMemory(4);
-                            if (!Int32.TryParse(unicodeHexValue.Span, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out int characterValue))
-                            {
-                                throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_UnrecognizedEscapeSequence, "\\u" + unicodeHexValue.Span.ToString()));
-                            }
-
+                            int characterValue = this.ParseUnicodeHexValue();
                             valueBuilder.Append((char)characterValue);
                             break;
                         default:
@@ -2615,10 +2610,10 @@ namespace Microsoft.OData.Json
         {
             Debug.Assert(this.tokenStartIndex + 4 <= this.storedCharacterCount, "4 specified characters outside of the available range.");
 
-            char hexChar1 = this.characterBuffer[this.tokenStartIndex];
-            char hexChar2 = this.characterBuffer[++this.tokenStartIndex];
-            char hexChar3 = this.characterBuffer[++this.tokenStartIndex];
-            char hexChar4 = this.characterBuffer[++this.tokenStartIndex];
+            char hexChar1 = this.characterBuffer[this.tokenStartIndex++];
+            char hexChar2 = this.characterBuffer[this.tokenStartIndex++];
+            char hexChar3 = this.characterBuffer[this.tokenStartIndex++];
+            char hexChar4 = this.characterBuffer[this.tokenStartIndex++];
 
             int characterValue = ParseFourHexDigits(hexChar1, hexChar2, hexChar3, hexChar4);
             if (characterValue < 0)
