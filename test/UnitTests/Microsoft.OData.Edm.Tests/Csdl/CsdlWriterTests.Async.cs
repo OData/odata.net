@@ -2948,11 +2948,11 @@ namespace Microsoft.OData.Edm.Tests.Csdl
 }").ConfigureAwait(false);
         }
 
-        [Theory]
-        [InlineData(CsdlTarget.OData, "<edmx:DataServices>", "</edmx:DataServices>")]
-        [InlineData(CsdlTarget.EntityFramework, "<edmx:Runtime><edmx:ConceptualModels>", "</edmx:ConceptualModels></edmx:Runtime>")]
-        public async Task TryWriteCsdlAsyncShouldFlushAsync_Async(CsdlTarget csdlTarget, string schemaParentOpeningPartial, string schemaParentClosingPartial)
+        [Fact]
+        public async Task TryWriteCsdlAsyncShouldFlushAsync_Async()
         {
+            string schemaParentOpeningPartial = "<edmx:DataServices>";
+            string schemaParentClosingPartial = "</edmx:DataServices>";
             var model = new EdmModel();
 
             var customerEntityType = new EdmEntityType("NS", "Customer");
@@ -2964,7 +2964,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             var builder = new StringBuilder();
             using (var writer = XmlWriter.Create(builder, new XmlWriterSettings { Encoding = Encoding.UTF8, Async = true }))
             {
-                var (result, errors) = await CsdlWriter.TryWriteCsdlAsync(model, writer, csdlTarget).ConfigureAwait(false);
+                var (result, errors) = await CsdlWriter.TryWriteCsdlAsync(model, writer).ConfigureAwait(false);
                 if (!result)
                 {
                     Assert.True(false, "Serialization was unsuccessful");
@@ -2990,7 +2990,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             }
         }
 
-        internal static async Task WriteAndVerifyXmlAsync(IEdmModel model, string expected, CsdlTarget target = CsdlTarget.OData)
+        internal static async Task WriteAndVerifyXmlAsync(IEdmModel model, string expected)
         {
             using (StringWriter sw = new StringWriter())
             {
@@ -3002,7 +3002,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
 
                 using (XmlWriter xw = XmlWriter.Create(sw, settings))
                 {
-                    var (ok, errors) = await CsdlWriter.TryWriteCsdlAsync(model, xw, target).ConfigureAwait(false);
+                    var (ok, errors) = await CsdlWriter.TryWriteCsdlAsync(model, xw).ConfigureAwait(false);
                     await xw.FlushAsync().ConfigureAwait(false);
                 }
 
@@ -3011,7 +3011,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             }
         }
 
-        internal static async Task WriteAndVerifyXmlAsync(IEdmModel model, string expected, CsdlXmlWriterSettings csdlXmlWriterSettings, CsdlTarget target = CsdlTarget.OData)
+        internal static async Task WriteAndVerifyXmlAsync(IEdmModel model, string expected, CsdlXmlWriterSettings csdlXmlWriterSettings)
         {
             using (StringWriter sw = new StringWriter())
             {
@@ -3023,7 +3023,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
 
                 using (XmlWriter xw = XmlWriter.Create(sw, settings))
                 {
-                    var (success, errors) = await CsdlWriter.TryWriteCsdlAsync(model, xw, target, csdlXmlWriterSettings).ConfigureAwait(false);
+                    var (success, errors) = await CsdlWriter.TryWriteCsdlAsync(model, xw, csdlXmlWriterSettings).ConfigureAwait(false);
                     await xw.FlushAsync().ConfigureAwait(false);
                 }
 
