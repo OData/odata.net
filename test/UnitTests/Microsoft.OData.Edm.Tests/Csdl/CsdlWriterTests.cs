@@ -3095,7 +3095,7 @@ var v40Json =
             WriteAndVerifyJson(edmModel, "{\"$Version\":\"" + odataVersion + "\"}", false);
         }
 
-        internal static void WriteAndVerifyXml(IEdmModel model, string expected, CsdlTarget target = CsdlTarget.OData)
+        internal static void WriteAndVerifyXml(IEdmModel model, string expected)
         {
             using (StringWriter sw = new StringWriter())
             {
@@ -3105,7 +3105,7 @@ var v40Json =
                 using (XmlWriter xw = XmlWriter.Create(sw, settings))
                 {
                     IEnumerable<EdmError> errors;
-                    CsdlWriter.TryWriteCsdl(model, xw, target, out errors);
+                    CsdlWriter.TryWriteCsdl(model, xw, out errors);
                     xw.Flush();
                 }
 
@@ -3114,7 +3114,7 @@ var v40Json =
             }
         }
 
-        internal static void WriteAndVerifyXml(IEdmModel model, string expected, CsdlXmlWriterSettings csdlXmlWriterSettings, CsdlTarget target = CsdlTarget.OData)
+        internal static void WriteAndVerifyXml(IEdmModel model, string expected, CsdlXmlWriterSettings csdlXmlWriterSettings)
         {
             using (StringWriter sw = new StringWriter())
             {
@@ -3124,7 +3124,7 @@ var v40Json =
                 using (XmlWriter xw = XmlWriter.Create(sw, settings))
                 {
                     IEnumerable<EdmError> errors;
-                    CsdlWriter.TryWriteCsdl(model, xw, target, csdlXmlWriterSettings, out errors);
+                    CsdlWriter.TryWriteCsdl(model, xw, csdlXmlWriterSettings, out errors);
                     xw.Flush();
                 }
 
@@ -3240,11 +3240,11 @@ var v40Json =
 }");
         }
 
-        [Theory]
-        [InlineData(CsdlTarget.OData, "<edmx:DataServices>", "</edmx:DataServices>")]
-        [InlineData(CsdlTarget.EntityFramework, "<edmx:Runtime><edmx:ConceptualModels>", "</edmx:ConceptualModels></edmx:Runtime>")]
-        public void TryWriteCsdlShouldFlush(CsdlTarget csdlTarget, string schemaParentOpeningPartial, string schemaParentClosingPartial)
+        [Fact]
+        public void TryWriteCsdlShouldFlush()
         {
+            string schemaParentOpeningPartial = "<edmx:DataServices>";
+            string schemaParentClosingPartial = "</edmx:DataServices>";
             EdmModel model = new EdmModel();
 
             var customerEntityType = new EdmEntityType("NS", "Customer");
@@ -3256,9 +3256,9 @@ var v40Json =
             var builder = new StringBuilder();
             using (var writer = XmlWriter.Create(builder, new XmlWriterSettings { Encoding = Encoding.UTF8 }))
             {
-                if (!CsdlWriter.TryWriteCsdl(model, writer, csdlTarget, out var errors))
+                if (!CsdlWriter.TryWriteCsdl(model, writer, out var errors))
                 {
-                    Assert.True(false, "Serialization was unsuccessful");
+                    Assert.Fail("Serialization was unsuccessful");
                 }
 
                 // Xml writer should have flushed whatever is in the buffer before TryWriteCsdl is exited

@@ -124,9 +124,9 @@ namespace Microsoft.OData.Edm.Csdl
         /// <param name="target">Target implementation of the CSDL being generated.</param>
         /// <param name="errors">Errors that prevented successful serialization, or no errors if serialization was successful. </param>
         /// <returns>A value indicating whether serialization was successful.</returns>
-        public static bool TryWriteCsdl(IEdmModel model, XmlWriter writer, CsdlTarget target, out IEnumerable<EdmError> errors)
+        public static bool TryWriteCsdl(IEdmModel model, XmlWriter writer, out IEnumerable<EdmError> errors)
         {
-            return TryWriteCsdl(model, writer, target, new CsdlXmlWriterSettings(), out errors);
+            return TryWriteCsdl(model, writer, new CsdlXmlWriterSettings(), out errors);
         }
 
         /// <summary>
@@ -135,9 +135,9 @@ namespace Microsoft.OData.Edm.Csdl
         /// <param name="model">The Edm model to be written.</param>
         /// <param name="writer">Xmlwriter the generated CSDL will be written to.</param>
         /// <returns>A task with tuple with a value indicating whether serialization was successful and EdmError if any</returns>
-        public static Task<(bool, IEnumerable<EdmError>)> TryWriteCsdlAsync(IEdmModel model, XmlWriter writer, CsdlTarget target)
+        public static Task<(bool, IEnumerable<EdmError>)> TryWriteCsdlAsync(IEdmModel model, XmlWriter writer)
         {
-            return TryWriteCsdlAsync(model, writer, target, new CsdlXmlWriterSettings());
+            return TryWriteCsdlAsync(model, writer, new CsdlXmlWriterSettings());
         }
 
         /// <summary>
@@ -149,7 +149,7 @@ namespace Microsoft.OData.Edm.Csdl
         /// <param name="writerSettings">The CSDL xml writer settings.</param>
         /// <param name="errors">Errors that prevented successful serialization, or no errors if serialization was successful. </param>
         /// <returns>A value indicating whether serialization was successful.</returns>
-        public static bool TryWriteCsdl(IEdmModel model, XmlWriter writer, CsdlTarget target, CsdlXmlWriterSettings writerSettings, out IEnumerable<EdmError> errors)
+        public static bool TryWriteCsdl(IEdmModel model, XmlWriter writer, CsdlXmlWriterSettings writerSettings, out IEnumerable<EdmError> errors)
         {
             EdmUtil.CheckArgumentNull(model, "model");
             EdmUtil.CheckArgumentNull(writer, "writer");
@@ -160,7 +160,7 @@ namespace Microsoft.OData.Edm.Csdl
                 return false;
             }
 
-            CsdlWriter csdlWriter = new CsdlXmlWriter(model, writer, edmxVersion, target, writerSettings);
+            CsdlWriter csdlWriter = new CsdlXmlWriter(model, writer, edmxVersion, writerSettings);
             csdlWriter.WriteCsdl();
 
             errors = Enumerable.Empty<EdmError>();
@@ -175,7 +175,7 @@ namespace Microsoft.OData.Edm.Csdl
         /// <param name="target">Target implementation of the CSDL being generated.</param>
         /// <param name="writerSettings">The CSDL xml writer settings.</param>
         /// <returns>A task with a value indicating whether serialization was successful.</returns>
-        public static async Task<(bool, IEnumerable<EdmError>)> TryWriteCsdlAsync(IEdmModel model, XmlWriter writer, CsdlTarget target, CsdlXmlWriterSettings writerSettings)
+        public static async Task<(bool, IEnumerable<EdmError>)> TryWriteCsdlAsync(IEdmModel model, XmlWriter writer, CsdlXmlWriterSettings writerSettings)
         {
             EdmUtil.CheckArgumentNull(model, "model");
             EdmUtil.CheckArgumentNull(writer, "writer");
@@ -186,7 +186,7 @@ namespace Microsoft.OData.Edm.Csdl
                 return (false, errors);
             }
 
-            CsdlWriter csdlWriter = new CsdlXmlWriter(model, writer, edmxVersion, target, writerSettings);
+            CsdlWriter csdlWriter = new CsdlXmlWriter(model, writer, edmxVersion, writerSettings);
             await csdlWriter.WriteCsdlAsync().ConfigureAwait(false);
 
             return (true, Enumerable.Empty<EdmError>());

@@ -21,7 +21,7 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
             var builder = new StringBuilder();
             using (var writer = XmlWriter.Create(builder, new XmlWriterSettings() { Async = true }))
             {
-                var (result, errors) = await CsdlWriter.TryWriteCsdlAsync(this.representativeModel, writer, CsdlTarget.OData).ConfigureAwait(false);
+                var (result, errors) = await CsdlWriter.TryWriteCsdlAsync(this.representativeModel, writer).ConfigureAwait(false);
                 Assert.True(result);
                 Assert.Empty(errors);
                 await writer.FlushAsync().ConfigureAwait(false);

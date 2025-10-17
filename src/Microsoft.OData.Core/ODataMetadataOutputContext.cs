@@ -263,7 +263,7 @@ namespace Microsoft.OData
                 writerSettings.LibraryCompatibility |= EdmLibraryCompatibility.UseLegacyVariableCasing;
             }
 
-            if (!CsdlWriter.TryWriteCsdl(this.Model, this.xmlWriter, CsdlTarget.OData, writerSettings, out errors))
+            if (!CsdlWriter.TryWriteCsdl(this.Model, this.xmlWriter, writerSettings, out errors))
             {
                 Debug.Assert(errors != null, "errors != null");
 
@@ -286,7 +286,7 @@ namespace Microsoft.OData
                 writerSettings.LibraryCompatibility |= EdmLibraryCompatibility.UseLegacyVariableCasing;
             }
 
-            var (success, errors) = await CsdlWriter.TryWriteCsdlAsync(this.Model, this.xmlWriter, CsdlTarget.OData, writerSettings).ConfigureAwait(false);
+            var (success, errors) = await CsdlWriter.TryWriteCsdlAsync(this.Model, this.xmlWriter, writerSettings).ConfigureAwait(false);
             if (!success)
             {
                 Debug.Assert(errors != null, "errors != null");

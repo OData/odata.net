@@ -194,7 +194,7 @@ public class EdmVersionTests : EdmLibTestCaseBase
 
         using (XmlWriter xw = XmlWriter.Create(sw, settings))
         {
-            CsdlWriter.TryWriteCsdl(model, xw, CsdlTarget.OData, out errors);
+            CsdlWriter.TryWriteCsdl(model, xw, out errors);
             xw.Close();
 
             parsed = CsdlReader.TryParse(XmlReader.Create(new StringReader(sw.ToString())), out model, out errors);
@@ -242,7 +242,7 @@ public class EdmVersionTests : EdmLibTestCaseBase
         using (XmlWriter xw = XmlWriter.Create(sw, settings))
         {
             model.SetEdmxVersion(CsdlConstants.EdmxVersion4);
-            CsdlWriter.TryWriteCsdl(model, xw, CsdlTarget.OData, out errors);
+            CsdlWriter.TryWriteCsdl(model, xw, out errors);
             xw.Close();
 
             parsed = CsdlReader.TryParse(XmlReader.Create(new StringReader(sw.ToString())), out model, out errors);
@@ -290,7 +290,7 @@ public class EdmVersionTests : EdmLibTestCaseBase
         using (XmlWriter xw = XmlWriter.Create(sw, settings))
         {
             model.SetEdmxVersion(CsdlConstants.EdmxVersion4);
-            CsdlWriter.TryWriteCsdl(model, xw, CsdlTarget.OData, out errors);
+            CsdlWriter.TryWriteCsdl(model, xw, out errors);
             xw.Close();
 
             parsed = CsdlReader.TryParse(XmlReader.Create(new StringReader(sw.ToString())), out model, out errors);
@@ -369,7 +369,7 @@ public class EdmVersionTests : EdmLibTestCaseBase
         using (XmlWriter xw = XmlWriter.Create(sw, settings))
         {
             model.SetEdmxVersion(new Version(1, 123));
-            var result = CsdlWriter.TryWriteCsdl(model, xw, CsdlTarget.OData, out errors);
+            var result = CsdlWriter.TryWriteCsdl(model, xw, out errors);
             Assert.False(result);
             Assert.Single(errors);
             Assert.Equal(EdmErrorCode.UnknownEdmxVersion, errors.First().ErrorCode);

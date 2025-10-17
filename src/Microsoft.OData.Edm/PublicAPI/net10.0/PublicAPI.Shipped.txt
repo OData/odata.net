@@ -76,9 +76,6 @@ Microsoft.OData.Edm.Csdl.CsdlReaderSettings.IgnoreUnexpectedAttributesAndElement
 Microsoft.OData.Edm.Csdl.CsdlReaderSettings.IgnoreUnexpectedAttributesAndElements.set -> void
 Microsoft.OData.Edm.Csdl.CsdlReaderSettingsBase
 Microsoft.OData.Edm.Csdl.CsdlReaderSettingsBase.CsdlReaderSettingsBase() -> void
-Microsoft.OData.Edm.Csdl.CsdlTarget
-Microsoft.OData.Edm.Csdl.CsdlTarget.EntityFramework = 0 -> Microsoft.OData.Edm.Csdl.CsdlTarget
-Microsoft.OData.Edm.Csdl.CsdlTarget.OData = 1 -> Microsoft.OData.Edm.Csdl.CsdlTarget
 Microsoft.OData.Edm.Csdl.CsdlWriter
 Microsoft.OData.Edm.Csdl.CsdlWriter.CsdlWriter(Microsoft.OData.Edm.IEdmModel model, System.Version edmxVersion) -> void
 Microsoft.OData.Edm.Csdl.CsdlXmlWriterSettings
@@ -1483,12 +1480,12 @@ static Microsoft.OData.Edm.Csdl.CsdlReader.TryParse(System.Xml.XmlReader reader,
 static Microsoft.OData.Edm.Csdl.CsdlWriter.GetVersionString(System.Version version) -> string
 static Microsoft.OData.Edm.Csdl.CsdlWriter.TryWriteCsdl(Microsoft.OData.Edm.IEdmModel model, System.Text.Json.Utf8JsonWriter writer, Microsoft.OData.Edm.Csdl.CsdlJsonWriterSettings settings, out System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.Validation.EdmError> errors) -> bool
 static Microsoft.OData.Edm.Csdl.CsdlWriter.TryWriteCsdl(Microsoft.OData.Edm.IEdmModel model, System.Text.Json.Utf8JsonWriter writer, out System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.Validation.EdmError> errors) -> bool
-static Microsoft.OData.Edm.Csdl.CsdlWriter.TryWriteCsdl(Microsoft.OData.Edm.IEdmModel model, System.Xml.XmlWriter writer, Microsoft.OData.Edm.Csdl.CsdlTarget target, Microsoft.OData.Edm.Csdl.CsdlXmlWriterSettings writerSettings, out System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.Validation.EdmError> errors) -> bool
-static Microsoft.OData.Edm.Csdl.CsdlWriter.TryWriteCsdl(Microsoft.OData.Edm.IEdmModel model, System.Xml.XmlWriter writer, Microsoft.OData.Edm.Csdl.CsdlTarget target, out System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.Validation.EdmError> errors) -> bool
+static Microsoft.OData.Edm.Csdl.CsdlWriter.TryWriteCsdl(Microsoft.OData.Edm.IEdmModel model, System.Xml.XmlWriter writer, Microsoft.OData.Edm.Csdl.CsdlXmlWriterSettings writerSettings, out System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.Validation.EdmError> errors) -> bool
+static Microsoft.OData.Edm.Csdl.CsdlWriter.TryWriteCsdl(Microsoft.OData.Edm.IEdmModel model, System.Xml.XmlWriter writer, out System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.Validation.EdmError> errors) -> bool
 static Microsoft.OData.Edm.Csdl.CsdlWriter.TryWriteCsdlAsync(Microsoft.OData.Edm.IEdmModel model, System.Text.Json.Utf8JsonWriter writer) -> System.Threading.Tasks.Task<(bool, System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.Validation.EdmError>)>
 static Microsoft.OData.Edm.Csdl.CsdlWriter.TryWriteCsdlAsync(Microsoft.OData.Edm.IEdmModel model, System.Text.Json.Utf8JsonWriter writer, Microsoft.OData.Edm.Csdl.CsdlJsonWriterSettings settings) -> System.Threading.Tasks.Task<(bool, System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.Validation.EdmError>)>
-static Microsoft.OData.Edm.Csdl.CsdlWriter.TryWriteCsdlAsync(Microsoft.OData.Edm.IEdmModel model, System.Xml.XmlWriter writer, Microsoft.OData.Edm.Csdl.CsdlTarget target) -> System.Threading.Tasks.Task<(bool, System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.Validation.EdmError>)>
-static Microsoft.OData.Edm.Csdl.CsdlWriter.TryWriteCsdlAsync(Microsoft.OData.Edm.IEdmModel model, System.Xml.XmlWriter writer, Microsoft.OData.Edm.Csdl.CsdlTarget target, Microsoft.OData.Edm.Csdl.CsdlXmlWriterSettings writerSettings) -> System.Threading.Tasks.Task<(bool, System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.Validation.EdmError>)>
+static Microsoft.OData.Edm.Csdl.CsdlWriter.TryWriteCsdlAsync(Microsoft.OData.Edm.IEdmModel model, System.Xml.XmlWriter writer) -> System.Threading.Tasks.Task<(bool, System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.Validation.EdmError>)>
+static Microsoft.OData.Edm.Csdl.CsdlWriter.TryWriteCsdlAsync(Microsoft.OData.Edm.IEdmModel model, System.Xml.XmlWriter writer, Microsoft.OData.Edm.Csdl.CsdlXmlWriterSettings writerSettings) -> System.Threading.Tasks.Task<(bool, System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.Validation.EdmError>)>
 static Microsoft.OData.Edm.Csdl.SchemaReader.TryParse(System.Collections.Generic.IEnumerable<System.Xml.XmlReader> readers, Microsoft.OData.Edm.IEdmModel reference, out Microsoft.OData.Edm.IEdmModel model, out System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.Validation.EdmError> errors) -> bool
 static Microsoft.OData.Edm.Csdl.SchemaReader.TryParse(System.Collections.Generic.IEnumerable<System.Xml.XmlReader> readers, out Microsoft.OData.Edm.IEdmModel model, out System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.Validation.EdmError> errors) -> bool
 static Microsoft.OData.Edm.Csdl.SchemaReader.TryParse(System.Collections.Generic.IEnumerable<System.Xml.XmlReader> readers, System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmModel> references, bool includeDefaultVocabularies, out Microsoft.OData.Edm.IEdmModel model, out System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.Validation.EdmError> errors) -> bool

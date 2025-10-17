@@ -889,7 +889,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
             using (var writer = XmlWriter.Create(stringWriter))
             {
                 IEnumerable<EdmError> errors;
-                CsdlWriter.TryWriteCsdl(this.model, writer, CsdlTarget.OData, out errors);
+                CsdlWriter.TryWriteCsdl(this.model, writer, out errors);
             }
 
             string modelAsString = stringBuilder.ToString();

@@ -32,42 +32,6 @@ public class EdmxRoundTripTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void Validate_MissingConceptualModelsInEdmx_ThrowsUnexpectedXmlElementError()
-    {
-        var edmx = @"<?xml version=""1.0"" encoding=""utf-16""?>
-<edmx:Edmx Version=""4.0"" xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"">
-  <edmx:Runtime>
-    <edmx:ConceptualModels>
-      <Schema />
-    </edmx:ConceptualModels>
-  </edmx:Runtime>
-</edmx:Edmx>";
-
-        bool parsed = CsdlReader.TryParse(XmlReader.Create(new StringReader(edmx)), out IEdmModel model, out IEnumerable<EdmError> actualErrors);
-        Assert.False(parsed);
-        Assert.Equal(EdmErrorCode.UnexpectedXmlElement, actualErrors.First().ErrorCode);
-        Assert.Equal("The root element has no namespace. The root element is expected to belong to one of the following namespaces: 'http://docs.oasis-open.org/odata/ns/edm, http://docs.oasis-open.org/odata/ns/edm'.", actualErrors.First().ErrorMessage);
-    }
-
-    [Fact]
-    public void Validate_InvalidConceptualModelNamespaceInEdmx_ThrowsUnexpectedXmlElementError()
-    {
-        var edmx = @"<?xml version=""1.0"" encoding=""utf-16""?>
-<edmx:Edmx Version=""4.0"" xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"">
-  <edmx:Runtime>
-    <edmx:ConceptualModels>
-      <Schema Name=""DefaultNamespace"" xmlns=""http://foo"" />
-    </edmx:ConceptualModels>
-  </edmx:Runtime>
-</edmx:Edmx>";
-
-        bool parsed = CsdlReader.TryParse(XmlReader.Create(new StringReader(edmx)), out IEdmModel model, out IEnumerable<EdmError> actualErrors);
-        Assert.False(parsed);
-        Assert.Equal(EdmErrorCode.UnexpectedXmlElement, actualErrors.First().ErrorCode);
-        Assert.Equal("The namespace 'http://foo' is invalid. The root element is expected to belong to one of the following namespaces: 'http://docs.oasis-open.org/odata/ns/edm, http://docs.oasis-open.org/odata/ns/edm'.", actualErrors.First().ErrorMessage);
-    }
-
-    [Fact]
     public void Validate_MissingDataServicesInEdmx_ThrowsUnexpectedXmlElementError()
     {
         var edmx = @"<?xml version=""1.0"" encoding=""utf-16""?>
@@ -112,163 +76,6 @@ public class EdmxRoundTripTests : EdmLibTestCaseBase
         Assert.Equal("Unexpected DataServices element while parsing Edmx. Edmx is expected to have at most one of 'Runtime' or 'DataServices' elements.", actualErrors.First().ErrorMessage);
     }
 
-    [Fact]
-    public void Validate_TwoRuntimeSectionsInEdmx_ThrowsBodyElementError()
-    {
-        var edmx = @"<?xml version=""1.0"" encoding=""utf-16""?>
-<edmx:Edmx Version=""4.0"" xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"">
-  <edmx:Runtime>
-    <edmx:ConceptualModels>
-      <Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
-        <ComplexType Name=""SimpleType"">
-          <Property Name=""Data"" Type=""Edm.String"" />
-        </ComplexType>
-        <EntityContainer Name=""Container"" />
-      </Schema>
-    </edmx:ConceptualModels>
-  </edmx:Runtime>
-  <edmx:Runtime>
-    <edmx:ConceptualModels>
-      <Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
-        <ComplexType Name=""SimpleType"">
-          <Property Name=""Data"" Type=""Edm.String"" />
-        </ComplexType>
-        <EntityContainer Name=""Container"" />
-      </Schema>
-    </edmx:ConceptualModels>
-  </edmx:Runtime>
-</edmx:Edmx>";
-
-        bool parsed = CsdlReader.TryParse(XmlReader.Create(new StringReader(edmx)), out IEdmModel model, out IEnumerable<EdmError> actualErrors);
-        Assert.False(parsed);
-        Assert.Equal(EdmErrorCode.UnexpectedXmlElement, actualErrors.First().ErrorCode);
-        Assert.Equal("Unexpected DataServices element while parsing Edmx. Edmx is expected to have at most one of 'Runtime' or 'DataServices' elements.", actualErrors.First().ErrorMessage);
-    }
-
-    [Theory]
-    [InlineData(EdmVersion.V40)]
-    [InlineData(EdmVersion.V401)]
-    public void Validate_EmptyConceptualModelsInEdmx_RoundTripsSuccessfully(EdmVersion edmVersion)
-    {
-        var expectedEdmx = @"<?xml version=""1.0"" encoding=""utf-16""?>
-<edmx:Edmx Version=""4.0"" xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"">
-  <edmx:Runtime>
-    <edmx:ConceptualModels />
-  </edmx:Runtime>
-</edmx:Edmx>";
-
-        bool parsed = CsdlReader.TryParse(XmlReader.Create(new StringReader(expectedEdmx)), out IEdmModel model, out IEnumerable<EdmError> errors);
-        Assert.True(parsed);
-        Assert.Empty(errors);
-
-        var ruleset = ValidationRuleSet.GetEdmModelRuleSet(toProductVersionlookup[edmVersion]);
-        var validationResult = model.Validate(ruleset, out IEnumerable<EdmError> actualErrors);
-        Assert.True(validationResult);
-        Assert.Empty(actualErrors);
-
-        string actualEdmx = GetEdmx(model, CsdlTarget.EntityFramework);
-        var valid = XElement.DeepEquals(XElement.Parse(expectedEdmx), XElement.Parse(actualEdmx));
-        Assert.True(valid);
-    }
-
-    [Theory]
-    [InlineData(EdmVersion.V40)]
-    [InlineData(EdmVersion.V401)]
-    public void Validate_EmptyConceptualModelsInModel_RoundTripsSuccessfully(EdmVersion edmVersion)
-    {
-        var versionToString = edmVersion == EdmVersion.V401 ? "4.01" : "4.0";
-
-        var expectedEdmx = $@"<?xml version=""1.0"" encoding=""utf-16""?>
-<edmx:Edmx Version=""{versionToString}"" xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"">
-  <edmx:Runtime>
-    <edmx:ConceptualModels />
-  </edmx:Runtime>
-</edmx:Edmx>";
-
-        var model = new EdmModel();
-        model.SetEdmxVersion(toProductVersionlookup[edmVersion]);
-
-        var ruleset = ValidationRuleSet.GetEdmModelRuleSet(toProductVersionlookup[edmVersion]);
-        var validationResult = model.Validate(ruleset, out IEnumerable<EdmError> actualErrors);
-        Assert.True(validationResult);
-        Assert.Empty(actualErrors);
-
-        string actualEdmx = GetEdmx(model, CsdlTarget.EntityFramework);
-        var valid = XElement.DeepEquals(XElement.Parse(expectedEdmx), XElement.Parse(actualEdmx));
-        Assert.True(valid);
-    }
-
-    [Theory]
-    [InlineData(EdmVersion.V40)]
-    [InlineData(EdmVersion.V401)]
-    public void Validate_SimpleConceptualModelsInEdmx_RoundTripsSuccessfully(EdmVersion edmVersion)
-    {
-        var expectedEdmx = @"<?xml version=""1.0"" encoding=""utf-16""?>
-<edmx:Edmx Version=""4.0"" xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"">
-  <edmx:Runtime>
-    <edmx:ConceptualModels>
-      <Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
-        <ComplexType Name=""SimpleType"">
-          <Property Name=""Data"" Type=""Edm.String"" />
-        </ComplexType>
-        <EntityContainer Name=""Container"" />
-      </Schema>
-    </edmx:ConceptualModels>
-  </edmx:Runtime>
-</edmx:Edmx>";
-
-        bool parsed = CsdlReader.TryParse(XmlReader.Create(new StringReader(expectedEdmx)), out IEdmModel model, out IEnumerable<EdmError> errors);
-        Assert.True(parsed);
-        Assert.Empty(errors);
-
-        var ruleset = ValidationRuleSet.GetEdmModelRuleSet(toProductVersionlookup[edmVersion]);
-        var validationResult = model.Validate(ruleset, out IEnumerable<EdmError> actualErrors);
-        Assert.True(validationResult);
-        Assert.Empty(actualErrors);
-
-        string actualEdmx = GetEdmx(model, CsdlTarget.EntityFramework);
-        var valid = XElement.DeepEquals(XElement.Parse(expectedEdmx), XElement.Parse(actualEdmx));
-        Assert.True(valid);
-    }
-
-    [Theory]
-    [InlineData(EdmVersion.V40)]
-    [InlineData(EdmVersion.V401)]
-    public void Validate_SimpleConceptualModelsInModel_RoundTripsSuccessfully(EdmVersion edmVersion)
-    {
-        var expectedEdmx = @"<?xml version=""1.0"" encoding=""utf-16""?>
-<edmx:Edmx Version=""4.0"" xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"">
-  <edmx:Runtime>
-    <edmx:ConceptualModels>
-      <Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
-        <ComplexType Name=""SimpleType"">
-          <Property Name=""Data"" Type=""Edm.String"" />
-        </ComplexType>
-        <EntityContainer Name=""Container"" />
-      </Schema>
-    </edmx:ConceptualModels>
-  </edmx:Runtime>
-</edmx:Edmx>";
-
-        var model = new EdmModel();
-
-        EdmComplexType simpleType = new EdmComplexType("DefaultNamespace", "SimpleType");
-        simpleType.AddProperty(new EdmStructuralProperty(simpleType, "Data", EdmCoreModel.Instance.GetString(true)));
-        model.AddElement(simpleType);
-
-        EdmEntityContainer container = new EdmEntityContainer("DefaultNamespace", "Container");
-        model.AddElement(container);
-
-        var ruleset = ValidationRuleSet.GetEdmModelRuleSet(toProductVersionlookup[edmVersion]);
-        var validationResult = model.Validate(ruleset, out IEnumerable<EdmError> actualErrors);
-        Assert.True(validationResult);
-        Assert.Empty(actualErrors);
-
-        string actualEdmx = GetEdmx(model, CsdlTarget.EntityFramework);
-        var valid = XElement.DeepEquals(XElement.Parse(expectedEdmx), XElement.Parse(actualEdmx));
-        Assert.True(valid);
-    }
-
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
@@ -288,7 +95,7 @@ public class EdmxRoundTripTests : EdmLibTestCaseBase
         Assert.True(validationResult);
         Assert.Empty(actualErrors);
 
-        string actualEdmx = GetEdmx(model, CsdlTarget.OData);
+        string actualEdmx = GetEdmx(model);
         var valid = XElement.DeepEquals(XElement.Parse(expectedEdmx), XElement.Parse(actualEdmx));
         Assert.True(valid);
     }
@@ -313,7 +120,7 @@ public class EdmxRoundTripTests : EdmLibTestCaseBase
         Assert.True(validationResult);
         Assert.Empty(actualErrors);
 
-        string actualEdmx = GetEdmx(model, CsdlTarget.OData);
+        string actualEdmx = GetEdmx(model);
         var valid = XElement.DeepEquals(XElement.Parse(expectedEdmx), XElement.Parse(actualEdmx));
         Assert.True(valid);
     }
@@ -342,7 +149,7 @@ public class EdmxRoundTripTests : EdmLibTestCaseBase
   <edmx:DataServices />
 </edmx:Edmx>";
 
-        string actualEdmx = GetEdmx(model, CsdlTarget.OData);
+        string actualEdmx = GetEdmx(model);
         var valid = XElement.DeepEquals(XElement.Parse(expectedEdmx), XElement.Parse(actualEdmx));
         Assert.True(valid);
     }
@@ -373,7 +180,7 @@ public class EdmxRoundTripTests : EdmLibTestCaseBase
         Assert.True(validationResult);
         Assert.Empty(actualErrors);
 
-        string actualEdmx = GetEdmx(model, CsdlTarget.OData);
+        string actualEdmx = GetEdmx(model);
         var valid = XElement.DeepEquals(XElement.Parse(expectedEdmx), XElement.Parse(actualEdmx));
         Assert.True(valid);
     }
@@ -409,90 +216,7 @@ public class EdmxRoundTripTests : EdmLibTestCaseBase
         Assert.True(validationResult);
         Assert.Empty(actualErrors);
 
-        string actualEdmx = GetEdmx(model, CsdlTarget.OData);
-        var valid = XElement.DeepEquals(XElement.Parse(expectedEdmx), XElement.Parse(actualEdmx));
-        Assert.True(valid);
-    }
-
-    [Theory]
-    [InlineData(EdmVersion.V40)]
-    [InlineData(EdmVersion.V401)]
-    public void Validate_DataServicesWithVersionAttributesInModelToConceptualModels_RoundTripsSuccessfully(EdmVersion edmVersion)
-    {
-        var expectedEdmx = @"<?xml version=""1.0"" encoding=""utf-16""?>
-<edmx:Edmx Version=""4.0"" xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"">
-  <edmx:Runtime>
-    <edmx:ConceptualModels>
-      <Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
-        <ComplexType Name=""SimpleType"">
-          <Property Name=""Data"" Type=""Edm.String"" />
-        </ComplexType>
-        <EntityContainer Name=""Container"" />
-      </Schema>
-    </edmx:ConceptualModels>
-  </edmx:Runtime>
-</edmx:Edmx>";
-
-        var model = new EdmModel();
-
-        EdmComplexType simpleType = new EdmComplexType("DefaultNamespace", "SimpleType");
-        simpleType.AddProperty(new EdmStructuralProperty(simpleType, "Data", EdmCoreModel.Instance.GetString(true)));
-        model.AddElement(simpleType);
-
-        EdmEntityContainer container = new EdmEntityContainer("DefaultNamespace", "Container");
-        model.AddElement(container);
-
-        var ruleset = ValidationRuleSet.GetEdmModelRuleSet(toProductVersionlookup[edmVersion]);
-        var validationResult = model.Validate(ruleset, out IEnumerable<EdmError> actualErrors);
-        Assert.True(validationResult);
-        Assert.Empty(actualErrors);
-
-        string actualEdmx = GetEdmx(model, CsdlTarget.EntityFramework);
-        var valid = XElement.DeepEquals(XElement.Parse(expectedEdmx), XElement.Parse(actualEdmx));
-        Assert.True(valid);
-    }
-
-    [Theory]
-    [InlineData(EdmVersion.V40)]
-    [InlineData(EdmVersion.V401)]
-    public void Validate_ConceptualModelsToDataServices_RoundTripsSuccessfully(EdmVersion edmVersion)
-    {
-        var modelEdmx = @"<?xml version=""1.0"" encoding=""utf-16""?>
-<edmx:Edmx Version=""4.0"" xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"">
-  <edmx:Runtime>
-    <edmx:ConceptualModels>
-      <Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
-        <ComplexType Name=""SimpleType"">
-          <Property Name=""Data"" Type=""Edm.String"" />
-        </ComplexType>
-        <EntityContainer Name=""Container"" />
-      </Schema>
-    </edmx:ConceptualModels>
-  </edmx:Runtime>
-</edmx:Edmx>";
-
-        bool parsed = CsdlReader.TryParse(XmlReader.Create(new StringReader(modelEdmx)), out IEdmModel model, out IEnumerable<EdmError> errors);
-        Assert.True(parsed);
-        Assert.Empty(errors);
-
-        var ruleset = ValidationRuleSet.GetEdmModelRuleSet(toProductVersionlookup[edmVersion]);
-        var validationResult = model.Validate(ruleset, out IEnumerable<EdmError> actualErrors);
-        Assert.True(validationResult);
-        Assert.Empty(actualErrors);
-
-        var expectedEdmx = @"<?xml version=""1.0"" encoding=""utf-16""?>
-<edmx:Edmx Version=""4.0"" xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"">
-  <edmx:DataServices>
-    <Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
-      <ComplexType Name=""SimpleType"">
-        <Property Name=""Data"" Type=""Edm.String"" />
-      </ComplexType>
-      <EntityContainer Name=""Container"" />
-    </Schema>
-  </edmx:DataServices>
-</edmx:Edmx>";
-
-        string actualEdmx = GetEdmx(model, CsdlTarget.OData);
+        string actualEdmx = GetEdmx(model);
         var valid = XElement.DeepEquals(XElement.Parse(expectedEdmx), XElement.Parse(actualEdmx));
         Assert.True(valid);
     }
@@ -525,78 +249,17 @@ public class EdmxRoundTripTests : EdmLibTestCaseBase
 
         var expectedEdmx = @"<?xml version=""1.0"" encoding=""utf-16""?>
 <edmx:Edmx Version=""4.0"" xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"">
-  <edmx:Runtime>
-    <edmx:ConceptualModels>
-      <Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
-        <ComplexType Name=""SimpleType"">
-          <Property Name=""Data"" Type=""Edm.String"" />
-        </ComplexType>
-        <EntityContainer Name=""Container"" />
-      </Schema>
-    </edmx:ConceptualModels>
-  </edmx:Runtime>
-</edmx:Edmx>";
-
-        string actualEdmx = GetEdmx(model, CsdlTarget.EntityFramework);
-        var valid = XElement.DeepEquals(XElement.Parse(expectedEdmx), XElement.Parse(actualEdmx));
-        Assert.True(valid);
-    }
-
-    [Theory]
-    [InlineData(EdmVersion.V40)]
-    [InlineData(EdmVersion.V401)]
-    public void Validate_UsingAliasInEdmx_RoundTripsSuccessfully(EdmVersion edmVersion)
-    {
-        var modelEdmx = @"<?xml version=""1.0"" encoding=""utf-16""?>
-<edmx:Edmx Version=""4.0"" xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"">
-  <edmx:Runtime>
-    <edmx:ConceptualModels>
-      <Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
-        <ComplexType Name=""SimpleType"">
-          <Property Name=""Data"" Type=""Edm.String"" />
-        <Property Name=""DataType"" Type=""Display.SimpleType"" />
-        </ComplexType>
-        <EntityContainer Name=""Container"" />
-      </Schema>
-    <Schema Namespace=""Org.OData.Display"" Alias=""Display"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
-      <ComplexType Name=""SimpleType"">
+  <edmx:DataServices>
+    <Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+    <ComplexType Name=""SimpleType"">
         <Property Name=""Data"" Type=""Edm.String"" />
-      </ComplexType>
+    </ComplexType>
+    <EntityContainer Name=""Container"" />
     </Schema>
-    </edmx:ConceptualModels>
-  </edmx:Runtime>
+  </edmx:DataServices>
 </edmx:Edmx>";
 
-        bool parsed = CsdlReader.TryParse(XmlReader.Create(new StringReader(modelEdmx)), out IEdmModel model, out IEnumerable<EdmError> errors);
-        Assert.True(parsed);
-        Assert.Empty(errors);
-
-        var ruleset = ValidationRuleSet.GetEdmModelRuleSet(toProductVersionlookup[edmVersion]);
-        var validationResult = model.Validate(ruleset, out IEnumerable<EdmError> actualErrors);
-        Assert.True(validationResult);
-        Assert.Empty(actualErrors);
-
-        var expectedEdmx = @"<?xml version=""1.0"" encoding=""utf-16""?>
-<edmx:Edmx Version=""4.0"" xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"">
-  <edmx:Runtime>
-    <edmx:ConceptualModels>
-      <Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
-        <ComplexType Name=""SimpleType"">
-          <Property Name=""Data"" Type=""Edm.String"" />
-        <Property Name=""DataType"" Type=""Display.SimpleType"" />
-        </ComplexType>
-        <EntityContainer Name=""Container"" />
-      </Schema>
-    <Schema Namespace=""Org.OData.Display"" Alias=""Display"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
-      <ComplexType Name=""SimpleType"">
-        <Property Name=""Data"" Type=""Edm.String"" />
-      </ComplexType>
-    </Schema>
-    </edmx:ConceptualModels>
-  </edmx:Runtime>
-</edmx:Edmx>";
-
-        string actualEdmx = GetEdmx(model, CsdlTarget.EntityFramework);
+        string actualEdmx = GetEdmx(model);
         var valid = XElement.DeepEquals(XElement.Parse(expectedEdmx), XElement.Parse(actualEdmx));
         Assert.True(valid);
     }
@@ -709,7 +372,7 @@ public class EdmxRoundTripTests : EdmLibTestCaseBase
         bool valid = mainModel.Validate(out IEnumerable<EdmError> validationErrors);
         Assert.True(valid && !validationErrors.Any());
 
-        string actualEdmx = GetEdmx(mainModel, CsdlTarget.OData);
+        string actualEdmx = GetEdmx(mainModel);
 
         // after deserialization & serialization, the alias'ed 'CT.Customer' becomes qualified name 'NS1.Customer',
         // so make some adjustments for verification: 
@@ -846,7 +509,7 @@ public class EdmxRoundTripTests : EdmLibTestCaseBase
         newReferences.AddRange(references);
         newReferences.Add(newReference);
         mainModel.SetEdmReferences(newReferences);
-        string actualEdmx = GetEdmx(mainModel, CsdlTarget.OData);
+        string actualEdmx = GetEdmx(mainModel);
 
         // add new Include to verify: Namespace=""adhoc_Namespace"" Alias=""adhoc_Alias""
         mainEdmx = mainEdmx.Replace("  <edmx:DataServices>",
@@ -865,7 +528,7 @@ public class EdmxRoundTripTests : EdmLibTestCaseBase
     }
     #endregion
 
-    private string GetEdmx(IEdmModel model, CsdlTarget target)
+    private string GetEdmx(IEdmModel model)
     {
         string edmx = string.Empty;
 
@@ -878,7 +541,7 @@ public class EdmxRoundTripTests : EdmLibTestCaseBase
             using (XmlWriter xw = XmlWriter.Create(sw, settings))
             {
                 IEnumerable<EdmError> errors;
-                CsdlWriter.TryWriteCsdl(model, xw, target, out errors);
+                CsdlWriter.TryWriteCsdl(model, xw, out errors);
                 xw.Flush();
             }
 

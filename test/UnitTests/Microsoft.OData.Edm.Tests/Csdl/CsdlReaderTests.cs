@@ -2657,7 +2657,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             var stream = new MemoryStream();
             XmlWriter xmlWriter = XmlWriter.Create(stream);
             IEnumerable<EdmError> errors;
-            Assert.True(CsdlWriter.TryWriteCsdl(model, xmlWriter, CsdlTarget.OData, out errors));
+            Assert.True(CsdlWriter.TryWriteCsdl(model, xmlWriter, out errors));
             Assert.Empty(errors);
             stream.Position = 0;
             Assert.Contains(csdl, new StreamReader(stream).ReadToEnd());

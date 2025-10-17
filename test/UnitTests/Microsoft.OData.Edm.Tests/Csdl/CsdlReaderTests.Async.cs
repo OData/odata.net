@@ -317,7 +317,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
         {
             var stream = new MemoryStream();
             XmlWriter xmlWriter = XmlWriter.Create(stream, new XmlWriterSettings() { Async = true });
-            var (success, errors) = await CsdlWriter.TryWriteCsdlAsync(model, xmlWriter, CsdlTarget.OData).ConfigureAwait(false);
+            var (success, errors) = await CsdlWriter.TryWriteCsdlAsync(model, xmlWriter).ConfigureAwait(false);
             Assert.True(success);
             Assert.Empty(errors);
             stream.Position = 0;
