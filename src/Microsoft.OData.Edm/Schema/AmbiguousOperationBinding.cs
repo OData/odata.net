@@ -4,6 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 
 namespace Microsoft.OData.Edm
@@ -60,6 +61,11 @@ namespace Microsoft.OData.Edm
         }
 
         public IEdmOperationParameter FindParameter(string name)
+        {
+            return this.first.FindParameter(name);
+        }
+
+        public IEdmOperationParameter FindParameter(ReadOnlySpan<char> name)
         {
             return this.first.FindParameter(name);
         }

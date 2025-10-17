@@ -87,7 +87,19 @@ internal class ModelWithRemovableElements<T> : IEdmModel
         return type != null && removedElements.ContainsKey(type) ? null : type;
     }
 
+    public IEdmSchemaType FindDeclaredType(ReadOnlySpan<char> qualifiedName)
+    {
+        IEdmSchemaType type = model.FindDeclaredType(qualifiedName);
+        return type != null && removedElements.ContainsKey(type) ? null : type;
+    }
+
     public IEnumerable<IEdmOperation> FindDeclaredOperations(string qualifiedName)
+    {
+        IEnumerable<IEdmOperation> functions = model.FindDeclaredOperations(qualifiedName);
+        return functions.Except(removedElements.Keys.Where(e => e.SchemaElementKind == EdmSchemaElementKind.Action || e.SchemaElementKind == EdmSchemaElementKind.Function).Cast<IEdmOperation>());
+    }
+
+    public IEnumerable<IEdmOperation> FindDeclaredOperations(ReadOnlySpan<char> qualifiedName)
     {
         IEnumerable<IEdmOperation> functions = model.FindDeclaredOperations(qualifiedName);
         return functions.Except(removedElements.Keys.Where(e => e.SchemaElementKind == EdmSchemaElementKind.Action || e.SchemaElementKind == EdmSchemaElementKind.Function).Cast<IEdmOperation>());
@@ -104,7 +116,18 @@ internal class ModelWithRemovableElements<T> : IEdmModel
         return FindDeclaredOperations(qualifiedName).Where(o => o.IsBound && o.Parameters.Any() && o.HasEquivalentBindingType(bindingType));
     }
 
+    public virtual IEnumerable<IEdmOperation> FindDeclaredBoundOperations(ReadOnlySpan<char> qualifiedName, IEdmType bindingType)
+    {
+        return FindDeclaredOperations(qualifiedName).Where(o => o.IsBound && o.Parameters.Any() && o.HasEquivalentBindingType(bindingType));
+    }
+
     public IEdmTerm FindDeclaredTerm(string qualifiedName)
+    {
+        IEdmTerm term = model.FindDeclaredTerm(qualifiedName);
+        return term != null && removedElements.ContainsKey(term) ? null : term;
+    }
+
+    public IEdmTerm FindDeclaredTerm(ReadOnlySpan<char> qualifiedName)
     {
         IEdmTerm term = model.FindDeclaredTerm(qualifiedName);
         return term != null && removedElements.ContainsKey(term) ? null : term;

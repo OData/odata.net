@@ -21,8 +21,8 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         private readonly Cache<CsdlSemanticsStructuredTypeDefinition, List<IEdmProperty>> declaredPropertiesCache = new Cache<CsdlSemanticsStructuredTypeDefinition, List<IEdmProperty>>();
         private static readonly Func<CsdlSemanticsStructuredTypeDefinition, List<IEdmProperty>> ComputeDeclaredPropertiesFunc = (me) => me.ComputeDeclaredProperties();
 
-        private readonly Cache<CsdlSemanticsStructuredTypeDefinition, IDictionary<string, IEdmProperty>> propertiesDictionaryCache = new Cache<CsdlSemanticsStructuredTypeDefinition, IDictionary<string, IEdmProperty>>();
-        private static readonly Func<CsdlSemanticsStructuredTypeDefinition, IDictionary<string, IEdmProperty>> ComputePropertiesDictionaryFunc = (me) => me.ComputePropertiesDictionary();
+        private readonly Cache<CsdlSemanticsStructuredTypeDefinition, Dictionary<string, IEdmProperty>> propertiesDictionaryCache = new Cache<CsdlSemanticsStructuredTypeDefinition, Dictionary<string, IEdmProperty>>();
+        private static readonly Func<CsdlSemanticsStructuredTypeDefinition, Dictionary<string, IEdmProperty>> ComputePropertiesDictionaryFunc = (me) => me.ComputePropertiesDictionary();
 
         protected CsdlSemanticsStructuredTypeDefinition(CsdlSemanticsSchema context, CsdlStructuredType type)
             : base(type)
@@ -75,15 +75,18 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             get;
         }
 
-        private IDictionary<string, IEdmProperty> PropertiesDictionary
+        private Dictionary<string, IEdmProperty> PropertiesDictionary
         {
             get { return this.propertiesDictionaryCache.GetValue(this, ComputePropertiesDictionaryFunc, null); }
         }
 
-        public IEdmProperty FindProperty(string name)
+        public IEdmProperty FindProperty(string name) => FindProperty(name.AsSpan());
+
+        public IEdmProperty FindProperty(ReadOnlySpan<char> name)
         {
-            IEdmProperty result;
-            this.PropertiesDictionary.TryGetValue(name, out result);
+            Dictionary<string, IEdmProperty>.AlternateLookup<ReadOnlySpan<char>> lookup
+                = this.PropertiesDictionary.GetAlternateLookup<ReadOnlySpan<char>>();
+            lookup.TryGetValue(name, out IEdmProperty result);
             return result;
         }
 
@@ -115,7 +118,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             return this.Model.WrapInlineVocabularyAnnotations(this, this.context);
         }
 
-        private IDictionary<string, IEdmProperty> ComputePropertiesDictionary()
+        private Dictionary<string, IEdmProperty> ComputePropertiesDictionary()
         {
             Dictionary<string, IEdmProperty> properties = new Dictionary<string, IEdmProperty>();
             foreach (IEdmProperty property in this.Properties())

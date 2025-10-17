@@ -107,8 +107,25 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         public CsdlSemanticsSchema Context { get; private set; }
 
         public IEdmOperationParameter FindParameter(string name)
+            => FindParameter(name.AsSpan());
+
+        public IEdmOperationParameter FindParameter(ReadOnlySpan<char> name)
         {
-            return this.Parameters.SingleOrDefault(p => p.Name == name);
+            IEdmOperationParameter found = null;
+            foreach (var p in this.Parameters)
+            {
+                if (name.Equals(p.Name, StringComparison.Ordinal))
+                {
+                    if (found != null)
+                    {
+                        throw new InvalidOperationException("Sequence contains more than one matching element");
+                    }
+
+                    found = p;
+                }
+            }
+
+            return found;
         }
 
         internal static string ParameterizedTargetName(IList<IEdmOperationParameter> parameters)

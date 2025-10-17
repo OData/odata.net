@@ -249,11 +249,19 @@ namespace Microsoft.OData.Edm
         /// <param name="setName">The name of the element being found.</param>
         /// <returns>The requested element, or null if the element does not exist.</returns>
         public virtual IEdmEntitySet FindEntitySet(string setName)
+            => string.IsNullOrEmpty(setName) ? null : FindEntitySet(setName.AsSpan());
+
+        /// <summary>
+        /// Searches for an entity set with the given name in this entity container and returns null if no such set exists.
+        /// </summary>
+        /// <param name="setName">The name of the element being found.</param>
+        /// <returns>The requested element, or null if the element does not exist.</returns>
+        public virtual IEdmEntitySet FindEntitySet(ReadOnlySpan<char> setName)
         {
-            if (!string.IsNullOrEmpty(setName))
+            if (!setName.IsEmpty)
             {
-                IEdmEntitySet element;
-                return this.entitySetDictionary.TryGetValue(setName, out element) ? element : null;
+                Dictionary<string, IEdmEntitySet>.AlternateLookup<ReadOnlySpan<char>> loopup = this.entitySetDictionary.GetAlternateLookup<ReadOnlySpan<char>>();
+                return loopup.TryGetValue(setName, out IEdmEntitySet element) ? element : null;
             }
 
             return null;
@@ -265,9 +273,22 @@ namespace Microsoft.OData.Edm
         /// <param name="singletonName">The name of the singleton to search.</param>
         /// <returns>The requested singleton, or null if the singleton does not exist.</returns>
         public virtual IEdmSingleton FindSingleton(string singletonName)
+            => string.IsNullOrEmpty(singletonName) ? null : FindSingleton(singletonName.AsSpan());
+
+        /// <summary>
+        /// Searches for a singleton with the given name in this entity container and returns null if no such singleton exists.
+        /// </summary>
+        /// <param name="singletonName">The name of the singleton to search.</param>
+        /// <returns>The requested singleton, or null if the singleton does not exist.</returns>
+        public virtual IEdmSingleton FindSingleton(ReadOnlySpan<char> singletonName)
         {
-            IEdmSingleton element;
-            return this.singletonDictionary.TryGetValue(singletonName, out element) ? element : null;
+            if (!singletonName.IsEmpty)
+            {
+                Dictionary<string, IEdmSingleton>.AlternateLookup<ReadOnlySpan<char>> lookup = this.singletonDictionary.GetAlternateLookup<ReadOnlySpan<char>>();
+                return lookup.TryGetValue(singletonName, out IEdmSingleton element) ? element : null;
+            }
+
+            return null;
         }
 
         /// <summary>
@@ -275,10 +296,17 @@ namespace Microsoft.OData.Edm
         /// </summary>
         /// <param name="operationName">The name of the operation to find.</param>
         /// <returns>A group of the requested operation imports, or an empty enumerable if no such operation import exists.</returns>
-        public IEnumerable<IEdmOperationImport> FindOperationImports(string operationName)
+        public IEnumerable<IEdmOperationImport> FindOperationImports(string operationName) => FindOperationImports(operationName.AsSpan());
+
+        /// <summary>
+        /// Searches for operation imports with the given name in this entity container and returns null if no such operation import exists.
+        /// </summary>
+        /// <param name="operationName">The name of the operation to find.</param>
+        /// <returns>A group of the requested operation imports, or an empty enumerable if no such operation import exists.</returns>
+        public IEnumerable<IEdmOperationImport> FindOperationImports(ReadOnlySpan<char> operationName)
         {
-            object element;
-            if (this.operationImportDictionary.TryGetValue(operationName, out element))
+            Dictionary<string, object>.AlternateLookup<ReadOnlySpan<char>> lookup = this.operationImportDictionary.GetAlternateLookup<ReadOnlySpan<char>>();
+            if (lookup.TryGetValue(operationName, out object element))
             {
                 List<IEdmOperationImport> listElement = element as List<IEdmOperationImport>;
                 if (listElement != null)

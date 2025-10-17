@@ -4,6 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -23,42 +24,27 @@ namespace Microsoft.OData.Edm
             this.fullName = EdmUtil.GetFullNameForSchemaElement(this.namespaceName, this.Name);
         }
 
-        public EdmSchemaElementKind SchemaElementKind
-        {
-            get { return EdmSchemaElementKind.EntityContainer; }
-        }
+        public EdmSchemaElementKind SchemaElementKind => EdmSchemaElementKind.EntityContainer;
 
-        public string Namespace
-        {
-            get { return this.namespaceName; }
-        }
+        public string Namespace => this.namespaceName;
 
         /// <summary>
         /// Gets the full name of this schema element.
         /// </summary>
-        public string FullName
-        {
-            get { return this.fullName; }
-        }
+        public string FullName => this.fullName;
 
-        public IEnumerable<IEdmEntityContainerElement> Elements
-        {
-            get { return Enumerable.Empty<IEdmEntityContainerElement>(); }
-        }
+        public IEnumerable<IEdmEntityContainerElement> Elements => Enumerable.Empty<IEdmEntityContainerElement>();
 
-        public IEdmEntitySet FindEntitySet(string name)
-        {
-            return null;
-        }
+        public IEdmEntitySet FindEntitySet(string name) => null;
 
-        public IEdmSingleton FindSingleton(string name)
-        {
-            return null;
-        }
+        public IEdmEntitySet FindEntitySet(ReadOnlySpan<char> name) => null;
 
-        public IEnumerable<IEdmOperationImport> FindOperationImports(string operationName)
-        {
-            return null;
-        }
+        public IEdmSingleton FindSingleton(string name) => null;
+
+        public IEdmSingleton FindSingleton(ReadOnlySpan<char> name) => null;
+
+        public IEnumerable<IEdmOperationImport> FindOperationImports(string operationName) => null;
+
+        public IEnumerable<IEdmOperationImport> FindOperationImports(ReadOnlySpan<char> operationName) => null;
     }
 }

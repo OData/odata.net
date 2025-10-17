@@ -4,6 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -119,10 +120,18 @@ namespace Microsoft.OData.Edm
         /// </summary>
         /// <param name="qualifiedName">The qualified name of the type being found.</param>
         /// <returns>The requested type, or null if no such type exists.</returns>
-        public IEdmSchemaType FindDeclaredType(string qualifiedName)
+        public IEdmSchemaType FindDeclaredType(string qualifiedName) => this.FindDeclaredType(qualifiedName.AsSpan());
+
+        /// <summary>
+        /// Searches for a type with the given name in this model only and returns null if no such type exists.
+        /// </summary>
+        /// <param name="qualifiedName">The qualified name of the type being found.</param>
+        /// <returns>The requested type, or null if no such type exists.</returns>
+        public IEdmSchemaType FindDeclaredType(ReadOnlySpan<char> qualifiedName)
         {
-            IEdmSchemaType result;
-            this.schemaTypeDictionary.TryGetValue(qualifiedName, out result);
+            Dictionary<string, IEdmSchemaType>.AlternateLookup<ReadOnlySpan<char>> lookup
+                = this.schemaTypeDictionary.GetAlternateLookup<ReadOnlySpan<char>>();
+            lookup.TryGetValue(qualifiedName, out IEdmSchemaType result);
             return result;
         }
 
@@ -131,10 +140,18 @@ namespace Microsoft.OData.Edm
         /// </summary>
         /// <param name="qualifiedName">The qualified name of the term being found.</param>
         /// <returns>The requested term, or null if no such term exists.</returns>
-        public IEdmTerm FindDeclaredTerm(string qualifiedName)
+        public IEdmTerm FindDeclaredTerm(string qualifiedName) => this.FindDeclaredTerm(qualifiedName.AsSpan());
+
+        /// <summary>
+        /// Searches for a term with the given name in this model and returns null if no such term exists.
+        /// </summary>
+        /// <param name="qualifiedName">The qualified name of the term being found.</param>
+        /// <returns>The requested term, or null if no such term exists.</returns>
+        public IEdmTerm FindDeclaredTerm(ReadOnlySpan<char> qualifiedName)
         {
-            IEdmTerm result;
-            this.termDictionary.TryGetValue(qualifiedName, out result);
+            Dictionary<string, IEdmTerm>.AlternateLookup<ReadOnlySpan<char>> lookup
+                = this.termDictionary.GetAlternateLookup<ReadOnlySpan<char>>();
+            lookup.TryGetValue(qualifiedName, out IEdmTerm result);
             return result;
         }
 
@@ -143,10 +160,20 @@ namespace Microsoft.OData.Edm
         /// </summary>
         /// <param name="qualifiedName">The qualified name of the operation being found.</param>
         /// <returns>A group of operations sharing the specified qualified name, or an empty enumerable if no such operation exists.</returns>
-        public IEnumerable<IEdmOperation> FindDeclaredOperations(string qualifiedName)
+        public IEnumerable<IEdmOperation> FindDeclaredOperations(string qualifiedName) => FindDeclaredOperations(qualifiedName.AsSpan());
+
+        /// <summary>
+        /// Searches for a operation with the given name in this model and returns null if no such operation exists.
+        /// </summary>
+        /// <param name="qualifiedName">The qualified name of the operation being found.</param>
+        /// <returns>A group of operations sharing the specified qualified name, or an empty enumerable if no such operation exists.</returns>
+        public IEnumerable<IEdmOperation> FindDeclaredOperations(ReadOnlySpan<char> qualifiedName)
         {
+            Dictionary<string, IList<IEdmOperation>>.AlternateLookup<ReadOnlySpan<char>> lookup
+                = this.functionDictionary.GetAlternateLookup<ReadOnlySpan<char>>();
+
             IList<IEdmOperation> elements;
-            if (this.functionDictionary.TryGetValue(qualifiedName, out elements))
+            if (lookup.TryGetValue(qualifiedName, out elements))
             {
                 return elements;
             }
@@ -200,10 +227,21 @@ namespace Microsoft.OData.Edm
         /// A set of operations that share the name and binding type or empty enumerable if no such operation exists.
         /// </returns>
         public virtual IEnumerable<IEdmOperation> FindDeclaredBoundOperations(string qualifiedName, IEdmType bindingType)
-        {
-            IEnumerable<IEdmOperation> enumerable = this.FindDeclaredBoundOperations(bindingType);  
+            => FindDeclaredBoundOperations(qualifiedName.AsSpan(), bindingType);
 
-            if(enumerable == null)
+        /// <summary>
+        /// Searches for bound operations based on the qualified name and binding type, returns an empty enumerable if no operation exists.
+        /// </summary>
+        /// <param name="qualifiedName">The qualified name of the operation.</param>
+        /// <param name="bindingType">Type of the binding.</param>
+        /// <returns>
+        /// A set of operations that share the name and binding type or empty enumerable if no such operation exists.
+        /// </returns>
+        public virtual IEnumerable<IEdmOperation> FindDeclaredBoundOperations(ReadOnlySpan<char> qualifiedName, IEdmType bindingType)
+        {
+            IEnumerable<IEdmOperation> enumerable = this.FindDeclaredBoundOperations(bindingType);
+
+            if (enumerable == null)
             {
                 return Enumerable.Empty<IEdmOperation>();
             }
@@ -216,7 +254,7 @@ namespace Microsoft.OData.Edm
             {
                 for (int i = 0; i < operations.Count; i++)
                 {
-                    if (string.Equals(operations[i].FullName(), qualifiedName, System.StringComparison.Ordinal))
+                    if (qualifiedName.Equals(operations[i].FullName(), StringComparison.Ordinal))
                     {
                         matchedOperations.Add(operations[i]);
                     }
@@ -224,9 +262,9 @@ namespace Microsoft.OData.Edm
             }
             else
             {
-                foreach(IEdmOperation operation in enumerable)
+                foreach (IEdmOperation operation in enumerable)
                 {
-                    if (string.Equals(operation.FullName(), qualifiedName, System.StringComparison.Ordinal))
+                    if (qualifiedName.Equals(operation.FullName(), StringComparison.Ordinal))
                     {
                         matchedOperations.Add(operation);
                     }

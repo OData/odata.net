@@ -236,6 +236,34 @@ namespace Microsoft.OData.Edm
             return true;
         }
 
+        /// <summary>
+        /// Tries the name of the parse container qualified element.
+        /// </summary>
+        /// <param name="containerQualifiedElementName">Name of the container qualified container element.</param>
+        /// <param name="containerName">Name of the container that was determined.</param>
+        /// <param name="containerElementName">The fully qualified name of the container element that was determined.</param>
+        /// <returns>Returns true if parsing was successful and false if not.</returns>
+        internal static bool TryParseContainerQualifiedElementName(ReadOnlySpan<char> containerQualifiedElementName, out ReadOnlySpan<char> containerName, out ReadOnlySpan<char> containerElementName)
+        {
+            containerName = default;
+            containerElementName = default;
+
+            int indexOfContainerNameAndElementNameSeparator = containerQualifiedElementName.LastIndexOf('.');
+            if (indexOfContainerNameAndElementNameSeparator < 0)
+            {
+                return false;
+            }
+
+            containerName = containerQualifiedElementName.Slice(0, indexOfContainerNameAndElementNameSeparator);
+            containerElementName = containerQualifiedElementName.Slice(indexOfContainerNameAndElementNameSeparator + 1);
+            if (containerName.IsEmpty || containerElementName.IsEmpty)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
         internal static bool IsNullOrWhiteSpaceInternal(String value)
         {
             return value == null || value.ToCharArray().All(Char.IsWhiteSpace);

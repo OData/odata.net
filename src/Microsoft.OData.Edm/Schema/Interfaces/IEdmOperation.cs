@@ -47,5 +47,12 @@ namespace Microsoft.OData.Edm
         /// <param name="name">The name of the parameter being found.</param>
         /// <returns>The requested parameter or null if no such parameter exists.</returns>
         IEdmOperationParameter FindParameter(string name);
+
+        /// <summary>
+        /// Searches for a parameter with the given name, and returns null if no such parameter exists.
+        /// </summary>
+        /// <param name="name">The name of the parameter being found.</param>
+        /// <returns>The requested parameter or null if no such parameter exists.</returns>
+        IEdmOperationParameter FindParameter(ReadOnlySpan<char> name);
     }
 }

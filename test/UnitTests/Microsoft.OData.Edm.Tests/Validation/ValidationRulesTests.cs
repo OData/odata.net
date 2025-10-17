@@ -1680,6 +1680,10 @@ namespace Microsoft.OData.Edm.Tests.Validation
                 return this.Parameters.Single(p => p.Name == name);
             }
 
+            // Since it's test codes, it's ok to call 'FindParameter(string)' since let's use 'Single()' method to throw exception if not found.
+            public IEdmOperationParameter FindParameter(ReadOnlySpan<char> name)
+                => FindParameter(name.ToString());
+
             public EdmSchemaElementKind SchemaElementKind
             {
                 get { return EdmSchemaElementKind.Function; }

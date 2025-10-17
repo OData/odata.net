@@ -524,7 +524,7 @@ Microsoft.OData.Edm.EdmStructuredType.EdmStructuredType(bool isAbstract, bool is
 Microsoft.OData.Edm.EdmStructuredType.FindProperty(string name) -> Microsoft.OData.Edm.IEdmProperty
 Microsoft.OData.Edm.EdmStructuredType.IsAbstract.get -> bool
 Microsoft.OData.Edm.EdmStructuredType.IsOpen.get -> bool
-Microsoft.OData.Edm.EdmStructuredType.PropertiesDictionary.get -> System.Collections.Generic.IDictionary<string, Microsoft.OData.Edm.IEdmProperty>
+Microsoft.OData.Edm.EdmStructuredType.PropertiesDictionary.get -> System.Collections.Generic.Dictionary<string, Microsoft.OData.Edm.IEdmProperty>
 Microsoft.OData.Edm.EdmTargetPath
 Microsoft.OData.Edm.EdmTargetPath.EdmTargetPath(params Microsoft.OData.Edm.IEdmElement[] segments) -> void
 Microsoft.OData.Edm.EdmTargetPath.EdmTargetPath(System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmElement> segments) -> void

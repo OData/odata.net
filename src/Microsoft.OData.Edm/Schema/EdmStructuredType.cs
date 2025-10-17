@@ -20,8 +20,8 @@ namespace Microsoft.OData.Edm
         private readonly bool isOpen;
 
         // PropertiesDictionary cache.
-        private readonly Cache<EdmStructuredType, IDictionary<string, IEdmProperty>> propertiesDictionary = new Cache<EdmStructuredType, IDictionary<string, IEdmProperty>>();
-        private static readonly Func<EdmStructuredType, IDictionary<string, IEdmProperty>> ComputePropertiesDictionaryFunc = (me) => me.ComputePropertiesDictionary();
+        private readonly Cache<EdmStructuredType, Dictionary<string, IEdmProperty>> propertiesDictionary = new Cache<EdmStructuredType, Dictionary<string, IEdmProperty>>();
+        private static readonly Func<EdmStructuredType, Dictionary<string, IEdmProperty>> ComputePropertiesDictionaryFunc = (me) => me.ComputePropertiesDictionary();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EdmStructuredType"/> class.
@@ -71,7 +71,7 @@ namespace Microsoft.OData.Edm
         /// <summary>
         /// Gets a dictionary of the properties in this type definition for faster lookup.
         /// </summary>
-        protected IDictionary<string, IEdmProperty> PropertiesDictionary
+        protected Dictionary<string, IEdmProperty> PropertiesDictionary
         {
             get { return this.propertiesDictionary.GetValue(this, ComputePropertiesDictionaryFunc, null); }
         }
@@ -168,17 +168,25 @@ namespace Microsoft.OData.Edm
         /// </summary>
         /// <param name="name">The name of the property being found.</param>
         /// <returns>The requested property, or null if no such property exists.</returns>
-        public IEdmProperty FindProperty(string name)
+        public IEdmProperty FindProperty(string name) => FindProperty(name.AsSpan());
+
+        /// <summary>
+        /// Searches for a structural or navigation property with the given name in this type and all base types and returns null if no such property exists.
+        /// </summary>
+        /// <param name="name">The name of the property being found.</param>
+        /// <returns>The requested property, or null if no such property exists.</returns>
+        public IEdmProperty FindProperty(ReadOnlySpan<char> name)
         {
-            IEdmProperty property;
-            return this.PropertiesDictionary.TryGetValue(name, out property) ? property : null;
+            Dictionary<string, IEdmProperty>.AlternateLookup<ReadOnlySpan<char>> lookup
+                = this.PropertiesDictionary.GetAlternateLookup<ReadOnlySpan<char>>();
+            return lookup.TryGetValue(name, out IEdmProperty property) ? property : null;
         }
 
         /// <summary>
         /// Computes the the cached dictionary of properties for this type definition.
         /// </summary>
         /// <returns>Dictionary of properties keyed by their name.</returns>
-        private IDictionary<string, IEdmProperty> ComputePropertiesDictionary()
+        private Dictionary<string, IEdmProperty> ComputePropertiesDictionary()
         {
             Dictionary<string, IEdmProperty> properties = new Dictionary<string, IEdmProperty>();
             foreach (IEdmProperty property in this.Properties())

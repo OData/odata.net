@@ -4,6 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 
 namespace Microsoft.OData.Edm
@@ -39,5 +40,12 @@ namespace Microsoft.OData.Edm
         /// <param name="name">The name of the property being found.</param>
         /// <returns>The requested property, or null if no such property exists.</returns>
         IEdmProperty FindProperty(string name);
+
+        /// <summary>
+        /// Searches for a structural or navigation property with the given name in this type and all base types and returns null if no such property exists.
+        /// </summary>
+        /// <param name="name">The name of the property being found.</param>
+        /// <returns>The requested property, or null if no such property exists.</returns>
+        IEdmProperty FindProperty(ReadOnlySpan<char> name);
     }
 }
