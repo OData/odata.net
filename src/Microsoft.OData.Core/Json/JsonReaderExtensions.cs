@@ -514,7 +514,7 @@ namespace Microsoft.OData.Json
         /// <param name="jsonReader">The <see cref="JsonReader"/> to read from.</param>
         /// <returns>A task that represents the asynchronous read operation.
         /// The value of the TResult parameter contains the property name of the current property node.</returns>
-        internal static async Task<string> GetPropertyNameAsync(this IJsonReader jsonReader)
+        internal static async Task<ReadOnlyMemory<char>> GetPropertyNameAsync(this IJsonReader jsonReader)
         {
             Debug.Assert(jsonReader != null, "jsonReader != null");
             Debug.Assert(jsonReader.NodeType == JsonNodeType.Property, "jsonReader.NodeType == JsonNodeType.Property");
@@ -522,7 +522,15 @@ namespace Microsoft.OData.Json
             // NOTE: the JSON reader already verifies that property names are strings and not null/empty
             object value = await jsonReader.GetValueAsync()
                 .ConfigureAwait(false);
-            return (string)value;
+
+            if (value is string s)
+            {
+                return s.AsMemory();
+            }
+            else
+            {
+                return ReadOnlyMemory<char>.Empty;
+            }
         }
 
         /// <summary>
@@ -531,12 +539,12 @@ namespace Microsoft.OData.Json
         /// <param name="jsonReader">The <see cref="JsonReader"/> to read from.</param>
         /// <returns>A task that represents the asynchronous read operation.
         /// The value of the TResult parameter contains the property name of the property node read.</returns>
-        internal static async Task<string> ReadPropertyNameAsync(this IJsonReader jsonReader)
+        internal static async Task<ReadOnlyMemory<char>> ReadPropertyNameAsync(this IJsonReader jsonReader)
         {
             Debug.Assert(jsonReader != null, "jsonReader != null");
 
             jsonReader.ValidateNodeType(JsonNodeType.Property);
-            string propertyName = await jsonReader.GetPropertyNameAsync()
+            ReadOnlyMemory<char> propertyName = await jsonReader.GetPropertyNameAsync()
                 .ConfigureAwait(false);
             await jsonReader.ReadNextAsync()
                 .ConfigureAwait(false);
@@ -748,9 +756,9 @@ namespace Microsoft.OData.Json
                             break;
 
                         case JsonNodeType.Property:
-                            string propertyName = await jsonReader.GetPropertyNameAsync()
+                            ReadOnlyMemory<char> propertyName = await jsonReader.GetPropertyNameAsync()
                                 .ConfigureAwait(false);
-                            await jsonWriter.WriteNameAsync(propertyName)
+                            await jsonWriter.WriteNameAsync(propertyName.Span.ToString())
                                 .ConfigureAwait(false);
                             break;
 
@@ -819,8 +827,10 @@ namespace Microsoft.OData.Json
                 while (jsonReader.NodeType != JsonNodeType.EndObject)
                 {
                     ODataProperty property = new ODataProperty();
-                    property.Name = await jsonReader.ReadPropertyNameAsync()
+                    ReadOnlyMemory<char> propertyName = await jsonReader.ReadPropertyNameAsync()
                         .ConfigureAwait(false);
+
+                    property.Name = propertyName.Span.ToString();
                     property.Value = await jsonReader.ReadODataValueAsync()
                         .ConfigureAwait(false);
                     properties.Add(property);

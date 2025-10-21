@@ -225,11 +225,11 @@ namespace Microsoft.OData.Json
         /// <param name="propertyName">The name of the annotated property, or null if the property is not a property annotation.</param>
         /// <param name="annotationName">The annotation name, or null if the property is not a property annotation.</param>
         /// <returns>true if the <paramref name="propertyAnnotationName"/> is a property annotation, false otherwise.</returns>
-        internal static bool TryParsePropertyAnnotation(string propertyAnnotationName, out string propertyName, out string annotationName)
+        internal static bool TryParsePropertyAnnotation(ReadOnlySpan<char> propertyAnnotationName, out ReadOnlySpan<char> propertyName, out ReadOnlySpan<char> annotationName)
         {
-            Debug.Assert(!string.IsNullOrEmpty(propertyAnnotationName), "!string.IsNullOrEmpty(propertyAnnotationName)");
+            Debug.Assert(!propertyAnnotationName.IsEmpty, "!string.IsNullOrEmpty(propertyAnnotationName)");
 
-            int propertyAnnotationSeparatorIndex = propertyAnnotationName.IndexOf(ODataJsonConstants.ODataPropertyAnnotationSeparatorChar, StringComparison.Ordinal);
+            int propertyAnnotationSeparatorIndex = propertyAnnotationName.IndexOf(ODataJsonConstants.ODataPropertyAnnotationSeparatorChar);
             if (propertyAnnotationSeparatorIndex <= 0 || propertyAnnotationSeparatorIndex == propertyAnnotationName.Length - 1)
             {
                 propertyName = null;
@@ -237,8 +237,8 @@ namespace Microsoft.OData.Json
                 return false;
             }
 
-            propertyName = propertyAnnotationName.Substring(0, propertyAnnotationSeparatorIndex);
-            annotationName = propertyAnnotationName.Substring(propertyAnnotationSeparatorIndex + 1);
+            propertyName = propertyAnnotationName.Slice(0, propertyAnnotationSeparatorIndex);
+            annotationName = propertyAnnotationName.Slice(propertyAnnotationSeparatorIndex + 1);
             return true;
         }
 
@@ -771,10 +771,10 @@ namespace Microsoft.OData.Json
             }
 
             // Must make sure the input odata.context has a '@' prefix
-            string propertyName = await this.JsonReader.GetPropertyNameAsync()
+            ReadOnlyMemory<char> propertyName = await this.JsonReader.GetPropertyNameAsync()
                 .ConfigureAwait(false);
-            if (!string.Equals(ODataJsonConstants.PrefixedODataContextPropertyName, propertyName, StringComparison.Ordinal)
-                && !this.CompareSimplifiedODataAnnotation(ODataJsonConstants.SimplifiedODataContextPropertyName, propertyName))
+            if (!ODataJsonConstants.PrefixedODataContextPropertyName.AsSpan().Equals(propertyName.Span, StringComparison.Ordinal)
+                && !this.CompareSimplifiedODataAnnotation(ODataJsonConstants.SimplifiedODataContextPropertyName.AsSpan(), propertyName.Span))
             {
                 if (!failOnMissingContextUriAnnotation || payloadKind == ODataPayloadKind.Unsupported)
                 {
@@ -787,7 +787,7 @@ namespace Microsoft.OData.Json
 
             if (propertyAndAnnotationCollector != null)
             {
-                propertyAndAnnotationCollector.MarkPropertyAsProcessed(propertyName);
+                propertyAndAnnotationCollector.MarkPropertyAsProcessed(propertyName.ToString());
             }
 
             // Read over the property name
@@ -803,13 +803,13 @@ namespace Microsoft.OData.Json
         /// <param name="simplifiedPropertyName">The simplified OData annotation property name.</param>
         /// <param name="propertyName">The JSON property name read from the payload.</param>
         /// <returns>If the JSON property name equals the simplified OData annotation property name.</returns>
-        protected bool CompareSimplifiedODataAnnotation(string simplifiedPropertyName, string propertyName)
+        protected bool CompareSimplifiedODataAnnotation(ReadOnlySpan<char> simplifiedPropertyName, ReadOnlySpan<char> propertyName)
         {
-            Debug.Assert(simplifiedPropertyName.IndexOf('@', StringComparison.Ordinal) == 0, "simplifiedPropertyName must start with '@'.");
-            Debug.Assert(simplifiedPropertyName.IndexOf('.', StringComparison.Ordinal) == -1, "simplifiedPropertyName must not be namespace-qualified.");
+            Debug.Assert(simplifiedPropertyName.IndexOf('@') == 0, "simplifiedPropertyName must start with '@'.");
+            Debug.Assert(simplifiedPropertyName.IndexOf('.') == -1, "simplifiedPropertyName must not be namespace-qualified.");
 
             return this.JsonInputContext.OptionalODataPrefix &&
-                   string.Equals(simplifiedPropertyName, propertyName, StringComparison.Ordinal);
+                   MemoryExtensions.Equals(simplifiedPropertyName, propertyName, StringComparison.Ordinal);
         }
 
         /// <summary>
@@ -1244,7 +1244,7 @@ namespace Microsoft.OData.Json
         /// 7). The first component contains EndOfObject if end of the object scope was reached and no properties are to be reported, while the second component contains null.
         ///                             This can only happen if there's a property annotation which is ignored (for example custom one) at the end of the object.
         /// </returns>
-        private async Task<(PropertyParsingResult ParsingResult, string PropertyName)> ParsePropertyAsync(
+        private async Task<(PropertyParsingResult ParsingResult, ReadOnlyMemory<char> PropertyName)> ParsePropertyAsync(
             PropertyAndAnnotationCollector propertyAndAnnotationCollector,
             Func<string, Task<object>> readPropertyAnnotationValueDelegate)
         {
@@ -1255,11 +1255,10 @@ namespace Microsoft.OData.Json
 
             while (this.JsonReader.NodeType == JsonNodeType.Property)
             {
-                string nameFromReader = await this.JsonReader.GetPropertyNameAsync()
+                var nameFromReader = await this.JsonReader.GetPropertyNameAsync()
                     .ConfigureAwait(false);
 
-                string propertyNameFromReader, annotationNameFromReader;
-                bool isPropertyAnnotation = TryParsePropertyAnnotation(nameFromReader, out propertyNameFromReader, out annotationNameFromReader);
+                bool isPropertyAnnotation = TryParsePropertyAnnotation(nameFromReader, out string propertyNameFromReader, out string annotationNameFromReader);
 
                 // Reading a nested delta resource set
                 if (isPropertyAnnotation && string.Equals(this.CompleteSimplifiedODataAnnotation(annotationNameFromReader), ODataAnnotationNames.ODataDelta, StringComparison.Ordinal))
