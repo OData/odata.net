@@ -274,9 +274,9 @@ namespace Microsoft.OData.UriParser
                     // If prev and next are both double quotes, then it's an empty string.
                     if (input[k - 1] == '"')
                     {
-                        // We append \"\" so as to return "\"\"" instead of "".
-                        // This is to avoid passing an empty string to the ConstantNode.
-                        sb.Append("\\\"\\\"");
+                        // Here, we meet an empty string as "", we should do nothing here becase at the beginning appends a double quote, and at the end appends another double quote.
+                        // So, don't do the following appending.
+                        // sb.Append("\\\"\\\"");
                     }
                     break;
                 }
@@ -334,9 +334,10 @@ namespace Microsoft.OData.UriParser
                                 sb.Append('"');
                                 return k;
                             }
-                            // We append \"\" so as to return "\"\"" instead of "".
-                            // This is to avoid passing an empty string to the ConstantNode.
-                            sb.Append("\\\"\\\"");
+
+                            // Here, we meet an empty string as '', we should do nothing here becase at the beginning appends a double quote, and at the end appends another double quote.
+                            // So, don't do the following appending.
+                            // sb.Append("\\\"\\\"");
                         }
                         // match with single quote ('), stop it.
                         break;
