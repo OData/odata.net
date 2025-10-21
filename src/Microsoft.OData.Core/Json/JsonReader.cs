@@ -128,10 +128,9 @@ namespace Microsoft.OData.Json
         private object nodeValue;
 
         /// <summary>
-        /// Represents the threshold size, in characters, at which a <see cref="StringBuilder"/> instance should be reset. 
-        /// Reset when capacity exceeds 1KB to avoid retaining large buffers in memory.
+        /// Represents the threshold size, in characters, at which a <see cref="StringBuilder"/> instance should be reset.
         /// </summary>
-        private const int stringBuilderResetThreshold = 1024;
+        private const int stringBuilderResetThreshold = 2048;
 
         /// <summary>
         /// Represents the maximum capacity, in characters, of a cached <see cref="StringBuilder"/> instance.
