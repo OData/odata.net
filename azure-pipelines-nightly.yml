@@ -35,10 +35,6 @@ variables:
 extends:
   template: v1/1ES.Official.PipelineTemplate.yml@1ESPipelineTemplates
   parameters:
-    settings:
-      networkIsolationPolicy: Preferred,Nuget.org,AzureKeyVault,AzureActiveDirectory,AzureStorage
-      # Change to Good,Nuget.org if it gets too restrictive
-      # AzureKeyVault,AzureActiveDirectory,AzureStorage Allow policies required for the ESRP task
     pool:
       name: MSSecurity-1ES-Build-Agents-Pool
       image: MSSecurity-1ES-Windows-2022
