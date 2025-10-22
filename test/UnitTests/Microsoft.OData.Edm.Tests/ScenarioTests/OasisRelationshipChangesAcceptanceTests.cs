@@ -209,7 +209,7 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
             using (var writer = XmlWriter.Create(builder))
             {
                 IEnumerable<EdmError> errors;
-                var result = CsdlWriter.TryWriteCsdl(this.representativeModel, writer, CsdlTarget.OData, out errors);
+                var result = CsdlWriter.TryWriteCsdl(this.representativeModel, writer, out errors);
                 Assert.True(result);
                 Assert.Empty(errors);
                 writer.Flush();
