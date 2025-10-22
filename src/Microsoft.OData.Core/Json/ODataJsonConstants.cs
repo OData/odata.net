@@ -48,6 +48,9 @@ namespace Microsoft.OData.Json
         /// <summary>The 'id' property name for the Json value property.</summary>
         internal const string ODataIdPropertyName = "id";
 
+        /// <summary>The 'Id' property name for the Json value property.</summary>
+        internal const string ODataIdPascalCasePropertyName = "Id";
+
         /// <summary>The 'delta' property name for the Json value property.</summary>
         internal const string ODataDeltaPropertyName = "delta";
 
@@ -113,6 +116,9 @@ namespace Microsoft.OData.Json
 
         /// <summary>The simplified OData Type property name.</summary>
         internal const string SimplifiedODataTypePropertyName = "@type";
+
+        /// <summary>The OData Type property name.</summary>
+        internal const string ODataTypePropertyName = "type";
 
         /// <summary>The simplified Removed property name.</summary>
         internal const string SimplifiedODataRemovedPropertyName = "@removed";
