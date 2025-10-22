@@ -5,22 +5,26 @@
 // </copyright>
 //------------------------------------------------------------------------------
 
+using System.Net;
+using System.Text;
 using Microsoft.AspNetCore.OData;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OData.E2E.TestCommon;
 using Microsoft.OData.E2E.TestCommon.Common;
+using Microsoft.OData.E2E.TestCommon.Common.Client.Default.Default;
 using Microsoft.OData.E2E.TestCommon.Common.Server.Default;
+using Microsoft.OData.E2E.TestCommon.Common.Server.DeltaTests;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Microsoft.Spatial;
-using System.Reflection;
 
 namespace Microsoft.OData.Core.E2E.Tests.DeltaTests
 {
     public class DeltaTests : EndToEndTestBase<DeltaTests.TestsStartup>
     {
         private readonly Uri _baseUri;
+        private readonly Container _context;
         private readonly IEdmModel _model;
         private static readonly string NameSpacePrefix = "Microsoft.OData.E2E.TestCommon.Common.Server.Default.";
 
@@ -28,7 +32,7 @@ namespace Microsoft.OData.Core.E2E.Tests.DeltaTests
         {
             public override void ConfigureServices(IServiceCollection services)
             {
-                services.ConfigureControllers(typeof(MetadataController));
+                services.ConfigureControllers(typeof(MetadataController), typeof(DeltaTestsController));
 
                 services.AddControllers().AddOData(opt => opt.Count().Filter().Expand().Select().OrderBy().SetMaxTop(null)
                     .AddRouteComponents("odata", DefaultEdmModel.GetEdmModel()));
@@ -39,7 +43,13 @@ namespace Microsoft.OData.Core.E2E.Tests.DeltaTests
             : base(fixture)
         {
             _baseUri = new Uri(Client.BaseAddress, "odata/");
+            _context = new Container(_baseUri)
+            {
+                HttpClientFactory = HttpClientFactory
+            };
+
             _model = DefaultEdmModel.GetEdmModel();
+            ResetDefaultDataSource();
         }
 
         [Theory]
@@ -827,6 +837,42 @@ namespace Microsoft.OData.Core.E2E.Tests.DeltaTests
             Assert.Equal(ODataReaderState.Completed, deltaReader.State);
         }
 
+        [Theory]
+        [InlineData("Customers(1)", "{\"Orders@delta\": [{\"OrderID\": 8, \"@removed\": { \"reason\": \"changed\" }}]}", 8)]
+        [InlineData("Customers(1)", "{\"FirstName\": \"Jane\", \"Orders@delta\": [{\"@removed\": { \"reason\": \"changed\" }, \"OrderID\": 8 }]}", 8)]
+        [InlineData("Customers(1)", "{\"FirstName\": \"Jane\", \"Orders@delta\": [{\"OrderID\": 8, \"@removed\": { \"reason\": \"changed\" }}]}", 8)]
+        [InlineData("Customers(2)", "{\"FirstName\": \"Doe\", \"Orders@delta\": [{\"@removed\": { \"reason\": \"changed\" }, \"OrderID\": 7 }, {\"OrderID\": 9, \"@removed\": { \"reason\": \"changed\" }}]}", 9)]
+        [InlineData("Customers(1)", "{\"Orders@delta\": [{\"OrderID\": 8, \"@removed\": { \"reason\": \"deleted\" }}]}", 8)]
+        [InlineData("Customers(2)", "{\"Orders@delta\": [{\"OrderID\": 9, \"@removed\": { \"reason\": \"changed\" }}, {\"@removed\": { \"reason\": \"changed\" }, \"OrderID\": 7 }]}", 9)]
+        [InlineData("Customers(2)", "{\"Orders@delta\": [{\"OrderID\": 9, \"@removed\": { \"reason\": \"deleted\" }}, {\"@removed\": { \"reason\": \"deleted\" }, \"OrderID\": 7 }]}", 9)]
+        [InlineData("Customers(2)", "{\"Orders@delta\": [{\"OrderID\": 9, \"@removed\": { \"reason\": \"deleted\" }}, {\"@removed\": { \"reason\": \"changed\" }, \"OrderID\": 7 }]}", 7)]
+        [InlineData("Customers(1)", "{\"FirstName\": \"Jane\", \"Orders@delta\": [{\"@removed\": { \"reason\": \"deleted\" }, \"OrderID\": 8 }]}", 8)]
+        [InlineData("Customers(1)", "{\"FirstName\": \"Jane\", \"Orders@delta\": [{\"OrderID\": 8, \"@removed\": { \"reason\": \"deleted\" }}]}", 8)]
+        [InlineData("Customers(2)", "{\"FirstName\": \"Doe\", \"Orders@delta\": [{\"@removed\": { \"reason\": \"deleted\" }, \"OrderID\": 7 }, {\"OrderID\": 9, \"@removed\": { \"reason\": \"deleted\" }}]}", 9)]
+        [InlineData("Customers(2)", "{\"FirstName\": \"Doe\", \"Orders@delta\": [{\"@removed\": { \"reason\": \"changed\" }, \"OrderID\": 7 }, {\"OrderID\": 9, \"@removed\": { \"reason\": \"deleted\" }}]}", 7)]
+        [InlineData("Customers(2)", "{\"FirstName\": \"Doe\", \"Orders@delta\": [{\"@removed\": { \"reason\": \"changed\" }, \"OrderID\": 7 }, {\"@removed\": { \"reason\": \"deleted\" }, \"OrderID\": 9}]}", 7)]
+        public async Task DeltaDeleteWithOrderedAndUnorderedPayload_WorksAsExpected_Async(string query, string payload, int removedID)
+        {
+            // Arrange
+            var requestUri = new Uri(_baseUri, query);
+            var orderQuery = requestUri.AbsoluteUri + $"/Orders({removedID})";
+
+            // Ensure the order to be removed exists
+            var existOrderResponse = await Client.GetAsync(orderQuery);
+            Assert.Equal(HttpStatusCode.OK, existOrderResponse.StatusCode);
+
+            var content = new StringContent(payload, Encoding.UTF8, "application/json");
+
+            // Act
+            var response = await Client.PatchAsync(requestUri, content);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+            // Ensure the order is removed
+            var removedOrderResponse = await Client.GetAsync(orderQuery);
+            Assert.Equal(HttpStatusCode.NotFound, removedOrderResponse.StatusCode);
+        }
 
         private ODataMessageWriterSettings CreateODataMessageWriterSettings(Uri requestUri)
         {
@@ -845,6 +891,12 @@ namespace Microsoft.OData.Core.E2E.Tests.DeltaTests
             };
 
             return settings;
+        }
+
+        private void ResetDefaultDataSource()
+        {
+            var actionUri = new Uri(_baseUri + "deltatests/Default.ResetDefaultDataSource", UriKind.Absolute);
+            _context.Execute(actionUri, "POST");
         }
     }
 }
