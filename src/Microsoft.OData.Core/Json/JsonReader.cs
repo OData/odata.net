@@ -1001,7 +1001,6 @@ namespace Microsoft.OData.Json
 
             // if the content is nested json, we can stream
             this.canStream = this.characterBuffer[this.tokenStartIndex] == '{' || this.characterBuffer[this.tokenStartIndex] == '[';
-
             return JsonNodeType.Property;
         }
 
@@ -1072,6 +1071,7 @@ namespace Microsoft.OData.Json
                         {
                             this.stringValueBuilder.Length = 0;
                         }
+
                         valueBuilder = this.stringValueBuilder;
                     }
 
