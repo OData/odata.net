@@ -121,7 +121,6 @@ namespace Microsoft.OData.Edm.Csdl
         /// </summary>
         /// <param name="model">Model to be written.</param>
         /// <param name="writer">The XmlWriter the generated CSDL will be written to.</param>
-        /// <param name="target">Target implementation of the CSDL being generated.</param>
         /// <param name="errors">Errors that prevented successful serialization, or no errors if serialization was successful. </param>
         /// <returns>A value indicating whether serialization was successful.</returns>
         public static bool TryWriteCsdl(IEdmModel model, XmlWriter writer, out IEnumerable<EdmError> errors)
@@ -145,7 +144,6 @@ namespace Microsoft.OData.Edm.Csdl
         /// </summary>
         /// <param name="model">Model to be written.</param>
         /// <param name="writer">XmlWriter the generated CSDL will be written to.</param>
-        /// <param name="target">Target implementation of the CSDL being generated.</param>
         /// <param name="writerSettings">The CSDL xml writer settings.</param>
         /// <param name="errors">Errors that prevented successful serialization, or no errors if serialization was successful. </param>
         /// <returns>A value indicating whether serialization was successful.</returns>
@@ -172,7 +170,6 @@ namespace Microsoft.OData.Edm.Csdl
         /// </summary>
         /// <param name="model">Model to be written.</param>
         /// <param name="writer">XmlWriter the generated CSDL will be written to.</param>
-        /// <param name="target">Target implementation of the CSDL being generated.</param>
         /// <param name="writerSettings">The CSDL xml writer settings.</param>
         /// <returns>A task with a value indicating whether serialization was successful.</returns>
         public static async Task<(bool, IEnumerable<EdmError>)> TryWriteCsdlAsync(IEdmModel model, XmlWriter writer, CsdlXmlWriterSettings writerSettings)

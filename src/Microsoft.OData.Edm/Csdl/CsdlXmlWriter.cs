@@ -28,7 +28,6 @@ namespace Microsoft.OData.Edm.Csdl
         /// <param name="model">The Edm model.</param>
         /// <param name="writer">The XML writer.</param>
         /// <param name="edmxVersion">The Edmx version.</param>
-        /// <param name="target">The CSDL target.</param>
         public CsdlXmlWriter(IEdmModel model, XmlWriter writer, Version edmxVersion)
             : this(model, writer, edmxVersion, new CsdlXmlWriterSettings())
         {
@@ -40,7 +39,6 @@ namespace Microsoft.OData.Edm.Csdl
         /// <param name="model">The Edm model.</param>
         /// <param name="writer">The XML writer.</param>
         /// <param name="edmxVersion">The Edmx version.</param>
-        /// <param name="target">The CSDL target.</param>
         /// <param name="writerSettings">The CSDL xml writer settings.</param>
         public CsdlXmlWriter(IEdmModel model, XmlWriter writer, Version edmxVersion, CsdlXmlWriterSettings writerSettings)
             : base(model, edmxVersion)
