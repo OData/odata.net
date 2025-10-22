@@ -1069,7 +1069,7 @@ namespace Microsoft.OData.Json
                         }
                         else
                         {
-                            this.stringValueBuilder.Length = 0;
+                            this.stringValueBuilder.Clear();
                         }
 
                         valueBuilder = this.stringValueBuilder;
@@ -1851,7 +1851,7 @@ namespace Microsoft.OData.Json
                         }
                         else
                         {
-                            this.stringValueBuilder.Length = 0;
+                            this.stringValueBuilder.Clear();
                         }
 
                         valueBuilder = this.stringValueBuilder;
