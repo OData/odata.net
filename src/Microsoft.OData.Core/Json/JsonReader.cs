@@ -128,16 +128,6 @@ namespace Microsoft.OData.Json
         private object nodeValue;
 
         /// <summary>
-        /// Represents the threshold size, in characters, at which a <see cref="StringBuilder"/> instance should be reset.
-        /// </summary>
-        private const int stringBuilderResetThreshold = 2048;
-
-        /// <summary>
-        /// Represents the maximum capacity, in characters, of a cached <see cref="StringBuilder"/> instance.
-        /// </summary>
-        private const int stringBuilderMaxCapacity = 4096;
-
-        /// <summary>
         /// Cached string builder to be used when constructing string values (needed to resolve escape sequences).
         /// </summary>
         /// <remarks>The string builder instance is cached to avoid excessive allocation when many string values with escape sequences
@@ -1080,7 +1070,7 @@ namespace Microsoft.OData.Json
                         }
                         else
                         {
-                            ResetStringBuilderIfNeeded();
+                            this.stringValueBuilder.Length = 0;
                         }
                         valueBuilder = this.stringValueBuilder;
                     }
@@ -1861,7 +1851,7 @@ namespace Microsoft.OData.Json
                         }
                         else
                         {
-                            ResetStringBuilderIfNeeded();
+                            this.stringValueBuilder.Length = 0;
                         }
 
                         valueBuilder = this.stringValueBuilder;
@@ -2762,20 +2752,6 @@ namespace Microsoft.OData.Json
             }
 
             return span.ToString();
-        }
-
-        /// <summary>
-        /// Resets the internal <see cref="StringBuilder"/> if its capacity exceeds a specified threshold.
-        /// </summary>
-        private void ResetStringBuilderIfNeeded()
-        {
-            this.stringValueBuilder.Clear();
-
-            // If the capacity is excessively large, shrink the capacity
-            if (this.stringValueBuilder.Capacity > stringBuilderMaxCapacity)
-            {
-                this.stringValueBuilder.Capacity = stringBuilderResetThreshold;
-            }
         }
 
         /// <summary>
