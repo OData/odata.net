@@ -1,0 +1,8 @@
+Microsoft.OData.UriParser.CustomQueryOptionNode
+Microsoft.OData.UriParser.CustomQueryOptionNode.CustomQueryOptionNode(string name, string value) -> void
+Microsoft.OData.UriParser.CustomQueryOptionNode.Name.get -> string
+Microsoft.OData.UriParser.CustomQueryOptionNode.Value.get -> string
+Microsoft.OData.UriParser.QueryNodeKind.CustomQueryOption = 35 -> Microsoft.OData.UriParser.QueryNodeKind
+override Microsoft.OData.UriParser.CustomQueryOptionNode.Accept<T>(Microsoft.OData.UriParser.QueryNodeVisitor<T> visitor) -> T
+override Microsoft.OData.UriParser.CustomQueryOptionNode.Kind.get -> Microsoft.OData.UriParser.QueryNodeKind
+virtual Microsoft.OData.UriParser.QueryNodeVisitor<T>.Visit(Microsoft.OData.UriParser.CustomQueryOptionNode nodeIn) -> T

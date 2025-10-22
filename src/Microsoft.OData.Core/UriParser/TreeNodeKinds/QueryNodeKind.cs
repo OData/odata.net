@@ -188,6 +188,11 @@ namespace Microsoft.OData.UriParser
        /// Node that represents a $root path
        /// </summary>
         RootPath = InternalQueryNodeKind.RootPath,
+
+        /// <summary>
+        /// Node that represents a custom query option
+        /// </summary>
+        CustomQueryOption = InternalQueryNodeKind.CustomQueryOption,
     }
 
     /// <summary>
@@ -368,6 +373,11 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// Node that represetns a $root path
         /// </summary>
-        RootPath,
+        RootPath = 34,
+
+        /// <summary>
+        /// Node that represents a custom query option
+        /// </summary>
+        CustomQueryOption = 35,
     }
 }
