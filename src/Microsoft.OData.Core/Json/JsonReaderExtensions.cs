@@ -75,15 +75,14 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="jsonReader">The <see cref="JsonReader"/> to read from.</param>
         /// <returns>The property name of the current property node.</returns>
-        internal static string GetPropertyName(this IJsonReader jsonReader)
+        internal static ReadOnlySpan<char> GetPropertyName(this IJsonReader jsonReader)
         {
             Debug.Assert(jsonReader != null, "jsonReader != null");
             Debug.Assert(jsonReader.NodeType == JsonNodeType.Property, "jsonReader.NodeType == JsonNodeType.Property");
 
             // NOTE: the JSON reader already verifies that property names are strings and not null/empty
-            string propertyName = (string)jsonReader.GetValue();
-
-            return propertyName;
+            object value = jsonReader.GetValue();
+            return new ReadOnlySpan<char>(((string)value).ToCharArray());
         }
 
         /// <summary>

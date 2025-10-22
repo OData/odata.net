@@ -103,9 +103,9 @@ namespace Microsoft.OData.Json
             // If the current node is the odata.type property - read it.
             if (this.JsonReader.NodeType == JsonNodeType.Property)
             {
-                string propertyName = this.JsonReader.GetPropertyName();
-                if (string.Equals(ODataJsonConstants.PrefixedODataTypePropertyName, propertyName, StringComparison.Ordinal)
-                    || this.CompareSimplifiedODataAnnotation(ODataJsonConstants.SimplifiedODataTypePropertyName, propertyName))
+                ReadOnlySpan<char> propertyName = this.JsonReader.GetPropertyName();
+                if (propertyName.SequenceEqual(ODataJsonConstants.PrefixedODataTypePropertyName.AsSpan())
+                    || this.CompareSimplifiedODataAnnotation(ODataJsonConstants.SimplifiedODataTypePropertyName.AsSpan(), propertyName))
                 {
                     Debug.Assert(resourceState.Resource.TypeName == null, "type name should not have already been set");
 
@@ -141,9 +141,9 @@ namespace Microsoft.OData.Json
             // If the current node is the deleted property - read it.
             if (this.JsonReader.NodeType == JsonNodeType.Property)
             {
-                string propertyName = this.JsonReader.GetPropertyName();
-                if (string.Equals(ODataJsonConstants.PrefixedODataRemovedPropertyName, propertyName, StringComparison.Ordinal)
-                    || this.CompareSimplifiedODataAnnotation(ODataJsonConstants.SimplifiedODataRemovedPropertyName, propertyName))
+                ReadOnlySpan<char> propertyName = this.JsonReader.GetPropertyName();
+                if (propertyName.SequenceEqual(ODataJsonConstants.PrefixedODataRemovedPropertyName.AsSpan())
+                    || this.CompareSimplifiedODataAnnotation(ODataJsonConstants.SimplifiedODataRemovedPropertyName.AsSpan(), propertyName))
                 {
                     DeltaDeletedEntryReason reason = DeltaDeletedEntryReason.Changed;
                     Uri id = null;
@@ -159,7 +159,7 @@ namespace Microsoft.OData.Json
                         {
                             // If the current node is the reason property - read it.
                             if (this.JsonReader.NodeType == JsonNodeType.Property &&
-                                string.Equals(ODataJsonConstants.ODataReasonPropertyName, this.JsonReader.GetPropertyName(), StringComparison.Ordinal))
+                                ODataJsonConstants.ODataReasonPropertyName.AsSpan().SequenceEqual(this.JsonReader.GetPropertyName()))
                             {
                                 // Read over the property to move to its value.
                                 this.JsonReader.Read();
@@ -192,8 +192,8 @@ namespace Microsoft.OData.Json
 
                     // If the next property is the id property - read it.
                     propertyName = this.JsonReader.GetPropertyName();
-                    if (string.Equals(ODataJsonConstants.PrefixedODataIdPropertyName, propertyName, StringComparison.Ordinal)
-                        || this.CompareSimplifiedODataAnnotation(ODataJsonConstants.SimplifiedODataIdPropertyName, propertyName))
+                    if (propertyName.SequenceEqual(ODataJsonConstants.PrefixedODataIdPropertyName.AsSpan())
+                        || this.CompareSimplifiedODataAnnotation(ODataJsonConstants.SimplifiedODataIdPropertyName.AsSpan(), propertyName))
                     {
                         // Read over the property to move to its value.
                         this.JsonReader.Read();
@@ -233,7 +233,7 @@ namespace Microsoft.OData.Json
                 if (this.JsonReader.NodeType == JsonNodeType.Property)
                 {
                     // If the current node is the id property - read it.
-                    if (string.Equals(ODataJsonConstants.ODataIdPropertyName, this.JsonReader.GetPropertyName(), StringComparison.Ordinal))
+                    if (ODataJsonConstants.ODataIdPropertyName.AsSpan().SequenceEqual(this.JsonReader.GetPropertyName()))
                     {
                         // Read over the property to move to its value.
                         this.JsonReader.Read();
@@ -245,7 +245,7 @@ namespace Microsoft.OData.Json
                         continue;
                     }
                     // If the current node is the reason property - read it.
-                    else if (string.Equals(ODataJsonConstants.ODataReasonPropertyName, this.JsonReader.GetPropertyName(), StringComparison.Ordinal))
+                    else if (ODataJsonConstants.ODataReasonPropertyName.AsSpan().SequenceEqual(this.JsonReader.GetPropertyName()))
                     {
                         // Read over the property to move to its value.
                         this.JsonReader.Read();
@@ -291,7 +291,7 @@ namespace Microsoft.OData.Json
 
             // If the current node is the source property - read it.
             if (this.JsonReader.NodeType == JsonNodeType.Property &&
-                string.Equals(ODataJsonConstants.ODataSourcePropertyName, this.JsonReader.GetPropertyName(), StringComparison.Ordinal))
+                ODataJsonConstants.ODataSourcePropertyName.AsSpan().SequenceEqual(this.JsonReader.GetPropertyName()))
             {
                 Debug.Assert(link.Source == null, "source should not have already been set");
 
@@ -324,7 +324,7 @@ namespace Microsoft.OData.Json
 
             // If the current node is the relationship property - read it.
             if (this.JsonReader.NodeType == JsonNodeType.Property &&
-                string.Equals(ODataJsonConstants.ODataRelationshipPropertyName, this.JsonReader.GetPropertyName(), StringComparison.Ordinal))
+                ODataJsonConstants.ODataRelationshipPropertyName.AsSpan().SequenceEqual(this.JsonReader.GetPropertyName()))
             {
                 Debug.Assert(link.Relationship == null, "relationship should not have already been set");
 
@@ -357,7 +357,7 @@ namespace Microsoft.OData.Json
 
             // If the current node is the target property - read it.
             if (this.JsonReader.NodeType == JsonNodeType.Property &&
-                string.Equals(ODataJsonConstants.ODataTargetPropertyName, this.JsonReader.GetPropertyName(), StringComparison.Ordinal))
+                ODataJsonConstants.ODataTargetPropertyName.AsSpan().SequenceEqual(this.JsonReader.GetPropertyName()))
             {
                 Debug.Assert(link.Target == null, "target should not have already been set");
 
@@ -1141,14 +1141,14 @@ namespace Microsoft.OData.Json
             Debug.Assert(expandedNestedResourceInfo.NestedResourceInfo.IsCollection == true, "Only collection navigation properties can have resourceSet content.");
 
             // Look at the next property in the owning resource, if it's a property annotation for the expanded nested resource info property, read it.
-            string propertyName, annotationName;
             while (this.JsonReader.NodeType == JsonNodeType.Property &&
-                   TryParsePropertyAnnotation(this.JsonReader.GetPropertyName(), out propertyName, out annotationName) &&
-                   string.Equals(propertyName, expandedNestedResourceInfo.NestedResourceInfo.Name, StringComparison.Ordinal))
+                   TryParsePropertyAnnotation(this.JsonReader.GetPropertyName(), out ReadOnlySpan<char> propertyName, out ReadOnlySpan<char> annotationName) &&
+                   propertyName.SequenceEqual(expandedNestedResourceInfo.NestedResourceInfo.Name.AsSpan()))
             {
                 if (!this.ReadingResponse)
                 {
-                    throw new ODataException(Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_UnexpectedPropertyAnnotation, propertyName, annotationName));
+                    throw new ODataException(Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_UnexpectedPropertyAnnotation, 
+                        propertyName.ToString(), annotationName.ToString()));
                 }
 
                 // Read over the property name.
@@ -1178,7 +1178,7 @@ namespace Microsoft.OData.Json
 
                     case ODataAnnotationNames.ODataDeltaLink:   // Delta links are not supported on expanded resource sets.
                     default:
-                        throw new ODataException(Error.Format(SRResources.ODataJsonResourceDeserializer_UnexpectedPropertyAnnotationAfterExpandedResourceSet, annotationName, expandedNestedResourceInfo.NestedResourceInfo.Name));
+                        throw new ODataException(Error.Format(SRResources.ODataJsonResourceDeserializer_UnexpectedPropertyAnnotationAfterExpandedResourceSet, annotationName.ToString(), expandedNestedResourceInfo.NestedResourceInfo.Name));
                 }
             }
         }
@@ -2391,11 +2391,11 @@ namespace Microsoft.OData.Json
             // If the current node is the odata.type property - read it.
             if (this.JsonReader.NodeType == JsonNodeType.Property)
             {
-                string propertyName = await this.JsonReader.GetPropertyNameAsync()
+                ReadOnlyMemory<char> propertyName = await this.JsonReader.GetPropertyNameAsync()
                     .ConfigureAwait(false);
 
-                if (string.Equals(ODataJsonConstants.PrefixedODataTypePropertyName, propertyName, StringComparison.Ordinal)
-                    || this.CompareSimplifiedODataAnnotation(ODataJsonConstants.SimplifiedODataTypePropertyName, propertyName))
+                if (propertyName.Span.SequenceEqual(ODataJsonConstants.PrefixedODataTypePropertyName.AsSpan())
+                    || this.CompareSimplifiedODataAnnotation(ODataJsonConstants.SimplifiedODataTypePropertyName.AsSpan(), propertyName.Span))
                 {
                     Debug.Assert(resourceState.Resource.TypeName == null, "type name should not have already been set");
 
@@ -2436,10 +2436,10 @@ namespace Microsoft.OData.Json
             // If the current node is the deleted property - read it.
             if (this.JsonReader.NodeType == JsonNodeType.Property)
             {
-                string propertyName = await this.JsonReader.GetPropertyNameAsync()
+                ReadOnlyMemory<char> propertyName = await this.JsonReader.GetPropertyNameAsync()
                     .ConfigureAwait(false);
-                if (string.Equals(ODataJsonConstants.PrefixedODataRemovedPropertyName, propertyName, StringComparison.Ordinal)
-                    || this.CompareSimplifiedODataAnnotation(ODataJsonConstants.SimplifiedODataRemovedPropertyName, propertyName))
+                if (propertyName.Span.SequenceEqual(ODataJsonConstants.PrefixedODataRemovedPropertyName.AsSpan())
+                    || this.CompareSimplifiedODataAnnotation(ODataJsonConstants.SimplifiedODataRemovedPropertyName.AsSpan(), propertyName.Span))
                 {
                     DeltaDeletedEntryReason reason = DeltaDeletedEntryReason.Changed;
                     Uri id = null;
@@ -2457,7 +2457,7 @@ namespace Microsoft.OData.Json
                         {
                             // If the current node is the reason property - read it.
                             if (this.JsonReader.NodeType == JsonNodeType.Property
-                                && string.Equals(ODataJsonConstants.ODataReasonPropertyName, await this.JsonReader.GetPropertyNameAsync().ConfigureAwait(false), StringComparison.Ordinal))
+                                && ODataJsonConstants.ODataReasonPropertyName.AsSpan().SequenceEqual((await this.JsonReader.GetPropertyNameAsync().ConfigureAwait(false)).Span))
                             {
                                 // Read over the property to move to its value.
                                 await this.JsonReader.ReadAsync()
@@ -2490,8 +2490,8 @@ namespace Microsoft.OData.Json
                     // If the next property is the id property - read it.
                     propertyName = await this.JsonReader.GetPropertyNameAsync()
                         .ConfigureAwait(false);
-                    if (string.Equals(ODataJsonConstants.PrefixedODataIdPropertyName, propertyName, StringComparison.Ordinal)
-                        || this.CompareSimplifiedODataAnnotation(ODataJsonConstants.SimplifiedODataIdPropertyName, propertyName))
+                    if (propertyName.Span.SequenceEqual(ODataJsonConstants.PrefixedODataIdPropertyName.AsSpan())
+                        || this.CompareSimplifiedODataAnnotation(ODataJsonConstants.SimplifiedODataIdPropertyName.AsSpan(), propertyName.Span))
                     {
                         // Read over the property to move to its value.
                         await this.JsonReader.ReadAsync()
@@ -2534,11 +2534,11 @@ namespace Microsoft.OData.Json
             {
                 if (this.JsonReader.NodeType == JsonNodeType.Property)
                 {
-                    string propertyName = await this.JsonReader.GetPropertyNameAsync()
+                    ReadOnlyMemory<char> propertyName = await this.JsonReader.GetPropertyNameAsync()
                         .ConfigureAwait(false);
 
                     // If the current node is the id property - read it.
-                    if (string.Equals(ODataJsonConstants.ODataIdPropertyName, propertyName, StringComparison.Ordinal))
+                    if (propertyName.Span.SequenceEqual(ODataJsonConstants.ODataIdPropertyName.AsSpan()))
                     {
                         // Read over the property to move to its value.
                         await this.JsonReader.ReadAsync()
@@ -2552,7 +2552,7 @@ namespace Microsoft.OData.Json
                         continue;
                     }
                     // If the current node is the reason property - read it.
-                    else if (string.Equals(ODataJsonConstants.ODataReasonPropertyName, propertyName, StringComparison.Ordinal))
+                    else if (propertyName.Span.SequenceEqual(ODataJsonConstants.ODataReasonPropertyName.AsSpan()))
                     {
                         // Read over the property to move to its value.
                         await this.JsonReader.ReadAsync()
@@ -2600,7 +2600,7 @@ namespace Microsoft.OData.Json
 
             // If the current node is the source property - read it.
             if (this.JsonReader.NodeType == JsonNodeType.Property &&
-                string.Equals(ODataJsonConstants.ODataSourcePropertyName, await this.JsonReader.GetPropertyNameAsync().ConfigureAwait(false), StringComparison.Ordinal))
+                ODataJsonConstants.ODataSourcePropertyName.AsSpan().SequenceEqual((await this.JsonReader.GetPropertyNameAsync().ConfigureAwait(false)).Span))
             {
                 Debug.Assert(link.Source == null, "source should not have already been set");
 
@@ -2636,7 +2636,7 @@ namespace Microsoft.OData.Json
 
             // If the current node is the relationship property - read it.
             if (this.JsonReader.NodeType == JsonNodeType.Property &&
-                string.Equals(ODataJsonConstants.ODataRelationshipPropertyName, await this.JsonReader.GetPropertyNameAsync().ConfigureAwait(false), StringComparison.Ordinal))
+                ODataJsonConstants.ODataRelationshipPropertyName.AsSpan().SequenceEqual((await this.JsonReader.GetPropertyNameAsync().ConfigureAwait(false)).Span))
             {
                 Debug.Assert(link.Relationship == null, "relationship should not have already been set");
 
@@ -2672,7 +2672,7 @@ namespace Microsoft.OData.Json
 
             // If the current node is the target property - read it.
             if (this.JsonReader.NodeType == JsonNodeType.Property &&
-                string.Equals(ODataJsonConstants.ODataTargetPropertyName, await this.JsonReader.GetPropertyNameAsync().ConfigureAwait(false), StringComparison.Ordinal))
+                ODataJsonConstants.ODataTargetPropertyName.AsSpan().SequenceEqual((await this.JsonReader.GetPropertyNameAsync().ConfigureAwait(false)).Span))
             {
                 Debug.Assert(link.Target == null, "target should not have already been set");
 
@@ -3373,10 +3373,10 @@ namespace Microsoft.OData.Json
             Debug.Assert(expandedNestedResourceInfo.NestedResourceInfo.IsCollection == true, "Only collection navigation properties can have resourceSet content.");
 
             // Look at the next property in the owning resource, if it's a property annotation for the expanded nested resource info property, read it.
-            string propertyName, annotationName;
+            ReadOnlyMemory<char> propertyName, annotationName;
             while (this.JsonReader.NodeType == JsonNodeType.Property &&
                 TryParsePropertyAnnotation(await this.JsonReader.GetPropertyNameAsync().ConfigureAwait(false), out propertyName, out annotationName) &&
-                string.Equals(propertyName, expandedNestedResourceInfo.NestedResourceInfo.Name, StringComparison.Ordinal))
+                propertyName.Span.SequenceEqual(expandedNestedResourceInfo.NestedResourceInfo.Name.AsSpan()))
             {
                 if (!this.ReadingResponse)
                 {
@@ -3388,7 +3388,7 @@ namespace Microsoft.OData.Json
                 await this.JsonReader.ReadAsync()
                     .ConfigureAwait(false);
 
-                switch (this.CompleteSimplifiedODataAnnotation(annotationName))
+                switch (this.CompleteSimplifiedODataAnnotation(annotationName).Span)
                 {
                     case ODataAnnotationNames.ODataNextLink:
                         if (resourceSet.NextPageLink != null)
@@ -4081,9 +4081,9 @@ namespace Microsoft.OData.Json
 
             while (readerContext.JsonReader.NodeType == JsonNodeType.Property)
             {
-                string operationPropertyName = ODataAnnotationNames.RemoveAnnotationPrefix(
+                ReadOnlyMemory<char> operationPropertyName = ODataAnnotationNames.RemoveAnnotationPrefix(
                     await readerContext.JsonReader.ReadPropertyNameAsync().ConfigureAwait(false));
-                switch (operationPropertyName)
+                switch (operationPropertyName.Span)
                 {
                     case JsonConstants.ODataOperationTitleName:
                         if (operation.Title != null)

@@ -96,13 +96,13 @@ namespace Microsoft.OData.Json
         /// <param name="propertyValue">The value of the property.</param>
         /// <param name="propertyName">The name of the property (used for error reporting).</param>
         /// <param name="metadata">The metadata value for the operation (used for error reporting).</param>
-        internal static void ValidateOperationPropertyValueIsNotNull(object propertyValue, string propertyName, string metadata)
+        internal static void ValidateOperationPropertyValueIsNotNull(object propertyValue, ReadOnlySpan<char> propertyName, ReadOnlySpan<char> metadata)
         {
-            Debug.Assert(!String.IsNullOrEmpty(metadata), "!string.IsNullOrEmpty(metadata)");
+            Debug.Assert(!metadata.IsEmpty, "!string.IsNullOrEmpty(metadata)");
 
             if (propertyValue == null)
             {
-                throw new ODataException(Error.Format(SRResources.ODataJsonValidationUtils_OperationPropertyCannotBeNull, propertyName, metadata));
+                throw new ODataException(Error.Format(SRResources.ODataJsonValidationUtils_OperationPropertyCannotBeNull, propertyName.ToString(), metadata.ToString()));
             }
         }
     }

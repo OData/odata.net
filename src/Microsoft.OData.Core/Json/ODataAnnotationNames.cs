@@ -10,6 +10,7 @@ namespace Microsoft.OData.Json
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Runtime.CompilerServices;
     using Microsoft.OData.Core;
     #endregion Namespaces
 
@@ -112,11 +113,11 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="annotationName">The name of the annotation in question.</param>
         /// <returns>Returns true if the <paramref name="annotationName"/> starts with "odata.", false otherwise.</returns>
-        internal static bool IsODataAnnotationName(string annotationName)
+        internal static bool IsODataAnnotationName(ReadOnlySpan<char> annotationName)
         {
-            Debug.Assert(!string.IsNullOrEmpty(annotationName), "!string.IsNullOrEmpty(annotationName)");
+            Debug.Assert(!annotationName.IsEmpty, "!string.IsNullOrEmpty(annotationName)");
 
-            if (annotationName.StartsWith(ODataJsonConstants.ODataAnnotationNamespacePrefix, StringComparison.Ordinal))
+            if (annotationName.StartsWith(ODataJsonConstants.ODataAnnotationNamespacePrefix))
             {
                 return true;
             }
@@ -129,11 +130,11 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="annotationName">The annotation name in question.</param>
         /// <returns>Returns true if the <paramref name="annotationName"/> starts with "odata." and is not one of the reserved odata annotation names; returns false otherwise.</returns>
-        internal static bool IsUnknownODataAnnotationName(string annotationName)
+        internal static bool IsUnknownODataAnnotationName(ReadOnlySpan<char> annotationName)
         {
-            Debug.Assert(!string.IsNullOrEmpty(annotationName), "!string.IsNullOrEmpty(annotationName)");
+            Debug.Assert(!annotationName.IsEmpty, "!string.IsNullOrEmpty(annotationName)");
 
-            if (IsODataAnnotationName(annotationName) && !KnownODataAnnotationNames.Contains(annotationName))
+            if (IsODataAnnotationName(annotationName) && !KnownODataAnnotationNames.Contains(annotationName.ToString()))
             {
                 return true;
             }
@@ -163,11 +164,28 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="annotationName">the origin annotation name from reader</param>
         /// <returns>the annotation name without prefix @ </returns>
-        internal static string RemoveAnnotationPrefix(string annotationName)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static ReadOnlySpan<char> RemoveAnnotationPrefix(ReadOnlySpan<char> annotationName)
         {
-            if (!String.IsNullOrEmpty(annotationName) && annotationName[0] == ODataJsonConstants.ODataPropertyAnnotationSeparatorChar)
+            if (!annotationName.IsEmpty && annotationName[0] == ODataJsonConstants.ODataPropertyAnnotationSeparatorChar)
             {
-                return annotationName.Substring(1);
+                return annotationName.Slice(1);
+            }
+
+            return annotationName;
+        }
+
+        /// <summary>
+        /// Get the string without the instance annotation prefix @
+        /// </summary>
+        /// <param name="annotationName">the origin annotation name from reader</param>
+        /// <returns>the annotation name without prefix @ </returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static ReadOnlyMemory<char> RemoveAnnotationPrefix(ReadOnlyMemory<char> annotationName)
+        {
+            if (!annotationName.IsEmpty && !annotationName.Span.IsEmpty && annotationName.Span[0] == ODataJsonConstants.ODataPropertyAnnotationSeparatorChar)
+            {
+                return annotationName.Slice(1);
             }
 
             return annotationName;

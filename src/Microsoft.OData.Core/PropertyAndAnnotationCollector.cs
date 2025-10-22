@@ -228,9 +228,9 @@ namespace Microsoft.OData
         /// <remarks>
         /// Scope annotations are those that do not apply to specific properties, and start directly with "@".
         /// </remarks>
-        internal void AddODataScopeAnnotation(string annotationName, object annotationValue)
+        internal void AddODataScopeAnnotation(ReadOnlySpan<char> annotationName, object annotationValue)
         {
-            Debug.Assert(!string.IsNullOrEmpty(annotationName));
+            Debug.Assert(!annotationName.IsEmpty);
             Debug.Assert(ODataJsonReaderUtils.IsODataAnnotationName(annotationName));
 
             if (annotationValue == null)
@@ -240,12 +240,12 @@ namespace Microsoft.OData
 
             try
             {
-                odataScopeAnnotations.Add(annotationName, annotationValue);
+                odataScopeAnnotations.Add(annotationName.ToString(), annotationValue);
             }
             catch (ArgumentException)
             {
                 throw new ODataException(
-                    Error.Format(SRResources.DuplicateAnnotationNotAllowed, annotationName));
+                    Error.Format(SRResources.DuplicateAnnotationNotAllowed, annotationName.ToString()));
             }
         }
 
