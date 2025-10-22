@@ -240,6 +240,110 @@ namespace Microsoft.OData.Tests.Json
             }
         }
 
+        [Theory]
+        [InlineData("\"simple\"", "simple")]
+        [InlineData("\"with spaces\"", "with spaces")]
+        [InlineData("\"with \\\"escaped quotes\\\"\"", "with \"escaped quotes\"")]
+        [InlineData("\"with \\\\ backslash\"", "with \\ backslash")]
+        [InlineData("\"with \\n newline\"", "with \n newline")]
+        [InlineData("\"with \\r carriage\"", "with \r carriage")]
+        [InlineData("\"with \\t tab\"", "with \t tab")]
+        [InlineData("\"with \\b backspace\"", "with \b backspace")]
+        [InlineData("\"with \\f formfeed\"", "with \f formfeed")]
+        [InlineData("\"unicode \\u0041\"", "unicode A")]
+        [InlineData("\"mix \\u0041\\n\\t\\\"\"", "mix A\n\t\"")]
+        [InlineData("\"12345\"", "12345")]
+        [InlineData("\"true\"", "true")]
+        [InlineData("\"false\"", "false")]
+        [InlineData("\"null\"", "null")]
+        [InlineData("\"\"", "")]
+        public void ParseStringPrimitiveValue_Sync(string json, string expected)
+        {
+            var reader = new JsonReader(new StringReader($"{{\"PropertyName\":{json}}}"), isIeee754Compatible: false);
+            reader.Read(); // Start object
+            reader.Read(); // Property name
+            Assert.Equal("PropertyName", reader.GetValue());
+
+            reader.Read(); // Value
+            Assert.Equal(expected, reader.GetValue());
+        }
+
+        [Theory]
+        [InlineData("\"simple\"", "simple")]
+        [InlineData("\"with spaces\"", "with spaces")]
+        [InlineData("\"with \\\"escaped quotes\\\"\"", "with \"escaped quotes\"")]
+        [InlineData("\"with \\\\ backslash\"", "with \\ backslash")]
+        [InlineData("\"with \\n newline\"", "with \n newline")]
+        [InlineData("\"with \\r carriage\"", "with \r carriage")]
+        [InlineData("\"with \\t tab\"", "with \t tab")]
+        [InlineData("\"with \\b backspace\"", "with \b backspace")]
+        [InlineData("\"with \\f formfeed\"", "with \f formfeed")]
+        [InlineData("\"unicode \\u0041\"", "unicode A")]
+        [InlineData("\"mix \\u0041\\n\\t\\\"\"", "mix A\n\t\"")]
+        [InlineData("\"12345\"", "12345")]
+        [InlineData("\"true\"", "true")]
+        [InlineData("\"false\"", "false")]
+        [InlineData("\"null\"", "null")]
+        [InlineData("\"\"", "")]
+        public async Task ParseStringPrimitiveValue_Async(string json, string expected)
+        {
+            var reader = new JsonReader(new StringReader($"{{\"PropertyName\":{json}}}"), isIeee754Compatible: false);
+            await reader.ReadAsync(); // Start object
+            await reader.ReadAsync(); // Property name
+            Assert.Equal("PropertyName", await reader.GetValueAsync());
+
+            await reader.ReadAsync(); // Value
+            Assert.Equal(expected, await reader.GetValueAsync());
+        }
+
+        [Theory]
+        [InlineData("42", typeof(int), 42)]
+        [InlineData("-42", typeof(int), -42)]
+        [InlineData("3.14e2", typeof(double), 314.0)]
+        [InlineData("true", typeof(bool), true)]
+        [InlineData("false", typeof(bool), false)]
+        public void ParsePrimitiveValue_Sync(string input, Type expectedType, object expectedValue)
+        {
+            var reader = new JsonReader(new StringReader($"{{\"Number\":{input}, \"Name\": \"John Doe\"}}"), isIeee754Compatible: false);
+            reader.Read(); // Start object
+            reader.Read(); // Property name
+            Assert.Equal("Number", reader.GetValue());
+
+            reader.Read(); // Value
+            var value = reader.GetValue();
+
+            Assert.IsType(expectedType, value);
+            Assert.Equal(expectedValue, value);
+
+            reader.Read(); // Property name
+            reader.Read(); // Value
+            Assert.Equal("John Doe", reader.GetValue());
+        }
+
+        [Theory]
+        [InlineData("42", typeof(int), 42)]
+        [InlineData("-42", typeof(int), -42)]
+        [InlineData("3.14e2", typeof(double), 314.0)]
+        [InlineData("true", typeof(bool), true)]
+        [InlineData("false", typeof(bool), false)]
+        public async Task ParsePrimitiveValue_Async(string input, Type expectedType, object expectedValue)
+        {
+            var reader = new JsonReader(new StringReader($"{{\"Number\":{input}, \"Name\": \"John Doe\"}}"), isIeee754Compatible: false);
+            await reader.ReadAsync(); // Start object
+            await reader.ReadAsync(); // Property name
+            Assert.Equal("Number", await reader.GetValueAsync());
+
+            await reader.ReadAsync(); // Value
+            var value = await reader.GetValueAsync();
+
+            Assert.IsType(expectedType, value);
+            Assert.Equal(expectedValue, value);
+
+            await reader.ReadAsync(); // Property name
+            await reader.ReadAsync(); // Value
+            Assert.Equal("John Doe", await reader.GetValueAsync());
+        }
+
         [Fact]
         public async Task ReadNullValue()
         {
@@ -1116,6 +1220,496 @@ namespace Microsoft.OData.Tests.Json
                 var exception = await Assert.ThrowsAsync<ODataException>(() => reader.SkipValueAsync(new StringBuilder()));
                 Assert.Equal(SRResources.JsonReader_EndOfInputWithOpenScope, exception.Message);
             }
+        }
+
+        [Fact]
+        public void ReadLongJson_AllScenarios()
+        {
+            string json = @"
+            {
+                ""str"": ""simple string"",
+                ""strEsc"": ""escaped \\n newline \\t tab \\r carriage \\b backspace \\f formfeed \\u0041 unicode A \\\""quote\\\"" \\'single\\'"",
+                ""strEmpty"": """",
+                ""strUnicode"": ""\u6211\u662F\u4E2D\u6587"",
+                ""strQuotedNumber"": ""42"",
+                ""strQuotedBool"": ""true"",
+                ""strQuotedNull"": ""null"",
+                ""int"": 123,
+                ""negInt"": -456,
+                ""dec"": 123.456,
+                ""negDec"": -789.01,
+                ""dbl"": 1.23e4,
+                ""negDbl"": -5.67E-8,
+                ""boolTrue"": true,
+                ""boolFalse"": false,
+                ""nullVal"": null,
+                ""arrPrimitives"": [""a"", 1, false, null, ""b""],
+                ""arrObjects"": [
+                    { ""id"": 1, ""name"": ""first"" },
+                    { ""id"": 2, ""name"": ""second"" }
+                ],
+                ""nestedObj"": {
+                    ""innerStr"": ""inside"",
+                    ""innerNum"": 99,
+                    ""innerBool"": false,
+                    ""innerNull"": null
+                },
+                ""singleQuoteProp"": ""single quoted value"",
+                ""unquotedProp"": 321
+            }";
+
+            using var reader = new JsonReader(new StringReader(json), isIeee754Compatible: false);
+
+            // Start object
+            Assert.True(reader.Read());
+            Assert.Equal(JsonNodeType.StartObject, reader.NodeType);
+
+            // str
+            Assert.True(reader.Read());
+            Assert.Equal("str", reader.GetValue());
+            Assert.True(reader.Read());
+            Assert.Equal("simple string", reader.GetValue());
+
+            // strEsc
+            Assert.True(reader.Read());
+            Assert.Equal("strEsc", reader.GetValue());
+            Assert.True(reader.Read());
+            Assert.Equal("escaped \\n newline \\t tab \\r carriage \\b backspace \\f formfeed \\u0041 unicode A \\\"quote\\\" \\'single\\'", reader.GetValue());
+
+            // strEmpty
+            Assert.True(reader.Read());
+            Assert.Equal("strEmpty", reader.GetValue());
+            Assert.True(reader.Read());
+            Assert.Equal("", reader.GetValue());
+
+            // strUnicode
+            Assert.True(reader.Read());
+            Assert.Equal("strUnicode", reader.GetValue());
+            Assert.True(reader.Read());
+            Assert.Equal("我是中文", reader.GetValue());
+
+            // strQuotedNumber
+            Assert.True(reader.Read());
+            Assert.Equal("strQuotedNumber", reader.GetValue());
+            Assert.True(reader.Read());
+            Assert.Equal("42", reader.GetValue());
+
+            // strQuotedBool
+            Assert.True(reader.Read());
+            Assert.Equal("strQuotedBool", reader.GetValue());
+            Assert.True(reader.Read());
+            Assert.Equal("true", reader.GetValue());
+
+            // strQuotedNull
+            Assert.True(reader.Read());
+            Assert.Equal("strQuotedNull", reader.GetValue());
+            Assert.True(reader.Read());
+            Assert.Equal("null", reader.GetValue());
+
+            // int
+            Assert.True(reader.Read());
+            Assert.Equal("int", reader.GetValue());
+            Assert.True(reader.Read());
+            Assert.Equal(123, reader.GetValue());
+
+            // negInt
+            Assert.True(reader.Read());
+            Assert.Equal("negInt", reader.GetValue());
+            Assert.True(reader.Read());
+            Assert.Equal(-456, reader.GetValue());
+
+            // dec
+            Assert.True(reader.Read());
+            Assert.Equal("dec", reader.GetValue());
+            Assert.True(reader.Read());
+            Assert.Equal(123.456m, reader.GetValue());
+
+            // negDec
+            Assert.True(reader.Read());
+            Assert.Equal("negDec", reader.GetValue());
+            Assert.True(reader.Read());
+            Assert.Equal(-789.01m, reader.GetValue());
+
+            // dbl
+            Assert.True(reader.Read());
+            Assert.Equal("dbl", reader.GetValue());
+            Assert.True(reader.Read());
+            Assert.Equal(1.23e4, reader.GetValue());
+
+            // negDbl
+            Assert.True(reader.Read());
+            Assert.Equal("negDbl", reader.GetValue());
+            Assert.True(reader.Read());
+            Assert.Equal(-5.67E-8, reader.GetValue());
+
+            // boolTrue
+            Assert.True(reader.Read());
+            Assert.Equal("boolTrue", reader.GetValue());
+            Assert.True(reader.Read());
+            Assert.Equal(true, reader.GetValue());
+
+            // boolFalse
+            Assert.True(reader.Read());
+            Assert.Equal("boolFalse", reader.GetValue());
+            Assert.True(reader.Read());
+            Assert.Equal(false, reader.GetValue());
+
+            // nullVal
+            Assert.True(reader.Read());
+            Assert.Equal("nullVal", reader.GetValue());
+            Assert.True(reader.Read());
+            Assert.Null(reader.GetValue());
+
+            // arrPrimitives
+            Assert.True(reader.Read());
+            Assert.Equal("arrPrimitives", reader.GetValue());
+            Assert.True(reader.Read());
+            Assert.Equal(JsonNodeType.StartArray, reader.NodeType);
+
+            // Array elements
+            Assert.True(reader.Read());
+            Assert.Equal("a", reader.GetValue());
+            Assert.True(reader.Read());
+            Assert.Equal(1, reader.GetValue());
+            Assert.True(reader.Read());
+            Assert.Equal(false, reader.GetValue());
+            Assert.True(reader.Read());
+            Assert.Null(reader.GetValue());
+            Assert.True(reader.Read());
+            Assert.Equal("b", reader.GetValue());
+            Assert.True(reader.Read());
+            Assert.Equal(JsonNodeType.EndArray, reader.NodeType);
+
+            // arrObjects
+            Assert.True(reader.Read());
+            Assert.Equal("arrObjects", reader.GetValue());
+            Assert.True(reader.Read());
+            Assert.Equal(JsonNodeType.StartArray, reader.NodeType);
+
+            // First object in array
+            Assert.True(reader.Read());
+            Assert.Equal(JsonNodeType.StartObject, reader.NodeType);
+            Assert.True(reader.Read());
+            Assert.Equal("id", reader.GetValue());
+            Assert.True(reader.Read());
+            Assert.Equal(1, reader.GetValue());
+            Assert.True(reader.Read());
+            Assert.Equal("name", reader.GetValue());
+            Assert.True(reader.Read());
+            Assert.Equal("first", reader.GetValue());
+            Assert.True(reader.Read());
+            Assert.Equal(JsonNodeType.EndObject, reader.NodeType);
+
+            // Second object in array
+            Assert.True(reader.Read());
+            Assert.Equal(JsonNodeType.StartObject, reader.NodeType);
+            Assert.True(reader.Read());
+            Assert.Equal("id", reader.GetValue());
+            Assert.True(reader.Read());
+            Assert.Equal(2, reader.GetValue());
+            Assert.True(reader.Read());
+            Assert.Equal("name", reader.GetValue());
+            Assert.True(reader.Read());
+            Assert.Equal("second", reader.GetValue());
+            Assert.True(reader.Read());
+            Assert.Equal(JsonNodeType.EndObject, reader.NodeType);
+
+            Assert.True(reader.Read());
+            Assert.Equal(JsonNodeType.EndArray, reader.NodeType);
+
+            // nestedObj
+            Assert.True(reader.Read());
+            Assert.Equal("nestedObj", reader.GetValue());
+            Assert.True(reader.Read());
+            Assert.Equal(JsonNodeType.StartObject, reader.NodeType);
+
+            Assert.True(reader.Read());
+            Assert.Equal("innerStr", reader.GetValue());
+            Assert.True(reader.Read());
+            Assert.Equal("inside", reader.GetValue());
+
+            Assert.True(reader.Read());
+            Assert.Equal("innerNum", reader.GetValue());
+            Assert.True(reader.Read());
+            Assert.Equal(99, reader.GetValue());
+
+            Assert.True(reader.Read());
+            Assert.Equal("innerBool", reader.GetValue());
+            Assert.True(reader.Read());
+            Assert.Equal(false, reader.GetValue());
+
+            Assert.True(reader.Read());
+            Assert.Equal("innerNull", reader.GetValue());
+            Assert.True(reader.Read());
+            Assert.Null(reader.GetValue());
+
+            Assert.True(reader.Read());
+            Assert.Equal(JsonNodeType.EndObject, reader.NodeType);
+
+            // singleQuoteProp
+            Assert.True(reader.Read());
+            Assert.Equal("singleQuoteProp", reader.GetValue());
+            Assert.True(reader.Read());
+            Assert.Equal("single quoted value", reader.GetValue());
+
+            // unquotedProp
+            Assert.True(reader.Read());
+            Assert.Equal("unquotedProp", reader.GetValue());
+            Assert.True(reader.Read());
+            Assert.Equal(321, reader.GetValue());
+
+            // End object
+            Assert.True(reader.Read());
+            Assert.Equal(JsonNodeType.EndObject, reader.NodeType);
+
+            // End of input
+            Assert.False(reader.Read());
+            Assert.Equal(JsonNodeType.EndOfInput, reader.NodeType);
+        }
+
+        [Fact]
+        public async Task ReadLongJson_AllScenarios_Async()
+        {
+            string json = @"
+            {
+                ""str"": ""simple string"",
+                ""strEsc"": ""escaped \\n newline \\t tab \\r carriage \\b backspace \\f formfeed \\u0041 unicode A \\\""quote\\\"" \\'single\\'"",
+                ""strEmpty"": """",
+                ""strUnicode"": ""\u6211\u662F\u4E2D\u6587"",
+                ""strQuotedNumber"": ""42"",
+                ""strQuotedBool"": ""true"",
+                ""strQuotedNull"": ""null"",
+                ""int"": 123,
+                ""negInt"": -456,
+                ""dec"": 123.456,
+                ""negDec"": -789.01,
+                ""dbl"": 1.23e4,
+                ""negDbl"": -5.67E-8,
+                ""boolTrue"": true,
+                ""boolFalse"": false,
+                ""nullVal"": null,
+                ""arrPrimitives"": [""a"", 1, false, null, ""b""],
+                ""arrObjects"": [
+                    { ""id"": 1, ""name"": ""first"" },
+                    { ""id"": 2, ""name"": ""second"" }
+                ],
+                ""nestedObj"": {
+                    ""innerStr"": ""inside"",
+                    ""innerNum"": 99,
+                    ""innerBool"": false,
+                    ""innerNull"": null
+                },
+                ""singleQuoteProp"": ""single quoted value"",
+                ""unquotedProp"": 321
+            }";
+
+            using var reader = new JsonReader(new StringReader(json), isIeee754Compatible: false);
+
+            // Start object
+            Assert.True(await reader.ReadAsync());
+            Assert.Equal(JsonNodeType.StartObject, reader.NodeType);
+
+            // str
+            Assert.True(await reader.ReadAsync());
+            Assert.Equal("str", await reader.GetValueAsync());
+            Assert.True(await reader.ReadAsync());
+            Assert.Equal("simple string", await reader.GetValueAsync());
+
+            // strEsc
+            Assert.True(await reader.ReadAsync());
+            Assert.Equal("strEsc", await reader.GetValueAsync());
+            Assert.True(await reader.ReadAsync());
+            Assert.Equal("escaped \\n newline \\t tab \\r carriage \\b backspace \\f formfeed \\u0041 unicode A \\\"quote\\\" \\'single\\'", await reader.GetValueAsync());
+
+            // strEmpty
+            Assert.True(await reader.ReadAsync());
+            Assert.Equal("strEmpty", await reader.GetValueAsync());
+            Assert.True(await reader.ReadAsync());
+            Assert.Equal("", await reader.GetValueAsync());
+
+            // strUnicode
+            Assert.True(await reader.ReadAsync());
+            Assert.Equal("strUnicode", await reader.GetValueAsync());
+            Assert.True(await reader.ReadAsync());
+            Assert.Equal("我是中文", await reader.GetValueAsync());
+
+            // strQuotedNumber
+            Assert.True(await reader.ReadAsync());
+            Assert.Equal("strQuotedNumber", await reader.GetValueAsync());
+            Assert.True(await reader.ReadAsync());
+            Assert.Equal("42", await reader.GetValueAsync());
+
+            // strQuotedBool
+            Assert.True(await reader.ReadAsync());
+            Assert.Equal("strQuotedBool", await reader.GetValueAsync());
+            Assert.True(await reader.ReadAsync());
+            Assert.Equal("true", await reader.GetValueAsync());
+
+            // strQuotedNull
+            Assert.True(await reader.ReadAsync());
+            Assert.Equal("strQuotedNull", await reader.GetValueAsync());
+            Assert.True(await reader.ReadAsync());
+            Assert.Equal("null", await reader.GetValueAsync());
+
+            // int
+            Assert.True(await reader.ReadAsync());
+            Assert.Equal("int", await reader.GetValueAsync());
+            Assert.True(await reader.ReadAsync());
+            Assert.Equal(123, await reader.GetValueAsync());
+
+            // negInt
+            Assert.True(await reader.ReadAsync());
+            Assert.Equal("negInt", await reader.GetValueAsync());
+            Assert.True(await reader.ReadAsync());
+            Assert.Equal(-456, await reader.GetValueAsync());
+
+            // dec
+            Assert.True(await reader.ReadAsync());
+            Assert.Equal("dec", await reader.GetValueAsync());
+            Assert.True(await reader.ReadAsync());
+            Assert.Equal(123.456m, await reader.GetValueAsync());
+
+            // negDec
+            Assert.True(await reader.ReadAsync());
+            Assert.Equal("negDec", await reader.GetValueAsync());
+            Assert.True(await reader.ReadAsync());
+            Assert.Equal(-789.01m, await reader.GetValueAsync());
+
+            // dbl
+            Assert.True(await reader.ReadAsync());
+            Assert.Equal("dbl", await reader.GetValueAsync());
+            Assert.True(await reader.ReadAsync());
+            Assert.Equal(1.23e4, await reader.GetValueAsync());
+
+            // negDbl
+            Assert.True(await reader.ReadAsync());
+            Assert.Equal("negDbl", await reader.GetValueAsync());
+            Assert.True(await reader.ReadAsync());
+            Assert.Equal(-5.67E-8, await reader.GetValueAsync());
+
+            // boolTrue
+            Assert.True(await reader.ReadAsync());
+            Assert.Equal("boolTrue", await reader.GetValueAsync());
+            Assert.True(await reader.ReadAsync());
+            Assert.Equal(true, await reader.GetValueAsync());
+
+            // boolFalse
+            Assert.True(await reader.ReadAsync());
+            Assert.Equal("boolFalse", await reader.GetValueAsync());
+            Assert.True(await reader.ReadAsync());
+            Assert.Equal(false, await reader.GetValueAsync());
+
+            // nullVal
+            Assert.True(await reader.ReadAsync());
+            Assert.Equal("nullVal", await reader.GetValueAsync());
+            Assert.True(await reader.ReadAsync());
+            Assert.Null(await reader.GetValueAsync());
+
+            // arrPrimitives
+            Assert.True(await reader.ReadAsync());
+            Assert.Equal("arrPrimitives", await reader.GetValueAsync());
+            Assert.True(await reader.ReadAsync());
+            Assert.Equal(JsonNodeType.StartArray, reader.NodeType);
+
+            // Array elements
+            Assert.True(await reader.ReadAsync());
+            Assert.Equal("a", await reader.GetValueAsync());
+            Assert.True(await reader.ReadAsync());
+            Assert.Equal(1, await reader.GetValueAsync());
+            Assert.True(await reader.ReadAsync());
+            Assert.Equal(false, await reader.GetValueAsync());
+            Assert.True(await reader.ReadAsync());
+            Assert.Null(await reader.GetValueAsync());
+            Assert.True(await reader.ReadAsync());
+            Assert.Equal("b", await reader.GetValueAsync());
+            Assert.True(await reader.ReadAsync());
+            Assert.Equal(JsonNodeType.EndArray, reader.NodeType);
+
+            // arrObjects
+            Assert.True(await reader.ReadAsync());
+            Assert.Equal("arrObjects", await reader.GetValueAsync());
+            Assert.True(await reader.ReadAsync());
+            Assert.Equal(JsonNodeType.StartArray, reader.NodeType);
+
+            // First object in array
+            Assert.True(await reader.ReadAsync());
+            Assert.Equal(JsonNodeType.StartObject, reader.NodeType);
+            Assert.True(await reader.ReadAsync());
+            Assert.Equal("id", await reader.GetValueAsync());
+            Assert.True(await reader.ReadAsync());
+            Assert.Equal(1, await reader.GetValueAsync());
+            Assert.True(await reader.ReadAsync());
+            Assert.Equal("name", await reader.GetValueAsync());
+            Assert.True(await reader.ReadAsync());
+            Assert.Equal("first", await reader.GetValueAsync());
+            Assert.True(await reader.ReadAsync());
+            Assert.Equal(JsonNodeType.EndObject, reader.NodeType);
+
+            // Second object in array
+            Assert.True(await reader.ReadAsync());
+            Assert.Equal(JsonNodeType.StartObject, reader.NodeType);
+            Assert.True(await reader.ReadAsync());
+            Assert.Equal("id", await reader.GetValueAsync());
+            Assert.True(await reader.ReadAsync());
+            Assert.Equal(2, await reader.GetValueAsync());
+            Assert.True(await reader.ReadAsync());
+            Assert.Equal("name", await reader.GetValueAsync());
+            Assert.True(await reader.ReadAsync());
+            Assert.Equal("second", await reader.GetValueAsync());
+            Assert.True(await reader.ReadAsync());
+            Assert.Equal(JsonNodeType.EndObject, reader.NodeType);
+
+            Assert.True(await reader.ReadAsync());
+            Assert.Equal(JsonNodeType.EndArray, reader.NodeType);
+
+            // nestedObj
+            Assert.True(await reader.ReadAsync());
+            Assert.Equal("nestedObj", await reader.GetValueAsync());
+            Assert.True(await reader.ReadAsync());
+            Assert.Equal(JsonNodeType.StartObject, reader.NodeType);
+
+            Assert.True(await reader.ReadAsync());
+            Assert.Equal("innerStr", await reader.GetValueAsync());
+            Assert.True(await reader.ReadAsync());
+            Assert.Equal("inside", await reader.GetValueAsync());
+
+            Assert.True(await reader.ReadAsync());
+            Assert.Equal("innerNum", await reader.GetValueAsync());
+            Assert.True(await reader.ReadAsync());
+            Assert.Equal(99, await reader.GetValueAsync());
+
+            Assert.True(await reader.ReadAsync());
+            Assert.Equal("innerBool", await reader.GetValueAsync());
+            Assert.True(await reader.ReadAsync());
+            Assert.Equal(false, await reader.GetValueAsync());
+
+            Assert.True(await reader.ReadAsync());
+            Assert.Equal("innerNull", await reader.GetValueAsync());
+            Assert.True(await reader.ReadAsync());
+            Assert.Null(await reader.GetValueAsync());
+
+            Assert.True(await reader.ReadAsync());
+            Assert.Equal(JsonNodeType.EndObject, reader.NodeType);
+
+            // singleQuoteProp
+            Assert.True(await reader.ReadAsync());
+            Assert.Equal("singleQuoteProp", await reader.GetValueAsync());
+            Assert.True(await reader.ReadAsync());
+            Assert.Equal("single quoted value", await reader.GetValueAsync());
+
+            // unquotedProp
+            Assert.True(await reader.ReadAsync());
+            Assert.Equal("unquotedProp", await reader.GetValueAsync());
+            Assert.True(await reader.ReadAsync());
+            Assert.Equal(321, await reader.GetValueAsync());
+
+            // End object
+            Assert.True(await reader.ReadAsync());
+            Assert.Equal(JsonNodeType.EndObject, reader.NodeType);
+
+            // End of input
+            Assert.False(await reader.ReadAsync());
+            Assert.Equal(JsonNodeType.EndOfInput, reader.NodeType);
         }
 
         private JsonReader CreateJsonReader(string jsonValue)

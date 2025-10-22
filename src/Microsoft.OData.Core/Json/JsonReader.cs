@@ -232,7 +232,11 @@ namespace Microsoft.OData.Json
                     }
                     else
                     {
-                        this.nodeValue = GetCommonOrNewString(this.ParseStringPrimitiveValue(out _));
+                        ReadOnlySpan<char> result = this.ParseStringPrimitiveValue(out _);
+                        if (this.nodeValue == null || this.nodeValue is not string)
+                        {
+                            this.nodeValue = GetCommonOrNewString(result);
+                        }
                     }
                 }
             }
@@ -567,7 +571,10 @@ namespace Microsoft.OData.Json
                 ValueTask<(ReadOnlyMemory<char> Value, bool HasLeadingBackslash)> parseStringTask = this.ParseStringPrimitiveValueAsync();
                 if (parseStringTask.IsCompletedSuccessfully)
                 {
-                    this.nodeValue = GetCommonOrNewString(parseStringTask.Result.Value.Span);
+                    if (this.nodeValue == null || this.nodeValue is not string)
+                    {
+                        this.nodeValue = GetCommonOrNewString(parseStringTask.Result.Value.Span);
+                    }
                     return Task.FromResult(this.nodeValue);
                 }
 
@@ -986,7 +993,10 @@ namespace Microsoft.OData.Json
                 throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_InvalidPropertyNameOrUnexpectedComma, this.nodeValue));
             }
 
-            this.nodeValue = GetCommonOrNewString(token);
+            if (this.nodeValue == null || this.nodeValue is not string)
+            {
+                this.nodeValue = GetCommonOrNewString(token);
+            }
 
             if (!this.SkipWhitespaces() || this.characterBuffer[this.tokenStartIndex] != ':')
             {
@@ -1135,11 +1145,13 @@ namespace Microsoft.OData.Json
                     if (valueBuilder != null)
                     {
                         this.ConsumeTokenAppendToBuilder(valueBuilder, currentCharacterTokenRelativeIndex);
-                        result = valueBuilder.ToString().AsSpan();
+                        this.nodeValue = valueBuilder.ToString();
+                        result = ((string)this.nodeValue).AsSpan();
                     }
                     else
                     {
                         result = this.ConsumeTokenToSpan(currentCharacterTokenRelativeIndex);
+                        this.nodeValue = null; // reset node value since we have the result in a span
                     }
 
                     Debug.Assert(this.characterBuffer[this.tokenStartIndex] == openingQuoteCharacter, "We should have consumed everything up to the quote character.");
@@ -1780,7 +1792,10 @@ namespace Microsoft.OData.Json
                 throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_InvalidPropertyNameOrUnexpectedComma, this.nodeValue));
             }
 
-            this.nodeValue = GetCommonOrNewString(token.Span);
+            if (this.nodeValue == null || this.nodeValue is not string)
+            {
+                this.nodeValue = GetCommonOrNewString(token.Span);
+            } 
 
             if (!await this.SkipWhitespacesAsync().ConfigureAwait(false) || this.characterBuffer[this.tokenStartIndex] != ':')
             {
@@ -1918,11 +1933,14 @@ namespace Microsoft.OData.Json
                     if (valueBuilder != null)
                     {
                         this.ConsumeTokenAppendToBuilder(valueBuilder, currentCharacterTokenRelativeIndex);
-                        result = valueBuilder.ToString().AsMemory();
+
+                        this.nodeValue = valueBuilder.ToString();
+                        result = ((string)this.nodeValue).AsMemory();
                     }
                     else
                     {
                         result = this.ConsumeTokenToMemory(currentCharacterTokenRelativeIndex);
+                        this.nodeValue = null; // We haven't allocated a string for the value yet.
                     }
 
                     Debug.Assert(this.characterBuffer[this.tokenStartIndex] == openingQuoteCharacter, "We should have consumed everything up to the quote character.");
@@ -2752,6 +2770,35 @@ namespace Microsoft.OData.Json
             }
 
             return span.ToString();
+        }
+
+        /// <summary>
+        /// Returns a shared string instance for common OData property names or values, otherwise returns a new string.
+        /// </summary>
+        /// <remarks>
+        /// This method reduces memory usage by returning static instances for known property names or values.
+        /// For uncommon or unique strings, it returns a new string instance.
+        /// </remarks>
+        /// <param name="result"></param>
+        /// <returns>
+        /// A shared string instance if the input matches a predefined common value or property name; otherwise, a new string instance representing the input.
+        /// </returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static string GetCommonOrNewString(ref StringBuilder result)
+        {
+            if (result.Length == 0)
+            {
+                return string.Empty;
+            }
+
+            string common = result.ToString();
+            // For known property names, return static interned instances
+            if (ODataJsonUtils.TryGetMatchingCommonValueString(common.AsSpan(), out string commonValue))
+            {
+                return commonValue;
+            }
+
+            return common;
         }
 
         /// <summary>
