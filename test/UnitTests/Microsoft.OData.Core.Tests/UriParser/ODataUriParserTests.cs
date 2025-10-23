@@ -143,6 +143,46 @@ namespace Microsoft.OData.Tests.UriParser
             Assert.Equal(AggregationMethod.Average, averageExpression.Method);
         }
 
+        [Fact]
+        public void CanParseAggregateOnCollectionProperty()
+        {
+            EdmModel model = new EdmModel();
+
+            EdmEntityType person = new EdmEntityType("NS", "Person");
+            EdmProperty property = person.AddStructuralProperty("MyDates", new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetDate(true))));
+            model.AddElement(person);
+            EdmEntityContainer container = new EdmEntityContainer("NS", "Container");
+            container.AddEntitySet("People", person);
+            model.AddElement(container);
+
+            string customFunctionName = "NS.UnionDate";
+
+            var argument = EdmCoreModel.GetCollection(EdmCoreModel.Instance.GetDate(/*isNullable*/false));
+            var existingCustomFunctionSignature = new FunctionSignatureWithReturnType(argument, argument);
+            model.AddCustomUriFunction(customFunctionName, existingCustomFunctionSignature);
+
+            var uriParser = new ODataUriParser(
+                model,
+                ServiceRoot,
+                new Uri($"http://host/People?$apply=aggregate(MyDates with {customFunctionName} as UnionDate)"));
+
+            var odataUri = uriParser.ParseUri();
+
+            var apply = odataUri.Apply;
+            Assert.NotNull(apply);
+            var transformations = apply.Transformations.ToList();
+            Assert.Single(transformations);
+            var aggregateTransformationNode = transformations[0] as AggregateTransformationNode;
+            Assert.NotNull(aggregateTransformationNode);
+            var aggregateExpressions = aggregateTransformationNode.AggregateExpressions.ToList();
+            Assert.Single(aggregateExpressions);
+            var averageExpression = aggregateExpressions[0] as AggregateCollectionExpression;
+            Assert.NotNull(averageExpression);
+            Assert.Equal(AggregationMethod.Custom, averageExpression.Method);
+            Assert.Equal(customFunctionName, averageExpression.MethodDefinition.MethodLabel);
+            averageExpression.Expression.ShouldBeCollectionPropertyAccessQueryNode(property);
+        }
+
         [Theory]
         [InlineData(true)]
         [InlineData(false)]

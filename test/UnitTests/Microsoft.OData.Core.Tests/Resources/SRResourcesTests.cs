@@ -25,6 +25,8 @@ public class SRResourcesTests
     [InlineData("ApplyBinder_UnsupportedAggregateMethod", new object[] { "MethodName" })]
     [InlineData("ApplyBinder_UnsupportedGroupByChild", new object[] { "ChildTransformation" })]
     [InlineData("ApplyBinder_UnsupportedType", new object[] { "UnsupportedType" })]
+    [InlineData("ApplyBinder_AggregateExpressionNodeNotSupported", new object[] { "UnsupportedNode" })]
+    [InlineData("ApplyBinder_AggregateCollectionExpressionOnlySupportCustomMethod", new object[] { })]
     [InlineData("AsyncBufferedStream_WriterDisposedWithoutFlush", new object[] { })]
     [InlineData("BadRequest_KeyCountMismatch", new object[] { "ResourceName" })]
     [InlineData("BadRequest_KeyMismatch", new object[] { "ResourceName" })]

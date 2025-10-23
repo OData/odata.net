@@ -19,7 +19,7 @@ namespace Microsoft.OData.Core {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "18.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class SRResources {
@@ -106,11 +106,29 @@ namespace Microsoft.OData.Core {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to $apply/aggregate collection expression must apply to custom mothod..
+        /// </summary>
+        internal static string ApplyBinder_AggregateCollectionExpressionOnlySupportCustomMethod {
+            get {
+                return ResourceManager.GetString("ApplyBinder_AggregateCollectionExpressionOnlySupportCustomMethod", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to $apply/aggregate expression &apos;{0}&apos; operation does not support value type &apos;{1}&apos;..
         /// </summary>
         internal static string ApplyBinder_AggregateExpressionIncompatibleTypeForMethod {
             get {
                 return ResourceManager.GetString("ApplyBinder_AggregateExpressionIncompatibleTypeForMethod", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to $apply/aggregate expression node kind &apos;{0}&apos; is not supported..
+        /// </summary>
+        internal static string ApplyBinder_AggregateExpressionNodeNotSupported {
+            get {
+                return ResourceManager.GetString("ApplyBinder_AggregateExpressionNodeNotSupported", resourceCulture);
             }
         }
         
@@ -6965,7 +6983,7 @@ namespace Microsoft.OData.Core {
                 return ResourceManager.GetString("UriUtils_RequiresAbsoluteUri", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to The UrlValidator used to validate an ODataUri must use the same Model as the ODataUriParser..
         /// </summary>
