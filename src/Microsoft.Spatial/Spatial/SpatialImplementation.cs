@@ -61,6 +61,11 @@ namespace Microsoft.Spatial
         /// <param name="allowOnlyTwoDimensions">Controls the writing and reading of the Z and M dimension.</param>
         public abstract WellKnownTextSqlFormatter CreateWellKnownTextSqlFormatter(bool allowOnlyTwoDimensions);
 
+        /// <summary> Creates a WellKnownBinaryFormatter for this implementation.</summary>
+        /// <returns>The WellKnownBinaryFormatter created.</returns>
+        /// <param name="settings">Controls the writing settings.</param>
+        public abstract WellKnownBinaryFormatter CreateWellKnownBinaryFormatter(WellKnownBinaryWriterSettings settings);
+
         /// <summary> Creates a spatial Validator.</summary>
         /// <returns>The SpatialValidator created.</returns>
         public abstract SpatialPipeline CreateValidator();
