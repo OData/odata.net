@@ -15,6 +15,9 @@ namespace Microsoft.OData.UriParser
 
     /// <summary>
     /// Node representing a constant value, can either be primitive, complex, entity, or collection value.
+    /// Be noted:
+    /// If an 'in' clause, for example: $filter=name in ('abc', ''), since the InBinder converts the literal to ["abc", ""], in this case, the literal for second item is an empty string.
+    /// In all other cases, for example: $filter=name eq '', the literal for this node is "''", it's not an empty string.
     /// </summary>
     public sealed class ConstantNode : SingleValueNode
     {
@@ -37,7 +40,8 @@ namespace Microsoft.OData.UriParser
         public ConstantNode(object constantValue, string literalText)
             : this(constantValue)
         {
-            ExceptionUtils.CheckArgumentStringNotNullOrEmpty(literalText, "literalText");
+            ExceptionUtils.CheckArgumentNotNull(literalText, "literalText");
+
             this.LiteralText = literalText;
         }
 
@@ -50,7 +54,7 @@ namespace Microsoft.OData.UriParser
         /// <exception cref="System.ArgumentNullException">Throws if the input literalText is null.</exception>
         public ConstantNode(object constantValue, string literalText, IEdmTypeReference typeReference)
         {
-            ExceptionUtils.CheckArgumentStringNotNullOrEmpty(literalText, "literalText");
+            ExceptionUtils.CheckArgumentNotNull(literalText, "literalText");
 
             this.constantValue = constantValue;
             this.LiteralText = literalText;
