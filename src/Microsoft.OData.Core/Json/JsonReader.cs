@@ -8,14 +8,13 @@ namespace Microsoft.OData.Json
 {
     #region Namespaces
     using System;
+    using System.Buffers;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.IO;
-    using System.Numerics;
     using System.Runtime.CompilerServices;
-    using System.Runtime.InteropServices;
     using System.Text;
     using System.Threading.Tasks;
     using Microsoft.OData.Buffers;
@@ -129,37 +128,14 @@ namespace Microsoft.OData.Json
         /// </summary>
         private object nodeValue;
 
+        private static readonly SearchValues<char> jsonWhitespaceSearchValues = SearchValues.Create(" \t\r\n");
+
         /// <summary>
         /// Cached string builder to be used when constructing string values (needed to resolve escape sequences).
         /// </summary>
         /// <remarks>The string builder instance is cached to avoid excessive allocation when many string values with escape sequences
         /// are found in the payload.</remarks>
         private StringBuilder stringValueBuilder;
-
-        /// <summary>
-        /// Represents a vector initialized with the space character. Represented by 0x20 (space).
-        /// </summary>
-        private static readonly Vector<ushort> spaceCharVector = new Vector<ushort>(' ');
-
-        /// <summary>
-        /// Represents a vector initialized with the tab character. Represented by 0x09 (tab).
-        /// </summary>
-        private static readonly Vector<ushort> tabCharVector = new Vector<ushort>('\t');
-
-        /// <summary>
-        /// Represents a vector initialized with the new line character. Represented by 0x0A (new line).
-        /// </summary>
-        private static readonly Vector<ushort> newlineCharVector = new Vector<ushort>('\n');
-
-        /// <summary>
-        /// Represents a vector initialized with the carriage return character. Represented by 0x0D (carriage return).
-        /// </summary>
-        private static readonly Vector<ushort> carriageCharVector = new Vector<ushort>('\r');
-
-        /// <summary>
-        /// Represents a vector where all elements are set to ushort.MaxValue (all 1s). Used for efficient whitespace comparison operations.
-        /// </summary>
-        private static readonly Vector<ushort> ushortMaxValueVector = new Vector<ushort>(ushort.MaxValue);
 
         /// <summary>
         /// Constructor.
@@ -1797,85 +1773,22 @@ namespace Microsoft.OData.Json
         /// <summary>
         /// Skips all whitespace characters in the input.
         /// </summary>
-        /// <returns>true if a non-whitespace character was found; false if end of input was reached.</returns>
+        /// <returns>true if a non-whitespace character was found in which case the tokenStartIndex is pointing at that character.
+        /// false if there are no non-whitespace characters left in the input.</returns>
         private bool SkipWhitespaces()
         {
             do
             {
-                int remaining = this.storedCharacterCount - this.tokenStartIndex;
-                int vectorSize = Vector<ushort>.Count;
+                int nonWhitespaceIndex = FindFirstNonWhitespace(this.characterBuffer, this.tokenStartIndex, this.storedCharacterCount);
 
-                // Process using vector operations when we have enough characters
-                // and IsHardwareAccelerated check to ensure SIMD is supported on the current platform.
-                if (remaining >= vectorSize && Vector.IsHardwareAccelerated)
+                if (nonWhitespaceIndex >= 0)
                 {
-                    // Process as many full vectors as possible
-                    int vectorsToProcess = remaining / vectorSize;
-                    int processedVectors = 0;
-
-                    while (processedVectors < vectorsToProcess)
-                    {
-                        int currentPosition = this.tokenStartIndex + (processedVectors * vectorSize);
-
-                        // Load vector from character buffer
-                        ReadOnlySpan<char> currentSpan = this.characterBuffer.AsSpan(currentPosition, vectorSize);
-                        Vector<ushort> currentVector = new Vector<ushort>(MemoryMarshal.Cast<char, ushort>(currentSpan));
-
-                        Vector<ushort> isWhitespace = Vector.Equals(currentVector, spaceCharVector) |
-                                   Vector.Equals(currentVector, tabCharVector) |
-                                   Vector.Equals(currentVector, newlineCharVector) |
-                                   Vector.Equals(currentVector, carriageCharVector);
-
-                        // If not all characters are whitespace, find the first non-whitespace character
-                        if (!Vector.EqualsAll(isWhitespace, ushortMaxValueVector))
-                        {
-                            // Found at least one non-whitespace character in this vector
-                            for (int i = 0; i < vectorSize; i++)
-                            {
-                                // 0 means NOT whitespace
-                                if (isWhitespace[i] == ushort.MinValue)
-                                {
-                                    this.tokenStartIndex += (processedVectors * vectorSize) + i;
-
-                                    // Found non-whitespace character
-                                    return true;
-                                }
-                            }
-                        }
-                        else 
-                        {
-                            // All characters in this vector are whitespace, continue to next vector
-                            processedVectors++;
-                        }
-                    }
-
-                    // Advance tokenStartIndex by the number of vectors we processed
-                    this.tokenStartIndex += processedVectors * vectorSize;
-
-                    // Update remaining count after vector processing
-                    remaining = this.storedCharacterCount - this.tokenStartIndex;
+                    this.tokenStartIndex += nonWhitespaceIndex;
+                    return true;
                 }
 
-                // Process any remaining characters (less than a full vector) using scalar approach
-                if (remaining > 0)
-                {
-                    for (int i = 0; i < remaining; i++)
-                    {
-                        if (!IsWhitespaceCharacter(this.characterBuffer[this.tokenStartIndex + i]))
-                        {
-                            this.tokenStartIndex += i;
-
-                            // Found non-whitespace character
-                            return true; 
-                        }
-                    }
-
-                    // All remaining characters were whitespace
-                    this.tokenStartIndex += remaining;
-                }
-
-                // If we get here, we've processed all available characters in the buffer
-                // and they were all whitespace. We need to read more input.
+                // All remaining characters are whitespace, advance to end
+                this.tokenStartIndex = this.storedCharacterCount;
             }
             while (this.ReadInput());
 
@@ -3091,11 +3004,17 @@ namespace Microsoft.OData.Json
         private ValueTask<bool> SkipWhitespacesAsync()
         {
             // Fast path: scan currently buffered characters without awaiting.
-            int result = SkipWhitespacesInCurrentBuffer();
-            if (result >= 0)
+            while (this.tokenStartIndex < this.storedCharacterCount)
             {
-                this.tokenStartIndex += result;
-                return ValueTask.FromResult(true);
+                int nonWhitespaceIndex = FindFirstNonWhitespace(this.characterBuffer, this.tokenStartIndex, this.storedCharacterCount);
+                if (nonWhitespaceIndex >= 0)
+                {
+                    this.tokenStartIndex += nonWhitespaceIndex;
+                    return ValueTask.FromResult(true);
+                }
+
+                // All remaining characters are whitespace, advance to end
+                this.tokenStartIndex = this.storedCharacterCount;
             }
 
             // No more buffered characters - attempt to read. ReadInputAsync may complete synchronously.
@@ -3113,15 +3032,18 @@ namespace Microsoft.OData.Json
                     return ValueTask.FromResult(false);
                 }
 
-                int nonWhitespaceIndex = SkipWhitespacesInCurrentBuffer();
-                if (nonWhitespaceIndex >= 0)
+                while (this.tokenStartIndex < this.storedCharacterCount)
                 {
-                    this.tokenStartIndex += nonWhitespaceIndex;
-                    return ValueTask.FromResult(true);
-                }
+                    int nonWhitespaceIndex = FindFirstNonWhitespace(this.characterBuffer, this.tokenStartIndex, this.storedCharacterCount);
+                    if (nonWhitespaceIndex >= 0)
+                    {
+                        this.tokenStartIndex += nonWhitespaceIndex;
+                        return ValueTask.FromResult(true);
+                    }
 
-                // All characters were whitespace, need to read more
-                this.tokenStartIndex = this.storedCharacterCount;
+                    // All remaining characters are whitespace, advance to end
+                    this.tokenStartIndex = this.storedCharacterCount;
+                }
             }
 
             // Async slow path: only allocated when an awaited read is pending.
@@ -3135,185 +3057,22 @@ namespace Microsoft.OData.Json
                         return false; // EOF
                     }
 
-                    int remaining = thisParam.storedCharacterCount - thisParam.tokenStartIndex;
-                    if (remaining <= 0)
+                    while (thisParam.tokenStartIndex < thisParam.storedCharacterCount)
                     {
-                        // All characters were whitespace, need to read more
-                        thisParam.tokenStartIndex = thisParam.storedCharacterCount;
-                    }
-
-                    int vectorSize = Vector<ushort>.Count;
-
-                    // Process using vector operations when we have enough characters
-                    // and IsHardwareAccelerated check to ensure SIMD is supported on the current platform.
-                    if (remaining >= vectorSize && Vector.IsHardwareAccelerated)
-                    {
-                        // Process as many full vectors as possible
-                        int vectorsToProcess = remaining / vectorSize;
-                        int nonWhitespaceIndex = SkipWhitespacesVectorized(
-                            thisParam.characterBuffer.AsSpan(thisParam.tokenStartIndex, vectorsToProcess * vectorSize), vectorSize);
-
+                        int nonWhitespaceIndex = FindFirstNonWhitespace(thisParam.characterBuffer, thisParam.tokenStartIndex, thisParam.storedCharacterCount);
                         if (nonWhitespaceIndex >= 0)
                         {
                             thisParam.tokenStartIndex += nonWhitespaceIndex;
                             return true;
                         }
 
-                        // Check remaining chars after vector processing
-                        int processedChars = vectorsToProcess * vectorSize;
-                        remaining -= processedChars;
-
-                        if (remaining > 0)
-                        {
-                            int scalarIndex = SkipWhitespacesScalar(
-                                thisParam.characterBuffer.AsSpan(thisParam.tokenStartIndex + processedChars, remaining));
-
-                            if (scalarIndex >= 0)
-                            {
-                                thisParam.tokenStartIndex += processedChars + scalarIndex;
-                                return true;
-                            }
-                        }
-
-                        // All chars were whitespace
-                        thisParam.tokenStartIndex = thisParam.storedCharacterCount;
-                    }
-                    else
-                    {
-                        // Use scalar approach for small buffers
-                        int result = SkipWhitespacesScalar(
-                            thisParam.characterBuffer.AsSpan(thisParam.tokenStartIndex, remaining));
-
-                        if (result >= 0)
-                        {
-                            thisParam.tokenStartIndex += result;
-                            return true;
-                        }
-
-                        // All chars were whitespace
+                        // All remaining characters are whitespace, advance to end
                         thisParam.tokenStartIndex = thisParam.storedCharacterCount;
                     }
 
                     pendingReadInputTask = thisParam.ReadInputAsync();
                 }
             }
-        }
-
-        /// <summary>
-        /// Skips all whitespace characters in the currently buffered input using vectorized and scalar approaches.
-        /// </summary>
-        /// <remarks>
-        /// Uses SIMD vectorization when possible for performance, falling back to scalar processing for small buffers.
-        /// </remarks>
-        /// <returns>The index of the first non-whitespace character relative to <see cref="tokenStartIndex"/>, or -1 if only whitespace remains.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private int SkipWhitespacesInCurrentBuffer()
-        {
-            int remaining = this.storedCharacterCount - this.tokenStartIndex;
-            if (remaining <= 0)
-            {
-                return -1;
-            }
-
-            int vectorSize = Vector<ushort>.Count;
-
-            // Process using vector operations when we have enough characters
-            // and IsHardwareAccelerated check to ensure SIMD is supported on the current platform.
-            if (remaining >= vectorSize && Vector.IsHardwareAccelerated)
-            {
-                // Process as many full vectors as possible
-                int vectorsToProcess = remaining / vectorSize;
-                int nonWhitespaceIndex = SkipWhitespacesVectorized(
-                    this.characterBuffer.AsSpan(this.tokenStartIndex, vectorsToProcess * vectorSize), vectorSize);
-
-                if (nonWhitespaceIndex >= 0)
-                {
-                    return nonWhitespaceIndex;
-                }
-
-                // Check remaining chars after vector processing
-                int processedChars = vectorsToProcess * vectorSize;
-                remaining -= processedChars;
-
-                if (remaining > 0)
-                {
-                    int scalarIndex = SkipWhitespacesScalar(
-                        this.characterBuffer.AsSpan(this.tokenStartIndex + processedChars, remaining));
-
-                    if (scalarIndex >= 0)
-                    {
-                        return processedChars + scalarIndex;
-                    }
-                }
-
-                // All chars were whitespace
-                return -1;
-            }
-
-            // Use scalar approach for small buffers
-            return SkipWhitespacesScalar(
-                this.characterBuffer.AsSpan(this.tokenStartIndex, remaining));
-        }
-
-        /// <summary>
-        /// Scans the given character span for whitespace using SIMD vectorization.
-        /// </summary>
-        /// <param name="span">The span of characters to scan.</param>
-        /// <param name="vectorSize">The size of the SIMD vector. For <see cref="Vector<ushort></ushort>"/> is 16.</param>
-        /// <returns>Index of the first non-whitespace character, or -1 if none found.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static int SkipWhitespacesVectorized(ReadOnlySpan<char> span, int vectorSize)
-        {
-            int processed = 0;
-
-            while (processed < span.Length)
-            {
-                // Load vector from char buffer
-                Vector<ushort> currentVector = new Vector<ushort>(MemoryMarshal.Cast<char, ushort>(span.Slice(processed)));
-
-                Vector<ushort> isWhitespace = Vector.Equals(currentVector, spaceCharVector) |
-                           Vector.Equals(currentVector, tabCharVector) |
-                           Vector.Equals(currentVector, newlineCharVector) |
-                           Vector.Equals(currentVector, carriageCharVector);
-
-                // If not all characters are whitespace, find the first non-whitespace character
-                if (!Vector.EqualsAll(isWhitespace, ushortMaxValueVector))
-                {
-                    // Found a non-whitespace character in the vector
-                    for (int i = 0; i < vectorSize; i++)
-                    {
-                        if (isWhitespace[i] == ushort.MinValue)
-                        {
-                            return processed + i;
-                        }
-                    }
-                }
-
-                processed += vectorSize;
-            }
-
-            // All characters were whitespace
-            return -1;
-        }
-
-        /// <summary>
-        /// Scans the given character span for whitespace using a scalar approach.
-        /// Returns the index of the first non-whitespace character, or -1 if all are whitespace.
-        /// </summary>
-        /// <param name="span">The span of characters to scan.</param>
-        /// <returns>Index of the first non-whitespace character, or -1 if none found.</returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static int SkipWhitespacesScalar(ReadOnlySpan<char> span)
-        {
-            for (int i = 0; i < span.Length; i++)
-            {
-                if (!IsWhitespaceCharacter(span[i]))
-                {
-                    return i;
-                }
-            }
-
-            return -1;
         }
 
         /// <summary>
@@ -3643,6 +3402,24 @@ namespace Microsoft.OData.Json
             }
 
             return span.ToString();
+        }
+
+        /// <summary>
+        /// Finds the index of the first non-whitespace character in the specified character buffer range.
+        /// Whitespace characters are defined by the JSON specification: space (' '), tab ('\t'), carriage return ('\r'), and newline ('\n').
+        /// </summary>
+        /// <param name="buffer">The character buffer to search.</param>
+        /// <param name="start">The starting index (inclusive) in the buffer.</param>
+        /// <param name="end">The ending index (exclusive) in the buffer.</param>
+        /// <returns>
+        /// The zero-based index (relative to <paramref name="start"/>) of the first non-whitespace character,
+        /// or -1 if all characters in the specified range are whitespace.
+        /// </returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static int FindFirstNonWhitespace(char[] buffer, int start, int end)
+        {
+            ReadOnlySpan<char> span = buffer.AsSpan(start, end - start);
+            return span.IndexOfAnyExcept(jsonWhitespaceSearchValues);
         }
 
         /// <summary>
