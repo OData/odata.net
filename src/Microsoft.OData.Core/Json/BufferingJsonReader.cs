@@ -11,7 +11,9 @@ namespace Microsoft.OData.Json
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.IO;
+    using System.Runtime.CompilerServices;
     using System.Threading.Tasks;
 
     #endregion Namespaces
@@ -21,6 +23,14 @@ namespace Microsoft.OData.Json
     /// </summary>
     internal class BufferingJsonReader : IJsonReader
     {
+        // Keep pools small; tune via benchmarks.
+        private const int MaxPooledNodesPerThread = 256;
+
+        // Per-thread pool: avoids lock contention and cross-thread reuse of linked nodes.
+        // Not for thread-safety of the reader instance itself (reader is single-threaded).
+        [ThreadStatic]
+        private static Stack<BufferedNode> bufferedNodePool;
+
         /// <summary>The (possibly empty) list of buffered nodes.</summary>
         /// <remarks>This is a circular linked list where this field points to the first item of the list.</remarks>
         protected BufferedNode bufferedNodesHead;
@@ -178,7 +188,6 @@ namespace Microsoft.OData.Json
         /// Creates a stream for reading a stream value
         /// </summary>
         /// <returns>A Stream used to read a stream value</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1825:Avoid zero-length array allocations.", Justification = "<Pending>")]
         public virtual Stream CreateReadStream()
         {
             if (!this.isBuffering)
@@ -222,7 +231,7 @@ namespace Microsoft.OData.Json
             }
 
             object value = this.GetValue();
-            return (value is string || value == null || this.NodeType == JsonNodeType.StartArray || this.NodeType == JsonNodeType.StartObject);
+            return value == null || value is string || this.NodeType == JsonNodeType.StartArray || this.NodeType == JsonNodeType.StartObject;
         }
 
         /// <summary>
@@ -285,19 +294,36 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <returns>A task that represents the asynchronous operation.
         /// true if the current value can be streamed; otherwise false.</returns>
-        public virtual async Task<bool> CanStreamAsync()
+        public virtual Task<bool> CanStreamAsync()
         {
             this.AssertAsynchronous();
 
-            if (!this.isBuffering)
+            // If buffering, we already the value locally - refer to GetValueAsync implementation
+            if (this.isBuffering)
             {
-                return await this.innerReader.CanStreamAsync()
-                    .ConfigureAwait(false);
+                Debug.Assert(this.currentBufferedNode != null, "this.currentBufferedNode != null");
+                BufferedNode node = this.currentBufferedNode;
+                if (node.Value == null || node.Value is string || node.NodeType == JsonNodeType.StartArray || node.NodeType == JsonNodeType.StartObject)
+                {
+                    return Task.FromResult(true);
+                }
+
+                return Task.FromResult(false);
             }
 
-            object value = await this.GetValueAsync()
-                .ConfigureAwait(false);
-            return value is string || value == null || this.NodeType == JsonNodeType.StartArray || this.NodeType == JsonNodeType.StartObject;
+            // Non-buffering: defer to the inner reader
+            Task<bool> canStreamTask = this.innerReader.CanStreamAsync();
+            if (canStreamTask.IsCompletedSuccessfully)
+            {
+                return canStreamTask;
+            }
+
+            return AwaitCanStreamAsync(canStreamTask);
+
+            static async Task<bool> AwaitCanStreamAsync(Task<bool> canStreamTask)
+            {
+                return await canStreamTask.ConfigureAwait(false);
+            }
         }
 
         /// <summary>
@@ -305,7 +331,6 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <returns>A task that represents the asynchronous read operation.
         /// The value of the TResult parameter contains a <see cref="Stream"/> used to read a stream value.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1825:Avoid zero-length array allocations.", Justification = "<Pending>")]
         public virtual async Task<Stream> CreateReadStreamAsync()
         {
             this.AssertAsynchronous();
@@ -382,7 +407,7 @@ namespace Microsoft.OData.Json
             if (this.bufferedNodesHead == null)
             {
                 // capture the current state of the reader as the first item in the buffer (if there are none)
-                this.bufferedNodesHead = new BufferedNode(this.innerReader.NodeType, this.innerReader.GetValue());
+                this.bufferedNodesHead = RentNode(this.innerReader.NodeType, this.innerReader.GetValue());
             }
             else
             {
@@ -482,7 +507,7 @@ namespace Microsoft.OData.Json
         /// Asynchronously puts the reader into the state where it buffers read nodes.
         /// </summary>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        internal async Task StartBufferingAsync()
+        internal Task StartBufferingAsync()
         {
             Debug.Assert(!this.isBuffering, "Buffering is already turned on. Must not call StartBuffering again.");
             this.AssertAsynchronous();
@@ -490,27 +515,44 @@ namespace Microsoft.OData.Json
             if (this.bufferedNodesHead == null)
             {
                 // capture the current state of the reader as the first item in the buffer (if there are none)
-                this.bufferedNodesHead = new BufferedNode(
-                    this.innerReader.NodeType,
-                    await this.innerReader.GetValueAsync().ConfigureAwait(false));
+                Task<object> getValueTask = this.innerReader.GetValueAsync();
+                if (!getValueTask.IsCompletedSuccessfully)
+                {
+                    return AwaitGetValueAndStartBufferingAsync(this, getValueTask);
+                }
+
+                this.bufferedNodesHead = RentNode(this.innerReader.NodeType, getValueTask.Result);
+                CompleteStartBuffering(this);
+                return Task.CompletedTask;
             }
-            else
+
+            // Already have a head node
+            this.removeOnNextRead = false;
+            CompleteStartBuffering(this);
+            return Task.CompletedTask;
+
+            static void CompleteStartBuffering(BufferingJsonReader thisParam)
             {
-                this.removeOnNextRead = false;
+                Debug.Assert(thisParam.bufferedNodesHead != null, "Expected at least the current node in the buffer when starting buffering.");
+
+                // Set the currentBufferedNode to the first node in the list; this means every time we start buffering we reset the
+                // position of the current buffered node since in general we don't know how far ahead we have read before and thus don't
+                // want to blindly continuing to read. The model is that with every call to StartBufferingAsync you reset the position of the
+                // current node in the list and start reading through the buffer again.
+                if (thisParam.currentBufferedNode == null)
+                {
+                    thisParam.currentBufferedNode = thisParam.bufferedNodesHead;
+                }
+
+                thisParam.isBuffering = true;
             }
 
-            Debug.Assert(this.bufferedNodesHead != null, "Expected at least the current node in the buffer when starting buffering.");
-
-            // Set the currentBufferedNode to the first node in the list; this means every time we start buffering we reset the
-            // position of the current buffered node since in general we don't know how far ahead we have read before and thus don't
-            // want to blindly continuing to read. The model is that with every call to StartBufferingAsync you reset the position of the
-            // current node in the list and start reading through the buffer again.
-            if (this.currentBufferedNode == null)
+            static async Task AwaitGetValueAndStartBufferingAsync(BufferingJsonReader thisParam, Task<object> getValueTask)
             {
-                this.currentBufferedNode = this.bufferedNodesHead;
+                object value = await getValueTask.ConfigureAwait(false);
+                thisParam.bufferedNodesHead = RentNode(thisParam.innerReader.NodeType, value);
+                CompleteStartBuffering(thisParam);
             }
-
-            this.isBuffering = true;
         }
 
         /// <summary>
@@ -520,7 +562,7 @@ namespace Microsoft.OData.Json
         /// The value of the TResult parameter contains a tuple comprising of:
         /// 1). A value of true if the current value is an in-stream error value; otherwise false.
         /// 2). An <see cref="ODataError"/> instance that was read from the payload.</returns>
-        internal async Task<(bool IsReadSuccessfully, ODataError Error)> StartBufferingAndTryToReadInStreamErrorPropertyValueAsync()
+        internal async ValueTask<(bool IsReadSuccessfully, ODataError Error)> StartBufferingAndTryToReadInStreamErrorPropertyValueAsync()
         {
             this.AssertNotBuffering();
             this.AssertAsynchronous();
@@ -531,10 +573,8 @@ namespace Microsoft.OData.Json
 
             try
             {
-                (bool IsReadSuccessfully, ODataError Error) readInStreamErrorPropertyResult = await this.TryReadInStreamErrorPropertyValueAsync()
+                return await this.TryReadInStreamErrorPropertyValueAsync()
                     .ConfigureAwait(false);
-
-                return readInStreamErrorPropertyResult;
             }
             finally
             {
@@ -551,7 +591,7 @@ namespace Microsoft.OData.Json
         /// <remarks>
         /// If the parsingInStreamError field is true, the method will read ahead for every StartObject node read from the input to check whether the JSON object
         /// represents an in-stream error. If so, it throws an <see cref="ODataErrorException"/>. If false, this check will not happen.
-        /// This parsingInStremError field is set to true when trying to parse an in-stream error; in normal operation it is false.
+        /// This parsingInStreamError field is set to true when trying to parse an in-stream error; in normal operation it is false.
         /// </remarks>
         protected bool ReadInternal()
         {
@@ -680,9 +720,9 @@ namespace Microsoft.OData.Json
         /// <remarks>
         /// If the parsingInStreamError field is true, the method will read ahead for every StartObject node read from the input to check whether the JSON object
         /// represents an in-stream error. If so, it throws an <see cref="ODataErrorException"/>. If false, this check will not happen.
-        /// This parsingInStremError field is set to true when trying to parse an in-stream error; in normal operation it is false.
+        /// This parsingInStreamError field is set to true when trying to parse an in-stream error; in normal operation it is false.
         /// </remarks>
-        protected async Task<bool> ReadInternalAsync()
+        protected Task<bool> ReadInternalAsync()
         {
             this.AssertAsynchronous();
 
@@ -691,11 +731,22 @@ namespace Microsoft.OData.Json
                 Debug.Assert(this.bufferedNodesHead != null, "If removeOnNextRead is true we must have at least one node in the buffer.");
 
                 this.RemoveFirstNodeInBuffer();
-
                 this.removeOnNextRead = false;
             }
 
-            bool result;
+            // Fast path: non-buffering replay from buffer
+            if (!this.isBuffering && this.bufferedNodesHead != null)
+            {
+                Debug.Assert(!this.parsingInStreamError, "!this.parsingInStreamError");
+
+                // Non-buffering read from the buffer
+                bool result = this.bufferedNodesHead.NodeType != JsonNodeType.EndOfInput;
+                this.removeOnNextRead = true;
+
+                return Task.FromResult(result);
+            }
+
+            // Fast path: still walking inside buffer
             if (this.isBuffering)
             {
                 Debug.Assert(this.currentBufferedNode != null, "this.currentBufferedNode != null");
@@ -703,46 +754,139 @@ namespace Microsoft.OData.Json
                 if (this.currentBufferedNode.Next != this.bufferedNodesHead)
                 {
                     this.currentBufferedNode = this.currentBufferedNode.Next;
-                    result = true;
+                    return Task.FromResult(true);
                 }
-                else if (this.parsingInStreamError)
-                {
-                    // Read more from the input stream and buffer it
-                    result = await this.innerReader.ReadAsync()
-                        .ConfigureAwait(false);
+            }
 
-                    // Add the new node to the end
-                    this.AddNewNodeToTheEndOfBufferedNodesList(
-                        this.innerReader.NodeType,
-                        await this.innerReader.GetValueAsync().ConfigureAwait(false));
-                }
-                else
+            return ReadInternalLocalAsync(this);
+
+            static Task<bool> ReadInternalLocalAsync(BufferingJsonReader thisParam)
+            {
+                if (thisParam.isBuffering)
                 {
-                    // Read the next node from the input stream and check
+                    Debug.Assert(thisParam.currentBufferedNode != null, "thisParam.currentBufferedNode != null");
+
+                    if (thisParam.parsingInStreamError)
+                    {
+                        // Read more from the input stream and buffer it
+                        Task<bool> innerReadTask = thisParam.innerReader.ReadAsync();
+                        if (!innerReadTask.IsCompletedSuccessfully)
+                        {
+                            return AwaitInnerReaderAsync(thisParam, innerReadTask);
+                        }
+
+                        bool localResult = innerReadTask.Result;
+                        if (!localResult)
+                        {
+                            return Task.FromResult(false);
+                        }
+
+                        return BufferValueIfNeededAsync(thisParam);
+                    }
+                    else
+                    {
+                        // Read the next node from the input stream and check
+                        // whether it is an in-stream error
+                        Task<bool> checkForInStreamErrorTask = thisParam.ReadNextAndCheckForInStreamErrorAsync();
+                        if (checkForInStreamErrorTask.IsCompletedSuccessfully)
+                        {
+                            return Task.FromResult(checkForInStreamErrorTask.Result);
+                        }
+
+                        return checkForInStreamErrorTask;
+                    }
+                }
+
+                // Non-buffering + no buffered nodes yet
+                if (thisParam.bufferedNodesHead == null)
+                {
+                    // If parsingInStreamError nothing in the buffer; read from the base,
+                    // else read the next node from the input stream and check
                     // whether it is an in-stream error
-                    result = await this.ReadNextAndCheckForInStreamErrorAsync()
-                        .ConfigureAwait(false);
+                    if (thisParam.parsingInStreamError)
+                    {
+                        Task<bool> readTask = thisParam.innerReader.ReadAsync();
+                        if (!readTask.IsCompletedSuccessfully)
+                        {
+                            return readTask;
+                        }
+
+                        return Task.FromResult(readTask.Result);
+                    }
+                    else
+                    {
+                        Task<bool> checkForInStreamErrorTask = thisParam.ReadNextAndCheckForInStreamErrorAsync();
+
+                        if (checkForInStreamErrorTask.IsCompletedSuccessfully)
+                        {
+                            return Task.FromResult(checkForInStreamErrorTask.Result);
+                        }
+
+                        return checkForInStreamErrorTask;
+                    }
                 }
-            }
-            else if (this.bufferedNodesHead == null)
-            {
-                // If parsingInStreamError nothing in the buffer; read from the base,
-                // else read the next node from the input stream and check
-                // whether it is an in-stream error
-                result = this.parsingInStreamError ?
-                    await this.innerReader.ReadAsync().ConfigureAwait(false) :
-                    await this.ReadNextAndCheckForInStreamErrorAsync().ConfigureAwait(false);
-            }
-            else
-            {
-                Debug.Assert(!this.parsingInStreamError, "!this.parsingInStreamError");
 
-                // Non-buffering read from the buffer
-                result = this.bufferedNodesHead.NodeType != JsonNodeType.EndOfInput;
-                this.removeOnNextRead = true;
+                // Should not reach here - buffered replay handled above
+                bool result = thisParam.bufferedNodesHead.NodeType != JsonNodeType.EndOfInput;
+                thisParam.removeOnNextRead = true;
+
+                return Task.FromResult(result);
             }
 
-            return result;
+            static Task<bool> BufferValueIfNeededAsync(BufferingJsonReader thisParam)
+            {
+                object value = null;
+                JsonNodeType localNodeType = thisParam.innerReader.NodeType;
+                // GetValueAsync returns null for everything other than primitive value and property nameof
+                // This check should help us avoid pointless calls
+                // TODO: Verify correctness of this check
+                if (localNodeType == JsonNodeType.PrimitiveValue || localNodeType == JsonNodeType.Property)
+                {
+                    Task<object> getValueTask = thisParam.innerReader.GetValueAsync();
+                    if (!getValueTask.IsCompletedSuccessfully)
+                    {
+                        return AwaitGetValueAsync(thisParam, getValueTask);
+                    }
+
+                    value = getValueTask.Result;
+                }
+
+                thisParam.AddNewNodeToTheEndOfBufferedNodesList(thisParam.innerReader.NodeType, value);
+
+                return Task.FromResult(true);
+            }
+
+            static async Task<bool> AwaitInnerReaderAsync(BufferingJsonReader thisParam, Task<bool> innerReadTask)
+            {
+                if (!await innerReadTask.ConfigureAwait(false))
+                {
+                    return false;
+                }
+
+                object value = null;
+                JsonNodeType localNodeType = thisParam.innerReader.NodeType;
+                // GetValueAsync returns null for everything other than primitive value and property nameof
+                // This check should help us avoid pointless calls
+                // TODO: Verify correctness of this check
+                if (localNodeType == JsonNodeType.PrimitiveValue || localNodeType == JsonNodeType.Property)
+                {
+                    value = await thisParam.innerReader.GetValueAsync().ConfigureAwait(false);
+                }
+
+                // Add new node to the end
+                thisParam.AddNewNodeToTheEndOfBufferedNodesList(thisParam.innerReader.NodeType, value);
+
+                return true;
+            }
+
+            static async Task<bool> AwaitGetValueAsync(BufferingJsonReader thisParam, Task<object> getValueTask)
+            {
+                object value = await getValueTask.ConfigureAwait(false);
+                // Add new node to the end
+                thisParam.AddNewNodeToTheEndOfBufferedNodesList(thisParam.innerReader.NodeType, value);
+
+                return true;
+            }
         }
 
         /// <summary>
@@ -755,7 +899,7 @@ namespace Microsoft.OData.Json
         /// once it returns the reader will be returned to the position before the method was called.
         /// The reader is always positioned on a start object when this method is called.
         /// </remarks>
-        protected virtual async Task ProcessObjectValueAsync()
+        protected virtual Task ProcessObjectValueAsync()
         {
             Debug.Assert(this.currentBufferedNode.NodeType == JsonNodeType.StartObject, "this.currentBufferedNode.NodeType == JsonNodeType.StartObject");
             Debug.Assert(this.parsingInStreamError, "this.parsingInStreamError");
@@ -763,48 +907,126 @@ namespace Microsoft.OData.Json
             this.AssertAsynchronous();
 
             // Only check for in-stream errors if the buffering reader is told to do so
-            if (!this.DisableInStreamErrorDetection)
+            if (this.DisableInStreamErrorDetection)
             {
-                // Move to the first property of the potential error object (or the EndObject node if no properties exist)
-                await this.ReadInternalAsync()
-                    .ConfigureAwait(false);
+                return Task.CompletedTask;
+            }
 
-                // We only consider this to be an in-stream error if the object has a single 'error' property
-                bool errorPropertyFound = false;
-                (bool IsReadSuccessfully, ODataError Error)? readInStreamErrorPropertyResult = null;
+            // Move to the first property of the potential error object (or the EndObject node if no properties exist)
+            Task<bool> readInternalTask = this.ReadInternalAsync();
+            if (!readInternalTask.IsCompletedSuccessfully)
+            {
+                return AwaitReadInternalAsync(this, readInternalTask);
+            }
 
-                while (this.currentBufferedNode.NodeType == JsonNodeType.Property)
+            // Fast path: ReadInternalAsync completed synchronously
+            return this.DetectAndTryReadInStreamErrorAsync();
+
+            static async Task AwaitReadInternalAsync(BufferingJsonReader thisParam, Task<bool> readInternalTask)
+            {
+                await readInternalTask.ConfigureAwait(false);
+                await thisParam.DetectAndTryReadInStreamErrorAsync();
+            }
+        }
+
+        /// <summary>
+        /// Checks the current buffered object (already positioned at its first child)
+        /// for exactly one matching in-stream error property and parses it.
+        /// </summary>
+        /// <returns>A faulted task on success (error detected); otherwise a completed task.</returns>
+        private Task DetectAndTryReadInStreamErrorAsync()
+        {
+            // We only consider this to be an in-stream error if the object has a single 'error' property
+            if (this.currentBufferedNode.NodeType != JsonNodeType.Property)
+            {
+                return Task.CompletedTask;
+            }
+
+            // NOTE: The JSON reader already ensures that the value of a property node (which is the name of the property) is a string
+            // First (and only candidate) property must match the in-stream error
+            string propertyName = (string)this.currentBufferedNode.Value;
+            if (string.CompareOrdinal(this.inStreamErrorPropertyName, propertyName) != 0)
+            {
+                return Task.CompletedTask;
+            }
+
+            // Advance to property value and read error object
+            ValueTask<(bool IsReadSuccessfully, ODataError Error)> tryReadInStreamErrorTask = this.TryReadInStreamErrorAsync();
+            if (!tryReadInStreamErrorTask.IsCompletedSuccessfully)
+            {
+                return AwaitTryReadInStreamErrorAsync(this, tryReadInStreamErrorTask);
+            }
+
+            (bool isReadSuccessfully, ODataError odataError) = tryReadInStreamErrorTask.Result;
+            if (!isReadSuccessfully)
+            {
+                // This means we thought we saw an in-stream error, but then
+                // we didn't see an intelligible error object, so we give up on reading the in-stream error
+                // and return. We will fail later in some other way. This payload is totally messed up.
+                return Task.CompletedTask;
+            }
+
+            // If we found any other property than the expected in-stream error property, we don't treat it as an in-stream error
+            // This check preserves same semantic as the while loop in the synchronous ProcessObjectValue
+            if (this.currentBufferedNode.NodeType == JsonNodeType.Property)
+            {
+                return Task.CompletedTask;
+            }
+
+            // Single in-stream error property, valid error object, return faulted Task
+            return Task.FromException(new ODataErrorException(odataError));
+
+            static async Task AwaitTryReadInStreamErrorAsync(
+                BufferingJsonReader thisParam,
+                ValueTask<(bool IsReadSuccessfully, ODataError Error)> pendingTryReadInStreamErrorTask)
+            {
+                (bool isReadSuccessfully, ODataError odataError) = await pendingTryReadInStreamErrorTask.ConfigureAwait(false);
+                if (!isReadSuccessfully)
                 {
-                    // NOTE: The JSON reader already ensures that the value of a property node (which is the name of the property) is a string
-                    string propertyName = (string)this.currentBufferedNode.Value;
-
-                    // If we found any other property than the expected in-stream error property, we don't treat it as an in-stream error
-                    if (string.CompareOrdinal(this.inStreamErrorPropertyName, propertyName) != 0 || errorPropertyFound)
-                    {
-                        return;
-                    }
-
-                    errorPropertyFound = true;
-
-                    // Position the reader over the property value
-                    await this.ReadInternalAsync()
-                        .ConfigureAwait(false);
-
-                    readInStreamErrorPropertyResult = await this.TryReadInStreamErrorPropertyValueAsync()
-                        .ConfigureAwait(false);
-                    if (readInStreamErrorPropertyResult?.IsReadSuccessfully == false)
-                    {
-                        // This means we thought we saw an in-stream error, but then
-                        // we didn't see an intelligible error object, so we give up on reading the in-stream error
-                        // and return. We will fail later in some other way. This payload is totally messed up.
-                        return;
-                    }
+                    return;
                 }
 
-                if (errorPropertyFound)
+                // Additional property invalidates the object as in-stream error
+                if (thisParam.currentBufferedNode.NodeType == JsonNodeType.Property)
                 {
-                    throw new ODataErrorException(readInStreamErrorPropertyResult?.Error);
+                    return;
                 }
+
+                throw new ODataErrorException(odataError);
+            }
+        }
+
+        /// <summary>
+        /// Advances from the error property name to its value and attempts to parse
+        /// the value as an OData error object.
+        /// </summary>
+        /// <returns>
+        /// A task that represents the asynchronous read operation.
+        /// The value of the TResult parameter contains a success flag and the parsed error.
+        /// </returns>
+        private ValueTask<(bool IsReadSuccessfully, ODataError Error)> TryReadInStreamErrorAsync()
+        {
+            // Position the reader over the property value
+            Task<bool> readInternalTask = this.ReadInternalAsync();
+            if (!readInternalTask.IsCompletedSuccessfully)
+            {
+                return AwaitReadInternalAsync(this, readInternalTask);
+            }
+
+            // Read error object
+            ValueTask<(bool IsReadSuccessfully, ODataError Error)> tryReadInStreamErrorTask = this.TryReadInStreamErrorPropertyValueAsync();
+            if (!tryReadInStreamErrorTask.IsCompletedSuccessfully)
+            {
+                return tryReadInStreamErrorTask; // Caller will await
+            }
+
+            return ValueTask.FromResult(tryReadInStreamErrorTask.Result);
+
+            static async ValueTask<(bool, ODataError)> AwaitReadInternalAsync(BufferingJsonReader thisParam, Task<bool> pendingReadInternalTask)
+            {
+                await pendingReadInternalTask.ConfigureAwait(false);
+
+                return await thisParam.TryReadInStreamErrorPropertyValueAsync().ConfigureAwait(false);
             }
         }
 
@@ -1065,8 +1287,8 @@ namespace Microsoft.OData.Json
                 {
                     case JsonConstants.ODataErrorCodeName:
                         if (!ODataJsonReaderUtils.ErrorPropertyNotFound(
-                                ref propertiesFoundBitmask,
-                                ODataJsonReaderUtils.ErrorPropertyBitMask.Code))
+                            ref propertiesFoundBitmask,
+                            ODataJsonReaderUtils.ErrorPropertyBitMask.Code))
                         {
                             return false;
                         }
@@ -1085,8 +1307,8 @@ namespace Microsoft.OData.Json
 
                     case JsonConstants.ODataErrorTargetName:
                         if (!ODataJsonReaderUtils.ErrorPropertyNotFound(
-                                ref propertiesFoundBitmask,
-                                ODataJsonReaderUtils.ErrorPropertyBitMask.Target))
+                            ref propertiesFoundBitmask,
+                            ODataJsonReaderUtils.ErrorPropertyBitMask.Target))
                         {
                             return false;
                         }
@@ -1105,8 +1327,8 @@ namespace Microsoft.OData.Json
 
                     case JsonConstants.ODataErrorMessageName:
                         if (!ODataJsonReaderUtils.ErrorPropertyNotFound(
-                                ref propertiesFoundBitmask,
-                                ODataJsonReaderUtils.ErrorPropertyBitMask.MessageValue))
+                            ref propertiesFoundBitmask,
+                            ODataJsonReaderUtils.ErrorPropertyBitMask.MessageValue))
                         {
                             return false;
                         }
@@ -1296,25 +1518,7 @@ namespace Microsoft.OData.Json
             int depth = 0;
             do
             {
-                switch (this.currentBufferedNode.NodeType)
-                {
-                    case JsonNodeType.PrimitiveValue:
-                        break;
-                    case JsonNodeType.StartArray:
-                    case JsonNodeType.StartObject:
-                        depth++;
-                        break;
-                    case JsonNodeType.EndArray:
-                    case JsonNodeType.EndObject:
-                        Debug.Assert(depth > 0, "Seen too many scope ends.");
-                        depth--;
-                        break;
-                    default:
-                        Debug.Assert(
-                            this.currentBufferedNode.NodeType != JsonNodeType.EndOfInput,
-                            "We should not have reached end of input, since the scopes should be well formed. Otherwise JsonReader should have failed by now.");
-                        break;
-                }
+                depth = AdjustDepth(depth, this.currentBufferedNode.NodeType);
 
                 this.ReadInternal();
             }
@@ -1326,6 +1530,8 @@ namespace Microsoft.OData.Json
         /// </summary>
         private void RemoveFirstNodeInBuffer()
         {
+            BufferedNode firstNodeInBuffer = this.bufferedNodesHead;
+
             if (this.bufferedNodesHead.Next == this.bufferedNodesHead)
             {
                 Debug.Assert(this.bufferedNodesHead.Previous == this.bufferedNodesHead, "The linked list is corrupted.");
@@ -1337,6 +1543,8 @@ namespace Microsoft.OData.Json
                 this.bufferedNodesHead.Next.Previous = this.bufferedNodesHead.Previous;
                 this.bufferedNodesHead = this.bufferedNodesHead.Next;
             }
+
+            ReturnNode(firstNodeInBuffer);
         }
 
         /// <summary>
@@ -1345,7 +1553,9 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <returns>A task that represents the asynchronous read operation.
         /// The value of the TResult parameter contains true if a new node was found, or false if end of input was reached.</returns>
-        private async Task<bool> ReadNextAndCheckForInStreamErrorAsync()
+        [SuppressMessage("Design", "CA1031:Do not catch general exception types",
+            Justification = "We must (1) reset parsingInStreamError on synchronous failure, and (2) preserve the contract of returning a faulted Task<bool> instead of throwing synchronously.")]
+        private Task<bool> ReadNextAndCheckForInStreamErrorAsync()
         {
             Debug.Assert(!this.parsingInStreamError, "!this.parsingInStreamError");
             this.AssertAsynchronous();
@@ -1354,47 +1564,173 @@ namespace Microsoft.OData.Json
 
             try
             {
-                // Read the next node in the current reader mode (buffering or non-buffering)
-                bool result = await this.ReadInternalAsync()
-                    .ConfigureAwait(false);
-
-                if (this.innerReader.NodeType == JsonNodeType.StartObject)
+                Task<bool> readInternalTask = ReadInternalAsync();
+                if (!readInternalTask.IsCompletedSuccessfully)
                 {
-                    // If we find a StartObject node we have to read ahead and check whether this
-                    // JSON object represents an in-stream error. If we are currently in buffering
-                    // mode remember the current position in the buffer; otherwise start buffering.
-                    bool wasBuffering = this.isBuffering;
-                    BufferedNode storedPosition = null;
-                    if (this.isBuffering)
-                    {
-                        storedPosition = this.currentBufferedNode;
-                    }
-                    else
-                    {
-                        await this.StartBufferingAsync()
-                            .ConfigureAwait(false);
-                    }
-
-                    await this.ProcessObjectValueAsync()
-                        .ConfigureAwait(false);
-
-                    // Reset the reader state to non-buffering or to the previously
-                    // backed up position in the buffer.
-                    if (wasBuffering)
-                    {
-                        this.currentBufferedNode = storedPosition;
-                    }
-                    else
-                    {
-                        this.StopBuffering();
-                    }
+                    // Asynchronous completion path; continuation will reset parsingInStreamError and fault the Task if needed
+                    return AwaitReadInternalAsync(this, readInternalTask);
                 }
 
-                return result;
+                // Synchronous completion path
+                return ContinueAfterReadInternalAsync(this, readInternalTask.Result);
             }
-            finally
+            catch (Exception ex)
             {
                 this.parsingInStreamError = false;
+                return Task.FromException<bool>(ex);
+            }
+
+            static Task<bool> ContinueAfterReadInternalAsync(BufferingJsonReader thisParam, bool innerResult)
+            {
+                // If not StartObject we can finish immediately.
+                if (thisParam.innerReader.NodeType != JsonNodeType.StartObject)
+                {
+                    thisParam.parsingInStreamError = false;
+                    return Task.FromResult(innerResult);
+                }
+
+                // If we find a StartObject node we have to read ahead and check whether this
+                // JSON object represents an in-stream error.
+                Task checkObjectForInStreamErrorTask;
+
+                try
+                {
+                    checkObjectForInStreamErrorTask = thisParam.ReadObjectAndCheckForInStreamErrorAsync();
+                }
+                catch (Exception ex)
+                {
+                    thisParam.parsingInStreamError = false;
+                    return Task.FromException<bool>(ex);
+                }
+
+                if (checkObjectForInStreamErrorTask.IsCompletedSuccessfully)
+                {
+                    // Completed synchronously
+                    thisParam.parsingInStreamError = false;
+                    return Task.FromResult(innerResult);
+                }
+
+                // Asynchronous completion path; continuation will reset this.parsingInStreamError and fault the Task if needed
+                return AwaitReadObjectAndCheckForInStreamErrorAsync(thisParam, checkObjectForInStreamErrorTask, innerResult);
+            }
+
+            static async Task<bool> AwaitReadInternalAsync(BufferingJsonReader thisParam, Task<bool> pendingReadInternalTask)
+            {
+                // Any exception propagates as faulted task since method is async
+                bool innerResult;
+
+                try
+                {
+                    innerResult = await pendingReadInternalTask.ConfigureAwait(false);
+                }
+                catch
+                {
+                    thisParam.parsingInStreamError = false;
+                    throw;
+                }
+
+                // May return a completed Task or an async path
+                bool finalResult = await ContinueAfterReadInternalAsync(thisParam, innerResult).ConfigureAwait(false);
+                Debug.Assert(!thisParam.parsingInStreamError, "parsingInStreamError must be false after ContinueAfterReadInternalAsync.");
+
+                return finalResult;
+            }
+
+            static async Task<bool> AwaitReadObjectAndCheckForInStreamErrorAsync(BufferingJsonReader thisParam, Task pendingCheckObjectForInStreamErrorTask, bool result)
+            {
+                // Any exception propagates as faulted task since method is async
+                try
+                {
+                    await pendingCheckObjectForInStreamErrorTask.ConfigureAwait(false);
+                    return result;
+                }
+                finally
+                {
+                    thisParam.parsingInStreamError = false;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Given the inner reader just produced a StartObject, buffer it (if needed),
+        /// probe it for a single in-stream error property, and restore the original buffered position.
+        /// </summary>
+        /// <returns>A completed or faulted task that represents the asynchronous read operation.</returns>
+        private Task ReadObjectAndCheckForInStreamErrorAsync()
+        {
+            Debug.Assert(
+                this.innerReader.NodeType == JsonNodeType.StartObject,
+                "this.innerReader.NodeType == JsonNodeType.StartObject");
+
+            BufferedNode storedPosition = null;
+
+            // If we are currently in buffering mode remember the current position in the buffer;
+            // otherwise start buffering.
+            if (this.isBuffering)
+            {
+                // Already buffering; remember position - restore on success
+                storedPosition = this.currentBufferedNode;
+
+                Task processObjectValueTask = this.ProcessObjectValueAsync();
+                if (processObjectValueTask.IsCompletedSuccessfully)
+                {
+                    // Completed synchronously
+                    this.currentBufferedNode = storedPosition;
+                    return Task.CompletedTask;
+                }
+
+                return AwaitProcessObjectValueAsync(this, storedPosition, processObjectValueTask);
+            }
+            else
+            {
+                // Need to start buffering first
+                Task startBufferingTask = this.StartBufferingAsync();
+                if (!startBufferingTask.IsCompletedSuccessfully)
+                {
+                    return AwaitStartBufferingThenProcessObjectValueAsync(this, startBufferingTask);
+                }
+
+                // StartBufferingAsync completed synchronously
+                Task processObjectValueTask = this.ProcessObjectValueAsync();
+                if (processObjectValueTask.IsCompletedSuccessfully)
+                {
+                    // Fast path
+                    this.StopBuffering();
+                    return Task.CompletedTask;
+                }
+
+                return AwaitProcessObjectValueThenStopBufferingAsync(this, processObjectValueTask);
+            }
+
+            // We were already buffering. Only restore position on success; on fault keep the advanced position - preserve semantics before refactor
+            static async Task AwaitProcessObjectValueAsync(
+                BufferingJsonReader thisParam,
+                BufferedNode storedPosition,
+                Task pendingProcessObjectValueTask)
+            {
+                await pendingProcessObjectValueTask.ConfigureAwait(false);
+                thisParam.currentBufferedNode = storedPosition;
+            }
+
+            // If start buffering faults, we propagate and leave buffering turned on - preserve semantics before refactor
+            static async Task AwaitStartBufferingThenProcessObjectValueAsync(BufferingJsonReader thisParam, Task pendingStartBufferingTask)
+            {
+                await pendingStartBufferingTask.ConfigureAwait(false);
+
+                Task processObjectValueTask = thisParam.ProcessObjectValueAsync();
+                if (!processObjectValueTask.IsCompletedSuccessfully)
+                {
+                    await processObjectValueTask.ConfigureAwait(false);
+                }
+
+                // On success stop buffering
+                thisParam.StopBuffering();
+            }
+
+            static async Task AwaitProcessObjectValueThenStopBufferingAsync(BufferingJsonReader thisParam, Task pendingProcessObjectValueTask)
+            {
+                await pendingProcessObjectValueTask.ConfigureAwait(false);
+                thisParam.StopBuffering();
             }
         }
 
@@ -1406,7 +1742,7 @@ namespace Microsoft.OData.Json
         /// The value of the TResult parameter contains a tuple comprising of:
         /// 1). A value of true if an <see cref="ODataError"/> instance that was read; otherwise false.
         /// 2). An <see cref="ODataError"/> instance that was read from the reader or null if none could be read.</returns>
-        private async Task<(bool IsReadSuccessfully, ODataError Error)> TryReadInStreamErrorPropertyValueAsync()
+        private async ValueTask<(bool IsReadSuccessfully, ODataError Error)> TryReadInStreamErrorPropertyValueAsync()
         {
             Debug.Assert(this.parsingInStreamError, "this.parsingInStreamError");
             this.AssertBuffering();
@@ -1415,7 +1751,7 @@ namespace Microsoft.OData.Json
             // We expect a StartObject node here
             if (this.currentBufferedNode.NodeType != JsonNodeType.StartObject)
             {
-                return (false, (ODataError)null);
+                return (false, null);
             }
 
             // Read the StartObject node
@@ -1433,94 +1769,92 @@ namespace Microsoft.OData.Json
                 switch (propertyName)
                 {
                     case JsonConstants.ODataErrorCodeName:
-                        if (!ODataJsonReaderUtils.ErrorPropertyNotFound(
-                            ref propertiesFoundBitmask,
-                            ODataJsonReaderUtils.ErrorPropertyBitMask.Code))
                         {
-                            return (false, error);
-                        }
+                            (bool isReadSuccessfully, string propertyValue) = await this.ValidateAndTryReadErrorStringPropertyValueAsync(
+                                ODataJsonReaderUtils.ErrorPropertyBitMask.Code,
+                                ref propertiesFoundBitmask).ConfigureAwait(false);
 
-                        (bool IsReadSuccessfully, string PropertyValue) readErrorCodePropertyResult = await this.TryReadErrorStringPropertyValueAsync()
-                            .ConfigureAwait(false);
-                        if (!readErrorCodePropertyResult.IsReadSuccessfully)
-                        {
-                            return (false, error);
-                        }
+                            if (!isReadSuccessfully)
+                            {
+                                return (false, error);
+                            }
 
-                        error.Code = readErrorCodePropertyResult.PropertyValue;
-                        break;
+                            error.Code = propertyValue;
+
+                            break;
+                        }
 
                     case JsonConstants.ODataErrorMessageName:
-                        if (!ODataJsonReaderUtils.ErrorPropertyNotFound(
-                            ref propertiesFoundBitmask,
-                            ODataJsonReaderUtils.ErrorPropertyBitMask.Message))
                         {
-                            return (false, error);
-                        }
+                            (bool isReadSuccessfully, string propertyValue) = await this.ValidateAndTryReadErrorStringPropertyValueAsync(
+                                ODataJsonReaderUtils.ErrorPropertyBitMask.Message,
+                                ref propertiesFoundBitmask).ConfigureAwait(false);
+                            if (!isReadSuccessfully)
+                            {
+                                return (false, error);
+                            }
 
-                        (bool IsReadSuccessfully, string PropertyValue) readErrorMessagePropertyResult = await this.TryReadErrorStringPropertyValueAsync()
-                            .ConfigureAwait(false);
-                        if (!readErrorMessagePropertyResult.IsReadSuccessfully)
-                        {
-                            return (false, error);
-                        }
+                            error.Message = propertyValue;
 
-                        error.Message = readErrorMessagePropertyResult.PropertyValue;
-                        break;
+                            break;
+                        }
 
                     case JsonConstants.ODataErrorTargetName:
-                        if (!ODataJsonReaderUtils.ErrorPropertyNotFound(
-                            ref propertiesFoundBitmask,
-                            ODataJsonReaderUtils.ErrorPropertyBitMask.Target))
                         {
-                            return (false, error);
-                        }
+                            (bool isReadSuccessfully, string propertyValue) = await this.ValidateAndTryReadErrorStringPropertyValueAsync(
+                                ODataJsonReaderUtils.ErrorPropertyBitMask.Target,
+                                ref propertiesFoundBitmask).ConfigureAwait(false);
+                            if (!isReadSuccessfully)
+                            {
+                                return (false, error);
+                            }
 
-                        (bool IsReadSuccessfully, string PropertyValue) readErrorTargetPropertyResult = await this.TryReadErrorStringPropertyValueAsync()
-                            .ConfigureAwait(false);
-                        if (!readErrorTargetPropertyResult.IsReadSuccessfully)
-                        {
-                            return (false, error);
-                        }
+                            error.Target = propertyValue;
 
-                        error.Target = readErrorTargetPropertyResult.Item2;
-                        break;
+                            break;
+                        }
 
                     case JsonConstants.ODataErrorDetailsName:
-                        if (!ODataJsonReaderUtils.ErrorPropertyNotFound(
+                        {
+                            if (!ODataJsonReaderUtils.ErrorPropertyNotFound(
                                 ref propertiesFoundBitmask,
                                 ODataJsonReaderUtils.ErrorPropertyBitMask.Details))
-                        {
-                            return (false, error);
-                        }
+                            {
+                                return (false, error);
+                            }
 
-                        (bool IsReadSuccessfully, List<ODataErrorDetail> ErrorDetails) readErrorDetailsPropertyResult = await this.TryReadErrorDetailsPropertyValueAsync()
-                            .ConfigureAwait(false);
-                        if (!readErrorDetailsPropertyResult.IsReadSuccessfully)
-                        {
-                            return (false, error);
-                        }
+                            (bool isReadSuccessfully, List<ODataErrorDetail> errorDetails) = await this.TryReadErrorDetailsPropertyValueAsync()
+                                .ConfigureAwait(false);
+                            if (!isReadSuccessfully)
+                            {
+                                return (false, error);
+                            }
 
-                        error.Details = readErrorDetailsPropertyResult.ErrorDetails;
-                        break;
+                            error.Details = errorDetails;
+
+                            break;
+                        }
 
                     case JsonConstants.ODataErrorInnerErrorName:
-                        if (!ODataJsonReaderUtils.ErrorPropertyNotFound(
-                            ref propertiesFoundBitmask,
-                            ODataJsonReaderUtils.ErrorPropertyBitMask.InnerError))
                         {
-                            return (false, error);
-                        }
+                            if (!ODataJsonReaderUtils.ErrorPropertyNotFound(
+                                ref propertiesFoundBitmask,
+                                ODataJsonReaderUtils.ErrorPropertyBitMask.InnerError))
+                            {
+                                return (false, error);
+                            }
 
-                        Tuple<bool, ODataInnerError> readInnerErrorPropertyResult = await this.TryReadInnerErrorPropertyValueAsync(0 /*recursionDepth */)
-                            .ConfigureAwait(false);
-                        if (!readInnerErrorPropertyResult.Item1)
-                        {
-                            return (false, error);
-                        }
+                            (bool isReadSuccessfully, ODataInnerError innerError) = await this.TryReadInnerErrorPropertyValueAsync(
+                                recursionDepth: 0).ConfigureAwait(false);
+                            if (!isReadSuccessfully)
+                            {
+                                return (false, error);
+                            }
 
-                        error.InnerError = readInnerErrorPropertyResult.Item2;
-                        break;
+                            error.InnerError = innerError;
+
+                            break;
+                        }
 
                     default:
                         // If we find a non-supported property we don't treat this as an error
@@ -1540,8 +1874,7 @@ namespace Microsoft.OData.Json
                 .ConfigureAwait(false);
 
             // If we don't find any properties it is not a valid error object
-            return (propertiesFoundBitmask != ODataJsonReaderUtils.ErrorPropertyBitMask.None,
-                error);
+            return (propertiesFoundBitmask != ODataJsonReaderUtils.ErrorPropertyBitMask.None, error);
         }
 
         /// <summary>
@@ -1551,7 +1884,7 @@ namespace Microsoft.OData.Json
         /// The value of the TResult parameter contains a tuple comprising of:
         /// 1). A value of true if an <see cref="ODataErrorDetail"/> collection was read; otherwise false.
         /// 2). An <see cref="ODataErrorDetail"/> collection that was read from the reader or null if none could be read.</returns>
-        private async Task<(bool IsReadSuccessfully, List<ODataErrorDetail> ErrorDetails)> TryReadErrorDetailsPropertyValueAsync()
+        private async ValueTask<(bool IsReadSuccessfully, List<ODataErrorDetail> ErrorDetails)> TryReadErrorDetailsPropertyValueAsync()
         {
             Debug.Assert(
                 this.currentBufferedNode.NodeType == JsonNodeType.Property,
@@ -1567,7 +1900,7 @@ namespace Microsoft.OData.Json
             // We expect a StartArray node here
             if (this.currentBufferedNode.NodeType != JsonNodeType.StartArray)
             {
-                return (false, (List<ODataErrorDetail>)null);
+                return (false, null);
             }
 
             // [
@@ -1578,15 +1911,15 @@ namespace Microsoft.OData.Json
 
             while (this.currentBufferedNode.NodeType != JsonNodeType.EndArray)
             {
-                (bool IsReadSuccessfully, ODataErrorDetail ErrorDetail) readErrorDetailResult = await TryReadErrorDetailAsync()
+                (bool isReadSuccessfully, ODataErrorDetail errorDetail) = await TryReadErrorDetailAsync()
                     .ConfigureAwait(false);
 
-                if (!readErrorDetailResult.IsReadSuccessfully)
+                if (!isReadSuccessfully)
                 {
                     return (false, details);
                 }
 
-                details.Add(readErrorDetailResult.ErrorDetail);
+                details.Add(errorDetail);
 
                 // ] or { (next error detail object)
                 await ReadInternalAsync()
@@ -1603,7 +1936,7 @@ namespace Microsoft.OData.Json
         /// The value of the TResult parameter contains a tuple comprising of:
         /// 1). A value of true if an <see cref="ODataErrorDetail"/> instance was read; otherwise false.
         /// 2). An <see cref="ODataErrorDetail"/> instance that was read from the reader or null if none could be read.</returns>
-        private async Task<(bool IsReadSuccessfully, ODataErrorDetail ErrorDetail)> TryReadErrorDetailAsync()
+        private async ValueTask<(bool IsReadSuccessfully, ODataErrorDetail ErrorDetail)> TryReadErrorDetailAsync()
         {
             Debug.Assert(
                 this.currentBufferedNode.NodeType == JsonNodeType.StartObject,
@@ -1614,7 +1947,7 @@ namespace Microsoft.OData.Json
 
             if (this.currentBufferedNode.NodeType != JsonNodeType.StartObject)
             {
-                return (false, (ODataErrorDetail)null);
+                return (false, null);
             }
 
             // {
@@ -1632,57 +1965,45 @@ namespace Microsoft.OData.Json
                 switch (propertyName)
                 {
                     case JsonConstants.ODataErrorCodeName:
-                        if (!ODataJsonReaderUtils.ErrorPropertyNotFound(
-                                ref propertiesFoundBitmask,
-                                ODataJsonReaderUtils.ErrorPropertyBitMask.Code))
                         {
-                            return (false, detail);
-                        }
+                            (bool isReadSuccessfully, string propertyValue) = await this.ValidateAndTryReadErrorStringPropertyValueAsync(
+                                ODataJsonReaderUtils.ErrorPropertyBitMask.Code,
+                                ref propertiesFoundBitmask).ConfigureAwait(false);
+                            if (!isReadSuccessfully)
+                            {
+                                return (false, detail);
+                            }
 
-                        (bool IsReadSuccessfully, string PropertyValue) readErrorCodePropertyResult = await this.TryReadErrorStringPropertyValueAsync()
-                            .ConfigureAwait(false);
-                        if (!readErrorCodePropertyResult.IsReadSuccessfully)
-                        {
-                            return (false, detail);
+                            detail.Code = propertyValue;
                         }
-
-                        detail.Code = readErrorCodePropertyResult.PropertyValue;
                         break;
 
                     case JsonConstants.ODataErrorTargetName:
-                        if (!ODataJsonReaderUtils.ErrorPropertyNotFound(
-                                ref propertiesFoundBitmask,
-                                ODataJsonReaderUtils.ErrorPropertyBitMask.Target))
                         {
-                            return (false, detail);
-                        }
+                            (bool isReadSuccessfully, string propertyValue) = await this.ValidateAndTryReadErrorStringPropertyValueAsync(
+                                ODataJsonReaderUtils.ErrorPropertyBitMask.Target,
+                                ref propertiesFoundBitmask).ConfigureAwait(false);
+                            if (!isReadSuccessfully)
+                            {
+                                return (false, detail);
+                            }
 
-                        (bool IsReadSuccessfully, string PropertyValue) readErrorTargetPropertyResult = await this.TryReadErrorStringPropertyValueAsync()
-                            .ConfigureAwait(false);
-                        if (!readErrorTargetPropertyResult.IsReadSuccessfully)
-                        {
-                            return (false, detail);
+                            detail.Target = propertyValue;
                         }
-
-                        detail.Target = readErrorTargetPropertyResult.PropertyValue;
                         break;
 
                     case JsonConstants.ODataErrorMessageName:
-                        if (!ODataJsonReaderUtils.ErrorPropertyNotFound(
-                                ref propertiesFoundBitmask,
-                                ODataJsonReaderUtils.ErrorPropertyBitMask.MessageValue))
                         {
-                            return (false, detail);
-                        }
+                            (bool isReadSuccessfully, string propertyValue) = await this.ValidateAndTryReadErrorStringPropertyValueAsync(
+                                ODataJsonReaderUtils.ErrorPropertyBitMask.MessageValue,
+                                ref propertiesFoundBitmask).ConfigureAwait(false);
+                            if (!isReadSuccessfully)
+                            {
+                                return (false, detail);
+                            }
 
-                        (bool IsReadSuccessfully, string PropertyValue) readErrorMessagePropertyResult = await this.TryReadErrorStringPropertyValueAsync()
-                            .ConfigureAwait(false);
-                        if (!readErrorMessagePropertyResult.IsReadSuccessfully)
-                        {
-                            return (false, detail);
+                            detail.Message = propertyValue;
                         }
-
-                        detail.Message = readErrorMessagePropertyResult.PropertyValue;
                         break;
 
                     default:
@@ -1711,7 +2032,7 @@ namespace Microsoft.OData.Json
         /// The value of the TResult parameter contains a tuple comprising of:
         /// 1). A value of true if an <see cref="ODataInnerError"/> instance was read; otherwise false.
         /// 2). An <see cref="ODataInnerError"/> instance that was read from the reader or null if none could be read.</returns>
-        private async Task<Tuple<bool, ODataInnerError>> TryReadInnerErrorPropertyValueAsync(int recursionDepth)
+        private async ValueTask<(bool IsReadSuccessfully, ODataInnerError InnerError)> TryReadInnerErrorPropertyValueAsync(int recursionDepth)
         {
             Debug.Assert(this.currentBufferedNode.NodeType == JsonNodeType.Property, "this.currentBufferedNode.NodeType == JsonNodeType.Property");
             Debug.Assert(this.parsingInStreamError, "this.parsingInStreamError");
@@ -1727,7 +2048,7 @@ namespace Microsoft.OData.Json
             // We expect a StartObject node here
             if (this.currentBufferedNode.NodeType != JsonNodeType.StartObject)
             {
-                return Tuple.Create(false, (ODataInnerError)null);
+                return (false, null);
             }
 
             // Read the StartObject node
@@ -1746,82 +2067,51 @@ namespace Microsoft.OData.Json
                 switch (propertyName)
                 {
                     case JsonConstants.ODataErrorInnerErrorMessageName:
-                        if (!ODataJsonReaderUtils.ErrorPropertyNotFound(
-                            ref propertiesFoundBitmask,
-                            ODataJsonReaderUtils.ErrorPropertyBitMask.MessageValue))
-                        {
-                            return Tuple.Create(false, innerError);
-                        }
-
-                        (bool IsReadSuccessfully, string PropertyValue) readErrorMessagePropertyResult = await this.TryReadErrorStringPropertyValueAsync()
-                            .ConfigureAwait(false);
-                        if (!readErrorMessagePropertyResult.IsReadSuccessfully)
-                        {
-                            return Tuple.Create(false, innerError);
-                        }
-
-                        innerError.Properties.Add(
+                        if (!await ValidateAndTryReadInnerErrorStringPropertyValueAsync(
+                            innerError,
                             JsonConstants.ODataErrorInnerErrorMessageName,
-                            new ODataPrimitiveValue(readErrorMessagePropertyResult.PropertyValue));
+                            ODataJsonReaderUtils.ErrorPropertyBitMask.MessageValue,
+                            ref propertiesFoundBitmask).ConfigureAwait(false))
+                        {
+                            return (false, innerError);
+                        }
+                        
                         break;
 
                     case JsonConstants.ODataErrorInnerErrorTypeNameName:
-                        if (!ODataJsonReaderUtils.ErrorPropertyNotFound(
-                            ref propertiesFoundBitmask,
-                            ODataJsonReaderUtils.ErrorPropertyBitMask.TypeName))
-                        {
-                            return Tuple.Create(false, innerError);
-                        }
-
-                        (bool IsReadSuccessfully, string PropertyValue) readErrorTypePropertyResult = await this.TryReadErrorStringPropertyValueAsync()
-                            .ConfigureAwait(false);
-                        if (!readErrorTypePropertyResult.IsReadSuccessfully)
-                        {
-                            return Tuple.Create(false, innerError);
-                        }
-
-                        innerError.Properties.Add(
+                        if (!await ValidateAndTryReadInnerErrorStringPropertyValueAsync(
+                            innerError,
                             JsonConstants.ODataErrorInnerErrorTypeNameName,
-                            new ODataPrimitiveValue(readErrorTypePropertyResult.PropertyValue));
+                            ODataJsonReaderUtils.ErrorPropertyBitMask.TypeName,
+                            ref propertiesFoundBitmask).ConfigureAwait(false))
+                        {
+                            return (false, innerError);
+                        }
+
                         break;
 
                     case JsonConstants.ODataErrorInnerErrorStackTraceName:
-                        if (!ODataJsonReaderUtils.ErrorPropertyNotFound(
-                            ref propertiesFoundBitmask,
-                            ODataJsonReaderUtils.ErrorPropertyBitMask.StackTrace))
-                        {
-                            return Tuple.Create(false, innerError);
-                        }
-
-                        (bool IsReadSuccessfully, string PropertyValue) readErrorStackTracePropertyResult = await this.TryReadErrorStringPropertyValueAsync()
-                            .ConfigureAwait(false);
-                        if (!readErrorStackTracePropertyResult.IsReadSuccessfully)
-                        {
-                            return Tuple.Create(false, innerError);
-                        }
-
-                        innerError.Properties.Add(
+                        if (!await ValidateAndTryReadInnerErrorStringPropertyValueAsync(
+                            innerError,
                             JsonConstants.ODataErrorInnerErrorStackTraceName,
-                            new ODataPrimitiveValue(readErrorStackTracePropertyResult.PropertyValue));
+                            ODataJsonReaderUtils.ErrorPropertyBitMask.StackTrace,
+                            ref propertiesFoundBitmask).ConfigureAwait(false))
+                        {
+                            return (false, innerError);
+                        }
+
                         break;
 
                     case JsonConstants.ODataErrorInnerErrorInnerErrorName:
                     case JsonConstants.ODataErrorInnerErrorName:
-                        if (!ODataJsonReaderUtils.ErrorPropertyNotFound(
+                        if (!await ValidateAndTryReadNestedInnerErrorAsync(
+                            innerError,
                             ref propertiesFoundBitmask,
-                            ODataJsonReaderUtils.ErrorPropertyBitMask.InnerError))
+                            recursionDepth).ConfigureAwait(false))
                         {
-                            return Tuple.Create(false, innerError);
+                            return (false, innerError);
                         }
 
-                        Tuple<bool, ODataInnerError> readInnerErrorPropertyResult = await TryReadInnerErrorPropertyValueAsync(recursionDepth)
-                            .ConfigureAwait(false);
-                        if (!readInnerErrorPropertyResult.Item1)
-                        {
-                            return Tuple.Create(false, innerError);
-                        }
-
-                        innerError.InnerError = readInnerErrorPropertyResult.Item2;
                         break;
 
                     default:
@@ -1839,7 +2129,137 @@ namespace Microsoft.OData.Json
                 this.currentBufferedNode.NodeType == JsonNodeType.EndObject,
                 "this.currentBufferedNode.NodeType == JsonNodeType.EndObject");
 
-            return Tuple.Create(true, innerError);
+            return (true, innerError);
+        }
+
+        /// <summary>
+        /// Validates the top-level error string property is not a duplicate, then attempts to read its string (or null) value.
+        /// </summary>
+        /// <param name="propertyBitMask">Bit representing this property.</param>
+        /// <param name="propertiesFoundBitmask">Bitmask tracking previously seen properties (updated if successful).</param>
+        /// <returns>
+        /// (IsReadSuccessfully, propertyValue) where IsReadSuccessfully is false on duplicate or non-string/non-null value.
+        /// </returns>
+        private ValueTask<(bool IsReadSuccessfully, string propertyValue)> ValidateAndTryReadErrorStringPropertyValueAsync(
+            ODataJsonReaderUtils.ErrorPropertyBitMask propertyBitMask,
+            ref ODataJsonReaderUtils.ErrorPropertyBitMask propertiesFoundBitmask)
+        {
+            // Duplicate or already seen property?
+            if (!ODataJsonReaderUtils.ErrorPropertyNotFound(ref propertiesFoundBitmask, propertyBitMask))
+            {
+                return ValueTask.FromResult((false, (string)null));
+            }
+
+            // TryReadErrorStringPropertyValueAsync has fast path for completed sync reads
+            return this.TryReadErrorStringPropertyValueAsync();
+        }
+
+        /// <summary>
+        /// Validates the inner error string property is not a duplicate, then tries to read it and add it to <paramref name="innerError"/>.
+        /// </summary>
+        /// <param name="innerError">Target inner error being populated.</param>
+        /// <param name="propertyName">Canonical JSON property name (message/type/stacktrace).</param>
+        /// <param name="propertyBitMask">Bit representing this property.</param>
+        /// <param name="propertiesFoundBitmask">Bitmask tracking previously seen properties (updated if successful).</param>
+        /// <returns><c>true</c> if the property was successfully read and added; otherwise <c>false</c>.</returns>
+        private ValueTask<bool> ValidateAndTryReadInnerErrorStringPropertyValueAsync(
+            ODataInnerError innerError,
+            string propertyName,
+            ODataJsonReaderUtils.ErrorPropertyBitMask propertyBitMask,
+            ref ODataJsonReaderUtils.ErrorPropertyBitMask propertiesFoundBitmask)
+        {
+            // Duplicate or already seen property?
+            if (!ODataJsonReaderUtils.ErrorPropertyNotFound(ref propertiesFoundBitmask, propertyBitMask))
+            {
+                return ValueTask.FromResult(false);
+            }
+
+            ValueTask<(bool IsReadSuccessfully, string PropertyValue)> readPropertyValueTask = this.TryReadErrorStringPropertyValueAsync();
+            if (readPropertyValueTask.IsCompletedSuccessfully)
+            {
+                return ValueTask.FromResult(ProcessResult(innerError, propertyName, readPropertyValueTask.Result));
+            }
+
+            return AwaitTryReadAndSetInnerErrorStringPropertyValueAsync(this, innerError, propertyName, readPropertyValueTask);
+
+            static bool ProcessResult(
+                ODataInnerError targetInnerError,
+                string targetPropertyName,
+                (bool IsReadSuccessfully, string PropertyValue) result)
+            {
+                if (!result.IsReadSuccessfully)
+                {
+                    return false;
+                }
+
+                targetInnerError.Properties.Add(targetPropertyName, new ODataPrimitiveValue(result.PropertyValue));
+
+                return true;
+            }
+
+            static async ValueTask<bool> AwaitTryReadAndSetInnerErrorStringPropertyValueAsync(
+                BufferingJsonReader thisParam,
+                ODataInnerError innerError,
+                string propertyName,
+                ValueTask<(bool IsReadSuccessfully, string PropertyValue)> pendingReadPropertyValueTask)
+            {
+                (bool IsReadSuccessfully, string PropertyValue) readPropertyValueTask = await pendingReadPropertyValueTask.ConfigureAwait(false);
+
+                return ProcessResult(innerError, propertyName, readPropertyValueTask);
+            }
+        }
+
+        /// <summary>
+        /// Validates the nested inner error property is not a duplicate, then recursively reads and assigns the nested inner error.
+        /// </summary>
+        /// <param name="innerError">Target inner error receiving the nested InnerError.</param>
+        /// <param name="propertiesFoundBitmask">Bitmask tracking previously seen properties (updated if successful).</param>
+        /// <param name="recursionDepth">Current recursion depth (used for depth validation).</param>
+        /// <returns><c>true</c> if a nested inner error was successfully read and attached; otherwise <c>false</c>.</returns>
+        private ValueTask<bool> ValidateAndTryReadNestedInnerErrorAsync(
+            ODataInnerError innerError,
+            ref ODataJsonReaderUtils.ErrorPropertyBitMask propertiesFoundBitmask,
+            int recursionDepth)
+        {
+            // Duplicate or already seen property?
+            if (!ODataJsonReaderUtils.ErrorPropertyNotFound(
+                ref propertiesFoundBitmask,
+                ODataJsonReaderUtils.ErrorPropertyBitMask.InnerError))
+            {
+                return ValueTask.FromResult(false);
+            }
+
+            ValueTask<(bool IsReadSuccessfully, ODataInnerError InnerError)> readPropertyValueTask = this.TryReadInnerErrorPropertyValueAsync(recursionDepth);
+            if (readPropertyValueTask.IsCompletedSuccessfully)
+            {
+                return ValueTask.FromResult(ProcessResult(innerError, readPropertyValueTask.Result));
+            }
+
+            return AwaitTryReadInnerErrorPropertyValueAsync(this, innerError, readPropertyValueTask);
+
+            static bool ProcessResult(
+                ODataInnerError targetInnerError,
+                (bool IsReadSuccessfully, ODataInnerError InnerError) result)
+            {
+                if (!result.IsReadSuccessfully)
+                {
+                    return false;
+                }
+
+                targetInnerError.InnerError = result.InnerError;
+
+                return true;
+            }
+
+            static async ValueTask<bool> AwaitTryReadInnerErrorPropertyValueAsync(
+                BufferingJsonReader thisParam,
+                ODataInnerError innerError,
+                ValueTask<(bool IsReadSuccessfully, ODataInnerError InnerError)> pendingReadPropertyValueTask)
+            {
+                (bool IsReadSuccessfully, ODataInnerError InnerError) readPropertyValueTask = await pendingReadPropertyValueTask.ConfigureAwait(false);
+
+                return ProcessResult(innerError, readPropertyValueTask);
+            }
         }
 
         /// <summary>
@@ -1849,21 +2269,36 @@ namespace Microsoft.OData.Json
         /// The value of the TResult parameter contains a tuple comprising of:
         /// 1). A value of true if a string value (or null) was read as property value of the current property; otherwise false.
         /// 2). The string value read if the method returns true; otherwise null.</returns>
-        private async Task<(bool IsReadSuccessfully, string PropertyValue)> TryReadErrorStringPropertyValueAsync()
+        private ValueTask<(bool IsReadSuccessfully, string PropertyValue)> TryReadErrorStringPropertyValueAsync()
         {
-            Debug.Assert(this.currentBufferedNode.NodeType == JsonNodeType.Property, "this.currentBufferedNode.NodeType == JsonNodeType.Property");
+            Debug.Assert(this.currentBufferedNode.NodeType == JsonNodeType.Property,
+                "this.currentBufferedNode.NodeType == JsonNodeType.Property");
             Debug.Assert(this.parsingInStreamError, "this.parsingInStreamError");
             this.AssertBuffering();
             this.AssertAsynchronous();
 
-            await this.ReadInternalAsync()
-                .ConfigureAwait(false);
+            Task readInternalTask = this.ReadInternalAsync();
+            if (readInternalTask.IsCompletedSuccessfully)
+            {
+                string stringValue = this.currentBufferedNode.Value as string;
+                bool isReadSuccessfully = this.currentBufferedNode.NodeType == JsonNodeType.PrimitiveValue
+                    && (this.currentBufferedNode.Value == null || stringValue != null);
 
-            // We expect a string value
-            string stringValue = this.currentBufferedNode.Value as string;
-            return (
-                this.currentBufferedNode.NodeType == JsonNodeType.PrimitiveValue && (this.currentBufferedNode.Value == null || stringValue != null),
-                stringValue);
+                return ValueTask.FromResult((isReadSuccessfully, stringValue));
+            }
+
+            return AwaitReadInternalAsync(this, readInternalTask);
+
+            static async ValueTask<(bool, string)> AwaitReadInternalAsync(BufferingJsonReader thisParam, Task pendingReadInternalTask)
+            {
+                await pendingReadInternalTask.ConfigureAwait(false);
+
+                string stringValue = thisParam.currentBufferedNode.Value as string;
+                bool isReadSuccessfully = thisParam.currentBufferedNode.NodeType == JsonNodeType.PrimitiveValue
+                    && (thisParam.currentBufferedNode.Value == null || stringValue != null);
+
+                return (isReadSuccessfully, stringValue);
+            }
         }
 
         /// <summary>
@@ -1876,36 +2311,45 @@ namespace Microsoft.OData.Json
         /// Post-Condition: JsonNodeType.PrimitiveValue, JsonNodeType.EndArray or JsonNodeType.EndObject
         /// </remarks>
         /// <returns>A task that represents the asynchronous read operation.</returns>
-        private async Task SkipValueInternalAsync()
+        private ValueTask SkipValueInternalAsync()
         {
             this.AssertAsynchronous();
 
             int depth = 0;
-            do
+
+            while (true)
             {
-                switch (this.currentBufferedNode.NodeType)
+                depth = AdjustDepth(depth, this.currentBufferedNode.NodeType);
+
+                Task<bool> readInternalTask = this.ReadInternalAsync();
+                if (!readInternalTask.IsCompletedSuccessfully)
                 {
-                    case JsonNodeType.PrimitiveValue:
-                        break;
-                    case JsonNodeType.StartArray:
-                    case JsonNodeType.StartObject:
-                        depth++;
-                        break;
-                    case JsonNodeType.EndArray:
-                    case JsonNodeType.EndObject:
-                        Debug.Assert(depth > 0, "Seen too many scope ends.");
-                        depth--;
-                        break;
-                    default:
-                        Debug.Assert(
-                            this.currentBufferedNode.NodeType != JsonNodeType.EndOfInput,
-                            "We should not have reached end of input, since the scopes should be well formed. Otherwise JsonReader should have failed by now.");
-                        break;
+                    return AwaitSkipValueInternalAsync(this, depth, readInternalTask);
                 }
 
-                await this.ReadInternalAsync()
-                    .ConfigureAwait(false);
-            } while (depth > 0);
+                // After completed synchronous advance, if depth is 0, we're done
+                if (depth == 0)
+                {
+                    return ValueTask.CompletedTask;
+                }
+            }
+
+            static async ValueTask AwaitSkipValueInternalAsync(BufferingJsonReader thisParam, int depth, Task<bool> pendingReadInternalTask)
+            {
+                while (true)
+                {
+                    await pendingReadInternalTask.ConfigureAwait(false);
+
+                    if (depth == 0)
+                    {
+                        return;
+                    }
+
+                    depth = AdjustDepth(depth, thisParam.currentBufferedNode.NodeType);
+
+                    pendingReadInternalTask = thisParam.ReadInternalAsync();
+                }
+            }
         }
 
         /// <summary>
@@ -1915,7 +2359,7 @@ namespace Microsoft.OData.Json
         /// <param name="value">The node value.</param>
         private void AddNewNodeToTheEndOfBufferedNodesList(JsonNodeType nodeType, object value)
         {
-            BufferedNode newNode = new BufferedNode(nodeType, value);
+            BufferedNode newNode = RentNode(nodeType, value);
             newNode.Previous = this.bufferedNodesHead.Previous;
             newNode.Next = this.bufferedNodesHead;
             this.bufferedNodesHead.Previous.Next = newNode;
@@ -1960,16 +2404,92 @@ namespace Microsoft.OData.Json
         }
 
 #endif
+
+        /// <summary>
+        /// Adjusts the running nesting depth counter based on the current node type,
+        /// incrementing for start scopes and decrementing for end scopes.
+        /// </summary>
+        /// <param name="currentDepth">The current nesting depth.</param>
+        /// <param name="nodeType">The node just encountered.</param>
+        /// <returns>The updated depth.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static int AdjustDepth(int currentDepth, JsonNodeType nodeType)
+        {
+            switch (nodeType)
+            {
+                case JsonNodeType.PrimitiveValue:
+                    return currentDepth;
+
+                case JsonNodeType.StartArray:
+                case JsonNodeType.StartObject:
+                    return currentDepth + 1;
+
+                case JsonNodeType.EndArray:
+                case JsonNodeType.EndObject:
+                    Debug.Assert(currentDepth > 0, "Seen too many scope ends.");
+                    return currentDepth - 1;
+
+                default:
+                    Debug.Assert(
+                        nodeType != JsonNodeType.EndOfInput,
+                        "We should not have reached end of input, since the scopes should be well formed. Otherwise JsonReader should have failed by now.");
+                    return currentDepth;
+            }
+        }
+
+        /// <summary>
+        /// Rents a node from the per-thread pool or creates a new instance.
+        /// </summary>
+        /// <param name="nodeType">The node type.</param>
+        /// <param name="nodeValue">The node value.</param>
+        /// <returns>A rented or newly created node.</returns>
+        private static BufferedNode RentNode(JsonNodeType nodeType, object nodeValue)
+        {
+            Stack<BufferedNode> nodePool = bufferedNodePool;
+            if (nodePool != null && nodePool.Count > 0)
+            {
+                BufferedNode node = nodePool.Pop();
+                node.Reset(nodeType, nodeValue);
+
+                return node;
+            }
+
+            return new BufferedNode(nodeType, nodeValue);
+        }
+
+        /// <summary>
+        /// Returns a node to the per-thread pool (breaking links and clearing value to release references).
+        /// </summary>
+        /// <param name="node">The node to return.</param>
+        private static void ReturnNode(BufferedNode node)
+        {
+            if (node == null)
+            {
+                return;
+            }
+
+            // Break object graph and value references
+            node.Reset(JsonNodeType.None, null);
+
+            Stack<BufferedNode> nodePool = bufferedNodePool ?? new Stack<BufferedNode>();
+            if (nodePool.Count < MaxPooledNodesPerThread)
+            {
+                nodePool.Push(node);
+                bufferedNodePool = nodePool;
+            }
+            // else let it be GC'ed
+        }
+
         /// <summary>
         /// Private class used to buffer nodes when reading in buffering mode.
         /// </summary>
         protected internal sealed class BufferedNode
         {
             /// <summary>The type of the node read.</summary>
-            private readonly JsonNodeType nodeType;
+            private JsonNodeType nodeType;
 
             /// <summary>The value of the node.</summary>
-            private readonly object nodeValue;
+            private object nodeValue;
 
             /// <summary>
             /// Constructor.
@@ -1980,6 +2500,20 @@ namespace Microsoft.OData.Json
             {
                 this.nodeType = nodeType;
                 this.nodeValue = value;
+                this.Previous = this;
+                this.Next = this;
+            }
+
+            /// <summary>
+            /// Reinitializes the node for reuse.
+            /// </summary>
+            /// <param name="nodeType">The type of the node.</param>
+            /// <param name="nodeValue">The value of the node.</param>
+            internal void Reset(JsonNodeType nodeType, object nodeValue)
+            {
+                this.nodeType = nodeType;
+                this.nodeValue = nodeValue;
+                // Break any previous links
                 this.Previous = this;
                 this.Next = this;
             }

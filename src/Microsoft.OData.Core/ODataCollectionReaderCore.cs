@@ -145,7 +145,7 @@ namespace Microsoft.OData
         {
             this.VerifyCanRead(true);
 
-            return this.InterceptException((thisParam) => thisParam.ReadSynchronously());
+            return this.InterceptException(static (thisParam) => thisParam.ReadSynchronously());
         }
 
         /// <summary>
@@ -156,7 +156,7 @@ namespace Microsoft.OData
         {
             this.VerifyCanRead(false);
 
-            return this.InterceptExceptionAsync((thisParam) => thisParam.ReadAsynchronously());
+            return this.InterceptExceptionAsync(static (thisParam) => thisParam.ReadAsynchronously());
         }
 
         /// <summary>

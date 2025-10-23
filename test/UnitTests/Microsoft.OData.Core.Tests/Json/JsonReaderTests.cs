@@ -150,6 +150,76 @@ namespace Microsoft.OData.Tests.Json
         }
 
         [Theory]
+        [InlineData("{ \"greeting\": \"\\u0048\\u0065\\u006C\\u006C\\u006F\" }", "Hello")]
+        [InlineData("{ \"emoji\": \"\\uD83D\\uDE03\" }", "😃")]
+        [InlineData("{ \"chinese\": \"\\u6211\\u662F\\u4E2D\\u6587\" }", "我是中文")]
+        [InlineData("{ \"symbol\": \"\\u00A9\" }", "©")]
+        [InlineData("{ \"currency\": \"\\u20AC\" }", "€")]
+        [InlineData("{ \"greek\": \"\\u03A9\" }", "Ω")]
+        [InlineData("{ \"cyrillic\": \"\\u0416\" }", "Ж")]
+        [InlineData("{ \"arabic\": \"\\u0627\" }", "ا")]
+        [InlineData("{ \"hebrew\": \"\\u05D0\" }", "א")]
+        [InlineData("{ \"chinese\": \"\\u4E2D\" }", "中")]
+        [InlineData("{ \"hiragana\": \"\\u3042\" }", "あ")]
+        [InlineData("{ \"math\": \"\\u221E\" }", "∞")]
+        [InlineData("{ \"arrow\": \"\\u2192\" }", "→")]
+        [InlineData("{ \"box\": \"\\u25A0\" }", "■")]
+        [InlineData("{ \"music\": \"\\u266B\" }", "♫")]
+        [InlineData("{ \"latin\": \"\\u00E9\" }", "é")]
+        [InlineData("{ \"emoji\": \"\\uD83D\\uDE0A\" }", "😊")]
+        [InlineData("{ \"rocket\": \"\\uD83D\\uDE80\" }", "🚀")]
+        [InlineData("{ \"sentence\": \"\\u0048\\u0065\\u006C\\u006C\\u006F, \\u4E16\\u754C!\" }", "Hello, 世界!")]
+        [InlineData("{ \"word\": \"\\u4E16\\u754C\" }", "世界")]
+        [InlineData("{ \"word\": \"\\u03A9\\u006D\\u0065\\u0067\\u0061\" }", "Ωmega")]
+        [InlineData("{ \"word\": \"\\u0045\\u0073\\u0070\\u0061\\u00F1\\u0061\" }", "España")]
+        [InlineData("{ \"word\": \"\\u05E9\\u05DC\\u05D5\\u05DD\" }", "שלום")]
+        public async Task ReadUnicodeHexValueAsync(string payload, string expected)
+        {
+            using (var reader = new JsonReader(new StringReader(payload), isIeee754Compatible: false))
+            {
+                await reader.ReadAsync(); // Read start of object
+                await reader.ReadAsync(); // Read property name - Data
+                await reader.ReadAsync(); // Position reader at the beginning of string
+                Assert.Equal(expected, await reader.GetValueAsync());
+            }
+        }
+
+        [Theory]
+        [InlineData("{ \"greeting\": \"\\u0048\\u0065\\u006C\\u006C\\u006F\" }", "Hello")]
+        [InlineData("{ \"emoji\": \"\\uD83D\\uDE03\" }", "😃")]
+        [InlineData("{ \"chinese\": \"\\u6211\\u662F\\u4E2D\\u6587\" }", "我是中文")]
+        [InlineData("{ \"symbol\": \"\\u00A9\" }", "©")]
+        [InlineData("{ \"currency\": \"\\u20AC\" }", "€")]
+        [InlineData("{ \"greek\": \"\\u03A9\" }", "Ω")]
+        [InlineData("{ \"cyrillic\": \"\\u0416\" }", "Ж")]
+        [InlineData("{ \"arabic\": \"\\u0627\" }", "ا")]
+        [InlineData("{ \"hebrew\": \"\\u05D0\" }", "א")]
+        [InlineData("{ \"chinese\": \"\\u4E2D\" }", "中")]
+        [InlineData("{ \"hiragana\": \"\\u3042\" }", "あ")]
+        [InlineData("{ \"math\": \"\\u221E\" }", "∞")]
+        [InlineData("{ \"arrow\": \"\\u2192\" }", "→")]
+        [InlineData("{ \"box\": \"\\u25A0\" }", "■")]
+        [InlineData("{ \"music\": \"\\u266B\" }", "♫")]
+        [InlineData("{ \"latin\": \"\\u00E9\" }", "é")]
+        [InlineData("{ \"emoji\": \"\\uD83D\\uDE0A\" }", "😊")]
+        [InlineData("{ \"rocket\": \"\\uD83D\\uDE80\" }", "🚀")]
+        [InlineData("{ \"sentence\": \"\\u0048\\u0065\\u006C\\u006C\\u006F, \\u4E16\\u754C!\" }", "Hello, 世界!")]
+        [InlineData("{ \"word\": \"\\u4E16\\u754C\" }", "世界")]
+        [InlineData("{ \"word\": \"\\u03A9\\u006D\\u0065\\u0067\\u0061\" }", "Ωmega")]
+        [InlineData("{ \"word\": \"\\u0045\\u0073\\u0070\\u0061\\u00F1\\u0061\" }", "España")]
+        [InlineData("{ \"word\": \"\\u05E9\\u05DC\\u05D5\\u05DD\" }", "שלום")]
+        public void ReadUnicodeHexValue(string payload, string expected)
+        {
+            using (var reader = new JsonReader(new StringReader(payload), isIeee754Compatible: false))
+            {
+                reader.Read(); // Read start of object
+                reader.Read(); // Read property name - Data
+                reader.Read(); // Position reader at the beginning of string
+                Assert.Equal(expected, reader.GetValue());
+            }
+        }
+
+        [Theory]
         [InlineData("{\"Data\":\"The \\r character\"}", "The \r character")]
         [InlineData("{\"Data\":\"The \\n character\"}", "The \n character")]
         [InlineData("{\"Data\":\"The \\t character\"}", "The \t character")]
@@ -651,7 +721,7 @@ namespace Microsoft.OData.Tests.Json
         [Theory]
         [InlineData("{\"Data\":\"The \\ r character\"}", "\\ ")]
         [InlineData("{\"Data\":\"The \\", "\\")]
-        [InlineData("{\"Data\":\"The \\u621", "\\uXXXX")]
+        [InlineData("{\"Data\":\"The \\u621", "\\u621")]
         [InlineData("{\"Data\":\"The \\u62 character\"}", "\\u62 c")]
         public async Task UnrecognizedEscapeSequenceThrowsException(string payload, string expected)
         {
