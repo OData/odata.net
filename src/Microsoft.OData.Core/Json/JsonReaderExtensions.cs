@@ -6,14 +6,15 @@
 
 namespace Microsoft.OData.Json
 {
-    using Microsoft.OData.Core;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Globalization;
     using System.IO;
+    using System.Runtime.CompilerServices;
     using System.Text;
     using System.Threading.Tasks;
+    using Microsoft.OData.Core;
 
     /// <summary>
     /// Extension methods for the JSON reader.
@@ -174,25 +175,8 @@ namespace Microsoft.OData.Json
             Debug.Assert(jsonReader != null, "jsonReader != null");
 
             object value = jsonReader.ReadPrimitiveValue();
-            double? doubleValue = value as double?;
-            if (value == null || doubleValue != null)
-            {
-                return doubleValue;
-            }
-
-            int? intValue = value as int?;
-            if (intValue != null)
-            {
-                return (double)intValue;
-            }
-
-            decimal? decimalValue = value as decimal?;
-            if (decimalValue != null)
-            {
-                return (double)decimalValue;
-            }
-
-            throw CreateException(Error.Format(SRResources.JsonReaderExtensions_CannotReadValueAsDouble, value));
+            
+            return CoerceToNullableDouble(value);
         }
 
         /// <summary>
@@ -207,27 +191,10 @@ namespace Microsoft.OData.Json
         {
             Debug.Assert(jsonReader != null, "jsonReader != null");
             int depth = 0;
+
             do
             {
-                switch (jsonReader.NodeType)
-                {
-                    case JsonNodeType.StartArray:
-                    case JsonNodeType.StartObject:
-                        depth++;
-                        break;
-
-                    case JsonNodeType.EndArray:
-                    case JsonNodeType.EndObject:
-                        Debug.Assert(depth > 0, "Seen too many scope ends.");
-                        depth--;
-                        break;
-
-                    default:
-                        Debug.Assert(
-                            jsonReader.NodeType != JsonNodeType.EndOfInput,
-                            "We should not have reached end of input, since the scopes should be well formed. Otherwise JsonReader should have failed by now.");
-                        break;
-                }
+                depth = AdjustDepth(depth, jsonReader.NodeType);
             }
             while (jsonReader.Read() && depth > 0);
 
@@ -235,7 +202,7 @@ namespace Microsoft.OData.Json
             {
                 // Not all open scopes were closed:
                 // "Invalid JSON. Unexpected end of input was found in JSON content. Not all object and array scopes were closed."
-                throw JsonReaderExtensions.CreateException(SRResources.JsonReader_EndOfInputWithOpenScope);
+                throw CreateException(SRResources.JsonReader_EndOfInputWithOpenScope);
             }
         }
 
@@ -309,7 +276,7 @@ namespace Microsoft.OData.Json
                     {
                         // Not all open scopes were closed:
                         // "Invalid JSON. Unexpected end of input was found in JSON content. Not all object and array scopes were closed."
-                        throw JsonReaderExtensions.CreateException(SRResources.JsonReader_EndOfInputWithOpenScope);
+                        throw CreateException(SRResources.JsonReader_EndOfInputWithOpenScope);
                     }
 
                     jsonWriter.Flush();
@@ -465,7 +432,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="jsonReader">The <see cref="JsonReader"/> to read from.</param>
         /// <returns>A task that represents the asynchronous read operation.</returns>
-        internal static Task ReadStartObjectAsync(this IJsonReader jsonReader)
+        internal static ValueTask ReadStartObjectAsync(this IJsonReader jsonReader)
         {
             Debug.Assert(jsonReader != null, "jsonReader != null");
 
@@ -477,7 +444,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="jsonReader">The <see cref="JsonReader"/> to read from.</param>
         /// <returns>A task that represents the asynchronous read operation.</returns>
-        internal static Task ReadEndObjectAsync(this IJsonReader jsonReader)
+        internal static ValueTask ReadEndObjectAsync(this IJsonReader jsonReader)
         {
             Debug.Assert(jsonReader != null, "jsonReader != null");
 
@@ -489,7 +456,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="jsonReader">The <see cref="JsonReader"/> to read from.</param>
         /// <returns>A task that represents the asynchronous read operation.</returns>
-        internal static Task ReadStartArrayAsync(this IJsonReader jsonReader)
+        internal static ValueTask ReadStartArrayAsync(this IJsonReader jsonReader)
         {
             Debug.Assert(jsonReader != null, "jsonReader != null");
 
@@ -501,7 +468,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="jsonReader">The <see cref="JsonReader"/> to read from.</param>
         /// <returns>A task that represents the asynchronous read operation.</returns>
-        internal static Task ReadEndArrayAsync(this IJsonReader jsonReader)
+        internal static ValueTask ReadEndArrayAsync(this IJsonReader jsonReader)
         {
             Debug.Assert(jsonReader != null, "jsonReader != null");
 
@@ -514,15 +481,26 @@ namespace Microsoft.OData.Json
         /// <param name="jsonReader">The <see cref="JsonReader"/> to read from.</param>
         /// <returns>A task that represents the asynchronous read operation.
         /// The value of the TResult parameter contains the property name of the current property node.</returns>
-        internal static async Task<string> GetPropertyNameAsync(this IJsonReader jsonReader)
+        internal static Task<string> GetPropertyNameAsync(this IJsonReader jsonReader)
         {
             Debug.Assert(jsonReader != null, "jsonReader != null");
             Debug.Assert(jsonReader.NodeType == JsonNodeType.Property, "jsonReader.NodeType == JsonNodeType.Property");
 
             // NOTE: the JSON reader already verifies that property names are strings and not null/empty
-            object value = await jsonReader.GetValueAsync()
-                .ConfigureAwait(false);
-            return (string)value;
+            Task<object> getValueTask = jsonReader.GetValueAsync();
+            if (getValueTask.IsCompletedSuccessfully)
+            {
+                return Task.FromResult((string)getValueTask.Result);
+            }
+
+            return AwaitGetValueAsync(getValueTask);
+
+            static async Task<string> AwaitGetValueAsync(Task<object> pendingGetValueTask)
+            {
+                object value = await pendingGetValueTask.ConfigureAwait(false);
+
+                return (string)value;
+            }
         }
 
         /// <summary>
@@ -531,17 +509,49 @@ namespace Microsoft.OData.Json
         /// <param name="jsonReader">The <see cref="JsonReader"/> to read from.</param>
         /// <returns>A task that represents the asynchronous read operation.
         /// The value of the TResult parameter contains the property name of the property node read.</returns>
-        internal static async Task<string> ReadPropertyNameAsync(this IJsonReader jsonReader)
+        internal static Task<string> ReadPropertyNameAsync(this IJsonReader jsonReader)
         {
             Debug.Assert(jsonReader != null, "jsonReader != null");
 
-            jsonReader.ValidateNodeType(JsonNodeType.Property);
-            string propertyName = await jsonReader.GetPropertyNameAsync()
-                .ConfigureAwait(false);
-            await jsonReader.ReadNextAsync()
-                .ConfigureAwait(false);
+            try
+            {
+                jsonReader.ValidateNodeType(JsonNodeType.Property);
+            }
+            catch (ODataException ex)
+            {
+                return Task.FromException<string>(ex);
+            }
 
-            return propertyName;
+            Task<string> getPropertyNameTask = jsonReader.GetPropertyNameAsync();
+            if (getPropertyNameTask.IsCompletedSuccessfully)
+            {
+                string propertyName = getPropertyNameTask.Result;
+                Task<JsonNodeType> readNextTask = jsonReader.ReadNextAsync();
+                if (readNextTask.IsCompletedSuccessfully)
+                {
+                    return Task.FromResult(propertyName); ;
+                }
+
+                return AwaitReadNextAsync(readNextTask, propertyName);
+            }
+
+            return AwaitGetPropertyNameAsync(jsonReader, getPropertyNameTask);
+
+            static async Task<string> AwaitReadNextAsync(Task pendingReadNextTask, string propertyName)
+            {
+                await pendingReadNextTask.ConfigureAwait(false);
+
+                return propertyName;
+            }
+
+            static async Task<string> AwaitGetPropertyNameAsync(IJsonReader jsonReaderParam, Task<string> pendingGetPropertyNameTask)
+            {
+                string propertyName = await pendingGetPropertyNameTask.ConfigureAwait(false);
+                await jsonReaderParam.ReadNextAsync()
+                    .ConfigureAwait(false);
+
+                return propertyName;
+            }
         }
 
         /// <summary>
@@ -550,16 +560,40 @@ namespace Microsoft.OData.Json
         /// <param name="jsonReader">The <see cref="JsonReader"/> to read from.</param>
         /// <returns>A task that represents the asynchronous read operation.
         /// The value of the TResult parameter contains the primitive value read from the reader.</returns>
-        internal static async Task<object> ReadPrimitiveValueAsync(this IJsonReader jsonReader)
+        internal static Task<object> ReadPrimitiveValueAsync(this IJsonReader jsonReader)
         {
             Debug.Assert(jsonReader != null, "jsonReader != null");
 
-            object value = await jsonReader.GetValueAsync()
-                .ConfigureAwait(false);
-            await ReadNextAsync(jsonReader, JsonNodeType.PrimitiveValue)
-                .ConfigureAwait(false);
+            Task<object> getValueTask = jsonReader.GetValueAsync();
+            if (getValueTask.IsCompletedSuccessfully)
+            {
+                object value = getValueTask.Result;
+                ValueTask readNextTask = ReadNextAsync(jsonReader, JsonNodeType.PrimitiveValue);
+                if (readNextTask.IsCompletedSuccessfully)
+                {
+                    return Task.FromResult(value);
+                }
+                
+                return AwaitReadNextAsync(readNextTask, value);
+            }
 
-            return value;
+            return AwaitGetValueAsync(jsonReader, getValueTask);
+
+            static async Task<object> AwaitReadNextAsync(ValueTask pendingReadNextTask, object value)
+            {
+                await pendingReadNextTask.ConfigureAwait(false);
+
+                return value;
+            }
+
+            static async Task<object> AwaitGetValueAsync(IJsonReader jsonReaderParam, Task<object> pendingGetValueTask)
+            {
+                object value = await pendingGetValueTask.ConfigureAwait(false);
+                await ReadNextAsync(jsonReaderParam, JsonNodeType.PrimitiveValue)
+                    .ConfigureAwait(false);
+
+                return value;
+            }
         }
 
         /// <summary>
@@ -570,26 +604,46 @@ namespace Microsoft.OData.Json
         /// <returns>A task that represents the asynchronous read operation.
         /// The value of the TResult parameter contains the string value read from the reader;
         /// throws an exception if no string value could be read.</returns>
-        internal static async Task<string> ReadStringValueAsync(this IJsonReader jsonReader, string propertyName = null)
+        internal static Task<string> ReadStringValueAsync(this IJsonReader jsonReader, string propertyName = null)
         {
             Debug.Assert(jsonReader != null, "jsonReader != null");
 
-            object value = await jsonReader.ReadPrimitiveValueAsync()
-                .ConfigureAwait(false);
-
-            string stringValue = value as string;
-            if (value == null || stringValue != null)
+            Task<object> readPrimitiveValueTask = jsonReader.ReadPrimitiveValueAsync();
+            if (readPrimitiveValueTask.IsCompletedSuccessfully)
             {
-                return stringValue;
+                try
+                {
+                    return Task.FromResult(ProcessResult(readPrimitiveValueTask.Result, propertyName));
+                }
+                catch (ODataException ex)
+                {
+                    return Task.FromException<string>(ex);
+                }
             }
 
-            if (!string.IsNullOrEmpty(propertyName))
+            return AwaitReadPrimitiveValueAsync(readPrimitiveValueTask, propertyName);
+
+            static string ProcessResult(object value, string propertyName)
             {
-                throw CreateException(Error.Format(SRResources.JsonReaderExtensions_CannotReadPropertyValueAsString, value, propertyName));
-            }
-            else
-            {
+                string stringValue = value as string;
+                if (value == null || stringValue != null)
+                {
+                    return stringValue;
+                }
+
+                if (!string.IsNullOrEmpty(propertyName))
+                {
+                    throw CreateException(Error.Format(SRResources.JsonReaderExtensions_CannotReadPropertyValueAsString, value, propertyName));
+                }
+
                 throw CreateException(Error.Format(SRResources.JsonReaderExtensions_CannotReadValueAsString, value));
+            }
+
+            static async Task<string> AwaitReadPrimitiveValueAsync(Task<object> pendingReadPrimitiveValueTask, string propertyName)
+            {
+                object value = await pendingReadPrimitiveValueTask.ConfigureAwait(false);
+
+                return ProcessResult(value, propertyName);
             }
         }
 
@@ -600,10 +654,22 @@ namespace Microsoft.OData.Json
         /// <returns>A task that represents the asynchronous read operation.
         /// The value of the TResult parameter contains the string value read from the reader as a URI;
         /// throws an exception if no string value could be read.</returns>
-        internal static async Task<Uri> ReadUriValueAsync(this IJsonReader jsonReader)
+        internal static Task<Uri> ReadUriValueAsync(this IJsonReader jsonReader)
         {
-            return UriUtils.StringToUri(await ReadStringValueAsync(jsonReader)
-                .ConfigureAwait(false));
+            Task<string> readStringValueTask = ReadStringValueAsync(jsonReader);
+            if (readStringValueTask.IsCompletedSuccessfully)
+            {
+                return Task.FromResult(UriUtils.StringToUri(readStringValueTask.Result));
+            }
+
+            return AwaitReadStringValueAsync(readStringValueTask);
+
+            static async Task<Uri> AwaitReadStringValueAsync(Task<string> pendingReadStringValueTask)
+            {
+                string stringValue = await pendingReadStringValueTask.ConfigureAwait(false);
+
+                return UriUtils.StringToUri(stringValue);
+            }
         }
 
         /// <summary>
@@ -613,32 +679,31 @@ namespace Microsoft.OData.Json
         /// <returns>A task that represents the asynchronous read operation.
         /// The value of the TResult parameter contains the double value read from the reader;
         /// throws an exception if no double value could be read.</returns>
-        internal static async Task<double?> ReadDoubleValueAsync(this IJsonReader jsonReader)
+        internal static Task<double?> ReadDoubleValueAsync(this IJsonReader jsonReader)
         {
             Debug.Assert(jsonReader != null, "jsonReader != null");
 
-            object value = await jsonReader.ReadPrimitiveValueAsync()
-                .ConfigureAwait(false);
-
-            double? doubleValue = value as double?;
-            if (value == null || doubleValue != null)
+            Task<object> readPrimitiveValueTask = jsonReader.ReadPrimitiveValueAsync();
+            if (readPrimitiveValueTask.IsCompletedSuccessfully)
             {
-                return doubleValue;
+                try
+                {
+                    return Task.FromResult(CoerceToNullableDouble(readPrimitiveValueTask.Result));
+                }
+                catch (ODataException ex)
+                {
+                    return Task.FromException<double?>(ex);
+                }
             }
 
-            int? intValue = value as int?;
-            if (intValue != null)
-            {
-                return (double)intValue;
-            }
+            return AwaitReadPrimitiveValueAsync(readPrimitiveValueTask);
 
-            decimal? decimalValue = value as decimal?;
-            if (decimalValue != null)
+            static async Task<double?> AwaitReadPrimitiveValueAsync(Task<object> pendingReadPrimitiveValueTask)
             {
-                return (double)decimalValue;
-            }
+                object value = await pendingReadPrimitiveValueTask.ConfigureAwait(false);
 
-            throw CreateException(Error.Format(SRResources.JsonReaderExtensions_CannotReadValueAsDouble, value));
+                return CoerceToNullableDouble(value);
+            }
         }
 
         /// <summary>
@@ -650,40 +715,71 @@ namespace Microsoft.OData.Json
         /// Post-Condition: JsonNodeType.PrimitiveValue, JsonNodeType.EndArray or JsonNodeType.EndObject
         /// </remarks>
         /// <returns>A task that represents the asynchronous read operation.</returns>
-        internal static async Task SkipValueAsync(this IJsonReader jsonReader)
+        internal static Task SkipValueAsync(this IJsonReader jsonReader)
         {
             Debug.Assert(jsonReader != null, "jsonReader != null");
             int depth = 0;
 
-            do
+            while (true)
             {
-                switch (jsonReader.NodeType)
+                // Adjust for the current node before advancing
+                depth = AdjustDepth(depth, jsonReader.NodeType);
+
+                Task<bool> readTask = jsonReader.ReadAsync();
+                if (!readTask.IsCompletedSuccessfully)
                 {
-                    case JsonNodeType.StartArray:
-                    case JsonNodeType.StartObject:
-                        depth++;
-                        break;
+                    return AwaitReadAsync(jsonReader, depth, readTask);
+                }
 
-                    case JsonNodeType.EndArray:
-                    case JsonNodeType.EndObject:
-                        Debug.Assert(depth > 0, "Seen too many scope ends.");
-                        depth--;
-                        break;
+                // End of input
+                if (!readTask.Result)
+                {
+                    break;
+                }
 
-                    default:
-                        Debug.Assert(
-                            jsonReader.NodeType != JsonNodeType.EndOfInput,
-                            "We should not have reached end of input, since the scopes should be well formed. Otherwise JsonReader should have failed by now.");
-                        break;
+                if (depth == 0)
+                {
+                    // Closed the entire value and advanced past it
+                    return Task.CompletedTask;
                 }
             }
-            while (await jsonReader.ReadAsync().ConfigureAwait(false) && depth > 0);
 
             if (depth > 0)
             {
                 // Not all open scopes were closed:
-                // "Invalid JSON. Unexpected end of input was found in JSON content. Not all object and array scopes were closed."
-                throw CreateException(SRResources.JsonReader_EndOfInputWithOpenScope);
+                return Task.FromException(CreateException(SRResources.JsonReader_EndOfInputWithOpenScope));
+            }
+
+            // Edge case: value ended exactly at end of input with depth 0
+            return Task.CompletedTask;
+
+            static async Task AwaitReadAsync(IJsonReader jsonReaderParam, int depthParam, Task<bool> pendingReadTask)
+            {
+                while (true)
+                {
+                    bool isReadSuccessfully = await pendingReadTask.ConfigureAwait(false);
+                    if (!isReadSuccessfully)
+                    {
+                        break;
+                    }
+
+                    // Finished (depth hit zero before advancing) - but we already advanced past the value
+                    if (depthParam == 0)
+                    {
+                        return;
+                    }
+
+                    // Process next node
+                    depthParam = AdjustDepth(depthParam, jsonReaderParam.NodeType);
+
+                    pendingReadTask = jsonReaderParam.ReadAsync();
+                }
+
+                if (depthParam > 0)
+                {
+                    // Not all open scopes were closed:
+                    throw CreateException(SRResources.JsonReader_EndOfInputWithOpenScope);
+                }
             }
         }
 
@@ -781,17 +877,30 @@ namespace Microsoft.OData.Json
         /// <param name="jsonReader">The reader to inspect.</param>
         /// <returns>A task that represents the asynchronous read operation.
         /// The value of the TResult parameter contains the <see cref="ODataUntypedValue"/> value read from the reader.</returns>
-        internal static async Task<ODataValue> ReadAsUntypedOrNullValueAsync(this IJsonReader jsonReader)
+        internal static Task<ODataValue> ReadAsUntypedOrNullValueAsync(this IJsonReader jsonReader)
         {
             StringBuilder builder = new StringBuilder();
-            await jsonReader.SkipValueAsync(builder)
-                .ConfigureAwait(false);
-            Debug.Assert(builder.Length > 0, "builder.Length > 0");
-
-            return new ODataUntypedValue()
+            Task skipValueTask = jsonReader.SkipValueAsync(builder);
+            if (skipValueTask.IsCompletedSuccessfully)
             {
-                RawValue = builder.ToString(),
-            };
+                Debug.Assert(builder.Length > 0, "builder.Length > 0");
+                return Task.FromResult<ODataValue>(new ODataUntypedValue()
+                {
+                    RawValue = builder.ToString(),
+                });
+            }
+
+            return AwaitSkipValueAsync(skipValueTask, builder);
+
+            static async Task<ODataValue> AwaitSkipValueAsync(Task pendingSkipValueTask, StringBuilder builderParam)
+            {
+                await pendingSkipValueTask.ConfigureAwait(false);
+                Debug.Assert(builderParam.Length > 0, $"{builderParam}.Length > 0");
+                return new ODataUntypedValue()
+                {
+                    RawValue = builderParam.ToString(),
+                };
+            }
         }
 
         /// <summary>
@@ -800,63 +909,21 @@ namespace Microsoft.OData.Json
         /// <param name="jsonReader">The reader to inspect.</param>
         /// <returns>A task that represents the asynchronous read operation.
         /// The value of the TResult parameter contains the <see cref="ODataValue"/> value read from the reader.</returns>
-        internal static async Task<ODataValue> ReadODataValueAsync(this IJsonReader jsonReader)
+        internal static Task<ODataValue> ReadODataValueAsync(this IJsonReader jsonReader)
         {
-            if (jsonReader.NodeType == JsonNodeType.PrimitiveValue)
+            switch (jsonReader.NodeType)
             {
-                object primitiveValue = await jsonReader.ReadPrimitiveValueAsync()
-                    .ConfigureAwait(false);
+                case JsonNodeType.PrimitiveValue:
+                    return jsonReader.ReadODataPrimitiveValueAsync();
 
-                return primitiveValue.ToODataValue();
-            }
-            else if (jsonReader.NodeType == JsonNodeType.StartObject)
-            {
-                await jsonReader.ReadStartObjectAsync()
-                    .ConfigureAwait(false);
-                ODataResourceValue resourceValue = new ODataResourceValue();
-                List<ODataProperty> properties = new List<ODataProperty>();
+                case JsonNodeType.StartObject:
+                    return jsonReader.ReadODataResourceValueAsync();
 
-                while (jsonReader.NodeType != JsonNodeType.EndObject)
-                {
-                    ODataProperty property = new ODataProperty();
-                    property.Name = await jsonReader.ReadPropertyNameAsync()
-                        .ConfigureAwait(false);
-                    property.Value = await jsonReader.ReadODataValueAsync()
-                        .ConfigureAwait(false);
-                    properties.Add(property);
-                }
+                case JsonNodeType.StartArray:
+                    return jsonReader.ReadODataCollectionValueAsync();
 
-                resourceValue.Properties = properties;
-
-                await jsonReader.ReadEndObjectAsync()
-                    .ConfigureAwait(false);
-
-                return resourceValue;
-            }
-            else if (jsonReader.NodeType == JsonNodeType.StartArray)
-            {
-                await jsonReader.ReadStartArrayAsync()
-                    .ConfigureAwait(false);
-                ODataCollectionValue collectionValue = new ODataCollectionValue();
-                List<object> properties = new List<object>();
-
-                while (jsonReader.NodeType != JsonNodeType.EndArray)
-                {
-                    ODataValue odataValue = await jsonReader.ReadODataValueAsync()
-                        .ConfigureAwait(false);
-                    properties.Add(odataValue);
-                }
-
-                collectionValue.Items = properties;
-                await jsonReader.ReadEndArrayAsync()
-                    .ConfigureAwait(false);
-
-                return collectionValue;
-            }
-            else
-            {
-                return await jsonReader.ReadAsUntypedOrNullValueAsync()
-                    .ConfigureAwait(false);
+                default:
+                    return jsonReader.ReadAsUntypedOrNullValueAsync();
             }
         }
 
@@ -866,25 +933,37 @@ namespace Microsoft.OData.Json
         /// <param name="jsonReader">The <see cref="JsonReader"/> to read from.</param>
         /// <returns>A task that represents the asynchronous read operation.
         /// The value of the TResult parameter contains the node type of the node that reader is positioned on after reading.</returns>
-        internal static async Task<JsonNodeType> ReadNextAsync(this IJsonReader jsonReader)
+        internal static Task<JsonNodeType> ReadNextAsync(this IJsonReader jsonReader)
         {
             Debug.Assert(jsonReader != null, "jsonReader != null");
 
+            Task<bool> readTask = jsonReader.ReadAsync();
+            if (readTask.IsCompletedSuccessfully)
+            {
 #if DEBUG
-            bool result = await jsonReader.ReadAsync()
-                .ConfigureAwait(false);
-            Debug.Assert(result, "JsonReader.ReadAsync returned false in an unexpected place.");
-#else
-            await jsonReader.ReadAsync()
-                .ConfigureAwait(false);
+                Debug.Assert(readTask.Result, "JsonReader.ReadAsync returned false in an unexpected place.");
 #endif
-            return jsonReader.NodeType;
+                return Task.FromResult(jsonReader.NodeType);
+            }
+
+            return AwaitReadAsync(readTask, jsonReader);
+
+            static async Task<JsonNodeType> AwaitReadAsync(Task<bool> pendingReadTask, IJsonReader jsonReaderParam)
+            {
+                bool result = await pendingReadTask.ConfigureAwait(false);
+
+#if DEBUG
+                Debug.Assert(result, "JsonReader.ReadAsync returned false in an unexpected place.");
+#endif
+                return jsonReaderParam.NodeType;
+            }
         }
 
         /// <summary>
         /// Asserts that the reader is not buffer.
         /// </summary>
         /// <param name="bufferedJsonReader">The <see cref="BufferingJsonReader"/> to read from.</param>
+        [DebuggerStepThrough]
         [Conditional("DEBUG")]
         internal static void AssertNotBuffering(this BufferingJsonReader bufferedJsonReader)
         {
@@ -897,6 +976,7 @@ namespace Microsoft.OData.Json
         /// Asserts that the reader is buffer.
         /// </summary>
         /// <param name="bufferedJsonReader">The <see cref="BufferingJsonReader"/> to read from.</param>
+        [DebuggerStepThrough]
         [Conditional("DEBUG")]
         internal static void AssertBuffering(this BufferingJsonReader bufferedJsonReader)
         {
@@ -911,6 +991,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="exceptionMessage">String to use for the exception message.</param>
         /// <returns>Exception to be thrown.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static ODataException CreateException(string exceptionMessage)
         {
             return new ODataException(exceptionMessage);
@@ -941,6 +1022,7 @@ namespace Microsoft.OData.Json
         /// <exception cref="ODataException">
         /// Thrown if the <see cref="IJsonReader.NodeType"/> of <paramref name="jsonReader"/> is not <paramref name="expectedNodeType"/>
         /// </exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static void ValidateNodeType(this IJsonReader jsonReader, JsonNodeType expectedNodeType)
         {
             Debug.Assert(jsonReader != null, "jsonReader != null");
@@ -957,13 +1039,125 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="jsonReader">The <see cref="JsonReader"/> to read from.</param>
         /// <param name="expectedNodeType">The expected <see cref="JsonNodeType"/> of the read node.</param>
-        private static async Task ReadNextAsync(this IJsonReader jsonReader, JsonNodeType expectedNodeType)
+        private static ValueTask ReadNextAsync(this IJsonReader jsonReader, JsonNodeType expectedNodeType)
         {
             Debug.Assert(jsonReader != null, "jsonReader != null");
             Debug.Assert(expectedNodeType != JsonNodeType.None, "expectedNodeType != JsonNodeType.None");
 
-            jsonReader.ValidateNodeType(expectedNodeType);
-            await jsonReader.ReadAsync().ConfigureAwait(false);
+            try
+            {
+                jsonReader.ValidateNodeType(expectedNodeType);
+            }
+            catch (ODataException ex)
+            {
+                return ValueTask.FromException(ex);
+            }
+
+            Task<bool> readTask = jsonReader.ReadAsync();
+            if (readTask.IsCompletedSuccessfully)
+            {
+                return ValueTask.CompletedTask;
+            }
+
+            return AwaitReadAsync(readTask);
+
+            static async ValueTask AwaitReadAsync(Task<bool> pendingReadTask)
+            {
+                await pendingReadTask.ConfigureAwait(false);
+            }
+        }
+
+        /// <summary>
+        /// Asynchronously reads a primitive value, and converts
+        /// the raw CLR value to an <see cref="ODataValue"/>.
+        /// </summary>
+        /// <param name="jsonReader">The <see cref="JsonReader"/> positioned on a PrimitiveValue node.</param>
+        /// <returns>A task that represents the asynchronous read operation.
+        /// The value of the TResult parameter contains the <see cref="ODataPrimitiveValue"/>.</returns>
+        private static Task<ODataValue> ReadODataPrimitiveValueAsync(this IJsonReader jsonReader)
+        {
+            Debug.Assert(jsonReader != null, "jsonReader != null");
+
+            Task<object> readPrimitiveValueTask = jsonReader.ReadPrimitiveValueAsync();
+            if (readPrimitiveValueTask.IsCompletedSuccessfully)
+            {
+                object primitiveValue = readPrimitiveValueTask.Result;
+
+                return Task.FromResult(primitiveValue.ToODataValue());
+            }
+
+            return AwaitReadPrimitiveValueAsync(readPrimitiveValueTask);
+
+            static async Task<ODataValue> AwaitReadPrimitiveValueAsync(Task<object> pendingReadPrimitiveValueTask)
+            {
+                object primitiveValue = await pendingReadPrimitiveValueTask.ConfigureAwait(false);
+
+                return primitiveValue.ToODataValue();
+            }
+        }
+
+        /// <summary>
+        /// Asynchronously reads an object value, and materializes
+        /// it as an <see cref="ODataResourceValue"/>.
+        /// </summary>
+        /// <param name="jsonReader">The <see cref="JsonReader"/> positioned on a StartObject node.</param>
+        /// <returns>A task that represents the asynchronous read operation.
+        /// The value of the TResult parameter contains the <see cref="ODataResourceValue"/>.</returns>
+        private static async Task<ODataValue> ReadODataResourceValueAsync(this IJsonReader jsonReader)
+        {
+            Debug.Assert(jsonReader != null, "jsonReader != null");
+
+            await jsonReader.ReadStartObjectAsync()
+                    .ConfigureAwait(false);
+            ODataResourceValue resourceValue = new ODataResourceValue();
+            List<ODataProperty> properties = new List<ODataProperty>();
+
+            while (jsonReader.NodeType != JsonNodeType.EndObject)
+            {
+                ODataProperty property = new ODataProperty();
+                property.Name = await jsonReader.ReadPropertyNameAsync()
+                    .ConfigureAwait(false);
+                property.Value = await jsonReader.ReadODataValueAsync()
+                    .ConfigureAwait(false);
+                properties.Add(property);
+            }
+
+            resourceValue.Properties = properties;
+
+            await jsonReader.ReadEndObjectAsync()
+                .ConfigureAwait(false);
+
+            return resourceValue;
+        }
+
+        /// <summary>
+        /// Asynchronously reads an array value, and materializes
+        /// it as an <see cref="ODataCollectionValue"/>.
+        /// </summary>
+        /// <param name="jsonReader">The <see cref="JsonReader"/> positioned on a StartArray node.</param>
+        /// <returns>A task that represents the asynchronous read operation.
+        /// The value of the TResult parameter contains the <see cref="ODataCollectionValue"/>.</returns>
+        private static async Task<ODataValue> ReadODataCollectionValueAsync(this IJsonReader jsonReader)
+        {
+            Debug.Assert(jsonReader != null, "jsonReader != null");
+
+            await jsonReader.ReadStartArrayAsync()
+                    .ConfigureAwait(false);
+            ODataCollectionValue collectionValue = new ODataCollectionValue();
+            List<object> properties = new List<object>();
+
+            while (jsonReader.NodeType != JsonNodeType.EndArray)
+            {
+                ODataValue odataValue = await jsonReader.ReadODataValueAsync()
+                    .ConfigureAwait(false);
+                properties.Add(odataValue);
+            }
+
+            collectionValue.Items = properties;
+            await jsonReader.ReadEndArrayAsync()
+                .ConfigureAwait(false);
+
+            return collectionValue;
         }
 
         /// <summary>
@@ -971,9 +1165,58 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="nodeType">The node type.</param>
         /// <returns>true if the node type is PrimitiveValue, StartObject or StartArray node; false otherwise.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static bool IsValueNodeType(JsonNodeType nodeType)
         {
             return nodeType == JsonNodeType.PrimitiveValue || nodeType == JsonNodeType.StartObject || nodeType == JsonNodeType.StartArray;
+        }
+
+        /// <summary>
+        /// Converts a boxed numeric (double, int, decimal) or null to a nullable double;
+        /// throws if the value is a non-null unsupported type.
+        /// </summary>
+        /// <param name="value">The boxed numeric or null.</param>
+        /// <returns>The coerced double value or null.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static double? CoerceToNullableDouble(object value)
+        {
+            return value switch
+            {
+                null => null,
+                double d => d,
+                int i => i,
+                decimal m => (double)m,
+                _ => throw CreateException(Error.Format(SRResources.JsonReaderExtensions_CannotReadValueAsDouble, value)),
+            };
+        }
+
+        /// <summary>
+        /// Adjusts the running nesting depth counter based on the current node type,
+        /// incrementing for start scopes and decrementing for end scopes.
+        /// </summary>
+        /// <param name="currentDepth">The current nesting depth.</param>
+        /// <param name="nodeType">The node just encountered.</param>
+        /// <returns>The updated depth.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static int AdjustDepth(int currentDepth, JsonNodeType nodeType)
+        {
+            switch (nodeType)
+            {
+                case JsonNodeType.StartArray:
+                case JsonNodeType.StartObject:
+                    return currentDepth + 1;
+
+                case JsonNodeType.EndArray:
+                case JsonNodeType.EndObject:
+                    Debug.Assert(currentDepth > 0, "Seen too many scope ends.");
+                    return currentDepth - 1;
+
+                default:
+                    Debug.Assert(
+                        nodeType != JsonNodeType.EndOfInput,
+                        "Unexpected EndOfInput inside SkipValueAsync depth traversal.");
+                    return currentDepth;
+            }
         }
     }
 }
