@@ -83,7 +83,9 @@ namespace Microsoft.OData.Json
         /// <returns>True if the current value can be streamed, otherwise false.</returns>
         public override bool CanStream()
         {
-            return (this.GetValue() is string || this.GetValue() == null);
+            object value = this.GetValue();
+
+            return value == null || value is string;
         }
 
 
@@ -164,7 +166,7 @@ namespace Microsoft.OData.Json
             if (getValueTask.IsCompletedSuccessfully)
             {
                 object value = getValueTask.Result;
-                return (value is string || value == null) ? Task.FromResult(true) : Task.FromResult(false);
+                return Task.FromResult(value == null || value is string);
             }
 
             return AwaitGetValueAsync(getValueTask);
@@ -173,7 +175,7 @@ namespace Microsoft.OData.Json
             {
                 object value = await pendingGetValueTask.ConfigureAwait(false);
                 
-                return value is string || value == null;
+                return value == null || value is string;
             }
         }
 

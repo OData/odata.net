@@ -596,14 +596,7 @@ namespace Microsoft.OData.Json
         /// true if the current value can be streamed; otherwise false.</returns>
         public Task<bool> CanStreamAsync()
         {
-            if (this.canStream)
-            {
-                return Task.FromResult(true);
-            }
-            else
-            {
-                return Task.FromResult(false);
-            }
+            return Task.FromResult(this.canStream);
         }
 
         /// <summary>

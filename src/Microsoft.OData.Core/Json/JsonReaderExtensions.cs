@@ -1180,27 +1180,14 @@ namespace Microsoft.OData.Json
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static double? CoerceToNullableDouble(object value)
         {
-            if (value == null)
+            return value switch
             {
-                return null;
-            }
-
-            if (value is double d)
-            {
-                return d;
-            }
-
-            if (value is int i)
-            {
-                return (double)i;
-            }
-
-            if (value is decimal m)
-            {
-                return (double)m;
-            }
-
-            throw CreateException(Error.Format(SRResources.JsonReaderExtensions_CannotReadValueAsDouble, value));
+                null => null,
+                double d => d,
+                int i => i,
+                decimal m => (double)m,
+                _ => throw CreateException(Error.Format(SRResources.JsonReaderExtensions_CannotReadValueAsDouble, value)),
+            };
         }
 
         /// <summary>

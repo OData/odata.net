@@ -26,6 +26,8 @@ namespace Microsoft.OData.Json
         // Keep pools small; tune via benchmarks.
         private const int MaxPooledNodesPerThread = 256;
 
+        // Per-thread pool: avoids lock contention and cross-thread reuse of linked nodes.
+        // Not for thread-safety of the reader instance itself (reader is single-threaded).
         [ThreadStatic]
         private static Stack<BufferedNode> bufferedNodePool;
 
@@ -229,7 +231,7 @@ namespace Microsoft.OData.Json
             }
 
             object value = this.GetValue();
-            return (value is string || value == null || this.NodeType == JsonNodeType.StartArray || this.NodeType == JsonNodeType.StartObject);
+            return value == null || value is string || this.NodeType == JsonNodeType.StartArray || this.NodeType == JsonNodeType.StartObject;
         }
 
         /// <summary>
@@ -301,7 +303,7 @@ namespace Microsoft.OData.Json
             {
                 Debug.Assert(this.currentBufferedNode != null, "this.currentBufferedNode != null");
                 BufferedNode node = this.currentBufferedNode;
-                if (node.Value is string || node.Value == null || node.NodeType == JsonNodeType.StartArray || node.NodeType == JsonNodeType.StartObject)
+                if (node.Value == null || node.Value is string || node.NodeType == JsonNodeType.StartArray || node.NodeType == JsonNodeType.StartObject)
                 {
                     return Task.FromResult(true);
                 }
