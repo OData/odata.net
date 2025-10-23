@@ -166,7 +166,7 @@ namespace Microsoft.OData
                 switch (primitiveKind)
                 {
                     case EdmPrimitiveTypeKind.Binary:
-                        return Convert.FromBase64String(text);
+                        return Convert.FromBase64String(text.Replace('-', '+').Replace('_', '/'));
                     case EdmPrimitiveTypeKind.Boolean:
                         return ConvertXmlBooleanValue(text);
                     case EdmPrimitiveTypeKind.Byte:

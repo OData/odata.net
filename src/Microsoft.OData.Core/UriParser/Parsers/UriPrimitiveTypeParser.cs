@@ -299,7 +299,7 @@ namespace Microsoft.OData.UriParser
 
             try
             {
-                targetValue = Convert.FromBase64String(text);
+                targetValue = Convert.FromBase64String(text.Replace('-', '+').Replace('_', '/'));
             }
             catch (FormatException)
             {
