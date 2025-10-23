@@ -4,6 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -115,9 +116,13 @@ namespace Microsoft.OData.Edm
         /// </summary>
         /// <param name="name">The name of the property being found.</param>
         /// <returns>The Edm.ComplexType is always without any declared properties.</returns>
-        public IEdmProperty FindProperty(string name)
-        {
-            return null;
-        }
+        public IEdmProperty FindProperty(string name) => null;
+
+        /// <summary>
+        /// Searches for a structural or navigation property with the given name in this type.
+        /// </summary>
+        /// <param name="name">The name of the property being found.</param>
+        /// <returns>The Edm.ComplexType is always without any declared properties.</returns>
+        public IEdmProperty FindProperty(ReadOnlySpan<char> name) => null;
     }
 }

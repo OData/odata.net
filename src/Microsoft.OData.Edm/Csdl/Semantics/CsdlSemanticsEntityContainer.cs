@@ -118,22 +118,28 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             get { return this.operationImportsDictionaryCache.GetValue(this, ComputeOperationImportsDictionaryFunc, null); }
         }
 
-        public IEdmEntitySet FindEntitySet(string name)
+        public IEdmEntitySet FindEntitySet(string name) => FindEntitySet(name.AsSpan());
+
+        public IEdmEntitySet FindEntitySet(ReadOnlySpan<char> name)
         {
-            IEdmEntitySet element;
-            return this.EntitySetDictionary.TryGetValue(name, out element) ? element : null;
+            Dictionary<string, IEdmEntitySet>.AlternateLookup<ReadOnlySpan<char>> lookup = this.EntitySetDictionary.GetAlternateLookup<ReadOnlySpan<char>>();
+            return lookup.TryGetValue(name, out IEdmEntitySet element) ? element : null;
         }
 
-        public IEdmSingleton FindSingleton(string name)
+        public IEdmSingleton FindSingleton(string name) => FindSingleton(name.AsSpan());
+
+        public IEdmSingleton FindSingleton(ReadOnlySpan<char> name)
         {
-            IEdmSingleton element;
-            return this.SingletonDictionary.TryGetValue(name, out element) ? element : null;
+            Dictionary<string, IEdmSingleton>.AlternateLookup<ReadOnlySpan<char>> lookup = this.SingletonDictionary.GetAlternateLookup<ReadOnlySpan<char>>();
+            return lookup.TryGetValue(name, out IEdmSingleton element) ? element : null;
         }
 
-        public IEnumerable<IEdmOperationImport> FindOperationImports(string operationName)
+        public IEnumerable<IEdmOperationImport> FindOperationImports(string operationName) => FindOperationImports(operationName.AsSpan());
+
+        public IEnumerable<IEdmOperationImport> FindOperationImports(ReadOnlySpan<char> operationName)
         {
-            object element;
-            if (this.OperationImportsDictionary.TryGetValue(operationName, out element))
+            Dictionary<string, object>.AlternateLookup<ReadOnlySpan<char>> lookup = this.OperationImportsDictionary.GetAlternateLookup<ReadOnlySpan<char>>();
+            if (lookup.TryGetValue(operationName, out object element))
             {
                 List<IEdmOperationImport> listElement = element as List<IEdmOperationImport>;
                 if (listElement != null)

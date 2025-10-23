@@ -4,6 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OData.Edm.Validation;
@@ -30,52 +31,27 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             this.operationReturn = new EdmOperationReturn(this, this.returnType);
         }
 
-        public string Namespace
-        {
-            get { return this.namespaceName; }
-        }
+        public string Namespace => this.namespaceName;
 
-        public string Name
-        {
-            get { return this.name; }
-        }
+        public string Name => this.name;
 
         /// <summary>
         /// Gets the full name of this schema element.
         /// </summary>
-        public string FullName
-        {
-            get { return this.fullName; }
-        }
+        public string FullName => this.fullName;
 
-        public IEdmOperationReturn Return
-        {
-            get { return this.operationReturn; }
-        }
+        public IEdmOperationReturn Return => this.operationReturn;
 
-        public IEnumerable<IEdmOperationParameter> Parameters
-        {
-            get { return Enumerable.Empty<IEdmOperationParameter>(); }
-        }
+        public IEnumerable<IEdmOperationParameter> Parameters => Enumerable.Empty<IEdmOperationParameter>();
 
-        public bool IsBound
-        {
-            get { return false; }
-        }
+        public bool IsBound => false;
 
-        public IEdmPathExpression EntitySetPath
-        {
-            get { return null; }
-        }
+        public IEdmPathExpression EntitySetPath => null;
 
-        public EdmSchemaElementKind SchemaElementKind
-        {
-            get { return EdmSchemaElementKind.None; }
-        }
+        public EdmSchemaElementKind SchemaElementKind => EdmSchemaElementKind.None;
 
-        public IEdmOperationParameter FindParameter(string name)
-        {
-            return null;
-        }
+        public IEdmOperationParameter FindParameter(string name) => null;
+
+        public IEdmOperationParameter FindParameter(ReadOnlySpan<char> name) => null;
     }
 }

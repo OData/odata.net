@@ -78,7 +78,25 @@ public class StubEdmModel : StubEdmElement, IEdmModel, IEnumerable
             throw new ArgumentNullException("qualifiedName");
         }
 
-        return this.schemaElements.OfType<IEdmSchemaType>().FirstOrDefault(e => (e.FullName() == qualifiedName));
+        return FindDeclaredType(qualifiedName.AsSpan());
+    }
+
+    /// <summary>
+    /// Finds a schema type by name
+    /// </summary>
+    /// <param name="qualifiedName">the qualified name of the element</param>
+    /// <returns>the schema type</returns>
+    public IEdmSchemaType FindDeclaredType(ReadOnlySpan<char> qualifiedName)
+    {
+        foreach (var type in this.schemaElements.OfType<IEdmSchemaType>())
+        {
+            if (qualifiedName.Equals(type.FullName(), StringComparison.Ordinal))
+            {
+                return type;
+            }
+        }
+
+        return null;
     }
 
     /// <summary>
@@ -93,22 +111,52 @@ public class StubEdmModel : StubEdmElement, IEdmModel, IEnumerable
             throw new ArgumentNullException("qualifiedName");
         }
 
-        return this.schemaElements.OfType<IEdmTerm>().FirstOrDefault(e => e.FullName() == qualifiedName);
+        return FindDeclaredTerm(qualifiedName.AsSpan());
     }
 
     /// <summary>
-    /// Finds a schema type by name
+    /// Finds a term by name
+    /// </summary>
+    /// <param name="qualifiedName">the qualified name of the element</param>
+    /// <returns>the term</returns>
+    public IEdmTerm FindDeclaredTerm(ReadOnlySpan<char> qualifiedName)
+    {
+        foreach (var term in this.schemaElements.OfType<IEdmTerm>())
+        {
+            if (qualifiedName.Equals(term.FullName(), StringComparison.Ordinal))
+            {
+                return term;
+            }
+        }
+
+        return null;
+    }
+
+    /// <summary>
+    /// Finds operations type by name
     /// </summary>
     /// <param name="qualifiedName">the qualified name of the element</param>
     /// <returns>the schema type</returns>
     public IEnumerable<IEdmOperation> FindDeclaredOperations(string qualifiedName)
+        => FindDeclaredOperations(qualifiedName.AsSpan());
+
+    /// <summary>
+    /// Finds operations by name
+    /// </summary>
+    /// <param name="qualifiedName">the qualified name of the element</param>
+    /// <returns>the schema type</returns>
+    public IEnumerable<IEdmOperation> FindDeclaredOperations(ReadOnlySpan<char> qualifiedName)
     {
-        if (qualifiedName == null)
+        IList<IEdmOperation> operations = new List<IEdmOperation>();
+        foreach (var operation in this.schemaElements.OfType<IEdmOperation>())
         {
-            throw new ArgumentNullException("qualifiedName");
+            if (qualifiedName.Equals(operation.FullName(), StringComparison.Ordinal))
+            {
+                operations.Add(operation);
+            }
         }
 
-        return this.schemaElements.OfType<IEdmOperation>().Where(e => e.FullName() == qualifiedName);
+        return operations;
     }
 
     /// <summary>
@@ -133,6 +181,19 @@ public class StubEdmModel : StubEdmElement, IEdmModel, IEnumerable
     /// A set of operations that share the qualified name and binding type or empty enumerable if no such operation exists.
     /// </returns>
     public IEnumerable<IEdmOperation> FindDeclaredBoundOperations(string qualifiedName, IEdmType bindingType)
+    {
+        return this.FindDeclaredOperations(qualifiedName).Where(o => o.IsBound && o.Parameters.Any() && o.HasEquivalentBindingType(bindingType));
+    }
+
+    /// <summary>
+    /// Searches for bound operations based on the qualified name and binding type, returns an empty enumerable if no operation exists.
+    /// </summary>
+    /// <param name="qualifiedName">The qualified name of the operation.</param>
+    /// <param name="bindingType">Type of the binding.</param>
+    /// <returns>
+    /// A set of operations that share the qualified name and binding type or empty enumerable if no such operation exists.
+    /// </returns>
+    public IEnumerable<IEdmOperation> FindDeclaredBoundOperations(ReadOnlySpan<char> qualifiedName, IEdmType bindingType)
     {
         return this.FindDeclaredOperations(qualifiedName).Where(o => o.IsBound && o.Parameters.Any() && o.HasEquivalentBindingType(bindingType));
     }
