@@ -2042,6 +2042,9 @@
   <data name="ApplyBinder_AggregateExpressionNotSingleValue" xml:space="preserve">
     <value>$apply/aggregate expression '{0}' must evaluate to a single value.</value>
   </data>
+  <data name="ApplyBinder_AggregateExpressionNodeNotSupported" xml:space="preserve">
+    <value>$apply/aggregate expression node kind '{0}' is not supported.</value>
+  </data>
   <data name="ApplyBinder_GroupByPropertyNotPropertyAccessValue" xml:space="preserve">
     <value>$apply/groupby grouping expression '{0}' must evaluate to a property access value.</value>
   </data>
@@ -2050,6 +2053,9 @@
   </data>
   <data name="ApplyBinder_UnsupportedGroupByChild" xml:space="preserve">
     <value>$apply/groupby not support '{0}' as child transformation</value>
+  </data>
+  <data name="ApplyBinder_AggregateCollectionExpressionOnlySupportCustomMethod" xml:space="preserve">
+    <value>$apply/aggregate collection expression must apply to custom mothod.</value>
   </data>
   <data name="AggregateTransformationNode_UnsupportedAggregateExpressions" xml:space="preserve">
     <value>There are unsupported aggregation expressions in the transformation node.</value>

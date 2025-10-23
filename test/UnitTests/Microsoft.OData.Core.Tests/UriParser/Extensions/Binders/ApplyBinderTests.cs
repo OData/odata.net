@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.OData.Edm;
 using Microsoft.OData.Tests.UriParser.Binders;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.UriParser.Aggregation;
@@ -37,6 +38,55 @@ namespace Microsoft.OData.Tests.UriParser.Extensions.Binders
             ApplyBinder binder = new ApplyBinder(FakeBindMethods.BindSingleComplexProperty, _bindingState);
             Action bind = () => binder.BindApply(null);
             Assert.Throws<ArgumentNullException>("tokens", bind);
+        }
+
+        [Fact]
+        public void BindApplyWithAggregateOnCollectionPropertyShouldReturnApplyClause()
+        {
+            string customFunctionName = "NS.UnionDate";
+
+            EdmModel model = new EdmModel();
+
+            EdmEntityType person = new EdmEntityType("NS", "Person");
+            EdmProperty property = person.AddStructuralProperty("MyDates", new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetDate(true))));
+            model.AddElement(person);
+            EdmEntityContainer container = new EdmEntityContainer("NS", "Container");
+            EdmEntitySet people = container.AddEntitySet("People", person);
+            model.AddElement(container);
+
+            var argument = EdmCoreModel.GetCollection(EdmCoreModel.Instance.GetDate(/*isNullable*/false));
+            var existingCustomFunctionSignature = new FunctionSignatureWithReturnType(argument, argument);
+            model.AddCustomUriFunction(customFunctionName, existingCustomFunctionSignature);
+
+            UriQueryExpressionParser parser = new UriQueryExpressionParser(model, 50);
+            IEnumerable<QueryToken> tokens = parser.ParseApply($"aggregate(MyDates with {customFunctionName} as UnionDate)");
+
+            ODataUriParserConfiguration configuration = new ODataUriParserConfiguration(model);
+            BindingState bindingState = new BindingState(configuration);
+
+            ResourceRangeVariable PeopleEntityRangeVariable = new ResourceRangeVariable("p", new EdmEntityTypeReference(person, true), people);
+
+            ResourceRangeVariableReferenceNode personNode =
+            new ResourceRangeVariableReferenceNode("p", PeopleEntityRangeVariable);
+
+            CollectionPropertyAccessNode collectionPropertyAccessNode = new CollectionPropertyAccessNode(personNode, property);
+
+            ApplyBinder binder = new ApplyBinder(q => collectionPropertyAccessNode, bindingState, configuration, null);
+            ApplyClause actual = binder.BindApply(tokens);
+
+            Assert.NotNull(actual);
+            AggregateTransformationNode aggregate = Assert.IsType<AggregateTransformationNode>(Assert.Single(actual.Transformations));
+
+            Assert.Equal(TransformationNodeKind.Aggregate, aggregate.Kind);
+            Assert.NotNull(aggregate.AggregateExpressions);
+
+            AggregateCollectionExpression statement = Assert.IsType<AggregateCollectionExpression>(Assert.Single(aggregate.AggregateExpressions));
+            Assert.Same(statement.Expression, collectionPropertyAccessNode);
+
+            Assert.Equal(AggregationMethod.Custom, statement.Method);
+            Assert.Equal(customFunctionName, statement.MethodDefinition.MethodLabel);
+            Assert.Equal("Collection(Edm.Date)", statement.TypeReference.FullName());
+            Assert.Equal("UnionDate", statement.Alias);
         }
 
         [Fact]

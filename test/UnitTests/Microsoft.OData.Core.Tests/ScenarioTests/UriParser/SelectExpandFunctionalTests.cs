@@ -2305,6 +2305,35 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Fact]
+        public void ApplyAggregateCollectionPropertyTreatedAsOpenPropertyInSelect()
+        {
+            string customFunctionName = "NS.UnionDate";
+
+            EdmModel model = new EdmModel();
+
+            EdmEntityType person = new EdmEntityType("NS", "Person");
+            EdmProperty property = person.AddStructuralProperty("MyDates", new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetDate(true))));
+            model.AddElement(person);
+            EdmEntityContainer container = new EdmEntityContainer("NS", "Container");
+            EdmEntitySet people = container.AddEntitySet("People", person);
+            model.AddElement(container);
+
+            var argument = EdmCoreModel.GetCollection(EdmCoreModel.Instance.GetDate(/*isNullable*/false));
+            var existingCustomFunctionSignature = new FunctionSignatureWithReturnType(argument, argument);
+            model.AddCustomUriFunction(customFunctionName, existingCustomFunctionSignature);
+
+            var odataQueryOptionParser = new ODataQueryOptionParser(model, person, people,
+                new Dictionary<string, string>()
+                {
+                    {"$select", "UnionDate"},
+                    {"$apply", $"aggregate(MyDates with {customFunctionName} as UnionDate)"}
+                });
+            odataQueryOptionParser.ParseApply();
+            var selectClause = odataQueryOptionParser.ParseSelectAndExpand();
+            AssertSelectString("UnionDate", selectClause);
+        }
+
+        [Fact]
         public void SelectAfterApplyReferencingCollapsedPropertyThrows()
         {
             var odataQueryOptionParser = new ODataQueryOptionParser(HardCodedTestModel.TestModel,
