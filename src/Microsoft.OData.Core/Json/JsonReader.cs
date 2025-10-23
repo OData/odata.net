@@ -232,7 +232,7 @@ namespace Microsoft.OData.Json
                     }
                     else
                     {
-                        this.nodeValue = this.ParseStringPrimitiveValue(out _);
+                        this.nodeValue = GetCommonOrNewString(this.ParseStringPrimitiveValue(out _));
                     }
                 }
             }
@@ -564,10 +564,10 @@ namespace Microsoft.OData.Json
             else
             {
                 // Quoted string (or single‑quoted for compat); fast-path if already completed.
-                ValueTask<(string Value, bool HasLeadingBackslash)> parseStringTask = this.ParseStringPrimitiveValueAsync();
+                ValueTask<(ReadOnlyMemory<char> Value, bool HasLeadingBackslash)> parseStringTask = this.ParseStringPrimitiveValueAsync();
                 if (parseStringTask.IsCompletedSuccessfully)
                 {
-                    this.nodeValue = parseStringTask.Result.Value;
+                    this.nodeValue = GetCommonOrNewString(parseStringTask.Result.Value.Span);
                     return Task.FromResult(this.nodeValue);
                 }
 
@@ -581,10 +581,10 @@ namespace Microsoft.OData.Json
                 return thisParam.nodeValue;
             }
 
-            static async Task<object> AwaitStringValueAsync(JsonReader thisParam, ValueTask<(string Value, bool HasLeadingBackslash)> pendingParseStringTask)
+            static async Task<object> AwaitStringValueAsync(JsonReader thisParam, ValueTask<(ReadOnlyMemory<char> Value, bool HasLeadingBackslash)> pendingParseStringTask)
             {
-                (string Value, bool HasLeadingBackslash) result = await pendingParseStringTask.ConfigureAwait(false);
-                thisParam.nodeValue = result.Value;
+                (ReadOnlyMemory<char> Value, bool HasLeadingBackslash) result = await pendingParseStringTask.ConfigureAwait(false);
+                thisParam.nodeValue = GetCommonOrNewString(result.Value.Span);
                 return thisParam.nodeValue;
             }
         }
@@ -976,18 +976,22 @@ namespace Microsoft.OData.Json
             this.PushScope(ScopeType.Property);
 
             // Parse the name of the property
-            this.nodeValue = this.ParseName();
+            ReadOnlySpan<char> token = this.ParseName();
 
-            if (string.IsNullOrEmpty((string)this.nodeValue))
+            if (token.IsEmpty)
             {
+                this.nodeValue = string.Empty;
+
                 // The name can't be empty.
-                throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_InvalidPropertyNameOrUnexpectedComma, (string)this.nodeValue));
+                throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_InvalidPropertyNameOrUnexpectedComma, this.nodeValue));
             }
+
+            this.nodeValue = GetCommonOrNewString(token);
 
             if (!this.SkipWhitespaces() || this.characterBuffer[this.tokenStartIndex] != ':')
             {
                 // We need the colon character after the property name
-                throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_MissingColon, (string)this.nodeValue));
+                throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_MissingColon, this.nodeValue));
             }
 
             // Consume the colon.
@@ -1008,7 +1012,7 @@ namespace Microsoft.OData.Json
         /// Assumes that the current token position points to the opening quote.
         /// Note that the string parsing can never end with EndOfInput, since we're already seen the quote.
         /// So it can either return a string successfully or fail.</remarks>
-        private string ParseStringPrimitiveValue()
+        private ReadOnlySpan<char> ParseStringPrimitiveValue()
         {
             return this.ParseStringPrimitiveValue(out _);
         }
@@ -1024,7 +1028,7 @@ namespace Microsoft.OData.Json
         /// Note that the string parsing can never end with EndOfInput, since we're already seen the quote.
         /// So it can either return a string successfully or fail.</remarks>
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "Splitting the function would make it hard to understand.")]
-        private string ParseStringPrimitiveValue(out bool hasLeadingBackslash)
+        private ReadOnlySpan<char> ParseStringPrimitiveValue(out bool hasLeadingBackslash)
         {
             Debug.Assert(this.tokenStartIndex < this.storedCharacterCount, "At least the quote must be present.");
 
@@ -1065,7 +1069,7 @@ namespace Microsoft.OData.Json
                         }
                         else
                         {
-                            this.stringValueBuilder.Length = 0;
+                            this.stringValueBuilder.Clear();
                         }
 
                         valueBuilder = this.stringValueBuilder;
@@ -1118,14 +1122,7 @@ namespace Microsoft.OData.Json
                                 throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_UnrecognizedEscapeSequence, "\\uXXXX"));
                             }
 
-                            string unicodeHexValue = this.ConsumeTokenToString(4);
-                            int characterValue;
-                            if (!Int32.TryParse(unicodeHexValue, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out characterValue))
-                            {
-                                throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_UnrecognizedEscapeSequence, "\\u" + unicodeHexValue));
-                            }
-
-                            valueBuilder.Append((char)characterValue);
+                            valueBuilder.Append((char)this.ParseUnicodeHexValue());
                             break;
                         default:
                             throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_UnrecognizedEscapeSequence, "\\" + character));
@@ -1134,15 +1131,15 @@ namespace Microsoft.OData.Json
                 else if (character == openingQuoteCharacter)
                 {
                     // Consume everything up to the quote character
-                    string result;
+                    ReadOnlySpan<char> result;
                     if (valueBuilder != null)
                     {
                         this.ConsumeTokenAppendToBuilder(valueBuilder, currentCharacterTokenRelativeIndex);
-                        result = valueBuilder.ToString();
+                        result = valueBuilder.ToString().AsSpan();
                     }
                     else
                     {
-                        result = this.ConsumeTokenToString(currentCharacterTokenRelativeIndex);
+                        result = this.ConsumeTokenToSpan(currentCharacterTokenRelativeIndex);
                     }
 
                     Debug.Assert(this.characterBuffer[this.tokenStartIndex] == openingQuoteCharacter, "We should have consumed everything up to the quote character.");
@@ -1173,11 +1170,11 @@ namespace Microsoft.OData.Json
                 "The method should only be called when the 'n' character is the start of the token.");
 
             // We can call ParseName since we know the first character is 'n' and thus it won't be quoted.
-            string token = this.ParseName();
+            ReadOnlySpan<char> token = this.ParseName();
 
-            if (!string.Equals(token, JsonConstants.JsonNullLiteral, StringComparison.Ordinal))
+            if (!token.SequenceEqual(JsonConstants.JsonNullLiteral.AsSpan()))
             {
-                throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_UnexpectedToken, token));
+                throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_UnexpectedToken, token.ToString()));
             }
 
             return null;
@@ -1195,19 +1192,19 @@ namespace Microsoft.OData.Json
                 "The method should only be called when the 't' or 'f' character is the start of the token.");
 
             // We can call ParseName since we know the first character is 't' or 'f' and thus it won't be quoted.
-            string token = this.ParseName();
+            ReadOnlySpan<char> token = this.ParseName();
 
-            if (string.Equals(token, JsonConstants.JsonFalseLiteral, StringComparison.Ordinal))
+            if (token.SequenceEqual(JsonConstants.JsonFalseLiteral.AsSpan()))
             {
                 return false;
             }
 
-            if (string.Equals(token, JsonConstants.JsonTrueLiteral, StringComparison.Ordinal))
+            if (token.SequenceEqual(JsonConstants.JsonTrueLiteral.AsSpan()))
             {
                 return true;
             }
 
-            throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_UnexpectedToken, token));
+            throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_UnexpectedToken, token.ToString()));
         }
 
         /// <summary>
@@ -1238,20 +1235,20 @@ namespace Microsoft.OData.Json
             }
 
             // We now have all the characters which belong to the number, consume it into a string.
-            string numberString = this.ConsumeTokenToString(currentCharacterTokenRelativeIndex);
+            ReadOnlySpan<char> numberSpan = this.ConsumeTokenToSpan(currentCharacterTokenRelativeIndex);
             
-            return ParseNumericToken(numberString);
+            return ParseNumericToken(numberSpan);
         }
 
         /// <summary>
         /// Parses a name token.
         /// </summary>
-        /// <returns>The value of the name token.</returns>
+        /// <returns>The value <see cref="ReadOnlySpan<char>"/> of the name token.</returns>
         /// <remarks>Name tokens are (for backward compat reasons) either
         /// - string value quoted with double quotes.
         /// - string value quoted with single quotes.
         /// - sequence of letters, digits, underscores and dollar signs (without quoted and in any order).</remarks>
-        private string ParseName()
+        private ReadOnlySpan<char> ParseName()
         {
             Debug.Assert(this.tokenStartIndex < this.storedCharacterCount, "Must have at least one character available.");
 
@@ -1280,7 +1277,7 @@ namespace Microsoft.OData.Json
             }
             while ((this.tokenStartIndex + currentCharacterTokenRelativeIndex) < this.storedCharacterCount || this.ReadInput());
 
-            return this.ConsumeTokenToString(currentCharacterTokenRelativeIndex);
+            return this.ConsumeTokenToSpan(currentCharacterTokenRelativeIndex);
         }
 
         /// <summary>
@@ -1379,8 +1376,7 @@ namespace Microsoft.OData.Json
                                 throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_UnrecognizedEscapeSequence, "\\uXXXX"));
                             }
 
-                            int characterValue = ParseUnicodeHexValue();
-                            character = (char)characterValue;
+                            character = (char)this.ParseUnicodeHexValue();
 
                             // We are already positioned on the next character, so don't advance at the end
                             advance = false;
@@ -1517,7 +1513,26 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="characterCountAfterTokenStart">The number of character after the token to make available.</param>
         /// <returns>true if at least the required number of characters is available; false if end of input was reached.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private bool EnsureAvailableCharacters(int characterCountAfterTokenStart)
+        {
+            // Fast path: Check if we already have enough characters in the buffer.
+            if (this.tokenStartIndex + characterCountAfterTokenStart <= this.storedCharacterCount)
+            {
+                return true;
+            }
+
+            // Slow path: We need to read more characters from the input.
+            return EnsureAvailableCharactersSlow(characterCountAfterTokenStart);
+        }
+
+        /// <summary>
+        /// Ensures that a specified number of characters after the token start is available in the buffer.
+        /// </summary>
+        /// <param name="characterCountAfterTokenStart">The number of character after the token to make available.</param>
+        /// <returns>true if at least the required number of characters is available; false if end of input was reached.</returns>
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        private bool EnsureAvailableCharactersSlow(int characterCountAfterTokenStart)
         {
             while (this.tokenStartIndex + characterCountAfterTokenStart > this.storedCharacterCount)
             {
@@ -1532,16 +1547,34 @@ namespace Microsoft.OData.Json
 
         /// <summary>
         /// Consumes the <paramref name="characterCount"/> characters starting at the start of the token
-        /// and returns them as a string.
+        /// and returns them as a <see cref="ReadOnlySpan<char>"/>.
         /// </summary>
         /// <param name="characterCount">The number of characters after the token start to consume.</param>
         /// <returns>The string value of the consumed token.</returns>
-        private string ConsumeTokenToString(int characterCount)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private ReadOnlySpan<char> ConsumeTokenToSpan(int characterCount)
         {
             Debug.Assert(characterCount >= 0, "characterCount >= 0");
             Debug.Assert(this.tokenStartIndex + characterCount <= this.storedCharacterCount, "characterCount specified characters outside of the available range.");
 
-            string result = new string(this.characterBuffer, this.tokenStartIndex, characterCount);
+            ReadOnlySpan<char> result = this.characterBuffer.AsSpan(this.tokenStartIndex, characterCount);
+            this.tokenStartIndex += characterCount;
+
+            return result;
+        }
+
+        /// <summary>
+        /// Consumes the <paramref name="characterCount"/> characters starting at the start of the token
+        /// and returns them as a <see cref="ReadOnlyMemory<char>"/>.
+        /// </summary>
+        /// <param name="characterCount">The number of characters after the token start to consume.</param>
+        /// <returns>The string value of the consumed token.</returns>
+        private ReadOnlyMemory<char> ConsumeTokenToMemory(int characterCount)
+        {
+            Debug.Assert(characterCount >= 0, "characterCount >= 0");
+            Debug.Assert(this.tokenStartIndex + characterCount <= this.storedCharacterCount, "characterCount specified characters outside of the available range.");
+
+            ReadOnlyMemory<char> result = this.characterBuffer.AsMemory(this.tokenStartIndex, characterCount);
             this.tokenStartIndex += characterCount;
 
             return result;
@@ -1737,18 +1770,22 @@ namespace Microsoft.OData.Json
             this.PushScope(ScopeType.Property);
 
             // Parse the name of the property
-            this.nodeValue = await this.ParseNameAsync().ConfigureAwait(false);
+            ReadOnlyMemory<char> token = await this.ParseNameAsync().ConfigureAwait(false);
 
-            if (string.IsNullOrEmpty((string)this.nodeValue))
+            if (token.Span.IsEmpty)
             {
+                this.nodeValue = string.Empty;
+
                 // The name can't be empty.
-                throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_InvalidPropertyNameOrUnexpectedComma, (string)this.nodeValue));
+                throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_InvalidPropertyNameOrUnexpectedComma, this.nodeValue));
             }
+
+            this.nodeValue = GetCommonOrNewString(token.Span);
 
             if (!await this.SkipWhitespacesAsync().ConfigureAwait(false) || this.characterBuffer[this.tokenStartIndex] != ':')
             {
                 // We need the colon character after the property name
-                throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_MissingColon, (string)this.nodeValue));
+                throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_MissingColon, this.nodeValue));
             }
 
             // Consume the colon.
@@ -1765,8 +1802,6 @@ namespace Microsoft.OData.Json
         /// <summary>
         /// Asynchronously parses a primitive string value.
         /// </summary>
-        /// <param name="hasLeadingBackslash">Set to true if the first character in the string was a backslash. This is used when parsing DateTime values
-        /// since they must start with an escaped slash character (\/).</param>
         /// <returns>A task that represents the asynchronous operation.
         /// The value of the TResult parameter contains a tuple comprising of the value of the string primitive value 
         /// and a value of true if the first character in the string has a backlash; otherwise false.</returns>
@@ -1775,7 +1810,7 @@ namespace Microsoft.OData.Json
         /// Note that the string parsing can never end with EndOfInput, since we're already seen the quote.
         /// So it can either return a string successfully or fail.</remarks>
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "Splitting the function would make it hard to understand.")]
-        private async ValueTask<(string Value, bool HasLeadingBackslash)> ParseStringPrimitiveValueAsync()
+        private async ValueTask<(ReadOnlyMemory<char> Value, bool HasLeadingBackslash)> ParseStringPrimitiveValueAsync()
         {
             Debug.Assert(this.tokenStartIndex < this.storedCharacterCount, "At least the quote must be present.");
 
@@ -1816,7 +1851,7 @@ namespace Microsoft.OData.Json
                         }
                         else
                         {
-                            this.stringValueBuilder.Length = 0;
+                            this.stringValueBuilder.Clear();
                         }
 
                         valueBuilder = this.stringValueBuilder;
@@ -1869,13 +1904,7 @@ namespace Microsoft.OData.Json
                                 throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_UnrecognizedEscapeSequence, "\\uXXXX"));
                             }
 
-                            string unicodeHexValue = this.ConsumeTokenToString(4);
-                            int characterValue;
-                            if (!Int32.TryParse(unicodeHexValue, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out characterValue))
-                            {
-                                throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_UnrecognizedEscapeSequence, "\\u" + unicodeHexValue));
-                            }
-
+                            int characterValue = this.ParseUnicodeHexValue();
                             valueBuilder.Append((char)characterValue);
                             break;
                         default:
@@ -1885,15 +1914,15 @@ namespace Microsoft.OData.Json
                 else if (character == openingQuoteCharacter)
                 {
                     // Consume everything up to the quote character
-                    string result;
+                    ReadOnlyMemory<char> result;
                     if (valueBuilder != null)
                     {
                         this.ConsumeTokenAppendToBuilder(valueBuilder, currentCharacterTokenRelativeIndex);
-                        result = valueBuilder.ToString();
+                        result = valueBuilder.ToString().AsMemory();
                     }
                     else
                     {
-                        result = this.ConsumeTokenToString(currentCharacterTokenRelativeIndex);
+                        result = this.ConsumeTokenToMemory(currentCharacterTokenRelativeIndex);
                     }
 
                     Debug.Assert(this.characterBuffer[this.tokenStartIndex] == openingQuoteCharacter, "We should have consumed everything up to the quote character.");
@@ -1926,11 +1955,11 @@ namespace Microsoft.OData.Json
                 "The method should only be called when the 'n' character is the start of the token.");
 
             // We can call ParseNameAsync since we know the first character is 'n' and thus it won't be quoted.
-            ValueTask<string> parseNameTask = this.ParseNameAsync();
+            ValueTask<ReadOnlyMemory<char>> parseNameTask = this.ParseNameAsync();
             if (parseNameTask.IsCompletedSuccessfully)
             {
-                string token = parseNameTask.Result;
-                if (!string.Equals(token, JsonConstants.JsonNullLiteral, StringComparison.Ordinal))
+                ReadOnlyMemory<char> token = parseNameTask.Result;
+                if (!token.Span.SequenceEqual(JsonConstants.JsonNullLiteral.AsSpan()))
                 {
                     // Return a faulted Task (rather than throw synchronously).
                     return ValueTask.FromException<object>(
@@ -1943,11 +1972,11 @@ namespace Microsoft.OData.Json
             // Slow path: allocate state machine only if we really have to await.
             return AwaitParseNameAsync(this, parseNameTask);
 
-            static async ValueTask<object> AwaitParseNameAsync(JsonReader thisParam, ValueTask<string> pendingParseNameTask)
+            static async ValueTask<object> AwaitParseNameAsync(JsonReader thisParam, ValueTask<ReadOnlyMemory<char>> pendingParseNameTask)
             {
-                string token = await pendingParseNameTask.ConfigureAwait(false);
+                ReadOnlyMemory<char> token = await pendingParseNameTask.ConfigureAwait(false);
 
-                if (!string.Equals(token, JsonConstants.JsonNullLiteral, StringComparison.Ordinal))
+                if (!token.Span.SequenceEqual(JsonConstants.JsonNullLiteral.AsSpan()))
                 {
                     throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_UnexpectedToken, token));
                 }
@@ -1969,17 +1998,17 @@ namespace Microsoft.OData.Json
                 "The method should only be called when the 't' or 'f' character is the start of the token.");
 
             // We can call ParseNameAsync since we know the first character is 't' or 'f' and thus it won't be quoted.
-            ValueTask<string> parseNameTask = this.ParseNameAsync();
+            ValueTask<ReadOnlyMemory<char>> parseNameTask = this.ParseNameAsync();
             if (parseNameTask.IsCompletedSuccessfully)
             {
-                string token = parseNameTask.Result;
+                ReadOnlyMemory<char> token = parseNameTask.Result;
 
-                if (string.Equals(token, JsonConstants.JsonFalseLiteral, StringComparison.Ordinal))
+                if (token.Span.SequenceEqual(JsonConstants.JsonFalseLiteral.AsSpan()))
                 {
                     return ValueTask.FromResult<object>(false);
                 }
 
-                if (string.Equals(token, JsonConstants.JsonTrueLiteral, StringComparison.Ordinal))
+                if (token.Span.SequenceEqual(JsonConstants.JsonTrueLiteral.AsSpan()))
                 {
                     return ValueTask.FromResult<object>(true);
                 }
@@ -1991,16 +2020,16 @@ namespace Microsoft.OData.Json
             // Slow path: allocate state machine only if we really have to await.
             return AwaitParseNameAsync(parseNameTask);
 
-            static async ValueTask<object> AwaitParseNameAsync(ValueTask<string> pendingParseNameTask)
+            static async ValueTask<object> AwaitParseNameAsync(ValueTask<ReadOnlyMemory<char>> pendingParseNameTask)
             {
-                string token = await pendingParseNameTask.ConfigureAwait(false);
+                ReadOnlyMemory<char> token = await pendingParseNameTask.ConfigureAwait(false);
 
-                if (string.Equals(token, JsonConstants.JsonFalseLiteral, StringComparison.Ordinal))
+                if (token.Span.SequenceEqual(JsonConstants.JsonFalseLiteral.AsSpan()))
                 {
                     return false;
                 }
 
-                if (string.Equals(token, JsonConstants.JsonTrueLiteral, StringComparison.Ordinal))
+                if (token.Span.SequenceEqual(JsonConstants.JsonTrueLiteral.AsSpan()))
                 {
                     return true;
                 }
@@ -2057,9 +2086,9 @@ namespace Microsoft.OData.Json
 
             try
             {
-                string numberString = this.ConsumeTokenToString(currentCharacterTokenRelativeIndex);
+                ReadOnlyMemory<char> numberMemory = this.ConsumeTokenToMemory(currentCharacterTokenRelativeIndex);
 
-                return ValueTask.FromResult(this.ParseNumericToken(numberString));
+                return ValueTask.FromResult(this.ParseNumericToken(numberMemory.Span));
             }
             catch (ODataException ex)
             {
@@ -2086,8 +2115,8 @@ namespace Microsoft.OData.Json
                             continue;
                         }
 
-                        string numString = thisParam.ConsumeTokenToString(relativeIndex);
-                        return thisParam.ParseNumericToken(numString);
+                        ReadOnlyMemory<char> numMemory = thisParam.ConsumeTokenToMemory(relativeIndex);
+                        return thisParam.ParseNumericToken(numMemory.Span);
                     }
 
                     // Need to read more input
@@ -2096,8 +2125,8 @@ namespace Microsoft.OData.Json
                 }
 
                 // EOF: Parse what we have
-                string numberString = thisParam.ConsumeTokenToString(relativeIndex);
-                return thisParam.ParseNumericToken(numberString);
+                ReadOnlyMemory<char> numberMemory = thisParam.ConsumeTokenToMemory(relativeIndex);
+                return thisParam.ParseNumericToken(numberMemory.Span);
             }
         }
 
@@ -2110,19 +2139,19 @@ namespace Microsoft.OData.Json
         /// - string value quoted with double quotes.
         /// - string value quoted with single quotes.
         /// - sequence of letters, digits, underscores and dollar signs (without quoted and in any order).</remarks>
-        private ValueTask<string> ParseNameAsync()
+        private ValueTask<ReadOnlyMemory<char>> ParseNameAsync()
         {
             Debug.Assert(this.tokenStartIndex < this.storedCharacterCount, "Must have at least one character available.");
 
             char firstCharacter = this.characterBuffer[this.tokenStartIndex];
             if ((firstCharacter == '"') || (firstCharacter == '\''))
             {
-                ValueTask<(string Value, bool HasLeadingBackslash)> parseQuotedNameTask = this.ParseStringPrimitiveValueAsync();
+                ValueTask<(ReadOnlyMemory<char> Value, bool HasLeadingBackslash)> parseQuotedNameTask = this.ParseStringPrimitiveValueAsync();
                 if (parseQuotedNameTask.IsCompletedSuccessfully)
                 {
                     return ValueTask.FromResult(parseQuotedNameTask.Result.Value);
                 }
-                
+
                 return AwaitParseQuotedNameAsync(this, parseQuotedNameTask);
             }
 
@@ -2158,16 +2187,17 @@ namespace Microsoft.OData.Json
                 }
             }
 
-            return ValueTask.FromResult(this.ConsumeTokenToString(currentCharacterTokenRelativeIndex));
+            ReadOnlyMemory<char> nameMemory = this.ConsumeTokenToMemory(currentCharacterTokenRelativeIndex);
+            return ValueTask.FromResult(nameMemory);
 
-            static async ValueTask<string> AwaitParseQuotedNameAsync(JsonReader thisParam, ValueTask<(string Value, bool HasLeadingBackslash)> pendingParseQuotedNameTask)
+            static async ValueTask<ReadOnlyMemory<char>> AwaitParseQuotedNameAsync(JsonReader thisParam, ValueTask<(ReadOnlyMemory<char> Value, bool HasLeadingBackslash)> pendingParseQuotedNameTask)
             {
-                (string Value, bool HasLeadingBackslash) result = await pendingParseQuotedNameTask.ConfigureAwait(false);
+                (ReadOnlyMemory<char> Value, bool HasLeadingBackslash) = await pendingParseQuotedNameTask.ConfigureAwait(false);
 
-                return result.Value;
+                return Value;
             }
 
-            static async ValueTask<string> AwaitParseUnquotedNameAsync(JsonReader thisParam, ValueTask<bool> pendingReadInputTask, int relativeIndex)
+            static async ValueTask<ReadOnlyMemory<char>> AwaitParseUnquotedNameAsync(JsonReader thisParam, ValueTask<bool> pendingReadInputTask, int relativeIndex)
             {
                 while (true)
                 {
@@ -2187,15 +2217,14 @@ namespace Microsoft.OData.Json
                             continue;
                         }
 
-                        // Hit a non-name character. Return the accumulated name
-                        return thisParam.ConsumeTokenToString(relativeIndex);
+                        return thisParam.ConsumeTokenToMemory(relativeIndex);
                     }
 
                     pendingReadInputTask = thisParam.ReadInputAsync();
                 }
 
                 // EOF: Return whatever we have accumulated so far
-                return thisParam.ConsumeTokenToString(relativeIndex);
+                return thisParam.ConsumeTokenToMemory(relativeIndex);
             }
         }
 
@@ -2296,8 +2325,7 @@ namespace Microsoft.OData.Json
                                 throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_UnrecognizedEscapeSequence, "\\uXXXX"));
                             }
 
-                            int characterValue = ParseUnicodeHexValue();
-                            character = (char)characterValue;
+                            character = (char)this.ParseUnicodeHexValue();
 
                             // We are already positioned on the next character, so don't advance at the end
                             advance = false;
@@ -2579,14 +2607,62 @@ namespace Microsoft.OData.Json
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private int ParseUnicodeHexValue()
         {
-            string unicodeHexValue = this.ConsumeTokenToString(4);
-            int characterValue;
-            if (!Int32.TryParse(unicodeHexValue, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out characterValue))
+            Debug.Assert(this.tokenStartIndex + 4 <= this.storedCharacterCount, "4 specified characters outside of the available range.");
+
+            char hexChar1 = this.characterBuffer[this.tokenStartIndex++];
+            char hexChar2 = this.characterBuffer[this.tokenStartIndex++];
+            char hexChar3 = this.characterBuffer[this.tokenStartIndex++];
+            char hexChar4 = this.characterBuffer[this.tokenStartIndex++];
+
+            int characterValue = ParseFourHexDigits(hexChar1, hexChar2, hexChar3, hexChar4);
+            if (characterValue < 0)
             {
-                throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_UnrecognizedEscapeSequence, "\\u" + unicodeHexValue));
+                throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_UnrecognizedEscapeSequence, "\\u" + new string(new char[] {hexChar1, hexChar2, hexChar3, hexChar4})));
             }
 
             return characterValue;
+        }
+
+        /// <summary>
+        /// Converts four hexadecimal characters to their integer value.
+        /// </summary>
+        /// <param name="hexChar1">The first hexadecimal character.</param>
+        /// <param name="hexChar2">The second hexadecimal character.</param>
+        /// <param name="hexChar3">The third hexadecimal character.</param>
+        /// <param name="hexChar4">The fourth hexadecimal character.</param>
+        /// <returns>
+        /// The integer value represented by the four hexadecimal characters, or -1 if any character is not a valid hexadecimal digit.
+        /// </returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static int ParseFourHexDigits(char hexChar1, char hexChar2, char hexChar3, char hexChar4)
+        {
+            int digit1 = HexCharToInt(hexChar1);
+            int digit2 = HexCharToInt(hexChar2);
+            int digit3 = HexCharToInt(hexChar3);
+            int digit4 = HexCharToInt(hexChar4);
+
+            if ((digit1 | digit2 | digit3 | digit4) < 0)
+            {
+                return -1;
+            }
+
+            return (digit1 << 12) | (digit2 << 8) | (digit3 << 4) | digit4;
+        }
+
+        /// <summary>
+        /// Converts a single hexadecimal character to its integer value.
+        /// </summary>
+        /// <param name="hexChar">The hexadecimal character to convert.</param>
+        /// <returns>
+        /// The integer value of the hexadecimal character (0-15), or -1 if the character is not a valid hexadecimal digit.
+        /// </returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static int HexCharToInt(char hexChar)
+        {
+            if ((uint)(hexChar - '0') <= 9u) return hexChar - '0';
+            if ((uint)(hexChar - 'A') <= 5u) return hexChar - 'A' + 10;
+            if ((uint)(hexChar - 'a') <= 5u) return hexChar - 'a' + 10;
+            return -1;
         }
 
         /// <summary>
@@ -2610,28 +2686,28 @@ namespace Microsoft.OData.Json
         /// <param name="numberString">Canonical numeric token (no surrounding whitespace).</param>
         /// <returns>Boxed int, decimal or double.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private object ParseNumericToken(string numberString)
+        private object ParseNumericToken(ReadOnlySpan<char> numberSpan)
         {
             // We will first try and convert the value to Int32. If it succeeds, use that.
             // And then, we will try Decimal, since it will lose precision while expected type is specified.
             // Otherwise, we will try and convert the value into a double.
-            if (Int32.TryParse(numberString, NumberStyles.Integer, NumberFormatInfo.InvariantInfo, out int intValue))
+            if (Int32.TryParse(numberSpan, NumberStyles.Integer, NumberFormatInfo.InvariantInfo, out int intValue))
             {
                 return intValue;
             }
 
             // if it is not Ieee754Compatible, decimal will be parsed before double to keep precision
-            if (!this.isIeee754Compatible && Decimal.TryParse(numberString, NumberStyles.Number, NumberFormatInfo.InvariantInfo, out decimal decimalValue))
+            if (!this.isIeee754Compatible && Decimal.TryParse(numberSpan, NumberStyles.Number, NumberFormatInfo.InvariantInfo, out decimal decimalValue))
             {
                 return decimalValue;
             }
 
-            if (Double.TryParse(numberString, NumberStyles.Float, NumberFormatInfo.InvariantInfo, out double doubleValue))
+            if (Double.TryParse(numberSpan, NumberStyles.Float, NumberFormatInfo.InvariantInfo, out double doubleValue))
             {
                 return doubleValue;
             }
 
-            throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_InvalidNumberFormat, numberString));
+            throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_InvalidNumberFormat, numberSpan.ToString()));
         }
 
         /// <summary>
@@ -2650,6 +2726,33 @@ namespace Microsoft.OData.Json
                 ch == '-' || ch == '+';
         }
 
+        /// <summary>
+        /// Returns a shared string instance for common OData property names or values, otherwise returns a new string.
+        /// </summary>
+        /// <remarks>
+        /// This method reduces memory usage by returning static instances for known property names or values.
+        /// For uncommon or unique strings, it returns a new string instance.
+        /// </remarks>
+        /// <param name="span">A read-only span of characters representing the input string to process.</param>
+        /// <returns>
+        /// A shared string instance if the input matches a predefined common value or property name; otherwise, a new string instance representing the input.
+        /// </returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static string GetCommonOrNewString(ReadOnlySpan<char> span)
+        {
+            if (span.IsEmpty)
+            {
+                return string.Empty;
+            }
+
+            // For known property names, return static interned instances
+            if (ODataJsonUtils.TryGetMatchingCommonValueString(span, out string commonValue))
+            {
+                return commonValue;
+            }
+
+            return span.ToString();
+        }
 
         /// <summary>
         /// Returns the result of a <see cref="ValueTask{TResult}"/> if already completed successfully; otherwise, awaits it.

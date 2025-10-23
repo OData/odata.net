@@ -438,7 +438,7 @@ namespace Microsoft.OData
             this.VerifyCanFlush(false);
 
             // Make sure we switch to writer state Error if an exception is thrown during flushing.
-            return this.InterceptExceptionAsync((thisParam) => thisParam.FlushAsynchronously(), null);
+            return this.InterceptExceptionAsync(static (thisParam) => thisParam.FlushAsynchronously(), null);
         }
 
         /// <summary>
@@ -1583,7 +1583,7 @@ namespace Microsoft.OData
             if (!this.SkipWriting)
             {
                 this.InterceptException(
-                    (thisParam, resourceSetParam) =>
+                    static (thisParam, resourceSetParam) =>
                     {
                         // Verify query count
                         if (resourceSetParam.Count.HasValue)
@@ -1625,7 +1625,7 @@ namespace Microsoft.OData
             this.EnterScope(WriterState.DeltaResourceSet, deltaResourceSet);
 
             this.InterceptException(
-                (thisParam, deltaResourceSetParam) =>
+                static (thisParam, deltaResourceSetParam) =>
                 {
                     // Check that links are not set for requests
                     if (!thisParam.outputContext.WritingResponse)
@@ -1683,7 +1683,7 @@ namespace Microsoft.OData
             {
                 this.IncreaseResourceDepth();
                 this.InterceptException(
-                    (thisParam, resourceParam) =>
+                    static (thisParam, resourceParam) =>
                     {
                         if (resourceParam != null)
                         {
@@ -1715,7 +1715,7 @@ namespace Microsoft.OData
             this.IncreaseResourceDepth();
 
             this.InterceptException(
-                (thisParam, resourceParam) =>
+                static (thisParam, resourceParam) =>
                 {
                     DeletedResourceScope resourceScope = thisParam.CurrentScope as DeletedResourceScope;
                     thisParam.ValidateResourceForResourceSet(resourceParam, resourceScope);
@@ -1751,7 +1751,7 @@ namespace Microsoft.OData
             if (!this.SkipWriting)
             {
                 this.InterceptException(
-                    (thisParam, propertyParam) =>
+                    static (thisParam, propertyParam) =>
                     {
                         thisParam.StartProperty(propertyParam);
                         if (propertyParam is ODataProperty)
@@ -1838,7 +1838,7 @@ namespace Microsoft.OData
         private void WritePrimitiveValueImplementation(ODataPrimitiveValue primitiveValue)
         {
             this.InterceptException(
-                (thisParam, primitiveValueParam) =>
+                static (thisParam, primitiveValueParam) =>
                 {
                     thisParam.EnterScope(WriterState.Primitive, primitiveValueParam);
                     if (!(thisParam.CurrentResourceSetValidator == null) && primitiveValueParam != null)
@@ -1863,13 +1863,13 @@ namespace Microsoft.OData
             EnterScope(WriterState.Primitive, primitiveValue);
 
             return InterceptExceptionAsync(
-                async (thisParam, primiteValueParam) =>
+                static async (thisParam, primiteValueParam) =>
                 {
-                    if (!(CurrentResourceSetValidator == null) && primiteValueParam != null)
+                    if (!(thisParam.CurrentResourceSetValidator == null) && primiteValueParam != null)
                     {
                         Debug.Assert(primiteValueParam.Value != null, "PrimitiveValue.Value should never be null!");
                         IEdmType itemType = EdmLibraryExtensions.GetPrimitiveTypeReference(primiteValueParam.Value.GetType()).Definition;
-                        CurrentResourceSetValidator.ValidateResource(itemType);
+                        thisParam.CurrentResourceSetValidator.ValidateResource(itemType);
                     }
 
                     await thisParam.WritePrimitiveValueAsync(primiteValueParam)
@@ -1935,7 +1935,7 @@ namespace Microsoft.OData
         private void WriteEndImplementation()
         {
             this.InterceptException(
-                (thisParam) =>
+                static (thisParam) =>
                 {
                     Scope currentScope = thisParam.CurrentScope;
 
@@ -2093,7 +2093,7 @@ namespace Microsoft.OData
             if (!this.SkipWriting)
             {
                 this.InterceptException(
-                    (thisParam, entityReferenceLinkParam) =>
+                    static (thisParam, entityReferenceLinkParam) =>
                     {
                         WriterValidationUtils.ValidateEntityReferenceLink(entityReferenceLinkParam);
 
@@ -2171,7 +2171,7 @@ namespace Microsoft.OData
         {
             if (this.State == WriterState.Start)
             {
-                this.InterceptException((thisParam) => thisParam.StartPayload());
+                this.InterceptException(static (thisParam) => thisParam.StartPayload());
             }
         }
 
@@ -2194,7 +2194,7 @@ namespace Microsoft.OData
             {
                 ODataNestedResourceInfo currentNestedResourceInfo = (ODataNestedResourceInfo)currentScope.Item;
                 this.InterceptException(
-                    (thisParam, currentNestedResourceInfoParam, contentPayloadKindParam) =>
+                    static (thisParam, currentNestedResourceInfoParam, contentPayloadKindParam) =>
                     {
                         if (thisParam.ParentResourceType != null)
                         {
@@ -2249,7 +2249,7 @@ namespace Microsoft.OData
                     if (!this.SkipWriting)
                     {
                         this.InterceptException(
-                            (thisParam, currentNestedResourceInfoParam) =>
+                            static (thisParam, currentNestedResourceInfoParam) =>
                             {
                                 if (!(currentNestedResourceInfoParam.SerializationInfo != null && currentNestedResourceInfoParam.SerializationInfo.IsComplex)
                                     && (thisParam.CurrentScope.ItemType == null || thisParam.CurrentScope.ItemType.IsEntityOrEntityCollectionType()))
@@ -2552,7 +2552,7 @@ namespace Microsoft.OData
         [SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Justification = "Debug only cast.")]
         private void EnterScope(WriterState newState, ODataItem item)
         {
-            this.InterceptException((thisParam, newStateParam) => thisParam.ValidateTransition(newStateParam), newState);
+            this.InterceptException(static (thisParam, newStateParam) => thisParam.ValidateTransition(newStateParam), newState);
 
             // If the parent scope was marked for skipping content, the new child scope should be as well.
             bool skipWriting = this.SkipWriting;
@@ -2908,7 +2908,7 @@ namespace Microsoft.OData
                     selectedProperties: startScope.SelectedProperties,
                     odataUri: startScope.ODataUri,
                     derivedTypeConstraints: null);
-                this.InterceptException((thisParam) => thisParam.EndPayload());
+                this.InterceptException(static (thisParam) => thisParam.EndPayload());
                 this.NotifyListener(WriterState.Completed);
             }
         }
@@ -3240,7 +3240,7 @@ namespace Microsoft.OData
             if (!this.SkipWriting)
             {
                 await this.InterceptExceptionAsync(
-                    async (thisParam, resourceSetParam) =>
+                    static async (thisParam, resourceSetParam) =>
                     {
                         // Verify query count
                         if (resourceSetParam.Count.HasValue)
@@ -3285,7 +3285,7 @@ namespace Microsoft.OData
             this.EnterScope(WriterState.DeltaResourceSet, deltaResourceSet);
 
             await this.InterceptExceptionAsync(
-                async (thisParam, deltaResourceSetParam) =>
+                static async (thisParam, deltaResourceSetParam) =>
                 {
                     if (!thisParam.outputContext.WritingResponse)
                     {
@@ -3323,7 +3323,7 @@ namespace Microsoft.OData
             {
                 this.IncreaseResourceDepth();
                 await this.InterceptExceptionAsync(
-                    async (thisParam, resourceParam) =>
+                    static async (thisParam, resourceParam) =>
                     {
                         if (resourceParam != null)
                         {
@@ -3359,7 +3359,7 @@ namespace Microsoft.OData
             this.IncreaseResourceDepth();
 
             await this.InterceptExceptionAsync(
-                async (thisParam, resourceParam) =>
+                static async (thisParam, resourceParam) =>
                 {
                     DeletedResourceScope resourceScope = thisParam.CurrentScope as DeletedResourceScope;
                     thisParam.ValidateResourceForResourceSet(resourceParam, resourceScope);
@@ -3386,7 +3386,7 @@ namespace Microsoft.OData
             if (!this.SkipWriting)
             {
                 return this.InterceptExceptionAsync(
-                    async (thisParam, propertyParam) =>
+                    static async (thisParam, propertyParam) =>
                     {
                         await thisParam.StartPropertyAsync(propertyParam)
                             .ConfigureAwait(false);
@@ -3438,7 +3438,7 @@ namespace Microsoft.OData
         private Task WriteEndImplementationAsync()
         {
             return this.InterceptExceptionAsync(
-                async (thisParam) =>
+                static async (thisParam) =>
                 {
                     Scope currentScope = thisParam.CurrentScope;
 
@@ -3563,7 +3563,7 @@ namespace Microsoft.OData
             if (!this.SkipWriting)
             {
                 await this.InterceptExceptionAsync(
-                    async (thisParam, entityReferenceLinkParam) =>
+                    static async (thisParam, entityReferenceLinkParam) =>
                     {
                         WriterValidationUtils.ValidateEntityReferenceLink(entityReferenceLinkParam);
 
@@ -3589,7 +3589,7 @@ namespace Microsoft.OData
         {
             if (this.State == WriterState.Start)
             {
-                return this.InterceptExceptionAsync((thisParam) => thisParam.StartPayloadAsync(), this.CurrentScope.Item);
+                return this.InterceptExceptionAsync(static (thisParam) => thisParam.StartPayloadAsync(), this.CurrentScope.Item);
             }
 
             return TaskUtils.CompletedTask;
@@ -3616,7 +3616,7 @@ namespace Microsoft.OData
                 ODataNestedResourceInfo currentNestedResourceInfo = (ODataNestedResourceInfo)currentScope.Item;
 
                 this.InterceptException(
-                    (thisParam, currentNestedResourceInfoParam, contentPayloadKindParam) =>
+                    static (thisParam, currentNestedResourceInfoParam, contentPayloadKindParam) =>
                     {
                         if (thisParam.ParentResourceType != null)
                         {
@@ -3676,7 +3676,7 @@ namespace Microsoft.OData
                     if (!this.SkipWriting)
                     {
                         await this.InterceptExceptionAsync(
-                            async (thisParam, currentNestedResourceInfoParam) =>
+                            static async (thisParam, currentNestedResourceInfoParam) =>
                             {
                                 if (!(currentNestedResourceInfoParam.SerializationInfo != null && currentNestedResourceInfoParam.SerializationInfo.IsComplex)
                                     && (thisParam.CurrentScope.ItemType == null || thisParam.CurrentScope.ItemType.IsEntityOrEntityCollectionType()))
@@ -3728,7 +3728,7 @@ namespace Microsoft.OData
                     startScope.SelectedProperties,
                     startScope.ODataUri,
                     /*derivedTypeConstraints*/ null);
-                await this.InterceptExceptionAsync((thisParam) => thisParam.EndPayloadAsync(), this.CurrentScope.Item)
+                await this.InterceptExceptionAsync(static (thisParam) => thisParam.EndPayloadAsync(), this.CurrentScope.Item)
                     .ConfigureAwait(false);
                 this.NotifyListener(WriterState.Completed);
             }
