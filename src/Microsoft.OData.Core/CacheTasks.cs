@@ -14,10 +14,6 @@ namespace Microsoft.OData
 
     internal static class CachedTasks
     {
-        internal static readonly Task<bool> True = Task.FromResult(true);
-        
-        internal static readonly Task<bool> False = Task.FromResult(false);
-
         internal static readonly Task<object> ObjectNull = Task.FromResult<object>(null);
 
         internal static readonly Task<object> ObjectTrue = Task.FromResult<object>(true);
