@@ -138,31 +138,6 @@ namespace Microsoft.OData.Json
         private StringBuilder stringValueBuilder;
 
         /// <summary>
-        /// Represents a vector initialized with the space character. Represented by 0x20 (space).
-        /// </summary>
-        private static readonly Vector<ushort> spaceCharVector = new Vector<ushort>(' ');
-
-        /// <summary>
-        /// Represents a vector initialized with the tab character. Represented by 0x09 (tab).
-        /// </summary>
-        private static readonly Vector<ushort> tabCharVector = new Vector<ushort>('\t');
-
-        /// <summary>
-        /// Represents a vector initialized with the new line character. Represented by 0x0A (new line).
-        /// </summary>
-        private static readonly Vector<ushort> newlineCharVector = new Vector<ushort>('\n');
-
-        /// <summary>
-        /// Represents a vector initialized with the carriage return character. Represented by 0x0D (carriage return).
-        /// </summary>
-        private static readonly Vector<ushort> carriageCharVector = new Vector<ushort>('\r');
-
-        /// <summary>
-        /// Represents a vector where all elements are set to ushort.MaxValue (all 1s). Used for efficient whitespace comparison operations.
-        /// </summary>
-        private static readonly Vector<ushort> ushortMaxValueVector = new Vector<ushort>(ushort.MaxValue);
-
-        /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="reader">The text reader to read input characters from.</param>
@@ -1523,13 +1498,14 @@ namespace Microsoft.OData.Json
         {
             do
             {
-                for (; this.tokenStartIndex < this.storedCharacterCount; this.tokenStartIndex++)
+                int nonWhitespaceIndex = FindFirstNonWhitespace(this.characterBuffer, this.tokenStartIndex, this.storedCharacterCount);
+                if (nonWhitespaceIndex >= 0)
                 {
-                    if (!IsWhitespaceCharacter(this.characterBuffer[this.tokenStartIndex]))
-                    {
-                        return true;
-                    }
+                    this.tokenStartIndex += nonWhitespaceIndex;
+                    return true;
                 }
+
+                this.tokenStartIndex = this.storedCharacterCount;
             }
             while (this.ReadInput());
 
@@ -2419,8 +2395,7 @@ namespace Microsoft.OData.Json
                     return ValueTask.FromResult(false);
                 }
 
-                int nonWhitespaceIndex = SkipWhitespacesInCurrentBuffer();
-                if (nonWhitespaceIndex >= 0)
+                while (this.tokenStartIndex < this.storedCharacterCount)
                 {
                     int nonWhitespaceIndex = FindFirstNonWhitespace(this.characterBuffer, this.tokenStartIndex, this.storedCharacterCount);
                     if (nonWhitespaceIndex >= 0)
