@@ -136,6 +136,49 @@ public class SupportForEnumerablePropertiesWithMultipleGenericTypes
         Assert.Equal(normalizedExpected, normalizedActual);
     }
 
+    [Fact]
+    public async Task CanSerializeGeneriMultiGenericTypeThatImplementsIEnumerable()
+    {
+        List<int> source = [1, 2, 3, 4, 5];
+        var entity = new EntityWithFilterMapProperty
+        {
+            Id = 1,
+            Items = new FilterMap<int, string>(
+                source,
+                x => x % 2 == 0,
+                x => $"Number {x}")
+        };
+
+        var model = GetEdmModel();
+        var odataUri = new ODataUriParser(
+            model,
+            new Uri("http://service/odata"),
+            new Uri("Entities(1)", UriKind.Relative)
+        ).ParseUri();
+
+        var options = new ODataSerializerOptions();
+        var stream = new MemoryStream();
+        await ODataSerializer.WriteAsync(entity, stream, odataUri, model, options);
+
+        stream.Position = 0;
+        var actual = new StreamReader(stream).ReadToEnd();
+        var normalizedActual = JsonSerializer.Serialize(JsonDocument.Parse(actual));
+        var expected =
+            """
+            {
+              "@odata.context": "http://service/odata/$metadata#Entities/$entity",
+              "Id": 1,
+              "Items": [
+                "Number 2",
+                "Number 4"
+              ]
+            }
+            """;
+
+        var normalizedExpected = JsonSerializer.Serialize(JsonDocument.Parse(expected));
+        Assert.Equal(normalizedExpected, normalizedActual);
+    }
+
     private static IEdmModel GetEdmModel()
     {
         var model = new EdmModel();
@@ -174,6 +217,13 @@ public class SupportForEnumerablePropertiesWithMultipleGenericTypes
     {
         public int Id { get; set; }
         public IEnumerable<string> Items { get; set; }
+    }
+
+    [ODataType("NS.Entity")]
+    class EntityWithFilterMapProperty
+    {
+        public int Id { get; set; }
+        public FilterMap<int, string> Items { get; set; }
     }
 
     class FilterMap<TSource, Target>(
