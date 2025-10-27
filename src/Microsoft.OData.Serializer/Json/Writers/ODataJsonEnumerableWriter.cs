@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,6 +10,7 @@ using System.Xml.Linq;
 
 namespace Microsoft.OData.Serializer;
 
+[SuppressMessage("Performance", "CA1812:Avoid uninstantiated internal classes", Justification = "This class is instantiated via reflection.")]
 internal class ODataJsonEnumerableWriter<TCollection, TCustomState> : ODataResourceSetBaseJsonWriter<TCollection, object, TCustomState>
     where TCollection : IEnumerable
 {
