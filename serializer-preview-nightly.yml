@@ -24,7 +24,7 @@ variables:
 - name: BuildPlatform
   value: anycpu
 - name: ProductBinPath
-  value: $(Build.SourcesDirectory)\artifacts\bin\$(BuildPlatform)\$(BuildConfiguration)
+  value: $(Build.SourcesDirectory)\artifacts\bin\$(BuildConfiguration)
 - group: OData-ESRP-CodeSigning
 
 extends:
