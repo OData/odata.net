@@ -68,7 +68,7 @@ public class NullablePrimitiveTests
               "Double": 4.56,
               "Decimal": 7.89,
               "DateTime": "2024-01-01T12:00:00Z",
-              "DateTimeOffset": "2024-01-01T12:00:00+00:00",
+              "DateTimeOffset": "2024-01-01T12:00:00Z",
               "Guid": "12345678-1234-1234-1234-1234567890ab"
             }
             """;

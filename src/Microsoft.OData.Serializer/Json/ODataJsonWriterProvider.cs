@@ -9,21 +9,36 @@ internal class ODataJsonWriterProvider<TCustomState>(ODataSerializerOptions<TCus
 {
     //private static readonly Type ObjectType = typeof(object);
     private static readonly ODataJsonBoolWriter<TCustomState> boolWriter = new();
+    private static readonly ODataJsonNullableBoolWriter<TCustomState> nullableBoolWriter = new();
     private static readonly ODataJsonByteWriter<TCustomState> byteWriter = new();
+    private static readonly ODataJsonNullableByteWriter<TCustomState> nullableByteWriter = new();
     private static readonly ODataJsonSByteWriter<TCustomState> sbyteWriter = new();
+    private static readonly ODataJsonNullableSByteWriter<TCustomState> nullableSbyteWriter = new();
     private static readonly ODataJsonShortWriter<TCustomState> shortWriter = new();
+    private static readonly ODataJsonNullableShortWriter<TCustomState> nullableShortWriter = new();
     private static readonly ODataJsonUshortWriter<TCustomState> ushortWriter = new();
+    private static readonly ODataJsonNullableUshortWriter<TCustomState> nullableUshortWriter = new();
     private static readonly ODataJsonInt32Writer<TCustomState> int32Writer = new();
+    private static readonly ODataJsonNullableInt32Writer<TCustomState> nullableInt32Writer = new();
     private static readonly ODataJsonUintWriter<TCustomState> uint32Writer = new();
+    private static readonly ODataJsonNullableUintWriter<TCustomState> nullableUint32Writer = new();
     private static readonly ODataJsonInt64Writer<TCustomState> int64Writer = new();
+    private static readonly ODataJsonNullableInt64Writer<TCustomState> nullableInt64Writer = new();
     private static readonly ODataJsonUlongWriter<TCustomState> uint64Writer = new();
+    private static readonly ODataJsonNullableUlongWriter<TCustomState> nullableUint64Writer = new();
     private static readonly ODataJsonStringWriter<TCustomState> stringWriter = new();
     private static readonly ODataJsonGuidWriter<TCustomState> guidWriter = new();
+    private static readonly ODataJsonNullableGuidWriter<TCustomState> nullableGuidWriter = new();
     private static readonly ODataJsonDateTimeWriter<TCustomState> dateTimeWriter = new();
+    private static readonly ODataJsonNullableDateTimeWriter<TCustomState> nullableDateTimeWriter = new();
     private static readonly ODataJsonDateTimeOffsetWriter<TCustomState> dateTimeOffsetWriter = new();
+    private static readonly ODataJsonNullableDateTimeOffsetWriter<TCustomState> nullableDateTimeOffsetWriter = new();
     private static readonly ODataJsonFloatWriter<TCustomState> floatWriter = new();
+    private static readonly ODataJsonNullableFloatWriter<TCustomState> nullableFloatWriter = new();
     private static readonly ODataJsonDoubleWriter<TCustomState> doubleWriter = new();
+    private static readonly ODataJsonNullableDoubleWriter<TCustomState> nullableDoubleWriter = new();
     private static readonly ODataJsonDecimalWriter<TCustomState> decimalWriter = new();
+    private static readonly ODataJsonNullableDecimalWriter<TCustomState> nullableDecimalWriter = new();
     private static readonly ODataJsonByteArrayWriter<TCustomState> byteArrayWriter = new();
     private static readonly ODataJsonUriWriter<TCustomState> uriWriter = new();
     private static readonly ODataJsonObjectWriter<TCustomState> objectWriter = new();
@@ -80,6 +95,7 @@ internal class ODataJsonWriterProvider<TCustomState>(ODataSerializerOptions<TCus
     private IODataWriter<T, ODataWriterState<TCustomState>> GetWriterNoCache<T>(IEdmModel? model)
     {
         var type = typeof(T);
+
         if (simpleWriters.TryGetValue(type, out var writer))
         {
             return (IODataWriter<T, ODataWriterState<TCustomState>>)writer;
@@ -121,25 +137,40 @@ internal class ODataJsonWriterProvider<TCustomState>(ODataSerializerOptions<TCus
 
     private static Dictionary<Type, IODataWriter<ODataWriterState<TCustomState>>> InitPrimitiveWriters()
     {
-        const int NumSimpleWriters = 19; // Update this when adding more writers. Keeps the dict size exact.
+        const int NumSimpleWriters = 34; // Update this when adding more writers. Keeps the dict size exact.
         Dictionary<Type, IODataWriter<ODataWriterState<TCustomState>>> writers = new(NumSimpleWriters);
 
         Add(boolWriter);
+        Add(nullableBoolWriter);
         Add(int32Writer);
+        Add(nullableInt32Writer);
         Add(int64Writer);
+        Add(nullableInt64Writer);
         Add(stringWriter);
         Add(guidWriter);
+        Add(nullableGuidWriter);
         Add(dateTimeWriter);
+        Add(nullableDateTimeWriter);
         Add(dateTimeOffsetWriter);
-        Add(doubleWriter);
+        Add(nullableDateTimeOffsetWriter);
         Add(decimalWriter);
+        Add(nullableDecimalWriter);
         Add(byteWriter);
+        Add(nullableByteWriter);
         Add(sbyteWriter);
+        Add(nullableSbyteWriter);
         Add(shortWriter);
+        Add(nullableShortWriter);
         Add(ushortWriter);
+        Add(nullableUshortWriter);
         Add(uint32Writer);
+        Add(nullableUint32Writer);
         Add(uint64Writer);
+        Add(nullableUint64Writer);
         Add(floatWriter);
+        Add(nullableFloatWriter);
+        Add(doubleWriter);
+        Add(nullableDoubleWriter);
         Add(byteArrayWriter);
         Add(uriWriter);
         Add(objectWriter);
