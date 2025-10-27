@@ -24,7 +24,7 @@ variables:
 - name: BuildPlatform
   value: anycpu
 - name: ProductBinPath
-  value: $(Build.SourcesDirectory)\artifacts\bin\$(BuildConfiguration)
+  value: $(Build.SourcesDirectory)\src\Microsoft.OData.Serializer\bin\
 - group: OData-ESRP-CodeSigning
 
 extends:
@@ -86,9 +86,9 @@ extends:
             projects: $(Build.SourcesDirectory)\src\Microsoft.OData.Serializer\Microsoft.OData.Serializer.csproj
             arguments: --configuration $(BuildConfiguration) --no-incremental -p:GeneratePackageOnBuild=true
         - task: CopyFiles@2
-          displayName: 'Copy Files to: $(Build.ArtifactStagingDirectory)\output - from: $(Build.SourcesDirectory)\src\Microsoft.OData.Serializer\bin\$(BuildConfiguration)'
+          displayName: 'Copy Files to: $(Build.ArtifactStagingDirectory)\output - from: $(Build.SourcesDirectory)\src\Microsoft.OData.Serializer\bin\'
           inputs:
-            SourceFolder: $(Build.SourcesDirectory)\src\Microsoft.OData.Serializer\bin\$(BuildConfiguration)\
+            SourceFolder: $(Build.SourcesDirectory)\src\Microsoft.OData.Serializer\bin\
             Contents: '**\Microsoft.OData.Serializer.*'
             TargetFolder: $(Build.ArtifactStagingDirectory)\output
         - task: DotNetCoreCLI@2
