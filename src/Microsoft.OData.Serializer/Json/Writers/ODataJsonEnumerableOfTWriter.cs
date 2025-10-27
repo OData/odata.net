@@ -1,25 +1,20 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
+﻿using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Microsoft.OData.Serializer;
 
-internal class ODataJsonEnumerableWriter<TCollection, TCustomState> : ODataResourceSetBaseJsonWriter<TCollection, object, TCustomState>
-    where TCollection : IEnumerable
+[SuppressMessage("Performance", "CA1812:Avoid uninstantiated internal classes", Justification = "This class is instantiated via reflection.")]
+internal class ODataJsonEnumerableOfTWriter<TCollection, TElement, TCustomState> : ODataResourceSetBaseJsonWriter<TCollection, TElement, TCustomState>
+    where TCollection : IEnumerable<TElement>
 {
-    public ODataJsonEnumerableWriter(ODataTypeInfo<TCollection, TCustomState>? typeInfo = null)
+    public ODataJsonEnumerableOfTWriter(ODataTypeInfo<TCollection, TCustomState>? typeInfo = null)
         : base(typeInfo)
     {
     }
 
     protected override bool WriteElements(TCollection value, ODataWriterState<TCustomState> state)
     {
-        IEnumerator enumerator;
+        IEnumerator<TElement> enumerator;
         if (state.Stack.Current.CurrentEnumerator == null)
         {
             enumerator = value.GetEnumerator();
@@ -33,7 +28,7 @@ internal class ODataJsonEnumerableWriter<TCollection, TCustomState> : ODataResou
         else
         {
             // Retrieve the enumerator from the state so we can resume writing from where we left off.
-            enumerator = state.Stack.Current.CurrentEnumerator;
+            enumerator = state.Stack.Current.CurrentEnumerator as IEnumerator<TElement>;
             Debug.Assert(enumerator != null, "CurrentEnumerator should be of type IEnumerator<TElement>. Possible bug in state management and collection resume operation.");
         }
 
@@ -51,6 +46,7 @@ internal class ODataJsonEnumerableWriter<TCollection, TCustomState> : ODataResou
             }
 
         } while (enumerator.MoveNext());
+
 
         return true;
     }
