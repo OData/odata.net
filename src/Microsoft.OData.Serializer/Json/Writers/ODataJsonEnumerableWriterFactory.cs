@@ -20,10 +20,11 @@ internal class ODataJsonEnumerableWriterFactory<TCustomState> : ODataWriterFacto
 
     public override IODataWriter CreateWriter(Type type, ODataSerializerOptions<TCustomState> options)
     {
+        var typeInfo = options.TryGetResourceInfo(type);
         if (TryGetEnumerableElementType(type, out Type? elementType))
         {
 
-            var typeInfo = options.TryGetResourceInfo(type);
+            
 
             var listType = typeof(IList<>).MakeGenericType(elementType!);
             if (listType.IsAssignableFrom(type))
@@ -39,13 +40,13 @@ internal class ODataJsonEnumerableWriterFactory<TCustomState> : ODataWriterFacto
                 return (IODataWriter)Activator.CreateInstance(readOnlyListWriterType, [typeInfo]);
             }
 
-            var enumerableType = EnumerableGenericDefinition.MakeGenericType(elementType!);
-            var enumerableWriterType = typeof(ODataJsonEnumerableWriter<,,>).MakeGenericType(type, elementType!, CustomStateType);
-            return (IODataWriter)Activator.CreateInstance(enumerableWriterType, [typeInfo]);
+            var enumerableOfTType = EnumerableGenericDefinition.MakeGenericType(elementType!);
+            var enumerableOfTWriterType = typeof(ODataJsonEnumerableOfTWriter<,,>).MakeGenericType(type, elementType!, CustomStateType);
+            return (IODataWriter)Activator.CreateInstance(enumerableOfTWriterType, [typeInfo]);
         }
 
-        // TODO: this would be non-generic cases
-        throw new NotSupportedException($"The serializer type does not yet support the enumerable type: '{type.FullName}'");
+        var enumerableWriterType = typeof(ODataJsonEnumerableWriter<,>).MakeGenericType(type, CustomStateType);
+        return (IODataWriter)Activator.CreateInstance(enumerableWriterType, [typeInfo]);
     }
 
     private static bool TryGetEnumerableElementType(Type type, out Type? elementType)
