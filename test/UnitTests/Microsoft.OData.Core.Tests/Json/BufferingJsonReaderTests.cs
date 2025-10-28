@@ -7,9 +7,12 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
+using Microsoft.OData.Core;
 using Microsoft.OData.Json;
 using Xunit;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Microsoft.OData.Tests.Json
 {
@@ -537,6 +540,229 @@ namespace Microsoft.OData.Tests.Json
 
                 Assert.Equal(expected, await bufferingReader.CanStreamAsync());
             }
+        }
+
+        [Fact]
+        public async Task ReadInStreamError_DisabledInStreamErrorDetection_DoesNotThrowAsync()
+        {
+            // Arrange
+            var payload = $"{{\"\":,\"error\":{{\"code\":\"{ErrorCode}\",\"message\":\"{ErrorMessage}\",\"target\":\"{ErrorTarget}\"}}}}";
+            var stringReader = new StringReader(payload);
+            using (var jsonReader = new JsonReader(stringReader, false))
+            {
+                var bufferingReader = new BufferingJsonReader(jsonReader, "error", MaxInnerErrorDepth);
+                bufferingReader.DisableInStreamErrorDetection = true;
+
+                // Act & Assert
+                Assert.True(await bufferingReader.ReadAsync());
+            }
+        }
+
+        [Fact]
+        public async Task ReadInStreamError_TopLevelPrimitiveValue_DoesNotThrowAsync()
+        {
+            // Arrange
+            var payload = "3.14159265359";
+            var stringReader = new StringReader(payload);
+            using (var jsonReader = new JsonReader(stringReader, false))
+            {
+                var bufferingReader = new BufferingJsonReader(jsonReader, "error", MaxInnerErrorDepth);
+                bufferingReader.DisableInStreamErrorDetection = true;
+
+                // Act & Assert
+                Assert.True(await bufferingReader.ReadAsync());
+            }
+        }
+
+        public static IEnumerable<object> GetSlowPathLargeInStreamErrorPayloadTestData()
+        {
+            var errorCode = new string('c', 2048);
+            var errorMessage = new string('m', 2048);
+            var errorTarget = new string('t', 2048);
+
+            yield return "{" + new string(' ', 4096) + "\"error\":{" + // Spaces added to force slow path
+                $"\"code\":\"{errorCode}\"," +
+                $"\"message\":\"{errorMessage}\"," +
+                $"\"target\":\"{errorTarget}\"}}}}";
+
+            yield return "{\"error\":{" + new string(' ', 2048) + // Spaces added to force slow path
+                $"\"code\":\"{errorCode}\"," +
+                $"\"message\":\"{errorMessage}\"," +
+                $"\"target\":\"{errorTarget}\"}}}}";
+
+            yield return new string(' ', 4096) + "{\"error\":{" + // Spaces added to force slow path
+                $"\"code\":\"{errorCode}\"," +
+                $"\"message\":\"{errorMessage}\"," +
+                $"\"target\":\"{errorTarget}\"}}}}";
+        }
+
+        public static IEnumerable<object[]> GetSlowPathLargeInStreamErrorPayloadTestData_WithReaderKinds =>
+            ExpandWithReaderKinds(GetSlowPathLargeInStreamErrorPayloadTestData());
+
+        [Theory]
+        [MemberData(nameof(GetSlowPathLargeInStreamErrorPayloadTestData_WithReaderKinds))]
+        public async Task ReadInStreamError_SlowPathLargePayload_ThrowsAsync(string payload, ReaderSourceKind sourceKind)
+        {
+            // Arrange
+            var textReader = CreateTextReader(payload, sourceKind);
+            using (var jsonReader = new JsonReader(textReader, false))
+            {
+                var bufferingReader = new BufferingJsonReader(jsonReader, "error", MaxInnerErrorDepth);
+
+                // Act & Assert
+                var exception = await Assert.ThrowsAsync<ODataErrorException>(bufferingReader.ReadAsync);
+
+                Assert.Equal(SRResources.ODataErrorException_GeneralError, exception.Message);
+                var error = exception.Error;
+                Assert.NotNull(error);
+                VerifyODataError(payload, error);
+            }
+        }
+
+        [Theory]
+        [InlineData(ReaderSourceKind.Buffered)]
+        [InlineData(ReaderSourceKind.Chunked)]
+        public async Task ReadInStreamError_ExtraProperty_DoesNotThrowAsync(ReaderSourceKind sourceKind)
+        {
+            // Arrange
+            var errorCode = new string('c', 2048);
+            var errorMessage = new string('m', 2048);
+            var errorTarget = new string('t', 2048);
+            var errorExtra = new string('e', 2048);
+            var payload = "{\"error\":{" +
+                $"\"code\":\"{errorCode}\"," +
+                $"\"message\":\"{errorMessage}\"," +
+                $"\"target\":\"{errorTarget}\"," +
+                $"\"extra\":\"{errorExtra}\"}}}}";
+
+            var textReader = CreateTextReader(payload, sourceKind);
+            using (var jsonReader = new JsonReader(textReader, false))
+            {
+                var bufferingReader = new BufferingJsonReader(jsonReader, "error", MaxInnerErrorDepth);
+
+                // Act & Assert
+                Assert.True(await bufferingReader.ReadAsync());
+            }
+        }
+
+        [Theory]
+        [InlineData(ReaderSourceKind.Buffered)]
+        [InlineData(ReaderSourceKind.Chunked)]
+        public async Task ReadInStreamError_ExtraTopLevelProperty_DoesNotThrowAsync(ReaderSourceKind sourceKind)
+        {
+            // Arrange
+            var errorCode = new string('c', 2048);
+            var errorMessage = new string('m', 2048);
+            var errorTarget = new string('t', 2048);
+            var extra = new string('e', 2048);
+            var payload = "{\"error\":{" +
+                $"\"code\":\"{errorCode}\"," +
+                $"\"message\":\"{errorMessage}\"," +
+                $"\"target\":\"{errorTarget}\"}}," +
+                $"\"extra\":\"{extra}\"}}";
+
+            var textReader = CreateTextReader(payload, sourceKind);
+            using (var jsonReader = new JsonReader(textReader, false))
+            {
+                var bufferingReader = new BufferingJsonReader(jsonReader, "error", MaxInnerErrorDepth);
+
+                // Act & Assert
+                Assert.True(await bufferingReader.ReadAsync());
+            }
+        }
+
+        [Theory]
+        [InlineData(ReaderSourceKind.Buffered)]
+        [InlineData(ReaderSourceKind.Chunked)]
+        public async Task ReadInStreamError_BufferingMode_StartObjectTriggersBufferedLookaheadAsync(ReaderSourceKind sourceKind)
+        {
+            // Arrange
+            var payload = $"{{\"next\":{{\"error\":{{\"code\":\"{ErrorCode}\",\"message\":\"{ErrorMessage}\",\"target\":\"{ErrorTarget}\"}}}}}}";
+            var textReader = CreateTextReader(payload, sourceKind);
+            using (var jsonReader = new JsonReader(textReader, false))
+            {
+                var bufferingReader = new BufferingJsonReader(jsonReader, "error", MaxInnerErrorDepth);
+
+                // Act & Assert
+                Assert.True(await bufferingReader.ReadAsync()); // {
+                // Enter buffering mode
+                await bufferingReader.StartBufferingAsync();
+                await bufferingReader.ReadAsync(); // "next" property name
+                Assert.Equal("next", await bufferingReader.GetValueAsync());
+                var exception = await Assert.ThrowsAsync<ODataErrorException>(bufferingReader.ReadAsync); // StartObject of "next" property value with a single "error" property
+
+                using JsonDocument doc = JsonDocument.Parse(payload);
+                JsonElement error = doc.RootElement.GetProperty("next").GetProperty("error");
+
+                string code = error.GetProperty("code").GetString();
+                string message = error.GetProperty("message").GetString();
+                string target = error.GetProperty("target").GetString();
+
+                var odataError = exception.Error;
+                Assert.NotNull(odataError);
+                Assert.Equal(code, odataError.Code);
+                Assert.Equal(message, odataError.Message);
+                Assert.Equal(target, odataError.Target);
+            }
+        }
+
+        [Theory]
+        [InlineData(ReaderSourceKind.Buffered)]
+        [InlineData(ReaderSourceKind.Chunked)]
+        public async Task ReadInStreamError_BufferingMode_EmptyObject_DoesNotThrowAsync(ReaderSourceKind sourceKind)
+        {
+            // Arrange
+            var payload = $"{{\"next\":{{}}}}";
+            var textReader = CreateTextReader(payload, sourceKind);
+            using (var jsonReader = new JsonReader(textReader, false))
+            {
+                var bufferingReader = new BufferingJsonReader(jsonReader, "error", MaxInnerErrorDepth);
+
+                // Act & Assert
+                Assert.True(await bufferingReader.ReadAsync()); // {
+                // Enter buffering mode
+                await bufferingReader.StartBufferingAsync();
+                await bufferingReader.ReadAsync(); // "next" property name
+                Assert.Equal("next", await bufferingReader.GetValueAsync());
+                Assert.True(await bufferingReader.ReadAsync());
+                Assert.Equal(JsonNodeType.StartObject, bufferingReader.NodeType); // {
+                Assert.True(await bufferingReader.ReadAsync());
+                Assert.Equal(JsonNodeType.EndObject, bufferingReader.NodeType); // }
+                bufferingReader.StopBuffering();
+                await bufferingReader.ReadAsync(); // }
+            }
+        }
+
+        private void VerifyODataError(string json, ODataError odataError)
+        {
+            using JsonDocument doc = JsonDocument.Parse(json);
+            JsonElement error = doc.RootElement.GetProperty("error");
+
+            string code = error.GetProperty("code").GetString();
+            string message = error.GetProperty("message").GetString();
+            string target = error.GetProperty("target").GetString();
+
+            Assert.Equal(code, odataError.Code);
+            Assert.Equal(message, odataError.Message);
+            Assert.Equal(target, odataError.Target);
+        }
+
+        private static IEnumerable<object[]> ExpandWithReaderKinds(IEnumerable<object> testData)
+        {
+            foreach (var dataRow in testData)
+            {
+                yield return new object[] { dataRow, ReaderSourceKind.Buffered }; // baseline buffered StringReader
+                yield return new object[] { dataRow, ReaderSourceKind.Chunked }; // chunked/refill ChunkedStringReader
+            }
+        }
+
+        private static TextReader CreateTextReader(string payload, ReaderSourceKind readerKind, int chunkSize = 128) =>
+            readerKind == ReaderSourceKind.Buffered ? new StringReader(payload) : new ChunkedStringReader(payload, chunkSize);
+
+        public enum ReaderSourceKind
+        {
+            Buffered,   // StringReader (baseline)
+            Chunked     // ChunkedStringReader (forced refills / async completion)
         }
     }
 }

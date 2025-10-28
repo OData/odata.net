@@ -140,7 +140,7 @@ namespace Microsoft.OData
         public bool Read()
         {
             this.VerifyCanRead(true);
-            return this.InterceptException((thisParam) => thisParam.ReadSynchronously());
+            return this.InterceptException(static (thisParam) => thisParam.ReadSynchronously());
         }
 
         /// <summary>Asynchronously reads the next part from the batch message payload.</summary>
@@ -148,7 +148,7 @@ namespace Microsoft.OData
         public Task<bool> ReadAsync()
         {
             this.VerifyCanRead(false);
-            return this.InterceptExceptionAsync((thisParam) => thisParam.ReadAsynchronously());
+            return this.InterceptExceptionAsync(static (thisParam) => thisParam.ReadAsynchronously());
         }
 
         /// <summary>Returns an <see cref="ODataBatchOperationRequestMessage" /> for reading the content of a batch operation.</summary>
@@ -157,7 +157,7 @@ namespace Microsoft.OData
         {
             this.VerifyCanCreateOperationRequestMessage(synchronousCall: true);
             ODataBatchOperationRequestMessage result =
-                this.InterceptException((thisParam) => thisParam.CreateOperationRequestMessageImplementation());
+                this.InterceptException(static (thisParam) => thisParam.CreateOperationRequestMessageImplementation());
             this.ReaderOperationState = OperationState.MessageCreated;
             this.contentIdToAddOnNextRead = result.ContentId;
             return result;
@@ -169,7 +169,7 @@ namespace Microsoft.OData
         {
             this.VerifyCanCreateOperationRequestMessage(synchronousCall: false);
             ODataBatchOperationRequestMessage result = await this.InterceptExceptionAsync(
-                (thisParam) => thisParam.CreateOperationRequestMessageImplementationAsync()).ConfigureAwait(false);
+                static (thisParam) => thisParam.CreateOperationRequestMessageImplementationAsync()).ConfigureAwait(false);
             this.ReaderOperationState = OperationState.MessageCreated;
             this.contentIdToAddOnNextRead = result.ContentId;
 
@@ -182,7 +182,7 @@ namespace Microsoft.OData
         {
             this.VerifyCanCreateOperationResponseMessage(synchronousCall: true);
             ODataBatchOperationResponseMessage result =
-                this.InterceptException((thisParam) => thisParam.CreateOperationResponseMessageImplementation());
+                this.InterceptException(static (thisParam) => thisParam.CreateOperationResponseMessageImplementation());
             this.ReaderOperationState = OperationState.MessageCreated;
             return result;
         }
@@ -193,7 +193,7 @@ namespace Microsoft.OData
         {
             this.VerifyCanCreateOperationResponseMessage(synchronousCall: false);
             ODataBatchOperationResponseMessage result = await this.InterceptExceptionAsync(
-                (thisParam) => thisParam.CreateOperationResponseMessageImplementationAsync()).ConfigureAwait(false);
+                static (thisParam) => thisParam.CreateOperationResponseMessageImplementationAsync()).ConfigureAwait(false);
 
             this.ReaderOperationState = OperationState.MessageCreated;
 

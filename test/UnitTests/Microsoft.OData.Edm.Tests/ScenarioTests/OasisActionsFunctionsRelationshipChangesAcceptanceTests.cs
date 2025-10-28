@@ -405,7 +405,7 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
             using (var writer = XmlWriter.Create(builder))
             {
                 IEnumerable<EdmError> errors;
-                Assert.True(CsdlWriter.TryWriteCsdl(this.TestModel.RepresentativeModel, writer, CsdlTarget.OData, out errors));
+                Assert.True(CsdlWriter.TryWriteCsdl(this.TestModel.RepresentativeModel, writer, out errors));
                 Assert.Empty(errors);
                 writer.Flush();
             }

@@ -740,6 +740,40 @@ namespace Microsoft.OData.Tests.UriParser
             Assert.NotNull(parser.ParseSearch());
             Assert.Equal("abc", parser.ParseSkipToken());
             Assert.Equal("def", parser.ParseDeltaToken());
+            Assert.Equal(2, parser.CustomQueryOptions.Count);
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void ParseQueryOptionsShouldWorkForUnknownQueryOptions(bool enableNoDollarQueryOptions)
+        {
+            string relativeUriString = "People?$filter=Name eq 'Foo'&unknown&whatif&unknown=&$top=5";
+            var parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri(relativeUriString, UriKind.Relative));
+            parser.EnableNoDollarQueryOptions = enableNoDollarQueryOptions;
+
+            Assert.NotNull(parser.ParseFilter());
+            Assert.Equal(3, parser.CustomQueryOptions.Count);
+            Assert.Equal(new KeyValuePair<string, string>(null, "unknown"), parser.CustomQueryOptions.ElementAt(0));
+            Assert.Equal(new KeyValuePair<string, string>(null, "whatif"), parser.CustomQueryOptions.ElementAt(1));
+            Assert.Equal(new KeyValuePair<string, string>("unknown", ""), parser.CustomQueryOptions.ElementAt(2));
+         }
+
+        [Fact]
+        public static void ParseCustomQueryOptionsShouldWork()
+        {
+            string request = "People?customQueryOption=value&customQueryOption2=value2";
+            var parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri(request, UriKind.Relative));
+            ODataUri odataUri = parser.ParseUri();
+
+            Assert.NotEmpty(odataUri.CustomQueryOptions);
+            var customQueryOption = Assert.IsType<CustomQueryOptionNode>(odataUri.CustomQueryOptions.FirstOrDefault());
+            Assert.Equal("customQueryOption", customQueryOption.Name);
+            Assert.Equal("value", customQueryOption.Value);
+
+            customQueryOption = Assert.IsType<CustomQueryOptionNode>(odataUri.CustomQueryOptions.Skip(1).FirstOrDefault());
+            Assert.Equal("customQueryOption2", customQueryOption.Name);
+            Assert.Equal("value2", customQueryOption.Value);
         }
 
         [Theory]

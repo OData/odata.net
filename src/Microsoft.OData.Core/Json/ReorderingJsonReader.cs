@@ -6,13 +6,16 @@
 
 namespace Microsoft.OData.Json
 {
-    using Microsoft.OData.Core;
     #region Namespaces
+
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
+    using System.Runtime.CompilerServices;
     using System.Threading.Tasks;
+    using Microsoft.OData.Core;
+
     #endregion Namespaces
 
     /// <summary>
@@ -80,7 +83,9 @@ namespace Microsoft.OData.Json
         /// <returns>True if the current value can be streamed, otherwise false.</returns>
         public override bool CanStream()
         {
-            return (this.GetValue() is string || this.GetValue() == null);
+            object value = this.GetValue();
+
+            return value == null || value is string;
         }
 
 
@@ -155,12 +160,23 @@ namespace Microsoft.OData.Json
         /// A task that represents the asynchronous operation.
         /// The value of the TResult parameter contains true if the current value can be streamed; otherwise false.
         /// </returns>
-        public override async Task<bool> CanStreamAsync()
+        public override Task<bool> CanStreamAsync()
         {
-            object value = await this.GetValueAsync()
-                .ConfigureAwait(false);
+            Task<object> getValueTask = this.GetValueAsync();
+            if (getValueTask.IsCompletedSuccessfully)
+            {
+                object value = getValueTask.Result;
+                return Task.FromResult(value == null || value is string);
+            }
 
-            return value is string || value == null;
+            return AwaitGetValueAsync(getValueTask);
+
+            static async Task<bool> AwaitGetValueAsync(Task<object> pendingGetValueTask)
+            {
+                object value = await pendingGetValueTask.ConfigureAwait(false);
+                
+                return value == null || value is string;
+            }
         }
 
         /// <summary>
@@ -270,9 +286,10 @@ namespace Microsoft.OData.Json
         /// once it returns the reader will be returned to the position before the method was called.
         /// The reader is always positioned on a start object when this method is called.
         /// </remarks>
-        protected override async Task ProcessObjectValueAsync()
+        protected override Task ProcessObjectValueAsync()
         {
-            Debug.Assert(this.currentBufferedNode.NodeType == JsonNodeType.StartObject, "this.currentBufferedNode.NodeType == JsonNodeType.StartObject");
+            Debug.Assert(this.currentBufferedNode.NodeType == JsonNodeType.StartObject,
+                "this.currentBufferedNode.NodeType == JsonNodeType.StartObject");
             this.AssertBuffering();
 
             Stack<BufferedObject> bufferedObjectStack = new Stack<BufferedObject>();
@@ -282,87 +299,320 @@ namespace Microsoft.OData.Json
                 switch (this.currentBufferedNode.NodeType)
                 {
                     case JsonNodeType.StartObject:
+                        ValueTask handleStartObjectTask = this.HandleStartObjectAsync(bufferedObjectStack);
+                        if (!handleStartObjectTask.IsCompletedSuccessfully)
                         {
-                            // New object record - add the node to our stack
-                            BufferedObject bufferedObject = new BufferedObject { ObjectStart = this.currentBufferedNode };
-                            bufferedObjectStack.Push(bufferedObject);
-
-                            // See if it's an in-stream error
-                            await base.ProcessObjectValueAsync()
-                                .ConfigureAwait(false);
-                            this.currentBufferedNode = bufferedObject.ObjectStart;
-
-                            await this.ReadInternalAsync()
-                                .ConfigureAwait(false);
+                            return AwaitHandleNodeTypeAsync(
+                                this,
+                                bufferedObjectStack,
+                                handleStartObjectTask);
                         }
 
+                        // Completed synchronously; continue
                         break;
+
                     case JsonNodeType.EndObject:
+                        ValueTask<bool> handleEndObjectTask = this.HandleEndObjectAsync(bufferedObjectStack);
+                        if (!handleEndObjectTask.IsCompletedSuccessfully)
                         {
-                            // End of object record
-                            // Pop the node from our stack
-                            BufferedObject bufferedObject = bufferedObjectStack.Pop();
+                            return AwaitHandleEndObjectAsync(
+                                this,
+                                bufferedObjectStack,
+                                handleEndObjectTask);
+                        }
 
-                            // If there is a previous property record, mark its last value node.
-                            if (bufferedObject.CurrentProperty != null)
-                            {
-                                bufferedObject.CurrentProperty.EndOfPropertyValueNode = this.currentBufferedNode.Previous;
-                            }
-
-                            // Now perform the re-ordering on the buffered nodes
-                            bufferedObject.Reorder();
-
-                            if (bufferedObjectStack.Count == 0)
-                            {
-                                // No more objects to process - we're done.
-                                return;
-                            }
-
-                            await this.ReadInternalAsync()
-                                .ConfigureAwait(false);
+                        if (handleEndObjectTask.Result)
+                        {
+                            // Processed outermost object
+                            return Task.CompletedTask;
                         }
 
                         break;
+
                     case JsonNodeType.Property:
+                        ValueTask handlePropertyTask = this.HandlePropertyAsync(bufferedObjectStack);
+                        if (!handlePropertyTask.IsCompletedSuccessfully)
                         {
-                            BufferedObject bufferedObject = bufferedObjectStack.Peek();
-
-                            // If there is a current property, mark its last value node.
-                            if (bufferedObject.CurrentProperty != null)
-                            {
-                                bufferedObject.CurrentProperty.EndOfPropertyValueNode = this.currentBufferedNode.Previous;
-                            }
-
-                            BufferedProperty bufferedProperty = new BufferedProperty();
-                            bufferedProperty.PropertyNameNode = this.currentBufferedNode;
-
-                            string propertyName, annotationName;
-                            Tuple<string, string> readPropertyNameResult = await this.ReadPropertyNameAsync()
-                                .ConfigureAwait(false);
-                            propertyName = readPropertyNameResult.Item1;
-                            annotationName = readPropertyNameResult.Item2;
-
-                            bufferedProperty.PropertyAnnotationName = annotationName;
-                            bufferedObject.AddBufferedProperty(propertyName, annotationName, bufferedProperty);
-
-                            if (annotationName != null)
-                            {
-                                // Instance-level property annotation - no reordering in its value
-                                // or instance-level annotation - no reordering in its value either
-                                // So skip its value while buffering.
-                                await this.BufferValueAsync()
-                                    .ConfigureAwait(false);
-                            }
+                            return AwaitHandleNodeTypeAsync(
+                                this,
+                                bufferedObjectStack,
+                                handlePropertyTask);
                         }
 
+                        // Completed synchronously; continue
                         break;
 
                     default:
                         // Read over (buffer) everything else
-                        await this.ReadInternalAsync()
-                            .ConfigureAwait(false);
+                        Task<bool> readInternalTask = this.ReadInternalAsync();
+                        if (!readInternalTask.IsCompletedSuccessfully)
+                        {
+                            return AwaitReadInternalAsync(
+                                this,
+                                bufferedObjectStack,
+                                readInternalTask);
+                        }
+
+                        // Ignore readInternalTask.Result - always advancing; continue
                         break;
                 }
+            }
+
+            static async Task AwaitHandleNodeTypeAsync(
+                ReorderingJsonReader thisParam,
+                Stack<BufferedObject> bufferedObjectParam,
+                ValueTask pendingHandleNodeTypeTask)
+            {
+                await pendingHandleNodeTypeTask.ConfigureAwait(false);
+                await ContinueObjectProcessingAsync(thisParam, bufferedObjectParam)
+                    .ConfigureAwait(false);
+            }
+
+            static async Task AwaitHandleEndObjectAsync(
+                ReorderingJsonReader thisParam,
+                Stack<BufferedObject> bufferedObjectParam,
+                ValueTask<bool> pendingHandleEndObjectTask)
+            {
+                if (await pendingHandleEndObjectTask.ConfigureAwait(false))
+                {
+                    return;
+                }
+
+                await ContinueObjectProcessingAsync(thisParam, bufferedObjectParam)
+                        .ConfigureAwait(false);
+            }
+
+            static async Task AwaitReadInternalAsync(
+                ReorderingJsonReader thisParam,
+                Stack<BufferedObject> bufferedObjectParam,
+                Task<bool> pendingReadInternalTask)
+            {
+                await pendingReadInternalTask.ConfigureAwait(false);
+                await ContinueObjectProcessingAsync(thisParam, bufferedObjectParam)
+                    .ConfigureAwait(false);
+            }
+
+            static async Task ContinueObjectProcessingAsync(
+                ReorderingJsonReader thisParam,
+                Stack<BufferedObject> bufferedObjectStackParam)
+            {
+                while (true)
+                {
+                    switch (thisParam.currentBufferedNode.NodeType)
+                    {
+                        case JsonNodeType.StartObject:
+                            await thisParam.HandleStartObjectAsync(bufferedObjectStackParam)
+                                .ConfigureAwait(false);
+                            break;
+
+                        case JsonNodeType.EndObject:
+                            if (await thisParam.HandleEndObjectAsync(bufferedObjectStackParam)
+                                .ConfigureAwait(false))
+                            {
+                                // Processed outermost object
+                                return;
+                            }
+
+                            break;
+
+                        case JsonNodeType.Property:
+                            await thisParam.HandlePropertyAsync(bufferedObjectStackParam)
+                                .ConfigureAwait(false);
+                            break;
+
+                        default:
+                            // Read over (buffer) everything else
+                            await thisParam.ReadInternalAsync()
+                                .ConfigureAwait(false);
+                            break;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Processes a start object: pushes a new frame, probes for in-stream error via base,
+        /// then advances to the first child (property or EndObject).
+        /// </summary>
+        /// <returns>A ValueTask that completes when positioned on the first child of the new object.</returns>
+        private ValueTask HandleStartObjectAsync(Stack<BufferedObject> bufferedObjectStack)
+        {
+            // New object record - add the node to our stack
+            BufferedObject bufferedObject = new BufferedObject { ObjectStart = this.currentBufferedNode };
+            bufferedObjectStack.Push(bufferedObject);
+
+            // See if it's an in-stream error
+            Task baseProcessObjectValueTask = base.ProcessObjectValueAsync();
+            if (!baseProcessObjectValueTask.IsCompletedSuccessfully)
+            {
+                return AwaitBaseProcessObjectValueAsync(
+                    this,
+                    bufferedObject,
+                    baseProcessObjectValueTask);
+            }
+
+            // Completed synchronously
+            this.currentBufferedNode = bufferedObject.ObjectStart;
+
+            // Advance into the first child node (Property or EndObject)
+            Task<bool> readInternalTask = this.ReadInternalAsync();
+            if (readInternalTask.IsCompletedSuccessfully)
+            {
+                return ValueTask.CompletedTask;
+            }
+
+            return AwaitReadInternalAsync(this, readInternalTask);
+
+            static async ValueTask AwaitBaseProcessObjectValueAsync(
+                ReorderingJsonReader thisParam,
+                BufferedObject bufferedObject,
+                Task pendingBaseProcessObjectValueTask)
+            {
+                await pendingBaseProcessObjectValueTask.ConfigureAwait(false);
+
+                thisParam.currentBufferedNode = bufferedObject.ObjectStart;
+
+                await thisParam.ReadInternalAsync()
+                    .ConfigureAwait(false);
+            }
+
+            static async ValueTask AwaitReadInternalAsync(
+                ReorderingJsonReader thisParam,
+                Task<bool> pendingReadInternalTask)
+            {
+                await pendingReadInternalTask.ConfigureAwait(false);
+            }
+        }
+
+        /// <summary>
+        /// Processes an end object: finalizes the last property's value range, reorders properties, advances (if nested).
+        /// </summary>
+        /// <returns><c>true</c> if this was the outermost object and processing is complete; otherwise <c>false</c>.</returns>
+        private ValueTask<bool> HandleEndObjectAsync(Stack<BufferedObject> bufferedObjectStack)
+        {
+            // End of object record
+            // Pop the node from our stack
+            BufferedObject bufferedObject = bufferedObjectStack.Pop();
+
+            // If there is a previous property record, mark its last value node.
+            MarkEndOfPropertyValueNode(bufferedObject, this.currentBufferedNode);
+
+            // Now perform the re-ordering on the buffered nodes
+            bufferedObject.Reorder();
+            Debug.Assert(
+                this.currentBufferedNode.NodeType == JsonNodeType.EndObject,
+                "this.currentBufferedNode.NodeType == JsonNodeType.EndObject");
+
+            if (bufferedObjectStack.Count == 0)
+            {
+                // No more objects to process - we're done.
+                return ValueTask.FromResult(true);
+            }
+
+            Task<bool> readInternalTask = this.ReadInternalAsync();
+            if (readInternalTask.IsCompletedSuccessfully)
+            {
+                return ValueTask.FromResult(false);
+            }
+
+            return AwaitReadInternalAsync(this, readInternalTask);
+
+            static async ValueTask<bool> AwaitReadInternalAsync(ReorderingJsonReader thisParam, Task<bool> pendingReadInternalTask)
+            {
+                await pendingReadInternalTask.ConfigureAwait(false);
+
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Processes a property: closes the prior property's span, records the new property,
+        /// optionally buffers its annotation value.
+        /// </summary>
+        /// <returns>A ValueTask that completes once positioned after the property name
+        /// (or after the buffered annotation value).</returns>
+        private ValueTask HandlePropertyAsync(Stack<BufferedObject> bufferedObjectStack)
+        {
+            Debug.Assert(bufferedObjectStack.Count > 0, "bufferedObjectStack.Count > 0");
+
+            BufferedObject bufferedObject = bufferedObjectStack.Peek();
+
+            // If there is a current property, mark its last value node.
+            MarkEndOfPropertyValueNode(bufferedObject, this.currentBufferedNode);
+
+            BufferedProperty bufferedProperty = new BufferedProperty { PropertyNameNode = this.currentBufferedNode };
+
+            ValueTask<(string PropertyName, string AnnotationName)> readPropertyNameTask = this.ReadPropertyNameAsync();
+            if (readPropertyNameTask.IsCompletedSuccessfully)
+            {
+                (string propertyName, string annotationName) = readPropertyNameTask.Result;
+
+                return ContinueAfterReadPropertyNameAsync(
+                    this,
+                    bufferedObject,
+                    bufferedProperty,
+                    propertyName,
+                    annotationName);
+            }
+
+            return AwaitReadPropertyNameAsync(
+                this,
+                bufferedObject,
+                bufferedProperty,
+                readPropertyNameTask);
+
+            static ValueTask ContinueAfterReadPropertyNameAsync(
+                ReorderingJsonReader thisParam,
+                BufferedObject bufferedObjectParam,
+                BufferedProperty bufferedPropertyParam,
+                string propertyNameParam,
+                string annotationNameParam)
+            {
+                bufferedPropertyParam.PropertyAnnotationName = annotationNameParam;
+                bufferedObjectParam.AddBufferedProperty(propertyNameParam, annotationNameParam, bufferedPropertyParam);
+
+                if (annotationNameParam != null)
+                {
+                    // Instance-level property annotation - no reordering in its value
+                    // or instance-level annotation - no reordering in its value either
+                    // So skip its value while buffering.
+
+                    ValueTask bufferValueTask = thisParam.BufferValueAsync();
+                    if (!bufferValueTask.IsCompletedSuccessfully)
+                    {
+                        return bufferValueTask; // Caller will await
+                    }
+                }
+
+                return ValueTask.CompletedTask;
+            }
+
+            static async ValueTask AwaitReadPropertyNameAsync(
+                ReorderingJsonReader thisParam,
+                BufferedObject bufferedObjectParam,
+                BufferedProperty bufferedPropertyParam,
+                ValueTask<(string PropertyName, string AnnotationName)> pendingReadPropertyNameTask)
+            {
+                (string propertyName, string annotationName) = await pendingReadPropertyNameTask.ConfigureAwait(false);
+                
+                await ContinueAfterReadPropertyNameAsync(
+                    thisParam,
+                    bufferedObjectParam,
+                    bufferedPropertyParam,
+                    propertyName,
+                    annotationName).ConfigureAwait(false);
+            }
+        }
+
+        /// <summary>
+        /// Marks the end node of the current property's value using the node preceding the current cursor.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static void MarkEndOfPropertyValueNode(BufferedObject bufferedObject, BufferedNode currentNode)
+        {
+            if (bufferedObject.CurrentProperty != null)
+            {
+                bufferedObject.CurrentProperty.EndOfPropertyValueNode = currentNode.Previous;
             }
         }
 
@@ -392,22 +642,7 @@ namespace Microsoft.OData.Json
             int depth = 0;
             do
             {
-                switch (this.NodeType)
-                {
-                    case JsonNodeType.PrimitiveValue:
-                        break;
-                    case JsonNodeType.StartArray:
-                    case JsonNodeType.StartObject:
-                        depth++;
-                        break;
-                    case JsonNodeType.EndArray:
-                    case JsonNodeType.EndObject:
-                        Debug.Assert(depth > 0, "Seen too many scope ends.");
-                        depth--;
-                        break;
-                    default:
-                        break;
-                }
+                depth = AdjustDepth(depth, this.NodeType);
 
                 this.ReadInternal();
             }
@@ -422,54 +657,92 @@ namespace Microsoft.OData.Json
         /// 1). The name of the regular property which the reader is positioned on or which a property annotation belongs to.
         /// 2). The name of the instance or property annotation, or null if the reader is on a regular property.
         /// </returns>
-        private async Task<Tuple<string, string>> ReadPropertyNameAsync()
+        private ValueTask<(string PropertyName, string AnnotationName)> ReadPropertyNameAsync()
         {
-            string propertyName, annotationName;
-            string jsonPropertyName = await this.GetPropertyNameAsync()
-                .ConfigureAwait(false);
-            Debug.Assert(!string.IsNullOrEmpty(jsonPropertyName), "The JSON reader guarantees that property names are not null or empty.");
+            Task<string> getPropertyNameTask = this.GetPropertyNameAsync();
+            if (getPropertyNameTask.IsCompletedSuccessfully)
+            {
+                string jsonPropertyName = getPropertyNameTask.Result;
+                Debug.Assert(!string.IsNullOrEmpty(jsonPropertyName), "The JSON reader guarantees that property names are not null or empty.");
+                Task<bool> readInternalTask = this.ReadInternalAsync();
+                if (readInternalTask.IsCompletedSuccessfully)
+                {
+                    ProcessProperty(jsonPropertyName, out string propertyName, out string annotationName);
+                    return ValueTask.FromResult((propertyName, annotationName));
+                }
 
-            await this.ReadInternalAsync()
-                .ConfigureAwait(false);
+                return AwaitReadInputAsync(this, jsonPropertyName, readInternalTask);
+            }
 
-            ProcessProperty(jsonPropertyName, out propertyName, out annotationName);
+            return AwaitGetPropertyNameAsync(this, getPropertyNameTask);
 
-            return Tuple.Create(propertyName, annotationName);
+            static async ValueTask<(string PropertyName, string AnnotationName)> AwaitGetPropertyNameAsync(
+                ReorderingJsonReader thisParam,
+                Task<string> pendingGetPropertyNameTask)
+            {
+                string jsonPropertyName = await pendingGetPropertyNameTask.ConfigureAwait(false);
+
+                Debug.Assert(!string.IsNullOrEmpty(jsonPropertyName), "The JSON reader guarantees that property names are not null or empty.");
+                await thisParam.ReadInternalAsync()
+                    .ConfigureAwait(false);
+
+                ProcessProperty(jsonPropertyName, out string propertyName, out string annotationName);
+                return (propertyName, annotationName);
+            }
+
+            static async ValueTask<(string PropertyName, string AnnotationName)> AwaitReadInputAsync(
+                ReorderingJsonReader thisParam,
+                string jsonPropertyName,
+                Task<bool> pendingReadInternalTask)
+            {
+                await pendingReadInternalTask.ConfigureAwait(false);
+                ProcessProperty(jsonPropertyName, out string propertyName, out string annotationName);
+                return (propertyName, annotationName);
+            }
         }
 
         /// <summary>
         /// Asynchronously reads over a value buffering it.
         /// </summary>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        private async Task BufferValueAsync()
+        private ValueTask BufferValueAsync()
         {
             this.AssertBuffering();
 
             // Skip the value buffering it in the process.
             int depth = 0;
-            do
+
+            while (true)
             {
-                switch (this.NodeType)
+                depth = AdjustDepth(depth, this.NodeType);
+
+                Task<bool> readInternalTask = this.ReadInternalAsync();
+                if (!readInternalTask.IsCompletedSuccessfully)
                 {
-                    case JsonNodeType.PrimitiveValue:
-                        break;
-                    case JsonNodeType.StartArray:
-                    case JsonNodeType.StartObject:
-                        depth++;
-                        break;
-                    case JsonNodeType.EndArray:
-                    case JsonNodeType.EndObject:
-                        Debug.Assert(depth > 0, "Seen too many scope ends.");
-                        depth--;
-                        break;
-                    default:
-                        break;
+                    return AwaitReadInputAsync(this, depth, readInternalTask);
                 }
 
-                await this.ReadInternalAsync()
-                    .ConfigureAwait(false);
+                if (depth == 0)
+                {
+                    return ValueTask.CompletedTask;
+                }
             }
-            while (depth > 0);
+
+            static async ValueTask AwaitReadInputAsync(ReorderingJsonReader thisParam, int depth, Task<bool> pendingReadInternalTask)
+            {
+                while (true)
+                {
+                    await pendingReadInternalTask.ConfigureAwait(false);
+
+                    if (depth == 0)
+                    {
+                        return;
+                    }
+
+                    depth = AdjustDepth(depth, thisParam.NodeType);
+                    pendingReadInternalTask = thisParam.ReadInternalAsync();
+                }
+            }
         }
 
         /// <summary>
@@ -523,6 +796,35 @@ namespace Microsoft.OData.Json
                         }
                     }
                 }
+            }
+        }
+
+        /// <summary>
+        /// Adjusts the running nesting depth counter based on the current node type,
+        /// incrementing for start scopes and decrementing for end scopes.
+        /// </summary>
+        /// <param name="currentDepth">The current nesting depth.</param>
+        /// <param name="nodeType">The node just encountered.</param>
+        /// <returns>The updated depth.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static int AdjustDepth(int currentDepth, JsonNodeType nodeType)
+        {
+            switch (nodeType)
+            {
+                case JsonNodeType.PrimitiveValue:
+                    return currentDepth;
+
+                case JsonNodeType.StartArray:
+                case JsonNodeType.StartObject:
+                    return currentDepth + 1;
+
+                case JsonNodeType.EndArray:
+                case JsonNodeType.EndObject:
+                    Debug.Assert(currentDepth > 0, "Seen too many scope ends.");
+                    return currentDepth - 1;
+
+                default:
+                    return currentDepth;
             }
         }
 

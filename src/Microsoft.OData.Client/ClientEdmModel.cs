@@ -141,9 +141,20 @@ namespace Microsoft.OData.Client
         /// <param name="qualifiedName">The qualified name of the schema element being found.</param>
         /// <returns>The requested schema element, or null if no such schema element exists.</returns>
         public IEdmSchemaType FindDeclaredType(string qualifiedName)
+            => FindDeclaredType(qualifiedName.AsSpan());
+
+        /// <summary>
+        /// Searches for a schema element with the given name in this model and returns null if no such schema element exists.
+        /// </summary>
+        /// <param name="qualifiedName">The qualified name of the schema element being found.</param>
+        /// <returns>The requested schema element, or null if no such schema element exists.</returns>
+        public IEdmSchemaType FindDeclaredType(ReadOnlySpan<char> qualifiedName)
         {
+            Dictionary<string, ClientTypeAnnotation>.AlternateLookup<ReadOnlySpan<char>> lookup
+                = this.typeNameToClientTypeAnnotationCache.GetAlternateLookup<ReadOnlySpan<char>>();
+
             ClientTypeAnnotation clientTypeAnnotation = null;
-            if (this.typeNameToClientTypeAnnotationCache.TryGetValue(qualifiedName, out clientTypeAnnotation))
+            if (lookup.TryGetValue(qualifiedName, out clientTypeAnnotation))
             {
                 return (IEdmSchemaType)clientTypeAnnotation.EdmType;
             }
@@ -157,6 +168,16 @@ namespace Microsoft.OData.Client
         /// <param name="qualifiedName">The qualified name of the operation being found.</param>
         /// <returns>A set operations sharing the specified qualified name, or an empty enumerable if no such operation exists.</returns>
         public IEnumerable<IEdmOperation> FindDeclaredOperations(string qualifiedName)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Searches for operations with the given name in this model and returns null if no such operation exists.
+        /// </summary>
+        /// <param name="qualifiedName">The qualified name of the operation being found.</param>
+        /// <returns>A set operations sharing the specified qualified name, or an empty enumerable if no such operation exists.</returns>
+        public IEnumerable<IEdmOperation> FindDeclaredOperations(ReadOnlySpan<char> qualifiedName)
         {
             throw new NotImplementedException();
         }
@@ -185,11 +206,34 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
+        /// Searches for bound operations based on the qualified name and binding type, returns an empty enumerable if no operation exists.
+        /// </summary>
+        /// <param name="qualifiedName">The qualified name of the operation.</param>
+        /// <param name="bindingType">Type of the binding.</param>
+        /// <returns>
+        /// A set of operations that share the qualified name and binding type or empty enumerable if no such operation exists.
+        /// </returns>
+        public IEnumerable<IEdmOperation> FindDeclaredBoundOperations(ReadOnlySpan<char> qualifiedName, IEdmType bindingType)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
         /// Searches for a term with the given name in this model and returns null if no such term exists.
         /// </summary>
         /// <param name="qualifiedName">The qualified name of the term being found.</param>
         /// <returns>The requested term, or null if no such term exists.</returns>
         public IEdmTerm FindDeclaredTerm(string qualifiedName)
+        {
+            return null;
+        }
+
+        /// <summary>
+        /// Searches for a term with the given name in this model and returns null if no such term exists.
+        /// </summary>
+        /// <param name="qualifiedName">The qualified name of the term being found.</param>
+        /// <returns>The requested term, or null if no such term exists.</returns>
+        public IEdmTerm FindDeclaredTerm(ReadOnlySpan<char> qualifiedName)
         {
             return null;
         }

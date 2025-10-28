@@ -4,6 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OData.Edm.Validation;
@@ -20,29 +21,16 @@ namespace Microsoft.OData.Edm
         {
         }
 
-        public IEdmStructuredType BaseType
-        {
-            get { return null; }
-        }
+        public IEdmStructuredType BaseType => null;
 
-        public IEnumerable<IEdmProperty> DeclaredProperties
-        {
-            get { return Enumerable.Empty<IEdmProperty>(); }
-        }
+        public IEnumerable<IEdmProperty> DeclaredProperties => Enumerable.Empty<IEdmProperty>();
 
-        public bool IsAbstract
-        {
-            get { return false; }
-        }
+        public bool IsAbstract => false;
 
-        public bool IsOpen
-        {
-            get { return false; }
-        }
+        public bool IsOpen => false;
 
-        public IEdmProperty FindProperty(string name)
-        {
-            return null;
-        }
+        public IEdmProperty FindProperty(string name) => null;
+
+        public IEdmProperty FindProperty(ReadOnlySpan<char> name) => null;
     }
 }
