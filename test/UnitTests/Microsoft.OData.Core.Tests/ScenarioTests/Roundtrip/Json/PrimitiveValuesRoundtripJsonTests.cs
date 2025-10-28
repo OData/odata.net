@@ -147,6 +147,48 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.Json
             this.VerifyPrimitiveValuesDoNotRoundtripWithoutTypeInformation(values);
         }
 
+        public static TheoryData<decimal, ODataVersion> DecimalValuesForRoundtripJsonTest()
+        {
+            return new TheoryData<decimal, ODataVersion>
+            {
+                { 0, ODataVersion.V4 },
+                { 0, ODataVersion.V401 },
+                { 1, ODataVersion.V4 },
+                { 1, ODataVersion.V401 },
+                { -1, ODataVersion.V4 },
+                { -1, ODataVersion.V401 },
+                { Decimal.MinValue, ODataVersion.V4 },
+                { Decimal.MinValue, ODataVersion.V401 },
+                { Decimal.MaxValue, ODataVersion.V4 },
+                { Decimal.MaxValue, ODataVersion.V401 },
+                { 10^28, ODataVersion.V4 },
+                { 10^28, ODataVersion.V401 },
+                { 10^-28, ODataVersion.V4 },
+                { 10^-28, ODataVersion.V401 },
+            };
+        }
+
+        [Theory]
+        [MemberData(nameof(DecimalValuesForRoundtripJsonTest))]
+        public void DecimalRoundtripJsonTest_With_Ieee754CompatibleTrue(decimal clrValue, ODataVersion version)
+        {
+            // Arrange & Act
+            var typeReference = new EdmPrimitiveTypeReference((IEdmPrimitiveType)this.model.FindType("Edm.Decimal"), true);
+
+            // roundtrip with type reference
+            var actualValuewithTypeRef = this.WriteThenReadValue(clrValue, typeReference, version, isIeee754Compatible: true);
+
+            // roundtrip without type reference
+            var actualValueWithoutTypeRef = this.WriteThenReadValue(clrValue, null, version, isIeee754Compatible: true);
+
+            // Assert
+            Assert.Equal(clrValue.GetType(), actualValuewithTypeRef.GetType());
+            Assert.Equal(actualValuewithTypeRef, clrValue);
+
+            Assert.Equal(typeof(string), actualValueWithoutTypeRef.GetType());
+            Assert.Equal(Convert.ToDecimal(actualValueWithoutTypeRef), clrValue);
+        }
+
         [Fact]
         public void DecimalRoundTripJsonTestWithIeee754CompatibleFalse()
         {
@@ -165,6 +207,44 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.Json
 
             // precision lose for Ieee754Compatible=false
             this.VerifyPrimitiveValuesDoNotRoundtripWithoutTypeInformationIeee754CompatibleFalse(new[] { Decimal.MaxValue, Decimal.MinValue });
+        }
+
+        public static TheoryData<decimal, ODataVersion, Type> DecimalValuesForRoundtripJsonTestWithIeee754CompatibleFalse()
+        {
+            return new TheoryData<decimal, ODataVersion, Type>
+            {
+                { 0, ODataVersion.V4, typeof(int) },
+                { 0, ODataVersion.V401, typeof(int) },
+                { 1, ODataVersion.V4, typeof(int) },
+                { 1, ODataVersion.V401, typeof(int) },
+                { -1, ODataVersion.V4, typeof(int) },
+                { -1, ODataVersion.V401, typeof(int) },
+                { Decimal.MinValue, ODataVersion.V4, typeof(double) },
+                { Decimal.MinValue, ODataVersion.V401, typeof(double) },
+                { Decimal.MaxValue, ODataVersion.V4, typeof(double) },
+                { Decimal.MaxValue, ODataVersion.V401, typeof(double) }
+            };
+        }
+
+        [Theory]
+        [MemberData(nameof(DecimalValuesForRoundtripJsonTestWithIeee754CompatibleFalse))]
+        public void DecimalRoundtripJsonTest_With_Ieee754CompatibleFalse(decimal clrValue, ODataVersion version, Type expectedTypeOfValueWithoutRef)
+        {
+            // Arrange & Act
+            var typeReference = new EdmPrimitiveTypeReference((IEdmPrimitiveType)this.model.FindType("Edm.Decimal"), true);
+
+            // roundtrip with type reference
+            var actualValuewithTypeRef = this.WriteThenReadValue(clrValue, typeReference, version, isIeee754Compatible: false);
+
+            // roundtrip without type reference
+            var actualValueWithoutTypeRef = this.WriteThenReadValue(clrValue, null, version, isIeee754Compatible: false);
+
+            // Assert
+            Assert.Equal(clrValue.GetType(), actualValuewithTypeRef.GetType());
+            Assert.Equal(actualValuewithTypeRef, clrValue);
+
+            Assert.Equal(expectedTypeOfValueWithoutRef, actualValueWithoutTypeRef.GetType());
+            Assert.Equal(Convert.ToDouble(actualValueWithoutTypeRef), (double)clrValue);
         }
 
         [Fact]
@@ -191,6 +271,64 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.Json
             this.VerifyPrimitiveValuesRoundtripWithTypeInformation(valuesWrittenAsDigits.Concat(valuesWrittenAsString), "Edm.Double");
             this.VerifyPrimitiveValuesRoundtripWithoutTypeInformation(valuesWrittenAsDigits);
             this.VerifyPrimitiveValuesDoNotRoundtripWithoutTypeInformation(valuesWrittenAsString);
+        }
+
+        [Theory]
+        [InlineData(0, ODataVersion.V4)]
+        [InlineData(0, ODataVersion.V401)]
+        [InlineData(42, ODataVersion.V4)]
+        [InlineData(42, ODataVersion.V401)]
+        [InlineData(42.42, ODataVersion.V4)]
+        [InlineData(42.42, ODataVersion.V401)]
+        [InlineData(Double.MaxValue, ODataVersion.V4)]
+        [InlineData(Double.MinValue, ODataVersion.V401)]
+        [InlineData(-4.42330604244772E-305, ODataVersion.V4)]
+        [InlineData(-4.42330604244772E-305, ODataVersion.V401)]
+        [InlineData(42E20, ODataVersion.V4)]
+        [InlineData(42E20, ODataVersion.V401)]
+        public void DoubleRoundtripJsonTest_With_DigitValues(double clrValue, ODataVersion version)
+        {
+            // Arrange & Act
+            var typeReference = new EdmPrimitiveTypeReference((IEdmPrimitiveType)this.model.FindType("Edm.Double"), true);
+
+            // roundtrip with type reference
+            var actualValuewithTypeRef = this.WriteThenReadValue(clrValue, typeReference, version, isIeee754Compatible: true);
+
+            // roundtrip without type reference
+            var actualValueWithoutTypeRef = this.WriteThenReadValue(clrValue, null, version, isIeee754Compatible: true);
+
+            // Assert
+            Assert.Equal(clrValue.GetType(), actualValuewithTypeRef.GetType());
+            Assert.Equal(actualValuewithTypeRef, clrValue);
+
+            Assert.Equal(clrValue.GetType(), actualValueWithoutTypeRef.GetType());
+            Assert.Equal(actualValueWithoutTypeRef, clrValue);
+        }
+
+        [Theory]
+        [InlineData(Double.PositiveInfinity, ODataVersion.V4, "INF")]
+        [InlineData(Double.PositiveInfinity, ODataVersion.V401, "INF")]
+        [InlineData(Double.NegativeInfinity, ODataVersion.V4, "-INF")]
+        [InlineData(Double.NegativeInfinity, ODataVersion.V401, "-INF")]
+        [InlineData(Double.NaN, ODataVersion.V4, "NaN")]
+        [InlineData(Double.NaN, ODataVersion.V401, "NaN")]
+        public void DoubleRoundtripJsonTest_With_StringValues(double clrValue, ODataVersion version, string expectedValueForNullTypeReference)
+        {
+            // Arrange & Act
+            var typeReference = new EdmPrimitiveTypeReference((IEdmPrimitiveType)this.model.FindType("Edm.Double"), true);
+
+            // roundtrip with type reference
+            var actualValuewithTypeRef = this.WriteThenReadValue(clrValue, typeReference, version, isIeee754Compatible: true);
+
+            // roundtrip without type reference
+            var actualValueWithoutTypeRef = this.WriteThenReadValue(clrValue, null, version, isIeee754Compatible: true);
+
+            // Assert
+            Assert.Equal(clrValue.GetType(), actualValuewithTypeRef.GetType());
+            Assert.Equal(actualValuewithTypeRef, clrValue);
+
+            Assert.Equal(typeof(string), actualValueWithoutTypeRef.GetType());
+            Assert.Equal(expectedValueForNullTypeReference, actualValueWithoutTypeRef);
         }
 
         [Fact]
@@ -720,6 +858,13 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.Json
                 }
 
                 Assert.True(true);
+            } 
+            else if (clrValue != null && clrValue is long longClrValue)
+            {
+                if(isIeee754Compatible)
+                {
+                    Assert.NotEqual(actualValue.GetType(), clrValue.GetType());
+                }
             }
             else
             {
