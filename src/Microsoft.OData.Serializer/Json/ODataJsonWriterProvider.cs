@@ -189,6 +189,7 @@ internal class ODataJsonWriterProvider<TCustomState>(ODataSerializerOptions<TCus
     {
         return [
             new ODataJsonEnumWriterFactory<TCustomState>(),
+            new ODataJsonNullableWriterFactory<TCustomState>(),
             new ODataJsonEnumerableWriterFactory<TCustomState>()
         ];
     }
