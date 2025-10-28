@@ -159,7 +159,7 @@ namespace Microsoft.OData.UriParser
                     }
                     else if (expectedType.Definition.AsElementType().TypeKind == EdmTypeKind.Enum)
                     {
-                        bracketLiteralText = NormalizeEnumCollectionItems(bracketLiteralText, expectedTypeFullName);
+                        bracketLiteralText = NormalizeEnumCollectionItems(bracketLiteralText, this.resolver.EnableCaseInsensitive, expectedTypeFullName);
                     }
                 }
 
@@ -430,7 +430,7 @@ namespace Microsoft.OData.UriParser
             return "[" + String.Join(",", items) + "]";
         }
 
-        private static string NormalizeEnumCollectionItems(string bracketLiteralText, string expectedTypeFullName)
+        private static string NormalizeEnumCollectionItems(string bracketLiteralText, bool enableCaseInsensitive, string expectedTypeFullName)
         {
             // Remove the '[' and ']' or '(' and ')' and trim the content
             ReadOnlySpan<char> normalizedText = bracketLiteralText.AsSpan(1, bracketLiteralText.Length - 2);
@@ -453,7 +453,7 @@ namespace Microsoft.OData.UriParser
                 return "[]";
             }
 
-            int expectedTypeFullNameLen = string.IsNullOrEmpty(expectedTypeFullName) ? 0 : expectedTypeFullName.Length;
+            int expectedTypeFullNameLength = string.IsNullOrEmpty(expectedTypeFullName) ? 0 : expectedTypeFullName.Length;
             ReadOnlySpan<char> content = normalizedText.Slice(left, right - left + 1);
             int startIndex = 0;
             int length = content.Length;
@@ -500,13 +500,15 @@ namespace Microsoft.OData.UriParser
                     }
 
                     ReadOnlySpan<char> token = content[startIndex..end];
-                    if (expectedTypeFullNameLen > 0 && token.Length > expectedTypeFullNameLen && 
-                        token.StartsWith(expectedTypeFullName, StringComparison.Ordinal))
+
+                    // Remove type prefix if present e.g., Namespace.Days'Monday'
+                    if (expectedTypeFullNameLength > 0 && token.Length > expectedTypeFullNameLength && 
+                        token.StartsWith(expectedTypeFullName, enableCaseInsensitive ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal))
                     {
-                        char next = token[expectedTypeFullNameLen];
+                        char next = token[expectedTypeFullNameLength];
                         if (next == '\'' || next == '\"')
                         {
-                            token = token.Slice(expectedTypeFullNameLen);
+                            token = token.Slice(expectedTypeFullNameLength);
                         }
                     }
 
