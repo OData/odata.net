@@ -55,7 +55,8 @@ public abstract class ODataResourceSetBaseJsonWriter<TCollection, TElement, TCus
             }
         }
 
-        if (progress < ResourceWriteProgress.Value)
+        // TODO: Checking whether value == null might not work for structs that implement the TCollection interface
+        if (progress < ResourceWriteProgress.Value && value != null)
         {
             if (WriteElements(value, state))
             {
