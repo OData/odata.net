@@ -303,6 +303,186 @@ namespace Microsoft.OData.Tests.Json
         }
 
         [Fact]
+        public async Task ReadTopLevelDeltaResourceSetAsyncWithWhitespaces()
+        {
+            this.messageReaderSettings.ShouldIncludeAnnotation = ODataUtils.CreateAnnotationFilter("*");
+
+            var payload =
+                """
+                {
+                  "@odata.context": "http://tempuri.org/$metadata#Customers/$delta"                             ,
+
+
+
+
+
+                  "@odata.count": 2,
+                  "@odata.deltaLink": "http://tempuri.org/Customers/deltaLink",                                            
+                  "@Is.DeltaResourceSet":              
+                                            true,
+
+                                
+                              "value": [
+                                {
+                                  "@odata.context": "http://tempuri.org/$metadata#Customers/$deletedEntity",
+                                  "id": "http://tempuri.org/Customers(7)",
+                                  "reason": "deleted"
+                                },
+                    {
+                      "@odata.context":     "http://tempuri.org/$metadata#Customers/$deletedEntity",
+                      "id":                                 
+                                                    
+                                                
+                                    
+                      
+                                                                        "http://tempuri.org/Customers(13)",
+                      "reason"    
+                         :     "changed"
+                    }
+                  ]
+                }
+                """;
+
+            var verifyDeletedResourceActionStack = new Stack<Action<ODataDeletedResource>>();
+
+            verifyDeletedResourceActionStack.Push((deletedResource) =>
+            {
+                Assert.NotNull(deletedResource);
+
+                Assert.NotNull(deletedResource.Id);
+                Assert.Equal("http://tempuri.org/Customers(13)", deletedResource.Id.AbsoluteUri);
+                Assert.Equal(DeltaDeletedEntryReason.Changed, deletedResource.Reason);
+            });
+
+            verifyDeletedResourceActionStack.Push((deletedResource) =>
+            {
+                Assert.NotNull(deletedResource);
+
+                Assert.NotNull(deletedResource.Id);
+                Assert.Equal("http://tempuri.org/Customers(7)", deletedResource.Id.AbsoluteUri);
+                Assert.Equal(DeltaDeletedEntryReason.Deleted, deletedResource.Reason);
+            });
+
+            await SetupJsonReaderAndRunTestAsync(
+                payload,
+                this.customerEntitySet,
+                this.customerEntityType,
+                (jsonReader) => JsonReaderUtils.DoReadAsync(
+                    jsonReader,
+                    verifyDeltaResourceSetAction: (deltaResourceSet) =>
+                    {
+                        Assert.NotNull(deltaResourceSet);
+                        Assert.Equal(2, deltaResourceSet.Count);
+                        Assert.Equal("http://tempuri.org/Customers/deltaLink", deltaResourceSet.DeltaLink.AbsoluteUri);
+                        var instanceAnnotation = Assert.Single(deltaResourceSet.InstanceAnnotations);
+                        Assert.Equal("Is.DeltaResourceSet", instanceAnnotation.Name);
+                        var annotationValue = Assert.IsType<ODataPrimitiveValue>(instanceAnnotation.Value);
+                        Assert.Equal(true, annotationValue.Value);
+                    },
+                    verifyDeletedResourceAction: (deletedResource) =>
+                    {
+                        Assert.NotEmpty(verifyDeletedResourceActionStack);
+                        var innerVerifyDeletedResourceAction = verifyDeletedResourceActionStack.Pop();
+
+                        innerVerifyDeletedResourceAction(deletedResource);
+                    }),
+                readingResourceSet: true,
+                readingDelta: true);
+
+            Assert.Empty(verifyDeletedResourceActionStack);
+        }
+
+        [Fact]
+        public void ReadTopLevelDeltaResourceSetWithWhitespaces()
+        {
+            this.messageReaderSettings.ShouldIncludeAnnotation = ODataUtils.CreateAnnotationFilter("*");
+
+            var payload =
+                """
+                {
+                  "@odata.context": "http://tempuri.org/$metadata#Customers/$delta"                             ,
+
+
+
+
+
+                  "@odata.count": 2,
+                  "@odata.deltaLink": "http://tempuri.org/Customers/deltaLink",                                            
+                  "@Is.DeltaResourceSet":              
+                                            true,
+
+                                
+                              "value": [
+                                {
+                                  "@odata.context": "http://tempuri.org/$metadata#Customers/$deletedEntity",
+                                  "id": "http://tempuri.org/Customers(7)",
+                                  "reason": "deleted"
+                                },
+                    {
+                      "@odata.context":     "http://tempuri.org/$metadata#Customers/$deletedEntity",
+                      "id":                                 
+                                                    
+                                                
+                                    
+                      
+                                                                        "http://tempuri.org/Customers(13)",
+                      "reason"    
+                         :     "changed"
+                    }
+                  ]
+                }
+                """;
+
+            var verifyDeletedResourceActionStack = new Stack<Action<ODataDeletedResource>>();
+
+            verifyDeletedResourceActionStack.Push((deletedResource) =>
+            {
+                Assert.NotNull(deletedResource);
+
+                Assert.NotNull(deletedResource.Id);
+                Assert.Equal("http://tempuri.org/Customers(13)", deletedResource.Id.AbsoluteUri);
+                Assert.Equal(DeltaDeletedEntryReason.Changed, deletedResource.Reason);
+            });
+
+            verifyDeletedResourceActionStack.Push((deletedResource) =>
+            {
+                Assert.NotNull(deletedResource);
+
+                Assert.NotNull(deletedResource.Id);
+                Assert.Equal("http://tempuri.org/Customers(7)", deletedResource.Id.AbsoluteUri);
+                Assert.Equal(DeltaDeletedEntryReason.Deleted, deletedResource.Reason);
+            });
+
+            SetupJsonReaderAndRunTest(
+                payload,
+                this.customerEntitySet,
+                this.customerEntityType,
+                (jsonReader) => JsonReaderUtils.DoRead(
+                    jsonReader,
+                    verifyDeltaResourceSetAction: (deltaResourceSet) =>
+                    {
+                        Assert.NotNull(deltaResourceSet);
+                        Assert.Equal(2, deltaResourceSet.Count);
+                        Assert.Equal("http://tempuri.org/Customers/deltaLink", deltaResourceSet.DeltaLink.AbsoluteUri);
+                        var instanceAnnotation = Assert.Single(deltaResourceSet.InstanceAnnotations);
+                        Assert.Equal("Is.DeltaResourceSet", instanceAnnotation.Name);
+                        var annotationValue = Assert.IsType<ODataPrimitiveValue>(instanceAnnotation.Value);
+                        Assert.Equal(true, annotationValue.Value);
+                    },
+                    verifyDeletedResourceAction: (deletedResource) =>
+                    {
+                        Assert.NotEmpty(verifyDeletedResourceActionStack);
+                        var innerVerifyDeletedResourceAction = verifyDeletedResourceActionStack.Pop();
+
+                        innerVerifyDeletedResourceAction(deletedResource);
+                    }),
+                readingResourceSet: true,
+                readingDelta: true);
+
+            Assert.Empty(verifyDeletedResourceActionStack);
+        }
+
+        [Fact]
         public async Task ReadV401TopLevelDeltaResourceSetAsync()
         {
             this.messageReaderSettings.Version = ODataVersion.V401;
