@@ -154,17 +154,9 @@ namespace Microsoft.OData
         /// <param name="memberName">The member name to check.</param>
         /// <param name="comparison">The comparison type to use for string comparison. Default is Ordinal.</param>
         /// <returns>True if the member name exists in the enum type; otherwise, false.</returns>
-        public static bool ContainsMember(this IEdmEnumType enumType, string memberName, StringComparison comparison = StringComparison.Ordinal)
+        public static bool HasMember(this IEdmEnumType enumType, string memberName, StringComparison comparison = StringComparison.Ordinal)
         {
-            foreach (IEdmEnumMember member in enumType.Members)
-            {
-                if (string.Equals(member.Name, memberName, comparison))
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            return enumType.HasMember(memberName.AsSpan(), comparison);
         }
 
         /// <summary>
@@ -175,19 +167,9 @@ namespace Microsoft.OData
         /// <param name="exactMemberName">When this method returns, contains the <see cref="IEdmEnumMember"/> that matches the specified name, if a match is found; otherwise, null.</param>
         /// <param name="comparison">The comparison type to use for string comparison. Default is Ordinal.</param>
         /// <returns>True if the member name exists in the enum type; otherwise, false.</returns>
-        public static bool ContainsMember(this IEdmEnumType enumType, string memberName, out IEdmEnumMember exactMemberName, StringComparison comparison = StringComparison.Ordinal)
+        public static IEdmEnumMember FindMember(this IEdmEnumType enumType, string memberName, StringComparison comparison = StringComparison.Ordinal)
         {
-            foreach (IEdmEnumMember member in enumType.Members)
-            {
-                if (string.Equals(member.Name, memberName, comparison))
-                {
-                    exactMemberName = member;
-                    return true;
-                }
-            }
-
-            exactMemberName = null;
-            return false;
+            return enumType.FindMember(memberName.AsSpan(), comparison);
         }
 
         /// <summary>
@@ -197,7 +179,7 @@ namespace Microsoft.OData
         /// <param name="memberName">The name of the member to locate, represented as a <see cref="ReadOnlySpan{T}"/> of characters.</param>
         /// <param name="comparison">The <see cref="StringComparison"/> to use when comparing the member names. The default is <see cref="StringComparison.Ordinal"/>.</param>
         /// <returns>True if the member name exists in the enum type; otherwise, false.</returns>
-        public static bool ContainsMember(this IEdmEnumType enumType, ReadOnlySpan<char> memberName, StringComparison comparison = StringComparison.Ordinal)
+        public static bool HasMember(this IEdmEnumType enumType, ReadOnlySpan<char> memberName, StringComparison comparison = StringComparison.Ordinal)
         {
             foreach (IEdmEnumMember member in enumType.Members)
             {
@@ -218,19 +200,17 @@ namespace Microsoft.OData
         /// <param name="exactMemberName">When this method returns, contains the <see cref="IEdmEnumMember"/> that matches the specified name, if a match is found; otherwise, null.</param>
         /// <param name="comparison">The <see cref="StringComparison"/> to use when comparing the member names. The default is <see cref="StringComparison.Ordinal"/>.</param>
         /// <returns>True if the member name exists in the enum type; otherwise, false.</returns>
-        public static bool ContainsMember(this IEdmEnumType enumType, ReadOnlySpan<char> memberName, out IEdmEnumMember exactMemberName, StringComparison comparison = StringComparison.Ordinal)
+        public static IEdmEnumMember FindMember(this IEdmEnumType enumType, ReadOnlySpan<char> memberName, StringComparison comparison = StringComparison.Ordinal)
         {
             foreach (IEdmEnumMember member in enumType.Members)
             {
                 if (member.Name.AsSpan().Equals(memberName, comparison))
                 {
-                    exactMemberName = member;
-                    return true;
+                    return member;
                 }
             }
 
-            exactMemberName = null;
-            return false;
+            return null;
         }
 
         /// <summary>
@@ -272,16 +252,17 @@ namespace Microsoft.OData
         public static string ParseFlagsFromStringValue(this IEdmEnumType enumType, string memberName, StringComparison comparison)
         {
             var stringBuilder = new StringBuilder();
-            int start = 0, end = 0;
-            while (end < memberName.Length)
+            int startIndex = 0, endIndex = 0;
+            while (endIndex < memberName.Length)
             {
-                while (end < memberName.Length && memberName[end] != ',')
+                while (endIndex < memberName.Length && memberName[endIndex] != ',')
                 {
-                    end++;
+                    endIndex++;
                 }
 
-                ReadOnlySpan<char> currentValue = memberName.AsSpan()[start..end].Trim();
-                if (!enumType.ContainsMember(currentValue, out IEdmEnumMember edmEnumMember, comparison))
+                ReadOnlySpan<char> currentValue = memberName.AsSpan()[startIndex..endIndex].Trim();
+                IEdmEnumMember edmEnumMember = enumType.FindMember(currentValue, comparison);
+                if (edmEnumMember == null)
                 {
                     return null;
                 }
@@ -292,8 +273,8 @@ namespace Microsoft.OData
                 }
 
                 stringBuilder.Append(edmEnumMember.Name);
-                start = end + 1;
-                end = start;
+                startIndex = endIndex + 1;
+                endIndex = startIndex;
             }
 
             return stringBuilder.ToString();
@@ -313,10 +294,10 @@ namespace Microsoft.OData
                 return false;
             }
 
-            int allFlagsMask = 0;
+            long allFlagsMask = 0;
             foreach (IEdmEnumMember member in enumType.Members)
             {
-                allFlagsMask |= (int)member.Value.Value;
+                allFlagsMask |= (long)member.Value.Value;
             }
 
             return (memberIntegralValue & ~allFlagsMask) == 0;
