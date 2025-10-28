@@ -62,6 +62,116 @@ namespace Microsoft.OData.Tests.Json
             return WriteAsyncTest(Encoding.UTF8, targetEncoding, message);
         }
 
+        [Fact]
+        public async Task WriteAsync_Works_WhenInputIsNonUtf8()
+        {
+            // Arrange
+            string message = "Non-UTF8 input Æ";
+            Encoding inputEncoding = Encoding.Unicode;
+            Encoding targetEncoding = Encoding.UTF8;
+            var memoryStream = new MemoryStream();
+            var stream = new AsyncStream(memoryStream);
+
+            await using var transcodingStream = Encoding.CreateTranscodingStream(stream, targetEncoding, inputEncoding);
+            await transcodingStream.WriteAsync(inputEncoding.GetBytes(message), default);
+            await transcodingStream.FlushAsync();
+
+            string actual = targetEncoding.GetString(memoryStream.ToArray());
+            Assert.Contains("Æ", actual);
+            Assert.Contains("Non-UTF8", actual);
+        }
+
+        [Fact]
+        public async Task WriteAsync_Works_WithEmptyInput()
+        {
+            Encoding inputEncoding = Encoding.UTF8;
+            Encoding targetEncoding = Encoding.UTF32;
+            var memoryStream = new MemoryStream();
+            var stream = new AsyncStream(memoryStream);
+
+            await using var transcodingStream = Encoding.CreateTranscodingStream(stream, targetEncoding, inputEncoding);
+            await transcodingStream.WriteAsync(Array.Empty<byte>(), default);
+            await transcodingStream.FlushAsync();
+
+            string actual = targetEncoding.GetString(memoryStream.ToArray());
+            Assert.Equal(string.Empty, actual);
+        }
+
+        [Fact]
+        public async Task WriteAsync_Works_WithLargeInput()
+        {
+            string message = new string('Z', BufferSize * 10);
+            Encoding inputEncoding = Encoding.UTF8;
+            Encoding targetEncoding = Encoding.UTF8;
+            var memoryStream = new MemoryStream();
+            var stream = new AsyncStream(memoryStream);
+
+            await using var transcodingStream = Encoding.CreateTranscodingStream(stream, targetEncoding, inputEncoding);
+            await transcodingStream.WriteAsync(inputEncoding.GetBytes(message), default);
+            await transcodingStream.FlushAsync();
+
+            string actual = targetEncoding.GetString(memoryStream.ToArray());
+            Assert.Equal(message, actual);
+        }
+
+        [Fact]
+        public async Task WriteAsync_Works_WithSurrogatePairs()
+        {
+            // Emoji: 😀 (U+1F600)
+            string message = "Surrogate \uD83D\uDE00 Pair";
+            Encoding inputEncoding = Encoding.UTF8;
+            Encoding targetEncoding = Encoding.UTF32;
+            var memoryStream = new MemoryStream();
+            var stream = new AsyncStream(memoryStream);
+
+            await using var transcodingStream = Encoding.CreateTranscodingStream(stream, targetEncoding, inputEncoding);
+            await transcodingStream.WriteAsync(inputEncoding.GetBytes(message), default);
+            await transcodingStream.FlushAsync();
+
+            string actual = targetEncoding.GetString(memoryStream.ToArray());
+            Assert.Contains("\uD83D\uDE00", actual);
+            Assert.Contains("Surrogate", actual);
+            Assert.Contains("Pair", actual);
+        }
+
+        [Fact]
+        public async Task WriteAsync_Works_WithFlushAndDispose()
+        {
+            string message = "Flush and Dispose test";
+            Encoding inputEncoding = Encoding.UTF8;
+            Encoding targetEncoding = Encoding.UTF8;
+            var memoryStream = new MemoryStream();
+            var stream = new AsyncStream(memoryStream);
+
+            await using (var transcodingStream = Encoding.CreateTranscodingStream(stream, targetEncoding, inputEncoding))
+            {
+                await transcodingStream.WriteAsync(inputEncoding.GetBytes(message), default);
+                await transcodingStream.FlushAsync();
+            }
+
+            string actual = targetEncoding.GetString(memoryStream.ToArray());
+            Assert.Contains("Flush", actual);
+            Assert.Contains("Dispose", actual);
+        }
+
+        [Fact]
+        public async Task WriteAsync_Throws_OnDisposedStream()
+        {
+            string message = "Disposed";
+            Encoding inputEncoding = Encoding.UTF8;
+            Encoding targetEncoding = Encoding.UTF8;
+            var memoryStream = new MemoryStream();
+            var stream = new AsyncStream(memoryStream);
+
+            var transcodingStream = Encoding.CreateTranscodingStream(stream, targetEncoding, inputEncoding);
+            await transcodingStream.DisposeAsync();
+
+            await Assert.ThrowsAsync<ObjectDisposedException>(async () =>
+            {
+                await transcodingStream.WriteAsync(inputEncoding.GetBytes(message), default);
+            });
+        }
+
         private static async Task WriteAsyncTest(Encoding inputEncoding, Encoding targetEncoding, string message)
         {
             string expected = JavaScriptEncoder.Default.Encode(message);
@@ -69,7 +179,7 @@ namespace Microsoft.OData.Tests.Json
             var memoryStream = new MemoryStream();
             var stream = new AsyncStream(memoryStream);
 
-            await using var transcodingStream = new TranscodingWriteStream(stream, targetEncoding, inputEncoding);
+            await using var transcodingStream = Encoding.CreateTranscodingStream(stream, targetEncoding, inputEncoding);
             await transcodingStream.WriteAsync(inputEncoding.GetBytes(JavaScriptEncoder.Default.Encode(message)), default);
             await transcodingStream.FlushAsync();
 
