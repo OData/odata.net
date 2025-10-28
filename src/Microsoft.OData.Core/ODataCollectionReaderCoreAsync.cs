@@ -81,7 +81,7 @@ namespace Microsoft.OData
 
                 default:
                     Debug.Assert(false, "Unsupported collection reader state " + this.State + " detected.");
-                    return TaskUtils.GetFaultedTask<bool>(new ODataException(Error.Format(SRResources.General_InternalError, InternalErrorCodes.ODataCollectionReaderCoreAsync_ReadAsynchronously)));
+                    return Task.FromException<bool>(new ODataException(Error.Format(SRResources.General_InternalError, InternalErrorCodes.ODataCollectionReaderCoreAsync_ReadAsynchronously)));
             }
         }
     }

@@ -6,6 +6,7 @@
 
 namespace Microsoft.OData.MultipartMixed
 {
+    using System;
     #region Namespaces
     using System.Diagnostics;
     using System.Threading.Tasks;
@@ -60,9 +61,14 @@ namespace Microsoft.OData.MultipartMixed
         {
             this.AssertAsynchronous();
 
-            return TaskUtils.GetTaskForSynchronousOperation(
-                thisParam => thisParam.CreateODataBatchWriterImplementation(),
-                this);
+            try
+            {
+                return Task.FromResult(this.CreateODataBatchWriterImplementation());
+            }
+            catch (Exception ex) when (ExceptionUtils.IsCatchableExceptionType(ex))
+            {
+                return Task.FromException<ODataBatchWriter>(ex);
+            }
         }
 
         /// <summary>
