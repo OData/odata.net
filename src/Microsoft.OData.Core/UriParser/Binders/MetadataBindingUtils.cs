@@ -89,7 +89,8 @@ namespace Microsoft.OData.UriParser
                     }
 
                     // Check if the member name is a valid enum member name
-                    if (enumType.ContainsMember(memberName, out IEdmEnumMember edmEnumMember, comparison))
+                    IEdmEnumMember? edmEnumMember = enumType.FindMember(memberName, comparison);
+                    if (edmEnumMember != null)
                     {
                         string literalText = ODataUriUtils.ConvertToUriLiteral(constantNode.Value, default(ODataVersion));
                         return new ConstantNode(new ODataEnumValue(edmEnumMember.Name, enumType.ToString()), literalText, targetTypeReference);
@@ -232,7 +233,7 @@ namespace Microsoft.OData.UriParser
                 if (item != null && item.Value != null && item.Value is ODataEnumValue enumValue)
                 {
                     // Check if the enum value is a valid enum member name
-                    if (enumType.ContainsMember(enumValue.Value, comparison))
+                    if (enumType.HasMember(enumValue.Value, comparison))
                     {
                         continue;
                     }
