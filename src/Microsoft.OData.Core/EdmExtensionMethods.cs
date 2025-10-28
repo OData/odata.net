@@ -277,7 +277,7 @@ namespace Microsoft.OData
                 endIndex = startIndex;
             }
 
-            return stringBuilder.ToString();
+            return stringBuilder.Length == 0 ? null : stringBuilder.ToString();
         }
 
         /// <summary>
