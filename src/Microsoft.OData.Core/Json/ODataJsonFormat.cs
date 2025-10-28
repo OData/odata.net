@@ -153,7 +153,7 @@ namespace Microsoft.OData.Json
             messageInfo.Encoding = detectionInfo.GetEncoding();
             var jsonInputContext = new ODataJsonInputContext(messageInfo, settings);
             return jsonInputContext.DetectPayloadKindAsync(detectionInfo)
-                .FollowAlwaysWith(t =>
+                .ThenAlways(t =>
                     {
                         jsonInputContext.Dispose();
                     });

@@ -6,6 +6,7 @@
 
 namespace Microsoft.OData
 {
+    using System;
     #region Namespaces
     using System.Collections.Generic;
     using System.Diagnostics;
@@ -85,7 +86,15 @@ namespace Microsoft.OData
             ODataMessageReaderSettings settings)
         {
             ExceptionUtils.CheckArgumentNotNull(messageInfo, "messageInfo");
-            return TaskUtils.GetTaskForSynchronousOperation(() => DetectPayloadKindImplementation(messageInfo.MediaType));
+            try
+            {
+                return Task.FromResult<IEnumerable<ODataPayloadKind>>(
+                    DetectPayloadKindImplementation(messageInfo.MediaType));
+            }
+            catch (Exception ex) when (ExceptionUtils.IsCatchableExceptionType(ex))
+            {
+                return Task.FromException<IEnumerable<ODataPayloadKind>>(ex);
+            }
         }
 
         /// <summary>

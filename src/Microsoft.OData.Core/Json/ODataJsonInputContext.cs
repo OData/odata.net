@@ -192,7 +192,14 @@ namespace Microsoft.OData.Json
             this.VerifyCanCreateODataReader(entitySet, expectedResourceType);
 
             // Note that the reading is actually synchronous since we buffer the entire input when getting the stream from the message.
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateResourceSetReaderImplementation(entitySet, expectedResourceType, /*readingParameter*/ false, /*readingDelta*/ false));
+            try
+            {
+                return Task.FromResult(this.CreateResourceSetReaderImplementation(entitySet, expectedResourceType, readingParameter: false, readingDelta: false));
+            }
+            catch (Exception ex) when (ExceptionUtils.IsCatchableExceptionType(ex))
+            {
+                return Task.FromException<ODataReader>(ex);
+            }
         }
 
         /// <summary>
@@ -221,7 +228,14 @@ namespace Microsoft.OData.Json
             this.VerifyCanCreateODataReader(entitySet, expectedResourceType);
 
             // Note that the reading is actually synchronous since we buffer the entire input when getting the stream from the message.
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateResourceSetReaderImplementation(entitySet, expectedResourceType, /*readingParameter*/ false, /*readingDelta*/ true));
+            try
+            {
+                return Task.FromResult(this.CreateResourceSetReaderImplementation(entitySet, expectedResourceType, readingParameter: false, readingDelta: true));
+            }
+            catch (Exception ex) when (ExceptionUtils.IsCatchableExceptionType(ex))
+            {
+                return Task.FromException<ODataReader>(ex);
+            }
         }
 
         /// <summary>
@@ -250,7 +264,14 @@ namespace Microsoft.OData.Json
             this.VerifyCanCreateODataReader(navigationSource, expectedResourceType);
 
             // Note that the reading is actually synchronous since we buffer the entire input when getting the stream from the message.
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateResourceReaderImplementation(navigationSource, expectedResourceType));
+            try
+            {
+                return Task.FromResult(this.CreateResourceReaderImplementation(navigationSource, expectedResourceType));
+            }
+            catch (Exception ex) when (ExceptionUtils.IsCatchableExceptionType(ex))
+            {
+                return Task.FromException<ODataReader>(ex);
+            }
         }
 
         /// <summary>
@@ -277,7 +298,14 @@ namespace Microsoft.OData.Json
             this.VerifyCanCreateCollectionReader(expectedItemTypeReference);
 
             // Note that the reading is actually synchronous since we buffer the entire input when getting the stream from the message.
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateCollectionReaderImplementation(expectedItemTypeReference));
+            try
+            {
+                return Task.FromResult(this.CreateCollectionReaderImplementation(expectedItemTypeReference));
+            }
+            catch (Exception ex) when (ExceptionUtils.IsCatchableExceptionType(ex))
+            {
+                return Task.FromException<ODataCollectionReader>(ex);
+            }
         }
 
         /// <summary>
@@ -362,7 +390,14 @@ namespace Microsoft.OData.Json
             this.AssertAsynchronous();
             this.VerifyCanCreateODataReader(entitySet, expectedResourceType);
 
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateResourceSetReaderImplementation(entitySet, expectedResourceType, /*readingParameter*/ true, /*readingDelta*/ false));
+            try
+            {
+                return Task.FromResult(this.CreateResourceSetReaderImplementation(entitySet, expectedResourceType, readingParameter: true, readingDelta: false));
+            }
+            catch (Exception ex) when (ExceptionUtils.IsCatchableExceptionType(ex))
+            {
+                return Task.FromException<ODataReader>(ex);
+            }
         }
 
         /// <summary>
@@ -411,7 +446,14 @@ namespace Microsoft.OData.Json
             this.VerifyCanCreateParameterReader(operation);
 
             // Note that the reading is actually synchronous since we buffer the entire input when getting the stream from the message.
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateParameterReaderImplementation(operation));
+            try
+            {
+                return Task.FromResult(this.CreateParameterReaderImplementation(operation));
+            }
+            catch (Exception ex) when (ExceptionUtils.IsCatchableExceptionType(ex))
+            {
+                return Task.FromException<ODataParameterReader>(ex);
+            }
         }
 
         /// <summary>
@@ -468,7 +510,14 @@ namespace Microsoft.OData.Json
             this.VerifyCanCreateODataReader(entitySet, expectedBaseEntityType);
 
             // Note that the reading is actually synchronous since we buffer the entire input when getting the stream from the message.
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateDeltaReaderImplementation(entitySet, expectedBaseEntityType));
+            try
+            {
+                return Task.FromResult(this.CreateDeltaReaderImplementation(entitySet, expectedBaseEntityType));
+            }
+            catch (Exception ex) when (ExceptionUtils.IsCatchableExceptionType(ex))
+            {
+                return Task.FromException<ODataDeltaReader>(ex);
+            }
         }
 
         /// <summary>
@@ -487,7 +536,14 @@ namespace Microsoft.OData.Json
         internal override Task<ODataBatchReader> CreateBatchReaderAsync()
         {
             // Note that the reading is actually synchronous since we buffer the entire input when getting the stream from the message.
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateBatchReaderImplementation(/*synchronous*/ false));
+            try
+            {
+                return Task.FromResult(this.CreateBatchReaderImplementation(synchronous: false));
+            }
+            catch (Exception ex) when (ExceptionUtils.IsCatchableExceptionType(ex))
+            {
+                return Task.FromException<ODataBatchReader>(ex);
+            }
         }
 
         /// <summary>

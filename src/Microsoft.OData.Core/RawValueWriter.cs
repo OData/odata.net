@@ -194,7 +194,7 @@ namespace Microsoft.OData
                 }
             }
 
-            return TaskUtils.CompletedTask;
+            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -208,7 +208,7 @@ namespace Microsoft.OData
                 return this.textWriter.WriteAsync(JsonConstants.EndPaddingFunctionScope);
             }
 
-            return TaskUtils.CompletedTask;
+            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -230,13 +230,15 @@ namespace Microsoft.OData
 
             if (value is Geometry || value is Geography)
             {
-                return TaskUtils.GetTaskForSynchronousOperation((
-                    valueParam,
-                    jsonWriterParam) => PrimitiveConverter.Instance.WriteJson(
-                        valueParam,
-                        jsonWriterParam),
-                    value,
-                    jsonWriter);
+                try
+                {
+                    PrimitiveConverter.Instance.WriteJson(value, jsonWriter);
+                    return Task.CompletedTask;
+                }
+                catch (Exception ex) when (ExceptionUtils.IsCatchableExceptionType(ex))
+                {
+                    return Task.FromException(ex);
+                }
             }
 
             if (ODataRawValueUtils.TryConvertPrimitiveToString(value, out string valueAsString))
@@ -245,7 +247,7 @@ namespace Microsoft.OData
             }
 
             // Value is neither enum nor primitive
-            return TaskUtils.GetFaultedTask(
+            return Task.FromException(
                 new ODataException(Error.Format(SRResources.ODataUtils_CannotConvertValueToRawString, value.GetType().FullName)));
         }
 
@@ -263,7 +265,7 @@ namespace Microsoft.OData
                 return this.TextWriter.FlushAsync();
             }
 
-            return TaskUtils.CompletedTask;
+            return Task.CompletedTask;
         }
 
         /// <summary>

@@ -222,7 +222,7 @@ namespace Microsoft.OData
             Queue<DataBuffer> buffers = this.PrepareFlushBuffers();
             if (buffers == null)
             {
-                return TaskUtils.CompletedTask;
+                return Task.CompletedTask;
             }
 
             // Note that this relies on lazy eval of the enumerator

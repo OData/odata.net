@@ -77,32 +77,29 @@ namespace Microsoft.OData.Tests
             var asyncResult = await new StreamReader(this.asyncStream).ReadToEndAsync();
             asyncResult = Regex.Replace(asyncResult, batchGuidRegex, batchBoundary);
 
-            var syncResult = await TaskUtils.GetTaskForSynchronousOperation(() =>
+            IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
+            using (var syncMessageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
             {
-                IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
-                using (var syncMessageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
+                var multipartMixedBatchWriter = syncMessageWriter.CreateODataBatchWriter();
+                multipartMixedBatchWriter.WriteStartBatch();
+
+                var operationRequestMessage = multipartMixedBatchWriter.CreateOperationRequestMessage(
+                    "POST", new Uri($"{ServiceUri}/Orders"), "1");
+
+                using (var nestedMessageWriter = new ODataMessageWriter(operationRequestMessage))
                 {
-                    var multipartMixedBatchWriter = syncMessageWriter.CreateODataBatchWriter();
-                    multipartMixedBatchWriter.WriteStartBatch();
-
-                    var operationRequestMessage = multipartMixedBatchWriter.CreateOperationRequestMessage(
-                        "POST", new Uri($"{ServiceUri}/Orders"), "1");
-
-                    using (var nestedMessageWriter = new ODataMessageWriter(operationRequestMessage))
-                    {
-                        var writer = nestedMessageWriter.CreateODataResourceWriter(this.orderEntitySet, this.orderEntityType);
-                        writer.WriteStart(orderResource);
-                        writer.WriteEnd();
-                    }
-
-                    multipartMixedBatchWriter.WriteEndBatch();
+                    var writer = nestedMessageWriter.CreateODataResourceWriter(this.orderEntitySet, this.orderEntityType);
+                    writer.WriteStart(orderResource);
+                    writer.WriteEnd();
                 }
 
-                this.syncStream.Position = 0;
-                var result = new StreamReader(this.syncStream).ReadToEnd();
+                multipartMixedBatchWriter.WriteEndBatch();
+            }
 
-                return Regex.Replace(result, batchGuidRegex, batchBoundary);
-            });
+            this.syncStream.Position = 0;
+            var result = new StreamReader(this.syncStream).ReadToEnd();
+
+            var syncResult = Regex.Replace(result, batchGuidRegex, batchBoundary);
 
             var expected = @"--batch_aed653ab
 Content-Type: application/http
@@ -162,45 +159,42 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
             var asyncResult = await new StreamReader(this.asyncStream).ReadToEndAsync();
             asyncResult = Regex.Replace(asyncResult, batchGuidRegex, batchBoundary);
 
-            var syncResult = await TaskUtils.GetTaskForSynchronousOperation(() =>
+            IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
+            using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
             {
-                IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
-                using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
+                var multipartMixedBatchWriter = messageWriter.CreateODataBatchWriter();
+                multipartMixedBatchWriter.WriteStartBatch();
+                multipartMixedBatchWriter.WriteStartChangeset("ec3a8d4f");
+
+                var operationRequestMessage1 = multipartMixedBatchWriter.CreateOperationRequestMessage(
+                    "POST", new Uri($"{ServiceUri}/Orders"), "1");
+
+                using (var messageWriter1 = new ODataMessageWriter(operationRequestMessage1))
                 {
-                    var multipartMixedBatchWriter = messageWriter.CreateODataBatchWriter();
-                    multipartMixedBatchWriter.WriteStartBatch();
-                    multipartMixedBatchWriter.WriteStartChangeset("ec3a8d4f");
-
-                    var operationRequestMessage1 = multipartMixedBatchWriter.CreateOperationRequestMessage(
-                        "POST", new Uri($"{ServiceUri}/Orders"), "1");
-
-                    using (var messageWriter1 = new ODataMessageWriter(operationRequestMessage1))
-                    {
-                        var jsonWriter = messageWriter1.CreateODataResourceWriter(this.orderEntitySet, this.orderEntityType);
-                        jsonWriter.WriteStart(orderResource);
-                        jsonWriter.WriteEnd();
-                    }
-
-                    var dependsOnIds = new List<string> { "1" };
-                    var operationRequestMessage2 = multipartMixedBatchWriter.CreateOperationRequestMessage(
-                        "POST", new Uri($"{ServiceUri}/Customers"), "2", BatchPayloadUriOption.AbsoluteUri, dependsOnIds);
-
-                    using (var messageWriter2 = new ODataMessageWriter(operationRequestMessage2))
-                    {
-                        var jsonWriter = messageWriter2.CreateODataResourceWriter(this.customerEntitySet, this.customerEntityType);
-                        jsonWriter.WriteStart(customerResource);
-                        jsonWriter.WriteEnd();
-                    }
-
-                    multipartMixedBatchWriter.WriteEndChangeset();
-                    multipartMixedBatchWriter.WriteEndBatch();
+                    var jsonWriter = messageWriter1.CreateODataResourceWriter(this.orderEntitySet, this.orderEntityType);
+                    jsonWriter.WriteStart(orderResource);
+                    jsonWriter.WriteEnd();
                 }
 
-                this.syncStream.Position = 0;
-                var result = new StreamReader(this.syncStream).ReadToEnd();
+                var dependsOnIds = new List<string> { "1" };
+                var operationRequestMessage2 = multipartMixedBatchWriter.CreateOperationRequestMessage(
+                    "POST", new Uri($"{ServiceUri}/Customers"), "2", BatchPayloadUriOption.AbsoluteUri, dependsOnIds);
 
-                return Regex.Replace(result, batchGuidRegex, batchBoundary);
-            });
+                using (var messageWriter2 = new ODataMessageWriter(operationRequestMessage2))
+                {
+                    var jsonWriter = messageWriter2.CreateODataResourceWriter(this.customerEntitySet, this.customerEntityType);
+                    jsonWriter.WriteStart(customerResource);
+                    jsonWriter.WriteEnd();
+                }
+
+                multipartMixedBatchWriter.WriteEndChangeset();
+                multipartMixedBatchWriter.WriteEndBatch();
+            }
+
+            this.syncStream.Position = 0;
+            var result = new StreamReader(this.syncStream).ReadToEnd();
+
+            var syncResult = Regex.Replace(result, batchGuidRegex, batchBoundary);
 
             var expected = @"--batch_aed653ab
 Content-Type: multipart/mixed; boundary=changeset_ec3a8d4f
@@ -277,47 +271,44 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
             var asyncResult = await new StreamReader(this.asyncStream).ReadToEndAsync();
             asyncResult = Regex.Replace(asyncResult, batchGuidRegex, batchBoundary);
 
-            var syncResult = await TaskUtils.GetTaskForSynchronousOperation(() =>
+            IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
+            using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
             {
-                IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
-                using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
+                var multipartMixedBatchWriter = messageWriter.CreateODataBatchWriter();
+                multipartMixedBatchWriter.WriteStartBatch();
+                multipartMixedBatchWriter.WriteStartChangeset("ec3a8d4f");
+
+                var operationRequestMessage1 = multipartMixedBatchWriter.CreateOperationRequestMessage(
+                    "PUT", new Uri($"{ServiceUri}/Orders(1)"), "1");
+
+                using (var messageWriter1 = new ODataMessageWriter(operationRequestMessage1))
                 {
-                    var multipartMixedBatchWriter = messageWriter.CreateODataBatchWriter();
-                    multipartMixedBatchWriter.WriteStartBatch();
-                    multipartMixedBatchWriter.WriteStartChangeset("ec3a8d4f");
-
-                    var operationRequestMessage1 = multipartMixedBatchWriter.CreateOperationRequestMessage(
-                        "PUT", new Uri($"{ServiceUri}/Orders(1)"), "1");
-
-                    using (var messageWriter1 = new ODataMessageWriter(operationRequestMessage1))
-                    {
-                        var jsonWriter = messageWriter1.CreateODataResourceWriter(this.orderEntitySet, this.orderEntityType);
-                        jsonWriter.WriteStart(orderResource);
-                        jsonWriter.WriteEnd();
-                    }
-
-                    multipartMixedBatchWriter.WriteEndChangeset();
-                    multipartMixedBatchWriter.WriteStartChangeset("f46c46e2");
-
-                    var operationRequestMessage2 = multipartMixedBatchWriter.CreateOperationRequestMessage(
-                        "PUT", new Uri($"{ServiceUri}/Customers(1)"), "2");
-
-                    using (var messageWriter2 = new ODataMessageWriter(operationRequestMessage2))
-                    {
-                        var jsonWriter = messageWriter2.CreateODataResourceWriter(this.customerEntitySet, this.customerEntityType);
-                        jsonWriter.WriteStart(customerResource);
-                        jsonWriter.WriteEnd();
-                    }
-
-                    multipartMixedBatchWriter.WriteEndChangeset();
-                    multipartMixedBatchWriter.WriteEndBatch();
+                    var jsonWriter = messageWriter1.CreateODataResourceWriter(this.orderEntitySet, this.orderEntityType);
+                    jsonWriter.WriteStart(orderResource);
+                    jsonWriter.WriteEnd();
                 }
 
-                this.syncStream.Position = 0;
-                var result = new StreamReader(this.syncStream).ReadToEnd();
+                multipartMixedBatchWriter.WriteEndChangeset();
+                multipartMixedBatchWriter.WriteStartChangeset("f46c46e2");
 
-                return Regex.Replace(result, batchGuidRegex, batchBoundary);
-            });
+                var operationRequestMessage2 = multipartMixedBatchWriter.CreateOperationRequestMessage(
+                    "PUT", new Uri($"{ServiceUri}/Customers(1)"), "2");
+
+                using (var messageWriter2 = new ODataMessageWriter(operationRequestMessage2))
+                {
+                    var jsonWriter = messageWriter2.CreateODataResourceWriter(this.customerEntitySet, this.customerEntityType);
+                    jsonWriter.WriteStart(customerResource);
+                    jsonWriter.WriteEnd();
+                }
+
+                multipartMixedBatchWriter.WriteEndChangeset();
+                multipartMixedBatchWriter.WriteEndBatch();
+            }
+
+            this.syncStream.Position = 0;
+            var result = new StreamReader(this.syncStream).ReadToEnd();
+
+            var syncResult = Regex.Replace(result, batchGuidRegex, batchBoundary);
 
             var expected = @"--batch_aed653ab
 Content-Type: multipart/mixed; boundary=changeset_ec3a8d4f
@@ -389,36 +380,33 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
             // Changeset group id will be a random guid
             asyncResult = Regex.Replace(asyncResult, changesetGuidRegex, changesetBoundary);
 
-            var syncResult = await TaskUtils.GetTaskForSynchronousOperation(() =>
+            IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
+            using (var syncMessageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
             {
-                IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
-                using (var syncMessageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
+                var multipartMixedBatchWriter = syncMessageWriter.CreateODataBatchWriter();
+                multipartMixedBatchWriter.WriteStartBatch();
+                multipartMixedBatchWriter.WriteStartChangeset();
+
+                var operationRequestMessage = multipartMixedBatchWriter.CreateOperationRequestMessage(
+                    "POST", new Uri($"{ServiceUri}/Orders"), "1");
+
+                using (var nestedMessageWriter = new ODataMessageWriter(operationRequestMessage))
                 {
-                    var multipartMixedBatchWriter = syncMessageWriter.CreateODataBatchWriter();
-                    multipartMixedBatchWriter.WriteStartBatch();
-                    multipartMixedBatchWriter.WriteStartChangeset();
-
-                    var operationRequestMessage = multipartMixedBatchWriter.CreateOperationRequestMessage(
-                        "POST", new Uri($"{ServiceUri}/Orders"), "1");
-
-                    using (var nestedMessageWriter = new ODataMessageWriter(operationRequestMessage))
-                    {
-                        var jsonWriter = nestedMessageWriter.CreateODataResourceWriter(this.orderEntitySet, this.orderEntityType);
-                        jsonWriter.WriteStart(orderResource);
-                        jsonWriter.WriteEnd();
-                    }
-
-                    multipartMixedBatchWriter.WriteEndChangeset();
-                    multipartMixedBatchWriter.WriteEndBatch();
+                    var jsonWriter = nestedMessageWriter.CreateODataResourceWriter(this.orderEntitySet, this.orderEntityType);
+                    jsonWriter.WriteStart(orderResource);
+                    jsonWriter.WriteEnd();
                 }
 
-                this.syncStream.Position = 0;
-                var result = new StreamReader(this.syncStream).ReadToEnd();
+                multipartMixedBatchWriter.WriteEndChangeset();
+                multipartMixedBatchWriter.WriteEndBatch();
+            }
 
-                result = Regex.Replace(result, batchGuidRegex, batchBoundary);
-                // Changeset group id will be a random guid
-                return Regex.Replace(result, changesetGuidRegex, changesetBoundary);
-            });
+            this.syncStream.Position = 0;
+            var result = new StreamReader(this.syncStream).ReadToEnd();
+
+            result = Regex.Replace(result, batchGuidRegex, batchBoundary);
+            // Changeset group id will be a random guid
+            var syncResult = Regex.Replace(result, changesetGuidRegex, changesetBoundary);
 
             var expected = @"--batch_aed653ab
 Content-Type: multipart/mixed; boundary=changeset_ec3a8d4f
@@ -470,32 +458,29 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
             var asyncResult = await new StreamReader(this.asyncStream).ReadToEndAsync();
             asyncResult = Regex.Replace(asyncResult, batchGuidRegex, batchBoundary);
 
-            var syncResult = await TaskUtils.GetTaskForSynchronousOperation(() =>
+            IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
+            using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
             {
-                IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
-                using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
+                var multipartMixedBatchWriter = messageWriter.CreateODataBatchWriter();
+                multipartMixedBatchWriter.WriteStartBatch();
+
+                var operationRequestMessage = multipartMixedBatchWriter.CreateOperationRequestMessage(
+                    "POST", new Uri($"{ServiceUri}/Orders"), /*contentId*/ null);
+
+                using (var nestedMessageWriter = new ODataMessageWriter(operationRequestMessage))
                 {
-                    var multipartMixedBatchWriter = messageWriter.CreateODataBatchWriter();
-                    multipartMixedBatchWriter.WriteStartBatch();
-
-                    var operationRequestMessage = multipartMixedBatchWriter.CreateOperationRequestMessage(
-                        "POST", new Uri($"{ServiceUri}/Orders"), /*contentId*/ null);
-
-                    using (var nestedMessageWriter = new ODataMessageWriter(operationRequestMessage))
-                    {
-                        var jsonWriter = nestedMessageWriter.CreateODataResourceWriter(this.orderEntitySet, this.orderEntityType);
-                        jsonWriter.WriteStart(orderResource);
-                        jsonWriter.WriteEnd();
-                    }
-
-                    multipartMixedBatchWriter.WriteEndBatch();
+                    var jsonWriter = nestedMessageWriter.CreateODataResourceWriter(this.orderEntitySet, this.orderEntityType);
+                    jsonWriter.WriteStart(orderResource);
+                    jsonWriter.WriteEnd();
                 }
 
-                this.syncStream.Position = 0;
-                var result = new StreamReader(this.syncStream).ReadToEnd();
+                multipartMixedBatchWriter.WriteEndBatch();
+            }
 
-                return Regex.Replace(result, batchGuidRegex, batchBoundary);
-            });
+            this.syncStream.Position = 0;
+            var result = new StreamReader(this.syncStream).ReadToEnd();
+
+            var syncResult = Regex.Replace(result, batchGuidRegex, batchBoundary);
 
             var expected = @"--batch_aed653ab
 Content-Type: application/http
@@ -543,32 +528,29 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
             var asyncResult = await new StreamReader(this.asyncStream).ReadToEndAsync();
             asyncResult = Regex.Replace(asyncResult, batchGuidRegex, batchBoundary);
 
-            var syncResult = await TaskUtils.GetTaskForSynchronousOperation(() =>
+            IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
+            using (var syncMessageWiter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
             {
-                IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
-                using (var syncMessageWiter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
+                var multipartMixedBatchWriter = syncMessageWiter.CreateODataBatchWriter();
+                multipartMixedBatchWriter.WriteStartBatch();
+
+                var operationRequestMessage = multipartMixedBatchWriter.CreateOperationRequestMessage(
+                "POST", new Uri($"{ServiceUri}/Orders"), /*contentId*/ null, BatchPayloadUriOption.AbsoluteUriUsingHostHeader);
+
+                using (var nestedMessageWriter = new ODataMessageWriter(operationRequestMessage))
                 {
-                    var multipartMixedBatchWriter = syncMessageWiter.CreateODataBatchWriter();
-                    multipartMixedBatchWriter.WriteStartBatch();
-
-                    var operationRequestMessage = multipartMixedBatchWriter.CreateOperationRequestMessage(
-                    "POST", new Uri($"{ServiceUri}/Orders"), /*contentId*/ null, BatchPayloadUriOption.AbsoluteUriUsingHostHeader);
-
-                    using (var nestedMessageWriter = new ODataMessageWriter(operationRequestMessage))
-                    {
-                        var jsonWriter = nestedMessageWriter.CreateODataResourceWriter(this.orderEntitySet, this.orderEntityType);
-                        jsonWriter.WriteStart(orderResource);
-                        jsonWriter.WriteEnd();
-                    }
-
-                    multipartMixedBatchWriter.WriteEndBatch();
+                    var jsonWriter = nestedMessageWriter.CreateODataResourceWriter(this.orderEntitySet, this.orderEntityType);
+                    jsonWriter.WriteStart(orderResource);
+                    jsonWriter.WriteEnd();
                 }
 
-                this.syncStream.Position = 0;
-                var result = new StreamReader(this.syncStream).ReadToEnd();
+                multipartMixedBatchWriter.WriteEndBatch();
+            }
 
-                return Regex.Replace(result, batchGuidRegex, batchBoundary);
-            });
+            this.syncStream.Position = 0;
+            var result = new StreamReader(this.syncStream).ReadToEnd();
+
+            var syncResult = Regex.Replace(result, batchGuidRegex, batchBoundary);
 
             var expected = @"--batch_aed653ab
 Content-Type: application/http
@@ -615,32 +597,29 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
             var asyncResult = await new StreamReader(this.asyncStream).ReadToEndAsync();
             asyncResult = Regex.Replace(asyncResult, batchGuidRegex, batchBoundary);
 
-            var syncResult = await TaskUtils.GetTaskForSynchronousOperation(() =>
+            IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
+            using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
             {
-                IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
-                using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
+                var multipartMixedBatchWriter = messageWriter.CreateODataBatchWriter();
+                multipartMixedBatchWriter.WriteStartBatch();
+
+                var operationRequestMessage = multipartMixedBatchWriter.CreateOperationRequestMessage(
+                "POST", new Uri("/Orders", UriKind.Relative), /*contentId*/ null, BatchPayloadUriOption.RelativeUri);
+
+                using (var nestedMessageWriter = new ODataMessageWriter(operationRequestMessage))
                 {
-                    var multipartMixedBatchWriter = messageWriter.CreateODataBatchWriter();
-                    multipartMixedBatchWriter.WriteStartBatch();
-
-                    var operationRequestMessage = multipartMixedBatchWriter.CreateOperationRequestMessage(
-                    "POST", new Uri("/Orders", UriKind.Relative), /*contentId*/ null, BatchPayloadUriOption.RelativeUri);
-
-                    using (var nestedMessageWriter = new ODataMessageWriter(operationRequestMessage))
-                    {
-                        var jsonWriter = nestedMessageWriter.CreateODataResourceWriter(this.orderEntitySet, this.orderEntityType);
-                        jsonWriter.WriteStart(orderResource);
-                        jsonWriter.WriteEnd();
-                    }
-
-                    multipartMixedBatchWriter.WriteEndBatch();
+                    var jsonWriter = nestedMessageWriter.CreateODataResourceWriter(this.orderEntitySet, this.orderEntityType);
+                    jsonWriter.WriteStart(orderResource);
+                    jsonWriter.WriteEnd();
                 }
 
-                this.syncStream.Position = 0;
-                var result = new StreamReader(this.syncStream).ReadToEnd();
+                multipartMixedBatchWriter.WriteEndBatch();
+            }
 
-                return Regex.Replace(result, batchGuidRegex, batchBoundary);
-            });
+            this.syncStream.Position = 0;
+            var result = new StreamReader(this.syncStream).ReadToEnd();
+
+            var syncResult = Regex.Replace(result, batchGuidRegex, batchBoundary);
 
             var expected = @"--batch_aed653ab
 Content-Type: application/http
@@ -677,25 +656,22 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
             var asyncResult = await new StreamReader(this.asyncStream).ReadToEndAsync();
             asyncResult = Regex.Replace(asyncResult, batchGuidRegex, batchBoundary);
 
-            var syncResult = await TaskUtils.GetTaskForSynchronousOperation(() =>
+            IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
+            using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
             {
-                IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
-                using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
-                {
-                    var multipartMixedBatchWriter = messageWriter.CreateODataBatchWriter();
-                    multipartMixedBatchWriter.WriteStartBatch();
+                var multipartMixedBatchWriter = messageWriter.CreateODataBatchWriter();
+                multipartMixedBatchWriter.WriteStartBatch();
 
-                    multipartMixedBatchWriter.CreateOperationRequestMessage(
-                    "POST", new Uri($"{ServiceUri}/Orders"), /*contentId*/ null);
-                    // No writer created for the request message
-                    multipartMixedBatchWriter.WriteEndBatch();
-                }
+                multipartMixedBatchWriter.CreateOperationRequestMessage(
+                "POST", new Uri($"{ServiceUri}/Orders"), /*contentId*/ null);
+                // No writer created for the request message
+                multipartMixedBatchWriter.WriteEndBatch();
+            }
 
-                this.syncStream.Position = 0;
-                var result = new StreamReader(this.syncStream).ReadToEnd();
+            this.syncStream.Position = 0;
+            var result = new StreamReader(this.syncStream).ReadToEnd();
 
-                return Regex.Replace(result, batchGuidRegex, batchBoundary);
-            });
+            var syncResult = Regex.Replace(result, batchGuidRegex, batchBoundary);
 
             var expected = @"--batch_aed653ab
 Content-Type: application/http
@@ -742,32 +718,29 @@ POST http://tempuri.org/Orders HTTP/1.1
             var asyncResult = await new StreamReader(this.asyncStream).ReadToEndAsync();
             asyncResult = Regex.Replace(asyncResult, batchGuidRegex, batchResponseBoundary);
 
-            var syncResult = await TaskUtils.GetTaskForSynchronousOperation(() =>
+            IODataResponseMessage syncResponseMessage = new InMemoryMessage { Stream = this.syncStream };
+            using (var messageWriter = new ODataMessageWriter(syncResponseMessage, this.writerSettings))
             {
-                IODataResponseMessage syncResponseMessage = new InMemoryMessage { Stream = this.syncStream };
-                using (var messageWriter = new ODataMessageWriter(syncResponseMessage, this.writerSettings))
+                var multipartMixedBatchWriter = messageWriter.CreateODataBatchWriter();
+                multipartMixedBatchWriter.WriteStartBatch();
+
+                var operationResponseMessage = multipartMixedBatchWriter.CreateOperationResponseMessage("1");
+                operationResponseMessage.StatusCode = 200;
+
+                using (var nestedMessageWriter = new ODataMessageWriter(operationResponseMessage, nestedWriterSettings))
                 {
-                    var multipartMixedBatchWriter = messageWriter.CreateODataBatchWriter();
-                    multipartMixedBatchWriter.WriteStartBatch();
-
-                    var operationResponseMessage = multipartMixedBatchWriter.CreateOperationResponseMessage("1");
-                    operationResponseMessage.StatusCode = 200;
-
-                    using (var nestedMessageWriter = new ODataMessageWriter(operationResponseMessage, nestedWriterSettings))
-                    {
-                        var jsonWriter = nestedMessageWriter.CreateODataResourceWriter(this.orderEntitySet, this.orderEntityType);
-                        jsonWriter.WriteStart(orderResource);
-                        jsonWriter.WriteEnd();
-                    }
-
-                    multipartMixedBatchWriter.WriteEndBatch();
+                    var jsonWriter = nestedMessageWriter.CreateODataResourceWriter(this.orderEntitySet, this.orderEntityType);
+                    jsonWriter.WriteStart(orderResource);
+                    jsonWriter.WriteEnd();
                 }
 
-                this.syncStream.Position = 0;
-                var result = new StreamReader(this.syncStream).ReadToEnd();
+                multipartMixedBatchWriter.WriteEndBatch();
+            }
 
-                return Regex.Replace(result, batchGuidRegex, batchResponseBoundary);
-            });
+            this.syncStream.Position = 0;
+            var result = new StreamReader(this.syncStream).ReadToEnd();
+
+            var syncResult = Regex.Replace(result, batchGuidRegex, batchResponseBoundary);
 
             var expected = @"--batchresponse_aed653ab
 Content-Type: application/http
@@ -834,47 +807,44 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
             var asyncResult = await new StreamReader(this.asyncStream).ReadToEndAsync();
             asyncResult = Regex.Replace(asyncResult, batchGuidRegex, batchResponseBoundary);
 
-            var syncResult = await TaskUtils.GetTaskForSynchronousOperation(() =>
+            IODataResponseMessage syncResponseMessage = new InMemoryMessage { Stream = this.syncStream };
+            using (var messageWriter = new ODataMessageWriter(syncResponseMessage, this.writerSettings))
             {
-                IODataResponseMessage syncResponseMessage = new InMemoryMessage { Stream = this.syncStream };
-                using (var messageWriter = new ODataMessageWriter(syncResponseMessage, this.writerSettings))
+                var multipartMixedBatchWriter = messageWriter.CreateODataBatchWriter();
+                multipartMixedBatchWriter.WriteStartBatch();
+                multipartMixedBatchWriter.WriteStartChangeset("ec3a8d4f");
+
+                var operationResponseMessage1 = multipartMixedBatchWriter.CreateOperationResponseMessage("1");
+                operationResponseMessage1.StatusCode = 200;
+
+                using (var messageWriter1 = new ODataMessageWriter(operationResponseMessage1, nestedWriterSettings))
                 {
-                    var multipartMixedBatchWriter = messageWriter.CreateODataBatchWriter();
-                    multipartMixedBatchWriter.WriteStartBatch();
-                    multipartMixedBatchWriter.WriteStartChangeset("ec3a8d4f");
-
-                    var operationResponseMessage1 = multipartMixedBatchWriter.CreateOperationResponseMessage("1");
-                    operationResponseMessage1.StatusCode = 200;
-
-                    using (var messageWriter1 = new ODataMessageWriter(operationResponseMessage1, nestedWriterSettings))
-                    {
-                        var jsonWriter = messageWriter1.CreateODataResourceWriter(this.orderEntitySet, this.orderEntityType);
-                        jsonWriter.WriteStart(orderResource);
-                        jsonWriter.WriteEnd();
-                    }
-
-                    multipartMixedBatchWriter.WriteEndChangeset();
-                    multipartMixedBatchWriter.WriteStartChangeset("f46c46e2");
-
-                    var operationResponseMessage2 = multipartMixedBatchWriter.CreateOperationResponseMessage("2");
-                    operationResponseMessage2.StatusCode = 200;
-
-                    using (var messageWriter2 = new ODataMessageWriter(operationResponseMessage2, nestedWriterSettings))
-                    {
-                        var jsonWriter = messageWriter2.CreateODataResourceWriter(this.customerEntitySet, this.customerEntityType);
-                        jsonWriter.WriteStart(customerResource);
-                        jsonWriter.WriteEnd();
-                    }
-
-                    multipartMixedBatchWriter.WriteEndChangeset();
-                    multipartMixedBatchWriter.WriteEndBatch();
+                    var jsonWriter = messageWriter1.CreateODataResourceWriter(this.orderEntitySet, this.orderEntityType);
+                    jsonWriter.WriteStart(orderResource);
+                    jsonWriter.WriteEnd();
                 }
 
-                this.syncStream.Position = 0;
-                var result = new StreamReader(this.syncStream).ReadToEnd();
+                multipartMixedBatchWriter.WriteEndChangeset();
+                multipartMixedBatchWriter.WriteStartChangeset("f46c46e2");
 
-                return Regex.Replace(result, batchGuidRegex, batchResponseBoundary);
-            });
+                var operationResponseMessage2 = multipartMixedBatchWriter.CreateOperationResponseMessage("2");
+                operationResponseMessage2.StatusCode = 200;
+
+                using (var messageWriter2 = new ODataMessageWriter(operationResponseMessage2, nestedWriterSettings))
+                {
+                    var jsonWriter = messageWriter2.CreateODataResourceWriter(this.customerEntitySet, this.customerEntityType);
+                    jsonWriter.WriteStart(customerResource);
+                    jsonWriter.WriteEnd();
+                }
+
+                multipartMixedBatchWriter.WriteEndChangeset();
+                multipartMixedBatchWriter.WriteEndBatch();
+            }
+
+            this.syncStream.Position = 0;
+            var result = new StreamReader(this.syncStream).ReadToEnd();
+
+            var syncResult = Regex.Replace(result, batchGuidRegex, batchResponseBoundary);
 
             var expected = @"--batchresponse_aed653ab
 Content-Type: multipart/mixed; boundary=changesetresponse_ec3a8d4f
@@ -933,21 +903,20 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
                     }
                 });
 
-            var syncException = await Assert.ThrowsAsync<ODataException>(
-                () => TaskUtils.GetTaskForSynchronousOperation(() =>
+            var syncException = Assert.Throws<ODataException>(() =>
+            {
+                IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
+                using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
                 {
-                    IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
-                    using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
-                    {
-                        var multipartMixedBatchWriter = messageWriter.CreateODataBatchWriter();
-                        multipartMixedBatchWriter.WriteStartBatch();
-                        multipartMixedBatchWriter.WriteStartChangeset();
+                    var multipartMixedBatchWriter = messageWriter.CreateODataBatchWriter();
+                    multipartMixedBatchWriter.WriteStartBatch();
+                    multipartMixedBatchWriter.WriteStartChangeset();
 
-                        var operationRequestMessage = multipartMixedBatchWriter.CreateOperationRequestMessage(
-                            "POST", new Uri($"{ServiceUri}/Orders"), /*contentId*/ null);
-                        // Try to create operation request message with null content id
-                    }
-                }));
+                    var operationRequestMessage = multipartMixedBatchWriter.CreateOperationRequestMessage(
+                        "POST", new Uri($"{ServiceUri}/Orders"), /*contentId*/ null);
+                    // Try to create operation request message with null content id
+                }
+            });
 
             Assert.Equal(Error.Format(SRResources.ODataBatchOperationHeaderDictionary_KeyNotFound, "Content-ID"), asyncException.Message);
             Assert.Equal(Error.Format(SRResources.ODataBatchOperationHeaderDictionary_KeyNotFound, "Content-ID"), syncException.Message);
@@ -976,25 +945,24 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
                     }
                 });
 
-            var syncException = await Assert.ThrowsAsync<ODataException>(
-                () => TaskUtils.GetTaskForSynchronousOperation(() =>
+            var syncException = Assert.Throws<ODataException>(() =>
+            {
+                IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
+                using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
                 {
-                    IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
-                    using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
-                    {
-                        var multipartMixedBatchWriter = messageWriter.CreateODataBatchWriter();
-                        multipartMixedBatchWriter.WriteStartBatch();
-                        multipartMixedBatchWriter.WriteStartChangeset("ec3a8d4f");
+                    var multipartMixedBatchWriter = messageWriter.CreateODataBatchWriter();
+                    multipartMixedBatchWriter.WriteStartBatch();
+                    multipartMixedBatchWriter.WriteStartChangeset("ec3a8d4f");
 
-                        var operationRequestMessage1 = multipartMixedBatchWriter.CreateOperationRequestMessage(
-                            "POST", new Uri($"{ServiceUri}/Customers"), "1");
+                    var operationRequestMessage1 = multipartMixedBatchWriter.CreateOperationRequestMessage(
+                        "POST", new Uri($"{ServiceUri}/Customers"), "1");
 
-                        // Try to use a content id not matched to a preceding request
-                        var dependsOnIds = new List<string> { "3" };
-                        var operationRequestMessage2 = multipartMixedBatchWriter.CreateOperationRequestMessage(
-                            "POST", new Uri($"{ServiceUri}/Orders"), "2", BatchPayloadUriOption.AbsoluteUri, dependsOnIds);
-                    }
-                }));
+                    // Try to use a content id not matched to a preceding request
+                    var dependsOnIds = new List<string> { "3" };
+                    var operationRequestMessage2 = multipartMixedBatchWriter.CreateOperationRequestMessage(
+                        "POST", new Uri($"{ServiceUri}/Orders"), "2", BatchPayloadUriOption.AbsoluteUri, dependsOnIds);
+                }
+            });
 
             Assert.Equal(Error.Format(SRResources.ODataBatchReader_DependsOnIdNotFound, 3, 2), asyncException.Message);
             Assert.Equal(Error.Format(SRResources.ODataBatchReader_DependsOnIdNotFound, 3, 2), syncException.Message);
@@ -1016,17 +984,16 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
                     }
                 });
 
-            var syncException = await Assert.ThrowsAsync<ODataException>(
-                () => TaskUtils.GetTaskForSynchronousOperation(() =>
+            var syncException = Assert.Throws<ODataException>(() =>
+            {
+                IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
+                using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
                 {
-                    IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
-                    using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
-                    {
-                        var multipartMixedBatchWriter = messageWriter.CreateODataBatchWriter();
-                        multipartMixedBatchWriter.WriteStartBatch();
-                        multipartMixedBatchWriter.OnInStreamError();
-                    }
-                }));
+                    var multipartMixedBatchWriter = messageWriter.CreateODataBatchWriter();
+                    multipartMixedBatchWriter.WriteStartBatch();
+                    multipartMixedBatchWriter.OnInStreamError();
+                }
+            });
 
             Assert.Equal(SRResources.ODataBatchWriter_CannotWriteInStreamErrorForBatch, asyncException.Message);
             Assert.Equal(SRResources.ODataBatchWriter_CannotWriteInStreamErrorForBatch, syncException.Message);

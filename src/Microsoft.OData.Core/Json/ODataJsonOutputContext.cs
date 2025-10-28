@@ -225,17 +225,14 @@ namespace Microsoft.OData.Json
         {
             this.AssertAsynchronous();
 
-            return TaskUtils.GetTaskForSynchronousOperation((
-                thisParam,
-                entitySetParam,
-                resourceTypeParam) => thisParam.CreateODataResourceSetWriterImplementation(
-                    entitySetParam,
-                    resourceTypeParam,
-                    writingParameter: false,
-                    writingDelta: false),
-                this,
-                entitySet,
-                resourceType);
+            try
+            {
+                return Task.FromResult(this.CreateODataResourceSetWriterImplementation(entitySet, resourceType, false, false));
+            }
+            catch (Exception ex) when (ExceptionUtils.IsCatchableExceptionType(ex))
+            {
+                return Task.FromException<ODataWriter>(ex);
+            }
         }
 
         /// <summary>
@@ -263,17 +260,14 @@ namespace Microsoft.OData.Json
         {
             this.AssertAsynchronous();
 
-            return TaskUtils.GetTaskForSynchronousOperation((
-                thisParam,
-                entitySetParam,
-                resourceTypeParam) => thisParam.CreateODataResourceSetWriterImplementation(
-                    entitySetParam,
-                    resourceTypeParam,
-                    writingParameter: false,
-                    writingDelta: true),
-                this,
-                entitySet,
-                resourceType);
+            try
+            {
+                return Task.FromResult(this.CreateODataResourceSetWriterImplementation(entitySet, resourceType, false, true));
+            }
+            catch (Exception ex) when (ExceptionUtils.IsCatchableExceptionType(ex))
+            {
+                return Task.FromException<ODataWriter>(ex);
+            }
         }
 
         /// <summary>
@@ -301,15 +295,14 @@ namespace Microsoft.OData.Json
         {
             this.AssertAsynchronous();
 
-            return TaskUtils.GetTaskForSynchronousOperation((
-                thisParam,
-                navigationSourceParam,
-                resourceTypeParam) => thisParam.CreateODataResourceWriterImplementation(
-                    navigationSourceParam,
-                    resourceTypeParam),
-                this,
-                navigationSource,
-                resourceType);
+            try
+            {
+                return Task.FromResult(this.CreateODataResourceWriterImplementation(navigationSource, resourceType));
+            }
+            catch (Exception ex) when (ExceptionUtils.IsCatchableExceptionType(ex))
+            {
+                return Task.FromException<ODataWriter>(ex);
+            }
         }
 
         /// <summary>
@@ -335,12 +328,14 @@ namespace Microsoft.OData.Json
         {
             this.AssertAsynchronous();
 
-            return TaskUtils.GetTaskForSynchronousOperation((
-                thisParam,
-                itemTypeReferenceParam) => thisParam.CreateODataCollectionWriterImplementation(
-                    itemTypeReferenceParam),
-                this,
-                itemTypeReference);
+            try
+            {
+                return Task.FromResult(this.CreateODataCollectionWriterImplementation(itemTypeReference));
+            }
+            catch (Exception ex) when (ExceptionUtils.IsCatchableExceptionType(ex))
+            {
+                return Task.FromException<ODataCollectionWriter>(ex);
+            }
         }
 
         /// <summary>
@@ -392,17 +387,14 @@ namespace Microsoft.OData.Json
         {
             this.AssertAsynchronous();
 
-            return TaskUtils.GetTaskForSynchronousOperation((
-                thisParam,
-                entitySetParam,
-                resourceTypeParam) => thisParam.CreateODataResourceSetWriterImplementation(
-                    entitySetParam,
-                    resourceTypeParam,
-                    writingParameter: true,
-                    writingDelta: false),
-                this,
-                entitySet,
-                resourceType);
+            try
+            {
+                return Task.FromResult(this.CreateODataResourceSetWriterImplementation(entitySet, resourceType, true, false));
+            }
+            catch (Exception ex) when (ExceptionUtils.IsCatchableExceptionType(ex))
+            {
+                return Task.FromException<ODataWriter>(ex);
+            }
         }
 
         /// <summary>
@@ -428,12 +420,14 @@ namespace Microsoft.OData.Json
         {
             this.AssertAsynchronous();
 
-            return TaskUtils.GetTaskForSynchronousOperation((
-                thisParam,
-                operationParam) => thisParam.CreateODataParameterWriterImplementation(
-                    operationParam),
-                this,
-                operation);
+            try
+            {
+                return Task.FromResult(this.CreateODataParameterWriterImplementation(operation));
+            }
+            catch (Exception ex) when (ExceptionUtils.IsCatchableExceptionType(ex))
+            {
+                return Task.FromException<ODataParameterWriter>(ex);
+            }
         }
 
         /// <summary>
@@ -571,7 +565,7 @@ namespace Microsoft.OData.Json
                 return this.asynchronousOutputStream.FlushAsync();
             }
 
-            return TaskUtils.CompletedTask;
+            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -608,9 +602,14 @@ namespace Microsoft.OData.Json
         {
             this.AssertAsynchronous();
 
-            return TaskUtils.GetTaskForSynchronousOperation(
-                thisParam => thisParam.CreateODataBatchWriterImplementation(),
-                this);
+            try
+            {
+                return Task.FromResult(this.CreateODataBatchWriterImplementation());
+            }
+            catch (Exception ex) when (ExceptionUtils.IsCatchableExceptionType(ex))
+            {
+                return Task.FromException<ODataBatchWriter>(ex);
+            }
         }
 
         /// <summary>
@@ -688,15 +687,14 @@ namespace Microsoft.OData.Json
         {
             this.AssertAsynchronous();
 
-            return TaskUtils.GetTaskForSynchronousOperation((
-                thisParam,
-                entitySetParam,
-                entityTypeParam) => thisParam.CreateODataDeltaWriterImplementation(
-                    entitySetParam,
-                    entityTypeParam),
-                this,
-                entitySet,
-                entityType);
+            try
+            {
+                return Task.FromResult(this.CreateODataDeltaWriterImplementation(entitySet, entityType));
+            }
+            catch (Exception ex) when (ExceptionUtils.IsCatchableExceptionType(ex))
+            {
+                return Task.FromException<ODataDeltaWriter>(ex);
+            }
         }
 
         /// <summary>

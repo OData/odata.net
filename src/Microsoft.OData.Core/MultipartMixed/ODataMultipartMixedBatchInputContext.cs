@@ -66,7 +66,14 @@ namespace Microsoft.OData.MultipartMixed
         internal override Task<ODataBatchReader> CreateBatchReaderAsync()
         {
             // Note that the reading is actually synchronous since we buffer the entire input when getting the stream from the message.
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateBatchReaderImplementation(/*synchronous*/ false));
+            try
+            {
+                return Task.FromResult(this.CreateBatchReaderImplementation(synchronous: false));
+            }
+            catch (Exception ex) when (ExceptionUtils.IsCatchableExceptionType(ex))
+            {
+                return Task.FromException<ODataBatchReader>(ex);
+            }
         }
 
         /// <summary>

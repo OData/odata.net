@@ -89,7 +89,15 @@ namespace Microsoft.OData.MultipartMixed
             ODataMessageReaderSettings settings)
         {
             ExceptionUtils.CheckArgumentNotNull(messageInfo, "messageInfo");
-            return TaskUtils.GetTaskForSynchronousOperation(() => DetectPayloadKindImplementation(messageInfo.MediaType));
+
+            try
+            {
+                return Task.FromResult(DetectPayloadKindImplementation(messageInfo.MediaType));
+            }
+            catch (Exception ex) when (ExceptionUtils.IsCatchableExceptionType(ex))
+            {
+                return Task.FromException<IEnumerable<ODataPayloadKind>>(ex);
+            }
         }
 
         /// <summary>

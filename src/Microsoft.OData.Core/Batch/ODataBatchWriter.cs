@@ -593,9 +593,15 @@ namespace Microsoft.OData
         /// <returns>A task that represents the asynchronous write operation.</returns>
         protected virtual Task WriteStartBatchImplementationAsync()
         {
-            return TaskUtils.GetTaskForSynchronousOperation(
-                (thisParam) => thisParam.WriteStartBatchImplementation(),
-                this);
+            try
+            {
+                this.WriteStartBatchImplementation();
+                return Task.CompletedTask;
+            }
+            catch (Exception ex) when (ExceptionUtils.IsCatchableExceptionType(ex))
+            {
+                return Task.FromException(ex);
+            }
         }
 
         /// <summary>
@@ -604,9 +610,15 @@ namespace Microsoft.OData
         /// <returns>A task that represents the asynchronous write operation.</returns>
         protected virtual Task WriteEndBatchImplementationAsync()
         {
-            return TaskUtils.GetTaskForSynchronousOperation(
-                (thisParam) => thisParam.WriteEndBatchImplementation(),
-                this);
+            try
+            {
+                this.WriteEndBatchImplementation();
+                return Task.CompletedTask;
+            }
+            catch (Exception ex) when (ExceptionUtils.IsCatchableExceptionType(ex))
+            {
+                return Task.FromException(ex);
+            }
         }
 
         /// <summary>
@@ -616,10 +628,15 @@ namespace Microsoft.OData
         /// <returns>A task that represents the asynchronous write operation.</returns>
         protected virtual Task WriteStartChangesetImplementationAsync(string groupOrChangesetId)
         {
-            return TaskUtils.GetTaskForSynchronousOperation(
-                (thisParam, groupOrChangesetIdParam) => thisParam.WriteStartChangesetImplementation(groupOrChangesetIdParam),
-                this,
-                groupOrChangesetId);
+            try
+            {
+                this.WriteStartChangesetImplementation(groupOrChangesetId);
+                return Task.CompletedTask;
+            }
+            catch (Exception ex) when (ExceptionUtils.IsCatchableExceptionType(ex))
+            {
+                return Task.FromException(ex);
+            }
         }
 
         /// <summary>
@@ -628,9 +645,15 @@ namespace Microsoft.OData
         /// <returns>A task that represents the asynchronous write operation.</returns>
         protected virtual Task WriteEndChangesetImplementationAsync()
         {
-            return TaskUtils.GetTaskForSynchronousOperation(
-                (thisParam) => thisParam.WriteEndChangesetImplementation(),
-                this);
+            try
+            {
+                this.WriteEndChangesetImplementation();
+                return Task.CompletedTask;
+            }
+            catch (Exception ex) when (ExceptionUtils.IsCatchableExceptionType(ex))
+            {
+                return Task.FromException(ex);
+            }
         }
 
         /// <summary>
@@ -652,13 +675,19 @@ namespace Microsoft.OData
             BatchPayloadUriOption payloadUriOption,
             IEnumerable<string> dependsOnIds)
         {
-            return TaskUtils.GetTaskForSynchronousOperation(
-                () => this.CreateOperationRequestMessageImplementation(
+            try
+            {
+                return Task.FromResult(this.CreateOperationRequestMessageImplementation(
                     method,
                     uri,
                     contentId,
                     payloadUriOption,
                     dependsOnIds));
+            }
+            catch (Exception ex) when (ExceptionUtils.IsCatchableExceptionType(ex))
+            {
+                return Task.FromException<ODataBatchOperationRequestMessage>(ex);
+            }
         }
 
         /// <summary>
@@ -670,8 +699,14 @@ namespace Microsoft.OData
         /// that can be used to write the response operation.</returns>
         protected virtual Task<ODataBatchOperationResponseMessage> CreateOperationResponseMessageImplementationAsync(string contentId)
         {
-            return TaskUtils.GetTaskForSynchronousOperation(
-                () => this.CreateOperationResponseMessageImplementation(contentId));
+            try
+            {
+                return Task.FromResult(this.CreateOperationResponseMessageImplementation(contentId));
+            }
+            catch (Exception ex) when (ExceptionUtils.IsCatchableExceptionType(ex))
+            {
+                return Task.FromException<ODataBatchOperationResponseMessage>(ex);
+            }
         }
 
         /// <summary>
