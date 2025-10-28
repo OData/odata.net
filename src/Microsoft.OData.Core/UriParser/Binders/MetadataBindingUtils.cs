@@ -89,7 +89,7 @@ namespace Microsoft.OData.UriParser
                     }
 
                     // Check if the member name is a valid enum member name
-                    IEdmEnumMember? edmEnumMember = enumType.FindMember(memberName, comparison);
+                    IEdmEnumMember edmEnumMember = enumType.FindMember(memberName, comparison);
                     if (edmEnumMember != null)
                     {
                         string literalText = ODataUriUtils.ConvertToUriLiteral(constantNode.Value, default(ODataVersion));
