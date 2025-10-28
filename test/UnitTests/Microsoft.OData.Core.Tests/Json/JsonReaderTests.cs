@@ -721,7 +721,7 @@ namespace Microsoft.OData.Tests.Json
         [Theory]
         [InlineData("{\"Data\":\"The \\ r character\"}", "\\ ")]
         [InlineData("{\"Data\":\"The \\", "\\")]
-        [InlineData("{\"Data\":\"The \\u621", "\\uXXXX")]
+        [InlineData("{\"Data\":\"The \\u621", "\\u621")]
         [InlineData("{\"Data\":\"The \\u62 character\"}", "\\u62 c")]
         public async Task UnrecognizedEscapeSequenceThrowsException(string payload, string expected)
         {

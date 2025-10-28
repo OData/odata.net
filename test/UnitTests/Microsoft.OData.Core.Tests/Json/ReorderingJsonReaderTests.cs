@@ -5,7 +5,9 @@
 //---------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.OData.Core;
 using Microsoft.OData.Json;
@@ -527,6 +529,127 @@ namespace Microsoft.OData.Tests.Json
                 exception.Message);
         }
 
+        public static IEnumerable<object> GetInStreamErrorPayloadTestData()
+        {
+            yield return $"{{\"error\":{{\"code\":\"{new string('c', 16)}\",\"message\":\"{new string('m', 16)}\",\"target\":\"{new string('t', 16)}\"}}}}";
+
+            yield return $"{{\"error\":{{\"code\":\"{new string('c', 2048)}\",\"message\":\"{new string('m', 2048)}\",\"target\":\"{new string('t', 2048)}\"}}}}";
+        }
+
+        public static IEnumerable<object[]> GetInStreamErrorPayloadTestData_WithReaderKinds =>
+            ExpandWithReaderKinds(GetInStreamErrorPayloadTestData());
+
+        [Theory]
+        [MemberData(nameof(GetInStreamErrorPayloadTestData_WithReaderKinds))]
+        public async Task ReadInStreamError_TopLevelInStreamErrorPayload_ThrowsAsync(string payload, ReaderSourceKind sourceKind)
+        {
+            // Arrange
+            var textReader = CreateTextReader(payload, sourceKind);
+
+            using (var jsonReader = new JsonReader(textReader, false))
+            {
+                var reorderingReader = new ReorderingJsonReader(jsonReader, 4);
+
+                // Act & Assert
+                var exception = await Assert.ThrowsAsync<ODataErrorException>(reorderingReader.ReadAsync);
+                VerifyODataError(payload, exception.Error);
+            }
+        }
+
+        [Theory]
+        [InlineData(ReaderSourceKind.Buffered)]
+        [InlineData(ReaderSourceKind.Chunked)]
+        public async Task ReadInStreamError_NonTopLevelInStreamErrorPayload_ThrowsAsync(ReaderSourceKind sourceKind)
+        {
+            // Arrange
+            var payload = $"{{\"first\":\"{new string('f', 8192)}\",\"next\":{{\"error\":{{\"code\":\"{new string('c', 2048)}\",\"message\":\"{new string('m', 2048)}\",\"target\":\"{new string('t', 2048)}\"}}}}}}";
+            var textReader = CreateTextReader(payload, sourceKind);
+
+            using (var jsonReader = new JsonReader(textReader, false))
+            {
+                var reorderingReader = new ReorderingJsonReader(jsonReader, 4);
+
+                // Act & Assert
+                var exception = await Assert.ThrowsAsync<ODataErrorException>(reorderingReader.ReadAsync); // StartObject of "next" property value with a single "error" property
+
+                using JsonDocument doc = JsonDocument.Parse(payload);
+                JsonElement error = doc.RootElement.GetProperty("next").GetProperty("error");
+
+                string code = error.GetProperty("code").GetString();
+                string message = error.GetProperty("message").GetString();
+                string target = error.GetProperty("target").GetString();
+
+                var odataError = exception.Error;
+                Assert.NotNull(odataError);
+                Assert.Equal(code, odataError.Code);
+                Assert.Equal(message, odataError.Message);
+                Assert.Equal(target, odataError.Target);
+            }
+        }
+
+        [Theory]
+        [InlineData(ReaderSourceKind.Buffered)]
+        [InlineData(ReaderSourceKind.Chunked)]
+        public async Task Read_SlowPathNestedObjectEndAsync(ReaderSourceKind sourceKind)
+        {
+            // Arrange
+            var payload = $"{{\"First\":{{\"StringProp\":\"{new string('s', 256)}\"}}{new string(' ', 8192)},{new string(' ', 8192)}\"Next\":{{\"NumberProp\":{new string('9', 256)}}}}}";
+            var textReader = CreateTextReader(payload, sourceKind);
+
+            using (var jsonReader = new JsonReader(textReader, false))
+            {
+                var reorderingReader = new ReorderingJsonReader(jsonReader, 4);
+
+                // Act & Assert
+                Assert.True(await reorderingReader.ReadAsync()); // {
+                Assert.True(await reorderingReader.ReadAsync()); // First
+                Assert.Equal("First", await reorderingReader.GetValueAsync());
+                Assert.True(await reorderingReader.ReadAsync()); // {
+                Assert.True(await reorderingReader.ReadAsync()); // StringProp
+                Assert.Equal("StringProp", await reorderingReader.GetValueAsync());
+                Assert.True(await reorderingReader.ReadAsync()); // StringProp value
+                Assert.Equal(new string('s', 256), await reorderingReader.GetValueAsync());
+                Assert.True(await reorderingReader.ReadAsync()); // }
+                Assert.True(await reorderingReader.ReadAsync()); // Next
+                Assert.Equal("Next", await reorderingReader.GetValueAsync());
+                Assert.True(await reorderingReader.ReadAsync()); // {
+                Assert.True(await reorderingReader.ReadAsync()); // NumberProp
+                Assert.Equal("NumberProp", await reorderingReader.GetValueAsync());
+                Assert.True(await reorderingReader.ReadAsync()); // NumberProp value
+                Assert.True(await reorderingReader.ReadAsync()); // }
+                await reorderingReader.ReadAsync(); // }
+            }
+        }
+
+        [Theory]
+        [InlineData(ReaderSourceKind.Buffered)]
+        [InlineData(ReaderSourceKind.Chunked)]
+        public async Task Read_SlowPathBufferedValueAsync(ReaderSourceKind sourceKind)
+        {
+            // Arrange
+            var payload = $"{{\"Data@attr.large\":{{{new string(' ', 4096)}\"First\":[1,2,3,4,5,6,7,8,9]{new string(' ', 4096)},{new string(' ', 4096)}\"Next\":{{\"A\":1,\"B\":2,\"C\":3}}}},\"After\":42}}";
+            var textReader = CreateTextReader(payload, sourceKind);
+
+            using (var jsonReader = new JsonReader(textReader, false))
+            {
+                var reorderingReader = new ReorderingJsonReader(jsonReader, 4);
+
+                // Act & Assert
+                Assert.True(await reorderingReader.ReadAsync()); // {
+                Assert.True(await reorderingReader.ReadAsync()); // Data@attr.large property name
+                Assert.Equal("Data@attr.large", await reorderingReader.GetValueAsync());
+                
+                await reorderingReader.ReadAsync(); // {
+                // Skip over Data@attr.large property value
+                await reorderingReader.SkipValueAsync();
+                
+                Assert.Equal("After", await reorderingReader.GetValueAsync());
+                Assert.True(await reorderingReader.ReadAsync()); // After property value
+                Assert.Equal(42, await reorderingReader.GetValueAsync());
+                await reorderingReader.ReadAsync(); // }
+            }
+        }
+
         /// <summary>
         /// Creates a new <see cref="ReorderingJsonReader"/> and advances it to the first property node
         /// </summary>
@@ -562,6 +685,38 @@ namespace Microsoft.OData.Tests.Json
                     await func(reorderingReader);
                 }
             }
+        }
+
+        private void VerifyODataError(string json, ODataError odataError)
+        {
+            using JsonDocument doc = JsonDocument.Parse(json);
+            JsonElement error = doc.RootElement.GetProperty("error");
+
+            string code = error.GetProperty("code").GetString();
+            string message = error.GetProperty("message").GetString();
+            string target = error.GetProperty("target").GetString();
+
+            Assert.Equal(code, odataError.Code);
+            Assert.Equal(message, odataError.Message);
+            Assert.Equal(target, odataError.Target);
+        }
+
+        private static IEnumerable<object[]> ExpandWithReaderKinds(IEnumerable<object> testData)
+        {
+            foreach (var dataRow in testData)
+            {
+                yield return new object[] { dataRow, ReaderSourceKind.Buffered }; // baseline buffered StringReader
+                yield return new object[] { dataRow, ReaderSourceKind.Chunked }; // chunked/refill ChunkedStringReader
+            }
+        }
+
+        private static TextReader CreateTextReader(string payload, ReaderSourceKind readerKind, int chunkSize = 128) =>
+            readerKind == ReaderSourceKind.Buffered ? new StringReader(payload) : new ChunkedStringReader(payload, chunkSize);
+
+        public enum ReaderSourceKind
+        {
+            Buffered,   // StringReader (baseline)
+            Chunked     // ChunkedStringReader (forced refills / async completion)
         }
     }
 }
