@@ -7,6 +7,12 @@ internal class ODataJsonByteArrayWriter<TCustomState> : ODataJsonWriter<byte[], 
 {
     public override bool Write(byte[] value, ODataWriterState<TCustomState> state)
     {
+        if (value is null)
+        {
+            state.JsonWriter.WriteNullValue();
+            return true;
+        }
+
         // TODO: byte[] could either be Edm.Binary or Collection(Edm.Byte). Currently,
         // this only assumes Edm.Binary. But we should also support Collection(Edm.Byte).
 

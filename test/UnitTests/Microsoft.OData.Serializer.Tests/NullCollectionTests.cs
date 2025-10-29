@@ -17,23 +17,25 @@ public class NullCollectionTests
     public async Task WritesNullWhenListCollectionPropertyIsNull()
     {
         // Arrange
-        var order = new EntityWithList
+        var entity = new EntityWithList
         {
             Id = 1,
             Items = null
         };
 
         var options = new ODataSerializerOptions();
+
+        var model = CreateModel();
         var odataUri = new ODataUriParser(
-            CreateModel(),
+            model,
             new Uri("http://service/odata"),
             new Uri("Entities(1)", UriKind.Relative)
         ).ParseUri();
-        var model = CreateModel();
+
         var stream = new MemoryStream();
 
         // Act
-        await ODataSerializer.WriteAsync(order, stream, odataUri, model, options);
+        await ODataSerializer.WriteAsync(entity, stream, odataUri, model, options);
 
         // Assert
         stream.Position = 0;
