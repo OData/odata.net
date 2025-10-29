@@ -4,7 +4,7 @@ using System.Text.Json;
 
 namespace Microsoft.OData.Serializer.Tests;
 
-public class NullSerializationSupport
+public class NullStringTests
 {
     [Fact]
     public async Task WhenStringPropertyIsNull_WritesNullValue()
