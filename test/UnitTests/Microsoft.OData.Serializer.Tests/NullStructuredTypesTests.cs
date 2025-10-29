@@ -9,8 +9,36 @@ using System.Threading.Tasks;
 
 namespace Microsoft.OData.Serializer.Tests;
 
-public class NullStructuredTypesPropertiesTests
+public class NullStructuredTypesTests
 {
+    [Fact]
+    public async Task WhenTopLevelResourceIsNull_WritesNullValue()
+    {
+        Customer? data = null;
+        var options = new ODataSerializerOptions();
+
+        var model = GetEdmModel();
+        var odataUri = new ODataUriParser(
+            model,
+            new Uri("http://service/odata"),
+            new Uri("Customers(1)", UriKind.Relative)
+        ).ParseUri();
+
+        var stream = new MemoryStream();
+        await ODataSerializer.WriteAsync(data, stream, odataUri, model, options);
+
+        stream.Position = 0;
+        var actual = new StreamReader(stream).ReadToEnd();
+        var actualNormalized = JsonSerializer.Serialize(JsonDocument.Parse(actual));
+
+        var expected = "null";
+        var expectedNormalized = JsonSerializer.Serialize(JsonDocument.Parse(expected));
+
+        Assert.Equal(expectedNormalized, actualNormalized);
+    }
+
+    // TODO: tests for
+
     [Fact]
     public async Task WhenStructuredTypePropertyIsNull_WritesNullValue()
     {
@@ -32,6 +60,7 @@ public class NullStructuredTypesPropertiesTests
         var stream = new MemoryStream();
         await ODataSerializer.WriteAsync(data, stream, odataUri, model, options);
 
+        stream.Position = 0;
         var actual = new StreamReader(stream).ReadToEnd();
         var actualNormalized = JsonSerializer.Serialize(JsonDocument.Parse(actual));
 
@@ -94,6 +123,7 @@ public class NullStructuredTypesPropertiesTests
         var stream = new MemoryStream();
         await ODataSerializer.WriteAsync(data, stream, odataUri, model, options);
 
+        stream.Position = 0;
         var actual = new StreamReader(stream).ReadToEnd();
         var actualNormalized = JsonSerializer.Serialize(JsonDocument.Parse(actual));
 

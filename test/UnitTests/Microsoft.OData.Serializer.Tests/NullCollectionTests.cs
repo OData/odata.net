@@ -205,6 +205,36 @@ public class NullCollectionTests
         Assert.Equal(normalizedExpected, normalizedActual);
     }
 
+    [Fact]
+    public async Task WhenTopLevelCollectionIsNull_WritesEmptyArray()
+    {
+        List<EntityWithList> data = null;
+
+        var options = new ODataSerializerOptions();
+        var odataUri = new ODataUriParser(
+            CreateModel(),
+            new Uri("http://service/odata"),
+            new Uri("Entities(1)", UriKind.Relative)
+        ).ParseUri();
+        var model = CreateModel();
+        var stream = new MemoryStream();
+
+        // Act
+        await ODataSerializer.WriteAsync(data, stream, odataUri, model, options);
+
+        // Assert
+        stream.Position = 0;
+        var actual = new StreamReader(stream).ReadToEnd();
+        var normalizedActual = JsonSerializer.Serialize(JsonDocument.Parse(actual));
+        var expected = """
+            {
+              "value": []
+            }
+            """;
+        var normalizedExpected = JsonSerializer.Serialize(JsonDocument.Parse(expected));
+        Assert.Equal(normalizedExpected, normalizedActual);
+    }
+
     private IEdmModel CreateModel()
     {
         var model = new EdmModel();

@@ -10,6 +10,14 @@ internal class ODataResourceJsonWriter<T, TCustomState>(ODataTypeInfo<T, TCustom
 {
     public override bool Write(T value, ODataWriterState<TCustomState> state)
     {
+        // TODO: Revisit when adding support for non-nullable custom structs
+        // TODO: How should we handle annotations and control information when the resource is null?
+        if (value is null)
+        {
+            state.JsonWriter.WriteNullValue();
+            return true;
+        }
+
         ODataPropertyInfo? parentProperty = state.IsTopLevel() ? null : state.Stack.Current.PropertyInfo;
 
         // if we're resuming, then we should not push the stack again.
