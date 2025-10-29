@@ -9,10 +9,10 @@ using System.Threading.Tasks;
 
 namespace Microsoft.OData.Serializer.Tests;
 
-public class NullStructuredPropertiesTests
+public class NullStructuredTypesPropertiesTests
 {
     [Fact]
-    public async Task WhenStructuredPropertyIsNull_WritesNullValue()
+    public async Task WhenStructuredTypePropertyIsNull_WritesNullValue()
     {
         var data = new Customer
         {
@@ -21,6 +21,68 @@ public class NullStructuredPropertiesTests
         };
 
         var options = new ODataSerializerOptions();
+
+        var model = GetEdmModel();
+        var odataUri = new ODataUriParser(
+            model,
+            new Uri("http://service/odata"),
+            new Uri("Customers(1)", UriKind.Relative)
+        ).ParseUri();
+
+        var stream = new MemoryStream();
+        await ODataSerializer.WriteAsync(data, stream, odataUri, model, options);
+
+        var actual = new StreamReader(stream).ReadToEnd();
+        var actualNormalized = JsonSerializer.Serialize(JsonDocument.Parse(actual));
+
+        var expected = """
+            {
+              "@odata.context": "http://service/odata/$metadata#Customers/$entity",
+              "Id": 1,
+              "Address": null
+            }
+            """;
+        var expectedNormalized = JsonSerializer.Serialize(JsonDocument.Parse(expected));
+
+        Assert.Equal(expectedNormalized, actualNormalized);
+    }
+
+    [Fact]
+    public async Task WithCustomODataTypeInfo_WhenStructuredTypePropertyIsNull_WritesNullValue()
+    {
+        var data = new Customer
+        {
+            Id = 1,
+            Address = null
+        };
+
+        var options = new ODataSerializerOptions();
+        options.AddTypeInfo<Customer>(new()
+        {
+            Properties = [
+                new ODataPropertyInfo<Customer, int, DefaultState>()
+                {
+                    Name = "Id",
+                    GetValue = (customer, state) => customer.Id
+                },
+                new ODataPropertyInfo<Customer, Address, DefaultState>()
+                {
+                    Name = "Address",
+                    GetValue = (customer, state) => customer.Address
+                }
+            ]
+        });
+
+        options.AddTypeInfo<Address>(new()
+        {
+            Properties = [
+                new ODataPropertyInfo<Address, string, DefaultState>()
+                {
+                    Name = "Street",
+                    GetValue = (customer, state) => customer.Street
+                }
+            ]
+        });
 
         var model = GetEdmModel();
         var odataUri = new ODataUriParser(
