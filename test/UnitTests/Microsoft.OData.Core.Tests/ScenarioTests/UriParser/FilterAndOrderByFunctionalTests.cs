@@ -3653,7 +3653,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Theory]
-        [InlineData("example in ('')", "\"\"")] // No space
+        [InlineData("example in ('')", "")] // No space
         [InlineData("example in (' ')", " ")] // 1 space
         [InlineData("example in ( '   ' )", "   ")] // 3 spaces
         [InlineData("example in ( \"  \" )", "  ")] // 2 spaces
@@ -3672,9 +3672,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Theory]
-        [InlineData("example in ('', \"  \")", "\"\"", "  ")]
-        [InlineData("example in (' ', \"\")", " ", "\"\"")]
-        [InlineData("example in ( '   ', '' )", "   ", "\"\"")]
+        [InlineData("example in ('', \"  \")", "", "  ")]
+        [InlineData("example in (' ', \"\")", " ", "")]
+        [InlineData("example in ( '   ', '' )", "   ", "")]
         [InlineData("example in ( \"  \", \" \" )", "  ", " ")]
         [InlineData("example in ( \"    \", ' ' )", "    ", " ")]
         public void FilterWithInOperationWithOpenTypesInMultipleEmptyStrings(string filterQueryString, string expectedFirstLiteral, string expectedSecondLiteral)
