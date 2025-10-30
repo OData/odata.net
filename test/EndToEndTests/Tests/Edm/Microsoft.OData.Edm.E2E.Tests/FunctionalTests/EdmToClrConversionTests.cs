@@ -204,24 +204,24 @@ public class EdmToClrConversionTests : EdmLibTestCaseBase
     public void Convert_DateValuesToClrType_Successfully()
     {
         EdmToClrConverter c = new EdmToClrConverter();
-        Date date = new Date(2014, 8, 8);
+        DateOnly date = new DateOnly(2014, 8, 8);
 
-        Assert.Equal(date, c.AsClrValue(new EdmDateConstant(date), typeof(Date)));
-        Assert.Equal(date, c.AsClrValue<Date>(new EdmDateConstant(date)));
-        Assert.Equal(date, ((Date?)c.AsClrValue(new EdmDateConstant(date), typeof(Date?))).Value);
-        Assert.Null(c.AsClrValue(EdmNullExpression.Instance, typeof(Date?)));
+        Assert.Equal(date, c.AsClrValue(new EdmDateConstant(date), typeof(DateOnly)));
+        Assert.Equal(date, c.AsClrValue<DateOnly>(new EdmDateConstant(date)));
+        Assert.Equal(date, ((DateOnly?)c.AsClrValue(new EdmDateConstant(date), typeof(DateOnly?))).Value);
+        Assert.Null(c.AsClrValue(EdmNullExpression.Instance, typeof(DateOnly?)));
     }
 
     [Fact]
     public void Convert_TimeOfDayValuesToClrType_Successfully()
     {
         EdmToClrConverter c = new EdmToClrConverter();
-        TimeOfDay time = new TimeOfDay(12, 5, 30, 900);
+        TimeOnly time = new TimeOnly(12, 5, 30, 900);
 
-        Assert.Equal(time, c.AsClrValue(new EdmTimeOfDayConstant(time), typeof(TimeOfDay)));
-        Assert.Equal(time, c.AsClrValue<TimeOfDay>(new EdmTimeOfDayConstant(time)));
-        Assert.Equal(time, ((TimeOfDay?)c.AsClrValue(new EdmTimeOfDayConstant(time), typeof(TimeOfDay?))).Value);
-        Assert.Null(c.AsClrValue(EdmNullExpression.Instance, typeof(TimeOfDay?)));
+        Assert.Equal(time, c.AsClrValue(new EdmTimeOfDayConstant(time), typeof(TimeOnly)));
+        Assert.Equal(time, c.AsClrValue<TimeOnly>(new EdmTimeOfDayConstant(time)));
+        Assert.Equal(time, ((TimeOnly?)c.AsClrValue(new EdmTimeOfDayConstant(time), typeof(TimeOnly?))).Value);
+        Assert.Null(c.AsClrValue(EdmNullExpression.Instance, typeof(TimeOnly?)));
     }
 
     [Fact]

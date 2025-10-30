@@ -79,8 +79,8 @@ namespace Microsoft.OData.E2E.TestCommon.Common.Server.Default
             var changeShipTimeAndDate = builder.EntityType<Order>()
                 .Action("ChangeShipTimeAndDate")
                 .ReturnsEntityViaEntitySetPath<Order>("bindingParameter");
-            changeShipTimeAndDate.Parameter<Date>("date");
-            changeShipTimeAndDate.Parameter<TimeOfDay>("time");
+            changeShipTimeAndDate.Parameter<DateOnly>("date");
+            changeShipTimeAndDate.Parameter<TimeOnly>("time");
 
             builder.Action("Discount")
                 .Parameter<int>("percentage");
@@ -118,21 +118,21 @@ namespace Microsoft.OData.E2E.TestCommon.Common.Server.Default
 
             builder.EntityType<Order>()
                 .Function("GetShipDate")
-                .Returns<Date>();
+                .Returns<DateOnly>();
 
             builder.EntityType<Order>()
                 .Function("GetShipTime")
-                .Returns<TimeOfDay>();
+                .Returns<TimeOnly>();
 
             builder.EntityType<Order>()
                 .Function("CheckShipTime")
                 .Returns<bool>()
-                .Parameter<TimeOfDay>("time");
+                .Parameter<TimeOnly>("time");
 
             builder.EntityType<Order>()
                 .Function("CheckShipDate")
                 .Returns<bool>()
-                .Parameter<Date>("date");
+                .Parameter<DateOnly>("date");
 
             builder.Function("GetDefaultColor")
                 .Returns<Color>();

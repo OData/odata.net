@@ -185,7 +185,7 @@ public class EdmValueKindTests : EdmLibTestCaseBase
     [Fact]
     public void Validate_TimeOfDayConstant_HasCorrectValueKind()
     {
-        var constant = new EdmTimeOfDayConstant(new TimeOfDay());
+        var constant = new EdmTimeOfDayConstant(new TimeOnly());
         Assert.Equal(EdmValueKind.TimeOfDay, constant.ValueKind);
 
         var valueKindType = EdmCoreModel.Instance.GetTimeOfDay(true);
@@ -242,7 +242,7 @@ public class EdmValueKindTests : EdmLibTestCaseBase
     [Fact]
     public void Validate_DateConstant_HasCorrectValueKind()
     {
-        var constant = new EdmDateConstant(new Date());
+        var constant = new EdmDateConstant(new DateOnly());
         Assert.Equal(EdmValueKind.Date, constant.ValueKind);
 
         var valueKindType = EdmCoreModel.Instance.GetDate(true);
