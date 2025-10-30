@@ -101,8 +101,8 @@ namespace Microsoft.OData.E2E.TestCommon.Common.Server.Default
         public Customer? CustomerForOrder { get; set; }
         public TimeSpan? ShelfLife { get; set; }
         public Collection<TimeSpan>? OrderShelfLifes { get; set; }
-        public Date ShipDate { get; set; }
-        public TimeOfDay ShipTime { get; set; }
+        public DateOnly ShipDate { get; set; }
+        public TimeOnly ShipTime { get; set; }
         public InfoFromCustomer? InfoFromCustomer { get; set; }
         public List<OrderDetail>? OrderDetails { get; set; }
     }
@@ -119,7 +119,7 @@ namespace Microsoft.OData.E2E.TestCommon.Common.Server.Default
         {
         }
         [EfKey]
-        public Date Day { get; set; }
+        public DateOnly Day { get; set; }
     }
 
     public class OrderDetail : AbstractEntity

@@ -88,8 +88,8 @@ namespace Microsoft.OData.Core.E2E.Tests.EdmDateAndTimeOfDayTests
                     }
 
                     // Verify Date Property
-                    Assert.Equal(new Date(2014, 8, 31), entry.Properties.OfType<ODataProperty>().Single(p => p.Name == "ShipDate").Value);
-                    Assert.Equal(new TimeOfDay(12, 40, 5, 50), entry.Properties.OfType<ODataProperty>().Single(p => p.Name == "ShipTime").Value);
+                    Assert.Equal(new DateOnly(2014, 8, 31), entry.Properties.OfType<ODataProperty>().Single(p => p.Name == "ShipDate").Value);
+                    Assert.Equal(new TimeOnly(12, 40, 5, 50), entry.Properties.OfType<ODataProperty>().Single(p => p.Name == "ShipTime").Value);
                     Assert.Equal(ODataReaderState.Completed, reader.State);
                 }
             }
@@ -113,7 +113,7 @@ namespace Microsoft.OData.Core.E2E.Tests.EdmDateAndTimeOfDayTests
             {
                 using var messageReader = new ODataMessageReader(responseMessage, readerSettings, _model);
                 ODataProperty property = await messageReader.ReadPropertyAsync();
-                Assert.Equal(new Date(2014, 8, 31), property.Value);
+                Assert.Equal(new DateOnly(2014, 8, 31), property.Value);
             }
         }
 
@@ -135,7 +135,7 @@ namespace Microsoft.OData.Core.E2E.Tests.EdmDateAndTimeOfDayTests
             {
                 using var messageReader = new ODataMessageReader(responseMessage, readerSettings, _model);
                 ODataProperty property = await messageReader.ReadPropertyAsync();
-                Assert.Equal(new TimeOfDay(12, 40, 5, 50), property.Value);
+                Assert.Equal(new TimeOnly(12, 40, 5, 50), property.Value);
             }
         }
 
@@ -154,7 +154,7 @@ namespace Microsoft.OData.Core.E2E.Tests.EdmDateAndTimeOfDayTests
             using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, _model))
             {
                 var date = await messageReader.ReadValueAsync(EdmCoreModel.Instance.GetDate(false));
-                Assert.Equal(new Date(2014, 8, 31), date);
+                Assert.Equal(new DateOnly(2014, 8, 31), date);
             }
 
             var todRequestUrl = new Uri(_baseUri.AbsoluteUri + "Orders(7)/ShipTime/$value", UriKind.Absolute);
@@ -167,7 +167,7 @@ namespace Microsoft.OData.Core.E2E.Tests.EdmDateAndTimeOfDayTests
             using (var messageReader = new ODataMessageReader(responseMessage2, readerSettings, _model))
             {
                 var date = await messageReader.ReadValueAsync(EdmCoreModel.Instance.GetTimeOfDay(false));
-                Assert.Equal(new TimeOfDay(12, 40, 5, 50), date);
+                Assert.Equal(new TimeOnly(12, 40, 5, 50), date);
             }
         }
 
@@ -198,8 +198,8 @@ namespace Microsoft.OData.Core.E2E.Tests.EdmDateAndTimeOfDayTests
                         if (entry != null && entry.TypeName.EndsWith("Order"))
                         {
                             // Verify Date Property
-                            Assert.Equal(new Date(2014, 8, 31), entry.Properties.OfType<ODataProperty>().Single(p => p.Name == "ShipDate").Value);
-                            Assert.Equal(new TimeOfDay(12, 40, 5, 50), entry.Properties.OfType<ODataProperty>().Single(p => p.Name == "ShipTime").Value);
+                            Assert.Equal(new DateOnly(2014, 8, 31), entry.Properties.OfType<ODataProperty>().Single(p => p.Name == "ShipDate").Value);
+                            Assert.Equal(new TimeOnly(12, 40, 5, 50), entry.Properties.OfType<ODataProperty>().Single(p => p.Name == "ShipTime").Value);
                         }
                     }
                 }
@@ -236,8 +236,8 @@ namespace Microsoft.OData.Core.E2E.Tests.EdmDateAndTimeOfDayTests
                         if (entry != null)
                         {
                             // Verify Date Property
-                            Assert.Equal(new Date(2014, 8, 31), entry.Properties.OfType<ODataProperty>().Single(p => p.Name == "ShipDate").Value);
-                            Assert.Equal(new TimeOfDay(12, 40, 5, 50), entry.Properties.OfType<ODataProperty>().Single(p => p.Name == "ShipTime").Value);
+                            Assert.Equal(new DateOnly(2014, 8, 31), entry.Properties.OfType<ODataProperty>().Single(p => p.Name == "ShipDate").Value);
+                            Assert.Equal(new TimeOnly(12, 40, 5, 50), entry.Properties.OfType<ODataProperty>().Single(p => p.Name == "ShipTime").Value);
                         }
                     }
                 }
@@ -261,7 +261,7 @@ namespace Microsoft.OData.Core.E2E.Tests.EdmDateAndTimeOfDayTests
 
             using var messageReader = new ODataMessageReader(responseMessage, readerSettings, _model);
             var date = (await messageReader.ReadPropertyAsync()).Value;
-            Assert.Equal(new Date(2014, 8, 31), date);
+            Assert.Equal(new DateOnly(2014, 8, 31), date);
         }
 
         [Fact]
@@ -298,7 +298,7 @@ namespace Microsoft.OData.Core.E2E.Tests.EdmDateAndTimeOfDayTests
             using var messageReader = new ODataMessageReader(responseMessage, readerSettings, _model);
             var time = (await messageReader.ReadPropertyAsync()).Value;
 
-            Assert.Equal(new TimeOfDay(12, 40, 5, 50), time);
+            Assert.Equal(new TimeOnly(12, 40, 5, 50), time);
         }
 
         [Fact]
@@ -346,7 +346,7 @@ namespace Microsoft.OData.Core.E2E.Tests.EdmDateAndTimeOfDayTests
                     {
                         ODataResource entry = reader.Item as ODataResource;
                         // Verify Date Property
-                        Assert.Equal(new Date(2015, 11, 11), entry.Properties.OfType<ODataProperty>().Single(p => p.Name == "Day").Value);
+                        Assert.Equal(new DateOnly(2015, 11, 11), entry.Properties.OfType<ODataProperty>().Single(p => p.Name == "Day").Value);
                     }
                 }
 
@@ -379,8 +379,8 @@ namespace Microsoft.OData.Core.E2E.Tests.EdmDateAndTimeOfDayTests
             requestMessage.SetHeader("Content-Type", mimeType);
             requestMessage.SetHeader("Accept", mimeType);
 
-            Date newDate = Date.MinValue;
-            TimeOfDay newTime = TimeOfDay.MinValue;
+            DateOnly newDate = DateOnly.MinValue;
+            TimeOnly newTime = TimeOnly.MinValue;
 
             await using (var messageWriter = new ODataMessageWriter(requestMessage, writerSettings, _model))
             {
@@ -409,8 +409,8 @@ namespace Microsoft.OData.Core.E2E.Tests.EdmDateAndTimeOfDayTests
 
                         if (entry != null)
                         {
-                            Assert.Equal(Date.MinValue, entry.Properties.OfType<ODataProperty>().Single(p => p.Name == "ShipDate").Value);
-                            Assert.Equal(TimeOfDay.MinValue, entry.Properties.OfType<ODataProperty>().Single(p => p.Name == "ShipTime").Value);
+                            Assert.Equal(DateOnly.MinValue, entry.Properties.OfType<ODataProperty>().Single(p => p.Name == "ShipDate").Value);
+                            Assert.Equal(TimeOnly.MinValue, entry.Properties.OfType<ODataProperty>().Single(p => p.Name == "ShipTime").Value);
                         }
                     }
                 }
