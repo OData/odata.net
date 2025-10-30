@@ -7,7 +7,6 @@ trigger:
   branches:
     include:
     - main
-    - dev-8.x
    
 # Pull request (PR) triggers
 pr:
@@ -16,7 +15,6 @@ pr:
 
     include:
     - main
-    - dev-8.x
 
 resources:
   repositories:
@@ -48,11 +46,9 @@ extends:
       jobs:
       - job:  Debug	
         variables:	
-          buildPlatform: 'Any CPU'	
+          buildPlatform: 'AnyCPU'
           buildConfiguration: 'Debug'	
           skipComponentGovernanceDetection: true	
-          snExe: 'C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.8 Tools\sn.exe'	
-          snExe64: 'C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.8 Tools\x64\sn.exe'	
           gacUtil: '$(Build.SourcesDirectory)\test\CommonAssemblies\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll'	
           productBinPathEdm: '$(Build.SourcesDirectory)\src\Microsoft.OData.Edm\bin\$(buildConfiguration)'	
           mainDllEdm: 'Microsoft.OData.Edm.dll'	
@@ -67,11 +63,9 @@ extends:
           - template: /credscan.yml@self
       - job:  Release
         variables:
-          buildPlatform: 'Any CPU'
+          buildPlatform: 'AnyCPU'
           buildConfiguration: 'Release'
           skipComponentGovernanceDetection: true
-          snExe: 'C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.8 Tools\sn.exe'
-          snExe64: 'C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.8 Tools\x64\sn.exe'
           gacUtil: '$(Build.SourcesDirectory)\test\CommonAssemblies\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll'
           productBinPathEdm: '$(Build.SourcesDirectory)\src\Microsoft.OData.Edm\bin\$(buildConfiguration)'
           mainDllEdm: 'Microsoft.OData.Edm.dll'

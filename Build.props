@@ -44,10 +44,6 @@
     <DefineConstants>$(DefineConstants);SUPPRESS_SECURITY_RULES;</DefineConstants>
   </PropertyGroup>
 
-  <PropertyGroup>
-      <TargetFrameworks Condition="'$(TargetFrameworks)' == ''">net8.0;net9.0</TargetFrameworks>
-  </PropertyGroup>
-
   <PropertyGroup Condition ="'$(TargetFrameworkIdentifier)' == 'net45'">
     <DefineConstants>$(DefineConstants);SUPPRESS_SECURITY_RULES;</DefineConstants>
   </PropertyGroup>

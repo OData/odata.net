@@ -27,7 +27,7 @@ steps:
   displayName: 'Build'  
   inputs:
     command: 'build'
-    arguments: '--configuration $(BuildConfiguration) --no-incremental'
+    arguments: '--configuration $(buildConfiguration) --no-incremental'
     projects: |
      $(Build.SourcesDirectory)\sln\OData.Pipeline.sln
 
