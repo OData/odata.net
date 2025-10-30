@@ -511,6 +511,11 @@ namespace Microsoft.OData
                         return new DateTimeOffset(dateValue.Year, dateValue.Month, dateValue.Day, 0, 0, 0, TimeSpan.Zero);
                     }
 
+                    if (primitiveValue is DateTimeOffset dateTimeOffset)
+                    {
+                        return dateTimeOffset;
+                    }
+
                     break;
 
                 case EdmPrimitiveTypeKind.Date:

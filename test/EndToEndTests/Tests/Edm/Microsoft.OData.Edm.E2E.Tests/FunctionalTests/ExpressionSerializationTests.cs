@@ -303,7 +303,7 @@ public class ExpressionSerializationTests : EdmLibTestCaseBase
         this.CreateAndAttachVocabularyAnnotation(nameProperty, termByteValue, new EdmIntegerConstant(1));
 
         IEdmTerm termDateValue = this.longDefinitionModel.FindTerm("bar.DateValue");
-        this.CreateAndAttachVocabularyAnnotation(nameProperty, termDateValue, new EdmDateConstant(new Date(2014, 8, 8)));
+        this.CreateAndAttachVocabularyAnnotation(nameProperty, termDateValue, new EdmDateConstant(new DateOnly(2014, 8, 8)));
 
         IEdmTerm termDateTimeOffsetValue = this.longDefinitionModel.FindTerm("bar.DateTimeOffsetValue");
         this.CreateAndAttachVocabularyAnnotation(nameProperty, termDateTimeOffsetValue, new EdmDateTimeOffsetConstant(DateTimeOffset.Parse("2011-01-01 23:59 -7:00")));
@@ -336,7 +336,7 @@ public class ExpressionSerializationTests : EdmLibTestCaseBase
         this.CreateAndAttachVocabularyAnnotation(birthdayProperty, termStringValue, new EdmStringConstant("here"));
 
         IEdmTerm termTimeOfDayValue = this.longDefinitionModel.FindTerm("bar.TimeOfDayValue");
-        this.CreateAndAttachVocabularyAnnotation(nameProperty, termTimeOfDayValue, new EdmTimeOfDayConstant(new TimeOfDay(1, 30, 9, 3)));
+        this.CreateAndAttachVocabularyAnnotation(nameProperty, termTimeOfDayValue, new EdmTimeOfDayConstant(new TimeOnly(1, 30, 9, 3)));
 
         string expectedCsdl =
 @"<Schema Namespace=""NS1"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
