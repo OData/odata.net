@@ -94,8 +94,6 @@
       displayName: 'Get Nuget Package Metadata'
       inputs:
         solution: '$(Build.SourcesDirectory)\tools\CustomMSBuild\GetNugetPackageMetadata.proj'
-        platform: '$(buildPlatform)'
-        configuration: '$(buildPlatform)'
 
     - task: NuGetCommand@2
       displayName: 'NuGet - pack Microsoft.Spatial.Nightly.Release'
