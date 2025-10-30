@@ -45,8 +45,8 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             var parser = LiteralParser.ForKeys(true /*keyAsSegment*/);
             object output;
-            Assert.True(parser.TryParseLiteral(typeof(Date), "2015-09-28", out output));
-            Assert.Equal(new Date(2015, 09, 28), output);
+            Assert.True(parser.TryParseLiteral(typeof(DateOnly), "2015-09-28", out output));
+            Assert.Equal(new DateOnly(2015, 09, 28), output);
         }
 
         [Fact]
@@ -54,8 +54,8 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             var parser = LiteralParser.ForKeys(false /*keyAsSegment*/);
             object output;
-            Assert.True(parser.TryParseLiteral(typeof(Date), "2015-09-28", out output));
-            Assert.Equal(new Date(2015, 09, 28), output);
+            Assert.True(parser.TryParseLiteral(typeof(DateOnly), "2015-09-28", out output));
+            Assert.Equal(new DateOnly(2015, 09, 28), output);
         }
     }
 }

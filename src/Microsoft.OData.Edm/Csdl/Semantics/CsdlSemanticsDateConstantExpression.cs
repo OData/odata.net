@@ -20,8 +20,8 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
     {
         private readonly CsdlConstantExpression expression;
 
-        private readonly Cache<CsdlSemanticsDateConstantExpression, Date> valueCache = new Cache<CsdlSemanticsDateConstantExpression, Date>();
-        private static readonly Func<CsdlSemanticsDateConstantExpression, Date> ComputeValueFunc = (me) => me.ComputeValue();
+        private readonly Cache<CsdlSemanticsDateConstantExpression, DateOnly> valueCache = new Cache<CsdlSemanticsDateConstantExpression, DateOnly>();
+        private static readonly Func<CsdlSemanticsDateConstantExpression, DateOnly> ComputeValueFunc = (me) => me.ComputeValue();
 
         private readonly Cache<CsdlSemanticsDateConstantExpression, IEnumerable<EdmError>> errorsCache = new Cache<CsdlSemanticsDateConstantExpression, IEnumerable<EdmError>>();
         private static readonly Func<CsdlSemanticsDateConstantExpression, IEnumerable<EdmError>> ComputeErrorsFunc = (me) => me.ComputeErrors();
@@ -37,7 +37,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             get { return this.expression; }
         }
 
-        public Date Value
+        public DateOnly Value
         {
             get { return this.valueCache.GetValue(this, ComputeValueFunc, null); }
         }
@@ -62,15 +62,15 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             get { return this.errorsCache.GetValue(this, ComputeErrorsFunc, null); }
         }
 
-        private Date ComputeValue()
+        private DateOnly ComputeValue()
         {
-            Date? value;
-            return EdmValueParser.TryParseDate(this.expression.Value, out value) ? value.Value : Date.MinValue;
+            DateOnly? value;
+            return EdmValueParser.TryParseDate(this.expression.Value, out value) ? value.Value : DateOnly.MinValue;
         }
 
         private IEnumerable<EdmError> ComputeErrors()
         {
-            Date? value;
+            DateOnly? value;
             if (!EdmValueParser.TryParseDate(this.expression.Value, out value))
             {
                 return new EdmError[] { new EdmError(this.Location, EdmErrorCode.InvalidDate, Error.Format(SRResources.ValueParser_InvalidDate, this.expression.Value)) };

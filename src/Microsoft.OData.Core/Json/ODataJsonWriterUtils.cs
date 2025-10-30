@@ -92,8 +92,6 @@ namespace Microsoft.OData.Json
                         || valueAsObject is DateTimeOffset
                         || valueAsObject is Guid
                         || valueAsObject is TimeSpan
-                        || valueAsObject is Date
-                        || valueAsObject is TimeOfDay
                         || valueAsObject is DateOnly
                         || valueAsObject is TimeOnly)
                     {

@@ -153,7 +153,7 @@ namespace Microsoft.OData.Edm.Vocabularies
                     throw new FormatException(Error.Format(SRResources.ValueParser_InvalidBoolean, value));
 
                 case EdmPrimitiveTypeKind.Date:
-                    if (EdmValueParser.TryParseDate(value, out Date? dt))
+                    if (EdmValueParser.TryParseDate(value, out DateOnly? dt))
                     {
                         return new EdmDateConstant(dt.Value);
                     }
@@ -222,7 +222,7 @@ namespace Microsoft.OData.Edm.Vocabularies
                     return new EdmStringConstant(value);
 
                 case EdmPrimitiveTypeKind.TimeOfDay:
-                    if (EdmValueParser.TryParseTimeOfDay(value, out TimeOfDay? tod))
+                    if (EdmValueParser.TryParseTimeOfDay(value, out TimeOnly? tod))
                     {
                         return new EdmTimeOfDayConstant(tod.Value);
                     }

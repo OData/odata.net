@@ -348,20 +348,20 @@ namespace Microsoft.OData.Json
         }
 
         /// <summary>
-        /// Write a Date value
+        /// Write a TimeOnly value
         /// </summary>
         /// <param name="value">Date value to be written.</param>
-        public void WriteValue(TimeOfDay value)
+        public void WriteValue(TimeOnly value)
         {
             this.WriteValueSeparator();
             JsonValueUtils.WriteValue(this.writer, value);
         }
 
         /// <summary>
-        /// Write a Date value
+        /// Write a DateOnly value
         /// </summary>
         /// <param name="value">Date value to be written.</param>
-        public void WriteValue(Date value)
+        public void WriteValue(DateOnly value)
         {
             this.WriteValueSeparator();
             JsonValueUtils.WriteValue(this.writer, value);

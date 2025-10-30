@@ -96,19 +96,16 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.Json
             this.VerifyPrimitiveValuesDoNotRoundtripWithoutTypeInformation(values);
         }
 
-        [Fact]
-        public void DateRoundtripJsonTest()
+        [Theory]
+        [InlineData(2012, 4, 13)]
+        [InlineData(1, 1, 1)]
+        [InlineData(9999, 12, 31)]
+        [InlineData(0, 1, 1)] // new DateOnly() is 0001-01-01
+        public void DateRoundtripJsonTest(int year, int month, int day)
         {
-            var values = new Date[]
-            {
-                new Date(2012, 4, 13),
-                new Date(1, 1, 1),
-                new Date(9999, 12, 31),
-                new Date(), 
-            };
-
-            this.VerifyPrimitiveValuesRoundtripWithTypeInformation(values, "Edm.Date");
-            this.VerifyPrimitiveValuesDoNotRoundtripWithoutTypeInformation(values);
+            var value = new DateOnly(year, month, day);
+            this.VerifyPrimitiveValuesRoundtripWithTypeInformation(new[] { value }, "Edm.Date");
+            this.VerifyPrimitiveValuesDoNotRoundtripWithoutTypeInformation(new[] { value });
         }
 
         [Fact]
@@ -482,12 +479,12 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.Json
         [Fact]
         public void TimeOfDayRoundtripJsonTest()
         {
-            var values = new TimeOfDay[]
+            var values = new TimeOnly[]
             {
-                new TimeOfDay(10, 5, 30, 90),
-                new TimeOfDay(TimeOfDay.MinTickValue),
-                new TimeOfDay(TimeOfDay.MaxTickValue),
-                new TimeOfDay(), 
+                new TimeOnly(10, 5, 30, 90),
+                new TimeOnly(TimeOnly.MinValue.Ticks),
+                new TimeOnly(TimeOnly.MaxValue.Ticks),
+                new TimeOnly(), 
             };
 
             this.VerifyPrimitiveValuesRoundtripWithTypeInformation(values, "Edm.TimeOfDay");

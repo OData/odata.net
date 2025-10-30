@@ -840,7 +840,7 @@ namespace Microsoft.OData.Tests.Json
         public static IEnumerable<object[]> PrimitiveData => new List<object[]>
         {
             new object[] { 42,                     "\"@odata.type\":\"#Int32\",\"value\":42" },
-            new object[] { new Date(2018, 11, 28), "\"@odata.type\":\"#Date\",\"value\":\"2018-11-28\"" },
+            new object[] { new DateOnly(2018, 11, 28), "\"@odata.type\":\"#Date\",\"value\":\"2018-11-28\"" },
             new object[] { 8.9,                    "\"@odata.type\":\"#Double\",\"value\":8.9" },
             new object[] { true,                   "\"@odata.type\":\"#Boolean\",\"value\":true" }
         };
@@ -1677,7 +1677,7 @@ namespace Microsoft.OData.Tests.Json
             return new List<object[]>
             {
                 new object [] { "\"@odata.type\":\"#Int32\",\"value\":13", 13, EdmPrimitiveTypeKind.Int32, false },
-                new object [] { "\"@odata.type\":\"#Date\",\"value\":\"2021-07-13\"", new Date(2021, 7, 13), EdmPrimitiveTypeKind.Date, false },
+                new object [] { "\"@odata.type\":\"#Date\",\"value\":\"2021-07-13\"", new DateOnly(2021, 7, 13), EdmPrimitiveTypeKind.Date, false },
                 new object [] { "\"@odata.type\":\"#Double\",\"value\":3.14159265359", 3.14159265359, EdmPrimitiveTypeKind.Double, false },
                 new object [] { "\"@odata.type\":\"#Boolean\",\"value\":true", true, EdmPrimitiveTypeKind.Boolean, false },
                 new object [] { "\"@odata.type\":\"#String\",\"value\":\"Sue\"", "Sue", EdmPrimitiveTypeKind.String, false },

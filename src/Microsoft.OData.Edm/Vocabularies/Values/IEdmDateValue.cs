@@ -4,6 +4,8 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
+
 namespace Microsoft.OData.Edm.Vocabularies
 {
     /// <summary>
@@ -14,6 +16,6 @@ namespace Microsoft.OData.Edm.Vocabularies
         /// <summary>
         /// Gets the value.
         /// </summary>
-        Date Value { get; }
+        DateOnly Value { get; }
     }
 }

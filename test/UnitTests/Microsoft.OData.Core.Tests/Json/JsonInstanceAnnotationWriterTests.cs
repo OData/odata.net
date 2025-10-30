@@ -79,7 +79,7 @@ namespace Microsoft.OData.Tests.Json
         [Fact]
         public void WriteInstanceAnnotation_ForDateShouldUsePrimitiveCodePathWithTypeName()
         {
-            var date = new ODataPrimitiveValue(new Date(2014, 11, 11));
+            var date = new ODataPrimitiveValue(new DateOnly(2014, 11, 11));
             const string term = "some.term";
             var verifierCalls = 0;
 
@@ -155,7 +155,7 @@ namespace Microsoft.OData.Tests.Json
         [Fact]
         public void WriteInstanceAnnotation_ForTimeOfDayShouldUsePrimitiveCodePathWithTypeName()
         {
-            var time = new ODataPrimitiveValue(new TimeOfDay(12, 5, 0, 90));
+            var time = new ODataPrimitiveValue(new TimeOnly(12, 5, 0, 90));
             const string term = "some.term";
             var verifierCalls = 0;
 

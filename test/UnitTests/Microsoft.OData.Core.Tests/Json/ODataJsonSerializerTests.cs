@@ -115,7 +115,7 @@ namespace Microsoft.OData.Tests.Json
             {
                 ODataError error = new ODataError();
                 var instanceAnnotations = new Collection<ODataInstanceAnnotation>();
-                var primitiveValue = new ODataPrimitiveValue(new Date(2014, 8, 8));
+                var primitiveValue = new ODataPrimitiveValue(new DateOnly(2014, 8, 8));
                 ODataInstanceAnnotation annotation = new ODataInstanceAnnotation("sample.primitive", primitiveValue);
                 instanceAnnotations.Add(annotation);
                 error.InstanceAnnotations = instanceAnnotations;
@@ -133,7 +133,7 @@ namespace Microsoft.OData.Tests.Json
             {
                 ODataError error = new ODataError();
                 var instanceAnnotations = new Collection<ODataInstanceAnnotation>();
-                var primitiveValue = new ODataPrimitiveValue(new TimeOfDay(12, 30, 5, 90));
+                var primitiveValue = new ODataPrimitiveValue(new TimeOnly(12, 30, 5, 90));
                 ODataInstanceAnnotation annotation = new ODataInstanceAnnotation("sample.primitive", primitiveValue);
                 instanceAnnotations.Add(annotation);
                 error.InstanceAnnotations = instanceAnnotations;
@@ -141,7 +141,7 @@ namespace Microsoft.OData.Tests.Json
                 serializer.WriteTopLevelError(error, false);
             });
 
-            Assert.Contains("\"sample.primitive@odata.type\":\"#TimeOfDay\",\"@sample.primitive\":\"12:30:05.0900000\"", result);
+            Assert.Contains("\"sample.primitive@odata.type\":\"#TimeOnly\",\"@sample.primitive\":\"12:30:05.0900000\"", result);
         }
 
         [Fact]

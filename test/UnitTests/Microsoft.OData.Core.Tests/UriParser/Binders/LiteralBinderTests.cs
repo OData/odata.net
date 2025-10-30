@@ -32,7 +32,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         [Fact]
         public void BindLiteralShouldReturnDateValue()
         {
-            var value = new Date(2012, 12, 2);
+            var value = new DateOnly(2012, 12, 2);
             ConstantNode result = LiteralBinder.BindLiteral(new LiteralToken(value)) as ConstantNode;
             Assert.Equal(value, result.Value);
         }
@@ -40,7 +40,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         [Fact]
         public void BindLiteralShouldReturnTimeOfDayValue()
         {
-            var value = new TimeOfDay(10, 15, 5, 20);
+            var value = new TimeOnly(10, 15, 5, 20);
             ConstantNode result = LiteralBinder.BindLiteral(new LiteralToken(value)) as ConstantNode;
             Assert.Equal(value, result.Value);
         }

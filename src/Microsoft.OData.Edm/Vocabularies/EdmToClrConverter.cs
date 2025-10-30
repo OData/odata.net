@@ -294,12 +294,12 @@ namespace Microsoft.OData.Edm.Vocabularies
         }
 
         /// <summary>
-        /// Converts <paramref name="edmValue"/> to a <see cref="Microsoft.OData.Edm.TimeOfDay"/> value.
+        /// Converts <paramref name="edmValue"/> to a <see cref="TimeOnly"/> value.
         /// </summary>
         /// <param name="edmValue">The EDM value to be converted.</param>
         /// <returns>Converted TimeOfDay.</returns>
         /// <exception cref="InvalidCastException">Exception is thrown if <paramref name="edmValue"/> is not <see cref="IEdmTimeOfDayValue"/>.</exception>
-        internal static TimeOfDay AsClrTimeOfDay(IEdmValue edmValue)
+        internal static TimeOnly AsClrTimeOnly(IEdmValue edmValue)
         {
             EdmUtil.CheckArgumentNull(edmValue, "edmValue");
 
@@ -307,12 +307,12 @@ namespace Microsoft.OData.Edm.Vocabularies
         }
 
         /// <summary>
-        /// Converts <paramref name="edmValue"/> to a <see cref="Microsoft.OData.Edm.Date"/> value.
+        /// Converts <paramref name="edmValue"/> to a <see cref="DateOnly"/> value.
         /// </summary>
         /// <param name="edmValue">The EDM value to be converted.</param>
         /// <returns>Converted date.</returns>
         /// <exception cref="InvalidCastException">Exception is thrown if <paramref name="edmValue"/> is not <see cref="IEdmDateValue"/>.</exception>
-        internal static Date AsClrDate(IEdmValue edmValue)
+        internal static DateOnly AsClrDate(IEdmValue edmValue)
         {
             EdmUtil.CheckArgumentNull(edmValue, "edmValue");
 
@@ -577,7 +577,7 @@ namespace Microsoft.OData.Edm.Vocabularies
                 {
                     return AsClrGuid(edmValue);
                 }
-                else if (clrType == typeof(Date))
+                else if (clrType == typeof(DateOnly))
                 {
                     return AsClrDate(edmValue);
                 }
@@ -585,9 +585,9 @@ namespace Microsoft.OData.Edm.Vocabularies
                 {
                     return AsClrDateTimeOffset(edmValue);
                 }
-                else if (clrType == typeof(TimeOfDay))
+                else if (clrType == typeof(TimeOnly))
                 {
-                    return AsClrTimeOfDay(edmValue);
+                    return AsClrTimeOnly(edmValue);
                 }
                 else if (clrType == typeof(TimeSpan))
                 {

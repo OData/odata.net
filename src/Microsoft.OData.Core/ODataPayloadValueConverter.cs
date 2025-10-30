@@ -162,16 +162,6 @@ namespace Microsoft.OData
                 return EdmValueParser.ParseDuration(stringValue);
             }
 
-            if (targetType == typeof(Date))
-            {
-                return PlatformHelper.ConvertStringToDate(stringValue);
-            }
-
-            if (targetType == typeof(TimeOfDay))
-            {
-                return PlatformHelper.ConvertStringToTimeOfDay(stringValue);
-            }
-
             if (targetType == typeof(DateOnly))
             {
                 return PlatformHelper.ConvertStringToDateOnly(stringValue);
