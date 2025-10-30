@@ -360,13 +360,13 @@ namespace Microsoft.OData.Tests.Json
         [Fact]
         public async Task WritePrimitiveValueAsyncDate()
         {
-            await this.VerifyWritePrimitiveValueAsync(new Date(2014, 12, 31), "\"2014-12-31\"");
+            await this.VerifyWritePrimitiveValueAsync(new DateOnly(2014, 12, 31), "\"2014-12-31\"");
         }
 
         [Fact]
         public async Task WritePrimitiveValueAsyncTimeOfDay()
         {
-            await this.VerifyWritePrimitiveValueAsync(new TimeOfDay(12, 30, 5, 10), "\"12:30:05.0100000\"");
+            await this.VerifyWritePrimitiveValueAsync(new TimeOnly(12, 30, 5, 10), "\"12:30:05.0100000\"");
         }
 
         private async Task VerifyWritePrimitiveValueAsync<T>(T parameter, string expected)

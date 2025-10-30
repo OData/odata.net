@@ -267,15 +267,15 @@ namespace Microsoft.OData.Json
         }
 
         /// <summary>
-        /// Write a TimeOfDay value
+        /// Write a TimeOnly value
         /// </summary>
         /// <param name="writer">The text writer to write the output to.</param>
-        /// <param name="value">TimeOfDay value to be written.</param>
-        internal static void WriteValue(TextWriter writer, TimeOfDay value)
+        /// <param name="value">TimeOnly value to be written.</param>
+        internal static void WriteValue(TextWriter writer, TimeOnly value)
         {
             Debug.Assert(writer != null, "writer != null");
 
-            JsonValueUtils.WriteQuoted(writer, value.ToString());
+            JsonValueUtils.WriteQuoted(writer, value.ToString(@"HH\:mm\:ss\.fffffff", CultureInfo.InvariantCulture));
         }
 
         /// <summary>
@@ -283,11 +283,11 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="writer">The text writer to write the output to.</param>
         /// <param name="value">Date value to be written.</param>
-        internal static void WriteValue(TextWriter writer, Date value)
+        internal static void WriteValue(TextWriter writer, DateOnly value)
         {
             Debug.Assert(writer != null, "writer != null");
 
-            JsonValueUtils.WriteQuoted(writer, value.ToString());
+            JsonValueUtils.WriteQuoted(writer, value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
         }
 
         /// <summary>

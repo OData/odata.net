@@ -130,25 +130,14 @@ namespace Microsoft.OData.Json
                 return jsonWriter.WriteValueAsync((TimeSpan)value);
             }
 
-            if (value is Date)
-            {
-                return jsonWriter.WriteValueAsync((Date)value);
-            }
-
             if (value is DateOnly dateOnly)
             {
                 // will call 'WriteValueAsync(Date)' version implicitly
                 return jsonWriter.WriteValueAsync(dateOnly);
             }
 
-            if (value is TimeOfDay)
-            {
-                return jsonWriter.WriteValueAsync((TimeOfDay)value);
-            }
-
             if (value is TimeOnly timeOnly)
             {
-                // will call 'WriteValueAsync(TimeOfDay)' version implicitly
                 return jsonWriter.WriteValueAsync(timeOnly);
             }
 

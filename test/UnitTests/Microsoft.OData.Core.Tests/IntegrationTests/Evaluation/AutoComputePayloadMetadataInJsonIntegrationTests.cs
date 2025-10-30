@@ -1224,7 +1224,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
                 {
                     new ODataProperty { Name = "City", Value = "Redmond" },
                     new ODataProperty { Name = "ZipCode", Value = 98052 },
-                    new ODataProperty { Name = "Data", Value = new Date(2018, 12, 4) }
+                    new ODataProperty { Name = "Data", Value = new DateOnly(2018, 12, 4) }
                 }
             };
             resourceWriter.WriteStart(complexValue);

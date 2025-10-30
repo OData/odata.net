@@ -198,16 +198,14 @@ namespace Microsoft.OData.Json
         }
 
         /// <inheritdoc/>
-        [Obsolete("Microsoft.OData.Edm.TimeOfDay will be removed in ODL 9 and replaced with System.TimeOnly.", false)]
-        public async Task WriteValueAsync(TimeOfDay value)
+        public async Task WriteValueAsync(TimeOnly value)
         {
             await this.WriteValueSeparatorAsync().ConfigureAwait(false);
             await this.writer.WriteValueAsync(value).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
-        [Obsolete("Microsoft.OData.Edm.Date will be removed in ODL 9 and replaced with System.DateOnly.", false)]
-        public async Task WriteValueAsync(Date value)
+        public async Task WriteValueAsync(DateOnly value)
         {
             await this.WriteValueSeparatorAsync().ConfigureAwait(false);
             await this.writer.WriteValueAsync(value).ConfigureAwait(false);

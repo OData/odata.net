@@ -36,9 +36,9 @@ namespace Microsoft.OData.Tests
         public static void WithDeprecatedElementsGeneratesErrors(String request, params string[] expectedErrors)
         {
             string expectedDateAsString = "2020-03-30";
-            Date expectedDate = Date.Parse(expectedDateAsString);
+            DateOnly expectedDate = DateOnly.Parse(expectedDateAsString);
             string expectedRemovalDateAsString = "2022-03-30";
-            Date expectedRemovalDate = Date.Parse(expectedRemovalDateAsString);
+            DateOnly expectedRemovalDate = DateOnly.Parse(expectedRemovalDateAsString);
 
             IEdmModel model = GetModel();
             ODataUriParser parser = new ODataUriParser(model, new Uri(request, UriKind.Relative));
@@ -69,9 +69,9 @@ namespace Microsoft.OData.Tests
                 elementName =elementNameAsString.Substring(elementNameAsString.LastIndexOf('.') + 1);
 
                 Assert.Contains(elementName as string, expectedErrors);
-                Assert.Equal(date as Date?, expectedDate);
+                Assert.Equal(date as DateOnly?, expectedDate);
                 Assert.Equal(version as string, expectedDateAsString);
-                Assert.Equal(removalDate as Date?, expectedRemovalDate);
+                Assert.Equal(removalDate as DateOnly?, expectedRemovalDate);
                 Assert.Contains(elementName as string, error.Message);
                 Assert.Contains(expectedRemovalDateAsString, error.Message);
             }

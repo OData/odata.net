@@ -46,9 +46,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.Json
             var originalDouble = new KeyValuePair<string, ODataValue>("double.error", new ODataPrimitiveValue(double.NaN));
             DateTimeOffset dateTimeOffset = new DateTimeOffset(2012, 10, 10, 12, 12, 59, new TimeSpan());
             var originalDateTimeOffset = new KeyValuePair<string, ODataValue>("DateTimeOffset.error", new ODataPrimitiveValue(dateTimeOffset));
-            Date date = new Date(2014, 12, 12);
+            DateOnly date = new DateOnly(2014, 12, 12);
             var originalDate = new KeyValuePair<string, ODataValue>("Date.error", new ODataPrimitiveValue(date));
-            TimeOfDay time = new TimeOfDay(10, 12, 3, 9);
+            TimeOnly time = new TimeOnly(10, 12, 3, 9);
             var originaltime = new KeyValuePair<string, ODataValue>("TimeOfDay.error", new ODataPrimitiveValue(time));
             TimeSpan timeSpan = new TimeSpan(12345);
             var originalTimeSpan = new KeyValuePair<string, ODataValue>("TimeSpan.error", new ODataPrimitiveValue(timeSpan));

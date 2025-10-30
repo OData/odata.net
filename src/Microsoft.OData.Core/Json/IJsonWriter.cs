@@ -151,15 +151,13 @@ namespace Microsoft.OData.Json
         /// Write a Date value
         /// </summary>
         /// <param name="value">Date value to be written.</param>
-        [Obsolete("Microsoft.OData.Edm.Date will be removed in ODL 9 and replaced with System.DateOnly.", false)]
-        void WriteValue(Date value);
+        void WriteValue(DateOnly value);
 
         /// <summary>
-        /// Write a TimeOfDay value
+        /// Write a TimeOnly value
         /// </summary>
-        /// <param name="value">TimeOfDay value to be written.</param>
-        [Obsolete("Microsoft.OData.Edm.TimeOfDay will be removed in ODL 9 and replaced with System.TimeOnly.", false)]
-        void WriteValue(TimeOfDay value);
+        /// <param name="value">TimeOnly value to be written.</param>
+        void WriteValue(TimeOnly value);
 
         /// <summary>
         /// Write a <see cref="JsonElement"/> value.
@@ -361,16 +359,14 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="value">Date value to be written.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        [Obsolete("Microsoft.OData.Edm.Date will be removed in ODL 9 and replaced with System.DateOnly.", false)]
-        Task WriteValueAsync(Date value);
+        Task WriteValueAsync(DateOnly value);
 
         /// <summary>
-        /// Asynchronously writes a TimeOfDay value
+        /// Asynchronously writes a TimeOnly value
         /// </summary>
-        /// <param name="value">TimeOfDay value to be written.</param>
+        /// <param name="value">TimeOnly value to be written.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        [Obsolete("Microsoft.OData.Edm.TimeOfDay will be removed in ODL 9 and replaced with System.TimeOnly.", false)]
-        Task WriteValueAsync(TimeOfDay value);
+        Task WriteValueAsync(TimeOnly value);
 
         /// <summary>
         /// Asynchronously writes a <see cref="JsonElement"/> value.

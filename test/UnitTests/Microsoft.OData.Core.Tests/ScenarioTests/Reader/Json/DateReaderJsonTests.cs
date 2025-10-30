@@ -6,55 +6,42 @@
 
 using System;
 using System.IO;
+using Microsoft.OData.Core;
+using Microsoft.OData.Edm;
 using Microsoft.OData.Json;
 using Microsoft.OData.Tests.Json;
-using Microsoft.OData.Edm;
+using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Xunit;
-using Microsoft.OData.Core;
 
 namespace Microsoft.OData.Tests.ScenarioTests.Reader.Json
 {
     public class DateReaderJsonTests
     {
-        [Fact]
-        public void ValidDateReaderTest()
+        [Theory]
+        [InlineData("\"2012-04-13\"", 2012, 4, 13)]
+        [InlineData("\"0001-01-01\"", 1, 1, 1)]
+        [InlineData("\"9999-12-31\"", 9999, 12, 31)]
+        public void ValidDateReaderTest(string payload, int year, int month, int day)
         {
-            var testCases = new[]
-            {
-                new { Payload = "\"2012-04-13\"", Value = new Date(2012, 4, 13)},
-                new { Payload = "\"0001-01-01\"", Value = new Date(1, 1, 1)},
-                new { Payload = "\"9999-12-31\"", Value = new Date(9999, 12, 31)},
-            };
-
-            foreach (var testCase in testCases)
-            {
-                this.VerifyDateValueReader(testCase.Payload, "Edm.Date", testCase.Value);
-            }
+            this.VerifyDateValueReader(payload, "Edm.Date", new DateOnly(year, month, day));
         }
 
-        [Fact]
-        public void InvalidDateReaderTest()
+        [Theory]
+        [InlineData("\"\"", "")]
+        [InlineData("\"value\"", "value")]
+        [InlineData("42", "42")]
+        [InlineData("true", "True")]
+        [InlineData("\"\\/Date(-0001-01-01)\\/\"", "/Date(-0001-01-01)/")]
+        [InlineData("\"\\/Date(-9999-12-31)\\/\"", "/Date(-9999-12-31)/")]
+        [InlineData("\"\\/Date(2012-04-13T02:43:10.215Z)\\/\"", "/Date(2012-04-13T02:43:10.215Z)/")]
+        [InlineData("\"2/26/2011\"", "2/26/2011")]
+        [InlineData("\"\\/Date(1298678400000)\\/\"", "/Date(1298678400000)/")]
+        [InlineData("\"\\/Date(1286705410000+0060)\\/\"", "/Date(1286705410000+0060)/")]
+        [InlineData("\"7-dui:9M7UG{*'!pu:^8LaV8a9~Pt76Fn*sP*1Tdf\"", "7-dui:9M7UG{*'!pu:^8LaV8a9~Pt76Fn*sP*1Tdf")]
+        public void InvalidDateReaderTest(string payload, string show)
         {
-            var testCases = new[]
-            {
-                new { Payload = "\"\"", Show = "" },
-                new { Payload = "\"value\"", Show = "value" },
-                new { Payload = "42", Show = "42" },
-                new { Payload = "true", Show = "True" },
-                new { Payload = "\"\\/Date(-0001-01-01)\\/\"", Show = "/Date(-0001-01-01)/" },
-                new { Payload = "\"\\/Date(-9999-12-31)\\/\"", Show = "/Date(-9999-12-31)/" },
-                new { Payload = "\"\\/Date(2012-04-13T02:43:10.215Z)\\/\"",  Show = "/Date(2012-04-13T02:43:10.215Z)/" },
-                new { Payload = "\"2/26/2011\"", Show = "2/26/2011" },
-                new { Payload = "\"\\/Date(1298678400000)\\/\"", Show = "/Date(1298678400000)/" },
-                new { Payload = "\"\\/Date(1286705410000+0060)\\/\"", Show = "/Date(1286705410000+0060)/" },
-                new { Payload = "\"7-dui:9M7UG{*'!pu:^8LaV8a9~Pt76Fn*sP*1Tdf\"", Show = "7-dui:9M7UG{*'!pu:^8LaV8a9~Pt76Fn*sP*1Tdf" },
-            };
-
-            foreach (var testCase in testCases)
-            {
-                Action action = () => this.VerifyDateValueReader(testCase.Payload, "Edm.Date", null);
-                action.Throws<ODataException>(Error.Format(SRResources.ReaderValidationUtils_CannotConvertPrimitiveValue, testCase.Show, "Edm.Date"));
-            }
+            Action action = () => this.VerifyDateValueReader(payload, "Edm.Date", null);
+            action.Throws<ODataException>(Error.Format(SRResources.ReaderValidationUtils_CannotConvertPrimitiveValue, show, "Edm.Date"));
         }
 
         private void VerifyDateValueReader(string payload, string edmTypeName, object expectedResult)

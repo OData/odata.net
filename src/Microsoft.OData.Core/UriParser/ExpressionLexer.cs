@@ -1071,7 +1071,7 @@ namespace Microsoft.OData.UriParser
         {
             int initialIndex = this.textPos;
             ReadOnlySpan<char> dateStr = ParseLiteral(tokenPos);
-            Date tmpDateValue;
+            DateOnly tmpDateValue;
             if (UriUtils.TryUriStringToDate(dateStr, out tmpDateValue))
             {
                 return true;
@@ -1085,19 +1085,19 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Tries to parse TimeOfDay from current text
-        /// If it's not TimeOfDay, then this.textPos and this.ch are reset
+        /// Tries to parse TimeOnly from current text
+        /// If it's not TimeOnly, then this.textPos and this.ch are reset
         /// </summary>
         /// <param name="tokenPos">Start index</param>
-        /// <returns>True if the substring that starts from tokenPos is a TimeOfDay, false otherwise</returns>
+        /// <returns>True if the substring that starts from tokenPos is a TimeOnly, false otherwise</returns>
         private bool TryParseTimeOfDay(int tokenPos)
         {
             int initialIndex = this.textPos;
 
             ReadOnlySpan<char> timeOfDayStr = ParseLiteral(tokenPos);
 
-            TimeOfDay tmpTimeOfDayValue;
-            if (UriUtils.TryUriStringToTimeOfDay(timeOfDayStr, out tmpTimeOfDayValue))
+            TimeOnly tmpTimeOfDayValue;
+            if (UriUtils.TryUriStringToTimeOnly(timeOfDayStr, out tmpTimeOfDayValue))
             {
                 return true;
             }

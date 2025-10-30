@@ -274,8 +274,8 @@ namespace Microsoft.OData.Tests.UriParser
         {
             ExpressionLexer lexer = new ExpressionLexer(this.model, expression: "2014-09-19", moveToFirstToken: false, useSemicolonDelimiter: false);
             object result = lexer.ReadLiteralToken(this.model);
-            var date = Assert.IsType<Date>(result);
-            Assert.Equal(new Date(2014, 9, 19), date);
+            var date = Assert.IsType<DateOnly>(result);
+            Assert.Equal(new DateOnly(2014, 9, 19), date);
         }
 
         [Fact]
@@ -283,8 +283,8 @@ namespace Microsoft.OData.Tests.UriParser
         {
             ExpressionLexer lexer = new ExpressionLexer(this.model, expression: "12:30:03.900", moveToFirstToken: false, useSemicolonDelimiter: false);
             object result = lexer.ReadLiteralToken(this.model);
-            var timeOfDay = Assert.IsType<TimeOfDay>(result);
-            Assert.Equal(new TimeOfDay(12, 30, 3, 900), timeOfDay);
+            var timeOfDay = Assert.IsType<TimeOnly>(result);
+            Assert.Equal(new TimeOnly(12, 30, 3, 900), timeOfDay);
         }
 
         [Fact]
@@ -292,8 +292,8 @@ namespace Microsoft.OData.Tests.UriParser
         {
             ExpressionLexer lexer = new ExpressionLexer(this.model, expression: "12:30:03", moveToFirstToken: false, useSemicolonDelimiter: false);
             object result = lexer.ReadLiteralToken(this.model);
-            var timeOfDay = Assert.IsType<TimeOfDay>(result);
-            Assert.Equal(new TimeOfDay(12, 30, 3, 0), timeOfDay);
+            var timeOfDay = Assert.IsType<TimeOnly>(result);
+            Assert.Equal(new TimeOnly(12, 30, 3, 0), timeOfDay);
         }
 
         [Fact]

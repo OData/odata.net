@@ -348,22 +348,20 @@ namespace Microsoft.OData.Json
         }
 
         /// <summary>
-        /// Write a Date value
+        /// Write a TimeOnly value
         /// </summary>
         /// <param name="value">Date value to be written.</param>
-        [Obsolete("Microsoft.OData.Edm.TimeOfDay will be removed in ODL 9 and replaced with System.TimeOnly.", false)]
-        public void WriteValue(TimeOfDay value)
+        public void WriteValue(TimeOnly value)
         {
             this.WriteValueSeparator();
             JsonValueUtils.WriteValue(this.writer, value);
         }
 
         /// <summary>
-        /// Write a Date value
+        /// Write a DateOnly value
         /// </summary>
         /// <param name="value">Date value to be written.</param>
-        [Obsolete("Microsoft.OData.Edm.Date will be removed in ODL 9 and replaced with System.DateOnly.", false)]
-        public void WriteValue(Date value)
+        public void WriteValue(DateOnly value)
         {
             this.WriteValueSeparator();
             JsonValueUtils.WriteValue(this.writer, value);

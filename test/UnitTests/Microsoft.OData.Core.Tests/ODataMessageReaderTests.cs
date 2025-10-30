@@ -69,7 +69,7 @@ namespace Microsoft.OData.Tests
             IODataResponseMessage responseMessage = new InMemoryMessage() { StatusCode = 200, Stream = stream };
             ODataMessageReader reader = new ODataMessageReader(responseMessage, new ODataMessageReaderSettings(), new EdmModel());
             var result = reader.ReadValue(new EdmTypeDefinitionReference(new EdmTypeDefinition("NS", "DateValue", EdmPrimitiveTypeKind.Date), true));
-            Assert.Equal(new Date(2014, 1, 3), result);
+            Assert.Equal(new DateOnly(2014, 1, 3), result);
         }
 
         [Fact]
@@ -79,7 +79,7 @@ namespace Microsoft.OData.Tests
             IODataResponseMessage responseMessage = new InMemoryMessage() { StatusCode = 200, Stream = stream };
             ODataMessageReader reader = new ODataMessageReader(responseMessage, new ODataMessageReaderSettings(), new EdmModel());
             var result = reader.ReadValue(new EdmTypeDefinitionReference(new EdmTypeDefinition("NS", "DateValue", EdmPrimitiveTypeKind.Date), true));
-            Assert.Equal(new Date(2014, 1, 3), result);
+            Assert.Equal(new DateOnly(2014, 1, 3), result);
         }
 
         [Fact]
@@ -89,8 +89,8 @@ namespace Microsoft.OData.Tests
             IODataResponseMessage responseMessage = new InMemoryMessage() { StatusCode = 200, Stream = stream };
             ODataMessageReader reader = new ODataMessageReader(responseMessage, new ODataMessageReaderSettings(), new EdmModel());
             var result = reader.ReadValue(new EdmTypeDefinitionReference(new EdmTypeDefinition("NS", "TimeOfDayValue", EdmPrimitiveTypeKind.TimeOfDay), true));
-            Assert.Equal(new TimeOfDay(12, 30, 4, 998), result);
-            Assert.Equal(new TimeOnly(12, 30, 4, 998), (TimeOnly)(TimeOfDay)result); // need to cast from object to 'TimeOfDay' first then cast to 'TimeOnly'
+            Assert.Equal(new TimeOnly(12, 30, 4, 998), result);
+            Assert.Equal(new TimeOnly(12, 30, 4, 998), (TimeOnly)result); 
         }
 
         [Fact]
@@ -100,7 +100,7 @@ namespace Microsoft.OData.Tests
             IODataResponseMessage responseMessage = new InMemoryMessage() { StatusCode = 200, Stream = stream };
             ODataMessageReader reader = new ODataMessageReader(responseMessage, new ODataMessageReaderSettings(), new EdmModel());
             var result = reader.ReadValue(new EdmTypeDefinitionReference(new EdmTypeDefinition("NS", "TimeOfDayValue", EdmPrimitiveTypeKind.TimeOfDay), true));
-            Assert.Equal(new TimeOfDay(12, 30, 4, 998), result);
+            Assert.Equal(new TimeOnly(12, 30, 4, 998), result);
         }
 
         [Fact]

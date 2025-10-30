@@ -7,17 +7,18 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using Newtonsoft.Json.Linq;
 using Xunit;
 
 namespace Microsoft.OData.Edm.Tests.Library
 {
     public class DateAndTimeOfDayTests
     {
-        #region Date
+        #region DateOnly
         [Fact]
         public void TestDateCtor()
         {
-            Action test = () => new Date(-2013, 8, 12);
+            Action test = () => new DateOnly(-2013, 8, 12);
 
             var exception = Assert.Throws<FormatException>(test);
             Assert.Equal(Error.Format(SRResources.Date_InvalidDateParameters, -2013, 8, 12), exception.Message);
@@ -26,8 +27,8 @@ namespace Microsoft.OData.Edm.Tests.Library
         [Fact]
         public void TestDateToDateTime()
         {
-            Date date = new Date(2013, 8, 12);
-            DateTime dt = date;
+            DateOnly date = new DateOnly(2013, 8, 12);
+            DateTime dt = date.ToDateTime(TimeOnly.MinValue);
             Assert.Equal(new DateTime(2013, 8, 12), dt);
         }
 
@@ -35,22 +36,22 @@ namespace Microsoft.OData.Edm.Tests.Library
         public void TestDateTimeToDate()
         {
             DateTime dateTime = new DateTime(2013, 8, 12);
-            Date d = dateTime;
-            Assert.Equal(new Date(2013, 8, 12), d);
+            DateOnly d = DateOnly.FromDateTime(dateTime);
+            Assert.Equal(new DateOnly(2013, 8, 12), d);
         }
 
         [Fact]
         public void TestDateAddYears()
         {
-            Date date = new Date(2013, 8, 12);
-            Date result = date.AddYears(100);
-            Assert.Equal(new Date(2113, 8, 12), result);
+            DateOnly date = new DateOnly(2013, 8, 12);
+            DateOnly result = date.AddYears(100);
+            Assert.Equal(new DateOnly(2113, 8, 12), result);
         }
 
         [Fact]
         public void TestDateAddYearsInvalidResults()
         {
-            Date date = new Date(2013, 8, 12);
+            DateOnly date = new DateOnly(2013, 8, 12);
             Action test = () => date.AddYears(-5000);
 
             var exception = Assert.Throws<ArgumentOutOfRangeException>(test);
@@ -60,7 +61,7 @@ namespace Microsoft.OData.Edm.Tests.Library
         [Fact]
         public void TestDateAddYearsInvalidParameters()
         {
-            Date date = new Date(2013, 8, 12);
+            DateOnly date = new DateOnly(2013, 8, 12);
             Action test = () => date.AddYears(12000);
             var exception = Assert.Throws<ArgumentOutOfRangeException>(test);
             Assert.Equal(SRResources.Date_InvalidAddedOrSubtractedResults + " (Parameter 'value')", exception.Message);
@@ -69,15 +70,15 @@ namespace Microsoft.OData.Edm.Tests.Library
         [Fact]
         public void TesDateAddMonths()
         {
-            Date date = new Date(2013, 8, 12);
-            Date result = date.AddMonths(1);
-            Assert.Equal(new Date(2013, 9, 12), result);
+            DateOnly date = new DateOnly(2013, 8, 12);
+            DateOnly result = date.AddMonths(1);
+            Assert.Equal(new DateOnly(2013, 9, 12), result);
         }
 
         [Fact]
         public void TestDateAddMonthsInvalidResults()
         {
-            Date date = new Date(1, 1, 1);
+            DateOnly date = new DateOnly(1, 1, 1);
             Action test = () => date.AddMonths(-5000);
             var exception = Assert.Throws<ArgumentOutOfRangeException>(test);
             Assert.Equal(SRResources.Date_InvalidAddedOrSubtractedResults + " (Parameter 'value')", exception.Message);
@@ -86,7 +87,7 @@ namespace Microsoft.OData.Edm.Tests.Library
         [Fact]
         public void TestDateAddMonthsInvalidParameters()
         {
-            Date date = new Date(1, 1, 1);
+            DateOnly date = new DateOnly(1, 1, 1);
             Action test = () => date.AddMonths(120001);
             var exception = Assert.Throws<ArgumentOutOfRangeException>(test);
             Assert.Equal(SRResources.Date_InvalidAddedOrSubtractedResults + " (Parameter 'value')", exception.Message);
@@ -95,15 +96,15 @@ namespace Microsoft.OData.Edm.Tests.Library
         [Fact]
         public void TestDateAddDays()
         {
-            Date date = new Date(2013, 8, 12);
-            Date result = date.AddDays(1);
-            Assert.Equal(new Date(2013, 8, 13), result);
+            DateOnly date = new DateOnly(2013, 8, 12);
+            DateOnly result = date.AddDays(1);
+            Assert.Equal(new DateOnly(2013, 8, 13), result);
         }
 
         [Fact]
         public void TestDateAddDaysInvalidResults()
         {
-            Date date = new Date(1, 1, 1);
+            DateOnly date = new DateOnly(1, 1, 1);
             Action test = () => date.AddDays(-2);
             var exception = Assert.Throws<ArgumentOutOfRangeException>(test);
             Assert.Equal(SRResources.Date_InvalidAddedOrSubtractedResults + " (Parameter 'value')", exception.Message);
@@ -112,7 +113,7 @@ namespace Microsoft.OData.Edm.Tests.Library
         [Fact]
         public void TestDateAddDaysInvalidParameters()
         {
-            Date date = new Date(1, 1, 1);
+            DateOnly date = new DateOnly(1, 1, 1);
             Action test = () => date.AddDays(999999999);
             var exception = Assert.Throws<ArgumentOutOfRangeException>(test);
             Assert.Equal(SRResources.Date_InvalidAddedOrSubtractedResults + " (Parameter 'value')", exception.Message);
@@ -121,98 +122,79 @@ namespace Microsoft.OData.Edm.Tests.Library
         [Fact]
         public void TestMinDate()
         {
-            Date date = Date.MinValue;
-            Assert.Equal(new Date(1, 1, 1), date);
+            DateOnly date = DateOnly.MinValue;
+            Assert.Equal(new DateOnly(1, 1, 1), date);
         }
 
         [Fact]
         public void TestMaxDate()
         {
-            Date date = Date.MaxValue;
-            Assert.Equal(new Date(9999, 12, 31), date);
+            DateOnly date = DateOnly.MaxValue;
+            Assert.Equal(new DateOnly(9999, 12, 31), date);
         }
 
         [Fact]
         public void TestNowDate()
         {
-            Date date = Date.Now;
+            DateOnly date = DateOnly.FromDateTime(DateTime.Now);
             DateTime dt = DateTime.Now;
-            Assert.Equal(new Date(dt.Year, dt.Month, dt.Day), date);
+            Assert.Equal(new DateOnly(dt.Year, dt.Month, dt.Day), date);
         }
 
-        [Fact]
-        public void TestParseDateSuccess()
+        [Theory]
+        [InlineData("2001-01-2", 2001, 1, 2)]
+        [InlineData("2001-1-02", 2001, 1, 2)]
+        [InlineData("0001-12-13", 1, 12, 13)]
+        public void TestParseDateSuccess(string input, int year, int month, int day)
         {
-            var lists = new List<Tuple<string, Date>>()
-            {
-                new Tuple<string, Date>("2001-01-2", new Date(2001, 1, 2)),
-                new Tuple<string, Date>("2001-1-02", new Date(2001, 1, 2)),
-                new Tuple<string, Date>("0001-12-13", new Date(1, 12, 13)),
-            };
+            var expected = new DateOnly(year, month, day);
 
-#region Test Parse
-            foreach (var tuple in lists)
-            {
-                Date date = Date.Parse(tuple.Item1, CultureInfo.InvariantCulture);
-                Assert.Equal(tuple.Item2, date);
-            }
-#endregion
+            #region Test Parse
+            DateOnly date = DateOnly.Parse(input, CultureInfo.InvariantCulture);
+            Assert.Equal(expected, date);
+            #endregion
 
-#region Test TryParse
-            foreach (var tuple in lists)
-            {
-                Date date;
-                bool result = Date.TryParse(tuple.Item1, CultureInfo.InvariantCulture, out date);
-                Assert.True(result);
-                Assert.Equal(tuple.Item2, date);
-            }
-#endregion
+            #region Test TryParse
+            bool result = DateOnly.TryParse(input, CultureInfo.InvariantCulture, out date);
+            Assert.True(result);
+            Assert.Equal(expected, date);
+            #endregion
         }
 
-        [Fact]
-        public void TestParseDateFailure()
+        [Theory]
+        [InlineData("2001-01-41")]
+        [InlineData("2001-13-02")]
+        [InlineData("-001-12-13")]
+        [InlineData("V001-12-13")]
+        [InlineData("2001-00-00")]
+        [InlineData("2001-00-")]
+        public void TestParseDateFailure(string input)
         {
-            var lists = new List<Tuple<string, Date>>()
-            {
-                new Tuple<string, Date>("2001-01-41", Date.MinValue),
-                new Tuple<string, Date>("2001-13-02", Date.MinValue),
-                new Tuple<string, Date>("-001-12-13", Date.MinValue),
-                new Tuple<string, Date>("V001-12-13", Date.MinValue),
-                new Tuple<string, Date>("2001-00-00", Date.MinValue),
-                new Tuple<string, Date>("2001-00-", Date.MinValue),
-            };
+            #region Test Parse
+            Action test = () => DateOnly.Parse(input, CultureInfo.InvariantCulture);
+            var exception = Assert.Throws<FormatException>(test);
+            Assert.Equal(Error.Format(SRResources.Date_InvalidParsingString, input), exception.Message);
+            #endregion
 
-#region Test Parse
-            foreach (var tuple in lists)
-            {
-                Action test = () => Date.Parse(tuple.Item1, CultureInfo.InvariantCulture);
-                var exception = Assert.Throws<FormatException>(test);
-                Assert.Equal(Error.Format(SRResources.Date_InvalidParsingString, tuple.Item1), exception.Message);
-            }
-#endregion
-
-#region Test TryParse
-            foreach (var tuple in lists)
-            {
-                Date date;
-                bool result = Date.TryParse(tuple.Item1, CultureInfo.InvariantCulture, out date);
-                Assert.False(result);
-                Assert.Equal(tuple.Item2, date);
-            }
-#endregion
+            #region Test TryParse
+            DateOnly date;
+            bool result = DateOnly.TryParse(input, CultureInfo.InvariantCulture, out date);
+            Assert.False(result);
+            Assert.Equal(DateOnly.MinValue, date);
+            #endregion
         }
 
         [Fact]
         public void TestDateEquals()
         {
-            var list = new List<Tuple<Date, Date, bool>>()
+            var list = new List<Tuple<DateOnly, DateOnly, bool>>()
             {
-                new Tuple<Date, Date, bool>(Date.MinValue, Date.MinValue, true),
-                new Tuple<Date, Date, bool>(Date.MaxValue, Date.MaxValue, true), 
-                new Tuple<Date, Date, bool>(new Date(2010, 12, 31), new Date(2010, 12, 31), true),
-                new Tuple<Date, Date, bool>(Date.MinValue, Date.MaxValue, false),
-                new Tuple<Date, Date, bool>(new Date(2010, 12, 31), new Date(2010, 12, 30), false),
-                new Tuple<Date, Date, bool>(new Date(1, 1, 1), Date.MinValue, true),
+                new Tuple<DateOnly, DateOnly, bool>(DateOnly.MinValue, DateOnly.MinValue, true),
+                new Tuple<DateOnly, DateOnly, bool>(DateOnly.MaxValue, DateOnly.MaxValue, true), 
+                new Tuple<DateOnly, DateOnly, bool>(new DateOnly(2010, 12, 31), new DateOnly(2010, 12, 31), true),
+                new Tuple<DateOnly, DateOnly, bool>(DateOnly.MinValue, DateOnly.MaxValue, false),
+                new Tuple<DateOnly, DateOnly, bool>(new DateOnly(2010, 12, 31), new DateOnly(2010, 12, 30), false),
+                new Tuple<DateOnly, DateOnly, bool>(new DateOnly(1, 1, 1), DateOnly.MinValue, true),
             };
 
             foreach (var tuple in list)
@@ -225,10 +207,10 @@ namespace Microsoft.OData.Edm.Tests.Library
         [Fact]
         public void TestDateEqualsObject()
         {
-            var list = new List<Tuple<Date, object, bool>>()
+            var list = new List<Tuple<DateOnly, object, bool>>()
             {
-                new Tuple<Date, object, bool>(Date.MinValue, Date.MinValue, true),
-                new Tuple<Date, object, bool>(Date.MinValue, TimeOfDay.MinValue, false),
+                new Tuple<DateOnly, object, bool>(DateOnly.MinValue, DateOnly.MinValue, true),
+                new Tuple<DateOnly, object, bool>(DateOnly.MinValue, TimeOnly.MinValue, false),
             };
 
             foreach (var tuple in list)
@@ -241,19 +223,19 @@ namespace Microsoft.OData.Edm.Tests.Library
         [Fact]
         public void TestDateCompareTo()
         {
-            var list = new List<Tuple<Date, Date, int>>() 
+            var list = new List<Tuple<DateOnly, DateOnly, int>>() 
             {
-                new Tuple<Date, Date, int>(Date.MinValue, Date.MaxValue, -1),
-                new Tuple<Date, Date, int>(Date.MaxValue, Date.MinValue, 1),
-                new Tuple<Date, Date, int>(Date.MinValue, Date.MinValue, 0),
-                new Tuple<Date, Date, int>(Date.MaxValue, Date.MaxValue, 0),
-                new Tuple<Date, Date, int>(Date.MinValue, new Date(2013, 12, 31), -1),
-                new Tuple<Date, Date, int>(new Date(2013, 12, 30), new Date(2013, 12, 31), -1),
-                new Tuple<Date, Date, int>(new Date(2013, 12, 31), Date.MaxValue, -1),
-                new Tuple<Date, Date, int>(new Date(2013, 12, 31), Date.MinValue, 1),
-                new Tuple<Date, Date, int>(new Date(2013, 12, 31), new Date(2013, 12, 30), 1),
-                new Tuple<Date, Date, int>(Date.MaxValue, new Date(2013, 12, 31), 1),
-                new Tuple<Date, Date, int>(new Date(2013, 12, 31), new Date(2013, 12, 31), 0),
+                new Tuple<DateOnly, DateOnly, int>(DateOnly.MinValue, DateOnly.MaxValue, -1),
+                new Tuple<DateOnly, DateOnly, int>(DateOnly.MaxValue, DateOnly.MinValue, 1),
+                new Tuple<DateOnly, DateOnly, int>(DateOnly.MinValue, DateOnly.MinValue, 0),
+                new Tuple<DateOnly, DateOnly, int>(DateOnly.MaxValue, DateOnly.MaxValue, 0),
+                new Tuple<DateOnly, DateOnly, int>(DateOnly.MinValue, new DateOnly(2013, 12, 31), -1),
+                new Tuple<DateOnly, DateOnly, int>(new DateOnly(2013, 12, 30), new DateOnly(2013, 12, 31), -1),
+                new Tuple<DateOnly, DateOnly, int>(new DateOnly(2013, 12, 31), DateOnly.MaxValue, -1),
+                new Tuple<DateOnly, DateOnly, int>(new DateOnly(2013, 12, 31), DateOnly.MinValue, 1),
+                new Tuple<DateOnly, DateOnly, int>(new DateOnly(2013, 12, 31), new DateOnly(2013, 12, 30), 1),
+                new Tuple<DateOnly, DateOnly, int>(DateOnly.MaxValue, new DateOnly(2013, 12, 31), 1),
+                new Tuple<DateOnly, DateOnly, int>(new DateOnly(2013, 12, 31), new DateOnly(2013, 12, 31), 0),
             };
 
             foreach (var tuple in list)
@@ -266,7 +248,7 @@ namespace Microsoft.OData.Edm.Tests.Library
         [Fact]
         public void TestDateCompareToInvalidTarget()
         {
-            Date date = new Date(1, 1, 1);
+            DateOnly date = new DateOnly(1, 1, 1);
             DateTimeOffset now = DateTimeOffset.Now;
             Action test = () => date.CompareTo(now);
 
@@ -277,12 +259,12 @@ namespace Microsoft.OData.Edm.Tests.Library
         [Fact]
         public void TestDateGetHashCode()
         {
-            var list = new List<Tuple<Date, Date, bool>>() 
+            var list = new List<Tuple<DateOnly, DateOnly, bool>>() 
             {
-                new Tuple<Date, Date, bool>(Date.MinValue, Date.MaxValue, false),
-                new Tuple<Date, Date, bool>(Date.MinValue, new Date(1, 1, 1), true),
-                new Tuple<Date, Date, bool>(new Date(2013, 12, 30), new Date(2013, 12, 31), false),
-                new Tuple<Date, Date, bool>(new Date(2013, 12, 31), new Date(2013, 12, 31), true),
+                new Tuple<DateOnly, DateOnly, bool>(DateOnly.MinValue, DateOnly.MaxValue, false),
+                new Tuple<DateOnly, DateOnly, bool>(DateOnly.MinValue, new DateOnly(1, 1, 1), true),
+                new Tuple<DateOnly, DateOnly, bool>(new DateOnly(2013, 12, 30), new DateOnly(2013, 12, 31), false),
+                new Tuple<DateOnly, DateOnly, bool>(new DateOnly(2013, 12, 31), new DateOnly(2013, 12, 31), true),
             };
 
             foreach (var tuple in list)
@@ -296,11 +278,11 @@ namespace Microsoft.OData.Edm.Tests.Library
         [Fact]
         public void TestDateToString()
         {
-            var list = new List<Tuple<Date, string>>()
+            var list = new List<Tuple<DateOnly, string>>()
             {
-                new Tuple<Date, string>(Date.MinValue, "0001-01-01"),
-                new Tuple<Date, string>(Date.MaxValue, "9999-12-31"),
-                new Tuple<Date, string>(new Date(2014, 12, 31), "2014-12-31"),
+                new Tuple<DateOnly, string>(DateOnly.MinValue, "0001-01-01"),
+                new Tuple<DateOnly, string>(DateOnly.MaxValue, "9999-12-31"),
+                new Tuple<DateOnly, string>(new DateOnly(2014, 12, 31), "2014-12-31"),
             };
 
             foreach (var tuple in list)
@@ -312,10 +294,10 @@ namespace Microsoft.OData.Edm.Tests.Library
         [Fact]
         public void TestDateOperator()
         {
-            Date d1 = new Date(2014, 9, 18);
-            Date d2 = new Date(2014, 9, 20);
-            Date d3 = new Date(2014, 9, 20);
-            Date d4 = new Date(2014, 10, 1);
+            DateOnly d1 = new DateOnly(2014, 9, 18);
+            DateOnly d2 = new DateOnly(2014, 9, 20);
+            DateOnly d3 = new DateOnly(2014, 9, 20);
+            DateOnly d4 = new DateOnly(2014, 10, 1);
 
             Assert.True(d1 < d2);
             Assert.False(d2 < d3);
@@ -339,314 +321,287 @@ namespace Microsoft.OData.Edm.Tests.Library
         }
 #endregion
 
-#region TimeOfDay
-        [Fact]
-        public void TestTimeOfDayCtorInvalid()
+#region TimeOnly
+        [Theory]
+        [InlineData(1, 1, 1, 1)]
+        [InlineData(-1, 1, 1, 1)]
+        [InlineData(1, -1, 1, 1)]
+        [InlineData(1, 1, -1, 1)]
+        [InlineData(1, 1, 1, -1)]
+        [InlineData(24, 1, 1, 1)]
+        [InlineData(23, 60, 1, 1)]
+        [InlineData(23, 59, 60, 1)]
+        [InlineData(23, 59, 59, 1000)]
+        public void TestTimeOfDayCtorInvalid(int hour, int minute, int second, int millisecond)
         {
-            var list = new List<Tuple<int, int, int, int>>()
+            Action test = () => new TimeOnly(hour, minute, second, millisecond);
+            var exception = Assert.Throws<FormatException>(test);
+            Assert.Equal(Error.Format(SRResources.TimeOfDay_InvalidTimeOfDayParameters, hour, minute, second, millisecond), exception.Message);
+        }
+
+        [Theory]
+        [InlineData(0 - 1)] // TimeOnly.MinValue.Ticks - 1
+        [InlineData(863999999999 + 1)] // TimeOnly.MaxValue.Ticks + 1
+        public void TestTimeOfDayTicksCtorInvalid(long ticks)
+        {
+            Action test = () => new TimeOnly(ticks);
+            var exception = Assert.Throws<FormatException>(test);
+            Assert.Equal(Error.Format(SRResources.TimeOfDay_TicksOutOfRange, ticks), exception.Message);
+        }
+
+        [Theory]
+        [InlineData(0, 0, 0, 0)]
+        [InlineData(23, 59, 59, 999)]
+        [InlineData(12, 0, 0, 0)]
+        [InlineData(0, 1, 2, 12)]
+        [InlineData(3, 12, 13, 9)]
+        [InlineData(23, 59, 59, 1)]
+        public void TestTimeOfDayCtor(int hour, int minute, int second, int millisecond)
+        {
+            var time = new TimeOnly(hour, minute, second, millisecond);
+            Assert.Equal(hour, time.Hour);
+            Assert.Equal(minute, time.Minute);
+            Assert.Equal(second, time.Second);
+            Assert.Equal(millisecond, time.Millisecond);
+        }
+
+        public static TheoryData<long, TimeOnly> TestTimeOfDayTicksCtorData()
+        {
+            return new TheoryData<long, TimeOnly>
             {
-                new Tuple<int, int, int, int>(-1, 1, 1, 1),
-                new Tuple<int, int, int, int>(1, -1, 1, 1),
-                new Tuple<int, int, int, int>(1, 1, -1, 1),
-                new Tuple<int, int, int, int>(1, 1, 1, -1),
-                new Tuple<int, int, int, int>(24, 1, 1, 1),
-                new Tuple<int, int, int, int>(23, 60, 1, 1),
-                new Tuple<int, int, int, int>(23, 59, 60, 1),
-                new Tuple<int, int, int, int>(23, 59, 59, 1000),
+                { TimeOnly.MinValue.Ticks, new TimeOnly(TimeOnly.MinValue.Ticks) },
+                { TimeOnly.MaxValue.Ticks, new TimeOnly(TimeOnly.MaxValue.Ticks) }
             };
-
-            foreach (var tuple in list)
-            {
-                Action test = () => new TimeOfDay(tuple.Item1, tuple.Item2, tuple.Item3, tuple.Item4);
-                var exception = Assert.Throws<FormatException>(test);
-                Assert.Equal(Error.Format(SRResources.TimeOfDay_InvalidTimeOfDayParameters, tuple.Item1, tuple.Item2, tuple.Item3, tuple.Item4), exception.Message);
-            }
         }
 
-        [Fact]
-        public void TestTimeOfDayTicksCtorInvalid()
+        [Theory]
+        [MemberData(nameof(TestTimeOfDayTicksCtorData))]
+        public void TestTimeOfDayTicksCtor(long ticks, TimeOnly expected)
         {
-            var list = new List<long> { TimeOfDay.MinTickValue - 1, TimeOfDay.MaxTickValue + 1 };
-            foreach (var value in list)
-            {
-                Action test = () => new TimeOfDay(value);
-                var exception = Assert.Throws<FormatException>(test);
-                Assert.Equal(Error.Format(SRResources.TimeOfDay_TicksOutOfRange, value), exception.Message);
-            }
+            var time = new TimeOnly(ticks);
+
+            Assert.Equal(expected, time);
+            Assert.Equal(ticks, time.Ticks);
         }
 
-        [Fact]
-        public void TestTimeOfDayCtor()
+        [Theory]
+        [InlineData(12, 59, 0, 123)]
+        [InlineData(23, 59, 58, 1)]
+        [InlineData(23, 59, 58, 345)]
+        [InlineData(0, 0, 0, 0)]
+        public void TestTimeOfDayToTimeSpan(int hour, int minute, int second, int millisecond)
         {
-            var list = new List<Tuple<int, int, int, int>>()
+            var timeOnly = new TimeOnly(hour, minute, second, millisecond);
+            TimeSpan timeSpan = timeOnly.ToTimeSpan();
+            Assert.Equal(timeOnly.Ticks, timeSpan.Ticks);
+        }
+
+        [Theory]
+        [InlineData(0)] // TimeOnly.MaxValue.Ticks
+        [InlineData(163999999999)]
+        [InlineData(863999999999)] // TimeOnly.MinValue.Ticks
+        public void TestTimeOfDayToTimeSpan_ticks(long ticks)
+        {
+            var timeOnly = new TimeOnly(ticks);
+            TimeSpan timeSpan = timeOnly.ToTimeSpan();
+            Assert.Equal(timeOnly.Ticks, timeSpan.Ticks);
+        }
+
+        [Theory]
+        [InlineData(0)]
+        [InlineData(123)]
+        [InlineData(863999999999)] // TimeOnly.MaxValue.Ticks
+        public void TestTimeSpanToTimeOfDay(long ticks)
+        {
+            var timeSpan = new TimeSpan(ticks);
+            TimeOnly timeOfDay = TimeOnly.FromTimeSpan(timeSpan);
+            Assert.Equal(timeSpan.Ticks, timeOfDay.Ticks);
+        }
+
+        [Theory]
+        [InlineData(0 - 1)] // TimeOnly.MinValue.Ticks - 1
+        [InlineData(863999999999 + 1)] // TimeOnly.MaxValue.Ticks + 1
+        public void TestTimeSpanToTimeOfDayException(long ticks)
+        {
+            TimeSpan timeSpan = new TimeSpan(ticks);
+            Action test = () => { TimeOnly timeOfDay = TimeOnly.FromTimeSpan(timeSpan); };
+            var exception = Assert.Throws<FormatException>(test);
+            Assert.Equal(Error.Format(SRResources.TimeOfDay_ConvertErrorFromTimeSpan, timeSpan), exception.Message);
+        }
+
+        public static TheoryData<TimeOnly, TimeOnly, bool> TestTimeOfDayEqualsData()
+        {
+            return new TheoryData<TimeOnly, TimeOnly, bool>
             {
-                new Tuple<int, int, int, int>(0, 0, 0, 0),
-                new Tuple<int, int, int, int>(23, 59, 59, 999),
-                new Tuple<int, int, int, int>(12, 0, 0, 0),
-                new Tuple<int, int, int, int>(0, 1, 2, 12),
-                new Tuple<int, int, int, int>(3, 12, 13, 9),
-                new Tuple<int, int, int, int>(23, 59, 59, 1),
+                { TimeOnly.MinValue, TimeOnly.MinValue, true },
+                { TimeOnly.MaxValue, TimeOnly.MaxValue, true },
+                { new TimeOnly(21, 12, 31, 0), new TimeOnly(21, 12, 31, 0), true },
+                { TimeOnly.MinValue, TimeOnly.MaxValue, false },
+                { new TimeOnly(1, 2, 3, 1), new TimeOnly(1, 2, 3, 10), false },
+                { new TimeOnly(TimeOnly.MinValue.Ticks), TimeOnly.MinValue, true },
+                { new TimeOnly(TimeOnly.MaxValue.Ticks), TimeOnly.MaxValue, true },
             };
-
-            foreach (var tuple in list)
-            {
-                var time = new TimeOfDay(tuple.Item1, tuple.Item2, tuple.Item3, tuple.Item4);
-                Assert.Equal(tuple.Item1, time.Hours);
-                Assert.Equal(tuple.Item2, time.Minutes);
-                Assert.Equal(tuple.Item3, time.Seconds);
-                Assert.Equal(tuple.Item4, time.Milliseconds);
-            }
         }
 
-        [Fact]
-        public void TestTimeOfDayTicksCtor()
+        [Theory]
+        [MemberData(nameof(TestTimeOfDayEqualsData))]
+        public void TestTimeOfDayEquals(TimeOnly time1, TimeOnly time2, bool expected)
         {
-            var list = new List<Tuple<long, TimeOfDay>>()
+            bool result = time1.Equals(time2);
+            Assert.Equal(expected, result);
+        }
+
+        public static TheoryData<TimeOnly, object, bool> TestTimeOfDayEqualsObjectData()
+        {
+            return new TheoryData<TimeOnly, object, bool>
             {
-                new Tuple<long, TimeOfDay>(TimeOfDay.MinTickValue, new TimeOfDay(TimeOfDay.MinTickValue)),
-                new Tuple<long, TimeOfDay>(TimeOfDay.MaxTickValue, new TimeOfDay(TimeOfDay.MaxTickValue)),
+                { TimeOnly.MinValue, TimeOnly.MinValue, true },
+                { TimeOnly.MaxValue, DateOnly.MaxValue, false }
             };
-
-            foreach (var tuple in list)
-            {
-                var time = new TimeOfDay(tuple.Item1);
-                Assert.Equal(tuple.Item2, time);
-                Assert.Equal(tuple.Item1, time.Ticks);
-            }
         }
 
-        [Fact]
-        public void TestTimeOfDayToTimeSpan()
+        [Theory]
+        [MemberData(nameof(TestTimeOfDayEqualsObjectData))]
+        public void TestTimeOfDayEqualsObject(TimeOnly time, object someObject, bool expected)
         {
-            var list = new List<TimeOfDay>()
+            bool result = time.Equals(someObject);
+            Assert.Equal(expected, result);
+        }
+
+        public static TheoryData<TimeOnly, TimeOnly, bool> TestTimeOfDayGetHashCodeData()
+        {
+            return new TheoryData<TimeOnly, TimeOnly, bool>
             {
-                new TimeOfDay(12, 59, 0, 123),
-                new TimeOfDay(23, 59, 58, 1),
-                new TimeOfDay(23, 59, 58, 345),
-                new TimeOfDay(0, 0, 0, 0),
-                new TimeOfDay(163999999999),
-                new TimeOfDay(TimeOfDay.MaxTickValue),
-                new TimeOfDay(TimeOfDay.MinTickValue),
+                { TimeOnly.MinValue, TimeOnly.MaxValue, false },
+                { TimeOnly.MinValue, new TimeOnly(0), true },
+                { new TimeOnly(1, 2, 3, 0), new TimeOnly(1, 2, 4, 0), false },
+                { new TimeOnly(23, 59, 59, 0), new TimeOnly(23, 59, 59, 0), true },
             };
-
-            foreach (var timeOfDay in list)
-            {
-                TimeSpan timeSpan = timeOfDay;
-                Assert.Equal(timeOfDay.Ticks, timeSpan.Ticks);
-            }
         }
 
-        [Fact]
-        public void TestTimeSpanToTimeOfDay()
+        [Theory]
+        [MemberData(nameof(TestTimeOfDayGetHashCodeData))]
+        public void TestTimeOfDayGetHashCode(TimeOnly time1, TimeOnly time2, bool expected)
         {
-            var list = new List<TimeSpan>()
+            var hashCode1 = time1.GetHashCode();
+            var hashCode2 = time2.GetHashCode();
+            Assert.Equal(expected, hashCode1 == hashCode2);
+        }
+
+        public static TheoryData<TimeOnly, TimeOnly, int> TestTimeOfDayCompareToData()
+        {
+            return new TheoryData<TimeOnly, TimeOnly, int>
             {
-                new TimeSpan(0), 
-                new TimeSpan(123), 
-                new TimeSpan(TimeOfDay.MaxTickValue),
+                {TimeOnly.MinValue, TimeOnly.MaxValue, -1  },
+                { TimeOnly.MaxValue, TimeOnly.MinValue, 1 },
+                { TimeOnly.MinValue, TimeOnly.MinValue, 0 },
+                { TimeOnly.MaxValue, TimeOnly.MaxValue, 0 },
+                { TimeOnly.MinValue, new TimeOnly(23, 59, 59, 0), -1 },
+                { new TimeOnly(23, 59, 59, 0), new TimeOnly(23, 59, 59, 1), -1 },
+                { new TimeOnly(23, 59, 59, 1), new TimeOnly(23, 59, 59, 10), -1 },
+                { new TimeOnly(23, 59, 59, 1), TimeOnly.MaxValue, -1 },
+                { new TimeOnly(0, 0, 0, 1), TimeOnly.MinValue, 1 },
+                { new TimeOnly(23, 59, 59, 100), new TimeOnly(23, 59, 59, 10), 1 },
+                { TimeOnly.MinValue, new TimeOnly(0, 0, 0, 0), 0 },
+                { TimeOnly.MaxValue, new TimeOnly(23, 59, 59, 999), 1 },
+                { new TimeOnly(12, 13, 14, 15), new TimeOnly(12, 13, 14, 15), 0 },
             };
-
-            foreach (var timeSpan in list)
-            {
-                TimeOfDay timeOfDay = timeSpan;
-                Assert.Equal(timeSpan.Ticks, timeOfDay.Ticks);
-            }
         }
 
-        [Fact]
-        public void TestTimeSpanToTimeOfDayException()
+        [Theory]
+        [MemberData(nameof(TestTimeOfDayCompareToData))]
+        public void TestTimeOfDayCompareTo(TimeOnly time1, TimeOnly time2, int expected)
         {
-            var list = new List<long>() { TimeOfDay.MinTickValue - 1, TimeOfDay.MaxTickValue + 1 };
-            foreach (var value in list)
-            {
-                TimeSpan timeSpan = new TimeSpan(value);
-                Action test = () => { TimeOfDay timeOfDay = timeSpan; };
-                var exception = Assert.Throws<FormatException>(test);
-                Assert.Equal(Error.Format(SRResources.TimeOfDay_ConvertErrorFromTimeSpan, timeSpan), exception.Message);
-            }
+            int result = time1.CompareTo(time2);
+            Assert.Equal(expected, result);
         }
 
-        [Fact]
-        public void TestTimeOfDayEquals()
+        public static TheoryData<TimeOnly, string> TestTimeOfDayToStringData()
         {
-            var list = new List<Tuple<TimeOfDay, TimeOfDay, bool>>()
+            return new TheoryData<TimeOnly, string>
             {
-                new Tuple<TimeOfDay, TimeOfDay, bool>(TimeOfDay.MinValue, TimeOfDay.MinValue, true),
-                new Tuple<TimeOfDay, TimeOfDay, bool>(TimeOfDay.MaxValue, TimeOfDay.MaxValue, true), 
-                new Tuple<TimeOfDay, TimeOfDay, bool>(new TimeOfDay(21, 12, 31, 0), new TimeOfDay(21, 12, 31, 0), true),
-                new Tuple<TimeOfDay, TimeOfDay, bool>(TimeOfDay.MinValue, TimeOfDay.MaxValue, false),
-                new Tuple<TimeOfDay, TimeOfDay, bool>(new TimeOfDay(1, 2, 3, 1), new TimeOfDay(1, 2, 3, 10), false),
-                new Tuple<TimeOfDay, TimeOfDay, bool>(new TimeOfDay(TimeOfDay.MinTickValue), TimeOfDay.MinValue, true),
-                new Tuple<TimeOfDay, TimeOfDay, bool>(new TimeOfDay(TimeOfDay.MaxTickValue), TimeOfDay.MaxValue, true),
+                { TimeOnly.MinValue, "00:00:00.0000000" },
+                { TimeOnly.MaxValue, "23:59:59.9999999" },
+                { new TimeOnly(12, 0, 1, 1), "12:00:01.0010000" },
+                { new TimeOnly(1, 0, 1, 10), "01:00:01.0100000" },
+                { new TimeOnly(2, 1, 2, 100), "02:01:02.1000000" },
+                { new TimeOnly(10, 12, 30, 100), "10:12:30.1000000" },
             };
-
-            foreach (var tuple in list)
-            {
-                bool result = tuple.Item1.Equals(tuple.Item2);
-                Assert.Equal(tuple.Item3, result);
-            }
         }
 
-        [Fact]
-        public void TestTimeOfDayEqualsObject()
+        [Theory]
+        [MemberData(nameof(TestTimeOfDayToStringData))]
+        public void TestTimeOfDayToString(TimeOnly input, string expected)
         {
-            var list = new List<Tuple<TimeOfDay, object, bool>>()
-            {
-                new Tuple<TimeOfDay, object, bool>(TimeOfDay.MinValue, TimeOfDay.MinValue, true),
-                new Tuple<TimeOfDay, object, bool>(TimeOfDay.MaxValue, Date.MaxValue, false), 
-            };
-
-            foreach (var tuple in list)
-            {
-                bool result = tuple.Item1.Equals(tuple.Item2);
-                Assert.Equal(tuple.Item3, result);
-            }
+            Assert.Equal(expected, input.ToString());
         }
 
-        [Fact]
-        public void TestTimeOfDayGetHashCode()
+        public static TheoryData<string, TimeOnly> TestParseTimeOfDaySuccessData()
         {
-            var list = new List<Tuple<TimeOfDay, TimeOfDay, bool>>() 
+            return new TheoryData<string, TimeOnly>
             {
-                new Tuple<TimeOfDay, TimeOfDay, bool>(TimeOfDay.MinValue, TimeOfDay.MaxValue, false),
-                new Tuple<TimeOfDay, TimeOfDay, bool>(TimeOfDay.MinValue, new TimeOfDay(0), true),
-                new Tuple<TimeOfDay, TimeOfDay, bool>(new TimeOfDay(1, 2, 3, 0), new TimeOfDay(1, 2, 4, 0), false),
-                new Tuple<TimeOfDay, TimeOfDay, bool>(new TimeOfDay(23, 59, 59, 0), new TimeOfDay(23, 59, 59, 0), true),
+                { "00:00:00.0000000", TimeOnly.MinValue },
+                { "0:0:0.0", TimeOnly.MinValue },
+                { "23:59:59.9999999", TimeOnly.MaxValue },
+                { "12:00:01.0010000", new TimeOnly(12, 0, 1, 1) },
+                { "12:0:1.0010000", new TimeOnly(12, 0, 1, 1) },
+                { "01:00:01.0100000", new TimeOnly(1, 0, 1, 10) },
+                { "1:0:1.01", new TimeOnly(1, 0, 1, 10) },
+                { "02:01:02.01", new TimeOnly(2, 1, 2, 10) },
+                { "2:1:2.01", new TimeOnly(2, 1, 2, 10) },
+                { "10:12:30.1000000", new TimeOnly(10, 12, 30, 100) },
+                { "10:12:30.1", new TimeOnly(10, 12, 30, 100) },
+                { "00:00:00.0000001", new TimeOnly(1) },
+                { "10:00", new TimeOnly(10, 0, 0, 0) },
+                { "13:30:25", new TimeOnly(13, 30, 25, 0) },
             };
-
-            foreach (var tuple in list)
-            {
-                var hashCode1 = tuple.Item1.GetHashCode();
-                var hashCode2 = tuple.Item2.GetHashCode();
-                Assert.Equal<bool>(tuple.Item3, hashCode1 == hashCode2);
-            }
         }
 
-        [Fact]
-        public void TestTimeOfDayCompareTo()
+        [Theory]
+        [MemberData(nameof(TestParseTimeOfDaySuccessData))]
+        public void TestParseTimeOfDaySuccess(string input, TimeOnly expected)
         {
-            var list = new List<Tuple<TimeOfDay, TimeOfDay, int>>() 
-            {
-                new Tuple<TimeOfDay, TimeOfDay, int>(TimeOfDay.MinValue, TimeOfDay.MaxValue, -1),
-                new Tuple<TimeOfDay, TimeOfDay, int>(TimeOfDay.MaxValue, TimeOfDay.MinValue, 1),
-                new Tuple<TimeOfDay, TimeOfDay, int>(TimeOfDay.MinValue, TimeOfDay.MinValue, 0),
-                new Tuple<TimeOfDay, TimeOfDay, int>(TimeOfDay.MaxValue, TimeOfDay.MaxValue, 0),
-                new Tuple<TimeOfDay, TimeOfDay, int>(TimeOfDay.MinValue, new TimeOfDay(23, 59, 59, 0), -1),
-                new Tuple<TimeOfDay, TimeOfDay, int>(new TimeOfDay(23, 59, 59, 0), new TimeOfDay(23, 59, 59, 1), -1),
-                new Tuple<TimeOfDay, TimeOfDay, int>(new TimeOfDay(23, 59, 59, 1), new TimeOfDay(23, 59, 59, 10), -1),
-                new Tuple<TimeOfDay, TimeOfDay, int>(new TimeOfDay(23, 59, 59, 1), TimeOfDay.MaxValue, -1),
-                new Tuple<TimeOfDay, TimeOfDay, int>(new TimeOfDay(0, 0, 0, 1), TimeOfDay.MinValue, 1),
-                new Tuple<TimeOfDay, TimeOfDay, int>(new TimeOfDay(23, 59, 59, 100), new TimeOfDay(23, 59, 59, 10), 1),
-                new Tuple<TimeOfDay, TimeOfDay, int>(TimeOfDay.MinValue, new TimeOfDay(0, 0, 0, 0), 0),
-                new Tuple<TimeOfDay, TimeOfDay, int>(TimeOfDay.MaxValue, new TimeOfDay(23, 59, 59, 999), 1),
-                new Tuple<TimeOfDay, TimeOfDay, int>(new TimeOfDay(12, 13, 14, 15), new TimeOfDay(12, 13, 14, 15), 0),
-            };
+            #region Test Parse
+            TimeOnly time = TimeOnly.Parse(input);
+            Assert.Equal(expected, time);
+            #endregion
 
-            foreach (var tuple in list)
-            {
-                int result = tuple.Item1.CompareTo(tuple.Item2);
-                Assert.Equal(tuple.Item3, result);
-            }
+            #region Test TryParse
+            bool result = TimeOnly.TryParse(input, out time);
+            Assert.True(result);
+            Assert.Equal(expected, time);
+            #endregion
         }
 
-        [Fact]
-        public void TestTimeOfDayToString()
+        [Theory]
+        [InlineData("12:15:60.0000000")]
+        [InlineData("12:60:59.0000000")]
+        [InlineData("24:59:59.0000000")]
+        [InlineData("124:59:59.0000000")]
+        [InlineData("-1:59:59.0000000")]
+        [InlineData("T4:59:59.0000000")]
+        [InlineData("14:59:59.")]
+        [InlineData("4:59:")]
+        public void TestParseTimeOfDayFailure(string input)
         {
-            var list = new List<Tuple<TimeOfDay, string>>()
-            {
-                new Tuple<TimeOfDay, string>(TimeOfDay.MinValue, "00:00:00.0000000"),
-                new Tuple<TimeOfDay, string>(TimeOfDay.MaxValue, "23:59:59.9999999"),
-                new Tuple<TimeOfDay, string>(new TimeOfDay(12, 0, 1, 1), "12:00:01.0010000"),
-                new Tuple<TimeOfDay, string>(new TimeOfDay(1, 0, 1, 10), "01:00:01.0100000"),
-                new Tuple<TimeOfDay, string>(new TimeOfDay(2, 1, 2, 100), "02:01:02.1000000"),
-                new Tuple<TimeOfDay, string>(new TimeOfDay(10, 12, 30, 100), "10:12:30.1000000"),
-            };
+            #region Test Parse
+            Action test = () => TimeOnly.Parse(input);
+            var exception = Assert.Throws<FormatException>(test);
+            Assert.Equal(Error.Format(SRResources.TimeOfDay_InvalidParsingString, input), exception.Message);
+            #endregion
 
-            foreach (var tuple in list)
-            {
-                Assert.Equal(tuple.Item2, tuple.Item1.ToString());
-            }
-        }
-
-        [Fact]
-        public void TestParseTimeOfDaySuccess()
-        {
-            var lists = new List<Tuple<string, TimeOfDay>>()
-            {
-                new Tuple<string, TimeOfDay>("00:00:00.0000000", TimeOfDay.MinValue),
-                new Tuple<string, TimeOfDay>("0:0:0.0", TimeOfDay.MinValue),
-                new Tuple<string, TimeOfDay>("23:59:59.9999999", TimeOfDay.MaxValue),
-                new Tuple<string, TimeOfDay>("12:00:01.0010000", new TimeOfDay(12, 0, 1, 1)),
-                new Tuple<string, TimeOfDay>("12:0:1.0010000", new TimeOfDay(12, 0, 1, 1)),
-                new Tuple<string, TimeOfDay>("01:00:01.0100000", new TimeOfDay(1, 0, 1, 10)),
-                new Tuple<string, TimeOfDay>("1:0:1.01", new TimeOfDay(1, 0, 1, 10)),
-                new Tuple<string, TimeOfDay>("02:01:02.01", new TimeOfDay(2, 1, 2, 10)),
-                new Tuple<string, TimeOfDay>("2:1:2.01", new TimeOfDay(2, 1, 2, 10)),
-                new Tuple<string, TimeOfDay>("10:12:30.1000000", new TimeOfDay(10, 12, 30, 100)),
-                new Tuple<string, TimeOfDay>("10:12:30.1", new TimeOfDay(10, 12, 30, 100)),
-                new Tuple<string, TimeOfDay>("00:00:00.0000001", new TimeOfDay(1)),
-                new Tuple<string, TimeOfDay>("10:00", new TimeOfDay(10, 0, 0, 0)),
-                new Tuple<string, TimeOfDay>("13:30:25", new TimeOfDay(13, 30, 25, 0)),
-            };
-
-#region Test Parse
-            foreach (var tuple in lists)
-            {
-                TimeOfDay time = TimeOfDay.Parse(tuple.Item1);
-                Assert.Equal(tuple.Item2, time);
-            }
-#endregion
-
-#region Test TryParse
-            foreach (var tuple in lists)
-            {
-                TimeOfDay time;
-                bool result = TimeOfDay.TryParse(tuple.Item1, out time);
-                Assert.True(result);
-                Assert.Equal(tuple.Item2, time);
-            }
-#endregion
-        }
-
-        [Fact]
-        public void TestParseTimeOfDayFailure()
-        {
-            var lists = new List<Tuple<string, TimeOfDay>>()
-            {
-                new Tuple<string, TimeOfDay>("12:15:60.0000000", TimeOfDay.MinValue),
-                new Tuple<string, TimeOfDay>("12:60:59.0000000", TimeOfDay.MinValue),
-                new Tuple<string, TimeOfDay>("24:59:59.0000000", TimeOfDay.MinValue),
-                new Tuple<string, TimeOfDay>("124:59:59.0000000", TimeOfDay.MinValue),
-                new Tuple<string, TimeOfDay>("-1:59:59.0000000", TimeOfDay.MinValue),
-                new Tuple<string, TimeOfDay>("T4:59:59.0000000", TimeOfDay.MinValue),
-                new Tuple<string, TimeOfDay>("14:59:59.", TimeOfDay.MinValue),
-                new Tuple<string, TimeOfDay>("4:59:", TimeOfDay.MinValue),
-            };
-
-#region Test Parse
-            foreach (var tuple in lists)
-            {
-                Action test = () => TimeOfDay.Parse(tuple.Item1);
-                var exception = Assert.Throws<FormatException>(test);
-                Assert.Equal(Error.Format(SRResources.TimeOfDay_InvalidParsingString, tuple.Item1), exception.Message);
-            }
-#endregion
-
-#region Test TryParse
-            foreach (var tuple in lists)
-            {
-                TimeOfDay time;
-                bool result = TimeOfDay.TryParse(tuple.Item1, out time);
-                Assert.False(result);
-                Assert.Equal(tuple.Item2, time);
-            }
-#endregion
+            #region Test TryParse
+            TimeOnly time;
+            bool result = TimeOnly.TryParse(input, out time);
+            Assert.False(result);
+            Assert.Equal(TimeOnly.MinValue, time);
+            #endregion
         }
 
         [Fact]
         public void TestTimeOfDayCompareToInvalidTarget()
         {
-            TimeOfDay time = new TimeOfDay(0);
+            TimeOnly time = new TimeOnly(0);
             DateTimeOffset now = DateTimeOffset.Now;
             Action test = () => time.CompareTo(now);
             var exception = Assert.Throws<ArgumentException>(test);
@@ -655,10 +610,10 @@ namespace Microsoft.OData.Edm.Tests.Library
         [Fact]
         public void TestTimeOfDayOperator()
         {
-            TimeOfDay t1 = new TimeOfDay(14, 9, 18, 0);
-            TimeOfDay t2 = new TimeOfDay(14, 9, 20, 0);
-            TimeOfDay t3 = new TimeOfDay(14, 9, 20, 0);
-            TimeOfDay t4 = new TimeOfDay(14, 10, 1, 0);
+            TimeOnly t1 = new TimeOnly(14, 9, 18, 0);
+            TimeOnly t2 = new TimeOnly(14, 9, 20, 0);
+            TimeOnly t3 = new TimeOnly(14, 9, 20, 0);
+            TimeOnly t4 = new TimeOnly(14, 10, 1, 0);
 
             Assert.True(t1 < t2);
             Assert.False(t2 < t3);

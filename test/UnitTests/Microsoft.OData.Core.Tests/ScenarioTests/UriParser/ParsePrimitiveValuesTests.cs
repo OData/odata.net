@@ -18,17 +18,17 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         [Fact]
         public void DateShouldParseCorrectly()
         {
-            Date realResult;
+            DateOnly realResult;
             Assert.True(TryParse("2012-07-28", EdmCoreModel.Instance.GetDate(false), out realResult));
-            Assert.Equal(realResult, new Date(2012, 7, 28));
+            Assert.Equal(realResult, new DateOnly(2012, 7, 28));
         }
 
         [Fact]
         public void TimeOfDayShouldParseCorrectly()
         {
-            TimeOfDay realResult;
+            TimeOnly realResult;
             Assert.True(TryParse("19:30:5.005", EdmCoreModel.Instance.GetTimeOfDay(false), out realResult));
-            Assert.Equal(realResult, new TimeOfDay(19, 30, 5, 5));
+            Assert.Equal(realResult, new TimeOnly(19, 30, 5, 5));
         }
 
         [Fact]

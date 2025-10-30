@@ -449,7 +449,7 @@ namespace Microsoft.OData.Client.Tests
 
             public Color Color { get; set; }
 
-            public Edm.Date LaunchDate { get; set; }
+            public DateOnly LaunchDate { get; set; }
 
             public IEnumerable<string> Comments { get; set; }
 
@@ -481,7 +481,7 @@ namespace Microsoft.OData.Client.Tests
             public static DateTimeOffset ServerNow() => throw new NotSupportedException();
 
             [UriFunction, OriginalName("date")]
-            public static Edm.Date ServerDate(DateTimeOffset value) => throw new NotSupportedException();
+            public static DateOnly ServerDate(DateTimeOffset value) => throw new NotSupportedException();
 
             [UriFunction(true)]
             public static bool Even(int value)

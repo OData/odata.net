@@ -96,7 +96,7 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
             // Assert
             Assert.NotNull(exp);
             EdmDateConstant constant = Assert.IsType<EdmDateConstant>(exp);
-            Assert.Equal(new Date(2000, 12, 10), constant.Value);
+            Assert.Equal(new DateOnly(2000, 12, 10), constant.Value);
         }
 
         [Fact]
@@ -231,7 +231,7 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
             // Assert
             Assert.NotNull(exp);
             EdmTimeOfDayConstant constant = Assert.IsType<EdmTimeOfDayConstant>(exp);
-            Assert.Equal(new TimeOfDay(21, 45, 0, 0), constant.Value);
+            Assert.Equal(new TimeOnly(21, 45, 0, 0), constant.Value);
         }
 
         [Fact]

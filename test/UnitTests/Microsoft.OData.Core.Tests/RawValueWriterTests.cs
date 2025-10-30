@@ -48,7 +48,7 @@ namespace Microsoft.OData.Tests
         public void WriteRawValueWritesDate()
         {
             RawValueWriter target = new RawValueWriter(this.settings, this.stream, new UTF32Encoding());
-            Date value = new Date(2014, 9, 18);
+            DateOnly value = new DateOnly(2014, 9, 18);
             target.WriteRawValue(value);
             Assert.Equal("2014-09-18", this.StreamAsString(target));
         }
@@ -60,7 +60,7 @@ namespace Microsoft.OData.Tests
         public void WriteRawValueWritesTimeOfDay()
         {
             RawValueWriter target = new RawValueWriter(this.settings, this.stream, new UTF32Encoding());
-            TimeOfDay value = new TimeOfDay(9, 47, 5, 900);
+            TimeOnly value = new TimeOnly(9, 47, 5, 900);
             target.WriteRawValue(value);
             Assert.Equal("09:47:05.9000000", this.StreamAsString(target));
         }
@@ -103,7 +103,7 @@ namespace Microsoft.OData.Tests
         [Fact]
         public async Task WriteRawDateValueAsync()
         {
-            var value = new Date(2014, 9, 18);
+            var value = new DateOnly(2014, 9, 18);
 
             var result = await SetupRawValueWriterAndRunTestAsync(
                 (rawValueWriter) => rawValueWriter.WriteRawValueAsync(value));
@@ -114,7 +114,7 @@ namespace Microsoft.OData.Tests
         [Fact]
         public async Task WriteRawTimeOfDayValueAsync()
         {
-            var value = new TimeOfDay(9, 47, 5, 900);
+            var value = new TimeOnly(9, 47, 5, 900);
 
             var result = await SetupRawValueWriterAndRunTestAsync(
                 (rawValueWriter) => rawValueWriter.WriteRawValueAsync(value));

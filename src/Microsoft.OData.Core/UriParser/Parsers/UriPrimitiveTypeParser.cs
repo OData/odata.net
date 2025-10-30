@@ -125,7 +125,7 @@ namespace Microsoft.OData.UriParser
                 }
                 else if (targetTypeKind == EdmPrimitiveTypeKind.Date)
                 {
-                    Date dateValue;
+                    DateOnly dateValue;
                     bool result = UriUtils.TryUriStringToDate(text, out dateValue);
                     targetValue = dateValue;
                     return result;
@@ -160,8 +160,8 @@ namespace Microsoft.OData.UriParser
                 }
                 else if (targetTypeKind == EdmPrimitiveTypeKind.TimeOfDay)
                 {
-                    TimeOfDay timeOfDayValue;
-                    bool result = UriUtils.TryUriStringToTimeOfDay(text, out timeOfDayValue);
+                    TimeOnly timeOfDayValue;
+                    bool result = UriUtils.TryUriStringToTimeOnly(text, out timeOfDayValue);
                     targetValue = timeOfDayValue;
                     return result;
                 }
