@@ -35,6 +35,14 @@ Microsoft.OData.Edm.IEdmPropertyRef.PropertyAlias.get -> string
 Microsoft.OData.Edm.IEdmPropertyRef.ReferencedProperty.get -> Microsoft.OData.Edm.IEdmStructuralProperty
 Microsoft.OData.Edm.IEdmStructuredType.FindProperty(System.ReadOnlySpan<char> name) -> Microsoft.OData.Edm.IEdmProperty
 Microsoft.OData.Edm.Validation.EdmErrorCode.BadUnresolvedPropertyRef = 412 -> Microsoft.OData.Edm.Validation.EdmErrorCode
+Microsoft.OData.Edm.Vocabularies.EdmDateConstant.EdmDateConstant(Microsoft.OData.Edm.IEdmPrimitiveTypeReference type, System.DateOnly value) -> void
+Microsoft.OData.Edm.Vocabularies.EdmDateConstant.EdmDateConstant(System.DateOnly value) -> void
+Microsoft.OData.Edm.Vocabularies.EdmDateConstant.Value.get -> System.DateOnly
+Microsoft.OData.Edm.Vocabularies.EdmTimeOfDayConstant.EdmTimeOfDayConstant(Microsoft.OData.Edm.IEdmTemporalTypeReference type, System.TimeOnly value) -> void
+Microsoft.OData.Edm.Vocabularies.EdmTimeOfDayConstant.EdmTimeOfDayConstant(System.TimeOnly value) -> void
+Microsoft.OData.Edm.Vocabularies.EdmTimeOfDayConstant.Value.get -> System.TimeOnly
+Microsoft.OData.Edm.Vocabularies.IEdmDateValue.Value.get -> System.DateOnly
+Microsoft.OData.Edm.Vocabularies.IEdmTimeOfDayValue.Value.get -> System.TimeOnly
 static Microsoft.OData.Edm.ExtensionMethods.ExistsContainer(this Microsoft.OData.Edm.IEdmModel model, System.ReadOnlySpan<char> containerName) -> bool
 static Microsoft.OData.Edm.ExtensionMethods.FindBoundOperations(this Microsoft.OData.Edm.IEdmModel model, System.ReadOnlySpan<char> qualifiedName, Microsoft.OData.Edm.IEdmType bindingType) -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmOperation>
 static Microsoft.OData.Edm.ExtensionMethods.FindDeclaredEntitySet(this Microsoft.OData.Edm.IEdmModel model, System.ReadOnlySpan<char> qualifiedName) -> Microsoft.OData.Edm.IEdmEntitySet

@@ -43,7 +43,7 @@ namespace Microsoft.OData.Tests.Json
                 jsonWriter.WriteValue(false);
 
                 jsonWriter.WriteName("DateProp");
-                jsonWriter.WriteValue(new Date(2014, 12, 31));
+                jsonWriter.WriteValue(new DateOnly(2014, 12, 31));
 
                 jsonWriter.WriteName("RawStringProp");
                 jsonWriter.WriteRawValue(@"""foobar""");
@@ -58,13 +58,13 @@ namespace Microsoft.OData.Tests.Json
                 jsonWriter.WriteValue(new DateTimeOffset(2014, 12, 31, 12, 42, 30, new TimeSpan(1, 20, 0)));
 
                 jsonWriter.WriteName("DateProp");
-                jsonWriter.WriteValue(new Date(2014, 12, 31));
+                jsonWriter.WriteValue(new DateOnly(2014, 12, 31));
 
                 jsonWriter.WriteName("TimeSpanProp");
                 jsonWriter.WriteValue(new TimeSpan(12, 42, 30));
 
                 jsonWriter.WriteName("TimeOfDayProp");
-                jsonWriter.WriteValue(new TimeOfDay(12, 42, 30, 100));
+                jsonWriter.WriteValue(new TimeOnly(12, 42, 30, 100));
 
                 jsonWriter.WriteName("ObjectProp");
                 jsonWriter.StartObjectScope();
@@ -91,7 +91,7 @@ namespace Microsoft.OData.Tests.Json
                 jsonWriter.WriteRawValue(@"""raw""");
                 jsonWriter.WriteValue(true);
                 jsonWriter.WriteRawValue(@"""raw""");
-                jsonWriter.WriteValue(new Date(2014, 12, 31));
+                jsonWriter.WriteValue(new DateOnly(2014, 12, 31));
                 jsonWriter.WriteRawValue(@"""raw""");
                 jsonWriter.WriteValue(new DateTimeOffset(2014, 12, 31, 12, 42, 30, new TimeSpan(1, 20, 0)));
                 jsonWriter.WriteRawValue(@"""raw""");
@@ -170,11 +170,11 @@ namespace Microsoft.OData.Tests.Json
                 jsonWriter.EndArrayScope();
                 jsonWriter.StartArrayScope();
                 jsonWriter.WriteRawValue(@"""rawAtArrayStartBeforeDate""");
-                jsonWriter.WriteValue(new Date(2014, 12, 31));
+                jsonWriter.WriteValue(new DateOnly(2014, 12, 31));
                 jsonWriter.EndArrayScope();
                 jsonWriter.StartArrayScope();
                 jsonWriter.WriteRawValue(@"""rawAtArrayStartBeforeTimeOfDay""");
-                jsonWriter.WriteValue(new TimeOfDay(12, 42, 30, 100));
+                jsonWriter.WriteValue(new TimeOnly(12, 42, 30, 100));
                 jsonWriter.EndArrayScope();
                 jsonWriter.StartArrayScope();
                 jsonWriter.WriteRawValue(@"""rawAtArrayStartBeforeTimeSpan""");
@@ -407,7 +407,7 @@ namespace Microsoft.OData.Tests.Json
                 jsonWriter.WriteName("obj2");
                 jsonWriter.StartObjectScope();
                 jsonWriter.WriteName("dtProp");
-                jsonWriter.WriteValue(new Date(2014, 12, 31));
+                jsonWriter.WriteValue(new DateOnly(2014, 12, 31));
                 jsonWriter.WriteName("lgB64AtObjEnd");
                 jsonWriter.WriteValue(largeBinaryData);
                 jsonWriter.EndObjectScope();
@@ -483,7 +483,7 @@ namespace Microsoft.OData.Tests.Json
                 jsonWriter.WriteName("obj6");
                 jsonWriter.StartObjectScope();
                 jsonWriter.WriteName("dtProp");
-                jsonWriter.WriteValue(new Date(2014, 12, 31));
+                jsonWriter.WriteValue(new DateOnly(2014, 12, 31));
                 jsonWriter.WriteName("lgSAtObjEnd");
                 jsonWriter.WriteValue(largeStringData);
                 jsonWriter.EndObjectScope();
@@ -685,7 +685,7 @@ namespace Microsoft.OData.Tests.Json
                 jsonWriter.WriteName("obj2");
                 jsonWriter.StartObjectScope();
                 jsonWriter.WriteName("dtProp");
-                jsonWriter.WriteValue(new Date(2014, 12, 31));
+                jsonWriter.WriteValue(new DateOnly(2014, 12, 31));
                 jsonWriter.WriteName("lgB64AtObjEnd");
                 jsonWriter.WriteValue(largeBinaryData);
                 jsonWriter.EndObjectScope();
@@ -787,7 +787,7 @@ namespace Microsoft.OData.Tests.Json
                 jsonWriter.WriteName("obj6");
                 jsonWriter.StartObjectScope();
                 jsonWriter.WriteName("dtProp");
-                jsonWriter.WriteValue(new Date(2014, 12, 31));
+                jsonWriter.WriteValue(new DateOnly(2014, 12, 31));
                 jsonWriter.WriteName("lgSAtObjEnd");
                 var tw3 = jsonWriter.StartTextWriterValueScope("text/plain");
                 WriteLargeStringInChunks(tw3, streamLargeStringData);

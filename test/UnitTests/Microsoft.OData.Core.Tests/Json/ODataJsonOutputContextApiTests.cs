@@ -4586,8 +4586,8 @@ POST http://tempuri.org/Customers HTTP/1.1
                 new ODataProperty { Name = "SignedByteProperty", Value = (sbyte)9 },
                 new ODataProperty { Name = "StringProperty", Value = "foo" },
                 new ODataProperty { Name = "ByteArrayProperty", Value = new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 0 } },
-                new ODataProperty { Name = "DateProperty", Value = new Date(1970, 1, 1) },
-                new ODataProperty { Name = "TimeOfDayProperty", Value = new TimeOfDay(23, 59, 59, 0) },
+                new ODataProperty { Name = "DateProperty", Value = new DateOnly(1970, 1, 1) },
+                new ODataProperty { Name = "TimeOfDayProperty", Value = new TimeOnly(23, 59, 59, 0) },
                 new ODataProperty { Name = "ColorProperty", Value = new ODataEnumValue("Black") },
                 new ODataProperty { Name = "GeographyPointProperty", Value = GeographyPoint.Create(22.2, 22.2) },
                 new ODataProperty { Name = "GeometryPointProperty", Value = GeometryPoint.Create(7, 13) },
@@ -4623,13 +4623,13 @@ POST http://tempuri.org/Customers HTTP/1.1
                 } } },
                 new ODataProperty { Name = "DateCollectionProperty", Value = new ODataCollectionValue { Items = new List<object>
                 {
-                    new Date(1970, 12, 31),
-                    new Date(1858, 11, 17)
+                    new DateOnly(1970, 12, 31),
+                    new DateOnly(1858, 11, 17)
                 } } },
                 new ODataProperty { Name = "TimeOfDayCollectionProperty", Value = new ODataCollectionValue { Items = new List<object>
                 {
-                    new TimeOfDay(23, 59, 59, 0),
-                    new TimeOfDay(11, 29, 29, 0)
+                    new TimeOnly(23, 59, 59, 0),
+                    new TimeOnly(11, 29, 29, 0)
                 } } },
                 new ODataProperty { Name = "ColorCollectionProperty", Value = new ODataCollectionValue { TypeName = "NS.Color", Items = new List<object>
                 {

@@ -208,17 +208,15 @@ namespace Microsoft.OData.Edm
         /// <param name="text">String to be converted.</param>
         /// <param name="date">The converted date value</param>
         /// <returns>if parsing was successful</returns>
-        internal static bool TryConvertStringToDate(ReadOnlySpan<char> text, out Date date)
+        internal static bool TryConvertStringToDateOnly(ReadOnlySpan<char> text, out DateOnly date)
         {
-            date = default(Date);
-            if (text == null || !PlatformHelper.DateValidator.IsMatch(text))
+            date = default;
+            if (text.IsEmpty || !PlatformHelper.DateValidator.IsMatch(text))
             {
                 return false;
             }
 
-            bool b = DateTime.TryParse(text, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dateTime);
-            date = dateTime;
-            return b;
+            return DateOnly.TryParse(text, CultureInfo.InvariantCulture, DateTimeStyles.None, out date);
         }
 
         /// <summary>
@@ -226,26 +224,10 @@ namespace Microsoft.OData.Edm
         /// </summary>
         /// <param name="text">String to be converted.</param>
         /// <returns>Date value</returns>
-        internal static Date ConvertStringToDate(string text)
-        {
-            Date date;
-            if (!PlatformHelper.TryConvertStringToDate(text, out date))
-            {
-                throw new FormatException(string.Format(CultureInfo.InvariantCulture, "String '{0}' was not recognized as a valid Edm.Date.", text));
-            }
-
-            return date;
-        }
-
-        /// <summary>
-        /// Converts a string to a <see cref="DateOnly"/>.
-        /// </summary>
-        /// <param name="text">String to be converted.</param>
-        /// <returns>DateOnly value</returns>
         internal static DateOnly ConvertStringToDateOnly(string text)
         {
             DateOnly date;
-            if (!DateOnly.TryParse(text, out date))
+            if (!PlatformHelper.TryConvertStringToDateOnly(text, out date))
             {
                 throw new FormatException(string.Format(CultureInfo.InvariantCulture, "String '{0}' was not recognized as a valid Edm.Date.", text));
             }
@@ -254,44 +236,20 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
-        /// Converts a string to a <see cref="TimeOfDay">.
+        /// Converts a string to a <see cref="TimeOnly">.
         /// </summary>
         /// <param name="text">String to be converted.</param>
         /// <param name="timeOfDay">Time of the day</param>
         /// <returns>Whether the value is a valid time of day</returns>
-        internal static bool TryConvertStringToTimeOfDay(ReadOnlySpan<char> text, out TimeOfDay timeOfDay)
+        internal static bool TryConvertStringToTimeOnly(ReadOnlySpan<char> text, out TimeOnly timeOnly)
         {
-            timeOfDay = default(TimeOfDay);
-            if (text == null || !PlatformHelper.TimeOfDayValidator.IsMatch(text))
+            timeOnly = default;
+            if (text.IsEmpty || !PlatformHelper.TimeOfDayValidator.IsMatch(text))
             {
                 return false;
             }
 
-            TimeSpan time;
-            bool b = TimeSpan.TryParse(text, CultureInfo.InvariantCulture, out time);
-            if (b && time.Ticks >= TimeOfDay.MinTickValue && time.Ticks <= TimeOfDay.MaxTickValue)
-            {
-                timeOfDay = new TimeOfDay(time.Ticks);
-                return true;
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// Converts a string to a TimeOfDay.
-        /// </summary>
-        /// <param name="text">String to be converted.</param>
-        /// <returns>TimeOfDay value</returns>
-        internal static TimeOfDay ConvertStringToTimeOfDay(string text)
-        {
-            TimeOfDay timeOfDay;
-            if (!PlatformHelper.TryConvertStringToTimeOfDay(text, out timeOfDay))
-            {
-                throw new FormatException(string.Format(CultureInfo.InvariantCulture, "String '{0}' was not recognized as a valid Edm.TimeOfDay.", text));
-            }
-
-            return timeOfDay;
+            return TimeOnly.TryParse(text, CultureInfo.CurrentCulture, out timeOnly);
         }
 
         /// <summary>
@@ -302,7 +260,7 @@ namespace Microsoft.OData.Edm
         internal static TimeOnly ConvertStringToTimeOnly(string text)
         {
             TimeOnly timeOfDay;
-            if (!TimeOnly.TryParse(text, out timeOfDay))
+            if (!TimeOnly.TryParse(text, CultureInfo.CurrentCulture, out timeOfDay))
             {
                 throw new FormatException(string.Format(CultureInfo.InvariantCulture, "String '{0}' was not recognized as a valid Edm.TimeOfDay.", text));
             }
