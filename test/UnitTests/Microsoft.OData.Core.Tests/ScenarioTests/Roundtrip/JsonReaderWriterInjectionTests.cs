@@ -456,9 +456,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
 
             public void WriteValue(byte[] value) => throw new NotImplementedException();
 
-            public void WriteValue(Date value) => throw new NotImplementedException();
+            public void WriteValue(DateOnly value) => throw new NotImplementedException();
 
-            public void WriteValue(TimeOfDay value) => throw new NotImplementedException();
+            public void WriteValue(TimeOnly value) => throw new NotImplementedException();
 
             public void WriteValue(System.Text.Json.JsonElement value) => throw new NotImplementedException();
 
@@ -533,9 +533,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
 
             public Task WriteValueAsync(byte[] value) => throw new NotImplementedException();
 
-            public Task WriteValueAsync(Date value) => throw new NotImplementedException();
+            public Task WriteValueAsync(DateOnly value) => throw new NotImplementedException();
 
-            public Task WriteValueAsync(TimeOfDay value) => throw new NotImplementedException();
+            public Task WriteValueAsync(TimeOnly value) => throw new NotImplementedException();
 
             public Task WriteRawValueAsync(string rawValue) => throw new NotImplementedException();
 

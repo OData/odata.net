@@ -134,8 +134,8 @@ namespace Microsoft.OData.Tests.Json
             var propertyAndAnnotationCollector = new PropertyAndAnnotationCollector(true);
 
             object value = deserializer.ReadCustomInstanceAnnotationValue(propertyAndAnnotationCollector, "custom.DateAnnotation");
-            var result = Assert.IsType<Date>(value);
-            Assert.Equal(Date.Parse("2013-01-25"), result);
+            var result = Assert.IsType<DateOnly>(value);
+            Assert.Equal(DateOnly.Parse("2013-01-25"), result);
         }
 
         [Fact]
@@ -146,8 +146,8 @@ namespace Microsoft.OData.Tests.Json
             var propertyAndAnnotationCollector = new PropertyAndAnnotationCollector(true);
 
             object value = deserializer.ReadCustomInstanceAnnotationValue(propertyAndAnnotationCollector, "custom.TimeOfDayAnnotation");
-            var result = Assert.IsType<TimeOfDay>(value);
-            Assert.Equal(TimeOfDay.Parse("12:30:40.900"), result);
+            var result = Assert.IsType<TimeOnly>(value);
+            Assert.Equal(TimeOnly.Parse("12:30:40.900"), result);
         }
 
         [Fact]

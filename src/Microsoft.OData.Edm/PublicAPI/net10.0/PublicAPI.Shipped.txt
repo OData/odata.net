@@ -1087,10 +1087,7 @@ Microsoft.OData.Edm.Vocabularies.EdmCollectionValue
 Microsoft.OData.Edm.Vocabularies.EdmCollectionValue.EdmCollectionValue(Microsoft.OData.Edm.IEdmCollectionTypeReference type, System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.Vocabularies.IEdmDelayedValue> elements) -> void
 Microsoft.OData.Edm.Vocabularies.EdmCollectionValue.Elements.get -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.Vocabularies.IEdmDelayedValue>
 Microsoft.OData.Edm.Vocabularies.EdmDateConstant
-Microsoft.OData.Edm.Vocabularies.EdmDateConstant.EdmDateConstant(Microsoft.OData.Edm.Date value) -> void
-Microsoft.OData.Edm.Vocabularies.EdmDateConstant.EdmDateConstant(Microsoft.OData.Edm.IEdmPrimitiveTypeReference type, Microsoft.OData.Edm.Date value) -> void
 Microsoft.OData.Edm.Vocabularies.EdmDateConstant.ExpressionKind.get -> Microsoft.OData.Edm.EdmExpressionKind
-Microsoft.OData.Edm.Vocabularies.EdmDateConstant.Value.get -> Microsoft.OData.Edm.Date
 Microsoft.OData.Edm.Vocabularies.EdmDateTimeOffsetConstant
 Microsoft.OData.Edm.Vocabularies.EdmDateTimeOffsetConstant.EdmDateTimeOffsetConstant(Microsoft.OData.Edm.IEdmTemporalTypeReference type, System.DateTimeOffset value) -> void
 Microsoft.OData.Edm.Vocabularies.EdmDateTimeOffsetConstant.EdmDateTimeOffsetConstant(System.DateTimeOffset value) -> void
@@ -1232,10 +1229,7 @@ Microsoft.OData.Edm.Vocabularies.EdmTerm.Namespace.get -> string
 Microsoft.OData.Edm.Vocabularies.EdmTerm.SchemaElementKind.get -> Microsoft.OData.Edm.EdmSchemaElementKind
 Microsoft.OData.Edm.Vocabularies.EdmTerm.Type.get -> Microsoft.OData.Edm.IEdmTypeReference
 Microsoft.OData.Edm.Vocabularies.EdmTimeOfDayConstant
-Microsoft.OData.Edm.Vocabularies.EdmTimeOfDayConstant.EdmTimeOfDayConstant(Microsoft.OData.Edm.IEdmTemporalTypeReference type, Microsoft.OData.Edm.TimeOfDay value) -> void
-Microsoft.OData.Edm.Vocabularies.EdmTimeOfDayConstant.EdmTimeOfDayConstant(Microsoft.OData.Edm.TimeOfDay value) -> void
 Microsoft.OData.Edm.Vocabularies.EdmTimeOfDayConstant.ExpressionKind.get -> Microsoft.OData.Edm.EdmExpressionKind
-Microsoft.OData.Edm.Vocabularies.EdmTimeOfDayConstant.Value.get -> Microsoft.OData.Edm.TimeOfDay
 Microsoft.OData.Edm.Vocabularies.EdmToClrConverter
 Microsoft.OData.Edm.Vocabularies.EdmToClrConverter.AsClrValue(Microsoft.OData.Edm.Vocabularies.IEdmValue edmValue, System.Type clrType) -> object
 Microsoft.OData.Edm.Vocabularies.EdmToClrConverter.AsClrValue<T>(Microsoft.OData.Edm.Vocabularies.IEdmValue edmValue) -> T
@@ -1308,7 +1302,6 @@ Microsoft.OData.Edm.Vocabularies.IEdmDateTimeOffsetConstantExpression
 Microsoft.OData.Edm.Vocabularies.IEdmDateTimeOffsetValue
 Microsoft.OData.Edm.Vocabularies.IEdmDateTimeOffsetValue.Value.get -> System.DateTimeOffset
 Microsoft.OData.Edm.Vocabularies.IEdmDateValue
-Microsoft.OData.Edm.Vocabularies.IEdmDateValue.Value.get -> Microsoft.OData.Edm.Date
 Microsoft.OData.Edm.Vocabularies.IEdmDecimalConstantExpression
 Microsoft.OData.Edm.Vocabularies.IEdmDecimalValue
 Microsoft.OData.Edm.Vocabularies.IEdmDecimalValue.Value.get -> decimal
@@ -1382,7 +1375,6 @@ Microsoft.OData.Edm.Vocabularies.IEdmTerm.Type.get -> Microsoft.OData.Edm.IEdmTy
 Microsoft.OData.Edm.Vocabularies.IEdmTermExtensions
 Microsoft.OData.Edm.Vocabularies.IEdmTimeOfDayConstantExpression
 Microsoft.OData.Edm.Vocabularies.IEdmTimeOfDayValue
-Microsoft.OData.Edm.Vocabularies.IEdmTimeOfDayValue.Value.get -> Microsoft.OData.Edm.TimeOfDay
 Microsoft.OData.Edm.Vocabularies.IEdmValue
 Microsoft.OData.Edm.Vocabularies.IEdmValue.Type.get -> Microsoft.OData.Edm.IEdmTypeReference
 Microsoft.OData.Edm.Vocabularies.IEdmValue.ValueKind.get -> Microsoft.OData.Edm.Vocabularies.EdmValueKind

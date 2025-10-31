@@ -31,8 +31,6 @@ Microsoft.OData.Json.IJsonWriter.WriteValueAsync(double value) -> System.Threadi
 Microsoft.OData.Json.IJsonWriter.WriteValueAsync(float value) -> System.Threading.Tasks.Task
 Microsoft.OData.Json.IJsonWriter.WriteValueAsync(int value) -> System.Threading.Tasks.Task
 Microsoft.OData.Json.IJsonWriter.WriteValueAsync(long value) -> System.Threading.Tasks.Task
-Microsoft.OData.Json.IJsonWriter.WriteValueAsync(Microsoft.OData.Edm.Date value) -> System.Threading.Tasks.Task
-Microsoft.OData.Json.IJsonWriter.WriteValueAsync(Microsoft.OData.Edm.TimeOfDay value) -> System.Threading.Tasks.Task
 Microsoft.OData.Json.IJsonWriter.WriteValueAsync(sbyte value) -> System.Threading.Tasks.Task
 Microsoft.OData.Json.IJsonWriter.WriteValueAsync(short value) -> System.Threading.Tasks.Task
 Microsoft.OData.Json.IJsonWriter.WriteValueAsync(string value) -> System.Threading.Tasks.Task
@@ -296,8 +294,6 @@ Microsoft.OData.Json.IJsonWriter.WriteValue(double value) -> void
 Microsoft.OData.Json.IJsonWriter.WriteValue(float value) -> void
 Microsoft.OData.Json.IJsonWriter.WriteValue(int value) -> void
 Microsoft.OData.Json.IJsonWriter.WriteValue(long value) -> void
-Microsoft.OData.Json.IJsonWriter.WriteValue(Microsoft.OData.Edm.Date value) -> void
-Microsoft.OData.Json.IJsonWriter.WriteValue(Microsoft.OData.Edm.TimeOfDay value) -> void
 Microsoft.OData.Json.IJsonWriter.WriteValue(sbyte value) -> void
 Microsoft.OData.Json.IJsonWriter.WriteValue(short value) -> void
 Microsoft.OData.Json.IJsonWriter.WriteValue(string value) -> void

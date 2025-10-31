@@ -58,8 +58,8 @@ namespace Microsoft.OData.UriParser.Validation.Rules
         {
             string message;
             string version;
-            Date? date;
-            Date? removalDate;
+            DateOnly? date;
+            DateOnly? removalDate;
             if (IsDeprecated(context.Model, edmType, out message, out version, out date, out removalDate))
             {
                 context.AddMessage(CreateUrlValidationMessage(edmType.FullTypeName(), message, version, date, removalDate));
@@ -76,7 +76,7 @@ namespace Microsoft.OData.UriParser.Validation.Rules
         /// <param name="date">The deprecation date, if specified.</param>
         /// <param name="removalDate">The removal date, if specified.</param>
         /// <returns>An ODataUrlValidationMessage representing the deprecated element.</returns>
-        private static ODataUrlValidationMessage CreateUrlValidationMessage(string elementName, string message, string version, Date? date, Date? removalDate)
+        private static ODataUrlValidationMessage CreateUrlValidationMessage(string elementName, string message, string version, DateOnly? date, DateOnly? removalDate)
         {
             ODataUrlValidationMessage error = new ODataUrlValidationMessage(ODataUrlValidationMessageCodes.DeprecatedElement, message, Severity.Warning);
             if (date != null)
@@ -112,8 +112,8 @@ namespace Microsoft.OData.UriParser.Validation.Rules
         {
             string message;
             string version;
-            Date? date;
-            Date? removalDate;
+            DateOnly? date;
+            DateOnly? removalDate;
             if (IsDeprecated(context.Model, element, out message, out version, out date, out removalDate))
             {
                 context.AddMessage(CreateUrlValidationMessage(element.Name, message, version, date, removalDate));
@@ -130,7 +130,7 @@ namespace Microsoft.OData.UriParser.Validation.Rules
         /// <param name="date">The returned date if the element is deprecated, if specified.</param>
         /// <param name="removalDate">The returned removal date if the element is deprecated, if specified.</param>
         /// <returns>True if the element is marked as deprecated, otherwise false.</returns>
-        private static bool IsDeprecated(IEdmModel model, IEdmElement element, out string message, out string version, out Date? date, out Date? removalDate)
+        private static bool IsDeprecated(IEdmModel model, IEdmElement element, out string message, out string version, out DateOnly? date, out DateOnly? removalDate)
         {
             if (!(element is IEdmPrimitiveType))
             {

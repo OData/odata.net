@@ -60,13 +60,13 @@ namespace Microsoft.OData.Tests.Json
 
         public void WriteValue(decimal value) => throw new NotImplementedException();
 
-        public void WriteValue(Date value) => throw new NotImplementedException();
+        public void WriteValue(DateOnly value) => throw new NotImplementedException();
 
         public void WriteValue(DateTimeOffset value) => throw new NotImplementedException();
 
         public void WriteValue(TimeSpan value) => throw new NotImplementedException();
 
-        public void WriteValue(TimeOfDay value) => throw new NotImplementedException();
+        public void WriteValue(TimeOnly value) => throw new NotImplementedException();
 
         public void WriteValue(byte value) => throw new NotImplementedException();
 
@@ -153,9 +153,9 @@ namespace Microsoft.OData.Tests.Json
             return TaskUtils.CompletedTask;
         }
 
-        public Task WriteValueAsync(Date value) => throw new NotImplementedException();
+        public Task WriteValueAsync(DateOnly value) => throw new NotImplementedException();
 
-        public Task WriteValueAsync(TimeOfDay value) => throw new NotImplementedException();
+        public Task WriteValueAsync(TimeOnly value) => throw new NotImplementedException();
 
         public Task WriteRawValueAsync(string rawValue)
         {

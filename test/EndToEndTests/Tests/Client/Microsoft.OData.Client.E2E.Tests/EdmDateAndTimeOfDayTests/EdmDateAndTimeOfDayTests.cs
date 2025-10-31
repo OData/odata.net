@@ -57,10 +57,10 @@ namespace Microsoft.OData.Client.E2E.Tests.EdmDateAndTimeOfDayTests
         {
             // Query Property
             var shipDate = await _context.Orders.ByKey(7).Select(o => o.ShipDate).GetValueAsync();
-            Assert.Equal(new Date(2014, 8, 31), shipDate);
+            Assert.Equal(new DateOnly(2014, 8, 31), shipDate);
 
             var shipTime = await _context.Orders.ByKey(7).Select(o => o.ShipTime).GetValueAsync();
-            Assert.Equal(new TimeOfDay(12, 40, 05, 50), shipTime);
+            Assert.Equal(new TimeOnly(12, 40, 05, 50), shipTime);
         }
 
         [Fact]
@@ -69,8 +69,8 @@ namespace Microsoft.OData.Client.E2E.Tests.EdmDateAndTimeOfDayTests
             // Projection Select
             var projOrder = await _context.Orders.ByKey(7).Select(o => new ClientDefaultModel.Order() { ShipDate = o.ShipDate, ShipTime = o.ShipTime }).GetValueAsync();
             Assert.True(projOrder != null);
-            Assert.Equal(new Date(2014, 8, 31), projOrder.ShipDate);
-            Assert.Equal(new TimeOfDay(12, 40, 05, 50), projOrder.ShipTime);
+            Assert.Equal(new DateOnly(2014, 8, 31), projOrder.ShipDate);
+            Assert.Equal(new TimeOnly(12, 40, 05, 50), projOrder.ShipTime);
         }
 
         [Fact]
@@ -81,15 +81,15 @@ namespace Microsoft.OData.Client.E2E.Tests.EdmDateAndTimeOfDayTests
             // Update Properties
             var order = await _context.Orders.ByKey(7).GetValueAsync();
             Assert.True(order != null);
-            Assert.Equal(new Date(2014, 8, 31), order.ShipDate);
-            Assert.Equal(new TimeOfDay(12, 40, 05, 50), order.ShipTime);
+            Assert.Equal(new DateOnly(2014, 8, 31), order.ShipDate);
+            Assert.Equal(new TimeOnly(12, 40, 05, 50), order.ShipTime);
 
-            order.ShipDate = new Date(2014, 9, 30);
+            order.ShipDate = new DateOnly(2014, 9, 30);
             _context.UpdateObject(order);
             await _context.SaveChangesAsync();
 
             var updatedOrder = await _context.Orders.ByKey(7).GetValueAsync();
-            Assert.Equal(new Date(2014, 9, 30), updatedOrder.ShipDate);
+            Assert.Equal(new DateOnly(2014, 9, 30), updatedOrder.ShipDate);
         }
 
         [Fact]
@@ -97,7 +97,7 @@ namespace Microsoft.OData.Client.E2E.Tests.EdmDateAndTimeOfDayTests
         {
             // Function
             var date = await _context.Orders.ByKey(7).GetShipDate().GetValueAsync();
-            Assert.Equal(new Date(2014, 8, 31), date);
+            Assert.Equal(new DateOnly(2014, 8, 31), date);
         }
 
         [Fact]
@@ -106,13 +106,13 @@ namespace Microsoft.OData.Client.E2E.Tests.EdmDateAndTimeOfDayTests
             _context.MergeOption = MergeOption.OverwriteChanges;
 
             var order = await _context.Orders.ByKey(7).GetValueAsync();
-            Assert.Equal(new Date(2014, 8, 31), order.ShipDate);
+            Assert.Equal(new DateOnly(2014, 8, 31), order.ShipDate);
 
             // Action
-            await _context.Orders.ByKey(7).ChangeShipTimeAndDate(Date.MaxValue, TimeOfDay.MaxValue).GetValueAsync();
+            await _context.Orders.ByKey(7).ChangeShipTimeAndDate(DateOnly.MaxValue, TimeOnly.MaxValue).GetValueAsync();
             order = await _context.Orders.ByKey(7).GetValueAsync();
-            Assert.Equal(Date.MaxValue, order.ShipDate);
-            Assert.Equal(TimeOfDay.MaxValue, order.ShipTime);
+            Assert.Equal(DateOnly.MaxValue, order.ShipDate);
+            Assert.Equal(TimeOnly.MaxValue, order.ShipTime);
         }
 
         [Fact]

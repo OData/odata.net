@@ -12,66 +12,59 @@ namespace Microsoft.OData.Edm.Tests.Csdl
 {
     public class EdmValueParserTests
     {
-        #region Date
+        #region DateOnly
         [Fact]
         public void ParseDateNullShouldThrowFormatException()
         {
-            Date? result;
+            DateOnly? result;
             Assert.False(EdmValueParser.TryParseDate(null, out result));
         }
 
         [Fact]
         public void ParseDateWithEmptyStringShouldThrowFormatException()
         {
-            Date? result;
+            DateOnly? result;
             Assert.False(EdmValueParser.TryParseDate(string.Empty, out result));
         }
 
         [Fact]
         public void ParseDateWithSpaceShouldThrowFormatException()
         {
-            Date? result;
+            DateOnly? result;
             Assert.False(EdmValueParser.TryParseDate(" ", out result));
         }
 
-        [Fact]
-        public void ParseDateWithInvalidParameterShouldThrowFormatException()
+        [Theory]
+        [InlineData("0000-01-01")]
+        [InlineData("0001-13-12")]
+        [InlineData("0001-12-98")]
+        [InlineData("0001-12-98")]
+        [InlineData("-0000-01-01")]
+        [InlineData("-0001-13-12")]
+        [InlineData("-0001-12-98")]
+        [InlineData("-0001-12-98")]
+        [InlineData("99999-01-01")]
+        [InlineData("-99999-01-01")]
+        [InlineData("-0000-01-01")]
+        [InlineData("2001-02-29")]
+        [InlineData("2001-04-31")]
+        [InlineData("-0001-01-01")]
+        [InlineData("-9999-12-12")]
+        [InlineData("001-01-01")]
+        [InlineData("01-01-01")]
+        [InlineData("1-01-01")]
+        public void ParseDateWithInvalidParameterShouldThrowFormatException(string invalidDate)
         {
-            var invalidDates = new[]
-            { 
-                 "0000-01-01",
-                 "0001-13-12",
-                 "0001-12-98",
-                 "0001-12-98",
-                 "-0000-01-01",
-                 "-0001-13-12",
-                 "-0001-12-98",
-                 "-0001-12-98",
-                 "99999-01-01",
-                 "-99999-01-01",
-                 "-0000-01-01",
-                 "2001-02-29",
-                 "2001-04-31",
-                 "-0001-01-01",
-                 "-9999-12-12",
-                 "001-01-01",
-                 "01-01-01",
-                 "1-01-01",
-            };
-
-            foreach (var invalidDate in invalidDates)
-            {
-                Date? result;
-                Assert.False(EdmValueParser.TryParseDate(invalidDate, out result));
-            }
+            DateOnly? result;
+            Assert.False(EdmValueParser.TryParseDate(invalidDate, out result));
         }
 
         [Fact]
         public void TryParseDateWithValidParameterShouldParseCorrectly()
         {
-            Date? result;
+            DateOnly? result;
             Assert.True(EdmValueParser.TryParseDate("2012-07-28", out result));
-            Assert.Equal(new Date(2012, 07, 28), result);
+            Assert.Equal(new DateOnly(2012, 07, 28), result);
         }
         #endregion
 
@@ -433,52 +426,45 @@ namespace Microsoft.OData.Edm.Tests.Csdl
         }
 #endregion Decimal
 
-#region TimeOfDay
+#region TimeOnly
         [Fact]
         public void ParseTimeOfDayNullShouldThrowFormatException()
         {
-            TimeOfDay? result;
+            TimeOnly? result;
             Assert.False(EdmValueParser.TryParseTimeOfDay(null, out result));
         }
 
         [Fact]
         public void ParseTimeOfDayWithEmptyStringShouldThrowFormatException()
         {
-            TimeOfDay? result;
+            TimeOnly? result;
             Assert.False(EdmValueParser.TryParseTimeOfDay(string.Empty, out result));
         }
 
         [Fact]
         public void ParseTimeOfDayWithSpaceShouldThrowFormatException()
         {
-            TimeOfDay? result;
+            TimeOnly? result;
             Assert.False(EdmValueParser.TryParseTimeOfDay(" ", out result));
         }
 
-        [Fact]
-        public void ParseTimeOfDayWithInvalidParameterShouldThrowFormatException()
+        [Theory]
+        [InlineData("-1:0:0.0")]
+        [InlineData("0:60:59.1")]
+        [InlineData("0:59:60.2")]
+        [InlineData("0:30:14.10000000")]
+        public void ParseTimeOfDayWithInvalidParameterShouldThrowFormatException(string invalidTime)
         {
-            var invalidTimeOfDays = new[]
-            { 
-                 "-1:0:0.0",
-                 "0:60:59.1",
-                 "0:59:60.2",
-                 "0:30:14.10000000",
-            };
-
-            foreach (var invalidTimeOfDay in invalidTimeOfDays)
-            {
-                TimeOfDay? result;
-                Assert.False(EdmValueParser.TryParseTimeOfDay(invalidTimeOfDay, out result));
-            }
+            TimeOnly? result;
+            Assert.False(EdmValueParser.TryParseTimeOfDay(invalidTime, out result));
         }
 
         [Fact]
         public void TryParseTimeOfDayWithValidParameterShouldParseCorrectly()
         {
-            TimeOfDay? result;
+            TimeOnly? result;
             Assert.True(EdmValueParser.TryParseTimeOfDay("1:12:5.009000", out result));
-            Assert.Equal(new TimeOfDay(1, 12, 5, 9), result);
+            Assert.Equal(new TimeOnly(1, 12, 5, 9), result);
         }
 #endregion
     }

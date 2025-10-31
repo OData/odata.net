@@ -1754,7 +1754,7 @@ namespace Microsoft.OData.E2E.TestCommon.Common.Client.Default
         /// <param name="updatedTime">Initial value of UpdatedTime.</param>
         /// <param name="day">Initial value of Day.</param>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public static Calendar CreateCalendar(global::System.DateTimeOffset updatedTime, global::Microsoft.OData.Edm.Date day)
+        public static Calendar CreateCalendar(global::System.DateTimeOffset updatedTime, global::System.DateOnly day)
         {
             Calendar calendar = new Calendar();
             calendar.UpdatedTime = updatedTime;
@@ -1767,7 +1767,7 @@ namespace Microsoft.OData.E2E.TestCommon.Common.Client.Default
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Day")]
         [global::System.ComponentModel.DataAnnotations.RequiredAttribute(ErrorMessage = "Day is required.")]
-        public virtual global::Microsoft.OData.Edm.Date Day
+        public virtual global::System.DateOnly Day
         {
             get
             {
@@ -1782,8 +1782,8 @@ namespace Microsoft.OData.E2E.TestCommon.Common.Client.Default
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Edm.Date _Day;
-        partial void OnDayChanging(global::Microsoft.OData.Edm.Date value);
+        private global::System.DateOnly _Day;
+        partial void OnDayChanging(global::System.DateOnly value);
         partial void OnDayChanged();
     }
     /// <summary>
@@ -3185,7 +3185,7 @@ namespace Microsoft.OData.E2E.TestCommon.Common.Client.Default
         /// <param name="shipDate">Initial value of ShipDate.</param>
         /// <param name="shipTime">Initial value of ShipTime.</param>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public static Order CreateOrder(global::System.DateTimeOffset updatedTime, int orderID, global::System.DateTimeOffset orderDate, global::Microsoft.OData.Edm.Date shipDate, global::Microsoft.OData.Edm.TimeOfDay shipTime)
+        public static Order CreateOrder(global::System.DateTimeOffset updatedTime, int orderID, global::System.DateTimeOffset orderDate, global::System.DateOnly shipDate, global::System.TimeOnly shipTime)
         {
             Order order = new Order();
             order.UpdatedTime = updatedTime;
@@ -3296,7 +3296,7 @@ namespace Microsoft.OData.E2E.TestCommon.Common.Client.Default
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("ShipDate")]
         [global::System.ComponentModel.DataAnnotations.RequiredAttribute(ErrorMessage = "ShipDate is required.")]
-        public virtual global::Microsoft.OData.Edm.Date ShipDate
+        public virtual global::System.DateOnly ShipDate
         {
             get
             {
@@ -3311,8 +3311,8 @@ namespace Microsoft.OData.E2E.TestCommon.Common.Client.Default
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Edm.Date _ShipDate;
-        partial void OnShipDateChanging(global::Microsoft.OData.Edm.Date value);
+        private global::System.DateOnly _ShipDate;
+        partial void OnShipDateChanging(global::System.DateOnly value);
         partial void OnShipDateChanged();
         /// <summary>
         /// There are no comments for Property ShipTime in the schema.
@@ -3320,7 +3320,7 @@ namespace Microsoft.OData.E2E.TestCommon.Common.Client.Default
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("ShipTime")]
         [global::System.ComponentModel.DataAnnotations.RequiredAttribute(ErrorMessage = "ShipTime is required.")]
-        public virtual global::Microsoft.OData.Edm.TimeOfDay ShipTime
+        public virtual global::System.TimeOnly ShipTime
         {
             get
             {
@@ -3335,8 +3335,8 @@ namespace Microsoft.OData.E2E.TestCommon.Common.Client.Default
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Edm.TimeOfDay _ShipTime;
-        partial void OnShipTimeChanging(global::Microsoft.OData.Edm.TimeOfDay value);
+        private global::System.TimeOnly _ShipTime;
+        partial void OnShipTimeChanging(global::System.TimeOnly value);
         partial void OnShipTimeChanged();
         /// <summary>
         /// There are no comments for Property InfoFromCustomer in the schema.
@@ -6272,7 +6272,7 @@ namespace Microsoft.OData.E2E.TestCommon.Common.Client.Default
         /// <param name="_source">source entity set</param>
         /// <param name="day">The value of day</param>
         public static global::Microsoft.OData.E2E.TestCommon.Common.Client.Default.CalendarSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.E2E.TestCommon.Common.Client.Default.Calendar> _source,
-            global::Microsoft.OData.Edm.Date day)
+            global::System.DateOnly day)
         {
             global::System.Collections.Generic.IDictionary<string, object> _keys = new global::System.Collections.Generic.Dictionary<string, object>
             {
@@ -7476,33 +7476,33 @@ namespace Microsoft.OData.E2E.TestCommon.Common.Client.Default.Default
         /// There are no comments for GetShipDate in the schema.
         /// </summary>
         [global::Microsoft.OData.Client.OriginalNameAttribute("GetShipDate")]
-        public static global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.Edm.Date> GetShipDate(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.E2E.TestCommon.Common.Client.Default.Order> _source)
+        public static global::Microsoft.OData.Client.DataServiceQuerySingle<global::System.DateOnly> GetShipDate(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.E2E.TestCommon.Common.Client.Default.Order> _source)
         {
             if (!_source.IsComposable)
             {
                 throw new global::System.NotSupportedException("The previous function is not composable.");
             }
 
-            return _source.CreateFunctionQuerySingle<global::Microsoft.OData.Edm.Date>("Default.GetShipDate", false);
+            return _source.CreateFunctionQuerySingle<global::System.DateOnly>("Default.GetShipDate", false);
         }
         /// <summary>
         /// There are no comments for GetShipTime in the schema.
         /// </summary>
         [global::Microsoft.OData.Client.OriginalNameAttribute("GetShipTime")]
-        public static global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.Edm.TimeOfDay> GetShipTime(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.E2E.TestCommon.Common.Client.Default.Order> _source)
+        public static global::Microsoft.OData.Client.DataServiceQuerySingle<global::System.TimeOnly> GetShipTime(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.E2E.TestCommon.Common.Client.Default.Order> _source)
         {
             if (!_source.IsComposable)
             {
                 throw new global::System.NotSupportedException("The previous function is not composable.");
             }
 
-            return _source.CreateFunctionQuerySingle<global::Microsoft.OData.Edm.TimeOfDay>("Default.GetShipTime", false);
+            return _source.CreateFunctionQuerySingle<global::System.TimeOnly>("Default.GetShipTime", false);
         }
         /// <summary>
         /// There are no comments for CheckShipTime in the schema.
         /// </summary>
         [global::Microsoft.OData.Client.OriginalNameAttribute("CheckShipTime")]
-        public static global::Microsoft.OData.Client.DataServiceQuerySingle<bool> CheckShipTime(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.E2E.TestCommon.Common.Client.Default.Order> _source, global::Microsoft.OData.Edm.TimeOfDay time)
+        public static global::Microsoft.OData.Client.DataServiceQuerySingle<bool> CheckShipTime(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.E2E.TestCommon.Common.Client.Default.Order> _source, global::System.TimeOnly time)
         {
             if (!_source.IsComposable)
             {
@@ -7515,7 +7515,7 @@ namespace Microsoft.OData.E2E.TestCommon.Common.Client.Default.Default
         /// There are no comments for CheckShipDate in the schema.
         /// </summary>
         [global::Microsoft.OData.Client.OriginalNameAttribute("CheckShipDate")]
-        public static global::Microsoft.OData.Client.DataServiceQuerySingle<bool> CheckShipDate(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.E2E.TestCommon.Common.Client.Default.Order> _source, global::Microsoft.OData.Edm.Date date)
+        public static global::Microsoft.OData.Client.DataServiceQuerySingle<bool> CheckShipDate(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.E2E.TestCommon.Common.Client.Default.Order> _source, global::System.DateOnly date)
         {
             if (!_source.IsComposable)
             {
@@ -7672,7 +7672,7 @@ namespace Microsoft.OData.E2E.TestCommon.Common.Client.Default.Default
         /// There are no comments for ChangeShipTimeAndDate in the schema.
         /// </summary>
         [global::Microsoft.OData.Client.OriginalNameAttribute("ChangeShipTimeAndDate")]
-        public static global::Microsoft.OData.Client.DataServiceActionQuerySingle<global::Microsoft.OData.E2E.TestCommon.Common.Client.Default.Order> ChangeShipTimeAndDate(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.E2E.TestCommon.Common.Client.Default.Order> _source, global::Microsoft.OData.Edm.Date date, global::Microsoft.OData.Edm.TimeOfDay time)
+        public static global::Microsoft.OData.Client.DataServiceActionQuerySingle<global::Microsoft.OData.E2E.TestCommon.Common.Client.Default.Order> ChangeShipTimeAndDate(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.E2E.TestCommon.Common.Client.Default.Order> _source, global::System.DateOnly date, global::System.TimeOnly time)
         {
             if (!_source.IsComposable)
             {

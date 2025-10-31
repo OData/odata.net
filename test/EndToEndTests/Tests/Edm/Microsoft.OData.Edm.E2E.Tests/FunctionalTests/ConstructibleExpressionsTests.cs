@@ -102,17 +102,17 @@ public class ConstructibleExpressionsTests : EdmLibTestCaseBase
     public void EdmDateConstant_ShouldCreateDateConstantExpressionAndValidateProperties()
     {
         // Arrange & Act & Assert
-        var e = new EdmDateConstant(new Date(2014, 8, 8));
+        var e = new EdmDateConstant(new DateOnly(2014, 8, 8));
         Assert.Equal(EdmExpressionKind.DateConstant, e.ExpressionKind);
         Assert.Null(e.Type);
-        Assert.Equal(new Date(2014, 8, 8), e.Value);
+        Assert.Equal(new DateOnly(2014, 8, 8), e.Value);
 
-        e = new EdmDateConstant(EdmCoreModel.Instance.GetDate(true), new Date(2014, 8, 8));
+        e = new EdmDateConstant(EdmCoreModel.Instance.GetDate(true), new DateOnly(2014, 8, 8));
         Assert.Equal(EdmPrimitiveTypeKind.Date, e.Type.AsPrimitive().PrimitiveKind());
         Assert.True(e.Type.IsNullable);
-        Assert.Equal(new Date(2014, 8, 8), e.Value);
+        Assert.Equal(new DateOnly(2014, 8, 8), e.Value);
 
-        e = new EdmDateConstant(null, new Date(2014, 8, 8));
+        e = new EdmDateConstant(null, new DateOnly(2014, 8, 8));
         Assert.Null(e.Type);
 
         Assert.False(e.IsBad());
@@ -226,16 +226,16 @@ public class ConstructibleExpressionsTests : EdmLibTestCaseBase
     public void EdmTimeOfDayConstant_ShouldCreateTimeOfDayConstantExpressionAndValidateProperties()
     {
         // Arrange & Act & Assert
-        var e = new EdmTimeOfDayConstant(new TimeOfDay(12, 30, 50, 0));
+        var e = new EdmTimeOfDayConstant(new TimeOnly(12, 30, 50, 0));
         Assert.Equal(EdmExpressionKind.TimeOfDayConstant, e.ExpressionKind);
         Assert.Null(e.Type);
-        Assert.Equal(new TimeOfDay(12, 30, 50, 0), e.Value);
+        Assert.Equal(new TimeOnly(12, 30, 50, 0), e.Value);
 
-        e = new EdmTimeOfDayConstant(EdmCoreModel.Instance.GetTimeOfDay(true), new TimeOfDay(1, 5, 10, 10));
+        e = new EdmTimeOfDayConstant(EdmCoreModel.Instance.GetTimeOfDay(true), new TimeOnly(1, 5, 10, 10));
         Assert.Equal(EdmPrimitiveTypeKind.TimeOfDay, e.Type.AsPrimitive().PrimitiveKind());
-        Assert.Equal(new TimeOfDay(1, 5, 10, 10), e.Value);
+        Assert.Equal(new TimeOnly(1, 5, 10, 10), e.Value);
 
-        e = new EdmTimeOfDayConstant(null, new TimeOfDay(23, 50, 11, 999));
+        e = new EdmTimeOfDayConstant(null, new TimeOnly(23, 50, 11, 999));
         Assert.Null(e.Type);
         Assert.False(e.IsBad());
         Assert.Empty(e.Errors());

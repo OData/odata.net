@@ -5,19 +5,20 @@
 //---------------------------------------------------------------------
 
 using System;
+using System.Buffers;
+using System.Buffers.Text;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
-using System.Text;
-using System.Text.Json;
-using System.Text.Encodings.Web;
-using System.Threading.Tasks;
-using System.Buffers;
 using System.Runtime.CompilerServices;
-using Microsoft.OData.Edm;
+using System.Text;
+using System.Text.Encodings.Web;
+using System.Text.Json;
 using System.Text.Unicode;
-using System.Buffers.Text;
+using System.Threading.Tasks;
 using System.Xml;
+using Microsoft.OData.Core;
+using Microsoft.OData.Edm;
 
 namespace Microsoft.OData.Json
 {
@@ -388,17 +389,17 @@ namespace Microsoft.OData.Json
             this.DrainBufferIfThresholdReached();
         }
 
-        public void WriteValue(Date value)
+        public void WriteValue(DateOnly value)
         {
             this.WriteSeparatorIfNecessary();
-            this.utf8JsonWriter.WriteStringValue(value.ToString());
+            this.utf8JsonWriter.WriteStringValue(value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
             this.DrainBufferIfThresholdReached();
         }
 
-        public void WriteValue(TimeOfDay value)
+        public void WriteValue(TimeOnly value)
         {
             this.WriteSeparatorIfNecessary();
-            this.utf8JsonWriter.WriteStringValue(value.ToString());
+            this.utf8JsonWriter.WriteStringValue(value.ToString(@"HH\:mm\:ss\.fffffff", CultureInfo.InvariantCulture));
             this.DrainBufferIfThresholdReached();
         }
 
@@ -1100,17 +1101,17 @@ namespace Microsoft.OData.Json
             await this.DrainBufferIfThresholdReachedAsync().ConfigureAwait(false);
         }
 
-        public async Task WriteValueAsync(Date value)
+        public async Task WriteValueAsync(DateOnly value)
         {
             this.WriteSeparatorIfNecessary();
-            this.utf8JsonWriter.WriteStringValue(value.ToString());
+            this.utf8JsonWriter.WriteStringValue(value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
             await this.DrainBufferIfThresholdReachedAsync().ConfigureAwait(false);
         }
 
-        public async Task WriteValueAsync(TimeOfDay value)
+        public async Task WriteValueAsync(TimeOnly value)
         {
             this.WriteSeparatorIfNecessary();
-            this.utf8JsonWriter.WriteStringValue(value.ToString());
+            this.utf8JsonWriter.WriteStringValue(value.ToString("HH:mm:ss.fffffff", CultureInfo.InvariantCulture));
             await this.DrainBufferIfThresholdReachedAsync().ConfigureAwait(false);
         }
 

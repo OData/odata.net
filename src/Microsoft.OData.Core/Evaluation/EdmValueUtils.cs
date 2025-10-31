@@ -276,12 +276,6 @@ namespace Microsoft.OData.Evaluation
                 return new EdmBinaryConstant(binaryType, bytes);
             }
 
-            if (primitiveValue is Date)
-            {
-                IEdmPrimitiveTypeReference dateType = EnsurePrimitiveType(type, EdmPrimitiveTypeKind.Date);
-                return new EdmDateConstant(dateType, (Date)primitiveValue);
-            }
-
             if (primitiveValue is DateOnly dateOnly)
             {
                 IEdmPrimitiveTypeReference dateType = EnsurePrimitiveType(type, EdmPrimitiveTypeKind.Date);
@@ -298,12 +292,6 @@ namespace Microsoft.OData.Evaluation
             {
                 type = EnsurePrimitiveType(type, EdmPrimitiveTypeKind.Guid);
                 return new EdmGuidConstant(type, (Guid)primitiveValue);
-            }
-
-            if (primitiveValue is TimeOfDay)
-            {
-                IEdmTemporalTypeReference timeOfDayType = (IEdmTemporalTypeReference)EnsurePrimitiveType(type, EdmPrimitiveTypeKind.TimeOfDay);
-                return new EdmTimeOfDayConstant(timeOfDayType, (TimeOfDay)primitiveValue);
             }
 
             if (primitiveValue is TimeOnly timeOnly)

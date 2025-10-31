@@ -115,7 +115,7 @@ namespace Microsoft.OData.E2E.TestCommon.Common.Server.EdmDateAndTimeOfDay
 
         [EnableQuery]
         [HttpGet("odata/Orders({key})/Default.CheckShipDate(date = {date})")]
-        public IActionResult CheckShipDate([FromRoute] int key, Date date)
+        public IActionResult CheckShipDate([FromRoute] int key, DateOnly date)
         {
             var order = _dataSource.Orders.SingleOrDefault(a => a.OrderID == key);
 
@@ -144,7 +144,7 @@ namespace Microsoft.OData.E2E.TestCommon.Common.Server.EdmDateAndTimeOfDay
 
         [EnableQuery]
         [HttpGet("odata/Orders({key})/Default.CheckShipTime(time = {time})")]
-        public IActionResult CheckShipTime([FromRoute] int key, TimeOfDay time)
+        public IActionResult CheckShipTime([FromRoute] int key, TimeOnly time)
         {
             var order = _dataSource.Orders.SingleOrDefault(a => a.OrderID == key);
 
@@ -158,7 +158,7 @@ namespace Microsoft.OData.E2E.TestCommon.Common.Server.EdmDateAndTimeOfDay
 
         [EnableQuery]
         [HttpGet("odata/Calendars({key})")]
-        public IActionResult GetCalendar([FromRoute] Date key)
+        public IActionResult GetCalendar([FromRoute] DateOnly key)
         {
             var calendar = _dataSource.Calendars.SingleOrDefault(a => a.Day == key);
 
@@ -180,8 +180,8 @@ namespace Microsoft.OData.E2E.TestCommon.Common.Server.EdmDateAndTimeOfDay
                 return NotFound();
             }
 
-            order.ShipTime = (TimeOfDay)parameters["time"];
-            order.ShipDate = (Date)parameters["date"];
+            order.ShipTime = (TimeOnly)parameters["time"];
+            order.ShipDate = (DateOnly)parameters["date"];
 
             return Ok(order);
         }

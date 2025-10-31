@@ -37,7 +37,7 @@ namespace Microsoft.OData.UriParser
             { typeof(byte[]), new BinaryPrimitiveParser() },
             { typeof(String), new StringPrimitiveParser() },
             { typeof(Decimal), new DecimalPrimitiveParser() },
-            { typeof(Date), new DatePrimitiveParser() },
+            { typeof(DateOnly), new DatePrimitiveParser() },
 
             // Types without single-quotes or type markers
             { typeof(Boolean), DelegatingPrimitiveParser<bool>.WithoutMarkup(XmlConvert.ToBoolean) },
@@ -637,7 +637,7 @@ namespace Microsoft.OData.UriParser
             /// Initializes a new instance of the <see cref="DatePrimitiveParser"/> class.
             /// </summary>
             public DatePrimitiveParser()
-                : base(typeof(Date))
+                : base(typeof(DateOnly))
             {
             }
 
@@ -651,7 +651,7 @@ namespace Microsoft.OData.UriParser
             /// </returns>
             internal override bool TryConvert(string text, out object targetValue)
             {
-                Date? date;
+                DateOnly? date;
                 bool isSucceed = EdmValueParser.TryParseDate(text, out date);
                 targetValue = date;
                 return isSucceed;
