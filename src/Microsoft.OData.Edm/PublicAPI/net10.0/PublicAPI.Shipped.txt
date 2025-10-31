@@ -1,3 +1,7 @@
+static Microsoft.OData.Edm.Date.implicit operator Microsoft.OData.Edm.Date(System.DateOnly operand) -> Microsoft.OData.Edm.Date
+static Microsoft.OData.Edm.Date.implicit operator System.DateOnly(Microsoft.OData.Edm.Date operand) -> System.DateOnly
+static Microsoft.OData.Edm.TimeOfDay.implicit operator Microsoft.OData.Edm.TimeOfDay(System.TimeOnly timeOnly) -> Microsoft.OData.Edm.TimeOfDay
+static Microsoft.OData.Edm.TimeOfDay.implicit operator System.TimeOnly(Microsoft.OData.Edm.TimeOfDay time) -> System.TimeOnly
 abstract Microsoft.OData.Edm.EdmModelBase.DeclaredNamespaces.get -> System.Collections.Generic.IEnumerable<string>
 abstract Microsoft.OData.Edm.EdmModelBase.FindDirectlyDerivedTypes(Microsoft.OData.Edm.IEdmStructuredType baseType) -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmStructuredType>
 abstract Microsoft.OData.Edm.EdmModelBase.SchemaElements.get -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmSchemaElement>
@@ -9,6 +13,11 @@ abstract Microsoft.OData.Edm.EdmOperationImport.OperationArgumentNullParameterNa
 abstract Microsoft.OData.Edm.EdmProperty.PropertyKind.get -> Microsoft.OData.Edm.EdmPropertyKind
 abstract Microsoft.OData.Edm.EdmType.TypeKind.get -> Microsoft.OData.Edm.EdmTypeKind
 abstract Microsoft.OData.Edm.Vocabularies.EdmValue.ValueKind.get -> Microsoft.OData.Edm.Vocabularies.EdmValueKind
+const Microsoft.OData.Edm.TimeOfDay.MaxTickValue = 863999999999 -> long
+const Microsoft.OData.Edm.TimeOfDay.MinTickValue = 0 -> long
+const Microsoft.OData.Edm.TimeOfDay.TicksPerHour = 36000000000 -> long
+const Microsoft.OData.Edm.TimeOfDay.TicksPerMinute = 600000000 -> long
+const Microsoft.OData.Edm.TimeOfDay.TicksPerSecond = 10000000 -> long
 const Microsoft.OData.Edm.Vocabularies.Community.V1.AlternateKeysVocabularyConstants.AlternateKeys = "OData.Community.Keys.V1.AlternateKeys" -> string
 const Microsoft.OData.Edm.Vocabularies.V1.CapabilitiesVocabularyConstants.ChangeTracking = "Org.OData.Capabilities.V1.ChangeTracking" -> string
 const Microsoft.OData.Edm.Vocabularies.V1.CapabilitiesVocabularyConstants.ChangeTrackingExpandableProperties = "ExpandableProperties" -> string
@@ -82,6 +91,18 @@ Microsoft.OData.Edm.Csdl.EdmVocabularyAnnotationSerializationLocation.OutOfLine 
 Microsoft.OData.Edm.Csdl.SchemaReader
 Microsoft.OData.Edm.Csdl.SchemaWriter
 Microsoft.OData.Edm.Csdl.SerializationExtensionMethods
+Microsoft.OData.Edm.Date
+Microsoft.OData.Edm.Date.AddDays(int value) -> Microsoft.OData.Edm.Date
+Microsoft.OData.Edm.Date.AddMonths(int value) -> Microsoft.OData.Edm.Date
+Microsoft.OData.Edm.Date.AddYears(int value) -> Microsoft.OData.Edm.Date
+Microsoft.OData.Edm.Date.CompareTo(Microsoft.OData.Edm.Date other) -> int
+Microsoft.OData.Edm.Date.CompareTo(object obj) -> int
+Microsoft.OData.Edm.Date.Date() -> void
+Microsoft.OData.Edm.Date.Date(int year, int month, int day) -> void
+Microsoft.OData.Edm.Date.Day.get -> int
+Microsoft.OData.Edm.Date.Equals(Microsoft.OData.Edm.Date other) -> bool
+Microsoft.OData.Edm.Date.Month.get -> int
+Microsoft.OData.Edm.Date.Year.get -> int
 Microsoft.OData.Edm.EdmAction
 Microsoft.OData.Edm.EdmAction.EdmAction(string namespaceName, string name, Microsoft.OData.Edm.IEdmTypeReference returnType) -> void
 Microsoft.OData.Edm.EdmAction.EdmAction(string namespaceName, string name, Microsoft.OData.Edm.IEdmTypeReference returnType, bool isBound, Microsoft.OData.Edm.IEdmPathExpression entitySetPathExpression) -> void
@@ -744,6 +765,18 @@ Microsoft.OData.Edm.IEdmUntypedTypeReference
 Microsoft.OData.Edm.IPrimitiveValueConverter
 Microsoft.OData.Edm.IPrimitiveValueConverter.ConvertFromUnderlyingType(object value) -> object
 Microsoft.OData.Edm.IPrimitiveValueConverter.ConvertToUnderlyingType(object value) -> object
+Microsoft.OData.Edm.TimeOfDay
+Microsoft.OData.Edm.TimeOfDay.CompareTo(Microsoft.OData.Edm.TimeOfDay other) -> int
+Microsoft.OData.Edm.TimeOfDay.CompareTo(object obj) -> int
+Microsoft.OData.Edm.TimeOfDay.Equals(Microsoft.OData.Edm.TimeOfDay other) -> bool
+Microsoft.OData.Edm.TimeOfDay.Hours.get -> int
+Microsoft.OData.Edm.TimeOfDay.Milliseconds.get -> long
+Microsoft.OData.Edm.TimeOfDay.Minutes.get -> int
+Microsoft.OData.Edm.TimeOfDay.Seconds.get -> int
+Microsoft.OData.Edm.TimeOfDay.Ticks.get -> long
+Microsoft.OData.Edm.TimeOfDay.TimeOfDay() -> void
+Microsoft.OData.Edm.TimeOfDay.TimeOfDay(int hour, int minute, int second, int millisecond) -> void
+Microsoft.OData.Edm.TimeOfDay.TimeOfDay(long ticks) -> void
 Microsoft.OData.Edm.ToTraceStringExtensionMethods
 Microsoft.OData.Edm.Validation.EdmError
 Microsoft.OData.Edm.Validation.EdmError.EdmError(Microsoft.OData.Edm.EdmLocation errorLocation, Microsoft.OData.Edm.Validation.EdmErrorCode errorCode, string errorMessage) -> void
@@ -1365,6 +1398,9 @@ Microsoft.OData.Edm.Vocabularies.V1.ValidationVocabularyModel
 Microsoft.OData.Edm.Vocabularies.V1.VocabularyAnnotationExtensions
 override abstract Microsoft.OData.Edm.EdmLocation.ToString() -> string
 override Microsoft.OData.Edm.Csdl.CsdlLocation.ToString() -> string
+override Microsoft.OData.Edm.Date.Equals(object obj) -> bool
+override Microsoft.OData.Edm.Date.GetHashCode() -> int
+override Microsoft.OData.Edm.Date.ToString() -> string
 override Microsoft.OData.Edm.EdmAction.SchemaElementKind.get -> Microsoft.OData.Edm.EdmSchemaElementKind
 override Microsoft.OData.Edm.EdmActionImport.ContainerElementKind.get -> Microsoft.OData.Edm.EdmContainerElementKind
 override Microsoft.OData.Edm.EdmActionImport.OperationArgumentNullParameterName() -> string
@@ -1394,6 +1430,9 @@ override Microsoft.OData.Edm.EdmType.ToString() -> string
 override Microsoft.OData.Edm.EdmTypeDefinition.TypeKind.get -> Microsoft.OData.Edm.EdmTypeKind
 override Microsoft.OData.Edm.EdmTypeReference.ToString() -> string
 override Microsoft.OData.Edm.EdmUntypedStructuredType.TypeKind.get -> Microsoft.OData.Edm.EdmTypeKind
+override Microsoft.OData.Edm.TimeOfDay.Equals(object obj) -> bool
+override Microsoft.OData.Edm.TimeOfDay.GetHashCode() -> int
+override Microsoft.OData.Edm.TimeOfDay.ToString() -> string
 override Microsoft.OData.Edm.Validation.EdmError.ToString() -> string
 override Microsoft.OData.Edm.Validation.ObjectLocation.ToString() -> string
 override Microsoft.OData.Edm.Vocabularies.EdmAnnotationPathExpression.ExpressionKind.get -> Microsoft.OData.Edm.EdmExpressionKind
@@ -1461,6 +1500,19 @@ static Microsoft.OData.Edm.Csdl.SerializationExtensionMethods.SetNamespaceAlias(
 static Microsoft.OData.Edm.Csdl.SerializationExtensionMethods.SetNamespacePrefixMappings(this Microsoft.OData.Edm.IEdmModel model, System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<string, string>> mappings) -> void
 static Microsoft.OData.Edm.Csdl.SerializationExtensionMethods.SetSchemaNamespace(this Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotation annotation, Microsoft.OData.Edm.IEdmModel model, string schemaNamespace) -> void
 static Microsoft.OData.Edm.Csdl.SerializationExtensionMethods.SetSerializationLocation(this Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotation annotation, Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.Csdl.EdmVocabularyAnnotationSerializationLocation? location) -> void
+static Microsoft.OData.Edm.Date.implicit operator Microsoft.OData.Edm.Date(System.DateTime operand) -> Microsoft.OData.Edm.Date
+static Microsoft.OData.Edm.Date.implicit operator System.DateTime(Microsoft.OData.Edm.Date operand) -> System.DateTime
+static Microsoft.OData.Edm.Date.Now.get -> Microsoft.OData.Edm.Date
+static Microsoft.OData.Edm.Date.operator !=(Microsoft.OData.Edm.Date firstOperand, Microsoft.OData.Edm.Date secondOperand) -> bool
+static Microsoft.OData.Edm.Date.operator <(Microsoft.OData.Edm.Date firstOperand, Microsoft.OData.Edm.Date secondOperand) -> bool
+static Microsoft.OData.Edm.Date.operator <=(Microsoft.OData.Edm.Date firstOperand, Microsoft.OData.Edm.Date secondOperand) -> bool
+static Microsoft.OData.Edm.Date.operator ==(Microsoft.OData.Edm.Date firstOperand, Microsoft.OData.Edm.Date secondOperand) -> bool
+static Microsoft.OData.Edm.Date.operator >(Microsoft.OData.Edm.Date firstOperand, Microsoft.OData.Edm.Date secondOperand) -> bool
+static Microsoft.OData.Edm.Date.operator >=(Microsoft.OData.Edm.Date firstOperand, Microsoft.OData.Edm.Date secondOperand) -> bool
+static Microsoft.OData.Edm.Date.Parse(string text) -> Microsoft.OData.Edm.Date
+static Microsoft.OData.Edm.Date.Parse(string text, System.IFormatProvider provider) -> Microsoft.OData.Edm.Date
+static Microsoft.OData.Edm.Date.TryParse(string text, out Microsoft.OData.Edm.Date result) -> bool
+static Microsoft.OData.Edm.Date.TryParse(string text, System.IFormatProvider provider, out Microsoft.OData.Edm.Date result) -> bool
 static Microsoft.OData.Edm.EdmConstants.EdmVersionDefault -> System.Version
 static Microsoft.OData.Edm.EdmCoreModel.GetCollection(Microsoft.OData.Edm.IEdmTypeReference elementType) -> Microsoft.OData.Edm.IEdmCollectionTypeReference
 static Microsoft.OData.Edm.EdmCoreModel.Namespace.get -> string
@@ -1701,6 +1753,19 @@ static Microsoft.OData.Edm.ExtensionMethods.TryGetStaticEntitySet(this Microsoft
 static Microsoft.OData.Edm.ExtensionMethods.TypeDefinition(this Microsoft.OData.Edm.IEdmTypeDefinitionReference type) -> Microsoft.OData.Edm.IEdmTypeDefinition
 static Microsoft.OData.Edm.ExtensionMethods.TypeKind(this Microsoft.OData.Edm.IEdmTypeReference type) -> Microsoft.OData.Edm.EdmTypeKind
 static Microsoft.OData.Edm.ExtensionMethods.VocabularyAnnotations(this Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotatable element, Microsoft.OData.Edm.IEdmModel model) -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotation>
+static Microsoft.OData.Edm.TimeOfDay.implicit operator Microsoft.OData.Edm.TimeOfDay(System.TimeSpan timeSpan) -> Microsoft.OData.Edm.TimeOfDay
+static Microsoft.OData.Edm.TimeOfDay.implicit operator System.TimeSpan(Microsoft.OData.Edm.TimeOfDay time) -> System.TimeSpan
+static Microsoft.OData.Edm.TimeOfDay.Now.get -> Microsoft.OData.Edm.TimeOfDay
+static Microsoft.OData.Edm.TimeOfDay.operator !=(Microsoft.OData.Edm.TimeOfDay firstOperand, Microsoft.OData.Edm.TimeOfDay secondOperand) -> bool
+static Microsoft.OData.Edm.TimeOfDay.operator <(Microsoft.OData.Edm.TimeOfDay firstOperand, Microsoft.OData.Edm.TimeOfDay secondOperand) -> bool
+static Microsoft.OData.Edm.TimeOfDay.operator <=(Microsoft.OData.Edm.TimeOfDay firstOperand, Microsoft.OData.Edm.TimeOfDay secondOperand) -> bool
+static Microsoft.OData.Edm.TimeOfDay.operator ==(Microsoft.OData.Edm.TimeOfDay firstOperand, Microsoft.OData.Edm.TimeOfDay secondOperand) -> bool
+static Microsoft.OData.Edm.TimeOfDay.operator >(Microsoft.OData.Edm.TimeOfDay firstOperand, Microsoft.OData.Edm.TimeOfDay secondOperand) -> bool
+static Microsoft.OData.Edm.TimeOfDay.operator >=(Microsoft.OData.Edm.TimeOfDay firstOperand, Microsoft.OData.Edm.TimeOfDay secondOperand) -> bool
+static Microsoft.OData.Edm.TimeOfDay.Parse(string text) -> Microsoft.OData.Edm.TimeOfDay
+static Microsoft.OData.Edm.TimeOfDay.Parse(string text, System.IFormatProvider provider) -> Microsoft.OData.Edm.TimeOfDay
+static Microsoft.OData.Edm.TimeOfDay.TryParse(string text, out Microsoft.OData.Edm.TimeOfDay result) -> bool
+static Microsoft.OData.Edm.TimeOfDay.TryParse(string text, System.IFormatProvider provider, out Microsoft.OData.Edm.TimeOfDay result) -> bool
 static Microsoft.OData.Edm.ToTraceStringExtensionMethods.ToTraceString(this Microsoft.OData.Edm.IEdmProperty property) -> string
 static Microsoft.OData.Edm.ToTraceStringExtensionMethods.ToTraceString(this Microsoft.OData.Edm.IEdmSchemaElement schemaElement) -> string
 static Microsoft.OData.Edm.ToTraceStringExtensionMethods.ToTraceString(this Microsoft.OData.Edm.IEdmSchemaType schemaType) -> string
@@ -1724,6 +1789,8 @@ static Microsoft.OData.Edm.Vocabularies.V1.VocabularyAnnotationExtensions.GetVoc
 static readonly Microsoft.OData.Edm.Csdl.CsdlConstants.EdmxVersion4 -> System.Version
 static readonly Microsoft.OData.Edm.Csdl.CsdlConstants.EdmxVersion401 -> System.Version
 static readonly Microsoft.OData.Edm.Csdl.CsdlConstants.EdmxVersionLatest -> System.Version
+static readonly Microsoft.OData.Edm.Date.MaxValue -> Microsoft.OData.Edm.Date
+static readonly Microsoft.OData.Edm.Date.MinValue -> Microsoft.OData.Edm.Date
 static readonly Microsoft.OData.Edm.EdmConstants.EdmVersion4 -> System.Version
 static readonly Microsoft.OData.Edm.EdmConstants.EdmVersion401 -> System.Version
 static readonly Microsoft.OData.Edm.EdmConstants.EdmVersionLatest -> System.Version
@@ -1731,6 +1798,8 @@ static readonly Microsoft.OData.Edm.EdmCoreModel.Instance -> Microsoft.OData.Edm
 static readonly Microsoft.OData.Edm.EdmUntypedStructuredType.Instance -> Microsoft.OData.Edm.EdmUntypedStructuredType
 static readonly Microsoft.OData.Edm.EdmUntypedStructuredTypeReference.NonNullableTypeReference -> Microsoft.OData.Edm.IEdmStructuredTypeReference
 static readonly Microsoft.OData.Edm.EdmUntypedStructuredTypeReference.NullableTypeReference -> Microsoft.OData.Edm.IEdmStructuredTypeReference
+static readonly Microsoft.OData.Edm.TimeOfDay.MaxValue -> Microsoft.OData.Edm.TimeOfDay
+static readonly Microsoft.OData.Edm.TimeOfDay.MinValue -> Microsoft.OData.Edm.TimeOfDay
 static readonly Microsoft.OData.Edm.Validation.ValidationRules.AnnotationInaccessibleTerm -> Microsoft.OData.Edm.Validation.ValidationRule<Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotation>
 static readonly Microsoft.OData.Edm.Validation.ValidationRules.BinaryTypeReferenceBinaryMaxLengthNegative -> Microsoft.OData.Edm.Validation.ValidationRule<Microsoft.OData.Edm.IEdmBinaryTypeReference>
 static readonly Microsoft.OData.Edm.Validation.ValidationRules.BinaryTypeReferenceBinaryUnboundedNotValidForMaxLength -> Microsoft.OData.Edm.Validation.ValidationRule<Microsoft.OData.Edm.IEdmBinaryTypeReference>
