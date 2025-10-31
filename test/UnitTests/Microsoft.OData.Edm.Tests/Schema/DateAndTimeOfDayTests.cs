@@ -90,7 +90,7 @@ namespace Microsoft.OData.Edm.Tests.Library
             DateOnly date = new DateOnly(1, 1, 1);
             Action test = () => date.AddMonths(120001);
             var exception = Assert.Throws<ArgumentOutOfRangeException>(test);
-            Assert.Equal(SRResources.Date_InvalidAddedOrSubtractedResults + " (Parameter 'value')", exception.Message);
+            Assert.Equal(SRResources.Date_InvalidMonthsAddedOrSubtractedResults + " (Parameter 'value')", exception.Message);
         }
 
         [Fact]
