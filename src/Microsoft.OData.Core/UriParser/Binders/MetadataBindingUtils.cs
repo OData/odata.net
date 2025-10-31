@@ -8,11 +8,10 @@ namespace Microsoft.OData.UriParser
 {
     using System;
     using System.Diagnostics;
-    using System.Linq;
-    using Microsoft.OData.Edm;
     using Microsoft.OData;
-    using Microsoft.OData.Metadata;
     using Microsoft.OData.Core;
+    using Microsoft.OData.Edm;
+    using Microsoft.OData.Metadata;
 
     /// <summary>
     /// Helper methods for metadata binding.
@@ -25,8 +24,9 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         /// <param name="source">The source node to apply the conversion to.</param>
         /// <param name="targetTypeReference">The target primitive type. May be null - this method will do nothing in that case.</param>
+        /// <param name="enableCaseInsensitive">Whether to enable case insensitive comparison for enum member names.</param>
         /// <returns>The converted query node, or the original source node unchanged.</returns>
-        internal static SingleValueNode ConvertToTypeIfNeeded(SingleValueNode source, IEdmTypeReference targetTypeReference)
+        internal static SingleValueNode ConvertToTypeIfNeeded(SingleValueNode source, IEdmTypeReference targetTypeReference, bool enableCaseInsensitive = false)
         {
             Debug.Assert(source != null, "source != null");
 
@@ -62,19 +62,50 @@ namespace Microsoft.OData.UriParser
                 // and the target type is an enum.
                 if (constantNode != null && constantNode.Value != null && (source.TypeReference.IsString() || source.TypeReference.IsIntegral()) && targetTypeReference.IsEnum())
                 {
+                    // String comparison for enum member names is case-sensitive by default.
+                    StringComparison comparison = enableCaseInsensitive ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
+
                     string memberName = constantNode.Value.ToString();
                     IEdmEnumType enumType = targetTypeReference.Definition as IEdmEnumType;
-                    if (enumType.ContainsMember(memberName, StringComparison.Ordinal))
-                    {
-                        string literalText = ODataUriUtils.ConvertToUriLiteral(constantNode.Value, default(ODataVersion));
-                        return new ConstantNode(new ODataEnumValue(memberName, enumType.ToString()), literalText, targetTypeReference);
-                    }
 
                     // If the member name is an integral value, we should try to convert it to the enum member name and find the enum member with the matching integral value
-                    if (long.TryParse(memberName, out long memberIntegralValue) && enumType.TryParse(memberIntegralValue, out IEdmEnumMember enumMember))
+                    if (long.TryParse(memberName, out long memberIntegralValue))
                     {
-                        string literalText = ODataUriUtils.ConvertToUriLiteral(enumMember.Name, default(ODataVersion));
-                        return new ConstantNode(new ODataEnumValue(enumMember.Name, enumType.ToString()), literalText, targetTypeReference);
+                        if(enumType.TryParse(memberIntegralValue, out IEdmEnumMember enumMember))
+                        {
+                            string literalText = ODataUriUtils.ConvertToUriLiteral(enumMember.Name, default(ODataVersion));
+                            return new ConstantNode(new ODataEnumValue(enumMember.Name, enumType.ToString()), literalText, targetTypeReference);
+                        }
+                        
+                        if(enumType.IsFlags)
+                        {
+                            string flagsValue = enumType.ParseFlagsFromIntegralValue(memberIntegralValue);
+                            if(!string.IsNullOrEmpty(flagsValue))
+                            {
+                                string literalText = ODataUriUtils.ConvertToUriLiteral(flagsValue, default(ODataVersion));
+                                return new ConstantNode(new ODataEnumValue(flagsValue, enumType.ToString()), literalText, targetTypeReference);
+                            }
+                        }
+                    }
+
+                    // Check if the member name is a valid enum member name
+                    IEdmEnumMember edmEnumMember = enumType.FindMember(memberName, comparison);
+                    if (edmEnumMember != null)
+                    {
+                        string literalText = ODataUriUtils.ConvertToUriLiteral(constantNode.Value, default(ODataVersion));
+                        return new ConstantNode(new ODataEnumValue(edmEnumMember.Name, enumType.ToString()), literalText, targetTypeReference);
+                    }
+
+                    // If the member name is a string representation of a flags value,
+                    // we should try to convert it to the enum member name and find the enum member with the matching flags value
+                    if (enumType.IsFlags)
+                    {
+                        string flagsValue = enumType.ParseFlagsFromStringValue(memberName, comparison);
+                        if (!string.IsNullOrEmpty(flagsValue))
+                        {
+                            string literalText = ODataUriUtils.ConvertToUriLiteral(flagsValue, default(ODataVersion));
+                            return new ConstantNode(new ODataEnumValue(flagsValue, enumType.ToString()), literalText, targetTypeReference);
+                        }
                     }
 
                     throw new ODataException(Error.Format(SRResources.Binder_IsNotValidEnumConstant, memberName));
@@ -195,16 +226,39 @@ namespace Microsoft.OData.UriParser
             }
 
             IEdmEnumType enumType = collectionConstantNode.ItemType.Definition as IEdmEnumType;
-
             StringComparison comparison = enableCaseInsensitive ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
+
             foreach (ConstantNode item in collectionConstantNode.Collection)
             {
                 if (item != null && item.Value != null && item.Value is ODataEnumValue enumValue)
                 {
-                    if (!enumType.ContainsMember(enumValue.Value, comparison))
+                    // Check if the enum value is a valid enum member name
+                    if (enumType.HasMember(enumValue.Value, comparison))
                     {
-                        throw new ODataException(Error.Format(SRResources.Binder_IsNotValidEnumConstant, enumValue.Value));
+                        continue;
                     }
+
+                    if (long.TryParse(enumValue.Value, out long memberIntegralValue))
+                    {
+                        // Check if the enum value is a valid integral value
+                        if (enumType.TryParse(memberIntegralValue, out IEdmEnumMember _))
+                        {
+                            continue;
+                        }
+
+                        // Check if the enum value is a valid flags value
+                        if (enumType.IsFlags && enumType.IsValidFlagsEnumValue(memberIntegralValue))
+                        {
+                            continue;
+                        }
+                    }
+
+                    if (enumType.IsFlags && !string.IsNullOrEmpty(enumType.ParseFlagsFromStringValue(enumValue.Value, comparison)))
+                    {
+                        continue;
+                    }
+
+                    throw new ODataException(Error.Format(SRResources.Binder_IsNotValidEnumConstant, enumValue.Value));
                 }
             }
         }
