@@ -235,14 +235,14 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.Json
         public void ShouldWriteODataTypeForPrimitiveTypeTimeOfDay()
         {
             string result = this.SerializeProperty(new ODataProperty() { Name = "TestProperty", Value = new TimeOnly(23, 59, 59, 0) });
-            Assert.Contains("@odata.type\":\"#TimeOnly", result);
+            Assert.Contains("@odata.type\":\"#TimeOfDay", result);
         }
 
         [Fact]
         public void ShouldWriteODataTypeForPrimitiveTypeTimeOfDay_401()
         {
             string result = this.SerializeProperty(new ODataProperty() { Name = "TestProperty", Value = new TimeOnly(23, 59, 59, 0) }, ODataVersion.V401);
-            Assert.Contains("@type\":\"TimeOnly", result);
+            Assert.Contains("@type\":\"TimeOfDay", result);
         }
 
         [Fact]

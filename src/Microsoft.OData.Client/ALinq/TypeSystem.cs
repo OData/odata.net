@@ -79,9 +79,9 @@ namespace Microsoft.OData.Client
             expressionMethodMap.Add(typeof(DateOnly).GetProperty("Year", typeof(int)).GetGetMethod(), @"year");
 
             // timeOfDay methods
-            expressionMethodMap.Add(typeof(TimeOnly).GetProperty("Hours", typeof(int)).GetGetMethod(), @"hour");
-            expressionMethodMap.Add(typeof(TimeOnly).GetProperty("Minutes", typeof(int)).GetGetMethod(), @"minute");
-            expressionMethodMap.Add(typeof(TimeOnly).GetProperty("Seconds", typeof(int)).GetGetMethod(), @"second");
+            expressionMethodMap.Add(typeof(TimeOnly).GetProperty("Hour", typeof(int)).GetGetMethod(), @"hour");
+            expressionMethodMap.Add(typeof(TimeOnly).GetProperty("Minute", typeof(int)).GetGetMethod(), @"minute");
+            expressionMethodMap.Add(typeof(TimeOnly).GetProperty("Second", typeof(int)).GetGetMethod(), @"second");
 
             // datetimeoffset methods
             expressionMethodMap.Add(typeof(DateTimeOffset).GetProperty("Date", typeof(DateTime)).GetGetMethod(), @"date");
@@ -199,21 +199,14 @@ namespace Microsoft.OData.Client
                 typeof(TimeSpan).GetProperty("Hours", typeof(int)),
                 typeof(TimeSpan).GetProperty("Hours", typeof(int)).GetGetMethod());
             propertiesAsMethodsMap.Add(
-                typeof(TimeSpan).GetProperty("Minutes", typeof(int)),
-                typeof(TimeSpan).GetProperty("Minutes", typeof(int)).GetGetMethod());
+                typeof(TimeOnly).GetProperty("Hour", typeof(int)),
+                typeof(TimeOnly).GetProperty("Hour", typeof(int)).GetGetMethod());
             propertiesAsMethodsMap.Add(
-                typeof(TimeSpan).GetProperty("Seconds", typeof(int)),
-                typeof(TimeSpan).GetProperty("Seconds", typeof(int)).GetGetMethod());
-
+                typeof(TimeOnly).GetProperty("Minute", typeof(int)),
+                typeof(TimeOnly).GetProperty("Minute", typeof(int)).GetGetMethod());
             propertiesAsMethodsMap.Add(
-                typeof(TimeOnly).GetProperty("Hours", typeof(int)),
-                typeof(TimeOnly).GetProperty("Hours", typeof(int)).GetGetMethod());
-            propertiesAsMethodsMap.Add(
-                typeof(TimeOnly).GetProperty("Minutes", typeof(int)),
-                typeof(TimeOnly).GetProperty("Minutes", typeof(int)).GetGetMethod());
-            propertiesAsMethodsMap.Add(
-                typeof(TimeOnly).GetProperty("Seconds", typeof(int)),
-                typeof(TimeOnly).GetProperty("Seconds", typeof(int)).GetGetMethod());
+                typeof(TimeOnly).GetProperty("Second", typeof(int)),
+                typeof(TimeOnly).GetProperty("Second", typeof(int)).GetGetMethod());
 
             propertiesAsMethodsMap.Add(
                 typeof(DateOnly).GetProperty("Year", typeof(int)),
@@ -225,7 +218,7 @@ namespace Microsoft.OData.Client
                 typeof(DateOnly).GetProperty("Day", typeof(int)),
                 typeof(DateOnly).GetProperty("Day", typeof(int)).GetGetMethod());
 
-            Debug.Assert(propertiesAsMethodsMap.Count == 24, "propertiesAsMethodsMap.Count == 24");
+            Debug.Assert(propertiesAsMethodsMap.Count == 22, "propertiesAsMethodsMap.Count == 22");
 
             aggregationMethodMap.Add(AggregationMethod.Sum, UriHelper.SUM);
             aggregationMethodMap.Add(AggregationMethod.Average, UriHelper.AVERAGE);

@@ -141,7 +141,7 @@ namespace Microsoft.OData.Tests.Json
                 serializer.WriteTopLevelError(error, false);
             });
 
-            Assert.Contains("\"sample.primitive@odata.type\":\"#TimeOnly\",\"@sample.primitive\":\"12:30:05.0900000\"", result);
+            Assert.Contains("\"sample.primitive@odata.type\":\"#TimeOfDay\",\"@sample.primitive\":\"12:30:05.0900000\"", result);
         }
 
         [Fact]

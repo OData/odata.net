@@ -110,7 +110,11 @@ namespace Microsoft.OData.UriParser.Validation.Rules
         /// <param name="context">The ODataUrlValidationContext providing validation context.</param>
         private static void Validate(IEdmNamedElement element, IEdmType elementType, ODataUrlValidationContext context)
         {
-            if (IsDeprecated(context.Model, element, out string message, out string version, out DateOnly? date, out DateOnly? removalDate))
+            string message;
+            string version;
+            DateOnly? date;
+            DateOnly? removalDate;
+            if (IsDeprecated(context.Model, element, out message, out version, out date, out removalDate))
             {
                 context.AddMessage(CreateUrlValidationMessage(element.Name, message, version, date, removalDate));
             }
