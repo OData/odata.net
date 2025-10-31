@@ -868,6 +868,136 @@ namespace Microsoft.OData.Tests.Json
             Assert.Equal(expectedOutput, rawOutput);
         }
 
+        [Theory]
+        [InlineData("utf-8")]
+        [InlineData("utf-16")]
+        [InlineData("utf-32")]
+        [InlineData("us-ascii")]
+        [InlineData("iso-8859-1")]
+        public void WritesJsonWithCorrectEncoding(string encodingName)
+        {
+            Encoding encoding = Encoding.GetEncoding(encodingName);
+            using MemoryStream stream = new MemoryStream();
+            IJsonWriter writer = CreateJsonWriter(stream, isIeee754Compatible: false, encoding);
+
+            writer.StartObjectScope();
+            writer.WriteName("greeting");
+            writer.WriteValue("hello");
+            writer.EndObjectScope();
+            writer.Flush();
+
+            var bytes = stream.ToArray();
+            var text = encoding.GetString(bytes);
+            Assert.Equal("{\"greeting\":\"hello\"}", text);
+        }
+
+        [Fact]
+        public void WritesUtf8DirectlyIfEncodingIsUtf8()
+        {
+            Encoding encoding = Encoding.UTF8;
+            using MemoryStream stream = new MemoryStream();
+            IJsonWriter writer = CreateJsonWriter(stream, isIeee754Compatible: false, encoding);
+
+            writer.StartObjectScope();
+            writer.WriteName("utf8");
+            writer.WriteValue("✓");
+            writer.EndObjectScope();
+            writer.Flush();
+
+            var bytes = stream.ToArray();
+            var text = encoding.GetString(bytes);
+            Assert.Contains("✓", text);
+        }
+
+        [Theory]
+        [InlineData("utf-16")]
+        [InlineData("utf-32")]
+        public void WritesUnicodeCharactersWithNonUtf8Encoding(string encodingName)
+        {
+            Encoding encoding = Encoding.GetEncoding(encodingName);
+            using MemoryStream stream = new MemoryStream();
+            IJsonWriter writer = CreateJsonWriter(stream, isIeee754Compatible: false, encoding);
+
+            writer.StartObjectScope();
+            writer.WriteName("unicode");
+            writer.WriteValue("你好");
+            writer.EndObjectScope();
+            writer.Flush();
+
+            var bytes = stream.ToArray();
+            var text = encoding.GetString(bytes);
+            Assert.Equal("{\"unicode\":\"你好\"}", text);
+        }
+
+        [Fact]
+        public async Task AsyncWriteWithEncodingWorks()
+        {
+            Encoding encoding = Encoding.UTF32;
+            using MemoryStream stream = new MemoryStream();
+            IJsonWriter writer = CreateJsonWriter(stream, isIeee754Compatible: false, encoding);
+
+            await writer.StartObjectScopeAsync();
+            await writer.WriteNameAsync("async");
+            await writer.WriteValueAsync("test");
+            await writer.EndObjectScopeAsync();
+            await writer.FlushAsync();
+
+            var bytes = stream.ToArray();
+            var text = encoding.GetString(bytes);
+            Assert.Equal("{\"async\":\"test\"}", text);
+        }
+
+        [Fact]
+        public void WritesRawValueWithEncoding()
+        {
+            var encoding = Encoding.ASCII;
+            using MemoryStream stream = new MemoryStream();
+            IJsonWriter writer = CreateJsonWriter(stream, isIeee754Compatible: false, encoding);
+
+            writer.WriteRawValue("12345");
+            writer.Flush();
+
+            var bytes = stream.ToArray();
+            var text = encoding.GetString(bytes);
+            Assert.Contains("12345", text);
+        }
+
+        [Fact]
+        public void WritesArrayScopeWithEncoding()
+        {
+            Encoding encoding = Encoding.UTF8;
+            using MemoryStream stream = new MemoryStream();
+            IJsonWriter writer = CreateJsonWriter(stream, isIeee754Compatible: false, encoding);
+
+            writer.StartArrayScope();
+            writer.WriteValue("a");
+            writer.WriteValue("b");
+            writer.EndArrayScope();
+            writer.Flush();
+
+            var bytes = stream.ToArray();
+            var text = encoding.GetString(bytes);
+            Assert.Equal("[\"a\",\"b\"]", text);
+        }
+
+        [Fact]
+        public void WritesNullValueWithEncoding()
+        {
+            Encoding encoding = Encoding.UTF8;
+            using MemoryStream stream = new MemoryStream();
+            IJsonWriter writer = CreateJsonWriter(stream, isIeee754Compatible: false, encoding);
+
+            writer.StartObjectScope();
+            writer.WriteName("nullValue");
+            writer.WriteValue((string)null);
+            writer.EndObjectScope();
+            writer.Flush();
+
+            var bytes = stream.ToArray();
+            var text = encoding.GetString(bytes);
+            Assert.Equal("{\"nullValue\":null}", text);
+        }
+
         /// <summary>
         /// Reads the test class's default stream with UTF8 encoding.
         /// </summary>

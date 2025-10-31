@@ -131,7 +131,7 @@ namespace Microsoft.OData.Json
             }
             else
             {
-                this.writeStream = new TranscodingWriteStream(
+                this.writeStream = Encoding.CreateTranscodingStream(
                     this.outputStream,
                     outputEncoding,
                     Encoding.UTF8,
