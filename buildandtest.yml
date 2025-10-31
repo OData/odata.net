@@ -41,7 +41,7 @@ steps:
   displayName: 'Test'
   inputs:
     command: 'test'
-    arguments: '--configuration $(buildConfiguration) --settings $(Build.SourcesDirectory)\test.runsettings --no-build --collect "Code Coverage"'
+    arguments: '--configuration $(buildConfiguration) --settings $(Build.SourcesDirectory)\test.runsettings --no-build --collect:"XPlat Code Coverage"'
     projects: |      
      $(Build.SourcesDirectory)\sln\OData.Pipeline.sln
 
@@ -49,7 +49,7 @@ steps:
   displayName: 'Test - E2E Tests'
   inputs:
     command: 'test'
-    arguments: '--configuration $(buildConfiguration) --settings $(Build.SourcesDirectory)\test.runsettings --no-build --collect "Code Coverage"'
+    arguments: '--configuration $(buildConfiguration) --settings $(Build.SourcesDirectory)\test.runsettings --no-build --collect:"XPlat Code Coverage"'
     projects: |      
      $(Build.SourcesDirectory)\test\EndToEndTests\Tests\Client\Microsoft.OData.Client.E2E.Tests\Microsoft.OData.Client.E2E.Tests.csproj
      $(Build.SourcesDirectory)\test\EndToEndTests\Tests\Core\Microsoft.OData.Core.E2E.Tests\Microsoft.OData.Core.E2E.Tests.csproj
