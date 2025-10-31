@@ -13,6 +13,7 @@ namespace Microsoft.OData
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Linq;
+    using System.Runtime.CompilerServices;
     using System.Text;
     using System.Threading.Tasks;
     using System.Xml;
@@ -256,7 +257,6 @@ namespace Microsoft.OData
         /// Note that this method can return multiple results if a payload is valid for multiple payload kinds but
         /// will always at most return a single result per payload kind.
         /// </remarks>
-        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Need to a return a task of an enumerable.")]
         public Task<IEnumerable<ODataPayloadKindDetectionResult>> DetectPayloadKindAsync()
         {
             IEnumerable<ODataPayloadKindDetectionResult> payloadKindsFromContentType;
@@ -265,26 +265,78 @@ namespace Microsoft.OData
                 return Task.FromResult(payloadKindsFromContentType);
             }
 
-            // Otherwise we have to do sniffing
-            List<ODataPayloadKindDetectionResult> detectedPayloadKinds = new List<ODataPayloadKindDetectionResult>();
+            return DetectPayloadKindLocalAsync(this, payloadKindsFromContentType);
 
-            // NOTE: this relies on the lazy eval of the enumerator
-            return Task.Factory.Iterate(this.GetPayloadKindDetectionTasks(payloadKindsFromContentType, detectedPayloadKinds))
-                .FollowAlwaysWith(
-                    t =>
-                    {
-                        // We are done sniffing; stop buffering.
-                        this.message.UseBufferingReadStream = false;
-                        this.message.BufferingReadStream.StopBuffering();
-                    })
-                .FollowOnSuccessWith(
-                    t =>
-                    {
-                        // Always sort by payload kind to guarantee stable order of results in case clients rely on it
-                        detectedPayloadKinds.Sort(this.ComparePayloadKindDetectionResult);
+            async static Task<IEnumerable<ODataPayloadKindDetectionResult>> DetectPayloadKindLocalAsync(
+                ODataMessageReader thisParam,
+                IEnumerable<ODataPayloadKindDetectionResult> payloadKindsFromContentTypeParam)
+            {
+                // Materialize once so we can do index-based scans without LINQ allocations
+                IList<ODataPayloadKindDetectionResult> expectedPayloadKinds = payloadKindsFromContentTypeParam as IList<ODataPayloadKindDetectionResult>
+                    ?? payloadKindsFromContentTypeParam.ToList();
 
-                        return (IEnumerable<ODataPayloadKindDetectionResult>)detectedPayloadKinds;
-                    });
+                // Fast exit if content type implies no kinds
+                if (expectedPayloadKinds.Count == 0)
+                {
+                    thisParam.message.UseBufferingReadStream = false;
+                    thisParam.message.BufferingReadStream.StopBuffering();
+
+                    return Array.Empty<ODataPayloadKindDetectionResult>();
+                }
+
+                // Otherwise we have to do sniffing
+                List<ODataPayloadKindDetectionResult> detectedPayloadKinds = new List<ODataPayloadKindDetectionResult>(expectedPayloadKinds.Count);
+
+                try
+                {
+                    // Group the payload kinds by format so we call the payload kind detection method only
+                    // once per format.
+                    IEnumerable<IGrouping<ODataFormat, ODataPayloadKindDetectionResult>> payloadKindFromContentTypeGroups =
+                        expectedPayloadKinds.GroupBy(kvp => kvp.Format);
+
+                    foreach (IGrouping<ODataFormat, ODataPayloadKindDetectionResult> payloadKindGroup in payloadKindFromContentTypeGroups)
+                    {
+                        // Acquire a stream for this format
+                        Stream stream = await thisParam.message.GetStreamAsync().ConfigureAwait(false);
+                        ODataMessageInfo messageInfo = thisParam.GetOrCreateMessageInfo(stream, isAsync: true);
+
+                        // Call the payload kind detection code on the format
+                        IEnumerable<ODataPayloadKind> payloadKinds = await payloadKindGroup.Key.DetectPayloadKindAsync(
+                            messageInfo,
+                            thisParam.settings).ConfigureAwait(false);
+
+                        if (payloadKinds is null)
+                        {
+                            continue;
+                        }
+
+                        foreach (ODataPayloadKind payloadKind in payloadKinds)
+                        {
+                            // Only include the payload kinds that we expect
+                            if (ContainsKind(expectedPayloadKinds, payloadKind))
+                            {
+                                // DEBUG: Asserts uniqueness - mirrors the synchronous DetectPayloadKind method
+                                // RELEASE: Duplicates are added - legacy implementation. Why?
+                                // If a duplicate appears, it'll be added and then naturally ordered in the final Sort.
+                                Debug.Assert(!ContainsKind(detectedPayloadKinds, payloadKind), "Each kind must appear at most once.");
+
+                                detectedPayloadKinds.Add(new ODataPayloadKindDetectionResult(payloadKind, payloadKindGroup.Key));
+                            }
+                        }
+                    }
+                }
+                finally
+                {
+                    // We are done sniffing; stop buffering
+                    thisParam.message.UseBufferingReadStream = false;
+                    thisParam.message.BufferingReadStream.StopBuffering();
+                }
+
+                // Always sort by payload kind to guarantee stable order of results in case clients rely on it
+                detectedPayloadKinds.Sort(thisParam.ComparePayloadKindDetectionResult);
+
+                return detectedPayloadKinds;
+            }
         }
 
         /// <summary>Creates an <see cref="Microsoft.OData.ODataAsynchronousReader" /> to read an async response.</summary>
@@ -1402,13 +1454,13 @@ namespace Microsoft.OData
                 // Call the payload kind detection code on the format
                 Task<IEnumerable<ODataPayloadKind>> detectionResult =
                     this.message.GetStreamAsync()
-                        .FollowOnSuccessWithTask(streamTask =>
+                        .ThenMapOnSuccessAsync(streamTask =>
                             payloadKindGroup.Key.DetectPayloadKindAsync(
                             this.GetOrCreateMessageInfo(streamTask.Result, true),
                             this.settings));
 
                 yield return detectionResult
-                    .FollowOnSuccessWith(
+                    .ThenOnSuccess(
                     t =>
                     {
                         IEnumerable<ODataPayloadKind> result = t.Result;
@@ -1428,6 +1480,20 @@ namespace Microsoft.OData
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static bool ContainsKind(in IList<ODataPayloadKindDetectionResult> list, ODataPayloadKind kind)
+        {
+            for (int i = 0; i < list.Count; i++)
+            {
+                if (list[i].PayloadKind == kind)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         /// <summary>
         /// Method which asynchronously creates an input context around the input message and calls a func to read the input.
         /// </summary>
@@ -1441,11 +1507,11 @@ namespace Microsoft.OData
             Debug.Assert(this.format != null, "By now we should have figured out which format to use.");
 
             return this.message.GetStreamAsync()
-                .FollowOnSuccessWithTask(
+                .ThenMapOnSuccessAsync(
                     streamTask => this.format.CreateInputContextAsync(
                         this.GetOrCreateMessageInfo(streamTask.Result, true),
                         this.settings))
-                .FollowOnSuccessWithTask(
+                .ThenMapOnSuccessAsync(
                     createInputContextTask =>
                     {
                         this.inputContext = createInputContextTask.Result;

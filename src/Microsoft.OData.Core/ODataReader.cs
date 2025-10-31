@@ -53,14 +53,28 @@ namespace Microsoft.OData
         /// <returns>A stream for reading the stream property.</returns>
         public virtual Task<Stream> CreateReadStreamAsync()
         {
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateReadStream());
+            try
+            {
+                return Task.FromResult(this.CreateReadStream());
+            }
+            catch (Exception ex) when (ExceptionUtils.IsCatchableExceptionType(ex))
+            {
+                return Task.FromException<Stream>(ex);
+            }
         }
 
         /// <summary>Asynchronously creates a stream for reading an inline stream property. </summary>
         /// <returns>A stream for reading the stream property.</returns>
         public virtual Task<TextReader> CreateTextReaderAsync()
         {
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateTextReader());
+            try
+            {
+                return Task.FromResult(this.CreateTextReader());
+            }
+            catch (Exception ex) when (ExceptionUtils.IsCatchableExceptionType(ex))
+            {
+                return Task.FromException<TextReader>(ex);
+            }
         }
     }
 }

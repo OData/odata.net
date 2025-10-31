@@ -432,7 +432,14 @@ this.State == ODataParameterReaderState.Collection,
             // We are reading from the fully buffered read stream here; thus it is ok
             // to use synchronous reads and then return a completed task
             // NOTE: once we switch to fully async reading this will have to change
-            return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadImplementation);
+            try
+            {
+                return Task.FromResult(this.ReadImplementation());
+            }
+            catch (Exception ex) when (ExceptionUtils.IsCatchableExceptionType(ex))
+            {
+                return Task.FromException<bool>(ex);
+            }
         }
 
         /// <summary>

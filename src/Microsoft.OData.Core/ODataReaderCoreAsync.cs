@@ -79,7 +79,14 @@ namespace Microsoft.OData
         /// <returns>A task which returns true if more items can be read from the reader; otherwise false.</returns>
         protected virtual Task<bool> ReadAtPrimitiveImplementationAsync()
         {
-            return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadAtPrimitiveImplementation);
+            try
+            {
+                return Task.FromResult(this.ReadAtPrimitiveImplementation());
+            }
+            catch (Exception ex) when (ExceptionUtils.IsCatchableExceptionType(ex))
+            {
+                return Task.FromException<bool>(ex);
+            }
         }
 
         /// <summary>
@@ -88,7 +95,14 @@ namespace Microsoft.OData
         /// <returns>A task which returns true if more items can be read from the reader; otherwise false.</returns>
         protected virtual Task<bool> ReadAtNestedPropertyInfoImplementationAsync()
         {
-            return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadAtNestedPropertyInfoImplementation);
+            try
+            {
+                return Task.FromResult(this.ReadAtNestedPropertyInfoImplementation());
+            }
+            catch (Exception ex) when (ExceptionUtils.IsCatchableExceptionType(ex))
+            {
+                return Task.FromException<bool>(ex);
+            }
         }
 
         /// <summary>
@@ -97,7 +111,14 @@ namespace Microsoft.OData
         /// <returns>A task which returns true if more items can be read from the reader; otherwise false.</returns>
         protected virtual Task<bool> ReadAtStreamImplementationAsync()
         {
-            return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadAtStreamImplementation);
+            try
+            {
+                return Task.FromResult(this.ReadAtStreamImplementation());
+            }
+            catch (Exception ex) when (ExceptionUtils.IsCatchableExceptionType(ex))
+            {
+                return Task.FromException<bool>(ex);
+            }
         }
 
         /// <summary>
@@ -124,7 +145,14 @@ namespace Microsoft.OData
         /// <returns>A task which returns true if more items can be read from the reader; otherwise false.</returns>
         protected virtual Task<bool> ReadAtDeltaResourceSetStartImplementationAsync()
         {
-            return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadAtDeltaResourceSetStartImplementation);
+            try
+            {
+                return Task.FromResult(this.ReadAtDeltaResourceSetStartImplementation());
+            }
+            catch (Exception ex) when (ExceptionUtils.IsCatchableExceptionType(ex))
+            {
+                return Task.FromException<bool>(ex);
+            }
         }
 
         /// <summary>
@@ -133,7 +161,14 @@ namespace Microsoft.OData
         /// <returns>A task which returns true if more items can be read from the reader; otherwise false.</returns>
         protected virtual Task<bool> ReadAtDeltaResourceSetEndImplementationAsync()
         {
-            return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadAtDeltaResourceSetEndImplementation);
+            try
+            {
+                return Task.FromResult(this.ReadAtDeltaResourceSetEndImplementation());
+            }
+            catch (Exception ex) when (ExceptionUtils.IsCatchableExceptionType(ex))
+            {
+                return Task.FromException<bool>(ex);
+            }
         }
 
         /// <summary>
@@ -142,7 +177,14 @@ namespace Microsoft.OData
         /// <returns>A task which returns true if more items can be read from the reader; otherwise false.</returns>
         protected virtual Task<bool> ReadAtDeletedResourceStartImplementationAsync()
         {
-            return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadAtDeletedResourceStartImplementation);
+            try
+            {
+                return Task.FromResult(this.ReadAtDeletedResourceStartImplementation());
+            }
+            catch (Exception ex) when (ExceptionUtils.IsCatchableExceptionType(ex))
+            {
+                return Task.FromException<bool>(ex);
+            }
         }
 
         /// <summary>
@@ -151,7 +193,14 @@ namespace Microsoft.OData
         /// <returns>A task which returns true if more items can be read from the reader; otherwise false.</returns>
         protected virtual Task<bool> ReadDeletedResourceEndImplementationAsync()
         {
-            return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadAtDeletedResourceEndImplementation);
+            try
+            {
+                return Task.FromResult(this.ReadAtDeletedResourceEndImplementation());
+            }
+            catch (Exception ex) when (ExceptionUtils.IsCatchableExceptionType(ex))
+            {
+                return Task.FromException<bool>(ex);
+            }
         }
 
         /// <summary>
@@ -160,7 +209,14 @@ namespace Microsoft.OData
         /// <returns>A task which returns true if more items can be read from the reader; otherwise false.</returns>
         protected virtual Task<bool> ReadAtDeltaLinkImplementationAsync()
         {
-            return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadAtDeltaLinkImplementation);
+            try
+            {
+                return Task.FromResult(this.ReadAtDeltaLinkImplementation());
+            }
+            catch (Exception ex) when (ExceptionUtils.IsCatchableExceptionType(ex))
+            {
+                return Task.FromException<bool>(ex);
+            }
         }
 
         /// <summary>
@@ -169,7 +225,14 @@ namespace Microsoft.OData
         /// <returns>A task which returns true if more items can be read from the reader; otherwise false.</returns>
         protected virtual Task<bool> ReadAtDeltaDeletedLinkImplementationAsync()
         {
-            return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadAtDeltaDeletedLinkImplementation);
+            try
+            {
+                return Task.FromResult(this.ReadAtDeltaDeletedLinkImplementation());
+            }
+            catch (Exception ex) when (ExceptionUtils.IsCatchableExceptionType(ex))
+            {
+                return Task.FromException<bool>(ex);
+            }
         }
 
         /// <summary>

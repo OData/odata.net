@@ -214,7 +214,14 @@ namespace Microsoft.OData
         {
             this.AssertAsynchronous();
 
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateODataAsynchronousWriterImplementation());
+            try
+            {
+                return Task.FromResult(this.CreateODataAsynchronousWriterImplementation());
+            }
+            catch (Exception ex) when (ExceptionUtils.IsCatchableExceptionType(ex))
+            {
+                return Task.FromException<ODataAsynchronousWriter>(ex);
+            }
         }
 
         /// <summary>
@@ -303,7 +310,7 @@ namespace Microsoft.OData
             }
             else
             {
-                return TaskUtils.CompletedTask;
+                return Task.CompletedTask;
             }
         }
 
