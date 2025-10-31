@@ -20,8 +20,8 @@ namespace Microsoft.OData.Edm.Tests.Library
         {
             Action test = () => new DateOnly(-2013, 8, 12);
 
-            var exception = Assert.Throws<FormatException>(test);
-            Assert.Equal(Error.Format(SRResources.Date_InvalidDateParameters, -2013, 8, 12), exception.Message);
+            var exception = Assert.Throws<ArgumentOutOfRangeException>(test);
+            Assert.Equal(Error.Format("Year, Month, and Day parameters describe an un-representable DateTime.", -2013, 8, 12), exception.Message);
         }
 
         [Fact]
@@ -55,7 +55,7 @@ namespace Microsoft.OData.Edm.Tests.Library
             Action test = () => date.AddYears(-5000);
 
             var exception = Assert.Throws<ArgumentOutOfRangeException>(test);
-            Assert.Equal(SRResources.Date_InvalidAddedOrSubtractedResults + " (Parameter 'value')", exception.Message);
+            Assert.Equal("The added or subtracted value results in an un-representable DateTime. (Parameter 'value')", exception.Message);
         }
 
         [Fact]
@@ -64,7 +64,7 @@ namespace Microsoft.OData.Edm.Tests.Library
             DateOnly date = new DateOnly(2013, 8, 12);
             Action test = () => date.AddYears(12000);
             var exception = Assert.Throws<ArgumentOutOfRangeException>(test);
-            Assert.Equal(SRResources.Date_InvalidAddedOrSubtractedResults + " (Parameter 'value')", exception.Message);
+            Assert.Equal("Years value must be between +/-10000. (Parameter 'value')", exception.Message);
         }
 
         [Fact]
@@ -81,7 +81,7 @@ namespace Microsoft.OData.Edm.Tests.Library
             DateOnly date = new DateOnly(1, 1, 1);
             Action test = () => date.AddMonths(-5000);
             var exception = Assert.Throws<ArgumentOutOfRangeException>(test);
-            Assert.Equal(SRResources.Date_InvalidAddedOrSubtractedResults + " (Parameter 'value')", exception.Message);
+            Assert.Equal("The added or subtracted value results in an un-representable DateTime. (Parameter 'months')", exception.Message);
         }
 
         [Fact]
@@ -90,7 +90,7 @@ namespace Microsoft.OData.Edm.Tests.Library
             DateOnly date = new DateOnly(1, 1, 1);
             Action test = () => date.AddMonths(120001);
             var exception = Assert.Throws<ArgumentOutOfRangeException>(test);
-            Assert.Equal(SRResources.Date_InvalidMonthsAddedOrSubtractedResults + " (Parameter 'value')", exception.Message);
+            Assert.Equal("Months value must be between +/-120000. (Parameter 'months')", exception.Message);
         }
 
         [Fact]
@@ -253,7 +253,7 @@ namespace Microsoft.OData.Edm.Tests.Library
             Action test = () => date.CompareTo(now);
 
             var exception = Assert.Throws<ArgumentException>(test);
-            Assert.Equal(Error.Format(SRResources.Date_InvalidCompareToTarget, now), exception.Message);
+            Assert.Equal(Error.Format("Object must be of type DateOnly.", now), exception.Message);
         }
 
         [Fact]
@@ -287,7 +287,7 @@ namespace Microsoft.OData.Edm.Tests.Library
 
             foreach (var tuple in list)
             {
-                Assert.Equal(tuple.Item2, tuple.Item1.ToString());
+                Assert.Equal(tuple.Item2, tuple.Item1.ToString("yyyy-MM-dd"));
             }
         }
 
@@ -605,7 +605,7 @@ namespace Microsoft.OData.Edm.Tests.Library
             DateTimeOffset now = DateTimeOffset.Now;
             Action test = () => time.CompareTo(now);
             var exception = Assert.Throws<ArgumentException>(test);
-            Assert.Equal(Error.Format(SRResources.TimeOfDay_InvalidCompareToTarget, now), exception.Message);
+            Assert.Equal("Object must be of type TimeOnly.", exception.Message);
         }
         [Fact]
         public void TestTimeOfDayOperator()
