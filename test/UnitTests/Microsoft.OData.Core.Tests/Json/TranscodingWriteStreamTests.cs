@@ -20,10 +20,10 @@ namespace Microsoft.OData.Tests.Json
     {
         private const int BufferSize = 4 * 1024;
 
-        public static TheoryData WriteAsyncInputLatin =>
+        public static TheoryData<string> WriteAsyncInputLatin =>
             GetLatinTextInput(BufferSize, BufferSize);
 
-        public static TheoryData WriteAsyncInputUnicode =>
+        public static TheoryData<string> WriteAsyncInputUnicode =>
             GetUnicodeText(BufferSize);
 
         [Theory]
@@ -77,7 +77,7 @@ namespace Microsoft.OData.Tests.Json
             Assert.Equal(expected, actual, StringComparer.OrdinalIgnoreCase);
         }
 
-        internal static TheoryData GetLatinTextInput(int maxCharBufferSize, int maxByteBufferSize)
+        internal static TheoryData<string> GetLatinTextInput(int maxCharBufferSize, int maxByteBufferSize)
         {
             return new TheoryData<string>
             {
@@ -90,7 +90,7 @@ namespace Microsoft.OData.Tests.Json
             };
         }
 
-        internal static TheoryData GetUnicodeText(int maxCharBufferSize)
+        internal static TheoryData<string> GetUnicodeText(int maxCharBufferSize)
         {
             return new TheoryData<string>
             {

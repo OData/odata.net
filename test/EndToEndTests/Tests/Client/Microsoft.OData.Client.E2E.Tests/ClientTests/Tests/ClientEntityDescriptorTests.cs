@@ -5,6 +5,7 @@
 // </copyright>
 //------------------------------------------------------------------------------
 
+using System.Globalization;
 using Microsoft.AspNetCore.OData;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
 using Microsoft.Extensions.DependencyInjection;
@@ -88,11 +89,12 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests.Tests
         [Fact]
         public async Task SkipOption_ExecutesSuccessfully()
         {
-            var allPeople = (await _context.People.ExecuteAsync()).ToList();
-            var skipFirstPersonQuery = _context.People.Skip(1);
+            var orderedPeopleQuery = _context.People.OrderBy(p => p.PersonID);
+            var allPeople = (await ((DataServiceQuery<ClientDefaultModel.Person>)orderedPeopleQuery).ExecuteAsync()).ToList();
+            var skipFirstPersonQuery = orderedPeopleQuery.Skip(1);
             var peopleAfterSkippingFirstPerson = (await ((DataServiceQuery<ClientDefaultModel.Person>)skipFirstPersonQuery).ExecuteAsync()).ToList();
 
-            Assert.Equal("http://localhost/odata/People?$skip=1", skipFirstPersonQuery.ToString());
+            Assert.Equal("http://localhost/odata/People?$orderby=PersonID&$skip=1", skipFirstPersonQuery.ToString());
             Assert.Equal(5, allPeople.Count);
             Assert.Equal(4, peopleAfterSkippingFirstPerson.Count);
         }
@@ -178,10 +180,10 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests.Tests
 
             Assert.Equal("http://localhost/odata/Orders?$filter=day(OrderDate) eq 29 and month(OrderDate) eq 5", filterByDateTimeQuery.ToString());
 
-            var ordersOnMyBirthday = (await ((DataServiceQuery<ClientDefaultModel.Order>)filterByDateTimeQuery).ExecuteAsync()).ToList();
+            var ordersOnSpecificDate = (await ((DataServiceQuery<ClientDefaultModel.Order>)filterByDateTimeQuery).ExecuteAsync()).ToList();
 
-            Assert.Single(ordersOnMyBirthday);
-            Assert.Equal("5/29/2011 12:00:00 AM", ordersOnMyBirthday.Single().OrderDate.Date.ToString());
+            var singleOrder = Assert.Single(ordersOnSpecificDate);
+            Assert.Equal("2011-05-29", singleOrder.OrderDate.Date.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
         }
 
         [Fact]

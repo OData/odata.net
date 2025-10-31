@@ -4,18 +4,19 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System.Globalization;
 using Microsoft.AspNetCore.OData;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OData.Client.E2E.Tests.KeyAsSegmentTests.Server;
+using Microsoft.OData.E2E.TestCommon;
 using Microsoft.OData.E2E.TestCommon.Common.Client.EndToEnd.Default;
 using Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd;
-using Microsoft.OData.E2E.TestCommon;
 using Microsoft.OData.Edm;
 using Xunit;
 using DiscontinuedProduct = Microsoft.OData.E2E.TestCommon.Common.Client.EndToEnd.DiscontinuedProduct;
 using Employee = Microsoft.OData.E2E.TestCommon.Common.Client.EndToEnd.Employee;
 using Login = Microsoft.OData.E2E.TestCommon.Common.Client.EndToEnd.Login;
-using Microsoft.OData.Client.E2E.Tests.KeyAsSegmentTests.Server;
 
 namespace Microsoft.OData.Client.E2E.Tests.KeyAsSegmentTests.Tests;
 
@@ -122,7 +123,9 @@ public class DollarSegmentTests : EndToEndTestBase<DollarSegmentTests.TestsStart
 
         // Assert
         Assert.Equal(5, discontinuedProductDatesQuery.Length);
-        Assert.Single(discontinuedProductDatesQuery.Where(d => d.Discontinued.ToString() == "7/28/2005 1:09:56 PM +00:00"));
+        Assert.Single(
+            discontinuedProductDatesQuery,
+            d => d.Discontinued.ToUniversalTime().ToString("yyyy-MM-dd'T'HH:mm:ss'Z'", CultureInfo.InvariantCulture) == "2005-07-28T13:09:56Z");
     }
 
     [Fact]
@@ -137,7 +140,9 @@ public class DollarSegmentTests : EndToEndTestBase<DollarSegmentTests.TestsStart
 
         // Assert
         Assert.Equal(5, discontinuedProductDatesQuery.Length);
-        Assert.Single(discontinuedProductDatesQuery.Where(d => d.Discontinued.ToString() == "7/28/2005 1:09:56 PM +00:00"));
+        Assert.Single(
+            discontinuedProductDatesQuery,
+            d => d.Discontinued.ToUniversalTime().ToString("yyyy-MM-dd'T'HH:mm:ss'Z'", CultureInfo.InvariantCulture) == "2005-07-28T13:09:56Z");
     }
 
     [Fact]

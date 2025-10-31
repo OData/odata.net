@@ -593,8 +593,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 // Uri with mix-case function names referring to equivalent-argument-typed functions,
                 // should result in exception for resolver with case insensitive enabled due to ambiguity (multiple equivalent matches).
                 var fullUri = new Uri(string.Format(uriTemplate, mixedCaseFunctionName));
-                ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri(rootUri), fullUri);
-                parser.Resolver.EnableCaseInsensitive = true;
+                ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri(rootUri), fullUri)
+                {
+                    Resolver = new ODataUriResolver { EnableCaseInsensitive = true }
+                };
 
                 Action action = () => parser.ParseFilter();
                 Assert.Throws<ODataException>(action);
