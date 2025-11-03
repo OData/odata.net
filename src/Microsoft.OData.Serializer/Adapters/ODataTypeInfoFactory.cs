@@ -10,9 +10,10 @@ namespace Microsoft.OData.Serializer;
 
 internal static class ODataTypeInfoFactory<TCustomState>
 {
-    private static Type CustomStateType { get; } = typeof(TCustomState);
-    private static Type StateType { get; } = typeof(ODataWriterState<>).MakeGenericType(CustomStateType);
-    private static Type StreamValueWriterType { get; } = typeof(IStreamValueWriter<>).MakeGenericType(CustomStateType);
+    private static readonly Type CustomStateType = typeof(TCustomState);
+    private static readonly Type StateType = typeof(ODataWriterState<>).MakeGenericType(CustomStateType);
+    private static readonly Type ValueWriterType = typeof(IValueWriter<>).MakeGenericType(CustomStateType);
+    private static readonly Type StreamValueWriterType = typeof(IStreamValueWriter<>).MakeGenericType(CustomStateType);
 
     private static Type ValueTaskType { get; } = typeof(ValueTask);
     private static Type ObjectType { get; } = typeof(object);
@@ -52,12 +53,12 @@ internal static class ODataTypeInfoFactory<TCustomState>
                 continue;
             }
 
-            if (!ShouldIncludeProperty(property, typeInfo, out IEdmProperty? edmProperty))
+            if (!ShouldIncludeProperty(property, typeInfo, out IEdmProperty? edmProperty, out ODataIgnoreCondition ignoreCondition))
             {
                 continue;
             }
 
-            var propertyInfo = CreateODataPropertyInfo(type, property, edmProperty);
+            var propertyInfo = CreateODataPropertyInfo(type, property, edmProperty, ignoreCondition);
             propertyInfos.Add((ODataPropertyInfo<T, TCustomState>)propertyInfo);
         }
         
@@ -77,20 +78,30 @@ internal static class ODataTypeInfoFactory<TCustomState>
     private static bool ShouldIncludeProperty<TResource>(
         PropertyInfo property,
         ODataTypeInfo<TResource, TCustomState> typeInfo,
-        [NotNullWhen(true)] out IEdmProperty? edmProperty)
+        [NotNullWhen(true)] out IEdmProperty? edmProperty,
+        out ODataIgnoreCondition ignoreCondition)
     {
         edmProperty = null;
+        ignoreCondition = ODataIgnoreCondition.Never;
 
         // Checking attributes individually instead of using GetCustomAttributes()
         // via cause we're betting that ODataIgnoreAttribute will be the most common.
-        if (property.GetCustomAttribute<ODataIgnoreAttribute>() != null)
+        var odataIgnore = property.GetCustomAttribute<ODataIgnoreAttribute>();
+        if (odataIgnore != null && odataIgnore.Condition == ODataIgnoreCondition.Always)
         {
             return false;
         }
 
+        // Support for [IgnoreDataMember] due to its common usage in data contracts
+        // TODO: should this be opt-in?
         if (property.GetCustomAttribute<IgnoreDataMemberAttribute>() != null)
         {
             return false;
+        }
+
+        if (odataIgnore != null)
+        {
+            ignoreCondition = odataIgnore.Condition;
         }
 
         var propertyNameAttribute = property.GetCustomAttribute<ODataPropertyNameAttribute>();
@@ -113,7 +124,7 @@ internal static class ODataTypeInfoFactory<TCustomState>
         return false;
     }
 
-    private static ODataPropertyInfo CreateODataPropertyInfo(Type instanceType, PropertyInfo clrProperty, IEdmProperty edmProperty)
+    private static ODataPropertyInfo CreateODataPropertyInfo(Type instanceType, PropertyInfo clrProperty, IEdmProperty edmProperty, ODataIgnoreCondition ignoreCondition)
     {
         var clrPropertyType = clrProperty.PropertyType;
 
@@ -124,7 +135,7 @@ internal static class ODataTypeInfoFactory<TCustomState>
 
         odataPropertyInfoType.GetProperty(nameof(ODataPropertyInfo.Name))!.SetValue(odataPropertyInfo, edmProperty.Name);
 
-        SetODataPropertyInfoValueHandler(odataPropertyInfo, odataPropertyInfoType, clrProperty, instanceType);
+        SetODataPropertyInfoValueHandler(odataPropertyInfo, odataPropertyInfoType, clrProperty, instanceType, ignoreCondition);
 
         Debug.Assert(odataPropertyInfo is ODataPropertyInfo, "propertyInfo is ODataPropertyInfo");
         return (ODataPropertyInfo)odataPropertyInfo;
@@ -134,7 +145,8 @@ internal static class ODataTypeInfoFactory<TCustomState>
         object odataPropertyInfo,
         Type odataPropertyInfoType,
         PropertyInfo clrProperty,
-        Type instanceType)
+        Type instanceType,
+        ODataIgnoreCondition ignoreCondition)
     {
         var valueWriterAttribute = clrProperty.GetCustomAttribute<ODataValueWriterAttribute>();
         if (valueWriterAttribute?.WriterType != null)
@@ -183,10 +195,23 @@ internal static class ODataTypeInfoFactory<TCustomState>
         }
         // TODO: potentially handle writer type specified on the declaring type instead.
 
-        // No custom writer set, generate basic GetValue delegate
-        var getValueDelegate = CreateGetValueDelegate(CreateGetter(instanceType, clrProperty), instanceType, clrProperty.PropertyType);
-        // TODO: we use bool as placeholder since we can't leave the type param blank until C# 14.
-        odataPropertyInfoType.GetProperty(nameof(ODataPropertyInfo<bool, bool, bool>.GetValue))!.SetValue(odataPropertyInfo, getValueDelegate);
+        Debug.Assert(ignoreCondition != ODataIgnoreCondition.Always, "Ignore condition should not be Always at this point.");
+
+        if (ignoreCondition == ODataIgnoreCondition.Never)
+        {
+            // No custom writer set, so we generate basic GetValue delegate
+            var getValueDelegate = CreateGetValueDelegate(CreateGetter(instanceType, clrProperty), instanceType, clrProperty.PropertyType);
+            // TODO: we use bool as placeholder since we can't leave the type param blank until C# 14.
+            odataPropertyInfoType.GetProperty(nameof(ODataPropertyInfo<bool, bool, bool>.GetValue))!.SetValue(odataPropertyInfo, getValueDelegate);
+        }
+        else if (ignoreCondition == ODataIgnoreCondition.WhenWritingNull)
+        {
+            var writeValueDelegate = CreatePropertyValueWriterThatIgnoresWhenNullDelegate(
+                CreatePropertyValueWriterThatIgnoresWhenNull(instanceType, clrProperty),
+                instanceType,
+                clrProperty.PropertyType);
+            odataPropertyInfoType.GetProperty(nameof(ODataPropertyInfo<bool,bool,bool>.WriteValue))!.SetValue(odataPropertyInfo, writeValueDelegate);
+        }
     }
 
     private static Delegate CreateGetValueDelegate(DynamicMethod dynamicMethod, Type instanceType, Type propertyType)
@@ -221,6 +246,70 @@ internal static class ODataTypeInfoFactory<TCustomState>
         // TODO handling of nullable structs?
         
         generator.Emit(OpCodes.Ret);
+
+        return dynamicMethod;
+    }
+
+    private static Delegate CreatePropertyValueWriterThatIgnoresWhenNullDelegate(
+        DynamicMethod dynamicMethod,
+        Type instanceType,
+        Type propertyType)
+    {
+        // Func<TDeclaringType, IValueWriter<TCustomState>, ODataWriterState<TCustomState>, bool>
+        var funcType = typeof(Func<,,,>).MakeGenericType(instanceType, ValueWriterType, StateType, typeof(bool));
+        return dynamicMethod.CreateDelegate(funcType);
+    }
+
+    private static DynamicMethod CreatePropertyValueWriterThatIgnoresWhenNull(
+        Type instanceType,
+        PropertyInfo property)
+    {
+        // bool PropertyValueWriter(InstanceType resource, IValueWriter<TCustomState> writer, ODataWriterState<TCustomState> state)
+        var dynamicMethod = new DynamicMethod(
+            property.Name + "ValueWriter",
+            typeof(bool),
+            [instanceType, ValueWriterType, StateType],
+            typeof(ODataTypeInfoFactory<TCustomState>).Module,
+            skipVisibility: true);
+
+
+        // We should validate that getter is not null before calling this method.`
+        var getMethod = property.GetGetMethod();
+        Debug.Assert(getMethod != null, $"Property {property.Name} does not have a getter.");
+
+        var writeValueMethod = ValueWriterType.GetMethod(nameof(IValueWriter<bool>.WriteValue))!.MakeGenericMethod(property.PropertyType);
+
+        ILGenerator il = dynamicMethod.GetILGenerator();
+
+        /*
+         * bool WritePropertyValue(InstanceType resource, IValueWriter<TCustomState> writer, ODataWriterState<TCustomState> state)
+         * {
+         *     if (resource.Property == null)
+         *     {
+         *        return true;
+         *     }
+         *
+         *     return writer.WriteValue<TProperty>(resource.Property, state);
+         * }
+         */
+        il.Emit(OpCodes.Ldarg_0);
+        il.Emit(OpCodes.Callvirt, getMethod);
+
+        Label notNullLabel = il.DefineLabel();
+        il.Emit(OpCodes.Brtrue_S, notNullLabel);
+
+        // property value is null
+        il.Emit(OpCodes.Ldc_I4_1); // return true
+        il.Emit(OpCodes.Ret);
+
+        // property value is not null
+        il.MarkLabel(notNullLabel);
+        il.Emit(OpCodes.Ldarg_1); // load writer
+        il.Emit(OpCodes.Ldarg_0); // load resource
+        il.Emit(OpCodes.Callvirt, getMethod); // load property value
+        il.Emit(OpCodes.Ldarg_2); // load state
+        il.Emit(OpCodes.Callvirt, writeValueMethod); // call writer.WriteValue<TProperty>(value, state)
+        il.Emit(OpCodes.Ret);
 
         return dynamicMethod;
     }

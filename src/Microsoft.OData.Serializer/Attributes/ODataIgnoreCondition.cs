@@ -9,6 +9,10 @@ namespace Microsoft.OData.Serializer;
 public enum ODataIgnoreCondition
 {
     /// <summary>
+    /// Never ignores the property.
+    /// </summary>
+    Never,
+    /// <summary>
     /// Always ignores the property, regardless of its value.
     /// </summary>
     Always,

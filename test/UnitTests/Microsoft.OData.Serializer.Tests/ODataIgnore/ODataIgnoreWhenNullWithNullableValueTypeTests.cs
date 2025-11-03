@@ -8,9 +8,9 @@ using Microsoft.OData.Edm;
 using Microsoft.OData.Serializer;
 using Microsoft.OData.UriParser;
 
-namespace Microsoft.OData.Serializer.Tests;
+namespace Microsoft.OData.Serializer.Tests.ODataIgnore;
 
-public class ODataIgnoreWhenNullTests
+public class ODataIgnoreWhenNullWithNullableValueTypeTests
 {
     [Fact]
     public async Task ODataIgnoreWhenWritingNull_ShouldSkipNullProperties()
@@ -19,7 +19,7 @@ public class ODataIgnoreWhenNullTests
         var customer = new Customer
         {
             Id = 1,
-            Nickname = null
+            Age = null,
         };
 
         var options = new ODataSerializerOptions();
@@ -59,7 +59,7 @@ public class ODataIgnoreWhenNullTests
         var customer = new Customer
         {
             Id = 1,
-            Nickname = "JohnDoe"
+            Age = 30
         };
 
         var options = new ODataSerializerOptions();
@@ -86,7 +86,7 @@ public class ODataIgnoreWhenNullTests
             {
               "@odata.context": "http://service/odata/$metadata#Customers/$entity",
               "Id": 1,
-              "Nickname": "JohnDoe"
+              "Age": 30
             }
             """;
         var normalizedExpected = JsonSerializer.Serialize(JsonDocument.Parse(expected));
@@ -99,7 +99,7 @@ public class ODataIgnoreWhenNullTests
         var model = new EdmModel();
         var entityType = model.AddEntityType("ns", "Customer");
         entityType.AddKeys(entityType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32, isNullable: false));
-        entityType.AddStructuralProperty("Nickname", EdmPrimitiveTypeKind.String, isNullable: true);
+        entityType.AddStructuralProperty("Age", EdmPrimitiveTypeKind.Int32, isNullable: true);
         var container = model.AddEntityContainer("ns", "DefaultContainer");
         container.AddEntitySet("Customers", entityType);
         return model;
@@ -111,6 +111,6 @@ public class ODataIgnoreWhenNullTests
         public int Id { get; set; }
 
         [ODataIgnore(ODataIgnoreCondition.WhenWritingNull)]
-        public string? Nickname { get; set; }
+        public int? Age { get; set; }
     }
 }
