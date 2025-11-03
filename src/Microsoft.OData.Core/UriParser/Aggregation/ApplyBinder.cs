@@ -6,9 +6,12 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Core;
+using Microsoft.OData.Metadata;
+using Microsoft.OData.UriParser;
 
 namespace Microsoft.OData.UriParser.Aggregation
 {
@@ -135,11 +138,22 @@ namespace Microsoft.OData.UriParser.Aggregation
                 case QueryTokenKind.AggregateExpression:
                     {
                         AggregateExpressionToken token = aggregateToken as AggregateExpressionToken;
-                        SingleValueNode expression = this.bindMethod(token.Expression) as SingleValueNode;
-                        IEdmTypeReference typeReference = CreateAggregateExpressionTypeReference(expression, token.MethodDefinition);
+                        QueryNode expression = this.bindMethod(token.Expression);
 
-                        // TODO: Determine source
-                        return new AggregateExpression(expression, token.MethodDefinition, token.Alias, typeReference);
+                        if(expression is SingleValueNode singleValueNode)
+                        {
+                            IEdmTypeReference typeReference = CreateAggregateExpressionTypeReference(singleValueNode, token.MethodDefinition);
+                            return new AggregateExpression(singleValueNode, token.MethodDefinition, token.Alias, typeReference);
+                        }
+                        else if (expression is CollectionNode collectionNode)
+                        {
+                            IEdmTypeReference typeReference = CreateAggregateExpressionTypeReference(collectionNode, token.MethodDefinition);
+                            return new AggregateCollectionExpression(collectionNode, token.MethodDefinition, token.Alias, typeReference);
+                        }
+                        else
+                        {
+                            throw new ODataException(Error.Format(SRResources.ApplyBinder_AggregateExpressionNodeNotSupported, aggregateToken.Kind));
+                        }
                     }
 
                 case QueryTokenKind.EntitySetAggregateExpression:
@@ -202,11 +216,137 @@ namespace Microsoft.OData.UriParser.Aggregation
                 case AggregationMethod.Sum:
                     return expressionType;
                 default:
+                    if (method.MethodKind == AggregationMethod.Custom)
+                    {
+                        IEdmTypeReference returnType = GetCustomMethodReturnType(configuration?.Model, expressionType, method, configuration?.EnableCaseInsensitiveUriFunctionIdentifier ?? false);
+
+                        if (returnType != null)
+                        {
+                            return returnType;
+                        }
+                    }
+
                     // Only the EdmModel knows which type the custom aggregation methods returns.
                     // Since we do not have a reference for it, right now we are assuming that all custom aggregation methods returns Doubles
                     // TODO: find a appropriate way of getting the return type.
                     return EdmCoreModel.Instance.GetPrimitive(EdmPrimitiveTypeKind.Double, expressionType.IsNullable);
             }
+        }
+
+        private IEdmTypeReference CreateAggregateExpressionTypeReference(CollectionNode expression, AggregationMethodDefinition method)
+        {
+            IEdmTypeReference expressionType = expression.CollectionType;
+            if (expressionType == null && aggregateExpressionsCache != null)
+            {
+                CollectionOpenPropertyAccessNode openProperty = expression as CollectionOpenPropertyAccessNode;
+                if (openProperty != null)
+                {
+                    expressionType = GetTypeReferenceByPropertyName(openProperty.Name);
+                }
+            }
+
+            IEdmTypeReference returnType = null;
+            if (method.MethodKind == AggregationMethod.Custom)
+            {
+                returnType = GetCustomMethodReturnType(configuration?.Model, expressionType, method, configuration?.EnableCaseInsensitiveUriFunctionIdentifier ?? false);
+            }
+            else
+            {
+                throw new ODataException(SRResources.ApplyBinder_AggregateCollectionExpressionOnlySupportCustomMethod);
+            }
+
+            if (returnType == null)
+            {
+                // Only the EdmModel knows which type the custom aggregation methods returns.
+                // Since we do not have a reference for it, right now we are assuming that all custom aggregation methods returns Collection(Double)?
+                return new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetPrimitive(EdmPrimitiveTypeKind.Double, expressionType.IsNullable)));
+            }
+
+           return returnType;
+       }
+
+        private static IEdmTypeReference GetCustomMethodReturnType(IEdmModel model, IEdmTypeReference expressionType, AggregationMethodDefinition method, bool enableCaseInsensitive)
+        {
+            // if model is not provided, we cannot find the custom function.
+            if (model == null)
+            {
+                return null;
+            }
+
+            Debug.Assert(method != null);
+            Debug.Assert(method.MethodKind == AggregationMethod.Custom);
+
+            // So far, it seems the 'custom' function is out of edm model defined? Why?
+            // Later, we can consider the 'unbound' functions in the Edm model?
+            bool customFound = model.TryGetCustomUriFunction(method.MethodLabel, out IReadOnlyList<KeyValuePair<string, FunctionSignatureWithReturnType>> customUriFunctionsNameSignatures, enableCaseInsensitive);
+            if (!customFound)
+            {
+                return null;
+            }
+
+            // Find the best custom function.
+            foreach (KeyValuePair<string, FunctionSignatureWithReturnType> candidate in customUriFunctionsNameSignatures)
+            {
+                // The custom function accepts the query node as input (parameter), so, the length should be 1.
+                if (candidate.Value.ArgumentTypes.Length != 1)
+                {
+                    continue;
+                }
+
+                IEdmTypeReference parameterType = candidate.Value.ArgumentTypes[0];
+                if (CanPromoteParameterTo(expressionType, parameterType))
+                {
+                    // First match wins.
+                    return candidate.Value.ReturnType;
+                }
+            }
+
+            return null;
+        }
+
+        /// <summary>Promotes the specified expression to the given type if necessary.</summary>
+        /// <param name="sourceType">The actual argument type.</param>
+        /// <param name="targetType">The required type to promote to.</param>
+        /// <returns>True if the <paramref name="sourceType"/> could be promoted; otherwise false.</returns>
+        private static bool CanPromoteParameterTo(IEdmTypeReference sourceType, IEdmTypeReference targetType)
+        {
+            Debug.Assert(sourceType != null, "sourceType != null");
+            Debug.Assert(targetType != null, "targetType != null");
+
+            EdmTypeKind sourceTypeKind = sourceType.TypeKind();
+            EdmTypeKind targetTypeKind = targetType.TypeKind();
+            if (sourceTypeKind == EdmTypeKind.Collection && targetTypeKind == EdmTypeKind.Collection)
+            {
+                sourceType = sourceType.GetCollectionItemType();
+                targetType = targetType.GetCollectionItemType();
+            }
+            else if (sourceTypeKind == EdmTypeKind.Collection || targetTypeKind == EdmTypeKind.Collection)
+            {
+                return false;
+            }
+
+            if (sourceType.IsEquivalentTo(targetType))
+            {
+                return true;
+            }
+
+            if (TypePromotionUtils.CanConvertTo(null, sourceType, targetType)) // sourceNodeOrNull is not needed here, so input 'null'
+            {
+                return true;
+            }
+
+            // Allow promotion from nullable<T> to non-nullable by directly accessing underlying value.
+            if (sourceType.IsNullable && targetType.IsODataValueType())
+            {
+                // COMPAT 40: Type promotion in the product allows promotion from a nullable type to arbitrary value types
+                IEdmTypeReference nonNullableSourceType = sourceType.Definition.ToTypeReference(false);
+                if (TypePromotionUtils.CanConvertTo(null, nonNullableSourceType, targetType))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         private IEdmTypeReference GetTypeReferenceByPropertyName(string name)
