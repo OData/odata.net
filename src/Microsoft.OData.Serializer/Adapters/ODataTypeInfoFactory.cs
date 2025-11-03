@@ -14,6 +14,7 @@ internal static class ODataTypeInfoFactory<TCustomState>
     private static readonly Type StateType = typeof(ODataWriterState<>).MakeGenericType(CustomStateType);
     private static readonly Type ValueWriterType = typeof(IValueWriter<>).MakeGenericType(CustomStateType);
     private static readonly Type StreamValueWriterType = typeof(IStreamValueWriter<>).MakeGenericType(CustomStateType);
+    private static readonly Type NullableOfTGenericDefinition = typeof(Nullable<>);
 
     private static Type ValueTaskType { get; } = typeof(ValueTask);
     private static Type ObjectType { get; } = typeof(object);
@@ -266,7 +267,7 @@ internal static class ODataTypeInfoFactory<TCustomState>
     {
         // bool PropertyValueWriter(InstanceType resource, IValueWriter<TCustomState> writer, ODataWriterState<TCustomState> state)
         var dynamicMethod = new DynamicMethod(
-            property.Name + "ValueWriter",
+            $"{property.Name}ValueWriter",
             typeof(bool),
             [instanceType, ValueWriterType, StateType],
             typeof(ODataTypeInfoFactory<TCustomState>).Module,
@@ -277,26 +278,63 @@ internal static class ODataTypeInfoFactory<TCustomState>
         var getMethod = property.GetGetMethod();
         Debug.Assert(getMethod != null, $"Property {property.Name} does not have a getter.");
 
-        var writeValueMethod = ValueWriterType.GetMethod(nameof(IValueWriter<bool>.WriteValue))!.MakeGenericMethod(property.PropertyType);
+        bool isNullableValueType = property.PropertyType.IsValueType
+            && property.PropertyType.IsGenericType
+            && property.PropertyType.GetGenericTypeDefinition() == NullableOfTGenericDefinition;
+
+        MethodInfo writeValueMethod;
+        if (!isNullableValueType)
+        {
+            writeValueMethod = ValueWriterType.GetMethod(nameof(IValueWriter<bool>.WriteValue))!.MakeGenericMethod(property.PropertyType);
+        }
+        else
+        {
+            // For Nullable<T>, we will use T as the type parameter for WriteValue<T>
+            // If the serializer already has an ODataWriter<T> or ODataTypeInfo<T>,
+            // then that will be used to write the value. Otherwise, the serializer would
+            // try to generate a writer for Nullable<T> and perform null checks again, which
+            // is an unnecessary cost since we're skipping the null-case.
+            var valueType = property.PropertyType.GetGenericArguments()[0];
+            Debug.Assert(valueType.IsValueType);
+            writeValueMethod = ValueWriterType.GetMethod(nameof(IValueWriter<bool>.WriteValue))!.MakeGenericMethod(valueType);
+        }
 
         ILGenerator il = dynamicMethod.GetILGenerator();
 
         /*
          * bool WritePropertyValue(InstanceType resource, IValueWriter<TCustomState> writer, ODataWriterState<TCustomState> state)
          * {
-         *     if (resource.Property == null)
+         *     PropertType value = resource.Property;
+         *     if (value == null)
          *     {
          *        return true;
          *     }
          *
-         *     return writer.WriteValue<TProperty>(resource.Property, state);
+         *     return writer.WriteValue<TProperty>(value, state);
          * }
          */
+
+        var value = il.DeclareLocal(property.PropertyType); // local variable to store property value
+
         il.Emit(OpCodes.Ldarg_0);
-        il.Emit(OpCodes.Callvirt, getMethod);
+        il.Emit(OpCodes.Callvirt, getMethod); // load property value
+        il.Emit(OpCodes.Stloc_S, value); // store property value in local variable
+
+        if (isNullableValueType)
+        {
+            // for Nullable<T>, we need to check HasValue
+            il.Emit(OpCodes.Ldloca_S, (byte)0); // load address of local variable.
+                                                // Since this is a value type, we have to load the address explicitly before calling an instance method
+            var hasValueMethod = property.PropertyType.GetProperty(nameof(Nullable<bool>.HasValue))!.GetGetMethod()!;
+            il.Emit(OpCodes.Call, hasValueMethod); // call get_HasValue
+        }
+        else
+        {
+            il.Emit(OpCodes.Ldloc_S, value); // load property value
+        }
 
         Label notNullLabel = il.DefineLabel();
-        il.Emit(OpCodes.Brtrue_S, notNullLabel);
+        il.Emit(OpCodes.Brtrue_S, notNullLabel); // if value != null goto notNullLabel
 
         // property value is null
         il.Emit(OpCodes.Ldc_I4_1); // return true
@@ -305,8 +343,20 @@ internal static class ODataTypeInfoFactory<TCustomState>
         // property value is not null
         il.MarkLabel(notNullLabel);
         il.Emit(OpCodes.Ldarg_1); // load writer
-        il.Emit(OpCodes.Ldarg_0); // load resource
-        il.Emit(OpCodes.Callvirt, getMethod); // load property value
+
+        if (!isNullableValueType)
+        {
+            il.Emit(OpCodes.Ldloc_S, value); // load property value
+        }
+        else
+        {
+            // for Nullable<T>, we want to unwrap the Nullable the underlying T value and write it directly,
+            // i.e. WriteValue<T>(resource.Property.Value)
+            il.Emit(OpCodes.Ldloca_S, value); // load property value
+            var valueGetter = property.PropertyType.GetProperty(nameof(Nullable<bool>.Value))!.GetGetMethod()!;
+            il.Emit(OpCodes.Call, valueGetter);
+        }
+
         il.Emit(OpCodes.Ldarg_2); // load state
         il.Emit(OpCodes.Callvirt, writeValueMethod); // call writer.WriteValue<TProperty>(value, state)
         il.Emit(OpCodes.Ret);
