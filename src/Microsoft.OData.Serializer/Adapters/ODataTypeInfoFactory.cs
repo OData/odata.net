@@ -162,14 +162,14 @@ internal static class ODataTypeInfoFactory<TCustomState>
 
                 var writeValueWithCustomWriterAsyncProp = odataPropertyInfoType.GetProperty(
                     nameof(ODataPropertyInfo<bool, bool>.WriteValueWithCustomWriterAsync),
-                    BindingFlags.Instance|BindingFlags.NonPublic);
+                    BindingFlags.Instance | BindingFlags.NonPublic);
                 Debug.Assert(writeValueWithCustomWriterAsyncProp != null, "WriteValueWithCustomWriterAsync property not found");
 
                 writeValueWithCustomWriterAsyncProp.SetValue(odataPropertyInfo, writeValueAsyncDelegate);
 
                 var customValueWriterProp = odataPropertyInfoType.GetProperty(
                     nameof(ODataPropertyInfo<bool, bool>.CustomPropertyValueWriter),
-                    BindingFlags.Instance|BindingFlags.NonPublic);
+                    BindingFlags.Instance | BindingFlags.NonPublic);
                 Debug.Assert(customValueWriterProp != null, "CustomPropertyValueWriter property not found");
 
                 // The custom writer type should be stateless. This expectation should be well documented.
@@ -198,21 +198,20 @@ internal static class ODataTypeInfoFactory<TCustomState>
 
         Debug.Assert(ignoreCondition != ODataIgnoreCondition.Always, "Ignore condition should not be Always at this point.");
 
-        if (ignoreCondition == ODataIgnoreCondition.Never)
-        {
-            // No custom writer set, so we generate basic GetValue delegate
-            var getValueDelegate = CreateGetValueDelegate(CreateGetter(instanceType, clrProperty), instanceType, clrProperty.PropertyType);
-            // TODO: we use bool as placeholder since we can't leave the type param blank until C# 14.
-            odataPropertyInfoType.GetProperty(nameof(ODataPropertyInfo<bool, bool, bool>.GetValue))!.SetValue(odataPropertyInfo, getValueDelegate);
-        }
-        else if (ignoreCondition == ODataIgnoreCondition.WhenWritingNull)
+        if (ignoreCondition == ODataIgnoreCondition.WhenWritingNull && IsReferenceTypeOrNullableValueType(clrProperty.PropertyType))
         {
             var writeValueDelegate = CreatePropertyValueWriterThatIgnoresWhenNullDelegate(
                 CreatePropertyValueWriterThatIgnoresWhenNull(instanceType, clrProperty),
                 instanceType,
                 clrProperty.PropertyType);
             odataPropertyInfoType.GetProperty(nameof(ODataPropertyInfo<bool,bool,bool>.WriteValue))!.SetValue(odataPropertyInfo, writeValueDelegate);
+            return;
         }
+
+        // No custom writer set, so we generate basic GetValue delegate
+        var getValueDelegate = CreateGetValueDelegate(CreateGetter(instanceType, clrProperty), instanceType, clrProperty.PropertyType);
+        // TODO: we use bool as placeholder since we can't leave the type param blank until C# 14.
+        odataPropertyInfoType.GetProperty(nameof(ODataPropertyInfo<bool, bool, bool>.GetValue))!.SetValue(odataPropertyInfo, getValueDelegate);
     }
 
     private static Delegate CreateGetValueDelegate(DynamicMethod dynamicMethod, Type instanceType, Type propertyType)
@@ -281,6 +280,8 @@ internal static class ODataTypeInfoFactory<TCustomState>
         bool isNullableValueType = property.PropertyType.IsValueType
             && property.PropertyType.IsGenericType
             && property.PropertyType.GetGenericTypeDefinition() == NullableOfTGenericDefinition;
+
+        Debug.Assert(isNullableValueType || !property.PropertyType.IsValueType, "Property type should either be Nullable<T> or a reference type.");
 
         MethodInfo writeValueMethod;
         if (!isNullableValueType)
@@ -483,4 +484,7 @@ internal static class ODataTypeInfoFactory<TCustomState>
 
         return typeMapper.GetEdmType(type, model);
     }
+
+    private static bool IsReferenceTypeOrNullableValueType(Type type) =>
+        !type.IsValueType || (type.IsGenericType && type.GetGenericTypeDefinition() == NullableOfTGenericDefinition);
 }
