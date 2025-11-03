@@ -144,6 +144,78 @@ namespace Microsoft.OData.Client.E2E.Tests.EdmDateAndTimeOfDayTests
             Assert.False(result);
         }
 
+        [Fact]
+        public void QueryingOrdersWithOrderByOnDateOnly_WorksCorrectly()
+        {
+            var orders = _context.Orders
+                .OrderBy(o => o.ShipDate)
+                .ToList();
+
+            Assert.NotEmpty(orders);
+            for (int i = 1; i < orders.Count; i++)
+            {
+                Assert.True(orders[i - 1].ShipDate <= orders[i].ShipDate);
+            }
+        }
+
+        [Fact]
+        public void QueryingOrdersWithOrderByOnTimeOnly_WorksCorrectly()
+        {
+            var orders = _context.Orders
+                .OrderBy(o => o.ShipTime)
+                .ToList();
+
+            Assert.NotEmpty(orders);
+            for (int i = 1; i < orders.Count; i++)
+            {
+                Assert.True(orders[i - 1].ShipTime <= orders[i].ShipTime);
+            }
+        }
+
+        [Fact]
+        public void QueryingOrdersWithFilterOnDateOnly_WorksCorrectly()
+        {
+            var targetDate = new DateOnly(2014, 8, 31);
+            var orders = _context.Orders
+                .Where(o => o.ShipDate == targetDate)
+                .ToList();
+
+            Assert.All(orders, o => Assert.Equal(targetDate, o.ShipDate));
+        }
+
+        [Fact]
+        public void QueryingOrdersWithFilterOnTimeOnly_WorksCorrectly()
+        {
+            var targetTime = new TimeOnly(12, 40, 05, 50);
+            var orders = _context.Orders
+                .Where(o => o.ShipTime == targetTime)
+                .ToList();
+
+            Assert.All(orders, o => Assert.Equal(targetTime, o.ShipTime));
+        }
+
+        [Fact]
+        public void QueryingOrdersWithTopOnDateOnly_WorksCorrectly()
+        {
+            var orders = _context.Orders
+                .OrderBy(o => o.ShipDate)
+                .Take(2)
+                .ToList();
+
+            Assert.True(orders.Count <= 2);
+        }
+
+        [Fact]
+        public void QueryingOrdersWithTopOnTimeOnly_WorksCorrectly()
+        {
+            var orders = _context.Orders
+                .OrderBy(o => o.ShipTime)
+                .Take(2)
+                .ToList();
+
+            Assert.True(orders.Count <= 2);
+        }
+
         #endregion
 
         private void ResetDefaultDataSource()

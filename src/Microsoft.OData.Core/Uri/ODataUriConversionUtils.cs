@@ -519,13 +519,28 @@ namespace Microsoft.OData
                     break;
 
                 case EdmPrimitiveTypeKind.Date:
-                    var stringValue = primitiveValue as string;
-                    if (stringValue != null)
+                    if (primitiveValue is string stringValue)
                     {
                         // Coerce to Date Type from String.
                         return PlatformHelper.ConvertStringToDateOnly(stringValue);
                     }
 
+                    // TEMPORARY: Handle Edm.Date as System.TimeOnly
+                    // TODO: This will be removed once Edm.Date is removed from AspNetCoreOData
+                    if (primitiveValue is Date date)
+                    {
+                        return DateOnly.FromDateTime(date);
+                    }
+
+                    break;
+
+                case EdmPrimitiveTypeKind.TimeOfDay:
+                    // TEMPORARY: Handle Edm.TimeOfDay as System.TimeOnly
+                    // TODO: This will be removed once Edm.TimeOfDay is removed from AspNetCoreOData
+                    if (primitiveValue is TimeOfDay time)
+                    {
+                        return TimeOnly.FromTimeSpan(time);
+                    }
                     break;
             }
 

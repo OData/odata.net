@@ -199,6 +199,13 @@ namespace Microsoft.OData.Client
                 typeof(TimeSpan).GetProperty("Hours", typeof(int)),
                 typeof(TimeSpan).GetProperty("Hours", typeof(int)).GetGetMethod());
             propertiesAsMethodsMap.Add(
+                typeof(TimeSpan).GetProperty("Minutes", typeof(int)),
+                typeof(TimeSpan).GetProperty("Minutes", typeof(int)).GetGetMethod());
+            propertiesAsMethodsMap.Add(
+                typeof(TimeSpan).GetProperty("Seconds", typeof(int)),
+                typeof(TimeSpan).GetProperty("Seconds", typeof(int)).GetGetMethod());
+
+            propertiesAsMethodsMap.Add(
                 typeof(TimeOnly).GetProperty("Hour", typeof(int)),
                 typeof(TimeOnly).GetProperty("Hour", typeof(int)).GetGetMethod());
             propertiesAsMethodsMap.Add(
@@ -218,7 +225,7 @@ namespace Microsoft.OData.Client
                 typeof(DateOnly).GetProperty("Day", typeof(int)),
                 typeof(DateOnly).GetProperty("Day", typeof(int)).GetGetMethod());
 
-            Debug.Assert(propertiesAsMethodsMap.Count == 22, "propertiesAsMethodsMap.Count == 22");
+            Debug.Assert(propertiesAsMethodsMap.Count == 24, "propertiesAsMethodsMap.Count == 24");
 
             aggregationMethodMap.Add(AggregationMethod.Sum, UriHelper.SUM);
             aggregationMethodMap.Add(AggregationMethod.Average, UriHelper.AVERAGE);
