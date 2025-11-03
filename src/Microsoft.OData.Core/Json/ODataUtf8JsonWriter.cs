@@ -1111,7 +1111,7 @@ namespace Microsoft.OData.Json
         public async Task WriteValueAsync(TimeOnly value)
         {
             this.WriteSeparatorIfNecessary();
-            this.utf8JsonWriter.WriteStringValue(value.ToString("HH:mm:ss.fffffff", CultureInfo.InvariantCulture));
+            this.utf8JsonWriter.WriteStringValue(value.ToString(@"HH\:mm\:ss\.fffffff", CultureInfo.InvariantCulture));
             await this.DrainBufferIfThresholdReachedAsync().ConfigureAwait(false);
         }
 
