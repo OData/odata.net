@@ -112,7 +112,16 @@ namespace Microsoft.OData.Client.E2E.Tests.EdmDateAndTimeOfDayTests
             await _context.Orders.ByKey(7).ChangeShipTimeAndDate(DateOnly.MaxValue, TimeOnly.MaxValue).GetValueAsync();
             order = await _context.Orders.ByKey(7).GetValueAsync();
             Assert.Equal(DateOnly.MaxValue, order.ShipDate);
-            Assert.Equal(TimeOnly.MaxValue, order.ShipTime);
+
+            // AspNetCore OData uses `new TimeOfDay(timeOnly.Hour, timeOnly.Minute, timeOnly.Second, timeOnly.Millisecond)` to create TimeOfDay value from TimeOnly value.
+            // This means that the precision of TimeOfDay value is up to milliseconds only.
+            // TimeOnly.MaxValue has precision up to 7 digits after seconds, i.e., 23:59:59.9999999 and TimeOfDay value created will be 23:59:59.9990000.
+            // Therefore, we cannot directly compare the two TimeOnly values here.
+            // See https://github.com/OData/AspNetCoreOData/blob/main/src/Microsoft.AspNetCore.OData/Formatter/Serialization/ODataPrimitiveSerializer.cs#L171
+            // To work around this, we compare the string representation up until milliseconds. This is because E2E tests uses AspNetCore OData for server side.
+            // Uncomment the below line once AspNetCore OData supports full precision for TimeOnly
+            // Asset.Equal(TimeOnly.MaxValue, order.ShipTime);
+            Assert.Equal(TimeOnly.MaxValue.ToString("HH:mm:ss.fff"), order.ShipTime.ToString("HH:mm:ss.fff"));
         }
 
         [Fact]
