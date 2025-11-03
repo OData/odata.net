@@ -139,7 +139,7 @@ namespace Microsoft.OData.Metadata
 
             // TimeOfDay and Date are not removed here as this will cause E2E tests to fail unless the AspNetCoreOData package is also updated by removing those types.
             // See https://github.com/OData/AspNetCoreOData/blob/main/src/Microsoft.AspNetCore.OData/Edm/DefaultODataTypeMapper.cs#L65-L66
-            // Once that package is updated, these two lines can be removed in the next major release.
+            // TODO: Once that package is updated, these two lines can be removed in the next major release.
             PrimitiveTypeReferenceMap.Add(typeof(TimeOfDay), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.TimeOfDay), false));
             PrimitiveTypeReferenceMap.Add(typeof(TimeOfDay?), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.TimeOfDay), true));
 
