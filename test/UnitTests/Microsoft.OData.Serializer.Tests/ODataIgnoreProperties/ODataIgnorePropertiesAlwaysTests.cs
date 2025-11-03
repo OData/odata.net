@@ -105,12 +105,10 @@ public class ODataIgnorePropertiesAlwaysTests
     public async Task WhenConditionIsWritingNull_IgnoreAllPropertiesWithNullValues()
     {
         // Arrange
-        var customer = new CustomerWithIgnoreAlways
+        var customer = new CustomerWithIgnoreNull
         {
             Id = 1,
             Name = "John Doe",
-            Nickname = null,
-            Age = null,
             Active = false
         };
 

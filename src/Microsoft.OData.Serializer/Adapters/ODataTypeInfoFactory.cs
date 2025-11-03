@@ -41,6 +41,14 @@ internal static class ODataTypeInfoFactory<TCustomState>
         var properties = type.GetProperties();
         var propertyInfos = new List<ODataPropertyInfo<T, TCustomState>>(properties.Length);
         PropertyInfo? openPropertiesContainerProperty = null;
+
+        var ignoreProperties = type.GetCustomAttribute<ODataIgnorePropertiesAttribute>();
+        ODataIgnoreCondition classLevelIgnoreCondition = ODataIgnoreCondition.Never;
+        if (ignoreProperties != null)
+        {
+            classLevelIgnoreCondition = ignoreProperties.Condition;
+        }
+
         foreach (var property in properties)
         {
             if (property.GetCustomAttribute<ODataOpenPropertiesAttribute>() != null)
@@ -54,12 +62,18 @@ internal static class ODataTypeInfoFactory<TCustomState>
                 continue;
             }
 
-            if (!ShouldIncludeProperty(property, typeInfo, out IEdmProperty? edmProperty, out ODataIgnoreCondition ignoreCondition))
+            if (!ShouldIncludeProperty(property, typeInfo, out IEdmProperty? edmProperty, out ODataIgnoreCondition? propertyIgnoreCondition))
             {
                 continue;
             }
 
-            var propertyInfo = CreateODataPropertyInfo(type, property, edmProperty, ignoreCondition);
+            var effectiveIgnoreCondition = propertyIgnoreCondition ?? classLevelIgnoreCondition;
+            if (effectiveIgnoreCondition == ODataIgnoreCondition.Always)
+            {
+                continue;
+            }
+
+            var propertyInfo = CreateODataPropertyInfo(type, property, edmProperty, effectiveIgnoreCondition);
             propertyInfos.Add((ODataPropertyInfo<T, TCustomState>)propertyInfo);
         }
         
@@ -80,16 +94,17 @@ internal static class ODataTypeInfoFactory<TCustomState>
         PropertyInfo property,
         ODataTypeInfo<TResource, TCustomState> typeInfo,
         [NotNullWhen(true)] out IEdmProperty? edmProperty,
-        out ODataIgnoreCondition ignoreCondition)
+        out ODataIgnoreCondition? ignoreCondition)
     {
         edmProperty = null;
-        ignoreCondition = ODataIgnoreCondition.Never;
+        ignoreCondition = null;
 
         // Checking attributes individually instead of using GetCustomAttributes()
         // via cause we're betting that ODataIgnoreAttribute will be the most common.
         var odataIgnore = property.GetCustomAttribute<ODataIgnoreAttribute>();
         if (odataIgnore != null && odataIgnore.Condition == ODataIgnoreCondition.Always)
         {
+            ignoreCondition = ODataIgnoreCondition.Always;
             return false;
         }
 
@@ -125,7 +140,11 @@ internal static class ODataTypeInfoFactory<TCustomState>
         return false;
     }
 
-    private static ODataPropertyInfo CreateODataPropertyInfo(Type instanceType, PropertyInfo clrProperty, IEdmProperty edmProperty, ODataIgnoreCondition ignoreCondition)
+    private static ODataPropertyInfo CreateODataPropertyInfo(
+        Type instanceType,
+        PropertyInfo clrProperty,
+        IEdmProperty edmProperty,
+        ODataIgnoreCondition ignoreCondition)
     {
         var clrPropertyType = clrProperty.PropertyType;
 
