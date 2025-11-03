@@ -13,12 +13,12 @@ namespace Microsoft.OData.Json
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Threading.Tasks;
+    using Microsoft.OData.Core;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Vocabularies;
     using Microsoft.OData.Edm.Vocabularies.V1;
     using Microsoft.OData.Evaluation;
     using Microsoft.OData.Metadata;
-    using Microsoft.OData.Core;
 
     #endregion Namespaces
 
@@ -137,49 +137,22 @@ namespace Microsoft.OData.Json
             this.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
 
             ODataDeletedResource deletedResource = null;
+            DeltaDeletedEntryReason reason = DeltaDeletedEntryReason.Changed;
+            Uri id = null;
 
             // If the current node is the deleted property - read it.
             if (this.JsonReader.NodeType == JsonNodeType.Property)
             {
                 string propertyName = this.JsonReader.GetPropertyName();
+
+                // Case 1: removed property first
                 if (string.Equals(ODataJsonConstants.PrefixedODataRemovedPropertyName, propertyName, StringComparison.Ordinal)
                     || this.CompareSimplifiedODataAnnotation(ODataJsonConstants.SimplifiedODataRemovedPropertyName, propertyName))
                 {
-                    DeltaDeletedEntryReason reason = DeltaDeletedEntryReason.Changed;
-                    Uri id = null;
-
                     // Read over the property to move to its value.
                     this.JsonReader.Read();
 
-                    // Read the removed object and extract the reason, if present
-                    this.AssertJsonCondition(JsonNodeType.StartObject, JsonNodeType.PrimitiveValue /*null*/);
-                    if (this.JsonReader.NodeType != JsonNodeType.PrimitiveValue)
-                    {
-                        while (this.JsonReader.NodeType != JsonNodeType.EndObject && this.JsonReader.Read())
-                        {
-                            // If the current node is the reason property - read it.
-                            if (this.JsonReader.NodeType == JsonNodeType.Property &&
-                                string.Equals(ODataJsonConstants.ODataReasonPropertyName, this.JsonReader.GetPropertyName(), StringComparison.Ordinal))
-                            {
-                                // Read over the property to move to its value.
-                                this.JsonReader.Read();
-
-                                // Read the reason value.
-                                if (string.Equals(ODataJsonConstants.ODataReasonDeletedValue, this.JsonReader.ReadStringValue(), StringComparison.Ordinal))
-                                {
-                                    reason = DeltaDeletedEntryReason.Deleted;
-                                }
-                            }
-                        }
-                    }
-                    else
-                    {
-                        object value = this.JsonReader.GetValue();
-                        if (value != null)
-                        {
-                            throw new ODataException(Error.Format(SRResources.ODataJsonResourceDeserializer_DeltaRemovedAnnotationMustBeObject, value));
-                        }
-                    }
+                    reason = ReadDeletedReason();
 
                     // read over end object or null value
                     this.JsonReader.Read();
@@ -204,6 +177,31 @@ namespace Microsoft.OData.Json
 
                     deletedResource = ReaderUtils.CreateDeletedResource(id, reason);
                 }
+                //// Case 2: id property first
+                //else if (this.JsonReader.NodeType == JsonNodeType.Property && !propertyName.EndsWith(ODataJsonConstants.SimplifiedODataDeltaPropertyName) && !propertyName.Contains(ODataJsonConstants.ODataPropertyAnnotationSeparatorChar))
+                //{
+                //    // read over end object or null value
+                //    this.JsonReader.Read();
+
+                //    ReadOnlyMemory<char> idPropertyName = propertyName.AsMemory();
+                //    object value = this.JsonReader.ReadPrimitiveValue();
+
+                //    // If the next property is the removed property - read it.
+                //    propertyName = this.JsonReader.GetPropertyName();
+                //    if (string.Equals(ODataJsonConstants.PrefixedODataRemovedPropertyName, propertyName, StringComparison.Ordinal)
+                //        || this.CompareSimplifiedODataAnnotation(ODataJsonConstants.SimplifiedODataRemovedPropertyName, propertyName))
+                //    {
+                //        // Read over the property to move to its value.
+                //        this.JsonReader.Read();
+
+                //        reason = ReadDeletedReason();
+
+                //        // Read over end object or null value
+                //        this.JsonReader.Read();
+
+                //        deletedResource = ReaderUtils.CreateDeletedResource(id, reason, KeyValuePair.Create<string, object>(idPropertyName.Span.ToString(), value));
+                //    }
+                //}
             }
 
             this.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
@@ -2431,77 +2429,73 @@ namespace Microsoft.OData.Json
         {
             this.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
 
-            ODataDeletedResource deletedResource = null;
-
-            // If the current node is the deleted property - read it.
-            if (this.JsonReader.NodeType == JsonNodeType.Property)
+            if (this.JsonReader.NodeType != JsonNodeType.Property)
             {
-                string propertyName = await this.JsonReader.GetPropertyNameAsync()
-                    .ConfigureAwait(false);
-                if (string.Equals(ODataJsonConstants.PrefixedODataRemovedPropertyName, propertyName, StringComparison.Ordinal)
+                this.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
+                return null;
+            }
+
+            ODataDeletedResource deletedResource = null;
+            DeltaDeletedEntryReason reason = DeltaDeletedEntryReason.Changed;
+            Uri id = null;
+
+            string propertyName = await this.JsonReader.GetPropertyNameAsync().ConfigureAwait(false);
+
+            // Case 1: removed property first
+            if (string.Equals(ODataJsonConstants.PrefixedODataRemovedPropertyName, propertyName, StringComparison.Ordinal)
                     || this.CompareSimplifiedODataAnnotation(ODataJsonConstants.SimplifiedODataRemovedPropertyName, propertyName))
+            {
+                // Read over the property to move to its value.
+                await this.JsonReader.ReadAsync().ConfigureAwait(false);
+
+                reason = await ReadDeletedReasonAsync();
+
+                // Read over end object or null value
+                await this.JsonReader.ReadAsync().ConfigureAwait(false);
+
+                // A deleted object must have at least either the odata id annotation or the key values
+                if (this.JsonReader.NodeType != JsonNodeType.Property)
                 {
-                    DeltaDeletedEntryReason reason = DeltaDeletedEntryReason.Changed;
-                    Uri id = null;
+                    throw new ODataException(SRResources.ODataWriterCore_DeltaResourceWithoutIdOrKeyProperties);
+                }
 
+                // If the next property is the id property - read it.
+                propertyName = await this.JsonReader.GetPropertyNameAsync().ConfigureAwait(false);
+                if (string.Equals(ODataJsonConstants.PrefixedODataIdPropertyName, propertyName, StringComparison.Ordinal)
+                    || this.CompareSimplifiedODataAnnotation(ODataJsonConstants.SimplifiedODataIdPropertyName, propertyName))
+                {
                     // Read over the property to move to its value.
-                    await this.JsonReader.ReadAsync()
-                        .ConfigureAwait(false);
+                    await this.JsonReader.ReadAsync().ConfigureAwait(false);
 
-                    // Read the removed object and extract the reason, if present
-                    this.AssertJsonCondition(JsonNodeType.StartObject, JsonNodeType.PrimitiveValue /*null*/);
-                    object removedValue;
-                    if (this.JsonReader.NodeType != JsonNodeType.PrimitiveValue)
-                    {
-                        while (this.JsonReader.NodeType != JsonNodeType.EndObject && await this.JsonReader.ReadAsync().ConfigureAwait(false))
-                        {
-                            // If the current node is the reason property - read it.
-                            if (this.JsonReader.NodeType == JsonNodeType.Property
-                                && string.Equals(ODataJsonConstants.ODataReasonPropertyName, await this.JsonReader.GetPropertyNameAsync().ConfigureAwait(false), StringComparison.Ordinal))
-                            {
-                                // Read over the property to move to its value.
-                                await this.JsonReader.ReadAsync()
-                                    .ConfigureAwait(false);
+                    // Read the id value.
+                    id = UriUtils.StringToUri(await this.JsonReader.ReadStringValueAsync().ConfigureAwait(false));
+                }
 
-                                // Read the reason value.
-                                if (string.Equals(ODataJsonConstants.ODataReasonDeletedValue, await this.JsonReader.ReadStringValueAsync().ConfigureAwait(false), StringComparison.Ordinal))
-                                {
-                                    reason = DeltaDeletedEntryReason.Deleted;
-                                }
-                            }
-                        }
-                    }
-                    else if ((removedValue = await this.JsonReader.GetValueAsync().ConfigureAwait(false)) != null)
-                    {
-                        throw new ODataException(
-                            Error.Format(SRResources.ODataJsonResourceDeserializer_DeltaRemovedAnnotationMustBeObject, removedValue));
-                    }
+                deletedResource = ReaderUtils.CreateDeletedResource(id, reason);
+            }
+            else if (this.JsonReader.NodeType == JsonNodeType.Property && !propertyName.StartsWith(ODataJsonConstants.ODataPropertyAnnotationSeparatorChar))
+            {
+                // Read over the property to move to its value.
+                await this.JsonReader.ReadAsync().ConfigureAwait(false);
+
+                ReadOnlyMemory<char> propertyNameMemory = propertyName.AsMemory();
+                object value = await this.JsonReader.ReadPrimitiveValueAsync().ConfigureAwait(false);
+
+                // If the next property is the removed property - read it.
+                propertyName = await this.JsonReader.GetPropertyNameAsync().ConfigureAwait(false);
+
+                if (string.Equals(ODataJsonConstants.PrefixedODataRemovedPropertyName, propertyName, StringComparison.Ordinal)
+                || this.CompareSimplifiedODataAnnotation(ODataJsonConstants.SimplifiedODataRemovedPropertyName, propertyName))
+                {
+                    // Read over the property to move to its value.
+                    await this.JsonReader.ReadAsync().ConfigureAwait(false);
+
+                    reason = await ReadDeletedReasonAsync();
 
                     // Read over end object or null value
-                    await this.JsonReader.ReadAsync()
-                        .ConfigureAwait(false);
+                    await this.JsonReader.ReadAsync().ConfigureAwait(false);
 
-                    // A deleted object must have at least either the odata id annotation or the key values
-                    if (this.JsonReader.NodeType != JsonNodeType.Property)
-                    {
-                        throw new ODataException(SRResources.ODataWriterCore_DeltaResourceWithoutIdOrKeyProperties);
-                    }
-
-                    // If the next property is the id property - read it.
-                    propertyName = await this.JsonReader.GetPropertyNameAsync()
-                        .ConfigureAwait(false);
-                    if (string.Equals(ODataJsonConstants.PrefixedODataIdPropertyName, propertyName, StringComparison.Ordinal)
-                        || this.CompareSimplifiedODataAnnotation(ODataJsonConstants.SimplifiedODataIdPropertyName, propertyName))
-                    {
-                        // Read over the property to move to its value.
-                        await this.JsonReader.ReadAsync()
-                            .ConfigureAwait(false);
-
-                        // Read the id value.
-                        id = UriUtils.StringToUri(await this.JsonReader.ReadStringValueAsync().ConfigureAwait(false));
-                    }
-
-                    deletedResource = ReaderUtils.CreateDeletedResource(id, reason);
+                    deletedResource = ReaderUtils.CreateDeletedResource(id, reason, KeyValuePair.Create<string, object>(propertyNameMemory.Span.ToString(), value));
                 }
             }
 
@@ -4331,6 +4325,91 @@ namespace Microsoft.OData.Json
 
             this.JsonReader.AssertNotBuffering();
             this.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
+        }
+
+        /// <summary>
+        /// Reads the reason for a deleted entry.
+        /// </summary>
+        /// <returns>The reason for the deleted entry.</returns>
+        /// <exception cref="ODataException"></exception>
+        private DeltaDeletedEntryReason ReadDeletedReason()
+        {
+            DeltaDeletedEntryReason reason = DeltaDeletedEntryReason.Changed;
+
+            // Read the removed object and extract the reason, if present
+            this.AssertJsonCondition(JsonNodeType.StartObject, JsonNodeType.PrimitiveValue /*null*/);
+
+            if (this.JsonReader.NodeType != JsonNodeType.PrimitiveValue)
+            {
+                while (this.JsonReader.NodeType != JsonNodeType.EndObject && this.JsonReader.Read())
+                {
+                    // If the current node is the reason property - read it.
+                    if (this.JsonReader.NodeType == JsonNodeType.Property &&
+                        string.Equals(ODataJsonConstants.ODataReasonPropertyName, this.JsonReader.GetPropertyName(), StringComparison.Ordinal))
+                    {
+                        // Read over the property to move to its value.
+                        this.JsonReader.Read();
+
+                        // Read the reason value.
+                        if (string.Equals(ODataJsonConstants.ODataReasonDeletedValue, this.JsonReader.ReadStringValue(), StringComparison.Ordinal))
+                        {
+                            reason = DeltaDeletedEntryReason.Deleted;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                object value = this.JsonReader.GetValue();
+                if (value != null)
+                {
+                    throw new ODataException(Error.Format(SRResources.ODataJsonResourceDeserializer_DeltaRemovedAnnotationMustBeObject, value));
+                }
+            }
+
+            return reason;
+        }
+
+        /// <summary>
+        /// Asynchronously reads the reason for a deleted entry.
+        /// </summary>
+        /// <returns>The reason for the deleted entry.</returns>
+        /// <exception cref="ODataException"></exception>
+        private async Task<DeltaDeletedEntryReason> ReadDeletedReasonAsync()
+        {
+            DeltaDeletedEntryReason reason = DeltaDeletedEntryReason.Changed;
+
+            // Read the removed object and extract the reason, if present
+            this.AssertJsonCondition(JsonNodeType.StartObject, JsonNodeType.PrimitiveValue /*null*/);
+
+            object removedValue;
+            if (this.JsonReader.NodeType != JsonNodeType.PrimitiveValue)
+            {
+                while (this.JsonReader.NodeType != JsonNodeType.EndObject && await this.JsonReader.ReadAsync().ConfigureAwait(false))
+                {
+                    // If the current node is the reason property - read it.
+                    if (this.JsonReader.NodeType == JsonNodeType.Property
+                        && string.Equals(ODataJsonConstants.ODataReasonPropertyName, await this.JsonReader.GetPropertyNameAsync().ConfigureAwait(false), StringComparison.Ordinal))
+                    {
+                        // Read over the property to move to its value.
+                        await this.JsonReader.ReadAsync()
+                            .ConfigureAwait(false);
+
+                        // Read the reason value.
+                        if (string.Equals(ODataJsonConstants.ODataReasonDeletedValue, await this.JsonReader.ReadStringValueAsync().ConfigureAwait(false), StringComparison.Ordinal))
+                        {
+                            reason = DeltaDeletedEntryReason.Deleted;
+                        }
+                    }
+                }
+            }
+            else if ((removedValue = await this.JsonReader.GetValueAsync().ConfigureAwait(false)) != null)
+            {
+                throw new ODataException(
+                    Error.Format(SRResources.ODataJsonResourceDeserializer_DeltaRemovedAnnotationMustBeObject, removedValue));
+            }
+
+            return reason;
         }
     }
 }

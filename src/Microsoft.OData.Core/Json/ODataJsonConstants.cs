@@ -108,6 +108,9 @@ namespace Microsoft.OData.Json
         /// <summary> The kind name of the service document entity set element. </summary>
         internal const string ServiceDocumentEntitySetKindName = "EntitySet";
 
+        /// <summary> The simplified OData Delta property name. </summary>
+        internal const string SimplifiedODataDeltaPropertyName = "@delta";
+
         /// <summary>The simplified OData Context property name.</summary>
         internal const string SimplifiedODataContextPropertyName = "@context";
 
@@ -137,5 +140,8 @@ namespace Microsoft.OData.Json
 
         /// <summary>The prefixed OData Removed property name.</summary>
         internal const string PrefixedODataRemovedPropertyName = "@odata.removed";
+
+        /// <summary>The OData Removed property name.</summary>
+        internal const string ODataRemovedPropertyName = "odata.removed";
     }
 }
