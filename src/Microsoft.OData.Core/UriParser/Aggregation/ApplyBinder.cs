@@ -218,7 +218,8 @@ namespace Microsoft.OData.UriParser.Aggregation
                 default:
                     if (method.MethodKind == AggregationMethod.Custom)
                     {
-                        IEdmTypeReference returnType = GetCustomMethodReturnType(configuration == null ? null : configuration.Model, expressionType, method, configuration == null ? false : configuration.EnableCaseInsensitiveUriFunctionIdentifier);
+                        IEdmTypeReference returnType = GetCustomMethodReturnType(configuration?.Model, expressionType, method, configuration?.EnableCaseInsensitiveUriFunctionIdentifier ?? false);
+
                         if (returnType != null)
                         {
                             return returnType;
