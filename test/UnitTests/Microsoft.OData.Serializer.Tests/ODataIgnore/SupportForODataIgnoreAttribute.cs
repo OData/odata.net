@@ -2,7 +2,7 @@
 using Microsoft.OData.UriParser;
 using System.Text.Json;
 
-namespace Microsoft.OData.Serializer.Tests;
+namespace Microsoft.OData.Serializer.Tests.ODataIgnore;
 
 public class SupportForODataIgnoreAttribute
 {
