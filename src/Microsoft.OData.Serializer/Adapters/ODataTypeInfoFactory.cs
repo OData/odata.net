@@ -67,7 +67,7 @@ internal static class ODataTypeInfoFactory<TCustomState>
                 continue;
             }
 
-            var effectiveIgnoreCondition = propertyIgnoreCondition ?? classLevelIgnoreCondition;
+            var effectiveIgnoreCondition = GetEffectiveIgnoreCondition(classLevelIgnoreCondition, propertyIgnoreCondition);
             if (effectiveIgnoreCondition == ODataIgnoreCondition.Always)
             {
                 continue;
@@ -506,4 +506,41 @@ internal static class ODataTypeInfoFactory<TCustomState>
 
     private static bool IsReferenceTypeOrNullableValueType(Type type) =>
         !type.IsValueType || (type.IsGenericType && type.GetGenericTypeDefinition() == NullableOfTGenericDefinition);
+
+    /// <summary>
+    /// Resolves the effective ignore condition for a property
+    /// based on parent (class-level) and child (property-level) ignore conditions
+    /// following precedence rules.
+    /// </summary>
+    /// <param name="parentCondition">Ignore condition from the parent-level configuration.</param>
+    /// <param name="childCondition">Ignore condition from the child-level configuration.</param>
+    /// <returns></returns>
+    private static ODataIgnoreCondition GetEffectiveIgnoreCondition(
+        ODataIgnoreCondition? parentCondition,
+        ODataIgnoreCondition? childCondition)
+    {
+        if (parentCondition == null)
+        {
+            return childCondition ?? ODataIgnoreCondition.Never;
+        }
+
+        if (childCondition == null)
+        {
+            return parentCondition ?? ODataIgnoreCondition.Never;
+        }
+
+        // If child condition is conditional (e.g. WhenWritingNull) and parent is Always,
+        // Then effective condition is Always since "ignoring the property all the time"
+        // is consistent with "ignoring the property sometimes".
+        if (parentCondition == ODataIgnoreCondition.Always)
+        {
+            if (childCondition == ODataIgnoreCondition.WhenWritingNull)
+            {
+                return ODataIgnoreCondition.Always;
+            }
+        }
+
+        // Otherwise, child condition takes precedence.
+        return childCondition.Value;
+    }
 }
