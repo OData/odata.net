@@ -220,11 +220,10 @@ public class ODataIgnoreClassAndPropertyAttributesOverridesTests
     [ODataIgnoreProperties(ODataIgnoreCondition.WhenWritingNull)]
     class CustomerWithIgnoreNull
     {
-        // This property will always be written.
+        // This property will always be written only if the value is not null.
         public string Id { get; set; }
 
         // This property will be written only if the value is not null.
-        [ODataIgnore(ODataIgnoreCondition.WhenWritingNull)]
         public string Name { get; set; }
 
         // This property will be written only if the value is not null.
@@ -234,7 +233,7 @@ public class ODataIgnoreClassAndPropertyAttributesOverridesTests
         [ODataIgnore(ODataIgnoreCondition.Never)]
         public int? Age { get; set; }
 
-        // This property will always be written.
+        // This property will always be written since it can't be null.
         public bool Active { get; set; }
 
         // This property will never be written.
