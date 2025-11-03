@@ -247,7 +247,7 @@ namespace Microsoft.OData.UriParser.Aggregation
             IEdmTypeReference returnType = null;
             if (method.MethodKind == AggregationMethod.Custom)
             {
-                returnType = GetCustomMethodReturnType(configuration == null ? null : configuration.Model, expressionType, method, configuration == null ? false : configuration.EnableCaseInsensitiveUriFunctionIdentifier);
+                returnType = GetCustomMethodReturnType(configuration?.Model, expressionType, method, configuration?.EnableCaseInsensitiveUriFunctionIdentifier ?? false);
             }
             else
             {
