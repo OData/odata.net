@@ -220,7 +220,7 @@ public class ODataIgnoreClassAndPropertyAttributesOverridesTests
     [ODataIgnoreProperties(ODataIgnoreCondition.WhenWritingNull)]
     class CustomerWithIgnoreNull
     {
-        // This property will always be written only if the value is not null.
+        // This property will be written only if the value is not null.
         public string Id { get; set; }
 
         // This property will be written only if the value is not null.
