@@ -76,9 +76,4 @@
   <PropertyGroup>
     <DefineConstants Condition="'$([System.IO.Path]::GetExtension($(MSBuildProjectFile)))' == '.vbproj'">$(DefineConstants.Replace(";", ","))</DefineConstants>
   </PropertyGroup>
-  
-  <PropertyGroup>
-    <!-- Only set a default if neither TargetFramework nor TargetFrameworks was provided -->
-    <TargetFramework Condition="'$(TargetFramework)'=='' and '$(TargetFrameworks)'==''">net8.0</TargetFramework>
-  </PropertyGroup>
 </Project>

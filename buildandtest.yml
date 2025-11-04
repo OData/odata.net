@@ -18,11 +18,6 @@ steps:
       $publish = New-Object System.EnterpriseServices.Internal.Publish
       $publish.GacInstall("$(gacUtil)")
 
-- task: UseDotNet@2
-  displayName: 'Install .NET 9 SDK'
-  inputs:
-    version: '9.x'
-
 - task: DotNetCoreCLI@2
   displayName: 'Build'  
   inputs:
@@ -35,6 +30,6 @@ steps:
   displayName: 'Test'
   inputs:
     command: 'test'
-    arguments: '--configuration $(buildConfiguration) --framework net8.0 --settings $(Build.SourcesDirectory)\test.runsettings --no-build'
+    arguments: '--configuration $(buildConfiguration) --settings $(Build.SourcesDirectory)\test.runsettings --no-build'
     projects: |      
      $(Build.SourcesDirectory)\sln\OData.Pipeline.sln
