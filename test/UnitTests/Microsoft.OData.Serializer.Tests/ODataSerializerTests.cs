@@ -6,7 +6,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Text.Json;
 
-public class V3ODataSerializerTests
+public class ODataSerializerTests
 {
     [Fact]
     public async Task NestedPocoResourceSetResponse_WithSelectExpand_And_MinimalControlInformation()

@@ -7,6 +7,9 @@ public class ODataPropertyInfo
 {
     private string name;
 
+    // Internal constructor to prevent external code from creating subclasses.
+    internal ODataPropertyInfo() { } 
+
     public string? Name
     {
         get => name;

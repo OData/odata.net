@@ -8,7 +8,8 @@ public class ODataPropertyInfo<TDeclaringType, TCustomState> :
     IValueWriter<TCustomState>,
     ICountWriter<TCustomState>,
     INextLinkWriter<TCustomState>,
-    IAnnotationWriter<TCustomState>
+    IAnnotationWriter<TCustomState>,
+    IStreamValueWriter<TCustomState>
 #pragma warning restore CA1005 // Avoid excessive parameters on generic types
 {
     // TODO: this property name conflicts with the method WriteValue from IValueWriter. Perhaps IValueWriter.WriteValue should be renamed?
@@ -185,20 +186,20 @@ public class ODataPropertyInfo<TDeclaringType, TCustomState> :
         Debug.Assert(this.WriteValueAsync != null || this.WriteValueWithCustomWriterAsync != null, 
             "WriteValueAsync should not be null.");
 
-        if (state.Stack.Current.PropertyProgress < PropertyProgress.Name)
-        {
-            state.JsonWriter.WritePropertyName(this.Utf8Name.Span);
-            state.Stack.Current.PropertyProgress = PropertyProgress.Name;
-        }
-
+        // TODO: We pass this ODataPropertyInfo as the IStreamValueWriter parameter
+        // so that the property name is written only if the caller invokes Write* methods.
+        // Since ODataPropertyInfo knows the property to write.
+        // Alternatively, we could store the property name in the state and have the StreamValueWriter
+        // retrieve it from the state and write it before the writing the value.
+        // I'll benchmark the two and settle on the one that's more performant.
         if (this.WriteValueAsync != null)
         {
-            return WriteValueAsync(resource, StreamValueWriter<TCustomState>.Instance, state);
+            return WriteValueAsync(resource, this, state);
         }
 
         Debug.Assert(this.CustomPropertyValueWriter != null, "CustomPropertyValueWriter should not be null if WriteValueWithCustomWriterAsync is set.");
         Debug.Assert(WriteValueWithCustomWriterAsync != null);
-        return WriteValueWithCustomWriterAsync(resource, this.CustomPropertyValueWriter, StreamValueWriter<TCustomState>.Instance, state);
+        return WriteValueWithCustomWriterAsync(resource, this.CustomPropertyValueWriter, this, state);
     }
 
     
@@ -368,5 +369,53 @@ public class ODataPropertyInfo<TDeclaringType, TCustomState> :
         JsonMetadataHelpers.WriteCustomPropertyAnnotationName(jsonWriter, this.Utf8Name.Span, name);
         var success = state.WriteValue(value);
         Debug.Assert(success, "Annotation value write did not complete. Resumable writes are not currently supported for annotations.");
+    }
+
+    void IStreamValueWriter<TCustomState>.WriteValue<T>(T value, ODataWriterState<TCustomState> state)
+    {
+        EnsurePropertyWritten(state);
+        StreamValueWriter<TCustomState>.Instance.WriteValue(value, state);
+    }
+
+    ValueTask IStreamValueWriter<TCustomState>.WriteValueAsync<T>(T value, ODataWriterState<TCustomState> state)
+    {
+        EnsurePropertyWritten(state);
+        return StreamValueWriter<TCustomState>.Instance.WriteValueAsync(value, state);
+    }
+
+    void IStreamValueWriter<TCustomState>.WriteStringSegment(ReadOnlySpan<char> value, bool isFinalBlock, ODataWriterState<TCustomState> state)
+    {
+        EnsurePropertyWritten(state);
+        StreamValueWriter<TCustomState>.Instance.WriteStringSegment(value, isFinalBlock, state);
+    }
+
+    void IStreamValueWriter<TCustomState>.WriteBinarySegment(ReadOnlySpan<byte> value, bool isFinalBlock, ODataWriterState<TCustomState> state)
+    {
+        EnsurePropertyWritten(state);
+        StreamValueWriter<TCustomState>.Instance.WriteBinarySegment(value, isFinalBlock, state);
+    }
+
+    bool IStreamValueWriter<TCustomState>.ShouldFlush(ODataWriterState<TCustomState> state)
+    {
+        return StreamValueWriter<TCustomState>.Instance.ShouldFlush(state);
+    }
+
+    ValueTask IStreamValueWriter<TCustomState>.FlushAsync(ODataWriterState<TCustomState> state)
+    {
+        return StreamValueWriter<TCustomState>.Instance.FlushAsync(state);
+    }
+
+    ValueTask IStreamValueWriter<TCustomState>.FlushIfBufferFullAsync(ODataWriterState<TCustomState> state)
+    {
+        return StreamValueWriter<TCustomState>.Instance.FlushIfBufferFullAsync(state);
+    }
+
+    private void EnsurePropertyWritten(ODataWriterState<TCustomState> state)
+    {
+        if (state.Stack.Current.PropertyProgress < PropertyProgress.Name)
+        {
+            state.JsonWriter.WritePropertyName(this.Utf8Name.Span);
+            state.Stack.Current.PropertyProgress = PropertyProgress.Name;
+        }
     }
 }
