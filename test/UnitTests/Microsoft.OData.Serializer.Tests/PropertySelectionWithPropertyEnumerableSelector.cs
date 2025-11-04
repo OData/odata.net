@@ -16,7 +16,7 @@ public class PropertySelectionWithPropertyEnumerableSelector
             {
                 { "Id", 1 },
                 { "Name", "Alice" },
-                { "BirthDate", new DateTimeOffset(new DateTime(1990, 1, 1)) }
+                { "BirthDate", new DateTimeOffset(new DateTime(1990, 1, 1), TimeSpan.Zero) }
             }
         };
 
@@ -73,7 +73,7 @@ public class PropertySelectionWithPropertyEnumerableSelector
             {
                 { "Id", 1 },
                 { "Name", "Alice" },
-                { "BirthDate", new DateTimeOffset(new DateTime(1990, 1, 1)) }
+                { "BirthDate", new DateTimeOffset(new DateTime(1990, 1, 1), TimeSpan.Zero) }
             }
         };
 
