@@ -171,6 +171,60 @@ public class WriteValueHookSkipsPropertyIfNoValueWrittenTests
         Assert.Equal(expectedNormalized, actualNormalized);
     }
 
+    [Fact]
+    public async Task ODataAsyncPropertyWriter_SkipsProperty_IfValueNotWritten()
+    {
+        List<BlogPostWithAsyncWriter> posts = [
+            new BlogPostWithAsyncWriter
+            {
+                Id = 1,
+                Title = "Test Post",
+                Content = null
+            },
+            new BlogPostWithAsyncWriter
+            {
+                Id = 2,
+                Title = "Another Post",
+                Content = "This is some content."
+            }
+        ];
+
+        var model = CreateEdmModel();
+        var odataUri = new ODataUriParser(
+            model,
+            new Uri("http://service/odata"),
+            new Uri("Posts", UriKind.Relative)
+        ).ParseUri();
+
+        var options = new ODataSerializerOptions();
+
+        var output = new MemoryStream();
+        await ODataSerializer.WriteAsync(posts, output, odataUri, model, options);
+        output.Position = 0;
+        var actual = Encoding.UTF8.GetString(output.ToArray());
+        var actualNormalized = JsonSerializer.Serialize(JsonDocument.Parse(actual));
+        var expected =
+            """
+            {
+              "@odata.context": "http://service/odata/$metadata#Posts",
+              "value": [
+                {
+                  "Id": 1,
+                  "Title": "Test Post"
+                },
+                {
+                  "Id": 2,
+                  "Title": "Another Post",
+                  "Content": "This is some content."
+                }
+              ]
+            }
+            """;
+        var expectedNormalized = JsonSerializer.Serialize(JsonDocument.Parse(expected));
+        Assert.Equal(expectedNormalized, actualNormalized);
+    }
+
+
 
     private static IEdmModel CreateEdmModel()
     {
@@ -186,11 +240,31 @@ public class WriteValueHookSkipsPropertyIfNoValueWrittenTests
         return model;
     }
 
-    [ODataType("ns.BlogPost")]
     class BlogPost
     {
         public int Id { get; set; }
         public string Title { get; set; }
         public string Content { get; set; }
+    }
+
+    [ODataType("ns.BlogPost")]
+    class BlogPostWithAsyncWriter
+    {
+        public int Id { get; set; }
+        public string Title { get; set; }
+
+        [ODataValueWriter(typeof(AsyncContentWriter))]
+        public string Content { get; set; }
+    }
+
+    class AsyncContentWriter : ODataAsyncPropertyWriter<BlogPostWithAsyncWriter, string, DefaultState>
+    {
+        public override async ValueTask WriteValueAsync(BlogPostWithAsyncWriter resource, string propertyValue, IStreamValueWriter<DefaultState> writer, ODataWriterState<DefaultState> state)
+        {
+            if (propertyValue != null)
+            {
+                await writer.WriteValueAsync(propertyValue, state);
+            }
+        }
     }
 }
