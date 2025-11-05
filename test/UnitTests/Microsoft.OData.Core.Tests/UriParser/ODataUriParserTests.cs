@@ -838,8 +838,10 @@ namespace Microsoft.OData.Tests.UriParser
         [InlineData("People?$select=@fuLLy.quaLIfied.NAMespACe.uNKNownTerm", "fuLLy.quaLIfied.NAMespACe.uNKNownTerm", "Edm.Untyped", true)]
         public void ParseSelectAnnotationShouldWork(string relativeUriString, string termName, string typeName, bool caseInsensitive)
         {
-            var parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri(relativeUriString, UriKind.Relative));
-            parser.Resolver.EnableCaseInsensitive = caseInsensitive;
+            var parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri(relativeUriString, UriKind.Relative))
+            {
+                Resolver = new ODataUriResolver { EnableCaseInsensitive = caseInsensitive }
+            };
             var selectExpand = parser.ParseSelectAndExpand();
             Assert.NotNull(selectExpand);
             PathSelectItem selectItem = selectExpand.SelectedItems.First() as PathSelectItem;

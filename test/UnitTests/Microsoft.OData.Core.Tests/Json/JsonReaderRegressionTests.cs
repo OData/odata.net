@@ -176,9 +176,8 @@ namespace Microsoft.OData.Tests.Json
 
         private static IEnumerable<object[]> ExpandWithReaderKinds(TheoryData<string> theoryData)
         {
-            foreach (var dataRow in theoryData)
+            foreach (var payload in theoryData)
             {
-                var payload = dataRow[0];
                 yield return new object[] { payload, ReaderSourceKind.Buffered }; // baseline buffered StringReader
                 yield return new object[] { payload, ReaderSourceKind.Chunked }; // chunked/refill ChunkedStringReader
             }

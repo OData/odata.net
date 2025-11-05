@@ -9,18 +9,10 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute> <!--check this in attributes-->
   </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <OutputPath>..\..\..\bin\AnyCPU\Debug\Test\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <Optimize>false</Optimize>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <OutputPath>..\..\..\bin\AnyCPU\Release\Test\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-  </PropertyGroup>
   
   <PropertyGroup>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
@@ -40,6 +32,7 @@
 
   <ItemGroup>
      <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
+     <PackageReference Include="coverlet.collector" Version="6.0.4" />
   </ItemGroup>
    
   <ItemGroup>

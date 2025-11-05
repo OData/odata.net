@@ -9,9 +9,8 @@
   </PropertyGroup>
   
    <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
-  </PropertyGroup>
-  <PropertyGroup>
+     <IsPackable>false</IsPackable>
+     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\..\..\tools\StrongNamePublicKeys\testkey.snk</AssemblyOriginatorKeyFile>
     <DelaySign>false</DelaySign>
   </PropertyGroup>
