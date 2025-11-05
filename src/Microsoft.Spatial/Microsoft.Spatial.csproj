@@ -5,7 +5,7 @@
     <RootNamespace>Microsoft.Spatial</RootNamespace>
 
     <DocumentationFile>$(AssemblyName).xml</DocumentationFile>
-    <DefineConstants>TRACE;SPATIAL;SUPPRESS_PORTABLELIB_TARGETFRAMEWORK_ATTRIBUTE;DelaySignKeys</DefineConstants>
+    <DefineConstants>TRACE;SPATIAL;DelaySignKeys</DefineConstants>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <IsPackable>true</IsPackable>
     <IsShipping>true</IsShipping>

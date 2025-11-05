@@ -33,34 +33,8 @@
     <DefineConstants Condition="'$(AllowPartialTrustedCalls)' == 'true'">$(DefineConstants);ASSEMBLY_ATTRIBUTE_ALLOW_PARTIALLY_TRUSTED_CALLERS</DefineConstants>
     <DefineConstants Condition="'$(ConditionalAPTCA_L2)' == 'true'">$(DefineConstants);ASSEMBLY_ATTRIBUTE_CONDITIONAL_APTCA_L2</DefineConstants>
     <DefineConstants Condition="'$(AssemblyAttributeSkipVerificationInFullTrust)' == 'true'">$(DefineConstants);ASSEMBLY_ATTRIBUTE_SKIP_VERIFICATION_IN_FULLTRUST</DefineConstants>
-    <DefineConstants Condition="'$(TargetFrameworkVersion)' == 'v4.5'">$(DefineConstants);ASSEMBLY_ATTRIBUTE_NO_BUILD_NUM_IN_VERSION</DefineConstants>
   </PropertyGroup>
 
- <PropertyGroup Condition ="'$(TargetFrameworkIdentifier)' == 'netstandard2.1'">
-    <DefineConstants>$(DefineConstants);SUPPRESS_SECURITY_RULES;</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup Condition ="'$(TargetFrameworkIdentifier)' == 'netstandard2.0'">
-    <DefineConstants>$(DefineConstants);SUPPRESS_SECURITY_RULES;</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup>
-      <TargetFrameworks Condition="'$(TargetFrameworks)' == ''">net8.0;net9.0</TargetFrameworks>
-  </PropertyGroup>
-
-  <PropertyGroup Condition ="'$(TargetFrameworkIdentifier)' == 'net45'">
-    <DefineConstants>$(DefineConstants);SUPPRESS_SECURITY_RULES;</DefineConstants>
-  </PropertyGroup>
-  
-  <PropertyGroup Condition ="'$(TargetFrameworkVersion)' == 'v4.5'">
-    <DefineConstants>$(DefineConstants);SUPPRESS_SECURITY_RULES</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup Condition ="'$(TargetFramework)' == 'net45'">
-    <DefineConstants>$(DefineConstants);SUPPRESS_SECURITY_RULES</DefineConstants>
-  </PropertyGroup>
-  
-  
   <PropertyGroup Condition="'$(MSBuildProjectExtension)' == '.csproj'">
     <NoWarn>$(NoWarn);1699;1570;1572;1573;1591;1607</NoWarn>
     <WarningsNotAsErrors>$(WarningsNotAsErrors);1058</WarningsNotAsErrors>
@@ -75,15 +49,6 @@
     <NuGetToolsPath>$(SolutionDir)\.nuget</NuGetToolsPath>
     <NuGetExePath>$(NuGetToolsPath)\NuGet.exe</NuGetExePath>
     <PackagesConfig>$(NuGetToolsPath)\packages.config</PackagesConfig>
-  </PropertyGroup>
-
-  
-  <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard1.1'">
-    <DefineConstants>$(DefineConstants);ASSEMBLY_ATTRIBUTE_ON_NETSTANDARD_11</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(TargetFramework)' == 'netcoreapp1.0'">
-    <DefineConstants>$(DefineConstants);ASSEMBLY_ATTRIBUTE_ON_NETCORE_10</DefineConstants>
   </PropertyGroup>
   
    <!--StyleCop settings--> 
@@ -111,5 +76,4 @@
   <PropertyGroup>
     <DefineConstants Condition="'$([System.IO.Path]::GetExtension($(MSBuildProjectFile)))' == '.vbproj'">$(DefineConstants.Replace(";", ","))</DefineConstants>
   </PropertyGroup>
-  
 </Project>
