@@ -178,6 +178,17 @@ namespace Microsoft.OData.Client
                 {
                     this.cannotBeEvaluated = true;
                 }
+
+                if (m.Method.DeclaringType != null && (m.Method.DeclaringType.ContainsGenericParameters || m.Method.DeclaringType.IsByRefLike))
+                {
+                    this.cannotBeEvaluated = true;
+                }
+
+                if (m.Method.ReturnType != null && m.Method.ReturnType.IsByRefLike)
+                {
+                    this.cannotBeEvaluated = true;
+                }
+
                 return base.VisitMethodCall(m);
             }
 
