@@ -752,7 +752,7 @@ namespace Microsoft.OData.Client
             // Get the first argument which is ReadOnlySpan<T> or Span<T>
             Expression argument = expression.Arguments[0];
 
-            // Since the first argument of MemoryExtensions.Contains is a ReadOnlySpan<T> or Span<T>, when 'visiting' the argument, it's rewrited as a Convert expression if it's implicit conversion from array to Span<T>/ReadOnlySpan<T>.
+            // Since the first argument of MemoryExtensions.Contains is a ReadOnlySpan<T> or Span<T>, when 'visiting' the argument, it's rewritten as a Convert expression if it's implicit conversion from array to Span<T>/ReadOnlySpan<T>.
             // So we need to unwrap the Convert expression to get the original argument.
             if (argument.NodeType == ExpressionType.Convert)
             {
