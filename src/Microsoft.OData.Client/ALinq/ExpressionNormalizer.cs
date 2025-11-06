@@ -14,6 +14,7 @@ namespace Microsoft.OData.Client
     using System.Diagnostics;
     using System.Linq.Expressions;
     using System.Reflection;
+    using System.Linq;
 
     #endregion Namespaces
 
@@ -383,6 +384,17 @@ namespace Microsoft.OData.Client
                 return CreateCompareExpression(visited.Arguments[0], visited.Arguments[1]);
             }
 
+            // for an usage as: 
+            // var products = dsc.CreateQuery<Product>("Products")
+            //    .Where(product => new[] { "Pancake mix" }.Contains(product.Name));
+            // For .NET version <= 9.0, the expression tree will have Enumerable.Contains method call
+            // For .NET version >= 10.0, the expression tree will have MemoryExtensions.Contains method call, Since the MemoryExtensions.Contains method takes the 'Span<T>' or 'ReadOnlySpan<T>' as the first parameter,
+            // It's not supported in OData query. So we need to convert it to Enumerable.Contains method call.
+            if (visited.Method.IsStatic && visited.Method.Name == "Contains" && visited.Method.DeclaringType == typeof(MemoryExtensions))
+            {
+                return CreateContainsExpression(visited);
+            }
+
             MethodCallExpression normalizedResult;
 
             // check for coalesce operators added by the VB compiler to predicate arguments
@@ -730,6 +742,30 @@ namespace Microsoft.OData.Client
             _patterns[result] = new ComparePattern(left, right);
 
             return result;
+        }
+
+        private static MethodCallExpression CreateContainsExpression(MethodCallExpression expression)
+        {
+            // Make sure it's calling System.Memory.MemoryExtensions.Contains
+            Debug.Assert(expression.Method.IsStatic && expression.Method.Name == "Contains" && expression.Method.DeclaringType == typeof(MemoryExtensions), "Expected MemoryExtensions.Contains method call.");
+
+            // Get the first argument which is ReadOnlySpan<T> or Span<T>
+            Expression argument = expression.Arguments[0];
+
+            // Since the first argument of MemoryExtensions.Contains is a ReadOnlySpan<T> or Span<T>, when 'visiting' the argument, it's rewrited as a Convert expression if it's implicit conversion from array to Span<T>/ReadOnlySpan<T>.
+            // So we need to unwrap the Convert expression to get the original argument.
+            if (argument.NodeType == ExpressionType.Convert)
+            {
+                UnaryExpression convertExpr = (UnaryExpression)argument;
+                argument = convertExpr.Operand;
+            }
+
+            // System.Memory.MemoryExtensions.Contains<T>(...) could contain the third parameter for comparer.
+            // So far, it's 'null' for comparer for most scenarios, most important, OData doesn't do comparision for, for example, 'in' operator. So we only care about the overload with two parameters here.
+            // So far, "System.Linq.Enumerable.Contains<T>(IEnumerable<T>, T)" contains two 'Contains' method and only one of them has two parameters.
+            return Expression.Call(null,
+                typeof(Enumerable).GetMethods().First(c => c.Name == "Contains" && c.GetParameters().Count() == 2).MakeGenericMethod(new[] { expression.Arguments[1].Type }),
+                argument, expression.Arguments[1]);
         }
 
         /// <summary>Records a rewritten expression as necessary.</summary>
