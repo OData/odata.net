@@ -50,6 +50,12 @@ namespace Microsoft.OData.Client
         private const bool LiftToNull = false;
 
         /// <summary>
+        /// The Enumerable.Contains method info.
+        /// </summary>
+        private static MethodInfo ContainsMethod = typeof(Enumerable).GetMethods(BindingFlags.Static | BindingFlags.Public)
+            .FirstOrDefault(m => m.Name == "Contains" && m.GetParameters().Length == 2);
+
+        /// <summary>
         /// Gets a dictionary mapping from LINQ expressions to matched by those expressions. Used
         /// to identify composite expression patterns.
         /// </summary>
@@ -763,9 +769,7 @@ namespace Microsoft.OData.Client
             // System.Memory.MemoryExtensions.Contains<T>(...) could contain the third parameter for comparer.
             // So far, it's 'null' for comparer for most scenarios, most important, OData doesn't do comparision for, for example, 'in' operator. So we only care about the overload with two parameters here.
             // So far, "System.Linq.Enumerable.Contains<T>(IEnumerable<T>, T)" contains two 'Contains' method and only one of them has two parameters.
-            return Expression.Call(null,
-                typeof(Enumerable).GetMethods().First(c => c.Name == "Contains" && c.GetParameters().Count() == 2).MakeGenericMethod(new[] { expression.Arguments[1].Type }),
-                argument, expression.Arguments[1]);
+            return Expression.Call(null, ContainsMethod.MakeGenericMethod(new[] { expression.Arguments[1].Type }), argument, expression.Arguments[1]);
         }
 
         /// <summary>Records a rewritten expression as necessary.</summary>
