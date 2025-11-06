@@ -540,12 +540,12 @@ Function BuildProcess
         rm $BUILDLOG
     }
 
-    RunBuild ('OData.sln')
+    RunBuild ('OData.slnx')
 
     if ($TestType -ne 'Quick')
     {
-        # OData.E2E.sln contains the product code for Net45 framework and a comprehensive list of test projects
-        RunBuild ('OData.E2E.sln')
+        # OData.E2E.slnx contains the product code for Net45 framework and a comprehensive list of test projects
+        RunBuild ('OData.E2E.slnx')
         
         # Solutions that contain .NET Core projects require VS2017 for full support. VS2015 supports only .NET Standard.
         
