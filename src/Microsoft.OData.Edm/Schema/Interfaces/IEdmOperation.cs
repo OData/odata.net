@@ -21,6 +21,11 @@ namespace Microsoft.OData.Edm
         IEdmOperationReturn Return { get; }
 
         /// <summary>
+        /// Gets the return type of this operation.
+        /// </summary>
+        IEdmTypeReference ReturnType => Return?.Type;
+
+        /// <summary>
         /// Gets the collection of parameters for this operation.
         /// </summary>
         IEnumerable<IEdmOperationParameter> Parameters { get; }

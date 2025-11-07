@@ -1003,10 +1003,10 @@ namespace Microsoft.OData.Edm.Validation
 
                 // Return type is optional for Action but not for Function
                 // So, from the point of view of this interface, derived validation will ensure return type null is valid or not.
-                if (operation.Return?.Type != null)
+                if (operation.ReturnType != null)
                 {
                     // Function owns its return type reference, so it goes as a followup.
-                    followup.Add(operation.Return.Type);
+                    followup.Add(operation.ReturnType);
                 }
 
                 return errors;

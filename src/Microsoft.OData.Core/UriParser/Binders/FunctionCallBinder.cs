@@ -418,7 +418,7 @@ namespace Microsoft.OData.UriParser
 
             IEnumerable<QueryNode> boundArguments = parsedParameters.Select(p => this.bindMethod(p));
             boundArguments = boundArguments.ToList(); // force enumerable to run : will immediately evaluate all this.bindMethod(p).
-            IEdmTypeReference returnType = function.Return?.Type;
+            IEdmTypeReference returnType = function.ReturnType;
             IEdmEntitySetBase returnSet = null;
             SingleResourceNode singleEntityNode = parent as SingleResourceNode;
             if (singleEntityNode != null)

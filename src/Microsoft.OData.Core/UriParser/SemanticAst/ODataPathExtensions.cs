@@ -365,8 +365,8 @@ namespace Microsoft.OData.UriParser
                     }
                     else
                     {
-                        pathString = operationImport.Operation.Return?.Type != null ?
-                                new StringBuilder(operationImport.Operation.Return.Type.FullName()) :
+                        pathString = operationImport.Operation.ReturnType != null ?
+                                new StringBuilder(operationImport.Operation.ReturnType.FullName()) :
                                 new StringBuilder("Edm.Untyped");
 
                         foundOperationWithoutPath = true;
@@ -396,8 +396,8 @@ namespace Microsoft.OData.UriParser
                         }
                         else
                         {
-                            pathString = operation.Return?.Type != null ?
-                                new StringBuilder(operation.Return.Type.FullName()) :
+                            pathString = operation.ReturnType != null ?
+                                new StringBuilder(operation.ReturnType.FullName()) :
                                 new StringBuilder("Edm.Untyped");
 
                             foundOperationWithoutPath = true;

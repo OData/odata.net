@@ -1693,9 +1693,9 @@ namespace Microsoft.OData.Edm.Validation
             new ValidationRule<IEdmOperationImport>(
                 (context, operationImport) =>
                 {
-                    if (operationImport.EntitySet != null && operationImport.Operation.Return?.Type != null)
+                    if (operationImport.EntitySet != null && operationImport.Operation.ReturnType != null)
                     {
-                        IEdmTypeReference elementType = operationImport.Operation.Return.Type.IsCollection() ? operationImport.Operation.Return.Type.AsCollection().ElementType() : operationImport.Operation.Return.Type;
+                        IEdmTypeReference elementType = operationImport.Operation.ReturnType.IsCollection() ? operationImport.Operation.ReturnType.AsCollection().ElementType() : operationImport.Operation.ReturnType;
                         if (elementType.IsEntity())
                         {
                             IEdmEntityType returnedEntityType = elementType.AsEntity().EntityDefinition();
@@ -1778,7 +1778,7 @@ namespace Microsoft.OData.Edm.Validation
             new ValidationRule<IEdmFunction>(
                 (context, function) =>
                 {
-                    if (function.Return?.Type == null)
+                    if (function.ReturnType == null)
                     {
                         context.AddError(
                             function.Location(),
@@ -1843,9 +1843,9 @@ namespace Microsoft.OData.Edm.Validation
             new ValidationRule<IEdmOperation>(
                 (context, operation) =>
                 {
-                    if (operation.Return?.Type != null)
+                    if (operation.ReturnType != null)
                     {
-                        IEdmTypeReference elementType = operation.Return.Type.IsCollection() ? operation.Return.Type.AsCollection().ElementType() : operation.Return.Type;
+                        IEdmTypeReference elementType = operation.ReturnType.IsCollection() ? operation.Return.Type.AsCollection().ElementType() : operation.ReturnType;
                         var isUnresolvedElement = elementType.Definition is IUnresolvedElement;
                         if (!isUnresolvedElement && context.IsBad(elementType.Definition))
                         {
@@ -1956,16 +1956,16 @@ namespace Microsoft.OData.Edm.Validation
                    return;
                }
 
-               if (operation.Return?.Type != null)
+               if (operation.ReturnType != null)
                {
-                   IEdmEntityType elementType = operation.Return.Type.Definition as IEdmEntityType;
-                   IEdmCollectionType returnCollectionType = operation.Return.Type.Definition as IEdmCollectionType;
+                   IEdmEntityType elementType = operation.ReturnType.Definition as IEdmEntityType;
+                   IEdmCollectionType returnCollectionType = operation.ReturnType.Definition as IEdmCollectionType;
                    if (elementType == null && returnCollectionType != null)
                    {
                        elementType = returnCollectionType.ElementType.Definition as IEdmEntityType;
                    }
 
-                   bool isEntity = operation.Return.Type.IsEntity();
+                   bool isEntity = operation.ReturnType.IsEntity();
                    if (returnCollectionType != null)
                    {
                        isEntity = returnCollectionType.ElementType.IsEntity();
@@ -2004,16 +2004,16 @@ namespace Microsoft.OData.Edm.Validation
         public static readonly ValidationRule<IEdmOperation> OperationReturnTypeCannotBeCollectionOfAbstractType =
             new ValidationRule<IEdmOperation>((context, operation) =>
             {
-                if (operation.Return?.Type != null && operation.Return.Type.IsCollection())
+                if (operation.ReturnType != null && operation.ReturnType.IsCollection())
                 {
-                    IEdmTypeReference elementType = operation.Return.Type.AsCollection().ElementType();
+                    IEdmTypeReference elementType = operation.ReturnType.AsCollection().ElementType();
                     if (elementType.Definition == EdmCoreModelComplexType.Instance ||
                         elementType.Definition == EdmCoreModel.Instance.GetPrimitiveType())
                     {
                         context.AddError(
                             operation.Location(),
                             EdmErrorCode.OperationWithCollectionOfAbstractReturnTypeInvalid,
-                            Error.Format(SRResources.EdmModel_Validator_Semantic_OperationReturnTypeCannotBeCollectionOfAbstractType, operation.Return.Type.FullName(), operation.FullName()));
+                            Error.Format(SRResources.EdmModel_Validator_Semantic_OperationReturnTypeCannotBeCollectionOfAbstractType, operation.ReturnType.FullName(), operation.FullName()));
                     }
                 }
             });
@@ -2266,7 +2266,7 @@ namespace Microsoft.OData.Edm.Validation
                         foreach (var function in functionNameGroup)
                         {
                             // Skip invalid functions that have no parameters or null ReturnType. This is validated elsewhere.
-                            if (!function.Parameters.Any() || function.Return?.Type == null)
+                            if (!function.Parameters.Any() || function.ReturnType == null)
                             {
                                 continue;
                             }
@@ -2274,12 +2274,12 @@ namespace Microsoft.OData.Edm.Validation
                             var bindingParameter = function.Parameters.First();
                             if (!bindingTypeReturnTypeLookup.ContainsKey(bindingParameter.Type))
                             {
-                                bindingTypeReturnTypeLookup.Add(bindingParameter.Type, function.Return.Type);
+                                bindingTypeReturnTypeLookup.Add(bindingParameter.Type, function.ReturnType);
                             }
                             else
                             {
                                 IEdmTypeReference expectedReturnType = bindingTypeReturnTypeLookup[bindingParameter.Type];
-                                if (!function.Return.Type.IsEquivalentTo(expectedReturnType))
+                                if (!function.ReturnType.IsEquivalentTo(expectedReturnType))
                                 {
                                     context.AddError(
                                         function.Location(),
@@ -2306,7 +2306,7 @@ namespace Microsoft.OData.Edm.Validation
                     }
                     else
                     {
-                        if (!function.Return.Type.IsEquivalentTo(functionNameToReturnTypeLookup[function.Name]))
+                        if (!function.ReturnType.IsEquivalentTo(functionNameToReturnTypeLookup[function.Name]))
                         {
                             context.AddError(
                                        function.Location(),

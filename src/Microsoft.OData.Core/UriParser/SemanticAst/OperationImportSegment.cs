@@ -61,7 +61,7 @@ namespace Microsoft.OData.UriParser
             this.operationImports = new ReadOnlyCollection<IEdmOperationImport>(new[] { operationImport });
             this.Identifier = operationImport.Name;
             this.entitySet = entitySet;
-            this.computedReturnEdmType = operationImport.Operation.Return?.Type != null ? operationImport.Operation.Return.Type.Definition : null;
+            this.computedReturnEdmType = operationImport.Operation.ReturnType != null ? operationImport.Operation.ReturnType.Definition : null;
             this.EnsureTypeAndSetAreCompatable();
 
             if (this.computedReturnEdmType != null)
@@ -116,12 +116,12 @@ namespace Microsoft.OData.UriParser
             if (typeSoFar == null)
             {
                 // This is for void operations
-                if (this.operationImports.Any(operation => operation.Operation.Return?.Type != null))
+                if (this.operationImports.Any(operation => operation.Operation.ReturnType != null))
                 {
                     typeSoFar = UnknownSentinel;
                 }
             }
-            else if (this.operationImports.Any(operationImport => !typeSoFar.IsEquivalentTo(operationImport.Operation.Return?.Type.Definition)))
+            else if (this.operationImports.Any(operationImport => !typeSoFar.IsEquivalentTo(operationImport.Operation.ReturnType?.Definition)))
             {
                 typeSoFar = UnknownSentinel;
             }
