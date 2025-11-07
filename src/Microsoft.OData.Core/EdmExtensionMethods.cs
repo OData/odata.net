@@ -221,20 +221,17 @@ namespace Microsoft.OData
         /// <returns>A comma-separated string of flag names corresponding to the set bits in the specified value. Returns null otherwise.</returns>
         public static string ParseFlagsFromIntegralValue(this IEdmEnumType enumType, long value)
         {
-            // Sort members by descending flag value to prioritize composite flags
-            var members = enumType.Members
-                .OrderByDescending(m => m.Value.Value);
-
             var result = new List<string>();
             long remaining = value;
 
-            foreach (IEdmEnumMember member in members)
+            for (int index = enumType.Members.Count() - 1; index >= 0; index--)
             {
+                IEdmEnumMember member = enumType.Members.ElementAt(index);
                 long flagValue = Convert.ToInt64(member.Value.Value);
                 if (flagValue != 0 && (remaining & flagValue) == flagValue)
                 {
                     result.Add(member.Name);
-                    remaining &= ~flagValue; // Remove matched bits
+                    remaining &= ~flagValue; // Remove matched bits     
                 }
             }
 
