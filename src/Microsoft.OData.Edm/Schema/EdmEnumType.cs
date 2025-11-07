@@ -18,7 +18,7 @@ namespace Microsoft.OData.Edm
         private readonly string name;
         private readonly string fullName;
         private readonly bool isFlags;
-        private readonly List<IEdmEnumMember> members = new List<IEdmEnumMember>();
+        private readonly SortedList<long, IEdmEnumMember> members = new SortedList<long, IEdmEnumMember>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EdmEnumType"/> class with <see cref="EdmPrimitiveTypeKind.Int32"/> underlying type.
@@ -126,7 +126,7 @@ namespace Microsoft.OData.Edm
         /// </summary>
         public virtual IEnumerable<IEdmEnumMember> Members
         {
-            get { return this.members; }
+            get { return this.members.Values; }
         }
 
         /// <summary>
@@ -143,7 +143,7 @@ namespace Microsoft.OData.Edm
         /// <param name="member">The member to add.</param>
         public void AddMember(IEdmEnumMember member)
         {
-            this.members.Add(member);
+            this.members.Add(member.Value.Value, member);
         }
 
         /// <summary>
