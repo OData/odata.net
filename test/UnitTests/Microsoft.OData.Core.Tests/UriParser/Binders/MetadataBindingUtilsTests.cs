@@ -330,9 +330,9 @@ namespace Microsoft.OData.Tests.UriParser.Binders
                 EdmEnumType employeeType = new EdmEnumType("NS", "EmployeeTypeWithFlags", isFlags: true);
                 employeeType.AddMember("FullTime", new EdmEnumMemberValue((long)2));
                 employeeType.AddMember("PartTime", new EdmEnumMemberValue((long)4));
-                employeeType.AddMember("Permanent", new EdmEnumMemberValue((long)(2 | 4))); // FullTime | PartTime = 6
                 employeeType.AddMember("Contractor", new EdmEnumMemberValue((long)8));
                 employeeType.AddMember("Intern", new EdmEnumMemberValue((long)16));
+                employeeType.AddMember("Permanent", new EdmEnumMemberValue((long)(2 | 4))); // FullTime | PartTime = 6
                 employeeType.AddMember("Temporary", new EdmEnumMemberValue((long) (4 | 8 | 16))); // PartTime | Contractor | Intern = 28
 
                 return employeeType;
