@@ -58,9 +58,9 @@ namespace Microsoft.OData.Metadata
         /// <returns>The <see cref="IEdmType"/> representing the return type fo the <paramref name="operationImport"/>.</returns>
         internal override IEdmTypeReference GetReturnType(IEdmOperationImport operationImport)
         {
-            if (operationImport != null && operationImport.Operation.Return?.Type != null)
+            if (operationImport != null && operationImport.Operation.ReturnType != null)
             {
-                return this.ResolveTypeReference(operationImport.Operation.Return.Type);
+                return this.ResolveTypeReference(operationImport.Operation.ReturnType);
             }
 
             return null;

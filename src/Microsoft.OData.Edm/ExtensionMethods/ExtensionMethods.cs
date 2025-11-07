@@ -2587,33 +2587,6 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
-        /// Gets the <see cref="IEdmOperationReturn"/> from the specified operation.
-        /// </summary>
-        /// <param name="operation">The operation.</param>
-        /// <returns>The instance of <see cref="IEdmOperationReturn"/> or null if the operation has no return type.</returns>
-        public static IEdmOperationReturn GetReturn(this IEdmOperation operation)
-        {
-            EdmOperation edmOperation = operation as EdmOperation;
-            if (edmOperation != null)
-            {
-                return edmOperation.Return;
-            }
-
-            CsdlSemanticsOperation csdlOperation = operation as CsdlSemanticsOperation;
-            if (csdlOperation != null)
-            {
-                return csdlOperation.Return;
-            }
-
-            if (operation == null)
-            {
-                return null;
-            }
-
-            return operation.Return;
-        }
-
-        /// <summary>
         /// Checks whether all operations have the same return type
         /// </summary>
         /// <param name="operations">the list to check</param>

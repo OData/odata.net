@@ -81,18 +81,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             }
         }
 
-        public IEdmTypeReference ReturnType
-        {
-            get
-            {
-                if (this.operation.Return == null)
-                {
-                    return null;
-                }
-
-                return Return.Type;
-            }
-        }
+        public IEdmTypeReference ReturnType => Return?.Type;
 
         public IEdmOperationReturn Return
         {

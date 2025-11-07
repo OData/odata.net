@@ -28,6 +28,7 @@ Microsoft.OData.Edm.EdmPropertyRef.Path.get -> Microsoft.OData.Edm.IEdmPathExpre
 Microsoft.OData.Edm.EdmPropertyRef.PropertyAlias.get -> string
 Microsoft.OData.Edm.EdmPropertyRef.ReferencedProperty.get -> Microsoft.OData.Edm.IEdmStructuralProperty
 Microsoft.OData.Edm.IEdmEntityType.DeclaredKeyRef.get -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmPropertyRef>
+Microsoft.OData.Edm.IEdmOperation.ReturnType.get -> Microsoft.OData.Edm.IEdmTypeReference
 Microsoft.OData.Edm.IEdmPropertyRef
 Microsoft.OData.Edm.IEdmPropertyRef.Path.get -> Microsoft.OData.Edm.IEdmPathExpression
 Microsoft.OData.Edm.IEdmPropertyRef.PropertyAlias.get -> string
