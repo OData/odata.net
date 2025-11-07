@@ -183,7 +183,7 @@ namespace Microsoft.OData
         {
             foreach (IEdmEnumMember member in enumType.Members)
             {
-                if (member.Name.AsSpan().Equals(memberName, comparison))
+                if (memberName.Equals(member.Name.AsSpan(), comparison))
                 {
                     return true;
                 }
@@ -204,7 +204,7 @@ namespace Microsoft.OData
         {
             foreach (IEdmEnumMember member in enumType.Members)
             {
-                if (member.Name.AsSpan().Equals(memberName, comparison))
+                if (memberName.Equals(member.Name.AsSpan(), comparison))
                 {
                     return member;
                 }
