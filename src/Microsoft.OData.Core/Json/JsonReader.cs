@@ -8,6 +8,7 @@ namespace Microsoft.OData.Json
 {
     #region Namespaces
     using System;
+    using System.Buffers;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
@@ -127,13 +128,14 @@ namespace Microsoft.OData.Json
         /// </summary>
         private object nodeValue;
 
+        private static readonly SearchValues<char> jsonWhitespaceSearchValues = SearchValues.Create(" \t\r\n");
+
         /// <summary>
         /// Cached string builder to be used when constructing string values (needed to resolve escape sequences).
         /// </summary>
         /// <remarks>The string builder instance is cached to avoid excessive allocation when many string values with escape sequences
         /// are found in the payload.</remarks>
         private StringBuilder stringValueBuilder;
-
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -1776,13 +1778,16 @@ namespace Microsoft.OData.Json
         {
             do
             {
-                for (; this.tokenStartIndex < this.storedCharacterCount; this.tokenStartIndex++)
+                int nonWhitespaceIndex = FindFirstNonWhitespace(this.characterBuffer, this.tokenStartIndex, this.storedCharacterCount);
+
+                if (nonWhitespaceIndex >= 0)
                 {
-                    if (!IsWhitespaceCharacter(this.characterBuffer[this.tokenStartIndex]))
-                    {
-                        return true;
-                    }
+                    this.tokenStartIndex += nonWhitespaceIndex;
+                    return true;
                 }
+
+                // All remaining characters are whitespace, advance to end
+                this.tokenStartIndex = this.storedCharacterCount;
             }
             while (this.ReadInput());
 
@@ -3000,12 +3005,15 @@ namespace Microsoft.OData.Json
             // Fast path: scan currently buffered characters without awaiting.
             while (this.tokenStartIndex < this.storedCharacterCount)
             {
-                if (!IsWhitespaceCharacter(this.characterBuffer[this.tokenStartIndex]))
+                int nonWhitespaceIndex = FindFirstNonWhitespace(this.characterBuffer, this.tokenStartIndex, this.storedCharacterCount);
+                if (nonWhitespaceIndex >= 0)
                 {
+                    this.tokenStartIndex += nonWhitespaceIndex;
                     return ValueTask.FromResult(true);
                 }
 
-                this.tokenStartIndex++;
+                // All remaining characters are whitespace, advance to end
+                this.tokenStartIndex = this.storedCharacterCount;
             }
 
             // No more buffered characters - attempt to read. ReadInputAsync may complete synchronously.
@@ -3025,12 +3033,15 @@ namespace Microsoft.OData.Json
 
                 while (this.tokenStartIndex < this.storedCharacterCount)
                 {
-                    if (!IsWhitespaceCharacter(this.characterBuffer[this.tokenStartIndex]))
+                    int nonWhitespaceIndex = FindFirstNonWhitespace(this.characterBuffer, this.tokenStartIndex, this.storedCharacterCount);
+                    if (nonWhitespaceIndex >= 0)
                     {
+                        this.tokenStartIndex += nonWhitespaceIndex;
                         return ValueTask.FromResult(true);
                     }
 
-                    this.tokenStartIndex++;
+                    // All remaining characters are whitespace, advance to end
+                    this.tokenStartIndex = this.storedCharacterCount;
                 }
             }
 
@@ -3047,12 +3058,15 @@ namespace Microsoft.OData.Json
 
                     while (thisParam.tokenStartIndex < thisParam.storedCharacterCount)
                     {
-                        if (!IsWhitespaceCharacter(thisParam.characterBuffer[thisParam.tokenStartIndex]))
+                        int nonWhitespaceIndex = FindFirstNonWhitespace(thisParam.characterBuffer, thisParam.tokenStartIndex, thisParam.storedCharacterCount);
+                        if (nonWhitespaceIndex >= 0)
                         {
+                            thisParam.tokenStartIndex += nonWhitespaceIndex;
                             return true;
                         }
 
-                        thisParam.tokenStartIndex++;
+                        // All remaining characters are whitespace, advance to end
+                        thisParam.tokenStartIndex = thisParam.storedCharacterCount;
                     }
 
                     pendingReadInputTask = thisParam.ReadInputAsync();
@@ -3387,6 +3401,24 @@ namespace Microsoft.OData.Json
             }
 
             return span.ToString();
+        }
+
+        /// <summary>
+        /// Finds the index of the first non-whitespace character in the specified character buffer range.
+        /// Whitespace characters are defined by the JSON specification: space (' '), tab ('\t'), carriage return ('\r'), and newline ('\n').
+        /// </summary>
+        /// <param name="buffer">The character buffer to search.</param>
+        /// <param name="start">The starting index (inclusive) in the buffer.</param>
+        /// <param name="end">The ending index (exclusive) in the buffer.</param>
+        /// <returns>
+        /// The zero-based index (relative to <paramref name="start"/>) of the first non-whitespace character,
+        /// or -1 if all characters in the specified range are whitespace.
+        /// </returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static int FindFirstNonWhitespace(char[] buffer, int start, int end)
+        {
+            ReadOnlySpan<char> span = buffer.AsSpan(start, end - start);
+            return span.IndexOfAnyExcept(jsonWhitespaceSearchValues);
         }
 
         /// <summary>
