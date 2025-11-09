@@ -1448,7 +1448,7 @@ namespace Microsoft.OData.Json
         /// <returns>A task that represents the asynchronous write operation.</returns>
         protected override Task EndPropertyAsync(ODataPropertyInfo property)
         {
-            return TaskUtils.CompletedTask;
+            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -1866,7 +1866,7 @@ namespace Microsoft.OData.Json
         {
             if (deletedResource == null)
             {
-                return TaskUtils.CompletedTask;
+                return Task.CompletedTask;
             }
 
             // Close the object scope
@@ -2085,7 +2085,7 @@ namespace Microsoft.OData.Json
             {
                 this.WriterValidator.ValidateNestedResourceInfoHasCardinality(nestedResourceInfo);
 
-                return TaskUtils.CompletedTask;
+                return Task.CompletedTask;
             }
         }
 
@@ -2125,7 +2125,7 @@ namespace Microsoft.OData.Json
                 }
             }
 
-            return TaskUtils.CompletedTask;
+            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -2227,21 +2227,15 @@ namespace Microsoft.OData.Json
             SelectedPropertiesNode selectedProperties)
         {
             // Currently, no asynchronous operation is involved when preparing resource for writing
-            return TaskUtils.GetTaskForSynchronousOperation((
-                thisParam,
-                resourceScopeParam,
-                resourceParam,
-                writingResponseParam,
-                selectedPropertiesParam) => thisParam.PrepareResourceForWriteStart(
-                    resourceScopeParam,
-                    resourceParam,
-                    writingResponseParam,
-                    selectedPropertiesParam),
-                this,
-                resourceScope,
-                resource,
-                writingResponse,
-                selectedProperties);
+            try
+            {
+                this.PrepareResourceForWriteStart(resourceScope, resource, writingResponse, selectedProperties);
+                return Task.CompletedTask;
+            }
+            catch (Exception ex) when (ExceptionUtils.IsCatchableExceptionType(ex))
+            {
+                return Task.FromException(ex);
+            }
         }
 
         /// <summary>
@@ -2260,21 +2254,15 @@ namespace Microsoft.OData.Json
             SelectedPropertiesNode selectedProperties)
         {
             // Currently, no asynchronous operation is involved when preparing deleted resource for writing
-            return TaskUtils.GetTaskForSynchronousOperation((
-                thisParam,
-                resourceScopeParam,
-                deletedResourceParam,
-                writingResponseParam,
-                selectedPropertiesParam) => this.PrepareDeletedResourceForWriteStart(
-                    resourceScopeParam,
-                    deletedResourceParam,
-                    writingResponseParam,
-                    selectedPropertiesParam),
-                this,
-                resourceScope,
-                deletedResource,
-                writingResponse,
-                selectedProperties);
+            try
+            {
+                this.PrepareDeletedResourceForWriteStart(resourceScope, deletedResource, writingResponse, selectedProperties);
+                return Task.CompletedTask;
+            }
+            catch (Exception ex) when (ExceptionUtils.IsCatchableExceptionType(ex))
+            {
+                return Task.FromException(ex);
+            }
         }
 
         /// <summary>
@@ -2687,7 +2675,7 @@ namespace Microsoft.OData.Json
                 }
             }
 
-            return TaskUtils.CompletedTask;
+            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -2734,7 +2722,7 @@ namespace Microsoft.OData.Json
                 }
             }
 
-            return TaskUtils.CompletedTask;
+            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -2747,7 +2735,7 @@ namespace Microsoft.OData.Json
         {
             if (deltaLink == null)
             {
-                return TaskUtils.CompletedTask;
+                return Task.CompletedTask;
             }
 
             Debug.Assert(this.State == WriterState.ResourceSet || this.State == WriterState.DeltaResourceSet,
@@ -2779,7 +2767,7 @@ namespace Microsoft.OData.Json
                 }
             }
 
-            return TaskUtils.CompletedTask;
+            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -2869,7 +2857,7 @@ namespace Microsoft.OData.Json
         {
             Debug.Assert(resource != null, "resource != null");
 
-            Task writePropertiesTask = TaskUtils.CompletedTask;
+            Task writePropertiesTask = Task.CompletedTask;
 
             this.jsonResourceSerializer.JsonValueSerializer.AssertRecursionDepthIsZero();
             if (resource.NonComputedProperties != null)

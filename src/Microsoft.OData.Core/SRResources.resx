@@ -2618,4 +2618,7 @@
   <data name="UriUtils_RequiresAbsoluteUri" xml:space="preserve">
     <value>This operation is not supported for a relative URI. (parameter: '{0}').</value>
   </data>
+  <data name="TaskUtils_NullContinuationTask" xml:space="preserve">
+    <value>The continuation task returned by the operation cannot be null.</value>
+  </data>
 </root>

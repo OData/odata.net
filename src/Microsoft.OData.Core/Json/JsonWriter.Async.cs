@@ -444,7 +444,7 @@ namespace Microsoft.OData.Json
                 return this.writer.WriteAsync(JsonConstants.QuoteCharacter);
             }
 
-            return TaskUtils.CompletedTask;
+            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -455,7 +455,7 @@ namespace Microsoft.OData.Json
         {
             if (this.scopes.Count == 0)
             {
-                return TaskUtils.CompletedTask;
+                return Task.CompletedTask;
             }
 
             Scope currentScope = this.scopes.Peek();
@@ -468,7 +468,7 @@ namespace Microsoft.OData.Json
                 }
             }
 
-            return TaskUtils.CompletedTask;
+            return Task.CompletedTask;
         }
 
         /// <summary>

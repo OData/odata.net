@@ -232,7 +232,14 @@ namespace Microsoft.OData
         protected virtual Task<bool> ReadAsynchronously()
         {
             // Use synchronous read and then return a completed task
-            return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadImplementation);
+            try
+            {
+                return Task.FromResult(this.ReadImplementation());
+            }
+            catch (Exception ex) when (ExceptionUtils.IsCatchableExceptionType(ex))
+            {
+                return Task.FromException<bool>(ex);
+            }
         }
 
         /// <summary>

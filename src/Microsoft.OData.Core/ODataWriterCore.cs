@@ -663,11 +663,15 @@ namespace Microsoft.OData
         {
             this.VerifyCanWriteStartNestedResourceInfo(false, nestedResourceInfo);
             // Currently, no asynchronous operation is involved when commencing with writing a nested resource info
-            return TaskUtils.GetTaskForSynchronousOperation(
-                (thisParam, nestedResourceInfoParam) => thisParam.WriteStartNestedResourceInfoImplementation(
-                    nestedResourceInfoParam),
-                this,
-                nestedResourceInfo);
+            try
+            {
+                this.WriteStartNestedResourceInfoImplementation(nestedResourceInfo);
+                return Task.CompletedTask;
+            }
+            catch (Exception ex) when (ExceptionUtils.IsCatchableExceptionType(ex))
+            {
+                return Task.FromException(ex);
+            }
         }
 
         /// <summary>
@@ -788,7 +792,7 @@ namespace Microsoft.OData
         /// <returns>A task for method called when a stream is requested.</returns>
         Task IODataStreamListener.StreamRequestedAsync()
         {
-            return TaskUtils.CompletedTask;
+            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -1535,7 +1539,7 @@ namespace Microsoft.OData
         {
             // ODataJsonWriter will override this method and inject the appropriate metadata builder
             // into the resource before writing.
-            return TaskUtils.CompletedTask;
+            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -1554,7 +1558,7 @@ namespace Microsoft.OData
         {
             // ODataJsonWriter will override this method and inject the appropriate metadata builder
             // into the resource before writing.
-            return TaskUtils.CompletedTask;
+            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -3400,7 +3404,7 @@ namespace Microsoft.OData
                     }, property);
             }
 
-            return TaskUtils.CompletedTask;
+            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -3592,7 +3596,7 @@ namespace Microsoft.OData
                 return this.InterceptExceptionAsync(static (thisParam) => thisParam.StartPayloadAsync(), this.CurrentScope.Item);
             }
 
-            return TaskUtils.CompletedTask;
+            return Task.CompletedTask;
         }
 
         /// <summary>
