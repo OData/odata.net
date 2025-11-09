@@ -461,9 +461,15 @@ namespace Microsoft.OData
         /// <returns>A task for method called when a stream is requested.</returns>
         Task IODataStreamListener.StreamRequestedAsync()
         {
-            return TaskUtils.GetTaskForSynchronousOperation(
-                (thisParam) => ((IODataStreamListener)thisParam).StreamRequested(),
-                this);
+            try
+            {
+                ((IODataStreamListener)this).StreamRequested();
+                return Task.CompletedTask;
+            }
+            catch (Exception ex) when (ExceptionUtils.IsCatchableExceptionType(ex))
+            {
+                return Task.FromException(ex);
+            }
         }
 
         /// <summary>
@@ -484,9 +490,15 @@ namespace Microsoft.OData
         /// <returns>A task that represents the asynchronous operation.</returns>
         Task IODataStreamListener.StreamDisposedAsync()
         {
-            return TaskUtils.GetTaskForSynchronousOperation(
-                (thisParam) => ((IODataStreamListener)thisParam).StreamDisposed(),
-                this);
+            try
+            {
+                ((IODataStreamListener)this).StreamDisposed();
+                return Task.CompletedTask;
+            }
+            catch (Exception ex) when (ExceptionUtils.IsCatchableExceptionType(ex))
+            {
+                return Task.FromException(ex);
+            }
         }
 
         /// <summary>
@@ -812,7 +824,14 @@ namespace Microsoft.OData
             // We are reading from the fully buffered read stream here; thus it is ok
             // to use synchronous reads and then return a completed task
             // NOTE: once we switch to fully async reading this will have to change
-            return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadImplementation);
+            try
+            {
+                return Task.FromResult(this.ReadImplementation());
+            }
+            catch (Exception ex) when (ExceptionUtils.IsCatchableExceptionType(ex))
+            {
+                return Task.FromException<bool>(ex);
+            }
         }
 
         /// <summary>

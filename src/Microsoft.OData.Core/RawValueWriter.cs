@@ -114,6 +114,11 @@ namespace Microsoft.OData
         /// </summary>
         internal void Start()
         {
+            if (this.settings.HasJsonPaddingFunction())
+            {
+                this.textWriter.Write(this.settings.JsonPCallback);
+                this.textWriter.Write(JsonConstants.StartPaddingFunctionScope);
+            }
         }
 
         /// <summary>
@@ -121,6 +126,10 @@ namespace Microsoft.OData
         /// </summary>
         internal void End()
         {
+            if (this.settings.HasJsonPaddingFunction())
+            {
+                this.textWriter.Write(JsonConstants.EndPaddingFunctionScope);
+            }
         }
 
         /// <summary>
@@ -172,7 +181,20 @@ namespace Microsoft.OData
         /// <returns>A task that represents the asynchronous write operation.</returns>
         internal Task StartAsync()
         {
-            return TaskUtils.CompletedTask;
+            if (this.settings.HasJsonPaddingFunction())
+            {
+                return StartInnerAsync();
+
+                async Task StartInnerAsync()
+                {
+                    await this.textWriter.WriteAsync(this.settings.JsonPCallback)
+                    .ConfigureAwait(false);
+                    await this.textWriter.WriteAsync(JsonConstants.StartPaddingFunctionScope)
+                        .ConfigureAwait(false);
+                }
+            }
+
+            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -181,7 +203,12 @@ namespace Microsoft.OData
         /// <returns>A task that represents the asynchronous write operation.</returns>
         internal Task EndAsync()
         {
-            return TaskUtils.CompletedTask;
+            if (this.settings.HasJsonPaddingFunction())
+            {
+                return this.textWriter.WriteAsync(JsonConstants.EndPaddingFunctionScope);
+            }
+
+            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -203,13 +230,15 @@ namespace Microsoft.OData
 
             if (value is Geometry || value is Geography)
             {
-                return TaskUtils.GetTaskForSynchronousOperation((
-                    valueParam,
-                    jsonWriterParam) => PrimitiveConverter.Instance.WriteJson(
-                        valueParam,
-                        jsonWriterParam),
-                    value,
-                    jsonWriter);
+                try
+                {
+                    PrimitiveConverter.Instance.WriteJson(value, jsonWriter);
+                    return Task.CompletedTask;
+                }
+                catch (Exception ex) when (ExceptionUtils.IsCatchableExceptionType(ex))
+                {
+                    return Task.FromException(ex);
+                }
             }
 
             if (ODataRawValueUtils.TryConvertPrimitiveToString(value, out string valueAsString))
@@ -218,7 +247,7 @@ namespace Microsoft.OData
             }
 
             // Value is neither enum nor primitive
-            return TaskUtils.GetFaultedTask(
+            return Task.FromException(
                 new ODataException(Error.Format(SRResources.ODataUtils_CannotConvertValueToRawString, value.GetType().FullName)));
         }
 
@@ -236,7 +265,7 @@ namespace Microsoft.OData
                 return this.TextWriter.FlushAsync();
             }
 
-            return TaskUtils.CompletedTask;
+            return Task.CompletedTask;
         }
 
         /// <summary>

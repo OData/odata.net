@@ -1411,7 +1411,7 @@ namespace Microsoft.OData.Json
             if (ODataJsonReaderUtils.IsAnnotationProperty(annotatedPropertyName)
                 && !string.Equals(annotationName, ODataAnnotationNames.ODataType, StringComparison.Ordinal))
             {
-                return TaskUtils.GetFaultedTask<ODataException>(
+                return Task.FromException<ODataException>(
                     new ODataException(Error.Format(SRResources.ODataJsonDeserializer_OnlyODataTypeAnnotationCanTargetInstanceAnnotation,
                         annotationName,
                         annotatedPropertyName,
@@ -1444,7 +1444,7 @@ namespace Microsoft.OData.Json
                 "Pre-Condition: JsonNodeType.EndOfInput if not reading a nested payload.");
             this.JsonReader.AssertNotBuffering();
 
-            return TaskUtils.CompletedTask;
+            return Task.CompletedTask;
         }
 
         /// <summary>

@@ -97,7 +97,14 @@ namespace Microsoft.OData
         internal override Task<ODataAsynchronousReader> CreateAsynchronousReaderAsync()
         {
             // Note that the reading is actually synchronous since we buffer the entire input when getting the stream from the message.
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateAsynchronousReaderImplementation());
+            try
+            {
+                return Task.FromResult(this.CreateAsynchronousReaderImplementation());
+            }
+            catch (Exception ex) when (ExceptionUtils.IsCatchableExceptionType(ex))
+            {
+                return Task.FromException<ODataAsynchronousReader>(ex);
+            }
         }
 
         /// <summary>
