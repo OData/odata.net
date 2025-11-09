@@ -33,7 +33,7 @@ namespace Microsoft.OData
                 throw new ODataException(Error.Format(SRResources.ODataPrimitiveValue_CannotCreateODataPrimitiveValueFromUnsupportedValueType, value.GetType()));
             }
 
-            // TODO: Remove this if...else once the AspNetCore library stops using Date and TimeOfDay
+            // TODO: Remove this if...else once the AspNetCore library stops using Date and TimeOfDay structs
             // See https://github.com/OData/AspNetCoreOData/blob/main/src/Microsoft.AspNetCore.OData/Edm/DefaultODataTypeMapper.cs#L65-L66
             if (value is Date dateValue)
             {

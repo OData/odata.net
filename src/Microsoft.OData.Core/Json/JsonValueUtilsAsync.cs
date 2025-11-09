@@ -233,7 +233,7 @@ namespace Microsoft.OData.Json
         {
             Debug.Assert(writer != null, "writer != null");
 
-            return writer.WriteQuotedAsync(value.ToString(@"HH\:mm\:ss\.fffffff", CultureInfo.InvariantCulture));
+            return writer.WriteQuotedAsync(value.ToODataString());
         }
 
         /// <summary>
@@ -245,7 +245,7 @@ namespace Microsoft.OData.Json
         {
             Debug.Assert(writer != null, "writer != null");
 
-            return writer.WriteQuotedAsync(value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
+            return writer.WriteQuotedAsync(value.ToODataString());
         }
 
         /// <summary>
