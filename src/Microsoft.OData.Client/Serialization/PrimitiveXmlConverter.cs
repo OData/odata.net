@@ -855,7 +855,7 @@ namespace Microsoft.OData.Client
         /// <returns>The string representation of the instance</returns>
         internal override string ToString(object instance)
         {
-            return ((DateOnly)instance).ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
+            return ((DateOnly)instance).ToODataString();
         }
     }
 
@@ -881,7 +881,7 @@ namespace Microsoft.OData.Client
         /// <returns>The string representation of the instance</returns>
         internal override string ToString(object instance)
         {
-            return ((TimeOnly)instance).ToString(@"HH\:mm\:ss\.fffffff", CultureInfo.InvariantCulture);
+            return ((TimeOnly)instance).ToODataString();
         }
     }
 }

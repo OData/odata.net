@@ -201,8 +201,7 @@ namespace Microsoft.OData.Edm.Csdl
         /// <returns>A System.String representation of the supplied <see cref="DateOnly"/>.</returns>
         internal static string DateAsXml(DateOnly d)
         {
-            var value = d.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
-            return value;
+            return d.ToODataString();
         }
 
         /// <summary>
@@ -212,8 +211,7 @@ namespace Microsoft.OData.Edm.Csdl
         /// <returns>A System.String representation of the supplied <see cref="TimeOnly"/>.</returns>
         internal static string TimeOfDayAsXml(TimeOnly time)
         {
-            var value = time.ToString(@"HH\:mm\:ss\.fffffff", CultureInfo.InvariantCulture);
-            return value;
+            return time.ToODataString();
         }
 
         /// <summary>

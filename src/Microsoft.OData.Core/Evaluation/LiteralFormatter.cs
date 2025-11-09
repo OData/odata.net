@@ -220,7 +220,7 @@ namespace Microsoft.OData.Evaluation
 
             if (value is DateOnly dateOnly)
             {
-                return dateOnly.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
+                return dateOnly.ToODataString();
             }
 
             if (value is DateTimeOffset dateTimeOffset)
@@ -230,7 +230,7 @@ namespace Microsoft.OData.Evaluation
 
             if (value is TimeOnly timeOnly)
             {
-                return timeOnly.ToString(@"HH\:mm\:ss\.fffffff", CultureInfo.InvariantCulture);
+                return timeOnly.ToODataString();
             }
 
             if (value is TimeSpan timespan)

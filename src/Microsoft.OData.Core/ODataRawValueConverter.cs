@@ -8,7 +8,6 @@ namespace Microsoft.OData
 {
     #region Namespaces
     using System;
-    using System.Globalization;
     using System.Xml;
     using Microsoft.OData.Edm;
     #endregion Namespaces
@@ -161,7 +160,7 @@ namespace Microsoft.OData
         /// <returns>The string version of the Date in raw value format.</returns>
         internal static string ToString(DateOnly date)
         {
-            return date.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
+            return date.ToODataString();
         }
 
         /// <summary>
@@ -171,7 +170,7 @@ namespace Microsoft.OData
         /// <returns>The string version of the TimeOnly in raw value format</returns>
         internal static string ToString(TimeOnly time)
         {
-            return time.ToString(@"HH\:mm\:ss\.fffffff", CultureInfo.InvariantCulture);
+            return time.ToODataString();
         }
     }
 }
