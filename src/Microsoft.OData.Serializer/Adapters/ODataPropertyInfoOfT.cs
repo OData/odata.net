@@ -163,12 +163,13 @@ public class ODataPropertyInfo<TDeclaringType, TCustomState> :
         {
             ValueTask task = this.WritePropertyValueAsync(resource, state);
 
+            // Store task in the state. The root of the serializer will await this task before
+            // resuming the write.
+            // It will also advance the PropertyProgress to Value once the task is complete.
+            // This will ensure that we don't attempt to write the property value again when resuming.
             state.Stack.Current.PendingTask = task;
-
-            // We expect the task to be consumed completely so we can mark the value
-            // as read so the next time we get here, we don't attempt to write the property again.
-            state.Stack.Current.PropertyProgress = PropertyProgress.Value;
-            // store task in the state;
+            
+            
             return false;
         }
 
@@ -373,25 +374,25 @@ public class ODataPropertyInfo<TDeclaringType, TCustomState> :
 
     void IStreamValueWriter<TCustomState>.WriteValue<T>(T value, ODataWriterState<TCustomState> state)
     {
-        EnsurePropertyWritten(state);
+        EnsurePropertyWrittenInsideAsyncWriteState(state);
         StreamValueWriter<TCustomState>.Instance.WriteValue(value, state);
     }
 
     ValueTask IStreamValueWriter<TCustomState>.WriteValueAsync<T>(T value, ODataWriterState<TCustomState> state)
     {
-        EnsurePropertyWritten(state);
+        EnsurePropertyWrittenInsideAsyncWriteState(state);
         return StreamValueWriter<TCustomState>.Instance.WriteValueAsync(value, state);
     }
 
     void IStreamValueWriter<TCustomState>.WriteStringSegment(ReadOnlySpan<char> value, bool isFinalBlock, ODataWriterState<TCustomState> state)
     {
-        EnsurePropertyWritten(state);
+        EnsurePropertyWrittenInsideAsyncWriteState(state);
         StreamValueWriter<TCustomState>.Instance.WriteStringSegment(value, isFinalBlock, state);
     }
 
     void IStreamValueWriter<TCustomState>.WriteBinarySegment(ReadOnlySpan<byte> value, bool isFinalBlock, ODataWriterState<TCustomState> state)
     {
-        EnsurePropertyWritten(state);
+        EnsurePropertyWrittenInsideAsyncWriteState(state);
         StreamValueWriter<TCustomState>.Instance.WriteBinarySegment(value, isFinalBlock, state);
     }
 
@@ -410,12 +411,21 @@ public class ODataPropertyInfo<TDeclaringType, TCustomState> :
         return StreamValueWriter<TCustomState>.Instance.FlushIfBufferFullAsync(state);
     }
 
-    private void EnsurePropertyWritten(ODataWriterState<TCustomState> state)
+    private void EnsurePropertyWrittenInsideAsyncWriteState(ODataWriterState<TCustomState> state)
     {
-        if (state.Stack.Current.PropertyProgress < PropertyProgress.Name)
+        // This method should only be called from inside an async property value writer.
+        // In this case, we're in inside a WriteValueAsync method, so we expect the serializer
+        // to be suspended with a pending task until the property value writing is complete.
+        // This method is called from within the property value writer to ensure the property name
+        // is written before writing the value.
+        // Since the serialzer is suspended, we should access Stack.LastSuspendedFrame, which remains
+        // stable until the property value writing is complete, unlike Stack.Current which may
+        // change or be popped as the serializer unwinds to the root.
+        Debug.Assert(state.Stack.HasSuspendedFrames());
+        if (state.Stack.LastSuspendedFrame.PropertyProgress < PropertyProgress.Name)
         {
             state.JsonWriter.WritePropertyName(this.Utf8Name.Span);
-            state.Stack.Current.PropertyProgress = PropertyProgress.Name;
+            state.Stack.LastSuspendedFrame.PropertyProgress = PropertyProgress.Name;
         }
     }
 }

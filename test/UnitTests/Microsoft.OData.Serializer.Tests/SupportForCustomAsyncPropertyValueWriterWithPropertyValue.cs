@@ -96,6 +96,7 @@ public class SupportForCustomAsyncPropertyValueWriterWithPropertyValue
             IStreamValueWriter<CustomState> writer,
             ODataWriterState<CustomState> state)
         {
+            await Task.Yield(); // ensure asynchronous behavior since MemoryStream may complete synchronously
             if (resource.HasContentStream)
             {
                 await using var stream = state.CustomState.StreamProvider.GetContentStream(resource.Id);
