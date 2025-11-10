@@ -113,33 +113,29 @@ namespace Microsoft.OData.Tests.Json
             this.asyncStream.Position = 0;
             var asyncResult = await new StreamReader(this.asyncStream).ReadToEndAsync();
 
-            var syncResult = await TaskUtils.GetTaskForSynchronousOperation(
-                () =>
-                {
-                    IODataResponseMessage syncResponseMessage = new InMemoryMessage { Stream = this.syncStream };
-                    using (var messageWriter = new ODataMessageWriter(syncResponseMessage, this.writerSettings))
-                    {
-                        var writer = messageWriter.CreateODataResourceSetWriter(this.orderEntitySet, this.orderEntityType);
+            IODataResponseMessage syncResponseMessage = new InMemoryMessage { Stream = this.syncStream };
+            using (var messageWriter = new ODataMessageWriter(syncResponseMessage, this.writerSettings))
+            {
+                var writer = messageWriter.CreateODataResourceSetWriter(this.orderEntitySet, this.orderEntityType);
 
-                        writer.WriteStart(orderResourceSet);
-                        writer.WriteStart(orderResource);
-                        writer.WriteStart(customerPropertyNestedResourceInfo);
-                        writer.WriteStart(customerResource);
-                        writer.WriteEnd();
-                        writer.WriteEnd();
-                        writer.WriteStart(orderItemsPropertyNestedResourceInfo);
-                        writer.WriteStart(orderItemResourceSet);
-                        writer.WriteStart(orderItemResource);
-                        writer.WriteEnd();
-                        writer.WriteEnd();
-                        writer.WriteEnd();
-                        writer.WriteEnd();
-                        writer.WriteEnd();
-                    }
+                writer.WriteStart(orderResourceSet);
+                writer.WriteStart(orderResource);
+                writer.WriteStart(customerPropertyNestedResourceInfo);
+                writer.WriteStart(customerResource);
+                writer.WriteEnd();
+                writer.WriteEnd();
+                writer.WriteStart(orderItemsPropertyNestedResourceInfo);
+                writer.WriteStart(orderItemResourceSet);
+                writer.WriteStart(orderItemResource);
+                writer.WriteEnd();
+                writer.WriteEnd();
+                writer.WriteEnd();
+                writer.WriteEnd();
+                writer.WriteEnd();
+            }
 
-                    this.syncStream.Position = 0;
-                    return new StreamReader(this.syncStream).ReadToEnd();
-                });
+            this.syncStream.Position = 0;
+            var syncResult = new StreamReader(this.syncStream).ReadToEnd();
 
             var expected = "{\"@odata.context\":\"http://tempuri.org/$metadata#Orders\"," +
                 "\"#Action\":[" +
@@ -202,33 +198,29 @@ namespace Microsoft.OData.Tests.Json
             this.asyncStream.Position = 0;
             var asyncResult = await new StreamReader(this.asyncStream).ReadToEndAsync();
 
-            var syncResult = await TaskUtils.GetTaskForSynchronousOperation(
-                () =>
-                {
-                    IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
-                    using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
-                    {
-                        var writer = messageWriter.CreateODataResourceWriter(this.customerEntitySet, this.customerEntityType);
+            IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
+            using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
+            {
+                var writer = messageWriter.CreateODataResourceWriter(this.customerEntitySet, this.customerEntityType);
 
-                        writer.WriteStart(customerResource);
-                        writer.WriteStart(ordersPropertyNestedResourceInfo);
-                        writer.WriteStart(orderResourceSet);
-                        writer.WriteStart(orderResource);
-                        writer.WriteStart(orderItemsPropertyNestedResourceInfo);
-                        writer.WriteStart(orderItemResourceSet);
-                        writer.WriteStart(orderItemResource);
-                        writer.WriteEnd();
-                        writer.WriteEnd();
-                        writer.WriteEnd();
-                        writer.WriteEnd();
-                        writer.WriteEnd();
-                        writer.WriteEnd();
-                        writer.WriteEnd();
-                    }
+                writer.WriteStart(customerResource);
+                writer.WriteStart(ordersPropertyNestedResourceInfo);
+                writer.WriteStart(orderResourceSet);
+                writer.WriteStart(orderResource);
+                writer.WriteStart(orderItemsPropertyNestedResourceInfo);
+                writer.WriteStart(orderItemResourceSet);
+                writer.WriteStart(orderItemResource);
+                writer.WriteEnd();
+                writer.WriteEnd();
+                writer.WriteEnd();
+                writer.WriteEnd();
+                writer.WriteEnd();
+                writer.WriteEnd();
+                writer.WriteEnd();
+            }
 
-                    this.syncStream.Position = 0;
-                    return new StreamReader(this.syncStream).ReadToEnd();
-                });
+            this.syncStream.Position = 0;
+            var syncResult = new StreamReader(this.syncStream).ReadToEnd();
 
             var expected = "{\"@odata.context\":\"http://tempuri.org/$metadata#Customers/$entity\"," +
                 "\"@odata.id\":\"http://tempuri.org/Customers(1)\"," +
@@ -337,89 +329,85 @@ namespace Microsoft.OData.Tests.Json
             this.asyncStream.Position = 0;
             var asyncResult = await new StreamReader(this.asyncStream).ReadToEndAsync();
 
-            var syncResult = await TaskUtils.GetTaskForSynchronousOperation(
-                () =>
+            IODataResponseMessage syncResponseMessage = new InMemoryMessage { Stream = this.syncStream };
+            using (var messageWriter = new ODataMessageWriter(syncResponseMessage, this.writerSettings))
+            {
+                var writer = messageWriter.CreateODataResourceWriter(this.superEntitySet, this.superEntityType);
+
+                writer.WriteStart(superEntityResource);
+                writer.WriteStart(new ODataProperty { Name = "DynamicPrimitiveProperty", Value = 3.14159265359d });
+                writer.WriteEnd();
+                writer.WriteStart(new ODataPropertyInfo { Name = "DynamicSpatialProperty" });
+                writer.WritePrimitive(new ODataPrimitiveValue(GeographyPoint.Create(11.1, 11.1)));
+                writer.WriteEnd();
+                writer.WriteStart(new ODataPropertyInfo { Name = "DynamicNullProperty" });
+                writer.WritePrimitive(null);
+                writer.WriteEnd();
+                writer.WriteStart(new ODataPropertyInfo { Name = "DynamicStringValueProperty" });
+                using (var textWriter = writer.CreateTextWriter())
                 {
-                    IODataResponseMessage syncResponseMessage = new InMemoryMessage { Stream = this.syncStream };
-                    using (var messageWriter = new ODataMessageWriter(syncResponseMessage, this.writerSettings))
-                    {
-                        var writer = messageWriter.CreateODataResourceWriter(this.superEntitySet, this.superEntityType);
-
-                        writer.WriteStart(superEntityResource);
-                        writer.WriteStart(new ODataProperty { Name = "DynamicPrimitiveProperty", Value = 3.14159265359d });
-                        writer.WriteEnd();
-                        writer.WriteStart(new ODataPropertyInfo { Name = "DynamicSpatialProperty" });
-                        writer.WritePrimitive(new ODataPrimitiveValue(GeographyPoint.Create(11.1, 11.1)));
-                        writer.WriteEnd();
-                        writer.WriteStart(new ODataPropertyInfo { Name = "DynamicNullProperty" });
-                        writer.WritePrimitive(null);
-                        writer.WriteEnd();
-                        writer.WriteStart(new ODataPropertyInfo { Name = "DynamicStringValueProperty" });
-                        using (var textWriter = writer.CreateTextWriter())
-                        {
-                            textWriter.Write("The quick brown fox jumps over the lazy dog");
-                            textWriter.Flush();
-                        }
-                        writer.WriteEnd();
-                        writer.WriteStart(new ODataStreamPropertyInfo
-                        {
-                            Name = "DynamicBinaryValueProperty",
-                            EditLink = new Uri($"{ServiceUri}/SuperEntitySet(1)/DynamicBinaryValueProperty/Edit"),
-                            ReadLink = new Uri($"{ServiceUri}/SuperEntitySet(1)/DynamicBinaryValueProperty"),
-                            ContentType = "text/plain"
-                        });
-                        using (var stream = writer.CreateBinaryWriteStream())
-                        {
-                            var bytes = new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 0 };
-
-                            stream.Write(bytes, 0, 4);
-                            stream.Write(bytes, 4, 4);
-                            stream.Write(bytes, 8, 2);
-                            stream.Flush();
-                        }
-                        writer.WriteEnd();
-                        writer.WriteStart(coordinatePropertyNestedResourceInfo);
-                        writer.WriteStart(coordinate1Resource);
-                        writer.WriteEnd();
-                        writer.WriteEnd();
-                        writer.WriteStart(entityPropertyNestedResourceInfo);
-                        writer.WriteStart(customer1Resource);
-                        writer.WriteEnd();
-                        writer.WriteEnd();
-                        writer.WriteStart(coordinateCollectionPropertyNestedResourceInfo);
-                        writer.WriteStart(new ODataResourceSet { TypeName = "Collection(NS.Coordinate)" });
-                        writer.WriteStart(coordinate1Resource);
-                        writer.WriteEnd();
-                        writer.WriteStart(coordinate2Resource);
-                        writer.WriteEnd();
-                        writer.WriteEnd();
-                        writer.WriteEnd();
-                        writer.WriteStart(entityCollectionPropertyNestedResourceInfo);
-                        writer.WriteStart(customerResourceSet);
-                        writer.WriteStart(customer1Resource);
-                        writer.WriteEnd();
-                        writer.WriteStart(customer2Resource);
-                        writer.WriteEnd();
-                        writer.WriteEnd();
-                        writer.WriteEnd();
-                        writer.WriteStart(dynamicComplexPropertyNestedResourceInfo);
-                        writer.WriteStart(coordinate1Resource);
-                        writer.WriteEnd();
-                        writer.WriteEnd();
-                        writer.WriteStart(dynamicComplexCollectionPropertyNestedResourceInfo);
-                        writer.WriteStart(new ODataResourceSet { TypeName = "Collection(NS.Coordinate)" });
-                        writer.WriteStart(coordinate1Resource);
-                        writer.WriteEnd();
-                        writer.WriteStart(coordinate2Resource);
-                        writer.WriteEnd();
-                        writer.WriteEnd();
-                        writer.WriteEnd();
-                        writer.WriteEnd();
-
-                        this.syncStream.Position = 0;
-                        return new StreamReader(this.syncStream).ReadToEnd();
-                    }
+                    textWriter.Write("The quick brown fox jumps over the lazy dog");
+                    textWriter.Flush();
+                }
+                writer.WriteEnd();
+                writer.WriteStart(new ODataStreamPropertyInfo
+                {
+                    Name = "DynamicBinaryValueProperty",
+                    EditLink = new Uri($"{ServiceUri}/SuperEntitySet(1)/DynamicBinaryValueProperty/Edit"),
+                    ReadLink = new Uri($"{ServiceUri}/SuperEntitySet(1)/DynamicBinaryValueProperty"),
+                    ContentType = "text/plain"
                 });
+                using (var stream = writer.CreateBinaryWriteStream())
+                {
+                    var bytes = new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 0 };
+
+                    stream.Write(bytes, 0, 4);
+                    stream.Write(bytes, 4, 4);
+                    stream.Write(bytes, 8, 2);
+                    stream.Flush();
+                }
+                writer.WriteEnd();
+                writer.WriteStart(coordinatePropertyNestedResourceInfo);
+                writer.WriteStart(coordinate1Resource);
+                writer.WriteEnd();
+                writer.WriteEnd();
+                writer.WriteStart(entityPropertyNestedResourceInfo);
+                writer.WriteStart(customer1Resource);
+                writer.WriteEnd();
+                writer.WriteEnd();
+                writer.WriteStart(coordinateCollectionPropertyNestedResourceInfo);
+                writer.WriteStart(new ODataResourceSet { TypeName = "Collection(NS.Coordinate)" });
+                writer.WriteStart(coordinate1Resource);
+                writer.WriteEnd();
+                writer.WriteStart(coordinate2Resource);
+                writer.WriteEnd();
+                writer.WriteEnd();
+                writer.WriteEnd();
+                writer.WriteStart(entityCollectionPropertyNestedResourceInfo);
+                writer.WriteStart(customerResourceSet);
+                writer.WriteStart(customer1Resource);
+                writer.WriteEnd();
+                writer.WriteStart(customer2Resource);
+                writer.WriteEnd();
+                writer.WriteEnd();
+                writer.WriteEnd();
+                writer.WriteStart(dynamicComplexPropertyNestedResourceInfo);
+                writer.WriteStart(coordinate1Resource);
+                writer.WriteEnd();
+                writer.WriteEnd();
+                writer.WriteStart(dynamicComplexCollectionPropertyNestedResourceInfo);
+                writer.WriteStart(new ODataResourceSet { TypeName = "Collection(NS.Coordinate)" });
+                writer.WriteStart(coordinate1Resource);
+                writer.WriteEnd();
+                writer.WriteStart(coordinate2Resource);
+                writer.WriteEnd();
+                writer.WriteEnd();
+                writer.WriteEnd();
+                writer.WriteEnd();
+            }
+
+            this.syncStream.Position = 0;
+            var syncResult = new StreamReader(this.syncStream).ReadToEnd();
 
             var expected = "{\"@odata.context\":\"http://tempuri.org/$metadata#SuperEntitySet/$entity\"," +
                 "\"Id\":1," +
@@ -506,21 +494,17 @@ namespace Microsoft.OData.Tests.Json
             this.asyncStream.Position = 0;
             var asyncResult = await new StreamReader(this.asyncStream).ReadToEndAsync();
 
-            var syncResult = await TaskUtils.GetTaskForSynchronousOperation(
-                () =>
-                {
-                    IODataResponseMessage syncResponseMessage = new InMemoryMessage { Stream = this.syncStream };
-                    using (var messageWriter = new ODataMessageWriter(syncResponseMessage, this.writerSettings))
-                    {
-                        var writer = messageWriter.CreateODataResourceWriter(this.customerEntitySet, this.customerEntityType);
+            IODataResponseMessage syncResponseMessage = new InMemoryMessage { Stream = this.syncStream };
+            using (var messageWriter = new ODataMessageWriter(syncResponseMessage, this.writerSettings))
+            {
+                var writer = messageWriter.CreateODataResourceWriter(this.customerEntitySet, this.customerEntityType);
 
-                        writer.WriteStart((ODataResource)null);
-                        writer.WriteEnd();
-                    }
+                writer.WriteStart((ODataResource)null);
+                writer.WriteEnd();
+            }
 
-                    this.syncStream.Position = 0;
-                    return new StreamReader(this.syncStream).ReadToEnd();
-                });
+            this.syncStream.Position = 0;
+            var syncResult = new StreamReader(this.syncStream).ReadToEnd();
 
             var expected = "null";
 
@@ -552,25 +536,21 @@ namespace Microsoft.OData.Tests.Json
             this.asyncStream.Position = 0;
             var asyncResult = await new StreamReader(this.asyncStream).ReadToEndAsync();
 
-            var syncResult = await TaskUtils.GetTaskForSynchronousOperation(
-                () =>
-                {
-                    IODataResponseMessage syncResponseMessage = new InMemoryMessage { Stream = this.syncStream };
-                    using (var messageWriter = new ODataMessageWriter(syncResponseMessage, this.writerSettings))
-                    {
-                        var writer = messageWriter.CreateODataResourceWriter(this.orderEntitySet, this.orderEntityType);
+            IODataResponseMessage syncResponseMessage = new InMemoryMessage { Stream = this.syncStream };
+            using (var messageWriter = new ODataMessageWriter(syncResponseMessage, this.writerSettings))
+            {
+                var writer = messageWriter.CreateODataResourceWriter(this.orderEntitySet, this.orderEntityType);
 
-                        writer.WriteStart(orderResource);
-                        writer.WriteStart(customerPropertyNestedResourceInfo);
-                        writer.WriteStart((ODataResource)null);
-                        writer.WriteEnd();
-                        writer.WriteEnd();
-                        writer.WriteEnd();
-                    }
+                writer.WriteStart(orderResource);
+                writer.WriteStart(customerPropertyNestedResourceInfo);
+                writer.WriteStart((ODataResource)null);
+                writer.WriteEnd();
+                writer.WriteEnd();
+                writer.WriteEnd();
+            }
 
-                    this.syncStream.Position = 0;
-                    return new StreamReader(this.syncStream).ReadToEnd();
-                });
+            this.syncStream.Position = 0;
+            var syncResult = new StreamReader(this.syncStream).ReadToEnd();
 
             var expected = "{\"@odata.context\":\"http://tempuri.org/$metadata#Orders/$entity\"," +
                 "\"@odata.id\":\"http://tempuri.org/Orders(1)\",\"Id\":1,\"Amount\":13,\"Customer@odata.type\":\"#NS.Customer\",\"Customer\":null}";
@@ -604,25 +584,21 @@ namespace Microsoft.OData.Tests.Json
             this.asyncStream.Position = 0;
             var asyncResult = await new StreamReader(this.asyncStream).ReadToEndAsync();
 
-            var syncResult = await TaskUtils.GetTaskForSynchronousOperation(
-                () =>
-                {
-                    IODataResponseMessage syncResponseMessage = new InMemoryMessage { Stream = this.syncStream };
-                    using (var messageWriter = new ODataMessageWriter(syncResponseMessage, this.writerSettings))
-                    {
-                        var writer = messageWriter.CreateODataResourceSetWriter(this.customerEntitySet, this.customerEntityType);
+            IODataResponseMessage syncResponseMessage = new InMemoryMessage { Stream = this.syncStream };
+            using (var messageWriter = new ODataMessageWriter(syncResponseMessage, this.writerSettings))
+            {
+                var writer = messageWriter.CreateODataResourceSetWriter(this.customerEntitySet, this.customerEntityType);
 
-                        writer.WriteStart(customerResourceSet);
-                        writer.WriteStart(customerResource);
-                        writer.WriteStart(ordersPropertyNestedResourceInfo);
-                        writer.WriteEnd();
-                        writer.WriteEnd();
-                        writer.WriteEnd();
-                    }
+                writer.WriteStart(customerResourceSet);
+                writer.WriteStart(customerResource);
+                writer.WriteStart(ordersPropertyNestedResourceInfo);
+                writer.WriteEnd();
+                writer.WriteEnd();
+                writer.WriteEnd();
+            }
 
-                    this.syncStream.Position = 0;
-                    return new StreamReader(this.syncStream).ReadToEnd();
-                });
+            this.syncStream.Position = 0;
+            var syncResult = new StreamReader(this.syncStream).ReadToEnd();
 
             var expected = "{\"@odata.context\":\"http://tempuri.org/$metadata#Customers\"," +
                 "\"@odata.deltaLink\":\"http://tempuri.org/Customers/deltaLink\"," +
@@ -657,28 +633,24 @@ namespace Microsoft.OData.Tests.Json
             this.asyncStream.Position = 0;
             var asyncResult = await new StreamReader(this.asyncStream).ReadToEndAsync();
 
-            var syncResult = await TaskUtils.GetTaskForSynchronousOperation(
-                () =>
+            IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
+            using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
+            {
+                var writer = messageWriter.CreateODataResourceWriter();
+
+                writer.WriteStart(customerResource);
+                writer.WriteStart(new ODataStreamPropertyInfo { Name = "DynamicProperty", ContentType = "text/plain" });
+                using (var textWriter = writer.CreateTextWriter())
                 {
-                    IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
-                    using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
-                    {
-                        var writer = messageWriter.CreateODataResourceWriter();
+                    textWriter.Write("cA_Россия");
+                    textWriter.Flush();
+                }
+                writer.WriteEnd();
+                writer.WriteEnd();
+            }
 
-                        writer.WriteStart(customerResource);
-                        writer.WriteStart(new ODataStreamPropertyInfo { Name = "DynamicProperty", ContentType = "text/plain" });
-                        using (var textWriter = writer.CreateTextWriter())
-                        {
-                            textWriter.Write("cA_Россия");
-                            textWriter.Flush();
-                        }
-                        writer.WriteEnd();
-                        writer.WriteEnd();
-                    }
-
-                    this.syncStream.Position = 0;
-                    return new StreamReader(this.syncStream).ReadToEnd();
-                });
+            this.syncStream.Position = 0;
+            var syncResult = new StreamReader(this.syncStream).ReadToEnd();
 
             var expected = "{\"@odata.context\":\"http://tempuri.org/$metadata#Customers/$entity\"," +
                 "\"@odata.id\":\"http://tempuri.org/Customers(1)\"," +
@@ -715,23 +687,19 @@ namespace Microsoft.OData.Tests.Json
             this.asyncStream.Position = 0;
             var asyncResult = await new StreamReader(this.asyncStream).ReadToEndAsync();
 
-            var syncResult = await TaskUtils.GetTaskForSynchronousOperation(
-                () =>
-                {
-                    IODataResponseMessage syncResponseMessage = new InMemoryMessage { Stream = this.syncStream };
-                    using (var messageWriter = new ODataMessageWriter(syncResponseMessage, this.writerSettings))
-                    {
-                        var writer = messageWriter.CreateODataDeltaResourceSetWriter(this.customerEntitySet, this.customerEntityType);
+            IODataResponseMessage syncResponseMessage = new InMemoryMessage { Stream = this.syncStream };
+            using (var messageWriter = new ODataMessageWriter(syncResponseMessage, this.writerSettings))
+            {
+                var writer = messageWriter.CreateODataDeltaResourceSetWriter(this.customerEntitySet, this.customerEntityType);
 
-                        writer.WriteStart(customerDeltaResourceSet);
-                        writer.WriteStart(customerDeletedResource);
-                        writer.WriteEnd();
-                        writer.WriteEnd();
-                    }
+                writer.WriteStart(customerDeltaResourceSet);
+                writer.WriteStart(customerDeletedResource);
+                writer.WriteEnd();
+                writer.WriteEnd();
+            }
 
-                    this.syncStream.Position = 0;
-                    return new StreamReader(this.syncStream).ReadToEnd();
-                });
+            this.syncStream.Position = 0;
+            var syncResult = new StreamReader(this.syncStream).ReadToEnd();
 
             var expected = "{\"@odata.context\":\"http://tempuri.org/$metadata#Customers/$delta\"," +
                 "\"@odata.deltaLink\":\"http://tempuri.org/Customers/deltaLink\"," +
@@ -773,23 +741,19 @@ namespace Microsoft.OData.Tests.Json
             this.asyncStream.Position = 0;
             var asyncResult = await new StreamReader(this.asyncStream).ReadToEndAsync();
 
-            var syncResult = await TaskUtils.GetTaskForSynchronousOperation(
-                () =>
-                {
-                    IODataResponseMessage syncResponseMessage = new InMemoryMessage { Stream = this.syncStream };
-                    using (var messageWriter = new ODataMessageWriter(syncResponseMessage, this.writerSettings))
-                    {
-                        var writer = messageWriter.CreateODataDeltaResourceSetWriter(this.customerEntitySet, this.customerEntityType);
+            IODataResponseMessage syncResponseMessage = new InMemoryMessage { Stream = this.syncStream };
+            using (var messageWriter = new ODataMessageWriter(syncResponseMessage, this.writerSettings))
+            {
+                var writer = messageWriter.CreateODataDeltaResourceSetWriter(this.customerEntitySet, this.customerEntityType);
 
-                        writer.WriteStart(customerDeltaResourceSet);
-                        writer.WriteStart(customerDeletedResource);
-                        writer.WriteEnd();
-                        writer.WriteEnd();
-                    }
+                writer.WriteStart(customerDeltaResourceSet);
+                writer.WriteStart(customerDeletedResource);
+                writer.WriteEnd();
+                writer.WriteEnd();
+            }
 
-                    this.syncStream.Position = 0;
-                    return new StreamReader(this.syncStream).ReadToEnd();
-                });
+            this.syncStream.Position = 0;
+            var syncResult = new StreamReader(this.syncStream).ReadToEnd();
 
             var expected = "{\"@context\":\"http://tempuri.org/$metadata#Customers/$delta\"," +
                 "\"@count\":5,\"@nextLink\":\"http://tempuri.org/Customers/nextLink\"," +
@@ -836,27 +800,23 @@ namespace Microsoft.OData.Tests.Json
             this.asyncStream.Position = 0;
             var asyncResult = await new StreamReader(this.asyncStream).ReadToEndAsync();
 
-            var syncResult = await TaskUtils.GetTaskForSynchronousOperation(
-                () =>
-                {
-                    IODataResponseMessage syncResponseMessage = new InMemoryMessage { Stream = this.syncStream };
-                    using (var messageWriter = new ODataMessageWriter(syncResponseMessage, this.writerSettings))
-                    {
-                        var writer = messageWriter.CreateODataDeltaResourceSetWriter(this.orderEntitySet, this.orderEntityType);
+            IODataResponseMessage syncResponseMessage = new InMemoryMessage { Stream = this.syncStream };
+            using (var messageWriter = new ODataMessageWriter(syncResponseMessage, this.writerSettings))
+            {
+                var writer = messageWriter.CreateODataDeltaResourceSetWriter(this.orderEntitySet, this.orderEntityType);
 
-                        writer.WriteStart(customerDeltaResourceSet);
-                        writer.WriteStart(orderResource);
-                        writer.WriteStart(customerPropertyNestedResourceInfo);
-                        writer.WriteStart(customerDeletedResource);
-                        writer.WriteEnd();
-                        writer.WriteEnd();
-                        writer.WriteEnd();
-                        writer.WriteEnd();
-                    }
+                writer.WriteStart(customerDeltaResourceSet);
+                writer.WriteStart(orderResource);
+                writer.WriteStart(customerPropertyNestedResourceInfo);
+                writer.WriteStart(customerDeletedResource);
+                writer.WriteEnd();
+                writer.WriteEnd();
+                writer.WriteEnd();
+                writer.WriteEnd();
+            }
 
-                    this.syncStream.Position = 0;
-                    return new StreamReader(this.syncStream).ReadToEnd();
-                });
+            this.syncStream.Position = 0;
+            var syncResult = new StreamReader(this.syncStream).ReadToEnd();
 
             var expected = "{\"@context\":\"http://tempuri.org/$metadata#Customers/$delta\"," +
                 "\"@deltaLink\":\"http://tempuri.org/Customers/deltaLink\"," +
@@ -903,29 +863,25 @@ namespace Microsoft.OData.Tests.Json
             this.asyncStream.Position = 0;
             var asyncResult = await new StreamReader(this.asyncStream).ReadToEndAsync();
 
-            var syncResult = await TaskUtils.GetTaskForSynchronousOperation(
-                () =>
-                {
-                    IODataResponseMessage syncResponseMessage = new InMemoryMessage { Stream = this.syncStream };
-                    using (var messageWriter = new ODataMessageWriter(syncResponseMessage, this.writerSettings))
-                    {
-                        var writer = messageWriter.CreateODataDeltaResourceSetWriter(this.customerEntitySet, this.customerEntityType);
+            IODataResponseMessage syncResponseMessage = new InMemoryMessage { Stream = this.syncStream };
+            using (var messageWriter = new ODataMessageWriter(syncResponseMessage, this.writerSettings))
+            {
+                var writer = messageWriter.CreateODataDeltaResourceSetWriter(this.customerEntitySet, this.customerEntityType);
 
-                        writer.WriteStart(customerResourceSet);
-                        writer.WriteStart(customerResource);
-                        writer.WriteStart(ordersPropertyNestedResourceInfo);
-                        writer.WriteStart(orderDeltaResourceSet);
-                        writer.WriteStart(orderNestedResource);
-                        writer.WriteEnd();
-                        writer.WriteEnd();
-                        writer.WriteEnd();
-                        writer.WriteEnd();
-                        writer.WriteEnd();
-                    }
+                writer.WriteStart(customerResourceSet);
+                writer.WriteStart(customerResource);
+                writer.WriteStart(ordersPropertyNestedResourceInfo);
+                writer.WriteStart(orderDeltaResourceSet);
+                writer.WriteStart(orderNestedResource);
+                writer.WriteEnd();
+                writer.WriteEnd();
+                writer.WriteEnd();
+                writer.WriteEnd();
+                writer.WriteEnd();
+            }
 
-                    this.syncStream.Position = 0;
-                    return new StreamReader(this.syncStream).ReadToEnd();
-                });
+            this.syncStream.Position = 0;
+            var syncResult = new StreamReader(this.syncStream).ReadToEnd();
 
             var expected = "{\"@context\":\"http://tempuri.org/$metadata#Customers\"," +
                 "\"value\":[{" +
@@ -972,27 +928,23 @@ namespace Microsoft.OData.Tests.Json
             this.asyncStream.Position = 0;
             var asyncResult = await new StreamReader(this.asyncStream).ReadToEndAsync();
 
-            var syncResult = await TaskUtils.GetTaskForSynchronousOperation(
-                () =>
-                {
-                    IODataResponseMessage syncResponseMessage = new InMemoryMessage { Stream = this.syncStream };
-                    using (var messageWriter = new ODataMessageWriter(syncResponseMessage, this.writerSettings))
-                    {
-                        var writer = messageWriter.CreateODataResourceWriter(this.orderEntitySet, this.orderEntityType);
+            IODataResponseMessage syncResponseMessage = new InMemoryMessage { Stream = this.syncStream };
+            using (var messageWriter = new ODataMessageWriter(syncResponseMessage, this.writerSettings))
+            {
+                var writer = messageWriter.CreateODataResourceWriter(this.orderEntitySet, this.orderEntityType);
 
-                        writer.WriteStart(orderResource);
-                        writer.WriteStart(orderItemsPropertyNestedResourceInfo);
-                        writer.WriteStart(orderItemResourceSet);
-                        writer.WriteStart(orderItemResource);
-                        writer.WriteEnd();
-                        writer.WriteEnd();
-                        writer.WriteEnd();
-                        writer.WriteEnd();
-                    }
+                writer.WriteStart(orderResource);
+                writer.WriteStart(orderItemsPropertyNestedResourceInfo);
+                writer.WriteStart(orderItemResourceSet);
+                writer.WriteStart(orderItemResource);
+                writer.WriteEnd();
+                writer.WriteEnd();
+                writer.WriteEnd();
+                writer.WriteEnd();
+            }
 
-                    this.syncStream.Position = 0;
-                    return new StreamReader(this.syncStream).ReadToEnd();
-                });
+            this.syncStream.Position = 0;
+            var syncResult = new StreamReader(this.syncStream).ReadToEnd();
 
             var expected = "{\"@odata.context\":\"http://tempuri.org/$metadata#Orders/$entity\"," +
                 "\"@odata.id\":\"http://tempuri.org/Orders(1)\"," +
@@ -1032,24 +984,20 @@ namespace Microsoft.OData.Tests.Json
             this.asyncStream.Position = 0;
             var asyncResult = await new StreamReader(this.asyncStream).ReadToEndAsync();
 
-            var syncResult = await TaskUtils.GetTaskForSynchronousOperation(
-                () =>
-                {
-                    IODataResponseMessage syncResponseMessage = new InMemoryMessage { Stream = this.syncStream };
-                    using (var messageWriter = new ODataMessageWriter(syncResponseMessage, this.writerSettings))
-                    {
-                        var writer = messageWriter.CreateODataCollectionWriter(EdmCoreModel.Instance.GetString(false));
+            IODataResponseMessage syncResponseMessage = new InMemoryMessage { Stream = this.syncStream };
+            using (var messageWriter = new ODataMessageWriter(syncResponseMessage, this.writerSettings))
+            {
+                var writer = messageWriter.CreateODataCollectionWriter(EdmCoreModel.Instance.GetString(false));
 
-                        writer.WriteStart(collectionStart);
-                        writer.WriteItem("Violet");
-                        writer.WriteItem("Indigo");
-                        writer.WriteItem("Blue");
-                        writer.WriteEnd();
-                    }
+                writer.WriteStart(collectionStart);
+                writer.WriteItem("Violet");
+                writer.WriteItem("Indigo");
+                writer.WriteItem("Blue");
+                writer.WriteEnd();
+            }
 
-                    this.syncStream.Position = 0;
-                    return new StreamReader(this.syncStream).ReadToEnd();
-                });
+            this.syncStream.Position = 0;
+            var syncResult = new StreamReader(this.syncStream).ReadToEnd();
 
             var expected = "{\"@odata.context\":\"http://tempuri.org/$metadata#Collection(Edm.String)\",\"value\":[\"Violet\",\"Indigo\",\"Blue\"]}";
 
@@ -1077,22 +1025,18 @@ namespace Microsoft.OData.Tests.Json
             this.asyncStream.Position = 0;
             var asyncResult = await new StreamReader(this.asyncStream).ReadToEndAsync();
 
-            var syncResult = await TaskUtils.GetTaskForSynchronousOperation(
-                () =>
-                {
-                    IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
-                    using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings, this.model))
-                    {
-                        var parameterWriter = messageWriter.CreateODataParameterWriter(rateCustomerAction);
+            IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
+            using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings, this.model))
+            {
+                var parameterWriter = messageWriter.CreateODataParameterWriter(rateCustomerAction);
 
-                        parameterWriter.WriteStart();
-                        parameterWriter.WriteValue("customerId", 1);
-                        parameterWriter.WriteEnd();
-                    }
+                parameterWriter.WriteStart();
+                parameterWriter.WriteValue("customerId", 1);
+                parameterWriter.WriteEnd();
+            }
 
-                    this.syncStream.Position = 0;
-                    return new StreamReader(this.syncStream).ReadToEnd();
-                });
+            this.syncStream.Position = 0;
+            var syncResult = new StreamReader(this.syncStream).ReadToEnd();
 
             var expected = "{\"customerId\":1}";
 
@@ -1118,21 +1062,17 @@ namespace Microsoft.OData.Tests.Json
             this.asyncStream.Position = 0;
             var asyncResult = await new StreamReader(this.asyncStream).ReadToEndAsync();
 
-            var syncResult = await TaskUtils.GetTaskForSynchronousOperation(
-                () =>
-                {
-                    IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
-                    using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings, this.model))
-                    {
-                        var parameterWriter = messageWriter.CreateODataUriParameterResourceWriter(this.customerEntitySet, this.customerEntityType);
+            IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
+            using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings, this.model))
+            {
+                var parameterWriter = messageWriter.CreateODataUriParameterResourceWriter(this.customerEntitySet, this.customerEntityType);
 
-                        parameterWriter.WriteStart(customerResource);
-                        parameterWriter.WriteEnd();
-                    }
+                parameterWriter.WriteStart(customerResource);
+                parameterWriter.WriteEnd();
+            }
 
-                    this.syncStream.Position = 0;
-                    return new StreamReader(this.syncStream).ReadToEnd();
-                });
+            this.syncStream.Position = 0;
+            var syncResult = new StreamReader(this.syncStream).ReadToEnd();
 
             var expected = "{\"@odata.context\":\"http://tempuri.org/$metadata#Customers/$entity\"," +
                 "\"@odata.id\":\"http://tempuri.org/Customers(1)\",\"Id\":1,\"Name\":\"Customer 1\"}";
@@ -1159,21 +1099,17 @@ namespace Microsoft.OData.Tests.Json
             this.asyncStream.Position = 0;
             var asyncResult = await new StreamReader(this.asyncStream).ReadToEndAsync();
 
-            var syncResult = await TaskUtils.GetTaskForSynchronousOperation(
-                () =>
-                {
-                    IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
-                    using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings, this.model))
-                    {
-                        var parameterWriter = messageWriter.CreateODataUriParameterResourceSetWriter(this.customerEntitySet, this.customerEntityType);
+            IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
+            using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings, this.model))
+            {
+                var parameterWriter = messageWriter.CreateODataUriParameterResourceSetWriter(this.customerEntitySet, this.customerEntityType);
 
-                        parameterWriter.WriteStart(customerResourceSet);
-                        parameterWriter.WriteEnd();
-                    }
+                parameterWriter.WriteStart(customerResourceSet);
+                parameterWriter.WriteEnd();
+            }
 
-                    this.syncStream.Position = 0;
-                    return new StreamReader(this.syncStream).ReadToEnd();
-                });
+            this.syncStream.Position = 0;
+            var syncResult = new StreamReader(this.syncStream).ReadToEnd();
 
             var expected = "[]";
 
@@ -1210,27 +1146,23 @@ namespace Microsoft.OData.Tests.Json
             this.asyncStream.Position = 0;
             var asyncResult = await new StreamReader(this.asyncStream).ReadToEndAsync();
 
-            var syncResult = await TaskUtils.GetTaskForSynchronousOperation(
-                () =>
-                {
-                    IODataResponseMessage syncResponseMessage = new InMemoryMessage { Stream = this.syncStream };
-                    using (var messageWriter = new ODataMessageWriter(syncResponseMessage, this.writerSettings))
-                    {
-                        var writer = messageWriter.CreateODataResourceWriter(this.customerEntitySet, this.customerEntityType);
+            IODataResponseMessage syncResponseMessage = new InMemoryMessage { Stream = this.syncStream };
+            using (var messageWriter = new ODataMessageWriter(syncResponseMessage, this.writerSettings))
+            {
+                var writer = messageWriter.CreateODataResourceWriter(this.customerEntitySet, this.customerEntityType);
 
-                        writer.WriteStart(customerResource);
-                        writer.WriteStart(ordersPropertyNestedResourceInfo);
-                        writer.WriteStart(orderResourceSet);
-                        writer.WriteEntityReferenceLink(orderEntityReferenceLink1);
-                        writer.WriteEntityReferenceLink(orderEntityReferenceLink2);
-                        writer.WriteEnd();
-                        writer.WriteEnd();
-                        writer.WriteEnd();
+                writer.WriteStart(customerResource);
+                writer.WriteStart(ordersPropertyNestedResourceInfo);
+                writer.WriteStart(orderResourceSet);
+                writer.WriteEntityReferenceLink(orderEntityReferenceLink1);
+                writer.WriteEntityReferenceLink(orderEntityReferenceLink2);
+                writer.WriteEnd();
+                writer.WriteEnd();
+                writer.WriteEnd();
+            }
 
-                        this.syncStream.Position = 0;
-                        return new StreamReader(this.syncStream).ReadToEnd();
-                    }
-                });
+            this.syncStream.Position = 0;
+            var syncResult = new StreamReader(this.syncStream).ReadToEnd();
 
             var expected = "{\"@odata.context\":\"http://tempuri.org/$metadata#Customers/$entity\"," +
                 "\"@odata.id\":\"http://tempuri.org/Customers(1)\"," +
@@ -1271,25 +1203,21 @@ namespace Microsoft.OData.Tests.Json
             this.asyncStream.Position = 0;
             var asyncResult = await new StreamReader(this.asyncStream).ReadToEndAsync();
 
-            var syncResult = await TaskUtils.GetTaskForSynchronousOperation(
-                () =>
-                {
-                    IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
-                    using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
-                    {
-                        var writer = messageWriter.CreateODataResourceWriter(this.customerEntitySet, this.customerEntityType);
+            IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
+            using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
+            {
+                var writer = messageWriter.CreateODataResourceWriter(this.customerEntitySet, this.customerEntityType);
 
-                        writer.WriteStart(customerResource);
-                        writer.WriteStart(ordersPropertyNestedResourceInfo);
-                        writer.WriteEntityReferenceLink(orderEntityReferenceLink1);
-                        writer.WriteEntityReferenceLink(orderEntityReferenceLink2);
-                        writer.WriteEnd();
-                        writer.WriteEnd();
+                writer.WriteStart(customerResource);
+                writer.WriteStart(ordersPropertyNestedResourceInfo);
+                writer.WriteEntityReferenceLink(orderEntityReferenceLink1);
+                writer.WriteEntityReferenceLink(orderEntityReferenceLink2);
+                writer.WriteEnd();
+                writer.WriteEnd();
+            }
 
-                        this.syncStream.Position = 0;
-                        return new StreamReader(this.syncStream).ReadToEnd();
-                    }
-                });
+            this.syncStream.Position = 0;
+            var syncResult = new StreamReader(this.syncStream).ReadToEnd();
 
             var expected = "{\"@context\":\"http://tempuri.org/$metadata#Customers/$entity\"," +
                 "\"@id\":\"http://tempuri.org/Customers(1)\"," +
@@ -1324,24 +1252,20 @@ namespace Microsoft.OData.Tests.Json
             this.asyncStream.Position = 0;
             var asyncResult = await new StreamReader(this.asyncStream).ReadToEndAsync();
 
-            var syncResult = await TaskUtils.GetTaskForSynchronousOperation(
-                () =>
-                {
-                    IODataResponseMessage syncResponseMessage = new InMemoryMessage { Stream = this.syncStream };
-                    using (var messageWriter = new ODataMessageWriter(syncResponseMessage, this.writerSettings))
-                    {
-                        var writer = messageWriter.CreateODataResourceWriter(this.orderEntitySet, this.orderEntityType);
+            IODataResponseMessage syncResponseMessage = new InMemoryMessage { Stream = this.syncStream };
+            using (var messageWriter = new ODataMessageWriter(syncResponseMessage, this.writerSettings))
+            {
+                var writer = messageWriter.CreateODataResourceWriter(this.orderEntitySet, this.orderEntityType);
 
-                        writer.WriteStart(orderResource);
-                        writer.WriteStart(customerPropertyNestedResourceInfo);
-                        writer.WriteEntityReferenceLink(entityReferenceLink);
-                        writer.WriteEnd();
-                        writer.WriteEnd();
-                    }
+                writer.WriteStart(orderResource);
+                writer.WriteStart(customerPropertyNestedResourceInfo);
+                writer.WriteEntityReferenceLink(entityReferenceLink);
+                writer.WriteEnd();
+                writer.WriteEnd();
+            }
 
-                    this.syncStream.Position = 0;
-                    return new StreamReader(this.syncStream).ReadToEnd();
-                });
+            this.syncStream.Position = 0;
+            var syncResult = new StreamReader(this.syncStream).ReadToEnd();
 
             var expected = "{\"@odata.context\":\"http://tempuri.org/$metadata#Orders/$entity\"," +
                 "\"@odata.id\":\"http://tempuri.org/Orders(1)\"," +
@@ -1376,24 +1300,20 @@ namespace Microsoft.OData.Tests.Json
             this.asyncStream.Position = 0;
             var asyncResult = await new StreamReader(this.asyncStream).ReadToEndAsync();
 
-            var syncResult = await TaskUtils.GetTaskForSynchronousOperation(
-                () =>
-                {
-                    IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
-                    using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
-                    {
-                        var writer = messageWriter.CreateODataResourceWriter(this.orderEntitySet, this.orderEntityType);
+            IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
+            using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
+            {
+                var writer = messageWriter.CreateODataResourceWriter(this.orderEntitySet, this.orderEntityType);
 
-                        writer.WriteStart(orderResource);
-                        writer.WriteStart(customerPropertyNestedResourceInfo);
-                        writer.WriteEntityReferenceLink(entityReferenceLink);
-                        writer.WriteEnd();
-                        writer.WriteEnd();
-                    }
+                writer.WriteStart(orderResource);
+                writer.WriteStart(customerPropertyNestedResourceInfo);
+                writer.WriteEntityReferenceLink(entityReferenceLink);
+                writer.WriteEnd();
+                writer.WriteEnd();
+            }
 
-                    this.syncStream.Position = 0;
-                    return new StreamReader(this.syncStream).ReadToEnd();
-                });
+            this.syncStream.Position = 0;
+            var syncResult = new StreamReader(this.syncStream).ReadToEnd();
 
             var expected = "{\"@odata.context\":\"http://tempuri.org/$metadata#Orders/$entity\"," +
                 "\"@odata.id\":\"http://tempuri.org/Orders(1)\"," +
@@ -1426,23 +1346,19 @@ namespace Microsoft.OData.Tests.Json
             this.asyncStream.Position = 0;
             var asyncResult = await new StreamReader(this.asyncStream).ReadToEndAsync();
 
-            var syncResult = await TaskUtils.GetTaskForSynchronousOperation(
-                () =>
-                {
-                    IODataResponseMessage syncResponseMessage = new InMemoryMessage { Stream = this.syncStream };
-                    using (var messageWriter = new ODataMessageWriter(syncResponseMessage, this.writerSettings))
-                    {
-                        var writer = messageWriter.CreateODataDeltaResourceSetWriter(this.orderEntitySet, this.orderEntityType);
+            IODataResponseMessage syncResponseMessage = new InMemoryMessage { Stream = this.syncStream };
+            using (var messageWriter = new ODataMessageWriter(syncResponseMessage, this.writerSettings))
+            {
+                var writer = messageWriter.CreateODataDeltaResourceSetWriter(this.orderEntitySet, this.orderEntityType);
 
-                        writer.WriteStart(orderDeltaResourceSet);
-                        writer.WriteDeltaLink(deltaLink);
-                        writer.WriteDeltaDeletedLink(deltaDeletedLink);
-                        writer.WriteEnd();
-                    }
+                writer.WriteStart(orderDeltaResourceSet);
+                writer.WriteDeltaLink(deltaLink);
+                writer.WriteDeltaDeletedLink(deltaDeletedLink);
+                writer.WriteEnd();
+            }
 
-                    this.syncStream.Position = 0;
-                    return new StreamReader(this.syncStream).ReadToEnd();
-                });
+            this.syncStream.Position = 0;
+            var syncResult = new StreamReader(this.syncStream).ReadToEnd();
 
             var expected = "{\"@odata.context\":\"http://tempuri.org/$metadata#Orders/$delta\"," +
                 "\"@odata.deltaLink\":\"http://tempuri.org/Orders/deltaLink\"," +
@@ -1495,25 +1411,21 @@ namespace Microsoft.OData.Tests.Json
             this.asyncStream.Position = 0;
             var asyncResult = await new StreamReader(this.asyncStream).ReadToEndAsync();
 
-            var syncResult = await TaskUtils.GetTaskForSynchronousOperation(
-                () =>
-                {
-                    IODataResponseMessage syncResponseMessage = new InMemoryMessage { Stream = this.syncStream };
-                    using (var messageWriter = new ODataMessageWriter(syncResponseMessage, this.writerSettings))
-                    {
-                        var writer = messageWriter.CreateODataResourceWriter(this.orderEntitySet, this.orderEntityType);
+            IODataResponseMessage syncResponseMessage = new InMemoryMessage { Stream = this.syncStream };
+            using (var messageWriter = new ODataMessageWriter(syncResponseMessage, this.writerSettings))
+            {
+                var writer = messageWriter.CreateODataResourceWriter(this.orderEntitySet, this.orderEntityType);
 
-                        orderResource.MetadataBuilder = new TestODataResourceMetadataBuilder(
-                            orderResource.Id,
-                            unprocessedNavigationLinksFactory: () => nestedResourceInfos);
+                orderResource.MetadataBuilder = new TestODataResourceMetadataBuilder(
+                    orderResource.Id,
+                    unprocessedNavigationLinksFactory: () => nestedResourceInfos);
 
-                        writer.WriteStart(orderResource);
-                        writer.WriteEnd();
-                    }
+                writer.WriteStart(orderResource);
+                writer.WriteEnd();
+            }
 
-                    this.syncStream.Position = 0;
-                    return new StreamReader(this.syncStream).ReadToEnd();
-                });
+            this.syncStream.Position = 0;
+            var syncResult = new StreamReader(this.syncStream).ReadToEnd();
 
             var expected = "{\"@odata.context\":\"http://tempuri.org/$metadata#Orders/$entity\"," +
                 "\"@odata.id\":\"http://tempuri.org/Orders(1)\"," +
@@ -1608,21 +1520,17 @@ namespace Microsoft.OData.Tests.Json
             this.asyncStream.Position = 0;
             var asyncResult = await new StreamReader(this.asyncStream).ReadToEndAsync();
 
-            var syncResult = await TaskUtils.GetTaskForSynchronousOperation(
-                () =>
-                {
-                    IODataResponseMessage syncResponseMessage = new InMemoryMessage { Stream = this.syncStream };
-                    using (var messageWriter = new ODataMessageWriter(syncResponseMessage, this.writerSettings))
-                    {
-                        var writer = messageWriter.CreateODataResourceWriter(this.streamEntitySet, this.streamEntityType);
+            IODataResponseMessage syncResponseMessage = new InMemoryMessage { Stream = this.syncStream };
+            using (var messageWriter = new ODataMessageWriter(syncResponseMessage, this.writerSettings))
+            {
+                var writer = messageWriter.CreateODataResourceWriter(this.streamEntitySet, this.streamEntityType);
 
-                        writer.WriteStart(streamEntityResource);
-                        writer.WriteEnd();
-                    }
+                writer.WriteStart(streamEntityResource);
+                writer.WriteEnd();
+            }
 
-                    this.syncStream.Position = 0;
-                    return new StreamReader(this.syncStream).ReadToEnd();
-                });
+            this.syncStream.Position = 0;
+            var syncResult = new StreamReader(this.syncStream).ReadToEnd();
 
             Assert.Equal(expected, asyncResult);
             Assert.Equal(expected, syncResult);
@@ -1664,25 +1572,21 @@ namespace Microsoft.OData.Tests.Json
             this.asyncStream.Position = 0;
             var asyncResult = await new StreamReader(this.asyncStream).ReadToEndAsync();
 
-            var syncResult = await TaskUtils.GetTaskForSynchronousOperation(
-                () =>
-                {
-                    IODataResponseMessage syncResponseMessage = new InMemoryMessage { Stream = this.syncStream };
-                    using (var messageWriter = new ODataMessageWriter(syncResponseMessage, this.writerSettings))
-                    {
-                        var writer = messageWriter.CreateODataResourceWriter(this.streamEntitySet, this.streamEntityType);
+            IODataResponseMessage syncResponseMessage = new InMemoryMessage { Stream = this.syncStream };
+            using (var messageWriter = new ODataMessageWriter(syncResponseMessage, this.writerSettings))
+            {
+                var writer = messageWriter.CreateODataResourceWriter(this.streamEntitySet, this.streamEntityType);
 
-                        streamEntityResource.MetadataBuilder = new TestODataResourceMetadataBuilder(
-                            streamEntityResource.Id,
-                            unprocessedStreamPropertiesFactory: () => streamProperties);
+                streamEntityResource.MetadataBuilder = new TestODataResourceMetadataBuilder(
+                    streamEntityResource.Id,
+                    unprocessedStreamPropertiesFactory: () => streamProperties);
 
-                        writer.WriteStart(streamEntityResource);
-                        writer.WriteEnd();
-                    }
+                writer.WriteStart(streamEntityResource);
+                writer.WriteEnd();
+            }
 
-                    this.syncStream.Position = 0;
-                    return new StreamReader(this.syncStream).ReadToEnd();
-                });
+            this.syncStream.Position = 0;
+            var syncResult = new StreamReader(this.syncStream).ReadToEnd();
 
             var expected = "{\"@odata.context\":\"http://tempuri.org/$metadata#StreamEntitySet/$entity\"," +
                 "\"@odata.id\":\"http://tempuri.org/StreamEntitySet(1)\"," +
@@ -1729,33 +1633,29 @@ namespace Microsoft.OData.Tests.Json
             var asyncResult = await new StreamReader(this.asyncStream).ReadToEndAsync();
             asyncResult = Regex.Replace(asyncResult, batchGuidRegex, batchBoundary);
 
-            var syncResult = await TaskUtils.GetTaskForSynchronousOperation(
-                () =>
+            IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
+            using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
+            {
+                var batchWriter = messageWriter.CreateODataBatchWriter();
+                batchWriter.WriteStartBatch();
+
+                var operationRequestMessage = batchWriter.CreateOperationRequestMessage(
+                    "POST", new Uri($"{ServiceUri}/Customers"), "1");
+
+                using (var nestedMessageWriter = new ODataMessageWriter(operationRequestMessage))
                 {
-                    IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
-                    using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
-                    {
-                        var batchWriter = messageWriter.CreateODataBatchWriter();
-                        batchWriter.WriteStartBatch();
+                    var writer = nestedMessageWriter.CreateODataResourceWriter(this.customerEntitySet, this.customerEntityType);
 
-                        var operationRequestMessage = batchWriter.CreateOperationRequestMessage(
-                            "POST", new Uri($"{ServiceUri}/Customers"), "1");
+                    writer.WriteStart(customerResource);
+                    writer.WriteEnd();
+                }
 
-                        using (var nestedMessageWriter = new ODataMessageWriter(operationRequestMessage))
-                        {
-                            var writer = nestedMessageWriter.CreateODataResourceWriter(this.customerEntitySet, this.customerEntityType);
+                batchWriter.WriteEndBatch();
+            }
 
-                            writer.WriteStart(customerResource);
-                            writer.WriteEnd();
-                        }
-
-                        batchWriter.WriteEndBatch();
-                    }
-
-                    this.syncStream.Position = 0;
-                    var result = new StreamReader(this.syncStream).ReadToEnd();
-                    return Regex.Replace(result, batchGuidRegex, batchBoundary);
-                });
+            this.syncStream.Position = 0;
+            var result = new StreamReader(this.syncStream).ReadToEnd();
+            var syncResult = Regex.Replace(result, batchGuidRegex, batchBoundary);
 
             var expected = @"--batch_aed653ab
 Content-Type: application/http
@@ -1805,35 +1705,31 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
             var asyncResult = await new StreamReader(this.asyncStream).ReadToEndAsync();
             asyncResult = Regex.Replace(asyncResult, batchGuidRegex, batchBoundary);
 
-            var syncResult = await TaskUtils.GetTaskForSynchronousOperation(
-                () =>
+            IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
+            using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
+            {
+                var batchWriter = messageWriter.CreateODataBatchWriter();
+                batchWriter.WriteStartBatch();
+                batchWriter.WriteStartChangeset("69028f2c");
+
+                var operationRequestMessage = batchWriter.CreateOperationRequestMessage(
+                    "POST", new Uri($"{ServiceUri}/Customers"), "1");
+
+                using (var nestedMessageWriter = new ODataMessageWriter(operationRequestMessage))
                 {
-                    IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
-                    using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
-                    {
-                        var batchWriter = messageWriter.CreateODataBatchWriter();
-                        batchWriter.WriteStartBatch();
-                        batchWriter.WriteStartChangeset("69028f2c");
+                    var writer = nestedMessageWriter.CreateODataResourceWriter(this.customerEntitySet, this.customerEntityType);
 
-                        var operationRequestMessage = batchWriter.CreateOperationRequestMessage(
-                            "POST", new Uri($"{ServiceUri}/Customers"), "1");
+                    writer.WriteStart(customerResource);
+                    writer.WriteEnd();
+                }
 
-                        using (var nestedMessageWriter = new ODataMessageWriter(operationRequestMessage))
-                        {
-                            var writer = nestedMessageWriter.CreateODataResourceWriter(this.customerEntitySet, this.customerEntityType);
+                batchWriter.WriteEndChangeset();
+                batchWriter.WriteEndBatch();
+            }
 
-                            writer.WriteStart(customerResource);
-                            writer.WriteEnd();
-                        }
-
-                        batchWriter.WriteEndChangeset();
-                        batchWriter.WriteEndBatch();
-                    }
-
-                    this.syncStream.Position = 0;
-                    var result = new StreamReader(this.syncStream).ReadToEnd();
-                    return Regex.Replace(result, batchGuidRegex, batchBoundary);
-                });
+            this.syncStream.Position = 0;
+            var result = new StreamReader(this.syncStream).ReadToEnd();
+            var syncResult = Regex.Replace(result, batchGuidRegex, batchBoundary);
 
             var expected = @"--batch_aed653ab
 Content-Type: multipart/mixed; boundary=changeset_69028f2c
@@ -1905,49 +1801,45 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
             asyncResult = Regex.Replace(asyncResult, batchGuidRegex, batchBoundary);
             asyncResult = Regex.Replace(asyncResult, changetsetGuidRegex, changesetBoundary);
 
-            var syncResult = await TaskUtils.GetTaskForSynchronousOperation(
-                () =>
+            IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
+            using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
+            {
+                var batchWriter = messageWriter.CreateODataBatchWriter();
+                batchWriter.WriteStartBatch();
+                batchWriter.WriteStartChangeset();
+
+                var operationRequestMessage1 = batchWriter.CreateOperationRequestMessage(
+                    "POST", new Uri($"{ServiceUri}/Customers"), "1");
+
+                using (var nestedMessageWriter1 = new ODataMessageWriter(operationRequestMessage1))
                 {
-                    IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
-                    using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
-                    {
-                        var batchWriter = messageWriter.CreateODataBatchWriter();
-                        batchWriter.WriteStartBatch();
-                        batchWriter.WriteStartChangeset();
+                    var writer = nestedMessageWriter1.CreateODataResourceWriter(this.customerEntitySet, this.customerEntityType);
 
-                        var operationRequestMessage1 = batchWriter.CreateOperationRequestMessage(
-                            "POST", new Uri($"{ServiceUri}/Customers"), "1");
+                    writer.WriteStart(customerResource);
+                    writer.WriteEnd();
+                }
 
-                        using (var nestedMessageWriter1 = new ODataMessageWriter(operationRequestMessage1))
-                        {
-                            var writer = nestedMessageWriter1.CreateODataResourceWriter(this.customerEntitySet, this.customerEntityType);
+                // Operation request depends on the previous (Content ID: 1)
+                var dependsOnIds = new List<string> { "1" };
+                var operationRequestMessage2 = batchWriter.CreateOperationRequestMessage(
+                    "POST", new Uri($"{ServiceUri}/Orders"), "2", BatchPayloadUriOption.AbsoluteUri, dependsOnIds);
 
-                            writer.WriteStart(customerResource);
-                            writer.WriteEnd();
-                        }
+                using (var nestedMessageWriter2 = new ODataMessageWriter(operationRequestMessage2))
+                {
+                    var writer = nestedMessageWriter2.CreateODataResourceWriter(this.orderEntitySet, this.orderEntityType);
 
-                        // Operation request depends on the previous (Content ID: 1)
-                        var dependsOnIds = new List<string> { "1" };
-                        var operationRequestMessage2 = batchWriter.CreateOperationRequestMessage(
-                            "POST", new Uri($"{ServiceUri}/Orders"), "2", BatchPayloadUriOption.AbsoluteUri, dependsOnIds);
+                    writer.WriteStart(orderResource);
+                    writer.WriteEnd();
+                }
 
-                        using (var nestedMessageWriter2 = new ODataMessageWriter(operationRequestMessage2))
-                        {
-                            var writer = nestedMessageWriter2.CreateODataResourceWriter(this.orderEntitySet, this.orderEntityType);
+                batchWriter.WriteEndChangeset();
+                batchWriter.WriteEndBatch();
+            }
 
-                            writer.WriteStart(orderResource);
-                            writer.WriteEnd();
-                        }
-
-                        batchWriter.WriteEndChangeset();
-                        batchWriter.WriteEndBatch();
-                    }
-
-                    this.syncStream.Position = 0;
-                    var result = new StreamReader(this.syncStream).ReadToEnd();
-                    result = Regex.Replace(result, batchGuidRegex, batchBoundary);
-                    return Regex.Replace(result, changetsetGuidRegex, changesetBoundary);
-                });
+            this.syncStream.Position = 0;
+            var result = new StreamReader(this.syncStream).ReadToEnd();
+            result = Regex.Replace(result, batchGuidRegex, batchBoundary);
+            var syncResult = Regex.Replace(result, changetsetGuidRegex, changesetBoundary);
 
             var expected = @"--batch_aed653ab
 Content-Type: multipart/mixed; boundary=changeset_69028f2c
@@ -2013,32 +1905,28 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
             var asyncResult = await new StreamReader(this.asyncStream).ReadToEndAsync();
             asyncResult = Regex.Replace(asyncResult, batchGuidRegex, batchBoundary);
 
-            var syncResult = await TaskUtils.GetTaskForSynchronousOperation(
-                () =>
+            IODataResponseMessage syncResponseMessage = new InMemoryMessage { Stream = this.syncStream };
+            using (var messageWriter = new ODataMessageWriter(syncResponseMessage, this.writerSettings))
+            {
+                var batchWriter = messageWriter.CreateODataBatchWriter();
+                batchWriter.WriteStartBatch();
+
+                var operationResponseMessage = batchWriter.CreateOperationResponseMessage("1");
+
+                using (var nestedMessageWriter = new ODataMessageWriter(operationResponseMessage, nestedWriterSettings))
                 {
-                    IODataResponseMessage syncResponseMessage = new InMemoryMessage { Stream = this.syncStream };
-                    using (var messageWriter = new ODataMessageWriter(syncResponseMessage, this.writerSettings))
-                    {
-                        var batchWriter = messageWriter.CreateODataBatchWriter();
-                        batchWriter.WriteStartBatch();
+                    var writer = nestedMessageWriter.CreateODataResourceWriter(this.customerEntitySet, this.customerEntityType);
 
-                        var operationResponseMessage = batchWriter.CreateOperationResponseMessage("1");
+                    writer.WriteStart(customerResource);
+                    writer.WriteEnd();
+                }
 
-                        using (var nestedMessageWriter = new ODataMessageWriter(operationResponseMessage, nestedWriterSettings))
-                        {
-                            var writer = nestedMessageWriter.CreateODataResourceWriter(this.customerEntitySet, this.customerEntityType);
+                batchWriter.WriteEndBatch();
+            }
 
-                            writer.WriteStart(customerResource);
-                            writer.WriteEnd();
-                        }
-
-                        batchWriter.WriteEndBatch();
-                    }
-
-                    this.syncStream.Position = 0;
-                    var result = new StreamReader(this.syncStream).ReadToEnd();
-                    return Regex.Replace(result, batchGuidRegex, batchBoundary);
-                });
+            this.syncStream.Position = 0;
+            var result = new StreamReader(this.syncStream).ReadToEnd();
+            var syncResult = Regex.Replace(result, batchGuidRegex, batchBoundary);
 
             var expected = @"--batch_aed653ab
 Content-Type: application/http
@@ -2091,34 +1979,30 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
             var asyncResult = await new StreamReader(this.asyncStream).ReadToEndAsync();
             asyncResult = Regex.Replace(asyncResult, batchGuidRegex, batchBoundary);
 
-            var syncResult = await TaskUtils.GetTaskForSynchronousOperation(
-                () =>
+            IODataResponseMessage syncResponseMessage = new InMemoryMessage { Stream = this.syncStream };
+            using (var messageWriter = new ODataMessageWriter(syncResponseMessage, this.writerSettings))
+            {
+                var batchWriter = messageWriter.CreateODataBatchWriter();
+                batchWriter.WriteStartBatch();
+                batchWriter.WriteStartChangeset("69028f2c");
+
+                var operationResponseMessage = batchWriter.CreateOperationResponseMessage("1");
+
+                using (var nestedMessageWriter = new ODataMessageWriter(operationResponseMessage, nestedWriterSettings))
                 {
-                    IODataResponseMessage syncResponseMessage = new InMemoryMessage { Stream = this.syncStream };
-                    using (var messageWriter = new ODataMessageWriter(syncResponseMessage, this.writerSettings))
-                    {
-                        var batchWriter = messageWriter.CreateODataBatchWriter();
-                        batchWriter.WriteStartBatch();
-                        batchWriter.WriteStartChangeset("69028f2c");
+                    var writer = nestedMessageWriter.CreateODataResourceWriter(this.customerEntitySet, this.customerEntityType);
 
-                        var operationResponseMessage = batchWriter.CreateOperationResponseMessage("1");
+                    writer.WriteStart(customerResource);
+                    writer.WriteEnd();
+                }
 
-                        using (var nestedMessageWriter = new ODataMessageWriter(operationResponseMessage, nestedWriterSettings))
-                        {
-                            var writer = nestedMessageWriter.CreateODataResourceWriter(this.customerEntitySet, this.customerEntityType);
+                batchWriter.WriteEndChangeset();
+                batchWriter.WriteEndBatch();
+            }
 
-                            writer.WriteStart(customerResource);
-                            writer.WriteEnd();
-                        }
-
-                        batchWriter.WriteEndChangeset();
-                        batchWriter.WriteEndBatch();
-                    }
-
-                    this.syncStream.Position = 0;
-                    var result = new StreamReader(this.syncStream).ReadToEnd();
-                    return Regex.Replace(result, batchGuidRegex, batchBoundary);
-                });
+            this.syncStream.Position = 0;
+            var result = new StreamReader(this.syncStream).ReadToEnd();
+            var syncResult = Regex.Replace(result, batchGuidRegex, batchBoundary);
 
             var expected = @"--batch_aed653ab
 Content-Type: multipart/mixed; boundary=changesetresponse_69028f2c
@@ -2171,33 +2055,29 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
             var asyncResult = await new StreamReader(this.asyncStream).ReadToEndAsync();
             asyncResult = Regex.Replace(asyncResult, batchGuidRegex, batchBoundary);
 
-            var syncResult = await TaskUtils.GetTaskForSynchronousOperation(
-                () =>
+            IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
+            using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
+            {
+                var batchWriter = messageWriter.CreateODataBatchWriter();
+                batchWriter.WriteStartBatch();
+
+                var operationRequestMessage = batchWriter.CreateOperationRequestMessage(
+                    "POST", new Uri($"{ServiceUri}/odata/Customers"), "1", BatchPayloadUriOption.AbsoluteUriUsingHostHeader);
+
+                using (var nestedMessageWriter = new ODataMessageWriter(operationRequestMessage))
                 {
-                    IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
-                    using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
-                    {
-                        var batchWriter = messageWriter.CreateODataBatchWriter();
-                        batchWriter.WriteStartBatch();
+                    var writer = nestedMessageWriter.CreateODataResourceWriter(this.customerEntitySet, this.customerEntityType);
 
-                        var operationRequestMessage = batchWriter.CreateOperationRequestMessage(
-                            "POST", new Uri($"{ServiceUri}/odata/Customers"), "1", BatchPayloadUriOption.AbsoluteUriUsingHostHeader);
+                    writer.WriteStart(customerResource);
+                    writer.WriteEnd();
+                }
 
-                        using (var nestedMessageWriter = new ODataMessageWriter(operationRequestMessage))
-                        {
-                            var writer = nestedMessageWriter.CreateODataResourceWriter(this.customerEntitySet, this.customerEntityType);
+                batchWriter.WriteEndBatch();
+            }
 
-                            writer.WriteStart(customerResource);
-                            writer.WriteEnd();
-                        }
-
-                        batchWriter.WriteEndBatch();
-                    }
-
-                    this.syncStream.Position = 0;
-                    var result = new StreamReader(this.syncStream).ReadToEnd();
-                    return Regex.Replace(result, batchGuidRegex, batchBoundary);
-                });
+            this.syncStream.Position = 0;
+            var result = new StreamReader(this.syncStream).ReadToEnd();
+            var syncResult = Regex.Replace(result, batchGuidRegex, batchBoundary);
 
             var expected = @"--batch_aed653ab
 Content-Type: application/http
@@ -2246,33 +2126,29 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
             var asyncResult = await new StreamReader(this.asyncStream).ReadToEndAsync();
             asyncResult = Regex.Replace(asyncResult, batchGuidRegex, batchBoundary);
 
-            var syncResult = await TaskUtils.GetTaskForSynchronousOperation(
-                () =>
+            IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
+            using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
+            {
+                var batchWriter = messageWriter.CreateODataBatchWriter();
+                batchWriter.WriteStartBatch();
+
+                var operationRequestMessage = batchWriter.CreateOperationRequestMessage(
+                    "POST", new Uri("/odata/Customers", UriKind.Relative), "1", BatchPayloadUriOption.RelativeUri);
+
+                using (var nestedMessageWriter = new ODataMessageWriter(operationRequestMessage))
                 {
-                    IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
-                    using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
-                    {
-                        var batchWriter = messageWriter.CreateODataBatchWriter();
-                        batchWriter.WriteStartBatch();
+                    var writer = nestedMessageWriter.CreateODataResourceWriter(this.customerEntitySet, this.customerEntityType);
 
-                        var operationRequestMessage = batchWriter.CreateOperationRequestMessage(
-                            "POST", new Uri("/odata/Customers", UriKind.Relative), "1", BatchPayloadUriOption.RelativeUri);
+                    writer.WriteStart(customerResource);
+                    writer.WriteEnd();
+                }
 
-                        using (var nestedMessageWriter = new ODataMessageWriter(operationRequestMessage))
-                        {
-                            var writer = nestedMessageWriter.CreateODataResourceWriter(this.customerEntitySet, this.customerEntityType);
+                batchWriter.WriteEndBatch();
+            }
 
-                            writer.WriteStart(customerResource);
-                            writer.WriteEnd();
-                        }
-
-                        batchWriter.WriteEndBatch();
-                    }
-
-                    this.syncStream.Position = 0;
-                    var result = new StreamReader(this.syncStream).ReadToEnd();
-                    return Regex.Replace(result, batchGuidRegex, batchBoundary);
-                });
+            this.syncStream.Position = 0;
+            var result = new StreamReader(this.syncStream).ReadToEnd();
+            var syncResult = Regex.Replace(result, batchGuidRegex, batchBoundary);
 
             var expected = @"--batch_aed653ab
 Content-Type: application/http
@@ -2312,25 +2188,21 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
             var asyncResult = await new StreamReader(this.asyncStream).ReadToEndAsync();
             asyncResult = Regex.Replace(asyncResult, batchGuidRegex, batchBoundary);
 
-            var syncResult = await TaskUtils.GetTaskForSynchronousOperation(
-                () =>
-                {
-                    IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
-                    using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
-                    {
-                        var batchWriter = messageWriter.CreateODataBatchWriter();
-                        batchWriter.WriteStartBatch();
+            IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
+            using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
+            {
+                var batchWriter = messageWriter.CreateODataBatchWriter();
+                batchWriter.WriteStartBatch();
 
-                        var operationRequestMessage = batchWriter.CreateOperationRequestMessage(
-                            "POST", new Uri($"{ServiceUri}/Customers"), "1");
-                        // No writer created for the request message
-                        batchWriter.WriteEndBatch();
-                    }
+                var operationRequestMessage = batchWriter.CreateOperationRequestMessage(
+                    "POST", new Uri($"{ServiceUri}/Customers"), "1");
+                // No writer created for the request message
+                batchWriter.WriteEndBatch();
+            }
 
-                    this.syncStream.Position = 0;
-                    var result = new StreamReader(this.syncStream).ReadToEnd();
-                    return Regex.Replace(result, batchGuidRegex, batchBoundary);
-                });
+            this.syncStream.Position = 0;
+            var result = new StreamReader(this.syncStream).ReadToEnd();
+            var syncResult = Regex.Replace(result, batchGuidRegex, batchBoundary);
 
             var expected = @"--batch_aed653ab
 Content-Type: application/http
@@ -2370,18 +2242,14 @@ POST http://tempuri.org/Customers HTTP/1.1
             this.asyncStream.Position = 0;
             var asyncResult = await new StreamReader(this.asyncStream).ReadToEndAsync();
 
-            var syncResult = await TaskUtils.GetTaskForSynchronousOperation(
-                () =>
-                {
-                    IODataResponseMessage syncResponseMessage = new InMemoryMessage { Stream = this.syncStream };
-                    using (var messageWriter = new ODataMessageWriter(syncResponseMessage, this.writerSettings))
-                    {
-                        messageWriter.WriteServiceDocument(serviceDocument);
-                    }
+            IODataResponseMessage syncResponseMessage = new InMemoryMessage { Stream = this.syncStream };
+            using (var messageWriter = new ODataMessageWriter(syncResponseMessage, this.writerSettings))
+            {
+                messageWriter.WriteServiceDocument(serviceDocument);
+            }
 
-                    this.syncStream.Position = 0;
-                    return new StreamReader(this.syncStream).ReadToEnd();
-                });
+            this.syncStream.Position = 0;
+            var syncResult = new StreamReader(this.syncStream).ReadToEnd();
 
             var expected = "{\"@odata.context\":\"http://tempuri.org/$metadata\"," +
                 "\"value\":[" +
@@ -2432,19 +2300,15 @@ POST http://tempuri.org/Customers HTTP/1.1
             this.asyncStream.Position = 0;
             var asyncResult = await new StreamReader(this.asyncStream).ReadToEndAsync();
 
-            var syncResult = await TaskUtils.GetTaskForSynchronousOperation(
-                () =>
-                {
-                    IODataResponseMessage syncResponseMessage = new InMemoryMessage { Stream = this.syncStream };
-                    using (var messageWriter = new ODataMessageWriter(syncResponseMessage, this.writerSettings))
-                    {
-                        messageWriter.CreateODataResourceWriter();
-                        messageWriter.WriteError(nullReferenceError, includeDebugInformation: true);
-                    }
+            IODataResponseMessage syncResponseMessage = new InMemoryMessage { Stream = this.syncStream };
+            using (var messageWriter = new ODataMessageWriter(syncResponseMessage, this.writerSettings))
+            {
+                messageWriter.CreateODataResourceWriter();
+                messageWriter.WriteError(nullReferenceError, includeDebugInformation: true);
+            }
 
-                    this.syncStream.Position = 0;
-                    return new StreamReader(this.syncStream).ReadToEnd();
-                });
+            this.syncStream.Position = 0;
+            var syncResult = new StreamReader(this.syncStream).ReadToEnd();
 
             var expected = "{\"error\":{" +
                 "\"code\":\"badRequest\"," +
@@ -2476,18 +2340,14 @@ POST http://tempuri.org/Customers HTTP/1.1
             this.asyncStream.Position = 0;
             var asyncResult = await new StreamReader(this.asyncStream).ReadToEndAsync();
 
-            var syncResult = await TaskUtils.GetTaskForSynchronousOperation(
-                () =>
-                {
-                    IODataResponseMessage syncResponseMessage = new InMemoryMessage { Stream = this.syncStream };
-                    using (var messageWriter = new ODataMessageWriter(syncResponseMessage, this.writerSettings))
-                    {
-                        messageWriter.WriteProperty(new ODataProperty { Name = "Count", Value = 5 });
-                    }
+            IODataResponseMessage syncResponseMessage = new InMemoryMessage { Stream = this.syncStream };
+            using (var messageWriter = new ODataMessageWriter(syncResponseMessage, this.writerSettings))
+            {
+                messageWriter.WriteProperty(new ODataProperty { Name = "Count", Value = 5 });
+            }
 
-                    this.syncStream.Position = 0;
-                    return new StreamReader(this.syncStream).ReadToEnd();
-                });
+            this.syncStream.Position = 0;
+            var syncResult = new StreamReader(this.syncStream).ReadToEnd();
 
             var expected = "fn({\"@odata.context\":\"http://tempuri.org/$metadata#Edm.Int32\",\"value\":5})";
 
@@ -2588,18 +2448,16 @@ POST http://tempuri.org/Customers HTTP/1.1
                     }
                 });
 
-            var syncException = await Assert.ThrowsAsync<ODataException>(
-                () => TaskUtils.GetTaskForSynchronousOperation(
-                    () =>
-                    {
-                        IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
-                        using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
-                        {
-                            var writer = messageWriter.CreateODataResourceSetWriter(this.customerEntitySet, this.customerEntityType);
+            var syncException = Assert.Throws<ODataException>(() =>
+            {
+                IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
+                using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
+                {
+                    var writer = messageWriter.CreateODataResourceSetWriter(this.customerEntitySet, this.customerEntityType);
 
-                            writer.WriteStart(customerResourceSet);
-                        }
-                    }));
+                    writer.WriteStart(customerResourceSet);
+                }
+            });
 
             Assert.Equal(SRResources.ODataWriterCore_QueryCountInRequest, asyncException.Message);
             Assert.Equal(SRResources.ODataWriterCore_QueryCountInRequest, syncException.Message);
@@ -2624,18 +2482,16 @@ POST http://tempuri.org/Customers HTTP/1.1
                     }
                 });
 
-            var syncException = await Assert.ThrowsAsync<ODataException>(
-                () => TaskUtils.GetTaskForSynchronousOperation(
-                    () =>
-                    {
-                        IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
-                        using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
-                        {
-                            var writer = messageWriter.CreateODataDeltaResourceSetWriter(this.customerEntitySet, this.customerEntityType);
+            var syncException = Assert.Throws<ODataException>(() =>
+            {
+                IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
+                using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
+                {
+                    var writer = messageWriter.CreateODataDeltaResourceSetWriter(this.customerEntitySet, this.customerEntityType);
 
-                            writer.WriteStart(customerDeltaResourceSet);
-                        }
-                    }));
+                    writer.WriteStart(customerDeltaResourceSet);
+                }
+            });
 
             Assert.Equal(SRResources.ODataWriterCore_QueryNextLinkInRequest, asyncException.Message);
             Assert.Equal(SRResources.ODataWriterCore_QueryNextLinkInRequest, syncException.Message);
@@ -2659,18 +2515,16 @@ POST http://tempuri.org/Customers HTTP/1.1
                     }
                 });
 
-            var syncException = await Assert.ThrowsAsync<ODataException>(
-                () => TaskUtils.GetTaskForSynchronousOperation(
-                    () =>
-                    {
-                        IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
-                        using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
-                        {
-                            var writer = messageWriter.CreateODataDeltaResourceSetWriter(this.customerEntitySet, this.customerEntityType);
+            var syncException = Assert.Throws<ODataException>(() =>
+            {
+                IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
+                using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
+                {
+                    var writer = messageWriter.CreateODataDeltaResourceSetWriter(this.customerEntitySet, this.customerEntityType);
 
-                            writer.WriteStart(customerDeltaResourceSet);
-                        }
-                    }));
+                    writer.WriteStart(customerDeltaResourceSet);
+                }
+            });
 
             Assert.Equal(SRResources.ODataWriterCore_QueryDeltaLinkInRequest, asyncException.Message);
             Assert.Equal(SRResources.ODataWriterCore_QueryDeltaLinkInRequest, syncException.Message);
@@ -2699,21 +2553,19 @@ POST http://tempuri.org/Customers HTTP/1.1
                     }
                 });
 
-            var syncException = await Assert.ThrowsAsync<ODataException>(
-                () => TaskUtils.GetTaskForSynchronousOperation(
-                    () =>
-                    {
-                        IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
-                        using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
-                        {
-                            var writer = messageWriter.CreateODataResourceSetWriter(this.customerEntitySet, this.customerEntityType);
+            var syncException = Assert.Throws<ODataException>(() =>
+            {
+                IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
+                using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
+                {
+                    var writer = messageWriter.CreateODataResourceSetWriter(this.customerEntitySet, this.customerEntityType);
 
-                            writer.WriteStart(customerResourceSet);
-                            writer.WriteStart(customerResource);
-                            writer.WriteStart(ordersPropertyNestedResourceInfo);
-                            writer.WriteEnd();
-                        }
-                    }));
+                    writer.WriteStart(customerResourceSet);
+                    writer.WriteStart(customerResource);
+                    writer.WriteStart(ordersPropertyNestedResourceInfo);
+                    writer.WriteEnd();
+                }
+            });
 
             Assert.Equal(SRResources.ODataWriterCore_DeferredLinkInRequest, asyncException.Message);
             Assert.Equal(SRResources.ODataWriterCore_DeferredLinkInRequest, syncException.Message);
@@ -2737,18 +2589,16 @@ POST http://tempuri.org/Customers HTTP/1.1
                     }
                 });
 
-            var syncException = await Assert.ThrowsAsync<ODataException>(
-                () => TaskUtils.GetTaskForSynchronousOperation(
-                    () =>
-                    {
-                        IODataResponseMessage syncResponseMessage = new InMemoryMessage { Stream = this.syncStream };
-                        using (var messageWriter = new ODataMessageWriter(syncResponseMessage, this.writerSettings))
-                        {
-                            var writer = messageWriter.CreateODataResourceWriter(this.customerEntitySet, this.customerEntityType);
+            var syncException = Assert.Throws<ODataException>(() =>
+            {
+                IODataResponseMessage syncResponseMessage = new InMemoryMessage { Stream = this.syncStream };
+                using (var messageWriter = new ODataMessageWriter(syncResponseMessage, this.writerSettings))
+                {
+                    var writer = messageWriter.CreateODataResourceWriter(this.customerEntitySet, this.customerEntityType);
 
-                            writer.WriteStart(customerPropertyNestedResourceInfo);
-                        }
-                    }));
+                    writer.WriteStart(customerPropertyNestedResourceInfo);
+                }
+            });
 
             var exceptionMessage = Error.Format(SRResources.ODataWriterCore_InvalidTransitionFromStart, "Start", "NestedResourceInfo");
 
@@ -2774,18 +2624,16 @@ POST http://tempuri.org/Customers HTTP/1.1
                     }
                 });
 
-            var syncException = await Assert.ThrowsAsync<ODataException>(
-                () => TaskUtils.GetTaskForSynchronousOperation(
-                    () =>
-                    {
-                        IODataResponseMessage syncResponseMessage = new InMemoryMessage { Stream = this.syncStream };
-                        using (var messageWriter = new ODataMessageWriter(syncResponseMessage, this.writerSettings))
-                        {
-                            var writer = messageWriter.CreateODataResourceWriter(this.customerEntitySet, this.customerEntityType);
+            var syncException = Assert.Throws<ODataException>(() =>
+            {
+                IODataResponseMessage syncResponseMessage = new InMemoryMessage { Stream = this.syncStream };
+                using (var messageWriter = new ODataMessageWriter(syncResponseMessage, this.writerSettings))
+                {
+                    var writer = messageWriter.CreateODataResourceWriter(this.customerEntitySet, this.customerEntityType);
 
-                            writer.WriteStart(countProperty);
-                        }
-                    }));
+                    writer.WriteStart(countProperty);
+                }
+            });
 
             var exceptionMessage = Error.Format(SRResources.ODataWriterCore_InvalidTransitionFromStart, "Start", "Property");
 
@@ -2816,21 +2664,19 @@ POST http://tempuri.org/Customers HTTP/1.1
                     }
                 });
 
-            var syncException = await Assert.ThrowsAsync<ODataException>(
-                () => TaskUtils.GetTaskForSynchronousOperation(
-                    () =>
-                    {
-                        IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
-                        using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
-                        {
-                            var writer = messageWriter.CreateODataResourceWriter();
+            var syncException = Assert.Throws<ODataException>(() =>
+            {
+                IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
+                using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
+                {
+                    var writer = messageWriter.CreateODataResourceWriter();
 
-                            writer.WriteStart(addressResource);
-                            writer.WriteStart(streetProperty);
-                            // Missing: writer.WriteEnd();
-                            writer.WriteStart(cityProperty);
-                        }
-                    }));
+                    writer.WriteStart(addressResource);
+                    writer.WriteStart(streetProperty);
+                    // Missing: writer.WriteEnd();
+                    writer.WriteStart(cityProperty);
+                }
+            });
 
             var exceptionMessage = Error.Format(SRResources.ODataWriterCore_PropertyValueAlreadyWritten, streetProperty.Name);
 
@@ -2864,20 +2710,18 @@ POST http://tempuri.org/Customers HTTP/1.1
                     }
                 });
 
-            var syncException = await Assert.ThrowsAsync<ODataException>(
-                () => TaskUtils.GetTaskForSynchronousOperation(
-                    () =>
-                    {
-                        IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
-                        using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
-                        {
-                            var writer = messageWriter.CreateODataResourceWriter();
+            var syncException = Assert.Throws<ODataException>(() =>
+            {
+                IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
+                using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
+                {
+                    var writer = messageWriter.CreateODataResourceWriter();
 
-                            writer.WriteStart(addressResource);
-                            writer.WriteStart(streetProperty);
-                            writer.WriteStart(nonPrimitivePropertyValue);
-                        }
-                    }));
+                    writer.WriteStart(addressResource);
+                    writer.WriteStart(streetProperty);
+                    writer.WriteStart(nonPrimitivePropertyValue);
+                }
+            });
 
             var exceptionMessage = Error.Format(SRResources.ODataWriterCore_InvalidStateTransition, "Property", "Resource");
 
@@ -2903,18 +2747,16 @@ POST http://tempuri.org/Customers HTTP/1.1
                     }
                 });
 
-            var syncException = await Assert.ThrowsAsync<ODataException>(
-                () => TaskUtils.GetTaskForSynchronousOperation(
-                    () =>
-                    {
-                        IODataResponseMessage syncResponseMessage = new InMemoryMessage { Stream = this.syncStream };
-                        using (var messageWriter = new ODataMessageWriter(syncResponseMessage, this.writerSettings))
-                        {
-                            var writer = messageWriter.CreateODataResourceWriter(this.customerEntitySet, this.customerEntityType);
+            var syncException = Assert.Throws<ODataException>(() =>
+            {
+                IODataResponseMessage syncResponseMessage = new InMemoryMessage { Stream = this.syncStream };
+                using (var messageWriter = new ODataMessageWriter(syncResponseMessage, this.writerSettings))
+                {
+                    var writer = messageWriter.CreateODataResourceWriter(this.customerEntitySet, this.customerEntityType);
 
-                            writer.WriteStart(customerResourceSet);
-                        }
-                    }));
+                    writer.WriteStart(customerResourceSet);
+                }
+            });
 
             Assert.Equal(SRResources.ODataWriterCore_CannotWriteTopLevelResourceSetWithResourceWriter, asyncException.Message);
             Assert.Equal(SRResources.ODataWriterCore_CannotWriteTopLevelResourceSetWithResourceWriter, syncException.Message);
@@ -2938,18 +2780,16 @@ POST http://tempuri.org/Customers HTTP/1.1
                     }
                 });
 
-            var syncException = await Assert.ThrowsAsync<ODataException>(
-                () => TaskUtils.GetTaskForSynchronousOperation(
-                    () =>
-                    {
-                        IODataResponseMessage syncResponseMessage = new InMemoryMessage { Stream = this.syncStream };
-                        using (var messageWriter = new ODataMessageWriter(syncResponseMessage, this.writerSettings))
-                        {
-                            var writer = messageWriter.CreateODataResourceSetWriter(this.customerEntitySet, this.customerEntityType);
+            var syncException = Assert.Throws<ODataException>(() =>
+            {
+                IODataResponseMessage syncResponseMessage = new InMemoryMessage { Stream = this.syncStream };
+                using (var messageWriter = new ODataMessageWriter(syncResponseMessage, this.writerSettings))
+                {
+                    var writer = messageWriter.CreateODataResourceSetWriter(this.customerEntitySet, this.customerEntityType);
 
-                            writer.WriteStart(customerResource);
-                        }
-                    }));
+                    writer.WriteStart(customerResource);
+                }
+            });
 
             Assert.Equal(SRResources.ODataWriterCore_CannotWriteTopLevelResourceWithResourceSetWriter, asyncException.Message);
             Assert.Equal(SRResources.ODataWriterCore_CannotWriteTopLevelResourceWithResourceSetWriter, syncException.Message);
@@ -2975,19 +2815,17 @@ POST http://tempuri.org/Customers HTTP/1.1
                     }
                 });
 
-            var syncException = await Assert.ThrowsAsync<ODataException>(
-                () => TaskUtils.GetTaskForSynchronousOperation(
-                    () =>
-                    {
-                        IODataResponseMessage asyncResponseMessage = new InMemoryMessage { Stream = this.syncStream };
-                        using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
-                        {
-                            var writer = messageWriter.CreateODataResourceWriter(this.customerEntitySet, this.customerEntityType);
+            var syncException = Assert.Throws<ODataException>(() =>
+            {
+                IODataResponseMessage asyncResponseMessage = new InMemoryMessage { Stream = this.syncStream };
+                using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
+                {
+                    var writer = messageWriter.CreateODataResourceWriter(this.customerEntitySet, this.customerEntityType);
 
-                            writer.WriteStart(customerResource);
-                            writer.WriteStart(orderResourceSet);
-                        }
-                    }));
+                    writer.WriteStart(customerResource);
+                    writer.WriteStart(orderResourceSet);
+                }
+            });
 
             var expectedMessage = Error.Format(SRResources.ODataWriterCore_InvalidTransitionFromResource, "Resource", "ResourceSet");
 
@@ -3015,19 +2853,17 @@ POST http://tempuri.org/Customers HTTP/1.1
                     }
                 });
 
-            var syncException = await Assert.ThrowsAsync<ODataException>(
-                () => TaskUtils.GetTaskForSynchronousOperation(
-                    () =>
-                    {
-                        IODataResponseMessage asyncResponseMessage = new InMemoryMessage { Stream = this.syncStream };
-                        using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
-                        {
-                            var writer = messageWriter.CreateODataResourceWriter(this.orderEntitySet, this.orderEntityType);
+            var syncException = Assert.Throws<ODataException>(() =>
+            {
+                IODataResponseMessage asyncResponseMessage = new InMemoryMessage { Stream = this.syncStream };
+                using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
+                {
+                    var writer = messageWriter.CreateODataResourceWriter(this.orderEntitySet, this.orderEntityType);
 
-                            writer.WriteStart(orderResource);
-                            writer.WriteStart(customerResource);
-                        }
-                    }));
+                    writer.WriteStart(orderResource);
+                    writer.WriteStart(customerResource);
+                }
+            });
 
             var expectedMessage = Error.Format(SRResources.ODataWriterCore_InvalidTransitionFromResource, "Resource", "Resource");
 
@@ -3054,19 +2890,17 @@ POST http://tempuri.org/Customers HTTP/1.1
                     }
                 });
 
-            var syncException = await Assert.ThrowsAsync<ODataException>(
-                () => TaskUtils.GetTaskForSynchronousOperation(
-                    () =>
-                    {
-                        IODataResponseMessage asyncResponseMessage = new InMemoryMessage { Stream = this.syncStream };
-                        using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
-                        {
-                            var writer = messageWriter.CreateODataResourceWriter(this.orderEntitySet, this.orderEntityType);
+            var syncException = Assert.Throws<ODataException>(() =>
+            {
+                IODataResponseMessage asyncResponseMessage = new InMemoryMessage { Stream = this.syncStream };
+                using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
+                {
+                    var writer = messageWriter.CreateODataResourceWriter(this.orderEntitySet, this.orderEntityType);
 
-                            writer.WriteStart((ODataResource)null);
-                            writer.WriteStart(customerPropertyResourceInfo);
-                        }
-                    }));
+                    writer.WriteStart((ODataResource)null);
+                    writer.WriteStart(customerPropertyResourceInfo);
+                }
+            });
 
             var expectedMessage = Error.Format(SRResources.ODataWriterCore_InvalidTransitionFromNullResource, "Resource", "NestedResourceInfo");
 
@@ -3098,21 +2932,19 @@ POST http://tempuri.org/Customers HTTP/1.1
                     }
                 });
 
-            var syncException = await Assert.ThrowsAsync<ODataException>(
-                () => TaskUtils.GetTaskForSynchronousOperation(
-                    () =>
-                    {
-                        IODataResponseMessage syncResponseMessage = new InMemoryMessage { Stream = this.syncStream };
-                        using (var messageWriter = new ODataMessageWriter(syncResponseMessage, this.writerSettings))
-                        {
-                            var writer = messageWriter.CreateODataDeltaResourceSetWriter(this.customerEntitySet, this.customerEntityType);
+            var syncException = Assert.Throws<ODataException>(() =>
+            {
+                IODataResponseMessage syncResponseMessage = new InMemoryMessage { Stream = this.syncStream };
+                using (var messageWriter = new ODataMessageWriter(syncResponseMessage, this.writerSettings))
+                {
+                    var writer = messageWriter.CreateODataDeltaResourceSetWriter(this.customerEntitySet, this.customerEntityType);
 
-                            writer.WriteStart(customerDeltaResourceSet);
-                            writer.WriteStart(customerResource);
-                            writer.WriteStart(ordersPropertyNestedResourceInfo);
-                            writer.WriteStart(orderDeltaResourceSet);
-                        }
-                    }));
+                    writer.WriteStart(customerDeltaResourceSet);
+                    writer.WriteStart(customerResource);
+                    writer.WriteStart(ordersPropertyNestedResourceInfo);
+                    writer.WriteStart(orderDeltaResourceSet);
+                }
+            });
 
             var expectedMessage = Error.Format(SRResources.ODataWriterCore_InvalidTransitionFromExpandedLink, "NestedResourceInfoWithContent", "DeltaResourceSet");
 
@@ -3147,21 +2979,19 @@ POST http://tempuri.org/Customers HTTP/1.1
                     }
                 });
 
-            var syncException = await Assert.ThrowsAsync<ODataException>(
-                () => TaskUtils.GetTaskForSynchronousOperation(
-                    () =>
-                    {
-                        IODataResponseMessage syncResponseMessage = new InMemoryMessage { Stream = this.syncStream };
-                        using (var messageWriter = new ODataMessageWriter(syncResponseMessage, this.writerSettings))
-                        {
-                            var writer = messageWriter.CreateODataDeltaResourceSetWriter(this.orderEntitySet, this.orderEntityType);
+            var syncException = Assert.Throws<ODataException>(() =>
+            {
+                IODataResponseMessage syncResponseMessage = new InMemoryMessage { Stream = this.syncStream };
+                using (var messageWriter = new ODataMessageWriter(syncResponseMessage, this.writerSettings))
+                {
+                    var writer = messageWriter.CreateODataDeltaResourceSetWriter(this.orderEntitySet, this.orderEntityType);
 
-                            writer.WriteStart(orderDeltaResourceSet);
-                            writer.WriteStart(orderResource);
-                            writer.WriteStart(customerPropertyNestedResourceInfo);
-                            writer.WriteStart(customerDeletedResource);
-                        }
-                    }));
+                    writer.WriteStart(orderDeltaResourceSet);
+                    writer.WriteStart(orderResource);
+                    writer.WriteStart(customerPropertyNestedResourceInfo);
+                    writer.WriteStart(customerDeletedResource);
+                }
+            });
 
             var expectedMessage = Error.Format(SRResources.ODataWriterCore_InvalidTransitionFromExpandedLink, "NestedResourceInfoWithContent", "DeletedResource");
 
@@ -3190,20 +3020,18 @@ POST http://tempuri.org/Customers HTTP/1.1
                     }
                 });
 
-            var syncException = await Assert.ThrowsAsync<ODataException>(
-                () => TaskUtils.GetTaskForSynchronousOperation(
-                    () =>
-                    {
-                        IODataResponseMessage syncResponseMessage = new InMemoryMessage { Stream = this.syncStream };
-                        using (var messageWriter = new ODataMessageWriter(syncResponseMessage, this.writerSettings))
-                        {
-                            var writer = messageWriter.CreateODataResourceSetWriter(this.orderEntitySet, this.orderEntityType);
+            var syncException = Assert.Throws<ODataException>(() =>
+            {
+                IODataResponseMessage syncResponseMessage = new InMemoryMessage { Stream = this.syncStream };
+                using (var messageWriter = new ODataMessageWriter(syncResponseMessage, this.writerSettings))
+                {
+                    var writer = messageWriter.CreateODataResourceSetWriter(this.orderEntitySet, this.orderEntityType);
 
-                            writer.WriteStart(orderResourceSet);
-                            writer.WriteDeltaLink(deltaLink);
-                            writer.WriteEnd();
-                        }
-                    }));
+                    writer.WriteStart(orderResourceSet);
+                    writer.WriteDeltaLink(deltaLink);
+                    writer.WriteEnd();
+                }
+            });
 
             Assert.Equal(SRResources.ODataWriterCore_CannotWriteDeltaWithResourceSetWriter, asyncException.Message);
             Assert.Equal(SRResources.ODataWriterCore_CannotWriteDeltaWithResourceSetWriter, syncException.Message);
@@ -3229,20 +3057,18 @@ POST http://tempuri.org/Customers HTTP/1.1
                     }
                 });
 
-            var syncException = await Assert.ThrowsAsync<ODataException>(
-                () => TaskUtils.GetTaskForSynchronousOperation(
-                    () =>
-                    {
-                        IODataResponseMessage syncResponseMessage = new InMemoryMessage { Stream = this.syncStream };
-                        using (var messageWriter = new ODataMessageWriter(syncResponseMessage, this.writerSettings))
-                        {
-                            var writer = messageWriter.CreateODataResourceSetWriter(this.orderEntitySet, this.orderEntityType);
+            var syncException = Assert.Throws<ODataException>(() =>
+            {
+                IODataResponseMessage syncResponseMessage = new InMemoryMessage { Stream = this.syncStream };
+                using (var messageWriter = new ODataMessageWriter(syncResponseMessage, this.writerSettings))
+                {
+                    var writer = messageWriter.CreateODataResourceSetWriter(this.orderEntitySet, this.orderEntityType);
 
-                            writer.WriteStart(orderResourceSet);
-                            writer.WriteDeltaDeletedLink(deltaDeletedLink);
-                            writer.WriteEnd();
-                        }
-                    }));
+                    writer.WriteStart(orderResourceSet);
+                    writer.WriteDeltaDeletedLink(deltaDeletedLink);
+                    writer.WriteEnd();
+                }
+            });
 
             Assert.Equal(SRResources.ODataWriterCore_CannotWriteDeltaWithResourceSetWriter, asyncException.Message);
             Assert.Equal(SRResources.ODataWriterCore_CannotWriteDeltaWithResourceSetWriter, syncException.Message);
@@ -3269,21 +3095,19 @@ POST http://tempuri.org/Customers HTTP/1.1
                     }
                 });
 
-            var syncException = await Assert.ThrowsAsync<ODataException>(
-                () => TaskUtils.GetTaskForSynchronousOperation(
-                    () =>
-                    {
-                        IODataResponseMessage asyncResponseMessage = new InMemoryMessage { Stream = this.syncStream };
-                        using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
-                        {
-                            var writer = messageWriter.CreateODataResourceWriter(this.customerEntitySet, this.customerEntityType);
+            var syncException = Assert.Throws<ODataException>(() =>
+            {
+                IODataResponseMessage asyncResponseMessage = new InMemoryMessage { Stream = this.syncStream };
+                using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
+                {
+                    var writer = messageWriter.CreateODataResourceWriter(this.customerEntitySet, this.customerEntityType);
 
-                            writer.WriteStart(customerResource);
-                            writer.WriteEnd();
-                            // Try to start writing again
-                            writer.WriteStart(customerResource);
-                        }
-                    }));
+                    writer.WriteStart(customerResource);
+                    writer.WriteEnd();
+                    // Try to start writing again
+                    writer.WriteStart(customerResource);
+                }
+            });
 
             var expected = Error.Format(SRResources.ODataWriterCore_InvalidTransitionFromCompleted, "Completed", "Resource");
 
@@ -3312,21 +3136,19 @@ POST http://tempuri.org/Customers HTTP/1.1
                     }
                 });
 
-            var syncException = await Assert.ThrowsAsync<ODataException>(
-                () => TaskUtils.GetTaskForSynchronousOperation(
-                    () =>
-                    {
-                        IODataResponseMessage asyncResponseMessage = new InMemoryMessage { Stream = this.syncStream };
-                        using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
-                        {
-                            var writer = messageWriter.CreateODataResourceWriter(this.customerEntitySet, this.customerEntityType);
+            var syncException = Assert.Throws<ODataException>(() =>
+            {
+                IODataResponseMessage asyncResponseMessage = new InMemoryMessage { Stream = this.syncStream };
+                using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
+                {
+                    var writer = messageWriter.CreateODataResourceWriter(this.customerEntitySet, this.customerEntityType);
 
-                            writer.WriteStart(customerResource);
-                            writer.WriteEnd();
-                            // Try to end writing again
-                            writer.WriteEnd();
-                        }
-                    }));
+                    writer.WriteStart(customerResource);
+                    writer.WriteEnd();
+                    // Try to end writing again
+                    writer.WriteEnd();
+                }
+            });
 
             var expected = Error.Format(SRResources.ODataWriterCore_WriteEndCalledInInvalidState, "Completed");
 
@@ -3362,27 +3184,25 @@ POST http://tempuri.org/Customers HTTP/1.1
                     }
                 });
 
-            var syncException = await Assert.ThrowsAsync<ODataException>(
-                () => TaskUtils.GetTaskForSynchronousOperation(
-                    () =>
-                    {
-                        IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
-                        using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
-                        {
-                            var writer = messageWriter.CreateODataResourceWriter();
+            var syncException = Assert.Throws<ODataException>(() =>
+            {
+                IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
+                using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
+                {
+                    var writer = messageWriter.CreateODataResourceWriter();
 
-                            writer.WriteStart(addressResource);
-                            writer.WriteStart(mapProperty);
-                            // `using` intentionally not used so as not to trigger dispose
-                            var stream = writer.CreateBinaryWriteStream();
-                            var bytes = new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 0 };
+                    writer.WriteStart(addressResource);
+                    writer.WriteStart(mapProperty);
+                    // `using` intentionally not used so as not to trigger dispose
+                    var stream = writer.CreateBinaryWriteStream();
+                    var bytes = new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 0 };
 
-                            stream.Write(bytes, 0, 10);
-                            stream.Flush();
+                    stream.Write(bytes, 0, 10);
+                    stream.Flush();
 
-                            writer.WriteEnd();
-                        }
-                    }));
+                    writer.WriteEnd();
+                }
+            });
 
             Assert.Equal(SRResources.ODataWriterCore_StreamNotDisposed, asyncException.Message);
             Assert.Equal(SRResources.ODataWriterCore_StreamNotDisposed, syncException.Message);
@@ -3406,21 +3226,19 @@ POST http://tempuri.org/Customers HTTP/1.1
                     }
                 });
 
-            var syncException = await Assert.ThrowsAsync<ODataException>(
-                () => TaskUtils.GetTaskForSynchronousOperation(
-                    () =>
-                    {
-                        IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
-                        using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
-                        {
-                            var writer = messageWriter.CreateODataBatchWriter();
+            var syncException = Assert.Throws<ODataException>(() =>
+            {
+                IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
+                using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
+                {
+                    var writer = messageWriter.CreateODataBatchWriter();
 
-                            writer.WriteStartBatch();
-                            writer.WriteStartChangeset();
-                            // Try to start writing a changeset when another is active
-                            writer.WriteStartChangeset();
-                        }
-                    }));
+                    writer.WriteStartBatch();
+                    writer.WriteStartChangeset();
+                    // Try to start writing a changeset when another is active
+                    writer.WriteStartChangeset();
+                }
+            });
 
             Assert.Equal(SRResources.ODataBatchWriter_CannotStartChangeSetWithActiveChangeSet, asyncException.Message);
             Assert.Equal(SRResources.ODataBatchWriter_CannotStartChangeSetWithActiveChangeSet, syncException.Message);
@@ -3444,20 +3262,18 @@ POST http://tempuri.org/Customers HTTP/1.1
                     }
                 });
 
-            var syncException = await Assert.ThrowsAsync<ODataException>(
-                () => TaskUtils.GetTaskForSynchronousOperation(
-                    () =>
-                    {
-                        IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
-                        using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
-                        {
-                            var writer = messageWriter.CreateODataBatchWriter();
+            var syncException = Assert.Throws<ODataException>(() =>
+            {
+                IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
+                using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
+                {
+                    var writer = messageWriter.CreateODataBatchWriter();
 
-                            writer.WriteStartBatch();
-                            // Try to end changeset when there's none active
-                            writer.WriteEndChangeset();
-                        }
-                    }));
+                    writer.WriteStartBatch();
+                    // Try to end changeset when there's none active
+                    writer.WriteEndChangeset();
+                }
+            });
 
             Assert.Equal(SRResources.ODataBatchWriter_CannotCompleteChangeSetWithoutActiveChangeSet, asyncException.Message);
             Assert.Equal(SRResources.ODataBatchWriter_CannotCompleteChangeSetWithoutActiveChangeSet, syncException.Message);
@@ -3482,21 +3298,19 @@ POST http://tempuri.org/Customers HTTP/1.1
                     }
                 });
 
-            var syncException = await Assert.ThrowsAsync<ODataException>(
-                () => TaskUtils.GetTaskForSynchronousOperation(
-                    () =>
-                    {
-                        IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
-                        using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
-                        {
-                            var writer = messageWriter.CreateODataBatchWriter();
+            var syncException = Assert.Throws<ODataException>(() =>
+            {
+                IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
+                using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
+                {
+                    var writer = messageWriter.CreateODataBatchWriter();
 
-                            writer.WriteStartBatch();
-                            writer.WriteStartChangeset();
-                            // Try to stop writing batch before changeset end
-                            writer.WriteEndBatch();
-                        }
-                    }));
+                    writer.WriteStartBatch();
+                    writer.WriteStartChangeset();
+                    // Try to stop writing batch before changeset end
+                    writer.WriteEndBatch();
+                }
+            });
 
             Assert.Equal(SRResources.ODataBatchWriter_CannotCompleteBatchWithActiveChangeSet, asyncException.Message);
             Assert.Equal(SRResources.ODataBatchWriter_CannotCompleteBatchWithActiveChangeSet, syncException.Message);
@@ -3519,19 +3333,17 @@ POST http://tempuri.org/Customers HTTP/1.1
                     }
                 });
 
-            var syncException = await Assert.ThrowsAsync<ODataException>(
-                () => TaskUtils.GetTaskForSynchronousOperation(
-                    () =>
-                    {
-                        IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
-                        using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
-                        {
-                            var writer = messageWriter.CreateODataBatchWriter();
+            var syncException = Assert.Throws<ODataException>(() =>
+            {
+                IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
+                using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
+                {
+                    var writer = messageWriter.CreateODataBatchWriter();
 
-                            // Try to start writing changeset before batch start
-                            writer.WriteStartChangeset();
-                        }
-                    }));
+                    // Try to start writing changeset before batch start
+                    writer.WriteStartChangeset();
+                }
+            });
 
             Assert.Equal(SRResources.ODataBatchWriter_InvalidTransitionFromStart, asyncException.Message);
             Assert.Equal(SRResources.ODataBatchWriter_InvalidTransitionFromStart, syncException.Message);
@@ -3555,20 +3367,18 @@ POST http://tempuri.org/Customers HTTP/1.1
                     }
                 });
 
-            var syncException = await Assert.ThrowsAsync<ODataException>(
-                () => TaskUtils.GetTaskForSynchronousOperation(
-                    () =>
-                    {
-                        IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
-                        using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
-                        {
-                            var writer = messageWriter.CreateODataBatchWriter();
+            var syncException = Assert.Throws<ODataException>(() =>
+            {
+                IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
+                using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
+                {
+                    var writer = messageWriter.CreateODataBatchWriter();
 
-                            writer.WriteStartBatch();
-                            // Try to start writing batch again
-                            writer.WriteStartBatch();
-                        }
-                    }));
+                    writer.WriteStartBatch();
+                    // Try to start writing batch again
+                    writer.WriteStartBatch();
+                }
+            });
 
             Assert.Equal(SRResources.ODataBatchWriter_InvalidTransitionFromBatchStarted, asyncException.Message);
             Assert.Equal(SRResources.ODataBatchWriter_InvalidTransitionFromBatchStarted, syncException.Message);
@@ -3593,21 +3403,19 @@ POST http://tempuri.org/Customers HTTP/1.1
                     }
                 });
 
-            var syncException = await Assert.ThrowsAsync<ODataException>(
-                () => TaskUtils.GetTaskForSynchronousOperation(
-                    () =>
-                    {
-                        IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
-                        using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
-                        {
-                            var writer = messageWriter.CreateODataBatchWriter();
+            var syncException = Assert.Throws<ODataException>(() =>
+            {
+                IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
+                using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
+                {
+                    var writer = messageWriter.CreateODataBatchWriter();
 
-                            writer.WriteStartBatch();
-                            writer.WriteEndBatch();
-                            // Try to start writing batch after batch end
-                            writer.WriteStartBatch();
-                        }
-                    }));
+                    writer.WriteStartBatch();
+                    writer.WriteEndBatch();
+                    // Try to start writing batch after batch end
+                    writer.WriteStartBatch();
+                }
+            });
 
             Assert.Equal(SRResources.ODataBatchWriter_InvalidTransitionFromBatchCompleted, asyncException.Message);
             Assert.Equal(SRResources.ODataBatchWriter_InvalidTransitionFromBatchCompleted, syncException.Message);
@@ -3630,19 +3438,17 @@ POST http://tempuri.org/Customers HTTP/1.1
                     }
                 });
 
-            var syncException = await Assert.ThrowsAsync<ODataException>(
-                () => TaskUtils.GetTaskForSynchronousOperation(
-                    () =>
-                    {
-                        IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
-                        using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
-                        {
-                            var writer = messageWriter.CreateODataBatchWriter();
+            var syncException = Assert.Throws<ODataException>(() =>
+            {
+                IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
+                using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
+                {
+                    var writer = messageWriter.CreateODataBatchWriter();
 
-                            writer.WriteStartBatch();
-                            writer.CreateOperationResponseMessage("1");
-                        }
-                    }));
+                    writer.WriteStartBatch();
+                    writer.CreateOperationResponseMessage("1");
+                }
+            });
 
             Assert.Equal(SRResources.ODataBatchWriter_CannotCreateResponseOperationWhenWritingRequest, asyncException.Message);
             Assert.Equal(SRResources.ODataBatchWriter_CannotCreateResponseOperationWhenWritingRequest, syncException.Message);
@@ -3666,20 +3472,18 @@ POST http://tempuri.org/Customers HTTP/1.1
                     }
                 });
 
-            var syncException = await Assert.ThrowsAsync<ODataException>(
-                () => TaskUtils.GetTaskForSynchronousOperation(
-                    () =>
-                    {
-                        IODataResponseMessage syncResponseMessage = new InMemoryMessage { Stream = this.syncStream };
-                        using (var messageWriter = new ODataMessageWriter(syncResponseMessage, this.writerSettings))
-                        {
-                            var writer = messageWriter.CreateODataBatchWriter();
+            var syncException = Assert.Throws<ODataException>(() =>
+            {
+                IODataResponseMessage syncResponseMessage = new InMemoryMessage { Stream = this.syncStream };
+                using (var messageWriter = new ODataMessageWriter(syncResponseMessage, this.writerSettings))
+                {
+                    var writer = messageWriter.CreateODataBatchWriter();
 
-                            writer.WriteStartBatch();
-                            writer.CreateOperationRequestMessage(
-                                "POST", new Uri($"{ServiceUri}/Customers"), "1");
-                        }
-                    }));
+                    writer.WriteStartBatch();
+                    writer.CreateOperationRequestMessage(
+                        "POST", new Uri($"{ServiceUri}/Customers"), "1");
+                }
+            });
 
             Assert.Equal(SRResources.ODataBatchWriter_CannotCreateRequestOperationWhenWritingResponse, asyncException.Message);
             Assert.Equal(SRResources.ODataBatchWriter_CannotCreateRequestOperationWhenWritingResponse, syncException.Message);
@@ -3705,22 +3509,20 @@ POST http://tempuri.org/Customers HTTP/1.1
                     }
                 });
 
-            var syncException = await Assert.ThrowsAsync<ODataException>(
-                () => TaskUtils.GetTaskForSynchronousOperation(
-                    () =>
-                    {
-                        IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
-                        using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
-                        {
-                            var writer = messageWriter.CreateODataBatchWriter();
+            var syncException = Assert.Throws<ODataException>(() =>
+            {
+                IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
+                using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
+                {
+                    var writer = messageWriter.CreateODataBatchWriter();
 
-                            writer.WriteStartBatch();
-                            writer.WriteStartChangeset();
-                            writer.WriteEndChangeset();
-                            // Try to start writing batch after changeset end
-                            writer.WriteStartBatch();
-                        }
-                    }));
+                    writer.WriteStartBatch();
+                    writer.WriteStartChangeset();
+                    writer.WriteEndChangeset();
+                    // Try to start writing batch after changeset end
+                    writer.WriteStartBatch();
+                }
+            });
 
             Assert.Equal(SRResources.ODataBatchWriter_InvalidTransitionFromChangeSetCompleted, asyncException.Message);
             Assert.Equal(SRResources.ODataBatchWriter_InvalidTransitionFromChangeSetCompleted, syncException.Message);
@@ -3758,32 +3560,30 @@ POST http://tempuri.org/Customers HTTP/1.1
                     }
                 });
 
-            var syncException = await Assert.ThrowsAsync<ODataException>(
-                () => TaskUtils.GetTaskForSynchronousOperation(
-                    () =>
+            var syncException = Assert.Throws<ODataException>(() =>
+            {
+                IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
+                using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
+                {
+                    var writer = messageWriter.CreateODataBatchWriter();
+
+                    writer.WriteStartBatch();
+
+                    var operationRequestMessage = writer.CreateOperationRequestMessage(
+                        "POST", new Uri($"{ServiceUri}/Customers"), "1");
+
+                    using (var nestedMessageWriter = new ODataMessageWriter(operationRequestMessage))
                     {
-                        IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
-                        using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
-                        {
-                            var writer = messageWriter.CreateODataBatchWriter();
+                        var nestedWriter = nestedMessageWriter.CreateODataResourceWriter(this.customerEntitySet, this.customerEntityType);
 
-                            writer.WriteStartBatch();
+                        nestedWriter.WriteStart(customerResource);
+                        nestedWriter.WriteEnd();
+                    }
 
-                            var operationRequestMessage = writer.CreateOperationRequestMessage(
-                                "POST", new Uri($"{ServiceUri}/Customers"), "1");
-
-                            using (var nestedMessageWriter = new ODataMessageWriter(operationRequestMessage))
-                            {
-                                var nestedWriter = nestedMessageWriter.CreateODataResourceWriter(this.customerEntitySet, this.customerEntityType);
-
-                                nestedWriter.WriteStart(customerResource);
-                                nestedWriter.WriteEnd();
-                            }
-
-                            // Try to start writing batch after operation stream disposed
-                            writer.WriteStartBatch();
-                        }
-                    }));
+                    // Try to start writing batch after operation stream disposed
+                    writer.WriteStartBatch();
+                }
+            });
 
             Assert.Equal(SRResources.ODataBatchWriter_InvalidTransitionFromOperationContentStreamDisposed, asyncException.Message);
             Assert.Equal(SRResources.ODataBatchWriter_InvalidTransitionFromOperationContentStreamDisposed, syncException.Message);
@@ -3816,29 +3616,27 @@ POST http://tempuri.org/Customers HTTP/1.1
                     }
                 });
 
-            var syncException = await Assert.ThrowsAsync<ODataException>(
-                () => TaskUtils.GetTaskForSynchronousOperation(
-                    () =>
+            var syncException = Assert.Throws<ODataException>(() =>
+            {
+                IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
+                using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
+                {
+                    var writer = messageWriter.CreateODataBatchWriter();
+
+                    writer.WriteStartBatch();
+
+                    var operationRequestMessage = writer.CreateOperationRequestMessage(
+                        "POST", new Uri($"{ServiceUri}/Customers"), "1");
+
+                    using (var nestedMessageWriter = new ODataMessageWriter(operationRequestMessage))
                     {
-                        IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
-                        using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
-                        {
-                            var writer = messageWriter.CreateODataBatchWriter();
+                        var nestedWriter = nestedMessageWriter.CreateODataResourceWriter(this.customerEntitySet, this.customerEntityType);
 
-                            writer.WriteStartBatch();
-
-                            var operationRequestMessage = writer.CreateOperationRequestMessage(
-                                "POST", new Uri($"{ServiceUri}/Customers"), "1");
-
-                            using (var nestedMessageWriter = new ODataMessageWriter(operationRequestMessage))
-                            {
-                                var nestedWriter = nestedMessageWriter.CreateODataResourceWriter(this.customerEntitySet, this.customerEntityType);
-
-                                // Try to end writing batch after operation stream requested
-                                writer.WriteEndBatch();
-                            }
-                        }
-                    }));
+                        // Try to end writing batch after operation stream requested
+                        writer.WriteEndBatch();
+                    }
+                }
+            });
 
             Assert.Equal(SRResources.ODataBatchWriter_InvalidTransitionFromOperationContentStreamRequested, asyncException.Message);
             Assert.Equal(SRResources.ODataBatchWriter_InvalidTransitionFromOperationContentStreamRequested, syncException.Message);
@@ -3865,23 +3663,21 @@ POST http://tempuri.org/Customers HTTP/1.1
                     }
                 });
 
-            var syncException = await Assert.ThrowsAsync<ODataException>(
-                () => TaskUtils.GetTaskForSynchronousOperation(
-                    () =>
-                    {
-                        IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
-                        using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
-                        {
-                            var writer = messageWriter.CreateODataBatchWriter();
+            var syncException = Assert.Throws<ODataException>(() =>
+            {
+                IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
+                using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
+                {
+                    var writer = messageWriter.CreateODataBatchWriter();
 
-                            writer.WriteStartBatch();
+                    writer.WriteStartBatch();
 
-                            var operationRequestMessage = writer.CreateOperationRequestMessage(
-                                "POST", new Uri($"{ServiceUri}/Customers"), "1");
-                            // Try to start writing batch after operation created
-                            writer.WriteStartBatch();
-                        }
-                    }));
+                    var operationRequestMessage = writer.CreateOperationRequestMessage(
+                        "POST", new Uri($"{ServiceUri}/Customers"), "1");
+                    // Try to start writing batch after operation created
+                    writer.WriteStartBatch();
+                }
+            });
 
             Assert.Equal(SRResources.ODataBatchWriter_InvalidTransitionFromOperationCreated, asyncException.Message);
             Assert.Equal(SRResources.ODataBatchWriter_InvalidTransitionFromOperationCreated, syncException.Message);
@@ -3906,21 +3702,19 @@ POST http://tempuri.org/Customers HTTP/1.1
                     }
                 });
 
-            var syncException = await Assert.ThrowsAsync<ODataException>(
-                () => TaskUtils.GetTaskForSynchronousOperation(
-                    () =>
-                    {
-                        IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
-                        using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
-                        {
-                            var writer = messageWriter.CreateODataBatchWriter();
+            var syncException = Assert.Throws<ODataException>(() =>
+            {
+                IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
+                using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
+                {
+                    var writer = messageWriter.CreateODataBatchWriter();
 
-                            writer.WriteStartBatch();
-                            writer.WriteStartChangeset();
-                            // Try to start writing batch after changeset started
-                            writer.WriteStartBatch();
-                        }
-                    }));
+                    writer.WriteStartBatch();
+                    writer.WriteStartChangeset();
+                    // Try to start writing batch after changeset started
+                    writer.WriteStartBatch();
+                }
+            });
 
             Assert.Equal(SRResources.ODataBatchWriter_InvalidTransitionFromChangeSetStarted, asyncException.Message);
             Assert.Equal(SRResources.ODataBatchWriter_InvalidTransitionFromChangeSetStarted, syncException.Message);
@@ -3946,22 +3740,20 @@ POST http://tempuri.org/Customers HTTP/1.1
                     }
                 });
 
-            var syncException = await Assert.ThrowsAsync<ODataException>(
-                () => TaskUtils.GetTaskForSynchronousOperation(
-                    () =>
-                    {
-                        IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
-                        using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
-                        {
-                            var writer = messageWriter.CreateODataBatchWriter();
+            var syncException = Assert.Throws<ODataException>(() =>
+            {
+                IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
+                using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
+                {
+                    var writer = messageWriter.CreateODataBatchWriter();
 
-                            writer.WriteStartBatch();
-                            writer.WriteStartChangeset();
-                            // Try to create operation request message for a GET
-                            writer.CreateOperationRequestMessage(
-                                "GET", new Uri($"{ServiceUri}/Customers(1)"), "1");
-                        }
-                    }));
+                    writer.WriteStartBatch();
+                    writer.WriteStartChangeset();
+                    // Try to create operation request message for a GET
+                    writer.CreateOperationRequestMessage(
+                        "GET", new Uri($"{ServiceUri}/Customers(1)"), "1");
+                }
+            });
 
             var exceptionMessage = Error.Format(SRResources.ODataBatch_InvalidHttpMethodForChangeSetRequest, "GET");
 
@@ -3989,22 +3781,20 @@ POST http://tempuri.org/Customers HTTP/1.1
                     }
                 });
 
-            var syncException = await Assert.ThrowsAsync<ODataException>(
-                () => TaskUtils.GetTaskForSynchronousOperation(
-                    () =>
-                    {
-                        IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
-                        using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
-                        {
-                            var writer = messageWriter.CreateODataBatchWriter();
+            var syncException = Assert.Throws<ODataException>(() =>
+            {
+                IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
+                using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
+                {
+                    var writer = messageWriter.CreateODataBatchWriter();
 
-                            writer.WriteStartBatch();
-                            writer.WriteStartChangeset();
-                            // Try to create operation request message with null content id
-                            writer.CreateOperationRequestMessage(
-                                "PUT", new Uri($"{ServiceUri}/Customers(1)"), /*contentId*/ null);
-                        }
-                    }));
+                    writer.WriteStartBatch();
+                    writer.WriteStartChangeset();
+                    // Try to create operation request message with null content id
+                    writer.CreateOperationRequestMessage(
+                        "PUT", new Uri($"{ServiceUri}/Customers(1)"), /*contentId*/ null);
+                }
+            });
 
             var exceptionMessage = Error.Format(SRResources.ODataBatchOperationHeaderDictionary_KeyNotFound, ODataConstants.ContentIdHeader);
 
@@ -4033,21 +3823,19 @@ POST http://tempuri.org/Customers HTTP/1.1
                     }
                 });
 
-            var syncException = await Assert.ThrowsAsync<ODataException>(
-                () => TaskUtils.GetTaskForSynchronousOperation(
-                    () =>
-                    {
-                        IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
-                        using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
-                        {
-                            var writer = messageWriter.CreateODataBatchWriter();
+            var syncException = Assert.Throws<ODataException>(() =>
+            {
+                IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
+                using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
+                {
+                    var writer = messageWriter.CreateODataBatchWriter();
 
-                            writer.WriteStartBatch();
-                            writer.WriteStartChangeset();
-                            writer.WriteEndChangeset();
-                            writer.WriteStartChangeset();
-                        }
-                    }));
+                    writer.WriteStartBatch();
+                    writer.WriteStartChangeset();
+                    writer.WriteEndChangeset();
+                    writer.WriteStartChangeset();
+                }
+            });
 
             var exceptionMessage = Error.Format(SRResources.ODataBatchWriter_MaxBatchSizeExceeded, 1);
 
@@ -4078,23 +3866,21 @@ POST http://tempuri.org/Customers HTTP/1.1
                     }
                 });
 
-            var syncException = await Assert.ThrowsAsync<ODataException>(
-                () => TaskUtils.GetTaskForSynchronousOperation(
-                    () =>
-                    {
-                        IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
-                        using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
-                        {
-                            var writer = messageWriter.CreateODataBatchWriter();
+            var syncException = Assert.Throws<ODataException>(() =>
+            {
+                IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
+                using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
+                {
+                    var writer = messageWriter.CreateODataBatchWriter();
 
-                            writer.WriteStartBatch();
-                            writer.WriteStartChangeset();
-                            writer.CreateOperationRequestMessage(
-                                "PUT", new Uri($"{ServiceUri}/Customers(1)"), "1");
-                            writer.CreateOperationRequestMessage(
-                                "PUT", new Uri($"{ServiceUri}/Customers(2)"), "2");
-                        }
-                    }));
+                    writer.WriteStartBatch();
+                    writer.WriteStartChangeset();
+                    writer.CreateOperationRequestMessage(
+                        "PUT", new Uri($"{ServiceUri}/Customers(1)"), "1");
+                    writer.CreateOperationRequestMessage(
+                        "PUT", new Uri($"{ServiceUri}/Customers(2)"), "2");
+                }
+            });
 
             var exceptionMessage = Error.Format(SRResources.ODataBatchWriter_MaxChangeSetSizeExceeded, 1);
 
@@ -4123,23 +3909,21 @@ POST http://tempuri.org/Customers HTTP/1.1
                     }
                 });
 
-            var syncException = await Assert.ThrowsAsync<ODataException>(
-                () => TaskUtils.GetTaskForSynchronousOperation(
-                    () =>
-                    {
-                        IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
-                        using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
-                        {
-                            var writer = messageWriter.CreateODataBatchWriter();
+            var syncException = Assert.Throws<ODataException>(() =>
+            {
+                IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
+                using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
+                {
+                    var writer = messageWriter.CreateODataBatchWriter();
 
-                            writer.WriteStartBatch();
-                            writer.WriteStartChangeset();
-                            writer.CreateOperationRequestMessage(
-                                "PUT", new Uri($"{ServiceUri}/Customers(1)"), "1");
-                            writer.CreateOperationRequestMessage(
-                                "PUT", new Uri($"{ServiceUri}/Customers(2)"), "1");
-                        }
-                    }));
+                    writer.WriteStartBatch();
+                    writer.WriteStartChangeset();
+                    writer.CreateOperationRequestMessage(
+                        "PUT", new Uri($"{ServiceUri}/Customers(1)"), "1");
+                    writer.CreateOperationRequestMessage(
+                        "PUT", new Uri($"{ServiceUri}/Customers(2)"), "1");
+                }
+            });
 
             var exceptionMessage = Error.Format(SRResources.ODataBatchWriter_DuplicateContentIDsNotAllowed, 1);
 
@@ -4175,30 +3959,28 @@ POST http://tempuri.org/Customers HTTP/1.1
                     }
                 });
 
-            var syncException = await Assert.ThrowsAsync<ODataException>(
-                () => TaskUtils.GetTaskForSynchronousOperation(
-                    () =>
-                    {
-                        IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
-                        using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
-                        {
-                            var writer = messageWriter.CreateODataBatchWriter();
+            var syncException = Assert.Throws<ODataException>(() =>
+            {
+                IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
+                using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
+                {
+                    var writer = messageWriter.CreateODataBatchWriter();
 
-                            writer.WriteStartBatch();
-                            writer.WriteStartChangeset("fd04fc24");
+                    writer.WriteStartBatch();
+                    writer.WriteStartChangeset("fd04fc24");
 
-                            writer.CreateOperationRequestMessage(
-                                "POST", new Uri($"{ServiceUri}/Customers"), "1");
+                    writer.CreateOperationRequestMessage(
+                        "POST", new Uri($"{ServiceUri}/Customers"), "1");
 
-                            writer.WriteEndChangeset();
-                            writer.WriteStartChangeset("b62a2456");
+                    writer.WriteEndChangeset();
+                    writer.WriteStartChangeset("b62a2456");
 
-                            // Operation request depends on content id from different atomicity group
-                            var dependsOnIds = new List<string> { "1" };
-                            writer.CreateOperationRequestMessage(
-                                "POST", new Uri($"{ServiceUri}/Orders"), "2", BatchPayloadUriOption.AbsoluteUri, dependsOnIds);
-                        }
-                    }));
+                    // Operation request depends on content id from different atomicity group
+                    var dependsOnIds = new List<string> { "1" };
+                    writer.CreateOperationRequestMessage(
+                        "POST", new Uri($"{ServiceUri}/Orders"), "2", BatchPayloadUriOption.AbsoluteUri, dependsOnIds);
+                }
+            });
 
             var exceptionMessage = Error.Format(SRResources.ODataBatchReader_DependsOnIdNotFound, "1", "2");
 

@@ -51,10 +51,15 @@ namespace Microsoft.OData
         /// <param name="resourceSet">The resource set or collection to write.</param>
         public virtual Task WriteStartAsync(ODataResourceSet resourceSet)
         {
-            return TaskUtils.GetTaskForSynchronousOperation(
-                (thisParam, resourceSetParam) => thisParam.WriteStart(resourceSetParam),
-                this,
-                resourceSet);
+            try
+            {
+                this.WriteStart(resourceSet);
+                return Task.CompletedTask;
+            }
+            catch (Exception ex) when (ExceptionUtils.IsCatchableExceptionType(ex))
+            {
+                return Task.FromException(ex);
+            }
         }
 
         /// <summary>Starts the writing of a delta resource set.</summary>
@@ -92,10 +97,15 @@ namespace Microsoft.OData
         /// <param name="deltaResourceSet">The resource set or collection to write.</param>
         public virtual Task WriteStartAsync(ODataDeltaResourceSet deltaResourceSet)
         {
-            return TaskUtils.GetTaskForSynchronousOperation(
-                (thisParam, deltaResourceSetParam) => thisParam.WriteStart(deltaResourceSetParam),
-                this,
-                deltaResourceSet);
+            try
+            {
+                this.WriteStart(deltaResourceSet);
+                return Task.CompletedTask;
+            }
+            catch (Exception ex) when (ExceptionUtils.IsCatchableExceptionType(ex))
+            {
+                return Task.FromException(ex);
+            }
         }
 
         /// <summary>Starts the writing of a resource.</summary>
@@ -170,10 +180,15 @@ namespace Microsoft.OData
         /// <param name="resource">The resource or item to write.</param>
         public virtual Task WriteStartAsync(ODataResource resource)
         {
-            return TaskUtils.GetTaskForSynchronousOperation(
-                (thisParam, resourceParam) => thisParam.WriteStart(resourceParam),
-                this,
-                resource);
+            try
+            {
+                this.WriteStart(resource);
+                return Task.CompletedTask;
+            }
+            catch (Exception ex) when (ExceptionUtils.IsCatchableExceptionType(ex))
+            {
+                return Task.FromException(ex);
+            }
         }
 
 
@@ -192,10 +207,15 @@ namespace Microsoft.OData
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
         public virtual Task WriteStartAsync(ODataDeletedResource deletedResource)
         {
-            return TaskUtils.GetTaskForSynchronousOperation(
-                (thisParam, deletedResourceParam) => thisParam.WriteStart(deletedResourceParam),
-                this,
-                deletedResource);
+            try
+                {
+                this.WriteStart(deletedResource);
+                return Task.CompletedTask;
+            }
+            catch (Exception ex) when (ExceptionUtils.IsCatchableExceptionType(ex))
+            {
+                return Task.FromException(ex);
+            }
         }
 
 
@@ -216,10 +236,15 @@ namespace Microsoft.OData
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
         public virtual Task WriteDeltaLinkAsync(ODataDeltaLink deltaLink)
         {
-            return TaskUtils.GetTaskForSynchronousOperation(
-                (thisParam, deltaLinkParam) => thisParam.WriteDeltaLink(deltaLinkParam),
-                this,
-                deltaLink);
+            try
+            {
+                this.WriteDeltaLink(deltaLink);
+                return Task.CompletedTask;
+            }
+            catch (Exception ex) when (ExceptionUtils.IsCatchableExceptionType(ex))
+            {
+                return Task.FromException(ex);
+            }
         }
 
 
@@ -240,10 +265,15 @@ namespace Microsoft.OData
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
         public virtual Task WriteDeltaDeletedLinkAsync(ODataDeltaDeletedLink deltaDeletedLink)
         {
-            return TaskUtils.GetTaskForSynchronousOperation(
-                (thisParam, deltaDeletedLinkParam) => thisParam.WriteDeltaDeletedLink(deltaDeletedLinkParam),
-                this,
-                deltaDeletedLink);
+            try
+            {
+                this.WriteDeltaDeletedLink(deltaDeletedLink);
+                return Task.CompletedTask;
+            }
+            catch (Exception ex) when (ExceptionUtils.IsCatchableExceptionType(ex))
+            {
+                return Task.FromException(ex);
+            }
         }
 
 
@@ -279,10 +309,15 @@ namespace Microsoft.OData
         /// <param name="nestedResourceInfo">The nested resource info to writer.</param>
         public virtual Task WriteStartAsync(ODataNestedResourceInfo nestedResourceInfo)
         {
-            return TaskUtils.GetTaskForSynchronousOperation(
-                (thisParam, nestedResourceInfoParam) => thisParam.WriteStart(nestedResourceInfoParam),
-                this,
-                nestedResourceInfo);
+            try
+            {
+                this.WriteStart(nestedResourceInfo);
+                return Task.CompletedTask;
+            }
+            catch (Exception ex) when (ExceptionUtils.IsCatchableExceptionType(ex))
+            {
+                return Task.FromException(ex);
+            }
         }
 
         /// <summary>Writes a primitive value within an untyped collection.</summary>
@@ -307,10 +342,15 @@ namespace Microsoft.OData
         /// <param name="primitiveValue">The primitive value to write.</param>
         public virtual Task WritePrimitiveAsync(ODataPrimitiveValue primitiveValue)
         {
-            return TaskUtils.GetTaskForSynchronousOperation(
-                (thisParam, primitiveValueParam) => thisParam.WritePrimitive(primitiveValueParam),
-                this,
-                primitiveValue);
+            try
+            {
+                this.WritePrimitive(primitiveValue);
+                return Task.CompletedTask;
+            }
+            catch (Exception ex) when (ExceptionUtils.IsCatchableExceptionType(ex))
+            {
+                return Task.FromException(ex);
+            }
         }
 
         /// <summary>Writes a primitive property within a resource.</summary>
@@ -350,10 +390,15 @@ namespace Microsoft.OData
         /// <param name="primitiveProperty">The primitive property to write.</param>
         public virtual Task WriteStartAsync(ODataPropertyInfo primitiveProperty)
         {
-            return TaskUtils.GetTaskForSynchronousOperation(
-                (thisParam, primitivePropertyParam) => thisParam.WriteStart(primitivePropertyParam),
-                this,
-                primitiveProperty);
+            try
+            {
+                this.WriteStart(primitiveProperty);
+                return Task.CompletedTask;
+            }
+            catch (Exception ex) when (ExceptionUtils.IsCatchableExceptionType(ex))
+            {
+                return Task.FromException(ex);
+            }
         }
 
         /// <summary>Creates a stream for writing a binary value.</summary>
@@ -380,9 +425,14 @@ namespace Microsoft.OData
         /// <returns>A stream to write a binary value to.</returns>
         public virtual Task<Stream> CreateBinaryWriteStreamAsync()
         {
-            return TaskUtils.GetTaskForSynchronousOperation(
-                (thisParam) => thisParam.CreateBinaryWriteStream(),
-                this);
+            try
+            {
+                return Task.FromResult(this.CreateBinaryWriteStream());
+            }
+            catch (Exception ex) when (ExceptionUtils.IsCatchableExceptionType(ex))
+            {
+                return Task.FromException<Stream>(ex);
+            }
         }
 
         /// <summary>Creates a TextWriter for writing a string value.</summary>
@@ -397,9 +447,14 @@ namespace Microsoft.OData
         /// <returns>A TextWriter to write a string value.</returns>
         public virtual Task<TextWriter> CreateTextWriterAsync()
         {
-            return TaskUtils.GetTaskForSynchronousOperation(
-                (thisParam) => thisParam.CreateTextWriter(),
-                this);
+            try
+            {
+                return Task.FromResult(this.CreateTextWriter());
+            }
+            catch (Exception ex) when (ExceptionUtils.IsCatchableExceptionType(ex))
+            {
+                return Task.FromException<TextWriter>(ex);
+            }
         }
 
         /// <summary>Finishes the writing of a resource set, a resource, or a nested resource info.</summary>
@@ -410,9 +465,15 @@ namespace Microsoft.OData
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
         public virtual Task WriteEndAsync()
         {
-            return TaskUtils.GetTaskForSynchronousOperation(
-                (thisParam) => thisParam.WriteEnd(),
-                this);
+            try
+            {
+                this.WriteEnd();
+                return Task.CompletedTask;
+            }
+            catch (Exception ex) when (ExceptionUtils.IsCatchableExceptionType(ex))
+            {
+                return Task.FromException(ex);
+            }
         }
 
         /// <summary> Writes an entity reference link, which is used to represent binding to an existing resource in a request payload. </summary>
@@ -437,10 +498,15 @@ namespace Microsoft.OData
         /// </remarks>
         public virtual Task WriteEntityReferenceLinkAsync(ODataEntityReferenceLink entityReferenceLink)
         {
-            return TaskUtils.GetTaskForSynchronousOperation(
-                (thisParam, entityReferenceLinkParam) => thisParam.WriteEntityReferenceLink(entityReferenceLinkParam),
-                this,
-                entityReferenceLink);
+            try
+            {
+                this.WriteEntityReferenceLink(entityReferenceLink);
+                return Task.CompletedTask;
+            }
+            catch (Exception ex) when (ExceptionUtils.IsCatchableExceptionType(ex))
+            {
+                return Task.FromException(ex);
+            }
         }
 
         /// <summary>Flushes the write buffer to the underlying stream.</summary>
@@ -451,9 +517,15 @@ namespace Microsoft.OData
         /// <returns>A task instance that represents the asynchronous operation.</returns>
         public virtual Task FlushAsync()
         {
-            return TaskUtils.GetTaskForSynchronousOperation(
-                (thisParam) => thisParam.Flush(),
-                this);
+            try
+            {
+                this.Flush();
+                return Task.CompletedTask;
+            }
+            catch (Exception ex) when (ExceptionUtils.IsCatchableExceptionType(ex))
+            {
+                return Task.FromException(ex);
+            }
         }
     }
 }

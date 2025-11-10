@@ -12,6 +12,7 @@ using Microsoft.OData.Json;
 using Microsoft.OData.Edm;
 using Xunit;
 using Microsoft.OData.Core;
+using System.Threading.Tasks;
 
 namespace Microsoft.OData.Tests.ScenarioTests.Writer.Json
 {
@@ -272,7 +273,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.Json
             ValidateWrittenPayload(stream, expectedPayload);
         }
 
-        private static async void WriteAndValidatePrimitivesAsync(IEdmTypeReference itemTypeReference, ODataResourceSet collectionStart, IEnumerable<ODataResource> items, string expectedPayload, bool writingResponse)
+        private static async Task WriteAndValidatePrimitivesAsync(IEdmTypeReference itemTypeReference, ODataResourceSet collectionStart, IEnumerable<ODataResource> items, string expectedPayload, bool writingResponse)
         {
             MemoryStream stream = new MemoryStream();
             var outputContext = CreateJsonOutputContext(stream, writingResponse, synchronous: false);

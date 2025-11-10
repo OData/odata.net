@@ -6472,6 +6472,15 @@ namespace Microsoft.OData.Core {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The continuation task returned by the operation cannot be null..
+        /// </summary>
+        internal static string TaskUtils_NullContinuationTask {
+            get {
+                return ResourceManager.GetString("TaskUtils_NullContinuationTask", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The value &apos;{0}&apos; is not a qualified type name. A qualified type name is expected..
         /// </summary>
         internal static string TypeUtils_TypeNameIsNotQualified {
@@ -6983,7 +6992,7 @@ namespace Microsoft.OData.Core {
                 return ResourceManager.GetString("UriUtils_RequiresAbsoluteUri", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to The UrlValidator used to validate an ODataUri must use the same Model as the ODataUriParser..
         /// </summary>

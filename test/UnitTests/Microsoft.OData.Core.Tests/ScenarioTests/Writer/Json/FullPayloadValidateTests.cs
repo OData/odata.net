@@ -12,6 +12,7 @@ using System.Text;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
+using System.Threading.Tasks;
 
 namespace Microsoft.OData.Tests.ScenarioTests.Writer.Json
 {
@@ -296,7 +297,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.Json
         }
 
         [Fact]
-        public async void ReadDeltaFeedTest_CanReadAsyncDeltaRequests()
+        public async Task ReadDeltaFeedTest_CanReadAsyncDeltaRequests()
         {
             string payload = "{\"" +
                              "@odata.context\":\"http://example.org/odata.svc/$metadata#EntitySet/$delta\"," +
