@@ -388,6 +388,7 @@ namespace Microsoft.OData.Json
             this.DrainBufferIfThresholdReached();
         }
 
+        [Obsolete("Microsoft.OData.Edm.Date will be removed in ODL 9 and replaced with System.DateOnly.", false)]
         public void WriteValue(Date value)
         {
             this.WriteSeparatorIfNecessary();
@@ -395,6 +396,7 @@ namespace Microsoft.OData.Json
             this.DrainBufferIfThresholdReached();
         }
 
+        [Obsolete("Microsoft.OData.Edm.TimeOfDay will be removed in ODL 9 and replaced with System.TimeOnly.", false)]
         public void WriteValue(TimeOfDay value)
         {
             this.WriteSeparatorIfNecessary();
@@ -1100,6 +1102,7 @@ namespace Microsoft.OData.Json
             await this.DrainBufferIfThresholdReachedAsync().ConfigureAwait(false);
         }
 
+        [Obsolete("Microsoft.OData.Edm.Date will be removed in ODL 9 and replaced with System.DateOnly.", false)]
         public async Task WriteValueAsync(Date value)
         {
             this.WriteSeparatorIfNecessary();
@@ -1107,6 +1110,7 @@ namespace Microsoft.OData.Json
             await this.DrainBufferIfThresholdReachedAsync().ConfigureAwait(false);
         }
 
+        [Obsolete("Microsoft.OData.Edm.TimeOfDay will be removed in ODL 9 and replaced with System.TimeOnly.", false)]
         public async Task WriteValueAsync(TimeOfDay value)
         {
             this.WriteSeparatorIfNecessary();
