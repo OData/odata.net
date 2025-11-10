@@ -637,7 +637,7 @@ namespace Microsoft.OData.Edm {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to String &apos;{0}&apos; was not recognized as a valid Date..
+        ///   Looks up a localized string similar to String &apos;{0}&apos; was not recognized as a valid DateOnly..
         /// </summary>
         internal static string Date_InvalidParsingString {
             get {
@@ -2517,7 +2517,7 @@ namespace Microsoft.OData.Edm {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to String &apos;{0}&apos; was not recognized as a valid TimeOfDay..
+        ///   Looks up a localized string similar to String &apos;{0}&apos; was not recognized as a valid TimeOnly..
         /// </summary>
         internal static string TimeOfDay_InvalidParsingString {
             get {

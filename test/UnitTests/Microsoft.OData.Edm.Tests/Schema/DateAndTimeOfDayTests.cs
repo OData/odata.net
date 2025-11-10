@@ -107,7 +107,7 @@ namespace Microsoft.OData.Edm.Tests.Library
             DateOnly date = new DateOnly(1, 1, 1);
             Action test = () => date.AddDays(-2);
             var exception = Assert.Throws<ArgumentOutOfRangeException>(test);
-            Assert.Equal(SRResources.Date_InvalidAddedOrSubtractedResults + " (Parameter 'value')", exception.Message);
+            Assert.Equal("Value to add was out of range. (Parameter 'value')", exception.Message);
         }
 
         [Fact]
@@ -116,7 +116,7 @@ namespace Microsoft.OData.Edm.Tests.Library
             DateOnly date = new DateOnly(1, 1, 1);
             Action test = () => date.AddDays(999999999);
             var exception = Assert.Throws<ArgumentOutOfRangeException>(test);
-            Assert.Equal(SRResources.Date_InvalidAddedOrSubtractedResults + " (Parameter 'value')", exception.Message);
+            Assert.Equal("Value to add was out of range. (Parameter 'value')", exception.Message);
         }
 
         [Fact]
@@ -554,6 +554,7 @@ namespace Microsoft.OData.Edm.Tests.Library
                 { "00:00:00.0000001", new TimeOnly(1) },
                 { "10:00", new TimeOnly(10, 0, 0, 0) },
                 { "13:30:25", new TimeOnly(13, 30, 25, 0) },
+                { "14:59:59.", new TimeOnly(14, 59, 59) },
             };
         }
 
@@ -573,6 +574,8 @@ namespace Microsoft.OData.Edm.Tests.Library
             #endregion
         }
 
+
+
         [Theory]
         [InlineData("12:15:60.0000000")]
         [InlineData("12:60:59.0000000")]
@@ -580,19 +583,18 @@ namespace Microsoft.OData.Edm.Tests.Library
         [InlineData("124:59:59.0000000")]
         [InlineData("-1:59:59.0000000")]
         [InlineData("T4:59:59.0000000")]
-        [InlineData("14:59:59.")]
         [InlineData("4:59:")]
         public void TestParseTimeOfDayFailure(string input)
         {
             #region Test Parse
-            Action test = () => TimeOnly.Parse(input);
+            Action test = () => TimeOnly.Parse(input, CultureInfo.CurrentCulture);
             var exception = Assert.Throws<FormatException>(test);
             Assert.Equal(Error.Format(SRResources.TimeOfDay_InvalidParsingString, input), exception.Message);
             #endregion
 
             #region Test TryParse
             TimeOnly time;
-            bool result = TimeOnly.TryParse(input, out time);
+            bool result = TimeOnly.TryParse(input, CultureInfo.CurrentCulture, out time);
             Assert.False(result);
             Assert.Equal(TimeOnly.MinValue, time);
             #endregion
