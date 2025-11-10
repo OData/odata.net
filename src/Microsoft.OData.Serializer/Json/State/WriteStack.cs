@@ -58,6 +58,10 @@ internal class WriteStack<TCustomState>
         }
     }
 
+    // NOTE: This can be accessed even when the stack is empty or is unwinding to the
+    // root of the serializer. It can be accessed asynchronouly by a pending task
+    // while the serializer is unwining the stack. So we should ensure its state
+    // is not modified by the serializer until the pending task is completed.
     internal ref WriteStackFrame<TCustomState> LastSuspendedFrame
     {
         get

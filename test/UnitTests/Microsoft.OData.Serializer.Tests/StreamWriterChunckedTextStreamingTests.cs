@@ -49,6 +49,7 @@ public class StreamWriterChunkedTextStreamingTests
                         var buffer = ArrayPool<byte>.Shared.Rent(4096);
                         var decodedBuffer = ArrayPool<char>.Shared.Rent(4096);
 
+                        await Task.Yield(); // ensure async behaviour since MemoryStream can complete synchronously
                         var bytesRead = await stream.ReadAsync(buffer);
                         do
                         {

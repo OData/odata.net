@@ -136,6 +136,7 @@ public class WriteValueHookSkipsPropertyIfNoValueWrittenTests
                     Name = "Content",
                     WriteValueAsync = async static (post, writer, state) =>
                     {
+                        await Task.Yield();
                         if (post.Content != null)
                         {
                             await writer.WriteValueAsync(post.Content, state);
@@ -261,6 +262,7 @@ public class WriteValueHookSkipsPropertyIfNoValueWrittenTests
     {
         public override async ValueTask WriteValueAsync(BlogPostWithAsyncWriter resource, string propertyValue, IStreamValueWriter<DefaultState> writer, ODataWriterState<DefaultState> state)
         {
+            await Task.Yield();
             if (propertyValue != null)
             {
                 await writer.WriteValueAsync(propertyValue, state);

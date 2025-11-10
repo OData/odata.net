@@ -56,6 +56,21 @@ public static class ODataSerializer
             {
                 isDone = writer.Write(value, state);
 
+                // If there's pending stack, complete the task before modifying the state or the writer
+                // to avoid concurrent modifications.
+                if (state.Stack.HasSuspendedFrames() && state.Stack.LastSuspendedFrame.PendingTask.HasValue)
+                {
+                    await state.Stack.LastSuspendedFrame.PendingTask.Value;
+                    state.Stack.LastSuspendedFrame.PendingTask = null;
+
+                    if (state.Stack.LastSuspendedFrame.PropertyProgress < PropertyProgress.Value)
+                    {
+                        // Mark the value as written.
+                        // TODO: This assumes that the only time we suspend with a pending task is during property value writing.
+                        // If this assumption changes, we should revise this logic.
+                        state.Stack.LastSuspendedFrame.PropertyProgress = PropertyProgress.Value;
+                    }
+                }
 
                 if (state.ShouldFlush())
                 {
@@ -64,14 +79,6 @@ public static class ODataSerializer
                     await stream.WriteAsync(bufferWriter.WrittenMemory, cancellationToken: default).ConfigureAwait(false);
                     bufferWriter.Clear();
                 }
-
-                if (state.Stack.HasSuspendedFrames() && state.Stack.LastSuspendedFrame.PendingTask.HasValue)
-                {
-                    await state.Stack.LastSuspendedFrame.PendingTask.Value;
-                }
-
-                // We might need to dispose the pipe reader, where should we do that? Here?
-                // How do we know we need to dispose?
             }
 
             if (jsonWriter.BytesPending > 0)

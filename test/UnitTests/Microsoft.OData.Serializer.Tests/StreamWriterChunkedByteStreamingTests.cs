@@ -46,6 +46,7 @@ public class StreamWriterChunkedByteStreamingTests
                         using var stream = post.GetContents();
                         var buffer = ArrayPool<byte>.Shared.Rent(4096);
 
+                        await Task.Yield(); // ensure asynchronous behavior since MemoryStream may complete synchronously
                         var bytesRead = await stream.ReadAsync(buffer);
                         do
                         {
