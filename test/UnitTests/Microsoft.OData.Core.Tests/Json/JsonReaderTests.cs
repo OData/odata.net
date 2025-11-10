@@ -1362,6 +1362,89 @@ namespace Microsoft.OData.Tests.Json
             Assert.True(await reader.ReadAsync()); // EndArray
         }
 
+        [Theory]
+        [InlineData("0", typeof(int), 0)]
+        [InlineData("42", typeof(int), 42)]
+        [InlineData("-42", typeof(int), -42)]
+        [InlineData("2147483647", typeof(int), 2147483647)]
+        [InlineData("-2147483648", typeof(int), -2147483648)]
+        [InlineData("1.7976931348623157E+308", typeof(double), 1.7976931348623157E+308)]
+        [InlineData("4.9E-324", typeof(double), 4.9E-324)]
+        [InlineData("6.0221409e+23", typeof(double), 6.0221409e+23)]
+        [InlineData("\"null\"", typeof(string), "null")]
+        [InlineData("\"\"", typeof(string), "")]
+        [InlineData("\"simple string\"", typeof(string), "simple string")]
+        [InlineData("\"string with \\\"escaped quotes\\\"\"", typeof(string), "string with \"escaped quotes\"")]
+        [InlineData("\"string with \\\\ backslash\"", typeof(string), "string with \\ backslash")]
+        [InlineData("\"string with \\n new line\"", typeof(string), "string with \n new line")]
+        [InlineData("\"string with \\r carriage return\"", typeof(string), "string with \r carriage return")]
+        [InlineData("\"string with \\t tab\"", typeof(string), "string with \t tab")]
+        [InlineData("\"string with \\b backspace\"", typeof(string), "string with \b backspace")]
+        [InlineData("\"string with \\f formfeed\"", typeof(string), "string with \f formfeed")]
+        [InlineData("\"unicode \\u6211 test\"", typeof(string), "unicode 我 test")]
+        [InlineData("\"emoji \\uD83D\\uDE03 test\"", typeof(string), "emoji 😃 test")]
+        [InlineData("true", typeof(bool), true)]
+        [InlineData("false", typeof(bool), false)]
+        [InlineData("\"true\"", typeof(string), "true")]
+        [InlineData("\"false\"", typeof(string), "false")]
+        public void JsonReader_GetValue_Sync(string jsonValue, Type expectedType, object expectedValue)
+        {
+            var reader = new JsonReader(new StringReader(jsonValue), isIeee754Compatible: false);
+            Assert.True(reader.Read());
+            Assert.IsType(expectedType, reader.GetValue());
+            Assert.Equal(expectedValue, reader.GetValue());
+        }
+
+        [Theory]
+        [InlineData("0", typeof(int), 0)]
+        [InlineData("42", typeof(int), 42)]
+        [InlineData("-42", typeof(int), -42)]
+        [InlineData("2147483647", typeof(int), 2147483647)]
+        [InlineData("-2147483648", typeof(int), -2147483648)]
+        [InlineData("1.7976931348623157E+308", typeof(double), 1.7976931348623157E+308)]
+        [InlineData("4.9E-324", typeof(double), 4.9E-324)]
+        [InlineData("6.0221409e+23", typeof(double), 6.0221409e+23)]
+        [InlineData("\"null\"", typeof(string), "null")]
+        [InlineData("\"\"", typeof(string), "")]
+        [InlineData("\"simple string\"", typeof(string), "simple string")]
+        [InlineData("\"string with \\\"escaped quotes\\\"\"", typeof(string), "string with \"escaped quotes\"")]
+        [InlineData("\"string with \\\\ backslash\"", typeof(string), "string with \\ backslash")]
+        [InlineData("\"string with \\n new line\"", typeof(string), "string with \n new line")]
+        [InlineData("\"string with \\r carriage return\"", typeof(string), "string with \r carriage return")]
+        [InlineData("\"string with \\t tab\"", typeof(string), "string with \t tab")]
+        [InlineData("\"string with \\b backspace\"", typeof(string), "string with \b backspace")]
+        [InlineData("\"string with \\f formfeed\"", typeof(string), "string with \f formfeed")]
+        [InlineData("\"unicode \\u6211 test\"", typeof(string), "unicode 我 test")]
+        [InlineData("\"emoji \\uD83D\\uDE03 test\"", typeof(string), "emoji 😃 test")]
+        [InlineData("true", typeof(bool), true)]
+        [InlineData("false", typeof(bool), false)]
+        [InlineData("\"true\"", typeof(string), "true")]
+        [InlineData("\"false\"", typeof(string), "false")]
+        public async Task JsonReader_GetValue_Async(string jsonValue, Type expectedType, object expectedValue)
+        {
+            var reader = new JsonReader(new StringReader(jsonValue), isIeee754Compatible: false);
+            Assert.True(await reader.ReadAsync());
+            var value = await reader.GetValueAsync();
+            Assert.IsType(expectedType, value);
+            Assert.Equal(expectedValue, value);
+        }
+
+        [Fact]
+        public void JsonReader_GetValue_Null_Sync()
+        {
+            var reader = new JsonReader(new StringReader("null"), isIeee754Compatible: false);
+            Assert.True(reader.Read());
+            Assert.Null(reader.GetValue());
+        }
+
+        [Fact]
+        public async Task JsonReader_GetValue_Null_Async()
+        {
+            var reader = new JsonReader(new StringReader("null"), isIeee754Compatible: false);
+            Assert.True(await reader.ReadAsync());
+            Assert.Null(await reader.GetValueAsync());
+        }
+
         private JsonReader CreateJsonReader(string jsonValue)
         {
             JsonReader reader = new JsonReader(
