@@ -411,19 +411,80 @@ namespace Microsoft.OData.Client
                 {
                     _requestMessage.Content.Headers.Add(contentHeader.Key, contentHeader.Value);
                 }
-
-                string contentString = Encoding.UTF8.GetString(messageContent);
             }
 
             _requestMessage.Method = new HttpMethod(_effectiveHttpMethod);
-            // If the timeout value is still the default, don't schedule cancellation.
-            // The timeout from the HttpClient will take effect.
-            if (_isTimeoutProvidedByCaller)
+
+            // If the abort CancellationTokenSource already got cancelled (either by Abort() or because an
+            // upstream caller supplied a pre-cancelled token which flowed here), honour that cancellation.
+            // CAUTION: Recreating CancellationTokenSource wipes the cancellation signal and causes the request
+            // to run instead of failing fast
+            if (_abortRequestCancellationTokenSource is { IsCancellationRequested: true })
             {
-                _abortRequestCancellationTokenSource.CancelAfter(_timeout);
+                return Task.FromCanceled<HttpResponseMessage>(_abortRequestCancellationTokenSource.Token);
             }
 
-            return _client.SendAsync(_requestMessage, _abortRequestCancellationTokenSource.Token);
+            // Ensure we have an abort CancellationTokenSource if missing
+            if (_abortRequestCancellationTokenSource == null)
+            {
+                _abortRequestCancellationTokenSource = new CancellationTokenSource();
+            }
+
+            CancellationToken sendToken = _abortRequestCancellationTokenSource.Token;
+            CancellationTokenSource timeoutTokenSource = null;
+            CancellationTokenSource linkedTokenSource = null;
+
+            if (_isTimeoutProvidedByCaller && _timeout > TimeSpan.Zero)
+            {
+                // Per-request timeout: link abort + timeout so either cancels the send
+                timeoutTokenSource = new CancellationTokenSource(_timeout);
+                linkedTokenSource = CancellationTokenSource.CreateLinkedTokenSource(
+                    _abortRequestCancellationTokenSource.Token,
+                    timeoutTokenSource.Token);
+                sendToken = linkedTokenSource.Token;
+            }
+
+            return SendInternalAsync(_requestMessage, sendToken, linkedTokenSource, timeoutTokenSource);
+        }
+
+        /// <summary>
+        /// Sends the request using <see cref="HttpCompletionOption.ResponseHeadersRead"/>, honoring abort
+        /// and per-request timeout cancellation via <paramref name="sendToken"/>.
+        /// </summary>
+        /// <param name="request">The prepared <see cref="HttpRequestMessage"/> to send.</param>
+        /// <param name="sendToken"><see cref="CancellationToken"/> combining abort and optional timeout.</param>
+        /// <param name="linkedTokenSource">Linked <see cref="CancellationTokenSource"/> (abort + timeout) if a timeout was specified; otherwise null.</param>
+        /// <param name="timeoutTokenSource"><see cref="CancellationTokenSource"/> created for the per-request timeout; null if no timeout.</param>
+        /// <returns>A task producing the <see cref="HttpResponseMessage"/>.</returns>
+        /// <remarks>
+        /// Internal cancellations (abort or timeout) are wrapped as <see cref="DataServiceTransportException"/>; 
+        /// other exceptions propagate.
+        /// Transient linked/timeout token sources are disposed in the finally block.
+        /// </remarks>
+        private async Task<HttpResponseMessage> SendInternalAsync(
+            HttpRequestMessage request,
+            CancellationToken sendToken,
+            CancellationTokenSource linkedTokenSource,
+            CancellationTokenSource timeoutTokenSource)
+        {
+            try
+            {
+                // Use HttpCompletionOption.ResponseHeadersRead to shorten the window before cancellation is honoured
+                return await _client.SendAsync(_requestMessage, HttpCompletionOption.ResponseHeadersRead, sendToken);
+            }
+            catch (OperationCanceledException ex)
+            {
+                // Wrap internal timeout / abort as DataServiceTransportException
+                // but let external caller-driven cancellations propagate as OperationCanceledException.
+                // Currently, only abort or per-request timeout can trigger cancellation (no external token linked)
+                throw new DataServiceTransportException(response: null, ex);
+            }
+            finally
+            {
+                // Dispose transient timeout/linked token sources after completion to avoid resource leaks;
+                linkedTokenSource?.Dispose();
+                timeoutTokenSource?.Dispose();
+            }
         }
 
         private static IDictionary<string, string> HttpHeadersToStringDictionary(HttpHeaders headers)

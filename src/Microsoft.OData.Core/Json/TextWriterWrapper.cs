@@ -83,7 +83,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         public virtual Task IncreaseIndentationAsync()
         {
-            return TaskUtils.CompletedTask;
+            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -91,7 +91,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         public virtual Task DecreaseIndentationAsync()
         {
-            return TaskUtils.CompletedTask;
+            return Task.CompletedTask;
         }
 
         /// <summary>

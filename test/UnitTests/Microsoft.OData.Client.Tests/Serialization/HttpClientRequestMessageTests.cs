@@ -238,7 +238,7 @@ namespace Microsoft.OData.Client.Tests.Serialization
         public async Task Timeout_DoesNotCancelOtherRequestsFromTheSameClient()
         {
             // Arrange
-            using (var handler = new MockDelayedHttpClientHandler("Success", 5000))
+            using (var handler = new MockDelayedHttpClientHandler("Success", delayMilliseconds: 5000))
             {
                 var httpClientFactory = new MockHttpClientFactory(handler);
                 var args1 = new DataServiceClientRequestMessageArgs(
