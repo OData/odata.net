@@ -221,20 +221,31 @@ namespace Microsoft.OData
         /// <returns>A comma-separated string of flag names corresponding to the set bits in the specified value. Returns null otherwise.</returns>
         public static string ParseFlagsFromIntegralValue(this IEdmEnumType enumType, long value)
         {
-            var result = new List<string>();
-            long remaining = value;
-
-            for (int index = enumType.Members.Count() - 1; index >= 0; index--)
+            // Special handling for 0: return the name of the member whose value is 0 (e.g., "None"), if present.
+            // In Flags Enum, 0 typically represents no flags set.
+            if (value == 0)
             {
-                IEdmEnumMember member = enumType.Members.ElementAt(index);
-                long flagValue = Convert.ToInt64(member.Value.Value);
+                return enumType.Members.FirstOrDefault(m => Convert.ToUInt64(m.Value.Value) == 0)?.Name;
+            }
+
+            List<string> result = new List<string>();
+            List<IEdmEnumMember> members = enumType.Members.ToList();
+
+            // Work with unsigned to handle all bit patterns correctly.
+            ulong remaining = unchecked((ulong)value);
+
+            // Iterate members in reverse order to match higher-value flags first.
+            for (int index = members.Count - 1; index >= 0; index--)
+            {
+                ulong flagValue = Convert.ToUInt64(members[index].Value.Value);
                 if (flagValue != 0 && (remaining & flagValue) == flagValue)
                 {
-                    result.Add(member.Name);
+                    result.Add(members[index].Name);
                     remaining &= ~flagValue; // Remove matched bits     
                 }
             }
 
+            // Reverse the result to maintain original order and return as comma-separated string if all bits were matched.
             return result.Count > 0 && remaining == 0 ? string.Join(", ", result.Reverse<string>()) : null;
         }
 
