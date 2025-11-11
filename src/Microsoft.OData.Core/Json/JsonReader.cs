@@ -235,7 +235,7 @@ namespace Microsoft.OData.Json
                     }
                     else
                     {
-                        AssignNodeValue(this.ParseStringPrimitiveValue(out _));
+                        SetNodeValue(this.ParseStringPrimitiveValue(out _));
                     }
                 }
             }
@@ -570,7 +570,7 @@ namespace Microsoft.OData.Json
                 ValueTask<(ReadOnlyMemory<char> Value, bool HasLeadingBackslash)> parseStringTask = this.ParseStringPrimitiveValueAsync();
                 if (parseStringTask.IsCompletedSuccessfully)
                 {
-                    AssignNodeValue(parseStringTask.Result.Value);
+                    SetNodeValue(parseStringTask.Result.Value);
                     return Task.FromResult(this.nodeValue);
                 }
 
@@ -1277,7 +1277,7 @@ namespace Microsoft.OData.Json
                 throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_InvalidPropertyNameOrUnexpectedComma, this.nodeValue));
             }
 
-            AssignNodeValue(token);
+            SetNodeValue(token);
 
             if (!this.SkipWhitespaces() || this.characterBuffer[this.tokenStartIndex] != ':')
             {
