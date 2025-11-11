@@ -3454,7 +3454,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="memory">The character span to convert to a string.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void AssignNodeValue(ReadOnlyMemory<char> memory)
+        private void SetNodeValue(ReadOnlyMemory<char> memory)
         {
             if (MemoryMarshal.TryGetString(memory, out string primitiveValue, out _, out _))
             {
