@@ -267,7 +267,7 @@ namespace Microsoft.OData
                 return null;
             }
 
-            var stringBuilder = new StringBuilder();
+            StringBuilder stringBuilder = new StringBuilder();
             int startIndex = 0, endIndex = 0;
             while (endIndex < memberName.Length)
             {
