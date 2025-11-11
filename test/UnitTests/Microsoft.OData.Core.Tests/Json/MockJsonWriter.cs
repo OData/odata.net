@@ -110,7 +110,7 @@ namespace Microsoft.OData.Tests.Json
         {
             Assert.NotNull(this.WriteNameVerifier);
             this.WriteNameVerifier(name);
-            return TaskUtils.CompletedTask;
+            return Task.CompletedTask;
         }
 
         public Task WritePaddingFunctionNameAsync(string functionName) => throw new NotImplementedException();
@@ -143,14 +143,14 @@ namespace Microsoft.OData.Tests.Json
         {
             Assert.NotNull(this.WriteValueVerifier);
             this.WriteValueVerifier(value);
-            return TaskUtils.CompletedTask;
+            return Task.CompletedTask;
         }
 
         public Task WriteValueAsync(byte[] value)
         {
             Assert.NotNull(this.WriteValueVerifier);
             this.WriteValueVerifier(Convert.ToBase64String(value));
-            return TaskUtils.CompletedTask;
+            return Task.CompletedTask;
         }
 
         public Task WriteValueAsync(Date value) => throw new NotImplementedException();
@@ -161,7 +161,7 @@ namespace Microsoft.OData.Tests.Json
         {
             Assert.NotNull(this.WriteValueVerifier);
             this.WriteValueVerifier(rawValue);
-            return TaskUtils.CompletedTask;
+            return Task.CompletedTask;
         }
 
         public Task FlushAsync() => throw new NotImplementedException();

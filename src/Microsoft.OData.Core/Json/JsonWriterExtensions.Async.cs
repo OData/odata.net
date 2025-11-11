@@ -152,7 +152,7 @@ namespace Microsoft.OData.Json
                 return jsonWriter.WriteValueAsync(timeOnly);
             }
 
-            return TaskUtils.GetFaultedTask(
+            return Task.FromException(
                 new ODataException(Error.Format(SRResources.ODataJsonWriter_UnsupportedValueType, value.GetType().FullName)));
         }
 
@@ -226,7 +226,7 @@ namespace Microsoft.OData.Json
                 }
             }
 
-            return TaskUtils.GetFaultedTask(
+            return Task.FromException(
                 new ODataException(Error.Format(SRResources.ODataJsonWriter_UnsupportedValueType, odataValue.GetType().FullName)));
         }
 

@@ -753,7 +753,7 @@ namespace Microsoft.OData
                 return this.InterceptExceptionAsync(static (thisParam) => thisParam.StartPayloadAsync());
             }
 
-            return TaskUtils.CompletedTask;
+            return Task.CompletedTask;
         }
 
         /// <summary>

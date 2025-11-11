@@ -151,12 +151,14 @@ namespace Microsoft.OData.Json
         /// Write a Date value
         /// </summary>
         /// <param name="value">Date value to be written.</param>
+        [Obsolete("Microsoft.OData.Edm.Date will be removed in ODL 9 and replaced with System.DateOnly.", false)]
         void WriteValue(Date value);
 
         /// <summary>
         /// Write a TimeOfDay value
         /// </summary>
         /// <param name="value">TimeOfDay value to be written.</param>
+        [Obsolete("Microsoft.OData.Edm.TimeOfDay will be removed in ODL 9 and replaced with System.TimeOnly.", false)]
         void WriteValue(TimeOfDay value);
 
         /// <summary>
@@ -359,6 +361,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="value">Date value to be written.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
+        [Obsolete("Microsoft.OData.Edm.Date will be removed in ODL 9 and replaced with System.DateOnly.", false)]
         Task WriteValueAsync(Date value);
 
         /// <summary>
@@ -366,6 +369,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="value">TimeOfDay value to be written.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
+        [Obsolete("Microsoft.OData.Edm.TimeOfDay will be removed in ODL 9 and replaced with System.TimeOnly.", false)]
         Task WriteValueAsync(TimeOfDay value);
 
         /// <summary>
