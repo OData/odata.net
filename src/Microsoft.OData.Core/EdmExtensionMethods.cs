@@ -231,13 +231,12 @@ namespace Microsoft.OData
             List<string> result = new List<string>();
             List<IEdmEnumMember> members = enumType.Members.ToList();
 
-            // Work with unsigned to handle all bit patterns correctly.
-            ulong remaining = unchecked((ulong)value);
+            long remaining = value;
 
             // Iterate members in reverse order to match higher-value flags first.
             for (int index = members.Count - 1; index >= 0; index--)
             {
-                ulong flagValue = Convert.ToUInt64(members[index].Value.Value);
+                long flagValue = members[index].Value.Value;
                 if (flagValue != 0 && (remaining & flagValue) == flagValue)
                 {
                     result.Add(members[index].Name);
