@@ -235,7 +235,7 @@ namespace Microsoft.OData.Json
                     }
                     else
                     {
-                        SetNodeValue(this.ParseStringPrimitiveValue(out _));
+                        SetNodeValue(this, this.ParseStringPrimitiveValue(out _));
                     }
                 }
             }
@@ -570,7 +570,7 @@ namespace Microsoft.OData.Json
                 ValueTask<(ReadOnlyMemory<char> Value, bool HasLeadingBackslash)> parseStringTask = this.ParseStringPrimitiveValueAsync();
                 if (parseStringTask.IsCompletedSuccessfully)
                 {
-                    SetNodeValue(parseStringTask.Result.Value);
+                    SetNodeValue(this, parseStringTask.Result.Value);
                     return Task.FromResult(this.nodeValue);
                 }
 
@@ -587,14 +587,7 @@ namespace Microsoft.OData.Json
             static async Task<object> AwaitStringValueAsync(JsonReader thisParam, ValueTask<(ReadOnlyMemory<char> Value, bool HasLeadingBackslash)> pendingParseStringTask)
             {
                 (ReadOnlyMemory<char> Value, bool HasLeadingBackslash) result = await pendingParseStringTask.ConfigureAwait(false);
-                if (MemoryMarshal.TryGetString(result.Value, out string primitiveValue, out _, out _))
-                {
-                    thisParam.nodeValue = primitiveValue;
-                }
-                else
-                {
-                    thisParam.nodeValue = GetCommonOrNewString(result.Value.Span);
-                }
+                SetNodeValue(thisParam, result.Value);
                 return thisParam.nodeValue;
             }
         }
@@ -1277,7 +1270,7 @@ namespace Microsoft.OData.Json
                 throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_InvalidPropertyNameOrUnexpectedComma, this.nodeValue));
             }
 
-            SetNodeValue(token);
+            SetNodeValue(this, token);
 
             if (!this.SkipWhitespaces() || this.characterBuffer[this.tokenStartIndex] != ':')
             {
@@ -2136,14 +2129,7 @@ namespace Microsoft.OData.Json
                             Error.Format(SRResources.JsonReader_InvalidPropertyNameOrUnexpectedComma, (string)thisParam.nodeValue)));
                 }
 
-                if (MemoryMarshal.TryGetString(nameToken, out string propertyName, out _, out _))
-                {
-                    thisParam.nodeValue = propertyName;
-                }
-                else
-                {
-                    thisParam.nodeValue = GetCommonOrNewString(nameToken.Span);
-                }
+                SetNodeValue(thisParam, nameToken);
 
                 ValueTask<bool> preColonWhitespaceTask = thisParam.SkipWhitespacesAsync();
                 if (!preColonWhitespaceTask.IsCompletedSuccessfully)
@@ -3454,15 +3440,15 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="memory">The character span to convert to a string.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void SetNodeValue(ReadOnlyMemory<char> memory)
+        private static void SetNodeValue(JsonReader thisParam, ReadOnlyMemory<char> memory)
         {
             if (MemoryMarshal.TryGetString(memory, out string primitiveValue, out _, out _))
             {
-                this.nodeValue = primitiveValue;
+                thisParam.nodeValue = primitiveValue;
             }
             else
             {
-                this.nodeValue = GetCommonOrNewString(memory.Span);
+                thisParam.nodeValue = GetCommonOrNewString(memory.Span);
             }
         }
 
