@@ -465,7 +465,7 @@ namespace Microsoft.OData.UriParser
             {
                 char currentChar = content[startIndex];
 
-                if (currentChar == '\'' || currentChar == '"')
+                if (currentChar is '\'' or '"')
                 {
                     // Handle quoted items
                     int relativeEnd = content.Slice(startIndex + 1).IndexOf(currentChar);

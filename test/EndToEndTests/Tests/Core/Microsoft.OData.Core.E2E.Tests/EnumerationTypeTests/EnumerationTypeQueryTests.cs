@@ -549,6 +549,48 @@ public class EnumerationTypeQueryTests : EndToEndTestBase<EnumerationTypeQueryTe
         Assert.Equal(expectedCount, entries.Count);
     }
 
+
+
+    [Theory]
+    [InlineData("UserAccess eq 10", "10")]
+    [InlineData("UserAccess eq '200'", "200")]
+    public async Task Query_WithInvalidEnumConstant_Throws(string filter, string content)
+    {
+        // Arrange
+        var queryText = $"Products?$filter={filter}";
+
+        var expectedErrorMessage = $"The query specified in the URI is not valid. The string '{content}' is not a valid enumeration type constant.";
+
+        // Act
+        var exception = await Assert.ThrowsAsync<InvalidOperationException>(async () =>
+        {
+            await TestsHelper.QueryResourceSetsAsync(queryText, MimeTypeODataParameterMinimalMetadata);
+        });
+
+        // Assert
+        Assert.Contains(expectedErrorMessage, exception.Message);
+    }
+
+    [Theory]
+    [InlineData("UserAccess in (3, 10)", "10")]
+    [InlineData("UserAccess in ('3', '200')", "200")]
+    public async Task Query_WithInvalidEnumConstantInOperator_Throws(string filter, string content)
+    {
+        // Arrange
+        var queryText = $"Products?$filter={filter}";
+
+        var expectedErrorMessage = $"The query specified in the URI is not valid. The string '{content}' is not a valid enumeration type constant.";
+
+        // Act
+        var exception = await Assert.ThrowsAsync<InvalidOperationException>(async () =>
+        {
+            await TestsHelper.QueryResourceSetsAsync(queryText, MimeTypeODataParameterMinimalMetadata);
+        });
+
+        // Assert
+        Assert.Contains(expectedErrorMessage, exception.Message);
+    }
+
     #endregion
 
     #region Private methods
