@@ -1115,7 +1115,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         [InlineData("PetColorPattern in (Red,,Striped)", "Invalid JSON. A token was not recognized in the JSON content.")]
         [InlineData("PetColorPattern in (Fully.Qualified.Namespace.ColorPattern 'Red',Fully.Qualified.Namespace.ColorPattern'Striped')", "Invalid JSON. A comma character ',' was expected in scope 'Array'. Every two elements in an array and properties of an object must be separated by commas.")]
 
-        public void InvalidEnumValues(string query, string errorMessage)
+        public void ParseFilter_WithInvalidEnumValues_ThrowsODataException(string query, string errorMessage)
         {
             var exception = Assert.Throws<ODataException>(() =>
                 ParseFilter(query, HardCodedTestModel.TestModel, HardCodedTestModel.GetPet2Type(), HardCodedTestModel.GetPet2Set()));

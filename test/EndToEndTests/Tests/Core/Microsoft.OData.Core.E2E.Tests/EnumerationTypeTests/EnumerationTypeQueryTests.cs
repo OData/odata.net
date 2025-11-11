@@ -531,6 +531,7 @@ public class EnumerationTypeQueryTests : EndToEndTestBase<EnumerationTypeQueryTe
     [InlineData("UserAccess eq '3'", 1)]
     [InlineData("UserAccess eq 'ReadWrite'", 1)]
     [InlineData("UserAccess eq Microsoft.OData.E2E.TestCommon.Common.Server.Default.AccessLevel'ReadWrite'", 1)]
+    [InlineData("UserAccess eq Microsoft.OData.E2E.TestCommon.Common.Server.Default.AccessLevel'3'", 1)]
     [InlineData("UserAccess ne 1", 3)]
     [InlineData("UserAccess ne 'Read'", 3)]
     [InlineData("UserAccess ne Microsoft.OData.E2E.TestCommon.Common.Server.Default.AccessLevel'Read'", 3)]
@@ -552,14 +553,25 @@ public class EnumerationTypeQueryTests : EndToEndTestBase<EnumerationTypeQueryTe
 
 
     [Theory]
-    [InlineData("UserAccess eq 10", "10")]
-    [InlineData("UserAccess eq '200'", "200")]
-    public async Task Query_WithInvalidEnumConstant_Throws(string filter, string content)
+    [InlineData("UserAccess eq 10", "The string '10' is not a valid enumeration type constant.")]
+    [InlineData("UserAccess eq '200'", "The string '200' is not a valid enumeration type constant.")]
+    [InlineData("UserAccess eq Microsoft.OData.E2E.TestCommon.Common.Server.Default.AccessLevel '3'", "Syntax error at position 82 in 'UserAccess eq Microsoft.OData.E2E.TestCommon.Common.Server.Default.AccessLevel '3''.")]
+    [InlineData("UserAccess eq Microsoft.OData.E2E.TestCommon.Common.Server.Default.AccessLevel 'ReadWrite'", "Syntax error at position 90 in 'UserAccess eq Microsoft.OData.E2E.TestCommon.Common.Server.Default.AccessLevel 'ReadWrite''.")]
+    [InlineData("UserAccess eq Microsoft.OData.E2E.TestCommon.Common.Server.Default.AccessLevel'Read,,Write'", "The string 'Microsoft.OData.E2E.TestCommon.Common.Server.Default.AccessLevel'Read,,Write'' is not a valid enumeration type constant.")]
+    [InlineData("UserAccess eq 'Read,,Write'", "The string 'Read,,Write' is not a valid enumeration type constant.")]
+    [InlineData("UserAccess eq ',Read,Write'", "The string ',Read,Write' is not a valid enumeration type constant.")]
+    [InlineData("UserAccess eq 'Read,Write,'", "The string 'Read,Write,' is not a valid enumeration type constant.")]
+    [InlineData("UserAccess in (Microsoft.OData.E2E.TestCommon.Common.Server.Default.AccessLevel'Read', Microsoft.OData.E2E.TestCommon.Common.Server.Default.AccessLevel 'Write')", "Invalid JSON. A comma character ',' was expected in scope 'Array'. Every two elements in an array and properties of an object must be separated by commas.")]
+    [InlineData("UserAccess in (Microsoft.OData.E2E.TestCommon.Common.Server.Default.AccessLevel'Read,,Microsoft.OData.E2E.TestCommon.Common.Server.Default.AccessLevelWrite')", "Invalid JSON. A comma character ',' was expected in scope 'Array'. Every two elements in an array and properties of an object must be separated by commas.")]
+    [InlineData("UserAccess in ('Read,,Write')", "The string 'Read,,Write' is not a valid enumeration type constant.")]
+    [InlineData("UserAccess in (',Read,Write')", "The string ',Read,Write' is not a valid enumeration type constant.")]
+    [InlineData("UserAccess in ('Read,Write,')", "The string 'Read,Write,' is not a valid enumeration type constant.")]
+    public async Task Query_WithInvalidEnumConstant_Throws(string filter, string expectedErrorMessage)
     {
         // Arrange
         var queryText = $"Products?$filter={filter}";
 
-        var expectedErrorMessage = $"The query specified in the URI is not valid. The string '{content}' is not a valid enumeration type constant.";
+        expectedErrorMessage = $"The query specified in the URI is not valid. {expectedErrorMessage}";
 
         // Act
         var exception = await Assert.ThrowsAsync<InvalidOperationException>(async () =>

@@ -259,7 +259,8 @@ namespace Microsoft.OData
         /// <returns>A formatted string containing the validated enum member names, separated by commas and trimmed of whitespace. Otherwise, null or empty string.</returns>
         public static string ParseFlagsFromStringValue(this IEdmEnumType enumType, string memberName, StringComparison comparison)
         {
-            var memberNameSpan = memberName.AsSpan();
+            ReadOnlySpan<char> memberNameSpan = memberName.AsSpan();
+
             // Check if string starts or ends with a comma, which is invalid.
             if (memberNameSpan.IsEmpty || memberNameSpan[0] == ',' || memberNameSpan[^1] == ',')
             {
