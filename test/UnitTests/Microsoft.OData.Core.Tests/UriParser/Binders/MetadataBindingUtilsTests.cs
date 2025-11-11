@@ -219,12 +219,12 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         [InlineData("PartTime")]
         [InlineData("Contractor")]
         [InlineData("Temporary")]
-        [InlineData("FullTime, PartTime")]
-        [InlineData("FullTime, Temporary")]
-        [InlineData("Permanent, Temporary")]
-        [InlineData("Intern, Temporary")]
+        [InlineData("FullTime,PartTime")]
+        [InlineData("FullTime,Temporary")]
+        [InlineData("Permanent,Temporary")]
+        [InlineData("Intern,Temporary")]
         [InlineData("Permanent")]
-        [InlineData("PartTime, Contractor, Temporary")]
+        [InlineData("PartTime,Contractor,Temporary")]
         public void IfTypePromotionNeeded_SourceIsFlagsCompositeMemberNameOrComposite_ConstantNodeIsCreated(string enumValue)
         {
             // Arrange
@@ -245,13 +245,13 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         [InlineData("PARTTIME", "PartTime")]
         [InlineData("contractor", "Contractor")]
         [InlineData("temporary", "Temporary")]
-        [InlineData("fulltime, parttime", "FullTime, PartTime")]
-        [InlineData("fulltime, temporary", "FullTime, Temporary")]
-        [InlineData("permanent, temporary", "Permanent, Temporary")]
-        [InlineData("intern, temporary", "Intern, Temporary")]
+        [InlineData("fulltime, parttime", "FullTime,PartTime")]
+        [InlineData("fulltime, temporary", "FullTime,Temporary")]
+        [InlineData("permanent, temporary", "Permanent,Temporary")]
+        [InlineData("intern, temporary", "Intern,Temporary")]
         [InlineData("permanent", "Permanent")]
-        [InlineData("parttime, contractor, temporary", "PartTime, Contractor, Temporary")]
-        [InlineData("PARTTIME, contractor, Temporary", "PartTime, Contractor, Temporary")]
+        [InlineData("parttime, contractor, temporary", "PartTime,Contractor,Temporary")]
+        [InlineData("PARTTIME, contractor, Temporary", "PartTime,Contractor,Temporary")]
         public void IfTypePromotionNeeded_SourceIsFlagsCompositeMemberNameOrComposite_enableCaseInsensitive_ConstantNodeIsCreated(string enumValue, string expected)
         {
             // Arrange
@@ -275,11 +275,11 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         [InlineData("8", "Contractor")]
         [InlineData(28, "Temporary")]
         [InlineData("28", "Temporary")]
-        [InlineData(26, "FullTime, Contractor, Intern")]
-        [InlineData("26", "FullTime, Contractor, Intern")]
-        [InlineData(30, "FullTime, Temporary")]
-        [InlineData("22", "Permanent, Intern")]
-        [InlineData(22, "Permanent, Intern")]
+        [InlineData(26, "FullTime,Contractor,Intern")]
+        [InlineData("26", "FullTime,Contractor,Intern")]
+        [InlineData(30, "FullTime,Temporary")]
+        [InlineData("22", "Permanent,Intern")]
+        [InlineData(22, "Permanent,Intern")]
         public void IfTypePromotionNeeded_SourceIsFlagsIntegralValues_ConstantNodeIsCreated(object enumValue, string expectedLiteralValue)
         {
             // Arrange

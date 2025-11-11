@@ -225,7 +225,7 @@ namespace Microsoft.OData
             // In Flags Enum, 0 typically represents no flags set.
             if (value == 0)
             {
-                return enumType.Members.FirstOrDefault(m => Convert.ToUInt64(m.Value.Value) == 0)?.Name;
+                return enumType.Members.FirstOrDefault(m => m.Value.Value == 0)?.Name;
             }
 
             List<string> result = new List<string>();
@@ -246,7 +246,7 @@ namespace Microsoft.OData
             }
 
             // Reverse the result to maintain original order and return as comma-separated string if all bits were matched.
-            return result.Count > 0 && remaining == 0 ? string.Join(", ", result.Reverse<string>()) : null;
+            return result.Count > 0 && remaining == 0 ? string.Join(",", result.Reverse<string>()) : null;
         }
 
         /// <summary>
