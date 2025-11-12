@@ -521,7 +521,7 @@ Microsoft.OData.Edm.EdmStructuredType.EdmStructuredType(bool isAbstract, bool is
 Microsoft.OData.Edm.EdmStructuredType.FindProperty(string name) -> Microsoft.OData.Edm.IEdmProperty
 Microsoft.OData.Edm.EdmStructuredType.IsAbstract.get -> bool
 Microsoft.OData.Edm.EdmStructuredType.IsOpen.get -> bool
-Microsoft.OData.Edm.EdmStructuredType.PropertiesDictionary.get -> System.Collections.Generic.IDictionary<string, Microsoft.OData.Edm.IEdmProperty>
+Microsoft.OData.Edm.EdmStructuredType.PropertiesDictionary.get -> System.Collections.Generic.Dictionary<string, Microsoft.OData.Edm.IEdmProperty>
 Microsoft.OData.Edm.EdmTargetPath
 Microsoft.OData.Edm.EdmTargetPath.EdmTargetPath(params Microsoft.OData.Edm.IEdmElement[] segments) -> void
 Microsoft.OData.Edm.EdmTargetPath.EdmTargetPath(System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmElement> segments) -> void
@@ -1685,7 +1685,6 @@ static Microsoft.OData.Edm.ExtensionMethods.GetLongDescriptionAnnotation(this Mi
 static Microsoft.OData.Edm.ExtensionMethods.GetNavigationPropertyBindings(this Microsoft.OData.Edm.IEdmEntityContainer container) -> System.Collections.Generic.IEnumerable<System.Tuple<Microsoft.OData.Edm.IEdmEntityContainerElement, Microsoft.OData.Edm.IEdmNavigationPropertyBinding>>
 static Microsoft.OData.Edm.ExtensionMethods.GetPartnerPath(this Microsoft.OData.Edm.IEdmNavigationProperty navigationProperty) -> Microsoft.OData.Edm.IEdmPathExpression
 static Microsoft.OData.Edm.ExtensionMethods.GetPrimitiveValueConverter(this Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.IEdmTypeReference type) -> Microsoft.OData.Edm.IPrimitiveValueConverter
-static Microsoft.OData.Edm.ExtensionMethods.GetReturn(this Microsoft.OData.Edm.IEdmOperation operation) -> Microsoft.OData.Edm.IEdmOperationReturn
 static Microsoft.OData.Edm.ExtensionMethods.GetTargetPath(this Microsoft.OData.Edm.IEdmModel model, string targetPath, bool ignoreCase = true) -> Microsoft.OData.Edm.IEdmTargetPath
 static Microsoft.OData.Edm.ExtensionMethods.GetTargetPathAnnotations(this Microsoft.OData.Edm.IEdmModel model, string targetPath) -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotation>
 static Microsoft.OData.Edm.ExtensionMethods.GetTermValue(this Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.Vocabularies.IEdmStructuredValue context, Microsoft.OData.Edm.Vocabularies.IEdmTerm term, Microsoft.OData.Edm.Vocabularies.EdmExpressionEvaluator expressionEvaluator) -> Microsoft.OData.Edm.Vocabularies.IEdmValue

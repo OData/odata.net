@@ -4,9 +4,10 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using Microsoft.OData.Edm.Validation;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.OData.Edm.Validation;
 
 namespace Microsoft.OData.Edm
 {
@@ -26,50 +27,32 @@ namespace Microsoft.OData.Edm
             EdmUtil.TryGetNamespaceNameFromQualifiedName(qualifiedName, out this.namespaceName, out this.name, out this.fullName);
         }
 
-        public IEnumerable<IEdmEntityContainerElement> Elements
-        {
-            get { return Enumerable.Empty<IEdmEntityContainerElement>(); }
-        }
+        public IEnumerable<IEdmEntityContainerElement> Elements => Enumerable.Empty<IEdmEntityContainerElement>();
 
-        public string Namespace
-        {
-            get { return this.namespaceName; }
-        }
+        public string Namespace => this.namespaceName;
 
-        public string Name
-        {
-            get { return this.name; }
-        }
+        public string Name => this.name;
 
         /// <summary>
         /// Gets the full name of this schema element.
         /// </summary>
-        public string FullName
-        {
-            get { return this.fullName; }
-        }
+        public string FullName => this.fullName;
 
         /// <summary>
         /// Gets the kind of this schema element.
         /// </summary>
-        public EdmSchemaElementKind SchemaElementKind
-        {
-            get { return EdmSchemaElementKind.EntityContainer; }
-        }
+        public EdmSchemaElementKind SchemaElementKind => EdmSchemaElementKind.EntityContainer;
 
-        public IEdmEntitySet FindEntitySet(string setName)
-        {
-            return null;
-        }
+        public IEdmEntitySet FindEntitySet(string name) => null;
 
-        public IEdmSingleton FindSingleton(string singletonName)
-        {
-            return null;
-        }
+        public IEdmEntitySet FindEntitySet(ReadOnlySpan<char> name) => null;
 
-        public IEnumerable<IEdmOperationImport> FindOperationImports(string operationName)
-        {
-            return null;
-        }
+        public IEdmSingleton FindSingleton(string name) => null;
+
+        public IEdmSingleton FindSingleton(ReadOnlySpan<char> name) => null;
+
+        public IEnumerable<IEdmOperationImport> FindOperationImports(string operationName) => null;
+
+        public IEnumerable<IEdmOperationImport> FindOperationImports(ReadOnlySpan<char> operationName) => null;
     }
 }

@@ -1600,7 +1600,8 @@ namespace Microsoft.OData.Json
                 payloadTypeReference,
                 this.MessageReaderSettings.PrimitiveTypeResolver,
                 this.MessageReaderSettings.ReadUntypedAsString,
-                !this.MessageReaderSettings.ThrowIfTypeConflictsWithMetadata);
+                !this.MessageReaderSettings.ThrowIfTypeConflictsWithMetadata, 
+                this.MessageReaderSettings.LibraryCompatibility.HasFlag(ODataLibraryCompatibility.ReadUntypedNumericAsDecimal));
 
             bool isCollection = payloadTypeReference.IsCollection();
             IEdmStructuredType payloadTypeOrItemType = payloadTypeReference.ToStructuredType();
@@ -3035,11 +3036,11 @@ namespace Microsoft.OData.Json
                 "The method should only be called with OData. annotations");
             this.AssertJsonCondition(JsonNodeType.PrimitiveValue, JsonNodeType.StartObject, JsonNodeType.StartArray);
 
-            Tuple<bool, string> readODataTypeAnnotationResult = await this.TryReadODataTypeAnnotationValueAsync(propertyAnnotationName)
-                .ConfigureAwait(false);
-            if (readODataTypeAnnotationResult.Item1)
+            (bool isODataTypeAnnotation, string annotationValue) = await this.TryReadODataTypeAnnotationValueAsync(
+                propertyAnnotationName).ConfigureAwait(false);
+            if (isODataTypeAnnotation)
             {
-                return readODataTypeAnnotationResult.Item2; // TypeName
+                return annotationValue; // TypeName
             }
 
             switch (propertyAnnotationName)
@@ -3824,7 +3825,8 @@ namespace Microsoft.OData.Json
                 payloadTypeReference,
                 this.MessageReaderSettings.PrimitiveTypeResolver,
                 this.MessageReaderSettings.ReadUntypedAsString,
-                !this.MessageReaderSettings.ThrowIfTypeConflictsWithMetadata);
+                !this.MessageReaderSettings.ThrowIfTypeConflictsWithMetadata, 
+                this.MessageReaderSettings.LibraryCompatibility.HasFlag(ODataLibraryCompatibility.ReadUntypedNumericAsDecimal));
 
             bool isCollection = payloadTypeReference.IsCollection();
             IEdmStructuredType payloadTypeOrItemType = payloadTypeReference.ToStructuredType();

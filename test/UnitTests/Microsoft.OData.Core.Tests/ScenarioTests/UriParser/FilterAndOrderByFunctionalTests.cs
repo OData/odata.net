@@ -4,18 +4,19 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Microsoft.OData.Core;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Metadata;
 using Microsoft.OData.Tests.ScenarioTests.UriBuilder;
 using Microsoft.OData.Tests.UriParser;
 using Microsoft.OData.UriParser;
+using Microsoft.OData.UriParser.Aggregation;
 using Microsoft.Spatial;
 using Microsoft.Test.OData.Utils.Metadata;
 using Microsoft.VisualBasic;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using Xunit;
 
 namespace Microsoft.OData.Tests.ScenarioTests.UriParser
@@ -3076,7 +3077,11 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             Assert.Equal(1, collectionNode.Collection.Count);
 
             ConstantNode constantNode = collectionNode.Collection.First();
-            Assert.Equal("\"\"", constantNode.LiteralText);
+            Assert.Equal(string.Empty, constantNode.Value);
+
+            // Since in the 'in' clause, the item string is normalized as plain JSON (using [] instead of ()), and the string item has changed from '' to "". 
+            // Thefore, the LiteralText is expected to be string.Empty.
+            Assert.Equal(string.Empty, constantNode.LiteralText);
         }
 
         [Theory]
@@ -3094,7 +3099,27 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             Assert.Equal(1, collectionNode.Collection.Count);
 
             ConstantNode constantNode = collectionNode.Collection.First();
-            Assert.Equal("\"\"", constantNode.LiteralText);
+            Assert.Equal(string.Empty, constantNode.Value);
+            Assert.Equal(string.Empty, constantNode.LiteralText);
+        }
+
+        [Theory]
+        [InlineData("SSN in ('abc', null, '')", 0)] // at the end
+        [InlineData("SSN in ('', 'abc', null)", 1)] // at the start
+        [InlineData("SSN in (null, '', 'abc')", 2)] // in the middle
+        public void FilterWithInOperationWithEmptyStringWithOthersShouldWork(string inLiteral, int index)
+        {
+            FilterClause filter = ParseFilter(inLiteral, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+
+            var inNode = Assert.IsType<InNode>(filter.Expression);
+            Assert.Equal("SSN", Assert.IsType<SingleValuePropertyAccessNode>(inNode.Left).Property.Name);
+
+            CollectionConstantNode collectionNode = Assert.IsType<CollectionConstantNode>(inNode.Right);
+            Assert.Equal(3, collectionNode.Collection.Count);
+
+            collectionNode.Collection.ElementAt((index + 0) % 3).ShouldBeConstantQueryNode("abc");
+            collectionNode.Collection.ElementAt((index + 1) % 3).ShouldBeConstantQueryNode<string>(null);
+            collectionNode.Collection.ElementAt((index + 2) % 3).ShouldBeConstantQueryNode("");
         }
 
         [Theory]
@@ -3591,7 +3616,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Theory]
-        [InlineData("example in ('')", "\"\"")] // No space
+        [InlineData("example in ('')", "")] // No space
         [InlineData("example in (' ')", " ")] // 1 space
         [InlineData("example in ( '   ' )", "   ")] // 3 spaces
         [InlineData("example in ( \"  \" )", "  ")] // 2 spaces
@@ -3610,9 +3635,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Theory]
-        [InlineData("example in ('', \"  \")", "\"\"", "  ")]
-        [InlineData("example in (' ', \"\")", " ", "\"\"")]
-        [InlineData("example in ( '   ', '' )", "   ", "\"\"")]
+        [InlineData("example in ('', \"  \")", "", "  ")]
+        [InlineData("example in (' ', \"\")", " ", "")]
+        [InlineData("example in ( '   ', '' )", "   ", "")]
         [InlineData("example in ( \"  \", \" \" )", "  ", " ")]
         [InlineData("example in ( \"    \", ' ' )", "    ", " ")]
         public void FilterWithInOperationWithOpenTypesInMultipleEmptyStrings(string filterQueryString, string expectedFirstLiteral, string expectedSecondLiteral)

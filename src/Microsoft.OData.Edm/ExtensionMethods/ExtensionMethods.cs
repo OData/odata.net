@@ -4,13 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Globalization;
-using System.Linq;
-using System.Text;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Csdl.CsdlSemantics;
 using Microsoft.OData.Edm.Csdl.Parsing.Ast;
@@ -19,13 +12,21 @@ using Microsoft.OData.Edm.Validation;
 using Microsoft.OData.Edm.Vocabularies;
 using Microsoft.OData.Edm.Vocabularies.Community.V1;
 using Microsoft.OData.Edm.Vocabularies.V1;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Globalization;
+using System.Linq;
+using System.Net.NetworkInformation;
+using System.Text;
 
 namespace Microsoft.OData.Edm
 {
     /// <summary>
     /// Contains extension methods for <see cref="IEdmModel"/> interfaces.
     /// </summary>
-    public static class ExtensionMethods
+    public static partial class ExtensionMethods
     {
         private const int ContainerExtendsMaxDepth = 100;
         private const string CollectionTypeFormat = EdmConstants.Type_Collection + "({0})";
@@ -35,10 +36,10 @@ namespace Microsoft.OData.Edm
         
         #region IEdmModel
 
-        private static readonly Func<IEdmModel, string, IEdmSchemaType> findType = (model, qualifiedName) => model.FindDeclaredType(qualifiedName);
-        private static readonly Func<IEdmModel, string, IEdmTerm> findTerm = (model, qualifiedName) => model.FindDeclaredTerm(qualifiedName);
-        private static readonly Func<IEdmModel, string, IEnumerable<IEdmOperation>> findOperations = (model, qualifiedName) => model.FindDeclaredOperations(qualifiedName);
-        private static readonly Func<IEdmModel, string, IEdmEntityContainer> findEntityContainer = (model, qualifiedName) => { return model.ExistsContainer(qualifiedName) ? model.EntityContainer : null; };
+        private static readonly Func<IEdmModel, ReadOnlySpan<char>, IEdmSchemaType> findType = (model, qualifiedName) => model.FindDeclaredType(qualifiedName);
+        private static readonly Func<IEdmModel, ReadOnlySpan<char>, IEdmTerm> findTerm = (model, qualifiedName) => model.FindDeclaredTerm(qualifiedName);
+        private static readonly Func<IEdmModel, ReadOnlySpan<char>, IEnumerable<IEdmOperation>> findOperations = (model, qualifiedName) => model.FindDeclaredOperations(qualifiedName);
+        private static readonly Func<IEdmModel, ReadOnlySpan<char>, IEdmEntityContainer> findEntityContainer = (model, qualifiedName) => { return model.ExistsContainer(qualifiedName) ? model.EntityContainer : null; };
         private static readonly Func<IEnumerable<IEdmOperation>, IEnumerable<IEdmOperation>, IEnumerable<IEdmOperation>> mergeFunctions = (f1, f2) => Enumerable.Concat(f1, f2);
 
         /// <summary>
@@ -71,19 +72,7 @@ namespace Microsoft.OData.Edm
         /// <param name="qualifiedName">The namespace or alias qualified name of the type being found.</param>
         /// <returns>The requested type, or null if no such type exists.</returns>
         public static IEdmSchemaType FindType(this IEdmModel model, string qualifiedName)
-        {
-            EdmUtil.CheckArgumentNull(model, "model");
-            EdmUtil.CheckArgumentNull(qualifiedName, "qualifiedName");
-
-            string fullyQualifiedName = model.ReplaceAlias(qualifiedName);
-
-            // search built-in EdmCoreModel and CoreVocabularyModel.
-            return FindAcrossModels(
-                model,
-                fullyQualifiedName,
-                findType,
-                (first, second) => RegistrationHelper.CreateAmbiguousTypeBinding(first, second));
-        }
+            => FindType(model, qualifiedName.AsSpan());
 
         /// <summary>
         /// Searches for bound operations based on the binding type, returns an empty enumerable if no operation exists.
@@ -127,21 +116,7 @@ namespace Microsoft.OData.Edm
             EdmUtil.CheckArgumentNull(qualifiedName, "qualifiedName");
             EdmUtil.CheckArgumentNull(bindingType, "bindingType");
 
-            string fullyQualifiedName = model.ReplaceAlias(qualifiedName);
-
-            // the below is a copy of FindAcrossModels method but Func<IEdmModel, TInput, T> finder is replaced by FindDeclaredBoundOperations.
-            IEnumerable<IEdmOperation> candidate = model.FindDeclaredBoundOperations(fullyQualifiedName, bindingType);
-
-            foreach (IEdmModel reference in model.ReferencedModels)
-            {
-                IEnumerable<IEdmOperation> fromReference = reference.FindDeclaredBoundOperations(fullyQualifiedName, bindingType);
-                if (fromReference != null)
-                {
-                    candidate = candidate == null ? fromReference : mergeFunctions(candidate, fromReference);
-                }
-            }
-
-            return candidate;
+            return model.FindBoundOperations(qualifiedName.AsSpan(), bindingType);
         }
 
         /// <summary>
@@ -155,13 +130,7 @@ namespace Microsoft.OData.Edm
             EdmUtil.CheckArgumentNull(model, "model");
             EdmUtil.CheckArgumentNull(qualifiedName, "qualifiedName");
 
-            string fullyQualifiedName = model.ReplaceAlias(qualifiedName);
-
-            return FindAcrossModels(
-                model,
-                fullyQualifiedName,
-                findTerm,
-                (first, second) => RegistrationHelper.CreateAmbiguousTermBinding(first, second));
+            return model.FindTerm(qualifiedName.AsSpan());
         }
 
         /// <summary>
@@ -175,7 +144,7 @@ namespace Microsoft.OData.Edm
             EdmUtil.CheckArgumentNull(model, "model");
             EdmUtil.CheckArgumentNull(qualifiedName, "qualifiedName");
 
-            return FindAcrossModels(model, qualifiedName, findOperations, mergeFunctions);
+            return model.FindOperations(qualifiedName.AsSpan());
         }
         #endregion
 
@@ -186,22 +155,7 @@ namespace Microsoft.OData.Edm
         /// <param name="containerName">Input container name to be searched. The container name may be full qualified with namespace prefix.</param>
         /// <returns>True if the model has a container called input name, otherwise false.</returns>
         public static bool ExistsContainer(this IEdmModel model, string containerName)
-        {
-            if (model.EntityContainer == null)
-            {
-                return false;
-            }
-
-            string fullQualifiedName = (model.EntityContainer.Namespace ?? String.Empty) + "." + (containerName ?? String.Empty);
-
-            if (string.Equals(model.EntityContainer.FullName(), fullQualifiedName, StringComparison.Ordinal)
-                || string.Equals(model.EntityContainer.FullName(), containerName, StringComparison.Ordinal))
-            {
-                return true;
-            }
-
-            return false;
-        }
+            => model.ExistsContainer(containerName.AsSpan());
 
         /// <summary>
         /// Searches for an entity container with the given name in this model and all referenced models and returns null if no such entity container exists.
@@ -214,11 +168,7 @@ namespace Microsoft.OData.Edm
             EdmUtil.CheckArgumentNull(model, "model");
             EdmUtil.CheckArgumentNull(qualifiedName, "qualifiedName");
 
-            return FindAcrossModels(
-                model,
-                qualifiedName,
-                findEntityContainer,
-                (first, second) => RegistrationHelper.CreateAmbiguousEntityContainerBinding(first, second));
+            return model.FindEntityContainer(qualifiedName.AsSpan());
         }
 
         /// <summary>
@@ -1086,7 +1036,6 @@ namespace Microsoft.OData.Edm
             return false;
         }
 
-
         /// <summary>
         /// Searches for entity set by the given name that may be container qualified in default container and .Extends containers.
         /// </summary>
@@ -1094,20 +1043,7 @@ namespace Microsoft.OData.Edm
         /// <param name="qualifiedName">The name which might be container qualified. If no container name is provided, then default container will be searched.</param>
         /// <returns>The entity set found or empty if none found.</returns>
         public static IEdmEntitySet FindDeclaredEntitySet(this IEdmModel model, string qualifiedName)
-        {
-            IEdmEntitySet foundEntitySet;
-            if (!model.TryFindContainerQualifiedEntitySet(qualifiedName, out foundEntitySet))
-            {
-                // try searching by entity set name in container and extended containers:
-                IEdmEntityContainer container = model.EntityContainer;
-                if (container != null)
-                {
-                    return container.FindEntitySetExtended(qualifiedName);
-                }
-            }
-
-            return foundEntitySet;
-        }
+            => model.FindDeclaredEntitySet(qualifiedName.AsSpan());
 
         /// <summary>
         /// Searches for singleton by the given name that may be container qualified in default container and .Extends containers. If no container name is provided, then default container will be searched.
@@ -1116,20 +1052,7 @@ namespace Microsoft.OData.Edm
         /// <param name="qualifiedName">The name which might be container qualified. If no container name is provided, then default container will be searched.</param>
         /// <returns>The singleton found or empty if none found.</returns>
         public static IEdmSingleton FindDeclaredSingleton(this IEdmModel model, string qualifiedName)
-        {
-            IEdmSingleton foundSingleton;
-            if (!model.TryFindContainerQualifiedSingleton(qualifiedName, out foundSingleton))
-            {
-                // try searching by singleton name in container and extended containers:
-                IEdmEntityContainer container = model.EntityContainer;
-                if (container != null)
-                {
-                    return container.FindSingletonExtended(qualifiedName);
-                }
-            }
-
-            return foundSingleton;
-        }
+            => model.FindDeclaredSingleton(qualifiedName.AsSpan());
 
         /// <summary>
         /// Searches for entity set or singleton by the given name that may be container qualified in default container and .Extends containers. If no container name is provided, then default container will be searched.
@@ -1138,16 +1061,7 @@ namespace Microsoft.OData.Edm
         /// <param name="qualifiedName">The name which might be container qualified. If no container name is provided, then default container will be searched.</param>
         /// <returns>The entity set or singleton found or empty if none found.</returns>
         public static IEdmNavigationSource FindDeclaredNavigationSource(this IEdmModel model, string qualifiedName)
-        {
-            IEdmEntitySet entitySet = model.FindDeclaredEntitySet(qualifiedName);
-            if (entitySet != null)
-            {
-                return entitySet;
-            }
-
-            return model.FindDeclaredSingleton(qualifiedName);
-        }
-
+            => model.FindDeclaredNavigationSource(qualifiedName.AsSpan());
 
         /// <summary>
         /// Searches for the operation imports by the specified name in default container and .Extends containers, returns an empty enumerable if no operation import exists.
@@ -1156,20 +1070,7 @@ namespace Microsoft.OData.Edm
         /// <param name="qualifiedName">The qualified name of the operation import which may or may not include the container name.</param>
         /// <returns>All operation imports that can be found by the specified name, returns an empty enumerable if no operation import exists.</returns>
         public static IEnumerable<IEdmOperationImport> FindDeclaredOperationImports(this IEdmModel model, string qualifiedName)
-        {
-            IEnumerable<IEdmOperationImport> foundOperationImports;
-            if (!model.TryFindContainerQualifiedOperationImports(qualifiedName, out foundOperationImports))
-            {
-                // try searching by operation import name in container and extended containers:
-                IEdmEntityContainer container = model.EntityContainer;
-                if (container != null)
-                {
-                    return container.FindOperationImportsExtended(qualifiedName);
-                }
-            }
-
-            return foundOperationImports ?? Enumerable.Empty<IEdmOperationImport>();
-        }
+            => model.FindDeclaredOperationImports(qualifiedName.AsSpan());
 
         /// <summary>
         /// Get the primitive value converter for the given type definition in the model.
@@ -2036,36 +1937,7 @@ namespace Microsoft.OData.Edm
             EdmUtil.CheckArgumentNull(structuredType, "structuredType");
             EdmUtil.CheckArgumentNull(propertyName, "propertyName");
 
-            // For example: a structured type has two properties in difference case:
-            //  1) Name
-            //  2) naMe
-            //  3) Title
-            // if input "propertyName="Name", returns the #1 property.
-            // if input "propertyName="naMe", returns the #2 property.
-            // if input "propertyName="name", throw exception because multiple found.
-            // But for "Title", any property name, such as "tiTle", "Title", "title", etc returns #3 property.
-            IEdmProperty edmProperty = structuredType.FindProperty(propertyName);
-            if (edmProperty != null || !caseInsensitive)
-            {
-                return edmProperty;
-            }
-
-            // Since we call "FindProperty" using case-sensitive, we don't miss the "right case" property.
-            // So, it's safety to throw exception if we meet second case.
-            foreach (IEdmProperty property in structuredType.Properties())
-            {
-                if (string.Equals(property.Name, propertyName, StringComparison.OrdinalIgnoreCase))
-                {
-                    if (edmProperty != null)
-                    {
-                        throw new InvalidOperationException(Error.Format(SRResources.MultipleMatchingPropertiesFound, propertyName, structuredType.FullTypeName()));
-                    }
-
-                    edmProperty = property;
-                }
-            }
-
-            return edmProperty;
+            return structuredType.FindProperty(propertyName.AsSpan(), caseInsensitive);
         }
 
         /// <summary>
@@ -2078,7 +1950,7 @@ namespace Microsoft.OData.Edm
         {
             EdmUtil.CheckArgumentNull(type, "type");
             EdmUtil.CheckArgumentNull(name, "name");
-            return type.StructuredDefinition().FindProperty(name);
+            return type.FindProperty(name.AsSpan());
         }
 
         /// <summary>
@@ -2113,7 +1985,7 @@ namespace Microsoft.OData.Edm
         {
             EdmUtil.CheckArgumentNull(type, "type");
             EdmUtil.CheckArgumentNull(name, "name");
-            return type.StructuredDefinition().FindProperty(name) as IEdmNavigationProperty;
+            return type.FindNavigationProperty(name.AsSpan());
         }
 
         #endregion
@@ -2715,33 +2587,6 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
-        /// Gets the <see cref="IEdmOperationReturn"/> from the specified operation.
-        /// </summary>
-        /// <param name="operation">The operation.</param>
-        /// <returns>The instance of <see cref="IEdmOperationReturn"/> or null if the operation has no return type.</returns>
-        public static IEdmOperationReturn GetReturn(this IEdmOperation operation)
-        {
-            EdmOperation edmOperation = operation as EdmOperation;
-            if (edmOperation != null)
-            {
-                return edmOperation.Return;
-            }
-
-            CsdlSemanticsOperation csdlOperation = operation as CsdlSemanticsOperation;
-            if (csdlOperation != null)
-            {
-                return csdlOperation.Return;
-            }
-
-            if (operation == null)
-            {
-                return null;
-            }
-
-            return operation.Return;
-        }
-
-        /// <summary>
         /// Checks whether all operations have the same return type
         /// </summary>
         /// <param name="operations">the list to check</param>
@@ -3051,11 +2896,10 @@ namespace Microsoft.OData.Edm
         /// <param name="ambiguousCreator">The func to combine results when more than one is found.</param>
         /// <remarks>when searching, will ignore built-in types in EdmCoreModel and CoreVocabularyModel.</remarks>
         /// <returns>The requested type, or null if no such type exists.</returns>
-        internal static T FindInModelTree<T>(this CsdlSemanticsModel model, Func<IEdmModel, string, T> finderFunc, string qualifiedName, Func<T, T, T> ambiguousCreator)
+        internal static T FindInModelTree<T>(this CsdlSemanticsModel model, Func<IEdmModel, ReadOnlySpan<char>, T> finderFunc, ReadOnlySpan<char> qualifiedName, Func<T, T, T> ambiguousCreator)
         {
             EdmUtil.CheckArgumentNull(model, "model");
             EdmUtil.CheckArgumentNull(finderFunc, "finderFunc");
-            EdmUtil.CheckArgumentNull(qualifiedName, "qualifiedName");
             EdmUtil.CheckArgumentNull(ambiguousCreator, "ambiguousCreator");
 
             // find type in current model only
@@ -3625,6 +3469,22 @@ namespace Microsoft.OData.Edm
             return candidate;
         }
 
+        private static T FindAcrossModels<T>(this IEdmModel model, ReadOnlySpan<char> qualifiedName, Func<IEdmModel, ReadOnlySpan<char>, T> finder, Func<T, T, T> ambiguousCreator)
+        {
+            T candidate = finder(model, qualifiedName);
+
+            foreach (IEdmModel reference in model.ReferencedModels)
+            {
+                T fromReference = finder(reference, qualifiedName);
+                if (fromReference != null)
+                {
+                    candidate = candidate == null ? fromReference : ambiguousCreator(candidate, fromReference);
+                }
+            }
+
+            return candidate;
+        }
+
         private static T GetTermValue<T>(this IEdmModel model, IEdmStructuredValue context, IEdmEntityType contextType, IEdmTerm term, string qualifier, Func<IEdmExpression, IEdmStructuredValue, IEdmTypeReference, T> evaluator)
         {
             IEnumerable<IEdmVocabularyAnnotation> annotations = model.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(contextType, term, qualifier);
@@ -3684,7 +3544,7 @@ namespace Microsoft.OData.Edm
         /// <param name="finderFunc">The func to do the search within container.</param>
         /// <param name="depth">The recursive depth of .Extends containers to search.</param>
         /// <returns>The found entity set or singleton or operation import.</returns>
-        private static T FindInContainerAndExtendsRecursively<T>(IEdmEntityContainer container, string simpleName, Func<IEdmEntityContainer, string, T> finderFunc, int depth)
+        private static T FindInContainerAndExtendsRecursively<T>(IEdmEntityContainer container, ReadOnlySpan<char> simpleName, Func<IEdmEntityContainer, ReadOnlySpan<char>, T> finderFunc, int depth)
         {
             Debug.Assert(finderFunc != null, "finderFunc!=null");
             EdmUtil.CheckArgumentNull(container, "container");

@@ -61,7 +61,6 @@ Microsoft.OData.ODataLibraryCompatibility.None = 0 -> Microsoft.OData.ODataLibra
 Microsoft.OData.ODataLibraryCompatibility.UseLegacyODataInnerErrorSerialization = 16 -> Microsoft.OData.ODataLibraryCompatibility
 Microsoft.OData.ODataLibraryCompatibility.UseLegacyVariableCasing = 1 -> Microsoft.OData.ODataLibraryCompatibility
 Microsoft.OData.ODataLibraryCompatibility.Version6 = Microsoft.OData.ODataLibraryCompatibility.WriteTopLevelODataNullAnnotation | Microsoft.OData.ODataLibraryCompatibility.WriteODataContextAnnotationForNavProperty | Microsoft.OData.ODataLibraryCompatibility.DoNotThrowExceptionForTopLevelNullProperty | Microsoft.OData.ODataLibraryCompatibility.Version7 -> Microsoft.OData.ODataLibraryCompatibility
-Microsoft.OData.ODataLibraryCompatibility.Version7 = Microsoft.OData.ODataLibraryCompatibility.UseLegacyVariableCasing | Microsoft.OData.ODataLibraryCompatibility.UseLegacyODataInnerErrorSerialization -> Microsoft.OData.ODataLibraryCompatibility
 Microsoft.OData.ODataLibraryCompatibility.WriteODataContextAnnotationForNavProperty = 4 -> Microsoft.OData.ODataLibraryCompatibility
 Microsoft.OData.ODataLibraryCompatibility.WriteTopLevelODataNullAnnotation = 2 -> Microsoft.OData.ODataLibraryCompatibility
 Microsoft.OData.ODataError.Code.get -> string

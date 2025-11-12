@@ -326,6 +326,11 @@ public class ConstructibleModelErrorCases : EdmLibTestCaseBase
             throw new NotImplementedException();
         }
 
+        public IEdmProperty FindProperty(ReadOnlySpan<char> name)
+        {
+            throw new NotImplementedException();
+        }
+
         public string NamespaceUri
         {
             get { throw new NotImplementedException(); }
@@ -428,6 +433,11 @@ public class ConstructibleModelErrorCases : EdmLibTestCaseBase
             throw new NotImplementedException();
         }
 
+        public IEdmOperationParameter FindParameter(ReadOnlySpan<char> name)
+        {
+            throw new NotImplementedException();
+        }
+
         bool IEdmOperation.IsBound
         {
             get { throw new NotImplementedException(); }
@@ -449,6 +459,11 @@ public class ConstructibleModelErrorCases : EdmLibTestCaseBase
         }
 
         IEdmOperationParameter IEdmOperation.FindParameter(string name)
+        {
+            throw new NotImplementedException();
+        }
+
+        IEdmOperationParameter IEdmOperation.FindParameter(ReadOnlySpan<char> name)
         {
             throw new NotImplementedException();
         }

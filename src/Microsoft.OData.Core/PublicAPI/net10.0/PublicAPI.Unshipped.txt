@@ -1,3 +1,6 @@
+Microsoft.OData.ODataLibraryCompatibility.ReadUntypedNumericAsDecimal = 32 -> Microsoft.OData.ODataLibraryCompatibility
+Microsoft.OData.ODataLibraryCompatibility.Version7 = Microsoft.OData.ODataLibraryCompatibility.UseLegacyVariableCasing | Microsoft.OData.ODataLibraryCompatibility.UseLegacyODataInnerErrorSerialization | Microsoft.OData.ODataLibraryCompatibility.ReadUntypedNumericAsDecimal -> Microsoft.OData.ODataLibraryCompatibility
+Microsoft.OData.ODataLibraryCompatibility.Version8 = 32 -> Microsoft.OData.ODataLibraryCompatibility
 Microsoft.OData.UriParser.CustomQueryOptionNode
 Microsoft.OData.UriParser.CustomQueryOptionNode.CustomQueryOptionNode(string name, string value) -> void
 Microsoft.OData.UriParser.CustomQueryOptionNode.Name.get -> string
@@ -6,3 +9,11 @@ Microsoft.OData.UriParser.QueryNodeKind.CustomQueryOption = 35 -> Microsoft.ODat
 override Microsoft.OData.UriParser.CustomQueryOptionNode.Accept<T>(Microsoft.OData.UriParser.QueryNodeVisitor<T> visitor) -> T
 override Microsoft.OData.UriParser.CustomQueryOptionNode.Kind.get -> Microsoft.OData.UriParser.QueryNodeKind
 virtual Microsoft.OData.UriParser.QueryNodeVisitor<T>.Visit(Microsoft.OData.UriParser.CustomQueryOptionNode nodeIn) -> T
+Microsoft.OData.UriParser.Aggregation.AggregateCollectionExpression
+Microsoft.OData.UriParser.Aggregation.AggregateCollectionExpression.AggregateCollectionExpression(Microsoft.OData.UriParser.CollectionNode expression, Microsoft.OData.UriParser.Aggregation.AggregationMethodDefinition methodDefinition, string alias, Microsoft.OData.Edm.IEdmTypeReference typeReference) -> void
+Microsoft.OData.UriParser.Aggregation.AggregateCollectionExpression.Expression.get -> Microsoft.OData.UriParser.CollectionNode
+Microsoft.OData.UriParser.Aggregation.AggregateCollectionExpression.Method.get -> Microsoft.OData.UriParser.Aggregation.AggregationMethod
+Microsoft.OData.UriParser.Aggregation.AggregateCollectionExpression.MethodDefinition.get -> Microsoft.OData.UriParser.Aggregation.AggregationMethodDefinition
+Microsoft.OData.UriParser.Aggregation.AggregateCollectionExpression.TypeReference.get -> Microsoft.OData.Edm.IEdmTypeReference
+Microsoft.OData.UriParser.Aggregation.AggregateExpressionKind.CollectionPropertyAggregate = 3 -> Microsoft.OData.UriParser.Aggregation.AggregateExpressionKind
+

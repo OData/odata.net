@@ -94,6 +94,22 @@ namespace Microsoft.OData.Client.Tests
         }
 
         [Fact]
+        public void TranslatesEnumerableContainsWithPrimitiveTypeToInOperator()
+        {
+            // Arrange
+            var sut = new DataServiceQueryProvider(dsc);
+            var prices = new[] { 2m, 15, 11, 15 };
+            var products = dsc.CreateQuery<Product>("Products")
+                .Where(product => prices.Contains(product.Price));
+
+            // Act
+            var queryComponents = sut.Translate(products.Expression);
+
+            // Assert
+            Assert.Equal(@"http://root/Products?$filter=Price in (2,15,11,15)", queryComponents.Uri.ToString());
+        }
+
+        [Fact]
         public void ThrowsForEnumerableContainsWithEmptyCollection()
         {
             // Arrange

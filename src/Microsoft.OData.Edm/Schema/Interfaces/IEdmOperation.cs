@@ -21,6 +21,11 @@ namespace Microsoft.OData.Edm
         IEdmOperationReturn Return { get; }
 
         /// <summary>
+        /// Gets the return type of this operation.
+        /// </summary>
+        IEdmTypeReference ReturnType => Return?.Type;
+
+        /// <summary>
         /// Gets the collection of parameters for this operation.
         /// </summary>
         IEnumerable<IEdmOperationParameter> Parameters { get; }
@@ -47,5 +52,12 @@ namespace Microsoft.OData.Edm
         /// <param name="name">The name of the parameter being found.</param>
         /// <returns>The requested parameter or null if no such parameter exists.</returns>
         IEdmOperationParameter FindParameter(string name);
+
+        /// <summary>
+        /// Searches for a parameter with the given name, and returns null if no such parameter exists.
+        /// </summary>
+        /// <param name="name">The name of the parameter being found.</param>
+        /// <returns>The requested parameter or null if no such parameter exists.</returns>
+        IEdmOperationParameter FindParameter(ReadOnlySpan<char> name);
     }
 }

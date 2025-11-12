@@ -60,7 +60,7 @@ namespace Microsoft.OData.UriParser
             ExceptionUtils.CheckArgumentNotNull(operation, "operation");
             this.operations = new ReadOnlyCollection<IEdmOperation>(new[] { operation });
             this.entitySet = entitySet;
-            this.computedReturnEdmType = operation.Return?.Type != null ? operation.Return.Type.Definition : null;
+            this.computedReturnEdmType = operation.ReturnType != null ? operation.ReturnType.Definition : null;
             this.EnsureTypeAndSetAreCompatable();
 
             if (this.computedReturnEdmType != null)
@@ -115,12 +115,12 @@ namespace Microsoft.OData.UriParser
             if (typeSoFar == null)
             {
                 // This is for void operations
-                if (this.operations.Any(operation => operation.Return?.Type != null))
+                if (this.operations.Any(operation => operation.ReturnType != null))
                 {
                     typeSoFar = UnknownSentinel;
                 }
             }
-            else if (this.operations.Any(operationImport => !typeSoFar.IsEquivalentTo(operationImport.Return?.Type.Definition)))
+            else if (this.operations.Any(operationImport => !typeSoFar.IsEquivalentTo(operationImport.ReturnType?.Definition)))
             {
                 typeSoFar = UnknownSentinel;
             }

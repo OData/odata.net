@@ -6,6 +6,7 @@
 
 namespace Microsoft.OData.Edm
 {
+    using System;
     using System.Collections.Generic;
 
     /// <summary>
@@ -109,10 +110,18 @@ namespace Microsoft.OData.Edm
         /// <param name="name">The name of the parameter to be found.</param>
         /// <returns>The requested parameter, or null if no such parameter exists.</returns>
         public IEdmOperationParameter FindParameter(string name)
+            => string.IsNullOrEmpty(name) ? null : FindParameter(name.AsSpan());
+
+        /// <summary>
+        /// Searches for a parameter with the given name in this operation and returns null if no such parameter exists.
+        /// </summary>
+        /// <param name="name">The name of the parameter to be found.</param>
+        /// <returns>The requested parameter, or null if no such parameter exists.</returns>
+        public IEdmOperationParameter FindParameter(ReadOnlySpan<char> name)
         {
             foreach (IEdmOperationParameter parameter in this.Parameters)
             {
-                if (parameter.Name == name)
+                if (name.Equals(parameter.Name, StringComparison.Ordinal))
                 {
                     return parameter;
                 }

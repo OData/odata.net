@@ -150,11 +150,39 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
             }
         }
 
+        private void ReadCollectionPayload(string payload, ODataMessageReaderSettings readerSettings, Action<ODataReader> action)
+        {
+            var message = new InMemoryMessage() { Stream = new MemoryStream(Encoding.UTF8.GetBytes(payload)) };
+            message.SetHeader("Content-Type", "application/json");
+            using (var msgReader = new ODataMessageReader((IODataResponseMessage)message, readerSettings, this.serverModel))
+            {
+                var reader = msgReader.CreateODataResourceSetReader();
+                while (reader.Read())
+                {
+                    action(reader);
+                }
+            }
+        }
+
         private void ReadResourcePayload(string payload, Action<ODataReader> action)
         {
             var message = new InMemoryMessage() { Stream = new MemoryStream(Encoding.UTF8.GetBytes(payload)) };
             message.SetHeader("Content-Type", "application/json");
             using (var msgReader = new ODataMessageReader((IODataResponseMessage)message, UntypedAsValueReaderSettings, this.serverModel))
+            {
+                var reader = msgReader.CreateODataResourceReader();
+                while (reader.Read())
+                {
+                    action(reader);
+                }
+            }
+        }
+
+        private void ReadResourcePayload(string payload, ODataMessageReaderSettings readerSettings, Action<ODataReader> action)
+        {
+            var message = new InMemoryMessage() { Stream = new MemoryStream(Encoding.UTF8.GetBytes(payload)) };
+            message.SetHeader("Content-Type", "application/json");
+            using (var msgReader = new ODataMessageReader((IODataResponseMessage)message, readerSettings, this.serverModel))
             {
                 var reader = msgReader.CreateODataResourceReader();
                 while (reader.Read())
@@ -1516,11 +1544,14 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
         [Theory]
         [InlineData("Edm.Untyped")]
         [InlineData("Server.NS.UndefinedType")]
-        public void ReadUntypedResource(string fragment)
+        public void ReadUntypedResource_asInt32_WhenReadUntypedNumericAsDecimalFlagIsNotSet(string fragment)
         {
             string payload = "{\"@odata.context\":\"http://www.sampletest.com/$metadata#" + fragment + "\",\"id\":1}";
+
+            var readerSettings = UntypedAsValueReaderSettings.Clone();
+
             ODataResource entry = null;
-            this.ReadResourcePayload(payload, reader =>
+            this.ReadResourcePayload(payload, readerSettings, reader =>
             {
                 if (reader.State == ODataReaderState.ResourceStart)
                 {
@@ -1529,7 +1560,260 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
             });
 
             Assert.Single(entry.Properties);
-            Assert.Equal(1m, Assert.IsType<ODataProperty>(entry.Properties.First(p => p.Name == "id")).Value);
+
+            var value = Assert.IsType<ODataProperty>(entry.Properties.First(p => p.Name == "id")).Value;
+            Assert.IsType<Int32>(value);
+            Assert.Equal(1, value);
+        }
+
+        [Theory]
+        [InlineData(0, 0)]
+        [InlineData("0", 0)]
+        [InlineData(0.0, 0)]
+        [InlineData(123, 123)]
+        [InlineData("123", 123)]
+        [InlineData(-42, -42)]
+        [InlineData("-42", -42)]
+        [InlineData(2147483647, 2147483647)] // Int32.MaxValue
+        [InlineData(-2147483648, -2147483648)] // Int32.MinValue
+        [InlineData(1.234e+5d, 123400)]
+        [InlineData("000123", 123)] // Leading zeros
+        [InlineData("2147483647", 2147483647)]
+        [InlineData("-2147483648", -2147483648)]
+        public void ReadUntypedResourceForInt32_ExpectedTypeAsInt32_WhenReadUntypedNumericAsDecimalFlagIsNotSet(object number, object expectedValue)
+        {
+            string payload = "{\"@odata.context\":\"http://www.sampletest.com/$metadata#Edm.Untyped\",\"id\":" + number + "}";
+
+            var readerSettings = UntypedAsValueReaderSettings.Clone();
+
+            ODataResource entry = null;
+            this.ReadResourcePayload(payload, readerSettings, reader =>
+            {
+                if (reader.State == ODataReaderState.ResourceStart)
+                {
+                    entry = (reader.Item as ODataResource);
+                }
+            });
+
+            Assert.Single(entry.Properties);
+
+            var value = Assert.IsType<ODataProperty>(entry.Properties.First(p => p.Name == "id")).Value;
+            Assert.IsType<int>(value);
+            Assert.Equal(expectedValue, value);
+        }
+
+        [Theory]
+        [InlineData(0, 0)]
+        [InlineData("0", 0)]
+        [InlineData(0.0, 0)]
+        [InlineData(123, 123)]
+        [InlineData("123", 123)]
+        [InlineData(-42, -42)]
+        [InlineData("-42", -42)]
+        [InlineData(2147483647, 2147483647)] // Int32.MaxValue
+        [InlineData(-2147483648, -2147483648)] // Int32.MinValue
+        [InlineData(1.234e+5d, 123400)]
+        [InlineData("000123", 123)] // Leading zeros
+        [InlineData("2147483647", 2147483647)]
+        [InlineData("-2147483648", -2147483648)]
+        public void ReadUntypedResourceForInt32_ExpectedTypeAsDecimal_WhenReadUntypedNumericAsDecimalFlagIsSet(object number, object expectedValue)
+        {
+            string payload = "{\"@odata.context\":\"http://www.sampletest.com/$metadata#Edm.Untyped\",\"id\":" + number + "}";
+
+            var readerSettings = UntypedAsValueReaderSettings.Clone();
+            readerSettings.LibraryCompatibility |= ODataLibraryCompatibility.ReadUntypedNumericAsDecimal;
+
+            ODataResource entry = null;
+            this.ReadResourcePayload(payload, readerSettings, reader =>
+            {
+                if (reader.State == ODataReaderState.ResourceStart)
+                {
+                    entry = (reader.Item as ODataResource);
+                }
+            });
+
+            Assert.Single(entry.Properties);
+
+            var value = Assert.IsType<ODataProperty>(entry.Properties.First(p => p.Name == "id")).Value;
+            Assert.IsType<decimal>(value);
+            Assert.Equal(Convert.ToDecimal(expectedValue), value);
+        }
+
+        [Theory]
+        [InlineData(2147483648, 2147483648L)]
+        [InlineData(9223372036854775807, 9223372036854775807L)]
+        [InlineData(-9223372036854775808, -9223372036854775808L)]
+        [InlineData("9223372036854775807", 9223372036854775807L)]
+        [InlineData("-9223372036854775808", -9223372036854775808L)]
+        [InlineData(1002147483646, 1002147483646L)]
+        [InlineData("1002147483646", 1002147483646L)]
+        [InlineData("0009223372036854775807", 9223372036854775807L)] // Leading zeros
+        [InlineData(1e10, 10000000000L)] // Large double that fits in long
+        public void ReadUntypedResourceForInt64_ExpectedTypeAsDecimal_WhenReadUntypedNumericAsDecimalFlagIsSetOrDefault(object number, object expectedValue)
+        {
+            string payload = "{\"@odata.context\":\"http://www.sampletest.com/$metadata#Edm.Untyped\",\"id\":" + number + "}";
+            var readerSettings = UntypedAsValueReaderSettings.Clone();
+
+            ODataResource entry = null;
+            this.ReadResourcePayload(payload, readerSettings, reader =>
+            {
+                if (reader.State == ODataReaderState.ResourceStart)
+                {
+                    entry = (reader.Item as ODataResource);
+                }
+            });
+
+            Assert.Single(entry.Properties);
+
+            var value = Assert.IsType<ODataProperty>(entry.Properties.First(p => p.Name == "id")).Value;
+            Assert.IsType<decimal>(value);
+            Assert.Equal(Convert.ToDecimal(expectedValue), value);
+        }
+
+        public static TheoryData<object, object> UntypedWithDecimalData => new()
+        {
+            { 9223372036854775808, 9223372036854775808M }, // Just above Int64.MaxValue
+            { 6.02214076e+23M, 602214076000000000000000M },
+            { 3.14159265358979323846M, 3.14159265358979323846M }, // PI
+            { "3.14159265358979323846", 3.14159265358979323846M },
+            { 123456789012345.123456789012345M, 123456789012345.123456789012345M },
+            { "123456789012345.123456789012345", 123456789012345.123456789012345M },
+            { 79228162514264337593543950335M, 79228162514264337593543950335M }, // Decimal.MaxValue
+            { "-79228162514264337593543950335", -79228162514264337593543950335M }, // Decimal.MinValue
+            { 0.0000000000000000000000000001M, 0.0000000000000000000000000001M }, // Smallest positive
+            { "-0.0000000000000000000000000001", -0.0000000000000000000000000001M },
+            { 9999999936869775949, 9999999936869775949M },
+            { "9999999936869775949", 9999999936869775949M },
+            { .14159265358979323846M, .14159265358979323846M },
+            { ".14159265358979323846", .14159265358979323846M },
+            { .14159265358979, .14159265358979M },
+            { ".14159265358979", .14159265358979M },
+            { "-0.0", 0M },
+            {"0.0", 0M },
+            { 123.456, 123.456M },
+            { "123.456", 123.456M },
+            { "0.0000001", 0.0000001M }
+        };
+
+        [Theory]
+        [MemberData(nameof(UntypedWithDecimalData))]
+        public void ReadUntypedResourceForDecimal_ExpectedTypeAsDecimal_WhenReadUntypedNumericAsDecimalFlagIsNotSet(object number, object expectedValue)
+        {
+            string payload = "{\"@odata.context\":\"http://www.sampletest.com/$metadata#Edm.Untyped\",\"id\":" + number + "}";
+
+            var readerSettings = UntypedAsValueReaderSettings.Clone();
+
+            ODataResource entry = null;
+            this.ReadResourcePayload(payload, readerSettings, reader =>
+            {
+                if (reader.State == ODataReaderState.ResourceStart)
+                {
+                    entry = (reader.Item as ODataResource);
+                }
+            });
+
+            Assert.Single(entry.Properties);
+
+            var value = Assert.IsType<ODataProperty>(entry.Properties.First(p => p.Name == "id")).Value;
+            Assert.IsType<decimal>(value);
+            Assert.Equal(expectedValue, value);
+        }
+
+        [Theory]
+        [MemberData(nameof(UntypedWithDecimalData))]
+        public void ReadUntypedResourceForDecimal_ExpectedTypeAsDecimal_WhenReadUntypedNumericAsDecimalFlagIsSetOrDefault(object number, object expectedValue)
+        {
+            string payload = "{\"@odata.context\":\"http://www.sampletest.com/$metadata#Edm.Untyped\",\"id\":" + number + "}";
+            var readerSettings = UntypedAsValueReaderSettings.Clone();
+
+            ODataResource entry = null;
+            this.ReadResourcePayload(payload, readerSettings, reader =>
+            {
+                if (reader.State == ODataReaderState.ResourceStart)
+                {
+                    entry = (reader.Item as ODataResource);
+                }
+            });
+
+            Assert.Single(entry.Properties);
+
+            var value = Assert.IsType<ODataProperty>(entry.Properties.First(p => p.Name == "id")).Value;
+            Assert.IsType<decimal>(value);
+            Assert.Equal(expectedValue, value);
+        }
+
+        [Theory]
+        [InlineData("1.234e+5", 123400d)]
+        [InlineData(1.234e-5d, 0.00001234)]
+        [InlineData("1.234e-5", 0.00001234)]
+        [InlineData(9.1093837e-31, 9.1093837e-31)]
+        [InlineData("9.1093837e-31", 9.1093837e-31)]
+        [InlineData(1.7976931348623157E+308, 1.7976931348623157E+308d)]
+        [InlineData("-1.7976931348623157E+308", -1.7976931348623157E+308d)]
+        [InlineData(2.2250738585072014E-308, 2.2250738585072014E-308d)]
+        [InlineData("-2.2250738585072014E-308", -2.2250738585072014E-308d)]
+        [InlineData("1e10", 10000000000d)]
+        [InlineData(double.MinValue, double.MinValue)]
+        [InlineData(0.0000001, 0.0000001d)]
+        public void ReadUntypedResourceForDouble_ExpectedTypeAsDouble_WhenReadUntypedNumericAsDecimalFlagIsNotSet(object number, object expectedValue)
+        {
+            string payload = "{\"@odata.context\":\"http://www.sampletest.com/$metadata#Edm.Untyped\",\"id\":" + number + "}";
+
+            var readerSettings = UntypedAsValueReaderSettings.Clone();
+
+            ODataResource entry = null;
+            this.ReadResourcePayload(payload, readerSettings, reader =>
+            {
+                if (reader.State == ODataReaderState.ResourceStart)
+                {
+                    entry = (reader.Item as ODataResource);
+                }
+            });
+
+            Assert.Single(entry.Properties);
+
+            var value = Assert.IsType<ODataProperty>(entry.Properties.First(p => p.Name == "id")).Value;
+            Assert.IsType<double>(value);
+            Assert.Equal(expectedValue, value);
+        }
+
+        [Theory]
+        [InlineData("1.234e+5", 123400d)]
+        [InlineData(1.234e-5d, 0.00001234)]
+        [InlineData("1.234e-5", 0.00001234)]
+        [InlineData(9.1093837e-31, 9.1093837e-31)]
+        [InlineData("9.1093837e-31", 9.1093837e-31)]
+        [InlineData(123.456, 123.456)]
+        [InlineData("123.456", 123.456)]
+        [InlineData("0.0000001", 0.0000001)]
+        [InlineData(0.0000001, 0.0000001)]
+        [InlineData("0.0", 0d)]
+        [InlineData("-0.0", -0d)]
+        [InlineData(.14159265358979, .14159265358979)]
+        [InlineData(".14159265358979", .14159265358979)]
+        [InlineData(2.2250738585072014E-308, 2.2250738585072014E-308d)]
+        [InlineData("-2.2250738585072014E-308", -2.2250738585072014E-308d)]
+        [InlineData("1e10", 10000000000d)]
+        public void ReadUntypedResourceForDouble_ExpectedTypeAsDecimal_WhenReadUntypedNumericAsDecimalFlagIsSet(object number, object expectedValue)
+        {
+            string payload = "{\"@odata.context\":\"http://www.sampletest.com/$metadata#Edm.Untyped\",\"id\":" + number + "}";
+            var readerSettings = UntypedAsValueReaderSettings.Clone();
+            readerSettings.LibraryCompatibility |= ODataLibraryCompatibility.ReadUntypedNumericAsDecimal;
+
+            ODataResource entry = null;
+            this.ReadResourcePayload(payload, readerSettings, reader =>
+            {
+                if (reader.State == ODataReaderState.ResourceStart)
+                {
+                    entry = (reader.Item as ODataResource);
+                }
+            });
+
+            Assert.Single(entry.Properties);
+
+            var value = Assert.IsType<ODataProperty>(entry.Properties.First(p => p.Name == "id")).Value;
+            Assert.IsType<decimal>(value);
+            Assert.Equal(Convert.ToDecimal(expectedValue), value);
         }
 
         #endregion
@@ -1600,32 +1884,50 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
         [InlineData("Edm.Untyped")]
         [InlineData("Collection(Edm.Untyped)")]
         [InlineData("Collection(Server.NS.UndefinedType)")]
-        public void ReadUntypedCollectionContainingResource(string fragment)
+        public void ReadUntypedCollectionContainingNullAndNumbers(string fragment)
         {
-            string payload = "{\"@odata.context\":\"http://www.sampletest.com/$metadata#" + fragment + "\",\"value\":[{\"id\":1}]}";
-            ODataResource entry = null;
-            this.ReadCollectionPayload(payload, reader =>
+            string payload = "{\"@odata.context\":\"http://www.sampletest.com/$metadata#" +
+                fragment
+                + "\",\"value\":[42, null, 83748348494435, 2147483647, \"some string\", -9223372036854775808, 214748364745, 3.134545454565656, { \"Anyname\": \"Redmond\", \"Justnull\": null, \"Intnum\": 2345454656, \"longnum\": -9223372036854775808 }]}";
+
+            var readerSettings = UntypedAsValueReaderSettings.Clone();
+            readerSettings.LibraryCompatibility = ~ODataLibraryCompatibility.ReadUntypedNumericAsDecimal; // Disable the behavior to read untyped numeric as decimal
+
+            List<object> entries = new List<object>();
+            this.ReadCollectionPayload(payload, readerSettings, reader =>
             {
                 if (reader.State == ODataReaderState.ResourceStart)
                 {
-                    entry = (reader.Item as ODataResource);
+                    entries.Add(reader.Item);
+                }
+                else if (reader.State == ODataReaderState.Primitive)
+                {
+                    entries.Add(((ODataPrimitiveValue)reader.Item).Value);
                 }
             });
 
-            Assert.Single(entry.Properties);
-            Assert.Equal(1m, Assert.IsType<ODataProperty>(entry.Properties.First(p=>p.Name == "id")).Value);
+            Assert.NotEmpty(entries);
+
+            Assert.Equal(42, Assert.IsType<int>(entries[0]));
+            Assert.Null(entries[1]);
+            //Assert.Equal(83748348494435L, Assert.IsType<long>(entries[2]));
+            Assert.Equal(2147483647, Assert.IsType<Int32>(entries[3]));
+            Assert.Equal("some string", Assert.IsType<string>(entries[4]));
+            Assert.Equal(-9223372036854775808M, Assert.IsType<Decimal>(entries[5]));
         }
 
         [Theory]
         [InlineData("Edm.Untyped")]
         [InlineData("Collection(Edm.Untyped)")]
-        public void ReadUntypedCollectionContainingCollection(string fragment)
+        public void ReadUntypedCollectionContainingCollection_WhenReadUntypedNumericAsDecimalFlagIsNotSet(string fragment)
         {
             string payload = "{\"@odata.context\":\"http://www.sampletest.com/$metadata#" + fragment +"\",\"value\":[[\"primitiveString\",{\"id\":1}]]}";
+            var readerSettings = UntypedAsValueReaderSettings.Clone();
+
             ODataPrimitiveValue primitiveMember = null;
             ODataResource resourceMember = null;
             int level = 0;
-            this.ReadCollectionPayload(payload, reader =>
+            this.ReadCollectionPayload(payload, readerSettings, reader =>
             {
                 if (reader.State == ODataReaderState.ResourceSetStart)
                 {
@@ -1642,7 +1944,294 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
             });
 
             Assert.Single(resourceMember.Properties);
-            Assert.Equal(1m, Assert.IsType<ODataProperty>(resourceMember.Properties.First(p => p.Name == "id")).Value);
+
+            var value = Assert.IsType<ODataProperty>(resourceMember.Properties.First(p => p.Name == "id")).Value;
+            Assert.IsType<Int32>(value);
+            Assert.Equal(1, value);
+            Assert.Equal("primitiveString", primitiveMember.Value);
+        }
+
+        [Theory]
+        [InlineData(0, 0)]
+        [InlineData("0", 0)]
+        [InlineData(0.0, 0)]
+        [InlineData(123, 123)]
+        [InlineData("123", 123)]
+        [InlineData(-42, -42)]
+        [InlineData("-42", -42)]
+        [InlineData(2147483647, 2147483647)] // Int32.MaxValue
+        [InlineData(-2147483648, -2147483648)] // Int32.MinValue
+        [InlineData(1.234e+5d, 123400)]
+        [InlineData("000123", 123)] // Leading zeros
+        [InlineData("2147483647", 2147483647)]
+        [InlineData("-2147483648", -2147483648)]
+        public void ReadUntypedCollectionForInt32_ExpectedTypeAsInt32_WhenReadUntypedNumericAsDecimalFlagIsNotSet(object number, object expectedValue)
+        {
+            var payload = "{\"@odata.context\":\"http://www.sampletest.com/$metadata#Collection(Edm.Untyped)\",\"value\":[[\"primitiveString\",{\"id\":1, \"num\":" + number + "}]]}";
+            var readerSettings = UntypedAsValueReaderSettings.Clone();
+
+            ODataPrimitiveValue primitiveMember = null;
+            ODataResource resourceMember = null;
+            int level = 0;
+            this.ReadCollectionPayload(payload, readerSettings, reader =>
+            {
+                if (reader.State == ODataReaderState.ResourceSetStart)
+                {
+                    level++;
+                }
+                else if (reader.State == ODataReaderState.ResourceStart && level == 2)
+                {
+                    resourceMember = (reader.Item as ODataResource);
+                }
+                else if (reader.State == ODataReaderState.Primitive && level == 2)
+                {
+                    primitiveMember = (reader.Item as ODataPrimitiveValue);
+                }
+            });
+
+            var value = Assert.IsType<ODataProperty>(resourceMember.Properties.First(p => p.Name == "num")).Value;
+            Assert.IsType<Int32>(value);
+            Assert.Equal(expectedValue, value);
+            Assert.Equal("primitiveString", primitiveMember.Value);
+        }
+
+        [Theory]
+        [InlineData(0, 0)]
+        [InlineData("0", 0)]
+        [InlineData(0.0, 0)]
+        [InlineData(123, 123)]
+        [InlineData("123", 123)]
+        [InlineData(-42, -42)]
+        [InlineData("-42", -42)]
+        [InlineData(2147483647, 2147483647)] // Int32.MaxValue
+        [InlineData(-2147483648, -2147483648)] // Int32.MinValue
+        [InlineData(1.234e+5d, 123400)]
+        [InlineData("000123", 123)] // Leading zeros
+        [InlineData("2147483647", 2147483647)]
+        [InlineData("-2147483648", -2147483648)]
+        public void ReadUntypedCollectionForInt32_ExpectedTypeAsDecimal_WhenReadUntypedNumericAsDecimalFlagIsSet(object number, object expectedValue)
+        {
+            var payload = "{\"@odata.context\":\"http://www.sampletest.com/$metadata#Collection(Edm.Untyped)\",\"value\":[[\"primitiveString\",{\"id\":1, \"num\":" + number + "}]]}";
+            var readerSettings = UntypedAsValueReaderSettings.Clone();
+            readerSettings.LibraryCompatibility |= ODataLibraryCompatibility.ReadUntypedNumericAsDecimal;
+
+            ODataPrimitiveValue primitiveMember = null;
+            ODataResource resourceMember = null;
+            int level = 0;
+            this.ReadCollectionPayload(payload, readerSettings, reader =>
+            {
+                if (reader.State == ODataReaderState.ResourceSetStart)
+                {
+                    level++;
+                }
+                else if (reader.State == ODataReaderState.ResourceStart && level == 2)
+                {
+                    resourceMember = (reader.Item as ODataResource);
+                }
+                else if (reader.State == ODataReaderState.Primitive && level == 2)
+                {
+                    primitiveMember = (reader.Item as ODataPrimitiveValue);
+                }
+            });
+
+            var value = Assert.IsType<ODataProperty>(resourceMember.Properties.First(p => p.Name == "num")).Value;
+            Assert.IsType<decimal>(value);
+            Assert.Equal(Convert.ToDecimal(expectedValue), value);
+            Assert.Equal("primitiveString", primitiveMember.Value);
+        }
+
+        [Theory]
+        [InlineData(2147483648, 2147483648L)]
+        [InlineData(9223372036854775807, 9223372036854775807L)]
+        [InlineData(-9223372036854775808, -9223372036854775808L)]
+        [InlineData("9223372036854775807", 9223372036854775807L)]
+        [InlineData("-9223372036854775808", -9223372036854775808L)]
+        [InlineData(1002147483646, 1002147483646L)]
+        [InlineData("1002147483646", 1002147483646L)]
+        [InlineData("0009223372036854775807", 9223372036854775807L)] // Leading zeros
+        [InlineData(1e10, 10000000000L)] // Large double that fits in long
+        public void ReadUntypedCollectionForInt64_ExpectedTypeAsDecimal_WhenReadUntypedNumericAsDecimalFlagIsSetOrDefault(object number, object expectedValue)
+        {
+            var payload = "{\"@odata.context\":\"http://www.sampletest.com/$metadata#Collection(Edm.Untyped)\",\"value\":[[\"primitiveString\",{\"id\":1, \"num\":" + number + "}]]}";
+            var readerSettings = UntypedAsValueReaderSettings.Clone();
+
+            ODataPrimitiveValue primitiveMember = null;
+            ODataResource resourceMember = null;
+            int level = 0;
+            this.ReadCollectionPayload(payload, readerSettings, reader =>
+            {
+                if (reader.State == ODataReaderState.ResourceSetStart)
+                {
+                    level++;
+                }
+                else if (reader.State == ODataReaderState.ResourceStart && level == 2)
+                {
+                    resourceMember = (reader.Item as ODataResource);
+                }
+                else if (reader.State == ODataReaderState.Primitive && level == 2)
+                {
+                    primitiveMember = (reader.Item as ODataPrimitiveValue);
+                }
+            });
+
+            var value = Assert.IsType<ODataProperty>(resourceMember.Properties.First(p => p.Name == "num")).Value;
+            Assert.IsType<decimal>(value);
+            Assert.Equal(Convert.ToDecimal(expectedValue), value);
+            Assert.Equal("primitiveString", primitiveMember.Value);
+        }
+
+        [Theory]
+        [MemberData(nameof(UntypedWithDecimalData))]
+        public void ReadUntypedCollectionForDecimal_ExpectedTypeAsDecimal_WhenReadUntypedNumericAsDecimalFlagIsNotSet(object number, object expectedValue)
+        {
+            var payload = "{\"@odata.context\":\"http://www.sampletest.com/$metadata#Collection(Edm.Untyped)\",\"value\":[[\"primitiveString\",{\"id\":1, \"num\":" + number + "}]]}";
+            var readerSettings = UntypedAsValueReaderSettings.Clone();
+
+            ODataPrimitiveValue primitiveMember = null;
+            ODataResource resourceMember = null;
+            int level = 0;
+            this.ReadCollectionPayload(payload, readerSettings, reader =>
+            {
+                if (reader.State == ODataReaderState.ResourceSetStart)
+                {
+                    level++;
+                }
+                else if (reader.State == ODataReaderState.ResourceStart && level == 2)
+                {
+                    resourceMember = (reader.Item as ODataResource);
+                }
+                else if (reader.State == ODataReaderState.Primitive && level == 2)
+                {
+                    primitiveMember = (reader.Item as ODataPrimitiveValue);
+                }
+            });
+
+            var value = Assert.IsType<ODataProperty>(resourceMember.Properties.First(p => p.Name == "num")).Value;
+            Assert.IsType<decimal>(value);
+            Assert.Equal(expectedValue, value);
+            Assert.Equal("primitiveString", primitiveMember.Value);
+        }
+
+        [Theory]
+        [MemberData(nameof(UntypedWithDecimalData))]
+        public void ReadUntypedCollectionForDecimal_ExpectedTypeAsDecimal_WhenReadUntypedNumericAsDecimalFlagIsSetOrDefault(object number, object expectedValue)
+        {
+            var payload = "{\"@odata.context\":\"http://www.sampletest.com/$metadata#Collection(Edm.Untyped)\",\"value\":[[\"primitiveString\",{\"id\":1, \"num\":" + number + "}]]}";
+            var readerSettings = UntypedAsValueReaderSettings.Clone();
+
+            ODataPrimitiveValue primitiveMember = null;
+            ODataResource resourceMember = null;
+            int level = 0;
+            this.ReadCollectionPayload(payload, readerSettings, reader =>
+            {
+                if (reader.State == ODataReaderState.ResourceSetStart)
+                {
+                    level++;
+                }
+                else if (reader.State == ODataReaderState.ResourceStart && level == 2)
+                {
+                    resourceMember = (reader.Item as ODataResource);
+                }
+                else if (reader.State == ODataReaderState.Primitive && level == 2)
+                {
+                    primitiveMember = (reader.Item as ODataPrimitiveValue);
+                }
+            });
+
+            var value = Assert.IsType<ODataProperty>(resourceMember.Properties.First(p => p.Name == "num")).Value;
+            Assert.IsType<decimal>(value);
+            Assert.Equal(expectedValue, value);
+            Assert.Equal("primitiveString", primitiveMember.Value);
+        }
+
+        [Theory]
+        [InlineData("1.234e+5", 123400d)]
+        [InlineData(1.234e-5d, 0.00001234)]
+        [InlineData("1.234e-5", 0.00001234)]
+        [InlineData(9.1093837e-31, 9.1093837e-31)]
+        [InlineData("9.1093837e-31", 9.1093837e-31)]
+        [InlineData(0.0000001, 0.0000001)]
+        [InlineData(1.7976931348623157E+308, 1.7976931348623157E+308d)]
+        [InlineData("-1.7976931348623157E+308", -1.7976931348623157E+308d)]
+        [InlineData(2.2250738585072014E-308, 2.2250738585072014E-308d)]
+        [InlineData("-2.2250738585072014E-308", -2.2250738585072014E-308d)]
+        [InlineData("1e10", 10000000000d)]
+        [InlineData(double.MinValue, double.MinValue)]
+        public void ReadUntypedCollectionForDouble_ExpectedTypeAsDouble_WhenReadUntypedNumericAsDecimalFlagIsNotSet(object number, object expectedValue)
+        {
+            var payload = "{\"@odata.context\":\"http://www.sampletest.com/$metadata#Collection(Edm.Untyped)\",\"value\":[[\"primitiveString\",{\"id\":1, \"num\":" + number + "}]]}";
+            var readerSettings = UntypedAsValueReaderSettings.Clone();
+
+            ODataPrimitiveValue primitiveMember = null;
+            ODataResource resourceMember = null;
+            int level = 0;
+            this.ReadCollectionPayload(payload, readerSettings, reader =>
+            {
+                if (reader.State == ODataReaderState.ResourceSetStart)
+                {
+                    level++;
+                }
+                else if (reader.State == ODataReaderState.ResourceStart && level == 2)
+                {
+                    resourceMember = (reader.Item as ODataResource);
+                }
+                else if (reader.State == ODataReaderState.Primitive && level == 2)
+                {
+                    primitiveMember = (reader.Item as ODataPrimitiveValue);
+                }
+            });
+
+            var value = Assert.IsType<ODataProperty>(resourceMember.Properties.First(p => p.Name == "num")).Value;
+            Assert.IsType<double>(value);
+            Assert.Equal(expectedValue, value);
+            Assert.Equal("primitiveString", primitiveMember.Value);
+        }
+
+        [Theory]
+        [InlineData("1.234e+5", 123400d)]
+        [InlineData(1.234e-5d, 0.00001234)]
+        [InlineData("1.234e-5", 0.00001234)]
+        [InlineData(9.1093837e-31, 9.1093837e-31)]
+        [InlineData("9.1093837e-31", 9.1093837e-31)]
+        [InlineData(123.456, 123.456)]
+        [InlineData("123.456", 123.456)]
+        [InlineData("0.0000001", 0.0000001)]
+        [InlineData(0.0000001, 0.0000001)]
+        [InlineData("0.0", 0d)]
+        [InlineData("-0.0", -0d)]
+        [InlineData(.14159265358979, .14159265358979)]
+        [InlineData(".14159265358979", .14159265358979)]
+        [InlineData(2.2250738585072014E-308, 2.2250738585072014E-308d)]
+        [InlineData("-2.2250738585072014E-308", -2.2250738585072014E-308d)]
+        [InlineData("1e10", 10000000000d)]
+        public void ReadUntypedCollectionForDouble_ExpectedTypeAsDecimal_WhenReadUntypedNumericAsDecimalFlagIsSet(object number, object expectedValue)
+        {
+            var payload = "{\"@odata.context\":\"http://www.sampletest.com/$metadata#Collection(Edm.Untyped)\",\"value\":[[\"primitiveString\",{\"id\":1, \"num\":" + number + "}]]}";
+            var readerSettings = UntypedAsValueReaderSettings.Clone();
+            readerSettings.LibraryCompatibility |= ODataLibraryCompatibility.ReadUntypedNumericAsDecimal;
+
+            ODataPrimitiveValue primitiveMember = null;
+            ODataResource resourceMember = null;
+            int level = 0;
+            this.ReadCollectionPayload(payload, readerSettings, reader =>
+            {
+                if (reader.State == ODataReaderState.ResourceSetStart)
+                {
+                    level++;
+                }
+                else if (reader.State == ODataReaderState.ResourceStart && level == 2)
+                {
+                    resourceMember = (reader.Item as ODataResource);
+                }
+                else if (reader.State == ODataReaderState.Primitive && level == 2)
+                {
+                    primitiveMember = (reader.Item as ODataPrimitiveValue);
+                }
+            });
+
+            var value = Assert.IsType<ODataProperty>(resourceMember.Properties.First(p => p.Name == "num")).Value;
+            Assert.IsType<decimal>(value);
+            Assert.Equal(Convert.ToDecimal(expectedValue), value);
             Assert.Equal("primitiveString", primitiveMember.Value);
         }
 

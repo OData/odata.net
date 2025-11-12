@@ -208,6 +208,7 @@ namespace Microsoft.OData.Json
         /// <param name="primitiveTypeResolver">Function that takes a primitive value and returns an <see cref="IEdmTypeReference"/>.</param>
         /// <param name="readUntypedAsString">Whether unknown properties should be read as a raw string value.</param>
         /// <param name="generateTypeIfMissing">Whether to generate a type if not already part of the model.</param>
+        /// <param name="readUntypedNumericAsDecimal">Whether untyped numeric values should be preserved as decimals. Default is <see langword="true"/></param>
         /// <returns>The <see cref="IEdmTypeReference"/> of the current value to be read.</returns>
         [SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Justification = "Each code path casts to bool at most one time, and only if needed.")]
         internal static IEdmTypeReference ResolveUntypedType(
@@ -217,7 +218,8 @@ namespace Microsoft.OData.Json
                 IEdmTypeReference payloadTypeReference,
                 Func<object, string, IEdmTypeReference> primitiveTypeResolver,
                 bool readUntypedAsString,
-                bool generateTypeIfMissing)
+                bool generateTypeIfMissing,
+                bool readUntypedNumericAsDecimal)
         {
             if (payloadTypeReference != null && (payloadTypeReference.TypeKind() != EdmTypeKind.Untyped || readUntypedAsString))
             {
@@ -257,23 +259,34 @@ namespace Microsoft.OData.Json
                             TypeUtils.ParseQualifiedTypeName(payloadTypeName, out namespaceName, out name, out isCollection);
                             Debug.Assert(namespaceName != Metadata.EdmConstants.EdmNamespace, "If type was in the edm namespace it should already have been resolved");
 
-                            typeReference = new EdmUntypedStructuredType(namespaceName, name).ToTypeReference(/*isNullable*/ true);
-                            return isCollection ? new EdmCollectionType(typeReference).ToTypeReference(/*isNullable*/ true) : typeReference;
+                            typeReference = new EdmUntypedStructuredType(namespaceName, name).ToTypeReference(nullable: true);
+                            return isCollection ? new EdmCollectionType(typeReference).ToTypeReference(nullable: true) : typeReference;
                         }
 
-                        typeReference = EdmCoreModel.Instance.GetString(/*isNullable*/ true);
+                        typeReference = EdmCoreModel.Instance.GetString(isNullable: true);
                     }
                     else if (jsonReaderValue is bool)
                     {
-                        typeReference = EdmCoreModel.Instance.GetBoolean(/*isNullable*/ true);
+                        typeReference = EdmCoreModel.Instance.GetBoolean(isNullable: true);
                     }
                     else if (jsonReaderValue is string)
                     {
-                        typeReference = EdmCoreModel.Instance.GetString(/*isNullable*/ true);
+                        typeReference = EdmCoreModel.Instance.GetString(isNullable: true);
+                    }
+                    // This is for backward compatibility with untyped numeric values.
+                    else if (readUntypedNumericAsDecimal)
+                    {
+                        typeReference = EdmCoreModel.Instance.GetDecimal(isNullable: true);
                     }
                     else
                     {
-                        typeReference = EdmCoreModel.Instance.GetDecimal(/*isNullable*/ true);
+                        typeReference = jsonReaderValue switch
+                        {
+                            int _ => EdmCoreModel.Instance.GetInt32(isNullable: true),
+                            long _ => EdmCoreModel.Instance.GetInt64(isNullable: true),
+                            decimal _ => EdmCoreModel.Instance.GetDecimal(isNullable: true),
+                            _ => EdmCoreModel.Instance.GetDouble(isNullable: true),
+                        };
                     }
 
                     if (payloadTypeName != null)
@@ -284,7 +297,7 @@ namespace Microsoft.OData.Json
                             throw new ODataException(Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_CollectionTypeNotExpected, payloadTypeName));
                         }
 
-                        typeReference = new EdmTypeDefinition(namespaceName, name, typeReference.PrimitiveKind()).ToTypeReference(/*isNullable*/ true);
+                        typeReference = new EdmTypeDefinition(namespaceName, name, typeReference.PrimitiveKind()).ToTypeReference(nullable: true);
                     }
 
                     return typeReference;
@@ -298,10 +311,10 @@ namespace Microsoft.OData.Json
                             throw new ODataException(Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_CollectionTypeNotExpected, payloadTypeName));
                         }
 
-                        return new EdmUntypedStructuredType(namespaceName, name).ToTypeReference(/*isNullable*/ true);
+                        return new EdmUntypedStructuredType(namespaceName, name).ToTypeReference(nullable:  true);
                     }
 
-                    return new EdmUntypedStructuredType().ToTypeReference(/*isNullable*/ true);
+                    return new EdmUntypedStructuredType().ToTypeReference(nullable:  true);
 
                 case JsonNodeType.StartArray:
                     if (payloadTypeName != null && generateTypeIfMissing)
@@ -312,10 +325,10 @@ namespace Microsoft.OData.Json
                             throw new ODataException(Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_CollectionTypeExpected, payloadTypeName));
                         }
 
-                        return new EdmCollectionType(new EdmUntypedStructuredType(namespaceName, name).ToTypeReference(/*isNullable*/ true)).ToTypeReference(/*isNullable*/true);
+                        return new EdmCollectionType(new EdmUntypedStructuredType(namespaceName, name).ToTypeReference(nullable:  true)).ToTypeReference(nullable: true);
                     }
 
-                    return new EdmCollectionType(new EdmUntypedStructuredType().ToTypeReference(/*isNullable*/ true)).ToTypeReference(/*isNullable*/true);
+                    return new EdmCollectionType(new EdmUntypedStructuredType().ToTypeReference(nullable:  true)).ToTypeReference(nullable: true);
 
                 default:
                     return EdmCoreModel.Instance.GetUntyped();
@@ -512,7 +525,8 @@ namespace Microsoft.OData.Json
                 payloadTypeReference,
                 this.MessageReaderSettings.PrimitiveTypeResolver,
                 this.MessageReaderSettings.ReadUntypedAsString,
-                !this.MessageReaderSettings.ThrowIfTypeConflictsWithMetadata);
+                !this.MessageReaderSettings.ThrowIfTypeConflictsWithMetadata,
+                this.MessageReaderSettings.LibraryCompatibility.HasFlag(ODataLibraryCompatibility.ReadUntypedNumericAsDecimal));
 
             if (payloadTypeReference.ToStructuredType() != null)
             {
@@ -1951,7 +1965,8 @@ namespace Microsoft.OData.Json
                     expectedTypeReference,
                     this.MessageReaderSettings.PrimitiveTypeResolver,
                     this.MessageReaderSettings.ReadUntypedAsString,
-                    !this.MessageReaderSettings.ThrowIfTypeConflictsWithMetadata);
+                    !this.MessageReaderSettings.ThrowIfTypeConflictsWithMetadata,
+                    this.MessageReaderSettings.LibraryCompatibility.HasFlag(ODataLibraryCompatibility.ReadUntypedNumericAsDecimal));
 
                 targetTypeKind = targetTypeReference.TypeKind();
             }
@@ -2256,13 +2271,12 @@ namespace Microsoft.OData.Json
                     propertyAndAnnotationCollector = this.CreatePropertyAndAnnotationCollector();
 
                     // Read the payload type name
-                    Tuple<bool, string> readPayloadTypeFromObjectResult = await this.TryReadPayloadTypeFromObjectAsync(
+                    (bool typeNameFoundInPayload, string tempPayloadTypeName) = await this.TryReadPayloadTypeFromObjectAsync(
                         propertyAndAnnotationCollector,
                         insideResourceValue).ConfigureAwait(false);
-                    bool typeNameFoundInPayload = readPayloadTypeFromObjectResult.Item1;
                     if (typeNameFoundInPayload)
                     {
-                        payloadTypeName = readPayloadTypeFromObjectResult.Item2;
+                        payloadTypeName = tempPayloadTypeName;
                     }
                 }
                 finally
@@ -2328,7 +2342,8 @@ namespace Microsoft.OData.Json
                 payloadTypeReference,
                 this.MessageReaderSettings.PrimitiveTypeResolver,
                 this.MessageReaderSettings.ReadUntypedAsString,
-                !this.MessageReaderSettings.ThrowIfTypeConflictsWithMetadata);
+                !this.MessageReaderSettings.ThrowIfTypeConflictsWithMetadata,
+                this.MessageReaderSettings.LibraryCompatibility.HasFlag(ODataLibraryCompatibility.ReadUntypedNumericAsDecimal));
 
             if (payloadTypeReference.ToStructuredType() != null)
             {
@@ -2492,16 +2507,23 @@ namespace Microsoft.OData.Json
         ///                 JsonNodeType.StartObject
         ///                 JsonNodeType.StartArray
         /// </remarks>
-        protected async Task<Tuple<bool, string>> TryReadODataTypeAnnotationValueAsync(string annotationName)
+        protected ValueTask<(bool IsODataTypeAnnotation, string AnnotationValue)> TryReadODataTypeAnnotationValueAsync(string annotationName)
         {
             Debug.Assert(!string.IsNullOrEmpty(annotationName), "!string.IsNullOrEmpty(annotationName)");
 
-            if (string.Equals(annotationName, ODataAnnotationNames.ODataType, StringComparison.Ordinal))
+            if (!string.Equals(annotationName, ODataAnnotationNames.ODataType, StringComparison.Ordinal))
             {
-                return Tuple.Create(true, await this.ReadODataTypeAnnotationValueAsync().ConfigureAwait(false));
+                return ValueTask.FromResult<(bool, string)>((false, null));
             }
 
-            return Tuple.Create(false, (string)null);
+            return AwaitReadODataTypeAnnotationValueAsync(this);
+
+            static async ValueTask<(bool, string)> AwaitReadODataTypeAnnotationValueAsync(ODataJsonPropertyAndValueDeserializer thisParam)
+            {
+                string typeName = await thisParam.ReadODataTypeAnnotationValueAsync().ConfigureAwait(false);
+                
+                return (true, typeName);
+            }
         }
 
         /// <summary>
@@ -2519,12 +2541,11 @@ namespace Microsoft.OData.Json
                 propertyAnnotationName.StartsWith(ODataJsonConstants.ODataAnnotationNamespacePrefix, StringComparison.Ordinal),
                 "The method should only be called with OData. annotations");
 
-            Tuple<bool, string> readODataTypeAnnotationResult = await this.TryReadODataTypeAnnotationValueAsync(propertyAnnotationName)
-                .ConfigureAwait(false);
-            if (readODataTypeAnnotationResult.Item1)
+            (bool isODataTypeAnnotation, string annotationValue) = await this.TryReadODataTypeAnnotationValueAsync(
+                propertyAnnotationName).ConfigureAwait(false);
+            if (isODataTypeAnnotation)
             {
-                string typeName = readODataTypeAnnotationResult.Item2;
-                return typeName;
+                return annotationValue;
             }
 
             throw new ODataException(Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_UnexpectedAnnotationProperties, propertyAnnotationName));
@@ -2544,7 +2565,7 @@ namespace Microsoft.OData.Json
         /// Post-Condition: JsonNodeType.Property       - the next property after the annotation or if the reader did not move
         ///                 JsonNodeType.EndObject      - end of the parent object
         /// </remarks>
-        private async Task<Tuple<bool, string>> TryReadODataTypeAnnotationAsync()
+        private async Task<(bool IsReadSuccessfully, string PayloadTypeName)> TryReadODataTypeAnnotationAsync()
         {
             this.AssertJsonCondition(JsonNodeType.Property);
             string payloadTypeName = null;
@@ -2565,7 +2586,7 @@ namespace Microsoft.OData.Json
 
             this.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
 
-            return Tuple.Create(result, payloadTypeName);
+            return (result, payloadTypeName);
         }
 
         /// <summary>
@@ -2615,12 +2636,9 @@ namespace Microsoft.OData.Json
             }
             else
             {
-                string payloadTypeName = null;
-                Tuple<bool, string> readingResourcePropertyResult = await this.ReadingResourcePropertyAsync(
+                (bool isReadingResourceProperty, string payloadTypeName) = await this.ReadingResourcePropertyAsync(
                     propertyAndAnnotationCollector,
                     expectedPropertyTypeReference).ConfigureAwait(false);
-                bool isReadingResourceProperty = readingResourcePropertyResult.Item1;
-                payloadTypeName = readingResourcePropertyResult.Item2;
 
                 if (isReadingResourceProperty)
                 {
@@ -3249,13 +3267,12 @@ namespace Microsoft.OData.Json
                 // Read the payload type name
                 if (!insideResourceValue)
                 {
-                    Tuple<bool, string> readPayloadTypeFromObjectResult = await this.TryReadPayloadTypeFromObjectAsync(
+                    (typeNameFoundInPayload, string tempPayloadTypeName) = await this.TryReadPayloadTypeFromObjectAsync(
                         propertyAndAnnotationCollector,
                         insideResourceValue).ConfigureAwait(false);
-                    typeNameFoundInPayload = readPayloadTypeFromObjectResult.Item1;
                     if (typeNameFoundInPayload)
                     {
-                        payloadTypeName = readPayloadTypeFromObjectResult.Item2;
+                        payloadTypeName = tempPayloadTypeName;
                     }
                 }
             }
@@ -3285,7 +3302,8 @@ namespace Microsoft.OData.Json
                     expectedTypeReference,
                     this.MessageReaderSettings.PrimitiveTypeResolver,
                     this.MessageReaderSettings.ReadUntypedAsString,
-                    !this.MessageReaderSettings.ThrowIfTypeConflictsWithMetadata);
+                    !this.MessageReaderSettings.ThrowIfTypeConflictsWithMetadata, 
+                    this.MessageReaderSettings.LibraryCompatibility.HasFlag(ODataLibraryCompatibility.ReadUntypedNumericAsDecimal));
 
                 targetTypeKind = targetTypeReference.TypeKind();
             }
@@ -3427,7 +3445,7 @@ namespace Microsoft.OData.Json
         ///                                 or the first property after the 'odata.type' annotation.
         ///                 EndObject       for an empty JSON object or an object with only the 'odata.type' annotation
         /// </remarks>
-        private async Task<Tuple<bool, string>> TryReadPayloadTypeFromObjectAsync(
+        private async Task<(bool TypeNameFoundInPayload, string PayloadTypeName)> TryReadPayloadTypeFromObjectAsync(
             PropertyAndAnnotationCollector propertyAndAnnotationCollector,
             bool insideResourceValue)
         {
@@ -3436,7 +3454,7 @@ namespace Microsoft.OData.Json
                 (this.JsonReader.NodeType == JsonNodeType.StartObject && !insideResourceValue) ||
                 ((this.JsonReader.NodeType == JsonNodeType.Property || this.JsonReader.NodeType == JsonNodeType.EndObject) && insideResourceValue),
                 "Pre-Condition: JsonNodeType.StartObject when not inside complex value; JsonNodeType.Property or JsonNodeType.EndObject otherwise.");
-            bool readTypeName = false;
+            bool typeNameFoundInPayload = false;
             string payloadTypeName = null;
 
             // If not already positioned inside the JSON object, read over the object start
@@ -3448,12 +3466,11 @@ namespace Microsoft.OData.Json
 
             if (this.JsonReader.NodeType == JsonNodeType.Property)
             {
-                Tuple<bool, string> readODataTypeAnnotationResult = await this.TryReadODataTypeAnnotationAsync()
+                (typeNameFoundInPayload, string tempPayloadTypeName) = await this.TryReadODataTypeAnnotationAsync()
                     .ConfigureAwait(false);
-                readTypeName = readODataTypeAnnotationResult.Item1;
-                if (readTypeName)
+                if (typeNameFoundInPayload)
                 {
-                    payloadTypeName = readODataTypeAnnotationResult.Item2;
+                    payloadTypeName = tempPayloadTypeName;
                     // Register the odata.type annotation we just found with the duplicate property names checker.
                     propertyAndAnnotationCollector.MarkPropertyAsProcessed(ODataAnnotationNames.ODataType);
                 }
@@ -3461,7 +3478,7 @@ namespace Microsoft.OData.Json
 
             this.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
 
-            return Tuple.Create(readTypeName, payloadTypeName);
+            return (typeNameFoundInPayload, payloadTypeName);
         }
 
         /// <summary>
@@ -3480,7 +3497,7 @@ namespace Microsoft.OData.Json
         /// <remarks>
         /// This method does not move the reader.
         /// </remarks>
-        private async Task<Tuple<bool, string>> ReadingResourcePropertyAsync(
+        private async Task<(bool IsReadingResourceProperty, string PayloadTypeName)> ReadingResourcePropertyAsync(
             PropertyAndAnnotationCollector propertyAndAnnotationCollector,
             IEdmTypeReference expectedPropertyTypeReference)
         {
@@ -3499,11 +3516,11 @@ namespace Microsoft.OData.Json
             // properties).
             if (this.JsonReader.NodeType == JsonNodeType.Property)
             {
-                Tuple<bool, string> readODataTypeAnnotationResult = await this.TryReadODataTypeAnnotationAsync()
+                (bool typeNameFoundInPayload, string tempPayloadTypeName) = await this.TryReadODataTypeAnnotationAsync()
                     .ConfigureAwait(false);
-                if (readODataTypeAnnotationResult.Item1)
+                if (typeNameFoundInPayload)
                 {
-                    payloadTypeName = readODataTypeAnnotationResult.Item2;
+                    payloadTypeName = tempPayloadTypeName;
                     // Register the odata.type annotation we just found with the duplicate property names checker.
                     propertyAndAnnotationCollector.MarkPropertyAsProcessed(ODataAnnotationNames.ODataType);
 
@@ -3527,7 +3544,7 @@ namespace Microsoft.OData.Json
                 }
             }
 
-            return Tuple.Create(readingResourceProperty, payloadTypeName);
+            return (readingResourceProperty, payloadTypeName);
         }
 
         /// <summary>

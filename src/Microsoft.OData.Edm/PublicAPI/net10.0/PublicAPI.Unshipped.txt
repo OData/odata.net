@@ -1,4 +1,22 @@
+Microsoft.OData.Edm.EdmCoreModel.FindDeclaredBoundOperations(System.ReadOnlySpan<char> qualifiedName, Microsoft.OData.Edm.IEdmType bindingType) -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmOperation>
+Microsoft.OData.Edm.EdmCoreModel.FindDeclaredOperations(System.ReadOnlySpan<char> qualifiedName) -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmOperation>
+Microsoft.OData.Edm.EdmCoreModel.FindDeclaredTerm(System.ReadOnlySpan<char> qualifiedName) -> Microsoft.OData.Edm.Vocabularies.IEdmTerm
+Microsoft.OData.Edm.EdmCoreModel.FindDeclaredType(System.ReadOnlySpan<char> qualifiedName) -> Microsoft.OData.Edm.IEdmSchemaType
+Microsoft.OData.Edm.EdmEntityContainer.FindOperationImports(System.ReadOnlySpan<char> operationName) -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmOperationImport>
+Microsoft.OData.Edm.EdmModelBase.FindDeclaredOperations(System.ReadOnlySpan<char> qualifiedName) -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmOperation>
+Microsoft.OData.Edm.EdmModelBase.FindDeclaredTerm(System.ReadOnlySpan<char> qualifiedName) -> Microsoft.OData.Edm.Vocabularies.IEdmTerm
+Microsoft.OData.Edm.EdmModelBase.FindDeclaredType(System.ReadOnlySpan<char> qualifiedName) -> Microsoft.OData.Edm.IEdmSchemaType
+Microsoft.OData.Edm.EdmOperation.FindParameter(System.ReadOnlySpan<char> name) -> Microsoft.OData.Edm.IEdmOperationParameter
 Microsoft.OData.Edm.EdmOperation.Return.get -> Microsoft.OData.Edm.IEdmOperationReturn
+Microsoft.OData.Edm.EdmStructuredType.FindProperty(System.ReadOnlySpan<char> name) -> Microsoft.OData.Edm.IEdmProperty
+Microsoft.OData.Edm.IEdmEntityContainer.FindEntitySet(System.ReadOnlySpan<char> setName) -> Microsoft.OData.Edm.IEdmEntitySet
+Microsoft.OData.Edm.IEdmEntityContainer.FindOperationImports(System.ReadOnlySpan<char> operationName) -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmOperationImport>
+Microsoft.OData.Edm.IEdmEntityContainer.FindSingleton(System.ReadOnlySpan<char> singletonName) -> Microsoft.OData.Edm.IEdmSingleton
+Microsoft.OData.Edm.IEdmModel.FindDeclaredBoundOperations(System.ReadOnlySpan<char> qualifiedName, Microsoft.OData.Edm.IEdmType bindingType) -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmOperation>
+Microsoft.OData.Edm.IEdmModel.FindDeclaredOperations(System.ReadOnlySpan<char> qualifiedName) -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmOperation>
+Microsoft.OData.Edm.IEdmModel.FindDeclaredTerm(System.ReadOnlySpan<char> qualifiedName) -> Microsoft.OData.Edm.Vocabularies.IEdmTerm
+Microsoft.OData.Edm.IEdmModel.FindDeclaredType(System.ReadOnlySpan<char> qualifiedName) -> Microsoft.OData.Edm.IEdmSchemaType
+Microsoft.OData.Edm.IEdmOperation.FindParameter(System.ReadOnlySpan<char> name) -> Microsoft.OData.Edm.IEdmOperationParameter
 Microsoft.OData.Edm.IEdmOperation.Return.get -> Microsoft.OData.Edm.IEdmOperationReturn
 Microsoft.OData.Edm.EdmEntityType.AddKeys(params Microsoft.OData.Edm.IEdmPropertyRef[] keyProperties) -> void
 Microsoft.OData.Edm.EdmEntityType.AddKeys(System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmPropertyRef> keyProperties) -> void
@@ -10,10 +28,32 @@ Microsoft.OData.Edm.EdmPropertyRef.Path.get -> Microsoft.OData.Edm.IEdmPathExpre
 Microsoft.OData.Edm.EdmPropertyRef.PropertyAlias.get -> string
 Microsoft.OData.Edm.EdmPropertyRef.ReferencedProperty.get -> Microsoft.OData.Edm.IEdmStructuralProperty
 Microsoft.OData.Edm.IEdmEntityType.DeclaredKeyRef.get -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmPropertyRef>
+Microsoft.OData.Edm.IEdmOperation.ReturnType.get -> Microsoft.OData.Edm.IEdmTypeReference
 Microsoft.OData.Edm.IEdmPropertyRef
 Microsoft.OData.Edm.IEdmPropertyRef.Path.get -> Microsoft.OData.Edm.IEdmPathExpression
 Microsoft.OData.Edm.IEdmPropertyRef.PropertyAlias.get -> string
 Microsoft.OData.Edm.IEdmPropertyRef.ReferencedProperty.get -> Microsoft.OData.Edm.IEdmStructuralProperty
+Microsoft.OData.Edm.IEdmStructuredType.FindProperty(System.ReadOnlySpan<char> name) -> Microsoft.OData.Edm.IEdmProperty
 Microsoft.OData.Edm.Validation.EdmErrorCode.BadUnresolvedPropertyRef = 412 -> Microsoft.OData.Edm.Validation.EdmErrorCode
+static Microsoft.OData.Edm.ExtensionMethods.ExistsContainer(this Microsoft.OData.Edm.IEdmModel model, System.ReadOnlySpan<char> containerName) -> bool
+static Microsoft.OData.Edm.ExtensionMethods.FindBoundOperations(this Microsoft.OData.Edm.IEdmModel model, System.ReadOnlySpan<char> qualifiedName, Microsoft.OData.Edm.IEdmType bindingType) -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmOperation>
+static Microsoft.OData.Edm.ExtensionMethods.FindDeclaredEntitySet(this Microsoft.OData.Edm.IEdmModel model, System.ReadOnlySpan<char> qualifiedName) -> Microsoft.OData.Edm.IEdmEntitySet
+static Microsoft.OData.Edm.ExtensionMethods.FindDeclaredNavigationSource(this Microsoft.OData.Edm.IEdmModel model, System.ReadOnlySpan<char> qualifiedName) -> Microsoft.OData.Edm.IEdmNavigationSource
+static Microsoft.OData.Edm.ExtensionMethods.FindDeclaredOperationImports(this Microsoft.OData.Edm.IEdmModel model, System.ReadOnlySpan<char> qualifiedName) -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmOperationImport>
+static Microsoft.OData.Edm.ExtensionMethods.FindDeclaredSingleton(this Microsoft.OData.Edm.IEdmModel model, System.ReadOnlySpan<char> qualifiedName) -> Microsoft.OData.Edm.IEdmSingleton
+static Microsoft.OData.Edm.ExtensionMethods.FindEntityContainer(this Microsoft.OData.Edm.IEdmModel model, System.ReadOnlySpan<char> qualifiedName) -> Microsoft.OData.Edm.IEdmEntityContainer
+static Microsoft.OData.Edm.ExtensionMethods.FindNavigationProperty(this Microsoft.OData.Edm.IEdmStructuredTypeReference type, System.ReadOnlySpan<char> name) -> Microsoft.OData.Edm.IEdmNavigationProperty
+static Microsoft.OData.Edm.ExtensionMethods.FindOperations(this Microsoft.OData.Edm.IEdmModel model, System.ReadOnlySpan<char> qualifiedName) -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmOperation>
+static Microsoft.OData.Edm.ExtensionMethods.FindProperty(this Microsoft.OData.Edm.IEdmStructuredType structuredType, System.ReadOnlySpan<char> propertyName, bool caseInsensitive) -> Microsoft.OData.Edm.IEdmProperty
+static Microsoft.OData.Edm.ExtensionMethods.FindProperty(this Microsoft.OData.Edm.IEdmStructuredTypeReference structuredType, System.ReadOnlySpan<char> propertyName, bool caseInsensitive) -> Microsoft.OData.Edm.IEdmProperty
+static Microsoft.OData.Edm.ExtensionMethods.FindProperty(this Microsoft.OData.Edm.IEdmStructuredTypeReference type, System.ReadOnlySpan<char> name) -> Microsoft.OData.Edm.IEdmProperty
+static Microsoft.OData.Edm.ExtensionMethods.FindTerm(this Microsoft.OData.Edm.IEdmModel model, System.ReadOnlySpan<char> qualifiedName) -> Microsoft.OData.Edm.Vocabularies.IEdmTerm
+static Microsoft.OData.Edm.ExtensionMethods.FindType(this Microsoft.OData.Edm.IEdmModel model, System.ReadOnlySpan<char> qualifiedName) -> Microsoft.OData.Edm.IEdmSchemaType
+static Microsoft.OData.Edm.ExtensionMethods.TryFindContainerQualifiedEntitySet(this Microsoft.OData.Edm.IEdmModel model, System.ReadOnlySpan<char> containerQualifiedEntitySetName, out Microsoft.OData.Edm.IEdmEntitySet entitySet) -> bool
+static Microsoft.OData.Edm.ExtensionMethods.TryFindContainerQualifiedOperationImports(this Microsoft.OData.Edm.IEdmModel model, System.ReadOnlySpan<char> containerQualifiedOperationImportName, out System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmOperationImport> operationImports) -> bool
+static Microsoft.OData.Edm.ExtensionMethods.TryFindContainerQualifiedSingleton(this Microsoft.OData.Edm.IEdmModel model, System.ReadOnlySpan<char> containerQualifiedSingletonName, out Microsoft.OData.Edm.IEdmSingleton singleton) -> bool
+virtual Microsoft.OData.Edm.EdmEntityContainer.FindEntitySet(System.ReadOnlySpan<char> setName) -> Microsoft.OData.Edm.IEdmEntitySet
+virtual Microsoft.OData.Edm.EdmEntityContainer.FindSingleton(System.ReadOnlySpan<char> singletonName) -> Microsoft.OData.Edm.IEdmSingleton
 virtual Microsoft.OData.Edm.EdmEntityType.DeclaredKey.get -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmStructuralProperty>
 virtual Microsoft.OData.Edm.EdmEntityType.DeclaredKeyRef.get -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmPropertyRef>
+virtual Microsoft.OData.Edm.EdmModelBase.FindDeclaredBoundOperations(System.ReadOnlySpan<char> qualifiedName, Microsoft.OData.Edm.IEdmType bindingType) -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmOperation>
