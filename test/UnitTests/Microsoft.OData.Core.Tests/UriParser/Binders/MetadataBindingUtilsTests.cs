@@ -214,6 +214,85 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             }
         }
 
+        [Theory]
+        [InlineData("FullTime")]
+        [InlineData("PartTime")]
+        [InlineData("Contractor")]
+        [InlineData("Temporary")]
+        [InlineData("FullTime,PartTime")]
+        [InlineData("FullTime,Temporary")]
+        [InlineData("Permanent,Temporary")]
+        [InlineData("Intern,Temporary")]
+        [InlineData("Permanent")]
+        [InlineData("PartTime,Contractor,Temporary")]
+        public void IfTypePromotionNeeded_SourceIsFlagsCompositeMemberNameOrComposite_ConstantNodeIsCreated(string enumValue)
+        {
+            // Arrange
+            SingleValueNode source = new ConstantNode(enumValue);
+            IEdmTypeReference targetTypeReference = new EdmEnumTypeReference(EmployeeTypeWithFlags, false);
+            // Act
+            ConstantNode result = MetadataBindingUtils.ConvertToTypeIfNeeded(source, targetTypeReference) as ConstantNode;
+
+            // Assert
+            result.ShouldBeEnumNode(EmployeeTypeWithFlags, enumValue);
+            Assert.Equal(enumValue, result.Value.ToString());
+        }
+
+        [Theory]
+        [InlineData("fulltime", "FullTime")]
+        [InlineData("FULLTIME", "FullTime")]
+        [InlineData("parttime", "PartTime")]
+        [InlineData("PARTTIME", "PartTime")]
+        [InlineData("contractor", "Contractor")]
+        [InlineData("temporary", "Temporary")]
+        [InlineData("fulltime, parttime", "FullTime,PartTime")]
+        [InlineData("fulltime, temporary", "FullTime,Temporary")]
+        [InlineData("permanent, temporary", "Permanent,Temporary")]
+        [InlineData("intern, temporary", "Intern,Temporary")]
+        [InlineData("permanent", "Permanent")]
+        [InlineData("parttime, contractor, temporary", "PartTime,Contractor,Temporary")]
+        [InlineData("PARTTIME, contractor, Temporary", "PartTime,Contractor,Temporary")]
+        public void IfTypePromotionNeeded_SourceIsFlagsCompositeMemberNameOrComposite_enableCaseInsensitive_ConstantNodeIsCreated(string enumValue, string expected)
+        {
+            // Arrange
+            SingleValueNode source = new ConstantNode(enumValue);
+            IEdmTypeReference targetTypeReference = new EdmEnumTypeReference(EmployeeTypeWithFlags, false);
+
+            // Act
+            ConstantNode result = MetadataBindingUtils.ConvertToTypeIfNeeded(source, targetTypeReference, true) as ConstantNode;
+
+            // Assert
+            result.ShouldBeEnumNode(EmployeeTypeWithFlags, expected);
+            Assert.Equal(expected, result.Value.ToString());
+        }
+
+        [Theory]
+        [InlineData(2, "FullTime")]
+        [InlineData("2", "FullTime")]
+        [InlineData(6, "Permanent")]
+        [InlineData("6", "Permanent")]
+        [InlineData(8, "Contractor")]
+        [InlineData("8", "Contractor")]
+        [InlineData(28, "Temporary")]
+        [InlineData("28", "Temporary")]
+        [InlineData(26, "FullTime,Contractor,Intern")]
+        [InlineData("26", "FullTime,Contractor,Intern")]
+        [InlineData(30, "FullTime,Temporary")]
+        [InlineData("22", "Permanent,Intern")]
+        [InlineData(22, "Permanent,Intern")]
+        public void IfTypePromotionNeeded_SourceIsFlagsIntegralValues_ConstantNodeIsCreated(object enumValue, string expectedLiteralValue)
+        {
+            // Arrange
+            SingleValueNode source = new ConstantNode(enumValue);
+            IEdmTypeReference targetTypeReference = new EdmEnumTypeReference(EmployeeTypeWithFlags, false);
+            // Act
+            ConstantNode result = MetadataBindingUtils.ConvertToTypeIfNeeded(source, targetTypeReference) as ConstantNode;
+
+            // Assert
+            result.ShouldBeEnumNode(EmployeeTypeWithFlags, expectedLiteralValue);
+            Assert.Equal(expectedLiteralValue, result.Value.ToString());
+        }
+
         private static EdmEnumType WeekDayEmumType
         {
             get
@@ -243,6 +322,23 @@ namespace Microsoft.OData.Tests.UriParser.Binders
                 return employeeType;
             }
         }
+
+        private static EdmEnumType EmployeeTypeWithFlags
+        {
+            get
+            {
+                EdmEnumType employeeType = new EdmEnumType("NS", "EmployeeTypeWithFlags", isFlags: true);
+                employeeType.AddMember("FullTime", new EdmEnumMemberValue((long)2));
+                employeeType.AddMember("PartTime", new EdmEnumMemberValue((long)4));
+                employeeType.AddMember("Contractor", new EdmEnumMemberValue((long)8));
+                employeeType.AddMember("Intern", new EdmEnumMemberValue((long)16));
+                employeeType.AddMember("Permanent", new EdmEnumMemberValue((long)(2 | 4))); // FullTime | PartTime = 6
+                employeeType.AddMember("Temporary", new EdmEnumMemberValue((long) (4 | 8 | 16))); // PartTime | Contractor | Intern = 28
+
+                return employeeType;
+            }
+        }
+
         #endregion
     }
 }
