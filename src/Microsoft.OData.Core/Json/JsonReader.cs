@@ -3443,7 +3443,6 @@ namespace Microsoft.OData.Json
         private static void SetNodeValue(JsonReader thisParam, ReadOnlyMemory<char> memory)
         {
             if (MemoryMarshal.TryGetString(memory, out string primitiveValue, out int length, out int start) && start == 0 && length == memory.Length)
-
             {
                 thisParam.nodeValue = primitiveValue;
             }
