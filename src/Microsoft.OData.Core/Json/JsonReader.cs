@@ -3442,7 +3442,8 @@ namespace Microsoft.OData.Json
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static void SetNodeValue(JsonReader thisParam, ReadOnlyMemory<char> memory)
         {
-            if (MemoryMarshal.TryGetString(memory, out string primitiveValue, out _, out _))
+            if (MemoryMarshal.TryGetString(memory, out string primitiveValue, out int length, out int start) && start == 0 && length == memory.Length)
+
             {
                 thisParam.nodeValue = primitiveValue;
             }
