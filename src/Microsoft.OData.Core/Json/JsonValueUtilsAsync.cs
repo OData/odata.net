@@ -225,15 +225,15 @@ namespace Microsoft.OData.Json
         }
 
         /// <summary>
-        /// Write a TimeOfDay value
+        /// Write a TimeOnly value
         /// </summary>
         /// <param name="writer">The text writer to write the output to.</param>
-        /// <param name="value">TimeOfDay value to be written.</param>
-        internal static Task WriteValueAsync(this TextWriter writer, TimeOfDay value)
+        /// <param name="value">TimeOnly value to be written.</param>
+        internal static Task WriteValueAsync(this TextWriter writer, TimeOnly value)
         {
             Debug.Assert(writer != null, "writer != null");
 
-            return writer.WriteQuotedAsync(value.ToString());
+            return writer.WriteQuotedAsync(value.ToODataString());
         }
 
         /// <summary>
@@ -241,11 +241,11 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="writer">The text writer to write the output to.</param>
         /// <param name="value">Date value to be written.</param>
-        internal static Task WriteValueAsync(this TextWriter writer, Date value)
+        internal static Task WriteValueAsync(this TextWriter writer, DateOnly value)
         {
             Debug.Assert(writer != null, "writer != null");
 
-            return writer.WriteQuotedAsync(value.ToString());
+            return writer.WriteQuotedAsync(value.ToODataString());
         }
 
         /// <summary>

@@ -57,10 +57,10 @@ namespace Microsoft.OData.Client.E2E.Tests.EdmDateAndTimeOfDayTests
         {
             // Query Property
             var shipDate = await _context.Orders.ByKey(7).Select(o => o.ShipDate).GetValueAsync();
-            Assert.Equal(new Date(2014, 8, 31), shipDate);
+            Assert.Equal(new DateOnly(2014, 8, 31), shipDate);
 
             var shipTime = await _context.Orders.ByKey(7).Select(o => o.ShipTime).GetValueAsync();
-            Assert.Equal(new TimeOfDay(12, 40, 05, 50), shipTime);
+            Assert.Equal(new TimeOnly(12, 40, 05, 50), shipTime);
         }
 
         [Fact]
@@ -69,8 +69,8 @@ namespace Microsoft.OData.Client.E2E.Tests.EdmDateAndTimeOfDayTests
             // Projection Select
             var projOrder = await _context.Orders.ByKey(7).Select(o => new ClientDefaultModel.Order() { ShipDate = o.ShipDate, ShipTime = o.ShipTime }).GetValueAsync();
             Assert.True(projOrder != null);
-            Assert.Equal(new Date(2014, 8, 31), projOrder.ShipDate);
-            Assert.Equal(new TimeOfDay(12, 40, 05, 50), projOrder.ShipTime);
+            Assert.Equal(new DateOnly(2014, 8, 31), projOrder.ShipDate);
+            Assert.Equal(new TimeOnly(12, 40, 05, 50), projOrder.ShipTime);
         }
 
         [Fact]
@@ -81,15 +81,15 @@ namespace Microsoft.OData.Client.E2E.Tests.EdmDateAndTimeOfDayTests
             // Update Properties
             var order = await _context.Orders.ByKey(7).GetValueAsync();
             Assert.True(order != null);
-            Assert.Equal(new Date(2014, 8, 31), order.ShipDate);
-            Assert.Equal(new TimeOfDay(12, 40, 05, 50), order.ShipTime);
+            Assert.Equal(new DateOnly(2014, 8, 31), order.ShipDate);
+            Assert.Equal(new TimeOnly(12, 40, 05, 50), order.ShipTime);
 
-            order.ShipDate = new Date(2014, 9, 30);
+            order.ShipDate = new DateOnly(2014, 9, 30);
             _context.UpdateObject(order);
             await _context.SaveChangesAsync();
 
             var updatedOrder = await _context.Orders.ByKey(7).GetValueAsync();
-            Assert.Equal(new Date(2014, 9, 30), updatedOrder.ShipDate);
+            Assert.Equal(new DateOnly(2014, 9, 30), updatedOrder.ShipDate);
         }
 
         [Fact]
@@ -97,7 +97,7 @@ namespace Microsoft.OData.Client.E2E.Tests.EdmDateAndTimeOfDayTests
         {
             // Function
             var date = await _context.Orders.ByKey(7).GetShipDate().GetValueAsync();
-            Assert.Equal(new Date(2014, 8, 31), date);
+            Assert.Equal(new DateOnly(2014, 8, 31), date);
         }
 
         [Fact]
@@ -106,13 +106,22 @@ namespace Microsoft.OData.Client.E2E.Tests.EdmDateAndTimeOfDayTests
             _context.MergeOption = MergeOption.OverwriteChanges;
 
             var order = await _context.Orders.ByKey(7).GetValueAsync();
-            Assert.Equal(new Date(2014, 8, 31), order.ShipDate);
+            Assert.Equal(new DateOnly(2014, 8, 31), order.ShipDate);
 
             // Action
-            await _context.Orders.ByKey(7).ChangeShipTimeAndDate(Date.MaxValue, TimeOfDay.MaxValue).GetValueAsync();
+            await _context.Orders.ByKey(7).ChangeShipTimeAndDate(DateOnly.MaxValue, TimeOnly.MaxValue).GetValueAsync();
             order = await _context.Orders.ByKey(7).GetValueAsync();
-            Assert.Equal(Date.MaxValue, order.ShipDate);
-            Assert.Equal(TimeOfDay.MaxValue, order.ShipTime);
+            Assert.Equal(DateOnly.MaxValue, order.ShipDate);
+
+            // AspNetCore OData uses `new TimeOfDay(timeOnly.Hour, timeOnly.Minute, timeOnly.Second, timeOnly.Millisecond)` to create TimeOfDay value from TimeOnly value.
+            // This means that the precision of TimeOfDay value is up to milliseconds only.
+            // TimeOnly.MaxValue has precision up to 7 digits after seconds, i.e., 23:59:59.9999999 and TimeOfDay value created will be 23:59:59.9990000.
+            // Therefore, we cannot directly compare the two TimeOnly values here.
+            // See https://github.com/OData/AspNetCoreOData/blob/main/src/Microsoft.AspNetCore.OData/Formatter/Serialization/ODataPrimitiveSerializer.cs#L171
+            // To work around this, we compare the string representation up until milliseconds. This is because E2E tests uses AspNetCore OData for server side.
+            // Uncomment the below line once AspNetCore OData supports full precision for TimeOnly
+            // Asset.Equal(TimeOnly.MaxValue, order.ShipTime);
+            Assert.Equal(TimeOnly.MaxValue.ToString("HH:mm:ss.fff"), order.ShipTime.ToString("HH:mm:ss.fff"));
         }
 
         [Fact]
@@ -133,6 +142,78 @@ namespace Microsoft.OData.Client.E2E.Tests.EdmDateAndTimeOfDayTests
             var result = (await _context.ExecuteAsync<bool>(requestUrl)).Single();
 
             Assert.False(result);
+        }
+
+        [Fact]
+        public void QueryingOrdersWithOrderByOnDateOnly_WorksCorrectly()
+        {
+            var orders = _context.Orders
+                .OrderBy(o => o.ShipDate)
+                .ToList();
+
+            Assert.NotEmpty(orders);
+            for (int i = 1; i < orders.Count; i++)
+            {
+                Assert.True(orders[i - 1].ShipDate <= orders[i].ShipDate);
+            }
+        }
+
+        [Fact]
+        public void QueryingOrdersWithOrderByOnTimeOnly_WorksCorrectly()
+        {
+            var orders = _context.Orders
+                .OrderBy(o => o.ShipTime)
+                .ToList();
+
+            Assert.NotEmpty(orders);
+            for (int i = 1; i < orders.Count; i++)
+            {
+                Assert.True(orders[i - 1].ShipTime <= orders[i].ShipTime);
+            }
+        }
+
+        [Fact]
+        public void QueryingOrdersWithFilterOnDateOnly_WorksCorrectly()
+        {
+            var targetDate = new DateOnly(2014, 8, 31);
+            var orders = _context.Orders
+                .Where(o => o.ShipDate == targetDate)
+                .ToList();
+
+            Assert.All(orders, o => Assert.Equal(targetDate, o.ShipDate));
+        }
+
+        [Fact]
+        public void QueryingOrdersWithFilterOnTimeOnly_WorksCorrectly()
+        {
+            var targetTime = new TimeOnly(12, 40, 05, 50);
+            var orders = _context.Orders
+                .Where(o => o.ShipTime == targetTime)
+                .ToList();
+
+            Assert.All(orders, o => Assert.Equal(targetTime, o.ShipTime));
+        }
+
+        [Fact]
+        public void QueryingOrdersWithTopOnDateOnly_WorksCorrectly()
+        {
+            var orders = _context.Orders
+                .OrderBy(o => o.ShipDate)
+                .Take(2)
+                .ToList();
+
+            Assert.True(orders.Count <= 2);
+        }
+
+        [Fact]
+        public void QueryingOrdersWithTopOnTimeOnly_WorksCorrectly()
+        {
+            var orders = _context.Orders
+                .OrderBy(o => o.ShipTime)
+                .Take(2)
+                .ToList();
+
+            Assert.True(orders.Count <= 2);
         }
 
         #endregion

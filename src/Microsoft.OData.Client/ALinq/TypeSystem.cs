@@ -74,14 +74,14 @@ namespace Microsoft.OData.Client
             expressionMethodMap.Add(typeof(string).GetProperty("Length", typeof(int)).GetGetMethod(), @"length");
 
             // date methods
-            expressionMethodMap.Add(typeof(Date).GetProperty("Day", typeof(int)).GetGetMethod(), @"day");
-            expressionMethodMap.Add(typeof(Date).GetProperty("Month", typeof(int)).GetGetMethod(), @"month");
-            expressionMethodMap.Add(typeof(Date).GetProperty("Year", typeof(int)).GetGetMethod(), @"year");
+            expressionMethodMap.Add(typeof(DateOnly).GetProperty("Day", typeof(int)).GetGetMethod(), @"day");
+            expressionMethodMap.Add(typeof(DateOnly).GetProperty("Month", typeof(int)).GetGetMethod(), @"month");
+            expressionMethodMap.Add(typeof(DateOnly).GetProperty("Year", typeof(int)).GetGetMethod(), @"year");
 
             // timeOfDay methods
-            expressionMethodMap.Add(typeof(TimeOfDay).GetProperty("Hours", typeof(int)).GetGetMethod(), @"hour");
-            expressionMethodMap.Add(typeof(TimeOfDay).GetProperty("Minutes", typeof(int)).GetGetMethod(), @"minute");
-            expressionMethodMap.Add(typeof(TimeOfDay).GetProperty("Seconds", typeof(int)).GetGetMethod(), @"second");
+            expressionMethodMap.Add(typeof(TimeOnly).GetProperty("Hour", typeof(int)).GetGetMethod(), @"hour");
+            expressionMethodMap.Add(typeof(TimeOnly).GetProperty("Minute", typeof(int)).GetGetMethod(), @"minute");
+            expressionMethodMap.Add(typeof(TimeOnly).GetProperty("Second", typeof(int)).GetGetMethod(), @"second");
 
             // datetimeoffset methods
             expressionMethodMap.Add(typeof(DateTimeOffset).GetProperty("Date", typeof(DateTime)).GetGetMethod(), @"date");
@@ -206,24 +206,24 @@ namespace Microsoft.OData.Client
                 typeof(TimeSpan).GetProperty("Seconds", typeof(int)).GetGetMethod());
 
             propertiesAsMethodsMap.Add(
-                typeof(TimeOfDay).GetProperty("Hours", typeof(int)),
-                typeof(TimeOfDay).GetProperty("Hours", typeof(int)).GetGetMethod());
+                typeof(TimeOnly).GetProperty("Hour", typeof(int)),
+                typeof(TimeOnly).GetProperty("Hour", typeof(int)).GetGetMethod());
             propertiesAsMethodsMap.Add(
-                typeof(TimeOfDay).GetProperty("Minutes", typeof(int)),
-                typeof(TimeOfDay).GetProperty("Minutes", typeof(int)).GetGetMethod());
+                typeof(TimeOnly).GetProperty("Minute", typeof(int)),
+                typeof(TimeOnly).GetProperty("Minute", typeof(int)).GetGetMethod());
             propertiesAsMethodsMap.Add(
-                typeof(TimeOfDay).GetProperty("Seconds", typeof(int)),
-                typeof(TimeOfDay).GetProperty("Seconds", typeof(int)).GetGetMethod());
+                typeof(TimeOnly).GetProperty("Second", typeof(int)),
+                typeof(TimeOnly).GetProperty("Second", typeof(int)).GetGetMethod());
 
             propertiesAsMethodsMap.Add(
-                typeof(Date).GetProperty("Year", typeof(int)),
-                typeof(Date).GetProperty("Year", typeof(int)).GetGetMethod());
+                typeof(DateOnly).GetProperty("Year", typeof(int)),
+                typeof(DateOnly).GetProperty("Year", typeof(int)).GetGetMethod());
             propertiesAsMethodsMap.Add(
-                typeof(Date).GetProperty("Month", typeof(int)),
-                typeof(Date).GetProperty("Month", typeof(int)).GetGetMethod());
+                typeof(DateOnly).GetProperty("Month", typeof(int)),
+                typeof(DateOnly).GetProperty("Month", typeof(int)).GetGetMethod());
             propertiesAsMethodsMap.Add(
-                typeof(Date).GetProperty("Day", typeof(int)),
-                typeof(Date).GetProperty("Day", typeof(int)).GetGetMethod());
+                typeof(DateOnly).GetProperty("Day", typeof(int)),
+                typeof(DateOnly).GetProperty("Day", typeof(int)).GetGetMethod());
 
             Debug.Assert(propertiesAsMethodsMap.Count == 24, "propertiesAsMethodsMap.Count == 24");
 

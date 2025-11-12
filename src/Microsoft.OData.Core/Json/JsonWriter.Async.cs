@@ -198,14 +198,14 @@ namespace Microsoft.OData.Json
         }
 
         /// <inheritdoc/>
-        public async Task WriteValueAsync(TimeOfDay value)
+        public async Task WriteValueAsync(TimeOnly value)
         {
             await this.WriteValueSeparatorAsync().ConfigureAwait(false);
             await this.writer.WriteValueAsync(value).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
-        public async Task WriteValueAsync(Date value)
+        public async Task WriteValueAsync(DateOnly value)
         {
             await this.WriteValueSeparatorAsync().ConfigureAwait(false);
             await this.writer.WriteValueAsync(value).ConfigureAwait(false);

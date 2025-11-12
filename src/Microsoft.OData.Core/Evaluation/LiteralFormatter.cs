@@ -218,14 +218,9 @@ namespace Microsoft.OData.Evaluation
                 return ConvertByteArrayToKeyString(array);
             }
 
-            if (value is Date)
-            {
-                return value.ToString();
-            }
-
             if (value is DateOnly dateOnly)
             {
-                return ((Date)dateOnly).ToString();
+                return dateOnly.ToODataString();
             }
 
             if (value is DateTimeOffset dateTimeOffset)
@@ -233,14 +228,9 @@ namespace Microsoft.OData.Evaluation
                 return XmlConvert.ToString(dateTimeOffset);
             }
 
-            if (value is TimeOfDay)
-            {
-                return value.ToString();
-            }
-
             if (value is TimeOnly timeOnly)
             {
-                return ((TimeOfDay)timeOnly).ToString();
+                return timeOnly.ToODataString();
             }
 
             if (value is TimeSpan timespan)

@@ -24,6 +24,7 @@ namespace Microsoft.OData.Client
 {
     using System;
     using System.Diagnostics;
+    using System.Globalization;
     using System.Reflection;
     using System.Xml;
     using Microsoft.OData.Edm;
@@ -833,32 +834,6 @@ namespace Microsoft.OData.Client
     }
 
     /// <summary>
-    /// Convert between primitive types Edm.Date and string
-    /// </summary>
-    internal sealed class DateTypeConverter : PrimitiveTypeConverter
-    {
-        /// <summary>
-        /// Create an instance of primitive type from a string representation
-        /// </summary>
-        /// <param name="text">The string representation</param>
-        /// <returns>An instance of primitive type</returns>
-        internal override object Parse(string text)
-        {
-            return PlatformHelper.ConvertStringToDate(text);
-        }
-
-        /// <summary>
-        /// Convert an instance of primitive type to string
-        /// </summary>
-        /// <param name="instance">The instance</param>
-        /// <returns>The string representation of the instance</returns>
-        internal override string ToString(object instance)
-        {
-            return ((Date)instance).ToString();
-        }
-    }
-
-    /// <summary>
     /// Convert between primitive types Edm.Date (using DateOnly) and string
     /// </summary>
     internal sealed class DateOnlyTypeConverter : PrimitiveTypeConverter
@@ -880,33 +855,7 @@ namespace Microsoft.OData.Client
         /// <returns>The string representation of the instance</returns>
         internal override string ToString(object instance)
         {
-            return ((Date)(DateOnly)instance).ToString();
-        }
-    }
-
-    /// <summary>
-    /// Convert between primitive types Edm.TimeOfDay and string
-    /// </summary>
-    internal sealed class TimeOfDayConverter : PrimitiveTypeConverter
-    {
-        /// <summary>
-        /// Create an instance of primitive type from a string representation
-        /// </summary>
-        /// <param name="text">The string representation</param>
-        /// <returns>An instance of primitive type</returns>
-        internal override object Parse(string text)
-        {
-            return PlatformHelper.ConvertStringToTimeOfDay(text);
-        }
-
-        /// <summary>
-        /// Convert an instance of primitive type to string
-        /// </summary>
-        /// <param name="instance">The instance</param>
-        /// <returns>The string representation of the instance</returns>
-        internal override string ToString(object instance)
-        {
-            return ((TimeOfDay)instance).ToString();
+            return ((DateOnly)instance).ToODataString();
         }
     }
 
@@ -932,7 +881,7 @@ namespace Microsoft.OData.Client
         /// <returns>The string representation of the instance</returns>
         internal override string ToString(object instance)
         {
-            return ((TimeOfDay)(TimeOnly)instance).ToString();
+            return ((TimeOnly)instance).ToODataString();
         }
     }
 }

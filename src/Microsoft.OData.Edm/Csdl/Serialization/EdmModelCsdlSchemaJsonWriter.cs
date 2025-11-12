@@ -2258,7 +2258,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         internal override void WriteDateConstantExpressionElement(IEdmDateConstantExpression expression)
         {
             // Date expressions are represented as a string containing the date value.
-            this.jsonWriter.WriteStringValue(expression.Value.ToString());
+            this.jsonWriter.WriteStringValue(EdmValueWriter.DateAsXml(expression.Value));
         }
 
         /// <summary>
@@ -2269,7 +2269,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         internal override Task WriteDateConstantExpressionElementAsync(IEdmDateConstantExpression expression)
         {
             // Date expressions are represented as a string containing the date value.
-            this.jsonWriter.WriteStringValue(expression.Value.ToString());
+            this.jsonWriter.WriteStringValue(EdmValueWriter.DateAsXml(expression.Value));
 
             return Task.CompletedTask;
         }

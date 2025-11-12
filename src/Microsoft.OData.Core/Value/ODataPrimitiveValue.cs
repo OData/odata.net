@@ -8,6 +8,7 @@ namespace Microsoft.OData
 {
     using System;
     using Microsoft.OData.Core;
+    using Microsoft.OData.Edm;
     using Microsoft.OData.Metadata;
 
     /// <summary>
@@ -30,6 +31,18 @@ namespace Microsoft.OData
             if (!EdmLibraryExtensions.IsPrimitiveType(value.GetType()))
             {
                 throw new ODataException(Error.Format(SRResources.ODataPrimitiveValue_CannotCreateODataPrimitiveValueFromUnsupportedValueType, value.GetType()));
+            }
+
+            // TODO: Remove this if...else once the AspNetCore library stops using Date and TimeOfDay structs
+            // See https://github.com/OData/AspNetCoreOData/blob/main/src/Microsoft.AspNetCore.OData/Edm/DefaultODataTypeMapper.cs#L65-L66
+            if (value is Date dateValue)
+            {
+                // Convert to DateOnly
+                value = DateOnly.FromDateTime(dateValue);
+            }
+            else if (value is TimeOfDay timeOfDayValue)
+            {
+                value = TimeOnly.FromTimeSpan(timeOfDayValue);
             }
 
             this.Value = value;

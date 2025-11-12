@@ -136,6 +136,10 @@ namespace Microsoft.OData.Metadata
             PrimitiveTypeReferenceMap.Add(typeof(TimeSpan?), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Duration), true));
             PrimitiveTypeReferenceMap.Add(typeof(Date), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Date), false));
             PrimitiveTypeReferenceMap.Add(typeof(Date?), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Date), true));
+
+            // TimeOfDay and Date are not removed here as this will cause E2E tests to fail unless the AspNetCoreOData package is also updated by removing those types.
+            // See https://github.com/OData/AspNetCoreOData/blob/main/src/Microsoft.AspNetCore.OData/Edm/DefaultODataTypeMapper.cs#L65-L66
+            // TODO: Once that package is updated, these two lines can be removed in the next major release.
             PrimitiveTypeReferenceMap.Add(typeof(TimeOfDay), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.TimeOfDay), false));
             PrimitiveTypeReferenceMap.Add(typeof(TimeOfDay?), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.TimeOfDay), true));
 
@@ -1741,7 +1745,7 @@ namespace Microsoft.OData.Metadata
                 case EdmPrimitiveTypeKind.Byte:
                     return isNullable ? typeof(Byte?) : typeof(Byte);
                 case EdmPrimitiveTypeKind.Date:
-                    return isNullable ? typeof(Date?) : typeof(Date);
+                    return isNullable ? typeof(DateOnly?) : typeof(DateOnly);
                 case EdmPrimitiveTypeKind.DateTimeOffset:
                     return isNullable ? typeof(DateTimeOffset?) : typeof(DateTimeOffset);
                 case EdmPrimitiveTypeKind.Decimal:
@@ -1799,7 +1803,7 @@ namespace Microsoft.OData.Metadata
                 case EdmPrimitiveTypeKind.Duration:
                     return isNullable ? typeof(TimeSpan?) : typeof(TimeSpan);
                 case EdmPrimitiveTypeKind.TimeOfDay:
-                    return isNullable ? typeof(TimeOfDay?) : typeof(TimeOfDay);
+                    return isNullable ? typeof(TimeOnly?) : typeof(TimeOnly);
                 default:
                     return null;
             }

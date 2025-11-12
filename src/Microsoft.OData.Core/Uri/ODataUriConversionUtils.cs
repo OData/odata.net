@@ -506,28 +506,41 @@ namespace Microsoft.OData
             switch (targetPrimitiveKind)
             {
                 case EdmPrimitiveTypeKind.DateTimeOffset:
-                    if (primitiveValue is Date)
+                    if (primitiveValue is DateOnly dateValue)
                     {
-                        var dateValue = (Date)primitiveValue;
                         return new DateTimeOffset(dateValue.Year, dateValue.Month, dateValue.Day, 0, 0, 0, TimeSpan.Zero);
                     }
 
-                    if (primitiveValue is DateOnly dateOnly)
+                    if (primitiveValue is DateTimeOffset dateTimeOffset)
                     {
-                        var dateValue = (Date)dateOnly;
-                        return new DateTimeOffset(dateValue.Year, dateValue.Month, dateValue.Day, 0, 0, 0, TimeSpan.Zero);
+                        return dateTimeOffset;
                     }
 
                     break;
 
                 case EdmPrimitiveTypeKind.Date:
-                    var stringValue = primitiveValue as string;
-                    if (stringValue != null)
+                    if (primitiveValue is string stringValue)
                     {
                         // Coerce to Date Type from String.
-                        return PlatformHelper.ConvertStringToDate(stringValue);
+                        return PlatformHelper.ConvertStringToDateOnly(stringValue);
                     }
 
+                    // TEMPORARY: Handle Edm.Date as System.TimeOnly
+                    // TODO: This will be removed once Edm.Date is removed from AspNetCoreOData
+                    if (primitiveValue is Date date)
+                    {
+                        return DateOnly.FromDateTime(date);
+                    }
+
+                    break;
+
+                case EdmPrimitiveTypeKind.TimeOfDay:
+                    // TEMPORARY: Handle Edm.TimeOfDay as System.TimeOnly
+                    // TODO: This will be removed once Edm.TimeOfDay is removed from AspNetCoreOData
+                    if (primitiveValue is TimeOfDay time)
+                    {
+                        return TimeOnly.FromTimeSpan(time);
+                    }
                     break;
             }
 

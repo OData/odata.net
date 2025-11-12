@@ -103,8 +103,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.Evaluation
             RunPinningTest(builder, 0, 1, -1, Int64.MaxValue, Int64.MinValue);
             RunPinningTest(builder, new byte[0], new byte[] { 0 }, new byte[] { 0, 1, byte.MinValue, byte.MaxValue }, new byte[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 });
             RunPinningTest(builder, DateTimeOffset.MaxValue, DateTimeOffset.MinValue, XmlConvert.ToDateTimeOffset("2012-11-16T10:54:13.5422534-08:00"), XmlConvert.ToDateTimeOffset("2012-11-16T18:54:13.5422534Z"));
-            RunPinningTest(builder, Date.MinValue, new Date(2014, 12, 31), Date.MaxValue);
-            RunPinningTest(builder, TimeOfDay.MinValue, new TimeOfDay(12, 20, 4, 123), new TimeOfDay(TimeOfDay.MaxTickValue));
+            RunPinningTest(builder, DateOnly.MinValue, new DateOnly(2014, 12, 31), DateOnly.MaxValue);
+            RunPinningTest(builder, TimeOnly.MinValue, new TimeOnly(12, 20, 4, 123), new TimeOnly(TimeOnly.MaxValue.Ticks));
 
             RunPinningTest(builder, DateOnly.MinValue, new DateOnly(2024, 10, 1), DateOnly.MaxValue);
             RunPinningTest(builder, TimeOnly.MinValue, new TimeOnly(4, 3, 2, 1), TimeOnly.MaxValue);

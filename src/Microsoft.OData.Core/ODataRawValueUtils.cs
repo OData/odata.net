@@ -117,23 +117,9 @@ namespace Microsoft.OData
                 return true;
             }
 
-            if (value is Date)
-            {
-                // Edm.Date
-                result = ODataRawValueConverter.ToString((Date)value);
-                return true;
-            }
-
             if (value is DateOnly dateOnly)
             {
                 result = ODataRawValueConverter.ToString(dateOnly);
-                return true;
-            }
-
-            if (value is TimeOfDay)
-            {
-                // Edm.TimeOfDay
-                result = ODataRawValueConverter.ToString((TimeOfDay)value);
                 return true;
             }
 
@@ -195,9 +181,9 @@ namespace Microsoft.OData
                     case EdmPrimitiveTypeKind.Duration:
                         return EdmValueParser.ParseDuration(text);
                     case EdmPrimitiveTypeKind.Date:
-                        return PlatformHelper.ConvertStringToDate(text);
+                        return PlatformHelper.ConvertStringToDateOnly(text);
                     case EdmPrimitiveTypeKind.TimeOfDay:
-                        return PlatformHelper.ConvertStringToTimeOfDay(text);
+                        return PlatformHelper.ConvertStringToTimeOnly(text);
                     case EdmPrimitiveTypeKind.Stream:
                     case EdmPrimitiveTypeKind.None:
                     case EdmPrimitiveTypeKind.Geography:

@@ -158,19 +158,19 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="date">The Date value to convert.</param>
         /// <returns>The string version of the Date in raw value format.</returns>
-        internal static string ToString(Date date)
+        internal static string ToString(DateOnly date)
         {
-            return date.ToString();
+            return date.ToODataString();
         }
 
         /// <summary>
-        /// Converts the given TimeOfDay value to the string appropriate for raw value format.
+        /// Converts the given TimeOnly value to the string appropriate for raw value format.
         /// </summary>
-        /// <param name="time">The TimeOfDay value to convert.</param>
-        /// <returns>The string version of the TimeOfDay in raw value format</returns>
-        internal static string ToString(TimeOfDay time)
+        /// <param name="time">The TimeOnly value to convert.</param>
+        /// <returns>The string version of the TimeOnly in raw value format</returns>
+        internal static string ToString(TimeOnly time)
         {
-            return time.ToString();
+            return time.ToODataString();
         }
     }
 }

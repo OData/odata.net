@@ -197,7 +197,7 @@ public class ExpressionEvaluationTests : EdmLibTestCaseBase
 
         term = this.vocabularyDefinitionModel.FindTerm("bar.DateValue");
         annotationValue = applicationModel.GetTermValue(this.personValue, term, expressionEvaluator);
-        Assert.Equal(new Date(2014, 8, 8), ((IEdmDateValue)annotationValue).Value);
+        Assert.Equal(new DateOnly(2014, 8, 8), ((IEdmDateValue)annotationValue).Value);
 
         term = this.vocabularyDefinitionModel.FindTerm("bar.DateTimeOffsetValue");
         annotationValue = applicationModel.GetTermValue(this.personValue, term, expressionEvaluator);
@@ -245,7 +245,7 @@ public class ExpressionEvaluationTests : EdmLibTestCaseBase
 
         term = this.vocabularyDefinitionModel.FindTerm("bar.TimeOfDayValue");
         annotationValue = applicationModel.GetTermValue(this.personValue, term, expressionEvaluator);
-        Assert.Equal(new TimeOfDay(1, 30, 59, 123), ((IEdmTimeOfDayValue)annotationValue).Value);
+        Assert.Equal(new TimeOnly(1, 30, 59, 123), ((IEdmTimeOfDayValue)annotationValue).Value);
     }
 
     [Fact]

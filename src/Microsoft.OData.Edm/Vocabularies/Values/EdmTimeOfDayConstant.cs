@@ -4,20 +4,22 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
+
 namespace Microsoft.OData.Edm.Vocabularies
 {
     /// <summary>
-    /// Represents an EDM TimeOfDay constant.
+    /// Represents an EDM TimeOnly constant.
     /// </summary>
     public class EdmTimeOfDayConstant : EdmValue, IEdmTimeOfDayConstantExpression
     {
-        private readonly TimeOfDay value;
+        private readonly TimeOnly value;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EdmTimeOfDayConstant"/> class.
         /// </summary>
-        /// <param name="value">TimeOfDay value represented by this value.</param>
-        public EdmTimeOfDayConstant(TimeOfDay value)
+        /// <param name="value">TimeOnly value represented by this value.</param>
+        public EdmTimeOfDayConstant(TimeOnly value)
             : this(null, value)
         {
             this.value = value;
@@ -26,9 +28,9 @@ namespace Microsoft.OData.Edm.Vocabularies
         /// <summary>
         /// Initializes a new instance of the <see cref="EdmTimeOfDayConstant"/> class.
         /// </summary>
-        /// <param name="type">Type of the TimeOfDay.</param>
-        /// <param name="value">TimeOfDay value represented by this value.</param>
-        public EdmTimeOfDayConstant(IEdmTemporalTypeReference type, TimeOfDay value)
+        /// <param name="type">Type of the TimeOnly.</param>
+        /// <param name="value">TimeOnly value represented by this value.</param>
+        public EdmTimeOfDayConstant(IEdmTemporalTypeReference type, TimeOnly value)
             : base(type)
         {
             this.value = value;
@@ -37,7 +39,7 @@ namespace Microsoft.OData.Edm.Vocabularies
         /// <summary>
         /// Gets the definition of this value.
         /// </summary>
-        public TimeOfDay Value
+        public TimeOnly Value
         {
             get { return this.value; }
         }

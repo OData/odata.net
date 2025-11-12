@@ -44,7 +44,7 @@ namespace Microsoft.OData.Tests.Json
                 await jsonWriter.WriteValueAsync(false);
 
                 await jsonWriter.WriteNameAsync("DateProp");
-                await jsonWriter.WriteValueAsync(new Date(2014, 12, 31));
+                await jsonWriter.WriteValueAsync(new DateOnly(2014, 12, 31));
 
                 await jsonWriter.WriteNameAsync("RawStringProp");
                 await jsonWriter.WriteRawValueAsync(@"""foobar""");
@@ -59,13 +59,13 @@ namespace Microsoft.OData.Tests.Json
                 await jsonWriter.WriteValueAsync(new DateTimeOffset(2014, 12, 31, 12, 42, 30, new TimeSpan(1, 20, 0)));
 
                 await jsonWriter.WriteNameAsync("DateProp");
-                await jsonWriter.WriteValueAsync(new Date(2014, 12, 31));
+                await jsonWriter.WriteValueAsync(new DateOnly(2014, 12, 31));
 
                 await jsonWriter.WriteNameAsync("TimeSpanProp");
                 await jsonWriter.WriteValueAsync(new TimeSpan(12, 42, 30));
 
                 await jsonWriter.WriteNameAsync("TimeOfDayProp");
-                await jsonWriter.WriteValueAsync(new TimeOfDay(12, 42, 30, 100));
+                await jsonWriter.WriteValueAsync(new TimeOnly(12, 42, 30, 100));
 
                 await jsonWriter.WriteNameAsync("ObjectProp");
                 await jsonWriter.StartObjectScopeAsync();
@@ -92,7 +92,7 @@ namespace Microsoft.OData.Tests.Json
                 await jsonWriter.WriteRawValueAsync(@"""raw""");
                 await jsonWriter.WriteValueAsync(true);
                 await jsonWriter.WriteRawValueAsync(@"""raw""");
-                await jsonWriter.WriteValueAsync(new Date(2014, 12, 31));
+                await jsonWriter.WriteValueAsync(new DateOnly(2014, 12, 31));
                 await jsonWriter.WriteRawValueAsync(@"""raw""");
                 await jsonWriter.WriteValueAsync(new DateTimeOffset(2014, 12, 31, 12, 42, 30, new TimeSpan(1, 20, 0)));
                 await jsonWriter.WriteRawValueAsync(@"""raw""");
@@ -171,11 +171,11 @@ namespace Microsoft.OData.Tests.Json
                 await jsonWriter.EndArrayScopeAsync();
                 await jsonWriter.StartArrayScopeAsync();
                 await jsonWriter.WriteRawValueAsync(@"""rawAtArrayStartBeforeDate""");
-                await jsonWriter.WriteValueAsync(new Date(2014, 12, 31));
+                await jsonWriter.WriteValueAsync(new DateOnly(2014, 12, 31));
                 await jsonWriter.EndArrayScopeAsync();
                 await jsonWriter.StartArrayScopeAsync();
                 await jsonWriter.WriteRawValueAsync(@"""rawAtArrayStartBeforeTimeOfDay""");
-                await jsonWriter.WriteValueAsync(new TimeOfDay(12, 42, 30, 100));
+                await jsonWriter.WriteValueAsync(new TimeOnly(12, 42, 30, 100));
                 await jsonWriter.EndArrayScopeAsync();
                 await jsonWriter.StartArrayScopeAsync();
                 await jsonWriter.WriteRawValueAsync(@"""rawAtArrayStartBeforeTimeSpan""");
@@ -409,7 +409,7 @@ namespace Microsoft.OData.Tests.Json
                 await jsonWriter.WriteNameAsync("obj2");
                 await jsonWriter.StartObjectScopeAsync();
                 await jsonWriter.WriteNameAsync("dtProp");
-                await jsonWriter.WriteValueAsync(new Date(2014, 12, 31));
+                await jsonWriter.WriteValueAsync(new DateOnly(2014, 12, 31));
                 await jsonWriter.WriteNameAsync("lgB64AtObjEnd");
                 await jsonWriter.WriteValueAsync(largeBinaryData);
                 await jsonWriter.EndObjectScopeAsync();
@@ -485,7 +485,7 @@ namespace Microsoft.OData.Tests.Json
                 await jsonWriter.WriteNameAsync("obj6");
                 await jsonWriter.StartObjectScopeAsync();
                 await jsonWriter.WriteNameAsync("dtProp");
-                await jsonWriter.WriteValueAsync(new Date(2014, 12, 31));
+                await jsonWriter.WriteValueAsync(new DateOnly(2014, 12, 31));
                 await jsonWriter.WriteNameAsync("lgSAtObjEnd");
                 await jsonWriter.WriteValueAsync(largeStringData);
                 await jsonWriter.EndObjectScopeAsync();
@@ -687,7 +687,7 @@ namespace Microsoft.OData.Tests.Json
                 await jsonWriter.WriteNameAsync("obj2");
                 await jsonWriter.StartObjectScopeAsync();
                 await jsonWriter.WriteNameAsync("dtProp");
-                await jsonWriter.WriteValueAsync(new Date(2014, 12, 31));
+                await jsonWriter.WriteValueAsync(new DateOnly(2014, 12, 31));
                 await jsonWriter.WriteNameAsync("lgB64AtObjEnd");
                 await jsonWriter.WriteValueAsync(largeBinaryData);
                 await jsonWriter.EndObjectScopeAsync();
@@ -789,7 +789,7 @@ namespace Microsoft.OData.Tests.Json
                 await jsonWriter.WriteNameAsync("obj6");
                 await jsonWriter.StartObjectScopeAsync();
                 await jsonWriter.WriteNameAsync("dtProp");
-                await jsonWriter.WriteValueAsync(new Date(2014, 12, 31));
+                await jsonWriter.WriteValueAsync(new DateOnly(2014, 12, 31));
                 await jsonWriter.WriteNameAsync("lgSAtObjEnd");
                 var tw3 = await jsonWriter.StartTextWriterValueScopeAsync("text/plain");
                 await WriteLargeStringInChunksAsync(tw3, streamLargeStringData);

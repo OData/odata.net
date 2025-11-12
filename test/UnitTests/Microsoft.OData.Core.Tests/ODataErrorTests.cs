@@ -879,8 +879,8 @@ namespace Microsoft.OData.Tests
                                 { "p14", new ODataPrimitiveValue(new DateTimeOffset(2024, 5, 2, 13, 27, 30, TimeSpan.Zero)) },
                                 { "p15", new ODataPrimitiveValue(Guid.Parse("6693ceb2-5d47-45c7-b928-900ebdebe898")) },
                                 { "p16", new ODataPrimitiveValue(new TimeSpan(1, 12, 0)) },
-                                { "p17", new ODataPrimitiveValue(new Date(2024, 5, 2)) },
-                                { "p18", new ODataPrimitiveValue(new TimeOfDay(12, 42, 30, 100)) },
+                                { "p17", new ODataPrimitiveValue(new DateOnly(2024, 5, 2)) },
+                                { "p18", new ODataPrimitiveValue(new TimeOnly(12, 42, 30, 100)) },
                                 { "p19", new ODataResourceValue
                                     {
                                         Properties = new List<ODataProperty>
@@ -922,8 +922,8 @@ namespace Microsoft.OData.Tests
                                 { "p27", new ODataPrimitiveValue((DateTimeOffset?)new DateTimeOffset(2024, 5, 2, 13, 27, 30, TimeSpan.Zero)) },
                                 { "p28", new ODataPrimitiveValue((Guid?)Guid.Parse("6693ceb2-5d47-45c7-b928-900ebdebe898")) },
                                 { "p29", new ODataPrimitiveValue((TimeSpan?)new TimeSpan(1, 12, 0)) },
-                                { "p30", new ODataPrimitiveValue((Date?)new Date(2024, 5, 2)) },
-                                { "p31", new ODataPrimitiveValue((TimeOfDay?)new TimeOfDay(12, 42, 30, 100)) },
+                                { "p30", new ODataPrimitiveValue((DateOnly?)new DateOnly(2024, 5, 2)) },
+                                { "p31", new ODataPrimitiveValue((TimeOnly?)new TimeOnly(12, 42, 30, 100)) },
                                 { JsonConstants.ODataErrorInnerErrorMessageName, new ODataPrimitiveValue("OIEM1") },
                                 { JsonConstants.ODataErrorInnerErrorTypeNameName, new ODataPrimitiveValue("OIET1") },
                                 { JsonConstants.ODataErrorInnerErrorStackTraceName, new ODataPrimitiveValue("OIES1") }
