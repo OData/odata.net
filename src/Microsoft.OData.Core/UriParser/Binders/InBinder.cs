@@ -70,7 +70,7 @@ namespace Microsoft.OData.UriParser
             // Calls the MetadataBindingUtils.ConvertToTypeIfNeeded() method to convert the left operand to the same enum type as the right operand.
             if ((!(right is CollectionConstantNode) && right.ItemType.IsEnum()) && (left.TypeReference != null && (left.TypeReference.IsString() || left.TypeReference.IsIntegral())))
             {
-                left = MetadataBindingUtils.ConvertToTypeIfNeeded(left, right.ItemType);
+                left = MetadataBindingUtils.ConvertToTypeIfNeeded(left, right.ItemType, this.resolver.EnableCaseInsensitive);
             }
 
             MetadataBindingUtils.VerifyCollectionNode(right, this.resolver.EnableCaseInsensitive);
@@ -156,6 +156,10 @@ namespace Microsoft.OData.UriParser
                         // Sample: [1970-01-01T00:00:00Z, 1980-01-01T01:01:01+01:00]
                         //    ==>  ['1970-01-01T00:00:00Z', '1980-01-01T01:01:01+01:00']
                         bracketLiteralText = NormalizeDateTimeCollectionItems(bracketLiteralText);
+                    }
+                    else if (expectedType.Definition.AsElementType().TypeKind == EdmTypeKind.Enum)
+                    {
+                        bracketLiteralText = NormalizeEnumCollectionItems(bracketLiteralText, this.resolver.EnableCaseInsensitive, expectedTypeFullName);
                     }
                 }
 
@@ -424,6 +428,108 @@ namespace Microsoft.OData.UriParser
             }
 
             return "[" + String.Join(",", items) + "]";
+        }
+
+        private static string NormalizeEnumCollectionItems(string bracketLiteralText, bool enableCaseInsensitive, string expectedTypeFullName)
+        {
+            // Remove the '[' and ']' or '(' and ')' and trim the content
+            ReadOnlySpan<char> normalizedText = bracketLiteralText.AsSpan(1, bracketLiteralText.Length - 2);
+
+            // Trim leading/trailing whitespace
+            int left = 0;
+            int right = normalizedText.Length - 1;
+            while (left <= right && char.IsWhiteSpace(normalizedText[left]))
+            {
+                left++;
+            }
+
+            while (right >= left && char.IsWhiteSpace(normalizedText[right]))
+            {
+                right--;
+            }
+
+            if (left > right)
+            {
+                return "[]";
+            }
+
+            int expectedTypeFullNameLength = string.IsNullOrEmpty(expectedTypeFullName) ? 0 : expectedTypeFullName.Length;
+            ReadOnlySpan<char> content = normalizedText.Slice(left, right - left + 1);
+            int startIndex = 0;
+            int length = content.Length;
+
+            StringBuilder result = new StringBuilder(length + 2);
+            result.Append('[');
+
+            while (startIndex < length)
+            {
+                char currentChar = content[startIndex];
+
+                if (currentChar is '\'' or '"')
+                {
+                    // Handle quoted items
+                    int relativeEnd = content.Slice(startIndex + 1).IndexOf(currentChar);
+                    if (relativeEnd < 0)
+                    {
+                        throw new ODataException(Error.Format("Found unbalanced quotes '{0}'", currentChar));
+                    }
+
+                    // Include closing quote
+                    int endIndex = startIndex + 1 + relativeEnd;
+                    result.Append(content.Slice(startIndex, endIndex - startIndex + 1)); 
+                    startIndex = endIndex + 1;
+                }
+                else if (currentChar == ',')
+                {
+                    // Handle commas
+                    result.Append(',');
+                    startIndex++;
+                }
+                else if (char.IsWhiteSpace(currentChar))
+                {
+                    // Skip whitespace
+                    startIndex++;
+                }
+                else
+                {
+                    // Handle non-quoted items
+                    int end = startIndex;
+                    while (end < length && content[end] != ',' && !char.IsWhiteSpace(content[end]))
+                    {
+                        end++;
+                    }
+
+                    ReadOnlySpan<char> token = content[startIndex..end];
+
+                    // Remove type prefix if present e.g., Namespace.Days'Monday'
+                    if (expectedTypeFullNameLength > 0 && token.Length > expectedTypeFullNameLength && 
+                        token.StartsWith(expectedTypeFullName, enableCaseInsensitive ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal))
+                    {
+                        char next = token[expectedTypeFullNameLength];
+                        if (next == '\'' || next == '\"')
+                        {
+                            token = token.Slice(expectedTypeFullNameLength);
+                        }
+                    }
+
+                    // If item is already quoted, keep it; otherwise wrap in single quotes
+                    if (token.Length > 0 && (token[0] == '\'' || token[0] == '"'))
+                    {
+                        result.Append(token);
+                    }
+                    else
+                    {
+                        result.Append('\'');
+                        result.Append(token);
+                        result.Append('\'');
+                    }
+
+                    startIndex = end;
+                }
+            }
+
+            result.Append(']');
+            return result.ToString();
         }
 
         private static bool IsCollectionEmptyOrWhiteSpace(string bracketLiteralText)

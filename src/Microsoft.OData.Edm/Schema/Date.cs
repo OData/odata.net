@@ -12,6 +12,7 @@ namespace Microsoft.OData.Edm
     /// <summary>
     /// Date type for Edm.Date
     /// </summary>
+    [Obsolete("Microsoft.OData.Edm.Date will be removed in ODL 9 and replaced with System.DateOnly.", false)]
     public struct Date : IComparable, IComparable<Date>, IEquatable<Date>
     {
         /// <summary>

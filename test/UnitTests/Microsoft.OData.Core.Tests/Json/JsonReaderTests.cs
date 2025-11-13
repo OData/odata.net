@@ -240,6 +240,38 @@ namespace Microsoft.OData.Tests.Json
             }
         }
 
+        [Theory]
+        [InlineData(" {\"Data\":   \"The \\r character\"}    ", "The \r character")]
+        [InlineData("   {\"Data\":\"The \\n   \\t\r character\"   }", "The \n   \t\r character")]
+        [InlineData("{    \"Data\":\"The \\t character  \n\r   \r\"}", "The \t character  \n\r   \r")]
+        [InlineData("{\"Data\"      :\"    The    character     \"}", "    The    character     ")]
+        public void ReadPrimitiveValueWithWhitespaces(string payload, string expected)
+        {
+            using (var reader = new JsonReader(new StringReader(payload), isIeee754Compatible: false))
+            {
+                reader.Read(); // Read start of object
+                reader.Read(); // Read property name - Data
+                reader.Read(); // Position reader at the beginning of string value
+                Assert.Equal(expected, reader.GetValue());
+            }
+        }
+
+        [Theory]
+        [InlineData(" {\"Data\":   \"The \\r character\"}    ", "The \r character")]
+        [InlineData("   {\"Data\":\"The \\n   \\t\r character\"   }", "The \n   \t\r character")]
+        [InlineData("{    \"Data\":\"The \\t character  \n\r   \r\"}", "The \t character  \n\r   \r")]
+        [InlineData("{\"Data\"      :\"    The    character     \"}", "    The    character     ")]
+        public async Task ReadPrimitiveValueAsyncWithWhitespaces(string payload, string expected)
+        {
+            using (var reader = new JsonReader(new StringReader(payload), isIeee754Compatible: false))
+            {
+                await reader.ReadAsync(); // Read start of object
+                await reader.ReadAsync(); // Read property name - Data
+                await reader.ReadAsync(); // Position reader at the beginning of string value
+                Assert.Equal(expected, await reader.GetValueAsync());
+            }
+        }
+
         [Fact]
         public async Task ReadNullValue()
         {
@@ -1116,6 +1148,322 @@ namespace Microsoft.OData.Tests.Json
                 var exception = await Assert.ThrowsAsync<ODataException>(() => reader.SkipValueAsync(new StringBuilder()));
                 Assert.Equal(SRResources.JsonReader_EndOfInputWithOpenScope, exception.Message);
             }
+        }
+
+        [Theory]
+        [InlineData("", 0, 0, -1)] // Empty buffer
+        [InlineData("    ", 0, 4, -1)] // All spaces
+        [InlineData("\t\t\t", 0, 3, -1)] // All tabs
+        [InlineData("\n\n", 0, 2, -1)] // All newlines
+        [InlineData("\r\r", 0, 2, -1)] // All carriage returns
+        [InlineData(" \t\r\n", 0, 4, -1)] // All JSON whitespace chars
+        [InlineData("a", 0, 1, 0)] // Single non-whitespace
+        [InlineData(" a", 0, 2, 1)] // Leading space
+        [InlineData("\t\n\rb", 0, 4, 3)] // Leading mixed whitespace
+        [InlineData("c ", 0, 2, 0)] // Trailing whitespace
+        [InlineData(" \t\r\nd", 0, 5, 4)] // All whitespace then non-whitespace
+        [InlineData(" \t\r\n", 1, 4, -1)] // Subspan, all whitespace
+        [InlineData(" \t\r\nx", 0, 5, 4)] // Non-whitespace at end
+        [InlineData(" \t\r\nx", 1, 5, 3)] // Subspan, non-whitespace at end
+        [InlineData(" \t\r\nx", 0, 4, -1)] // Subspan, all whitespace
+        [InlineData(" \t\r\nx", 2, 5, 2)] // Subspan, non-whitespace at end
+        public void FindFirstNonWhitespace_CoversAllCases(string input, int start, int end, int expected)
+        {
+            // Arrange
+            char[] buffer = input.ToCharArray();
+
+            // Act
+            int result = typeof(JsonReader)
+                .GetMethod("FindFirstNonWhitespace", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)
+                .Invoke(null, new object[] { buffer, start, end }) as int? ?? -2;
+
+            // Assert
+            Assert.Equal(expected, result);
+        }
+
+        [Theory]
+        [InlineData("   42", 42)] // Leading spaces
+        [InlineData("\t\n\r42", 42)] // Leading mixed whitespace
+        [InlineData("42   ", 42)] // Trailing spaces
+        [InlineData("   42   ", 42)] // Leading and trailing spaces
+        [InlineData("\t\n\r 42 \t\n\r", 42)] // Leading/trailing mixed whitespace
+        [InlineData("   \"foo\"   ", "foo")] // Quoted string with whitespace
+        [InlineData("   null   ", null)] // Null with whitespace
+        [InlineData("   true   ", true)] // Boolean true with whitespace
+        [InlineData("   false   ", false)] // Boolean false with whitespace
+        [InlineData("   -42   ", -42)] // Negative int with whitespace
+        [InlineData("     \n\n\n\n\n\n3\r\r\r\r\r     \n\n\n\n\n!", 3)]
+        [InlineData("     \n\n\n\n\n\n-3\r\r\r\r\r     \n\n\n\n\n!", -3)]
+        [InlineData("     \n\n\n\n\n\ntrue\r\r\r\r\r     \n\n\n\n\n!", true)]
+        [InlineData("     \n\n\n\n\n\nnull\r\r\r\r\r     \n\n\n\n\n!", null)]
+        public void Read_SkipWhitespaces_CorrectValue(string payload, object expected)
+        {
+            var reader = new JsonReader(new StringReader(payload), isIeee754Compatible: false);
+            Assert.True(reader.Read());
+            Assert.Equal(expected, reader.GetValue());
+        }
+
+        [Theory]
+        [InlineData("   42", 42)]
+        [InlineData("\t\n\r42", 42)]
+        [InlineData("42   ", 42)]
+        [InlineData("   42   ", 42)]
+        [InlineData("\t\n\r 42 \t\n\r", 42)]
+        [InlineData("   \"foo\"   ", "foo")]
+        [InlineData("   null   ", null)]
+        [InlineData("   true   ", true)]
+        [InlineData("   false   ", false)]
+        [InlineData("   -42   ", -42)]
+        [InlineData("     \n\n\n\n\n\n3\r\r\r\r\r     \n\n\n\n\n!", 3)]
+        [InlineData("     \n\n\n\n\n\n-3\r\r\r\r\r     \n\n\n\n\n!", -3)]
+        [InlineData("     \n\n\n\n\n\ntrue\r\r\r\r\r     \n\n\n\n\n!", true)]
+        [InlineData("     \n\n\n\n\n\nnull\r\r\r\r\r     \n\n\n\n\n!", null)]
+        public async Task ReadAsync_SkipWhitespaces_CorrectValue(string payload, object expected)
+        {
+            var reader = new JsonReader(new StringReader(payload), isIeee754Compatible: false);
+            Assert.True(await reader.ReadAsync());
+            Assert.Equal(expected, await reader.GetValueAsync());
+        }
+
+        public static TheoryData<string, string> LargeStringsWithWhitespace()
+        {
+            return new TheoryData<string, string>
+            {
+                { new string(' ', 10000) + "\"HelloWorld\"" + new string(' ', 10000), "HelloWorld" },
+                { new string('\t', 5000) + "\"TestString\"" + new string('\n', 5000), "TestString" },
+                { new string('\r', 8000) + "\"WhitespaceTest\"" + new string(' ', 2000), "WhitespaceTest" },
+                { new string(' ', 2500) + new string('\n', 2500) + "\"MixedWhitespace\"" + new string('\t', 2500) + new string('\r', 2500), "MixedWhitespace" },
+                { new string(' ', 5) + new string('\n', 5) + "\"Hello\"" + new string(' ', 5) + new string('\t', 5) + "\"World\"" + new string('\r', 5) + new string(' ', 5) + new string('\n', 5) + "!", "Hello" },
+                { new string(' ', 5) + new string('\n', 5) + "\"Hello" + new string(' ', 5) + new string('\t', 5) + "World" + new string('\r', 5) + new string(' ', 5) + new string('\n', 5) + "!\"", "Hello     \t\t\t\t\tWorld\r\r\r\r\r     \n\n\n\n\n!" },
+            };
+        }
+
+        [Theory]
+        [MemberData(nameof(LargeStringsWithWhitespace))]
+        public void Read_LargeStringWithWhitespaces(string largeString, string expected)
+        {
+            var reader = new JsonReader(new StringReader(largeString), isIeee754Compatible: false);
+            Assert.True(reader.Read());
+            Assert.Equal(expected, reader.GetValue());
+        }
+
+        [Theory]
+        [MemberData(nameof(LargeStringsWithWhitespace))]
+        public async Task ReadAsync_LargeStringWithWhitespaces(string largeString, string expected)
+        {
+            var reader = new JsonReader(new StringReader(largeString), isIeee754Compatible: false);
+            Assert.True(await reader.ReadAsync());
+            Assert.Equal(expected, await reader.GetValueAsync());
+        }
+
+        [Fact]
+        public void Read_LargeEmptyStringWithWhitespaces()
+        {
+            string largeString = new string(' ', 2500) + new string('\n', 2500) + new string('\t', 2500) + new string('\r', 2500);
+            var reader = new JsonReader(new StringReader(largeString), isIeee754Compatible: false);
+            Assert.False(reader.Read());
+            Assert.Null(reader.GetValue());
+        }
+
+        [Fact]
+        public async Task ReadAsync_LargeEmptyStringWithWhitespaces()
+        {
+            string largeString = new string(' ', 2500) + new string('\n', 2500) + new string('\t', 2500) + new string('\r', 2500);
+            var reader = new JsonReader(new StringReader(largeString), isIeee754Compatible: false);
+            Assert.False(await reader.ReadAsync());
+            Assert.Null(await reader.GetValueAsync());
+        }
+
+        [Fact]
+        public void Read_MixedWhitespaceAndNewlines()
+        {
+            var payload = "\n\n\t   \r\n\"abc\"\n\t\r";
+            var reader = new JsonReader(new StringReader(payload), isIeee754Compatible: false);
+            Assert.True(reader.Read());
+            Assert.Equal("abc", reader.GetValue());
+        }
+
+        [Fact]
+        public async Task ReadAsync_MixedWhitespaceAndNewlines()
+        {
+            var payload = "\n\n\t   \r\n\"abc\"\n\t\r";
+            var reader = new JsonReader(new StringReader(payload), isIeee754Compatible: false);
+            Assert.True(await reader.ReadAsync());
+            Assert.Equal("abc", await reader.GetValueAsync());
+        }
+
+        [Fact]
+        public void Read_OnlyWhitespace_ReturnsFalse()
+        {
+            var reader = new JsonReader(new StringReader("   \t\n\r   "), isIeee754Compatible: false);
+            Assert.False(reader.Read());
+        }
+
+        [Fact]
+        public async Task ReadAsync_OnlyWhitespace_ReturnsFalse()
+        {
+            var reader = new JsonReader(new StringReader("   \t\n\r   "), isIeee754Compatible: false);
+            Assert.False(await reader.ReadAsync());
+        }
+
+        [Fact]
+        public void Read_WhitespaceBetweenTokens_Object()
+        {
+            var payload = "{   \"foo\"   :   \"bar\"   }";
+            var reader = new JsonReader(new StringReader(payload), isIeee754Compatible: false);
+            Assert.True(reader.Read()); // StartObject
+            Assert.True(reader.Read()); // Property
+            Assert.Equal("foo", reader.GetValue());
+            Assert.True(reader.Read()); // Value
+            Assert.Equal("bar", reader.GetValue());
+            Assert.True(reader.Read()); // EndObject
+        }
+
+        [Fact]
+        public async Task ReadAsync_WhitespaceBetweenTokens_Object()
+        {
+            var payload = "{   \"foo\"   :   \"bar\"   }";
+            var reader = new JsonReader(new StringReader(payload), isIeee754Compatible: false);
+            Assert.True(await reader.ReadAsync()); // StartObject
+            Assert.True(await reader.ReadAsync()); // Property
+            Assert.Equal("foo", await reader.GetValueAsync());
+            Assert.True(await reader.ReadAsync()); // Value
+            Assert.Equal("bar", await reader.GetValueAsync());
+            Assert.True(await reader.ReadAsync()); // EndObject
+        }
+
+        [Fact]
+        public void Read_WhitespaceBetweenTokens_Array()
+        {
+            var payload = "[   \"a\"   ,   \"b\"   ,   \"c\"   ]";
+            var reader = new JsonReader(new StringReader(payload), isIeee754Compatible: false);
+            Assert.True(reader.Read()); // StartArray
+            Assert.True(reader.Read()); // Value
+            Assert.Equal("a", reader.GetValue());
+            Assert.True(reader.Read()); // Value
+            Assert.Equal("b", reader.GetValue());
+            Assert.True(reader.Read()); // Value
+            Assert.Equal("c", reader.GetValue());
+            Assert.True(reader.Read()); // EndArray
+        }
+
+        [Fact]
+        public async Task ReadAsync_WhitespaceBetweenTokens_Array()
+        {
+            var payload = "[   \"a\"   ,   \"b\"   ,   \"c\"   ]";
+            var reader = new JsonReader(new StringReader(payload), isIeee754Compatible: false);
+            Assert.True(await reader.ReadAsync()); // StartArray
+            Assert.True(await reader.ReadAsync()); // Value
+            Assert.Equal("a", await reader.GetValueAsync());
+            Assert.True(await reader.ReadAsync()); // Value
+            Assert.Equal("b", await reader.GetValueAsync());
+            Assert.True(await reader.ReadAsync()); // Value
+            Assert.Equal("c", await reader.GetValueAsync());
+            Assert.True(await reader.ReadAsync()); // EndArray
+        }
+
+        [Theory]
+        [InlineData("\"simple\"", "simple")]
+        [InlineData("\"with spaces\"", "with spaces")]
+        [InlineData("\"with \\\"escaped quotes\\\"\"", "with \"escaped quotes\"")]
+        [InlineData("\"with \\\\ backslash\"", "with \\ backslash")]
+        [InlineData("\"with \\n newline\"", "with \n newline")]
+        [InlineData("\"with \\r carriage\"", "with \r carriage")]
+        [InlineData("\"with \\t tab\"", "with \t tab")]
+        [InlineData("\"with \\b backspace\"", "with \b backspace")]
+        [InlineData("\"with \\f formfeed\"", "with \f formfeed")]
+        [InlineData("\"unicode \\u0041\"", "unicode A")]
+        [InlineData("\"mix \\u0041\\n\\t\\\"\"", "mix A\n\t\"")]
+        [InlineData("\"12345\"", "12345")]
+        [InlineData("\"true\"", "true")]
+        [InlineData("\"false\"", "false")]
+        [InlineData("\"null\"", "null")]
+        [InlineData("\"\"", "")]
+        public void ParseStringPrimitiveValue_Sync(string json, string expected)
+        {
+            var reader = new JsonReader(new StringReader($"{{\"PropertyName\":{json}}}"), isIeee754Compatible: false);
+            reader.Read(); // Start object
+            reader.Read(); // Property name
+            Assert.Equal("PropertyName", reader.GetValue());
+
+            reader.Read(); // Value
+            Assert.Equal(expected, reader.GetValue());
+        }
+
+        [Theory]
+        [InlineData("\"simple\"", "simple")]
+        [InlineData("\"with spaces\"", "with spaces")]
+        [InlineData("\"with \\\"escaped quotes\\\"\"", "with \"escaped quotes\"")]
+        [InlineData("\"with \\\\ backslash\"", "with \\ backslash")]
+        [InlineData("\"with \\n newline\"", "with \n newline")]
+        [InlineData("\"with \\r carriage\"", "with \r carriage")]
+        [InlineData("\"with \\t tab\"", "with \t tab")]
+        [InlineData("\"with \\b backspace\"", "with \b backspace")]
+        [InlineData("\"with \\f formfeed\"", "with \f formfeed")]
+        [InlineData("\"unicode \\u0041\"", "unicode A")]
+        [InlineData("\"mix \\u0041\\n\\t\\\"\"", "mix A\n\t\"")]
+        [InlineData("\"12345\"", "12345")]
+        [InlineData("\"true\"", "true")]
+        [InlineData("\"false\"", "false")]
+        [InlineData("\"null\"", "null")]
+        [InlineData("\"\"", "")]
+        public async Task ParseStringPrimitiveValue_Async(string json, string expected)
+        {
+            var reader = new JsonReader(new StringReader($"{{\"PropertyName\":{json}}}"), isIeee754Compatible: false);
+            await reader.ReadAsync(); // Start object
+            await reader.ReadAsync(); // Property name
+            Assert.Equal("PropertyName", await reader.GetValueAsync());
+
+            await reader.ReadAsync(); // Value
+            Assert.Equal(expected, await reader.GetValueAsync());
+        }
+
+        [Theory]
+        [InlineData("42", typeof(int), 42)]
+        [InlineData("-42", typeof(int), -42)]
+        [InlineData("3.14e2", typeof(double), 314.0)]
+        [InlineData("true", typeof(bool), true)]
+        [InlineData("false", typeof(bool), false)]
+        public void ParsePrimitiveValue_Sync(string input, Type expectedType, object expectedValue)
+        {
+            var reader = new JsonReader(new StringReader($"{{\"Number\":{input}, \"Name\": \"John Doe\"}}"), isIeee754Compatible: false);
+            reader.Read(); // Start object
+            reader.Read(); // Property name
+            Assert.Equal("Number", reader.GetValue());
+
+            reader.Read(); // Value
+            var value = reader.GetValue();
+
+            Assert.IsType(expectedType, value);
+            Assert.Equal(expectedValue, value);
+
+            reader.Read(); // Property name
+            reader.Read(); // Value
+            Assert.Equal("John Doe", reader.GetValue());
+        }
+
+        [Theory]
+        [InlineData("42", typeof(int), 42)]
+        [InlineData("-42", typeof(int), -42)]
+        [InlineData("3.14e2", typeof(double), 314.0)]
+        [InlineData("true", typeof(bool), true)]
+        [InlineData("false", typeof(bool), false)]
+        public async Task ParsePrimitiveValue_Async(string input, Type expectedType, object expectedValue)
+        {
+            var reader = new JsonReader(new StringReader($"{{\"Number\":{input}, \"Name\": \"John Doe\"}}"), isIeee754Compatible: false);
+            await reader.ReadAsync(); // Start object
+            await reader.ReadAsync(); // Property name
+            Assert.Equal("Number", await reader.GetValueAsync());
+
+            await reader.ReadAsync(); // Value
+            var value = await reader.GetValueAsync();
+
+            Assert.IsType(expectedType, value);
+            Assert.Equal(expectedValue, value);
+
+            await reader.ReadAsync(); // Property name
+            await reader.ReadAsync(); // Value
+            Assert.Equal("John Doe", await reader.GetValueAsync());
         }
 
         private JsonReader CreateJsonReader(string jsonValue)
