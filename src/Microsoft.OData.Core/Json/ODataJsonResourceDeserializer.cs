@@ -2708,7 +2708,7 @@ namespace Microsoft.OData.Json
         ///                 JsonNodeType.StartArray             Expanded resource set
         ///                 JsonNodeType.PrimitiveValue (null)  Expanded null
         /// </remarks>
-        internal async Task<ODataJsonReaderNestedInfo> ReadResourceContentAsync(IODataJsonReaderResourceState resourceState)
+        internal async ValueTask<ODataJsonReaderNestedInfo> ReadResourceContentAsync(IODataJsonReaderResourceState resourceState)
         {
             Debug.Assert(resourceState != null, "resourceState != null");
             Debug.Assert(resourceState.ResourceType != null && this.Model.IsUserModel(), "A non-null resource type and non-null model are required.");
@@ -2817,7 +2817,7 @@ namespace Microsoft.OData.Json
         /// A task that represents the asynchronous read operation.
         /// The value of the TResult parameter contains the annotation value.
         /// </returns>
-        internal async Task<object> ReadODataOrCustomInstanceAnnotationValueAsync(
+        internal async ValueTask<object> ReadODataOrCustomInstanceAnnotationValueAsync(
             IODataJsonReaderResourceState resourceState,
             PropertyParsingResult propertyParsingResult,
             string annotationName)
@@ -3261,7 +3261,7 @@ namespace Microsoft.OData.Json
         /// Post-Condition: JsonNodeType.EndObject              This method doesn't move the reader.
         ///                 JsonNodeType.Property
         /// </remarks>
-        internal async Task<ODataJsonReaderNestedInfo> ReadPropertyWithoutValueAsync(IODataJsonReaderResourceState resourceState, string propertyName)
+        internal async ValueTask<ODataJsonReaderNestedInfo> ReadPropertyWithoutValueAsync(IODataJsonReaderResourceState resourceState, string propertyName)
         {
             Debug.Assert(resourceState != null, "resourceState != null");
             Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
@@ -3450,7 +3450,7 @@ namespace Microsoft.OData.Json
         ///                 JsonNodeType.StartArray             Expanded resource set
         ///                 JsonNodeType.PrimitiveValue (null)  Expanded null resource
         /// </remarks>
-        private async Task<ODataJsonReaderNestedInfo> ReadPropertyWithValueAsync(
+        private async ValueTask<ODataJsonReaderNestedInfo> ReadPropertyWithValueAsync(
             IODataJsonReaderResourceState resourceState,
             string propertyName,
             bool isDeltaResourceSet)
@@ -4250,7 +4250,7 @@ namespace Microsoft.OData.Json
         /// Post-Condition: JsonNodeType.Property:      the property after the annotation value
         ///                 JsonNodeType.EndObject:     the end-object of the resource
         /// </remarks>
-        private async Task ReadMetadataReferencePropertyValueAsync(IODataJsonReaderResourceState resourceState, string metadataReferencePropertyName)
+        private async ValueTask ReadMetadataReferencePropertyValueAsync(IODataJsonReaderResourceState resourceState, string metadataReferencePropertyName)
         {
             Debug.Assert(resourceState != null, "resourceState != null");
             Debug.Assert(resourceState.Resource != null, "resourceState.Resource != null");
