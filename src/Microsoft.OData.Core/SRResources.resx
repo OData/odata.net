@@ -2627,4 +2627,7 @@
   <data name="ODataJsonDeserializer_AssertJsonConditionFailed" xml:space="preserve">
     <value>JSON condition failed: the JsonReader is on node {0} (Value: {1}) but it was expected be on {2}.</value>
   </data>
+  <data name="MetadataBinder_FunctionArgumentNotSingleValueOrCollectionNode" xml:space="preserve">
+    <value>The argument for an invocation of a function with name '{0}' is not a single value or collection. Arguments for this function must be either a single value or collection.</value>
+  </data>
 </root>

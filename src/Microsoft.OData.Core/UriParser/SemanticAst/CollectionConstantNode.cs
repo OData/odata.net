@@ -59,6 +59,30 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
+        /// CreateS a CollectionConstantNode.
+        /// </summary>
+        /// <param name="nodeCollection">A ConstantNode collection.</param>
+        /// <param name="literalText">The literal text for this node's value, formatted according to the OData URI literal formatting rules.</param>
+        /// <param name="collectionType">The reference to the collection type.</param>
+        /// <exception cref="System.ArgumentNullException">Throws if the input literalText is null.</exception>
+        internal CollectionConstantNode(IEnumerable<ConstantNode> nodeCollection, string literalText, IEdmCollectionTypeReference collectionType)
+        {
+            ExceptionUtils.CheckArgumentNotNull(nodeCollection, nameof(nodeCollection));
+            ExceptionUtils.CheckArgumentStringNotNullOrEmpty(literalText, nameof(literalText));
+            ExceptionUtils.CheckArgumentNotNull(collectionType, nameof(collectionType));
+
+            this.LiteralText = literalText;
+            EdmCollectionType edmCollectionType = collectionType.Definition as EdmCollectionType;
+            this.itemType = edmCollectionType.ElementType;
+            this.collectionTypeReference = collectionType;
+
+            foreach (ConstantNode item in nodeCollection)
+            {
+                this.collection.Add(item);
+            }
+        }
+
+        /// <summary>
         /// Gets the collection of ConstantNodes.
         /// </summary>
         public IList<ConstantNode> Collection
