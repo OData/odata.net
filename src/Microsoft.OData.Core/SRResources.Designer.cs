@@ -1520,6 +1520,15 @@ namespace Microsoft.OData.Core {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The argument for an invocation of a function with name &apos;{0}&apos; is not a single value or collection. Arguments for this function must be either a single value or collection..
+        /// </summary>
+        internal static string MetadataBinder_FunctionArgumentNotSingleValueOrCollectionNode {
+            get {
+                return ResourceManager.GetString("MetadataBinder_FunctionArgumentNotSingleValueOrCollectionNode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Encountered invalid type cast. &apos;{0}&apos; is not assignable from &apos;{1}&apos;..
         /// </summary>
         internal static string MetadataBinder_HierarchyNotFollowed {
