@@ -322,7 +322,16 @@ namespace Microsoft.OData.Client
                             if (entry != null && properties?.Any() == true)
                             {
                                 ODataProperty aggregationProperty = properties.First();
-                                ODataUntypedValue untypedValue = aggregationProperty.Value as ODataUntypedValue;
+
+                                if (aggregationProperty.Value == null)
+                                {
+                                    return default(TElement);
+                                };
+
+                                if (aggregationProperty.Value is TElement)
+                                {
+                                    return (TElement)aggregationProperty.Value;
+                                }
 
                                 Type underlyingType = Nullable.GetUnderlyingType(typeof(TElement));
                                 if (underlyingType == null) // Not a nullable type
@@ -331,9 +340,9 @@ namespace Microsoft.OData.Client
                                 }
 
                                 return (TElement)Convert.ChangeType(
-                                    untypedValue.RawValue,
-                                    underlyingType,
-                                    System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
+                                        aggregationProperty.Value,
+                                        underlyingType,
+                                        System.Globalization.CultureInfo.InvariantCulture.NumberFormat);
                             }
                             break;
                         default:

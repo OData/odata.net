@@ -1002,17 +1002,6 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.Json
             EdmEntitySet entitySet = container.AddEntitySet("People", entityType);
             model.AddElement(container);
 
-            // Disable case-insensitive - read as untyped string
-            ReadDateTimeOffsetPayloadAndVerify(model, entitySet, entityType, "birthday", false, s =>
-            {
-                Assert.NotNull(s);
-                ODataProperty odataProperty = Assert.IsType<ODataProperty>(Assert.Single(s.Properties));
-                Assert.Equal("birthday", odataProperty.Name);
-                ODataUntypedValue untypedValue = Assert.IsType<ODataUntypedValue>(odataProperty.Value);
-                Assert.Equal("\"2021-10-28T21:33:26+08:00\"", untypedValue.RawValue);
-            },
-            /*readUntypedAsString*/ true);
-
             // Disable case-insensitive - read as untyped value
             ReadDateTimeOffsetPayloadAndVerify(model, entitySet, entityType, "birthday", false, s =>
             {
@@ -1021,8 +1010,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.Json
                 Assert.Equal("birthday", odataProperty.Name);
                 string value = Assert.IsType<string>(odataProperty.Value);
                 Assert.Equal("2021-10-28T21:33:26+08:00", value);
-            },
-            /*readUntypedAsString*/ false);
+            });
 
             // Enable case sensitive
             ReadDateTimeOffsetPayloadAndVerify(model, entitySet, entityType, "birthday", true, s =>
@@ -1035,7 +1023,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.Json
         }
 
         private void ReadDateTimeOffsetPayloadAndVerify(IEdmModel model, EdmEntitySet entitySet, IEdmEntityType entityType, string propertyName, bool enablePropertyCaseInsensitive,
-            Action<ODataResource> verifyAction, bool readUntypedAsString = true)
+            Action<ODataResource> verifyAction)
         {
             string payloadFormat =
                 "{" +
@@ -1047,7 +1035,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.Json
 
             ODataResource resource = null;
             this.ReadEntryPayload(model, payload, entitySet, entityType,
-                reader => { resource = resource ?? reader.Item as ODataResource; }, true, null, enablePropertyCaseInsensitive, readUntypedAsString);
+                reader => { resource = resource ?? reader.Item as ODataResource; }, true, null, enablePropertyCaseInsensitive);
 
             verifyAction(resource);
         }
@@ -1095,14 +1083,13 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.Json
                 Assert.Equal(3.14, odataProperty.Value);
             });
 
-            // Doesn't match any property, read as untyped.
+            // Doesn't match any property, read as untyped (Since 9.x, untyped is read as real value).
             ReadPayloadAndVerify(model, entitySet, entityType, "\"name\":\"Dynamic Property\"", s =>
             {
                 Assert.NotNull(s);
                 ODataProperty odataProperty = Assert.IsType<ODataProperty>(Assert.Single(s.Properties));
                 Assert.Equal("name", odataProperty.Name);
-                ODataUntypedValue untypedValue = Assert.IsType<ODataUntypedValue>(odataProperty.Value);
-                Assert.Equal("\"Dynamic Property\"", untypedValue.RawValue);
+                Assert.Equal("Dynamic Property", odataProperty.Value);
             });
         }
 
@@ -1125,7 +1112,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.Json
 
         private void ReadEntryPayload(IEdmModel userModel, string payload, EdmEntitySet entitySet, IEdmEntityType entityType,
             Action<ODataReader> action, bool isIeee754Compatible = true, IServiceProvider serviceProvider = null,
-            bool enablePropertyCaseInsensitive = false, bool readUntypedAsString = true)
+            bool enablePropertyCaseInsensitive = false)
         {
             var message = new InMemoryMessage() { Stream = new MemoryStream(Encoding.UTF8.GetBytes(payload)), ServiceProvider = serviceProvider };
             string contentType = isIeee754Compatible
@@ -1136,7 +1123,6 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.Json
             {
                 EnableMessageStreamDisposal = true,
                 EnablePropertyNameCaseInsensitive = enablePropertyCaseInsensitive,
-                ReadUntypedAsString = readUntypedAsString
             };
             readerSettings.Validations &= ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType;
             using (var msgReader = new ODataMessageReader((IODataResponseMessage)message, readerSettings, userModel))

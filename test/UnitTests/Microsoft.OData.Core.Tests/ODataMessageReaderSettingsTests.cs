@@ -29,7 +29,6 @@ namespace Microsoft.OData.Tests
             Assert.False(settings.EnableCharactersCheck, "The CheckCharacters should be off by default.");
             Assert.True((settings.Validations & ValidationKinds.ThrowIfTypeConflictsWithMetadata) != 0, "The ThrowIfTypeConflictsWithMetadata should be true by default");                        
             Assert.Null(settings.ShouldIncludeAnnotation);
-            Assert.True(settings.ReadUntypedAsString, "ReadUntypedAsString should be true by default for OData 4.0.");
             Assert.True((settings.Validations & ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType) != 0, "ThrowOnUndeclaredPropertyForNonOpenType should be true by default.");
             Assert.True(ODataVersion.V4 == settings.Version, "Version should be 4.0.");
             Assert.True(ODataVersion.V4 == settings.MaxProtocolVersion, "MaxProtocolVersion should be V4.");
@@ -54,7 +53,6 @@ namespace Microsoft.OData.Tests
             Assert.True(settings.EnablePrimitiveTypeConversion, "EnablePrimitiveTypeConversion should be true by default.");
             Assert.True(settings.EnableMessageStreamDisposal, "EnableMessageStreamDisposal should be false by default.");
             Assert.False(settings.EnableCharactersCheck, "The CheckCharacters should be off by default.");
-            Assert.False(settings.ReadUntypedAsString, "ReadUntypedAsString should be false by default for OData 4.01.");
             Assert.True((settings.Validations & ValidationKinds.ThrowIfTypeConflictsWithMetadata) != 0, "The ThrowIfTypeConflictsWithMetadata should be true by default");
             Assert.Null(settings.ShouldIncludeAnnotation);
             Assert.True((settings.Validations & ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType) == 0, "ThrowOnUndeclaredPropertyForNonOpenType should be false by default for OData 4.01.");
@@ -82,7 +80,6 @@ namespace Microsoft.OData.Tests
             Assert.False(settings.EnableCharactersCheck, "The CheckCharacters should be off by default.");
             Assert.True((settings.Validations & ValidationKinds.ThrowIfTypeConflictsWithMetadata) != 0, "The ThrowIfTypeConflictsWithMetadata should be true by default");
             Assert.Null(settings.ShouldIncludeAnnotation);
-            Assert.True(settings.ReadUntypedAsString, "ReadUntypedAsString should be true by default for OData 4.0.");
             Assert.True((settings.Validations & ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType) != 0, "ThrowOnUndeclaredPropertyForNonOpenType should be true by default.");
             Assert.True(ODataVersion.V4 == settings.Version, "Version should be 4.0.");
             Assert.True(ODataVersion.V4 == settings.MaxProtocolVersion, "MaxProtocolVersion should be V4.");

@@ -53,14 +53,12 @@ namespace Microsoft.OData
             if (odataVersion < ODataVersion.V401)
             {
                 Validations = ValidationKinds.All;
-                this.ReadUntypedAsString = true;
                 this.MaxProtocolVersion = ODataConstants.ODataDefaultProtocolVersion;
                 this.EnableReadingODataAnnotationWithoutPrefix = false;
             }
             else
             {
                 Validations = ValidationKinds.All & ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType;
-                this.ReadUntypedAsString = false;
                 this.MaxProtocolVersion = odataVersion;
                 this.EnableReadingODataAnnotationWithoutPrefix = true;
             }
@@ -192,12 +190,6 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Whether to read untyped values as a raw string.
-        /// </summary>
-        [Obsolete("ReadUntypedAsString is deprecated and will be dropped in a future release. Please use 'PrimitiveTypeResolver' for primitive unknown types.")]
-        public bool ReadUntypedAsString { get; set; }
-
-        /// <summary>
         /// Func to evaluate whether a property should be read as a stream.  Note that IEdmProperty may be null when reading
         /// within a collection
         /// </summary>
@@ -308,7 +300,6 @@ namespace Microsoft.OData
             this.EnableCharactersCheck = other.EnableCharactersCheck;
             this.messageQuotas = new ODataMessageQuotas(other.MessageQuotas);
             this.MaxProtocolVersion = other.MaxProtocolVersion;
-            this.ReadUntypedAsString = other.ReadUntypedAsString;
             this.ShouldIncludeAnnotation = other.ShouldIncludeAnnotation;
             this.validations = other.validations;
             this.ThrowOnDuplicatePropertyNames = other.ThrowOnDuplicatePropertyNames;

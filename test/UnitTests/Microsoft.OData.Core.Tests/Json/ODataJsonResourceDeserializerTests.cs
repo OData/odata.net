@@ -766,8 +766,7 @@ namespace Microsoft.OData.Tests.Json
                     Assert.Equal(3, resourceState.Resource.Properties.Count());
 
                     var piProperty = Assert.IsType<ODataProperty>(Assert.Single(resourceState.Resource.Properties.Where(d => d.Name.Equals("Pi"))));
-                    var untypedValue = Assert.IsType<ODataUntypedValue>(piProperty.Value);
-                    Assert.Equal("3.1428571429", untypedValue.RawValue);
+                    Assert.Equal(3.1428571429m, piProperty.Value);
                 });
         }
 
@@ -790,8 +789,7 @@ namespace Microsoft.OData.Tests.Json
                     Assert.Equal(3, resourceState.Resource.Properties.Count());
 
                     var creditLimitProperty = Assert.IsType<ODataProperty>(Assert.Single(resourceState.Resource.Properties.Where(d => d.Name.Equals("CreditLimit"))));
-                    var untypedValue = Assert.IsType<ODataUntypedValue>(creditLimitProperty.Value);
-                    Assert.Equal("1730", untypedValue.RawValue);
+                    Assert.Equal(1730, creditLimitProperty.Value);
                 });
         }
 
