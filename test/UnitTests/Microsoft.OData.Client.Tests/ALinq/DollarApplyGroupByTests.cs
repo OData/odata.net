@@ -1241,9 +1241,9 @@ namespace Microsoft.OData.Client.Tests.ALinq
             Assert.Equal("2012", aggregateResult.YearStr);
             Assert.Equal(8, aggregateResult.CategoryNameLength);
             Assert.Equal("EUR", aggregateResult.CurrencyCode);
-            Assert.Equal("1.5", aggregateResult.AverageAmount);
+            Assert.Equal("1.500000", aggregateResult.AverageAmount);
             Assert.Equal(3M, aggregateResult.SumAmount);
-            Assert.Equal("1", aggregateResult.MinAmount);
+            Assert.Equal("1.00", aggregateResult.MinAmount);
         }
 
         [Fact]
@@ -1284,9 +1284,9 @@ namespace Microsoft.OData.Client.Tests.ALinq
             Assert.Equal("2012", aggregateResult.YearStr);
             Assert.Equal(8, aggregateResult.CategoryNameLength);
             Assert.Equal("EUR", aggregateResult.CurrencyCode);
-            Assert.Equal("1.5", aggregateResult.AverageAmount);
+            Assert.Equal("1.500000", aggregateResult.AverageAmount);
             Assert.Equal(3M, aggregateResult.SumAmount);
-            Assert.Equal("1", aggregateResult.MinAmount);
+            Assert.Equal("1.00", aggregateResult.MinAmount);
         }
 
         [Fact]

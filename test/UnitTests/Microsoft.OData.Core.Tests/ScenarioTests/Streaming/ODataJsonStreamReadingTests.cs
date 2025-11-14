@@ -1386,7 +1386,6 @@ namespace Microsoft.OData.Tests.Json
                                 Settings = new ODataMessageReaderSettings
                                 {
                                     Version = version,
-                                    ReadUntypedAsString = false,
                                     ReadAsStreamFunc = readAsStream,
                                     ShouldIncludeAnnotation = ODataUtils.CreateAnnotationFilter("*")
                                 },

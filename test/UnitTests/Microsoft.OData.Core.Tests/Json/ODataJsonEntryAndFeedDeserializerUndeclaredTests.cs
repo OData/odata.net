@@ -4,31 +4,27 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.OData;
 using Microsoft.OData.Core;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Tests;
+using Microsoft.OData.Tests.ScenarioTests.Roundtrip.Json;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Numerics;
+using System.Text;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
 {
     public class ODataJsonEntryAndFeedDeserializerUndeclaredTests
     {
-        private static ODataMessageReaderSettings UntypedAsStringReaderSettings = new ODataMessageReaderSettings
-        {
-            Validations = ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType
-        };
-
-        private static ODataMessageReaderSettings UntypedAsValueReaderSettings = new ODataMessageReaderSettings
+        private static ODataMessageReaderSettings ReaderSettings = new ODataMessageReaderSettings
         {
             Validations = ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType & ~ValidationKinds.ThrowIfTypeConflictsWithMetadata,
-            ReadUntypedAsString = false
         };
 
         private ODataMessageWriterSettings writerSettings = new ODataMessageWriterSettings
@@ -84,15 +80,14 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
         // ----------- end of edm for entry reader ----------- 
 
         private void ReadEntryPayload(
-            string payload, 
+            string payload,
             EdmEntitySet entitySet,
-            EdmEntityType entityType, 
-            Action<ODataReader> action, 
-            bool readUntypedAsValue = false,
-            bool readRequest = false, 
+            EdmEntityType entityType,
+            Action<ODataReader> action,
+            bool readRequest = false,
             ODataMessageReaderSettings settings = null)
         {
-            ODataMessageReaderSettings readerSettings = readUntypedAsValue ? UntypedAsValueReaderSettings : UntypedAsStringReaderSettings;
+            ODataMessageReaderSettings readerSettings = ReaderSettings;
             var message = new InMemoryMessage() { Stream = new MemoryStream(Encoding.UTF8.GetBytes(payload)) };
             message.SetHeader("Content-Type", "application/json");
 
@@ -112,7 +107,6 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
             EdmEntitySet entitySet,
             EdmEntityType entityType,
             Action<ODataReader> action,
-            bool readUntypedAsValue = false,
             bool readRequest = false,
             ODataMessageReaderSettings settings = null)
         {
@@ -122,7 +116,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
             };
             message.SetHeader("Content-Type", "application/json");
 
-            ODataMessageReaderSettings readerSettings = readUntypedAsValue ? UntypedAsValueReaderSettings : UntypedAsStringReaderSettings;
+            ODataMessageReaderSettings readerSettings = ReaderSettings;
 
             using (var msgReader = readRequest ?
                 new ODataMessageReader((IODataRequestMessage)message, settings ?? readerSettings, this.serverModel) :
@@ -140,7 +134,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
         {
             var message = new InMemoryMessage() { Stream = new MemoryStream(Encoding.UTF8.GetBytes(payload)) };
             message.SetHeader("Content-Type", "application/json");
-            using (var msgReader = new ODataMessageReader((IODataResponseMessage)message, UntypedAsValueReaderSettings, this.serverModel))
+            using (var msgReader = new ODataMessageReader((IODataResponseMessage)message, ReaderSettings, this.serverModel))
             {
                 var reader = msgReader.CreateODataResourceSetReader();
                 while (reader.Read())
@@ -157,20 +151,6 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
             using (var msgReader = new ODataMessageReader((IODataResponseMessage)message, readerSettings, this.serverModel))
             {
                 var reader = msgReader.CreateODataResourceSetReader();
-                while (reader.Read())
-                {
-                    action(reader);
-                }
-            }
-        }
-
-        private void ReadResourcePayload(string payload, Action<ODataReader> action)
-        {
-            var message = new InMemoryMessage() { Stream = new MemoryStream(Encoding.UTF8.GetBytes(payload)) };
-            message.SetHeader("Content-Type", "application/json");
-            using (var msgReader = new ODataMessageReader((IODataResponseMessage)message, UntypedAsValueReaderSettings, this.serverModel))
-            {
-                var reader = msgReader.CreateODataResourceReader();
                 while (reader.Read())
                 {
                     action(reader);
@@ -207,7 +187,11 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
             });
 
             Assert.Equal(2, entry.Properties.Count());
-            Assert.Equal("null", Assert.IsType<ODataUntypedValue>(Assert.IsType<ODataProperty>(entry.Properties.Last()).ODataValue).RawValue);
+            ODataProperty idProp = Assert.IsType<ODataProperty>(entry.Properties.First(c => c.Name == "Id"));
+            Assert.Equal(61880128, idProp.Value);
+
+            ODataProperty undeclaredAddress1Prop = Assert.IsType<ODataProperty>(entry.Properties.First(c => c.Name == "UndeclaredAddress1"));
+            Assert.Null(undeclaredAddress1Prop.Value);
 
             entry.MetadataBuilder = new Microsoft.OData.Evaluation.NoOpResourceMetadataBuilder(entry);
             string result = this.WriteEntryPayload(this.serverEntitySet, this.serverEntityType, writer =>
@@ -366,8 +350,8 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
             Assert.Single(entry.Properties);
             Assert.Equal("Server.NS.Address", complex1.TypeName);
             Assert.Equal(2, complex1.Properties.Count());
-            Assert.Equal(@"""No.10000000999,Zixing Rd Minhang""",
-                Assert.IsType<ODataUntypedValue>(Assert.IsType<ODataProperty>(complex1.Properties.First(s => string.Equals("UndeclaredStreet", s.Name, StringComparison.Ordinal))).Value).RawValue);
+            Assert.Equal("No.10000000999,Zixing Rd Minhang",
+                Assert.IsType<ODataProperty>(complex1.Properties.First(s => string.Equals("UndeclaredStreet", s.Name, StringComparison.Ordinal))).Value);
 
             entry.MetadataBuilder = new Microsoft.OData.Evaluation.NoOpResourceMetadataBuilder(entry);
             string result = this.WriteEntryPayload(this.serverEntitySet, this.serverEntityType, writer =>
@@ -433,18 +417,44 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
             const string payload = @"{""@odata.context"":""http://www.sampletest.com/$metadata#serverEntitySet/$entity"",""Id"":61880128,""UndeclaredAddress1"":"
                 + @"null,""UndeclaredAddress1@odata.type"":""#Server.NS.UndefComplex1""}";
             ODataResource entry = null;
+            ODataNestedResourceInfo nestedResourceInfo = null;
+            ODataResource complex = null;
+            bool undefComplexRead = false;
             this.ReadEntryPayload(payload, this.serverEntitySet, this.serverEntityType, reader =>
             {
-                entry = reader.Item as ODataResource;
+                if (reader.State == ODataReaderState.ResourceStart)
+                {
+                    if (entry == null)
+                    {
+                        entry = (reader.Item as ODataResource);
+                    }
+                    else if (complex == null)
+                    {
+                        complex = (reader.Item as ODataResource);
+                        undefComplexRead = true;
+                    }
+                }
+                else if (reader.State == ODataReaderState.NestedResourceInfoStart)
+                {
+                    nestedResourceInfo = (ODataNestedResourceInfo)reader.Item;
+                }
             });
 
-            Assert.Equal(2, entry.Properties.Count());
-            Assert.Equal("null", Assert.IsType<ODataUntypedValue>(Assert.IsType<ODataProperty>(entry.Properties.Last()).Value).RawValue);
+            Assert.Single(entry.Properties);
+            Assert.NotNull(nestedResourceInfo);
+            Assert.Equal("UndeclaredAddress1", nestedResourceInfo.Name);
+            Assert.Equal("Server.NS.UndefComplex1", nestedResourceInfo.TypeAnnotation.TypeName);
+            Assert.True(undefComplexRead);
+            Assert.Null(complex);
 
             entry.MetadataBuilder = new Microsoft.OData.Evaluation.NoOpResourceMetadataBuilder(entry);
             string result = this.WriteEntryPayload(this.serverEntitySet, this.serverEntityType, writer =>
             {
                 writer.WriteStart(entry);
+                writer.WriteStart(nestedResourceInfo);
+                writer.WriteStart(complex);
+                writer.WriteEnd();
+                writer.WriteEnd();
                 writer.WriteEnd();
             });
 
@@ -474,10 +484,11 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
             });
 
             Assert.Equal(2, entry.Properties.Count());
-            Assert.Equal("12.3", Assert.IsType<ODataUntypedValue>(Assert.IsType<ODataProperty>(entry.Properties.First(s => string.Equals("UndeclaredFloatId", s.Name, StringComparison.Ordinal))).Value).RawValue); // numeric
+            ODataProperty undeclaredFloatIdProp = Assert.IsType<ODataProperty>(entry.Properties.First(s => string.Equals("UndeclaredFloatId", s.Name, StringComparison.Ordinal)));
+            Assert.Equal(12.3m, undeclaredFloatIdProp.Value); // numeric
             Assert.Equal(2, complex1.Properties.Count());
-            Assert.Equal(@"""No.10000000999,Zixing Rd Minhang""",
-                Assert.IsType<ODataUntypedValue>(Assert.IsType<ODataProperty>(complex1.Properties.First(s => string.Equals("UndeclaredStreet", s.Name, StringComparison.Ordinal))).Value).RawValue);  // string
+            Assert.Equal("No.10000000999,Zixing Rd Minhang",
+                Assert.IsType<ODataProperty>(complex1.Properties.First(s => string.Equals("UndeclaredStreet", s.Name, StringComparison.Ordinal))).Value);  // string
         }
 
         [Fact]
@@ -487,24 +498,8 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
             const string payload = @"{""@odata.context"":""http://www.sampletest.com/$metadata#serverEntitySet/$entity"",""Id"":61880128,""UndeclaredAddress1"":"
                 + @"{""@odata.type"":""Server.NS.AddressInValid"",'Street':""No.999,Zixing Rd Minhang"",""UndeclaredStreet"":'No.10000000999,Zixing Rd Minhang'}}";
             ODataResource entry = null;
-            this.ReadEntryPayload(payload, this.serverEntitySet, this.serverEntityType, reader =>
-            {
-                entry = reader.Item as ODataResource;
-            });
-
-            Assert.Equal(2, entry.Properties.Count());
-            Assert.Equal(@"{""@odata.type"":""Server.NS.AddressInValid"",""Street"":""No.999,Zixing Rd Minhang"",""UndeclaredStreet"":""No.10000000999,Zixing Rd Minhang""}",
-                Assert.IsType<ODataUntypedValue>(Assert.IsType<ODataProperty>(entry.Properties.Last()).Value).RawValue);
-        }
-
-        [Fact]
-        public void ReadNonOpenUnknownTypeInvalidComplexNestedTest()
-        {
-            // non-open entity's unknown property type including string & numeric values
-            const string payload = @"{""@odata.context"":""http://www.sampletest.com/$metadata#serverEntitySet/$entity"",""Id"":61880128,""UndeclaredAddress1"":"
-                + @"{""@odata.type"":""Server.NS.AddressInValid"",'Street':""No.999,Zixing Rd Minhang"",""innerComplex1"":{""innerProp1"":null,""inerProp2"":'abc'},""UndeclaredStreet"":'No.10000000999,Zixing Rd Minhang'}}";
-            ODataResource entry = null;
-            ODataResource complex1 = null;
+            ODataNestedResourceInfo nestedResourceInfo = null;
+            ODataResource complex = null;
             this.ReadEntryPayload(payload, this.serverEntitySet, this.serverEntityType, reader =>
             {
                 if (reader.State == ODataReaderState.ResourceStart)
@@ -513,16 +508,85 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
                     {
                         entry = (reader.Item as ODataResource);
                     }
-                    else if (complex1 == null)
+                    else if (complex == null)
                     {
-                        complex1 = (reader.Item as ODataResource);
+                        complex = (reader.Item as ODataResource);
+                    }
+                }
+                else if (reader.State == ODataReaderState.NestedResourceInfoStart)
+                {
+                    nestedResourceInfo = (ODataNestedResourceInfo)reader.Item;
+                }
+            });
+
+            Assert.Single(entry.Properties);
+            Assert.NotNull(nestedResourceInfo);
+            Assert.Equal("UndeclaredAddress1", nestedResourceInfo.Name);
+
+            Assert.NotNull(complex);
+            Assert.Equal("Server.NS.AddressInValid", complex.TypeName);
+            Assert.Equal("No.999,Zixing Rd Minhang", Assert.IsType<ODataProperty>(complex.Properties.First(c => c.Name == "Street")).Value);
+            Assert.Equal("No.10000000999,Zixing Rd Minhang", Assert.IsType<ODataProperty>(complex.Properties.First(c => c.Name == "UndeclaredStreet")).Value);
+        }
+
+        [Fact]
+        public void ReadNonOpenUnknownTypeInvalidComplexNestedTest()
+        {
+            // non-open entity's unknown property type including string & numeric values
+            const string payload = @"{""@odata.context"":""http://www.sampletest.com/$metadata#serverEntitySet/$entity"",""Id"":61880128,""UndeclaredAddress1"":"
+                + @"{""@odata.type"":""Server.NS.AddressInValid"",'Street':""No.999,Zixing Rd Minhang"",""innerComplex1"":{""innerProp1"":null,""innerProp2"":'abc'},""UndeclaredStreet"":'No.10000000999,Zixing Rd Minhang'}}";
+            ODataResource entry = null;
+            ODataResource complex = null;
+            ODataNestedResourceInfo nestedResourceInfo = null;
+            ODataNestedResourceInfo innerNestedResourceInfo = null;
+            ODataResource innerComplex = null;
+            this.ReadEntryPayload(payload, this.serverEntitySet, this.serverEntityType, reader =>
+            {
+                if (reader.State == ODataReaderState.ResourceStart)
+                {
+                    if (entry == null)
+                    {
+                        entry = (reader.Item as ODataResource);
+                    }
+                    else if (complex == null)
+                    {
+                        complex = (reader.Item as ODataResource);
+                    }
+                    else if (innerComplex == null)
+                    {
+                        innerComplex = (reader.Item as ODataResource);
+                    }
+                }
+                else if (reader.State == ODataReaderState.NestedResourceInfoStart)
+                {
+                    if (nestedResourceInfo == null)
+                    {
+                        nestedResourceInfo = (ODataNestedResourceInfo)reader.Item;
+                    }
+                    else
+                    {
+                        innerNestedResourceInfo = (ODataNestedResourceInfo)reader.Item;
                     }
                 }
             });
 
-            Assert.Equal(2, entry.Properties.Count());
-            Assert.Equal(@"{""@odata.type"":""Server.NS.AddressInValid"",""Street"":""No.999,Zixing Rd Minhang"",""innerComplex1"":{""innerProp1"":null,""inerProp2"":""abc""},""UndeclaredStreet"":""No.10000000999,Zixing Rd Minhang""}",
-                Assert.IsType<ODataUntypedValue>(Assert.IsType<ODataProperty>(entry.Properties.Last()).Value).RawValue);
+            Assert.Single(entry.Properties);
+
+            Assert.NotNull(nestedResourceInfo);
+            Assert.Equal("UndeclaredAddress1", nestedResourceInfo.Name);
+
+            Assert.NotNull(complex);
+            Assert.Equal("Server.NS.AddressInValid", complex.TypeName);
+            Assert.Equal("No.999,Zixing Rd Minhang", Assert.IsType<ODataProperty>(complex.Properties.First(c => c.Name == "Street")).Value);
+            Assert.Equal("No.10000000999,Zixing Rd Minhang", Assert.IsType<ODataProperty>(complex.Properties.First(c => c.Name == "UndeclaredStreet")).Value);
+
+            Assert.NotNull(innerNestedResourceInfo);
+            Assert.Equal("innerComplex1", innerNestedResourceInfo.Name);
+
+            Assert.NotNull(innerComplex);
+            Assert.Equal(2, innerComplex.Properties.Count());
+            Assert.Null(Assert.IsType<ODataProperty>(innerComplex.Properties.First(c => c.Name == "innerProp1")).Value);
+            Assert.Equal("abc", Assert.IsType<ODataProperty>(innerComplex.Properties.First(c => c.Name == "innerProp2")).Value);
         }
 
         [Fact]
@@ -532,6 +596,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
                 UndeclaredCollection1:[""email1@163.com"",""email2@gmail.com"",""email3@gmail2.com""],""Address"":{""Street"":""No.999,Zixing Rd Minhang"",""UndeclaredStreet"":""No.10000000999,Zixing Rd Minhang""}}";
             ODataResource entry = null;
             ODataResource complex1 = null;
+            IList<ODataPrimitiveValue> undeclaredCollection1Values = null;
             this.ReadEntryPayload(payload, this.serverEntitySet, this.serverEntityType, reader =>
             {
                 if (reader.State == ODataReaderState.ResourceStart)
@@ -545,12 +610,28 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
                         complex1 = (reader.Item as ODataResource);
                     }
                 }
+                else if (reader.State == ODataReaderState.ResourceSetStart) // Undeclared is read as ResourceSet
+                {
+                    undeclaredCollection1Values = new List<ODataPrimitiveValue>();
+                }
+                else if (reader.State == ODataReaderState.Primitive)
+                {
+                    undeclaredCollection1Values.Add((ODataPrimitiveValue)reader.Item);
+                }
             });
 
-            Assert.Equal(3, entry.Properties.Count());
-            Assert.Equal(@"[""email1@163.com"",""email2@gmail.com"",""email3@gmail2.com""]",
-                Assert.IsType<ODataUntypedValue>(Assert.IsType<ODataProperty>(entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredCollection1", StringComparison.Ordinal))).Value).RawValue);
+            Assert.Equal(2, entry.Properties.Count());
+            Assert.Equal(12.3m, Assert.IsType<ODataProperty>(entry.Properties.First(c => c.Name == "UndeclaredFloatId")).Value);
+
+            Assert.NotNull(undeclaredCollection1Values);
+            Assert.Equal(3, undeclaredCollection1Values.Count);
+            Assert.Equal(new[] { "email1@163.com", "email2@gmail.com", "email3@gmail2.com" }, undeclaredCollection1Values.Select(u => u.Value));
+
+            Assert.NotNull(complex1);
             Assert.Equal(2, complex1.Properties.Count());
+            Assert.Equal("No.999,Zixing Rd Minhang", Assert.IsType<ODataProperty>(complex1.Properties.First(c => c.Name == "Street")).Value);
+            Assert.Equal("No.10000000999,Zixing Rd Minhang", Assert.IsType<ODataProperty>(complex1.Properties.First(c => c.Name == "UndeclaredStreet")).Value);
+
         }
 
         #endregion
@@ -583,7 +664,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
                 {
                     undeclaredAddress1NestedInfo = (reader.Item as ODataNestedResourceInfo);
                 }
-            }, /*readUntypedAsValue*/ true);
+            }, /*ReadRequest*/ true);
 
             Assert.Single(entry.Properties);
             Assert.Equal("Server.NS.UndefComplex1", undeclaredAddress1NestedInfo.TypeAnnotation.TypeName);
@@ -623,7 +704,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
                         complex1 = (reader.Item as ODataResource);
                     }
                 }
-            }, /*readUntypedAsValue*/ true);
+            }, true);
 
             Assert.Equal(2, entry.Properties.Count());
             ODataProperty decimalProperty = Assert.IsType<ODataProperty>(entry.Properties.First(s => string.Equals("UndeclaredDecimal", s.Name, StringComparison.Ordinal)));
@@ -655,7 +736,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
                         complex1 = (reader.Item as ODataResource);
                     }
                 }
-            }, /*readUntypedAsValue*/ true);
+            }, true);
 
             Assert.Equal(2, entry.Properties.Count());
             Assert.Equal(12.3M, Assert.IsType<ODataProperty>(entry.Properties.First(s => string.Equals("UndeclaredFloatId", s.Name, StringComparison.Ordinal))).Value);
@@ -684,7 +765,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
                         undeclaredAddress1 = (reader.Item as ODataResource);
                     }
                 }
-            }, /*readUntypedAsValue*/ true);
+            }, true);
 
             Assert.Single(entry.Properties);
             Assert.Equal("Server.NS.AddressInValid", undeclaredAddress1.TypeName);
@@ -714,11 +795,10 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
                     }
                 }
             },
-            /*readUntypedAsValue*/ true,
             /*readRequest*/ true);
 
             Assert.Single(entry.Properties);
-            Assert.Equal("Edm.Untyped", undeclaredAddress1.TypeName);
+            Assert.Null(undeclaredAddress1.TypeName);
             Assert.Equal(2, undeclaredAddress1.Properties.Count());
             Assert.Equal("No.10000000999,Zixing Rd Minhang", Assert.IsType<ODataProperty>(undeclaredAddress1.Properties.First(s => string.Equals("UndeclaredStreet", s.Name, StringComparison.Ordinal))).Value);
         }
@@ -749,7 +829,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
                         innerComplex1 = (reader.Item as ODataResource);
                     }
                 }
-            }, /*readUntypedAsValue*/ true);
+            }, true);
 
             Assert.Single(entry.Properties);
             Assert.Equal("Server.NS.AddressInValid", undeclaredAddress1.TypeName);
@@ -799,7 +879,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
                 {
                     undeclaredCollection1Items.Add(reader.Item == null ? null : ((ODataPrimitiveValue)(reader.Item)).Value);
                 }
-            }, /*readUntypedAsValue*/ true);
+            }, true);
 
             Assert.Equal(2, entry.Properties.Count());
             Assert.Equal("UndeclaredCollection1", undeclaredCollection1.Name);
@@ -857,7 +937,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
                 {
                     undeclaredCollection1.TypeAnnotation = new ODataTypeAnnotation((reader.Item as ODataResourceSet).TypeName);
                 }
-            }, /*readUntypedAsValue*/ true);
+            }, true);
 
             Assert.Equal(2, entry.Properties.Count());
             Assert.Equal("Collection(Server.NS.UnknownCollectionType)", undeclaredCollection1.TypeAnnotation.TypeName);
@@ -913,7 +993,6 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
                     undeclaredCollection1.TypeAnnotation = new ODataTypeAnnotation((reader.Item as ODataResourceSet).TypeName);
                 }
             },
-            /*readUntypedAsValue*/ true,
             /*readRequest*/ true);
 
             Assert.Equal(2, entry.Properties.Count());
@@ -940,7 +1019,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
             });
 
             Assert.Equal(3, entry.Properties.Count());
-            Assert.Equal("null", Assert.IsType<ODataUntypedValue>(Assert.IsType<ODataProperty>(entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredType1", StringComparison.Ordinal))).ODataValue).RawValue);
+            Assert.Null(Assert.IsType<ODataProperty>(entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredType1", StringComparison.Ordinal))).Value);
         }
 
         [Fact]
@@ -1031,6 +1110,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
             const string payload = @"{""@odata.context"":""http://www.sampletest.com/$metadata#serverOpenEntitySet/$entity"",""Id"":61880128,""UndeclaredFloatId"":12.3,
                                   ""undeclaredComplex1"":{""MyProp1"":""aaaaaaaaa"",""UndeclaredProp1"":""bbbbbbb""},""Address"":{""Street"":""No.999,Zixing Rd Minhang"",""UndeclaredStreet"":""No.10000000999,Zixing Rd Minhang""}}";
             ODataResource entry = null;
+            ODataResource undeclaredComplex1 = null;
             ODataResource complex1 = null;
             this.ReadEntryPayload(payload, this.serverOpenEntitySet, this.serverOpenEntityType, reader =>
             {
@@ -1040,6 +1120,10 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
                     {
                         entry = (reader.Item as ODataResource);
                     }
+                    else if (undeclaredComplex1 == null)
+                    {
+                        undeclaredComplex1 = (reader.Item as ODataResource);
+                    }
                     else if (complex1 == null)
                     {
                         complex1 = (reader.Item as ODataResource);
@@ -1047,9 +1131,8 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
                 }
             });
 
-            Assert.Equal(3, entry.Properties.Count());
-            Assert.Equal(@"{""MyProp1"":""aaaaaaaaa"",""UndeclaredProp1"":""bbbbbbb""}",
-                Assert.IsType<ODataUntypedValue>(Assert.IsType<ODataProperty>(entry.Properties.Single(s => string.Equals(s.Name, "undeclaredComplex1", StringComparison.Ordinal))).Value).RawValue);
+            Assert.Equal(2, entry.Properties.Count());
+            Assert.Equal(2, undeclaredComplex1.Properties.Count());
             Assert.Equal(2, complex1.Properties.Count());
         }
 
@@ -1074,8 +1157,10 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
                     }
                 }
             });
-            Assert.Equal(@"{""@odata.type"":""Server.NS.AddressUndeclared"",""Street"":""No.999,Zixing Rd Minhang""}",
-                Assert.IsType<ODataUntypedValue>(Assert.IsType<ODataProperty>(entry.Properties.Last()).Value).RawValue);
+
+            Assert.Equal(2, entry.Properties.Count());
+            Assert.Equal("Server.NS.AddressUndeclared", complex1.TypeName);
+            Assert.Equal("No.999,Zixing Rd Minhang", Assert.IsType<ODataProperty>(complex1.Properties.First()).Value);
         }
 
         [Fact]
@@ -1084,28 +1169,37 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
             const string payload = @"{""@odata.context"":""http://www.sampletest.com/$metadata#serverOpenEntitySet/$entity"",""Id"":61880128,""UndeclaredFloatId"":12.3,
                 ""undeclaredComplex1"":{}}";
             ODataResource entry = null;
+            ODataResource complex = null;
             this.ReadEntryPayload(payload, this.serverOpenEntitySet, this.serverOpenEntityType, reader =>
             {
-                entry = reader.Item as ODataResource;
+                if (reader.State == ODataReaderState.ResourceStart)
+                {
+                    if (entry == null)
+                    {
+                        entry = (reader.Item as ODataResource);
+                    }
+                    else if (complex == null)
+                    {
+                        complex = (reader.Item as ODataResource);
+                    }
+                }
             });
 
-            Assert.Equal(3, entry.Properties.Count());
-            Assert.Equal(@"{}",
-                Assert.IsType<ODataUntypedValue>(Assert.IsType<ODataProperty>(entry.Properties.Single(s => string.Equals(s.Name, "undeclaredComplex1", StringComparison.Ordinal))).Value).RawValue);
+            Assert.Equal(2, entry.Properties.Count());
+            Assert.NotNull(complex);
+            Assert.Empty(complex.Properties);
         }
 
         [Fact]
-        public void ReadOpenEntryUndeclaredPrimitiveCollectionPropertiesWithoutODataTypeAsODataCollectionTest()
+        public void ReadOpenEntryUndeclaredPrimitiveCollectionPropertiesWithoutODataTypeAsResourceSetTest()
         {
             const string payload = @"{""@odata.context"":""http://www.sampletest.com/$metadata#serverOpenEntitySet/$entity"",""Id"":61880128,""UndeclaredFloatId"":12.3,
                                                                           UndeclaredCollection1:[""email1@163.com"",""email2@gmail.com"",""email3@gmail2.com""],""Address"":{""Street"":""No.999,Zixing Rd Minhang"",""UndeclaredStreet"":""No.10000000999,Zixing Rd Minhang""}}";
             ODataResource entry = null;
+            IList<ODataPrimitiveValue> undeclaredCollection1Values = null;
+            ODataNestedResourceInfo nestedResourceInfo = null;
             ODataResource complex1 = null;
-            this.ReadEntryPayload(
-                payload, 
-                this.serverOpenEntitySet, 
-                this.serverOpenEntityType,
-                reader =>
+            this.ReadEntryPayload(payload, this.serverOpenEntitySet, this.serverOpenEntityType, reader =>
                 {
                     if (reader.State == ODataReaderState.ResourceStart)
                     {
@@ -1118,28 +1212,51 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
                             complex1 = (reader.Item as ODataResource);
                         }
                     }
+                    else if (reader.State == ODataReaderState.ResourceSetStart)
+                    {
+                        Assert.NotNull(nestedResourceInfo);
+                        Assert.Equal("UndeclaredCollection1", nestedResourceInfo.Name);
+                        Assert.Null(undeclaredCollection1Values); // guard
+                        undeclaredCollection1Values = new List<ODataPrimitiveValue>();
+                    }
+                    else if (reader.State == ODataReaderState.Primitive)
+                    {
+                        Assert.NotNull(undeclaredCollection1Values);// guard
+                        undeclaredCollection1Values.Add(reader.Item as ODataPrimitiveValue);
+                    }
+                    else if (reader.State == ODataReaderState.NestedResourceInfoStart)
+                    {
+                        nestedResourceInfo = (ODataNestedResourceInfo)reader.Item;
+                    }
+                    else if (reader.State == ODataReaderState.NestedResourceInfoEnd)
+                    {
+                        nestedResourceInfo = null;
+                    }
                 },
                 settings: new ODataMessageReaderSettings
                 {
                     ShouldIncludeAnnotation = (annotationName) => true,
                     Validations = ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType,
-                    EnableUntypedCollections = true,
+                    EnableUntypedCollections = true, // Sam: This configuration looks unnecessary? We should consider to remove this configuration when removing/obsolote 'ODataUntypedValue'
                 });
 
-            Assert.Equal(3, entry.Properties.Count());
-            var odataCollection = Assert.IsType<ODataCollectionValue>(Assert.IsType<ODataProperty>(entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredCollection1", StringComparison.Ordinal))).Value);
-            Assert.Equal(@"""email1@163.com"",""email2@gmail.com"",""email3@gmail2.com""",
-                string.Join(",", odataCollection.Items.Cast<ODataUntypedValue>().Select(item => item.RawValue)));
+            Assert.Equal(2, entry.Properties.Count());
+            Assert.NotNull(undeclaredCollection1Values);
+            Assert.Equal(3, undeclaredCollection1Values.Count);
+            Assert.Equal(new[] { "email1@163.com", "email2@gmail.com", "email3@gmail2.com" }, undeclaredCollection1Values.Select(u => u.Value));
+
             Assert.Equal(2, complex1.Properties.Count());
         }
 
         [Fact]
-        public void ReadOpenEntryUndeclaredPrimitiveCollectionPropertiesWithoutODataTypeTest()
+        public void ReadOpenEntryUndeclaredEmptyCollectionPropertiesWithoutODataTypeAsODataResourceSetTest()
         {
             const string payload = @"{""@odata.context"":""http://www.sampletest.com/$metadata#serverOpenEntitySet/$entity"",""Id"":61880128,""UndeclaredFloatId"":12.3,
-                                                                          UndeclaredCollection1:[""email1@163.com"",""email2@gmail.com"",""email3@gmail2.com""],""Address"":{""Street"":""No.999,Zixing Rd Minhang"",""UndeclaredStreet"":""No.10000000999,Zixing Rd Minhang""}}";
+                                                                          UndeclaredCollection1:[],""Address"":{""Street"":""No.999,Zixing Rd Minhang"",""UndeclaredStreet"":""No.10000000999,Zixing Rd Minhang""}}";
             ODataResource entry = null;
             ODataResource complex1 = null;
+            bool readCollection = false;
+            ODataNestedResourceInfo nestedResourceInfo = null;
             this.ReadEntryPayload(payload, this.serverOpenEntitySet, this.serverOpenEntityType, reader =>
             {
                 if (reader.State == ODataReaderState.ResourceStart)
@@ -1148,87 +1265,41 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
                     {
                         entry = (reader.Item as ODataResource);
                     }
-                    else if (complex1 == null)
+                    else
                     {
+                        Assert.NotNull(nestedResourceInfo);
+                        Assert.Equal("Address", nestedResourceInfo.Name);
+
                         complex1 = (reader.Item as ODataResource);
                     }
                 }
-            });
-
-            Assert.Equal(3, entry.Properties.Count());
-            Assert.Equal(@"[""email1@163.com"",""email2@gmail.com"",""email3@gmail2.com""]",
-                Assert.IsType<ODataUntypedValue>(Assert.IsType<ODataProperty>(entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredCollection1", StringComparison.Ordinal))).Value).RawValue);
-            Assert.Equal(2, complex1.Properties.Count());
-        }
-
-        [Fact]
-        public void ReadOpenEntryUndeclaredEmptyCollectionPropertiesWithoutODataTypeAsODataCollectionTest()
-        {
-            const string payload = @"{""@odata.context"":""http://www.sampletest.com/$metadata#serverOpenEntitySet/$entity"",""Id"":61880128,""UndeclaredFloatId"":12.3,
-                                                                          UndeclaredCollection1:[],""Address"":{""Street"":""No.999,Zixing Rd Minhang"",""UndeclaredStreet"":""No.10000000999,Zixing Rd Minhang""}}";
-            ODataResource entry = null;
-            ODataResource complex1 = null;
-            this.ReadEntryPayload(
-                payload, 
-                this.serverOpenEntitySet, 
-                this.serverOpenEntityType, 
-                reader =>
+                else if (reader.State == ODataReaderState.ResourceSetStart)
                 {
-                    if (reader.State == ODataReaderState.ResourceStart)
-                    {
-                        if (entry == null)
-                        {
-                            entry = (reader.Item as ODataResource);
-                        }
-                        else if (complex1 == null)
-                        {
-                            complex1 = (reader.Item as ODataResource);
-                        }
-                    }
-                },
-                settings: new ODataMessageReaderSettings
+                    // to set the type annotation for the undeclared collection property
+                    Assert.NotNull(nestedResourceInfo);
+                    Assert.Equal("UndeclaredCollection1", nestedResourceInfo.Name);
+                    readCollection = true;
+                }
+                else if (reader.State == ODataReaderState.NestedResourceInfoStart)
                 {
-                    ShouldIncludeAnnotation = (annotationName) => true,
-                    Validations = ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType,
-                    EnableUntypedCollections = true,
-                });
-
-            Assert.Equal(3, entry.Properties.Count());
-            var odataCollection = Assert.IsType<ODataCollectionValue>(Assert.IsType<ODataProperty>(entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredCollection1", StringComparison.Ordinal))).Value);
-            Assert.False(odataCollection.Items.Any());
-            Assert.Equal(@"""No.10000000999,Zixing Rd Minhang""",
-                Assert.IsType<ODataUntypedValue>(Assert.IsType<ODataProperty>(complex1.Properties.Single(s => string.Equals(s.Name, "UndeclaredStreet", StringComparison.Ordinal))).Value).RawValue);
-        }
-
-        [Fact]
-        public void ReadOpenEntryUndeclaredEmptyCollectionPropertiesWithoutODataTypeTest()
-        {
-            const string payload = @"{""@odata.context"":""http://www.sampletest.com/$metadata#serverOpenEntitySet/$entity"",""Id"":61880128,""UndeclaredFloatId"":12.3,
-                                                                          UndeclaredCollection1:[],""Address"":{""Street"":""No.999,Zixing Rd Minhang"",""UndeclaredStreet"":""No.10000000999,Zixing Rd Minhang""}}";
-            ODataResource entry = null;
-            ODataResource complex1 = null;
-            this.ReadEntryPayload(payload, this.serverOpenEntitySet, this.serverOpenEntityType, reader =>
+                    nestedResourceInfo = (ODataNestedResourceInfo)reader.Item;
+                }
+                else if (reader.State == ODataReaderState.NestedResourceInfoEnd)
+                {
+                    nestedResourceInfo = null;
+                }
+            },
+            settings: new ODataMessageReaderSettings
             {
-                if (reader.State == ODataReaderState.ResourceStart)
-                {
-                    if (entry == null)
-                    {
-                        entry = (reader.Item as ODataResource);
-                    }
-                    else if (complex1 == null)
-                    {
-                        complex1 = (reader.Item as ODataResource);
-                    }
-                }
+                ShouldIncludeAnnotation = (annotationName) => true,
+                Validations = ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType,
+                EnableUntypedCollections = true, // Sam: This configuration looks unnecessary? We should consider to remove this configuration when removing/obsolote 'ODataUntypedValue'
             });
 
-            Assert.Equal(3, entry.Properties.Count());
-            Assert.Equal(@"[]",
-                Assert.IsType<ODataUntypedValue>(Assert.IsType<ODataProperty>(entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredCollection1", StringComparison.Ordinal))).Value).RawValue);
-            Assert.Equal(@"""No.10000000999,Zixing Rd Minhang""",
-                Assert.IsType<ODataUntypedValue>(Assert.IsType<ODataProperty>(complex1.Properties.Single(s => string.Equals(s.Name, "UndeclaredStreet", StringComparison.Ordinal))).Value).RawValue);
+            Assert.Equal(2, entry.Properties.Count());
+            Assert.True(readCollection);
+            Assert.Equal("No.10000000999,Zixing Rd Minhang", Assert.IsType<ODataProperty>(complex1.Properties.Single(s => string.Equals(s.Name, "UndeclaredStreet", StringComparison.Ordinal))).Value);
         }
-
         #endregion
 
         #region open entity's property unknown name + unknown value type - readAsValue
@@ -1258,7 +1329,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
                         address = (reader.Item as ODataResource);
                     }
                 }
-            }, /*readUntypedAsValue*/ true);
+            }, true);
 
             Assert.Equal(2, entry.Properties.Count());
             Assert.Equal(2, undeclaredComplex.Properties.Count());
@@ -1287,7 +1358,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
                         undeclaredComplex1 = (reader.Item as ODataResource);
                     }
                 }
-            }, /*readUntypedAsValue*/ true);
+            }, true);
 
             Assert.Equal(2, entry.Properties.Count());
             Assert.Equal("Server.NS.AddressUndeclared", undeclaredComplex1.TypeName);
@@ -1315,7 +1386,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
                         undeclaredComplex1 = (reader.Item as ODataResource);
                     }
                 }
-            }, /*readUntypedAsValue*/ true);
+            }, true);
 
             Assert.Equal(2, entry.Properties.Count());
             Assert.Empty(undeclaredComplex1.Properties);
@@ -1373,7 +1444,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
                     Assert.True(populatingCollection, "Found primitive type outside of collection");
                     undeclaredCollection1Items.Add(((ODataPrimitiveValue)(reader.Item)).Value);
                 }
-            }, /*readUntypedAsValue*/ true);
+            }, true);
 
             Assert.Equal(2, entry.Properties.Count());
             Assert.Equal("UndeclaredCollection1", undeclaredCollection1.Name);
@@ -1474,11 +1545,11 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
                         undeclaredNestedCollection = (reader.Item as ODataNestedResourceInfo);
                     }
                 }
-            }, /*readUntypedAsValue*/ true);
+            }, true);
 
             Assert.Equal(2, entry.Properties.Count());
             Assert.Equal(2, undeclaredCollection1Address.Properties.Count());
-            Assert.Equal("Server.NS.Address", undeclaredCollection1Address.TypeAnnotation.TypeName);
+            Assert.Equal("Server.NS.Address", undeclaredCollection1Address.TypeName);
             Assert.Equal("email1@163.com", undeclaredCollection1Email1.Value);
             Assert.Equal("email2@gmail.com", undeclaredCollection1Email2.Value);
             Assert.Equal("email1@163.com", undeclaredCollection1NestedEmail1.Value);
@@ -1528,7 +1599,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
                 {
                     undeclaredCollection1Items.Add(reader.Item == null ? null : ((ODataPrimitiveValue)(reader.Item)).Value);
                 }
-            }, /*readUntypedAsValue*/ true);
+            }, true);
 
             Assert.Equal(2, entry.Properties.Count());
             Assert.Equal("UndeclaredCollection1", undeclaredCollection1.Name);
@@ -1548,7 +1619,10 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
         {
             string payload = "{\"@odata.context\":\"http://www.sampletest.com/$metadata#" + fragment + "\",\"id\":1}";
 
-            var readerSettings = UntypedAsValueReaderSettings.Clone();
+            var readerSettings = new ODataMessageReaderSettings
+            {
+                Validations = ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType & ~ValidationKinds.ThrowIfTypeConflictsWithMetadata,
+            };
 
             ODataResource entry = null;
             this.ReadResourcePayload(payload, readerSettings, reader =>
@@ -1584,7 +1658,10 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
         {
             string payload = "{\"@odata.context\":\"http://www.sampletest.com/$metadata#Edm.Untyped\",\"id\":" + number + "}";
 
-            var readerSettings = UntypedAsValueReaderSettings.Clone();
+            var readerSettings = new ODataMessageReaderSettings
+            {
+                Validations = ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType & ~ValidationKinds.ThrowIfTypeConflictsWithMetadata,
+            };
 
             ODataResource entry = null;
             this.ReadResourcePayload(payload, readerSettings, reader =>
@@ -1620,7 +1697,10 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
         {
             string payload = "{\"@odata.context\":\"http://www.sampletest.com/$metadata#Edm.Untyped\",\"id\":" + number + "}";
 
-            var readerSettings = UntypedAsValueReaderSettings.Clone();
+            var readerSettings = new ODataMessageReaderSettings
+            {
+                Validations = ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType & ~ValidationKinds.ThrowIfTypeConflictsWithMetadata,
+            };
             readerSettings.LibraryCompatibility |= ODataLibraryCompatibility.ReadUntypedNumericAsDecimal;
 
             ODataResource entry = null;
@@ -1652,7 +1732,10 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
         public void ReadUntypedResourceForInt64_ExpectedTypeAsDecimal_WhenReadUntypedNumericAsDecimalFlagIsSetOrDefault(object number, object expectedValue)
         {
             string payload = "{\"@odata.context\":\"http://www.sampletest.com/$metadata#Edm.Untyped\",\"id\":" + number + "}";
-            var readerSettings = UntypedAsValueReaderSettings.Clone();
+            var readerSettings = new ODataMessageReaderSettings
+            {
+                Validations = ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType & ~ValidationKinds.ThrowIfTypeConflictsWithMetadata,
+            };
 
             ODataResource entry = null;
             this.ReadResourcePayload(payload, readerSettings, reader =>
@@ -1701,7 +1784,10 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
         {
             string payload = "{\"@odata.context\":\"http://www.sampletest.com/$metadata#Edm.Untyped\",\"id\":" + number + "}";
 
-            var readerSettings = UntypedAsValueReaderSettings.Clone();
+            var readerSettings = new ODataMessageReaderSettings
+            {
+                Validations = ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType & ~ValidationKinds.ThrowIfTypeConflictsWithMetadata,
+            };
 
             ODataResource entry = null;
             this.ReadResourcePayload(payload, readerSettings, reader =>
@@ -1724,7 +1810,10 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
         public void ReadUntypedResourceForDecimal_ExpectedTypeAsDecimal_WhenReadUntypedNumericAsDecimalFlagIsSetOrDefault(object number, object expectedValue)
         {
             string payload = "{\"@odata.context\":\"http://www.sampletest.com/$metadata#Edm.Untyped\",\"id\":" + number + "}";
-            var readerSettings = UntypedAsValueReaderSettings.Clone();
+            var readerSettings = new ODataMessageReaderSettings
+            {
+                Validations = ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType & ~ValidationKinds.ThrowIfTypeConflictsWithMetadata,
+            };
 
             ODataResource entry = null;
             this.ReadResourcePayload(payload, readerSettings, reader =>
@@ -1759,7 +1848,10 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
         {
             string payload = "{\"@odata.context\":\"http://www.sampletest.com/$metadata#Edm.Untyped\",\"id\":" + number + "}";
 
-            var readerSettings = UntypedAsValueReaderSettings.Clone();
+            var readerSettings = new ODataMessageReaderSettings
+            {
+                Validations = ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType & ~ValidationKinds.ThrowIfTypeConflictsWithMetadata,
+            };
 
             ODataResource entry = null;
             this.ReadResourcePayload(payload, readerSettings, reader =>
@@ -1797,7 +1889,10 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
         public void ReadUntypedResourceForDouble_ExpectedTypeAsDecimal_WhenReadUntypedNumericAsDecimalFlagIsSet(object number, object expectedValue)
         {
             string payload = "{\"@odata.context\":\"http://www.sampletest.com/$metadata#Edm.Untyped\",\"id\":" + number + "}";
-            var readerSettings = UntypedAsValueReaderSettings.Clone();
+            var readerSettings = new ODataMessageReaderSettings
+            {
+                Validations = ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType & ~ValidationKinds.ThrowIfTypeConflictsWithMetadata
+            };
             readerSettings.LibraryCompatibility |= ODataLibraryCompatibility.ReadUntypedNumericAsDecimal;
 
             ODataResource entry = null;
@@ -1890,7 +1985,10 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
                 fragment
                 + "\",\"value\":[42, null, 83748348494435, 2147483647, \"some string\", -9223372036854775808, 214748364745, 3.134545454565656, { \"Anyname\": \"Redmond\", \"Justnull\": null, \"Intnum\": 2345454656, \"longnum\": -9223372036854775808 }]}";
 
-            var readerSettings = UntypedAsValueReaderSettings.Clone();
+            var readerSettings = new ODataMessageReaderSettings
+            {
+                Validations = ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType & ~ValidationKinds.ThrowIfTypeConflictsWithMetadata
+            };
             readerSettings.LibraryCompatibility = ~ODataLibraryCompatibility.ReadUntypedNumericAsDecimal; // Disable the behavior to read untyped numeric as decimal
 
             List<object> entries = new List<object>();
@@ -1922,7 +2020,10 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
         public void ReadUntypedCollectionContainingCollection_WhenReadUntypedNumericAsDecimalFlagIsNotSet(string fragment)
         {
             string payload = "{\"@odata.context\":\"http://www.sampletest.com/$metadata#" + fragment +"\",\"value\":[[\"primitiveString\",{\"id\":1}]]}";
-            var readerSettings = UntypedAsValueReaderSettings.Clone();
+            var readerSettings = new ODataMessageReaderSettings
+            {
+                Validations = ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType & ~ValidationKinds.ThrowIfTypeConflictsWithMetadata
+            };
 
             ODataPrimitiveValue primitiveMember = null;
             ODataResource resourceMember = null;
@@ -1968,7 +2069,10 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
         public void ReadUntypedCollectionForInt32_ExpectedTypeAsInt32_WhenReadUntypedNumericAsDecimalFlagIsNotSet(object number, object expectedValue)
         {
             var payload = "{\"@odata.context\":\"http://www.sampletest.com/$metadata#Collection(Edm.Untyped)\",\"value\":[[\"primitiveString\",{\"id\":1, \"num\":" + number + "}]]}";
-            var readerSettings = UntypedAsValueReaderSettings.Clone();
+            var readerSettings = new ODataMessageReaderSettings
+            {
+                Validations = ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType & ~ValidationKinds.ThrowIfTypeConflictsWithMetadata
+            };
 
             ODataPrimitiveValue primitiveMember = null;
             ODataResource resourceMember = null;
@@ -2012,7 +2116,10 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
         public void ReadUntypedCollectionForInt32_ExpectedTypeAsDecimal_WhenReadUntypedNumericAsDecimalFlagIsSet(object number, object expectedValue)
         {
             var payload = "{\"@odata.context\":\"http://www.sampletest.com/$metadata#Collection(Edm.Untyped)\",\"value\":[[\"primitiveString\",{\"id\":1, \"num\":" + number + "}]]}";
-            var readerSettings = UntypedAsValueReaderSettings.Clone();
+            var readerSettings = new ODataMessageReaderSettings
+            {
+                Validations = ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType & ~ValidationKinds.ThrowIfTypeConflictsWithMetadata
+            };
             readerSettings.LibraryCompatibility |= ODataLibraryCompatibility.ReadUntypedNumericAsDecimal;
 
             ODataPrimitiveValue primitiveMember = null;
@@ -2053,7 +2160,10 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
         public void ReadUntypedCollectionForInt64_ExpectedTypeAsDecimal_WhenReadUntypedNumericAsDecimalFlagIsSetOrDefault(object number, object expectedValue)
         {
             var payload = "{\"@odata.context\":\"http://www.sampletest.com/$metadata#Collection(Edm.Untyped)\",\"value\":[[\"primitiveString\",{\"id\":1, \"num\":" + number + "}]]}";
-            var readerSettings = UntypedAsValueReaderSettings.Clone();
+            var readerSettings = new ODataMessageReaderSettings
+            {
+                Validations = ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType & ~ValidationKinds.ThrowIfTypeConflictsWithMetadata
+            };
 
             ODataPrimitiveValue primitiveMember = null;
             ODataResource resourceMember = null;
@@ -2085,7 +2195,10 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
         public void ReadUntypedCollectionForDecimal_ExpectedTypeAsDecimal_WhenReadUntypedNumericAsDecimalFlagIsNotSet(object number, object expectedValue)
         {
             var payload = "{\"@odata.context\":\"http://www.sampletest.com/$metadata#Collection(Edm.Untyped)\",\"value\":[[\"primitiveString\",{\"id\":1, \"num\":" + number + "}]]}";
-            var readerSettings = UntypedAsValueReaderSettings.Clone();
+            var readerSettings = new ODataMessageReaderSettings
+            {
+                Validations = ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType & ~ValidationKinds.ThrowIfTypeConflictsWithMetadata
+            };
 
             ODataPrimitiveValue primitiveMember = null;
             ODataResource resourceMember = null;
@@ -2117,7 +2230,10 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
         public void ReadUntypedCollectionForDecimal_ExpectedTypeAsDecimal_WhenReadUntypedNumericAsDecimalFlagIsSetOrDefault(object number, object expectedValue)
         {
             var payload = "{\"@odata.context\":\"http://www.sampletest.com/$metadata#Collection(Edm.Untyped)\",\"value\":[[\"primitiveString\",{\"id\":1, \"num\":" + number + "}]]}";
-            var readerSettings = UntypedAsValueReaderSettings.Clone();
+            var readerSettings = new ODataMessageReaderSettings
+            {
+                Validations = ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType & ~ValidationKinds.ThrowIfTypeConflictsWithMetadata
+            };
 
             ODataPrimitiveValue primitiveMember = null;
             ODataResource resourceMember = null;
@@ -2160,7 +2276,10 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
         public void ReadUntypedCollectionForDouble_ExpectedTypeAsDouble_WhenReadUntypedNumericAsDecimalFlagIsNotSet(object number, object expectedValue)
         {
             var payload = "{\"@odata.context\":\"http://www.sampletest.com/$metadata#Collection(Edm.Untyped)\",\"value\":[[\"primitiveString\",{\"id\":1, \"num\":" + number + "}]]}";
-            var readerSettings = UntypedAsValueReaderSettings.Clone();
+            var readerSettings = new ODataMessageReaderSettings
+            {
+                Validations = ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType & ~ValidationKinds.ThrowIfTypeConflictsWithMetadata
+            };
 
             ODataPrimitiveValue primitiveMember = null;
             ODataResource resourceMember = null;
@@ -2207,7 +2326,10 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
         public void ReadUntypedCollectionForDouble_ExpectedTypeAsDecimal_WhenReadUntypedNumericAsDecimalFlagIsSet(object number, object expectedValue)
         {
             var payload = "{\"@odata.context\":\"http://www.sampletest.com/$metadata#Collection(Edm.Untyped)\",\"value\":[[\"primitiveString\",{\"id\":1, \"num\":" + number + "}]]}";
-            var readerSettings = UntypedAsValueReaderSettings.Clone();
+            var readerSettings = new ODataMessageReaderSettings
+            {
+                Validations = ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType & ~ValidationKinds.ThrowIfTypeConflictsWithMetadata
+            };
             readerSettings.LibraryCompatibility |= ODataLibraryCompatibility.ReadUntypedNumericAsDecimal;
 
             ODataPrimitiveValue primitiveMember = null;
@@ -2244,41 +2366,10 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
             const string payload = @"{""@odata.context"":""http://www.sampletest.com/$metadata#serverEntitySet/$entity"",""Id"":61880128,""UndeclaredFloatId"":12.3,
                                   ""undeclaredComplex1"":{""MyProp1"":""aaaaaaaaa"",""UndeclaredProp1"":""bbbbbbb""},""Address"":{""Street"":""No.999,Zixing Rd Minhang"",""UndeclaredStreet"":""No.10000000999,Zixing Rd Minhang""},
                                    MyEdmUntypedProp1:{""MyProp12"":""bbb222"",abc:null}}";
-            ODataResource entry = null;
-            ODataResource complex1 = null;
-            this.ReadEntryPayload(payload, this.serverEntitySet, this.serverEntityType, reader =>
-            {
-                if (reader.State == ODataReaderState.ResourceStart)
-                {
-                    if (entry == null)
-                    {
-                        entry = (reader.Item as ODataResource);
-                    }
-                    else if (complex1 == null)
-                    {
-                        complex1 = (reader.Item as ODataResource);
-                    }
-                }
-            });
 
-            Assert.Equal(4, entry.Properties.Count());
-            Assert.Equal(@"{""MyProp1"":""aaaaaaaaa"",""UndeclaredProp1"":""bbbbbbb""}",
-                Assert.IsType<ODataUntypedValue>(Assert.IsType<ODataProperty>(entry.Properties.Single(s => string.Equals(s.Name, "undeclaredComplex1", StringComparison.Ordinal))).Value).RawValue);
-            Assert.Equal(@"{""MyProp12"":""bbb222"",""abc"":null}",
-                Assert.IsType<ODataUntypedValue>(Assert.IsType<ODataProperty>(entry.Properties.Single(s => string.Equals(s.Name, "MyEdmUntypedProp1", StringComparison.Ordinal))).Value).RawValue);
+            const string expected = "{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverEntitySet/$entity\",\"Id\":61880128,\"UndeclaredFloatId\":12.3,\"undeclaredComplex1\":{\"MyProp1\":\"aaaaaaaaa\",\"UndeclaredProp1\":\"bbbbbbb\"},\"MyEdmUntypedProp1\":{\"MyProp12\":\"bbb222\",\"abc\":null},\"Address\":{\"Street\":\"No.999,Zixing Rd Minhang\",\"UndeclaredStreet\":\"No.10000000999,Zixing Rd Minhang\"}}";
 
-            entry.MetadataBuilder = new Microsoft.OData.Evaluation.NoOpResourceMetadataBuilder(entry);
-            string result = this.WriteEntryPayload(this.serverEntitySet, this.serverEntityType, writer =>
-            {
-                writer.WriteStart(entry);
-                writer.WriteStart(new ODataNestedResourceInfo() { Name = "Address" });
-                writer.WriteStart(complex1);
-                writer.WriteEnd();
-                writer.WriteEnd();
-                writer.WriteEnd();
-            });
-
-            Assert.Equal("{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverEntitySet/$entity\",\"Id\":61880128,\"UndeclaredFloatId\":12.3,\"undeclaredComplex1\":{\"MyProp1\":\"aaaaaaaaa\",\"UndeclaredProp1\":\"bbbbbbb\"},\"MyEdmUntypedProp1\":{\"MyProp12\":\"bbb222\",\"abc\":null},\"Address\":{\"Street\":\"No.999,Zixing Rd Minhang\",\"UndeclaredStreet\":\"No.10000000999,Zixing Rd Minhang\"}}", result);
+            VerifyEntryEdmUntypedProperty(payload, this.serverEntitySet, this.serverEntityType, "MyEdmUntypedProp1", expected);
         }
 
         [Fact]
@@ -2287,41 +2378,84 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
             const string payload = @"{""@odata.context"":""http://www.sampletest.com/$metadata#serverOpenEntitySet/$entity"",""Id"":61880128,""UndeclaredFloatId"":12.3,
                                   ""undeclaredComplex1"":{""MyProp1"":""aaaaaaaaa"",""UndeclaredProp1"":""bbbbbbb""},""Address"":{""Street"":""No.999,Zixing Rd Minhang"",""UndeclaredStreet"":""No.10000000999,Zixing Rd Minhang""},
                                    MyEdmUntypedProp2:{""MyProp12"":""bbb222"",abc:null}}";
-            ODataResource entry = null;
-            ODataResource complex1 = null;
-            this.ReadEntryPayload(payload, this.serverOpenEntitySet, this.serverOpenEntityType, reader =>
+
+            const string expected = "{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverOpenEntitySet/$entity\",\"Id\":61880128,\"UndeclaredFloatId@odata.type\":\"#Decimal\",\"UndeclaredFloatId\":12.3,\"undeclaredComplex1\":{\"MyProp1\":\"aaaaaaaaa\",\"UndeclaredProp1\":\"bbbbbbb\"},\"MyEdmUntypedProp2\":{\"MyProp12\":\"bbb222\",\"abc\":null},\"Address\":{\"Street\":\"No.999,Zixing Rd Minhang\",\"UndeclaredStreet\":\"No.10000000999,Zixing Rd Minhang\"}}";
+
+            VerifyEntryEdmUntypedProperty(payload, this.serverOpenEntitySet, this.serverOpenEntityType, "MyEdmUntypedProp2", expected);
+        }
+
+        private void VerifyEntryEdmUntypedProperty(string payload, EdmEntitySet entitySet, EdmEntityType entityType, string propertyName, string expected)
+        {
+            Stack<(ODataNestedResourceInfo, ODataResource)> resources = new Stack<(ODataNestedResourceInfo, ODataResource)>();
+            ODataNestedResourceInfo nestedResourceInfo = null;
+            this.ReadEntryPayload(payload, entitySet, entityType, reader =>
             {
                 if (reader.State == ODataReaderState.ResourceStart)
                 {
-                    if (entry == null)
-                    {
-                        entry = (reader.Item as ODataResource);
-                    }
-                    else if (complex1 == null)
-                    {
-                        complex1 = (reader.Item as ODataResource);
-                    }
+                    resources.Push((nestedResourceInfo, (ODataResource)reader.Item));
+                }
+                else if (reader.State == ODataReaderState.NestedResourceInfoStart)
+                {
+                    nestedResourceInfo = (ODataNestedResourceInfo)reader.Item;
+                }
+                else if (reader.State == ODataReaderState.NestedResourceInfoEnd)
+                {
+                    nestedResourceInfo = null;
                 }
             });
 
-            Assert.Equal(4, entry.Properties.Count());
-            Assert.Equal(@"{""MyProp1"":""aaaaaaaaa"",""UndeclaredProp1"":""bbbbbbb""}",
-                Assert.IsType<ODataUntypedValue>(Assert.IsType<ODataProperty>(entry.Properties.Single(s => string.Equals(s.Name, "undeclaredComplex1", StringComparison.Ordinal))).Value).RawValue);
-            Assert.Equal(@"{""MyProp12"":""bbb222"",""abc"":null}",
-                Assert.IsType<ODataUntypedValue>(Assert.IsType<ODataProperty>(entry.Properties.Single(s => string.Equals(s.Name, "MyEdmUntypedProp2", StringComparison.Ordinal))).Value).RawValue);
+            Assert.Equal(4, resources.Count);
 
-            entry.MetadataBuilder = new Microsoft.OData.Evaluation.NoOpResourceMetadataBuilder(entry);
-            string result = this.WriteEntryPayload(this.serverOpenEntitySet, this.serverOpenEntityType, writer =>
+            // MyEdmUntypedProp1
+            (ODataNestedResourceInfo, ODataResource) myUntypedProp1 = resources.Pop();
+            Assert.Equal(propertyName, myUntypedProp1.Item1.Name);
+            Assert.NotNull(myUntypedProp1.Item2);
+            Assert.Equal("bbb222", Assert.IsType<ODataProperty>(myUntypedProp1.Item2.Properties.Single(s => s.Name == "MyProp12")).Value);
+            Assert.Null(Assert.IsType<ODataProperty>(myUntypedProp1.Item2.Properties.Single(s => s.Name == "abc")).Value);
+
+            // Address
+            (ODataNestedResourceInfo, ODataResource) address = resources.Pop();
+            Assert.Equal("Address", address.Item1.Name);
+            Assert.NotNull(address.Item2);
+            Assert.Equal("No.999,Zixing Rd Minhang", Assert.IsType<ODataProperty>(address.Item2.Properties.Single(s => s.Name == "Street")).Value);
+            Assert.Equal("No.10000000999,Zixing Rd Minhang", Assert.IsType<ODataProperty>(address.Item2.Properties.Single(s => s.Name == "UndeclaredStreet")).Value);
+
+            // undeclaredComplex1
+            (ODataNestedResourceInfo, ODataResource) undeclaredComplex1 = resources.Pop();
+            Assert.Equal("undeclaredComplex1", undeclaredComplex1.Item1.Name);
+            Assert.NotNull(undeclaredComplex1.Item2);
+            Assert.Equal("aaaaaaaaa", Assert.IsType<ODataProperty>(undeclaredComplex1.Item2.Properties.Single(s => s.Name == "MyProp1")).Value);
+            Assert.Equal("bbbbbbb", Assert.IsType<ODataProperty>(undeclaredComplex1.Item2.Properties.Single(s => s.Name == "UndeclaredProp1")).Value);
+
+            // top-level entry
+            (ODataNestedResourceInfo, ODataResource) topLevel = resources.Pop();
+            Assert.Null(topLevel.Item1);
+            Assert.Equal(2, topLevel.Item2.Properties.Count());
+            Assert.Equal(61880128, Assert.IsType<ODataProperty>(topLevel.Item2.Properties.Single(s => s.Name == "Id")).Value);
+            Assert.Equal(12.3m, Assert.IsType<ODataProperty>(topLevel.Item2.Properties.Single(s => s.Name == "UndeclaredFloatId")).Value);
+
+            // write the inner resources as the following order
+            Assert.True(resources.Count == 0);
+            resources.Push(address);
+            resources.Push(myUntypedProp1);
+            resources.Push(undeclaredComplex1);
+
+            topLevel.Item2.MetadataBuilder = new Microsoft.OData.Evaluation.NoOpResourceMetadataBuilder(topLevel.Item2);
+            string result = this.WriteEntryPayload(entitySet, entityType, writer =>
             {
-                writer.WriteStart(entry);
-                writer.WriteStart(new ODataNestedResourceInfo() { Name = "Address" });
-                writer.WriteStart(complex1);
-                writer.WriteEnd();
-                writer.WriteEnd();
+                writer.WriteStart(topLevel.Item2);
+                foreach (var item in resources)
+                {
+                    writer.WriteStart(item.Item1); // nestedResourceInfo
+                    writer.WriteStart(item.Item2);
+                    writer.WriteEnd();
+                    writer.WriteEnd();
+                }
+
                 writer.WriteEnd();
             });
 
-            Assert.Equal("{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverOpenEntitySet/$entity\",\"Id\":61880128,\"UndeclaredFloatId\":12.3,\"undeclaredComplex1\":{\"MyProp1\":\"aaaaaaaaa\",\"UndeclaredProp1\":\"bbbbbbb\"},\"MyEdmUntypedProp2\":{\"MyProp12\":\"bbb222\",\"abc\":null},\"Address\":{\"Street\":\"No.999,Zixing Rd Minhang\",\"UndeclaredStreet\":\"No.10000000999,Zixing Rd Minhang\"}}", result);
+            Assert.Equal(expected, result);
         }
 
         [Fact]
@@ -2329,42 +2463,10 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
         {
             const string payload = @"{""@odata.context"":""http://www.sampletest.com/$metadata#serverEntitySet/$entity"",""Id"":61880128,""UndeclaredFloatId"":12.3,
                                   ""undeclaredComplex1"":{""MyProp1"":""aaaaaaaaa"",""UndeclaredProp1"":""bbbbbbb""},""Address"":{""Street"":""No.999,Zixing Rd Minhang"",""UndeclaredStreet"":""No.10000000999,Zixing Rd Minhang"",MyEdmUntypedProp3:{""MyProp12"":""bbb222"",abc:null}}}";
-            ODataResource entry = null;
-            ODataResource complex1 = null;
-            this.ReadEntryPayload(payload, this.serverEntitySet, this.serverEntityType, reader =>
-            {
-                if (reader.State == ODataReaderState.ResourceStart)
-                {
-                    if (entry == null)
-                    {
-                        entry = (reader.Item as ODataResource);
-                    }
-                    else if (complex1 == null)
-                    {
-                        complex1 = (reader.Item as ODataResource);
-                    }
-                }
-            });
 
-            Assert.Equal(3, entry.Properties.Count());
-            Assert.Equal(@"{""MyProp1"":""aaaaaaaaa"",""UndeclaredProp1"":""bbbbbbb""}",
-                Assert.IsType<ODataUntypedValue>(Assert.IsType<ODataProperty>(entry.Properties.Single(s => string.Equals(s.Name, "undeclaredComplex1", StringComparison.Ordinal))).Value).RawValue);
-            Assert.Equal(@"{""MyProp12"":""bbb222"",""abc"":null}",
-                Assert.IsType<ODataUntypedValue>(Assert.IsType<ODataProperty>(complex1.Properties.Single(s => string.Equals(s.Name, "MyEdmUntypedProp3", StringComparison.Ordinal))).Value).RawValue);
-
-            entry.MetadataBuilder = new Microsoft.OData.Evaluation.NoOpResourceMetadataBuilder(entry);
-            string result = this.WriteEntryPayload(this.serverEntitySet, this.serverEntityType, writer =>
-            {
-                writer.WriteStart(entry);
-                writer.WriteStart(new ODataNestedResourceInfo() { Name = "Address" });
-                writer.WriteStart(complex1);
-                writer.WriteEnd();
-                writer.WriteEnd();
-                writer.WriteEnd();
-            });
-
-            Assert.Equal("{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverEntitySet/$entity\",\"Id\":61880128,\"UndeclaredFloatId\":12.3,\"undeclaredComplex1\":{\"MyProp1\":\"aaaaaaaaa\",\"UndeclaredProp1\":\"bbbbbbb\"},\"Address\":{\"Street\":\"No.999,Zixing Rd Minhang\",\"UndeclaredStreet\":\"No.10000000999,Zixing Rd Minhang\",\"MyEdmUntypedProp3\":{\"MyProp12\":\"bbb222\",\"abc\":null}}}", result);
-        }
+            VerifyEntryEdmUntypedProperty(payload, this.serverEntitySet, this.serverEntityType, "MyEdmUntypedProp3",
+                "{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverEntitySet/$entity\",\"Id\":61880128,\"UndeclaredFloatId\":12.3,\"undeclaredComplex1\":{\"MyProp1\":\"aaaaaaaaa\",\"UndeclaredProp1\":\"bbbbbbb\"},\"MyEdmUntypedProp3\":{\"MyProp12\":\"bbb222\",\"abc\":null},\"Address\":{\"Street\":\"No.999,Zixing Rd Minhang\",\"UndeclaredStreet\":\"No.10000000999,Zixing Rd Minhang\"}}");
+          }
         #endregion
 
         #region declared Edm.Untyped property with odata.type
@@ -2397,7 +2499,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
                 {
                     nestedInfo = (reader.Item as ODataNestedResourceInfo);
                 }
-            }, false, true /*reading request*/);
+            }, true /*reading request*/);
 
             VerifyResourceAndWrite(topLevelResource, nestedResource, nestedInfo);
         }
@@ -2431,7 +2533,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
                 {
                     nestedInfo = (reader.Item as ODataNestedResourceInfo);
                 }
-            }, false, true /*reading request*/);
+            }, true /*reading request*/);
 
             VerifyResourceAndWrite(topLevelResource, nestedResource, nestedInfo);
         }
@@ -2476,7 +2578,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
                 {
                     topLevelResource = (reader.Item as ODataResource);
                 }
-            }, false, true /*reading request*/);
+            }, true /*reading request*/);
 
             VerifyEnum(topLevelResource);
         }
@@ -2495,7 +2597,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
                 {
                     topLevelResource = (reader.Item as ODataResource);
                 }
-            }, false, true /*reading request*/);
+            }, true /*reading request*/);
 
             VerifyEnum(topLevelResource);
         }
@@ -2509,10 +2611,8 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
             Assert.Equal("Member", enumValue.Value);
         }
 
-        [Theory]
-        [InlineData(true)]
-        [InlineData(false)]
-        public void ReadSingleValueEdmUntypedPropertyWithODataTypePrimitiveCollectionTest(bool readUntypedAsValue)
+        [Fact]
+        public void ReadSingleValueEdmUntypedPropertyWithODataTypePrimitiveCollectionTest()
         {
             const string payload = @"{
   ""MyEdmUntypedProp1@odata.type"": ""#Collection(Edm.Int32)"",
@@ -2526,7 +2626,6 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
                     topLevelResource = (reader.Item as ODataResource);
                 }
             },
-            readUntypedAsValue, // it doesn't matter since the value is typed.
             true /*reading request*/);
 
             ODataProperty property = Assert.IsType<ODataProperty>(Assert.Single(topLevelResource.Properties));
@@ -2576,7 +2675,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
                 {
                     primitiveValue = (reader.Item as ODataPrimitiveValue);
                 }
-            }, true, true /*reading request*/);
+            }, true /*reading request*/);
 
             Assert.Empty(topLevelResource.Properties);
             Assert.Equal("MyEdmUntypedProp1", nestedInfo.Name);
@@ -2629,7 +2728,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
                 {
                     primitiveValue = (reader.Item as ODataPrimitiveValue);
                 }
-            }, false, true /*reading request*/);
+            }, true /*reading request*/);
 
             VerifyCollectionAndWrite(topLevelResource, nestedResource, resourceSet, nestedInfo, primitiveValue);
         }
@@ -2676,7 +2775,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
                 {
                     primitiveValue = (reader.Item as ODataPrimitiveValue);
                 }
-            }, false, true /*reading request*/);
+            }, true /*reading request*/);
 
             VerifyCollectionAndWrite(topLevelResource, nestedResource, resourceSet, nestedInfo, primitiveValue);
         }
@@ -2721,101 +2820,33 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
             const string payload = @"{""@odata.context"":""http://www.sampletest.com/$metadata#serverEntitySet/$entity"",""Id"":61880128,""UndeclaredFloatId"":12.3,
                                   ""undeclaredComplex1"":{""MyProp1"":""aaaaaaaaa"",""UndeclaredProp1"":""bbbbbbb""},""Address"":{""Street"":""No.999,Zixing Rd Minhang"",""UndeclaredStreet"":""No.10000000999,Zixing Rd Minhang""},
             ""UndeclaredMyEdmUntypedProp1@odata.type"":""Edm.Untyped"",UndeclaredMyEdmUntypedProp1:{""MyProp12"":""bbb222"",abc:null}}";
-            ODataResource entry = null;
-            ODataResource complex1 = null;
-            ODataResource complex2 = null;
-            this.ReadEntryPayload(payload, this.serverEntitySet, this.serverEntityType, reader =>
-            {
-                if (reader.State == ODataReaderState.ResourceStart)
-                {
-                    if (entry == null)
-                    {
-                        entry = (reader.Item as ODataResource);
-                    }
-                    else if (complex1 == null)
-                    {
-                        complex1 = (reader.Item as ODataResource);
-                    }
-                    else if (complex2 == null)
-                    {
-                        complex2 = (reader.Item as ODataResource);
-                    }
-                }
-            });
 
-            Assert.Equal(4, entry.Properties.Count());
-            Assert.Equal(@"{""MyProp1"":""aaaaaaaaa"",""UndeclaredProp1"":""bbbbbbb""}",
-                Assert.IsType<ODataUntypedValue>(Assert.IsType<ODataProperty>(entry.Properties.Single(s => string.Equals(s.Name, "undeclaredComplex1", StringComparison.Ordinal))).Value).RawValue);
-            Assert.Equal(@"{""MyProp12"":""bbb222"",""abc"":null}",
-                Assert.IsType<ODataUntypedValue>(Assert.IsType<ODataProperty>(entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredMyEdmUntypedProp1", StringComparison.Ordinal))).Value).RawValue);
-            Assert.Equal("Edm.Untyped", entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredMyEdmUntypedProp1", StringComparison.Ordinal)).TypeAnnotation.TypeName);
-            Assert.Null(complex2);
-
-            entry.MetadataBuilder = new Microsoft.OData.Evaluation.NoOpResourceMetadataBuilder(entry);
-            string result = this.WriteEntryPayload(this.serverEntitySet, this.serverEntityType, writer =>
-            {
-                writer.WriteStart(entry);
-                writer.WriteStart(new ODataNestedResourceInfo() { Name = "Address" });
-                writer.WriteStart(complex1);
-                writer.WriteEnd();
-                writer.WriteEnd();
-                writer.WriteEnd();
-            });
-
-            Assert.Equal("{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverEntitySet/$entity\",\"Id\":61880128,\"UndeclaredFloatId\":12.3,\"undeclaredComplex1\":{\"MyProp1\":\"aaaaaaaaa\",\"UndeclaredProp1\":\"bbbbbbb\"},\"UndeclaredMyEdmUntypedProp1@odata.type\":\"#Untyped\",\"UndeclaredMyEdmUntypedProp1\":{\"MyProp12\":\"bbb222\",\"abc\":null},\"Address\":{\"Street\":\"No.999,Zixing Rd Minhang\",\"UndeclaredStreet\":\"No.10000000999,Zixing Rd Minhang\"}}", result);
+            VerifyEntryEdmUntypedProperty(payload, this.serverEntitySet, this.serverEntityType, "UndeclaredMyEdmUntypedProp1",
+    "{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverEntitySet/$entity\",\"Id\":61880128,\"UndeclaredFloatId\":12.3,\"undeclaredComplex1\":{\"MyProp1\":\"aaaaaaaaa\",\"UndeclaredProp1\":\"bbbbbbb\"},\"UndeclaredMyEdmUntypedProp1\":{\"MyProp12\":\"bbb222\",\"abc\":null},\"Address\":{\"Street\":\"No.999,Zixing Rd Minhang\",\"UndeclaredStreet\":\"No.10000000999,Zixing Rd Minhang\"}}");
         }
 
         [Fact]
         public void ReadOpenEntryEdmUntypedPropertyODataTypeTest()
         {
             const string payload = @"{""@odata.context"":""http://www.sampletest.com/$metadata#serverOpenEntitySet/$entity"",""Id"":61880128,""UndeclaredFloatId"":12.3,
-                                  ""undeclaredComplex1"":{""MyProp1"":""aaaaaaaaa"",""UndeclaredProp1"":""bbbbbbb""},""Address"":{""Street"":""No.999,Zixing Rd Minhang"",""UndeclaredStreet"":""No.10000000999,Zixing Rd Minhang""},
-            ""UndeclaredMyEdmUntypedProp2@odata.type"":""Edm.Untyped"",UndeclaredMyEdmUntypedProp2:{""MyProp12"":""bbb222"",""abc"":null}}";
-            ODataResource entry = null;
-            ODataResource complex1 = null;
-            this.ReadEntryPayload(payload, this.serverOpenEntitySet, this.serverOpenEntityType, reader =>
-            {
-                if (reader.State == ODataReaderState.ResourceStart)
-                {
-                    if (entry == null)
-                    {
-                        entry = (reader.Item as ODataResource);
-                    }
-                    else if (complex1 == null)
-                    {
-                        complex1 = (reader.Item as ODataResource);
-                    }
-                }
-            });
+  ""undeclaredComplex1"":{""MyProp1"":""aaaaaaaaa"",""UndeclaredProp1"":""bbbbbbb""},
+  ""Address"":{""Street"":""No.999,Zixing Rd Minhang"",""UndeclaredStreet"":""No.10000000999,Zixing Rd Minhang""},
+  ""UndeclaredMyEdmUntypedProp2"":{""@odata.type"":""#Edm.Untyped"",""MyProp12"":""bbb222"",""abc"":null}}";
 
-            Assert.Equal(4, entry.Properties.Count());
-            Assert.Equal(@"{""MyProp1"":""aaaaaaaaa"",""UndeclaredProp1"":""bbbbbbb""}",
-                Assert.IsType<ODataUntypedValue>(Assert.IsType<ODataProperty>(entry.Properties.Single(s => string.Equals(s.Name, "undeclaredComplex1", StringComparison.Ordinal))).Value).RawValue);
-            Assert.Equal(@"{""MyProp12"":""bbb222"",""abc"":null}",
-                Assert.IsType<ODataUntypedValue>(Assert.IsType<ODataProperty>(entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredMyEdmUntypedProp2", StringComparison.Ordinal))).Value).RawValue);
-            Assert.Equal("Edm.Untyped", entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredMyEdmUntypedProp2", StringComparison.Ordinal)).TypeAnnotation.TypeName);
-
-            entry.MetadataBuilder = new Microsoft.OData.Evaluation.NoOpResourceMetadataBuilder(entry);
-            string result = this.WriteEntryPayload(this.serverOpenEntitySet, this.serverOpenEntityType, writer =>
-            {
-                writer.WriteStart(entry);
-                writer.WriteStart(new ODataNestedResourceInfo() { Name = "Address" });
-                writer.WriteStart(complex1);
-                writer.WriteEnd();
-                writer.WriteEnd();
-                writer.WriteEnd();
-            });
-
-            Assert.Equal("{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverOpenEntitySet/$entity\",\"Id\":61880128,\"UndeclaredFloatId\":12.3,\"undeclaredComplex1\":{\"MyProp1\":\"aaaaaaaaa\",\"UndeclaredProp1\":\"bbbbbbb\"},\"UndeclaredMyEdmUntypedProp2@odata.type\":\"#Untyped\",\"UndeclaredMyEdmUntypedProp2\":{\"MyProp12\":\"bbb222\",\"abc\":null},\"Address\":{\"Street\":\"No.999,Zixing Rd Minhang\",\"UndeclaredStreet\":\"No.10000000999,Zixing Rd Minhang\"}}", result);
+            VerifyEntryEdmUntypedProperty(payload, this.serverOpenEntitySet, this.serverOpenEntityType, "UndeclaredMyEdmUntypedProp2",
+                "{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverOpenEntitySet/$entity\",\"Id\":61880128,\"UndeclaredFloatId@odata.type\":\"#Decimal\",\"UndeclaredFloatId\":12.3,\"undeclaredComplex1\":{\"MyProp1\":\"aaaaaaaaa\",\"UndeclaredProp1\":\"bbbbbbb\"},\"UndeclaredMyEdmUntypedProp2\":{\"MyProp12\":\"bbb222\",\"abc\":null},\"Address\":{\"Street\":\"No.999,Zixing Rd Minhang\",\"UndeclaredStreet\":\"No.10000000999,Zixing Rd Minhang\"}}");
         }
 
         [Fact]
         public void ReadNonOpenEntryEdmUntypedPropertyODataTypeInComplexTest()
         {
             const string payload = @"{""@odata.context"":""http://www.sampletest.com/$metadata#serverEntitySet/$entity"",""Id"":61880128,""UndeclaredFloatId"":12.3,
-                                  ""undeclaredComplex1"":{""MyProp1"":""aaaaaaaaa"",""UndeclaredProp1"":""bbbbbbb""},""Address"":{""Street"":""No.999,Zixing Rd Minhang"",""UndeclaredStreet"":""No.10000000999,Zixing Rd Minhang"",""UndeclaredMyEdmUntypedProp3@odata.type"":""Edm.Untyped"",UndeclaredMyEdmUntypedProp3:{""MyProp12"":""bbb222"",abc:null}}}";
+  ""undeclaredComplex1"":{""MyProp1"":""aaaaaaaaa"",""UndeclaredProp1"":""bbbbbbb""},
+  ""Address"":{""Street"":""No.999,Zixing Rd Minhang"",""UndeclaredStreet"":""No.10000000999,Zixing Rd Minhang"",UndeclaredMyEdmUntypedProp3:{""@odata.type"":""Edm.Untyped"",""MyProp12"":""bbb222"",abc:null}}}";
             ODataResource entry = null;
-            ODataResource complex1 = null;
+            ODataResource undeclaredComplex1 = null;
+            ODataResource address = null;
+            ODataResource undeclaredMyEdmUntypedProp3 = null;
             this.ReadEntryPayload(payload, this.serverEntitySet, this.serverEntityType, reader =>
             {
                 if (reader.State == ODataReaderState.ResourceStart)
@@ -2824,33 +2855,63 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
                     {
                         entry = (reader.Item as ODataResource);
                     }
-                    else if (complex1 == null)
+                    else if (undeclaredComplex1 == null)
                     {
-                        complex1 = (reader.Item as ODataResource);
+                        undeclaredComplex1 = (reader.Item as ODataResource);
+                    }
+                    else if (address == null)
+                    {
+                        address = (reader.Item as ODataResource);
+                    }
+                    else if (undeclaredMyEdmUntypedProp3 == null)
+                    {
+                        undeclaredMyEdmUntypedProp3 = (reader.Item as ODataResource);
                     }
                 }
             });
 
-            Assert.Equal(3, entry.Properties.Count());
-            Assert.Equal(@"{""MyProp1"":""aaaaaaaaa"",""UndeclaredProp1"":""bbbbbbb""}",
-                Assert.IsType<ODataUntypedValue>(Assert.IsType<ODataProperty>(entry.Properties.Single(s => string.Equals(s.Name, "undeclaredComplex1", StringComparison.Ordinal))).Value).RawValue);
-            Assert.Equal(@"{""MyProp12"":""bbb222"",""abc"":null}",
-                Assert.IsType<ODataUntypedValue>(Assert.IsType<ODataProperty>(complex1.Properties.Single(s => string.Equals(s.Name, "UndeclaredMyEdmUntypedProp3", StringComparison.Ordinal))).Value).RawValue);
-            Assert.Equal("Edm.Untyped", complex1.Properties
-                .Single(s => string.Equals(s.Name, "UndeclaredMyEdmUntypedProp3", StringComparison.Ordinal)).TypeAnnotation.TypeName);
+            Assert.Equal(2, entry.Properties.Count());
+
+            Assert.Equal(2, undeclaredComplex1.Properties.Count());
+            Assert.Equal("aaaaaaaaa",
+                Assert.IsType<ODataProperty>(undeclaredComplex1.Properties.Single(s => string.Equals(s.Name, "MyProp1", StringComparison.Ordinal))).Value);
+            Assert.Equal("bbbbbbb",
+                Assert.IsType<ODataProperty>(undeclaredComplex1.Properties.Single(s => string.Equals(s.Name, "UndeclaredProp1", StringComparison.Ordinal))).Value);
+
+            Assert.Equal(2, address.Properties.Count());
+            Assert.Equal("No.999,Zixing Rd Minhang",
+                Assert.IsType<ODataProperty>(address.Properties.Single(s => string.Equals(s.Name, "Street", StringComparison.Ordinal))).Value);
+            Assert.Equal("No.10000000999,Zixing Rd Minhang",
+                Assert.IsType<ODataProperty>(address.Properties.Single(s => string.Equals(s.Name, "UndeclaredStreet", StringComparison.Ordinal))).Value);
+
+            Assert.Equal("Edm.Untyped", undeclaredMyEdmUntypedProp3.TypeName);
+            Assert.Equal(2, undeclaredMyEdmUntypedProp3.Properties.Count());
+            Assert.Equal("bbb222",
+                 Assert.IsType<ODataProperty>(undeclaredMyEdmUntypedProp3.Properties.Single(s => s.Name == "MyProp12")).Value);
+            Assert.Null(Assert.IsType<ODataProperty>(undeclaredMyEdmUntypedProp3.Properties.Single(s => s.Name == "abc")).Value);
 
             entry.MetadataBuilder = new Microsoft.OData.Evaluation.NoOpResourceMetadataBuilder(entry);
             string result = this.WriteEntryPayload(this.serverEntitySet, this.serverEntityType, writer =>
             {
                 writer.WriteStart(entry);
+
+                writer.WriteStart(new ODataNestedResourceInfo() { Name = "undeclaredComplex1" });
+                writer.WriteStart(undeclaredComplex1);
+                writer.WriteEnd();
+                writer.WriteEnd();
+
                 writer.WriteStart(new ODataNestedResourceInfo() { Name = "Address" });
-                writer.WriteStart(complex1);
+                writer.WriteStart(address);
+                writer.WriteStart(new ODataNestedResourceInfo() { Name = "UndeclaredMyEdmUntypedProp3" });
+                writer.WriteStart(undeclaredMyEdmUntypedProp3);
+                writer.WriteEnd();
+                writer.WriteEnd();
                 writer.WriteEnd();
                 writer.WriteEnd();
                 writer.WriteEnd();
             });
 
-            Assert.Equal("{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverEntitySet/$entity\",\"Id\":61880128,\"UndeclaredFloatId\":12.3,\"undeclaredComplex1\":{\"MyProp1\":\"aaaaaaaaa\",\"UndeclaredProp1\":\"bbbbbbb\"},\"Address\":{\"Street\":\"No.999,Zixing Rd Minhang\",\"UndeclaredStreet\":\"No.10000000999,Zixing Rd Minhang\",\"UndeclaredMyEdmUntypedProp3@odata.type\":\"#Untyped\",\"UndeclaredMyEdmUntypedProp3\":{\"MyProp12\":\"bbb222\",\"abc\":null}}}", result);
+            Assert.Equal("{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverEntitySet/$entity\",\"Id\":61880128,\"UndeclaredFloatId\":12.3,\"undeclaredComplex1\":{\"MyProp1\":\"aaaaaaaaa\",\"UndeclaredProp1\":\"bbbbbbb\"},\"Address\":{\"Street\":\"No.999,Zixing Rd Minhang\",\"UndeclaredStreet\":\"No.10000000999,Zixing Rd Minhang\",\"UndeclaredMyEdmUntypedProp3\":{\"MyProp12\":\"bbb222\",\"abc\":null}}}", result);
         }
         #endregion
 
@@ -2876,7 +2937,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
                         undeclaredProperty = (reader.Item as ODataResource);
                     }
                 }
-            }, /*readUntypedAsValue*/ true);
+            }, true);
 
             Assert.Single(entry.Properties);
             Assert.Equal("Server.NS.Undeclared", undeclaredProperty.TypeName);
@@ -2900,28 +2961,30 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
                 ""UndeclaredProperty@odata.type"":""#Collection(Server.NS.Undeclared)"",""UndeclaredProperty"":[{""Id"":""123""}]}";
             ODataResource entry = null;
             ODataResource undeclaredProperty = null;
-            int level = 0;
+            ODataNestedResourceInfo nestedInfo = null;
             this.ReadEntryPayload(payload, this.serverOpenEntitySet, this.serverOpenEntityType, reader =>
             {
                 if (reader.State == ODataReaderState.ResourceStart)
                 {
-                    if (level == 0)
+                    if (entry == null)
                     {
                         entry = (reader.Item as ODataResource);
                     }
-                    else if (level == 1)
+                    else if (undeclaredProperty == null)
                     {
                         undeclaredProperty = (reader.Item as ODataResource);
                     }
                 }
                 else if (reader.State == ODataReaderState.NestedResourceInfoStart)
                 {
-                    level++;
+                    nestedInfo = (ODataNestedResourceInfo)reader.Item;
                 }
-            }, /*readUntypedAsValue*/ true);
+            }, true);
 
             Assert.Single(entry.Properties);
-            Assert.Equal("Server.NS.Undeclared", undeclaredProperty.TypeName);
+            Assert.Equal("UndeclaredProperty", nestedInfo.Name);
+            Assert.Null(nestedInfo.TypeAnnotation);
+            Assert.Null(undeclaredProperty.TypeName);
             Assert.Single(undeclaredProperty.Properties);
             Assert.Equal("123", Assert.IsType<ODataProperty>(undeclaredProperty.Properties.Single(p => p.Name == "Id")).Value);
         }
@@ -2940,7 +3003,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
         {
             string contextUrl = @"http://www.sampletest.com/$metadata#Collection(Server.NS.Undefined)";
             string payload = "{\"@odata.context\":\"" + contextUrl + "\",\"id\":1}";
-            Action test = () => this.ReadEntryPayload(payload, this.serverOpenEntitySet, this.serverOpenEntityType, reader => { }, true);
+            Action test = () => this.ReadEntryPayload(payload, this.serverOpenEntitySet, this.serverOpenEntityType, reader => { });
             test.Throws<ODataException>(Error.Format(SRResources.ODataJsonContextUriParser_ContextUriDoesNotMatchExpectedPayloadKind, contextUrl, "Resource"));
         }
 

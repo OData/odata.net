@@ -550,8 +550,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.Json
             var address = entries[1];
             VerifyProperty(address.Properties, "CountryRegion", "China");
             var cityProperty = address.Properties.FirstOrDefault(s => string.Equals(s.Name, "City", StringComparison.OrdinalIgnoreCase));
-            var value = Assert.IsType<ODataUntypedValue>(Assert.IsType<ODataProperty>(cityProperty).Value);
-            Assert.Equal("\"Shanghai\"", value.RawValue);
+            Assert.Equal("Shanghai", Assert.IsType<ODataProperty>(cityProperty).Value);
         }
 
         [Fact]

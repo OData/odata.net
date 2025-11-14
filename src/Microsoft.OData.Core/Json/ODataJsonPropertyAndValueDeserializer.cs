@@ -206,7 +206,6 @@ namespace Microsoft.OData.Json
         /// <param name="payloadTypeName">The 'odata.type' annotation in payload.</param>
         /// <param name="payloadTypeReference">The payloadTypeReference of 'odata.type'.</param>
         /// <param name="primitiveTypeResolver">Function that takes a primitive value and returns an <see cref="IEdmTypeReference"/>.</param>
-        /// <param name="readUntypedAsString">Whether unknown properties should be read as a raw string value.</param>
         /// <param name="generateTypeIfMissing">Whether to generate a type if not already part of the model.</param>
         /// <param name="readUntypedNumericAsDecimal">Whether untyped numeric values should be preserved as decimals. Default is <see langword="true"/></param>
         /// <returns>The <see cref="IEdmTypeReference"/> of the current value to be read.</returns>
@@ -217,29 +216,18 @@ namespace Microsoft.OData.Json
                 string payloadTypeName,
                 IEdmTypeReference payloadTypeReference,
                 Func<object, string, IEdmTypeReference> primitiveTypeResolver,
-                bool readUntypedAsString,
                 bool generateTypeIfMissing,
                 bool readUntypedNumericAsDecimal)
         {
-            if (payloadTypeReference != null && (payloadTypeReference.TypeKind() != EdmTypeKind.Untyped || readUntypedAsString))
+            if (payloadTypeReference != null && (payloadTypeReference.TypeKind() != EdmTypeKind.Untyped))
             {
                 return payloadTypeReference;
-            }
-
-            if (readUntypedAsString)
-            {
-                if (jsonReaderNodeType == JsonNodeType.PrimitiveValue && jsonReaderValue is bool)
-                {
-                    return EdmCoreModel.Instance.GetBoolean(true);
-                }
-
-                return EdmCoreModel.Instance.GetUntyped();
             }
 
             string namespaceName;
             string name;
             bool isCollection;
-            IEdmTypeReference typeReference;
+            IEdmTypeReference typeReference = null;
             switch (jsonReaderNodeType)
             {
                 case JsonNodeType.PrimitiveValue:
@@ -289,7 +277,7 @@ namespace Microsoft.OData.Json
                         };
                     }
 
-                    if (payloadTypeName != null)
+                    if (typeReference == null && payloadTypeName != null)
                     {
                         TypeUtils.ParseQualifiedTypeName(payloadTypeName, out namespaceName, out name, out isCollection);
                         if (isCollection)
@@ -524,7 +512,6 @@ namespace Microsoft.OData.Json
                 payloadTypeName,
                 payloadTypeReference,
                 this.MessageReaderSettings.PrimitiveTypeResolver,
-                this.MessageReaderSettings.ReadUntypedAsString,
                 !this.MessageReaderSettings.ThrowIfTypeConflictsWithMetadata,
                 this.MessageReaderSettings.LibraryCompatibility.HasFlag(ODataLibraryCompatibility.ReadUntypedNumericAsDecimal));
 
@@ -1964,7 +1951,6 @@ namespace Microsoft.OData.Json
                     payloadTypeName,
                     expectedTypeReference,
                     this.MessageReaderSettings.PrimitiveTypeResolver,
-                    this.MessageReaderSettings.ReadUntypedAsString,
                     !this.MessageReaderSettings.ThrowIfTypeConflictsWithMetadata,
                     this.MessageReaderSettings.LibraryCompatibility.HasFlag(ODataLibraryCompatibility.ReadUntypedNumericAsDecimal));
 
@@ -2341,7 +2327,6 @@ namespace Microsoft.OData.Json
                 payloadTypeName,
                 payloadTypeReference,
                 this.MessageReaderSettings.PrimitiveTypeResolver,
-                this.MessageReaderSettings.ReadUntypedAsString,
                 !this.MessageReaderSettings.ThrowIfTypeConflictsWithMetadata,
                 this.MessageReaderSettings.LibraryCompatibility.HasFlag(ODataLibraryCompatibility.ReadUntypedNumericAsDecimal));
 
@@ -3301,7 +3286,6 @@ namespace Microsoft.OData.Json
                     payloadTypeName,
                     expectedTypeReference,
                     this.MessageReaderSettings.PrimitiveTypeResolver,
-                    this.MessageReaderSettings.ReadUntypedAsString,
                     !this.MessageReaderSettings.ThrowIfTypeConflictsWithMetadata, 
                     this.MessageReaderSettings.LibraryCompatibility.HasFlag(ODataLibraryCompatibility.ReadUntypedNumericAsDecimal));
 

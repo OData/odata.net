@@ -349,8 +349,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader.Json
 
             Assert.Equal(3, entry.Properties.Count());
             var property = Assert.IsType<ODataProperty>(Assert.Single(entry.Properties, p => p.Name == "OpenType2"));
-            var unTypedValue = Assert.IsType<ODataUntypedValue>(property.Value);
-            Assert.Equal("\"BlaBla\"", unTypedValue.RawValue);
+            Assert.Equal("BlaBla", property.Value);
         }
 
         private void OpenTypeTestSetting()

@@ -325,8 +325,8 @@ namespace Microsoft.OData.Tests.Json
             Assert.Equal("entry", pair.Key);
             var entry = Assert.Single(pair.Value);
             Assert.Equal(2, entry.Properties.Count());
-            var untypedValue = Assert.IsType<ODataUntypedValue>(entry.Properties.OfType<ODataProperty>().ElementAt(1).Value);
-            Assert.Equal("\"DynamicValue\"", untypedValue.RawValue);
+            var propertyValue = entry.Properties.OfType<ODataProperty>().ElementAt(1).Value;
+            Assert.Equal("DynamicValue", propertyValue);
         }
 
         [Fact]
