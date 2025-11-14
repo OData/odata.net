@@ -1597,8 +1597,7 @@ namespace Microsoft.OData.Tests.Json
                 Assert.Equal(2, properties.Length);
 
                 Assert.Equal("Name", properties[0].Name);
-                var untypedValue = Assert.IsType<ODataUntypedValue>(properties[0].Value);
-                Assert.Equal("\"Joe\"", untypedValue.RawValue);
+                Assert.Equal("Joe", properties[0].Value);
                 Assert.Equal("Age", properties[1].Name);
                 Assert.Equal(17, properties[1].Value);
             });

@@ -745,25 +745,46 @@ namespace Microsoft.OData
                 case EdmTypeKind.Complex:
                     // if the expectedTypeKind is different from the payloadType.TypeKind the types are not related
                     // in any way. In that case we will just use the expected type.
-                    if (payloadType != null && expectedTypeKind == payloadType.TypeKind)
+                    if (payloadType != null)
                     {
-                        if (EdmLibraryExtensions.IsAssignableFrom(expectedTypeReference.AsComplex().ComplexDefinition(), (IEdmComplexType)payloadType))
+                        if (expectedTypeReference != null && expectedTypeReference.IsUntyped())
                         {
                             return payloadType.ToTypeReference(/*nullable*/ true);
+                        }
+
+                        if (expectedTypeKind == payloadType.TypeKind)
+                        {
+                            if (EdmLibraryExtensions.IsAssignableFrom(expectedTypeReference.AsComplex().ComplexDefinition(), (IEdmComplexType)payloadType))
+                            {
+                                return payloadType.ToTypeReference(/*nullable*/ true);
+                            }
                         }
                     }
 
                     break;
                 case EdmTypeKind.Entity:
+                    if (expectedTypeReference != null && expectedTypeReference.IsUntyped())
+                    {
+                        return payloadType.ToTypeReference(/*nullable*/ true);
+                    }
+
                     // if the expectedTypeKind is different from the payloadType.TypeKind the types are not related
                     // in any way. In that case we will just use the expected type.
                     if (payloadType != null && expectedTypeKind == payloadType.TypeKind)
                     {
-                        // If the type is assignable (equal or derived) we will use the payload type, since we want to allow derived entities
-                        if (EdmLibraryExtensions.IsAssignableFrom(expectedTypeReference.AsEntity().EntityDefinition(), (IEdmEntityType)payloadType))
+                        if (expectedTypeReference != null && expectedTypeReference.IsUntyped())
                         {
-                            IEdmTypeReference payloadTypeReference = payloadType.ToTypeReference(/*nullable*/ true);
-                            return payloadTypeReference;
+                            return payloadType.ToTypeReference(/*nullable*/ true);
+                        }
+
+                        // If the type is assignable (equal or derived) we will use the payload type, since we want to allow derived entities
+                        if (expectedTypeKind == payloadType.TypeKind)
+                        {
+                            if (EdmLibraryExtensions.IsAssignableFrom(expectedTypeReference.AsEntity().EntityDefinition(), (IEdmEntityType)payloadType))
+                            {
+                                IEdmTypeReference payloadTypeReference = payloadType.ToTypeReference(/*nullable*/ true);
+                                return payloadTypeReference;
+                            }
                         }
                     }
 

@@ -32,6 +32,11 @@ namespace Microsoft.OData.Edm
                 return false;
             }
 
+            if (thisType.TypeKind == EdmTypeKind.Untyped && otherType.TypeKind == EdmTypeKind.Untyped)
+            {
+                return true;
+            }
+
             thisType = thisType.AsActualType();
             otherType = otherType.AsActualType();
 

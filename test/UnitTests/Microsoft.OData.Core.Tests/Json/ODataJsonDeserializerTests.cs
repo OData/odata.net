@@ -2477,8 +2477,7 @@ namespace Microsoft.OData.Tests.Json
                         propertyName: "UntypedProp",
                         isDynamicProperty: false);
 
-                    var untypedValue = Assert.IsType<ODataUntypedValue>(nonEntityValue);
-                    Assert.Equal("\"foobar\"", untypedValue.RawValue);
+                    Assert.Equal("foobar", nonEntityValue);
                 });
         }
 

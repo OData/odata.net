@@ -49,7 +49,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="8.0.11" />
-    <PackageReference Include="Microsoft.AspNetCore.OData" Version="9.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.OData" Version="9.4.1" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
     <PackageReference Include="xunit" Version="2.9.3" />
     <PackageReference Include="xunit.runner.visualstudio" Version="3.0.2">
