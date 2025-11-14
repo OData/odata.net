@@ -51,7 +51,7 @@ namespace Microsoft.OData
 
             if (model == null)
             {
-                model = Microsoft.OData.Edm.EdmCoreModel.Instance;
+                model = EdmCoreModel.Instance;
             }
 
             // Let ExpressionLexer try to get a primitive
@@ -149,7 +149,7 @@ namespace Microsoft.OData
 
             if (model == null)
             {
-                model = Microsoft.OData.Edm.EdmCoreModel.Instance;
+                model = EdmCoreModel.Instance;
             }
 
             ODataNullValue nullValue = value as ODataNullValue;

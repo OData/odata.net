@@ -357,6 +357,8 @@ namespace Microsoft.OData.UriParser
                 .Where(source => string.Equals(identifier, source.Name, StringComparison.OrdinalIgnoreCase));
         }
 
+        // TODO: Why does this method only handle SingleValueNode?
+        // What about other QueryNode types like CollectionNode?
         /// <summary>
         /// Resolve operation's parameters.
         /// </summary>
