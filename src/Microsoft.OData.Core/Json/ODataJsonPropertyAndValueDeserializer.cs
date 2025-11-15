@@ -1271,9 +1271,9 @@ namespace Microsoft.OData.Json
             payloadTypeName = null;
 
             bool result = false;
-            string propertyName = this.JsonReader.GetPropertyName();
-            if (string.Equals(propertyName, ODataJsonConstants.PrefixedODataTypePropertyName, StringComparison.Ordinal)
-                || this.CompareSimplifiedODataAnnotation(ODataJsonConstants.SimplifiedODataTypePropertyName, propertyName))
+            ReadOnlySpan<char> propertyName = this.JsonReader.GetPropertyName();
+            if (propertyName.SequenceEqual(ODataJsonConstants.PrefixedODataTypePropertyName)
+                || this.CompareSimplifiedODataAnnotation(ODataJsonConstants.SimplifiedODataTypePropertyName.AsSpan(), propertyName))
             {
                 // Read over the property name
                 this.JsonReader.ReadNext();
@@ -2166,7 +2166,7 @@ namespace Microsoft.OData.Json
         /// <remarks>If the method detects the odata.null annotation, it will read it; otherwise the reader does not move.</remarks>
         private bool IsTopLevel6xNullValue()
         {
-            bool odataNullAnnotationInPayload = this.JsonReader.NodeType == JsonNodeType.Property && string.Equals(ODataJsonConstants.PrefixedODataNullPropertyName, JsonReader.GetPropertyName(), StringComparison.Ordinal);
+            bool odataNullAnnotationInPayload = this.JsonReader.NodeType == JsonNodeType.Property && JsonReader.GetPropertyName().SequenceEqual(ODataJsonConstants.PrefixedODataNullPropertyName);
             if (odataNullAnnotationInPayload)
             {
                 // If we found the expected annotation read over the property name
@@ -2453,14 +2453,14 @@ namespace Microsoft.OData.Json
         /// Post-Condition: JsonNodeType.Property    - the next property after the annotation
         ///                 JsonNodeType.EndObject   - end of the parent object
         /// </remarks>
-        protected async Task<string> ReadODataTypeAnnotationValueAsync()
+        protected async Task<ReadOnlyMemory<char>> ReadODataTypeAnnotationValueAsync()
         {
             this.AssertJsonCondition(JsonNodeType.PrimitiveValue, JsonNodeType.StartObject, JsonNodeType.StartArray);
 
-            string typeName = ReaderUtils.AddEdmPrefixOfTypeName(
+            ReadOnlyMemory<char> typeName = ReaderUtils.AddEdmPrefixOfTypeName(
                 ReaderUtils.RemovePrefixOfTypeName(
                     await this.JsonReader.ReadStringValueAsync().ConfigureAwait(false)));
-            if (typeName == null)
+            if (typeName.IsEmpty)
             {
                 // TODO: It's meaningless to output an error message using "typeName == null". Should use the original JSON value to construct the error message.
                 throw new ODataException(Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_InvalidTypeName, typeName));
@@ -2549,16 +2549,16 @@ namespace Microsoft.OData.Json
         /// Post-Condition: JsonNodeType.Property       - the next property after the annotation or if the reader did not move
         ///                 JsonNodeType.EndObject      - end of the parent object
         /// </remarks>
-        private async Task<(bool IsReadSuccessfully, string PayloadTypeName)> TryReadODataTypeAnnotationAsync()
+        private async Task<(bool IsReadSuccessfully, ReadOnlyMemory<char> PayloadTypeName)> TryReadODataTypeAnnotationAsync()
         {
             this.AssertJsonCondition(JsonNodeType.Property);
-            string payloadTypeName = null;
+            ReadOnlyMemory<char> payloadTypeName = null;
 
             bool result = false;
-            string propertyName = await this.JsonReader.GetPropertyNameAsync()
+            ReadOnlyMemory<char> propertyName = await this.JsonReader.GetPropertyNameAsync()
                 .ConfigureAwait(false);
-            if (string.Equals(propertyName, ODataJsonConstants.PrefixedODataTypePropertyName, StringComparison.Ordinal)
-                || this.CompareSimplifiedODataAnnotation(ODataJsonConstants.SimplifiedODataTypePropertyName, propertyName))
+            if (propertyName.Equals(ODataJsonConstants.PrefixedODataTypePropertyName)
+                || this.CompareSimplifiedODataAnnotation(ODataJsonConstants.SimplifiedODataTypePropertyName.AsSpan(), propertyName.Span))
             {
                 // Read over the property name
                 await this.JsonReader.ReadNextAsync()
