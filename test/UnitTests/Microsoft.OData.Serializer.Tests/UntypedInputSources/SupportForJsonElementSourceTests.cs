@@ -73,6 +73,12 @@ public class SupportForJsonElementSourceTests
         options.AddTypeInfo<JsonElement>(new()
         {
             GetEdmTypeName = (element, state) => state.CustomState.EdmStructuredType?.FullTypeName()!, // what about subtype
+            GetValueKind = (element, state) => element.ValueKind switch
+            {
+                JsonValueKind.Array => ODataValueKind.Collection,
+                JsonValueKind.Object => ODataValueKind.Resource,
+                _ => ODataValueKind.Unknown
+            },
             ElementSelector = new ODataElementEnumeratorSelector<JsonElement, JsonElement.ArrayEnumerator, JsonElement, WriterState>
             {
                 GetElementsEnumerator = (resource, state) => resource.EnumerateArray(),
@@ -83,7 +89,7 @@ public class SupportForJsonElementSourceTests
                         // TODO handle dates and byte arrays
                         JsonValueKind.String => writer.WriteValue(value.GetString(), state),
                         // TODO handle different kinds of numbers
-                        JsonValueKind.Number => writer.WriteValue(value.GetInt32(), state),
+                        JsonValueKind.Number => writer.WriteValue(value.GetDouble(), state),
                         JsonValueKind.True => writer.WriteValue(true, state),
                         JsonValueKind.False => writer.WriteValue(false, state),
                         JsonValueKind.Null => writer.WriteValue<object>(null, state),
@@ -104,7 +110,7 @@ public class SupportForJsonElementSourceTests
                         // TODO handle dates and byte arrays
                         JsonValueKind.String => writer.WriteProperty(property.Name, value.GetString(), state),
                         // TODO handle different kinds of numbers
-                        JsonValueKind.Number => writer.WriteProperty(property.Name, value.GetInt32(), state),
+                        JsonValueKind.Number => writer.WriteProperty(property.Name, value.GetDouble(), state),
                         JsonValueKind.True => writer.WriteProperty(property.Name, true, state),
                         JsonValueKind.False => writer.WriteProperty(property.Name, false, state),
                         JsonValueKind.Null => writer.WriteProperty<object>(property.Name, null, state),
@@ -139,7 +145,7 @@ public class SupportForJsonElementSourceTests
 
         var expectedOutput = """
             {
-                "@odata.context": "http://service/odata/$metadata#Customers",
+                "@odata.context": "http://service/odata/$metadata#Items",
                 "value": [
                     {
                         "Id": 1,
