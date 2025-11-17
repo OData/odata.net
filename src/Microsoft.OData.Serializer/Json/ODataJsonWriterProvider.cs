@@ -112,7 +112,28 @@ internal class ODataJsonWriterProvider<TCustomState>(ODataSerializerOptions<TCus
         ODataTypeInfo<T, TCustomState>? typeInfo = options.TryGetResourceInfo<T>();
         if (typeInfo != null)
         {
-            return new ODataResourceJsonWriter<T, TCustomState>(typeInfo);
+            // the type info could represet a resource/entity writer, a collection writer, or both.
+            // we use heuristics to determine the right kind unless the user specifies it explicitly
+
+            if (typeInfo.GetValueKind != null)
+            {
+                // TODO a hybrid json writer.
+            }
+
+            var couldBeResource = typeInfo.Properties != null || typeInfo.PropertySelector != null || typeInfo.WriteProperties != null;
+            var couldBeCollection = typeInfo.ElementSelector != null;
+            if (couldBeResource && !couldBeCollection)
+            {
+                // we have properties but no element selector, so it's a resource writer
+                return new ODataResourceJsonWriter<T, TCustomState>(typeInfo);
+            }
+
+            if (couldBeCollection && !couldBeResource)
+            {
+                return new ODataJsonResourceSetWithElementSelectorWriter<T, TCustomState>(typeInfo);
+            }
+
+            throw new Exception($"Unable to determine the OData value kind for type '{type.FullName}'. Set the GetValueKind property directly on the ODataTypeInfo to explicitly specify the value kind.");
         }
 
         // TODO: automatic generation of type infos should not be tightly coupled to
