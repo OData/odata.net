@@ -72,8 +72,27 @@ public class SupportForJsonElementSourceTests
         var options = new ODataSerializerOptions<WriterState>();
         options.AddTypeInfo<JsonElement>(new()
         {
-            GetEdmTypeName = (element, state) => state.CustomState.EdmStructuredType?.FullTypeName()!,
-            
+            GetEdmTypeName = (element, state) => state.CustomState.EdmStructuredType?.FullTypeName()!, // what about subtype
+            ElementSelector = new ODataElementEnumeratorSelector<JsonElement, JsonElement.ArrayEnumerator, JsonElement, WriterState>
+            {
+                GetElementsEnumerator = (resource, state) => resource.EnumerateArray(),
+                WriteElement = (resource, value, writer, state) =>
+                {
+                    return value.ValueKind switch
+                    {
+                        // TODO handle dates and byte arrays
+                        JsonValueKind.String => writer.WriteValue(value.GetString(), state),
+                        // TODO handle different kinds of numbers
+                        JsonValueKind.Number => writer.WriteValue(value.GetInt32(), state),
+                        JsonValueKind.True => writer.WriteValue(true, state),
+                        JsonValueKind.False => writer.WriteValue(false, state),
+                        JsonValueKind.Null => writer.WriteValue<object>(null, state),
+                        JsonValueKind.Object => writer.WriteValue(value, state),
+                        JsonValueKind.Array => writer.WriteValue(value, state),
+                        _ => true,
+                    };
+                }
+            },
             PropertySelector = new ODataPropertyEnumeratorSelector<JsonElement, JsonElement.ObjectEnumerator, JsonProperty, WriterState>
             {
                 GetPropertiesEnumerator = (resource, state) => resource.EnumerateObject(),
