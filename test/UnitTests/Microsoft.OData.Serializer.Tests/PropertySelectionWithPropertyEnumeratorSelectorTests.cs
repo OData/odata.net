@@ -4,7 +4,7 @@ using System.Text.Json;
 
 namespace Microsoft.OData.Serializer.Tests;
 
-public class PropertySelectionWithPropertyEnumeratorSelector
+public class PropertySelectionWithPropertyEnumeratorSelectorTests
 {
     [Fact]
     public async Task SerializesDataFromDictionaryUsingPropertyEnumerableSelector()
