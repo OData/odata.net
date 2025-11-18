@@ -7,14 +7,15 @@
 namespace Microsoft.OData
 {
     #region Namespaces
-    using System;
-    using System.Diagnostics;
-    using System.Linq;
-    using System.Text;
     using Microsoft.OData.Core;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Json;
     using Microsoft.OData.Metadata;
+    using System;
+    using System.Data.SqlTypes;
+    using System.Diagnostics;
+    using System.Linq;
+    using System.Text;
     #endregion Namespaces
 
     /// <summary>
@@ -749,14 +750,14 @@ namespace Microsoft.OData
                     {
                         if (expectedTypeReference != null && expectedTypeReference.IsUntyped())
                         {
-                            return payloadType.ToTypeReference(/*nullable*/ true);
+                            return payloadType.ToTypeReference(nullable: true);
                         }
 
                         if (expectedTypeKind == payloadType.TypeKind)
                         {
                             if (EdmLibraryExtensions.IsAssignableFrom(expectedTypeReference.AsComplex().ComplexDefinition(), (IEdmComplexType)payloadType))
                             {
-                                return payloadType.ToTypeReference(/*nullable*/ true);
+                                return payloadType.ToTypeReference(nullable: true);
                             }
                         }
                     }
@@ -765,7 +766,7 @@ namespace Microsoft.OData
                 case EdmTypeKind.Entity:
                     if (expectedTypeReference != null && expectedTypeReference.IsUntyped())
                     {
-                        return payloadType.ToTypeReference(/*nullable*/ true);
+                        return payloadType.ToTypeReference(nullable: true);
                     }
 
                     // if the expectedTypeKind is different from the payloadType.TypeKind the types are not related
@@ -774,7 +775,7 @@ namespace Microsoft.OData
                     {
                         if (expectedTypeReference != null && expectedTypeReference.IsUntyped())
                         {
-                            return payloadType.ToTypeReference(/*nullable*/ true);
+                            return payloadType.ToTypeReference(nullable: true);
                         }
 
                         // If the type is assignable (equal or derived) we will use the payload type, since we want to allow derived entities
@@ -782,7 +783,7 @@ namespace Microsoft.OData
                         {
                             if (EdmLibraryExtensions.IsAssignableFrom(expectedTypeReference.AsEntity().EntityDefinition(), (IEdmEntityType)payloadType))
                             {
-                                IEdmTypeReference payloadTypeReference = payloadType.ToTypeReference(/*nullable*/ true);
+                                IEdmTypeReference payloadTypeReference = payloadType.ToTypeReference(nullable: true);
                                 return payloadTypeReference;
                             }
                         }
@@ -840,7 +841,7 @@ namespace Microsoft.OData
                         }
 
                         // Use the payload type
-                        return payloadType.ToTypeReference(/*nullable*/ true);
+                        return payloadType.ToTypeReference(nullable: true);
                     }
 
                     break;
@@ -848,7 +849,7 @@ namespace Microsoft.OData
                     if (payloadType != null)
                     {
                         // The payload type must be assignable to the expected type.
-                        IEdmTypeReference payloadTypeReference = payloadType.ToTypeReference(/*nullable*/ true);
+                        IEdmTypeReference payloadTypeReference = payloadType.ToTypeReference(nullable: true);
                         if (!expectedTypeReference.IsUntyped())
                         {
                             ValidationUtils.ValidateEntityTypeIsAssignable((IEdmEntityTypeReference)expectedTypeReference, (IEdmEntityTypeReference)payloadTypeReference);

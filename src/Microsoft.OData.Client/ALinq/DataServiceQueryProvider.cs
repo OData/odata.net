@@ -326,7 +326,7 @@ namespace Microsoft.OData.Client
                                 if (aggregationProperty.Value == null)
                                 {
                                     return default(TElement);
-                                };
+                                }
 
                                 if (aggregationProperty.Value is TElement)
                                 {
