@@ -410,9 +410,7 @@ namespace Microsoft.OData
                 value = this.Model.ConvertToUnderlyingTypeIfUIntValue(value);
 
                 this.InitializeRawValueWriter();
-                this.rawValueWriter.Start();
                 this.rawValueWriter.WriteRawValue(value);
-                this.rawValueWriter.End();
             }
         }
 
@@ -437,11 +435,7 @@ namespace Microsoft.OData
                 value = this.Model.ConvertToUnderlyingTypeIfUIntValue(value);
 
                 this.InitializeRawValueWriter();
-                await this.rawValueWriter.StartAsync()
-                    .ConfigureAwait(false);
                 await this.rawValueWriter.WriteRawValueAsync(value)
-                    .ConfigureAwait(false);
-                await this.rawValueWriter.EndAsync()
                     .ConfigureAwait(false);
             }
         }

@@ -48,7 +48,7 @@ namespace Microsoft.OData.Service.Parsing
         /// <returns>true if match found, false otherwise.</returns>
         internal static bool IsInfinityOrNaNDouble(ReadOnlySpan<char> tokenText)
         {
-            Debug.Assert(tokenText != null, "tokenText != null");
+            Debug.Assert(!tokenText.IsEmpty, "tokenText is empty.");
 
             // COMPAT 30 - INFd/INFD and NaNd/NaND are rejected as Edm.Double literals
             // For now we behave exactly the same as WCF DS, we should consider "fixing" this bug in ODataLib, but it is technically a breaking change!
@@ -78,7 +78,7 @@ namespace Microsoft.OData.Service.Parsing
         /// <returns>true if the substring is equal using an ordinal comparison; false otherwise.</returns>
         internal static bool IsInfinityLiteralDouble(ReadOnlySpan<char> text)
         {
-            Debug.Assert(text != null, "text != null");
+            Debug.Assert(!text.IsEmpty, "text is empty.");
 
             // COMPAT 30 - INFd/INFD and NaNd/NaND are rejected as Edm.Double literals
             // For now we behave exactly the same as WCF DS, we should consider "fixing" this bug in ODataLib, but it is technically a breaking change!
@@ -94,7 +94,7 @@ namespace Microsoft.OData.Service.Parsing
         /// <returns>true if match found, false otherwise.</returns>
         internal static bool IsInfinityOrNanSingle(ReadOnlySpan<char> tokenText)
         {
-            Debug.Assert(tokenText != null, "tokenText != null");
+            Debug.Assert(!tokenText.IsEmpty, "tokenText is empty.");
 
             if (tokenText.Length == 4)
             {
@@ -120,7 +120,7 @@ namespace Microsoft.OData.Service.Parsing
         /// <returns>true if the substring is equal using an ordinal comparison; false otherwise.</returns>
         internal static bool IsInfinityLiteralSingle(ReadOnlySpan<char> text)
         {
-            Debug.Assert(text != null, "text != null");
+            Debug.Assert(!text.IsEmpty, "text is empty.");
             return text.Length == 4 &&
                    (text[3] == SingleSuffixLower || text[3] == SingleSuffixUpper) &&
                    text.Slice(0, 3).Equals(ExpressionConstants.InfinityLiteral, StringComparison.Ordinal);

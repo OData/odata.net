@@ -39,6 +39,10 @@ namespace Microsoft.OData.Client.E2E.Tests.ContainmentTests
         public ContainmentTests(TestWebApplicationFactory<TestsStartup> fixture)
             : base(fixture)
         {
+            if (Client.BaseAddress == null)
+            {
+                throw new ArgumentNullException(nameof(Client.BaseAddress), "Client.BaseAddress cannot be null.");
+            }
             _baseUri = new Uri(Client.BaseAddress, "odata/");
 
             _context = new Container(_baseUri)

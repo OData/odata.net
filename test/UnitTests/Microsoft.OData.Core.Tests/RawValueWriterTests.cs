@@ -29,22 +29,6 @@ namespace Microsoft.OData.Tests
             this.settings = new ODataMessageWriterSettings();
         }
 
-        [Fact]
-        public void StartDoesNothingNormally()
-        {
-            RawValueWriter target = new RawValueWriter(this.settings, this.stream, new UTF32Encoding());
-            target.Start();
-            Assert.Empty(this.StreamAsString(target));
-        }
-
-        [Fact]
-        public void EndDoesNothingNormally()
-        {
-            RawValueWriter target = new RawValueWriter(this.settings, this.stream, new UTF32Encoding());
-            target.End();
-            Assert.Empty(this.StreamAsString(target));
-        }
-
         /// <summary>
         ///A test for WriteRawValue
         ///</summary>
@@ -104,25 +88,6 @@ namespace Microsoft.OData.Tests
             target.WriteRawValue(value);
             Assert.Equal(@"{""type"":""Point"",""coordinates"":[1.2,3.16],""crs"":{""type"":""name"",""properties"":{""name"":""EPSG:0""}}}", this.StreamAsString(target));
         }
-
-        [Fact]
-        public async Task RawValueWriterStartAsync()
-        {
-            var result = await SetupRawValueWriterAndRunTestAsync(
-                (rawValueWriter) => rawValueWriter.StartAsync());
-
-            Assert.Equal("", result);
-        }
-
-        [Fact]
-        public async Task RawValueWriterEndAsync()
-        {
-            var result = await SetupRawValueWriterAndRunTestAsync(
-                (rawValueWriter) => rawValueWriter.EndAsync());
-
-            Assert.Equal("", result);
-        }
-
 
         [Fact]
         public async Task WriteRawStringValueAsync()

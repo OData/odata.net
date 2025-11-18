@@ -270,7 +270,7 @@ namespace Microsoft.OData.Client.Tests.Tracking
             EmployeeSingle query = _defaultContext.Employees.ByKey(
                 new Dictionary<string, object>() { { "EmpNumber", 8 }, { "EmpType", EmployeeType.PartTime }, { "OrgId", 1 } });
 
-            Employee employee = await query.GetValueAsync().ConfigureAwait(false);
+            Employee employee = await query.GetValueAsync();
 
             // Assert
             Assert.Equal(expectedUri, query.Query.ToString());

@@ -83,7 +83,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Tests
         private ClientOpenTypesModel.Row row2 = new ClientOpenTypesModel.Row
         {
             Id = Guid.NewGuid(),
-            DynamicProperties = new Dictionary<string, object>
+            DynamicProperties = new Dictionary<string, object?>
             {
                 { "OpenBoolean", null },
                 { "OpenDateTimeOffset", null },

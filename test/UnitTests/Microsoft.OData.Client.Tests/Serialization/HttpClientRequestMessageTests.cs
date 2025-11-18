@@ -58,7 +58,7 @@ namespace Microsoft.OData.Client.Tests.Serialization
 
                     // Assert
                     Assert.Equal(expectedResponse, contents);
-                    Assert.Equal(1, handler.Requests.Count);
+                    Assert.Single(handler.Requests);
                     Assert.Equal("GET http://localhost/", handler.Requests[0]);
                     Assert.Equal(1, httpClientFactory.NumCalls);
                 }

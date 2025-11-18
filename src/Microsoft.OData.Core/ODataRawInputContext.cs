@@ -192,7 +192,7 @@ namespace Microsoft.OData
             if (this.stream.CanSeek && this.stream.Length <= int.MaxValue)
             {
                 data = new byte[this.stream.Length];
-                this.stream.Read(data, 0, (int)stream.Length);
+                stream.ReadExactly(data, 0, (int)stream.Length);
 
                 return data;
             }

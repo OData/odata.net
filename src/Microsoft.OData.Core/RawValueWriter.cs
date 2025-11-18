@@ -110,20 +110,6 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Start writing a raw output. This should only be called once.
-        /// </summary>
-        internal void Start()
-        {
-        }
-
-        /// <summary>
-        /// End the writing of a raw output. This should be the last thing called.
-        /// </summary>
-        internal void End()
-        {
-        }
-
-        /// <summary>
         /// Converts the specified <paramref name="value"/> into its raw format and writes it to the output.
         /// The value has to be of enumeration or primitive type. Only one WriteRawValue call should be made before this object gets disposed.
         /// </summary>
@@ -164,24 +150,6 @@ namespace Microsoft.OData
             {
                 this.TextWriter.Flush();
             }
-        }
-
-        /// <summary>
-        /// Asynchronously start writing a raw output. This should only be called once.
-        /// </summary>
-        /// <returns>A task that represents the asynchronous write operation.</returns>
-        internal Task StartAsync()
-        {
-            return TaskUtils.CompletedTask;
-        }
-
-        /// <summary>
-        /// Asynchronously end the writing of a raw output. This should be the last thing called.
-        /// </summary>
-        /// <returns>A task that represents the asynchronous write operation.</returns>
-        internal Task EndAsync()
-        {
-            return TaskUtils.CompletedTask;
         }
 
         /// <summary>

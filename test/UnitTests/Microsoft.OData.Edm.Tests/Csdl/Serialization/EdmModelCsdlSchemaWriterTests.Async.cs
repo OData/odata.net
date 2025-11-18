@@ -23,7 +23,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
         {
             EdmAction action = new EdmAction("Default.Namespace", "Checkout", null /*returnType*/, true /*isBound*/, null /*entitySetPath*/);
             action.AddParameter("param", EdmCoreModel.Instance.GetString(true));
-            await this.TestWriteActionElementHeaderMethodWithAsync(action, @"<Action Name=""Checkout"" IsBound=""true""").ConfigureAwait(false);
+            await this.TestWriteActionElementHeaderMethodWithAsync(action, @"<Action Name=""Checkout"" IsBound=""true""");
         }
 
         [Fact]
@@ -31,7 +31,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
         {
             EdmFunction function = new EdmFunction("Default.Namespace", "Checkout", EdmCoreModel.Instance.GetString(true) /*returnType*/, false /*isBound*/, null /*entitySetPath*/, false /*isComposable*/);
             function.AddParameter("param", EdmCoreModel.Instance.GetString(true));
-            await this.TestWriteFunctionElementHeaderMethodWithAsync(function, @"<Function Name=""Checkout""").ConfigureAwait(false);
+            await this.TestWriteFunctionElementHeaderMethodWithAsync(function, @"<Function Name=""Checkout""");
         }
 
         [Fact]
@@ -39,24 +39,24 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
         {
             EdmAction action = new EdmAction("Default.Namespace", "Checkout", null /*returnType*/, true /*isBound*/, new EdmPathExpression("Customer", "Orders") /*entitySetPath*/);
             action.AddParameter("param", EdmCoreModel.Instance.GetString(true));
-            await this.TestWriteActionElementHeaderMethodWithAsync(action, @"<Action Name=""Checkout"" IsBound=""true"" EntitySetPath=""Customer/Orders""").ConfigureAwait(false);
+            await this.TestWriteActionElementHeaderMethodWithAsync(action, @"<Action Name=""Checkout"" IsBound=""true"" EntitySetPath=""Customer/Orders""");
         }
 
         [Fact]
         public async Task ComposableFunctionShouldWriteIsComposableEqualTrue_Async()
         {
             EdmFunction function = new EdmFunction("Default.Namespace", "Checkout", EdmCoreModel.Instance.GetString(true) /*returnType*/, false /*isBound*/, null /*entitySetPath*/, true /*isComposable*/);
-            await this.TestWriteFunctionElementHeaderMethodWithAsync(function, @"<Function Name=""Checkout"" IsComposable=""true""").ConfigureAwait(false);
+            await this.TestWriteFunctionElementHeaderMethodWithAsync(function, @"<Function Name=""Checkout"" IsComposable=""true""");
         }
 
         private async Task TestWriteActionElementHeaderMethodWithAsync(EdmAction action, string expected)
         {
-            await this.EdmModelCsdlSchemaWriterTestAsync(async (writer) => await writer.WriteActionElementHeaderAsync(action).ConfigureAwait(false), expected).ConfigureAwait(false);
+            await this.EdmModelCsdlSchemaWriterTestAsync(async (writer) => await writer.WriteActionElementHeaderAsync(action), expected);
         }
 
         private async Task TestWriteFunctionElementHeaderMethodWithAsync(EdmFunction function, string expected)
         {
-            await this.EdmModelCsdlSchemaWriterTestAsync(async (writer) => await writer.WriteFunctionElementHeaderAsync(function).ConfigureAwait(false), expected).ConfigureAwait(false);
+            await this.EdmModelCsdlSchemaWriterTestAsync(async (writer) => await writer.WriteFunctionElementHeaderAsync(function), expected);
         }
         #endregion
 
@@ -67,8 +67,8 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
             EdmActionImport actionImport = new EdmActionImport(defaultContainer, "Checkout", defaultCheckoutAction, new EdmPathExpression("Customers"));
 
             await this.EdmModelCsdlSchemaWriterTestAsync(
-                async (writer) => await writer.WriteActionImportElementHeaderAsync(actionImport).ConfigureAwait(false),
-                @"<ActionImport Name=""Checkout"" Action=""Default.NameSpace2.CheckOut"" EntitySet=""Customers""").ConfigureAwait(false);
+                async (writer) => await writer.WriteActionImportElementHeaderAsync(actionImport),
+                @"<ActionImport Name=""Checkout"" Action=""Default.NameSpace2.CheckOut"" EntitySet=""Customers""");
         }
 
         [Fact]
@@ -77,8 +77,8 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
             EdmFunctionImport functionImport = new EdmFunctionImport(defaultContainer, "GetStuff", defaultGetStuffFunction, new EdmPathExpression("Customers", "Orders"), false);
 
             await this.EdmModelCsdlSchemaWriterTestAsync(
-                async (writer) => await writer.WriteFunctionImportElementHeaderAsync(functionImport).ConfigureAwait(false),
-                @"<FunctionImport Name=""GetStuff"" Function=""Default.NameSpace2.GetStuff"" EntitySet=""Customers/Orders""").ConfigureAwait(false);
+                async (writer) => await writer.WriteFunctionImportElementHeaderAsync(functionImport),
+                @"<FunctionImport Name=""GetStuff"" Function=""Default.NameSpace2.GetStuff"" EntitySet=""Customers/Orders""");
         }
 
         [Fact]
@@ -87,9 +87,9 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
             EdmActionImport actionImport = new EdmActionImport(defaultContainer, "Checkout", defaultCheckoutAction, new EdmIntegerConstant(EdmCoreModel.Instance.GetInt32(true), 1));
 
             var csdlSchemaWriter = CreateEdmModelCsdlSchemaWriterForErrorTestForAsync();
-            async Task errorTest() => await csdlSchemaWriter.WriteActionImportElementHeaderAsync(actionImport).ConfigureAwait(false);
+            async Task errorTest() => await csdlSchemaWriter.WriteActionImportElementHeaderAsync(actionImport);
 
-            var exception = await Assert.ThrowsAsync<InvalidOperationException>(errorTest).ConfigureAwait(false);
+            var exception = await Assert.ThrowsAsync<InvalidOperationException>(errorTest);
             Assert.Equal(Error.Format(SRResources.EdmModel_Validator_Semantic_OperationImportEntitySetExpressionIsInvalid, actionImport.Name), exception.Message);
         }
         #endregion
@@ -101,8 +101,8 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
             EdmActionImport actionImport = new EdmActionImport(defaultContainer, "Checkout", defaultCheckoutAction, null);
 
             await this.EdmModelCsdlSchemaWriterTestAsync(
-                async (writer) => await writer.WriteActionImportElementHeaderAsync(actionImport).ConfigureAwait(false),
-                @"<ActionImport Name=""Checkout"" Action=""Default.NameSpace2.CheckOut""").ConfigureAwait(false);
+                async (writer) => await writer.WriteActionImportElementHeaderAsync(actionImport),
+                @"<ActionImport Name=""Checkout"" Action=""Default.NameSpace2.CheckOut""");
         }
         #endregion
 
@@ -113,8 +113,8 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
             EdmFunctionImport functionImport = new EdmFunctionImport(defaultContainer, "GetStuff", defaultGetStuffFunction, new EdmPathExpression("Customers", "Orders"), false);
 
             await this.EdmModelCsdlSchemaWriterTestAsync(
-                async (writer) => await writer.WriteFunctionImportElementHeaderAsync(functionImport).ConfigureAwait(false),
-                @"<FunctionImport Name=""GetStuff"" Function=""Default.NameSpace2.GetStuff"" EntitySet=""Customers/Orders""").ConfigureAwait(false);
+                async (writer) => await writer.WriteFunctionImportElementHeaderAsync(functionImport),
+                @"<FunctionImport Name=""GetStuff"" Function=""Default.NameSpace2.GetStuff"" EntitySet=""Customers/Orders""");
         }
 
         [Fact]
@@ -123,8 +123,8 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
             EdmFunctionImport functionImport = new EdmFunctionImport(defaultContainer, "GetStuff", defaultGetStuffFunction, new EdmPathExpression("Customers", "Orders"), true);
 
             await this.EdmModelCsdlSchemaWriterTestAsync(
-                async (writer) => await writer.WriteFunctionImportElementHeaderAsync(functionImport).ConfigureAwait(false),
-                @"<FunctionImport Name=""GetStuff"" Function=""Default.NameSpace2.GetStuff"" EntitySet=""Customers/Orders"" IncludeInServiceDocument=""true""").ConfigureAwait(false);
+                async (writer) => await writer.WriteFunctionImportElementHeaderAsync(functionImport),
+                @"<FunctionImport Name=""GetStuff"" Function=""Default.NameSpace2.GetStuff"" EntitySet=""Customers/Orders"" IncludeInServiceDocument=""true""");
         }
         #endregion
 
@@ -133,12 +133,12 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
         public async Task ShouldWriteOpenTypeAttributeForOpenComplexType_Async()
         {
             IEdmComplexType complexType = new EdmComplexType("Default.NameSpace2", "OpenComplex", null, false, true);
-            await TestWriteComplexTypeElementHeaderMethodWithAsync(complexType, @"<ComplexType Name=""OpenComplex"" OpenType=""true""").ConfigureAwait(false);
+            await TestWriteComplexTypeElementHeaderMethodWithAsync(complexType, @"<ComplexType Name=""OpenComplex"" OpenType=""true""");
         }
 
         private async Task TestWriteComplexTypeElementHeaderMethodWithAsync(IEdmComplexType complexType, string expected)
         {
-            await this.EdmModelCsdlSchemaWriterTestAsync(async (writer) => await writer.WriteComplexTypeElementHeaderAsync(complexType).ConfigureAwait(false), expected).ConfigureAwait(false);
+            await this.EdmModelCsdlSchemaWriterTestAsync(async (writer) => await writer.WriteComplexTypeElementHeaderAsync(complexType), expected);
         }
 
         internal async Task EdmModelCsdlSchemaWriterTestAsync(Func<EdmModelCsdlSchemaWriter, Task> testAction, string expectedPayload)
@@ -147,9 +147,9 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
             MemoryStream memoryStream;
             EdmModelCsdlSchemaWriter schemaWriter = CreateEdmModelCsdlSchemaWriterForAsync(out xmlWriter, out memoryStream);
 
-            await testAction(schemaWriter).ConfigureAwait(false);
+            await testAction(schemaWriter);
 
-            await xmlWriter.FlushAsync().ConfigureAwait(false);
+            await xmlWriter.FlushAsync();
 
             memoryStream.Seek(0, SeekOrigin.Begin);
             StreamReader reader = new StreamReader(memoryStream);

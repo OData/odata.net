@@ -190,12 +190,7 @@ namespace Microsoft.OData.UriParser.Validation
             Type[] interfaces;
             if(!implementedInterfaces.TryGetValue(type, out interfaces))
             {
-
-#if NETSTANDARD1_1
                 interfaces = type.GetInterfaces().ToArray();
-#else
-                interfaces = type.GetInterfaces();
-#endif
                 implementedInterfaces.TryAdd(type, interfaces);
             }
 
