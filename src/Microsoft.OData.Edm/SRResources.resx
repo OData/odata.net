@@ -1030,10 +1030,13 @@
     <value>Target object '{0}' is not an instance with type of Date.</value>
   </data>
   <data name="TimeOfDay_InvalidTimeOfDayParameters" xml:space="preserve">
-    <value>The Hour '{0}', Minute '{1}', Second '{2}' and Millisecond '{3}' parameters describe an un-representable TimeOfDay.</value>
+    <value>Hour, Minute, and Second parameters describe an un-representable DateTime.</value>
   </data>
   <data name="TimeOfDay_TicksOutOfRange" xml:space="preserve">
-    <value>The ticks value '{0}' is out of representable TimeOfDay range.</value>
+    <value>Ticks must be between 0 and and TimeOnly.MaxValue.Ticks. (Parameter 'ticks')</value>
+  </data>
+  <data name="TimeOfDay_ValuesOutOfRange" xml:space="preserve">
+    <value>Valid values are between 0 and 999, inclusive. (Parameter 'millisecond')</value>
   </data>
   <data name="TimeOfDay_ConvertErrorFromTimeSpan" xml:space="preserve">
     <value>The TimeSpan value '{0}' is out of representable TimeOfDay range.</value>

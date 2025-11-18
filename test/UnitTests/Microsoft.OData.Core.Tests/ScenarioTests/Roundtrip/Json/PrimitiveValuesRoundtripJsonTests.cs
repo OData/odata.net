@@ -100,7 +100,6 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.Json
         [InlineData(2012, 4, 13)]
         [InlineData(1, 1, 1)]
         [InlineData(9999, 12, 31)]
-        [InlineData(0, 1, 1)] // new DateOnly() is 0001-01-01
         public void DateRoundtripJsonTest(int year, int month, int day)
         {
             var value = new DateOnly(year, month, day);

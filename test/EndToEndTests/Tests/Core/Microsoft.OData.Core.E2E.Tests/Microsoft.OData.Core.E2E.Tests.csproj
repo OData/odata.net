@@ -8,7 +8,9 @@
     <RootNamespace>Microsoft.OData.Core.E2E.Tests</RootNamespace>
 
     <IsPackable>false</IsPackable>
-    <IsTestProject>true</IsTestProject>
+	 <!-- Disable this test for now until AspNetCore.OData supports DateOnly/TimeOnly -->
+	 <!--TODO: Set IsTestProject back to `true` when the issue is resolved.-->
+	 <IsTestProject>false</IsTestProject>
     <SignAssembly>True</SignAssembly>
     <AssemblyOriginatorKeyFile>..\..\..\..\..\tools\StrongNamePublicKeys\testkey.snk</AssemblyOriginatorKeyFile>
     <DelaySign>True</DelaySign>

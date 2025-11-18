@@ -2526,7 +2526,7 @@ namespace Microsoft.OData.Edm {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The Hour &apos;{0}&apos;, Minute &apos;{1}&apos;, Second &apos;{2}&apos; and Millisecond &apos;{3}&apos; parameters describe an un-representable TimeOfDay..
+        ///   Looks up a localized string similar to Hour, Minute, and Second parameters describe an un-representable DateTime..
         /// </summary>
         internal static string TimeOfDay_InvalidTimeOfDayParameters {
             get {
@@ -2535,11 +2535,20 @@ namespace Microsoft.OData.Edm {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The ticks value &apos;{0}&apos; is out of representable TimeOfDay range..
+        ///   Looks up a localized string similar to Ticks must be between 0 and and TimeOnly.MaxValue.Ticks. (Parameter &apos;ticks&apos;).
         /// </summary>
         internal static string TimeOfDay_TicksOutOfRange {
             get {
                 return ResourceManager.GetString("TimeOfDay_TicksOutOfRange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Valid values are between 0 and 999, inclusive. (Parameter &apos;millisecond&apos;).
+        /// </summary>
+        internal static string TimeOfDay_ValuesOutOfRange {
+            get {
+                return ResourceManager.GetString("TimeOfDay_ValuesOutOfRange", resourceCulture);
             }
         }
         

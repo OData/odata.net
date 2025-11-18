@@ -452,19 +452,20 @@ namespace Microsoft.OData.Edm.Tests.Csdl
         [InlineData("-1:0:0.0")]
         [InlineData("0:60:59.1")]
         [InlineData("0:59:60.2")]
-        [InlineData("0:30:14.10000000")]
         public void ParseTimeOfDayWithInvalidParameterShouldThrowFormatException(string invalidTime)
         {
             TimeOnly? result;
             Assert.False(EdmValueParser.TryParseTimeOfDay(invalidTime, out result));
         }
 
-        [Fact]
-        public void TryParseTimeOfDayWithValidParameterShouldParseCorrectly()
+        [Theory]
+        [InlineData("0:30:14.10000000", "00:30:14.1000000")]
+        [InlineData("1:12:5.009000", "01:12:05.0090000")]
+        public void TryParseTimeOfDayWithValidParameterShouldParseCorrectly(string validTime, string expectedODataString)
         {
             TimeOnly? result;
-            Assert.True(EdmValueParser.TryParseTimeOfDay("1:12:5.009000", out result));
-            Assert.Equal(new TimeOnly(1, 12, 5, 9), result);
+            Assert.True(EdmValueParser.TryParseTimeOfDay(validTime, out result));
+            Assert.Equal(expectedODataString, result?.ToODataString());
         }
 #endregion
     }

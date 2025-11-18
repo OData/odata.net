@@ -323,33 +323,41 @@ namespace Microsoft.OData.Edm.Tests.Library
 
 #region TimeOnly
         [Theory]
-        [InlineData(1, 1, 1, 1)]
         [InlineData(-1, 1, 1, 1)]
         [InlineData(1, -1, 1, 1)]
         [InlineData(1, 1, -1, 1)]
-        [InlineData(1, 1, 1, -1)]
         [InlineData(24, 1, 1, 1)]
         [InlineData(23, 60, 1, 1)]
         [InlineData(23, 59, 60, 1)]
-        [InlineData(23, 59, 59, 1000)]
-        public void TestTimeOfDayCtorInvalid(int hour, int minute, int second, int millisecond)
+        public void TestTimeOnlyCtor_InvalidTimeOfDayParameters(int hour, int minute, int second, int millisecond)
         {
             Action test = () => new TimeOnly(hour, minute, second, millisecond);
-            var exception = Assert.Throws<FormatException>(test);
-            Assert.Equal(Error.Format(SRResources.TimeOfDay_InvalidTimeOfDayParameters, hour, minute, second, millisecond), exception.Message);
+            var exception = Assert.Throws<ArgumentOutOfRangeException>(test);
+            Assert.Equal(SRResources.TimeOfDay_InvalidTimeOfDayParameters, exception.Message);
+        }
+
+        [Theory]
+        [InlineData(1, 1, 1, -1)]
+        [InlineData(23, 59, 59, 1000)]
+        public void TestTimeOnlyCtorInvalid(int hour, int minute, int second, int millisecond)
+        {
+            Action test = () => new TimeOnly(hour, minute, second, millisecond);
+            var exception = Assert.Throws<ArgumentOutOfRangeException>(test);
+            Assert.Equal(SRResources.TimeOfDay_ValuesOutOfRange, exception.Message);
         }
 
         [Theory]
         [InlineData(0 - 1)] // TimeOnly.MinValue.Ticks - 1
         [InlineData(863999999999 + 1)] // TimeOnly.MaxValue.Ticks + 1
-        public void TestTimeOfDayTicksCtorInvalid(long ticks)
+        public void TestTimeOnlyTicksCtorInvalid(long ticks)
         {
             Action test = () => new TimeOnly(ticks);
-            var exception = Assert.Throws<FormatException>(test);
-            Assert.Equal(Error.Format(SRResources.TimeOfDay_TicksOutOfRange, ticks), exception.Message);
+            var exception = Assert.Throws<ArgumentOutOfRangeException>(test);
+            Assert.Equal(SRResources.TimeOfDay_TicksOutOfRange, exception.Message);
         }
 
         [Theory]
+        [InlineData(1, 1, 1, 1)]
         [InlineData(0, 0, 0, 0)]
         [InlineData(23, 59, 59, 999)]
         [InlineData(12, 0, 0, 0)]
@@ -425,8 +433,8 @@ namespace Microsoft.OData.Edm.Tests.Library
         {
             TimeSpan timeSpan = new TimeSpan(ticks);
             Action test = () => { TimeOnly timeOfDay = TimeOnly.FromTimeSpan(timeSpan); };
-            var exception = Assert.Throws<FormatException>(test);
-            Assert.Equal(Error.Format(SRResources.TimeOfDay_ConvertErrorFromTimeSpan, timeSpan), exception.Message);
+            var exception = Assert.Throws<ArgumentOutOfRangeException>(test);
+            Assert.Equal(SRResources.TimeOfDay_TicksOutOfRange, exception.Message);
         }
 
         public static TheoryData<TimeOnly, TimeOnly, bool> TestTimeOfDayEqualsData()
@@ -533,7 +541,7 @@ namespace Microsoft.OData.Edm.Tests.Library
         [MemberData(nameof(TestTimeOfDayToStringData))]
         public void TestTimeOfDayToString(TimeOnly input, string expected)
         {
-            Assert.Equal(expected, input.ToString());
+            Assert.Equal(expected, input.ToODataString());
         }
 
         public static TheoryData<string, TimeOnly> TestParseTimeOfDaySuccessData()

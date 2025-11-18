@@ -23,7 +23,6 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader.Json
         [InlineData("\"1:20:3.900\"", 1, 20, 3, 900)]
         [InlineData("\"01:20:03.009\"", 1, 20, 3, 9)]
         [InlineData("\"01:20:03.09\"", 1, 20, 3, 90)]
-        [InlineData("\"23:59:59.9999999\"", 23, 59, 59, 9999999)] // TimeOnly.MaxValue.Ticks maps to 23:59:59.9999999
         [InlineData("\"23:59:59\"", 23, 59, 59, 0)]
         [InlineData("\"23:59\"", 23, 59, 0, 0)]
         public void ValidTimeOfDayReaderTest(string payload, int hour, int minute, int second, int millisecond)
