@@ -289,44 +289,44 @@ namespace Microsoft.OData.UriParser
 
             // int year(DateTimeOffset)
             // int year(DateTimeOffset?)
-            // int year(Date)
-            // int year(Date?)
+            // int year(DateOnly)
+            // int year(DateOnly?)
             functions.Add("year", yearMonthDayFunctionSignatures);
 
             // int month(DateTimeOffset)
             // int month(DateTimeOffset?)
-            // int month(Date)
-            // int month(Date?)
+            // int month(DateOnly)
+            // int month(DateOnly?)
             functions.Add("month", yearMonthDayFunctionSignatures);
 
             // int day(DateTimeOffset)
             // int day(DateTimeOffset?)
-            // int day(Date)
-            // int day(Date?)
+            // int day(DateOnly)
+            // int day(DateOnly?)
             functions.Add("day", yearMonthDayFunctionSignatures);
 
             // int hour(DateTimeOffset)
             // int hour(DateTimeOffset?)
             // int hour(TimeSpan)
             // int hour(TimeSpan?)
-            // int hour(TimeOfDay)
-            // int hour(TimeOfDay?)
+            // int hour(TimeOnly)
+            // int hour(TimeOnly?)
             functions.Add("hour", hourMinuteSecondFunctionSignatures);
 
             // int minute(DateTimeOffset)
             // int minute(DateTimeOffset?)
             // int minute(TimeSpan)
             // int minute(TimeSpan?)
-            // int minute(TimeOfDay)
-            // int minute(TimeOfDay?)
+            // int minute(TimeOnly)
+            // int minute(TimeOnly?)
             functions.Add("minute", hourMinuteSecondFunctionSignatures);
 
             // int second(DateTimeOffset)
             // int second(DateTimeOffset?)
             // int second(TimeSpan)
             // int second(TimeSpan?)
-            // int second(TimeOfDay)
-            // int second(TimeOfDay?)
+            // int second(TimeOnly)
+            // int second(TimeOnly?)
             functions.Add("second", hourMinuteSecondFunctionSignatures);
 
             // Use protocol signature

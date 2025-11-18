@@ -127,11 +127,8 @@ namespace Microsoft.OData.UriParser
                 {
                     DateOnly dateValue;
                     bool result = UriUtils.TryUriStringToDate(text, out dateValue);
-                    
-                    // This will be used for $filter query
-                    // AspNetCore OData expects Date type instead of DateOnly. For example, ?$filter=date eq 2022-01-01
-                    // AspNetCore OData expects the targetValue to be of Date type.
-                    targetValue = (Date)dateValue;
+
+                    targetValue = dateValue;
                     return result;
                 }
                 else if (targetTypeKind == EdmPrimitiveTypeKind.DateTimeOffset)
@@ -167,10 +164,7 @@ namespace Microsoft.OData.UriParser
                     TimeOnly timeOfDayValue;
                     bool result = UriUtils.TryUriStringToTimeOnly(text, out timeOfDayValue);
 
-                    // This will be used for $filter query
-                    // AspNetCore OData expects TimeOfDay type instead of TimeOnly. For example, ?$filter=TimeOfDay eq 10:00:00
-                    // AspNetCore OData expects the targetValue to be of TimeOfDay type.
-                    targetValue = (TimeOfDay)timeOfDayValue;
+                    targetValue = timeOfDayValue;
                     return result;
                 }
 
