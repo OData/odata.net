@@ -211,7 +211,7 @@ namespace Microsoft.OData.Edm
         internal static bool TryConvertStringToDate(ReadOnlySpan<char> text, out Date date)
         {
             date = default(Date);
-            if (text == null || !PlatformHelper.DateValidator.IsMatch(text))
+            if (text.IsEmpty || !PlatformHelper.DateValidator.IsMatch(text))
             {
                 return false;
             }
@@ -262,7 +262,7 @@ namespace Microsoft.OData.Edm
         internal static bool TryConvertStringToTimeOfDay(ReadOnlySpan<char> text, out TimeOfDay timeOfDay)
         {
             timeOfDay = default(TimeOfDay);
-            if (text == null || !PlatformHelper.TimeOfDayValidator.IsMatch(text))
+            if (text.IsEmpty || !PlatformHelper.TimeOfDayValidator.IsMatch(text))
             {
                 return false;
             }

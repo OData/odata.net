@@ -126,14 +126,14 @@ namespace Microsoft.OData.Json
         /// <summary>
         /// Writes the start of the entire JSON payload.
         /// </summary>
-        internal void WritePayloadStart()
+        internal virtual void WritePayloadStart()
         {
         }
 
         /// <summary>
         /// Writes the end of the entire JSON payload.
         /// </summary>
-        internal void WritePayloadEnd()
+        internal virtual void WritePayloadEnd()
         {
         }
 
@@ -225,7 +225,7 @@ namespace Microsoft.OData.Json
         /// Asynchronously writes the start of the entire JSON payload.
         /// </summary>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        internal Task WritePayloadStartAsync()
+        internal virtual Task WritePayloadStartAsync()
         {
             return Task.CompletedTask;
         }
@@ -234,7 +234,7 @@ namespace Microsoft.OData.Json
         /// Asynchronously writes the end of the entire JSON payload.
         /// </summary>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        internal Task WritePayloadEndAsync()
+        internal virtual Task WritePayloadEndAsync()
         {
             return Task.CompletedTask;
         }

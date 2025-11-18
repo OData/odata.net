@@ -78,7 +78,7 @@ public static class CsdlToEdmModelComparer
         }
     }
 
-    /// <summary
+    /// <summary>
     /// Compares ComplexType elements from CSDL to IEdmComplexTypes in the model.
     /// </summary>
     /// <param name="schemaElements">The CSDL schema elements to extract ComplexType elements from.</param>
@@ -103,7 +103,7 @@ public static class CsdlToEdmModelComparer
         }
     }
 
-    /// <summary
+    /// <summary>
     /// Compares Action and Function elements from CSDL to IEdmComplexTypes in the model.
     /// </summary>
     /// <param name="schemaElements">The CSDL schema elements to extract ComplexType elements from.</param>
@@ -130,7 +130,7 @@ public static class CsdlToEdmModelComparer
                     CompareOperationParameters(parameterElements, possibleMatch.Parameters);
                     operation = possibleMatch;
                 }
-                
+
                 if (operationElement.TryGetAttributeValue("ReturnType", out string? returnTypeValue) && returnTypeValue != null)
                 {
                     CompareTypeValue(returnTypeValue, operation.ReturnType);
@@ -148,7 +148,6 @@ public static class CsdlToEdmModelComparer
 
                 if (operationElement.TryGetAttributeValue("EntitySetPath", out string entitySetPathValue))
                 {
-                    
                     CompareEntitySetPaths(entitySetPathValue, operation.EntitySetPath);
                 }
             }

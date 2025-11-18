@@ -159,12 +159,12 @@ namespace Microsoft.OData.Client.Tests.Tracking
         }
 
         [Fact]
-        public void TestBehaviourShouldRemainTheSameForTheDataContext()
+        public async Task TestBehaviourShouldRemainTheSameForTheDataContext()
         {
             SetupContextWithRequestPipeline(new DataServiceContext[] { DefaultTrackingContext, NonTrackingContext }, false);
 
-            var users = DefaultTrackingContext.Users.ExecuteAsync().GetAwaiter().GetResult();
-            var users2 = NonTrackingContext.Users.ExecuteAsync().GetAwaiter().GetResult();
+            var users = await DefaultTrackingContext.Users.ExecuteAsync();
+            var users2 = await NonTrackingContext.Users.ExecuteAsync();
             // data should be fetched and the count should be the same
             Assert.Equal(users.ToList().Count, users2.ToList().Count);
 
@@ -176,11 +176,11 @@ namespace Microsoft.OData.Client.Tests.Tracking
         }
 
         [Fact]
-        public void TrackMediaEntitiesShouldBePopulatedWithMediaEntities()
+        public async Task TrackMediaEntitiesShouldBePopulatedWithMediaEntities()
         {
             SetupContextWithRequestPipeline(new DataServiceContext[] { NonTrackingContext }, true);
 
-            var documents = NonTrackingContext.Documents.ExecuteAsync().GetAwaiter().GetResult().ToList();
+            var documents = await  NonTrackingContext.Documents.ExecuteAsync();
 
             Assert.Empty(NonTrackingContext.EntityTracker.Entities.ToList());
 
@@ -192,7 +192,7 @@ namespace Microsoft.OData.Client.Tests.Tracking
             Assert.Equal("https://localhost:8000/Documents/1/content", NonTrackingContext.GetReadStreamUri(document).ToString());
 
             // try and get the content and verify that the content matches the values
-            Stream result = GetTestReadStreamResult(NonTrackingContext, document).GetAwaiter().GetResult();
+            Stream result = await GetTestReadStreamResult(NonTrackingContext, document);
 
             Assert.Equal("Hello World!", new StreamReader(result).ReadToEnd());
 
@@ -269,7 +269,7 @@ namespace Microsoft.OData.Client.Tests.Tracking
         }
 
         [Fact]
-        public async void GetNamedStreamsShouldWorkInNoTrackingModeIfExtendsBaseEntity()
+        public async Task GetNamedStreamsShouldWorkInNoTrackingModeIfExtendsBaseEntity()
         {
             SetupContextWithRequestPipeline(new DataServiceContext[] { NonTrackingContext }, true, true);
 

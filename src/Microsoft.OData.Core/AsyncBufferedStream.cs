@@ -4,7 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if NETSTANDARD1_1
 namespace Microsoft.OData
 {
     #region Namespaces
@@ -13,6 +12,7 @@ namespace Microsoft.OData
     using System.Diagnostics;
     using System.IO;
     using System.Threading.Tasks;
+    using Microsoft.OData.Core;
     #endregion Namespaces
 
     /// <summary>
@@ -239,7 +239,7 @@ namespace Microsoft.OData
             {
                 if (this.bufferQueue.Count > 0)
                 {
-                    throw new ODataException(Strings.AsyncBufferedStream_WriterDisposedWithoutFlush);
+                    throw new ODataException(SRResources.AsyncBufferedStream_WriterDisposedWithoutFlush);
                 }
             }
 
@@ -369,5 +369,3 @@ namespace Microsoft.OData
         }
     }
 }
-
-#endif

@@ -466,7 +466,9 @@ public class AsyncMethodTests : AsynchronousEndToEndTestBase<AsyncMethodTests.Te
         var context = this.CreateWrappedContext();
 
         var query = context.Customers.IncludeCount();
-        var allCustomersCount = ((await query.ExecuteAsync()) as QueryOperationResponse<Customer>).Count;
+        var response = (await query.ExecuteAsync()) as QueryOperationResponse<Customer>;
+        Assert.NotNull(response);
+        var allCustomersCount = response.Count;
 
         bool CheckNextLink = false;
         Uri? nextPageLink = null;
@@ -493,7 +495,9 @@ public class AsyncMethodTests : AsynchronousEndToEndTestBase<AsyncMethodTests.Te
         //$filter
         context.SendingRequest2 -= sendRequestEvent;
         query = ((DataServiceQuery<Customer>)context.Customers.Where(c => c.CustomerId > -5)).IncludeCount();
-        var filterCustomersCount = ((await query.ExecuteAsync()) as QueryOperationResponse<Customer>).Count;
+        var filterResponse = await query.ExecuteAsync() as QueryOperationResponse<Customer>;
+        Assert.NotNull(filterResponse);
+        var filterCustomersCount = filterResponse.Count;
 
         context.SendingRequest2 += sendRequestEvent;
         CheckNextLink = false;
@@ -533,17 +537,19 @@ public class AsyncMethodTests : AsynchronousEndToEndTestBase<AsyncMethodTests.Te
         var context = this.CreateWrappedContext();
 
         var query = context.Customers.ByKey(new Dictionary<string, object> { { "CustomerId", -10 } }).Orders.IncludeCount();
-        var allOrdersCount = ((await query.ExecuteAsync()) as QueryOperationResponse<Order>).Count;
+        var response = (await query.ExecuteAsync()) as QueryOperationResponse<Order>;
+        Assert.NotNull(response);
+        var allOrdersCount = response.Count;
 
         bool CheckNextLink = false;
-        Uri nextPageLink = null;
+        Uri? nextPageLink = null;
 
         EventHandler<SendingRequest2EventArgs> sendRequestEvent = (sender, args) =>
         {
             //The first request should not be checked.
             if (CheckNextLink)
             {
-                Assert.Equal(nextPageLink.AbsoluteUri, args.RequestMessage.Url.AbsoluteUri);
+                Assert.Equal(nextPageLink?.AbsoluteUri, args.RequestMessage.Url.AbsoluteUri);
             }
             CheckNextLink = true;
         };

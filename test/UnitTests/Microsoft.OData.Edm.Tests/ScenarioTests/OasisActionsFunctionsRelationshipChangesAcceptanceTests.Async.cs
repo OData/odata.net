@@ -22,10 +22,10 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
             var builder = new StringBuilder();
             using (var writer = XmlWriter.Create(builder, new XmlWriterSettings() { Async = true }))
             {
-                var (result, errors) = await CsdlWriter.TryWriteCsdlAsync(this.TestModel.RepresentativeModel, writer).ConfigureAwait(false);
+                var (result, errors) = await CsdlWriter.TryWriteCsdlAsync(this.TestModel.RepresentativeModel, writer);
                 Assert.True(result);
                 Assert.Empty(errors);
-                await writer.FlushAsync().ConfigureAwait(false);
+                await writer.FlushAsync();
             }
 
             string actual = builder.ToString();

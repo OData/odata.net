@@ -9,16 +9,17 @@ using Microsoft.AspNetCore.OData.Batch;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OData.E2E.TestCommon;
+using Microsoft.OData.E2E.TestCommon.Common.Client.Default;
 using Microsoft.OData.E2E.TestCommon.Common.Client.Default.Default;
 using Microsoft.OData.E2E.TestCommon.Common.Server.AsyncRequestTests;
 using Microsoft.OData.E2E.TestCommon.Common.Server.Default;
 using Xunit;
+using Asset = Microsoft.OData.E2E.TestCommon.Common.Client.Default.Asset;
 using Company = Microsoft.OData.E2E.TestCommon.Common.Client.Default.Company;
 using CompanyCategory = Microsoft.OData.E2E.TestCommon.Common.Client.Default.CompanyCategory;
+using Customer = Microsoft.OData.E2E.TestCommon.Common.Client.Default.Customer;
 using Department = Microsoft.OData.E2E.TestCommon.Common.Client.Default.Department;
 using PublicCompany = Microsoft.OData.E2E.TestCommon.Common.Client.Default.PublicCompany;
-using Customer = Microsoft.OData.E2E.TestCommon.Common.Client.Default.Customer;
-using Asset = Microsoft.OData.E2E.TestCommon.Common.Client.Default.Asset;
 
 namespace Microsoft.OData.Client.E2E.Tests.AsynchronousTests;
 
@@ -129,7 +130,7 @@ public class AsynchronousSingletonClientTest : AsynchronousEndToEndTestBase<Asyn
         var selectCompany = context.Company.Select(c => new Company { CompanyID = c.CompanyID, Departments = c.Departments }) as DataServiceQuerySingle<Company>;
         var selectCompanyAr = selectCompany.BeginGetValue(null, null).EnqueueWait(this);
         var projectedCompany = selectCompany.EndGetValue(selectCompanyAr);
-        Assert.True(projectedCompany.Departments.Any(c => c.DepartmentID == tmpDepartmentID));
+        Assert.Contains(projectedCompany.Departments, c => c.DepartmentID == tmpDepartmentID);
 
         //Update EntitySet's Navigation Property - Singleton 
         context.SetLink(department, "Company", company);
@@ -138,8 +139,10 @@ public class AsynchronousSingletonClientTest : AsynchronousEndToEndTestBase<Asyn
 
         //Query(Expand) EntitySet's Navigation Property - Singleton
         var queryDepartment = context.Departments.Expand(d => d.Company).Where(d => d.DepartmentID == tmpDepartmentID) as DataServiceQuery<Department>;
+        Assert.NotNull(queryDepartment);
         var queryDepartmentAr = queryDepartment.BeginExecute(null, null).EnqueueWait(this);
         department = queryDepartment.EndExecute(queryDepartmentAr).SingleOrDefault();
+        Assert.NotNull(department);
         Assert.True(department.Company.CompanyID == company.CompanyID);
 
         //Delete Navigation Property - EntitySet
@@ -300,7 +303,7 @@ public class AsynchronousSingletonClientTest : AsynchronousEndToEndTestBase<Asyn
         Assert.True(name == "UpdatedName");
 
         //Projection with properties of DerivedType
-        var queryStockExchange = context.PublicCompany.Select(c => (c as PublicCompany).StockExchange) as DataServiceQuerySingle<string>;
+        var queryStockExchange = context.PublicCompany.Select(c => (c as PublicCompany).StockExchange);
         var queryStockExchangeAr = queryStockExchange.BeginGetValue(null, null).EnqueueWait(this);
         var stockExchange = queryStockExchange.EndGetValue(queryStockExchangeAr);
         Assert.True(stockExchange == "Updated StockExchange");
@@ -312,7 +315,7 @@ public class AsynchronousSingletonClientTest : AsynchronousEndToEndTestBase<Asyn
                 CompanyID = c.CompanyID,
                 Name = c.Name,
                 StockExchange = (c as PublicCompany).StockExchange
-            }) as DataServiceQuerySingle<PublicCompany>;
+            });
 
         var queryPublicCompanyAr = queryPublicCompany.BeginGetValue(null, null).EnqueueWait(this);
         publicCompany = queryPublicCompany.EndGetValue(queryPublicCompanyAr);

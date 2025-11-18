@@ -44,13 +44,11 @@ namespace Microsoft.OData.Metadata
         /// </summary>
         private static readonly Dictionary<Type, IEdmPrimitiveTypeReference> PrimitiveTypeReferenceMap = new Dictionary<Type, IEdmPrimitiveTypeReference>(EqualityComparer<Type>.Default);
 
-#if !NETSTANDARD1_1
         /// <summary>
         /// Packs the <see cref="TypeCode"/> of supported primitive types. This is used to speed up the <see cref="IsPrimitiveType(Type)"/> method.
         /// If the bit at a given type code position is set, it means that's a support primitive type.
         /// </summary>
         private static int PrimitiveTypeCodeBitMap = 0;
-#endif
 
         /// <summary>Type reference for Edm.Boolean.</summary>
         private static readonly EdmPrimitiveTypeReference BooleanTypeReference = ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Boolean), false);
@@ -144,7 +142,6 @@ namespace Microsoft.OData.Metadata
             PrimitiveTypeReferenceMap.Add(typeof(TimeOnly), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.TimeOfDay), false));
             PrimitiveTypeReferenceMap.Add(typeof(TimeOnly?), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.TimeOfDay), true));
 
-#if !NETSTANDARD1_1
             // Pack type codes of supported primitive types in the bitmap
             // See the type codes here: https://learn.microsoft.com/en-us/dotnet/api/system.typecode
             PrimitiveTypeCodeBitMap = 0;
@@ -161,7 +158,6 @@ namespace Microsoft.OData.Metadata
             PrimitiveTypeCodeBitMap |= 1 << (int)TypeCode.UInt16;
             PrimitiveTypeCodeBitMap |= 1 << (int)TypeCode.UInt32;
             PrimitiveTypeCodeBitMap |= 1 << (int)TypeCode.UInt64;
-#endif
         }
 
         #region Internal methods
@@ -625,19 +621,12 @@ namespace Microsoft.OData.Metadata
         internal static bool IsPrimitiveType(Type clrType)
         {
             Debug.Assert(clrType != null, "clrType != null");
-#if !NETSTANDARD1_1
+
             int typeCode = 1 << (int)Type.GetTypeCode(clrType);
-#endif
 
             return
-#if !NETSTANDARD1_1
                 (PrimitiveTypeCodeBitMap & typeCode) == typeCode
                 ||
-#else
-                // .netstandard1.1 does not support TypeCode
-                clrType == typeof(UInt16) || clrType == typeof(UInt32) || clrType == typeof(UInt64)
-                ||
-#endif
                 // DateTimeOffset and Guid don't have dedicated type codes, but they are
                 // common types, so we check them first to optimize their lookup before falling back to the dictionary.
                 clrType == typeof(DateTimeOffset)
