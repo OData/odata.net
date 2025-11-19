@@ -260,7 +260,7 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
         [InlineData(EdmPrimitiveTypeKind.Double, "The value 'abc' is not a valid floating point value.")]
         [InlineData(EdmPrimitiveTypeKind.Guid, "The value 'abc' is not a valid Guid.")]
         [InlineData(EdmPrimitiveTypeKind.Int16, "The value 'abc' is not a valid integer. The value must be a valid 32 bit integer.")]
-        [InlineData(EdmPrimitiveTypeKind.TimeOfDay, "The value 'abc' is not a valid TimeOfDay value.")]
+        [InlineData(EdmPrimitiveTypeKind.TimeOfDay, "The value 'abc' is not a valid TimeOnly value.")]
         public void BuildEdmExpression_Throws_ForInvalidDefaultValue(EdmPrimitiveTypeKind kind, string expected)
         {
             // Arrange

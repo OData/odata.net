@@ -156,7 +156,7 @@
   <data name="PathSegmentMustNotContainSlash" xml:space="preserve">
     <value>Path segments must not contain '/' character.</value>
   </data>
-	<data name="PropertyPathMustEndingWithCorrectPropertyName" xml:space="preserve">
+  <data name="PropertyPathMustEndingWithCorrectPropertyName" xml:space="preserve">
     <value>Property Path '{0}' is not ended with '{1}'.</value>
   </data>
   <data name="Constructable_DependentPropertyCountMustMatchNumberOfPropertiesOnPrincipalType" xml:space="preserve">
@@ -969,7 +969,7 @@
   <data name="Bad_UnresolvedLabeledElement" xml:space="preserve">
     <value>The labeled element '{0}' could not be found.</value>
   </data>
-	<data name="Bad_UnresolvedPropertyRef" xml:space="preserve">
+  <data name="Bad_UnresolvedPropertyRef" xml:space="preserve">
     <value>The property ref on type '{0}' with name '{1}' and alias '{2}' could not be resolved.</value>
   </data>
   <data name="Bad_CyclicEntity" xml:space="preserve">
@@ -1017,12 +1017,6 @@
   <data name="PlatformHelper_DateTimeOffsetMustContainTimeZone" xml:space="preserve">
     <value>The time zone information is missing on the DateTimeOffset value '{0}'. A DateTimeOffset value must contain the time zone information.</value>
   </data>
-  <data name="Date_InvalidParsingString" xml:space="preserve">
-    <value>String '{0}' was not recognized as a valid DateOnly.</value>
-  </data>
-  <data name="TimeOfDay_InvalidParsingString" xml:space="preserve">
-    <value>String '{0}' was not recognized as a valid TimeOnly.</value>
-  </data>
   <data name="EdmVocabularyAnnotations_DidNotFindDefaultValue" xml:space="preserve">
     <value>Annotation expressions must specify a value or use a term with a specified default value. Cannot find a default value for the given annotation term, '{0}'.</value>
   </data>
@@ -1031,5 +1025,11 @@
   </data>
   <data name="EdmVocabularyAnnotations_InvalidLocationForTargetPathAnnotation" xml:space="preserve">
     <value>Invalid to set inline location for a path target '{0}'.</value>
+  </data>
+  <data name="Date_InvalidParsingString" xml:space="preserve">
+    <value>String '{0}' was not recognized as a valid DateOnly.</value>
+  </data>
+  <data name="TimeOfDay_InvalidParsingString" xml:space="preserve">
+    <value>String '{0}' was not recognized as a valid TimeOnly.</value>
   </data>
 </root>
