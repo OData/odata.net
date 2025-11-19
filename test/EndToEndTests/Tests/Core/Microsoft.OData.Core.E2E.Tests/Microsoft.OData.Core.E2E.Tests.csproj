@@ -15,11 +15,11 @@
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <OutputPath>..\..\..\bin\AnyCPU\Debug\Test\</OutputPath>
+    <OutputPath>..\..\..\..\..\sln\bin\AnyCPU\Debug\Test\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <OutputPath>..\..\..\bin\AnyCPU\Release\Test\</OutputPath>
+    <OutputPath>..\..\..\..\..\sln\bin\AnyCPU\Release\Test\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
   </PropertyGroup>
 
