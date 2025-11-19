@@ -715,8 +715,6 @@ Microsoft.OData.ODataMessageReaderSettings.PrimitiveTypeResolver.get -> System.F
 Microsoft.OData.ODataMessageReaderSettings.PrimitiveTypeResolver.set -> void
 Microsoft.OData.ODataMessageReaderSettings.ReadAsStreamFunc.get -> System.Func<Microsoft.OData.Edm.IEdmPrimitiveType, bool, string, Microsoft.OData.Edm.IEdmProperty, bool>
 Microsoft.OData.ODataMessageReaderSettings.ReadAsStreamFunc.set -> void
-Microsoft.OData.ODataMessageReaderSettings.ReadUntypedAsString.get -> bool
-Microsoft.OData.ODataMessageReaderSettings.ReadUntypedAsString.set -> void
 Microsoft.OData.ODataMessageReaderSettings.ShouldIncludeAnnotation.get -> System.Func<string, bool>
 Microsoft.OData.ODataMessageReaderSettings.ShouldIncludeAnnotation.set -> void
 Microsoft.OData.ODataMessageReaderSettings.Validations.get -> Microsoft.OData.ValidationKinds

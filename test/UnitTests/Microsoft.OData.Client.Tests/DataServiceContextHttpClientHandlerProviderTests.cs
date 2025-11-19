@@ -97,17 +97,6 @@ namespace Microsoft.OData.Client.Tests
 
                 var context = createRequestForEntityWithDynamicCollectionOfUntypedValues(rootUri, entitySet, provider);
 
-                // This test is asserting behavior about a bug that has been fixed in order to demonstrate the difference between the fixed behavior and the bugged
-                // behavior. The bugged behavior fails a <see cref="System.Diagnostics.Debug.Assert(bool)"/>, so we don't run the test with the behavior flag disabled in
-                // the Debug configuration
-#if !DEBUG
-                // when disabled, we expect an exception due to a bug
-                context.Configurations.ResponsePipeline.OnMessageReaderSettingsCreated(args => args.Settings.EnableUntypedCollections = false);
-                Assert.Throws<DataServiceRequestException>(() => context.SaveChanges());
-#endif
-
-                context = createRequestForEntityWithDynamicCollectionOfUntypedValues(rootUri, entitySet, provider);
-
                 // when enabled, the exception should go away and we should receive an actual repsonse
                 context.Configurations.ResponsePipeline.OnMessageReaderSettingsCreated(args => args.Settings.EnableUntypedCollections = true);
                 var response = context.SaveChanges();

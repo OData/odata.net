@@ -1599,7 +1599,6 @@ namespace Microsoft.OData.Json
                 payloadTypeName,
                 payloadTypeReference,
                 this.MessageReaderSettings.PrimitiveTypeResolver,
-                this.MessageReaderSettings.ReadUntypedAsString,
                 !this.MessageReaderSettings.ThrowIfTypeConflictsWithMetadata, 
                 this.MessageReaderSettings.LibraryCompatibility.HasFlag(ODataLibraryCompatibility.ReadUntypedNumericAsDecimal));
 
@@ -3824,7 +3823,6 @@ namespace Microsoft.OData.Json
                 payloadTypeName,
                 payloadTypeReference,
                 this.MessageReaderSettings.PrimitiveTypeResolver,
-                this.MessageReaderSettings.ReadUntypedAsString,
                 !this.MessageReaderSettings.ThrowIfTypeConflictsWithMetadata, 
                 this.MessageReaderSettings.LibraryCompatibility.HasFlag(ODataLibraryCompatibility.ReadUntypedNumericAsDecimal));
 

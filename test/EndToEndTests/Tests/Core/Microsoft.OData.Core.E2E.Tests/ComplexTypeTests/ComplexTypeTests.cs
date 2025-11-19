@@ -593,9 +593,9 @@ namespace Microsoft.OData.Core.E2E.Tests.ComplexTypeTests
                 string typeName = NameSpacePrefix + "AccountInfo";
 
                 Assert.Equal(typeName, accountInfo.TypeName);
-                Assert.Equal("\"Hood\"", (accountInfo.Properties.OfType<ODataProperty>().Single(p => p.Name == "MiddleName").Value as ODataUntypedValue).RawValue);
+                Assert.Equal("Hood", accountInfo.Properties.OfType<ODataProperty>().Single(p => p.Name == "MiddleName").Value);
 
-                var colorODataEnumValue = accountInfo.Properties.OfType<ODataProperty>().Single(p => p.Name == "FavoriteColor").Value as ODataEnumValue;
+                var colorODataEnumValue = Assert.IsType<ODataEnumValue>(accountInfo.Properties.OfType<ODataProperty>().Single(p => p.Name == "FavoriteColor").Value);
                 string colorTypeName = NameSpacePrefix + "Color";
 
                 Assert.Equal(colorTypeName, colorODataEnumValue.TypeName);
@@ -675,7 +675,7 @@ namespace Microsoft.OData.Core.E2E.Tests.ComplexTypeTests
                 string typeName = NameSpacePrefix + "AccountInfo";
 
                 Assert.Equal(typeName, accountInfo.TypeName);
-                Assert.Equal("\"Hood\"", (accountInfo.Properties.OfType<ODataProperty>().Single(p => p.Name == "MiddleName").Value as ODataUntypedValue).RawValue);
+                Assert.Equal("Hood", accountInfo.Properties.OfType<ODataProperty>().Single(p => p.Name == "MiddleName").Value);
 
                 int? accountID = account.Properties.OfType<ODataProperty>().Single(p => p.Name == "AccountID").Value as int?;
 
@@ -703,7 +703,7 @@ namespace Microsoft.OData.Core.E2E.Tests.ComplexTypeTests
                 (ODataResource entry, List<ODataResource> complexTypeResources) = await QueryEntryAsync("Accounts(101)");
 
                 var accountInfo = complexTypeResources.Single(a => a.TypeName.EndsWith("AccountInfo"));
-                Assert.Equal("\"" + middleNames[i] + "\"", (accountInfo.Properties.OfType<ODataProperty>().Single(p => p.Name == "MiddleName").Value as ODataUntypedValue).RawValue);
+                Assert.Equal(middleNames[i], accountInfo.Properties.OfType<ODataProperty>().Single(p => p.Name == "MiddleName").Value);
 
                 // update
                 bool isPersonalAccount = i % 2 == 0;
@@ -771,7 +771,7 @@ namespace Microsoft.OData.Core.E2E.Tests.ComplexTypeTests
                 (entry, complexTypeResources) = await QueryEntryAsync("Accounts(101)");
                 var updatedAccountInfo = complexTypeResources.Single(a => a.TypeName.EndsWith("AccountInfo"));
                 Assert.Equal("FN", updatedAccountInfo.Properties.OfType<ODataProperty>().Single(p => p.Name == "FirstName").Value);
-                Assert.Equal("\"" + middleNames[i + 1] + "\"", (updatedAccountInfo.Properties.OfType<ODataProperty>().Single(p => p.Name == "MiddleName").Value as ODataUntypedValue).RawValue);
+                Assert.Equal(middleNames[i + 1], updatedAccountInfo.Properties.OfType<ODataProperty>().Single(p => p.Name == "MiddleName").Value);
                 Assert.Equal(isPersonalAccount, updatedAccountInfo.Properties.OfType<ODataProperty>().Single(p => p.Name == "IsPersonalAccount").Value);
             }
         }
@@ -849,7 +849,7 @@ namespace Microsoft.OData.Core.E2E.Tests.ComplexTypeTests
 
             var accountInfo = complexTypeResources.Single(a => a.TypeName.EndsWith("AccountInfo"));
             Assert.Equal("Peter", accountInfo.Properties.OfType<ODataProperty>().Single(p => p.Name == "FirstName").Value);
-            Assert.Equal("\"#999, ZiXing Road\"", (accountInfo.Properties.OfType<ODataProperty>().Single(p => p.Name == "ShippingAddress").Value as ODataUntypedValue).RawValue);
+            Assert.Equal("#999, ZiXing Road", accountInfo.Properties.OfType<ODataProperty>().Single(p => p.Name == "ShippingAddress").Value);
 
             // delete the entry
             var deleteRequestUri = new Uri(_baseUri + "Accounts(10086)");
@@ -901,7 +901,7 @@ namespace Microsoft.OData.Core.E2E.Tests.ComplexTypeTests
 
                 Assert.NotNull(accountInfo);
                 Assert.Equal("Alex", accountInfo.Properties.OfType<ODataProperty>().Single(p => p.Name == "FirstName").Value);
-                Assert.Equal("\"Hood\"", (accountInfo.Properties.OfType<ODataProperty>().Single(p => p.Name == "MiddleName").Value as ODataUntypedValue).RawValue);
+                Assert.Equal("Hood", accountInfo.Properties.OfType<ODataProperty>().Single(p => p.Name == "MiddleName").Value);
             }
 
             requestUri = new Uri(_baseUri.AbsoluteUri + "Accounts(103)/Default.GetAccountInfo", UriKind.Absolute);
@@ -1079,7 +1079,7 @@ namespace Microsoft.OData.Core.E2E.Tests.ComplexTypeTests
 
             Assert.Equal("FN", updatedAccountInfo.Properties.OfType<ODataProperty>().Single(p => p.Name == "FirstName").Value);
             Assert.Equal("Green", updatedAccountInfo.Properties.OfType<ODataProperty>().Single(p => p.Name == "LastName").Value);
-            Assert.Equal("\"Hood\"", (updatedAccountInfo.Properties.OfType<ODataProperty>().Single(p => p.Name == "MiddleName").Value as ODataUntypedValue).RawValue);
+            Assert.Equal("Hood", updatedAccountInfo.Properties.OfType<ODataProperty>().Single(p => p.Name == "MiddleName").Value);
 
             var favoriteFood = updatedAccountInfo.Properties.OfType<ODataProperty>().Single(p => p.Name == "FavoriteFood").Value as ODataCollectionValue;
 
@@ -1087,6 +1087,7 @@ namespace Microsoft.OData.Core.E2E.Tests.ComplexTypeTests
             string[] expectedFavoriteFood = ["meat", "sea food", "apple"];
             int index = 0;
 
+            Assert.NotNull(favoriteFood);
             foreach (var item in favoriteFood.Items)
             {
                 Assert.Equal(expectedFavoriteFood[index++], item);
