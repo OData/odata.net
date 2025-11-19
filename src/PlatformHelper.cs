@@ -216,7 +216,7 @@ namespace Microsoft.OData.Edm
                 return false;
             }
 
-            return DateOnly.TryParse(text, CultureInfo.InvariantCulture, DateTimeStyles.None, out date);
+            return DateOnly.TryParse(text, CultureInfo.InvariantCulture, out date);
         }
 
         /// <summary>

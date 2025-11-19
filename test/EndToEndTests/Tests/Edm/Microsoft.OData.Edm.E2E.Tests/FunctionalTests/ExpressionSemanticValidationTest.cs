@@ -2064,7 +2064,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         Assert.Single(actualErrors);
 
         Assert.Equal(EdmErrorCode.InvalidTimeOfDay, actualErrors.ElementAt(0).ErrorCode);
-        Assert.Equal("The value '-1:10:26' is not a valid TimeOfDay value.", actualErrors.ElementAt(0).ErrorMessage);
+        Assert.Equal("The value '-1:10:26' is not a valid TimeOnly value.", actualErrors.ElementAt(0).ErrorMessage);
         Assert.Equal("(6, 10)", actualErrors.ElementAt(0).ErrorLocation.ToString());
 
         var serializedCsdls = GetSerializerResult(model, edmVersion, out IEnumerable<EdmError> serializationErrors).Select(n => XElement.Parse(n));
