@@ -610,33 +610,6 @@ namespace Microsoft.OData.Edm {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The added or subtracted value results in an un-representable Date..
-        /// </summary>
-        internal static string Date_InvalidAddedOrSubtractedResults {
-            get {
-                return ResourceManager.GetString("Date_InvalidAddedOrSubtractedResults", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Target object &apos;{0}&apos; is not an instance with type of Date..
-        /// </summary>
-        internal static string Date_InvalidCompareToTarget {
-            get {
-                return ResourceManager.GetString("Date_InvalidCompareToTarget", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The Year &apos;{0}&apos;, Month &apos;{1}&apos; and Day &apos;{2}&apos; parameters describe an un-representable Date..
-        /// </summary>
-        internal static string Date_InvalidDateParameters {
-            get {
-                return ResourceManager.GetString("Date_InvalidDateParameters", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to String &apos;{0}&apos; was not recognized as a valid DateOnly..
         /// </summary>
         internal static string Date_InvalidParsingString {
@@ -2499,56 +2472,11 @@ namespace Microsoft.OData.Edm {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The TimeSpan value &apos;{0}&apos; is out of representable TimeOfDay range..
-        /// </summary>
-        internal static string TimeOfDay_ConvertErrorFromTimeSpan {
-            get {
-                return ResourceManager.GetString("TimeOfDay_ConvertErrorFromTimeSpan", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Target object &apos;{0}&apos; is not an instance with type of TimeOfDay..
-        /// </summary>
-        internal static string TimeOfDay_InvalidCompareToTarget {
-            get {
-                return ResourceManager.GetString("TimeOfDay_InvalidCompareToTarget", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to String &apos;{0}&apos; was not recognized as a valid TimeOnly..
         /// </summary>
         internal static string TimeOfDay_InvalidParsingString {
             get {
                 return ResourceManager.GetString("TimeOfDay_InvalidParsingString", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Hour, Minute, and Second parameters describe an un-representable DateTime..
-        /// </summary>
-        internal static string TimeOfDay_InvalidTimeOfDayParameters {
-            get {
-                return ResourceManager.GetString("TimeOfDay_InvalidTimeOfDayParameters", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Ticks must be between 0 and and TimeOnly.MaxValue.Ticks. (Parameter &apos;ticks&apos;).
-        /// </summary>
-        internal static string TimeOfDay_TicksOutOfRange {
-            get {
-                return ResourceManager.GetString("TimeOfDay_TicksOutOfRange", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Valid values are between 0 and 999, inclusive. (Parameter &apos;millisecond&apos;).
-        /// </summary>
-        internal static string TimeOfDay_ValuesOutOfRange {
-            get {
-                return ResourceManager.GetString("TimeOfDay_ValuesOutOfRange", resourceCulture);
             }
         }
         
@@ -2778,7 +2706,7 @@ namespace Microsoft.OData.Edm {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The value &apos;{0}&apos; is not a valid TimeOfDay value..
+        ///   Looks up a localized string similar to The value &apos;{0}&apos; is not a valid TimeOnly value..
         /// </summary>
         internal static string ValueParser_InvalidTimeOfDay {
             get {

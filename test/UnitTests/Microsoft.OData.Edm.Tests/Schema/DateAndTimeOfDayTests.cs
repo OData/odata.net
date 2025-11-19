@@ -333,7 +333,7 @@ namespace Microsoft.OData.Edm.Tests.Library
         {
             Action test = () => new TimeOnly(hour, minute, second, millisecond);
             var exception = Assert.Throws<ArgumentOutOfRangeException>(test);
-            Assert.Equal(SRResources.TimeOfDay_InvalidTimeOfDayParameters, exception.Message);
+            Assert.Equal("Hour, Minute, and Second parameters describe an un-representable DateTime.", exception.Message);
         }
 
         [Theory]
@@ -343,7 +343,7 @@ namespace Microsoft.OData.Edm.Tests.Library
         {
             Action test = () => new TimeOnly(hour, minute, second, millisecond);
             var exception = Assert.Throws<ArgumentOutOfRangeException>(test);
-            Assert.Equal(SRResources.TimeOfDay_ValuesOutOfRange, exception.Message);
+            Assert.Equal("Valid values are between 0 and 999, inclusive. (Parameter 'millisecond')", exception.Message);
         }
 
         [Theory]
@@ -353,7 +353,7 @@ namespace Microsoft.OData.Edm.Tests.Library
         {
             Action test = () => new TimeOnly(ticks);
             var exception = Assert.Throws<ArgumentOutOfRangeException>(test);
-            Assert.Equal(SRResources.TimeOfDay_TicksOutOfRange, exception.Message);
+            Assert.Equal("Ticks must be between 0 and and TimeOnly.MaxValue.Ticks. (Parameter 'ticks')", exception.Message);
         }
 
         [Theory]
@@ -434,7 +434,7 @@ namespace Microsoft.OData.Edm.Tests.Library
             TimeSpan timeSpan = new TimeSpan(ticks);
             Action test = () => { TimeOnly timeOfDay = TimeOnly.FromTimeSpan(timeSpan); };
             var exception = Assert.Throws<ArgumentOutOfRangeException>(test);
-            Assert.Equal(SRResources.TimeOfDay_TicksOutOfRange, exception.Message);
+            Assert.Equal("Ticks must be between 0 and and TimeOnly.MaxValue.Ticks. (Parameter 'ticks')", exception.Message);
         }
 
         public static TheoryData<TimeOnly, TimeOnly, bool> TestTimeOfDayEqualsData()
