@@ -91,30 +91,27 @@ namespace Microsoft.OData.Tests
             this.asyncStream.Position = 0;
             var asyncResult = await new StreamReader(this.asyncStream).ReadToEndAsync();
 
-            var syncResult = await TaskUtils.GetTaskForSynchronousOperation(() =>
+            IODataResponseMessage syncResponseMessage = new InMemoryMessage { StatusCode = 200, Stream = this.syncStream };
+            using (var messageWriter = new ODataMessageWriter(syncResponseMessage, writerSettings))
             {
-                IODataResponseMessage syncResponseMessage = new InMemoryMessage { StatusCode = 200, Stream = this.syncStream };
-                using (var messageWriter = new ODataMessageWriter(syncResponseMessage, writerSettings))
+                var asynchronousWriter = messageWriter.CreateODataAsynchronousWriter();
+                var responseMessage = asynchronousWriter.CreateResponseMessage();
+                responseMessage.StatusCode = 200;
+
+                using (var nestedMessageWriter = new ODataMessageWriter(responseMessage, nestedWriterSettings, this.model))
                 {
-                    var asynchronousWriter = messageWriter.CreateODataAsynchronousWriter();
-                    var responseMessage = asynchronousWriter.CreateResponseMessage();
-                    responseMessage.StatusCode = 200;
+                    var writer = nestedMessageWriter.CreateODataResourceWriter(this.customerEntitySet, this.customerEntityType);
 
-                    using (var nestedMessageWriter = new ODataMessageWriter(responseMessage, nestedWriterSettings, this.model))
-                    {
-                        var writer = nestedMessageWriter.CreateODataResourceWriter(this.customerEntitySet, this.customerEntityType);
-
-                        writer.WriteStart(customerResponse);
-                        writer.WriteEnd();
-                        writer.Flush();
-                    }
-
-                    asynchronousWriter.Flush();
+                    writer.WriteStart(customerResponse);
+                    writer.WriteEnd();
+                    writer.Flush();
                 }
 
-                this.syncStream.Position = 0;
-                return new StreamReader(this.syncStream).ReadToEnd();
-            });
+                asynchronousWriter.Flush();
+            }
+
+            this.syncStream.Position = 0;
+            var syncResult = new StreamReader(this.syncStream).ReadToEnd();
 
             var expected = @"HTTP/1.1 200 OK
 OData-Version: 4.0
@@ -170,17 +167,14 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
             this.asyncStream.Position = 0;
             var asyncResult = await new StreamReader(this.asyncStream).ReadToEndAsync();
 
-            var syncResult = await TaskUtils.GetTaskForSynchronousOperation(() =>
+            IODataResponseMessage syncResponseMessage = new InMemoryMessage { StatusCode = 200, Stream = this.syncStream };
+            using (var messageWriter = new ODataMessageWriter(syncResponseMessage, writerSettings))
             {
-                IODataResponseMessage syncResponseMessage = new InMemoryMessage { StatusCode = 200, Stream = this.syncStream };
-                using (var messageWriter = new ODataMessageWriter(syncResponseMessage, writerSettings))
-                {
-                    messageWriter.WriteValue(value);
-                }
+                messageWriter.WriteValue(value);
+            }
 
-                this.syncStream.Position = 0;
-                return new StreamReader(this.syncStream).ReadToEnd();
-            });
+            this.syncStream.Position = 0;
+            var syncResult = new StreamReader(this.syncStream).ReadToEnd();
 
             Assert.Equal(expected, asyncResult);
             Assert.Equal(expected, syncResult);
@@ -222,28 +216,27 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
             this.asyncStream.Position = 0;
             var asyncResult = await new StreamReader(this.asyncStream).ReadToEndAsync();
 
-            var syncException = await Assert.ThrowsAsync<ODataException>(
-                () => TaskUtils.GetTaskForSynchronousOperation(() =>
+            var syncException = Assert.Throws<ODataException>(() =>
+            {
+                IODataResponseMessage syncResponseMessage = new InMemoryMessage { StatusCode = 200, Stream = this.syncStream };
+                using (var messageWriter = new ODataMessageWriter(syncResponseMessage, writerSettings))
                 {
-                    IODataResponseMessage syncResponseMessage = new InMemoryMessage { StatusCode = 200, Stream = this.syncStream };
-                    using (var messageWriter = new ODataMessageWriter(syncResponseMessage, writerSettings))
+                    // Call to CreateODataAsynchronousWriterAsync triggers setting of output in-stream error listener
+                    var asynchronousWriter = messageWriter.CreateODataAsynchronousWriter();
+                    var responseMessage = asynchronousWriter.CreateResponseMessage();
+                    responseMessage.StatusCode = 200;
+
+                    // Next section is added to demonstrate that what was already written is flushed to the buffer before exception is thrown
+                    using (var nestedMessageWriter = new ODataMessageWriter(responseMessage, nestedWriterSettings))
                     {
-                        // Call to CreateODataAsynchronousWriterAsync triggers setting of output in-stream error listener
-                        var asynchronousWriter = messageWriter.CreateODataAsynchronousWriter();
-                        var responseMessage = asynchronousWriter.CreateResponseMessage();
-                        responseMessage.StatusCode = 200;
-
-                        // Next section is added to demonstrate that what was already written is flushed to the buffer before exception is thrown
-                        using (var nestedMessageWriter = new ODataMessageWriter(responseMessage, nestedWriterSettings))
-                        {
-                            var writer = nestedMessageWriter.CreateODataResourceWriter();
-                        }
-
-                        messageWriter.WriteError(
-                            new ODataError { Code = "NRE", Message = "Object reference not set to an instance of an object." },
-                            /*includeDebugInformation*/ true);
+                        var writer = nestedMessageWriter.CreateODataResourceWriter();
                     }
-                }));
+
+                    messageWriter.WriteError(
+                        new ODataError { Code = "NRE", Message = "Object reference not set to an instance of an object." },
+                        includeDebugInformation: true);
+                }
+            });
 
             this.syncStream.Position = 0;
             var syncResult = await new StreamReader(this.syncStream).ReadToEndAsync();

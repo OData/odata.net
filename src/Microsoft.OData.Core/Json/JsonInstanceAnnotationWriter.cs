@@ -266,7 +266,7 @@ namespace Microsoft.OData
 
             if (instanceAnnotations.Count == 0)
             {
-                return TaskUtils.CompletedTask;
+                return Task.CompletedTask;
             }
 
             HashSet<string> instanceAnnotationNames = new HashSet<string>(StringComparer.Ordinal);

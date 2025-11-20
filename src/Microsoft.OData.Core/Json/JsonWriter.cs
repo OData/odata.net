@@ -351,6 +351,7 @@ namespace Microsoft.OData.Json
         /// Write a Date value
         /// </summary>
         /// <param name="value">Date value to be written.</param>
+        [Obsolete("Microsoft.OData.Edm.TimeOfDay will be removed in ODL 9 and replaced with System.TimeOnly.", false)]
         public void WriteValue(TimeOfDay value)
         {
             this.WriteValueSeparator();
@@ -361,6 +362,7 @@ namespace Microsoft.OData.Json
         /// Write a Date value
         /// </summary>
         /// <param name="value">Date value to be written.</param>
+        [Obsolete("Microsoft.OData.Edm.Date will be removed in ODL 9 and replaced with System.DateOnly.", false)]
         public void WriteValue(Date value)
         {
             this.WriteValueSeparator();

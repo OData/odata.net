@@ -21,6 +21,7 @@ namespace Microsoft.OData.Client.Tests.Serialization
     {
         private readonly Func<HttpRequestMessage, HttpResponseMessage> _requestHandler;
         private readonly List<string> _requests = new List<string>();
+        private readonly object _sync = new object();
 
         /// <summary>
         /// Creates an instance of <see cref="MockHttpClientHandler"/> that
@@ -28,11 +29,9 @@ namespace Microsoft.OData.Client.Tests.Serialization
         /// </summary>
         /// <param name="expectedResponse">The contents to return in each response.</param>
         public MockHttpClientHandler(string expectedResponse)
-            : this((_) =>
+            : this(_ => new HttpResponseMessage(HttpStatusCode.OK)
             {
-                var response = new HttpResponseMessage(HttpStatusCode.OK);
-                response.Content = new StringContent(expectedResponse);
-                return response;
+                Content = new StringContent(expectedResponse)
             })
         {
         }
@@ -44,7 +43,7 @@ namespace Microsoft.OData.Client.Tests.Serialization
         /// <param name="requestHandler"></param>
         public MockHttpClientHandler(Func<HttpRequestMessage, HttpResponseMessage> requestHandler)
         {
-            _requestHandler = requestHandler;
+            this._requestHandler = requestHandler ?? throw new ArgumentNullException(nameof(requestHandler));
         }
 
         /// <summary>
@@ -52,7 +51,16 @@ namespace Microsoft.OData.Client.Tests.Serialization
         /// Each item is of the form: "[METHOD] [url]"
         /// e.g.: { "GET http://service/", "GET http://service/path" }.
         /// </summary>
-        public IReadOnlyList<string> Requests => _requests;
+        public IReadOnlyList<string> Requests
+        {
+            get
+            {
+                lock (_sync)
+                {
+                    return _requests.AsReadOnly();
+                }
+            }
+        }
 
         /// <summary>
         /// Whether the handler has been disposed;
@@ -61,9 +69,18 @@ namespace Microsoft.OData.Client.Tests.Serialization
 
         protected override HttpResponseMessage Send(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            _requests.Add($"{request.Method} {request.RequestUri.AbsoluteUri}");
-            HttpResponseMessage response = _requestHandler(request);
-            return response;
+            // Fast cancellation check - important for tests calling Abort/Timeout
+            if (cancellationToken.IsCancellationRequested)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+            }
+
+            lock (_sync)
+            {
+                _requests.Add($"{request.Method} {request.RequestUri.AbsoluteUri}");
+            }
+
+            return _requestHandler(request);
         }
 
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)

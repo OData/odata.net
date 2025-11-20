@@ -27,7 +27,7 @@ namespace Microsoft.OData.Tests.Json
         {
             this.stringWriter = new StringWriter();
             this.jsonWriter = new JsonWriter(this.stringWriter, isIeee754Compatible: true);
-            this.writeInstanceAnnotationsDelegate = async (ICollection<ODataInstanceAnnotation> instanceAnnotations) => await TaskUtils.CompletedTask;
+            this.writeInstanceAnnotationsDelegate = async (ICollection<ODataInstanceAnnotation> instanceAnnotations) => await Task.CompletedTask;
             this.messageWriterSettings = new ODataMessageWriterSettings();
         }
 

@@ -218,7 +218,7 @@ namespace Microsoft.OData
         Task IODataStreamListener.StreamRequestedAsync()
         {
             this.operationState = OperationState.StreamRequested;
-            return TaskUtils.CompletedTask;
+            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -236,7 +236,7 @@ namespace Microsoft.OData
         Task IODataStreamListener.StreamDisposedAsync()
         {
             this.operationState = OperationState.StreamDisposed;
-            return TaskUtils.CompletedTask;
+            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -383,7 +383,14 @@ namespace Microsoft.OData
         /// </returns>
         protected virtual Task<ODataBatchOperationRequestMessage> CreateOperationRequestMessageImplementationAsync()
         {
-            return TaskUtils.GetTaskForSynchronousOperation(this.CreateOperationRequestMessageImplementation);
+            try
+            {
+                return Task.FromResult(this.CreateOperationRequestMessageImplementation());
+            }
+            catch (Exception ex) when (ExceptionUtils.IsCatchableExceptionType(ex))
+            {
+                return Task.FromException<ODataBatchOperationRequestMessage>(ex);
+            }
         }
 
         /// <summary>
@@ -397,7 +404,14 @@ namespace Microsoft.OData
         /// </returns>
         protected virtual Task<ODataBatchOperationResponseMessage> CreateOperationResponseMessageImplementationAsync()
         {
-            return TaskUtils.GetTaskForSynchronousOperation(this.CreateOperationResponseMessageImplementation);
+            try
+            {
+                return Task.FromResult(this.CreateOperationResponseMessageImplementation());
+            }
+            catch (Exception ex) when (ExceptionUtils.IsCatchableExceptionType(ex))
+            {
+                return Task.FromException<ODataBatchOperationResponseMessage>(ex);
+            }
         }
 
         /// <summary>
@@ -409,7 +423,14 @@ namespace Microsoft.OData
         /// </returns>
         protected virtual Task<ODataBatchReaderState> ReadAtStartImplementationAsync()
         {
-            return TaskUtils.GetTaskForSynchronousOperation(this.ReadAtStartImplementation);
+            try
+            {
+                return Task.FromResult(this.ReadAtStartImplementation());
+            }
+            catch (Exception ex) when (ExceptionUtils.IsCatchableExceptionType(ex))
+            {
+                return Task.FromException<ODataBatchReaderState>(ex);
+            }
         }
 
         /// <summary>
@@ -421,7 +442,14 @@ namespace Microsoft.OData
         /// </returns>
         protected virtual Task<ODataBatchReaderState> ReadAtOperationImplementationAsync()
         {
-            return TaskUtils.GetTaskForSynchronousOperation(this.ReadAtOperationImplementation);
+            try
+            {
+                return Task.FromResult(this.ReadAtOperationImplementation());
+            }
+            catch (Exception ex) when (ExceptionUtils.IsCatchableExceptionType(ex))
+            {
+                return Task.FromException<ODataBatchReaderState>(ex);
+            }
         }
 
         /// <summary>
@@ -433,7 +461,14 @@ namespace Microsoft.OData
         /// </returns>
         protected virtual Task<ODataBatchReaderState> ReadAtChangesetStartImplementationAsync()
         {
-            return TaskUtils.GetTaskForSynchronousOperation(this.ReadAtChangesetStartImplementation);
+            try
+            {
+                return Task.FromResult(this.ReadAtChangesetStartImplementation());
+            }
+            catch (Exception ex) when (ExceptionUtils.IsCatchableExceptionType(ex))
+            {
+                return Task.FromException<ODataBatchReaderState>(ex);
+            }
         }
 
         /// <summary>
@@ -445,7 +480,14 @@ namespace Microsoft.OData
         /// </returns>
         protected virtual Task<ODataBatchReaderState> ReadAtChangesetEndImplementationAsync()
         {
-            return TaskUtils.GetTaskForSynchronousOperation(this.ReadAtChangesetEndImplementation);
+            try
+            {
+                return Task.FromResult(this.ReadAtChangesetEndImplementation());
+            }
+            catch (Exception ex) when (ExceptionUtils.IsCatchableExceptionType(ex))
+            {
+                return Task.FromException<ODataBatchReaderState>(ex);
+            }
         }
 
         /// <summary>

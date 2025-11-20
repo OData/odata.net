@@ -5,9 +5,9 @@
 //---------------------------------------------------------------------
 
 using System;
-using System.Diagnostics;
 using System.Net.Http;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Microsoft.OData.Client.Tests.Serialization
 {
@@ -34,27 +34,40 @@ namespace Microsoft.OData.Client.Tests.Serialization
 
         protected override HttpResponseMessage Send(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            NotifyRequestStart(request);
-            Stopwatch stopwatch = new Stopwatch();
-            stopwatch.Start();
+            // Notify start so tests (Abort / external cancellation) can act after "start"
+            OnRequestStarted?.Invoke(request);
 
-            while (true)
+            if (_delay > 0)
             {
-                cancellationToken.ThrowIfCancellationRequested();
-
-                if (stopwatch.ElapsedMilliseconds > _delay)
+                // WaitOne returns true if the handle was signaled (cancellation requested)
+                // before timeout elapses; false if the timeout elapsed first
+                // This avoids a busy spin while still allowing prompt cancellation.
+                bool cancelled = cancellationToken.WaitHandle.WaitOne(_delay);
+                if (cancelled)
                 {
-                    break;
+                    // Ensure that we surface the OperationCanceledException consistently
+                    cancellationToken.ThrowIfCancellationRequested();
                 }
             }
 
-            stopwatch.Stop();
+            // Delegate to base to create the standard mocked response
             return base.Send(request, cancellationToken);
         }
 
-        private void NotifyRequestStart(HttpRequestMessage request)
+        protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
+            // Notify start so tests (Abort / external cancellation) can act after "start"
             OnRequestStarted?.Invoke(request);
+
+            if (_delay > 0)
+            {
+                // Asynchronous cancellable delay - if per-request timeout or abort fires,
+                // Task.Delay will throw OperationCanceledException promptly
+                await Task.Delay(_delay, cancellationToken).ConfigureAwait(false);
+            }
+
+            // Delegate to base to create the standard mocked response
+            return base.Send(request, cancellationToken);
         }
     }
 }

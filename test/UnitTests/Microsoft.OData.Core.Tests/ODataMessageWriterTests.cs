@@ -1235,7 +1235,7 @@ namespace Microsoft.OData.Tests
         }
 
         [Fact]
-        public async void DisposeAsync_Should_Dispose_Stream_Asynchronously_AfterWritingRawValue()
+        public async Task DisposeAsync_Should_Dispose_Stream_Asynchronously_AfterWritingRawValue()
         {
             AsyncStream stream = new AsyncStream(new MemoryStream());
             InMemoryMessage message = new InMemoryMessage()
