@@ -72,8 +72,8 @@ namespace Microsoft.OData.Tests.UriParser
             Assert.True(ExpressionTokenKind.NullLiteral.IsLiteralType());
             Assert.True(ExpressionTokenKind.SingleLiteral.IsLiteralType());
             Assert.True(ExpressionTokenKind.StringLiteral.IsLiteralType());
-            Assert.True(ExpressionTokenKind.TimeOfDayLiteral.IsLiteralType());
-            Assert.True(ExpressionTokenKind.DateLiteral.IsLiteralType());
+            Assert.True(ExpressionTokenKind.TimeOnlyLiteral.IsLiteralType());
+            Assert.True(ExpressionTokenKind.DateOnlyLiteral.IsLiteralType());
             Assert.True(ExpressionTokenKind.DateTimeOffsetLiteral.IsLiteralType());
             Assert.True(ExpressionTokenKind.DurationLiteral.IsLiteralType());
             Assert.True(ExpressionTokenKind.GeographyLiteral.IsLiteralType());

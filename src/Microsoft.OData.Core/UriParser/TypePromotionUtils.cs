@@ -1006,13 +1006,13 @@ namespace Microsoft.OData.UriParser
                 return 1;
             }
 
-            // If both DateTimeOffset and Date are possible, then DateTimeOffset is preferred, as to keep previous behaviour.
-            if (IsDateTimeOffset(targetA) && IsDate(targetB))
+            // If both DateTimeOffset and DateOnly are possible, then DateTimeOffset is preferred, as to keep previous behaviour.
+            if (IsDateTimeOffset(targetA) && IsDateOnly(targetB))
             {
                 return 1;
             }
 
-            if (IsDateTimeOffset(targetB) && IsDate(targetA))
+            if (IsDateTimeOffset(targetB) && IsDateOnly(targetA))
             {
                 return -1;
             }
@@ -1107,10 +1107,10 @@ namespace Microsoft.OData.UriParser
             return GetNumericTypeKind(typeReference) == NumericTypeKind.UnsignedIntegral;
         }
 
-        /// <summary>Checks if the specified type is a Date or nullable Date type.</summary>
+        /// <summary>Checks if the specified type is a DateOnly or nullable DateOnly type.</summary>
         /// <param name="typeReference">Type to check.</param>
-        /// <returns>true if <paramref name="typeReference"/> is either Date or nullable Date type; false otherwise.</returns>
-        private static bool IsDate(IEdmTypeReference typeReference)
+        /// <returns>true if <paramref name="typeReference"/> is either DateOnly or nullable DateOnly type; false otherwise.</returns>
+        private static bool IsDateOnly(IEdmTypeReference typeReference)
         {
             IEdmPrimitiveTypeReference primitiveTypeReference = typeReference.AsPrimitiveOrNull();
             if (primitiveTypeReference != null)

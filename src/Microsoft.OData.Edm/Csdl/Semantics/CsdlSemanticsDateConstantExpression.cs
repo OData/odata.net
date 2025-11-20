@@ -65,13 +65,13 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         private DateOnly ComputeValue()
         {
             DateOnly? value;
-            return EdmValueParser.TryParseDate(this.expression.Value, out value) ? value.Value : DateOnly.MinValue;
+            return EdmValueParser.TryParseDateOnly(this.expression.Value, out value) ? value.Value : DateOnly.MinValue;
         }
 
         private IEnumerable<EdmError> ComputeErrors()
         {
             DateOnly? value;
-            if (!EdmValueParser.TryParseDate(this.expression.Value, out value))
+            if (!EdmValueParser.TryParseDateOnly(this.expression.Value, out value))
             {
                 return new EdmError[] { new EdmError(this.Location, EdmErrorCode.InvalidDate, Error.Format(SRResources.ValueParser_InvalidDate, this.expression.Value)) };
             }

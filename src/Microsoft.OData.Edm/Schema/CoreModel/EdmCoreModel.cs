@@ -540,7 +540,7 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
-        /// Get a reference to the Date primitive type definition.
+        /// Get a reference to the DateOnly primitive type definition.
         /// </summary>
         /// <param name="isNullable">Flag specifying if the referenced type should be nullable.</param>
         /// <returns>A new primitive type reference</returns>
@@ -570,10 +570,10 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
-        /// Gets a reference to a TimeOfDay primitive type definition
+        /// Gets a reference to a TimeOnly primitive type definition
         /// </summary>
         /// <param name="isNullable">Flag specifying if the referenced type should be nullable.</param>
-        /// <returns>A new TimeOfDay type reference.</returns>
+        /// <returns>A new TimeOnly type reference.</returns>
         public IEdmTemporalTypeReference GetTimeOfDay(bool isNullable)
         {
             return new EdmTemporalTypeReference(this.GetCoreModelPrimitiveType(EdmPrimitiveTypeKind.TimeOfDay), isNullable);

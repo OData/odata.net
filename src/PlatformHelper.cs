@@ -50,14 +50,14 @@ namespace Microsoft.OData.Edm
         internal static readonly Type[] EmptyTypes = new Type[0];
 
         /// <summary>
-        /// This pattern eliminates all invalid dates, the supported format should be "YYYY-MM-DD"
+        /// This pattern eliminates all invalid dateOnly, the supported format should be "YYYY-MM-DD"
         /// </summary>
-        internal static readonly Regex DateValidator = CreateCompiled(@"^(\d{4})-(0?[1-9]|1[012])-(0?[1-9]|[12]\d|3[0|1])$", RegexOptions.Singleline);
+        internal static readonly Regex DateOnlyValidator = CreateCompiled(@"^(\d{4})-(0?[1-9]|1[012])-(0?[1-9]|[12]\d|3[0|1])$", RegexOptions.Singleline);
 
         /// <summary>
-        /// This pattern eliminates all invalid timeOfDay, the supported format should be "hh:mm:ss.fffffff"
+        /// This pattern eliminates all invalid timeOnly, the supported format should be "hh:mm:ss.fffffff"
         /// </summary>
-        internal static readonly Regex TimeOfDayValidator = CreateCompiled(@"^(0?\d|1\d|2[0-3]):(0?\d|[1-5]\d)(:(0?\d|[1-5]\d)(\.\d{1,7})?)?$", RegexOptions.Singleline);
+        internal static readonly Regex TimeOnlyValidator = CreateCompiled(@"^(0?\d|1\d|2[0-3]):(0?\d|[1-5]\d)(:(0?\d|[1-5]\d)(\.\d{1,7})?)?$", RegexOptions.Singleline);
 
         /// <summary>
         /// This pattern eliminates whether a text is potentially DateTimeOffset but not others like GUID, digit .etc
@@ -203,15 +203,15 @@ namespace Microsoft.OData.Edm
 
 #if !SPATIAL
         /// <summary>
-        /// Converts a string to a Date.
+        /// Converts a string to a DateOnly.
         /// </summary>
         /// <param name="text">String to be converted.</param>
-        /// <param name="date">The converted date value</param>
+        /// <param name="date">The converted DateOnly value</param>
         /// <returns>if parsing was successful</returns>
         internal static bool TryConvertStringToDateOnly(ReadOnlySpan<char> text, out DateOnly date)
         {
             date = default;
-            if (text.IsEmpty || !PlatformHelper.DateValidator.IsMatch(text))
+            if (text.IsEmpty || !PlatformHelper.DateOnlyValidator.IsMatch(text))
             {
                 return false;
             }
@@ -220,14 +220,13 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
-        /// Converts a string to a Date.
+        /// Converts a string to a DateOnly.
         /// </summary>
         /// <param name="text">String to be converted.</param>
-        /// <returns>Date value</returns>
+        /// <returns>DateOnly value</returns>
         internal static DateOnly ConvertStringToDateOnly(string text)
         {
-            DateOnly date;
-            if (!PlatformHelper.TryConvertStringToDateOnly(text, out date))
+            if (!PlatformHelper.TryConvertStringToDateOnly(text, out DateOnly date))
             {
                 throw new FormatException(string.Format(CultureInfo.InvariantCulture, "String '{0}' was not recognized as a valid Edm.Date.", text));
             }
@@ -239,12 +238,12 @@ namespace Microsoft.OData.Edm
         /// Converts a string to a <see cref="TimeOnly">.
         /// </summary>
         /// <param name="text">String to be converted.</param>
-        /// <param name="timeOfDay">Time of the day</param>
+        /// <param name="timeOnly"><see cref="TimeOnly"</param>
         /// <returns>Whether the value is a valid time of day</returns>
         internal static bool TryConvertStringToTimeOnly(ReadOnlySpan<char> text, out TimeOnly timeOnly)
         {
             timeOnly = default;
-            if (text.IsEmpty || !PlatformHelper.TimeOfDayValidator.IsMatch(text))
+            if (text.IsEmpty || !PlatformHelper.TimeOnlyValidator.IsMatch(text))
             {
                 return false;
             }
@@ -259,13 +258,12 @@ namespace Microsoft.OData.Edm
         /// <returns>TimeOnly value</returns>
         internal static TimeOnly ConvertStringToTimeOnly(string text)
         {
-            TimeOnly timeOfDay;
-            if (!TimeOnly.TryParse(text, CultureInfo.CurrentCulture, out timeOfDay))
+            if (!TimeOnly.TryParse(text, CultureInfo.CurrentCulture, out TimeOnly timeOnly))
             {
                 throw new FormatException(string.Format(CultureInfo.InvariantCulture, "String '{0}' was not recognized as a valid Edm.TimeOfDay.", text));
             }
 
-            return timeOfDay;
+            return timeOnly;
         }
 #endif
 

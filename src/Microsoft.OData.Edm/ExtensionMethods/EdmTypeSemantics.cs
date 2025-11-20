@@ -234,10 +234,10 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
-        /// Returns true if this reference refers to a Date type.
+        /// Returns true if this reference refers to a DateOnly type.
         /// </summary>
         /// <param name="type">Type reference.</param>
-        /// <returns>This reference refers to a Date type.</returns>
+        /// <returns>This reference refers to a DateOnly type.</returns>
         public static bool IsDate(this IEdmTypeReference type)
         {
             EdmUtil.CheckArgumentNull(type, "type");
@@ -313,10 +313,10 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
-        /// Returns true if this reference refers to a TimeOfDay type.
+        /// Returns true if this reference refers to a TimeOnly type.
         /// </summary>
         /// <param name="type">Type reference.</param>
-        /// <returns>This reference refers to a TimeOfDay type.</returns>
+        /// <returns>This reference refers to a TimeOnly type.</returns>
         public static bool IsTimeOfDay(this IEdmTypeReference type)
         {
             EdmUtil.CheckArgumentNull(type, "type");

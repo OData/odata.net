@@ -67,7 +67,7 @@ namespace Microsoft.OData.Edm.Csdl
                 case EdmValueKind.Duration:
                     return DurationAsXml(((IEdmDurationValue)v).Value);
                 case EdmValueKind.TimeOfDay:
-                    return TimeOfDayAsXml(((IEdmTimeOfDayValue)v).Value);
+                    return TimeOnlyAsXml(((IEdmTimeOfDayValue)v).Value);
                 default:
                     throw new NotSupportedException(Error.Format(SRResources.ValueWriter_NonSerializableValue, v.ValueKind));
             }
@@ -195,7 +195,7 @@ namespace Microsoft.OData.Edm.Csdl
         }
 
         /// <summary>
-        /// Converts the Date to a String.
+        /// Converts the DateOnly to a String.
         /// </summary>
         /// <param name="d">The <see cref="DateOnly"/> to be converted</param>
         /// <returns>A System.String representation of the supplied <see cref="DateOnly"/>.</returns>
@@ -209,7 +209,7 @@ namespace Microsoft.OData.Edm.Csdl
         /// </summary>
         /// <param name="time">The <see cref="TimeOnly"/> to be converted</param>
         /// <returns>A System.String representation of the supplied <see cref="TimeOnly"/>.</returns>
-        internal static string TimeOfDayAsXml(TimeOnly time)
+        internal static string TimeOnlyAsXml(TimeOnly time)
         {
             return time.ToODataString();
         }

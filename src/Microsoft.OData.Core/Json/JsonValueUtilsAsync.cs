@@ -237,10 +237,10 @@ namespace Microsoft.OData.Json
         }
 
         /// <summary>
-        /// Write a Date value
+        /// Write a DateOnly value
         /// </summary>
         /// <param name="writer">The text writer to write the output to.</param>
-        /// <param name="value">Date value to be written.</param>
+        /// <param name="value">DateOnly value to be written.</param>
         internal static Task WriteValueAsync(this TextWriter writer, DateOnly value)
         {
             Debug.Assert(writer != null, "writer != null");

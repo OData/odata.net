@@ -521,7 +521,7 @@ namespace Microsoft.OData
                 case EdmPrimitiveTypeKind.Date:
                     if (primitiveValue is string stringValue)
                     {
-                        // Coerce to Date Type from String.
+                        // Coerce to DateOnly Type from String.
                         return PlatformHelper.ConvertStringToDateOnly(stringValue);
                     }
 

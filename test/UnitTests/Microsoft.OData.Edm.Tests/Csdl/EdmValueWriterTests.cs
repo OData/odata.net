@@ -31,7 +31,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
         {
             DateOnly? parsedDate;
             var result = EdmValueWriter.DateAsXml(date);
-            Assert.True(EdmValueParser.TryParseDate(result, out parsedDate));
+            Assert.True(EdmValueParser.TryParseDateOnly(result, out parsedDate));
 
             Assert.Equal(date, parsedDate);
         }
@@ -100,8 +100,8 @@ namespace Microsoft.OData.Edm.Tests.Csdl
         public void TimeOfDayyAsXmlWithValidShouldRoundtripWhenParsed(TimeOnly time)
         {
             TimeOnly? parsedTime;
-            var result = EdmValueWriter.TimeOfDayAsXml(time);
-            Assert.True(EdmValueParser.TryParseTimeOfDay(result, out parsedTime));
+            var result = EdmValueWriter.TimeOnlyAsXml(time);
+            Assert.True(EdmValueParser.TryParseTimeOnly(result, out parsedTime));
 
             Assert.Equal(time, parsedTime);
         }

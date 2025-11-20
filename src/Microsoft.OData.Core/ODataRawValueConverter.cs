@@ -154,10 +154,10 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Converts the given Date value to the string appropriate for raw value format.
+        /// Converts the given DateOnly value to the string appropriate for raw value format.
         /// </summary>
-        /// <param name="date">The Date value to convert.</param>
-        /// <returns>The string version of the Date in raw value format.</returns>
+        /// <param name="date">The DateOnly value to convert.</param>
+        /// <returns>The string version of the DateOnly in raw value format.</returns>
         internal static string ToString(DateOnly date)
         {
             return date.ToODataString();

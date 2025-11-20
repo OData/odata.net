@@ -422,8 +422,8 @@ namespace Microsoft.OData.Edm.Tests.Library
         public void TestTimeSpanToTimeOfDay(long ticks)
         {
             var timeSpan = new TimeSpan(ticks);
-            TimeOnly timeOfDay = TimeOnly.FromTimeSpan(timeSpan);
-            Assert.Equal(timeSpan.Ticks, timeOfDay.Ticks);
+            TimeOnly timeOnly = TimeOnly.FromTimeSpan(timeSpan);
+            Assert.Equal(timeSpan.Ticks, timeOnly.Ticks);
         }
 
         [Theory]
@@ -432,7 +432,7 @@ namespace Microsoft.OData.Edm.Tests.Library
         public void TestTimeSpanToTimeOfDayException(long ticks)
         {
             TimeSpan timeSpan = new TimeSpan(ticks);
-            Action test = () => { TimeOnly timeOfDay = TimeOnly.FromTimeSpan(timeSpan); };
+            Action test = () => { TimeOnly timeOnly = TimeOnly.FromTimeSpan(timeSpan); };
             var exception = Assert.Throws<ArgumentOutOfRangeException>(test);
             Assert.Equal("Ticks must be between 0 and and TimeOnly.MaxValue.Ticks. (Parameter 'ticks')", exception.Message);
         }

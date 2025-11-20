@@ -132,7 +132,6 @@ namespace Microsoft.OData.Json
 
             if (value is DateOnly dateOnly)
             {
-                // will call 'WriteValueAsync(Date)' version implicitly
                 return jsonWriter.WriteValueAsync(dateOnly);
             }
 

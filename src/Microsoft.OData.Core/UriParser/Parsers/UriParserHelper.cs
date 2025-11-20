@@ -242,7 +242,7 @@ namespace Microsoft.OData.UriParser
                     return EdmCoreModel.Instance.GetGuid(false);
                 case ExpressionTokenKind.BinaryLiteral:
                     return EdmCoreModel.Instance.GetBinary(true);
-                case ExpressionTokenKind.DateLiteral:
+                case ExpressionTokenKind.DateOnlyLiteral:
                     return EdmCoreModel.Instance.GetDate(false);
                 case ExpressionTokenKind.DateTimeOffsetLiteral:
                     return EdmCoreModel.Instance.GetDateTimeOffset(false);
@@ -254,7 +254,7 @@ namespace Microsoft.OData.UriParser
                     return EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.Geometry, false);
                 case ExpressionTokenKind.QuotedLiteral:
                     return EdmCoreModel.Instance.GetString(true);
-                case ExpressionTokenKind.TimeOfDayLiteral:
+                case ExpressionTokenKind.TimeOnlyLiteral:
                     return EdmCoreModel.Instance.GetTimeOfDay(false);
             }
 

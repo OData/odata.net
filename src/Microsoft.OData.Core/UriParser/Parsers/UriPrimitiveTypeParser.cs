@@ -125,8 +125,7 @@ namespace Microsoft.OData.UriParser
                 }
                 else if (targetTypeKind == EdmPrimitiveTypeKind.Date)
                 {
-                    DateOnly dateValue;
-                    bool result = UriUtils.TryUriStringToDate(text, out dateValue);
+                    bool result = UriUtils.TryUriStringToDateOnly(text, out DateOnly dateValue);
 
                     targetValue = dateValue;
                     return result;

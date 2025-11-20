@@ -17,21 +17,21 @@ namespace Microsoft.OData.Edm.Tests.Csdl
         public void ParseDateNullShouldThrowFormatException()
         {
             DateOnly? result;
-            Assert.False(EdmValueParser.TryParseDate(null, out result));
+            Assert.False(EdmValueParser.TryParseDateOnly(null, out result));
         }
 
         [Fact]
         public void ParseDateWithEmptyStringShouldThrowFormatException()
         {
             DateOnly? result;
-            Assert.False(EdmValueParser.TryParseDate(string.Empty, out result));
+            Assert.False(EdmValueParser.TryParseDateOnly(string.Empty, out result));
         }
 
         [Fact]
         public void ParseDateWithSpaceShouldThrowFormatException()
         {
             DateOnly? result;
-            Assert.False(EdmValueParser.TryParseDate(" ", out result));
+            Assert.False(EdmValueParser.TryParseDateOnly(" ", out result));
         }
 
         [Theory]
@@ -56,14 +56,14 @@ namespace Microsoft.OData.Edm.Tests.Csdl
         public void ParseDateWithInvalidParameterShouldThrowFormatException(string invalidDate)
         {
             DateOnly? result;
-            Assert.False(EdmValueParser.TryParseDate(invalidDate, out result));
+            Assert.False(EdmValueParser.TryParseDateOnly(invalidDate, out result));
         }
 
         [Fact]
         public void TryParseDateWithValidParameterShouldParseCorrectly()
         {
             DateOnly? result;
-            Assert.True(EdmValueParser.TryParseDate("2012-07-28", out result));
+            Assert.True(EdmValueParser.TryParseDateOnly("2012-07-28", out result));
             Assert.Equal(new DateOnly(2012, 07, 28), result);
         }
         #endregion
@@ -431,21 +431,21 @@ namespace Microsoft.OData.Edm.Tests.Csdl
         public void ParseTimeOfDayNullShouldThrowFormatException()
         {
             TimeOnly? result;
-            Assert.False(EdmValueParser.TryParseTimeOfDay(null, out result));
+            Assert.False(EdmValueParser.TryParseTimeOnly(null, out result));
         }
 
         [Fact]
         public void ParseTimeOfDayWithEmptyStringShouldThrowFormatException()
         {
             TimeOnly? result;
-            Assert.False(EdmValueParser.TryParseTimeOfDay(string.Empty, out result));
+            Assert.False(EdmValueParser.TryParseTimeOnly(string.Empty, out result));
         }
 
         [Fact]
         public void ParseTimeOfDayWithSpaceShouldThrowFormatException()
         {
             TimeOnly? result;
-            Assert.False(EdmValueParser.TryParseTimeOfDay(" ", out result));
+            Assert.False(EdmValueParser.TryParseTimeOnly(" ", out result));
         }
 
         [Theory]
@@ -455,7 +455,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
         public void ParseTimeOfDayWithInvalidParameterShouldThrowFormatException(string invalidTime)
         {
             TimeOnly? result;
-            Assert.False(EdmValueParser.TryParseTimeOfDay(invalidTime, out result));
+            Assert.False(EdmValueParser.TryParseTimeOnly(invalidTime, out result));
         }
 
         [Theory]
@@ -464,7 +464,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
         public void TryParseTimeOfDayWithValidParameterShouldParseCorrectly(string validTime, string expectedODataString)
         {
             TimeOnly? result;
-            Assert.True(EdmValueParser.TryParseTimeOfDay(validTime, out result));
+            Assert.True(EdmValueParser.TryParseTimeOnly(validTime, out result));
             Assert.Equal(expectedODataString, result?.ToODataString());
         }
 #endregion

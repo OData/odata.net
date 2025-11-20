@@ -242,12 +242,12 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Converts a string to a Date value.
+        /// Converts a string to a DateOnly value.
         /// </summary>
         /// <param name="text">String text to convert.</param>
         /// <param name="targetValue">After invocation, converted value.</param>
         /// <returns>true if the value was converted; false otherwise.</returns>
-        internal static bool TryUriStringToDate(ReadOnlySpan<char> text, out DateOnly targetValue)
+        internal static bool TryUriStringToDateOnly(ReadOnlySpan<char> text, out DateOnly targetValue)
         {
             return PlatformHelper.TryConvertStringToDateOnly(text, out targetValue);
         }

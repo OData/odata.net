@@ -65,13 +65,13 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         private TimeOnly ComputeValue()
         {
             TimeOnly? value;
-            return EdmValueParser.TryParseTimeOfDay(this.expression.Value, out value) ? value.Value : TimeOnly.MinValue;
+            return EdmValueParser.TryParseTimeOnly(this.expression.Value, out value) ? value.Value : TimeOnly.MinValue;
         }
 
         private IEnumerable<EdmError> ComputeErrors()
         {
             TimeOnly? value;
-            if (!EdmValueParser.TryParseTimeOfDay(this.expression.Value, out value))
+            if (!EdmValueParser.TryParseTimeOnly(this.expression.Value, out value))
             {
                 return new EdmError[] { new EdmError(this.Location, EdmErrorCode.InvalidTimeOfDay, Error.Format(SRResources.ValueParser_InvalidTimeOfDay, this.expression.Value)) };
             }

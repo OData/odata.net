@@ -73,12 +73,12 @@ namespace Microsoft.OData.Client
             expressionMethodMap.Add(typeof(string).GetMethod("Concat", new Type[] { typeof(string), typeof(string) }), @"concat");
             expressionMethodMap.Add(typeof(string).GetProperty("Length", typeof(int)).GetGetMethod(), @"length");
 
-            // date methods
+            // dateOnly methods
             expressionMethodMap.Add(typeof(DateOnly).GetProperty("Day", typeof(int)).GetGetMethod(), @"day");
             expressionMethodMap.Add(typeof(DateOnly).GetProperty("Month", typeof(int)).GetGetMethod(), @"month");
             expressionMethodMap.Add(typeof(DateOnly).GetProperty("Year", typeof(int)).GetGetMethod(), @"year");
 
-            // timeOfDay methods
+            // timeOnly methods
             expressionMethodMap.Add(typeof(TimeOnly).GetProperty("Hour", typeof(int)).GetGetMethod(), @"hour");
             expressionMethodMap.Add(typeof(TimeOnly).GetProperty("Minute", typeof(int)).GetGetMethod(), @"minute");
             expressionMethodMap.Add(typeof(TimeOnly).GetProperty("Second", typeof(int)).GetGetMethod(), @"second");

@@ -148,9 +148,9 @@ namespace Microsoft.OData.Json
         void WriteValue(byte[] value);
 
         /// <summary>
-        /// Write a Date value
+        /// Write a DateOnly value
         /// </summary>
-        /// <param name="value">Date value to be written.</param>
+        /// <param name="value">DateOnly value to be written.</param>
         void WriteValue(DateOnly value);
 
         /// <summary>
@@ -355,9 +355,9 @@ namespace Microsoft.OData.Json
         Task WriteValueAsync(byte[] value);
 
         /// <summary>
-        /// Asynchronously writes a Date value
+        /// Asynchronously writes a DateOnly value
         /// </summary>
-        /// <param name="value">Date value to be written.</param>
+        /// <param name="value">DateOnly value to be written.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
         Task WriteValueAsync(DateOnly value);
 

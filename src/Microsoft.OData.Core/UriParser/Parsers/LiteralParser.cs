@@ -651,8 +651,7 @@ namespace Microsoft.OData.UriParser
             /// </returns>
             internal override bool TryConvert(string text, out object targetValue)
             {
-                DateOnly? date;
-                bool isSucceed = EdmValueParser.TryParseDate(text, out date);
+                bool isSucceed = EdmValueParser.TryParseDateOnly(text, out DateOnly? date);
                 targetValue = date;
                 return isSucceed;
             }

@@ -111,11 +111,11 @@ namespace Microsoft.OData.UriParser
         /// <summary>Quoted</summary>
         QuotedLiteral = 33,
 
-        /// <summary>Date literal.</summary>
-        DateLiteral = 34,
+        /// <summary>DateOnly literal.</summary>
+        DateOnlyLiteral = 34,
 
-        /// <summary>TimeOfDay literal.</summary>
-        TimeOfDayLiteral = 35,
+        /// <summary>TimeOnly literal.</summary>
+        TimeOnlyLiteral = 35,
 
         /// <summary>CustomType Literal.</summary>
         CustomTypeLiteral = 36,

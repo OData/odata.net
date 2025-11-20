@@ -315,12 +315,12 @@ namespace Microsoft.OData.Edm.Csdl
         }
 
         /// <summary>
-        /// Attempts to parse a Date value from the specified text.
+        /// Attempts to parse a DateOnly value from the specified text.
         /// </summary>
         /// <param name="value">Input string</param>
-        /// <param name="result">The Date resulting from parsing the string value</param>
+        /// <param name="result">The DateOnly resulting from parsing the string value</param>
         /// <returns>true if the value was parsed successfully, false otherwise</returns>
-        internal static bool TryParseDate(string value, out DateOnly? result)
+        internal static bool TryParseDateOnly(string value, out DateOnly? result)
         {
             result = null;
             DateOnly targetDate;
@@ -339,7 +339,7 @@ namespace Microsoft.OData.Edm.Csdl
         /// <param name="value">Input string</param>
         /// <param name="result">The TimeOnly resulting from parsing the string value</param>
         /// <returns>true if the value was parsed successfully, false otherwise</returns>
-        internal static bool TryParseTimeOfDay(string value, out TimeOnly? result)
+        internal static bool TryParseTimeOnly(string value, out TimeOnly? result)
         {
             try
             {

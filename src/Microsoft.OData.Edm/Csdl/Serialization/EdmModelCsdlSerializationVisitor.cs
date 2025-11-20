@@ -1155,7 +1155,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
 
         protected override void ProcessDateConstantExpression(IEdmDateConstantExpression expression)
         {
-            this.schemaWriter.WriteDateConstantExpressionElement(expression);
+            this.schemaWriter.WriteDateOnlyConstantExpressionElement(expression);
         }
 
         /// <summary>
@@ -1164,7 +1164,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <param name="expression">The Edm date constant expression.</param>
         protected override Task ProcessDateConstantExpressionAsync(IEdmDateConstantExpression expression)
         {
-            return this.schemaWriter.WriteDateConstantExpressionElementAsync(expression);
+            return this.schemaWriter.WriteDateOnlyConstantExpressionElementAsync(expression);
         }
 
         protected override void ProcessDateTimeOffsetConstantExpression(IEdmDateTimeOffsetConstantExpression expression)
@@ -1195,18 +1195,18 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             return this.schemaWriter.WriteDurationConstantExpressionElementAsync(expression);
         }
 
-        protected override void ProcessTimeOfDayConstantExpression(IEdmTimeOfDayConstantExpression expression)
+        protected override void ProcessTimeOnlyConstantExpression(IEdmTimeOfDayConstantExpression expression)
         {
-            this.schemaWriter.WriteTimeOfDayConstantExpressionElement(expression);
+            this.schemaWriter.WriteTimeOnlyConstantExpressionElement(expression);
         }
 
         /// <summary>
-        /// Asynchronously processes the time of day constant expression.
+        /// Asynchronously processes the TimeOnly constant expression.
         /// </summary>
         /// <param name="expression">The Edm TimeOfDay constant expression.</param>
-        protected override Task ProcessTimeOfDayConstantExpressionAsync(IEdmTimeOfDayConstantExpression expression)
+        protected override Task ProcessTimeOnlyConstantExpressionAsync(IEdmTimeOfDayConstantExpression expression)
         {
-            return this.schemaWriter.WriteTimeOfDayConstantExpressionElementAsync(expression);
+            return this.schemaWriter.WriteTimeOnlyConstantExpressionElementAsync(expression);
         }
 
         protected override void ProcessBooleanConstantExpression(IEdmBooleanConstantExpression expression)

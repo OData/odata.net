@@ -350,7 +350,7 @@ namespace Microsoft.OData.Json
         /// <summary>
         /// Write a TimeOnly value
         /// </summary>
-        /// <param name="value">Date value to be written.</param>
+        /// <param name="value">TimeOnly value to be written.</param>
         public void WriteValue(TimeOnly value)
         {
             this.WriteValueSeparator();
@@ -360,7 +360,7 @@ namespace Microsoft.OData.Json
         /// <summary>
         /// Write a DateOnly value
         /// </summary>
-        /// <param name="value">Date value to be written.</param>
+        /// <param name="value">DateOnly value to be written.</param>
         public void WriteValue(DateOnly value)
         {
             this.WriteValueSeparator();

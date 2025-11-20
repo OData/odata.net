@@ -297,7 +297,7 @@ namespace Microsoft.OData.Edm.Vocabularies
         /// Converts <paramref name="edmValue"/> to a <see cref="TimeOnly"/> value.
         /// </summary>
         /// <param name="edmValue">The EDM value to be converted.</param>
-        /// <returns>Converted TimeOfDay.</returns>
+        /// <returns>Converted TimeOnly.</returns>
         /// <exception cref="InvalidCastException">Exception is thrown if <paramref name="edmValue"/> is not <see cref="IEdmTimeOfDayValue"/>.</exception>
         internal static TimeOnly AsClrTimeOnly(IEdmValue edmValue)
         {
@@ -310,9 +310,9 @@ namespace Microsoft.OData.Edm.Vocabularies
         /// Converts <paramref name="edmValue"/> to a <see cref="DateOnly"/> value.
         /// </summary>
         /// <param name="edmValue">The EDM value to be converted.</param>
-        /// <returns>Converted date.</returns>
+        /// <returns>Converted DateOnly.</returns>
         /// <exception cref="InvalidCastException">Exception is thrown if <paramref name="edmValue"/> is not <see cref="IEdmDateValue"/>.</exception>
-        internal static DateOnly AsClrDate(IEdmValue edmValue)
+        internal static DateOnly AsClrDateOnly(IEdmValue edmValue)
         {
             EdmUtil.CheckArgumentNull(edmValue, "edmValue");
 
@@ -579,7 +579,7 @@ namespace Microsoft.OData.Edm.Vocabularies
                 }
                 else if (clrType == typeof(DateOnly))
                 {
-                    return AsClrDate(edmValue);
+                    return AsClrDateOnly(edmValue);
                 }
                 else if (clrType == typeof(DateTimeOffset))
                 {

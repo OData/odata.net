@@ -1918,10 +1918,10 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
                     WriteDurationConstantExpressionElement((IEdmDurationConstantExpression)expression);
                     break;
                 case EdmExpressionKind.DateConstant:
-                    WriteDateConstantExpressionElement((IEdmDateConstantExpression)expression);
+                    WriteDateOnlyConstantExpressionElement((IEdmDateConstantExpression)expression);
                     break;
                 case EdmExpressionKind.TimeOfDayConstant:
-                    WriteTimeOfDayConstantExpressionElement((IEdmTimeOfDayConstantExpression)expression);
+                    WriteTimeOnlyConstantExpressionElement((IEdmTimeOfDayConstantExpression)expression);
                     break;
                 default:
                     Debug.Assert(false, "Attempted to inline an expression that was not one of the expected inlineable types.");
@@ -1966,9 +1966,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
                 case EdmExpressionKind.DurationConstant:
                     return WriteDurationConstantExpressionElementAsync((IEdmDurationConstantExpression)expression);
                 case EdmExpressionKind.DateConstant:
-                    return WriteDateConstantExpressionElementAsync((IEdmDateConstantExpression)expression);
+                    return WriteDateOnlyConstantExpressionElementAsync((IEdmDateConstantExpression)expression);
                 case EdmExpressionKind.TimeOfDayConstant:
-                    return WriteTimeOfDayConstantExpressionElementAsync((IEdmTimeOfDayConstantExpression)expression);
+                    return WriteTimeOnlyConstantExpressionElementAsync((IEdmTimeOfDayConstantExpression)expression);
                 default:
                     Debug.Assert(false, "Attempted to inline an expression that was not one of the expected inlineable types.");
                     return Task.CompletedTask;
@@ -2252,21 +2252,21 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Writes Date Constant Expression.
+        /// Writes DateOnly Constant Expression.
         /// </summary>
         /// <param name="expression">The Edm Date Constant Expression.</param>
-        internal override void WriteDateConstantExpressionElement(IEdmDateConstantExpression expression)
+        internal override void WriteDateOnlyConstantExpressionElement(IEdmDateConstantExpression expression)
         {
             // Date expressions are represented as a string containing the date value.
             this.jsonWriter.WriteStringValue(EdmValueWriter.DateAsXml(expression.Value));
         }
 
         /// <summary>
-        /// Asynchronously Writes Date Constant Expression.
+        /// Asynchronously Writes DateOnly Constant Expression.
         /// </summary>
-        /// <param name="expression">The Edm Date Constant Expression.</param>
+        /// <param name="expression">The Edm DateOnly Constant Expression.</param>
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
-        internal override Task WriteDateConstantExpressionElementAsync(IEdmDateConstantExpression expression)
+        internal override Task WriteDateOnlyConstantExpressionElementAsync(IEdmDateConstantExpression expression)
         {
             // Date expressions are represented as a string containing the date value.
             this.jsonWriter.WriteStringValue(EdmValueWriter.DateAsXml(expression.Value));
@@ -2825,24 +2825,24 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Write Time Of Day Constant Expression.
+        /// Write TimeOnly Constant Expression.
         /// </summary>
         /// <param name="expression">The Edm TimeOfDay Constant Expression.</param>
-        internal override void WriteTimeOfDayConstantExpressionElement(IEdmTimeOfDayConstantExpression expression)
+        internal override void WriteTimeOnlyConstantExpressionElement(IEdmTimeOfDayConstantExpression expression)
         {
             // Time-of-day expressions are represented as a string containing the time-of-day value.
-            this.jsonWriter.WriteStringValue(EdmValueWriter.TimeOfDayAsXml(expression.Value));
+            this.jsonWriter.WriteStringValue(EdmValueWriter.TimeOnlyAsXml(expression.Value));
         }
 
         /// <summary>
-        /// Asynchronously Writes Time Of Day Constant Expression.
+        /// Asynchronously Writes TimeOnly Constant Expression.
         /// </summary>
         /// <param name="expression">The Edm TimeOfDay Constant Expression.</param>
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
-        internal override Task WriteTimeOfDayConstantExpressionElementAsync(IEdmTimeOfDayConstantExpression expression)
+        internal override Task WriteTimeOnlyConstantExpressionElementAsync(IEdmTimeOfDayConstantExpression expression)
         {
             // Time-of-day expressions are represented as a string containing the time-of-day value.
-            this.jsonWriter.WriteStringValue(EdmValueWriter.TimeOfDayAsXml(expression.Value));
+            this.jsonWriter.WriteStringValue(EdmValueWriter.TimeOnlyAsXml(expression.Value));
 
             return Task.CompletedTask;
         }
