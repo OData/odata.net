@@ -2427,7 +2427,7 @@ namespace Microsoft.OData.Json
         ///
         /// This method Creates an ODataDeltaDeletedEntry and fills in the Id and Reason properties, if specified in the payload.
         /// </remarks>
-        internal async Task<ODataDeletedResource> ReadDeletedResourceAsync()
+        internal async ValueTask<ODataDeletedResource> ReadDeletedResourceAsync()
         {
             this.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
 
@@ -2524,7 +2524,7 @@ namespace Microsoft.OData.Json
         /// <remarks>
         /// This method Creates an ODataDeltaDeletedEntry and fills in the Id and Reason properties, if specified in the payload.
         /// </remarks>
-        internal async Task<ODataDeletedResource> ReadDeletedEntryAsync()
+        internal async ValueTask<ODataDeletedResource> ReadDeletedEntryAsync()
         {
             this.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
             Uri id = null;
@@ -3574,7 +3574,7 @@ namespace Microsoft.OData.Json
         /// The value of the TResult parameter contains the <see cref="ODataJsonReaderNestedInfo"/> for a nested stream property,
         /// or null if the property shouldn't be streamed.
         /// </returns>
-        private async Task<ODataJsonReaderNestedInfo> TryReadAsStreamAsync(
+        private async ValueTask<ODataJsonReaderNestedInfo> TryReadAsStreamAsync(
             IODataJsonReaderResourceState resourceState,
             IEdmStructuralProperty property,
             IEdmTypeReference propertyType,
@@ -3764,7 +3764,7 @@ namespace Microsoft.OData.Json
         /// Post-Condition: JsonNodeType.Property:    the next property of the resource
         ///                 JsonNodeType.EndObject:   the end-object node of the resource
         /// </remarks>
-        private async Task<ODataJsonReaderNestedInfo> InnerReadUndeclaredPropertyAsync(
+        private async ValueTask<ODataJsonReaderNestedInfo> InnerReadUndeclaredPropertyAsync(
             IODataJsonReaderResourceState resourceState,
             IEdmStructuredType owningStructuredType,
             string propertyName,
@@ -3898,7 +3898,7 @@ namespace Microsoft.OData.Json
         /// Post-Condition: JsonNodeType.Property:    the next property of the resource
         ///                 JsonNodeType.EndObject:   the end-object node of the resource
         /// </remarks>
-        private async Task<ODataJsonReaderNestedInfo> ReadUndeclaredPropertyAsync(
+        private async ValueTask<ODataJsonReaderNestedInfo> ReadUndeclaredPropertyAsync(
             IODataJsonReaderResourceState resourceState,
             string propertyName,
             bool propertyWithValue)
