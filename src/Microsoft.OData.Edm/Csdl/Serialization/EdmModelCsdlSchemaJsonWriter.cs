@@ -2264,7 +2264,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <summary>
         /// Asynchronously Writes DateOnly Constant Expression.
         /// </summary>
-        /// <param name="expression">The Edm DateOnly Constant Expression.</param>
+        /// <param name="expression">The Edm Date Constant Expression.</param>
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
         internal override Task WriteDateOnlyConstantExpressionElementAsync(IEdmDateConstantExpression expression)
         {

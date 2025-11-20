@@ -1305,8 +1305,8 @@ namespace Microsoft.OData.Tests.Json
             await writer.WriteValueAsync((sbyte)-7);
             await writer.WriteValueAsync("test");
             await writer.WriteValueAsync((byte[])null);
-            await writer.WriteValueAsync(new Date(2022, 12, 31));
-            await writer.WriteValueAsync(new TimeOfDay(12, 30, 5, 10));
+            await writer.WriteValueAsync(new DateOnly(2022, 12, 31));
+            await writer.WriteValueAsync(new TimeOnly(12, 30, 5, 10));
             await writer.EndArrayScopeAsync();
             await writer.FlushAsync();
 

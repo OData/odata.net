@@ -173,7 +173,7 @@ namespace Microsoft.OData.Edm.Tests.Library
             #region Test Parse
             Action test = () => DateOnly.Parse(input, CultureInfo.InvariantCulture);
             var exception = Assert.Throws<FormatException>(test);
-            Assert.Equal(Error.Format(SRResources.Date_InvalidParsingString, input), exception.Message);
+            Assert.Equal(Error.Format(SRResources.DateOnly_InvalidParsingString, input), exception.Message);
             #endregion
 
             #region Test TryParse
@@ -597,7 +597,7 @@ namespace Microsoft.OData.Edm.Tests.Library
             #region Test Parse
             Action test = () => TimeOnly.Parse(input, CultureInfo.CurrentCulture);
             var exception = Assert.Throws<FormatException>(test);
-            Assert.Equal(Error.Format(SRResources.TimeOfDay_InvalidParsingString, input), exception.Message);
+            Assert.Equal(Error.Format(SRResources.TimeOnly_InvalidParsingString, input), exception.Message);
             #endregion
 
             #region Test TryParse

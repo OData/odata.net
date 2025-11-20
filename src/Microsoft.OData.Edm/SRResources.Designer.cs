@@ -612,9 +612,9 @@ namespace Microsoft.OData.Edm {
         /// <summary>
         ///   Looks up a localized string similar to String &apos;{0}&apos; was not recognized as a valid DateOnly..
         /// </summary>
-        internal static string Date_InvalidParsingString {
+        internal static string DateOnly_InvalidParsingString {
             get {
-                return ResourceManager.GetString("Date_InvalidParsingString", resourceCulture);
+                return ResourceManager.GetString("DateOnly_InvalidParsingString", resourceCulture);
             }
         }
         
@@ -2474,9 +2474,9 @@ namespace Microsoft.OData.Edm {
         /// <summary>
         ///   Looks up a localized string similar to String &apos;{0}&apos; was not recognized as a valid TimeOnly..
         /// </summary>
-        internal static string TimeOfDay_InvalidParsingString {
+        internal static string TimeOnly_InvalidParsingString {
             get {
-                return ResourceManager.GetString("TimeOfDay_InvalidParsingString", resourceCulture);
+                return ResourceManager.GetString("TimeOnly_InvalidParsingString", resourceCulture);
             }
         }
         
