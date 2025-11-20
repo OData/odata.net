@@ -899,17 +899,7 @@ namespace Microsoft.OData.Json
         {
             // Read over the name.
             this.JsonReader.Read();
-            object annotationValue;
-            if (this.JsonReader.NodeType != JsonNodeType.PrimitiveValue)
-            {
-                annotationValue = this.JsonReader.ReadAsUntypedOrNullValue();
-            }
-            else
-            {
-                annotationValue = this.JsonReader.GetValue();
-                this.JsonReader.SkipValue();
-            }
-
+            object annotationValue = this.JsonReader.ReadODataValue();
             return annotationValue;
         }
 

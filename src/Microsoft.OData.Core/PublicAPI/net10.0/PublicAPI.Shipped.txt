@@ -2496,8 +2496,6 @@ virtual Microsoft.OData.UriParser.SelectItemTranslator<T>.Translate(Microsoft.OD
 virtual Microsoft.OData.UriParser.TypeFacetsPromotionRules.GetPromotedPrecision(int? left, int? right) -> int?
 virtual Microsoft.OData.UriParser.TypeFacetsPromotionRules.GetPromotedScale(int? left, int? right) -> int?
 virtual Microsoft.OData.UriParser.UriPathParser.ParsePathIntoSegments(System.Uri fullUri, System.Uri serviceBaseUri) -> System.Collections.Generic.ICollection<string>
-Microsoft.OData.ODataMessageReaderSettings.EnableUntypedCollections.get -> bool
-Microsoft.OData.ODataMessageReaderSettings.EnableUntypedCollections.set -> void
 static Microsoft.OData.UriParser.ODataPathExtensions.EdmType(this Microsoft.OData.UriParser.ODataPath path) -> Microsoft.OData.Edm.IEdmTypeReference
 static Microsoft.OData.UriParser.ODataPathExtensions.IsCollection(this Microsoft.OData.UriParser.ODataPath path) -> bool
 static Microsoft.OData.UriParser.ODataPathExtensions.NavigationSource(this Microsoft.OData.UriParser.ODataPath path) -> Microsoft.OData.Edm.IEdmNavigationSource

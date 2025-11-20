@@ -38,11 +38,6 @@ namespace Microsoft.OData.Client.Tests
 
         private const string PersonNameValue = "John Doe";
 
-        /// <summary>
-        /// Asserts that a dynamic property which represents a collection of untyped values throws an exception when the
-        /// <see cref="ODataMessageReaderSettings.EnableUntypedCollections"/> behavior flag is not enabled, and that the exception is not present when the flag is
-        /// enabled
-        /// </summary>
         [Fact]
         public void DynamicPropertyCollectionOfUntypedValues()
         { 
@@ -88,19 +83,33 @@ namespace Microsoft.OData.Client.Tests
                     (uri, set, handlerProvider) =>
                     {
                         var directoryDataService = new DirectoryDataService(rootUri);
+                        string name = null;
+                        IList<object> alternativeSecurityIds = null;
+                        directoryDataService.Configurations.ResponsePipeline.OnFeedStarted(args =>
+                        {
+                            Assert.NotNull(name);
+                            Assert.Equal("alternativeSecurityIds", name);
+                            Assert.Null(alternativeSecurityIds);
+                            alternativeSecurityIds = new List<object>();
+                        });
+                        directoryDataService.Configurations.ResponsePipeline.OnNestedResourceInfoStarted(arg =>
+                        {
+                            name = arg.Link.Name;
+                        });
                         directoryDataService.HttpClientFactory = provider;
 
-                        directoryDataService.AddObject(entitySet, new User());
+                        var nameQuery = new DataServiceQuerySingle<User>(directoryDataService, "users/080a1a0e-71bf-4582-b141-fd61bdd35a40");
+                        var user = nameQuery.GetValue();
 
-                        return directoryDataService;
+                        Assert.NotNull(name);
+                        Assert.Equal("alternativeSecurityIds", name);
+                        Assert.NotNull(alternativeSecurityIds);
+                        user.DynamicProperties[name] = alternativeSecurityIds;
+
+                          return directoryDataService;
                     };
 
-                var context = createRequestForEntityWithDynamicCollectionOfUntypedValues(rootUri, entitySet, provider);
-
-                // when enabled, the exception should go away and we should receive an actual repsonse
-                context.Configurations.ResponsePipeline.OnMessageReaderSettingsCreated(args => args.Settings.EnableUntypedCollections = true);
-                var response = context.SaveChanges();
-                Assert.True(response.First().StatusCode >= 200 && response.First().StatusCode < 300);
+                 createRequestForEntityWithDynamicCollectionOfUntypedValues(rootUri, entitySet, provider);
             }
         }
 
