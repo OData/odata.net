@@ -284,71 +284,6 @@ namespace Microsoft.OData.Json
             }
         }
 
-        /// <summary>
-        /// Reads the elements in a JSON array and parses them as <see cref="ODataUntypedValue"/>s
-        /// </summary>
-        /// <param name="jsonReader">The <see cref="IJsonReader"/> that the collection of untyped values should be read from</param>
-        /// <returns>The untyped values in the JSON array in <paramref name="jsonReader"/></returns>
-        /// <exception cref="ArgumentNullException">Thrown if <paramref name="jsonReader"/> is <see langword="null"/></exception>
-        /// <exception cref="ODataException">
-        /// Thrown if the <see cref="IJsonReader.NodeType"/> of <paramref name="jsonReader"/> is not <see cref="JsonNodeType.StartArray"/> or the JSON that
-        /// <paramref name="jsonReader"/> is reading is not well-formed
-        /// </exception>
-        internal static IEnumerable<ODataUntypedValue> ReadUntypedCollectionValues(this IJsonReader jsonReader)
-        {
-            if (jsonReader == null)
-            {
-                throw new ArgumentNullException(nameof(jsonReader));
-            }
-
-            return jsonReader.ReadUntypedCollectionValuesIterator();
-        }
-
-        /// <summary>
-        /// Reads the elements in a JSON array and parses them as <see cref="ODataUntypedValue"/>s
-        /// </summary>
-        /// <param name="jsonReader">
-        /// The <see cref="IJsonReader"/> that the collection of untyped values should be read from; assumed to not be <see langword="null"/>
-        /// </param>
-        /// <returns>The untyped values in the JSON array in <paramref name="jsonReader"/></returns>
-        /// <exception cref="ODataException">
-        /// Thrown if the <see cref="IJsonReader.NodeType"/> of <paramref name="jsonReader"/> is not <see cref="JsonNodeType.StartArray"/> or the JSON that
-        /// <paramref name="jsonReader"/> is reading is not well-formed
-        /// </exception>
-        private static IEnumerable<ODataUntypedValue> ReadUntypedCollectionValuesIterator(this IJsonReader jsonReader)
-        {
-            jsonReader.ReadStartArray();
-
-            while (jsonReader.NodeType != JsonNodeType.EndArray)
-            {
-                yield return jsonReader.ReadAsUntypedOrNullValueImplementation();
-            }
-
-            jsonReader.ReadEndArray();
-        }
-
-        internal static ODataValue ReadAsUntypedOrNullValue(this IJsonReader jsonReader)
-        {
-            return jsonReader.ReadAsUntypedOrNullValueImplementation();
-        }
-
-        /// <summary>
-        /// Reads the entirety of the next JSON value (primitive, object or array) in <paramref name="jsonReader"/> as an <see cref="ODataUntypedValue"/>
-        /// </summary>
-        /// <param name="jsonReader">The <see cref="JsonReader"/> to read from.</param>
-        /// <returns>The <see cref="ODataUntypedValue"/> that represents the value read from <paramref name="jsonReader"/></returns>
-        /// <exception cref="ODataException">Thrown if the JSON that <paramref name="jsonReader"/> is reading is not well-formed</exception>
-        private static ODataUntypedValue ReadAsUntypedOrNullValueImplementation(this IJsonReader jsonReader)
-        {
-            StringBuilder builder = new StringBuilder();
-            jsonReader.SkipValue(builder);
-            Debug.Assert(builder.Length > 0, "builder.Length > 0");
-            return new ODataUntypedValue()
-            {
-                RawValue = builder.ToString(),
-            };
-        }
-
         internal static ODataValue ReadODataValue(this IJsonReader jsonReader)
         {
             if (jsonReader.NodeType == JsonNodeType.PrimitiveValue)
@@ -393,10 +328,8 @@ namespace Microsoft.OData.Json
 
                 return collectionValue;
             }
-            else
-            {
-                return jsonReader.ReadAsUntypedOrNullValue();
-            }
+
+            throw CreateException(Error.Format(SRResources.JsonReaderExtensions_UnexpectedNodeDetected, "PrimitiveValue|StartObject|StartArray", jsonReader.NodeType));
         }
 
         /// <summary>
@@ -923,7 +856,7 @@ namespace Microsoft.OData.Json
                     return jsonReader.ReadODataCollectionValueAsync();
 
                 default:
-                    return jsonReader.ReadAsUntypedOrNullValueAsync();
+                    throw CreateException(Error.Format(SRResources.JsonReaderExtensions_UnexpectedNodeDetected, "PrimitiveValue|StartObject|StartArray", jsonReader.NodeType));
             }
         }
 

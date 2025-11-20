@@ -1237,7 +1237,6 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
                 {
                     ShouldIncludeAnnotation = (annotationName) => true,
                     Validations = ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType,
-                    EnableUntypedCollections = true, // Sam: This configuration looks unnecessary? We should consider to remove this configuration when removing/obsolote 'ODataUntypedValue'
                 });
 
             Assert.Equal(2, entry.Properties.Count());
@@ -1293,7 +1292,6 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
             {
                 ShouldIncludeAnnotation = (annotationName) => true,
                 Validations = ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType,
-                EnableUntypedCollections = true, // Sam: This configuration looks unnecessary? We should consider to remove this configuration when removing/obsolote 'ODataUntypedValue'
             });
 
             Assert.Equal(2, entry.Properties.Count());

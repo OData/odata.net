@@ -537,23 +537,16 @@ namespace Microsoft.OData.Json
                 return readerNestedResourceInfo;
             }
 
-            if (!(payloadTypeReference is IEdmUntypedTypeReference))
-            {
-                this.JsonReader.AssertNotBuffering();
-                propertyValue = this.ReadNonEntityValueImplementation(
-                    outerPayloadTypeName,
-                    payloadTypeReference,
-                    /*propertyAndAnnotationCollector*/ null,
-                    /*collectionValidator*/ null,
-                    false, // validateNullValue
-                    isTopLevelPropertyValue,
-                    insideResourceValue,
-                    propertyName);
-            }
-            else
-            {
-                propertyValue = this.JsonReader.ReadAsUntypedOrNullValue();
-            }
+            this.JsonReader.AssertNotBuffering();
+            propertyValue = this.ReadNonEntityValueImplementation(
+                outerPayloadTypeName,
+                payloadTypeReference,
+                /*propertyAndAnnotationCollector*/ null,
+                /*collectionValidator*/ null,
+                false, // validateNullValue
+                isTopLevelPropertyValue,
+                insideResourceValue,
+                propertyName);
 
             this.JsonReader.AssertNotBuffering();
             Debug.Assert(
@@ -2044,7 +2037,7 @@ namespace Microsoft.OData.Json
                         break;
 
                     case EdmTypeKind.Untyped:
-                        result = this.JsonReader.ReadAsUntypedOrNullValue();
+                        result = this.JsonReader.ReadODataValue();
                         break;
 
                     default:

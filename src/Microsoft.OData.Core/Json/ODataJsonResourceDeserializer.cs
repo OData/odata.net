@@ -1618,36 +1618,18 @@ namespace Microsoft.OData.Json
                 }
             }
 
-            if (!(payloadTypeReference is IEdmUntypedTypeReference))
-            {
-                this.JsonReader.AssertNotBuffering();
-                propertyValue = this.ReadNonEntityValue(
-                    outerPayloadTypeName,
-                    payloadTypeReference,
-                    /*propertyAndAnnotationCollector*/ null,
-                    /*collectionValidator*/ null,
-                    /*validateNullValue*/ true,
-                    /*isTopLevelPropertyValue*/ false,
-                    /*insideResourceValue*/ false,
-                    propertyName,
-                    /*isDynamicProperty*/true);
-            }
-            else
-            {
-                if (base.MessageReaderSettings.EnableUntypedCollections && this.JsonReader.NodeType == JsonNodeType.StartArray)
-                {
-                    propertyValue = new ODataCollectionValue()
-                    {
-                        TypeAnnotation = new ODataTypeAnnotation(EdmUntypedStructuredType.Instance.FullName, EdmUntypedStructuredType.Instance),
-                        TypeName = EdmUntypedStructuredType.Instance.FullName,
-                        Items = this.JsonReader.ReadUntypedCollectionValues().ToList(),
-                    };
-                }
-                else
-                {
-                    propertyValue = this.JsonReader.ReadAsUntypedOrNullValue();
-                }
-            }
+            // Primitive property or collection of primitive property.
+            this.JsonReader.AssertNotBuffering();
+            propertyValue = this.ReadNonEntityValue(
+                outerPayloadTypeName,
+                payloadTypeReference,
+                /*propertyAndAnnotationCollector*/ null,
+                /*collectionValidator*/ null,
+                /*validateNullValue*/ true,
+                /*isTopLevelPropertyValue*/ false,
+                /*insideResourceValue*/ false,
+                propertyName,
+                /*isDynamicProperty*/true);
 
             ValidationUtils.ValidateOpenPropertyValue(propertyName, propertyValue);
             AddResourceProperty(resourceState, propertyName, propertyValue);
