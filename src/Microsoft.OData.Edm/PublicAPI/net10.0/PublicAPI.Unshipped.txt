@@ -1,4 +1,4 @@
-Microsoft.OData.Edm.DateAndTimeExtensions
+Microsoft.OData.Edm.DateOnlyAndTimeOnlyExtensions
 Microsoft.OData.Edm.EdmCoreModel.FindDeclaredBoundOperations(System.ReadOnlySpan<char> qualifiedName, Microsoft.OData.Edm.IEdmType bindingType) -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmOperation>
 Microsoft.OData.Edm.EdmCoreModel.FindDeclaredOperations(System.ReadOnlySpan<char> qualifiedName) -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmOperation>
 Microsoft.OData.Edm.EdmCoreModel.FindDeclaredTerm(System.ReadOnlySpan<char> qualifiedName) -> Microsoft.OData.Edm.Vocabularies.IEdmTerm
@@ -46,8 +46,8 @@ Microsoft.OData.Edm.Vocabularies.EdmTimeOfDayConstant.EdmTimeOfDayConstant(Syste
 Microsoft.OData.Edm.Vocabularies.EdmTimeOfDayConstant.Value.get -> System.TimeOnly
 Microsoft.OData.Edm.Vocabularies.IEdmDateValue.Value.get -> System.DateOnly
 Microsoft.OData.Edm.Vocabularies.IEdmTimeOfDayValue.Value.get -> System.TimeOnly
-static Microsoft.OData.Edm.DateAndTimeExtensions.ToODataString(this System.DateOnly date) -> string
-static Microsoft.OData.Edm.DateAndTimeExtensions.ToODataString(this System.TimeOnly time) -> string
+static Microsoft.OData.Edm.DateOnlyAndTimeOnlyExtensions.ToODataString(this System.DateOnly date) -> string
+static Microsoft.OData.Edm.DateOnlyAndTimeOnlyExtensions.ToODataString(this System.TimeOnly time) -> string
 static Microsoft.OData.Edm.EdmTypeSemantics.IsDateOnly(this Microsoft.OData.Edm.IEdmTypeReference type) -> bool
 static Microsoft.OData.Edm.EdmTypeSemantics.IsTimeOnly(this Microsoft.OData.Edm.IEdmTypeReference type) -> bool
 static Microsoft.OData.Edm.ExtensionMethods.ExistsContainer(this Microsoft.OData.Edm.IEdmModel model, System.ReadOnlySpan<char> containerName) -> bool

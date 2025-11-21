@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="DateTimeExtensions.cs" company="Microsoft">
+// <copyright file="DateOnlyAndTimeOnlyExtensions.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -9,7 +9,7 @@ using System.Globalization;
 
 namespace Microsoft.OData.Edm
 {
-    public static class DateAndTimeExtensions
+    public static class DateOnlyAndTimeOnlyExtensions
     {
         /// <summary>
         /// Converts the specified <see cref="DateOnly"/> value to its OData string representation
