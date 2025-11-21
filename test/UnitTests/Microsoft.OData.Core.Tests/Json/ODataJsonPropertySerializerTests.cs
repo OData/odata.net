@@ -102,8 +102,8 @@ namespace Microsoft.OData.Tests.Json
             this.declaredProperty = new ODataProperty { Name = "DeclaredProperty", Value = Guid.Empty };
             this.undeclaredProperty = new ODataProperty { Name = "UndeclaredProperty", Value = DateTimeOffset.MinValue };
             this.declaredGeometryProperty = new ODataProperty { Name = "DeclaredGeometryProperty", Value = GeometryPoint.Create(0.0, 0.0) };
-            this.declaredPropertyTimeOfDay = new ODataProperty { Name = "TimeOfDayProperty", Value = new TimeOfDay(1, 30, 5, 123) };
-            this.declaredPropertyDate = new ODataProperty { Name = "DateProperty", Value = new Date(2014, 9, 17) };
+            this.declaredPropertyTimeOfDay = new ODataProperty { Name = "TimeOfDayProperty", Value = new TimeOnly(1, 30, 5, 123) };
+            this.declaredPropertyDate = new ODataProperty { Name = "DateProperty", Value = new DateOnly(2014, 9, 17) };
 
             this.declaredPropertyAddress = new ODataProperty()
             {
@@ -437,7 +437,7 @@ namespace Microsoft.OData.Tests.Json
 
         #endregion
 
-        #region Serializing TimeOfDay/Date properties
+        #region Serializing TimeOnly/Date properties
         [Fact]
         public void WritingTimeOfDayPropertyShouldWorkJson()
         {
@@ -454,7 +454,7 @@ namespace Microsoft.OData.Tests.Json
         public static IEnumerable<object[]> PrimitiveData => new List<object[]>
         {
             new object[] { 42,                     "{\"PrimitiveProperty@odata.type\":\"#Int32\",\"PrimitiveProperty\":42}" },
-            new object[] { new Date(2018, 11, 28), "{\"PrimitiveProperty@odata.type\":\"#Date\",\"PrimitiveProperty\":\"2018-11-28\"}" },
+            new object[] { new DateOnly(2018, 11, 28), "{\"PrimitiveProperty@odata.type\":\"#Date\",\"PrimitiveProperty\":\"2018-11-28\"}" },
             new object[] { 8.9,                    "{\"PrimitiveProperty@odata.type\":\"#Double\",\"PrimitiveProperty\":8.9}" },
             new object[] { true,                   "{\"PrimitiveProperty@odata.type\":\"#Boolean\",\"PrimitiveProperty\":true}" }
         };

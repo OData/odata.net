@@ -272,61 +272,61 @@ namespace Microsoft.OData.UriParser
         {
             // Basic Signature according to type
             FunctionSignatureWithReturnType[] dateTimeOffsetReturnInt = CreateDateTimeFunctionSignatureArray();
-            FunctionSignatureWithReturnType[] dateTimeoffsetReturnDate = CreateDateTimeOffsetReturnDate();
+            FunctionSignatureWithReturnType[] dateTimeoffsetReturnDateOnly = CreateDateTimeOffsetReturnDateOnly();
             FunctionSignatureWithReturnType[] dateTimeOffsetReturnDecimal = CreateDateTimeOffsetReturnDecimal();
-            FunctionSignatureWithReturnType[] dateTimeoffsetReturnTimeOfDay = CreateDateTimeOffsetReturnTimeOfDay();
+            FunctionSignatureWithReturnType[] dateTimeoffsetReturnTimeOnly = CreateDateTimeOffsetReturnTimeOnly();
             FunctionSignatureWithReturnType[] dateTimeOffsetOrDurationReturnInt = dateTimeOffsetReturnInt.Concat(CreateDurationFunctionSignatures()).ToArray();
             FunctionSignatureWithReturnType[] voidReturnDateTimeOffset = CreateVoidReturnDateTimeOffset();
             FunctionSignatureWithReturnType[] durationReturnDecimal = CreateDurationReturnDecimal();
-            FunctionSignatureWithReturnType[] dateReturnInt = CreateDateReturnInt();
-            FunctionSignatureWithReturnType[] timeOfDayReturnInt = CreateTimeOfDayReturnInt();
-            FunctionSignatureWithReturnType[] timeOfDayReturnDecimal = CreateTimeOfDayReturnDecimal();
+            FunctionSignatureWithReturnType[] dateReturnInt = CreateDateOnlyReturnInt();
+            FunctionSignatureWithReturnType[] timeOnlyReturnInt = CreateTimeOnlyReturnInt();
+            FunctionSignatureWithReturnType[] timeOnlyReturnDecimal = CreateTimeOnlyReturnDecimal();
 
             // Signature array according to function name
             FunctionSignatureWithReturnType[] yearMonthDayFunctionSignatures = dateTimeOffsetReturnInt.Concat(dateReturnInt).ToArray();
-            FunctionSignatureWithReturnType[] hourMinuteSecondFunctionSignatures = dateTimeOffsetOrDurationReturnInt.Concat(timeOfDayReturnInt).ToArray();
-            FunctionSignatureWithReturnType[] fractionalsecondsFunctionSignatures = dateTimeOffsetReturnDecimal.Concat(timeOfDayReturnDecimal).ToArray();
+            FunctionSignatureWithReturnType[] hourMinuteSecondFunctionSignatures = dateTimeOffsetOrDurationReturnInt.Concat(timeOnlyReturnInt).ToArray();
+            FunctionSignatureWithReturnType[] fractionalsecondsFunctionSignatures = dateTimeOffsetReturnDecimal.Concat(timeOnlyReturnDecimal).ToArray();
 
             // int year(DateTimeOffset)
             // int year(DateTimeOffset?)
-            // int year(Date)
-            // int year(Date?)
+            // int year(DateOnly)
+            // int year(DateOnly?)
             functions.Add("year", yearMonthDayFunctionSignatures);
 
             // int month(DateTimeOffset)
             // int month(DateTimeOffset?)
-            // int month(Date)
-            // int month(Date?)
+            // int month(DateOnly)
+            // int month(DateOnly?)
             functions.Add("month", yearMonthDayFunctionSignatures);
 
             // int day(DateTimeOffset)
             // int day(DateTimeOffset?)
-            // int day(Date)
-            // int day(Date?)
+            // int day(DateOnly)
+            // int day(DateOnly?)
             functions.Add("day", yearMonthDayFunctionSignatures);
 
             // int hour(DateTimeOffset)
             // int hour(DateTimeOffset?)
             // int hour(TimeSpan)
             // int hour(TimeSpan?)
-            // int hour(TimeOfDay)
-            // int hour(TimeOfDay?)
+            // int hour(TimeOnly)
+            // int hour(TimeOnly?)
             functions.Add("hour", hourMinuteSecondFunctionSignatures);
 
             // int minute(DateTimeOffset)
             // int minute(DateTimeOffset?)
             // int minute(TimeSpan)
             // int minute(TimeSpan?)
-            // int minute(TimeOfDay)
-            // int minute(TimeOfDay?)
+            // int minute(TimeOnly)
+            // int minute(TimeOnly?)
             functions.Add("minute", hourMinuteSecondFunctionSignatures);
 
             // int second(DateTimeOffset)
             // int second(DateTimeOffset?)
             // int second(TimeSpan)
             // int second(TimeSpan?)
-            // int second(TimeOfDay)
-            // int second(TimeOfDay?)
+            // int second(TimeOnly)
+            // int second(TimeOnly?)
             functions.Add("second", hourMinuteSecondFunctionSignatures);
 
             // Use protocol signature
@@ -350,10 +350,10 @@ namespace Microsoft.OData.UriParser
             functions.Add("totalseconds", durationReturnDecimal);
 
             // Edm.Date date(Edm.DateTimeOffset)
-            functions.Add("date", dateTimeoffsetReturnDate);
+            functions.Add("date", dateTimeoffsetReturnDateOnly);
 
             // Edm.TimeOfDay time(Edm.DateTimeOffset)
-            functions.Add("time", dateTimeoffsetReturnTimeOfDay);
+            functions.Add("time", dateTimeoffsetReturnTimeOnly);
         }
 
         /// <summary>
@@ -402,18 +402,18 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Builds the set of signatures for 'Date function(DateTimeOffset)'.
+        /// Builds the set of signatures for 'DateOnly function(DateTimeOffset)'.
         /// </summary>
-        /// <returns>The set of signatures for 'Date function(DateTimeOffset)'.</returns>
-        private static FunctionSignatureWithReturnType[] CreateDateTimeOffsetReturnDate()
+        /// <returns>The set of signatures for 'DateOnly function(DateTimeOffset)'.</returns>
+        private static FunctionSignatureWithReturnType[] CreateDateTimeOffsetReturnDateOnly()
         {
             return new[]
             {
                 new FunctionSignatureWithReturnType(
-                    EdmCoreModel.Instance.GetDate(false),
+                    EdmCoreModel.Instance.GetDateOnly(false),
                     EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.DateTimeOffset, false)),
                 new FunctionSignatureWithReturnType(
-                    EdmCoreModel.Instance.GetDate(false),
+                    EdmCoreModel.Instance.GetDateOnly(false),
                     EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.DateTimeOffset, true)),
             };
         }
@@ -436,10 +436,10 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Builds the set of signatures for 'TimeOfDay function(DateTimeOffset)'.
+        /// Builds the set of signatures for 'TimeOnly function(DateTimeOffset)'.
         /// </summary>
-        /// <returns>The set of signatures for 'TimeOfDay function(DateTimeOffset)'.</returns>
-        private static FunctionSignatureWithReturnType[] CreateDateTimeOffsetReturnTimeOfDay()
+        /// <returns>The set of signatures for 'TimeOnly function(DateTimeOffset)'.</returns>
+        private static FunctionSignatureWithReturnType[] CreateDateTimeOffsetReturnTimeOnly()
         {
             return new[]
             {
@@ -470,27 +470,27 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Builds the set of signatures for 'Int function(Date)'.
+        /// Builds the set of signatures for 'Int function(DateOnly)'.
         /// </summary>
-        /// <returns>The set of signatures for 'Int function(Date)'.</returns>
-        private static FunctionSignatureWithReturnType[] CreateDateReturnInt()
+        /// <returns>The set of signatures for 'Int function(DateOnly)'.</returns>
+        private static FunctionSignatureWithReturnType[] CreateDateOnlyReturnInt()
         {
             return new[]
             {
                 new FunctionSignatureWithReturnType(
                     EdmCoreModel.Instance.GetInt32(false),
-                    EdmCoreModel.Instance.GetDate(false)),
+                    EdmCoreModel.Instance.GetDateOnly(false)),
                  new FunctionSignatureWithReturnType(
                      EdmCoreModel.Instance.GetInt32(false),
-                     EdmCoreModel.Instance.GetDate(true)),
+                     EdmCoreModel.Instance.GetDateOnly(true)),
             };
         }
 
         /// <summary>
-        /// Builds the set of signatures for 'Int function(TimeOfDay)'.
+        /// Builds the set of signatures for 'Int function(TimeOnly)'.
         /// </summary>
-        /// <returns>The set of signatures for 'Int function(TimeOfDay)'.</returns>
-        private static FunctionSignatureWithReturnType[] CreateTimeOfDayReturnInt()
+        /// <returns>The set of signatures for 'Int function(TimeOnly)'.</returns>
+        private static FunctionSignatureWithReturnType[] CreateTimeOnlyReturnInt()
         {
             return new[]
             {
@@ -504,10 +504,10 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Builds the set of signatures for 'Decimal function(TimeOfDay)'.
+        /// Builds the set of signatures for 'Decimal function(TimeOnly)'.
         /// </summary>
-        /// <returns>The set of signatures for 'Decimal function(TimeOfDay)'.</returns>
-        private static FunctionSignatureWithReturnType[] CreateTimeOfDayReturnDecimal()
+        /// <returns>The set of signatures for 'Decimal function(TimeOnly)'.</returns>
+        private static FunctionSignatureWithReturnType[] CreateTimeOnlyReturnDecimal()
         {
             return new[]
             {

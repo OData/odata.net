@@ -86,8 +86,8 @@ public static class ModelBuilderHelpers
             EdmCoreModel.Instance.GetStream(nullable),
             EdmCoreModel.Instance.GetString(nullable),
             EdmCoreModel.Instance.GetDuration(nullable),
-            EdmCoreModel.Instance.GetDate(nullable),
-            EdmCoreModel.Instance.GetTimeOfDay(nullable),
+            EdmCoreModel.Instance.GetDateOnly(nullable),
+            EdmCoreModel.Instance.GetTimeOnly(nullable),
         };
     }
 

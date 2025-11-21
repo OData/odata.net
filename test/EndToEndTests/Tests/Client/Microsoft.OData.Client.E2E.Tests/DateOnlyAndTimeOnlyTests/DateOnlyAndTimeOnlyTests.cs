@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------------
-// <copyright file="EdmDateAndTimeOfDayTests.cs" company=".NET Foundation">
+// <copyright file="DateOnlyAndTimeOnlyTests.cs" company=".NET Foundation">
 //      Copyright (c) .NET Foundation and Contributors. All rights reserved.
 //      See License.txt in the project root for license information.
 // </copyright>
@@ -12,14 +12,14 @@ using Microsoft.OData.E2E.TestCommon;
 using Microsoft.OData.E2E.TestCommon.Common.Client.Default;
 using Microsoft.OData.E2E.TestCommon.Common.Client.Default.Default;
 using Microsoft.OData.E2E.TestCommon.Common.Server.Default;
-using Microsoft.OData.E2E.TestCommon.Common.Server.EdmDateAndTimeOfDay;
+using Microsoft.OData.E2E.TestCommon.Common.Server.DateOnlyAndTimeOnly;
 using Microsoft.OData.Edm;
 using Xunit;
 using ClientDefaultModel = Microsoft.OData.E2E.TestCommon.Common.Client.Default;
 
-namespace Microsoft.OData.Client.E2E.Tests.EdmDateAndTimeOfDayTests
+namespace Microsoft.OData.Client.E2E.Tests.DateOnlyAndTimeOnlyTests
 {
-    public class EdmDateAndTimeOfDayTests : EndToEndTestBase<EdmDateAndTimeOfDayTests.TestsStartup>
+    public class DateOnlyAndTimeOnlyTests : EndToEndTestBase<DateOnlyAndTimeOnlyTests.TestsStartup>
     {
         private readonly Uri _baseUri;
         private readonly Container _context;
@@ -29,14 +29,14 @@ namespace Microsoft.OData.Client.E2E.Tests.EdmDateAndTimeOfDayTests
         {
             public override void ConfigureServices(IServiceCollection services)
             {
-                services.ConfigureControllers(typeof(EdmDateAndTimeOfDayTestsController), typeof(MetadataController));
+                services.ConfigureControllers(typeof(DateOnlyAndTimeOnlyTestsController), typeof(MetadataController));
 
                 services.AddControllers().AddOData(opt => opt.Count().Filter().Expand().Select().OrderBy().SetMaxTop(null)
                     .AddRouteComponents("odata", DefaultEdmModel.GetEdmModel()));
             }
         }
 
-        public EdmDateAndTimeOfDayTests(TestWebApplicationFactory<TestsStartup> fixture)
+        public DateOnlyAndTimeOnlyTests(TestWebApplicationFactory<TestsStartup> fixture)
             : base(fixture)
         {
             _baseUri = new Uri(Client.BaseAddress, "odata/");
@@ -57,10 +57,10 @@ namespace Microsoft.OData.Client.E2E.Tests.EdmDateAndTimeOfDayTests
         {
             // Query Property
             var shipDate = await _context.Orders.ByKey(7).Select(o => o.ShipDate).GetValueAsync();
-            Assert.Equal(new Date(2014, 8, 31), shipDate);
+            Assert.Equal(new DateOnly(2014, 8, 31), shipDate);
 
             var shipTime = await _context.Orders.ByKey(7).Select(o => o.ShipTime).GetValueAsync();
-            Assert.Equal(new TimeOfDay(12, 40, 05, 50), shipTime);
+            Assert.Equal(new TimeOnly(12, 40, 05, 50), shipTime);
         }
 
         [Fact]
@@ -69,8 +69,8 @@ namespace Microsoft.OData.Client.E2E.Tests.EdmDateAndTimeOfDayTests
             // Projection Select
             var projOrder = await _context.Orders.ByKey(7).Select(o => new ClientDefaultModel.Order() { ShipDate = o.ShipDate, ShipTime = o.ShipTime }).GetValueAsync();
             Assert.True(projOrder != null);
-            Assert.Equal(new Date(2014, 8, 31), projOrder.ShipDate);
-            Assert.Equal(new TimeOfDay(12, 40, 05, 50), projOrder.ShipTime);
+            Assert.Equal(new DateOnly(2014, 8, 31), projOrder.ShipDate);
+            Assert.Equal(new TimeOnly(12, 40, 05, 50), projOrder.ShipTime);
         }
 
         [Fact]
@@ -81,15 +81,15 @@ namespace Microsoft.OData.Client.E2E.Tests.EdmDateAndTimeOfDayTests
             // Update Properties
             var order = await _context.Orders.ByKey(7).GetValueAsync();
             Assert.True(order != null);
-            Assert.Equal(new Date(2014, 8, 31), order.ShipDate);
-            Assert.Equal(new TimeOfDay(12, 40, 05, 50), order.ShipTime);
+            Assert.Equal(new DateOnly(2014, 8, 31), order.ShipDate);
+            Assert.Equal(new TimeOnly(12, 40, 05, 50), order.ShipTime);
 
-            order.ShipDate = new Date(2014, 9, 30);
+            order.ShipDate = new DateOnly(2014, 9, 30);
             _context.UpdateObject(order);
             await _context.SaveChangesAsync();
 
             var updatedOrder = await _context.Orders.ByKey(7).GetValueAsync();
-            Assert.Equal(new Date(2014, 9, 30), updatedOrder.ShipDate);
+            Assert.Equal(new DateOnly(2014, 9, 30), updatedOrder.ShipDate);
         }
 
         [Fact]
@@ -97,7 +97,7 @@ namespace Microsoft.OData.Client.E2E.Tests.EdmDateAndTimeOfDayTests
         {
             // Function
             var date = await _context.Orders.ByKey(7).GetShipDate().GetValueAsync();
-            Assert.Equal(new Date(2014, 8, 31), date);
+            Assert.Equal(new DateOnly(2014, 8, 31), date);
         }
 
         [Fact]
@@ -106,13 +106,15 @@ namespace Microsoft.OData.Client.E2E.Tests.EdmDateAndTimeOfDayTests
             _context.MergeOption = MergeOption.OverwriteChanges;
 
             var order = await _context.Orders.ByKey(7).GetValueAsync();
-            Assert.Equal(new Date(2014, 8, 31), order.ShipDate);
+            Assert.Equal(new DateOnly(2014, 8, 31), order.ShipDate);
 
             // Action
-            await _context.Orders.ByKey(7).ChangeShipTimeAndDate(Date.MaxValue, TimeOfDay.MaxValue).GetValueAsync();
+            await _context.Orders.ByKey(7).ChangeShipTimeAndDate(DateOnly.MaxValue, TimeOnly.MaxValue).GetValueAsync();
             order = await _context.Orders.ByKey(7).GetValueAsync();
-            Assert.Equal(Date.MaxValue, order.ShipDate);
-            Assert.Equal(TimeOfDay.MaxValue, order.ShipTime);
+            Assert.Equal(DateOnly.MaxValue, order.ShipDate);
+
+            Assert.Equal(TimeOnly.MaxValue, order.ShipTime);
+            Assert.Equal(TimeOnly.MaxValue.ToODataString(), order.ShipTime.ToODataString());
         }
 
         [Fact]
@@ -133,6 +135,78 @@ namespace Microsoft.OData.Client.E2E.Tests.EdmDateAndTimeOfDayTests
             var result = (await _context.ExecuteAsync<bool>(requestUrl)).Single();
 
             Assert.False(result);
+        }
+
+        [Fact]
+        public void QueryingOrdersWithOrderByOnDateOnly_WorksCorrectly()
+        {
+            var orders = _context.Orders
+                .OrderBy(o => o.ShipDate)
+                .ToList();
+
+            Assert.NotEmpty(orders);
+            for (int i = 1; i < orders.Count; i++)
+            {
+                Assert.True(orders[i - 1].ShipDate <= orders[i].ShipDate);
+            }
+        }
+
+        [Fact]
+        public void QueryingOrdersWithOrderByOnTimeOnly_WorksCorrectly()
+        {
+            var orders = _context.Orders
+                .OrderBy(o => o.ShipTime)
+                .ToList();
+
+            Assert.NotEmpty(orders);
+            for (int i = 1; i < orders.Count; i++)
+            {
+                Assert.True(orders[i - 1].ShipTime <= orders[i].ShipTime);
+            }
+        }
+
+        [Fact]
+        public void QueryingOrdersWithFilterOnDateOnly_WorksCorrectly()
+        {
+            var targetDate = new DateOnly(2014, 8, 31);
+            var orders = _context.Orders
+                .Where(o => o.ShipDate == targetDate)
+                .ToList();
+
+            Assert.All(orders, o => Assert.Equal(targetDate, o.ShipDate));
+        }
+
+        [Fact]
+        public void QueryingOrdersWithFilterOnTimeOnly_WorksCorrectly()
+        {
+            var targetTime = new TimeOnly(12, 40, 05, 50);
+            var orders = _context.Orders
+                .Where(o => o.ShipTime == targetTime)
+                .ToList();
+
+            Assert.All(orders, o => Assert.Equal(targetTime, o.ShipTime));
+        }
+
+        [Fact]
+        public void QueryingOrdersWithTopOnDateOnly_WorksCorrectly()
+        {
+            var orders = _context.Orders
+                .OrderBy(o => o.ShipDate)
+                .Take(2)
+                .ToList();
+
+            Assert.True(orders.Count <= 2);
+        }
+
+        [Fact]
+        public void QueryingOrdersWithTopOnTimeOnly_WorksCorrectly()
+        {
+            var orders = _context.Orders
+                .OrderBy(o => o.ShipTime)
+                .Take(2)
+                .ToList();
+
+            Assert.True(orders.Count <= 2);
         }
 
         #endregion

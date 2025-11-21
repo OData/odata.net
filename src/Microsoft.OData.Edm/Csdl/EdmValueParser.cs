@@ -315,16 +315,16 @@ namespace Microsoft.OData.Edm.Csdl
         }
 
         /// <summary>
-        /// Attempts to parse a Date value from the specified text.
+        /// Attempts to parse a DateOnly value from the specified text.
         /// </summary>
         /// <param name="value">Input string</param>
-        /// <param name="result">The Date resulting from parsing the string value</param>
+        /// <param name="result">The DateOnly resulting from parsing the string value</param>
         /// <returns>true if the value was parsed successfully, false otherwise</returns>
-        internal static bool TryParseDate(string value, out Date? result)
+        internal static bool TryParseDateOnly(string value, out DateOnly? result)
         {
             result = null;
-            Date targetDate;
-            if (PlatformHelper.TryConvertStringToDate(value, out targetDate))
+            DateOnly targetDate;
+            if (PlatformHelper.TryConvertStringToDateOnly(value, out targetDate))
             {
                 result = targetDate;
                 return true;
@@ -334,16 +334,16 @@ namespace Microsoft.OData.Edm.Csdl
         }
 
         /// <summary>
-        /// Attempts to parse a TimeOfDay value from the specified text.
+        /// Attempts to parse a TimeOnly value from the specified text.
         /// </summary>
         /// <param name="value">Input string</param>
-        /// <param name="result">The TimeOfDay resulting from parsing the string value</param>
+        /// <param name="result">The TimeOnly resulting from parsing the string value</param>
         /// <returns>true if the value was parsed successfully, false otherwise</returns>
-        internal static bool TryParseTimeOfDay(string value, out TimeOfDay? result)
+        internal static bool TryParseTimeOnly(string value, out TimeOnly? result)
         {
             try
             {
-                result = PlatformHelper.ConvertStringToTimeOfDay(value);
+                result = PlatformHelper.ConvertStringToTimeOnly(value);
                 return true;
             }
             catch (FormatException)

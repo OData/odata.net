@@ -506,28 +506,32 @@ namespace Microsoft.OData
             switch (targetPrimitiveKind)
             {
                 case EdmPrimitiveTypeKind.DateTimeOffset:
-                    if (primitiveValue is Date)
+                    if (primitiveValue is DateOnly dateValue)
                     {
-                        var dateValue = (Date)primitiveValue;
-                        return new DateTimeOffset(dateValue.Year, dateValue.Month, dateValue.Day, 0, 0, 0, TimeSpan.Zero);
-                    }
-
-                    if (primitiveValue is DateOnly dateOnly)
-                    {
-                        var dateValue = (Date)dateOnly;
                         return new DateTimeOffset(dateValue.Year, dateValue.Month, dateValue.Day, 0, 0, 0, TimeSpan.Zero);
                     }
 
                     break;
 
                 case EdmPrimitiveTypeKind.Date:
-                    var stringValue = primitiveValue as string;
-                    if (stringValue != null)
+                    if (primitiveValue is string stringValue)
                     {
-                        // Coerce to Date Type from String.
-                        return PlatformHelper.ConvertStringToDate(stringValue);
+                        // Coerce to DateOnly Type from String.
+                        return PlatformHelper.ConvertStringToDateOnly(stringValue);
                     }
 
+                    if (primitiveValue is DateOnly dateOnly)
+                    {
+                        return dateOnly;
+                    }
+
+                    break;
+
+                case EdmPrimitiveTypeKind.TimeOfDay:
+                    if (primitiveValue is TimeOnly timeOnly)
+                    {
+                        return timeOnly;
+                    }
                     break;
             }
 

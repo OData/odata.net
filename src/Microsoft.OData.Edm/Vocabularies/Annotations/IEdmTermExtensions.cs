@@ -153,12 +153,12 @@ namespace Microsoft.OData.Edm.Vocabularies
                     throw new FormatException(Error.Format(SRResources.ValueParser_InvalidBoolean, value));
 
                 case EdmPrimitiveTypeKind.Date:
-                    if (EdmValueParser.TryParseDate(value, out Date? dt))
+                    if (EdmValueParser.TryParseDateOnly(value, out DateOnly? dt))
                     {
                         return new EdmDateConstant(dt.Value);
                     }
 
-                    throw new FormatException(Error.Format(SRResources.ValueParser_InvalidDate, value));
+                    throw new FormatException(Error.Format(SRResources.ValueParser_InvalidDateOnly, value));
 
                 case EdmPrimitiveTypeKind.DateTimeOffset:
                     if (EdmValueParser.TryParseDateTimeOffset(value, out DateTimeOffset? dto))
@@ -222,12 +222,12 @@ namespace Microsoft.OData.Edm.Vocabularies
                     return new EdmStringConstant(value);
 
                 case EdmPrimitiveTypeKind.TimeOfDay:
-                    if (EdmValueParser.TryParseTimeOfDay(value, out TimeOfDay? tod))
+                    if (EdmValueParser.TryParseTimeOnly(value, out TimeOnly? tod))
                     {
                         return new EdmTimeOfDayConstant(tod.Value);
                     }
 
-                    throw new FormatException(Error.Format(SRResources.ValueParser_InvalidTimeOfDay, value));
+                    throw new FormatException(Error.Format(SRResources.ValueParser_InvalidTimeOnly, value));
             }
 
             throw new NotSupportedException(Error.Format(SRResources.EdmVocabularyAnnotations_TermTypeNotSupported, typeReference.FullName()));

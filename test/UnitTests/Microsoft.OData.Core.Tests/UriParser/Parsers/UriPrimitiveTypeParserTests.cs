@@ -24,7 +24,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void InvalidDateShouldReturnFalse()
         {
             object output;
-            Assert.False(this.TryParseUriStringToPrimitiveType("-1000-00-01", EdmCoreModel.Instance.GetDate(true), out output));
+            Assert.False(this.TryParseUriStringToPrimitiveType("-1000-00-01", EdmCoreModel.Instance.GetDateOnly(true), out output));
         }
 
         [Fact]
@@ -39,7 +39,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             };
             foreach (var s in list)
             {
-                Assert.False(this.TryParseUriStringToPrimitiveType(s, EdmCoreModel.Instance.GetTimeOfDay(true), out output));
+                Assert.False(this.TryParseUriStringToPrimitiveType(s, EdmCoreModel.Instance.GetTimeOnly(true), out output));
             }
         }
 

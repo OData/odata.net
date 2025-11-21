@@ -386,7 +386,7 @@ namespace Microsoft.OData.Tests.UriParser
         }
 
         [Fact]
-        public void NegateOnTimeOfDayIsNotSupported()
+        public void NegateOnTimeOnlyIsNotSupported()
         {
             IEdmTypeReference type = EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.TimeOfDay, false);
             var result = TypePromotionUtils.PromoteOperandType(UnaryOperatorKind.Negate, ref type);
@@ -556,7 +556,7 @@ namespace Microsoft.OData.Tests.UriParser
             entityType.AddStructuralProperty("Decimal_6_3_B", EdmCoreModel.Instance.GetDecimal(6, 3, nullable));
             entityType.AddStructuralProperty("Decimal_5_4", EdmCoreModel.Instance.GetDecimal(5, 4, nullable));
             entityType.AddStructuralProperty("Duration_6", EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.Duration, 6, nullable));
-            entityType.AddStructuralProperty("Date", EdmCoreModel.Instance.GetDate(nullable));
+            entityType.AddStructuralProperty("Date", EdmCoreModel.Instance.GetDateOnly(nullable));
             var svcRoot = new Uri("http://host", UriKind.Absolute);
 
             FilterClause tree;
@@ -610,7 +610,7 @@ namespace Microsoft.OData.Tests.UriParser
             Assert.Equal(3, ((IEdmDecimalTypeReference)((SingleValuePropertyAccessNode)unaryNode.Operand).TypeReference).Scale);
 
             // GetAdditionTermporalSignatures: date, duration
-            var dateTypeDefinition = EdmCoreModel.Instance.GetDate(nullable).Definition;
+            var dateTypeDefinition = EdmCoreModel.Instance.GetDateOnly(nullable).Definition;
             tree = new ODataUriParser(model, svcRoot, new Uri("http://host/Set?$filter=Date add Duration_6 ne 2016-08-18", UriKind.Absolute)).ParseUri().Filter;
             binaryNode = (BinaryOperatorNode)((BinaryOperatorNode)tree.Expression).Left;
             Assert.True(binaryNode.Left is SingleValuePropertyAccessNode);
@@ -629,7 +629,7 @@ namespace Microsoft.OData.Tests.UriParser
             entityType.AddStructuralProperty("Decimal_6_3_B", EdmCoreModel.Instance.GetDecimal(6, 3, nullable));
             entityType.AddStructuralProperty("Decimal_5_4", EdmCoreModel.Instance.GetDecimal(5, 4, nullable));
             entityType.AddStructuralProperty("Duration_6", EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.Duration, 6, nullable));
-            entityType.AddStructuralProperty("Date", EdmCoreModel.Instance.GetDate(nullable));
+            entityType.AddStructuralProperty("Date", EdmCoreModel.Instance.GetDateOnly(nullable));
             var svcRoot = new Uri("http://host", UriKind.Absolute);
 
             OrderByClause tree;
@@ -683,7 +683,7 @@ namespace Microsoft.OData.Tests.UriParser
             Assert.Equal(3, ((IEdmDecimalTypeReference)((SingleValuePropertyAccessNode)unaryNode.Operand).TypeReference).Scale);
 
             // GetAdditionTermporalSignatures: date, duration
-            var dateTypeDefinition = EdmCoreModel.Instance.GetDate(nullable).Definition;
+            var dateTypeDefinition = EdmCoreModel.Instance.GetDateOnly(nullable).Definition;
             tree = new ODataUriParser(model, svcRoot, new Uri("http://host/Set?$orderby=Date add Duration_6", UriKind.Absolute)).ParseUri().OrderBy;
             binaryNode = (BinaryOperatorNode)tree.Expression;
             Assert.True(binaryNode.Left is SingleValuePropertyAccessNode);
@@ -728,7 +728,7 @@ namespace Microsoft.OData.Tests.UriParser
             entityType.AddStructuralProperty("Decimal_6_3_B", EdmCoreModel.Instance.GetDecimal(6, 3, nullable));
             entityType.AddStructuralProperty("Decimal_5_4", EdmCoreModel.Instance.GetDecimal(5, 4, nullable));
             entityType.AddStructuralProperty("Duration_6", EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.Duration, 6, nullable));
-            entityType.AddStructuralProperty("Date", EdmCoreModel.Instance.GetDate(nullable));
+            entityType.AddStructuralProperty("Date", EdmCoreModel.Instance.GetDateOnly(nullable));
             var svcRoot = new Uri("http://host", UriKind.Absolute);
 
             ODataUriParser parser;
@@ -791,7 +791,7 @@ namespace Microsoft.OData.Tests.UriParser
             Assert.Equal(3, ((IEdmDecimalTypeReference)((SingleValuePropertyAccessNode)unaryNode.Operand).TypeReference).Scale);
 
             // GetAdditionTermporalSignatures: date, duration
-            var dateTypeDefinition = EdmCoreModel.Instance.GetDate(nullable).Definition;
+            var dateTypeDefinition = EdmCoreModel.Instance.GetDateOnly(nullable).Definition;
             parser = new ODataUriParser(model, svcRoot, new Uri("http://host/Set?$filter=Date add Duration_6 ne 2016-08-18", UriKind.Absolute));
             parser.Resolver.TypeFacetsPromotionRules = new CustomTypeFacetsPromotionRules();
             tree = parser.ParseUri().Filter;
@@ -812,7 +812,7 @@ namespace Microsoft.OData.Tests.UriParser
             entityType.AddStructuralProperty("Decimal_6_3_B", EdmCoreModel.Instance.GetDecimal(6, 3, nullable));
             entityType.AddStructuralProperty("Decimal_5_4", EdmCoreModel.Instance.GetDecimal(5, 4, nullable));
             entityType.AddStructuralProperty("Duration_6", EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.Duration, 6, nullable));
-            entityType.AddStructuralProperty("Date", EdmCoreModel.Instance.GetDate(nullable));
+            entityType.AddStructuralProperty("Date", EdmCoreModel.Instance.GetDateOnly(nullable));
             var svcRoot = new Uri("http://host", UriKind.Absolute);
 
             ODataUriParser parser;
@@ -875,7 +875,7 @@ namespace Microsoft.OData.Tests.UriParser
             Assert.Equal(3, ((IEdmDecimalTypeReference)((SingleValuePropertyAccessNode)unaryNode.Operand).TypeReference).Scale);
 
             // GetAdditionTermporalSignatures: date, duration
-            var dateTypeDefinition = EdmCoreModel.Instance.GetDate(nullable).Definition;
+            var dateTypeDefinition = EdmCoreModel.Instance.GetDateOnly(nullable).Definition;
             parser = new ODataUriParser(model, svcRoot, new Uri("http://host/Set?$orderby=Date add Duration_6", UriKind.Absolute));
             parser.Resolver.TypeFacetsPromotionRules = new CustomTypeFacetsPromotionRules();
             tree = parser.ParseUri().OrderBy;

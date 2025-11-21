@@ -165,7 +165,7 @@ namespace Microsoft.OData.Edm.Vocabularies
                 case EdmValueKind.Boolean:
                     return targetType.IsBoolean();
                 case EdmValueKind.Date:
-                    return targetType.IsDate();
+                    return targetType.IsDateOnly();
                 case EdmValueKind.DateTimeOffset:
                     return targetType.IsDateTimeOffset();
                 case EdmValueKind.Decimal:
@@ -185,7 +185,7 @@ namespace Microsoft.OData.Edm.Vocabularies
 
                     break;
                 case EdmValueKind.TimeOfDay:
-                    return targetType.IsTimeOfDay();
+                    return targetType.IsTimeOnly();
                 case EdmValueKind.Floating:
                     return targetType.IsDouble() || (targetType.IsSingle() && FitsInSingle(((IEdmFloatingValue)operand).Value));
                 case EdmValueKind.Integer:

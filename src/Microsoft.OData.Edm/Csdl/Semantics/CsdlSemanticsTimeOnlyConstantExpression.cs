@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="CsdlSemanticsDateConstantExpression.cs" company="Microsoft">
+// <copyright file="CsdlSemanticsTimeOnlyConstantExpression.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -14,19 +14,19 @@ using Microsoft.OData.Edm.Vocabularies;
 namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 {
     /// <summary>
-    /// Provides semantics for a Csdl date constant expression.
+    /// Provides semantics for a Csdl TimeOnly constant expression.
     /// </summary>
-    internal class CsdlSemanticsDateConstantExpression : CsdlSemanticsExpression, IEdmDateConstantExpression, IEdmCheckable
+    internal class CsdlSemanticsTimeOnlyConstantExpression : CsdlSemanticsExpression, IEdmTimeOfDayConstantExpression, IEdmCheckable
     {
         private readonly CsdlConstantExpression expression;
 
-        private readonly Cache<CsdlSemanticsDateConstantExpression, Date> valueCache = new Cache<CsdlSemanticsDateConstantExpression, Date>();
-        private static readonly Func<CsdlSemanticsDateConstantExpression, Date> ComputeValueFunc = (me) => me.ComputeValue();
+        private readonly Cache<CsdlSemanticsTimeOnlyConstantExpression, TimeOnly> valueCache = new Cache<CsdlSemanticsTimeOnlyConstantExpression, TimeOnly>();
+        private static readonly Func<CsdlSemanticsTimeOnlyConstantExpression, TimeOnly> ComputeValueFunc = (me) => me.ComputeValue();
 
-        private readonly Cache<CsdlSemanticsDateConstantExpression, IEnumerable<EdmError>> errorsCache = new Cache<CsdlSemanticsDateConstantExpression, IEnumerable<EdmError>>();
-        private static readonly Func<CsdlSemanticsDateConstantExpression, IEnumerable<EdmError>> ComputeErrorsFunc = (me) => me.ComputeErrors();
+        private readonly Cache<CsdlSemanticsTimeOnlyConstantExpression, IEnumerable<EdmError>> errorsCache = new Cache<CsdlSemanticsTimeOnlyConstantExpression, IEnumerable<EdmError>>();
+        private static readonly Func<CsdlSemanticsTimeOnlyConstantExpression, IEnumerable<EdmError>> ComputeErrorsFunc = (me) => me.ComputeErrors();
 
-        public CsdlSemanticsDateConstantExpression(CsdlConstantExpression expression, CsdlSemanticsSchema schema)
+        public CsdlSemanticsTimeOnlyConstantExpression(CsdlConstantExpression expression, CsdlSemanticsSchema schema)
             : base(schema, expression)
         {
             this.expression = expression;
@@ -37,7 +37,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             get { return this.expression; }
         }
 
-        public Date Value
+        public TimeOnly Value
         {
             get { return this.valueCache.GetValue(this, ComputeValueFunc, null); }
         }
@@ -49,7 +49,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 
         public override EdmExpressionKind ExpressionKind
         {
-            get { return EdmExpressionKind.DateConstant; }
+            get { return EdmExpressionKind.TimeOfDayConstant; }
         }
 
         public EdmValueKind ValueKind
@@ -62,18 +62,18 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             get { return this.errorsCache.GetValue(this, ComputeErrorsFunc, null); }
         }
 
-        private Date ComputeValue()
+        private TimeOnly ComputeValue()
         {
-            Date? value;
-            return EdmValueParser.TryParseDate(this.expression.Value, out value) ? value.Value : Date.MinValue;
+            TimeOnly? value;
+            return EdmValueParser.TryParseTimeOnly(this.expression.Value, out value) ? value.Value : TimeOnly.MinValue;
         }
 
         private IEnumerable<EdmError> ComputeErrors()
         {
-            Date? value;
-            if (!EdmValueParser.TryParseDate(this.expression.Value, out value))
+            TimeOnly? value;
+            if (!EdmValueParser.TryParseTimeOnly(this.expression.Value, out value))
             {
-                return new EdmError[] { new EdmError(this.Location, EdmErrorCode.InvalidDate, Error.Format(SRResources.ValueParser_InvalidDate, this.expression.Value)) };
+                return new EdmError[] { new EdmError(this.Location, EdmErrorCode.InvalidTimeOfDay, Error.Format(SRResources.ValueParser_InvalidTimeOnly, this.expression.Value)) };
             }
             else
             {

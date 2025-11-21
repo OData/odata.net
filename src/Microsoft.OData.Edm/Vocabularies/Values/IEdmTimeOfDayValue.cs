@@ -4,6 +4,8 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
+
 namespace Microsoft.OData.Edm.Vocabularies
 {
     /// <summary>
@@ -14,6 +16,6 @@ namespace Microsoft.OData.Edm.Vocabularies
         /// <summary>
         /// Gets the definition of this value.
         /// </summary>
-        TimeOfDay Value { get; }
+        TimeOnly Value { get; }
     }
 }

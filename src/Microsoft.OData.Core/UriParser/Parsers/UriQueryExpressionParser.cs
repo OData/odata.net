@@ -194,7 +194,7 @@ namespace Microsoft.OData.UriParser
             switch (lexer.CurrentToken.Kind)
             {
                 case ExpressionTokenKind.BooleanLiteral:
-                case ExpressionTokenKind.DateLiteral:
+                case ExpressionTokenKind.DateOnlyLiteral:
                 case ExpressionTokenKind.DecimalLiteral:
                 case ExpressionTokenKind.StringLiteral:
                 case ExpressionTokenKind.Int64Literal:
@@ -207,7 +207,7 @@ namespace Microsoft.OData.UriParser
                 case ExpressionTokenKind.GeometryLiteral:
                 case ExpressionTokenKind.QuotedLiteral:
                 case ExpressionTokenKind.DurationLiteral:
-                case ExpressionTokenKind.TimeOfDayLiteral:
+                case ExpressionTokenKind.TimeOnlyLiteral:
                 case ExpressionTokenKind.DateTimeOffsetLiteral:
                 case ExpressionTokenKind.CustomTypeLiteral:
                     IEdmTypeReference literalEdmTypeReference = lexer.CurrentToken.GetLiteralEdmTypeReference();

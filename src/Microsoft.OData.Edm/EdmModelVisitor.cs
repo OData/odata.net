@@ -250,7 +250,7 @@ namespace Microsoft.OData.Edm
                     this.ProcessStringConstantExpression((IEdmStringConstantExpression)expression);
                     break;
                 case EdmExpressionKind.TimeOfDayConstant:
-                    this.ProcessTimeOfDayConstantExpression((IEdmTimeOfDayConstantExpression)expression);
+                    this.ProcessTimeOnlyConstantExpression((IEdmTimeOfDayConstantExpression)expression);
                     break;
                 case EdmExpressionKind.DurationConstant:
                     this.ProcessDurationConstantExpression((IEdmDurationConstantExpression)expression);
@@ -314,7 +314,7 @@ namespace Microsoft.OData.Edm
                 case EdmExpressionKind.StringConstant:
                     return this.ProcessStringConstantExpressionAsync((IEdmStringConstantExpression)expression);
                 case EdmExpressionKind.TimeOfDayConstant:
-                    return this.ProcessTimeOfDayConstantExpressionAsync((IEdmTimeOfDayConstantExpression)expression);
+                    return this.ProcessTimeOnlyConstantExpressionAsync((IEdmTimeOfDayConstantExpression)expression);
                 case EdmExpressionKind.DurationConstant:
                     return this.ProcessDurationConstantExpressionAsync((IEdmDurationConstantExpression)expression);
                 case EdmExpressionKind.None:
@@ -1396,12 +1396,12 @@ namespace Microsoft.OData.Edm
             return this.ProcessExpressionAsync(expression);
         }
 
-        protected virtual void ProcessTimeOfDayConstantExpression(IEdmTimeOfDayConstantExpression expression)
+        protected virtual void ProcessTimeOnlyConstantExpression(IEdmTimeOfDayConstantExpression expression)
         {
             this.ProcessExpression(expression);
         }
 
-        protected virtual Task ProcessTimeOfDayConstantExpressionAsync(IEdmTimeOfDayConstantExpression expression)
+        protected virtual Task ProcessTimeOnlyConstantExpressionAsync(IEdmTimeOfDayConstantExpression expression)
         {
             return this.ProcessExpressionAsync(expression);
         }

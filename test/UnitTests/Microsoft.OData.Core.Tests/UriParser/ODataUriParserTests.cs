@@ -149,7 +149,7 @@ namespace Microsoft.OData.Tests.UriParser
             EdmModel model = new EdmModel();
 
             EdmEntityType person = new EdmEntityType("NS", "Person");
-            EdmProperty property = person.AddStructuralProperty("MyDates", new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetDate(true))));
+            EdmProperty property = person.AddStructuralProperty("MyDates", new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetDateOnly(true))));
             model.AddElement(person);
             EdmEntityContainer container = new EdmEntityContainer("NS", "Container");
             container.AddEntitySet("People", person);
@@ -157,7 +157,7 @@ namespace Microsoft.OData.Tests.UriParser
 
             string customFunctionName = "NS.UnionDate";
 
-            var argument = EdmCoreModel.GetCollection(EdmCoreModel.Instance.GetDate(/*isNullable*/false));
+            var argument = EdmCoreModel.GetCollection(EdmCoreModel.Instance.GetDateOnly(/*isNullable*/false));
             var existingCustomFunctionSignature = new FunctionSignatureWithReturnType(argument, argument);
             model.AddCustomUriFunction(customFunctionName, existingCustomFunctionSignature);
 

@@ -1295,10 +1295,10 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
                     this.WriteRequiredAttribute(CsdlConstants.Attribute_Duration, ((IEdmDurationConstantExpression)expression).Value, EdmValueWriter.DurationAsXml);
                     break;
                 case EdmExpressionKind.DateConstant:
-                    this.WriteRequiredAttribute(CsdlConstants.Attribute_Date, ((IEdmDateConstantExpression)expression).Value, EdmValueWriter.DateAsXml);
+                    this.WriteRequiredAttribute(CsdlConstants.Attribute_Date, ((IEdmDateConstantExpression)expression).Value, EdmValueWriter.DateOnlyAsXml);
                     break;
                 case EdmExpressionKind.TimeOfDayConstant:
-                    this.WriteRequiredAttribute(CsdlConstants.Attribute_TimeOfDay, ((IEdmTimeOfDayConstantExpression)expression).Value, EdmValueWriter.TimeOfDayAsXml);
+                    this.WriteRequiredAttribute(CsdlConstants.Attribute_TimeOfDay, ((IEdmTimeOfDayConstantExpression)expression).Value, EdmValueWriter.TimeOnlyAsXml);
                     break;
                 default:
                     Debug.Assert(false, "Attempted to inline an expression that was not one of the expected inlineable types.");
@@ -1343,9 +1343,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
                 case EdmExpressionKind.DurationConstant:
                     return this.WriteRequiredAttributeAsync(CsdlConstants.Attribute_Duration, ((IEdmDurationConstantExpression)expression).Value, EdmValueWriter.DurationAsXml);
                 case EdmExpressionKind.DateConstant:
-                    return this.WriteRequiredAttributeAsync(CsdlConstants.Attribute_Date, ((IEdmDateConstantExpression)expression).Value, EdmValueWriter.DateAsXml);
+                    return this.WriteRequiredAttributeAsync(CsdlConstants.Attribute_Date, ((IEdmDateConstantExpression)expression).Value, EdmValueWriter.DateOnlyAsXml);
                 case EdmExpressionKind.TimeOfDayConstant:
-                    return this.WriteRequiredAttributeAsync(CsdlConstants.Attribute_TimeOfDay, ((IEdmTimeOfDayConstantExpression)expression).Value, EdmValueWriter.TimeOfDayAsXml);
+                    return this.WriteRequiredAttributeAsync(CsdlConstants.Attribute_TimeOfDay, ((IEdmTimeOfDayConstantExpression)expression).Value, EdmValueWriter.TimeOnlyAsXml);
                 default:
                     Debug.Assert(false, "Attempted to inline an expression that was not one of the expected inlineable types.");
                     return Task.CompletedTask;
@@ -1605,25 +1605,25 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Writes DateConstantExpression element.
+        /// Writes DateOnlyConstantExpression element.
         /// </summary>
         /// <param name="expression">The Edm Date constant expression.</param>
-        internal override void WriteDateConstantExpressionElement(IEdmDateConstantExpression expression)
+        internal override void WriteDateOnlyConstantExpressionElement(IEdmDateConstantExpression expression)
         {
             this.xmlWriter.WriteStartElement(CsdlConstants.Element_Date);
-            this.xmlWriter.WriteString(EdmValueWriter.DateAsXml(expression.Value));
+            this.xmlWriter.WriteString(EdmValueWriter.DateOnlyAsXml(expression.Value));
             this.WriteEndElement();
         }
 
         /// <summary>
-        /// Asynchronously writes DateConstantExpression element.
+        /// Asynchronously writes DateOnlyConstantExpression element.
         /// </summary>
         /// <param name="expression">The Edm Date constant expression.</param>
         /// <returns>Task represents an asynchronous operation.</returns>
-        internal override async Task WriteDateConstantExpressionElementAsync(IEdmDateConstantExpression expression)
+        internal override async Task WriteDateOnlyConstantExpressionElementAsync(IEdmDateConstantExpression expression)
         {
             await this.xmlWriter.WriteStartElementAsync(null, CsdlConstants.Element_Date, null).ConfigureAwait(false);
-            await this.xmlWriter.WriteStringAsync(EdmValueWriter.DateAsXml(expression.Value)).ConfigureAwait(false);
+            await this.xmlWriter.WriteStringAsync(EdmValueWriter.DateOnlyAsXml(expression.Value)).ConfigureAwait(false);
             await this.WriteEndElementAsync().ConfigureAwait(false);
         }
 
@@ -2019,25 +2019,25 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Writes TimeOfDay Constant Expression element.
+        /// Writes TimeOnly Constant Expression element.
         /// </summary>
         /// <param name="expression">The Edm TimeOfDay constant expression.</param>
-        internal override void WriteTimeOfDayConstantExpressionElement(IEdmTimeOfDayConstantExpression expression)
+        internal override void WriteTimeOnlyConstantExpressionElement(IEdmTimeOfDayConstantExpression expression)
         {
             this.xmlWriter.WriteStartElement(CsdlConstants.Element_TimeOfDay);
-            this.xmlWriter.WriteString(EdmValueWriter.TimeOfDayAsXml(expression.Value));
+            this.xmlWriter.WriteString(EdmValueWriter.TimeOnlyAsXml(expression.Value));
             this.WriteEndElement();
         }
 
         /// <summary>
-        /// Asynchronously writes TimeOfDay Constant Expression element.
+        /// Asynchronously writes TimeOnly Constant Expression element.
         /// </summary>
         /// <param name="expression">The Edm TimeOfDay constant expression.</param>
         /// <returns>Task represents an asynchronous operation.</returns>
-        internal override async Task WriteTimeOfDayConstantExpressionElementAsync(IEdmTimeOfDayConstantExpression expression)
+        internal override async Task WriteTimeOnlyConstantExpressionElementAsync(IEdmTimeOfDayConstantExpression expression)
         {
             await this.xmlWriter.WriteStartElementAsync(null, CsdlConstants.Element_TimeOfDay, null).ConfigureAwait(false);
-            await this.xmlWriter.WriteStringAsync(EdmValueWriter.TimeOfDayAsXml(expression.Value)).ConfigureAwait(false);
+            await this.xmlWriter.WriteStringAsync(EdmValueWriter.TimeOnlyAsXml(expression.Value)).ConfigureAwait(false);
             await this.WriteEndElementAsync().ConfigureAwait(false);
         }
 

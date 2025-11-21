@@ -117,8 +117,8 @@ public class ExtensionMethodsTests : EdmLibTestCaseBase
         Assert.Equal("Edm.Stream", EdmCoreModel.Instance.GetStream(false).FullName());
         Assert.Equal("Edm.String", EdmCoreModel.Instance.GetString(false).FullName());
         Assert.Equal("Edm.Duration", EdmCoreModel.Instance.GetDuration(false).FullName());
-        Assert.Equal("Edm.Date", EdmCoreModel.Instance.GetDate(false).FullName());
-        Assert.Equal("Edm.TimeOfDay", EdmCoreModel.Instance.GetTimeOfDay(false).FullName());
+        Assert.Equal("Edm.Date", EdmCoreModel.Instance.GetDateOnly(false).FullName());
+        Assert.Equal("Edm.TimeOfDay", EdmCoreModel.Instance.GetTimeOnly(false).FullName());
     }
 
     [Fact]
@@ -139,8 +139,8 @@ public class ExtensionMethodsTests : EdmLibTestCaseBase
         Assert.Equal("Stream", EdmCoreModel.Instance.GetStream(false).ShortQualifiedName());
         Assert.Equal("String", EdmCoreModel.Instance.GetString(false).ShortQualifiedName());
         Assert.Equal("Duration", EdmCoreModel.Instance.GetDuration(false).ShortQualifiedName());
-        Assert.Equal("Date", EdmCoreModel.Instance.GetDate(false).ShortQualifiedName());
-        Assert.Equal("TimeOfDay", EdmCoreModel.Instance.GetTimeOfDay(false).ShortQualifiedName());
+        Assert.Equal("Date", EdmCoreModel.Instance.GetDateOnly(false).ShortQualifiedName());
+        Assert.Equal("TimeOfDay", EdmCoreModel.Instance.GetTimeOnly(false).ShortQualifiedName());
     }
 
     [Fact]

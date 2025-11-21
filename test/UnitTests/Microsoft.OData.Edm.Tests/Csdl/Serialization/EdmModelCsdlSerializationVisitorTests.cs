@@ -1556,13 +1556,13 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
         }
 
         [Fact]
-        public void VerifyAnnotationWithDateExpressionWrittenCorrectly()
+        public void VerifyAnnotationWithDateOnlyExpressionWrittenCorrectly()
         {
             // Arrange
             EdmComplexType complexType = new EdmComplexType("NS", "ComplexType");
             EdmTerm term = new EdmTerm("vCard", "birthDay", EdmPrimitiveTypeKind.Date);
 
-            IEdmVocabularyAnnotation annotation = new EdmVocabularyAnnotation(complexType, term, new EdmDateConstant(new Date(2019, 4, 5)));
+            IEdmVocabularyAnnotation annotation = new EdmVocabularyAnnotation(complexType, term, new EdmDateConstant(new DateOnly(2019, 4, 5)));
 
             // Act & Assert for XML
             VisitAndVerifyXml(v => v.VisitVocabularyAnnotation(annotation),
@@ -1713,13 +1713,13 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
         }
 
         [Fact]
-        public void VerifyAnnotationWithTimeOfDayExpressionWrittenCorrectly()
+        public void VerifyAnnotationWithTimeOnlyExpressionWrittenCorrectly()
         {
             // Arrange
             EdmComplexType complexType = new EdmComplexType("NS", "ComplexType");
             EdmTerm term = new EdmTerm("UI", "EndTime", EdmPrimitiveTypeKind.TimeOfDay);
 
-            IEdmVocabularyAnnotation annotation = new EdmVocabularyAnnotation(complexType, term, new EdmTimeOfDayConstant(new TimeOfDay(0, 21, 45, 04)));
+            IEdmVocabularyAnnotation annotation = new EdmVocabularyAnnotation(complexType, term, new EdmTimeOfDayConstant(new TimeOnly(0, 21, 45, 04)));
 
             // Act & Assert for XML
             VisitAndVerifyXml(v => v.VisitVocabularyAnnotation(annotation),

@@ -130,7 +130,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             var entityId = entity.AddStructuralProperty("Id", EdmCoreModel.Instance.GetInt32(false));
             entity.AddKeys(entityId);
             EdmStructuralProperty name1 = entity.AddStructuralProperty("Name", EdmCoreModel.Instance.GetString(false));
-            EdmStructuralProperty timeVer = entity.AddStructuralProperty("UpdatedTime", EdmCoreModel.Instance.GetDate(false));
+            EdmStructuralProperty timeVer = entity.AddStructuralProperty("UpdatedTime", EdmCoreModel.Instance.GetDateOnly(false));
             model.AddElement(entity);
 
             SetComputedAnnotation(model, entityId);  // semantic meaning is V3's 'Identity' for Key property

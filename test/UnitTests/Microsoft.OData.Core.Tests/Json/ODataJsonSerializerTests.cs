@@ -109,13 +109,13 @@ namespace Microsoft.OData.Tests.Json
         }
 
         [Fact]
-        public void WriteTopLevelErrorWithDateInstanceAnnotation()
+        public void WriteTopLevelErrorWithDateOnlyInstanceAnnotation()
         {
             var result = SetupSerializerAndRunTest(serializer =>
             {
                 ODataError error = new ODataError();
                 var instanceAnnotations = new Collection<ODataInstanceAnnotation>();
-                var primitiveValue = new ODataPrimitiveValue(new Date(2014, 8, 8));
+                var primitiveValue = new ODataPrimitiveValue(new DateOnly(2014, 8, 8));
                 ODataInstanceAnnotation annotation = new ODataInstanceAnnotation("sample.primitive", primitiveValue);
                 instanceAnnotations.Add(annotation);
                 error.InstanceAnnotations = instanceAnnotations;
@@ -127,13 +127,13 @@ namespace Microsoft.OData.Tests.Json
         }
 
         [Fact]
-        public void WriteTopLevelErrorWithTimeOfDayInstanceAnnotation()
+        public void WriteTopLevelErrorWithTimeOnlyInstanceAnnotation()
         {
             var result = SetupSerializerAndRunTest(serializer =>
             {
                 ODataError error = new ODataError();
                 var instanceAnnotations = new Collection<ODataInstanceAnnotation>();
-                var primitiveValue = new ODataPrimitiveValue(new TimeOfDay(12, 30, 5, 90));
+                var primitiveValue = new ODataPrimitiveValue(new TimeOnly(12, 30, 5, 90));
                 ODataInstanceAnnotation annotation = new ODataInstanceAnnotation("sample.primitive", primitiveValue);
                 instanceAnnotations.Add(annotation);
                 error.InstanceAnnotations = instanceAnnotations;

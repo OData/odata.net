@@ -34,7 +34,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Fact]
-        public void ParsePath_AliasInFunctionImport_Date()
+        public void ParsePath_AliasInFunctionImport_DateOnly()
         {
             ParseUriAndVerify(
                 new Uri("http://gobbledygook/GetPersonByDate(date=@p1)?@p1=1997-12-12"),
@@ -43,8 +43,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                     oDataPath.LastSegment.ShouldBeOperationImportSegment(
                         HardCodedTestModel.GetFunctionImportForGetPersonByDate())
                         .Parameters.First()
-                        .ShouldHaveParameterAliasNode("date", "@p1", EdmCoreModel.Instance.GetDate(false));
-                    aliasNodes["@p1"].ShouldBeConstantQueryNode(new Date(1997, 12, 12));
+                        .ShouldHaveParameterAliasNode("date", "@p1", EdmCoreModel.Instance.GetDateOnly(false));
+                    aliasNodes["@p1"].ShouldBeConstantQueryNode(new DateOnly(1997, 12, 12));
                 });
         }
 
@@ -59,8 +59,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                         HardCodedTestModel.GetFunctionImportForGetPersonByDTO())
                         .Parameters.First()
                         .ShouldHaveConvertNode("dto", EdmCoreModel.Instance.GetDateTimeOffset(false))
-                        .Source.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetDate(false));
-                    aliasNodes["@p1"].ShouldBeConstantQueryNode(new Date(1997, 12, 12));
+                        .Source.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetDateOnly(false));
+                    aliasNodes["@p1"].ShouldBeConstantQueryNode(new DateOnly(1997, 12, 12));
                 });
         }
 

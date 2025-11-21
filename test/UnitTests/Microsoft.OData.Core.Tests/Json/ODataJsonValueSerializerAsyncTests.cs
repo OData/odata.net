@@ -413,8 +413,8 @@ namespace Microsoft.OData.Tests.Json
         [Fact]
         public async Task WritePrimitiveValueAsync_WritesExpectedValue()
         {
-            var date = new Date(2014, 9, 17);
-            var dateEdmTypeReference = EdmCoreModel.Instance.GetDate(false);
+            var date = new DateOnly(2014, 9, 17);
+            var dateEdmTypeReference = EdmCoreModel.Instance.GetDateOnly(false);
 
             var result = await SetupJsonValueSerializerAndRunTestAsync(
                 (jsonValueSerializer) =>
@@ -429,7 +429,7 @@ namespace Microsoft.OData.Tests.Json
         public async Task WriteDateOnlyValueAsync_WritesExpectedValue()
         {
             var date = new DateOnly(2024, 9, 17);
-            var dateEdmTypeReference = EdmCoreModel.Instance.GetDate(false);
+            var dateEdmTypeReference = EdmCoreModel.Instance.GetDateOnly(false);
 
             var result = await SetupJsonValueSerializerAndRunTestAsync(
                 (jsonValueSerializer) =>
@@ -443,8 +443,8 @@ namespace Microsoft.OData.Tests.Json
         [Fact]
         public async Task WriteTimeOnlyValueAsync_WritesExpectedValue()
         {
-            var timeOnly = new TimeOfDay(14, 9, 17, 2);
-            var dateEdmTypeReference = EdmCoreModel.Instance.GetTimeOfDay(false);
+            var timeOnly = new TimeOnly(14, 9, 17, 2);
+            var dateEdmTypeReference = EdmCoreModel.Instance.GetTimeOnly(false);
 
             var result = await SetupJsonValueSerializerAndRunTestAsync(
                 (jsonValueSerializer) =>

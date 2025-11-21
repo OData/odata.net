@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------------
-// <copyright file="EdmDateAndTimeOfDayTestsController.cs" company=".NET Foundation">
+// <copyright file="DateOnlyAndTimeOnlyTestsController.cs" company=".NET Foundation">
 //      Copyright (c) .NET Foundation and Contributors. All rights reserved.
 //      See License.txt in the project root for license information.
 // </copyright>
@@ -13,9 +13,9 @@ using Microsoft.AspNetCore.OData.Routing.Controllers;
 using Microsoft.OData.E2E.TestCommon.Common.Server.Default;
 using Microsoft.OData.Edm;
 
-namespace Microsoft.OData.E2E.TestCommon.Common.Server.EdmDateAndTimeOfDay
+namespace Microsoft.OData.E2E.TestCommon.Common.Server.DateOnlyAndTimeOnly
 {
-    public class EdmDateAndTimeOfDayTestsController : ODataController
+    public class DateOnlyAndTimeOnlyTestsController : ODataController
     {
         private static DefaultDataSource _dataSource;
 
@@ -115,7 +115,7 @@ namespace Microsoft.OData.E2E.TestCommon.Common.Server.EdmDateAndTimeOfDay
 
         [EnableQuery]
         [HttpGet("odata/Orders({key})/Default.CheckShipDate(date = {date})")]
-        public IActionResult CheckShipDate([FromRoute] int key, Date date)
+        public IActionResult CheckShipDate([FromRoute] int key, DateOnly date)
         {
             var order = _dataSource.Orders.SingleOrDefault(a => a.OrderID == key);
 
@@ -144,7 +144,7 @@ namespace Microsoft.OData.E2E.TestCommon.Common.Server.EdmDateAndTimeOfDay
 
         [EnableQuery]
         [HttpGet("odata/Orders({key})/Default.CheckShipTime(time = {time})")]
-        public IActionResult CheckShipTime([FromRoute] int key, TimeOfDay time)
+        public IActionResult CheckShipTime([FromRoute] int key, TimeOnly time)
         {
             var order = _dataSource.Orders.SingleOrDefault(a => a.OrderID == key);
 
@@ -158,7 +158,7 @@ namespace Microsoft.OData.E2E.TestCommon.Common.Server.EdmDateAndTimeOfDay
 
         [EnableQuery]
         [HttpGet("odata/Calendars({key})")]
-        public IActionResult GetCalendar([FromRoute] Date key)
+        public IActionResult GetCalendar([FromRoute] DateOnly key)
         {
             var calendar = _dataSource.Calendars.SingleOrDefault(a => a.Day == key);
 
@@ -180,8 +180,8 @@ namespace Microsoft.OData.E2E.TestCommon.Common.Server.EdmDateAndTimeOfDay
                 return NotFound();
             }
 
-            order.ShipTime = (TimeOfDay)parameters["time"];
-            order.ShipDate = (Date)parameters["date"];
+            order.ShipTime = (TimeOnly)parameters["time"];
+            order.ShipDate = (DateOnly)parameters["date"];
 
             return Ok(order);
         }
@@ -202,7 +202,7 @@ namespace Microsoft.OData.E2E.TestCommon.Common.Server.EdmDateAndTimeOfDay
             return Ok(updatedOrder);
         }
 
-        [HttpPost("odata/edmdateandtimeofday/Default.ResetDefaultDataSource")]
+        [HttpPost("odata/dateonlyandTimeOnly/Default.ResetDefaultDataSource")]
         public IActionResult ResetDefaultDataSource()
         {
             _dataSource = DefaultDataSource.CreateInstance();

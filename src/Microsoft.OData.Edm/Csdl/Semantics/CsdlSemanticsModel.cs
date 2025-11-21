@@ -431,9 +431,9 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                     case EdmExpressionKind.DurationConstant:
                         return new CsdlSemanticsDurationConstantExpression((CsdlConstantExpression)expression, schema);
                     case EdmExpressionKind.DateConstant:
-                        return new CsdlSemanticsDateConstantExpression((CsdlConstantExpression)expression, schema);
+                        return new CsdlSemanticsDateOnlyConstantExpression((CsdlConstantExpression)expression, schema);
                     case EdmExpressionKind.TimeOfDayConstant:
-                        return new CsdlSemanticsTimeOfDayConstantExpression((CsdlConstantExpression)expression, schema);
+                        return new CsdlSemanticsTimeOnlyConstantExpression((CsdlConstantExpression)expression, schema);
                     case EdmExpressionKind.AnnotationPath:
                         return new CsdlSemanticsAnnotationPathExpression((CsdlAnnotationPathExpression)expression, bindingContext, schema);
                 }

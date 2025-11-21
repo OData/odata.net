@@ -42,8 +42,8 @@ namespace Microsoft.OData.UriParser
                 case ExpressionTokenKind.NullLiteral:
                 case ExpressionTokenKind.SingleLiteral:
                 case ExpressionTokenKind.StringLiteral:
-                case ExpressionTokenKind.TimeOfDayLiteral:
-                case ExpressionTokenKind.DateLiteral:
+                case ExpressionTokenKind.TimeOnlyLiteral:
+                case ExpressionTokenKind.DateOnlyLiteral:
                 case ExpressionTokenKind.DateTimeOffsetLiteral:
                 case ExpressionTokenKind.DurationLiteral:
                 case ExpressionTokenKind.GeographyLiteral:
@@ -148,13 +148,13 @@ namespace Microsoft.OData.UriParser
                 case ExpressionTokenKind.SingleLiteral:
                 case ExpressionTokenKind.GuidLiteral:
                 case ExpressionTokenKind.BinaryLiteral:
-                case ExpressionTokenKind.DateLiteral:
+                case ExpressionTokenKind.DateOnlyLiteral:
                 case ExpressionTokenKind.DateTimeOffsetLiteral:
                 case ExpressionTokenKind.DurationLiteral:
                 case ExpressionTokenKind.GeographyLiteral:
                 case ExpressionTokenKind.GeometryLiteral:
                 case ExpressionTokenKind.QuotedLiteral:
-                case ExpressionTokenKind.TimeOfDayLiteral:
+                case ExpressionTokenKind.TimeOnlyLiteral:
                 case ExpressionTokenKind.CustomTypeLiteral:
                     return ParseTypedLiteral(expressionLexer, model, expressionLexer.CurrentToken.GetLiteralEdmTypeReference());
                 default:

@@ -722,7 +722,6 @@ namespace Microsoft.OData.Tests.Metadata
         [InlineData(typeof(byte))]
         [InlineData(typeof(bool))]
         [InlineData(typeof(float))]
-        [InlineData(typeof(Date))]
         [InlineData(typeof(DateOnly))]
         [InlineData(typeof(DateOnly?))]
         [InlineData(typeof(TimeOnly))]
@@ -745,10 +744,6 @@ namespace Microsoft.OData.Tests.Metadata
         }
 
         [Theory]
-        [InlineData(typeof(Date), EdmPrimitiveTypeKind.Date, false)]
-        [InlineData(typeof(Date?), EdmPrimitiveTypeKind.Date, true)]
-        [InlineData(typeof(TimeOfDay), EdmPrimitiveTypeKind.TimeOfDay, false)]
-        [InlineData(typeof(TimeOfDay?), EdmPrimitiveTypeKind.TimeOfDay, true)]
         [InlineData(typeof(DateOnly), EdmPrimitiveTypeKind.Date, false)]
         [InlineData(typeof(DateOnly?), EdmPrimitiveTypeKind.Date, true)]
         [InlineData(typeof(TimeOnly), EdmPrimitiveTypeKind.TimeOfDay, false)]

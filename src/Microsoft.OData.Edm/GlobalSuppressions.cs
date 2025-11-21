@@ -204,7 +204,6 @@
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Scope = "member", Target = "Microsoft.OData.Edm.EdmCoreModel.#Instance")]
 
 // By design and already public APIs thus cannot be changed.
-[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords", MessageId = "Date", Scope = "type", Target = "Microsoft.OData.Edm.Date")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords", MessageId = "Function", Scope = "member", Target = "Microsoft.OData.Edm.EdmEntityContainer.#AddFunctionImport(Microsoft.OData.Edm.IEdmFunction)")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords", MessageId = "Function", Scope = "member", Target = "Microsoft.OData.Edm.EdmEntityContainer.#AddFunctionImport(System.String,Microsoft.OData.Edm.IEdmFunction)")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords", MessageId = "Function", Scope = "member", Target = "Microsoft.OData.Edm.EdmEntityContainer.#AddFunctionImport(System.String,Microsoft.OData.Edm.IEdmFunction,Microsoft.OData.Edm.IEdmExpression)")]
@@ -218,9 +217,6 @@
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Scope = "member", Target = "Microsoft.OData.Edm.EdmEnumType.#.ctor(System.String,System.String,System.Boolean)")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Scope = "member", Target = "Microsoft.OData.Edm.EdmEnumType.#.ctor(System.String,System.String,Microsoft.OData.Edm.EdmPrimitiveTypeKind,System.Boolean)")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Flags", Scope = "member", Target = "Microsoft.OData.Edm.IEdmEnumType.#IsFlags")]
-
-// By design.
-[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations", Scope = "member", Target = "Microsoft.OData.Edm.TimeOfDay.#op_Implicit(System.TimeSpan):Microsoft.OData.Edm.TimeOfDay")]
 
 // By design.
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes", Scope = "member", Target = "Microsoft.OData.Edm.Vocabularies.EdmValue.#Microsoft.OData.Edm.Vocabularies.IEdmDelayedValue.Value")]

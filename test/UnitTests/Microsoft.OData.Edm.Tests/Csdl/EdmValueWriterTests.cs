@@ -12,27 +12,27 @@ namespace Microsoft.OData.Edm.Tests.Csdl
 {
     public class EdmValueWriterTests
     {
-        #region Date
-        private Date[] validDate = new[]
+        #region DateOnly
+        public static TheoryData<DateOnly> validDate()
         {
-            new Date(), 
-            new Date(1, 1, 1),
-            new Date(2014, 8, 8),
-            new Date(9999, 12 ,31),
-            
-        };
-
-        [Fact]
-        public void DateAsXmlWithValidShouldRoundtripWhenParsed()
-        {
-            foreach (var date in this.validDate)
+            return new TheoryData<DateOnly>
             {
-                Date? parsedDate;
-                var result = EdmValueWriter.DateAsXml(date);
-                Assert.True(EdmValueParser.TryParseDate(result, out parsedDate));
+                new DateOnly(),
+                new DateOnly(1, 1, 1),
+                new DateOnly(2014, 8, 8),
+                new DateOnly(9999, 12 ,31),
+            };
+        }
 
-                Assert.Equal(date, parsedDate);
-            }
+        [Theory]
+        [MemberData(nameof(validDate))]
+        public void DateOnlyAsXmlWithValidShouldRoundtripWhenParsed(DateOnly date)
+        {
+            DateOnly? parsedDate;
+            var result = EdmValueWriter.DateOnlyAsXml(date);
+            Assert.True(EdmValueParser.TryParseDateOnly(result, out parsedDate));
+
+            Assert.Equal(date, parsedDate);
         }
         #endregion
 
@@ -80,28 +80,29 @@ namespace Microsoft.OData.Edm.Tests.Csdl
         }
         #endregion
 
-        #region TimeOfDay
-        private TimeOfDay[] validTime = new[]
+        #region TimeOnly
+        public static TheoryData<TimeOnly> validTime()
         {
-            new TimeOfDay(), 
-            new TimeOfDay(0, 0, 0, 0),
-            new TimeOfDay(23, 59, 59, 999),
-            new TimeOfDay(TimeOfDay.MaxTickValue),
-            new TimeOfDay(TimeOfDay.MinTickValue),
-            new TimeOfDay(5, 30, 5, 30), 
-        };
-
-        [Fact]
-        public void TimeOfDayyAsXmlWithValidShouldRoundtripWhenParsed()
-        {
-            foreach (var time in this.validTime)
+            return new TheoryData<TimeOnly>
             {
-                TimeOfDay? parsedTime;
-                var result = EdmValueWriter.TimeOfDayAsXml(time);
-                Assert.True(EdmValueParser.TryParseTimeOfDay(result, out parsedTime));
+                new TimeOnly(),
+                new TimeOnly(0, 0, 0, 0),
+                new TimeOnly(23, 59, 59, 999),
+                new TimeOnly(TimeOnly.MaxValue.Ticks),
+                new TimeOnly(TimeOnly.MinValue.Ticks),
+                new TimeOnly(5, 30, 5, 30),
+            };
+        }
 
-                Assert.Equal(time, parsedTime);
-            }
+        [Theory]
+        [MemberData(nameof(validTime))]
+        public void TimeOnlyAsXmlWithValidShouldRoundtripWhenParsed(TimeOnly time)
+        {
+            TimeOnly? parsedTime;
+            var result = EdmValueWriter.TimeOnlyAsXml(time);
+            Assert.True(EdmValueParser.TryParseTimeOnly(result, out parsedTime));
+
+            Assert.Equal(time, parsedTime);
         }
         #endregion
     }

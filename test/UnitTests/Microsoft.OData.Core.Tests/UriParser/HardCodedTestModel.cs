@@ -156,10 +156,10 @@ namespace Microsoft.OData.Tests.UriParser
             var FullyQualifiedNamespacePerson_Name = FullyQualifiedNamespacePerson.AddStructuralProperty("Name", EdmCoreModel.Instance.GetString(true));
             var FullyQualifiedNamespacePerson_FirstName = FullyQualifiedNamespacePerson.AddStructuralProperty("FirstName", FullyQualifiedNamespaceNameTypeReference);
             FullyQualifiedNamespacePerson.AddStructuralProperty("Prop.With.Periods", EdmCoreModel.Instance.GetString(true));
-            FullyQualifiedNamespacePerson.AddStructuralProperty("MyDate", EdmCoreModel.Instance.GetDate(false));
-            FullyQualifiedNamespacePerson.AddStructuralProperty("MyDates", new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetDate(true))));
-            FullyQualifiedNamespacePerson.AddStructuralProperty("MyTimeOfDay", EdmCoreModel.Instance.GetTimeOfDay(false));
-            FullyQualifiedNamespacePerson.AddStructuralProperty("MyTimeOfDays", new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetTimeOfDay(true))));
+            FullyQualifiedNamespacePerson.AddStructuralProperty("MyDate", EdmCoreModel.Instance.GetDateOnly(false));
+            FullyQualifiedNamespacePerson.AddStructuralProperty("MyDates", new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetDateOnly(true))));
+            FullyQualifiedNamespacePerson.AddStructuralProperty("MyTimeOfDay", EdmCoreModel.Instance.GetTimeOnly(false));
+            FullyQualifiedNamespacePerson.AddStructuralProperty("MyTimeOfDays", new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetTimeOnly(true))));
             FullyQualifiedNamespacePerson.AddStructuralProperty("Birthdate", EdmCoreModel.Instance.GetDateTimeOffset(false));
             FullyQualifiedNamespacePerson.AddStructuralProperty("FavoriteDate", EdmCoreModel.Instance.GetDateTimeOffset(true));
             FullyQualifiedNamespacePerson.AddStructuralProperty("TimeEmployed", EdmCoreModel.Instance.GetDuration(true));
@@ -426,7 +426,7 @@ namespace Microsoft.OData.Tests.UriParser
             model.AddElement(FullyQualifiedNamespaceGetPersonByDTOFunction);
 
             var FullyQualifiedNamespaceGetPersonByDateFunction = new EdmFunction("Fully.Qualified.Namespace", "GetPersonByDate", FullyQualifiedNamespacePersonTypeReference, false, null, true);
-            FullyQualifiedNamespaceGetPersonByDateFunction.AddParameter("date", EdmCoreModel.Instance.GetDate(false));
+            FullyQualifiedNamespaceGetPersonByDateFunction.AddParameter("date", EdmCoreModel.Instance.GetDateOnly(false));
             model.AddElement(FullyQualifiedNamespaceGetPersonByDateFunction);
 
             var FullyQualifiedNamespaceGetPet1Function = new EdmFunction("Fully.Qualified.Namespace", "GetPet1", FullyQualifiedNamespacePet1TypeReference, false, null, true);

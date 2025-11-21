@@ -4,6 +4,8 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
+
 namespace Microsoft.OData.Edm.Vocabularies
 {
     /// <summary>
@@ -11,13 +13,13 @@ namespace Microsoft.OData.Edm.Vocabularies
     /// </summary>
     public class EdmDateConstant : EdmValue, IEdmDateConstantExpression
     {
-        private readonly Date value;
+        private readonly DateOnly value;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EdmDateConstant"/> class.
         /// </summary>
-        /// <param name="value">Date value represented by this value.</param>
-        public EdmDateConstant(Date value)
+        /// <param name="value">DateOnly value represented by this value.</param>
+        public EdmDateConstant(DateOnly value)
             : this(null, value)
         {
         }
@@ -25,9 +27,9 @@ namespace Microsoft.OData.Edm.Vocabularies
         /// <summary>
         /// Initializes a new instance of the <see cref="EdmDateConstant"/> class.
         /// </summary>
-        /// <param name="type">Type of the Date.</param>
-        /// <param name="value">Date value represented by this value.</param>
-        public EdmDateConstant(IEdmPrimitiveTypeReference type, Date value)
+        /// <param name="type">Type of the DateOnly.</param>
+        /// <param name="value">DateOnly value represented by this value.</param>
+        public EdmDateConstant(IEdmPrimitiveTypeReference type, DateOnly value)
             : base(type)
         {
             this.value = value;
@@ -36,7 +38,7 @@ namespace Microsoft.OData.Edm.Vocabularies
         /// <summary>
         /// Gets the content of this value.
         /// </summary>
-        public Date Value
+        public DateOnly Value
         {
             get { return this.value; }
         }

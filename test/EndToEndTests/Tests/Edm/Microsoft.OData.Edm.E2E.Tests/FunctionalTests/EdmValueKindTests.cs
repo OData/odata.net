@@ -183,12 +183,12 @@ public class EdmValueKindTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void Validate_TimeOfDayConstant_HasCorrectValueKind()
+    public void Validate_TimeOnlyConstant_HasCorrectValueKind()
     {
-        var constant = new EdmTimeOfDayConstant(new TimeOfDay());
+        var constant = new EdmTimeOfDayConstant(new TimeOnly());
         Assert.Equal(EdmValueKind.TimeOfDay, constant.ValueKind);
 
-        var valueKindType = EdmCoreModel.Instance.GetTimeOfDay(true);
+        var valueKindType = EdmCoreModel.Instance.GetTimeOnly(true);
         Assert.Equal(EdmValueKind.TimeOfDay, constant.ValueKind);
 
         var model = this.BuildVocabularyAnnotationModelWithEdmValueKind(valueKindType, constant as IEdmExpression);
@@ -211,7 +211,7 @@ public class EdmValueKindTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void Validate_EvaluationOfTimeOfDayConstant_HasCorrectValueKind()
+    public void Validate_EvaluationOfTimeOnlyConstant_HasCorrectValueKind()
     {
         var csdl = @"
 <Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -240,12 +240,12 @@ public class EdmValueKindTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void Validate_DateConstant_HasCorrectValueKind()
+    public void Validate_DateOnlyConstant_HasCorrectValueKind()
     {
-        var constant = new EdmDateConstant(new Date());
+        var constant = new EdmDateConstant(new DateOnly());
         Assert.Equal(EdmValueKind.Date, constant.ValueKind);
 
-        var valueKindType = EdmCoreModel.Instance.GetDate(true);
+        var valueKindType = EdmCoreModel.Instance.GetDateOnly(true);
         Assert.Equal(EdmValueKind.Date, constant.ValueKind);
 
         var model = this.BuildVocabularyAnnotationModelWithEdmValueKind(valueKindType, constant as IEdmExpression);
@@ -268,7 +268,7 @@ public class EdmValueKindTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void Validate_EvaluationOfDateConstant_HasCorrectValueKind()
+    public void Validate_EvaluationOfDateOnlyConstant_HasCorrectValueKind()
     {
         var csdl = @"
 <Schema Namespace=""DefaultNamespace"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">

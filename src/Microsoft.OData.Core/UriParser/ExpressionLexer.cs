@@ -924,9 +924,9 @@ namespace Microsoft.OData.UriParser
                 // DateTimeOffset, Date and Guids will have '-' in them
                 if (this.ch == '-')
                 {
-                    if (this.TryParseDate(tokenPos))
+                    if (this.TryParseDateOnly(tokenPos))
                     {
-                        return ExpressionTokenKind.DateLiteral;
+                        return ExpressionTokenKind.DateOnlyLiteral;
                     }
                     else if (this.TryParseDateTimeoffset(tokenPos))
                     {
@@ -938,12 +938,12 @@ namespace Microsoft.OData.UriParser
                     }
                 }
 
-                // TimeOfDay will have ":" in them
+                // TimeOnly will have ":" in them
                 if (this.ch == ':')
                 {
-                    if (this.TryParseTimeOfDay(tokenPos))
+                    if (this.TryParseTimeOnly(tokenPos))
                     {
-                        return ExpressionTokenKind.TimeOfDayLiteral;
+                        return ExpressionTokenKind.TimeOnlyLiteral;
                     }
                 }
 
@@ -1067,12 +1067,11 @@ namespace Microsoft.OData.UriParser
             }
         }
 
-        private bool TryParseDate(int tokenPos)
+        private bool TryParseDateOnly(int tokenPos)
         {
             int initialIndex = this.textPos;
             ReadOnlySpan<char> dateStr = ParseLiteral(tokenPos);
-            Date tmpDateValue;
-            if (UriUtils.TryUriStringToDate(dateStr, out tmpDateValue))
+            if (UriUtils.TryUriStringToDateOnly(dateStr, out DateOnly tmpDateValue))
             {
                 return true;
             }
@@ -1085,19 +1084,18 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Tries to parse TimeOfDay from current text
-        /// If it's not TimeOfDay, then this.textPos and this.ch are reset
+        /// Tries to parse TimeOnly from current text
+        /// If it's not TimeOnly, then this.textPos and this.ch are reset
         /// </summary>
         /// <param name="tokenPos">Start index</param>
-        /// <returns>True if the substring that starts from tokenPos is a TimeOfDay, false otherwise</returns>
-        private bool TryParseTimeOfDay(int tokenPos)
+        /// <returns>True if the substring that starts from tokenPos is a TimeOnly, false otherwise</returns>
+        private bool TryParseTimeOnly(int tokenPos)
         {
             int initialIndex = this.textPos;
 
-            ReadOnlySpan<char> timeOfDayStr = ParseLiteral(tokenPos);
+            ReadOnlySpan<char> timeOnlyStr = ParseLiteral(tokenPos);
 
-            TimeOfDay tmpTimeOfDayValue;
-            if (UriUtils.TryUriStringToTimeOfDay(timeOfDayStr, out tmpTimeOfDayValue))
+            if (UriUtils.TryUriStringToTimeOnly(timeOnlyStr, out TimeOnly tmpTimeOnlyValue))
             {
                 return true;
             }

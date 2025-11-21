@@ -242,25 +242,25 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Converts a string to a Date value.
+        /// Converts a string to a DateOnly value.
         /// </summary>
         /// <param name="text">String text to convert.</param>
         /// <param name="targetValue">After invocation, converted value.</param>
         /// <returns>true if the value was converted; false otherwise.</returns>
-        internal static bool TryUriStringToDate(ReadOnlySpan<char> text, out Date targetValue)
+        internal static bool TryUriStringToDateOnly(ReadOnlySpan<char> text, out DateOnly targetValue)
         {
-            return PlatformHelper.TryConvertStringToDate(text, out targetValue);
+            return PlatformHelper.TryConvertStringToDateOnly(text, out targetValue);
         }
 
         /// <summary>
-        /// Converts a string to a TimeOfDay value.
+        /// Converts a string to a TimeOnly value.
         /// </summary>
         /// <param name="text">String text to convert.</param>
         /// <param name="targetValue">After invocation, converted value.</param>
         /// <returns>true if the value was converted; false otherwise.</returns>
-        internal static bool TryUriStringToTimeOfDay(ReadOnlySpan<char> text, out TimeOfDay targetValue)
+        internal static bool TryUriStringToTimeOnly(ReadOnlySpan<char> text, out TimeOnly targetValue)
         {
-            return PlatformHelper.TryConvertStringToTimeOfDay(text, out targetValue);
+            return PlatformHelper.TryConvertStringToTimeOnly(text, out targetValue);
         }
 
         /// <summary>

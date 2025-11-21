@@ -7,6 +7,7 @@
 using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Xml;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Vocabularies;
@@ -62,11 +63,11 @@ namespace Microsoft.OData.Edm.Csdl
                 case EdmValueKind.DateTimeOffset:
                     return DateTimeOffsetAsXml(((IEdmDateTimeOffsetValue)v).Value);
                 case EdmValueKind.Date:
-                    return DateAsXml(((IEdmDateValue)v).Value);
+                    return DateOnlyAsXml(((IEdmDateValue)v).Value);
                 case EdmValueKind.Duration:
                     return DurationAsXml(((IEdmDurationValue)v).Value);
                 case EdmValueKind.TimeOfDay:
-                    return TimeOfDayAsXml(((IEdmTimeOfDayValue)v).Value);
+                    return TimeOnlyAsXml(((IEdmTimeOfDayValue)v).Value);
                 default:
                     throw new NotSupportedException(Error.Format(SRResources.ValueWriter_NonSerializableValue, v.ValueKind));
             }
@@ -194,25 +195,23 @@ namespace Microsoft.OData.Edm.Csdl
         }
 
         /// <summary>
-        /// Converts the Date to a String.
+        /// Converts the DateOnly to a String.
         /// </summary>
-        /// <param name="d">The <see cref="Microsoft.OData.Edm.Date"/> to be converted</param>
-        /// <returns>A System.String representation of the supplied <see cref="Microsoft.OData.Edm.Date"/>.</returns>
-        internal static string DateAsXml(Date d)
+        /// <param name="d">The <see cref="DateOnly"/> to be converted</param>
+        /// <returns>A System.String representation of the supplied <see cref="DateOnly"/>.</returns>
+        internal static string DateOnlyAsXml(DateOnly d)
         {
-            var value = d.ToString();
-            return value;
+            return d.ToODataString();
         }
 
         /// <summary>
-        /// Converts the TimeOfDay to a String.
+        /// Converts the TimeOnly to a String.
         /// </summary>
-        /// <param name="time">The <see cref="Microsoft.OData.Edm.TimeOfDay"/> to be converted</param>
-        /// <returns>A System.String representation of the supplied <see cref="Microsoft.OData.Edm.TimeOfDay"/>.</returns>
-        internal static string TimeOfDayAsXml(TimeOfDay time)
+        /// <param name="time">The <see cref="TimeOnly"/> to be converted</param>
+        /// <returns>A System.String representation of the supplied <see cref="TimeOnly"/>.</returns>
+        internal static string TimeOnlyAsXml(TimeOnly time)
         {
-            var value = time.ToString();
-            return value;
+            return time.ToODataString();
         }
 
         /// <summary>

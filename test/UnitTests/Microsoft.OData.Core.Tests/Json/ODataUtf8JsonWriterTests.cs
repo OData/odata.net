@@ -278,13 +278,13 @@ namespace Microsoft.OData.Tests.Json
         [Fact]
         public void WritePrimitiveValueDate()
         {
-            this.VerifyWritePrimitiveValue(new Date(2014, 12, 31), "\"2014-12-31\"");
+            this.VerifyWritePrimitiveValue(new DateOnly(2014, 12, 31), "\"2014-12-31\"");
         }
 
         [Fact]
         public void WritePrimitiveValueTimeOfDay()
         {
-            this.VerifyWritePrimitiveValue(new TimeOfDay(12, 30, 5, 10), "\"12:30:05.0100000\"");
+            this.VerifyWritePrimitiveValue(new TimeOnly(12, 30, 5, 10), "\"12:30:05.0100000\"");
         }
 
         private void VerifyWritePrimitiveValue<T>(T parameter, string expected)
@@ -1305,8 +1305,8 @@ namespace Microsoft.OData.Tests.Json
             await writer.WriteValueAsync((sbyte)-7);
             await writer.WriteValueAsync("test");
             await writer.WriteValueAsync((byte[])null);
-            await writer.WriteValueAsync(new Date(2022, 12, 31));
-            await writer.WriteValueAsync(new TimeOfDay(12, 30, 5, 10));
+            await writer.WriteValueAsync(new DateOnly(2022, 12, 31));
+            await writer.WriteValueAsync(new TimeOnly(12, 30, 5, 10));
             await writer.EndArrayScopeAsync();
             await writer.FlushAsync();
 

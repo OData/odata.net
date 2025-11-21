@@ -115,8 +115,8 @@ namespace Microsoft.OData.UriParser
             new FunctionSignature(new[] { EdmCoreModel.Instance.GetBoolean(true),  EdmCoreModel.Instance.GetBoolean(true)  }, null),
             new FunctionSignature(new[] { EdmCoreModel.Instance.GetGuid(false),    EdmCoreModel.Instance.GetGuid(false)    }, null),
             new FunctionSignature(new[] { EdmCoreModel.Instance.GetGuid(true),     EdmCoreModel.Instance.GetGuid(true)     }, null),
-            new FunctionSignature(new[] { EdmCoreModel.Instance.GetDate(false),    EdmCoreModel.Instance.GetDate(false)    }, null),
-            new FunctionSignature(new[] { EdmCoreModel.Instance.GetDate(true),     EdmCoreModel.Instance.GetDate(true)     }, null),
+            new FunctionSignature(new[] { EdmCoreModel.Instance.GetDateOnly(false),    EdmCoreModel.Instance.GetDateOnly(false)    }, null),
+            new FunctionSignature(new[] { EdmCoreModel.Instance.GetDateOnly(true),     EdmCoreModel.Instance.GetDateOnly(true)     }, null),
             new FunctionSignature(new[] { EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.DateTimeOffset, false), EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.DateTimeOffset, false) },
                                   new FunctionSignature.CreateArgumentTypeWithFacets[]
                                   {
@@ -593,25 +593,25 @@ namespace Microsoft.OData.UriParser
                                                    (int? p, int? s) => { return EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.Duration, p, true); },
                                                    (int? p, int? s) => { return EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.Duration, p, true); }
                                                });
-            yield return new FunctionSignature(new[] { EdmCoreModel.Instance.GetDate(false), EdmCoreModel.Instance.GetDuration(false) },
+            yield return new FunctionSignature(new[] { EdmCoreModel.Instance.GetDateOnly(false), EdmCoreModel.Instance.GetDuration(false) },
                                                new FunctionSignature.CreateArgumentTypeWithFacets[]
                                                {
                                                    null,
                                                    (int? p, int? s) => { return EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.Duration, p, false); }
                                                });
-            yield return new FunctionSignature(new[] { EdmCoreModel.Instance.GetDate(true), EdmCoreModel.Instance.GetDuration(true) },
+            yield return new FunctionSignature(new[] { EdmCoreModel.Instance.GetDateOnly(true), EdmCoreModel.Instance.GetDuration(true) },
                                                new FunctionSignature.CreateArgumentTypeWithFacets[]
                                                {
                                                    null,
                                                    (int? p, int? s) => { return EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.Duration, p, true); }
                                                });
-            yield return new FunctionSignature(new[] { EdmCoreModel.Instance.GetDuration(false), EdmCoreModel.Instance.GetDate(false) },
+            yield return new FunctionSignature(new[] { EdmCoreModel.Instance.GetDuration(false), EdmCoreModel.Instance.GetDateOnly(false) },
                                                new FunctionSignature.CreateArgumentTypeWithFacets[]
                                                {
                                                    (int? p, int? s) => { return EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.Duration, p, false); },
                                                    null
                                                });
-            yield return new FunctionSignature(new[] { EdmCoreModel.Instance.GetDuration(true), EdmCoreModel.Instance.GetDate(true) },
+            yield return new FunctionSignature(new[] { EdmCoreModel.Instance.GetDuration(true), EdmCoreModel.Instance.GetDateOnly(true) },
                                                new FunctionSignature.CreateArgumentTypeWithFacets[]
                                                {
                                                    (int? p, int? s) => { return EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.Duration, p, true); },
@@ -661,20 +661,20 @@ namespace Microsoft.OData.UriParser
                                                    (int? p, int? s) => { return EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.DateTimeOffset, p, true); },
                                                    (int? p, int? s) => { return EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.DateTimeOffset, p, true); }
                                                });
-            yield return new FunctionSignature(new[] { EdmCoreModel.Instance.GetDate(false), EdmCoreModel.Instance.GetDuration(false) },
+            yield return new FunctionSignature(new[] { EdmCoreModel.Instance.GetDateOnly(false), EdmCoreModel.Instance.GetDuration(false) },
                                                new FunctionSignature.CreateArgumentTypeWithFacets[]
                                                {
                                                    null,
                                                    (int? p, int? s) => { return EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.Duration, p, false); }
                                                });
-            yield return new FunctionSignature(new[] { EdmCoreModel.Instance.GetDate(true), EdmCoreModel.Instance.GetDuration(true) },
+            yield return new FunctionSignature(new[] { EdmCoreModel.Instance.GetDateOnly(true), EdmCoreModel.Instance.GetDuration(true) },
                                                new FunctionSignature.CreateArgumentTypeWithFacets[]
                                                {
                                                    null,
                                                    (int? p, int? s) => { return EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.Duration, p, true); }
                                                });
-            yield return new FunctionSignature(new[] { EdmCoreModel.Instance.GetDate(false), EdmCoreModel.Instance.GetDate(false) }, null);
-            yield return new FunctionSignature(new[] { EdmCoreModel.Instance.GetDate(true),  EdmCoreModel.Instance.GetDate(true)  }, null);
+            yield return new FunctionSignature(new[] { EdmCoreModel.Instance.GetDateOnly(false), EdmCoreModel.Instance.GetDateOnly(false) }, null);
+            yield return new FunctionSignature(new[] { EdmCoreModel.Instance.GetDateOnly(true),  EdmCoreModel.Instance.GetDateOnly(true)  }, null);
         }
 
         /// <summary>
@@ -1006,13 +1006,13 @@ namespace Microsoft.OData.UriParser
                 return 1;
             }
 
-            // If both DateTimeOffset and Date are possible, then DateTimeOffset is preferred, as to keep previous behaviour.
-            if (IsDateTimeOffset(targetA) && IsDate(targetB))
+            // If both DateTimeOffset and DateOnly are possible, then DateTimeOffset is preferred, as to keep previous behaviour.
+            if (IsDateTimeOffset(targetA) && IsDateOnly(targetB))
             {
                 return 1;
             }
 
-            if (IsDateTimeOffset(targetB) && IsDate(targetA))
+            if (IsDateTimeOffset(targetB) && IsDateOnly(targetA))
             {
                 return -1;
             }
@@ -1107,10 +1107,10 @@ namespace Microsoft.OData.UriParser
             return GetNumericTypeKind(typeReference) == NumericTypeKind.UnsignedIntegral;
         }
 
-        /// <summary>Checks if the specified type is a Date or nullable Date type.</summary>
+        /// <summary>Checks if the specified type is a DateOnly or nullable DateOnly type.</summary>
         /// <param name="typeReference">Type to check.</param>
-        /// <returns>true if <paramref name="typeReference"/> is either Date or nullable Date type; false otherwise.</returns>
-        private static bool IsDate(IEdmTypeReference typeReference)
+        /// <returns>true if <paramref name="typeReference"/> is either DateOnly or nullable DateOnly type; false otherwise.</returns>
+        private static bool IsDateOnly(IEdmTypeReference typeReference)
         {
             IEdmPrimitiveTypeReference primitiveTypeReference = typeReference.AsPrimitiveOrNull();
             if (primitiveTypeReference != null)

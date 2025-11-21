@@ -1,3 +1,7 @@
+Microsoft.OData.Json.IJsonWriter.WriteValue(System.DateOnly value) -> void
+Microsoft.OData.Json.IJsonWriter.WriteValue(System.TimeOnly value) -> void
+Microsoft.OData.Json.IJsonWriter.WriteValueAsync(System.DateOnly value) -> System.Threading.Tasks.Task
+Microsoft.OData.Json.IJsonWriter.WriteValueAsync(System.TimeOnly value) -> System.Threading.Tasks.Task
 Microsoft.OData.ODataLibraryCompatibility.ReadUntypedNumericAsDecimal = 32 -> Microsoft.OData.ODataLibraryCompatibility
 Microsoft.OData.ODataLibraryCompatibility.Version7 = Microsoft.OData.ODataLibraryCompatibility.UseLegacyVariableCasing | Microsoft.OData.ODataLibraryCompatibility.UseLegacyODataInnerErrorSerialization | Microsoft.OData.ODataLibraryCompatibility.ReadUntypedNumericAsDecimal -> Microsoft.OData.ODataLibraryCompatibility
 Microsoft.OData.ODataLibraryCompatibility.Version8 = 32 -> Microsoft.OData.ODataLibraryCompatibility

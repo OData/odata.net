@@ -454,11 +454,11 @@ namespace Microsoft.OData.E2E.TestCommon.Common.Server.Default
             {
                 new Calendar()
                 {
-                    Day = new Date(2015, 11, 11)
+                    Day = new DateOnly(2015, 11, 11)
                 },
                 new Calendar()
                 {
-                    Day = new Date(2015, 11, 12)
+                    Day = new DateOnly(2015, 11, 12)
                 }
             };
 
@@ -472,8 +472,8 @@ namespace Microsoft.OData.E2E.TestCommon.Common.Server.Default
                     OrderDate = new DateTimeOffset(2011, 5, 29, 14, 21, 12, TimeSpan.FromHours(-8)),
                     ShelfLife = new TimeSpan(1),
                     OrderShelfLifes = [new TimeSpan(1)],
-                    ShipDate = new Date(2014, 8, 31),
-                    ShipTime = new TimeOfDay(12, 40, 5, 50),
+                    ShipDate = new DateOnly(2014, 8, 31),
+                    ShipTime = new TimeOnly(12, 40, 5, 50),
                 },
                 new Order()
                 {
@@ -483,8 +483,8 @@ namespace Microsoft.OData.E2E.TestCommon.Common.Server.Default
                     OrderDate = new DateTimeOffset(2011, 3, 4, 16, 3, 57, TimeSpan.FromHours(-8)),
                     ShelfLife = new TimeSpan(1),
                     OrderShelfLifes = [new TimeSpan(1)],
-                    ShipDate = new Date(2014, 8, 12),
-                    ShipTime = new TimeOfDay(6, 5, 30, 0),
+                    ShipDate = new DateOnly(2014, 8, 12),
+                    ShipTime = new TimeOnly(6, 5, 30, 0),
                 },
                 new Order()
                 {
@@ -494,8 +494,8 @@ namespace Microsoft.OData.E2E.TestCommon.Common.Server.Default
                     OrderDate = new DateTimeOffset(2011, 1, 4, 18, 3, 57, TimeSpan.FromHours(-8)),
                     ShelfLife = new TimeSpan(1),
                     OrderShelfLifes = [new TimeSpan(1)],
-                    ShipDate = new Date(2014, 6, 12),
-                    ShipTime = new TimeOfDay(4, 5, 30, 0),
+                    ShipDate = new DateOnly(2014, 6, 12),
+                    ShipTime = new TimeOnly(4, 5, 30, 0),
                 }
             };
 

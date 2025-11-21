@@ -579,8 +579,8 @@ namespace Microsoft.OData.Core.E2E.Tests.DeltaTests
                     new ODataProperty { Name = "OrderID", Value = 8 },
                     new ODataProperty { Name = "OrderShelfLifes", Value = new ODataCollectionValue { Items = new object[] { new TimeSpan(1) } } },
                     new ODataProperty { Name = "ShelfLife", Value = new TimeSpan(1) },
-                    new ODataProperty { Name = "ShipDate", Value = new Date(2014, 8, 12) },
-                    new ODataProperty { Name = "ShipTime", Value = new TimeOfDay(6, 5, 30, 0) },
+                    new ODataProperty { Name = "ShipDate", Value = new DateOnly(2014, 8, 12) },
+                    new ODataProperty { Name = "ShipTime", Value = new TimeOnly(6, 5, 30, 0) },
                 }
             };
 

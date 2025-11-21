@@ -268,8 +268,8 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         internal abstract void WriteNullConstantExpressionElement(IEdmNullExpression expression);
         internal abstract Task WriteNullConstantExpressionElementAsync(IEdmNullExpression expression);
 
-        internal abstract void WriteDateConstantExpressionElement(IEdmDateConstantExpression expression);
-        internal abstract Task WriteDateConstantExpressionElementAsync(IEdmDateConstantExpression expression);
+        internal abstract void WriteDateOnlyConstantExpressionElement(IEdmDateConstantExpression expression);
+        internal abstract Task WriteDateOnlyConstantExpressionElementAsync(IEdmDateConstantExpression expression);
 
         internal virtual void WriteSchemaOperationsHeader<T>(KeyValuePair<string, IList<T>> operations)
         {
@@ -365,8 +365,8 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         internal abstract void WriteLabeledExpressionReferenceExpression(IEdmLabeledExpressionReferenceExpression labeledExpressionReference);
         internal abstract Task WriteLabeledExpressionReferenceExpressionAsync(IEdmLabeledExpressionReferenceExpression labeledExpressionReference);
 
-        internal abstract void WriteTimeOfDayConstantExpressionElement(IEdmTimeOfDayConstantExpression expression);
-        internal abstract Task WriteTimeOfDayConstantExpressionElementAsync(IEdmTimeOfDayConstantExpression expression);
+        internal abstract void WriteTimeOnlyConstantExpressionElement(IEdmTimeOfDayConstantExpression expression);
+        internal abstract Task WriteTimeOnlyConstantExpressionElementAsync(IEdmTimeOfDayConstantExpression expression);
 
         internal abstract void WriteIsOfExpressionElementHeader(IEdmIsOfExpression expression, bool inlineType);
         internal abstract Task WriteIsOfExpressionElementHeaderAsync(IEdmIsOfExpression expression, bool inlineType);
