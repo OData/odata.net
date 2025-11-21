@@ -188,7 +188,7 @@ public class EdmValueKindTests : EdmLibTestCaseBase
         var constant = new EdmTimeOfDayConstant(new TimeOnly());
         Assert.Equal(EdmValueKind.TimeOfDay, constant.ValueKind);
 
-        var valueKindType = EdmCoreModel.Instance.GetTimeOfDay(true);
+        var valueKindType = EdmCoreModel.Instance.GetTimeOnly(true);
         Assert.Equal(EdmValueKind.TimeOfDay, constant.ValueKind);
 
         var model = this.BuildVocabularyAnnotationModelWithEdmValueKind(valueKindType, constant as IEdmExpression);
@@ -245,7 +245,7 @@ public class EdmValueKindTests : EdmLibTestCaseBase
         var constant = new EdmDateConstant(new DateOnly());
         Assert.Equal(EdmValueKind.Date, constant.ValueKind);
 
-        var valueKindType = EdmCoreModel.Instance.GetDate(true);
+        var valueKindType = EdmCoreModel.Instance.GetDateOnly(true);
         Assert.Equal(EdmValueKind.Date, constant.ValueKind);
 
         var model = this.BuildVocabularyAnnotationModelWithEdmValueKind(valueKindType, constant as IEdmExpression);

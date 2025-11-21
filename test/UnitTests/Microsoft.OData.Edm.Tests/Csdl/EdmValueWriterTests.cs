@@ -7,7 +7,6 @@
 using System;
 using Microsoft.OData.Edm.Csdl;
 using Xunit;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Microsoft.OData.Edm.Tests.Csdl
 {
@@ -27,10 +26,10 @@ namespace Microsoft.OData.Edm.Tests.Csdl
 
         [Theory]
         [MemberData(nameof(validDate))]
-        public void DateAsXmlWithValidShouldRoundtripWhenParsed(DateOnly date)
+        public void DateOnlyAsXmlWithValidShouldRoundtripWhenParsed(DateOnly date)
         {
             DateOnly? parsedDate;
-            var result = EdmValueWriter.DateAsXml(date);
+            var result = EdmValueWriter.DateOnlyAsXml(date);
             Assert.True(EdmValueParser.TryParseDateOnly(result, out parsedDate));
 
             Assert.Equal(date, parsedDate);
@@ -97,7 +96,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
 
         [Theory]
         [MemberData(nameof(validTime))]
-        public void TimeOfDayyAsXmlWithValidShouldRoundtripWhenParsed(TimeOnly time)
+        public void TimeOnlyAsXmlWithValidShouldRoundtripWhenParsed(TimeOnly time)
         {
             TimeOnly? parsedTime;
             var result = EdmValueWriter.TimeOnlyAsXml(time);

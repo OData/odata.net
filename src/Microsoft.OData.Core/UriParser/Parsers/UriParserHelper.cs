@@ -243,7 +243,7 @@ namespace Microsoft.OData.UriParser
                 case ExpressionTokenKind.BinaryLiteral:
                     return EdmCoreModel.Instance.GetBinary(true);
                 case ExpressionTokenKind.DateOnlyLiteral:
-                    return EdmCoreModel.Instance.GetDate(false);
+                    return EdmCoreModel.Instance.GetDateOnly(false);
                 case ExpressionTokenKind.DateTimeOffsetLiteral:
                     return EdmCoreModel.Instance.GetDateTimeOffset(false);
                 case ExpressionTokenKind.DurationLiteral:
@@ -255,7 +255,7 @@ namespace Microsoft.OData.UriParser
                 case ExpressionTokenKind.QuotedLiteral:
                     return EdmCoreModel.Instance.GetString(true);
                 case ExpressionTokenKind.TimeOnlyLiteral:
-                    return EdmCoreModel.Instance.GetTimeOfDay(false);
+                    return EdmCoreModel.Instance.GetTimeOnly(false);
             }
 
             return null;

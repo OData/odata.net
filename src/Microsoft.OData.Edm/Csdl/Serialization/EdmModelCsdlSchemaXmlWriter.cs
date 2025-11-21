@@ -1295,7 +1295,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
                     this.WriteRequiredAttribute(CsdlConstants.Attribute_Duration, ((IEdmDurationConstantExpression)expression).Value, EdmValueWriter.DurationAsXml);
                     break;
                 case EdmExpressionKind.DateConstant:
-                    this.WriteRequiredAttribute(CsdlConstants.Attribute_Date, ((IEdmDateConstantExpression)expression).Value, EdmValueWriter.DateAsXml);
+                    this.WriteRequiredAttribute(CsdlConstants.Attribute_Date, ((IEdmDateConstantExpression)expression).Value, EdmValueWriter.DateOnlyAsXml);
                     break;
                 case EdmExpressionKind.TimeOfDayConstant:
                     this.WriteRequiredAttribute(CsdlConstants.Attribute_TimeOfDay, ((IEdmTimeOfDayConstantExpression)expression).Value, EdmValueWriter.TimeOnlyAsXml);
@@ -1343,7 +1343,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
                 case EdmExpressionKind.DurationConstant:
                     return this.WriteRequiredAttributeAsync(CsdlConstants.Attribute_Duration, ((IEdmDurationConstantExpression)expression).Value, EdmValueWriter.DurationAsXml);
                 case EdmExpressionKind.DateConstant:
-                    return this.WriteRequiredAttributeAsync(CsdlConstants.Attribute_Date, ((IEdmDateConstantExpression)expression).Value, EdmValueWriter.DateAsXml);
+                    return this.WriteRequiredAttributeAsync(CsdlConstants.Attribute_Date, ((IEdmDateConstantExpression)expression).Value, EdmValueWriter.DateOnlyAsXml);
                 case EdmExpressionKind.TimeOfDayConstant:
                     return this.WriteRequiredAttributeAsync(CsdlConstants.Attribute_TimeOfDay, ((IEdmTimeOfDayConstantExpression)expression).Value, EdmValueWriter.TimeOnlyAsXml);
                 default:
@@ -1611,7 +1611,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         internal override void WriteDateOnlyConstantExpressionElement(IEdmDateConstantExpression expression)
         {
             this.xmlWriter.WriteStartElement(CsdlConstants.Element_Date);
-            this.xmlWriter.WriteString(EdmValueWriter.DateAsXml(expression.Value));
+            this.xmlWriter.WriteString(EdmValueWriter.DateOnlyAsXml(expression.Value));
             this.WriteEndElement();
         }
 
@@ -1623,7 +1623,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         internal override async Task WriteDateOnlyConstantExpressionElementAsync(IEdmDateConstantExpression expression)
         {
             await this.xmlWriter.WriteStartElementAsync(null, CsdlConstants.Element_Date, null).ConfigureAwait(false);
-            await this.xmlWriter.WriteStringAsync(EdmValueWriter.DateAsXml(expression.Value)).ConfigureAwait(false);
+            await this.xmlWriter.WriteStringAsync(EdmValueWriter.DateOnlyAsXml(expression.Value)).ConfigureAwait(false);
             await this.WriteEndElementAsync().ConfigureAwait(false);
         }
 

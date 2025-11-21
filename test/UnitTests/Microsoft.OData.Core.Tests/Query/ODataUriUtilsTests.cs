@@ -206,7 +206,7 @@ namespace Microsoft.OData.Tests.Query
         [Fact]
         public void TestDateConvertFromUriLiteral()
         {
-            DateOnly dateValue = (DateOnly)ODataUriUtils.ConvertFromUriLiteral("1997-07-01", ODataVersion.V4, HardCodedTestModel.TestModel, EdmCoreModel.Instance.GetDate(false));
+            DateOnly dateValue = (DateOnly)ODataUriUtils.ConvertFromUriLiteral("1997-07-01", ODataVersion.V4, HardCodedTestModel.TestModel, EdmCoreModel.Instance.GetDateOnly(false));
             Assert.Equal(new DateOnly(1997, 7, 1), dateValue);
 
             DateTimeOffset dtoValue1 = (DateTimeOffset)ODataUriUtils.ConvertFromUriLiteral("1997-07-01", ODataVersion.V4, HardCodedTestModel.TestModel, EdmCoreModel.Instance.GetDateTimeOffset(false));
@@ -261,7 +261,7 @@ namespace Microsoft.OData.Tests.Query
         [Fact]
         public void TestTimeOfDayConvertFromUriLiteral()
         {
-            TimeOnly timeValue1 = (TimeOnly)ODataUriUtils.ConvertFromUriLiteral("12:13:14.015", ODataVersion.V4, HardCodedTestModel.TestModel, EdmCoreModel.Instance.GetTimeOfDay(false));
+            TimeOnly timeValue1 = (TimeOnly)ODataUriUtils.ConvertFromUriLiteral("12:13:14.015", ODataVersion.V4, HardCodedTestModel.TestModel, EdmCoreModel.Instance.GetTimeOnly(false));
             Assert.Equal(new TimeOnly(12, 13, 14, 15), timeValue1);
 
             TimeOnly timeValue2 = (TimeOnly)ODataUriUtils.ConvertFromUriLiteral("12:13:14.015", ODataVersion.V4);

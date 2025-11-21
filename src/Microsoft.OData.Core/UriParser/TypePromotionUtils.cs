@@ -115,8 +115,8 @@ namespace Microsoft.OData.UriParser
             new FunctionSignature(new[] { EdmCoreModel.Instance.GetBoolean(true),  EdmCoreModel.Instance.GetBoolean(true)  }, null),
             new FunctionSignature(new[] { EdmCoreModel.Instance.GetGuid(false),    EdmCoreModel.Instance.GetGuid(false)    }, null),
             new FunctionSignature(new[] { EdmCoreModel.Instance.GetGuid(true),     EdmCoreModel.Instance.GetGuid(true)     }, null),
-            new FunctionSignature(new[] { EdmCoreModel.Instance.GetDate(false),    EdmCoreModel.Instance.GetDate(false)    }, null),
-            new FunctionSignature(new[] { EdmCoreModel.Instance.GetDate(true),     EdmCoreModel.Instance.GetDate(true)     }, null),
+            new FunctionSignature(new[] { EdmCoreModel.Instance.GetDateOnly(false),    EdmCoreModel.Instance.GetDateOnly(false)    }, null),
+            new FunctionSignature(new[] { EdmCoreModel.Instance.GetDateOnly(true),     EdmCoreModel.Instance.GetDateOnly(true)     }, null),
             new FunctionSignature(new[] { EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.DateTimeOffset, false), EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.DateTimeOffset, false) },
                                   new FunctionSignature.CreateArgumentTypeWithFacets[]
                                   {
@@ -593,25 +593,25 @@ namespace Microsoft.OData.UriParser
                                                    (int? p, int? s) => { return EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.Duration, p, true); },
                                                    (int? p, int? s) => { return EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.Duration, p, true); }
                                                });
-            yield return new FunctionSignature(new[] { EdmCoreModel.Instance.GetDate(false), EdmCoreModel.Instance.GetDuration(false) },
+            yield return new FunctionSignature(new[] { EdmCoreModel.Instance.GetDateOnly(false), EdmCoreModel.Instance.GetDuration(false) },
                                                new FunctionSignature.CreateArgumentTypeWithFacets[]
                                                {
                                                    null,
                                                    (int? p, int? s) => { return EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.Duration, p, false); }
                                                });
-            yield return new FunctionSignature(new[] { EdmCoreModel.Instance.GetDate(true), EdmCoreModel.Instance.GetDuration(true) },
+            yield return new FunctionSignature(new[] { EdmCoreModel.Instance.GetDateOnly(true), EdmCoreModel.Instance.GetDuration(true) },
                                                new FunctionSignature.CreateArgumentTypeWithFacets[]
                                                {
                                                    null,
                                                    (int? p, int? s) => { return EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.Duration, p, true); }
                                                });
-            yield return new FunctionSignature(new[] { EdmCoreModel.Instance.GetDuration(false), EdmCoreModel.Instance.GetDate(false) },
+            yield return new FunctionSignature(new[] { EdmCoreModel.Instance.GetDuration(false), EdmCoreModel.Instance.GetDateOnly(false) },
                                                new FunctionSignature.CreateArgumentTypeWithFacets[]
                                                {
                                                    (int? p, int? s) => { return EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.Duration, p, false); },
                                                    null
                                                });
-            yield return new FunctionSignature(new[] { EdmCoreModel.Instance.GetDuration(true), EdmCoreModel.Instance.GetDate(true) },
+            yield return new FunctionSignature(new[] { EdmCoreModel.Instance.GetDuration(true), EdmCoreModel.Instance.GetDateOnly(true) },
                                                new FunctionSignature.CreateArgumentTypeWithFacets[]
                                                {
                                                    (int? p, int? s) => { return EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.Duration, p, true); },
@@ -661,20 +661,20 @@ namespace Microsoft.OData.UriParser
                                                    (int? p, int? s) => { return EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.DateTimeOffset, p, true); },
                                                    (int? p, int? s) => { return EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.DateTimeOffset, p, true); }
                                                });
-            yield return new FunctionSignature(new[] { EdmCoreModel.Instance.GetDate(false), EdmCoreModel.Instance.GetDuration(false) },
+            yield return new FunctionSignature(new[] { EdmCoreModel.Instance.GetDateOnly(false), EdmCoreModel.Instance.GetDuration(false) },
                                                new FunctionSignature.CreateArgumentTypeWithFacets[]
                                                {
                                                    null,
                                                    (int? p, int? s) => { return EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.Duration, p, false); }
                                                });
-            yield return new FunctionSignature(new[] { EdmCoreModel.Instance.GetDate(true), EdmCoreModel.Instance.GetDuration(true) },
+            yield return new FunctionSignature(new[] { EdmCoreModel.Instance.GetDateOnly(true), EdmCoreModel.Instance.GetDuration(true) },
                                                new FunctionSignature.CreateArgumentTypeWithFacets[]
                                                {
                                                    null,
                                                    (int? p, int? s) => { return EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.Duration, p, true); }
                                                });
-            yield return new FunctionSignature(new[] { EdmCoreModel.Instance.GetDate(false), EdmCoreModel.Instance.GetDate(false) }, null);
-            yield return new FunctionSignature(new[] { EdmCoreModel.Instance.GetDate(true),  EdmCoreModel.Instance.GetDate(true)  }, null);
+            yield return new FunctionSignature(new[] { EdmCoreModel.Instance.GetDateOnly(false), EdmCoreModel.Instance.GetDateOnly(false) }, null);
+            yield return new FunctionSignature(new[] { EdmCoreModel.Instance.GetDateOnly(true),  EdmCoreModel.Instance.GetDateOnly(true)  }, null);
         }
 
         /// <summary>

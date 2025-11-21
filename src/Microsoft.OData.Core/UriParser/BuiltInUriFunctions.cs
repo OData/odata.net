@@ -279,13 +279,13 @@ namespace Microsoft.OData.UriParser
             FunctionSignatureWithReturnType[] voidReturnDateTimeOffset = CreateVoidReturnDateTimeOffset();
             FunctionSignatureWithReturnType[] durationReturnDecimal = CreateDurationReturnDecimal();
             FunctionSignatureWithReturnType[] dateReturnInt = CreateDateOnlyReturnInt();
-            FunctionSignatureWithReturnType[] timeOfDayReturnInt = CreateTimeOnlyReturnInt();
-            FunctionSignatureWithReturnType[] timeOfDayReturnDecimal = CreateTimeOnlyReturnDecimal();
+            FunctionSignatureWithReturnType[] timeOnlyReturnInt = CreateTimeOnlyReturnInt();
+            FunctionSignatureWithReturnType[] timeOnlyReturnDecimal = CreateTimeOnlyReturnDecimal();
 
             // Signature array according to function name
             FunctionSignatureWithReturnType[] yearMonthDayFunctionSignatures = dateTimeOffsetReturnInt.Concat(dateReturnInt).ToArray();
-            FunctionSignatureWithReturnType[] hourMinuteSecondFunctionSignatures = dateTimeOffsetOrDurationReturnInt.Concat(timeOfDayReturnInt).ToArray();
-            FunctionSignatureWithReturnType[] fractionalsecondsFunctionSignatures = dateTimeOffsetReturnDecimal.Concat(timeOfDayReturnDecimal).ToArray();
+            FunctionSignatureWithReturnType[] hourMinuteSecondFunctionSignatures = dateTimeOffsetOrDurationReturnInt.Concat(timeOnlyReturnInt).ToArray();
+            FunctionSignatureWithReturnType[] fractionalsecondsFunctionSignatures = dateTimeOffsetReturnDecimal.Concat(timeOnlyReturnDecimal).ToArray();
 
             // int year(DateTimeOffset)
             // int year(DateTimeOffset?)
@@ -410,10 +410,10 @@ namespace Microsoft.OData.UriParser
             return new[]
             {
                 new FunctionSignatureWithReturnType(
-                    EdmCoreModel.Instance.GetDate(false),
+                    EdmCoreModel.Instance.GetDateOnly(false),
                     EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.DateTimeOffset, false)),
                 new FunctionSignatureWithReturnType(
-                    EdmCoreModel.Instance.GetDate(false),
+                    EdmCoreModel.Instance.GetDateOnly(false),
                     EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.DateTimeOffset, true)),
             };
         }
@@ -479,10 +479,10 @@ namespace Microsoft.OData.UriParser
             {
                 new FunctionSignatureWithReturnType(
                     EdmCoreModel.Instance.GetInt32(false),
-                    EdmCoreModel.Instance.GetDate(false)),
+                    EdmCoreModel.Instance.GetDateOnly(false)),
                  new FunctionSignatureWithReturnType(
                      EdmCoreModel.Instance.GetInt32(false),
-                     EdmCoreModel.Instance.GetDate(true)),
+                     EdmCoreModel.Instance.GetDateOnly(true)),
             };
         }
 

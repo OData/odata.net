@@ -888,11 +888,11 @@ namespace Microsoft.OData.Tests.UriParser.Binders
                 EdmCoreModel.Instance.GetInt32(false));
             this.ResetState();
             this.TestUnaryCanonicalFunctionBinding("year",
-                EdmCoreModel.Instance.GetDate(true),
+                EdmCoreModel.Instance.GetDateOnly(true),
                 EdmCoreModel.Instance.GetInt32(false));
             this.ResetState();
             this.TestUnaryCanonicalFunctionBinding("year",
-                EdmCoreModel.Instance.GetDate(false),
+                EdmCoreModel.Instance.GetDateOnly(false),
                 EdmCoreModel.Instance.GetInt32(false));
         }
 
@@ -908,11 +908,11 @@ namespace Microsoft.OData.Tests.UriParser.Binders
                 EdmCoreModel.Instance.GetInt32(false));
             this.ResetState();
             this.TestUnaryCanonicalFunctionBinding("month",
-                EdmCoreModel.Instance.GetDate(true),
+                EdmCoreModel.Instance.GetDateOnly(true),
                 EdmCoreModel.Instance.GetInt32(false));
             this.ResetState();
             this.TestUnaryCanonicalFunctionBinding("month",
-                EdmCoreModel.Instance.GetDate(false),
+                EdmCoreModel.Instance.GetDateOnly(false),
                 EdmCoreModel.Instance.GetInt32(false));
         }
 
@@ -928,11 +928,11 @@ namespace Microsoft.OData.Tests.UriParser.Binders
                 EdmCoreModel.Instance.GetInt32(false));
             this.ResetState();
             this.TestUnaryCanonicalFunctionBinding("day",
-                EdmCoreModel.Instance.GetDate(true),
+                EdmCoreModel.Instance.GetDateOnly(true),
                 EdmCoreModel.Instance.GetInt32(false));
             this.ResetState();
             this.TestUnaryCanonicalFunctionBinding("day",
-                EdmCoreModel.Instance.GetDate(false),
+                EdmCoreModel.Instance.GetDateOnly(false),
                 EdmCoreModel.Instance.GetInt32(false));
         }
 
@@ -956,11 +956,11 @@ namespace Microsoft.OData.Tests.UriParser.Binders
                 EdmCoreModel.Instance.GetInt32(false));
             this.ResetState();
             this.TestUnaryCanonicalFunctionBinding("hour",
-                EdmCoreModel.Instance.GetTimeOfDay(true),
+                EdmCoreModel.Instance.GetTimeOnly(true),
                 EdmCoreModel.Instance.GetInt32(false));
             this.ResetState();
             this.TestUnaryCanonicalFunctionBinding("hour",
-                EdmCoreModel.Instance.GetTimeOfDay(false),
+                EdmCoreModel.Instance.GetTimeOnly(false),
                 EdmCoreModel.Instance.GetInt32(false));
         }
 
@@ -984,11 +984,11 @@ namespace Microsoft.OData.Tests.UriParser.Binders
                 EdmCoreModel.Instance.GetInt32(false));
             this.ResetState();
             this.TestUnaryCanonicalFunctionBinding("minute",
-                EdmCoreModel.Instance.GetTimeOfDay(true),
+                EdmCoreModel.Instance.GetTimeOnly(true),
                 EdmCoreModel.Instance.GetInt32(false));
             this.ResetState();
             this.TestUnaryCanonicalFunctionBinding("minute",
-                EdmCoreModel.Instance.GetTimeOfDay(false),
+                EdmCoreModel.Instance.GetTimeOnly(false),
                 EdmCoreModel.Instance.GetInt32(false));
         }
 
@@ -1012,11 +1012,11 @@ namespace Microsoft.OData.Tests.UriParser.Binders
                 EdmCoreModel.Instance.GetInt32(false));
             this.ResetState();
             this.TestUnaryCanonicalFunctionBinding("second",
-                EdmCoreModel.Instance.GetTimeOfDay(true),
+                EdmCoreModel.Instance.GetTimeOnly(true),
                 EdmCoreModel.Instance.GetInt32(false));
             this.ResetState();
             this.TestUnaryCanonicalFunctionBinding("second",
-                EdmCoreModel.Instance.GetTimeOfDay(false),
+                EdmCoreModel.Instance.GetTimeOnly(false),
                 EdmCoreModel.Instance.GetInt32(false));
         }
 
@@ -1025,11 +1025,11 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         {
             this.TestUnaryCanonicalFunctionBinding("date",
                 EdmCoreModel.Instance.GetDateTimeOffset(true),
-                EdmCoreModel.Instance.GetDate(false));
+                EdmCoreModel.Instance.GetDateOnly(false));
             this.ResetState();
             this.TestUnaryCanonicalFunctionBinding("date",
                 EdmCoreModel.Instance.GetDateTimeOffset(false),
-                EdmCoreModel.Instance.GetDate(false));
+                EdmCoreModel.Instance.GetDateOnly(false));
         }
 
         [Fact]
@@ -1037,11 +1037,11 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         {
             this.TestUnaryCanonicalFunctionBinding("time",
                 EdmCoreModel.Instance.GetDateTimeOffset(true),
-                EdmCoreModel.Instance.GetTimeOfDay(false));
+                EdmCoreModel.Instance.GetTimeOnly(false));
             this.ResetState();
             this.TestUnaryCanonicalFunctionBinding("time",
                 EdmCoreModel.Instance.GetDateTimeOffset(false),
-                EdmCoreModel.Instance.GetTimeOfDay(false));
+                EdmCoreModel.Instance.GetTimeOnly(false));
         }
 
         [Fact]
@@ -1056,11 +1056,11 @@ namespace Microsoft.OData.Tests.UriParser.Binders
                 EdmCoreModel.Instance.GetDecimal(false));
             this.ResetState();
             this.TestUnaryCanonicalFunctionBinding("fractionalseconds",
-                EdmCoreModel.Instance.GetTimeOfDay(true),
+                EdmCoreModel.Instance.GetTimeOnly(true),
                 EdmCoreModel.Instance.GetDecimal(false));
             this.ResetState();
             this.TestUnaryCanonicalFunctionBinding("fractionalseconds",
-                EdmCoreModel.Instance.GetTimeOfDay(false),
+                EdmCoreModel.Instance.GetTimeOnly(false),
                 EdmCoreModel.Instance.GetDecimal(false));
         }
 

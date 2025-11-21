@@ -4076,9 +4076,9 @@ POST http://tempuri.org/Customers HTTP/1.1
             this.superEntityType.AddStructuralProperty("ByteArrayCollectionProperty",
                 new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetBinary(false))));
             this.superEntityType.AddStructuralProperty("DateCollectionProperty",
-                new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetDate(false))));
+                new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetDateOnly(false))));
             this.superEntityType.AddStructuralProperty("TimeOfDayCollectionProperty",
-                new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetTimeOfDay(false))));
+                new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetTimeOnly(false))));
             this.superEntityType.AddStructuralProperty("ColorCollectionProperty",
                 new EdmCollectionTypeReference(new EdmCollectionType(new EdmEnumTypeReference(this.colorEnumType, false))));
             this.superEntityType.AddStructuralProperty("CoordinateCollectionProperty",

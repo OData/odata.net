@@ -2312,13 +2312,13 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             EdmModel model = new EdmModel();
 
             EdmEntityType person = new EdmEntityType("NS", "Person");
-            EdmProperty property = person.AddStructuralProperty("MyDates", new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetDate(true))));
+            EdmProperty property = person.AddStructuralProperty("MyDates", new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetDateOnly(true))));
             model.AddElement(person);
             EdmEntityContainer container = new EdmEntityContainer("NS", "Container");
             EdmEntitySet people = container.AddEntitySet("People", person);
             model.AddElement(container);
 
-            var argument = EdmCoreModel.GetCollection(EdmCoreModel.Instance.GetDate(/*isNullable*/false));
+            var argument = EdmCoreModel.GetCollection(EdmCoreModel.Instance.GetDateOnly(/*isNullable*/false));
             var existingCustomFunctionSignature = new FunctionSignatureWithReturnType(argument, argument);
             model.AddCustomUriFunction(customFunctionName, existingCustomFunctionSignature);
 

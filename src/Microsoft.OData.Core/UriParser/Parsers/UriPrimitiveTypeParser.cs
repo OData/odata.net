@@ -160,10 +160,10 @@ namespace Microsoft.OData.UriParser
                 }
                 else if (targetTypeKind == EdmPrimitiveTypeKind.TimeOfDay)
                 {
-                    TimeOnly timeOfDayValue;
-                    bool result = UriUtils.TryUriStringToTimeOnly(text, out timeOfDayValue);
+                    TimeOnly timeOnlyValue;
+                    bool result = UriUtils.TryUriStringToTimeOnly(text, out timeOnlyValue);
 
-                    targetValue = timeOfDayValue;
+                    targetValue = timeOnlyValue;
                     return result;
                 }
 

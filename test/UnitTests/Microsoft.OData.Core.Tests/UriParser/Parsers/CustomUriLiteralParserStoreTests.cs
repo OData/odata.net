@@ -23,7 +23,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
         private static IEdmTypeReference EdmTString(bool nullable = false) => EdmCoreModel.Instance.GetString(nullable);
         private static IEdmTypeReference EdmTInt32(bool nullable = false) => EdmCoreModel.Instance.GetInt32(nullable);
         private static IEdmTypeReference EdmTBoolean(bool nullable = false) => EdmCoreModel.Instance.GetBoolean(nullable);
-        private static IEdmTypeReference EdmTDate(bool nullable = false) => EdmCoreModel.Instance.GetDate(nullable);
+        private static IEdmTypeReference EdmTDate(bool nullable = false) => EdmCoreModel.Instance.GetDateOnly(nullable);
 
         private sealed class DummyUriLiteralParser : IUriLiteralParser
         {

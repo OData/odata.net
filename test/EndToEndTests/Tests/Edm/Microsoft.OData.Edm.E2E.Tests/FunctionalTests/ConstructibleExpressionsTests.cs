@@ -107,7 +107,7 @@ public class ConstructibleExpressionsTests : EdmLibTestCaseBase
         Assert.Null(e.Type);
         Assert.Equal(new DateOnly(2014, 8, 8), e.Value);
 
-        e = new EdmDateConstant(EdmCoreModel.Instance.GetDate(true), new DateOnly(2014, 8, 8));
+        e = new EdmDateConstant(EdmCoreModel.Instance.GetDateOnly(true), new DateOnly(2014, 8, 8));
         Assert.Equal(EdmPrimitiveTypeKind.Date, e.Type.AsPrimitive().PrimitiveKind());
         Assert.True(e.Type.IsNullable);
         Assert.Equal(new DateOnly(2014, 8, 8), e.Value);
@@ -231,7 +231,7 @@ public class ConstructibleExpressionsTests : EdmLibTestCaseBase
         Assert.Null(e.Type);
         Assert.Equal(new TimeOnly(12, 30, 50, 0), e.Value);
 
-        e = new EdmTimeOfDayConstant(EdmCoreModel.Instance.GetTimeOfDay(true), new TimeOnly(1, 5, 10, 10));
+        e = new EdmTimeOfDayConstant(EdmCoreModel.Instance.GetTimeOnly(true), new TimeOnly(1, 5, 10, 10));
         Assert.Equal(EdmPrimitiveTypeKind.TimeOfDay, e.Type.AsPrimitive().PrimitiveKind());
         Assert.Equal(new TimeOnly(1, 5, 10, 10), e.Value);
 

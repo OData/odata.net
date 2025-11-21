@@ -12,7 +12,6 @@ using System.Threading.Tasks;
 using Microsoft.OData.Core;
 using Microsoft.OData.Json;
 using Xunit;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Microsoft.OData.Tests.Json
 {

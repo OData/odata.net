@@ -153,7 +153,7 @@ namespace Microsoft.OData.Core.E2E.Tests.EdmDateAndTimeOfDayTests
 
             using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, _model))
             {
-                var date = await messageReader.ReadValueAsync(EdmCoreModel.Instance.GetDate(false));
+                var date = await messageReader.ReadValueAsync(EdmCoreModel.Instance.GetDateOnly(false));
                 Assert.Equal(new DateOnly(2014, 8, 31), date);
             }
 
@@ -166,7 +166,7 @@ namespace Microsoft.OData.Core.E2E.Tests.EdmDateAndTimeOfDayTests
 
             using (var messageReader = new ODataMessageReader(responseMessage2, readerSettings, _model))
             {
-                var date = await messageReader.ReadValueAsync(EdmCoreModel.Instance.GetTimeOfDay(false));
+                var date = await messageReader.ReadValueAsync(EdmCoreModel.Instance.GetTimeOnly(false));
                 Assert.Equal(new TimeOnly(12, 40, 5, 50), date);
             }
         }

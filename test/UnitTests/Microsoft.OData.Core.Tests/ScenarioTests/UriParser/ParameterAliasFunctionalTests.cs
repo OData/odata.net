@@ -43,7 +43,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                     oDataPath.LastSegment.ShouldBeOperationImportSegment(
                         HardCodedTestModel.GetFunctionImportForGetPersonByDate())
                         .Parameters.First()
-                        .ShouldHaveParameterAliasNode("date", "@p1", EdmCoreModel.Instance.GetDate(false));
+                        .ShouldHaveParameterAliasNode("date", "@p1", EdmCoreModel.Instance.GetDateOnly(false));
                     aliasNodes["@p1"].ShouldBeConstantQueryNode(new DateOnly(1997, 12, 12));
                 });
         }
@@ -59,7 +59,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                         HardCodedTestModel.GetFunctionImportForGetPersonByDTO())
                         .Parameters.First()
                         .ShouldHaveConvertNode("dto", EdmCoreModel.Instance.GetDateTimeOffset(false))
-                        .Source.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetDate(false));
+                        .Source.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetDateOnly(false));
                     aliasNodes["@p1"].ShouldBeConstantQueryNode(new DateOnly(1997, 12, 12));
                 });
         }

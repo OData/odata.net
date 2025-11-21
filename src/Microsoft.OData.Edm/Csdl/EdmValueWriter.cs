@@ -63,7 +63,7 @@ namespace Microsoft.OData.Edm.Csdl
                 case EdmValueKind.DateTimeOffset:
                     return DateTimeOffsetAsXml(((IEdmDateTimeOffsetValue)v).Value);
                 case EdmValueKind.Date:
-                    return DateAsXml(((IEdmDateValue)v).Value);
+                    return DateOnlyAsXml(((IEdmDateValue)v).Value);
                 case EdmValueKind.Duration:
                     return DurationAsXml(((IEdmDurationValue)v).Value);
                 case EdmValueKind.TimeOfDay:
@@ -199,7 +199,7 @@ namespace Microsoft.OData.Edm.Csdl
         /// </summary>
         /// <param name="d">The <see cref="DateOnly"/> to be converted</param>
         /// <returns>A System.String representation of the supplied <see cref="DateOnly"/>.</returns>
-        internal static string DateAsXml(DateOnly d)
+        internal static string DateOnlyAsXml(DateOnly d)
         {
             return d.ToODataString();
         }

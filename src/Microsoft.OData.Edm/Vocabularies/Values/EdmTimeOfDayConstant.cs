@@ -9,7 +9,7 @@ using System;
 namespace Microsoft.OData.Edm.Vocabularies
 {
     /// <summary>
-    /// Represents an EDM TimeOnly constant.
+    /// Represents an EDM TimeOfDay constant.
     /// </summary>
     public class EdmTimeOfDayConstant : EdmValue, IEdmTimeOfDayConstantExpression
     {

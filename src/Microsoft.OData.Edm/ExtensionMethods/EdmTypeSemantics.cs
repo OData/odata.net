@@ -7,7 +7,6 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using Microsoft.OData.Edm.Validation;
 
 namespace Microsoft.OData.Edm
@@ -245,6 +244,17 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
+        /// Returns true if this reference refers to a DateOnly type.
+        /// </summary>
+        /// <param name="type">Type reference.</param>
+        /// <returns>This reference refers to a DateOnly type.</returns>
+        public static bool IsDateOnly(this IEdmTypeReference type)
+        {
+            EdmUtil.CheckArgumentNull(type, "type");
+            return type.PrimitiveKind() == EdmPrimitiveTypeKind.Date;
+        }
+
+        /// <summary>
         /// Returns true if this reference refers to a DateTimeOffset type.
         /// </summary>
         /// <param name="type">Type reference.</param>
@@ -318,6 +328,17 @@ namespace Microsoft.OData.Edm
         /// <param name="type">Type reference.</param>
         /// <returns>This reference refers to a TimeOnly type.</returns>
         public static bool IsTimeOfDay(this IEdmTypeReference type)
+        {
+            EdmUtil.CheckArgumentNull(type, "type");
+            return type.PrimitiveKind() == EdmPrimitiveTypeKind.TimeOfDay;
+        }
+
+        /// <summary>
+        /// Returns true if this reference refers to a TimeOnly type.
+        /// </summary>
+        /// <param name="type">Type reference.</param>
+        /// <returns>This reference refers to a TimeOnly type.</returns>
+        public static bool IsTimeOnly(this IEdmTypeReference type)
         {
             EdmUtil.CheckArgumentNull(type, "type");
             return type.PrimitiveKind() == EdmPrimitiveTypeKind.TimeOfDay;

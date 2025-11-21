@@ -10,7 +10,6 @@ using Microsoft.OData.Core;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Json;
 using Microsoft.OData.Tests.Json;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Xunit;
 
 namespace Microsoft.OData.Tests.ScenarioTests.Reader.Json

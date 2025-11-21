@@ -25,7 +25,7 @@ namespace Microsoft.OData.Core.Tests.UriParser
 
         private static IEdmTypeReference EdmTInt32 => EdmCoreModel.Instance.GetInt32(false);
         private static IEdmTypeReference EdmTString => EdmCoreModel.Instance.GetString(false);
-        private static IEdmTypeReference EdmTDate => EdmCoreModel.Instance.GetDate(false);
+        private static IEdmTypeReference EdmTDate => EdmCoreModel.Instance.GetDateOnly(false);
 
         private static IEdmModel NewModel() => new EdmModel();
 

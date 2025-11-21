@@ -453,7 +453,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 HardCodedTestModel.TestModel.AddCustomUriFunction(customFunctionName, existingCustomFunctionSignature);
 
                 FunctionSignatureWithReturnType existingCustomFunctionSignatureTwo =
-                    new FunctionSignatureWithReturnType(EdmCoreModel.Instance.GetBoolean(false), EdmCoreModel.Instance.GetDate(false));
+                    new FunctionSignatureWithReturnType(EdmCoreModel.Instance.GetBoolean(false), EdmCoreModel.Instance.GetDateOnly(false));
                 HardCodedTestModel.TestModel.AddCustomUriFunction(customFunctionName, existingCustomFunctionSignatureTwo);
 
                 // Validate that the two overloads as

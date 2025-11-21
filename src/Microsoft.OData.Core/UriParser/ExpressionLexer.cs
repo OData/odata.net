@@ -1093,9 +1093,9 @@ namespace Microsoft.OData.UriParser
         {
             int initialIndex = this.textPos;
 
-            ReadOnlySpan<char> timeOfDayStr = ParseLiteral(tokenPos);
+            ReadOnlySpan<char> timeOnlyStr = ParseLiteral(tokenPos);
 
-            if (UriUtils.TryUriStringToTimeOnly(timeOfDayStr, out TimeOnly tmpTimeOfDayValue))
+            if (UriUtils.TryUriStringToTimeOnly(timeOnlyStr, out TimeOnly tmpTimeOnlyValue))
             {
                 return true;
             }

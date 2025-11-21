@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="CsdlSemanticsTimeOfDayConstantExpression.cs" company="Microsoft">
+// <copyright file="CsdlSemanticsTimeOnlyConstantExpression.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -16,17 +16,17 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
     /// <summary>
     /// Provides semantics for a Csdl TimeOnly constant expression.
     /// </summary>
-    internal class CsdlSemanticsTimeOfDayConstantExpression : CsdlSemanticsExpression, IEdmTimeOfDayConstantExpression, IEdmCheckable
+    internal class CsdlSemanticsTimeOnlyConstantExpression : CsdlSemanticsExpression, IEdmTimeOfDayConstantExpression, IEdmCheckable
     {
         private readonly CsdlConstantExpression expression;
 
-        private readonly Cache<CsdlSemanticsTimeOfDayConstantExpression, TimeOnly> valueCache = new Cache<CsdlSemanticsTimeOfDayConstantExpression, TimeOnly>();
-        private static readonly Func<CsdlSemanticsTimeOfDayConstantExpression, TimeOnly> ComputeValueFunc = (me) => me.ComputeValue();
+        private readonly Cache<CsdlSemanticsTimeOnlyConstantExpression, TimeOnly> valueCache = new Cache<CsdlSemanticsTimeOnlyConstantExpression, TimeOnly>();
+        private static readonly Func<CsdlSemanticsTimeOnlyConstantExpression, TimeOnly> ComputeValueFunc = (me) => me.ComputeValue();
 
-        private readonly Cache<CsdlSemanticsTimeOfDayConstantExpression, IEnumerable<EdmError>> errorsCache = new Cache<CsdlSemanticsTimeOfDayConstantExpression, IEnumerable<EdmError>>();
-        private static readonly Func<CsdlSemanticsTimeOfDayConstantExpression, IEnumerable<EdmError>> ComputeErrorsFunc = (me) => me.ComputeErrors();
+        private readonly Cache<CsdlSemanticsTimeOnlyConstantExpression, IEnumerable<EdmError>> errorsCache = new Cache<CsdlSemanticsTimeOnlyConstantExpression, IEnumerable<EdmError>>();
+        private static readonly Func<CsdlSemanticsTimeOnlyConstantExpression, IEnumerable<EdmError>> ComputeErrorsFunc = (me) => me.ComputeErrors();
 
-        public CsdlSemanticsTimeOfDayConstantExpression(CsdlConstantExpression expression, CsdlSemanticsSchema schema)
+        public CsdlSemanticsTimeOnlyConstantExpression(CsdlConstantExpression expression, CsdlSemanticsSchema schema)
             : base(schema, expression)
         {
             this.expression = expression;

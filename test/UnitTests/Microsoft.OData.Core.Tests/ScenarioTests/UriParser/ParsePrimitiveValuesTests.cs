@@ -19,7 +19,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void DateShouldParseCorrectly()
         {
             DateOnly realResult;
-            Assert.True(TryParse("2012-07-28", EdmCoreModel.Instance.GetDate(false), out realResult));
+            Assert.True(TryParse("2012-07-28", EdmCoreModel.Instance.GetDateOnly(false), out realResult));
             Assert.Equal(realResult, new DateOnly(2012, 7, 28));
         }
 
@@ -27,7 +27,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void TimeOfDayShouldParseCorrectly()
         {
             TimeOnly realResult;
-            Assert.True(TryParse("19:30:5.005", EdmCoreModel.Instance.GetTimeOfDay(false), out realResult));
+            Assert.True(TryParse("19:30:5.005", EdmCoreModel.Instance.GetTimeOnly(false), out realResult));
             Assert.Equal(realResult, new TimeOnly(19, 30, 5, 5));
         }
 
