@@ -201,7 +201,7 @@ public class EdmToClrConversionTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void Convert_DateValuesToClrType_Successfully()
+    public void Convert_DateOnlyValuesToClrType_Successfully()
     {
         EdmToClrConverter c = new EdmToClrConverter();
         DateOnly date = new DateOnly(2014, 8, 8);
@@ -213,7 +213,7 @@ public class EdmToClrConversionTests : EdmLibTestCaseBase
     }
 
     [Fact]
-    public void Convert_TimeOfDayValuesToClrType_Successfully()
+    public void Convert_TimeOnlyValuesToClrType_Successfully()
     {
         EdmToClrConverter c = new EdmToClrConverter();
         TimeOnly time = new TimeOnly(12, 5, 30, 900);

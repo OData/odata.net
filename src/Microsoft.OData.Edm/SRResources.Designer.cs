@@ -2600,9 +2600,9 @@ namespace Microsoft.OData.Edm {
         /// <summary>
         ///   Looks up a localized string similar to The value &apos;{0}&apos; is not a valid date value..
         /// </summary>
-        internal static string ValueParser_InvalidDate {
+        internal static string ValueParser_InvalidDateOnly {
             get {
-                return ResourceManager.GetString("ValueParser_InvalidDate", resourceCulture);
+                return ResourceManager.GetString("ValueParser_InvalidDateOnly", resourceCulture);
             }
         }
         
@@ -2708,9 +2708,9 @@ namespace Microsoft.OData.Edm {
         /// <summary>
         ///   Looks up a localized string similar to The value &apos;{0}&apos; is not a valid TimeOnly value..
         /// </summary>
-        internal static string ValueParser_InvalidTimeOfDay {
+        internal static string ValueParser_InvalidTimeOnly {
             get {
-                return ResourceManager.GetString("ValueParser_InvalidTimeOfDay", resourceCulture);
+                return ResourceManager.GetString("ValueParser_InvalidTimeOnly", resourceCulture);
             }
         }
         

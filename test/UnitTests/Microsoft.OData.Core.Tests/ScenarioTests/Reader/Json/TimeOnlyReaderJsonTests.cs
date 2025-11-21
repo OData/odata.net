@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="DateReaderJsonTests.cs" company="Microsoft">
+// <copyright file="TimeOnlyReaderJsonTests.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -14,36 +14,40 @@ using Xunit;
 
 namespace Microsoft.OData.Tests.ScenarioTests.Reader.Json
 {
-    public class DateReaderJsonTests
+    public class TimeOnlyReaderJsonTests
     {
         [Theory]
-        [InlineData("\"2012-04-13\"", 2012, 4, 13)]
-        [InlineData("\"0001-01-01\"", 1, 1, 1)]
-        [InlineData("\"9999-12-31\"", 9999, 12, 31)]
-        public void ValidDateReaderTest(string payload, int year, int month, int day)
+        [InlineData("\"01:20:03.900\"", 1, 20, 3, 900)]
+        [InlineData("\"00:00:00.000\"", 0, 0, 0, 0)]
+        [InlineData("\"23:59:59.999\"", 23, 59, 59, 999)]
+        [InlineData("\"1:20:3.900\"", 1, 20, 3, 900)]
+        [InlineData("\"01:20:03.009\"", 1, 20, 3, 9)]
+        [InlineData("\"01:20:03.09\"", 1, 20, 3, 90)]
+        [InlineData("\"23:59:59\"", 23, 59, 59, 0)]
+        [InlineData("\"23:59\"", 23, 59, 0, 0)]
+        public void ValidTimeOnlyReaderTest(string payload, int hour, int minute, int second, int millisecond)
         {
-            this.VerifyDateValueReader(payload, "Edm.Date", new DateOnly(year, month, day));
+            var timeOnly = new TimeOnly(hour, minute, second, millisecond);
+            this.VerifyTimeOnlyValueReader(payload, "Edm.TimeOfDay", timeOnly);
         }
 
         [Theory]
         [InlineData("\"\"", "")]
         [InlineData("\"value\"", "value")]
-        [InlineData("42", "42")]
+        [InlineData("12", "12")]
         [InlineData("true", "True")]
-        [InlineData("\"\\/Date(-0001-01-01)\\/\"", "/Date(-0001-01-01)/")]
-        [InlineData("\"\\/Date(-9999-12-31)\\/\"", "/Date(-9999-12-31)/")]
-        [InlineData("\"\\/Date(2012-04-13T02:43:10.215Z)\\/\"", "/Date(2012-04-13T02:43:10.215Z)/")]
-        [InlineData("\"2/26/2011\"", "2/26/2011")]
-        [InlineData("\"\\/Date(1298678400000)\\/\"", "/Date(1298678400000)/")]
-        [InlineData("\"\\/Date(1286705410000+0060)\\/\"", "/Date(1286705410000+0060)/")]
-        [InlineData("\"7-dui:9M7UG{*'!pu:^8LaV8a9~Pt76Fn*sP*1Tdf\"", "7-dui:9M7UG{*'!pu:^8LaV8a9~Pt76Fn*sP*1Tdf")]
-        public void InvalidDateReaderTest(string payload, string show)
+        [InlineData("\"\\/TimeOnly(12:30:03.000)\\/\"", "/TimeOnly(12:30:03.000)/")]
+        [InlineData("\"\\/TimeOfDay(12:30:03.000)\\/\"", "/TimeOfDay(12:30:03.000)/")]
+        [InlineData("\".920\"", ".920")]
+        [InlineData("\"-12:30:0.920\"", "-12:30:0.920")]
+        [InlineData("\"1.12:30:0.920\"", "1.12:30:0.920")]
+        public void InvalidTimeOnlyReaderTest(string payload, string show)
         {
-            Action action = () => this.VerifyDateValueReader(payload, "Edm.Date", null);
-            action.Throws<ODataException>(Error.Format(SRResources.ReaderValidationUtils_CannotConvertPrimitiveValue, show, "Edm.Date"));
+            Action action = () => this.VerifyTimeOnlyValueReader(payload, "Edm.TimeOfDay", null);
+            action.Throws<ODataException>(Error.Format(SRResources.ReaderValidationUtils_CannotConvertPrimitiveValue, show, "Edm.TimeOfDay"));
         }
 
-        private void VerifyDateValueReader(string payload, string edmTypeName, object expectedResult)
+        private void VerifyTimeOnlyValueReader(string payload, string edmTypeName, object expectedResult)
         {
             IEdmModel model = new EdmModel();
             IEdmPrimitiveTypeReference typeReference = new EdmPrimitiveTypeReference((IEdmPrimitiveType)model.FindType(edmTypeName), true);
@@ -53,14 +57,14 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader.Json
                 IsResponse = true,
                 MediaType = JsonUtils.JsonStreamingMediaType,
                 IsAsync = false,
-                Model = new EdmModel(),
+                Model = model,
             };
 
             object actualValue;
             using (var inputContext = new ODataJsonInputContext(
                 new StringReader(payload), messageInfo, new ODataMessageReaderSettings()))
             {
-                var deserializer = new ODataJsonPropertyAndValueDeserializer(inputContext);
+                ODataJsonPropertyAndValueDeserializer deserializer = new ODataJsonPropertyAndValueDeserializer(inputContext);
                 deserializer.JsonReader.Read();
                 actualValue = deserializer.ReadNonEntityValue(
                     /*payloadTypeName*/ null,
@@ -72,6 +76,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader.Json
                     /*insideResourceValue*/ false,
                     /*propertyName*/ null);
             }
+
             Assert.Equal(expectedResult, actualValue);
         }
     }

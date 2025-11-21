@@ -109,7 +109,7 @@ namespace Microsoft.OData.Tests.Json
         }
 
         [Fact]
-        public void WriteTopLevelErrorWithDateInstanceAnnotation()
+        public void WriteTopLevelErrorWithDateOnlyInstanceAnnotation()
         {
             var result = SetupSerializerAndRunTest(serializer =>
             {
@@ -127,7 +127,7 @@ namespace Microsoft.OData.Tests.Json
         }
 
         [Fact]
-        public void WriteTopLevelErrorWithTimeOfDayInstanceAnnotation()
+        public void WriteTopLevelErrorWithTimeOnlyInstanceAnnotation()
         {
             var result = SetupSerializerAndRunTest(serializer =>
             {

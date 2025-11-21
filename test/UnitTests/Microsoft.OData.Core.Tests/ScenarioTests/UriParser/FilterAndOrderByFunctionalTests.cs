@@ -626,7 +626,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Fact]
-        public void OrderbyDate()
+        public void OrderbyDateOnly()
         {
             var orderByQueryNode = ParseOrderBy("MyDate", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
 
@@ -634,7 +634,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Fact]
-        public void OrderbyTimeOfDay()
+        public void OrderbyTimeOnly()
         {
             var orderByQueryNode = ParseOrderBy("MyTimeOfDay", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
 
@@ -661,7 +661,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Fact]
-        public void FilterWithDate()
+        public void FilterWithDateOnly()
         {
             var filterNode = ParseFilter("MyDate gt 1997-02-04", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
 
@@ -670,7 +670,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Fact]
-        public void FilterWithTimeOfDay()
+        public void FilterWithTimeOnly()
         {
             var filterNode = ParseFilter("MyTimeOfDay gt 23:40:40.900", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
 
@@ -2118,7 +2118,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Fact]
-        public void DateConstantAddDurationShouldWork()
+        public void DateOnlyConstantAddDurationShouldWork()
         {
             FilterClause filter = ParseFilter("TimeEmployed add 2010-06-10 le 2011-06-18+00:00", HardCodedTestModel.TestModel,
                 HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
@@ -2136,7 +2136,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Fact]
-        public void DatePropertyAddDurationShouldWork()
+        public void DateOnlyPropertyAddDurationShouldWork()
         {
             FilterClause filter = ParseFilter("TimeEmployed add MyDate le 2011-06-18+00:00", HardCodedTestModel.TestModel,
                 HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
@@ -2152,7 +2152,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Fact]
-        public void DurationAddDateShouldWork()
+        public void DurationAddDateOnlyShouldWork()
         {
             FilterClause filter = ParseFilter("2010-06-10 add TimeEmployed le 2011-06-18+00:00", HardCodedTestModel.TestModel,
                 HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
@@ -2209,7 +2209,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Fact]
-        public void DateSubDurationShouldWork()
+        public void DateOnlySubDurationShouldWork()
         {
             OrderByClause orderby = ParseOrderBy("MyDate sub duration'PT130S'", HardCodedTestModel.TestModel,
                 HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
@@ -2220,7 +2220,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Fact]
-        public void DateSubDateShouldWork()
+        public void DateOnlySubDateOnlyShouldWork()
         {
             OrderByClause orderby = ParseOrderBy("MyDate sub 2010-06-18", HardCodedTestModel.TestModel,
                 HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
@@ -2300,7 +2300,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Fact]
-        public void FunctionYearWithDateShouldWork()
+        public void FunctionYearWithDateOnlyShouldWork()
         {
             FilterClause filterClause = ParseFilter("year(MyDate) ge year(2010-12-13)", HardCodedTestModel.TestModel,
                 HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
@@ -2312,7 +2312,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Fact]
-        public void FunctionHourWithTimeOfDayShouldWork()
+        public void FunctionHourWithTimeOnlyShouldWork()
         {
             FilterClause filterClause = ParseFilter("hour(MyTimeOfDay) ge hour(19:20:5)", HardCodedTestModel.TestModel,
                 HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
@@ -3074,7 +3074,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var inNode = Assert.IsType<InNode>(filter.Expression);
 
             CollectionConstantNode collectionNode = Assert.IsType<CollectionConstantNode>(inNode.Right);
-            Assert.Equal(1, collectionNode.Collection.Count);
+            Assert.Single(collectionNode.Collection);
 
             ConstantNode constantNode = collectionNode.Collection.First();
             Assert.Equal(string.Empty, constantNode.Value);
@@ -3096,7 +3096,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var inNode = Assert.IsType<InNode>(filter.Expression);
 
             CollectionConstantNode collectionNode = Assert.IsType<CollectionConstantNode>(inNode.Right);
-            Assert.Equal(1, collectionNode.Collection.Count);
+            Assert.Single(collectionNode.Collection);
 
             ConstantNode constantNode = collectionNode.Collection.First();
             Assert.Equal(string.Empty, constantNode.Value);
@@ -3260,7 +3260,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         [Theory]
         [InlineData("(1950-01-02, '',1977-09-16)")]
         [InlineData("(1950-01-02, \"\",1977-09-16)")]
-        public void FilterWithInOperationWithQuotedDateCollectionWithInvalidValuesThrows(string dateCollection)
+        public void FilterWithInOperationWithQuotedDateOnlyCollectionWithInvalidValuesThrows(string dateCollection)
         {
             string filterClause = $"MyDate in {dateCollection}";
 
@@ -3485,7 +3485,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
         
         [Fact]
-        public void FilterWithInOperationWithDateCollection()
+        public void FilterWithInOperationWithDateOnlyCollection()
         {
             FilterClause filter = ParseFilter("MyDate in (1950-01-02, 1977-09-16)",
                 HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
@@ -3499,7 +3499,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
         
         [Fact]
-        public void FilterWithInOperationWithTimeOfDayCollection()
+        public void FilterWithInOperationWithTimeOnlyCollection()
         {
             FilterClause filter = ParseFilter("MyTimeOfDay in (12:00:00, 08:00:01)",
                 HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
@@ -3628,7 +3628,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             var inNode = Assert.IsType<InNode>(filter.Expression);
             CollectionConstantNode collectionNode = Assert.IsType<CollectionConstantNode>(inNode.Right);
-            Assert.Equal(1, collectionNode.Collection.Count);
+            Assert.Single(collectionNode.Collection);
 
             ConstantNode constantNode = collectionNode.Collection.First();
             Assert.Equal(expectedLiteral, constantNode.LiteralText);

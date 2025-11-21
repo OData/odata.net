@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------------
-// <copyright file="EdmDateAndTimeOfDayTests.cs" company=".NET Foundation">
+// <copyright file="DateOnlyAndTimeOnlyTests.cs" company=".NET Foundation">
 //      Copyright (c) .NET Foundation and Contributors. All rights reserved.
 //      See License.txt in the project root for license information.
 // </copyright>
@@ -12,12 +12,12 @@ using Microsoft.OData.E2E.TestCommon;
 using Microsoft.OData.E2E.TestCommon.Common;
 using Microsoft.OData.E2E.TestCommon.Common.Client.Default.Default;
 using Microsoft.OData.E2E.TestCommon.Common.Server.Default;
-using Microsoft.OData.E2E.TestCommon.Common.Server.EdmDateAndTimeOfDay;
+using Microsoft.OData.E2E.TestCommon.Common.Server.DateOnlyAndTimeOnly;
 using Microsoft.OData.Edm;
 
-namespace Microsoft.OData.Core.E2E.Tests.EdmDateAndTimeOfDayTests
+namespace Microsoft.OData.Core.E2E.Tests.DateAndTimeOnlyTests
 {
-    public class EdmDateAndTimeOfDayTests : EndToEndTestBase<EdmDateAndTimeOfDayTests.TestsStartup>
+    public class DateOnlyAndTimeOnlyTests : EndToEndTestBase<DateOnlyAndTimeOnlyTests.TestsStartup>
     {
         private readonly Uri _baseUri;
         private readonly Container _context;
@@ -27,14 +27,14 @@ namespace Microsoft.OData.Core.E2E.Tests.EdmDateAndTimeOfDayTests
         {
             public override void ConfigureServices(IServiceCollection services)
             {
-                services.ConfigureControllers(typeof(EdmDateAndTimeOfDayTestsController), typeof(MetadataController));
+                services.ConfigureControllers(typeof(DateOnlyAndTimeOnlyTestsController), typeof(MetadataController));
 
                 services.AddControllers().AddOData(opt => opt.Count().Filter().Expand().Select().OrderBy().SetMaxTop(null)
                     .AddRouteComponents("odata", DefaultEdmModel.GetEdmModel()));
             }
         }
 
-        public EdmDateAndTimeOfDayTests(TestWebApplicationFactory<TestsStartup> fixture)
+        public DateOnlyAndTimeOnlyTests(TestWebApplicationFactory<TestsStartup> fixture)
             : base(fixture)
         {
             _baseUri = new Uri(Client.BaseAddress, "odata/");
@@ -61,7 +61,7 @@ namespace Microsoft.OData.Core.E2E.Tests.EdmDateAndTimeOfDayTests
         #region Query/Action/Function
         [Theory]
         [MemberData(nameof(MimeTypesData))]
-        public async Task QueryingAnEntityThatContainsDateAndTimeOfDay_WorksCorrectly(string mimeType)
+        public async Task QueryingAnEntityThatContainsDateOnlyAndTimeOnly_WorksCorrectly(string mimeType)
         {
             ODataMessageReaderSettings readerSettings = new() { BaseUri = _baseUri };
 
@@ -87,7 +87,7 @@ namespace Microsoft.OData.Core.E2E.Tests.EdmDateAndTimeOfDayTests
                         }
                     }
 
-                    // Verify Date Property
+                    // Verify DateOnly Property
                     Assert.Equal(new DateOnly(2014, 8, 31), entry.Properties.OfType<ODataProperty>().Single(p => p.Name == "ShipDate").Value);
                     Assert.Equal(new TimeOnly(12, 40, 5, 50), entry.Properties.OfType<ODataProperty>().Single(p => p.Name == "ShipTime").Value);
                     Assert.Equal(ODataReaderState.Completed, reader.State);
@@ -97,7 +97,7 @@ namespace Microsoft.OData.Core.E2E.Tests.EdmDateAndTimeOfDayTests
 
         [Theory]
         [MemberData(nameof(MimeTypesData))]
-        public async Task QueryingTopLevelDateProperies_WorksCorrectly(string mimeType)
+        public async Task QueryingTopLevelDateOnlyProperies_WorksCorrectly(string mimeType)
         {
             ODataMessageReaderSettings readerSettings = new() { BaseUri = _baseUri };
 
@@ -119,7 +119,7 @@ namespace Microsoft.OData.Core.E2E.Tests.EdmDateAndTimeOfDayTests
 
         [Theory]
         [MemberData(nameof(MimeTypesData))]
-        public async Task QueryingTopLevelTimeOfDayProperies_WorksCorrectly(string mimeType)
+        public async Task QueryingTopLevelTimeOnlyProperies_WorksCorrectly(string mimeType)
         {
             ODataMessageReaderSettings readerSettings = new() { BaseUri = _baseUri };
 
@@ -140,7 +140,7 @@ namespace Microsoft.OData.Core.E2E.Tests.EdmDateAndTimeOfDayTests
         }
 
         [Fact]
-        public async Task QueryingRawDateAndTimeOfDayValues_WorkCorrectly()
+        public async Task QueryingRawDateOnlyAndTimeOnlyValues_WorkCorrectly()
         {
             ODataMessageReaderSettings readerSettings = new() { BaseUri = _baseUri };
 
@@ -173,7 +173,7 @@ namespace Microsoft.OData.Core.E2E.Tests.EdmDateAndTimeOfDayTests
 
         [Theory]
         [MemberData(nameof(MimeTypesData))]
-        public async Task QueryingWithDateFilter_WorksCorrectly(string mimeType)
+        public async Task QueryingWithDateOnlyFilter_WorksCorrectly(string mimeType)
         {
             ODataMessageReaderSettings readerSettings = new() { BaseUri = _baseUri };
 
@@ -197,7 +197,7 @@ namespace Microsoft.OData.Core.E2E.Tests.EdmDateAndTimeOfDayTests
                         ODataResource entry = reader.Item as ODataResource;
                         if (entry != null && entry.TypeName.EndsWith("Order"))
                         {
-                            // Verify Date Property
+                            // Verify DateOnly Property
                             Assert.Equal(new DateOnly(2014, 8, 31), entry.Properties.OfType<ODataProperty>().Single(p => p.Name == "ShipDate").Value);
                             Assert.Equal(new TimeOnly(12, 40, 5, 50), entry.Properties.OfType<ODataProperty>().Single(p => p.Name == "ShipTime").Value);
                         }
@@ -235,7 +235,7 @@ namespace Microsoft.OData.Core.E2E.Tests.EdmDateAndTimeOfDayTests
 
                         if (entry != null)
                         {
-                            // Verify Date Property
+                            // Verify DateOnly Property
                             Assert.Equal(new DateOnly(2014, 8, 31), entry.Properties.OfType<ODataProperty>().Single(p => p.Name == "ShipDate").Value);
                             Assert.Equal(new TimeOnly(12, 40, 5, 50), entry.Properties.OfType<ODataProperty>().Single(p => p.Name == "ShipTime").Value);
                         }
@@ -247,7 +247,7 @@ namespace Microsoft.OData.Core.E2E.Tests.EdmDateAndTimeOfDayTests
         }
 
         [Fact]
-        public async Task InvokingAFunctionCorrectly_ReturnDates()
+        public async Task InvokingAFunctionCorrectly_ReturnDateOnly()
         {
             ODataMessageReaderSettings readerSettings = new() { BaseUri = _baseUri };
 
@@ -322,7 +322,7 @@ namespace Microsoft.OData.Core.E2E.Tests.EdmDateAndTimeOfDayTests
 
         [Theory]
         [MemberData(nameof(MimeTypesData))]
-        public async Task QueryingByDateKey_WorksCorrectly(string mimeType)
+        public async Task QueryingByDateOnlyKey_WorksCorrectly(string mimeType)
         {
             ODataMessageReaderSettings readerSettings = new() { BaseUri = _baseUri };
 
@@ -345,7 +345,7 @@ namespace Microsoft.OData.Core.E2E.Tests.EdmDateAndTimeOfDayTests
                     if (reader.State == ODataReaderState.ResourceEnd)
                     {
                         ODataResource entry = reader.Item as ODataResource;
-                        // Verify Date Property
+                        // Verify DateOnly Property
                         Assert.Equal(new DateOnly(2015, 11, 11), entry.Properties.OfType<ODataProperty>().Single(p => p.Name == "Day").Value);
                     }
                 }
@@ -356,7 +356,7 @@ namespace Microsoft.OData.Core.E2E.Tests.EdmDateAndTimeOfDayTests
 
         [Theory]
         [MemberData(nameof(MimeTypesData))]
-        public async Task InvokingAnActionWithDateAndTimeParameters_WorksCorrectly(string mimeType)
+        public async Task InvokingAnActionWithDateOnlyAndTimeOnlyParameters_WorksCorrectly(string mimeType)
         {
             var writerSettings = new ODataMessageWriterSettings
             {
@@ -423,7 +423,7 @@ namespace Microsoft.OData.Core.E2E.Tests.EdmDateAndTimeOfDayTests
 
         private void ResetDefaultDataSource()
         {
-            var actionUri = new Uri(_baseUri + "edmdateandtimeofday/Default.ResetDefaultDataSource", UriKind.Absolute);
+            var actionUri = new Uri(_baseUri + "dateonlyandTimeOnly/Default.ResetDefaultDataSource", UriKind.Absolute);
             _context.Execute(actionUri, "POST");
         }
     }

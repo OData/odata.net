@@ -158,7 +158,7 @@ namespace Microsoft.OData.Edm.Vocabularies
                         return new EdmDateConstant(dt.Value);
                     }
 
-                    throw new FormatException(Error.Format(SRResources.ValueParser_InvalidDate, value));
+                    throw new FormatException(Error.Format(SRResources.ValueParser_InvalidDateOnly, value));
 
                 case EdmPrimitiveTypeKind.DateTimeOffset:
                     if (EdmValueParser.TryParseDateTimeOffset(value, out DateTimeOffset? dto))
@@ -227,7 +227,7 @@ namespace Microsoft.OData.Edm.Vocabularies
                         return new EdmTimeOfDayConstant(tod.Value);
                     }
 
-                    throw new FormatException(Error.Format(SRResources.ValueParser_InvalidTimeOfDay, value));
+                    throw new FormatException(Error.Format(SRResources.ValueParser_InvalidTimeOnly, value));
             }
 
             throw new NotSupportedException(Error.Format(SRResources.EdmVocabularyAnnotations_TermTypeNotSupported, typeReference.FullName()));

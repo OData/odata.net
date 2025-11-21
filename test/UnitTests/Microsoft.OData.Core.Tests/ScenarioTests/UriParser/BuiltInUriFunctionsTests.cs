@@ -32,7 +32,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             FunctionSignatureWithReturnType[] builtInFunctionsSignature;
             BuiltInUriFunctions.TryGetBuiltInFunction("year", out builtInFunctionsSignature);
 
-            Assert.Equal(4, builtInFunctionsSignature.Length); // DateTimeOffset and Date, Nullable and not Nullable
+            Assert.Equal(4, builtInFunctionsSignature.Length); // DateTimeOffset and DateOnly, Nullable and not Nullable
         }
 
         [Fact]
@@ -41,7 +41,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             FunctionSignatureWithReturnType[] builtInFunctionsSignature;
             BuiltInUriFunctions.TryGetBuiltInFunction("month", out builtInFunctionsSignature);
 
-            Assert.Equal(4, builtInFunctionsSignature.Length); // DateTimeOffset and Date, Nullable and not Nullable
+            Assert.Equal(4, builtInFunctionsSignature.Length); // DateTimeOffset and DateOnly, Nullable and not Nullable
         }
 
         [Fact]
@@ -59,7 +59,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             FunctionSignatureWithReturnType[] builtInFunctionsSignature;
             BuiltInUriFunctions.TryGetBuiltInFunction("hour", out builtInFunctionsSignature);
 
-            Assert.Equal(6, builtInFunctionsSignature.Length); // DateTimeOffset, Duration and TimeOfDay, Nullable and not Nullable
+            Assert.Equal(6, builtInFunctionsSignature.Length); // DateTimeOffset, Duration and TimeOnly, Nullable and not Nullable
         }
 
         [Fact]
@@ -68,7 +68,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             FunctionSignatureWithReturnType[] builtInFunctionsSignature;
             BuiltInUriFunctions.TryGetBuiltInFunction("minute", out builtInFunctionsSignature);
 
-            Assert.Equal(6, builtInFunctionsSignature.Length); // DateTimeOffset, Duration and TimeOfDay, Nullable and not Nullable
+            Assert.Equal(6, builtInFunctionsSignature.Length); // DateTimeOffset, Duration and TimeOnly, Nullable and not Nullable
         }
 
         [Fact]
@@ -77,7 +77,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             FunctionSignatureWithReturnType[] builtInFunctionsSignature;
             BuiltInUriFunctions.TryGetBuiltInFunction("second", out builtInFunctionsSignature);
 
-            Assert.Equal(6, builtInFunctionsSignature.Length); // DateTimeOffset, Duration and TimeOfDay, Nullable and not Nullable
+            Assert.Equal(6, builtInFunctionsSignature.Length); // DateTimeOffset, Duration and TimeOnly, Nullable and not Nullable
         }
 
         [Fact]
@@ -86,7 +86,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             FunctionSignatureWithReturnType[] builtInFunctionsSignature;
             BuiltInUriFunctions.TryGetBuiltInFunction("fractionalseconds", out builtInFunctionsSignature);
 
-            Assert.Equal(4, builtInFunctionsSignature.Length); // DateTimeOffset, TimeOfDay, Nullable and not Nullable
+            Assert.Equal(4, builtInFunctionsSignature.Length); // DateTimeOffset, TimeOnly, Nullable and not Nullable
         }
 
         [Fact]

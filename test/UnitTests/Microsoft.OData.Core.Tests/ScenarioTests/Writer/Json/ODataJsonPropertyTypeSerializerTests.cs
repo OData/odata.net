@@ -85,14 +85,14 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.Json
         }
 
         [Fact]
-        public void ShouldWriteODataTypeForPrimitiveTypeDate()
+        public void ShouldWriteODataTypeForPrimitiveTypeDateOnly()
         {
             string result = this.SerializeProperty(new ODataProperty() { Name = "TestProperty", Value = new DateOnly(2014, 8, 8) });
             Assert.Contains("@odata.type\":\"#Date", result);
         }
 
         [Fact]
-        public void ShouldWriteODataTypeForPrimitiveTypeDate_401()
+        public void ShouldWriteODataTypeForPrimitiveTypeDateOnly_401()
         {
             string result = this.SerializeProperty(new ODataProperty() { Name = "TestProperty", Value = new DateOnly(2014, 8, 8) }, ODataVersion.V401);
             Assert.Contains("@type\":\"Date", result);
@@ -232,14 +232,14 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.Json
         }
 
         [Fact]
-        public void ShouldWriteODataTypeForPrimitiveTypeTimeOfDay()
+        public void ShouldWriteODataTypeForPrimitiveTypeTimeOnly()
         {
             string result = this.SerializeProperty(new ODataProperty() { Name = "TestProperty", Value = new TimeOnly(23, 59, 59, 0) });
             Assert.Contains("@odata.type\":\"#TimeOfDay", result);
         }
 
         [Fact]
-        public void ShouldWriteODataTypeForPrimitiveTypeTimeOfDay_401()
+        public void ShouldWriteODataTypeForPrimitiveTypeTimeOnly_401()
         {
             string result = this.SerializeProperty(new ODataProperty() { Name = "TestProperty", Value = new TimeOnly(23, 59, 59, 0) }, ODataVersion.V401);
             Assert.Contains("@type\":\"TimeOfDay", result);

@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------------
-// <copyright file="EdmDateAndTimeOfDayTestsController.cs" company=".NET Foundation">
+// <copyright file="DateOnlyAndTimeOnlyTestsController.cs" company=".NET Foundation">
 //      Copyright (c) .NET Foundation and Contributors. All rights reserved.
 //      See License.txt in the project root for license information.
 // </copyright>
@@ -13,9 +13,9 @@ using Microsoft.AspNetCore.OData.Routing.Controllers;
 using Microsoft.OData.E2E.TestCommon.Common.Server.Default;
 using Microsoft.OData.Edm;
 
-namespace Microsoft.OData.E2E.TestCommon.Common.Server.EdmDateAndTimeOfDay
+namespace Microsoft.OData.E2E.TestCommon.Common.Server.DateOnlyAndTimeOnly
 {
-    public class EdmDateAndTimeOfDayTestsController : ODataController
+    public class DateOnlyAndTimeOnlyTestsController : ODataController
     {
         private static DefaultDataSource _dataSource;
 
@@ -202,7 +202,7 @@ namespace Microsoft.OData.E2E.TestCommon.Common.Server.EdmDateAndTimeOfDay
             return Ok(updatedOrder);
         }
 
-        [HttpPost("odata/edmdateandtimeofday/Default.ResetDefaultDataSource")]
+        [HttpPost("odata/dateonlyandTimeOnly/Default.ResetDefaultDataSource")]
         public IActionResult ResetDefaultDataSource()
         {
             _dataSource = DefaultDataSource.CreateInstance();

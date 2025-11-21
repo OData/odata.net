@@ -270,7 +270,7 @@ namespace Microsoft.OData.Tests.UriParser
         }
 
         [Fact]
-        public void ShouldReturnDateLiteralWhenNoSuffixDateLiteralToken()
+        public void ShouldReturnDateOnlyLiteralWhenNoSuffixDateLiteralToken()
         {
             ExpressionLexer lexer = new ExpressionLexer(this.model, expression: "2014-09-19", moveToFirstToken: false, useSemicolonDelimiter: false);
             object result = lexer.ReadLiteralToken(this.model);
@@ -279,21 +279,21 @@ namespace Microsoft.OData.Tests.UriParser
         }
 
         [Fact]
-        public void ShouldReturnLiteralWhenNoSuffixLiteralTokenTimeOfDay()
+        public void ShouldReturnLiteralWhenNoSuffixLiteralTokenTimeOnly()
         {
             ExpressionLexer lexer = new ExpressionLexer(this.model, expression: "12:30:03.900", moveToFirstToken: false, useSemicolonDelimiter: false);
             object result = lexer.ReadLiteralToken(this.model);
-            var timeOfDay = Assert.IsType<TimeOnly>(result);
-            Assert.Equal(new TimeOnly(12, 30, 3, 900), timeOfDay);
+            var timeOnly = Assert.IsType<TimeOnly>(result);
+            Assert.Equal(new TimeOnly(12, 30, 3, 900), timeOnly);
         }
 
         [Fact]
-        public void ShouldReturnLiteralWhenNoSuffixLiteralTokenShortTimeOfDay()
+        public void ShouldReturnLiteralWhenNoSuffixLiteralTokenShortTimeOnly()
         {
             ExpressionLexer lexer = new ExpressionLexer(this.model, expression: "12:30:03", moveToFirstToken: false, useSemicolonDelimiter: false);
             object result = lexer.ReadLiteralToken(this.model);
-            var timeOfDay = Assert.IsType<TimeOnly>(result);
-            Assert.Equal(new TimeOnly(12, 30, 3, 0), timeOfDay);
+            var timeOnly = Assert.IsType<TimeOnly>(result);
+            Assert.Equal(new TimeOnly(12, 30, 3, 0), timeOnly);
         }
 
         [Fact]

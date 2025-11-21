@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------------
-// <copyright file="EdmDateAndTimeOfDayTests.cs" company=".NET Foundation">
+// <copyright file="DateOnlyAndTimeOnlyTests.cs" company=".NET Foundation">
 //      Copyright (c) .NET Foundation and Contributors. All rights reserved.
 //      See License.txt in the project root for license information.
 // </copyright>
@@ -12,14 +12,14 @@ using Microsoft.OData.E2E.TestCommon;
 using Microsoft.OData.E2E.TestCommon.Common.Client.Default;
 using Microsoft.OData.E2E.TestCommon.Common.Client.Default.Default;
 using Microsoft.OData.E2E.TestCommon.Common.Server.Default;
-using Microsoft.OData.E2E.TestCommon.Common.Server.EdmDateAndTimeOfDay;
+using Microsoft.OData.E2E.TestCommon.Common.Server.DateOnlyAndTimeOnly;
 using Microsoft.OData.Edm;
 using Xunit;
 using ClientDefaultModel = Microsoft.OData.E2E.TestCommon.Common.Client.Default;
 
-namespace Microsoft.OData.Client.E2E.Tests.EdmDateAndTimeOfDayTests
+namespace Microsoft.OData.Client.E2E.Tests.DateOnlyAndTimeOnlyTests
 {
-    public class EdmDateAndTimeOfDayTests : EndToEndTestBase<EdmDateAndTimeOfDayTests.TestsStartup>
+    public class DateOnlyAndTimeOnlyTests : EndToEndTestBase<DateOnlyAndTimeOnlyTests.TestsStartup>
     {
         private readonly Uri _baseUri;
         private readonly Container _context;
@@ -29,14 +29,14 @@ namespace Microsoft.OData.Client.E2E.Tests.EdmDateAndTimeOfDayTests
         {
             public override void ConfigureServices(IServiceCollection services)
             {
-                services.ConfigureControllers(typeof(EdmDateAndTimeOfDayTestsController), typeof(MetadataController));
+                services.ConfigureControllers(typeof(DateOnlyAndTimeOnlyTestsController), typeof(MetadataController));
 
                 services.AddControllers().AddOData(opt => opt.Count().Filter().Expand().Select().OrderBy().SetMaxTop(null)
                     .AddRouteComponents("odata", DefaultEdmModel.GetEdmModel()));
             }
         }
 
-        public EdmDateAndTimeOfDayTests(TestWebApplicationFactory<TestsStartup> fixture)
+        public DateOnlyAndTimeOnlyTests(TestWebApplicationFactory<TestsStartup> fixture)
             : base(fixture)
         {
             _baseUri = new Uri(Client.BaseAddress, "odata/");

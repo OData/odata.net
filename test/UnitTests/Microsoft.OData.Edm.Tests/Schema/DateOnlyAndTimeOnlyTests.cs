@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="DateAndTimeOfDayTests.cs" company="Microsoft">
+// <copyright file="DateOnlyAndTimeOnlyTests.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -12,11 +12,11 @@ using Xunit;
 
 namespace Microsoft.OData.Edm.Tests.Library
 {
-    public class DateAndTimeOfDayTests
+    public class DateOnlyAndTimeOnlyTests
     {
         #region DateOnly
         [Fact]
-        public void TestDateCtor()
+        public void TestDateOnlyCtor()
         {
             Action test = () => new DateOnly(-2013, 8, 12);
 
@@ -25,7 +25,7 @@ namespace Microsoft.OData.Edm.Tests.Library
         }
 
         [Fact]
-        public void TestDateToDateTime()
+        public void TestDateOnlyToDateTime()
         {
             DateOnly date = new DateOnly(2013, 8, 12);
             DateTime dt = date.ToDateTime(TimeOnly.MinValue);
@@ -33,7 +33,7 @@ namespace Microsoft.OData.Edm.Tests.Library
         }
 
         [Fact]
-        public void TestDateTimeToDate()
+        public void TestDateTimeToDateOnly()
         {
             DateTime dateTime = new DateTime(2013, 8, 12);
             DateOnly d = DateOnly.FromDateTime(dateTime);
@@ -41,7 +41,7 @@ namespace Microsoft.OData.Edm.Tests.Library
         }
 
         [Fact]
-        public void TestDateAddYears()
+        public void TestDateOnlyAddYears()
         {
             DateOnly date = new DateOnly(2013, 8, 12);
             DateOnly result = date.AddYears(100);
@@ -49,7 +49,7 @@ namespace Microsoft.OData.Edm.Tests.Library
         }
 
         [Fact]
-        public void TestDateAddYearsInvalidResults()
+        public void TestDateOnlyAddYearsInvalidResults()
         {
             DateOnly date = new DateOnly(2013, 8, 12);
             Action test = () => date.AddYears(-5000);
@@ -59,7 +59,7 @@ namespace Microsoft.OData.Edm.Tests.Library
         }
 
         [Fact]
-        public void TestDateAddYearsInvalidParameters()
+        public void TestDateOnlyAddYearsInvalidParameters()
         {
             DateOnly date = new DateOnly(2013, 8, 12);
             Action test = () => date.AddYears(12000);
@@ -68,7 +68,7 @@ namespace Microsoft.OData.Edm.Tests.Library
         }
 
         [Fact]
-        public void TesDateAddMonths()
+        public void TestDateOnlyAddMonths()
         {
             DateOnly date = new DateOnly(2013, 8, 12);
             DateOnly result = date.AddMonths(1);
@@ -76,7 +76,7 @@ namespace Microsoft.OData.Edm.Tests.Library
         }
 
         [Fact]
-        public void TestDateAddMonthsInvalidResults()
+        public void TestDateOnlyAddMonthsInvalidResults()
         {
             DateOnly date = new DateOnly(1, 1, 1);
             Action test = () => date.AddMonths(-5000);
@@ -85,7 +85,7 @@ namespace Microsoft.OData.Edm.Tests.Library
         }
 
         [Fact]
-        public void TestDateAddMonthsInvalidParameters()
+        public void TestDateOnlyAddMonthsInvalidParameters()
         {
             DateOnly date = new DateOnly(1, 1, 1);
             Action test = () => date.AddMonths(120001);
@@ -94,7 +94,7 @@ namespace Microsoft.OData.Edm.Tests.Library
         }
 
         [Fact]
-        public void TestDateAddDays()
+        public void TestDateOnlyAddDays()
         {
             DateOnly date = new DateOnly(2013, 8, 12);
             DateOnly result = date.AddDays(1);
@@ -102,7 +102,7 @@ namespace Microsoft.OData.Edm.Tests.Library
         }
 
         [Fact]
-        public void TestDateAddDaysInvalidResults()
+        public void TestDateOnlyAddDaysInvalidResults()
         {
             DateOnly date = new DateOnly(1, 1, 1);
             Action test = () => date.AddDays(-2);
@@ -111,7 +111,7 @@ namespace Microsoft.OData.Edm.Tests.Library
         }
 
         [Fact]
-        public void TestDateAddDaysInvalidParameters()
+        public void TestDateOnlyAddDaysInvalidParameters()
         {
             DateOnly date = new DateOnly(1, 1, 1);
             Action test = () => date.AddDays(999999999);
@@ -120,21 +120,21 @@ namespace Microsoft.OData.Edm.Tests.Library
         }
 
         [Fact]
-        public void TestMinDate()
+        public void TestMinDateOnly()
         {
             DateOnly date = DateOnly.MinValue;
             Assert.Equal(new DateOnly(1, 1, 1), date);
         }
 
         [Fact]
-        public void TestMaxDate()
+        public void TestMaxDateOnly()
         {
             DateOnly date = DateOnly.MaxValue;
             Assert.Equal(new DateOnly(9999, 12, 31), date);
         }
 
         [Fact]
-        public void TestNowDate()
+        public void TestNowDateOnly()
         {
             DateOnly date = DateOnly.FromDateTime(DateTime.Now);
             DateTime dt = DateTime.Now;
@@ -145,7 +145,7 @@ namespace Microsoft.OData.Edm.Tests.Library
         [InlineData("2001-01-2", 2001, 1, 2)]
         [InlineData("2001-1-02", 2001, 1, 2)]
         [InlineData("0001-12-13", 1, 12, 13)]
-        public void TestParseDateSuccess(string input, int year, int month, int day)
+        public void TestParseDateOnlySuccess(string input, int year, int month, int day)
         {
             var expected = new DateOnly(year, month, day);
 
@@ -168,7 +168,7 @@ namespace Microsoft.OData.Edm.Tests.Library
         [InlineData("V001-12-13")]
         [InlineData("2001-00-00")]
         [InlineData("2001-00-")]
-        public void TestParseDateFailure(string input)
+        public void TestParseDateOnlyFailure(string input)
         {
             #region Test Parse
             Action test = () => DateOnly.Parse(input, CultureInfo.InvariantCulture);
@@ -185,7 +185,7 @@ namespace Microsoft.OData.Edm.Tests.Library
         }
 
         [Fact]
-        public void TestDateEquals()
+        public void TestDateOnlyEquals()
         {
             var list = new List<Tuple<DateOnly, DateOnly, bool>>()
             {
@@ -205,7 +205,7 @@ namespace Microsoft.OData.Edm.Tests.Library
         }
 
         [Fact]
-        public void TestDateEqualsObject()
+        public void TestDateOnlyEqualsObject()
         {
             var list = new List<Tuple<DateOnly, object, bool>>()
             {
@@ -221,7 +221,7 @@ namespace Microsoft.OData.Edm.Tests.Library
         }
 
         [Fact]
-        public void TestDateCompareTo()
+        public void TestDateOnlyCompareTo()
         {
             var list = new List<Tuple<DateOnly, DateOnly, int>>() 
             {
@@ -246,7 +246,7 @@ namespace Microsoft.OData.Edm.Tests.Library
         }
 
         [Fact]
-        public void TestDateCompareToInvalidTarget()
+        public void TestDateOnlyCompareToInvalidTarget()
         {
             DateOnly date = new DateOnly(1, 1, 1);
             DateTimeOffset now = DateTimeOffset.Now;
@@ -257,7 +257,7 @@ namespace Microsoft.OData.Edm.Tests.Library
         }
 
         [Fact]
-        public void TestDateGetHashCode()
+        public void TestDateOnlyGetHashCode()
         {
             var list = new List<Tuple<DateOnly, DateOnly, bool>>() 
             {
@@ -276,7 +276,7 @@ namespace Microsoft.OData.Edm.Tests.Library
         }
 
         [Fact]
-        public void TestDateToString()
+        public void TestDateOnlyToString()
         {
             var list = new List<Tuple<DateOnly, string>>()
             {
@@ -292,7 +292,7 @@ namespace Microsoft.OData.Edm.Tests.Library
         }
 
         [Fact]
-        public void TestDateOperator()
+        public void TestDateOnlyOperator()
         {
             DateOnly d1 = new DateOnly(2014, 9, 18);
             DateOnly d2 = new DateOnly(2014, 9, 20);
@@ -329,7 +329,7 @@ namespace Microsoft.OData.Edm.Tests.Library
         [InlineData(24, 1, 1, 1)]
         [InlineData(23, 60, 1, 1)]
         [InlineData(23, 59, 60, 1)]
-        public void TestTimeOnlyCtor_InvalidTimeOfDayParameters(int hour, int minute, int second, int millisecond)
+        public void TestTimeOnlyCtor_InvalidTimeOnlyParameters(int hour, int minute, int second, int millisecond)
         {
             Action test = () => new TimeOnly(hour, minute, second, millisecond);
             var exception = Assert.Throws<ArgumentOutOfRangeException>(test);
@@ -364,7 +364,7 @@ namespace Microsoft.OData.Edm.Tests.Library
         [InlineData(0, 1, 2, 12)]
         [InlineData(3, 12, 13, 9)]
         [InlineData(23, 59, 59, 1)]
-        public void TestTimeOfDayCtor(int hour, int minute, int second, int millisecond)
+        public void TestTimeOnlyCtor(int hour, int minute, int second, int millisecond)
         {
             var time = new TimeOnly(hour, minute, second, millisecond);
             Assert.Equal(hour, time.Hour);
@@ -373,7 +373,7 @@ namespace Microsoft.OData.Edm.Tests.Library
             Assert.Equal(millisecond, time.Millisecond);
         }
 
-        public static TheoryData<long, TimeOnly> TestTimeOfDayTicksCtorData()
+        public static TheoryData<long, TimeOnly> TestTimeOnlyTicksCtorData()
         {
             return new TheoryData<long, TimeOnly>
             {
@@ -383,8 +383,8 @@ namespace Microsoft.OData.Edm.Tests.Library
         }
 
         [Theory]
-        [MemberData(nameof(TestTimeOfDayTicksCtorData))]
-        public void TestTimeOfDayTicksCtor(long ticks, TimeOnly expected)
+        [MemberData(nameof(TestTimeOnlyTicksCtorData))]
+        public void TestTimeOnlyTicksCtor(long ticks, TimeOnly expected)
         {
             var time = new TimeOnly(ticks);
 
@@ -397,7 +397,7 @@ namespace Microsoft.OData.Edm.Tests.Library
         [InlineData(23, 59, 58, 1)]
         [InlineData(23, 59, 58, 345)]
         [InlineData(0, 0, 0, 0)]
-        public void TestTimeOfDayToTimeSpan(int hour, int minute, int second, int millisecond)
+        public void TestTimeOnlyToTimeSpan(int hour, int minute, int second, int millisecond)
         {
             var timeOnly = new TimeOnly(hour, minute, second, millisecond);
             TimeSpan timeSpan = timeOnly.ToTimeSpan();
@@ -408,7 +408,7 @@ namespace Microsoft.OData.Edm.Tests.Library
         [InlineData(0)] // TimeOnly.MaxValue.Ticks
         [InlineData(163999999999)]
         [InlineData(863999999999)] // TimeOnly.MinValue.Ticks
-        public void TestTimeOfDayToTimeSpan_ticks(long ticks)
+        public void TestTimeOnlyToTimeSpan_ticks(long ticks)
         {
             var timeOnly = new TimeOnly(ticks);
             TimeSpan timeSpan = timeOnly.ToTimeSpan();
@@ -419,7 +419,7 @@ namespace Microsoft.OData.Edm.Tests.Library
         [InlineData(0)]
         [InlineData(123)]
         [InlineData(863999999999)] // TimeOnly.MaxValue.Ticks
-        public void TestTimeSpanToTimeOfDay(long ticks)
+        public void TestTimeSpanToTimeOnly(long ticks)
         {
             var timeSpan = new TimeSpan(ticks);
             TimeOnly timeOnly = TimeOnly.FromTimeSpan(timeSpan);
@@ -429,7 +429,7 @@ namespace Microsoft.OData.Edm.Tests.Library
         [Theory]
         [InlineData(0 - 1)] // TimeOnly.MinValue.Ticks - 1
         [InlineData(863999999999 + 1)] // TimeOnly.MaxValue.Ticks + 1
-        public void TestTimeSpanToTimeOfDayException(long ticks)
+        public void TestTimeSpanToTimeOnlyException(long ticks)
         {
             TimeSpan timeSpan = new TimeSpan(ticks);
             Action test = () => { TimeOnly timeOnly = TimeOnly.FromTimeSpan(timeSpan); };
@@ -437,7 +437,7 @@ namespace Microsoft.OData.Edm.Tests.Library
             Assert.Equal("Ticks must be between 0 and and TimeOnly.MaxValue.Ticks. (Parameter 'ticks')", exception.Message);
         }
 
-        public static TheoryData<TimeOnly, TimeOnly, bool> TestTimeOfDayEqualsData()
+        public static TheoryData<TimeOnly, TimeOnly, bool> TestTimeOnlyEqualsData()
         {
             return new TheoryData<TimeOnly, TimeOnly, bool>
             {
@@ -452,14 +452,14 @@ namespace Microsoft.OData.Edm.Tests.Library
         }
 
         [Theory]
-        [MemberData(nameof(TestTimeOfDayEqualsData))]
-        public void TestTimeOfDayEquals(TimeOnly time1, TimeOnly time2, bool expected)
+        [MemberData(nameof(TestTimeOnlyEqualsData))]
+        public void TestTimeOnlyEquals(TimeOnly time1, TimeOnly time2, bool expected)
         {
             bool result = time1.Equals(time2);
             Assert.Equal(expected, result);
         }
 
-        public static TheoryData<TimeOnly, object, bool> TestTimeOfDayEqualsObjectData()
+        public static TheoryData<TimeOnly, object, bool> TestTimeOnlyEqualsObjectData()
         {
             return new TheoryData<TimeOnly, object, bool>
             {
@@ -469,14 +469,14 @@ namespace Microsoft.OData.Edm.Tests.Library
         }
 
         [Theory]
-        [MemberData(nameof(TestTimeOfDayEqualsObjectData))]
-        public void TestTimeOfDayEqualsObject(TimeOnly time, object someObject, bool expected)
+        [MemberData(nameof(TestTimeOnlyEqualsObjectData))]
+        public void TestTimeOnlyEqualsObject(TimeOnly time, object someObject, bool expected)
         {
             bool result = time.Equals(someObject);
             Assert.Equal(expected, result);
         }
 
-        public static TheoryData<TimeOnly, TimeOnly, bool> TestTimeOfDayGetHashCodeData()
+        public static TheoryData<TimeOnly, TimeOnly, bool> TestTimeOnlyGetHashCodeData()
         {
             return new TheoryData<TimeOnly, TimeOnly, bool>
             {
@@ -488,15 +488,15 @@ namespace Microsoft.OData.Edm.Tests.Library
         }
 
         [Theory]
-        [MemberData(nameof(TestTimeOfDayGetHashCodeData))]
-        public void TestTimeOfDayGetHashCode(TimeOnly time1, TimeOnly time2, bool expected)
+        [MemberData(nameof(TestTimeOnlyGetHashCodeData))]
+        public void TestTimeOnlyGetHashCode(TimeOnly time1, TimeOnly time2, bool expected)
         {
             var hashCode1 = time1.GetHashCode();
             var hashCode2 = time2.GetHashCode();
             Assert.Equal(expected, hashCode1 == hashCode2);
         }
 
-        public static TheoryData<TimeOnly, TimeOnly, int> TestTimeOfDayCompareToData()
+        public static TheoryData<TimeOnly, TimeOnly, int> TestTimeOnlyCompareToData()
         {
             return new TheoryData<TimeOnly, TimeOnly, int>
             {
@@ -517,14 +517,14 @@ namespace Microsoft.OData.Edm.Tests.Library
         }
 
         [Theory]
-        [MemberData(nameof(TestTimeOfDayCompareToData))]
-        public void TestTimeOfDayCompareTo(TimeOnly time1, TimeOnly time2, int expected)
+        [MemberData(nameof(TestTimeOnlyCompareToData))]
+        public void TestTimeOnlyCompareTo(TimeOnly time1, TimeOnly time2, int expected)
         {
             int result = time1.CompareTo(time2);
             Assert.Equal(expected, result);
         }
 
-        public static TheoryData<TimeOnly, string> TestTimeOfDayToStringData()
+        public static TheoryData<TimeOnly, string> TestTimeOnlyToStringData()
         {
             return new TheoryData<TimeOnly, string>
             {
@@ -538,13 +538,13 @@ namespace Microsoft.OData.Edm.Tests.Library
         }
 
         [Theory]
-        [MemberData(nameof(TestTimeOfDayToStringData))]
-        public void TestTimeOfDayToString(TimeOnly input, string expected)
+        [MemberData(nameof(TestTimeOnlyToStringData))]
+        public void TestTimeOnlyToString(TimeOnly input, string expected)
         {
             Assert.Equal(expected, input.ToODataString());
         }
 
-        public static TheoryData<string, TimeOnly> TestParseTimeOfDaySuccessData()
+        public static TheoryData<string, TimeOnly> TestParseTimeOnlySuccessData()
         {
             return new TheoryData<string, TimeOnly>
             {
@@ -567,8 +567,8 @@ namespace Microsoft.OData.Edm.Tests.Library
         }
 
         [Theory]
-        [MemberData(nameof(TestParseTimeOfDaySuccessData))]
-        public void TestParseTimeOfDaySuccess(string input, TimeOnly expected)
+        [MemberData(nameof(TestParseTimeOnlySuccessData))]
+        public void TestParseTimeOnlySuccess(string input, TimeOnly expected)
         {
             #region Test Parse
             TimeOnly time = TimeOnly.Parse(input);
@@ -592,7 +592,7 @@ namespace Microsoft.OData.Edm.Tests.Library
         [InlineData("-1:59:59.0000000")]
         [InlineData("T4:59:59.0000000")]
         [InlineData("4:59:")]
-        public void TestParseTimeOfDayFailure(string input)
+        public void TestParseTimeOnlyFailure(string input)
         {
             #region Test Parse
             Action test = () => TimeOnly.Parse(input, CultureInfo.CurrentCulture);
@@ -609,7 +609,7 @@ namespace Microsoft.OData.Edm.Tests.Library
         }
 
         [Fact]
-        public void TestTimeOfDayCompareToInvalidTarget()
+        public void TestTimeOnlyCompareToInvalidTarget()
         {
             TimeOnly time = new TimeOnly(0);
             DateTimeOffset now = DateTimeOffset.Now;
@@ -618,7 +618,7 @@ namespace Microsoft.OData.Edm.Tests.Library
             Assert.Equal("Object must be of type TimeOnly.", exception.Message);
         }
         [Fact]
-        public void TestTimeOfDayOperator()
+        public void TestTimeOnlyOperator()
         {
             TimeOnly t1 = new TimeOnly(14, 9, 18, 0);
             TimeOnly t2 = new TimeOnly(14, 9, 20, 0);

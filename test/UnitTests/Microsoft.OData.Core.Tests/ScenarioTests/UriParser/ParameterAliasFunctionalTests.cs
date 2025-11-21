@@ -34,7 +34,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Fact]
-        public void ParsePath_AliasInFunctionImport_Date()
+        public void ParsePath_AliasInFunctionImport_DateOnly()
         {
             ParseUriAndVerify(
                 new Uri("http://gobbledygook/GetPersonByDate(date=@p1)?@p1=1997-12-12"),

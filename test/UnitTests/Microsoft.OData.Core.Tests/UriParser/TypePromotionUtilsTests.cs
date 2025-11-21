@@ -386,7 +386,7 @@ namespace Microsoft.OData.Tests.UriParser
         }
 
         [Fact]
-        public void NegateOnTimeOfDayIsNotSupported()
+        public void NegateOnTimeOnlyIsNotSupported()
         {
             IEdmTypeReference type = EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.TimeOfDay, false);
             var result = TypePromotionUtils.PromoteOperandType(UnaryOperatorKind.Negate, ref type);

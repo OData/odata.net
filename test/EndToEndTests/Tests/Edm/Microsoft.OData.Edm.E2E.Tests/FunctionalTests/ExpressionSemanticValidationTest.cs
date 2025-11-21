@@ -1815,7 +1815,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void Validate_IncorrectTypeForDateExpression_ReturnsValidationError(EdmVersion edmVersion)
+    public void Validate_IncorrectTypeForDateOnlyExpression_ReturnsValidationError(EdmVersion edmVersion)
     {
         var csdl1 =
 @"<?xml version=""1.0"" encoding=""utf-16""?>
@@ -1861,7 +1861,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void Validate_IncorrectFormatForDateExpression_ReturnsValidationError(EdmVersion edmVersion)
+    public void Validate_IncorrectFormatForDateOnlyExpression_ReturnsValidationError(EdmVersion edmVersion)
     {
         var csdl =
 @"<?xml version=""1.0"" encoding=""utf-16""?>
@@ -1993,7 +1993,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void Validate_IncorrectTypeForTimeOfDayExpression_ReturnsValidationError(EdmVersion edmVersion)
+    public void Validate_IncorrectTypeForTimeOnlyExpression_ReturnsValidationError(EdmVersion edmVersion)
     {
         var csdl1 =
 @"<?xml version=""1.0"" encoding=""utf-16""?>
@@ -2039,7 +2039,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
     [Theory]
     [InlineData(EdmVersion.V40)]
     [InlineData(EdmVersion.V401)]
-    public void Validate_IncorrectFormatForTimeOfDayExpression_ReturnsValidationError(EdmVersion edmVersion)
+    public void Validate_IncorrectFormatForTimeOnlyExpression_ReturnsValidationError(EdmVersion edmVersion)
     {
         var csdl =
 @"<?xml version=""1.0"" encoding=""utf-16""?>

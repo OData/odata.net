@@ -885,7 +885,7 @@
   <data name="ValueParser_InvalidDateTime" xml:space="preserve">
     <value>The value '{0}' is not a valid date time value.</value>
   </data>
-  <data name="ValueParser_InvalidDate" xml:space="preserve">
+  <data name="ValueParser_InvalidDateOnly" xml:space="preserve">
     <value>The value '{0}' is not a valid date value.</value>
   </data>
   <data name="ValueParser_InvalidDuration" xml:space="preserve">
@@ -894,7 +894,7 @@
   <data name="ValueParser_InvalidBinary" xml:space="preserve">
     <value>The value '{0}' is not a valid binary value. The value must be a hexadecimal string and must not be prefixed by '0x'.</value>
   </data>
-  <data name="ValueParser_InvalidTimeOfDay" xml:space="preserve">
+  <data name="ValueParser_InvalidTimeOnly" xml:space="preserve">
     <value>The value '{0}' is not a valid TimeOnly value.</value>
   </data>
   <data name="UnknownEnumVal_Multiplicity" xml:space="preserve">

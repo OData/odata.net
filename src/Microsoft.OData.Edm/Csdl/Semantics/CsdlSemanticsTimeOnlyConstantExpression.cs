@@ -73,7 +73,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             TimeOnly? value;
             if (!EdmValueParser.TryParseTimeOnly(this.expression.Value, out value))
             {
-                return new EdmError[] { new EdmError(this.Location, EdmErrorCode.InvalidTimeOfDay, Error.Format(SRResources.ValueParser_InvalidTimeOfDay, this.expression.Value)) };
+                return new EdmError[] { new EdmError(this.Location, EdmErrorCode.InvalidTimeOfDay, Error.Format(SRResources.ValueParser_InvalidTimeOnly, this.expression.Value)) };
             }
             else
             {

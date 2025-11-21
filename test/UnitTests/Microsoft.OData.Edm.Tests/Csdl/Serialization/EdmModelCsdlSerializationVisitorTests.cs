@@ -1556,7 +1556,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
         }
 
         [Fact]
-        public void VerifyAnnotationWithDateExpressionWrittenCorrectly()
+        public void VerifyAnnotationWithDateOnlyExpressionWrittenCorrectly()
         {
             // Arrange
             EdmComplexType complexType = new EdmComplexType("NS", "ComplexType");
@@ -1713,7 +1713,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
         }
 
         [Fact]
-        public void VerifyAnnotationWithTimeOfDayExpressionWrittenCorrectly()
+        public void VerifyAnnotationWithTimeOnlyExpressionWrittenCorrectly()
         {
             // Arrange
             EdmComplexType complexType = new EdmComplexType("NS", "ComplexType");

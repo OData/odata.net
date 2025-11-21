@@ -42,10 +42,10 @@ namespace Microsoft.OData.Tests
         }
 
         // <summary>
-        ///A test for writing raw Date value
+        ///A test for writing raw DateOnly value
         ///</summary>
         [Fact]
-        public void WriteRawValueWritesDate()
+        public void WriteRawValueWritesDateOnly()
         {
             RawValueWriter target = new RawValueWriter(this.settings, this.stream, new UTF32Encoding());
             DateOnly value = new DateOnly(2014, 9, 18);
@@ -54,10 +54,10 @@ namespace Microsoft.OData.Tests
         }
 
         // <summary>
-        ///A test for writing raw Date value
+        ///A test for writing raw TimeOnly value
         ///</summary>
         [Fact]
-        public void WriteRawValueWritesTimeOfDay()
+        public void WriteRawValueWritesTimeOnly()
         {
             RawValueWriter target = new RawValueWriter(this.settings, this.stream, new UTF32Encoding());
             TimeOnly value = new TimeOnly(9, 47, 5, 900);
@@ -101,7 +101,7 @@ namespace Microsoft.OData.Tests
         }
 
         [Fact]
-        public async Task WriteRawDateValueAsync()
+        public async Task WriteRawDateOnlyValueAsync()
         {
             var value = new DateOnly(2014, 9, 18);
 
@@ -112,7 +112,7 @@ namespace Microsoft.OData.Tests
         }
 
         [Fact]
-        public async Task WriteRawTimeOfDayValueAsync()
+        public async Task WriteRawTimeOnlyValueAsync()
         {
             var value = new TimeOnly(9, 47, 5, 900);
 

@@ -46,8 +46,8 @@ Microsoft.OData.Edm.Vocabularies.EdmTimeOfDayConstant.EdmTimeOfDayConstant(Syste
 Microsoft.OData.Edm.Vocabularies.EdmTimeOfDayConstant.Value.get -> System.TimeOnly
 Microsoft.OData.Edm.Vocabularies.IEdmDateValue.Value.get -> System.DateOnly
 Microsoft.OData.Edm.Vocabularies.IEdmTimeOfDayValue.Value.get -> System.TimeOnly
-static Microsoft.OData.Edm.DateOnlyAndTimeOnlyExtensions.ToODataString(this System.DateOnly date) -> string
-static Microsoft.OData.Edm.DateOnlyAndTimeOnlyExtensions.ToODataString(this System.TimeOnly time) -> string
+static Microsoft.OData.Edm.DateOnlyAndTimeOnlyExtensions.ToODataString(this System.DateOnly dateOnly) -> string
+static Microsoft.OData.Edm.DateOnlyAndTimeOnlyExtensions.ToODataString(this System.TimeOnly timeOnly) -> string
 static Microsoft.OData.Edm.EdmTypeSemantics.IsDateOnly(this Microsoft.OData.Edm.IEdmTypeReference type) -> bool
 static Microsoft.OData.Edm.EdmTypeSemantics.IsTimeOnly(this Microsoft.OData.Edm.IEdmTypeReference type) -> bool
 static Microsoft.OData.Edm.ExtensionMethods.ExistsContainer(this Microsoft.OData.Edm.IEdmModel model, System.ReadOnlySpan<char> containerName) -> bool
