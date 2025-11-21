@@ -525,7 +525,7 @@ namespace Microsoft.OData
                         return PlatformHelper.ConvertStringToDateOnly(stringValue);
                     }
 
-                    if (primitiveValue is DateOnly dateOnly || DateOnly.TryParse(primitiveValue.ToString(), out dateOnly))
+                    if (primitiveValue is DateOnly dateOnly)
                     {
                         return dateOnly;
                     }
@@ -533,7 +533,7 @@ namespace Microsoft.OData
                     break;
 
                 case EdmPrimitiveTypeKind.TimeOfDay:
-                    if (primitiveValue is TimeOnly timeOnly || TimeOnly.TryParse(primitiveValue.ToString(), out timeOnly))
+                    if (primitiveValue is TimeOnly timeOnly)
                     {
                         return timeOnly;
                     }

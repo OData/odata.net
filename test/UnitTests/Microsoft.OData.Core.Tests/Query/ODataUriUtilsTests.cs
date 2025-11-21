@@ -204,7 +204,7 @@ namespace Microsoft.OData.Tests.Query
 
 #region Date/DateTimeOffset
         [Fact]
-        public void TestDateConvertFromUriLiteral()
+        public void TestDateOnlyConvertFromUriLiteral()
         {
             DateOnly dateValue = (DateOnly)ODataUriUtils.ConvertFromUriLiteral("1997-07-01", ODataVersion.V4, HardCodedTestModel.TestModel, EdmCoreModel.Instance.GetDateOnly(false));
             Assert.Equal(new DateOnly(1997, 7, 1), dateValue);
@@ -259,7 +259,7 @@ namespace Microsoft.OData.Tests.Query
         }
 
         [Fact]
-        public void TestTimeOfDayConvertFromUriLiteral()
+        public void TestTimeOnlyConvertFromUriLiteral()
         {
             TimeOnly timeValue1 = (TimeOnly)ODataUriUtils.ConvertFromUriLiteral("12:13:14.015", ODataVersion.V4, HardCodedTestModel.TestModel, EdmCoreModel.Instance.GetTimeOnly(false));
             Assert.Equal(new TimeOnly(12, 13, 14, 15), timeValue1);
