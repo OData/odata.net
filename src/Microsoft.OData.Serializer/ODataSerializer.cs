@@ -58,17 +58,27 @@ public static class ODataSerializer
 
                 // If there's pending stack, complete the task before modifying the state or the writer
                 // to avoid concurrent modifications.
-                if (state.Stack.HasSuspendedFrames() && state.Stack.LastSuspendedFrame.PendingTask.HasValue)
+                if (state.Stack.HasSuspendedFrames())
                 {
-                    await state.Stack.LastSuspendedFrame.PendingTask.Value;
-                    state.Stack.LastSuspendedFrame.PendingTask = null;
-
-                    if (state.Stack.LastSuspendedFrame.PropertyProgress < PropertyProgress.Value)
+                    if (state.Stack.LastSuspendedFrame.PendingTask.HasValue)
                     {
-                        // Mark the value as written.
-                        // TODO: This assumes that the only time we suspend with a pending task is during property value writing.
-                        // If this assumption changes, we should revise this logic.
-                        state.Stack.LastSuspendedFrame.PropertyProgress = PropertyProgress.Value;
+                        await state.Stack.LastSuspendedFrame.PendingTask.Value;
+                        state.Stack.LastSuspendedFrame.PendingTask = null;
+
+                        // TODO: This is hacky, messy, and hard to understand. Fix this logic!!
+                        if (state.Stack.LastSuspendedFrame.PropertyProgress < PropertyProgress.Value)
+                        {
+                            // Mark the value as written.
+                            // TODO: This assumes that the only time we suspend with a pending task is during property value writing.
+                            // If this assumption changes, we should revise this logic.
+                            state.Stack.LastSuspendedFrame.PropertyProgress = PropertyProgress.Value;
+                        }
+                    }
+                    else if (state.Stack.LastSuspendedFrame.PendingTaskWithValue != null)
+                    {
+                        // Await task but don't set to null because the frame that created it will
+                        // need to read its result. It's the frame's responsibility to set it to null.
+                        await state.Stack.LastSuspendedFrame.PendingTaskWithValue;
                     }
                 }
 
