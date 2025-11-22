@@ -84,8 +84,11 @@ public class SupportForJsonElementSourceTests
                 GetElementsEnumerator = (resource, state) => resource.EnumerateArray(),
                 WriteElement = (resource, value, writer, state) =>
                 {
+                    // If you need to pass item-level state, then we could wrap that info in the element type, i.e.
+                    // (JsonElement, itemState)
                     return value.ValueKind switch
                     {
+                        // We should use EDM type to disambiguate type when multiple types are possible
                         // TODO handle dates and byte arrays
                         JsonValueKind.String => writer.WriteValue(value.GetString(), state),
                         // TODO handle different kinds of numbers
@@ -99,11 +102,18 @@ public class SupportForJsonElementSourceTests
                     };
                 }
             },
+            
             PropertySelector = new ODataPropertyEnumeratorSelector<JsonElement, JsonElement.ObjectEnumerator, JsonProperty, WriterState>
             {
                 GetPropertiesEnumerator = (resource, state) => resource.EnumerateObject(),
                 WriteProperty = (resource, property, writer, state) =>
                 {
+                    if (property.Name.StartsWith("#"))
+                    {
+                        // Annotations are handled separately
+                        return true;
+                    }
+
                     var value = property.Value;
                     return value.ValueKind switch
                     {
@@ -116,12 +126,14 @@ public class SupportForJsonElementSourceTests
                         JsonValueKind.Null => writer.WriteProperty<object>(property.Name, null, state),
                         JsonValueKind.Object => writer.WriteProperty(property.Name, value, state),
                         JsonValueKind.Array => writer.WriteProperty(property.Name, value, state),
+                        
                         _ => true,
                     };
                 }
             }
-        });
 
+        });
+        
         var model = CreateEdmModel();
         var odataUri = new ODataUriParser(
             model,
@@ -201,6 +213,7 @@ public class SupportForJsonElementSourceTests
         Assert.Equal(expectedNormalizedOutput, actualNormalizedOutput);
     }
 
+
     private static IEdmModel CreateEdmModel()
     {
         var model = new EdmModel();
@@ -235,5 +248,14 @@ public class SupportForJsonElementSourceTests
     class WriterState
     {
         public IEdmStructuredType? EdmStructuredType { get; set; }
+    }
+
+    async IAsyncEnumerable<JsonProperty> GetPropertiesEnumerator(JsonElement resource, ODataWriterState<WriterState> state)
+    {
+        foreach (var property in resource.EnumerateObject())
+        {
+            await Task.Delay(0);
+            yield return property;
+        }
     }
 }

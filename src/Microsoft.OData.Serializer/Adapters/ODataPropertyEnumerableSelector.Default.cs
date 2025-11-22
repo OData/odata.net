@@ -1,7 +1,7 @@
 ﻿
 namespace Microsoft.OData.Serializer;
 
-public class ODataPropertyEnumerableSelector<TDeclaringType, TProperty>
+public sealed class ODataPropertyEnumerableSelector<TDeclaringType, TProperty>
     : ODataPropertyEnumerableSelector<TDeclaringType, TProperty, DefaultState>
 {
 }

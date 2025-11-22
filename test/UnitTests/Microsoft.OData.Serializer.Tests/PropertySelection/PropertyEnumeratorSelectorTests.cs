@@ -2,9 +2,9 @@
 using Microsoft.OData.UriParser;
 using System.Text.Json;
 
-namespace Microsoft.OData.Serializer.Tests;
+namespace Microsoft.OData.Serializer.Tests.PropertySelection;
 
-public class PropertySelectionWithPropertyEnumerableSelector
+public class PropertyEnumeratorSelectorTests
 {
     [Fact]
     public async Task SerializesDataFromDictionaryUsingPropertyEnumerableSelector()
@@ -23,9 +23,9 @@ public class PropertySelectionWithPropertyEnumerableSelector
         var options = new ODataSerializerOptions();
         options.AddTypeInfo<Customer>(new()
         {
-            PropertySelector = new ODataPropertyEnumerableSelector<Customer, KeyValuePair<string, object>>()
+            PropertySelector = new ODataPropertyEnumeratorSelector<Customer, Dictionary<string, object>.Enumerator, KeyValuePair<string, object>>()
             {
-                GetProperties = (cust, state) => cust.Data,
+                GetPropertiesEnumerator = (cust, state) => cust.Data.GetEnumerator(),
                 WriteProperty = (cust, prop, writer, state) => writer.WriteProperty(prop.Key, prop.Value, state)
             }
         });
@@ -80,9 +80,9 @@ public class PropertySelectionWithPropertyEnumerableSelector
         var options = new ODataSerializerOptions();
         options.AddTypeInfo<Customer>(new()
         {
-            PropertySelector = new ODataPropertyEnumerableSelector<Customer, KeyValuePair<string, object>, object, DefaultState>()
+            PropertySelector = new ODataPropertyEnumeratorSelector<Customer, Dictionary<string, object>.Enumerator, KeyValuePair<string, object>, object, DefaultState>()
             {
-                GetProperties = (cust, state) => cust.Data,
+                GetPropertiesEnumerator = (cust, state) => cust.Data.GetEnumerator(),
                 GetPropertyName = (cust, prop, state) => prop.Key,
                 GetPropertyValue = (cust, prop, state) => prop.Value,
             }
