@@ -120,7 +120,7 @@ internal class ODataJsonWriterProvider<TCustomState>(ODataSerializerOptions<TCus
                 return new ODataJsonHybridValueKindWriter<T, TCustomState>(typeInfo);
             }
 
-            var couldBeResource = typeInfo.Properties != null || typeInfo.PropertySelector != null || typeInfo.WriteProperties != null;
+            var couldBeResource = typeInfo.Properties != null || typeInfo.PropertySelector != null || typeInfo.WriteProperties != null || typeInfo.GetOpenProperties != null;
             var couldBeCollection = typeInfo.ElementSelector != null;
             if (couldBeResource && !couldBeCollection)
             {
