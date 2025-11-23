@@ -32,7 +32,7 @@ public class StreamWriterChunkedTextStreamingTests
                 new ODataPropertyInfo<BlogPost, int, DefaultState>()
                 {
                     Name = "Id",
-                    GetValue = (post, state) => post.Id
+                    GetValue = (post, state) => post.Id,
                 },
                 new ODataPropertyInfo<BlogPost, string, DefaultState>()
                 {
