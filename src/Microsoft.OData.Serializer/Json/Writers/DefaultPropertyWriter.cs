@@ -25,6 +25,8 @@ internal class DefaultPropertyWriter<TCustomState> : IPropertyWriter<TCustomStat
         T value,
         ODataWriterState<TCustomState> state)
     {
-        throw new NotImplementedException();
+
+        state.JsonWriter.WritePropertyName(propertyName);
+        state.WriteValueToBufferWriter(writeAction, value, state);
     }
 }
