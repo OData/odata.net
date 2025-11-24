@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Text.Unicode;
 using System.Threading.Tasks;
 
@@ -14,7 +15,9 @@ public class RawValuePropertyBufferWriterTests
     [Theory]
     [InlineData(EdmPrimitiveTypeKind.Int32, 12, "12")]
     [InlineData(EdmPrimitiveTypeKind.Boolean, true, "true")]
-    [InlineData(EdmPrimitiveTypeKind.Stream, "test", "\"test\"")]
+    [InlineData(EdmPrimitiveTypeKind.Boolean, false, "false")]
+    [InlineData(EdmPrimitiveTypeKind.String, "test", "\"test\"")]
+    [InlineData(EdmPrimitiveTypeKind.String, null, "null")]
     public async Task CanWritePrimitivePropertyValueToBufferWriterDirectly(
         EdmPrimitiveTypeKind propertyType,
         object propertyValue,
@@ -43,22 +46,15 @@ public class RawValuePropertyBufferWriterTests
                     // Writes the value to completion in a single synchronous call. Not resumable.
                     writer.WritePropertyToBuffer(static (bufferWriter, value, state) =>
                     {
-                        var isString = value is string;
-                        var raw = value.ToString();
-                        var maxTranscodingLength = Encoding.UTF8.GetMaxByteCount(raw.Length) + 2; // add quotes for strings
+                        var raw = value is string strValue ? $"\"{strValue}\""
+                            : value is bool boolValue ? (boolValue ? "true" : "false")
+                            : value is null ? "null"
+                            : value.ToString();
+
+                        var maxTranscodingLength = Encoding.UTF8.GetMaxByteCount(raw.Length);
                         // note that this can grow the writer's internal buffer.
                         Span<byte> destination = bufferWriter.GetSpan(maxTranscodingLength);
-                        if (isString)
-                        {
-                            destination[0] = (byte)'"';
-                            destination = destination.Slice(1);
-                        }
                         Utf8.FromUtf16(raw, destination, out _, out var bytesWritten);
-                        if (isString)
-                        {
-                            destination[bytesWritten] = (byte)'"';
-                            bytesWritten += 1;
-                        }
 
                         bufferWriter.Advance(bytesWritten);
                     }, property.Key, property.Value, state);
@@ -86,7 +82,20 @@ public class RawValuePropertyBufferWriterTests
 
         // Act
         await ODataSerializer.WriteAsync(data, stream, odataUri, model, options);
-        
+
         // Assert
+        stream.Position = 0;
+        string actualJson = new StreamReader(stream).ReadToEnd();
+        var actualNormalized = JsonSerializer.Serialize(JsonDocument.Parse(actualJson));
+        var expected = $$"""
+            {
+              "@odata.context": "http://service/odata/$metadata#Entities",
+              "Id": 1,
+              "RawProperty": {{expectedJson}},
+              "Foo": "Bar"
+            }
+            """;
+        var expectedNormalized = JsonSerializer.Serialize(JsonDocument.Parse(expected));
+        Assert.Equal(expectedNormalized, actualNormalized);
     }
 }
