@@ -12,7 +12,9 @@ namespace Microsoft.OData.Serializer.Tests;
 public class RawValuePropertyBufferWriterTests
 {
     [Theory]
-    [InlineData(EdmPrimitiveTypeKind.Int32, "12")]
+    [InlineData(EdmPrimitiveTypeKind.Int32, 12, "12")]
+    [InlineData(EdmPrimitiveTypeKind.Boolean, true, "true")]
+    [InlineData(EdmPrimitiveTypeKind.Stream, "test", "\"test\"")]
     public async Task CanWritePrimitivePropertyValueToBufferWriterDirectly(
         EdmPrimitiveTypeKind propertyType,
         object propertyValue,
@@ -41,11 +43,23 @@ public class RawValuePropertyBufferWriterTests
                     // Writes the value to completion in a single synchronous call. Not resumable.
                     writer.WritePropertyToBuffer(static (bufferWriter, value, state) =>
                     {
+                        var isString = value is string;
                         var raw = value.ToString();
-                        var maxTranscodingLength = raw!.Length * 6;
+                        var maxTranscodingLength = Encoding.UTF8.GetMaxByteCount(raw.Length) + 2; // add quotes for strings
                         // note that this can grow the writer's internal buffer.
                         Span<byte> destination = bufferWriter.GetSpan(maxTranscodingLength);
+                        if (isString)
+                        {
+                            destination[0] = (byte)'"';
+                            destination = destination.Slice(1);
+                        }
                         Utf8.FromUtf16(raw, destination, out _, out var bytesWritten);
+                        if (isString)
+                        {
+                            destination[bytesWritten] = (byte)'"';
+                            bytesWritten += 1;
+                        }
+
                         bufferWriter.Advance(bytesWritten);
                     }, property.Key, property.Value, state);
 
@@ -74,11 +88,5 @@ public class RawValuePropertyBufferWriterTests
         await ODataSerializer.WriteAsync(data, stream, odataUri, model, options);
         
         // Assert
-    }
-
-    class Entity
-    {
-        public int Id { get; set; }
-        public object Property { get; set; }
     }
 }
