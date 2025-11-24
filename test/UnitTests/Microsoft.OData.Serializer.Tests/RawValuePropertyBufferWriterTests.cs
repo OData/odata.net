@@ -72,7 +72,6 @@ public class RawValuePropertyBufferWriterTests
 
         var stream = new MemoryStream();
 
-        // Act
         var data = new Dictionary<string, object>
         {
             ["Id"] = 1,
