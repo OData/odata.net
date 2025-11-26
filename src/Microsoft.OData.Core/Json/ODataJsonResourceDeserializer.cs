@@ -2862,26 +2862,52 @@ namespace Microsoft.OData.Json
         /// A task that represents the asynchronous read operation.
         /// The value of the TResult parameter contains the annotation value.
         /// </returns>
-        internal async Task<object> ReadODataOrCustomInstanceAnnotationValueAsync(
+        internal Task<object> ReadODataOrCustomInstanceAnnotationValueAsync(
             IODataJsonReaderResourceState resourceState,
             PropertyParsingResult propertyParsingResult,
             string annotationName)
         {
-            object value = await this.ReadEntryInstanceAnnotationAsync(
+            Task<object> readEntryInstanceAnnotationTask = this.ReadEntryInstanceAnnotationAsync(
                 annotationName,
                 resourceState.AnyPropertyFound,
                 typeAnnotationFound: true,
-                propertyAndAnnotationCollector: resourceState.PropertyAndAnnotationCollector).ConfigureAwait(false);
-            if (propertyParsingResult == PropertyParsingResult.ODataInstanceAnnotation)
+                propertyAndAnnotationCollector: resourceState.PropertyAndAnnotationCollector);
+
+            if(readEntryInstanceAnnotationTask.IsCompletedSuccessfully)
             {
-                resourceState.PropertyAndAnnotationCollector.AddODataScopeAnnotation(annotationName, value);
-            }
-            else
-            {
-                resourceState.PropertyAndAnnotationCollector.AddCustomScopeAnnotation(annotationName, value);
+                return Task.FromResult<object>(ProcessInstanceAnnotationValue(resourceState,propertyParsingResult,readEntryInstanceAnnotationTask.Result, annotationName));
             }
 
-            return value;
+            return AwaitReadODataOrCustomInstanceAnnotationValueAsync(readEntryInstanceAnnotationTask, resourceState, propertyParsingResult, annotationName);
+
+            static object ProcessInstanceAnnotationValue(
+                IODataJsonReaderResourceState paramResourceState,
+                PropertyParsingResult paramPropertyParsingResult,
+                object annotationValue,
+                string paramAnnotationName)
+            {
+                if (paramPropertyParsingResult == PropertyParsingResult.ODataInstanceAnnotation)
+                {
+                    paramResourceState.PropertyAndAnnotationCollector.AddODataScopeAnnotation(paramAnnotationName, annotationValue);
+                }
+                else
+                {
+                    paramResourceState.PropertyAndAnnotationCollector.AddCustomScopeAnnotation(paramAnnotationName, annotationValue);
+                }
+
+                return annotationValue;
+            }
+
+            static async Task<object> AwaitReadODataOrCustomInstanceAnnotationValueAsync(
+                Task<object> readEntryInstanceAnnotationTask,
+                IODataJsonReaderResourceState paramResourceState,
+                PropertyParsingResult paramPropertyParsingResult,
+                string paramAnnotationName)
+            {
+                object annotationValue = await readEntryInstanceAnnotationTask.ConfigureAwait(false);
+                return ProcessInstanceAnnotationValue(paramResourceState, paramPropertyParsingResult, annotationValue, paramAnnotationName);
+            }
+
         }
 
         /// <summary>
