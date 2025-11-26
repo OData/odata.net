@@ -2594,27 +2594,44 @@ namespace Microsoft.OData.Json
         ///
         /// This method fills the ODataDelta(Deleted)Link.Source property if the id is found in the payload.
         /// </remarks>
-        internal async Task ReadDeltaLinkSourceAsync(ODataDeltaLinkBase link)
+        internal ValueTask ReadDeltaLinkSourceAsync(ODataDeltaLinkBase link)
         {
             this.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
 
-            // If the current node is the source property - read it.
-            if (this.JsonReader.NodeType == JsonNodeType.Property &&
-                string.Equals(ODataJsonConstants.ODataSourcePropertyName, await this.JsonReader.GetPropertyNameAsync().ConfigureAwait(false), StringComparison.Ordinal))
+            if (this.JsonReader.NodeType != JsonNodeType.Property)
             {
-                Debug.Assert(link.Source == null, "source should not have already been set");
+                this.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
+                return ValueTask.CompletedTask;
+            }
+
+            return AwaitReadDeltaLinkSourceAsync(this, link);
+
+            static async ValueTask AwaitReadDeltaLinkSourceAsync(
+                ODataJsonResourceDeserializer paramThis,
+                ODataDeltaLinkBase paramLink
+                )
+            {
+                string propertyName = await paramThis.JsonReader.GetPropertyNameAsync().ConfigureAwait(false);
+
+                if (!string.Equals(ODataJsonConstants.ODataSourcePropertyName, propertyName, StringComparison.Ordinal))
+                {
+                    paramThis.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
+                    return;
+                }
+
+                Debug.Assert(paramLink.Source == null, "source should not have already been set");
 
                 // Read over the property to move to its value.
-                await this.JsonReader.ReadAsync()
+                await paramThis.JsonReader.ReadAsync()
                     .ConfigureAwait(false);
 
                 // Read the source value.
-                link.Source = await this.JsonReader.ReadUriValueAsync()
+                paramLink.Source = await paramThis.JsonReader.ReadUriValueAsync()
                     .ConfigureAwait(false);
-                Debug.Assert(link.Source != null, "value for source must be provided");
-            }
+                Debug.Assert(paramLink.Source != null, "value for source must be provided");
 
-            this.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
+                paramThis.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
+            }
         }
 
         /// <summary>
@@ -2630,27 +2647,41 @@ namespace Microsoft.OData.Json
         ///
         /// This method fills the ODataDelta(Deleted)Link.Relationship property if the id is found in the payload.
         /// </remarks>
-        internal async Task ReadDeltaLinkRelationshipAsync(ODataDeltaLinkBase link)
+        internal ValueTask ReadDeltaLinkRelationshipAsync(ODataDeltaLinkBase link)
         {
             this.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
 
-            // If the current node is the relationship property - read it.
-            if (this.JsonReader.NodeType == JsonNodeType.Property &&
-                string.Equals(ODataJsonConstants.ODataRelationshipPropertyName, await this.JsonReader.GetPropertyNameAsync().ConfigureAwait(false), StringComparison.Ordinal))
+            if (this.JsonReader.NodeType != JsonNodeType.Property)
             {
-                Debug.Assert(link.Relationship == null, "relationship should not have already been set");
-
-                // Read over the property to move to its value.
-                await this.JsonReader.ReadAsync()
-                    .ConfigureAwait(false);
-
-                // Read the relationship value.
-                link.Relationship = await this.JsonReader.ReadStringValueAsync()
-                    .ConfigureAwait(false);
-                Debug.Assert(link.Relationship != null, "value for relationship must be provided");
+                this.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
+                return ValueTask.CompletedTask;
             }
 
-            this.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
+            return AwaitReadDeltaLinkRelationshipAsync(this, link);
+
+            static async ValueTask AwaitReadDeltaLinkRelationshipAsync(
+                ODataJsonResourceDeserializer paramThis,
+                ODataDeltaLinkBase paramLink)
+            {
+                string propertyName = await paramThis.JsonReader.GetPropertyNameAsync().ConfigureAwait(false);
+
+                if (!string.Equals(ODataJsonConstants.ODataRelationshipPropertyName, propertyName, StringComparison.Ordinal))
+                {
+                    paramThis.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
+                    return;
+                }
+
+                Debug.Assert(paramLink.Relationship == null, "relationship should not have already been set");
+
+                // Read over the property to move to its value.
+                await paramThis.JsonReader.ReadAsync().ConfigureAwait(false);
+
+                // Read the relationship value.
+                paramLink.Relationship = await paramThis.JsonReader.ReadStringValueAsync().ConfigureAwait(false);
+                Debug.Assert(paramLink.Relationship != null, "value for relationship must be provided");
+
+                paramThis.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
+            }
         }
 
         /// <summary>
@@ -2666,27 +2697,41 @@ namespace Microsoft.OData.Json
         ///
         /// This method fills the ODataDelta(Deleted)Link.Target property if the id is found in the payload.
         /// </remarks>
-        internal async Task ReadDeltaLinkTargetAsync(ODataDeltaLinkBase link)
+        internal ValueTask ReadDeltaLinkTargetAsync(ODataDeltaLinkBase link)
         {
             this.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
 
-            // If the current node is the target property - read it.
-            if (this.JsonReader.NodeType == JsonNodeType.Property &&
-                string.Equals(ODataJsonConstants.ODataTargetPropertyName, await this.JsonReader.GetPropertyNameAsync().ConfigureAwait(false), StringComparison.Ordinal))
+            if (this.JsonReader.NodeType != JsonNodeType.Property)
             {
-                Debug.Assert(link.Target == null, "target should not have already been set");
-
-                // Read over the property to move to its value.
-                await this.JsonReader.ReadAsync()
-                    .ConfigureAwait(false);
-
-                // Read the source value.
-                link.Target = await this.JsonReader.ReadUriValueAsync()
-                    .ConfigureAwait(false);
-                Debug.Assert(link.Target != null, "value for target must be provided");
+                this.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
+                return ValueTask.CompletedTask;
             }
 
-            this.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
+            return AwaitReadDeltaLinkTargetAsync(this, link);
+
+            static async ValueTask AwaitReadDeltaLinkTargetAsync(
+                ODataJsonResourceDeserializer paramThis,
+                ODataDeltaLinkBase paramLink)
+            {
+                string propertyName = await paramThis.JsonReader.GetPropertyNameAsync().ConfigureAwait(false);
+
+                if (!string.Equals(ODataJsonConstants.ODataTargetPropertyName, propertyName, StringComparison.Ordinal))
+                {
+                    paramThis.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
+                    return;
+                }
+
+                Debug.Assert(paramLink.Target == null, "target should not have already been set");
+
+                // Read over the property to move to its value.
+                await paramThis.JsonReader.ReadAsync().ConfigureAwait(false);
+
+                // Read the target value.
+                paramLink.Target = await paramThis.JsonReader.ReadUriValueAsync().ConfigureAwait(false);
+                Debug.Assert(paramLink.Target != null, "value for target must be provided");
+
+                paramThis.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
+            }
         }
 
         /// <summary>
