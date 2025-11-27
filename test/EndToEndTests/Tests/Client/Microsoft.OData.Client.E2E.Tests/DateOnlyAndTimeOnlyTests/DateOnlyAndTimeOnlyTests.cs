@@ -283,7 +283,7 @@ namespace Microsoft.OData.Client.E2E.Tests.DateOnlyAndTimeOnlyTests
 
         private void ResetDefaultDataSource()
         {
-            var actionUri = new Uri(_baseUri + "edmdateonlyandtimeonly/Default.ResetDefaultDataSource", UriKind.Absolute);
+            var actionUri = new Uri(_baseUri + "dateonlyandTimeOnly/Default.ResetDefaultDataSource", UriKind.Absolute);
             _context.Execute(actionUri, "POST");
         }
     }

@@ -202,7 +202,7 @@ namespace Microsoft.OData.E2E.TestCommon.Common.Server.DateOnlyAndTimeOnly
             return Ok(updatedOrder);
         }
 
-        [HttpPost("odata/edmdateonlyandtimeonly/Default.ResetDefaultDataSource")]
+        [HttpPost("odata/dateonlyandTimeOnly/Default.ResetDefaultDataSource")]
         public IActionResult ResetDefaultDataSource()
         {
             _dataSource = DefaultDataSource.CreateInstance();
