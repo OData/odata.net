@@ -53,7 +53,7 @@ namespace Microsoft.OData.Client.E2E.Tests.DateOnlyAndTimeOnlyTests
         #region Client
 
         [Fact]
-        public async Task SelectingAnEntitysDateOrTimeOfDayPropertiesFromODataClient_WorksCorrectly()
+        public async Task SelectingAnEntitysDateOnlyOrTimeOnlyPropertiesFromODataClient_WorksCorrectly()
         {
             // Query Property
             var shipDate = await _context.Orders.ByKey(7).Select(o => o.ShipDate).GetValueAsync();
@@ -64,7 +64,7 @@ namespace Microsoft.OData.Client.E2E.Tests.DateOnlyAndTimeOnlyTests
         }
 
         [Fact]
-        public async Task AProjectionSelectForDateAndTimeOfDayProperties_WorksCorrectly()
+        public async Task AProjectionSelectForDateOnlyAndTimeOnlyProperties_WorksCorrectly()
         {
             // Projection Select
             var projOrder = await _context.Orders.ByKey(7).Select(o => new ClientDefaultModel.Order() { ShipDate = o.ShipDate, ShipTime = o.ShipTime }).GetValueAsync();
@@ -74,7 +74,7 @@ namespace Microsoft.OData.Client.E2E.Tests.DateOnlyAndTimeOnlyTests
         }
 
         [Fact]
-        public async Task UpdatingDateAndTimeOfDayPropertiesFromODataClient_WorksCorrectly()
+        public async Task UpdatingDateOnlyAndTimeOnlyPropertiesFromODataClient_WorksCorrectly()
         {
             _context.MergeOption = MergeOption.OverwriteChanges;
 
@@ -93,7 +93,7 @@ namespace Microsoft.OData.Client.E2E.Tests.DateOnlyAndTimeOnlyTests
         }
 
         [Fact]
-        public async Task InvokingAFunctionThatReturnsDateFromODataClient_WorksCorrectly()
+        public async Task InvokingAFunctionThatReturnsDateOnlyFromODataClient_WorksCorrectly()
         {
             // Function
             var date = await _context.Orders.ByKey(7).GetShipDate().GetValueAsync();
@@ -101,7 +101,7 @@ namespace Microsoft.OData.Client.E2E.Tests.DateOnlyAndTimeOnlyTests
         }
 
         [Fact]
-        public async Task InvokingAnActionThatTakesDateAndTimeOfDayAsParameters_WorksCorrectly()
+        public async Task InvokingAnActionThatTakesDateOnlyAndTimeOnlyAsParameters_WorksCorrectly()
         {
             _context.MergeOption = MergeOption.OverwriteChanges;
 
@@ -209,11 +209,81 @@ namespace Microsoft.OData.Client.E2E.Tests.DateOnlyAndTimeOnlyTests
             Assert.True(orders.Count <= 2);
         }
 
+        [Fact]
+        public void QueryingOrdersWithFilterOnDateOnlyYearMonthDay_WorksCorrectly()
+        {
+            var query = _context.Orders
+                .Where(o => o.ShipDate.Year == 2014 && o.ShipDate.Month == 8 && o.ShipDate.Day == 31);
+
+            Assert.EndsWith("/Orders?$filter=year(ShipDate) eq 2014 and month(ShipDate) eq 8 and day(ShipDate) eq 31", query.ToString());
+
+            var orders = query.ToList();
+
+            Assert.All(orders, o =>
+            {
+                Assert.Equal(2014, o.ShipDate.Year);
+                Assert.Equal(8, o.ShipDate.Month);
+                Assert.Equal(31, o.ShipDate.Day);
+            });
+        }
+
+        [Fact]
+        public void QueryingOrdersWithOrderByOnDateOnlyMonth_WorksCorrectly()
+        {
+            var query = _context.Orders
+                .OrderBy(o => o.ShipDate.Month);
+
+            Assert.EndsWith("/Orders?$orderby=month(ShipDate)", query.ToString());
+
+            var orders = query.ToList();
+
+            Assert.NotEmpty(orders);
+            for (int i = 1; i < orders.Count; i++)
+            {
+                Assert.True(orders[i - 1].ShipDate.Month <= orders[i].ShipDate.Month);
+            }
+        }
+
+        [Fact]
+        public void QueryingOrdersWithFilterOnTimeOnlyHourMinuteSecond_WorksCorrectly()
+        {
+            var query = _context.Orders
+                .Where(o => o.ShipTime.Hour == 12 && o.ShipTime.Minute == 40 && o.ShipTime.Second == 5);
+
+            Assert.EndsWith("/Orders?$filter=hour(ShipTime) eq 12 and minute(ShipTime) eq 40 and second(ShipTime) eq 5", query.ToString());
+
+            var orders = query.ToList();
+
+            Assert.All(orders, o =>
+            {
+                Assert.Equal(12, o.ShipTime.Hour);
+                Assert.Equal(40, o.ShipTime.Minute);
+                Assert.Equal(5, o.ShipTime.Second);
+            });
+        }
+
+        [Fact]
+        public void QueryingOrdersWithOrderByOnTimeOnlyMinute_WorksCorrectly()
+        {
+            var query = _context.Orders
+                .OrderBy(o => o.ShipTime.Minute);
+
+            Assert.EndsWith("/Orders?$orderby=minute(ShipTime)", query.ToString());
+
+            var orders = query.ToList();
+
+            Assert.NotEmpty(orders);
+            for (int i = 1; i < orders.Count; i++)
+            {
+                Assert.True(orders[i - 1].ShipTime.Minute <= orders[i].ShipTime.Minute);
+            }
+        }
+
         #endregion
 
         private void ResetDefaultDataSource()
         {
-            var actionUri = new Uri(_baseUri + "edmdateandtimeofday/Default.ResetDefaultDataSource", UriKind.Absolute);
+            var actionUri = new Uri(_baseUri + "edmdateonlyandtimeonly/Default.ResetDefaultDataSource", UriKind.Absolute);
             _context.Execute(actionUri, "POST");
         }
     }
