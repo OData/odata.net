@@ -3786,7 +3786,7 @@ namespace Microsoft.OData.Json
         /// Post-Condition: JsonNodeType.Property:    the next property of the resource
         ///                 JsonNodeType.EndObject:   the end-object node of the resource
         /// </remarks>
-        private async Task ReadEntryDataPropertyAsync(IODataJsonReaderResourceState resourceState, IEdmProperty edmProperty, string propertyTypeName)
+        private ValueTask ReadEntryDataPropertyAsync(IODataJsonReaderResourceState resourceState, IEdmProperty edmProperty, string propertyTypeName)
         {
             Debug.Assert(resourceState != null, "resourceState != null");
             Debug.Assert(edmProperty != null, "edmProperty != null");
@@ -3797,7 +3797,7 @@ namespace Microsoft.OData.Json
             ODataNullValueBehaviorKind nullValueReadBehaviorKind = this.ReadingResponse
                 ? ODataNullValueBehaviorKind.Default
                 : this.Model.NullValueReadBehaviorKind(edmProperty);
-            object propertyValue = await this.ReadNonEntityValueAsync(
+            Task<object> readNonEntityValueTask = this.ReadNonEntityValueAsync(
                 propertyTypeName,
                 edmProperty.Type,
                 propertyAndAnnotationCollector: null,
@@ -3805,17 +3805,45 @@ namespace Microsoft.OData.Json
                 validateNullValue: nullValueReadBehaviorKind == ODataNullValueBehaviorKind.Default,
                 isTopLevelPropertyValue: false,
                 insideResourceValue: false,
-                propertyName: edmProperty.Name).ConfigureAwait(false);
+                propertyName: edmProperty.Name);
 
-            if (nullValueReadBehaviorKind != ODataNullValueBehaviorKind.IgnoreValue || propertyValue != null)
+            if(readNonEntityValueTask.IsCompletedSuccessfully)
             {
-                AddResourceProperty(resourceState, edmProperty.Name, propertyValue);
+                object propertyValue = readNonEntityValueTask.Result;
+                InnerAddResourceProperty(this, nullValueReadBehaviorKind, resourceState, edmProperty.Name, propertyValue);
+                return ValueTask.CompletedTask;
             }
 
-            this.JsonReader.AssertNotBuffering();
-            Debug.Assert(
-                this.JsonReader.NodeType == JsonNodeType.Property || this.JsonReader.NodeType == JsonNodeType.EndObject,
-                "Post-Condition: expected JsonNodeType.Property or JsonNodeType.EndObject");
+            return AwaitReadNonEntityValueAsync(readNonEntityValueTask, this, nullValueReadBehaviorKind, resourceState, edmProperty.Name);
+
+            static void InnerAddResourceProperty(
+                ODataJsonResourceDeserializer paramThis,
+                ODataNullValueBehaviorKind paramNullValueReadBehaviorKind,
+                IODataJsonReaderResourceState paramResourceState,
+                string paramPropertyName,
+                object propertyValue)
+            {
+                if (paramNullValueReadBehaviorKind != ODataNullValueBehaviorKind.IgnoreValue || propertyValue != null)
+                {
+                    AddResourceProperty(paramResourceState, paramPropertyName, propertyValue);
+                }
+                paramThis.JsonReader.AssertNotBuffering();
+                Debug.Assert(
+                    paramThis.JsonReader.NodeType == JsonNodeType.Property || paramThis.JsonReader.NodeType == JsonNodeType.EndObject,
+                    "Post-Condition: expected JsonNodeType.Property or JsonNodeType.EndObject");
+                return;
+            }
+
+            static async ValueTask AwaitReadNonEntityValueAsync(
+                Task<object> readTask,
+                ODataJsonResourceDeserializer paramThis,
+                ODataNullValueBehaviorKind paramNullValueReadBehaviorKind,
+                IODataJsonReaderResourceState paramResourceState,
+                string paramPropertyName)
+            {
+                object propertyValue = await readTask.ConfigureAwait(false);
+                InnerAddResourceProperty(paramThis, paramNullValueReadBehaviorKind, paramResourceState, paramPropertyName, propertyValue);
+            }
         }
 
         /// <summary>
