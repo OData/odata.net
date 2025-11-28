@@ -3831,7 +3831,6 @@ namespace Microsoft.OData.Json
                 Debug.Assert(
                     paramThis.JsonReader.NodeType == JsonNodeType.Property || paramThis.JsonReader.NodeType == JsonNodeType.EndObject,
                     "Post-Condition: expected JsonNodeType.Property or JsonNodeType.EndObject");
-                return;
             }
 
             static async ValueTask AwaitReadNonEntityValueAsync(
