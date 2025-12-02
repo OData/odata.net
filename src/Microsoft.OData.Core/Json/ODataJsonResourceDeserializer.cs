@@ -3411,7 +3411,7 @@ namespace Microsoft.OData.Json
         /// Post-Condition: JsonNodeType.EndObject              This method doesn't move the reader.
         ///                 JsonNodeType.Property
         /// </remarks>
-        internal async ValueTask<ODataJsonReaderNestedInfo> ReadPropertyWithoutValueAsync(IODataJsonReaderResourceState resourceState, string propertyName)
+        internal Task<ODataJsonReaderNestedInfo> ReadPropertyWithoutValueAsync(IODataJsonReaderResourceState resourceState, string propertyName)
         {
             Debug.Assert(resourceState != null, "resourceState != null");
             Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
@@ -3423,11 +3423,19 @@ namespace Microsoft.OData.Json
             if (edmProperty == null || edmProperty.Type.IsUntyped())
             {
                 // Undeclared property - we need to run detection algorithm here.
-                readerNestedInfo = await this.ReadUndeclaredPropertyAsync(resourceState, propertyName, propertyWithValue: false)
-                    .ConfigureAwait(false);
+                ValueTask<ODataJsonReaderNestedInfo> taskReadUndeclaredProperty = this.ReadUndeclaredPropertyAsync(resourceState, propertyName, propertyWithValue: false);
+
+                if(taskReadUndeclaredProperty.IsCompletedSuccessfully)
+                {
+                    readerNestedInfo = taskReadUndeclaredProperty.Result;
+                }
+                else
+                {
+                    readerNestedInfo = AwaitReadPropertyWithoutValueAsync(taskReadUndeclaredProperty).Result;
+                }
 
                 this.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
-                return readerNestedInfo;
+                return Task<ODataJsonReaderNestedInfo>.FromResult(readerNestedInfo);
             }
 
             // Declared property - read it.
@@ -3472,7 +3480,13 @@ namespace Microsoft.OData.Json
             }
 
             this.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
-            return readerNestedInfo;
+            return Task<ODataJsonReaderNestedInfo>.FromResult(readerNestedInfo);
+
+            static async Task<ODataJsonReaderNestedInfo> AwaitReadPropertyWithoutValueAsync(
+                ValueTask<ODataJsonReaderNestedInfo> pendingTask)
+            {
+                return await pendingTask.ConfigureAwait(false);
+            }
         }
 
         /// <summary>
