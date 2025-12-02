@@ -3098,7 +3098,7 @@ namespace Microsoft.OData.Json
         /// <param name="propertyParseResult">The PropertyParsingResult.</param>
         /// <param name="annotationName">The annotation name.</param>
         /// <returns>A task that represents the asynchronous read operation.</returns>
-        internal async Task ReadODataOrCustomInstanceAnnotationValueAsync(
+        internal Task ReadODataOrCustomInstanceAnnotationValueAsync(
             ODataResourceSetBase resourceSet,
             PropertyAndAnnotationCollector propertyAndAnnotationCollector,
             bool forResourceSetStart,
@@ -3110,7 +3110,24 @@ namespace Microsoft.OData.Json
             {
                 // #### annotation 1 ####
                 // built-in "odata." annotation value is added to propertyAndAnnotationCollector then later to resourceSet.InstanceAnnotations.
-                propertyAndAnnotationCollector.AddODataScopeAnnotation(annotationName, await this.JsonReader.GetValueAsync().ConfigureAwait(false));
+                Task<object> annotationTask = this.JsonReader.GetValueAsync();
+
+                if (annotationTask.IsCompletedSuccessfully)
+                {
+                    object annotationValue = annotationTask.Result;
+                    propertyAndAnnotationCollector.AddODataScopeAnnotation(annotationName, annotationValue);
+                }
+                else
+                {
+                    object annotationValue = AwaitReadODataOrCustomInstanceAnnotationValueAsync(annotationTask);
+                    propertyAndAnnotationCollector.AddODataScopeAnnotation(annotationName, annotationValue);
+                }
+            }
+
+            static async Task<object> AwaitReadODataOrCustomInstanceAnnotationValueAsync(
+                Task<object> pendingTask)
+            {
+                return await pendingTask.ConfigureAwait(false);
             }
 
             // When we are reading the start of a resource set (in scan-ahead mode or not) or when
@@ -3120,13 +3137,11 @@ namespace Microsoft.OData.Json
             {
                 // #### annotation 2 ####
                 // custom annotation value will be directly added to resourceSet.InstanceAnnotations.
-                await this.ReadAndApplyResourceSetInstanceAnnotationValueAsync(annotationName, resourceSet, propertyAndAnnotationCollector)
-                    .ConfigureAwait(false);
+                return this.ReadAndApplyResourceSetInstanceAnnotationValueAsync(annotationName, resourceSet, propertyAndAnnotationCollector);
             }
             else
             {
-                await this.JsonReader.SkipValueAsync()
-                    .ConfigureAwait(false);
+                return this.JsonReader.SkipValueAsync();
             }
         }
 
