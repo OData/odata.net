@@ -3115,12 +3115,26 @@ namespace Microsoft.OData.Json
                 if (annotationTask.IsCompletedSuccessfully)
                 {
                     object annotationValue = annotationTask.Result;
-                    propertyAndAnnotationCollector.AddODataScopeAnnotation(annotationName, annotationValue);
+                    try
+                    {
+                        propertyAndAnnotationCollector.AddODataScopeAnnotation(annotationName, annotationValue);
+                    }
+                    catch (ODataException ex)
+                    {
+                        return Task.FromException<object>(ex);
+                    }
                 }
                 else
                 {
                     object annotationValue = AwaitReadODataOrCustomInstanceAnnotationValueAsync(annotationTask);
-                    propertyAndAnnotationCollector.AddODataScopeAnnotation(annotationName, annotationValue);
+                    try
+                    {
+                        propertyAndAnnotationCollector.AddODataScopeAnnotation(annotationName, annotationValue);
+                    }
+                    catch (ODataException ex)
+                    {
+                        return Task.FromException<object>(ex);
+                    }
                 }
             }
 
