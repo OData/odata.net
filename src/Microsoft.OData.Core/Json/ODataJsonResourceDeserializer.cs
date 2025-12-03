@@ -3401,7 +3401,9 @@ namespace Microsoft.OData.Json
 
                     if (!readerNestedResourceInfo.HasEntityReferenceLink)
                     {
-                        throw new ODataException(Error.Format(SRResources.ODataJsonResourceDeserializer_NavigationPropertyWithoutValueAndEntityReferenceLink, propertyName, ODataAnnotationNames.ODataBind));
+                        return ValueTask.FromException<ODataJsonReaderNestedInfo>(
+                            new ODataException(Error.Format(SRResources.ODataJsonResourceDeserializer_NavigationPropertyWithoutValueAndEntityReferenceLink, propertyName, ODataAnnotationNames.ODataBind))
+                            );
                     }
                 }
 
