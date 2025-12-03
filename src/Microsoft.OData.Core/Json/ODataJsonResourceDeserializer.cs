@@ -3126,22 +3126,8 @@ namespace Microsoft.OData.Json
                 }
                 else
                 {
-                    object annotationValue = AwaitReadODataOrCustomInstanceAnnotationValueAsync(annotationTask);
-                    try
-                    {
-                        propertyAndAnnotationCollector.AddODataScopeAnnotation(annotationName, annotationValue);
-                    }
-                    catch (ODataException ex)
-                    {
-                        return Task.FromException<object>(ex);
-                    }
+                    return AwaitReadODataOrCustomInstanceAnnotationValueAsync(annotationTask, annotationName, propertyAndAnnotationCollector);
                 }
-            }
-
-            static async Task<object> AwaitReadODataOrCustomInstanceAnnotationValueAsync(
-                Task<object> pendingTask)
-            {
-                return await pendingTask.ConfigureAwait(false);
             }
 
             // When we are reading the start of a resource set (in scan-ahead mode or not) or when
@@ -3156,6 +3142,23 @@ namespace Microsoft.OData.Json
             else
             {
                 return this.JsonReader.SkipValueAsync();
+            }
+
+            static async Task<object> AwaitReadODataOrCustomInstanceAnnotationValueAsync(
+                Task<object> pendingTask,
+                string paramAnnotationName,
+                PropertyAndAnnotationCollector paramPropertyAndAnnotationCollector)
+            {
+                try
+                {
+                    object annotationValue = await pendingTask.ConfigureAwait(false);
+                    paramPropertyAndAnnotationCollector.AddODataScopeAnnotation(paramAnnotationName, annotationValue);
+                    return null;
+                }
+                catch (ODataException ex)
+                {
+                    return await Task.FromException<object>(ex).ConfigureAwait(false);
+                }
             }
         }
 
@@ -3435,7 +3438,7 @@ namespace Microsoft.OData.Json
                 }
 
                 this.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
-                return Task<ODataJsonReaderNestedInfo>.FromResult(readerNestedInfo);
+                return Task.FromResult<ODataJsonReaderNestedInfo>(readerNestedInfo);
             }
 
             // Declared property - read it.
@@ -3480,7 +3483,7 @@ namespace Microsoft.OData.Json
             }
 
             this.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
-            return Task<ODataJsonReaderNestedInfo>.FromResult(readerNestedInfo);
+            return Task.FromResult<ODataJsonReaderNestedInfo>(readerNestedInfo);
 
             static async Task<ODataJsonReaderNestedInfo> AwaitReadPropertyWithoutValueAsync(
                 ValueTask<ODataJsonReaderNestedInfo> pendingTask)
