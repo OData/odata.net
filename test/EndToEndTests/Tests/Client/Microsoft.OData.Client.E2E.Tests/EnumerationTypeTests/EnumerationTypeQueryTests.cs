@@ -90,7 +90,8 @@ public class EnumerationTypeQueryTests : EndToEndTestBase<EnumerationTypeQueryTe
         var result = queryable.GetValue();
         Assert.NotNull(result);
         Assert.Equal(Color.Red, result.SkinColor);
-        Assert.Equal(AccessLevel.Execute, result.UserAccess);
+        Assert.Equal((AccessLevel.Write | AccessLevel.Execute | AccessLevel.Read), result.UserAccess);
+        Assert.Equal((AccessLevel.ReadWrite | AccessLevel.Execute), result.UserAccess);
     }
 
     [Fact]
@@ -103,7 +104,8 @@ public class EnumerationTypeQueryTests : EndToEndTestBase<EnumerationTypeQueryTe
         var userAccess = _context.Execute<AccessLevel>(new Uri(_baseUri.AbsoluteUri + "Products(8)/UserAccess"));
         List<AccessLevel> enumResult = userAccess.ToList();
         Assert.Single(enumResult);
-        Assert.Equal(AccessLevel.Execute, enumResult[0]);
+        Assert.Equal((AccessLevel.Write | AccessLevel.Execute | AccessLevel.Read), enumResult[0]);
+        Assert.Equal((AccessLevel.ReadWrite | AccessLevel.Execute), enumResult[0]);
     }
 
     [Fact]
@@ -135,7 +137,8 @@ public class EnumerationTypeQueryTests : EndToEndTestBase<EnumerationTypeQueryTe
         Assert.True(result.All(s => s.SkinColor == Color.Red));
         Assert.NotNull(result.SingleOrDefault(r => r.ProductID == 5 && r.UserAccess == AccessLevel.None));
         Assert.NotNull(result.SingleOrDefault(r => r.ProductID == 7 && r.UserAccess == AccessLevel.Read));
-        Assert.NotNull(result.SingleOrDefault(r => r.ProductID == 8 && r.UserAccess == AccessLevel.Execute));
+        Assert.NotNull(result.SingleOrDefault(r => r.ProductID == 8 &&
+            (r.UserAccess == (AccessLevel.Write | AccessLevel.Execute | AccessLevel.Read) || r.UserAccess == (AccessLevel.ReadWrite | AccessLevel.Execute))));
 
         // FullMetadata: UseJson() + have $select in request uri
         _context.Format.UseJson(_model);
@@ -149,7 +152,8 @@ public class EnumerationTypeQueryTests : EndToEndTestBase<EnumerationTypeQueryTe
         Assert.True(result.All(s => s.SkinColor == Color.Red));
         Assert.NotNull(result.SingleOrDefault(r => r.ProductID == 5 && r.UserAccess == AccessLevel.None));
         Assert.NotNull(result.SingleOrDefault(r => r.ProductID == 7 && r.UserAccess == AccessLevel.Read));
-        Assert.NotNull(result.SingleOrDefault(r => r.ProductID == 8 && r.UserAccess == AccessLevel.Execute));
+        Assert.NotNull(result.SingleOrDefault(r => r.ProductID == 8 && 
+            (r.UserAccess == (AccessLevel.Write | AccessLevel.Execute | AccessLevel.Read) || r.UserAccess == (AccessLevel.ReadWrite | AccessLevel.Execute))));
 
         // Atom
         queryable = _context.CreateQuery<Product>("Products")
@@ -159,7 +163,7 @@ public class EnumerationTypeQueryTests : EndToEndTestBase<EnumerationTypeQueryTe
         result = queryable.ToList();
         Assert.Equal(result.Select(s => s.ProductID).Distinct().Count(), result.Count);
         Assert.True(result.All(s => s.SkinColor == Color.Red));
-        Assert.Contains(result, s => s.UserAccess == AccessLevel.Execute);
+        Assert.Contains(result, s => (s.UserAccess == (AccessLevel.Write | AccessLevel.Execute | AccessLevel.Read) || s.UserAccess == (AccessLevel.ReadWrite | AccessLevel.Execute)));
         Assert.Contains(result, s => s.UserAccess == AccessLevel.Read);
     }
 
@@ -343,6 +347,129 @@ public class EnumerationTypeQueryTests : EndToEndTestBase<EnumerationTypeQueryTe
             Assert.Equal(expectedProd.SkinColor, prod.SkinColor);
             Assert.Equal(expectedProd.CoverColors.Count, prod.CoverColors.Count);
         }
+    }
+
+    [Fact]
+    public void QueryEntitiesWithCombinedFlagStringFormatUsingODataClient()
+    {
+        // Arrange
+        _context.Format.UseJson(_model);
+
+        // Act
+        var queryable = _context.Products
+            .Where(p => p.UserAccess == AccessLevel.ReadWrite) as DataServiceQuery<Product>;
+        Assert.NotNull(queryable);
+        var result = queryable.ToList();
+
+        // Assert
+        Assert.EndsWith("/Products?$filter=UserAccess eq Microsoft.OData.E2E.TestCommon.Common.Server.Default.AccessLevel'ReadWrite'", queryable.RequestUri.OriginalString);
+        Assert.All(result, p => Assert.Equal(AccessLevel.ReadWrite, p.UserAccess));
+    }
+
+    [Fact]
+    public void QueryEntitiesWithCombinedFlagNumericRepresentationUsingODataClient()
+    {
+        // Arrange
+        _context.Format.UseJson(_model);
+
+        // Act
+        var queryable = _context.Products
+            .Where(p => (int)p.UserAccess == 3) as DataServiceQuery<Product>;
+        Assert.NotNull(queryable);
+        var result = queryable.ToList();
+
+        // Assert
+        Assert.EndsWith("/Products?$filter=UserAccess eq Microsoft.OData.E2E.TestCommon.Common.Server.Default.AccessLevel'ReadWrite'", queryable.RequestUri.OriginalString);
+        Assert.All(result, p => Assert.Equal(AccessLevel.ReadWrite, p.UserAccess));
+    }
+
+    [Fact]
+    public void QueryEntitiesWithHasOperatorForCombinedFlagsUsingODataClient()
+    {
+        // Arrange
+        _context.Format.UseJson(_model);
+
+        // Act
+        var queryable = _context.Products
+            .Where(p => p.UserAccess.Value.HasFlag(AccessLevel.Read) && p.UserAccess.Value.HasFlag(AccessLevel.Write)) as DataServiceQuery<Product>;
+        Assert.NotNull(queryable);
+        var result = queryable.ToList();
+
+        // Assert
+        Assert.EndsWith("/Products?$filter=UserAccess has Microsoft.OData.E2E.TestCommon.Common.Server.Default.AccessLevel'Read' and UserAccess has Microsoft.OData.E2E.TestCommon.Common.Server.Default.AccessLevel'Write'", queryable.RequestUri.OriginalString);
+        Assert.All(result, p => Assert.True(p.UserAccess.Value.HasFlag(AccessLevel.Read) && p.UserAccess.Value.HasFlag(AccessLevel.Write)));
+    }
+
+    [Fact]
+    public void QueryEntitiesWithInOperatorForFlagsUsingODataClient()
+    {
+        // Arrange
+        _context.Format.UseJson(_model);
+
+        // Act
+        var queryable = _context.Products
+            .Where(p => new[] { AccessLevel.Read, AccessLevel.Write, AccessLevel.ReadWrite }.Contains(p.UserAccess.Value)) as DataServiceQuery<Product>;
+        Assert.NotNull(queryable);
+        var result = queryable.ToList();
+
+        // Assert
+        Assert.EndsWith("/Products?$filter=UserAccess in ('Read','Write','ReadWrite')", queryable.RequestUri.OriginalString);
+        Assert.All(result, p => new[] { AccessLevel.Read, AccessLevel.Write, AccessLevel.ReadWrite }.Contains(p.UserAccess.Value));
+    }
+
+    [Fact]
+    public void QueryEntitiesWithCombinedFlagNumericEqualityUsingODataClient()
+    {
+        // Arrange
+        _context.Format.UseJson(_model);
+
+        // Act
+        // ReadWrite = 3
+        var queryable = _context.Products
+            .Where(p => (int)p.UserAccess == 3) as DataServiceQuery<Product>;
+        Assert.NotNull(queryable);
+        var result = queryable.ToList();
+
+        // Assert
+        Assert.EndsWith("/Products?$filter=UserAccess eq Microsoft.OData.E2E.TestCommon.Common.Server.Default.AccessLevel'ReadWrite'", queryable.RequestUri.OriginalString);
+        Assert.All(result, p => Assert.Equal(AccessLevel.ReadWrite, p.UserAccess));
+    }
+
+    [Fact]
+    public void QueryEntitiesWithCombinedFlagNumericGreaterThanUsingODataClient()
+    {
+        // Arrange
+        _context.Format.UseJson(_model);
+
+        // Act
+        // Execute = 4, so this will match Execute and any higher value if present
+        var queryable = _context.Products
+            .Where(p => (int)p.UserAccess > 3) as DataServiceQuery<Product>;
+        Assert.NotNull(queryable);
+        var result = queryable.ToList();
+
+        // Assert
+        Assert.EndsWith("/Products?$filter=UserAccess gt Microsoft.OData.E2E.TestCommon.Common.Server.Default.AccessLevel'ReadWrite'", queryable.RequestUri.OriginalString);
+        Assert.All(result, p => Assert.True((int)p.UserAccess > 3));
+    }
+
+    [Fact]
+    public void QueryEntitiesWithCombinedFlagNumericInOperatorUsingODataClient()
+    {
+        // Arrange
+        _context.Format.UseJson(_model);
+
+        // Act
+        // None = 0, Read = 1, Write = 2, ReadWrite = 3, Execute = 4
+        var validValues = new[] { 0, 3, 4 };
+        var queryable = _context.Products
+            .Where(p => validValues.Contains((int)p.UserAccess)) as DataServiceQuery<Product>;
+        Assert.NotNull(queryable);
+        var result = queryable.ToList();
+
+        // Assert
+        Assert.EndsWith("/Products?$filter=UserAccess in (0,3,4)", queryable.RequestUri.OriginalString, StringComparison.Ordinal);
+        Assert.All(result, p => Assert.Contains((int)p.UserAccess, validValues));
     }
 
     #region Private methods

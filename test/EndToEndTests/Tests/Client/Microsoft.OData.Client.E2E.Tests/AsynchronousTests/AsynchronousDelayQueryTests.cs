@@ -260,6 +260,11 @@ public class AsynchronousDelayQueryTests : AsynchronousEndToEndTestBase<Asynchro
         var productsCount = await productsQuery.GetValueAsync();
         Assert.EndsWith("/GetProductsByAccessLevel(accessLevel=Microsoft.OData.E2E.TestCommon.Common.Server.Default.AccessLevel'Read%2CExecute')", productsQuery.RequestUri.AbsoluteUri);
         Assert.Equal(1, productsCount);
+
+        productsQuery = context.GetProductsByAccessLevel(AccessLevel.Execute | AccessLevel.Read);
+        productsCount = await productsQuery.GetValueAsync();
+        Assert.EndsWith("/GetProductsByAccessLevel(accessLevel=Microsoft.OData.E2E.TestCommon.Common.Server.Default.AccessLevel'Read%2CExecute')", productsQuery.RequestUri.AbsoluteUri);
+        Assert.Equal(1, productsCount);
     }
 
     [Fact]

@@ -12,6 +12,7 @@ namespace Microsoft.OData.Edm
     /// <summary>
     /// TimeOfDay type for Edm.TimeOfDay
     /// </summary>
+    [Obsolete("Microsoft.OData.Edm.TimeOfDay will be removed in ODL 9 and replaced with System.TimeOnly.", false)]
     public struct TimeOfDay : IComparable, IComparable<TimeOfDay>, IEquatable<TimeOfDay>
     {
         /// <summary>

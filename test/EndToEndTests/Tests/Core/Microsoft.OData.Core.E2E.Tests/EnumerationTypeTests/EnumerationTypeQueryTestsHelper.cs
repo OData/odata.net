@@ -6,6 +6,7 @@
 
 using Microsoft.OData.E2E.TestCommon.Common;
 using Microsoft.OData.Edm;
+using Newtonsoft.Json.Linq;
 
 namespace Microsoft.OData.Core.E2E.Tests.EnumerationTypeTests;
 
@@ -87,6 +88,18 @@ public class EnumerationTypeQueryTestsHelper
         if (responseMessage.StatusCode == 404)
         {
             return new List<ODataResource>();
+        }
+
+        if (responseMessage.StatusCode != 200)
+        {
+            using var stream = await responseMessage.GetStreamAsync();
+            using var reader = new StreamReader(stream);
+            var jObject = JObject.Parse(await reader.ReadToEndAsync());
+            var message = jObject["error"]?["message"]?.Value<string>();
+            if (!string.IsNullOrEmpty(message))
+            {
+                throw new InvalidOperationException($"Request failed with status code {responseMessage.StatusCode}: {message}");
+            }
         }
 
         Assert.Equal(200, responseMessage.StatusCode);

@@ -161,7 +161,7 @@ namespace Microsoft.OData.Tests.Json
 
             var colorEnumType = new EdmEnumType("NS", "Color");
             colorEnumType.AddMember(new EdmEnumMember(colorEnumType, "Black", new EdmEnumMemberValue(0)));
-            colorEnumType.AddMember(new EdmEnumMember(colorEnumType, "White", new EdmEnumMemberValue(0)));
+            colorEnumType.AddMember(new EdmEnumMember(colorEnumType, "White", new EdmEnumMemberValue(1)));
             this.model.AddElement(colorEnumType);
         }
     }

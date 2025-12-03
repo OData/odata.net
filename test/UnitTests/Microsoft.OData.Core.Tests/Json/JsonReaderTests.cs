@@ -1362,6 +1362,110 @@ namespace Microsoft.OData.Tests.Json
             Assert.True(await reader.ReadAsync()); // EndArray
         }
 
+        [Theory]
+        [InlineData("\"simple\"", "simple")]
+        [InlineData("\"with spaces\"", "with spaces")]
+        [InlineData("\"with \\\"escaped quotes\\\"\"", "with \"escaped quotes\"")]
+        [InlineData("\"with \\\\ backslash\"", "with \\ backslash")]
+        [InlineData("\"with \\n newline\"", "with \n newline")]
+        [InlineData("\"with \\r carriage\"", "with \r carriage")]
+        [InlineData("\"with \\t tab\"", "with \t tab")]
+        [InlineData("\"with \\b backspace\"", "with \b backspace")]
+        [InlineData("\"with \\f formfeed\"", "with \f formfeed")]
+        [InlineData("\"unicode \\u0041\"", "unicode A")]
+        [InlineData("\"mix \\u0041\\n\\t\\\"\"", "mix A\n\t\"")]
+        [InlineData("\"12345\"", "12345")]
+        [InlineData("\"true\"", "true")]
+        [InlineData("\"false\"", "false")]
+        [InlineData("\"null\"", "null")]
+        [InlineData("\"\"", "")]
+        public void ParseStringPrimitiveValue_Sync(string json, string expected)
+        {
+            var reader = new JsonReader(new StringReader($"{{\"PropertyName\":{json}}}"), isIeee754Compatible: false);
+            reader.Read(); // Start object
+            reader.Read(); // Property name
+            Assert.Equal("PropertyName", reader.GetValue());
+
+            reader.Read(); // Value
+            Assert.Equal(expected, reader.GetValue());
+        }
+
+        [Theory]
+        [InlineData("\"simple\"", "simple")]
+        [InlineData("\"with spaces\"", "with spaces")]
+        [InlineData("\"with \\\"escaped quotes\\\"\"", "with \"escaped quotes\"")]
+        [InlineData("\"with \\\\ backslash\"", "with \\ backslash")]
+        [InlineData("\"with \\n newline\"", "with \n newline")]
+        [InlineData("\"with \\r carriage\"", "with \r carriage")]
+        [InlineData("\"with \\t tab\"", "with \t tab")]
+        [InlineData("\"with \\b backspace\"", "with \b backspace")]
+        [InlineData("\"with \\f formfeed\"", "with \f formfeed")]
+        [InlineData("\"unicode \\u0041\"", "unicode A")]
+        [InlineData("\"mix \\u0041\\n\\t\\\"\"", "mix A\n\t\"")]
+        [InlineData("\"12345\"", "12345")]
+        [InlineData("\"true\"", "true")]
+        [InlineData("\"false\"", "false")]
+        [InlineData("\"null\"", "null")]
+        [InlineData("\"\"", "")]
+        public async Task ParseStringPrimitiveValue_Async(string json, string expected)
+        {
+            var reader = new JsonReader(new StringReader($"{{\"PropertyName\":{json}}}"), isIeee754Compatible: false);
+            await reader.ReadAsync(); // Start object
+            await reader.ReadAsync(); // Property name
+            Assert.Equal("PropertyName", await reader.GetValueAsync());
+
+            await reader.ReadAsync(); // Value
+            Assert.Equal(expected, await reader.GetValueAsync());
+        }
+
+        [Theory]
+        [InlineData("42", typeof(int), 42)]
+        [InlineData("-42", typeof(int), -42)]
+        [InlineData("3.14e2", typeof(double), 314.0)]
+        [InlineData("true", typeof(bool), true)]
+        [InlineData("false", typeof(bool), false)]
+        public void ParsePrimitiveValue_Sync(string input, Type expectedType, object expectedValue)
+        {
+            var reader = new JsonReader(new StringReader($"{{\"Number\":{input}, \"Name\": \"John Doe\"}}"), isIeee754Compatible: false);
+            reader.Read(); // Start object
+            reader.Read(); // Property name
+            Assert.Equal("Number", reader.GetValue());
+
+            reader.Read(); // Value
+            var value = reader.GetValue();
+
+            Assert.IsType(expectedType, value);
+            Assert.Equal(expectedValue, value);
+
+            reader.Read(); // Property name
+            reader.Read(); // Value
+            Assert.Equal("John Doe", reader.GetValue());
+        }
+
+        [Theory]
+        [InlineData("42", typeof(int), 42)]
+        [InlineData("-42", typeof(int), -42)]
+        [InlineData("3.14e2", typeof(double), 314.0)]
+        [InlineData("true", typeof(bool), true)]
+        [InlineData("false", typeof(bool), false)]
+        public async Task ParsePrimitiveValue_Async(string input, Type expectedType, object expectedValue)
+        {
+            var reader = new JsonReader(new StringReader($"{{\"Number\":{input}, \"Name\": \"John Doe\"}}"), isIeee754Compatible: false);
+            await reader.ReadAsync(); // Start object
+            await reader.ReadAsync(); // Property name
+            Assert.Equal("Number", await reader.GetValueAsync());
+
+            await reader.ReadAsync(); // Value
+            var value = await reader.GetValueAsync();
+
+            Assert.IsType(expectedType, value);
+            Assert.Equal(expectedValue, value);
+
+            await reader.ReadAsync(); // Property name
+            await reader.ReadAsync(); // Value
+            Assert.Equal("John Doe", await reader.GetValueAsync());
+        }
+
         private JsonReader CreateJsonReader(string jsonValue)
         {
             JsonReader reader = new JsonReader(

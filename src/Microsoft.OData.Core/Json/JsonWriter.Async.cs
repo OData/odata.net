@@ -198,6 +198,7 @@ namespace Microsoft.OData.Json
         }
 
         /// <inheritdoc/>
+        [Obsolete("Microsoft.OData.Edm.TimeOfDay will be removed in ODL 9 and replaced with System.TimeOnly.", false)]
         public async Task WriteValueAsync(TimeOfDay value)
         {
             await this.WriteValueSeparatorAsync().ConfigureAwait(false);
@@ -205,6 +206,7 @@ namespace Microsoft.OData.Json
         }
 
         /// <inheritdoc/>
+        [Obsolete("Microsoft.OData.Edm.Date will be removed in ODL 9 and replaced with System.DateOnly.", false)]
         public async Task WriteValueAsync(Date value)
         {
             await this.WriteValueSeparatorAsync().ConfigureAwait(false);
@@ -444,7 +446,7 @@ namespace Microsoft.OData.Json
                 return this.writer.WriteAsync(JsonConstants.QuoteCharacter);
             }
 
-            return TaskUtils.CompletedTask;
+            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -455,7 +457,7 @@ namespace Microsoft.OData.Json
         {
             if (this.scopes.Count == 0)
             {
-                return TaskUtils.CompletedTask;
+                return Task.CompletedTask;
             }
 
             Scope currentScope = this.scopes.Peek();
@@ -468,7 +470,7 @@ namespace Microsoft.OData.Json
                 }
             }
 
-            return TaskUtils.CompletedTask;
+            return Task.CompletedTask;
         }
 
         /// <summary>

@@ -269,7 +269,7 @@ namespace Microsoft.OData.Client.Tests.Tracking
         }
 
         [Fact]
-        public async void GetNamedStreamsShouldWorkInNoTrackingModeIfExtendsBaseEntity()
+        public async Task GetNamedStreamsShouldWorkInNoTrackingModeIfExtendsBaseEntity()
         {
             SetupContextWithRequestPipeline(new DataServiceContext[] { NonTrackingContext }, true, true);
 

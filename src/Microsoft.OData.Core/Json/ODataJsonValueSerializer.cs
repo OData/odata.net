@@ -689,12 +689,7 @@ namespace Microsoft.OData.Json
             if (actualTypeReference != null && actualTypeReference.IsSpatial())
             {
                 // TODO: Implement asynchronous handling of spatial types in a separate PR
-                await TaskUtils.GetTaskForSynchronousOperation(
-                    (thisParam, valueParam) => PrimitiveConverter.Instance.WriteJson(
-                        valueParam,
-                        thisParam.JsonWriter),
-                    this,
-                    value).ConfigureAwait(false);
+                PrimitiveConverter.Instance.WriteJson(value, this.JsonWriter);
             }
             else
             {

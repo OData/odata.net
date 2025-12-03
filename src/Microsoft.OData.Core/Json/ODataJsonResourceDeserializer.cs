@@ -3808,7 +3808,7 @@ namespace Microsoft.OData.Json
                 return this.JsonReader.ReadAsync();
             }
 
-            return TaskUtils.CompletedTask;
+            return Task.CompletedTask;
         }
 
         /// <summary>

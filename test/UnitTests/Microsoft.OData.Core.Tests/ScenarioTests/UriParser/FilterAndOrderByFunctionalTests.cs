@@ -1106,6 +1106,23 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Theory]
+        [InlineData("PetColorPattern eq Fully.Qualified.Namespace.ColorPattern 'Blue'", "Syntax error at position 64 in 'PetColorPattern eq Fully.Qualified.Namespace.ColorPattern 'Blue''.")]
+        [InlineData("PetColorPattern eq ',Red,Solid'", "The string ',Red,Solid' is not a valid enumeration type constant.")]
+        [InlineData("PetColorPattern eq 'Red,Blue,Striped,'", "The string 'Red,Blue,Striped,' is not a valid enumeration type constant.")]
+        [InlineData("PetColorPattern eq 'Red,,Striped,'", "The string 'Red,,Striped,' is not a valid enumeration type constant.")]
+        [InlineData("PetColorPattern in (,Red,Solid)", "Invalid JSON. An unexpected comma was found in scope 'Array'. A comma is only valid between properties of an object or between elements of an array.")]
+        [InlineData("PetColorPattern in (Red,Blue,Striped,)", "Invalid JSON. An unexpected comma was found in scope 'Array'. A comma is only valid between properties of an object or between elements of an array.")]
+        [InlineData("PetColorPattern in (Red,,Striped)", "Invalid JSON. A token was not recognized in the JSON content.")]
+        [InlineData("PetColorPattern in (Fully.Qualified.Namespace.ColorPattern 'Red',Fully.Qualified.Namespace.ColorPattern'Striped')", "Invalid JSON. A comma character ',' was expected in scope 'Array'. Every two elements in an array and properties of an object must be separated by commas.")]
+
+        public void ParseFilter_WithInvalidEnumValues_ThrowsODataException(string query, string errorMessage)
+        {
+            var exception = Assert.Throws<ODataException>(() =>
+                ParseFilter(query, HardCodedTestModel.TestModel, HardCodedTestModel.GetPet2Type(), HardCodedTestModel.GetPet2Set()));
+            Assert.Equal(errorMessage, exception.Message);
+        }
+
+        [Theory]
         [InlineData("cast(MyDog, 'Fully.Qualified.Namespace.Dog')/Color eq 'blue'")]
         [InlineData("cast(MyDog, Fully.Qualified.Namespace.Dog)/Color eq 'blue'")]
         public void CastFunctionProducesAnEntityType(string filterQuery)

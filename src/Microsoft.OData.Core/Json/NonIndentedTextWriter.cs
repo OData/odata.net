@@ -87,7 +87,7 @@ namespace Microsoft.OData.Json
         /// <returns>A task that represents the asynchronous write operation.</returns>
         public override Task WriteLineAsync()
         {
-            return TaskUtils.CompletedTask;
+            return Task.CompletedTask;
         }
     }
 }

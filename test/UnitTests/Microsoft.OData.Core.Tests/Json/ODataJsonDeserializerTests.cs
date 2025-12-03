@@ -1376,7 +1376,7 @@ namespace Microsoft.OData.Tests.Json
                     Assert.Contains("odata.type", odataPropertyAnnotations);
                     Assert.Equal("#Collection(Edm.String)", odataPropertyAnnotations["odata.type"]);
 
-                    return TaskUtils.CompletedTask;
+                    return Task.CompletedTask;
                 });
         }
 
@@ -1396,7 +1396,7 @@ namespace Microsoft.OData.Tests.Json
                     Assert.Empty(propertyAndAnnotationCollector.GetCustomScopeAnnotation());
                     Assert.Empty(propertyAndAnnotationCollector.GetCustomPropertyAnnotations("Prop"));
 
-                    return TaskUtils.CompletedTask;
+                    return Task.CompletedTask;
                 });
         }
 
@@ -1414,7 +1414,7 @@ namespace Microsoft.OData.Tests.Json
                         PropertyParsingResult.EndOfObject,
                         propertyParsingResult);
 
-                    return TaskUtils.CompletedTask;
+                    return Task.CompletedTask;
                 });
         }
 
@@ -1464,7 +1464,7 @@ namespace Microsoft.OData.Tests.Json
                         PropertyParsingResult.EndOfObject,
                         propertyParsingResult);
 
-                    return TaskUtils.CompletedTask;
+                    return Task.CompletedTask;
                 });
         }
 
@@ -1482,7 +1482,7 @@ namespace Microsoft.OData.Tests.Json
                         PropertyParsingResult.ODataInstanceAnnotation,
                         propertyParsingResult);
 
-                    return TaskUtils.CompletedTask;
+                    return Task.CompletedTask;
                 });
         }
 
@@ -1500,7 +1500,7 @@ namespace Microsoft.OData.Tests.Json
                         PropertyParsingResult.MetadataReferenceProperty,
                         propertyParsingResult);
 
-                    return TaskUtils.CompletedTask;
+                    return Task.CompletedTask;
                 });
         }
 
@@ -1518,7 +1518,7 @@ namespace Microsoft.OData.Tests.Json
                         PropertyParsingResult.PropertyWithoutValue,
                         propertyParsingResult);
 
-                    return TaskUtils.CompletedTask;
+                    return Task.CompletedTask;
                 });
         }
 
@@ -1582,7 +1582,7 @@ namespace Microsoft.OData.Tests.Json
                     Assert.Contains("odata.type", odataPropertyAnnotations);
                     Assert.Equal("#Edm.String", odataPropertyAnnotations["odata.type"]);
 
-                    return TaskUtils.CompletedTask;
+                    return Task.CompletedTask;
                 });
         }
 
@@ -1614,7 +1614,7 @@ namespace Microsoft.OData.Tests.Json
                         (PropertyParsingResult)Enum.Parse(typeof(PropertyParsingResult), expectedPropertyParsingResult),
                         propertyParsingResult);
 
-                    return TaskUtils.CompletedTask;
+                    return Task.CompletedTask;
                 });
         }
 
@@ -1655,7 +1655,7 @@ namespace Microsoft.OData.Tests.Json
                 {
                     Assert.Equal(PropertyParsingResult.EndOfObject, propertyParsingResult);
 
-                    return TaskUtils.CompletedTask;
+                    return Task.CompletedTask;
                 });
         }
 
@@ -2662,7 +2662,7 @@ namespace Microsoft.OData.Tests.Json
 
                 if (verificationDelegate == null)
                 {
-                    verificationDelegate = (arg1, arg2, arg3, arg4) => TaskUtils.CompletedTask;
+                    verificationDelegate = (arg1, arg2, arg3, arg4) => Task.CompletedTask;
                 }
 
                 if (propertyAndAnnotationCollector == null)
