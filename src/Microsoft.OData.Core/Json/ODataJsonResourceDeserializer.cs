@@ -2923,9 +2923,9 @@ namespace Microsoft.OData.Json
                 typeAnnotationFound: true,
                 propertyAndAnnotationCollector: resourceState.PropertyAndAnnotationCollector);
 
-            if(readEntryInstanceAnnotationTask.IsCompletedSuccessfully)
+            if (readEntryInstanceAnnotationTask.IsCompletedSuccessfully)
             {
-                return Task.FromResult<object>(ProcessInstanceAnnotationValue(resourceState,propertyParsingResult,readEntryInstanceAnnotationTask.Result, annotationName));
+                return Task.FromResult<object>(ProcessInstanceAnnotationValue(resourceState,propertyParsingResult, readEntryInstanceAnnotationTask.Result, annotationName));
             }
 
             return AwaitReadODataOrCustomInstanceAnnotationValueAsync(readEntryInstanceAnnotationTask, resourceState, propertyParsingResult, annotationName);
@@ -3428,7 +3428,7 @@ namespace Microsoft.OData.Json
                 // Undeclared property - we need to run detection algorithm here.
                 ValueTask<ODataJsonReaderNestedInfo> taskReadUndeclaredProperty = this.ReadUndeclaredPropertyAsync(resourceState, propertyName, propertyWithValue: false);
 
-                if(taskReadUndeclaredProperty.IsCompletedSuccessfully)
+                if (taskReadUndeclaredProperty.IsCompletedSuccessfully)
                 {
                     readerNestedInfo = taskReadUndeclaredProperty.Result;
                 }
@@ -3903,7 +3903,7 @@ namespace Microsoft.OData.Json
                 insideResourceValue: false,
                 propertyName: edmProperty.Name);
 
-            if(readNonEntityValueTask.IsCompletedSuccessfully)
+            if (readNonEntityValueTask.IsCompletedSuccessfully)
             {
                 object propertyValue = readNonEntityValueTask.Result;
                 InnerAddResourceProperty(this, nullValueReadBehaviorKind, resourceState, edmProperty.Name, propertyValue);
