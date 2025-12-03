@@ -2383,83 +2383,33 @@ namespace Microsoft.OData.Json
         ///
         /// This method fills the ODataResource.TypeName property if the type name is found in the payload.
         /// </remarks>
-        internal ValueTask ReadResourceTypeNameAsync(IODataJsonReaderResourceState resourceState)
+        internal async Task ReadResourceTypeNameAsync(IODataJsonReaderResourceState resourceState)
         {
             Debug.Assert(resourceState != null, "resourceState != null");
             this.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
 
-            // If the current node is not the odata.type property return, else - read it.
-            if (this.JsonReader.NodeType != JsonNodeType.Property)
+            // If the current node is the odata.type property - read it.
+            if (this.JsonReader.NodeType == JsonNodeType.Property)
             {
-                this.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
-                return ValueTask.CompletedTask;
-            }
+                string propertyName = await this.JsonReader.GetPropertyNameAsync()
+                    .ConfigureAwait(false);
 
-            string propertyName;
-
-            Task<string> propertyNameTask = this.JsonReader.GetPropertyNameAsync();
-            if (propertyNameTask.IsCompletedSuccessfully)
-            {
-                propertyName = propertyNameTask.Result;
-            }
-            else
-            {
-                propertyName = AwaitPropertyNameAsync(propertyNameTask).Result;
-            }
-
-            if (!string.Equals(ODataJsonConstants.PrefixedODataTypePropertyName, propertyName, StringComparison.Ordinal)
-                    && !this.CompareSimplifiedODataAnnotation(ODataJsonConstants.SimplifiedODataTypePropertyName, propertyName))
-            {
-                this.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
-                return ValueTask.CompletedTask;
-            }
-
-            Debug.Assert(resourceState.Resource.TypeName == null, "type name should not have already been set");
-
-            Task readTask = this.JsonReader.ReadAsync();
-            if (readTask.IsCompletedSuccessfully)
-            {
-                Task<string> typeNameTask = this.ReadODataTypeAnnotationValueAsync();
-                if (typeNameTask.IsCompletedSuccessfully)
+                if (string.Equals(ODataJsonConstants.PrefixedODataTypePropertyName, propertyName, StringComparison.Ordinal)
+                    || this.CompareSimplifiedODataAnnotation(ODataJsonConstants.SimplifiedODataTypePropertyName, propertyName))
                 {
-                    resourceState.Resource.TypeName = typeNameTask.Result;
-                    this.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
-                    return ValueTask.CompletedTask;
-                }
-                else
-                {
-                    return AwaitTypeNameAsync(this, resourceState, typeNameTask);
+                    Debug.Assert(resourceState.Resource.TypeName == null, "type name should not have already been set");
+
+                    // Read over the property to move to its value.
+                    await this.JsonReader.ReadAsync()
+                        .ConfigureAwait(false);
+
+                    // Read the annotation value.
+                    resourceState.Resource.TypeName = await this.ReadODataTypeAnnotationValueAsync()
+                        .ConfigureAwait(false);
                 }
             }
-            else
-            {
-                return AwaitReadThenTypeNameAsync(this, resourceState, readTask);
-            }
 
-            static async Task<string> AwaitPropertyNameAsync(
-                Task<string> propertyNameTask)
-            {
-                return await propertyNameTask.ConfigureAwait(false);
-            }
-
-            static async ValueTask AwaitReadThenTypeNameAsync(
-                ODataJsonResourceDeserializer @this,
-                IODataJsonReaderResourceState resourceState,
-                Task readTask)
-            {
-                await readTask.ConfigureAwait(false);
-                resourceState.Resource.TypeName = await @this.ReadODataTypeAnnotationValueAsync().ConfigureAwait(false);
-                @this.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
-            }
-
-            static async ValueTask AwaitTypeNameAsync(
-                ODataJsonResourceDeserializer @this,
-                IODataJsonReaderResourceState resourceState,
-                Task<string> typeNameTask)
-            {
-                resourceState.Resource.TypeName = await typeNameTask.ConfigureAwait(false);
-                @this.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
-            }
+            this.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
         }
 
         /// <summary>
