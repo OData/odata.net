@@ -3144,21 +3144,13 @@ namespace Microsoft.OData.Json
                 return this.JsonReader.SkipValueAsync();
             }
 
-            static async Task<object> AwaitReadODataOrCustomInstanceAnnotationValueAsync(
+            static async Task AwaitReadODataOrCustomInstanceAnnotationValueAsync(
                 Task<object> pendingTask,
                 string paramAnnotationName,
                 PropertyAndAnnotationCollector paramPropertyAndAnnotationCollector)
             {
-                try
-                {
-                    object annotationValue = await pendingTask.ConfigureAwait(false);
-                    paramPropertyAndAnnotationCollector.AddODataScopeAnnotation(paramAnnotationName, annotationValue);
-                    return null;
-                }
-                catch (ODataException ex)
-                {
-                    return await Task.FromException<object>(ex).ConfigureAwait(false);
-                }
+                object annotationValue = await pendingTask.ConfigureAwait(false);
+                paramPropertyAndAnnotationCollector.AddODataScopeAnnotation(paramAnnotationName, annotationValue);
             }
         }
 
@@ -3414,7 +3406,7 @@ namespace Microsoft.OData.Json
         /// Post-Condition: JsonNodeType.EndObject              This method doesn't move the reader.
         ///                 JsonNodeType.Property
         /// </remarks>
-        internal Task<ODataJsonReaderNestedInfo> ReadPropertyWithoutValueAsync(IODataJsonReaderResourceState resourceState, string propertyName)
+        internal ValueTask<ODataJsonReaderNestedInfo> ReadPropertyWithoutValueAsync(IODataJsonReaderResourceState resourceState, string propertyName)
         {
             Debug.Assert(resourceState != null, "resourceState != null");
             Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
@@ -3428,17 +3420,16 @@ namespace Microsoft.OData.Json
                 // Undeclared property - we need to run detection algorithm here.
                 ValueTask<ODataJsonReaderNestedInfo> taskReadUndeclaredProperty = this.ReadUndeclaredPropertyAsync(resourceState, propertyName, propertyWithValue: false);
 
+                this.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
+
                 if (taskReadUndeclaredProperty.IsCompletedSuccessfully)
                 {
-                    readerNestedInfo = taskReadUndeclaredProperty.Result;
+                    return taskReadUndeclaredProperty;
                 }
                 else
                 {
-                    readerNestedInfo = AwaitReadPropertyWithoutValueAsync(taskReadUndeclaredProperty).Result;
+                    return AwaitReadPropertyWithoutValueAsync(taskReadUndeclaredProperty);
                 }
-
-                this.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
-                return Task.FromResult<ODataJsonReaderNestedInfo>(readerNestedInfo);
             }
 
             // Declared property - read it.
@@ -3483,9 +3474,9 @@ namespace Microsoft.OData.Json
             }
 
             this.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
-            return Task.FromResult<ODataJsonReaderNestedInfo>(readerNestedInfo);
+            return ValueTask.FromResult<ODataJsonReaderNestedInfo>(readerNestedInfo);
 
-            static async Task<ODataJsonReaderNestedInfo> AwaitReadPropertyWithoutValueAsync(
+            static async ValueTask<ODataJsonReaderNestedInfo> AwaitReadPropertyWithoutValueAsync(
                 ValueTask<ODataJsonReaderNestedInfo> pendingTask)
             {
                 return await pendingTask.ConfigureAwait(false);
