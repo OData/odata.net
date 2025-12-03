@@ -1736,7 +1736,7 @@ namespace Microsoft.OData.Tests.Json
                 await jsonReader.ReadAsync();
 
                 var exception = await Assert.ThrowsAsync<ODataException>(
-                    () => jsonResourceDeserializer.ReadResourceSetContentStartAsync()/*.AsTask()*/);
+                    () => jsonResourceDeserializer.ReadResourceSetContentStartAsync());
 
                 Assert.Equal(
                     Error.Format(SRResources.ODataJsonResourceDeserializer_CannotReadResourceSetContentStart, "StartObject"),

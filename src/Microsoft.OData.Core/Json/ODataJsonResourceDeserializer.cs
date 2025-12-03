@@ -2875,7 +2875,7 @@ namespace Microsoft.OData.Json
 
             if (readEntryInstanceAnnotationTask.IsCompletedSuccessfully)
             {
-                return Task.FromResult<object>(ProcessInstanceAnnotationValue(resourceState,propertyParsingResult, readEntryInstanceAnnotationTask.Result, annotationName));
+                return Task.FromResult<object>(ProcessInstanceAnnotationValue(resourceState, propertyParsingResult, readEntryInstanceAnnotationTask.Result, annotationName));
             }
 
             return AwaitReadODataOrCustomInstanceAnnotationValueAsync(readEntryInstanceAnnotationTask, resourceState, propertyParsingResult, annotationName);
