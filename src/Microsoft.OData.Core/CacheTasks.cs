@@ -27,5 +27,7 @@ namespace Microsoft.OData
         internal static readonly Task<JsonNodeType> PrimitiveValue = Task.FromResult(JsonNodeType.PrimitiveValue);
 
         internal static readonly Task<JsonNodeType> Property = Task.FromResult(JsonNodeType.Property);
+
+        internal static readonly Task<string> StringNull = Task.FromResult<string>(null);
     }
 }

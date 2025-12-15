@@ -8,7 +8,7 @@ namespace Microsoft.OData.Json
 {
     #region Namespaces
     using System;
-    using System.Collections.Generic;
+    using System.Collections.Frozen;
     using System.Diagnostics;
     using Microsoft.OData.Core;
     #endregion Namespaces
@@ -21,8 +21,8 @@ namespace Microsoft.OData.Json
         /// <summary>
         /// Hash set of known odata annotation names that have special meanings to OData Lib.
         /// </summary>
-        internal static readonly HashSet<string> KnownODataAnnotationNames =
-            new HashSet<string>(
+        internal static readonly FrozenSet<string> KnownODataAnnotationNames =
+            FrozenSet.ToFrozenSet(
                 new[]
                 {
                     ODataContext,
@@ -43,7 +43,7 @@ namespace Microsoft.OData.Json
                     ODataDeltaLink,
                     ODataRemoved,
                     ODataDelta,
-                    ODataNull,
+                    ODataNull
                 },
                 StringComparer.Ordinal);
 
@@ -106,6 +106,66 @@ namespace Microsoft.OData.Json
         /// used for compatibility with 6.x library version.
         /// </summary>
         internal const string ODataNull = "odata.null";
+
+        /// <summary>The OData Context annotation name with no prefix.</summary>
+        internal const string ODataContextNoPrefix = "context";
+
+        /// <summary>The OData Type annotation name with no prefix.</summary>
+        internal const string ODataTypeNoPrefix = "type";
+
+        /// <summary>The OData ID annotation name with no prefix.</summary>
+        internal const string ODataIdNoPrefix = "id";
+
+        /// <summary>The OData etag annotation name with no prefix.</summary>
+        internal const string ODataETagNoPrefix = "etag";
+
+        /// <summary>The OData edit link annotation name with no prefix.</summary>
+        internal const string ODataEditLinkNoPrefix = "editLink";
+
+        /// <summary>The OData read link annotation name with no prefix.</summary>
+        internal const string ODataReadLinkNoPrefix = "readLink";
+
+        /// <summary>The OData media edit link annotation name with no prefix.</summary>
+        internal const string ODataMediaEditLinkNoPrefix = "mediaEditLink";
+
+        /// <summary>The OData media read link annotation name with no prefix.</summary>
+        internal const string ODataMediaReadLinkNoPrefix = "mediaReadLink";
+
+        /// <summary>The OData media content type annotation name with no prefix.</summary>
+        internal const string ODataMediaContentTypeNoPrefix = "mediaContentType";
+
+        /// <summary>The OData media etag annotation name with no prefix.</summary>
+        internal const string ODataMediaETagNoPrefix = "mediaEtag";
+
+        /// <summary>The 'count' annotation name with no prefix.</summary>
+        internal const string ODataCountNoPrefix = "count";
+
+        /// <summary>The 'nextLink' annotation name with no prefix.</summary>
+        internal const string ODataNextLinkNoPrefix = "nextLink";
+
+        /// <summary>The 'navigationLink' annotation name with no prefix.</summary>
+        internal const string ODataNavigationLinkUrlNoPrefix = "navigationLink";
+
+        /// <summary>The 'bind' annotation name with no prefix.</summary>
+        internal const string ODataBindNoPrefix = "bind";
+
+        /// <summary>The 'associationLink' annotation name with no prefix.</summary>
+        internal const string ODataAssociationLinkUrlNoPrefix = "associationLink";
+
+        /// <summary>The 'deltaLink' annotation name with no prefix.</summary>
+        internal const string ODataDeltaLinkNoPrefix = "deltaLink";
+
+        /// <summary>The 'removed' annotation name with no prefix.</summary>
+        internal const string ODataRemovedNoPrefix = "removed";
+
+        /// <summary>The 'delta' annotation name with no prefix.</summary>
+        internal const string ODataDeltaNoPrefix = "delta";
+
+        /// <summary>
+        /// The OData Null annotation name with no prefix. This is an OData 3.0 protocol element
+        /// used for compatibility with 6.x library version.
+        /// </summary>
+        internal const string ODataNullNoPrefix = "null";
 
         /// <summary>
         /// Returns true if the <paramref name="annotationName"/> starts with "odata.", false otherwise.

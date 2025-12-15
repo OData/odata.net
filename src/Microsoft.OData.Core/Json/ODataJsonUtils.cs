@@ -28,11 +28,25 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="propertyName">The name of the property.</param>
         /// <returns>true if <paramref name="propertyName"/> is a name of a metadata reference property, false otherwise.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static bool IsMetadataReferenceProperty(string propertyName)
         {
             Debug.Assert(!String.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
 
             return propertyName.IndexOf(ODataConstants.ContextUriFragmentIndicator, StringComparison.Ordinal) >= 0;
+        }
+
+        /// <summary>
+        /// Determines if the specified property name is a name of a metadata reference property.
+        /// </summary>
+        /// <param name="propertyName">The name of the property.</param>
+        /// <returns>true if <paramref name="propertyNameSpan"/> is a name of a metadata reference property, false otherwise.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static bool IsMetadataReferenceProperty(ReadOnlySpan<char> propertyNameSpan)
+        {
+            Debug.Assert(!propertyNameSpan.IsEmpty, "!propertyNameSpan.IsEmpty");
+
+            return propertyNameSpan.IndexOf(ODataConstants.ContextUriFragmentIndicator) >= 0;
         }
 
         /// <summary>

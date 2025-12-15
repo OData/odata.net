@@ -12,6 +12,8 @@ namespace Microsoft.OData.Json
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.Linq;
+    using System.Runtime.CompilerServices;
+    using System.Runtime.InteropServices;
     using System.Threading.Tasks;
     using Microsoft.OData;
     using Microsoft.OData.Core;
@@ -327,11 +329,11 @@ namespace Microsoft.OData.Json
         /// Post-Condition: The reader is positioned on the first property of the payload after having read (or skipped) the context URI property.
         ///                 Or the reader is positioned on an end-object node if there are no properties (other than the context URI which is required in responses and optional in requests).
         /// </remarks>
-        internal async Task ReadPayloadStartAsync(
+        internal Task ReadPayloadStartAsync(
             ODataPayloadKind payloadKind,
             PropertyAndAnnotationCollector propertyAndAnnotationCollector,
             bool isReadingNestedPayload,
-            bool allowEmptyPayload, 
+            bool allowEmptyPayload,
             IEdmNavigationSource navigationSource = null)
         {
             this.JsonReader.AssertNotBuffering();
@@ -339,31 +341,77 @@ namespace Microsoft.OData.Json
                 isReadingNestedPayload || this.JsonReader.NodeType == JsonNodeType.None,
                 "Pre-Condition: JSON reader must not have been used yet when not reading a nested payload.");
 
-            string contextUriAnnotationValue = await this.ReadPayloadStartImplementationAsync(
+            Task<string> readPayloadStartTask = this.ReadPayloadStartImplementationAsync(
                         payloadKind,
                         propertyAndAnnotationCollector,
                         isReadingNestedPayload,
-                        allowEmptyPayload).ConfigureAwait(false);
+                        allowEmptyPayload);
 
-            // The context URI is only recognized in non-error response top-level payloads.
-            // If the payload is nested (for example when we read URL literals) we don't recognize the context URI.
-            // Top-level error payloads don't need and use the context URI.
-            if (!isReadingNestedPayload && payloadKind != ODataPayloadKind.Error && contextUriAnnotationValue != null)
+            if (readPayloadStartTask.IsCompletedSuccessfully)
             {
-                this.contextUriParseResult = ODataJsonContextUriParser.Parse(
-                    this.Model,
-                    contextUriAnnotationValue,
+                ProcessContextUriAnnotationValue(
+                    this,
                     payloadKind,
-                    this.MessageReaderSettings.ClientCustomTypeResolver,
-                    this.JsonInputContext.ReadingResponse || payloadKind == ODataPayloadKind.Delta,
-                    this.JsonInputContext.MessageReaderSettings.ThrowIfTypeConflictsWithMetadata,
-                    this.BaseUri, 
+                    isReadingNestedPayload,
+                    readPayloadStartTask.Result,
                     navigationSource);
+
+                return Task.CompletedTask;
             }
 
+            return AwaitReadPayloadStartAsync(
+                this,
+                payloadKind,
+                isReadingNestedPayload,
+                readPayloadStartTask.Result,
+                navigationSource,
+                readPayloadStartTask);
+
+            static void ProcessContextUriAnnotationValue(
+                ODataJsonDeserializer thisParam,
+                ODataPayloadKind payloadKindParam,
+                bool isReadingNestedPayloadParam,
+                string contextUriAnnotationValueParam,
+                IEdmNavigationSource navigationSourceParam)
+            {
+                // The context URI is only recognized in non-error response top-level payloads.
+                // If the payload is nested (for example when we read URL literals) we don't recognize the context URI.
+                // Top-level error payloads don't need and use the context URI.
+                if (!isReadingNestedPayloadParam && payloadKindParam != ODataPayloadKind.Error && contextUriAnnotationValueParam != null)
+                {
+                    thisParam.contextUriParseResult = ODataJsonContextUriParser.Parse(
+                        thisParam.Model,
+                        contextUriAnnotationValueParam,
+                        payloadKindParam,
+                        thisParam.MessageReaderSettings.ClientCustomTypeResolver,
+                        thisParam.JsonInputContext.ReadingResponse || payloadKindParam == ODataPayloadKind.Delta,
+                        thisParam.JsonInputContext.MessageReaderSettings.ThrowIfTypeConflictsWithMetadata,
+                        thisParam.BaseUri,
+                        navigationSourceParam);
+                }
+
 #if DEBUG
-            this.contextUriParseResultReady = true;
+                thisParam.contextUriParseResultReady = true;
 #endif
+            }
+
+            static async Task AwaitReadPayloadStartAsync(
+                ODataJsonDeserializer thisParam,
+                ODataPayloadKind payloadKindParam,
+                bool isReadingNestedPayloadParam,
+                string contextUriAnnotationValueParam,
+                IEdmNavigationSource navigationSourceParam,
+                Task<string> pendingReadPayloadStartTask)
+            {
+                string contextUriAnnotationValue = await pendingReadPayloadStartTask.ConfigureAwait(false);
+
+                ProcessContextUriAnnotationValue(
+                    thisParam,
+                    payloadKindParam,
+                    isReadingNestedPayloadParam,
+                    contextUriAnnotationValue,
+                    navigationSourceParam);
+            }
         }
 
         /// <summary>
@@ -612,13 +660,35 @@ namespace Microsoft.OData.Json
         /// A task that represents the asynchronous read operation.
         /// The value of the TResult parameter contains the string that was read.
         /// </returns>
-        internal async Task<string> ReadAndValidateAnnotationStringValueAsync(string annotationName)
+        internal Task<string> ReadAndValidateAnnotationStringValueAsync(string annotationName)
         {
-            string valueRead = await this.JsonReader.ReadStringValueAsync(annotationName)
-                .ConfigureAwait(false);
-            ODataJsonReaderUtils.ValidateAnnotationValue(valueRead, annotationName);
-            
-            return valueRead;
+            Task<string> readStringValueTask = this.JsonReader.ReadStringValueAsync();
+
+            if (!readStringValueTask.IsCompletedSuccessfully)
+            {
+                return AwaitReadStringValueAsync(annotationName, readStringValueTask);
+            }
+
+            try
+            {
+                string valueRead = readStringValueTask.Result;
+                ODataJsonReaderUtils.ValidateAnnotationValue(valueRead, annotationName);
+
+                return Task.FromResult(valueRead);
+            }
+            catch (ODataException ex)
+            {
+                return Task.FromException<string>(ex);
+            }
+
+            static async Task<string> AwaitReadStringValueAsync(string annotationNameParam, Task<string> pendingReadStringValueTask)
+            {
+                string valueRead = await pendingReadStringValueTask.ConfigureAwait(false);
+
+                ODataJsonReaderUtils.ValidateAnnotationValue(valueRead, annotationNameParam);
+
+                return valueRead;
+            }
         }
 
         /// <summary>
@@ -642,17 +712,33 @@ namespace Microsoft.OData.Json
         /// A task that represents the asynchronous read operation.
         /// The value of the TResult parameter contains the Uri that was read.
         /// </returns>
-        internal async Task<Uri> ReadAnnotationStringValueAsUriAsync(string annotationName)
+        internal Task<Uri> ReadAnnotationStringValueAsUriAsync(string annotationName)
         {
-            string stringValue = await this.JsonReader.ReadStringValueAsync(annotationName)
-                .ConfigureAwait(false);
+            Task<string> readStringValueTask = this.JsonReader.ReadStringValueAsync();
 
-            if (stringValue == null)
+            if (readStringValueTask.IsCompletedSuccessfully)
             {
-                return null;
+                return Task.FromResult(ProcessUri(this, readStringValueTask.Result));
             }
 
-            return this.ReadingResponse ? this.ProcessUriFromPayload(stringValue) : new Uri(stringValue, UriKind.RelativeOrAbsolute);
+            return AwaitReadStringValueAsync(this, readStringValueTask);
+
+            static Uri ProcessUri(ODataJsonDeserializer thisParam, string stringValueParam)
+            {
+                if (stringValueParam == null)
+                {
+                    return null;
+                }
+
+                return thisParam.ReadingResponse ? thisParam.ProcessUriFromPayload(stringValueParam) : new Uri(stringValueParam, UriKind.RelativeOrAbsolute);
+            }
+
+            static async Task<Uri> AwaitReadStringValueAsync(ODataJsonDeserializer thisParam, Task<string> pendingReadStringValueTask)
+            {
+                var stringValue = await pendingReadStringValueTask.ConfigureAwait(false);
+
+                return ProcessUri(thisParam, stringValue);
+            }
         }
 
         /// <summary>
@@ -663,11 +749,31 @@ namespace Microsoft.OData.Json
         /// A task that represents the asynchronous read operation.
         /// The value of the TResult parameter contains the Uri that was read.
         /// </returns>
-        internal async Task<Uri> ReadAndValidateAnnotationStringValueAsUriAsync(string annotationName)
+        internal Task<Uri> ReadAndValidateAnnotationStringValueAsUriAsync(string annotationName)
         {
-            string stringValue = await this.ReadAndValidateAnnotationStringValueAsync(annotationName)
-                .ConfigureAwait(false);
-            return this.ReadingResponse ? this.ProcessUriFromPayload(stringValue) : new Uri(stringValue, UriKind.RelativeOrAbsolute);
+            Task<string> readAndValidateAnnotationStringValueTask = this.ReadAndValidateAnnotationStringValueAsync(annotationName);
+
+            if (readAndValidateAnnotationStringValueTask.IsCompletedSuccessfully)
+            {
+                return Task.FromResult(ProcessUri(this, readAndValidateAnnotationStringValueTask.Result));
+            }
+
+            return AwaitReadAndValidateAnnotationStringValueAsync(this, readAndValidateAnnotationStringValueTask);
+
+            static async Task<Uri> AwaitReadAndValidateAnnotationStringValueAsync(
+                ODataJsonDeserializer thisParam,
+                Task<string> pendingReadAndValidateAnnotationTask)
+            {
+                string stringValueParam = await pendingReadAndValidateAnnotationTask
+                    .ConfigureAwait(false);
+
+                return ProcessUri(thisParam, stringValueParam);
+            }
+
+            static Uri ProcessUri(ODataJsonDeserializer thisParam, string stringValueParam)
+            {
+                return thisParam.ReadingResponse ? thisParam.ProcessUriFromPayload(stringValueParam) : new Uri(stringValueParam, UriKind.RelativeOrAbsolute);
+            }
         }
 
         /// <summary>
@@ -679,25 +785,49 @@ namespace Microsoft.OData.Json
         /// A task that represents the asynchronous read operation.
         /// The value of the TResult parameter contains the <see cref="long"/> value that was read.
         /// </returns>
-        internal async Task<long> ReadAndValidateAnnotationAsLongForIeee754CompatibleAsync(string annotationName)
+        internal Task<long> ReadAndValidateAnnotationAsLongForIeee754CompatibleAsync(string annotationName)
         {
-            object value = await this.JsonReader.ReadPrimitiveValueAsync()
-                .ConfigureAwait(false);
+            Task<object> readPrimitiveValueTask = this.JsonReader.ReadPrimitiveValueAsync();
 
-            ODataJsonReaderUtils.ValidateAnnotationValue(value, annotationName);
-
-            if ((value is string) ^ this.JsonReader.IsIeee754Compatible)
+            if (readPrimitiveValueTask.IsCompletedSuccessfully)
             {
-                throw new ODataException(Error.Format(SRResources.ODataJsonReaderUtils_ConflictBetweenInputFormatAndParameter, Metadata.EdmConstants.EdmInt64TypeName));
+                try
+                {
+                    return Task.FromResult(ProcessAnnotationValue(this, readPrimitiveValueTask.Result, annotationName));
+                }
+                catch (ODataException ex)
+                {
+                    return Task.FromException<long>(ex);
+                }
             }
 
-            return (long)ODataJsonReaderUtils.ConvertValue(
-                    value,
-                    EdmCoreModel.Instance.GetInt64(false),
-                    this.MessageReaderSettings,
-                    validateNullValue: true,
-                    propertyName: annotationName,
-                    converter: this.JsonInputContext.PayloadValueConverter);
+            return AwaitReadPrimitiveValueAsync(this, annotationName, readPrimitiveValueTask);
+
+            static long ProcessAnnotationValue(ODataJsonDeserializer thisParam, object valueParam, string annotationNameParam)
+            {
+                ODataJsonReaderUtils.ValidateAnnotationValue(valueParam, annotationNameParam);
+
+                if ((valueParam is string) ^ thisParam.JsonReader.IsIeee754Compatible)
+                {
+                    throw new ODataException(
+                        Error.Format(SRResources.ODataJsonReaderUtils_ConflictBetweenInputFormatAndParameter, Metadata.EdmConstants.EdmInt64TypeName));
+                }
+
+                return (long)ODataJsonReaderUtils.ConvertValue(
+                        valueParam,
+                        EdmCoreModel.Instance.GetInt64(false),
+                        thisParam.MessageReaderSettings,
+                        validateNullValue: true,
+                        propertyName: annotationNameParam,
+                        converter: thisParam.JsonInputContext.PayloadValueConverter);
+            }
+
+            static async Task<long> AwaitReadPrimitiveValueAsync(ODataJsonDeserializer thisParam, string annotationNameParam, Task<object> pendingReadPrimitiveValueTask)
+            {
+                object value = await pendingReadPrimitiveValueTask.ConfigureAwait(false);
+
+                return ProcessAnnotationValue(thisParam, value, annotationNameParam);
+            }
         }
 
         /// <summary>
@@ -707,7 +837,7 @@ namespace Microsoft.OData.Json
         /// <param name="readPropertyAnnotationValueDelegate">Delegate to read property annotation value.</param>
         /// <param name="handlePropertyDelegate">Delegate to handle the result of parsing property.</param>
         /// <returns>A task that represents the asynchronous read operation.</returns>
-        internal async Task ProcessPropertyAsync(
+        internal Task ProcessPropertyAsync(
             PropertyAndAnnotationCollector propertyAndAnnotationCollector,
             Func<string, Task<object>> readPropertyAnnotationValueDelegate,
             Func<PropertyParsingResult, string, Task> handlePropertyDelegate)
@@ -717,30 +847,201 @@ namespace Microsoft.OData.Json
             Debug.Assert(handlePropertyDelegate != null, $"{nameof(handlePropertyDelegate)} != null");
             this.AssertJsonCondition(JsonNodeType.Property);
 
-            (PropertyParsingResult propertyParsingResult, string propertyName) = await this.ParsePropertyAsync(
+            ValueTask<(PropertyParsingResult propertyParsingResult, string propertyName)> parsePropertyTask = this.ParsePropertyAsync(
                 propertyAndAnnotationCollector,
-                readPropertyAnnotationValueDelegate).ConfigureAwait(false);
+                readPropertyAnnotationValueDelegate);
 
-            while (propertyParsingResult == PropertyParsingResult.CustomInstanceAnnotation && this.ShouldSkipCustomInstanceAnnotation(propertyName))
+            if (!parsePropertyTask.IsCompletedSuccessfully)
             {
-                // Read over the property name
-                await this.JsonReader.ReadAsync()
-                    .ConfigureAwait(false);
-
-                // Skip over the instance annotation value
-                await this.JsonReader.SkipValueAsync()
-                    .ConfigureAwait(false);
-                (propertyParsingResult, propertyName) = await this.ParsePropertyAsync(
+                return AwaitParsePropertyAsync(
+                    this,
                     propertyAndAnnotationCollector,
-                    readPropertyAnnotationValueDelegate).ConfigureAwait(false);
+                    readPropertyAnnotationValueDelegate,
+                    handlePropertyDelegate,
+                    parsePropertyTask);
             }
 
-            await handlePropertyDelegate(propertyParsingResult, propertyName)
-                .ConfigureAwait(false);
-            if (propertyParsingResult != PropertyParsingResult.EndOfObject
-                && propertyParsingResult != PropertyParsingResult.CustomInstanceAnnotation)
+            return ContinueAfterParsePropertyAsync(
+                this,
+                propertyAndAnnotationCollector,
+                readPropertyAnnotationValueDelegate,
+                handlePropertyDelegate,
+                parsePropertyTask.Result.propertyParsingResult,
+                parsePropertyTask.Result.propertyName);
+
+            static Task ContinueAfterParsePropertyAsync(
+                ODataJsonDeserializer thisParam,
+                PropertyAndAnnotationCollector propertyAndAnnotationCollectorParam,
+                Func<string, Task<object>> readPropertyAnnotationValueDelegateParam,
+                Func<PropertyParsingResult, string, Task> handlePropertyDelegateParam,
+                PropertyParsingResult propertyParsingResultParam,
+                string propertyNameParam)
             {
-                propertyAndAnnotationCollector.MarkPropertyAsProcessed(propertyName);
+                while (true)
+                {
+                    if (propertyParsingResultParam != PropertyParsingResult.CustomInstanceAnnotation
+                        || !thisParam.ShouldSkipCustomInstanceAnnotation(propertyNameParam))
+                    {
+                        break;
+                    }
+
+                    ValueTask<(PropertyParsingResult propertyParsingResult, string propertyName)> processPropertyLocalTask = ProcessPropertyLocalAsync(
+                        thisParam,
+                        propertyAndAnnotationCollectorParam,
+                        readPropertyAnnotationValueDelegateParam);
+
+                    if (!processPropertyLocalTask.IsCompletedSuccessfully)
+                    {
+                        return AwaitParsePropertyLocalAsync(
+                            thisParam,
+                            propertyAndAnnotationCollectorParam,
+                            readPropertyAnnotationValueDelegateParam,
+                            handlePropertyDelegateParam,
+                            processPropertyLocalTask);
+                    }
+                }
+
+                return FinalizeProcessPropertyAsync(
+                    thisParam,
+                    propertyAndAnnotationCollectorParam,
+                    handlePropertyDelegateParam,
+                    propertyParsingResultParam,
+                    propertyNameParam);
+            }
+
+            static ValueTask<(PropertyParsingResult propertyParsingResult, string propertyName)> ProcessPropertyLocalAsync(
+                ODataJsonDeserializer thisParam,
+                PropertyAndAnnotationCollector propertyAndAnnotationCollectorParam,
+                Func<string, Task<object>> readPropertyAnnotationValueDelegateParam)
+            {
+                // Read over the property name
+                Task<bool> readTask = thisParam.JsonReader.ReadAsync();
+
+                if (!readTask.IsCompletedSuccessfully)
+                {
+                    return AwaitReadAsync(
+                        thisParam,
+                        propertyAndAnnotationCollectorParam,
+                        readPropertyAnnotationValueDelegateParam,
+                        readTask);
+                }
+
+                return ContinueAfterReadAsync(thisParam, propertyAndAnnotationCollectorParam, readPropertyAnnotationValueDelegateParam);
+            }
+
+            static ValueTask<(PropertyParsingResult PropertyParsingResult, string PropertyName)> ContinueAfterReadAsync(
+                ODataJsonDeserializer thisParam,
+                PropertyAndAnnotationCollector propertyAndAnnotationCollectorParam,
+                Func<string, Task<object>> readPropertyAnnotationValueDelegateParam)
+            {
+                // Skip over the instance annotation value
+                Task skipValueTask = thisParam.JsonReader.SkipValueAsync();
+
+                if (!skipValueTask.IsCompletedSuccessfully)
+                {
+                    return AwaitSkipValueAsync(
+                        thisParam,
+                        propertyAndAnnotationCollectorParam,
+                        readPropertyAnnotationValueDelegateParam,
+                        skipValueTask);
+                }
+
+                return thisParam.ParsePropertyAsync(
+                    propertyAndAnnotationCollectorParam,
+                    readPropertyAnnotationValueDelegateParam);
+            }
+
+            static async ValueTask<(PropertyParsingResult PropertyParsingResult, string PropertyName)> AwaitReadAsync(
+                ODataJsonDeserializer thisParam,
+                PropertyAndAnnotationCollector propertyAndAnnotationCollectorParam,
+                Func<string, Task<object>> readPropertyAnnotationValueDelegateParam,
+                Task<bool> pendingReadTask)
+            {
+                await pendingReadTask.ConfigureAwait(false);
+
+                return await ContinueAfterReadAsync(
+                    thisParam,
+                    propertyAndAnnotationCollectorParam,
+                    readPropertyAnnotationValueDelegateParam).ConfigureAwait(false);
+            }
+
+            static async ValueTask<(PropertyParsingResult PropertyParsingResult, string PropertyName)> AwaitSkipValueAsync(
+                ODataJsonDeserializer thisParam,
+                PropertyAndAnnotationCollector propertyAndAnnotationCollectorParam,
+                Func<string, Task<object>> readPropertyAnnotationValueDelegateParam,
+                Task pendingSkipValueTask)
+            {
+                await pendingSkipValueTask.ConfigureAwait(false);
+
+                return await thisParam.ParsePropertyAsync(
+                    propertyAndAnnotationCollectorParam,
+                    readPropertyAnnotationValueDelegateParam).ConfigureAwait(false);
+            }
+
+            static async Task AwaitParsePropertyLocalAsync(
+                ODataJsonDeserializer thisParam,
+                PropertyAndAnnotationCollector propertyAndAnnotationCollectorParam,
+                Func<string, Task<object>> readPropertyAnnotationValueDelegateParam,
+                Func<PropertyParsingResult, string, Task> handlePropertyDelegateParam,
+                ValueTask<(PropertyParsingResult PropertyParsingResult, string PropertyName)> pendingProcessPropertyLocalTask)
+            {
+                (PropertyParsingResult propertyParsingResult, string propertyName) = await pendingProcessPropertyLocalTask.ConfigureAwait(false);
+
+                while (true)
+                {
+                    if (propertyParsingResult != PropertyParsingResult.CustomInstanceAnnotation
+                        || !thisParam.ShouldSkipCustomInstanceAnnotation(propertyName))
+                    {
+                        break;
+                    }
+
+                    (propertyParsingResult, propertyName) = await ProcessPropertyLocalAsync(
+                        thisParam,
+                        propertyAndAnnotationCollectorParam,
+                        readPropertyAnnotationValueDelegateParam).ConfigureAwait(false);
+                }
+
+                await FinalizeProcessPropertyAsync(
+                    thisParam,
+                    propertyAndAnnotationCollectorParam,
+                    handlePropertyDelegateParam,
+                    propertyParsingResult,
+                    propertyName).ConfigureAwait(false);
+            }
+
+            static async Task FinalizeProcessPropertyAsync(
+                ODataJsonDeserializer thisParam,
+                PropertyAndAnnotationCollector propertyAndAnnotationCollectorParam,
+                Func<PropertyParsingResult, string, Task> handlePropertyDelegateParam,
+                PropertyParsingResult propertyParsingResultParam,
+                string propertyNameParam)
+            {
+                await handlePropertyDelegateParam(propertyParsingResultParam, propertyNameParam)
+                    .ConfigureAwait(false);
+                if (propertyParsingResultParam != PropertyParsingResult.EndOfObject
+                    && propertyParsingResultParam != PropertyParsingResult.CustomInstanceAnnotation)
+                {
+                    propertyAndAnnotationCollectorParam.MarkPropertyAsProcessed(propertyNameParam);
+                }
+            }
+
+            static async Task AwaitParsePropertyAsync(
+                ODataJsonDeserializer thisParam,
+                PropertyAndAnnotationCollector propertyAndAnnotationCollectorParam,
+                Func<string, Task<object>> readPropertyAnnotationValueDelegateParam,
+                Func<PropertyParsingResult, string, Task> handlePropertyDelegateParam,
+                ValueTask<(PropertyParsingResult propertyParsingResult, string propertyName)> pendingParsePropertyTask)
+            {
+                (PropertyParsingResult propertyParsingResult, string propertyName) = await pendingParsePropertyTask
+                    .ConfigureAwait(false);
+
+                await ContinueAfterParsePropertyAsync(
+                    thisParam,
+                    propertyAndAnnotationCollectorParam,
+                    readPropertyAnnotationValueDelegateParam,
+                    handlePropertyDelegateParam,
+                    propertyParsingResult,
+                    propertyName).ConfigureAwait(false);
             }
         }
 
@@ -754,7 +1055,7 @@ namespace Microsoft.OData.Json
         /// A task that represents the asynchronous read operation.
         /// The value of the TResult parameter contains the value of the context URI annotation.
         /// </returns>
-        internal async Task<string> ReadContextUriAnnotationAsync(
+        internal Task<string> ReadContextUriAnnotationAsync(
             ODataPayloadKind payloadKind,
             PropertyAndAnnotationCollector propertyAndAnnotationCollector,
             bool failOnMissingContextUriAnnotation)
@@ -764,37 +1065,85 @@ namespace Microsoft.OData.Json
                 if (!failOnMissingContextUriAnnotation || payloadKind == ODataPayloadKind.Unsupported)
                 {
                     // Do not fail during payload kind detection
-                    return null;
+                    return Task.FromResult<string>(null);
                 }
 
                 throw new ODataException(SRResources.ODataJsonDeserializer_ContextLinkNotFoundAsFirstProperty);
             }
 
             // Must make sure the input odata.context has a '@' prefix
-            string propertyName = await this.JsonReader.GetPropertyNameAsync()
-                .ConfigureAwait(false);
-            if (!string.Equals(ODataJsonConstants.PrefixedODataContextPropertyName, propertyName, StringComparison.Ordinal)
-                && !this.CompareSimplifiedODataAnnotation(ODataJsonConstants.SimplifiedODataContextPropertyName, propertyName))
+            Task<string> getPropertyNameTask = this.JsonReader.GetPropertyNameAsync();
+            if (!getPropertyNameTask.IsCompletedSuccessfully)
             {
-                if (!failOnMissingContextUriAnnotation || payloadKind == ODataPayloadKind.Unsupported)
+                return AwaitGetPropertyNameAsync(
+                    this,
+                    payloadKind,
+                    propertyAndAnnotationCollector,
+                    failOnMissingContextUriAnnotation,
+                    getPropertyNameTask);
+            }
+
+            string propertyName = getPropertyNameTask.Result;
+
+            return ContinueAfterGetPropertyNameAsync(this, payloadKind, propertyAndAnnotationCollector, failOnMissingContextUriAnnotation, propertyName);
+
+            static Task<string> ContinueAfterGetPropertyNameAsync(
+                ODataJsonDeserializer thisParam,
+                ODataPayloadKind payloadKindParam,
+                PropertyAndAnnotationCollector propertyAndAnnotationCollectorParam,
+                bool failOnMissingContextUriAnnotationParam,
+                string propertyNameParam)
+            {
+                if (!string.Equals(ODataJsonConstants.PrefixedODataContextPropertyName, propertyNameParam, StringComparison.Ordinal)
+                    && !thisParam.CompareSimplifiedODataAnnotation(ODataJsonConstants.SimplifiedODataContextPropertyName, propertyNameParam))
                 {
-                    // Do not fail during payload kind detection
-                    return null;
+                    if (!failOnMissingContextUriAnnotationParam || payloadKindParam == ODataPayloadKind.Unsupported)
+                    {
+                        // Do not fail during payload kind detection
+                        return Task.FromResult<string>(null);
+                    }
+
+                    throw new ODataException(SRResources.ODataJsonDeserializer_ContextLinkNotFoundAsFirstProperty);
                 }
 
-                throw new ODataException(SRResources.ODataJsonDeserializer_ContextLinkNotFoundAsFirstProperty);
+                if (propertyAndAnnotationCollectorParam != null)
+                {
+                    propertyAndAnnotationCollectorParam.MarkPropertyAsProcessed(propertyNameParam);
+                }
+
+                // Read over the property name
+                Task<JsonNodeType> readNextTask = thisParam.JsonReader.ReadNextAsync();
+                if (!readNextTask.IsCompletedSuccessfully)
+                {
+                    return AwaitReadNextAsync(thisParam.JsonReader, readNextTask);
+                }
+                
+                return thisParam.JsonReader.ReadStringValueAsync();
             }
 
-            if (propertyAndAnnotationCollector != null)
+            static async Task<string> AwaitGetPropertyNameAsync(
+                ODataJsonDeserializer thisParam,
+                ODataPayloadKind payloadKindParam,
+                PropertyAndAnnotationCollector propertyAndAnnotationCollectorParam,
+                bool failOnMissingContextUriAnnotationParam,
+                Task<string> pendingGetPropertyNameTask)
             {
-                propertyAndAnnotationCollector.MarkPropertyAsProcessed(propertyName);
+                string propertyName = await pendingGetPropertyNameTask.ConfigureAwait(false);
+
+                return await ContinueAfterGetPropertyNameAsync(
+                    thisParam,
+                    payloadKindParam,
+                    propertyAndAnnotationCollectorParam,
+                    failOnMissingContextUriAnnotationParam,
+                    propertyName);
             }
 
-            // Read over the property name
-            await this.JsonReader.ReadNextAsync()
-                .ConfigureAwait(false);
-            return await this.JsonReader.ReadStringValueAsync()
-                .ConfigureAwait(false);
+            static async Task<string> AwaitReadNextAsync(IJsonReader jsonReaderParam, Task<JsonNodeType> pendingReadNextTask)
+            {
+                await pendingReadNextTask.ConfigureAwait(false);
+
+                return await jsonReaderParam.ReadStringValueAsync().ConfigureAwait(false);
+            }
         }
 
         /// <summary>
@@ -819,13 +1168,99 @@ namespace Microsoft.OData.Json
         /// <returns>The complete OData annotation name.</returns>
         protected string CompleteSimplifiedODataAnnotation(string annotationName)
         {
-            if (this.JsonInputContext.OptionalODataPrefix &&
-                annotationName.IndexOf('.', StringComparison.Ordinal) == -1)
+            if (!this.JsonInputContext.OptionalODataPrefix 
+                || annotationName.IndexOf('.', StringComparison.Ordinal) >= 0)
             {
-                annotationName = ODataJsonConstants.ODataAnnotationNamespacePrefix + annotationName;
+                return annotationName;
             }
 
-            return annotationName;
+            return annotationName switch
+            {
+                ODataAnnotationNames.ODataTypeNoPrefix => ODataAnnotationNames.ODataType,
+                ODataAnnotationNames.ODataContextNoPrefix => ODataAnnotationNames.ODataContext,
+                ODataAnnotationNames.ODataIdNoPrefix => ODataAnnotationNames.ODataId,
+                ODataAnnotationNames.ODataCountNoPrefix => ODataAnnotationNames.ODataCount,
+                ODataAnnotationNames.ODataETagNoPrefix => ODataAnnotationNames.ODataETag,
+                ODataAnnotationNames.ODataDeltaNoPrefix => ODataAnnotationNames.ODataDelta,
+                ODataAnnotationNames.ODataRemovedNoPrefix => ODataAnnotationNames.ODataRemoved,
+                ODataAnnotationNames.ODataNextLinkNoPrefix => ODataAnnotationNames.ODataNextLink,
+                ODataAnnotationNames.ODataDeltaLinkNoPrefix => ODataAnnotationNames.ODataDeltaLink,
+                ODataAnnotationNames.ODataReadLinkNoPrefix => ODataAnnotationNames.ODataReadLink,
+                ODataAnnotationNames.ODataEditLinkNoPrefix => ODataAnnotationNames.ODataEditLink,
+                ODataAnnotationNames.ODataBindNoPrefix => ODataAnnotationNames.ODataBind,
+                ODataAnnotationNames.ODataNavigationLinkUrlNoPrefix => ODataAnnotationNames.ODataNavigationLinkUrl,
+                ODataAnnotationNames.ODataAssociationLinkUrlNoPrefix => ODataAnnotationNames.ODataAssociationLinkUrl,
+                ODataAnnotationNames.ODataMediaETagNoPrefix => ODataAnnotationNames.ODataMediaETag,
+                ODataAnnotationNames.ODataMediaReadLinkNoPrefix => ODataAnnotationNames.ODataMediaReadLink,
+                ODataAnnotationNames.ODataMediaEditLinkNoPrefix => ODataAnnotationNames.ODataMediaEditLink,
+                ODataAnnotationNames.ODataMediaContentTypeNoPrefix => ODataAnnotationNames.ODataMediaContentType,
+                ODataAnnotationNames.ODataNullNoPrefix => ODataAnnotationNames.ODataNull,
+                _ => string.Concat(ODataJsonConstants.ODataAnnotationNamespacePrefix, annotationName)
+            };
+        }
+
+        /// <summary>
+        /// Completes the simplified OData annotation name with "odata.".
+        /// </summary>
+        /// <param name="annotationName">The annotation name to be completed.</param>
+        /// <returns>The complete OData annotation name.</returns>
+        protected ReadOnlyMemory<char> CompleteSimplifiedODataAnnotation(ReadOnlyMemory<char> annotationName)
+        {
+            ReadOnlySpan<char> annotationNameSpan = annotationName.Span;
+
+            if (!this.JsonInputContext.OptionalODataPrefix || annotationNameSpan.IndexOf('.') >= 0)
+            {
+                // Return the original memory slice without allocating
+                return annotationName;
+            }
+
+            // Match known no-prefix names using guards
+            if (annotationNameSpan.SequenceEqual(ODataAnnotationNames.ODataTypeNoPrefix.AsSpan()))
+                return ODataAnnotationNames.ODataType.AsMemory();
+            if (annotationNameSpan.SequenceEqual(ODataAnnotationNames.ODataContextNoPrefix.AsSpan()))
+                return ODataAnnotationNames.ODataContext.AsMemory();
+            if (annotationNameSpan.SequenceEqual(ODataAnnotationNames.ODataIdNoPrefix.AsSpan()))
+                return ODataAnnotationNames.ODataId.AsMemory();
+            if (annotationNameSpan.SequenceEqual(ODataAnnotationNames.ODataCountNoPrefix.AsSpan()))
+                return ODataAnnotationNames.ODataCount.AsMemory();
+            if (annotationNameSpan.SequenceEqual(ODataAnnotationNames.ODataETagNoPrefix.AsSpan()))
+                return ODataAnnotationNames.ODataETag.AsMemory();
+            if (annotationNameSpan.SequenceEqual(ODataAnnotationNames.ODataDeltaNoPrefix.AsSpan()))
+                return ODataAnnotationNames.ODataDelta.AsMemory();
+            if (annotationNameSpan.SequenceEqual(ODataAnnotationNames.ODataRemovedNoPrefix.AsSpan()))
+                return ODataAnnotationNames.ODataRemoved.AsMemory();
+            if (annotationNameSpan.SequenceEqual(ODataAnnotationNames.ODataNextLinkNoPrefix.AsSpan()))
+                return ODataAnnotationNames.ODataNextLink.AsMemory();
+            if (annotationNameSpan.SequenceEqual(ODataAnnotationNames.ODataDeltaLinkNoPrefix.AsSpan()))
+                return ODataAnnotationNames.ODataDeltaLink.AsMemory();
+            if (annotationNameSpan.SequenceEqual(ODataAnnotationNames.ODataReadLinkNoPrefix.AsSpan()))
+                return ODataAnnotationNames.ODataReadLink.AsMemory();
+            if (annotationNameSpan.SequenceEqual(ODataAnnotationNames.ODataEditLinkNoPrefix.AsSpan()))
+                return ODataAnnotationNames.ODataEditLink.AsMemory();
+            if (annotationNameSpan.SequenceEqual(ODataAnnotationNames.ODataBindNoPrefix.AsSpan()))
+                return ODataAnnotationNames.ODataBind.AsMemory();
+            if (annotationNameSpan.SequenceEqual(ODataAnnotationNames.ODataNavigationLinkUrlNoPrefix.AsSpan()))
+                return ODataAnnotationNames.ODataNavigationLinkUrl.AsMemory();
+            if (annotationNameSpan.SequenceEqual(ODataAnnotationNames.ODataAssociationLinkUrlNoPrefix.AsSpan()))
+                return ODataAnnotationNames.ODataAssociationLinkUrl.AsMemory();
+            if (annotationNameSpan.SequenceEqual(ODataAnnotationNames.ODataMediaETagNoPrefix.AsSpan()))
+                return ODataAnnotationNames.ODataMediaETag.AsMemory();
+            if (annotationNameSpan.SequenceEqual(ODataAnnotationNames.ODataMediaReadLinkNoPrefix.AsSpan()))
+                return ODataAnnotationNames.ODataMediaReadLink.AsMemory();
+            if (annotationNameSpan.SequenceEqual(ODataAnnotationNames.ODataMediaEditLinkNoPrefix.AsSpan()))
+                return ODataAnnotationNames.ODataMediaEditLink.AsMemory();
+            if (annotationNameSpan.SequenceEqual(ODataAnnotationNames.ODataMediaContentTypeNoPrefix.AsSpan()))
+                return ODataAnnotationNames.ODataMediaContentType.AsMemory();
+            if (annotationNameSpan.SequenceEqual(ODataAnnotationNames.ODataNullNoPrefix.AsSpan()))
+                return ODataAnnotationNames.ODataNull.AsMemory();
+
+            // Fallback: allocate once for "odata." + name
+            ReadOnlySpan<char> prefix = ODataJsonConstants.ODataAnnotationNamespacePrefix.AsSpan();
+            char[] buffer = new char[prefix.Length + annotationNameSpan.Length];
+            prefix.CopyTo(buffer);
+            annotationNameSpan.CopyTo(buffer.AsSpan(prefix.Length));
+
+            return buffer.AsMemory();
         }
 
         /// <summary>
@@ -853,6 +1288,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="annotationName">the origin annotation name from reader</param>
         /// <returns>true is the instance annotation, false is not</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static bool IsInstanceAnnotation(string annotationName)
         {
             if (!string.IsNullOrEmpty(annotationName) && annotationName[0] == ODataJsonConstants.ODataPropertyAnnotationSeparatorChar)
@@ -1173,53 +1609,155 @@ namespace Microsoft.OData.Json
         /// 1) true if the annotation name and value is skipped; otherwise false.
         /// 2) The annotation value that was read.
         /// </returns>
-        private async ValueTask<(bool IsUnknownODataAnnotationName, object AnnotationValue)> SkipOverUnknownODataAnnotationAsync(string annotationName)
+        private ValueTask<(bool IsUnknownODataAnnotationName, object AnnotationValue)> SkipOverUnknownODataAnnotationAsync(string annotationName)
         {
             Debug.Assert(!string.IsNullOrEmpty(annotationName), "!string.IsNullOrEmpty(annotationName)");
             this.AssertJsonCondition(JsonNodeType.Property);
 
-            object annotationValue = null;
-            bool isUnknownODataAnnotationName = false;
-
-            if (ODataAnnotationNames.IsUnknownODataAnnotationName(annotationName))
+            if (!ODataAnnotationNames.IsUnknownODataAnnotationName(annotationName))
             {
-                annotationValue = await ReadODataOrCustomInstanceAnnotationValueAsync(annotationName)
-                    .ConfigureAwait(false);
-                isUnknownODataAnnotationName = true;
+                return ValueTask.FromResult((false, (object)null));
             }
 
-            return (isUnknownODataAnnotationName, annotationValue);
+            ValueTask<object> readODataOrCustomInstanceAnnotationValueTask = this.ReadODataOrCustomInstanceAnnotationValueAsync();
+            if (readODataOrCustomInstanceAnnotationValueTask.IsCompletedSuccessfully)
+            {
+                return ValueTask.FromResult((true, readODataOrCustomInstanceAnnotationValueTask.Result));
+            }
+
+            return AwaitReadODataOrCustomInstanceAnnotationValueAsync(readODataOrCustomInstanceAnnotationValueTask);
+
+            static async ValueTask<(bool, object)> AwaitReadODataOrCustomInstanceAnnotationValueAsync(
+                ValueTask<object> pendingReadODataOrCustomInstanceAnnotationValueTask)
+            {
+                object annotationValue = await pendingReadODataOrCustomInstanceAnnotationValueTask.ConfigureAwait(false);
+
+                return (true,  annotationValue);
+            }
         }
 
         /// <summary>
         /// Asynchronously reads "odata." or custom instance annotation's value.
         /// </summary>
-        /// <param name="annotationName">The annotation name.</param>
         /// <returns>
         /// A task that represents the asynchronous read operation.
         /// The value of the TResult parameter contains the annotation value.
         /// </returns>
-        private async Task<object> ReadODataOrCustomInstanceAnnotationValueAsync(string annotationName)
+        private ValueTask<object> ReadODataOrCustomInstanceAnnotationValueAsync()
         {
-            // Read over the name.
-            await this.JsonReader.ReadAsync()
-                .ConfigureAwait(false);
-            object annotationValue;
-            if (this.JsonReader.NodeType != JsonNodeType.PrimitiveValue)
+            Task<bool> readTask = this.JsonReader.ReadAsync();
+            if (!readTask.IsCompletedSuccessfully)
             {
-                annotationValue = await this.JsonReader.ReadAsUntypedOrNullValueAsync()
-                    .ConfigureAwait(false);
-            }
-            else
-            {
-                annotationValue = await this.JsonReader.GetValueAsync()
-                    .ConfigureAwait(false);
-                await this.JsonReader.SkipValueAsync()
-                    .ConfigureAwait(false);
+                return AwaitReadAsync(this, readTask);
             }
 
-            return annotationValue;
+            if (this.JsonReader.NodeType != JsonNodeType.PrimitiveValue)
+            {
+                Task<ODataValue> readAsUntypedOrNullValueTask = this.JsonReader.ReadAsUntypedOrNullValueAsync();
+                if (readAsUntypedOrNullValueTask.IsCompletedSuccessfully)
+                {
+                    return ValueTask.FromResult<object>(readAsUntypedOrNullValueTask.Result);
+                }
+
+                return AwaitReadAsUntypedOrNullValueAsync(readAsUntypedOrNullValueTask);
+            }
+
+            Task<object> getValueTask = this.JsonReader.GetValueAsync();
+            if (!getValueTask.IsCompletedSuccessfully)
+            {
+                return AwaitGetValueThenSkipValueAsync(this.JsonReader, getValueTask);
+            }
+
+            object annotationValue = getValueTask.Result;
+            Task skipValueTask = this.JsonReader.SkipValueAsync();
+            if (skipValueTask.IsCompletedSuccessfully)
+            {
+                return ValueTask.FromResult(annotationValue);
+            }
+
+            return AwaitSkipValueAsync(annotationValue, skipValueTask);
+
+            static async ValueTask<object> AwaitReadAsync(ODataJsonDeserializer thisParam, Task<bool> pendingReadTask)
+            {
+                await pendingReadTask.ConfigureAwait(false);
+
+                if (thisParam.JsonReader.NodeType != JsonNodeType.PrimitiveValue)
+                {
+                    return await thisParam.JsonReader.ReadAsUntypedOrNullValueAsync().ConfigureAwait(false);
+                }
+
+                object annotationValue = await thisParam.JsonReader.GetValueAsync().ConfigureAwait(false);
+                await thisParam.JsonReader.SkipValueAsync().ConfigureAwait(false);
+
+                return annotationValue;
+            }
+
+            static async ValueTask<object> AwaitReadAsUntypedOrNullValueAsync(Task<ODataValue> pendingReadAsUntypedOrNullValueTask)
+            {
+                return await pendingReadAsUntypedOrNullValueTask.ConfigureAwait(false);
+            }
+
+            static async ValueTask<object> AwaitGetValueThenSkipValueAsync(IJsonReader jsonReaderParam, Task<object> pendingGetValueTask)
+            {
+                object annotationValue = await pendingGetValueTask.ConfigureAwait(false);
+                await jsonReaderParam.SkipValueAsync().ConfigureAwait(false);
+
+                return annotationValue;
+            }
+
+            static async ValueTask<object> AwaitSkipValueAsync(object annotationValueParam, Task pendingSkipValueTask)
+            {
+                await pendingSkipValueTask.ConfigureAwait(false);
+
+                return annotationValueParam;
+            }
         }
+
+        /// <summary>
+        /// Local classification used by <see cref="ParsePropertyAsync"/> to cheaply categorize a JSON property name.
+        /// </summary>
+        /// <remarks>
+        /// The classification is dictated upon by the presence and position of the '@' character in the property name from the reader"/>
+        /// </remarks>
+        private enum ParsedPropertyKind
+        {
+            /// <summary>
+            /// Property name contains '@' character in the middle (not at index 0) and not as the last character;
+            /// treated as a property annotation: Property@an.notation.
+            /// </summary>
+            PropertyAnnotation,
+
+            /// <summary>
+            /// Property name starts with '@' character; treated as an instance annotation: @an.notation.
+            /// </summary>
+            InstanceAnnotation,
+
+            /// <summary>
+            /// Name has no valid '@' character; treated as a normal property.
+            /// </summary>
+            NormalProperty
+        }
+
+        /// <summary>
+        /// Lightweight result for a single parse step used to drive property parsing in <see cref="ParsePropertyAsync"/>.
+        /// </summary>
+        /// <param name="ShouldContinueParsing"><c>true</c> if parsing should continue; otherwise, <c>false</c>.</param>
+        /// <param name="ParsingResult">
+        /// The result when parsing has terminated (e.g., PropertyWithValue, PropertyWithoutValue, ODataInstanceAnnotation,
+        /// CustomInstanceAnnotation,MetadataReferenceProperty, NestedDeltaResourceSet, EndOfObject).
+        /// Ignored when <paramref name="ShouldContinueParsing"/> is <c>true</c>.
+        /// </param>
+        /// <param name="ParsedPropertyName">
+        /// The current property or annotation name associated with <paramref name="ParsingResult"/> or carried forward when continuing.
+        /// </param>
+        /// <param name="LastPropertyAnnotationNameFound">
+        /// The last property annotation name found for the property being parsed.
+        /// </param>
+        private readonly record struct PropertyParsingLocalResult(
+            bool ShouldContinueParsing,
+            PropertyParsingResult ParsingResult,
+            ReadOnlyMemory<char> ParsedPropertyName,
+            ReadOnlyMemory<char> LastPropertyAnnotationNameFound);
 
         /// <summary>
         /// Asynchronously parses JSON object property starting with the current position of the JSON reader.
@@ -1244,174 +1782,462 @@ namespace Microsoft.OData.Json
         /// 7). The first component contains EndOfObject if end of the object scope was reached and no properties are to be reported, while the second component contains null.
         ///                             This can only happen if there's a property annotation which is ignored (for example custom one) at the end of the object.
         /// </returns>
-        private async Task<(PropertyParsingResult ParsingResult, string PropertyName)> ParsePropertyAsync(
+        private ValueTask<(PropertyParsingResult ParsingResult, string PropertyName)> ParsePropertyAsync(
             PropertyAndAnnotationCollector propertyAndAnnotationCollector,
             Func<string, Task<object>> readPropertyAnnotationValueDelegate)
         {
             Debug.Assert(propertyAndAnnotationCollector != null, $"{nameof(propertyAndAnnotationCollector)} != null");
             Debug.Assert(readPropertyAnnotationValueDelegate != null, $"{nameof(readPropertyAnnotationValueDelegate)} != null");
-            string lastPropertyAnnotationNameFound = null;
-            string parsedPropertyName = null;
 
-            while (this.JsonReader.NodeType == JsonNodeType.Property)
+            ReadOnlyMemory<char> lastPropertyAnnotationNameFound = ReadOnlyMemory<char>.Empty;
+            ReadOnlyMemory<char> parsedPropertyName = ReadOnlyMemory<char>.Empty;
+
+            while (true)
             {
-                string nameFromReader = await this.JsonReader.GetPropertyNameAsync()
-                    .ConfigureAwait(false);
-
-                string propertyNameFromReader, annotationNameFromReader;
-                bool isPropertyAnnotation = TryParsePropertyAnnotation(nameFromReader, out propertyNameFromReader, out annotationNameFromReader);
-
-                // Reading a nested delta resource set
-                if (isPropertyAnnotation && string.Equals(this.CompleteSimplifiedODataAnnotation(annotationNameFromReader), ODataAnnotationNames.ODataDelta, StringComparison.Ordinal))
+                if (this.JsonReader.NodeType != JsonNodeType.Property)
                 {
-                    // Read over the property name.
-                    await this.JsonReader.ReadAsync()
-                        .ConfigureAwait(false);
-                    parsedPropertyName = propertyNameFromReader;
-                    return (PropertyParsingResult.NestedDeltaResourceSet, parsedPropertyName);
+                    break;
                 }
 
-                bool isInstanceAnnotation = false;
-                // If this is not a property annotation, determine whether it's an instance annotation, i.e. starts with @ prefix
-                // If we find that it's an instance annotation and OptionalODataPrefix setting is set to true, complete the simplified
-                // annotation (if necessary) by prepending it with "odata."
-                if (!isPropertyAnnotation)
+                ValueTask<PropertyParsingLocalResult> parsePropertyLocalTask = ParsePropertyLocalAsync(
+                    this,
+                    propertyAndAnnotationCollector,
+                    readPropertyAnnotationValueDelegate,
+                    parsedPropertyName,
+                    lastPropertyAnnotationNameFound);
+
+                if (!parsePropertyLocalTask.IsCompletedSuccessfully)
                 {
-                    isInstanceAnnotation = IsInstanceAnnotation(nameFromReader);
-                    propertyNameFromReader = isInstanceAnnotation ? this.CompleteSimplifiedODataAnnotation(nameFromReader.Substring(1)) : nameFromReader;
+                    return ContinueAfterParsePropertyLocalAsync(
+                        this,
+                        propertyAndAnnotationCollector,
+                        readPropertyAnnotationValueDelegate,
+                        parsedPropertyName,
+                        lastPropertyAnnotationNameFound,
+                        parsePropertyLocalTask);
+                }
+
+                PropertyParsingLocalResult propertyParsingLocalResult = parsePropertyLocalTask.Result;
+
+                if (propertyParsingLocalResult.ShouldContinueParsing)
+                {
+                    lastPropertyAnnotationNameFound = propertyParsingLocalResult.LastPropertyAnnotationNameFound;
+                    parsedPropertyName = propertyParsingLocalResult.ParsedPropertyName;
+                    continue;
+                }
+
+                Debug.Assert(propertyParsingLocalResult.ParsingResult != default,
+                    $"{nameof(propertyParsingLocalResult.ParsingResult)} != default");
+                Debug.Assert(!propertyParsingLocalResult.ParsedPropertyName.IsEmpty,
+                    $"!{nameof(propertyParsingLocalResult.ParsedPropertyName)}.IsEmpty");
+                return ValueTask.FromResult((propertyParsingLocalResult.ParsingResult, propertyParsingLocalResult.ParsedPropertyName.GetString()));
+            }
+
+            return FinalizeParseProperty(this, parsedPropertyName, lastPropertyAnnotationNameFound);
+
+            static async ValueTask<(PropertyParsingResult, string)> ContinueAfterParsePropertyLocalAsync(
+                ODataJsonDeserializer thisParam,
+                PropertyAndAnnotationCollector propertyAndAnnotationCollectorParam,
+                Func<string, Task<object>> readPropertyAnnotationValueDelegateParam,
+                ReadOnlyMemory<char> parsedPropertyNameParam,
+                ReadOnlyMemory<char> lastPropertyAnnotationNameFoundParam,
+                ValueTask<PropertyParsingLocalResult> pendingParsePropertyLocalTask)
+            {
+                PropertyParsingLocalResult propertyParsingLocalResult = await pendingParsePropertyLocalTask.ConfigureAwait(false);
+
+                while (true)
+                {
+                    if (propertyParsingLocalResult.ShouldContinueParsing)
+                    {
+                        lastPropertyAnnotationNameFoundParam = propertyParsingLocalResult.LastPropertyAnnotationNameFound;
+                        parsedPropertyNameParam = propertyParsingLocalResult.ParsedPropertyName;
+                        
+                        if (thisParam.JsonReader.NodeType != JsonNodeType.Property)
+                        {
+                            break;
+                        }
+
+                        propertyParsingLocalResult = await ParsePropertyLocalAsync(
+                            thisParam,
+                            propertyAndAnnotationCollectorParam,
+                            readPropertyAnnotationValueDelegateParam,
+                            parsedPropertyNameParam,
+                            lastPropertyAnnotationNameFoundParam).ConfigureAwait(false);
+
+                        continue;
+                    }
+
+                    Debug.Assert(propertyParsingLocalResult.ParsingResult != default,
+                        $"{nameof(propertyParsingLocalResult.ParsingResult)} != default");
+                    Debug.Assert(!propertyParsingLocalResult.ParsedPropertyName.IsEmpty,
+                        $"!{nameof(propertyParsingLocalResult.ParsedPropertyName)}.IsEmpty");
+                    return (propertyParsingLocalResult.ParsingResult, propertyParsingLocalResult.ParsedPropertyName.GetString());
+                }
+
+                return await FinalizeParseProperty(thisParam, parsedPropertyNameParam, lastPropertyAnnotationNameFoundParam);
+            }
+
+            static ValueTask<PropertyParsingLocalResult> ParsePropertyLocalAsync(
+                ODataJsonDeserializer thisParam,
+                PropertyAndAnnotationCollector propertyAndAnnotationCollectorParam,
+                Func<string, Task<object>> readPropertyAnnotationValueDelegateParam,
+                ReadOnlyMemory<char> parsedPropertyNameParam,
+                ReadOnlyMemory<char> lastPropertyAnnotationNameFoundParam)
+            {
+                Task<string> getPropertyNameTask = thisParam.JsonReader.GetPropertyNameAsync();
+
+                if (!getPropertyNameTask.IsCompletedSuccessfully)
+                {
+                    return AwaitGetPropertyNameAsync(
+                        thisParam,
+                        propertyAndAnnotationCollectorParam,
+                        readPropertyAnnotationValueDelegateParam,
+                        parsedPropertyNameParam,
+                        lastPropertyAnnotationNameFoundParam,
+                        getPropertyNameTask);
+                }
+
+                string nameFromReader = getPropertyNameTask.Result;
+
+                return ContinueAfterGetPropertyNameAsync(
+                    thisParam,
+                    propertyAndAnnotationCollectorParam,
+                    readPropertyAnnotationValueDelegateParam,
+                    parsedPropertyNameParam,
+                    lastPropertyAnnotationNameFoundParam,
+                    nameFromReader);
+            }
+
+            static async ValueTask<PropertyParsingLocalResult> AwaitGetPropertyNameAsync(
+                ODataJsonDeserializer thisParam,
+                PropertyAndAnnotationCollector propertyAndAnnotationCollectorParam,
+                Func<string, Task<object>> readPropertyAnnotationValueDelegateParam,
+                ReadOnlyMemory<char> parsedPropertyNameParam,
+                ReadOnlyMemory<char> lastPropertyAnnotationNameFoundParam,
+                Task<string> pendingGetPropertyNameTask)
+            {
+                string nameFromReader = await pendingGetPropertyNameTask.ConfigureAwait(false);
+
+                return await ContinueAfterGetPropertyNameAsync(
+                    thisParam,
+                    propertyAndAnnotationCollectorParam,
+                    readPropertyAnnotationValueDelegateParam,
+                    parsedPropertyNameParam,
+                    lastPropertyAnnotationNameFoundParam,
+                    nameFromReader).ConfigureAwait(false);
+            }
+
+            static ValueTask<PropertyParsingLocalResult> ContinueAfterGetPropertyNameAsync(
+                ODataJsonDeserializer thisParam,
+                PropertyAndAnnotationCollector propertyAndAnnotationCollectorParam,
+                Func<string, Task<object>> readPropertyAnnotationValueDelegateParam,
+                ReadOnlyMemory<char> parsedPropertyNameParam,
+                ReadOnlyMemory<char> lastPropertyAnnotationNameFoundParam,
+                string nameFromReaderParam)
+            {
+                // Most payload properties are not annotations; optimize for that case
+                int annotationSeparatorIndex = nameFromReaderParam.IndexOf(
+                    ODataJsonConstants.ODataPropertyAnnotationSeparatorChar,
+                    StringComparison.Ordinal);
+                ParsedPropertyKind parsedPropertyKind = ParsePropertyKind(nameFromReaderParam, annotationSeparatorIndex);
+                (ReadOnlyMemory<char> propertyNameFromReaderMem, ReadOnlyMemory<char> annotationNameFromReaderMem, ReadOnlyMemory<char> prefixedAnnotationNameMem) = ParseNameFromReader(
+                    thisParam,
+                    nameFromReaderParam.AsMemory(),
+                    annotationSeparatorIndex,
+                    parsedPropertyKind);
+
+                // Reading a nested delta resource set
+                if (parsedPropertyKind == ParsedPropertyKind.PropertyAnnotation && prefixedAnnotationNameMem.Span.SequenceEqual(ODataAnnotationNames.ODataDelta.AsSpan()))
+                {
+                    return HandleNestedDeltaResourceSetAsync(
+                        thisParam,
+                        propertyAndAnnotationCollectorParam,
+                        readPropertyAnnotationValueDelegateParam,
+                        parsedPropertyNameParam,
+                        lastPropertyAnnotationNameFoundParam,
+                        propertyNameFromReaderMem);
                 }
 
                 // If parsedPropertyName is set and is different from the property name the reader is currently on,
                 // we have parsed a property annotation for a different property than the one at the current position.
-                if (parsedPropertyName != null && !string.Equals(parsedPropertyName, propertyNameFromReader, StringComparison.Ordinal))
+                if (!parsedPropertyNameParam.IsEmpty && !parsedPropertyNameParam.Span.SequenceEqual(propertyNameFromReaderMem.Span))
                 {
-                    if (ODataJsonReaderUtils.IsAnnotationProperty(parsedPropertyName))
+                    if (ODataJsonReaderUtils.IsAnnotationProperty(parsedPropertyNameParam.Span))
                     {
-                        throw new ODataException(Error.Format(SRResources.ODataJsonDeserializer_AnnotationTargetingInstanceAnnotationWithoutValue,
-                            lastPropertyAnnotationNameFound,
-                            parsedPropertyName));
+                        return ValueTask.FromException<PropertyParsingLocalResult>(
+                            new ODataException(Error.Format(
+                                SRResources.ODataJsonDeserializer_AnnotationTargetingInstanceAnnotationWithoutValue,
+                                lastPropertyAnnotationNameFoundParam.GetString(),
+                                parsedPropertyNameParam.GetString())));
                     }
 
-                    return (PropertyParsingResult.PropertyWithoutValue, parsedPropertyName);
+                    return ValueTask.FromResult(
+                        new PropertyParsingLocalResult(false, PropertyParsingResult.PropertyWithoutValue, parsedPropertyNameParam, lastPropertyAnnotationNameFoundParam));
                 }
 
-                object annotationValue = null;
-                if (isPropertyAnnotation)
+                if (parsedPropertyKind == ParsedPropertyKind.PropertyAnnotation)
                 {
-                    annotationNameFromReader = this.CompleteSimplifiedODataAnnotation(annotationNameFromReader);
+                    return HandlePropertyAnnotationAsync(
+                        thisParam,
+                        propertyAndAnnotationCollectorParam,
+                        readPropertyAnnotationValueDelegateParam,
+                        parsedPropertyNameParam,
+                        lastPropertyAnnotationNameFoundParam,
+                        propertyNameFromReaderMem,
+                        annotationNameFromReaderMem,
+                        prefixedAnnotationNameMem);
+                }
+                else if (parsedPropertyKind == ParsedPropertyKind.InstanceAnnotation)
+                {
+                    return HandleInstanceAnnotationAsync(
+                        thisParam,
+                        propertyAndAnnotationCollectorParam,
+                        readPropertyAnnotationValueDelegateParam,
+                        parsedPropertyNameParam,
+                        lastPropertyAnnotationNameFoundParam,
+                        propertyNameFromReaderMem,
+                        annotationNameFromReaderMem);
+                }
+                else
+                {
+                    // We are encountering the property name for the first time.
+                    // Don't read over property name, as that would cause the buffering reader to read ahead in the StartObject
+                    // state, which would break our ability to stream inline json. Instead, callers of ParsePropertyAsync will have to
+                    // call this.JsonReader.ReadAsync() as appropriate to read past the property name.
+                    parsedPropertyNameParam = propertyNameFromReaderMem;
 
-                    // If this is a unknown odata annotation targeting a property, we skip over it.
-                    // See remark on the method SkipOverUnknownODataAnnotationAsync() for detailed explanation.
-                    // Note that we don't skip over unknown odata annotations targeting another annotation.
-                    // We don't allow annotations (except odata.type) targeting other annotations,
-                    // so ProcessPropertyAnnotationAsync() will test and fail for that case.
-                    if (!ODataJsonReaderUtils.IsAnnotationProperty(propertyNameFromReader))
+                    if (ODataJsonUtils.IsMetadataReferenceProperty(propertyNameFromReaderMem.Span))
                     {
-                        (bool isUnknownODataAnnotationName, object tempAnnotationValue) = await this.SkipOverUnknownODataAnnotationAsync(
-                            annotationNameFromReader).ConfigureAwait(false);
-                        if (isUnknownODataAnnotationName)
+                        return ValueTask.FromResult(
+                            new PropertyParsingLocalResult(false, PropertyParsingResult.MetadataReferenceProperty, parsedPropertyNameParam, lastPropertyAnnotationNameFoundParam));
+                    }
+
+                    if (!ODataJsonReaderUtils.IsAnnotationProperty(propertyNameFromReaderMem.Span))
+                    {
+                        // Normal property
+                        return ValueTask.FromResult(
+                            new PropertyParsingLocalResult(false, PropertyParsingResult.PropertyWithValue, parsedPropertyNameParam, lastPropertyAnnotationNameFoundParam));
+                    }
+                }
+
+                return ValueTask.FromResult(
+                    HandleCustomInstanceAnnotation(parsedPropertyNameParam, lastPropertyAnnotationNameFoundParam, annotationNameFromReaderMem));
+            }
+
+            static ParsedPropertyKind ParsePropertyKind(ReadOnlySpan<char> nameFromReaderParam, int annotationSeparatorIndexParam)
+            {
+                // Most payload properties are not annotations; optimize for that case
+                // TODO: Verify behaviour for odata.type or custom.annotation (i.e., missing @)
+                if (annotationSeparatorIndexParam == 0)
+                {
+                    return ParsedPropertyKind.InstanceAnnotation;
+                }
+
+                if (annotationSeparatorIndexParam > 0 && annotationSeparatorIndexParam != nameFromReaderParam.Length - 1)
+                {
+                    return ParsedPropertyKind.PropertyAnnotation;
+                }
+
+                // If there's no '@' anywhere in the name, it's either:
+                // - a normal property (most common) -> PropertyWithValue
+                // - a metadata reference property -> MetadataReferenceProperty
+                return ParsedPropertyKind.NormalProperty;
+            }
+
+            static (ReadOnlyMemory<char> propertyName, ReadOnlyMemory<char> annotationName, ReadOnlyMemory<char> prefixedAnnotationName) ParseNameFromReader(
+                ODataJsonDeserializer thisParam,
+                ReadOnlyMemory<char> nameFromReaderParam,
+                int annotationSeparatorIndexParam,
+                ParsedPropertyKind parsedPropertyKindParam)
+            {
+                switch (parsedPropertyKindParam)
+                {
+                    case ParsedPropertyKind.PropertyAnnotation:
                         {
-                            annotationValue = tempAnnotationValue;
-                            propertyAndAnnotationCollector.AddODataPropertyAnnotation(propertyNameFromReader, annotationNameFromReader, annotationValue);
-                            continue;
+                            ReadOnlyMemory<char> propertyName = nameFromReaderParam[..annotationSeparatorIndexParam];
+                            ReadOnlyMemory<char> annotationName = nameFromReaderParam[(annotationSeparatorIndexParam + 1)..];
+                            ReadOnlyMemory<char> prefixedAnnotationName = thisParam.CompleteSimplifiedODataAnnotation(annotationName);
+
+                            return (propertyName, annotationName, prefixedAnnotationName);
                         }
-                    }
 
-                    // We have another property annotation for the same property we parsed.
-                    parsedPropertyName = propertyNameFromReader;
-                    lastPropertyAnnotationNameFound = annotationNameFromReader;
+                    case ParsedPropertyKind.InstanceAnnotation:
+                        {
+                            // If this is not a property annotation, determine whether it's an instance annotation, i.e. starts with @ prefix
+                            // If we find that it's an instance annotation and OptionalODataPrefix setting is set to true, complete the simplified
+                            // annotation (if necessary) by prepending it with "odata."
+                            ReadOnlyMemory<char> propertyNameMem = thisParam.CompleteSimplifiedODataAnnotation(nameFromReaderParam[1..]);
 
-                    await this.ProcessPropertyAnnotationAsync(
-                        propertyNameFromReader,
-                        annotationNameFromReader,
-                        propertyAndAnnotationCollector,
-                        readPropertyAnnotationValueDelegate).ConfigureAwait(false);
-                    continue;
+                            return (propertyNameMem, ReadOnlyMemory<char>.Empty, ReadOnlyMemory<char>.Empty);
+                        }
+
+                    default:
+                        return (nameFromReaderParam, ReadOnlyMemory<char>.Empty, ReadOnlyMemory<char>.Empty);
                 }
+            }
 
-                // If this is a unknown odata annotation, skip over it. See remark on the method SkipOverUnknownODataAnnotationAsync() for detailed explanation.
-                if (isInstanceAnnotation)
+            static async ValueTask<PropertyParsingLocalResult> HandleNestedDeltaResourceSetAsync(
+                ODataJsonDeserializer thisParam,
+                PropertyAndAnnotationCollector propertyAndAnnotationCollectorParam,
+                Func<string, Task<object>> readPropertyAnnotationValueDelegateParam,
+                ReadOnlyMemory<char> parsedPropertyNameParam,
+                ReadOnlyMemory<char> lastPropertyAnnotationNameFoundParam,
+                ReadOnlyMemory<char> propertyNameFromReaderParam)
+            {
+                // Read over the property name.
+                await thisParam.JsonReader.ReadAsync()
+                    .ConfigureAwait(false);
+                parsedPropertyNameParam = propertyNameFromReaderParam;
+                
+                return new PropertyParsingLocalResult(false, PropertyParsingResult.NestedDeltaResourceSet, parsedPropertyNameParam, lastPropertyAnnotationNameFoundParam);
+            }
+
+            static async ValueTask<PropertyParsingLocalResult> HandlePropertyAnnotationAsync(
+                ODataJsonDeserializer thisParam,
+                PropertyAndAnnotationCollector propertyAndAnnotationCollectorParam,
+                Func<string, Task<object>> readPropertyAnnotationValueDelegateParam,
+                ReadOnlyMemory<char> parsedPropertyNameParam,
+                ReadOnlyMemory<char> lastPropertyAnnotationNameFoundParam,
+                ReadOnlyMemory<char> propertyNameFromReaderParam,
+                ReadOnlyMemory<char> annotationNameFromReaderParam,
+                ReadOnlyMemory<char> prefixedAnnotationNameParam)
+            {
+                object annotationValue = null;
+                // If this is a unknown odata annotation targeting a property, we skip over it.
+                // See remark on the method SkipOverUnknownODataAnnotationAsync() for detailed explanation.
+                // Note that we don't skip over unknown odata annotations targeting another annotation.
+                // We don't allow annotations (except odata.type) targeting other annotations,
+                // so ProcessPropertyAnnotationAsync() will test and fail for that case.
+                if (!ODataJsonReaderUtils.IsAnnotationProperty(propertyNameFromReaderParam.Span))
                 {
-                    (bool isUnknownODataAnnotationName, object tempAnnotationValue) = await this.SkipOverUnknownODataAnnotationAsync(
-                        propertyNameFromReader).ConfigureAwait(false);
+                    string prefixedAnnotationName = prefixedAnnotationNameParam.GetString();
+                    (bool isUnknownODataAnnotationName, object tempAnnotationValue) = await thisParam.SkipOverUnknownODataAnnotationAsync(
+                        prefixedAnnotationName).ConfigureAwait(false);
                     if (isUnknownODataAnnotationName)
                     {
+                        string propertyNameFromReader = propertyNameFromReaderParam.GetString();
                         annotationValue = tempAnnotationValue;
-                        // collect 'odata.<unknown>' annotation:
-                        // here we know the original property name contains no '@', but '.' dot
-                        Debug.Assert(annotationNameFromReader == null, $"{nameof(annotationNameFromReader)} == null");
-                        propertyAndAnnotationCollector.AddODataScopeAnnotation(propertyNameFromReader, annotationValue);
-                        continue;
+                        propertyAndAnnotationCollectorParam.AddODataPropertyAnnotation(propertyNameFromReader, prefixedAnnotationName, annotationValue);
+                        return new PropertyParsingLocalResult(true, default, parsedPropertyNameParam, lastPropertyAnnotationNameFoundParam);
                     }
+                }
+
+                // We have another property annotation for the same property we parsed.
+                parsedPropertyNameParam = propertyNameFromReaderParam;
+                lastPropertyAnnotationNameFoundParam = prefixedAnnotationNameParam;
+
+                await thisParam.ProcessPropertyAnnotationAsync(
+                    propertyNameFromReaderParam.Span,
+                    prefixedAnnotationNameParam.Span,
+                    propertyAndAnnotationCollectorParam,
+                    readPropertyAnnotationValueDelegateParam).ConfigureAwait(false);
+                return new PropertyParsingLocalResult(true, default, parsedPropertyNameParam, lastPropertyAnnotationNameFoundParam);
+            }
+
+            static async ValueTask<PropertyParsingLocalResult> HandleInstanceAnnotationAsync(
+                ODataJsonDeserializer thisParam,
+                PropertyAndAnnotationCollector propertyAndAnnotationCollectorParam,
+                Func<string, Task<object>> readPropertyAnnotationValueDelegateParam,
+                ReadOnlyMemory<char> parsedPropertyNameParam,
+                ReadOnlyMemory<char> lastPropertyAnnotationNameFoundParam,
+                ReadOnlyMemory<char> propertyNameFromReaderParam,
+                ReadOnlyMemory<char> annotationNameFromReaderParam)
+            {
+                object annotationValue = null;
+                string propertyNameFromReader = propertyNameFromReaderParam.GetString();
+                (bool isUnknownODataAnnotationName, object tempAnnotationValue) = await thisParam.SkipOverUnknownODataAnnotationAsync(
+                    propertyNameFromReader).ConfigureAwait(false);
+                if (isUnknownODataAnnotationName)
+                {
+                    annotationValue = tempAnnotationValue;
+                    // collect 'odata.<unknown>' annotation:
+                    // here we know the original property name contains no '@', but '.' dot
+                    Debug.Assert(annotationNameFromReaderParam.IsEmpty, $"{nameof(annotationNameFromReaderParam)}.IsEmpty");
+                    propertyAndAnnotationCollectorParam.AddODataScopeAnnotation(propertyNameFromReader, annotationValue);
+                    return new PropertyParsingLocalResult(true, default, parsedPropertyNameParam, lastPropertyAnnotationNameFoundParam);
                 }
 
                 // We are encountering the property name for the first time.
                 // Don't read over property name, as that would cause the buffering reader to read ahead in the StartObject
                 // state, which would break our ability to stream inline json. Instead, callers of ParsePropertyAsync will have to
                 // call this.JsonReader.ReadAsync() as appropriate to read past the property name.
-                parsedPropertyName = propertyNameFromReader;
-
-                if (!isInstanceAnnotation && ODataJsonUtils.IsMetadataReferenceProperty(propertyNameFromReader))
-                {
-                    return (PropertyParsingResult.MetadataReferenceProperty, parsedPropertyName);
-                }
-
-                if (!isInstanceAnnotation && !ODataJsonReaderUtils.IsAnnotationProperty(propertyNameFromReader))
-                {
-                    // Normal property
-                    return (PropertyParsingResult.PropertyWithValue, parsedPropertyName);
-                }
+                parsedPropertyNameParam = propertyNameFromReaderParam;
 
                 // collect 'xxx.yyyy' annotation:
                 // here we know the original property name contains no '@', but '.' dot
-                Debug.Assert(annotationNameFromReader == null, $"{nameof(annotationNameFromReader)} == null");
+                Debug.Assert(annotationNameFromReaderParam.IsEmpty, $"{nameof(annotationNameFromReaderParam)}.IsEmpty");
 
                 // Handle 'odata.XXXXX' annotations
-                if (isInstanceAnnotation && ODataJsonReaderUtils.IsODataAnnotationName(propertyNameFromReader))
+                if (ODataJsonReaderUtils.IsODataAnnotationName(propertyNameFromReaderParam.Span))
                 {
-                    return (PropertyParsingResult.ODataInstanceAnnotation, parsedPropertyName);
+                    return new PropertyParsingLocalResult(false, PropertyParsingResult.ODataInstanceAnnotation, parsedPropertyNameParam, lastPropertyAnnotationNameFoundParam);
                 }
 
-                // Handle custom annotations
-                return (PropertyParsingResult.CustomInstanceAnnotation, parsedPropertyName);
+                return HandleCustomInstanceAnnotation(parsedPropertyNameParam, lastPropertyAnnotationNameFoundParam, annotationNameFromReaderParam);
             }
 
-            this.AssertJsonCondition(JsonNodeType.EndObject);
-            if (parsedPropertyName != null)
+            static PropertyParsingLocalResult HandleCustomInstanceAnnotation(
+                ReadOnlyMemory<char> parsedPropertyNameParam,
+                ReadOnlyMemory<char> lastPropertyAnnotationNameFoundParam,
+                ReadOnlyMemory<char> annotationNameFromReaderParam)
             {
-                if (ODataJsonReaderUtils.IsAnnotationProperty(parsedPropertyName))
-                {
-                    throw new ODataException(
-                        Error.Format(SRResources.ODataJsonDeserializer_AnnotationTargetingInstanceAnnotationWithoutValue,
-                            lastPropertyAnnotationNameFound,
-                            parsedPropertyName));
-                }
+                // collect 'xxx.yyyy' annotation:
+                // here we know the original property name contains no '@', but '.' dot
+                Debug.Assert(annotationNameFromReaderParam.IsEmpty, $"{nameof(annotationNameFromReaderParam)}.IsEmpty");
 
-                return (PropertyParsingResult.PropertyWithoutValue, parsedPropertyName);
+                // We'd only end up here for "if (isInstanceAnnotation)" and "else" cases
+                // Handle custom annotations
+                return new PropertyParsingLocalResult(false, PropertyParsingResult.CustomInstanceAnnotation, parsedPropertyNameParam, lastPropertyAnnotationNameFoundParam);
             }
 
-            return (PropertyParsingResult.EndOfObject, parsedPropertyName);
+            static ValueTask<(PropertyParsingResult, string)> FinalizeParseProperty(
+                ODataJsonDeserializer thisParam,
+                ReadOnlyMemory<char> parsedPropertyNameParam,
+                ReadOnlyMemory<char> lastPropertyAnnotationNameFoundParam)
+            {
+                thisParam.AssertJsonCondition(JsonNodeType.EndObject);
+
+                string parsedPropertyName = parsedPropertyNameParam.IsEmpty ? null : parsedPropertyNameParam.GetString();
+                if (!parsedPropertyNameParam.IsEmpty)
+                {
+                    if (ODataJsonReaderUtils.IsAnnotationProperty(parsedPropertyNameParam.Span))
+                    {
+                        string lastPropertyAnnotationNameFound = lastPropertyAnnotationNameFoundParam.GetString();
+                        return ValueTask.FromException<(PropertyParsingResult, string)>(new ODataException(
+                            Error.Format(SRResources.ODataJsonDeserializer_AnnotationTargetingInstanceAnnotationWithoutValue,
+                                lastPropertyAnnotationNameFound,
+                                parsedPropertyName)));
+                    }
+
+                    return ValueTask.FromResult((PropertyParsingResult.PropertyWithoutValue, parsedPropertyName));
+                }
+
+                return ValueTask.FromResult((PropertyParsingResult.EndOfObject, parsedPropertyName));
+            }
         }
 
         /// <summary>
         /// Asynchronously process the current property annotation.
         /// </summary>
-        /// <param name="annotatedPropertyName">The name being annotated. Can be a property or an instance annotation.</param>
-        /// <param name="annotationName">The annotation targeting the <paramref name="annotatedPropertyName"/>.</param>
+        /// <param name="annotatedPropertyNameSpan">The name being annotated. Can be a property or an instance annotation.</param>
+        /// <param name="annotationNameSpan">The annotation targeting the <paramref name="annotatedPropertyNameSpan"/>.</param>
         /// <param name="propertyAndAnnotationCollector">The duplicate property names checker.</param>
         /// <param name="readPropertyAnnotationValueDelegate">Delegate to read the property annotation value.</param>
         /// <returns>A task that represents the asynchronous read operation.</returns>
-        private Task ProcessPropertyAnnotationAsync(
-            string annotatedPropertyName,
-            string annotationName,
+        private ValueTask ProcessPropertyAnnotationAsync(
+            ReadOnlySpan<char> annotatedPropertyNameSpan,
+            ReadOnlySpan<char> annotationNameSpan,
             PropertyAndAnnotationCollector propertyAndAnnotationCollector,
             Func<string, Task<object>> readPropertyAnnotationValueDelegate)
         {
+            string annotatedPropertyName = annotatedPropertyNameSpan.ToString();
+            string annotationName = annotationNameSpan.ToString();
+
             // We don't currently support annotation targeting an instance annotation except for the @odata.type property annotation.
             if (ODataJsonReaderUtils.IsAnnotationProperty(annotatedPropertyName)
                 && !string.Equals(annotationName, ODataAnnotationNames.ODataType, StringComparison.Ordinal))
             {
-                return Task.FromException<ODataException>(
+                return ValueTask.FromException(
                     new ODataException(Error.Format(SRResources.ODataJsonDeserializer_OnlyODataTypeAnnotationCanTargetInstanceAnnotation,
                         annotationName,
                         annotatedPropertyName,
@@ -1455,38 +2281,117 @@ namespace Microsoft.OData.Json
         /// <param name="propertyAndAnnotationCollector">The PropertyAndAnnotationCollector.</param>
         /// <param name="readPropertyAnnotationValueDelegate">Delegate to read the property annotation value.</param>
         /// <returns>A task that represents the asynchronous read operation.</returns>
-        private async Task ReadODataOrCustomInstanceAnnotationValueAsync(
+        private ValueTask ReadODataOrCustomInstanceAnnotationValueAsync(
             string annotatedPropertyName,
             string annotationName,
             PropertyAndAnnotationCollector propertyAndAnnotationCollector,
             Func<string, Task<object>> readPropertyAnnotationValueDelegate)
         {
             // Read over the property name.
-            await this.JsonReader.ReadAsync()
-                .ConfigureAwait(false);
-            if (ODataJsonReaderUtils.IsODataAnnotationName(annotationName))
+            Task<bool> readTask = this.JsonReader.ReadAsync();
+
+            if (!readTask.IsCompletedSuccessfully)
             {
-                // OData annotations are read
-                object propertyAnnotationValue = await readPropertyAnnotationValueDelegate(annotationName)
-                    .ConfigureAwait(false);
-                propertyAndAnnotationCollector.AddODataPropertyAnnotation(annotatedPropertyName, annotationName, propertyAnnotationValue);
+                return AwaitReadAsync(this, annotatedPropertyName, annotationName, propertyAndAnnotationCollector, readPropertyAnnotationValueDelegate, readTask);
             }
-            else
+
+            return ContinueAfterReadAsync(this, annotatedPropertyName, annotationName, propertyAndAnnotationCollector, readPropertyAnnotationValueDelegate);
+
+            static ValueTask ContinueAfterReadAsync(
+                ODataJsonDeserializer thisParam,
+                string annotatedPropertyNameParam,
+                string annotationNameParam,
+                PropertyAndAnnotationCollector propertyAndAnnotationCollectorParam,
+                Func<string, Task<object>> readPropertyAnnotationValueDelegateParam)
             {
-                if (this.ShouldSkipCustomInstanceAnnotation(annotationName)
-                    || (this is ODataJsonErrorDeserializer && this.MessageReaderSettings.ShouldIncludeAnnotation == null))
+                if (ODataJsonReaderUtils.IsODataAnnotationName(annotationNameParam))
                 {
-                    propertyAndAnnotationCollector.CheckIfPropertyOpenForAnnotations(annotatedPropertyName, annotationName);
-                    await this.JsonReader.SkipValueAsync()
-                        .ConfigureAwait(false);
+                    // OData annotations are read
+                    Task<object> readPropertyAnnotationValueTask = readPropertyAnnotationValueDelegateParam(annotationNameParam);
+                    if (!readPropertyAnnotationValueTask.IsCompletedSuccessfully)
+                    {
+                        return AwaitReadPropertyAnnotationValueDelegate(
+                            annotatedPropertyNameParam,
+                            annotationNameParam,
+                            propertyAndAnnotationCollectorParam,
+                            readPropertyAnnotationValueTask);
+                    }
+
+                    propertyAndAnnotationCollectorParam.AddODataPropertyAnnotation(annotatedPropertyNameParam, annotationNameParam, readPropertyAnnotationValueTask.Result);
+
+                    return ValueTask.CompletedTask;
                 }
-                else
+
+                if (thisParam.ShouldSkipCustomInstanceAnnotation(annotationNameParam)
+                    || (thisParam is ODataJsonErrorDeserializer && thisParam.MessageReaderSettings.ShouldIncludeAnnotation == null))
                 {
-                    Debug.Assert(this.ReadPropertyCustomAnnotationValueAsync != null, $"{nameof(ReadPropertyCustomAnnotationValueAsync)} != null");
-                    object propertyCustomAnnotationValue = await this.ReadPropertyCustomAnnotationValueAsync(propertyAndAnnotationCollector, annotationName)
-                        .ConfigureAwait(false);
-                    propertyAndAnnotationCollector.AddCustomPropertyAnnotation(annotatedPropertyName, annotationName, propertyCustomAnnotationValue);
+                    propertyAndAnnotationCollectorParam.CheckIfPropertyOpenForAnnotations(annotatedPropertyNameParam, annotationNameParam);
+                    Task skipValueTask = thisParam.JsonReader.SkipValueAsync();
+                    if (!skipValueTask.IsCompletedSuccessfully)
+                    {
+                        return AwaitSkipValueAsync(skipValueTask);
+                    }
+
+                    return ValueTask.CompletedTask;
                 }
+
+                Debug.Assert(thisParam.ReadPropertyCustomAnnotationValueAsync != null, $"{nameof(ReadPropertyCustomAnnotationValueAsync)} != null");
+                Task<object> readPropertyCustomAnnotationValueTask = thisParam.ReadPropertyCustomAnnotationValueAsync(
+                    propertyAndAnnotationCollectorParam,
+                    annotationNameParam);
+                if (!readPropertyCustomAnnotationValueTask.IsCompletedSuccessfully)
+                {
+                    return AwaitReadPropertyCustomAnnotationValueAsync(annotatedPropertyNameParam, annotationNameParam, propertyAndAnnotationCollectorParam, readPropertyCustomAnnotationValueTask);
+                }
+
+                propertyAndAnnotationCollectorParam.AddCustomPropertyAnnotation(annotatedPropertyNameParam, annotationNameParam, readPropertyCustomAnnotationValueTask.Result);
+
+                return ValueTask.CompletedTask;
+            }
+
+            static async ValueTask AwaitReadAsync(
+                ODataJsonDeserializer thisParam,
+                string annotatedPropertyNameParam,
+                string annotationNameParam,
+                PropertyAndAnnotationCollector propertyAndAnnotationCollectorParam,
+                Func<string, Task<object>> readPropertyAnnotationValueDelegateParam,
+                Task<bool> pendingReadTask)
+            {
+                await pendingReadTask.ConfigureAwait(false);
+
+                await ContinueAfterReadAsync(
+                    thisParam,
+                    annotatedPropertyNameParam,
+                    annotationNameParam,
+                    propertyAndAnnotationCollectorParam,
+                    readPropertyAnnotationValueDelegateParam);
+            }
+
+            static async ValueTask AwaitReadPropertyAnnotationValueDelegate(
+                string annotatedPropertyNameParam,
+                string annotationNameParam,
+                PropertyAndAnnotationCollector propertyAndAnnotationCollectorParam,
+                Task<object> pendingReadPropertyAnnotationValueTask)
+            {
+                object propertyAnnotationValue = await pendingReadPropertyAnnotationValueTask.ConfigureAwait(false);
+
+                propertyAndAnnotationCollectorParam.AddODataPropertyAnnotation(annotatedPropertyNameParam, annotationNameParam, propertyAnnotationValue);
+            }
+
+            static async ValueTask AwaitReadPropertyCustomAnnotationValueAsync(
+                string annotatedPropertyNameParam,
+                string annotationNameParam,
+                PropertyAndAnnotationCollector propertyAndAnnotationCollectorParam,
+                Task<object> pendingReadPropertyCustomAnnotationValueTask)
+            {
+                object propertyCustomAnnotationValue = await pendingReadPropertyCustomAnnotationValueTask.ConfigureAwait(false);
+                
+                propertyAndAnnotationCollectorParam.AddCustomPropertyAnnotation(annotatedPropertyNameParam, annotationNameParam, propertyCustomAnnotationValue);
+            }
+
+            static async ValueTask AwaitSkipValueAsync(Task pendingSkipValueTask)
+            {
+                await pendingSkipValueTask.ConfigureAwait(false);
             }
         }
 
@@ -1507,7 +2412,7 @@ namespace Microsoft.OData.Json
         /// Post-Condition: The reader is positioned on the first property of the payload after having read (or skipped) the context URI property.
         ///                 Or the reader is positioned on an end-object node if there are no properties (other than the context URI which is required in responses and optional in requests).
         /// </remarks>
-        private async Task<string> ReadPayloadStartImplementationAsync(
+        private Task<string> ReadPayloadStartImplementationAsync(
             ODataPayloadKind payloadKind,
             PropertyAndAnnotationCollector propertyAndAnnotationCollector,
             bool isReadingNestedPayload,
@@ -1518,40 +2423,97 @@ namespace Microsoft.OData.Json
                 isReadingNestedPayload || this.JsonReader.NodeType == JsonNodeType.None,
                 "Pre-Condition: JSON reader must not have been used yet when not reading a nested payload.");
 
-            if (!isReadingNestedPayload)
+            if (isReadingNestedPayload)
             {
-                // Position the reader on the first node inside the outermost object.
-                await this.JsonReader.ReadAsync()
-                    .ConfigureAwait(false);
+                return CachedTasks.StringNull;
+            }
 
-                if (allowEmptyPayload && this.JsonReader.NodeType == JsonNodeType.EndOfInput)
+            // Position the reader on the first node inside the outermost object.
+            Task<bool> readTask = this.JsonReader.ReadAsync();
+            if (!readTask.IsCompletedSuccessfully)
+            {
+                return AwaitReadAsync(this, payloadKind, propertyAndAnnotationCollector, allowEmptyPayload, readTask);
+            }
+
+            return ContinueAfterReadAsync(this, payloadKind, propertyAndAnnotationCollector, allowEmptyPayload);
+
+            static Task<string> ContinueAfterReadAsync(
+                ODataJsonDeserializer thisParam,
+                ODataPayloadKind payloadKindParam,
+                PropertyAndAnnotationCollector propertyAndAnnotationCollectorParam,
+                bool allowEmptyPayloadParam)
+            {
+                if (allowEmptyPayloadParam && thisParam.JsonReader.NodeType == JsonNodeType.EndOfInput)
                 {
-                    return null;
+                    return CachedTasks.StringNull;
                 }
 
                 // Read the StartObject node and position the reader on the first property
                 // (or the end object node).
-                await this.JsonReader.ReadStartObjectAsync()
-                    .ConfigureAwait(false);
-
-                if (payloadKind != ODataPayloadKind.Error)
+                ValueTask readStartObjectTask = thisParam.JsonReader.ReadStartObjectAsync();
+                if (!readStartObjectTask.IsCompletedSuccessfully)
                 {
-                    // Skip over the context URI annotation in request payloads or when we've already read it
-                    // during payload kind detection.
-                    bool failOnMissingContextUriAnnotation = this.jsonInputContext.ReadingResponse;
-
-                    // In responses we expect the context URI to be the first thing in the payload
-                    // (except for error payloads). In requests we ignore the context URI.
-                    return await this.ReadContextUriAnnotationAsync(
-                        payloadKind,
-                        propertyAndAnnotationCollector,
-                        failOnMissingContextUriAnnotation).ConfigureAwait(false);
+                    return AwaitReadStartObjectAsync(
+                        thisParam,
+                        payloadKindParam,
+                        propertyAndAnnotationCollectorParam,
+                        readStartObjectTask);
                 }
 
-                this.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
+                return ContinueAfterReadStartObjectAsync(
+                    thisParam,
+                    payloadKindParam,
+                    propertyAndAnnotationCollectorParam);
             }
 
-            return null;
+            static Task<string> ContinueAfterReadStartObjectAsync(ODataJsonDeserializer thisParam,
+                ODataPayloadKind payloadKindParam,
+                PropertyAndAnnotationCollector propertyAndAnnotationCollectorParam)
+            {
+                if (payloadKindParam == ODataPayloadKind.Error)
+                {
+                    thisParam.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
+                    return CachedTasks.StringNull;
+                }
+
+                // Skip over the context URI annotation in request payloads or when we've already read it
+                // during payload kind detection.
+                bool failOnMissingContextUriAnnotation = thisParam.jsonInputContext.ReadingResponse;
+
+                // In responses we expect the context URI to be the first thing in the payload
+                // (except for error payloads). In requests we ignore the context URI.
+                return thisParam.ReadContextUriAnnotationAsync(
+                    payloadKindParam,
+                    propertyAndAnnotationCollectorParam,
+                    failOnMissingContextUriAnnotation);
+
+            }
+
+            static async Task<string> AwaitReadAsync(
+                ODataJsonDeserializer thisParam,
+                ODataPayloadKind payloadKindParam,
+                PropertyAndAnnotationCollector propertyAndAnnotationCollectorParam,
+                bool allowEmptyPayloadParam,
+                Task<bool> pendingReadTask)
+            {
+                await pendingReadTask.ConfigureAwait(false);
+
+                return await ContinueAfterReadAsync(thisParam, payloadKindParam, propertyAndAnnotationCollectorParam, allowEmptyPayloadParam);
+            }
+
+            static async Task<string> AwaitReadStartObjectAsync(
+                ODataJsonDeserializer thisParam,
+                ODataPayloadKind payloadKindParam,
+                PropertyAndAnnotationCollector propertyAndAnnotationCollectorParam,
+                ValueTask pendingStartObjectTask)
+            {
+                await pendingStartObjectTask.ConfigureAwait(false);
+
+                return await ContinueAfterReadStartObjectAsync(
+                    thisParam,
+                    payloadKindParam,
+                    propertyAndAnnotationCollectorParam);
+            }
         }
     }
 }
