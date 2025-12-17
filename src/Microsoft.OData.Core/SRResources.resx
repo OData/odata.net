@@ -1436,8 +1436,8 @@
   <data name="ODataJsonPropertyAndValueDeserializer_ResourceValuePropertyAnnotationWithoutProperty" xml:space="preserve">
     <value>One or more property annotations for property '{0}' were found in the resource value without the property to annotate. Resource values must only contain property annotations for existing properties.</value>
   </data>
-  <data name="ODataJsonPropertyAndValueDeserializer_ComplexValueWithPropertyTypeAnnotation" xml:space="preserve">
-    <value>A complex property with an '{0}' property annotation was found. Complex properties must not have the '{0}' property annotation, instead the '{0}' should be specified as an instance annotation in the complex value.</value>
+  <data name="ODataJsonPropertyAndValueDeserializer_NestedResourceValueWithPropertyTypeAnnotation" xml:space="preserve">
+    <value>A non-null nested resource property with an '{0}' property annotation was found. Non-null nested properties must not have the '{0}' property annotation, instead the '{0}' should be specified as an instance annotation in the nested resource value.</value>
   </data>
   <data name="ODataJsonPropertyAndValueDeserializer_ResourceTypeAnnotationNotFirst" xml:space="preserve">
     <value>The 'odata.type' instance annotation in a resource object is not the first property of the object. In OData, the 'odata.type' instance annotation must be the first property of the resource object.</value>

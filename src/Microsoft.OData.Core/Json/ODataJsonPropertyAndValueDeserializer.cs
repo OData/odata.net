@@ -524,11 +524,13 @@ namespace Microsoft.OData.Json
                 ValidateExpandedNestedResourceInfoPropertyValue(this.JsonReader, isCollection, propertyName, payloadTypeReference);
                 if (isCollection)
                 {
+                    // Sam: Unclear that since it's an undeclared property, why call 'ReadExpandedResourceSetNestedResourceInfo' to tread it as navigation property, not call 'ReadNonExpandedResourceSetNestedResourceInfo'?
                     readerNestedResourceInfo =
-                        ReadExpandedResourceSetNestedResourceInfo(resourceState, null, payloadTypeReference.ToStructuredType(), propertyName, /*isDeltaResourceSet*/ false);
+                        ReadExpandedResourceSetNestedResourceInfo(resourceState, null, payloadTypeReference.ToStructuredType(), propertyName, isDeltaResourceSet: false, this.MessageReaderSettings);
                 }
                 else
                 {
+                    // Sam: Unclear that since it's an undeclared property, why call 'ReadExpandedResourceNestedResourceInfo' to tread it as navigation property, not call 'ReadNonExpandedResourceNestedResourceInfo'?
                     readerNestedResourceInfo = ReadExpandedResourceNestedResourceInfo(resourceState, null, propertyName, payloadTypeReference.ToStructuredType(), this.MessageReaderSettings);
                 }
 
@@ -606,7 +608,7 @@ namespace Microsoft.OData.Json
         }
 
         /// <summary>
-        /// Reads non-expanded nested resource set.
+        /// Reads non-expanded (complex) nested resource set.
         /// </summary>
         /// <param name="resourceState">The state of the reader for resource to read.</param>
         /// <param name="collectionProperty">The collection of complex property for which to read the nested resource info. null for undeclared property.</param>
@@ -628,6 +630,8 @@ namespace Microsoft.OData.Json
                 IsCollection = true,
                 IsComplex = true
             };
+
+            AttachPropertyAnnotationsToNestedResourceInfo(resourceState, nestedResourceInfo);
 
             ODataResourceSet expandedResourceSet = CreateCollectionResourceSet(resourceState, propertyName);
             return ODataJsonReaderNestedResourceInfo.CreateResourceSetReaderNestedResourceInfo(nestedResourceInfo, collectionProperty, nestedResourceType, expandedResourceSet);
@@ -656,13 +660,36 @@ namespace Microsoft.OData.Json
                 IsComplex = true
             };
 
-            // Check the odata.type annotation for the complex property, it should show inside the complex object.
-            if (ValidateDataPropertyTypeNameAnnotation(resourceState.PropertyAndAnnotationCollector, nestedResourceInfo.Name) != null)
-            {
-                throw new ODataException(Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_ComplexValueWithPropertyTypeAnnotation, ODataAnnotationNames.ODataType));
-            }
+            // Here's old logic: If a complex nested resource has `odata.type` property annotation, then throw exception, it says the annotation should be inside complex object.
+            // It doesn't make sense now since the complex nested resoruce value could be null , in that case the `odata.type` annotation has to be outside the complex object.
+            AttachPropertyAnnotationsToNestedResourceInfo(resourceState, nestedResourceInfo);
 
             return ODataJsonReaderNestedResourceInfo.CreateResourceReaderNestedResourceInfo(nestedResourceInfo, complexProperty, nestedResourceType);
+        }
+
+        protected static void AttachPropertyAnnotationsToNestedResourceInfo(IODataJsonReaderResourceState resourceState, ODataNestedResourceInfo nestedResourceInfo)
+        {
+            Debug.Assert(resourceState != null, "resourceState != null");
+            Debug.Assert(nestedResourceInfo != null, "nestedResourceInfo != null");
+
+            foreach (KeyValuePair<string, object> odataAnnotation
+                    in resourceState.PropertyAndAnnotationCollector.GetODataPropertyAnnotations(nestedResourceInfo.Name))
+            {
+                if (string.Equals(odataAnnotation.Key, "odata.type", StringComparison.Ordinal)
+                    || string.Equals(odataAnnotation.Key, "type", StringComparison.Ordinal))
+                {
+                    nestedResourceInfo.TypeAnnotation = new ODataTypeAnnotation((string)odataAnnotation.Value);
+                }
+                else
+                {
+                    nestedResourceInfo.InstanceAnnotations.Add(new ODataInstanceAnnotation(odataAnnotation.Key, odataAnnotation.Value.ToODataValue(), true));
+                }
+            }
+
+            foreach (KeyValuePair<string, object> instanceAnnotation in resourceState.PropertyAndAnnotationCollector.GetCustomPropertyAnnotations(nestedResourceInfo.Name))
+            {
+                nestedResourceInfo.InstanceAnnotations.Add(new ODataInstanceAnnotation(instanceAnnotation.Key, instanceAnnotation.Value.ToODataValue()));
+            }
         }
 
         /// <summary>
@@ -714,13 +741,25 @@ namespace Microsoft.OData.Json
                         break;
 
                     default:
-                        if (messageReaderSettings.ThrowOnUndeclaredPropertyForNonOpenType)
+                        if (messageReaderSettings.ThrowOnUnexpectedODataPropertyAnnotationOnNavigationProperty)
                         {
                             throw new ODataException(Error.Format(SRResources.ODataJsonResourceDeserializer_UnexpectedExpandedSingletonNavigationLinkPropertyAnnotation, nestedResourceInfo.Name, propertyAnnotation.Key));
                         }
 
+                        // Let's save the property annotations into the nested resource info, therefore we can support the 'null' value nested resource as:
+                        // {
+                        //     "NestedResource@NS.InstanceAnnotation" : "anyvalue",
+                        //     "NestedResource": null
+                        // }
+                        nestedResourceInfo.InstanceAnnotations.Add(new ODataInstanceAnnotation(propertyAnnotation.Key, propertyAnnotation.Value.ToODataValue(), true));
+
                         break;
                 }
+            }
+
+            foreach (KeyValuePair<string, object> instanceAnnotation in resourceState.PropertyAndAnnotationCollector.GetCustomPropertyAnnotations(nestedResourceInfo.Name))
+            {
+                nestedResourceInfo.InstanceAnnotations.Add(new ODataInstanceAnnotation(instanceAnnotation.Key, instanceAnnotation.Value.ToODataValue()));
             }
 
             return ODataJsonReaderNestedResourceInfo.CreateResourceReaderNestedResourceInfo(nestedResourceInfo, navigationProperty, propertyType);
@@ -734,11 +773,13 @@ namespace Microsoft.OData.Json
         /// <param name="propertyType">The type of the collection.</param>
         /// <param name="propertyName">The property name.</param>
         /// <param name="isDeltaResourceSet">The property being read represents a nested delta resource set.</param>
+        /// <param name="messageReaderSettings">The ODataMessageReaderSettings.</param>
         /// <returns>The nested resource info for the expanded link read.</returns>
         /// <remarks>
         /// This method doesn't move the reader.
         /// </remarks>
-        protected static ODataJsonReaderNestedResourceInfo ReadExpandedResourceSetNestedResourceInfo(IODataJsonReaderResourceState resourceState, IEdmNavigationProperty navigationProperty, IEdmStructuredType propertyType, string propertyName, bool isDeltaResourceSet)
+        protected static ODataJsonReaderNestedResourceInfo ReadExpandedResourceSetNestedResourceInfo(IODataJsonReaderResourceState resourceState, 
+            IEdmNavigationProperty navigationProperty, IEdmStructuredType propertyType, string propertyName, bool isDeltaResourceSet, ODataMessageReaderSettings messageReaderSettings)
         {
             Debug.Assert(resourceState != null, "resourceState != null");
             Debug.Assert(navigationProperty != null || propertyName != null, "navigationProperty != null || propertyName != null");
@@ -796,8 +837,19 @@ namespace Microsoft.OData.Json
 
                     case ODataAnnotationNames.ODataDeltaLink:   // Delta links are not supported on expanded resource sets.
                     default:
-                        throw new ODataException(Error.Format(SRResources.ODataJsonResourceDeserializer_UnexpectedExpandedCollectionNavigationLinkPropertyAnnotation, nestedResourceInfo.Name, propertyAnnotation.Key));
+                        if (messageReaderSettings.ThrowOnUnexpectedODataPropertyAnnotationOnNavigationProperty)
+                        {
+                            throw new ODataException(Error.Format(SRResources.ODataJsonResourceDeserializer_UnexpectedExpandedCollectionNavigationLinkPropertyAnnotation, nestedResourceInfo.Name, propertyAnnotation.Key));
+                        }
+
+                        nestedResourceInfo.InstanceAnnotations.Add(new ODataInstanceAnnotation(propertyAnnotation.Key, propertyAnnotation.Value.ToODataValue(), true));
+                        break;
                 }
+            }
+
+            foreach (KeyValuePair<string, object> instanceAnnotation in resourceState.PropertyAndAnnotationCollector.GetCustomPropertyAnnotations(nestedResourceInfo.Name))
+            {
+                nestedResourceInfo.InstanceAnnotations.Add(new ODataInstanceAnnotation(instanceAnnotation.Key, instanceAnnotation.Value.ToODataValue()));
             }
 
             return ODataJsonReaderNestedResourceInfo.CreateResourceSetReaderNestedResourceInfo(nestedResourceInfo, navigationProperty, propertyType, expandedResourceSet);
@@ -2338,7 +2390,7 @@ namespace Microsoft.OData.Json
                 if (isCollection)
                 {
                     readerNestedResourceInfo =
-                        ReadExpandedResourceSetNestedResourceInfo(resourceState, null, payloadTypeReference.ToStructuredType(), propertyName, isDeltaResourceSet: false);
+                        ReadExpandedResourceSetNestedResourceInfo(resourceState, null, payloadTypeReference.ToStructuredType(), propertyName, isDeltaResourceSet: false, this.MessageReaderSettings);
                 }
                 else
                 {

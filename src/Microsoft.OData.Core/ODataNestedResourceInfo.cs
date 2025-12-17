@@ -7,9 +7,11 @@
 namespace Microsoft.OData
 {
     #region Namespaces
-    using System;
-    using System.Diagnostics;
     using Microsoft.OData.Evaluation;
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     #endregion Namespaces
 
     /// <summary>
@@ -137,5 +139,50 @@ namespace Microsoft.OData
         /// Whether this is a complex property.
         /// </summary>
         internal bool IsComplex { get; set; }
+
+        /// <summary>
+        /// Collection of custom instance annotations.
+        /// Reading process:
+        /// A single-valued nested resource could be one of the following three scenarios: Be noted:
+        ///  # 1. a resource with a valid json object
+        ///  {
+        ///      "MyNavProp@ns.annotation": "value",
+        ///      "MyNavProp": {...}
+        ///  }
+        ///  
+        ///  In this case, the instance annotations within resource are attached to the ODataResource represented by "MyNavProp".
+        ///  meanwhile, the instance annotations as property annotations are attached to the ODataNestedResourceInfo representing "MyNavProp"?
+        ///  # 2. a resource with 'null' value
+        ///  {
+        ///      "MyNavProp@ns.annotation": "value",
+        ///      "MyNavProp": null
+        ///  }
+        ///  In this case, the instance annotations as property annotations are attached to the ODataNestedResourceInfo representing "MyNavProp".
+        ///  
+        ///  # 3. a resource without value
+        ///  {
+        ///      "MyNavProp@ns.annotation": "value",
+        ///  }
+        ///  In this case, the instance annotations as property annotations are attached to the ODataPropertyInfo representing "MyNavProp".
+        ///  In reading process, ODataReaderState.NestedProperty is popup.
+        ///  
+        /// For collection-valued nested resource, the instance annotations are always property annotations, for example:
+        /// {
+        ///       "MyCollectionNavProp@ns.annotation": "value",
+        /// }
+        /// The value of collection-valued could be: Empty collection "[]", or collection with items "[{...}, x, {...}]", or without content.
+        /// 
+        /// Writing process:
+        /// Following up OData spec, When annotating a name/value pair for which the value is represented as a JSON object, each annotation is placed within the object and represented as a single name/value pair.
+        /// So,dDuring writing process, the instance annotations attached to ODataNestedResourceInfo will be written as property annotations only if the associated nested resource value is null.
+        /// That means the instance annotations attached to ODataNestedResourceInfo will be ignored if the associated nested resource value is a JSON object.
+        /// </summary>
+        [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly",
+            Justification = "We want to allow the same instance annotation collection instance to be shared across ODataLib OM instances.")]
+        public ICollection<ODataInstanceAnnotation> InstanceAnnotations
+        {
+            get { return this.GetInstanceAnnotations(); }
+            set { this.SetInstanceAnnotations(value); }
+        }
     }
 }

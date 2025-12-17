@@ -989,7 +989,7 @@ namespace Microsoft.OData.Json
             if (edmProperty == null || edmProperty.Type.IsUntyped())
             {
                 // Undeclared property - we need to run detection algorithm here.
-                readerNestedInfo = this.ReadUndeclaredProperty(resourceState, propertyName, propertyWithValue: false);
+                 readerNestedInfo = this.ReadUndeclaredProperty(resourceState, propertyName, propertyWithValue: false);
 
                 this.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
                 return readerNestedInfo;
@@ -1274,7 +1274,7 @@ namespace Microsoft.OData.Json
                     if (isCollection)
                     {
                         readerNestedResourceInfo = this.ReadingResponse || isDeltaResourceSet
-                            ? ReadExpandedResourceSetNestedResourceInfo(resourceState, navigationProperty, navigationProperty.Type.ToStructuredType(), propertyName, /*isDeltaResourceSet*/ isDeltaResourceSet)
+                            ? ReadExpandedResourceSetNestedResourceInfo(resourceState, navigationProperty, navigationProperty.Type.ToStructuredType(), propertyName, isDeltaResourceSet: isDeltaResourceSet, this.MessageReaderSettings)
                             : ReadEntityReferenceLinksForCollectionNavigationLinkInRequest(resourceState, navigationProperty, propertyName, /*isExpanded*/ true);
                     }
                     else
@@ -3502,7 +3502,7 @@ namespace Microsoft.OData.Json
                     if (isCollection)
                     {
                         readerNestedResourceInfo = this.ReadingResponse || isDeltaResourceSet
-                            ? ReadExpandedResourceSetNestedResourceInfo(resourceState, navigationProperty, navigationProperty.Type.ToStructuredType(), propertyName, isDeltaResourceSet: isDeltaResourceSet)
+                            ? ReadExpandedResourceSetNestedResourceInfo(resourceState, navigationProperty, navigationProperty.Type.ToStructuredType(), propertyName, isDeltaResourceSet: isDeltaResourceSet, this.MessageReaderSettings)
                             : ReadEntityReferenceLinksForCollectionNavigationLinkInRequest(resourceState, navigationProperty, propertyName, isExpanded: true);
                     }
                     else

@@ -1,0 +1,3 @@
+Microsoft.OData.ODataNestedResourceInfo.InstanceAnnotations.get -> System.Collections.Generic.ICollection<Microsoft.OData.ODataInstanceAnnotation>
+Microsoft.OData.ODataNestedResourceInfo.InstanceAnnotations.set -> void
+Microsoft.OData.ValidationKinds.ThrowOnUnexpectedODataPropertyAnnotationOnNavigationProperty = 8 -> Microsoft.OData.ValidationKinds

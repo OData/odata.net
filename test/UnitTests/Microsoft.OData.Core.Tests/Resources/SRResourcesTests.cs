@@ -387,7 +387,7 @@ public class SRResourcesTests
     [InlineData("ODataJsonParameterDeserializer_UnsupportedPrimitiveParameterType", new object[] { "Value1", "Value2" })]
     [InlineData("ODataJsonPropertyAndValueDeserializer_CollectionTypeExpected", new object[] { "Value" })]
     [InlineData("ODataJsonPropertyAndValueDeserializer_CollectionTypeNotExpected", new object[] { "Value" })]
-    [InlineData("ODataJsonPropertyAndValueDeserializer_ComplexValueWithPropertyTypeAnnotation", new object[] { "Value" })]
+    [InlineData("ODataJsonPropertyAndValueDeserializer_NestedResourceValueWithPropertyTypeAnnotation", new object[] { "Value" })]
     [InlineData("ODataJsonPropertyAndValueDeserializer_InvalidTopLevelPropertyName", new object[] { "Value1", "Value2" })]
     [InlineData("ODataJsonPropertyAndValueDeserializer_InvalidTopLevelPropertyPayload", new object[] { })]
     [InlineData("ODataJsonPropertyAndValueDeserializer_InvalidTypeName", new object[] { "Value" })]

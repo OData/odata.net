@@ -37,6 +37,11 @@ namespace Microsoft.OData
         ThrowIfTypeConflictsWithMetadata = 4,
 
         /// <summary>
+        /// Indicates that an exception is thrown when an unexpected OData property annotation (@odata.xxx) is found on a navigation property.
+        /// </summary>
+        ThrowOnUnexpectedODataPropertyAnnotationOnNavigationProperty = 8,
+
+        /// <summary>
         /// Enable all validations.
         /// </summary>
         All = ~0
