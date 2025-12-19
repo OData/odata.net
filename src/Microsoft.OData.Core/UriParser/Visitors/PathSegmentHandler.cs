@@ -201,5 +201,14 @@ namespace Microsoft.OData.UriParser
         {
             throw new NotImplementedException();
         }
+
+        /// <summary>
+        /// Handle a IndexSegment
+        /// </summary>
+        /// <param name="segment">the segment to Handle</param>
+        public virtual void Handle(IndexSegment segment)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

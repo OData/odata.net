@@ -21,6 +21,7 @@ using Microsoft.OData.UriParser.Aggregation;
 using Microsoft.OData.UriParser.Validation;
 using Xunit;
 using Microsoft.OData.Metadata;
+using Microsoft.OData.Edm.Vocabularies.V1;
 
 namespace Microsoft.OData.Tests.UriParser
 {
@@ -1986,6 +1987,87 @@ namespace Microsoft.OData.Tests.UriParser
 
             return model;
         }
-#endregion
+        #endregion
+
+        [Theory]
+        [InlineData("/Customers('1')/Names/0", 4, 0)]
+        [InlineData("/Customers('1')/Names/41", 4, 41)]
+        [InlineData("/Customers('1')/Names/-31", 4, -31)]
+        [InlineData("/Customers('1')/Locations/0", 4, 0)]
+        [InlineData("/Customers('1')/Locations/41", 4, 41)]
+        [InlineData("/Customers('1')/Locations/-21", 4, -21)]
+        public void ParseIndexSegmentForOrderedCollectionPropertyReturnsIndexSegment(string path, int count, long index)
+        {
+            // Arrange
+            IEdmModel model = GetOrderedEdmModel(ordered: true);
+
+            // Act
+            string fullUriString = ServiceRoot + path;
+            ODataUriParser parser = new ODataUriParser(model, ServiceRoot, new Uri(fullUriString));
+            var odataPath = parser.ParsePath();
+
+            // Assert
+            Assert.Equal(count, odataPath.Segments.Count);
+
+            EntitySetSegment entitySetSegment = Assert.IsType<EntitySetSegment>(odataPath.First());
+            IndexSegment indexSegment = Assert.IsType<IndexSegment>(odataPath.Last());
+            Assert.Equal(index, indexSegment.Index);
+        }
+
+        [Theory]
+        [InlineData("/Customers('1')/Names/0", "Names")]
+        [InlineData("/Customers('1')/Names/-31", "Names")]
+        [InlineData("/Customers('1')/Locations/0", "Locations")]
+        [InlineData("/Customers('1')/Locations/41", "Locations")]
+        public void ParseIndexSegmentForUnorderedCollectionPropertyThrows(string path, string identifier)
+        {
+            // Arrange
+            IEdmModel model = GetOrderedEdmModel(ordered: false);
+
+            // Act
+            string fullUriString = ServiceRoot + path;
+            ODataUriParser parser = new ODataUriParser(model, ServiceRoot, new Uri(fullUriString));
+            Action test = () => parser.ParsePath();
+
+            // Assert
+            ODataException exception = Assert.Throws<ODataException>(test);
+            Assert.Equal(Error.Format(SRResources.RequestUriProcessor_CannotQueryCollections, identifier), exception.Message);
+        }
+
+        internal static IEdmModel GetOrderedEdmModel(bool ordered = false)
+        {
+            EdmModel model = new EdmModel();
+
+            EdmComplexType address = new EdmComplexType("NS", "Address");
+            model.AddElement(address);
+
+            EdmCollectionTypeReference stringCollectionType = new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetString(false)));
+            EdmEntityType customerType = new EdmEntityType("NS", "Customer");
+            customerType.AddKeys(customerType.AddStructuralProperty("Id", EdmCoreModel.Instance.GetString(false)));
+            var namesProp = customerType.AddStructuralProperty("Names", stringCollectionType);
+            var locationsProp = customerType.AddStructuralProperty("Locations", new EdmCollectionTypeReference(new EdmCollectionType(new EdmComplexTypeReference(address, false))));
+
+            EdmEntityContainer container = new EdmEntityContainer("Default", "Container");
+            EdmEntitySet entitySet = container.AddEntitySet("Customers", customerType);
+            model.AddElement(container);
+
+            var multipleFunction = new EdmFunction("NS", "FindAllNames", stringCollectionType, true, null, true);
+            multipleFunction.AddParameter("bindingParameter", new EdmCollectionTypeReference(new EdmCollectionType(new EdmEntityTypeReference(customerType, false))));
+            model.AddElement(multipleFunction);
+
+            if (ordered)
+            {
+                IEdmBooleanConstantExpression booleanConstant = new EdmBooleanConstant(true);
+                IEdmTerm term = CoreVocabularyModel.OrderedTerm;
+                foreach (IEdmVocabularyAnnotatable item in new IEdmVocabularyAnnotatable[] { multipleFunction.Return, locationsProp, namesProp, entitySet })
+                {
+                    EdmVocabularyAnnotation annotation = new EdmVocabularyAnnotation(item, term, booleanConstant);
+                    annotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
+                    model.SetVocabularyAnnotation(annotation);
+                }
+            }
+
+            return model;
+        }
     }
 }
