@@ -456,9 +456,10 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
         }
 
         [Fact]
-        public void ReadNonOpenNestedResourceWithoutContentTest()
+        public void ReadOpenNestedResourceWithoutContentTest()
         {
-            const string payload = @"{""@odata.context"":""http://www.sampletest.com/$metadata#serverEntitySet/$entity"",
+            // Be noted: If the type is non-open, so far, reading the dynamic properties without value/content will throw exception.
+            const string payload = @"{""@odata.context"":""http://www.sampletest.com/$metadata#serverOpenEntitySet/$entity"",
   ""Id"":61880128,
   ""UndeclaredAddress@odata.type"":""#NS1.unknownTypeName123"",
   ""UndeclaredAddress@odata.unknownName1"":""unknown odata.xxx"",
@@ -469,7 +470,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
             ODataNestedResourceInfo nestedInfo = null;
             ODataPropertyInfo propertyInfo = null;
             bool undeclaredAddressRead = false;
-            this.ReadEntryPayload(payload, this.serverEntitySet, this.serverEntityType, reader =>
+            this.ReadEntryPayload(payload, this.serverOpenEntitySet, this.serverOpenEntityType, reader =>
             {
                 if (reader.State == ODataReaderState.ResourceStart)
                 {
@@ -510,7 +511,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
             Assert.Equal("unknown abcdefghijk", (propertyInfo.InstanceAnnotations.Last().Value as ODataPrimitiveValue).Value);
 
             entry.MetadataBuilder = new Microsoft.OData.Evaluation.NoOpResourceMetadataBuilder(entry);
-            string result = this.WriteEntryPayload(this.serverEntitySet, this.serverEntityType, writer =>
+            string result = this.WriteEntryPayload(this.serverOpenEntitySet, this.serverOpenEntityType, writer =>
             {
                 writer.WriteStart(entry);
                 writer.WriteStart(propertyInfo);
@@ -518,7 +519,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
                 writer.WriteEnd();
             });
 
-            Assert.Equal("{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverEntitySet/$entity\",\"Id\":61880128,\"UndeclaredAddress@odata.type\":\"#NS1.unknownTypeName123\",\"UndeclaredAddress@odata.unknownName1\":\"unknown odata.xxx\",\"UndeclaredAddress@NS1.abcdefg\":\"unknown abcdefghijk\"}", result);
+            Assert.Equal("{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverOpenEntitySet/$entity\",\"Id\":61880128,\"UndeclaredAddress@odata.type\":\"#NS1.unknownTypeName123\",\"UndeclaredAddress@odata.unknownName1\":\"unknown odata.xxx\",\"UndeclaredAddress@NS1.abcdefg\":\"unknown abcdefghijk\"}", result);
         }
 
         [Fact]
