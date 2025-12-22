@@ -10,7 +10,6 @@ namespace Microsoft.OData.Serializer
     public class ODataPropertyAsyncEnumerableSelector<TResource, TProperty, TCustomState>
         : ODataPropertySelector<TResource, TCustomState>
     {
-        internal ODataPropertyAsyncEnumerableSelector() { } // prevent
 
         public required Func<TResource, ODataWriterState<TCustomState>, IAsyncEnumerable<TProperty>>
         GetProperties
