@@ -6,6 +6,7 @@ public abstract class ODataResourceSetBaseJsonWriter<TCollection, TElement, TCus
     ODataJsonWriter<TCollection, TCustomState>, ICountWriter<TCustomState>, INextLinkWriter<TCustomState>
 #pragma warning restore CA1005 // Avoid excessive parameters on generic types
 {
+    protected ODataTypeInfo<TCollection, TCustomState>? TypeInfo { get; } = typeInfo;
     public override bool Write(TCollection value, ODataWriterState<TCustomState> state)
     {
         ODataPropertyInfo? parentProperty = state.IsTopLevel()
@@ -19,10 +20,10 @@ public abstract class ODataResourceSetBaseJsonWriter<TCollection, TElement, TCus
 
         if (progress < ResourceWriteProgress.PreValueMetadata)
         {
-            state.Stack.Current.ResourceTypeInfo = typeInfo;
+            state.Stack.Current.ResourceTypeInfo = TypeInfo;
             state.Stack.Current.PropertyInfo = parentProperty;
 
-            typeInfo?.OnSerializing?.Invoke(value, state);
+            TypeInfo?.OnSerializing?.Invoke(value, state);
 
             if (state.IsTopLevel())
             {
@@ -93,7 +94,7 @@ public abstract class ODataResourceSetBaseJsonWriter<TCollection, TElement, TCus
             }
         }
 
-        typeInfo?.OnSerialized?.Invoke(value, state);
+        TypeInfo?.OnSerialized?.Invoke(value, state);
         state.Stack.Pop(true);
         return true;
     }
@@ -120,18 +121,18 @@ public abstract class ODataResourceSetBaseJsonWriter<TCollection, TElement, TCus
 
     protected virtual void WritePreValueAnnotaitons(TCollection value, ODataWriterState<TCustomState> state)
     {
-        if (typeInfo?.CountPosition != AnnotationPosition.PostValue)
+        if (TypeInfo?.CountPosition != AnnotationPosition.PostValue)
         {
             WriteCountProperty(value, state);
         }
-        if (typeInfo?.NextLinkPosition != AnnotationPosition.PostValue)
+        if (TypeInfo?.NextLinkPosition != AnnotationPosition.PostValue)
         {
             WriteNextLinkProperty(value, state);
         }
 
-        if (typeInfo?.GetCustomPreValueAnnotations != null)
+        if (TypeInfo?.GetCustomPreValueAnnotations != null)
         {
-            var annotations = typeInfo.GetCustomPreValueAnnotations(value, state);
+            var annotations = TypeInfo.GetCustomPreValueAnnotations(value, state);
             if (annotations is not null)
             {
                 // TODO: Should we allow GetCustomPreValueAnnotations to return
@@ -141,28 +142,28 @@ public abstract class ODataResourceSetBaseJsonWriter<TCollection, TElement, TCus
                 handler.WriteAnnotations(annotations, CustomInstanceAnnotationWriter<TCustomState>.Instance, state);
             }
         }
-        else if (typeInfo?.WriteCustomPreValueAnnotations != null)
+        else if (TypeInfo?.WriteCustomPreValueAnnotations != null)
         {
-            typeInfo.WriteCustomPreValueAnnotations(value, CustomInstanceAnnotationWriter<TCustomState>.Instance, state);
+            TypeInfo.WriteCustomPreValueAnnotations(value, CustomInstanceAnnotationWriter<TCustomState>.Instance, state);
         }
     }
 
     protected virtual void WritePostValueAnnotaitons(TCollection value, ODataWriterState<TCustomState> state)
     {
-        if (typeInfo?.CountPosition == AnnotationPosition.PostValue)
+        if (TypeInfo?.CountPosition == AnnotationPosition.PostValue)
         {
             WriteCountProperty(value, state);
         }
 
-        if (typeInfo?.NextLinkPosition == AnnotationPosition.PostValue)
+        if (TypeInfo?.NextLinkPosition == AnnotationPosition.PostValue)
         {
             WriteNextLinkProperty(value, state);
         }
 
         // TODO: perhaps this logic should be moved to the type info?
-        if (typeInfo?.GetCustomPostValueAnnotations != null)
+        if (TypeInfo?.GetCustomPostValueAnnotations != null)
         {
-            var annotations = typeInfo.GetCustomPostValueAnnotations(value, state);
+            var annotations = TypeInfo.GetCustomPostValueAnnotations(value, state);
             if (annotations is not null)
             {
                 // TODO: Should we allow GetCustomPreValueAnnotations to return
@@ -172,9 +173,9 @@ public abstract class ODataResourceSetBaseJsonWriter<TCollection, TElement, TCus
                 handler.WriteAnnotations(annotations, CustomInstanceAnnotationWriter<TCustomState>.Instance, state);
             }
         }
-        else if (typeInfo?.WriteCustomPostValueAnnotations != null)
+        else if (TypeInfo?.WriteCustomPostValueAnnotations != null)
         {
-            typeInfo.WriteCustomPostValueAnnotations(value, CustomInstanceAnnotationWriter<TCustomState>.Instance, state);
+            TypeInfo.WriteCustomPostValueAnnotations(value, CustomInstanceAnnotationWriter<TCustomState>.Instance, state);
         }
     }
 
@@ -191,9 +192,9 @@ public abstract class ODataResourceSetBaseJsonWriter<TCollection, TElement, TCus
     protected virtual void WriteCountProperty(TCollection value, ODataWriterState<TCustomState> state)
     {
         var jsonWriter = state.JsonWriter;
-        if (typeInfo?.GetCount != null)
+        if (TypeInfo?.GetCount != null)
         {
-            var count = typeInfo.GetCount(value, state);
+            var count = TypeInfo.GetCount(value, state);
             if (count.HasValue)
             {
                 jsonWriter.WritePropertyName("@odata.count"u8);
@@ -202,7 +203,7 @@ public abstract class ODataResourceSetBaseJsonWriter<TCollection, TElement, TCus
         }
         else
         {
-            typeInfo?.WriteCount?.Invoke(value, this, state);
+            TypeInfo?.WriteCount?.Invoke(value, this, state);
         }
     }
 
@@ -210,9 +211,9 @@ public abstract class ODataResourceSetBaseJsonWriter<TCollection, TElement, TCus
     {
 
         var jsonWriter = state.JsonWriter;
-        if (typeInfo?.GetNextLink != null)
+        if (TypeInfo?.GetNextLink != null)
         {
-            var nextLink = typeInfo.GetNextLink(value, state);
+            var nextLink = TypeInfo.GetNextLink(value, state);
             if (!string.IsNullOrEmpty(nextLink))
             {
                 jsonWriter.WritePropertyName("@odata.nextLink"u8);
@@ -221,7 +222,7 @@ public abstract class ODataResourceSetBaseJsonWriter<TCollection, TElement, TCus
         }
         else
         {
-            typeInfo?.WriteNextLink?.Invoke(value, this, state);
+            TypeInfo?.WriteNextLink?.Invoke(value, this, state);
         }
     }
 

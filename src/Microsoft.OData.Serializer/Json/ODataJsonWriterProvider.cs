@@ -1,7 +1,10 @@
 ﻿using Microsoft.OData.Edm;
 using Microsoft.OData.Serializer.Json.Writers;
+using System.Collections;
 using System.Collections.Concurrent;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
 
 namespace Microsoft.OData.Serializer;
 
@@ -96,9 +99,17 @@ internal class ODataJsonWriterProvider<TCustomState>(ODataSerializerOptions<TCus
     {
         var type = typeof(T);
 
+        // We currently don't support overriding the serialization of primitive types,
+        // so we check the built-in simple writers first.
         if (simpleWriters.TryGetValue(type, out var writer))
         {
             return (IODataWriter<T, ODataWriterState<TCustomState>>)writer;
+        }
+
+        // Manually registered ODataTypeInfo have precedence over built-in writer factories.
+        if (TryGetWriterFromRegisteredTypeInfo<T>(type, out var typeInfo, out IODataWriter<T, ODataWriterState<TCustomState>> odataTypeInfoWriter))
+        {
+            return odataTypeInfoWriter;
         }
 
         foreach (var factory in defaultFactories)
@@ -109,12 +120,57 @@ internal class ODataJsonWriterProvider<TCustomState>(ODataSerializerOptions<TCus
             }
         }
 
-        ODataTypeInfo<T, TCustomState>? typeInfo = options.TryGetResourceInfo<T>();
-        if (typeInfo != null)
+        if (TryCreateWriterFromType<T>(model, type, out IODataWriter<T, ODataWriterState<TCustomState>> createdWriter))
         {
-            return new ODataResourceJsonWriter<T, TCustomState>(typeInfo);
+            return createdWriter;
         }
 
+        throw new Exception(typeInfo == null ?
+            $"Could not find a suitable writer for {type.FullName}"
+            : $"Unable to determine the OData value kind for type '{type.FullName}'. Set the GetValueKind property directly on the ODataTypeInfo to explicitly specify the value kind.");
+    }
+
+    private bool TryGetWriterFromRegisteredTypeInfo<T>(Type type, out ODataTypeInfo<T, TCustomState>? typeInfo, [NotNullWhen(true)] out IODataWriter<T, ODataWriterState<TCustomState>>? writer)
+    {
+        // type is same as T, but we want to avoid calleding typeof(T) each time.
+        Debug.Assert(type == typeof(T));
+        writer = null;
+        typeInfo = options.TryGetResourceInfo<T>();
+        if (typeInfo == null)
+        {
+            return false;
+        }
+
+        // the type info could represet a resource/entity writer, a collection writer, or both.
+        // we use heuristics to determine the right kind unless the user specifies it explicitly
+
+        if (typeInfo.GetValueKind != null)
+        {
+            writer = new ODataJsonHybridValueKindWriter<T, TCustomState>(typeInfo);
+            return true;
+        }
+
+        var couldBeResource = typeInfo.Properties != null || typeInfo.PropertySelector != null || typeInfo.WriteProperties != null || typeInfo.GetOpenProperties != null;
+        var couldBeCollection = typeInfo.ElementSelector != null;
+        if (couldBeResource && !couldBeCollection)
+        {
+            // we have properties but no element selector, so it's a resource writer
+            writer = new ODataResourceJsonWriter<T, TCustomState>(typeInfo);
+            return true;
+        }
+
+        if (couldBeCollection && !couldBeResource)
+        {
+            writer = new ODataJsonResourceSetWithElementSelectorWriter<T, TCustomState>(typeInfo);
+            return true;
+        }
+
+
+        return false;
+    }
+
+    private bool TryCreateWriterFromType<T>(IEdmModel? model, Type type, [NotNullWhen(true)] out IODataWriter<T, ODataWriterState<TCustomState>>? writer)
+    {
         // TODO: automatic generation of type infos should not be tightly coupled to
         // the core writer, it should be a pluggable extension on top of the core writer.
         // However, currently it depends on internal details of ODataTypeInfo and ODataPropertyInfo,
@@ -126,13 +182,19 @@ internal class ODataJsonWriterProvider<TCustomState>(ODataSerializerOptions<TCus
         // extensions written by library consumers.
         // Attempts to generate a type info on the fly.
         // TODO: This currently only works with POCOs.
-        typeInfo = ODataTypeInfoFactory<TCustomState>.CreateTypeInfo<T>(model, options.TypeMapper);
+
+        // type is same as T, but we want to avoid calleding typeof(T) each time.
+        Debug.Assert(type == typeof(T));
+        writer = null;
+
+        var typeInfo = ODataTypeInfoFactory<TCustomState>.CreateTypeInfo<T>(model, options.TypeMapper);
         if (typeInfo != null)
         {
-            return new ODataResourceJsonWriter<T, TCustomState>(typeInfo);
+            writer = new ODataResourceJsonWriter<T, TCustomState>(typeInfo);
+            return true;
         }
 
-        throw new Exception($"Could not find a suitable writer for {type.FullName}");
+        return false;
     }
 
     private static Dictionary<Type, IODataWriter<ODataWriterState<TCustomState>>> InitPrimitiveWriters()

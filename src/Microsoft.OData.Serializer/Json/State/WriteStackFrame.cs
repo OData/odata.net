@@ -15,6 +15,7 @@ internal struct WriteStackFrame<TCustomState>
 
     public int EnumeratorIndex { get; set; }
 
-    public IEnumerator CurrentEnumerator { get; set; }
+    public object? CurrentEnumerator { get; set; }
     public ValueTask? PendingTask { get; set; }
+    public Task? PendingTaskWithValue {get;set; }
 }

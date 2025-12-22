@@ -166,6 +166,25 @@ public sealed class ODataWriterState<TCustomState>
         }
     }
 
+    /// <summary>
+    /// Allows writing a value directly to the buffer writer's memory.
+    /// This might cause the buffer to be resized. We do not
+    /// check the correctness or validity of the value written.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="writeAction"></param>
+    /// <param name="value"></param>
+    /// <param name="state"></param>
+    internal void WriteValueToBufferWriter<T>(
+        Action<IBufferWriter<byte>, T, ODataWriterState<TCustomState>> writeAction,
+        T value,
+        ODataWriterState<TCustomState> state)
+    {
+        this.JsonWriter.Flush(); // commit JsonWriter contents to buffer writer
+        writeAction(BufferWriter, value, state);
+        this.JsonWriter.SignalWriteThatBypassedWriter();
+    }
+
     public ODataPropertyInfo? CurrentPropertyInfo()
     {
         return Stack.Current.PropertyInfo;

@@ -20,6 +20,8 @@ public class ODataTypeInfo<T, TCustomState> : ODataTypeInfo
 
     public Func<T, ODataWriterState<TCustomState>, string>? GetEdmTypeName { get; init; }
 
+    public Func<T, ODataWriterState<TCustomState>, ODataValueKind>? GetValueKind { get; init; }
+
     public IReadOnlyList<ODataPropertyInfo<T, TCustomState>>? Properties
     {
         get
@@ -39,6 +41,8 @@ public class ODataTypeInfo<T, TCustomState> : ODataTypeInfo
     }
 
     public ODataPropertySelector<T, TCustomState>? PropertySelector { get; init; }
+
+    public ODataElementSelector<T, TCustomState>? ElementSelector { get; init; }
 
     // We expose two approaches to writing annotations:
     // - shorthand GetXXXValue that returns the value, here we select a common, but "cheap" type to represent the value.

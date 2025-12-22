@@ -1,4 +1,6 @@
 ﻿
+using System.Buffers;
+
 namespace Microsoft.OData.Serializer;
 
 internal class DefaultPropertyWriter<TCustomState> : IPropertyWriter<TCustomState>
@@ -15,5 +17,16 @@ internal class DefaultPropertyWriter<TCustomState> : IPropertyWriter<TCustomStat
         }
 
         return state.WriteValue(value);
+    }
+
+    public void WritePropertyToBuffer<T>(
+        Action<IBufferWriter<byte>, T, ODataWriterState<TCustomState>> writeAction,
+        ReadOnlySpan<char> propertyName,
+        T value,
+        ODataWriterState<TCustomState> state)
+    {
+
+        state.JsonWriter.WritePropertyName(propertyName);
+        state.WriteValueToBufferWriter(writeAction, value, state);
     }
 }

@@ -35,7 +35,7 @@ internal class ODataJsonEnumerableWriter<TCollection, TCustomState> : ODataResou
         else
         {
             // Retrieve the enumerator from the state so we can resume writing from where we left off.
-            enumerator = state.Stack.Current.CurrentEnumerator;
+            enumerator = state.Stack.Current.CurrentEnumerator as IEnumerator;
             Debug.Assert(enumerator != null, "CurrentEnumerator should be of type IEnumerator<TElement>. Possible bug in state management and collection resume operation.");
         }
 

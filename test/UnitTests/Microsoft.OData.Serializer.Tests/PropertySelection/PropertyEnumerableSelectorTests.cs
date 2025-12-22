@@ -2,9 +2,9 @@
 using Microsoft.OData.UriParser;
 using System.Text.Json;
 
-namespace Microsoft.OData.Serializer.Tests;
+namespace Microsoft.OData.Serializer.Tests.PropertySelection;
 
-public class PropertySelectionWithPropertyEnumerableSelector
+public class PropertyEnumerableSelectorTests
 {
     [Fact]
     public async Task SerializesDataFromDictionaryUsingPropertyEnumerableSelector()
