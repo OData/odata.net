@@ -48,6 +48,7 @@ public class BasicPayloadReaderTests
         });
 
         var stream = new MemoryStream(Encoding.UTF8.GetBytes(payload));
+        stream.Position = 0;
 
         var product = await ODataSerializer.ReadAsync<Product>(stream, model, options);
 

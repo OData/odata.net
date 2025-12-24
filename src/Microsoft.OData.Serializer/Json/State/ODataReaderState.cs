@@ -15,27 +15,28 @@ public class ODataReaderState<TCustomState>
         // TODO: Quick hack for POC purposes. Need to implement proper buffered reading.
         var memStream = new MemoryStream();
         inputStream.CopyTo(memStream);
+        memStream.Position = 0;
         buffer = memStream.ToArray();
     }
 
     ReadOnlyMemory<byte> buffer;
-    internal JsonReaderState JsonReaderState { get; set; }
+    private JsonReaderState? JsonReaderState { get; set; }
 
     // TODO: this is a quick hack to help ensure the reader state is updated
     // after each scoped use of the reader, since we can't store the reader itself in a field.
     // This is bad design, error prone and probably bad for perf. So should definitely rethink it.
-    internal JsonReaderScope GetJsonReaderScope()
+    internal Utf8JsonReader GetJsonReader()
     {
-        var reader = new Utf8JsonReader(buffer.Span, isFinalBlock: true, state: JsonReaderState);
-        return new JsonReaderScope(reader, this);
+        // TODO: setting isFinalBlock to true because buffering not yet supported
+        var reader = JsonReaderState.HasValue ? new Utf8JsonReader(buffer.Span, isFinalBlock: true, JsonReaderState.Value)
+               : new Utf8JsonReader(buffer.Span);
+        return reader;
     }
 
-    internal ref struct JsonReaderScope(Utf8JsonReader reader, ODataReaderState<TCustomState> state)
+    internal void SaveJsonReaderState(ref Utf8JsonReader reader)
     {
-        public readonly Utf8JsonReader Reader = reader;
-        public readonly void Dispose()
-        {
-            state.JsonReaderState = Reader.CurrentState;
-        }
+        JsonReaderState = reader.CurrentState;
+        long bytesConsumed = reader.BytesConsumed;
+        buffer = buffer.Slice((int)bytesConsumed);
     }
 }

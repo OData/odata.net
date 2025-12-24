@@ -11,8 +11,9 @@ internal class ODataJsonBoolWriter<TCustomState> : ODataJsonWriter<bool, TCustom
 
     public override bool Read(ODataReaderState<TCustomState> state, out bool value)
     {
-        using var reader = state.GetJsonReaderScope();
-        value = reader.Reader.GetBoolean();
+        var reader = state.GetJsonReader();
+        value = reader.GetBoolean();
+        state.SaveJsonReaderState(ref reader);
         return true;
     }
 }

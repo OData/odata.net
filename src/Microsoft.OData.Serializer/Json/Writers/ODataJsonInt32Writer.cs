@@ -12,8 +12,9 @@ internal sealed class ODataJsonInt32Writer<TCustomState> : ODataJsonWriter<int, 
 
     public override bool Read(ODataReaderState<TCustomState> state, out int value)
     {
-        using var scope = state.GetJsonReaderScope();
-        value = scope.Reader.GetInt32();
+        var reader = state.GetJsonReader();
+        value = reader.GetInt32();
+        state.SaveJsonReaderState(ref reader);
         return true;
     }
 }

@@ -54,8 +54,9 @@ internal class ODataJsonStringWriter<TCustomState> : ODataJsonWriter<string?, TC
 
     public override bool Read(ODataReaderState<TCustomState> state, out string? value)
     {
-        using var scope = state.GetJsonReaderScope();
-        value = scope.Reader.GetString();
+        var reader = state.GetJsonReader();
+        value = reader.GetString();
+        state.SaveJsonReaderState(ref reader);
         return true;
     }
 }
