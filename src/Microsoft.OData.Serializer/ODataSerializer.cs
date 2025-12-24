@@ -147,6 +147,14 @@ public static class ODataSerializer
         //} while (!isDone);
     }
 
+    public static ValueTask<T> ReadAsync<T>(Stream stream, IEdmModel model, ODataSerializerOptions options) =>
+        ReadAsync<T, DefaultState>(stream, model, options, default);
+
+    public static async ValueTask<T> ReadAsync<T, TCustomState>(Stream stream, IEdmModel model, ODataSerializerOptions<TCustomState> options, TCustomState state)
+    {
+        throw new NotImplementedException();
+    }
+
     private static ODataPayloadKind GetPayloadKindFromUri(ODataUri uri)
     {
         var lastSegment = uri.Path.LastSegment;
