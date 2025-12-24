@@ -25,6 +25,28 @@ public class BasicPayloadReaderTests
         var model = GetEdmModel();
         var options = new ODataSerializerOptions();
 
+        options.AddTypeInfo<Product>(new()
+        {
+            CreateInstance = (state) => new Product(),
+            Properties = [
+                new()
+                {
+                    Name = "ID",
+                    ReadValue = (product, reader, state) => product.ID = reader.GetInt32(state),
+                },
+                new()
+                {
+                    Name = "Name",
+                    ReadValue = (product, reader, state) => product.Name = reader.GetString(state),
+                },
+                new()
+                {
+                    Name = "InStock",
+                    ReadValue = (product, reader, state) => product.InStock = reader.GetBoolean(state)
+                }
+            ]
+        });
+
         var stream = new MemoryStream(Encoding.UTF8.GetBytes(payload));
 
         var product = await ODataSerializer.ReadAsync<Product>(stream, model, options);

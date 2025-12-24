@@ -152,7 +152,14 @@ public static class ODataSerializer
 
     public static async ValueTask<T> ReadAsync<T, TCustomState>(Stream stream, IEdmModel model, ODataSerializerOptions<TCustomState> options, TCustomState state)
     {
-        throw new NotImplementedException();
+        var readerState = new ODataReaderState<TCustomState>(stream);
+        var writerProvider = new ODataJsonWriterProvider<TCustomState>(options);
+        var converter = writerProvider.GetWriter<T>(model);
+
+        bool success = converter.Read(readerState, out T value);
+        // TODO should check success for resumability
+
+        return value;
     }
 
     private static ODataPayloadKind GetPayloadKindFromUri(ODataUri uri)

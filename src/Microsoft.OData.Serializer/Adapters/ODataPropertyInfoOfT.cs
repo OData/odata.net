@@ -18,6 +18,9 @@ public class ODataPropertyInfo<TDeclaringType, TCustomState> :
 
     public Func<TDeclaringType, IStreamValueWriter<TCustomState>, ODataWriterState<TCustomState>, ValueTask> WriteValueAsync { get; init; }
 
+    // TODO: should support resumability
+    public Action<TDeclaringType, IValueReader<TCustomState>, ODataReaderState<TCustomState>> ReadValue { get; init; }
+
     // TODO: this tight coupling between attribute handling and the core serializer internals is not ideal and should be revised.
     /// <summary>
     /// Custom writer provided by the user via [ODataPropertyValueWriter] attribute.

@@ -134,7 +134,7 @@ public sealed class ODataWriterState<TCustomState>
         return Stack.IsTopLevel();
     }
 
-    internal IODataWriter<ODataWriterState<TCustomState>> GetWriter(Type type)
+    internal IODataWriter<ODataWriterState<TCustomState>, ODataReaderState<TCustomState>> GetWriter(Type type)
     {
         return writers.GetWriter(type, EdmModel);
     }

@@ -1,9 +1,9 @@
 ﻿
 namespace Microsoft.OData.Serializer;
 
-internal class ODataJsonStringWriter<TCustomState> : ODataJsonWriter<string, TCustomState>
+internal class ODataJsonStringWriter<TCustomState> : ODataJsonWriter<string?, TCustomState>
 {
-    public override bool Write(string value, ODataWriterState<TCustomState> state)
+    public override bool Write(string? value, ODataWriterState<TCustomState> state)
     {
         if (value == null)
         {
@@ -50,5 +50,12 @@ internal class ODataJsonStringWriter<TCustomState> : ODataJsonWriter<string, TCu
         }
 
         return success;
+    }
+
+    public override bool Read(ODataReaderState<TCustomState> state, out string? value)
+    {
+        using var scope = state.GetJsonReaderScope();
+        value = scope.Reader.GetString();
+        return true;
     }
 }
