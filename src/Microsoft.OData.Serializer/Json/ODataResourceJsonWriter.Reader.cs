@@ -64,16 +64,13 @@ internal partial class ODataResourceJsonWriter<T, TCustomState>
                 throw new ODataException($"Could not find property '{propertyName}' on type '{typeof(T).FullName}'.");
             }
 
-            if (propertyInfo.ReadValue == null)
-            {
-                throw new ODataException($"Could not deserialize property {propertyInfo.Name} of type {Type?.FullName}. Consider definining the ReadValue property.");
-            }
+           
 
             state.SaveJsonReaderState(ref reader);
 
-            // TODO: should delegate property handling to the propertyInfo so that it can pick the best strategy
-            // TODO should handle case where read fails due to buffer end, and need to fetch more data from stream into buffer.
-            propertyInfo.ReadValue(instance, DefaultJsonValueReader<TCustomState>.Instance, state);
+            bool success = propertyInfo.ReadProperty(instance, state);
+            Debug.Assert(success, "Resumability not yet supported");
+
             reader = state.GetJsonReader();
         }
 

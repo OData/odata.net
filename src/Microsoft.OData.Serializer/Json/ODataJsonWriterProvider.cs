@@ -107,7 +107,7 @@ internal class ODataJsonWriterProvider<TCustomState>(ODataSerializerOptions<TCus
         }
 
         // Manually registered ODataTypeInfo have precedence over built-in writer factories.
-        if (TryGetWriterFromRegisteredTypeInfo<T>(type, out var typeInfo, out IODataWriter<T, ODataWriterState<TCustomState>> odataTypeInfoWriter))
+        if (TryGetWriterFromRegisteredTypeInfo<T>(type, out var typeInfo, out IODataWriter<T, ODataWriterState<TCustomState>, ODataReaderState<TCustomState>> odataTypeInfoWriter))
         {
             return odataTypeInfoWriter;
         }
@@ -120,7 +120,7 @@ internal class ODataJsonWriterProvider<TCustomState>(ODataSerializerOptions<TCus
             }
         }
 
-        if (TryCreateWriterFromType<T>(model, type, out IODataWriter<T, ODataWriterState<TCustomState>> createdWriter))
+        if (TryCreateWriterFromType<T>(model, type, out IODataWriter<T, ODataWriterState<TCustomState>, ODataReaderState<TCustomState>> createdWriter))
         {
             return createdWriter;
         }
@@ -130,7 +130,7 @@ internal class ODataJsonWriterProvider<TCustomState>(ODataSerializerOptions<TCus
             : $"Unable to determine the OData value kind for type '{type.FullName}'. Set the GetValueKind property directly on the ODataTypeInfo to explicitly specify the value kind.");
     }
 
-    private bool TryGetWriterFromRegisteredTypeInfo<T>(Type type, out ODataTypeInfo<T, TCustomState>? typeInfo, [NotNullWhen(true)] out IODataWriter<T, ODataWriterState<TCustomState>>? writer)
+    private bool TryGetWriterFromRegisteredTypeInfo<T>(Type type, out ODataTypeInfo<T, TCustomState>? typeInfo, [NotNullWhen(true)] out IODataWriter<T, ODataWriterState<TCustomState>, ODataReaderState<TCustomState>>? writer)
     {
         // type is same as T, but we want to avoid calleding typeof(T) each time.
         Debug.Assert(type == typeof(T));
@@ -169,7 +169,7 @@ internal class ODataJsonWriterProvider<TCustomState>(ODataSerializerOptions<TCus
         return false;
     }
 
-    private bool TryCreateWriterFromType<T>(IEdmModel? model, Type type, [NotNullWhen(true)] out IODataWriter<T, ODataWriterState<TCustomState>>? writer)
+    private bool TryCreateWriterFromType<T>(IEdmModel? model, Type type, [NotNullWhen(true)] out IODataWriter<T, ODataWriterState<TCustomState>, ODataReaderState<TCustomState>>? writer)
     {
         // TODO: automatic generation of type infos should not be tightly coupled to
         // the core writer, it should be a pluggable extension on top of the core writer.

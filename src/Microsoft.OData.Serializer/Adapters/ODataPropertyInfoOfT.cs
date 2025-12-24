@@ -3,7 +3,7 @@
 namespace Microsoft.OData.Serializer;
 
 #pragma warning disable CA1005 // Avoid excessive parameters on generic types
-public class ODataPropertyInfo<TDeclaringType, TCustomState> :
+public partial class ODataPropertyInfo<TDeclaringType, TCustomState> :
     ODataPropertyInfo,
     IValueWriter<TCustomState>,
     ICountWriter<TCustomState>,
@@ -17,9 +17,6 @@ public class ODataPropertyInfo<TDeclaringType, TCustomState> :
     public Func<TDeclaringType, IValueWriter<TCustomState>, ODataWriterState<TCustomState>, bool> WriteValue { get; init; }
 
     public Func<TDeclaringType, IStreamValueWriter<TCustomState>, ODataWriterState<TCustomState>, ValueTask> WriteValueAsync { get; init; }
-
-    // TODO: should support resumability
-    public Func<TDeclaringType, IValueReader<TCustomState>, ODataReaderState<TCustomState>, bool> ReadValue { get; init; }
 
     // TODO: this tight coupling between attribute handling and the core serializer internals is not ideal and should be revised.
     /// <summary>
