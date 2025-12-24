@@ -13,6 +13,10 @@ internal sealed class ODataJsonInt32Writer<TCustomState> : ODataJsonWriter<int, 
     public override bool Read(ODataReaderState<TCustomState> state, out int value)
     {
         var reader = state.GetJsonReader();
+        if (!reader.Read())
+        {
+            throw new Exception("Unexpected end of JSON input.");
+        }
         value = reader.GetInt32();
         state.SaveJsonReaderState(ref reader);
         return true;

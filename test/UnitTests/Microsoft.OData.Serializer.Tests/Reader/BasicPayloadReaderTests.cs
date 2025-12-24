@@ -32,17 +32,44 @@ public class BasicPayloadReaderTests
                 new()
                 {
                     Name = "ID",
-                    ReadValue = (product, reader, state) => product.ID = reader.GetInt32(state),
+                    ReadValue = static (product, reader, state) =>
+                    {
+                        if (reader.ReadValue<int>(state, out int value))
+                        {
+                            product.ID = value;
+                            return true;
+                        }
+
+                        return false;
+                    }
                 },
                 new()
                 {
                     Name = "Name",
-                    ReadValue = (product, reader, state) => product.Name = reader.GetString(state),
+                    ReadValue = static (product, reader, state) =>
+                    {
+                        if (reader.ReadValue<string>(state, out string value))
+                        {
+                            product.Name = value;
+                            return true;
+                        }
+
+                        return false;
+                    }
                 },
                 new()
                 {
                     Name = "InStock",
-                    ReadValue = (product, reader, state) => product.InStock = reader.GetBoolean(state)
+                    ReadValue = static (product, reader, state) =>
+                    {
+                        if (reader.ReadValue(state, out bool value))
+                        {
+                            product.InStock = value;
+                            return true;
+                        }
+
+                        return false;
+                    }
                 }
             ]
         });

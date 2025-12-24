@@ -55,6 +55,10 @@ internal class ODataJsonStringWriter<TCustomState> : ODataJsonWriter<string?, TC
     public override bool Read(ODataReaderState<TCustomState> state, out string? value)
     {
         var reader = state.GetJsonReader();
+        if (!reader.Read())
+        {
+            throw new Exception("Unexpected end of JSON input.");
+        }
         value = reader.GetString();
         state.SaveJsonReaderState(ref reader);
         return true;

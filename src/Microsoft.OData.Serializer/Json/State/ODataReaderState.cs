@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.OData.Edm;
+using System;
 using System.Buffers;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,8 +11,16 @@ namespace Microsoft.OData.Serializer;
 
 public class ODataReaderState<TCustomState>
 {
-    internal ODataReaderState(Stream inputStream)
+    private ODataJsonWriterProvider<TCustomState> converters;
+    private IEdmModel model;
+
+    internal ODataReaderState(
+        Stream inputStream,
+        IEdmModel model,
+        ODataJsonWriterProvider<TCustomState> converters)
     {
+        this.converters = converters;
+        this.model = model;
         // TODO: Quick hack for POC purposes. Need to implement proper buffered reading.
         var memStream = new MemoryStream();
         inputStream.CopyTo(memStream);
@@ -38,5 +47,11 @@ public class ODataReaderState<TCustomState>
         JsonReaderState = reader.CurrentState;
         long bytesConsumed = reader.BytesConsumed;
         buffer = buffer.Slice((int)bytesConsumed);
+    }
+
+    internal bool ReadValue<T>(out T value)
+    {
+        var converter = converters.GetWriter<T>(model);
+        return converter.Read(this, out value);
     }
 }

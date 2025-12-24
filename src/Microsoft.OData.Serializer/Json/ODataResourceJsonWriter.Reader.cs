@@ -3,7 +3,7 @@ using System.Text.Json;
 
 namespace Microsoft.OData.Serializer;
 
-internal partial class ODataResourceJsonWriter<T, TCustomState> : IValueReader<TCustomState>
+internal partial class ODataResourceJsonWriter<T, TCustomState>
 {
     public override bool Read(ODataReaderState<TCustomState> state, out T value)
     {
@@ -69,43 +69,16 @@ internal partial class ODataResourceJsonWriter<T, TCustomState> : IValueReader<T
                 throw new ODataException($"Could not deserialize property {propertyInfo.Name} of type {Type?.FullName}. Consider definining the ReadValue property.");
             }
 
-            IValueReader<TCustomState> valueReader = this;
-
             state.SaveJsonReaderState(ref reader);
+
+            // TODO: should delegate property handling to the propertyInfo so that it can pick the best strategy
             // TODO should handle case where read fails due to buffer end, and need to fetch more data from stream into buffer.
-            propertyInfo.ReadValue(instance, valueReader, state);
+            propertyInfo.ReadValue(instance, DefaultJsonValueReader<TCustomState>.Instance, state);
             reader = state.GetJsonReader();
         }
 
         state.SaveJsonReaderState(ref reader);
         value = instance;
         return true;
-    }
-
-    bool IValueReader<TCustomState>.GetBoolean(ODataReaderState<TCustomState> state)
-    {
-        var reader = state.GetJsonReader();
-        Debug.Assert(reader.Read());
-        var value = reader.GetBoolean();
-        state.SaveJsonReaderState(ref reader);
-        return value;
-    }
-
-    int IValueReader<TCustomState>.GetInt32(ODataReaderState<TCustomState> state)
-    {
-        var reader = state.GetJsonReader();
-        Debug.Assert(reader.Read());
-        var value = reader.GetInt32();
-        state.SaveJsonReaderState(ref reader);
-        return value;
-    }
-
-    string? IValueReader<TCustomState>.GetString(ODataReaderState<TCustomState> state)
-    {
-        var reader = state.GetJsonReader();
-        Debug.Assert(reader.Read());
-        var value = reader.GetString();
-        state.SaveJsonReaderState(ref reader);
-        return value;
     }
 }

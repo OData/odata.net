@@ -152,9 +152,10 @@ public static class ODataSerializer
 
     public static async ValueTask<T> ReadAsync<T, TCustomState>(Stream stream, IEdmModel model, ODataSerializerOptions<TCustomState> options, TCustomState state)
     {
-        var readerState = new ODataReaderState<TCustomState>(stream);
-        var writerProvider = new ODataJsonWriterProvider<TCustomState>(options);
-        var converter = writerProvider.GetWriter<T>(model);
+        var converterProvider = new ODataJsonWriterProvider<TCustomState>(options);
+        var readerState = new ODataReaderState<TCustomState>(stream, model, converterProvider);
+        
+        var converter = converterProvider.GetWriter<T>(model);
 
         bool success = converter.Read(readerState, out T value);
         // TODO should check success for resumability

@@ -8,7 +8,5 @@ namespace Microsoft.OData.Serializer;
 
 public interface IValueReader<TCustomState>
 {
-    int GetInt32(ODataReaderState<TCustomState> state);
-    bool GetBoolean(ODataReaderState<TCustomState> state);
-    string? GetString(ODataReaderState<TCustomState> state);
+    bool ReadValue<T>(ODataReaderState<TCustomState> state, out T value);
 }

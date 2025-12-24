@@ -146,7 +146,7 @@ public sealed class ODataWriterState<TCustomState>
         var writer = writers.GetWriter<T>(EdmModel);
         return writer.Write(value, this);
     }
-
+    
     /// <summary>
     /// Writes the value completely in memory, without
     /// breaking for resumability if the buffer is full.
