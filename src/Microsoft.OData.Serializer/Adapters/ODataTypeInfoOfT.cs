@@ -21,6 +21,7 @@ public class ODataTypeInfo<T, TCustomState> : ODataTypeInfo
     public Func<T, ODataWriterState<TCustomState>, string>? GetEdmTypeName { get; init; }
 
     public Func<T, ODataWriterState<TCustomState>, ODataValueKind>? GetValueKind { get; init; }
+    public Func<ODataReaderState<TCustomState>, T>? CreateInstance { get; init; }
 
     public IReadOnlyList<ODataPropertyInfo<T, TCustomState>>? Properties
     {

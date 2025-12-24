@@ -11,16 +11,16 @@
 /// Represents a type that can write an OData value from an input of type <typeparamref name="T"/>.
 /// </summary>
 /// <typeparam name="T">The input type to write.</typeparam>
-/// <typeparam name="TState">
+/// <typeparam name="TWriteState">
 /// Encapsulates the current state of the serialization.
 /// The state should provide access to the writer or output and other contextual information.
 /// </typeparam>
-public interface IODataWriter<T, TState> : IODataWriter<TState>
+/// <typeparam name="TReadState">
+/// Encapsulates the current state of the deserialization.
+/// The state should provide access to the reader or input and other contextual information.
+/// </typeparam>
+public interface IODataWriter<T, TWriteState, TReadState> : IODataWriter<TWriteState, TReadState>
 {
-    // TODO might consider making the return value a struct if we need to encaspulate more info in the return result.
-    // Temporarily reverted to return ValueTask instead of bool to simplify the design of the initial API surface
-    // abstractions, then I'll go back to returning bool or other re-entrancy mechanism once I have
-    // other things figured out.
     /// <summary>
     /// Writes the specified value to the output.
     /// </summary>
@@ -39,5 +39,6 @@ public interface IODataWriter<T, TState> : IODataWriter<TState>
     /// This allows us to support async scenarios without having to make methods async and do async/await in the fast path of the serializer
     /// that is expected to do in-memory writes for the most part.
     /// </returns>
-    bool Write(T value, TState state);
+    bool Write(T value, TWriteState state);
+    bool Read(TReadState state, out T value);
 }

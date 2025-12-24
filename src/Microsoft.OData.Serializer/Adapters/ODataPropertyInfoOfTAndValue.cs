@@ -1,4 +1,6 @@
 ﻿
+using System.Diagnostics;
+
 namespace Microsoft.OData.Serializer;
 
 // TODO: I'd want to create a default version of this with DefaultState,
@@ -11,6 +13,8 @@ public sealed class ODataPropertyInfo<TDeclaringType, TValue, TCustomState> : OD
 {
     public Func<TDeclaringType, ODataWriterState<TCustomState>, TValue>? GetValue { get; init; }
 
+    public Action<TDeclaringType, TValue, ODataReaderState<TCustomState>>? SetValue { get; init; }
+
     internal protected override bool WritePropertyValue(TDeclaringType resource, ODataWriterState<TCustomState> state)
     {
         if (GetValue != null)
@@ -21,5 +25,18 @@ public sealed class ODataPropertyInfo<TDeclaringType, TValue, TCustomState> : OD
         {
             return base.WritePropertyValue(resource, state);
         }
+    }
+
+    protected internal override bool ReadPropertyValue(TDeclaringType resource, ODataReaderState<TCustomState> state)
+    {
+        if (SetValue != null)
+        {
+            bool success = state.ReadValue(out TValue value);
+            Debug.Assert(success, "Resumability is not yet supported, so we can't handle ReadValue returning false. Add support for it then remove this assertion.");
+            SetValue(resource, value, state);
+            return success;
+        }
+
+        return base.ReadPropertyValue(resource, state);
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Microsoft.OData.Serializer;
 
-public interface IODataWriterProvider<TState>
+public interface IODataWriterProvider<TWriteState, TReadState>
 {
-    public IODataWriter<T, TState> GetWriter<T>(IEdmModel? model); // TODO should we pass the state here?
+    public IODataWriter<T, TWriteState, TReadState> GetWriter<T>(IEdmModel? model); // TODO should we pass the state here?
 }

@@ -1,9 +1,9 @@
 ﻿
 namespace Microsoft.OData.Serializer;
 
-internal class ODataJsonStringWriter<TCustomState> : ODataJsonWriter<string, TCustomState>
+internal class ODataJsonStringWriter<TCustomState> : ODataJsonWriter<string?, TCustomState>
 {
-    public override bool Write(string value, ODataWriterState<TCustomState> state)
+    public override bool Write(string? value, ODataWriterState<TCustomState> state)
     {
         if (value == null)
         {
@@ -50,5 +50,17 @@ internal class ODataJsonStringWriter<TCustomState> : ODataJsonWriter<string, TCu
         }
 
         return success;
+    }
+
+    public override bool Read(ODataReaderState<TCustomState> state, out string? value)
+    {
+        var reader = state.GetJsonReader();
+        if (!reader.Read())
+        {
+            throw new Exception("Unexpected end of JSON input.");
+        }
+        value = reader.GetString();
+        state.SaveJsonReaderState(ref reader);
+        return true;
     }
 }
