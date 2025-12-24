@@ -11,7 +11,7 @@ namespace Microsoft.OData.Serializer.Tests.Reader;
 public class BasicPayloadReaderTests
 {
     [Fact]
-    public async Task ReadPayload()
+    public async Task CanReadSimpleResourceOfPrimitiveProperties()
     {
         string payload = """
         {
@@ -70,6 +70,53 @@ public class BasicPayloadReaderTests
 
                         return false;
                     }
+                }
+            ]
+        });
+
+        var stream = new MemoryStream(Encoding.UTF8.GetBytes(payload));
+        stream.Position = 0;
+
+        var product = await ODataSerializer.ReadAsync<Product>(stream, model, options);
+
+        Assert.NotNull(product);
+        Assert.Equal(1, product.ID);
+        Assert.Equal("Product 1", product.Name);
+    }
+
+    [Fact]
+    public async Task CanReadSimpleResourceOfPrimitiveProperties_UsingGenericSetValueHook()
+    {
+        string payload = """
+        {
+            "@odata.context": "http://service/odata/$metadata#Products",
+            "ID": 1,
+            "Name": "Product 1",
+            "InStock": true
+        }
+        """;
+
+        var model = GetEdmModel();
+        var options = new ODataSerializerOptions();
+
+        options.AddTypeInfo<Product>(new()
+        {
+            CreateInstance = (state) => new Product(),
+            Properties = [
+                new ODataPropertyInfo<Product, int, DefaultState>
+                {
+                    Name = "ID",
+                    SetValue = static (product, value, state) => product.ID = value
+                },
+                new ODataPropertyInfo<Product, string, DefaultState>
+                {
+                    Name = "Name",
+                    SetValue = static (product, value, state) => product.Name = value
+                },
+                new ODataPropertyInfo<Product, bool, DefaultState>
+                {
+                    Name = "InStock",
+                    SetValue = static (product, value, state) => product.InStock = value
                 }
             ]
         });
