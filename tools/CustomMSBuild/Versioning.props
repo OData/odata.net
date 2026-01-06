@@ -13,7 +13,7 @@
       overflows the Int16. The system convert below will throw errors when this happens.
     -->
   <PropertyGroup>
-    <VersionStartYear Condition="'$(VersionStartYear)' == ''">2020</VersionStartYear>
+    <VersionStartYear Condition="'$(VersionStartYear)' == ''">2022</VersionStartYear>
     <VersionDateCode>$([System.Convert]::ToUInt16('$([MSBuild]::Add(1, $([MSBuild]::Subtract($([System.DateTime]::Now.Year), $(VersionStartYear)))))$([System.DateTime]::Now.ToString("MMdd"))'))</VersionDateCode>
     <VersionRevision Condition="'$(VersionRevision)' == '' OR '$(VersionRevision)' == '0'">$([System.Convert]::ToString($(VersionDateCode)))</VersionRevision>
   </PropertyGroup>
