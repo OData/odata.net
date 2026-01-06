@@ -915,7 +915,7 @@ namespace Microsoft.Spatial.Tests
                     payloadBuilder.Append(GmlEndElement("MultiGeometry"));
                     break;
                 default:
-                    Assert.True(false, "unknown spatial type");
+                    Assert.Fail("unknown spatial type");
                     break;
             }
 

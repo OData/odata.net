@@ -377,7 +377,7 @@ namespace Microsoft.Spatial.Tests.ScenarioTests
                 return (T)geographyTypes[(int)GeographyTypeKind.FullGlobe];
             }
 
-            Assert.True(false, String.Format(CultureInfo.InvariantCulture, "Invalid Geography type encountered - {0}", typeof(T).FullName));
+            Assert.Fail(string.Format(CultureInfo.InvariantCulture, "Invalid Geography type encountered - {0}", typeof(T).FullName));
             return null;
         }
 
@@ -412,7 +412,7 @@ namespace Microsoft.Spatial.Tests.ScenarioTests
                 return (T)geometryTypes[(int)GeometryTypeKind.Collection];
             }
 
-            Assert.True(false, String.Format(CultureInfo.InvariantCulture, "Invalid Geometry type encountered - {0}", typeof(T).FullName));
+            Assert.Fail(string.Format(CultureInfo.InvariantCulture, "Invalid Geometry type encountered - {0}", typeof(T).FullName));
             return null;
         }
     }
