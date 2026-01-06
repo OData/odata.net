@@ -47,7 +47,7 @@ namespace Microsoft.Spatial.Tests
             {
                 if (!spatialPipelineReturnTestedMethods.Contains(method.Name))
                 {
-                    Assert.True(false, "Not testing the SpatialPipeline return of method " + method.Name + " to be sure it is wrapped in a forwarding pipeline.");
+                    Assert.Fail("Not testing the SpatialPipeline return of method " + method.Name + " to be sure it is wrapped in a forwarding pipeline.");
                 }
             }
         }
