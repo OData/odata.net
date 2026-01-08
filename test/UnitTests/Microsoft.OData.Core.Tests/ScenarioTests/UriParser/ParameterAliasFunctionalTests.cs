@@ -93,7 +93,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                    var enumValue = Assert.IsType<ODataEnumValue>(constNode.Value);
                    Assert.Equal("Fully.Qualified.Namespace.ColorPattern", enumValue.TypeName);
                    Assert.Equal("22", enumValue.Value);
-                   Assert.True(aliasNodes["@p1"].TypeReference.IsEnum());
+                   Assert.True(constNode.TypeReference.IsEnum());
                });
         }
 
@@ -288,7 +288,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                     var enumValue = Assert.IsType<ODataEnumValue>(constNode.Value);
                     Assert.Equal("Fully.Qualified.Namespace.ColorPattern", enumValue.TypeName);
                     Assert.Equal("22", enumValue.Value);
-                    Assert.True(aliasNodes["@p1"].TypeReference.IsEnum());
+                    Assert.True(constNode.TypeReference.IsEnum());
                 });
         }
 
@@ -312,7 +312,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                     var enumValue = Assert.IsType<ODataEnumValue>(constNode.Value);
                     Assert.Equal("Fully.Qualified.Namespace.ColorPattern", enumValue.TypeName);
                     Assert.Equal("238563", enumValue.Value);
-                    Assert.True(aliasNodes["@p1"].TypeReference.IsEnum());
+                    Assert.True(constNode.TypeReference.IsEnum());
                 });
         }
 
@@ -425,6 +425,47 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
                     var singlePropAccessNode = Assert.IsType<SingleValuePropertyAccessNode>(aliasNodes["@p1"]);
                     Assert.Equal("ID", singlePropAccessNode.Property.Name);
+                });
+        }
+
+        [Fact]
+        public void ParseFilter_AliasBothInsideInOperator_OperandsAsExpressions()
+        {
+            ParseUriAndVerify(
+                new Uri("http://gobbledygook/People?$filter=@p1 in @p2&@p1=ID&@p2=RelatedIDs"),
+                (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
+                {
+                    var inNode = Assert.IsType<InNode>(filterClause.Expression);
+                    inNode.Left.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetInt32(false));
+                    inNode.Right.ShouldBeParameterAliasCollectionNode("@p2", EdmCoreModel.Instance.GetInt32(false));
+
+                    SingleValuePropertyAccessNode singleValuePropAccessNode = Assert.IsType<SingleValuePropertyAccessNode>(aliasNodes["@p1"]);
+                    Assert.Equal("ID", singleValuePropAccessNode.Property.Name);
+
+                    CollectionPropertyAccessNode colValuePropAccessNode = Assert.IsType<CollectionPropertyAccessNode>(aliasNodes["@p2"]);
+                    Assert.Equal("RelatedIDs", colValuePropAccessNode.Property.Name);
+                });
+        }
+
+        [Fact]
+        public void ParseFilter_AliasBothInsideInOperator_MultipleParameterAliasAsExpressions()
+        {
+            ParseUriAndVerify(
+                new Uri("http://gobbledygook/People?$filter=@p1 in @p2&@p1=ID&@p2=@p3&@p3=RelatedIDs"),
+                (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
+                {
+                    var inNode = Assert.IsType<InNode>(filterClause.Expression);
+                    inNode.Left.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetInt32(false));
+                    inNode.Right.ShouldBeParameterAliasCollectionNode("@p2", EdmCoreModel.Instance.GetInt32(false));
+
+                    SingleValuePropertyAccessNode singleValuePropAccessNode = Assert.IsType<SingleValuePropertyAccessNode>(aliasNodes["@p1"]);
+                    Assert.Equal("ID", singleValuePropAccessNode.Property.Name);
+
+                    ParameterAliasCollectionNode parameterP2Alias = Assert.IsType<ParameterAliasCollectionNode>(aliasNodes["@p2"]);
+                    Assert.Equal("@p3", parameterP2Alias.Alias);
+
+                    CollectionPropertyAccessNode colValuePropAccessNode = Assert.IsType<CollectionPropertyAccessNode>(aliasNodes["@p3"]);
+                    Assert.Equal("RelatedIDs", colValuePropAccessNode.Property.Name);
                 });
         }
 
@@ -1033,7 +1074,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         #region private methods
         private void ParseUriAndVerify(
             Uri uri,
-            Action<ODataPath, FilterClause, OrderByClause, SelectExpandClause, IDictionary<string, SingleValueNode>> verifyAction)
+            Action<ODataPath, FilterClause, OrderByClause, SelectExpandClause, IDictionary<string, QueryNode>> verifyAction)
         {
             // run 2 test passes:
             // 1. low level api - ODataUriParser instance methods

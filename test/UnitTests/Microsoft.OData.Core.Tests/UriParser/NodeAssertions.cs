@@ -418,6 +418,15 @@ namespace Microsoft.OData.Tests.UriParser
             return paramAliasNode;
         }
 
+        public static ParameterAliasCollectionNode ShouldBeParameterAliasCollectionNode(this QueryNode node, string alias, IEdmTypeReference itemType)
+        {
+            Assert.NotNull(node);
+            var paramAliasNode = Assert.IsType<ParameterAliasCollectionNode>(node);
+            Assert.Equal(alias, paramAliasNode.Alias);
+            Assert.True(paramAliasNode.ItemType.IsEquivalentTo(itemType));
+            return paramAliasNode;
+        }
+
         public static UriTemplateExpression ShouldBeUriTemplateExpression(this object node, string literalText, IEdmTypeReference expectedType)
         {
             Assert.NotNull(node);

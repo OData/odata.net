@@ -22,14 +22,14 @@ namespace Microsoft.OData.UriParser
         {
             ExceptionUtils.CheckArgumentNotNull(parameterAliasValueExpressions, "parameterAliasValueExpressions");
             this.ParameterAliasValueExpressions = new Dictionary<string, string>(parameterAliasValueExpressions, StringComparer.Ordinal);
-            this.ParameterAliasValueNodesCached = new Dictionary<string, SingleValueNode>(StringComparer.Ordinal);
+            this.ParameterAliasValueNodesCached = new Dictionary<string, QueryNode>(StringComparer.Ordinal);
         }
 
         /// <summary>
         /// Gets the up-to-now cached semantics nodes of parameter alias value expressions (StringComparer.Ordinal)
         /// Only referenced parameter alias will have their value nodes cached.
         /// </summary>
-        public IDictionary<string, SingleValueNode> ParameterAliasValueNodesCached { get; private set; }
+        public IDictionary<string, QueryNode> ParameterAliasValueNodesCached { get; private set; }
 
         /// <summary>
         /// Gets the parameter alias's value expressions like @p1=... (StringComparer.Ordinal)

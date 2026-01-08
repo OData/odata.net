@@ -29,7 +29,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             odataUriParser.UrlKeyDelimiter = ODataUrlKeyDelimiter.Parentheses;
             ODataUri odataUri = odataUriParser.ParseUri();
 
-            IDictionary<string, SingleValueNode> aliasNodes = odataUri.ParameterAliasNodes;
+            IDictionary<string, QueryNode> aliasNodes = odataUri.ParameterAliasNodes;
 
             odataUri.Path.LastSegment.ShouldBeOperationImportSegment(HardCodedTestModel.GetFunctionImportForGetPet4()).Parameters.First().ShouldHaveParameterAliasNode("id", "@p1", EdmCoreModel.Instance.GetDecimal(false));
             aliasNodes["@p1"].ShouldBeConstantQueryNode(1.01M);
@@ -49,7 +49,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             SetODataUriParserSettingsTo(this.settings, odataUriParser.Settings);
             odataUriParser.UrlKeyDelimiter = ODataUrlKeyDelimiter.Parentheses;
             ODataUri odataUri = odataUriParser.ParseUri();
-            IDictionary<string, SingleValueNode> aliasNodes = odataUri.ParameterAliasNodes;
+            IDictionary<string, QueryNode> aliasNodes = odataUri.ParameterAliasNodes;
 
             OperationSegmentParameter p = odataUri.Path.LastSegment.ShouldBeOperationImportSegment(HardCodedTestModel.GetFunctionImportForGetPetCount()).Parameters.First();
             Assert.Equal("colorPattern", p.Name);
@@ -58,10 +58,11 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             Assert.True(node.TypeReference.IsEnum());
             Assert.Equal("Fully.Qualified.Namespace.ColorPattern", node.TypeReference.Definition.FullTypeName());
 
-            var enumValue = Assert.IsType<ODataEnumValue>(Assert.IsType<ConstantNode>(aliasNodes["@p1"]).Value);
+            ConstantNode constNode = Assert.IsType<ConstantNode>(aliasNodes["@p1"]);
+            var enumValue = Assert.IsType<ODataEnumValue>(constNode.Value);
             Assert.Equal("Fully.Qualified.Namespace.ColorPattern", enumValue.TypeName);
             Assert.Equal("22", enumValue.Value);
-            Assert.True(aliasNodes["@p1"].TypeReference.IsEnum());
+            Assert.True(constNode.TypeReference.IsEnum());
 
             Uri actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Parentheses);
             Assert.Equal(fullUri, actualUri, new UriComparer<Uri>());
@@ -79,7 +80,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             odataUriParser.UrlKeyDelimiter = ODataUrlKeyDelimiter.Parentheses;
             ODataUri odataUri = odataUriParser.ParseUri();
 
-            IDictionary<string, SingleValueNode> aliasNodes = odataUri.ParameterAliasNodes;
+            IDictionary<string, QueryNode> aliasNodes = odataUri.ParameterAliasNodes;
 
             odataUri.Path.LastSegment.ShouldBeOperationImportSegment(HardCodedTestModel.GetFunctionImportForGetPet4()).Parameters.First().ShouldHaveParameterAliasNode("id", "@p1", EdmCoreModel.Instance.GetDecimal(false));
             odataUri.Filter.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).Right.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetDecimal(false));
@@ -101,7 +102,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             odataUriParser.UrlKeyDelimiter = ODataUrlKeyDelimiter.Parentheses;
             ODataUri odataUri = odataUriParser.ParseUri();
 
-            IDictionary<string, SingleValueNode> aliasNodes = odataUri.ParameterAliasNodes;
+            IDictionary<string, QueryNode> aliasNodes = odataUri.ParameterAliasNodes;
             odataUri.Path.LastSegment.ShouldBeOperationImportSegment(HardCodedTestModel.GetFunctionImportForGetPet4()).Parameters.First().ShouldHaveParameterAliasNode("id", "@p1", null);
             aliasNodes["@p1"].ShouldBeConstantQueryNode((object)null);
 
@@ -121,7 +122,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             odataUriParser.UrlKeyDelimiter = ODataUrlKeyDelimiter.Parentheses;
             ODataUri odataUri = odataUriParser.ParseUri();
 
-            IDictionary<string, SingleValueNode> aliasNodes = odataUri.ParameterAliasNodes;
+            IDictionary<string, QueryNode> aliasNodes = odataUri.ParameterAliasNodes;
 
             var operation = HardCodedTestModel.TestModel.FindOperations("Fully.Qualified.Namespace.HasHat").Single(s => (s as IEdmFunction).Parameters.Count() == 2);
             odataUri.Path.LastSegment.ShouldBeOperationSegment(operation);
@@ -145,7 +146,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             odataUriParser.UrlKeyDelimiter = ODataUrlKeyDelimiter.Parentheses;
             ODataUri odataUri = odataUriParser.ParseUri();
 
-            IDictionary<string, SingleValueNode> aliasNodes = odataUri.ParameterAliasNodes;
+            IDictionary<string, QueryNode> aliasNodes = odataUri.ParameterAliasNodes;
             var functionCallNode = odataUri.Filter.Expression.ShouldBeSingleValueFunctionCallQueryNode(HardCodedTestModel.GetFunctionForAllHaveDogWithTwoParameters());
 
             var queryNode = Assert.IsType<NamedFunctionParameterNode>(functionCallNode.Parameters.Last()).Value;
@@ -176,12 +177,12 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             Assert.True(aliasNode.TypeReference.IsEnum());
             Assert.Equal("Fully.Qualified.Namespace.ColorPattern", aliasNode.TypeReference.Definition.FullTypeName());
 
-            IDictionary<string, SingleValueNode> aliasNodes = odataUri.ParameterAliasNodes;
+            IDictionary<string, QueryNode> aliasNodes = odataUri.ParameterAliasNodes;
             var node = Assert.IsType<ConstantNode>(aliasNodes["@p1"]);
             var enumValue = Assert.IsType<ODataEnumValue>(node.Value);
             Assert.Equal("Fully.Qualified.Namespace.ColorPattern", enumValue.TypeName);
             Assert.Equal("22", enumValue.Value);
-            Assert.True(aliasNodes["@p1"].TypeReference.IsEnum());
+            Assert.True(node.TypeReference.IsEnum());
 
             Uri actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Parentheses);
             Assert.Equal(fullUri, actualUri, new UriComparer<Uri>());
@@ -206,12 +207,12 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             Assert.True(aliasNode.TypeReference.IsEnum());
             Assert.Equal("Fully.Qualified.Namespace.ColorPattern", aliasNode.TypeReference.Definition.FullTypeName());
 
-            IDictionary<string, SingleValueNode> aliasNodes = odataUri.ParameterAliasNodes;
+            IDictionary<string, QueryNode> aliasNodes = odataUri.ParameterAliasNodes;
             var node = Assert.IsType<ConstantNode>(aliasNodes["@p1"]);
             var enumValue = Assert.IsType<ODataEnumValue>(node.Value);
             Assert.Equal("Fully.Qualified.Namespace.ColorPattern", enumValue.TypeName);
             Assert.Equal("238563", enumValue.Value);
-            Assert.True(aliasNodes["@p1"].TypeReference.IsEnum());
+            Assert.True(node.TypeReference.IsEnum());
 
             Uri actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Parentheses);
             Assert.Equal(fullUri, actualUri, new UriComparer<Uri>());
@@ -229,7 +230,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             odataUriParser.UrlKeyDelimiter = ODataUrlKeyDelimiter.Parentheses;
             ODataUri odataUri = odataUriParser.ParseUri();
 
-            IDictionary<string, SingleValueNode> aliasNodes = odataUri.ParameterAliasNodes;
+            IDictionary<string, QueryNode> aliasNodes = odataUri.ParameterAliasNodes;
 
             var function = HardCodedTestModel.GetHasDogOverloadForPeopleWithThreeParameters() as IEdmFunction;
             Assert.NotNull(function);
@@ -253,7 +254,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             odataUriParser.UrlKeyDelimiter = ODataUrlKeyDelimiter.Parentheses;
             ODataUri odataUri = odataUriParser.ParseUri();
 
-            IDictionary<string, SingleValueNode> aliasNodes = odataUri.ParameterAliasNodes;
+            IDictionary<string, QueryNode> aliasNodes = odataUri.ParameterAliasNodes;
             var function = HardCodedTestModel.GetHasDogOverloadForPeopleWithThreeParameters() as IEdmFunction;
             Assert.NotNull(function);
             var functionCallNode = odataUri.Filter.Expression.ShouldBeSingleValueFunctionCallQueryNode(function);
@@ -269,6 +270,38 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
         }
 
         [Fact]
+        public void BuildFilter_AliasFilter_Recursive_CollectionPropertyAsValue()
+        {
+            Uri fullUri = new Uri("http://gobbledygook/People?$filter=ID in @p1&@p1=@p2&@p2=RelatedIDs");
+            ODataUriParser odataUriParser = new ODataUriParser(HardCodedTestModel.TestModel, serviceRoot, fullUri);
+            SetODataUriParserSettingsTo(this.settings, odataUriParser.Settings);
+            odataUriParser.UrlKeyDelimiter = ODataUrlKeyDelimiter.Parentheses;
+            ODataUri odataUri = odataUriParser.ParseUri();
+
+            var inNode = odataUri.Filter.Expression.ShouldBeInNode();
+
+            SingleValuePropertyAccessNode singleValuePropAccessNode = Assert.IsType<SingleValuePropertyAccessNode>(inNode.Left);
+            Assert.Equal("ID", singleValuePropAccessNode.Property.Name);
+
+            inNode.Right.ShouldBeParameterAliasCollectionNode("@p1", EdmCoreModel.Instance.GetInt32(false));
+
+            IDictionary<string, QueryNode> aliasNodes = odataUri.ParameterAliasNodes;
+
+            ParameterAliasCollectionNode p1ParameterNode = Assert.IsType<ParameterAliasCollectionNode>(aliasNodes["@p1"]);
+            Assert.Equal("@p2", p1ParameterNode.Alias);
+
+            CollectionPropertyAccessNode colValuePropAccessNode = Assert.IsType<CollectionPropertyAccessNode>(aliasNodes["@p2"]);
+            Assert.Equal("RelatedIDs", colValuePropAccessNode.Property.Name);
+
+            Uri expected = new Uri("http://gobbledygook/People?$filter=ID in %40p1&@p2=RelatedIDs&@p1=%40p2");
+            Uri actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Parentheses);
+            Assert.Equal(expected, actualUri, new UriComparer<Uri>());
+
+            actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Slash);
+            Assert.Equal(expected, actualUri, new UriComparer<Uri>());
+        }
+
+        [Fact]
         public void BuildFilter_AliasInFunction_PropertyAsValue_TypeMismatch()
         {
             Uri fullUri = new Uri("http://gobbledygook/People?$filter=Fully.Qualified.Namespace.HasDog(inOffice%3D%40p1%2Cname%3D%40p1)&@p2=Name&@p1=%40p2");
@@ -277,7 +310,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             odataUriParser.UrlKeyDelimiter = ODataUrlKeyDelimiter.Parentheses;
             ODataUri odataUri = odataUriParser.ParseUri();
 
-            IDictionary<string, SingleValueNode> aliasNodes = odataUri.ParameterAliasNodes;
+            IDictionary<string, QueryNode> aliasNodes = odataUri.ParameterAliasNodes;
             IEdmFunction function = HardCodedTestModel.GetHasDogOverloadForPeopleWithThreeParameters() as IEdmFunction;
             Assert.NotNull(function);
             var functionCallNode = odataUri.Filter.Expression.ShouldBeSingleValueFunctionCallQueryNode(function);
@@ -302,7 +335,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             odataUriParser.UrlKeyDelimiter = ODataUrlKeyDelimiter.Parentheses;
             ODataUri odataUri = odataUriParser.ParseUri();
 
-            IDictionary<string, SingleValueNode> aliasNodes = odataUri.ParameterAliasNodes;
+            IDictionary<string, QueryNode> aliasNodes = odataUri.ParameterAliasNodes;
             var function = HardCodedTestModel.GetHasDogOverloadForPeopleWithThreeParameters() as IEdmFunction;
             Assert.NotNull(function);
             var functionCallNode = odataUri.Filter.Expression.ShouldBeSingleValueFunctionCallQueryNode(function);
@@ -326,7 +359,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             odataUriParser.UrlKeyDelimiter = ODataUrlKeyDelimiter.Parentheses;
             ODataUri odataUri = odataUriParser.ParseUri();
 
-            IDictionary<string, SingleValueNode> aliasNodes = odataUri.ParameterAliasNodes;
+            IDictionary<string, QueryNode> aliasNodes = odataUri.ParameterAliasNodes;
             odataUri.Filter.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).Right.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetInt32(false));
             aliasNodes["@p1"].ShouldBeBinaryOperatorNode(BinaryOperatorKind.Add).Right.ShouldBeConstantQueryNode(2);
 
@@ -346,7 +379,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             odataUriParser.UrlKeyDelimiter = ODataUrlKeyDelimiter.Parentheses;
             ODataUri odataUri = odataUriParser.ParseUri();
 
-            IDictionary<string, SingleValueNode> aliasNodes = odataUri.ParameterAliasNodes;
+            IDictionary<string, QueryNode> aliasNodes = odataUri.ParameterAliasNodes;
             Assert.IsType<SingleValueFunctionCallNode>(odataUri.Filter.Expression).Parameters.First().ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetString(true));
             aliasNodes["@p1"].ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPeopleSet().EntityType.FindProperty("Name"));
 
@@ -430,7 +463,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             odataUriParser.UrlKeyDelimiter = ODataUrlKeyDelimiter.Parentheses;
             ODataUri odataUri = odataUriParser.ParseUri();
 
-            IDictionary<string, SingleValueNode> aliasNodes = odataUri.ParameterAliasNodes;
+            IDictionary<string, QueryNode> aliasNodes = odataUri.ParameterAliasNodes;
             var expectedFunc = HardCodedTestModel.GetAllHasDogFunctionOverloadsForPeople().Single(s => s.Parameters.Count() == 2);
             var funciontCallNode = odataUri.OrderBy.Expression.ShouldBeSingleValueFunctionCallQueryNode(expectedFunc);
             Assert.IsType<NamedFunctionParameterNode>(funciontCallNode.Parameters.Last()).Value.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetBoolean(false));
@@ -452,7 +485,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             odataUriParser.UrlKeyDelimiter = ODataUrlKeyDelimiter.Parentheses;
             ODataUri odataUri = odataUriParser.ParseUri();
 
-            IDictionary<string, SingleValueNode> aliasNodes = odataUri.ParameterAliasNodes;
+            IDictionary<string, QueryNode> aliasNodes = odataUri.ParameterAliasNodes;
             odataUri.OrderBy.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Multiply).Right.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetInt32(false));
             aliasNodes["@p1"].ShouldBeBinaryOperatorNode(BinaryOperatorKind.Divide).Right.ShouldBeConstantQueryNode(2);
 
@@ -474,7 +507,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             odataUriParser.UrlKeyDelimiter = ODataUrlKeyDelimiter.Parentheses;
             ODataUri odataUri = odataUriParser.ParseUri();
 
-            IDictionary<string, SingleValueNode> aliasNodes = odataUri.ParameterAliasNodes;
+            IDictionary<string, QueryNode> aliasNodes = odataUri.ParameterAliasNodes;
             SingleValueFunctionCallNode node = (odataUri.SelectAndExpand.SelectedItems.First() as ExpandedNavigationSelectItem).OrderByOption.Expression as SingleValueFunctionCallNode;
             node.Parameters.Last().ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetString(true));
             aliasNodes["@p1"].ShouldBeConstantQueryNode("abc");

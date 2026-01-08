@@ -419,7 +419,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         #region private methods
         private void ParseUriAndVerify(
             Uri uri,
-            Action<ODataPath, FilterClause, IDictionary<string, SingleValueNode>> verifyAction)
+            Action<ODataPath, FilterClause, IDictionary<string, QueryNode>> verifyAction)
         {
             // run 2 test passes:
             // 1. low level api - ODataUriParser instance methods

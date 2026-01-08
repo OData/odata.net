@@ -6,3 +6,10 @@ override Microsoft.OData.UriParser.IndexSegment.HandleWith(Microsoft.OData.UriPa
 override Microsoft.OData.UriParser.IndexSegment.TranslateWith<T>(Microsoft.OData.UriParser.PathSegmentTranslator<T> translator) -> T
 virtual Microsoft.OData.UriParser.PathSegmentHandler.Handle(Microsoft.OData.UriParser.IndexSegment segment) -> void
 virtual Microsoft.OData.UriParser.PathSegmentTranslator<T>.Translate(Microsoft.OData.UriParser.IndexSegment segment) -> T
+Microsoft.OData.UriParser.ParameterAliasCollectionNode
+Microsoft.OData.UriParser.ParameterAliasCollectionNode.Alias.get -> string
+Microsoft.OData.UriParser.ParameterAliasCollectionNode.ParameterAliasCollectionNode(string alias, Microsoft.OData.Edm.IEdmCollectionTypeReference collectionType) -> void
+override Microsoft.OData.UriParser.ParameterAliasCollectionNode.Accept<T>(Microsoft.OData.UriParser.QueryNodeVisitor<T> visitor) -> T
+override Microsoft.OData.UriParser.ParameterAliasCollectionNode.CollectionType.get -> Microsoft.OData.Edm.IEdmCollectionTypeReference
+override Microsoft.OData.UriParser.ParameterAliasCollectionNode.ItemType.get -> Microsoft.OData.Edm.IEdmTypeReference
+virtual Microsoft.OData.UriParser.QueryNodeVisitor<T>.Visit(Microsoft.OData.UriParser.ParameterAliasCollectionNode nodeIn) -> T

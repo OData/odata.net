@@ -6,7 +6,6 @@
 
 using Microsoft.OData.Metadata;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Core;
 
 namespace Microsoft.OData.UriParser
 {
@@ -38,7 +37,7 @@ namespace Microsoft.OData.UriParser
         /// <param name="bindingState">The alias name which is inside another alias value.</param>
         /// <param name="aliasToken">The cache of alias value nodes</param>
         /// <returns>The semantics node tree for alias (the @p1 in "@p1=...", not alias value expression)</returns>
-        internal ParameterAliasNode BindParameterAlias(BindingState bindingState, FunctionParameterAliasToken aliasToken)
+        internal QueryNode BindParameterAlias(BindingState bindingState, FunctionParameterAliasToken aliasToken)
         {
             ExceptionUtils.CheckArgumentNotNull(bindingState, "bindingState");
             ExceptionUtils.CheckArgumentNotNull(aliasToken, "aliasToken");
@@ -51,7 +50,7 @@ namespace Microsoft.OData.UriParser
             }
 
             // in cache?
-            SingleValueNode aliasValueNode = null;
+            QueryNode aliasValueNode = null;
             if (!aliasValueAccessor.ParameterAliasValueNodesCached.TryGetValue(alias, out aliasValueNode))
             {
                 // has value expression?
@@ -67,6 +66,11 @@ namespace Microsoft.OData.UriParser
                 }
             }
 
+            if (aliasValueNode is CollectionNode collectionNode)
+            {
+                return new ParameterAliasCollectionNode(alias, collectionNode.CollectionType);
+            }
+
             return new ParameterAliasNode(alias, aliasValueNode.GetEdmTypeReference());
         }
 
@@ -77,7 +81,7 @@ namespace Microsoft.OData.UriParser
         /// <param name="aliasValueExpression">The alias value's expression text.</param>
         /// <param name="parameterType">The edm type of the parameter.</param>
         /// <returns>The semantics node of the expression text.</returns>
-        private SingleValueNode ParseAndBindParameterAliasValueExpression(BindingState bindingState, string aliasValueExpression, IEdmTypeReference parameterType)
+        private QueryNode ParseAndBindParameterAliasValueExpression(BindingState bindingState, string aliasValueExpression, IEdmTypeReference parameterType)
         {
             // Get the syntactic representation of the filter expression
             // TODO: change Settings.FilterLimit to ParameterAliasValueLimit
@@ -87,16 +91,8 @@ namespace Microsoft.OData.UriParser
             // Special logic to handle parameter alias token.
             aliasValueToken = ParseComplexOrCollectionAlias(aliasValueToken, parameterType, bindingState.Model);
 
-            // Get the semantic node, and check for SingleValueNode
-            QueryNode aliasValueNode = this.bindMethod(aliasValueToken);
-            SingleValueNode result = aliasValueNode as SingleValueNode;
-            if (result == null)
-            {
-                // TODO: add string resource
-                throw new ODataException(SRResources.MetadataBinder_ParameterAliasValueExpressionNotSingleValue);
-            }
-
-            return result;
+            // Get the semantic node, it should support single and collection value node.
+            return this.bindMethod(aliasValueToken);
         }
 
         /// <summary>

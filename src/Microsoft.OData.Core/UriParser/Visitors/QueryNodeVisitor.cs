@@ -255,6 +255,16 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
+        /// Visit a ParameterAliasCollectionNode
+        /// </summary>
+        /// <param name="nodeIn">The node to visit</param>
+        /// <returns>The translated expression</returns>
+        public virtual T Visit(ParameterAliasCollectionNode nodeIn)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
         /// Visit a SearchTermNode
         /// </summary>
         /// <param name="nodeIn">The node to visit</param>

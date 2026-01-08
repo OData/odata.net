@@ -398,6 +398,17 @@ namespace Microsoft.OData
         }
 
         /// <summary>
+        /// Translates a <see cref="ParameterAliasCollectionNode"/> into a corresponding <see cref="String"/>.
+        /// </summary>
+        /// <param name="node">The node to translate.</param>
+        /// <returns>The translated String.</returns>
+        public override String Visit(ParameterAliasCollectionNode node)
+        {
+            ExceptionUtils.CheckArgumentNotNull(node, "node");
+            return node.Alias;
+        }
+
+        /// <summary>
         /// Translates a <see cref="NamedFunctionParameterNode"/> into a corresponding <see cref="String"/>.
         /// </summary>
         /// <param name="node">The node to translate.</param>
@@ -570,12 +581,12 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="dictionary">Dictionary</param>
         /// <returns>The url query string of dictionary's key value pairs (URL encoded)</returns>
-        internal String TranslateParameterAliasNodes(IDictionary<string, SingleValueNode> dictionary)
+        internal String TranslateParameterAliasNodes(IDictionary<string, QueryNode> dictionary)
         {
             String result = null;
             if (dictionary != null)
             {
-                foreach (KeyValuePair<string, SingleValueNode> keyValuePair in dictionary)
+                foreach (KeyValuePair<string, QueryNode> keyValuePair in dictionary)
                 {
                     if (keyValuePair.Value != null)
                     {
