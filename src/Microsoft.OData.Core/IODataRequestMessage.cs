@@ -11,6 +11,7 @@ namespace Microsoft.OData
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
+    using System.Threading.Tasks;
     #endregion Namespaces
 
     /// <summary>
@@ -54,9 +55,15 @@ namespace Microsoft.OData
         /// <param name="headerValue">The value of the HTTP header or 'null' if the header should be removed.</param>
         void SetHeader(string headerName, string headerValue);
 
-        /// <summary>Gets the stream backing for this message.</summary>
+        /// <summary>Gets the stream backing this message.</summary>
         /// <returns>The stream backing for this message.</returns>
-        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate", Justification = "This is intentionally a method.")]
         Stream GetStream();
+
+        /// <summary>Asynchronously gets the stream backing this message.</summary>
+        /// <returns>
+        /// A task that represents the asynchronous operation.
+        /// The task result contains the stream for this message.
+        /// </returns>
+        Task<Stream> GetStreamAsync();
     }
 }

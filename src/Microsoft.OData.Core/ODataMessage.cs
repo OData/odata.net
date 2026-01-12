@@ -18,7 +18,7 @@ namespace Microsoft.OData
     #endregion Namespaces
 
     /// <summary>
-    /// Base class for the internal wrappers around IODataRequestMessageAsync and IODataResponseMessageAsync.
+    /// Base class for the internal wrappers around IODataRequestMessage and IODataResponseMessageAsync.
     /// </summary>
     [SuppressMessage("Microsoft.Design", "CA1001:TypesThatOwnDisposableFieldsShouldBeDisposable", Justification = "This class does not own the BufferingReadStream instance.")]
     internal abstract class ODataMessage

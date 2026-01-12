@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace Microsoft.OData.Tests
 {
     public class InMemoryMessage : IODataRequestMessage, IODataResponseMessage, IServiceCollectionProvider, IDisposable
-        , IODataRequestMessageAsync, IODataResponseMessageAsync
+        , IODataResponseMessageAsync
     {
         private readonly Dictionary<string, string> headers;
 

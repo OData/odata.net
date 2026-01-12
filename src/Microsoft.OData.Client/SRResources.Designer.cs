@@ -2257,6 +2257,15 @@ namespace Microsoft.OData.Client {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to GetStreamAsync method is not supported..
+        /// </summary>
+        internal static string ODataRequestMessage_GetStreamAsyncMethodNotSupported {
+            get {
+                return ResourceManager.GetString("ODataRequestMessage_GetStreamAsyncMethodNotSupported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to GetStream method is not supported..
         /// </summary>
         internal static string ODataRequestMessage_GetStreamMethodNotSupported {

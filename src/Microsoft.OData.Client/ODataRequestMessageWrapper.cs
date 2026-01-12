@@ -9,12 +9,11 @@ namespace Microsoft.OData.Client
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Text;
-    using System.Net;
+    using System.Threading.Tasks;
     using Microsoft.OData;
 
     /// <summary>
@@ -553,6 +552,23 @@ namespace Microsoft.OData.Client
                 }
 
                 return this.cachedRequestStream.Stream;
+            }
+
+            /// <summary>
+            /// Asynchronously gets the stream to be used to write the request payload.
+            /// </summary>
+            /// <returns>
+            /// A task that represents the asynchronous operation.
+            /// The task result contains the stream to which the request payload needs to be written.
+            /// </returns>
+            public Task<Stream> GetStreamAsync()
+            {
+                if (this.cachedRequestStream == null)
+                {
+                    this.cachedRequestStream = new ContentStream(new MemoryStream(), isKnownMemoryStream: true);
+                }
+
+                return Task.FromResult(this.cachedRequestStream.Stream);
             }
         }
 

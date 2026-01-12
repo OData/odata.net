@@ -482,6 +482,9 @@
   <data name="ODataRequestMessage_GetStreamMethodNotSupported" xml:space="preserve">
     <value>GetStream method is not supported.</value>
   </data>
+  <data name="ODataRequestMessage_GetStreamAsyncMethodNotSupported" xml:space="preserve">
+    <value>GetStreamAsync method is not supported.</value>
+  </data>
   <data name="Util_EmptyString" xml:space="preserve">
     <value>Empty string.</value>
   </data>

@@ -319,6 +319,24 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
+        /// Asynchronously gets the stream to be used to write the request payload.
+        /// </summary>
+        /// <returns>
+        /// A task that represents the asynchronous get stream operation.
+        /// The task result contains the stream to which the request payload needs to be written.
+        /// </returns>
+        public override Task<Stream> GetStreamAsync()
+        {
+            if (this.inSendingRequest2Event)
+            {
+                return Task.FromException<Stream>(
+                    new NotSupportedException(SRResources.ODataRequestMessage_GetStreamAsyncMethodNotSupported));
+            }
+
+            return Task.FromResult<Stream>(this._messageStream);
+        }
+
+        /// <summary>
         /// Abort the current request.
         /// </summary>
         public override void Abort()

@@ -18,7 +18,7 @@ namespace Microsoft.OData
     /// <summary>
     /// Message representing an operation in a batch request.
     /// </summary>
-    public sealed class ODataBatchOperationRequestMessage : IODataRequestMessageAsync, IODataPayloadUriConverter, IServiceCollectionProvider
+    public sealed class ODataBatchOperationRequestMessage : IODataRequestMessage, IODataPayloadUriConverter, IServiceCollectionProvider
     {
         /// <summary>
         /// The Content-ID for this request message.</summary>

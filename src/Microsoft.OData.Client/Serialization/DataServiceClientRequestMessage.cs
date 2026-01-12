@@ -11,6 +11,7 @@ namespace Microsoft.OData.Client
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Net;
+    using System.Threading.Tasks;
     using Microsoft.OData;
 
     /// <summary>
@@ -98,6 +99,15 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <returns>Stream to which the request payload needs to be written.</returns>
         public abstract Stream GetStream();
+
+        /// <summary>
+        /// Asynchronously gets the stream to be used to write the request payload.
+        /// </summary>
+        /// <returns>
+        /// A task that represents the asynchronous operation.
+        /// The task result contains the stream to which the request payload needs to be written.
+        /// </returns>
+        public abstract Task<Stream> GetStreamAsync();
 
         /// <summary>
         /// Abort the current request.
