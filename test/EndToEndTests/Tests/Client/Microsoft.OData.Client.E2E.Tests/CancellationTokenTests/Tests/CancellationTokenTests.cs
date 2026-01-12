@@ -76,8 +76,8 @@ public class CancellationTokenTests : EndToEndTestBase<CancellationTokenTests.Te
 
         Task response() => _context.SaveChangesAsync(source.Token);
         source.Cancel();
-        var exception = await Assert.ThrowsAsync<OperationCanceledException>(response);
-        Assert.Equal("The operation was canceled.", exception.Message);
+        var exception = await Assert.ThrowsAsync<TaskCanceledException>(response);
+        Assert.Equal("A task was canceled.", exception.Message);
 
         // SaveChangesAsync with SaveChangesOptions
         var c2 = new Customer { CustomerId = 22, Name = "customerTwo" };
@@ -87,8 +87,8 @@ public class CancellationTokenTests : EndToEndTestBase<CancellationTokenTests.Te
 
         Task response2() => _context.SaveChangesAsync(SaveChangesOptions.BatchWithIndependentOperations, source.Token);
         source.Cancel();
-        var exception2 = await Assert.ThrowsAsync<OperationCanceledException>(response2);
-        Assert.Equal("The operation was canceled.", exception2.Message);
+        var exception2 = await Assert.ThrowsAsync<TaskCanceledException>(response2);
+        Assert.Equal("A task was canceled.", exception2.Message);
     }
 
     #endregion
@@ -107,8 +107,8 @@ public class CancellationTokenTests : EndToEndTestBase<CancellationTokenTests.Te
         // Act & Assert
         Task response() => _context.Customers.ByKey(11).GetValueAsync(source.Token);
         source.Cancel();
-        var exception = await Assert.ThrowsAsync<OperationCanceledException>(response);
-        Assert.Equal("The operation was canceled.", exception.Message);
+        var exception = await Assert.ThrowsAsync<TaskCanceledException>(response);
+        Assert.Equal("A task was canceled.", exception.Message);
     }
 
     #endregion
@@ -130,8 +130,8 @@ public class CancellationTokenTests : EndToEndTestBase<CancellationTokenTests.Te
 
         Task response() => _context.Customers.ExecuteAsync(source.Token);
         source.Cancel();
-        var exception = await Assert.ThrowsAsync<OperationCanceledException>(response);
-        Assert.Equal("The operation was canceled.", exception.Message);
+        var exception = await Assert.ThrowsAsync<TaskCanceledException>(response);
+        Assert.Equal("A task was canceled.", exception.Message);
 
         // ExecuteAsync by continuation
         var customers = await _context.Customers.ExecuteAsync() as QueryOperationResponse<Customer>;
@@ -142,8 +142,8 @@ public class CancellationTokenTests : EndToEndTestBase<CancellationTokenTests.Te
 
         Task response2() => _context.ExecuteAsync(continuation, source.Token);
         source.Cancel();
-        var exception2 = await Assert.ThrowsAsync<OperationCanceledException>(response2);
-        Assert.Equal("The operation was canceled.", exception2.Message);
+        var exception2 = await Assert.ThrowsAsync<TaskCanceledException>(response2);
+        Assert.Equal("A task was canceled.", exception2.Message);
 
         // ExecuteAsync by nextLink
         var customers2 = await _context.Customers.ExecuteAsync() as QueryOperationResponse<Customer>;
@@ -154,8 +154,8 @@ public class CancellationTokenTests : EndToEndTestBase<CancellationTokenTests.Te
 
         Task response3() => _context.ExecuteAsync<Customer>(continuation2.NextLinkUri, source.Token);
         source.Cancel();
-        var exception3 = await Assert.ThrowsAsync<OperationCanceledException>(response3);
-        Assert.Equal("The operation was canceled.", exception3.Message);
+        var exception3 = await Assert.ThrowsAsync<TaskCanceledException>(response3);
+        Assert.Equal("A task was canceled.", exception3.Message);
     }
 
     #endregion
@@ -177,8 +177,8 @@ public class CancellationTokenTests : EndToEndTestBase<CancellationTokenTests.Te
 
         Task response() => _context.Customers.GetAllPagesAsync(source.Token);
         source.Cancel();
-        var exception = await Assert.ThrowsAsync<OperationCanceledException>(response);
-        Assert.Equal("The operation was canceled.", exception.Message);
+        var exception = await Assert.ThrowsAsync<TaskCanceledException>(response);
+        Assert.Equal("A task was canceled.", exception.Message);
     }
 
     #endregion
@@ -208,8 +208,8 @@ public class CancellationTokenTests : EndToEndTestBase<CancellationTokenTests.Te
 
         Task response() => _context.LoadPropertyAsync(c1, "Orders", source.Token);
         source.Cancel();
-        var exception = await Assert.ThrowsAsync<OperationCanceledException>(response);
-        Assert.Equal("The operation was canceled.", exception.Message);
+        var exception = await Assert.ThrowsAsync<TaskCanceledException>(response);
+        Assert.Equal("A task was canceled.", exception.Message);
 
         //Get Entity by DataServiceQuery.ExecuteAsync
         var query = _context.Customers.Expand(c => c.Orders).Where(c => c.CustomerId == 11) as DataServiceQuery<Customer>;
@@ -222,13 +222,13 @@ public class CancellationTokenTests : EndToEndTestBase<CancellationTokenTests.Te
         var continuation = resp.GetContinuation(customer.Orders);
         Task response2() => _context.LoadPropertyAsync(customer, "Orders", continuation, source.Token);
         source.Cancel();
-        var exception2 = await Assert.ThrowsAsync<OperationCanceledException>(response2);
-        Assert.Equal("The operation was canceled.", exception2.Message);
+        var exception2 = await Assert.ThrowsAsync<TaskCanceledException>(response2);
+        Assert.Equal("A task was canceled.", exception2.Message);
 
         Task response3() => _context.LoadPropertyAsync(customer, "Orders", continuation.NextLinkUri, source.Token);
         source.Cancel();
-        var exception3 = await Assert.ThrowsAsync<OperationCanceledException>(response3);
-        Assert.Equal("The operation was canceled.", exception3.Message);
+        var exception3 = await Assert.ThrowsAsync<TaskCanceledException>(response3);
+        Assert.Equal("A task was canceled.", exception3.Message);
     }
 
     #endregion
@@ -252,16 +252,16 @@ public class CancellationTokenTests : EndToEndTestBase<CancellationTokenTests.Te
 
         //Task response() => _context.GetReadStreamAsync(car, new DataServiceRequestArgs(), source.Token);
         //source.Cancel();
-        //var exception = await Assert.ThrowsAsync<OperationCanceledException>(response);
-        //Assert.Equal("The operation was canceled.", exception.Message);
+        //var exception = await Assert.ThrowsAsync<TaskCanceledException>(response);
+        //Assert.Equal("A task was canceled.", exception.Message);
 
         _context.SetSaveStream(car, "Photo", mediaEntry, true, new DataServiceRequestArgs { ContentType = "application/binary" });
         await _context.SaveChangesAsync();
 
         Task response2() => _context.GetReadStreamAsync(car, "Photo", new DataServiceRequestArgs { AcceptContentType = "application/binary" }, source.Token);
         source.Cancel();
-        var exception2 = await Assert.ThrowsAsync<OperationCanceledException>(response2);
-        Assert.Equal("The operation was canceled.", exception2.Message);
+        var exception2 = await Assert.ThrowsAsync<TaskCanceledException>(response2);
+        Assert.Equal("A task was canceled.", exception2.Message);
     }
 
     #endregion
@@ -291,8 +291,8 @@ public class CancellationTokenTests : EndToEndTestBase<CancellationTokenTests.Te
             });
 
         source.Cancel();
-        var exception = await Assert.ThrowsAsync<OperationCanceledException>(response);
-        Assert.Equal("The operation was canceled.", exception.Message);
+        var exception = await Assert.ThrowsAsync<TaskCanceledException>(response);
+        Assert.Equal("A task was canceled.", exception.Message);
     }
 
     #endregion
@@ -314,7 +314,7 @@ public class CancellationTokenTests : EndToEndTestBase<CancellationTokenTests.Te
 
         var auditInfo = new AuditInfo()
         {
-            ModifiedDate = new DateTimeOffset()
+            ModifiedDate = DateTimeOffset.Now
         };
 
         DataServiceQuerySingle<Customer> customer = _context.Customers.ByKey(11);
@@ -323,8 +323,8 @@ public class CancellationTokenTests : EndToEndTestBase<CancellationTokenTests.Te
         Task response() => getComputerAction.ExecuteAsync(source.Token);
 
         source.Cancel();
-        var exception = await Assert.ThrowsAsync<OperationCanceledException>(response);
-        Assert.Equal("The operation was canceled.", exception.Message);
+        var exception = await Assert.ThrowsAsync<TaskCanceledException>(response);
+        Assert.Equal("A task was canceled.", exception.Message);
     }
 
     #endregion

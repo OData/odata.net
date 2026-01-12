@@ -10,9 +10,10 @@ namespace Microsoft.OData.Client
     using System.CodeDom.Compiler;
     using System.Diagnostics;
     using System.Linq;
-    using System.Reflection;
-    using System.Xml.Linq;
     using System.Net;
+    using System.Reflection;
+    using System.Threading;
+    using System.Threading.Tasks;
     using Microsoft.OData;
     using Microsoft.OData.Client.Metadata;
 
@@ -207,6 +208,22 @@ namespace Microsoft.OData.Client
         internal IODataResponseMessage GetSynchronousResponse(ODataRequestMessageWrapper request, bool handleWebException)
         {
             return this.Context.GetSynchronousResponse(request, handleWebException);
+        }
+
+        /// <summary>
+        /// Asynchronously gets the response for the request.
+        /// </summary>
+        /// <param name="request">The OData request message wrapper to get the response from.</param>
+        /// <param name="handleWebException">If true, suppresses <see cref="WebException"/> if the response is available;
+        /// otherwise, always rethrows <see cref="WebException"/>.</param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        /// <returns>A task that represents the asynchronous operation. The task result contains the response message.</returns>
+        internal Task<IODataResponseMessage> GetResponseAsync(
+            ODataRequestMessageWrapper request,
+            bool handleWebException,
+            CancellationToken cancellationToken = default)
+        {
+            return this.Context.GetResponseAsync(request, handleWebException, cancellationToken);
         }
 
         /// <summary>

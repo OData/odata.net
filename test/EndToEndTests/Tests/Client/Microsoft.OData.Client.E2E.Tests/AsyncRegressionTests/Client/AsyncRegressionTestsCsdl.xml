@@ -1,0 +1,53 @@
+﻿<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:DataServices>
+    <Schema Namespace="Microsoft.OData.Client.E2E.Tests.AsyncRegressionTests.Server" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <EntityType Name="Customer">
+        <Key>
+          <PropertyRef Name="Id" />
+        </Key>
+        <Property Name="Id" Type="Edm.Int32" Nullable="false" />
+        <Property Name="Name" Type="Edm.String" Nullable="false" />
+        <Property Name="Photo" Type="Edm.Stream" Nullable="false" />
+        <NavigationProperty Name="Orders" Type="Collection(Microsoft.OData.Client.E2E.Tests.AsyncRegressionTests.Server.Order)" />
+      </EntityType>
+      <EntityType Name="Order">
+        <Key>
+          <PropertyRef Name="Id" />
+        </Key>
+        <Property Name="Id" Type="Edm.Int32" Nullable="false" />
+        <Property Name="Amount" Type="Edm.Decimal" Nullable="false" Scale="variable" />
+        <NavigationProperty Name="Customer" Type="Microsoft.OData.Client.E2E.Tests.AsyncRegressionTests.Server.Customer" Nullable="false" />
+      </EntityType>
+      <EntityType Name="MediaAsset" HasStream="true">
+        <Key>
+          <PropertyRef Name="Id" />
+        </Key>
+        <Property Name="Id" Type="Edm.Int32" Nullable="false" />
+      </EntityType>
+    </Schema>
+    <Schema Namespace="Default" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <Function Name="GetTopCustomer" IsBound="true">
+        <Parameter Name="bindingParameter" Type="Collection(Microsoft.OData.Client.E2E.Tests.AsyncRegressionTests.Server.Customer)" />
+        <ReturnType Type="Microsoft.OData.Client.E2E.Tests.AsyncRegressionTests.Server.Customer" />
+      </Function>
+      <Function Name="GetTop2Orders" IsBound="true">
+        <Parameter Name="bindingParameter" Type="Collection(Microsoft.OData.Client.E2E.Tests.AsyncRegressionTests.Server.Order)" />
+        <ReturnType Type="Collection(Microsoft.OData.Client.E2E.Tests.AsyncRegressionTests.Server.Order)" />
+      </Function>
+      <Action Name="ApplyDiscount" IsBound="true">
+        <Parameter Name="bindingParameter" Type="Microsoft.OData.Client.E2E.Tests.AsyncRegressionTests.Server.Order" />
+        <Parameter Name="discountPercentage" Type="Edm.Decimal" Nullable="false" Scale="variable" />
+        <ReturnType Type="Edm.Decimal" Nullable="false" Scale="variable" />
+      </Action>
+      <EntityContainer Name="Container">
+        <EntitySet Name="Customers" EntityType="Microsoft.OData.Client.E2E.Tests.AsyncRegressionTests.Server.Customer">
+          <NavigationPropertyBinding Path="Orders" Target="Orders" />
+        </EntitySet>
+        <EntitySet Name="Orders" EntityType="Microsoft.OData.Client.E2E.Tests.AsyncRegressionTests.Server.Order">
+          <NavigationPropertyBinding Path="Customer" Target="Customers" />
+        </EntitySet>
+        <EntitySet Name="Media" EntityType="Microsoft.OData.Client.E2E.Tests.AsyncRegressionTests.Server.MediaAsset" />
+      </EntityContainer>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>

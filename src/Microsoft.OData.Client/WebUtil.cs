@@ -15,6 +15,8 @@ namespace Microsoft.OData.Client
     using System.Linq;
     using System.Reflection;
     using System.Runtime.CompilerServices;
+    using System.Threading;
+    using System.Threading.Tasks;
     using Microsoft.OData;
     using Microsoft.OData.Client.Metadata;
 
@@ -24,7 +26,15 @@ namespace Microsoft.OData.Client
         /// <summary>
         /// Default buffer size used for stream copy.
         /// </summary>
-        internal const int DefaultBufferSizeForStreamCopy = 64 * 1024;
+        /// <remarks>
+        /// Justification for the default buffer size of 4096 bytes:
+        /// - Matches <see cref="FileStream"/> and <see cref="BufferedStream"/> defaults
+        /// - 1 read for typical single-entity responses up to 4KB
+        /// - 3-4 reads on a typical paged collection (~12-16KB)
+        /// - Stays on SOH with negligible allocation cost
+        /// - ArrayPool&lt;byte&gt;.Shared.Rent(4096) returns a pre-warmed 4096-byte buffer with zero allocation in steady state
+        /// </remarks>
+        internal const int DefaultBufferSizeForStreamCopy = 4096;
 
         /// <summary>
         /// Whether DataServiceCollection&lt;&gt; type is available.
@@ -64,24 +74,50 @@ namespace Microsoft.OData.Client
         /// <summary>copy from one stream to another</summary>
         /// <param name="input">input stream</param>
         /// <param name="output">output stream</param>
-        /// <param name="refBuffer">reusable buffer</param>
+        /// <param name="buffer">reusable buffer</param>
         /// <returns>count of copied bytes</returns>
-        internal static long CopyStream(Stream input, Stream output, ref byte[] refBuffer)
+        internal static long CopyStream(Stream input, Stream output, byte[] buffer)
         {
             Debug.Assert(input != null, "null input stream");
             Debug.Assert(output != null, "null output stream");
+            Debug.Assert(buffer == null || buffer.Length > 0, "null or empty buffer");
 
             long total = 0;
-            byte[] buffer = refBuffer;
-            if (buffer == null)
-            {
-                refBuffer = buffer = new byte[1000];
-            }
 
             int count;
             while (input.CanRead && ((count = input.Read(buffer, 0, buffer.Length)) > 0))
             {
                 output.Write(buffer, 0, count);
+                total += count;
+            }
+
+            return total;
+        }
+
+        /// <summary>
+        /// Asynchronously copies data from one stream to another.
+        /// </summary>
+        /// <param name="input">Input stream to read from.</param>
+        /// <param name="output">Output stream to write to.</param>
+        /// <param name="buffer">Buffer to use for copying. If null, a new buffer will be created.</param>
+        /// <param name="cancellationToken">Cancellation token to observe.</param>
+        /// <returns>
+        /// A task that represents the asynchronous copy operation.
+        /// The task result contains a tuple with:
+        /// - BytesCopied: The total number of bytes copied
+        /// - Buffer: The buffer used for copying (either the provided buffer or a newly created one)
+        /// </returns>
+        internal static async Task<long> CopyStreamAsync(Stream input, Stream output, byte[] buffer, CancellationToken cancellationToken = default)
+        {
+            Debug.Assert(input != null, "null input stream");
+            Debug.Assert(output != null, "null output stream");
+            Debug.Assert(buffer == null || buffer.Length > 0, "null or empty buffer");
+
+            long total = 0;
+            int count;
+            while (input.CanRead && (count = await input.ReadAsync(buffer.AsMemory(0, buffer.Length), cancellationToken).ConfigureAwait(false)) > 0)
+            {
+                await output.WriteAsync(buffer.AsMemory(0, count), cancellationToken).ConfigureAwait(false);
                 total += count;
             }
 

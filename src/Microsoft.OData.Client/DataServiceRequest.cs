@@ -11,6 +11,8 @@ namespace Microsoft.OData.Client
     using System.Diagnostics;
     using System.Linq;
     using System.Net;
+    using System.Threading;
+    using System.Threading.Tasks;
     using Microsoft.OData;
     using Microsoft.OData.Client.Materialization;
 
@@ -139,14 +141,27 @@ namespace Microsoft.OData.Client
         /// <param name="model">The client model.</param>
         /// <returns>instance of query components</returns>
         internal abstract QueryComponents QueryComponents(ClientEdmModel model);
-
+        
         /// <summary>
-        /// execute uri and materialize result
+        /// Executes the request represented by <paramref name="queryComponents"/> against the OData service
+        /// and materializes the results as a <see cref="QueryOperationResponse{TElement}"/>.
         /// </summary>
-        /// <typeparam name="TElement">element type</typeparam>
-        /// <param name="context">context</param>
-        /// <param name="queryComponents">query components for request to execute</param>
-        /// <returns>enumerable of results</returns>
+        /// <typeparam name="TElement">The element type expected in the result set.</typeparam>
+        /// <param name="context">
+        /// The <see cref="DataServiceContext"/> used to create and send the HTTP request, apply request
+        /// pipeline configuration (headers, format, versioning), and resolve client-side metadata during
+        /// materialization.
+        /// </param>
+        /// <param name="queryComponents">
+        /// The parsed query that defines the request to execute (target <see cref="Uri"/>, HTTP method,
+        /// query and operation parameters, and protocol version). Only <c>GET</c>, <c>POST</c>, and
+        /// <c>DELETE</c> are supported in this execution path.
+        /// </param>
+        /// <returns>
+        /// A <see cref="QueryOperationResponse{TElement}"/> whose enumerable results can be iterated to
+        /// materialize <typeparamref name="TElement"/> instances. The response also carries HTTP status,
+        /// headers, and the request <see cref="Uri"/> for diagnostics and paging.
+        /// </returns>
         internal QueryOperationResponse<TElement> Execute<TElement>(DataServiceContext context, QueryComponents queryComponents)
         {
             QueryResult result = null;
@@ -156,6 +171,72 @@ namespace Microsoft.OData.Client
                 DataServiceRequest<TElement> serviceRequest = new DataServiceRequest<TElement>(requestUri, queryComponents, this.Plan);
                 result = serviceRequest.CreateExecuteResult(this, context, null, null, Util.ExecuteMethodName);
                 result.ExecuteQuery();
+                return result.ProcessResult<TElement>(this.Plan);
+            }
+            catch (InvalidOperationException ex)
+            {
+                if (result != null)
+                {
+                    QueryOperationResponse operationResponse = result.GetResponse<TElement>(ObjectMaterializer.EmptyResults);
+
+                    if (operationResponse != null)
+                    {
+                        if (context.IgnoreResourceNotFoundException)
+                        {
+                            DataServiceClientException cex = ex as DataServiceClientException;
+                            if (cex != null && cex.StatusCode == (int)HttpStatusCode.NotFound)
+                            {
+                                // don't throw
+                                return (QueryOperationResponse<TElement>)operationResponse;
+                            }
+                        }
+
+                        operationResponse.Error = ex;
+                        throw new DataServiceQueryException(SRResources.DataServiceException_GeneralError, ex, operationResponse);
+                    }
+                }
+
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Asynchronously executes the request represented by <paramref name="queryComponents"/> against the OData service
+        /// and materializes the results as a <see cref="QueryOperationResponse{TElement}"/>.
+        /// </summary>
+        /// <typeparam name="TElement">The element type expected in the result set.</typeparam>
+        /// <param name="context">
+        /// The <see cref="DataServiceContext"/> used to create and send the HTTP request, apply request
+        /// pipeline configuration (headers, format, versioning), and resolve client-side metadata during
+        /// materialization.
+        /// </param>
+        /// <param name="queryComponents">
+        /// The parsed query that defines the request to execute (target <see cref="Uri"/>, HTTP method,
+        /// query and operation parameters, and protocol version). Only <c>GET</c>, <c>POST</c>, and
+        /// <c>DELETE</c> are supported in this execution path.
+        /// </param>
+        /// <returns>
+        /// A task that represents the asynchronous operation.
+        /// The task result contains a <see cref="QueryOperationResponse{TElement}"/> whose enumerable results can be iterated to
+        /// materialize <typeparamref name="TElement"/> instances. The response also carries HTTP status,
+        /// headers, and the request <see cref="Uri"/> for diagnostics and paging.
+        /// </returns>
+        internal async Task<QueryOperationResponse<TElement>> ExecuteAsync<TElement>(
+            DataServiceContext context,
+            QueryComponents queryComponents,
+            CancellationToken cancellationToken)
+        {
+            Debug.Assert(context != null, "context is null");
+            Debug.Assert(queryComponents != null, "queryComponents is null");
+
+            QueryResult result = null;
+
+            try
+            {
+                Uri requestUri = queryComponents.Uri;
+                DataServiceRequest<TElement> serviceRequest = new DataServiceRequest<TElement>(requestUri, queryComponents, this.Plan);
+                result = serviceRequest.CreateExecuteResult(this, context, null, null, "ExecuteAsync");
+                await result.ExecuteQueryAsync(cancellationToken).ConfigureAwait(false);
                 return result.ProcessResult<TElement>(this.Plan);
             }
             catch (InvalidOperationException ex)
