@@ -43,11 +43,16 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             Assert.True(segment.SingleResult);
         }
 
-        [Fact]
-        public void IndexSegment_IndexProperytIsInputValue()
+        [Theory]
+        [InlineData(0)]
+        [InlineData(1)]
+        [InlineData(-1)]
+        [InlineData(long.MaxValue)]
+        [InlineData(long.MinValue)]
+        public void IndexSegment_IndexProperytIsInputValue(long index)
         {
-            IndexSegment segment = new IndexSegment(42, HardCodedTestModel.GetPersonType());
-            Assert.Equal(42, segment.Index);
+            IndexSegment segment = new IndexSegment(index, HardCodedTestModel.GetPersonType());
+            Assert.Equal(index, segment.Index);
         }
 
         [Fact]

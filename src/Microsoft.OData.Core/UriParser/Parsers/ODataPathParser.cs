@@ -1131,7 +1131,7 @@ namespace Microsoft.OData.UriParser
             }
 
             if (previousSegment is PropertySegment propertySegment &&
-                long.TryParse(segmentText, out var index))
+                long.TryParse(segmentText, out long index))
             {
                 IEdmModel model = configuration.Model;
 

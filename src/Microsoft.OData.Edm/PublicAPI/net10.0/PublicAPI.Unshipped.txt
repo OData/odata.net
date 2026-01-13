@@ -1,5 +1,2 @@
-<<<<<<< HEAD
 static Microsoft.OData.Edm.ExtensionMethods.SetOptimisticConcurrencyAnnotation(this Microsoft.OData.Edm.EdmModel model, Microsoft.OData.Edm.IEdmSingleton target, System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmStructuralProperty> properties, Microsoft.OData.Edm.Csdl.EdmVocabularyAnnotationSerializationLocation location = Microsoft.OData.Edm.Csdl.EdmVocabularyAnnotationSerializationLocation.Inline) -> void
-=======
 static readonly Microsoft.OData.Edm.Vocabularies.V1.CoreVocabularyModel.OrderedTerm -> Microsoft.OData.Edm.Vocabularies.IEdmTerm
->>>>>>> 003965b3d (Fixes #3454:  support the index after the collection in the path)
