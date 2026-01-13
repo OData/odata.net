@@ -12,12 +12,13 @@ namespace Microsoft.OData.Json
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
+    using System.Linq;
     using System.Threading.Tasks;
+    using Microsoft.OData.Core;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Evaluation;
     using Microsoft.OData.Metadata;
     using Microsoft.OData.UriParser;
-    using Microsoft.OData.Core;
 
     #endregion Namespaces
 
@@ -2192,17 +2193,14 @@ namespace Microsoft.OData.Json
 
         private bool TryReadPrimitiveAsStream(IEdmType resourceType)
         {
-            Func<IEdmPrimitiveType, bool, string, IEdmProperty, bool> readAsStream = this.jsonInputContext.MessageReaderSettings.ReadAsStreamFunc;
-
             // Should stream primitive if
             // 1. Primitive is a stream value
             // 2. Primitive is a string or binary value (within an untyped or streamed collection) that the reader wants to read as a stream
             if (
                 (resourceType != null && resourceType.IsStream()) ||
                 (resourceType != null
-                   && readAsStream != null
                    && (resourceType.IsBinary() || resourceType.IsString())
-                   && readAsStream(resourceType as IEdmPrimitiveType, false, null, null)))
+                   && ShouldReadPrimitiveAsStream(resourceType as IEdmPrimitiveType)))
             {
                 if (resourceType == null || resourceType.IsUntyped())
                 {
@@ -2653,6 +2651,39 @@ namespace Microsoft.OData.Json
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Determines whether a primitive value within a collection should be read as a stream.
+        /// </summary>
+        /// <param name="primitiveType">The primitive type of the value, or null if unknown.</param>
+        /// <returns>True if the primitive should be read as a stream; otherwise, false.</returns>
+        private bool ShouldReadPrimitiveAsStream(IEdmPrimitiveType primitiveType)
+        {
+            Func<ODataPropertyReadingContext, bool> shouldReadAsStream = this.jsonInputContext.MessageReaderSettings.ShouldReadPropertyAsStream;
+            if (shouldReadAsStream != null)
+            {
+                ODataPropertyReadingContext propertyReadingContext = new ODataPropertyReadingContext
+                {
+                    PrimitiveType = primitiveType,
+                    IsCollection = false,
+                    PropertyName = null, // No property name for primitives within collection
+                    Property = null, // No EDM property for primitives within collection
+                    CustomPropertyAnnotations = Enumerable.Empty<KeyValuePair<string, object>>(),
+                    ODataPropertyAnnotations = new Dictionary<string, object>()
+                };
+
+                return shouldReadAsStream(propertyReadingContext);
+            }
+
+            // Fallback to ReadAsStreamFunc
+            Func<IEdmPrimitiveType, bool, string, IEdmProperty, bool> readAsStream = this.jsonInputContext.MessageReaderSettings.ReadAsStreamFunc;
+            if (readAsStream != null)
+            {
+                return readAsStream(primitiveType, false, null, null);
+            }
+
+            return false;
         }
 
         #endregion private methods

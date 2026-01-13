@@ -1,3 +1,13 @@
+Microsoft.OData.ODataMessageReaderSettings.ShouldReadPropertyAsStream.get -> System.Func<Microsoft.OData.ODataPropertyReadingContext, bool>
+Microsoft.OData.ODataMessageReaderSettings.ShouldReadPropertyAsStream.set -> void
+Microsoft.OData.ODataPropertyReadingContext
+Microsoft.OData.ODataPropertyReadingContext.CustomPropertyAnnotations.get -> System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<string, object>>
+Microsoft.OData.ODataPropertyReadingContext.IsCollection.get -> bool
+Microsoft.OData.ODataPropertyReadingContext.ODataPropertyAnnotations.get -> System.Collections.Generic.IDictionary<string, object>
+Microsoft.OData.ODataPropertyReadingContext.ODataPropertyReadingContext() -> void
+Microsoft.OData.ODataPropertyReadingContext.PrimitiveType.get -> Microsoft.OData.Edm.IEdmPrimitiveType
+Microsoft.OData.ODataPropertyReadingContext.Property.get -> Microsoft.OData.Edm.IEdmProperty
+Microsoft.OData.ODataPropertyReadingContext.PropertyName.get -> string
 Microsoft.OData.UriParser.Aggregation.AggregateCollectionExpression
 Microsoft.OData.UriParser.Aggregation.AggregateCollectionExpression.AggregateCollectionExpression(Microsoft.OData.UriParser.CollectionNode expression, Microsoft.OData.UriParser.Aggregation.AggregationMethodDefinition methodDefinition, string alias, Microsoft.OData.Edm.IEdmTypeReference typeReference) -> void
 Microsoft.OData.UriParser.Aggregation.AggregateCollectionExpression.Expression.get -> Microsoft.OData.UriParser.CollectionNode
