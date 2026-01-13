@@ -26,7 +26,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
         private ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings
         {
             ShouldIncludeAnnotation = (annotationName) => true,
-            Validations = ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType
+            Validations = ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType & ~ValidationKinds.ThrowOnUnexpectedODataPropertyAnnotationOnNavigationProperty
         };
 
         private ODataMessageWriterSettings writerSettings = new ODataMessageWriterSettings
@@ -188,14 +188,17 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
         #endregion
 
         #region non-open entity's property unknown name + known value type
-
         [Fact]
-        public void ReadNonOpenNullTest()
+        public void ReadNonOpenDeclaredNestedResourceWithContentTest()
         {
-            // non-open entity's unknown property type including string & numeric values
-            const string payload = @"{""@odata.context"":""http://www.sampletest.com/$metadata#serverEntitySet/$entity"",""Id"":61880128,""UndeclaredAddress1@odata.type"":""#NS1.unknownTypeName123"",""UndeclaredAddress1@odata.unknownName1"":""uknown odata.xxx value1"",""UndeclaredAddress1@NS1.abcdefg"":""uknown abcdefghijk value2"",""UndeclaredAddress1"":null}";
+            const string payload = @"{""@odata.context"":""http://www.sampletest.com/$metadata#serverEntitySet/$entity"",
+  ""Id"":61880128,
+  ""Address@odata.unknownName1"":""unknown odata.xxx"",
+  ""Address@NS1.abcdefg"":""unknown abcdefg"",
+  ""Address"": {}
+}";
             ODataResource entry = null;
-            ODataResource complex1 = null;
+            ODataResource address = null;
             ODataNestedResourceInfo nestedInfo = null;
             this.ReadEntryPayload(payload, this.serverEntitySet, this.serverEntityType, reader =>
             {
@@ -208,40 +211,315 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
                     else
                     {
                         Assert.NotNull(nestedInfo);
-                        Assert.Equal("UndeclaredAddress1", nestedInfo.Name);
-                        complex1 = (reader.Item as ODataResource);
+                        Assert.Equal("Address", nestedInfo.Name);
+                        address = (reader.Item as ODataResource);
                     }
                 }
                 else if (reader.State == ODataReaderState.NestedResourceInfoStart)
                 {
                     nestedInfo = (ODataNestedResourceInfo)(reader.Item);
-                    // to ensure read to the end of entry
                 }
             });
 
             Assert.Single(entry.Properties);
 
             Assert.NotNull(nestedInfo);
-            Assert.Null(complex1);
+            Assert.Equal(2, nestedInfo.InstanceAnnotations.Count());
+            Assert.Equal("unknown odata.xxx", (nestedInfo.InstanceAnnotations.First().Value as ODataPrimitiveValue).Value);
+            Assert.Equal("unknown abcdefg", (nestedInfo.InstanceAnnotations.Last().Value as ODataPrimitiveValue).Value);
 
-            // So far, the ODL doesn't popout the annotation for the null nested resource. As expected, we should get the annotation from the nested resource info, but no such logic yet,
-            // See details at: https://github.com/OData/odata.net/issues/3440
-            // Assert.Equal(2, nestedInfo.InstanceAnnotations.Count());
-            // Assert.Equal("unknown odata.xxx value1", (nestedInfo.InstanceAnnotations.First().Value as ODataPrimitiveValue).Value);
-            // Assert.Equal("unknown abcdefghijk value2", (nestedInfo.InstanceAnnotations.Last().Value as ODataPrimitiveValue).Value);
+            Assert.NotNull(address);
+            Assert.Empty(address.Properties);
+            Assert.Empty(address.InstanceAnnotations);
 
             entry.MetadataBuilder = new Microsoft.OData.Evaluation.NoOpResourceMetadataBuilder(entry);
             string result = this.WriteEntryPayload(this.serverEntitySet, this.serverEntityType, writer =>
             {
                 writer.WriteStart(entry);
                 writer.WriteStart(nestedInfo);
-                writer.WriteStart(complex1);
+                writer.WriteStart(address);
                 writer.WriteEnd();
                 writer.WriteEnd();
                 writer.WriteEnd();
             });
 
-            Assert.Equal("{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverEntitySet/$entity\",\"Id\":61880128,\"UndeclaredAddress1@odata.type\":\"#NS1.unknownTypeName123\",\"UndeclaredAddress1\":null}", result);
+            Assert.Equal("{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverEntitySet/$entity\",\"Id\":61880128,\"Address\":{}}", result);
+        }
+
+        [Fact]
+        public void ReadNonOpenNestedResourceWithContentWithPropertyAnnotationAndResourceAnnotationTest()
+        {
+            const string payload = @"{""@odata.context"":""http://www.sampletest.com/$metadata#serverEntitySet/$entity"",
+  ""Id"":61880128,
+  ""UndeclaredAddress@odata.type"":""#NS1.unknownTypeName123"",
+  ""UndeclaredAddress@odata.unknownName1"":""unknown value"",
+  ""UndeclaredAddress@NS1.abcdefg"":""unknown abcdefg"",
+  ""UndeclaredAddress"": {
+    ""@NS2.Annotation"": 42,
+    ""City"": ""abc""}
+}";
+            ODataResource entry = null;
+            ODataResource undeclaredAddress = null;
+            ODataNestedResourceInfo nestedInfo = null;
+            this.ReadEntryPayload(payload, this.serverEntitySet, this.serverEntityType, reader =>
+            {
+                if (reader.State == ODataReaderState.ResourceStart)
+                {
+                    if (entry == null)
+                    {
+                        entry = (reader.Item as ODataResource);
+                    }
+                    else
+                    {
+                        Assert.NotNull(nestedInfo);
+                        Assert.Equal("UndeclaredAddress", nestedInfo.Name);
+                        undeclaredAddress = (reader.Item as ODataResource);
+                    }
+                }
+                else if (reader.State == ODataReaderState.NestedResourceInfoStart)
+                {
+                    nestedInfo = (ODataNestedResourceInfo)(reader.Item);
+                }
+            });
+
+            Assert.Single(entry.Properties);
+
+            Assert.NotNull(nestedInfo);
+            Assert.Equal("NS1.unknownTypeName123", nestedInfo.TypeAnnotation.TypeName);
+
+            Assert.Equal(2, nestedInfo.InstanceAnnotations.Count());
+            Assert.Equal("unknown value", (nestedInfo.InstanceAnnotations.First().Value as ODataPrimitiveValue).Value);
+            Assert.Equal("unknown abcdefg", (nestedInfo.InstanceAnnotations.Last().Value as ODataPrimitiveValue).Value);
+
+            Assert.NotNull(undeclaredAddress);
+            ODataInstanceAnnotation annotation = Assert.Single(undeclaredAddress.InstanceAnnotations);
+            Assert.Equal("NS2.Annotation", annotation.Name);
+            Assert.Equal(42, (annotation.Value as ODataPrimitiveValue).Value);
+
+            entry.MetadataBuilder = new Microsoft.OData.Evaluation.NoOpResourceMetadataBuilder(entry);
+            string result = this.WriteEntryPayload(this.serverEntitySet, this.serverEntityType, writer =>
+            {
+                writer.WriteStart(entry);
+                writer.WriteStart(nestedInfo);
+                writer.WriteStart(undeclaredAddress);
+                writer.WriteEnd();
+                writer.WriteEnd();
+                writer.WriteEnd();
+            });
+
+            // Make sure the annotation on ODataNestedResourceInfo is not written if the nested resource has content.
+            Assert.Equal("{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverEntitySet/$entity\",\"Id\":61880128,\"UndeclaredAddress\":{\"@NS2.Annotation\":42,\"City\":\"abc\"}}", result);
+        }
+
+        [Fact]
+        public void ReadNonOpenTypeNestedResourceWithNullValueTest()
+        {
+            const string payload = @"{""@odata.context"":""http://www.sampletest.com/$metadata#serverEntitySet/$entity"",
+  ""Id"":61880128,
+  ""UndeclaredAddress@odata.type"":""#NS1.unknownTypeName123"",
+  ""UndeclaredAddress@odata.unknownName1"":""unknown value"",
+  ""UndeclaredAddress@NS1.abcdefg"":""unknown abcdefg value"",
+  ""UndeclaredAddress"": null
+}";
+            ODataResource entry = null;
+            ODataResource undeclaredAddress = null;
+            bool undeclaredAddressRead = false;
+            ODataNestedResourceInfo nestedInfo = null;
+            this.ReadEntryPayload(payload, this.serverEntitySet, this.serverEntityType, reader =>
+            {
+                if (reader.State == ODataReaderState.ResourceStart)
+                {
+                    if (entry == null)
+                    {
+                        entry = (reader.Item as ODataResource);
+                    }
+                    else
+                    {
+                        Assert.NotNull(nestedInfo);
+                        Assert.Equal("UndeclaredAddress", nestedInfo.Name);
+                        Assert.False(undeclaredAddressRead);
+                        undeclaredAddressRead = true;
+                        undeclaredAddress = (reader.Item as ODataResource);
+                    }
+                }
+                else if (reader.State == ODataReaderState.NestedResourceInfoStart)
+                {
+                    nestedInfo = (ODataNestedResourceInfo)(reader.Item);
+                }
+            });
+
+            Assert.Single(entry.Properties);
+
+            Assert.Null(undeclaredAddress);
+            Assert.True(undeclaredAddressRead); // make sure we hit the "nested resource reading cycle"
+
+            Assert.NotNull(nestedInfo);
+
+            // @odata.type read into 'TypeAnnotation'.
+            Assert.Equal("NS1.unknownTypeName123", nestedInfo.TypeAnnotation.TypeName);
+
+            Assert.Equal(2, nestedInfo.InstanceAnnotations.Count());
+            Assert.Equal("unknown value", (nestedInfo.InstanceAnnotations.First().Value as ODataPrimitiveValue).Value);
+            Assert.Equal("unknown abcdefg value", (nestedInfo.InstanceAnnotations.Last().Value as ODataPrimitiveValue).Value);
+
+            entry.MetadataBuilder = new Microsoft.OData.Evaluation.NoOpResourceMetadataBuilder(entry);
+            string result = this.WriteEntryPayload(this.serverEntitySet, this.serverEntityType, writer =>
+            {
+                writer.WriteStart(entry);
+                writer.WriteStart(nestedInfo);
+                writer.WriteStart(undeclaredAddress);
+                writer.WriteEnd();
+                writer.WriteEnd();
+                writer.WriteEnd();
+            });
+
+            Assert.Equal("{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverEntitySet/$entity\",\"Id\":61880128,\"UndeclaredAddress@odata.type\":\"#NS1.unknownTypeName123\",\"UndeclaredAddress@odata.unknownName1\":\"unknown value\",\"UndeclaredAddress@NS1.abcdefg\":\"unknown abcdefg value\",\"UndeclaredAddress\":null}", result);
+        }
+
+        [Fact]
+        public void ReadNonOpenDeclaredAndUndeclaredMixedNestedResourceWithOrWithoutContentTest()
+        {
+            const string payload = @"{""@odata.context"":""http://www.sampletest.com/$metadata#serverEntitySet/$entity"",
+  ""Address@odata.unknownName1"":""address unknown name"",
+  ""Address@NS1.abcdefg"":""address abcdefg"",
+  ""MyEdmUntypedProp1@NS2.Untyped"": { ""UntypedProp1"":123 },
+  ""MyEdmUntypedProp1"": null,
+  ""UndeclaredAddress@odata.unknownName1"":""unknown value"",
+  ""UndeclaredAddress@NS1.abcdefg"":""unknown abcdefg"",
+  ""UndeclaredAddress"": []
+}";
+            ODataResource entry = null;
+            ODataNestedResourceInfo nestedInfo = null;
+            ODataResourceSet undeclaredAddress = null;
+            ODataPropertyInfo nestedPropertyInfo = null;
+            int hit = 0;
+            this.ReadEntryPayload(payload, this.serverEntitySet, this.serverEntityType, reader =>
+            {
+                if (reader.State == ODataReaderState.ResourceStart)
+                {
+                    entry = (reader.Item as ODataResource);
+                }
+                else if (reader.State == ODataReaderState.ResourceSetStart)
+                {
+                    undeclaredAddress = (ODataResourceSet)(reader.Item);
+                }
+                else if (reader.State == ODataReaderState.NestedResourceInfoStart)
+                {
+                    hit++;
+                    nestedInfo = (ODataNestedResourceInfo)(reader.Item);
+                }
+                else if (reader.State == ODataReaderState.NestedProperty)
+                {
+                    nestedPropertyInfo = (ODataPropertyInfo)(reader.Item);
+                }
+            });
+
+            ODataProperty property = Assert.IsType<ODataProperty>(Assert.Single(entry.Properties));
+            Assert.Equal("MyEdmUntypedProp1", property.Name);
+            Assert.Null(property.Value);
+            ODataInstanceAnnotation myEdmUntypedProp1Annotation = Assert.Single(property.InstanceAnnotations);
+            Assert.Equal("NS2.Untyped", myEdmUntypedProp1Annotation.Name);
+            ODataResourceValue resourceValue = Assert.IsType<ODataResourceValue>(myEdmUntypedProp1Annotation.Value);
+
+            Assert.Equal(1, hit); // only hit once for nested resource info
+            Assert.NotNull(nestedInfo);
+            Assert.Equal("UndeclaredAddress", nestedInfo.Name);
+            Assert.Equal(2, nestedInfo.InstanceAnnotations.Count());
+            Assert.Equal("unknown value", (nestedInfo.InstanceAnnotations.First().Value as ODataPrimitiveValue).Value);
+            Assert.Equal("unknown abcdefg", (nestedInfo.InstanceAnnotations.Last().Value as ODataPrimitiveValue).Value);
+
+            Assert.NotNull(nestedPropertyInfo);
+            Assert.Equal("Address", nestedPropertyInfo.Name);
+            Assert.Equal(2, nestedPropertyInfo.InstanceAnnotations.Count());
+            Assert.Equal("address unknown name", (nestedPropertyInfo.InstanceAnnotations.First().Value as ODataPrimitiveValue).Value);
+            Assert.Equal("address abcdefg", (nestedPropertyInfo.InstanceAnnotations.Last().Value as ODataPrimitiveValue).Value);
+
+            Assert.NotNull(undeclaredAddress);
+
+            // We have to specify a type name for ODataResourceValue to write it.
+            // it seems a feature gap that it should not be required..
+            resourceValue.TypeName = "Server.NS.Address";
+
+            entry.MetadataBuilder = new Microsoft.OData.Evaluation.NoOpResourceMetadataBuilder(entry);
+            string result = this.WriteEntryPayload(this.serverEntitySet, this.serverEntityType, writer =>
+            {
+                writer.WriteStart(entry);
+                writer.WriteStart(nestedInfo);
+                writer.WriteStart(undeclaredAddress);
+                writer.WriteEnd();
+                writer.WriteEnd();
+                writer.WriteEnd();
+            });
+
+            // It seems a feature gap to write the instance annotations for 'Edm.Untyped' declared property.
+            Assert.Equal("{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverEntitySet/$entity\",\"MyEdmUntypedProp1@NS2.Untyped\":{\"@odata.type\":\"#Server.NS.Address\",\"UntypedProp1\":123},\"MyEdmUntypedProp1\":null,\"UndeclaredAddress\":[]}", result);
+        }
+
+        [Fact]
+        public void ReadOpenNestedResourceWithoutContentTest()
+        {
+            // Be noted: If the type is non-open, so far, reading the dynamic properties without value/content will throw exception.
+            const string payload = @"{""@odata.context"":""http://www.sampletest.com/$metadata#serverOpenEntitySet/$entity"",
+  ""Id"":61880128,
+  ""UndeclaredAddress@odata.type"":""#NS1.unknownTypeName123"",
+  ""UndeclaredAddress@odata.unknownName1"":""unknown odata.xxx"",
+  ""UndeclaredAddress@NS1.abcdefg"":""unknown abcdefghijk""
+}";
+            ODataResource entry = null;
+            ODataResource undeclaredAddress = null;
+            ODataNestedResourceInfo nestedInfo = null;
+            ODataPropertyInfo propertyInfo = null;
+            bool undeclaredAddressRead = false;
+            this.ReadEntryPayload(payload, this.serverOpenEntitySet, this.serverOpenEntityType, reader =>
+            {
+                if (reader.State == ODataReaderState.ResourceStart)
+                {
+                    if (entry == null)
+                    {
+                        entry = (reader.Item as ODataResource);
+                    }
+                    else
+                    {
+                        Assert.NotNull(nestedInfo);
+                        Assert.Equal("UndeclaredAddress", nestedInfo.Name);
+                        undeclaredAddressRead = true;
+                        undeclaredAddress = (reader.Item as ODataResource);
+                    }
+                }
+                else if (reader.State == ODataReaderState.NestedResourceInfoStart)
+                {
+                    nestedInfo = (ODataNestedResourceInfo)(reader.Item);
+                }
+                else if (reader.State == ODataReaderState.NestedProperty)
+                {
+                    propertyInfo = (ODataPropertyInfo)(reader.Item);
+                }
+            });
+
+            Assert.Single(entry.Properties);
+
+            Assert.False(undeclaredAddressRead); // make sure we did not hit the "nested resource reading cycle"
+            Assert.Null(undeclaredAddress);
+
+            Assert.Null(nestedInfo);
+
+            Assert.NotNull(propertyInfo);
+            Assert.Equal("NS1.unknownTypeName123", propertyInfo.TypeAnnotation.TypeName);
+
+            Assert.Equal(2, propertyInfo.InstanceAnnotations.Count());
+            Assert.Equal("unknown odata.xxx", (propertyInfo.InstanceAnnotations.First().Value as ODataPrimitiveValue).Value);
+            Assert.Equal("unknown abcdefghijk", (propertyInfo.InstanceAnnotations.Last().Value as ODataPrimitiveValue).Value);
+
+            entry.MetadataBuilder = new Microsoft.OData.Evaluation.NoOpResourceMetadataBuilder(entry);
+            string result = this.WriteEntryPayload(this.serverOpenEntitySet, this.serverOpenEntityType, writer =>
+            {
+                writer.WriteStart(entry);
+                writer.WriteStart(propertyInfo);
+                writer.WriteEnd();
+                writer.WriteEnd();
+            });
+
+            Assert.Equal("{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverOpenEntitySet/$entity\",\"Id\":61880128,\"UndeclaredAddress@odata.type\":\"#NS1.unknownTypeName123\",\"UndeclaredAddress@odata.unknownName1\":\"unknown odata.xxx\",\"UndeclaredAddress@NS1.abcdefg\":\"unknown abcdefghijk\"}", result);
         }
 
         [Fact]
@@ -537,9 +815,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
                 writer.WriteEnd();
             });
 
-            // It should contain the following annotations but we don't have such logic yet. Keep the codes for later change once we fix the issue at https://github.com/OData/odata.net/issues/3440
-            // Assert.Equal("{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverEntitySet/$entity\",\"Id\":61880128,\"UndeclaredAddress1@odata.type\":\"#Server.NS.UndefComplex1\",\"UndeclaredAddress1@odata.unknownName1\":\"unknown odata.xxx value1\",\"UndeclaredAddress1@NS1.abcdefg\":\"unknown abcdefghijk value2\",\"UndeclaredAddress1\":null}", result);
-            Assert.Equal("{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverEntitySet/$entity\",\"Id\":61880128,\"UndeclaredAddress1@odata.type\":\"#Server.NS.UndefComplex1\",\"UndeclaredAddress1\":null}", result);
+            Assert.Equal("{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverEntitySet/$entity\",\"Id\":61880128,\"UndeclaredAddress1@odata.type\":\"#Server.NS.UndefComplex1\",\"UndeclaredAddress1@odata.unknownName1\":\"unknown odata.xxx value1\",\"UndeclaredAddress1@NS1.abcdefg\":\"unknown abcdefghijk value2\",\"UndeclaredAddress1\":null}", result);
         }
 
         [Fact]
@@ -1334,11 +1610,12 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
             EdmEntitySet entitySet, 
             EdmEntityType entityType, 
             Action<ODataReader> action, 
-            ODataMessageReaderSettings settings = null)
+            ODataMessageReaderSettings settings = null,
+            IEdmModel model = null)
         {
             var message = new InMemoryMessage() { Stream = new MemoryStream(Encoding.UTF8.GetBytes(payload)) };
             message.SetHeader("Content-Type", "application/json");
-            using (var msgReader = new ODataMessageReader((IODataResponseMessage)message, settings ?? readerSettings, this.serverModel))
+            using (var msgReader = new ODataMessageReader((IODataResponseMessage)message, settings ?? readerSettings, model ?? this.serverModel))
             {
                 var reader = msgReader.CreateODataResourceReader(entitySet, entityType);
                 while (reader.Read())

@@ -3452,15 +3452,6 @@ namespace Microsoft.OData.Core {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to A complex property with an &apos;{0}&apos; property annotation was found. Complex properties must not have the &apos;{0}&apos; property annotation, instead the &apos;{0}&apos; should be specified as an instance annotation in the complex value..
-        /// </summary>
-        internal static string ODataJsonPropertyAndValueDeserializer_ComplexValueWithPropertyTypeAnnotation {
-            get {
-                return ResourceManager.GetString("ODataJsonPropertyAndValueDeserializer_ComplexValueWithPropertyTypeAnnotation", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to A top-level property with name &apos;{0}&apos; was found in the payload; however, property and collection payloads must always have a top-level property with name &apos;{1}&apos;..
         /// </summary>
         internal static string ODataJsonPropertyAndValueDeserializer_InvalidTopLevelPropertyName {
@@ -3484,6 +3475,16 @@ namespace Microsoft.OData.Core {
         internal static string ODataJsonPropertyAndValueDeserializer_InvalidTypeName {
             get {
                 return ResourceManager.GetString("ODataJsonPropertyAndValueDeserializer_InvalidTypeName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A non-null nested resource property with an &apos;{0}&apos; property annotation was found. Non-null nested properties must not have the &apos;{0}&apos; property annotation, instead the &apos;{0}&apos; should be specified as an instance annotation in the nested resource value..
+        /// </summary>
+        internal static string ODataJsonPropertyAndValueDeserializer_NestedResourceValueWithPropertyTypeAnnotation {
+            get {
+                return ResourceManager.GetString("ODataJsonPropertyAndValueDeserializer_NestedResourceValueWithPropertyTypeAnnotati" +
+                        "on", resourceCulture);
             }
         }
         

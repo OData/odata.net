@@ -364,22 +364,22 @@ namespace Microsoft.OData.Json
         /// <param name="resource">The resource to write.</param>
         protected override void StartResource(ODataResource resource)
         {
-            ODataNestedResourceInfo parentNavLink = this.ParentNestedResourceInfo;
-            if (parentNavLink != null)
+            ODataNestedResourceInfo nestedResourceInfo = this.ParentNestedResourceInfo;
+            if (nestedResourceInfo != null)
             {
                 // For a null value, write the type as a property annotation
                 if (resource == null)
                 {
-                    if (parentNavLink.TypeAnnotation != null && parentNavLink.TypeAnnotation.TypeName != null)
+                    if (nestedResourceInfo.TypeAnnotation != null && nestedResourceInfo.TypeAnnotation.TypeName != null)
                     {
-                        this.odataAnnotationWriter.WriteODataTypePropertyAnnotation(parentNavLink.Name, parentNavLink.TypeAnnotation.TypeName);
+                        this.odataAnnotationWriter.WriteODataTypePropertyAnnotation(nestedResourceInfo.Name, nestedResourceInfo.TypeAnnotation.TypeName);
                     }
 
-                    this.instanceAnnotationWriter.WriteInstanceAnnotations(parentNavLink.GetInstanceAnnotations(), parentNavLink.Name);
+                    this.instanceAnnotationWriter.WriteInstanceAnnotations(nestedResourceInfo.GetInstanceAnnotations(), nestedResourceInfo.Name);
                 }
 
                 // Write the property name of an expanded navigation property to start the value.
-                this.jsonWriter.WriteName(parentNavLink.Name);
+                this.jsonWriter.WriteName(nestedResourceInfo.Name);
             }
 
             if (resource == null)

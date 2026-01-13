@@ -621,19 +621,16 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.Json
                 "\"OtherAddresses\":null" +
             "}";
 
-            // Not supported.
-            Exception ex = Assert.Throws<ODataException>(() =>
-                ReadAndValidate(payload, personT, true, (resources, nestedResourceInfos, resourceSets) =>
-                {
-                    Assert.Equal(4, resources.Count);
-                    Assert.Equal(3, nestedResourceInfos.Count);
+            ReadAndValidate(payload, personT, true, (resources, nestedResourceInfos, resourceSets) =>
+            {
+                Assert.Equal(4, resources.Count);
+                Assert.Equal(3, nestedResourceInfos.Count);
 
-                    Assert.Equal("OtherAddresses", nestedResourceInfos.ElementAt(2).Name);
-                    Assert.False(nestedResourceInfos.ElementAt(2).IsCollection);
+                Assert.Equal("OtherAddresses", nestedResourceInfos.ElementAt(2).Name);
+                Assert.False(nestedResourceInfos.ElementAt(2).IsCollection);
 
-                    Assert.Null(resources.ElementAt(2));
-                }));
-            Assert.Contains("A complex property with an 'odata.type' property annotation was found", ex.Message);
+                Assert.Null(resources.ElementAt(2));
+            });
         }
 
         [Fact]

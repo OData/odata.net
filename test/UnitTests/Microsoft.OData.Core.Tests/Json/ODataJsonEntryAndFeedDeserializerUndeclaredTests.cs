@@ -2981,7 +2981,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
 
             Assert.Single(entry.Properties);
             Assert.Equal("UndeclaredProperty", nestedInfo.Name);
-            Assert.Null(nestedInfo.TypeAnnotation);
+            Assert.Equal("Collection(Server.NS.Undeclared)", nestedInfo.TypeAnnotation.TypeName);
             Assert.Null(undeclaredProperty.TypeName);
             Assert.Single(undeclaredProperty.Properties);
             Assert.Equal("123", Assert.IsType<ODataProperty>(undeclaredProperty.Properties.Single(p => p.Name == "Id")).Value);

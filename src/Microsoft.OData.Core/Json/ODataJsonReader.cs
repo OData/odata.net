@@ -1826,16 +1826,30 @@ namespace Microsoft.OData.Json
 
                 // Expanded null resource
                 // The expected type and expected navigation source for an expanded resource are the same as for the nested resource info around it.
-                this.EnterScope(new JsonResourceScope(ODataReaderState.ResourceStart, /*resource*/ null,
-                    this.CurrentNavigationSource, this.CurrentResourceTypeReference, /*propertyAndAnnotationCollector*/null,
-                    /*projectedProperties*/null, this.CurrentScope.ODataUri));
+                this.EnterScope(new JsonResourceScope(ODataReaderState.ResourceStart, resource: null,
+                    navigationSource: this.CurrentNavigationSource, expectedResourceTypeReference: this.CurrentResourceTypeReference, propertyAndAnnotationCollector: null,
+                    selectedProperties: null, odataUri: this.CurrentScope.ODataUri));
             }
             else
             {
-                // Expanded resource
+                // Expanded resource, a JSON object
                 // The expected type for an expanded resource is the same as for the nested resource info around it.
                 JsonResourceBaseScope parentScope = (JsonResourceBaseScope)this.ParentScope;
                 SelectedPropertiesNode parentSelectedProperties = parentScope.SelectedProperties;
+
+                // OData spec says: When annotating a name/value pair for which the value is represented as a JSON object, each annotation is placed within the object and represented as a single name/value pair.
+                // So, do we need to verify that the property annotation should be specified as an instance annotation in the nested resource value?
+                // Or, just let it go and let the upper reader to handle it?
+                // Sam descided to comment out the verification for now. 12/2025, reasons:
+                // 1) This would be a breaking change for existing clients.
+                // 2) The upper reader will handle invalid annotations anyway.
+
+                //if (parentScope.PropertyAndAnnotationCollector.GetCustomPropertyAnnotations(nestedResourceInfo.Name).Any() ||
+                //    parentScope.PropertyAndAnnotationCollector.GetODataPropertyAnnotations(nestedResourceInfo.Name).Count > 0)
+                //{
+                //    throw new ODataException(Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_NestedResourceValueWithPropertyTypeAnnotation, nestedResourceInfo.Name));
+                //}
+
                 Debug.Assert(parentSelectedProperties != null, "parentProjectedProperties != null");
                 this.ReadResourceSetItemStart(/*propertyAndAnnotationCollector*/ null, parentSelectedProperties.GetSelectedPropertiesForNavigationProperty(parentScope.ResourceType, nestedResourceInfo.Name));
             }

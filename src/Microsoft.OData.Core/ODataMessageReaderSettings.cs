@@ -94,6 +94,7 @@ namespace Microsoft.OData
                 ThrowOnDuplicatePropertyNames = (validations & ValidationKinds.ThrowOnDuplicatePropertyNames) != 0;
                 ThrowIfTypeConflictsWithMetadata = (validations & ValidationKinds.ThrowIfTypeConflictsWithMetadata) != 0;
                 ThrowOnUndeclaredPropertyForNonOpenType = (validations & ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType) != 0;
+                ThrowOnUnexpectedODataPropertyAnnotationOnNavigationProperty = (validations & ValidationKinds.ThrowOnUnexpectedODataPropertyAnnotationOnNavigationProperty) != 0;
             }
         }
 
@@ -225,6 +226,11 @@ namespace Microsoft.OData
         internal bool ThrowOnUndeclaredPropertyForNonOpenType { get; private set; }
 
         /// <summary>
+        /// Returns whether ThwoOnUnexpectedODataPropertyAnnotationsOnNavigationProperty validation setting is enabled.
+        /// </summary>
+        internal bool ThrowOnUnexpectedODataPropertyAnnotationOnNavigationProperty { get; private set; }
+
+        /// <summary>
         /// Gets or sets a value that indicates whether the reader should put key values in their own URI segment when automatically building URIs.
         /// If this value is false, automatically-generated URLs will take the form "../EntitySet('KeyValue')/..".
         /// If this value is true, automatically-generated URLs will take the form "../EntitySet/KeyValue/..".
@@ -299,6 +305,7 @@ namespace Microsoft.OData
             this.ThrowOnDuplicatePropertyNames = other.ThrowOnDuplicatePropertyNames;
             this.ThrowIfTypeConflictsWithMetadata = other.ThrowIfTypeConflictsWithMetadata;
             this.ThrowOnUndeclaredPropertyForNonOpenType = other.ThrowOnUndeclaredPropertyForNonOpenType;
+            this.ThrowOnUnexpectedODataPropertyAnnotationOnNavigationProperty = other.ThrowOnUnexpectedODataPropertyAnnotationOnNavigationProperty;
             this.LibraryCompatibility = other.LibraryCompatibility;
             this.Version = other.Version;
             this.ReadAsStreamFunc = other.ReadAsStreamFunc;
