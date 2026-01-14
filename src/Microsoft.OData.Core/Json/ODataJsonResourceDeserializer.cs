@@ -4336,10 +4336,10 @@ namespace Microsoft.OData.Json
         /// <returns>True if the property should be read as a stream; otherwise, false.</returns>
         private bool ShouldReadAsStream(IODataJsonReaderResourceState resourceState, IEdmPrimitiveType primitiveType, bool isCollection, string propertyName, IEdmProperty property)
         {
-            Func<ODataPropertyReadingContext, bool> shouldReadAsStream = this.MessageReaderSettings.ShouldReadPropertyAsStream;
+            Func<ODataPropertyStreamReadingContext, bool> shouldReadAsStream = this.MessageReaderSettings.ShouldReadPropertyAsStream;
             if (shouldReadAsStream != null)
             {
-                ODataPropertyReadingContext propertyReadingContext = new ODataPropertyReadingContext
+                ODataPropertyStreamReadingContext propertyReadingContext = new ODataPropertyStreamReadingContext
                 {
                     PrimitiveType = primitiveType,
                     IsCollection = isCollection,

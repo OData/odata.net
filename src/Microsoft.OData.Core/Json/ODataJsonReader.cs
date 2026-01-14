@@ -2660,10 +2660,10 @@ namespace Microsoft.OData.Json
         /// <returns>True if the primitive should be read as a stream; otherwise, false.</returns>
         private bool ShouldReadPrimitiveAsStream(IEdmPrimitiveType primitiveType)
         {
-            Func<ODataPropertyReadingContext, bool> shouldReadAsStream = this.jsonInputContext.MessageReaderSettings.ShouldReadPropertyAsStream;
+            Func<ODataPropertyStreamReadingContext, bool> shouldReadAsStream = this.jsonInputContext.MessageReaderSettings.ShouldReadPropertyAsStream;
             if (shouldReadAsStream != null)
             {
-                ODataPropertyReadingContext propertyReadingContext = new ODataPropertyReadingContext
+                ODataPropertyStreamReadingContext propertyReadingContext = new ODataPropertyStreamReadingContext
                 {
                     PrimitiveType = primitiveType,
                     IsCollection = false,

@@ -218,7 +218,7 @@ namespace Microsoft.OData
         /// scenarios where the decision to read as stream depends on annotations. Note that IEdmProperty may be null when reading within a collection.
         /// </summary>
         /// <remarks>
-        /// <see cref="ODataPropertyReadingContext"/> provides:
+        /// <see cref="ODataPropertyStreamReadingContext"/> provides:
         /// * Primitive type of the value being read, or null if unknown
         /// * Whether the value being read is a collection
         /// * The name of the property being read (null for values within a collection)
@@ -226,7 +226,7 @@ namespace Microsoft.OData
         /// * Custom property annotations (non-OData annotations) that have been read so far.
         /// * OData property annotations that have been read so far.
         /// </remarks>
-        public Func<ODataPropertyReadingContext, bool> ShouldReadPropertyAsStream { get; set; }
+        public Func<ODataPropertyStreamReadingContext, bool> ShouldReadPropertyAsStream { get; set; }
 
         /// <summary>
         /// Func to evaluate whether an annotation should be read or skipped by the reader. The func should return true if the annotation should
