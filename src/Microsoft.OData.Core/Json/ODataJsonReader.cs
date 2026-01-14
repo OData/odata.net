@@ -2669,8 +2669,7 @@ namespace Microsoft.OData.Json
                     IsCollection = false,
                     PropertyName = null, // No property name for primitives within collection
                     Property = null, // No EDM property for primitives within collection
-                    CustomPropertyAnnotations = Enumerable.Empty<KeyValuePair<string, object>>(),
-                    ODataPropertyAnnotations = new Dictionary<string, object>()
+                    CustomPropertyAnnotations = Enumerable.Empty<KeyValuePair<string, object>>() // No custom annotations for primitives within collection
                 };
 
                 return shouldReadAsStream(propertyReadingContext);

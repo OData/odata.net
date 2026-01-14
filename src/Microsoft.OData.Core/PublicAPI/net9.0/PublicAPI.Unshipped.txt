@@ -3,7 +3,6 @@ Microsoft.OData.ODataMessageReaderSettings.ShouldReadPropertyAsStream.set -> voi
 Microsoft.OData.ODataPropertyStreamReadingContext
 Microsoft.OData.ODataPropertyStreamReadingContext.CustomPropertyAnnotations.get -> System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<string, object>>
 Microsoft.OData.ODataPropertyStreamReadingContext.IsCollection.get -> bool
-Microsoft.OData.ODataPropertyStreamReadingContext.ODataPropertyAnnotations.get -> System.Collections.Generic.IDictionary<string, object>
 Microsoft.OData.ODataPropertyStreamReadingContext.ODataPropertyStreamReadingContext() -> void
 Microsoft.OData.ODataPropertyStreamReadingContext.PrimitiveType.get -> Microsoft.OData.Edm.IEdmPrimitiveType
 Microsoft.OData.ODataPropertyStreamReadingContext.Property.get -> Microsoft.OData.Edm.IEdmProperty

@@ -4339,16 +4339,16 @@ namespace Microsoft.OData.Json
             Func<ODataPropertyStreamReadingContext, bool> shouldReadAsStream = this.MessageReaderSettings.ShouldReadPropertyAsStream;
             if (shouldReadAsStream != null)
             {
+                IEnumerable<KeyValuePair<string, object>> customPropertyAnnotations = resourceState?.PropertyAndAnnotationCollector?.GetCustomPropertyAnnotations(propertyName) 
+                    ?? Enumerable.Empty<KeyValuePair<string, object>>();
+
                 ODataPropertyStreamReadingContext propertyReadingContext = new ODataPropertyStreamReadingContext
                 {
                     PrimitiveType = primitiveType,
                     IsCollection = isCollection,
                     PropertyName = propertyName,
                     Property = property,
-                    CustomPropertyAnnotations = resourceState?.PropertyAndAnnotationCollector?.GetCustomPropertyAnnotations(propertyName) 
-                        ?? Enumerable.Empty<KeyValuePair<string, object>>(),
-                    ODataPropertyAnnotations = resourceState?.PropertyAndAnnotationCollector?.GetODataPropertyAnnotations(propertyName) 
-                        ?? new Dictionary<string, object>()
+                    CustomPropertyAnnotations = customPropertyAnnotations
                 };
 
                 return shouldReadAsStream(propertyReadingContext);

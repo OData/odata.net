@@ -39,10 +39,5 @@ namespace Microsoft.OData
         /// </summary>
         public IEnumerable<KeyValuePair<string, object>> CustomPropertyAnnotations { get; internal set; }
 
-        /// <summary>
-        /// OData annotations associated with this property. These are annotations that start with "odata."
-        /// </summary>
-        public IDictionary<string, object> ODataPropertyAnnotations { get; internal set; }
-
     }
 }
