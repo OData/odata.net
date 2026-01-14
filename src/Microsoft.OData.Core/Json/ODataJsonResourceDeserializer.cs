@@ -1342,9 +1342,9 @@ namespace Microsoft.OData.Json
             if (
                 (primitiveType != null &&
                     (primitiveType.IsStream() ||
-                        (ShouldReadAsStream(resourceState, primitiveType, isCollection, propertyName, property)
-                             && (property == null || !property.IsKey())  // don't stream key properties
-                             && (primitiveType.IsBinary() || primitiveType.IsString() || isCollection)))) ||
+                        ((property == null || !property.IsKey())  // don't stream key properties
+                             && (primitiveType.IsBinary() || primitiveType.IsString() || isCollection))
+                             && ShouldReadAsStream(resourceState, primitiveType, isCollection, propertyName, property))) ||
                 (propertyType != null &&
                     isCollection &&
                     propertyType.Definition.AsElementType().IsUntyped()) ||
