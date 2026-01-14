@@ -505,7 +505,7 @@ namespace Microsoft.OData.Tests.Json
                             break;
 
                         case ODataReaderState.Primitive:
-                            Assert.False(true, "Should not read as Primitive if collection not streamed");
+                            Assert.Fail("Should not read as Primitive if collection not streamed");
                             break;
 
                         case ODataReaderState.NestedProperty:
