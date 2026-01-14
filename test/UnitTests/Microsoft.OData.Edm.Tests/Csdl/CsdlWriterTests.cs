@@ -209,6 +209,87 @@ namespace Microsoft.OData.Edm.Tests.Csdl
         }
 
         [Fact]
+        public void VerifySetOptimisticConcurrencyAnnotation_ForSingleton_OutOfLine()
+        {
+            // Arrange
+            var model = new EdmModel();
+            var entity = new EdmEntityType("NS", "User");
+            var entityId = entity.AddStructuralProperty("Id", EdmCoreModel.Instance.GetInt32(false));
+            entity.AddKeys(entityId);
+            EdmStructuralProperty email = entity.AddStructuralProperty("Email", EdmCoreModel.Instance.GetString(false));
+            EdmStructuralProperty version = entity.AddStructuralProperty("Version", EdmCoreModel.Instance.GetInt32(false)); // (Integer field for tracking changes)
+            model.AddElement(entity);
+
+            var entityContainer = new EdmEntityContainer("NS", "Container");
+            model.AddElement(entityContainer);
+            EdmSingleton me = new EdmSingleton(entityContainer, "me", entity);
+            model.SetOptimisticConcurrencyAnnotation(me, new IEdmStructuralProperty[] { entityId, version }, EdmVocabularyAnnotationSerializationLocation.OutOfLine);
+            entityContainer.AddElement(me);
+
+            // Act & Assert for XML
+            WriteAndVerifyXml(model, "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+                "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+                  "<edmx:DataServices>" +
+                    "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                      "<EntityType Name=\"User\">" +
+                        "<Key>" +
+                          "<PropertyRef Name=\"Id\" />" +
+                        "</Key>" +
+                        "<Property Name=\"Id\" Type=\"Edm.Int32\" Nullable=\"false\" />" +
+                        "<Property Name=\"Email\" Type=\"Edm.String\" Nullable=\"false\" />" +
+                        "<Property Name=\"Version\" Type=\"Edm.Int32\" Nullable=\"false\" />" +
+                      "</EntityType>" +
+                      "<EntityContainer Name=\"Container\">" +
+                        "<Singleton Name=\"me\" Type=\"NS.User\" />" +
+                      "</EntityContainer>" +
+                      "<Annotations Target=\"NS.Container/me\">" +
+                        "<Annotation Term=\"Org.OData.Core.V1.OptimisticConcurrency\">" +
+                          "<Collection>" +
+                            "<PropertyPath>Id</PropertyPath>" +
+                            "<PropertyPath>Version</PropertyPath>" +
+                          "</Collection>" +
+                        "</Annotation>" +
+                      "</Annotations>" +
+                    "</Schema>" +
+                  "</edmx:DataServices></edmx:Edmx>");
+
+            // Act & Assert for JSON
+            WriteAndVerifyJson(model, @"{
+  ""$Version"": ""4.0"",
+  ""$EntityContainer"": ""NS.Container"",
+  ""NS"": {
+    ""User"": {
+      ""$Kind"": ""EntityType"",
+      ""$Key"": [
+        ""Id""
+      ],
+      ""Id"": {
+        ""$Type"": ""Edm.Int32""
+      },
+      ""Email"": {},
+      ""Version"": {
+        ""$Type"": ""Edm.Int32""
+      }
+    },
+    ""Container"": {
+      ""$Kind"": ""EntityContainer"",
+      ""me"": {
+        ""$Type"": ""NS.User""
+      }
+    },
+    ""$Annotations"": {
+      ""NS.Container/me"": {
+        ""@Org.OData.Core.V1.OptimisticConcurrency"": [
+          ""Id"",
+          ""Version""
+        ]
+      }
+    }
+  }
+}");
+        }
+
+        [Fact]
         public void WriteNavigationPropertyInComplexType()
         {
             // Arrange

@@ -1339,7 +1339,19 @@ namespace Microsoft.OData.Edm
         /// <param name="model">The model to add annotation</param>
         /// <param name="target">The target entitySet to set the inline annotation</param>
         /// <param name="properties">The PropertyPath for annotation</param>
-        public static void SetOptimisticConcurrencyAnnotation(this EdmModel model, IEdmEntitySet target, IEnumerable<IEdmStructuralProperty> properties)
+        public static void SetOptimisticConcurrencyAnnotation(this EdmModel model, IEdmEntitySet target, IEnumerable<IEdmStructuralProperty> properties, EdmVocabularyAnnotationSerializationLocation location = EdmVocabularyAnnotationSerializationLocation.Inline)
+            => model.SetOptimisticConcurrencyAnnotatioInternal(target, properties, location);
+
+        /// <summary>
+        /// Set annotation Org.OData.Core.V1.OptimisticConcurrency to Singleton
+        /// </summary>
+        /// <param name="model">The model to add annotation</param>
+        /// <param name="target">The target singleton to set the inline annotation</param>
+        /// <param name="properties">The PropertyPath for annotation</param>
+        public static void SetOptimisticConcurrencyAnnotation(this EdmModel model, IEdmSingleton target, IEnumerable<IEdmStructuralProperty> properties, EdmVocabularyAnnotationSerializationLocation location = EdmVocabularyAnnotationSerializationLocation.Inline)
+            => model.SetOptimisticConcurrencyAnnotatioInternal(target, properties, location);
+
+        private static void SetOptimisticConcurrencyAnnotatioInternal(this EdmModel model, IEdmVocabularyAnnotatable target, IEnumerable<IEdmStructuralProperty> properties, EdmVocabularyAnnotationSerializationLocation location)
         {
             EdmUtil.CheckArgumentNull(model, "model");
             EdmUtil.CheckArgumentNull(target, "target");
@@ -1350,7 +1362,7 @@ namespace Microsoft.OData.Edm
 
             Debug.Assert(term != null, "term!=null");
             EdmVocabularyAnnotation annotation = new EdmVocabularyAnnotation(target, term, collectionExpression);
-            annotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
+            annotation.SetSerializationLocation(model, location);
             model.SetVocabularyAnnotation(annotation);
         }
 
