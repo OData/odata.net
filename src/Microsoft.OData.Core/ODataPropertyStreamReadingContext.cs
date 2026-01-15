@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="ODataPropertyReadingContext.cs" company="Microsoft">
+// <copyright file="ODataPropertyStreamReadingContext.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -38,6 +38,5 @@ namespace Microsoft.OData
         /// The custom annotations (non-OData annotations) associated with this property. These are annotations that do not start with "odata."
         /// </summary>
         public IEnumerable<KeyValuePair<string, object>> CustomPropertyAnnotations { get; internal set; }
-
     }
 }
