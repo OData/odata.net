@@ -2916,7 +2916,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var inNode = Assert.IsType<InNode>(inFilter.Expression);
             Assert.Equal("SSN", Assert.IsType<SingleValuePropertyAccessNode>(inNode.Left).Property.Name);
             CollectionConstantNode collectionNode = Assert.IsType<CollectionConstantNode>(inNode.Right);
-            Assert.Equal(1, collectionNode.Collection.Count);
+            Assert.Single(collectionNode.Collection);
 
             var eqNode = Assert.IsType<BinaryOperatorNode>(eqFilter.Expression);
             Assert.Equal("SSN", Assert.IsType<SingleValuePropertyAccessNode>(eqNode.Left).Property.Name);
@@ -2939,7 +2939,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var inNode = Assert.IsType<InNode>(inFilter.Expression);
             Assert.Equal("SSN", Assert.IsType<SingleValuePropertyAccessNode>(inNode.Left).Property.Name);
             CollectionConstantNode collectionNode = Assert.IsType<CollectionConstantNode>(inNode.Right);
-            Assert.Equal(1, collectionNode.Collection.Count);
+            Assert.Single(collectionNode.Collection);
 
             Assert.Equal(constantString, collectionNode.Collection.ElementAt(0).Value);
 
@@ -3059,7 +3059,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var inNode = Assert.IsType<InNode>(filter.Expression);
 
             CollectionConstantNode collectionNode = Assert.IsType<CollectionConstantNode>(inNode.Right);
-            Assert.Equal(0, collectionNode.Collection.Count);
+            Assert.Empty(collectionNode.Collection);
         }
 
         [Theory]

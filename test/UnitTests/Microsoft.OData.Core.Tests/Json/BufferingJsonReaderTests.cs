@@ -46,7 +46,7 @@ namespace Microsoft.OData.Tests.Json
             // Assert
             Assert.True(result);
             Assert.Equal("any target", error.Target);
-            Assert.Equal(1, error.Details.Count);
+            Assert.Single(error.Details);
             var detail = error.Details.Single();
             Assert.Equal("500", detail.Code);
             Assert.Equal("another target", detail.Target);
@@ -380,10 +380,10 @@ namespace Microsoft.OData.Tests.Json
                 var innerError = error.InnerError;
                 Assert.NotNull(innerError);
                 Assert.Equal(3, innerError.Properties.Count);
-                Assert.Single(innerError.Properties.Where(d => d.Key.Equals("message")));
-                Assert.Single(innerError.Properties.Where(d => d.Key.Equals("type")));
-                Assert.Single(innerError.Properties.Where(d => d.Key.Equals("stacktrace")));
-                Assert.Empty(innerError.Properties.Where(d => d.Key.Equals("foo")));
+                Assert.Single(innerError.Properties, d => d.Key.Equals("message"));
+                Assert.Single(innerError.Properties, d => d.Key.Equals("type"));
+                Assert.Single(innerError.Properties, d => d.Key.Equals("stacktrace"));
+                Assert.DoesNotContain(innerError.Properties, d => d.Key.Equals("foo"));
             }
         }
 

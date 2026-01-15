@@ -41,8 +41,8 @@ namespace Microsoft.OData.Tests.Json
                     var payloadKinds = jsonPayloadKindDetectionDeserializer.DetectPayloadKind(this.payloadKindDetectionInfo);
 
                     Assert.Equal(2, payloadKinds.Count());
-                    Assert.Single(payloadKinds.Where(d => d.Equals(ODataPayloadKind.Resource)));
-                    Assert.Single(payloadKinds.Where(d => d.Equals(ODataPayloadKind.Delta)));
+                    Assert.Single(payloadKinds, d => d.Equals(ODataPayloadKind.Resource));
+                    Assert.Single(payloadKinds, d => d.Equals(ODataPayloadKind.Delta));
                 });
         }
 
@@ -59,7 +59,7 @@ namespace Microsoft.OData.Tests.Json
                     var payloadKinds = jsonPayloadKindDetectionDeserializer.DetectPayloadKind(this.payloadKindDetectionInfo);
 
                     Assert.Single(payloadKinds);
-                    Assert.Single(payloadKinds.Where(d => d.Equals(ODataPayloadKind.Error)));
+                    Assert.Single(payloadKinds, d => d.Equals(ODataPayloadKind.Error));
                 });
         }
 
@@ -97,8 +97,8 @@ namespace Microsoft.OData.Tests.Json
                     var payloadKinds = await jsonPayloadKindDetectionDeserializer.DetectPayloadKindAsync(this.payloadKindDetectionInfo);
 
                     Assert.Equal(2, payloadKinds.Count());
-                    Assert.Single(payloadKinds.Where(d => d.Equals(ODataPayloadKind.Resource)));
-                    Assert.Single(payloadKinds.Where(d => d.Equals(ODataPayloadKind.Delta)));
+                    Assert.Single(payloadKinds, d => d.Equals(ODataPayloadKind.Resource));
+                    Assert.Single(payloadKinds, d => d.Equals(ODataPayloadKind.Delta));
                 });
         }
 
@@ -115,7 +115,7 @@ namespace Microsoft.OData.Tests.Json
                     var payloadKinds = await jsonPayloadKindDetectionDeserializer.DetectPayloadKindAsync(this.payloadKindDetectionInfo);
 
                     Assert.Single(payloadKinds);
-                    Assert.Single(payloadKinds.Where(d => d.Equals(ODataPayloadKind.Error)));
+                    Assert.Single(payloadKinds, d => d.Equals(ODataPayloadKind.Error));
                 });
         }
 

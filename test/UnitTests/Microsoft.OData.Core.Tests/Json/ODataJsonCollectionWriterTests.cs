@@ -84,7 +84,7 @@ namespace Microsoft.OData.Tests.Json
                             }
                         }))));
             var str = Encoding.UTF8.GetString(stream.ToArray());
-            Assert.Equal(str,
+            Assert.Equal(
                 "{" +
                     "\"@odata.context\":\"http://svc/$metadata#EntitySet/$entity\"," +
                     "\"ID\":1," +
@@ -92,7 +92,7 @@ namespace Microsoft.OData.Tests.Json
                     "\"DynamicPrimitive\":[1,2,null]," +
                     "\"DynamicComplex@odata.type\":\"#Collection(NS.ComplexType)\"," +
                     "\"DynamicComplex\":[null,null,{\"Prop1\":1,\"Prop2\":2}]" +
-                "}");
+                "}", str);
         }
 
         [Fact]

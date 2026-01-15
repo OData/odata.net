@@ -60,7 +60,7 @@ namespace Microsoft.OData.Tests.Evaluation
                     new ODataProperty() {Name = "StreamProperty", Value = new ODataStreamReferenceValue()}
                 };
 
-            Assert.Single(this.testSubject.GetProperties(properties).Where(p => p.Name == "IntegerProperty"));
+            Assert.Single(this.testSubject.GetProperties(properties), p => p.Name == "IntegerProperty");
         }
 
         [Fact]

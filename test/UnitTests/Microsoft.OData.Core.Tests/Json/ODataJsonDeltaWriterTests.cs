@@ -856,7 +856,7 @@ namespace Microsoft.OData.Tests.Json
 
             this.WriteExpandedFeedWithModelImplementation();
 
-            Assert.Equal(this.TestPayload(),
+            Assert.Equal("{" +
                 "{" +
                     "\"@odata.context\":\"http://host/service/$metadata#Customers/$delta\"," +
                     "\"value\":" +
@@ -880,7 +880,7 @@ namespace Microsoft.OData.Tests.Json
                             "]" +
                         "}" +
                     "]" +
-                "}");
+                "}", this.TestPayload());
         }
 
         [Fact]
@@ -890,8 +890,7 @@ namespace Microsoft.OData.Tests.Json
 
             this.WriteExpandedFeedWithModelImplementation();
 
-            Assert.Equal(this.TestPayload(),
-                "{" +
+            Assert.Equal("{" +
                     "\"@odata.context\":\"http://host/service/$metadata#Customers/$delta\"," +
                     "\"value\":" +
                     "[" +
@@ -924,7 +923,7 @@ namespace Microsoft.OData.Tests.Json
                             "\"ProductBeingViewed@odata.navigationLink\":\"http://host/service/Customers('BOTTM')/ProductBeingViewed\"" +
                         "}" +
                     "]" +
-                "}");
+                "}", this.TestPayload());
         }
 
         [InlineData(/*isResponse*/true)]
@@ -951,8 +950,7 @@ namespace Microsoft.OData.Tests.Json
             writer.WriteEnd(); // deltaFeedWithInfo
             writer.Flush();
 
-            Assert.Equal(this.TestPayload(),
-                "{" +
+            Assert.Equal("{" +
                     "\"@odata.context\":\"http://host/service/$metadata#Customers/$delta\"," +
                     "\"value\":" +
                     "[" +
@@ -975,7 +973,7 @@ namespace Microsoft.OData.Tests.Json
                             "]" +
                         "}" +
                     "]" +
-                "}");
+                "}", this.TestPayload());
         }
 
         [InlineData(/*isResponse*/true)]
@@ -1008,8 +1006,7 @@ namespace Microsoft.OData.Tests.Json
             writer.WriteEnd(); // deltaFeed
             writer.Flush();
 
-            Assert.Equal(this.TestPayload(),
-                "{" +
+            Assert.Equal("{" +
                     "\"@odata.context\":\"http://host/service/$metadata#Customers/$delta\"," +
                     "\"value\":" +
                     "[" +
@@ -1040,7 +1037,7 @@ namespace Microsoft.OData.Tests.Json
                             "]" +
                         "}" +
                     "]" +
-                "}");
+                "}", this.TestPayload());
         }
 
         [InlineData(/*isResponse*/true)]
@@ -1069,8 +1066,7 @@ namespace Microsoft.OData.Tests.Json
             writer.WriteEnd(); // deltaFeed
             writer.Flush();
 
-            Assert.Equal(this.TestPayload(),
-                "{" +
+            Assert.Equal("{" +
                     "\"@odata.context\":\"http://host/service/$metadata#Customers/$delta\"," +
                     "\"value\":" +
                     "[" +
@@ -1094,7 +1090,7 @@ namespace Microsoft.OData.Tests.Json
                             "]" +
                         "}" +
                     "]" +
-                "}");
+                "}", this.TestPayload());
         }
 
         [InlineData(/*isResponse*/true)]
@@ -1106,8 +1102,7 @@ namespace Microsoft.OData.Tests.Json
 
             this.WriteNestedDeltaFeedImplementation(isResponse);
 
-            Assert.Equal(this.TestPayload(),
-                "{" +
+            Assert.Equal("{" +
                     "\"@context\":\"http://host/service/$metadata#Customers/$delta\"," +
                     "\"value\":" +
                     "[" +
@@ -1137,8 +1132,7 @@ namespace Microsoft.OData.Tests.Json
                             "]" +
                         "}" +
                     "]" +
-                "}"
-                );
+                "}", this.TestPayload());
         }
 
         [InlineData(/*isResponse*/true)]
@@ -1367,8 +1361,7 @@ namespace Microsoft.OData.Tests.Json
             writer.WriteEnd(); // deltaFeed
             writer.Flush();
 
-            Assert.Equal(this.TestPayload(),
-                "{" +
+            Assert.Equal("{" +
                     "\"@odata.context\":\"http://host/service/$metadata#Customers/$delta\"," +
                     "\"value\":" +
                     "[" +
@@ -1390,7 +1383,7 @@ namespace Microsoft.OData.Tests.Json
                             "}" +
                         "}" +
                     "]" +
-                "}");
+                "}", this.TestPayload());
         }
 
         #endregion

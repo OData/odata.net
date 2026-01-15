@@ -166,7 +166,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             {
                 // Dummy code, just need to access property to get the exception
                 var type = segment.EdmType;
-                Assert.True(false, "The EdmType getter returned '" + type + "', but should have thrown.");
+                Assert.Fail("The EdmType getter returned '" + type + "', but should have thrown.");
             }
             catch (ODataException e)
             {

@@ -81,7 +81,7 @@ namespace Microsoft.OData.Tests
             ODataEntityReferenceLink referencelink = new ODataEntityReferenceLink();
             Assert.NotNull(referencelink.InstanceAnnotations);
             referencelink.InstanceAnnotations.Add(new ODataInstanceAnnotation("TestNamespace.name", new ODataPrimitiveValue("value")));
-            Assert.Equal(1, referencelink.InstanceAnnotations.Count);
+            Assert.Single(referencelink.InstanceAnnotations);
         }
 
         [Fact]
