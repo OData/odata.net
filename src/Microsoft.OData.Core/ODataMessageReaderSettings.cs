@@ -224,7 +224,6 @@ namespace Microsoft.OData
         /// * The name of the property being read (null for values within a collection)
         /// * The property being read (null for dynamic property or value within a collection)
         /// * Custom property annotations (non-OData annotations) that have been read so far.
-        /// * OData property annotations that have been read so far.
         /// </remarks>
         public Func<ODataPropertyStreamReadingContext, bool> ShouldReadPropertyAsStream { get; set; }
 

@@ -13,12 +13,12 @@ namespace Microsoft.OData.Json
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Threading.Tasks;
+    using Microsoft.OData.Core;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Vocabularies;
     using Microsoft.OData.Edm.Vocabularies.V1;
     using Microsoft.OData.Evaluation;
     using Microsoft.OData.Metadata;
-    using Microsoft.OData.Core;
 
     #endregion Namespaces
 
