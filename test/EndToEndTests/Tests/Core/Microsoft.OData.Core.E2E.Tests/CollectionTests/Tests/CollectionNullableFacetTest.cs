@@ -20,7 +20,7 @@ namespace Microsoft.OData.Core.E2E.Tests.CollectionTests.Tests
     public class CollectionNullableFacetTest : EndToEndTestBase<CollectionNullableFacetTest.TestsStartup>
     {
         private readonly Uri _baseUri;
-        private IEdmModel _model = null;
+        private IEdmModel? _model = null;
         private readonly Container _context;
         private static string NameSpacePrefix = "Microsoft.OData.E2E.TestCommon.Common.Server.Default.";
         protected readonly string[] mimeTypes =
@@ -47,6 +47,7 @@ namespace Microsoft.OData.Core.E2E.Tests.CollectionTests.Tests
         public CollectionNullableFacetTest(TestWebApplicationFactory<TestsStartup> fixture)
             : base(fixture)
         {
+            Assert.NotNull(Client.BaseAddress);
             _baseUri = new Uri(Client.BaseAddress, "odata/");
             _model = DefaultEdmModel.GetEdmModel();
             _context = new Container(_baseUri)
@@ -119,7 +120,7 @@ namespace Microsoft.OData.Core.E2E.Tests.CollectionTests.Tests
             {
                 if (property.Name.Equals(testProperty))
                 {
-                    IEdmCollectionTypeReference typeRef = property.Type as IEdmCollectionTypeReference;
+                    IEdmCollectionTypeReference? typeRef = property.Type as IEdmCollectionTypeReference;
                     Assert.NotNull(typeRef);
                     isNullable = typeRef.IsNullable;
                 }
@@ -152,9 +153,13 @@ namespace Microsoft.OData.Core.E2E.Tests.CollectionTests.Tests
 
                     // verify the update
                     Assert.Equal(204, responseMessage.StatusCode);
-                    ODataResource updatedProduct = await QueryEntityItemAsync("Customers(1)") as ODataResource;
-                    ODataCollectionValue testCollection = updatedProduct.Properties.OfType<ODataProperty>().Single(p => p.Name == testProperty).Value as ODataCollectionValue;
-                    ODataCollectionValue expectValue = personToAdd.Properties.OfType<ODataProperty>().Single(p => p.Name == testProperty).Value as ODataCollectionValue;
+                    ODataResource? updatedProduct = await QueryEntityItemAsync("Customers(1)") as ODataResource;
+                    Assert.NotNull(updatedProduct);
+                    ODataCollectionValue? testCollection = updatedProduct.Properties.OfType<ODataProperty>().Single(p => p.Name == testProperty).Value as ODataCollectionValue;
+                    ODataCollectionValue? expectValue = personToAdd.Properties.OfType<ODataProperty>().Single(p => p.Name == testProperty).Value as ODataCollectionValue;
+
+                    Assert.NotNull(testCollection);
+                    Assert.NotNull(expectValue);
                     var actIter = testCollection.Items.GetEnumerator();
                     var expIter = expectValue.Items.GetEnumerator();
                     while (actIter.MoveNext() && expIter.MoveNext())
@@ -166,7 +171,7 @@ namespace Microsoft.OData.Core.E2E.Tests.CollectionTests.Tests
                 {
                     if (!isNullable)
                     {
-                        Assert.Equal(exception.Message, "A null value was detected in the items of a collection property value; non-nullable instances of collection types do not support null values as items.");
+                        Assert.Equal("A null value was detected in the items of a collection property value; non-nullable instances of collection types do not support null values as items.", exception.Message);
                     }
                     else
                     {
@@ -176,7 +181,7 @@ namespace Microsoft.OData.Core.E2E.Tests.CollectionTests.Tests
             }
         }
 
-        private async Task<ODataItem> QueryEntityItemAsync(string uri, int expectedStatusCode = 200)
+        private async Task<ODataItem?> QueryEntityItemAsync(string uri, int expectedStatusCode = 200)
         {
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = _baseUri };
 
@@ -191,7 +196,7 @@ namespace Microsoft.OData.Core.E2E.Tests.CollectionTests.Tests
             var queryResponseMessage = await queryRequestMessage.GetResponseAsync();
             Assert.Equal(expectedStatusCode, queryResponseMessage.StatusCode);
 
-            ODataItem item = null;
+            ODataItem? item = null;
             if (expectedStatusCode == 200)
             {
                 using (var messageReader = new ODataMessageReader(queryResponseMessage, readerSettings, _model))

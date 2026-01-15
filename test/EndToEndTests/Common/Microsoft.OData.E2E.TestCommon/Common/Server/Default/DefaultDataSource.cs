@@ -7,6 +7,7 @@
 
 using Microsoft.OData.Edm;
 using Microsoft.Spatial;
+using Xunit;
 
 namespace Microsoft.OData.E2E.TestCommon.Common.Server.Default
 {
@@ -541,11 +542,17 @@ namespace Microsoft.OData.E2E.TestCommon.Common.Server.Default
             Orders[0].OrderDetails = [OrderDetails[1]];
             Orders[1].OrderDetails = [OrderDetails[2]];
 
-            (People[2] as Employee).CompanyID = Company.CompanyID;
-            (People[3] as Employee).CompanyID = Company.CompanyID;
-            (People[2] as Employee).Company = Company;
-            (People[3] as Employee).Company = Company;
-            Company.Employees = [(People[2] as Employee), (People[3] as Employee)];
+            Employee? p2 = People[2] as Employee;
+            Assert.NotNull(p2);
+            p2.CompanyID = Company.CompanyID;
+            p2.Company = Company;
+
+            Employee? p3 = People[3] as Employee;
+            Assert.NotNull(p3);
+            p3.CompanyID = Company.CompanyID;
+            p3.Company = Company;
+
+            Company.Employees = [p2, p3];
             Company.VipCustomer = VipCustomer;
             VipCustomer.Company = Company;
 
@@ -908,9 +915,9 @@ namespace Microsoft.OData.E2E.TestCommon.Common.Server.Default
                 }
             ];
 
-            Accounts[0].AccountInfo.DynamicProperties["MiddleName"] = "Hood";
-            Accounts[0].AccountInfo.DynamicProperties["FavoriteColor"] = Color.Red;
-            Accounts[0].AccountInfo.DynamicProperties["Address"] = new Address
+            Accounts[0].AccountInfo?.DynamicProperties?["MiddleName"] = "Hood";
+            Accounts[0].AccountInfo?.DynamicProperties?["FavoriteColor"] = Color.Red;
+            Accounts[0].AccountInfo?.DynamicProperties?["Address"] = new Address
             {
                 City = "a",
                 Street = "b",

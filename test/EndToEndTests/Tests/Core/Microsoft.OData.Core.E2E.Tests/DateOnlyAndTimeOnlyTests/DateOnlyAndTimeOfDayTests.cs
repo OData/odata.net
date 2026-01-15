@@ -78,7 +78,7 @@ namespace Microsoft.OData.Core.E2E.Tests.DateAndTimeOnlyTests
                 using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, _model))
                 {
                     var reader = await messageReader.CreateODataResourceReaderAsync();
-                    ODataResource entry = null;
+                    ODataResource? entry = null;
                     while (await reader.ReadAsync())
                     {
                         if (reader.State == ODataReaderState.ResourceEnd)
@@ -88,6 +88,7 @@ namespace Microsoft.OData.Core.E2E.Tests.DateAndTimeOnlyTests
                     }
 
                     // Verify DateOnly Property
+                    Assert.NotNull(entry);
                     Assert.Equal(new DateOnly(2014, 8, 31), entry.Properties.OfType<ODataProperty>().Single(p => p.Name == "ShipDate").Value);
                     Assert.Equal(new TimeOnly(12, 40, 5, 50), entry.Properties.OfType<ODataProperty>().Single(p => p.Name == "ShipTime").Value);
                     Assert.Equal(ODataReaderState.Completed, reader.State);
@@ -194,7 +195,7 @@ namespace Microsoft.OData.Core.E2E.Tests.DateAndTimeOnlyTests
                 {
                     if (reader.State == ODataReaderState.ResourceEnd)
                     {
-                        ODataResource entry = reader.Item as ODataResource;
+                        ODataResource? entry = reader.Item as ODataResource;
                         if (entry != null && entry.TypeName.EndsWith("Order"))
                         {
                             // Verify DateOnly Property
@@ -231,7 +232,7 @@ namespace Microsoft.OData.Core.E2E.Tests.DateAndTimeOnlyTests
                 {
                     if (reader.State == ODataReaderState.ResourceEnd)
                     {
-                        ODataResource entry = reader.Item as ODataResource;
+                        ODataResource? entry = reader.Item as ODataResource;
 
                         if (entry != null)
                         {
@@ -344,7 +345,8 @@ namespace Microsoft.OData.Core.E2E.Tests.DateAndTimeOnlyTests
                 {
                     if (reader.State == ODataReaderState.ResourceEnd)
                     {
-                        ODataResource entry = reader.Item as ODataResource;
+                        ODataResource? entry = reader.Item as ODataResource;
+                        Assert.NotNull(entry);
                         // Verify DateOnly Property
                         Assert.Equal(new DateOnly(2015, 11, 11), entry.Properties.OfType<ODataProperty>().Single(p => p.Name == "Day").Value);
                     }
@@ -405,7 +407,7 @@ namespace Microsoft.OData.Core.E2E.Tests.DateAndTimeOnlyTests
                 {
                     if (reader.State == ODataReaderState.ResourceEnd)
                     {
-                        ODataResource entry = reader.Item as ODataResource;
+                        ODataResource? entry = reader.Item as ODataResource;
 
                         if (entry != null)
                         {

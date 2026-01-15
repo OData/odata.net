@@ -970,8 +970,8 @@ namespace Microsoft.OData.Core.E2E.Tests.WriteJsonPayloadTests
             properties.Add(thumbnailProperty);
             customerEntry.Properties = properties.ToArray();
 
-            expectedCustomerObject.Add("Thumbnail" + JsonLightConstants.ODataMediaEditLinkAnnotationName, (thumbnailProperty.Value as ODataStreamReferenceValue).EditLink.AbsoluteUri);
-            expectedCustomerObject.Add("Thumbnail" + JsonLightConstants.ODataMediaReadLinkAnnotationName, (thumbnailProperty.Value as ODataStreamReferenceValue).ReadLink.AbsoluteUri);
+            expectedCustomerObject.Add("Thumbnail" + JsonLightConstants.ODataMediaEditLinkAnnotationName, ((ODataStreamReferenceValue)thumbnailProperty.Value).EditLink.AbsoluteUri);
+            expectedCustomerObject.Add("Thumbnail" + JsonLightConstants.ODataMediaReadLinkAnnotationName, ((ODataStreamReferenceValue)thumbnailProperty.Value).ReadLink.AbsoluteUri);
 
             return thumbnailProperty;
         }
@@ -1147,9 +1147,9 @@ namespace Microsoft.OData.Core.E2E.Tests.WriteJsonPayloadTests
             TestStreamResponseMessage responseMessage,
             IEdmEntitySet expectedSet,
             IEdmEntityType expectedType,
-            Action<ODataResourceSet> verifyFeed,
-            Action<ODataResource> verifyEntry,
-            Action<ODataNestedResourceInfo> verifyNavigation)
+            Action<ODataResourceSet?> verifyFeed,
+            Action<ODataResource?> verifyEntry,
+            Action<ODataNestedResourceInfo?> verifyNavigation)
         {
             var settings = new ODataMessageReaderSettings() { BaseUri = _baseUri, EnableMessageStreamDisposal = false };
             settings.ShouldIncludeAnnotation = s => true;
@@ -1164,10 +1164,7 @@ namespace Microsoft.OData.Core.E2E.Tests.WriteJsonPayloadTests
                 {
                     case ODataReaderState.ResourceSetEnd:
                         {
-                            if (verifyFeed != null)
-                            {
-                                verifyFeed((ODataResourceSet)reader.Item);
-                            }
+                            verifyFeed?.Invoke((ODataResourceSet?)reader.Item);
 
                             break;
                         }
@@ -1182,10 +1179,7 @@ namespace Microsoft.OData.Core.E2E.Tests.WriteJsonPayloadTests
                         }
                     case ODataReaderState.NestedResourceInfoEnd:
                         {
-                            if (verifyNavigation != null)
-                            {
-                                verifyNavigation((ODataNestedResourceInfo)reader.Item);
-                            }
+                            verifyNavigation?.Invoke((ODataNestedResourceInfo?)reader.Item);
 
                             break;
                         }

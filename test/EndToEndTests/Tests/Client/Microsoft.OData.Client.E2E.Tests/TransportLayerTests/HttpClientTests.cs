@@ -176,8 +176,9 @@ namespace Microsoft.OData.Client.E2E.Tests.TransportLayerTests
         {
             _context.AddObject("Products", new ClientEndToEndModel.Product { ProductId = 55443, Description = "My new product", });
 
-            ClientEndToEndModel.Customer customerWithCustomerInfo = null;
+            ClientEndToEndModel.Customer? customerWithCustomerInfo = null;
             var query = _context.Customers.Expand(c => c.Info).Where(c => c.Info != null) as DataServiceQuery<ClientEndToEndModel.Customer>;
+            Assert.NotNull(query);
             var queryResult = await query.ExecuteAsync();
             customerWithCustomerInfo = queryResult.First();
 

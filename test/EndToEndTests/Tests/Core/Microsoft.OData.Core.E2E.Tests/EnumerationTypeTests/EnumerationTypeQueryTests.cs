@@ -58,8 +58,6 @@ public class EnumerationTypeQueryTests : EndToEndTestBase<EnumerationTypeQueryTe
     private static string NameSpacePrefix = typeof(DefaultEdmModel).Namespace ?? "Microsoft.OData.E2E.TestCommon.Common.Server.Default";
 
     // Constants
-    private const string MimeTypeODataParameterFullMetadata = MimeTypes.ApplicationJson + MimeTypes.ODataParameterFullMetadata;
-    private const string MimeTypeODataParameterMinimalMetadata = MimeTypes.ApplicationJson + MimeTypes.ODataParameterMinimalMetadata;
     private const string MimeTypeApplicationAtomXml = MimeTypes.ApplicationAtomXml;
 
     #region Tests querying entity set and verifies the enumeration type properties

@@ -1181,7 +1181,7 @@ public class TypeDefinitionTests : EndToEndTestBase<TypeDefinitionTests.TestsSta
 
         using (var messageWriter = new ODataMessageWriter(requestMessage, writerSettings, _model))
         {
-            var odataWriter = messageWriter.CreateODataParameterWriter((IEdmOperation)null);
+            var odataWriter = messageWriter.CreateODataParameterWriter(null);
             odataWriter.WriteStart();
             odataWriter.WriteValue("seconds", 1000u);
             odataWriter.WriteEnd();

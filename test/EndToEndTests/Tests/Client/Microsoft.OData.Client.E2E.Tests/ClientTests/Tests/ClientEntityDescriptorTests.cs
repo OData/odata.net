@@ -64,7 +64,8 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests.Tests
         [MemberData(nameof(GetEntitySetData))]
         public void EntityDescriptor_LinksAndIdentity_AreNotNull_ForAllEntities(string entitySetKey)
         {
-            IQueryable iqueryableProperty = typeof(Container).GetProperty(entitySetKey).GetValue(_context, null) as IQueryable;
+            IQueryable? iqueryableProperty = typeof(Container).GetProperty(entitySetKey)?.GetValue(_context, null) as IQueryable;
+            Assert.NotNull(iqueryableProperty);
             foreach (var entity in iqueryableProperty)
             {
                 EntityDescriptor eDescriptor = _context.GetEntityDescriptor(entity);

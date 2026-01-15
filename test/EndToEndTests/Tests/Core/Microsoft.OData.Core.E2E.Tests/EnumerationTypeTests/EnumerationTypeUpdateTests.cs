@@ -58,10 +58,6 @@ public class EnumerationTypeUpdateTests : EndToEndTestBase<EnumerationTypeUpdate
 
     private static string NameSpacePrefix = typeof(DefaultEdmModel).Namespace ?? "Microsoft.OData.E2E.TestCommon.Common.Server.Default";
 
-    // Constants
-    private const string MimeTypeODataParameterFullMetadata = MimeTypes.ApplicationJson + MimeTypes.ODataParameterFullMetadata;
-    private const string MimeTypeODataParameterMinimalMetadata = MimeTypes.ApplicationJson + MimeTypes.ODataParameterMinimalMetadata;
-
     #region Tests creating and deleting an entity with enumeration type properties.
 
     [Theory]

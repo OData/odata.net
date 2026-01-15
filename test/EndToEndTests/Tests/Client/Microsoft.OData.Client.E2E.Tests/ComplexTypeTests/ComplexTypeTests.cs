@@ -91,7 +91,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ComplexTypeTests
 
             Assert.NotNull(personResult);
 
-            ClientDefaultModel.HomeAddress homeAddress = personResult.HomeAddress as ClientDefaultModel.HomeAddress;
+            ClientDefaultModel.HomeAddress? homeAddress = personResult.HomeAddress as ClientDefaultModel.HomeAddress;
 
             Assert.NotNull(homeAddress);
             Assert.Equal(1, personResult.PersonID);
@@ -283,6 +283,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ComplexTypeTests
                         Value = new ODataUntypedValue() { RawValue = "{ \"sender\": \"RSS\", \"senderImage\": \"https://exchangelabs.live-int.com/connectors/content/images/feed-icon-128px.png?upn=admin%40tenant-EXHR-3837dom.EXTEST.MICROSOFT.COM\", \"summary\": \"RSS is now connected to your mailbox\", \"title\": null }" }
                     };
                     var accountInfoComplexValueProperties = ea.Entry.Properties as List<ODataProperty>;
+                    Assert.NotNull(accountInfoComplexValueProperties);
                     accountInfoComplexValueProperties.Add(undeclaredOdataProperty);
                 }
             });
@@ -297,12 +298,13 @@ namespace Microsoft.OData.Client.E2E.Tests.ComplexTypeTests
                 rsa.Settings.Validations ^= ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType;
             });
 
-            ODataUntypedValue undeclaredOdataPropertyValue = null;
+            ODataUntypedValue? undeclaredOdataPropertyValue = null;
             _context.Configurations.ResponsePipeline.OnEntityMaterialized(rea =>
             {
                 if (rea.Entity.GetType() == typeof(ClientDefaultModel.AccountInfo))
                 {
                     var undeclaredOdataProperty = rea.Entry.Properties.OfType<ODataProperty>().FirstOrDefault(s => s.Name == "UndecalredOpenProperty1");
+                    Assert.NotNull(undeclaredOdataProperty);
                     undeclaredOdataPropertyValue = (ODataUntypedValue)undeclaredOdataProperty.Value;
                 }
             });
@@ -320,6 +322,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ComplexTypeTests
             if (ea.Entity.GetType() == typeof(ClientDefaultModel.AccountInfo))
             {
                 var properties = ea.Entry.Properties as List<ODataProperty>;
+                Assert.NotNull(properties);
                 var undeclaredOdataProperty = new ODataProperty() { Name = "dynamicPropertyKey", Value = "dynamicPropertyValue" };
                 properties.Add(undeclaredOdataProperty);
                 ea.Entry.Properties = properties;

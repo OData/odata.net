@@ -8279,23 +8279,35 @@ namespace Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd
         private void PopulateLogin_ReceivedMessages()
         {
             var loginDictionary = new Dictionary<string, Login>();
-            foreach (var login in Logins)
+            if (Logins != null)
             {
-                loginDictionary[login.Username] = login;
+                foreach (var login in Logins)
+                {
+                    if (login.Username != null)
+                    {
+                        loginDictionary[login.Username] = login;
+                    }
+                }
             }
 
-            foreach (var message in Messages)
+            if (Messages != null)
             {
-                if (loginDictionary.TryGetValue(message.FromUsername, out var recipientLogin))
+                foreach (var message in Messages)
                 {
-                    message.Recipient = recipientLogin;
-
-                    if (recipientLogin.ReceivedMessages == null)
+                    if (message.FromUsername != null)
                     {
-                        recipientLogin.ReceivedMessages = new List<Message>();
-                    }
+                        if (loginDictionary.TryGetValue(message.FromUsername, out var recipientLogin))
+                        {
+                            message.Recipient = recipientLogin;
 
-                    recipientLogin.ReceivedMessages.Add(message);
+                            if (recipientLogin.ReceivedMessages == null)
+                            {
+                                recipientLogin.ReceivedMessages = new List<Message>();
+                            }
+
+                            recipientLogin.ReceivedMessages.Add(message);
+                        }
+                    }
                 }
             }
         }
@@ -8303,16 +8315,22 @@ namespace Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd
         private void PopulateCustomer_CustomerInfo()
         {
             var customerDictionary = new Dictionary<int, Customer>();
-            foreach (var customer in Customers)
+            if (Customers != null)
             {
-                customerDictionary[customer.CustomerId] = customer;
+                foreach (var customer in Customers)
+                {
+                    customerDictionary[customer.CustomerId] = customer;
+                }
             }
 
-            foreach (var customerInfo in CustomerInfos)
+            if (CustomerInfos != null)
             {
-                if (customerDictionary.TryGetValue(customerInfo.CustomerInfoId, out var customer))
+                foreach (var customerInfo in CustomerInfos)
                 {
-                    customer.Info = customerInfo;
+                    if (customerDictionary.TryGetValue(customerInfo.CustomerInfoId, out var customer))
+                    {
+                        customer.Info = customerInfo;
+                    }
                 }
             }
         }

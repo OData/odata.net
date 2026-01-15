@@ -55,10 +55,7 @@ public class QueryCountTests : EndToEndTestBase<QueryCountTests.TestsStartup>
 
     // Constants
     private const string MimeTypeApplicationAtomXml = MimeTypes.ApplicationAtomXml;
-    private const string MimeTypeODataParameterFullMetadata = MimeTypes.ApplicationJson + MimeTypes.ODataParameterFullMetadata;
-    private const string MimeTypeODataParameterMinimalMetadata = MimeTypes.ApplicationJson + MimeTypes.ODataParameterMinimalMetadata;
     private const string MimeTypeODataParameterIEEE754Compatible = MimeTypes.ApplicationJson + MimeTypes.ODataParameterIEEE754Compatible;
-    private const string MimeTypeODataParameterNoMetadata = MimeTypes.ApplicationJson + MimeTypes.ODataParameterNoMetadata;
 
     #region Positive tests
 

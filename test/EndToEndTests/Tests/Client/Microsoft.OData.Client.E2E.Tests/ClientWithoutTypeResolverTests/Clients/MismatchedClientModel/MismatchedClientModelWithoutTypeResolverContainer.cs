@@ -8667,7 +8667,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Client
         /// server schema, use type-mappers to map between the two.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        protected global::System.Type ResolveTypeFromName(string typeName)
+        protected new global::System.Type ResolveTypeFromName(string typeName)
         {
             global::System.Type resolvedType = this.DefaultResolveType(typeName, "Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd", "Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients");
             if ((resolvedType != null))

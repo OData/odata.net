@@ -30,28 +30,6 @@ namespace Microsoft.OData.Tests.Json
             
         }
 
-        [Fact]
-        public void StartPaddingFunctionScopeWritesParenthesis()
-        {
-            this.writer.StartPaddingFunctionScope();
-            Assert.Equal("(", this.builder.ToString());
-        }
-
-        [Fact]
-        public void EndPaddingFunctionScopeWritesParenthesis()
-        {
-            this.writer.StartPaddingFunctionScope();
-            this.writer.EndPaddingFunctionScope();
-            Assert.Equal("()", this.builder.ToString());
-        }
-
-        [Fact]
-        public void WritePaddingFunctionNameWritesName()
-        {
-            this.writer.WritePaddingFunctionName("example");
-            Assert.Equal("example", this.builder.ToString());
-        }
-
         #region WritePrimitiveValue
 
         [Fact]

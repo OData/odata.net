@@ -53,7 +53,6 @@ public class PrimitiveValueFormatTest : EndToEndTestBase<PrimitiveValueFormatTes
     }
 
     public string DataPattern = "(" + @"[\+-]?\d\.?\d*E?[\+-]?\d*" + "|" + @"INF|-INF|NaN" + ")";
-    private const string MimeTypeODataParameterFullMetadata = MimeTypes.ApplicationJson + MimeTypes.ODataParameterFullMetadata;
     private const string MimeTypeODataParameterFullMetadataAndIEEE754Compatible = MimeTypes.ApplicationJson + MimeTypes.ODataParameterFullMetadata + MimeTypes.ODataParameterIEEE754Compatible;
 
     [Theory]

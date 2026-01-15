@@ -840,7 +840,7 @@ namespace Microsoft.OData.Client.E2E.Tests.AnnotationSerializationTests.Client.D
         /// server schema, use type-mappers to map between the two.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        protected global::System.Type ResolveTypeFromName(string typeName)
+        protected new global::System.Type ResolveTypeFromName(string typeName)
         {
             global::System.Type resolvedType = this.DefaultResolveType(typeName, "Microsoft.OData.Client.E2E.Tests.AnnotationSerializationTests.Server.Models", "Microsoft.OData.Client.E2E.Tests.AnnotationSerializationTests.Client.Models");
             if ((resolvedType != null))

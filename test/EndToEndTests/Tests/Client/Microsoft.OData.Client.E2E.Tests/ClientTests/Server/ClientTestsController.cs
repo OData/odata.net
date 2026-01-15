@@ -15,13 +15,13 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests.Server
 {
     public class ClientTestsController : ODataController
     {
-        private static DefaultDataSource _dataSource;
+        private static DefaultDataSource? _dataSource;
 
         [EnableQuery]
         [HttpGet("odata/People")]
         public IActionResult Get()
         {
-            var people = _dataSource.People;
+            var people = _dataSource?.People;
 
             return Ok(people);
         }
@@ -30,7 +30,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests.Server
         [HttpGet("odata/People({key})")]
         public IActionResult Get([FromRoute] int key)
         {
-            var person = _dataSource.People?.FirstOrDefault(a => a.PersonID == key);
+            var person = _dataSource?.People?.FirstOrDefault(a => a.PersonID == key);
 
             if (person == null)
             {
@@ -43,14 +43,14 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests.Server
         [HttpDelete("odata/People({key})")]
         public IActionResult DeletePerson(int key)
         {
-            var person = _dataSource.People.SingleOrDefault(a => a.PersonID == key);
+            var person = _dataSource?.People?.SingleOrDefault(a => a.PersonID == key);
 
             if (person == null)
             {
                 return NotFound();
             }
 
-            _dataSource.People.Remove(person);
+            _dataSource?.People?.Remove(person);
 
             return NoContent();
         }
@@ -58,14 +58,14 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests.Server
         [HttpDelete("odata/People({key})/Parent")]
         public IActionResult DeleteParent(int key)
         {
-            var person = _dataSource.People.SingleOrDefault(a => a.PersonID == key);
+            var person = _dataSource?.People?.SingleOrDefault(a => a.PersonID == key);
 
             if (person == null)
             {
                 return NotFound();
             }
 
-            _dataSource.People.Remove(person);
+            _dataSource?.People?.Remove(person);
 
             return NoContent();
         }
@@ -74,7 +74,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests.Server
         [HttpGet("odata/Products")]
         public IActionResult GetProducts()
         {
-            var products = _dataSource.Products;
+            var products = _dataSource?.Products;
 
             return Ok(products);
         }
@@ -83,7 +83,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests.Server
         [HttpGet("odata/Orders")]
         public IActionResult GetOrders()
         {
-            var orders = _dataSource.Orders;
+            var orders = _dataSource?.Orders;
 
             return Ok(orders);
         }
@@ -92,7 +92,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests.Server
         [HttpGet("odata/Customers")]
         public IActionResult GetCustomers()
         {
-            var customers = _dataSource.Customers;
+            var customers = _dataSource?.Customers;
 
             return Ok(customers);
         }
@@ -101,7 +101,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests.Server
         [HttpGet("odata/Customers({key})")]
         public IActionResult GetCustomer(int key)
         {
-            var customer = _dataSource.Customers.SingleOrDefault(a => a.PersonID == key);
+            var customer = _dataSource?.Customers?.SingleOrDefault(a => a.PersonID == key);
 
             if (customer == null)
             {
@@ -115,7 +115,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests.Server
         [HttpGet("odata/ProductDetails")]
         public IActionResult GetProductDetails()
         {
-            var productDetails = _dataSource.ProductDetails;
+            var productDetails = _dataSource?.ProductDetails;
 
             return Ok(productDetails);
         }
@@ -124,7 +124,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests.Server
         [HttpGet("odata/OrderDetails")]
         public IActionResult GetOrderDetails()
         {
-            var orderDetails = _dataSource.OrderDetails;
+            var orderDetails = _dataSource?.OrderDetails;
 
             return Ok(orderDetails);
         }
@@ -133,7 +133,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests.Server
         [HttpGet("odata/OrderDetails(orderId={orderId},productId={productId})")]
         public IActionResult GetOrderDetail([FromODataUri] int orderId, [FromODataUri] int productId)
         {
-            var orderDetail = _dataSource.OrderDetails.SingleOrDefault(a => a.OrderID == orderId && a.ProductID == productId);
+            var orderDetail = _dataSource?.OrderDetails?.SingleOrDefault(a => a.OrderID == orderId && a.ProductID == productId);
 
             if (orderDetail == null)
             {

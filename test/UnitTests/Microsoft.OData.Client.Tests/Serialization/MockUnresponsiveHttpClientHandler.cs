@@ -31,7 +31,7 @@ namespace Microsoft.OData.Client.Tests.Serialization
         /// </summary>
         public Action OnRequestStarted { get; set; }
 
-        public HttpResponseMessage Send(HttpRequestMessage request, CancellationToken cancellationToken)
+        public new HttpResponseMessage Send(HttpRequestMessage request, CancellationToken cancellationToken)
         {
             NotifyRequestStart();
             Stopwatch stopwatch = new Stopwatch();

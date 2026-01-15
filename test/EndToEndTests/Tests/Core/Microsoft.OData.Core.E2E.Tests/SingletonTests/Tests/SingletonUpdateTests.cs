@@ -53,10 +53,6 @@ public class SingletonUpdateTests : EndToEndTestBase<SingletonUpdateTests.TestsS
         ResetDefaultDataSource();
     }
 
-    // Constants
-    private const string MimeTypeODataParameterFullMetadata = MimeTypes.ApplicationJson + MimeTypes.ODataParameterFullMetadata;
-    private const string MimeTypeODataParameterMinimalMetadata = MimeTypes.ApplicationJson + MimeTypes.ODataParameterMinimalMetadata;
-
     [Theory]
     [InlineData(MimeTypeODataParameterFullMetadata)]
     [InlineData(MimeTypeODataParameterMinimalMetadata)]

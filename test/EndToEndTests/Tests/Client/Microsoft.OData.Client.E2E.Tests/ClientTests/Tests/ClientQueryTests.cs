@@ -220,13 +220,13 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests.Tests
             // Arrange
             int expectedCount = _context.Customers.Count();
             bool checkNextLink = false;
-            Uri nextPageLink = null;
+            Uri? nextPageLink = null;
 
             EventHandler<SendingRequest2EventArgs> sendRequestEvent = (sender, args) =>
             {
                 if (checkNextLink)
                 {
-                    Assert.Equal(nextPageLink.AbsoluteUri, args.RequestMessage.Url.AbsoluteUri);
+                    Assert.Equal(nextPageLink?.AbsoluteUri, args.RequestMessage.Url.AbsoluteUri);
                 }
 
                 checkNextLink = true;
@@ -322,13 +322,13 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests.Tests
             // Arrange
             int expectedCount = _context.Customers.Count();
             bool checkNextLink = false;
-            Uri nextPageLink = null;
+            Uri? nextPageLink = null;
 
             EventHandler<SendingRequest2EventArgs> sendRequestEvent = (sender, args) =>
             {
                 if (checkNextLink)
                 {
-                    Assert.Equal(nextPageLink.AbsoluteUri, args.RequestMessage.Url.AbsoluteUri);
+                    Assert.Equal(nextPageLink?.AbsoluteUri, args.RequestMessage.Url.AbsoluteUri);
                 }
 
                 checkNextLink = true;

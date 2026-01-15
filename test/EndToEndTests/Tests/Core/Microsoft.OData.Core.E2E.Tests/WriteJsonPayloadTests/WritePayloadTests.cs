@@ -36,6 +36,7 @@ namespace Microsoft.OData.Core.E2E.Tests.WriteJsonPayloadTests
         public WritePayloadTests(TestWebApplicationFactory<TestsStartup> fixture)
             : base(fixture)
         {
+            Assert.NotNull(Client.BaseAddress);
             _baseUri = new Uri(Client.BaseAddress, "odata/");
             _model = CommonEndToEndEdmModel.GetEdmModel();
         }
@@ -44,7 +45,7 @@ namespace Microsoft.OData.Core.E2E.Tests.WriteJsonPayloadTests
         [InlineData(MimeTypeODataParameterFullMetadata, "\"@odata.associationLink\":", "\"@odata.type\":")]
         [InlineData(MimeTypeODataParameterMinimalMetadata, "", "\"@odata.type\":")]
         [InlineData(MimeTypeODataParameterNoMetadata, "", "")]
-        public async Task WritingAnODataFeed_WithDifferentMimeTypes_ShouldMatchExpectedPayload(string? mimeType, string associationLink, string odataType)
+        public async Task WritingAnODataFeed_WithDifferentMimeTypes_ShouldMatchExpectedPayload(string mimeType, string associationLink, string odataType)
         {
             var settings = new ODataMessageWriterSettings
             {
@@ -99,7 +100,7 @@ namespace Microsoft.OData.Core.E2E.Tests.WriteJsonPayloadTests
         [InlineData(MimeTypeODataParameterMinimalMetadata, "", "\"@odata.type\":")]
         [InlineData(MimeTypeODataParameterNoMetadata, "", "")]
         public async Task WritingAnExpandedEntry_WithDifferentMimeTypes_ShouldMatchExpectedPayload(
-            string? mimeType,
+            string mimeType,
             string associationLink,
             string odataType)
         {
@@ -109,8 +110,8 @@ namespace Microsoft.OData.Core.E2E.Tests.WriteJsonPayloadTests
                 EnableMessageStreamDisposal = false
             };
 
-            string outputWithModel = null;
-            string outputWithoutModel = null;
+            string? outputWithModel = null;
+            string? outputWithoutModel = null;
 
             // Without Model
             var responseMessageWithoutModel = new TestStreamResponseMessage(new MemoryStream());
@@ -261,8 +262,9 @@ namespace Microsoft.OData.Core.E2E.Tests.WriteJsonPayloadTests
                 ODataUri = new ODataUri() { ServiceRoot = _baseUri },
                 EnableMessageStreamDisposal = false
             };
-            string outputWithModel = null;
-            string outputWithoutModel = null;
+
+            string? outputWithModel = null;
+            string? outputWithoutModel = null;
 
             var responseMessageWithModel = new TestStreamResponseMessage(new MemoryStream());
             responseMessageWithModel.SetHeader("Content-Type", mimeType);
@@ -303,8 +305,8 @@ namespace Microsoft.OData.Core.E2E.Tests.WriteJsonPayloadTests
                 ODataUri = new ODataUri() { ServiceRoot = _baseUri },
                 EnableMessageStreamDisposal = false
             };
-            string outputWithModel = null;
-            string outputWithoutModel = null;
+            string? outputWithModel = null;
+            string? outputWithoutModel = null;
 
             var contactDetailType = _model.FindDeclaredType(NameSpacePrefix + "ContactDetails") as IEdmComplexType;
 

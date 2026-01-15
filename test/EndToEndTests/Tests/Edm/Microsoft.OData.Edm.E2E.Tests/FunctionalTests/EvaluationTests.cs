@@ -1601,7 +1601,7 @@ public class EvaluationTests : EdmLibTestCaseBase
 
         // And finally make sure we can handle nulls for bad graph references.
         clrEvaluator.EdmToClrConverter = new EdmToClrConverter(
-            (IEdmStructuredValue edmValue, Type clrType, EdmToClrConverter converter, out object objectInstance, out bool objectInstanceInitialized) =>
+            (IEdmStructuredValue edmValue, Type clrType, EdmToClrConverter converter, out object? objectInstance, out bool objectInstanceInitialized) =>
             {
                 objectInstance = null;
                 objectInstanceInitialized = false;

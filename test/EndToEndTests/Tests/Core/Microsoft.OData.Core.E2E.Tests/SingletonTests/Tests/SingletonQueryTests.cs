@@ -51,10 +51,6 @@ public class SingletonQueryTests : EndToEndTestBase<SingletonQueryTests.TestsSta
         ResetDefaultDataSource();
     }
 
-    // Constants
-    private const string MimeTypeODataParameterFullMetadata = MimeTypes.ApplicationJson + MimeTypes.ODataParameterFullMetadata;
-    private const string MimeTypeODataParameterMinimalMetadata = MimeTypes.ApplicationJson + MimeTypes.ODataParameterMinimalMetadata;
-
     #region Query singleton entity
 
     [Theory]

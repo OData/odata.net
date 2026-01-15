@@ -70,7 +70,7 @@ namespace Microsoft.OData.E2E.TestCommon.Common.Server.Default
         public string? LastName { get; set; }
         public string? MiddleName { get; set; }
         public Collection<string>? Numbers { get; set; }
-        public Collection<string>? Emails { get; set; }
+        public Collection<string?>? Emails { get; set; }
         public Collection<Address>? Addresses { get; set; }
         public Address? HomeAddress { get; set; }
         public GeographyPoint? Home { get; set; }

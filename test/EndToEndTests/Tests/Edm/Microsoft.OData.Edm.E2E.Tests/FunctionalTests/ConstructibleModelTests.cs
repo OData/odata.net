@@ -161,7 +161,7 @@ public class ConstructibleModelTests : EdmLibTestCaseBase
         Assert.True(exception.Message.Contains("Boxed") && exception.Message.Contains("String"));
 
         // Act
-        model.SetAnnotationValue<Boxed<string>>(f11, null);
+        model.SetAnnotationValue<Boxed<string>?>(f11, null);
 
         // Assert
         Assert.Equal(3, model.DirectValueAnnotations(f11).Count());
@@ -172,7 +172,7 @@ public class ConstructibleModelTests : EdmLibTestCaseBase
         Assert.Null(model.GetAnnotationValue<Boxed<bool>>(f11));
 
         // Act
-        model.SetAnnotationValue<Boxed<int>>(f11, null);
+        model.SetAnnotationValue<Boxed<int>?>(f11, null);
         model.SetAnnotationValue(f11, "Grumble", "Stumble", null);
         model.SetAnnotationValue(f11, "Grumble", "Tumble", null);
 

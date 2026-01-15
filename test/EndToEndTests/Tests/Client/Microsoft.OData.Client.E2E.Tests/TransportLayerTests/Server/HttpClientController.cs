@@ -15,13 +15,13 @@ namespace Microsoft.OData.Client.E2E.Tests.TransportLayerTests.Server
 {
     public class HttpClientController : ODataController
     {
-        private static CommonEndToEndDataSource _dataSource;
+        private static CommonEndToEndDataSource? _dataSource;
 
         [EnableQuery]
         [HttpGet("odata/Products")]
         public IActionResult Get()
         {
-            var products = _dataSource.Products;
+            var products = _dataSource?.Products;
 
             return Ok(products);
         }
@@ -30,7 +30,7 @@ namespace Microsoft.OData.Client.E2E.Tests.TransportLayerTests.Server
         [HttpGet("odata/Orders")]
         public IActionResult GetOrders()
         {
-            var orders = _dataSource.Orders;
+            var orders = _dataSource?.Orders;
 
             return Ok(orders);
         }
@@ -39,7 +39,7 @@ namespace Microsoft.OData.Client.E2E.Tests.TransportLayerTests.Server
         [HttpGet("odata/Customers")]
         public IActionResult GetCustomers()
         {
-            var customers = _dataSource.Customers;
+            var customers = _dataSource?.Customers;
 
             return Ok(customers);
         }
@@ -48,7 +48,7 @@ namespace Microsoft.OData.Client.E2E.Tests.TransportLayerTests.Server
         [HttpGet("odata/Computers")]
         public IActionResult GetComputer()
         {
-            var computers = _dataSource.Computers;
+            var computers = _dataSource?.Computers;
 
             return Ok(computers);
         }
@@ -57,7 +57,7 @@ namespace Microsoft.OData.Client.E2E.Tests.TransportLayerTests.Server
         [HttpGet("odata/Login")]
         public IActionResult GetLogins()
         {
-            var logins = _dataSource.Logins;
+            var logins = _dataSource?.Logins;
 
             return Ok(logins);
         }
@@ -65,21 +65,21 @@ namespace Microsoft.OData.Client.E2E.Tests.TransportLayerTests.Server
         [HttpPost("odata/Orders")]
         public IActionResult PostOrder([FromBody] Order order)
         {
-            _dataSource.Orders.Add(order);
+            _dataSource?.Orders?.Add(order);
             return Created(order);
         }
 
         [HttpPost("odata/Products")]
         public IActionResult PostProducts([FromBody] Product product)
         {
-            _dataSource.Products.Add(product);
+            _dataSource?.Products?.Add(product);
             return Created(product);
         }
 
         [HttpPatch("odata/Computers({key})")]
         public IActionResult GetComputer([FromRoute] int key)
         {
-            var computer = _dataSource.Computers.SingleOrDefault(a => a.ComputerId == key);
+            var computer = _dataSource?.Computers?.SingleOrDefault(a => a.ComputerId == key);
 
             if (computer == null)
             {
@@ -92,7 +92,7 @@ namespace Microsoft.OData.Client.E2E.Tests.TransportLayerTests.Server
         [HttpGet("odata/Products({key})/Description")]
         public IActionResult GetProductDescription([FromRoute] int key)
         {
-            var product = _dataSource.Products.SingleOrDefault(a => a.ProductId == key);
+            var product = _dataSource?.Products?.SingleOrDefault(a => a.ProductId == key);
 
             if (product == null)
             {
@@ -105,7 +105,7 @@ namespace Microsoft.OData.Client.E2E.Tests.TransportLayerTests.Server
         [HttpGet("odata/Orders({key})")]
         public IActionResult GetOrder([FromRoute] int key)
         {
-            var order = _dataSource.Orders.SingleOrDefault(a => a.OrderId == key);
+            var order = _dataSource?.Orders?.SingleOrDefault(a => a.OrderId == key);
 
             if (order == null)
             {
@@ -118,7 +118,7 @@ namespace Microsoft.OData.Client.E2E.Tests.TransportLayerTests.Server
         [HttpGet("odata/Products({key})/RelatedProducts")]
         public IActionResult GetRelatedProducts([FromRoute] int key)
         {
-            var product = _dataSource.Products.SingleOrDefault(a => a.ProductId == key);
+            var product = _dataSource?.Products?.SingleOrDefault(a => a.ProductId == key);
 
             if (product == null)
             {
@@ -131,7 +131,7 @@ namespace Microsoft.OData.Client.E2E.Tests.TransportLayerTests.Server
         [HttpPatch("odata/Products({key})")]
         public IActionResult PatchProducts([FromRoute] int key, [FromBody] Delta<Product> delta)
         {
-            var product = _dataSource.Products.SingleOrDefault(a => a.ProductId == key);
+            var product = _dataSource?.Products?.SingleOrDefault(a => a.ProductId == key);
 
             if (product == null)
             {
@@ -146,7 +146,7 @@ namespace Microsoft.OData.Client.E2E.Tests.TransportLayerTests.Server
         [HttpPatch("odata/CustomerInfos({key})")]
         public IActionResult PatchCustomerInfos([FromRoute] int key, [FromBody] Delta<CustomerInfo> delta)
         {
-            var customerInfo = _dataSource.CustomerInfos.SingleOrDefault(a => a.CustomerInfoId == key);
+            var customerInfo = _dataSource?.CustomerInfos?.SingleOrDefault(a => a.CustomerInfoId == key);
 
             if (customerInfo == null)
             {
@@ -161,7 +161,7 @@ namespace Microsoft.OData.Client.E2E.Tests.TransportLayerTests.Server
         [HttpPatch("odata/Customers({key})")]
         public IActionResult PatchCustomers([FromRoute] int key, [FromBody] Delta<Customer> delta)
         {
-            var customer = _dataSource.Customers.SingleOrDefault(a => a.CustomerId == key);
+            var customer = _dataSource?.Customers?.SingleOrDefault(a => a.CustomerId == key);
 
             if (customer == null)
             {
@@ -176,14 +176,14 @@ namespace Microsoft.OData.Client.E2E.Tests.TransportLayerTests.Server
         [HttpDelete("odata/Customers({key})")]
         public IActionResult DeleteCustomer([FromRoute] int key)
         {
-            var customer = _dataSource.Customers?.SingleOrDefault(o => o.CustomerId == key);
+            var customer = _dataSource?.Customers?.SingleOrDefault(o => o.CustomerId == key);
 
             if (customer == null)
             {
                 return NotFound();
             }
 
-            _dataSource.Customers.Remove(customer);
+            _dataSource?.Customers?.Remove(customer);
 
             return NoContent();
         }
@@ -191,17 +191,17 @@ namespace Microsoft.OData.Client.E2E.Tests.TransportLayerTests.Server
         [HttpPut("odata/Products({key})")]
         public IActionResult PutProduct([FromRoute] int key, [FromBody] Product product)
         {
-            var existProduct = _dataSource.Products?.SingleOrDefault(o => o.ProductId == key);
+            var existProduct = _dataSource?.Products?.SingleOrDefault(o => o.ProductId == key);
 
             if (existProduct == null)
             {
                 return NotFound();
             }
 
-            _dataSource.Products.Remove(existProduct);
+            _dataSource?.Products?.Remove(existProduct);
             existProduct.Description = product.Description;
 
-            _dataSource.Products.Add(existProduct);
+            _dataSource?.Products?.Add(existProduct);
 
             return Ok(existProduct);
         }
@@ -209,14 +209,14 @@ namespace Microsoft.OData.Client.E2E.Tests.TransportLayerTests.Server
         [HttpDelete("odata/Computers({key})")]
         public IActionResult DeleteComputer([FromRoute] int key)
         {
-            var computer = _dataSource.Computers?.SingleOrDefault(o => o.ComputerId == key);
+            var computer = _dataSource?.Computers?.SingleOrDefault(o => o.ComputerId == key);
 
             if (computer == null)
             {
                 return NotFound();
             }
 
-            _dataSource.Computers.Remove(computer);
+            _dataSource?.Computers?.Remove(computer);
 
             return NoContent();
         }

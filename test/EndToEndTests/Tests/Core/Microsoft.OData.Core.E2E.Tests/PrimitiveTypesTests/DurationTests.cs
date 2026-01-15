@@ -52,10 +52,6 @@ public class DurationTests : EndToEndTestBase<DurationTests.TestsStartup>
         ResetDefaultDataSource();
     }
 
-    // Constants
-    private const string MimeTypeODataParameterFullMetadata = MimeTypes.ApplicationJson + MimeTypes.ODataParameterFullMetadata;
-    private const string MimeTypeODataParameterMinimalMetadata = MimeTypes.ApplicationJson + MimeTypes.ODataParameterMinimalMetadata;
-
     #region Entity Set
 
     [Theory]

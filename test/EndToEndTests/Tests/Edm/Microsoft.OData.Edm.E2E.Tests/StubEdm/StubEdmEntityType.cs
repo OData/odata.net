@@ -12,7 +12,7 @@ namespace Microsoft.OData.Edm.E2E.Tests.StubEdm;
 public class StubEdmEntityType : StubEdmElement, IEdmEntityType
 {
     private List<IEdmProperty> declaredProperties = new List<IEdmProperty>();
-    private List<IEdmPropertyRef> declaredKeyProperties = null;
+    private List<IEdmPropertyRef>? declaredKeyProperties = null;
 
     /// <summary>
     /// Initializes a new instance of the StubEdmEntityType class.

@@ -206,6 +206,7 @@ namespace Microsoft.OData.Core.E2E.Tests.DeltaTests
             // Arrange: Set up OData model, navigation properties, and request URI
             var accountsSet = _model.FindDeclaredEntitySet("Accounts");
             var accountType = _model.FindDeclaredType(NameSpacePrefix + "Account") as IEdmEntityType;
+            Assert.NotNull(accountType);
             var myPisNav = accountType.FindProperty("MyPaymentInstruments") as IEdmNavigationProperty;
             var piSet = accountsSet.FindNavigationTarget(myPisNav) as IEdmEntitySetBase;
             var piType = _model.FindDeclaredType(NameSpacePrefix + "PaymentInstrument") as IEdmEntityType;
@@ -309,15 +310,17 @@ namespace Microsoft.OData.Core.E2E.Tests.DeltaTests
                 {
                     case ODataReaderState.ResourceEnd:
                         var entry = deltaReader.Item as ODataResource;
-
+                        Assert.NotNull(entry);
                         if (entry.Id == new Uri(_baseUri, "Accounts(103)/MyPaymentInstruments(103901)"))
                         {
                             var friendlyNameProp = entry.Properties.OfType<ODataProperty>().SingleOrDefault(p => p.Name == "FriendlyName");
+                            Assert.NotNull(friendlyNameProp);
                             Assert.Equal("GGGG", friendlyNameProp.Value);
                         }
                         else if (entry.Id == new Uri(_baseUri, "Accounts(103)/MyPaymentInstruments(103901)/BillingStatements(103901005)"))
                         {
                             var transationTypeProp = entry.Properties.OfType<ODataProperty>().SingleOrDefault(p => p.Name == "TransactionType");
+                            Assert.NotNull(transationTypeProp);
                             Assert.Equal("OnlinePurchase", transationTypeProp.Value);
                         }
 
@@ -461,15 +464,18 @@ namespace Microsoft.OData.Core.E2E.Tests.DeltaTests
                 {
                     case ODataReaderState.ResourceEnd:
                         var entry = deltaReader.Item as ODataResource;
+                        Assert.NotNull(entry);
 
                         if (entry.Id == new Uri(_baseUri, "People(1)"))
                         {
                             var cityNameProp = entry.Properties.OfType<ODataProperty>().SingleOrDefault(p => p.Name == "City");
+                            Assert.NotNull(cityNameProp);
                             Assert.Equal("GGGG", cityNameProp.Value);
                         }
                         else if (entry.Id == new Uri(_baseUri, "Orders(100)"))
                         {
                             var orderIdProp = entry.Properties.OfType<ODataProperty>().SingleOrDefault(p => p.Name == "OrderID");
+                            Assert.NotNull(orderIdProp);
                             Assert.Equal(100, orderIdProp.Value);
                         }
 
@@ -802,7 +808,7 @@ namespace Microsoft.OData.Core.E2E.Tests.DeltaTests
                 switch (deltaReader.State)
                 {
                     case ODataReaderState.ResourceEnd:
-                        ODataResource entry = deltaReader.Item as ODataResource;
+                        ODataResource? entry = deltaReader.Item as ODataResource;
                         Assert.NotNull(entry);
 
                         var personIdProp = entry.Properties.OfType<ODataProperty>().SingleOrDefault(p => p.Name == "PersonID");

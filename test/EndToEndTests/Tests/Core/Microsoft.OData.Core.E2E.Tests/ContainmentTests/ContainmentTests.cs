@@ -85,7 +85,8 @@ namespace Microsoft.OData.Core.E2E.Tests.ContainmentTests
                 {
                     if (reader.State == ODataReaderState.ResourceEnd)
                     {
-                        ODataResource entry = reader.Item as ODataResource;
+                        ODataResource? entry = reader.Item as ODataResource;
+                        Assert.NotNull(entry);
                         Assert.Equal(301, entry.Properties.OfType<ODataProperty>().Single(p => p.Name == "GiftCardID").Value);
                     }
                 }
@@ -140,7 +141,7 @@ namespace Microsoft.OData.Core.E2E.Tests.ContainmentTests
                 {
                     if (reader.State == ODataReaderState.ResourceEnd)
                     {
-                        ODataResource entry = reader.Item as ODataResource;
+                        ODataResource? entry = reader.Item as ODataResource;
                         Assert.NotNull(entry);
                         entries.Add(entry);
                     }
@@ -201,7 +202,8 @@ namespace Microsoft.OData.Core.E2E.Tests.ContainmentTests
                 {
                     if (reader.State == ODataReaderState.ResourceEnd)
                     {
-                        ODataResource entry = reader.Item as ODataResource;
+                        ODataResource? entry = reader.Item as ODataResource;
+                        Assert.NotNull(entry);
                         entries.Add(entry);
                     }
                 }
@@ -237,7 +239,7 @@ namespace Microsoft.OData.Core.E2E.Tests.ContainmentTests
                 {
                     if (reader.State == ODataReaderState.ResourceEnd)
                     {
-                        ODataResource entry = reader.Item as ODataResource;
+                        ODataResource? entry = reader.Item as ODataResource;
 
                         Assert.NotNull(entry);
                         entries.Add(entry);
@@ -280,7 +282,8 @@ namespace Microsoft.OData.Core.E2E.Tests.ContainmentTests
                 {
                     if (reader.State == ODataReaderState.ResourceEnd)
                     {
-                        ODataResource entry = reader.Item as ODataResource;
+                        ODataResource? entry = reader.Item as ODataResource;
+                        Assert.NotNull(entry);
                         Assert.Equal("103 second PI", entry.Properties.OfType<ODataProperty>().Single(p => p.Name == "FriendlyName").Value);
                     }
                 }
@@ -313,7 +316,8 @@ namespace Microsoft.OData.Core.E2E.Tests.ContainmentTests
                 {
                     if (reader.State == ODataReaderState.ResourceEnd)
                     {
-                        ODataResource entry = reader.Item as ODataResource;
+                        ODataResource? entry = reader.Item as ODataResource;
+                        Assert.NotNull(entry);
                         Assert.Equal("Digital goods: App", entry.Properties.OfType<ODataProperty>().Single(p => p.Name == "TransactionDescription").Value);
                     }
                 }
@@ -346,7 +350,8 @@ namespace Microsoft.OData.Core.E2E.Tests.ContainmentTests
                 {
                     if (reader.State == ODataReaderState.ResourceEnd)
                     {
-                        ODataResource entry = reader.Item as ODataResource;
+                        ODataResource? entry = reader.Item as ODataResource;
+                        Assert.NotNull(entry);
                         Assert.NotNull(entry.Properties.OfType<ODataProperty>().Single(p => p.Name == "StatementID").Value);
                         Assert.NotNull(entry.Properties.OfType<ODataProperty>().Single(p => p.Name == "TransactionType").Value);
                         Assert.NotNull(entry.Properties.OfType<ODataProperty>().Single(p => p.Name == "TransactionDescription").Value);
@@ -385,7 +390,8 @@ namespace Microsoft.OData.Core.E2E.Tests.ContainmentTests
                 {
                     if (reader.State == ODataReaderState.ResourceEnd)
                     {
-                        ODataResource entry = reader.Item as ODataResource;
+                        ODataResource? entry = reader.Item as ODataResource;
+                        Assert.NotNull(entry);
                         Assert.Equal(802, entry.Properties.OfType<ODataProperty>().Single(p => p.Name == "StoredPIID").Value);
                         Assert.Equal("AliPay", entry.Properties.OfType<ODataProperty>().Single(p => p.Name == "PIType").Value);
                     }
@@ -419,7 +425,7 @@ namespace Microsoft.OData.Core.E2E.Tests.ContainmentTests
                 {
                     if (reader.State == ODataReaderState.ResourceEnd)
                     {
-                        ODataResource entry = reader.Item as ODataResource;
+                        ODataResource? entry = reader.Item as ODataResource;
                         Assert.NotNull(entry);
                         entries.Add(entry);
                     }
@@ -457,7 +463,8 @@ namespace Microsoft.OData.Core.E2E.Tests.ContainmentTests
                 {
                     if (reader.State == ODataReaderState.ResourceEnd)
                     {
-                        ODataResource entry = reader.Item as ODataResource;
+                        ODataResource? entry = reader.Item as ODataResource;
+                        Assert.NotNull(entry);
                         Assert.Equal(101902, entry.Properties.OfType<ODataProperty>().Single(p => p.Name == "PaymentInstrumentID").Value);
                     }
                 }
@@ -489,7 +496,8 @@ namespace Microsoft.OData.Core.E2E.Tests.ContainmentTests
                 {
                     if (reader.State == ODataReaderState.ResourceEnd)
                     {
-                        ODataResource entry = reader.Item as ODataResource;
+                        ODataResource? entry = reader.Item as ODataResource;
+                        Assert.NotNull(entry);
                         Assert.NotNull(entry.Properties.OfType<ODataProperty>().Single(p => p.Name == "PaymentInstrumentID").Value);
                     }
                     else if (reader.State == ODataReaderState.ResourceSetEnd)
@@ -556,7 +564,7 @@ namespace Microsoft.OData.Core.E2E.Tests.ContainmentTests
             {
                 using var messageReader = new ODataMessageReader(responseMessage, readerSettings, _model);
                 var reader = await messageReader.CreateODataResourceReaderAsync();
-                ODataResource entry = null;
+                ODataResource? entry = null;
 
                 while (await reader.ReadAsync())
                 {
@@ -566,6 +574,7 @@ namespace Microsoft.OData.Core.E2E.Tests.ContainmentTests
                     }
                 }
 
+                Assert.NotNull(entry);
                 Assert.Equal(101, entry.Properties.OfType<ODataProperty>().Single(p => p.Name == "AccountID").Value);
                 Assert.Equal(ODataReaderState.Completed, reader.State);
             }
@@ -589,13 +598,13 @@ namespace Microsoft.OData.Core.E2E.Tests.ContainmentTests
             {
                 using var messageReader = new ODataMessageReader(responseMessage, readerSettings, _model);
                 var reader = await messageReader.CreateODataResourceSetReaderAsync();
-                ODataResourceSet feed = null;
+                ODataResourceSet? feed = null;
 
                 while (await reader.ReadAsync())
                 {
                     if (reader.State == ODataReaderState.ResourceEnd)
                     {
-                        ODataResource entry = reader.Item as ODataResource;
+                        ODataResource? entry = reader.Item as ODataResource;
                         if (entry != null && entry.TypeName.EndsWith("Account"))
                         {
                             Assert.NotNull(entry.Properties.OfType<ODataProperty>().Single(p => p.Name == "AccountID").Value);
@@ -698,7 +707,7 @@ namespace Microsoft.OData.Core.E2E.Tests.ContainmentTests
                 {
                     if (reader.State == ODataReaderState.ResourceEnd)
                     {
-                        ODataResource entry = reader.Item as ODataResource;
+                        ODataResource? entry = reader.Item as ODataResource;
 
                         Assert.NotNull(entry);
                         entries.Add(entry);
@@ -743,11 +752,11 @@ namespace Microsoft.OData.Core.E2E.Tests.ContainmentTests
                 {
                     if (reader.State == ODataReaderState.ResourceEnd)
                     {
-                        entries.Add(reader.Item as ODataResource);
+                        entries.Add((ODataResource)reader.Item);
                     }
                     else if (reader.State == ODataReaderState.NestedResourceInfoEnd)
                     {
-                        navigationLinks.Add(reader.Item as ODataNestedResourceInfo);
+                        navigationLinks.Add((ODataNestedResourceInfo)reader.Item);
                     }
                 }
 
@@ -778,9 +787,10 @@ namespace Microsoft.OData.Core.E2E.Tests.ContainmentTests
             };
 
             var accountType = _model.FindDeclaredType(TestModelNameSpace + ".Account") as IEdmEntityType;
+            Assert.NotNull(accountType);
             var accountSet = _model.EntityContainer.FindEntitySet("Accounts");
             var paymentInstrumentType = _model.FindDeclaredType(TestModelNameSpace + ".PaymentInstrument") as IEdmEntityType;
-            IEdmNavigationProperty navProp = accountType.FindProperty("MyPaymentInstruments") as IEdmNavigationProperty;
+            IEdmNavigationProperty? navProp = accountType.FindProperty("MyPaymentInstruments") as IEdmNavigationProperty;
             var myPaymentInstrumentSet = accountSet.FindNavigationTarget(navProp);
 
             var requestUrl = new Uri(_baseUri + "Accounts(101)/MyPaymentInstruments");
@@ -805,7 +815,8 @@ namespace Microsoft.OData.Core.E2E.Tests.ContainmentTests
 
             // verify the create
             Assert.Equal(201, responseMessage.StatusCode);
-            ODataResource entry = await QueryEntityItemAsync("Accounts(101)/MyPaymentInstruments(101904)") as ODataResource;
+            ODataResource? entry = await QueryEntityItemAsync("Accounts(101)/MyPaymentInstruments(101904)") as ODataResource;
+            Assert.NotNull(entry);
             Assert.Equal(101904, entry.Properties.OfType<ODataProperty>().Single(p => p.Name == "PaymentInstrumentID").Value);
 
             // delete the entry
@@ -820,7 +831,7 @@ namespace Microsoft.OData.Core.E2E.Tests.ContainmentTests
 
             // verify the delete
             Assert.Equal(204, deleteResponseMessage.StatusCode);
-            ODataResource deletedEntry = await QueryEntityItemAsync("Accounts(101)/MyPaymentInstruments(101904)", 404) as ODataResource;
+            ODataResource? deletedEntry = await QueryEntityItemAsync("Accounts(101)/MyPaymentInstruments(101904)", 404) as ODataResource;
             Assert.Null(deletedEntry);
         }
 
@@ -843,9 +854,10 @@ namespace Microsoft.OData.Core.E2E.Tests.ContainmentTests
             };
 
             var accountType = _model.FindDeclaredType(TestModelNameSpace + ".Account") as IEdmEntityType;
+            Assert.NotNull(accountType);
             var accountSet = _model.EntityContainer.FindEntitySet("Accounts");
             var giftCardType = _model.FindDeclaredType(TestModelNameSpace + ".GiftCard") as IEdmEntityType;
-            IEdmNavigationProperty navProp = accountType.FindProperty("MyGiftCard") as IEdmNavigationProperty;
+            IEdmNavigationProperty? navProp = accountType.FindProperty("MyGiftCard") as IEdmNavigationProperty;
             var myGiftCardSet = accountSet.FindNavigationTarget(navProp);
 
             var requestUrl = new Uri(_baseUri + "Accounts(104)/MyGiftCard");
@@ -870,7 +882,8 @@ namespace Microsoft.OData.Core.E2E.Tests.ContainmentTests
             var responseMessage = await requestMessage.GetResponseAsync();
 
             Assert.Equal(204, responseMessage.StatusCode);
-            ODataResource entry = await QueryEntityItemAsync("Accounts(104)/MyGiftCard") as ODataResource;
+            ODataResource? entry = await QueryEntityItemAsync("Accounts(104)/MyGiftCard") as ODataResource;
+            Assert.NotNull(entry);
             Assert.Equal(304, entry.Properties.OfType<ODataProperty>().Single(p => p.Name == "GiftCardID").Value);
         }
 
@@ -886,9 +899,10 @@ namespace Microsoft.OData.Core.E2E.Tests.ContainmentTests
             };
 
             var accountType = _model.FindDeclaredType(TestModelNameSpace + ".Account") as IEdmEntityType;
+            Assert.NotNull(accountType);
             var accountSet = _model.EntityContainer.FindEntitySet("Accounts");
             var paymentInstrumentType = _model.FindDeclaredType(TestModelNameSpace + ".PaymentInstrument") as IEdmEntityType;
-            IEdmNavigationProperty navProp = accountType.FindProperty("MyPaymentInstruments") as IEdmNavigationProperty;
+            IEdmNavigationProperty? navProp = accountType.FindProperty("MyPaymentInstruments") as IEdmNavigationProperty;
             var myPaymentInstrumentSet = accountSet.FindNavigationTarget(navProp);
 
             var paymentInstrumentEntry = new ODataResource() { TypeName = TestModelNameSpace + ".PaymentInstrument" };
@@ -919,7 +933,8 @@ namespace Microsoft.OData.Core.E2E.Tests.ContainmentTests
 
             // verify the create
             Assert.Equal(204, responseMessage.StatusCode);
-            ODataResource entry = await QueryEntityItemAsync("Accounts(101)/MyPaymentInstruments(101903)") as ODataResource;
+            ODataResource? entry = await QueryEntityItemAsync("Accounts(101)/MyPaymentInstruments(101903)") as ODataResource;
+            Assert.NotNull(entry);
             Assert.Equal(101903, entry.Properties.OfType<ODataProperty>().Single(p => p.Name == "PaymentInstrumentID").Value);
             Assert.Equal(mimeType, entry.Properties.OfType<ODataProperty>().Single(p => p.Name == "FriendlyName").Value);
         }
@@ -936,7 +951,7 @@ namespace Microsoft.OData.Core.E2E.Tests.ContainmentTests
             yield return new object[] { "Accounts(101)/MyPaymentInstruments(101901)?$select=PaymentInstrumentID,FriendlyName,CreatedDate", 3, "application/json;odata.metadata=none" };
         }
 
-        private async Task<ODataItem> QueryEntityItemAsync(string uri, int expectedStatusCode = 200)
+        private async Task<ODataItem?> QueryEntityItemAsync(string uri, int expectedStatusCode = 200)
         {
             ODataMessageReaderSettings readerSettings = new()
             {
@@ -952,7 +967,7 @@ namespace Microsoft.OData.Core.E2E.Tests.ContainmentTests
 
             Assert.Equal(expectedStatusCode, queryResponseMessage.StatusCode);
 
-            ODataItem item = null;
+            ODataItem? item = null;
             if (expectedStatusCode == 200)
             {
                 using var messageReader = new ODataMessageReader(queryResponseMessage, readerSettings, _model);

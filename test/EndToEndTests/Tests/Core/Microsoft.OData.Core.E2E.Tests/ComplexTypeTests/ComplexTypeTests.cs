@@ -255,7 +255,7 @@ namespace Microsoft.OData.Core.E2E.Tests.ComplexTypeTests
         public async Task UpdatingADerivedComplexTypeProperty_UpdatesSuccessfully(string mimeType)
         {
             ODataMessageReaderSettings readerSettings = new() { BaseUri = _baseUri };
-            (ODataResource entry, List<ODataResource> complexTypeResources) = await QueryEntryAsync("People(1)");
+            (ODataResource? entry, List<ODataResource> complexTypeResources) = await QueryEntryAsync("People(1)");
 
             var homeAddress = complexTypeResources.Last(a => a.TypeName.EndsWith("HomeAddress"));
 
@@ -445,8 +445,9 @@ namespace Microsoft.OData.Core.E2E.Tests.ComplexTypeTests
             // verify the insert
             Assert.Equal(201, responseMessage.StatusCode);
 
-            (ODataResource entry, List<ODataResource> complexTypeResources) = await QueryEntryAsync("People(101)");
+            (ODataResource? entry, List<ODataResource> complexTypeResources) = await QueryEntryAsync("People(101)");
 
+            Assert.NotNull(entry);
             Assert.Equal(101, entry.Properties.OfType<ODataProperty>().Single(p => p.Name == "PersonID").Value);
 
             var homeAddress = complexTypeResources.Single(r => r.TypeName.EndsWith("Address"));
@@ -466,7 +467,7 @@ namespace Microsoft.OData.Core.E2E.Tests.ComplexTypeTests
             // verify the delete
             Assert.Equal(204, deleteResponseMessage.StatusCode);
 
-            ODataResource deletedEntry = null;
+            ODataResource? deletedEntry = null;
             (deletedEntry, complexTypeResources) = await QueryEntryAsync("People(101)", 404);
 
             Assert.Null(deletedEntry);
@@ -565,9 +566,9 @@ namespace Microsoft.OData.Core.E2E.Tests.ComplexTypeTests
                 using var messageReader = new ODataMessageReader(responseMessage, readerSettings, _model);
                 var reader = await messageReader.CreateODataResourceReaderAsync();
 
-                ODataResource account = null;
-                ODataResource accountInfo = null;
-                ODataResource addressComplex1 = null;
+                ODataResource? account = null;
+                ODataResource? accountInfo = null;
+                ODataResource? addressComplex1 = null;
 
                 while (await reader.ReadAsync())
                 {
@@ -649,9 +650,9 @@ namespace Microsoft.OData.Core.E2E.Tests.ComplexTypeTests
                 using var messageReader = new ODataMessageReader(responseMessage, readerSettings, _model);
                 var reader = await messageReader.CreateODataResourceSetReaderAsync();
 
-                ODataResource account = null;
-                ODataResource accountInfo = null;
-                ODataResource addressComplex1 = null;
+                ODataResource? account = null;
+                ODataResource? accountInfo = null;
+                ODataResource? addressComplex1 = null;
 
                 while (await reader.ReadAsync())
                 {
@@ -700,7 +701,7 @@ namespace Microsoft.OData.Core.E2E.Tests.ComplexTypeTests
             string[] middleNames = { "Hood", "MN1", "MN2", "MN3" };
             for (int i = 0; i < types.Length; i++)
             {
-                (ODataResource entry, List<ODataResource> complexTypeResources) = await QueryEntryAsync("Accounts(101)");
+                (ODataResource? entry, List<ODataResource> complexTypeResources) = await QueryEntryAsync("Accounts(101)");
 
                 var accountInfo = complexTypeResources.Single(a => a.TypeName.EndsWith("AccountInfo"));
                 Assert.Equal(middleNames[i], accountInfo.Properties.OfType<ODataProperty>().Single(p => p.Name == "MiddleName").Value);
@@ -863,7 +864,7 @@ namespace Microsoft.OData.Core.E2E.Tests.ComplexTypeTests
 
             // verify the delete
             Assert.Equal(204, deleteResponseMessage.StatusCode);
-            (ODataResource deletedEntry, List<ODataResource> complexProperties) = await QueryEntryAsync("Accounts(10086)", 404);
+            (ODataResource? deletedEntry, List<ODataResource> complexProperties) = await QueryEntryAsync("Accounts(10086)", 404);
             Assert.Null(deletedEntry);
         }
 
@@ -889,7 +890,7 @@ namespace Microsoft.OData.Core.E2E.Tests.ComplexTypeTests
             {
                 using var messageReader = new ODataMessageReader(responseMessage, readerSettings, _model);
                 var odataReader = await messageReader.CreateODataResourceReaderAsync();
-                ODataResource accountInfo = null;
+                ODataResource? accountInfo = null;
 
                 while (await odataReader.ReadAsync())
                 {
@@ -1074,7 +1075,7 @@ namespace Microsoft.OData.Core.E2E.Tests.ComplexTypeTests
             Assert.Equal(204, responseMessage.StatusCode);
 
             // verify updated value
-            (ODataResource entry, List<ODataResource> complexProperties) = await QueryEntryAsync("Accounts(101)");
+            (ODataResource? entry, List<ODataResource> complexProperties) = await QueryEntryAsync("Accounts(101)");
             var updatedAccountInfo = complexProperties.Single(r => r.TypeName.EndsWith("AccountInfo"));
 
             Assert.Equal("FN", updatedAccountInfo.Properties.OfType<ODataProperty>().Single(p => p.Name == "FirstName").Value);
@@ -1097,7 +1098,7 @@ namespace Microsoft.OData.Core.E2E.Tests.ComplexTypeTests
         }
         #endregion
 
-        private async Task<(ODataResource entry, List<ODataResource> complexProperties)> QueryEntryAsync(string uri, int expectedStatusCode = 200)
+        private async Task<(ODataResource? entry, List<ODataResource> complexProperties)> QueryEntryAsync(string uri, int expectedStatusCode = 200)
         {
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = _baseUri };
 
@@ -1113,7 +1114,7 @@ namespace Microsoft.OData.Core.E2E.Tests.ComplexTypeTests
 
             Assert.Equal(expectedStatusCode, queryResponseMessage.StatusCode);
 
-            ODataResource entry = null;
+            ODataResource? entry = null;
             List<ODataResource> complexProperties = [];
 
             if (expectedStatusCode == 200)
@@ -1138,7 +1139,7 @@ namespace Microsoft.OData.Core.E2E.Tests.ComplexTypeTests
                                 }
                                 else
                                 {
-                                    complexProperties.Add(reader.Item as ODataResource);
+                                    complexProperties.Add((ODataResource)reader.Item);
                                 }
 
                                 break;

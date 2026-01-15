@@ -16,7 +16,7 @@ namespace Microsoft.OData.Client.E2E.Tests.SingletonTests.Server;
 
 public class SingletonClientTestsController : ODataController
 {
-    private static DefaultDataSource _dataSource;
+    private static DefaultDataSource? _dataSource;
 
 
     #region odata/VipCustomer

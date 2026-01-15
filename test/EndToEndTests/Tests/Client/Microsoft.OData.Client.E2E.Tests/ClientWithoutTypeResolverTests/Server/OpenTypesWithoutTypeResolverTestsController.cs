@@ -15,7 +15,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Server
 {
     public class OpenTypesWithoutTypeResolverTestsController : ODataController
     {
-        private static OpenTypesDataSource _dataSource;
+        private static OpenTypesDataSource? _dataSource;
 
         [EnableQuery]
         [HttpGet("odata/RowIndices")]

@@ -22,7 +22,7 @@ namespace Microsoft.OData.Core.E2E.Tests.ActionOverloadingTests.Tests
     {
         private readonly Uri _baseUri;
         private readonly Container _context;
-        private IEdmModel _model = null;
+        private IEdmModel? _model = null;
         public const string PersonTypeName = "Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.Person";
         public const string EmployeeTypeName = "Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.Employee";
         public const string SpecialEmployeeTypeName = "Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.SpecialEmployee";
@@ -46,6 +46,7 @@ namespace Microsoft.OData.Core.E2E.Tests.ActionOverloadingTests.Tests
         public ActionOverloadingQueryTests(TestWebApplicationFactory<TestsStartup> fixture)
             : base(fixture)
         {
+            Assert.NotNull(Client.BaseAddress);
             _baseUri = new Uri(Client.BaseAddress, "odata/");
             _context = new Container(_baseUri)
             {
