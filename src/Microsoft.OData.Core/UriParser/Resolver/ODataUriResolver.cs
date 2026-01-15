@@ -196,7 +196,7 @@ namespace Microsoft.OData.UriParser
                 return term;
             }
 
-            IReadOnlyList<IEdmTerm> results = FindSchemaElements(model, termName, (cache, key) => cache.FindTerms(key));
+            IReadOnlyList<IEdmTerm> results = FindSchemaElements(model, termName, (cache, key) => cache.FindTerms(key), EnableCaseInsensitive);
 
             if (results == null || results.Count == 0)
             {
@@ -228,7 +228,7 @@ namespace Microsoft.OData.UriParser
                 return type;
             }
 
-            IReadOnlyList<IEdmSchemaType> results = FindSchemaElements(model, typeName, (cache, key) => cache.FindSchemaTypes(key));
+            IReadOnlyList<IEdmSchemaType> results = FindSchemaElements(model, typeName, (cache, key) => cache.FindSchemaTypes(key), EnableCaseInsensitive);
 
             if (results == null || results.Count == 0)
             {
@@ -262,7 +262,7 @@ namespace Microsoft.OData.UriParser
                 return results;
             }
 
-            IReadOnlyList<IEdmOperation> operations = FindSchemaElements(model, identifier, (cache, key) => cache.FindOperations(key));
+            IReadOnlyList<IEdmOperation> operations = FindSchemaElements(model, identifier, (cache, key) => cache.FindOperations(key), EnableCaseInsensitive);
 
             if (operations != null && operations.Count > 0)
             {
@@ -298,7 +298,7 @@ namespace Microsoft.OData.UriParser
                 return results;
             }
 
-            IReadOnlyList<IEdmOperation> operations = FindSchemaElements(model, identifier, (cache, key) => cache.FindOperations(key));
+            IReadOnlyList<IEdmOperation> operations = FindSchemaElements(model, identifier, (cache, key) => cache.FindOperations(key), EnableCaseInsensitive);
 
             if (operations != null && operations.Count > 0)
             {
@@ -575,7 +575,7 @@ namespace Microsoft.OData.UriParser
         private static IReadOnlyList<T> FindSchemaElements<T>(
             IEdmModel model,
             string identifier,
-            Func<NormalizedModelElementsCache, string, List<T>> cacheLookupFunc) where T : IEdmSchemaElement
+            Func<NormalizedModelElementsCache, string, List<T>> cacheLookupFunc, bool caseInsensitive) where T : IEdmSchemaElement
         {
             if (model.IsImmutable())
             {
@@ -588,22 +588,25 @@ namespace Microsoft.OData.UriParser
 
         private static IReadOnlyList<T> FindAcrossModels<T>(IEdmModel model, string qualifiedName, bool caseInsensitive) where T : IEdmSchemaElement
         {
+            // Replace the possible alias in the qualified name.
+            ReadOnlySpan<char> modifiedQualifiedName = model.ReplaceAlias(qualifiedName.AsSpan(), caseInsensitive);
+
             IList<T> results = new List<T>();
-            FindSchemaElementsInModel<T>(model, qualifiedName, caseInsensitive, ref results);
+            FindSchemaElementsInModel<T>(model, modifiedQualifiedName, caseInsensitive, ref results);
 
             foreach (IEdmModel reference in model.ReferencedModels)
             {
-                FindSchemaElementsInModel<T>(reference, qualifiedName, caseInsensitive, ref results);
+                FindSchemaElementsInModel<T>(reference, modifiedQualifiedName, caseInsensitive, ref results);
             }
 
             return results as IReadOnlyList<T>;
         }
 
-        private static void FindSchemaElementsInModel<T>(IEdmModel model, string qualifiedName, bool caseInsensitive, ref IList<T> results) where T : IEdmSchemaElement
+        private static void FindSchemaElementsInModel<T>(IEdmModel model, ReadOnlySpan<char> qualifiedName, bool caseInsensitive, ref IList<T> results) where T : IEdmSchemaElement
         {
             foreach (IEdmSchemaElement schema in model.SchemaElements)
             {
-                if (string.Equals(qualifiedName, schema.FullName(), caseInsensitive ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal))
+                if (qualifiedName.Equals(schema.FullName(), caseInsensitive ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal))
                 {
                     if (schema is T)
                     {
@@ -631,5 +634,7 @@ namespace Microsoft.OData.UriParser
 
             return cache;
         }
+
+
     }
 }

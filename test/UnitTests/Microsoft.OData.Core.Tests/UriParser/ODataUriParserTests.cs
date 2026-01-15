@@ -1449,7 +1449,94 @@ namespace Microsoft.OData.Tests.UriParser
             Assert.Equal(fullUriString, Uri.UnescapeDataString(resultUri.OriginalString));
         }
 
-#region Escape Function Parse
+        // use static to make sure one model used in all tests
+        private static IEdmModel ModelWithAlias = GetEdmModelWithAlias();
+
+        private static IEdmModel GetEdmModelWithAlias()
+        {
+            EdmModel model = new EdmModel();
+            var person = new EdmEntityType("MyNameSpace", "Person");
+            var person_ID = person.AddStructuralProperty("ID", EdmCoreModel.Instance.GetString(false));
+            person.AddKeys(person_ID);
+            var person_SSN = person.AddStructuralProperty("SSN", EdmCoreModel.Instance.GetString(true));
+            model.AddElement(person);
+            var employee = new EdmEntityType("MyNameSpace", "Employee", person);
+            employee.AddStructuralProperty("BadgeId", EdmCoreModel.Instance.GetInt32(false));
+            model.AddElement(employee);
+            EdmEntityContainer container = new EdmEntityContainer("MyNameSpace", "Container");
+            container.AddEntitySet("People", person);
+            model.AddElement(container);
+            model.SetNamespaceAlias("MyNameSpace", "MyAlias");
+            return model;
+        }
+
+        [Theory]
+        [InlineData("MyNameSpace", "Employee", true)] // Exact match using Qualified Namespace, but case insensitive enabled
+        [InlineData("MyNameSpace", "Employee", false)] // Exact match using Qualified Namespace, but case insensitive disabled
+        [InlineData("myNamespace", "Employee", true)]
+        [InlineData("MyNameSpace", "emploYee", true)]
+        [InlineData("mynameSpace", "employEE", true)]
+        [InlineData("MyAlias", "Employee", true)] // Exact match using alias Namespace, but case insensitive enabled
+        [InlineData("MyAlias", "Employee", false)] // Exact match using alias Namespace, but case insensitive disabled
+        [InlineData("myAlias", "Employee", true)]
+        [InlineData("MyAlias", "emploYee", true)]
+        [InlineData("mYalias", "employEE", true)]
+        public void ParsePathUsingNamespaceOrAlias_CaseInsensitiveEnabled(string namespaceOrAlias, string typeShortName, bool caseInsensitive)
+        {
+            IEdmModel model = ModelWithAlias;
+
+            Uri uri = new Uri($"/People/{namespaceOrAlias}.{typeShortName}", UriKind.Relative);
+            ODataUriParser uriParser = new ODataUriParser(model, ServiceRoot, uri)
+            {
+                Resolver = new UnqualifiedODataUriResolver()
+                {
+                    EnableCaseInsensitive = caseInsensitive,
+                },
+                UrlKeyDelimiter = ODataUrlKeyDelimiter.Slash,
+            };
+            ODataPath path = uriParser.ParsePath();
+
+            ODataPathSegment segment = path.LastSegment;
+
+            Assert.NotNull(segment);
+            TypeSegment typeSegment = Assert.IsType<TypeSegment>(segment);
+            Assert.Equal("Collection(MyNameSpace.Employee)", typeSegment.EdmType.FullTypeName());
+        }
+
+        [Theory]
+        [InlineData("myNamespace", "Employee")]
+        [InlineData("MyNameSpace", "emploYee")]
+        [InlineData("mynameSpace", "employEE")]
+        [InlineData("myAlias", "Employee")]
+        [InlineData("MyAlias", "emploYee")]
+        [InlineData("mYalias", "employEE")]
+        public void ParsePathUsingNonMatchedNamespaceOrAlias_CaseInsensitiveDisabled(string namespaceOrAlias, string typeShortName)
+        {
+            IEdmModel model = ModelWithAlias;
+            string segmentString = $"{namespaceOrAlias}.{typeShortName}";
+            Uri uri = new Uri($"/People/{segmentString}", UriKind.Relative);
+            ODataUriParser uriParser = new ODataUriParser(model, ServiceRoot, uri)
+            {
+                Resolver = new UnqualifiedODataUriResolver()
+                {
+                    EnableCaseInsensitive = false,
+                },
+                UrlKeyDelimiter = ODataUrlKeyDelimiter.Slash,
+            };
+            ODataPath path = uriParser.ParsePath();
+
+            ODataPathSegment segment = path.LastSegment;
+
+            Assert.NotNull(segment);
+
+            // The segment should be treated as a key segment since
+            // 1) the type could not be resolved
+            // 2) the key is string type
+            // 3) key as segment is enabled
+            segment.ShouldBeKeySegment(new KeyValuePair<string, object>("ID", segmentString));
+        }
+
+        #region Escape Function Parse
         [Theory]
         [InlineData("/root:/", "/root/NS.NormalFunction(path='')")]
         [InlineData("/root:/abc", "/root/NS.NormalFunction(path='abc')")]
