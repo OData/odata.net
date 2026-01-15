@@ -512,8 +512,10 @@ namespace Microsoft.OData.Edm
         /// <param name="model">The model containing the element.</param>
         /// <param name="name">The alias- or namespace- qualified name of the element.</param>
         /// <returns>The namespace qualified name of the element.</returns>
-        internal static ReadOnlySpan<char> ReplaceAlias(this IEdmModel model, ReadOnlySpan<char> name)
+        public static ReadOnlySpan<char> ReplaceAlias(this IEdmModel model, ReadOnlySpan<char> name, bool enableCaseInsensitive = false)
         {
+            EdmUtil.CheckArgumentNull(model, "model");
+
             VersioningDictionary<string, string> mappings = model.GetNamespaceAliases();
             VersioningList<string> list = model.GetUsedNamespacesHavingAlias();
             int idx = name.IndexOf(".", StringComparison.Ordinal);
@@ -525,7 +527,8 @@ namespace Microsoft.OData.Edm
                 string ns = null;
                 for (int i = 0; i < list.Count; i++)
                 {
-                    if (mappings.TryGetValue(list[i], out string alias) && typeAlias.Equals(alias, StringComparison.Ordinal))
+                    if (mappings.TryGetValue(list[i], out string alias)
+                        && typeAlias.Equals(alias, enableCaseInsensitive ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal))
                     {
                         ns = list[i];
                         break;
