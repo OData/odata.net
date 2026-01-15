@@ -20,27 +20,6 @@ namespace Microsoft.OData.Json
     internal sealed partial class JsonWriter
     {
         /// <inheritdoc/>
-        public Task StartPaddingFunctionScopeAsync()
-        {
-            Debug.Assert(this.scopes.Count == 0, "Padding scope can only be the outer most scope.");
-            return this.StartScopeAsync(ScopeType.Padding);
-        }
-
-        /// <inheritdoc/>
-        public async Task EndPaddingFunctionScopeAsync()
-        {
-            Debug.Assert(this.scopes.Count > 0, "No scope to end.");
-
-            await this.writer.WriteLineAsync().ConfigureAwait(false);
-            await this.writer.DecreaseIndentationAsync().ConfigureAwait(false);
-            Scope scope = this.scopes.Pop();
-
-            Debug.Assert(scope.Type == ScopeType.Padding, "Ending scope does not match.");
-
-            await this.writer.WriteAsync(scope.EndString).ConfigureAwait(false);
-        }
-
-        /// <inheritdoc/>
         public Task StartObjectScopeAsync()
         {
             return this.StartScopeAsync(ScopeType.Object);
@@ -98,12 +77,6 @@ namespace Microsoft.OData.Json
             await this.writer.WriteEscapedJsonStringAsync(name, this.stringEscapeOption, this.wrappedBuffer, this.ArrayPool)
                 .ConfigureAwait(false);
             await this.writer.WriteAsync(JsonConstants.NameValueSeparator).ConfigureAwait(false);
-        }
-
-        /// <inheritdoc/>
-        public Task WritePaddingFunctionNameAsync(string functionName)
-        {
-            return this.writer.WriteAsync(functionName);
         }
 
         /// <inheritdoc/>

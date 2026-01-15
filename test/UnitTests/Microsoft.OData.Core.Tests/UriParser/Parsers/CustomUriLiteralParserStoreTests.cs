@@ -151,7 +151,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
 
             var set = store.Snapshot();
             Assert.True(set.Contains(parser));
-            Assert.Equal(1, set.Count);
+            Assert.Single(set);
         }
 
         [Theory]

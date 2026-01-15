@@ -53,28 +53,6 @@ namespace Microsoft.OData.Tests.Json
             await this.stream.DisposeAsync();
         }
 
-        [Fact]
-        public async Task StartPaddingFunctionScopeAsync_WritesParenthesis()
-        {
-            await this.writer.StartPaddingFunctionScopeAsync();
-            Assert.Equal("(", await this.ReadStreamAsync());
-        }
-
-        [Fact]
-        public async Task EndPaddingFunctionScopeAsync_WritesParenthesis()
-        {
-            await this.writer.StartPaddingFunctionScopeAsync();
-            await this.writer.EndPaddingFunctionScopeAsync();
-            Assert.Equal("()", await this.ReadStreamAsync());
-        }
-
-        [Fact]
-        public async Task WritePaddingFunctionNameAsync_WritesName()
-        {
-            await this.writer.WritePaddingFunctionNameAsync("example");
-            Assert.Equal("example", await this.ReadStreamAsync());
-        }
-
         #region WritePrimitiveValue
 
         [Fact]

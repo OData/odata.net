@@ -1243,7 +1243,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
             resourceWriter.WriteEnd();
 
             var str = Encoding.UTF8.GetString(stream.ToArray());
-            Assert.Equal(str, "{\"@odata.context\":\"http://svc/$metadata#Customers/$entity\"," +
+            Assert.Equal("{\"@odata.context\":\"http://svc/$metadata#Customers/$entity\"," +
                 "\"Id\":9," +
                 "\"ComplexProperty\":{" +
                     "\"@odata.type\":\"#NS.Address\"," +
@@ -1255,7 +1255,8 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
                 "\"EntityProperty\":{" +
                     "\"@odata.type\":\"#NS.Customer\"," +
                     "\"Id\":42" +
-                "}}");
+                "}}",
+                str);
         }
 
         [Fact]
@@ -3250,7 +3251,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
                 }
                 else
                 {
-                    Assert.True(false, "Top level item to write must be entry or feed.");
+                    Assert.Fail("Top level item to write must be entry or feed.");
                 }
 
                 Assert.Equal(itemsToWrite.Length, currentIdx);

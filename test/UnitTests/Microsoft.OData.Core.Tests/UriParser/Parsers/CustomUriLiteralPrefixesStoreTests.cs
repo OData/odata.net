@@ -287,7 +287,7 @@ namespace Microsoft.OData.Core.Tests.UriParser
             // Ensure only one key exists with that name
             var snapshot = store.Snapshot();
             Assert.True(snapshot.ContainsKey(prefix));
-            Assert.Single(snapshot.Where(kv => kv.Key == prefix));
+            Assert.Single(snapshot, kv => kv.Key == prefix);
         }
 
         [Fact]

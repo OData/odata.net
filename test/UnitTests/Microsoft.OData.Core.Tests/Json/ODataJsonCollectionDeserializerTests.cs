@@ -149,7 +149,6 @@ namespace Microsoft.OData.Tests.Json
                     await jsonCollectionDeserializer.ReadCollectionEndAsync(
                         isReadingNestedPayload: false);
 
-                    Assert.NotNull(readCollectionStartResult);
                     var collectionStart = Assert.IsType<ODataCollectionStart>(readCollectionStartResult.Item1);
                     var actualItemTypeReference = Assert.IsAssignableFrom<IEdmTypeReference>(readCollectionStartResult.Item2);
                     Assert.NotNull(collectionStart);
@@ -196,7 +195,6 @@ namespace Microsoft.OData.Tests.Json
                     await jsonCollectionDeserializer.ReadCollectionEndAsync(
                         isReadingNestedPayload: false);
 
-                    Assert.NotNull(readCollectionStartResult);
                     Assert.Equal("Tea", collectionItem1);
                     Assert.Equal("Coffee", collectionItem2);
                 });

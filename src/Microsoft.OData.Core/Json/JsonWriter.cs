@@ -124,31 +124,6 @@ namespace Microsoft.OData.Json
         }
 
         /// <summary>
-        /// Start the padding function scope.
-        /// </summary>
-        public void StartPaddingFunctionScope()
-        {
-            Debug.Assert(this.scopes.Count == 0, "Padding scope can only be the outer most scope.");
-            this.StartScope(ScopeType.Padding);
-        }
-
-        /// <summary>
-        /// End the padding function scope.
-        /// </summary>
-        public void EndPaddingFunctionScope()
-        {
-            Debug.Assert(this.scopes.Count > 0, "No scope to end.");
-
-            this.writer.WriteLine();
-            this.writer.DecreaseIndentation();
-            Scope scope = this.scopes.Pop();
-
-            Debug.Assert(scope.Type == ScopeType.Padding, "Ending scope does not match.");
-
-            this.writer.Write(scope.EndString);
-        }
-
-        /// <summary>
         /// Start the object scope.
         /// </summary>
         public void StartObjectScope()
@@ -216,15 +191,6 @@ namespace Microsoft.OData.Json
 
             JsonValueUtils.WriteEscapedJsonString(this.writer, name, this.stringEscapeOption, this.wrappedBuffer, this.ArrayPool);
             this.writer.Write(JsonConstants.NameValueSeparator);
-        }
-
-        /// <summary>
-        /// Writes a function name for JSON padding.
-        /// </summary>
-        /// <param name="functionName">Name of the padding function to write.</param>
-        public void WritePaddingFunctionName(string functionName)
-        {
-            this.writer.Write(functionName);
         }
 
         /// <summary>

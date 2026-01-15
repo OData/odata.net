@@ -925,7 +925,7 @@ public class SchemaParsingTests : EdmLibTestCaseBase
         Assert.Equal("Address", type2.StructuralProperties().Last().Name);
 
         IEdmStringTypeReference addressType = type2.StructuralProperties().Last().Type.AsPrimitive().AsString();
-        Assert.Equal(addressType.PrimitiveKind(), EdmPrimitiveTypeKind.String);
+        Assert.Equal(EdmPrimitiveTypeKind.String, addressType.PrimitiveKind());
         Assert.Equal(2048, addressType.MaxLength);
         Assert.True(addressType.IsNullable);
 
@@ -955,7 +955,7 @@ public class SchemaParsingTests : EdmLibTestCaseBase
         IEdmPrimitiveTypeReference resolvedIdType = id.Type.AsPrimitive();
         Assert.Equal(EdmPrimitiveTypeKind.Int32, resolvedIdType.PrimitiveKind());
 
-        Assert.Equal(1, smod.DeclaredKey.Count());
+        Assert.Single(smod.DeclaredKey);
         Assert.Equal(id, smod.DeclaredKey.First());
         Assert.Equal(smod.DeclaredKey.First(), clod.Key().First());
     }

@@ -206,7 +206,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.Json
             WriteAndValidateSync(itemTypeReference, collectionStart, items, expectedPayload, writingResponse);
             WriteAndValidateAsync(itemTypeReference, collectionStart, items, expectedPayload, writingResponse);
             WriteAndValidatePrimitivesSync(itemTypeReference, collectionStart, items, expectedPayload, writingResponse);
-            WriteAndValidatePrimitivesAsync(itemTypeReference, collectionStart, items, expectedPayload, writingResponse);
+            WriteAndValidatePrimitivesAsync(itemTypeReference, collectionStart, items, expectedPayload, writingResponse).Wait();
         }
 
         private static void WriteAndValidateSync(IEdmTypeReference itemTypeReference, ODataResourceSet collectionStart, IEnumerable<ODataResource> items, string expectedPayload, bool writingResponse)

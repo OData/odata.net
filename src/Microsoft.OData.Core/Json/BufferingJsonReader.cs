@@ -2374,9 +2374,7 @@ namespace Microsoft.OData.Json
         [Conditional("DEBUG")]
         private void AssertAsynchronous()
         {
-#if DEBUG
             Debug.Assert(this.innerReader != null, "The method should only be called on an asynchronous buffering json reader.");
-#endif
         }
 
 #if DEBUG
