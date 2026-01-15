@@ -130,7 +130,7 @@ namespace Microsoft.OData.Tests
         [Fact]
         public void MaxReceivedMessageSizeShouldBeSetByDefault()
         {
-            Assert.Equal(this.settings.MessageQuotas.MaxReceivedMessageSize, 1024 * 1024);
+            Assert.Equal(1024 * 1024, this.settings.MessageQuotas.MaxReceivedMessageSize);
         }
 
         [Fact]
@@ -446,11 +446,11 @@ namespace Microsoft.OData.Tests
             Assert.Same(this.settings.BaseUri, baseUri);
             Assert.True(this.settings.EnableCharactersCheck);
             Assert.False(this.settings.EnableMessageStreamDisposal);
-            Assert.Equal(this.settings.MessageQuotas.MaxPartsPerBatch, maxPartsPerBatch);
-            Assert.Equal(this.settings.MessageQuotas.MaxOperationsPerChangeset, maxOperationsPerChangeset);
-            Assert.Equal(this.settings.MessageQuotas.MaxNestingDepth, maxNestingDepth);
-            Assert.Equal(this.settings.Version, version);
-            Assert.Equal(this.settings.LibraryCompatibility, library);
+            Assert.Equal(maxPartsPerBatch, this.settings.MessageQuotas.MaxPartsPerBatch);
+            Assert.Equal(maxOperationsPerChangeset, this.settings.MessageQuotas.MaxOperationsPerChangeset);
+            Assert.Equal(maxNestingDepth, this.settings.MessageQuotas.MaxNestingDepth);
+            Assert.Equal(version, this.settings.Version);
+            Assert.Equal(library, this.settings.LibraryCompatibility);
         }
 
         [Fact]

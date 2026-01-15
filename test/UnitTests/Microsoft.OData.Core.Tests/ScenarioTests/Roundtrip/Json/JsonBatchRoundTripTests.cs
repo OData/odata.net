@@ -295,7 +295,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.Json
                             }
                             else
                             {
-                                Assert.True(false, "Unexpected response id received: " + responseId);
+                                Assert.Fail("Unexpected response id received: " + responseId);
                             }
                             break;
 

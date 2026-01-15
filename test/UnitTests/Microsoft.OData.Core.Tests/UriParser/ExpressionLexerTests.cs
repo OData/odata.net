@@ -991,7 +991,7 @@ namespace Microsoft.OData.Tests.UriParser
                     return ch;
                 }
             }
-            Assert.True(false, "Should never get here");
+            Assert.Fail("Should never get here");
             return (char)0;
         }
 

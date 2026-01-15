@@ -682,7 +682,7 @@ namespace Microsoft.OData.Tests.Json
                 this.categoryEntityType,
                 (resourceState) =>
                 {
-                    var mediaProperty = Assert.IsType<ODataProperty>(Assert.Single(resourceState.Resource.Properties.Where(d => d.Name.Equals("Media"))));
+                    var mediaProperty = Assert.IsType<ODataProperty>(Assert.Single(resourceState.Resource.Properties, d => d.Name.Equals("Media")));
                     var streamReferenceValue = Assert.IsType<ODataStreamReferenceValue>(mediaProperty.Value);
 
                     Assert.Equal("http://tempuri.org/Categories(1)/Media", streamReferenceValue.EditLink.AbsoluteUri);
@@ -741,7 +741,7 @@ namespace Microsoft.OData.Tests.Json
                 {
                     Assert.Equal(3, resourceState.Resource.Properties.Count());
 
-                    var warehousePinProperty = Assert.IsType<ODataProperty>(Assert.Single(resourceState.Resource.Properties.Where(d => d.Name.Equals("WarehousePin"))));
+                    var warehousePinProperty = Assert.IsType<ODataProperty>(Assert.Single(resourceState.Resource.Properties, d => d.Name.Equals("WarehousePin")));
                     var geographyPoint = Assert.IsAssignableFrom<GeographyPoint>(warehousePinProperty.Value);
                     Assert.Equal(22.2, geographyPoint.Latitude);
                     Assert.Equal(22.2, geographyPoint.Longitude);
@@ -765,7 +765,7 @@ namespace Microsoft.OData.Tests.Json
                 {
                     Assert.Equal(3, resourceState.Resource.Properties.Count());
 
-                    var piProperty = Assert.IsType<ODataProperty>(Assert.Single(resourceState.Resource.Properties.Where(d => d.Name.Equals("Pi"))));
+                    var piProperty = Assert.IsType<ODataProperty>(Assert.Single(resourceState.Resource.Properties, d => d.Name.Equals("Pi")));
                     Assert.Equal(3.1428571429m, piProperty.Value);
                 });
         }
@@ -788,7 +788,7 @@ namespace Microsoft.OData.Tests.Json
                 {
                     Assert.Equal(3, resourceState.Resource.Properties.Count());
 
-                    var creditLimitProperty = Assert.IsType<ODataProperty>(Assert.Single(resourceState.Resource.Properties.Where(d => d.Name.Equals("CreditLimit"))));
+                    var creditLimitProperty = Assert.IsType<ODataProperty>(Assert.Single(resourceState.Resource.Properties, d => d.Name.Equals("CreditLimit")));
                     Assert.Equal(1730, creditLimitProperty.Value);
                 });
         }
@@ -812,7 +812,7 @@ namespace Microsoft.OData.Tests.Json
                 {
                     Assert.Equal(3, resourceState.Resource.Properties.Count());
 
-                    var creditLimitProperty = Assert.IsType<ODataProperty>(Assert.Single(resourceState.Resource.Properties.Where(d => d.Name.Equals("CreditLimit"))));
+                    var creditLimitProperty = Assert.IsType<ODataProperty>(Assert.Single(resourceState.Resource.Properties, d => d.Name.Equals("CreditLimit")));
                     Assert.Equal(1730M, creditLimitProperty.Value);
                 });
         }
@@ -1054,7 +1054,7 @@ namespace Microsoft.OData.Tests.Json
                 {
                     Assert.Equal(3, resourceState.Resource.Properties.Count());
 
-                    var photoProperty = Assert.IsType<ODataProperty>(Assert.Single(resourceState.Resource.Properties.Where(d => d.Name.Equals("Photo"))));
+                    var photoProperty = Assert.IsType<ODataProperty>(Assert.Single(resourceState.Resource.Properties, d => d.Name.Equals("Photo")));
                     var streamReferenceValue = Assert.IsType<ODataStreamReferenceValue>(photoProperty.Value);
 
                     Assert.Equal("http://tempuri.org/Products(1)/Photo", streamReferenceValue.EditLink.AbsoluteUri);
@@ -1080,7 +1080,7 @@ namespace Microsoft.OData.Tests.Json
                 {
                     Assert.Equal(3, resourceState.Resource.Properties.Count());
 
-                    var photoProperty = Assert.IsType<ODataProperty>(Assert.Single(resourceState.Resource.Properties.Where(d => d.Name.Equals("Photo"))));
+                    var photoProperty = Assert.IsType<ODataProperty>(Assert.Single(resourceState.Resource.Properties, d => d.Name.Equals("Photo")));
                     var streamReferenceValue = Assert.IsType<ODataStreamReferenceValue>(photoProperty.Value);
 
                     Assert.Equal("http://tempuri.org/Products(1)/Photo", streamReferenceValue.EditLink.AbsoluteUri);

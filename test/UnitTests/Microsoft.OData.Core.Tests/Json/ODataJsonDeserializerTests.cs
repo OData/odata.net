@@ -633,7 +633,7 @@ namespace Microsoft.OData.Tests.Json
                     jsonReader.ShouldBeOn(JsonNodeType.Property, "@odata.unknown");
                     var propertyAnnotation = duplicateChecker.GetODataPropertyAnnotations("NavProp").Keys;
                     Assert.Contains("odata.navigationLink", propertyAnnotation);
-                    Assert.Equal(1, propertyAnnotation.Count);
+                    Assert.Single(propertyAnnotation);
                 },
                 (jsonReader, name) =>
                 {
@@ -827,13 +827,13 @@ namespace Microsoft.OData.Tests.Json
         }
 
         [Fact]
-        public void ReadPayloadStartAsyncTestForDetla()
+        public async Task ReadPayloadStartAsyncTestForDetla()
         {
             var model = this.CreateEdmModelWithEntity();
             var primitiveTypeRef = ((IEdmEntityType)model.SchemaElements.First()).Properties().First().Type;
             this.messageReaderSettings = new ODataMessageReaderSettings();
             ODataJsonPropertyAndValueDeserializer deserializer = new ODataJsonPropertyAndValueDeserializer(this.CreateJsonInputContext("{\"@odata.context\":\"http://odata.org/test/$metadata#Customers/$delta\",\"value\":\"Joe\"}", model));
-            deserializer.ReadPayloadStartAsync(ODataPayloadKind.Delta, null, false, true);
+            await deserializer.ReadPayloadStartAsync(ODataPayloadKind.Delta, null, false, true);
             Assert.Equal(ODataDeltaKind.ResourceSet, deserializer.ContextUriParseResult.DeltaKind);
         }
 
@@ -965,7 +965,7 @@ namespace Microsoft.OData.Tests.Json
                     if (odataReader.State == ODataReaderState.ResourceEnd)
                     {
                         var resource = odataReader.Item as ODataResource;
-                        Assert.Equal(0, resource.Properties.First().InstanceAnnotations.Count);
+                        Assert.Empty(resource.Properties.First().InstanceAnnotations);
                     }
                 }
             };
@@ -2063,8 +2063,8 @@ namespace Microsoft.OData.Tests.Json
 
                     var resource = Assert.IsType<ODataResourceValue>(property.ODataValue);
                     Assert.Equal(2, resource.Properties.Count());
-                    var streetProperty = Assert.Single(resource.Properties.Where(d => d.Name.Equals("Street")));
-                    var cityProperty = Assert.Single(resource.Properties.Where(d => d.Name.Equals("City")));
+                    var streetProperty = Assert.Single(resource.Properties, d => d.Name.Equals("Street"));
+                    var cityProperty = Assert.Single(resource.Properties, d => d.Name.Equals("City"));
                     Assert.Equal("S1", streetProperty.Value);
                     Assert.Equal("C1", cityProperty.Value);
                 });

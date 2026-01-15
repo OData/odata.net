@@ -53,7 +53,7 @@ namespace Microsoft.OData.Tests
 
                 var bytesRead = reader.Read(buffer, 0, maxLength);
 
-                Assert.Equal(bytesRead, maxLength);
+                Assert.Equal(maxLength, bytesRead);
                 Assert.Equal(new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 0 }, buffer);
             }
         }
@@ -67,7 +67,7 @@ namespace Microsoft.OData.Tests
 
                 var bytesRead = await reader.ReadAsync(buffer, 0, maxLength);
 
-                Assert.Equal(bytesRead, maxLength);
+                Assert.Equal(maxLength, bytesRead);
                 Assert.Equal(new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 0 }, buffer);
             }
         }

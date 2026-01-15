@@ -392,7 +392,7 @@ namespace Microsoft.OData.Core.Tests.Json
                     }
                     catch (NullReferenceException ex)
                     {
-                        Assert.False(true, ex.Message);
+                        Assert.Fail(ex.Message);
                     }
                 },
                 isResponse: false);
@@ -428,7 +428,7 @@ namespace Microsoft.OData.Core.Tests.Json
                     }
                     catch (NullReferenceException ex)
                     {
-                        Assert.False(true, ex.Message);
+                        Assert.Fail(ex.Message);
                     }
                 },
                 isResponse: false);
@@ -459,7 +459,7 @@ namespace Microsoft.OData.Core.Tests.Json
                             jsonBatchReader.CreateOperationRequestMessage();
                         }
                     }
-                    Assert.False(true, "The test failed, because the duplicate header has not thrown an ODataException");
+                    Assert.Fail("The test failed, because the duplicate header has not thrown an ODataException");
                 },
                 isResponse: false));
 
@@ -492,7 +492,7 @@ namespace Microsoft.OData.Core.Tests.Json
                             await jsonBatchReader.CreateOperationRequestMessageAsync();
                         }
                     }
-                    Assert.False(true, "The test failed, because the duplicate header has not thrown an ODataException");
+                    Assert.Fail("The test failed, because the duplicate header has not thrown an ODataException");
                 },
                 isResponse: false));
 
@@ -523,7 +523,7 @@ namespace Microsoft.OData.Core.Tests.Json
                             jsonBatchReader.CreateOperationRequestMessage();
                         }
                     }
-                    Assert.False(true, "The test failed, because the duplicate header has thrown no ODataException");
+                    Assert.Fail("The test failed, because the duplicate header has thrown no ODataException");
                 },
                 isResponse: false));
 
@@ -554,7 +554,7 @@ namespace Microsoft.OData.Core.Tests.Json
                                 await jsonBatchReader.CreateOperationRequestMessageAsync();
                             }
                         }
-                        Assert.False(true, "The test failed, because the duplicate header has thrown no ODataException");
+                        Assert.Fail("The test failed, because the duplicate header has thrown no ODataException");
                 },
                 isResponse: false));
 

@@ -93,7 +93,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.Json
         public void WriteComplexColParameter_WithoutModel()
         {
             WriteResourceSetParameter(false, false,
-                (actual) => Assert.Equal(actual,
+                (actual) => Assert.Equal(
                     "[" +
                         "{" +
                             "\"@odata.type\":\"#NS.Address\"," +
@@ -104,7 +104,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.Json
                             "\"CompanyName\":\"MS\"," +
                             "\"City\":{\"@odata.type\":\"#NS.City\",\"CityName\":\"City1\",\"AreaCode\":\"AreaCode1\"}" +
                         "}" +
-                    "]"));
+                    "]", actual));
         }
 
         [Fact]

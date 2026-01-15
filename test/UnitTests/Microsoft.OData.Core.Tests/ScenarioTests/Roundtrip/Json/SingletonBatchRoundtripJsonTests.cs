@@ -1285,7 +1285,7 @@ Content-Type: application/json;odata.metadata=none
 
                     default:
                         {
-                            Assert.True(false, "Unknown BatchFormat value");
+                            Assert.Fail("Unknown BatchFormat value");
                         }
                         break;
                 }

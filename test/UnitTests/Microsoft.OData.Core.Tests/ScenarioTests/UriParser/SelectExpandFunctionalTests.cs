@@ -560,7 +560,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             var result = RunParseSelectExpand("", "MyDog", HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
             Assert.True(result.AllSelected);
-            Assert.Empty(result.SelectedItems.Where(x => x is PathSelectItem));
+
+            Assert.DoesNotContain(result.SelectedItems, x => x is PathSelectItem);
         }
 
         [Fact]

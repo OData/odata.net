@@ -257,7 +257,7 @@ namespace Microsoft.OData.Tests.Json
                             break;
 
                         case ODataReaderState.Primitive:
-                            Assert.False(true, "Should not read as Primitive if Caller Specifies Stream");
+                            Assert.Fail("Should not read as Primitive if Caller Specifies Stream");
                             break;
 
                         case ODataReaderState.NestedProperty:
@@ -314,7 +314,7 @@ namespace Microsoft.OData.Tests.Json
                             break;
 
                         case ODataReaderState.Stream:
-                            Assert.False(true, "Should not read as stream if caller returns false");
+                            Assert.Fail("Should not read as stream if caller returns false");
                             break;
                     }
                 }
@@ -505,7 +505,7 @@ namespace Microsoft.OData.Tests.Json
                             break;
 
                         case ODataReaderState.Primitive:
-                            Assert.False(true, "Should not read as Primitive if collection not streamed");
+                            Assert.Fail("Should not read as Primitive if collection not streamed");
                             break;
 
                         case ODataReaderState.NestedProperty:
@@ -560,7 +560,7 @@ namespace Microsoft.OData.Tests.Json
                             break;
 
                         case ODataReaderState.Primitive:
-                            Assert.False(true, "Should not read as Primitive if Caller Specifies Stream");
+                            Assert.Fail("Should not read as Primitive if Caller Specifies Stream");
                             break;
 
                         case ODataReaderState.NestedProperty:
@@ -654,11 +654,11 @@ namespace Microsoft.OData.Tests.Json
                             break;
 
                         case ODataReaderState.NestedProperty:
-                            Assert.False(true, "Should Not enter nested property without a value");
+                            Assert.Fail("Should Not enter nested property without a value");
                             break;
 
                         case ODataReaderState.Stream:
-                            Assert.False(true, "Should Not enter stream without a value");
+                            Assert.Fail("Should Not enter stream without a value");
                             break;
                     }
                 }
@@ -1489,7 +1489,7 @@ namespace Microsoft.OData.Tests.Json
             {
                 Stream stream = reader.CreateReadStream();
                 {
-                    stream.Read(new byte[2],0,2);
+                    stream.ReadExactly(new byte[2], 0, 2);
                 }
             }
 

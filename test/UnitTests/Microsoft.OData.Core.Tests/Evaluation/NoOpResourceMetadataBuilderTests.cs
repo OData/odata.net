@@ -94,7 +94,7 @@ namespace Microsoft.OData.Tests.Evaluation
 
             ODataResource entry = new ODataResource();
             entry.AddAction(action);
-            Assert.Single(new NoOpResourceMetadataBuilder(entry).GetActions().Where(a => a == action));
+            Assert.Single(new NoOpResourceMetadataBuilder(entry).GetActions(), a => a == action);
 
             // Verify that the action information wasn't removed or changed.
             Assert.Equal(new Uri("http://example.com/$metadata#Action"), action.Metadata);
@@ -115,7 +115,7 @@ namespace Microsoft.OData.Tests.Evaluation
             ODataResource entry = new ODataResource();
             entry.AddFunction(function);
 
-            Assert.Single(new NoOpResourceMetadataBuilder(entry).GetFunctions().Where(f => f == function));
+            Assert.Single(new NoOpResourceMetadataBuilder(entry).GetFunctions(), f => f == function);
 
             // Verify that the Function information wasn't removed or changed.
             Assert.Equal(new Uri("http://example.com/$metadata#Function"), function.Metadata);

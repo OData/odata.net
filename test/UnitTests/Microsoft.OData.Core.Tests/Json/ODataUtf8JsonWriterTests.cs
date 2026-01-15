@@ -61,28 +61,6 @@ namespace Microsoft.OData.Tests.Json
             this.disposed = true;
         }
 
-        [Fact]
-        public void StartPaddingFunctionScopeWritesParenthesis()
-        {
-            this.writer.StartPaddingFunctionScope();
-            Assert.Equal("(", this.ReadStream());
-        }
-
-        [Fact]
-        public void EndPaddingFunctionScopeWritesParenthesis()
-        {
-            this.writer.StartPaddingFunctionScope();
-            this.writer.EndPaddingFunctionScope();
-            Assert.Equal("()", this.ReadStream());
-        }
-
-        [Fact]
-        public void WritePaddingFunctionNameWritesName()
-        {
-            this.writer.WritePaddingFunctionName("example");
-            Assert.Equal("example", this.ReadStream());
-        }
-
         #region WritePrimitiveValue
 
         [Fact]

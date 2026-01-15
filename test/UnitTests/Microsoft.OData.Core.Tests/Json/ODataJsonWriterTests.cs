@@ -814,7 +814,7 @@ namespace Microsoft.OData.Core.Tests.Json
                 {
                     if (!CsdlReader.TryParse(xmlReader, out model, out var errors))
                     {
-                        Assert.True(false, string.Join(Environment.NewLine, errors));
+                        Assert.Fail(string.Join(Environment.NewLine, errors));
                     }
                 }
             }
@@ -875,7 +875,7 @@ namespace Microsoft.OData.Core.Tests.Json
                 {
                     if (!CsdlReader.TryParse(xmlReader, out model, out var errors))
                     {
-                        Assert.True(false, string.Join(Environment.NewLine, errors));
+                        Assert.Fail(string.Join(Environment.NewLine, errors));
                     }
                 }
             }

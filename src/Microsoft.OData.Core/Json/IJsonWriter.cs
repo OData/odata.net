@@ -19,18 +19,6 @@ namespace Microsoft.OData.Json
     public interface IJsonWriter
     {
         /// <summary>
-        /// Start the padding function scope.
-        /// </summary>
-        [Obsolete("This will be dropped in the 9.x release.")]
-        void StartPaddingFunctionScope();
-
-        /// <summary>
-        /// End the padding function scope.
-        /// </summary>
-        [Obsolete("This will be dropped in the 9.x release.")]
-        void EndPaddingFunctionScope();
-
-        /// <summary>
         /// Start the object scope.
         /// </summary>
         void StartObjectScope();
@@ -55,13 +43,6 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="name">Name of the object property.</param>
         void WriteName(string name);
-
-        /// <summary>
-        /// Writes a function name for JSON padding.
-        /// </summary>
-        /// <param name="functionName">Name of the padding function to write.</param>
-        [Obsolete("This will be dropped in the 9.x release.")]
-        void WritePaddingFunctionName(string functionName);
 
         /// <summary>
         /// Write a boolean value.
@@ -204,20 +185,6 @@ namespace Microsoft.OData.Json
         void EndTextWriterValueScope();
 
         /// <summary>
-        /// Asynchronously starts the padding function scope.
-        /// </summary>
-        /// <returns>A task that represents the asynchronous operation.</returns>
-        [Obsolete("This will be dropped in the 9.x release.")]
-        Task StartPaddingFunctionScopeAsync();
-
-        /// <summary>
-        /// Asynchronously ends the padding function scope.
-        /// </summary>
-        /// <returns>A task that represents the asynchronous operation.</returns>
-        [Obsolete("This will be dropped in the 9.x release.")]
-        Task EndPaddingFunctionScopeAsync();
-
-        /// <summary>
         /// Asynchronously starts the object scope.
         /// </summary>
         /// <returns>A task that represents the asynchronous operation.</returns>
@@ -247,14 +214,6 @@ namespace Microsoft.OData.Json
         /// <param name="name">Name of the object property.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
         Task WriteNameAsync(string name);
-
-        /// <summary>
-        /// Asynchronously writes a function name for JSON padding.
-        /// </summary>
-        /// <param name="functionName">Name of the padding function to write.</param>
-        /// <returns>A task that represents the asynchronous write operation.</returns>
-        [Obsolete("This will be dropped in the 9.x release.")]
-        Task WritePaddingFunctionNameAsync(string functionName);
 
         /// <summary>
         /// Asynchronously writes a boolean value.
