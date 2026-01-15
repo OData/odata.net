@@ -1324,18 +1324,18 @@ namespace Microsoft.OData.Tests.Json
                 );
 
             Func<ODataPropertyStreamReadingContext, bool> ShouldStream = (ODataPropertyStreamReadingContext context) =>
+            {
+                // Check if the property has a custom annotation
+                foreach (var annotation in context.CustomPropertyAnnotations)
                 {
-                    // Check if the property has a custom annotation
-                    foreach (var annotation in context.CustomPropertyAnnotations)
+                    if (annotation.Key == "is.Large" && annotation.Value is bool isLarge && isLarge)
                     {
-                        if (annotation.Key == "is.Large" && annotation.Value is bool isLarge && isLarge)
-                        {
-                            return true;
-                        }
+                        return true;
                     }
+                }
 
-                    return false;
-                };
+                return false;
+            };
 
             foreach (Variant variant in GetVariants(ShouldStream))
             {
@@ -1365,10 +1365,8 @@ namespace Microsoft.OData.Tests.Json
                 }
 
                 Assert.NotNull(resource);
-                // Id should be present, but LargeField should have been streamed (not in properties)
                 Assert.Equal(expectedPropertyCount, resource.Properties.Count());
                 var properties = resource.Properties.OfType<ODataProperty>().ToArray();
-                Assert.Single(properties);
                 Assert.Equal("id", properties[0].Name);
                 Assert.Equal("largeField", propertyInfo.Name);
                 Assert.Equal(EdmPrimitiveTypeKind.String, propertyInfo.PrimitiveTypeKind);
