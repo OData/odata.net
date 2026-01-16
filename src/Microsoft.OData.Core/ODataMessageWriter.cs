@@ -1230,7 +1230,8 @@ namespace Microsoft.OData
                     Model = this.model,
                     PayloadUriConverter = this.payloadUriConverter,
                     ServiceProvider = this.serviceProvider,
-                    MessageStream = messageStream
+                    MessageStream = messageStream,
+                    Message = this.message
                 };
             }
 
