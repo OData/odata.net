@@ -1,8 +1,0 @@
-Microsoft.OData.IODataRequestMessage.GetStreamAsync(System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<System.IO.Stream>
-Microsoft.OData.IODataResponseMessage.GetStreamAsync(System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<System.IO.Stream>
-Microsoft.OData.ODataAsynchronousResponseMessage.GetStreamAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<System.IO.Stream>
-Microsoft.OData.ODataBatchOperationRequestMessage.GetStreamAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<System.IO.Stream>
-Microsoft.OData.ODataBatchOperationResponseMessage.GetStreamAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<System.IO.Stream>
-Microsoft.OData.ODataNestedResourceInfo.InstanceAnnotations.get -> System.Collections.Generic.ICollection<Microsoft.OData.ODataInstanceAnnotation>
-Microsoft.OData.ODataNestedResourceInfo.InstanceAnnotations.set -> void
-Microsoft.OData.ValidationKinds.ThrowOnUnexpectedODataPropertyAnnotationOnNavigationProperty = 8 -> Microsoft.OData.ValidationKinds
