@@ -475,7 +475,7 @@ public class UntypedTypesTests : EndToEndTestBase<UntypedTypesTests.TestsStartup
 
     private static async Task<string> ReadAsStringAsync(IODataResponseMessage responseMessage)
     {
-        using (Stream stream = await responseMessage.GetStreamAsync())
+        using (Stream stream = await responseMessage.GetStreamAsync(default))
         {
             using (StreamReader reader = new StreamReader(stream, Encoding.UTF8))
             {

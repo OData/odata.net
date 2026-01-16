@@ -80,7 +80,7 @@ namespace Microsoft.OData.Client.E2E.Tests.PayloadValueConverterTests
 
             Assert.Equal(200, responseMessage.StatusCode);
 
-            var dat = new StreamReader(await responseMessage.GetStreamAsync()).ReadToEnd();
+            var dat = new StreamReader(await responseMessage.GetStreamAsync(default)).ReadToEnd();
 
             Assert.Contains("\"value\":\"3-1-4\"", dat);
         }

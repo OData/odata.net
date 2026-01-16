@@ -11,6 +11,7 @@ namespace Microsoft.OData
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
+    using System.Threading;
     using System.Threading.Tasks;
     #endregion Namespaces
 
@@ -60,10 +61,11 @@ namespace Microsoft.OData
         Stream GetStream();
 
         /// <summary>Asynchronously gets the stream backing this message.</summary>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <returns>
         /// A task that represents the asynchronous operation.
         /// The task result contains the stream for this message.
         /// </returns>
-        Task<Stream> GetStreamAsync();
+        Task<Stream> GetStreamAsync(CancellationToken cancellationToken);
     }
 }

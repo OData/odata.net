@@ -206,6 +206,7 @@ namespace Microsoft.OData.Client
         /// <summary>
         /// Asynchronously gets the stream to be used to read the response payload.
         /// </summary>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <remarks>
         /// If the asynchronous delegate was not provided during construction,
         /// this method will wrap the synchronous delegate result in a completed task.
@@ -214,9 +215,9 @@ namespace Microsoft.OData.Client
         /// A task that represents the asynchronous operation.
         /// The task result contains the stream from which the response payload can be read.
         /// </returns>
-        public virtual Task<Stream> GetStreamAsync()
+        public virtual Task<Stream> GetStreamAsync(CancellationToken cancellationToken = default)
             => getResponseStreamAsync != null
-            ? getResponseStreamAsync(default)
+            ? getResponseStreamAsync(cancellationToken)
             : Task.FromResult(getResponseStream!());
 
         /// <summary>

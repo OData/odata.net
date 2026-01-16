@@ -10,6 +10,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OData.Edm;
@@ -394,7 +395,7 @@ namespace Microsoft.OData.Tests
 
             public string GetHeader(string headerName) => this.headers.TryGetValue(headerName, out var v) ? v : null;
             public Stream GetStream() => new MemoryStream(this.stream.ToArray()); // Fresh copy for each call
-            public Task<Stream> GetStreamAsync() => Task.FromResult(GetStream());
+            public Task<Stream> GetStreamAsync(CancellationToken cancellationToken = default) => Task.FromResult(GetStream());
             public IEnumerable<KeyValuePair<string, string>> Headers => this.headers;
             public void SetHeader(string headerName, string headerValue) => this.headers[headerName] = headerValue;
             public int StatusCode { get; set; } = 200;

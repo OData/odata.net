@@ -405,7 +405,7 @@ public class InstanceAnnotationTests : EndToEndTestBase<InstanceAnnotationTests.
 
     private async Task<string> ReadAsStringAsync(IODataResponseMessage responseMessage)
     {
-        using (Stream stream = await responseMessage.GetStreamAsync())
+        using (Stream stream = await responseMessage.GetStreamAsync(default))
         {
             using (StreamReader reader = new StreamReader(stream, Encoding.UTF8))
             {

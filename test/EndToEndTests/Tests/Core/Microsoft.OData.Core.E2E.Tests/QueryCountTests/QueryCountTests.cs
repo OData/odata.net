@@ -147,7 +147,7 @@ public class QueryCountTests : EndToEndTestBase<QueryCountTests.TestsStartup>
         // Assert
         Assert.Equal(200, responseMessage.StatusCode);
 
-        var stream = await responseMessage.GetStreamAsync();
+        var stream = await responseMessage.GetStreamAsync(default);
         using var streamReader = new StreamReader(stream);
         return await streamReader.ReadToEndAsync();
     }
