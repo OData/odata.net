@@ -1226,16 +1226,20 @@ namespace Microsoft.OData.Json
         /// <param name="mediaType">The media type.</param>
         /// <param name="encoding">The encoding.</param>
         /// <returns>The content type string for the header.</returns>
-        private string BuildContentTypeHeader(ODataMediaType mediaType, Encoding encoding)
+        private static string BuildContentTypeHeader(ODataMediaType mediaType, Encoding encoding)
         {
             Debug.Assert(mediaType != null, "mediaType != null");
 
-            StringBuilder contentType = new StringBuilder();
+            // Initialize with estimated capacity to reduce allocations
+            // Typical: "application/json" (16) + parameters (~50) = ~70 chars
+            StringBuilder contentType = new StringBuilder(70);
             contentType.Append(mediaType.Type);
             contentType.Append('/');
             contentType.Append(mediaType.SubType);
 
-            // Add parameters
+            bool hasCharset = false;
+
+            // Add parameters and check for charset in a single pass
             if (mediaType.Parameters != null)
             {
                 foreach (KeyValuePair<string, string> parameter in mediaType.Parameters)
@@ -1243,34 +1247,24 @@ namespace Microsoft.OData.Json
                     contentType.Append(';');
                     contentType.Append(parameter.Key);
                     contentType.Append('=');
+                    // Parameter values in media types are already validated and escaped by ODataMediaType
                     contentType.Append(parameter.Value);
+
+                    if (string.Equals(parameter.Key, ODataConstants.Charset, StringComparison.OrdinalIgnoreCase))
+                    {
+                        hasCharset = true;
+                    }
                 }
             }
 
-            // Add charset parameter if encoding is specified
-            if (encoding != null)
+            // Add charset parameter if encoding is specified and not already present
+            if (encoding != null && !hasCharset)
             {
-                // Check if charset is not already in parameters
-                bool hasCharset = false;
-                if (mediaType.Parameters != null)
-                {
-                    foreach (KeyValuePair<string, string> parameter in mediaType.Parameters)
-                    {
-                        if (string.Equals(parameter.Key, ODataConstants.Charset, StringComparison.OrdinalIgnoreCase))
-                        {
-                            hasCharset = true;
-                            break;
-                        }
-                    }
-                }
-
-                if (!hasCharset)
-                {
-                    contentType.Append(';');
-                    contentType.Append(ODataConstants.Charset);
-                    contentType.Append('=');
-                    contentType.Append(encoding.WebName);
-                }
+                contentType.Append(';');
+                contentType.Append(ODataConstants.Charset);
+                contentType.Append('=');
+                // WebName is safe - it's a well-known encoding name like "utf-8"
+                contentType.Append(encoding.WebName);
             }
 
             return contentType.ToString();
