@@ -36,9 +36,9 @@ namespace Microsoft.OData.E2E.TestCommon.Common
             return null;
         }
 
-        public async Task<Stream> GetStreamAsync()
+        public async Task<Stream> GetStreamAsync(CancellationToken cancellationToken = default)
         {
-            return await _response.Content.ReadAsStreamAsync();
+            return await _response.Content.ReadAsStreamAsync(cancellationToken);
         }
 
         public IEnumerable<KeyValuePair<string, string>> Headers

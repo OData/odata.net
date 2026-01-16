@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Microsoft.OData.Tests
@@ -53,7 +54,7 @@ namespace Microsoft.OData.Tests
 
         public Action DisposeAction { get; set; }
 
-        public Task<Stream> GetStreamAsync()
+        public Task<Stream> GetStreamAsync(CancellationToken cancellationToken = default)
         {
             TaskCompletionSource<Stream> taskCompletionSource = new TaskCompletionSource<Stream>();
             taskCompletionSource.SetResult(this.Stream);

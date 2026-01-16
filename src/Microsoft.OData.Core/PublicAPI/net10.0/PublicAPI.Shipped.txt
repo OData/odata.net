@@ -344,7 +344,6 @@ Microsoft.OData.ODataAsynchronousReader.CreateResponseMessageAsync() -> System.T
 Microsoft.OData.ODataAsynchronousResponseMessage
 Microsoft.OData.ODataAsynchronousResponseMessage.GetHeader(string headerName) -> string
 Microsoft.OData.ODataAsynchronousResponseMessage.GetStream() -> System.IO.Stream
-Microsoft.OData.ODataAsynchronousResponseMessage.GetStreamAsync() -> System.Threading.Tasks.Task<System.IO.Stream>
 Microsoft.OData.ODataAsynchronousResponseMessage.Headers.get -> System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<string, string>>
 Microsoft.OData.ODataAsynchronousResponseMessage.SetHeader(string headerName, string headerValue) -> void
 Microsoft.OData.ODataAsynchronousResponseMessage.StatusCode.get -> int
@@ -367,7 +366,6 @@ Microsoft.OData.ODataBatchOperationRequestMessage
 Microsoft.OData.ODataBatchOperationRequestMessage.DependsOnIds.get -> System.Collections.Generic.IEnumerable<string>
 Microsoft.OData.ODataBatchOperationRequestMessage.GetHeader(string headerName) -> string
 Microsoft.OData.ODataBatchOperationRequestMessage.GetStream() -> System.IO.Stream
-Microsoft.OData.ODataBatchOperationRequestMessage.GetStreamAsync() -> System.Threading.Tasks.Task<System.IO.Stream>
 Microsoft.OData.ODataBatchOperationRequestMessage.GroupId.get -> string
 Microsoft.OData.ODataBatchOperationRequestMessage.Headers.get -> System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<string, string>>
 Microsoft.OData.ODataBatchOperationRequestMessage.Method.get -> string
@@ -378,7 +376,6 @@ Microsoft.OData.ODataBatchOperationRequestMessage.Url.set -> void
 Microsoft.OData.ODataBatchOperationResponseMessage
 Microsoft.OData.ODataBatchOperationResponseMessage.GetHeader(string headerName) -> string
 Microsoft.OData.ODataBatchOperationResponseMessage.GetStream() -> System.IO.Stream
-Microsoft.OData.ODataBatchOperationResponseMessage.GetStreamAsync() -> System.Threading.Tasks.Task<System.IO.Stream>
 Microsoft.OData.ODataBatchOperationResponseMessage.GroupId.get -> string
 Microsoft.OData.ODataBatchOperationResponseMessage.Headers.get -> System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<string, string>>
 Microsoft.OData.ODataBatchOperationResponseMessage.SetHeader(string headerName, string headerValue) -> void

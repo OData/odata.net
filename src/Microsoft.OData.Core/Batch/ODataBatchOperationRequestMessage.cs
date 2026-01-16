@@ -11,6 +11,7 @@ namespace Microsoft.OData
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
+    using System.Threading;
     using System.Threading.Tasks;
 
     #endregion Namespaces
@@ -175,10 +176,11 @@ namespace Microsoft.OData
         }
 
         /// <summary>Asynchronously get the stream backing for this message.</summary>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <returns>The stream backing for this message.</returns>
-        public Task<Stream> GetStreamAsync()
+        public Task<Stream> GetStreamAsync(CancellationToken cancellationToken = default)
         {
-            return this.message.GetStreamAsync();
+            return this.message.GetStreamAsync(cancellationToken);
         }
 
         /// <summary>Implements a custom URL resolution scheme.</summary>

@@ -10,6 +10,7 @@ namespace Microsoft.OData.Client
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
+    using System.Threading;
     using System.Threading.Tasks;
     using Microsoft.OData;
 
@@ -102,11 +103,12 @@ namespace Microsoft.OData.Client
         /// <summary>
         /// Asynchronously gets the stream to be used to write the request payload.
         /// </summary>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <returns>
         /// A task that represents the asynchronous operation.
         /// The task result contains the stream to which the request payload needs to be written.
         /// </returns>
-        public abstract Task<Stream> GetStreamAsync();
+        public abstract Task<Stream> GetStreamAsync(CancellationToken cancellationToken);
 
         /// <summary>
         /// Abort the current request.

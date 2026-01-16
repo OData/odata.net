@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.OData.Edm;
 using Microsoft.Test.OData.Utils.Metadata;
@@ -255,7 +256,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.Json
                 return this.stream;
             }
 
-            public Task<Stream> GetStreamAsync()
+            public Task<Stream> GetStreamAsync(CancellationToken cancellationToken = default)
             {
                 return Task.FromResult(this.stream);
             }

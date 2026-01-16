@@ -12,6 +12,7 @@ namespace Microsoft.OData
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
+    using System.Threading;
     using System.Threading.Tasks;
 
     #endregion Namespaces
@@ -204,8 +205,9 @@ namespace Microsoft.OData
         }
 
         /// <summary>Asynchronously get the stream backing for this message.</summary>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <returns>The stream backing for this message.</returns>
-        public async Task<Stream> GetStreamAsync()
+        public async Task<Stream> GetStreamAsync(CancellationToken cancellationToken = default)
         {
             // If writing response, the envelope for the inner message should be written once and only once before returning the stream.
             if (this.writing && !this.envelopeWritten)

@@ -13,6 +13,7 @@ namespace Microsoft.OData
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
+    using System.Threading;
     using System.Threading.Tasks;
 
     #endregion Namespaces
@@ -112,9 +113,10 @@ namespace Microsoft.OData
         /// <summary>
         /// Asynchronously get the stream backing this message.
         /// </summary>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <returns>The stream for this message.</returns>
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate", Justification = "Intentionally a method.")]
-        public abstract Task<Stream> GetStreamAsync();
+        public abstract Task<Stream> GetStreamAsync(CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Queries the message for the specified interface type.
@@ -181,7 +183,7 @@ namespace Microsoft.OData
         /// <param name="streamFuncAsync">A function that returns a task for the stream backing the message.</param>
         /// <param name="isRequest">true if the message is a request message; false for a response message.</param>
         /// <returns>A task that when completed returns the stream backing the message.</returns>
-        protected internal Task<Stream> GetStreamAsync(Func<Task<Stream>> streamFuncAsync, bool isRequest)
+        protected internal Task<Stream> GetStreamAsync(Func<CancellationToken, Task<Stream>> streamFuncAsync, bool isRequest, CancellationToken cancellationToken)
         {
             // Check whether we have an existing buffering read stream when reading
             if (!this.writing)
@@ -195,11 +197,11 @@ namespace Microsoft.OData
                 }
             }
 
-            return GetMessageStreamAsync(streamFuncAsync, isRequest);
+            return GetMessageStreamAsync(streamFuncAsync, isRequest, cancellationToken);
 
-            async Task<Stream> GetMessageStreamAsync(Func<Task<Stream>> innerStreamFuncAsync, bool innerIsRequest)
+            async Task<Stream> GetMessageStreamAsync(Func<CancellationToken, Task<Stream>> innerStreamFuncAsync, bool innerIsRequest, CancellationToken innerCancellationToken)
             {
-                Task<Stream> messageStreamTask = innerStreamFuncAsync();
+                Task<Stream> messageStreamTask = innerStreamFuncAsync(innerCancellationToken);
                 ValidateMessageStreamTask(messageStreamTask, innerIsRequest);
 
                 // Wrap it in a non-disposing stream if requested

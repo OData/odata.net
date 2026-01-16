@@ -12,6 +12,7 @@ namespace Microsoft.OData.Client
     using System.Net;
     using Microsoft.OData;
     using System.Threading.Tasks;
+    using System.Threading;
 
     /// <summary>
     /// This is a just a pass through implementation of IODataRequestMessage. This class is used
@@ -180,11 +181,12 @@ namespace Microsoft.OData.Client
         /// <summary>
         /// Asynchronously gets the stream to be used to write the request payload.
         /// </summary>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <returns>
         /// A task that represents the asynchronous operation.
         /// The task result contains the stream to which the request payload needs to be written.
         /// </returns>
-        public override async Task<Stream> GetStreamAsync()
+        public override async Task<Stream> GetStreamAsync(CancellationToken cancellationToken = default)
         {
             if (!this.allowGetStream)
             {
@@ -193,7 +195,7 @@ namespace Microsoft.OData.Client
 
             if (this.cachedRequestStream == null)
             {
-                this.cachedRequestStream = await this.requestMessage.GetStreamAsync()
+                this.cachedRequestStream = await this.requestMessage.GetStreamAsync(cancellationToken)
                     .ConfigureAwait(false);
             }
 

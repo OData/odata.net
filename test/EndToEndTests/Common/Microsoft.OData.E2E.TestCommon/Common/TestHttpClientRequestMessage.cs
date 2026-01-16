@@ -45,7 +45,7 @@ namespace Microsoft.OData.E2E.TestCommon.Common
             return null;
         }
 
-        public async Task<Stream> GetStreamAsync()
+        public async Task<Stream> GetStreamAsync(CancellationToken cancellationToken = default)
         {
             if (_stream == null)
             {

@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Microsoft.OData.Tests
@@ -44,7 +45,7 @@ namespace Microsoft.OData.Tests
             return new MemoryStream();
         }
 
-        public Task<Stream> GetStreamAsync()
+        public Task<Stream> GetStreamAsync(CancellationToken cancellationToken = default)
         {
             return Task.FromResult<Stream>(new MemoryStream());
         }

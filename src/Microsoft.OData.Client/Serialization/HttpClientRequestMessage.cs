@@ -321,11 +321,12 @@ namespace Microsoft.OData.Client
         /// <summary>
         /// Asynchronously gets the stream to be used to write the request payload.
         /// </summary>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <returns>
         /// A task that represents the asynchronous get stream operation.
         /// The task result contains the stream to which the request payload needs to be written.
         /// </returns>
-        public override Task<Stream> GetStreamAsync()
+        public override Task<Stream> GetStreamAsync(CancellationToken cancellationToken = default)
         {
             if (this.inSendingRequest2Event)
             {

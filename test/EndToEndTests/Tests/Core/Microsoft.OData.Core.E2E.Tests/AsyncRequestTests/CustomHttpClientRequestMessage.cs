@@ -92,7 +92,7 @@ public class CustomODataResponseMessageAsync : IODataResponseMessage
         return _stream;
     }
 
-    public Task<Stream> GetStreamAsync()
+    public Task<Stream> GetStreamAsync(CancellationToken cancellationToken = default)
     {
         return Task.FromResult<Stream>(_stream);
     }
