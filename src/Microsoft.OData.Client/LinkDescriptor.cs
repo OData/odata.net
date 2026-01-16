@@ -49,6 +49,13 @@ namespace Microsoft.OData.Client
         internal LinkDescriptor(object source, string sourceProperty, object target, ClientEdmModel model)
             : this(source, sourceProperty, target, EntityStates.Unchanged)
         {
+            if(this.HasPropertySegments)
+            {
+                // when there are path segments, we need to get the type of the first property in the path
+                this.IsSourcePropertyCollection = model.GetClientTypeAnnotation(model.GetOrCreateEdmType(source.GetType())).GetProperty(this.SourceFirstProperty, UndeclaredPropertyBehavior.ThrowException).IsEntityCollection;
+                return;
+            }
+
             this.IsSourcePropertyCollection = model.GetClientTypeAnnotation(model.GetOrCreateEdmType(source.GetType())).GetProperty(sourceProperty, UndeclaredPropertyBehavior.ThrowException).IsEntityCollection;
         }
 
@@ -64,11 +71,19 @@ namespace Microsoft.OData.Client
         {
             Debug.Assert(source != null, "source != null");
             Debug.Assert(!String.IsNullOrEmpty(sourceProperty), "!String.IsNullOrEmpty(propertyName)");
-            Debug.Assert(!sourceProperty.Contains("/", StringComparison.Ordinal), "!sourceProperty.Contains('/')");
+            //Debug.Assert(!sourceProperty.Contains("/", StringComparison.Ordinal), "!sourceProperty.Contains('/')");
 
             this.source = source;
             this.sourceProperty = sourceProperty;
             this.target = target;
+
+            if (sourceProperty.Contains(UriHelper.FORWARDSLASH, StringComparison.Ordinal))
+            {
+                string[] elements = sourceProperty.Split(new[] { UriHelper.FORWARDSLASH }, StringSplitOptions.RemoveEmptyEntries);
+                this.sourceFirstProperty = elements[0];
+                this.sourcePropertySegments = elements is not null ? new List<string>(elements) : new List<string>();
+                this.HasPropertySegments = true;
+            }
         }
 
         #region Public Properties
@@ -161,6 +176,13 @@ namespace Microsoft.OData.Client
 
         /// <summary>is this a collection property or not</summary>
         internal bool IsSourcePropertyCollection
+        {
+            get;
+            set;
+        }
+
+        /// <summary>is this a collection property or not</summary>
+        internal bool HasPropertySegments
         {
             get;
             set;

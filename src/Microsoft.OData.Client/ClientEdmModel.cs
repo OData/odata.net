@@ -276,7 +276,7 @@ namespace Microsoft.OData.Client
             return this.GetClientTypeAnnotation(result);
         }
 
-        internal void ValidatePath(ClientTypeAnnotation type, string[] elements)
+        internal ClientTypeAnnotation ValidatePath(ClientTypeAnnotation type, string[] elements)
         {
             ClientPropertyAnnotation property = null;
             foreach (string element in elements)
@@ -285,6 +285,7 @@ namespace Microsoft.OData.Client
                 type = this.GetClientTypeAnnotation(property.EdmProperty);
 
                 // If a complex collection, throw exception.
+                // A complex collection has no canonical url so we won’t be able to bind an entity to a navigation property in a complex collection.
                 if (type.EdmTypeReference.IsComplex() && type.EdmTypeReference.IsCollection())
                 {
                     throw Client.Error.InvalidOperation(Error.Format(SRResources.ClientType_CollectionOfComplexNotSupported, type.ToString()));
@@ -296,6 +297,8 @@ namespace Microsoft.OData.Client
             {
                 throw Client.Error.InvalidOperation(Error.Format(SRResources.ClientType_LastElementMustBeNavigationProperty, property.PropertyName));
             }
+
+            return type;
         }
 
         /// <summary>Returns <paramref name="type"/> and its base types, in the order of most base type first and <paramref name="type"/> last.</summary>
