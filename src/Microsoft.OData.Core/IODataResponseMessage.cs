@@ -10,6 +10,7 @@ namespace Microsoft.OData
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
+    using System.Threading.Tasks;
     #endregion Namespaces
 
     /// <summary>
@@ -47,7 +48,10 @@ namespace Microsoft.OData
 
         /// <summary>Gets the stream backing for this message.</summary>
         /// <returns>The stream backing for this message.</returns>
-        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate", Justification = "This is intentionally a method.")]
         Stream GetStream();
+
+        /// <summary>Asynchronously get the stream backing for this message.</summary>
+        /// <returns>The stream backing for this message.</returns>
+        Task<Stream> GetStreamAsync();
     }
 }

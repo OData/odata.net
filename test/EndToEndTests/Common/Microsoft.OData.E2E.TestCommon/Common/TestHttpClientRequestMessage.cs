@@ -88,7 +88,7 @@ namespace Microsoft.OData.E2E.TestCommon.Common
             }
         }
 
-        public async Task<IODataResponseMessageAsync> GetResponseAsync()
+        public async Task<IODataResponseMessage> GetResponseAsync()
         {
             HttpResponseMessage response;
 
@@ -107,7 +107,7 @@ namespace Microsoft.OData.E2E.TestCommon.Common
             };
         }
 
-        public virtual Task<IODataResponseMessageAsync> GetResponseAsync(string mimeType, TestHttpClientRequestMessage? requestMessage = null)
+        public virtual Task<IODataResponseMessage> GetResponseAsync(string mimeType, TestHttpClientRequestMessage? requestMessage = null)
         {
             throw new NotImplementedException();
         }

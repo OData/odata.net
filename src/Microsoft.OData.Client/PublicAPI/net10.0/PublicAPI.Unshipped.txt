@@ -1,2 +1,4 @@
 abstract Microsoft.OData.Client.DataServiceClientRequestMessage.GetStreamAsync() -> System.Threading.Tasks.Task<System.IO.Stream>
 override Microsoft.OData.Client.HttpClientRequestMessage.GetStreamAsync() -> System.Threading.Tasks.Task<System.IO.Stream>
+Microsoft.OData.Client.HttpWebResponseMessage.HttpWebResponseMessage(System.Collections.Generic.IDictionary<string, string> headers, int statusCode, System.Func<System.IO.Stream> getResponseStream = null, System.Func<System.Threading.CancellationToken, System.Threading.Tasks.Task<System.IO.Stream>> getResponseStreamAsync = null) -> void
+virtual Microsoft.OData.Client.HttpWebResponseMessage.GetStreamAsync() -> System.Threading.Tasks.Task<System.IO.Stream>

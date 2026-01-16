@@ -442,7 +442,8 @@ namespace Microsoft.OData.Client.Tests.Tracking
                 {
                     byte[] byteArray = Encoding.UTF8.GetBytes(this.Response);
                     return new MemoryStream(byteArray);
-                });
+                },
+                null);
         }
 
         public override IAsyncResult BeginGetResponse(AsyncCallback callback, object state)

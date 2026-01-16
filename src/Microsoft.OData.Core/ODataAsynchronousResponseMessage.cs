@@ -19,9 +19,7 @@ namespace Microsoft.OData
     /// <summary>
     /// Representing the message of a non-batch async response.
     /// </summary>
-    public sealed class ODataAsynchronousResponseMessage : IServiceCollectionProvider,
-
-        IODataResponseMessageAsync
+    public sealed class ODataAsynchronousResponseMessage : IServiceCollectionProvider, IODataResponseMessage
     {
         /// <summary>True if we are writing the response; false if we are reading it.</summary>
         private readonly bool writing;

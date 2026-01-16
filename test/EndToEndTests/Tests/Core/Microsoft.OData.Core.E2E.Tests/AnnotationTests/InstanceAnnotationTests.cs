@@ -403,7 +403,7 @@ public class InstanceAnnotationTests : EndToEndTestBase<InstanceAnnotationTests.
 
     #region Private
 
-    private async Task<string> ReadAsStringAsync(IODataResponseMessageAsync responseMessage)
+    private async Task<string> ReadAsStringAsync(IODataResponseMessage responseMessage)
     {
         using (Stream stream = await responseMessage.GetStreamAsync())
         {

@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 using Microsoft.OData.Edm;
 using Xunit;
 
@@ -182,6 +183,11 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.Json
             public Stream GetStream()
             {
                 return this.stream;
+            }
+
+            public Task<Stream> GetStreamAsync()
+            {
+                return Task.FromResult(this.stream);
             }
         }
 

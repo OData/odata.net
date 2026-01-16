@@ -23,9 +23,7 @@ namespace Microsoft.OData
     /// This class also implements the message interface since it is passed to the payload kind
     /// detection logic on the format implementations and manages the buffering read stream.
     /// </remarks>
-    internal sealed class ODataResponseMessage : ODataMessage,
-
- IODataResponseMessageAsync
+    internal sealed class ODataResponseMessage : ODataMessage, IODataResponseMessage
     {
         /// <summary>The response message this class is wrapping.</summary>
         private readonly IODataResponseMessage responseMessage;
@@ -109,13 +107,8 @@ namespace Microsoft.OData
         /// <returns>The stream for this message.</returns>
         public override Task<Stream> GetStreamAsync()
         {
-            IODataResponseMessageAsync asyncResponseMessage = this.responseMessage as IODataResponseMessageAsync;
-            if (asyncResponseMessage == null)
-            {
-                throw new ODataException(SRResources.ODataResponseMessage_AsyncNotAvailable);
-            }
 
-            return this.GetStreamAsync(asyncResponseMessage.GetStreamAsync, /*isRequest*/ false);
+            return this.GetStreamAsync(this.responseMessage.GetStreamAsync, isRequest: false);
         }
 
         /// <summary>

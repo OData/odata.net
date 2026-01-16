@@ -38,7 +38,7 @@ namespace Microsoft.OData.Client.Tests
 
         public override IODataResponseMessage GetResponse()
         {
-            return new HttpWebResponseMessage(this.headers, this.statusCode, this.getResponseStream);
+            return new HttpWebResponseMessage(this.headers, this.statusCode, this.getResponseStream, null);
         }
 
         public override IAsyncResult BeginGetResponse(AsyncCallback callback, object state)
