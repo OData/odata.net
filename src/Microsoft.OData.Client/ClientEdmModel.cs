@@ -276,6 +276,28 @@ namespace Microsoft.OData.Client
             return this.GetClientTypeAnnotation(result);
         }
 
+        internal void ValidatePath(ClientTypeAnnotation type, string[] elements)
+        {
+            ClientPropertyAnnotation property = null;
+            foreach (string element in elements)
+            {
+                property = type.GetProperty(element, UndeclaredPropertyBehavior.ThrowException);
+                type = this.GetClientTypeAnnotation(property.EdmProperty);
+
+                // If a complex collection, throw exception.
+                if (type.EdmTypeReference.IsComplex() && type.EdmTypeReference.IsCollection())
+                {
+                    throw Client.Error.InvalidOperation(Error.Format(SRResources.ClientType_CollectionOfComplexNotSupported, type.ToString()));
+                }
+            }
+
+            // Last element must be a navigation property.
+            if(property.EdmProperty.PropertyKind != EdmPropertyKind.Navigation)
+            {
+                throw Client.Error.InvalidOperation(Error.Format(SRResources.ClientType_LastElementMustBeNavigationProperty, property.PropertyName));
+            }
+        }
+
         /// <summary>Returns <paramref name="type"/> and its base types, in the order of most base type first and <paramref name="type"/> last.</summary>
         /// <param name="type">Type instance in question.</param>
         /// <param name="keyProperties">Returns the list of key properties if <paramref name="type"/> is an entity type; null otherwise.</param>

@@ -8,12 +8,13 @@ namespace Microsoft.OData.Client.Metadata
 {
     #region Namespaces
 
+    using Microsoft.OData.Edm;
+    using Microsoft.OData.UriParser;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
     using System.Reflection;
-    using Microsoft.OData.Edm;
 
     #endregion Namespaces
 

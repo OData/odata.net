@@ -7,6 +7,8 @@
 namespace Microsoft.OData.Client
 {
     using System;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.Diagnostics;
     using Microsoft.OData.Client.Metadata;
 
@@ -26,6 +28,12 @@ namespace Microsoft.OData.Client
 
         /// <summary>name of property on source entity that references the target entity</summary>
         private string sourceProperty;
+
+        /// <summary>list of properties if the sourceProperty has path segments e.g /Address/Country</summary>
+        private List<string> sourcePropertySegments;
+
+        /// <summary>name of first property if the sourceProperty has path segments</summary>
+        private string sourceFirstProperty;
 
         /// <summary>target entity</summary>
         private object target;
@@ -110,6 +118,36 @@ namespace Microsoft.OData.Client
             internal set
             {
                 this.sourceProperty = value;
+            }
+        }
+
+        /// <summary>list of properties if the sourceProperty has path segments e.g /Address/Country.</summary>
+        /// <returns>The list of properties of the sourceProperty. </returns>
+        internal List<string> SourcePropertySegments
+        {
+            get
+            {
+                return this.sourcePropertySegments;
+            }
+
+            set
+            {
+                this.sourcePropertySegments = value;
+            }
+        }
+
+        /// <summary>The name of first property if the sourceProperty has path segments.</summary>
+        /// <returns>The string identifier of an identity property in a source entity. </returns>
+        internal string SourceFirstProperty
+        {
+            get
+            {
+                return this.sourceFirstProperty;
+            }
+
+            set
+            {
+                this.sourceFirstProperty = value;
             }
         }
 

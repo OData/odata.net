@@ -3948,6 +3948,14 @@ namespace Microsoft.OData.Client
             ClientTypeAnnotation type = this.model.GetClientTypeAnnotation(this.model.GetOrCreateEdmType(source.GetType()));
             Debug.Assert(type.IsEntityType, "should be enforced by just adding an object");
 
+            if (sourceProperty.Contains(UriHelper.FORWARDSLASH))
+            {
+                string[] elements = sourceProperty.Split(new[] { UriHelper.FORWARDSLASH }, StringSplitOptions.RemoveEmptyEntries);
+
+                // We will only check the relationship between the source type and the first element in the path.
+                sourceProperty = elements[0];
+            }
+
             // will throw InvalidOperationException if property doesn't exist
             ClientPropertyAnnotation property = type.GetProperty(sourceProperty, UndeclaredPropertyBehavior.ThrowException);
 
@@ -3974,7 +3982,7 @@ namespace Microsoft.OData.Client
             // if (property.IsEntityCollection) then property.PropertyType is the collection elementType
             // either way you can only have a relation ship between keyed objects
             type = this.model.GetClientTypeAnnotation(this.model.GetOrCreateEdmType(property.EntityCollectionItemType ?? property.PropertyType));
-            Debug.Assert(type.IsEntityType, "should be enforced by just adding an object");
+            //Debug.Assert(type.IsEntityType, "should be enforced by just adding an object");
 
             if ((target != null) && !type.ElementType.IsInstanceOfType(target))
             {
