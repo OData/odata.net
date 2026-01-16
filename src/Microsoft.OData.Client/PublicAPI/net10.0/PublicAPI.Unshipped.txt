@@ -1,0 +1,2 @@
+abstract Microsoft.OData.Client.DataServiceClientRequestMessage.GetStreamAsync() -> System.Threading.Tasks.Task<System.IO.Stream>
+override Microsoft.OData.Client.HttpClientRequestMessage.GetStreamAsync() -> System.Threading.Tasks.Task<System.IO.Stream>

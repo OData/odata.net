@@ -104,14 +104,11 @@
   <data name="ExceptionUtils_ArgumentStringEmpty" xml:space="preserve">
     <value>Value cannot be empty.</value>
   </data>
-  <data name="ODataRequestMessage_AsyncNotAvailable" xml:space="preserve">
-    <value>An asynchronous operation was requested on an IODataRequestMessage instance. For asynchronous operations to succeed, the request message instance must implement IODataRequestMessageAsync.</value>
-  </data>
   <data name="ODataRequestMessage_StreamTaskIsNull" xml:space="preserve">
-    <value>The IODataRequestMessageAsync.GetStreamAsync method returned null. An asynchronous method that returns a task can never return null.</value>
+    <value>The IODataRequestMessage.GetStreamAsync method returned null. An asynchronous method that returns a task can never return null.</value>
   </data>
   <data name="ODataRequestMessage_MessageStreamIsNull" xml:space="preserve">
-    <value>The IODataRequestMessage.GetStream or IODataRequestMessageAsync.GetStreamAsync method returned a null stream value. The message can never return a null stream.</value>
+    <value>The IODataRequestMessage.GetStream or IODataRequestMessage.GetStreamAsync method returned a null stream value. The message can never return a null stream.</value>
   </data>
   <data name="ODataResponseMessage_AsyncNotAvailable" xml:space="preserve">
     <value>An asynchronous operation was requested on an IODataResponseMessage instance. For asynchronous operations to succeed, the response message instance must implement IODataResponseMessageAsync.</value>

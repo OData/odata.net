@@ -10,7 +10,7 @@ namespace Microsoft.OData.E2E.TestCommon.Common
     /// <summary>
     /// Represents an OData request message that encapsulates an underlying <see cref="Stream"/>.
     /// </summary>
-    public class TestStreamRequestMessage : IODataRequestMessageAsync
+    public class TestStreamRequestMessage : IODataRequestMessage
     {
         private readonly Stream stream;
         private readonly Dictionary<string, string> headers = new Dictionary<string, string>();

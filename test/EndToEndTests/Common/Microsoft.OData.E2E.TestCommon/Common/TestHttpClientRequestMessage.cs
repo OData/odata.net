@@ -8,10 +8,10 @@
 namespace Microsoft.OData.E2E.TestCommon.Common
 {
     /// <summary>
-    /// An implementation of <see cref="IODataRequestMessageAsync"/> that uses an <see cref="HttpRequestMessage"/> under the covers.
+    /// An implementation of <see cref="IODataRequestMessage"/> that uses an <see cref="HttpRequestMessage"/> under the covers.
     /// In OData library, a message is an abstraction which consists of stream and header interfaces that hides the details of stream-reading/writing.
     /// </summary>
-    public class TestHttpClientRequestMessage : IODataRequestMessageAsync, IServiceCollectionProvider, IDisposable, IAsyncDisposable
+    public class TestHttpClientRequestMessage : IODataRequestMessage, IServiceCollectionProvider, IDisposable, IAsyncDisposable
     {
         private readonly HttpRequestMessage _request;
         private readonly HttpClient _httpClient;

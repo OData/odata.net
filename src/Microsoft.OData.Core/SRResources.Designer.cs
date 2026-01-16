@@ -19,7 +19,7 @@ namespace Microsoft.OData.Core {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "18.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class SRResources {
@@ -5105,16 +5105,7 @@ namespace Microsoft.OData.Core {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to An asynchronous operation was requested on an IODataRequestMessage instance. For asynchronous operations to succeed, the request message instance must implement IODataRequestMessageAsync..
-        /// </summary>
-        internal static string ODataRequestMessage_AsyncNotAvailable {
-            get {
-                return ResourceManager.GetString("ODataRequestMessage_AsyncNotAvailable", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The IODataRequestMessage.GetStream or IODataRequestMessageAsync.GetStreamAsync method returned a null stream value. The message can never return a null stream..
+        ///   Looks up a localized string similar to The IODataRequestMessage.GetStream or IODataRequestMessage.GetStreamAsync method returned a null stream value. The message can never return a null stream..
         /// </summary>
         internal static string ODataRequestMessage_MessageStreamIsNull {
             get {
@@ -5123,7 +5114,7 @@ namespace Microsoft.OData.Core {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The IODataRequestMessageAsync.GetStreamAsync method returned null. An asynchronous method that returns a task can never return null..
+        ///   Looks up a localized string similar to The IODataRequestMessage.GetStreamAsync method returned null. An asynchronous method that returns a task can never return null..
         /// </summary>
         internal static string ODataRequestMessage_StreamTaskIsNull {
             get {

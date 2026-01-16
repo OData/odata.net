@@ -258,6 +258,7 @@ public class SRResourcesTests
     [InlineData("ODataMetadataBuilder_MissingEntitySetUri", new object[] { "Value" })]
     [InlineData("ODataMetadataBuilder_MissingSegmentForEntitySetUriSuffix", new object[] { "Value", "Value" })]
     [InlineData("ODataRequestMessage_GetStreamMethodNotSupported", new object[] { })]
+    [InlineData("ODataRequestMessage_GetStreamAsyncMethodNotSupported", new object[] { })]
     [InlineData("Parser_SingleEntry_ExpectedFeedOrEntry", new object[] { })]
     [InlineData("Parser_SingleEntry_MultipleFound", new object[] { })]
     [InlineData("Parser_SingleEntry_NoneFound", new object[] { })]

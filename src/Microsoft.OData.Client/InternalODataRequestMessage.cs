@@ -11,6 +11,7 @@ namespace Microsoft.OData.Client
     using System.Collections.Generic;
     using System.Net;
     using Microsoft.OData;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// This is a just a pass through implementation of IODataRequestMessage. This class is used
@@ -171,6 +172,29 @@ namespace Microsoft.OData.Client
             if (this.cachedRequestStream == null)
             {
                 this.cachedRequestStream = this.requestMessage.GetStream();
+            }
+
+            return this.cachedRequestStream;
+        }
+
+        /// <summary>
+        /// Asynchronously gets the stream to be used to write the request payload.
+        /// </summary>
+        /// <returns>
+        /// A task that represents the asynchronous operation.
+        /// The task result contains the stream to which the request payload needs to be written.
+        /// </returns>
+        public override async Task<Stream> GetStreamAsync()
+        {
+            if (!this.allowGetStream)
+            {
+                throw new NotImplementedException();
+            }
+
+            if (this.cachedRequestStream == null)
+            {
+                this.cachedRequestStream = await this.requestMessage.GetStreamAsync()
+                    .ConfigureAwait(false);
             }
 
             return this.cachedRequestStream;

@@ -569,7 +569,6 @@ public class SRResourcesTests
     [InlineData("ODataReaderCore_ReadCalledWithOpenStream", new object[] { })]
     [InlineData("ODataReaderCore_ReadOrReadAsyncCalledInInvalidState", new object[] { "Value" })]
     [InlineData("ODataReaderCore_SyncCallOnAsyncReader", new object[] { })]
-    [InlineData("ODataRequestMessage_AsyncNotAvailable", new object[] { })]
     [InlineData("ODataRequestMessage_MessageStreamIsNull", new object[] { })]
     [InlineData("ODataRequestMessage_StreamTaskIsNull", new object[] { })]
     [InlineData("ODataResource_PropertyValueCannotBeODataResourceValue", new object[] { "Value" })]

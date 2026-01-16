@@ -17,11 +17,9 @@ namespace Microsoft.OData
     #endregion Namespaces
 
     /// <summary>
-    /// Wrapper class around an IODataRequestMessageAsync to isolate our code from the interface implementation.
+    /// Wrapper class around an IODataRequestMessage to isolate our code from the interface implementation.
     /// </summary>
-    internal sealed class ODataRequestMessage : ODataMessage,
-
-        IODataRequestMessageAsync
+    internal sealed class ODataRequestMessage : ODataMessage, IODataRequestMessage
     {
         /// <summary>The request message this class is wrapping.</summary>
         private readonly IODataRequestMessage requestMessage;
@@ -118,16 +116,13 @@ namespace Microsoft.OData
         /// <summary>
         /// Asynchronously get the stream backing this message.
         /// </summary>
-        /// <returns>The stream for this message.</returns>
+        /// <returns>
+        /// A task that represents the asynchronous operation.
+        /// The task result contains the stream for this message.
+        /// </returns>
         public override Task<Stream> GetStreamAsync()
         {
-            IODataRequestMessageAsync asyncRequestMessage = this.requestMessage as IODataRequestMessageAsync;
-            if (asyncRequestMessage == null)
-            {
-                throw new ODataException(SRResources.ODataRequestMessage_AsyncNotAvailable);
-            }
-
-            return this.GetStreamAsync(asyncRequestMessage.GetStreamAsync, /*isRequest*/ true);
+            return this.GetStreamAsync(this.requestMessage.GetStreamAsync, isRequest: true);
         }
 
         /// <summary>

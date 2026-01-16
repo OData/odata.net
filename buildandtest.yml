@@ -31,12 +31,23 @@ steps:
     command: 'build'
     arguments: '--configuration $(BuildConfiguration) --no-incremental'
     projects: |
-     $(Build.SourcesDirectory)\sln\OData.Pipeline.sln
+      $(Build.SourcesDirectory)\sln\OData.Pipeline.sln
 
 - task: DotNetCoreCLI@2
   displayName: 'Test'
   inputs:
     command: 'test'
     arguments: '--configuration $(buildConfiguration) --settings $(Build.SourcesDirectory)\test.runsettings --no-build'
-    projects: |      
-     $(Build.SourcesDirectory)\sln\OData.Pipeline.sln
+    projects: |
+      # Disable Core and Client E2E tests temporarily pending update of AspNetCoreOData dependency
+      # $(Build.SourcesDirectory)\sln\OData.Pipeline.sln
+      test/**/*Microsoft.OData.TestCommon.csproj
+      test/**/*Microsoft.OData.Core.Tests.csproj
+      test/**/*Microsoft.OData.Edm.Tests.csproj
+      test/**/*Microsoft.OData.Spatial.Tests.csproj
+      test/**/*Microsoft.OData.Client.Tests.csproj
+      test/**/Microsoft.OData.E2E.TestCommon.csproj
+      !test/**/Microsoft.OData.Core.E2E.Tests.csproj
+      test/**/Microsoft.OData.Edm.E2E.Tests.csproj
+      !test/**/Microsoft.OData.Client.E2E.Tests.csproj
+      !test/**/obj/**
