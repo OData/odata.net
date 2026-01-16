@@ -521,16 +521,18 @@ namespace Microsoft.OData.Client
 
         private static HttpWebResponseMessage ConvertHttpWebResponse(HttpResponseMessage response)
         {
-            IEnumerable<KeyValuePair<string, string>> allHeaders = HttpHeadersToStringDictionary(response.Headers).Concat(HttpHeadersToStringDictionary(response.Content.Headers));
+            IEnumerable<KeyValuePair<string, string>> allHeaders = HttpHeadersToStringDictionary(response.Headers).Concat(
+                HttpHeadersToStringDictionary(response.Content.Headers));
+
             return new HttpWebResponseMessage(
                 allHeaders.ToDictionary((h1) => h1.Key, (h2) => h2.Value),
                 (int)response.StatusCode,
-                () =>
-                {
+                getResponseStream: () => {
                     Task<Stream> task = response.Content.ReadAsStreamAsync();
                     task.Wait();
                     return task.Result;
-                });
+                },
+                getResponseStreamAsync: response.Content.ReadAsStreamAsync);
         }
 
         private static T UnwrapAggregateException<T>(Func<T> action)

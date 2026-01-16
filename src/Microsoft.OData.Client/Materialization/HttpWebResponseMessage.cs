@@ -8,9 +8,10 @@ namespace Microsoft.OData.Client
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
     using System.IO;
     using System.Net;
+    using System.Threading;
+    using System.Threading.Tasks;
     using Microsoft.OData;
 
     /// <summary>
@@ -21,8 +22,11 @@ namespace Microsoft.OData.Client
         /// <summary>Cached headers.</summary>
         private readonly HeaderCollection headers;
 
-        /// <summary>A func which returns the response stream.</summary>
+        /// <summary>A delegate that returns the response stream.</summary>
         private readonly Func<Stream> getResponseStream;
+
+        /// <summary>A delegate that returns the response stream asynchronously.</summary>
+        private readonly Func<CancellationToken, Task<Stream>> getResponseStreamAsync;
 
         /// <summary>The response status code.</summary>
         private readonly int statusCode;
@@ -31,19 +35,81 @@ namespace Microsoft.OData.Client
         private HttpWebResponse httpWebResponse;
 
         /// <summary>
-        /// Constructor.
+        /// Initializes a new instance of the <see cref="HttpWebResponseMessage"/> class.
         /// </summary>
         /// <param name="headers">The headers.</param>
         /// <param name="statusCode">The status code.</param>
-        /// <param name="getResponseStream">A function returning the response stream.</param>
-        public HttpWebResponseMessage(IDictionary<string, string> headers, int statusCode, Func<Stream> getResponseStream)
+        /// <param name="getResponseStream">
+        /// Optional delegate that returns the response stream synchronously.
+        /// At least one of <paramref name="getResponseStream"/> or <paramref name="getResponseStreamAsync"/> must be provided.
+        /// </param>
+        /// <param name="getResponseStreamAsync">
+        /// Optional delegate that returns the response stream asynchronously.
+        /// At least one of <paramref name="getResponseStream"/> or <paramref name="getResponseStreamAsync"/> must be provided.
+        /// </param>
+        /// <remarks>
+        /// Provide either or both stream access delegates depending on whether synchronous,
+        /// asynchronous, or both types of stream access are required.
+        /// </remarks>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="headers"/> is null.</exception>
+        /// <exception cref="ArgumentException">
+        /// Thrown when both <paramref name="getResponseStream"/> and <paramref name="getResponseStreamAsync"/> are null.
+        /// </exception>
+        public HttpWebResponseMessage(
+            IDictionary<string, string> headers,
+            int statusCode,
+            Func<Stream> getResponseStream = null,
+            Func<CancellationToken, Task<Stream>> getResponseStreamAsync = null)
+            : this(
+                  headers != null ? new HeaderCollection(headers) : throw Error.ArgumentNull(nameof(headers)),
+                  statusCode,
+                  getResponseStream,
+                  getResponseStreamAsync)
         {
-            Debug.Assert(headers != null, "headers != null");
-            Debug.Assert(getResponseStream != null, "getResponseStream != null");
+        }
 
-            this.headers = new HeaderCollection(headers);
+        /// <summary>
+        /// Initializes a new instance of the <see cref="HttpWebResponseMessage"/> class.
+        /// </summary>
+        /// <param name="headers">The headers.</param>
+        /// <param name="statusCode">The status code.</param>
+        /// <param name="getResponseStream">
+        /// Optional delegate that returns the response stream synchronously.
+        /// At least one of <paramref name="getResponseStream"/> or <paramref name="getResponseStreamAsync"/> must be provided.
+        /// </param>
+        /// <param name="getResponseStreamAsync">
+        /// Optional delegate that returns the response stream asynchronously.
+        /// At least one of <paramref name="getResponseStream"/> or <paramref name="getResponseStreamAsync"/> must be provided.
+        /// </param>
+        /// <remarks>
+        /// Provide either or both stream access delegates depending on whether synchronous,
+        /// asynchronous, or both types of stream access are required.
+        /// </remarks>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="headers"/> is null.</exception>
+        /// <exception cref="ArgumentException">
+        /// Thrown when both <paramref name="getResponseStream"/> and <paramref name="getResponseStreamAsync"/> are null.
+        /// </exception>
+        internal HttpWebResponseMessage(
+            HeaderCollection headers,
+            int statusCode,
+            Func<Stream> getResponseStream = null,
+            Func<CancellationToken, Task<Stream>> getResponseStreamAsync = null)
+        {
+            if (headers == null)
+            {
+                throw Error.ArgumentNull(nameof(headers));
+            }
+
+            if (getResponseStream == null && getResponseStreamAsync == null)
+            {
+                throw new ArgumentException(
+                    $"At least one of the parameters '{nameof(getResponseStream)}'or '{nameof(getResponseStreamAsync)}' must be provided.");
+            }
+
+            this.headers = headers;
             this.statusCode = statusCode;
             this.getResponseStream = getResponseStream;
+            this.getResponseStreamAsync = getResponseStreamAsync;
         }
 
         /// <summary>
@@ -52,14 +118,15 @@ namespace Microsoft.OData.Client
         /// <param name="headers">The headers.</param>
         /// <param name="statusCode">The status code.</param>
         /// <param name="getResponseStream">A function returning the response stream.</param>
-        internal HttpWebResponseMessage(HeaderCollection headers, int statusCode, Func<Stream> getResponseStream)
+        [Obsolete("Use the constructor overload that accepts Func<CancellationToken, Task<Stream>> " +
+            "for proper async stream retrieval and cancellation support. " +
+            "This overload will be removed in a future version.", error: false)]
+        public HttpWebResponseMessage(IDictionary<string, string> headers, int statusCode, Func<Stream> getResponseStream)
+            : this(
+                  headers != null ? new HeaderCollection(headers) : throw Error.ArgumentNull(nameof(headers)),
+                  statusCode,
+                  getResponseStream)
         {
-            Debug.Assert(headers != null, "headers != null");
-            Debug.Assert(getResponseStream != null, "getResponseStream != null");
-
-            this.headers = headers;
-            this.statusCode = statusCode;
-            this.getResponseStream = getResponseStream;
         }
 
         /// <summary>
@@ -126,11 +193,31 @@ namespace Microsoft.OData.Client
         /// <summary>
         /// Gets the stream to be used to read the response payload.
         /// </summary>
+        /// <remarks>
+        /// If the synchronous delegate was not provided during construction,
+        /// this method will invoke the async delegate synchronously, which may block.
+        /// </remarks>
         /// <returns>Stream from which the response payload can be read.</returns>
         public virtual Stream GetStream()
-        {
-            return this.getResponseStream();
-        }
+            => getResponseStream != null
+            ? getResponseStream()
+            : getResponseStreamAsync!(default).GetAwaiter().GetResult();
+
+        /// <summary>
+        /// Asynchronously gets the stream to be used to read the response payload.
+        /// </summary>
+        /// <remarks>
+        /// If the asynchronous delegate was not provided during construction,
+        /// this method will wrap the synchronous delegate result in a completed task.
+        /// </remarks>
+        /// <returns>
+        /// A task that represents the asynchronous operation.
+        /// The task result contains the stream from which the response payload can be read.
+        /// </returns>
+        public virtual Task<Stream> GetStreamAsync()
+            => getResponseStreamAsync != null
+            ? getResponseStreamAsync(default)
+            : Task.FromResult(getResponseStream!());
 
         /// <summary>
         /// Close the underlying HttpWebResponse.

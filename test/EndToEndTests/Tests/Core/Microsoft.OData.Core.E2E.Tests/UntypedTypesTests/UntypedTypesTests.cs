@@ -473,7 +473,7 @@ public class UntypedTypesTests : EndToEndTestBase<UntypedTypesTests.TestsStartup
         Assert.Equal(200, responseMessage.StatusCode);
     }
 
-    private static async Task<string> ReadAsStringAsync(IODataResponseMessageAsync responseMessage)
+    private static async Task<string> ReadAsStringAsync(IODataResponseMessage responseMessage)
     {
         using (Stream stream = await responseMessage.GetStreamAsync())
         {

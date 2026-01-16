@@ -268,7 +268,7 @@ namespace Microsoft.OData.Client
                 else if (Util.MayBeJson(message))
                 {
                     headers.Add(ODataConstants.ContentTypeHeader, JsonContentTypeHeader);
-                    httpWebResponseMessage = new HttpWebResponseMessage(headers, (int)statusCode, getResponseStream);
+                    httpWebResponseMessage = new HttpWebResponseMessage(headers, (int)statusCode, getResponseStream, null);
                     ODataMessageReader messageReader = new ODataMessageReader(httpWebResponseMessage);
 
                     // If the error message response does not conform to the OData specifications

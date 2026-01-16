@@ -889,13 +889,13 @@ namespace Microsoft.OData.Tests
             // Act
             for (int i = 0; i < 10; i++)
             {
-                var exception = await Record.ExceptionAsync(async () =>
+                var exception = await Record.ExceptionAsync((Func<Task>)(async () =>
                 {
-                    await using (var msgWriter = new ODataMessageWriter((IODataResponseMessageAsync)message, writerSettings, _largeEdmModel))
+                    await using (var msgWriter = new ODataMessageWriter((IODataResponseMessage)message, writerSettings, _largeEdmModel))
                     {
                         await msgWriter.WriteMetadataDocumentAsync();
                     }
-                });
+                }));
 
                 Assert.Null(exception);
             }
@@ -962,13 +962,13 @@ namespace Microsoft.OData.Tests
             // Act
             for (int i = 0; i < 10; i++)
             {
-                var exception = await Record.ExceptionAsync(async () =>
+                var exception = await Record.ExceptionAsync((Func<Task>)(async () =>
                 {
-                    await using (var msgWriter = new ODataMessageWriter((IODataResponseMessageAsync)message, writerSettings, _largeEdmModel))
+                    await using (var msgWriter = new ODataMessageWriter((IODataResponseMessage)message, writerSettings, _largeEdmModel))
                     {
                         await msgWriter.WriteMetadataDocumentAsync();
                     }
-                });
+                }));
 
                 Assert.Null(exception);
             }
@@ -1097,7 +1097,7 @@ namespace Microsoft.OData.Tests
             message.SetHeader("Content-Type", "application/json");
 
             // Act
-            await using (var msgWriter = new ODataMessageWriter((IODataResponseMessageAsync)message, writerSettings, edmModel))
+            await using (var msgWriter = new ODataMessageWriter((IODataResponseMessage)message, writerSettings, edmModel))
             {
                 var writer = await msgWriter.CreateODataResourceWriterAsync(edmModel.FindDeclaredEntitySet("Customers"));
                 await writer.WriteStartAsync(resource);
@@ -1125,7 +1125,7 @@ namespace Microsoft.OData.Tests
             writerSettings.SetServiceDocumentUri(new Uri("http://www.example.com/"));
             message.SetHeader("Content-Type", "application/json");
 
-            var msgWriter = new ODataMessageWriter((IODataResponseMessageAsync)message, writerSettings, edmModel);
+            var msgWriter = new ODataMessageWriter((IODataResponseMessage)message, writerSettings, edmModel);
 
             try
             {
@@ -1162,7 +1162,7 @@ namespace Microsoft.OData.Tests
             writerSettings.SetServiceDocumentUri(new Uri("http://www.example.com/"));
             message.SetHeader("Content-Type", "application/json");
 
-            var msgWriter = new ODataMessageWriter((IODataResponseMessageAsync)message, writerSettings, edmModel);
+            var msgWriter = new ODataMessageWriter((IODataResponseMessage)message, writerSettings, edmModel);
 
             await msgWriter.WriteMetadataDocumentAsync();
 
@@ -1188,7 +1188,7 @@ namespace Microsoft.OData.Tests
             writerSettings.SetServiceDocumentUri(new Uri("http://www.example.com/"));
             message.SetHeader("Content-Type", "application/xml");
 
-            var msgWriter = new ODataMessageWriter((IODataResponseMessageAsync)message, writerSettings, edmModel);
+            var msgWriter = new ODataMessageWriter((IODataResponseMessage)message, writerSettings, edmModel);
 
             try
             {
@@ -1225,7 +1225,7 @@ namespace Microsoft.OData.Tests
             writerSettings.SetServiceDocumentUri(new Uri("http://www.example.com/"));
             message.SetHeader("Content-Type", "application/xml");
 
-            var msgWriter = new ODataMessageWriter((IODataResponseMessageAsync)message, writerSettings, edmModel);
+            var msgWriter = new ODataMessageWriter((IODataResponseMessage)message, writerSettings, edmModel);
 
             await msgWriter.WriteMetadataDocumentAsync();
 
@@ -1249,7 +1249,7 @@ namespace Microsoft.OData.Tests
                 EnableMessageStreamDisposal = true,
             };
 
-            var writer = new ODataMessageWriter((IODataResponseMessageAsync)message, settings, edmModel);
+            var writer = new ODataMessageWriter((IODataResponseMessage)message, settings, edmModel);
             await writer.WriteValueAsync(123);
             await writer.DisposeAsync();
 
@@ -1604,7 +1604,7 @@ namespace Microsoft.OData.Tests
                 };
             }
 
-            await using (var msgWriter = new ODataMessageWriter((IODataResponseMessageAsync)message, writerSettings, edmModel))
+            await using (var msgWriter = new ODataMessageWriter((IODataResponseMessage)message, writerSettings, edmModel))
             {
                 await test(msgWriter);
             }
@@ -1645,7 +1645,7 @@ namespace Microsoft.OData.Tests
             writerSettings.BaseUri = new Uri("http://www.example.com/");
             writerSettings.SetServiceDocumentUri(new Uri("http://www.example.com/"));
 
-            await using (var msgWriter = new ODataMessageWriter((IODataResponseMessageAsync)message, writerSettings, edmModel))
+            await using (var msgWriter = new ODataMessageWriter((IODataResponseMessage)message, writerSettings, edmModel))
             {
                 await test(msgWriter);
             }

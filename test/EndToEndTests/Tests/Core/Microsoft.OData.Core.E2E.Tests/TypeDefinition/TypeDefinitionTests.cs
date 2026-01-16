@@ -1617,7 +1617,7 @@ public class TypeDefinitionTests : EndToEndTestBase<TypeDefinitionTests.TestsSta
 
     #region Private methods
 
-    private static async Task<string> ReadAsStringAsync(IODataResponseMessageAsync responseMessage)
+    private static async Task<string> ReadAsStringAsync(IODataResponseMessage responseMessage)
     {
         using (Stream stream = await responseMessage.GetStreamAsync())
         {

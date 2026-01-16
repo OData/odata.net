@@ -300,7 +300,7 @@ namespace Microsoft.OData.Client
                 { ODataConstants.ContentTypeHeader, "application/json" }
             };
             HttpWebResponseMessage httpWebResponseMessage = new HttpWebResponseMessage(
-                responseHeaders, (int)queryResult.StatusCode, queryResult.GetResponseStream);
+                responseHeaders, (int)queryResult.StatusCode, queryResult.GetResponseStream, null);
 
             ODataMessageReaderSettings messageReaderSettings = new ODataMessageReaderSettings
             {

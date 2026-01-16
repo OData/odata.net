@@ -18,7 +18,7 @@ internal class CustomHttpClientRequestMessage : TestHttpClientRequestMessage
         this._httpClient = httpClient;
     }
 
-    public override async Task<IODataResponseMessageAsync> GetResponseAsync(string mimeType, TestHttpClientRequestMessage? requestMessage = null)
+    public override async Task<IODataResponseMessage> GetResponseAsync(string mimeType, TestHttpClientRequestMessage? requestMessage = null)
     {
         string? asyncToken = null;
         if (this.Url.Query.Contains("$asyncToken"))
@@ -58,7 +58,7 @@ internal class CustomHttpClientRequestMessage : TestHttpClientRequestMessage
     }
 }
 
-public class CustomODataResponseMessageAsync : IODataResponseMessageAsync
+public class CustomODataResponseMessageAsync : IODataResponseMessage
 {
     private readonly Dictionary<string, string> _headers = new();
     private readonly MemoryStream _stream = new();

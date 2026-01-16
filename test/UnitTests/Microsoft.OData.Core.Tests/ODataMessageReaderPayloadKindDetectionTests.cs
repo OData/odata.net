@@ -370,7 +370,7 @@ namespace Microsoft.OData.Tests
                 => this.formats;
         }
 
-        private sealed class TestResponseMessage : IODataResponseMessage, IODataResponseMessageAsync, IServiceCollectionProvider
+        private sealed class TestResponseMessage : IODataResponseMessage, IServiceCollectionProvider
         {
             private readonly MemoryStream stream;
             private readonly Dictionary<string, string> headers = new(StringComparer.OrdinalIgnoreCase);
