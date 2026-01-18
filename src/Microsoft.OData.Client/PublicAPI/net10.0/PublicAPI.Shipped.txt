@@ -1,3 +1,7 @@
+abstract Microsoft.OData.Client.DataServiceClientRequestMessage.GetStreamAsync(System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<System.IO.Stream>
+Microsoft.OData.Client.HttpWebResponseMessage.HttpWebResponseMessage(System.Collections.Generic.IDictionary<string, string> headers, int statusCode, System.Func<System.IO.Stream> getResponseStream = null, System.Func<System.Threading.CancellationToken, System.Threading.Tasks.Task<System.IO.Stream>> getResponseStreamAsync = null) -> void
+override Microsoft.OData.Client.HttpClientRequestMessage.GetStreamAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<System.IO.Stream>
+virtual Microsoft.OData.Client.HttpWebResponseMessage.GetStreamAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<System.IO.Stream>
 abstract Microsoft.OData.Client.DataServiceClientRequestMessage.Url.set -> void
 Microsoft.OData.Client.ALinq.UriParser.ISyntacticTreeVisitor<T>.Visit(Microsoft.OData.Client.ALinq.UriParser.RootPathToken tokenIn) -> T
 Microsoft.OData.Client.ALinq.UriParser.QueryTokenKind.RootPath = 33 -> Microsoft.OData.Client.ALinq.UriParser.QueryTokenKind

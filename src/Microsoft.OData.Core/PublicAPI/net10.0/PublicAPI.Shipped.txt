@@ -1,3 +1,11 @@
+Microsoft.OData.IODataRequestMessage.GetStreamAsync(System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<System.IO.Stream>
+Microsoft.OData.IODataResponseMessage.GetStreamAsync(System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<System.IO.Stream>
+Microsoft.OData.ODataAsynchronousResponseMessage.GetStreamAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<System.IO.Stream>
+Microsoft.OData.ODataBatchOperationRequestMessage.GetStreamAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<System.IO.Stream>
+Microsoft.OData.ODataBatchOperationResponseMessage.GetStreamAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<System.IO.Stream>
+Microsoft.OData.ODataNestedResourceInfo.InstanceAnnotations.get -> System.Collections.Generic.ICollection<Microsoft.OData.ODataInstanceAnnotation>
+Microsoft.OData.ODataNestedResourceInfo.InstanceAnnotations.set -> void
+Microsoft.OData.ValidationKinds.ThrowOnUnexpectedODataPropertyAnnotationOnNavigationProperty = 8 -> Microsoft.OData.ValidationKinds
 Microsoft.OData.Json.IJsonWriter.WriteValue(System.DateOnly value) -> void
 Microsoft.OData.Json.IJsonWriter.WriteValue(System.TimeOnly value) -> void
 Microsoft.OData.Json.IJsonWriter.WriteValueAsync(System.DateOnly value) -> System.Threading.Tasks.Task
