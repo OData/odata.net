@@ -12,7 +12,7 @@ namespace Microsoft.OData
     /// <summary>
     /// Context information for reading an OData property
     /// </summary>
-    public class ODataPropertyStreamingContext
+    public sealed class ODataPropertyStreamingContext
     {
         /// <summary>
         /// The primitive type of the property being read, or null if unknown.
