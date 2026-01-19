@@ -691,6 +691,15 @@ namespace Microsoft.OData.Client {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Collection properties of a complex type are not supported..
+        /// </summary>
+        internal static string ClientType_CollectionOfComplexNotSupported {
+            get {
+                return ResourceManager.GetString("ClientType_CollectionOfComplexNotSupported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The key property &apos;{0}&apos; on for type &apos;{1}&apos; is of type &apos;{2}&apos;, which is not a simple type. Only properties of simple type can be key properties..
         /// </summary>
         internal static string ClientType_KeysMustBeSimpleTypes {
@@ -705,6 +714,15 @@ namespace Microsoft.OData.Client {
         internal static string ClientType_KeysOnDifferentDeclaredType {
             get {
                 return ResourceManager.GetString("ClientType_KeysOnDifferentDeclaredType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Last element must be a navigation property..
+        /// </summary>
+        internal static string ClientType_LastElementMustBeNavigationProperty {
+            get {
+                return ResourceManager.GetString("ClientType_LastElementMustBeNavigationProperty", resourceCulture);
             }
         }
         

@@ -7,6 +7,8 @@
 namespace Microsoft.OData.Client
 {
     using System;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.Diagnostics;
     using Microsoft.OData.Client.Metadata;
 
@@ -27,6 +29,12 @@ namespace Microsoft.OData.Client
         /// <summary>name of property on source entity that references the target entity</summary>
         private string sourceProperty;
 
+        /// <summary>list of properties if the sourceProperty has path segments e.g /Address/Country</summary>
+        private List<string> sourcePropertySegments;
+
+        /// <summary>name of first property if the sourceProperty has path segments</summary>
+        private string sourceFirstProperty;
+
         /// <summary>target entity</summary>
         private object target;
         #endregion
@@ -41,6 +49,13 @@ namespace Microsoft.OData.Client
         internal LinkDescriptor(object source, string sourceProperty, object target, ClientEdmModel model)
             : this(source, sourceProperty, target, EntityStates.Unchanged)
         {
+            if(this.HasPropertySegments)
+            {
+                // when there are path segments, we need to get the type of the first property in the path
+                this.IsSourcePropertyCollection = model.GetClientTypeAnnotation(model.GetOrCreateEdmType(source.GetType())).GetProperty(this.SourceFirstProperty, UndeclaredPropertyBehavior.ThrowException).IsEntityCollection;
+                return;
+            }
+
             this.IsSourcePropertyCollection = model.GetClientTypeAnnotation(model.GetOrCreateEdmType(source.GetType())).GetProperty(sourceProperty, UndeclaredPropertyBehavior.ThrowException).IsEntityCollection;
         }
 
@@ -56,11 +71,19 @@ namespace Microsoft.OData.Client
         {
             Debug.Assert(source != null, "source != null");
             Debug.Assert(!String.IsNullOrEmpty(sourceProperty), "!String.IsNullOrEmpty(propertyName)");
-            Debug.Assert(!sourceProperty.Contains("/", StringComparison.Ordinal), "!sourceProperty.Contains('/')");
+            //Debug.Assert(!sourceProperty.Contains("/", StringComparison.Ordinal), "!sourceProperty.Contains('/')");
 
             this.source = source;
             this.sourceProperty = sourceProperty;
             this.target = target;
+
+            if (sourceProperty.Contains(UriHelper.FORWARDSLASH, StringComparison.Ordinal))
+            {
+                string[] elements = sourceProperty.Split(new[] { UriHelper.FORWARDSLASH }, StringSplitOptions.RemoveEmptyEntries);
+                this.sourceFirstProperty = elements[0];
+                this.sourcePropertySegments = elements is not null ? new List<string>(elements) : new List<string>();
+                this.HasPropertySegments = true;
+            }
         }
 
         #region Public Properties
@@ -113,6 +136,36 @@ namespace Microsoft.OData.Client
             }
         }
 
+        /// <summary>list of properties if the sourceProperty has path segments e.g /Address/Country.</summary>
+        /// <returns>The list of properties of the sourceProperty. </returns>
+        internal List<string> SourcePropertySegments
+        {
+            get
+            {
+                return this.sourcePropertySegments;
+            }
+
+            set
+            {
+                this.sourcePropertySegments = value;
+            }
+        }
+
+        /// <summary>The name of first property if the sourceProperty has path segments.</summary>
+        /// <returns>The string identifier of an identity property in a source entity. </returns>
+        internal string SourceFirstProperty
+        {
+            get
+            {
+                return this.sourceFirstProperty;
+            }
+
+            set
+            {
+                this.sourceFirstProperty = value;
+            }
+        }
+
         #endregion
 
         /// <summary>this is a link</summary>
@@ -123,6 +176,13 @@ namespace Microsoft.OData.Client
 
         /// <summary>is this a collection property or not</summary>
         internal bool IsSourcePropertyCollection
+        {
+            get;
+            set;
+        }
+
+        /// <summary>is this a collection property or not</summary>
+        internal bool HasPropertySegments
         {
             get;
             set;

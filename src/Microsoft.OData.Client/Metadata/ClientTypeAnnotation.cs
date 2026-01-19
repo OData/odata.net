@@ -14,6 +14,7 @@ namespace Microsoft.OData.Client.Metadata
     using System.Linq;
     using System.Reflection;
     using Microsoft.OData.Edm;
+    using Microsoft.OData.UriParser;
 
     #endregion Namespaces
 
