@@ -2624,4 +2624,7 @@
   <data name="TaskUtils_NullContinuationTask" xml:space="preserve">
     <value>The continuation task returned by the operation cannot be null.</value>
   </data>
+  <data name="MetadataBinder_FunctionArgumentNotSingleValueOrCollectionNode" xml:space="preserve">
+    <value>The argument for an invocation of a function with name '{0}' is not a single value or collection. Arguments for this function must be either a single value or collection.</value>
+  </data>
 </root>

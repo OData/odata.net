@@ -482,12 +482,13 @@ namespace Microsoft.OData.UriParser
             ExceptionUtils.CheckArgumentNotNull(this.uri, "uri");
 
             ODataPath path = this.ParsePath();
+            // NOTE: ParseCompute should be called before ParseSelectAndExpand because $compute may add computed properties to the select/expand clause.
+            ComputeClause compute = this.ParseCompute();
             SelectExpandClause selectExpand = this.ParseSelectAndExpand();
             FilterClause filter = this.ParseFilter();
             OrderByClause orderBy = this.ParseOrderBy();
             SearchClause search = this.ParseSearch();
             ApplyClause apply = this.ParseApply();
-            ComputeClause compute = this.ParseCompute();
             long? top = this.ParseTop();
             long? skip = this.ParseSkip();
             long? index = this.ParseIndex();
