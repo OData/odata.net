@@ -1344,13 +1344,13 @@ namespace Microsoft.OData.Json
                     (primitiveType.IsStream() ||
                         ((property == null || !property.IsKey())  // don't stream key properties
                              && (primitiveType.IsBinary() || primitiveType.IsString() || isCollection))
-                             && ShouldReadAsStream(resourceState, primitiveType, isCollection, propertyName, property))) ||
+                             && ShouldPrimitiveValueReadAsStream(resourceState, primitiveType, isCollection, propertyName, property))) ||
                 (propertyType != null &&
                     isCollection &&
                     propertyType.Definition.AsElementType().IsUntyped()) ||
                 (propertyType == null
                     && (isCollection || this.JsonReader.CanStream())
-                    && ShouldReadAsStream(resourceState, null, isCollection, propertyName, property)))
+                    && ShouldPrimitiveValueReadAsStream(resourceState, null, isCollection, propertyName, property)))
             {
                 if (isCollection)
                 {
@@ -3598,13 +3598,13 @@ namespace Microsoft.OData.Json
                     (primitiveType.IsStream() ||
                         ((property == null || !property.IsKey())  // don't stream key properties
                              && (primitiveType.IsBinary() || primitiveType.IsString() || isCollection))
-                             && ShouldReadAsStream(resourceState, primitiveType, isCollection, propertyName, property))) ||
+                             && ShouldPrimitiveValueReadAsStream(resourceState, primitiveType, isCollection, propertyName, property))) ||
                 (propertyType != null &&
                     isCollection &&
                     propertyType.Definition.AsElementType().IsUntyped()) ||
                 (propertyType == null
                     && (isCollection || await this.JsonReader.CanStreamAsync().ConfigureAwait(false))
-                    && ShouldReadAsStream(resourceState, null, isCollection, propertyName, property)))
+                    && ShouldPrimitiveValueReadAsStream(resourceState, null, isCollection, propertyName, property)))
             {
                 if (isCollection)
                 {
@@ -4326,7 +4326,7 @@ namespace Microsoft.OData.Json
         }
 
         /// <summary>
-        /// Determines whether a primitive value within a collection should be read as a stream.
+        /// Determines whether a primitive value should be read as a stream.
         /// </summary>
         /// <param name="resourceState">The current resource state containing property annotations.</param>
         /// <param name="primitiveType">The primitive type of the property, or null if unknown.</param>
@@ -4334,15 +4334,15 @@ namespace Microsoft.OData.Json
         /// <param name="propertyName">The name of the property.</param>
         /// <param name="property">The EDM property, or null for dynamic properties.</param>
         /// <returns>True if the property should be read as a stream; otherwise, false.</returns>
-        private bool ShouldReadAsStream(IODataJsonReaderResourceState resourceState, IEdmPrimitiveType primitiveType, bool isCollection, string propertyName, IEdmProperty property)
+        private bool ShouldPrimitiveValueReadAsStream(IODataJsonReaderResourceState resourceState, IEdmPrimitiveType primitiveType, bool isCollection, string propertyName, IEdmProperty property)
         {
-            Func<ODataPropertyStreamReadingContext, bool> shouldReadAsStream = this.MessageReaderSettings.ShouldReadPropertyAsStream;
+            Func<ODataPropertyStreamingContext, bool> shouldReadAsStream = this.MessageReaderSettings.ShouldReadPropertyAsStream;
             if (shouldReadAsStream != null)
             {
                 IEnumerable<KeyValuePair<string, object>> customPropertyAnnotations = resourceState?.PropertyAndAnnotationCollector?.GetCustomPropertyAnnotations(propertyName) 
                     ?? Enumerable.Empty<KeyValuePair<string, object>>();
 
-                ODataPropertyStreamReadingContext propertyReadingContext = new ODataPropertyStreamReadingContext
+                ODataPropertyStreamingContext propertyReadingContext = new ODataPropertyStreamingContext
                 {
                     PrimitiveType = primitiveType,
                     IsCollection = isCollection,

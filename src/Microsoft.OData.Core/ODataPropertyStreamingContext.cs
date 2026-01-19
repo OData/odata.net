@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="ODataPropertyStreamReadingContext.cs" company="Microsoft">
+// <copyright file="ODataPropertyStreamingContext.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -12,7 +12,7 @@ namespace Microsoft.OData
     /// <summary>
     /// Context information for reading an OData property
     /// </summary>
-    public class ODataPropertyStreamReadingContext
+    public class ODataPropertyStreamingContext
     {
         /// <summary>
         /// The primitive type of the property being read, or null if unknown.
@@ -35,7 +35,9 @@ namespace Microsoft.OData
         public IEdmProperty Property { get; internal set; }
 
         /// <summary>
-        /// The custom annotations (non-OData annotations) associated with this property. These are annotations that do not start with "odata."
+        /// The custom annotations associated with this property.
+        /// These are annotations that do not correspond to reserved OData annotations,
+        /// regardless of whether the optional "odata." prefix is present.
         /// </summary>
         public IEnumerable<KeyValuePair<string, object>> CustomPropertyAnnotations { get; internal set; }
     }

@@ -2200,7 +2200,7 @@ namespace Microsoft.OData.Json
                 (resourceType != null && resourceType.IsStream()) ||
                 (resourceType != null
                    && (resourceType.IsBinary() || resourceType.IsString())
-                   && ShouldReadPrimitiveAsStream(resourceType as IEdmPrimitiveType)))
+                   && ShouldReadPrimitiveCollectionItemAsStream(resourceType as IEdmPrimitiveType)))
             {
                 if (resourceType == null || resourceType.IsUntyped())
                 {
@@ -2658,12 +2658,12 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="primitiveType">The primitive type of the value, or null if unknown.</param>
         /// <returns>True if the primitive should be read as a stream; otherwise, false.</returns>
-        private bool ShouldReadPrimitiveAsStream(IEdmPrimitiveType primitiveType)
+        private bool ShouldReadPrimitiveCollectionItemAsStream(IEdmPrimitiveType primitiveType)
         {
-            Func<ODataPropertyStreamReadingContext, bool> shouldReadAsStream = this.jsonInputContext.MessageReaderSettings.ShouldReadPropertyAsStream;
+            Func<ODataPropertyStreamingContext, bool> shouldReadAsStream = this.jsonInputContext.MessageReaderSettings.ShouldReadPropertyAsStream;
             if (shouldReadAsStream != null)
             {
-                ODataPropertyStreamReadingContext propertyReadingContext = new ODataPropertyStreamReadingContext
+                ODataPropertyStreamingContext propertyReadingContext = new ODataPropertyStreamingContext
                 {
                     PrimitiveType = primitiveType,
                     IsCollection = false,

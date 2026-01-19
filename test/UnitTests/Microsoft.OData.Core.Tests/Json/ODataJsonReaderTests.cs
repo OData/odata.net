@@ -1025,8 +1025,7 @@ namespace Microsoft.OData.Tests.Json
         [Fact]
         public async Task ReadResourceWithStringPropertyReadAsStreamAsync()
         {
-            this.messageReaderSettings.ReadAsStreamFunc =
-                (primitiveType, isCollection, propertyName, edmProperty) => propertyName.Equals("Name");
+            this.messageReaderSettings.ShouldReadPropertyAsStream = (context) => context.PropertyName.Equals("Name");
 
             var payload = "{\"@odata.context\":\"http://tempuri.org/$metadata#Customers/$entity\"," +
                 "\"Id\":1," +
@@ -1053,8 +1052,7 @@ namespace Microsoft.OData.Tests.Json
         [Fact]
         public async Task ReadResourceWithStringPropertySetToNullReadAsStreamAsync()
         {
-            this.messageReaderSettings.ReadAsStreamFunc =
-                (primitiveType, isCollection, propertyName, edmProperty) => propertyName.Equals("Name");
+            this.messageReaderSettings.ShouldReadPropertyAsStream = (context) => context.PropertyName.Equals("Name");
 
             var payload = "{\"@odata.context\":\"http://tempuri.org/$metadata#Customers/$entity\"," +
                 "\"Id\":1," +
@@ -1098,6 +1096,7 @@ namespace Microsoft.OData.Tests.Json
 
             var payload = "{\"@odata.context\":\"http://tempuri.org/$metadata#Customers/$entity\"," +
                 "\"Id\":1," +
+                "\"Name\":null," +
                 "\"LargeField@odata.type\":\"#Edm.String\"," +
                 "\"LargeField@is.Large\":true," +
                 "\"LargeField\":\"This is a large string value that should be streamed\"}";
@@ -1113,8 +1112,9 @@ namespace Microsoft.OData.Tests.Json
                         Assert.NotNull(resource);
                         // Id should be present, but LargeField should have been streamed (not in properties)
                         var properties = resource.Properties.OfType<ODataProperty>().ToArray();
-                        Assert.Single(properties);
+                        Assert.Equal(2, properties.Count());
                         Assert.Equal("Id", properties[0].Name);
+                        Assert.Equal("Name", properties[1].Name);
                     },
                     verifyTextStreamAction: async (textReader) =>
                     {
@@ -1785,8 +1785,7 @@ namespace Microsoft.OData.Tests.Json
         [Fact]
         public async Task ReadStringCollectionAsStreamAsync()
         {
-            this.messageReaderSettings.ReadAsStreamFunc =
-                (primitiveType, isCollection, propertyName, edmProperty) => true;
+            this.messageReaderSettings.ShouldReadPropertyAsStream = (context) => true;
 
             var payload = "{\"@odata.context\":\"http://tempuri.org/$metadata#Customers/$entity\"," +
                 "\"Id\":1," +

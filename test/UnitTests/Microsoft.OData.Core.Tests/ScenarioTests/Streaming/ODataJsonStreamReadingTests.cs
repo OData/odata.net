@@ -236,8 +236,8 @@ namespace Microsoft.OData.Tests.Json
                 ",\"comments\":[\"one\",\"two\",null]"
                 );
 
-            Func<ODataPropertyStreamReadingContext, bool> ShouldStream =
-                (ODataPropertyStreamReadingContext context) =>
+            Func<ODataPropertyStreamingContext, bool> ShouldStream =
+                (ODataPropertyStreamingContext context) =>
             {
                 return true;
             };
@@ -288,8 +288,8 @@ namespace Microsoft.OData.Tests.Json
                 ",\"comments\":[\"one\",\"two\",null]"
                 );
 
-            Func<ODataPropertyStreamReadingContext, bool> ShouldStream =
-                (ODataPropertyStreamReadingContext context) =>
+            Func<ODataPropertyStreamingContext, bool> ShouldStream =
+                (ODataPropertyStreamingContext context) =>
                 {
                     return context.IsCollection;
                 };
@@ -347,25 +347,25 @@ namespace Microsoft.OData.Tests.Json
                 ",-10.5]"
                 );
 
-            Func<ODataPropertyStreamReadingContext, bool> StreamCollection =
-                (ODataPropertyStreamReadingContext context) =>
+            Func<ODataPropertyStreamingContext, bool> StreamCollection =
+                (ODataPropertyStreamingContext context) =>
             {
                 return context.IsCollection;
             };
 
-            Func<ODataPropertyStreamReadingContext, bool> StreamAll =
-                (ODataPropertyStreamReadingContext context) =>
+            Func<ODataPropertyStreamingContext, bool> StreamAll =
+                (ODataPropertyStreamingContext context) =>
                 {
                     return true;
                 };
 
-            Func<ODataPropertyStreamReadingContext, bool> StreamNone =
-                (ODataPropertyStreamReadingContext context) =>
+            Func<ODataPropertyStreamingContext, bool> StreamNone =
+                (ODataPropertyStreamingContext context) =>
                 {
                     return false;
                 };
 
-            foreach (Func<ODataPropertyStreamReadingContext, bool> ShouldStream in new Func<ODataPropertyStreamReadingContext, bool>[] { StreamCollection, StreamAll, StreamNone })
+            foreach (Func<ODataPropertyStreamingContext, bool> ShouldStream in new Func<ODataPropertyStreamingContext, bool>[] { StreamCollection, StreamAll, StreamNone })
             {
                 foreach (Variant variant in GetVariants(ShouldStream))
                 {
@@ -481,8 +481,8 @@ namespace Microsoft.OData.Tests.Json
                 ",\"name\":\"Thor\""
                 );
 
-            Func<ODataPropertyStreamReadingContext, bool> ShouldStream =
-                (ODataPropertyStreamReadingContext context) =>
+            Func<ODataPropertyStreamingContext, bool> ShouldStream =
+                (ODataPropertyStreamingContext context) =>
                 {
                     numberOfTimesCalled++;
                     return !context.IsCollection;
@@ -1165,8 +1165,8 @@ namespace Microsoft.OData.Tests.Json
                 ",\"name\":\"Thor\""
                 );
 
-            Func<ODataPropertyStreamReadingContext, bool> ShouldStream =
-                (ODataPropertyStreamReadingContext context) =>
+            Func<ODataPropertyStreamingContext, bool> ShouldStream =
+                (ODataPropertyStreamingContext context) =>
                 {
                     return context.PropertyName == "name";
                 };
@@ -1219,8 +1219,8 @@ namespace Microsoft.OData.Tests.Json
                 ",\"age\":4000"
                 );
 
-            Func<ODataPropertyStreamReadingContext, bool> ShouldStream =
-                (ODataPropertyStreamReadingContext context) =>
+            Func<ODataPropertyStreamingContext, bool> ShouldStream =
+                (ODataPropertyStreamingContext context) =>
                 {
                     return true;
                 };
@@ -1271,8 +1271,8 @@ namespace Microsoft.OData.Tests.Json
                 ",\"binaryAsStream\":\"" + binaryValue + "\""
                 );
 
-            Func<ODataPropertyStreamReadingContext, bool> ShouldStream =
-                (ODataPropertyStreamReadingContext context) =>
+            Func<ODataPropertyStreamingContext, bool> ShouldStream =
+                (ODataPropertyStreamingContext context) =>
                 {
                     return context.PrimitiveType != null && context.PrimitiveType.IsBinary();
                 };
@@ -1323,7 +1323,7 @@ namespace Microsoft.OData.Tests.Json
                 "\"largeField\":\"This is a large string value that should be streamed\""
                 );
 
-            Func<ODataPropertyStreamReadingContext, bool> ShouldStream = (ODataPropertyStreamReadingContext context) =>
+            Func<ODataPropertyStreamingContext, bool> ShouldStream = (ODataPropertyStreamingContext context) =>
             {
                 // Check if the property has a custom annotation
                 foreach (var annotation in context.CustomPropertyAnnotations)
@@ -1384,7 +1384,7 @@ namespace Microsoft.OData.Tests.Json
                 "\"largeField\":\"This is a large string value that should be streamed\""
                 );
 
-            Func<ODataPropertyStreamReadingContext, bool> ShouldStream = (ODataPropertyStreamReadingContext context) =>
+            Func<ODataPropertyStreamingContext, bool> ShouldStream = (ODataPropertyStreamingContext context) =>
             {
                 // Check if the property has a custom annotation
                 foreach (var annotation in context.CustomPropertyAnnotations)
@@ -1443,8 +1443,8 @@ namespace Microsoft.OData.Tests.Json
              ",\"name\":\"Thor\""
              );
 
-            Func<ODataPropertyStreamReadingContext, bool> ShouldStream =
-                (ODataPropertyStreamReadingContext context) =>
+            Func<ODataPropertyStreamingContext, bool> ShouldStream =
+                (ODataPropertyStreamingContext context) =>
                 {
                     return true;
                 };
@@ -1483,7 +1483,7 @@ namespace Microsoft.OData.Tests.Json
             Full
         }
 
-        private static IEnumerable<Variant> GetVariants(Func<ODataPropertyStreamReadingContext, bool> readAsStream, bool includeUnordered = true)
+        private static IEnumerable<Variant> GetVariants(Func<ODataPropertyStreamingContext, bool> readAsStream, bool includeUnordered = true)
         {
             List<Variant> variants = new List<Variant>();
             foreach (ODataVersion version in new ODataVersion[] { ODataVersion.V4, ODataVersion.V401 })

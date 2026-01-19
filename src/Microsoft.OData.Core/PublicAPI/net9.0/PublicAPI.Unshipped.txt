@@ -1,12 +1,12 @@
-Microsoft.OData.ODataMessageReaderSettings.ShouldReadPropertyAsStream.get -> System.Func<Microsoft.OData.ODataPropertyStreamReadingContext, bool>
+Microsoft.OData.ODataMessageReaderSettings.ShouldReadPropertyAsStream.get -> System.Func<Microsoft.OData.ODataPropertyStreamingContext, bool>
 Microsoft.OData.ODataMessageReaderSettings.ShouldReadPropertyAsStream.set -> void
-Microsoft.OData.ODataPropertyStreamReadingContext
-Microsoft.OData.ODataPropertyStreamReadingContext.CustomPropertyAnnotations.get -> System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<string, object>>
-Microsoft.OData.ODataPropertyStreamReadingContext.IsCollection.get -> bool
-Microsoft.OData.ODataPropertyStreamReadingContext.ODataPropertyStreamReadingContext() -> void
-Microsoft.OData.ODataPropertyStreamReadingContext.PrimitiveType.get -> Microsoft.OData.Edm.IEdmPrimitiveType
-Microsoft.OData.ODataPropertyStreamReadingContext.Property.get -> Microsoft.OData.Edm.IEdmProperty
-Microsoft.OData.ODataPropertyStreamReadingContext.PropertyName.get -> string
+Microsoft.OData.ODataPropertyStreamingContext
+Microsoft.OData.ODataPropertyStreamingContext.CustomPropertyAnnotations.get -> System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<string, object>>
+Microsoft.OData.ODataPropertyStreamingContext.IsCollection.get -> bool
+Microsoft.OData.ODataPropertyStreamingContext.ODataPropertyStreamingContext() -> void
+Microsoft.OData.ODataPropertyStreamingContext.PrimitiveType.get -> Microsoft.OData.Edm.IEdmPrimitiveType
+Microsoft.OData.ODataPropertyStreamingContext.Property.get -> Microsoft.OData.Edm.IEdmProperty
+Microsoft.OData.ODataPropertyStreamingContext.PropertyName.get -> string
 Microsoft.OData.UriParser.Aggregation.AggregateCollectionExpression
 Microsoft.OData.UriParser.Aggregation.AggregateCollectionExpression.AggregateCollectionExpression(Microsoft.OData.UriParser.CollectionNode expression, Microsoft.OData.UriParser.Aggregation.AggregationMethodDefinition methodDefinition, string alias, Microsoft.OData.Edm.IEdmTypeReference typeReference) -> void
 Microsoft.OData.UriParser.Aggregation.AggregateCollectionExpression.Expression.get -> Microsoft.OData.UriParser.CollectionNode
