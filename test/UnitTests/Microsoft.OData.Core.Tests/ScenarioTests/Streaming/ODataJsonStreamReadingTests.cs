@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.OData.Core;
 using Microsoft.OData.Edm;
 using Xunit;
@@ -235,8 +236,8 @@ namespace Microsoft.OData.Tests.Json
                 ",\"comments\":[\"one\",\"two\",null]"
                 );
 
-            Func<IEdmPrimitiveType, bool, string, IEdmProperty, bool> ShouldStream =
-                (IEdmPrimitiveType type, bool isCollection, string propertyName, IEdmProperty property) =>
+            Func<ODataPropertyStreamingContext, bool> ShouldStream =
+                (ODataPropertyStreamingContext context) =>
             {
                 return true;
             };
@@ -257,7 +258,7 @@ namespace Microsoft.OData.Tests.Json
                             break;
 
                         case ODataReaderState.Primitive:
-                            Assert.False(true, "Should not read as Primitive if Caller Specifies Stream");
+                            Assert.Fail("Should not read as Primitive if Caller Specifies Stream");
                             break;
 
                         case ODataReaderState.NestedProperty:
@@ -287,10 +288,10 @@ namespace Microsoft.OData.Tests.Json
                 ",\"comments\":[\"one\",\"two\",null]"
                 );
 
-            Func<IEdmPrimitiveType, bool, string, IEdmProperty, bool> ShouldStream =
-                (IEdmPrimitiveType type, bool isCollection, string propertyName, IEdmProperty property) =>
+            Func<ODataPropertyStreamingContext, bool> ShouldStream =
+                (ODataPropertyStreamingContext context) =>
                 {
-                    return isCollection;
+                    return context.IsCollection;
                 };
 
             foreach (Variant variant in GetVariants(ShouldStream))
@@ -314,7 +315,7 @@ namespace Microsoft.OData.Tests.Json
                             break;
 
                         case ODataReaderState.Stream:
-                            Assert.False(true, "Should not read as stream if caller returns false");
+                            Assert.Fail("Should not read as stream if caller returns false");
                             break;
                     }
                 }
@@ -346,25 +347,25 @@ namespace Microsoft.OData.Tests.Json
                 ",-10.5]"
                 );
 
-            Func<IEdmPrimitiveType, bool, string, IEdmProperty, bool> StreamCollection =
-                (IEdmPrimitiveType type, bool isCollection, string propertyName, IEdmProperty property) =>
-                {
-                    return isCollection;
-                };
+            Func<ODataPropertyStreamingContext, bool> StreamCollection =
+                (ODataPropertyStreamingContext context) =>
+            {
+                return context.IsCollection;
+            };
 
-            Func<IEdmPrimitiveType, bool, string, IEdmProperty, bool> StreamAll =
-                (IEdmPrimitiveType type, bool isCollection, string propertyName, IEdmProperty property) =>
+            Func<ODataPropertyStreamingContext, bool> StreamAll =
+                (ODataPropertyStreamingContext context) =>
                 {
                     return true;
                 };
 
-            Func<IEdmPrimitiveType, bool, string, IEdmProperty, bool> StreamNone =
-                (IEdmPrimitiveType type, bool isCollection, string propertyName, IEdmProperty property) =>
+            Func<ODataPropertyStreamingContext, bool> StreamNone =
+                (ODataPropertyStreamingContext context) =>
                 {
                     return false;
                 };
 
-            foreach (Func<IEdmPrimitiveType, bool, string, IEdmProperty, bool> ShouldStream in new Func<IEdmPrimitiveType, bool, string, IEdmProperty, bool>[] { StreamCollection, StreamAll, StreamNone })
+            foreach (Func<ODataPropertyStreamingContext, bool> ShouldStream in new Func<ODataPropertyStreamingContext, bool>[] { StreamCollection, StreamAll, StreamNone })
             {
                 foreach (Variant variant in GetVariants(ShouldStream))
                 {
@@ -480,11 +481,11 @@ namespace Microsoft.OData.Tests.Json
                 ",\"name\":\"Thor\""
                 );
 
-            Func<IEdmPrimitiveType, bool, string, IEdmProperty, bool> ShouldStream =
-                (IEdmPrimitiveType type, bool isCollection, string propertyName, IEdmProperty property) =>
+            Func<ODataPropertyStreamingContext, bool> ShouldStream =
+                (ODataPropertyStreamingContext context) =>
                 {
                     numberOfTimesCalled++;
-                    return !isCollection;
+                    return !context.IsCollection;
                 };
 
             foreach (Variant variant in GetVariants(ShouldStream))
@@ -505,7 +506,7 @@ namespace Microsoft.OData.Tests.Json
                             break;
 
                         case ODataReaderState.Primitive:
-                            Assert.False(true, "Should not read as Primitive if collection not streamed");
+                            Assert.Fail("Should not read as Primitive if collection not streamed");
                             break;
 
                         case ODataReaderState.NestedProperty:
@@ -560,7 +561,7 @@ namespace Microsoft.OData.Tests.Json
                             break;
 
                         case ODataReaderState.Primitive:
-                            Assert.False(true, "Should not read as Primitive if Caller Specifies Stream");
+                            Assert.Fail("Should not read as Primitive if Caller Specifies Stream");
                             break;
 
                         case ODataReaderState.NestedProperty:
@@ -654,11 +655,11 @@ namespace Microsoft.OData.Tests.Json
                             break;
 
                         case ODataReaderState.NestedProperty:
-                            Assert.False(true, "Should Not enter nested property without a value");
+                            Assert.Fail("Should Not enter nested property without a value");
                             break;
 
                         case ODataReaderState.Stream:
-                            Assert.False(true, "Should Not enter stream without a value");
+                            Assert.Fail("Should Not enter stream without a value");
                             break;
                     }
                 }
@@ -1164,10 +1165,10 @@ namespace Microsoft.OData.Tests.Json
                 ",\"name\":\"Thor\""
                 );
 
-            Func<IEdmPrimitiveType, bool, string, IEdmProperty, bool> ShouldStream =
-                (IEdmPrimitiveType type, bool isCollection, string propertyName, IEdmProperty property) =>
+            Func<ODataPropertyStreamingContext, bool> ShouldStream =
+                (ODataPropertyStreamingContext context) =>
                 {
-                    return propertyName == "name";
+                    return context.PropertyName == "name";
                 };
 
             foreach (Variant variant in GetVariants(ShouldStream))
@@ -1218,8 +1219,8 @@ namespace Microsoft.OData.Tests.Json
                 ",\"age\":4000"
                 );
 
-            Func<IEdmPrimitiveType, bool, string, IEdmProperty, bool> ShouldStream =
-                (IEdmPrimitiveType type, bool isCollection, string propertyName, IEdmProperty property) =>
+            Func<ODataPropertyStreamingContext, bool> ShouldStream =
+                (ODataPropertyStreamingContext context) =>
                 {
                     return true;
                 };
@@ -1270,10 +1271,10 @@ namespace Microsoft.OData.Tests.Json
                 ",\"binaryAsStream\":\"" + binaryValue + "\""
                 );
 
-            Func<IEdmPrimitiveType, bool, string, IEdmProperty, bool> ShouldStream =
-                (IEdmPrimitiveType type, bool isCollection, string propertyName, IEdmProperty property) =>
+            Func<ODataPropertyStreamingContext, bool> ShouldStream =
+                (ODataPropertyStreamingContext context) =>
                 {
-                    return type != null && type.IsBinary();
+                    return context.PrimitiveType != null && context.PrimitiveType.IsBinary();
                 };
 
             foreach (Variant variant in GetVariants(ShouldStream))
@@ -1314,14 +1315,136 @@ namespace Microsoft.OData.Tests.Json
         }
 
         [Fact]
+        public void ReadDynamicPropertyWithCustomAnnotationAsStream()
+        {
+            string payload = String.Format(resourcePayload,
+                ",\"largeField@odata.type\":\"#Edm.String\"," +
+                "\"largeField@is.Large\":true," +
+                "\"largeField\":\"This is a large string value that should be streamed\""
+                );
+
+            Func<ODataPropertyStreamingContext, bool> ShouldStream = (ODataPropertyStreamingContext context) =>
+            {
+                // Check if the property has a custom annotation
+                foreach (var annotation in context.CustomPropertyAnnotations)
+                {
+                    if (annotation.Key == "is.Large" && annotation.Value is bool isLarge && isLarge)
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+            };
+
+            foreach (Variant variant in GetVariants(ShouldStream))
+            {
+                int expectedPropertyCount = variant.IsRequest ? 1 : 2;
+                ODataResource resource = null;
+                List<string> streamValues = new List<string>();
+                ODataPropertyInfo propertyInfo = null;
+
+                ODataReader reader = CreateODataReader(payload, variant);
+                while (reader.Read())
+                {
+                    switch (reader.State)
+                    {
+                        case ODataReaderState.ResourceStart:
+                            resource = reader.Item as ODataResource;
+                            break;
+
+                        case ODataReaderState.NestedProperty:
+                            Assert.Null(propertyInfo);
+                            propertyInfo = reader.Item as ODataPropertyInfo;
+                            break;
+
+                        case ODataReaderState.Stream:
+                            streamValues.Add(ReadStream(reader));
+                            break;
+                    }
+                }
+
+                Assert.NotNull(resource);
+                Assert.Equal(expectedPropertyCount, resource.Properties.Count());
+                var properties = resource.Properties.OfType<ODataProperty>().ToArray();
+                Assert.Equal("id", properties[0].Name);
+                Assert.Equal("largeField", propertyInfo.Name);
+                Assert.Equal(EdmPrimitiveTypeKind.String, propertyInfo.PrimitiveTypeKind);
+                Assert.NotNull(streamValues);
+                Assert.Equal("This is a large string value that should be streamed", Assert.Single(streamValues));
+            }
+        }
+
+        [Fact]
+        public async Task ReadDynamicPropertyWithCustomAnnotationAsStreamAsync()
+        {
+            string payload = String.Format(resourcePayload,
+                ",\"largeField@odata.type\":\"#Edm.String\"," +
+                "\"largeField@is.Large\":true," +
+                "\"largeField\":\"This is a large string value that should be streamed\""
+                );
+
+            Func<ODataPropertyStreamingContext, bool> ShouldStream = (ODataPropertyStreamingContext context) =>
+            {
+                // Check if the property has a custom annotation
+                foreach (var annotation in context.CustomPropertyAnnotations)
+                {
+                    if (annotation.Key == "is.Large" && annotation.Value is bool isLarge && isLarge)
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+            };
+
+            foreach (Variant variant in GetVariants(ShouldStream))
+            {
+                int expectedPropertyCount = variant.IsRequest ? 1 : 2;
+                ODataResource resource = null;
+                List<string> streamValues = new List<string>();
+                ODataPropertyInfo propertyInfo = null;
+
+                ODataReader reader = await CreateODataReaderAsync(payload, variant);
+                while (await reader.ReadAsync())
+                {
+                    switch (reader.State)
+                    {
+                        case ODataReaderState.ResourceStart:
+                            resource = reader.Item as ODataResource;
+                            break;
+
+                        case ODataReaderState.NestedProperty:
+                            Assert.Null(propertyInfo);
+                            propertyInfo = reader.Item as ODataPropertyInfo;
+                            break;
+
+                        case ODataReaderState.Stream:
+                            streamValues.Add(ReadStream(reader));
+                            break;
+                    }
+                }
+
+                Assert.NotNull(resource);
+                Assert.Equal(expectedPropertyCount, resource.Properties.Count());
+                var properties = resource.Properties.OfType<ODataProperty>().ToArray();
+                Assert.Equal("id", properties[0].Name);
+                Assert.Equal("largeField", propertyInfo.Name);
+                Assert.Equal(EdmPrimitiveTypeKind.String, propertyInfo.PrimitiveTypeKind);
+                Assert.NotNull(streamValues);
+                Assert.Equal("This is a large string value that should be streamed", Assert.Single(streamValues));
+            }
+        }
+
+        [Fact]
         public void CannotSkipStreamProperties()
         {
             string payload = String.Format(resourcePayload,
              ",\"name\":\"Thor\""
              );
 
-            Func<IEdmPrimitiveType, bool, string, IEdmProperty, bool> ShouldStream =
-                (IEdmPrimitiveType type, bool isCollection, string propertyName, IEdmProperty property) =>
+            Func<ODataPropertyStreamingContext, bool> ShouldStream =
+                (ODataPropertyStreamingContext context) =>
                 {
                     return true;
                 };
@@ -1341,6 +1464,7 @@ namespace Microsoft.OData.Tests.Json
             }
         }
 
+
         #region Helpers
         private class Variant
         {
@@ -1359,7 +1483,7 @@ namespace Microsoft.OData.Tests.Json
             Full
         }
 
-        private static IEnumerable<Variant> GetVariants(Func<IEdmPrimitiveType, bool, string, IEdmProperty, bool> readAsStream, bool includeUnordered = true)
+        private static IEnumerable<Variant> GetVariants(Func<ODataPropertyStreamingContext, bool> readAsStream, bool includeUnordered = true)
         {
             List<Variant> variants = new List<Variant>();
             foreach (ODataVersion version in new ODataVersion[] { ODataVersion.V4, ODataVersion.V401 })
@@ -1386,7 +1510,7 @@ namespace Microsoft.OData.Tests.Json
                                 Settings = new ODataMessageReaderSettings
                                 {
                                     Version = version,
-                                    ReadAsStreamFunc = readAsStream,
+                                    ShouldReadPropertyAsStream = readAsStream,
                                     ShouldIncludeAnnotation = ODataUtils.CreateAnnotationFilter("*")
                                 },
                                 IsRequest = isRequest,
@@ -1449,6 +1573,46 @@ namespace Microsoft.OData.Tests.Json
             return reader;
         }
 
+        private Task<ODataReader> CreateODataReaderAsync(string payload, Variant variant)
+        {
+            if (variant.Version < ODataVersion.V401)
+            {
+                foreach (var item in AnnotationPrefixes)
+                {
+                    payload = payload.Replace(item.Key, item.Value);
+                }
+            }
+
+            var stream = new MemoryStream();
+            StreamWriter writer = new StreamWriter(stream);
+            writer.Write(payload);
+            writer.Flush();
+            stream.Position = 0;
+
+            ODataMessageReader messageReader;
+
+            if (variant.IsRequest)
+            {
+                IODataRequestMessage requestMessage = new InMemoryMessage { Stream = stream };
+                if (variant.IsStreaming)
+                {
+                    requestMessage.SetHeader("Content-Type", "application/json;odata.streaming=true");
+                }
+                messageReader = new ODataMessageReader(requestMessage, variant.Settings, Model);
+            }
+            else
+            {
+                IODataResponseMessage responseMessage = new InMemoryMessage { Stream = stream };
+                if (variant.IsStreaming)
+                {
+                    responseMessage.SetHeader("Content-Type", "application/json;odata.streaming=true");
+                }
+                messageReader = new ODataMessageReader(responseMessage, variant.Settings, Model);
+            }
+
+            return messageReader.CreateODataResourceReaderAsync(CustomersEntitySet, CustomersEntitySet.EntityType);
+        }
+
         private static string ReadStream(ODataReader reader)
         {
             ODataStreamItem streamValue = reader.Item as ODataStreamItem;
@@ -1465,6 +1629,30 @@ namespace Microsoft.OData.Tests.Json
             else
             {
                 using (Stream stream = reader.CreateReadStream())
+                {
+                    result = new BinaryReader(stream).ReadString();
+                }
+            }
+
+            return result;
+        }
+
+        private async Task<string> ReadStreamAsync(ODataReader reader)
+        {
+            ODataStreamItem streamValue = reader.Item as ODataStreamItem;
+            Assert.NotNull(streamValue);
+            string result;
+            if (streamValue.PrimitiveTypeKind == EdmPrimitiveTypeKind.String ||
+                streamValue.PrimitiveTypeKind == EdmPrimitiveTypeKind.None)
+            {
+                using (TextReader textReader = await reader.CreateTextReaderAsync())
+                {
+                    result = await textReader.ReadToEndAsync();
+                }
+            }
+            else
+            {
+                using (Stream stream = await reader.CreateReadStreamAsync())
                 {
                     result = new BinaryReader(stream).ReadString();
                 }
