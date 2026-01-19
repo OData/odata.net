@@ -897,53 +897,6 @@ namespace Microsoft.OData.Tests.JsonLight
         }
 
         [Fact]
-        public void ReadDynamicPropertyWithCustomAnnotationAsStream()
-        {
-            this.messageReaderSettings.ShouldIncludeAnnotation = ODataUtils.CreateAnnotationFilter("*");
-            this.messageReaderSettings.ShouldReadPropertyAsStream = (context) =>
-            {
-                // Check if the property has a custom annotation
-                foreach (var annotation in context.CustomPropertyAnnotations)
-                {
-                    if (annotation.Key == "is.Large" && annotation.Value is bool isLarge && isLarge)
-                    {
-                        return true;
-                    }
-                }
-
-                return false;
-            };
-
-            var payload = "{\"@odata.context\":\"http://tempuri.org/$metadata#Customers/$entity\"," +
-                "\"Id\":1," +
-                "\"Name\":null," +
-                "\"LargeField@odata.type\":\"#Edm.String\"," +
-                "\"LargeField@is.Large\":true," +
-                "\"LargeField\":\"This is a large string value that should be streamed\"}";
-
-            SetupJsonReaderAndRunTest(
-                payload,
-                this.customerEntitySet,
-                this.customerEntityType,
-                (jsonReader) => JsonReaderUtils.DoRead(
-                    jsonReader,
-                    verifyResourceAction: (resource) =>
-                    {
-                        Assert.NotNull(resource);
-                        // Id should be present, but LargeField should have been streamed (not in properties)
-                        var properties = resource.Properties.OfType<ODataProperty>().ToArray();
-                        Assert.Equal(2, properties.Count());
-                        Assert.Equal("Id", properties[0].Name);
-                        Assert.Equal("Name", properties[1].Name);
-                    },
-                    verifyTextStreamAction: async (textReader) =>
-                    {
-                        var result = textReader.ReadToEnd();
-                        Assert.Equal("This is a large string value that should be streamed", result);
-                    }));
-        }
-
-        [Fact]
         public async Task ReadDynamicPropertyWithCustomAnnotationAsStreamAsync()
         {
             this.messageReaderSettings.ShouldIncludeAnnotation = ODataUtils.CreateAnnotationFilter("*");
@@ -967,11 +920,11 @@ namespace Microsoft.OData.Tests.JsonLight
                 "\"LargeField@is.Large\":true," +
                 "\"LargeField\":\"This is a large string value that should be streamed\"}";
 
-            await SetupJsonReaderAndRunTestAsync(
+            await SetupJsonLightReaderAndRunTestAsync(
                 payload,
                 this.customerEntitySet,
                 this.customerEntityType,
-                (jsonReader) => JsonReaderUtils.DoReadAsync(
+                (jsonReader) => DoReadAsync(
                     jsonReader,
                     verifyResourceAction: (resource) =>
                     {
@@ -985,47 +938,6 @@ namespace Microsoft.OData.Tests.JsonLight
                     {
                         var result = await textReader.ReadToEndAsync();
                         Assert.Equal("This is a large string value that should be streamed", result);
-                    }));
-        }
-
-        [Fact]
-        public void ReadDynamicPropertyWithoutTheCustomAnnotationNotStreamed()
-        {
-            this.messageReaderSettings.ShouldIncludeAnnotation = ODataUtils.CreateAnnotationFilter("*");
-            this.messageReaderSettings.ShouldReadPropertyAsStream = (context) =>
-            {
-                foreach (var annotation in context.CustomPropertyAnnotations)
-                {
-                    if (annotation.Key == "is.Large" && annotation.Value is bool isLarge && isLarge)
-                    {
-                        return true;
-                    }
-                }
-
-                return false;
-            };
-
-            var payload = "{\"@odata.context\":\"http://tempuri.org/$metadata#Customers/$entity\"," +
-                "\"Id\":1," +
-                "\"SmallField\":\"This is a small string value that should NOT be streamed\"}";
-
-            SetupJsonReaderAndRunTest(
-                payload,
-                this.customerEntitySet,
-                this.customerEntityType,
-                (jsonReader) => JsonReaderUtils.DoRead(
-                    jsonReader,
-                    verifyResourceAction: (resource) =>
-                    {
-                        Assert.NotNull(resource);
-                        // Both Id and SmallField should be in properties (not streamed)
-                        var properties = resource.Properties.OfType<ODataProperty>().ToArray();
-                        Assert.Equal(2, properties.Length);
-                        Assert.Equal("Id", properties[0].Name);
-                        Assert.Equal("SmallField", properties[1].Name);
-                        // Dynamic properties without type annotation are read as ODataUntypedValue
-                        var untypedValue = Assert.IsType<ODataUntypedValue>(properties[1].Value);
-                        Assert.Contains("This is a small string value", untypedValue.RawValue);
                     }));
         }
 
@@ -1050,11 +962,11 @@ namespace Microsoft.OData.Tests.JsonLight
                 "\"Id\":1," +
                 "\"SmallField\":\"This is a small string value that should NOT be streamed\"}";
 
-            await SetupJsonReaderAndRunTestAsync(
+            await SetupJsonLightReaderAndRunTestAsync(
                 payload,
                 this.customerEntitySet,
                 this.customerEntityType,
-                (jsonReader) => JsonReaderUtils.DoReadAsync(
+                (jsonReader) => DoReadAsync(
                     jsonReader,
                     verifyResourceAction: (resource) =>
                     {

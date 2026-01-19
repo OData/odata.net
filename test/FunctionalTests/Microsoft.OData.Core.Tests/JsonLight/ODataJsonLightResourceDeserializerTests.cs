@@ -642,7 +642,7 @@ namespace Microsoft.OData.Tests.JsonLight
         [Fact]
         public async Task ReadResourceContentWithPrimitivePropertyReadAsStreamAsync()
         {
-            this.messageReaderSettings.ReadAsStreamFunc = (primitiveType, isCollection, propertyName, edmProperty) => propertyName.Equals("Name");
+            this.messageReaderSettings.ShouldReadPropertyAsStream = (context) => context.PropertyName.Equals("Name");
 
             var payload = "{\"@odata.context\":\"http://tempuri.org/$metadata#Categories/$entity\"," +
                 "\"Id\":1," +
