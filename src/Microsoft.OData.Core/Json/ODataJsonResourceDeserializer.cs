@@ -4334,7 +4334,7 @@ namespace Microsoft.OData.Json
         /// <param name="propertyName">The name of the property.</param>
         /// <param name="property">The EDM property, or null for dynamic properties.</param>
         /// <returns>True if the property should be read as a stream; otherwise, false.</returns>
-        private bool ShouldPrimitiveValueReadAsStream(IODataJsonReaderResourceState resourceState, IEdmPrimitiveType primitiveType, bool isCollection, string propertyName, IEdmProperty property)
+        private bool ShouldReadPrimitiveValueAsStream(IODataJsonReaderResourceState resourceState, IEdmPrimitiveType primitiveType, bool isCollection, string propertyName, IEdmProperty property)
         {
             Func<ODataPropertyStreamingContext, bool> shouldReadAsStream = this.MessageReaderSettings.ShouldReadPropertyAsStream;
             if (shouldReadAsStream != null)
