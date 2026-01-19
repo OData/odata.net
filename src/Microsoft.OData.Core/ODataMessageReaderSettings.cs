@@ -207,7 +207,22 @@ namespace Microsoft.OData
         /// Function returns:
         /// * True, to have the value streamed, otherwise false
         /// </Remarks>
+        [Obsolete("Use 'ShouldReadPropertyAsStream' instead, which provides access to property annotations. ReadAsStreamFunc will be removed in a future ODL 9 release.")]
         public Func<IEdmPrimitiveType, bool, string, IEdmProperty, bool> ReadAsStreamFunc { get; set; }
+
+        /// <summary>
+        /// Func to evaluate whether a property should be read as a stream. This function provides access to property annotations, enabling
+        /// scenarios where the decision to read as stream depends on annotations. Note that IEdmProperty may be null when reading within a collection.
+        /// </summary>
+        /// <remarks>
+        /// <see cref="ODataPropertyStreamingContext"/> provides:
+        /// * Primitive type of the value being read, or null if unknown
+        /// * Whether the value being read is a collection
+        /// * The name of the property being read (null for values within a collection)
+        /// * The property being read (null for dynamic property or value within a collection)
+        /// * Custom property annotations (non-OData annotations) that have been read so far.
+        /// </remarks>
+        public Func<ODataPropertyStreamingContext, bool> ShouldReadPropertyAsStream { get; set; }
 
         /// <summary>
         /// Func to evaluate whether an annotation should be read or skipped by the reader. The func should return true if the annotation should
@@ -299,6 +314,7 @@ namespace Microsoft.OData
             this.LibraryCompatibility = other.LibraryCompatibility;
             this.Version = other.Version;
             this.ReadAsStreamFunc = other.ReadAsStreamFunc;
+            this.ShouldReadPropertyAsStream = other.ShouldReadPropertyAsStream;
             this.ArrayPool = other.ArrayPool;
             this.EnablePropertyNameCaseInsensitive = other.EnablePropertyNameCaseInsensitive;
             this.EnableUntypedCollections = other.EnableUntypedCollections;
