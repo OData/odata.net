@@ -1344,13 +1344,13 @@ namespace Microsoft.OData.Json
                     (primitiveType.IsStream() ||
                         ((property == null || !property.IsKey())  // don't stream key properties
                              && (primitiveType.IsBinary() || primitiveType.IsString() || isCollection))
-                             && ShouldPrimitiveValueReadAsStream(resourceState, primitiveType, isCollection, propertyName, property))) ||
+                             && ShouldReadPrimitiveValueAsStream(resourceState, primitiveType, isCollection, propertyName, property))) ||
                 (propertyType != null &&
                     isCollection &&
                     propertyType.Definition.AsElementType().IsUntyped()) ||
                 (propertyType == null
                     && (isCollection || this.JsonReader.CanStream())
-                    && ShouldPrimitiveValueReadAsStream(resourceState, null, isCollection, propertyName, property)))
+                    && ShouldReadPrimitiveValueAsStream(resourceState, null, isCollection, propertyName, property)))
             {
                 if (isCollection)
                 {
@@ -3598,13 +3598,13 @@ namespace Microsoft.OData.Json
                     (primitiveType.IsStream() ||
                         ((property == null || !property.IsKey())  // don't stream key properties
                              && (primitiveType.IsBinary() || primitiveType.IsString() || isCollection))
-                             && ShouldPrimitiveValueReadAsStream(resourceState, primitiveType, isCollection, propertyName, property))) ||
+                             && ShouldReadPrimitiveValueAsStream(resourceState, primitiveType, isCollection, propertyName, property))) ||
                 (propertyType != null &&
                     isCollection &&
                     propertyType.Definition.AsElementType().IsUntyped()) ||
                 (propertyType == null
                     && (isCollection || await this.JsonReader.CanStreamAsync().ConfigureAwait(false))
-                    && ShouldPrimitiveValueReadAsStream(resourceState, null, isCollection, propertyName, property)))
+                    && ShouldReadPrimitiveValueAsStream(resourceState, null, isCollection, propertyName, property)))
             {
                 if (isCollection)
                 {
