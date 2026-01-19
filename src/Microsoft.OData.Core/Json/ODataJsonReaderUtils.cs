@@ -12,6 +12,7 @@ namespace Microsoft.OData.Json
     using Microsoft.OData.Metadata;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Core;
+    using System.Runtime.CompilerServices;
     #endregion Namespaces
 
     /// <summary>
@@ -142,11 +143,27 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="propertyName">The property name to test.</param>
         /// <returns>true if the property name is an OData annotation property name, false otherwise.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static bool IsODataAnnotationName(string propertyName)
         {
             Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
 
-            return propertyName.StartsWith(ODataJsonConstants.ODataAnnotationNamespacePrefix, StringComparison.Ordinal);
+            return propertyName.Length >= ODataJsonConstants.ODataAnnotationNamespacePrefix.Length &&
+                propertyName.StartsWith(ODataJsonConstants.ODataAnnotationNamespacePrefix, StringComparison.Ordinal);
+        }
+
+        /// <summary>
+        /// Determines if the specified <paramref name="propertyNameSpan"/> is an OData annotation property name.
+        /// </summary>
+        /// <param name="propertyName">The property name to test.</param>
+        /// <returns>true if the property name is an OData annotation property name, false otherwise.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static bool IsODataAnnotationName(ReadOnlySpan<char> propertyNameSpan)
+        {
+            Debug.Assert(!propertyNameSpan.IsEmpty, "!propertyNameSpan.IsEmpty");
+
+            return propertyNameSpan.Length >= ODataJsonConstants.ODataAnnotationNamespacePrefix.Length &&
+                propertyNameSpan.StartsWith(ODataJsonConstants.ODataAnnotationNamespacePrefix.AsSpan(), StringComparison.Ordinal);
         }
 
         /// <summary>
@@ -157,11 +174,28 @@ namespace Microsoft.OData.Json
         /// <remarks>
         /// This method returns true both for normal annotation as well as property annotations.
         /// </remarks>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static bool IsAnnotationProperty(string propertyName)
         {
             Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
 
             return propertyName.IndexOf('.', StringComparison.Ordinal) >= 0;
+        }
+
+        /// <summary>
+        /// Determines if the specified property name is a name of an annotation property.
+        /// </summary>
+        /// <param name="propertyName">The name of the property.</param>
+        /// <returns>true if <paramref name="propertyNameSpan"/> is a name of an annotation property, false otherwise.</returns>
+        /// <remarks>
+        /// This method returns true both for normal annotation as well as property annotations.
+        /// </remarks>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static bool IsAnnotationProperty(ReadOnlySpan<char> propertyNameSpan)
+        {
+            Debug.Assert(!propertyNameSpan.IsEmpty, "!propertyNameSpan.IsEmpty");
+
+            return propertyNameSpan.IndexOf('.') >= 0;
         }
 
         /// <summary>

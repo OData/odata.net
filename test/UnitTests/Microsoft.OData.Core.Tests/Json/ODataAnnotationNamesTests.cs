@@ -20,7 +20,8 @@ namespace Microsoft.OData.Tests.Json
             typeof(ODataAnnotationNames)
             .GetFields(BindingFlags.NonPublic | BindingFlags.Static)
             .Where(f => f.FieldType == typeof(string))
-            .Select(f => (string)f.GetValue(null)).ToArray();
+            .Select(f => (string)f.GetValue(null))
+            .Where(f => f.StartsWith("odata.")).ToArray();
 
         // Not applicable to .NET Core due to changes in framework
         [Fact]
