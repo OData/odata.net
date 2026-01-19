@@ -2423,7 +2423,7 @@ namespace Microsoft.OData.Json
         ///
         /// This method Creates an ODataDeltaDeletedEntry and fills in the Id and Reason properties, if specified in the payload.
         /// </remarks>
-        internal async Task<ODataDeletedResource> ReadDeletedResourceAsync()
+        internal async ValueTask<ODataDeletedResource> ReadDeletedResourceAsync()
         {
             this.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
 
@@ -2520,7 +2520,7 @@ namespace Microsoft.OData.Json
         /// <remarks>
         /// This method Creates an ODataDeltaDeletedEntry and fills in the Id and Reason properties, if specified in the payload.
         /// </remarks>
-        internal async Task<ODataDeletedResource> ReadDeletedEntryAsync()
+        internal async ValueTask<ODataDeletedResource> ReadDeletedEntryAsync()
         {
             this.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
             Uri id = null;
@@ -2590,27 +2590,44 @@ namespace Microsoft.OData.Json
         ///
         /// This method fills the ODataDelta(Deleted)Link.Source property if the id is found in the payload.
         /// </remarks>
-        internal async Task ReadDeltaLinkSourceAsync(ODataDeltaLinkBase link)
+        internal ValueTask ReadDeltaLinkSourceAsync(ODataDeltaLinkBase link)
         {
             this.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
 
-            // If the current node is the source property - read it.
-            if (this.JsonReader.NodeType == JsonNodeType.Property &&
-                string.Equals(ODataJsonConstants.ODataSourcePropertyName, await this.JsonReader.GetPropertyNameAsync().ConfigureAwait(false), StringComparison.Ordinal))
+            if (this.JsonReader.NodeType != JsonNodeType.Property)
             {
-                Debug.Assert(link.Source == null, "source should not have already been set");
+                this.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
+                return ValueTask.CompletedTask;
+            }
+
+            return AwaitReadDeltaLinkSourceAsync(this, link);
+
+            static async ValueTask AwaitReadDeltaLinkSourceAsync(
+                ODataJsonResourceDeserializer paramThis,
+                ODataDeltaLinkBase paramLink
+                )
+            {
+                string propertyName = await paramThis.JsonReader.GetPropertyNameAsync().ConfigureAwait(false);
+
+                if (!string.Equals(ODataJsonConstants.ODataSourcePropertyName, propertyName, StringComparison.Ordinal))
+                {
+                    paramThis.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
+                    return;
+                }
+
+                Debug.Assert(paramLink.Source == null, "source should not have already been set");
 
                 // Read over the property to move to its value.
-                await this.JsonReader.ReadAsync()
+                await paramThis.JsonReader.ReadAsync()
                     .ConfigureAwait(false);
 
                 // Read the source value.
-                link.Source = await this.JsonReader.ReadUriValueAsync()
+                paramLink.Source = await paramThis.JsonReader.ReadUriValueAsync()
                     .ConfigureAwait(false);
-                Debug.Assert(link.Source != null, "value for source must be provided");
-            }
+                Debug.Assert(paramLink.Source != null, "value for source must be provided");
 
-            this.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
+                paramThis.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
+            }
         }
 
         /// <summary>
@@ -2626,27 +2643,41 @@ namespace Microsoft.OData.Json
         ///
         /// This method fills the ODataDelta(Deleted)Link.Relationship property if the id is found in the payload.
         /// </remarks>
-        internal async Task ReadDeltaLinkRelationshipAsync(ODataDeltaLinkBase link)
+        internal ValueTask ReadDeltaLinkRelationshipAsync(ODataDeltaLinkBase link)
         {
             this.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
 
-            // If the current node is the relationship property - read it.
-            if (this.JsonReader.NodeType == JsonNodeType.Property &&
-                string.Equals(ODataJsonConstants.ODataRelationshipPropertyName, await this.JsonReader.GetPropertyNameAsync().ConfigureAwait(false), StringComparison.Ordinal))
+            if (this.JsonReader.NodeType != JsonNodeType.Property)
             {
-                Debug.Assert(link.Relationship == null, "relationship should not have already been set");
-
-                // Read over the property to move to its value.
-                await this.JsonReader.ReadAsync()
-                    .ConfigureAwait(false);
-
-                // Read the relationship value.
-                link.Relationship = await this.JsonReader.ReadStringValueAsync()
-                    .ConfigureAwait(false);
-                Debug.Assert(link.Relationship != null, "value for relationship must be provided");
+                this.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
+                return ValueTask.CompletedTask;
             }
 
-            this.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
+            return AwaitReadDeltaLinkRelationshipAsync(this, link);
+
+            static async ValueTask AwaitReadDeltaLinkRelationshipAsync(
+                ODataJsonResourceDeserializer paramThis,
+                ODataDeltaLinkBase paramLink)
+            {
+                string propertyName = await paramThis.JsonReader.GetPropertyNameAsync().ConfigureAwait(false);
+
+                if (!string.Equals(ODataJsonConstants.ODataRelationshipPropertyName, propertyName, StringComparison.Ordinal))
+                {
+                    paramThis.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
+                    return;
+                }
+
+                Debug.Assert(paramLink.Relationship == null, "relationship should not have already been set");
+
+                // Read over the property to move to its value.
+                await paramThis.JsonReader.ReadAsync().ConfigureAwait(false);
+
+                // Read the relationship value.
+                paramLink.Relationship = await paramThis.JsonReader.ReadStringValueAsync().ConfigureAwait(false);
+                Debug.Assert(paramLink.Relationship != null, "value for relationship must be provided");
+
+                paramThis.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
+            }
         }
 
         /// <summary>
@@ -2662,27 +2693,41 @@ namespace Microsoft.OData.Json
         ///
         /// This method fills the ODataDelta(Deleted)Link.Target property if the id is found in the payload.
         /// </remarks>
-        internal async Task ReadDeltaLinkTargetAsync(ODataDeltaLinkBase link)
+        internal ValueTask ReadDeltaLinkTargetAsync(ODataDeltaLinkBase link)
         {
             this.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
 
-            // If the current node is the target property - read it.
-            if (this.JsonReader.NodeType == JsonNodeType.Property &&
-                string.Equals(ODataJsonConstants.ODataTargetPropertyName, await this.JsonReader.GetPropertyNameAsync().ConfigureAwait(false), StringComparison.Ordinal))
+            if (this.JsonReader.NodeType != JsonNodeType.Property)
             {
-                Debug.Assert(link.Target == null, "target should not have already been set");
-
-                // Read over the property to move to its value.
-                await this.JsonReader.ReadAsync()
-                    .ConfigureAwait(false);
-
-                // Read the source value.
-                link.Target = await this.JsonReader.ReadUriValueAsync()
-                    .ConfigureAwait(false);
-                Debug.Assert(link.Target != null, "value for target must be provided");
+                this.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
+                return ValueTask.CompletedTask;
             }
 
-            this.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
+            return AwaitReadDeltaLinkTargetAsync(this, link);
+
+            static async ValueTask AwaitReadDeltaLinkTargetAsync(
+                ODataJsonResourceDeserializer paramThis,
+                ODataDeltaLinkBase paramLink)
+            {
+                string propertyName = await paramThis.JsonReader.GetPropertyNameAsync().ConfigureAwait(false);
+
+                if (!string.Equals(ODataJsonConstants.ODataTargetPropertyName, propertyName, StringComparison.Ordinal))
+                {
+                    paramThis.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
+                    return;
+                }
+
+                Debug.Assert(paramLink.Target == null, "target should not have already been set");
+
+                // Read over the property to move to its value.
+                await paramThis.JsonReader.ReadAsync().ConfigureAwait(false);
+
+                // Read the target value.
+                paramLink.Target = await paramThis.JsonReader.ReadUriValueAsync().ConfigureAwait(false);
+                Debug.Assert(paramLink.Target != null, "value for target must be provided");
+
+                paramThis.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
+            }
         }
 
         /// <summary>
@@ -2704,7 +2749,7 @@ namespace Microsoft.OData.Json
         ///                 JsonNodeType.StartArray             Expanded resource set
         ///                 JsonNodeType.PrimitiveValue (null)  Expanded null
         /// </remarks>
-        internal async Task<ODataJsonReaderNestedInfo> ReadResourceContentAsync(IODataJsonReaderResourceState resourceState)
+        internal async ValueTask<ODataJsonReaderNestedInfo> ReadResourceContentAsync(IODataJsonReaderResourceState resourceState)
         {
             Debug.Assert(resourceState != null, "resourceState != null");
             Debug.Assert(resourceState.ResourceType != null && this.Model.IsUserModel(), "A non-null resource type and non-null model are required.");
@@ -2813,26 +2858,52 @@ namespace Microsoft.OData.Json
         /// A task that represents the asynchronous read operation.
         /// The value of the TResult parameter contains the annotation value.
         /// </returns>
-        internal async Task<object> ReadODataOrCustomInstanceAnnotationValueAsync(
+        internal Task<object> ReadODataOrCustomInstanceAnnotationValueAsync(
             IODataJsonReaderResourceState resourceState,
             PropertyParsingResult propertyParsingResult,
             string annotationName)
         {
-            object value = await this.ReadEntryInstanceAnnotationAsync(
+            Task<object> readEntryInstanceAnnotationTask = this.ReadEntryInstanceAnnotationAsync(
                 annotationName,
                 resourceState.AnyPropertyFound,
                 typeAnnotationFound: true,
-                propertyAndAnnotationCollector: resourceState.PropertyAndAnnotationCollector).ConfigureAwait(false);
-            if (propertyParsingResult == PropertyParsingResult.ODataInstanceAnnotation)
+                propertyAndAnnotationCollector: resourceState.PropertyAndAnnotationCollector);
+
+            if (readEntryInstanceAnnotationTask.IsCompletedSuccessfully)
             {
-                resourceState.PropertyAndAnnotationCollector.AddODataScopeAnnotation(annotationName, value);
-            }
-            else
-            {
-                resourceState.PropertyAndAnnotationCollector.AddCustomScopeAnnotation(annotationName, value);
+                return Task.FromResult<object>(ProcessInstanceAnnotationValue(resourceState, propertyParsingResult, readEntryInstanceAnnotationTask.Result, annotationName));
             }
 
-            return value;
+            return AwaitReadODataOrCustomInstanceAnnotationValueAsync(readEntryInstanceAnnotationTask, resourceState, propertyParsingResult, annotationName);
+
+            static object ProcessInstanceAnnotationValue(
+                IODataJsonReaderResourceState paramResourceState,
+                PropertyParsingResult paramPropertyParsingResult,
+                object annotationValue,
+                string paramAnnotationName)
+            {
+                if (paramPropertyParsingResult == PropertyParsingResult.ODataInstanceAnnotation)
+                {
+                    paramResourceState.PropertyAndAnnotationCollector.AddODataScopeAnnotation(paramAnnotationName, annotationValue);
+                }
+                else
+                {
+                    paramResourceState.PropertyAndAnnotationCollector.AddCustomScopeAnnotation(paramAnnotationName, annotationValue);
+                }
+
+                return annotationValue;
+            }
+
+            static async Task<object> AwaitReadODataOrCustomInstanceAnnotationValueAsync(
+                Task<object> readEntryInstanceAnnotationTask,
+                IODataJsonReaderResourceState paramResourceState,
+                PropertyParsingResult paramPropertyParsingResult,
+                string paramAnnotationName)
+            {
+                object annotationValue = await readEntryInstanceAnnotationTask.ConfigureAwait(false);
+                return ProcessInstanceAnnotationValue(paramResourceState, paramPropertyParsingResult, annotationValue, paramAnnotationName);
+            }
+
         }
 
         /// <summary>
@@ -2973,7 +3044,7 @@ namespace Microsoft.OData.Json
         /// <param name="propertyParseResult">The PropertyParsingResult.</param>
         /// <param name="annotationName">The annotation name.</param>
         /// <returns>A task that represents the asynchronous read operation.</returns>
-        internal async Task ReadODataOrCustomInstanceAnnotationValueAsync(
+        internal Task ReadODataOrCustomInstanceAnnotationValueAsync(
             ODataResourceSetBase resourceSet,
             PropertyAndAnnotationCollector propertyAndAnnotationCollector,
             bool forResourceSetStart,
@@ -2985,7 +3056,24 @@ namespace Microsoft.OData.Json
             {
                 // #### annotation 1 ####
                 // built-in "odata." annotation value is added to propertyAndAnnotationCollector then later to resourceSet.InstanceAnnotations.
-                propertyAndAnnotationCollector.AddODataScopeAnnotation(annotationName, await this.JsonReader.GetValueAsync().ConfigureAwait(false));
+                Task<object> annotationTask = this.JsonReader.GetValueAsync();
+
+                if (annotationTask.IsCompletedSuccessfully)
+                {
+                    object annotationValue = annotationTask.Result;
+                    try
+                    {
+                        propertyAndAnnotationCollector.AddODataScopeAnnotation(annotationName, annotationValue);
+                    }
+                    catch (ODataException ex)
+                    {
+                        return Task.FromException<object>(ex);
+                    }
+                }
+                else
+                {
+                    return AwaitReadODataOrCustomInstanceAnnotationValueAsync(annotationTask, annotationName, propertyAndAnnotationCollector);
+                }
             }
 
             // When we are reading the start of a resource set (in scan-ahead mode or not) or when
@@ -2995,13 +3083,20 @@ namespace Microsoft.OData.Json
             {
                 // #### annotation 2 ####
                 // custom annotation value will be directly added to resourceSet.InstanceAnnotations.
-                await this.ReadAndApplyResourceSetInstanceAnnotationValueAsync(annotationName, resourceSet, propertyAndAnnotationCollector)
-                    .ConfigureAwait(false);
+                return this.ReadAndApplyResourceSetInstanceAnnotationValueAsync(annotationName, resourceSet, propertyAndAnnotationCollector);
             }
             else
             {
-                await this.JsonReader.SkipValueAsync()
-                    .ConfigureAwait(false);
+                return this.JsonReader.SkipValueAsync();
+            }
+
+            static async Task AwaitReadODataOrCustomInstanceAnnotationValueAsync(
+                Task<object> pendingTask,
+                string paramAnnotationName,
+                PropertyAndAnnotationCollector paramPropertyAndAnnotationCollector)
+            {
+                object annotationValue = await pendingTask.ConfigureAwait(false);
+                paramPropertyAndAnnotationCollector.AddODataScopeAnnotation(paramAnnotationName, annotationValue);
             }
         }
 
@@ -3257,7 +3352,7 @@ namespace Microsoft.OData.Json
         /// Post-Condition: JsonNodeType.EndObject              This method doesn't move the reader.
         ///                 JsonNodeType.Property
         /// </remarks>
-        internal async Task<ODataJsonReaderNestedInfo> ReadPropertyWithoutValueAsync(IODataJsonReaderResourceState resourceState, string propertyName)
+        internal ValueTask<ODataJsonReaderNestedInfo> ReadPropertyWithoutValueAsync(IODataJsonReaderResourceState resourceState, string propertyName)
         {
             Debug.Assert(resourceState != null, "resourceState != null");
             Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
@@ -3269,11 +3364,18 @@ namespace Microsoft.OData.Json
             if (edmProperty == null || edmProperty.Type.IsUntyped())
             {
                 // Undeclared property - we need to run detection algorithm here.
-                readerNestedInfo = await this.ReadUndeclaredPropertyAsync(resourceState, propertyName, propertyWithValue: false)
-                    .ConfigureAwait(false);
+                ValueTask<ODataJsonReaderNestedInfo> taskReadUndeclaredProperty = this.ReadUndeclaredPropertyAsync(resourceState, propertyName, propertyWithValue: false);
 
                 this.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
-                return readerNestedInfo;
+
+                if (taskReadUndeclaredProperty.IsCompletedSuccessfully)
+                {
+                    return taskReadUndeclaredProperty;
+                }
+                else
+                {
+                    return AwaitReadPropertyWithoutValueAsync(taskReadUndeclaredProperty);
+                }
             }
 
             // Declared property - read it.
@@ -3295,7 +3397,9 @@ namespace Microsoft.OData.Json
 
                     if (!readerNestedResourceInfo.HasEntityReferenceLink)
                     {
-                        throw new ODataException(Error.Format(SRResources.ODataJsonResourceDeserializer_NavigationPropertyWithoutValueAndEntityReferenceLink, propertyName, ODataAnnotationNames.ODataBind));
+                        return ValueTask.FromException<ODataJsonReaderNestedInfo>(
+                            new ODataException(Error.Format(SRResources.ODataJsonResourceDeserializer_NavigationPropertyWithoutValueAndEntityReferenceLink, propertyName, ODataAnnotationNames.ODataBind))
+                            );
                     }
                 }
 
@@ -3318,7 +3422,13 @@ namespace Microsoft.OData.Json
             }
 
             this.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
-            return readerNestedInfo;
+            return ValueTask.FromResult<ODataJsonReaderNestedInfo>(readerNestedInfo);
+
+            static async ValueTask<ODataJsonReaderNestedInfo> AwaitReadPropertyWithoutValueAsync(
+                ValueTask<ODataJsonReaderNestedInfo> pendingTask)
+            {
+                return await pendingTask.ConfigureAwait(false);
+            }
         }
 
         /// <summary>
@@ -3570,7 +3680,7 @@ namespace Microsoft.OData.Json
         /// The value of the TResult parameter contains the <see cref="ODataJsonReaderNestedInfo"/> for a nested stream property,
         /// or null if the property shouldn't be streamed.
         /// </returns>
-        private async Task<ODataJsonReaderNestedInfo> TryReadAsStreamAsync(
+        private async ValueTask<ODataJsonReaderNestedInfo> TryReadAsStreamAsync(
             IODataJsonReaderResourceState resourceState,
             IEdmStructuralProperty property,
             IEdmTypeReference propertyType,
@@ -3707,7 +3817,7 @@ namespace Microsoft.OData.Json
         /// Post-Condition: JsonNodeType.Property:    the next property of the resource
         ///                 JsonNodeType.EndObject:   the end-object node of the resource
         /// </remarks>
-        private async Task ReadEntryDataPropertyAsync(IODataJsonReaderResourceState resourceState, IEdmProperty edmProperty, string propertyTypeName)
+        private ValueTask ReadEntryDataPropertyAsync(IODataJsonReaderResourceState resourceState, IEdmProperty edmProperty, string propertyTypeName)
         {
             Debug.Assert(resourceState != null, "resourceState != null");
             Debug.Assert(edmProperty != null, "edmProperty != null");
@@ -3718,7 +3828,7 @@ namespace Microsoft.OData.Json
             ODataNullValueBehaviorKind nullValueReadBehaviorKind = this.ReadingResponse
                 ? ODataNullValueBehaviorKind.Default
                 : this.Model.NullValueReadBehaviorKind(edmProperty);
-            object propertyValue = await this.ReadNonEntityValueAsync(
+            Task<object> readNonEntityValueTask = this.ReadNonEntityValueAsync(
                 propertyTypeName,
                 edmProperty.Type,
                 propertyAndAnnotationCollector: null,
@@ -3726,17 +3836,44 @@ namespace Microsoft.OData.Json
                 validateNullValue: nullValueReadBehaviorKind == ODataNullValueBehaviorKind.Default,
                 isTopLevelPropertyValue: false,
                 insideResourceValue: false,
-                propertyName: edmProperty.Name).ConfigureAwait(false);
+                propertyName: edmProperty.Name);
 
-            if (nullValueReadBehaviorKind != ODataNullValueBehaviorKind.IgnoreValue || propertyValue != null)
+            if (readNonEntityValueTask.IsCompletedSuccessfully)
             {
-                AddResourceProperty(resourceState, edmProperty.Name, propertyValue);
+                object propertyValue = readNonEntityValueTask.Result;
+                InnerAddResourceProperty(this, nullValueReadBehaviorKind, resourceState, edmProperty.Name, propertyValue);
+                return ValueTask.CompletedTask;
             }
 
-            this.JsonReader.AssertNotBuffering();
-            Debug.Assert(
-                this.JsonReader.NodeType == JsonNodeType.Property || this.JsonReader.NodeType == JsonNodeType.EndObject,
-                "Post-Condition: expected JsonNodeType.Property or JsonNodeType.EndObject");
+            return AwaitReadNonEntityValueAsync(readNonEntityValueTask, this, nullValueReadBehaviorKind, resourceState, edmProperty.Name);
+
+            static void InnerAddResourceProperty(
+                ODataJsonResourceDeserializer paramThis,
+                ODataNullValueBehaviorKind paramNullValueReadBehaviorKind,
+                IODataJsonReaderResourceState paramResourceState,
+                string paramPropertyName,
+                object propertyValue)
+            {
+                if (paramNullValueReadBehaviorKind != ODataNullValueBehaviorKind.IgnoreValue || propertyValue != null)
+                {
+                    AddResourceProperty(paramResourceState, paramPropertyName, propertyValue);
+                }
+                paramThis.JsonReader.AssertNotBuffering();
+                Debug.Assert(
+                    paramThis.JsonReader.NodeType == JsonNodeType.Property || paramThis.JsonReader.NodeType == JsonNodeType.EndObject,
+                    "Post-Condition: expected JsonNodeType.Property or JsonNodeType.EndObject");
+            }
+
+            static async ValueTask AwaitReadNonEntityValueAsync(
+                Task<object> readTask,
+                ODataJsonResourceDeserializer paramThis,
+                ODataNullValueBehaviorKind paramNullValueReadBehaviorKind,
+                IODataJsonReaderResourceState paramResourceState,
+                string paramPropertyName)
+            {
+                object propertyValue = await readTask.ConfigureAwait(false);
+                InnerAddResourceProperty(paramThis, paramNullValueReadBehaviorKind, paramResourceState, paramPropertyName, propertyValue);
+            }
         }
 
         /// <summary>
@@ -3756,7 +3893,7 @@ namespace Microsoft.OData.Json
         /// Post-Condition: JsonNodeType.Property:    the next property of the resource
         ///                 JsonNodeType.EndObject:   the end-object node of the resource
         /// </remarks>
-        private async Task<ODataJsonReaderNestedInfo> InnerReadUndeclaredPropertyAsync(
+        private async ValueTask<ODataJsonReaderNestedInfo> InnerReadUndeclaredPropertyAsync(
             IODataJsonReaderResourceState resourceState,
             IEdmStructuredType owningStructuredType,
             string propertyName,
@@ -3890,7 +4027,7 @@ namespace Microsoft.OData.Json
         /// Post-Condition: JsonNodeType.Property:    the next property of the resource
         ///                 JsonNodeType.EndObject:   the end-object node of the resource
         /// </remarks>
-        private async Task<ODataJsonReaderNestedInfo> ReadUndeclaredPropertyAsync(
+        private async ValueTask<ODataJsonReaderNestedInfo> ReadUndeclaredPropertyAsync(
             IODataJsonReaderResourceState resourceState,
             string propertyName,
             bool propertyWithValue)
