@@ -230,8 +230,8 @@ namespace Microsoft.OData.Tests.JsonLight
                 ",\"comments\":[\"one\",\"two\",null]"
                 );
 
-            Func<IEdmPrimitiveType, bool, string, IEdmProperty, bool> ShouldStream =
-                (IEdmPrimitiveType type, bool isCollection, string propertyName, IEdmProperty property) =>
+            Func<ODataPropertyStreamingContext, bool> ShouldStream =
+                (ODataPropertyStreamingContext context) =>
             {
                 return true;
             };
@@ -282,10 +282,10 @@ namespace Microsoft.OData.Tests.JsonLight
                 ",\"comments\":[\"one\",\"two\",null]"
                 );
 
-            Func<IEdmPrimitiveType, bool, string, IEdmProperty, bool> ShouldStream =
-                (IEdmPrimitiveType type, bool isCollection, string propertyName, IEdmProperty property) =>
+            Func<ODataPropertyStreamingContext, bool> ShouldStream =
+                (ODataPropertyStreamingContext context) =>
                 {
-                    return isCollection;
+                    return context.IsCollection;
                 };
 
             foreach (Variant variant in GetVariants(ShouldStream))
@@ -341,25 +341,25 @@ namespace Microsoft.OData.Tests.JsonLight
                 ",-10.5]"
                 );
 
-            Func<IEdmPrimitiveType, bool, string, IEdmProperty, bool> StreamCollection =
-                (IEdmPrimitiveType type, bool isCollection, string propertyName, IEdmProperty property) =>
+            Func<ODataPropertyStreamingContext, bool> StreamCollection =
+                (ODataPropertyStreamingContext context) =>
                 {
-                    return isCollection;
+                    return context.IsCollection;
                 };
 
-            Func<IEdmPrimitiveType, bool, string, IEdmProperty, bool> StreamAll =
-                (IEdmPrimitiveType type, bool isCollection, string propertyName, IEdmProperty property) =>
+            Func<ODataPropertyStreamingContext, bool> StreamAll =
+                (ODataPropertyStreamingContext context) =>
                 {
                     return true;
                 };
 
-            Func<IEdmPrimitiveType, bool, string, IEdmProperty, bool> StreamNone =
-                (IEdmPrimitiveType type, bool isCollection, string propertyName, IEdmProperty property) =>
+            Func<ODataPropertyStreamingContext, bool> StreamNone =
+                (ODataPropertyStreamingContext context) =>
                 {
                     return false;
                 };
 
-            foreach (Func<IEdmPrimitiveType, bool, string, IEdmProperty, bool> ShouldStream in new Func<IEdmPrimitiveType, bool, string, IEdmProperty, bool>[] { StreamCollection, StreamAll, StreamNone })
+            foreach (Func<ODataPropertyStreamingContext, bool> ShouldStream in new Func<ODataPropertyStreamingContext, bool>[] { StreamCollection, StreamAll, StreamNone })
             {
                 foreach (Variant variant in GetVariants(ShouldStream))
                 {
@@ -476,11 +476,11 @@ namespace Microsoft.OData.Tests.JsonLight
                 ",\"name\":\"Thor\""
                 );
 
-            Func<IEdmPrimitiveType, bool, string, IEdmProperty, bool> ShouldStream =
-                (IEdmPrimitiveType type, bool isCollection, string propertyName, IEdmProperty property) =>
+            Func<ODataPropertyStreamingContext, bool> ShouldStream =
+                (ODataPropertyStreamingContext context) =>
                 {
                     numberOfTimesCalled++;
-                    return !isCollection;
+                    return !context.IsCollection;
                 };
 
             foreach (Variant variant in GetVariants(ShouldStream))
@@ -1155,10 +1155,10 @@ namespace Microsoft.OData.Tests.JsonLight
                 ",\"name\":\"Thor\""
                 );
 
-            Func<IEdmPrimitiveType, bool, string, IEdmProperty, bool> ShouldStream =
-                (IEdmPrimitiveType type, bool isCollection, string propertyName, IEdmProperty property) =>
+            Func<ODataPropertyStreamingContext, bool> ShouldStream =
+                (ODataPropertyStreamingContext context) =>
                 {
-                    return propertyName == "name";
+                    return context.PropertyName == "name";
                 };
 
             foreach (Variant variant in GetVariants(ShouldStream))
@@ -1209,8 +1209,8 @@ namespace Microsoft.OData.Tests.JsonLight
                 ",\"age\":4000"
                 );
 
-            Func<IEdmPrimitiveType, bool, string, IEdmProperty, bool> ShouldStream =
-                (IEdmPrimitiveType type, bool isCollection, string propertyName, IEdmProperty property) =>
+            Func<ODataPropertyStreamingContext, bool> ShouldStream =
+                (ODataPropertyStreamingContext context) =>
                 {
                     return true;
                 };
@@ -1260,10 +1260,10 @@ namespace Microsoft.OData.Tests.JsonLight
                 ",\"binaryAsStream\":\"" + binaryValue + "\""
                 );
 
-            Func<IEdmPrimitiveType, bool, string, IEdmProperty, bool> ShouldStream =
-                (IEdmPrimitiveType type, bool isCollection, string propertyName, IEdmProperty property) =>
+            Func<ODataPropertyStreamingContext, bool> ShouldStream =
+                (ODataPropertyStreamingContext context) =>
                 {
-                    return type != null && type.IsBinary();
+                    return context.PrimitiveType != null && context.PrimitiveType.IsBinary();
                 };
 
             foreach (Variant variant in GetVariants(ShouldStream))
@@ -1310,8 +1310,8 @@ namespace Microsoft.OData.Tests.JsonLight
              ",\"name\":\"Thor\""
              );
 
-            Func<IEdmPrimitiveType, bool, string, IEdmProperty, bool> ShouldStream =
-                (IEdmPrimitiveType type, bool isCollection, string propertyName, IEdmProperty property) =>
+            Func<ODataPropertyStreamingContext, bool> ShouldStream =
+                (ODataPropertyStreamingContext context) =>
                 {
                     return true;
                 };
@@ -1349,7 +1349,7 @@ namespace Microsoft.OData.Tests.JsonLight
             Full
         }
 
-        private static IEnumerable<Variant> GetVariants(Func<IEdmPrimitiveType, bool, string, IEdmProperty, bool> readAsStream, bool includeUnordered = true)
+        private static IEnumerable<Variant> GetVariants(Func<ODataPropertyStreamingContext, bool> readAsStream, bool includeUnordered = true)
         {
             List<Variant> variants = new List<Variant>();
             foreach (ODataVersion version in new ODataVersion[] { ODataVersion.V4, ODataVersion.V401 })
@@ -1377,7 +1377,7 @@ namespace Microsoft.OData.Tests.JsonLight
                                 {
                                     Version = version,
                                     ReadUntypedAsString = false,
-                                    ReadAsStreamFunc = readAsStream,
+                                    ShouldReadPropertyAsStream = readAsStream,
                                     ShouldIncludeAnnotation = ODataUtils.CreateAnnotationFilter("*")
                                 },
                                 IsRequest = isRequest,
