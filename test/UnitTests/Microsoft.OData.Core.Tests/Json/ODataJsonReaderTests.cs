@@ -1203,9 +1203,8 @@ namespace Microsoft.OData.Tests.Json
                         Assert.Equal(2, properties.Length);
                         Assert.Equal("Id", properties[0].Name);
                         Assert.Equal("SmallField", properties[1].Name);
-                        // Dynamic properties without type annotation are read as ODataUntypedValue
-                        var untypedValue = Assert.IsType<ODataUntypedValue>(properties[1].Value);
-                        Assert.Contains("This is a small string value", untypedValue.RawValue);
+                        var value = Assert.IsType<string>(properties[1].Value);
+                        Assert.Contains("This is a small string value", value);
                     }));
         }
 
@@ -1244,9 +1243,8 @@ namespace Microsoft.OData.Tests.Json
                         Assert.Equal(2, properties.Length);
                         Assert.Equal("Id", properties[0].Name);
                         Assert.Equal("SmallField", properties[1].Name);
-                        // Dynamic properties without type annotation are read as ODataUntypedValue
-                        var untypedValue = Assert.IsType<ODataUntypedValue>(properties[1].Value);
-                        Assert.Contains("This is a small string value", untypedValue.RawValue);
+                        var value = Assert.IsType<string>(properties[1].Value);
+                        Assert.Contains("This is a small string value", value);
                     }));
         }
 
