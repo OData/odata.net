@@ -5189,7 +5189,7 @@ public class Microsoft.OData.ODataPropertyInfo : Microsoft.OData.ODataItem {
     Microsoft.OData.Edm.EdmPrimitiveTypeKind PrimitiveTypeKind  { public virtual get; public virtual set; }
 }
 
-public class Microsoft.OData.ODataPropertyStreamingContext {
+public sealed class Microsoft.OData.ODataPropertyStreamingContext {
     public ODataPropertyStreamingContext ()
 
     System.Collections.Generic.IEnumerable`1[[System.Collections.Generic.KeyValuePair`2[[System.String],[System.Object]]]] CustomPropertyAnnotations  { public get; }
