@@ -559,11 +559,11 @@ namespace Microsoft.OData.Metadata
         /// </summary>
         /// <param name="operationImport">Operation import in question.</param>
         /// <returns>Name of the operation import with parameters.</returns>
-        internal static string NameWithParameters(this IEdmOperationImport operationImport)
+        internal static ReadOnlySpan<char> NameWithParameters(this IEdmOperationImport operationImport)
         {
             Debug.Assert(operationImport != null, "operationImport != null");
 
-            return operationImport.Name + operationImport.ParameterTypesToString();
+            return (operationImport.Name + operationImport.ParameterTypesToString().ToString()).AsSpan();
         }
 
         /// <summary>
@@ -571,11 +571,11 @@ namespace Microsoft.OData.Metadata
         /// </summary>
         /// <param name="operationImport">Operation import in question.</param>
         /// <returns>Full name of the operation import with parameters.</returns>
-        internal static string FullNameWithParameters(this IEdmOperationImport operationImport)
+        internal static ReadOnlySpan<char> FullNameWithParameters(this IEdmOperationImport operationImport)
         {
             Debug.Assert(operationImport != null, "operationImport != null");
 
-            return operationImport.FullName() + operationImport.ParameterTypesToString();
+            return (operationImport.FullName() + operationImport.ParameterTypesToString().ToString()).AsSpan();
         }
 
         /// <summary>
@@ -1065,7 +1065,7 @@ namespace Microsoft.OData.Metadata
         /// </summary>
         /// <param name="typeName">CollectionValue type name read from payload.</param>
         /// <returns>CollectionValue element type name or null if not a collectionValue.</returns>
-        internal static string GetCollectionItemTypeName(string typeName)
+        internal static ReadOnlySpan<char> GetCollectionItemTypeName(ReadOnlySpan<char> typeName)
         {
             return GetCollectionItemTypeName(typeName, false);
         }
@@ -1075,17 +1075,17 @@ namespace Microsoft.OData.Metadata
         /// </summary>
         /// <param name="typeName">The original collection type string.</param>
         /// <returns>The full type name for the given origin type name/>.</returns>
-        internal static string GetCollectionTypeFullName(string typeName)
+        internal static ReadOnlySpan<char> GetCollectionTypeFullName(ReadOnlySpan<char> typeName)
         {
-            if (typeName != null)
+            if (!typeName.IsEmpty)
             {
-                string innerTypeName = GetCollectionItemTypeName(typeName);
+                ReadOnlySpan<char> innerTypeName = GetCollectionItemTypeName(typeName);
                 if (innerTypeName != null)
                 {
-                    IEdmSchemaType primitiveType = EdmCoreModel.Instance.FindDeclaredType(innerTypeName);
+                    IEdmSchemaType primitiveType = EdmCoreModel.Instance.FindDeclaredType(innerTypeName.ToString());
                     if (primitiveType != null)
                     {
-                        return GetCollectionTypeName(primitiveType.FullName());
+                        return GetCollectionTypeName(primitiveType.FullName()).AsSpan();
                     }
                 }
             }
@@ -1883,14 +1883,16 @@ namespace Microsoft.OData.Metadata
         /// - "Collection (Edm.Int32)"
         /// - "Collection("
         /// </remarks>
-        private static string GetCollectionItemTypeName(string typeName, bool isNested)
+        private static ReadOnlySpan<char> GetCollectionItemTypeName(ReadOnlySpan<char> typeName, bool isNested)
         {
             int collectionTypeQualifierLength = CollectionTypeQualifier.Length;
 
             // to be recognized as a collection wireTypeName must not be null, has to start with "Collection(" and end with ")" and must not be "Collection()"
-            if (typeName != null &&
-                typeName.StartsWith(CollectionTypeQualifier + "(", StringComparison.Ordinal) &&
-                typeName[typeName.Length - 1] == ')' &&
+            if (!typeName.IsEmpty &&
+                typeName.Length > collectionTypeQualifierLength + 1 &&
+                typeName.StartsWith(CollectionTypeQualifier, StringComparison.Ordinal) &&
+                typeName[collectionTypeQualifierLength] == '(' &&
+                typeName[^1] == ')' &&
                 typeName.Length != collectionTypeQualifierLength + 2)
             {
                 if (isNested)
@@ -1898,7 +1900,7 @@ namespace Microsoft.OData.Metadata
                     throw new ODataException(SRResources.ValidationUtils_NestedCollectionsAreNotSupported);
                 }
 
-                string innerTypeName = typeName.Substring(collectionTypeQualifierLength + 1, typeName.Length - (collectionTypeQualifierLength + 2));
+                ReadOnlySpan<char> innerTypeName = typeName.Slice(collectionTypeQualifierLength + 1, typeName.Length - (collectionTypeQualifierLength + 2));
 
                 // Check if it is not a nested collection and throw if it is
                 GetCollectionItemTypeName(innerTypeName, true);
@@ -1914,12 +1916,14 @@ namespace Microsoft.OData.Metadata
         /// </summary>
         /// <param name="operationImport">Function import in question.</param>
         /// <returns>Comma separated operation import parameter types enclosed in parentheses.</returns>
-        private static string ParameterTypesToString(this IEdmOperationImport operationImport)
+        private static ReadOnlySpan<char> ParameterTypesToString(this IEdmOperationImport operationImport)
         {
             // TODO: Resolve duplication of operationImport and operation
-            return ODataJsonConstants.FunctionParameterStart +
+            string result = ODataJsonConstants.FunctionParameterStart +
                 string.Join(ODataJsonConstants.FunctionParameterSeparator, operationImport.Operation.Parameters.Select(p => p.Type.FullName()).ToArray()) +
                 ODataJsonConstants.FunctionParameterEnd;
+
+            return result.AsSpan();
         }
 
         /// <summary>

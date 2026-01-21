@@ -139,17 +139,16 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="typeName">The type name which may be prefixed (#).</param>
         /// <returns>The type name with prefix removed, if there is.</returns>
-        internal static string RemovePrefixOfTypeName(string typeName)
+        internal static ReadOnlySpan<char> RemovePrefixOfTypeName(ReadOnlySpan<char> typeName)
         {
-            string prefixRemovedTypeName = typeName;
-            if (!string.IsNullOrEmpty(typeName) && typeName.StartsWith(ODataConstants.TypeNamePrefix, StringComparison.Ordinal))
+            if (!typeName.IsEmpty && typeName.StartsWith(ODataConstants.TypeNamePrefix.AsSpan(), StringComparison.Ordinal))
             {
-                prefixRemovedTypeName = typeName.Substring(ODataConstants.TypeNamePrefix.Length);
+                typeName = typeName.Slice(ODataConstants.TypeNamePrefix.Length);
 
-                Debug.Assert(!prefixRemovedTypeName.StartsWith(ODataConstants.TypeNamePrefix, StringComparison.Ordinal), "The type name not start with " + ODataConstants.TypeNamePrefix + "after removing prefix");
+                Debug.Assert(!typeName.StartsWith(ODataConstants.TypeNamePrefix, StringComparison.Ordinal), "The type name not start with " + ODataConstants.TypeNamePrefix + "after removing prefix");
             }
 
-            return prefixRemovedTypeName;
+            return typeName;
         }
 
         /// <summary>
@@ -157,9 +156,9 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="typeName">The type name which may be not prefixed (Edm.).</param>
         /// <returns>The type name with Edm. prefix</returns>
-        internal static string AddEdmPrefixOfTypeName(string typeName)
+        internal static ReadOnlySpan<char> AddEdmPrefixOfTypeName(ReadOnlySpan<char> typeName)
         {
-            if (!string.IsNullOrEmpty(typeName))
+            if (!typeName.IsEmpty)
             {
                 string itemTypeName = EdmLibraryExtensions.GetCollectionItemTypeName(typeName);
                 if (itemTypeName == null)

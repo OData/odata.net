@@ -142,11 +142,11 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="propertyName">The property name to test.</param>
         /// <returns>true if the property name is an OData annotation property name, false otherwise.</returns>
-        internal static bool IsODataAnnotationName(string propertyName)
+        internal static bool IsODataAnnotationName(ReadOnlySpan<char> propertyName)
         {
-            Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
+            Debug.Assert(!propertyName.IsEmpty, "!string.IsNullOrEmpty(propertyName)");
 
-            return propertyName.StartsWith(ODataJsonConstants.ODataAnnotationNamespacePrefix, StringComparison.Ordinal);
+            return propertyName.StartsWith(ODataJsonConstants.ODataAnnotationNamespacePrefix.AsSpan(), StringComparison.Ordinal);
         }
 
         /// <summary>
@@ -157,11 +157,11 @@ namespace Microsoft.OData.Json
         /// <remarks>
         /// This method returns true both for normal annotation as well as property annotations.
         /// </remarks>
-        internal static bool IsAnnotationProperty(string propertyName)
+        internal static bool IsAnnotationProperty(ReadOnlySpan<char> propertyName)
         {
-            Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
+            Debug.Assert(!propertyName.IsEmpty, "!string.IsNullOrEmpty(propertyName)");
 
-            return propertyName.IndexOf('.', StringComparison.Ordinal) >= 0;
+            return propertyName.IndexOf('.') >= 0;
         }
 
         /// <summary>
