@@ -1334,21 +1334,41 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
-        /// Set annotation Org.OData.Core.V1.OptimisticConcurrency to EntitySet
+        /// Set annotation Org.OData.Core.V1.OptimisticConcurrency to EntitySet as inline annotation.
         /// </summary>
         /// <param name="model">The model to add annotation</param>
         /// <param name="target">The target entitySet to set the inline annotation</param>
         /// <param name="properties">The PropertyPath for annotation</param>
-        public static void SetOptimisticConcurrencyAnnotation(this EdmModel model, IEdmEntitySet target, IEnumerable<IEdmStructuralProperty> properties, EdmVocabularyAnnotationSerializationLocation location = EdmVocabularyAnnotationSerializationLocation.Inline)
+        public static void SetOptimisticConcurrencyAnnotation(this EdmModel model, IEdmEntitySet target, IEnumerable<IEdmStructuralProperty> properties)
+            => model.SetOptimisticConcurrencyAnnotatioInternal(target, properties, EdmVocabularyAnnotationSerializationLocation.Inline);
+
+        /// <summary>
+        /// Set annotation Org.OData.Core.V1.OptimisticConcurrency to EntitySet.
+        /// </summary>
+        /// <param name="model">The model to add annotation</param>
+        /// <param name="target">The target entitySet to set the inline annotation</param>
+        /// <param name="properties">The PropertyPath for annotation</param>
+        /// <param name="location">The annotation location</param>
+        public static void SetOptimisticConcurrencyAnnotation(this EdmModel model, IEdmEntitySet target, IEnumerable<IEdmStructuralProperty> properties, EdmVocabularyAnnotationSerializationLocation location)
             => model.SetOptimisticConcurrencyAnnotatioInternal(target, properties, location);
 
         /// <summary>
-        /// Set annotation Org.OData.Core.V1.OptimisticConcurrency to Singleton
+        /// Set annotation Org.OData.Core.V1.OptimisticConcurrency to Singleton as inline annotation.
         /// </summary>
         /// <param name="model">The model to add annotation</param>
         /// <param name="target">The target singleton to set the inline annotation</param>
         /// <param name="properties">The PropertyPath for annotation</param>
-        public static void SetOptimisticConcurrencyAnnotation(this EdmModel model, IEdmSingleton target, IEnumerable<IEdmStructuralProperty> properties, EdmVocabularyAnnotationSerializationLocation location = EdmVocabularyAnnotationSerializationLocation.Inline)
+        public static void SetOptimisticConcurrencyAnnotation(this EdmModel model, IEdmSingleton target, IEnumerable<IEdmStructuralProperty> properties)
+            => model.SetOptimisticConcurrencyAnnotatioInternal(target, properties, EdmVocabularyAnnotationSerializationLocation.Inline);
+
+        /// <summary>
+        /// Set annotation Org.OData.Core.V1.OptimisticConcurrency to Singleton.
+        /// </summary>
+        /// <param name="model">The model to add annotation</param>
+        /// <param name="target">The target singleton to set the inline annotation</param>
+        /// <param name="properties">The PropertyPath for annotation</param>
+        /// <param name="location">The annotation location</param>
+        public static void SetOptimisticConcurrencyAnnotation(this EdmModel model, IEdmSingleton target, IEnumerable<IEdmStructuralProperty> properties, EdmVocabularyAnnotationSerializationLocation location)
             => model.SetOptimisticConcurrencyAnnotatioInternal(target, properties, location);
 
         private static void SetOptimisticConcurrencyAnnotatioInternal(this EdmModel model, IEdmVocabularyAnnotatable target, IEnumerable<IEdmStructuralProperty> properties, EdmVocabularyAnnotationSerializationLocation location)

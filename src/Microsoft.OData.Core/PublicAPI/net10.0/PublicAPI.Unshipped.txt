@@ -1,6 +1,3 @@
-Microsoft.OData.ODataNestedResourceInfo.InstanceAnnotations.get -> System.Collections.Generic.ICollection<Microsoft.OData.ODataInstanceAnnotation>
-Microsoft.OData.ODataNestedResourceInfo.InstanceAnnotations.set -> void
-Microsoft.OData.ValidationKinds.ThrowOnUnexpectedODataPropertyAnnotationOnNavigationProperty = 8 -> Microsoft.OData.ValidationKinds
 Microsoft.OData.UriParser.IndexSegment
 Microsoft.OData.UriParser.IndexSegment.Index.get -> long
 Microsoft.OData.UriParser.IndexSegment.IndexSegment(long index, Microsoft.OData.Edm.IEdmType targetEdmType) -> void
