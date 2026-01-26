@@ -1,0 +1,672 @@
+﻿@page "/"
+@using Default
+@using Microsoft.OData.Client
+@using System.Text.Json
+@using Microsoft.OData.Client.Wasm.Sample.Client.Models
+@inject HttpClient Http
+@inject IConfiguration Configuration
+
+<PageTitle>OData Client WebAssembly Sample</PageTitle>
+
+<div class="page-container">
+    <div class="left-panel">
+        <div class="header-section">
+            <h1>OData Client Async Operations</h1>
+            <p>Test Microsoft.OData.Client async methods in WebAssembly</p>
+
+            <div class="test-controls">
+                <button class="btn btn-danger" @onclick="ResetDataSource">Reset Data Source</button>
+                <button class="btn btn-secondary" @onclick="ClearResults">Clear Results</button>
+            </div>
+        </div>
+
+        <div class="test-sections">
+            <div class="test-section">
+                <h3>Entity Operations</h3>
+                <button class="btn btn-primary" @onclick="DataServiceContext_SaveChangesAsync_AddsEntity">SaveChangesAsync - Add Customer</button>
+                <button class="btn btn-primary" @onclick="DataServiceContext_SaveChangesAsync_BatchWithSingleChangeset_AddsEntity">SaveChangesAsync (Batch) - Add Customer</button>
+                <button class="btn btn-primary" @onclick="DataServiceContext_BulkUpdateAsync_UpdatesEntity">BulkUpdateAsync - Update Customer</button>
+                <button class="btn btn-primary" @onclick="DataServiceContext_DeepInsertAsync_InsertsEntityGraph">DeepInsertAsync - Add Customer</button>
+            </div>
+
+            <div class="test-section">
+                <h3>Query Operations</h3>
+                <button class="btn btn-primary" @onclick="DataServiceQuerySingle_GetValueAsync_ReturnsEntity">GetValueAsync - Get Customer</button>
+                <button class="btn btn-primary" @onclick="DataServiceQuerySingle_GetValueAsync_ExecutesBoundFunction">GetValueAsync - Get Top Customer</button>
+                <button class="btn btn-primary" @onclick="DataServiceContext_ExecuteAsync_ExecutesFilterQuery">ExecuteAsync - Filter Query</button>
+                <button class="btn btn-primary" @onclick="DataServiceContext_ExecuteBatchAsync_ExecutesBatchRequest">ExecuteBatchAsync - Batch Request</button>
+            </div>
+
+            <div class="test-section">
+                <h3>Function & Query Operations</h3>
+                <button class="btn btn-primary" @onclick="DataServiceFunctionQuery_ExecuteAsync_ReturnsCollectionFromFunction">ExecuteAsync - Get Top 2 Orders</button>
+                <button class="btn btn-primary" @onclick="DataServiceQuery_ExecuteAsync_ExecutesQuery">DataServiceQuery.ExecuteAsync</button>
+                <button class="btn btn-primary" @onclick="DataServiceQuery_GetAllPagesAsync_RetrievesAllPages">GetAllPagesAsync - All Orders</button>
+                <button class="btn btn-primary" @onclick="DataServiceQuery_EnumerateAllPagesAsync_StreamsAllPages">EnumerateAllPagesAsync - All Orders</button>
+            </div>
+
+            <div class="test-section">
+                <h3>Navigation & Loading</h3>
+                <button class="btn btn-primary" @onclick="DataServiceContext_LoadPropertyAsync_LoadsNavigationProperty">LoadPropertyAsync - Order Customer</button>
+                <button class="btn btn-primary" @onclick="DataServiceContext_LoadPropertyAsync_LoadsCollectionWithNextLink">LoadPropertyAsync - With NextLink</button>
+                <button class="btn btn-primary" @onclick="DataServiceContext_LoadPropertyAsync_LoadsCollectionWithContinuation">LoadPropertyAsync - With Continuation</button>
+                <button class="btn btn-primary" @onclick="DataServiceContext_LoadPropertyAllPagesAsync_LoadsAllPages">LoadPropertyAllPagesAsync - All Pages</button>
+            </div>
+
+            <div class="test-section">
+                <h3>Stream Operations</h3>
+                <button class="btn btn-primary" @onclick="DataServiceContext_GetReadStreamAsync_ReadsMediaEntityStream">GetReadStreamAsync - Media Asset</button>
+                <button class="btn btn-primary" @onclick="DataServiceContext_GetReadStreamAsync_ReadsNamedStream">GetReadStreamAsync - Named Stream</button>
+            </div>
+
+            <div class="test-section">
+                <h3>Action Operations</h3>
+                <button class="btn btn-primary" @onclick="DataServiceActionQuerySingle_GetValueAsync_ExecutesActionReturningScalar">GetValueAsync - Apply Discount Action</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="right-panel">
+        <div class="results-panel">
+            <h3>Results</h3>
+            @if (isLoading)
+            {
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            }
+            <pre class="result-text">@results</pre>
+        </div>
+    </div>
+</div>
+
+<style>
+    .page-container {
+        display: flex;
+        height: calc(100vh - 60px); /* Adjust based on your header/nav height */
+        gap: 20px;
+        padding: 20px;
+        overflow: hidden;
+    }
+
+    .left-panel {
+        flex: 0 0 55%;
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto;
+        padding-right: 10px;
+    }
+
+    .right-panel {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+    }
+
+    .header-section {
+        position: sticky;
+        top: 0;
+        background-color: white;
+        z-index: 10;
+        padding-bottom: 15px;
+        border-bottom: 2px solid #ddd;
+        margin-bottom: 20px;
+    }
+
+        .header-section h1 {
+            margin: 0 0 10px 0;
+            font-size: 1.8em;
+        }
+
+        .header-section p {
+            margin: 0 0 15px 0;
+            color: #666;
+        }
+
+    .test-controls {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .test-sections {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .test-section {
+        border: 1px solid #ddd;
+        padding: 15px;
+        border-radius: 8px;
+        background-color: #f9f9f9;
+    }
+
+        .test-section h3 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            color: #333;
+            font-size: 1.1em;
+            border-bottom: 2px solid #0066cc;
+            padding-bottom: 5px;
+        }
+
+        .test-section button {
+            display: block;
+            width: 100%;
+            margin: 8px 0;
+            text-align: left;
+            white-space: normal;
+            height: auto;
+            padding: 10px;
+        }
+
+    .results-panel {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        background-color: #f5f5f5;
+        border-radius: 8px;
+        border: 1px solid #ddd;
+        padding: 20px;
+        overflow: hidden;
+    }
+
+        .results-panel h3 {
+            margin: 0 0 15px 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #0066cc;
+            flex-shrink: 0;
+        }
+
+    .result-text {
+        background-color: #fff;
+        padding: 15px;
+        border-radius: 4px;
+        border: 1px solid #ddd;
+        overflow-y: auto;
+        flex: 1;
+        font-family: 'Courier New', monospace;
+        font-size: 0.9em;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        margin: 0;
+    }
+
+    .image-result {
+        margin-bottom: 15px;
+        padding: 15px;
+        background-color: #fff;
+        border-radius: 4px;
+        border: 1px solid #ddd;
+        flex-shrink: 0;
+        max-height: 300px;
+        overflow: auto;
+    }
+
+        .image-result h4 {
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+
+        .image-result img {
+            max-width: 100%;
+            border: 1px solid #ccc;
+            padding: 10px;
+            background-color: white;
+        }
+
+    .btn {
+        font-size: 0.9em;
+    }
+
+    .spinner-border {
+        margin: 20px 0;
+    }
+
+    /* Responsive design for smaller screens */
+    @@media (max-width: 1200px) {
+        .page-container {
+            flex-direction: column;
+            height: auto;
+        }
+
+        .left-panel {
+            flex: none;
+            overflow-y: visible;
+        }
+
+        .right-panel {
+            flex: none;
+            height: 600px;
+        }
+
+        .header-section {
+            position: relative;
+        }
+    }
+
+    /* Custom scrollbar for webkit browsers */
+    .left-panel::-webkit-scrollbar,
+    .result-text::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    .left-panel::-webkit-scrollbar-track,
+    .result-text::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 4px;
+    }
+
+    .left-panel::-webkit-scrollbar-thumb,
+    .result-text::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 4px;
+    }
+
+        .left-panel::-webkit-scrollbar-thumb:hover,
+        .result-text::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+</style>
+
+@code {
+    private string results = "Click a button to test an async operation...";
+    private bool isLoading = false;
+    private Uri serviceUri = default!;
+
+    protected override void OnInitialized()
+    {
+        serviceUri = new Uri(Configuration["ODataWasmServiceUri"]!);
+    }
+
+    private async Task ExecuteTest(Func<Task> testAction, string testName)
+    {
+        try
+        {
+            isLoading = true;
+            results = $"🔄 Running: {testName}\n\n";
+            StateHasChanged();
+
+            await testAction();
+
+            results += $"\n✅ Operation completed successfully!";
+        }
+        catch (Exception ex)
+        {
+            results += $"\n❌ Error: {ex.Message}\n\nStack Trace:\n{ex.StackTrace}";
+        }
+        finally
+        {
+            isLoading = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task DataServiceContext_SaveChangesAsync_AddsEntity()
+    {
+        await ExecuteTest(async () =>
+        {
+            var ctx = new Container(serviceUri);
+            var customerId = Random.Shared.Next(11, 100);
+            ctx.AddToCustomers(new Customer { Id = customerId, Name = $"Customer {customerId}" });
+
+            var response = await ctx.SaveChangesAsync();
+
+            results += $"Response Count: {response.Count()}\n";
+            foreach (var item in response)
+            {
+                results += $"Status Code: {item.StatusCode}\n";
+            }
+        }, "SaveChangesAsync - Add Customer");
+    }
+
+    private async Task DataServiceContext_SaveChangesAsync_BatchWithSingleChangeset_AddsEntity()
+    {
+        await ExecuteTest(async () =>
+        {
+            var ctx = new Container(serviceUri);
+            var customerId = Random.Shared.Next(11, 100);
+            ctx.AddToCustomers(new Customer { Id = customerId, Name = $"Customer {customerId}" });
+
+            var response = await ctx.SaveChangesAsync(SaveChangesOptions.BatchWithSingleChangeset);
+
+            results += $"Response Count: {response.Count()}\n";
+            foreach (var item in response)
+            {
+                results += $"Status Code: {item.StatusCode}\n";
+            }
+        }, "SaveChangesAsync (Batch) - Add Customer");
+    }
+
+    private async Task DataServiceContext_BulkUpdateAsync_UpdatesEntity()
+    {
+        await ExecuteTest(async () =>
+        {
+            var ctx = new Container(serviceUri);
+            var customer = await ctx.Customers.ByKey(1).GetValueAsync();
+            results += $"Original Name: {customer.Name}\n";
+
+            customer.Name = "Sue Morgan";
+            ctx.UpdateObject(customer);
+
+            var response = await ctx.BulkUpdateAsync(customer);
+
+            results += $"Response Count: {response.Count()}\n";
+            foreach (var item in response)
+            {
+                results += $"Status Code: {item.StatusCode}\n";
+            }
+        }, "BulkUpdateAsync - Update Customer");
+    }
+
+    private async Task DataServiceContext_DeepInsertAsync_InsertsEntityGraph()
+    {
+        await ExecuteTest(async () =>
+        {
+            var ctx = new Container(serviceUri);
+            var customerId = Random.Shared.Next(11, 100);
+            var customer = new Customer { Id = customerId, Name = $"Customer {customerId}" };
+            ctx.AddToCustomers(customer);
+
+            var response = await ctx.DeepInsertAsync(customer);
+
+            results += $"Response Count: {response.Count()}\n";
+            foreach (var item in response)
+            {
+                results += $"Status Code: {item.StatusCode}\n";
+            }
+        }, "DeepInsertAsync - Add Customer");
+    }
+
+    private async Task DataServiceQuerySingle_GetValueAsync_ReturnsEntity()
+    {
+        await ExecuteTest(async () =>
+        {
+            var ctx = new Container(serviceUri);
+
+            var customer = await ctx.Customers.ByKey(1).GetValueAsync();
+
+            results += $"Customer ID: {customer.Id}\n";
+            results += $"Customer Name: {customer.Name}\n";
+        }, "GetValueAsync - Get Customer");
+    }
+
+    private async Task DataServiceQuerySingle_GetValueAsync_ExecutesBoundFunction()
+    {
+        await ExecuteTest(async () =>
+        {
+            var ctx = new Container(serviceUri);
+
+            var topCustomer = await ctx.Customers.GetTopCustomer().GetValueAsync();
+
+            results += $"Top Customer ID: {topCustomer.Id}\n";
+            results += $"Top Customer Name: {topCustomer.Name}\n";
+        }, "GetValueAsync - Get Top Customer");
+    }
+
+    private async Task DataServiceContext_ExecuteAsync_ExecutesFilterQuery()
+    {
+        await ExecuteTest(async () =>
+        {
+            var ctx = new Container(serviceUri);
+
+            var result = (await ctx.ExecuteAsync<Customer>(new Uri("Customers?$filter=contains(Name,'ob')", UriKind.Relative))).ToArray();
+
+            results += $"Customers Found: {result.Length}\n\n";
+            foreach (var customer in result)
+            {
+                results += $"- {customer.Name} (ID: {customer.Id})\n";
+            }
+        }, "ExecuteAsync - Filter Query");
+    }
+
+    private async Task DataServiceContext_ExecuteBatchAsync_ExecutesBatchRequest()
+    {
+        await ExecuteTest(async () =>
+        {
+            var ctx = new Container(serviceUri);
+
+            var response = await ctx.ExecuteBatchAsync(new DataServiceRequest[]
+            {
+                ctx.Customers.AddQueryOption("$filter", "contains(Name,'o')"),
+            });
+
+            var operationResponses = response.ToList();
+            results += $"Batch Response Count: {operationResponses.Count}\n";
+            var queryResponse = operationResponses.First() as QueryOperationResponse<Customer>;
+            if (queryResponse != null)
+            {
+                var queryOperationResponses = queryResponse.ToList();
+                results += $"Query Status Code: {queryResponse.StatusCode}\n";
+                results += $"Customers Found: {queryOperationResponses.Count}\n\n";
+                foreach (var customer in queryOperationResponses)
+                {
+                    results += $"- {customer.Name} (ID: {customer.Id})\n";
+                }
+            }
+        }, "ExecuteBatchAsync - Batch Request");
+    }
+
+    private async Task DataServiceFunctionQuery_ExecuteAsync_ReturnsCollectionFromFunction()
+    {
+        await ExecuteTest(async () =>
+        {
+            var ctx = new Container(serviceUri);
+
+            var result = await ctx.CreateFunctionQuery<Order>("Orders", "GetTop2Orders", true).ExecuteAsync();
+
+            var orders = result.ToList();
+            results += $"Orders Found: {orders.Count}\n\n";
+            foreach (var order in orders)
+            {
+                results += $"Order ID: {order.Id}, Amount: {order.Amount:C}\n";
+            }
+        }, "ExecuteAsync - Get Top 2 Orders");
+    }
+
+    private async Task DataServiceQuery_ExecuteAsync_ExecutesQuery()
+    {
+        await ExecuteTest(async () =>
+        {
+            var ctx = new Container(serviceUri);
+            DataServiceQuery query = ctx.CreateFunctionQuery<Order>("Orders", "GetTop2Orders", true);
+
+            var result = await query.ExecuteAsync();
+
+            var orders = result.Cast<Order>().ToList();
+            results += $"Orders Found: {orders.Count}\n\n";
+            foreach (var order in orders)
+            {
+                results += $"Order ID: {order.Id}, Amount: {order.Amount:C}\n";
+            }
+        }, "DataServiceQuery.ExecuteAsync");
+    }
+
+    private async Task DataServiceContext_LoadPropertyAsync_LoadsNavigationProperty()
+    {
+        await ExecuteTest(async () =>
+        {
+            var ctx = new Container(serviceUri);
+            var order = await ctx.Orders.ByKey(1).GetValueAsync();
+
+            results += $"Order ID: {order.Id}, Amount: {order.Amount:C}\n";
+            results += $"Customer before LoadPropertyAsync: {(order.Customer == null ? "null" : "loaded")}\n\n";
+
+            var response = await ctx.LoadPropertyAsync(order, "Customer");
+
+            results += $"Customer after LoadPropertyAsync: {order.Customer?.Name ?? "null"}\n";
+            results += $"Customer ID: {order.Customer?.Id}\n";
+        }, "LoadPropertyAsync - Order Customer");
+    }
+
+    private async Task DataServiceContext_LoadPropertyAsync_LoadsCollectionWithNextLink()
+    {
+        await ExecuteTest(async () =>
+        {
+            var ctx = new Container(serviceUri);
+            var customer = await ctx.Customers.ByKey(1).GetValueAsync();
+
+            results += $"Customer: {customer.Name}\n\n";
+
+            // Load first page
+            await ctx.LoadPropertyAsync(customer, "Orders");
+            results += $"Orders after first page: {customer.Orders.Count}\n";
+
+            // Load next page
+            var nextLinkUri = new Uri(serviceUri, "Customers(1)/Orders?$skiptoken=Id-3");
+            var response = await ctx.LoadPropertyAsync(customer, "Orders", nextLinkUri);
+
+            results += $"Orders after next link: {customer.Orders.Count}\n";
+        }, "LoadPropertyAsync - With NextLink");
+    }
+
+    private async Task DataServiceContext_LoadPropertyAsync_LoadsCollectionWithContinuation()
+    {
+        await ExecuteTest(async () =>
+        {
+            var ctx = new Container(serviceUri);
+            var customer = await ctx.Customers.ByKey(1).GetValueAsync();
+
+            results += $"Customer: {customer.Name}\n\n";
+
+            var response = await ctx.LoadPropertyAsync(customer, "Orders");
+            results += $"Orders loaded: {customer.Orders.Count}\n";
+
+            var continuation = response.GetContinuation();
+            if (continuation != null)
+            {
+                results += $"Continuation exists, loading more...\n";
+                response = await ctx.LoadPropertyAsync(customer, "Orders", continuation);
+                results += $"Total orders after continuation: {customer.Orders.Count}\n";
+            }
+            else
+            {
+                results += "No continuation available (all data loaded)\n";
+            }
+        }, "LoadPropertyAsync - With Continuation");
+    }
+
+    private async Task DataServiceContext_GetReadStreamAsync_ReadsMediaEntityStream()
+    {
+        await ExecuteTest(async () =>
+        {
+            var ctx = new Container(serviceUri);
+            var mediaAsset = await ctx.Media.ByKey(1).GetValueAsync();
+
+            var streamResponse = await ctx.GetReadStreamAsync(mediaAsset, new DataServiceRequestArgs());
+
+            using var memoryStream = new MemoryStream();
+            await streamResponse.Stream.CopyToAsync(memoryStream);
+
+            results += $"Content Type: {streamResponse.ContentType}\n";
+            results += $"Stream Length: {memoryStream.Length} bytes\n";
+        }, "GetReadStreamAsync - Media Asset");
+    }
+
+    private async Task DataServiceContext_GetReadStreamAsync_ReadsNamedStream()
+    {
+        await ExecuteTest(async () =>
+        {
+            var ctx = new Container(serviceUri);
+            var customer = await ctx.Customers.ByKey(1).GetValueAsync();
+
+            var streamResponse = await ctx.GetReadStreamAsync(customer, "Photo", new DataServiceRequestArgs());
+
+            using var memoryStream = new MemoryStream();
+            await streamResponse.Stream.CopyToAsync(memoryStream);
+
+            results += $"Content Type: {streamResponse.ContentType}\n";
+            results += $"Stream Length: {memoryStream.Length} bytes\n";
+        }, "GetReadStreamAsync - Named Stream");
+    }
+
+    private async Task DataServiceContext_LoadPropertyAllPagesAsync_LoadsAllPages()
+    {
+        await ExecuteTest(async () =>
+        {
+            var ctx = new Container(serviceUri);
+            var customer = await ctx.Customers.ByKey(1).GetValueAsync();
+
+            results += $"Customer: {customer.Name}\n\n";
+
+            // Load the first page and follow continuation tokens until all pages are loaded.
+            QueryOperationResponse response = await ctx.LoadPropertyAsync(customer, "Orders");
+            DataServiceQueryContinuation continuation = response.GetContinuation();
+
+            while (continuation != null)
+            {
+                response = await ctx.LoadPropertyAsync(customer, "Orders", continuation);
+                continuation = response.GetContinuation();
+            }
+
+            results += $"Total orders loaded (all pages): {customer.Orders.Count}\n";
+        }, "LoadPropertyAllPagesAsync - All Pages");
+    }
+
+    private async Task DataServiceQuery_EnumerateAllPagesAsync_StreamsAllPages()
+    {
+        await ExecuteTest(async () =>
+        {
+            var ctx = new Container(serviceUri);
+
+            int count = 0;
+            await foreach (Order order in ctx.Orders.EnumerateAllPagesAsync())
+            {
+                results += $"Order ID: {order.Id}, Amount: {order.Amount:C}\n";
+                count++;
+            }
+
+            results += $"\nTotal Orders Streamed: {count}\n";
+        }, "EnumerateAllPagesAsync - All Orders");
+    }
+
+    private async Task DataServiceQuery_GetAllPagesAsync_RetrievesAllPages()
+    {
+        await ExecuteTest(async () =>
+        {
+            var ctx = new Container(serviceUri);
+
+            var result = (await ctx.Orders.GetAllPagesAsync()).ToArray();
+
+            results += $"Total Orders Retrieved: {result.Length}\n\n";
+            foreach (var order in result)
+            {
+                results += $"Order ID: {order.Id}, Amount: {order.Amount:C}\n";
+            }
+        }, "GetAllPagesAsync - All Orders");
+    }
+
+    private async Task DataServiceActionQuerySingle_GetValueAsync_ExecutesActionReturningScalar()
+    {
+        await ExecuteTest(async () =>
+        {
+            var ctx = new Container(serviceUri);
+
+            var originalOrder = await ctx.Orders.ByKey(1).GetValueAsync();
+            results += $"Original Amount: {originalOrder.Amount:C}\n";
+
+            var totalAfterDiscount = await ctx.Orders.ByKey(1).ApplyDiscount(10m).GetValueAsync();
+
+            results += $"Amount After 10% Discount: {totalAfterDiscount:C}\n";
+            results += $"Discount Applied: {(originalOrder.Amount - totalAfterDiscount):C}\n";
+        }, "GetValueAsync - Apply Discount Action");
+    }
+
+    private async Task ResetDataSource()
+    {
+        await ExecuteTest(async () =>
+        {
+            var ctx = new Container(serviceUri);
+            await ctx.ResetDataSource().ExecuteAsync();
+
+            results += "Data source reset successfully!\n";
+        }, "Reset Data Source");
+    }
+
+    private void ClearResults()
+    {
+        results = "Click a button to test an async operation...";
+    }
+}
