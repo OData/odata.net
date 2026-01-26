@@ -12,10 +12,11 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using Microsoft.OData.Core;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Vocabularies;
+using Microsoft.OData.Edm.Vocabularies.V1;
 using Microsoft.OData.Metadata;
-using Microsoft.OData.Core;
 
 namespace Microsoft.OData.UriParser
 {
@@ -1107,6 +1108,45 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
+        /// Tries to parse a segment as Individual Member of an Ordered Collection.
+        /// From OData spec:
+        /// Individual members of collections of primitive and complex types annotated with the Ordered term (see OData-VocCore)
+        /// are addressable by appending a segment containing the zero-based ordinal to the URL of the collection.
+        /// A negative ordinal indexes from the end of the collection, with -1 representing the last item in the collection.
+        /// </summary>
+        /// <param name="previousSegment">The previous segment before the operation to be invoked.</param>
+        /// <param name="identifier">The segment text.</param>
+        /// <returns>Whether or not the identifier referred to an index to the collection.</returns>
+        private bool TryCreateIndexSegmentForCollection(ODataPathSegment previousSegment, string segmentText)
+        {
+            if (previousSegment == null || string.IsNullOrEmpty(segmentText))
+            {
+                return false;
+            }
+
+            // Index only apply to collections, so if the prior segment is already a single value, do not treat this segment as an index.
+            if (previousSegment.SingleResult)
+            {
+                return false;
+            }
+
+            if (previousSegment is PropertySegment propertySegment &&
+                long.TryParse(segmentText, out long index))
+            {
+                IEdmModel model = configuration.Model;
+
+                if (IsTaged(model, propertySegment.Property, CoreVocabularyModel.OrderedTerm))
+                {
+                    var indexSegment = new IndexSegment(index, propertySegment.Property.Type.Definition.AsElementType());
+                    this.parsedSegments.Add(indexSegment);
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
         /// Tries to parse a segment as a function or action.
         /// </summary>
         /// <param name="previousSegment">The previous segment before the operation to be invoked.</param>
@@ -1257,6 +1297,12 @@ namespace Microsoft.OData.UriParser
 
             // For KeyAsSegment, try to handle as key segment
             if (this.configuration.UrlKeyDelimiter.EnableKeyAsSegment && this.TryHandleAsKeySegment(text))
+            {
+                return;
+            }
+
+            // index for collection
+            if (this.TryCreateIndexSegmentForCollection(previous, text))
             {
                 return;
             }
@@ -1781,7 +1827,8 @@ namespace Microsoft.OData.UriParser
                 return false;
             }
 
-            IEnumerable<IEdmFunction> candidates = model.FindBoundOperations(bindingType).OfType<IEdmFunction>().Where(f => IsUrlEscapeFunction(model, f));
+            IEnumerable<IEdmFunction> candidates = model.FindBoundOperations(bindingType)
+                .OfType<IEdmFunction>().Where(f => IsTaged(model, f, Edm.Vocabularies.Community.V1.CommunityVocabularyModel.UrlEscapeFunctionTerm));
 
             if (!candidates.HasAny())
             {
@@ -1897,13 +1944,13 @@ namespace Microsoft.OData.UriParser
             return true;
         }
 
-        internal static bool IsUrlEscapeFunction(IEdmModel model, IEdmFunction function)
+        internal static bool IsTaged(IEdmModel model, IEdmVocabularyAnnotatable item, IEdmTerm term)
         {
             Debug.Assert(model != null);
-            Debug.Assert(function != null);
+            Debug.Assert(item != null);
+            Debug.Assert(term != null);
 
-            IEdmVocabularyAnnotation annotation = model.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(function,
-                Edm.Vocabularies.Community.V1.CommunityVocabularyModel.UrlEscapeFunctionTerm).FirstOrDefault();
+            IEdmVocabularyAnnotation annotation = model.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(item, term).FirstOrDefault();
             if (annotation != null)
             {
                 if (annotation.Value == null)

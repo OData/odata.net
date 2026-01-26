@@ -1,0 +1,8 @@
+Microsoft.OData.UriParser.IndexSegment
+Microsoft.OData.UriParser.IndexSegment.Index.get -> long
+Microsoft.OData.UriParser.IndexSegment.IndexSegment(long index, Microsoft.OData.Edm.IEdmType targetEdmType) -> void
+override Microsoft.OData.UriParser.IndexSegment.EdmType.get -> Microsoft.OData.Edm.IEdmType
+override Microsoft.OData.UriParser.IndexSegment.HandleWith(Microsoft.OData.UriParser.PathSegmentHandler handler) -> void
+override Microsoft.OData.UriParser.IndexSegment.TranslateWith<T>(Microsoft.OData.UriParser.PathSegmentTranslator<T> translator) -> T
+virtual Microsoft.OData.UriParser.PathSegmentHandler.Handle(Microsoft.OData.UriParser.IndexSegment segment) -> void
+virtual Microsoft.OData.UriParser.PathSegmentTranslator<T>.Translate(Microsoft.OData.UriParser.IndexSegment segment) -> T

@@ -257,5 +257,16 @@ namespace Microsoft.OData.UriParser
             ExceptionUtils.CheckArgumentNotNull(segment, "segment");
             return null;
         }
+
+        /// <summary>
+        /// Determine the NavigationSource of a IndexSegment
+        /// </summary>
+        /// <param name="segment">The IndexSegment to look in.</param>
+        /// <exception cref="System.ArgumentNullException">Throws if the input segment is null.</exception>
+        public override IEdmNavigationSource Translate(IndexSegment segment)
+        {
+            ExceptionUtils.CheckArgumentNotNull(segment, "segment");
+            return null;
+        }
     }
 }

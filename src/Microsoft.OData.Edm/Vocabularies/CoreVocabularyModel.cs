@@ -129,6 +129,11 @@ namespace Microsoft.OData.Edm.Vocabularies.V1
         public static readonly IEdmTerm AlternateKeysTerm = VocabularyModelProvider.CoreModel.FindDeclaredTerm(CoreVocabularyConstants.AlternateKeys);
 
         /// <summary>
+        /// The Ordered term.
+        /// </summary>
+        public static readonly IEdmTerm OrderedTerm = VocabularyModelProvider.CoreModel.FindDeclaredTerm("Org.OData.Core.V1.Ordered");
+
+        /// <summary>
         /// The AlternateKey ComplexType.
         /// </summary>
         internal static readonly IEdmComplexType AlternateKeyType = VocabularyModelProvider.CoreModel.FindDeclaredType(CoreVocabularyConstants.AlternateKey) as IEdmComplexType;

@@ -213,5 +213,15 @@ namespace Microsoft.OData.UriParser
         {
             throw new NotImplementedException();
         }
+
+        /// <summary>
+        /// Translate a IndexSegment
+        /// </summary>
+        /// <param name="segment">the segment to Translate</param>
+        /// <returns>Defined by the implementer.</returns>
+        public virtual T Translate(IndexSegment segment)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
