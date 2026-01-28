@@ -1563,7 +1563,8 @@ Microsoft.OData.UriParser.ODataQueryOptionParser.ODataQueryOptionParser(Microsof
 Microsoft.OData.UriParser.ODataQueryOptionParser.ODataQueryOptionParser(Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.IEdmType targetEdmType, Microsoft.OData.Edm.IEdmNavigationSource targetNavigationSource, System.Collections.Generic.IDictionary<string, string> queryOptions, System.IServiceProvider container) -> void
 Microsoft.OData.UriParser.ODataQueryOptionParser.ODataQueryOptionParser(Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.UriParser.ODataPath odataPath, System.Collections.Generic.IDictionary<string, string> queryOptions) -> void
 Microsoft.OData.UriParser.ODataQueryOptionParser.ODataQueryOptionParser(Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.UriParser.ODataPath odataPath, System.Collections.Generic.IDictionary<string, string> queryOptions, System.IServiceProvider container) -> void
-Microsoft.OData.UriParser.ODataQueryOptionParser.ParameterAliasNodes.get -> System.Collections.Generic.IDictionary<string, Microsoft.OData.UriParser.QueryNode>
+Microsoft.OData.UriParser.ODataQueryOptionParser.ParameterAliasAllNodes.get -> System.Collections.Generic.IDictionary<string, Microsoft.OData.UriParser.QueryNode>
+Microsoft.OData.UriParser.ODataQueryOptionParser.ParameterAliasNodes.get -> System.Collections.Generic.IDictionary<string, Microsoft.OData.UriParser.SingleValueNode>
 Microsoft.OData.UriParser.ODataQueryOptionParser.ParseApply() -> Microsoft.OData.UriParser.Aggregation.ApplyClause
 Microsoft.OData.UriParser.ODataQueryOptionParser.ParseCompute() -> Microsoft.OData.UriParser.ComputeClause
 Microsoft.OData.UriParser.ODataQueryOptionParser.ParseCount() -> bool?

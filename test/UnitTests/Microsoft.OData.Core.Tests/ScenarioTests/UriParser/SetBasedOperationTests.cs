@@ -441,7 +441,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
                 // Two parser should share same ParameterAliasNodes
                 verifyAction(path, filterClause, parser.ParameterAliasNodes);
-                verifyAction(path, filterClause, queryOptionParser.ParameterAliasNodes);
+                verifyAction(path, filterClause, queryOptionParser.ParameterAliasAllNodes);
             }
 
             //2. high level api - ParseUri
