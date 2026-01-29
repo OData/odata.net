@@ -69,7 +69,7 @@ namespace Microsoft.OData
         /// <summary>
         /// Get the parameter alias nodes info.
         /// </summary>
-        public IDictionary<string, SingleValueNode> ParameterAliasNodes => this.odataUri.ParameterAliasNodes;
+        public IDictionary<string, QueryNode> ParameterAliasNodes => this.odataUri.ParameterAliasNodes;
 
         /// <summary>
         /// Gets any custom query options for this uri.

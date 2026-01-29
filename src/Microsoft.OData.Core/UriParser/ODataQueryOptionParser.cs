@@ -137,10 +137,16 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// Get the parameter alias nodes info.
         /// </summary>
-        public IDictionary<string, SingleValueNode> ParameterAliasNodes
+        public IDictionary<string, QueryNode> ParameterAliasAllNodes
         {
             get { return this.Configuration.ParameterAliasValueAccessor.ParameterAliasValueNodesCached; }
         }
+
+        /// <summary>
+        /// Gets the parameter alias nodes as SingleValueNode.
+        /// </summary>
+        [Obsolete("This property is deprecated. Please use ParameterAliasAllNodes instead. When updates the ASP.NET Core OData dependency, this property will be changed later.")]
+        public IDictionary<string, SingleValueNode> ParameterAliasNodes => ParameterAliasAllNodes.ToDictionary(kvp => kvp.Key, kvp => kvp.Value as SingleValueNode);
 
         /// <summary>
         /// Gets or sets the <see cref="ODataUriResolver"/> for <see cref="ODataUriParser"/>.

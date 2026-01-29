@@ -224,7 +224,7 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         /// <param name="functionParameterAliasToken">The alias syntactics token.</param>
         /// <returns>The semantics node for parameter alias.</returns>
-        protected virtual SingleValueNode BindParameterAlias(FunctionParameterAliasToken functionParameterAliasToken)
+        protected virtual QueryNode BindParameterAlias(FunctionParameterAliasToken functionParameterAliasToken)
         {
             ParameterAliasBinder binder = new ParameterAliasBinder(this.Bind);
             return binder.BindParameterAlias(this.BindingState, functionParameterAliasToken);

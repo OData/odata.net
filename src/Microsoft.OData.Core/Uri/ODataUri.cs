@@ -124,7 +124,7 @@ namespace Microsoft.OData
         /// <summary>
         /// Get the parameter alias nodes info.
         /// </summary>
-        public IDictionary<string, SingleValueNode> ParameterAliasNodes
+        public IDictionary<string, QueryNode> ParameterAliasNodes
         {
             get
             {

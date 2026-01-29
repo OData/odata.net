@@ -201,7 +201,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             startsWithArgs[1].ShouldBeParameterAliasNode("@p2", EdmCoreModel.Instance.GetString(true));
 
             // @p1
-            Assert.True(parser.ParameterAliasNodes["@p1"].TypeReference.IsInt32());
+            ConstantNode p1 = Assert.IsType<ConstantNode>(parser.ParameterAliasNodes["@p1"]);
+            Assert.True(p1.TypeReference.IsInt32());
 
             // @p2
             List<QueryNode> p2Node = parser.ParameterAliasNodes["@p2"].ShouldBeSingleValueFunctionCallQueryNode("concat").Parameters.ToList();

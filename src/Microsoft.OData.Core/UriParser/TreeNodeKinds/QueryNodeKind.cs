@@ -379,5 +379,10 @@ namespace Microsoft.OData.UriParser
         /// Node that represents a custom query option
         /// </summary>
         CustomQueryOption = 35,
+
+        /// <summary>
+        /// The parameter alias node to collection.
+        /// </summary>
+        ParameterAliasCollection = 36,
     }
 }
