@@ -222,6 +222,12 @@ namespace Microsoft.OData.Edm
                 case EdmExpressionKind.IsOf:
                     this.ProcessIsOfExpression((IEdmIsOfExpression)expression);
                     break;
+                case EdmExpressionKind.UnaryOperator:
+                    this.ProcessUnaryOperatorExpression((IEdmUnaryOperatorExpression)expression);
+                    break;
+                case EdmExpressionKind.BinaryOperator:
+                    this.ProcessBinaryOperatorExpression((IEdmBinaryOperatorExpression)expression);
+                    break;
                 case EdmExpressionKind.LabeledExpressionReference:
                     this.ProcessLabeledExpressionReferenceExpression((IEdmLabeledExpressionReferenceExpression)expression);
                     break;
@@ -295,6 +301,10 @@ namespace Microsoft.OData.Edm
                     return this.ProcessIntegerConstantExpressionAsync((IEdmIntegerConstantExpression)expression);
                 case EdmExpressionKind.IsOf:
                     return this.ProcessIsOfExpressionAsync((IEdmIsOfExpression)expression);
+                case EdmExpressionKind.UnaryOperator:
+                    return ProcessUnaryOperatorExpressionAsync((IEdmUnaryOperatorExpression)expression);
+                case EdmExpressionKind.BinaryOperator:
+                    return ProcessBinaryOperatorExpressionAsync((IEdmBinaryOperatorExpression)expression);
                 case EdmExpressionKind.LabeledExpressionReference:
                     return this.ProcessLabeledExpressionReferenceExpressionAsync((IEdmLabeledExpressionReferenceExpression)expression);
                 case EdmExpressionKind.Labeled:
@@ -1306,6 +1316,32 @@ namespace Microsoft.OData.Edm
             await this.ProcessExpressionAsync(expression).ConfigureAwait(false);
             await this.VisitTypeReferenceAsync(expression.Type).ConfigureAwait(false);
             await this.VisitExpressionAsync(expression.Operand).ConfigureAwait(false);
+        }
+
+        protected virtual void ProcessUnaryOperatorExpression(IEdmUnaryOperatorExpression expression)
+        {
+            this.ProcessExpression(expression);
+            this.VisitExpression(expression.Operand);
+        }
+
+        protected virtual async Task ProcessUnaryOperatorExpressionAsync(IEdmUnaryOperatorExpression expression)
+        {
+            await this.ProcessExpressionAsync(expression).ConfigureAwait(false);
+            await this.VisitExpressionAsync(expression.Operand).ConfigureAwait(false);
+        }
+
+        protected virtual void ProcessBinaryOperatorExpression(IEdmBinaryOperatorExpression expression)
+        {
+            this.ProcessExpression(expression);
+            this.VisitExpression(expression.Left);
+            this.VisitExpression(expression.Right);
+        }
+
+        protected virtual async Task ProcessBinaryOperatorExpressionAsync(IEdmBinaryOperatorExpression expression)
+        {
+            await this.ProcessExpressionAsync(expression).ConfigureAwait(false);
+            await this.VisitExpressionAsync(expression.Left).ConfigureAwait(false);
+            await this.VisitExpressionAsync(expression.Right).ConfigureAwait(false);
         }
 
         protected virtual void ProcessIntegerConstantExpression(IEdmIntegerConstantExpression expression)

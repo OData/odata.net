@@ -371,6 +371,18 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         internal abstract void WriteIsOfExpressionElementHeader(IEdmIsOfExpression expression, bool inlineType);
         internal abstract Task WriteIsOfExpressionElementHeaderAsync(IEdmIsOfExpression expression, bool inlineType);
 
+        internal abstract void WriteUnaryOperatorExpressionHeader(IEdmUnaryOperatorExpression expression);
+        internal abstract Task WriteUnaryOperatorExpressionHeaderAsync(IEdmUnaryOperatorExpression expression);
+
+        internal abstract void WriteUnaryOperatorExpressionEnd(IEdmUnaryOperatorExpression expression);
+        internal abstract Task WriteUnaryOperatorExpressionEndAsync(IEdmUnaryOperatorExpression expression);
+
+        internal abstract void WriteBinaryOperatorExpressionHeader(IEdmBinaryOperatorExpression expression);
+        internal abstract Task WriteBinaryOperatorExpressionHeaderAsync(IEdmBinaryOperatorExpression expression);
+
+        internal abstract void WriteBinaryOperatorExpressionEnd(IEdmBinaryOperatorExpression expression);
+        internal abstract Task WriteBinaryOperatorExpressionEndAsync(IEdmBinaryOperatorExpression expression);
+
         internal virtual void WriteIsOfExpressionType(IEdmIsOfExpression expression, bool inlineType)
         {
             // nothing here

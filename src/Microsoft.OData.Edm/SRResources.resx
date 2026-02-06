@@ -195,6 +195,15 @@
   <data name="Edm_Evaluator_UnrecognizedExpressionKind" xml:space="preserve">
     <value>Expression with kind '{0}' cannot be evaluated.</value>
   </data>
+  <data name="Edm_Evaluator_InvalidUnaryOperand" xml:space="preserve">
+    <value>Unary Expression with operator kind '{0}' cannot be evaluated on value of kind '{1}'.</value>
+  </data>
+  <data name="Edm_Evaluator_UnrecognizedUnaryOperatorKind" xml:space="preserve">
+    <value>Unary Expression with operator kind '{0}' cannot be evaluated.</value>
+  </data>
+  <data name="Edm_Evaluator_InvalidBinaryOperand" xml:space="preserve">
+    <value>Binary Expression with operator kind '{0}' cannot be evaluated on left value of kind '{1}' and right value of kind '{2}'.</value>
+  </data>
   <data name="Edm_Evaluator_UnboundFunction" xml:space="preserve">
     <value>Function '{0}' is not present in the execution environment.</value>
   </data>
@@ -768,6 +777,12 @@
   <data name="CsdlParser_InvalidLabeledElementExpressionIncorrectNumberOfOperands" xml:space="preserve">
     <value>The LabeledElement expression must contain 1 operand.</value>
   </data>
+  <data name="CsdlParser_InvalidUnaryOperatorExpressionOperands" xml:space="preserve">
+    <value>The '{0}' unary operator expression must contain 1 operand.</value>
+  </data>
+	<data name="CsdlParser_InvalidBinaryOperatorExpressionOperands" xml:space="preserve">
+    <value>The '{0}' binary operator expression must contain 2 operands.</value>
+  </data>
   <data name="CsdlParser_InvalidTypeName" xml:space="preserve">
     <value>The type name '{0}' is invalid. The type name must be that of a primitive type, a fully qualified name or an inline 'Collection' or 'Ref' type.</value>
   </data>
@@ -827,6 +842,9 @@
   </data>
   <data name="CsdlJsonParser_InvalidJsonNumberType" xml:space="preserve">
     <value>Cannot parse a JSON number '{0}' when parsing the JSON path '{1}'.</value>
+  </data>
+  <data name="CsdlJsonParser_InvalidBinaryOperatorExpression" xml:space="preserve">
+    <value>Invalid binary operator expression for '{0}' when parsing the JSON path '{1}'.</value>
   </data>
   <data name="CsdlJsonParser_UnsupportedJsonMember" xml:space="preserve">
     <value>A member at JSON path '{0}' is not supported.</value>

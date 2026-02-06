@@ -187,6 +187,18 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                 return labeledReferenceExp;
             }
 
+            // Unary operator: $Neg, $Not
+            if (TryParseUnaryOperatorExpression(element, context, out CsdlUnaryOperatorExpression unaryExp))
+            {
+                return unaryExp;
+            }
+
+            // Binary operator: $Add, $Sub, $Mul, $Div, $Mod, $And, $Or ...
+            if (TryParseBinaryOperatorExpression(element, context, out CsdlBinaryOperatorExpression binaryExp))
+            {
+                return binaryExp;
+            }
+
             // For all others, let's try build it as "Record"
             return ParseRecordExpression(element, context);
         }
@@ -380,6 +392,81 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
 
             labeledExp = new CsdlLabeledExpression(label, expression, context.Location());
             return true;
+        }
+
+        /// <summary>
+        /// Parse the Unary Operator expression using <see cref="JsonElement"/>.
+        /// </summary>
+        /// <param name="element">The input JSON element.</param>
+        /// <param name="context">The parser context.</param>
+        /// <param name="unaryExp">The built unary operator expression.</param>
+        /// <returns>true/false</returns>
+        private static bool TryParseUnaryOperatorExpression(JsonElement element, JsonParserContext context, out CsdlUnaryOperatorExpression unaryExp)
+        {
+            Debug.Assert(context != null);
+            unaryExp = null;
+
+            // Unary operator expressions are represented as an object with a member $Neg/$Not whose value is an annotation expression
+            JsonElement propertyValue;
+            if (element.ValueKind != JsonValueKind.Object && element.GetPropertyCount() != 1)
+            {
+                return false;
+            }
+
+            if (element.TryGetProperty("$Neg", out propertyValue))
+            {
+                CsdlExpressionBase expression = propertyValue.ProcessProperty("$Neg", context, ParseExpression);
+                unaryExp = new CsdlUnaryOperatorExpression(expression, EdmUnaryOperatorKind.Negate, context.Location());
+                return true;
+            }
+            else if (element.TryGetProperty("$Not", out propertyValue))
+            {
+                CsdlExpressionBase expression = propertyValue.ProcessProperty("$Not", context, ParseExpression);
+                unaryExp = new CsdlUnaryOperatorExpression(expression, EdmUnaryOperatorKind.Not, context.Location());
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Parse the Binary Operator expression using <see cref="JsonElement"/>.
+        /// </summary>
+        /// <param name="element">The input JSON element.</param>
+        /// <param name="context">The parser context.</param>
+        /// <param name="binaryExp">The built binary operator expression.</param>
+        /// <returns>true/false</returns>
+        private static bool TryParseBinaryOperatorExpression(JsonElement element, JsonParserContext context, out CsdlBinaryOperatorExpression binaryExp)
+        {
+            Debug.Assert(context != null);
+            binaryExp = null;
+
+            // Binary operator expressions are represented as an object with a member $Add/$Or... whose value is an array with two annotation expressions.
+            JsonElement propertyValue;
+            if (element.ValueKind != JsonValueKind.Object && element.GetPropertyCount() != 1)
+            {
+                return false;
+            }
+
+            foreach (EdmBinaryOperatorKind kind in Enum.GetValues<EdmBinaryOperatorKind>())
+            {
+                if (element.TryGetProperty(kind.ToJsonName(), out propertyValue))
+                {
+                    IList<CsdlExpressionBase> operands = propertyValue.ProcessArrayProperty(kind.ToJsonName(), context, ParseExpression);
+                    if (operands.Count != 2)
+                    {
+                        context.ReportError(EdmErrorCode.InvalidBinaryOperatorExpression, Error.Format(SRResources.CsdlJsonParser_InvalidBinaryOperatorExpression, kind.ToString(), context.Path));
+                        return false;
+                    }
+
+                    binaryExp = new CsdlBinaryOperatorExpression(operands[0], operands[1], kind, context.Location());
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         /// <summary>

@@ -2703,6 +2703,116 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
+        /// Writes 'Unary Operator' Expression Header.
+        /// </summary>
+        /// <param name="expression">The Unary Operator Expression.</param>
+        internal override void WriteUnaryOperatorExpressionHeader(IEdmUnaryOperatorExpression expression)
+        {
+            // Unary operator (Negation/Not) expressions are represented as an object
+            this.jsonWriter.WriteStartObject();
+
+            // Unary operator expressions are represented as an object with a member $UnaryOperator
+            this.jsonWriter.WritePropertyName(expression.Kind == EdmUnaryOperatorKind.Negate ? "$Neg" : "$Not");
+
+            // whose value is an annotation expression
+        }
+
+        /// <summary>
+        /// Asynchronously Writes 'Unary Operator' Expression Header.
+        /// </summary>
+        /// <param name="expression">The Unary Operator Expression.</param>
+        /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
+        internal override Task WriteUnaryOperatorExpressionHeaderAsync(IEdmUnaryOperatorExpression expression)
+        {
+            // Is-of expressions are represented as an object
+            this.jsonWriter.WriteStartObject();
+
+            // Conditional expressions are represented as an object with a member $If
+            this.jsonWriter.WritePropertyName(expression.Kind == EdmUnaryOperatorKind.Negate ? "$Neg" : "$Not");
+
+            // whose value is an annotation expression
+
+            return Task.CompletedTask;
+        }
+
+        /// <summary>
+        /// Writes 'Unary Operator' Expression End.
+        /// </summary>
+        /// <param name="expression">The Edm Unary Operator Expression.</param>
+        internal override void WriteUnaryOperatorExpressionEnd(IEdmUnaryOperatorExpression expression)
+        {
+            this.jsonWriter.WriteEndObject();
+        }
+
+        /// <summary>
+        /// Asynchronously Writes 'Unary Operator' Expression End.
+        /// </summary>
+        /// <param name="expression">The Edm Unary Operator Expression.</param>
+        /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
+        internal override Task WriteUnaryOperatorExpressionEndAsync(IEdmUnaryOperatorExpression expression)
+        {
+            this.jsonWriter.WriteEndObject();
+            return Task.CompletedTask;
+        }
+
+        /// <summary>
+        /// Writes 'Binary Operator' Expression Header.
+        /// </summary>
+        /// <param name="expression">The Binary Operator Expression.</param>
+        internal override void WriteBinaryOperatorExpressionHeader(IEdmBinaryOperatorExpression expression)
+        {
+            // Binary operator expressions are represented as an object
+            this.jsonWriter.WriteStartObject();
+
+            // Binary operator expressions are represented as an object with a member $BinaryOperator
+            this.jsonWriter.WritePropertyName(expression.Kind.ToJsonName());
+
+            // whose value is an array with two annotation expressions
+            this.jsonWriter.WriteStartArray();
+        }
+
+        /// <summary>
+        /// Asynchronously Writes 'Binary Operator' Expression Header.
+        /// </summary>
+        /// <param name="expression">The Binary Operator Expression.</param>
+        /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
+        internal override Task WriteBinaryOperatorExpressionHeaderAsync(IEdmBinaryOperatorExpression expression)
+        {
+            // Binary operator expressions are represented as an object
+            this.jsonWriter.WriteStartObject();
+
+            // Binary operator expressions are represented as an object with a member $BinaryOperator
+            this.jsonWriter.WritePropertyName(expression.Kind.ToJsonName());
+
+            // whose value is an array with two annotation expressions
+            this.jsonWriter.WriteStartArray();
+
+            return Task.CompletedTask;
+        }
+
+        /// <summary>
+        /// Writes 'Binary Operator' Expression End.
+        /// </summary>
+        /// <param name="expression">The Edm Binary Operator Expression.</param>
+        internal override void WriteBinaryOperatorExpressionEnd(IEdmBinaryOperatorExpression expression)
+        {
+            this.jsonWriter.WriteEndArray();
+            this.jsonWriter.WriteEndObject();
+        }
+
+        /// <summary>
+        /// Asynchronously Writes 'Binary Operator' Expression End.
+        /// </summary>
+        /// <param name="expression">The Edm Binary Operator Expression.</param>
+        /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
+        internal override Task WriteBinaryOperatorExpressionEndAsync(IEdmBinaryOperatorExpression expression)
+        {
+            this.jsonWriter.WriteEndArray();
+            this.jsonWriter.WriteEndObject();
+            return Task.CompletedTask;
+        }
+
+        /// <summary>
         /// Writes Collection Expression Header.
         /// </summary>
         /// <param name="expression">The Edm Collection Expression.</param>

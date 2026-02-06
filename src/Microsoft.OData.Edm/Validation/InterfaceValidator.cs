@@ -1386,6 +1386,14 @@ namespace Microsoft.OData.Edm.Validation
                             expressionKindError = CheckForInterfaceKindValueMismatchError<IEdmExpression, EdmExpressionKind, IEdmLabeledExpressionReferenceExpression>(expression, expression.ExpressionKind, "ExpressionKind");
                             break;
 
+                        case EdmExpressionKind.UnaryOperator:
+                            expressionKindError = CheckForInterfaceKindValueMismatchError<IEdmExpression, EdmExpressionKind, IEdmUnaryOperatorExpression>(expression, expression.ExpressionKind, "ExpressionKind");
+                            break;
+
+                        case EdmExpressionKind.BinaryOperator:
+                            expressionKindError = CheckForInterfaceKindValueMismatchError<IEdmExpression, EdmExpressionKind, IEdmBinaryOperatorExpression>(expression, expression.ExpressionKind, "ExpressionKind");
+                            break;
+
                         default:
                             expressionKindError = CreateInterfaceKindValueUnexpectedError(expression, expression.ExpressionKind, "ExpressionKind");
                             break;

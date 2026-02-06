@@ -126,6 +126,12 @@ namespace Microsoft.OData.Edm.Validation
                     return TryCast(((IEdmLabeledExpressionReferenceExpression)expression).ReferencedLabeledExpression, type, out discoveredErrors);
                 case EdmExpressionKind.EnumMember:
                     return TryCastEnumConstantAsType((IEdmEnumMemberExpression)expression, type, matchExactly, out discoveredErrors);
+
+                case EdmExpressionKind.UnaryOperator:
+                    return TryCaseUnaryOperatorAsType((IEdmUnaryOperatorExpression)expression, type, matchExactly, out discoveredErrors);
+
+                case EdmExpressionKind.BinaryOperator:
+                    return TryCaseBinaryOperatorAsType((IEdmBinaryOperatorExpression)expression, type, matchExactly, out discoveredErrors);
                 default:
                     discoveredErrors = new EdmError[] { new EdmError(expression.Location(), EdmErrorCode.ExpressionNotValidForTheAssertedType, SRResources.EdmModel_Validator_Semantic_ExpressionNotValidForTheAssertedType) };
                     return false;
@@ -511,6 +517,20 @@ namespace Microsoft.OData.Edm.Validation
                 }
             }
 
+            discoveredErrors = Enumerable.Empty<EdmError>();
+            return true;
+        }
+
+        private static bool TryCaseUnaryOperatorAsType(IEdmUnaryOperatorExpression expression, IEdmTypeReference type, bool matchExactly, out IEnumerable<EdmError> discoveredErrors)
+        {
+            // Do nothing here so far.
+            discoveredErrors = Enumerable.Empty<EdmError>();
+            return true;
+        }
+
+        private static bool TryCaseBinaryOperatorAsType(IEdmBinaryOperatorExpression expression, IEdmTypeReference type, bool matchExactly, out IEnumerable<EdmError> discoveredErrors)
+        {
+            // Do nothing here so far.
             discoveredErrors = Enumerable.Empty<EdmError>();
             return true;
         }

@@ -4,6 +4,8 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using Microsoft.OData.Edm.Vocabularies;
+
 namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
 {
     internal class CsdlIfExpression : CsdlExpressionBase
@@ -39,5 +41,34 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
         {
             get { return this.ifFalse; }
         }
+    }
+
+    internal class CsdlUnaryOperatorExpression : CsdlExpressionBase
+    {
+        public CsdlUnaryOperatorExpression(CsdlExpressionBase operand, EdmUnaryOperatorKind kind, CsdlLocation location)
+            : base(location)
+        {
+            Operand = operand;
+            Kind = kind;
+        }
+        public override EdmExpressionKind ExpressionKind => EdmExpressionKind.UnaryOperator;
+
+        public CsdlExpressionBase Operand { get; }
+        public EdmUnaryOperatorKind Kind { get; }
+    }
+
+    internal class CsdlBinaryOperatorExpression : CsdlExpressionBase
+    {
+        public CsdlBinaryOperatorExpression(CsdlExpressionBase left, CsdlExpressionBase right, EdmBinaryOperatorKind kind, CsdlLocation location)
+            : base(location)
+        {
+            Left = left;
+            Right = right;
+            Kind = kind;
+        }
+        public override EdmExpressionKind ExpressionKind => EdmExpressionKind.BinaryOperator;
+        public CsdlExpressionBase Left { get; }
+        public CsdlExpressionBase Right { get; }
+        public EdmBinaryOperatorKind Kind { get; }
     }
 }

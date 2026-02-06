@@ -1937,6 +1937,82 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
+        /// Writes Unary Operator Expression element header.
+        /// </summary>
+        /// <param name="expression">EDM unary operator Expression</param>
+        internal override void WriteUnaryOperatorExpressionHeader(IEdmUnaryOperatorExpression expression)
+        {
+            this.xmlWriter.WriteStartElement(expression.Kind == EdmUnaryOperatorKind.Negate ? "Neg" : "Not");
+        }
+
+        /// <summary>
+        /// Asynchronously writes Unary Operator Expression element header.
+        /// </summary>
+        /// <param name="expression">EDM unary operator Expression</param>
+        /// <returns>Task represents an asynchronous operation.</returns>
+        internal override Task WriteUnaryOperatorExpressionHeaderAsync(IEdmUnaryOperatorExpression expression)
+        {
+            return this.xmlWriter.WriteStartElementAsync(null, expression.Kind == EdmUnaryOperatorKind.Negate ? "Neg" : "Not", null);
+        }
+
+        /// <summary>
+        /// Writes Unary Operator Expression element end.
+        /// </summary>
+        /// <param name="expression">EDM unary operator Expression</param>
+        internal override void WriteUnaryOperatorExpressionEnd(IEdmUnaryOperatorExpression expression)
+        {
+            this.WriteEndElement();
+        }
+
+        /// <summary>
+        /// Asynchronously writes Unary Operator Expression element end.
+        /// </summary>
+        /// <param name="expression">EDM unary operator Expression</param>
+        /// <returns>Task represents an asynchronous operation.</returns>
+        internal override Task WriteUnaryOperatorExpressionEndAsync(IEdmUnaryOperatorExpression expression)
+        {
+            return this.WriteEndElementAsync();
+        }
+
+        /// <summary>
+        /// Writes Binary Operator Expression element header.
+        /// </summary>
+        /// <param name="expression">EDM binary operator Expression</param>
+        internal override void WriteBinaryOperatorExpressionHeader(IEdmBinaryOperatorExpression expression)
+        {
+            this.xmlWriter.WriteStartElement(expression.Kind.ToXmlName());
+        }
+
+        /// <summary>
+        /// Asynchronously writes Binary Operator Expression element header.
+        /// </summary>
+        /// <param name="expression">EDM binary operator Expression</param>
+        /// <returns>Task represents an asynchronous operation.</returns>
+        internal override Task WriteBinaryOperatorExpressionHeaderAsync(IEdmBinaryOperatorExpression expression)
+        {
+            return this.xmlWriter.WriteStartElementAsync(null, expression.Kind.ToXmlName(), null);
+        }
+
+        /// <summary>
+        /// Writes Binary Operator Expression element end.
+        /// </summary>
+        /// <param name="expression">EDM binary operator Expression</param>
+        internal override void WriteBinaryOperatorExpressionEnd(IEdmBinaryOperatorExpression expression)
+        {
+            this.WriteEndElement();
+        }
+
+        /// <summary>
+        /// Asynchronously writes Binary Operator Expression element end.
+        /// </summary>
+        /// <param name="expression">EDM binary operator Expression</param>
+        /// <returns>Task represents an asynchronous operation.</returns>
+        internal override Task WriteBinaryOperatorExpressionEndAsync(IEdmBinaryOperatorExpression expression)
+        {
+            return this.WriteEndElementAsync();
+        }
+
+        /// <summary>
         /// Writes Collection Expression element header.
         /// </summary>
         /// <param name="expression">The Edm collection expression.</param>

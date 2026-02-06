@@ -1047,6 +1047,44 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             }
         }
 
+        protected override void ProcessUnaryOperatorExpression(IEdmUnaryOperatorExpression expression)
+        {
+            this.BeginElement(expression, this.schemaWriter.WriteUnaryOperatorExpressionHeader);
+            base.VisitExpression(expression.Operand);
+            this.EndElement(expression, this.schemaWriter.WriteUnaryOperatorExpressionEnd);
+        }
+
+        /// <summary>
+        /// Asynchronously processes the unary operator expression.
+        /// </summary>
+        /// <param name="expression">The Edm Unary Operator expression.</param>
+        protected override async Task ProcessUnaryOperatorExpressionAsync(IEdmUnaryOperatorExpression expression)
+        {
+            await this.BeginElementAsync(expression, this.schemaWriter.WriteUnaryOperatorExpressionHeaderAsync).ConfigureAwait(false);
+            this.VisitExpression(expression.Operand);
+            await this.EndElementAsync(expression, this.schemaWriter.WriteUnaryOperatorExpressionEndAsync).ConfigureAwait(false);
+        }
+
+        protected override void ProcessBinaryOperatorExpression(IEdmBinaryOperatorExpression expression)
+        {
+            this.BeginElement(expression, this.schemaWriter.WriteBinaryOperatorExpressionHeader);
+            base.VisitExpression(expression.Left);
+            base.VisitExpression(expression.Right);
+            this.EndElement(expression, this.schemaWriter.WriteBinaryOperatorExpressionEnd);
+        }
+
+        /// <summary>
+        /// Asynchronously processes the binary operator expression.
+        /// </summary>
+        /// <param name="expression">The Edm binary operator expression.</param>
+        protected override async Task ProcessBinaryOperatorExpressionAsync(IEdmBinaryOperatorExpression expression)
+        {
+            await this.BeginElementAsync(expression, this.schemaWriter.WriteBinaryOperatorExpressionHeaderAsync).ConfigureAwait(false);
+            this.VisitExpression(expression.Left);
+            this.VisitExpression(expression.Right);
+            await this.EndElementAsync(expression, this.schemaWriter.WriteBinaryOperatorExpressionEndAsync).ConfigureAwait(false);
+        }
+
         protected override void ProcessIntegerConstantExpression(IEdmIntegerConstantExpression expression)
         {
             this.schemaWriter.WriteIntegerConstantExpressionElement(expression);

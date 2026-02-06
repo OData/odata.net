@@ -1442,5 +1442,15 @@ namespace Microsoft.OData.Edm.Validation
         /// Could not resolve a property ref with that name
         /// </summary>
         BadUnresolvedPropertyRef,
+
+        /// <summary>
+        /// Invalid Unary operator expression.
+        /// </summary>
+        InvalidUnaryOperatorExpression,
+
+        /// <summary>
+        /// Invalid Binary operator expression.
+        /// </summary>
+        InvalidBinaryOperatorExpression
     }
 }

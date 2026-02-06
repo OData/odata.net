@@ -4,11 +4,12 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using Microsoft.OData.Edm.Csdl;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using Microsoft.OData.Edm.Csdl;
+using System.Linq.Expressions;
 
 namespace Microsoft.OData.Edm.Vocabularies
 {
@@ -649,6 +650,12 @@ namespace Microsoft.OData.Edm.Vocabularies
                 case EdmExpressionKind.Labeled:
                     return this.MapLabeledExpressionToDelayedValue(expression, new DelayedExpressionContext(this, context), context).Value;
 
+                case EdmExpressionKind.UnaryOperator:
+                    return EvalUnaryOperator((IEdmUnaryOperatorExpression)expression, context);
+
+                case EdmExpressionKind.BinaryOperator:
+                    return EvalBinaryOperator((IEdmBinaryOperatorExpression)expression, context);
+
                 case EdmExpressionKind.EnumMember:
                     IEdmEnumMemberExpression enumMemberExpression = (IEdmEnumMemberExpression)expression;
                     var enumMembers = enumMemberExpression.EnumMembers.ToList();
@@ -676,8 +683,493 @@ namespace Microsoft.OData.Edm.Vocabularies
                     }
 
                 default:
-                    throw new InvalidOperationException(Error.Format(SRResources.Edm_Evaluator_UnrecognizedExpressionKind, ((int)expression.ExpressionKind).ToString(System.Globalization.CultureInfo.InvariantCulture)));
+                    throw new InvalidOperationException(Error.Format(SRResources.Edm_Evaluator_UnrecognizedExpressionKind, ((int)expression.ExpressionKind).ToString(CultureInfo.InvariantCulture)));
             }
+        }
+
+        private IEdmValue EvalUnaryOperator(IEdmUnaryOperatorExpression unaryExpression, IEdmStructuredValue context)
+        {
+            IEdmValue operand = this.Eval(unaryExpression.Operand, context);
+
+            switch (unaryExpression.Kind)
+            {
+                case EdmUnaryOperatorKind.Negate:
+                    {
+                        IEdmIntegerValue intOperand = operand as IEdmIntegerValue;
+                        if (intOperand != null)
+                        {
+                            return new EdmIntegerConstant(-intOperand.Value);
+                        }
+
+                        IEdmDecimalValue decimalOperand = operand as IEdmDecimalValue;
+                        if (decimalOperand != null)
+                        {
+                            return new EdmDecimalConstant(-decimalOperand.Value);
+                        }
+
+                        IEdmFloatingValue floatingOperand = operand as IEdmFloatingValue;
+                        if (floatingOperand != null)
+                        {
+                            return new EdmFloatingConstant(-floatingOperand.Value);
+                        }
+
+                        throw new InvalidOperationException(Error.Format(SRResources.Edm_Evaluator_InvalidUnaryOperand, unaryExpression.Kind, operand.ValueKind));
+                    }
+
+                case EdmUnaryOperatorKind.Not:
+                    {
+                        IEdmBooleanValue boolOperand = operand as IEdmBooleanValue;
+                        if (boolOperand != null)
+                        {
+                            return new EdmBooleanConstant(!boolOperand.Value);
+                        }
+
+                        throw new InvalidOperationException(Error.Format(SRResources.Edm_Evaluator_InvalidUnaryOperand, unaryExpression.Kind, operand.ValueKind));
+                    }
+
+                default:
+                    throw new InvalidOperationException(Error.Format(SRResources.Edm_Evaluator_UnrecognizedUnaryOperatorKind, ((int)unaryExpression.Kind).ToString(CultureInfo.InvariantCulture)));
+            }
+        }
+
+        private IEdmValue EvalBinaryOperator(IEdmBinaryOperatorExpression binaryExpression, IEdmStructuredValue context)
+        {
+            IEdmValue left = this.Eval(binaryExpression.Left, context);
+            IEdmValue right = this.Eval(binaryExpression.Right, context);
+
+            if (binaryExpression.Kind == EdmBinaryOperatorKind.Or)
+            {
+                IEdmBooleanValue leftBool = left as IEdmBooleanValue;
+                IEdmBooleanValue rightBool = right as IEdmBooleanValue;
+                if (leftBool != null && rightBool != null)
+                {
+                    return new EdmBooleanConstant(leftBool.Value || rightBool.Value);
+                }
+
+                throw new InvalidOperationException(Error.Format(SRResources.Edm_Evaluator_InvalidBinaryOperand, binaryExpression.Kind, left.ValueKind, right.ValueKind));
+            }
+            else if (binaryExpression.Kind == EdmBinaryOperatorKind.And)
+            {
+                IEdmBooleanValue leftBool = left as IEdmBooleanValue;
+                IEdmBooleanValue rightBool = right as IEdmBooleanValue;
+                if (leftBool != null && rightBool != null)
+                {
+                    return new EdmBooleanConstant(leftBool.Value && rightBool.Value);
+                }
+
+                throw new InvalidOperationException(Error.Format(SRResources.Edm_Evaluator_InvalidBinaryOperand, binaryExpression.Kind, left.ValueKind, right.ValueKind));
+            }
+
+            return EvalArithmeticBinaryOperatorOperator(left, right, binaryExpression.Kind, context);
+        }
+
+        private static IEdmValue EvalArithmeticBinaryOperatorOperator(IEdmValue left, IEdmValue right, EdmBinaryOperatorKind kind, IEdmStructuredValue context)
+        {
+            if (left is IEdmIntegerValue leftInt)
+            {
+                if (right is IEdmIntegerValue rightInt)
+                {
+                    switch (kind)
+                    {
+                        case EdmBinaryOperatorKind.Add:
+                            return new EdmIntegerConstant(leftInt.Value + rightInt.Value);
+                        case EdmBinaryOperatorKind.Sub:
+                            return new EdmIntegerConstant(leftInt.Value - rightInt.Value);
+                        case EdmBinaryOperatorKind.Mul:
+                            return new EdmIntegerConstant(leftInt.Value * rightInt.Value);
+                        case EdmBinaryOperatorKind.Div:
+                            return new EdmIntegerConstant(leftInt.Value / rightInt.Value);
+                        case EdmBinaryOperatorKind.DivBy:
+                            return new EdmFloatingConstant((double)leftInt.Value / (double)rightInt.Value);
+                        case EdmBinaryOperatorKind.Mod:
+                            return new EdmIntegerConstant(leftInt.Value % rightInt.Value);
+
+                        case EdmBinaryOperatorKind.Eq:
+                            return new EdmBooleanConstant(leftInt.Value == rightInt.Value);
+                        case EdmBinaryOperatorKind.Ne:
+                            return new EdmBooleanConstant(leftInt.Value != rightInt.Value);
+                        case EdmBinaryOperatorKind.Lt:
+                            return new EdmBooleanConstant(leftInt.Value < rightInt.Value);
+                        case EdmBinaryOperatorKind.Gt:
+                            return new EdmBooleanConstant(leftInt.Value > rightInt.Value);
+                        case EdmBinaryOperatorKind.Le:
+                            return new EdmBooleanConstant(leftInt.Value <= rightInt.Value);
+                        case EdmBinaryOperatorKind.Ge:
+                            return new EdmBooleanConstant(leftInt.Value >= rightInt.Value);
+                    }
+                }
+                else if (right is IEdmFloatingValue rightFloat)
+                {
+                    switch (kind)
+                    {
+                        case EdmBinaryOperatorKind.Add:
+                            return new EdmFloatingConstant(leftInt.Value + rightFloat.Value);
+                        case EdmBinaryOperatorKind.Sub:
+                            return new EdmFloatingConstant(leftInt.Value - rightFloat.Value);
+                        case EdmBinaryOperatorKind.Mul:
+                            return new EdmFloatingConstant(leftInt.Value * rightFloat.Value);
+                        case EdmBinaryOperatorKind.Div:
+                            return new EdmFloatingConstant(leftInt.Value / rightFloat.Value);
+                        case EdmBinaryOperatorKind.DivBy:
+                            return new EdmFloatingConstant((double)leftInt.Value / (double)rightFloat.Value);
+
+                        case EdmBinaryOperatorKind.Eq:
+                            return new EdmBooleanConstant(leftInt.Value == rightFloat.Value); // Allow comparison between int and float?
+                        case EdmBinaryOperatorKind.Ne:
+                            return new EdmBooleanConstant(leftInt.Value != rightFloat.Value);
+                        case EdmBinaryOperatorKind.Lt:
+                            return new EdmBooleanConstant(leftInt.Value < rightFloat.Value);
+                        case EdmBinaryOperatorKind.Gt:
+                            return new EdmBooleanConstant(leftInt.Value > rightFloat.Value);
+                        case EdmBinaryOperatorKind.Le:
+                            return new EdmBooleanConstant(leftInt.Value <= rightFloat.Value);
+                        case EdmBinaryOperatorKind.Ge:
+                            return new EdmBooleanConstant(leftInt.Value >= rightFloat.Value);
+                        case EdmBinaryOperatorKind.Mod:
+                            break;
+                    }
+                }
+                else if (right is IEdmDecimalValue rightDecimal)
+                {
+                    switch (kind)
+                    {
+                        case EdmBinaryOperatorKind.Add:
+                            return new EdmDecimalConstant(leftInt.Value + rightDecimal.Value);
+                        case EdmBinaryOperatorKind.Sub:
+                            return new EdmDecimalConstant(leftInt.Value - rightDecimal.Value);
+                        case EdmBinaryOperatorKind.Mul:
+                            return new EdmDecimalConstant(leftInt.Value * rightDecimal.Value);
+                        case EdmBinaryOperatorKind.Div:
+                            return new EdmDecimalConstant(leftInt.Value / rightDecimal.Value);
+                        case EdmBinaryOperatorKind.DivBy:
+                            return new EdmDecimalConstant(leftInt.Value / rightDecimal.Value);
+
+                        case EdmBinaryOperatorKind.Eq:
+                            return new EdmBooleanConstant(leftInt.Value == rightDecimal.Value); // Allow comparison between int and decimal?
+                        case EdmBinaryOperatorKind.Ne:
+                            return new EdmBooleanConstant(leftInt.Value != rightDecimal.Value);
+                        case EdmBinaryOperatorKind.Lt:
+                            return new EdmBooleanConstant(leftInt.Value < rightDecimal.Value);
+                        case EdmBinaryOperatorKind.Gt:
+                            return new EdmBooleanConstant(leftInt.Value > rightDecimal.Value);
+                        case EdmBinaryOperatorKind.Le:
+                            return new EdmBooleanConstant(leftInt.Value <= rightDecimal.Value);
+                        case EdmBinaryOperatorKind.Ge:
+                            return new EdmBooleanConstant(leftInt.Value >= rightDecimal.Value);
+
+                        case EdmBinaryOperatorKind.Mod: // Not valid for decimal??
+                            break;
+                    }
+                }
+            }
+            else if (left is IEdmFloatingValue leftFloat)
+            {
+                if (right is IEdmIntegerValue rightInt)
+                {
+                    switch (kind)
+                    {
+                        case EdmBinaryOperatorKind.Add:
+                            return new EdmFloatingConstant(leftFloat.Value + rightInt.Value);
+                        case EdmBinaryOperatorKind.Sub:
+                            return new EdmFloatingConstant(leftFloat.Value - rightInt.Value);
+                        case EdmBinaryOperatorKind.Mul:
+                            return new EdmFloatingConstant(leftFloat.Value * rightInt.Value);
+                        case EdmBinaryOperatorKind.Div:
+                            return new EdmFloatingConstant(leftFloat.Value / rightInt.Value);
+                        case EdmBinaryOperatorKind.DivBy:
+                            return new EdmFloatingConstant((double)leftFloat.Value / (double)rightInt.Value);
+
+                        case EdmBinaryOperatorKind.Eq:
+                            return new EdmBooleanConstant(leftFloat.Value == rightInt.Value);
+                        case EdmBinaryOperatorKind.Ne:
+                            return new EdmBooleanConstant(leftFloat.Value != rightInt.Value);
+                        case EdmBinaryOperatorKind.Lt:
+                            return new EdmBooleanConstant(leftFloat.Value < rightInt.Value);
+                        case EdmBinaryOperatorKind.Gt:
+                            return new EdmBooleanConstant(leftFloat.Value > rightInt.Value);
+                        case EdmBinaryOperatorKind.Le:
+                            return new EdmBooleanConstant(leftFloat.Value <= rightInt.Value);
+                        case EdmBinaryOperatorKind.Ge:
+                            return new EdmBooleanConstant(leftFloat.Value >= rightInt.Value);
+
+                        case EdmBinaryOperatorKind.Mod: // not valid for floating
+                            break;
+                    }
+                }
+                else if (right is IEdmFloatingValue rightFloat)
+                {
+                    switch (kind)
+                    {
+                        case EdmBinaryOperatorKind.Add:
+                            return new EdmFloatingConstant(leftFloat.Value + rightFloat.Value);
+                        case EdmBinaryOperatorKind.Sub:
+                            return new EdmFloatingConstant(leftFloat.Value - rightFloat.Value);
+                        case EdmBinaryOperatorKind.Mul:
+                            return new EdmFloatingConstant(leftFloat.Value * rightFloat.Value);
+                        case EdmBinaryOperatorKind.Div:
+                            return new EdmFloatingConstant(leftFloat.Value / rightFloat.Value);
+                        case EdmBinaryOperatorKind.DivBy:
+                            return new EdmFloatingConstant((double)leftFloat.Value / (double)rightFloat.Value);
+
+                        case EdmBinaryOperatorKind.Eq:
+                            return new EdmBooleanConstant(leftFloat.Value == rightFloat.Value); // Allow comparison between float and float?
+                        case EdmBinaryOperatorKind.Ne:
+                            return new EdmBooleanConstant(leftFloat.Value != rightFloat.Value);
+                        case EdmBinaryOperatorKind.Lt:
+                            return new EdmBooleanConstant(leftFloat.Value < rightFloat.Value);
+                        case EdmBinaryOperatorKind.Gt:
+                            return new EdmBooleanConstant(leftFloat.Value > rightFloat.Value);
+                        case EdmBinaryOperatorKind.Le:
+                            return new EdmBooleanConstant(leftFloat.Value <= rightFloat.Value);
+                        case EdmBinaryOperatorKind.Ge:
+                            return new EdmBooleanConstant(leftFloat.Value >= rightFloat.Value);
+                        case EdmBinaryOperatorKind.Mod: // Not valid for floating
+                            break;
+                    }
+                }
+                else if (right is IEdmDecimalValue rightDecimal)
+                {
+                    switch (kind)
+                    {
+                        case EdmBinaryOperatorKind.Add:
+                            return new EdmDecimalConstant((decimal)leftFloat.Value + rightDecimal.Value);
+                        case EdmBinaryOperatorKind.Sub:
+                            return new EdmDecimalConstant((decimal)leftFloat.Value - rightDecimal.Value);
+                        case EdmBinaryOperatorKind.Mul:
+                            return new EdmDecimalConstant((decimal)leftFloat.Value * rightDecimal.Value);
+                        case EdmBinaryOperatorKind.Div:
+                            return new EdmDecimalConstant((decimal)leftFloat.Value / rightDecimal.Value);
+                        case EdmBinaryOperatorKind.DivBy:
+                            return new EdmDecimalConstant((decimal)leftFloat.Value / rightDecimal.Value);
+                        case EdmBinaryOperatorKind.Eq:
+                            return new EdmBooleanConstant((decimal)leftFloat.Value == rightDecimal.Value); // Allow comparison between double and decimal?
+                        case EdmBinaryOperatorKind.Ne:
+                            return new EdmBooleanConstant((decimal)leftFloat.Value != rightDecimal.Value);
+                        case EdmBinaryOperatorKind.Lt:
+                            return new EdmBooleanConstant((decimal)leftFloat.Value < rightDecimal.Value);
+                        case EdmBinaryOperatorKind.Gt:
+                            return new EdmBooleanConstant((decimal)leftFloat.Value > rightDecimal.Value);
+                        case EdmBinaryOperatorKind.Le:
+                            return new EdmBooleanConstant((decimal)leftFloat.Value <= rightDecimal.Value);
+                        case EdmBinaryOperatorKind.Ge:
+                            return new EdmBooleanConstant((decimal)leftFloat.Value >= rightDecimal.Value);
+                        case EdmBinaryOperatorKind.Mod: // Not valid for decimal??
+                            break;
+                    }
+                }
+            }
+            else if (left is IEdmDecimalValue leftDecimal)
+            {
+                if (right is IEdmIntegerValue rightInt)
+                {
+                    switch (kind)
+                    {
+                        case EdmBinaryOperatorKind.Add:
+                            return new EdmDecimalConstant(leftDecimal.Value + rightInt.Value);
+                        case EdmBinaryOperatorKind.Sub:
+                            return new EdmDecimalConstant(leftDecimal.Value - rightInt.Value);
+                        case EdmBinaryOperatorKind.Mul:
+                            return new EdmDecimalConstant(leftDecimal.Value * rightInt.Value);
+                        case EdmBinaryOperatorKind.Div:
+                            return new EdmDecimalConstant(leftDecimal.Value / rightInt.Value);
+                        case EdmBinaryOperatorKind.DivBy:
+                            return new EdmDecimalConstant(leftDecimal.Value / rightInt.Value);
+                        case EdmBinaryOperatorKind.Eq:
+                            return new EdmBooleanConstant(leftDecimal.Value == rightInt.Value);
+                        case EdmBinaryOperatorKind.Ne:
+                            return new EdmBooleanConstant(leftDecimal.Value != rightInt.Value);
+                        case EdmBinaryOperatorKind.Lt:
+                            return new EdmBooleanConstant(leftDecimal.Value < rightInt.Value);
+                        case EdmBinaryOperatorKind.Gt:
+                            return new EdmBooleanConstant(leftDecimal.Value > rightInt.Value);
+                        case EdmBinaryOperatorKind.Le:
+                            return new EdmBooleanConstant(leftDecimal.Value <= rightInt.Value);
+                        case EdmBinaryOperatorKind.Ge:
+                            return new EdmBooleanConstant(leftDecimal.Value >= rightInt.Value);
+
+                        case EdmBinaryOperatorKind.Mod: // not valid for floating
+                            break;
+                    }
+                }
+                else if (right is IEdmFloatingValue rightFloat)
+                {
+                    switch (kind)
+                    {
+                        case EdmBinaryOperatorKind.Add:
+                            return new EdmDecimalConstant(leftDecimal.Value + (decimal)rightFloat.Value);
+                        case EdmBinaryOperatorKind.Sub:
+                            return new EdmDecimalConstant(leftDecimal.Value - (decimal)rightFloat.Value);
+                        case EdmBinaryOperatorKind.Mul:
+                            return new EdmDecimalConstant(leftDecimal.Value * (decimal)rightFloat.Value);
+                        case EdmBinaryOperatorKind.Div:
+                            return new EdmDecimalConstant(leftDecimal.Value / (decimal)rightFloat.Value);
+                        case EdmBinaryOperatorKind.DivBy:
+                            return new EdmDecimalConstant(leftDecimal.Value / (decimal)rightFloat.Value);
+                        case EdmBinaryOperatorKind.Eq:
+                            return new EdmBooleanConstant(leftDecimal.Value == (decimal)rightFloat.Value); // Allow comparison between float and float?
+                        case EdmBinaryOperatorKind.Ne:
+                            return new EdmBooleanConstant(leftDecimal.Value != (decimal)rightFloat.Value);
+                        case EdmBinaryOperatorKind.Lt:
+                            return new EdmBooleanConstant(leftDecimal.Value < (decimal)rightFloat.Value);
+                        case EdmBinaryOperatorKind.Gt:
+                            return new EdmBooleanConstant(leftDecimal.Value > (decimal)rightFloat.Value);
+                        case EdmBinaryOperatorKind.Le:
+                            return new EdmBooleanConstant(leftDecimal.Value <= (decimal)rightFloat.Value);
+                        case EdmBinaryOperatorKind.Ge:
+                            return new EdmBooleanConstant(leftDecimal.Value >= (decimal)rightFloat.Value);
+                        case EdmBinaryOperatorKind.Mod: // Not valid for floating
+                            break;
+                    }
+                }
+                else if (right is IEdmDecimalValue rightDecimal)
+                {
+                    switch (kind)
+                    {
+                        case EdmBinaryOperatorKind.Add:
+                            return new EdmDecimalConstant(leftDecimal.Value + rightDecimal.Value);
+                        case EdmBinaryOperatorKind.Sub:
+                            return new EdmDecimalConstant(leftDecimal.Value - rightDecimal.Value);
+                        case EdmBinaryOperatorKind.Mul:
+                            return new EdmDecimalConstant(leftDecimal.Value * rightDecimal.Value);
+                        case EdmBinaryOperatorKind.Div:
+                            return new EdmDecimalConstant(leftDecimal.Value / rightDecimal.Value);
+                        case EdmBinaryOperatorKind.DivBy:
+                            return new EdmDecimalConstant(leftDecimal.Value / rightDecimal.Value);
+                        case EdmBinaryOperatorKind.Eq:
+                            return new EdmBooleanConstant(leftDecimal.Value == rightDecimal.Value); // Allow comparison between double and decimal?
+                        case EdmBinaryOperatorKind.Ne:
+                            return new EdmBooleanConstant(leftDecimal.Value != rightDecimal.Value);
+                        case EdmBinaryOperatorKind.Lt:
+                            return new EdmBooleanConstant(leftDecimal.Value < rightDecimal.Value);
+                        case EdmBinaryOperatorKind.Gt:
+                            return new EdmBooleanConstant(leftDecimal.Value > rightDecimal.Value);
+                        case EdmBinaryOperatorKind.Le:
+                            return new EdmBooleanConstant(leftDecimal.Value <= rightDecimal.Value);
+                        case EdmBinaryOperatorKind.Ge:
+                            return new EdmBooleanConstant(leftDecimal.Value >= rightDecimal.Value);
+                        case EdmBinaryOperatorKind.Mod: // Not valid for decimal??
+                            break;
+                    }
+                }
+            }
+            else if (left is IEdmDateValue leftDate)
+            {
+                if (right is IEdmDateValue rightDate)
+                {
+                    switch (kind)
+                    {
+                        // The DateOnly struct supports comparison operators.
+                        case EdmBinaryOperatorKind.Eq:
+                            return new EdmBooleanConstant(leftDate.Value == rightDate.Value);
+                        case EdmBinaryOperatorKind.Ne:
+                            return new EdmBooleanConstant(leftDate.Value != rightDate.Value);
+                        case EdmBinaryOperatorKind.Lt:
+                            return new EdmBooleanConstant(leftDate.Value < rightDate.Value);
+                        case EdmBinaryOperatorKind.Gt:
+                            return new EdmBooleanConstant(leftDate.Value > rightDate.Value);
+                        case EdmBinaryOperatorKind.Le:
+                            return new EdmBooleanConstant(leftDate.Value <= rightDate.Value);
+                        case EdmBinaryOperatorKind.Ge:
+                            return new EdmBooleanConstant(leftDate.Value >= rightDate.Value);
+                    }
+                }
+                else if (right is IEdmDurationValue rightDuration)
+                {
+                    switch (kind)
+                    {
+                        // Weird but valid operations on date and duration values - the DateOnly struct supports addition and subtraction with TimeSpan.
+                        //case EdmBinaryOperatorKind.Add:
+                        //    return new EdmDateConstant(leftDate.Value + rightDuration.Value);
+                        //case EdmBinaryOperatorKind.Subtract:
+                        //    return new EdmDateConstant(leftDate.Value - rightDuration.Value);
+                        default:
+                            break;
+                    }
+                }
+                else if (right is IEdmDateTimeOffsetValue rightDateTimeOffset)
+                {
+                    switch (kind)
+                    {
+                        // Weird but valid operations on date and datetimeoffset values - the DateOnly struct supports addition and subtraction with DateTimeOffset.
+                        //case EdmBinaryOperatorKind.Add:
+                        //    return new EdmDateTimeOffsetConstant(leftDate.Value + rightDateTimeOffset.Value);
+                        //case EdmBinaryOperatorKind.Subtract:
+                        //    return new EdmDateTimeOffsetConstant(leftDate.Value - rightDateTimeOffset.Value);
+                        default:
+                            break;
+                    }
+                }
+            }
+            else if (left is IEdmDurationValue leftDuration)
+            {
+                if (right is IEdmDurationValue rightDuration)
+                {
+                    switch (kind)
+                    {
+                        // The TimeSpan struct supports comparison operators.
+                        case EdmBinaryOperatorKind.Add:
+                            return new EdmDurationConstant(leftDuration.Value + rightDuration.Value);
+                        case EdmBinaryOperatorKind.Sub:
+                            return new EdmDurationConstant(leftDuration.Value - rightDuration.Value);
+                        case EdmBinaryOperatorKind.Eq:
+                            return new EdmBooleanConstant(leftDuration.Value == rightDuration.Value);
+                        case EdmBinaryOperatorKind.Ne:
+                            return new EdmBooleanConstant(leftDuration.Value != rightDuration.Value);
+                        case EdmBinaryOperatorKind.Lt:
+                            return new EdmBooleanConstant(leftDuration.Value < rightDuration.Value);
+                        case EdmBinaryOperatorKind.Gt:
+                            return new EdmBooleanConstant(leftDuration.Value > rightDuration.Value);
+                        case EdmBinaryOperatorKind.Le:
+                            return new EdmBooleanConstant(leftDuration.Value <= rightDuration.Value);
+                        case EdmBinaryOperatorKind.Ge:
+                            return new EdmBooleanConstant(leftDuration.Value >= rightDuration.Value);
+                    }
+                }
+            }
+            else if (left is IEdmDateTimeOffsetValue leftDateTimeOffset)
+            {
+                if (right is IEdmDateValue rightDate)
+                {
+                    //switch (kind)
+                    //{
+                    //    case EdmBinaryOperatorKind.Add:
+                    //        return new EdmDateTimeOffsetConstant(leftDateTimeOffset.Value + rightDate.Value);
+                    //}
+                }
+                else if (right is IEdmDurationValue rightDuration)
+                {
+                    switch (kind)
+                    {
+                        case EdmBinaryOperatorKind.Add:
+                            return new EdmDateTimeOffsetConstant(leftDateTimeOffset.Value + rightDuration.Value);
+                        case EdmBinaryOperatorKind.Sub:
+                            return new EdmDateTimeOffsetConstant(leftDateTimeOffset.Value - rightDuration.Value);
+                    }
+                }
+                else if (right is IEdmDateTimeOffsetValue rightDateTimeOffset)
+                {
+                    switch (kind)
+                    {
+                        // The DateTimeOffset struct supports comparison operators.
+                        case EdmBinaryOperatorKind.Sub:
+                            return new EdmDurationConstant(leftDateTimeOffset.Value - rightDateTimeOffset.Value);
+                        case EdmBinaryOperatorKind.Eq:
+                            return new EdmBooleanConstant(leftDateTimeOffset.Value == rightDateTimeOffset.Value);
+                        case EdmBinaryOperatorKind.Ne:
+                            return new EdmBooleanConstant(leftDateTimeOffset.Value != rightDateTimeOffset.Value);
+                        case EdmBinaryOperatorKind.Lt:
+                            return new EdmBooleanConstant(leftDateTimeOffset.Value < rightDateTimeOffset.Value);
+                        case EdmBinaryOperatorKind.Gt:
+                            return new EdmBooleanConstant(leftDateTimeOffset.Value > rightDateTimeOffset.Value);
+                        case EdmBinaryOperatorKind.Le:
+                            return new EdmBooleanConstant(leftDateTimeOffset.Value <= rightDateTimeOffset.Value);
+                        case EdmBinaryOperatorKind.Ge:
+                            return new EdmBooleanConstant(leftDateTimeOffset.Value >= rightDateTimeOffset.Value);
+                    }
+                }
+            }
+
+            throw new InvalidOperationException(Error.Format(SRResources.Edm_Evaluator_InvalidBinaryOperand, kind, left.ValueKind, right.ValueKind));
         }
 
         private IEdmDelayedValue MapLabeledExpressionToDelayedValue(IEdmExpression expression, DelayedExpressionContext delayedContext, IEdmStructuredValue context)
