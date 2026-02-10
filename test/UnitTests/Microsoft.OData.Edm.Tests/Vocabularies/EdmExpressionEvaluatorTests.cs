@@ -97,9 +97,9 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
             IEdmBooleanConstantExpression leftExp = new EdmBooleanConstant(left);
             IEdmBooleanConstantExpression rightExp = new EdmBooleanConstant(right);
 
-            IEdmBinaryOperatorExpression unaryOperator = new EdmBinaryOperatorExpression(leftExp, rightExp, kind);
+            IEdmBinaryOperatorExpression binaryOperator = new EdmBinaryOperatorExpression(leftExp, rightExp, kind);
 
-            IEdmValue value = _evaluator.Evaluate(unaryOperator);
+            IEdmValue value = _evaluator.Evaluate(binaryOperator);
             VerifyBooleanValue(value, expected);
         }
 

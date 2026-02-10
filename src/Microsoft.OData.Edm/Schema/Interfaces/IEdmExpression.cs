@@ -153,9 +153,9 @@ namespace Microsoft.OData.Edm
         /// <summary>
         /// Represents an expression implementing <see cref="IEdmBinaryOperatorExpression"/>.
         /// </summary>
-        /// <remarks>This class is used to define and evaluate binary operations in expressions. It can be
-        /// extended to implement specific binary operations such as addition, subtraction, multiplication, and
-        /// division.</remarks>
+        /// <remarks>
+        /// Used for binary operator expressions such as addition, subtraction, multiplication, and division, etc.
+        /// </remarks>
         BinaryOperator
     }
 
