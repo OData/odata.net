@@ -408,7 +408,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
 
             // Unary operator expressions are represented as an object with a member $Neg/$Not whose value is an annotation expression
             JsonElement propertyValue;
-            if (element.ValueKind != JsonValueKind.Object && element.GetPropertyCount() != 1)
+            if (element.ValueKind != JsonValueKind.Object || element.GetPropertyCount() != 1)
             {
                 return false;
             }
@@ -445,7 +445,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
 
             // Binary operator expressions are represented as an object with a member $Add/$Or... whose value is an array with two annotation expressions.
             JsonElement propertyValue;
-            if (element.ValueKind != JsonValueKind.Object && element.GetPropertyCount() != 1)
+            if (element.ValueKind != JsonValueKind.Object || element.GetPropertyCount() != 1)
             {
                 return false;
             }

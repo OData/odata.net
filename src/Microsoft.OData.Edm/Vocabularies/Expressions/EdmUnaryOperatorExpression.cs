@@ -14,7 +14,7 @@ namespace Microsoft.OData.Edm.Vocabularies
         /// <summary>
         /// Initializes a new instance of the <see cref="EdmUnaryOperatorExpression"/> class.
         /// </summary>
-        /// <param name="operand">Expression for which the type is casted.</param>
+        /// <param name="operand">he operand expression on which the unary operator will be applied.</param>
         /// <param name="kind">The unary operator kind.</param>
         public EdmUnaryOperatorExpression(IEdmExpression operand, EdmUnaryOperatorKind kind)
         {

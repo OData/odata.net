@@ -2724,14 +2724,13 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
         internal override Task WriteUnaryOperatorExpressionHeaderAsync(IEdmUnaryOperatorExpression expression)
         {
-            // Is-of expressions are represented as an object
+            // Unary operator (Negation/Not) expressions are represented as an object
             this.jsonWriter.WriteStartObject();
 
-            // Conditional expressions are represented as an object with a member $If
+            // Unary operator expressions are represented as an object with a member $UnaryOperator
             this.jsonWriter.WritePropertyName(expression.Kind == EdmUnaryOperatorKind.Negate ? "$Neg" : "$Not");
 
             // whose value is an annotation expression
-
             return Task.CompletedTask;
         }
 
