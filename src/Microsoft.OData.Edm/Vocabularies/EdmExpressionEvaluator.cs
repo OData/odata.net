@@ -995,7 +995,7 @@ namespace Microsoft.OData.Edm.Vocabularies
                 // String != String (ordinal comparison)
                 if (left.ValueKind == EdmValueKind.String && right.ValueKind == EdmValueKind.String)
                 {
-                    int comparison = ((IEdmStringValue)left).Value.CompareTo(((IEdmStringValue)right).Value);
+                    int comparison = ((IEdmStringValue)left).Value.CompareTo(((IEdmStringValue)right).Value, StringComparison.Ordinal);
                     return new EdmBooleanConstant(comparison > 0);
                 }
 

@@ -107,16 +107,16 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
         public void EvaluateEqualComparisonBinaryOperatorExpressionWorksForNull()
         {
             IEdmNullExpression nullExp = EdmNullExpression.Instance;
-            IEdmIntegerConstantExpression intergerExp = new EdmIntegerConstant(42);
+            IEdmIntegerConstantExpression integerExp = new EdmIntegerConstant(42);
 
             // null == 42 ?
-            IEdmBinaryOperatorExpression binaryOperator = new EdmBinaryOperatorExpression(nullExp, intergerExp, EdmBinaryOperatorKind.Eq);
+            IEdmBinaryOperatorExpression binaryOperator = new EdmBinaryOperatorExpression(nullExp, integerExp, EdmBinaryOperatorKind.Eq);
 
             IEdmValue value = _evaluator.Evaluate(binaryOperator);
             VerifyBooleanValue(value, false);
 
             // 42 == null ?
-            binaryOperator = new EdmBinaryOperatorExpression(intergerExp, nullExp, EdmBinaryOperatorKind.Eq);
+            binaryOperator = new EdmBinaryOperatorExpression(integerExp, nullExp, EdmBinaryOperatorKind.Eq);
 
             value = _evaluator.Evaluate(binaryOperator);
             VerifyBooleanValue(value, false);
