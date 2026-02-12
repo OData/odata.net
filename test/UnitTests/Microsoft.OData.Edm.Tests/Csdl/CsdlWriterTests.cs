@@ -290,6 +290,272 @@ namespace Microsoft.OData.Edm.Tests.Csdl
         }
 
         [Fact]
+        public void CanWriteEdmUnaryAndBinaryOperatorExpression()
+        {
+            EdmModel model = new EdmModel();
+            var color = new EdmEnumType("NS", "Color");
+            var red = color.AddMember("Red", new EdmEnumMemberValue(1));
+            color.AddMember("Green", new EdmEnumMemberValue(2));
+            color.AddMember("Blue", new EdmEnumMemberValue(4));
+            model.AddElement(color);
+
+            var person = new EdmEntityType("NS", "Person");
+            var entityId = person.AddStructuralProperty("Id", EdmCoreModel.Instance.GetInt32(false));
+            person.AddStructuralProperty("IsMale", EdmCoreModel.Instance.GetBoolean(false));
+            person.AddStructuralProperty("IsMarried", EdmCoreModel.Instance.GetBoolean(false));
+            person.AddStructuralProperty("Price", EdmCoreModel.Instance.GetInt32(false));
+            person.AddStructuralProperty("Fabric", new EdmEnumTypeReference(color, false));
+            person.AddStructuralProperty("Size", EdmCoreModel.Instance.GetString(false));
+            model.AddElement(person);
+
+            EdmPathExpression isMale = new EdmPathExpression("IsMale");
+            EdmPathExpression isMarried = new EdmPathExpression("IsMarried");
+            EdmPathExpression price = new EdmPathExpression("Price");
+            EdmPathExpression fabric = new EdmPathExpression("Fabric");
+            EdmPathExpression size = new EdmPathExpression("Size");
+            IEdmBinaryOperatorExpression binary = new EdmBinaryOperatorExpression(isMale, isMarried, EdmBinaryOperatorKind.And);
+
+            var isMarriedAndMale = person.AddStructuralProperty("IsMarriedAndMale", EdmCoreModel.Instance.GetBoolean(false));
+            EdmVocabularyAnnotation annotation = new EdmVocabularyAnnotation(isMarriedAndMale, CoreVocabularyModel.ComputedTerm, binary);
+            annotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
+            model.SetVocabularyAnnotation(annotation);
+
+            var isMarriedOrMale = person.AddStructuralProperty("IsMarriedOrMale", EdmCoreModel.Instance.GetBoolean(false));
+            binary = new EdmBinaryOperatorExpression(isMale, isMarried, EdmBinaryOperatorKind.Or);
+            annotation = new EdmVocabularyAnnotation(isMarriedOrMale, CoreVocabularyModel.ComputedTerm, binary);
+            annotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
+            model.SetVocabularyAnnotation(annotation);
+
+            var isNotMale = person.AddStructuralProperty("IsNotMale", EdmCoreModel.Instance.GetBoolean(false));
+            IEdmUnaryOperatorExpression unary = new EdmUnaryOperatorExpression(isMale, EdmUnaryOperatorKind.Not);
+            annotation = new EdmVocabularyAnnotation(isNotMale, CoreVocabularyModel.ComputedTerm, unary);
+            annotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
+            model.SetVocabularyAnnotation(annotation);
+
+            var isMaleEqNull = person.AddStructuralProperty("IsMaleEqNull", EdmCoreModel.Instance.GetBoolean(false));
+            EdmNullExpression nullExpression = EdmNullExpression.Instance;
+            binary = new EdmBinaryOperatorExpression(nullExpression, isMale, EdmBinaryOperatorKind.Eq);
+            annotation = new EdmVocabularyAnnotation(isMaleEqNull, CoreVocabularyModel.ComputedTerm, binary);
+            annotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
+            model.SetVocabularyAnnotation(annotation);
+
+            var isPriceGreatOrEq = person.AddStructuralProperty("IsPriceGreatOrEq", EdmCoreModel.Instance.GetBoolean(false));
+            var constInteger = new EdmIntegerConstant(10);
+            binary = new EdmBinaryOperatorExpression(price, constInteger, EdmBinaryOperatorKind.Ge);
+            annotation = new EdmVocabularyAnnotation(isPriceGreatOrEq, CoreVocabularyModel.ComputedTerm, binary);
+            annotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
+            model.SetVocabularyAnnotation(annotation);
+
+            var hasRed = person.AddStructuralProperty("HasRed", EdmCoreModel.Instance.GetBoolean(false));
+            var enumMemberExp = new EdmEnumMemberExpression(red);
+            binary = new EdmBinaryOperatorExpression(fabric, enumMemberExp, EdmBinaryOperatorKind.Has);
+            annotation = new EdmVocabularyAnnotation(hasRed, CoreVocabularyModel.ComputedTerm, binary);
+            annotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
+            model.SetVocabularyAnnotation(annotation);
+
+            var sizeIn = person.AddStructuralProperty("SizeIn", EdmCoreModel.Instance.GetBoolean(false));
+            var collectionExpr = new EdmCollectionExpression(
+                new EdmStringConstant("XS"),
+                new EdmStringConstant("S")
+                );
+            binary = new EdmBinaryOperatorExpression(size, collectionExpr, EdmBinaryOperatorKind.In);
+            annotation = new EdmVocabularyAnnotation(sizeIn, CoreVocabularyModel.ComputedTerm, binary);
+            annotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
+            model.SetVocabularyAnnotation(annotation);
+
+            WriteAndVerifyXml(model, "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+          "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+            "<edmx:DataServices>" +
+              "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                "<EnumType Name=\"Color\">" +
+                  "<Member Name=\"Red\" Value=\"1\" />" +
+                  "<Member Name=\"Green\" Value=\"2\" />" +
+                  "<Member Name=\"Blue\" Value=\"4\" />" +
+                "</EnumType>" +
+                "<EntityType Name=\"Person\">" +
+                  "<Property Name=\"Id\" Type=\"Edm.Int32\" Nullable=\"false\" />" +
+                  "<Property Name=\"IsMale\" Type=\"Edm.Boolean\" Nullable=\"false\" />" +
+                  "<Property Name=\"IsMarried\" Type=\"Edm.Boolean\" Nullable=\"false\" />" +
+                  "<Property Name=\"Price\" Type=\"Edm.Int32\" Nullable=\"false\" />" +
+                  "<Property Name=\"Fabric\" Type=\"NS.Color\" Nullable=\"false\" />" +
+                  "<Property Name=\"Size\" Type=\"Edm.String\" Nullable=\"false\" />" +
+                  "<Property Name=\"IsMarriedAndMale\" Type=\"Edm.Boolean\" Nullable=\"false\">" +
+                    "<Annotation Term=\"Org.OData.Core.V1.Computed\">" +
+                      "<And>" +
+                        "<Path>IsMale</Path>" +
+                        "<Path>IsMarried</Path>" +
+                      "</And>" +
+                    "</Annotation>" +
+                  "</Property>" +
+                  "<Property Name=\"IsMarriedOrMale\" Type=\"Edm.Boolean\" Nullable=\"false\">" +
+                    "<Annotation Term=\"Org.OData.Core.V1.Computed\">" +
+                      "<Or>" +
+                        "<Path>IsMale</Path>" +
+                        "<Path>IsMarried</Path>" +
+                      "</Or>" +
+                    "</Annotation>" +
+                  "</Property>" +
+                  "<Property Name=\"IsNotMale\" Type=\"Edm.Boolean\" Nullable=\"false\">" +
+                    "<Annotation Term=\"Org.OData.Core.V1.Computed\">" +
+                      "<Not>" +
+                        "<Path>IsMale</Path>" +
+                      "</Not>" +
+                    "</Annotation>" +
+                  "</Property>" +
+                  "<Property Name=\"IsMaleEqNull\" Type=\"Edm.Boolean\" Nullable=\"false\">" +
+                    "<Annotation Term=\"Org.OData.Core.V1.Computed\">" +
+                      "<Eq>" +
+                        "<Null />" +
+                        "<Path>IsMale</Path>" +
+                      "</Eq>" +
+                    "</Annotation>" +
+                  "</Property>" +
+                  "<Property Name=\"IsPriceGreatOrEq\" Type=\"Edm.Boolean\" Nullable=\"false\">" +
+                    "<Annotation Term=\"Org.OData.Core.V1.Computed\">" +
+                      "<Ge>" +
+                        "<Path>Price</Path>" +
+                        "<Int>10</Int>" +
+                      "</Ge>" +
+                    "</Annotation>" +
+                  "</Property>" +
+                  "<Property Name=\"HasRed\" Type=\"Edm.Boolean\" Nullable=\"false\">" +
+                    "<Annotation Term=\"Org.OData.Core.V1.Computed\">" +
+                      "<Has>" +
+                        "<Path>Fabric</Path>" +
+                        "<EnumMember>NS.Color/Red</EnumMember>" +
+                      "</Has>" +
+                    "</Annotation>" +
+                  "</Property>" +
+                  "<Property Name=\"SizeIn\" Type=\"Edm.Boolean\" Nullable=\"false\">" +
+                    "<Annotation Term=\"Org.OData.Core.V1.Computed\">" +
+                      "<In>" +
+                        "<Path>Size</Path>" +
+                        "<Collection>" +
+                          "<String>XS</String>" +
+                          "<String>S</String>" +
+                        "</Collection>" +
+                      "</In>" +
+                    "</Annotation>" +
+                  "</Property>" +
+                "</EntityType>" +
+              "</Schema>" +
+            "</edmx:DataServices>" +
+          "</edmx:Edmx>");
+
+            WriteAndVerifyJson(model, @"{
+  ""$Version"": ""4.0"",
+  ""NS"": {
+    ""Color"": {
+      ""$Kind"": ""EnumType"",
+      ""Red"": 1,
+      ""Green"": 2,
+      ""Blue"": 4
+    },
+    ""Person"": {
+      ""$Kind"": ""EntityType"",
+      ""Id"": {
+        ""$Type"": ""Edm.Int32""
+      },
+      ""IsMale"": {
+        ""$Type"": ""Edm.Boolean""
+      },
+      ""IsMarried"": {
+        ""$Type"": ""Edm.Boolean""
+      },
+      ""Price"": {
+        ""$Type"": ""Edm.Int32""
+      },
+      ""Fabric"": {
+        ""$Type"": ""NS.Color""
+      },
+      ""Size"": {},
+      ""IsMarriedAndMale"": {
+        ""$Type"": ""Edm.Boolean"",
+        ""@Org.OData.Core.V1.Computed"": {
+          ""$And"": [
+            {
+              ""$Path"": ""IsMale""
+            },
+            {
+              ""$Path"": ""IsMarried""
+            }
+          ]
+        }
+      },
+      ""IsMarriedOrMale"": {
+        ""$Type"": ""Edm.Boolean"",
+        ""@Org.OData.Core.V1.Computed"": {
+          ""$Or"": [
+            {
+              ""$Path"": ""IsMale""
+            },
+            {
+              ""$Path"": ""IsMarried""
+            }
+          ]
+        }
+      },
+      ""IsNotMale"": {
+        ""$Type"": ""Edm.Boolean"",
+        ""@Org.OData.Core.V1.Computed"": {
+          ""$Not"": {
+            ""$Path"": ""IsMale""
+          }
+        }
+      },
+      ""IsMaleEqNull"": {
+        ""$Type"": ""Edm.Boolean"",
+        ""@Org.OData.Core.V1.Computed"": {
+          ""$Eq"": [
+            null,
+            {
+              ""$Path"": ""IsMale""
+            }
+          ]
+        }
+      },
+      ""IsPriceGreatOrEq"": {
+        ""$Type"": ""Edm.Boolean"",
+        ""@Org.OData.Core.V1.Computed"": {
+          ""$Ge"": [
+            {
+              ""$Path"": ""Price""
+            },
+            10
+          ]
+        }
+      },
+      ""HasRed"": {
+        ""$Type"": ""Edm.Boolean"",
+        ""@Org.OData.Core.V1.Computed"": {
+          ""$Has"": [
+            {
+              ""$Path"": ""Fabric""
+            },
+            ""Red""
+          ]
+        }
+      },
+      ""SizeIn"": {
+        ""$Type"": ""Edm.Boolean"",
+        ""@Org.OData.Core.V1.Computed"": {
+          ""$In"": [
+            {
+              ""$Path"": ""Size""
+            },
+            [
+              ""XS"",
+              ""S""
+            ]
+          ]
+        }
+      }
+    }
+  }
+}");
+        }
+
+        [Fact]
         public void WriteNavigationPropertyInComplexType()
         {
             // Arrange

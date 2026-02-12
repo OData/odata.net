@@ -304,6 +304,15 @@ namespace Microsoft.OData.Edm {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invalid binary operator expression for &apos;{0}&apos; when parsing the JSON path &apos;{1}&apos;..
+        /// </summary>
+        internal static string CsdlJsonParser_InvalidBinaryOperatorExpression {
+            get {
+                return ResourceManager.GetString("CsdlJsonParser_InvalidBinaryOperatorExpression", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The version specified at &apos;{0}&apos; is not valid. It should be a string containing either &apos;4.0&apos; or &apos;4.01&apos;..
         /// </summary>
         internal static string CsdlJsonParser_InvalidCsdlVersion {
@@ -408,6 +417,15 @@ namespace Microsoft.OData.Edm {
         internal static string CsdlParser_InvalidAlias {
             get {
                 return ResourceManager.GetString("CsdlParser_InvalidAlias", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The &apos;{0}&apos; binary operator expression must contain 2 operands..
+        /// </summary>
+        internal static string CsdlParser_InvalidBinaryOperatorExpressionOperands {
+            get {
+                return ResourceManager.GetString("CsdlParser_InvalidBinaryOperatorExpressionOperands", resourceCulture);
             }
         }
         
@@ -520,6 +538,15 @@ namespace Microsoft.OData.Edm {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The &apos;{0}&apos; unary operator expression must contain 1 operand..
+        /// </summary>
+        internal static string CsdlParser_InvalidUnaryOperatorExpressionOperands {
+            get {
+                return ResourceManager.GetString("CsdlParser_InvalidUnaryOperatorExpressionOperands", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Metadata document cannot have more than one entity container..
         /// </summary>
         internal static string CsdlParser_MetadataDocumentCannotHaveMoreThanOneEntityContainer {
@@ -628,6 +655,24 @@ namespace Microsoft.OData.Edm {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Binary Expression with operator kind &apos;{0}&apos; cannot be evaluated on left value of kind &apos;{1}&apos; and right value of kind &apos;{2}&apos;..
+        /// </summary>
+        internal static string Edm_Evaluator_InvalidBinaryOperand {
+            get {
+                return ResourceManager.GetString("Edm_Evaluator_InvalidBinaryOperand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unary Expression with operator kind &apos;{0}&apos; cannot be evaluated on value of kind &apos;{1}&apos;..
+        /// </summary>
+        internal static string Edm_Evaluator_InvalidUnaryOperand {
+            get {
+                return ResourceManager.GetString("Edm_Evaluator_InvalidUnaryOperand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to A containing object cannot be null when getting value of an annotation with Path in the execution environment..
         /// </summary>
         internal static string Edm_Evaluator_NoContextPath {
@@ -696,6 +741,15 @@ namespace Microsoft.OData.Edm {
         internal static string Edm_Evaluator_UnrecognizedExpressionKind {
             get {
                 return ResourceManager.GetString("Edm_Evaluator_UnrecognizedExpressionKind", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unary Expression with operator kind &apos;{0}&apos; cannot be evaluated..
+        /// </summary>
+        internal static string Edm_Evaluator_UnrecognizedUnaryOperatorKind {
+            get {
+                return ResourceManager.GetString("Edm_Evaluator_UnrecognizedUnaryOperatorKind", resourceCulture);
             }
         }
         

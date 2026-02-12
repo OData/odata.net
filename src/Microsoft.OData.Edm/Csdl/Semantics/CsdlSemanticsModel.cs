@@ -410,6 +410,10 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                         return new CsdlSemanticsGuidConstantExpression((CsdlConstantExpression)expression, schema);
                     case EdmExpressionKind.If:
                         return new CsdlSemanticsIfExpression((CsdlIfExpression)expression, bindingContext, schema);
+                    case EdmExpressionKind.UnaryOperator:
+                        return new CsdlSemanticsUnaryOperatorExpression((CsdlUnaryOperatorExpression)expression, bindingContext, schema);
+                    case EdmExpressionKind.BinaryOperator:
+                        return new CsdlSemanticsBinaryOperatorExpression((CsdlBinaryOperatorExpression)expression, bindingContext, schema);
                     case EdmExpressionKind.IntegerConstant:
                         return new CsdlSemanticsIntConstantExpression((CsdlConstantExpression)expression, schema);
                     case EdmExpressionKind.IsOf:

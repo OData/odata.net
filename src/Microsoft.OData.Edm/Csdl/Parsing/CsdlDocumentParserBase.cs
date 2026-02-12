@@ -273,6 +273,30 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                 //// <LabeledElementReference/>
                 CsdlElement<CsdlExpressionBase>(CsdlConstants.Element_LabeledElementReference, this.OnLabeledElementReferenceExpression);
 
+            // Unary operators
+            var negExpressionParser = CsdlElement<CsdlExpressionBase>("Neg", this.OnUnaryOperatorElement);
+            var notExpressionParser = CsdlElement<CsdlExpressionBase>("Not", this.OnUnaryOperatorElement);
+
+            // Binary operators, arithmetic: Add, Sub, Mul, Div, Mod; arithmetic with reversed operands: DivBy; 
+            var addExpressionParser = CsdlElement<CsdlExpressionBase>("Add", this.OnBinaryOperatorElement);
+            var subExpressionParser = CsdlElement<CsdlExpressionBase>("Sub", this.OnBinaryOperatorElement);
+            var mulExpressionParser = CsdlElement<CsdlExpressionBase>("Mul", this.OnBinaryOperatorElement);
+            var divExpressionParser = CsdlElement<CsdlExpressionBase>("Div", this.OnBinaryOperatorElement);
+            var divByExpressionParser = CsdlElement<CsdlExpressionBase>("DivBy", this.OnBinaryOperatorElement);
+            var modExpressionParser = CsdlElement<CsdlExpressionBase>("Mod", this.OnBinaryOperatorElement);
+
+            // Binary operators, logical: And, Or; comparison: Eq, Neq, Gt, Ge, Lt, Le. Has, In
+            var andExpressionParser = CsdlElement<CsdlExpressionBase>("And", this.OnBinaryOperatorElement);
+            var orExpressionParser = CsdlElement<CsdlExpressionBase>("Or", this.OnBinaryOperatorElement);
+            var eqExpressionParser = CsdlElement<CsdlExpressionBase>("Eq", this.OnBinaryOperatorElement);
+            var neExpressionParser = CsdlElement<CsdlExpressionBase>("Ne", this.OnBinaryOperatorElement);
+            var gtExpressionParser = CsdlElement<CsdlExpressionBase>("Gt", this.OnBinaryOperatorElement);
+            var geExpressionParser = CsdlElement<CsdlExpressionBase>("Ge", this.OnBinaryOperatorElement);
+            var ltExpressionParser = CsdlElement<CsdlExpressionBase>("Lt", this.OnBinaryOperatorElement);
+            var leExpressionParser = CsdlElement<CsdlExpressionBase>("Le", this.OnBinaryOperatorElement);
+            var hasExpressionParser = CsdlElement<CsdlExpressionBase>("Has", this.OnBinaryOperatorElement);
+            var inExpressionParser = CsdlElement<CsdlExpressionBase>("In", this.OnBinaryOperatorElement);
+
             XmlElementParser[] expressionParsers =
             {
                 //// <String/>
@@ -324,7 +348,29 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                 //// <EnumConstant/>
                 enumMemberExpressionParser,
                 //// </Apply>
-                applyExpressionParser
+                applyExpressionParser,
+
+                //// Unary operators
+                negExpressionParser,
+                notExpressionParser,
+
+                //// Binary operators
+                addExpressionParser,
+                subExpressionParser,
+                mulExpressionParser,
+                divExpressionParser,
+                divByExpressionParser,
+                modExpressionParser,
+                andExpressionParser,
+                orExpressionParser,
+                eqExpressionParser,
+                neExpressionParser,
+                gtExpressionParser,
+                geExpressionParser,
+                ltExpressionParser,
+                leExpressionParser,
+                hasExpressionParser,
+                inExpressionParser
             };
 
             AddChildParsers(ifExpressionParser, expressionParsers);
@@ -334,6 +380,28 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
             AddChildParsers(collectionExpressionParser, expressionParsers);
             AddChildParsers(labeledElementParser, expressionParsers);
             AddChildParsers(applyExpressionParser, expressionParsers);
+
+            // Unary operator has one child expression
+            AddChildParsers(negExpressionParser, expressionParsers);
+            AddChildParsers(notExpressionParser, expressionParsers);
+
+            // Binary operator has two child expressions
+            AddChildParsers(addExpressionParser, expressionParsers);
+            AddChildParsers(subExpressionParser, expressionParsers);
+            AddChildParsers(mulExpressionParser, expressionParsers);
+            AddChildParsers(divExpressionParser, expressionParsers);
+            AddChildParsers(divByExpressionParser, expressionParsers);
+            AddChildParsers(modExpressionParser, expressionParsers);
+            AddChildParsers(andExpressionParser, expressionParsers);
+            AddChildParsers(orExpressionParser, expressionParsers);
+            AddChildParsers(eqExpressionParser, expressionParsers);
+            AddChildParsers(neExpressionParser, expressionParsers);
+            AddChildParsers(gtExpressionParser, expressionParsers);
+            AddChildParsers(geExpressionParser, expressionParsers);
+            AddChildParsers(ltExpressionParser, expressionParsers);
+            AddChildParsers(leExpressionParser, expressionParsers);
+            AddChildParsers(hasExpressionParser, expressionParsers);
+            AddChildParsers(inExpressionParser, expressionParsers);
 
             var annotationParser =
                 //// <Annotation>
@@ -418,6 +486,32 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
             IEnumerable<CsdlExpressionBase> arguments = childValues.ValuesOfType<CsdlExpressionBase>();
 
             return new CsdlApplyExpression(function, arguments, element.Location);
+        }
+
+        private CsdlUnaryOperatorExpression OnUnaryOperatorElement(XmlElementInfo element, XmlElementValueCollection childValues)
+        {
+            EdmUnaryOperatorKind kind = element.Name == "Not" ? EdmUnaryOperatorKind.Not : EdmUnaryOperatorKind.Negate;
+
+            IEnumerable<CsdlExpressionBase> expressions = childValues.ValuesOfType<CsdlExpressionBase>();
+            if (expressions.Count() != 1)
+            {
+                this.ReportError(element.Location, EdmErrorCode.InvalidUnaryOperatorExpression, Error.Format(SRResources.CsdlParser_InvalidUnaryOperatorExpressionOperands, kind));
+            }
+
+            return new CsdlUnaryOperatorExpression(expressions.ElementAtOrDefault(0), kind, element.Location);
+        }
+
+        private CsdlBinaryOperatorExpression OnBinaryOperatorElement(XmlElementInfo element, XmlElementValueCollection childValues)
+        {
+            EdmBinaryOperatorKind kind = Enum.Parse<EdmBinaryOperatorKind>(element.Name);
+
+            IEnumerable<CsdlExpressionBase> expressions = childValues.ValuesOfType<CsdlExpressionBase>();
+            if (expressions.Count() != 2)
+            {
+                this.ReportError(element.Location, EdmErrorCode.InvalidBinaryOperatorExpression, Error.Format(SRResources.CsdlParser_InvalidBinaryOperatorExpressionOperands, kind));
+            }
+
+            return new CsdlBinaryOperatorExpression(expressions.ElementAtOrDefault(0), expressions.ElementAtOrDefault(1), kind, element.Location);
         }
 
         private static void AddChildParsers(XmlElementParser parent, IEnumerable<XmlElementParser> children)

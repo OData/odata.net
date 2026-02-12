@@ -141,7 +141,22 @@ namespace Microsoft.OData.Edm
         /// <summary>
         /// Represents an expression implementing <see cref="IEdmPathExpression"/>.
         /// </summary>
-        AnnotationPath
+        AnnotationPath,
+
+        /// <summary>
+        /// Represents an expression implementing <see cref="IEdmUnaryOperatorExpression"/>.
+        /// Not
+        /// Negation
+        /// </summary>
+        UnaryOperator,
+
+        /// <summary>
+        /// Represents an expression implementing <see cref="IEdmBinaryOperatorExpression"/>.
+        /// </summary>
+        /// <remarks>
+        /// Used for binary operator expressions such as addition, subtraction, multiplication, and division, etc.
+        /// </remarks>
+        BinaryOperator
     }
 
     /// <summary>

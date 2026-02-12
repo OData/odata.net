@@ -530,6 +530,174 @@ namespace Microsoft.OData.Edm.Tests.Csdl
         }
 
         [Fact]
+        public void ReadUnaryAndBinaryOperatorExpressionTest()
+        {
+            var csdl = "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+          "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+            "<edmx:DataServices>" +
+              "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                "<EnumType Name=\"Color\">" +
+                  "<Member Name=\"Red\" Value=\"1\" />" +
+                  "<Member Name=\"Green\" Value=\"2\" />" +
+                  "<Member Name=\"Blue\" Value=\"4\" />" +
+                "</EnumType>" +
+                "<EntityType Name=\"Person\">" +
+                  "<Property Name=\"Id\" Type=\"Edm.Int32\" Nullable=\"false\" />" +
+                  "<Property Name=\"IsMale\" Type=\"Edm.Boolean\" Nullable=\"false\" />" +
+                  "<Property Name=\"IsMarried\" Type=\"Edm.Boolean\" Nullable=\"false\" />" +
+                  "<Property Name=\"Price\" Type=\"Edm.Int32\" Nullable=\"false\" />" +
+                  "<Property Name=\"Fabric\" Type=\"NS.Color\" Nullable=\"false\" />" +
+                  "<Property Name=\"Size\" Type=\"Edm.String\" Nullable=\"false\" />" +
+                  "<Property Name=\"IsMarriedAndMale\" Type=\"Edm.Boolean\" Nullable=\"false\">" +
+                    "<Annotation Term=\"Org.OData.Core.V1.Computed\">" +
+                      "<And>" +
+                        "<Path>IsMale</Path>" +
+                        "<Path>IsMarried</Path>" +
+                      "</And>" +
+                    "</Annotation>" +
+                  "</Property>" +
+                  "<Property Name=\"IsMarriedOrMale\" Type=\"Edm.Boolean\" Nullable=\"false\">" +
+                    "<Annotation Term=\"Org.OData.Core.V1.Computed\">" +
+                      "<Or>" +
+                        "<Path>IsMale</Path>" +
+                        "<Path>IsMarried</Path>" +
+                      "</Or>" +
+                    "</Annotation>" +
+                  "</Property>" +
+                  "<Property Name=\"IsNotMale\" Type=\"Edm.Boolean\" Nullable=\"false\">" +
+                    "<Annotation Term=\"Org.OData.Core.V1.Computed\">" +
+                      "<Not>" +
+                        "<Path>IsMale</Path>" +
+                      "</Not>" +
+                    "</Annotation>" +
+                  "</Property>" +
+                  "<Property Name=\"IsMaleEqNull\" Type=\"Edm.Boolean\" Nullable=\"false\">" +
+                    "<Annotation Term=\"Org.OData.Core.V1.Computed\">" +
+                      "<Eq>" +
+                        "<Null />" +
+                        "<Path>IsMale</Path>" +
+                      "</Eq>" +
+                    "</Annotation>" +
+                  "</Property>" +
+                  "<Property Name=\"IsPriceGreatOrEq\" Type=\"Edm.Boolean\" Nullable=\"false\">" +
+                    "<Annotation Term=\"Org.OData.Core.V1.Computed\">" +
+                      "<Ge>" +
+                        "<Path>Price</Path>" +
+                        "<Int>10</Int>" +
+                      "</Ge>" +
+                    "</Annotation>" +
+                  "</Property>" +
+                  "<Property Name=\"HasRed\" Type=\"Edm.Boolean\" Nullable=\"false\">" +
+                    "<Annotation Term=\"Org.OData.Core.V1.Computed\">" +
+                      "<Has>" +
+                        "<Path>Fabric</Path>" +
+                        "<EnumMember>NS.Color/Red</EnumMember>" +
+                      "</Has>" +
+                    "</Annotation>" +
+                  "</Property>" +
+                  "<Property Name=\"SizeIn\" Type=\"Edm.Boolean\" Nullable=\"false\">" +
+                    "<Annotation Term=\"Org.OData.Core.V1.Computed\">" +
+                      "<In>" +
+                        "<Path>Size</Path>" +
+                        "<Collection>" +
+                          "<String>XS</String>" +
+                          "<String>S</String>" +
+                        "</Collection>" +
+                      "</In>" +
+                    "</Annotation>" +
+                  "</Property>" +
+                "</EntityType>" +
+              "</Schema>" +
+            "</edmx:DataServices>" +
+          "</edmx:Edmx>";
+
+            IEdmModel model;
+            IEnumerable<EdmError> errors;
+            var result = CsdlReader.TryParse(XElement.Parse(csdl).CreateReader(), out model, out errors);
+            Assert.True(result);
+            Assert.Empty(errors);
+            model.Validate(out errors);
+            Assert.Empty(errors);
+
+            IEdmEntityType personType = (IEdmEntityType)model.FindDeclaredType("NS.Person");
+
+            // Not unary operator
+            IEdmProperty isNotMaleProp = personType.FindProperty("IsNotMale");
+            Assert.NotNull(isNotMaleProp);
+
+            IEdmVocabularyAnnotation annotation = model.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(isNotMaleProp, CoreVocabularyModel.ComputedTerm).FirstOrDefault();
+            Assert.NotNull(annotation);
+
+            IEdmUnaryOperatorExpression notUnaryExpression = annotation.Value as IEdmUnaryOperatorExpression;
+            Assert.NotNull(notUnaryExpression);
+            Assert.Equal(EdmUnaryOperatorKind.Not, notUnaryExpression.Kind);
+
+            IEdmPathExpression notOperand = notUnaryExpression.Operand as IEdmPathExpression;
+            Assert.NotNull(notOperand);
+            Assert.Equal("IsMale", notOperand.Path);
+
+            // Ge binary operator
+            IEdmProperty isPriceGreatOrEqProp = personType.FindProperty("IsPriceGreatOrEq");
+            Assert.NotNull(isPriceGreatOrEqProp);
+
+            annotation = model.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(isPriceGreatOrEqProp, CoreVocabularyModel.ComputedTerm).FirstOrDefault();
+            Assert.NotNull(annotation);
+
+            IEdmBinaryOperatorExpression geBinaryExpression = annotation.Value as IEdmBinaryOperatorExpression;
+            Assert.NotNull(geBinaryExpression);
+            Assert.Equal(EdmBinaryOperatorKind.Ge, geBinaryExpression.Kind);
+
+            IEdmPathExpression geLeft = geBinaryExpression.Left as IEdmPathExpression;
+            Assert.NotNull(geLeft);
+            Assert.Equal("Price", geLeft.Path);
+
+            IEdmIntegerConstantExpression geRight = geBinaryExpression.Right as IEdmIntegerConstantExpression;
+            Assert.Equal(10, geRight.Value);
+
+            // In operator
+            IEdmProperty sizeInProp = personType.FindProperty("SizeIn");
+            Assert.NotNull(sizeInProp);
+
+            annotation = model.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(sizeInProp, CoreVocabularyModel.ComputedTerm).FirstOrDefault();
+            Assert.NotNull(annotation);
+
+            IEdmBinaryOperatorExpression inBinaryExpression = annotation.Value as IEdmBinaryOperatorExpression;
+            Assert.NotNull(inBinaryExpression);
+            Assert.Equal(EdmBinaryOperatorKind.In, inBinaryExpression.Kind);
+
+            IEdmPathExpression inLeft = inBinaryExpression.Left as IEdmPathExpression;
+            Assert.NotNull(inLeft);
+            Assert.Equal("Size", inLeft.Path);
+
+            IEdmCollectionExpression inRight = inBinaryExpression.Right as IEdmCollectionExpression;
+            Assert.NotNull(inRight);
+
+            Assert.Equal(2, inRight.Elements.Count());
+            Assert.Equal("XS", ((IEdmStringConstantExpression)inRight.Elements.ElementAt(0)).Value);
+            Assert.Equal("S", ((IEdmStringConstantExpression)inRight.Elements.ElementAt(1)).Value);
+
+            // Has operator
+            IEdmProperty hasRedProp = personType.FindProperty("HasRed");
+            Assert.NotNull(hasRedProp);
+
+            annotation = model.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(hasRedProp, CoreVocabularyModel.ComputedTerm).FirstOrDefault();
+            Assert.NotNull(annotation);
+
+            IEdmBinaryOperatorExpression hasBinaryExpression = annotation.Value as IEdmBinaryOperatorExpression;
+            Assert.NotNull(hasBinaryExpression);
+            Assert.Equal(EdmBinaryOperatorKind.Has, hasBinaryExpression.Kind);
+
+            IEdmPathExpression hasLeft = hasBinaryExpression.Left as IEdmPathExpression;
+            Assert.NotNull(hasLeft);
+            Assert.Equal("Fabric", hasLeft.Path);
+
+            IEdmEnumMemberExpression hasRight = hasBinaryExpression.Right as IEdmEnumMemberExpression;
+            Assert.NotNull(hasRight);
+            IEdmEnumMember enumMember = Assert.Single(hasRight.EnumMembers);
+            Assert.Equal("Red", enumMember.Name);
+        }
+
+        [Fact]
         public void ReadNavigationPropertyPartnerTypeHierarchyTest()
         {
             var csdl =
