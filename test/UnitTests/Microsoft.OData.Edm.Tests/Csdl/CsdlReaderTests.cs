@@ -688,7 +688,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             Assert.Equal(EdmBinaryOperatorKind.Has, hasBinaryExpression.Kind);
 
             IEdmPathExpression hasLeft = hasBinaryExpression.Left as IEdmPathExpression;
-            Assert.NotNull(inLeft);
+            Assert.NotNull(hasLeft);
             Assert.Equal("Fabric", hasLeft.Path);
 
             IEdmEnumMemberExpression hasRight = hasBinaryExpression.Right as IEdmEnumMemberExpression;
