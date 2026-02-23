@@ -128,6 +128,57 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
         }
 
         [Fact]
+        public void VerifyComplexTypeWithNavigationPropertiesHasOnDeleteWithAnnotationsWrittenCorrectly()
+        {
+            // Arrange
+            EdmEntityType city = new EdmEntityType("NS", "City");
+            EdmComplexType complexType = new EdmComplexType("NS", "Address");
+            complexType.AddStructuralProperty("Street", new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetString(false, 42, false, true))));
+            IEdmNavigationProperty navProp = complexType.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo
+            {
+                Name = "City",
+                Target = city,
+                TargetMultiplicity = EdmMultiplicity.One,
+                OnDelete = EdmOnDeleteAction.SetNull,
+                ContainsTarget = true
+            });
+
+            Assert.NotNull(navProp.OnDelete);
+            this.model.SetDescriptionAnnotation(navProp.OnDelete, "participate in other referential constraints will be set to null");
+
+            // Act & Assert for XML
+            VisitAndVerifyXml(v => v.VisitSchemaType(complexType),
+                @"<ComplexType Name=""Address"">
+  <Property Name=""Street"" Type=""Collection(Edm.String)"" MaxLength=""42"" Unicode=""false"" />
+  <NavigationProperty Name=""City"" Type=""NS.City"" Nullable=""false"" ContainsTarget=""true"">
+    <OnDelete Action=""SetNull"">
+      <Annotation Term=""Org.OData.Core.V1.Description"" String=""participate in other referential constraints will be set to null"" />
+    </OnDelete>
+  </NavigationProperty>
+</ComplexType>");
+
+            // Act & Assert for JSON
+            VisitAndVerifyJson(v => v.VisitSchemaType(complexType), @"{
+  ""Address"": {
+    ""$Kind"": ""ComplexType"",
+    ""Street"": {
+      ""$Collection"": true,
+      ""$Nullable"": true,
+      ""$MaxLength"": 42,
+      ""$Unicode"": false
+    },
+    ""City"": {
+      ""$Kind"": ""NavigationProperty"",
+      ""$Type"": ""NS.City"",
+      ""$ContainsTarget"": true,
+      ""$OnDelete"": ""SetNull"",
+      ""$OnDelete@Org.OData.Core.V1.Description"": ""participate in other referential constraints will be set to null""
+    }
+  }
+}");
+        }
+
+        [Fact]
         public void VerifyComplexTypeWithAnnotationWrittenCorrectly()
         {
             // Arrange

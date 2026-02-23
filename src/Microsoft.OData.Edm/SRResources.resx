@@ -748,7 +748,7 @@
     <value>The alias '{0}' is not a valid simple name.</value>
   </data>
   <data name="CsdlParser_InvalidDeleteAction" xml:space="preserve">
-    <value>The delete action '{0}' is not valid. Action must be: 'None', 'Cascade', or 'Restrict'.</value>
+    <value>The delete action '{0}' is not valid. Action must be: 'None', 'Cascade', 'SetNull' or 'SetDefault'.</value>
   </data>
   <data name="CsdlParser_MissingTypeAttributeOrElement" xml:space="preserve">
     <value>An XML attribute or sub-element representing an EDM type is missing.</value>

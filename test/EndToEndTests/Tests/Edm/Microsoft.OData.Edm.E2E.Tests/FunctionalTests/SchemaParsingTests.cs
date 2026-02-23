@@ -613,8 +613,8 @@ public class SchemaParsingTests : EdmLibTestCaseBase
         Assert.Equal(toReckless.DependentProperties().First(), feckless.DeclaredKey.First());
         Assert.Equal(toReckless.DependentProperties().Last(), feckless.DeclaredKey.Last());
 
-        Assert.Equal(EdmOnDeleteAction.Cascade, toReckless.OnDelete);
-        Assert.Equal(EdmOnDeleteAction.None, toFecklesses.OnDelete);
+        Assert.Equal(EdmOnDeleteAction.Cascade, toReckless.OnDelete.Action);
+        Assert.Null(toFecklesses.OnDelete);
 
         Assert.Equal(EdmMultiplicity.Many, toFecklesses.TargetMultiplicity());
         Assert.Equal(EdmMultiplicity.ZeroOrOne, toReckless.TargetMultiplicity());

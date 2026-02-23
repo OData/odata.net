@@ -243,6 +243,10 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
                         return EdmOnDeleteAction.None;
                     case CsdlConstants.Value_Cascade:
                         return EdmOnDeleteAction.Cascade;
+                    case "SetDefault":
+                        return EdmOnDeleteAction.SetDefault;
+                    case "SetNull":
+                        return EdmOnDeleteAction.SetNull;
                     default:
                         this.ReportError(this.currentElement.Location, EdmErrorCode.InvalidOnDelete, Error.Format(SRResources.CsdlParser_InvalidDeleteAction, attr.Value));
                         break;

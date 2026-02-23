@@ -59,11 +59,11 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             get { return this.navigationProperty.Name; }
         }
 
-        public EdmOnDeleteAction OnDelete
+        public IEdmOnDelete OnDelete
         {
             get
             {
-                return (this.navigationProperty.OnDelete != null) ? this.navigationProperty.OnDelete.Action : EdmOnDeleteAction.None;
+                return (this.navigationProperty.OnDelete != null) ? new CsdlSemanticsOnDelete(this.Model, this.declaringType.Context, this.navigationProperty.OnDelete) : null;
             }
         }
 

@@ -1100,11 +1100,15 @@ namespace Microsoft.OData.Edm
         protected virtual void ProcessNavigationProperty(IEdmNavigationProperty property)
         {
             this.ProcessProperty(property);
+            this.ProcessOnDelete(property.OnDelete);
+            this.ProcessReferentialConstraint(property.ReferentialConstraint);
         }
 
-        protected virtual Task ProcessNavigationPropertyAsync(IEdmNavigationProperty property)
+        protected virtual async Task ProcessNavigationPropertyAsync(IEdmNavigationProperty property)
         {
-            return this.ProcessPropertyAsync(property);
+            await this.ProcessPropertyAsync(property);
+            await this.ProcessOnDeleteAsync(property.OnDelete);
+            await this.ProcessReferentialConstraintAsync(property.ReferentialConstraint);
         }
 
         protected virtual void ProcessStructuralProperty(IEdmStructuralProperty property)
@@ -1139,6 +1143,31 @@ namespace Microsoft.OData.Edm
         protected virtual Task ProcessEnumMemberAsync(IEdmEnumMember enumMember)
         {
             return this.ProcessNamedElementAsync(enumMember);
+        }
+
+        protected virtual void ProcessOnDelete(IEdmOnDelete onDelete)
+        {
+            if (onDelete != null)
+            {
+                this.ProcessElement(onDelete);
+            }
+        }
+
+        protected virtual async Task ProcessOnDeleteAsync(IEdmOnDelete onDelete)
+        {
+            if (onDelete != null)
+            {
+                await this.ProcessElementAsync(onDelete);
+            }
+        }
+
+        protected virtual void ProcessReferentialConstraint(IEdmReferentialConstraint referentialConstraint)
+        {
+        }
+
+        protected virtual Task ProcessReferentialConstraintAsync(IEdmReferentialConstraint referentialConstraint)
+        {
+            return Task.CompletedTask;
         }
 
         #endregion

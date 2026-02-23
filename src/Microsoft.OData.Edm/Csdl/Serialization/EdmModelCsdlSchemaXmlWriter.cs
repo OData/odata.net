@@ -483,10 +483,21 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// Writes the NavigationOnDeleteAction element.
         /// </summary>
         /// <param name="operationAction">The Edm OnDelete action.</param>
-        internal override void WriteNavigationOnDeleteActionElement(EdmOnDeleteAction operationAction)
+        internal override void WriteNavigationOnDeleteActionElement(IEdmOnDelete operationAction)
         {
             this.xmlWriter.WriteStartElement(CsdlConstants.Element_OnDelete);
-            this.WriteRequiredAttribute(CsdlConstants.Attribute_Action, operationAction.ToString(), EdmValueWriter.StringAsXml);
+            this.WriteRequiredAttribute(CsdlConstants.Attribute_Action, operationAction.Action.ToString(), EdmValueWriter.StringAsXml);
+
+            if (this.Model != null)
+            {
+                IEnumerable<IEdmVocabularyAnnotation> annotations = this.Model.FindDeclaredVocabularyAnnotations(operationAction).Where(a => a.IsInline(this.Model));
+                foreach (var annotation in annotations)
+                {
+                    WriteVocabularyAnnotationElementHeader(annotation, isInline: true);
+                    WriteVocabularyAnnotationElementEnd(annotation, isInline: true);
+                }
+            }
+
             this.WriteEndElement();
         }
 
@@ -495,10 +506,21 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// </summary>
         /// <param name="operationAction">The Edm OnDelete action.</param>
         /// <returns>Task represents an asynchronous operation.</returns>
-        internal override async Task WriteNavigationOnDeleteActionElementAsync(EdmOnDeleteAction operationAction)
+        internal override async Task WriteNavigationOnDeleteActionElementAsync(IEdmOnDelete operationAction)
         {
             await this.xmlWriter.WriteStartElementAsync(null, CsdlConstants.Element_OnDelete, null).ConfigureAwait(false);
-            await this.WriteRequiredAttributeAsync(CsdlConstants.Attribute_Action, operationAction.ToString(), EdmValueWriter.StringAsXml).ConfigureAwait(false);
+            await this.WriteRequiredAttributeAsync(CsdlConstants.Attribute_Action, operationAction.Action.ToString(), EdmValueWriter.StringAsXml).ConfigureAwait(false);
+
+            if (this.Model != null)
+            {
+                IEnumerable<IEdmVocabularyAnnotation> annotations = this.Model.FindDeclaredVocabularyAnnotations(operationAction).Where(a => a.IsInline(this.Model));
+                foreach (var annotation in annotations)
+                {
+                    await WriteVocabularyAnnotationElementHeaderAsync(annotation, isInline: true);
+                    await WriteVocabularyAnnotationElementEndAsync(annotation, isInline: true);
+                }
+            }
+
             await this.WriteEndElementAsync().ConfigureAwait(false);
         }
 
@@ -1376,7 +1398,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// </summary>
         /// <param name="annotation">The Edm vocabulary annotation.</param>
         /// <param name="isInline">Is inline type or not.</param>
-        internal override void WriteVocabularyAnnotationElementHeader(IEdmVocabularyAnnotation annotation, bool isInline)
+        internal override void WriteVocabularyAnnotationElementHeader(IEdmVocabularyAnnotation annotation, bool isInline, string prefix = null)
         {
             this.xmlWriter.WriteStartElement(CsdlConstants.Element_Annotation);
             this.WriteRequiredAttribute(CsdlConstants.Attribute_Term, annotation.Term, this.TermAsXml);
@@ -1395,7 +1417,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <param name="annotation">The Edm vocabulary annotation.</param>
         /// <param name="isInline">Is inline type or not.</param>
         /// <returns>Task represents an asynchronous operation.</returns>
-        internal override async Task WriteVocabularyAnnotationElementHeaderAsync(IEdmVocabularyAnnotation annotation, bool isInline)
+        internal override async Task WriteVocabularyAnnotationElementHeaderAsync(IEdmVocabularyAnnotation annotation, bool isInline, string prefix = null)
         {
             await this.xmlWriter.WriteStartElementAsync(null, CsdlConstants.Element_Annotation, null).ConfigureAwait(false);
             await this.WriteRequiredAttributeAsync(CsdlConstants.Attribute_Term, annotation.Term, this.TermAsXml).ConfigureAwait(false);

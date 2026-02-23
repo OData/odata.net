@@ -147,8 +147,8 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
         [Fact]
         public void OnDeleteShouldContinueToWork()
         {
-            Assert.Equal(EdmOnDeleteAction.Cascade, this.navigation1.OnDelete);
-            Assert.Equal(EdmOnDeleteAction.None, this.navigation2.OnDelete);
+            Assert.Equal(EdmOnDeleteAction.Cascade, this.navigation1.OnDelete.Action);
+            Assert.Null(this.navigation2.OnDelete);
         }
 
         [Fact]

@@ -45,6 +45,8 @@ namespace Microsoft.OData.Edm
 
         /// <summary>
         /// Gets or sets the action to take when an instance of the declaring type is deleted.
+        /// Keep using the enum values instead of the IEdmOnDelete interface to avoid unnecessary object creation when the default value (None) is used.
+        /// And it's only used to provide the information to the caller when building the navigation property, it won't be used after that, so we don't need to convert it to IEdmOnDelete and attach it to the navigation property.
         /// </summary>
         public EdmOnDeleteAction OnDelete { get; set; }
 

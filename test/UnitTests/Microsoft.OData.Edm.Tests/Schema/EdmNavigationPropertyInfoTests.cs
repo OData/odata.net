@@ -20,10 +20,10 @@ namespace Microsoft.OData.Edm.Tests.Library
             EdmNavigationPropertyInfo navigationPropertyInfo = new EdmNavigationPropertyInfo
             {
                 ContainsTarget = true,
-                DependentProperties = new[] {property1}, 
+                DependentProperties = new[] {property1},
                 Name = "navPropInfo", 
-                OnDelete = EdmOnDeleteAction.Cascade, 
-                PrincipalProperties = new[] {property2}, 
+                OnDelete = EdmOnDeleteAction.Cascade,
+                PrincipalProperties = new[] {property2},
                 Target = type, 
                 TargetMultiplicity = EdmMultiplicity.Many
             };

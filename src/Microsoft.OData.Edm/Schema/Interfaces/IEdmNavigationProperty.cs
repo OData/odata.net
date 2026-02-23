@@ -33,22 +33,6 @@ namespace Microsoft.OData.Edm
     }
 
     /// <summary>
-    /// Enumerates the actions EDM can apply on deletes.
-    /// </summary>
-    public enum EdmOnDeleteAction
-    {
-        /// <summary>
-        /// Take no action on delete.
-        /// </summary>
-        None = 0,
-
-        /// <summary>
-        /// On delete also delete items on the other end of the association.
-        /// </summary>
-        Cascade
-    }
-
-    /// <summary>
     /// Represents an EDM navigation property.
     /// </summary>
     public interface IEdmNavigationProperty : IEdmProperty
@@ -61,7 +45,7 @@ namespace Microsoft.OData.Edm
         /// <summary>
         /// Gets the action to execute on the deletion of this end of a bidirectional association.
         /// </summary>
-        EdmOnDeleteAction OnDelete { get; }
+        IEdmOnDelete OnDelete { get; }
 
         /// <summary>
         /// Gets a value indicating whether the navigation target is contained inside the navigation source.

@@ -90,8 +90,8 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         internal abstract void WriteNavigationPropertyElementHeader(IEdmNavigationProperty property);
         internal abstract Task WriteNavigationPropertyElementHeaderAsync(IEdmNavigationProperty property);
 
-        internal abstract void WriteNavigationOnDeleteActionElement(EdmOnDeleteAction operationAction);
-        internal abstract Task WriteNavigationOnDeleteActionElementAsync(EdmOnDeleteAction operationAction);
+        internal abstract void WriteNavigationOnDeleteActionElement(IEdmOnDelete operationAction);
+        internal abstract Task WriteNavigationOnDeleteActionElementAsync(IEdmOnDelete operationAction);
 
         internal abstract void WriteSchemaElementHeader(EdmSchema schema, string alias, IEnumerable<KeyValuePair<string, string>> mappings);
         internal abstract Task WriteSchemaElementHeaderAsync(EdmSchema schema, string alias, IEnumerable<KeyValuePair<string, string>> mappings);
@@ -238,8 +238,8 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         internal abstract void WriteInlineExpression(IEdmExpression expression);
         internal abstract Task WriteInlineExpressionAsync(IEdmExpression expression);
 
-        internal abstract void WriteVocabularyAnnotationElementHeader(IEdmVocabularyAnnotation annotation, bool isInline);
-        internal abstract Task WriteVocabularyAnnotationElementHeaderAsync(IEdmVocabularyAnnotation annotation, bool isInline);
+        internal abstract void WriteVocabularyAnnotationElementHeader(IEdmVocabularyAnnotation annotation, bool isInline, string prefix = null);
+        internal abstract Task WriteVocabularyAnnotationElementHeaderAsync(IEdmVocabularyAnnotation annotation, bool isInline, string prefix = null);
 
         internal abstract void WriteVocabularyAnnotationElementEnd(IEdmVocabularyAnnotation annotation, bool isInline);
         internal abstract Task WriteVocabularyAnnotationElementEndAsync(IEdmVocabularyAnnotation annotation, bool isInline);

@@ -17,7 +17,7 @@ namespace Microsoft.OData.Edm
     {
         private readonly IEdmReferentialConstraint referentialConstraint;
         private readonly bool containsTarget;
-        private readonly EdmOnDeleteAction onDelete;
+        private readonly IEdmOnDelete onDelete;
         private IEdmNavigationProperty partner;
 
         private EdmNavigationProperty(
@@ -27,7 +27,7 @@ namespace Microsoft.OData.Edm
             IEnumerable<IEdmStructuralProperty> dependentProperties,
             IEnumerable<IEdmStructuralProperty> principalProperties,
             bool containsTarget,
-            EdmOnDeleteAction onDelete)
+            IEdmOnDelete onDelete)
             : base(declaringType, name, type)
         {
             this.containsTarget = containsTarget;
@@ -66,7 +66,7 @@ namespace Microsoft.OData.Edm
         /// <summary>
         /// Gets the action to take when an instance of the declaring type is deleted.
         /// </summary>
-        public EdmOnDeleteAction OnDelete
+        public IEdmOnDelete OnDelete
         {
             get { return this.onDelete; }
         }
@@ -106,7 +106,7 @@ namespace Microsoft.OData.Edm
                 propertyInfo.DependentProperties,
                 propertyInfo.PrincipalProperties,
                 propertyInfo.ContainsTarget,
-                propertyInfo.OnDelete);
+                propertyInfo.OnDelete == EdmOnDeleteAction.None ? null : new EdmOnDelete(propertyInfo.OnDelete));
         }
 
         /// <summary>
@@ -131,7 +131,7 @@ namespace Microsoft.OData.Edm
                 propertyInfo.DependentProperties,
                 propertyInfo.PrincipalProperties,
                 propertyInfo.ContainsTarget,
-                propertyInfo.OnDelete);
+                propertyInfo.OnDelete == EdmOnDeleteAction.None ? null : new EdmOnDelete(propertyInfo.OnDelete));
 
             EdmNavigationProperty end2 = new EdmNavigationProperty(
                 propertyInfo.Target,
@@ -140,7 +140,7 @@ namespace Microsoft.OData.Edm
                 partnerInfo.DependentProperties,
                 partnerInfo.PrincipalProperties,
                 partnerInfo.ContainsTarget,
-                partnerInfo.OnDelete);
+                partnerInfo.OnDelete == EdmOnDeleteAction.None ? null : new EdmOnDelete(partnerInfo.OnDelete));
 
             end1.SetPartner(end2, new EdmPathExpression(end2.Name));
             end2.SetPartner(end1, new EdmPathExpression(end1.Name));
@@ -176,6 +176,41 @@ namespace Microsoft.OData.Edm
             IEnumerable<IEdmStructuralProperty> partnerPrincipalProperties,
             bool partnerContainsTarget,
             EdmOnDeleteAction partnerOnDelete)
+        {
+            return CreateNavigationPropertyWithPartner(propertyName, propertyType,
+                dependentProperties, principalProperties, containsTarget, new EdmOnDelete(onDelete),
+                partnerPropertyName, partnerPropertyType, partnerDependentProperties, partnerPrincipalProperties, partnerContainsTarget, new EdmOnDelete(partnerOnDelete));
+        }
+
+        /// <summary>
+        /// Creates two navigation properties representing an association between two entity types.
+        /// </summary>
+        /// <param name="propertyName">Navigation property name.</param>
+        /// <param name="propertyType">Type of the navigation property.</param>
+        /// <param name="dependentProperties">Dependent properties of the navigation source.</param>
+        /// <param name="principalProperties">Principal properties of the navigation source.</param>
+        /// <param name="containsTarget">A value indicating whether the navigation source logically contains the navigation target.</param>
+        /// <param name="onDelete">Action to take upon deletion of an instance of the navigation source.</param>
+        /// <param name="partnerPropertyName">Navigation partner property name.</param>
+        /// <param name="partnerPropertyType">Type of the navigation partner property.</param>
+        /// <param name="partnerDependentProperties">Dependent properties of the navigation target.</param>
+        /// <param name="partnerPrincipalProperties">Principal properties of the navigation target.</param>
+        /// <param name="partnerContainsTarget">A value indicating whether the navigation target logically contains the navigation source.</param>
+        /// <param name="partnerOnDelete">Action to take upon deletion of an instance of the navigation target.</param>
+        /// <returns>Navigation property.</returns>
+        public static EdmNavigationProperty CreateNavigationPropertyWithPartner(
+            string propertyName,
+            IEdmTypeReference propertyType,
+            IEnumerable<IEdmStructuralProperty> dependentProperties,
+            IEnumerable<IEdmStructuralProperty> principalProperties,
+            bool containsTarget,
+            IEdmOnDelete onDelete,
+            string partnerPropertyName,
+            IEdmTypeReference partnerPropertyType,
+            IEnumerable<IEdmStructuralProperty> partnerDependentProperties,
+            IEnumerable<IEdmStructuralProperty> partnerPrincipalProperties,
+            bool partnerContainsTarget,
+            IEdmOnDelete partnerOnDelete)
         {
             EdmUtil.CheckArgumentNull(propertyName, "propertyName");
             EdmUtil.CheckArgumentNull(propertyType, "propertyType");

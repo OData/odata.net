@@ -303,7 +303,7 @@ public class EdmToStockModelConverter : IEdmToStockModelConverter
                     DependentProperties = createDependentProperties(edmNavigation.DependentProperties()),
                     PrincipalProperties = createPrincipalProperties(edmNavigation.ReferentialConstraint, stockToRoleType),
                     ContainsTarget = edmNavigation.ContainsTarget,
-                    OnDelete = edmNavigation.OnDelete
+                    OnDelete = edmNavigation.OnDelete == null ? EdmOnDeleteAction.None : edmNavigation.OnDelete.Action
                 };
 
                 bool bidirectional = edmNavigation.Partner != null && edmNavigation.ToEntityType().FindProperty(edmNavigation.Partner.Name) != null;
@@ -316,7 +316,7 @@ public class EdmToStockModelConverter : IEdmToStockModelConverter
                         DependentProperties = createDependentProperties(edmNavigation.Partner.DependentProperties()),
                         PrincipalProperties = createPrincipalProperties(edmNavigation.Partner.ReferentialConstraint, stockType),
                         ContainsTarget = edmNavigation.Partner.ContainsTarget,
-                        OnDelete = edmNavigation.Partner.OnDelete
+                        OnDelete = edmNavigation.Partner.OnDelete == null ? EdmOnDeleteAction.None : edmNavigation.Partner.OnDelete.Action
                     };
 
                     stockType.AddBidirectionalNavigation(propertyInfo, partnerInfo);

@@ -73,7 +73,7 @@ public class StubEdmNavigationProperty : StubEdmElement, IEdmNavigationProperty
     /// <summary>
     /// Gets or sets the action to execute on the deletion of this end of a bidirectional association.
     /// </summary>
-    public EdmOnDeleteAction OnDelete { get; set; }
+    public IEdmOnDelete OnDelete { get; set; }
 
     /// <summary>
     /// Gets or sets the referential constraint for this navigation property.

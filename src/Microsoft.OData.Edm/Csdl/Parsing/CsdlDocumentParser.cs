@@ -89,7 +89,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                         //// <ReferentialConstraint/>
                         CsdlElement<CsdlReferentialConstraint>(CsdlConstants.Element_ReferentialConstraint, this.OnReferentialConstraintElement),
                         //// <OnDelete/>
-                        CsdlElement<CsdlOnDelete>(CsdlConstants.Element_OnDelete, this.OnDeleteActionElement),
+                        CsdlElement<CsdlOnDelete>(CsdlConstants.Element_OnDelete, this.OnDeleteActionElement, annotationParser),
                         //// <Annotation/>
                         annotationParser),
                     //// </NavigationProperty>
@@ -114,7 +114,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                         //// <ReferentialConstraint/>
                         CsdlElement<CsdlReferentialConstraint>(CsdlConstants.Element_ReferentialConstraint, this.OnReferentialConstraintElement),
                         //// <OnDelete/>
-                        CsdlElement<CsdlOnDelete>(CsdlConstants.Element_OnDelete, this.OnDeleteActionElement),
+                        CsdlElement<CsdlOnDelete>(CsdlConstants.Element_OnDelete, this.OnDeleteActionElement, annotationParser),
                         //// <Annotation/>
                         annotationParser),
                     //// </NavigationProperty>

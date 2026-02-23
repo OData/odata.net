@@ -927,9 +927,12 @@ namespace Microsoft.OData.Edm.Validation
                     followup.Add(property.ReferentialConstraint);
                 }
 
-                if (property.OnDelete < EdmOnDeleteAction.None || property.OnDelete > EdmOnDeleteAction.Cascade)
+                if (property.OnDelete != null)
                 {
-                    CollectErrors(CreateEnumPropertyOutOfRangeError(property, property.OnDelete, "OnDelete"), ref errors);
+                    if (property.OnDelete.Action < EdmOnDeleteAction.None || property.OnDelete.Action > EdmOnDeleteAction.SetDefault)
+                    {
+                        CollectErrors(CreateEnumPropertyOutOfRangeError(property, property.OnDelete, "OnDelete"), ref errors);
+                    }
                 }
 
                 return errors;
