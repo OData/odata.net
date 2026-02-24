@@ -4,11 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using Microsoft.OData.Edm.Csdl;
-using Microsoft.OData.Edm.Csdl.CsdlSemantics;
-using Microsoft.OData.Edm.Validation;
-using Microsoft.OData.Edm.Vocabularies;
-using Microsoft.OData.Edm.Vocabularies.V1;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -17,6 +12,11 @@ using System.Linq;
 using System.Text;
 using System.Xml;
 using System.Xml.Linq;
+using Microsoft.OData.Edm.Csdl;
+using Microsoft.OData.Edm.Csdl.CsdlSemantics;
+using Microsoft.OData.Edm.Validation;
+using Microsoft.OData.Edm.Vocabularies;
+using Microsoft.OData.Edm.Vocabularies.V1;
 using Xunit;
 using ErrorStrings = Microsoft.OData.Edm.SRResources;
 

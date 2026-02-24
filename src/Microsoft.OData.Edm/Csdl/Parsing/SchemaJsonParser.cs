@@ -827,7 +827,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                             {
                                 if (propertyName == "$OnDelete")
                                 {
-                                    // annotation for OnDelte
+                                    // annotation for OnDelete
                                     onDeleteAnnotations.Add(annotation);
                                 }
                                 else
@@ -852,7 +852,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                 typeName = "Collection(" + typeName + ")";
             }
 
-            // Annotations for $OnDelete are prefixed with $OnDelete. However, It's not supported in ODL yet.
+            // Annotations for $OnDelete are prefixed with $OnDelete.
             if (csdlOnDelete != null && onDeleteAnnotations.Count > 0)
             {
                 onDeleteAnnotations.ForEach(a => csdlOnDelete.AddAnnotation(a));
@@ -889,7 +889,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                     break;
 
                 default:
-                    // So far, ODL only supports "Cascade", for others we use "None" for them
+                    // All OData 4.01 OnDelete actions are supported; unexpected values are reported.
                     ReportUnexpectedElement(element, context);
                     break;
             }
