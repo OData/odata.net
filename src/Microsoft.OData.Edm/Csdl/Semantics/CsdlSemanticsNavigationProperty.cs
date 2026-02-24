@@ -34,6 +34,9 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         private readonly Cache<CsdlSemanticsNavigationProperty, IEdmEntityType> targetEntityTypeCache = new Cache<CsdlSemanticsNavigationProperty, IEdmEntityType>();
         private static readonly Func<CsdlSemanticsNavigationProperty, IEdmEntityType> ComputeTargetEntityTypeFunc = (me) => me.ComputeTargetEntityType();
 
+        private readonly Cache<CsdlSemanticsNavigationProperty, IEdmOnDelete> onDeleteCache = new Cache<CsdlSemanticsNavigationProperty, IEdmOnDelete>();
+        private static readonly Func<CsdlSemanticsNavigationProperty, IEdmOnDelete> ComputeOnDeleteFunc = (me) => me.ComputeOnDelete();
+
         private readonly Cache<CsdlSemanticsNavigationProperty, IEnumerable<EdmError>> errorsCache = new Cache<CsdlSemanticsNavigationProperty, IEnumerable<EdmError>>();
         private static readonly Func<CsdlSemanticsNavigationProperty, IEnumerable<EdmError>> ComputeErrorsFunc = (me) => me.ComputeErrors();
 
@@ -61,10 +64,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 
         public IEdmOnDelete OnDelete
         {
-            get
-            {
-                return (this.navigationProperty.OnDelete != null) ? new CsdlSemanticsOnDelete(this.Model, this.declaringType.Context, this.navigationProperty.OnDelete) : null;
-            }
+            get { return this.onDeleteCache.GetValue(this, ComputeOnDeleteFunc, null); }
         }
 
         public IEdmStructuredType DeclaringType
@@ -287,6 +287,11 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             IEdmStructuralProperty dependentProperty = this.declaringType.FindProperty(csdlConstraint.PropertyName) as IEdmStructuralProperty ?? new UnresolvedProperty(this.declaringType, csdlConstraint.PropertyName, csdlConstraint.Location);
             IEdmStructuralProperty principalProperty = this.TargetEntityType.FindProperty(csdlConstraint.ReferencedPropertyName) as IEdmStructuralProperty ?? new UnresolvedProperty(this.ToEntityType(), csdlConstraint.ReferencedPropertyName, csdlConstraint.Location);
             return new EdmReferentialConstraintPropertyPair(dependentProperty, principalProperty);
+        }
+
+        private IEdmOnDelete ComputeOnDelete()
+        {
+            return (this.navigationProperty.OnDelete != null) ? new CsdlSemanticsOnDelete(this.Model, this.declaringType.Context, this.navigationProperty.OnDelete) : null;
         }
 
         private IEnumerable<EdmError> ComputeErrors()
