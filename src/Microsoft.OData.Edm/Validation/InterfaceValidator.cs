@@ -931,7 +931,7 @@ namespace Microsoft.OData.Edm.Validation
                 {
                     if (property.OnDelete.Action < EdmOnDeleteAction.None || property.OnDelete.Action > EdmOnDeleteAction.SetDefault)
                     {
-                        CollectErrors(CreateEnumPropertyOutOfRangeError(property, property.OnDelete, "OnDelete"), ref errors);
+                        CollectErrors(CreateEnumPropertyOutOfRangeError(property, property.OnDelete.Action, "OnDelete"), ref errors);
                     }
                 }
 

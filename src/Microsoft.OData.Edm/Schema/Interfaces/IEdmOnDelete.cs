@@ -5,7 +5,6 @@
 //---------------------------------------------------------------------
 
 using Microsoft.OData.Edm.Vocabularies;
-using System.Runtime.CompilerServices;
 
 namespace Microsoft.OData.Edm
 {
@@ -25,14 +24,14 @@ namespace Microsoft.OData.Edm
         Cascade,
 
         /// <summary>
-        /// meaning all properties of related entities that are tied to properties of the source entity via a referential constraint
-        /// and that do not participate in other referential constraints will be set to null
+        /// Meaning all properties of related entities that are tied to properties of the source entity via a referential constraint
+        /// and that do not participate in other referential constraints will be set to null.
         /// </summary>
         SetNull,
 
         /// <summary>
-        /// meaning all properties of related entities that are tied to properties of the source entity via a referential constraint
-        /// and that do not participate in other referential constraints will be set to their default valueSets the default value or 
+        /// Meaning all properties of related entities that are tied to properties of the source entity via a referential constraint
+        /// and that do not participate in other referential constraints will be set to their default value.
         /// </summary>
         SetDefault
     }
