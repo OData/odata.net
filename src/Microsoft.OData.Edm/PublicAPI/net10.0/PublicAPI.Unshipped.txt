@@ -1,5 +1,12 @@
 Microsoft.OData.Edm.EdmExpressionKind.BinaryOperator = 27 -> Microsoft.OData.Edm.EdmExpressionKind
 Microsoft.OData.Edm.EdmExpressionKind.UnaryOperator = 26 -> Microsoft.OData.Edm.EdmExpressionKind
+Microsoft.OData.Edm.EdmOnDelete
+Microsoft.OData.Edm.EdmOnDelete.Action.get -> Microsoft.OData.Edm.EdmOnDeleteAction
+Microsoft.OData.Edm.EdmOnDelete.EdmOnDelete(Microsoft.OData.Edm.EdmOnDeleteAction action) -> void
+Microsoft.OData.Edm.EdmOnDeleteAction.SetDefault = 3 -> Microsoft.OData.Edm.EdmOnDeleteAction
+Microsoft.OData.Edm.EdmOnDeleteAction.SetNull = 2 -> Microsoft.OData.Edm.EdmOnDeleteAction
+Microsoft.OData.Edm.IEdmOnDelete
+Microsoft.OData.Edm.IEdmOnDelete.Action.get -> Microsoft.OData.Edm.EdmOnDeleteAction
 Microsoft.OData.Edm.Validation.EdmErrorCode.InvalidBinaryOperatorExpression = 414 -> Microsoft.OData.Edm.Validation.EdmErrorCode
 Microsoft.OData.Edm.Validation.EdmErrorCode.InvalidUnaryOperatorExpression = 413 -> Microsoft.OData.Edm.Validation.EdmErrorCode
 Microsoft.OData.Edm.Vocabularies.EdmBinaryOperatorExpression
@@ -40,6 +47,7 @@ Microsoft.OData.Edm.Vocabularies.IEdmBinaryOperatorExpression.Right.get -> Micro
 Microsoft.OData.Edm.Vocabularies.IEdmUnaryOperatorExpression
 Microsoft.OData.Edm.Vocabularies.IEdmUnaryOperatorExpression.Kind.get -> Microsoft.OData.Edm.Vocabularies.EdmUnaryOperatorKind
 Microsoft.OData.Edm.Vocabularies.IEdmUnaryOperatorExpression.Operand.get -> Microsoft.OData.Edm.IEdmExpression
+static Microsoft.OData.Edm.EdmNavigationProperty.CreateNavigationPropertyWithPartner(string propertyName, Microsoft.OData.Edm.IEdmTypeReference propertyType, System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmStructuralProperty> dependentProperties, System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmStructuralProperty> principalProperties, bool containsTarget, Microsoft.OData.Edm.IEdmOnDelete onDelete, string partnerPropertyName, Microsoft.OData.Edm.IEdmTypeReference partnerPropertyType, System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmStructuralProperty> partnerDependentProperties, System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmStructuralProperty> partnerPrincipalProperties, bool partnerContainsTarget, Microsoft.OData.Edm.IEdmOnDelete partnerOnDelete) -> Microsoft.OData.Edm.EdmNavigationProperty
 static Microsoft.OData.Edm.ExtensionMethods.SetOptimisticConcurrencyAnnotation(this Microsoft.OData.Edm.EdmModel model, Microsoft.OData.Edm.IEdmSingleton target, System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmStructuralProperty> properties) -> void
 static Microsoft.OData.Edm.ExtensionMethods.SetOptimisticConcurrencyAnnotation(this Microsoft.OData.Edm.EdmModel model, Microsoft.OData.Edm.IEdmSingleton target, System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmStructuralProperty> properties, Microsoft.OData.Edm.Csdl.EdmVocabularyAnnotationSerializationLocation location) -> void
 static readonly Microsoft.OData.Edm.Vocabularies.V1.CoreVocabularyModel.OrderedTerm -> Microsoft.OData.Edm.Vocabularies.IEdmTerm

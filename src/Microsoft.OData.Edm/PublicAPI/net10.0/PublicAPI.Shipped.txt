@@ -396,7 +396,7 @@ Microsoft.OData.Edm.EdmNamedElement.EdmNamedElement(string name) -> void
 Microsoft.OData.Edm.EdmNamedElement.Name.get -> string
 Microsoft.OData.Edm.EdmNavigationProperty
 Microsoft.OData.Edm.EdmNavigationProperty.ContainsTarget.get -> bool
-Microsoft.OData.Edm.EdmNavigationProperty.OnDelete.get -> Microsoft.OData.Edm.EdmOnDeleteAction
+Microsoft.OData.Edm.EdmNavigationProperty.OnDelete.get -> Microsoft.OData.Edm.IEdmOnDelete
 Microsoft.OData.Edm.EdmNavigationProperty.Partner.get -> Microsoft.OData.Edm.IEdmNavigationProperty
 Microsoft.OData.Edm.EdmNavigationProperty.ReferentialConstraint.get -> Microsoft.OData.Edm.IEdmReferentialConstraint
 Microsoft.OData.Edm.EdmNavigationPropertyBinding
@@ -719,7 +719,7 @@ Microsoft.OData.Edm.IEdmNamedElement
 Microsoft.OData.Edm.IEdmNamedElement.Name.get -> string
 Microsoft.OData.Edm.IEdmNavigationProperty
 Microsoft.OData.Edm.IEdmNavigationProperty.ContainsTarget.get -> bool
-Microsoft.OData.Edm.IEdmNavigationProperty.OnDelete.get -> Microsoft.OData.Edm.EdmOnDeleteAction
+Microsoft.OData.Edm.IEdmNavigationProperty.OnDelete.get -> Microsoft.OData.Edm.IEdmOnDelete
 Microsoft.OData.Edm.IEdmNavigationProperty.Partner.get -> Microsoft.OData.Edm.IEdmNavigationProperty
 Microsoft.OData.Edm.IEdmNavigationProperty.ReferentialConstraint.get -> Microsoft.OData.Edm.IEdmReferentialConstraint
 Microsoft.OData.Edm.IEdmNavigationPropertyBinding

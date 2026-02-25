@@ -56,9 +56,9 @@ namespace Microsoft.OData.Edm
             get { return null; }
         }
 
-        public EdmOnDeleteAction OnDelete
+        public IEdmOnDelete OnDelete
         {
-            get { return EdmOnDeleteAction.None; }
+            get { return null; }
         }
 
         public IEdmReferentialConstraint ReferentialConstraint

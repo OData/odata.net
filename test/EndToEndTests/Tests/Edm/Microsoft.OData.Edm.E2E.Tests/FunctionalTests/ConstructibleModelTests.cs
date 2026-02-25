@@ -343,8 +343,8 @@ public class ConstructibleModelTests : EdmLibTestCaseBase
         Assert.Equal(t1.FindProperty("P103"), p103);
 
         Assert.True(p101.PropertyKind == EdmPropertyKind.Navigation);
-        Assert.True(p102.OnDelete == EdmOnDeleteAction.None);
-        Assert.True(p103.OnDelete == EdmOnDeleteAction.Cascade);
+        Assert.Null(p102.OnDelete);
+        Assert.Equal(EdmOnDeleteAction.Cascade, p103.OnDelete.Action);
 
         var p202 = p102.Partner;
         var p201 = p101.Partner;
@@ -411,8 +411,8 @@ public class ConstructibleModelTests : EdmLibTestCaseBase
         Assert.Equal(t1.FindProperty("P103"), p103);
 
         Assert.True(p101.PropertyKind == EdmPropertyKind.Navigation);
-        Assert.True(p102.OnDelete == EdmOnDeleteAction.None);
-        Assert.True(p103.OnDelete == EdmOnDeleteAction.Cascade);
+        Assert.Null(p102.OnDelete);
+        Assert.Equal(EdmOnDeleteAction.Cascade, p103.OnDelete.Action);
 
         var p201 = p101.Partner;
         var p202 = p102.Partner;

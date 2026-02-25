@@ -591,15 +591,24 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// Writes Navigation OnDelete Action Element.
         /// </summary>
         /// <param name="operationAction">The Edm OnDelete Action.</param>
-        internal override void WriteNavigationOnDeleteActionElement(EdmOnDeleteAction operationAction)
+        internal override void WriteNavigationOnDeleteActionElement(IEdmOnDelete operationAction)
         {
             // $OnDelete
             this.jsonWriter.WritePropertyName("$OnDelete");
 
             // The value of $OnDelete is a string with one of the values Cascade, None, SetNull, or SetDefault.
-            this.jsonWriter.WriteStringValue(operationAction.ToString());
+            this.jsonWriter.WriteStringValue(operationAction.Action.ToString());
 
-            // Annotations for $OnDelete are prefixed with $OnDelete. So far, it's not supported now.
+            // Annotations for $OnDelete are prefixed with $OnDelete.
+            if (this.Model != null)
+            {
+                IEnumerable<IEdmVocabularyAnnotation> annotations = this.Model.FindDeclaredVocabularyAnnotations(operationAction).Where(a => a.IsInline(this.Model));
+                foreach (var annotation in annotations)
+                {
+                    WriteVocabularyAnnotationElementHeader(annotation, isInline: true, "$OnDelete");
+                    WriteVocabularyAnnotationElementEnd(annotation, isInline: true);
+                }
+            }
         }
 
         /// <summary>
@@ -607,16 +616,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// </summary>
         /// <param name="operationAction">The Edm OnDelete Action.</param>
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
-        internal override Task WriteNavigationOnDeleteActionElementAsync(EdmOnDeleteAction operationAction)
+        internal override Task WriteNavigationOnDeleteActionElementAsync(IEdmOnDelete operationAction)
         {
-            // $OnDelete
-            this.jsonWriter.WritePropertyName("$OnDelete");
-
-            // The value of $OnDelete is a string with one of the values Cascade, None, SetNull, or SetDefault.
-            this.jsonWriter.WriteStringValue(operationAction.ToString());
-
-            // Annotations for $OnDelete are prefixed with $OnDelete. So far, it's not supported now.
-
+            WriteNavigationOnDeleteActionElement(operationAction);
             return Task.CompletedTask;
         }
 
@@ -1980,9 +1982,20 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// </summary>
         /// <param name="annotation">The Edm Vocabulary Annotation.</param>
         /// <param name="isInline">Is line type or not.</param>
-        internal override void WriteVocabularyAnnotationElementHeader(IEdmVocabularyAnnotation annotation, bool isInline)
+        /// <param name="prefix">use the prefix or not.</param>
+        internal override void WriteVocabularyAnnotationElementHeader(IEdmVocabularyAnnotation annotation, bool isInline, string prefix = null)
         {
-            this.jsonWriter.WritePropertyName(AnnotationToString(annotation));
+            string annotationName;
+            if (prefix == null)
+            {
+                annotationName = AnnotationToString(annotation);
+            }
+            else
+            {
+                annotationName = prefix + AnnotationToString(annotation);
+            }
+
+            this.jsonWriter.WritePropertyName(annotationName);
 
             if (isInline)
             {
@@ -1997,9 +2010,19 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <param name="annotation">The Edm Vocabulary Annotation.</param>
         /// <param name="isInline">Is line type or not.</param>
         /// <returns>Task represents an asynchronous operation.</returns>
-        internal override async Task WriteVocabularyAnnotationElementHeaderAsync(IEdmVocabularyAnnotation annotation, bool isInline)
+        internal override async Task WriteVocabularyAnnotationElementHeaderAsync(IEdmVocabularyAnnotation annotation, bool isInline, string prefix = null)
         {
-            this.jsonWriter.WritePropertyName(AnnotationToString(annotation));
+            string annotationName;
+            if (prefix == null)
+            {
+                annotationName = AnnotationToString(annotation);
+            }
+            else
+            {
+                annotationName = prefix + AnnotationToString(annotation);
+            }
+
+            this.jsonWriter.WritePropertyName(annotationName);
 
             if (isInline)
             {

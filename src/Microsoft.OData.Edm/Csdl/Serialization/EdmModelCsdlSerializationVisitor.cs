@@ -4,11 +4,12 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using Microsoft.OData.Edm.Vocabularies;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.OData.Edm.Vocabularies;
+using System.Xml.Linq;
 
 namespace Microsoft.OData.Edm.Csdl.Serialization
 {
@@ -424,15 +425,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         protected override void ProcessNavigationProperty(IEdmNavigationProperty element)
         {
             this.BeginElement(element, this.schemaWriter.WriteNavigationPropertyElementHeader);
-
-            // From 4.0.1 spec says:
-            // "OnDelete" has "None, Cascade, SetNull, SetDefault" values defined in 4.01.
-            // But, ODL now only process "Cascade" and "None".So we should fix it to support the others.
-            if (element.OnDelete != EdmOnDeleteAction.None)
-            {
-                this.schemaWriter.WriteNavigationOnDeleteActionElement(element.OnDelete);
-            }
-
+            this.ProcessOnDelete(element.OnDelete);
             this.ProcessReferentialConstraint(element.ReferentialConstraint);
 
             this.EndElement(element);
@@ -446,15 +439,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         protected override async Task ProcessNavigationPropertyAsync(IEdmNavigationProperty element)
         {
             await this.BeginElementAsync(element, this.schemaWriter.WriteNavigationPropertyElementHeaderAsync).ConfigureAwait(false);
-
-            // From 4.0.1 spec says:
-            // "OnDelete" has "None, Cascade, SetNull, SetDefault" values defined in 4.01.
-            // But, ODL now only process "Cascade" and "None".So we should fix it to support the others.
-            if (element.OnDelete != EdmOnDeleteAction.None)
-            {
-                await this.schemaWriter.WriteNavigationOnDeleteActionElementAsync(element.OnDelete).ConfigureAwait(false);
-            }
-
+            await this.ProcessOnDeleteAsync(element.OnDelete).ConfigureAwait(false);
             await this.ProcessReferentialConstraintAsync(element.ReferentialConstraint).ConfigureAwait(false);
 
             await this.EndElementAsync(element).ConfigureAwait(false);
@@ -1459,7 +1444,27 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             await this.EndElementAsync(operation).ConfigureAwait(false);
         }
 
-        private void ProcessReferentialConstraint(IEdmReferentialConstraint element)
+        protected override void ProcessOnDelete(IEdmOnDelete onDelete)
+        {
+            if (onDelete != null && onDelete.Action != EdmOnDeleteAction.None)
+            {
+                // From 4.0.1 spec says:
+                // "OnDelete" has "None, Cascade, SetNull, SetDefault" values defined in 4.01.
+                this.schemaWriter.WriteNavigationOnDeleteActionElement(onDelete);
+            }
+        }
+
+        protected override async Task ProcessOnDeleteAsync(IEdmOnDelete onDelete)
+        {
+            if (onDelete != null && onDelete.Action != EdmOnDeleteAction.None)
+            {
+                // From 4.0.1 spec says:
+                // "OnDelete" has "None, Cascade, SetNull, SetDefault" values defined in 4.01.
+                await this.schemaWriter.WriteNavigationOnDeleteActionElementAsync(onDelete);
+            }
+        }
+
+        protected override void ProcessReferentialConstraint(IEdmReferentialConstraint element)
         {
             if (element != null)
             {
@@ -1477,7 +1482,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// Asynchronously processes the referential constraint.
         /// </summary>
         /// <param name="element">The Edm referential constraint.</param>
-        private async Task ProcessReferentialConstraintAsync(IEdmReferentialConstraint element)
+        protected override async Task ProcessReferentialConstraintAsync(IEdmReferentialConstraint element)
         {
             if (element != null)
             {

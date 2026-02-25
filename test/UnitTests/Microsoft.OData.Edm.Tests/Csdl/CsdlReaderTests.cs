@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -1714,6 +1715,48 @@ namespace Microsoft.OData.Edm.Tests.Csdl
 
             var function = model.SchemaElements.OfType<IEdmFunction>().First();
             VerifyOptionalParameter(function);
+        }
+
+        [Fact]
+        public void ParsingOnDeleteWithAnnotationsWorks()
+        {
+            string expected =
+           "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+           "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+             "<edmx:DataServices>" +
+               "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                 "<ComplexType Name=\"Address\" >" +
+                   "<Property Name=\"Street\" Type=\"Collection(Edm.String)\" MaxLength=\"42\" Unicode=\"false\" />" +
+                   "<NavigationProperty Name=\"City\" Type=\"NS.City\" Nullable=\"false\" ContainsTarget=\"true\" >" +
+                     "<OnDelete Action=\"SetNull\" >" +
+                       "<Annotation Term=\"Org.OData.Core.V1.Description\" String=\"Any description\" />" +
+                     "</OnDelete>" +
+                   "</NavigationProperty>" +
+                 "</ComplexType>" +
+               "</Schema>" +
+             "</edmx:DataServices>" +
+           "</edmx:Edmx>";
+
+            IEdmModel model;
+            IEnumerable<EdmError> errors;
+
+            bool result = CsdlReader.TryParse(XElement.Parse(expected).CreateReader(), out model, out errors);
+            Assert.True(result);
+            Assert.NotNull(model);
+
+            var addressType = model.SchemaElements.OfType<IEdmComplexType>().First();
+            Assert.NotNull(addressType);
+            IEdmNavigationProperty navProp = addressType.NavigationProperties().First();
+            Assert.Equal("City", navProp.Name);
+
+            Assert.NotNull(navProp.OnDelete);
+            Assert.Equal(EdmOnDeleteAction.SetNull, navProp.OnDelete.Action);
+
+            var descriptions = model.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(navProp.OnDelete, CoreVocabularyModel.DescriptionTerm);
+            IEdmVocabularyAnnotation annotation = Assert.Single(descriptions);
+            IEdmStringValue strExpression = annotation.Value as IEdmStringValue;
+            Assert.NotNull(strExpression);
+            Assert.Equal("Any description", strExpression.Value);
         }
 
         [Theory]

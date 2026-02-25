@@ -439,7 +439,7 @@ namespace Microsoft.OData.Edm {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The delete action &apos;{0}&apos; is not valid. Action must be: &apos;None&apos;, &apos;Cascade&apos;, or &apos;Restrict&apos;..
+        ///   Looks up a localized string similar to The delete action &apos;{0}&apos; is not valid. Action must be: &apos;None&apos;, &apos;Cascade&apos;, &apos;SetNull&apos; or &apos;SetDefault&apos;..
         /// </summary>
         internal static string CsdlParser_InvalidDeleteAction {
             get {

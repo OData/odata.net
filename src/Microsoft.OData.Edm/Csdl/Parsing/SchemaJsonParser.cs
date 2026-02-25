@@ -825,22 +825,23 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                             // termname with "@" and optional "#"
                             if (AnnotationJsonParser.TryParseCsdlAnnotation(termName, propertyValue, context, out CsdlAnnotation annotation))
                             {
-                                // annotation for the navigation property
-                                navPropertyAnnotations.Add(annotation);
+                                if (propertyName == "$OnDelete")
+                                {
+                                    // annotation for OnDelete
+                                    onDeleteAnnotations.Add(annotation);
+                                }
+                                else
+                                {
+                                    // annotation for the navigation property
+                                    navPropertyAnnotations.Add(annotation);
+                                }
+
                                 break;
                             }
-                            else if (propertyName == "$OnDelete")
-                            {
-                                // annotation for OnDelte
-                                onDeleteAnnotations.Add(annotation);
-                                break;
-                            }
-                        }
-                        else
-                        {
-                            ReportUnexpectedElement(propertyValue, context);
                         }
 
+                        // for other situations, we report unexpected element, even for annotations with invalid format, because it's better to report the error than silently ignore the annotation.
+                        ReportUnexpectedElement(propertyValue, context);
                         break;
                 }
             });
@@ -851,7 +852,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                 typeName = "Collection(" + typeName + ")";
             }
 
-            // Annotations for $OnDelete are prefixed with $OnDelete. However, It's not supported in ODL yet.
+            // Annotations for $OnDelete are prefixed with $OnDelete.
             if (csdlOnDelete != null && onDeleteAnnotations.Count > 0)
             {
                 onDeleteAnnotations.ForEach(a => csdlOnDelete.AddAnnotation(a));
@@ -877,8 +878,19 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                 case "Cascade":
                     edmOnDelete = EdmOnDeleteAction.Cascade;
                     break;
+                case "SetNull":
+                    edmOnDelete = EdmOnDeleteAction.SetNull;
+                    break;
+                case "SetDefault":
+                    edmOnDelete = EdmOnDeleteAction.SetDefault;
+                    break;
+                case "None":
+                    edmOnDelete = EdmOnDeleteAction.None;
+                    break;
+
                 default:
-                    // So far, ODL only supports "Cascade", for others "SetNull, or SetDefault.", we use "None" for them
+                    // All OData 4.01 OnDelete actions are supported; unexpected values are reported.
+                    ReportUnexpectedElement(element, context);
                     break;
             }
 

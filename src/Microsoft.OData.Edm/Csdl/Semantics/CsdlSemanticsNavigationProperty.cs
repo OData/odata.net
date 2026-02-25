@@ -37,6 +37,9 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         private readonly Cache<CsdlSemanticsNavigationProperty, IEnumerable<EdmError>> errorsCache = new Cache<CsdlSemanticsNavigationProperty, IEnumerable<EdmError>>();
         private static readonly Func<CsdlSemanticsNavigationProperty, IEnumerable<EdmError>> ComputeErrorsFunc = (me) => me.ComputeErrors();
 
+        private readonly Cache<CsdlSemanticsNavigationProperty, IEdmOnDelete> onDeleteCache = new Cache<CsdlSemanticsNavigationProperty, IEdmOnDelete>();
+        private static readonly Func<CsdlSemanticsNavigationProperty, IEdmOnDelete> ComputeOnDeleteFunc = (me) => me.ComputeOnDelete();
+
         public CsdlSemanticsNavigationProperty(CsdlSemanticsStructuredTypeDefinition declaringType, CsdlNavigationProperty navigationProperty)
             : base(navigationProperty)
         {
@@ -59,12 +62,9 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             get { return this.navigationProperty.Name; }
         }
 
-        public EdmOnDeleteAction OnDelete
+        public IEdmOnDelete OnDelete
         {
-            get
-            {
-                return (this.navigationProperty.OnDelete != null) ? this.navigationProperty.OnDelete.Action : EdmOnDeleteAction.None;
-            }
+            get { return this.onDeleteCache.GetValue(this, ComputeOnDeleteFunc, null); }
         }
 
         public IEdmStructuredType DeclaringType
@@ -262,6 +262,11 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             }
 
             return targetTypeReference;
+        }
+
+        private IEdmOnDelete ComputeOnDelete()
+        {
+            return (this.navigationProperty.OnDelete != null) ? new CsdlSemanticsOnDelete(this.Model, this.declaringType.Context, this.navigationProperty.OnDelete) : null;
         }
 
         private IEdmReferentialConstraint ComputeReferentialConstraint()

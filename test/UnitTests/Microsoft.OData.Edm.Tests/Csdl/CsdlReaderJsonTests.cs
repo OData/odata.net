@@ -2003,6 +2003,56 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             Assert.Equal("Collection(Edm.Untyped)", dataProperty.Type.FullName());
         }
 
+        [Fact]
+        public void ParsingOnDeleteWithAnnotationsWorksInJson()
+        {
+            string json = @"{
+  ""$Version"": ""4.0"",
+  ""NS"": {
+    ""Address"": {
+      ""$Kind"": ""ComplexType"",
+      ""Street"": {
+        ""$Collection"": true,
+        ""$MaxLength"": 42,
+        ""$Unicode"": false
+      },
+      ""City"": {
+        ""$Kind"": ""NavigationProperty"",
+        ""$Type"": ""NS.City"",
+        ""$ContainsTarget"": true,
+        ""$OnDelete"": ""SetNull"",
+        ""$OnDelete@Org.OData.Core.V1.Description"": ""Any description""
+      }
+    },
+    ""City"": {
+      ""$Kind"": ""EntityType""
+    }
+  }
+}";
+
+            IEdmModel model;
+            IEnumerable<EdmError> errors;
+            Utf8JsonReader jsonReader = GetJsonReader(json);
+            bool result = CsdlReader.TryParse(ref jsonReader, out model, out errors);
+            Assert.True(result);
+            Assert.Empty(errors);
+            Assert.NotNull(model);
+
+            var addressType = model.SchemaElements.OfType<IEdmComplexType>().First();
+            Assert.NotNull(addressType);
+            IEdmNavigationProperty navProp = addressType.NavigationProperties().First();
+            Assert.Equal("City", navProp.Name);
+
+            Assert.NotNull(navProp.OnDelete);
+            Assert.Equal(EdmOnDeleteAction.SetNull, navProp.OnDelete.Action);
+
+            var descriptions = model.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(navProp.OnDelete, CoreVocabularyModel.DescriptionTerm);
+            IEdmVocabularyAnnotation annotation = Assert.Single(descriptions);
+            IEdmStringValue strExpression = annotation.Value as IEdmStringValue;
+            Assert.NotNull(strExpression);
+            Assert.Equal("Any description", strExpression.Value);
+        }
+
         private static Utf8JsonReader GetMeasureJsonReader(Uri uri, out bool skip)
         {
             string measures = @"{

@@ -1191,7 +1191,7 @@ namespace Microsoft.OData.Edm.Validation
            new ValidationRule<IEdmNavigationProperty>(
                (context, navigationProperty) =>
                {
-                   if (navigationProperty.OnDelete != EdmOnDeleteAction.None && navigationProperty.Partner != null && navigationProperty.Partner.OnDelete != EdmOnDeleteAction.None)
+                   if (navigationProperty.OnDelete != null && navigationProperty.OnDelete.Action != EdmOnDeleteAction.None && navigationProperty.Partner != null && navigationProperty.Partner.OnDelete != null && navigationProperty.Partner.OnDelete.Action != EdmOnDeleteAction.None)
                    {
                        context.AddError(
                            navigationProperty.Location(),
@@ -1399,7 +1399,8 @@ namespace Microsoft.OData.Edm.Validation
                    if (
                        end.Partner != null &&
                        end.Partner.Type.IsCollection() &&
-                       end.OnDelete != EdmOnDeleteAction.None)
+                       end.OnDelete != null &&
+                       end.OnDelete.Action != EdmOnDeleteAction.None)
                    {
                        string errorMessage = Error.Format(SRResources.EdmModel_Validator_Semantic_EndWithManyMultiplicityCannotHaveOperationsSpecified, end.Name);
 
