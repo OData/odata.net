@@ -675,7 +675,7 @@ public class AnnotatableTests : EdmLibTestCaseBase
             }
         }
 
-        public override bool Equals(object? obj)
+        public override bool Equals(object obj)
         {
             var other = obj as MyQualifiedName;
             if (other == null)
@@ -686,7 +686,7 @@ public class AnnotatableTests : EdmLibTestCaseBase
             return this.Equals(other);
         }
 
-        public bool Equals(MyQualifiedName? other)
+        public bool Equals(MyQualifiedName other)
         {
             return this.NamespaceName == other.NamespaceName && this.Name == other.Name;
         }

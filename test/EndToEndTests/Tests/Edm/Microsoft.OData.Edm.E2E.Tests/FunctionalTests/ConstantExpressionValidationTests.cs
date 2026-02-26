@@ -45,7 +45,7 @@ public class ConstantExpressionValidationTests : EdmLibTestCaseBase
         var validationRuleSet = ValidationRuleSet.GetEdmModelRuleSet(this.GetProductVersion(edmVersion));
 
         // Assert
-        var validationResult = testModel.Validate(validationRuleSet, out IEnumerable<EdmError>? actualErrors);
+        var validationResult = testModel.Validate(validationRuleSet, out IEnumerable<EdmError> actualErrors);
         Assert.True(expectedErrors.Count == actualErrors.Count());
         Assert.Single(actualErrors);
 
@@ -58,7 +58,7 @@ public class ConstantExpressionValidationTests : EdmLibTestCaseBase
         Assert.False(serializationErrors.Any());
 
         // if the original test model is not valid, the serializer should still generate CSDLs that parser can handle, but the round trip-ability is not guaranteed.
-        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel? roundtrippedModel, out IEnumerable<EdmError>? parserErrors);
+        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel roundtrippedModel, out IEnumerable<EdmError> parserErrors);
         Assert.True(isWellFormed);
     }
 
@@ -91,7 +91,7 @@ public class ConstantExpressionValidationTests : EdmLibTestCaseBase
         var validationRuleSet = ValidationRuleSet.GetEdmModelRuleSet(this.GetProductVersion(edmVersion));
 
         // Assert
-        var validationResult = testModel.Validate(validationRuleSet, out IEnumerable<EdmError>? actualErrors);
+        var validationResult = testModel.Validate(validationRuleSet, out IEnumerable<EdmError> actualErrors);
         Assert.True(expectedErrors.Count == actualErrors.Count());
         Assert.Single(actualErrors);
 
@@ -104,7 +104,7 @@ public class ConstantExpressionValidationTests : EdmLibTestCaseBase
         Assert.False(serializationErrors.Any());
 
         // if the original test model is not valid, the serializer should still generate CSDLs that parser can handle, but the round trip-ability is not guaranteed.
-        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel? roundtrippedModel, out IEnumerable<EdmError>? parserErrors);
+        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel roundtrippedModel, out IEnumerable<EdmError> parserErrors);
         Assert.True(isWellFormed);
     }
 
@@ -139,7 +139,7 @@ public class ConstantExpressionValidationTests : EdmLibTestCaseBase
         var validationRuleSet = ValidationRuleSet.GetEdmModelRuleSet(this.GetProductVersion(edmVersion));
 
         // Assert
-        var validationResult = testModel.Validate(validationRuleSet, out IEnumerable<EdmError>? actualErrors);
+        var validationResult = testModel.Validate(validationRuleSet, out IEnumerable<EdmError> actualErrors);
         Assert.True(expectedErrors.Count == actualErrors.Count());
         Assert.Single(actualErrors);
 
@@ -152,7 +152,7 @@ public class ConstantExpressionValidationTests : EdmLibTestCaseBase
         Assert.False(serializationErrors.Any());
 
         // if the original test model is not valid, the serializer should still generate CSDLs that parser can handle, but the round trip-ability is not guaranteed.
-        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel? roundtrippedModel, out IEnumerable<EdmError>? parserErrors);
+        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel roundtrippedModel, out IEnumerable<EdmError> parserErrors);
         Assert.True(isWellFormed);
     }
 
@@ -185,7 +185,7 @@ public class ConstantExpressionValidationTests : EdmLibTestCaseBase
         var validationRuleSet = ValidationRuleSet.GetEdmModelRuleSet(this.GetProductVersion(edmVersion));
 
         // Assert
-        var validationResult = testModel.Validate(validationRuleSet, out IEnumerable<EdmError>? actualErrors);
+        var validationResult = testModel.Validate(validationRuleSet, out IEnumerable<EdmError> actualErrors);
         Assert.True(expectedErrors.Count == actualErrors.Count());
         Assert.Single(actualErrors);
 
@@ -198,7 +198,7 @@ public class ConstantExpressionValidationTests : EdmLibTestCaseBase
         Assert.False(serializationErrors.Any());
 
         // if the original test model is not valid, the serializer should still generate CSDLs that parser can handle, but the round trip-ability is not guaranteed.
-        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel? roundtrippedModel, out IEnumerable<EdmError>? parserErrors);
+        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel roundtrippedModel, out IEnumerable<EdmError> parserErrors);
         Assert.True(isWellFormed);
     }
 
@@ -233,7 +233,7 @@ public class ConstantExpressionValidationTests : EdmLibTestCaseBase
         var validationRuleSet = ValidationRuleSet.GetEdmModelRuleSet(this.GetProductVersion(edmVersion));
 
         // Assert
-        var validationResult = testModel.Validate(validationRuleSet, out IEnumerable<EdmError>? actualErrors);
+        var validationResult = testModel.Validate(validationRuleSet, out IEnumerable<EdmError> actualErrors);
         Assert.True(expectedErrors.Count == actualErrors.Count());
         Assert.Single(actualErrors);
 
@@ -246,7 +246,7 @@ public class ConstantExpressionValidationTests : EdmLibTestCaseBase
         Assert.False(serializationErrors.Any());
 
         // if the original test model is not valid, the serializer should still generate CSDLs that parser can handle, but the round trip-ability is not guaranteed.
-        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel? roundtrippedModel, out IEnumerable<EdmError>? parserErrors);
+        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel roundtrippedModel, out IEnumerable<EdmError> parserErrors);
         Assert.True(isWellFormed);
     }
 
@@ -279,7 +279,7 @@ public class ConstantExpressionValidationTests : EdmLibTestCaseBase
         var validationRuleSet = ValidationRuleSet.GetEdmModelRuleSet(this.GetProductVersion(edmVersion));
 
         // Assert
-        var validationResult = testModel.Validate(validationRuleSet, out IEnumerable<EdmError>? actualErrors);
+        var validationResult = testModel.Validate(validationRuleSet, out IEnumerable<EdmError> actualErrors);
         Assert.True(expectedErrors.Count == actualErrors.Count());
         Assert.Single(actualErrors);
 
@@ -292,7 +292,7 @@ public class ConstantExpressionValidationTests : EdmLibTestCaseBase
         Assert.False(serializationErrors.Any());
 
         // if the original test model is not valid, the serializer should still generate CSDLs that parser can handle, but the round trip-ability is not guaranteed.
-        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel? roundtrippedModel, out IEnumerable<EdmError>? parserErrors);
+        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel roundtrippedModel, out IEnumerable<EdmError> parserErrors);
         Assert.True(isWellFormed);
     }
 
@@ -327,7 +327,7 @@ public class ConstantExpressionValidationTests : EdmLibTestCaseBase
         var validationRuleSet = ValidationRuleSet.GetEdmModelRuleSet(this.GetProductVersion(edmVersion));
 
         // Assert
-        var validationResult = testModel.Validate(validationRuleSet, out IEnumerable<EdmError>? actualErrors);
+        var validationResult = testModel.Validate(validationRuleSet, out IEnumerable<EdmError> actualErrors);
         Assert.True(expectedErrors.Count == actualErrors.Count());
         Assert.Single(actualErrors);
        
@@ -340,7 +340,7 @@ public class ConstantExpressionValidationTests : EdmLibTestCaseBase
         Assert.False(serializationErrors.Any());
 
         // if the original test model is not valid, the serializer should still generate CSDLs that parser can handle, but the round trip-ability is not guaranteed.
-        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel? roundtrippedModel, out IEnumerable<EdmError>? parserErrors);
+        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel roundtrippedModel, out IEnumerable<EdmError> parserErrors);
         Assert.True(isWellFormed);
     }
 
@@ -373,7 +373,7 @@ public class ConstantExpressionValidationTests : EdmLibTestCaseBase
         var validationRuleSet = ValidationRuleSet.GetEdmModelRuleSet(this.GetProductVersion(edmVersion));
 
         // Assert
-        var validationResult = testModel.Validate(validationRuleSet, out IEnumerable<EdmError>? actualErrors);
+        var validationResult = testModel.Validate(validationRuleSet, out IEnumerable<EdmError> actualErrors);
         Assert.True(expectedErrors.Count == actualErrors.Count());
         Assert.Single(actualErrors);
 
@@ -386,7 +386,7 @@ public class ConstantExpressionValidationTests : EdmLibTestCaseBase
         Assert.False(serializationErrors.Any());
 
         // if the original test model is not valid, the serializer should still generate CSDLs that parser can handle, but the round trip-ability is not guaranteed.
-        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel? roundtrippedModel, out IEnumerable<EdmError>? parserErrors);
+        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel roundtrippedModel, out IEnumerable<EdmError> parserErrors);
         Assert.True(isWellFormed);
     }
 
@@ -421,7 +421,7 @@ public class ConstantExpressionValidationTests : EdmLibTestCaseBase
         var validationRuleSet = ValidationRuleSet.GetEdmModelRuleSet(this.GetProductVersion(edmVersion));
 
         // Assert
-        var validationResult = testModel.Validate(validationRuleSet, out IEnumerable<EdmError>? actualErrors);
+        var validationResult = testModel.Validate(validationRuleSet, out IEnumerable<EdmError> actualErrors);
         Assert.True(expectedErrors.Count == actualErrors.Count());
         Assert.Single(actualErrors);
 
@@ -434,7 +434,7 @@ public class ConstantExpressionValidationTests : EdmLibTestCaseBase
         Assert.False(serializationErrors.Any());
 
         // if the original test model is not valid, the serializer should still generate CSDLs that parser can handle, but the round trip-ability is not guaranteed.
-        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel? roundtrippedModel, out IEnumerable<EdmError>? parserErrors);
+        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel roundtrippedModel, out IEnumerable<EdmError> parserErrors);
         Assert.True(isWellFormed);
     }
 
@@ -467,7 +467,7 @@ public class ConstantExpressionValidationTests : EdmLibTestCaseBase
         var validationRuleSet = ValidationRuleSet.GetEdmModelRuleSet(this.GetProductVersion(edmVersion));
 
         // Assert
-        var validationResult = testModel.Validate(validationRuleSet, out IEnumerable<EdmError>? actualErrors);
+        var validationResult = testModel.Validate(validationRuleSet, out IEnumerable<EdmError> actualErrors);
         Assert.True(expectedErrors.Count == actualErrors.Count());
         Assert.Single(actualErrors);
 
@@ -480,7 +480,7 @@ public class ConstantExpressionValidationTests : EdmLibTestCaseBase
         Assert.False(serializationErrors.Any());
 
         // if the original test model is not valid, the serializer should still generate CSDLs that parser can handle, but the round trip-ability is not guaranteed.
-        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel? roundtrippedModel, out IEnumerable<EdmError>? parserErrors);
+        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel roundtrippedModel, out IEnumerable<EdmError> parserErrors);
         Assert.True(isWellFormed);
     }
 
@@ -515,7 +515,7 @@ public class ConstantExpressionValidationTests : EdmLibTestCaseBase
         var validationRuleSet = ValidationRuleSet.GetEdmModelRuleSet(this.GetProductVersion(edmVersion));
 
         // Assert
-        var validationResult = testModel.Validate(validationRuleSet, out IEnumerable<EdmError>? actualErrors);
+        var validationResult = testModel.Validate(validationRuleSet, out IEnumerable<EdmError> actualErrors);
         Assert.True(expectedErrors.Count == actualErrors.Count());
         Assert.Single(actualErrors);
 
@@ -528,7 +528,7 @@ public class ConstantExpressionValidationTests : EdmLibTestCaseBase
         Assert.False(serializationErrors.Any());
 
         // if the original test model is not valid, the serializer should still generate CSDLs that parser can handle, but the round trip-ability is not guaranteed.
-        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel? roundtrippedModel, out IEnumerable<EdmError>? parserErrors);
+        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel roundtrippedModel, out IEnumerable<EdmError> parserErrors);
         Assert.True(isWellFormed);
     }
 
@@ -561,7 +561,7 @@ public class ConstantExpressionValidationTests : EdmLibTestCaseBase
         var validationRuleSet = ValidationRuleSet.GetEdmModelRuleSet(this.GetProductVersion(edmVersion));
 
         // Assert
-        var validationResult = testModel.Validate(validationRuleSet, out IEnumerable<EdmError>? actualErrors);
+        var validationResult = testModel.Validate(validationRuleSet, out IEnumerable<EdmError> actualErrors);
         Assert.True(expectedErrors.Count == actualErrors.Count());
         Assert.Single(actualErrors);
 
@@ -574,7 +574,7 @@ public class ConstantExpressionValidationTests : EdmLibTestCaseBase
         Assert.False(serializationErrors.Any());
 
         // if the original test model is not valid, the serializer should still generate CSDLs that parser can handle, but the round trip-ability is not guaranteed.
-        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel? roundtrippedModel, out IEnumerable<EdmError>? parserErrors);
+        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel roundtrippedModel, out IEnumerable<EdmError> parserErrors);
         Assert.True(isWellFormed);
     }
 
@@ -609,7 +609,7 @@ public class ConstantExpressionValidationTests : EdmLibTestCaseBase
         var validationRuleSet = ValidationRuleSet.GetEdmModelRuleSet(this.GetProductVersion(edmVersion));
 
         // Assert
-        var validationResult = testModel.Validate(validationRuleSet, out IEnumerable<EdmError>? actualErrors);
+        var validationResult = testModel.Validate(validationRuleSet, out IEnumerable<EdmError> actualErrors);
         Assert.True(expectedErrors.Count == actualErrors.Count());
         Assert.Single(actualErrors);
 
@@ -622,7 +622,7 @@ public class ConstantExpressionValidationTests : EdmLibTestCaseBase
         Assert.False(serializationErrors.Any());
 
         // if the original test model is not valid, the serializer should still generate CSDLs that parser can handle, but the round trip-ability is not guaranteed.
-        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel? roundtrippedModel, out IEnumerable<EdmError>? parserErrors);
+        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel roundtrippedModel, out IEnumerable<EdmError> parserErrors);
         Assert.True(isWellFormed);
     }
 
@@ -655,7 +655,7 @@ public class ConstantExpressionValidationTests : EdmLibTestCaseBase
         var validationRuleSet = ValidationRuleSet.GetEdmModelRuleSet(this.GetProductVersion(edmVersion));
 
         // Assert
-        var validationResult = testModel.Validate(validationRuleSet, out IEnumerable<EdmError>? actualErrors);
+        var validationResult = testModel.Validate(validationRuleSet, out IEnumerable<EdmError> actualErrors);
         Assert.True(expectedErrors.Count == actualErrors.Count());
         Assert.Single(actualErrors);
 
@@ -668,7 +668,7 @@ public class ConstantExpressionValidationTests : EdmLibTestCaseBase
         Assert.False(serializationErrors.Any());
 
         // if the original test model is not valid, the serializer should still generate CSDLs that parser can handle, but the round trip-ability is not guaranteed.
-        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel? roundtrippedModel, out IEnumerable<EdmError>? parserErrors);
+        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel roundtrippedModel, out IEnumerable<EdmError> parserErrors);
         Assert.True(isWellFormed);
     }
 
@@ -701,7 +701,7 @@ public class ConstantExpressionValidationTests : EdmLibTestCaseBase
         var validationRuleSet = ValidationRuleSet.GetEdmModelRuleSet(this.GetProductVersion(edmVersion));
 
         // Assert
-        var validationResult = testModel.Validate(validationRuleSet, out IEnumerable<EdmError>? actualErrors);
+        var validationResult = testModel.Validate(validationRuleSet, out IEnumerable<EdmError> actualErrors);
         Assert.True(expectedErrors.Count == actualErrors.Count());
         Assert.Single(actualErrors);
 
@@ -714,7 +714,7 @@ public class ConstantExpressionValidationTests : EdmLibTestCaseBase
         Assert.False(serializationErrors.Any());
 
         // if the original test model is not valid, the serializer should still generate CSDLs that parser can handle, but the round trip-ability is not guaranteed.
-        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel? roundtrippedModel, out IEnumerable<EdmError>? parserErrors);
+        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel roundtrippedModel, out IEnumerable<EdmError> parserErrors);
         Assert.True(isWellFormed);
     }
 
@@ -749,7 +749,7 @@ public class ConstantExpressionValidationTests : EdmLibTestCaseBase
         var validationRuleSet = ValidationRuleSet.GetEdmModelRuleSet(this.GetProductVersion(edmVersion));
 
         // Assert
-        var validationResult = testModel.Validate(validationRuleSet, out IEnumerable<EdmError>? actualErrors);
+        var validationResult = testModel.Validate(validationRuleSet, out IEnumerable<EdmError> actualErrors);
         Assert.True(expectedErrors.Count == actualErrors.Count());
         Assert.Single(actualErrors);
 
@@ -762,7 +762,7 @@ public class ConstantExpressionValidationTests : EdmLibTestCaseBase
         Assert.False(serializationErrors.Any());
 
         // if the original test model is not valid, the serializer should still generate CSDLs that parser can handle, but the round trip-ability is not guaranteed.
-        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel? roundtrippedModel, out IEnumerable<EdmError>? parserErrors);
+        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel roundtrippedModel, out IEnumerable<EdmError> parserErrors);
         Assert.True(isWellFormed);
     }
 
@@ -795,7 +795,7 @@ public class ConstantExpressionValidationTests : EdmLibTestCaseBase
         var validationRuleSet = ValidationRuleSet.GetEdmModelRuleSet(this.GetProductVersion(edmVersion));
 
         // Assert
-        var validationResult = testModel.Validate(validationRuleSet, out IEnumerable<EdmError>? actualErrors);
+        var validationResult = testModel.Validate(validationRuleSet, out IEnumerable<EdmError> actualErrors);
         Assert.True(expectedErrors.Count == actualErrors.Count());
         Assert.Single(actualErrors);
 
@@ -808,7 +808,7 @@ public class ConstantExpressionValidationTests : EdmLibTestCaseBase
         Assert.False(serializationErrors.Any());
 
         // if the original test model is not valid, the serializer should still generate CSDLs that parser can handle, but the round trip-ability is not guaranteed.
-        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel? roundtrippedModel, out IEnumerable<EdmError>? parserErrors);
+        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel roundtrippedModel, out IEnumerable<EdmError> parserErrors);
         Assert.True(isWellFormed);
     }
 
@@ -841,7 +841,7 @@ public class ConstantExpressionValidationTests : EdmLibTestCaseBase
         var validationRuleSet = ValidationRuleSet.GetEdmModelRuleSet(this.GetProductVersion(edmVersion));
 
         // Assert
-        var validationResult = testModel.Validate(validationRuleSet, out IEnumerable<EdmError>? actualErrors);
+        var validationResult = testModel.Validate(validationRuleSet, out IEnumerable<EdmError> actualErrors);
         Assert.True(expectedErrors.Count == actualErrors.Count());
         Assert.Single(actualErrors);
 
@@ -854,7 +854,7 @@ public class ConstantExpressionValidationTests : EdmLibTestCaseBase
         Assert.False(serializationErrors.Any());
 
         // if the original test model is not valid, the serializer should still generate CSDLs that parser can handle, but the round trip-ability is not guaranteed.
-        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel? roundtrippedModel, out IEnumerable<EdmError>? parserErrors);
+        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel roundtrippedModel, out IEnumerable<EdmError> parserErrors);
         Assert.True(isWellFormed);
     }
 
@@ -885,7 +885,7 @@ public class ConstantExpressionValidationTests : EdmLibTestCaseBase
         var validationRuleSet = ValidationRuleSet.GetEdmModelRuleSet(this.GetProductVersion(edmVersion));
 
         // Act & Assert
-        var validationResult = testModel.Validate(validationRuleSet, out IEnumerable<EdmError>? actualErrors);
+        var validationResult = testModel.Validate(validationRuleSet, out IEnumerable<EdmError> actualErrors);
         Assert.True(expectedErrors.Count == actualErrors.Count());
         Assert.Equal(2, actualErrors.Count());
 
@@ -903,7 +903,7 @@ public class ConstantExpressionValidationTests : EdmLibTestCaseBase
         Assert.False(serializationErrors.Any());
 
         // if the original test model is not valid, the serializer should still generate CSDLs that parser can handle, but the round trip-ability is not guaranteed.
-        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel? roundtrippedModel, out IEnumerable<EdmError>? parserErrors);
+        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel roundtrippedModel, out IEnumerable<EdmError> parserErrors);
         Assert.True(isWellFormed);
     }
 
@@ -936,7 +936,7 @@ public class ConstantExpressionValidationTests : EdmLibTestCaseBase
         var validationRuleSet = ValidationRuleSet.GetEdmModelRuleSet(this.GetProductVersion(edmVersion));
 
         // Assert
-        var validationResult = testModel.Validate(validationRuleSet, out IEnumerable<EdmError>? actualErrors);
+        var validationResult = testModel.Validate(validationRuleSet, out IEnumerable<EdmError> actualErrors);
         Assert.True(expectedErrors.Count == actualErrors.Count());
         Assert.Single(actualErrors);
 
@@ -949,7 +949,7 @@ public class ConstantExpressionValidationTests : EdmLibTestCaseBase
         Assert.False(serializationErrors.Any());
 
         // if the original test model is not valid, the serializer should still generate CSDLs that parser can handle, but the round trip-ability is not guaranteed.
-        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel? roundtrippedModel, out IEnumerable<EdmError>? parserErrors);
+        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel roundtrippedModel, out IEnumerable<EdmError> parserErrors);
         Assert.True(isWellFormed);
     }
 }

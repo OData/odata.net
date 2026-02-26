@@ -286,7 +286,7 @@ public class ExtensionMethodsTests : EdmLibTestCaseBase
     [Fact]
     public void Validate_SetPrimitiveValueConverterWithNullModel_ThrowsArgumentNullException()
     {
-        EdmModel? model = null;
+        EdmModel model = null;
         var typeReference = new EdmTypeDefinitionReference(new EdmTypeDefinition("NS", "Test", EdmPrimitiveTypeKind.Int32), true);
         var converter = new TestPrimitiveValueConverter();
 
@@ -307,7 +307,7 @@ public class ExtensionMethodsTests : EdmLibTestCaseBase
     [Fact]
     public void Validate_GetPrimitiveValueConverterWithNullModel_ThrowsArgumentNullException()
     {
-        EdmModel? model = null;
+        EdmModel model = null;
         var typeReference = new EdmTypeDefinitionReference(new EdmTypeDefinition("NS", "Test", EdmPrimitiveTypeKind.Int32), true);
 
         Assert.Throws<ArgumentNullException>(() => model.GetPrimitiveValueConverter(typeReference));
@@ -336,7 +336,7 @@ public class ExtensionMethodsTests : EdmLibTestCaseBase
     [Fact]
     public void Validate_GetUIntWithNullModel_ThrowsArgumentNullException()
     {
-        EdmModel? model = null;
+        EdmModel model = null;
         var exception = Assert.Throws<ArgumentNullException>(() => model.GetUInt16("MyNS", false));
         Assert.Equal("Value cannot be null. (Parameter 'model')", exception.Message);
     }

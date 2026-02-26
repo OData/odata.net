@@ -72,7 +72,7 @@ public static class MetadataUtils
     /// <param name="entityType">The entity type to search for navigation properties on.</param>
     /// <param name="navigationPropertyName">The navigation property name.</param>
     /// <returns>The navigation property with the specified name or null if none exists.</returns>
-    public static IEdmNavigationProperty? GetNavigationProperty(this IEdmEntityType entityType, string navigationPropertyName)
+    public static IEdmNavigationProperty GetNavigationProperty(this IEdmEntityType entityType, string navigationPropertyName)
     {
         Assert.NotNull(entityType);
         Assert.NotEmpty(navigationPropertyName);
@@ -90,7 +90,7 @@ public static class MetadataUtils
         int lastDot = typeAndPropertyName.LastIndexOf('.');
         string propertyName = typeAndPropertyName.Substring(lastDot + 1);
         string typeName = typeAndPropertyName.Substring(0, lastDot);
-        IEdmStructuredType? type = model.ResolveType(typeName) as IEdmStructuredType;
+        IEdmStructuredType type = model.ResolveType(typeName) as IEdmStructuredType;
         Assert.NotNull(type);
 
         return type.ResolveProperty(propertyName);
@@ -112,7 +112,7 @@ public static class MetadataUtils
     /// <param name="fullName">The name of the type to find. For the namespace the namespace of the model is used.</param>
     /// <param name="nullable">true if the type reference should be nullable; otherwise false.</param>
     /// <returns>The type found.</returns>
-    public static IEdmTypeReference? ResolveTypeReference(this IEdmModel model, string fullName, bool nullable)
+    public static IEdmTypeReference ResolveTypeReference(this IEdmModel model, string fullName, bool nullable)
     {
         IEdmType type = model.ResolveType(fullName);
         Assert.NotNull(type);
@@ -162,7 +162,7 @@ public static class MetadataUtils
     /// names for collection types. For EdmLib, collection types are functions and thus don't have a full name.
     /// The name/string they use in CSDL is just shorthand for them.
     /// </remarks>
-    public static string? TestFullName(this IEdmType type)
+    public static string TestFullName(this IEdmType type)
     {
         Assert.NotNull(type);
         // Handle collection type names here since for EdmLib collections are functions
@@ -247,7 +247,7 @@ public static class MetadataUtils
     /// </summary>
     /// <param name="type">The type to convert.</param>
     /// <returns>A non-nullable type reference for the <paramref name="type"/>.</returns>
-    public static IEdmTypeReference? ToTypeReference(this IEdmType type)
+    public static IEdmTypeReference ToTypeReference(this IEdmType type)
     {
         return type.ToTypeReference(false /*nullable*/);
     }
@@ -258,7 +258,7 @@ public static class MetadataUtils
     /// <param name="type">The type to convert.</param>
     /// <param name="nullable">true if the returned type reference should be nullable; otherwise false.</param>
     /// <returns>A type reference for the <paramref name="type"/>.</returns>
-    public static IEdmTypeReference? ToTypeReference(this IEdmType type, bool nullable)
+    public static IEdmTypeReference ToTypeReference(this IEdmType type, bool nullable)
     {
         if (type == null)
         {
@@ -311,7 +311,7 @@ public static class MetadataUtils
     /// </summary>
     /// <param name="clrType">The Clr type to resolve.</param>
     /// <returns>The primitive type reference for the given Clr type.</returns>
-    public static IEdmPrimitiveTypeReference? GetPrimitiveTypeReference(Type clrType)
+    public static IEdmPrimitiveTypeReference GetPrimitiveTypeReference(Type clrType)
     {
         Assert.NotNull(clrType);
 
@@ -319,7 +319,7 @@ public static class MetadataUtils
         TypeCode typeCode = Type.GetTypeCode(targetType);
         bool nullable = TypeAllowsNull(clrType);
 
-        IEdmPrimitiveType? primitiveType = null;
+        IEdmPrimitiveType primitiveType = null;
         switch (typeCode)
         {
             case TypeCode.Boolean:
@@ -496,9 +496,9 @@ public static class MetadataUtils
     /// </summary>
     /// <param name="edmTypeName">The edm type name to resolve.</param>
     /// <returns>The primitive type reference for the given edm type name.</returns>
-    public static IEdmPrimitiveTypeReference? GetPrimitiveTypeReference(string edmTypeName)
+    public static IEdmPrimitiveTypeReference GetPrimitiveTypeReference(string edmTypeName)
     {
-        IEdmPrimitiveType? primitiveType = null;
+        IEdmPrimitiveType primitiveType = null;
         bool nullable = true;
         switch (edmTypeName)
         {
@@ -612,7 +612,7 @@ public static class MetadataUtils
     /// <param name="typeReference">The type reference to clone.</param>
     /// <param name="nullable">true to make the cloned type reference nullable; false to make it non-nullable.</param>
     /// <returns>The cloned <see cref="IEdmTypeReference"/> instance.</returns>
-    public static IEdmTypeReference? Clone(this IEdmTypeReference typeReference, bool nullable)
+    public static IEdmTypeReference Clone(this IEdmTypeReference typeReference, bool nullable)
     {
         if (typeReference == null)
         {
@@ -712,7 +712,7 @@ public static class MetadataUtils
     /// </summary>
     /// <param name="typeReference">The collection type to get the item type for.</param>
     /// <returns>The item type of the <paramref name="typeReference"/>.</returns>
-    public static IEdmTypeReference? GetCollectionItemType(this IEdmTypeReference typeReference)
+    public static IEdmTypeReference GetCollectionItemType(this IEdmTypeReference typeReference)
     {
         IEdmCollectionTypeReference collectionType = typeReference.AsCollection();
         return collectionType?.ElementType();
@@ -762,7 +762,7 @@ public static class MetadataUtils
     /// <param name="type">The type to inspect.</param>
     /// <returns>If the <paramref name="type"/> was IEnumerable then it returns the type of a single element
     /// otherwise it returns null.</returns>
-    public static Type? GetIEnumerableElementType(Type type)
+    public static Type GetIEnumerableElementType(Type type)
     {
         Assert.NotNull(type);
         var iEnum = FindIEnumerable(type);
@@ -779,7 +779,7 @@ public static class MetadataUtils
     /// </summary>
     /// <param name="seqType">The Type to check</param>
     /// <returns>returns the type which implements IEnumerable</returns>
-    public static Type? FindIEnumerable(Type seqType)
+    public static Type FindIEnumerable(Type seqType)
     {
         Assert.NotNull(seqType);
 
@@ -867,7 +867,7 @@ public static class MetadataUtils
     /// <param name="attributeName">The name of the attribute to retrieve.</param>
     /// <param name="attributeValue">The value of the attribute as a string, or null if not found.</param>
     /// <returns>Whether or not the attribute was found.</returns>
-    public static bool TryGetAttributeValue(this XElement element, string attributeName, out string? attributeValue)
+    public static bool TryGetAttributeValue(this XElement element, string attributeName, out string attributeValue)
     {
         Assert.NotEmpty(attributeName);
         Assert.NotNull(attributeName);
@@ -984,7 +984,7 @@ public static class MetadataUtils
     /// <param name="property">Property to evaluate.</param>
     /// <param name="expressionEvaluator">Evaluator to use to perform expression evaluation.</param>
     /// <returns>Value of the property evaluated against the supplied value, or null if no relevant annotation exists.</returns>
-    public static IEdmValue? GetPropertyValue(this IEdmModel model, IEdmStructuredValue context, IEdmTerm term, IEdmProperty property, EdmExpressionEvaluator expressionEvaluator)
+    public static IEdmValue GetPropertyValue(this IEdmModel model, IEdmStructuredValue context, IEdmTerm term, IEdmProperty property, EdmExpressionEvaluator expressionEvaluator)
     {
         return model.GetPropertyValue(context, context.Type.AsEntity().EntityDefinition(), term, property, null, expressionEvaluator.Evaluate);
     }
@@ -999,7 +999,7 @@ public static class MetadataUtils
     /// <param name="property">Property to evaluate.</param>
     /// <param name="evaluator">Evaluator to use to perform expression evaluation.</param>
     /// <returns>Value of the property evaluated against the supplied value, or default(<typeparamref name="T"/>) if no relevant annotation exists.</returns>
-    public static T? GetPropertyValue<T>(this IEdmModel model, IEdmStructuredValue context, IEdmTerm term, IEdmProperty property, EdmToClrEvaluator evaluator)
+    public static T GetPropertyValue<T>(this IEdmModel model, IEdmStructuredValue context, IEdmTerm term, IEdmProperty property, EdmToClrEvaluator evaluator)
     {
         return model.GetPropertyValue(context, context.Type.AsEntity().EntityDefinition(), term, property, null, evaluator.EvaluateToClrValue<T>);
     }
@@ -1015,12 +1015,12 @@ public static class MetadataUtils
     /// <param name="qualifier">Qualifier to apply.</param>
     /// <param name="evaluator">Evaluator to use to perform expression evaluation.</param>
     /// <returns>Value of the property evaluated against the supplied value, or default(<typeparamref name="T"/>) if no relevant annotation exists.</returns>
-    public static T? GetPropertyValue<T>(this IEdmModel model, IEdmStructuredValue context, IEdmTerm term, IEdmProperty property, string qualifier, EdmToClrEvaluator evaluator)
+    public static T GetPropertyValue<T>(this IEdmModel model, IEdmStructuredValue context, IEdmTerm term, IEdmProperty property, string qualifier, EdmToClrEvaluator evaluator)
     {
         return model.GetPropertyValue(context, context.Type.AsEntity().EntityDefinition(), term, property, qualifier, evaluator.EvaluateToClrValue<T>);
     }
 
-    private static T? GetPropertyValue<T>(this IEdmModel model, IEdmStructuredValue context, IEdmEntityType contextType, IEdmTerm term, IEdmProperty property, string? qualifier, Func<IEdmExpression, IEdmStructuredValue, T> evaluator)
+    private static T GetPropertyValue<T>(this IEdmModel model, IEdmStructuredValue context, IEdmEntityType contextType, IEdmTerm term, IEdmProperty property, string qualifier, Func<IEdmExpression, IEdmStructuredValue, T> evaluator)
     {
         IEnumerable<IEdmVocabularyAnnotation> annotations = model.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(contextType, term, qualifier);
 

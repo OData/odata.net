@@ -1865,7 +1865,7 @@ public class ClrTypeMappingTests : EdmLibTestCaseBase
 
         var isObjectPopulated = true;
         var isObjectInitialized = true;
-        object? createdObjectInstance = null;
+        object createdObjectInstance = null;
         TryCreateObjectInstance tryCreateObjectInstance = (IEdmStructuredValue edmValue, Type clrType, EdmToClrConverter converter, out object objectInstance, out bool objectInstanceInitialized) =>
         {
             objectInstance = createdObjectInstance;
@@ -1897,7 +1897,7 @@ public class ClrTypeMappingTests : EdmLibTestCaseBase
         ev.EdmToClrConverter = new EdmToClrConverter(tryCreateObjectInstance);
         Assert.True(CompareObjects((Display2)ev.EdmToClrConverter.AsClrValue(value, typeof(Display2)), createdObjectInstance));
 
-        ev.EdmToClrConverter = new EdmToClrConverter((IEdmStructuredValue edmValue, Type clrType, EdmToClrConverter converter, out object? objectInstance, out bool objectInstanceInitialized) =>
+        ev.EdmToClrConverter = new EdmToClrConverter((IEdmStructuredValue edmValue, Type clrType, EdmToClrConverter converter, out object objectInstance, out bool objectInstanceInitialized) =>
         {
             if (clrType == typeof(Display2))
             {

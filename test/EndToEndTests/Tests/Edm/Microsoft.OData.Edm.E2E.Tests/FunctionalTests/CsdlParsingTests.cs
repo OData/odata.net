@@ -35,7 +35,7 @@ public class CsdlParsingTests : EdmLibTestCaseBase
   </edmx:DataServices>
 </edmx:Edmx>";
 
-        IEnumerable<IEdmModel>? refs = null;
+        IEnumerable<IEdmModel> refs = null;
         var exception = Assert.Throws<ArgumentNullException>(() => CsdlReader.TryParse(XmlReader.Create(new StringReader(edmx)), refs, out IEdmModel model, out IEnumerable<EdmError> errors));
         Assert.Equal("Value cannot be null. (Parameter 'references')", exception.Message);
 

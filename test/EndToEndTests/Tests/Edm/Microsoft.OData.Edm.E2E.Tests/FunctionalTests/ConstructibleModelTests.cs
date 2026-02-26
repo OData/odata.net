@@ -1464,7 +1464,7 @@ public class ConstructibleModelTests : EdmLibTestCaseBase
         model.AddElement(entityType);
         var validationRuleSet = ValidationRuleSet.GetEdmModelRuleSet(this.GetProductVersion(edmVersion));
 
-        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError>? actualErrors);
+        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError> actualErrors);
         Assert.Equal(3, actualErrors.Count());
 
         Assert.Equal(EdmErrorCode.KeyPropertyMustBelongToEntity, actualErrors.ElementAt(0).ErrorCode);
@@ -1484,7 +1484,7 @@ public class ConstructibleModelTests : EdmLibTestCaseBase
         Assert.False(serializationErrors.Any());
 
         // if the original test model is not valid, the serializer should still generate CSDLs that parser can handle, but the round trip-ability is not guaranteed.
-        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel? roundtrippedModel, out IEnumerable<EdmError>? parserErrors);
+        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel roundtrippedModel, out IEnumerable<EdmError> parserErrors);
         Assert.True(isWellFormed);
 
         var roundTripCsdls = this.GetSerializerResult(roundtrippedModel).Select(n => XElement.Parse(n));

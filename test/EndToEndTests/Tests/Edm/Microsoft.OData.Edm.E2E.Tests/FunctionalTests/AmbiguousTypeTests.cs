@@ -304,7 +304,7 @@ public class AmbiguousTypeTests : EdmLibTestCaseBase
         var validationRuleSet = ValidationRuleSet.GetEdmModelRuleSet(this.GetProductVersion(edmVersion));
 
         // Act & Assert
-        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError>? actualErrors);
+        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError> actualErrors);
         Assert.Equal(7, actualErrors.Count());
 
         Assert.Equal(EdmErrorCode.TypeMustNotHaveKindOfNone, actualErrors.ElementAt(0).ErrorCode);
@@ -469,7 +469,7 @@ public class AmbiguousTypeTests : EdmLibTestCaseBase
         var validationRuleSet = ValidationRuleSet.GetEdmModelRuleSet(this.GetProductVersion(edmVersion));
 
         // Assert
-        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError>? actualErrors);
+        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError> actualErrors);
         Assert.Empty(actualErrors);
 
         var serializedCsdls = GetSerializerResult(model, edmVersion, out IEnumerable<EdmError> serializationErrors).Select(n => XElement.Parse(n));
@@ -477,11 +477,11 @@ public class AmbiguousTypeTests : EdmLibTestCaseBase
         Assert.False(serializationErrors.Any());
 
         // if the original test model is valid, the round-tripped model should be well-formed and valid.
-        IEdmModel? roundtrippedModel = null;
-        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out roundtrippedModel, out IEnumerable<EdmError>? parserErrors);
+        IEdmModel roundtrippedModel = null;
+        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out roundtrippedModel, out IEnumerable<EdmError> parserErrors);
         Assert.True(isWellFormed && !parserErrors.Any());
 
-        var isValid = roundtrippedModel.Validate(out IEnumerable<EdmError>? validationErrors);
+        var isValid = roundtrippedModel.Validate(out IEnumerable<EdmError> validationErrors);
         Assert.True(!validationErrors.Any() && isValid);
     }
 

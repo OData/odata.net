@@ -3313,12 +3313,12 @@ public class FindMethodTests : EdmLibTestCaseBase
 
     private static void VerifyFindDerivedType(IEnumerable<XElement> sourceCsdls, IEdmModel testModel, EdmVersion edmVersion)
     {
-        Func<IEdmStructuredType, string?> getFullName = (type) =>
+        Func<IEdmStructuredType, string> getFullName = (type) =>
         {
             return type as IEdmComplexType != null ? ((IEdmComplexType)type).FullName() : type as IEdmEntityType != null ? ((IEdmEntityType)type).FullName() : null;
         };
 
-        Func<IEdmStructuredType, string?> getNamespace = (type) =>
+        Func<IEdmStructuredType, string> getNamespace = (type) =>
         {
             return type as IEdmComplexType != null ? ((IEdmComplexType)type).Namespace : type as IEdmEntityType != null ? ((IEdmEntityType)type).Namespace : null;
         };
@@ -3404,7 +3404,7 @@ public class FindMethodTests : EdmLibTestCaseBase
         {
             foreach (var propertyElement in sourceCsdl.Descendants().Elements(XName.Get(schemaElementType, csdlNamespace.NamespaceName)))
             {
-                IEdmProperty? foundProperty = null;
+                IEdmProperty foundProperty = null;
                 Assert.Contains(new string[] { "EntityType", "ComplexType", "RowType" }, n => n == propertyElement.Parent?.Name.LocalName);
 
                 if (propertyElement.Parent.Name.LocalName != "RowType")
@@ -3439,7 +3439,7 @@ public class FindMethodTests : EdmLibTestCaseBase
                     var elementName = string.Format("{0}.{1}", namespaceValue, propertyElement.Parent?.Attribute("Name")?.Value);
                     var elementTypeFound = testModel.FindType(elementName) as IEdmStructuredType;
 
-                    IEdmStructuredTypeReference? elementTypeReferenceFound = null;
+                    IEdmStructuredTypeReference elementTypeReferenceFound = null;
                     if (propertyElement.Parent.Name.LocalName.Equals("ComplexType"))
                     {
                         elementTypeReferenceFound = new EdmComplexTypeReference((IEdmComplexType)elementTypeFound, true);
@@ -3470,7 +3470,7 @@ public class FindMethodTests : EdmLibTestCaseBase
         {
             foreach (var parameterElement in sourceCsdl.Descendants().Elements(XName.Get(schemaElementType, csdlNamespace.NamespaceName)))
             {
-                IEdmOperationParameter? parameterFound = null;
+                IEdmOperationParameter parameterFound = null;
                 var parameterName = parameterElement.Attribute("Name")?.Value;
                 Assert.Contains(new string[] { "Function", "Action" }, n => n == parameterElement.Parent?.Name.LocalName);
 
@@ -3513,7 +3513,7 @@ public class FindMethodTests : EdmLibTestCaseBase
 
                 Assert.False((typeFound == null) && (operationGroup == null) && (valueTermFound == null));
 
-                IEdmSchemaElement? schemaElementFound = null;
+                IEdmSchemaElement schemaElementFound = null;
                 if (operationGroup.Count() > 0)
                 {
                     schemaElementFound = (IEdmSchemaElement)operationGroup.First();
@@ -3574,7 +3574,7 @@ public class FindMethodTests : EdmLibTestCaseBase
                 var entitySetFound = entityContainerObj.FindEntitySet(entityContainerElementName);
                 var functionImportsFound = entityContainerObj.FindOperationImports(entityContainerElementName);
 
-                IEdmEntityContainerElement? entityContainerElementFound = null;
+                IEdmEntityContainerElement entityContainerElementFound = null;
                 var elementsWithSameName = entityContainerElements.Where(n => n.Attribute("Name").Value.Equals(entityContainerElementName)).Count();
 
                 if (functionImportsFound != null && functionImportsFound.Count() == elementsWithSameName)

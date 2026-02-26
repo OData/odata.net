@@ -124,14 +124,14 @@ public static class CsdlToEdmModelComparer
 
                 var possibleMatches = model.FindDeclaredOperations(namespaceName + "." + operationName).ToArray();
                 
-                IEdmOperation? operation = null;
+                IEdmOperation operation = null;
                 foreach (var possibleMatch in possibleMatches)
                 {
                     CompareOperationParameters(parameterElements, possibleMatch.Parameters);
                     operation = possibleMatch;
                 }
 
-                if (operationElement.TryGetAttributeValue("ReturnType", out string? returnTypeValue) && returnTypeValue != null)
+                if (operationElement.TryGetAttributeValue("ReturnType", out string returnTypeValue) && returnTypeValue != null)
                 {
                     CompareTypeValue(returnTypeValue, operation.ReturnType);
                 }
@@ -478,7 +478,7 @@ public static class CsdlToEdmModelComparer
         bool isCollectionType = typeName.StartsWith(EdmModelUtils.CollectionTypeNamePrefix);
         if (isCollectionType)
         {
-            string? elementTypeName = EdmModelUtils.GetCollectionItemTypeName(typeName);
+            string elementTypeName = EdmModelUtils.GetCollectionItemTypeName(typeName);
             CompareTypeValue(elementTypeName, typeReference.GetCollectionItemType());
         }
         else
