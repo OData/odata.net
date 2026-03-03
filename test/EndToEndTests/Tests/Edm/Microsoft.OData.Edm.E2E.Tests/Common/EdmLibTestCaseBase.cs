@@ -140,7 +140,7 @@ public class EdmLibTestCaseBase
     {
         public void Add(int? lineNumber, int? linePostion, EdmErrorCode edmErrorCode)
         {
-            EdmLibTestCsdlLocation? errorLocation = null;
+            EdmLibTestCsdlLocation errorLocation = null;
             if (lineNumber != null && linePostion != null)
             {
                 errorLocation = new EdmLibTestCsdlLocation(lineNumber, linePostion);

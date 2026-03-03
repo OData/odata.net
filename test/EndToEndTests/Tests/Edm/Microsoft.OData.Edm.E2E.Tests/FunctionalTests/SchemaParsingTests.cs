@@ -1924,7 +1924,7 @@ public class SchemaParsingTests : EdmLibTestCaseBase
         Assert.True(parsed);
 
         IEdmOperation operation = (IEdmOperation)model.SchemaElements.First();
-        IEdmTypeReference? returnType = operation.Return?.Type;
+        IEdmTypeReference returnType = operation.ReturnType;
         IEdmTypeReference parameterType = operation.Parameters.First().Type;
 
         Assert.False(returnType.IsBad());
@@ -1953,7 +1953,7 @@ public class SchemaParsingTests : EdmLibTestCaseBase
         Assert.True(parsed);
 
         IEdmOperation operation = (IEdmOperation)model.SchemaElements.First();
-        IEdmTypeReference? returnType = operation.Return?.Type;
+        IEdmTypeReference returnType = operation.ReturnType;
         IEdmTypeReference parameterType = operation.Parameters.First().Type;
 
         Assert.False(returnType.IsBad());

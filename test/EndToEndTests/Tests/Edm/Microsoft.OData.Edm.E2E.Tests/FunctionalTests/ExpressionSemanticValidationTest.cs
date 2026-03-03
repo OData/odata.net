@@ -44,7 +44,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         var validationRuleSet = ValidationRuleSet.GetEdmModelRuleSet(this.GetProductVersion(edmVersion));
 
         // Assert
-        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError>? actualErrors);
+        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError> actualErrors);
         Assert.Single(actualErrors);
 
         Assert.Equal(EdmErrorCode.NullCannotBeAssertedToBeANonNullableType, actualErrors.Last().ErrorCode);
@@ -56,7 +56,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         Assert.False(serializationErrors.Any());
 
         // if the original test model is not valid, the serializer should still generate CSDLs that parser can handle, but the round trip-ability is not guaranteed.
-        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel? roundtrippedModel, out IEnumerable<EdmError>? parserErrors);
+        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel roundtrippedModel, out IEnumerable<EdmError> parserErrors);
         Assert.True(isWellFormed);
     }
 
@@ -91,7 +91,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         var validationRuleSet = ValidationRuleSet.GetEdmModelRuleSet(this.GetProductVersion(edmVersion));
 
         // Assert
-        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError>? actualErrors);
+        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError> actualErrors);
         Assert.Single(actualErrors);
 
         Assert.Equal(EdmErrorCode.PrimitiveConstantExpressionNotValidForNonPrimitiveType, actualErrors.Last().ErrorCode);
@@ -103,7 +103,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         Assert.False(serializationErrors.Any());
 
         // if the original test model is not valid, the serializer should still generate CSDLs that parser can handle, but the round trip-ability is not guaranteed.
-        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel? roundtrippedModel, out IEnumerable<EdmError>? parserErrors);
+        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel roundtrippedModel, out IEnumerable<EdmError> parserErrors);
         Assert.True(isWellFormed);
     }
 
@@ -135,7 +135,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         var validationRuleSet = ValidationRuleSet.GetEdmModelRuleSet(this.GetProductVersion(edmVersion));
 
         // Assert
-        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError>? actualErrors);
+        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError> actualErrors);
         Assert.Single(actualErrors);
 
         Assert.Equal(EdmErrorCode.ExpressionPrimitiveKindNotValidForAssertedType, actualErrors.Last().ErrorCode);
@@ -147,7 +147,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         Assert.False(serializationErrors.Any());
 
         // if the original test model is not valid, the serializer should still generate CSDLs that parser can handle, but the round trip-ability is not guaranteed.
-        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel? roundtrippedModel, out IEnumerable<EdmError>? parserErrors);
+        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel roundtrippedModel, out IEnumerable<EdmError> parserErrors);
         Assert.True(isWellFormed);
     }
 
@@ -179,7 +179,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         var validationRuleSet = ValidationRuleSet.GetEdmModelRuleSet(this.GetProductVersion(edmVersion));
 
         // Assert
-        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError>? actualErrors);
+        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError> actualErrors);
         Assert.Empty(actualErrors);
 
         var serializedCsdls = GetSerializerResult(model, edmVersion, out IEnumerable<EdmError> serializationErrors).Select(n => XElement.Parse(n));
@@ -187,7 +187,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         Assert.False(serializationErrors.Any());
 
         // if the original test model is not valid, the serializer should still generate CSDLs that parser can handle, but the round trip-ability is not guaranteed.
-        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel? roundtrippedModel, out IEnumerable<EdmError>? parserErrors);
+        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel roundtrippedModel, out IEnumerable<EdmError> parserErrors);
         Assert.True(isWellFormed);
     }
 
@@ -224,7 +224,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         var validationRuleSet = ValidationRuleSet.GetEdmModelRuleSet(this.GetProductVersion(edmVersion));
 
         // Assert
-        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError>? actualErrors);
+        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError> actualErrors);
         Assert.Empty(actualErrors);
 
         var serializedCsdls = GetSerializerResult(model, edmVersion, out IEnumerable<EdmError> serializationErrors).Select(n => XElement.Parse(n));
@@ -232,7 +232,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         Assert.False(serializationErrors.Any());
 
         // if the original test model is not valid, the serializer should still generate CSDLs that parser can handle, but the round trip-ability is not guaranteed.
-        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel? roundtrippedModel, out IEnumerable<EdmError>? parserErrors);
+        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel roundtrippedModel, out IEnumerable<EdmError> parserErrors);
         Assert.True(isWellFormed);
     }
 
@@ -280,7 +280,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         var validationRuleSet = ValidationRuleSet.GetEdmModelRuleSet(this.GetProductVersion(edmVersion));
 
         // Assert
-        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError>? actualErrors);
+        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError> actualErrors);
         Assert.Empty(actualErrors);
 
         var serializedCsdls = GetSerializerResult(model, edmVersion, out IEnumerable<EdmError> serializationErrors).Select(n => XElement.Parse(n));
@@ -288,7 +288,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         Assert.False(serializationErrors.Any());
 
         // if the original test model is not valid, the serializer should still generate CSDLs that parser can handle, but the round trip-ability is not guaranteed.
-        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel? roundtrippedModel, out IEnumerable<EdmError>? parserErrors);
+        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel roundtrippedModel, out IEnumerable<EdmError> parserErrors);
         Assert.True(isWellFormed);
     }
 
@@ -326,7 +326,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         var validationRuleSet = ValidationRuleSet.GetEdmModelRuleSet(this.GetProductVersion(edmVersion));
 
         // Assert
-        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError>? actualErrors);
+        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError> actualErrors);
         Assert.Single(actualErrors);
 
         Assert.Equal(EdmErrorCode.InvalidInteger, actualErrors.Last().ErrorCode);
@@ -338,7 +338,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         Assert.False(serializationErrors.Any());
 
         // if the original test model is not valid, the serializer should still generate CSDLs that parser can handle, but the round trip-ability is not guaranteed.
-        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel? roundtrippedModel, out IEnumerable<EdmError>? parserErrors);
+        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel roundtrippedModel, out IEnumerable<EdmError> parserErrors);
         Assert.True(isWellFormed);
     }
 
@@ -375,7 +375,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         var validationRuleSet = ValidationRuleSet.GetEdmModelRuleSet(this.GetProductVersion(edmVersion));
 
         // Assert
-        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError>? actualErrors);
+        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError> actualErrors);
         Assert.Equal(3, actualErrors.Count());
 
         Assert.Equal(EdmErrorCode.ExpressionNotValidForTheAssertedType, actualErrors.ElementAt(0).ErrorCode);
@@ -395,7 +395,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         Assert.False(serializationErrors.Any());
 
         // if the original test model is not valid, the serializer should still generate CSDLs that parser can handle, but the round trip-ability is not guaranteed.
-        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel? roundtrippedModel, out IEnumerable<EdmError>? parserErrors);
+        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel roundtrippedModel, out IEnumerable<EdmError> parserErrors);
         Assert.True(isWellFormed);
     }
 
@@ -443,7 +443,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         var validationRuleSet = ValidationRuleSet.GetEdmModelRuleSet(this.GetProductVersion(edmVersion));
 
         // Assert
-        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError>? actualErrors);
+        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError> actualErrors);
         Assert.Single(actualErrors);
 
         Assert.Equal(EdmErrorCode.RecordExpressionHasExtraProperties, actualErrors.ElementAt(0).ErrorCode);
@@ -455,7 +455,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         Assert.False(serializationErrors.Any());
 
         // if the original test model is not valid, the serializer should still generate CSDLs that parser can handle, but the round trip-ability is not guaranteed.
-        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel? roundtrippedModel, out IEnumerable<EdmError>? parserErrors);
+        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel roundtrippedModel, out IEnumerable<EdmError> parserErrors);
         Assert.True(isWellFormed);
     }
 
@@ -503,7 +503,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         var validationRuleSet = ValidationRuleSet.GetEdmModelRuleSet(this.GetProductVersion(edmVersion));
 
         // Assert
-        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError>? actualErrors);
+        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError> actualErrors);
         Assert.Single(actualErrors);
 
         Assert.Equal(EdmErrorCode.ExpressionPrimitiveKindNotValidForAssertedType, actualErrors.ElementAt(0).ErrorCode);
@@ -515,7 +515,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         Assert.False(serializationErrors.Any());
 
         // if the original test model is not valid, the serializer should still generate CSDLs that parser can handle, but the round trip-ability is not guaranteed.
-        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel? roundtrippedModel, out IEnumerable<EdmError>? parserErrors);
+        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel roundtrippedModel, out IEnumerable<EdmError> parserErrors);
         Assert.True(isWellFormed);
     }
 
@@ -552,7 +552,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         var validationRuleSet = ValidationRuleSet.GetEdmModelRuleSet(this.GetProductVersion(edmVersion));
 
         // Assert
-        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError>? actualErrors);
+        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError> actualErrors);
         Assert.Single(actualErrors);
 
         Assert.Equal(EdmErrorCode.ExpressionPrimitiveKindNotValidForAssertedType, actualErrors.ElementAt(0).ErrorCode);
@@ -564,7 +564,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         Assert.False(serializationErrors.Any());
 
         // if the original test model is not valid, the serializer should still generate CSDLs that parser can handle, but the round trip-ability is not guaranteed.
-        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel? roundtrippedModel, out IEnumerable<EdmError>? parserErrors);
+        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel roundtrippedModel, out IEnumerable<EdmError> parserErrors);
         Assert.True(isWellFormed);
     }
 
@@ -614,7 +614,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         var validationRuleSet = ValidationRuleSet.GetEdmModelRuleSet(this.GetProductVersion(edmVersion));
 
         // Assert
-        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError>? actualErrors);
+        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError> actualErrors);
         Assert.Single(actualErrors);
 
         Assert.Equal(EdmErrorCode.TypeSemanticsCouldNotConvertTypeReference, actualErrors.ElementAt(0).ErrorCode);
@@ -626,7 +626,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         Assert.False(serializationErrors.Any());
 
         // if the original test model is not valid, the serializer should still generate CSDLs that parser can handle, but the round trip-ability is not guaranteed.
-        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel? roundtrippedModel, out IEnumerable<EdmError>? parserErrors);
+        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel roundtrippedModel, out IEnumerable<EdmError> parserErrors);
         Assert.True(isWellFormed);
     }
 
@@ -674,7 +674,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         var validationRuleSet = ValidationRuleSet.GetEdmModelRuleSet(this.GetProductVersion(edmVersion));
 
         // Assert
-        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError>? actualErrors);
+        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError> actualErrors);
         Assert.Single(actualErrors);
 
         Assert.Equal(EdmErrorCode.ExpressionPrimitiveKindNotValidForAssertedType, actualErrors.ElementAt(0).ErrorCode);
@@ -686,7 +686,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         Assert.False(serializationErrors.Any());
 
         // if the original test model is not valid, the serializer should still generate CSDLs that parser can handle, but the round trip-ability is not guaranteed.
-        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel? roundtrippedModel, out IEnumerable<EdmError>? parserErrors);
+        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel roundtrippedModel, out IEnumerable<EdmError> parserErrors);
         Assert.True(isWellFormed);
     }
 
@@ -728,7 +728,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         var validationRuleSet = ValidationRuleSet.GetEdmModelRuleSet(this.GetProductVersion(edmVersion));
 
         // Assert
-        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError>? actualErrors);
+        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError> actualErrors);
         Assert.Single(actualErrors);
 
         Assert.Equal(EdmErrorCode.InvalidBinary, actualErrors.ElementAt(0).ErrorCode);
@@ -740,7 +740,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         Assert.False(serializationErrors.Any());
 
         // if the original test model is not valid, the serializer should still generate CSDLs that parser can handle, but the round trip-ability is not guaranteed.
-        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel? roundtrippedModel, out IEnumerable<EdmError>? parserErrors);
+        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel roundtrippedModel, out IEnumerable<EdmError> parserErrors);
         Assert.True(isWellFormed);
     }
 
@@ -784,7 +784,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         var validationRuleSet = ValidationRuleSet.GetEdmModelRuleSet(this.GetProductVersion(edmVersion));
 
         // Assert
-        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError>? actualErrors);
+        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError> actualErrors);
         Assert.Empty(actualErrors);
 
         var serializedCsdls = GetSerializerResult(model, edmVersion, out IEnumerable<EdmError> serializationErrors).Select(n => XElement.Parse(n));
@@ -792,7 +792,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         Assert.False(serializationErrors.Any());
 
         // if the original test model is not valid, the serializer should still generate CSDLs that parser can handle, but the round trip-ability is not guaranteed.
-        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel? roundtrippedModel, out IEnumerable<EdmError>? parserErrors);
+        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel roundtrippedModel, out IEnumerable<EdmError> parserErrors);
         Assert.True(isWellFormed);
     }
 
@@ -833,7 +833,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         var validationRuleSet = ValidationRuleSet.GetEdmModelRuleSet(this.GetProductVersion(edmVersion));
 
         // Assert
-        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError>? actualErrors);
+        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError> actualErrors);
         Assert.Single(actualErrors);
 
         Assert.Equal(EdmErrorCode.ExpressionNotValidForTheAssertedType, actualErrors.ElementAt(0).ErrorCode);
@@ -845,7 +845,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         Assert.False(serializationErrors.Any());
 
         // if the original test model is not valid, the serializer should still generate CSDLs that parser can handle, but the round trip-ability is not guaranteed.
-        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel? roundtrippedModel, out IEnumerable<EdmError>? parserErrors);
+        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel roundtrippedModel, out IEnumerable<EdmError> parserErrors);
         Assert.True(isWellFormed);
     }
 
@@ -881,7 +881,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         var validationRuleSet = ValidationRuleSet.GetEdmModelRuleSet(this.GetProductVersion(edmVersion));
 
         // Assert
-        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError>? actualErrors);
+        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError> actualErrors);
         Assert.Single(actualErrors);
 
         Assert.Equal(EdmErrorCode.ExpressionNotValidForTheAssertedType, actualErrors.ElementAt(0).ErrorCode);
@@ -892,7 +892,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         Assert.False(serializationErrors.Any());
 
         // if the original test model is not valid, the serializer should still generate CSDLs that parser can handle, but the round trip-ability is not guaranteed.
-        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel? roundtrippedModel, out IEnumerable<EdmError>? parserErrors);
+        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel roundtrippedModel, out IEnumerable<EdmError> parserErrors);
         Assert.True(isWellFormed);
     }
 
@@ -933,7 +933,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         var validationRuleSet = ValidationRuleSet.GetEdmModelRuleSet(this.GetProductVersion(edmVersion));
 
         // Assert
-        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError>? actualErrors);
+        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError> actualErrors);
         Assert.Single(actualErrors);
 
         Assert.Equal(EdmErrorCode.ExpressionNotValidForTheAssertedType, actualErrors.ElementAt(0).ErrorCode);
@@ -945,7 +945,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         Assert.False(serializationErrors.Any());
 
         // if the original test model is not valid, the serializer should still generate CSDLs that parser can handle, but the round trip-ability is not guaranteed.
-        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel? roundtrippedModel, out IEnumerable<EdmError>? parserErrors);
+        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel roundtrippedModel, out IEnumerable<EdmError> parserErrors);
         Assert.True(isWellFormed);
     }
 
@@ -981,7 +981,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         var validationRuleSet = ValidationRuleSet.GetEdmModelRuleSet(this.GetProductVersion(edmVersion));
 
         // Assert
-        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError>? actualErrors);
+        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError> actualErrors);
         Assert.Single(actualErrors);
 
         Assert.Equal(EdmErrorCode.ExpressionNotValidForTheAssertedType, actualErrors.ElementAt(0).ErrorCode);
@@ -992,7 +992,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         Assert.False(serializationErrors.Any());
 
         // if the original test model is not valid, the serializer should still generate CSDLs that parser can handle, but the round trip-ability is not guaranteed.
-        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel? roundtrippedModel, out IEnumerable<EdmError>? parserErrors);
+        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel roundtrippedModel, out IEnumerable<EdmError> parserErrors);
         Assert.True(isWellFormed);
     }
 
@@ -1032,7 +1032,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         var validationRuleSet = ValidationRuleSet.GetEdmModelRuleSet(this.GetProductVersion(edmVersion));
 
         // Assert
-        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError>? actualErrors);
+        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError> actualErrors);
         Assert.Single(actualErrors);
 
         Assert.Equal(EdmErrorCode.ExpressionNotValidForTheAssertedType, actualErrors.ElementAt(0).ErrorCode);
@@ -1044,7 +1044,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         Assert.False(serializationErrors.Any());
 
         // if the original test model is not valid, the serializer should still generate CSDLs that parser can handle, but the round trip-ability is not guaranteed.
-        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel? roundtrippedModel, out IEnumerable<EdmError>? parserErrors);
+        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel roundtrippedModel, out IEnumerable<EdmError> parserErrors);
         Assert.True(isWellFormed);
     }
 
@@ -1080,7 +1080,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         var validationRuleSet = ValidationRuleSet.GetEdmModelRuleSet(this.GetProductVersion(edmVersion));
 
         // Assert
-        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError>? actualErrors);
+        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError> actualErrors);
         Assert.Single(actualErrors);
 
         Assert.Equal(EdmErrorCode.ExpressionNotValidForTheAssertedType, actualErrors.ElementAt(0).ErrorCode);
@@ -1091,7 +1091,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         Assert.False(serializationErrors.Any());
 
         // if the original test model is not valid, the serializer should still generate CSDLs that parser can handle, but the round trip-ability is not guaranteed.
-        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel? roundtrippedModel, out IEnumerable<EdmError>? parserErrors);
+        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel roundtrippedModel, out IEnumerable<EdmError> parserErrors);
         Assert.True(isWellFormed);
     }
 
@@ -1139,7 +1139,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         var validationRuleSet = ValidationRuleSet.GetEdmModelRuleSet(this.GetProductVersion(edmVersion));
 
         // Assert
-        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError>? actualErrors);
+        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError> actualErrors);
         Assert.Empty(actualErrors);
 
         var serializedCsdls = GetSerializerResult(model, edmVersion, out IEnumerable<EdmError> serializationErrors).Select(n => XElement.Parse(n));
@@ -1147,7 +1147,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         Assert.False(serializationErrors.Any());
 
         // if the original test model is not valid, the serializer should still generate CSDLs that parser can handle, but the round trip-ability is not guaranteed.
-        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel? roundtrippedModel, out IEnumerable<EdmError>? parserErrors);
+        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel roundtrippedModel, out IEnumerable<EdmError> parserErrors);
         Assert.True(isWellFormed);
     }
 
@@ -1187,7 +1187,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         var validationRuleSet = ValidationRuleSet.GetEdmModelRuleSet(this.GetProductVersion(edmVersion));
 
         // Assert
-        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError>? actualErrors);
+        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError> actualErrors);
         Assert.Empty(actualErrors);
 
         var serializedCsdls = GetSerializerResult(model, edmVersion, out IEnumerable<EdmError> serializationErrors).Select(n => XElement.Parse(n));
@@ -1195,7 +1195,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         Assert.False(serializationErrors.Any());
 
         // if the original test model is not valid, the serializer should still generate CSDLs that parser can handle, but the round trip-ability is not guaranteed.
-        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel? roundtrippedModel, out IEnumerable<EdmError>? parserErrors);
+        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel roundtrippedModel, out IEnumerable<EdmError> parserErrors);
         Assert.True(isWellFormed);
     }
 
@@ -1243,7 +1243,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         var validationRuleSet = ValidationRuleSet.GetEdmModelRuleSet(this.GetProductVersion(edmVersion));
 
         // Assert
-        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError>? actualErrors);
+        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError> actualErrors);
         Assert.Empty(actualErrors);
 
         var serializedCsdls = GetSerializerResult(model, edmVersion, out IEnumerable<EdmError> serializationErrors).Select(n => XElement.Parse(n));
@@ -1251,7 +1251,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         Assert.False(serializationErrors.Any());
 
         // if the original test model is not valid, the serializer should still generate CSDLs that parser can handle, but the round trip-ability is not guaranteed.
-        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel? roundtrippedModel, out IEnumerable<EdmError>? parserErrors);
+        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel roundtrippedModel, out IEnumerable<EdmError> parserErrors);
         Assert.True(isWellFormed);
     }
 
@@ -1296,7 +1296,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         var validationRuleSet = ValidationRuleSet.GetEdmModelRuleSet(this.GetProductVersion(edmVersion));
 
         // Assert
-        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError>? actualErrors);
+        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError> actualErrors);
         Assert.Empty(actualErrors);
 
         var serializedCsdls = GetSerializerResult(model, edmVersion, out IEnumerable<EdmError> serializationErrors).Select(n => XElement.Parse(n));
@@ -1304,7 +1304,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         Assert.False(serializationErrors.Any());
 
         // if the original test model is not valid, the serializer should still generate CSDLs that parser can handle, but the round trip-ability is not guaranteed.
-        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel? roundtrippedModel, out IEnumerable<EdmError>? parserErrors);
+        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel roundtrippedModel, out IEnumerable<EdmError> parserErrors);
         Assert.True(isWellFormed);
     }
 
@@ -1333,7 +1333,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         var validationRuleSet = ValidationRuleSet.GetEdmModelRuleSet(this.GetProductVersion(edmVersion));
 
         // Assert
-        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError>? actualErrors);
+        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError> actualErrors);
         Assert.Single(actualErrors);
 
         Assert.Equal(EdmErrorCode.ExpressionPrimitiveKindNotValidForAssertedType, actualErrors.ElementAt(0).ErrorCode);
@@ -1345,7 +1345,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         Assert.False(serializationErrors.Any());
 
         // if the original test model is not valid, the serializer should still generate CSDLs that parser can handle, but the round trip-ability is not guaranteed.
-        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel? roundtrippedModel, out IEnumerable<EdmError>? parserErrors);
+        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel roundtrippedModel, out IEnumerable<EdmError> parserErrors);
         Assert.True(isWellFormed);
     }
 
@@ -1369,7 +1369,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         var validationRuleSet = ValidationRuleSet.GetEdmModelRuleSet(this.GetProductVersion(edmVersion));
 
         // Assert
-        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError>? actualErrors);
+        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError> actualErrors);
         Assert.Single(actualErrors);
 
         Assert.Equal(EdmErrorCode.ExpressionPrimitiveKindNotValidForAssertedType, actualErrors.ElementAt(0).ErrorCode);
@@ -1380,7 +1380,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         Assert.False(serializationErrors.Any());
 
         // if the original test model is not valid, the serializer should still generate CSDLs that parser can handle, but the round trip-ability is not guaranteed.
-        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel? roundtrippedModel, out IEnumerable<EdmError>? parserErrors);
+        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel roundtrippedModel, out IEnumerable<EdmError> parserErrors);
         Assert.True(isWellFormed);
     }
 
@@ -1417,7 +1417,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         var validationRuleSet = ValidationRuleSet.GetEdmModelRuleSet(this.GetProductVersion(edmVersion));
 
         // Assert
-        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError>? actualErrors);
+        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError> actualErrors);
         Assert.Single(actualErrors);
 
         Assert.Equal(EdmErrorCode.ExpressionNotValidForTheAssertedType, actualErrors.ElementAt(0).ErrorCode);
@@ -1429,7 +1429,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         Assert.False(serializationErrors.Any());
 
         // if the original test model is not valid, the serializer should still generate CSDLs that parser can handle, but the round trip-ability is not guaranteed.
-        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel? roundtrippedModel, out IEnumerable<EdmError>? parserErrors);
+        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel roundtrippedModel, out IEnumerable<EdmError> parserErrors);
         Assert.True(isWellFormed);
     }
 
@@ -1462,7 +1462,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         var validationRuleSet = ValidationRuleSet.GetEdmModelRuleSet(this.GetProductVersion(edmVersion));
 
         // Assert
-        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError>? actualErrors);
+        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError> actualErrors);
         Assert.Single(actualErrors);
 
         Assert.Equal(EdmErrorCode.ExpressionNotValidForTheAssertedType, actualErrors.ElementAt(0).ErrorCode);
@@ -1473,7 +1473,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         Assert.False(serializationErrors.Any());
 
         // if the original test model is not valid, the serializer should still generate CSDLs that parser can handle, but the round trip-ability is not guaranteed.
-        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel? roundtrippedModel, out IEnumerable<EdmError>? parserErrors);
+        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel roundtrippedModel, out IEnumerable<EdmError> parserErrors);
         Assert.True(isWellFormed);
     }
 
@@ -1502,7 +1502,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         var validationRuleSet = ValidationRuleSet.GetEdmModelRuleSet(this.GetProductVersion(edmVersion));
 
         // Assert
-        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError>? actualErrors);
+        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError> actualErrors);
         Assert.Empty(actualErrors);
 
         var serializedCsdls = GetSerializerResult(model, edmVersion, out IEnumerable<EdmError> serializationErrors).Select(n => XElement.Parse(n));
@@ -1510,7 +1510,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         Assert.False(serializationErrors.Any());
 
         // if the original test model is not valid, the serializer should still generate CSDLs that parser can handle, but the round trip-ability is not guaranteed.
-        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel? roundtrippedModel, out IEnumerable<EdmError>? parserErrors);
+        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel roundtrippedModel, out IEnumerable<EdmError> parserErrors);
         Assert.True(isWellFormed);
     }
 
@@ -1534,7 +1534,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         var validationRuleSet = ValidationRuleSet.GetEdmModelRuleSet(this.GetProductVersion(edmVersion));
 
         // Assert
-        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError>? actualErrors);
+        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError> actualErrors);
         Assert.Empty(actualErrors);
 
         var serializedCsdls = GetSerializerResult(model, edmVersion, out IEnumerable<EdmError> serializationErrors).Select(n => XElement.Parse(n));
@@ -1542,7 +1542,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         Assert.False(serializationErrors.Any());
 
         // if the original test model is not valid, the serializer should still generate CSDLs that parser can handle, but the round trip-ability is not guaranteed.
-        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel? roundtrippedModel, out IEnumerable<EdmError>? parserErrors);
+        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel roundtrippedModel, out IEnumerable<EdmError> parserErrors);
         Assert.True(isWellFormed);
     }
 
@@ -1578,7 +1578,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         var validationRuleSet = ValidationRuleSet.GetEdmModelRuleSet(this.GetProductVersion(edmVersion));
 
         // Assert
-        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError>? actualErrors);
+        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError> actualErrors);
         Assert.Empty(actualErrors);
 
         var serializedCsdls = GetSerializerResult(model, edmVersion, out IEnumerable<EdmError> serializationErrors).Select(n => XElement.Parse(n));
@@ -1586,7 +1586,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         Assert.False(serializationErrors.Any());
 
         // if the original test model is not valid, the serializer should still generate CSDLs that parser can handle, but the round trip-ability is not guaranteed.
-        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel? roundtrippedModel, out IEnumerable<EdmError>? parserErrors);
+        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel roundtrippedModel, out IEnumerable<EdmError> parserErrors);
         Assert.True(isWellFormed);
     }
 
@@ -1614,7 +1614,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         var validationRuleSet = ValidationRuleSet.GetEdmModelRuleSet(this.GetProductVersion(edmVersion));
 
         // Assert
-        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError>? actualErrors);
+        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError> actualErrors);
         Assert.Empty(actualErrors);
 
         var serializedCsdls = GetSerializerResult(model, edmVersion, out IEnumerable<EdmError> serializationErrors).Select(n => XElement.Parse(n));
@@ -1622,7 +1622,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         Assert.False(serializationErrors.Any());
 
         // if the original test model is not valid, the serializer should still generate CSDLs that parser can handle, but the round trip-ability is not guaranteed.
-        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel? roundtrippedModel, out IEnumerable<EdmError>? parserErrors);
+        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel roundtrippedModel, out IEnumerable<EdmError> parserErrors);
         Assert.True(isWellFormed);
     }
 
@@ -1658,7 +1658,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         var validationRuleSet = ValidationRuleSet.GetEdmModelRuleSet(this.GetProductVersion(edmVersion));
 
         // Assert
-        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError>? actualErrors);
+        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError> actualErrors);
         Assert.Single(actualErrors);
 
         Assert.Equal(EdmErrorCode.CollectionExpressionNotValidForNonCollectionType, actualErrors.ElementAt(0).ErrorCode);
@@ -1670,7 +1670,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         Assert.False(serializationErrors.Any());
 
         // if the original test model is not valid, the serializer should still generate CSDLs that parser can handle, but the round trip-ability is not guaranteed.
-        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel? roundtrippedModel, out IEnumerable<EdmError>? parserErrors);
+        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel roundtrippedModel, out IEnumerable<EdmError> parserErrors);
         Assert.True(isWellFormed);
     }
 
@@ -1704,7 +1704,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         var validationRuleSet = ValidationRuleSet.GetEdmModelRuleSet(this.GetProductVersion(edmVersion));
 
         // Assert
-        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError>? actualErrors);
+        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError> actualErrors);
         Assert.Single(actualErrors);
 
         Assert.Equal(EdmErrorCode.ExpressionPrimitiveKindNotValidForAssertedType, actualErrors.ElementAt(0).ErrorCode);
@@ -1716,7 +1716,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         Assert.False(serializationErrors.Any());
 
         // if the original test model is not valid, the serializer should still generate CSDLs that parser can handle, but the round trip-ability is not guaranteed.
-        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel? roundtrippedModel, out IEnumerable<EdmError>? parserErrors);
+        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel roundtrippedModel, out IEnumerable<EdmError> parserErrors);
         Assert.True(isWellFormed);
     }
 
@@ -1750,7 +1750,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         var validationRuleSet = ValidationRuleSet.GetEdmModelRuleSet(this.GetProductVersion(edmVersion));
 
         // Assert
-        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError>? actualErrors);
+        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError> actualErrors);
         Assert.Single(actualErrors);
 
         Assert.Equal(EdmErrorCode.ExpressionPrimitiveKindNotValidForAssertedType, actualErrors.ElementAt(0).ErrorCode);
@@ -1762,7 +1762,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         Assert.False(serializationErrors.Any());
 
         // if the original test model is not valid, the serializer should still generate CSDLs that parser can handle, but the round trip-ability is not guaranteed.
-        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel? roundtrippedModel, out IEnumerable<EdmError>? parserErrors);
+        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel roundtrippedModel, out IEnumerable<EdmError> parserErrors);
         Assert.True(isWellFormed);
     }
 
@@ -1796,7 +1796,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         var validationRuleSet = ValidationRuleSet.GetEdmModelRuleSet(this.GetProductVersion(edmVersion));
 
         // Assert
-        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError>? actualErrors);
+        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError> actualErrors);
         Assert.Single(actualErrors);
 
         Assert.Equal(EdmErrorCode.ExpressionPrimitiveKindNotValidForAssertedType, actualErrors.ElementAt(0).ErrorCode);
@@ -1808,7 +1808,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         Assert.False(serializationErrors.Any());
 
         // if the original test model is not valid, the serializer should still generate CSDLs that parser can handle, but the round trip-ability is not guaranteed.
-        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel? roundtrippedModel, out IEnumerable<EdmError>? parserErrors);
+        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel roundtrippedModel, out IEnumerable<EdmError> parserErrors);
         Assert.True(isWellFormed);
     }
 
@@ -1842,7 +1842,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         var validationRuleSet = ValidationRuleSet.GetEdmModelRuleSet(this.GetProductVersion(edmVersion));
 
         // Assert
-        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError>? actualErrors);
+        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError> actualErrors);
         Assert.Single(actualErrors);
 
         Assert.Equal(EdmErrorCode.ExpressionPrimitiveKindNotValidForAssertedType, actualErrors.ElementAt(0).ErrorCode);
@@ -1854,7 +1854,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         Assert.False(serializationErrors.Any());
 
         // if the original test model is not valid, the serializer should still generate CSDLs that parser can handle, but the round trip-ability is not guaranteed.
-        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel? roundtrippedModel, out IEnumerable<EdmError>? parserErrors);
+        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel roundtrippedModel, out IEnumerable<EdmError> parserErrors);
         Assert.True(isWellFormed);
     }
 
@@ -1882,7 +1882,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         var validationRuleSet = ValidationRuleSet.GetEdmModelRuleSet(this.GetProductVersion(edmVersion));
 
         // Assert
-        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError>? actualErrors);
+        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError> actualErrors);
         Assert.Single(actualErrors);
 
         Assert.Equal(EdmErrorCode.InvalidDate, actualErrors.ElementAt(0).ErrorCode);
@@ -1894,7 +1894,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         Assert.False(serializationErrors.Any());
 
         // if the original test model is not valid, the serializer should still generate CSDLs that parser can handle, but the round trip-ability is not guaranteed.
-        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel? roundtrippedModel, out IEnumerable<EdmError>? parserErrors);
+        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel roundtrippedModel, out IEnumerable<EdmError> parserErrors);
         Assert.True(isWellFormed);
     }
 
@@ -1928,7 +1928,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         var validationRuleSet = ValidationRuleSet.GetEdmModelRuleSet(this.GetProductVersion(edmVersion));
 
         // Assert
-        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError>? actualErrors);
+        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError> actualErrors);
         Assert.Single(actualErrors);
 
         Assert.Equal(EdmErrorCode.ExpressionPrimitiveKindNotValidForAssertedType, actualErrors.ElementAt(0).ErrorCode);
@@ -1940,7 +1940,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         Assert.False(serializationErrors.Any());
 
         // if the original test model is not valid, the serializer should still generate CSDLs that parser can handle, but the round trip-ability is not guaranteed.
-        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel? roundtrippedModel, out IEnumerable<EdmError>? parserErrors);
+        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel roundtrippedModel, out IEnumerable<EdmError> parserErrors);
         Assert.True(isWellFormed);
     }
 
@@ -1974,7 +1974,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         var validationRuleSet = ValidationRuleSet.GetEdmModelRuleSet(this.GetProductVersion(edmVersion));
 
         // Assert
-        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError>? actualErrors);
+        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError> actualErrors);
         Assert.Single(actualErrors);
 
         Assert.Equal(EdmErrorCode.ExpressionPrimitiveKindNotValidForAssertedType, actualErrors.ElementAt(0).ErrorCode);
@@ -1986,7 +1986,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         Assert.False(serializationErrors.Any());
 
         // if the original test model is not valid, the serializer should still generate CSDLs that parser can handle, but the round trip-ability is not guaranteed.
-        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel? roundtrippedModel, out IEnumerable<EdmError>? parserErrors);
+        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel roundtrippedModel, out IEnumerable<EdmError> parserErrors);
         Assert.True(isWellFormed);
     }
 
@@ -2020,7 +2020,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         var validationRuleSet = ValidationRuleSet.GetEdmModelRuleSet(this.GetProductVersion(edmVersion));
 
         // Assert
-        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError>? actualErrors);
+        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError> actualErrors);
         Assert.Single(actualErrors);
 
         Assert.Equal(EdmErrorCode.ExpressionPrimitiveKindNotValidForAssertedType, actualErrors.ElementAt(0).ErrorCode);
@@ -2032,7 +2032,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         Assert.False(serializationErrors.Any());
 
         // if the original test model is not valid, the serializer should still generate CSDLs that parser can handle, but the round trip-ability is not guaranteed.
-        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel? roundtrippedModel, out IEnumerable<EdmError>? parserErrors);
+        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel roundtrippedModel, out IEnumerable<EdmError> parserErrors);
         Assert.True(isWellFormed);
     }
 
@@ -2060,7 +2060,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         var validationRuleSet = ValidationRuleSet.GetEdmModelRuleSet(this.GetProductVersion(edmVersion));
 
         // Assert
-        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError>? actualErrors);
+        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError> actualErrors);
         Assert.Single(actualErrors);
 
         Assert.Equal(EdmErrorCode.InvalidTimeOfDay, actualErrors.ElementAt(0).ErrorCode);
@@ -2072,7 +2072,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         Assert.False(serializationErrors.Any());
 
         // if the original test model is not valid, the serializer should still generate CSDLs that parser can handle, but the round trip-ability is not guaranteed.
-        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel? roundtrippedModel, out IEnumerable<EdmError>? parserErrors);
+        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel roundtrippedModel, out IEnumerable<EdmError> parserErrors);
         Assert.True(isWellFormed);
     }
 
@@ -2106,7 +2106,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         var validationRuleSet = ValidationRuleSet.GetEdmModelRuleSet(this.GetProductVersion(edmVersion));
 
         // Assert
-        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError>? actualErrors);
+        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError> actualErrors);
         Assert.Single(actualErrors);
 
         Assert.Equal(EdmErrorCode.StringConstantLengthOutOfRange, actualErrors.ElementAt(0).ErrorCode);
@@ -2118,7 +2118,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         Assert.False(serializationErrors.Any());
 
         // if the original test model is not valid, the serializer should still generate CSDLs that parser can handle, but the round trip-ability is not guaranteed.
-        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel? roundtrippedModel, out IEnumerable<EdmError>? parserErrors);
+        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel roundtrippedModel, out IEnumerable<EdmError> parserErrors);
         Assert.True(isWellFormed);
     }
 
@@ -2152,7 +2152,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         var validationRuleSet = ValidationRuleSet.GetEdmModelRuleSet(this.GetProductVersion(edmVersion));
 
         // Assert
-        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError>? actualErrors);
+        var validationResult = model.Validate(validationRuleSet, out IEnumerable<EdmError> actualErrors);
         Assert.Single(actualErrors);
 
         Assert.Equal(EdmErrorCode.BinaryConstantLengthOutOfRange, actualErrors.ElementAt(0).ErrorCode);
@@ -2164,7 +2164,7 @@ public class ExpressionSemanticValidationTest : EdmLibTestCaseBase
         Assert.False(serializationErrors.Any());
 
         // if the original test model is not valid, the serializer should still generate CSDLs that parser can handle, but the round trip-ability is not guaranteed.
-        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel? roundtrippedModel, out IEnumerable<EdmError>? parserErrors);
+        var isWellFormed = SchemaReader.TryParse(serializedCsdls.Select(e => e.CreateReader()), out IEdmModel roundtrippedModel, out IEnumerable<EdmError> parserErrors);
         Assert.True(isWellFormed);
     }
 }

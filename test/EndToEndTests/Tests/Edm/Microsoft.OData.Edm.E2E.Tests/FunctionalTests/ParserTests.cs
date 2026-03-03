@@ -599,7 +599,7 @@ public class ParserTests : EdmLibTestCaseBase
     public void Validate_ParsingSelfReferencingNavigationPropertyWithBaseType_ReportsExpectedErrors()
     {
         var csdl = @"
-< Schema Namespace=""DefaultNamespace"" Alias=""Self"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+<Schema Namespace=""DefaultNamespace"" Alias=""Self"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
     <EntityType Name=""Person"">
         <Key>
             <PropertyRef Name=""Id"" />

@@ -26,7 +26,7 @@ public static class EdmModelUtils
     /// </summary>
     /// <param name="collectionTypeName">The collection item type name to parse.</param>
     /// <returns>The item type name or null if the <paramref name="collectionTypeName"/> is not a collection type name.</returns>
-    public static string? GetCollectionItemTypeName(string collectionTypeName)
+    public static string GetCollectionItemTypeName(string collectionTypeName)
     {
         if (collectionTypeName.StartsWith(CollectionTypeNamePrefix) && collectionTypeName.EndsWith(CollectionTypeNameSuffix))
         {
