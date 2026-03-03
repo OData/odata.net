@@ -123,6 +123,9 @@ namespace Microsoft.OData
         /// <summary> "isof function </summary>
         internal const string UnboundFunctionIsOf = "isof";
 
+        /// <summary> "case" conditional function </summary>
+        internal const string UnboundFunctionCase = "case";
+
         /// <summary> Spatial length function </summary>
         internal const string UnboundFunctionLength = "geo.length";
 

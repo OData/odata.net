@@ -773,6 +773,42 @@ namespace Microsoft.OData.Core {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The &apos;case&apos; function requires condition:result pairs, but received {0} argument(s). Each condition must be followed by a colon and a result expression..
+        /// </summary>
+        internal static string FunctionCallBinder_CaseRequiresEvenNumberOfArgs {
+            get {
+                return ResourceManager.GetString("FunctionCallBinder_CaseRequiresEvenNumberOfArgs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Each condition in the &apos;case&apos; function must be a single-value expression..
+        /// </summary>
+        internal static string FunctionCallBinder_CaseConditionMustBeSingleValue {
+            get {
+                return ResourceManager.GetString("FunctionCallBinder_CaseConditionMustBeSingleValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Each result in the &apos;case&apos; function must be a single-value expression..
+        /// </summary>
+        internal static string FunctionCallBinder_CaseResultMustBeSingleValue {
+            get {
+                return ResourceManager.GetString("FunctionCallBinder_CaseResultMustBeSingleValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &apos;:&apos; expected at position {0} in &apos;{1}&apos;..
+        /// </summary>
+        internal static string UriQueryExpressionParser_ColonExpected {
+            get {
+                return ResourceManager.GetString("UriQueryExpressionParser_ColonExpected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The operation overloads matching &apos;{0}&apos; are invalid. This is most likely an error in the IEdmModel..
         /// </summary>
         internal static string FunctionOverloadResolver_FoundInvalidOperation {

@@ -30,6 +30,7 @@ namespace Microsoft.OData.UriParser
         {
             ExpressionConstants.UnboundFunctionCast,
             ExpressionConstants.UnboundFunctionIsOf,
+            ExpressionConstants.UnboundFunctionCase,
         };
 
         /// <summary>
@@ -672,6 +673,12 @@ namespace Microsoft.OData.UriParser
                         break;
                     }
 
+                case ExpressionConstants.UnboundFunctionCase:
+                    {
+                        returnType = ValidateAndBuildCaseArgs(args);
+                        break;
+                    }
+
                 default:
                     {
                         break;
@@ -703,6 +710,48 @@ namespace Microsoft.OData.UriParser
         private static IEdmTypeReference ValidateAndBuildIsOfArgs(BindingState state, ref List<QueryNode> args)
         {
             return ValidateIsOfOrCast(state, false, ref args);
+        }
+
+        /// <summary>
+        /// Validate the arguments for the case conditional function and determine the return type.
+        /// Arguments are expected as alternating condition/result pairs: condition1, result1, condition2, result2, ...
+        /// Each condition must be a boolean expression.
+        /// </summary>
+        /// <param name="args">The list of bound arguments (alternating condition, result pairs).</param>
+        /// <returns>The return type determined from the result expressions.</returns>
+        private static IEdmTypeReference ValidateAndBuildCaseArgs(List<QueryNode> args)
+        {
+            if (args.Count < 2 || args.Count % 2 != 0)
+            {
+                throw new ODataException(Error.Format(SRResources.FunctionCallBinder_CaseRequiresEvenNumberOfArgs, args.Count));
+            }
+
+            IEdmTypeReference returnType = null;
+
+            for (int i = 0; i < args.Count; i += 2)
+            {
+                // Validate condition is a SingleValueNode
+                SingleValueNode conditionNode = args[i] as SingleValueNode;
+                if (conditionNode == null)
+                {
+                    throw new ODataException(SRResources.FunctionCallBinder_CaseConditionMustBeSingleValue);
+                }
+
+                // Validate result is a SingleValueNode
+                SingleValueNode resultNode = args[i + 1] as SingleValueNode;
+                if (resultNode == null)
+                {
+                    throw new ODataException(SRResources.FunctionCallBinder_CaseResultMustBeSingleValue);
+                }
+
+                // Use the type of the first result expression as the return type
+                if (returnType == null && resultNode.TypeReference != null)
+                {
+                    returnType = resultNode.TypeReference;
+                }
+            }
+
+            return returnType;
         }
 
         /// <summary>

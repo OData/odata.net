@@ -3712,6 +3712,64 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
         #endregion
 
+        #region case function tests
+
+        [Fact]
+        public void CaseFunctionWithSingleCondition()
+        {
+            FilterClause filter = ParseFilter("case(ID gt 0:true,true:false) eq true", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
+            var binaryNode = filter.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal);
+            var functionCallNode = binaryNode.Left.ShouldBeSingleValueFunctionCallQueryNode("case");
+            Assert.Equal(4, functionCallNode.Parameters.Count());
+            // First pair: condition = ID gt 0, result = true
+            functionCallNode.Parameters.ElementAt(0).ShouldBeBinaryOperatorNode(BinaryOperatorKind.GreaterThan);
+            functionCallNode.Parameters.ElementAt(1).ShouldBeConstantQueryNode(true);
+            // Second pair: condition = true, result = false
+            functionCallNode.Parameters.ElementAt(2).ShouldBeConstantQueryNode(true);
+            functionCallNode.Parameters.ElementAt(3).ShouldBeConstantQueryNode(false);
+        }
+
+        [Fact]
+        public void CaseFunctionWithMultipleConditions()
+        {
+            FilterClause filter = ParseFilter("case(ID gt 100:1,ID gt 10:2,true:3) eq 1", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
+            var binaryNode = filter.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal);
+            var functionCallNode = binaryNode.Left.ShouldBeSingleValueFunctionCallQueryNode("case");
+            Assert.Equal(6, functionCallNode.Parameters.Count());
+        }
+
+        [Fact]
+        public void CaseFunctionReturnsTypeOfFirstResult()
+        {
+            FilterClause filter = ParseFilter("case(ID gt 0:1,true:0) eq 1", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
+            var binaryNode = filter.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal);
+            var functionCallNode = binaryNode.Left.ShouldBeSingleValueFunctionCallQueryNode("case");
+            Assert.Equal("Edm.Int32", functionCallNode.TypeReference.FullName());
+        }
+
+        [Fact]
+        public void CaseFunctionWithStringResults()
+        {
+            FilterClause filter = ParseFilter("case(ID gt 0:'positive',true:'non-positive') eq 'positive'", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
+            var binaryNode = filter.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal);
+            var functionCallNode = binaryNode.Left.ShouldBeSingleValueFunctionCallQueryNode("case");
+            Assert.Equal(4, functionCallNode.Parameters.Count());
+            Assert.Equal("Edm.String", functionCallNode.TypeReference.FullName());
+        }
+
+        [Fact]
+        public void CaseFunctionWithPropertyResults()
+        {
+            FilterClause filter = ParseFilter("case(ID gt 0:Shoe,true:'unknown') eq 'test'", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
+            var binaryNode = filter.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal);
+            var functionCallNode = binaryNode.Left.ShouldBeSingleValueFunctionCallQueryNode("case");
+            Assert.Equal(4, functionCallNode.Parameters.Count());
+            functionCallNode.Parameters.ElementAt(2).ShouldBeConstantQueryNode(true);
+            functionCallNode.Parameters.ElementAt(1).ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPersonShoeProp());
+        }
+
+        #endregion
+
         private static FilterClause ParseFilter(string text, IEdmModel edmModel, IEdmType edmType, IEdmNavigationSource edmEntitySet = null)
         {
             return new ODataQueryOptionParser(edmModel, edmType, edmEntitySet, new Dictionary<string, string>() { { "$filter", text } }) { Resolver = new ODataUriResolver() { EnableCaseInsensitive = false } }.ParseFilter();

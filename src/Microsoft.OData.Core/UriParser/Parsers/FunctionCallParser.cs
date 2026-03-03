@@ -187,30 +187,63 @@ namespace Microsoft.OData.UriParser
             Stack<QueryToken> expressionParents = new Stack<QueryToken>();
             bool isFunctionCallNameCastOrIsOf = functionName.Length > 0 &&
                 (functionName.SequenceEqual(ExpressionConstants.UnboundFunctionCast.AsSpan()) || functionName.SequenceEqual(ExpressionConstants.UnboundFunctionIsOf.AsSpan()));
-            List<FunctionParameterToken> argList = new List<FunctionParameterToken>();
-            while (true)
+            bool isFunctionCallNameCase = functionName.Length > 0 &&
+                functionName.SequenceEqual(ExpressionConstants.UnboundFunctionCase.AsSpan());
+
+            // For 'case' function, prevent the lexer from consuming ':' in numeric literals (e.g., 0:1 as TimeOfDay)
+            if (isFunctionCallNameCase)
             {
-                // If we have a parent expression, we need to set the parent of the next argument to the current argument.
-                QueryToken parentExpression = expressionParents.Count > 0 ? expressionParents.Pop() : null;
-                QueryToken parameterToken = this.parser.ParseExpression();
+                this.Lexer.ColonAsDelimiter = true;
+            }
 
-                // If the function call is cast or isof, set the parent of the next argument to the current argument.
-                if (parentExpression != null && isFunctionCallNameCastOrIsOf)
+            List<FunctionParameterToken> argList = new List<FunctionParameterToken>();
+            try
+            {
+                while (true)
                 {
-                    parameterToken = SetParentForCurrentParameterToken(parentExpression, parameterToken);
-                }
+                    // If we have a parent expression, we need to set the parent of the next argument to the current argument.
+                    QueryToken parentExpression = expressionParents.Count > 0 ? expressionParents.Pop() : null;
+                    QueryToken parameterToken = this.parser.ParseExpression();
 
-                argList.Add(new FunctionParameterToken(null, parameterToken));
-                if (this.Lexer.CurrentToken.Kind != ExpressionTokenKind.Comma)
+                    // If the function call is cast or isof, set the parent of the next argument to the current argument.
+                    if (parentExpression != null && isFunctionCallNameCastOrIsOf)
+                    {
+                        parameterToken = SetParentForCurrentParameterToken(parentExpression, parameterToken);
+                    }
+
+                    argList.Add(new FunctionParameterToken(null, parameterToken));
+
+                    // For 'case' function, expect a colon separator between condition and result
+                    if (isFunctionCallNameCase)
+                    {
+                        if (this.Lexer.CurrentToken.Kind != ExpressionTokenKind.Colon)
+                        {
+                            throw new ODataException(Error.Format(SRResources.UriQueryExpressionParser_ColonExpected, this.Lexer.CurrentToken.Position, this.Lexer.ExpressionText));
+                        }
+
+                        this.Lexer.NextToken();
+                        QueryToken resultToken = this.parser.ParseExpression();
+                        argList.Add(new FunctionParameterToken(null, resultToken));
+                    }
+
+                    if (this.Lexer.CurrentToken.Kind != ExpressionTokenKind.Comma)
+                    {
+                        break;
+                    }
+
+                    // In case of comma, we need to parse the next argument
+                    // but first we need to set the parent of the next argument to the current argument.
+                    expressionParents.Push(parameterToken);
+
+                    this.Lexer.NextToken();
+                }
+            }
+            finally
+            {
+                if (isFunctionCallNameCase)
                 {
-                    break;
+                    this.Lexer.ColonAsDelimiter = false;
                 }
-
-                // In case of comma, we need to parse the next argument
-                // but first we need to set the parent of the next argument to the current argument.
-                expressionParents.Push(parameterToken);
-
-                this.Lexer.NextToken();
             }
 
             return argList;

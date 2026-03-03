@@ -2075,6 +2075,18 @@
   <data name="FunctionCallParser_DuplicateParameterOrEntityKeyName" xml:space="preserve">
     <value>Parameter or entity key names must be unique. There is most likely an error in the model.</value>
   </data>
+  <data name="FunctionCallBinder_CaseRequiresEvenNumberOfArgs" xml:space="preserve">
+    <value>The 'case' function requires condition:result pairs, but received {0} argument(s). Each condition must be followed by a colon and a result expression.</value>
+  </data>
+  <data name="FunctionCallBinder_CaseConditionMustBeSingleValue" xml:space="preserve">
+    <value>Each condition in the 'case' function must be a single-value expression.</value>
+  </data>
+  <data name="FunctionCallBinder_CaseResultMustBeSingleValue" xml:space="preserve">
+    <value>Each result in the 'case' function must be a single-value expression.</value>
+  </data>
+  <data name="UriQueryExpressionParser_ColonExpected" xml:space="preserve">
+    <value>':' expected at position {0} in '{1}'.</value>
+  </data>
   <data name="ODataUriParser_InvalidCount" xml:space="preserve">
     <value>'{0}' is not a valid count option.</value>
   </data>

@@ -88,6 +88,9 @@ namespace Microsoft.OData.UriParser
         /// <summary>Indicates whether a double-quoted string is being parsed.</summary>
         private bool parsingDoubleQuotedString;
 
+        /// <summary>Whether the lexer should treat ':' as a token delimiter in numeric literals instead of trying to parse TimeOfDay.</summary>
+        private bool colonAsDelimiter;
+
         #endregion Protected and Private fields
 
         #region Constructors
@@ -141,6 +144,17 @@ namespace Microsoft.OData.UriParser
 
         /// <summary>Position on text being parsed.</summary>
         internal int Position => this.token.Position;
+
+        /// <summary>
+        /// Gets or sets whether the lexer should treat ':' as a token delimiter in numeric literals
+        /// instead of trying to parse TimeOfDay. Used when parsing 'case' function arguments where
+        /// ':' separates condition:result pairs.
+        /// </summary>
+        internal bool ColonAsDelimiter
+        {
+            get => this.colonAsDelimiter;
+            set => this.colonAsDelimiter = value;
+        }
 
         #endregion Internal properties
 
@@ -932,7 +946,7 @@ namespace Microsoft.OData.UriParser
                 }
 
                 // TimeOfDay will have ":" in them
-                if (this.ch == ':')
+                if (this.ch == ':' && !this.colonAsDelimiter)
                 {
                     if (this.TryParseTimeOfDay(tokenPos))
                     {
