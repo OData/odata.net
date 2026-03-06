@@ -1877,6 +1877,9 @@
   <data name="UriQueryExpressionParser_InnerMostExpandRequireFilter" xml:space="preserve">
     <value>The inner most expand transformation requires a filter transformation at position {0} in '{1}'.</value>
   </data>
+	<data name="UriQueryExpressionParser_ColonExpectedForCaseFunctionCall" xml:space="preserve">
+    <value>':' expected at position {0} in '{1}'. The 'case' function requires 'condition:result' pairs.</value>
+  </data>
   <data name="UriQueryPathParser_RequestUriDoesNotHaveTheCorrectBaseUri" xml:space="preserve">
     <value>The URI '{0}' is not valid because it is not based on '{1}'.</value>
   </data>
@@ -2068,6 +2071,12 @@
   </data>
   <data name="FunctionCallParser_DuplicateParameterOrEntityKeyName" xml:space="preserve">
     <value>Parameter or entity key names must be unique. There is most likely an error in the model.</value>
+  </data>
+  <data name="FunctionCallBinder_CaseRequiresEvenNumberOfArgs" xml:space="preserve">
+    <value>The 'case' function requires 'condition:result' pairs, but received {0} argument(s). Each condition must be followed by a colon and a result expression.</value>
+  </data>
+  <data name="FunctionCallBinder_CaseConditionMustBeSingleBooleanValue" xml:space="preserve">
+    <value>The No.'{0}' condition in the 'case' function MUST be a single value boolean expression.</value>
   </data>
   <data name="ODataUriParser_InvalidCount" xml:space="preserve">
     <value>'{0}' is not a valid count option.</value>

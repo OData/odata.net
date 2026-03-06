@@ -79,7 +79,7 @@ namespace Microsoft.OData.UriParser
             if (returnedTypeReference != null)
             {
                 if (returnedTypeReference.IsCollection()
-                    || !(returnedTypeReference.IsComplex() || returnedTypeReference.IsPrimitive() || returnedTypeReference.IsEnum()))
+                    || !(returnedTypeReference.IsComplex() || returnedTypeReference.IsPrimitive() || returnedTypeReference.IsEnum() || returnedTypeReference.IsUntyped()))
                 {
                     throw new ArgumentException(SRResources.Nodes_SingleValueFunctionCallNode_ItemTypeMustBePrimitiveOrComplexOrEnum);
                 }

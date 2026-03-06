@@ -551,6 +551,11 @@ namespace Microsoft.OData.UriParser
             return MetadataUtilsCommon.CanConvertPrimitiveTypeTo(sourceNodeOrNull, sourcePrimitiveTypeReference.PrimitiveDefinition(), targetPrimitiveTypeReference.PrimitiveDefinition());
         }
 
+        internal static bool IsNumericType(IEdmTypeReference type)
+        {
+            return GetNumericTypeKind(type) != NumericTypeKind.NotNumeric;
+        }
+
         /// <summary>
         /// function signatures for temporal
         /// </summary>
