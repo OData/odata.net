@@ -208,8 +208,8 @@ namespace Microsoft.OData.UriParser
                 if (isFunctionCallNameCase)
                 {
                     // For 'case' function, expect a colon separator between condition and result
-                    // Be noted, there could be confusing to have TimeOfDay as the value, for example: "case(CreatedTime eq 10:2:1)"
-                    // In this case, client should clearly add a whitespace to get rid of the confusion, like: "case(CreatedTime eq 10:2 :1)"
+                    // Note that there could be confusion when using TimeOfDay as the value, for example: "case(CreatedTime eq 10:2:1)".
+                    // In this case, the client should explicitly add a whitespace to avoid this confusion, for example: "case(CreatedTime eq 10:2 :1)".
                     if (this.Lexer.CurrentToken.Kind != ExpressionTokenKind.Colon)
                     {
                         throw new ODataException(Error.Format(SRResources.UriQueryExpressionParser_ColonExpectedForCaseFunctionCall, this.Lexer.CurrentToken.Position, this.Lexer.ExpressionText));
@@ -218,7 +218,7 @@ namespace Microsoft.OData.UriParser
                     this.lexer.NextToken(); // consume the ':'
                     QueryToken resultToken = this.parser.ParseExpression();
 
-                    // Be sure, the 'condition' expression is added into the argList already.
+                    // The 'condition' expression has already been added to argList above.
                     argList.Add(new FunctionParameterToken(null, resultToken));
                 }
 

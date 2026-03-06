@@ -321,7 +321,7 @@ namespace Microsoft.OData.UriParser
                 return CreateUnboundFunctionNode(matchedFunctionCallTokenName, argumentNodes);
             }
 
-            // expression case(Edm.Boolean:expression, ..., Edm.Boolean:expression)
+            //  Handle 'case' function: case(boolExpr1: result1, boolExpr2: result2, ...)
             if (string.Equals(functionCallToken.Name, "case", this.state.Configuration.EnableCaseInsensitiveUriFunctionIdentifier ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal))
             {
                 return CreateCaseFunctionNode(argumentNodes);
