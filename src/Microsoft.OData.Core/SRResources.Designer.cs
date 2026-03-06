@@ -755,7 +755,7 @@ namespace Microsoft.OData.Core {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The No.&apos;{0}&apos; condition in the &apos;case&apos; function MUST be a single value boolean expression..
+        ///   Looks up a localized string similar to The condition at position &apos;{0}&apos; in the &apos;case&apos; function must be a single-value boolean expression..
         /// </summary>
         internal static string FunctionCallBinder_CaseConditionMustBeSingleBooleanValue {
             get {

@@ -7,7 +7,6 @@
 using Microsoft.OData.Core;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Metadata;
-using Microsoft.OData.UriParser;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -888,9 +887,9 @@ namespace Microsoft.OData.UriParser
                 SingleValueNode singleValueNode = args[i] as SingleValueNode;
 
                 // the first expression – the condition – MUST be a Boolean expression.
-                if (singleValueNode == null || !singleValueNode.TypeReference.IsBoolean())
+                if (singleValueNode == null || singleValueNode.TypeReference == null || !singleValueNode.TypeReference.IsBoolean())
                 {
-                    throw new ODataException(Error.Format(SRResources.FunctionCallBinder_CaseConditionMustBeSingleBooleanValue, i % 2));
+                    throw new ODataException(Error.Format(SRResources.FunctionCallBinder_CaseConditionMustBeSingleBooleanValue, i / 2));
                 }
 
                 // the second expression – the result – may evaluate to any type.
@@ -906,6 +905,11 @@ namespace Microsoft.OData.UriParser
                     {
                         // this is the first result node, set the return type to this node's type
                         returnType = singleResultNode.TypeReference;
+                    }
+                    else if (singleResultNode.TypeReference == null)
+                    {
+                        // if this result node doesn't have type information, we can't identify the return type, so we treat the whole case expression as untyped.
+                        returnType = null;
                     }
                     else if (HasCommonTypeOrCanPromote(returnType, singleResultNode.TypeReference, out IEdmTypeReference promotedType))
                     {
@@ -948,6 +952,7 @@ namespace Microsoft.OData.UriParser
                 else if (TypePromotionUtils.CanConvertTo(null, currentType, previousType))
                 {
                     promotedType = previousType;
+                    return true;
                 }
             }
 

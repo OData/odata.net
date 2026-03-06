@@ -268,10 +268,37 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
         /// <summary>
         /// Tests case expression with a single condition/result pair.
-        /// Query: ?$compute=case(Age lt 18: 'Minor', true: 'Adult') as AgeGroup
+        /// Query: ?$compute=case(Age lt 18: 'Minor') as AgeGroup
         /// </summary>
         [Fact]
         public void CaseInComputeWithSingleConditionPair()
+        {
+            // Arrange
+            string compute = "case(Age lt 18: 'Minor', true: 'Adult') as AgeGroup";
+
+            // Act
+            ComputeClause computeClause = ParseCompute(compute, this.model, this.userType, this.usersSet);
+
+            // Assert
+            Assert.NotNull(computeClause);
+            ComputeExpression computeExp = Assert.Single(computeClause.ComputedItems);
+            Assert.Equal("AgeGroup", computeExp.Alias);
+
+            var caseFunctionCall = computeExp.Expression.ShouldBeSingleValueFunctionCallQueryNode("case");
+
+            // Verify 2 parameters (1 pair)
+            Assert.Equal(2, caseFunctionCall.Parameters.Count());
+            Assert.Collection(caseFunctionCall.Parameters,
+                param1 => param1.ShouldBeBinaryOperatorNode(BinaryOperatorKind.LessThan),
+                param2 => param2.ShouldBeConstantQueryNode("Minor"));
+        }
+
+        /// <summary>
+        /// Tests case expression with a two condition/result pairs.
+        /// Query: ?$compute=case(Age lt 18: 'Minor', true: 'Adult') as AgeGroup
+        /// </summary>
+        [Fact]
+        public void CaseInComputeWithTwoConditionPairs()
         {
             // Arrange
             string compute = "case(Age lt 18: 'Minor', true: 'Adult') as AgeGroup";
