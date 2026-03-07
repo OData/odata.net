@@ -4,17 +4,16 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using Microsoft.OData.Core;
+using Microsoft.OData.Edm;
+using Microsoft.OData.Metadata;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
-using Microsoft.OData.Metadata;
-using Microsoft.OData.Edm;
-using Microsoft.OData.Core;
 
 namespace Microsoft.OData.UriParser
 {
@@ -320,6 +319,12 @@ namespace Microsoft.OData.UriParser
             if (matchedFunctionCallTokenName != null)
             {
                 return CreateUnboundFunctionNode(matchedFunctionCallTokenName, argumentNodes);
+            }
+
+            //  Handle 'case' function: case(boolExpr1: result1, boolExpr2: result2, ...)
+            if (string.Equals(functionCallToken.Name, "case", this.state.Configuration.EnableCaseInsensitiveUriFunctionIdentifier ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal))
+            {
+                return CreateCaseFunctionNode(argumentNodes);
             }
 
             // Do some validation and get potential Uri functions that could match what we saw
@@ -745,7 +750,7 @@ namespace Microsoft.OData.UriParser
                     Error.Format(SRResources.MetadataBinder_CastOrIsOfExpressionWithWrongNumberOfOperands, args.Count));
             }
 
-            QueryNode queryNode = args[^1];
+            QueryNode queryNode = args[^1]; // Get the last element
 
             string typeArgumentFullName = null;
             IEdmTypeReference returnType = null;
@@ -854,6 +859,105 @@ namespace Microsoft.OData.UriParser
             }
 
             return typeReference;
+        }
+
+        /// <summary>
+        /// Build a QueryNode for 'case' function using the list of already bound arguments,
+        /// and do necessary validation on the arguments to make sure they fit the requirement of 'case' function.
+        /// Arguments are expected as alternating condition/result pairs: condition1, result1, condition2, result2, ...
+        /// Each condition must be a boolean expression.
+        /// Each result may evaluate to any type.
+        ///    - If all results are of the same type, the type of the case expression is of that type
+        ///    - If all results are of numeric type, then the type of the case expression is a numeric type capable of representing any of these expressions according to standard type promotion rules.
+        ///    - Services MAY support case expressions containing parameters of incompatible types, in which case the case expression is treated as Edm.Untyped and its value has the type of the parameter expression selected by the case statement.
+        /// </summary>
+        /// <param name="args">list of already bound query nodes for this function</param>
+        /// <returns>A query node of this function.</returns>
+        private static QueryNode CreateCaseFunctionNode(List<QueryNode> args)
+        {
+            if (args.Count < 2 || args.Count % 2 != 0)
+            {
+                throw new ODataException(Error.Format(SRResources.FunctionCallBinder_CaseRequiresEvenNumberOfArgs, args.Count));
+            }
+
+            // Verify the condition/result:
+            IEdmTypeReference returnType = null;
+            for (int i = 0; i < args.Count; i += 2)
+            {
+                SingleValueNode singleValueNode = args[i] as SingleValueNode;
+
+                // the first expression – the condition – MUST be a Boolean expression.
+                if (singleValueNode == null || singleValueNode.TypeReference == null || !singleValueNode.TypeReference.IsBoolean())
+                {
+                    throw new ODataException(Error.Format(SRResources.FunctionCallBinder_CaseConditionMustBeSingleBooleanValue, i / 2));
+                }
+
+                // the second expression – the result – may evaluate to any type.
+                if (i != 0 && returnType == null)
+                {
+                    // If we cannot identify the return type so far, we can skip the remaining results, and let the return type as 'Edm.Untyped'.
+                    continue;
+                }
+
+                if (args[i + 1] is SingleValueNode singleResultNode)
+                {
+                    if (i == 0)
+                    {
+                        // this is the first result node, set the return type to this node's type
+                        returnType = singleResultNode.TypeReference;
+                    }
+                    else if (singleResultNode.TypeReference == null)
+                    {
+                        // if this result node doesn't have type information, we can't identify the return type, so we treat the whole case expression as untyped.
+                        returnType = null;
+                    }
+                    else if (HasCommonTypeOrCanPromote(returnType, singleResultNode.TypeReference, out IEdmTypeReference promotedType))
+                    {
+                        // if this result node has the same type as the return type, or can be promoted to the return type, we keep the return type as is
+                        returnType = promotedType;
+                    }
+                    else
+                    {
+                        returnType = null;
+                    }
+                }
+                else
+                {
+                    // if the result node is not a SingleValueNode, let's simply treat it as untyped.
+                    returnType = null;
+                }
+            }
+
+            return new SingleValueFunctionCallNode("case", args, returnType ?? EdmCoreModel.Instance.GetUntyped());
+        }
+
+        private static bool HasCommonTypeOrCanPromote(IEdmTypeReference previousType, IEdmTypeReference currentType, out IEdmTypeReference promotedType)
+        {
+            Debug.Assert(previousType != null, "previousType != null");
+            Debug.Assert(currentType != null, "currentType != null");
+
+            if (previousType.IsEquivalentTo(currentType))
+            {
+                promotedType = previousType;
+                return true; // same type
+            }
+
+            if (TypePromotionUtils.IsNumericType(previousType) && TypePromotionUtils.IsNumericType(currentType))
+            {
+                if (TypePromotionUtils.CanConvertTo(null, previousType, currentType))
+                {
+                    promotedType = currentType;
+                    return true;
+                }
+                else if (TypePromotionUtils.CanConvertTo(null, currentType, previousType))
+                {
+                    promotedType = previousType;
+                    return true;
+                }
+            }
+
+            promotedType = null;
+            return false;
         }
     }
 }

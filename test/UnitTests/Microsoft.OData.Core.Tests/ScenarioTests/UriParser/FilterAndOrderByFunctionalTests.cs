@@ -772,6 +772,36 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Fact]
+        public void CaseFunctionWithSameResultTypesWorksWithFilter()
+        {
+            FilterClause filter = ParseFilter("case(ID gt 99:1,ID lt 99:-1,true:0) eq 1", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
+
+            BinaryOperatorNode binaryOperatorNode = filter.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal);
+
+            // Left
+            SingleValueFunctionCallNode caseFunctionCallNode = binaryOperatorNode.Left.ShouldBeSingleValueFunctionCallQueryNode("case");
+            Assert.True(caseFunctionCallNode.TypeReference.IsEquivalentTo(EdmCoreModel.Instance.GetInt32(false)));
+            Assert.Equal(6, caseFunctionCallNode.Parameters.Count());
+            Assert.Collection(caseFunctionCallNode.Parameters,
+                e => VerifyCaseParameter(e, BinaryOperatorKind.GreaterThan, 99),
+                e => e.ShouldBeConstantQueryNode(1),
+                e => VerifyCaseParameter(e, BinaryOperatorKind.LessThan, 99),
+                e => e.ShouldBeConstantQueryNode(-1),
+                e => e.ShouldBeConstantQueryNode(true),
+                e => e.ShouldBeConstantQueryNode(0));
+
+            // Right
+            binaryOperatorNode.Right.ShouldBeConstantQueryNode(1);
+        }
+
+        private static void VerifyCaseParameter(QueryNode node, BinaryOperatorKind expectedOperatorKind, int expectedConstantValue)
+        {
+            BinaryOperatorNode binaryNode = node.ShouldBeBinaryOperatorNode(expectedOperatorKind);
+            binaryNode.Left.ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPersonIdProp());
+            binaryNode.Right.ShouldBeConstantQueryNode(expectedConstantValue);
+        }
+
+        [Fact]
         public void IsOfFunctionWithOneParameter_WithSingleQuotesOnTypeParameter_ShouldBeConstantQueryNode()
         {
             // Arrange 
@@ -1781,6 +1811,28 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var binaryOperatorNode = filterClause.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.GreaterThan);
             var cvNode = Assert.IsType<ConvertNode>(binaryOperatorNode.Left);
             cvNode.Source.ShouldBeSingleValueOpenPropertyAccessQueryNode("DoubleTotal");
+        }
+
+        [Fact]
+        public void DollarComputedPropertyUsingCaseTreatedAsOpenPropertyInFilter()
+        {
+            var odataQueryOptionParser = new ODataQueryOptionParser(HardCodedTestModel.TestModel,
+                HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet(),
+                new Dictionary<string, string>()
+                {
+                    {"$filter", "SignumX gt 10"},
+                    {"$compute", "case(ID gt 99:1,ID lt 99:-1,true:0) as SignumX"}
+                });
+            ComputeClause computeClause = odataQueryOptionParser.ParseCompute();
+            var filterClause = odataQueryOptionParser.ParseFilter();
+            var binaryOperatorNode = filterClause.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.GreaterThan);
+            var cvNode = Assert.IsType<ConvertNode>(binaryOperatorNode.Left);
+            cvNode.Source.ShouldBeSingleValueOpenPropertyAccessQueryNode("SignumX");
+
+            ComputeExpression computeExp = Assert.Single(computeClause.ComputedItems);
+            Assert.Equal("SignumX", computeExp.Alias);
+            SingleValueFunctionCallNode caseFunctionCallNode = computeExp.Expression.ShouldBeSingleValueFunctionCallQueryNode("case");
+            Assert.Equal(6, caseFunctionCallNode.Parameters.Count());
         }
 
         [Fact]

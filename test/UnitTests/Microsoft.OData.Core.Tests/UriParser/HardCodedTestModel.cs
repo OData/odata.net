@@ -1838,6 +1838,11 @@ namespace Microsoft.OData.Tests.UriParser
             return (IEdmStructuralProperty)((IEdmStructuredType)TestModel.FindType("Fully.Qualified.Namespace.Person")).FindProperty("ID");
         }
 
+        public static IEdmStructuralProperty GetPersonStockQuantityProp()
+        {
+            return (IEdmStructuralProperty)((IEdmStructuredType)TestModel.FindType("Fully.Qualified.Namespace.Person")).FindProperty("StockQuantity");
+        }
+
         public static IEdmNavigationProperty GetPersonMyAddressNavProp()
         {
             return (IEdmNavigationProperty)((IEdmStructuredType)TestModel.FindType("Fully.Qualified.Namespace.Person")).FindProperty("MyAddress");

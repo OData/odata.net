@@ -84,6 +84,16 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         }
 
         [Fact]
+        public void BindCaseFunctionCallWithOddNumberOfArgsConditionThrows()
+        {
+            var arguments = new List<QueryToken>() { new LiteralToken("grr") };
+            var token = new FunctionCallToken("case", arguments);
+            Action test = () => functionCallBinder.BindFunctionCall(token);
+            var exception = Assert.Throws<ODataException>(test);
+            Assert.Equal("The 'case' function requires 'condition:result' pairs, but received 1 argument(s). Each condition must be followed by a colon and a result expression.", exception.Message);
+        }
+
+        [Fact]
         public void CannotBindArbitraryNumberOfOpenParametersWithCorrectNonOpenParameters()
         {
             this.functionCallBinder = new FunctionCallBinder(binder.Bind, this.binder.BindingState);

@@ -19,7 +19,7 @@ namespace Microsoft.OData.Core {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "18.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class SRResources {
@@ -751,6 +751,24 @@ namespace Microsoft.OData.Core {
         internal static string FunctionCallBinder_CannotFindASuitableOverload {
             get {
                 return ResourceManager.GetString("FunctionCallBinder_CannotFindASuitableOverload", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The condition at position &apos;{0}&apos; in the &apos;case&apos; function must be a single-value boolean expression..
+        /// </summary>
+        internal static string FunctionCallBinder_CaseConditionMustBeSingleBooleanValue {
+            get {
+                return ResourceManager.GetString("FunctionCallBinder_CaseConditionMustBeSingleBooleanValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The &apos;case&apos; function requires &apos;condition:result&apos; pairs, but received {0} argument(s). Each condition must be followed by a colon and a result expression..
+        /// </summary>
+        internal static string FunctionCallBinder_CaseRequiresEvenNumberOfArgs {
+            get {
+                return ResourceManager.GetString("FunctionCallBinder_CaseRequiresEvenNumberOfArgs", resourceCulture);
             }
         }
         
@@ -6757,6 +6775,15 @@ namespace Microsoft.OData.Core {
         internal static string UriQueryExpressionParser_CloseParenOrOperatorExpected {
             get {
                 return ResourceManager.GetString("UriQueryExpressionParser_CloseParenOrOperatorExpected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &apos;:&apos; expected at position {0} in &apos;{1}&apos;. The &apos;case&apos; function requires &apos;condition:result&apos; pairs..
+        /// </summary>
+        internal static string UriQueryExpressionParser_ColonExpectedForCaseFunctionCall {
+            get {
+                return ResourceManager.GetString("UriQueryExpressionParser_ColonExpectedForCaseFunctionCall", resourceCulture);
             }
         }
         

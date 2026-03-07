@@ -2291,6 +2291,49 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Fact]
+        public void DollarComputedPropertyUsingCaseTreatedAsOpenPropertyInSelect()
+        {
+            var odataQueryOptionParser = new ODataQueryOptionParser(HardCodedTestModel.TestModel,
+                HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet(),
+                new Dictionary<string, string>()
+                {
+                    {"$select", "StockStatus"},
+                    {"$compute", "case(StockQuantity lt 10: 'Critical', StockQuantity lt 50: 'Low', true: 'OK') as StockStatus"}
+                });
+            ComputeClause computeClause = odataQueryOptionParser.ParseCompute();
+            var selectClause = odataQueryOptionParser.ParseSelectAndExpand();
+            AssertSelectString("StockStatus", selectClause);
+
+            // Verify the compute expression
+            ComputeExpression computeExp = Assert.Single(computeClause.ComputedItems);
+            Assert.Equal("StockStatus", computeExp.Alias);
+
+            // Verify the case function call
+            SingleValueFunctionCallNode caseFunctionCall = computeExp.Expression.ShouldBeSingleValueFunctionCallQueryNode("case");
+            Assert.True(caseFunctionCall.TypeReference.IsString());
+
+            // case function should have 6 parameters (3 condition/result pairs)
+            // condition1, result1, condition2, result2, condition3, result3
+            Assert.Equal(6, caseFunctionCall.Parameters.Count());
+
+            Assert.Collection(caseFunctionCall.Parameters,
+                e => VerifyCaseParameter(e, BinaryOperatorKind.LessThan, 10),
+                e => e.ShouldBeConstantQueryNode("Critical"),
+                e => VerifyCaseParameter(e, BinaryOperatorKind.LessThan, 50),
+                e => e.ShouldBeConstantQueryNode("Low"),
+                e => e.ShouldBeConstantQueryNode(true),
+                e => e.ShouldBeConstantQueryNode("OK"));
+        }
+
+        private static void VerifyCaseParameter(QueryNode node, BinaryOperatorKind expectedOperatorKind, long expectedConstantValue)
+        {
+            BinaryOperatorNode binaryNode = node.ShouldBeBinaryOperatorNode(expectedOperatorKind);
+            ConvertNode convertNode = binaryNode.Left.ShouldBeConvertQueryNode(EdmCoreModel.Instance.GetInt64(true)); //  there's a convert node since 10 or 50 are treated as 'long'. But it seems no sense?
+            convertNode.Source.ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPersonStockQuantityProp());
+            binaryNode.Right.ShouldBeConstantQueryNode(expectedConstantValue);
+        }
+
+        [Fact]
         public void ApplyComputedPropertyTreatedAsOpenPropertyInSelect()
         {
             var odataQueryOptionParser = new ODataQueryOptionParser(HardCodedTestModel.TestModel,

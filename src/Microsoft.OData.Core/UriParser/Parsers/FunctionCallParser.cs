@@ -187,6 +187,9 @@ namespace Microsoft.OData.UriParser
             Stack<QueryToken> expressionParents = new Stack<QueryToken>();
             bool isFunctionCallNameCastOrIsOf = functionName.Length > 0 &&
                 (functionName.SequenceEqual(ExpressionConstants.UnboundFunctionCast.AsSpan()) || functionName.SequenceEqual(ExpressionConstants.UnboundFunctionIsOf.AsSpan()));
+
+            bool isFunctionCallNameCase = functionName.Equals("case", this.parser.EnableCaseInsensitiveBuiltinIdentifier ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal);
+
             List<FunctionParameterToken> argList = new List<FunctionParameterToken>();
             while (true)
             {
@@ -201,6 +204,24 @@ namespace Microsoft.OData.UriParser
                 }
 
                 argList.Add(new FunctionParameterToken(null, parameterToken));
+
+                if (isFunctionCallNameCase)
+                {
+                    // For 'case' function, expect a colon separator between condition and result
+                    // Note that there could be confusion when using TimeOfDay as the value, for example: "case(CreatedTime eq 10:2:1)".
+                    // In this case, the client should explicitly add a whitespace to avoid this confusion, for example: "case(CreatedTime eq 10:2 :1)".
+                    if (this.Lexer.CurrentToken.Kind != ExpressionTokenKind.Colon)
+                    {
+                        throw new ODataException(Error.Format(SRResources.UriQueryExpressionParser_ColonExpectedForCaseFunctionCall, this.Lexer.CurrentToken.Position, this.Lexer.ExpressionText));
+                    }
+
+                    this.lexer.NextToken(); // consume the ':'
+                    QueryToken resultToken = this.parser.ParseExpression();
+
+                    // The 'condition' expression has already been added to argList above.
+                    argList.Add(new FunctionParameterToken(null, resultToken));
+                }
+
                 if (this.Lexer.CurrentToken.Kind != ExpressionTokenKind.Comma)
                 {
                     break;
