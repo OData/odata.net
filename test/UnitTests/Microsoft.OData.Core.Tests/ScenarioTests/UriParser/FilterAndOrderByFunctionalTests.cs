@@ -2654,6 +2654,37 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Fact]
+        public void MatchesPatternInFilterWithTheReturnType()
+        {
+            // Arrange & Act - Filter people whose names match capitalized pattern
+            var filterClause = ParseFilter("matchesPattern(Name, '^[A-Z][a-z]+$')", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
+
+            // Assert
+            var functionCallNode = filterClause.Expression.ShouldBeSingleValueFunctionCallQueryNode("matchesPattern");
+            Assert.Equal(2, functionCallNode.Parameters.Count());
+            Assert.True(functionCallNode.TypeReference.IsBoolean());
+
+            // Verify first parameter is the Name property
+            functionCallNode.Parameters.ElementAt(0)
+                .ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPersonNameProp());
+
+            // Verify second parameter is the regex pattern
+            functionCallNode.Parameters.ElementAt(1).ShouldBeConstantQueryNode("^[A-Z][a-z]+$");
+        }
+
+        [Fact]
+        public void MatchesPatternInFilterWithBooleanComparison()
+        {
+            // Arrange & Act - Use matchesPattern in boolean expression
+            var filterClause = ParseFilter("matchesPattern(Name, '[0-9]+') eq true", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
+
+            // Assert
+            var binaryOp = filterClause.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal);
+            binaryOp.Left.ShouldBeSingleValueFunctionCallQueryNode("matchesPattern");
+            binaryOp.Right.ShouldBeConstantQueryNode(true);
+        }
+
+        [Fact]
         public void FilterWithInOperationWithAny()
         {
             // https://github.com/OData/odata.net/issues/1447
