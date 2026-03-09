@@ -1298,6 +1298,32 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         }
 
         [Fact]
+        public void MatchesPatternFunctionBindsCorrectly()
+        {
+            // Arrange
+            var arguments = new List<QueryToken>()
+            {
+                new EndPathToken("Name", new RangeVariableToken(ExpressionConstants.It)),
+                new LiteralToken(@"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$")
+            };
+            var token = new FunctionCallToken("matchesPattern", arguments);
+
+            // Act
+            var result = functionCallBinder.BindFunctionCall(token);
+
+            // Assert
+            var functionCallNode = result.ShouldBeSingleValueFunctionCallQueryNode("matchesPattern", EdmCoreModel.Instance.GetBoolean(false));
+            Assert.Equal(2, functionCallNode.Parameters.Count());
+            Assert.True(functionCallNode.TypeReference.IsBoolean());
+
+            // Verify first parameter is the Name property
+            functionCallNode.Parameters.ElementAt(0).ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPersonNameProp());
+
+            // Verify second parameter is the regex pattern
+            functionCallNode.Parameters.ElementAt(1).ShouldBeConstantQueryNode(@"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$");
+        }
+
+        [Fact]
         public void GetUriFunction_CombineCustomFunctionsAndBuiltInFunctions()
         {
             const string BUILT_IN_GEODISTANCE_FUNCTION_NAME = "geo.distance";
