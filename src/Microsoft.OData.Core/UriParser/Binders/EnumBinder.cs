@@ -89,7 +89,7 @@ namespace Microsoft.OData.UriParser
 
             // now, find out the value
             UriParserHelper.TryRemovePrefix(namespaceAndType, ref text);
-            UriParserHelper.TryRemoveSingleQuotes(ref text, out string value);
+            UriParserHelper.TryRemoveSingleQuotes(ref text);
 
             // parse string or int value to edm enum value
             ODataEnumValue enumValue;
@@ -107,7 +107,6 @@ namespace Microsoft.OData.UriParser
 
             return true;
         }
-
 
         /// <summary>
         /// Parse string or integer to enum value

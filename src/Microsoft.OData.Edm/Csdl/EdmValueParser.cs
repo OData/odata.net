@@ -8,8 +8,6 @@ using System;
 using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Xml;
-using static System.Net.Mime.MediaTypeNames;
-
 
 #if ODATA_SERVICE
 namespace Microsoft.OData.Service

@@ -312,6 +312,13 @@ namespace Microsoft.OData.UriParser
             }
             catch (FormatException)
             {
+                try
+                {
+                    targetValue = Convert.FromBase64String(text.ToString());
+                }
+                catch (FormatException)
+                {
+                }
                 targetValue = null;
                 return false;
             }

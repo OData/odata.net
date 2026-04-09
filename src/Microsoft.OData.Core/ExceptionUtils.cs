@@ -69,7 +69,7 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Checks the argument string value empty string and throws <see cref="ArgumentNullException"/> if it is empty. The value can be null though.
+        /// Checks the argument string value empty string and throws <see cref="ArgumentException"/> if it is empty. The value can be null though.
         /// </summary>
         /// <param name="value">Argument whose value needs to be checked.</param>
         /// <param name="parameterName">Name of the argument, used for exception message.</param>
@@ -87,7 +87,7 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Checks the argument string value empty string and throws <see cref="ArgumentNullException"/> if it is empty. The value can be null though.
+        /// Checks the argument string value empty string and throws <see cref="ArgumentException"/> if it is empty.
         /// </summary>
         /// <param name="value">Argument whose value needs to be checked.</param>
         /// <param name="parameterName">Name of the argument, used for exception message.</param>
