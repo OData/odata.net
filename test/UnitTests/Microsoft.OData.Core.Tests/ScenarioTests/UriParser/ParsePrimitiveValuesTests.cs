@@ -54,7 +54,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             object result;
             UriLiteralParsingException exception;
-            bool parseSuceeded = UriPrimitiveTypeParser.Instance.TryParseUriStringToType(input, asType, out result, out exception);
+            bool parseSuceeded = UriPrimitiveTypeParser.TryParseUriStringToType(input.AsSpan(), asType, out result, out exception);
             if (parseSuceeded)
             {
                 realResult = (T)result;

@@ -87,6 +87,24 @@ namespace Microsoft.OData
         }
 
         /// <summary>
+        /// Checks the argument string value empty string and throws <see cref="ArgumentNullException"/> if it is empty. The value can be null though.
+        /// </summary>
+        /// <param name="value">Argument whose value needs to be checked.</param>
+        /// <param name="parameterName">Name of the argument, used for exception message.</param>
+        [DebuggerStepThrough]
+        internal static void CheckArgumentStringNotEmpty(ReadOnlySpan<char> value, string parameterName)
+        {
+            Debug.Assert(!string.IsNullOrEmpty(parameterName), "!string.IsNullOrEmpty(parameterName)");
+
+            if (value.IsEmpty)
+            {
+#if !ODATA_CLIENT
+                throw new ArgumentException(SRResources.ExceptionUtils_ArgumentStringEmpty, parameterName);
+#endif
+            }
+        }
+
+        /// <summary>
         /// Checks the argument string value for null or empty string and throws <see cref="ArgumentNullException"/> if it is null or empty.
         /// </summary>
         /// <param name="value">Argument whose value needs to be checked.</param>

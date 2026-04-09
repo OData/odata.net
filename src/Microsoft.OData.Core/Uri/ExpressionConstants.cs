@@ -132,6 +132,9 @@ namespace Microsoft.OData
         /// <summary>"INF" literal used to represent infinity.</summary>
         internal const string InfinityLiteral = "INF";
 
+        /// <summary>"-INF" literal used to represent negative infinity.</summary>
+        internal const string NegativeInfinityLiteral = "-INF";
+
         /// <summary>"NaN" literal used to represent not-a-number values.</summary>
         internal const string NaNLiteral = "NaN";
 

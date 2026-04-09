@@ -1484,7 +1484,7 @@ Microsoft.OData.UriParser.ISyntacticTreeVisitor<T>.Visit(Microsoft.OData.UriPars
 Microsoft.OData.UriParser.ISyntacticTreeVisitor<T>.Visit(Microsoft.OData.UriParser.StarToken tokenIn) -> T
 Microsoft.OData.UriParser.ISyntacticTreeVisitor<T>.Visit(Microsoft.OData.UriParser.UnaryOperatorToken tokenIn) -> T
 Microsoft.OData.UriParser.IUriLiteralParser
-Microsoft.OData.UriParser.IUriLiteralParser.ParseUriStringToType(string text, Microsoft.OData.Edm.IEdmTypeReference targetType, out Microsoft.OData.UriParser.UriLiteralParsingException parsingException) -> object
+Microsoft.OData.UriParser.IUriLiteralParser.ParseUriStringToType(System.ReadOnlySpan<char> text, Microsoft.OData.Edm.IEdmTypeReference targetType, out Microsoft.OData.UriParser.UriLiteralParsingException parsingException) -> object
 Microsoft.OData.UriParser.KeySegment
 Microsoft.OData.UriParser.KeySegment.Keys.get -> System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<string, object>>
 Microsoft.OData.UriParser.KeySegment.KeySegment(Microsoft.OData.UriParser.ODataPathSegment previous, System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<string, object>> keys, Microsoft.OData.Edm.IEdmEntityType edmType, Microsoft.OData.Edm.IEdmNavigationSource navigationSource) -> void

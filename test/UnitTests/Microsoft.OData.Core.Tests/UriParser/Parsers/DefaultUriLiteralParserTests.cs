@@ -30,7 +30,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
                 this.key = key;
             }
 
-            public object ParseUriStringToType(string text, IEdmTypeReference targetType, out UriLiteralParsingException parsingException)
+            public object ParseUriStringToType(ReadOnlySpan<char> text, IEdmTypeReference targetType, out UriLiteralParsingException parsingException)
             {
                 parsingException = null;
 

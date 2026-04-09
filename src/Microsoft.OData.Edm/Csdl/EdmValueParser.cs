@@ -5,9 +5,11 @@
 //---------------------------------------------------------------------
 
 using System;
+using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Xml;
-using Microsoft.OData.Edm;
+using static System.Net.Mime.MediaTypeNames;
+
 
 #if ODATA_SERVICE
 namespace Microsoft.OData.Service
@@ -41,14 +43,14 @@ namespace Microsoft.OData.Edm.Csdl
         /// <returns>A TimeSpan equivalent of the string.</returns>
         /// <exception cref="System.FormatException">Throws if the given string is not an edm:Duration expression</exception>
         /// <exception cref="System.OverflowException">Throws if the given duration is greater than P10675199DT2H48M5.4775807S or less than P10675199DT2H48M5.4775807S</exception>
-        internal static TimeSpan ParseDuration(string value)
+        internal static TimeSpan ParseDuration(ReadOnlySpan<char> value)
         {
-            if (value == null || !DayTimeDurationValidator.IsMatch(value))
+            if (value.IsEmpty || !DayTimeDurationValidator.IsMatch(value))
             {
-                throw new FormatException(String.Format(SRResources.Culture, SRResources.ValueParser_InvalidDuration, value));
+                throw new FormatException(String.Format(SRResources.Culture, SRResources.ValueParser_InvalidDuration, value.ToString()));
             }
 
-            return XmlConvert.ToTimeSpan(value);
+            return XmlConvert.ToTimeSpan(value.ToString());
         }
 
         /// <summary>
@@ -320,7 +322,7 @@ namespace Microsoft.OData.Edm.Csdl
         /// <param name="value">Input string</param>
         /// <param name="result">The DateOnly resulting from parsing the string value</param>
         /// <returns>true if the value was parsed successfully, false otherwise</returns>
-        internal static bool TryParseDateOnly(string value, out DateOnly? result)
+        internal static bool TryParseDateOnly(ReadOnlySpan<char> value, out DateOnly? result)
         {
             result = null;
             DateOnly targetDate;
@@ -339,18 +341,16 @@ namespace Microsoft.OData.Edm.Csdl
         /// <param name="value">Input string</param>
         /// <param name="result">The TimeOnly resulting from parsing the string value</param>
         /// <returns>true if the value was parsed successfully, false otherwise</returns>
-        internal static bool TryParseTimeOnly(string value, out TimeOnly? result)
+        internal static bool TryParseTimeOnly(ReadOnlySpan<char> value, out TimeOnly? result)
         {
-            try
+            result = null;
+            if (TimeOnly.TryParse(value, CultureInfo.CurrentCulture, out TimeOnly timeOnly))
             {
-                result = PlatformHelper.ConvertStringToTimeOnly(value);
+                result = timeOnly;
                 return true;
             }
-            catch (FormatException)
-            {
-                result = null;
-                return false;
-            }
+
+            return false;
         }
 
         /// <summary>

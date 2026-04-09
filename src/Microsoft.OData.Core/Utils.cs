@@ -11,6 +11,8 @@ namespace Microsoft.OData
     using System.Collections.Generic;
     using System.IO;
     using System.Threading.Tasks;
+    using System.Xml;
+    using static System.Net.Mime.MediaTypeNames;
 
     #endregion Namespaces
 

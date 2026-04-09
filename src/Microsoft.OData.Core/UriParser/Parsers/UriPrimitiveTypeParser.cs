@@ -9,7 +9,7 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Text;
-using System.Xml;
+using System.Buffers.Text;
 using Microsoft.OData.Metadata;
 using Microsoft.OData.Edm;
 using Microsoft.Spatial;
@@ -43,11 +43,11 @@ namespace Microsoft.OData.UriParser
 
         #region IUriLiteralParser Implementation
 
-        public object ParseUriStringToType(string text, IEdmTypeReference targetType, out UriLiteralParsingException parsingException)
+        public object ParseUriStringToType(ReadOnlySpan<char> text, IEdmTypeReference targetType, out UriLiteralParsingException parsingException)
         {
             object targetValue;
 
-            if (this.TryUriStringToPrimitive(text, targetType, out targetValue, out parsingException))
+            if (TryUriStringToPrimitive(text, targetType, out targetValue, out parsingException))
             {
                 return targetValue;
             }
@@ -59,9 +59,9 @@ namespace Microsoft.OData.UriParser
 
         #region Internal Methods
 
-        internal bool TryParseUriStringToType(string text, IEdmTypeReference targetType, out object targetValue, out UriLiteralParsingException parsingException)
+        internal static bool TryParseUriStringToType(ReadOnlySpan<char> text, IEdmTypeReference targetType, out object targetValue, out UriLiteralParsingException parsingException)
         {
-            return this.TryUriStringToPrimitive(text, targetType, out targetValue, out parsingException);
+            return TryUriStringToPrimitive(text, targetType, out targetValue, out parsingException);
         }
 
         #endregion
@@ -76,9 +76,9 @@ namespace Microsoft.OData.UriParser
         /// <returns>true if the value was converted; false otherwise.</returns>
         /// <remarks>Copy of the WebConvert.TryKeyStringToPrimitive</remarks>
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "Complexity is not too high; handling all the cases in one method is preferable to refactoring.")]
-        private bool TryUriStringToPrimitive(string text, IEdmTypeReference targetType, out object targetValue, out UriLiteralParsingException exception)
+        private static bool TryUriStringToPrimitive(ReadOnlySpan<char> text, IEdmTypeReference targetType, out object targetValue, out UriLiteralParsingException exception)
         {
-            Debug.Assert(text != null, "text != null");
+            Debug.Assert(!text.IsEmpty, "!text.IsEmpty");
             Debug.Assert(targetType != null, "targetType != null");
             exception = null;
 
@@ -105,7 +105,7 @@ namespace Microsoft.OData.UriParser
                 EdmPrimitiveTypeKind targetTypeKind = primitiveTargetType.PrimitiveKind();
 
                 byte[] byteArrayValue;
-                bool binaryResult = TryUriStringToByteArray(text, out byteArrayValue);
+                bool binaryResult = TryUriStringToByteArray(text, out byteArrayValue);// "binary'binaryValue'"
                 if (targetTypeKind == EdmPrimitiveTypeKind.Binary)
                 {
                     targetValue = (object)byteArrayValue;
@@ -113,8 +113,11 @@ namespace Microsoft.OData.UriParser
                 }
                 else if (binaryResult)
                 {
+                    // this logic looks weird but let it be here for the sake of backward compatibility.
+                    // We used to support parsing binary literals to string in V1, and we want to keep supporting that in later versions.
+                    // So if the target type is not binary but the text can be parsed as binary, we will parse it as binary first and then convert the byte array to string and try parsing the string to the target primitive type.
                     string keyValue = Encoding.UTF8.GetString(byteArrayValue, 0, byteArrayValue.Length);
-                    return this.TryUriStringToPrimitive(keyValue, targetType, out targetValue);
+                    return TryUriStringToPrimitive(keyValue, targetType, out targetValue, out _);
                 }
                 else if (targetTypeKind == EdmPrimitiveTypeKind.Guid)
                 {
@@ -162,21 +165,21 @@ namespace Microsoft.OData.UriParser
                 {
                     TimeOnly timeOnlyValue;
                     bool result = UriUtils.TryUriStringToTimeOnly(text, out timeOnlyValue);
-
                     targetValue = timeOnlyValue;
                     return result;
                 }
 
                 bool quoted = targetTypeKind == EdmPrimitiveTypeKind.String;
-                if (quoted != UriParserHelper.IsUriValueQuoted(text))
+                if (quoted != UriParserHelper.IsUriValueSingleQuoted(text))
                 {
                     targetValue = null;
                     return false;
                 }
 
+                string textString = null;
                 if (quoted)
                 {
-                    text = UriParserHelper.RemoveQuotes(text);
+                    UriParserHelper.TryRemoveSingleQuotes(ref text, out textString);
                 }
 
                 try
@@ -184,52 +187,53 @@ namespace Microsoft.OData.UriParser
                     switch (targetTypeKind)
                     {
                         case EdmPrimitiveTypeKind.String:
-                            targetValue = text;
+                            targetValue = textString ?? text.ToString();
                             break;
                         case EdmPrimitiveTypeKind.Boolean:
-                            targetValue = XmlConvert.ToBoolean(text);
+                            targetValue = text.ToBoolean();
                             break;
                         case EdmPrimitiveTypeKind.Byte:
-                            targetValue = XmlConvert.ToByte(text);
+                            targetValue = text.ToByte();
                             break;
                         case EdmPrimitiveTypeKind.SByte:
-                            targetValue = XmlConvert.ToSByte(text);
+                            targetValue = text.ToSByte();
                             break;
                         case EdmPrimitiveTypeKind.Int16:
-                            targetValue = XmlConvert.ToInt16(text);
+                            targetValue = text.ToInt16();
                             break;
                         case EdmPrimitiveTypeKind.Int32:
-                            targetValue = XmlConvert.ToInt32(text);
+                            targetValue = text.ToInt32();
+
                             break;
                         case EdmPrimitiveTypeKind.Int64:
                             UriParserHelper.TryRemoveLiteralSuffix(ExpressionConstants.LiteralSuffixInt64, ref text);
-                            targetValue = XmlConvert.ToInt64(text);
+                            targetValue = text.ToInt64();
                             break;
                         case EdmPrimitiveTypeKind.Single:
                             UriParserHelper.TryRemoveLiteralSuffix(ExpressionConstants.LiteralSuffixSingle, ref text);
-                            targetValue = XmlConvert.ToSingle(text);
+                            targetValue = text.ToSingle();
                             break;
                         case EdmPrimitiveTypeKind.Double:
                             UriParserHelper.TryRemoveLiteralSuffix(ExpressionConstants.LiteralSuffixDouble, ref text);
-                            targetValue = XmlConvert.ToDouble(text);
+                            targetValue = text.ToDouble();
                             break;
                         case EdmPrimitiveTypeKind.Decimal:
                             UriParserHelper.TryRemoveLiteralSuffix(ExpressionConstants.LiteralSuffixDecimal, ref text);
                             try
                             {
-                                targetValue = XmlConvert.ToDecimal(text);
+                                targetValue = text.ToDecimal();
                             }
                             catch (FormatException)
                             {
                                 // we need to support exponential format for decimals since we used to support them in V1
                                 decimal result;
-                                if (Decimal.TryParse(text, NumberStyles.Float, NumberFormatInfo.InvariantInfo, out result))
+                                if (decimal.TryParse(text, NumberStyles.Float, NumberFormatInfo.InvariantInfo, out result))
                                 {
                                     targetValue = result;
                                 }
                                 else
                                 {
-                                    targetValue = default(Decimal);
+                                    targetValue = default(decimal);
                                     return false;
                                 }
                             }
@@ -252,27 +256,31 @@ namespace Microsoft.OData.UriParser
                     return false;
                 }
             }
-            catch (Exception primitiveParserException)
+
+            catch (FormatException primitiveParserException)
             {
                 exception = new UriLiteralParsingException(
-                    string.Format(CultureInfo.InvariantCulture, Error.Format(SRResources.UriPrimitiveTypeParsers_FailedToParseTextToPrimitiveValue, text, targetType),
-                                                        primitiveParserException));
+                    string.Format(CultureInfo.InvariantCulture, Error.Format(SRResources.UriPrimitiveTypeParsers_FailedToParseTextToPrimitiveValue, text.ToString(), targetType),
+                                                            primitiveParserException));
                 targetValue = null;
                 return false;
             }
-        }
-
-        /// <summary>Converts a string to a primitive value.</summary>
-        /// <param name="text">String text to convert.</param>
-        /// <param name="targetType">Type to convert string to.</param>
-        /// <param name="targetValue">After invocation, converted value.</param>
-        /// <returns>true if the value was converted; false otherwise.</returns>
-        /// <remarks>Copy of the WebConvert.TryKeyStringToPrimitive</remarks>
-        [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "Complexity is not too high; handling all the cases in one method is preferable to refactoring.")]
-        private bool TryUriStringToPrimitive(string text, IEdmTypeReference targetType, out object targetValue)
-        {
-            UriLiteralParsingException exception;
-            return this.TryUriStringToPrimitive(text, targetType, out targetValue, out exception);
+            catch (OverflowException primitiveParserException)
+            {
+                exception = new UriLiteralParsingException(
+                    string.Format(CultureInfo.InvariantCulture, Error.Format(SRResources.UriPrimitiveTypeParsers_FailedToParseTextToPrimitiveValue, text.ToString(), targetType),
+                                                            primitiveParserException));
+                targetValue = null;
+                return false;
+            }
+            catch (ODataException primitiveParserException)
+            {
+                exception = new UriLiteralParsingException(
+                    string.Format(CultureInfo.InvariantCulture, Error.Format(SRResources.UriPrimitiveTypeParsers_FailedToParseTextToPrimitiveValue, text.ToString(), targetType),
+                                                            primitiveParserException));
+                targetValue = null;
+                return false;
+            }
         }
 
         /// <summary>
@@ -282,9 +290,9 @@ namespace Microsoft.OData.UriParser
         /// <param name="targetValue">After invocation, converted value.</param>
         /// <returns>true if the value was converted; false otherwise.</returns>
         /// <remarks>Copy of WebConvert.TryKeyStringToByteArray.</remarks>
-        private static bool TryUriStringToByteArray(string text, out byte[] targetValue)
+        private static bool TryUriStringToByteArray(ReadOnlySpan<char> text, out byte[] targetValue)
         {
-            Debug.Assert(text != null, "text != null");
+            Debug.Assert(!text.IsEmpty, "!text.IsEmpty");
 
             if (!UriParserHelper.TryRemoveLiteralPrefix(ExpressionConstants.LiteralPrefixBinary, ref text))
             {
@@ -292,7 +300,7 @@ namespace Microsoft.OData.UriParser
                 return false;
             }
 
-            if (!UriParserHelper.TryRemoveQuotes(ref text))
+            if (!UriParserHelper.TryRemoveSingleQuotes(ref text, out _))
             {
                 targetValue = null;
                 return false;
@@ -300,7 +308,7 @@ namespace Microsoft.OData.UriParser
 
             try
             {
-                targetValue = Convert.FromBase64String(text);
+                targetValue = Base64Url.DecodeFromChars(text);
             }
             catch (FormatException)
             {
@@ -318,7 +326,7 @@ namespace Microsoft.OData.UriParser
         /// <param name="targetValue">After invocation, converted value.</param>
         /// <returns>true if the value was converted; false otherwise.</returns>
         /// <remarks>Copy of WebConvert.TryKeyStringToTime.</remarks>
-        private static bool TryUriStringToDuration(string text, out TimeSpan targetValue)
+        private static bool TryUriStringToDuration(ReadOnlySpan<char> text, out TimeSpan targetValue)
         {
             if (!UriParserHelper.TryRemoveLiteralPrefix(ExpressionConstants.LiteralPrefixDuration, ref text))
             {
@@ -326,7 +334,7 @@ namespace Microsoft.OData.UriParser
                 return false;
             }
 
-            if (!UriParserHelper.TryRemoveQuotes(ref text))
+            if (!UriParserHelper.TryRemoveSingleQuotes(ref text, out _))
             {
                 targetValue = default(TimeSpan);
                 return false;
@@ -351,7 +359,7 @@ namespace Microsoft.OData.UriParser
         /// <param name="targetValue">Geography to return.</param>
         /// <param name="parsingException">The detailed reason of parsing error.</param>
         /// <returns>True if succeeds, false if not.</returns>
-        private static bool TryUriStringToGeography(string text, out Geography targetValue, out UriLiteralParsingException parsingException)
+        private static bool TryUriStringToGeography(ReadOnlySpan<char> text, out Geography targetValue, out UriLiteralParsingException parsingException)
         {
             parsingException = null;
 
@@ -361,7 +369,7 @@ namespace Microsoft.OData.UriParser
                 return false;
             }
 
-            if (!UriParserHelper.TryRemoveQuotes(ref text))
+            if (!UriParserHelper.TryRemoveSingleQuotes(ref text, out string value))
             {
                 targetValue = default(Geography);
                 return false;
@@ -369,7 +377,8 @@ namespace Microsoft.OData.UriParser
 
             try
             {
-                targetValue = LiteralUtils.ParseGeography(text);
+                string textString = value ?? text.ToString();
+                targetValue = LiteralUtils.ParseGeography(textString);
                 return true;
             }
             catch (ParseErrorException e)
@@ -387,7 +396,7 @@ namespace Microsoft.OData.UriParser
         /// <param name="targetValue">Geometry to return.</param>
         /// <param name="parsingFailureReasonException">The detailed reason of parsing error.</param>
         /// <returns>True if succeeds, false if not.</returns>
-        private static bool TryUriStringToGeometry(string text, out Geometry targetValue, out UriLiteralParsingException parsingFailureReasonException)
+        private static bool TryUriStringToGeometry(ReadOnlySpan<char> text, out Geometry targetValue, out UriLiteralParsingException parsingFailureReasonException)
         {
             parsingFailureReasonException = null;
 
@@ -397,7 +406,7 @@ namespace Microsoft.OData.UriParser
                 return false;
             }
 
-            if (!UriParserHelper.TryRemoveQuotes(ref text))
+            if (!UriParserHelper.TryRemoveSingleQuotes(ref text, out string value))
             {
                 targetValue = default(Geometry);
                 return false;
@@ -405,7 +414,8 @@ namespace Microsoft.OData.UriParser
 
             try
             {
-                targetValue = LiteralUtils.ParseGeometry(text);
+                string textString = value ?? text.ToString();
+                targetValue = LiteralUtils.ParseGeometry(textString);
                 return true;
             }
             catch (ParseErrorException e)

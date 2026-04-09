@@ -5,12 +5,11 @@
 //---------------------------------------------------------------------
 
 using System;
+using System.Buffers.Text;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Text;
-using System.Xml;
-using Microsoft.OData.Edm;
 using Microsoft.Spatial;
 
 namespace Microsoft.OData.UriParser
@@ -40,21 +39,21 @@ namespace Microsoft.OData.UriParser
             { typeof(DateOnly), new DatePrimitiveParser() },
 
             // Types without single-quotes or type markers
-            { typeof(Boolean), DelegatingPrimitiveParser<bool>.WithoutMarkup(XmlConvert.ToBoolean) },
-            { typeof(Byte), DelegatingPrimitiveParser<byte>.WithoutMarkup(XmlConvert.ToByte) },
-            { typeof(SByte), DelegatingPrimitiveParser<sbyte>.WithoutMarkup(XmlConvert.ToSByte) },
-            { typeof(Int16), DelegatingPrimitiveParser<short>.WithoutMarkup(XmlConvert.ToInt16) },
-            { typeof(Int32), DelegatingPrimitiveParser<int>.WithoutMarkup(XmlConvert.ToInt32) },
-            { typeof(DateTimeOffset), DelegatingPrimitiveParser<DateTimeOffset>.WithoutMarkup(XmlConvert.ToDateTimeOffset) },
-            { typeof(Guid), DelegatingPrimitiveParser<Guid>.WithoutMarkup(XmlConvert.ToGuid) },
+            { typeof(Boolean), DelegatingPrimitiveParser<bool>.WithoutMarkup(ConverterUtils.ToBoolean) },
+            { typeof(Byte), DelegatingPrimitiveParser<byte>.WithoutMarkup(ConverterUtils.ToByte) },
+            { typeof(SByte), DelegatingPrimitiveParser<sbyte>.WithoutMarkup(ConverterUtils.ToSByte) },
+            { typeof(Int16), DelegatingPrimitiveParser<short>.WithoutMarkup(ConverterUtils.ToInt16) },
+            { typeof(Int32), DelegatingPrimitiveParser<int>.WithoutMarkup(ConverterUtils.ToInt32) },
+            { typeof(DateTimeOffset), DelegatingPrimitiveParser<DateTimeOffset>.WithoutMarkup(ConverterUtils.ToDateTimeOffset) },
+            { typeof(Guid), DelegatingPrimitiveParser<Guid>.WithoutMarkup(ConverterUtils.ToGuid) },
 
             // Types with prefixes and single-quotes.
             { typeof(TimeSpan), DelegatingPrimitiveParser<TimeSpan>.WithPrefix(EdmValueParser.ParseDuration, ExpressionConstants.LiteralPrefixDuration) },
 
             // Types with suffixes.
-            { typeof(Int64), DelegatingPrimitiveParser<long>.WithSuffix(XmlConvert.ToInt64, ExpressionConstants.LiteralSuffixInt64, /*required*/ false) },
-            { typeof(Single), DelegatingPrimitiveParser<float>.WithSuffix(XmlConvert.ToSingle, ExpressionConstants.LiteralSuffixSingle, /*required*/ false) },
-            { typeof(Double), DelegatingPrimitiveParser<double>.WithSuffix(XmlConvert.ToDouble, ExpressionConstants.LiteralSuffixDouble, /*required*/ false) }
+            { typeof(Int64), DelegatingPrimitiveParser<long>.WithSuffix(ConverterUtils.ToInt64, ExpressionConstants.LiteralSuffixInt64, /*required*/ false) },
+            { typeof(Single), DelegatingPrimitiveParser<float>.WithSuffix(ConverterUtils.ToSingle, ExpressionConstants.LiteralSuffixSingle, /*required*/ false) },
+            { typeof(Double), DelegatingPrimitiveParser<double>.WithSuffix(ConverterUtils.ToDouble, ExpressionConstants.LiteralSuffixDouble, /*required*/ false) }
         };
 
         /// <summary>
@@ -151,9 +150,9 @@ namespace Microsoft.OData.UriParser
             /// <param name="targetType">Type to convert string to.</param>
             /// <param name="targetValue">After invocation, converted value.</param>
             /// <returns>true if the value was converted; false otherwise.</returns>
-            private static bool TryRemoveFormattingAndConvert(string text, Type targetType, out object targetValue)
+            private static bool TryRemoveFormattingAndConvert(ReadOnlySpan<char> text, Type targetType, out object targetValue)
             {
-                Debug.Assert(text != null, "text != null");
+                Debug.Assert(!text.IsEmpty, "!text.IsEmpty");
                 Debug.Assert(targetType != null, "expectedType != null");
 #if DEBUG
                 Debug.Assert(!IsSpatial(targetType), "Not supported for spatial types, as they cannot be part of a key, etag, or skiptoken");
@@ -186,7 +185,7 @@ namespace Microsoft.OData.UriParser
                 Debug.Assert(text != null, "text != null");
                 Debug.Assert(targetType != null, "expectedType != null");
 
-                text = UnescapeLeadingDollarSign(text);
+                ReadOnlySpan<char> textSpan = UnescapeLeadingDollarSign(text.AsSpan());
 
                 targetType = Nullable.GetUnderlyingType(targetType) ?? targetType;
 
@@ -194,7 +193,7 @@ namespace Microsoft.OData.UriParser
                 Debug.Assert(!IsSpatial(targetType), "Not supported for spatial types, as they cannot be part of a key, etag, or skiptoken");
 #endif
                 Debug.Assert(Parsers.ContainsKey(targetType), "Unexpected type: " + targetType);
-                return Parsers[targetType].TryConvert(text, out result);
+                return Parsers[targetType].TryConvert(textSpan, out result);
             }
 
             /// <summary>
@@ -203,13 +202,13 @@ namespace Microsoft.OData.UriParser
             /// </summary>
             /// <param name="text">The text.</param>
             /// <returns>The string value with a leading '$' removed, if the string started with one.</returns>
-            private static string UnescapeLeadingDollarSign(string text)
+            private static ReadOnlySpan<char> UnescapeLeadingDollarSign(ReadOnlySpan<char> text)
             {
-                Debug.Assert(text != null, "text != null");
-                if (text.Length > 1 && text[0] == '$')
+                Debug.Assert(!text.IsEmpty, "text is empty");
+                if (text.Length > 0 && text[0] == '$')
                 {
-                    Debug.Assert(text.Length > 0 && text[1] == '$', "2nd character should also be '$', otherwise it would have been treated as a system segment.");
-                    text = text.Substring(1);
+                    Debug.Assert(text.Length > 1 && text[1] == '$', "2nd character should also be '$', otherwise it would have been treated as a system segment.");
+                    text = text.Slice(1);
                 }
 
                 return text;
@@ -221,9 +220,6 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         private abstract class PrimitiveParser
         {
-            /// <summary>XML whitespace characters to trim around literals.</summary>
-            private static readonly char[] XmlWhitespaceChars = new char[] { ' ', '\t', '\n', '\r' };
-
             /// <summary>
             /// The expected prefix for the literal. Null indicates no prefix is expected.
             /// </summary>
@@ -289,14 +285,14 @@ namespace Microsoft.OData.UriParser
             /// <param name="text">The text to convert.</param>
             /// <param name="targetValue">The target value.</param>
             /// <returns>Whether or not conversion was successful.</returns>
-            internal abstract bool TryConvert(string text, out object targetValue);
+            internal abstract bool TryConvert(ReadOnlySpan<char> text, out object targetValue);
 
             /// <summary>
             /// Tries to remove formatting specific to this parser's expected type.
             /// </summary>
             /// <param name="text">The text to remove formatting from.</param>
             /// <returns>Whether or not the expected formatting was found and successfully removed.</returns>
-            internal virtual bool TryRemoveFormatting(ref string text)
+            internal virtual bool TryRemoveFormatting(ref ReadOnlySpan<char> text)
             {
                 if (this.prefix != null)
                 {
@@ -307,7 +303,7 @@ namespace Microsoft.OData.UriParser
                 }
 
                 bool shouldBeQuoted = this.prefix != null || ValueOfTypeCanContainQuotes(this.expectedType);
-                if (shouldBeQuoted && !UriParserHelper.TryRemoveQuotes(ref text))
+                if (shouldBeQuoted && !UriParserHelper.TryRemoveSingleQuotes(ref text, out _))
                 {
                     return false;
                 }
@@ -315,33 +311,12 @@ namespace Microsoft.OData.UriParser
                 if (this.suffix != null)
                 {
                     // we need to try to remove the literal even if it isn't required.
-                    if (!TryRemoveLiteralSuffix(this.suffix, ref text) && this.suffixRequired)
+                    if (!UriParserHelper.TryRemoveLiteralSuffix(this.suffix, ref text) && this.suffixRequired)
                     {
                         return false;
                     }
                 }
 
-                return true;
-            }
-
-            /// <summary>
-            /// Check and strip the input <paramref name="text"/> for literal <paramref name="suffix"/>
-            /// </summary>
-            /// <param name="suffix">The suffix value</param>
-            /// <param name="text">The string to check</param>
-            /// <returns>A string that has been striped of the suffix</returns>
-            internal static bool TryRemoveLiteralSuffix(string suffix, ref string text)
-            {
-                Debug.Assert(text != null, "text != null");
-                Debug.Assert(suffix != null, "suffix != null");
-
-                text = text.Trim(XmlWhitespaceChars);
-                if (text.Length <= suffix.Length || IsValidNumericConstant(text) || !text.EndsWith(suffix, StringComparison.OrdinalIgnoreCase))
-                {
-                    return false;
-                }
-
-                text = text.Substring(0, text.Length - suffix.Length);
                 return true;
             }
 
@@ -358,18 +333,6 @@ namespace Microsoft.OData.UriParser
                 Debug.Assert(type != null, "type != null");
                 return type == typeof(string);
             }
-
-            /// <summary>
-            /// Checks if text is '-INF' or 'INF' or 'NaN'.
-            /// </summary>
-            /// <param name="text">numeric string</param>
-            /// <returns>true or false</returns>
-            private static bool IsValidNumericConstant(string text)
-            {
-                return string.Equals(text, ExpressionConstants.InfinityLiteral, StringComparison.OrdinalIgnoreCase)
-                    || string.Equals(text, "-" + ExpressionConstants.InfinityLiteral, StringComparison.OrdinalIgnoreCase)
-                    || string.Equals(text, ExpressionConstants.NaNLiteral, StringComparison.OrdinalIgnoreCase);
-            }
         }
 
         /// <summary>
@@ -381,7 +344,7 @@ namespace Microsoft.OData.UriParser
             /// <summary>
             /// The delegate to use for conversion.
             /// </summary>
-            private readonly Func<string, T> convertMethod;
+            private readonly Func<ReadOnlySpan<char>, T> convertMethod;
 
             /// <summary>
             /// Initializes a new instance of the <see cref="DelegatingPrimitiveParser&lt;T&gt;"/> class.
@@ -389,7 +352,7 @@ namespace Microsoft.OData.UriParser
             /// <param name="convertMethod">The delegate to use for conversion.</param>
             /// <param name="suffix">The expected suffix for the literal. Null indicates that no suffix is expected.</param>
             /// <param name="suffixRequired">Whether or not the suffix is required.</param>
-            protected DelegatingPrimitiveParser(Func<string, T> convertMethod, string suffix, bool suffixRequired)
+            protected DelegatingPrimitiveParser(Func<ReadOnlySpan<char>, T> convertMethod, string suffix, bool suffixRequired)
                 : base(typeof(T), suffix, suffixRequired)
             {
                 Debug.Assert(convertMethod != null, "convertMethod != null");
@@ -400,7 +363,7 @@ namespace Microsoft.OData.UriParser
             /// Prevents a default instance of the <see cref="DelegatingPrimitiveParser&lt;T&gt;"/> class from being created.
             /// </summary>
             /// <param name="convertMethod">The delegate to use for conversion.</param>
-            private DelegatingPrimitiveParser(Func<string, T> convertMethod)
+            private DelegatingPrimitiveParser(Func<ReadOnlySpan<char>, T> convertMethod)
                 : base(typeof(T))
             {
                 Debug.Assert(convertMethod != null, "convertMethod != null");
@@ -412,7 +375,7 @@ namespace Microsoft.OData.UriParser
             /// </summary>
             /// <param name="convertMethod">The delegate to use for conversion.</param>
             /// <param name="prefix">The expected prefix for the literal.</param>
-            private DelegatingPrimitiveParser(Func<string, T> convertMethod, string prefix)
+            private DelegatingPrimitiveParser(Func<ReadOnlySpan<char>, T> convertMethod, string prefix)
                 : base(typeof(T), prefix)
             {
                 Debug.Assert(convertMethod != null, "convertMethod != null");
@@ -424,7 +387,7 @@ namespace Microsoft.OData.UriParser
             /// </summary>
             /// <param name="convertMethod">The delegate to use for conversion.</param>
             /// <returns>A new primitive parser.</returns>
-            internal static DelegatingPrimitiveParser<T> WithoutMarkup(Func<string, T> convertMethod)
+            internal static DelegatingPrimitiveParser<T> WithoutMarkup(Func<ReadOnlySpan<char>, T> convertMethod)
             {
                 return new DelegatingPrimitiveParser<T>(convertMethod);
             }
@@ -435,7 +398,7 @@ namespace Microsoft.OData.UriParser
             /// <param name="convertMethod">The delegate to use for conversion.</param>
             /// <param name="prefix">The expected prefix for the literal.</param>
             /// <returns>A new primitive parser.</returns>
-            internal static DelegatingPrimitiveParser<T> WithPrefix(Func<string, T> convertMethod, string prefix)
+            internal static DelegatingPrimitiveParser<T> WithPrefix(Func<ReadOnlySpan<char>, T> convertMethod, string prefix)
             {
                 return new DelegatingPrimitiveParser<T>(convertMethod, prefix);
             }
@@ -446,7 +409,7 @@ namespace Microsoft.OData.UriParser
             /// <param name="convertMethod">The delegate to use for conversion.</param>
             /// <param name="suffix">The expected suffix for the literal. Null indicates that no suffix is expected.</param>
             /// <returns>A new primitive parser.</returns>
-            internal static DelegatingPrimitiveParser<T> WithSuffix(Func<string, T> convertMethod, string suffix)
+            internal static DelegatingPrimitiveParser<T> WithSuffix(Func<ReadOnlySpan<char>, T> convertMethod, string suffix)
             {
                 return WithSuffix(convertMethod, suffix, /*required*/ true);
             }
@@ -458,7 +421,7 @@ namespace Microsoft.OData.UriParser
             /// <param name="suffix">The expected suffix for the literal. Null indicates that no suffix is expected.</param>
             /// <param name="required">Whether or not the suffix is required.</param>
             /// <returns>A new primitive parser.</returns>
-            internal static DelegatingPrimitiveParser<T> WithSuffix(Func<string, T> convertMethod, string suffix, bool required)
+            internal static DelegatingPrimitiveParser<T> WithSuffix(Func<ReadOnlySpan<char>, T> convertMethod, string suffix, bool required)
             {
                 return new DelegatingPrimitiveParser<T>(convertMethod, suffix, required);
             }
@@ -471,7 +434,7 @@ namespace Microsoft.OData.UriParser
             /// <returns>
             /// Whether or not conversion was successful.
             /// </returns>
-            internal override bool TryConvert(string text, out object targetValue)
+            internal override bool TryConvert(ReadOnlySpan<char> text, out object targetValue)
             {
                 try
                 {
@@ -509,17 +472,17 @@ namespace Microsoft.OData.UriParser
             /// </summary>
             /// <param name="text">The text to convert.</param>
             /// <returns>The converted decimal value.</returns>
-            private static Decimal ConvertDecimal(string text)
+            private static decimal ConvertDecimal(ReadOnlySpan<char> text)
             {
                 try
                 {
-                    return XmlConvert.ToDecimal(text);
+                    return text.ToDecimal();
                 }
                 catch (FormatException)
                 {
                     // we need to support exponential format for decimals since we used to support them in V1
                     decimal result;
-                    if (Decimal.TryParse(text, NumberStyles.Float, NumberFormatInfo.InvariantInfo, out result))
+                    if (decimal.TryParse(text, NumberStyles.Float, NumberFormatInfo.InvariantInfo, out result))
                     {
                         return result;
                     }
@@ -550,11 +513,11 @@ namespace Microsoft.OData.UriParser
             /// <returns>
             /// Whether or not conversion was successful.
             /// </returns>
-            internal override bool TryConvert(string text, out object targetValue)
+            internal override bool TryConvert(ReadOnlySpan<char> text, out object targetValue)
             {
                 try
                 {
-                    targetValue = Convert.FromBase64String(text);
+                    targetValue = Base64Url.DecodeFromChars(text);
                 }
                 catch (FormatException)
                 {
@@ -572,14 +535,14 @@ namespace Microsoft.OData.UriParser
             /// <returns>
             /// Whether or not the expected formatting was found and succesfully removed.
             /// </returns>
-            internal override bool TryRemoveFormatting(ref string text)
+            internal override bool TryRemoveFormatting(ref ReadOnlySpan<char> text)
             {
                 if (!UriParserHelper.TryRemovePrefix(ExpressionConstants.LiteralPrefixBinary, ref text))
                 {
                     return false;
                 }
 
-                if (!UriParserHelper.TryRemoveQuotes(ref text))
+                if (!UriParserHelper.TryRemoveSingleQuotes(ref text, out _))
                 {
                     return false;
                 }
@@ -609,9 +572,9 @@ namespace Microsoft.OData.UriParser
             /// <returns>
             /// Whether or not conversion was successful.
             /// </returns>
-            internal override bool TryConvert(string text, out object targetValue)
+            internal override bool TryConvert(ReadOnlySpan<char> text, out object targetValue)
             {
-                targetValue = text;
+                targetValue = text.ToString();
                 return true;
             }
 
@@ -622,9 +585,9 @@ namespace Microsoft.OData.UriParser
             /// <returns>
             /// Whether or not the expected formatting was found and succesfully removed.
             /// </returns>
-            internal override bool TryRemoveFormatting(ref string text)
+            internal override bool TryRemoveFormatting(ref ReadOnlySpan<char> text)
             {
-                return UriParserHelper.TryRemoveQuotes(ref text);
+                return UriParserHelper.TryRemoveSingleQuotes(ref text, out _);
             }
         }
 
@@ -649,7 +612,7 @@ namespace Microsoft.OData.UriParser
             /// <returns>
             /// Whether or not conversion was successful.
             /// </returns>
-            internal override bool TryConvert(string text, out object targetValue)
+            internal override bool TryConvert(ReadOnlySpan<char> text, out object targetValue)
             {
                 bool isSucceed = EdmValueParser.TryParseDateOnly(text, out DateOnly? date);
                 targetValue = date;

@@ -783,9 +783,9 @@ namespace Microsoft.OData.UriParser
         {
             Debug.Assert(lexer != null, "lexer != null");
 
-            string tokenText = lexer.CurrentToken.Text.ToString();
+            ReadOnlySpan<char> tokenSpan = lexer.CurrentToken.Span;
             UriLiteralParsingException typeParsingException;
-            object targetValue = DefaultUriLiteralParser.GetOrCreate(model).ParseUriStringToType(tokenText, targetTypeReference, out typeParsingException);
+            object targetValue = DefaultUriLiteralParser.GetOrCreate(model).ParseUriStringToType(tokenSpan, targetTypeReference, out typeParsingException);
 
             if (targetValue == null)
             {
@@ -795,7 +795,7 @@ namespace Microsoft.OData.UriParser
                 {
                     message = Error.Format(SRResources.UriQueryExpressionParser_UnrecognizedLiteral,
                         targetTypeName,
-                        tokenText,
+                        tokenSpan.ToString(),
                         lexer.CurrentToken.Position,
                         lexer.ExpressionText);
 
@@ -805,7 +805,7 @@ namespace Microsoft.OData.UriParser
                 {
                     message = Error.Format(SRResources.UriQueryExpressionParser_UnrecognizedLiteralWithReason,
                         targetTypeName,
-                        tokenText,
+                        tokenSpan.ToString(),
                         lexer.CurrentToken.Position,
                         lexer.ExpressionText,
                         typeParsingException.Message);
@@ -814,7 +814,7 @@ namespace Microsoft.OData.UriParser
                 }
             }
 
-            LiteralToken result = new LiteralToken(targetValue, tokenText);
+            LiteralToken result = new LiteralToken(targetValue, tokenSpan.ToString());
             lexer.NextToken();
             return result;
         }

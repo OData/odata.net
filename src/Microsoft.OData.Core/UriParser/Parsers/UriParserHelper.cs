@@ -8,17 +8,20 @@ namespace Microsoft.OData.UriParser
 {
     #region Namespaces
 
+    using Microsoft.OData.Core;
+    using Microsoft.OData.Edm;
     using System;
     using System.Diagnostics;
     using System.Globalization;
     using System.Linq;
-    using Microsoft.OData.Edm;
-    using Microsoft.OData.Core;
+
 
     #endregion
 
     internal static class UriParserHelper
     {
+        private static readonly char[] XmlWhitespaceChars = new char[] { ' ', '\t', '\n', '\r' };
+
         #region Internal Methods
 
         /// <summary>Determines whether the specified character is a valid hexadecimal digit.</summary>
@@ -36,7 +39,7 @@ namespace Microsoft.OData.UriParser
         /// <param name="text">Text to attempt to remove prefix from.</param>
         /// <returns>true if the prefix was found and removed; false otherwise.</returns>
         /// <remarks>Copy of WebConvert.TryRemoveLiteralPrefix.</remarks>
-        internal static bool TryRemovePrefix(string prefix, ref string text)
+        internal static bool TryRemovePrefix(ReadOnlySpan<char> prefix, ref ReadOnlySpan<char> text)
         {
             return TryRemoveLiteralPrefix(prefix, ref text);
         }
@@ -46,76 +49,76 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         /// <param name="text">Text to remove quotes from.</param>
         /// <returns>Whether quotes were successfully removed.</returns>
-        /// <remarks>Copy of WebConvert.TryRemoveQuotes.</remarks>
-        internal static bool TryRemoveQuotes(ref string text)
-        {
-            Debug.Assert(text != null, "text != null");
+        internal static bool TryRemoveSingleQuotes(ref ReadOnlySpan<char> text)
+            => TryRemoveSingleQuotes(ref text, out _);
 
+        /// <summary>
+        /// Removes quotes from the single-quotes text.
+        /// </summary>
+        /// <param name="text">Text to remove quotes from.</param>
+        /// <param name="value">The new string created if there's any escaped single quotes.</param>
+        /// <returns>Whether quotes were successfully removed.</returns>
+        internal static bool TryRemoveSingleQuotes(ref ReadOnlySpan<char> text, out string value)
+        {
+            Debug.Assert(!text.IsEmpty, "!text.IsEmpty");
+
+            value = null;
             if (text.Length < 2)
             {
                 return false;
             }
 
             char quote = text[0];
-            if (quote != '\'' || text[text.Length - 1] != quote)
+            if (quote != '\'' || text[^1] != quote)
             {
                 return false;
             }
 
-            string s = text.Substring(1, text.Length - 2);
-            int start = 0;
-            while (true)
+            // Work with the inner content only by removing the leading and ending single quotes
+            text = text.Slice(1, text.Length - 2);
+
+            int escapedCount = 0;
+            for (int k = 0; k < text.Length; k++)
             {
-                int i = s.IndexOf(quote, start);
-                if (i < 0)
+                if (text[k] == quote)
                 {
-                    break;
-                }
+                    if (k + 1 >= text.Length || text[k + 1] != quote)
+                    {
+                        // found a single quote within the content so it's not a valid single quoted string.
+                        return false;
+                    }
 
-                s = s.Remove(i, 1);
-                if (s.Length < i + 1 || s[i] != quote)
-                {
-                    return false;
+                    escapedCount++;
+                    k++; // Skip the second quote of the pair
                 }
-
-                start = i + 1;
             }
 
-            text = s;
+            // If no escaped quotes found, return the un-quoted (leading and ending single quotes removed) immediately
+            if (escapedCount == 0)
+            {
+                return true;
+            }
+
+            int finalLength = text.Length - escapedCount;
+
+            // Now, it's valid single quoted string.
+            value = string.Create(finalLength, text, (dest, src) =>
+            {
+                int destIdx = 0;
+                for (int i = 0; i < src.Length; i++)
+                {
+                    dest[destIdx++] = src[i];
+
+                    // If we hit a quote, check if the next char is also a quote to skip it
+                    if (src[i] == quote && i + 1 < src.Length && src[i + 1] == quote)
+                    {
+                        i++;
+                    }
+                }
+            });
+
+            text = value.AsSpan();
             return true;
-        }
-
-        /// <summary>
-        /// Removes quotes from the single-quotes text.
-        /// </summary>
-        /// <param name="text">Text to remove quotes from.</param>
-        /// <returns>The specified <paramref name="text"/> with single quotes removed.</returns>
-        /// <remarks>Copy of WebConvert.RemoveQuotes.</remarks>
-        /// TODO: Consider combine this method with the method 'TryRemoveQuotes'
-        internal static string RemoveQuotes(string text)
-        {
-            Debug.Assert(!String.IsNullOrEmpty(text), "!String.IsNullOrEmpty(text)");
-
-            char quote = text[0];
-            Debug.Assert(quote == '\'', "quote == '\''");
-            Debug.Assert(text[text.Length - 1] == '\'', "text should end with '\''.");
-
-            string s = text.Substring(1, text.Length - 2);
-            int start = 0;
-            while (true)
-            {
-                int i = s.IndexOf(quote, start);
-                if (i < 0)
-                {
-                    break;
-                }
-
-                Debug.Assert(i + 1 < s.Length && s[i + 1] == '\'', @"Each single quote should be properly escaped with double single quotes.");
-                s = s.Remove(i, 1);
-                start = i + 1;
-            }
-
-            return s;
         }
 
         /// <summary>
@@ -124,20 +127,19 @@ namespace Microsoft.OData.UriParser
         /// <param name="suffix">The suffix value</param>
         /// <param name="text">The string to check</param>
         /// <returns>A string that has been striped of the suffix</returns>
-        /// <remarks>Copy of WebConvert.TryRemoveLiteralSuffix.</remarks>
-        internal static bool TryRemoveLiteralSuffix(string suffix, ref string text)
+        internal static bool TryRemoveLiteralSuffix(ReadOnlySpan<char> suffix, ref ReadOnlySpan<char> text)
         {
-            Debug.Assert(text != null, "text != null");
-            Debug.Assert(suffix != null, "suffix != null");
+            Debug.Assert(!text.IsEmpty, "!text.IsEmpty");
+            Debug.Assert(!suffix.IsEmpty, "!suffix.IsEmpty");
 
-            text = text.Trim();
+            text = text.Trim(XmlWhitespaceChars);
             if (text.Length <= suffix.Length || IsValidNumericConstant(text) || !text.EndsWith(suffix, StringComparison.OrdinalIgnoreCase))
             {
                 return false;
             }
             else
             {
-                text = text.Substring(0, text.Length - suffix.Length);
+                text = text.Slice(0, text.Length - suffix.Length);
                 return true;
             }
         }
@@ -149,13 +151,13 @@ namespace Microsoft.OData.UriParser
         /// <param name="text">Text to attempt to remove prefix from.</param>
         /// <returns>true if the prefix was found and removed; false otherwise.</returns>
         /// <remarks>Copy of WebConvert.TryRemoveLiteralPrefix.</remarks>
-        internal static bool TryRemoveLiteralPrefix(string prefix, ref string text)
+        internal static bool TryRemoveLiteralPrefix(ReadOnlySpan<char> prefix, ref ReadOnlySpan<char> text)
         {
-            Debug.Assert(prefix != null, "prefix != null");
+            Debug.Assert(!prefix.IsEmpty, "!prefix.IsEmpty");
 
             if (text.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
             {
-                text = text.Remove(0, prefix.Length);
+                text = text.Slice(prefix.Length);
                 return true;
             }
             else
@@ -181,38 +183,37 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Checks whether the specified text is a correctly formatted quoted value.
+        /// Checks whether the specified text is a correctly formatted single quoted value.
         /// </summary>
         /// <param name='text'>Text to check.</param>
         /// <returns>true if the text is correctly formatted, false otherwise.</returns>
-        /// <remarks>Copy of WebConvert.IsKeyValueQuoted.</remarks>
-        internal static bool IsUriValueQuoted(string text)
+        internal static bool IsUriValueSingleQuoted(ReadOnlySpan<char> text)
         {
-            Debug.Assert(text != null, "text != null");
+            Debug.Assert(!text.IsEmpty, "!text.IsEmpty");
 
-            if (text.Length < 2 || text[0] != '\'' || text[text.Length - 1] != '\'')
+            if (text.Length < 2 || text[0] != '\'' || text[^1] != '\'')
             {
                 return false;
             }
             else
             {
-                int startIndex = 1;
-                while (startIndex < text.Length - 1)
+                ReadOnlySpan<char> s = text.Slice(1, text.Length - 2); // skip the leading and ending single quote
+                while (!s.IsEmpty)
                 {
                     // Check whether the Uri contains a valid escaped single quote.
-                    // Example: 'aaa''bbb'.
-                    int match = text.IndexOf('\'', startIndex, text.Length - startIndex - 1);
-                    if (match == -1)
+                    // single quote is escaped within single quoted string using two consecutive single quotes. Example: 'aaa''bbb'.
+                    int match = s.IndexOf('\'');
+                    if (match < 0)
                     {
                         break;
                     }
-                    else if (match == text.Length - 2 || text[match + 1] != '\'')
+                    else if (match == s.Length - 1 || s[match + 1] != '\'')
                     {
                         return false;
                     }
                     else
                     {
-                        startIndex = match + 2;
+                        s = s.Slice(match + 2);
                     }
                 }
 
@@ -266,9 +267,9 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         /// <param name="identifier">The identifier that may be an annotation term name</param>
         /// <returns>True if the identifier is an annotation term, otherwise false</returns>
-        internal static bool IsAnnotation(string identifier)
+        internal static bool IsAnnotation(ReadOnlySpan<char> identifier)
         {
-            return !string.IsNullOrEmpty(identifier) && identifier[0] == UriQueryConstants.AnnotationPrefix && identifier.Contains(".", StringComparison.Ordinal);
+            return !identifier.IsEmpty && identifier[0] == UriQueryConstants.AnnotationPrefix && identifier.Contains(".".AsSpan(), StringComparison.Ordinal);
         }
 
         /// <summary>
@@ -308,11 +309,11 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         /// <param name="text">numeric string</param>
         /// <returns>true or false</returns>
-        private static bool IsValidNumericConstant(string text)
+        internal static bool IsValidNumericConstant(ReadOnlySpan<char> text)
         {
-            return string.Equals(text, ExpressionConstants.InfinityLiteral, StringComparison.OrdinalIgnoreCase)
-                || string.Equals(text, "-" + ExpressionConstants.InfinityLiteral, StringComparison.OrdinalIgnoreCase)
-                || string.Equals(text, ExpressionConstants.NaNLiteral, StringComparison.OrdinalIgnoreCase);
+            return text.Equals(ExpressionConstants.InfinityLiteral, StringComparison.OrdinalIgnoreCase) // INF
+                || text.Equals(ExpressionConstants.NegativeInfinityLiteral, StringComparison.OrdinalIgnoreCase) // -INF
+                || text.Equals(ExpressionConstants.NaNLiteral, StringComparison.OrdinalIgnoreCase); // NaN
         }
 
         #endregion

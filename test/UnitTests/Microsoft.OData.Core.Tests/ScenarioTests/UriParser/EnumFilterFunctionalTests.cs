@@ -502,8 +502,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         [Fact]
         public void ParseFilterEnumMemberUndefined4()
         {
-            Action parse = () => ParseFilter("ColorFlags has NS.ColorFlags'Red,2'", this.userModel, this.entityType, this.entitySet);
-            parse.Throws<ODataException>(Error.Format(SRResources.Binder_IsNotValidEnumConstant, "NS.ColorFlags'Red,2'"));
+            Action parse = () => ParseFilter("ColorFlags has NS.ColorFlags'Red,R2'", this.userModel, this.entityType, this.entitySet);
+            parse.Throws<ODataException>(Error.Format(SRResources.Binder_IsNotValidEnumConstant, "NS.ColorFlags'Red,R2'"));
         }
 
         [Theory]

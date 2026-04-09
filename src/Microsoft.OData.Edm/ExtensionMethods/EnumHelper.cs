@@ -22,7 +22,6 @@ namespace Microsoft.OData.Edm
 
         private static readonly ConcurrentDictionary<IEdmEnumType, HashEntry> fieldInfoHash = new ConcurrentDictionary<IEdmEnumType, HashEntry>(4, EnumHelper.MaxHashElements);
 
-
         /// <summary>
         /// Parse an enum literal value to integer. The literal value can be Enum member name (e.g. "Red"), underlying value (e.g. "2"), or combined values (e.g. "Red, Green, Blue", "1,2,4").
         /// </summary>
@@ -31,91 +30,53 @@ namespace Microsoft.OData.Edm
         /// <param name="ignoreCase">true if case insensitive, false if case sensitive</param>
         /// <param name="parseResult">parse result</param>
         /// <returns>true if parse succeeds, false if parse fails</returns>
-        public static bool TryParseEnum(this IEdmEnumType enumType, string value, bool ignoreCase, out long parseResult)
+        public static bool TryParseEnum(this IEdmEnumType enumType, ReadOnlySpan<char> input, bool ignoreCase, out long parseResult)
         {
-            char[] enumSeparatorCharArray = new[] { ',' };
-
-            string[] enumNames;
-            ulong[] enumValues;
-            IEdmEnumType type = enumType;
+            if (enumType == null)
+            {
+                throw new ArgumentNullException(nameof(enumType));
+            }
 
             parseResult = 0L;
-
-            if (value == null)
+            if (input.IsEmpty)
             {
                 return false;
             }
 
-            value = value.Trim();
-            if (value.Length == 0)
-            {
-                return false;
-            }
-
+            MemoryExtensions.SpanSplitEnumerator<char> values = input.Split(',');
+            StringComparison comparison = ignoreCase ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
             ulong num = 0L;
-            string[] values = value.Split(enumSeparatorCharArray);
-
-            if ((!enumType.IsFlags) && values.Length > 1)
+            int count = 0;
+            while (values.MoveNext())
             {
-                return false; // nonflags can only have 1 value
-            }
-
-            type.GetCachedValuesAndNames(out enumValues, out enumNames, true, true);
-
-            if ((char.IsDigit(value[0]) || (value[0] == '-')) || (value[0] == '+'))
-            {
-                // computed for later use. only meaningful for Enum types with IsFlags=true.
-                ulong fullBits = 0;
-                for (int j = 0; j < enumValues.Length; j++)
+                count++;
+                if (!enumType.IsFlags && count > 1)
                 {
-                    fullBits |= enumValues[j];
+                    return false;// non-flags can only have 1 value (without comma)
                 }
 
-                // process each value
-                for (int i = 0; i < values.Length; i++)
+                // For example, Get the 'Red' from 'Red,Yellow,...'
+                ReadOnlySpan<char> currentValue = input[values.Current].Trim();
+
+                if (long.TryParse(currentValue, out long longNum))
                 {
-                    long itemValue;
-                    if (long.TryParse(values[i], out itemValue))
-                    {
-                        // allow any number value, don't validate it against enum definition.
-                        num |= (ulong)itemValue;
-                    }
-                    else
-                    {
-                        return false;
-                    }
+                    // allow any number value, don't validate it against enum definition.
+                    num |= (ulong)longNum;
                 }
-            }
-            else
-            {
-                for (int i = 0; i < values.Length; i++)
+                else
                 {
-                    values[i] = values[i].Trim();
-                    bool flag = false;
-                    for (int j = 0; j < enumNames.Length; j++)
+                    bool found = false;
+                    foreach (var member in enumType.Members)
                     {
-                        if (ignoreCase)
+                        if (currentValue.Equals(member.Name, comparison))
                         {
-                            if (string.Compare(enumNames[j], values[i], StringComparison.OrdinalIgnoreCase) != 0)
-                            {
-                                continue;
-                            }
+                            num |= (ulong)member.Value.Value;
+                            found = true;
+                            break;
                         }
-                        else
-                        {
-                            if (!enumNames[j].Equals(values[i], StringComparison.Ordinal))
-                            {
-                                continue;
-                            }
-                        }
-
-                        ulong item = enumValues[j];
-                        num |= item;
-                        flag = true;
-                        break;
                     }
 
-                    if (!flag)
+                    if (!found)
                     {
                         return false;
                     }
