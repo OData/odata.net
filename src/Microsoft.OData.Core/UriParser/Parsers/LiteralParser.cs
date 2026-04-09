@@ -205,9 +205,8 @@ namespace Microsoft.OData.UriParser
             private static ReadOnlySpan<char> UnescapeLeadingDollarSign(ReadOnlySpan<char> text)
             {
                 Debug.Assert(!text.IsEmpty, "text is empty");
-                if (text.Length > 0 && text[0] == '$')
+                if (text.Length > 1 && text[0] == '$' && text[1] == '$')
                 {
-                    Debug.Assert(text.Length > 1 && text[1] == '$', "2nd character should also be '$', otherwise it would have been treated as a system segment.");
                     text = text.Slice(1);
                 }
 
