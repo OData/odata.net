@@ -102,7 +102,13 @@ namespace Microsoft.OData.UriParser
             // create an enum node, enclosing an odata enum value
             IEdmEnumTypeReference enumTypeReference = typeReference ?? new EdmEnumTypeReference(enumType, false);
 
-            MemoryMarshal.TryGetString(identifier, out string identifierString, out int _, out int _);
+            if (!MemoryMarshal.TryGetString(identifier, out string identifierString, out int _, out int _))
+            {
+                // If 'MemoryMarshal.TryGetString' method is ever called with non-string-backed memory, identifierString will be null
+                // For safety, falling back to identifier.ToString()
+                identifierString = identifier.ToString();
+            }
+
             boundEnum = new ConstantNode(enumValue, identifierString, enumTypeReference);
 
             return true;

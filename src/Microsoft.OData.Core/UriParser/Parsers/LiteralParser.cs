@@ -517,12 +517,14 @@ namespace Microsoft.OData.UriParser
                 try
                 {
                     targetValue = Base64Url.DecodeFromChars(text);
+                    return true;
                 }
                 catch (FormatException)
                 {
                     try
                     {
                         targetValue = Convert.FromBase64String(text.ToString());
+                        return true;
                     }
                     catch(FormatException)
                     {
@@ -530,8 +532,6 @@ namespace Microsoft.OData.UriParser
                     targetValue = null;
                     return false;
                 }
-
-                return true;
             }
 
             /// <summary>

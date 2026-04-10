@@ -322,6 +322,17 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         }
 
         [Theory]
+        [InlineData("binary'+w=='")]   // standard base64 with +
+        [InlineData("binary'/w=='")]   // standard base64 with /
+        [InlineData("binary'+++/'")]   // standard base64 with both + and /
+        public void TryUriStringToPrimitiveWithValidBinaryContainingPlusAndSlashShouldReturnTrue(string input)
+        {
+            object output;
+            Assert.True(this.TryParseUriStringToPrimitiveType(input, EdmCoreModel.Instance.GetBinary(false), out output));
+            Assert.NotNull(output);
+        }
+
+        [Theory]
         [InlineData("binary'notbase64!@#$'")]
         [InlineData("invalid")]
         [InlineData("VGVzdA==")]  // Missing prefix

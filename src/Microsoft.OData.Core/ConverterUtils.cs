@@ -65,7 +65,7 @@ namespace Microsoft.OData
         {
             if (s.IsEmpty)
             {
-                throw new ArgumentNullException(nameof(s));
+                throw new FormatException("The empty string is not a valid 'single' value.");
             }
 
             ReadOnlySpan<char> value = s.Trim(WhitespaceChars);

@@ -4,11 +4,9 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using System.Diagnostics.CodeAnalysis;
 using Microsoft.OData.Metadata;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Core;
-using System;
 
 namespace Microsoft.OData.UriParser
 {

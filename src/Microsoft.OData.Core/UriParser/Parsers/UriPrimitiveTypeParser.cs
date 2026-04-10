@@ -82,6 +82,12 @@ namespace Microsoft.OData.UriParser
             Debug.Assert(targetType != null, "targetType != null");
             exception = null;
 
+            if (text.IsEmpty)
+            {
+                targetValue = null;
+                return false;
+            }
+
             try
             {
                 if (targetType.IsNullable)
@@ -309,21 +315,22 @@ namespace Microsoft.OData.UriParser
             try
             {
                 targetValue = Base64Url.DecodeFromChars(text);
+                return true;
             }
             catch (FormatException)
             {
                 try
                 {
                     targetValue = Convert.FromBase64String(text.ToString());
+                    return true;
                 }
                 catch (FormatException)
                 {
                 }
+
                 targetValue = null;
                 return false;
             }
-
-            return true;
         }
 
         /// <summary>
