@@ -30,10 +30,10 @@ namespace Microsoft.OData.Core.Tests.UriParser.Parsers
             private readonly string _name;
             public DummyUriLiteralParser(string name) => _name = name;
 
-            public object ParseUriStringToType(string text, IEdmTypeReference targetType, out UriLiteralParsingException parsingException)
+            public object ParseUriStringToType(ReadOnlySpan<char> text, IEdmTypeReference targetType, out UriLiteralParsingException parsingException)
             {
                 parsingException = null;
-                return $"{_name}:{text}:{targetType?.FullName()}";
+                return $"{_name}:{text.ToString()}:{targetType?.FullName()}";
             }
 
             public override string ToString() => $"DummyUriLiteralParser({_name})";

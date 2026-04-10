@@ -4,6 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Microsoft.OData.Edm;
@@ -62,7 +63,7 @@ namespace Microsoft.OData.UriParser
         /// <param name="targetType">The type which the uri text has to be parsed to</param>
         /// <param name="parsingException">Assign the exception only in case the text could be parsed to the <paramref name="targetType"/> but failed during the parsing process</param>
         /// <returns>If the parsing process has succeeded, returns the parsed object, otherwise returns 'Null'</returns>
-        public object ParseUriStringToType(string text, IEdmTypeReference targetType, out UriLiteralParsingException parsingException)
+        public object ParseUriStringToType(ReadOnlySpan<char> text, IEdmTypeReference targetType, out UriLiteralParsingException parsingException)
         {
             parsingException = null;
             object targetValue;
@@ -130,7 +131,7 @@ namespace Microsoft.OData.UriParser
             /// <paramref name="parsingException"/> must be set to <c>null</c>.
             /// This method is public because of the interface, but the singleton instance is internal so it cannot be accessed externally.
             /// </remarks>
-            public object ParseUriStringToType(string text, IEdmTypeReference targetType, out UriLiteralParsingException parsingException)
+            public object ParseUriStringToType(ReadOnlySpan<char> text, IEdmTypeReference targetType, out UriLiteralParsingException parsingException)
             {
                 CustomUriLiteralParsersStore store = CustomUriLiteralParsersStore.GetOrCreate(this.model);
 

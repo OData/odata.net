@@ -166,7 +166,7 @@ namespace Microsoft.OData.Core.E2E.Tests.CollectionTests.Tests
                 {
                     if (!isNullable)
                     {
-                        Assert.Equal(exception.Message, "A null value was detected in the items of a collection property value; non-nullable instances of collection types do not support null values as items.");
+                        Assert.Equal("A null value was detected in the items of a collection property value; non-nullable instances of collection types do not support null values as items.", exception.Message);
                     }
                     else
                     {

@@ -789,8 +789,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
                 var fullUri = new Uri("http://www.odata.com/OData/People" + string.Format("?$filter=Name eq '{0}'", CUSTOM_PARSER_STRING_VALUE_CAUSEBUG));
                 ODataUriParser parser = new ODataUriParser(this.model, new Uri("http://www.odata.com/OData/"), fullUri);
 
-                Action parseUriAction = () =>
-                    parser.ParseFilter();
+                Action parseUriAction = () => parser.ParseFilter();
 
                 ODataException exception = Assert.Throws<ODataException>(parseUriAction);
                 Assert.IsType<UriLiteralParsingException>(exception.InnerException);
@@ -1031,7 +1030,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 
         internal class MyCustomBooleanUriLiteralParser : IUriLiteralParser
         {
-            public object ParseUriStringToType(string text, IEdmTypeReference targetType, out UriLiteralParsingException parsingException)
+            public object ParseUriStringToType(ReadOnlySpan<char> text, IEdmTypeReference targetType, out UriLiteralParsingException parsingException)
             {
                 parsingException = null;
 
@@ -1048,19 +1047,19 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
                 // Take care of literals
                 if (text.StartsWith(BOOLEAN_LITERAL_PREFIX))
                 {
-                    text = text.Replace(BOOLEAN_LITERAL_PREFIX, string.Empty);
-                    text = UriParserHelper.RemoveQuotes(text);
+                    text = text.Slice(BOOLEAN_LITERAL_PREFIX.Length);
+                    UriParserHelper.TryRemoveSingleQuotes(ref text, out _);
                 }
 
-                if (text == CUSTOM_PARSER_BOOLEAN_VALID_VALUE_TRUE)
+                if (text.Equals(CUSTOM_PARSER_BOOLEAN_VALID_VALUE_TRUE, StringComparison.Ordinal))
                 {
                     return true;
                 }
-                else if (text == CUSTOM_PARSER_BOOLEAN_VALUE_TRUE_VALID)
+                else if (text.Equals(CUSTOM_PARSER_BOOLEAN_VALUE_TRUE_VALID, StringComparison.Ordinal))
                 {
                     return true;
                 }
-                else if (text == CUSTOM_PARSER_BOOLEAN_INVALID_VALUE)
+                else if (text.Equals(CUSTOM_PARSER_BOOLEAN_INVALID_VALUE, StringComparison.Ordinal))
                 {
                     parsingException = new UriLiteralParsingException("Failed to convert boolean.");
                     return null;
@@ -1072,7 +1071,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 
         internal class MyCustomIntAndBooleanUriLiteralParser : IUriLiteralParser
         {
-            public object ParseUriStringToType(string text, IEdmTypeReference targetType, out UriLiteralParsingException parsingException)
+            public object ParseUriStringToType(ReadOnlySpan<char> text, IEdmTypeReference targetType, out UriLiteralParsingException parsingException)
             {
                 if (!RegisteredTestCases.Exists(testCase => Environment.StackTrace.ToString().Contains(testCase)))
                 {
@@ -1094,7 +1093,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
                 return null;
             }
 
-            private object ParseUriStringToInt(string text, out UriLiteralParsingException parsingException)
+            private object ParseUriStringToInt(ReadOnlySpan<char> text, out UriLiteralParsingException parsingException)
             {
                 parsingException = null;
 
@@ -1103,7 +1102,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
                     return null;
                 }
 
-                if (text == CUSTOM_PARSER_INT_VALID_VALUE)
+                if (text.Equals(CUSTOM_PARSER_INT_VALID_VALUE, StringComparison.Ordinal))
                 {
                     return 55;
                 }
@@ -1111,7 +1110,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
                 return null;
             }
 
-            public object ParseUriStringToBoolean(string text, out UriLiteralParsingException parsingException)
+            public object ParseUriStringToBoolean(ReadOnlySpan<char> text, out UriLiteralParsingException parsingException)
             {
                 parsingException = null;
 
@@ -1123,19 +1122,19 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
                 // Take care of literals
                 if (text.StartsWith(BOOLEAN_LITERAL_PREFIX))
                 {
-                    text = text.Replace(BOOLEAN_LITERAL_PREFIX, string.Empty);
-                    text = UriParserHelper.RemoveQuotes(text);
+                    text = text.Slice(BOOLEAN_LITERAL_PREFIX.Length);
+                    UriParserHelper.TryRemoveSingleQuotes(ref text, out _);
                 }
 
-                if (text == CUSTOM_PARSER_BOOLEAN_VALID_VALUE_TRUE)
+                if (text.Equals(CUSTOM_PARSER_BOOLEAN_VALID_VALUE_TRUE, StringComparison.Ordinal))
                 {
                     return true;
                 }
-                else if (text == CUSTOM_PARSER_BOOLEAN_VALUE_TRUE_VALID)
+                else if (text.Equals(CUSTOM_PARSER_BOOLEAN_VALUE_TRUE_VALID, StringComparison.Ordinal))
                 {
                     parsingException = new UriLiteralParsingException("Failed to convert boolean.");
                 }
-                else if (text == CUSTOM_PARSER_BOOLEAN_INVALID_VALUE)
+                else if (text.Equals(CUSTOM_PARSER_BOOLEAN_INVALID_VALUE, StringComparison.Ordinal))
                 {
                     parsingException = new UriLiteralParsingException("Failed to convert boolean.");
                     return null;
@@ -1147,7 +1146,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 
         internal class MyCustomStringUriLiteralParser : IUriLiteralParser
         {
-            public object ParseUriStringToType(string text, IEdmTypeReference targetType, out UriLiteralParsingException parsingException)
+            public object ParseUriStringToType(ReadOnlySpan<char> text, IEdmTypeReference targetType, out UriLiteralParsingException parsingException)
             {
                 parsingException = null;
                 if (!RegisteredTestCases.Exists(testCase => Environment.StackTrace.ToString().Contains(testCase)))
@@ -1159,7 +1158,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
                 {
                     return null;
                 }
-                if (text == null)
+                if (text.IsEmpty)
                 {
                     return null;
                 }
@@ -1169,22 +1168,22 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
                 // Take care of literals
                 if (text.StartsWith(STRING_LITERAL_PREFIX))
                 {
-                    text = text.Replace(STRING_LITERAL_PREFIX, string.Empty);
+                    text = text.Slice(STRING_LITERAL_PREFIX.Length);
 
                     // If Literal exists, not need of quotes
                     isLiteralPrefixExists = true;
                 }
 
-                if (!isLiteralPrefixExists && !UriParserHelper.IsUriValueQuoted(text))
+                if (!isLiteralPrefixExists && !UriParserHelper.IsUriValueSingleQuoted(text))
                 {
                     parsingException = new UriLiteralParsingException("Edm.String value must be quoted");
                     return null;
                 }
 
-                text = UriParserHelper.RemoveQuotes(text);
+                UriParserHelper.TryRemoveSingleQuotes(ref text, out _);
 
                 // Simulates a bug in a client Parser
-                if (text == CUSTOM_PARSER_STRING_VALUE_CAUSEBUG)
+                if (text.Equals(CUSTOM_PARSER_STRING_VALUE_CAUSEBUG, StringComparison.Ordinal))
                 {
                     parsingException = new UriLiteralParsingException("Parsing to Edm.String has failed for some reasons");
                     return "RetunsAValueButSupposeToBeNull";
@@ -1192,7 +1191,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 
                 if (text.StartsWith(CUSTOM_PARSER_STRING_VALID_VALUE))
                 {
-                    return text + CUSTOM_PARSER_STRING_ADDED_VALUE;
+                    return text.ToString() + CUSTOM_PARSER_STRING_ADDED_VALUE;
                 }
 
                 return null;
@@ -1208,7 +1207,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
                 HeartbeatComplexType = new EdmComplexTypeReference(HardCodedTestModel.GetHeatbeatComplexType(), true);
             }
 
-            public object ParseUriStringToType(string text, IEdmTypeReference targetType, out UriLiteralParsingException parsingException)
+            public object ParseUriStringToType(ReadOnlySpan<char> text, IEdmTypeReference targetType, out UriLiteralParsingException parsingException)
             {
                 parsingException = null;
                 if (!RegisteredTestCases.Exists(testCase => Environment.StackTrace.ToString().Contains(testCase)))
@@ -1220,7 +1219,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
                 {
                     return null;
                 }
-                if (text == null)
+                if (text.IsEmpty)
                 {
                     return null;
                 }
@@ -1231,15 +1230,15 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
                     return null;
                 }
 
-                text = text.Replace("myCustomHeartbeatTypePrefixLiteral", string.Empty);
+                text = text.Slice("myCustomHeartbeatTypePrefixLiteral".Length);
 
-                if (!UriParserHelper.IsUriValueQuoted(text))
+                if (!UriParserHelper.IsUriValueSingleQuoted(text))
                 {
                     parsingException = new UriLiteralParsingException("Edm.Heartbeat value must be quoted");
                     return null;
                 }
 
-                text = UriParserHelper.RemoveQuotes(text);
+                UriParserHelper.TryRemoveSingleQuotes(ref text, out _);
 
                 double textIntValue;
                 // Simulates a bug in a client Parser

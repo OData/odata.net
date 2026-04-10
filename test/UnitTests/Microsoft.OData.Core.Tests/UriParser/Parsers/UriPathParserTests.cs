@@ -277,18 +277,18 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         }
 
         [Fact]
-        public void TryRemoveQuotesTest()
+        public void TryRemoveSingleQuotesTest()
         {
-            string test = "' '";
-            Assert.True(UriParserHelper.TryRemoveQuotes(ref test));
+            ReadOnlySpan<char> test = "' '".AsSpan();
+            Assert.True(UriParserHelper.TryRemoveSingleQuotes(ref test));
             Assert.Equal(" ", test);
 
             test = "invalid";
-            Assert.False(UriParserHelper.TryRemoveQuotes(ref test));
+            Assert.False(UriParserHelper.TryRemoveSingleQuotes(ref test));
             Assert.Equal("invalid", test);
 
             test = "'invalid";
-            Assert.False(UriParserHelper.TryRemoveQuotes(ref test));
+            Assert.False(UriParserHelper.TryRemoveSingleQuotes(ref test));
             Assert.Equal("'invalid", test);
         }
 

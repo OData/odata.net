@@ -4,6 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
 using Microsoft.OData.Edm;
 
 namespace Microsoft.OData.UriParser
@@ -34,7 +35,7 @@ namespace Microsoft.OData.UriParser
         /// If the parser does not support the <paramref name="targetType"/>, or if parsing is successful,
         /// <paramref name="parsingException"/> must be set to <c>null</c>.
         /// </remarks>
-        object ParseUriStringToType(string text, IEdmTypeReference targetType, out UriLiteralParsingException parsingException);
+        object ParseUriStringToType(ReadOnlySpan<char> text, IEdmTypeReference targetType, out UriLiteralParsingException parsingException);
 
         // Consider add this API:
         // bool TryParseUriStringToType(string text, IEdmTypeReference targetType,out object targetValue, out UriTypeParsingException parsingException);
