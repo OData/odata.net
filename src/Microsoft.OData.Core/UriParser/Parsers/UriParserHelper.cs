@@ -275,8 +275,8 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// Read a query option from the lexer.
         /// </summary>
-        /// <returns>The query option as a string.</returns>
-        internal static string ReadQueryOption(ExpressionLexer lexer)
+        /// <returns>The query option as a ReadOnlyMemory of characters.</returns>
+        internal static ReadOnlyMemory<char> ReadQueryOption(ExpressionLexer lexer)
         {
             if (lexer.CurrentToken.Kind != ExpressionTokenKind.Equal)
             {
@@ -286,7 +286,7 @@ namespace Microsoft.OData.UriParser
             // get the full text from the current location onward
             // there could be literals like 'A string literal; tricky!' in there, so we need to be careful.
             // Also there could be more nested (...) expressions that we ignore until we recurse enough times to get there.
-            string expressionText = lexer.AdvanceThroughExpandOption();
+            ReadOnlyMemory<char> expressionText = lexer.AdvanceThroughExpandOption();
 
             if (lexer.CurrentToken.Kind == ExpressionTokenKind.SemiColon)
             {

@@ -15,6 +15,7 @@ namespace Microsoft.OData.UriParser
     using Microsoft.OData.UriParser.Aggregation;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Core;
+    using System.Runtime.CompilerServices;
     #endregion Namespaces
 
     /// <summary>
@@ -178,6 +179,14 @@ namespace Microsoft.OData.UriParser
         /// <param name="filter">The $filter expression string to parse.</param>
         /// <returns>The lexical token representing the filter.</returns>
         public QueryToken ParseFilter(string filter)
+            => ParseFilter(filter.AsMemory());
+
+        /// <summary>
+        /// Parses the $filter expression.
+        /// </summary>
+        /// <param name="filter">The $filter expression string to parse.</param>
+        /// <returns>The lexical token representing the filter.</returns>
+        public QueryToken ParseFilter(ReadOnlyMemory<char> filter)
         {
             return this.ParseExpressionText(filter);
         }
@@ -316,13 +325,12 @@ namespace Microsoft.OData.UriParser
         }
 
         // parses $compute query option.
-        internal ComputeToken ParseCompute(string compute)
+        internal ComputeToken ParseCompute(string compute) => ParseCompute(compute.AsMemory());
+
+        internal ComputeToken ParseCompute(ReadOnlyMemory<char> compute)
         {
-            Debug.Assert(compute != null, "compute != null");
-
             List<ComputeExpressionToken> transformationTokens = new List<ComputeExpressionToken>();
-
-            if (string.IsNullOrEmpty(compute))
+            if (compute.IsEmpty)
             {
                 return new ComputeToken(transformationTokens);
             }
@@ -376,7 +384,8 @@ namespace Microsoft.OData.UriParser
                 this.lexer.NextToken();
                 if (this.lexer.CurrentToken.Kind == ExpressionTokenKind.Identifier)
                 {
-                    switch (this.lexer.CurrentToken.GetIdentifier())
+                    ReadOnlySpan<char> identifier = this.lexer.CurrentToken.GetIdentifier().Span;
+                    switch (identifier)
                     {
                         case ExpressionConstants.KeywordFilter:
                             filterToken = this.ParseApplyFilter();
@@ -414,13 +423,13 @@ namespace Microsoft.OData.UriParser
             return new ExpandToken(termTokens);
         }
 
-        internal IEnumerable<QueryToken> ParseApply(string apply)
-        {
-            Debug.Assert(apply != null, "apply != null");
+        internal IEnumerable<QueryToken> ParseApply(string apply) => ParseApply(apply.AsMemory());
 
+        internal IEnumerable<QueryToken> ParseApply(ReadOnlyMemory<char> apply)
+        {
             List<QueryToken> transformationTokens = new List<QueryToken>();
 
-            if (string.IsNullOrEmpty(apply))
+            if (apply.IsEmpty)
             {
                 return transformationTokens;
             }
@@ -430,7 +439,8 @@ namespace Microsoft.OData.UriParser
 
             while (true)
             {
-                switch (this.lexer.CurrentToken.GetIdentifier())
+                ReadOnlySpan<char> identifier = this.lexer.CurrentToken.GetIdentifier().Span;
+                switch (identifier)
                 {
                     case ExpressionConstants.KeywordAggregate:
                         transformationTokens.Add(ParseAggregate());
@@ -545,9 +555,9 @@ namespace Microsoft.OData.UriParser
                 }
 
                 // "as" alias
-                StringLiteralToken alias = this.ParseAggregateAs();
+                ReadOnlyMemory<char> alias = this.ParseAggregateAs();
 
-                return new AggregateExpressionToken(expression, verb, alias.Text);
+                return new AggregateExpressionToken(expression, verb, alias.ToString());
             }
             finally
             {
@@ -655,9 +665,9 @@ namespace Microsoft.OData.UriParser
             QueryToken expression = this.ParseExpression();
 
             // "as" alias
-            StringLiteralToken alias = this.ParseAggregateAs();
+            ReadOnlyMemory<char> alias = this.ParseAggregateAs();
 
-            return new ComputeExpressionToken(expression, alias.Text);
+            return new ComputeExpressionToken(expression, alias.ToString());
         }
 
         /// <summary>
@@ -665,10 +675,10 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         /// <param name="expressionText">The expression string to Parse.</param>
         /// <returns>The lexical token representing the expression text.</returns>
-        internal QueryToken ParseExpressionText(string expressionText)
-        {
-            Debug.Assert(expressionText != null, "expressionText != null");
+        internal QueryToken ParseExpressionText(string expressionText) => ParseExpressionText(expressionText.AsMemory());
 
+        internal QueryToken ParseExpressionText(ReadOnlyMemory<char> expressionText)
+        {
             this.recursionDepth = 0;
             this.lexer = CreateLexerForFilterOrOrderByOrApplyExpression(this.model, expressionText);
             QueryToken result = this.ParseExpression();
@@ -682,9 +692,16 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         /// <param name="orderBy">The $orderby expression string to parse.</param>
         /// <returns>The enumeration of lexical tokens representing order by tokens.</returns>
-        internal IEnumerable<OrderByToken> ParseOrderBy(string orderBy)
+        internal IEnumerable<OrderByToken> ParseOrderBy(string orderBy) => ParseOrderBy(orderBy.AsMemory());
+
+        /// <summary>
+        /// Parses the $orderby expression.
+        /// </summary>
+        /// <param name="orderBy">The $orderby expression string to parse.</param>
+        /// <returns>The enumeration of lexical tokens representing order by tokens.</returns>
+        internal IEnumerable<OrderByToken> ParseOrderBy(ReadOnlyMemory<char> orderBy)
         {
-            Debug.Assert(orderBy != null, "orderBy != null");
+            Debug.Assert(!orderBy.IsEmpty, "orderBy is empty.");
 
             this.recursionDepth = 0;
             this.lexer = CreateLexerForFilterOrOrderByOrApplyExpression(this.model, orderBy);
@@ -737,6 +754,9 @@ namespace Microsoft.OData.UriParser
         /// <param name="expression">The expression.</param>
         /// <returns>The lexer for the expression, which will have already moved to the first token.</returns>
         private static ExpressionLexer CreateLexerForFilterOrOrderByOrApplyExpression(IEdmModel edmModel, string expression)
+            => CreateLexerForFilterOrOrderByOrApplyExpression(edmModel, expression.AsMemory());
+
+        private static ExpressionLexer CreateLexerForFilterOrOrderByOrApplyExpression(IEdmModel edmModel, ReadOnlyMemory<char> expression)
         {
             return new ExpressionLexer(edmModel, expression, moveToFirstToken: true, useSemicolonDelimiter: true, parsingFunctionParameters: true);
         }
@@ -1003,7 +1023,7 @@ namespace Microsoft.OData.UriParser
                 if (operatorToken.Kind == ExpressionTokenKind.Minus && (ExpressionLexerUtils.IsNumeric(this.lexer.CurrentToken.Kind)))
                 {
                     ExpressionToken numberLiteral = this.lexer.CurrentToken;
-                    numberLiteral.Text = this.Lexer.ExpressionText.AsMemory(operatorToken.Position, 1 + this.lexer.CurrentToken.Length);
+                    numberLiteral.Text = this.Lexer.ExpressionText.Slice(operatorToken.Position, 1 + this.lexer.CurrentToken.Length);
                     numberLiteral.Position = operatorToken.Position;
                     this.lexer.CurrentToken = numberLiteral;
                     this.RecurseLeave();
@@ -1167,16 +1187,16 @@ namespace Microsoft.OData.UriParser
 
                 // a function call or an entity with key value is treated same as function call.
                 bool identifierIsFunction = this.lexer.ExpandIdentifierAsFunction();
-                if (identifierIsFunction && TryParseIdentifierAsFunction(lexer, out string result))
+                if (identifierIsFunction && TryParseIdentifierAsFunction(lexer, out ReadOnlyMemory<char> result))
                 {
-                    rootPathToken.Segments.Add(result);
+                    rootPathToken.Segments.Add(result.ToString());
                     this.lexer.NextToken();
                     continue;
                 }
 
                 if (this.lexer.PeekNextToken().Kind == ExpressionTokenKind.Dot)
                 {
-                    ReadOnlySpan<char> dotIdentifier = this.lexer.ReadDottedIdentifier(false);
+                    ReadOnlyMemory<char> dotIdentifier = this.lexer.ReadDottedIdentifier(false);
                     rootPathToken.Segments.Add(dotIdentifier.ToString());
                     continue;
                 }
@@ -1190,13 +1210,14 @@ namespace Microsoft.OData.UriParser
             return rootPathToken;
         }
 
-        private static bool TryParseIdentifierAsFunction(ExpressionLexer lexer, out string result)
+        private static bool TryParseIdentifierAsFunction(ExpressionLexer lexer, out ReadOnlyMemory<char> result)
         {
             result = null;
-            ReadOnlySpan<char> functionName;
+            ReadOnlyMemory<char> functionName;
 
+            int startPosition = lexer.CurrentToken.Position;
             ExpressionLexer.ExpressionLexerPosition position = lexer.SnapshotPosition();
-
+            
             if (lexer.PeekNextToken().Kind == ExpressionTokenKind.Dot)
             {
                 // handle the case where we prefix a function with its namespace.
@@ -1204,7 +1225,7 @@ namespace Microsoft.OData.UriParser
             }
             else
             {
-                functionName = lexer.CurrentToken.Span;
+                functionName = lexer.CurrentToken.Text;
                 lexer.NextToken();
             }
 
@@ -1214,8 +1235,9 @@ namespace Microsoft.OData.UriParser
                 return false;
             }
 
-            string parameters = lexer.AdvanceThroughBalancedParentheticalExpression();
-            result = $"{functionName}{parameters}";
+            lexer.AdvanceThroughBalancedParentheticalExpression();
+
+            result = lexer.ExpressionText.Slice(startPosition, lexer.TextPosition - startPosition);
             return true;
         }
 
@@ -1374,7 +1396,7 @@ namespace Microsoft.OData.UriParser
 
             AggregationMethodDefinition verb;
             int identifierStartPosition = lexer.CurrentToken.Position;
-            ReadOnlySpan<char> methodLabel = lexer.ReadDottedIdentifier(false /* acceptStar */);
+            ReadOnlySpan<char> methodLabel = lexer.ReadDottedIdentifier(false /* acceptStar */).Span;
 
             switch (methodLabel)
             {
@@ -1394,7 +1416,7 @@ namespace Microsoft.OData.UriParser
                     verb = AggregationMethodDefinition.Sum;
                     break;
                 default:
-                    if (!methodLabel.Contains(OData.ExpressionConstants.SymbolDot, StringComparison.Ordinal))
+                    if (!methodLabel.Contains(ExpressionConstants.SymbolDot, StringComparison.Ordinal))
                     {
                         throw ParseError(
                             Error.Format(SRResources.UriQueryExpressionParser_UnrecognizedWithMethod,
@@ -1410,7 +1432,7 @@ namespace Microsoft.OData.UriParser
             return verb;
         }
 
-        private StringLiteralToken ParseAggregateAs()
+        private ReadOnlyMemory<char> ParseAggregateAs()
         {
             if (!TokenIdentifierIs(ExpressionConstants.KeywordAs))
             {
@@ -1419,7 +1441,7 @@ namespace Microsoft.OData.UriParser
 
             lexer.NextToken();
 
-            var alias = new StringLiteralToken(lexer.CurrentToken.Text.ToString());
+            var alias = lexer.CurrentToken.Text;
 
             lexer.NextToken();
 

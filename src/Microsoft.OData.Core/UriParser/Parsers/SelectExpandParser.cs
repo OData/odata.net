@@ -62,6 +62,16 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         private bool isSelect;
 
+        internal SelectExpandParser(
+            IEdmModel model,
+            string clauseToParse,
+            int maxRecursiveDepth,
+            bool enableCaseInsensitiveBuiltinIdentifier = false,
+            bool enableNoDollarQueryOptions = false)
+            : this (model, clauseToParse.AsMemory(), maxRecursiveDepth, enableCaseInsensitiveBuiltinIdentifier, enableNoDollarQueryOptions)
+        {
+        }
+
         /// <summary>
         /// Build the SelectOption strategy.
         /// TODO: Really should not take the clauseToParse here. Instead it should be provided with a call to ParseSelect() or ParseExpand().
@@ -72,7 +82,7 @@ namespace Microsoft.OData.UriParser
         /// <param name="enableNoDollarQueryOptions">Whether to enable no dollar query options.</param>
         public SelectExpandParser(
             IEdmModel model,
-            string clauseToParse,
+            ReadOnlyMemory<char> clauseToParse,
             int maxRecursiveDepth,
             bool enableCaseInsensitiveBuiltinIdentifier = false,
             bool enableNoDollarQueryOptions = false)
@@ -88,11 +98,23 @@ namespace Microsoft.OData.UriParser
 
             // Sets up our lexer. We don't turn useSemicolonDelimiter on since the parsing code for expand options,
             // which is the only thing that needs it, is in a different class that uses it's own lexer.
-            this.lexer = clauseToParse != null ? new ExpressionLexer(this.model, clauseToParse, moveToFirstToken: false, useSemicolonDelimiter: false) : null;
+            this.lexer = clauseToParse.IsEmpty ? null : new ExpressionLexer(this.model, clauseToParse, moveToFirstToken: false, useSemicolonDelimiter: false);
 
             this.enableCaseInsensitiveBuiltinIdentifier = enableCaseInsensitiveBuiltinIdentifier;
 
             this.enableNoDollarQueryOptions = enableNoDollarQueryOptions;
+        }
+
+        internal SelectExpandParser(
+            IEdmModel model,
+            ODataUriResolver resolver,
+            string clauseToParse,
+            IEdmStructuredType parentStructuredType,
+            int maxRecursiveDepth,
+            bool enableCaseInsensitiveBuiltinIdentifier = false,
+            bool enableNoDollarQueryOptions = false)
+            : this (model, resolver, clauseToParse.AsMemory(), parentStructuredType, maxRecursiveDepth, enableCaseInsensitiveBuiltinIdentifier, enableNoDollarQueryOptions)
+        {
         }
 
         /// <summary>
@@ -107,7 +129,7 @@ namespace Microsoft.OData.UriParser
         public SelectExpandParser(
             IEdmModel model,
             ODataUriResolver resolver,
-            string clauseToParse,
+            ReadOnlyMemory<char> clauseToParse,
             IEdmStructuredType parentStructuredType,
             int maxRecursiveDepth,
             bool enableCaseInsensitiveBuiltinIdentifier = false,
@@ -196,7 +218,7 @@ namespace Microsoft.OData.UriParser
             var termParser = new SelectExpandTermParser(this.lexer, this.MaxPathDepth, this.isSelect);
             PathSegmentToken pathToken = termParser.ParseTerm();
 
-            string optionsText = null;
+            ReadOnlyMemory<char> optionsText = null;
             if (this.lexer.CurrentToken.Kind == ExpressionTokenKind.OpenParen)
             {
                 optionsText = this.lexer.AdvanceThroughBalancedParentheticalExpression();
@@ -219,7 +241,7 @@ namespace Microsoft.OData.UriParser
             var termParser = new SelectExpandTermParser(this.lexer, this.MaxPathDepth, this.isSelect);
             PathSegmentToken pathToken = termParser.ParseTerm(allowRef: true);
 
-            string optionsText = null;
+            ReadOnlyMemory<char> optionsText = null;
             if (this.lexer.CurrentToken.Kind == ExpressionTokenKind.OpenParen)
             {
                 optionsText = this.lexer.AdvanceThroughBalancedParentheticalExpression();

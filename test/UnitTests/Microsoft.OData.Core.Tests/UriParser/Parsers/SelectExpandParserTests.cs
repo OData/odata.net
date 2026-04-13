@@ -489,8 +489,8 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             bool enableNoDollarQueryOptions = false)
         {
             SelectExpandSyntacticParser.Parse(
-                select,
-                expand,
+                select.AsMemory(),
+                expand.AsMemory(),
                 parentStructuredType: null,
                 new ODataUriParserConfiguration(EdmCoreModel.Instance)
                 {
@@ -805,7 +805,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
                 Settings = { PathLimit = 2, FilterLimit = 8, OrderByLimit = 8, SearchLimit = 7, SelectExpandLimit = 5 }
             };
 
-            SelectExpandSyntacticParser.Parse(select, expand, null , configuration, out expandTree, out selectTree);
+            SelectExpandSyntacticParser.Parse(select.AsMemory(), expand.AsMemory(), null , configuration, out expandTree, out selectTree);
         }
         #endregion
     }

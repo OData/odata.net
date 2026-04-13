@@ -7,6 +7,7 @@
 namespace Microsoft.OData.UriParser
 {
     using Microsoft.OData.Edm;
+    using System;
 
     /// <summary>
     /// Parse the raw select and expand clause syntax.
@@ -23,8 +24,8 @@ namespace Microsoft.OData.UriParser
         /// <param name="expandTree">the resulting expand AST</param>
         /// <param name="selectTree">the resulting select AST</param>
         public static void Parse(
-            string selectClause,
-            string expandClause,
+            ReadOnlyMemory<char> selectClause,
+            ReadOnlyMemory<char> expandClause,
             IEdmStructuredType parentStructuredType,
             ODataUriParserConfiguration configuration,
             out ExpandToken expandTree,

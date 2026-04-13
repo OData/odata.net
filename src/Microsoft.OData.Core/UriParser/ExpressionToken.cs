@@ -94,7 +94,7 @@ namespace Microsoft.OData.UriParser
 
         /// <summary>Gets the current identifier text.</summary>
         /// <returns>The current identifier text.</returns>
-        internal ReadOnlySpan<char> GetIdentifier()
+        internal ReadOnlyMemory<char> GetIdentifier()
         {
             if (this.Kind != ExpressionTokenKind.Identifier)
             {
@@ -103,7 +103,7 @@ namespace Microsoft.OData.UriParser
             }
 
             Debug.Assert(!this.Text.IsEmpty, "Text is null");
-            return this.Span;
+            return this.Text;
         }
 
         /// <summary>Checks that this token has the specified identifier.</summary>

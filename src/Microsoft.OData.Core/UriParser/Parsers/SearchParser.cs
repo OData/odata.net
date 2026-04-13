@@ -58,10 +58,10 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         /// <param name="expressionText">The expression string to Parse.</param>
         /// <returns>The lexical token representing the expression text.</returns>
-        internal QueryToken ParseSearch(string expressionText)
-        {
-            Debug.Assert(expressionText != null, "expressionText != null");
+        internal QueryToken ParseSearch(string expressionText) => ParseSearch(expressionText.AsMemory());
 
+        internal QueryToken ParseSearch(ReadOnlyMemory<char> expressionText)
+        {
             this.recursionDepth = 0;
             this.lexer = new SearchLexer(this.model, expressionText);
             QueryToken result = this.ParseExpression();

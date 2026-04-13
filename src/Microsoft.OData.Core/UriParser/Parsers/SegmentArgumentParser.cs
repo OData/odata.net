@@ -239,7 +239,7 @@ namespace Microsoft.OData.UriParser
             if (typeReference.IsEnum())
             {
                 QueryNode enumNode = null;
-                if (EnumBinder.TryBindIdentifier(valueText, typeReference.AsEnum(), null, out enumNode))
+                if (EnumBinder.TryBindIdentifier(valueText.AsMemory(), typeReference.AsEnum(), null, out enumNode))
                 {
                     convertedValue = ((ConstantNode)enumNode).Value;
                     return true;

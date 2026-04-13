@@ -867,8 +867,8 @@ namespace Microsoft.OData.Tests.UriParser
         public void AdvanceThroughExpandOptionStopsAtSemi()
         {
             var lexer = CreateLexerForAdvanceThroughExpandOptionTest(this.model, "abc;def");
-            string result = lexer.AdvanceThroughExpandOption();
-            Assert.Equal("abc", result);
+            ReadOnlyMemory<char> result = lexer.AdvanceThroughExpandOption();
+            Assert.Equal("abc", result.Span);
             Assert.Equal(3, lexer.Position);
             Assert.Equal(ExpressionTokenKind.SemiColon, lexer.CurrentToken.Kind);
         }
@@ -877,8 +877,8 @@ namespace Microsoft.OData.Tests.UriParser
         public void AdvanceThroughExpandOptionStopsAtCloseParen()
         {
             var lexer = CreateLexerForAdvanceThroughExpandOptionTest(this.model, "abc)def");
-            string result = lexer.AdvanceThroughExpandOption();
-            Assert.Equal("abc", result);
+            ReadOnlyMemory<char> result = lexer.AdvanceThroughExpandOption();
+            Assert.Equal("abc", result.Span);
             Assert.Equal(3, lexer.Position);
             Assert.Equal(ExpressionTokenKind.CloseParen, lexer.CurrentToken.Kind);
         }
@@ -887,8 +887,8 @@ namespace Microsoft.OData.Tests.UriParser
         public void AdvanceThroughExpandOptionWillReadUntilEnd()
         {
             var lexer = CreateLexerForAdvanceThroughExpandOptionTest(this.model, "entirestring");
-            string result = lexer.AdvanceThroughExpandOption();
-            Assert.Equal("entirestring", result);
+            ReadOnlyMemory<char> result = lexer.AdvanceThroughExpandOption();
+            Assert.Equal("entirestring", result.Span);
             Assert.Equal(ExpressionTokenKind.End, lexer.CurrentToken.Kind);
         }
 
@@ -896,8 +896,8 @@ namespace Microsoft.OData.Tests.UriParser
         public void AdvanceThroughExpandOptionWorksWhenDelimiterIsAtEnd()
         {
             var lexer = CreateLexerForAdvanceThroughExpandOptionTest(this.model, "foo;");
-            string result = lexer.AdvanceThroughExpandOption();
-            Assert.Equal("foo", result);
+            ReadOnlyMemory<char> result = lexer.AdvanceThroughExpandOption();
+            Assert.Equal("foo", result.Span);
             Assert.Equal(ExpressionTokenKind.SemiColon, lexer.CurrentToken.Kind);
         }
 
@@ -905,8 +905,8 @@ namespace Microsoft.OData.Tests.UriParser
         public void AdvanceThroughExpandOptionSkipsBalancedParens()
         {
             var lexer = CreateLexerForAdvanceThroughExpandOptionTest(this.model, "abc()def;");
-            string result = lexer.AdvanceThroughExpandOption();
-            Assert.Equal("abc()def", result);
+            ReadOnlyMemory<char> result = lexer.AdvanceThroughExpandOption();
+            Assert.Equal("abc()def", result.Span);
             Assert.Equal(8, lexer.Position);
             Assert.Equal(ExpressionTokenKind.SemiColon, lexer.CurrentToken.Kind);
         }
@@ -915,8 +915,8 @@ namespace Microsoft.OData.Tests.UriParser
         public void AdvanceThroughExpandOptionHandlesNestedParensRightNextToCheckOther()
         {
             var lexer = CreateLexerForAdvanceThroughExpandOptionTest(this.model, "abc(())def;");
-            string result = lexer.AdvanceThroughExpandOption();
-            Assert.Equal("abc(())def", result);
+            ReadOnlyMemory<char> result = lexer.AdvanceThroughExpandOption();
+            Assert.Equal("abc(())def", result.Span);
             Assert.Equal(10, lexer.Position);
             Assert.Equal(ExpressionTokenKind.SemiColon, lexer.CurrentToken.Kind);
         }
@@ -925,8 +925,8 @@ namespace Microsoft.OData.Tests.UriParser
         public void AdvanceThroughExpandOptionHandlesNestedParensRightNextToFinalClosingParen()
         {
             var lexer = CreateLexerForAdvanceThroughExpandOptionTest(this.model, "abc(()))");
-            string result = lexer.AdvanceThroughExpandOption();
-            Assert.Equal("abc(())", result);
+            ReadOnlyMemory<char> result = lexer.AdvanceThroughExpandOption();
+            Assert.Equal("abc(())", result.Span);
             Assert.Equal(7, lexer.Position);
             Assert.Equal(ExpressionTokenKind.CloseParen, lexer.CurrentToken.Kind);
         }
@@ -935,8 +935,8 @@ namespace Microsoft.OData.Tests.UriParser
         public void AdvanceThroughExpandOptionSkipsSemisInParenthesis()
         {
             var lexer = CreateLexerForAdvanceThroughExpandOptionTest(this.model, "abc(;;;)def;next");
-            string result = lexer.AdvanceThroughExpandOption();
-            Assert.Equal("abc(;;;)def", result);
+            ReadOnlyMemory<char> result = lexer.AdvanceThroughExpandOption();
+            Assert.Equal("abc(;;;)def", result.Span);
             Assert.Equal(11, lexer.Position);
             Assert.Equal(ExpressionTokenKind.SemiColon, lexer.CurrentToken.Kind);
         }
@@ -945,8 +945,8 @@ namespace Microsoft.OData.Tests.UriParser
         public void AdvanceThroughExpandOptionSkipsOverInnerOptionsSuccessfully()
         {
             var lexer = CreateLexerForAdvanceThroughExpandOptionTest(this.model, "prop(inner(a=b;c=d(e=deep)))");
-            string result = lexer.AdvanceThroughExpandOption();
-            Assert.Equal("prop(inner(a=b;c=d(e=deep)))", result);
+            ReadOnlyMemory<char> result = lexer.AdvanceThroughExpandOption();
+            Assert.Equal("prop(inner(a=b;c=d(e=deep)))", result.Span);
             Assert.Equal(ExpressionTokenKind.End, lexer.CurrentToken.Kind);
         }
 
@@ -962,8 +962,8 @@ namespace Microsoft.OData.Tests.UriParser
         public void AdvanceUntilRecognizesSkipsStringLiterals()
         {
             var lexer = CreateLexerForAdvanceThroughExpandOptionTest(this.model, "'str with ; and () in it' eq StringProperty)");
-            string result = lexer.AdvanceThroughExpandOption();
-            Assert.Equal("'str with ; and () in it' eq StringProperty", result);
+            ReadOnlyMemory<char> result = lexer.AdvanceThroughExpandOption();
+            Assert.Equal("'str with ; and () in it' eq StringProperty", result.Span);
             Assert.Equal(43, lexer.Position);
             Assert.StartsWith(")", lexer.CurrentToken.Span.ToString());
         }
@@ -973,8 +973,8 @@ namespace Microsoft.OData.Tests.UriParser
         public void AdvanceThroughBalancedParentheticalExpressionWorks()
         {
             ExpressionLexer lexer = new ExpressionLexer(this.model, "(expression)next", moveToFirstToken: true, useSemicolonDelimiter: true, parsingFunctionParameters: false);
-            string result = lexer.AdvanceThroughBalancedParentheticalExpression();
-            Assert.Equal("(expression)", result);
+            ReadOnlyMemory<char> result = lexer.AdvanceThroughBalancedParentheticalExpression();
+            Assert.Equal("(expression)", result.Span);
             // TODO: the state of the lexer is weird right now, see note in AdvanceThroughBalancedParentheticalExpression.
 
             Assert.Equal("next", lexer.NextToken().Span.ToString());

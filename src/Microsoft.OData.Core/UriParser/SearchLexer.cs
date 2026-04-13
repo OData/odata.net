@@ -56,6 +56,11 @@ namespace Microsoft.OData.UriParser
         /// <param name="model">The Edm model associated with this lexer, used when resolving custom URI literal prefixes.</param>
         /// <param name="expression">Expression to parse.</param>
         internal SearchLexer(IEdmModel model, string expression)
+            : this(model, expression.AsMemory())
+        {
+        }
+
+        internal SearchLexer(IEdmModel model, ReadOnlyMemory<char> expression)
             : base(model, expression, moveToFirstToken: true, useSemicolonDelimiter: false)
         {
         }
@@ -114,7 +119,7 @@ namespace Microsoft.OData.UriParser
             }
 
             this.token.Kind = t;
-            this.token.Text = this.Text.AsMemory(tokenPos, this.textPos - tokenPos);
+            this.token.Text = this.Text.Slice(tokenPos, this.textPos - tokenPos);
             this.token.Position = tokenPos;
 
             if (this.token.Kind == ExpressionTokenKind.StringLiteral)
