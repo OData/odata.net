@@ -16,6 +16,8 @@ namespace Microsoft.OData.Client
         /// </summary>
         protected internal DataServiceContext Context { get; set; }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1033:Interface methods should be callable by child types",
+            Justification = "Implemented explicitly to satisfy IBaseEntityType without exposing DataServiceContext on the public API; derived types access the same value through the protected internal Context property.")]
         DataServiceContext IBaseEntityType.DataServiceContext
         {
             get => Context;

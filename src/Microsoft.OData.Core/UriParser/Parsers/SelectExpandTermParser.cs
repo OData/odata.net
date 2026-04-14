@@ -119,7 +119,7 @@ namespace Microsoft.OData.UriParser
             // Some check here to throw exception, prop1/*/prop2 and */$ref/prop and prop1/$count/prop2 will throw exception, all are $expand cases.
             if (!isSelect)
             {
-                if (previousSegment != null && previousSegment.Identifier == UriQueryConstants.Star && !this.lexer.CurrentToken.GetIdentifier().Equals(UriQueryConstants.RefSegment, StringComparison.Ordinal))
+                if (previousSegment != null && previousSegment.Identifier == UriQueryConstants.Star && !this.lexer.CurrentToken.GetIdentifier().Span.Equals(UriQueryConstants.RefSegment, StringComparison.Ordinal))
                 {
                     // Star can only be followed with $ref. $count is not supported with star as expand option
                     throw new ODataException(SRResources.ExpressionToken_OnlyRefAllowWithStarInExpand);
@@ -137,7 +137,7 @@ namespace Microsoft.OData.UriParser
             }
 
 
-            ReadOnlySpan<char> propertyName;
+            ReadOnlyMemory<char> propertyName;
 
             if (this.lexer.PeekNextToken().Kind == ExpressionTokenKind.Dot)
             {
@@ -156,7 +156,7 @@ namespace Microsoft.OData.UriParser
                     throw new ODataException(SRResources.ExpressionToken_NoSegmentAllowedBeforeStarInExpand);
                 }
 
-                propertyName = this.lexer.CurrentToken.Span;
+                propertyName = this.lexer.CurrentToken.Text;
                 this.lexer.NextToken();
             }
             else

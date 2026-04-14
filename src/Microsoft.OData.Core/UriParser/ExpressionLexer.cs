@@ -49,7 +49,7 @@ namespace Microsoft.OData.UriParser
         #region Protected and Private fields
 
         /// <summary>Text being parsed.</summary>
-        protected readonly string Text;
+        protected readonly ReadOnlyMemory<char> Text;
 
         /// <summary>Length of text being parsed.</summary>
         protected readonly int TextLen;
@@ -105,6 +105,11 @@ namespace Microsoft.OData.UriParser
         {
         }
 
+        internal ExpressionLexer(IEdmModel model, ReadOnlyMemory<char> expression, bool moveToFirstToken, bool useSemicolonDelimiter)
+            : this(model, expression, moveToFirstToken, useSemicolonDelimiter, parsingFunctionParameters: false)
+        {
+        }
+
         /// <summary>Initializes a new <see cref="ExpressionLexer"/>.</summary>
         /// <param name="model">The Edm model associated with this lexer, used when resolving custom URI literal prefixes.</param>
         /// <param name="expression">Expression to parse.</param>
@@ -112,9 +117,13 @@ namespace Microsoft.OData.UriParser
         /// <param name="useSemicolonDelimiter">If true, the lexer will tokenize based on semicolons as well.</param>
         /// <param name="parsingFunctionParameters">Whether the lexer is being used to parse function parameters. If true, will allow/recognize parameter aliases and typed nulls.</param>
         internal ExpressionLexer(IEdmModel model, string expression, bool moveToFirstToken, bool useSemicolonDelimiter, bool parsingFunctionParameters)
+            : this (model, expression.AsMemory(), moveToFirstToken, useSemicolonDelimiter, parsingFunctionParameters)
+        {
+        }
+
+        internal ExpressionLexer(IEdmModel model, ReadOnlyMemory<char> expression, bool moveToFirstToken, bool useSemicolonDelimiter, bool parsingFunctionParameters)
         {
             Debug.Assert(model != null, "model != null");
-            Debug.Assert(expression != null, "expression != null");
 
             this.model = model;
             this.ignoreWhitespace = true;
@@ -144,10 +153,13 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>Text being parsed.</summary>
-        internal string ExpressionText => this.Text;
+        internal ReadOnlyMemory<char> ExpressionText => this.Text;
+
+        /// <summary>Position on current token being parsed.</summary>
+        internal int Position => this.token.Position;
 
         /// <summary>Position on text being parsed.</summary>
-        internal int Position => this.token.Position;
+        internal int TextPosition => this.textPos;
 
         #endregion Internal properties
 
@@ -252,11 +264,11 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         /// <param name="acceptStar">do we allow a star in this identifier</param>
         /// <returns>The dotted identifier starting at the current identifier.</returns>
-        internal ReadOnlySpan<char> ReadDottedIdentifier(bool acceptStar)
+        internal ReadOnlyMemory<char> ReadDottedIdentifier(bool acceptStar)
         {
             this.ValidateToken(ExpressionTokenKind.Identifier);
 
-            ReadOnlySpan<char> result = this.CurrentToken.Span;
+            ReadOnlyMemory<char> result = this.CurrentToken.Text;
             int position = this.CurrentToken.Position;
             int oldLength = this.CurrentToken.Length;
             int length = this.CurrentToken.Length;
@@ -288,7 +300,7 @@ namespace Microsoft.OData.UriParser
 
             if (oldLength != length)
             {
-                return this.Text.AsSpan(position, length);
+                return this.Text.Slice(position, length);
             }
 
             return result;
@@ -352,7 +364,7 @@ namespace Microsoft.OData.UriParser
 
             if (matched)
             {
-                this.token.Text = this.Text.AsMemory(tokenStartPos, this.textPos - tokenStartPos);
+                this.token.Text = this.Text.Slice(tokenStartPos, this.textPos - tokenStartPos);
                 this.token.Position = tokenStartPos;
             }
             else
@@ -383,10 +395,10 @@ namespace Microsoft.OData.UriParser
         /// The CurrentToken of the lexer after this method call will be whatever comes after the advanced text.
         /// </summary>
         /// <returns>All of the text that was read.</returns>
-        internal string AdvanceThroughExpandOption()
+        internal ReadOnlyMemory<char> AdvanceThroughExpandOption()
         {
             int startingPosition = this.textPos;
-            string textToReturn;
+            ReadOnlyMemory<char> textToReturn;
 
             while (true)
             {
@@ -404,13 +416,13 @@ namespace Microsoft.OData.UriParser
 
                 if (this.ch == ';' || this.ch == ')')
                 {
-                    textToReturn = this.Text.Substring(startingPosition, this.textPos - startingPosition);
+                    textToReturn = this.Text.Slice(startingPosition, this.textPos - startingPosition);
                     break;
                 }
 
                 if (this.ch == null)
                 {
-                    textToReturn = this.Text.Substring(startingPosition);
+                    textToReturn = this.Text.Slice(startingPosition);
                     break;
                 }
 
@@ -434,16 +446,11 @@ namespace Microsoft.OData.UriParser
         ///    For this reason, you probably want to call NextToken() after this method, since CurrentToken wil be garbage.
         /// </remarks>
         /// <returns>The parenthesis expression, including the outer parenthesis.</returns>
-        internal string AdvanceThroughBalancedParentheticalExpression()
+        internal ReadOnlyMemory<char> AdvanceThroughBalancedParentheticalExpression()
         {
             int startPosition = this.Position;
             this.AdvanceThroughBalancedExpression('(', ')');
-            string expressionText = this.Text.Substring(startPosition, this.textPos - startPosition);
-
-            //// TODO: Consider introducing a token type and setting up the current token instead of returning string.
-            //// We've done weird stuff, and the state of hte lexer is weird now. All will be well once NextToken() is called,
-            //// but until then CurrentToken is stale and misleading.
-
+            ReadOnlyMemory<char> expressionText = this.Text.Slice(startPosition, this.textPos - startPosition);
             return expressionText;
         }
 
@@ -499,7 +506,8 @@ namespace Microsoft.OData.UriParser
                 this.textPos++;
                 if (this.textPos < this.TextLen)
                 {
-                    this.ch = this.Text[this.textPos];
+                    // Accessing the .Span property is a near-instant, O(1) operation with no heap allocations.
+                    this.ch = this.Text.Span[this.textPos];
                     return;
                 }
             }
@@ -572,7 +580,7 @@ namespace Microsoft.OData.UriParser
                     break;
                 case '-':
                     bool hasNext = this.textPos + 1 < this.TextLen;
-                    if (hasNext && Char.IsDigit(this.Text[this.textPos + 1]))
+                    if (hasNext && Char.IsDigit(this.Text.Span[this.textPos + 1]))
                     {
                         // don't separate '-' and its following digits : -2147483648 is valid int.MinValue, but 2147483648 is long.
                         t = this.ParseFromDigit();
@@ -585,12 +593,11 @@ namespace Microsoft.OData.UriParser
                         // we'll rewind and fall through to a simple '-' token.
                         this.SetTextPos(tokenPos);
                     }
-                    else if (hasNext && this.Text[tokenPos + 1] == ExpressionConstants.InfinityLiteral[0])
+                    else if (hasNext && this.Text.Span[tokenPos + 1] == ExpressionConstants.InfinityLiteral[0])
                     {
                         this.NextChar();
                         this.ParseIdentifier();
-                        string currentIdentifier = this.Text.Substring(tokenPos + 1, this.textPos - tokenPos - 1);
-
+                        ReadOnlySpan<char> currentIdentifier = this.Text.Slice(tokenPos + 1, this.textPos - tokenPos - 1).Span;
                         if (ExpressionLexerUtils.IsInfinityLiteralDouble(currentIdentifier))
                         {
                             t = ExpressionTokenKind.DoubleLiteral;
@@ -728,10 +735,10 @@ namespace Microsoft.OData.UriParser
                         this.ParseIdentifier(true /*includingDots*/);
 
                         // Extract the identifier from expression.
-                        string leftToken = ExpressionText.Substring(start, this.textPos - start);
+                        ReadOnlyMemory<char> leftToken = ExpressionText.Slice(start, this.textPos - start);
 
 
-                        t = this.parsingFunctionParameters && !leftToken.Contains(".", StringComparison.Ordinal)
+                        t = this.parsingFunctionParameters && !leftToken.Span.Contains(".", StringComparison.Ordinal)
                             ? ExpressionTokenKind.ParameterAlias
                             : ExpressionTokenKind.Identifier;
                         break;
@@ -743,7 +750,7 @@ namespace Microsoft.OData.UriParser
             }
 
             this.token.Kind = t;
-            this.token.Text = this.Text.AsMemory(tokenPos, this.textPos - tokenPos);
+            this.token.Text = this.Text.Slice(tokenPos, this.textPos - tokenPos);
             this.token.Position = tokenPos;
 
             this.HandleTypePrefixedLiterals();
@@ -829,7 +836,7 @@ namespace Microsoft.OData.UriParser
             while (this.ch.HasValue && this.ch == '\'');
 
             // Update token.Text to include the literal + the quoted value
-            this.token.Text = this.Text.AsMemory(startPosition, this.textPos - startPosition);
+            this.token.Text = this.Text.Slice(startPosition, this.textPos - startPosition);
         }
 
         /// <summary>
@@ -1009,8 +1016,8 @@ namespace Microsoft.OData.UriParser
                 }
                 else
                 {
-                    string valueStr = this.Text.Substring(tokenPos, this.textPos - tokenPos);
-                    result = MakeBestGuessOnNoSuffixStr(valueStr, result);
+                    ReadOnlyMemory<char> valueStr = this.Text.Slice(tokenPos, this.textPos - tokenPos);
+                    result = MakeBestGuessOnNoSuffixStr(valueStr.Span, result);
                 }
             }
 
@@ -1037,7 +1044,7 @@ namespace Microsoft.OData.UriParser
             else
             {
                 this.textPos = initialIndex;
-                this.ch = this.Text[initialIndex];
+                this.ch = this.Text.Span[initialIndex];
                 return false;
             }
         }
@@ -1062,7 +1069,7 @@ namespace Microsoft.OData.UriParser
             else
             {
                 this.textPos = initialIndex;
-                this.ch = this.Text[initialIndex];
+                this.ch = this.Text.Span[initialIndex];
                 return false;
             }
         }
@@ -1078,7 +1085,7 @@ namespace Microsoft.OData.UriParser
             else
             {
                 this.textPos = initialIndex;
-                this.ch = this.Text[initialIndex];
+                this.ch = this.Text.Span[initialIndex];
                 return false;
             }
         }
@@ -1102,7 +1109,7 @@ namespace Microsoft.OData.UriParser
             else
             {
                 this.textPos = initialIndex;
-                this.ch = this.Text[initialIndex];
+                this.ch = this.Text.Span[initialIndex];
                 return false;
             }
         }
@@ -1125,7 +1132,7 @@ namespace Microsoft.OData.UriParser
                 this.NextChar();
             }
 
-            return this.Text.AsSpan(tokenPos, this.textPos - tokenPos);
+            return this.Text.Slice(tokenPos, this.textPos - tokenPos).Span;
         }
 
         /// <summary>
@@ -1262,7 +1269,7 @@ namespace Microsoft.OData.UriParser
         private void SetTextPos(int pos)
         {
             this.textPos = pos;
-            this.ch = this.textPos < this.TextLen ? this.Text[this.textPos] : (char?)null;
+            this.ch = this.textPos < this.TextLen ? this.Text.Span[this.textPos] : (char?)null;
         }
 
         /// <summary>Validates the current character is a digit.</summary>
@@ -1276,7 +1283,7 @@ namespace Microsoft.OData.UriParser
 
         private void DoubleQuotedStringCheckpoint()
         {
-            if (this.textPos != 0 && this.Text[this.textPos - 1] != '\\')
+            if (this.textPos != 0 && this.Text.Span[this.textPos - 1] != '\\')
             {
                 this.parsingDoubleQuotedString = !this.parsingDoubleQuotedString;
             }

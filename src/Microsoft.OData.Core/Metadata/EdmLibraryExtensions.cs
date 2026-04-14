@@ -45,7 +45,7 @@ namespace Microsoft.OData.Metadata
         private static readonly Dictionary<Type, IEdmPrimitiveTypeReference> PrimitiveTypeReferenceMap = new Dictionary<Type, IEdmPrimitiveTypeReference>(EqualityComparer<Type>.Default);
 
         /// <summary>
-        /// Packs the <see cref="TypeCode"/> of supported primitive types. This is used to speed up the <see cref="IsPrimitiveType(Type)"/> method.
+        /// Packs the <see cref="TypeCode"/> of supported primitive types. This is used to speed up the "IsPrimitiveType(Type)" method.
         /// If the bit at a given type code position is set, it means that's a support primitive type.
         /// </summary>
         private static int PrimitiveTypeCodeBitMap = 0;

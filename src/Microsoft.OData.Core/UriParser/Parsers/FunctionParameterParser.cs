@@ -79,7 +79,7 @@ namespace Microsoft.OData.UriParser
             while (currentToken.Kind != endTokenKind)
             {
                 lexer.ValidateToken(ExpressionTokenKind.Identifier);
-                ReadOnlySpan<char> identifier = lexer.CurrentToken.GetIdentifier();
+                ReadOnlyMemory<char> identifier = lexer.CurrentToken.GetIdentifier();
                 lexer.NextToken();
 
                 lexer.ValidateToken(ExpressionTokenKind.Equal);

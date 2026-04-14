@@ -40,9 +40,9 @@ namespace Microsoft.OData.UriParser
         /// <param name="modelWhenNoTypeReference">the current model when no enum typeReference.</param>
         /// <param name="boundEnum">an enum node .</param>
         /// <returns>true if we bound an enum for this token.</returns>
-        internal static bool TryBindIdentifier(string identifier, IEdmEnumTypeReference typeReference, IEdmModel modelWhenNoTypeReference, out QueryNode boundEnum)
+        internal static bool TryBindIdentifier(ReadOnlyMemory<char> identifier, IEdmEnumTypeReference typeReference, IEdmModel modelWhenNoTypeReference, out QueryNode boundEnum)
         {
-            return TryBindIdentifier(identifier.AsMemory(), typeReference, modelWhenNoTypeReference, null, out boundEnum);
+            return TryBindIdentifier(identifier, typeReference, modelWhenNoTypeReference, null, out boundEnum);
         }
 
         /// <summary>

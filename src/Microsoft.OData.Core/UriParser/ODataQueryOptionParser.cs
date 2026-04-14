@@ -426,7 +426,7 @@ namespace Microsoft.OData.UriParser
                 configuration.Model,
                 configuration.Settings.FilterLimit,
                 configuration.EnableCaseInsensitiveUriFunctionIdentifier);
-            var applyTokens = expressionParser.ParseApply(apply);
+            var applyTokens = expressionParser.ParseApply(apply.AsMemory());
 
             // Bind it to metadata
             BindingState state = new BindingState(configuration, odataPathInfo.Segments.ToList());
@@ -457,7 +457,7 @@ namespace Microsoft.OData.UriParser
             SelectToken selectTree;
 
             // syntactic pass , pass in the expand parent entity type name, in case expand option contains star, will get all the parent entity navigation properties (both declared and dynamical).
-            SelectExpandSyntacticParser.Parse(select, expand, odataPathInfo.TargetStructuredType, configuration, out expandTree, out selectTree);
+            SelectExpandSyntacticParser.Parse(select.AsMemory(), expand.AsMemory(), odataPathInfo.TargetStructuredType, configuration, out expandTree, out selectTree);
 
             // semantic pass
             BindingState state = CreateBindingState(configuration, odataPathInfo);
@@ -483,7 +483,7 @@ namespace Microsoft.OData.UriParser
                 configuration.Model,
                 configuration.Settings.OrderByLimit,
                 configuration.EnableCaseInsensitiveUriFunctionIdentifier);
-            var orderByQueryTokens = expressionParser.ParseOrderBy(orderBy);
+            var orderByQueryTokens = expressionParser.ParseOrderBy(orderBy.AsMemory());
 
             // Bind it to metadata
             BindingState state = CreateBindingState(configuration, odataPathInfo);
@@ -633,7 +633,7 @@ namespace Microsoft.OData.UriParser
             ExceptionUtils.CheckArgumentNotNull(search, "search");
 
             SearchParser searchParser = new SearchParser(configuration.Model, configuration.Settings.SearchLimit);
-            QueryToken queryToken = searchParser.ParseSearch(search);
+            QueryToken queryToken = searchParser.ParseSearch(search.AsMemory());
 
             // Bind it to metadata
             BindingState state = new BindingState(configuration);
@@ -661,7 +661,7 @@ namespace Microsoft.OData.UriParser
                 configuration.Model,
                 configuration.Settings.FilterLimit,
                 configuration.EnableCaseInsensitiveUriFunctionIdentifier);
-            ComputeToken computeToken = expressionParser.ParseCompute(compute);
+            ComputeToken computeToken = expressionParser.ParseCompute(compute.AsMemory());
 
             // Bind it to metadata
             BindingState state = CreateBindingState(configuration, odataPathInfo);
