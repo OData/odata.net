@@ -218,7 +218,7 @@ namespace Microsoft.OData.UriParser
             var termParser = new SelectExpandTermParser(this.lexer, this.MaxPathDepth, this.isSelect);
             PathSegmentToken pathToken = termParser.ParseTerm();
 
-            ReadOnlyMemory<char> optionsText = null;
+            ReadOnlyMemory<char> optionsText = default;
             if (this.lexer.CurrentToken.Kind == ExpressionTokenKind.OpenParen)
             {
                 optionsText = this.lexer.AdvanceThroughBalancedParentheticalExpression();
@@ -241,7 +241,7 @@ namespace Microsoft.OData.UriParser
             var termParser = new SelectExpandTermParser(this.lexer, this.MaxPathDepth, this.isSelect);
             PathSegmentToken pathToken = termParser.ParseTerm(allowRef: true);
 
-            ReadOnlyMemory<char> optionsText = null;
+            ReadOnlyMemory<char> optionsText = default;
             if (this.lexer.CurrentToken.Kind == ExpressionTokenKind.OpenParen)
             {
                 optionsText = this.lexer.AdvanceThroughBalancedParentheticalExpression();

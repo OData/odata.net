@@ -15,7 +15,6 @@ namespace Microsoft.OData.UriParser
     using Microsoft.OData.UriParser.Aggregation;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Core;
-    using System.Runtime.CompilerServices;
     #endregion Namespaces
 
     /// <summary>
@@ -1212,7 +1211,7 @@ namespace Microsoft.OData.UriParser
 
         private static bool TryParseIdentifierAsFunction(ExpressionLexer lexer, out ReadOnlyMemory<char> result)
         {
-            result = null;
+            result = default;
             ReadOnlyMemory<char> functionName;
 
             int startPosition = lexer.CurrentToken.Position;
