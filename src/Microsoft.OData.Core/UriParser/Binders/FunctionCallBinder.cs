@@ -475,7 +475,7 @@ namespace Microsoft.OData.UriParser
             MetadataBinder binder = new MetadataBinder(state);
             List<OperationSegmentParameter> boundParameters = new List<OperationSegmentParameter>();
 
-            IDictionary<string, SingleValueNode> input = new Dictionary<string, SingleValueNode>(StringComparer.Ordinal);
+            IDictionary<string, QueryNode> input = new Dictionary<string, QueryNode>(StringComparer.Ordinal);
             foreach (FunctionParameterToken paraToken in parametersParsed)
             {
                 // TODO: considering another better exception
@@ -485,7 +485,7 @@ namespace Microsoft.OData.UriParser
                         string.Format(CultureInfo.InvariantCulture, "{0}={1}", paraToken.ParameterName, (paraToken.ValueToken as EndPathToken).Identifier)));
                 }
 
-                SingleValueNode boundNode = (SingleValueNode)binder.Bind(paraToken.ValueToken);
+                QueryNode boundNode = binder.Bind(paraToken.ValueToken);
 
                 if (!input.ContainsKey(paraToken.ParameterName))
                 {
@@ -493,26 +493,32 @@ namespace Microsoft.OData.UriParser
                 }
             }
 
-            IDictionary<IEdmOperationParameter, SingleValueNode> result = configuration.Resolver.ResolveOperationParameters(functionOrOpertion, input);
+            IDictionary<IEdmOperationParameter, QueryNode> result = configuration.Resolver.ResolveOperationParameters(functionOrOpertion, input);
 
-            foreach (KeyValuePair<IEdmOperationParameter, SingleValueNode> item in result)
+            foreach (KeyValuePair<IEdmOperationParameter, QueryNode> item in result)
             {
-                SingleValueNode boundNode = item.Value;
-
-                // ensure node type is compatible with parameter type.
-                IEdmTypeReference sourceTypeReference = boundNode.GetEdmTypeReference();
-                bool sourceIsNullOrOpenType = (sourceTypeReference == null);
-                if (!sourceIsNullOrOpenType)
+                if (item.Value is SingleValueNode singleValueNode)
                 {
-                    // if the node has been rewritten, no further conversion is needed.
-                    if (!TryRewriteIntegralConstantNode(ref boundNode, item.Key.Type))
+                    // ensure node type is compatible with parameter type.
+                    IEdmTypeReference sourceTypeReference = singleValueNode.GetEdmTypeReference();
+                    bool sourceIsNullOrOpenType = (sourceTypeReference == null);
+                    if (!sourceIsNullOrOpenType)
                     {
-                        boundNode = MetadataBindingUtils.ConvertToTypeIfNeeded(boundNode, item.Key.Type);
+                        // if the node has been rewritten, no further conversion is needed.
+                        if (!TryRewriteIntegralConstantNode(ref singleValueNode, item.Key.Type))
+                        {
+                            singleValueNode = MetadataBindingUtils.ConvertToTypeIfNeeded(singleValueNode, item.Key.Type);
+                        }
                     }
-                }
 
-                OperationSegmentParameter boundParamer = new OperationSegmentParameter(item.Key.Name, boundNode);
-                boundParameters.Add(boundParamer);
+                    OperationSegmentParameter boundParameter = new OperationSegmentParameter(item.Key.Name, singleValueNode);
+                    boundParameters.Add(boundParameter);
+                }
+                else
+                {
+                    OperationSegmentParameter boundParameter = new OperationSegmentParameter(item.Key.Name, item.Value);
+                    boundParameters.Add(boundParameter);
+                }
             }
 
             return boundParameters;

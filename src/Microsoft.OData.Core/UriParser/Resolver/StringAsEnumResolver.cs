@@ -70,9 +70,9 @@ namespace Microsoft.OData.UriParser
         /// <param name="operation">Current operation for parameters.</param>
         /// <param name="input">A dictionary the parameter list.</param>
         /// <returns>A dictionary containing resolved parameters.</returns>
-        public override IDictionary<IEdmOperationParameter, SingleValueNode> ResolveOperationParameters(IEdmOperation operation, IDictionary<string, SingleValueNode> input)
+        public override IDictionary<IEdmOperationParameter, QueryNode> ResolveOperationParameters(IEdmOperation operation, IDictionary<string, QueryNode> input)
         {
-            Dictionary<IEdmOperationParameter, SingleValueNode> result = new Dictionary<IEdmOperationParameter, SingleValueNode>(EqualityComparer<IEdmOperationParameter>.Default);
+            Dictionary<IEdmOperationParameter, QueryNode> result = new Dictionary<IEdmOperationParameter, QueryNode>(EqualityComparer<IEdmOperationParameter>.Default);
             foreach (var item in input)
             {
                 IEdmOperationParameter functionParameter = null;
@@ -91,14 +91,14 @@ namespace Microsoft.OData.UriParser
                     throw new ODataException(Error.Format(SRResources.ODataParameterWriterCore_ParameterNameNotFoundInOperation, item.Key, operation.Name));
                 }
 
-                SingleValueNode newVal = item.Value;
+                QueryNode newVal = item.Value;
 
                 if (functionParameter.Type.IsEnum()
-                    && newVal is ConstantNode
-                    && newVal.TypeReference != null
-                    && newVal.TypeReference.IsString())
+                    && newVal is ConstantNode constNode
+                    && constNode.TypeReference != null
+                    && constNode.TypeReference.IsString())
                 {
-                    string text = ((ConstantNode)item.Value).Value as string;
+                    string text = constNode.Value as string;
                     ODataEnumValue val;
                     IEdmTypeReference typeRef = functionParameter.Type;
 

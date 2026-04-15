@@ -363,12 +363,12 @@ namespace Microsoft.OData.UriParser
         /// <param name="operation">Current operation for parameters.</param>
         /// <param name="input">A dictionary the parameter list.</param>
         /// <returns>A dictionary containing resolved parameters.</returns>
-        public virtual IDictionary<IEdmOperationParameter, SingleValueNode> ResolveOperationParameters(IEdmOperation operation, IDictionary<string, SingleValueNode> input)
+        public virtual IDictionary<IEdmOperationParameter, QueryNode> ResolveOperationParameters(IEdmOperation operation, IDictionary<string, QueryNode> input)
         {
             ExceptionUtils.CheckArgumentNotNull(operation, nameof(operation));
             ExceptionUtils.CheckArgumentNotNull(input, nameof(input));
 
-            Dictionary<IEdmOperationParameter, SingleValueNode> result = new Dictionary<IEdmOperationParameter, SingleValueNode>(EqualityComparer<IEdmOperationParameter>.Default);
+            Dictionary<IEdmOperationParameter, QueryNode> result = new Dictionary<IEdmOperationParameter, QueryNode>(EqualityComparer<IEdmOperationParameter>.Default);
             foreach (var item in input)
             {
                 IEdmOperationParameter functionParameter = null;
