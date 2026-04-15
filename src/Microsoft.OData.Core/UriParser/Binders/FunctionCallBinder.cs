@@ -511,13 +511,13 @@ namespace Microsoft.OData.UriParser
                         }
                     }
 
-                    OperationSegmentParameter boundParamer = new OperationSegmentParameter(item.Key.Name, singleValueNode);
-                    boundParameters.Add(boundParamer);
+                    OperationSegmentParameter boundParameter = new OperationSegmentParameter(item.Key.Name, singleValueNode);
+                    boundParameters.Add(boundParameter);
                 }
                 else
                 {
-                    OperationSegmentParameter boundParamer = new OperationSegmentParameter(item.Key.Name, item.Value);
-                    boundParameters.Add(boundParamer);
+                    OperationSegmentParameter boundParameter = new OperationSegmentParameter(item.Key.Name, item.Value);
+                    boundParameters.Add(boundParameter);
                 }
             }
 
