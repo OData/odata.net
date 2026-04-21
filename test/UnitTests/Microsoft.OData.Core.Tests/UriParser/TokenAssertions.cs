@@ -183,5 +183,13 @@ namespace Microsoft.OData.Tests.UriParser
             Assert.Equal(text, stringLiteralToken.Text);
             return stringLiteralToken;
         }
+
+        public static SearchTermToken ShouldBeSearchTermToken(this QueryToken token, string text)
+        {
+            Assert.NotNull(token);
+            SearchTermToken searchTermToken = Assert.IsType<SearchTermToken>(token);
+            Assert.Equal(text, searchTermToken.Text);
+            return searchTermToken;
+        }
     }
 }

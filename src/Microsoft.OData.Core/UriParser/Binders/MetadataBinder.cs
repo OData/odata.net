@@ -173,6 +173,9 @@ namespace Microsoft.OData.UriParser
                 case QueryTokenKind.StringLiteral:
                     result = this.BindStringLiteral((StringLiteralToken)token);
                     break;
+                case QueryTokenKind.SearchTerm:
+                    result = this.BindSearchTerm((SearchTermToken)token);
+                    break;
                 case QueryTokenKind.BinaryOperator:
                     result = this.BindBinaryOperator((BinaryOperatorToken)token);
                     break;
@@ -352,9 +355,15 @@ namespace Microsoft.OData.UriParser
         /// <param name="stringLiteralToken">The StringLiteral token to bind.</param>
         /// <returns>The bound StringLiteral token.</returns>
         protected virtual QueryNode BindStringLiteral(StringLiteralToken stringLiteralToken)
-        {
-            return new SearchTermNode(stringLiteralToken.Text);
-        }
+            => new ConstantNode(stringLiteralToken.Text);
+
+        /// <summary>
+        /// Binds a SearchTerm token.
+        /// </summary>
+        /// <param name="searchTermToken">The SearchTerm token to bind.</param>
+        /// <returns>The bound SearchTerm token.</returns>
+        protected virtual QueryNode BindSearchTerm(SearchTermToken searchTermToken)
+            => new SearchTermNode(searchTermToken.Text);
 
         /// <summary>
         /// Binds an In token.

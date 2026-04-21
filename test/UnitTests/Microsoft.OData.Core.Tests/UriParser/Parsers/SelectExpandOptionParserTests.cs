@@ -143,7 +143,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 
             // Assert
             Assert.NotNull(selectTerm.SearchOption);
-            selectTerm.SearchOption.ShouldBeStringLiteralToken("Searchme");
+            selectTerm.SearchOption.ShouldBeSearchTermToken("Searchme");
         }
 
         [Theory]
@@ -484,7 +484,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             // Assert
             Assert.NotNull(expandTerm);
             Assert.NotNull(expandTerm.SearchOption);
-            expandTerm.SearchOption.ShouldBeStringLiteralToken("Searchme");
+            expandTerm.SearchOption.ShouldBeSearchTermToken("Searchme");
         }
 
         [Theory]
