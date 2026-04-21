@@ -43,15 +43,15 @@ The OData.net implementation so far parses the above literals as raw string lite
 
 In tokenization process, add two new token classes to hold the JSON object and JSON array literal.
 
-1) <strong>CollectionToken</strong>
+1) <strong>CollectionLiteralToken</strong>
    
-   It's a collection of QueryToken, use it to hold the JSON array literal. Each item (separate using comma) is parsed as QueryToken and saved as an item into the CollectionToken.
+   It's a collection of QueryToken, use it to hold the JSON array literal. Each item (separate using comma) is parsed as QueryToken and saved as an item into the CollectionLiteralToken.
 
 
-2) <strong>MapToken</strong>
+2) <strong>ResourceLiteralToken</strong>
    
    It's a collection of Key/Value pairs, use it to hold the JSON objet literal.
-   Each key/value pair (separte using comma) is parsed as QueryToken pairs and saved as a property into MapToken.
+   Each key/value pair (separte using comma) is parsed as QueryToken pairs and saved as a property into ResourceLiteralToken.
 
    The key and the value are QueryToken. But, for simplicity, we can use string as the key since it's the property name. 
 
@@ -97,6 +97,27 @@ We need to add a new AST node class to hold the JSON object literal.
 9) Add new test cases to cover the changes.
 
 For JSON format of OData, check '5. JSON format for function parameters' in [OData ABNF](https://docs.oasis-open.org/odata/odata/v4.01/cs01/abnf/odata-abnf-construction-rules.txt)
+
+## Metadata binding details
+
+### Binding ResourceLiteralToken
+
+A resource literal could have the type name metadata within it, such as:
+
+`{'@odata.type':'#Fully.Qualified.Namespace.Address','Street':'NE 24th St.','City':'Redmond'}`
+
+Such literal can be used for a parameter value of function as inline literal as:
+
+`~/myfunction(location={'@odata.type':'#Fully.Qualified.Namespace.Address','Street':'NE 24th St.','City':'Redmond'}) `  (be noted, single quoted string used here, but for valid JSON, it should be double quoted).
+
+In this case, the parameter 'location' has its own metadata type. So the binding process for 'ResourceLiteralToken' is designed as:
+
+| TypeNameFromLiteral | ExpectedTypeFromMetadata | Action 3 |
+|:-------------:|:-------------:| -------------:|
+| No | No| Each property binding using its literal |
+| No | Yes |Use the expected type to binding its property value |
+| Yes | No| Resolve type name and use it to binding its property value |
+| Yes | Yes | Bind using TypeName from literal first, Make sure the types are compatible, Type from literal should be sub type of the expected, if it's, create a convert |
 
 ## Challenges 
 
