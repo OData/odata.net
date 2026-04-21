@@ -16,7 +16,7 @@ namespace Microsoft.OData.UriParser
     /// <summary>
     /// Lexical token representing a search term value.
     /// </summary>
-    [DebuggerDisplay("SearchTermToken ({text})")]
+    [DebuggerDisplay("SearchTermToken ({Text})")]
     internal sealed class SearchTermToken : QueryToken
     {
         /// <summary>
