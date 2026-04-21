@@ -20,14 +20,14 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void SearchWordTest()
         {
             QueryToken token = searchParser.ParseSearch("zlexico");
-            token.ShouldBeStringLiteralToken("zlexico");
+            token.ShouldBeSearchTermToken("zlexico");
         }
 
         [Fact]
         public void SearchPhraseTest()
         {
             QueryToken token = searchParser.ParseSearch("\"A AND BC AND DEF\"");
-            token.ShouldBeStringLiteralToken("A AND BC AND DEF");
+            token.ShouldBeSearchTermToken("A AND BC AND DEF");
         }
 
         [Fact]
@@ -36,9 +36,9 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             QueryToken token = searchParser.ParseSearch("A AND BC AND DEF");
             var binaryToken1 = token.ShouldBeBinaryOperatorQueryToken(BinaryOperatorKind.And);
             var binaryToken11 = binaryToken1.Left.ShouldBeBinaryOperatorQueryToken(BinaryOperatorKind.And);
-            binaryToken11.Left.ShouldBeStringLiteralToken("A");
-            binaryToken11.Right.ShouldBeStringLiteralToken("BC");
-            binaryToken1.Right.ShouldBeStringLiteralToken("DEF");
+            binaryToken11.Left.ShouldBeSearchTermToken("A");
+            binaryToken11.Right.ShouldBeSearchTermToken("BC");
+            binaryToken1.Right.ShouldBeSearchTermToken("DEF");
         }
 
         [Fact]
@@ -47,9 +47,9 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             QueryToken token = searchParser.ParseSearch("A BC DEF");
             var binaryToken1 = token.ShouldBeBinaryOperatorQueryToken(BinaryOperatorKind.And);
             var binaryToken11 = binaryToken1.Left.ShouldBeBinaryOperatorQueryToken(BinaryOperatorKind.And);
-            binaryToken11.Left.ShouldBeStringLiteralToken("A");
-            binaryToken11.Right.ShouldBeStringLiteralToken("BC");
-            binaryToken1.Right.ShouldBeStringLiteralToken("DEF");
+            binaryToken11.Left.ShouldBeSearchTermToken("A");
+            binaryToken11.Right.ShouldBeSearchTermToken("BC");
+            binaryToken1.Right.ShouldBeSearchTermToken("DEF");
         }
 
         [Fact]
@@ -57,8 +57,8 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             QueryToken token = searchParser.ParseSearch("foo OR bar");
             var binaryToken = token.ShouldBeBinaryOperatorQueryToken(BinaryOperatorKind.Or);
-            binaryToken.Left.ShouldBeStringLiteralToken("foo");
-            binaryToken.Right.ShouldBeStringLiteralToken("bar");
+            binaryToken.Left.ShouldBeSearchTermToken("foo");
+            binaryToken.Right.ShouldBeSearchTermToken("bar");
         }
 
         [Fact]
@@ -67,9 +67,9 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             QueryToken token = searchParser.ParseSearch("(A  OR BC) AND DEF");
             var binaryToken1 = token.ShouldBeBinaryOperatorQueryToken(BinaryOperatorKind.And);
             var binaryToken11 = binaryToken1.Left.ShouldBeBinaryOperatorQueryToken(BinaryOperatorKind.Or);
-            binaryToken11.Left.ShouldBeStringLiteralToken("A");
-            binaryToken11.Right.ShouldBeStringLiteralToken("BC");
-            binaryToken1.Right.ShouldBeStringLiteralToken("DEF");
+            binaryToken11.Left.ShouldBeSearchTermToken("A");
+            binaryToken11.Right.ShouldBeSearchTermToken("BC");
+            binaryToken1.Right.ShouldBeSearchTermToken("DEF");
         }
 
         [Fact]
@@ -78,9 +78,9 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             QueryToken token = searchParser.ParseSearch("(A BC) DEF");
             var binaryToken1 = token.ShouldBeBinaryOperatorQueryToken(BinaryOperatorKind.And);
             var binaryToken11 = binaryToken1.Left.ShouldBeBinaryOperatorQueryToken(BinaryOperatorKind.And);
-            binaryToken11.Left.ShouldBeStringLiteralToken("A");
-            binaryToken11.Right.ShouldBeStringLiteralToken("BC");
-            binaryToken1.Right.ShouldBeStringLiteralToken("DEF");
+            binaryToken11.Left.ShouldBeSearchTermToken("A");
+            binaryToken11.Right.ShouldBeSearchTermToken("BC");
+            binaryToken1.Right.ShouldBeSearchTermToken("DEF");
         }
 
         [Fact]
@@ -88,7 +88,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             QueryToken token = searchParser.ParseSearch("NOT foo");
             var unaryToken = token.ShouldBeUnaryOperatorQueryToken(UnaryOperatorKind.Not);
-            unaryToken.Operand.ShouldBeStringLiteralToken("foo");
+            unaryToken.Operand.ShouldBeSearchTermToken("foo");
         }
 
 
@@ -99,15 +99,15 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             var binaryToken1 = token.ShouldBeBinaryOperatorQueryToken(BinaryOperatorKind.Or);
             var binaryToken21 = binaryToken1.Left.ShouldBeBinaryOperatorQueryToken(BinaryOperatorKind.And);
             var binaryToken22 = binaryToken1.Right.ShouldBeBinaryOperatorQueryToken(BinaryOperatorKind.And);
-            binaryToken21.Left.ShouldBeStringLiteralToken("a");
-            binaryToken21.Right.ShouldBeStringLiteralToken("bc");
-            binaryToken22.Left.ShouldBeStringLiteralToken("def");
+            binaryToken21.Left.ShouldBeSearchTermToken("a");
+            binaryToken21.Right.ShouldBeSearchTermToken("bc");
+            binaryToken22.Left.ShouldBeSearchTermToken("def");
             var unaryToken222 = binaryToken22.Right.ShouldBeUnaryOperatorQueryToken(UnaryOperatorKind.Not);
             var binaryToken222 = unaryToken222.Operand.ShouldBeBinaryOperatorQueryToken(BinaryOperatorKind.And);
             var binaryToken2221 = binaryToken222.Left.ShouldBeBinaryOperatorQueryToken(BinaryOperatorKind.And);
-            binaryToken2221.Left.ShouldBeStringLiteralToken("ghij");
-            binaryToken2221.Right.ShouldBeStringLiteralToken("klmno");
-            binaryToken222.Right.ShouldBeStringLiteralToken("pqrstu");
+            binaryToken2221.Left.ShouldBeSearchTermToken("ghij");
+            binaryToken2221.Right.ShouldBeSearchTermToken("klmno");
+            binaryToken222.Right.ShouldBeSearchTermToken("pqrstu");
         }
 
         [Fact]

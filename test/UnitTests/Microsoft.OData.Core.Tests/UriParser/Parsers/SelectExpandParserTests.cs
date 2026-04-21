@@ -302,7 +302,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             orderBy.Expression.ShouldBeEndPathToken("abc");
 
             Assert.NotNull(selectTermToken.SearchOption);
-            selectTermToken.SearchOption.ShouldBeStringLiteralToken("xyz");
+            selectTermToken.SearchOption.ShouldBeSearchTermToken("xyz");
         }
 
         [Theory]

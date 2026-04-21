@@ -164,6 +164,11 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// $root path
         /// </summary>
-        RootPath = 33
+        RootPath = 33,
+
+        /// <summary>
+        /// The search literal for search query
+        /// </summary>
+        SearchTerm = 34
     }
 }
