@@ -169,6 +169,16 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// The search literal for search query
         /// </summary>
-        SearchTerm = 34
+        SearchTerm = 34,
+
+        /// <summary>
+        /// Collection literal token
+        /// </summary>
+        CollectionLiteral = 35,
+
+        /// <summary>
+        /// Resource literal (object/resource or key value pairs) token
+        /// </summary>
+        ResourceLiteral = 36,
     }
 }

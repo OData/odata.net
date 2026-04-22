@@ -1281,7 +1281,6 @@ Microsoft.OData.UriParser.CollectionComplexNode.Source.get -> Microsoft.OData.Ur
 Microsoft.OData.UriParser.CollectionConstantNode
 Microsoft.OData.UriParser.CollectionConstantNode.Collection.get -> System.Collections.Generic.IList<Microsoft.OData.UriParser.ConstantNode>
 Microsoft.OData.UriParser.CollectionConstantNode.CollectionConstantNode(System.Collections.Generic.IEnumerable<object> objectCollection, string literalText, Microsoft.OData.Edm.IEdmCollectionTypeReference collectionType) -> void
-Microsoft.OData.UriParser.CollectionConstantNode.LiteralText.get -> string
 Microsoft.OData.UriParser.CollectionFunctionCallNode
 Microsoft.OData.UriParser.CollectionFunctionCallNode.CollectionFunctionCallNode(string name, System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmFunction> functions, System.Collections.Generic.IEnumerable<Microsoft.OData.UriParser.QueryNode> parameters, Microsoft.OData.Edm.IEdmCollectionTypeReference returnedCollectionType, Microsoft.OData.UriParser.QueryNode source) -> void
 Microsoft.OData.UriParser.CollectionFunctionCallNode.Functions.get -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmFunction>
@@ -1335,7 +1334,6 @@ Microsoft.OData.UriParser.ConstantNode
 Microsoft.OData.UriParser.ConstantNode.ConstantNode(object constantValue) -> void
 Microsoft.OData.UriParser.ConstantNode.ConstantNode(object constantValue, string literalText) -> void
 Microsoft.OData.UriParser.ConstantNode.ConstantNode(object constantValue, string literalText, Microsoft.OData.Edm.IEdmTypeReference typeReference) -> void
-Microsoft.OData.UriParser.ConstantNode.LiteralText.get -> string
 Microsoft.OData.UriParser.ConstantNode.Value.get -> object
 Microsoft.OData.UriParser.ConvertNode
 Microsoft.OData.UriParser.ConvertNode.ConvertNode(Microsoft.OData.UriParser.SingleValueNode source, Microsoft.OData.Edm.IEdmTypeReference typeReference) -> void

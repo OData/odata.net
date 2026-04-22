@@ -58,7 +58,7 @@ public class UriBuilderTests
         Assert.Equal(BinaryOperatorKind.Equal, binaryOperator.OperatorKind);
         Assert.Equal("Color", singleValueProperty.Property.Name);
         Assert.Equal("MyDog", singleNavigation.NavigationProperty.Name);
-        Assert.Equal("'Brown'", constantNode.LiteralText);
+        Assert.Equal("'Brown'".AsMemory(), constantNode.LiteralText);
     }
 
     [Fact]
@@ -256,7 +256,7 @@ public class UriBuilderTests
         Assert.Equal(BinaryOperatorKind.Equal, binaryOperator.OperatorKind);
         Assert.Equal("Color", singleValueProperty.Property.Name);
         Assert.Equal("MyDog", singleNavigation.NavigationProperty.Name);
-        Assert.Equal("'Brown'", constantNode.LiteralText);
+        Assert.Equal("'Brown'".AsMemory(), constantNode.LiteralText);
     }
 
     [Theory]

@@ -565,7 +565,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             Assert.True(leftNode.TypeReference.IsEnum());
             Assert.Equal(enumValue, leftNode.Value.ToString());
-            Assert.Equal(expectedLiteral, leftNode.LiteralText);
+            Assert.Equal(expectedLiteral.AsMemory(), leftNode.LiteralText);
 
             CollectionPropertyAccessNode rightNode = Assert.IsType<CollectionPropertyAccessNode>(inNode.Right);
             rightNode.ShouldBeCollectionPropertyAccessQueryNode(this.GetIEdmProperty("Colors"));

@@ -79,8 +79,8 @@ namespace Microsoft.OData.UriParser
             get
             {
                 return this.IsKeyValueToken
-                    || this.Kind == ExpressionTokenKind.BracketedExpression
-                    || this.Kind == ExpressionTokenKind.BracedExpression
+                    //|| this.Kind == ExpressionTokenKind.BracketedExpression
+                    //|| this.Kind == ExpressionTokenKind.BracedExpression
                     || this.Kind == ExpressionTokenKind.NullLiteral;
             }
         }
@@ -121,6 +121,8 @@ namespace Microsoft.OData.UriParser
             this.Kind = ExpressionTokenKind.CustomTypeLiteral;
             this.LiteralEdmType = edmType;
         }
+
+        internal IEdmTypeReference GetCustomEdmTypeLiteral() => this.LiteralEdmType;
 
         internal IEdmTypeReference GetLiteralEdmTypeReference()
         {

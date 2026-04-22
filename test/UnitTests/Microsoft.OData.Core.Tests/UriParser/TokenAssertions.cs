@@ -4,6 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
 using System.Linq;
 using Microsoft.OData.UriParser;
 using Xunit;
@@ -101,7 +102,10 @@ namespace Microsoft.OData.Tests.UriParser
             Assert.NotNull(token);
             LiteralToken literalToken = Assert.IsType<LiteralToken>(token);
             Assert.Equal(QueryTokenKind.Literal, literalToken.Kind);
+
             Assert.Equal(expectedValue, literalToken.Value);
+            // Assert.Equal(expectedValue.AsMemory(), literalToken.OriginalText);
+
             return literalToken;
         }
 
@@ -180,7 +184,7 @@ namespace Microsoft.OData.Tests.UriParser
         {
             Assert.NotNull(token);
             StringLiteralToken stringLiteralToken = Assert.IsType<StringLiteralToken>(token);
-            Assert.Equal(text, stringLiteralToken.Text);
+            Assert.Equal(text.AsMemory(), stringLiteralToken.Text);
             return stringLiteralToken;
         }
 

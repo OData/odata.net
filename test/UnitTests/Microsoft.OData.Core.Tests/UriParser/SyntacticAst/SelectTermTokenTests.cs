@@ -148,7 +148,7 @@ namespace Microsoft.OData.Tests.UriParser.SyntacticAst
             // Assert
             Assert.NotNull(selectTerm.SearchOption);
             StringLiteralToken token = Assert.IsType<StringLiteralToken>(selectTerm.SearchOption);
-            Assert.Equal("searchMe", token.Text);
+            Assert.Equal("searchMe".AsMemory(), token.Text);
         }
 
         [Fact]

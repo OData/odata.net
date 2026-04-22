@@ -47,7 +47,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         [Fact]
         public void NullLiteralTextShouldThrow()
         {
-            Action target = () => new ConstantNode(null, null);
+            Action target = () => new ConstantNode(null, (string)null);
             Assert.Throws<ArgumentNullException>("literalText", target);
         }
 
@@ -55,7 +55,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         public void LiteralTextPropertyShouldBeSet()
         {
             ConstantNode constantNode = new ConstantNode(null, "foo");
-            Assert.Equal("foo", constantNode.LiteralText);
+            Assert.Equal("foo".AsMemory(), constantNode.LiteralText);
         }
     }
 }

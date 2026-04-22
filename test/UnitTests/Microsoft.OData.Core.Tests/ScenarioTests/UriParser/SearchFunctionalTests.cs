@@ -96,13 +96,13 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             action = () => this.RunSearchTest("(");
             action.Throws<ODataException>(Error.Format(SRResources.UriQueryExpressionParser_ExpressionExpected, 1, "("));
             action = () => this.RunSearchTest("(something");
-            action.Throws<ODataException>(Error.Format(SRResources.UriQueryExpressionParser_CloseParenOrOperatorExpected, 10, "(something"));
+            action.Throws<ODataException>(Error.Format(SRResources.UriQueryExpressionParser_ExpressionTokenExpected, ")", 10, "(something"));
             action = () => this.RunSearchTest("AND OR");
             action.Throws<ODataException>(Error.Format(SRResources.UriQueryExpressionParser_ExpressionExpected, 0, "AND OR"));
             action = () => this.RunSearchTest("kit (");
             action.Throws<ODataException>(Error.Format(SRResources.UriQueryExpressionParser_ExpressionExpected, 5, "kit ("));
             action = () => this.RunSearchTest("kit ( A");
-            action.Throws<ODataException>(Error.Format(SRResources.UriQueryExpressionParser_CloseParenOrOperatorExpected, 7, "kit ( A"));
+            action.Throws<ODataException>(Error.Format(SRResources.UriQueryExpressionParser_ExpressionTokenExpected, ")", 7, "kit ( A"));
             action = () => this.RunSearchTest("kit )");
             action.Throws<ODataException>(Error.Format(SRResources.ExpressionLexer_SyntaxError, 5, "kit )"));
         }

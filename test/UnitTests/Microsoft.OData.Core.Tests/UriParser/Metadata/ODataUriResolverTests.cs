@@ -199,13 +199,16 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                 .ShouldHaveParameterCount(1)
                 .Parameters;
             var parameter = Assert.Single(parameters);
-            var node = Assert.IsType<ConstantNode>(parameter.Value);
-            var values = node.Value.ShouldBeODataCollectionValue();
+            var node = Assert.IsType<CollectionConstantNode>(parameter.Value);
+            //var values = node.Value.ShouldBeODataCollectionValue();
 
-            var items = values.Items.Cast<object>().ToList();
-            Assert.Equal(2, items.Count);
-            items[0].ShouldBeODataEnumValue("TestNS.Color", "Blue");
-            Assert.Null(items[1]);
+            Assert.Equal(2, node.Items.Count);
+            ConstantNode item1 = Assert.IsType<ConstantNode>(node.Items.ElementAt(0));
+            item1.Value.ShouldBeODataEnumValue("TestNS.Color", "Blue");
+
+            ConstantNode item2 = Assert.IsType<ConstantNode>(node.Items.ElementAt(1));
+            Assert.Null(item2.Value);
+
         }
         #endregion
 

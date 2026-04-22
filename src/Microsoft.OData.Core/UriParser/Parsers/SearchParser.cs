@@ -191,14 +191,14 @@ namespace Microsoft.OData.UriParser
         {
             if (this.lexer.CurrentToken.Kind != ExpressionTokenKind.OpenParen)
             {
-                throw ParseError(Error.Format(SRResources.UriQueryExpressionParser_OpenParenExpected, this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
+                throw ParseError(Error.Format(SRResources.UriQueryExpressionParser_ExpressionTokenExpected, "(", this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
             }
 
             this.lexer.NextToken();
             QueryToken result = this.ParseExpression();
             if (this.lexer.CurrentToken.Kind != ExpressionTokenKind.CloseParen)
             {
-                throw ParseError(Error.Format(SRResources.UriQueryExpressionParser_CloseParenOrOperatorExpected, this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
+                throw ParseError(Error.Format(SRResources.UriQueryExpressionParser_ExpressionTokenExpected, ")", this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
             }
 
             this.lexer.NextToken();

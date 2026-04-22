@@ -42,6 +42,8 @@ namespace Microsoft.OData.UriParser
     /// singleValue = doubleValue                                       ; with restricted number range
     /// nanInfinity = 'NaN' / '-INF' / 'INF'
     ///
+    /// From ABNF about "5. JSON format for function parameters,"
+    /// String in JSON format is double quoted, and we want to allow them as string literals in expressions as well.
     /// </remarks>
     [DebuggerDisplay("ExpressionLexer ({text} @ {textPos} [{token}])")]
     internal class ExpressionLexer
@@ -353,13 +355,7 @@ namespace Microsoft.OData.UriParser
             if (this.CurrentToken.Kind == ExpressionTokenKind.Identifier)
             {
                 ExpressionTokenKind nextKind = this.PeekNextToken().Kind;
-
-                // Special case for 'in' operator: It is legal to have a custom function with the same name as an operator.
-                // If the current identifier is 'in', PeekNextToken() will return ParenthesesExpression instead of OpenParen.
-                // Nevertheless, we should still treat it as a function.
-                matched =
-                    nextKind == ExpressionTokenKind.OpenParen ||
-                    (nextKind == ExpressionTokenKind.ParenthesesExpression && this.CurrentToken.Span.Equals(ExpressionConstants.KeywordIn, StringComparison.Ordinal));
+                matched = nextKind == ExpressionTokenKind.OpenParen;
             }
 
             if (matched)
@@ -452,6 +448,43 @@ namespace Microsoft.OData.UriParser
             this.AdvanceThroughBalancedExpression('(', ')');
             ReadOnlyMemory<char> expressionText = this.Text.Slice(startPosition, this.textPos - startPosition);
             return expressionText;
+        }
+
+        internal ReadOnlyMemory<char> GetBalancedExpression(char startingCharacter, char endingCharacter)
+        {
+            int startPosition = this.Position;
+            this.AdvanceThroughBalancedExpression(startingCharacter, endingCharacter);
+            return this.Text.Slice(startPosition, this.textPos - startPosition);
+        }
+
+        internal ReadOnlySpan<char> GetBalancedExpressionWithoutAdvanceTheLexer(char startingCharacter, char endingCharacter)
+        {
+            int startPosition = this.Position; // first starting token position.
+
+            int currentDepth = 1;
+            int position = this.textPos - 1;
+            char test = this.Text.Span[position];
+            while (currentDepth > 0)
+            {
+                if (test == startingCharacter)
+                {
+                    currentDepth++;
+                }
+                else if (test == endingCharacter)
+                {
+                    currentDepth--;
+                }
+
+                position++;
+                if (position >= this.TextLen)
+                {
+                    throw new ODataException(Error.Format(SRResources.ExpressionLexer_UnbalancedExpression, startingCharacter, position, this.Text));
+                }
+
+                test = this.Text.Span[position];
+            }
+
+            return this.Text.Span.Slice(startPosition, position - startPosition);
         }
 
         /// <summary>
@@ -557,18 +590,8 @@ namespace Microsoft.OData.UriParser
             switch (this.ch)
             {
                 case '(':
-                    if (this.CurrentToken.Span.Equals(ExpressionConstants.KeywordIn, StringComparison.Ordinal))
-                    {
-                        this.NextChar();
-                        this.AdvanceThroughBalancedExpression('(', ')');
-                        t = ExpressionTokenKind.ParenthesesExpression;
-                    }
-                    else
-                    {
-                        this.NextChar();
-                        t = ExpressionTokenKind.OpenParen;
-                    }
-
+                    this.NextChar();
+                    t = ExpressionTokenKind.OpenParen;
                     break;
                 case ')':
                     this.NextChar();
@@ -648,6 +671,10 @@ namespace Microsoft.OData.UriParser
                     while (this.ch.HasValue && (this.ch.Value == quote));
                     t = ExpressionTokenKind.StringLiteral;
                     break;
+                case '"': // in JSON object, property names are double quoted, and we want to allow them as string literals in expressions as well.
+                    this.AdvanceDoubleQuoteString();
+                    t = ExpressionTokenKind.StringLiteral;
+                    break;
                 case '*':
                     this.NextChar();
                     t = ExpressionTokenKind.Star;
@@ -658,13 +685,19 @@ namespace Microsoft.OData.UriParser
                     break;
                 case '{':
                     this.NextChar();
-                    this.AdvanceThroughBalancedExpression('{', '}');
-                    t = ExpressionTokenKind.BracedExpression;
+                    t = ExpressionTokenKind.OpenBrace;
+                    break;
+                case '}':
+                    this.NextChar();
+                    t = ExpressionTokenKind.CloseBrace;
                     break;
                 case '[':
                     this.NextChar();
-                    this.AdvanceThroughBalancedExpression('[', ']');
-                    t = ExpressionTokenKind.BracketedExpression;
+                    t = ExpressionTokenKind.OpenBracket;
+                    break;
+                case ']':
+                    this.NextChar();
+                    t = ExpressionTokenKind.CloseBracket;
                     break;
                 default:
                     if (this.IsValidWhiteSpace)
@@ -1221,7 +1254,7 @@ namespace Microsoft.OData.UriParser
         private void AdvanceThroughBalancedExpression(char startingCharacter, char endingCharacter)
         {
             int currentBracketDepth = 1;
-
+            int position = this.textPos - 1;
             while (currentBracketDepth > 0)
             {
                 if (this.ch == '"')
@@ -1245,11 +1278,44 @@ namespace Microsoft.OData.UriParser
 
                 if (this.ch == null)
                 {
-                    throw new ODataException(SRResources.ExpressionLexer_UnbalancedBracketExpression);
+                    throw new ODataException(Error.Format(SRResources.ExpressionLexer_UnbalancedExpression, startingCharacter, position, this.Text));
                 }
 
                 this.NextChar();
             }
+        }
+
+        private void AdvanceDoubleQuoteString()
+        {
+            Debug.Assert(this.ch.HasValue && this.ch.Value == '"');
+
+            this.NextChar();
+            while (this.ch.HasValue)
+            {
+                if (this.ch.Value == '"')
+                {
+                    // a double quote inside the string value, must escape it with a backslash (\)
+                    if (this.Text.Span[this.textPos - 1] == '\\')
+                    {
+                        // double quote is escaped by a backslash, so skip both of them and continue.
+                        this.NextChar();
+                    }
+                    else
+                    {
+                        // end of double quoted string.
+                        break;
+                    }
+                }
+
+                this.NextChar();
+            }
+
+            if (this.ch == null)
+            {
+                throw ParseError(Error.Format(SRResources.ExpressionLexer_UnterminatedStringLiteral, this.textPos, this.Text));
+            }
+
+            this.NextChar();
         }
 
         /// <summary>Parses an identifier by advancing the current character.</summary>

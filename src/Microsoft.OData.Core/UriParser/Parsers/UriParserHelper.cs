@@ -15,7 +15,6 @@ namespace Microsoft.OData.UriParser
     using System.Globalization;
     using System.Linq;
 
-
     #endregion
 
     internal static class UriParserHelper
@@ -256,6 +255,48 @@ namespace Microsoft.OData.UriParser
                 case ExpressionTokenKind.QuotedLiteral:
                     return EdmCoreModel.Instance.GetString(true);
                 case ExpressionTokenKind.TimeOnlyLiteral:
+                    return EdmCoreModel.Instance.GetTimeOnly(false);
+            }
+
+            return null;
+        }
+
+        internal static IEdmTypeReference GetLiteralEdmTypeReference(LiteralKind tokenKind)
+        {
+            switch (tokenKind)
+            {
+                case LiteralKind.Boolean:
+                    return EdmCoreModel.Instance.GetBoolean(false);
+                case LiteralKind.Decimal:
+                    return EdmCoreModel.Instance.GetDecimal(false);
+                case LiteralKind.DoubleQuotedString:
+                case LiteralKind.SingleQuotedString:
+                    return EdmCoreModel.Instance.GetString(true);
+                case LiteralKind.Int64:
+                    return EdmCoreModel.Instance.GetInt64(false);
+                case LiteralKind.Integer:
+                    return EdmCoreModel.Instance.GetInt32(false);
+                case LiteralKind.Double:
+                    return EdmCoreModel.Instance.GetDouble(false);
+                case LiteralKind.Single:
+                    return EdmCoreModel.Instance.GetSingle(false);
+                case LiteralKind.Guid:
+                    return EdmCoreModel.Instance.GetGuid(false);
+                case LiteralKind.Binary:
+                    return EdmCoreModel.Instance.GetBinary(true);
+                case LiteralKind.Date:
+                    return EdmCoreModel.Instance.GetDateOnly(false);
+                case LiteralKind.DateTimeOffset:
+                    return EdmCoreModel.Instance.GetDateTimeOffset(false);
+                case LiteralKind.Duration:
+                    return EdmCoreModel.Instance.GetTemporal(EdmPrimitiveTypeKind.Duration, false);
+                case LiteralKind.Geography:
+                    return EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.Geography, false);
+                case LiteralKind.Geometry:
+                    return EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.Geometry, false);
+                case LiteralKind.Quoted:
+                    return EdmCoreModel.Instance.GetString(true);
+                case LiteralKind.TimeOfDay:
                     return EdmCoreModel.Instance.GetTimeOnly(false);
             }
 

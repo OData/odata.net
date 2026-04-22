@@ -92,7 +92,13 @@ namespace Microsoft.OData.UriParser
             aliasValueToken = ParseComplexOrCollectionAlias(aliasValueToken, parameterType, bindingState.Model);
 
             // Get the semantic node, it should support single and collection value node.
-            return this.bindMethod(aliasValueToken);
+            QueryNode node = this.bindMethod(aliasValueToken);
+            if (node is ConstantNode singleValueNode)
+            {
+                return MetadataBindingUtils.ConvertToTypeIfNeeded(singleValueNode, parameterType);
+            }
+
+            return node;
         }
 
         /// <summary>
@@ -104,22 +110,34 @@ namespace Microsoft.OData.UriParser
         /// <returns>Token with complex/collection value passed.</returns>
         private static QueryToken ParseComplexOrCollectionAlias(QueryToken queryToken, IEdmTypeReference parameterType, IEdmModel model)
         {
-            LiteralToken valueToken = queryToken as LiteralToken;
-            string valueStr;
-            if (valueToken != null && (valueStr = valueToken.Value as string) != null && !string.IsNullOrEmpty(valueToken.OriginalText))
-            {
-                ExpressionLexer lexer = new ExpressionLexer(model, expression: valueToken.OriginalText, moveToFirstToken: true, useSemicolonDelimiter: false, parsingFunctionParameters: true);
-                if (lexer.CurrentToken.Kind == ExpressionTokenKind.BracketedExpression || lexer.CurrentToken.Kind == ExpressionTokenKind.BracedExpression)
-                {
-                    object result = valueStr;
-                    if (!parameterType.IsStructured() && !parameterType.IsStructuredCollectionType())
-                    {
-                        result = ODataUriUtils.ConvertFromUriLiteral(valueStr, ODataVersion.V4, model, parameterType);
-                    }
+            //LiteralToken valueToken = queryToken as LiteralToken;
+            //string valueStr;
+            //if (valueToken != null && (valueStr = valueToken.Value as string) != null && !string.IsNullOrEmpty(valueToken.OriginalText))
+            //{
+            //    ExpressionLexer lexer = new ExpressionLexer(model, expression: valueToken.OriginalText, moveToFirstToken: true, useSemicolonDelimiter: false, parsingFunctionParameters: true);
+            //    if (lexer.CurrentToken.Kind == ExpressionTokenKind.BracketedExpression || lexer.CurrentToken.Kind == ExpressionTokenKind.BracedExpression)
+            //    {
+            //        object result = valueStr;
+            //        if (!parameterType.IsStructured() && !parameterType.IsStructuredCollectionType())
+            //        {
+            //            result = ODataUriUtils.ConvertFromUriLiteral(valueStr, ODataVersion.V4, model, parameterType);
+            //        }
 
-                    // For non-primitive type, we have to pass parameterType to LiteralToken, then to ConstantNode so the service can know what the type it is.
-                    return new LiteralToken(result, valueToken.OriginalText, parameterType);
-                }
+            //        // For non-primitive type, we have to pass parameterType to LiteralToken, then to ConstantNode so the service can know what the type it is.
+            //        return new LiteralToken(result, valueToken.OriginalText, parameterType);
+            //    }
+            //}
+            if (queryToken is LiteralToken literalToken)
+            {
+               // literalToken.ExpectedEdmTypeReference = parameterType;
+            }
+            else if (queryToken is ResourceLiteralToken mapToken)
+            {
+                mapToken.ExpectedType = parameterType.AsStructured(); // verify is strucutred
+            }
+            else if (queryToken is CollectionLiteralToken collectionToken)
+            {
+                collectionToken.CollectionType = parameterType.AsCollection(); // verify is collection
             }
 
             return queryToken;

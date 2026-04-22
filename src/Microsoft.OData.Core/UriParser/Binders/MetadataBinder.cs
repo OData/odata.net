@@ -11,6 +11,8 @@ namespace Microsoft.OData.UriParser
 
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
+    using System.Reflection;
+    using System.Xml.Linq;
     using Microsoft.OData.Core;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Metadata;
@@ -209,6 +211,12 @@ namespace Microsoft.OData.UriParser
                 case QueryTokenKind.RootPath:
                     result = this.BindRootPath((RootPathToken)token);
                     break;
+                case QueryTokenKind.CollectionLiteral:
+                    result = this.BindCollectionLiteral((CollectionLiteralToken)token);
+                    break;
+                case QueryTokenKind.ResourceLiteral:
+                    result = this.BindResourceLiteral((ResourceLiteralToken)token);
+                    break;
                 default:
                     throw new ODataException(Error.Format(SRResources.MetadataBinder_UnsupportedQueryTokenKind, token.Kind));
             }
@@ -279,6 +287,7 @@ namespace Microsoft.OData.UriParser
         protected virtual QueryNode BindLiteral(LiteralToken literalToken)
         {
             return LiteralBinder.BindLiteral(literalToken);
+            //return LiteralBinder.BindTypedLiteral(literalToken, BindingState.Model);
         }
 
         /// <summary>
@@ -423,6 +432,26 @@ namespace Microsoft.OData.UriParser
             // The EdmType could be null for Dynamic path segment
             IEdmTypeReference typeReference = lastSegment.EdmType == null ? null : lastSegment.EdmType.ToTypeReference(true);
             return new RootPathNode(path, typeReference);
+        }
+
+        /// <summary>
+        /// Binds a CollectionLiteralToken, a collection literal token is a list of primitive or complex literal values, or a list of root path tokens.
+        /// </summary>
+        /// <param name="collectionToken">The collection literal token to bind.</param>
+        /// <returns>The bound collection literal token.</returns>
+        protected virtual QueryNode BindCollectionLiteral(CollectionLiteralToken collectionToken)
+        {
+            return CollectionLiteralBinder.BindCollectionLiteralToken(collectionToken, this.Bind, this.BindingState);
+        }
+
+        /// <summary>
+        /// Binds a ResourceLiteralToken, a resource literal token is a collection of key value pairs.
+        /// </summary>
+        /// <param name="resourceLiteralToken">The resource literal token to bind.</param>
+        /// <returns>The bound resource literal token.</returns>
+        protected virtual QueryNode BindResourceLiteral(ResourceLiteralToken resourceLiteralToken)
+        {
+            return ResourceLiteralBinder.BindResourceLiteralToken(resourceLiteralToken, this.Bind, this.BindingState);
         }
     }
 }

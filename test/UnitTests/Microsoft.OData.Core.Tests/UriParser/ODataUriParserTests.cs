@@ -1770,7 +1770,7 @@ namespace Microsoft.OData.Tests.UriParser
                 OperationSegment escapeUriSegment = escapePath.LastSegment as OperationSegment;
 
                 Assert.True(functionSegment.Parameters.First().Name == escapeUriSegment.Parameters.First().Name);
-                Assert.True(((ConstantNode)functionSegment.Parameters.First().Value).LiteralText == ((ConstantNode)escapeUriSegment.Parameters.First().Value).LiteralText);
+                Assert.True(((ConstantNode)functionSegment.Parameters.First().Value).LiteralText.Span.SequenceEqual(((ConstantNode)escapeUriSegment.Parameters.First().Value).LiteralText.Span));
             }
         }
 

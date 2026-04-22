@@ -10,6 +10,7 @@ namespace Microsoft.OData.UriParser
 
     using Microsoft.OData.Edm;
     using Microsoft.OData.Metadata;
+    using System;
 
     #endregion Namespaces
 
@@ -42,6 +43,14 @@ namespace Microsoft.OData.UriParser
         {
             ExceptionUtils.CheckArgumentNotNull(literalText, "literalText");
 
+            this.LiteralText = literalText.AsMemory();
+        }
+
+        internal ConstantNode(object constantValue, ReadOnlyMemory<char> literalText)
+            : this(constantValue)
+        {
+           // ExceptionUtils.CheckArgumentNotNull(literalText, "literalText");
+
             this.LiteralText = literalText;
         }
 
@@ -55,6 +64,15 @@ namespace Microsoft.OData.UriParser
         public ConstantNode(object constantValue, string literalText, IEdmTypeReference typeReference)
         {
             ExceptionUtils.CheckArgumentNotNull(literalText, "literalText");
+
+            this.constantValue = constantValue;
+            this.LiteralText = literalText.AsMemory();
+            this.typeReference = typeReference;
+        }
+
+        internal ConstantNode(object constantValue, ReadOnlyMemory<char> literalText, IEdmTypeReference typeReference)
+        {
+           // ExceptionUtils.CheckArgumentNotNull(literalText, "literalText");
 
             this.constantValue = constantValue;
             this.LiteralText = literalText;
@@ -85,7 +103,7 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// Get or Set the literal text for this node's value, formatted according to the OData URI literal formatting rules. May be null if the text was not provided at construction time.
         /// </summary>
-        public string LiteralText { get; private set; }
+        public ReadOnlyMemory<char> LiteralText { get; private set; }
 
         /// <summary>
         /// Gets the resource type of the single value this node represents.

@@ -11,6 +11,7 @@ namespace Microsoft.OData.UriParser
 #endif
 {
     using Microsoft.OData.Edm;
+    using System;
 
     /// <summary>
     /// Lexical token representing a literal value.
@@ -22,7 +23,7 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         /// <remarks>This is used internally to simulate correct compat behavior with WCF DS, and parameter alias.
         /// We should use this during type promotion when applying metadata.</remarks>
-        private readonly string originalText;
+        private readonly ReadOnlyMemory<char> originalText;
 
         /// <summary>
         /// The value of the literal. This is a parsed primitive value.
@@ -32,7 +33,7 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// The expected EDM type of literal.
         /// </summary>
-        private readonly IEdmTypeReference expectedEdmTypeReference;
+        private IEdmTypeReference expectedEdmTypeReference;
 
         /// <summary>
         /// Create a new LiteralToken given value and originalText
@@ -46,10 +47,10 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// Create a new LiteralToken given value and originalText
         /// </summary>
-        /// <param name="value">The value of the literal. This is a parsed primitive value.</param>
+        /// <param name="value">The value of the literal. This is a pre-parsed primitive value.</param>
         /// <param name="originalText">The original text value of the literal.</param>
         /// <remarks>This is used internally to simulate correct compat behavior with WCF DS, and parameter alias.</remarks>
-        internal LiteralToken(object value, string originalText)
+        internal LiteralToken(object value, ReadOnlyMemory<char> originalText)
             : this(value)
         {
             this.originalText = originalText;
@@ -63,10 +64,23 @@ namespace Microsoft.OData.UriParser
         /// <param name="expectedEdmTypeReference">The expected EDM type of literal..</param>
         /// <remarks>This is used internally to simulate correct compat behavior with WCF DS, and parameter alias.</remarks>
         internal LiteralToken(object value, string originalText, IEdmTypeReference expectedEdmTypeReference)
-            : this(value, originalText)
+            : this(value, originalText.AsMemory())
         {
             this.expectedEdmTypeReference = expectedEdmTypeReference;
         }
+
+        //internal LiteralToken(ReadOnlyMemory<char> originalText, LiteralKind literalKind)
+        //{
+        //    this.originalText = originalText;
+        //    this.LiteralKind = literalKind;
+        //}
+
+        //public LiteralToken(object value, ReadOnlyMemory<char> originalText)
+        //    : this (value)
+        //{
+        //    this.originalText = originalText.ToString();
+        //    this.LiteralKind = literalKind;
+        //}
 
         /// <summary>
         /// The kind of the query token.
@@ -89,7 +103,7 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         /// <remarks>This is used internally to simulate correct compat behavior with WCF DS, and parameter alias.
         /// We should use this during type promotion when applying metadata.</remarks>
-        internal string OriginalText
+        internal ReadOnlyMemory<char> OriginalText
         {
             get
             {
@@ -106,7 +120,15 @@ namespace Microsoft.OData.UriParser
             {
                 return this.expectedEdmTypeReference;
             }
+            set
+            {
+                this.expectedEdmTypeReference = value;
+            }
         }
+
+        internal LiteralKind LiteralKind { get; set; }
+
+        internal IEdmTypeReference InferredEdmTypeReference { get; set; } // The EdmType reference of the literal token
 
         /// <summary>
         /// Accept a <see cref="ISyntacticTreeVisitor{T}"/> to walk a tree of <see cref="QueryToken"/>s.
@@ -118,5 +140,29 @@ namespace Microsoft.OData.UriParser
         {
             return visitor.Visit(this);
         }
+    }
+
+    internal enum LiteralKind
+    {
+        None,
+        Null,
+        Boolean,
+        DoubleQuotedString,
+        SingleQuotedString,
+        Date,
+        TimeOfDay,
+        Integer,
+        Decimal,
+        Int64,
+        Double,
+        Single,
+        Binary,
+        Geography,
+        Geometry,
+        DateTimeOffset,
+        Guid,
+        Duration,
+        Quoted,
+        CustomTypeLiteral
     }
 }

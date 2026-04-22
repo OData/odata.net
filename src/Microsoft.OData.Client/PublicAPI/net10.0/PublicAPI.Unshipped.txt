@@ -1,1 +1,35 @@
 Microsoft.OData.Client.ALinq.UriParser.QueryTokenKind.SearchTerm = 34 -> Microsoft.OData.Client.ALinq.UriParser.QueryTokenKind
+Microsoft.OData.Client.ALinq.UriParser.CollectionLiteralToken
+Microsoft.OData.Client.ALinq.UriParser.CollectionLiteralToken.Add(Microsoft.OData.Client.ALinq.UriParser.QueryToken item) -> void
+Microsoft.OData.Client.ALinq.UriParser.CollectionLiteralToken.Clear() -> void
+Microsoft.OData.Client.ALinq.UriParser.CollectionLiteralToken.CollectionLiteralToken() -> void
+Microsoft.OData.Client.ALinq.UriParser.CollectionLiteralToken.CollectionType.get -> Microsoft.OData.Edm.IEdmCollectionTypeReference
+Microsoft.OData.Client.ALinq.UriParser.CollectionLiteralToken.CollectionType.set -> void
+Microsoft.OData.Client.ALinq.UriParser.CollectionLiteralToken.Contains(Microsoft.OData.Client.ALinq.UriParser.QueryToken item) -> bool
+Microsoft.OData.Client.ALinq.UriParser.CollectionLiteralToken.CopyTo(Microsoft.OData.Client.ALinq.UriParser.QueryToken[] array, int arrayIndex) -> void
+Microsoft.OData.Client.ALinq.UriParser.CollectionLiteralToken.Count.get -> int
+Microsoft.OData.Client.ALinq.UriParser.CollectionLiteralToken.GetEnumerator() -> System.Collections.Generic.IEnumerator<Microsoft.OData.Client.ALinq.UriParser.QueryToken>
+Microsoft.OData.Client.ALinq.UriParser.CollectionLiteralToken.IsReadOnly.get -> bool
+Microsoft.OData.Client.ALinq.UriParser.CollectionLiteralToken.OriginalText.get -> System.ReadOnlyMemory<char>
+Microsoft.OData.Client.ALinq.UriParser.CollectionLiteralToken.OriginalText.set -> void
+Microsoft.OData.Client.ALinq.UriParser.CollectionLiteralToken.Remove(Microsoft.OData.Client.ALinq.UriParser.QueryToken item) -> bool
+Microsoft.OData.Client.ALinq.UriParser.ISyntacticTreeVisitor<T>.Visit(Microsoft.OData.Client.ALinq.UriParser.CollectionLiteralToken tokenIn) -> T
+Microsoft.OData.Client.ALinq.UriParser.ISyntacticTreeVisitor<T>.Visit(Microsoft.OData.Client.ALinq.UriParser.ResourceLiteralToken tokenIn) -> T
+Microsoft.OData.Client.ALinq.UriParser.ResourceLiteralToken
+Microsoft.OData.Client.ALinq.UriParser.ResourceLiteralToken.Add(string key, Microsoft.OData.Client.ALinq.UriParser.QueryToken value) -> void
+Microsoft.OData.Client.ALinq.UriParser.ResourceLiteralToken.Add(System.Collections.Generic.KeyValuePair<string, Microsoft.OData.Client.ALinq.UriParser.QueryToken> item) -> void
+Microsoft.OData.Client.ALinq.UriParser.ResourceLiteralToken.Clear() -> void
+Microsoft.OData.Client.ALinq.UriParser.ResourceLiteralToken.Contains(System.Collections.Generic.KeyValuePair<string, Microsoft.OData.Client.ALinq.UriParser.QueryToken> item) -> bool
+Microsoft.OData.Client.ALinq.UriParser.ResourceLiteralToken.CopyTo(System.Collections.Generic.KeyValuePair<string, Microsoft.OData.Client.ALinq.UriParser.QueryToken>[] array, int arrayIndex) -> void
+Microsoft.OData.Client.ALinq.UriParser.ResourceLiteralToken.Count.get -> int
+Microsoft.OData.Client.ALinq.UriParser.ResourceLiteralToken.GetEnumerator() -> System.Collections.Generic.IEnumerator<System.Collections.Generic.KeyValuePair<string, Microsoft.OData.Client.ALinq.UriParser.QueryToken>>
+Microsoft.OData.Client.ALinq.UriParser.ResourceLiteralToken.IsReadOnly.get -> bool
+Microsoft.OData.Client.ALinq.UriParser.ResourceLiteralToken.ResourceLiteralToken() -> void
+Microsoft.OData.Client.ALinq.UriParser.ResourceLiteralToken.Remove(System.Collections.Generic.KeyValuePair<string, Microsoft.OData.Client.ALinq.UriParser.QueryToken> item) -> bool
+Microsoft.OData.Client.ALinq.UriParser.QueryTokenKind.CollectionLiteral = 35 -> Microsoft.OData.Client.ALinq.UriParser.QueryTokenKind
+Microsoft.OData.Client.ALinq.UriParser.QueryTokenKind.ResourceLiteral = 36 -> Microsoft.OData.Client.ALinq.UriParser.QueryTokenKind
+override Microsoft.OData.Client.ALinq.UriParser.CollectionLiteralToken.Accept<T>(Microsoft.OData.Client.ALinq.UriParser.ISyntacticTreeVisitor<T> visitor) -> T
+override Microsoft.OData.Client.ALinq.UriParser.CollectionLiteralToken.Kind.get -> Microsoft.OData.Client.ALinq.UriParser.QueryTokenKind
+override Microsoft.OData.Client.ALinq.UriParser.EndPathToken.ToString() -> string
+override Microsoft.OData.Client.ALinq.UriParser.ResourceLiteralToken.Accept<T>(Microsoft.OData.Client.ALinq.UriParser.ISyntacticTreeVisitor<T> visitor) -> T
+override Microsoft.OData.Client.ALinq.UriParser.ResourceLiteralToken.Kind.get -> Microsoft.OData.Client.ALinq.UriParser.QueryTokenKind

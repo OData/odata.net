@@ -466,7 +466,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             IList<ODataPathSegment> path = this.testSubject.ParsePath(new[] { "GetPet1(id=1)" });
             var operationImportSegment = Assert.IsType<OperationImportSegment>(path[0]);
             var node = Assert.IsType<ConstantNode>(Assert.Single(operationImportSegment.Parameters).Value);
-            Assert.Equal("1", node.LiteralText);
+            Assert.Equal("1".AsMemory(), node.LiteralText);
         }
 
         [Fact]
@@ -476,7 +476,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 
             var operationImportSegment = Assert.IsType<OperationImportSegment>(path[0]);
             var node = Assert.IsType<ConstantNode>(Assert.Single(operationImportSegment.Parameters).Value);
-            Assert.Equal("1", node.LiteralText);
+            Assert.Equal("1".AsMemory(), node.LiteralText);
         }
 
         [Fact]
@@ -486,7 +486,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 
             var operationImportSegment = Assert.IsType<OperationImportSegment>(path[0]);
             var node = Assert.IsType<ConstantNode>(Assert.Single(operationImportSegment.Parameters).Value);
-            Assert.Equal("1.5", node.LiteralText);
+            Assert.Equal("1.5".AsMemory(), node.LiteralText);
         }
 
         [Fact]
@@ -496,7 +496,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 
             var operationImportSegment = Assert.IsType<OperationImportSegment>(path[0]);
             var node = Assert.IsType<ConstantNode>(Assert.Single(operationImportSegment.Parameters).Value);
-            Assert.Equal("true", node.LiteralText);
+            Assert.Equal("true".AsMemory(), node.LiteralText);
         }
 
         [Fact]
@@ -506,7 +506,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 
             var operationImportSegment = Assert.IsType<OperationImportSegment>(path[0]);
             var node = Assert.IsType<ConstantNode>(Assert.Single(operationImportSegment.Parameters).Value);
-            Assert.Equal("'myDog'", node.LiteralText);
+            Assert.Equal("'myDog'".AsMemory(), node.LiteralText);
         }
 
         [Fact]
@@ -516,7 +516,9 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 
             var operationImportSegment = Assert.IsType<OperationImportSegment>(path[0]);
             var node = Assert.IsType<ConstantNode>(Assert.Single(operationImportSegment.Parameters).Value);
-            Assert.Equal("Fully.Qualified.Namespace.ColorPattern'1'", node.LiteralText);
+
+            ODataEnumValue enumValue = Assert.IsType<ODataEnumValue>(node.Value);
+            Assert.Equal("Fully.Qualified.Namespace.ColorPattern'Red'".AsMemory(), node.LiteralText);
         }
 
         [Fact]

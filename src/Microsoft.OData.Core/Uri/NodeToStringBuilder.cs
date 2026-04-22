@@ -171,7 +171,7 @@ namespace Microsoft.OData
                 return ExpressionConstants.KeywordNull;
             }
 
-            return node.LiteralText;
+            return node.LiteralText.ToString();
         }
 
         /// <summary>
@@ -182,12 +182,12 @@ namespace Microsoft.OData
         public override String Visit(CollectionConstantNode node)
         {
             ExceptionUtils.CheckArgumentNotNull(node, "node");
-            if (String.IsNullOrEmpty(node.LiteralText))
+            if (node.LiteralText.IsEmpty)
             {
                 return ExpressionConstants.KeywordNull;
             }
 
-            return node.LiteralText;
+            return node.LiteralText.ToString();
         }
 
         /// <summary>
@@ -420,7 +420,7 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Translates a <see cref="NamedFunctionParameterNode"/> into a corresponding <see cref="String"/>.
+        /// Translates a <see cref="SearchTermNode"/> into a corresponding <see cref="String"/>.
         /// </summary>
         /// <param name="node">The node to translate.</param>
         /// <returns>The translated String of SearchTermNode.</returns>

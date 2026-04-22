@@ -73,31 +73,42 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             Assert.Null(constantNode.Value);
         }
 
-        [Fact]
-        public void FunctionParameterParserShouldSupportBracketedExpressionsInPath()
+        [Theory]
+        [InlineData("{\'City\' : \'Seattle\'}")]
+        [InlineData("{\"City\" : \"Seattle\"}")]
+        public void FunctionParameterParserShouldSupportBracketedExpressionsInPath(string parameterValue)
         {
             ICollection<OperationSegmentParameter> parsedParameters;
-            var result = TryParseFunctionParameters("CanMoveToAddress", "address={\'City\' : \'Seattle\'}", null, out parsedParameters);
+            var result = TryParseFunctionParameters("CanMoveToAddress", $"address={parameterValue}", null, out parsedParameters);
             Assert.True(result);
             var parameter = Assert.Single(parsedParameters);
             Assert.Equal("address", parameter.Name);
-            var convertNode = Assert.IsType<ConvertNode>(parameter.Value);
-            var node = Assert.IsType<ConstantNode>(convertNode.Source);
-            Assert.Equal("{\'City\' : \'Seattle\'}", node.Value);
+            var resourceConstantNode = Assert.IsType<ResourceConstantNode>(parameter.Value);
+            Assert.Equal(parameterValue.AsMemory(), resourceConstantNode.LiteralText);
+
+            KeyValuePair<string, QueryNode> property = Assert.Single(resourceConstantNode.Properties);
+            Assert.Equal("City", property.Key);
+            property.Value.ShouldBeConstantQueryNode("Seattle");
         }
 
-        [Fact]
-        public void FunctionParameterParserShouldSupportBracketedExpressionsInFilterOrderby()
+        [Theory]
+        [InlineData("{\'City\' : \'Seattle\'}")]
+        [InlineData("{\"City\" : \"Seattle\"}")]
+        public void FunctionParameterParserShouldSupportBracketedExpressionsInFilterOrderby(string parameterValue)
         {
-            ExpressionLexer lexer = new ExpressionLexer(HardCodedTestModel.TestModel, expression: "address={\'City\' : \'Seattle\'})", moveToFirstToken: true, useSemicolonDelimiter: false, parsingFunctionParameters: false);
+            ExpressionLexer lexer = new ExpressionLexer(HardCodedTestModel.TestModel, expression: $"address={parameterValue})", moveToFirstToken: true, useSemicolonDelimiter: false, parsingFunctionParameters: false);
             ICollection<NamedFunctionParameterNode> parameterNodes;
             var result = TryParseFunctionParameters(lexer, null, out parameterNodes);
             Assert.True(result);
             var parameter = Assert.Single(parameterNodes);
             Assert.Equal("address", parameter.Name);
-            var convertNode = Assert.IsType<ConvertNode>(parameter.Value);
-            var node = Assert.IsType<ConstantNode>(convertNode.Source);
-            Assert.Equal("{\'City\' : \'Seattle\'}", node.Value);
+
+            var resourceConstantNode = Assert.IsType<ResourceConstantNode>(parameter.Value);
+            Assert.Equal(parameterValue.AsMemory(), resourceConstantNode.LiteralText);
+
+            KeyValuePair<string, QueryNode> property = Assert.Single(resourceConstantNode.Properties);
+            Assert.Equal("City", property.Key);
+            property.Value.ShouldBeConstantQueryNode("Seattle");
         }
 
         [Fact]

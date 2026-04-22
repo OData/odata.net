@@ -29,6 +29,9 @@ namespace Microsoft.OData.UriParser
         {
             ExpressionConstants.UnboundFunctionCast,
             ExpressionConstants.UnboundFunctionIsOf,
+
+            ExpressionConstants.UnboundFunctionHassubset,
+            ExpressionConstants.UnboundFunctionHassubsequence
         };
 
         /// <summary>
@@ -497,22 +500,59 @@ namespace Microsoft.OData.UriParser
 
             foreach (KeyValuePair<IEdmOperationParameter, QueryNode> item in result)
             {
+                QueryNode boundNode = item.Value;
+
+                if (boundNode is CollectionConstantNode collectionConstantNode)
+                {
+                    //IList<ConstantNode> newCollections = new List<ConstantNode>();
+                    //IEdmTypeReference collectionItemType = collectionConstantNode.ItemType;
+                    //CollectionConstantNode ok = new CollectionConstantNode(collectionConstantNode.CollectionType, collectionConstantNode.LiteralText);
+                    //foreach (var collectionitem in collectionConstantNode.Collection)
+                    //{
+                    //    QueryNode newConstantNode = collectionitem;
+                    //    if (!TryRewriteIntegralConstantNode(ref newConstantNode, collectionItemType))
+                    //    {
+                    //        newConstantNode = MetadataBindingUtils.ConvertToTypeIfNeeded(newConstantNode as SingleValueNode, collectionItemType);
+                    //    }
+
+                    //    ok.Add(newConstantNode as ConstantNode);
+                    //}
+
+                    OperationSegmentParameter boundParamer1 = new OperationSegmentParameter(item.Key.Name, collectionConstantNode);
+                    boundParameters.Add(boundParamer1);
+                    continue;
+                }
+
                 if (item.Value is SingleValueNode singleValueNode)
                 {
-                    // ensure node type is compatible with parameter type.
-                    IEdmTypeReference sourceTypeReference = singleValueNode.GetEdmTypeReference();
-                    bool sourceIsNullOrOpenType = (sourceTypeReference == null);
-                    if (!sourceIsNullOrOpenType)
+                    if (item.Value is ConvertNode convertNode)
                     {
-                        // if the node has been rewritten, no further conversion is needed.
-                        if (!TryRewriteIntegralConstantNode(ref singleValueNode, item.Key.Type))
+                        if (convertNode.Source is ConstantNode)
                         {
-                            singleValueNode = MetadataBindingUtils.ConvertToTypeIfNeeded(singleValueNode, item.Key.Type);
+                            boundParameters.Add(new OperationSegmentParameter(item.Key.Name, item.Value));
                         }
                     }
+                    else if (item.Value is ConstantNode)
+                    {
+                        boundParameters.Add(new OperationSegmentParameter(item.Key.Name, item.Value));
+                    }
+                    else
+                    {
+                        // ensure node type is compatible with parameter type.
+                        IEdmTypeReference sourceTypeReference = singleValueNode.GetEdmTypeReference();
+                        bool sourceIsNullOrOpenType = (sourceTypeReference == null);
+                        if (!sourceIsNullOrOpenType)
+                        {
+                            // if the node has been rewritten, no further conversion is needed.
+                            if (!TryRewriteIntegralConstantNode(ref singleValueNode, item.Key.Type))
+                            {
+                                singleValueNode = MetadataBindingUtils.ConvertToTypeIfNeeded(singleValueNode, item.Key.Type);
+                            }
+                        }
 
-                    OperationSegmentParameter boundParameter = new OperationSegmentParameter(item.Key.Name, singleValueNode);
-                    boundParameters.Add(boundParameter);
+                        OperationSegmentParameter boundParameter = new OperationSegmentParameter(item.Key.Name, singleValueNode);
+                        boundParameters.Add(boundParameter);
+                    }
                 }
                 else
                 {
@@ -616,43 +656,52 @@ namespace Microsoft.OData.UriParser
                     funcParaToken = paraToken;
                 }
 
+                // "param=[{...}, {...}]"
+                if (funcParaToken.ValueToken is CollectionLiteralToken collectionToken)
+                {
+                    // Should check the parameter type is collection or not before set CollectionType?
+                    // otherwise it may cause exception in UriTemplateParser.TryParseLiteral() when it tries to convert the value to target type based on the CollectionType.
+                    collectionToken.CollectionType = functionParameter.Type.AsCollection();
+                    partiallyParsedParametersWithComplexOrCollection.Add(funcParaToken);
+                    continue;
+                }
+
+                // "param={...}"
+                if (funcParaToken.ValueToken is ResourceLiteralToken mapToken)
+                {
+                    // Should check the parameter type is complex or not before set StructuredType?
+                    // otherwise it may cause exception in UriTemplateParser.TryParseLiteral() when it tries to convert the value to target type based on the StructuredType.
+                    mapToken.ExpectedType = functionParameter.Type.AsStructured();
+                    partiallyParsedParametersWithComplexOrCollection.Add(funcParaToken);
+                    continue;
+                }
+
+                // "param=@alias"
                 FunctionParameterAliasToken aliasToken = funcParaToken.ValueToken as FunctionParameterAliasToken;
                 if (aliasToken != null)
                 {
                     aliasToken.ExpectedParameterType = functionParameter.Type;
                 }
 
-                LiteralToken valueToken = funcParaToken.ValueToken as LiteralToken;
-                string valueStr = null;
-                if (valueToken != null && (valueStr = valueToken.Value as string) != null && !string.IsNullOrEmpty(valueToken.OriginalText))
+                // "param=literal"
+                LiteralToken literalToken = funcParaToken.ValueToken as LiteralToken;
+                if (literalToken != null)
                 {
-                    ExpressionLexer lexer = new ExpressionLexer(model, expression: valueToken.OriginalText, moveToFirstToken: true, useSemicolonDelimiter: false, parsingFunctionParameters: true);
-                    if (lexer.CurrentToken.Kind == ExpressionTokenKind.BracketedExpression || lexer.CurrentToken.Kind == ExpressionTokenKind.BracedExpression)
+                    if (literalToken.Value is UriTemplateExpression existed)
                     {
-                        object result;
-                        UriTemplateExpression expression;
-
-                        if (enableUriTemplateParsing && UriTemplateParser.TryParseLiteral(lexer.CurrentToken.Span, functionParameter.Type, out expression))
+                        if (!enableUriTemplateParsing)
                         {
-                            result = expression;
-                        }
-                        else if (!functionParameter.Type.IsStructured() && !functionParameter.Type.IsStructuredCollectionType())
-                        {
-                            // ExpressionTokenKind.BracketedExpression means text like [1,2]
-                            // so now try convert it to collection type value:
-                            result = ODataUriUtils.ConvertFromUriLiteral(valueStr, ODataVersion.V4, model, functionParameter.Type);
-                        }
-                        else
-                        {
-                            // For complex & collection of complex directly return the raw string.
-                            partiallyParsedParametersWithComplexOrCollection.Add(funcParaToken);
-                            continue;
+                            throw new ODataException("Uri template is not enabled.");
                         }
 
-                        LiteralToken newValueToken = new LiteralToken(result, valueToken.OriginalText);
-                        FunctionParameterToken newFuncParaToken = new FunctionParameterToken(funcParaToken.ParameterName, newValueToken);
-                        partiallyParsedParametersWithComplexOrCollection.Add(newFuncParaToken);
-                        continue;
+                        existed.LiteralText = literalToken.OriginalText.ToString();
+                        existed.ExpectedType = functionParameter.Type;
+                    }
+                    else
+                    {
+                        //result = ODataUriUtils.ConvertFromUriLiteral(literalToken.OriginalText, ODataVersion.V4, model, functionParameter.Type);
+
+                        literalToken.ExpectedEdmTypeReference = functionParameter.Type;
                     }
                 }
 
@@ -708,6 +757,14 @@ namespace Microsoft.OData.UriParser
                         break;
                     }
 
+                case ExpressionConstants.UnboundFunctionHassubset:
+                case ExpressionConstants.UnboundFunctionHassubsequence:
+                    {
+                        ValidateArgsForCollection(functionCallTokenName, args);
+                        returnType = EdmCoreModel.Instance.GetBoolean(false); // why 'false'? Because these functions return non-nullable boolean, and GetBoolean is designed to return nullable boolean by default, we need to specify false here to get the non-nullable boolean type reference.
+                        break;
+                    }
+
                 default:
                     {
                         break;
@@ -741,6 +798,22 @@ namespace Microsoft.OData.UriParser
             return ValidateIsOfOrCast(state, false, ref args);
         }
 
+        private static void ValidateArgsForCollection(string functionName, List<QueryNode> args)
+        {
+            if (args.Count != 2)
+            {
+                throw new ODataErrorException(Error.Format(SRResources.MetadataBinder_FunctionWithWrongNumberOfOperands, functionName, args.Count, "2"));
+            }
+
+            for (int i = 0; i < args.Count; i++)
+            {
+                if (!(args[i] is CollectionNode))
+                {
+                    throw new ODataErrorException(Error.Format(SRResources.MetadataBinder_FunctionArgumentNotCollectionValue, i + 1, functionName));
+                }
+            }
+        }
+
         /// <summary>
         /// Validate the arguments to either isof or cast
         /// </summary>
@@ -753,7 +826,7 @@ namespace Microsoft.OData.UriParser
             if (args.Count != 1 && args.Count != 2)
             {
                 throw new ODataErrorException(
-                    Error.Format(SRResources.MetadataBinder_CastOrIsOfExpressionWithWrongNumberOfOperands, args.Count));
+                    Error.Format(SRResources.MetadataBinder_FunctionWithWrongNumberOfOperands, isCast ? "cast" : "isof", args.Count, "1 or 2"));
             }
 
             QueryNode queryNode = args[^1]; // Get the last element

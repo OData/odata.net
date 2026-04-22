@@ -394,6 +394,42 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
+        /// Resolve operation's parameters.
+        /// </summary>
+        /// <param name="operation">Current operation for parameters.</param>
+        /// <param name="input">A dictionary the parameter list.</param>
+        /// <returns>A dictionary containing resolved parameters.</returns>
+        internal IDictionary<IEdmOperationParameter, QueryNode> ResolveOperationParameters2(IEdmOperation operation, IDictionary<string, QueryNode> input)
+        {
+            ExceptionUtils.CheckArgumentNotNull(operation, nameof(operation));
+            ExceptionUtils.CheckArgumentNotNull(input, nameof(input));
+
+            Dictionary<IEdmOperationParameter, QueryNode> result = new Dictionary<IEdmOperationParameter, QueryNode>(EqualityComparer<IEdmOperationParameter>.Default);
+            foreach (var item in input)
+            {
+                IEdmOperationParameter functionParameter = null;
+                if (EnableCaseInsensitive)
+                {
+                    functionParameter = ResolveOperationParameterNameCaseInsensitive(operation, item.Key);
+                }
+                else
+                {
+                    functionParameter = operation.FindParameter(item.Key);
+                }
+
+                // ensure parameter name exists
+                if (functionParameter == null)
+                {
+                    throw new ODataException(Error.Format(SRResources.ODataParameterWriterCore_ParameterNameNotFoundInOperation, item.Key, operation.Name));
+                }
+
+                result.Add(functionParameter, item.Value);
+            }
+
+            return result;
+        }
+
+        /// <summary>
         /// Resolve keys for certain entity set, this function would be called when key is specified as positional values. E.g. EntitySet('key')
         /// </summary>
         /// <param name="type">Type for current entityset.</param>

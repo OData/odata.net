@@ -6,19 +6,225 @@
 
 namespace Microsoft.OData.UriParser
 {
+    using Microsoft.OData;
+    using Microsoft.OData.Core;
+    using Microsoft.OData.Edm;
+    using Microsoft.OData.Metadata;
     using System;
     using System.Diagnostics;
+    using System.Globalization;
     using System.Linq;
-    using Microsoft.OData.Edm;
-    using Microsoft.OData;
-    using Microsoft.OData.Metadata;
-    using Microsoft.OData.Core;
+    using static System.Net.Mime.MediaTypeNames;
 
     /// <summary>
     /// Helper methods for metadata binding.
     /// </summary>
     internal static class MetadataBindingUtils
     {
+        internal static SingleValueNode ConvertConstantNodeIfNeeded(ConstantNode source, IEdmTypeReference targetTypeReference)
+        {
+            Debug.Assert(source != null, "constantNode != null");
+
+            if (targetTypeReference == null)
+            {
+                return source;
+            }
+
+            // We don't have type information, espically for 'null' literal case
+            // But, we cannot say any 'null' literal without a type. Especially, for type prefied 'null' literal.
+            if (source.TypeReference == null)
+            {
+                if (source.Value == null)
+                {
+                    if (targetTypeReference.IsNullable)
+                    {
+                        return new ConvertNode(source, targetTypeReference);
+                    }
+
+                    throw new ODataException($"Cannot 'null' to non-null type of {targetTypeReference.FullName()}");
+                }
+
+                // For safety, create a convert node for non-null value constant node without a type. It looks weird.
+                return new ConvertNode(source, targetTypeReference);
+            }
+
+            // Any literal value can convert to Edm.Untyped
+            if (targetTypeReference.IsUntyped())
+            {
+                return new ConvertNode(source, targetTypeReference);
+            }
+
+            // Why using the 'Definition'? Because, we should not care about the nullablity since the ConstantNode is from literal, we don't know about the nullablity of the literal
+            if (source.TypeReference.Definition.IsEquivalentTo(targetTypeReference.Definition))
+            {
+                if (targetTypeReference.IsTypeDefinition())
+                {
+                    return new ConvertNode(source, targetTypeReference);
+                }
+
+                return source;
+            }
+
+            IEdmTypeReference sourceTypeReference = source.TypeReference;
+            if (source.TypeReference.IsNullable != targetTypeReference.IsNullable)
+            {
+                sourceTypeReference = source.TypeReference.Definition.ToTypeReference(targetTypeReference.IsNullable);
+            }
+
+            if (!TypePromotionUtils.CanConvertTo(source, sourceTypeReference, targetTypeReference))
+            {
+                throw new ODataException(Error.Format(SRResources.MetadataBinder_CannotConvertToType, source.TypeReference.FullName(), targetTypeReference.FullName()));
+            }
+
+            return new ConvertNode(source, targetTypeReference);
+        }
+
+#if false
+        internal static SingleValueNode ConvertResourceConstantNodeIfNeeded(ResourceConstantNode source, IEdmTypeReference targetTypeReference, BindingState bindingState)
+        {
+            Debug.Assert(source != null, "source != null");
+
+            if (targetTypeReference == null)
+            {
+                return source;
+            }
+
+            // Any source value can convert to Edm.Untyped
+            if (targetTypeReference.IsUntyped())
+            {
+                return new ConvertNode(source, targetTypeReference);
+            }
+
+            if (!targetTypeReference.IsStructured())
+            {
+                throw new UriLiteralParsingException(Error.Format(SRResources.UriPrimitiveTypeParsers_FailedToParseJsonObjectToNonStrucutredType, source.LiteralText, targetTypeReference.FullName()));
+            }
+
+            IEdmStructuredTypeReference targetStructuredTypeReference = targetTypeReference.AsStructured();
+            if (source.ExpectedStructuredType != null)
+            {
+                if (source.ExpectedStructuredType.StructuredDefinition().IsEquivalentTo(targetStructuredTypeReference.StructuredDefinition()))
+                {
+                    return source;
+                }
+
+                if (targetStructuredTypeReference.IsAssignableFrom(source.ExpectedStructuredType))
+                {
+                    return new ConvertNode(source, targetTypeReference);
+                }
+
+                throw new ODataException(Error.Format(SRResources.MetadataBinder_CannotConvertToType, source.TypeReference.FullName(), targetTypeReference.FullName()));
+            }
+
+            ResourceConstantNode newNode = new ResourceConstantNode(targetStructuredTypeReference, source.LiteralText);
+            foreach (var property in source.Properties)
+            {
+                IEdmTypeReference propertyType = GetPropertyType(targetStructuredTypeReference, property.Key, bindingState); // This could be null.
+                if (propertyType == null)
+                {
+                    newNode.Add(property.Key, property.Value);
+                    continue;
+                }
+
+                if (property.Value is ConstantNode constantNode)
+                {
+                    newNode.Add(property.Key, ConvertConstantNodeIfNeeded(constantNode, propertyType));
+                }
+                else if (property.Value is ResourceConstantNode subResourceConstantNode)
+                {
+                    newNode.Add(property.Key, ConvertResourceConstantNodeIfNeeded(subResourceConstantNode, propertyType));
+                }
+                else if (property.Value is CollectionConstantNode subCollectionNode)
+                {
+                    newNode.Add(property.Key, ConvertCollectionConstantNodeIfNeeded(subCollectionNode, propertyType, bindingState));
+                }
+                else
+                {
+                    throw new ODataException(Error.Format(SRResources.MetadataBinder_UnsupportedQueryNodeForConstant, property.Value.ToString(), property.Value.Kind, "Resource Constant"));
+                }
+            }
+
+            return newNode;
+        }
+
+        internal static CollectionConstantNode ConvertCollectionConstantNodeIfNeeded(CollectionConstantNode source, IEdmTypeReference targetTypeReference, BindingState bindingState)
+        {
+            Debug.Assert(source != null, "source != null");
+
+            if (targetTypeReference == null)
+            {
+                return source;
+            }
+
+            // Any Collection Constant value can convert to Edm.Untyped?? No, Be noted, the target type should be collection of Edm.Untyped.
+            //if (targetTypeReference.IsUntyped())
+            //{
+            //    return new ConvertNode(source, targetTypeReference);
+            //}
+
+            if (!targetTypeReference.IsCollection())
+            {
+                throw new UriLiteralParsingException(Error.Format(SRResources.UriPrimitiveTypeParsers_FailedToParseJsonArrayToNonCollectionType, source.LiteralText, targetTypeReference.FullName()));
+            }
+
+            IEdmCollectionTypeReference targetCollectionTypeReference = targetTypeReference.AsCollection();
+            IEdmTypeReference targetElementTypeReference = targetCollectionTypeReference.ElementType();
+
+
+            if (source.CollectionType != null)
+            {
+                if (source.ItemType.Definition.IsEquivalentTo(targetElementTypeReference.Definition))
+                {
+                    return source;
+                }
+
+                if (targetStructuredTypeReference.IsAssignableFrom(source.ExpectedStructuredType))
+                {
+                    return new ConvertNode(source, targetTypeReference);
+                }
+
+                throw new ODataException(Error.Format(SRResources.MetadataBinder_CannotConvertToType, source.TypeReference.FullName(), targetTypeReference.FullName()));
+            }
+
+            CollectionConstantNode newNode = new CollectionConstantNode(targetCollectionTypeReference, source.LiteralText);
+            foreach (var item in source.Items)
+            {
+                if (item is ConstantNode constantNode)
+                {
+                    newNode.Add(ConvertConstantNodeIfNeeded(constantNode, targetElementTypeReference));
+                }
+                else if (item is ResourceConstantNode nestedResourceConstant)
+                {
+                    newNode.Add(ConvertConstantNodeIfNeeded(nestedResourceConstant, targetElementTypeReference, bindingState));
+                }
+                else if (item is CollectionConstantNode nestedCollectionNode)
+                {
+                    newNode.Add(ConvertCollectionConstantNodeIfNeeded(nestedCollectionNode, targetElementTypeReference, bindingState));
+                }
+                else
+                {
+                    // Is there a special logic for the 'ConvertNode' if the source node is *Constant*Node?
+                    throw new ODataException(Error.Format(SRResources.MetadataBinder_UnsupportedQueryNodeForConstant, item.ToString(), item.Kind, "Collection"));
+                }
+            }
+
+            return newNode;
+        }
+
+#endif
+        private static IEdmTypeReference GetPropertyType(IEdmStructuredTypeReference structuredTypeRef, string propertyName, BindingState bindingState)
+        {
+            IEdmStructuredType structuredType = structuredTypeRef.StructuredDefinition();
+
+            IEdmProperty edmProperty = bindingState.Configuration.Resolver.ResolveProperty(structuredType, propertyName);
+            if (edmProperty != null)
+            {
+                return edmProperty.Type;
+            }
+
+            return null;
+        }
+
         /// <summary>
         /// If the source node is not of the specified type, then we check if type promotion is possible and inject a convert node.
         /// If the source node is the same type as the target type (or if the target type is null), we just return the source node as is.
@@ -37,7 +243,14 @@ namespace Microsoft.OData.UriParser
 
             if (source.TypeReference != null)
             {
-                if (source.TypeReference.IsEquivalentTo(targetTypeReference))
+                ConstantNode constantNode = source as ConstantNode;
+                if (constantNode != null && constantNode.Value == null && !targetTypeReference.IsNullable)
+                {
+                    throw new ODataException($"Can not covert 'null' literal to a non-nullable type {targetTypeReference.FullName()}");
+                }
+
+                // don't care about the 'nullability'
+                if (source.TypeReference.Definition.IsEquivalentTo(targetTypeReference.Definition))
                 {
                     // For source is type definition, if source's underlying type == target type.
                     // We create a conversion node from source to its underlying type (target type)
@@ -57,7 +270,7 @@ namespace Microsoft.OData.UriParser
                     return new ConvertNode(source, targetTypeReference);
                 }
 
-                ConstantNode constantNode = source as ConstantNode;
+               
                 // Check if the source node is a constant node, not null, and the source type is either string or integral
                 // and the target type is an enum.
                 if (constantNode != null && constantNode.Value != null && (source.TypeReference.IsString() || source.TypeReference.IsIntegral()) && targetTypeReference.IsEnum())
@@ -99,7 +312,7 @@ namespace Microsoft.OData.UriParser
                         // 2. And prevent losing precision in float -> double, e.g. (double)1.234f => 1.2339999675750732d not 1.234d
                         object targetPrimitiveValue = ODataUriConversionUtils.CoerceNumericType(originalPrimitiveValue, targetTypeReference.AsPrimitive().Definition as IEdmPrimitiveType);
 
-                        if (string.IsNullOrEmpty(constantNode.LiteralText))
+                        if (constantNode.LiteralText.IsEmpty)
                         {
                             return new ConstantNode(targetPrimitiveValue);
                         }

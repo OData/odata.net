@@ -5,6 +5,7 @@
 //---------------------------------------------------------------------
 
 using Microsoft.OData.Edm;
+using System.Collections.Generic;
 
 namespace Microsoft.OData.UriParser
 {
@@ -23,4 +24,35 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         public abstract IEdmStructuredTypeReference StructuredTypeReference { get; }
     }
+
+    //public sealed class SingleResourceValueNode : SingleResourceNode
+    //{
+    //    private IList<KeyValuePair<string, QueryNode>> _properties = new List<KeyValuePair<string, QueryNode>>();
+    //    private IEdmNavigationSource _navigationSource = null;
+    //    private IEdmStructuredTypeReference _structuredTypeReference = null;
+
+    //    public override IEdmNavigationSource NavigationSource => _navigationSource;
+
+    //    public override IEdmStructuredTypeReference StructuredTypeReference => _structuredTypeReference;
+
+    //    public IReadOnlyCollection<KeyValuePair<string, QueryNode>> Properties => _properties.AsReadOnly();
+
+    //    public void SetMetadata(IEdmNavigationSource navigationSource, IEdmStructuredTypeReference structuredTypeReference)
+    //    {
+    //        _navigationSource = navigationSource;
+    //        _structuredTypeReference = structuredTypeReference;
+    //    }
+
+    //    public void Add(string propertyName, QueryNode value)
+    //    {
+    //        _properties.Add(new KeyValuePair<string, QueryNode>(propertyName, value));
+    //    }
+
+    //    public override QueryNodeKind Kind
+    //    {
+    //        get { return QueryNodeKind.ResourceConstant; }
+    //    }
+
+    //    public override IEdmTypeReference TypeReference => _structuredTypeReference;
+    //}
 }

@@ -1120,7 +1120,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             };
 
             Assert.Equal("Fully.Qualified.Namespace.ColorPattern", fullyQualifiedTypeName);
-            Assert.Equal("Fully.Qualified.Namespace.ColorPattern'blue'", Assert.IsType<ConstantNode>(bon.Right).LiteralText);
+            Assert.Equal("Fully.Qualified.Namespace.ColorPattern'blue'".AsMemory(), Assert.IsType<ConstantNode>(bon.Right).LiteralText);
             bon.Right.ShouldBeEnumNode(HardCodedTestModel.TestModel.FindType("Fully.Qualified.Namespace.ColorPattern") as IEdmEnumType, 2L);
         }
 
@@ -1130,9 +1130,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             FilterClause filter = ParseFilter("cast(null, Fully.Qualified.Namespace.ColorPattern) eq Fully.Qualified.Namespace.ColorPattern'blue'", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
             var bon = filter.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal);
             var singleFunctionCallNode = bon.Left.ShouldBeSingleValueFunctionCallQueryNode("cast");
-            Assert.Equal("null", Assert.IsType<ConstantNode>(singleFunctionCallNode.Parameters.ElementAt(0)).LiteralText);
-            Assert.Equal("Fully.Qualified.Namespace.ColorPattern", Assert.IsType<ConstantNode>(singleFunctionCallNode.Parameters.ElementAt(1)).LiteralText);
-            Assert.Equal("Fully.Qualified.Namespace.ColorPattern'blue'", Assert.IsType<ConstantNode>(bon.Right).LiteralText);
+            Assert.Equal("null".AsMemory(), Assert.IsType<ConstantNode>(singleFunctionCallNode.Parameters.ElementAt(0)).LiteralText);
+            Assert.Equal("Fully.Qualified.Namespace.ColorPattern".AsMemory(), Assert.IsType<ConstantNode>(singleFunctionCallNode.Parameters.ElementAt(1)).LiteralText);
+            Assert.Equal("Fully.Qualified.Namespace.ColorPattern'blue'".AsMemory(), Assert.IsType<ConstantNode>(bon.Right).LiteralText);
         }
 
         [Theory]
@@ -1483,32 +1483,47 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 .Source.ShouldBeResourceRangeVariableReferenceNode("a");
         }
 
-        [Fact]
-        public void FunctionWithComplexParameterInJsonWithSingleQuotesInsteadOfDoubleQuotesWorks()
+        [Theory]
+        [InlineData("{'Street' : 'stuff1', 'City' : 'stuff'}")]
+        [InlineData("{\"Street\" : \"stuff1\", \"City\" : \"stuff\"}")]
+        public void FunctionWithComplexParameterInJsonWithQuotesWorks(string parameterValue)
         {
-            const string text = "Fully.Qualified.Namespace.CanMoveToAddress(address={'Street' : 'stuff', 'City' : 'stuff'})";
+            string text = $"Fully.Qualified.Namespace.CanMoveToAddress(address={parameterValue})";
             var filterClause = ParseFilter(text, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
             var parameters = filterClause.Expression.ShouldBeSingleValueFunctionCallQueryNode(HardCodedTestModel.GetFunctionForCanMoveToAddress()).Parameters;
             var paramNode = Assert.IsType<NamedFunctionParameterNode>(Assert.Single(parameters));
-            var constantNode = Assert.IsType<ConstantNode>(paramNode.Value);
-            Assert.Equal("{'Street' : 'stuff', 'City' : 'stuff'}", constantNode.Value);
+            ResourceConstantNode resourceConstant = Assert.IsType<ResourceConstantNode>(paramNode.Value);
+            Assert.Equal(parameterValue.AsMemory(), resourceConstant.LiteralText);
+
+            Assert.Equal(2, resourceConstant.Properties.Count);
+            resourceConstant.Properties.First(c => c.Key == "Street").Value.ShouldBeConstantQueryNode("stuff1");
+            resourceConstant.Properties.First(c => c.Key == "City").Value.ShouldBeConstantQueryNode("stuff");
         }
 
         [Fact]
         public void FunctionWithInvalidComplexParameterThrows()
         {
-            Action parseInvalidComplex = () => ParseFilter("Fully.Qualified.Namespace.CanMoveToAddress(address={}})", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
-            parseInvalidComplex.Throws<ODataException>(Error.Format(SRResources.ExpressionLexer_InvalidCharacter, "}", "53", "Fully.Qualified.Namespace.CanMoveToAddress(address={}})"));
+            string input = "Fully.Qualified.Namespace.CanMoveToAddress(address={}})";
+            Action parseInvalidComplex = () => ParseFilter(input, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
+            parseInvalidComplex.Throws<ODataException>(Error.Format(SRResources.ExpressionLexer_SyntaxError, "54", input));
         }
 
-        [Fact]
-        public void FunctionWithComplexParameterInJsonWorks()
+        [Theory]
+        [InlineData("{'@odata.type':'#Fully.Qualified.Namespace.Address','Street':'NE 24th St.','City':'Redmond'}")]
+        [InlineData("{\"@odata.type\":\"#Fully.Qualified.Namespace.Address\",\"Street\":\"NE 24th St.\",\"City\":\"Redmond\"}")]
+        public void FunctionWithComplexParameterInJsonWorks(string parameterValue)
         {
-            var filterCaluse = ParseFilter("Fully.Qualified.Namespace.CanMoveToAddress(address={\"@odata.type\":\"#Fully.Qualified.Namespace.Address\",\"Street\":\"NE 24th St.\",\"City\":\"Redmond\"})", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
+            var filterCaluse = ParseFilter($"Fully.Qualified.Namespace.CanMoveToAddress(address={parameterValue})", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
             var parameters = filterCaluse.Expression.ShouldBeSingleValueFunctionCallQueryNode(HardCodedTestModel.GetFunctionForCanMoveToAddress()).Parameters;
             var paramNode = Assert.IsType<NamedFunctionParameterNode>(Assert.Single(parameters));
-            var constantNode = Assert.IsType<ConstantNode>(paramNode.Value);
-            Assert.Equal("{\"@odata.type\":\"#Fully.Qualified.Namespace.Address\",\"Street\":\"NE 24th St.\",\"City\":\"Redmond\"}", constantNode.Value);
+            var resourceConstantNode = Assert.IsType<ResourceConstantNode>(paramNode.Value);
+            Assert.Equal(parameterValue.AsMemory(), resourceConstantNode.LiteralText);
+
+            Assert.Equal("Fully.Qualified.Namespace.Address", resourceConstantNode.TypeReference.FullName());
+            Assert.Equal(2, resourceConstantNode.Properties.Count);
+            // resourceConstantNode.Properties.First(c => c.Key == "@odata.type").Value.ShouldBeConstantQueryNode("#Fully.Qualified.Namespace.Address");
+            resourceConstantNode.Properties.First(c => c.Key == "Street").Value.ShouldBeConstantQueryNode("NE 24th St.");
+            resourceConstantNode.Properties.First(c => c.Key == "City").Value.ShouldBeConstantQueryNode("Redmond");
         }
 
         [Fact]
@@ -1518,10 +1533,11 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var filterCaluse = ParseFilter(text, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
             var parameters = filterCaluse.Expression.ShouldBeSingleValueFunctionCallQueryNode(HardCodedTestModel.GetFunctionForOwnsTheseDogs()).Parameters;
             var paramNode = Assert.IsType<NamedFunctionParameterNode>(Assert.Single(parameters));
-            var constantNode = Assert.IsType<ConstantNode>(paramNode.Value);
-            var collectionValue = constantNode.Value.ShouldBeODataCollectionValue();
-            collectionValue.ItemsShouldBeAssignableTo<string>();
-            Assert.Equal(2, collectionValue.Items.Count());
+            var collectionConstantNode = Assert.IsType<CollectionConstantNode>(paramNode.Value);
+            Assert.Equal("[\"Barky\",\"Junior\"]".AsMemory(), collectionConstantNode.LiteralText);
+            Assert.Equal(2, collectionConstantNode.Items.Count());
+            collectionConstantNode.Items.ElementAt(0).ShouldBeConstantQueryNode("Barky");
+            collectionConstantNode.Items.ElementAt(1).ShouldBeConstantQueryNode("Junior");
         }
 
         [Fact]
@@ -1532,8 +1548,14 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             // TODO: parameter value is ConstantNode, whose .TypeReference should NOT be null though .Value is ok to be ODataCollectionValue.
             var parameters = filterCaluse.Expression.ShouldBeSingleValueFunctionCallQueryNode(HardCodedTestModel.GetFunctionForCanMoveToAddresses()).Parameters;
             var paramNode = Assert.IsType<NamedFunctionParameterNode>(Assert.Single(parameters));
-            var constantNode = Assert.IsType<ConstantNode>(paramNode.Value);
-            Assert.Equal("[{\"Street\":\"NE 24th St.\",\"City\":\"Redmond\"},{\"Street\":\"Pine St.\",\"City\":\"Seattle\"}]", constantNode.Value);
+            var collectionConstantNode = Assert.IsType<CollectionConstantNode>(paramNode.Value);
+
+            Assert.Equal("[{\"Street\":\"NE 24th St.\",\"City\":\"Redmond\"},{\"Street\":\"Pine St.\",\"City\":\"Seattle\"}]".AsMemory(), collectionConstantNode.LiteralText);
+
+            Assert.Equal(2, collectionConstantNode.Items.Count());
+
+            Assert.IsType<ResourceConstantNode>(collectionConstantNode.Items.ElementAt(0));
+            Assert.IsType<ResourceConstantNode>(collectionConstantNode.Items.ElementAt(1));
         }
 
         [Fact]
@@ -2591,7 +2613,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             FilterClause filter = ParseFilter("Fully.Qualified.Namespace.ColorPattern'SolidYellow' in FavoriteColors", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
 
             var inNode = Assert.IsType<InNode>(filter.Expression);
-            Assert.Equal("Fully.Qualified.Namespace.ColorPattern'SolidYellow'", Assert.IsType<ConstantNode>(inNode.Left).LiteralText);
+            Assert.Equal("Fully.Qualified.Namespace.ColorPattern'SolidYellow'".AsMemory(), Assert.IsType<ConstantNode>(inNode.Left).LiteralText);
             Assert.Equal("FavoriteColors", Assert.IsType<CollectionPropertyAccessNode>(inNode.Right).Property.Name);
         }
 
@@ -2616,7 +2638,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             ConstantNode left = Assert.IsType<ConstantNode>(inNode.Left);
             ODataEnumValue enumValue = Assert.IsType<ODataEnumValue>(left.Value);
 
-            Assert.Equal(expectedLiteralText, left.LiteralText);
+            Assert.Equal(expectedLiteralText.AsMemory(), left.LiteralText);
             Assert.Equal(expectedfullyQualifiedName, (enumValue.TypeName + left.LiteralText));
             Assert.Equal(expectedCollectionPropertyName, Assert.IsType<CollectionPropertyAccessNode>(inNode.Right).Property.Name);
         }
@@ -2685,6 +2707,29 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Fact]
+        public void HasSubSetInFilterWithBooleanComparison()
+        {
+            // Arrange & Act - Use hasSubSet in boolean expression
+            IEdmEntityType personType = HardCodedTestModel.GetPersonType();
+            IEdmProperty relatedIdsProp = personType.FindProperty("RelatedIDs");
+            Assert.NotNull(relatedIdsProp);
+
+            var filterClause = ParseFilter("hassubset(RelatedIDs, [0,9]) eq true", HardCodedTestModel.TestModel, personType, HardCodedTestModel.GetPeopleSet());
+
+            // Assert
+            var binaryOp = filterClause.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal);
+            SingleValueFunctionCallNode hassubsetCall = binaryOp.Left.ShouldBeSingleValueFunctionCallQueryNode("hassubset");
+            Assert.Equal(2, hassubsetCall.Parameters.Count());
+            hassubsetCall.Parameters.ElementAt(0).ShouldBeCollectionPropertyAccessQueryNode(relatedIdsProp);
+            CollectionConstantNode collectionNode = Assert.IsType<CollectionConstantNode>(hassubsetCall.Parameters.ElementAt(1));
+            Assert.Equal(2, collectionNode.Items.Count);
+            collectionNode.Items.ElementAt(0).ShouldBeConstantQueryNode(0);
+            collectionNode.Items.ElementAt(1).ShouldBeConstantQueryNode(9);
+
+            binaryOp.Right.ShouldBeConstantQueryNode(true);
+        }
+
+        [Fact]
         public void FilterWithInOperationWithAny()
         {
             // https://github.com/OData/odata.net/issues/1447
@@ -2699,7 +2744,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             svcn.Source.ShouldBeNonResourceRangeVariableReferenceNode("x");
 
             CollectionConstantNode collectionNode = Assert.IsType<CollectionConstantNode>(inNode.Right);
-            Assert.Equal("('Blue','Red')", collectionNode.LiteralText);
+            Assert.Equal("('Blue','Red')", collectionNode.LiteralText.ToString());
             Assert.Equal(2, collectionNode.Collection.Count);
             collectionNode.Collection.ElementAt(0).ShouldBeConstantQueryNode("Blue");
             collectionNode.Collection.ElementAt(1).ShouldBeConstantQueryNode("Red");
@@ -2712,7 +2757,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             var inNode = Assert.IsType<InNode>(filter.Expression);
             Assert.Equal("ID", Assert.IsType<SingleValuePropertyAccessNode>(inNode.Left).Property.Name);
-            Assert.Equal("(1,2,3)", Assert.IsType<CollectionConstantNode>(inNode.Right).LiteralText);
+            Assert.Equal("(1,2,3)", Assert.IsType<CollectionConstantNode>(inNode.Right).LiteralText.ToString());
         }
 
         [Theory]
@@ -2733,7 +2778,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             var inNode = Assert.IsType<InNode>(filter.Expression);
             Assert.IsType<SingleValueOpenPropertyAccessNode>(inNode.Left);
-            Assert.Equal(values, Assert.IsType<CollectionConstantNode>(inNode.Right).LiteralText);
+            Assert.Equal(values.AsMemory(), Assert.IsType<CollectionConstantNode>(inNode.Right).LiteralText);
         }
 
         [Fact]
@@ -2743,7 +2788,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var uon = filter.Expression.ShouldBeUnaryOperatorNode(UnaryOperatorKind.Not);
             var inNode = Assert.IsType<InNode>(uon.Operand);
             Assert.Equal("ID", Assert.IsType<SingleValuePropertyAccessNode>(inNode.Left).Property.Name);
-            Assert.Equal("(1,2,3)", Assert.IsType<CollectionConstantNode>(inNode.Right).LiteralText);
+            Assert.Equal("(1,2,3)".AsMemory(), Assert.IsType<CollectionConstantNode>(inNode.Right).LiteralText);
         }
 
         [Theory]
@@ -2760,7 +2805,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             Assert.Equal("SSN", Assert.IsType<SingleValuePropertyAccessNode>(inNode.Left).Property.Name);
 
             CollectionConstantNode collectionNode = Assert.IsType<CollectionConstantNode>(inNode.Right);
-            Assert.Equal(collection, collectionNode.LiteralText);
+            Assert.Equal(collection, collectionNode.LiteralText.ToString());
             Assert.Equal(2, collectionNode.Collection.Count);
             collectionNode.Collection.ElementAt(0).ShouldBeConstantQueryNode("abc");
             collectionNode.Collection.ElementAt(1).ShouldBeConstantQueryNode("xyz");
@@ -2781,22 +2826,29 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             Assert.Equal("SSN", Assert.IsType<SingleValuePropertyAccessNode>(inNode.Left).Property.Name);
 
             CollectionConstantNode collectionNode = Assert.IsType<CollectionConstantNode>(inNode.Right);
-            Assert.Equal(collection, collectionNode.LiteralText);
+            Assert.Equal(collection, collectionNode.LiteralText.ToString());
             Assert.Equal(2, collectionNode.Collection.Count);
             collectionNode.Collection.ElementAt(0).ShouldBeConstantQueryNode("abc");
             collectionNode.Collection.ElementAt(1).ShouldBeConstantQueryNode("xyz");
         }
 
+        [Fact]
+        public void FilterWithInOperationWithMalformCollection()
+        {
+            string filterClause = $"SSN in ('ab c',    def, 'xy,z')";
+            Action parse = () => ParseFilter(filterClause, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            parse.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_UnsupportedQueryNodeForConstant, "def", "EndPath", "Collection"));
+        }
+
         [Theory]
-        [InlineData("('abc'def, 'xy,z')")]
-        [InlineData("('ab c',    def, 'xy,z')")]
-        [InlineData("('xy,z', 'abc'd)")]
-        [InlineData("('xy,z', 'abc'  def)")]
-        public void FilterWithInOperationWithMalformCollection(string collection)
+        [InlineData("('abc'def, 'xy,z')", 13)]
+        [InlineData("('xy,z', 'abc'  def)", 23)]
+        [InlineData("('xy,z', 'abc'd)", 21)]
+        public void FilterWithInOperationWithMalformCollection_ThrowsExpectedToken(string collection, int position)
         {
             string filterClause = $"SSN in {collection}";
             Action parse = () => ParseFilter(filterClause, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
-            parse.Throws<ODataException>(Error.Format(SRResources.StringItemShouldBeQuoted, "d"));
+            parse.Throws<ODataException>(Error.Format(SRResources.UriQueryExpressionParser_ExpressionTokenExpected, ")", position, filterClause));
         }
 
         [Fact]
@@ -2808,7 +2860,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             Assert.Equal("SSN", Assert.IsType<SingleValuePropertyAccessNode>(inNode.Left).Property.Name);
 
             CollectionConstantNode collectionNode = Assert.IsType<CollectionConstantNode>(inNode.Right);
-            Assert.Equal("('a''bc','''def','ghi''','xyz''')", collectionNode.LiteralText);
+            Assert.Equal("('a''bc','''def','ghi''','xyz''')", collectionNode.LiteralText.ToString());
             Assert.Equal(4, collectionNode.Collection.Count);
             collectionNode.Collection.ElementAt(0).ShouldBeConstantQueryNode("a'bc");
             collectionNode.Collection.ElementAt(1).ShouldBeConstantQueryNode("'def");
@@ -2906,7 +2958,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             Assert.Equal("SSN", Assert.IsType<SingleValuePropertyAccessNode>(inNode.Left).Property.Name);
 
             CollectionConstantNode collectionNode = Assert.IsType<CollectionConstantNode>(inNode.Right);
-            Assert.Equal(parsedExpr, collectionNode.LiteralText);
+            Assert.Equal(parsedExpr, collectionNode.LiteralText.ToString());
             Assert.Equal(count, collectionNode.Collection.Count);
         }
 
@@ -2919,7 +2971,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             Assert.Equal("SSN", Assert.IsType<SingleValuePropertyAccessNode>(inNode.Left).Property.Name);
 
             CollectionConstantNode collectionNode = Assert.IsType<CollectionConstantNode>(inNode.Right);
-            Assert.Equal("('a\"\t\u00A9bc')", collectionNode.LiteralText);
+            Assert.Equal("('a\"\t\u00A9bc')", collectionNode.LiteralText.ToString());
             ConstantNode constantNode = Assert.Single(collectionNode.Collection);
             constantNode.ShouldBeConstantQueryNode("a\"\t©bc");
         }
@@ -2927,13 +2979,14 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         [Fact]
         public void FilterWithInOperationWithParensStringCollection_EscapedDoubleQuoteInDoubleQuoteString()
         {
-            FilterClause filter = ParseFilter("SSN in (\"a\\\"\\tbc\", \"x\\u00A9\")", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            string input = "SSN in (\"a\\\"\\tbc\", \"x\\u00A9\")";
+            FilterClause filter = ParseFilter(input, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
 
             var inNode = Assert.IsType<InNode>(filter.Expression);
             Assert.Equal("SSN", Assert.IsType<SingleValuePropertyAccessNode>(inNode.Left).Property.Name);
 
             CollectionConstantNode collectionNode = Assert.IsType<CollectionConstantNode>(inNode.Right);
-            Assert.Equal("(\"a\\\"\\tbc\", \"x\\u00A9\")", collectionNode.LiteralText);
+            Assert.Equal(input.Substring(input.IndexOf('(')), collectionNode.LiteralText.ToString());
 
             Assert.Equal(2, collectionNode.Collection.Count);
             collectionNode.Collection.ElementAt(0).ShouldBeConstantQueryNode("a\"\tbc");
@@ -2949,7 +3002,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             Assert.Equal("SSN", Assert.IsType<SingleValuePropertyAccessNode>(inNode.Left).Property.Name);
 
             CollectionConstantNode collectionNode = Assert.IsType<CollectionConstantNode>(inNode.Right);
-            Assert.Equal("(  'a' , 'x,  y,z ')", collectionNode.LiteralText);
+            Assert.Equal("(  'a' , 'x,  y,z ')", collectionNode.LiteralText.ToString());
             Assert.Equal(2, collectionNode.Collection.Count);
             collectionNode.Collection.ElementAt(0).ShouldBeConstantQueryNode("a");
             collectionNode.Collection.ElementAt(1).ShouldBeConstantQueryNode("x,  y,z ");
@@ -2964,7 +3017,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             Assert.Equal("SSN", Assert.IsType<SingleValuePropertyAccessNode>(inNode.Left).Property.Name);
 
             CollectionConstantNode collectionNode = Assert.IsType<CollectionConstantNode>(inNode.Right);
-            Assert.Equal("(\"a\\b\\\\kc\"   , \"x \\t\\\\t'' /y \")", collectionNode.LiteralText);
+            Assert.Equal("(\"a\\b\\\\kc\"   , \"x \\t\\\\t'' /y \")", collectionNode.LiteralText.ToString());
             Assert.Equal(2, collectionNode.Collection.Count);
             collectionNode.Collection.ElementAt(0).ShouldBeConstantQueryNode("a\b\\kc");
             collectionNode.Collection.ElementAt(1).ShouldBeConstantQueryNode("x \t\\t'' /y ");
@@ -2979,7 +3032,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             Assert.Equal("SSN", Assert.IsType<SingleValuePropertyAccessNode>(inNode.Left).Property.Name);
 
             CollectionConstantNode collectionNode = Assert.IsType<CollectionConstantNode>(inNode.Right);
-            Assert.Equal("('a\\b\\\\bc', 'd\\ff''\\t','xy/z''')", collectionNode.LiteralText);
+            Assert.Equal("('a\\b\\\\bc', 'd\\ff''\\t','xy/z''')", collectionNode.LiteralText.ToString());
             Assert.Equal(3, collectionNode.Collection.Count);
             collectionNode.Collection.ElementAt(0).ShouldBeConstantQueryNode("a\\b\\\\bc");
             collectionNode.Collection.ElementAt(1).ShouldBeConstantQueryNode("d\\ff'\\t");
@@ -3084,19 +3137,30 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Theory]
-        [InlineData("(nu ll)", "nu ll")]
-        [InlineData("(Null)", "N")]
-        [InlineData("('abc', Null)", "N")]
-        [InlineData("('abc', n  ull)", "n  ull")]
-        [InlineData("('abc', Null , 'xyz')", "N")]
-        [InlineData("('abc', n  ull, 'xyz')", "n  ull")]
+        [InlineData("(Null)", "Null")]
+        [InlineData("('abc', Null)", "Null")]
+        [InlineData("('abc', Null , 'xyz')", "Null")]
         [InlineData("('abc', n)", "n")]
-        public void FilterWithInOperationWithInvalidNullLiteral(string collection, string error)
+        public void FilterWithInOperationWithInvalidNullLiteralThrowsUnsupportedQueryNode(string collection, string token)
         {
             string filterClause = $"SSN in {collection}";
             Action parse = () => ParseFilter(filterClause, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
-            parse.Throws<ODataException>(Error.Format(SRResources.StringItemShouldBeQuoted, error));
+
+            // Since 'Null' or 'n' is not recognized as a valid null literal. The parser will treat it as EndPath token and the binder will throw exception about unsupported query node for constant.
+            parse.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_UnsupportedQueryNodeForConstant, token, QueryTokenKind.EndPath, "Collection"));
         }
+
+        [Theory]
+        [InlineData("(nu ll)", 11)]
+        [InlineData("('abc', n  ull)", 18)]
+        [InlineData("('abc', n  ull, 'xyz')", 18)]
+        public void FilterWithInOperationWithInvalidNullLiteralThrowsExpectedExpression(string collection, int position)
+        {
+            string filterClause = $"SSN in {collection}";
+            Action parse = () => ParseFilter(filterClause, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            parse.Throws<ODataException>(Error.Format(SRResources.UriQueryExpressionParser_ExpressionTokenExpected, ")", position, filterClause));
+        }
+
 
         [Fact]
         public void FilterWithEqOperation_EscapedSingleQuote()
@@ -3125,7 +3189,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             var inNode = Assert.IsType<InNode>(filter.Expression);
             Assert.Equal("ID", Assert.IsType<SingleValuePropertyAccessNode>(inNode.Left).Property.Name);
-            Assert.Equal("[1,2,3]", Assert.IsType<CollectionConstantNode>(inNode.Right).LiteralText);
+            Assert.Equal("[1,2,3]", Assert.IsType<CollectionConstantNode>(inNode.Right).LiteralText.ToString());
         }
 
         [Theory]
@@ -3146,11 +3210,15 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Theory]
-        [InlineData("SSN in ('')")]     // Edm.String
-        [InlineData("SSN in ( '' )")]     // Edm.String
-        [InlineData("SSN in (\"\")")]     // Edm.String
-        [InlineData("SSN in ( \"\" )")]     // Edm.String
-        public void FilterWithInOperationWithEmptyString(string filterClause)
+        [InlineData("SSN in ('')", "''")]
+        [InlineData("SSN in ( '' )", "''")]
+        [InlineData("SSN in (\"\")", "\"\"")]
+        [InlineData("SSN in ( \"\" )", "\"\"")]
+        [InlineData("SSN in ['']", "''")]
+        [InlineData("SSN in [ '' ]", "''")]
+        [InlineData("SSN in [\"\"]", "\"\"")]
+        [InlineData("SSN in [ \"\" ]", "\"\"")]
+        public void FilterWithInOperationWithEmptyStringInSquareBrackets(string filterClause, string expectedLiteralText)
         {
             FilterClause filter = ParseFilter(filterClause, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
 
@@ -3161,29 +3229,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             ConstantNode constantNode = collectionNode.Collection.First();
             Assert.Equal(string.Empty, constantNode.Value);
-
-            // Since in the 'in' clause, the item string is normalized as plain JSON (using [] instead of ()), and the string item has changed from '' to "". 
-            // Thefore, the LiteralText is expected to be string.Empty.
-            Assert.Equal(string.Empty, constantNode.LiteralText);
-        }
-
-        [Theory]
-        [InlineData("SSN in ['']")]     // Edm.String
-        [InlineData("SSN in [ '' ]")]     // Edm.String
-        [InlineData("SSN in [\"\"]")]     // Edm.String
-        [InlineData("SSN in [ \"\" ]")]     // Edm.String
-        public void FilterWithInOperationWithEmptyStringInSquareBrackets(string filterClause)
-        {
-            FilterClause filter = ParseFilter(filterClause, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
-
-            var inNode = Assert.IsType<InNode>(filter.Expression);
-
-            CollectionConstantNode collectionNode = Assert.IsType<CollectionConstantNode>(inNode.Right);
-            Assert.Single(collectionNode.Collection);
-
-            ConstantNode constantNode = collectionNode.Collection.First();
-            Assert.Equal(string.Empty, constantNode.Value);
-            Assert.Equal(string.Empty, constantNode.LiteralText);
+            Assert.Equal(expectedLiteralText.AsMemory(), constantNode.LiteralText);
         }
 
         [Theory]
@@ -3206,10 +3252,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Theory]
-        [InlineData("SSN in ( ' ' )", " ")]     // 1 space
-        [InlineData("SSN in ( '   ' )", "   ")]     // 3 spaces
-        [InlineData("SSN in ( \"  \" )", "  ")]     // 2 spaces
-        [InlineData("SSN in ( \"    \" )", "    ")]     // 4 spaces
+        [InlineData("SSN in ( ' ' )", "' '")]     // 1 space
+        [InlineData("SSN in ( '   ' )", "'   '")]     // 3 spaces
+        [InlineData("SSN in ( \"  \" )", "\"  \"")]     // 2 spaces
+        [InlineData("SSN in ( \"    \" )", "\"    \"")]     // 4 spaces
         public void FilterWithInOperationWithWhitespace(string filterClause, string expectedLiteralText)
         {
             FilterClause filter = ParseFilter(filterClause, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
@@ -3222,14 +3268,14 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             Assert.Single(collectionNode.Collection);
 
             ConstantNode constantNode = collectionNode.Collection.First();
-            Assert.Equal(expectedLiteralText, constantNode.LiteralText);
+            Assert.Equal(expectedLiteralText.AsMemory(), constantNode.LiteralText);
         }
 
         [Theory]
-        [InlineData("SSN in [ ' ' ]", " ")]     // 1 space
-        [InlineData("SSN in [ '   ' ]", "   ")]     // 3 spaces
-        [InlineData("SSN in [ \"  \" ]", "  ")]     // 2 spaces
-        [InlineData("SSN in [ \"    \" ]", "    ")]     // 4 spaces
+        [InlineData("SSN in [ ' ' ]", "' '")]     // 1 space
+        [InlineData("SSN in [ '   ' ]", "'   '")]     // 3 spaces
+        [InlineData("SSN in [ \"  \" ]", "\"  \"")]     // 2 spaces
+        [InlineData("SSN in [ \"    \" ]", "\"    \"")]     // 4 spaces
         public void FilterWithInOperationWithWhitespaceInSquareBrackets(string filterClause, string expectedLiteralText)
         {
             FilterClause filter = ParseFilter(filterClause, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
@@ -3242,7 +3288,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             Assert.Single(collectionNode.Collection);
 
             ConstantNode constantNode = collectionNode.Collection.First();
-            Assert.Equal(expectedLiteralText, constantNode.LiteralText);
+            Assert.Equal(expectedLiteralText.AsMemory(), constantNode.LiteralText);
         }
 
         [Theory]
@@ -3280,12 +3326,12 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Theory]
-        [InlineData("MyGuid in ( '' )", "")]  // Edm.Guid
-        [InlineData("MyGuid in ( '  ' )", "  ")]  // Edm.Guid
-        [InlineData("MyGuid in ( \" \" )", " ")]  // Edm.Guid
-        [InlineData("MyGuid in [ '' ]", "")]  // Edm.Guid
-        [InlineData("MyGuid in [ '  ' ]", "  ")]  // Edm.Guid
-        [InlineData("MyGuid in [ \" \" ]", " ")]  // Edm.Guid
+        [InlineData("MyGuid in ( '' )", "''")]  // Edm.Guid
+        [InlineData("MyGuid in ( '  ' )", "'  '")]  // Edm.Guid
+        [InlineData("MyGuid in ( \" \" )", "\" \"")]  // Edm.Guid
+        [InlineData("MyGuid in [ '' ]", "''")]  // Edm.Guid
+        [InlineData("MyGuid in [ '  ' ]", "'  '")]  // Edm.Guid
+        [InlineData("MyGuid in [ \" \" ]", "\" \"")]  // Edm.Guid
         public void FilterWithInOperationGuidWithEmptyQuotesThrows(string filterClause, string quotedString)
         {
             Action parse = () => ParseFilter(filterClause, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
@@ -3293,29 +3339,29 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Theory]
-        [InlineData("Birthdate in ( '' )", "")]  // Edm.DateTimeOffset
-        [InlineData("Birthdate in ( \" \" )", " ")]  // Edm.DateTimeOffset
-        [InlineData("Birthdate in ('   ')", "   ")]  // Edm.DateTimeOffset
-        [InlineData("Birthdate in [ '' ]", "")]  // Edm.DateTimeOffset
-        [InlineData("Birthdate in [ \" \" ]", " ")]  // Edm.DateTimeOffset
-        [InlineData("Birthdate in ['   ']", "   ")]  // Edm.DateTimeOffset
+        [InlineData("Birthdate in ( '' )", "''")]  // Edm.DateTimeOffset
+        [InlineData("Birthdate in ( \" \" )", "\" \"")]  // Edm.DateTimeOffset
+        [InlineData("Birthdate in ('   ')", "'   '")]  // Edm.DateTimeOffset
+        [InlineData("Birthdate in [ '' ]", "''")]  // Edm.DateTimeOffset
+        [InlineData("Birthdate in [ \" \" ]", "\" \"")]  // Edm.DateTimeOffset
+        [InlineData("Birthdate in ['   ']", "'   '")]  // Edm.DateTimeOffset
         public void FilterWithInOperationDateTimeOffsetWithEmptyQuotesThrows(string filterClause, string quotedString)
         {
             Action parse = () => ParseFilter(filterClause, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
-            parse.Throws<ODataException>(Error.Format(SRResources.ReaderValidationUtils_CannotConvertPrimitiveValue, quotedString, "Edm.DateTimeOffset"));
+            parse.Throws<ODataException>(Error.Format(SRResources.LiteralBinder_CannotConvertPrimitiveValue, quotedString, "Edm.DateTimeOffset"));
         }
 
         [Theory]
-        [InlineData("MyDate in ( '' )", "")]  // Edm.Date
-        [InlineData("MyDate in ( \" \" )", " ")]  // Edm.Date
-        [InlineData("MyDate in ('   ')", "   ")]  // Edm.Date
-        [InlineData("MyDate in [ '' ]", "")]  // Edm.Date
-        [InlineData("MyDate in [ \" \" ]", " ")]  // Edm.Date
-        [InlineData("MyDate in ['   ']", "   ")]  // Edm.Date
+        [InlineData("MyDate in ( '' )", "''")]  // Edm.Date
+        [InlineData("MyDate in ( \" \" )", "\" \"")]  // Edm.Date
+        [InlineData("MyDate in ('   ')", "'   '")]  // Edm.Date
+        [InlineData("MyDate in [ '' ]", "''")]  // Edm.Date
+        [InlineData("MyDate in [ \" \" ]", "\" \"")]  // Edm.Date
+        [InlineData("MyDate in ['   ']", "'   '")]  // Edm.Date
         public void FilterWithInOperationDateWithEmptyQuotesThrows(string filterClause, string quotedString)
         {
             Action parse = () => ParseFilter(filterClause, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
-            parse.Throws<ODataException>(Error.Format(SRResources.ReaderValidationUtils_CannotConvertPrimitiveValue, quotedString, "Edm.Date"));
+            parse.Throws<ODataException>(Error.Format(SRResources.LiteralBinder_CannotConvertPrimitiveValue, quotedString, "Edm.Date"));
         }
 
         [Theory]
@@ -3326,36 +3372,36 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             string filterClause = $"MyGuid in {guidsCollection}";
 
             Action parse = () => ParseFilter(filterClause, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
-            parse.Throws<ODataException>(Error.Format(SRResources.ReaderValidationUtils_CannotConvertPrimitiveValue, "", "Edm.Guid"));
+            parse.Throws<ODataException>(Error.Format(SRResources.ReaderValidationUtils_CannotConvertPrimitiveValue, "'D01663CF-EB21-4A0E-88E0-361C10ACE7FD'", "Edm.Guid"));
         }
 
         [Theory]
-        [InlineData("(1950-01-02T06:15:00Z, '',1977-09-16T15:00:00+05:00)")]
-        [InlineData("(1950-01-02T06:15:00Z, \"\",1977-09-16T15:00:00+05:00)")]
-        public void FilterWithInOperationWithQuotedDateTimeOffsetCollectionWithInvalidValuesThrows(string dateTimeOffsetCollection)
+        [InlineData("(1950-01-02T06:15:00Z, '',1977-09-16T15:00:00+05:00)", "''")]
+        [InlineData("(1950-01-02T06:15:00Z, \"\",1977-09-16T15:00:00+05:00)", "\"\"")]
+        public void FilterWithInOperationWithQuotedDateTimeOffsetCollectionWithInvalidValuesThrows(string dateTimeOffsetCollection, string err)
         {
             string filterClause = $"Birthdate in {dateTimeOffsetCollection}";
 
             Action parse = () => ParseFilter(filterClause, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
-            parse.Throws<ODataException>(Error.Format(SRResources.ReaderValidationUtils_CannotConvertPrimitiveValue, "", "Edm.DateTimeOffset"));
+            parse.Throws<ODataException>(Error.Format(SRResources.ReaderValidationUtils_CannotConvertPrimitiveValue, err, "Edm.DateTimeOffset"));
         }
 
         [Theory]
-        [InlineData("(1950-01-02, '',1977-09-16)")]
-        [InlineData("(1950-01-02, \"\",1977-09-16)")]
-        public void FilterWithInOperationWithQuotedDateOnlyCollectionWithInvalidValuesThrows(string dateCollection)
+        [InlineData("(1950-01-02, '',1977-09-16)", "''")]
+        [InlineData("(1950-01-02, \"\",1977-09-16)", "\"\"")]
+        public void FilterWithInOperationWithQuotedDateOnlyCollectionWithInvalidValuesThrows(string dateCollection, string err)
         {
             string filterClause = $"MyDate in {dateCollection}";
 
             Action parse = () => ParseFilter(filterClause, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
-            parse.Throws<ODataException>(Error.Format(SRResources.ReaderValidationUtils_CannotConvertPrimitiveValue, "", "Edm.Date"));
+            parse.Throws<ODataException>(Error.Format(SRResources.ReaderValidationUtils_CannotConvertPrimitiveValue, err, "Edm.Date"));
         }
 
         [Fact]
         public void FilterWithInOperationWithMismatchedClosureCollection()
         {
             Action parse = () => ParseFilter("ID in (1,2,3]", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
-            parse.Throws<ODataException>(SRResources.ExpressionLexer_UnbalancedBracketExpression);
+            parse.Throws<ODataException>(Error.Format(SRResources.UriQueryExpressionParser_ExpressionTokenExpected, ")", 12, "ID in (1,2,3]"));
         }
 
         [Fact]
@@ -3407,21 +3453,22 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var inNode = Assert.IsType<InNode>(filter.Expression);
             Assert.Equal("MyGuid", Assert.IsType<SingleValuePropertyAccessNode>(inNode.Left).Property.Name);
             Assert.Equal("(D01663CF-EB21-4A0E-88E0-361C10ACE7FD, 492CF54A-84C9-490C-A7A4-B5010FAD8104, null)",
-                Assert.IsType<CollectionConstantNode>(inNode.Right).LiteralText);
+                Assert.IsType<CollectionConstantNode>(inNode.Right).LiteralText.ToString());
         }
 
         [Theory]
-        [InlineData("('D01663CF-EB21-4A0E-88E0-361C10ACE7FD','492CF54A-84C9-490C-A7A4-B5010FAD8104')")]
-        [InlineData("(\"D01663CF-EB21-4A0E-88E0-361C10ACE7FD\", \"492CF54A-84C9-490C-A7A4-B5010FAD8104\")")]
-        [InlineData("(\"D01663CF-EB21-4A0E-88E0-361C10ACE7FD\",\"492CF54A-84C9-490C-A7A4-B5010FAD8104\")")]
-        public void FilterWithInOperationWithQuotedGuidCollection(string guidsCollection)
+        [InlineData("('D01663CF-EB21-4A0E-88E0-361C10ACE7FD','492CF54A-84C9-490C-A7A4-B5010FAD8104')", "'D01663CF-EB21-4A0E-88E0-361C10ACE7FD'")]
+        [InlineData("(\"D01663CF-EB21-4A0E-88E0-361C10ACE7FD\", \"492CF54A-84C9-490C-A7A4-B5010FAD8104\")", "\"D01663CF-EB21-4A0E-88E0-361C10ACE7FD\"")]
+        [InlineData("(\"D01663CF-EB21-4A0E-88E0-361C10ACE7FD\",\"492CF54A-84C9-490C-A7A4-B5010FAD8104\")", "\"D01663CF-EB21-4A0E-88E0-361C10ACE7FD\"")]
+        public void FilterWithInOperationWithQuotedGuidCollectionShouldThrows(string guidsCollection, string firstGuid)
         {
-            FilterClause filter = ParseFilter($"MyGuid in {guidsCollection}",
-                HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            // Be noted: The in operation with quoted guid collection is not valid since the guid values are expected to be unquoted in the collection.
+            // The parser will treat the quoted guid collection as a single string literal and then the binder will throw exception about cannot convert primitive value from string to guid.
+            // In the old ODL version, it supports by mistoken (see details at: https://github.com/OData/odata.net/pull/1323)
+            // From the original issue at: https://github.com/OData/WebApi/issues/1596, it means the quoted guid collection should not work.
+            Action test = () => ParseFilter($"MyGuid in {guidsCollection}", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
 
-            var inNode = Assert.IsType<InNode>(filter.Expression);
-            Assert.Equal("MyGuid", Assert.IsType<SingleValuePropertyAccessNode>(inNode.Left).Property.Name);
-            Assert.Equal(guidsCollection, Assert.IsType<CollectionConstantNode>(inNode.Right).LiteralText);
+            test.Throws<ODataException>(Error.Format(SRResources.LiteralBinder_CannotConvertPrimitiveValue, firstGuid, "Edm.Guid"));
         }
 
         [Fact]
@@ -3503,7 +3550,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             OrderByClause orderby = ParseOrderBy("Fully.Qualified.Namespace.ColorPattern'SolidYellow' in FavoriteColors", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
 
             var inNode = Assert.IsType<InNode>(orderby.Expression);
-            Assert.Equal("Fully.Qualified.Namespace.ColorPattern'SolidYellow'", Assert.IsType<ConstantNode>(inNode.Left).LiteralText);
+            Assert.Equal("Fully.Qualified.Namespace.ColorPattern'SolidYellow'".AsMemory(), Assert.IsType<ConstantNode>(inNode.Left).LiteralText);
             Assert.Equal("FavoriteColors", Assert.IsType<CollectionPropertyAccessNode>(inNode.Right).Property.Name);
         }
 
@@ -3533,7 +3580,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             OrderByClause orderby = ParseOrderBy("ID in (1,2,3)", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
             var inNode = Assert.IsType<InNode>(orderby.Expression);
             Assert.Equal("ID", Assert.IsType<SingleValuePropertyAccessNode>(inNode.Left).Property.Name);
-            Assert.Equal("(1,2,3)", Assert.IsType<CollectionConstantNode>(inNode.Right).LiteralText);
+            Assert.Equal("(1,2,3)", Assert.IsType<CollectionConstantNode>(inNode.Right).LiteralText.ToString());
         }
 
         [Fact]
@@ -3542,14 +3589,15 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             OrderByClause orderby = ParseOrderBy("ID in [1,2,3]", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
             var inNode = Assert.IsType<InNode>(orderby.Expression);
             Assert.Equal("ID", Assert.IsType<SingleValuePropertyAccessNode>(inNode.Left).Property.Name);
-            Assert.Equal("[1,2,3]", Assert.IsType<CollectionConstantNode>(inNode.Right).LiteralText);
+            Assert.Equal("[1,2,3]", Assert.IsType<CollectionConstantNode>(inNode.Right).LiteralText.ToString());
         }
 
         [Fact]
         public void OrderByWithInOperationWithMismatchedClosureCollection()
         {
-            Action parse = () => ParseOrderBy("ID in (1,2,3]", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
-            parse.Throws<ODataException>(SRResources.ExpressionLexer_UnbalancedBracketExpression);
+            string input = "ID in (1,2,3]";
+            Action parse = () => ParseOrderBy(input, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            parse.Throws<ODataException>(Error.Format(SRResources.UriQueryExpressionParser_ExpressionTokenExpected, ")", 12, input));
         }
         
         [Fact]
@@ -3561,7 +3609,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var inNode = Assert.IsType<InNode>(filter.Expression);
             Assert.Equal("Birthdate", Assert.IsType<SingleValuePropertyAccessNode>(inNode.Left).Property.Name);
             Assert.Equal("(1950-01-02T06:15:00Z, 1977-09-16T15:00:00+05:00)",
-                Assert.IsType<CollectionConstantNode>(inNode.Right).LiteralText);
+                Assert.IsType<CollectionConstantNode>(inNode.Right).LiteralText.ToString());
             Assert.Equal(new object[]{new DateTimeOffset(1950, 1, 2, 6, 15, 0, TimeSpan.Zero), 
                     new DateTimeOffset(1977, 9, 16, 15, 0, 0, TimeSpan.FromHours(5))},
                 Assert.IsType<CollectionConstantNode>(inNode.Right).Collection.Select(x => x.Value));
@@ -3576,7 +3624,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var inNode = Assert.IsType<InNode>(filter.Expression);
             Assert.Equal("MyDate", Assert.IsType<SingleValuePropertyAccessNode>(inNode.Left).Property.Name);
             Assert.Equal("(1950-01-02, 1977-09-16)",
-                Assert.IsType<CollectionConstantNode>(inNode.Right).LiteralText);
+                Assert.IsType<CollectionConstantNode>(inNode.Right).LiteralText.ToString());
             Assert.Equal(new object[]{new DateOnly(1950, 1, 2), new DateOnly(1977, 9, 16)},
                 Assert.IsType<CollectionConstantNode>(inNode.Right).Collection.Select(x => x.Value));
         }
@@ -3590,7 +3638,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var inNode = Assert.IsType<InNode>(filter.Expression);
             Assert.Equal("MyTimeOfDay", Assert.IsType<SingleValuePropertyAccessNode>(inNode.Left).Property.Name);
             Assert.Equal("(12:00:00, 08:00:01)",
-                Assert.IsType<CollectionConstantNode>(inNode.Right).LiteralText);
+                Assert.IsType<CollectionConstantNode>(inNode.Right).LiteralText.ToString());
             Assert.Equal(new object[]{new TimeOnly(12, 0, 0, 0), new TimeOnly(8, 0, 1, 0)},
                 Assert.IsType<CollectionConstantNode>(inNode.Right).Collection.Select(x => x.Value));
         }
@@ -3604,7 +3652,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var inNode = Assert.IsType<InNode>(filter.Expression);
             Assert.Equal("TimeEmployed", Assert.IsType<SingleValuePropertyAccessNode>(inNode.Left).Property.Name);
             Assert.Equal("(duration'PT2H47M30S', duration'PT2H46M40S')",
-                Assert.IsType<CollectionConstantNode>(inNode.Right).LiteralText);
+                Assert.IsType<CollectionConstantNode>(inNode.Right).LiteralText.ToString());
             Assert.Equal(new object[]{new TimeSpan(2, 47, 30), new TimeSpan(2, 46, 40)},
                 Assert.IsType<CollectionConstantNode>(inNode.Right).Collection.Select(x => x.Value));
         }
@@ -3618,7 +3666,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var inNode = Assert.IsType<InNode>(filter.Expression);
             Assert.Equal("FavoriteDate", Assert.IsType<SingleValuePropertyAccessNode>(inNode.Left).Property.Name);
             Assert.Equal("(1950-01-02T06:15:00Z, null)",
-                Assert.IsType<CollectionConstantNode>(inNode.Right).LiteralText);
+                Assert.IsType<CollectionConstantNode>(inNode.Right).LiteralText.ToString());
             Assert.Equal(new object[]{new DateTimeOffset(1950, 1, 2, 6, 15, 0, TimeSpan.Zero), 
                     null},
                 Assert.IsType<CollectionConstantNode>(inNode.Right).Collection.Select(x => x.Value));
@@ -3633,7 +3681,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var inNode = Assert.IsType<InNode>(filter.Expression);
             Assert.Equal("TimeEmployed", Assert.IsType<SingleValuePropertyAccessNode>(inNode.Left).Property.Name);
             Assert.Equal("(duration'PT2H47M30S', null)",
-                Assert.IsType<CollectionConstantNode>(inNode.Right).LiteralText);
+                Assert.IsType<CollectionConstantNode>(inNode.Right).LiteralText.ToString());
             Assert.Equal(new object[]{new TimeSpan(2, 47, 30), null},
                 Assert.IsType<CollectionConstantNode>(inNode.Right).Collection.Select(x => x.Value));
         }
@@ -3647,7 +3695,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var inNode = Assert.IsType<InNode>(filter.Expression);
             Assert.Equal("FavoriteDate", Assert.IsType<SingleValuePropertyAccessNode>(inNode.Left).Property.Name);
             Assert.Equal("(1950-01-02T06:15:00Z)",
-                Assert.IsType<CollectionConstantNode>(inNode.Right).LiteralText);
+                Assert.IsType<CollectionConstantNode>(inNode.Right).LiteralText.ToString());
             Assert.Equal(new object[]{new DateTimeOffset(1950, 1, 2, 6, 15, 0, TimeSpan.Zero)},
                 Assert.IsType<CollectionConstantNode>(inNode.Right).Collection.Select(x => x.Value));
         }
@@ -3661,7 +3709,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var inNode = Assert.IsType<InNode>(filter.Expression);
             Assert.Equal("FavoriteDate", Assert.IsType<SingleValuePropertyAccessNode>(inNode.Left).Property.Name);
             Assert.Equal("(null)",
-                Assert.IsType<CollectionConstantNode>(inNode.Right).LiteralText);
+                Assert.IsType<CollectionConstantNode>(inNode.Right).LiteralText.ToString());
             Assert.Equal(new object[] {null},
                 Assert.IsType<CollectionConstantNode>(inNode.Right).Collection.Select(x => x.Value));
         }
@@ -3675,7 +3723,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var inNode = Assert.IsType<InNode>(filter.Expression);
             Assert.Equal("example", Assert.IsType<SingleValueOpenPropertyAccessNode>(inNode.Left).Name);
             Assert.Equal("('examplepainting')",
-                Assert.IsType<CollectionConstantNode>(inNode.Right).LiteralText);
+                Assert.IsType<CollectionConstantNode>(inNode.Right).LiteralText.ToString());
         }
 
         [Theory]
@@ -3699,44 +3747,42 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Theory]
-        [InlineData("example in ('')", "")] // No space
-        [InlineData("example in (' ')", " ")] // 1 space
-        [InlineData("example in ( '   ' )", "   ")] // 3 spaces
-        [InlineData("example in ( \"  \" )", "  ")] // 2 spaces
-        [InlineData("example in ( \"    \" )", "    ")] // 4 spaces
+        [InlineData("example in ('')", "''")] // No space
+        [InlineData("example in (' ')", "' '")] // 1 space
+        [InlineData("example in ( '   ' )", "'   '")] // 3 spaces
+        [InlineData("example in ( \"  \" )", "\"  \"")] // 2 spaces
+        [InlineData("example in ( \"    \" )", "\"    \"")] // 4 spaces
         public void FilterWithInOperationWithOpenTypesInEmptyString(string filterQueryString, string expectedLiteral)
         {
-            FilterClause filter = ParseFilter(filterQueryString,
-                HardCodedTestModel.TestModel, HardCodedTestModel.GetPaintingType());
+            FilterClause filter = ParseFilter(filterQueryString, HardCodedTestModel.TestModel, HardCodedTestModel.GetPaintingType());
 
             var inNode = Assert.IsType<InNode>(filter.Expression);
             CollectionConstantNode collectionNode = Assert.IsType<CollectionConstantNode>(inNode.Right);
             Assert.Single(collectionNode.Collection);
 
             ConstantNode constantNode = collectionNode.Collection.First();
-            Assert.Equal(expectedLiteral, constantNode.LiteralText);
+            Assert.Equal(expectedLiteral.AsMemory(), constantNode.LiteralText);
         }
 
         [Theory]
-        [InlineData("example in ('', \"  \")", "", "  ")]
-        [InlineData("example in (' ', \"\")", " ", "")]
-        [InlineData("example in ( '   ', '' )", "   ", "")]
-        [InlineData("example in ( \"  \", \" \" )", "  ", " ")]
-        [InlineData("example in ( \"    \", ' ' )", "    ", " ")]
+        [InlineData("example in ('', \"  \")", "''", "\"  \"")]
+        [InlineData("example in (' ', \"\")", "' '", "\"\"")]
+        [InlineData("example in ( '   ', '' )", "'   '", "''")]
+        [InlineData("example in ( \"  \", \" \" )", "\"  \"", "\" \"")]
+        [InlineData("example in ( \"    \", ' ' )", "\"    \"", "' '")]
         public void FilterWithInOperationWithOpenTypesInMultipleEmptyStrings(string filterQueryString, string expectedFirstLiteral, string expectedSecondLiteral)
         {
-            FilterClause filter = ParseFilter(filterQueryString,
-                HardCodedTestModel.TestModel, HardCodedTestModel.GetPaintingType());
+            FilterClause filter = ParseFilter(filterQueryString, HardCodedTestModel.TestModel, HardCodedTestModel.GetPaintingType());
 
             var inNode = Assert.IsType<InNode>(filter.Expression);
             CollectionConstantNode collectionNode = Assert.IsType<CollectionConstantNode>(inNode.Right);
             Assert.Equal(2, collectionNode.Collection.Count);
 
             ConstantNode constantNode1 = collectionNode.Collection.First();
-            Assert.Equal(expectedFirstLiteral, constantNode1.LiteralText);
+            Assert.Equal(expectedFirstLiteral.AsMemory(), constantNode1.LiteralText);
 
             ConstantNode constantNode2 = collectionNode.Collection.Last();
-            Assert.Equal(expectedSecondLiteral, constantNode2.LiteralText);
+            Assert.Equal(expectedSecondLiteral.AsMemory(), constantNode2.LiteralText);
         }
 
         #endregion

@@ -56,8 +56,8 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         [Fact]
         public void BindLiteralShouldSetLiteralTextFromToken()
         {
-            ConstantNode result = LiteralBinder.BindLiteral(new LiteralToken(1, "originalText")) as ConstantNode;
-            Assert.Equal("originalText", result.LiteralText);
+            ConstantNode result = LiteralBinder.BindLiteral(new LiteralToken(1, "originalText".AsMemory())) as ConstantNode;
+            Assert.Equal("originalText".AsMemory(), result.LiteralText);
         }
     }
 }

@@ -127,7 +127,7 @@ namespace Microsoft.OData.UriParser
                     return null;
                 }
 
-                throw new ODataException(Error.Format(SRResources.UriQueryExpressionParser_OpenParenExpected, this.Lexer.CurrentToken.Position, this.Lexer.ExpressionText));
+                throw new ODataException(Error.Format(SRResources.UriQueryExpressionParser_ExpressionTokenExpected, "(", this.Lexer.CurrentToken.Position, this.Lexer.ExpressionText));
             }
 
             this.Lexer.NextToken();

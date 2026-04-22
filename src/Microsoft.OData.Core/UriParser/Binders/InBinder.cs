@@ -110,7 +110,7 @@ namespace Microsoft.OData.UriParser
                 // Parentheses-based collections are not standard JSON but bracket-based ones are.
                 // Temporarily switch our collection to bracket-based so that the JSON reader will
                 // correctly parse the collection. Then pass the original literal text to the token.
-                string bracketLiteralText = literalToken.OriginalText;
+                string bracketLiteralText = literalToken.OriginalText.ToString();
 
                 if (bracketLiteralText[0] == '(' || bracketLiteralText[0] == '[')
                 {
@@ -160,11 +160,16 @@ namespace Microsoft.OData.UriParser
                 }
 
                 object collection = ODataUriConversionUtils.ConvertFromCollectionValue(bracketLiteralText, model, expectedType);
-                LiteralToken collectionLiteralToken = new LiteralToken(collection, literalToken.OriginalText, expectedType);
+                LiteralToken collectionLiteralToken = new LiteralToken(collection, literalToken.OriginalText.ToString(), expectedType);
                 operand = this.bindMethod(collectionLiteralToken) as CollectionConstantNode;
             }
             else
             {
+                if (queryToken is CollectionLiteralToken collectionToken)
+                {
+                    collectionToken.CollectionType = expectedType.AsCollection();
+                }
+
                 var node = this.bindMethod(queryToken);
                 if (node is SingleValueOpenPropertyAccessNode openNode)
                 {

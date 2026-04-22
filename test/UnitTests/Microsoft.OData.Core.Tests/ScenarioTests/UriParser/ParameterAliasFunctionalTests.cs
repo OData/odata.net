@@ -115,22 +115,18 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             Action parse = () => ParseUriAndVerify(
                 new Uri("http://gobbledygook/GetPet4(id=@p!1)?@p!1=1.01M"),
-                (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
-                {
-                });
+                (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) => { });
+
             parse.Throws<ODataException>(Error.Format(SRResources.ExpressionLexer_InvalidCharacter, "!", 5, "id=@p!1"));
         }
 
         [Fact]
-        public void ParsePath_AliasInFunctionImport_NullAsValue()
+        public void ParsePath_AliasInFunctionImport_NullAsValue_ThrowsIfTypeIsNonNullable()
         {
-            ParseUriAndVerify(
+            Action parse = () => ParseUriAndVerify(
                 new Uri("http://gobbledygook/GetPet4(id=@p1)?@p1=null"),
-                (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
-                {
-                    oDataPath.LastSegment.ShouldBeOperationImportSegment(HardCodedTestModel.GetFunctionImportForGetPet4()).Parameters.First().ShouldHaveParameterAliasNode("id", "@p1", null);
-                    aliasNodes["@p1"].ShouldBeConstantQueryNode((object)null);
-                });
+                (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) => { });
+            parse.Throws<ODataException>(Error.Format(SRResources.LiteralBinder_CannotBindNullLiteralToNonNullableType, EdmCoreModel.Instance.GetDecimal(false).FullName()));
         }
 
         [Fact]
@@ -148,28 +144,46 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         [Fact]
         public void ParsePath_ComplexAliasInBoundFunction()
         {
+            string addressValue = "{\"@odata.type\":\"%23Fully.Qualified.Namespace.Address\",\"Street\":\"NE 24th St.\",\"City\":\"Redmond\"}";
             const string relativeUri = "People(1)/Fully.Qualified.Namespace.CanMoveToAddress(address=@address)?@address={\"@odata.type\":\"%23Fully.Qualified.Namespace.Address\",\"Street\":\"NE 24th St.\",\"City\":\"Redmond\"}";
             ParseUriAndVerify(
                 new Uri("http://gobbledygook/" + relativeUri),
                 (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
                 {
                     oDataPath.LastSegment.ShouldBeOperationSegment(HardCodedTestModel.GetFunctionForCanMoveToAddress());
-                    var constNode = Assert.IsType<ConstantNode>(aliasNodes["@address"]);
-                    Assert.Equal("{\"@odata.type\":\"#Fully.Qualified.Namespace.Address\",\"Street\":\"NE 24th St.\",\"City\":\"Redmond\"}", constNode.Value);
+                    ResourceConstantNode constNode = Assert.IsType<ResourceConstantNode>(aliasNodes["@address"]);
+                    Assert.Equal(addressValue.Replace("%23", "#").AsMemory(), constNode.LiteralText);
+                    Assert.Equal("Fully.Qualified.Namespace.Address", constNode.TypeReference.FullName());
+
+                    Assert.Equal(2, constNode.Properties.Count);
+                    constNode.Properties.First(c => c.Key == "Street").Value.ShouldBeConstantQueryNode("NE 24th St.");
+                    constNode.Properties.First(c => c.Key == "City").Value.ShouldBeConstantQueryNode("Redmond");
                 });
         }
 
         [Fact]
         public void ParsePath_CollectionComplexAliasInBoundFunction()
         {
-            const string relativeUri = "People(1)/Fully.Qualified.Namespace.CanMoveToAddresses(addresses=@addresses)?@addresses=[{\"Street\":\"NE 24th St.\",\"City\":\"Redmond\"},{\"Street\":\"Pine St.\",\"City\":\"Seattle\"}]";
+            string addresses = "[{\"Street\":\"NE 24th St.\",\"City\":\"Redmond\"},{\"Street\":\"Pine St.\",\"City\":\"Seattle\"}]";
+            string relativeUri = $"People(1)/Fully.Qualified.Namespace.CanMoveToAddresses(addresses=@addresses)?@addresses={addresses}";
             ParseUriAndVerify(
                 new Uri("http://gobbledygook/" + relativeUri),
                 (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
                 {
                     oDataPath.LastSegment.ShouldBeOperationSegment(HardCodedTestModel.GetFunctionForCanMoveToAddresses());
-                    var constNode = Assert.IsType<ConstantNode>(aliasNodes["@addresses"]);
-                    Assert.Equal("[{\"Street\":\"NE 24th St.\",\"City\":\"Redmond\"},{\"Street\":\"Pine St.\",\"City\":\"Seattle\"}]", constNode.Value);
+                    CollectionConstantNode constNode = Assert.IsType<CollectionConstantNode>(aliasNodes["@addresses"]);
+                    Assert.Equal(addresses.AsMemory(), constNode.LiteralText);
+
+                    Assert.Equal(2, constNode.Items.Count);
+                    ResourceConstantNode resourceNode1 = Assert.IsType<ResourceConstantNode>(constNode.Items.ElementAt(0));
+                    Assert.Equal(2, resourceNode1.Properties.Count);
+                    resourceNode1.Properties.First(c => c.Key == "Street").Value.ShouldBeConstantQueryNode("NE 24th St.");
+                    resourceNode1.Properties.First(c => c.Key == "City").Value.ShouldBeConstantQueryNode("Redmond");
+
+                    ResourceConstantNode resourceNode2 = Assert.IsType<ResourceConstantNode>(constNode.Items.ElementAt(1));
+                    Assert.Equal(2, resourceNode2.Properties.Count);
+                    resourceNode2.Properties.First(c => c.Key == "Street").Value.ShouldBeConstantQueryNode("Pine St.");
+                    resourceNode2.Properties.First(c => c.Key == "City").Value.ShouldBeConstantQueryNode("Seattle");
                 });
         }
 
@@ -182,9 +196,11 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
                 {
                     oDataPath.LastSegment.ShouldBeOperationSegment(HardCodedTestModel.GetFunctionForOwnsTheseDogs());
-                    var constNode = Assert.IsType<ConstantNode>(aliasNodes["@dogNames"]);
-                    var items = constNode.Value.ShouldBeODataCollectionValue().ItemsShouldBeAssignableTo<string>();
-                    Assert.Equal(2, items.Count());
+                    CollectionConstantNode constNode = Assert.IsType<CollectionConstantNode>(aliasNodes["@dogNames"]);
+                    Assert.Equal("[\"Barky\",\"Junior\"]".AsMemory(), constNode.LiteralText);
+                    Assert.Equal(2, constNode.Items.Count);
+                    constNode.Items.ElementAt(0).ShouldBeConstantQueryNode("Barky");
+                    constNode.Items.ElementAt(1).ShouldBeConstantQueryNode("Junior");
                 });
         }
 
@@ -198,11 +214,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 {
                     oDataPath.LastSegment.ShouldBeOperationSegment(HardCodedTestModel.GetFunctionForIsOlderThanShort());
                     var constNode = Assert.IsType<ConstantNode>(aliasNodes["@age"]);
-                    Assert.Equal(1234, constNode.Value);
+                    Assert.Equal((short)1234, constNode.Value);
                     Assert.Equal("Edm.Int16", constNode.TypeReference.FullName());
                 });
-            // TODO: This is a bug repro. Remove this assertion after the bug is fixed.
-            parseUri.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_CannotConvertToType, "Edm.Int32", "Edm.Int16"));
         }
 
         [Theory]
@@ -217,8 +231,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 {
                     oDataPath.LastSegment.ShouldBeOperationImportSegment(HardCodedTestModel.GetFunctionImportForGetRating());
 
-                    var constNode = Assert.IsType<ConstantNode>(aliasNodes["@p"]);
-                    Assert.Equal(parameterValue.Replace("%23", "#"), constNode.Value);
+                    ResourceConstantNode colConstNode = Assert.IsType<ResourceConstantNode>(aliasNodes["@p"]);
+                    Assert.Equal(2, colConstNode.Properties.Count);
                 });
         }
 
@@ -232,8 +246,21 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 {
                     oDataPath.LastSegment.ShouldBeOperationImportSegment(HardCodedTestModel.GetFunctionImportForGetRatings());
 
-                    var constNode = Assert.IsType<ConstantNode>(aliasNodes["@p"]);
-                    Assert.Equal(parameterValue.Replace("%23", "#"), constNode.Value);
+                    var colConstNode = Assert.IsType<CollectionConstantNode>(aliasNodes["@p"]);
+                    Assert.Equal(parameterValue.AsMemory(), colConstNode.LiteralText);
+
+                    Assert.Equal(3, colConstNode.Count);
+                    ResourceConstantNode resource1 = Assert.IsType<ResourceConstantNode>(colConstNode.Items.ElementAt(0));
+                    resource1.Properties.First(c => c.Key == "ID").Value.ShouldBeConstantQueryNode(1);
+                    resource1.Properties.First(c => c.Key == "Title").Value.ShouldBeConstantQueryNode("The Ogre's Lair");
+
+                    ResourceConstantNode resource2 = Assert.IsType<ResourceConstantNode>(colConstNode.Items.ElementAt(1));
+                    resource2.Properties.First(c => c.Key == "ID").Value.ShouldBeConstantQueryNode(2);
+                    resource2.Properties.First(c => c.Key == "Title").Value.ShouldBeConstantQueryNode("The \"Benevolent\" Dictator");
+
+                    ResourceConstantNode resource3 = Assert.IsType<ResourceConstantNode>(colConstNode.Items.ElementAt(2));
+                    resource3.Properties.First(c => c.Key == "ID").Value.ShouldBeConstantQueryNode(3);
+                    resource3.Properties.First(c => c.Key == "Title").Value.ShouldBeConstantQueryNode("The \"Gardener's\" Story");
                 });
         }
 
@@ -246,8 +273,17 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 {
                     oDataPath.LastSegment.ShouldBeOperationImportSegment(HardCodedTestModel.GetFunctionImportForGetRatings());
 
-                    var constNode = Assert.IsType<ConstantNode>(aliasNodes["@c"]);
-                    Assert.Equal("[$root/Films(1),$root/Films(3)]", constNode.Value);
+                    var colRootExprNode = Assert.IsType<CollectionRootPathNode>(aliasNodes["@c"]);
+                    Assert.Equal(2, colRootExprNode.Count);
+
+                    RootPathNode path1 = colRootExprNode.Items.ElementAt(0);
+
+                    path1.Path.Segments[0].ShouldBeEntitySetSegment(HardCodedTestModel.GetFilmSet());
+                    path1.Path.Segments[1].ShouldBeKeySegment(new KeyValuePair<string, object>("ID", 1));
+
+                    RootPathNode path2 = colRootExprNode.Items.ElementAt(1);
+                    path2.Path.Segments[0].ShouldBeEntitySetSegment(HardCodedTestModel.GetFilmSet());
+                    path2.Path.Segments[1].ShouldBeKeySegment(new KeyValuePair<string, object>("ID", 3));
                 });
         }
 
@@ -263,7 +299,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 {
                     var parameters = filterClause.Expression.ShouldBeSingleValueFunctionCallQueryNode(HardCodedTestModel.GetFunctionForAllHaveDogWithTwoParameters()).Parameters;
                     var paramNode = Assert.IsType<NamedFunctionParameterNode>(parameters.Last());
-                    paramNode.Value.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetBoolean(false));
+                    paramNode.Value.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetBoolean(true)); // inOffice is defined as nullable in the Edm model.
                     aliasNodes["@p1"].ShouldBeConstantQueryNode(true);
                 });
         }
@@ -1038,7 +1074,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
                 {
                     var expectedFunc = HardCodedTestModel.GetAllHasDogFunctionOverloadsForPeople().Single(s => s.Parameters.Count() == 2);
-                    (orderByClause.Expression.ShouldBeSingleValueFunctionCallQueryNode(expectedFunc).Parameters.Last() as NamedFunctionParameterNode).Value.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetBoolean(false));
+                    (orderByClause.Expression.ShouldBeSingleValueFunctionCallQueryNode(expectedFunc).Parameters.Last() as NamedFunctionParameterNode).Value.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetBoolean(true));
                     aliasNodes["@p1"].ShouldBeConstantQueryNode(true);
                 });
         }

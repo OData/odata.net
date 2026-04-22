@@ -77,5 +77,8 @@ namespace Microsoft.OData.UriParser
         {
             return visitor.Visit(this);
         }
+
+        public override string ToString()
+            => this.NextToken != null ? this.NextToken.ToString() + "/" + this.Identifier : this.Identifier;
     }
 }

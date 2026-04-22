@@ -300,14 +300,14 @@ namespace Microsoft.OData.UriParser
 
             foreach (FunctionParameterToken t in tmp)
             {
-                string valueText = null;
+                ReadOnlyMemory<char> valueText = default;
                 LiteralToken literalToken = t.ValueToken as LiteralToken;
                 if (literalToken != null)
                 {
                     valueText = literalToken.OriginalText;
 
                     // disallow "{...}" if enableUriTemplateParsing is false (which could have been seen as valid function parameter, e.g. array notation)
-                    if (!enableUriTemplateParsing && UriTemplateParser.IsValidTemplateLiteral(valueText))
+                    if (!enableUriTemplateParsing && UriTemplateParser.IsValidTemplateLiteral(valueText.Span))
                     {
                         instance = null;
                         return false;
@@ -315,18 +315,18 @@ namespace Microsoft.OData.UriParser
                 }
                 else if (t.ValueToken is FunctionParameterAliasToken aliasToken)
                 {
-                    valueText = aliasToken.Alias;
+                    valueText = aliasToken.Alias.AsMemory();
                 }
                 else
                 {
                     DottedIdentifierToken dottedIdentifierToken = t.ValueToken as DottedIdentifierToken; // for enum
                     if (dottedIdentifierToken != null)
                     {
-                        valueText = dottedIdentifierToken.Identifier;
+                        valueText = dottedIdentifierToken.Identifier.AsMemory();
                     }
                 }
 
-                if (valueText != null)
+                if (!valueText.IsEmpty)
                 {
                     if (t.ParameterName == null)
                     {
@@ -337,7 +337,7 @@ namespace Microsoft.OData.UriParser
                         }
 
                         CreateIfNull(ref positionalValues);
-                        positionalValues.Add(valueText);
+                        positionalValues.Add(valueText.ToString());
                     }
                     else
                     {
@@ -348,7 +348,7 @@ namespace Microsoft.OData.UriParser
                         }
 
                         CreateIfNull(ref namedValues);
-                        namedValues.Add(t.ParameterName, valueText);
+                        namedValues.Add(t.ParameterName, valueText.ToString());
                     }
                 }
                 else
