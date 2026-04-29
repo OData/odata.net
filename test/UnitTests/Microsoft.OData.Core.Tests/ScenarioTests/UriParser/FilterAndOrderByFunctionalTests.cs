@@ -1535,9 +1535,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var paramNode = Assert.IsType<NamedFunctionParameterNode>(Assert.Single(parameters));
             var collectionConstantNode = Assert.IsType<CollectionConstantNode>(paramNode.Value);
             Assert.Equal("[\"Barky\",\"Junior\"]".AsMemory(), collectionConstantNode.LiteralText);
-            Assert.Equal(2, collectionConstantNode.Collection.Count());
-            collectionConstantNode.Collection.ElementAt(0).ShouldBeConstantQueryNode("Barky");
-            collectionConstantNode.Collection.ElementAt(1).ShouldBeConstantQueryNode("Junior");
+            Assert.Equal(2, collectionConstantNode.Items.Count());
+            collectionConstantNode.Items.ElementAt(0).ShouldBeConstantQueryNode("Barky");
+            collectionConstantNode.Items.ElementAt(1).ShouldBeConstantQueryNode("Junior");
         }
 
         [Fact]
@@ -2722,9 +2722,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             CollectionConstantNode collectionNode = Assert.IsType<CollectionConstantNode>(inNode.Right);
             Assert.Equal("('Blue','Red')", collectionNode.LiteralText.ToString());
-            Assert.Equal(2, collectionNode.Collection.Count);
-            collectionNode.Collection.ElementAt(0).ShouldBeConstantQueryNode("Blue");
-            collectionNode.Collection.ElementAt(1).ShouldBeConstantQueryNode("Red");
+            Assert.Equal(2, collectionNode.Items.Count);
+            collectionNode.Items.ElementAt(0).ShouldBeConstantQueryNode("Blue");
+            collectionNode.Items.ElementAt(1).ShouldBeConstantQueryNode("Red");
         }
 
         [Fact]
@@ -2783,9 +2783,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             CollectionConstantNode collectionNode = Assert.IsType<CollectionConstantNode>(inNode.Right);
             Assert.Equal(collection, collectionNode.LiteralText.ToString());
-            Assert.Equal(2, collectionNode.Collection.Count);
-            collectionNode.Collection.ElementAt(0).ShouldBeConstantQueryNode("abc");
-            collectionNode.Collection.ElementAt(1).ShouldBeConstantQueryNode("xyz");
+            Assert.Equal(2, collectionNode.Items.Count);
+            collectionNode.Items.ElementAt(0).ShouldBeConstantQueryNode("abc");
+            collectionNode.Items.ElementAt(1).ShouldBeConstantQueryNode("xyz");
         }
 
         [Theory]
@@ -2804,9 +2804,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             CollectionConstantNode collectionNode = Assert.IsType<CollectionConstantNode>(inNode.Right);
             Assert.Equal(collection, collectionNode.LiteralText.ToString());
-            Assert.Equal(2, collectionNode.Collection.Count);
-            collectionNode.Collection.ElementAt(0).ShouldBeConstantQueryNode("abc");
-            collectionNode.Collection.ElementAt(1).ShouldBeConstantQueryNode("xyz");
+            Assert.Equal(2, collectionNode.Items.Count);
+            collectionNode.Items.ElementAt(0).ShouldBeConstantQueryNode("abc");
+            collectionNode.Items.ElementAt(1).ShouldBeConstantQueryNode("xyz");
         }
 
         [Fact]
@@ -2838,11 +2838,11 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             CollectionConstantNode collectionNode = Assert.IsType<CollectionConstantNode>(inNode.Right);
             Assert.Equal("('a''bc','''def','ghi''','xyz''')", collectionNode.LiteralText.ToString());
-            Assert.Equal(4, collectionNode.Collection.Count);
-            collectionNode.Collection.ElementAt(0).ShouldBeConstantQueryNode("a'bc");
-            collectionNode.Collection.ElementAt(1).ShouldBeConstantQueryNode("'def");
-            collectionNode.Collection.ElementAt(2).ShouldBeConstantQueryNode("ghi'");
-            collectionNode.Collection.ElementAt(3).ShouldBeConstantQueryNode("xyz'");
+            Assert.Equal(4, collectionNode.Items.Count);
+            collectionNode.Items.ElementAt(0).ShouldBeConstantQueryNode("a'bc");
+            collectionNode.Items.ElementAt(1).ShouldBeConstantQueryNode("'def");
+            collectionNode.Items.ElementAt(2).ShouldBeConstantQueryNode("ghi'");
+            collectionNode.Items.ElementAt(3).ShouldBeConstantQueryNode("xyz'");
         }
 
         [Theory]
@@ -2936,7 +2936,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             CollectionConstantNode collectionNode = Assert.IsType<CollectionConstantNode>(inNode.Right);
             Assert.Equal(parsedExpr, collectionNode.LiteralText.ToString());
-            Assert.Equal(count, collectionNode.Collection.Count);
+            Assert.Equal(count, collectionNode.Items.Count);
         }
 
         [Fact]
@@ -2949,7 +2949,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             CollectionConstantNode collectionNode = Assert.IsType<CollectionConstantNode>(inNode.Right);
             Assert.Equal("('a\"\t\u00A9bc')", collectionNode.LiteralText.ToString());
-            QueryNode constantNode = Assert.Single(collectionNode.Collection);
+            QueryNode constantNode = Assert.Single(collectionNode.Items);
             constantNode.ShouldBeConstantQueryNode("a\"\t©bc");
         }
 
@@ -2965,9 +2965,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             CollectionConstantNode collectionNode = Assert.IsType<CollectionConstantNode>(inNode.Right);
             Assert.Equal(input.Substring(input.IndexOf('(')), collectionNode.LiteralText.ToString());
 
-            Assert.Equal(2, collectionNode.Collection.Count);
-            collectionNode.Collection.ElementAt(0).ShouldBeConstantQueryNode("a\"\tbc");
-            collectionNode.Collection.ElementAt(1).ShouldBeConstantQueryNode("x©");
+            Assert.Equal(2, collectionNode.Items.Count);
+            collectionNode.Items.ElementAt(0).ShouldBeConstantQueryNode("a\"\tbc");
+            collectionNode.Items.ElementAt(1).ShouldBeConstantQueryNode("x©");
         }
 
         [Fact]
@@ -2980,9 +2980,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             CollectionConstantNode collectionNode = Assert.IsType<CollectionConstantNode>(inNode.Right);
             Assert.Equal("(  'a' , 'x,  y,z ')", collectionNode.LiteralText.ToString());
-            Assert.Equal(2, collectionNode.Collection.Count);
-            collectionNode.Collection.ElementAt(0).ShouldBeConstantQueryNode("a");
-            collectionNode.Collection.ElementAt(1).ShouldBeConstantQueryNode("x,  y,z ");
+            Assert.Equal(2, collectionNode.Items.Count);
+            collectionNode.Items.ElementAt(0).ShouldBeConstantQueryNode("a");
+            collectionNode.Items.ElementAt(1).ShouldBeConstantQueryNode("x,  y,z ");
         }
 
         [Fact]
@@ -2995,9 +2995,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             CollectionConstantNode collectionNode = Assert.IsType<CollectionConstantNode>(inNode.Right);
             Assert.Equal("(\"a\\b\\\\kc\"   , \"x \\t\\\\t'' /y \")", collectionNode.LiteralText.ToString());
-            Assert.Equal(2, collectionNode.Collection.Count);
-            collectionNode.Collection.ElementAt(0).ShouldBeConstantQueryNode("a\b\\kc");
-            collectionNode.Collection.ElementAt(1).ShouldBeConstantQueryNode("x \t\\t'' /y ");
+            Assert.Equal(2, collectionNode.Items.Count);
+            collectionNode.Items.ElementAt(0).ShouldBeConstantQueryNode("a\b\\kc");
+            collectionNode.Items.ElementAt(1).ShouldBeConstantQueryNode("x \t\\t'' /y ");
         }
 
         [Fact]
@@ -3010,10 +3010,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             CollectionConstantNode collectionNode = Assert.IsType<CollectionConstantNode>(inNode.Right);
             Assert.Equal("('a\\b\\\\bc', 'd\\ff''\\t','xy/z''')", collectionNode.LiteralText.ToString());
-            Assert.Equal(3, collectionNode.Collection.Count);
-            collectionNode.Collection.ElementAt(0).ShouldBeConstantQueryNode("a\\b\\\\bc");
-            collectionNode.Collection.ElementAt(1).ShouldBeConstantQueryNode("d\\ff'\\t");
-            collectionNode.Collection.ElementAt(2).ShouldBeConstantQueryNode("xy/z'");
+            Assert.Equal(3, collectionNode.Items.Count);
+            collectionNode.Items.ElementAt(0).ShouldBeConstantQueryNode("a\\b\\\\bc");
+            collectionNode.Items.ElementAt(1).ShouldBeConstantQueryNode("d\\ff'\\t");
+            collectionNode.Items.ElementAt(2).ShouldBeConstantQueryNode("xy/z'");
         }
 
 
@@ -3029,12 +3029,12 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var inNode = Assert.IsType<InNode>(inFilter.Expression);
             Assert.Equal("SSN", Assert.IsType<SingleValuePropertyAccessNode>(inNode.Left).Property.Name);
             CollectionConstantNode collectionNode = Assert.IsType<CollectionConstantNode>(inNode.Right);
-            Assert.Single(collectionNode.Collection);
+            Assert.Single(collectionNode.Items);
 
             var eqNode = Assert.IsType<BinaryOperatorNode>(eqFilter.Expression);
             Assert.Equal("SSN", Assert.IsType<SingleValuePropertyAccessNode>(eqNode.Left).Property.Name);
             ConstantNode constantNode = Assert.IsType<ConstantNode>(eqNode.Right);
-            ConstantNode expectedNode = Assert.IsType<ConstantNode>(collectionNode.Collection.ElementAt(0));
+            ConstantNode expectedNode = Assert.IsType<ConstantNode>(collectionNode.Items.ElementAt(0));
             Assert.Equal(expectedNode.Value, constantNode.Value);
         }
 
@@ -3052,9 +3052,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var inNode = Assert.IsType<InNode>(inFilter.Expression);
             Assert.Equal("SSN", Assert.IsType<SingleValuePropertyAccessNode>(inNode.Left).Property.Name);
             CollectionConstantNode collectionNode = Assert.IsType<CollectionConstantNode>(inNode.Right);
-            Assert.Single(collectionNode.Collection);
+            Assert.Single(collectionNode.Items);
 
-            ConstantNode actualNode = Assert.IsType<ConstantNode>(collectionNode.Collection.ElementAt(0));
+            ConstantNode actualNode = Assert.IsType<ConstantNode>(collectionNode.Items.ElementAt(0));
             Assert.Equal(constantString, actualNode.Value);
 
             var parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri(String.Format(@"People?$filter={0}",query), UriKind.Relative));
@@ -3074,9 +3074,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             Assert.Equal("SSN", Assert.IsType<SingleValuePropertyAccessNode>(inNode.Left).Property.Name);
 
             CollectionConstantNode collectionNode = Assert.IsType<CollectionConstantNode>(inNode.Right);
-            Assert.Equal(2, collectionNode.Collection.Count);
-            collectionNode.Collection.ElementAt(0).ShouldBeConstantQueryNode<string>(null);
-            collectionNode.Collection.ElementAt(1).ShouldBeConstantQueryNode("abc");
+            Assert.Equal(2, collectionNode.Items.Count);
+            collectionNode.Items.ElementAt(0).ShouldBeConstantQueryNode<string>(null);
+            collectionNode.Items.ElementAt(1).ShouldBeConstantQueryNode("abc");
         }
 
         [Theory]
@@ -3091,9 +3091,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             Assert.Equal("SSN", Assert.IsType<SingleValuePropertyAccessNode>(inNode.Left).Property.Name);
 
             CollectionConstantNode collectionNode = Assert.IsType<CollectionConstantNode>(inNode.Right);
-            Assert.Equal(2, collectionNode.Collection.Count);
-            collectionNode.Collection.ElementAt(0).ShouldBeConstantQueryNode("abc");
-            collectionNode.Collection.ElementAt(1).ShouldBeConstantQueryNode<string>(null);
+            Assert.Equal(2, collectionNode.Items.Count);
+            collectionNode.Items.ElementAt(0).ShouldBeConstantQueryNode("abc");
+            collectionNode.Items.ElementAt(1).ShouldBeConstantQueryNode<string>(null);
         }
 
         [Theory]
@@ -3108,10 +3108,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             Assert.Equal("SSN", Assert.IsType<SingleValuePropertyAccessNode>(inNode.Left).Property.Name);
 
             CollectionConstantNode collectionNode = Assert.IsType<CollectionConstantNode>(inNode.Right);
-            Assert.Equal(3, collectionNode.Collection.Count);
-            collectionNode.Collection.ElementAt(0).ShouldBeConstantQueryNode("abc");
-            collectionNode.Collection.ElementAt(1).ShouldBeConstantQueryNode<string>(null);
-            collectionNode.Collection.ElementAt(2).ShouldBeConstantQueryNode("null");
+            Assert.Equal(3, collectionNode.Items.Count);
+            collectionNode.Items.ElementAt(0).ShouldBeConstantQueryNode("abc");
+            collectionNode.Items.ElementAt(1).ShouldBeConstantQueryNode<string>(null);
+            collectionNode.Items.ElementAt(2).ShouldBeConstantQueryNode("null");
         }
 
         [Theory]
@@ -3184,7 +3184,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var inNode = Assert.IsType<InNode>(filter.Expression);
 
             CollectionConstantNode collectionNode = Assert.IsType<CollectionConstantNode>(inNode.Right);
-            Assert.Empty(collectionNode.Collection);
+            Assert.Empty(collectionNode.Items);
         }
 
         [Theory]
@@ -3203,9 +3203,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var inNode = Assert.IsType<InNode>(filter.Expression);
 
             CollectionConstantNode collectionNode = Assert.IsType<CollectionConstantNode>(inNode.Right);
-            Assert.Single(collectionNode.Collection);
+            Assert.Single(collectionNode.Items);
 
-            ConstantNode constantNode = Assert.IsType<ConstantNode>(collectionNode.Collection.First());
+            ConstantNode constantNode = Assert.IsType<ConstantNode>(collectionNode.Items.First());
             Assert.Equal(string.Empty, constantNode.Value);
             Assert.Equal(expectedLiteralText, constantNode.LiteralText);
         }
@@ -3222,11 +3222,11 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             Assert.Equal("SSN", Assert.IsType<SingleValuePropertyAccessNode>(inNode.Left).Property.Name);
 
             CollectionConstantNode collectionNode = Assert.IsType<CollectionConstantNode>(inNode.Right);
-            Assert.Equal(3, collectionNode.Collection.Count);
+            Assert.Equal(3, collectionNode.Items.Count);
 
-            collectionNode.Collection.ElementAt((index + 0) % 3).ShouldBeConstantQueryNode("abc");
-            collectionNode.Collection.ElementAt((index + 1) % 3).ShouldBeConstantQueryNode<string>(null);
-            collectionNode.Collection.ElementAt((index + 2) % 3).ShouldBeConstantQueryNode("");
+            collectionNode.Items.ElementAt((index + 0) % 3).ShouldBeConstantQueryNode("abc");
+            collectionNode.Items.ElementAt((index + 1) % 3).ShouldBeConstantQueryNode<string>(null);
+            collectionNode.Items.ElementAt((index + 2) % 3).ShouldBeConstantQueryNode("");
         }
 
         [Theory]
@@ -3243,9 +3243,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             CollectionConstantNode collectionNode = Assert.IsType<CollectionConstantNode>(inNode.Right);
 
             // A single whitespace or multiple whitespaces are valid literals
-            Assert.Single(collectionNode.Collection);
+            Assert.Single(collectionNode.Items);
 
-            ConstantNode constantNode = Assert.IsType<ConstantNode>(collectionNode.Collection.First());
+            ConstantNode constantNode = Assert.IsType<ConstantNode>(collectionNode.Items.First());
             Assert.Equal(expectedLiteralText, constantNode.LiteralText);
         }
 
@@ -3263,9 +3263,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             CollectionConstantNode collectionNode = Assert.IsType<CollectionConstantNode>(inNode.Right);
 
             // A single whitespace or multiple whitespaces are valid literals
-            Assert.Single(collectionNode.Collection);
+            Assert.Single(collectionNode.Items);
 
-            ConstantNode constantNode = Assert.IsType<ConstantNode>(collectionNode.Collection.First());
+            ConstantNode constantNode = Assert.IsType<ConstantNode>(collectionNode.Items.First());
             Assert.Equal(expectedLiteralText, constantNode.LiteralText);
         }
 
@@ -3283,7 +3283,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             CollectionConstantNode collectionNode = Assert.IsType<CollectionConstantNode>(inNode.Right);
 
             // A single whitespace or multiple whitespaces are valid literals
-            Assert.Equal(2, collectionNode.Collection.Count);
+            Assert.Equal(2, collectionNode.Items.Count);
         }
 
         [Theory]
@@ -3300,7 +3300,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             CollectionConstantNode collectionNode = Assert.IsType<CollectionConstantNode>(inNode.Right);
 
             // A single whitespace or multiple whitespaces are valid literals
-            Assert.Equal(2, collectionNode.Collection.Count);
+            Assert.Equal(2, collectionNode.Items.Count);
         }
 
         [Theory]
@@ -3590,7 +3590,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 Assert.IsType<CollectionConstantNode>(inNode.Right).LiteralText.ToString());
             Assert.Equal(new object[]{new DateTimeOffset(1950, 1, 2, 6, 15, 0, TimeSpan.Zero), 
                     new DateTimeOffset(1977, 9, 16, 15, 0, 0, TimeSpan.FromHours(5))},
-                Assert.IsType<CollectionConstantNode>(inNode.Right).Collection.Select(x => Assert.IsType<ConstantNode>(x).Value));
+                Assert.IsType<CollectionConstantNode>(inNode.Right).Items.Select(x => Assert.IsType<ConstantNode>(x).Value));
         }
         
         [Fact]
@@ -3604,7 +3604,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             Assert.Equal("(1950-01-02, 1977-09-16)",
                 Assert.IsType<CollectionConstantNode>(inNode.Right).LiteralText.ToString());
             Assert.Equal(new object[]{new DateOnly(1950, 1, 2), new DateOnly(1977, 9, 16)},
-                Assert.IsType<CollectionConstantNode>(inNode.Right).Collection.Select(x => Assert.IsType<ConstantNode>(x).Value));
+                Assert.IsType<CollectionConstantNode>(inNode.Right).Items.Select(x => Assert.IsType<ConstantNode>(x).Value));
         }
         
         [Fact]
@@ -3618,7 +3618,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             Assert.Equal("(12:00:00, 08:00:01)",
                 Assert.IsType<CollectionConstantNode>(inNode.Right).LiteralText.ToString());
             Assert.Equal(new object[]{new TimeOnly(12, 0, 0, 0), new TimeOnly(8, 0, 1, 0)},
-                Assert.IsType<CollectionConstantNode>(inNode.Right).Collection.Select(x => Assert.IsType<ConstantNode>(x).Value));
+                Assert.IsType<CollectionConstantNode>(inNode.Right).Items.Select(x => Assert.IsType<ConstantNode>(x).Value));
         }
         
         [Fact]
@@ -3632,7 +3632,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             Assert.Equal("(duration'PT2H47M30S', duration'PT2H46M40S')",
                 Assert.IsType<CollectionConstantNode>(inNode.Right).LiteralText.ToString());
             Assert.Equal(new object[]{new TimeSpan(2, 47, 30), new TimeSpan(2, 46, 40)},
-                Assert.IsType<CollectionConstantNode>(inNode.Right).Collection.Select(x => Assert.IsType<ConstantNode>(x).Value));
+                Assert.IsType<CollectionConstantNode>(inNode.Right).Items.Select(x => Assert.IsType<ConstantNode>(x).Value));
         }
         
         [Fact]
@@ -3647,7 +3647,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 Assert.IsType<CollectionConstantNode>(inNode.Right).LiteralText.ToString());
             Assert.Equal(new object[]{new DateTimeOffset(1950, 1, 2, 6, 15, 0, TimeSpan.Zero), 
                     null},
-                Assert.IsType<CollectionConstantNode>(inNode.Right).Collection.Select(x => Assert.IsType<ConstantNode>(x).Value));
+                Assert.IsType<CollectionConstantNode>(inNode.Right).Items.Select(x => Assert.IsType<ConstantNode>(x).Value));
         }
         
         [Fact]
@@ -3661,7 +3661,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             Assert.Equal("(duration'PT2H47M30S', null)",
                 Assert.IsType<CollectionConstantNode>(inNode.Right).LiteralText.ToString());
             Assert.Equal(new object[]{new TimeSpan(2, 47, 30), null},
-                Assert.IsType<CollectionConstantNode>(inNode.Right).Collection.Select(x => Assert.IsType<ConstantNode>(x).Value));
+                Assert.IsType<CollectionConstantNode>(inNode.Right).Items.Select(x => Assert.IsType<ConstantNode>(x).Value));
         }
         
         [Fact]
@@ -3675,7 +3675,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             Assert.Equal("(1950-01-02T06:15:00Z)",
                 Assert.IsType<CollectionConstantNode>(inNode.Right).LiteralText.ToString());
             Assert.Equal(new object[]{new DateTimeOffset(1950, 1, 2, 6, 15, 0, TimeSpan.Zero)},
-                Assert.IsType<CollectionConstantNode>(inNode.Right).Collection.Select(x => Assert.IsType<ConstantNode>(x).Value));
+                Assert.IsType<CollectionConstantNode>(inNode.Right).Items.Select(x => Assert.IsType<ConstantNode>(x).Value));
         }
         
         [Fact]
@@ -3689,7 +3689,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             Assert.Equal("(null)",
                 Assert.IsType<CollectionConstantNode>(inNode.Right).LiteralText.ToString());
             Assert.Equal(new object[] {null},
-                Assert.IsType<CollectionConstantNode>(inNode.Right).Collection.Select(x => Assert.IsType<ConstantNode>(x).Value));
+                Assert.IsType<CollectionConstantNode>(inNode.Right).Items.Select(x => Assert.IsType<ConstantNode>(x).Value));
         }
 
         [Fact]
@@ -3736,9 +3736,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             var inNode = Assert.IsType<InNode>(filter.Expression);
             CollectionConstantNode collectionNode = Assert.IsType<CollectionConstantNode>(inNode.Right);
-            Assert.Single(collectionNode.Collection);
+            Assert.Single(collectionNode.Items);
 
-            ConstantNode constantNode = Assert.IsType<ConstantNode>(collectionNode.Collection.First());
+            ConstantNode constantNode = Assert.IsType<ConstantNode>(collectionNode.Items.First());
             Assert.Equal(expectedLiteral, constantNode.LiteralText);
         }
 
@@ -3754,12 +3754,12 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             var inNode = Assert.IsType<InNode>(filter.Expression);
             CollectionConstantNode collectionNode = Assert.IsType<CollectionConstantNode>(inNode.Right);
-            Assert.Equal(2, collectionNode.Collection.Count);
+            Assert.Equal(2, collectionNode.Items.Count);
 
-            ConstantNode constantNode1 = Assert.IsType<ConstantNode>(collectionNode.Collection.First());
+            ConstantNode constantNode1 = Assert.IsType<ConstantNode>(collectionNode.Items.First());
             Assert.Equal(expectedFirstLiteral, constantNode1.LiteralText);
 
-            ConstantNode constantNode2 = Assert.IsType<ConstantNode>(collectionNode.Collection.Last());
+            ConstantNode constantNode2 = Assert.IsType<ConstantNode>(collectionNode.Items.Last());
             Assert.Equal(expectedSecondLiteral, constantNode2.LiteralText);
         }
 
