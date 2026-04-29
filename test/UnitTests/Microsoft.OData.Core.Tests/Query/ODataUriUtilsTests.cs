@@ -335,6 +335,16 @@ namespace Microsoft.OData.Tests.Query
                   "\"@Custom.Annotation\":{\"@odata.type\":\"#Fully.Qualified.Namespace.Dog\",\"Color\":\"Red\"}," +
                   "\"ID\":42" +
                 "}", actual);
+
+            // Now, roundTrip
+            IEdmStructuredTypeReference personType = HardCodedTestModel.GetPersonTypeReference();
+            object readResource = ODataUriUtils.ConvertFromUriLiteral(actual, ODataVersion.V4, HardCodedTestModel.TestModel, personType);
+            ODataResourceValue newValue = Assert.IsType<ODataResourceValue>(readResource);
+
+            ODataProperty property = Assert.Single(newValue.Properties);
+            Assert.Equal(42, property.Value);
+            Assert.Equal("ID", property.Name);
+            Assert.Empty(newValue.InstanceAnnotations); // It's empty because the 'ConvertFromUriLiteral' doesn't config the annotation reading.
         }
 
         [Fact]
@@ -416,6 +426,25 @@ namespace Microsoft.OData.Tests.Query
                   "{\"@Custom.Annotation\":{\"@odata.type\":\"#Fully.Qualified.Namespace.Dog\",\"Color\":\"Red\"},\"ID\":42}," +
                   "{\"@odata.type\":\"#Fully.Qualified.Namespace.Employee\",\"ID\":42,\"WorkEmail\":\"WorkEmail@work.com\"}" +
                 "]", actual);
+
+            // Now, roundTrip
+            IEdmStructuredTypeReference personType = HardCodedTestModel.GetPersonTypeReference();
+            IEdmCollectionTypeReference collectionPersionType = new EdmCollectionTypeReference(new EdmCollectionType(personType));
+            object readResource = ODataUriUtils.ConvertFromUriLiteral(actual, ODataVersion.V4, HardCodedTestModel.TestModel, collectionPersionType);
+            ODataCollectionValue newValue = Assert.IsType<ODataCollectionValue>(readResource);
+
+            Assert.Equal(2, newValue.Items.Count());
+            ODataResourceValue resource1 = Assert.IsType<ODataResourceValue>(newValue.Items.ElementAt(0));
+
+            Assert.Equal(42, resource1.Properties.Single().Value);
+            Assert.Equal("ID", resource1.Properties.Single().Name);
+            Assert.Empty(resource1.InstanceAnnotations); // It's empty because the 'ConvertFromUriLiteral' doesn't config the annotation reading.
+
+            ODataResourceValue resource2 = Assert.IsType<ODataResourceValue>(newValue.Items.ElementAt(1));
+
+            Assert.Equal(42, resource2.Properties.Single(c => c.Name == "ID").Value);
+            Assert.Equal("WorkEmail@work.com", resource2.Properties.Single(c => c.Name == "WorkEmail").Value);
+            Assert.Empty(resource2.InstanceAnnotations); // It's empty because the 'ConvertFromUriLiteral' doesn't config the annotation reading.
         }
 #endregion Collection of Resource Value
     }
