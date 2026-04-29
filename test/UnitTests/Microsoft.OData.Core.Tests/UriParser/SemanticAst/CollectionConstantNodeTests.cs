@@ -10,7 +10,6 @@ using Microsoft.OData.Edm;
 using Xunit;
 using System.Collections.Generic;
 
-#if false
 namespace Microsoft.OData.Tests.UriParser.SemanticAst
 {
 
@@ -187,4 +186,3 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         }
     }
 }
-#endif

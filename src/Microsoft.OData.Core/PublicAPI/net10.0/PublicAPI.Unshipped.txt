@@ -1,4 +1,3 @@
-Microsoft.OData.UriParser.CollectionConstantNode.Collection.get -> System.Collections.Generic.IList<Microsoft.OData.UriParser.ConstantNode>
 Microsoft.OData.UriParser.CollectionConstantNode.CollectionConstantNode(Microsoft.OData.Edm.IEdmCollectionTypeReference collectionType) -> void
 Microsoft.OData.UriParser.CollectionConstantNode.Items.get -> System.Collections.Generic.IList<Microsoft.OData.UriParser.QueryNode>
 Microsoft.OData.UriParser.CollectionConstantNode.LiteralText.get -> System.ReadOnlyMemory<char>

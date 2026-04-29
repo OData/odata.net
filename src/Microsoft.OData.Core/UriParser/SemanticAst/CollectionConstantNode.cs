@@ -9,13 +9,10 @@ namespace Microsoft.OData.UriParser
     #region Namespaces
 
     using Microsoft.OData.Edm;
-    using Microsoft.VisualBasic;
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Linq;
-    using System.Linq.Expressions;
-    using System.Text;
 
     #endregion Namespaces
 
@@ -35,12 +32,36 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Gets the collection of ConstantNodes, ResourceConstantNode (such as, {...} ), CollectionConstantNode (such as, [....]).
-        /// Keep it since the ASP.NET Core OData or other OData libraries may need it, even though it's not used in the ODataLib.
-        /// This property will be removed in the future, and the collection of constant nodes will be stored in the "Value" property.
+        /// Creates a new instance of the <see cref="CollectionConstantNode"/> class.
         /// </summary>
-        [Obsolete("This property will be removed in the future, and the collection of constant nodes will be stored in the 'Items' property.")]
-        public IList<ConstantNode> Collection => Items.OfType<ConstantNode>().ToList();
+        /// <param name="objectCollection">A collection of constant objects.</param>
+        /// <param name="literalText">The literal text for this node's value, formatted according to the OData URI literal formatting rules.</param>
+        /// <param name="collectionType">The reference to the collection type.</param>
+        /// <exception cref="System.ArgumentNullException">Throws if any required argument is null.</exception>
+        [Obsolete("Use CollectionConstantNode(IEdmCollectionTypeReference) and populate Items instead.")]
+        public CollectionConstantNode(IEnumerable<object> objectCollection, string literalText, IEdmCollectionTypeReference collectionType)
+        {
+            ExceptionUtils.CheckArgumentNotNull(objectCollection, "objectCollection");
+            ExceptionUtils.CheckArgumentStringNotNullOrEmpty(literalText, "literalText");
+            ExceptionUtils.CheckArgumentNotNull(collectionType, "collectionType");
+
+            LiteralText = literalText.AsMemory();
+            CollectionType = collectionType;
+            ItemType = collectionType?.ElementType();
+
+            foreach (object item in objectCollection)
+            {
+                Items.Add(new ConstantNode(item, item != null ? item.ToString() : "null", ItemType));
+            }
+        }
+
+        /// <summary>
+        /// Gets the collection of ConstantNodes.
+        /// Keep it since the ASP.NET Core OData or other OData libraries may need it, even though it's not used in the ODataLib.
+        /// Use the <see cref="Items"/> property to access the full list of query nodes including ResourceConstantNode and nested CollectionConstantNode.
+        /// </summary>
+        [Obsolete("This property will be removed in the future, use the 'Items' property instead.")]
+        public IList<ConstantNode> Collection => new ReadOnlyCollection<ConstantNode>(Items.OfType<ConstantNode>().ToList());
 
         /// <summary>
         /// The collection of query nodes.
