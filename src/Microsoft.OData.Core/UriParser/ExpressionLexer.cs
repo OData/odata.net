@@ -1294,17 +1294,30 @@ namespace Microsoft.OData.UriParser
             {
                 if (this.ch.Value == '"')
                 {
-                    // a double quote inside the string value, must escape it with a backslash (\)
-                    if (this.Text.Span[this.textPos - 1] == '\\')
+                    // Count consecutive backslashes immediately before the current '"' to determine
+                    // whether it is escaped. An odd number of backslashes means the quote is escaped
+                    // (e.g. \"  or \\\") and scanning must continue; an even number (including zero)
+                    // means all preceding backslashes are themselves escaped and this '"' terminates
+                    // the string (e.g. "  or \\").
+                    int backslashCount = 0;
+                    int pos = this.textPos - 1; // position of the character just before the '"'
+                    while (pos >= 0 && this.Text.Span[pos] == '\\')
                     {
-                        // double quote is escaped by a backslash, so skip both of them and continue.
+                        backslashCount++;
+                        pos--;
+                    }
+
+                    if (backslashCount % 2 != 0)
+                    {
+                        // Odd number of backslashes: the '"' is escaped – skip it and continue.
+                        // Use 'continue' to avoid the unconditional NextChar() below double-advancing
+                        // past the character that follows the escaped quote.
                         this.NextChar();
+                        continue;
                     }
-                    else
-                    {
-                        // end of double quoted string.
-                        break;
-                    }
+
+                    // Even number of backslashes: this '"' terminates the string.
+                    break;
                 }
 
                 this.NextChar();
