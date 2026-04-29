@@ -1456,15 +1456,7 @@ namespace Microsoft.OData.Tests.UriParser
             ValidateTokenSequence(this.model, "null", NullLiteralToken);
         }
 
-        // Double-quoted strings (JSON style)
-        [Theory]
-        [InlineData("\"hello world\"")]
-        [InlineData("\"simple\"")]
-        [InlineData("\"123\"")]
-        public void ParseDoubleQuotedString(string input)
-        {
-            ValidateTokenSequence(this.model, input, StringToken(input));
-        }
+        #region Double-Quoted String Tests
 
         // Single-quoted strings with escaped quotes
         [Fact]
@@ -1473,6 +1465,110 @@ namespace Microsoft.OData.Tests.UriParser
             ValidateTokenSequence(this.model, "'It''s a test'",
                 new ExpressionToken() { Kind = ExpressionTokenKind.StringLiteral, Text = "'It''s a test'".AsMemory() });
         }
+
+        [Theory]
+        [InlineData("\"simple\"")] // Simple string
+        [InlineData("\"hello@#$%world\"")] // String with special characters
+        [InlineData("\"hello world with spaces\"")] // String with spaces
+        [InlineData("\"\"")] // Empty string
+        [InlineData("\"12345\"")] // String with numbers only
+        [InlineData("\"abc123!@#\"")] // String with mixed content
+        [InlineData("\"It's working\"")] // String with single quote
+        [InlineData("\"{key:value}\"")] // String with braces
+        [InlineData("\"[1,2,3]\"")] // String with brackets
+        [InlineData("\"key:value\"")] // String with colon
+        [InlineData("\"first,second,third\"")] // String with commas
+        [InlineData("\"a=b\"")] // String with equals
+        [InlineData("\"func(param)\"")] // String with parentheses
+        [InlineData("\"https://example.com/path?query=value&another=test\"")] // String with URL content
+        [InlineData("\"user@example.com\"")] // String with email content
+        public void ParseDoubleQuotedStringVariations(string input)
+        {
+            ValidateTokenSequence(this.model, input, StringToken(input));
+        }
+
+        [Fact]
+        public void ParseDoubleQuotedStringOnlyThrows()
+        {
+            string input = "\"";
+            Action test = () => ValidateTokenSequence(this.model, input, StringToken(input));
+            test.Throws<ODataException>(Error.Format(SRResources.ExpressionLexer_UnterminatedStringLiteral, 1, input));
+        }
+
+        [Fact]
+        public void ParseDoubleQuotedStringInExpression()
+        {
+            ValidateTokenSequence(this.model, "Name eq \"John\"",
+                IdentifierToken("Name"),
+                ExpressionToken.EqualsTo,
+                StringToken("\"John\""));
+        }
+
+        [Fact]
+        public void ParseDoubleQuotedStringInFunction()
+        {
+            ValidateTokenSequence(this.model, "contains(Name,\"test\")",
+                IdentifierToken("contains"),
+                OpenParenToken,
+                IdentifierToken("Name"),
+                CommaToken,
+                StringToken("\"test\""),
+                CloseParenToken);
+        }
+
+        [Fact]
+        public void ParseDoubleQuotedStringLong()
+        {
+            string longString = "\"" + new string('a', 500) + "\"";
+            ValidateTokenSequence(this.model, longString,
+                StringToken(longString));
+        }
+
+        [Fact]
+        public void ParseMultipleDoubleQuotedStrings()
+        {
+            ValidateTokenSequence(this.model, "\"first\" \"second\" \"third\"",
+                StringToken("\"first\""),
+                StringToken("\"second\""),
+                StringToken("\"third\""));
+        }
+
+        [Fact]
+        public void ParseDoubleQuotedStringInObjectLiteral()
+        {
+            ValidateTokenSequence(this.model, "{\"name\":\"value\"}",
+                OpenBraceToken,
+                StringToken("\"name\""),
+                ColonToken,
+                StringToken("\"value\""),
+                CloseBraceToken);
+        }
+
+        [Fact]
+        public void ParseDoubleQuotedStringInArrayLiteral()
+        {
+            ValidateTokenSequence(this.model, "[\"item1\",\"item2\",\"item3\"]",
+                OpenBracketToken,
+                StringToken("\"item1\""),
+                CommaToken,
+                StringToken("\"item2\""),
+                CommaToken,
+                StringToken("\"item3\""),
+                CloseBracketToken);
+        }
+
+        [Fact]
+        public void ParseDoubleQuotedEmptyStringInObject()
+        {
+            ValidateTokenSequence(this.model, "{\"key\":\"\"}",
+                OpenBraceToken,
+                StringToken("\"key\""),
+                ColonToken,
+                StringToken("\"\""),
+                CloseBraceToken);
+        }
+
+        #endregion
 
         // MoveNextWhenMatch / ExpandIdentifierAsFunction edge cases
         [Fact]

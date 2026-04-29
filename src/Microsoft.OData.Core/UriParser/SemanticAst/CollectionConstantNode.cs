@@ -32,30 +32,6 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Creates a new instance of the <see cref="CollectionConstantNode"/> class.
-        /// </summary>
-        /// <param name="objectCollection">A collection of constant objects.</param>
-        /// <param name="literalText">The literal text for this node's value, formatted according to the OData URI literal formatting rules.</param>
-        /// <param name="collectionType">The reference to the collection type.</param>
-        /// <exception cref="System.ArgumentNullException">Throws if any required argument is null.</exception>
-        [Obsolete("Use CollectionConstantNode(IEdmCollectionTypeReference) and populate Items instead.")]
-        public CollectionConstantNode(IEnumerable<object> objectCollection, string literalText, IEdmCollectionTypeReference collectionType)
-        {
-            ExceptionUtils.CheckArgumentNotNull(objectCollection, "objectCollection");
-            ExceptionUtils.CheckArgumentStringNotNullOrEmpty(literalText, "literalText");
-            ExceptionUtils.CheckArgumentNotNull(collectionType, "collectionType");
-
-            LiteralText = literalText.AsMemory();
-            CollectionType = collectionType;
-            ItemType = collectionType?.ElementType();
-
-            foreach (object item in objectCollection)
-            {
-                Items.Add(new ConstantNode(item, item != null ? item.ToString() : "null", ItemType));
-            }
-        }
-
-        /// <summary>
         /// Gets the collection of ConstantNodes.
         /// Keep it since the ASP.NET Core OData or other OData libraries may need it, even though it's not used in the ODataLib.
         /// Use the <see cref="Items"/> property to access the full list of query nodes including ResourceConstantNode and nested CollectionConstantNode.
