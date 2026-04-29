@@ -61,9 +61,18 @@ namespace Microsoft.OData.UriParser
             // double quoted string
             if (text[0] == '"' && text[^1] == '"')
             {
-                value = JsonSerializer.Deserialize<string>(text);
-                text = value.AsSpan();
-                return true;
+                try
+                {
+                    // JsonSerializer.Deserialize(...) for double-quoted values could throw JsonException on invalid escapes
+                    value = JsonSerializer.Deserialize<string>(text);
+                    text = value.AsSpan();
+                    return true;
+                }
+                catch (JsonException)
+                {
+                    value = null;
+                    return false;
+                }
             }
 
             if (TryRemoveSingleQuotes(ref text, out value))
