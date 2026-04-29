@@ -11,6 +11,7 @@ using Microsoft.OData.Tests.UriParser;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
+using Microsoft.OData.Core;
 
 namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
 {
@@ -96,14 +97,16 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
         [Fact]
         public void BuildPath_AliasInFunctionImport_NullAsValue()
         {
-            Uri fullUri = new Uri("http://gobbledygook/GetPet4(id=@p1)?@p1=null");
+            Uri fullUri = new Uri("http://gobbledygook/GetCoolestPersonWithStyle(styleID=@p1)?@p1=null");
             ODataUriParser odataUriParser = new ODataUriParser(HardCodedTestModel.TestModel, serviceRoot, fullUri);
             SetODataUriParserSettingsTo(this.settings, odataUriParser.Settings);
             odataUriParser.UrlKeyDelimiter = ODataUrlKeyDelimiter.Parentheses;
             ODataUri odataUri = odataUriParser.ParseUri();
 
             IDictionary<string, QueryNode> aliasNodes = odataUri.ParameterAliasNodes;
-            odataUri.Path.LastSegment.ShouldBeOperationImportSegment(HardCodedTestModel.GetFunctionImportForGetPet4()).Parameters.First().ShouldHaveParameterAliasNode("id", "@p1", null);
+            IEdmOperationImport functionImport = HardCodedTestModel.TestModel.EntityContainer.FindOperationImports("GetCoolestPersonWithStyle").Single();
+            Assert.NotNull(functionImport); // guard
+            odataUri.Path.LastSegment.ShouldBeOperationImportSegment(functionImport).Parameters.First().ShouldHaveParameterAliasNode("styleID", "@p1", EdmCoreModel.Instance.GetInt32(true));
             aliasNodes["@p1"].ShouldBeConstantQueryNode((object)null);
 
             Uri actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Parentheses);
@@ -111,6 +114,18 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
 
             actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Slash);
             Assert.Equal(fullUri, actualUri, new UriComparer<Uri>());
+        }
+
+        [Fact]
+        public void BuildPath_AliasInFunctionImport_NullAsValue_ShouldThrowsForNonNullableParameter()
+        {
+            Uri fullUri = new Uri("http://gobbledygook/GetPet4(id=@p1)?@p1=null");
+            ODataUriParser odataUriParser = new ODataUriParser(HardCodedTestModel.TestModel, serviceRoot, fullUri);
+            SetODataUriParserSettingsTo(this.settings, odataUriParser.Settings);
+            odataUriParser.UrlKeyDelimiter = ODataUrlKeyDelimiter.Parentheses;
+            Action test = () => odataUriParser.ParseUri();
+
+            test.Throws<ODataException>(Error.Format(SRResources.LiteralBinder_CannotBindNullLiteralToNonNullableType, "null", "Edm.Decimal"));
         }
 
         [Fact]
@@ -150,7 +165,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             var functionCallNode = odataUri.Filter.Expression.ShouldBeSingleValueFunctionCallQueryNode(HardCodedTestModel.GetFunctionForAllHaveDogWithTwoParameters());
 
             var queryNode = Assert.IsType<NamedFunctionParameterNode>(functionCallNode.Parameters.Last()).Value;
-            queryNode.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetBoolean(false));
+            queryNode.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetBoolean(true));
 
             aliasNodes["@p1"].ShouldBeConstantQueryNode(true);
 
@@ -466,7 +481,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             IDictionary<string, QueryNode> aliasNodes = odataUri.ParameterAliasNodes;
             var expectedFunc = HardCodedTestModel.GetAllHasDogFunctionOverloadsForPeople().Single(s => s.Parameters.Count() == 2);
             var funciontCallNode = odataUri.OrderBy.Expression.ShouldBeSingleValueFunctionCallQueryNode(expectedFunc);
-            Assert.IsType<NamedFunctionParameterNode>(funciontCallNode.Parameters.Last()).Value.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetBoolean(false));
+            Assert.IsType<NamedFunctionParameterNode>(funciontCallNode.Parameters.Last()).Value.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetBoolean(true));
             aliasNodes["@p1"].ShouldBeConstantQueryNode(true);
 
             Uri actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Parentheses);

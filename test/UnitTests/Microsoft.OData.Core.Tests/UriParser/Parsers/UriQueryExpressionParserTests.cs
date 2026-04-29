@@ -4,13 +4,14 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using System;
-using System.Linq;
-using System.Collections.Generic;
+using Microsoft.OData.Core;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.UriParser.Aggregation;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using Xunit;
-using Microsoft.OData.Core;
+using static Microsoft.OData.UriParser.UriQueryExpressionParser;
 
 namespace Microsoft.OData.Tests.UriParser.Parsers
 {
@@ -243,7 +244,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             string apply = "aggregate UnitPrice with sum as TotalPrice)";
             Action parse = () => this.testSubject.ParseApply(apply);
-            parse.Throws<ODataException>(Error.Format(SRResources.UriQueryExpressionParser_OpenParenExpected, 10, apply));
+            parse.Throws<ODataException>(Error.Format(SRResources.UriQueryExpressionParser_ExpressionTokenExpected, "(", 10, apply));
         }
 
         [Fact]
@@ -392,7 +393,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             string apply = "groupby (UnitPrice))";
             Action parse = () => this.testSubject.ParseApply(apply);
-            parse.Throws<ODataException>(Error.Format(SRResources.UriQueryExpressionParser_OpenParenExpected, 9, apply));
+            parse.Throws<ODataException>(Error.Format(SRResources.UriQueryExpressionParser_ExpressionTokenExpected, "(", 9, apply));
         }
 
         [Fact]
@@ -416,7 +417,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             string apply = "groupby()";
             Action parse = () => this.testSubject.ParseApply(apply);
-            parse.Throws<ODataException>(Error.Format(SRResources.UriQueryExpressionParser_OpenParenExpected, 8, apply));
+            parse.Throws<ODataException>(Error.Format(SRResources.UriQueryExpressionParser_ExpressionTokenExpected, "(", 8, apply));
         }
 
         [Fact]
@@ -424,7 +425,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             string apply = "groupby(UnitPrice)";
             Action parse = () => this.testSubject.ParseApply(apply);
-            parse.Throws<ODataException>(Error.Format(SRResources.UriQueryExpressionParser_OpenParenExpected, 8, apply));
+            parse.Throws<ODataException>(Error.Format(SRResources.UriQueryExpressionParser_ExpressionTokenExpected, "(", 8, apply));
         }
 
         [Fact]
@@ -476,7 +477,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             string apply = "filter UnitPrice eq 5)";
             Action parse = () => this.testSubject.ParseApply(apply);
-            parse.Throws<ODataException>(Error.Format(SRResources.UriQueryExpressionParser_OpenParenExpected, 7, apply));
+            parse.Throws<ODataException>(Error.Format(SRResources.UriQueryExpressionParser_ExpressionTokenExpected, "(", 7, apply));
         }
 
         [Fact]
@@ -484,7 +485,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             string apply = "filter(UnitPrice eq 5";
             Action parse = () => this.testSubject.ParseApply(apply);
-            parse.Throws<ODataException>(Error.Format(SRResources.UriQueryExpressionParser_CloseParenOrOperatorExpected, apply.Length, apply));
+            parse.Throws<ODataException>(Error.Format(SRResources.UriQueryExpressionParser_ExpressionTokenExpected, ")", apply.Length, apply));
         }
 
         [Fact]
@@ -817,5 +818,608 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             Assert.Equal("Stores", expandTerm3.PathToNavigationProp.Identifier);
             Assert.NotNull(expandTerm3.FilterOption);
         }
+
+        [Fact]
+        public void PaseTest()
+        {
+            //QueryToken token = this.testSubject.ParseExpressionText("[1,2,3]");
+            //Assert.NotNull(token);
+            QueryToken token0 = this.testSubject.ParseExpressionText("{_1V!@$%^&*}");
+            Assert.NotNull(token0);
+
+            QueryToken token1 = this.testSubject.ParseExpressionText("{\"Name\": \"John\", \"Id\": 7}");
+            Assert.NotNull(token1);
+
+            QueryToken token2 = this.testSubject.ParseExpressionText("Id in (1,2,4)");
+            Assert.NotNull(token2);
+
+            QueryToken token3 = this.testSubject.ParseExpressionText("Id lt 1 and (Name eq 'John' or Name eq 'Jane')");
+            Assert.NotNull(token3);
+
+            QueryToken token4 = this.testSubject.ParseExpressionText("[45, true, 'abc']");
+            Assert.NotNull(token4);
+        }
+
+        [Fact]
+        public void ParseEmptyParentheseShouldThrows()
+        {
+            string input = "id eq ()";
+            Action test = () => this.testSubject.ParseFilter(input);
+            test.Throws<ODataException>(Error.Format(SRResources.UriQueryExpressionParser_ExpressionExpected, 7, input));
+        }
+
+        #region Collection Parsing Tests
+        [Fact]
+        public void ParseEmptyCollection()
+        {
+            QueryToken token = this.testSubject.ParseExpressionText("[]");
+            Assert.NotNull(token);
+            var collectionToken = Assert.IsType<CollectionLiteralToken>(token);
+            Assert.Empty(collectionToken.Items);
+        }
+
+        [Fact]
+        public void ParseCollectionWithIntegers()
+        {
+            QueryToken token = this.testSubject.ParseExpressionText("[1,2,3,4,5]");
+            Assert.NotNull(token);
+            var collectionToken = Assert.IsType<CollectionLiteralToken>(token);
+            Assert.Equal(5, collectionToken.Items.Count);
+        }
+
+        [Theory]
+        [InlineData("['apple','banana','cherry']")]
+        [InlineData("[\"apple\",\"banana\",\"cherry\"]")]
+        public void ParseCollectionWithStrings(string input)
+        {
+            QueryToken token = this.testSubject.ParseExpressionText(input);
+            Assert.NotNull(token);
+            var collectionToken = Assert.IsType<CollectionLiteralToken>(token);
+            Assert.Equal(3, collectionToken.Items.Count);
+        }
+
+        [Fact]
+        public void ParseCollectionWithMixedTypes()
+        {
+            QueryToken token = this.testSubject.ParseExpressionText("[1,'text',true,null,3.14]");
+            Assert.NotNull(token);
+            var collectionToken = Assert.IsType<CollectionLiteralToken>(token);
+            Assert.Equal(5, collectionToken.Items.Count);
+
+            // Verify each item in the collection
+            var items = collectionToken.Items;
+
+            // Item 0: Integer literal (1)
+            var item0 = Assert.IsType<LiteralToken>(items[0]);
+            Assert.Equal(1, item0.Value);
+
+            // Item 1: String literal ('text')
+            var item1 = Assert.IsType<LiteralToken>(items[1]);
+            Assert.Equal("text", item1.Value);
+
+            // Item 2: Boolean literal (true)
+            var item2 = Assert.IsType<LiteralToken>(items[2]);
+            Assert.Equal(true, item2.Value);
+
+            // Item 3: Null literal
+            var item3 = Assert.IsType<LiteralToken>(items[3]);
+            Assert.Null(item3.Value);
+
+            // Item 4: Decimal literal (3.14)
+            var item4 = Assert.IsType<LiteralToken>(items[4]);
+            Assert.Equal(3.14f, item4.Value);
+        }
+
+        [Fact]
+        public void ParseCollectionWithBooleans()
+        {
+            QueryToken token = this.testSubject.ParseExpressionText("[true,false,true]");
+            Assert.NotNull(token);
+            var collectionToken = Assert.IsType<CollectionLiteralToken>(token);
+            Assert.Equal(3, collectionToken.Items.Count);
+        }
+
+        [Fact]
+        public void ParseCollectionWithNulls()
+        {
+            QueryToken token = this.testSubject.ParseExpressionText("[null,null,null]");
+            Assert.NotNull(token);
+            var collectionToken = Assert.IsType<CollectionLiteralToken>(token);
+            Assert.Equal(3, collectionToken.Items.Count);
+        }
+
+        [Fact]
+        public void ParseNestedCollections()
+        {
+            QueryToken token = this.testSubject.ParseExpressionText("[[1,2],[3,4],[5,6]]");
+            Assert.NotNull(token);
+            var collectionToken = Assert.IsType<CollectionLiteralToken>(token);
+            Assert.Equal(3, collectionToken.Items.Count);
+            for (int i = 0; i < 3; ++i)
+            {
+                Assert.IsType<CollectionLiteralToken>(collectionToken.Items[i]);
+            }
+        }
+
+        [Fact]
+        public void ParseDeeplyNestedCollections()
+        {
+            QueryToken token = this.testSubject.ParseExpressionText("[[[1,2]]]");
+            Assert.NotNull(token);
+            var collectionToken = Assert.IsType<CollectionLiteralToken>(token);
+            CollectionLiteralToken deep1Collection = Assert.IsType<CollectionLiteralToken>(Assert.Single(collectionToken.Items));
+            CollectionLiteralToken deep2Collection = Assert.IsType<CollectionLiteralToken>(Assert.Single(deep1Collection.Items));
+            Assert.Equal(2, deep2Collection.Items.Count);
+        }
+
+        [Fact]
+        public void ParseCollectionWithNegativeNumbers()
+        {
+            QueryToken token = this.testSubject.ParseExpressionText("[-1,-2,-3]");
+            Assert.NotNull(token);
+            var collectionToken = Assert.IsType<CollectionLiteralToken>(token);
+            Assert.Equal(3, collectionToken.Items.Count);
+        }
+
+        [Fact]
+        public void ParseCollectionWithDecimals()
+        {
+            QueryToken token = this.testSubject.ParseExpressionText("[1.5,2.5,3.5]");
+            Assert.NotNull(token);
+            var collectionToken = Assert.IsType<CollectionLiteralToken>(token);
+            Assert.Equal(3, collectionToken.Items.Count);
+        }
+
+        [Fact]
+        public void ParseCollectionWithWhitespace()
+        {
+            string input = "[  1  ,  2  ,  3  ]";
+            QueryToken token = this.testSubject.ParseExpressionText(input);
+            Assert.NotNull(token);
+            var collectionToken = Assert.IsType<CollectionLiteralToken>(token);
+            Assert.Equal(input.AsMemory(), collectionToken.OriginalText);
+            Assert.Equal(3, collectionToken.Items.Count);
+        }
+
+        [Fact]
+        public void ParseCollectionWithTrailingCommaThrows()
+        {
+            string input = "[1,2,3,]";
+            Action test = () => this.testSubject.ParseExpressionText(input);
+            test.Throws<ODataException>(Error.Format(SRResources.UriQueryExpressionParser_ExpressionExpected, input.Length - 1, input));
+        }
+
+        #endregion
+
+        #region In Operator Tests
+
+        [Fact]
+        public void ParseInOperatorWithIntegers()
+        {
+            QueryToken token = this.testSubject.ParseFilter("Id in (1,2,3)");
+            Assert.NotNull(token);
+            var inToken = Assert.IsType<InToken>(token);
+            Assert.Equal("Id", (inToken.Left as EndPathToken)?.Identifier);
+        }
+
+        [Fact]
+        public void ParseInOperatorWithStrings()
+        {
+            QueryToken token = this.testSubject.ParseFilter("Name in ('John','Jane','Bob')");
+            Assert.NotNull(token);
+            var inToken = Assert.IsType<InToken>(token);
+            Assert.Equal("Name", (inToken.Left as EndPathToken)?.Identifier);
+        }
+
+        [Fact]
+        public void ParseInOperatorWithMixedTypes()
+        {
+            QueryToken token = this.testSubject.ParseFilter("Value in (1,'text',true)");
+            Assert.NotNull(token);
+            Assert.IsType<InToken>(token);
+        }
+
+        [Fact]
+        public void ParseInOperatorWithEmptyCollection()
+        {
+            QueryToken token = this.testSubject.ParseFilter("Id in ()");
+            Assert.NotNull(token);
+            var inToken = Assert.IsType<InToken>(token);
+            var collectionToken = Assert.IsType<CollectionLiteralToken>(inToken.Right);
+            Assert.Empty(collectionToken.Items);
+        }
+
+        [Fact]
+        public void ParseInOperatorWithSingleValue()
+        {
+            QueryToken token = this.testSubject.ParseFilter("Id in (1)");
+            Assert.NotNull(token);
+            var inToken = Assert.IsType<InToken>(token);
+            var collectionToken = Assert.IsType<CollectionLiteralToken>(inToken.Right);
+            Assert.Single(collectionToken.Items);
+        }
+
+        [Fact]
+        public void ParseInOperatorWithPropertyAccess()
+        {
+            QueryToken token = this.testSubject.ParseFilter("Order/CustomerId in (1,2,3)");
+            Assert.NotNull(token);
+            Assert.IsType<InToken>(token);
+        }
+
+        [Fact]
+        public void ParseInOperatorWithNullValues()
+        {
+            QueryToken token = this.testSubject.ParseFilter("Value in (1,null,3)");
+            Assert.NotNull(token);
+            var inToken = Assert.IsType<InToken>(token);
+            var collectionToken = Assert.IsType<CollectionLiteralToken>(inToken.Right);
+            Assert.Equal(3, collectionToken.Items.Count);
+        }
+
+        [Fact]
+        public void ParseInOperatorCombinedWithAndOperator()
+        {
+            QueryToken token = this.testSubject.ParseFilter("Id in (1,2,3) and Name eq 'John'");
+            Assert.NotNull(token);
+            var binaryToken = Assert.IsType<BinaryOperatorToken>(token);
+            Assert.Equal(BinaryOperatorKind.And, binaryToken.OperatorKind);
+            Assert.IsType<InToken>(binaryToken.Left);
+        }
+
+        [Fact]
+        public void ParseInOperatorCombinedWithOrOperator()
+        {
+            QueryToken token = this.testSubject.ParseFilter("Id in (1,2,3) or Name eq 'Jane'");
+            Assert.NotNull(token);
+            var binaryToken = Assert.IsType<BinaryOperatorToken>(token);
+            Assert.Equal(BinaryOperatorKind.Or, binaryToken.OperatorKind);
+            Assert.IsType<InToken>(binaryToken.Left);
+        }
+
+        [Fact]
+        public void ParseMultipleInOperators()
+        {
+            QueryToken token = this.testSubject.ParseFilter("Id in (1,2) and Status in ('Active','Pending')");
+            Assert.NotNull(token);
+            var binaryToken = Assert.IsType<BinaryOperatorToken>(token);
+            Assert.IsType<InToken>(binaryToken.Left);
+            Assert.IsType<InToken>(binaryToken.Right);
+        }
+
+        [Fact]
+        public void ParseInOperatorWithParenthesizedExpression()
+        {
+            QueryToken token = this.testSubject.ParseFilter("(Id in (1,2,3))");
+            Assert.NotNull(token);
+            Assert.IsType<InToken>(token);
+        }
+
+        [Fact]
+        public void ParseInOperatorWithComplexLeftSide()
+        {
+            QueryToken token = this.testSubject.ParseFilter("tolower(Name) in ('john','jane')");
+            Assert.NotNull(token);
+            var inToken = Assert.IsType<InToken>(token);
+            Assert.IsType<FunctionCallToken>(inToken.Left);
+        }
+
+        #endregion
+
+        #region Map/Object Parsing Tests
+
+        [Fact]
+        public void ParseEmptyMap()
+        {
+            QueryToken token = this.testSubject.ParseExpressionText("{}");
+            Assert.NotNull(token);
+            var resourceLiteralToken = Assert.IsType<ResourceLiteralToken>(token);
+            Assert.Empty(resourceLiteralToken.Properties);
+        }
+
+        [Fact]
+        public void ParseMapWithSingleProperty()
+        {
+            QueryToken token = this.testSubject.ParseExpressionText("{\"Name\":\"John\"}");
+            Assert.NotNull(token);
+            var resourceLiteralToken = Assert.IsType<ResourceLiteralToken>(token);
+            Assert.Single(resourceLiteralToken.Properties);
+        }
+
+        [Fact]
+        public void ParseMapWithMultipleProperties()
+        {
+            QueryToken token = this.testSubject.ParseExpressionText("{\"Name\":\"John\",\"Age\":30,\"Active\":true}");
+            Assert.NotNull(token);
+            var resourceLiteralToken = Assert.IsType<ResourceLiteralToken>(token);
+            Assert.Equal(3, resourceLiteralToken.Properties.Count);
+        }
+
+        [Fact]
+        public void ParseMapWithDoubleQuotedKeys()
+        {
+            QueryToken token = this.testSubject.ParseExpressionText("{\"Name\":\"John\",\"Age\":30}");
+            Assert.NotNull(token);
+            var resourceLiteralToken = Assert.IsType<ResourceLiteralToken>(token);
+            Assert.Equal(2, resourceLiteralToken.Properties.Count);
+        }
+
+        [Fact]
+        public void ParseMapWithSpecialCharactersInKey()
+        {
+            QueryToken token = this.testSubject.ParseExpressionText("{_1V!@$%^&*:123}");
+            Assert.NotNull(token);
+            Assert.IsType<LiteralToken>(token);
+        }
+
+        [Fact]
+        public void ParseMapWithNestedMap()
+        {
+            QueryToken token = this.testSubject.ParseExpressionText("{\"Person\":{\"Name\":\"John\",\"Age\":30}}");
+            Assert.NotNull(token);
+            var resourceLiteralToken = Assert.IsType<ResourceLiteralToken>(token);
+            Assert.Single(resourceLiteralToken.Properties);
+        }
+
+        [Fact]
+        public void ParseMapWithCollection()
+        {
+            QueryToken token = this.testSubject.ParseExpressionText("{\"Numbers\":[1,2,3]}");
+            Assert.NotNull(token);
+            var resourceLiteralToken = Assert.IsType<ResourceLiteralToken>(token);
+            Assert.Single(resourceLiteralToken.Properties);
+        }
+
+        [Fact]
+        public void ParseMapWithMixedValueTypes()
+        {
+            QueryToken token = this.testSubject.ParseExpressionText("{\"Id\":1,\"Name\":\"John\",\"Active\":true,\"Score\":9.5,\"Tags\":null}");
+            Assert.NotNull(token);
+            var resourceLiteralToken = Assert.IsType<ResourceLiteralToken>(token);
+            Assert.Equal(5, resourceLiteralToken.Properties.Count);
+        }
+
+        [Fact]
+        public void ParseMapWithWhitespace()
+        {
+            QueryToken token = this.testSubject.ParseExpressionText("{  \"Name\"  :  \"John\"  ,  \"Age\"  :  30  }");
+            Assert.NotNull(token);
+            var resourceLiteralToken = Assert.IsType<ResourceLiteralToken>(token);
+            Assert.Equal(2, resourceLiteralToken.Properties.Count);
+        }
+
+        [Fact]
+        public void ParseComplexNestedStructure()
+        {
+            QueryToken token = this.testSubject.ParseExpressionText("{\"User\":{\"Na\\\"me\":\"John\",\"Contacts\":[{\"Type\":\"Email\",\"Value\":\"john@example.com\"}]}}");
+            Assert.NotNull(token);
+
+            // Verify root is a ResourceLiteralToken with one property "User"
+            var rootMap = Assert.IsType<ResourceLiteralToken>(token);
+            KeyValuePair<string, QueryToken> userPair = Assert.Single(rootMap.Properties);
+            Assert.Equal("User", userPair.Key);
+
+            // Verify "User" value is a ResourceLiteralToken with "Name" and "Contacts"
+            var userMap = Assert.IsType<ResourceLiteralToken>(userPair.Value);
+            Assert.Equal(2, userMap.Properties.Count);
+
+            var namePair = userMap.Properties.First(kvp => kvp.Key == "Na\"me"); // escaped
+            var nameToken = Assert.IsType<LiteralToken>(namePair.Value);
+            Assert.Equal("John", nameToken.Value);
+
+            var contactsPair = userMap.Properties.First(kvp => kvp.Key == "Contacts");
+
+            // Verify "Contacts" is a CollectionLiteralToken with one item
+            var contactsCollection = Assert.IsType<CollectionLiteralToken>(contactsPair.Value);
+            QueryToken contactItem = Assert.Single(contactsCollection.Items);
+            
+            // Verify the collection item is a ResourceLiteralToken with "Type" and "Value"
+            var contactMap = Assert.IsType<ResourceLiteralToken>(contactItem);
+            Assert.Equal(2, contactMap.Properties.Count);
+
+            var typePair = contactMap.Properties.First(kvp => kvp.Key == "Type");
+            Assert.Equal("Type", typePair.Key);
+            var typeToken = Assert.IsType<LiteralToken>(typePair.Value);
+            Assert.Equal("Email", typeToken.Value);
+
+            var valuePair = contactMap.Properties.First(kvp => kvp.Key == "Value");
+            Assert.Equal("Value", valuePair.Key);
+            var valueToken = Assert.IsType<LiteralToken>(valuePair.Value);
+            Assert.Equal("john@example.com", valueToken.Value);
+        }
+
+        #endregion
+
+        #region Complex Expression Tests
+
+        [Fact]
+        public void ParseComplexBooleanExpression()
+        {
+            QueryToken token = this.testSubject.ParseFilter("(Id gt 5 and Id lt 10) or (Status eq 'Active' and Priority in (1,2,3))");
+            Assert.NotNull(token);
+            Assert.IsType<BinaryOperatorToken>(token);
+        }
+
+        [Fact]
+        public void ParseNestedParenthesizedExpressions()
+        {
+            QueryToken token = this.testSubject.ParseFilter("((Id eq 1) and (Name eq 'John')) or ((Id eq 2) and (Name eq 'Jane'))");
+            Assert.NotNull(token);
+            Assert.IsType<BinaryOperatorToken>(token);
+        }
+
+        [Fact]
+        public void ParseExpressionWithFunctionAndInOperator()
+        {
+            QueryToken token = this.testSubject.ParseFilter("length(Name) in (3,4,5)");
+            Assert.NotNull(token);
+            var inToken = Assert.IsType<InToken>(token);
+            Assert.IsType<FunctionCallToken>(inToken.Left);
+        }
+
+        [Fact]
+        public void ParseExpressionWithMultipleFunctions()
+        {
+            QueryToken token = this.testSubject.ParseFilter("concat(FirstName, LastName) eq 'JohnDoe' and length(Name) gt 5");
+            Assert.NotNull(token);
+            Assert.IsType<BinaryOperatorToken>(token);
+        }
+
+        [Fact]
+        public void ParseCollectionInFunctionParameter()
+        {
+            QueryToken token = this.testSubject.ParseExpressionText("customFunction([1,2,3])");
+            Assert.NotNull(token);
+            var functionToken = Assert.IsType<FunctionCallToken>(token);
+            Assert.Single(functionToken.Arguments);
+        }
+
+        [Fact]
+        public void ParseMapInFunctionParameter()
+        {
+            QueryToken token = this.testSubject.ParseExpressionText("customFunction({Name:'John',Age:30})");
+            Assert.NotNull(token);
+            var functionToken = Assert.IsType<FunctionCallToken>(token);
+            Assert.Single(functionToken.Arguments);
+        }
+
+        #endregion
+
+        #region Error Handling Tests
+
+        [Fact]
+        public void ParseInOperatorWithMissingOpenParenThrows()
+        {
+            Action parse = () => this.testSubject.ParseFilter("Id in 1,2,3)");
+            Assert.Throws<ODataException>(parse);
+        }
+
+        [Fact]
+        public void ParseInOperatorWithMissingCloseParenThrows()
+        {
+            Action parse = () => this.testSubject.ParseFilter("Id in (1,2,3");
+            Assert.Throws<ODataException>(parse);
+        }
+
+        [Fact]
+        public void ParseUnclosedCollectionThrows()
+        {
+            Action parse = () => this.testSubject.ParseExpressionText("[1,2,3");
+            Assert.Throws<ODataException>(parse);
+        }
+
+        [Fact]
+        public void ParseUnclosedMapThrows()
+        {
+            Action parse = () => this.testSubject.ParseExpressionText("{Name:'John'");
+            Assert.Throws<ODataException>(parse);
+        }
+
+        [Fact]
+        public void ParseMapWithMissingColonDoesnotThrows_SinceItBeTreatedAsString()
+        {
+            string input = "{\"Name\"\"John\"}";
+            QueryToken token = this.testSubject.ParseExpressionText(input);
+            Assert.IsType<LiteralToken>(token);
+        }
+
+        [Fact]
+        public void ParseMapWithMissingValueThrows()
+        {
+            string input = "{\"Name\":}";
+            Action parse = () => this.testSubject.ParseExpressionText(input);
+            parse.Throws<ODataException>(Error.Format(SRResources.UriQueryExpressionParser_ExpressionExpected, input.Length - 1, input));
+        }
+
+        [Fact]
+        public void ParseCollectionWithInvalidCommaPlacementThrows()
+        {
+            string input = "[,1,2,3]";
+            Action parse = () => this.testSubject.ParseExpressionText(input);
+            parse.Throws<ODataException>(Error.Format(SRResources.UriQueryExpressionParser_ExpressionExpected, 1, input));
+        }
+
+        #endregion
+
+        #region Edge Cases and Special Scenarios
+
+        [Fact]
+        public void ParseInOperatorCaseInsensitiveShouldThrow()
+        {
+            // The 'in' operator should be case-insensitive in OData
+            string input = "Id IN (1,2,3)";
+            Action test = () => this.testSubject.ParseFilter(input);
+            test.Throws<ODataException>(Error.Format(SRResources.ExpressionLexer_SyntaxError, 5, input));
+        }
+
+        [Fact]
+        public void ParseCollectionWithLargeNumbers()
+        {
+            QueryToken token = this.testSubject.ParseExpressionText("[9223372036854775807,9223372036854775806]");
+            Assert.NotNull(token);
+            var collectionToken = Assert.IsType<CollectionLiteralToken>(token);
+            Assert.Equal(2, collectionToken.Items.Count());
+        }
+
+        [Fact]
+        public void ParseCollectionWithScientificNotation()
+        {
+            QueryToken token = this.testSubject.ParseExpressionText("[1.23E+10,3.14E-5]");
+            Assert.NotNull(token);
+            var collectionToken = Assert.IsType<CollectionLiteralToken>(token);
+            Assert.Equal(2, collectionToken.Items.Count());
+        }
+
+        [Fact]
+        public void ParseMapWithEmptyStringValue()
+        {
+            QueryToken token = this.testSubject.ParseExpressionText("{\"Name\":\"\"}");
+            Assert.NotNull(token);
+            var resourceLiteralToken = Assert.IsType<ResourceLiteralToken>(token);
+            Assert.Single(resourceLiteralToken.Properties);
+        }
+
+        [Fact]
+        public void ParseCollectionWithGuid()
+        {
+            QueryToken token = this.testSubject.ParseFilter("Id in (12345678-1234-1234-1234-123456789012)");
+            Assert.NotNull(token);
+            Assert.IsType<InToken>(token);
+        }
+
+        [Fact]
+        public void ParseInOperatorWithDateTimeValues()
+        {
+            QueryToken token = this.testSubject.ParseFilter("CreatedDate in (2023-01-01T00:00:00Z,2023-12-31T23:59:59Z)");
+            Assert.NotNull(token);
+            Assert.IsType<InToken>(token);
+        }
+
+        [Fact]
+        public void ParseInOperatorWithDurationValues()
+        {
+            QueryToken token = this.testSubject.ParseFilter("Duration in (duration'PT1H',duration'PT2H')");
+            Assert.NotNull(token);
+            Assert.IsType<InToken>(token);
+        }
+
+        [Fact]
+        public void ParseCollectionInsideCollection()
+        {
+            QueryToken token = this.testSubject.ParseExpressionText("[{Values:[1,2,3]},{Values:[4,5,6]}]");
+            Assert.NotNull(token);
+            var collectionToken = Assert.IsType<CollectionLiteralToken>(token);
+            Assert.Equal(2, collectionToken.Items.Count());
+        }
+
+        [Fact]
+        public void ParseExpressionWithAllOperatorsAndInOperator()
+        {
+            QueryToken token = this.testSubject.ParseFilter("Id in (1,2,3) and Name ne null or Price gt 10.5 and Status eq 'Active'");
+            Assert.NotNull(token);
+            Assert.IsType<BinaryOperatorToken>(token);
+        }
+
+        #endregion
     }
 }

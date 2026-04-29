@@ -199,5 +199,19 @@ namespace Microsoft.OData.UriParser
         /// <param name="tokenIn">The RootPathToken to bind</param>
         /// <returns>A user defined value</returns>
         T Visit(RootPathToken tokenIn);
+
+        /// <summary>
+        /// Visits a CollectionToken
+        /// </summary>
+        /// <param name="tokenIn">The CollectionLiteralToken to bind</param>
+        /// <returns>A user defined value</returns>
+        T Visit(CollectionLiteralToken tokenIn);
+
+        /// <summary>
+        /// Visits a ResourceLiteralToken
+        /// </summary>
+        /// <param name="tokenIn">The ResourceLiteralToken to bind</param>
+        /// <returns>A user defined value</returns>
+        T Visit(ResourceLiteralToken tokenIn);
     }
 }

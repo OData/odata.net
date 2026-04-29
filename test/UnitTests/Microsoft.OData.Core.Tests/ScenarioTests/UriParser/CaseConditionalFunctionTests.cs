@@ -126,7 +126,11 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 // Condition 3: true (default case)
                 param5 => param5.ShouldBeConstantQueryNode(true),
                 // Result 3: [] - empty collection
-                param6 => param6.ShouldBeConstantQueryNode("[]")); // Note: OData URI parser represents empty collection as a string "[]", that's weird and we should fix it as 'CollectionConstantNode'.
+                param6 =>
+                {
+                    var collectionNode = Assert.IsType<CollectionConstantNode>(param6);
+                    Assert.Empty(collectionNode.Collection);
+                });
         }
 
         [Fact]
@@ -261,7 +265,11 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 // Condition 3: true (default case)
                 param5 => param5.ShouldBeConstantQueryNode(true),
                 // Result 3: [] - empty collection
-                param6 => param6.ShouldBeConstantQueryNode("[]"));
+                param6 =>
+                {
+                    var collectionNode = Assert.IsType<CollectionConstantNode>(param6);
+                    Assert.Empty(collectionNode.Collection);
+                });
         }
 
         #region Edge Case Tests

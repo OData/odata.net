@@ -174,27 +174,22 @@ namespace Microsoft.OData.UriParser
                     targetValue = timeOnlyValue;
                     return result;
                 }
-
-                bool quoted = targetTypeKind == EdmPrimitiveTypeKind.String;
-                if (quoted != UriParserHelper.IsUriValueSingleQuoted(text))
+                else if (targetTypeKind == EdmPrimitiveTypeKind.String)
                 {
+                    if (UriParserHelper.TryRemoveQuotes(ref text, out string textString))
+                    {
+                        targetValue = textString ?? text.ToString();
+                        return true;
+                    }
+
                     targetValue = null;
                     return false;
-                }
-
-                string textString = null;
-                if (quoted)
-                {
-                    UriParserHelper.TryRemoveSingleQuotes(ref text, out textString);
                 }
 
                 try
                 {
                     switch (targetTypeKind)
                     {
-                        case EdmPrimitiveTypeKind.String:
-                            targetValue = textString ?? text.ToString();
-                            break;
                         case EdmPrimitiveTypeKind.Boolean:
                             targetValue = text.ToBoolean();
                             break;

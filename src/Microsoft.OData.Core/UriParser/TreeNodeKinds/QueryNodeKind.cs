@@ -193,6 +193,15 @@ namespace Microsoft.OData.UriParser
         /// Node that represents a custom query option
         /// </summary>
         CustomQueryOption = InternalQueryNodeKind.CustomQueryOption,
+
+        ParameterAliasCollection = InternalQueryNodeKind.ParameterAliasCollection,
+
+        /// <summary>
+        /// a single JSON Object node, which is represented as a collection of key value pairs where the key is a literal token and the value is a query token.
+        /// </summary>
+        ResourceConstant = InternalQueryNodeKind.ResourceConstant,
+
+        CollectionRootExpr = InternalQueryNodeKind.CollectionRootExpr
     }
 
     /// <summary>
@@ -384,5 +393,15 @@ namespace Microsoft.OData.UriParser
         /// The parameter alias node to collection.
         /// </summary>
         ParameterAliasCollection = 36,
+
+        /// <summary>
+        /// The resource constant node, which is represented as a collection of property nodes where the property name is a string literal and the property value is a query node.
+        /// </summary>
+        ResourceConstant,
+
+       /// <summary>
+       /// The collection of root path node.
+       /// </summary>
+        CollectionRootExpr,
     }
 }

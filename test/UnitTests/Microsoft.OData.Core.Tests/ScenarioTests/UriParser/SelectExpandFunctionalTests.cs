@@ -1256,8 +1256,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         [Fact]
         public void NestedOptionsWithoutClosingParenthesisThrows()
         {
-            Action parse = () => RunParseSelectExpand(null, "MyPaintings($filter=true", HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPaintingsSet());
-            parse.Throws<ODataException>(SRResources.ExpressionLexer_UnbalancedBracketExpression);
+            string input = "MyPaintings($filter=true";
+            Action parse = () => RunParseSelectExpand(null, input, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPaintingsSet());
+            parse.Throws<ODataException>(Error.Format(SRResources.ExpressionLexer_UnbalancedExpression, "(", 11, input));
         }
 
         [Fact]

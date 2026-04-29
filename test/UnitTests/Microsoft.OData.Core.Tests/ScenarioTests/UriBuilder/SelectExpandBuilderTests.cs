@@ -669,8 +669,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
         }
 
         [Theory]
-        [InlineData("People?$expand=MyDog($filter=$it/ID in ['1', '2', '3'])", "MyDog($filter=$it/ID in ['1', '2', '3'])")]
-        [InlineData("People?$expand=MyDog($filter=$it/ID in ('1', '2', '3'))", "MyDog($filter=$it/ID in ('1', '2', '3'))")]
+        [InlineData("People?$expand=MyDog($filter=$it/ID in [1, 2, 3])", "MyDog($filter=$it/ID in [1, 2, 3])")]
+        [InlineData("People?$expand=MyDog($filter=$it/ID in (1, 2, 3))", "MyDog($filter=$it/ID in (1, 2, 3))")]
         [InlineData("People?$expand=MyDog($filter=$it/Name in (''))", "MyDog($filter=$it/Name in (''))")]
         [InlineData("People?$expand=MyDog($filter=$it/Name in [''])", "MyDog($filter=$it/Name in [''])")]
         public void ExpandWithDollarItInFilterInOperatorShouldWork(string filterQuery, string expectedSubQuery)

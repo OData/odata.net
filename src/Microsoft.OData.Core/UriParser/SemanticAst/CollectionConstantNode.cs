@@ -8,101 +8,61 @@ namespace Microsoft.OData.UriParser
 {
     #region Namespaces
 
+    using Microsoft.OData.Edm;
+    using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
-    using Microsoft.OData.Edm;
+    using System.Linq;
 
     #endregion Namespaces
 
     /// <summary>
-    /// Node representing a constant value, can either be primitive, complex, entity, or collection value.
+    /// Node representing a collection of constant value, can either be primitive, enum, complex, entity, or collection of them.
     /// </summary>
     public sealed class CollectionConstantNode : CollectionNode
     {
         /// <summary>
-        /// Collection of ConstantNodes.
+        /// Creates a new instance of the <see cref="CollectionConstantNode"/> class.
         /// </summary>
-        private readonly IList<ConstantNode> collection = new List<ConstantNode>();
-
-        /// <summary>
-        /// Cache for the TypeReference after it has been calculated for the current state of the node.
-        /// </summary>
-        private readonly IEdmTypeReference itemType;
-
-        /// <summary>
-        /// The type of the collection represented by this node.
-        /// </summary>
-        private readonly IEdmCollectionTypeReference collectionTypeReference;
-
-        /// <summary>
-        /// Create a CollectionConstantNode
-        /// </summary>
-        /// <param name="objectCollection">A collection of objects.</param>
-        /// <param name="literalText">The literal text for this node's value, formatted according to the OData URI literal formatting rules.</param>
-        /// <param name="collectionType">The reference to the collection type.</param>
-        /// <exception cref="System.ArgumentNullException">Throws if the input literalText is null.</exception>
-        public CollectionConstantNode(IEnumerable<object> objectCollection, string literalText, IEdmCollectionTypeReference collectionType)
+        /// <param name="collectionType">The expected collection type of this node. It could be null.</param>
+        public CollectionConstantNode(IEdmCollectionTypeReference collectionType)
         {
-            ExceptionUtils.CheckArgumentNotNull(objectCollection, "objectCollection");
-            ExceptionUtils.CheckArgumentStringNotNullOrEmpty(literalText, "literalText");
-            ExceptionUtils.CheckArgumentNotNull(collectionType, "collectionType");
-
-            this.LiteralText = literalText;
-            EdmCollectionType edmCollectionType = collectionType.Definition as EdmCollectionType;
-            this.itemType = edmCollectionType.ElementType;
-            this.collectionTypeReference = collectionType;
-
-            foreach (object item in objectCollection)
-            {
-                this.collection.Add(new ConstantNode(item, item != null ? item.ToString() : "null", this.itemType));
-            }
+            CollectionType = collectionType;
+            ItemType = collectionType?.ElementType();
         }
 
         /// <summary>
         /// Gets the collection of ConstantNodes.
+        /// Keep it since the ASP.NET Core OData or other OData libraries may need it, even though it's not used in the ODataLib.
+        /// Use the <see cref="Items"/> property to access the full list of query nodes including ResourceConstantNode and nested CollectionConstantNode.
         /// </summary>
-        public IList<ConstantNode> Collection
-        {
-            get
-            {
-                return new ReadOnlyCollection<ConstantNode>(this.collection);
-            }
-        }
+        [Obsolete("This property will be removed in the future, use the 'Items' property instead.")]
+        public IList<ConstantNode> Collection => new ReadOnlyCollection<ConstantNode>(Items.OfType<ConstantNode>().ToList());
+
+        /// <summary>
+        /// The collection of query nodes.
+        /// </summary>
+        public IList<QueryNode> Items { get; } = new List<QueryNode>();
 
         /// <summary>
         /// Get or Set the literal text for this node's value, formatted according to the OData URI literal formatting rules. May be null if the text was not provided at construction time.
         /// </summary>
-        public string LiteralText { get; private set; }
+        public ReadOnlyMemory<char> LiteralText { get; set; }
 
         /// <summary>
-        /// Gets the resource type of a single item from the collection represented by this node.
+        /// Gets the resource type of a single item from the collection represented by this node. This could be null.
         /// </summary>
-        public override IEdmTypeReference ItemType
-        {
-            get
-            {
-                return this.itemType;
-            }
-        }
+        public override IEdmTypeReference ItemType { get; }
 
         /// <summary>
-        /// The type of the collection represented by this node.
+        /// The type of the collection type represented/expected by this node. This could be null.
         /// </summary>
-        public override IEdmCollectionTypeReference CollectionType
-        {
-            get { return this.collectionTypeReference; }
-        }
+        public override IEdmCollectionTypeReference CollectionType { get; }
 
         /// <summary>
         /// Gets the kind of this node.
         /// </summary>
-        internal override InternalQueryNodeKind InternalKind
-        {
-            get
-            {
-                return InternalQueryNodeKind.CollectionConstant;
-            }
-        }
+        internal override InternalQueryNodeKind InternalKind => InternalQueryNodeKind.CollectionConstant;
 
         /// <summary>
         /// Accept a <see cref="QueryNodeVisitor{T}"/> to walk a tree of <see cref="QueryNode"/>s.

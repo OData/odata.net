@@ -14,7 +14,7 @@ namespace Microsoft.OData.UriParser
     using System.Diagnostics;
     using System.Globalization;
     using System.Linq;
-
+    using System.Text.Json;
 
     #endregion
 
@@ -42,6 +42,51 @@ namespace Microsoft.OData.UriParser
         internal static bool TryRemovePrefix(ReadOnlySpan<char> prefix, ref ReadOnlySpan<char> text)
         {
             return TryRemoveLiteralPrefix(prefix, ref text);
+        }
+
+        /// <summary>
+        /// Remove single or double quoted string literal delimiters from the specified <paramref name="text"/>.
+        /// </summary>
+        /// <param name="text">The text to remove quotes from.</param>
+        /// <param name="value">The resulting string after removing quotes. If true, this will contain the unquoted string.</param>
+        /// <returns>True if quotes were successfully removed; otherwise, false.</returns>
+        internal static bool TryRemoveQuotes(ref ReadOnlySpan<char> text, out string value)
+        {
+            value = null;
+            if (text.Length < 2)
+            {
+                return false;
+            }
+
+            // double quoted string
+            if (text[0] == '"' && text[^1] == '"')
+            {
+                try
+                {
+                    // JsonSerializer.Deserialize(...) for double-quoted values could throw JsonException on invalid escapes
+                    value = JsonSerializer.Deserialize<string>(text);
+                    text = value.AsSpan();
+                    return true;
+                }
+                catch (JsonException)
+                {
+                    value = null;
+                    return false;
+                }
+            }
+
+            if (TryRemoveSingleQuotes(ref text, out value))
+            {
+                if (value == null)
+                {
+                    // The value is null meaning the text doesn't have escaped single quotes within the string.
+                    value = text.ToString();
+                }
+
+                return true;
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -242,7 +287,7 @@ namespace Microsoft.OData.UriParser
                 case ExpressionTokenKind.GuidLiteral:
                     return EdmCoreModel.Instance.GetGuid(false);
                 case ExpressionTokenKind.BinaryLiteral:
-                    return EdmCoreModel.Instance.GetBinary(true);
+                    return EdmCoreModel.Instance.GetBinary(false);
                 case ExpressionTokenKind.DateOnlyLiteral:
                     return EdmCoreModel.Instance.GetDateOnly(false);
                 case ExpressionTokenKind.DateTimeOffsetLiteral:

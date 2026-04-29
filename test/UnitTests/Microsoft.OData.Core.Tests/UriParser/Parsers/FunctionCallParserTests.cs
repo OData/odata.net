@@ -96,7 +96,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             Action createWithoutClosingParen = () => tokenizerWithoutClosingParen.ParseArgumentListOrEntityKeyList();
             Action createWithoutOpeningParen = () => tokenizerWithoutOpeningParen.ParseArgumentListOrEntityKeyList();
             createWithoutClosingParen.Throws<ODataException>(Error.Format(SRResources.UriQueryExpressionParser_CloseParenOrCommaExpected, 13, "(stuff, stuff"));
-            createWithoutOpeningParen.Throws<ODataException>(Error.Format(SRResources.UriQueryExpressionParser_OpenParenExpected, 0, "stuff, stuff)"));
+            createWithoutOpeningParen.Throws<ODataException>(Error.Format(SRResources.UriQueryExpressionParser_ExpressionTokenExpected, "(", 0, "stuff, stuff)"));
         }
 
         [Fact]

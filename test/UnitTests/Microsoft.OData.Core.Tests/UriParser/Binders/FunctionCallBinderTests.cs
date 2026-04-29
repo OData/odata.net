@@ -455,7 +455,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
 
             Action createWithMoreThanTwoArgs = () => this.functionCallBinder.BindFunctionCall(functionWithMoreThanTwoArgs);
 
-            createWithMoreThanTwoArgs.Throws<ODataErrorException>(Error.Format(SRResources.MetadataBinder_CastOrIsOfExpressionWithWrongNumberOfOperands, 3));
+            createWithMoreThanTwoArgs.Throws<ODataErrorException>(Error.Format(SRResources.MetadataBinder_FunctionWithWrongNumberOfOperands, "cast", 3, "1 or 2"));
         }
 
         [Fact]
@@ -592,7 +592,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
 
             Action createWithMoreThanTwoArgs = () => this.functionCallBinder.BindFunctionCall(functionWithMoreThanTwoArgs);
 
-            createWithMoreThanTwoArgs.Throws<ODataErrorException>(Error.Format(SRResources.MetadataBinder_CastOrIsOfExpressionWithWrongNumberOfOperands, 3));
+            createWithMoreThanTwoArgs.Throws<ODataErrorException>(Error.Format(SRResources.MetadataBinder_FunctionWithWrongNumberOfOperands, "isof", 3, "1 or 2"));
         }
 
         [Fact]
@@ -1226,7 +1226,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
                 "Fully.Qualified.Namespace.FindMyOwner",
                 new FunctionParameterToken[]
                 {
-                    new FunctionParameterToken("dogsName", new LiteralToken("fido","'fido'"))
+                    new FunctionParameterToken("dogsName", new LiteralToken("fido", "'fido'"))
                 },
                 null);
             QueryNode functionCallNode = this.functionCallBinder.BindFunctionCall(functionCallToken);
@@ -1290,7 +1290,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
                 "Fully.Qualified.Namespace.FindMyOwner",
                 new FunctionParameterToken[]
                 {
-                    new FunctionParameterToken("dogsName", new LiteralToken("fido","'fido'"))
+                    new FunctionParameterToken("dogsName", new LiteralToken("fido", "'fido'"))
                 },
                 new EndPathToken("OpenProperty", new InnerPathToken("MyFavoritePainting", null, null)));
             Action bindOpenFunction = () => this.functionCallBinder.BindFunctionCall(functionCall);

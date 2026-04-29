@@ -417,9 +417,8 @@ namespace Microsoft.OData.UriParser
 
             IEdmFunction function = (IEdmFunction)operation;
 
-            // TODO:  $filter $orderby parameter expression which contains complex or collection should NOT be supported in this way
-            //     but should be parsed into token tree, and binded to node tree: parsedParameters.Select(p => this.bindMethod(p));
-            ICollection<FunctionParameterToken> parsedParameters = HandleComplexOrCollectionParameterValueIfExists(state.Configuration.Model, function, syntacticArguments, state.Configuration.Resolver.EnableCaseInsensitive);
+
+            ICollection<FunctionParameterToken> parsedParameters = PreProcessParameterTokens(state.Configuration.Model, function, syntacticArguments, state.Configuration.Resolver.EnableCaseInsensitive);
 
             IEnumerable<QueryNode> boundArguments = parsedParameters.Select(p => this.bindMethod(p));
             boundArguments = boundArguments.ToList(); // force enumerable to run : will immediately evaluate all this.bindMethod(p).
@@ -465,8 +464,7 @@ namespace Microsoft.OData.UriParser
         /// <returns>The binded semantic nodes.</returns>
         internal static List<OperationSegmentParameter> BindSegmentParameters(ODataUriParserConfiguration configuration, IEdmOperation functionOrOpertion, ICollection<FunctionParameterToken> segmentParameterTokens)
         {
-            // TODO: HandleComplexOrCollectionParameterValueIfExists is temp work around for single copmlex or colleciton type, it can't handle nested complex or collection value.
-            ICollection<FunctionParameterToken> parametersParsed = FunctionCallBinder.HandleComplexOrCollectionParameterValueIfExists(configuration.Model, functionOrOpertion, segmentParameterTokens, configuration.Resolver.EnableCaseInsensitive, configuration.EnableUriTemplateParsing);
+            ICollection<FunctionParameterToken> parametersParsed = PreProcessParameterTokens(configuration.Model, functionOrOpertion, segmentParameterTokens, configuration.Resolver.EnableCaseInsensitive, configuration.EnableUriTemplateParsing);
 
             // Bind it to metadata
             BindingState state = new BindingState(configuration);
@@ -499,20 +497,33 @@ namespace Microsoft.OData.UriParser
             {
                 if (item.Value is SingleValueNode singleValueNode)
                 {
-                    // ensure node type is compatible with parameter type.
-                    IEdmTypeReference sourceTypeReference = singleValueNode.GetEdmTypeReference();
-                    bool sourceIsNullOrOpenType = (sourceTypeReference == null);
-                    if (!sourceIsNullOrOpenType)
+                    // ConstantNode from LiteralBinder doesn't need to do further convertion, but other nodes may need to do it.
+                    // So, let's keep the old logic for other nodes but not for constant node.
+                    if (item.Value is ConvertNode convertNode && convertNode.Source is ConstantNode)
                     {
-                        // if the node has been rewritten, no further conversion is needed.
-                        if (!TryRewriteIntegralConstantNode(ref singleValueNode, item.Key.Type))
-                        {
-                            singleValueNode = MetadataBindingUtils.ConvertToTypeIfNeeded(singleValueNode, item.Key.Type);
-                        }
+                        boundParameters.Add(new OperationSegmentParameter(item.Key.Name, item.Value));
                     }
+                    else if (item.Value is ConstantNode)
+                    {
+                        boundParameters.Add(new OperationSegmentParameter(item.Key.Name, item.Value));
+                    }
+                    else
+                    {
+                        // ensure node type is compatible with parameter type.
+                        IEdmTypeReference sourceTypeReference = singleValueNode.GetEdmTypeReference();
+                        bool sourceIsNullOrOpenType = (sourceTypeReference == null);
+                        if (!sourceIsNullOrOpenType)
+                        {
+                            // if the node has been rewritten, no further conversion is needed.
+                            if (!TryRewriteIntegralConstantNode(ref singleValueNode, item.Key.Type))
+                            {
+                                singleValueNode = MetadataBindingUtils.ConvertToTypeIfNeeded(singleValueNode, item.Key.Type);
+                            }
+                        }
 
-                    OperationSegmentParameter boundParameter = new OperationSegmentParameter(item.Key.Name, singleValueNode);
-                    boundParameters.Add(boundParameter);
+                        OperationSegmentParameter boundParameter = new OperationSegmentParameter(item.Key.Name, singleValueNode);
+                        boundParameters.Add(boundParameter);
+                    }
                 }
                 else
                 {
@@ -586,10 +597,7 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// This is temp work around for $filter $orderby parameter expression which contains complex or collection
-        ///     like "Fully.Qualified.Namespace.CanMoveToAddresses(addresses=[{\"Street\":\"NE 24th St.\",\"City\":\"Redmond\"},{\"Street\":\"Pine St.\",\"City\":\"Seattle\"}])";
-        /// TODO:  $filter $orderby parameter expression which contains nested complex or collection should NOT be supported in this way
-        ///     but should be parsed into token tree, and binded to node tree: parsedParameters.Select(p => this.bindMethod(p));
+        /// Pre process the parameters for function or function import.
         /// </summary>
         /// <param name="model">The model.</param>
         /// <param name="operation">IEdmFunction or IEdmOperation</param>
@@ -597,9 +605,9 @@ namespace Microsoft.OData.UriParser
         /// <param name="enableCaseInsensitive">Whether to enable case-insensitive when resolving parameter name.</param>
         /// <param name="enableUriTemplateParsing">Whether Uri template parsing is enabled.</param>
         /// <returns>The FunctionParameterTokens with complex or collection values converted from string like "{...}", or "[..,..,..]".</returns>
-        private static ICollection<FunctionParameterToken> HandleComplexOrCollectionParameterValueIfExists(IEdmModel model, IEdmOperation operation, ICollection<FunctionParameterToken> parameterTokens, bool enableCaseInsensitive, bool enableUriTemplateParsing = false)
+        private static ICollection<FunctionParameterToken> PreProcessParameterTokens(IEdmModel model, IEdmOperation operation, ICollection<FunctionParameterToken> parameterTokens, bool enableCaseInsensitive, bool enableUriTemplateParsing = false)
         {
-            ICollection<FunctionParameterToken> partiallyParsedParametersWithComplexOrCollection = new Collection<FunctionParameterToken>();
+            ICollection<FunctionParameterToken> preParsedParametersTokens = new Collection<FunctionParameterToken>();
             foreach (FunctionParameterToken paraToken in parameterTokens)
             {
                 FunctionParameterToken funcParaToken;
@@ -616,50 +624,50 @@ namespace Microsoft.OData.UriParser
                     funcParaToken = paraToken;
                 }
 
-                FunctionParameterAliasToken aliasToken = funcParaToken.ValueToken as FunctionParameterAliasToken;
-                if (aliasToken != null)
+                if (functionParameter == null)
                 {
-                    aliasToken.ExpectedParameterType = functionParameter.Type;
+                    preParsedParametersTokens.Add(funcParaToken);
+                    continue;
                 }
 
-                LiteralToken valueToken = funcParaToken.ValueToken as LiteralToken;
-                string valueStr = null;
-                if (valueToken != null && (valueStr = valueToken.Value as string) != null && !string.IsNullOrEmpty(valueToken.OriginalText))
+                if (funcParaToken.ValueToken is CollectionLiteralToken collectionToken)
                 {
-                    ExpressionLexer lexer = new ExpressionLexer(model, expression: valueToken.OriginalText, moveToFirstToken: true, useSemicolonDelimiter: false, parsingFunctionParameters: true);
-                    if (lexer.CurrentToken.Kind == ExpressionTokenKind.BracketedExpression || lexer.CurrentToken.Kind == ExpressionTokenKind.BracedExpression)
+                    // "param=[{...}, {...}]"
+                    BindingHelpers.SetExpectedType(collectionToken, functionParameter.Type);
+                }
+                else if (funcParaToken.ValueToken is ResourceLiteralToken resourceLiteralToken)
+                {
+                    // "param={...}"
+                    BindingHelpers.SetExpectedType(resourceLiteralToken, functionParameter.Type);
+                }
+                else if (funcParaToken.ValueToken is FunctionParameterAliasToken aliasToken)
+                {
+                    // "param=@alias"
+                    aliasToken.ExpectedParameterType = functionParameter.Type;
+                }
+                else if (funcParaToken.ValueToken is LiteralToken literalToken)
+                {
+                    // "param=literal"
+                    if (literalToken.Value is UriTemplateExpression templateExpr)
                     {
-                        object result;
-                        UriTemplateExpression expression;
-
-                        if (enableUriTemplateParsing && UriTemplateParser.TryParseLiteral(lexer.CurrentToken.Span, functionParameter.Type, out expression))
+                        if (!enableUriTemplateParsing)
                         {
-                            result = expression;
-                        }
-                        else if (!functionParameter.Type.IsStructured() && !functionParameter.Type.IsStructuredCollectionType())
-                        {
-                            // ExpressionTokenKind.BracketedExpression means text like [1,2]
-                            // so now try convert it to collection type value:
-                            result = ODataUriUtils.ConvertFromUriLiteral(valueStr, ODataVersion.V4, model, functionParameter.Type);
-                        }
-                        else
-                        {
-                            // For complex & collection of complex directly return the raw string.
-                            partiallyParsedParametersWithComplexOrCollection.Add(funcParaToken);
-                            continue;
+                            throw new ODataException(Error.Format(SRResources.FunctionCallBinder_NoUriTemplateParsingEnabled, literalToken.OriginalText));
                         }
 
-                        LiteralToken newValueToken = new LiteralToken(result, valueToken.OriginalText);
-                        FunctionParameterToken newFuncParaToken = new FunctionParameterToken(funcParaToken.ParameterName, newValueToken);
-                        partiallyParsedParametersWithComplexOrCollection.Add(newFuncParaToken);
-                        continue;
+                        templateExpr.LiteralText = literalToken.OriginalText;
+                        templateExpr.ExpectedType = functionParameter.Type;
+                    }
+                    else
+                    {
+                        literalToken.ExpectedType = functionParameter.Type;
                     }
                 }
 
-                partiallyParsedParametersWithComplexOrCollection.Add(funcParaToken);
+                preParsedParametersTokens.Add(funcParaToken);
             }
 
-            return partiallyParsedParametersWithComplexOrCollection;
+            return preParsedParametersTokens;
         }
 
         /// <summary>
@@ -753,7 +761,7 @@ namespace Microsoft.OData.UriParser
             if (args.Count != 1 && args.Count != 2)
             {
                 throw new ODataErrorException(
-                    Error.Format(SRResources.MetadataBinder_CastOrIsOfExpressionWithWrongNumberOfOperands, args.Count));
+                    Error.Format(SRResources.MetadataBinder_FunctionWithWrongNumberOfOperands, isCast ? "cast" : "isof", args.Count, "1 or 2"));
             }
 
             QueryNode queryNode = args[^1]; // Get the last element

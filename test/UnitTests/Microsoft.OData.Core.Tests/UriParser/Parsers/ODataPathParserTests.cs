@@ -405,7 +405,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             // short.MaxValue + 1 = 32768
             Action parsePath = () => this.testSubject.ParsePath(new[] { "People(1)", "Fully.Qualified.Namespace.IsOlderThanShort(age=32768)" });
-            parsePath.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_CannotConvertToType, "Edm.Int32", "Edm.Int16"));
+            parsePath.Throws<ODataException>(Error.Format(SRResources.LiteralBinder_CannotConvertPrimitiveValue, "32768", "Edm.Int16"));
         }
 
         [Fact]
@@ -423,7 +423,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void TestDoubleArgumentOnSingleParameter()
         {
             Action parsePath = () => this.testSubject.ParsePath(new[] { "People(1)", "Fully.Qualified.Namespace.IsOlderThanSingle(age=123.45678987)" });
-            parsePath.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_CannotConvertToType, "Edm.Double", "Edm.Single"));
+            parsePath.Throws<ODataException>(Error.Format(SRResources.LiteralBinder_CannotConvertPrimitiveValue, "123.45678987", "Edm.Single"));
         }
         #endregion
 
@@ -516,7 +516,9 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 
             var operationImportSegment = Assert.IsType<OperationImportSegment>(path[0]);
             var node = Assert.IsType<ConstantNode>(Assert.Single(operationImportSegment.Parameters).Value);
-            Assert.Equal("Fully.Qualified.Namespace.ColorPattern'1'", node.LiteralText);
+
+            ODataEnumValue enumValue = Assert.IsType<ODataEnumValue>(node.Value);
+            Assert.Equal("Fully.Qualified.Namespace.ColorPattern'Red'", node.LiteralText);
         }
 
         [Fact]
@@ -807,7 +809,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             path[2].ShouldBeOperationSegment(HardCodedTestModel.GetFunctionForGetFullName());
 
             var parameterValue = Assert.IsType<OperationSegmentParameter>(Assert.Single(Assert.IsType<OperationSegment>(path[2]).Parameters)).Value;
-            var node = Assert.IsType<ConstantNode>(Assert.IsType<ConvertNode>(parameterValue).Source);
+            var node = Assert.IsType<ConstantNode>(parameterValue);
             Assert.Equal("abc", node.Value);
         }
 

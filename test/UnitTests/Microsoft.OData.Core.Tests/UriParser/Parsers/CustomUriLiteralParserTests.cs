@@ -822,8 +822,8 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
                 var fullUri = new Uri("http://www.odata.com/OData/Lions" + string.Format("?$filter=LionHeartbeat eq {0}'55.9'", HEARTBEAT_LITERAL_PREFIX));
                 ODataUriParser parser = new ODataUriParser(this.model, new Uri("http://www.odata.com/OData/"), fullUri);
 
-                HeatBeatCustomUriLiteralParser.HeatBeat heartbeatValue = Assert.IsType<HeatBeatCustomUriLiteralParser.HeatBeat>(
-                  (parser.ParseFilter().Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).Right.ShouldBeConvertQueryNode(heartbeatTypeReference).Source as ConstantNode).Value);
+                ConstantNode constantNode = Assert.IsType<ConstantNode>(parser.ParseFilter().Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).Right);
+                HeatBeatCustomUriLiteralParser.HeatBeat heartbeatValue = Assert.IsType<HeatBeatCustomUriLiteralParser.HeatBeat>(constantNode.Value);
 
                 Assert.NotNull(heartbeatValue);
                 Assert.Equal(55.9, heartbeatValue.Frequency);

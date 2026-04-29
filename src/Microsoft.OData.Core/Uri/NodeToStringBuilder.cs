@@ -6,6 +6,8 @@
 
 namespace Microsoft.OData
 {
+    using Microsoft.OData.Edm;
+    using Microsoft.OData.UriParser;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
@@ -13,8 +15,6 @@ namespace Microsoft.OData
     using System.Linq;
     using System.Text;
     using System.Text.RegularExpressions;
-    using Microsoft.OData.Edm;
-    using Microsoft.OData.UriParser;
 
     /// <summary>
     /// Build QueryNode to String Representation
@@ -182,12 +182,29 @@ namespace Microsoft.OData
         public override String Visit(CollectionConstantNode node)
         {
             ExceptionUtils.CheckArgumentNotNull(node, "node");
-            if (String.IsNullOrEmpty(node.LiteralText))
-            {
-                return ExpressionConstants.KeywordNull;
-            }
+            return node.LiteralText.ToString();
+        }
 
-            return node.LiteralText;
+        /// <summary>
+        /// Translates a <see cref="CollectionRootPathNode"/> into a corresponding <see cref="String"/>.
+        /// </summary>
+        /// <param name="node">The node to translate.</param>
+        /// <returns>The translated String.</returns>
+        public override String Visit(CollectionRootPathNode node)
+        {
+            ExceptionUtils.CheckArgumentNotNull(node, "node");
+            return node.LiteralText.ToString();
+        }
+
+        /// <summary>
+        /// Translates a <see cref="ResourceConstantNode"/> into a corresponding <see cref="String"/>.
+        /// </summary>
+        /// <param name="node">The node to translate.</param>
+        /// <returns>The translated String.</returns>
+        public override string Visit(ResourceConstantNode nodeIn)
+        {
+            ExceptionUtils.CheckArgumentNotNull(nodeIn, "nodeIn");
+            return nodeIn.LiteralText.ToString();
         }
 
         /// <summary>
@@ -420,7 +437,7 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Translates a <see cref="NamedFunctionParameterNode"/> into a corresponding <see cref="String"/>.
+        /// Translates a <see cref="SearchTermNode"/> into a corresponding <see cref="String"/>.
         /// </summary>
         /// <param name="node">The node to translate.</param>
         /// <returns>The translated String of SearchTermNode.</returns>

@@ -114,7 +114,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void SearchUnMatchedParenthesisTest()
         {
             Action action = ()=>searchParser.ParseSearch("(A BC DEF");
-            action.Throws<ODataException>(Error.Format(SRResources.UriQueryExpressionParser_CloseParenOrOperatorExpected, 9,"(A BC DEF"));
+            action.Throws<ODataException>(Error.Format(SRResources.UriQueryExpressionParser_ExpressionTokenExpected, ")", 9,"(A BC DEF"));
         }
 
         [Fact]

@@ -182,13 +182,14 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void NestedOptionsWithoutClosingParenthesisShouldThrow()
         {
             // Arrange
-            SelectExpandParser parser = new SelectExpandParser(this.model, "one($filter=true", ODataUriParserSettings.DefaultSelectExpandLimit);
+            string expr = "one($filter=true";
+            SelectExpandParser parser = new SelectExpandParser(this.model, expr, ODataUriParserSettings.DefaultSelectExpandLimit);
 
             // Act
             Action test = () => parser.ParseExpand();
 
             // Assert
-            test.Throws<ODataException>(SRResources.ExpressionLexer_UnbalancedBracketExpression);
+            test.Throws<ODataException>(Error.Format(SRResources.ExpressionLexer_UnbalancedExpression, "(", 3, expr));
         }
 
         [Fact]

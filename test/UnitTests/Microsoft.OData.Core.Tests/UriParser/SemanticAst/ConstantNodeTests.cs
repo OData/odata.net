@@ -47,7 +47,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         [Fact]
         public void NullLiteralTextShouldThrow()
         {
-            Action target = () => new ConstantNode(null, null);
+            Action target = () => new ConstantNode(null, (string)null);
             Assert.Throws<ArgumentNullException>("literalText", target);
         }
 
