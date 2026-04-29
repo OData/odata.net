@@ -56,7 +56,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             Assert.NotNull(result);
             Assert.IsType<CollectionConstantNode>(result);
             var collectionNode = result as CollectionConstantNode;
-            Assert.Empty(collectionNode.Collection);
+            Assert.Empty(collectionNode.Items);
         }
 
         [Fact]
@@ -79,7 +79,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             Assert.NotNull(result);
             Assert.IsType<CollectionConstantNode>(result);
             var collectionNode = result as CollectionConstantNode;
-            Assert.Equal(3, collectionNode.Collection.Count);
+            Assert.Equal(3, collectionNode.Items.Count);
         }
 
         [Fact]
@@ -102,7 +102,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             Assert.NotNull(result);
             Assert.IsType<CollectionConstantNode>(result);
             var collectionNode = result as CollectionConstantNode;
-            Assert.Equal(3, collectionNode.Collection.Count);
+            Assert.Equal(3, collectionNode.Items.Count);
         }
 
         [Fact]
@@ -183,7 +183,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             Assert.NotNull(result);
             Assert.IsType<CollectionConstantNode>(result);
             var collectionNode = result as CollectionConstantNode;
-            Assert.Equal(2, collectionNode.Collection.Count);
+            Assert.Equal(2, collectionNode.Items.Count);
         }
 
         [Fact]
@@ -302,7 +302,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             Assert.NotNull(result);
             Assert.IsType<CollectionConstantNode>(result);
             var collectionNode = result as CollectionConstantNode;
-            Assert.Single(collectionNode.Collection);
+            Assert.Single(collectionNode.Items);
         }
 
         [Fact]
@@ -327,7 +327,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             Assert.NotNull(result);
             Assert.IsType<CollectionConstantNode>(result);
             var collectionNode = result as CollectionConstantNode;
-            Assert.Equal(2, collectionNode.Collection.Count);
+            Assert.Equal(2, collectionNode.Items.Count);
         }
 
         [Fact]
@@ -350,7 +350,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             Assert.NotNull(result);
             Assert.IsType<CollectionConstantNode>(result);
             var collectionNode = result as CollectionConstantNode;
-            Assert.Equal(3, collectionNode.Collection.Count);
+            Assert.Equal(3, collectionNode.Items.Count);
         }
 
         #region Helper Methods

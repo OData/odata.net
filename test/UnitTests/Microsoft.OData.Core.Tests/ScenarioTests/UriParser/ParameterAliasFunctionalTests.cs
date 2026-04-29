@@ -197,9 +197,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                     oDataPath.LastSegment.ShouldBeOperationSegment(HardCodedTestModel.GetFunctionForOwnsTheseDogs());
                     CollectionConstantNode constNode = Assert.IsType<CollectionConstantNode>(aliasNodes["@dogNames"]);
                     Assert.Equal("[\"Barky\",\"Junior\"]".AsMemory(), constNode.LiteralText);
-                    Assert.Equal(2, constNode.Collection.Count);
-                    constNode.Collection.ElementAt(0).ShouldBeConstantQueryNode("Barky");
-                    constNode.Collection.ElementAt(1).ShouldBeConstantQueryNode("Junior");
+                    Assert.Equal(2, constNode.Items.Count);
+                    constNode.Items.ElementAt(0).ShouldBeConstantQueryNode("Barky");
+                    constNode.Items.ElementAt(1).ShouldBeConstantQueryNode("Junior");
                 });
         }
 

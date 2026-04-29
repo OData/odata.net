@@ -202,11 +202,11 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
             var node = Assert.IsType<CollectionConstantNode>(parameter.Value);
             //var values = node.Value.ShouldBeODataCollectionValue();
 
-            Assert.Equal(2, node.Collection.Count);
-            ConstantNode item1 = Assert.IsType<ConstantNode>(node.Collection.ElementAt(0));
+            Assert.Equal(2, node.Items.Count);
+            ConstantNode item1 = Assert.IsType<ConstantNode>(node.Items.ElementAt(0));
             item1.Value.ShouldBeODataEnumValue("TestNS.Color", "Blue");
 
-            ConstantNode item2 = Assert.IsType<ConstantNode>(node.Collection.ElementAt(1));
+            ConstantNode item2 = Assert.IsType<ConstantNode>(node.Items.ElementAt(1));
             Assert.Null(item2.Value);
 
         }

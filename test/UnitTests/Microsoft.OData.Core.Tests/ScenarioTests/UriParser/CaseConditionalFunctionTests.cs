@@ -129,7 +129,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 param6 =>
                 {
                     var collectionNode = Assert.IsType<CollectionConstantNode>(param6);
-                    Assert.Empty(collectionNode.Collection);
+                    Assert.Empty(collectionNode.Items);
                 });
         }
 
@@ -268,7 +268,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 param6 =>
                 {
                     var collectionNode = Assert.IsType<CollectionConstantNode>(param6);
-                    Assert.Empty(collectionNode.Collection);
+                    Assert.Empty(collectionNode.Items);
                 });
         }
 

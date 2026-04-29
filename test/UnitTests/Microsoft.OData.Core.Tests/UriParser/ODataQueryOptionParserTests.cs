@@ -21,7 +21,7 @@ namespace Microsoft.OData.Tests.UriParser
         public void DefaultParameterAliasNodesShouldBeEmtpy()
         {
             var uriParser = new ODataQueryOptionParser(HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet(), new Dictionary<string, string>());
-            Assert.Empty(uriParser.ParameterAliasNodes);
+            Assert.Empty(uriParser.ParameterAliasAllNodes);
         }
 
         [Fact]

@@ -558,12 +558,12 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var collectionConstant = Assert.IsType<CollectionConstantNode>(parameter.Value);
             Assert.Equal(parameterValue.AsMemory(), collectionConstant.LiteralText);
 
-            Assert.Equal(2, collectionConstant.Collection.Count);
-            QueryNode firstItem = collectionConstant.Collection.ElementAt(0);
+            Assert.Equal(2, collectionConstant.Items.Count);
+            QueryNode firstItem = collectionConstant.Items.ElementAt(0);
             ConstantNode firstItemNode = firstItem.ShouldBeConstantQueryNode("Barky");
             Assert.Equal("\"Barky\"", firstItemNode.LiteralText);
 
-            QueryNode secondItem = collectionConstant.Collection.ElementAt(1);
+            QueryNode secondItem = collectionConstant.Items.ElementAt(1);
             ConstantNode secondItemNode = secondItem.ShouldBeConstantQueryNode("Junior");
             Assert.Equal("\"Junior\"", secondItemNode.LiteralText);
         }
