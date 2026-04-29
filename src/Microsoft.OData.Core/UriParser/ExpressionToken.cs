@@ -73,18 +73,6 @@ namespace Microsoft.OData.UriParser
             }
         }
 
-        /// <summary>Checks whether this token is a valid token for a function parameter.</summary>
-        internal bool IsFunctionParameterToken
-        {
-            get
-            {
-                return this.IsKeyValueToken
-                    || this.Kind == ExpressionTokenKind.BracketedExpression
-                    || this.Kind == ExpressionTokenKind.BracedExpression
-                    || this.Kind == ExpressionTokenKind.NullLiteral;
-            }
-        }
-
         /// <summary>Provides a string representation of this token.</summary>
         /// <returns>String representation of this token.</returns>
         public override string ToString()

@@ -13,100 +13,67 @@ namespace Microsoft.OData.UriParser
     using Microsoft.OData.Edm;
 
     /// <summary>
-    /// Lexical token representing a literal value.
+    /// JSON value token, Lexical token representing a literal value.
     /// </summary>
     public sealed class LiteralToken : QueryToken
     {
         /// <summary>
-        /// The original text value of the literal.
+        /// Create a new LiteralToken with the given value.
         /// </summary>
-        /// <remarks>This is used internally to simulate correct compat behavior with WCF DS, and parameter alias.
-        /// We should use this during type promotion when applying metadata.</remarks>
-        private readonly string originalText;
-
-        /// <summary>
-        /// The value of the literal. This is a parsed primitive value.
-        /// </summary>
-        private readonly object value;
-
-        /// <summary>
-        /// The expected EDM type of literal.
-        /// </summary>
-        private readonly IEdmTypeReference expectedEdmTypeReference;
-
-        /// <summary>
-        /// Create a new LiteralToken given value and originalText
-        /// </summary>
-        /// <param name="value">The value of the literal. This is a parsed primitive value.</param>
+        /// <param name="value">The value of the literal. This is a pre-parsed primitive value.</param>
         public LiteralToken(object value)
         {
-            this.value = value;
+            this.Value = value;
         }
 
         /// <summary>
-        /// Create a new LiteralToken given value and originalText
+        /// Create a new LiteralToken with given value and originalText, without the inferred type.
         /// </summary>
-        /// <param name="value">The value of the literal. This is a parsed primitive value.</param>
+        /// <param name="value">The value of the literal. This is a pre-parsed primitive value.</param>
         /// <param name="originalText">The original text value of the literal.</param>
-        /// <remarks>This is used internally to simulate correct compat behavior with WCF DS, and parameter alias.</remarks>
         internal LiteralToken(object value, string originalText)
             : this(value)
         {
-            this.originalText = originalText;
+            this.OriginalText = originalText ?? string.Empty;
         }
 
         /// <summary>
-        /// Create a new LiteralToken given value and originalText
+        /// Create a new LiteralToken with given value and originalText, with the inferred type.
         /// </summary>
-        /// <param name="value">The value of the literal. This is a parsed primitive value.</param>
+        /// <param name="value">The value of the literal. This is a pre-parsed primitive value.</param>
         /// <param name="originalText">The original text value of the literal.</param>
-        /// <param name="expectedEdmTypeReference">The expected EDM type of literal..</param>
-        /// <remarks>This is used internally to simulate correct compat behavior with WCF DS, and parameter alias.</remarks>
-        internal LiteralToken(object value, string originalText, IEdmTypeReference expectedEdmTypeReference)
+        /// <param name="typeReference">The inferred EDM type of literal.</param>
+        internal LiteralToken(object value, string originalText, IEdmTypeReference typeReference)
             : this(value, originalText)
         {
-            this.expectedEdmTypeReference = expectedEdmTypeReference;
+            this.InferredType = typeReference;
         }
 
         /// <summary>
         /// The kind of the query token.
         /// </summary>
-        public override QueryTokenKind Kind
-        {
-            get { return QueryTokenKind.Literal; }
-        }
+        public override QueryTokenKind Kind => QueryTokenKind.Literal;
 
         /// <summary>
-        /// The value of the literal. This is a parsed primitive value.
+        /// Gets the value of the literal. This is a pre-parsed primitive value.
         /// </summary>
-        public object Value
-        {
-            get { return this.value; }
-        }
+        public object Value { get; }
 
         /// <summary>
-        /// The original text value of the literal.
+        /// Gets the original text value of the literal.
         /// </summary>
-        /// <remarks>This is used internally to simulate correct compat behavior with WCF DS, and parameter alias.
-        /// We should use this during type promotion when applying metadata.</remarks>
-        internal string OriginalText
-        {
-            get
-            {
-                return this.originalText;
-            }
-        }
+        internal string OriginalText { get; } = string.Empty;
 
         /// <summary>
-        /// The expected EDM type of literal.
+        /// Gets or sets the expected Edm type of literal. This type is from the metadata, and is used for type promotion.
         /// </summary>
-        internal IEdmTypeReference ExpectedEdmTypeReference
-        {
-            get
-            {
-                return this.expectedEdmTypeReference;
-            }
-        }
+        internal IEdmTypeReference ExpectedType { get; set; }
+
+        /// <summary>
+        /// Gets the Edm type inferred from the literal itself. The nullability seems un-used but let's keep it.(One exception is when it's from the Customized Prefix type.)
+        /// This could be null if no inferred type provided or for a 'null' literal since there's no type information from the literal itself.
+        /// </summary>
+        internal IEdmTypeReference InferredType { get; set; }
 
         /// <summary>
         /// Accept a <see cref="ISyntacticTreeVisitor{T}"/> to walk a tree of <see cref="QueryToken"/>s.

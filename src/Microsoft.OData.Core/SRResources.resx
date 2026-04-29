@@ -1838,14 +1838,11 @@
   <data name="UriQueryExpressionParser_ExpressionExpected" xml:space="preserve">
     <value>Expression expected at position {0} in '{1}'.</value>
   </data>
-  <data name="UriQueryExpressionParser_OpenParenExpected" xml:space="preserve">
-    <value>'(' expected at position {0} in '{1}'.</value>
+	<data name="UriQueryExpressionParser_ExpressionTokenExpected" xml:space="preserve">
+    <value>Expression Token '{0}' expected at position {1} in '{2}'.</value>
   </data>
   <data name="UriQueryExpressionParser_CloseParenOrCommaExpected" xml:space="preserve">
     <value>')' or ',' expected at position {0} in '{1}'.</value>
-  </data>
-  <data name="UriQueryExpressionParser_CloseParenOrOperatorExpected" xml:space="preserve">
-    <value>')' or operator expected at position {0} in '{1}'.</value>
   </data>
   <data name="UriQueryExpressionParser_IllegalQueryOptioninDollarCount" xml:space="preserve">
     <value>Only $filter and $search query options are allowed within $count.</value>
@@ -1964,6 +1961,9 @@
   <data name="MetadataBinder_UnknownFunction" xml:space="preserve">
     <value>An unknown function with name '{0}' was found. This may also be a function import or a key lookup on a navigation property, which is not allowed.</value>
   </data>
+	<data name="MetadataBinder_FunctionArgumentNotCollectionValue" xml:space="preserve">
+    <value>The '{0}' argument for an invocation of a function '{1}' is not a collection value. This argument must be a collection value.</value>
+  </data>
   <data name="MetadataBinder_FunctionArgumentNotSingleValue" xml:space="preserve">
     <value>The argument for an invocation of a function with name '{0}' is not a single value. All arguments for this function must be single values.</value>
   </data>
@@ -2006,8 +2006,8 @@
   <data name="MetadataBinder_AnyAllExpressionNotSingleValue" xml:space="preserve">
     <value>The Any/All query expression must evaluate to a single boolean value.</value>
   </data>
-  <data name="MetadataBinder_CastOrIsOfExpressionWithWrongNumberOfOperands" xml:space="preserve">
-    <value>The Cast or IsOf expression has an invalid number of operands: number of operands is '{0}' and it should be 1 or 2.</value>
+  <data name="MetadataBinder_FunctionWithWrongNumberOfOperands" xml:space="preserve">
+    <value>The function '{0}' has an invalid number of operands: number of operands is '{1}' and it should be '{2}'.</value>
   </data>
   <data name="MetadataBinder_CastOrIsOfFunctionWithoutATypeArgument" xml:space="preserve">
     <value>Cast or IsOf Function must have a type in its arguments.</value>
@@ -2023,6 +2023,36 @@
   </data>
   <data name="MetadataBinder_QueryOptionNotApplicable" xml:space="preserve">
     <value>The '{0}' option cannot be applied to the query path. '{0}' can only be applied to a collection of entities.</value>
+  </data>
+  <data name="MetadataBinder_UnsupportedQueryNodeForConstant" xml:space="preserve">
+    <value>Query token '{0}' as node kind '{1}' is invalid within '{2}'. So far, only the primitive literal, JSON object literal, and JSON array literal are supported.</value>
+  </data>
+  <data name="ResourceLiteralBinder_CannotResolveTypeName" xml:space="preserve">
+    <value>Cannot resolve the type name '{0}' specified as "@odata.type" or "@type" in the resource literal '{1}'.</value>
+  </data>
+  <data name="ResourceLiteralBinder_IncompatibleType" xml:space="preserve">
+    <value>A resource literal has a type name '{0}' that is incompatible with the type '{1}' from metadata.</value>
+  </data>
+  <data name="ResourceLiteralBinder_InvalidPropertyValueTokenItem" xml:space="preserve">
+    <value>A query token as '{0}' is invalid for a property value within a resource literal. Only the primitive literal, JSON object literal, and JSON array literal are supported.</value>
+  </data>
+	<data name="CollectionLiteralBinder_MixedLiterals" xml:space="preserve">
+    <value>Cannot mix '{0}' types of literals within a collection which contains '{1}' if the collection has a specific expected type (non-untyped) assigned.</value>
+  </data>
+  <data name="CollectionLiteralBinder_InvalidTokenItem" xml:space="preserve">
+    <value>A query token as '{0}' is invalid within a collection. Only the primitive literal, JSON object literal, and JSON array literal are supported.</value>
+  </data>
+  <data name="LiteralBinder_CannotBindNullLiteralToNonNullableType" xml:space="preserve">
+    <value>Cannot bind the literal '{0}' to the non-nullable type '{1}'. Non-nullable types must have a value.</value>
+  </data>
+  <data name="LiteralBinder_CannotBindLiteralToIncompatibleType" xml:space="preserve">
+    <value>Cannot bind the literal '{0}' from type '{1}' to the incompatible type '{2}'.</value>
+  </data>
+  <data name="LiteralBinder_CannotConvertPrimitiveValue" xml:space="preserve">
+    <value>Cannot bind the literal '{0}' to the expected type '{1}'.</value>
+  </data>
+  <data name="LiteralBinder_CannotConvertPrimitiveValueWithReason" xml:space="preserve">
+    <value>Cannot bind the literal '{0}' to the expected type '{1}'. Reasons: '{2}'.</value>
   </data>
   <data name="StringItemShouldBeQuoted" xml:space="preserve">
     <value>String item should be single/double quoted: '{0}'.</value>
@@ -2077,6 +2107,15 @@
   </data>
   <data name="FunctionCallBinder_CaseConditionMustBeSingleBooleanValue" xml:space="preserve">
     <value>The condition at position '{0}' in the 'case' function must be a single-value boolean expression.</value>
+  </data>
+  <data name="FunctionCallBinder_NoUriTemplateParsingEnabled" xml:space="preserve">
+    <value>Found a Uri template '{0}', but the Uri template parsing is not enabled. Please config 'EnableUriTemplateParsing' on ODataUriParser. </value>
+  </data>
+  <data name="CollectionLiteralToken_ExpectedCollectionType" xml:space="preserve">
+    <value>The collection literal token expected an untyped or a collection type, but found '{0}' with type kind '{1}'.</value>
+  </data>
+  <data name="ResourceLiteralToken_ExpectedStructuredType" xml:space="preserve">
+    <value>The resource literal token expected an untyped or a structured type, but found '{0}' with type kind '{1}'.</value>
   </data>
   <data name="ODataUriParser_InvalidCount" xml:space="preserve">
     <value>'{0}' is not a valid count option.</value>
@@ -2501,8 +2540,8 @@
   <data name="ExpressionLexer_DigitExpected" xml:space="preserve">
     <value>A digit was expected at position {0} in '{1}'.</value>
   </data>
-  <data name="ExpressionLexer_UnbalancedBracketExpression" xml:space="preserve">
-    <value>Found an unbalanced bracket expression.</value>
+  <data name="ExpressionLexer_UnbalancedExpression" xml:space="preserve">
+    <value>Found an unbalanced '{0}' expression at position '{1}' in '{2}'.</value>
   </data>
   <data name="ExpressionLexer_InvalidNumericString" xml:space="preserve">
     <value>Numeric string '{0}' is not a valid Int32/Int64/Double/Decimal.</value>
@@ -2510,17 +2549,29 @@
   <data name="ExpressionLexer_InvalidEscapeSequence" xml:space="preserve">
     <value>An unrecognized escape sequence '\\{0}' was found at position {1} in '{2}'.</value>
   </data>
-  <data name="UriQueryExpressionParser_UnrecognizedLiteral" xml:space="preserve">
-    <value>Unrecognized '{0}' literal '{1}' at '{2}' in '{3}'.</value>
+  <data name="UriQueryExpressionParser_ResourceConstantTypePropertyShouldHaveStringLiteralValue" xml:space="preserve">
+    <value>The "@odata.type" or "@type" property in a resource constant should have a string literal value, but found a '{0}' token kind.</value>
+  </data>
+	<data name="UriQueryExpressionParser_ResourceConstantDuplicatedTypePropertyFound" xml:space="preserve">
+    <value>The "@odata.type" or "@type" property in a resource constant is duplicated.</value>
   </data>
   <data name="UriQueryExpressionParser_UnrecognizedLiteralWithReason" xml:space="preserve">
     <value>Unrecognized '{0}' literal '{1}' at '{2}' in '{3}' with reason '{4}'.</value>
+  </data>
+	<data name="UriQueryExpressionParser_UnrecognizedLiteral" xml:space="preserve">
+    <value>Unrecognized '{0}' literal '{1}' at '{2}' in '{3}'.</value>
   </data>
   <data name="UriPrimitiveTypeParsers_FailedToParseTextToPrimitiveValue" xml:space="preserve">
     <value>Failed to parse '{0}' of Edm type '{1}' to primitive type.</value>
   </data>
   <data name="UriPrimitiveTypeParsers_FailedToParseStringToGeography" xml:space="preserve">
     <value>Failed to parse string to Geography.</value>
+  </data>
+  <data name="UriPrimitiveTypeParsers_FailedToParseJsonObjectToNonStrucutredType" xml:space="preserve">
+    <value>Failed to parse a JSON object '{0}' to a non-structured type, the target type is '{1}'.</value>
+  </data>
+  <data name="UriPrimitiveTypeParsers_FailedToParseJsonArrayToNonCollectionType" xml:space="preserve">
+    <value>Failed to parse a JSON array '{0}' to a non-collection type, the target type is '{1}'.</value>
   </data>
   <data name="UriCustomTypeParsers_AddCustomUriTypeParserAlreadyExists" xml:space="preserve">
     <value>The given uri custom type parser already exists.</value>

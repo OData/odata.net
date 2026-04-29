@@ -636,7 +636,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
         {
             Uri queryUri = new Uri("GetPetCountNullable(colorPattern=Fully.Qualified.Namespace.ColorPattern'BlueYellowStriped')", UriKind.Relative);
             Uri actualUri = UriBuilder(queryUri, ODataUrlKeyDelimiter.Parentheses, settings);
-            Assert.Equal(new Uri("http://gobbledygook/GetPetCountNullable(colorPattern=Fully.Qualified.Namespace.ColorPattern'22')"), actualUri); 
+            Assert.Equal(new Uri("http://gobbledygook/GetPetCountNullable(colorPattern=Fully.Qualified.Namespace.ColorPattern'BlueYellowStriped')"), actualUri); 
         }
 
         [Fact]

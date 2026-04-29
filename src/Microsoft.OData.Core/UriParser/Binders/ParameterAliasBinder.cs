@@ -4,7 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using Microsoft.OData.Metadata;
 using Microsoft.OData.Edm;
 
 namespace Microsoft.OData.UriParser
@@ -46,7 +45,7 @@ namespace Microsoft.OData.UriParser
             ParameterAliasValueAccessor aliasValueAccessor = bindingState.Configuration.ParameterAliasValueAccessor;
             if (aliasValueAccessor == null)
             {
-                return new ParameterAliasNode(alias, null);
+                return new ParameterAliasNode(alias, typeReference: null);
             }
 
             // in cache?
@@ -89,37 +88,42 @@ namespace Microsoft.OData.UriParser
             QueryToken aliasValueToken = expressionParser.ParseExpressionText(aliasValueExpression);
 
             // Special logic to handle parameter alias token.
-            aliasValueToken = ParseComplexOrCollectionAlias(aliasValueToken, parameterType, bindingState.Model);
+            aliasValueToken = ProcessAliasValueToken(aliasValueToken, parameterType, bindingState.Model);
 
             // Get the semantic node, it should support single and collection value node.
             return this.bindMethod(aliasValueToken);
         }
 
         /// <summary>
-        /// Parse the complex/collection value in parameter alias.
+        /// Processes the alias value token in parameter alias.
         /// </summary>
         /// <param name="queryToken">The parsed token.</param>
         /// <param name="parameterType">The expected parameter type.</param>
         /// <param name="model">The model</param>
         /// <returns>Token with complex/collection value passed.</returns>
-        private static QueryToken ParseComplexOrCollectionAlias(QueryToken queryToken, IEdmTypeReference parameterType, IEdmModel model)
+        private static QueryToken ProcessAliasValueToken(QueryToken queryToken, IEdmTypeReference parameterType, IEdmModel model)
         {
-            LiteralToken valueToken = queryToken as LiteralToken;
-            string valueStr;
-            if (valueToken != null && (valueStr = valueToken.Value as string) != null && !string.IsNullOrEmpty(valueToken.OriginalText))
+            if (parameterType == null)
             {
-                ExpressionLexer lexer = new ExpressionLexer(model, expression: valueToken.OriginalText, moveToFirstToken: true, useSemicolonDelimiter: false, parsingFunctionParameters: true);
-                if (lexer.CurrentToken.Kind == ExpressionTokenKind.BracketedExpression || lexer.CurrentToken.Kind == ExpressionTokenKind.BracedExpression)
-                {
-                    object result = valueStr;
-                    if (!parameterType.IsStructured() && !parameterType.IsStructuredCollectionType())
-                    {
-                        result = ODataUriUtils.ConvertFromUriLiteral(valueStr, ODataVersion.V4, model, parameterType);
-                    }
+                return queryToken;
+            }
 
-                    // For non-primitive type, we have to pass parameterType to LiteralToken, then to ConstantNode so the service can know what the type it is.
-                    return new LiteralToken(result, valueToken.OriginalText, parameterType);
-                }
+            if (queryToken is LiteralToken literalToken)
+            {
+                literalToken.ExpectedType = parameterType;
+            }
+            else if (queryToken is ResourceLiteralToken resourceLiteralToken)
+            {
+                BindingHelpers.SetExpectedType(resourceLiteralToken, parameterType);
+            }
+            else if (queryToken is CollectionLiteralToken collectionLiteralToken)
+            {
+                BindingHelpers.SetExpectedType(collectionLiteralToken, parameterType);
+            }
+            else if (queryToken is FunctionParameterAliasToken parameterAliasToken)
+            {
+                // If this's a nested parameter alias, we also need to set expected type for it, so it can be used when parsing its value expression.
+                parameterAliasToken.ExpectedParameterType = parameterType;
             }
 
             return queryToken;

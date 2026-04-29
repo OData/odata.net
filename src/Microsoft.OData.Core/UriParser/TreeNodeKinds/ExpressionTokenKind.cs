@@ -102,25 +102,30 @@ namespace Microsoft.OData.UriParser
         /// <summary>ParameterAlias</summary>
         ParameterAlias = 30,
 
-        /// <summary>A BracedExpression is an expression within braces. It contains a JSON object.</summary>
-        BracedExpression = 31,
+        /// <summary>OpenBrace. A BracedExpression is an expression within braces. It contains a JSON object.</summary>
+        OpenBrace,
 
-        /// <summary>A BracketedExpression is an expression within brackets. It contains a JSON array.</summary>
-        BracketedExpression = 32,
+        /// <summary>CloseBrace.</summary>
+        CloseBrace,
+
+        /// <summary>OpenBracket. A BracketedExpression is an expression within brackets. It contains a JSON array.</summary>
+        OpenBracket,
+
+        /// <summary>CloseBracket.</summary>
+        CloseBracket,
 
         /// <summary>Quoted</summary>
-        QuotedLiteral = 33,
+        QuotedLiteral,
 
         /// <summary>DateOnly literal.</summary>
-        DateOnlyLiteral = 34,
+        DateOnlyLiteral,
 
         /// <summary>TimeOnly literal.</summary>
-        TimeOnlyLiteral = 35,
+        TimeOnlyLiteral,
 
         /// <summary>CustomType Literal.</summary>
-        CustomTypeLiteral = 36,
+        CustomTypeLiteral,
 
-        /// <summary>A ParenthesesExpression is an expression within parentheses. It contains a list of objects.</summary>
-        ParenthesesExpression = 37,
+
     }
 }

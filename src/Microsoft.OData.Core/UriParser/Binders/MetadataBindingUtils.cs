@@ -197,9 +197,10 @@ namespace Microsoft.OData.UriParser
             IEdmEnumType enumType = collectionConstantNode.ItemType.Definition as IEdmEnumType;
 
             StringComparison comparison = enableCaseInsensitive ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
-            foreach (ConstantNode item in collectionConstantNode.Collection)
+            foreach (QueryNode item in collectionConstantNode.Items)
             {
-                if (item != null && item.Value != null && item.Value is ODataEnumValue enumValue)
+                ConstantNode constantNode = item as ConstantNode;
+                if (constantNode != null && constantNode.Value != null && constantNode.Value is ODataEnumValue enumValue)
                 {
                     if (!enumType.ContainsMember(enumValue.Value, comparison))
                     {

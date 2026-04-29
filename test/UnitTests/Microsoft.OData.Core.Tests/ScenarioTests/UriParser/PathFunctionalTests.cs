@@ -389,8 +389,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var path = PathFunctionalTestsUtil.RunParsePath("People(1)/Fully.Qualified.Namespace.Employee/Fully.Qualified.Namespace.HasDog(inOffice=true)");
             var opSegment = path.LastSegment.ShouldBeOperationSegment(HardCodedTestModel.GetFunctionForEmployeeHasDogWithTwoParameters());
             opSegment.ShouldHaveParameterCount(1);
-            var source = Assert.IsType<ConvertNode>(opSegment.Parameters.SingleOrDefault(p => p.Name == "inOffice").Value).Source;
-            var constantNode = Assert.IsType<ConstantNode>(source);
+            var constantNode = Assert.IsType<ConstantNode>(opSegment.Parameters.SingleOrDefault(p => p.Name == "inOffice").Value);
             Assert.Equal(true, constantNode.Value);
         }
 
@@ -402,8 +401,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             opSegment.ShouldHaveParameterCount(2);
             //.And.ShouldHaveConstantParameter("inOffice", true)
             opSegment.ShouldHaveConstantParameter("name", "Fido");
-            var source = Assert.IsType<ConvertNode>(opSegment.Parameters.SingleOrDefault(p => p.Name == "inOffice").Value).Source;
-            var constantNode = Assert.IsType<ConstantNode>(source);
+            var constantNode = Assert.IsType<ConstantNode>(opSegment.Parameters.SingleOrDefault(p => p.Name == "inOffice").Value);
             Assert.Equal(true, constantNode.Value);
         }
 
@@ -452,7 +450,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         [Fact]
         public void FunctionWithBogusBracketsThrows()
         {
-            PathFunctionalTestsUtil.RunParseErrorPath("People(1)/Fully.Qualified.Namespace.CanMoveToAddress(address={}})", Error.Format(SRResources.ExpressionLexer_InvalidCharacter, "}", "10", "address={}}"));
+            PathFunctionalTestsUtil.RunParseErrorPath("People(1)/Fully.Qualified.Namespace.CanMoveToAddress(address={}})", Error.Format(SRResources.ExpressionLexer_SyntaxError, "11", "address={}}"));
         }
 
         [Fact]
@@ -497,72 +495,105 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             Assert.Single(operationSegment.Operations);
         }
 
-        // JSON (light) literals
-        [Fact]
-        public void FunctionWithComplexParameterThatUsesSingleQuotesInsteadOfDoubleWorks()
+        [Theory]
+        [InlineData("{'Street' : 'stuff1', 'City' : 'stuff'}")]
+        [InlineData("{\"Street\" : \"stuff1\", \"City\" : \"stuff\"}")]
+        public void FunctionWithComplexParameterInLineThatUsesQuotesWorks(string parameterValue)
         {
-            var result = PathFunctionalTestsUtil.RunParsePath("People(1)/Fully.Qualified.Namespace.CanMoveToAddress(address={'Street' : 'stuff', 'City' : 'stuff'})");
+            var result = PathFunctionalTestsUtil.RunParsePath($"People(1)/Fully.Qualified.Namespace.CanMoveToAddress(address={parameterValue})");
             var parameters = result.LastSegment.ShouldBeOperationSegment(HardCodedTestModel.GetFunctionForCanMoveToAddress()).Parameters;
             var parameter = Assert.Single(parameters);
-            var convertNode = Assert.IsType<ConvertNode>(parameter.Value);
-            Assert.Equal("Fully.Qualified.Namespace.Address", convertNode.TypeReference.FullName());
-            var constNode = Assert.IsType<ConstantNode>(convertNode.Source);
-            Assert.Equal("{'Street' : 'stuff', 'City' : 'stuff'}", constNode.Value);
+            var resourceConstant = Assert.IsType<ResourceConstantNode>(parameter.Value);
+            Assert.Equal("Fully.Qualified.Namespace.Address", resourceConstant.TypeReference.FullName());
+            Assert.Equal(parameterValue.AsMemory(), resourceConstant.LiteralText);
+
+            Assert.Equal(2, resourceConstant.Properties.Count);
+            resourceConstant.Properties.First(c => c.Key == "Street").Value.ShouldBeConstantQueryNode("stuff1");
+            resourceConstant.Properties.First(c => c.Key == "City").Value.ShouldBeConstantQueryNode("stuff");
         }
 
         [Fact]
         public void FunctionWithComplexParameterInJsonWithTypeNameWorks()
         {
-            var result = PathFunctionalTestsUtil.RunParsePath("People(1)/Fully.Qualified.Namespace.CanMoveToAddress(address={\"@odata.type\":\"Fully.Qualified.Namespace.Address\",\"Street\":\"NE 24th St.\",\"City\":\"Redmond\"})");
+            string parameterValue = "{\"@odata.type\":\"Fully.Qualified.Namespace.Address\",\"Street\":\"NE 24th St.\",\"City\":\"Redmond\"}";
+            var result = PathFunctionalTestsUtil.RunParsePath($"People(1)/Fully.Qualified.Namespace.CanMoveToAddress(address={parameterValue})");
             var parameters = result.LastSegment.ShouldBeOperationSegment(HardCodedTestModel.GetFunctionForCanMoveToAddress()).Parameters;
             var parameter = Assert.Single(parameters);
-            var convertNode = Assert.IsType<ConvertNode>(parameter.Value);
-            Assert.Equal("Fully.Qualified.Namespace.Address", convertNode.TypeReference.FullName());
 
-            var constNode = Assert.IsType<ConstantNode>(convertNode.Source);
-            Assert.Equal("{\"@odata.type\":\"Fully.Qualified.Namespace.Address\",\"Street\":\"NE 24th St.\",\"City\":\"Redmond\"}", constNode.Value);
+            var resourceConstantNode = Assert.IsType<ResourceConstantNode>(parameter.Value);
+            Assert.Equal(parameterValue.AsMemory(), resourceConstantNode.LiteralText);
+
+            Assert.Equal("Fully.Qualified.Namespace.Address", resourceConstantNode.TypeReference.FullName());
+            Assert.Equal(2, resourceConstantNode.Properties.Count);
+            // resourceConstantNode.Properties.First(c => c.Key == "@odata.type").Value.ShouldBeConstantQueryNode("#Fully.Qualified.Namespace.Address");
+            resourceConstantNode.Properties.First(c => c.Key == "Street").Value.ShouldBeConstantQueryNode("NE 24th St.");
+            resourceConstantNode.Properties.First(c => c.Key == "City").Value.ShouldBeConstantQueryNode("Redmond");
         }
 
         [Fact]
         public void FunctionWithComplexParameterInJsonWithNoTypeNameWorks()
         {
-            var result = PathFunctionalTestsUtil.RunParsePath("People(1)/Fully.Qualified.Namespace.CanMoveToAddress(address={\"Street\":\"NE 24th St.\",\"City\":\"Redmond\"})");
+            string parameterValue = "{\"Street\":\"NE 24th St.\",\"City\":\"Redmond\"}";
+            var result = PathFunctionalTestsUtil.RunParsePath($"People(1)/Fully.Qualified.Namespace.CanMoveToAddress(address={parameterValue})");
 
             var parameters = result.LastSegment.ShouldBeOperationSegment(HardCodedTestModel.GetFunctionForCanMoveToAddress()).Parameters;
             var parameter = Assert.Single(parameters);
-            var convertNode = Assert.IsType<ConvertNode>(parameter.Value);
-            Assert.Equal("Fully.Qualified.Namespace.Address", convertNode.TypeReference.FullName());
 
-            var constNode = Assert.IsType<ConstantNode>(convertNode.Source);
-            Assert.Equal("{\"Street\":\"NE 24th St.\",\"City\":\"Redmond\"}", constNode.Value);
+            var resourceConstantNode = Assert.IsType<ResourceConstantNode>(parameter.Value);
+            Assert.Equal(parameterValue.AsMemory(), resourceConstantNode.LiteralText);
+
+            Assert.Equal("Fully.Qualified.Namespace.Address", resourceConstantNode.TypeReference.FullName());
+
+            resourceConstantNode.Properties.First(c => c.Key == "Street").Value.ShouldBeConstantQueryNode("NE 24th St.");
+            resourceConstantNode.Properties.First(c => c.Key == "City").Value.ShouldBeConstantQueryNode("Redmond");
         }
         
         [Fact]
         public void FunctionWithCollectionParameterInJsonWorks()
         {
-            var result = PathFunctionalTestsUtil.RunParsePath("People(1)/Fully.Qualified.Namespace.OwnsTheseDogs(dogNames=[\"Barky\",\"Junior\"])");
+            string parameterValue = "[\"Barky\",\"Junior\"]";
+            var result = PathFunctionalTestsUtil.RunParsePath($"People(1)/Fully.Qualified.Namespace.OwnsTheseDogs(dogNames={parameterValue})");
             var parameters = result.LastSegment.ShouldBeOperationSegment(HardCodedTestModel.GetFunctionForOwnsTheseDogs()).Parameters;
             var parameter = Assert.Single(parameters);
-            var constNode = Assert.IsType<ConstantNode>(parameter.Value);
+            var collectionConstant = Assert.IsType<CollectionConstantNode>(parameter.Value);
+            Assert.Equal(parameterValue.AsMemory(), collectionConstant.LiteralText);
 
-            var collectionValue = Assert.IsType<ODataCollectionValue>(constNode.Value);
-            Assert.Equal("[\"Barky\",\"Junior\"]", constNode.LiteralText);
-            Assert.Contains("Barky", collectionValue.Items);
-            Assert.Contains("Junior", collectionValue.Items);
+            Assert.Equal(2, collectionConstant.Collection.Count);
+            QueryNode firstItem = collectionConstant.Collection.ElementAt(0);
+            ConstantNode firstItemNode = firstItem.ShouldBeConstantQueryNode("Barky");
+            Assert.Equal("\"Barky\"", firstItemNode.LiteralText);
+
+            QueryNode secondItem = collectionConstant.Collection.ElementAt(1);
+            ConstantNode secondItemNode = secondItem.ShouldBeConstantQueryNode("Junior");
+            Assert.Equal("\"Junior\"", secondItemNode.LiteralText);
         }
 
         [Fact]
         public void FunctionWithCollectionOfComplexParameterInJsonWorks()
         {
-            var result = PathFunctionalTestsUtil.RunParsePath("People(1)/Fully.Qualified.Namespace.CanMoveToAddresses(addresses=[{\"Street\":\"NE 24th St.\",\"City\":\"Redmond\"},{\"Street\":\"Pine St.\",\"City\":\"Seattle\"}])");
+            string resource1 = "{\"Street\":\"NE 24th St.\",\"City\":\"Redmond\"}";
+            string resource2 = "{\"Street\":\"Pine St.\",\"City\":\"Seattle\"}";
+            string parameterValue = $"[{resource1},{resource2}]";
+
+            var result = PathFunctionalTestsUtil.RunParsePath($"People(1)/Fully.Qualified.Namespace.CanMoveToAddresses(addresses={parameterValue})");
 
             var parameters = result.LastSegment.ShouldBeOperationSegment(HardCodedTestModel.GetFunctionForCanMoveToAddresses()).Parameters;
             var parameter = Assert.Single(parameters);
             var segmentParameter = Assert.IsType<OperationSegmentParameter>(parameter);
-            var innerParameterNode = Assert.IsType<ConvertNode>(segmentParameter.Value);
-            var constNode = Assert.IsType<ConstantNode>(innerParameterNode.Source);
-            Assert.Equal("[{\"Street\":\"NE 24th St.\",\"City\":\"Redmond\"},{\"Street\":\"Pine St.\",\"City\":\"Seattle\"}]", constNode.Value);
-            Assert.Equal("Collection(Fully.Qualified.Namespace.Address)", innerParameterNode.TypeReference.FullName());
+            CollectionConstantNode parameterNode = Assert.IsType<CollectionConstantNode>(segmentParameter.Value);
+            Assert.Equal(parameterValue.AsMemory(), parameterNode.LiteralText);
+
+            Assert.Equal(2, parameterNode.Items.Count);
+
+            ResourceConstantNode firstItem = Assert.IsType<ResourceConstantNode>(parameterNode.Items.ElementAt(0));
+            Assert.Equal(resource1.AsMemory(), firstItem.LiteralText);
+            firstItem.Properties.First(c => c.Key == "Street").Value.ShouldBeConstantQueryNode("NE 24th St.");
+            firstItem.Properties.First(c => c.Key == "City").Value.ShouldBeConstantQueryNode("Redmond");
+
+            ResourceConstantNode secondItem = Assert.IsType<ResourceConstantNode>(parameterNode.Items.ElementAt(1));
+            Assert.Equal(resource2.AsMemory(), secondItem.LiteralText);
+            secondItem.Properties.First(c => c.Key == "Street").Value.ShouldBeConstantQueryNode("Pine St.");
+            secondItem.Properties.First(c => c.Key == "City").Value.ShouldBeConstantQueryNode("Seattle");
         }
 
         [Fact]
@@ -972,22 +1003,22 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             PathFunctionalTestsUtil.RunParsePath("GetPet5(id=false)").LastSegment.ShouldBeOperationImportSegment(HardCodedTestModel.GetFunctionImportForGetPet5()).ShouldHaveParameterCount(1).ShouldHaveConstantParameter("id", false);
 
-            PathFunctionalTestsUtil.RunParseErrorPath("GetPet5(id=1)", Error.Format(SRResources.MetadataBinder_CannotConvertToType, "Edm.Int32", "Edm.Boolean"));
+            PathFunctionalTestsUtil.RunParseErrorPath("GetPet5(id=1)", Error.Format(SRResources.LiteralBinder_CannotConvertPrimitiveValue, "1", "Edm.Boolean"));
         }
 
         [Fact]
         public void FunctionParameterWithUnmatchType()
         {
             // long
-            PathFunctionalTestsUtil.RunParseErrorPath("GetPet1(id=102F)", Error.Format(SRResources.MetadataBinder_CannotConvertToType, "Edm.Single", "Edm.Int64"));
-            PathFunctionalTestsUtil.RunParseErrorPath("GetPet1(id=9223372036854775808)" /*bigger than long*/, Error.Format(SRResources.MetadataBinder_CannotConvertToType, "Edm.Decimal", "Edm.Int64"));
+            PathFunctionalTestsUtil.RunParseErrorPath("GetPet1(id=102F)", Error.Format(SRResources.LiteralBinder_CannotConvertPrimitiveValue, "102F", "Edm.Int64"));
+            PathFunctionalTestsUtil.RunParseErrorPath("GetPet1(id=9223372036854775808)" /*bigger than long*/, Error.Format(SRResources.LiteralBinder_CannotConvertPrimitiveValue, "9223372036854775808", "Edm.Int64"));
 
             // single
-            PathFunctionalTestsUtil.RunParseErrorPath("GetPet2(id=102.0D)", Error.Format(SRResources.MetadataBinder_CannotConvertToType, "Edm.Double", "Edm.Single"));
-            PathFunctionalTestsUtil.RunParseErrorPath("GetPet2(id=3402823000000000000000000000000000000000)" /*bigger than Single*/, Error.Format(SRResources.MetadataBinder_CannotConvertToType, "Edm.Double", "Edm.Single"));
+            PathFunctionalTestsUtil.RunParseErrorPath("GetPet2(id=102.0D)", Error.Format(SRResources.LiteralBinder_CannotConvertPrimitiveValue, "102.0D", "Edm.Single"));
+            PathFunctionalTestsUtil.RunParseErrorPath("GetPet2(id=3402823000000000000000000000000000000000)" /*bigger than Single*/, Error.Format(SRResources.LiteralBinder_CannotConvertPrimitiveValue, "3402823000000000000000000000000000000000", "Edm.Single"));
 
             // double
-            PathFunctionalTestsUtil.RunParseErrorPath("GetPet3(id=12M)", Error.Format(SRResources.MetadataBinder_CannotConvertToType, "Edm.Decimal", "Edm.Double"));
+            PathFunctionalTestsUtil.RunParseErrorPath("GetPet3(id=12M)", Error.Format(SRResources.LiteralBinder_CannotConvertPrimitiveValue, "12M", "Edm.Double"));
 
             // decimal
             // TODO: Whether different type should throw exception even when 102F can be promoted to 102M?
@@ -1544,7 +1575,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void FunctionImportWithImcompatibleTypeDefinitionShouldFail()
         {
             Action action = () => PathFunctionalTestsUtil.RunParsePath("GetPet6(id='abc')");
-            action.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_CannotConvertToType, "Edm.String", "Fully.Qualified.Namespace.IdType"));
+            action.Throws<ODataException>(Error.Format(SRResources.LiteralBinder_CannotConvertPrimitiveValue, "'abc'", "Fully.Qualified.Namespace.IdType"));
         }
 
 #endregion

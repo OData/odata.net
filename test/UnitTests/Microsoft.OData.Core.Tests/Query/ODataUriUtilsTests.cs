@@ -280,8 +280,9 @@ namespace Microsoft.OData.Tests.Query
         [Fact]
         public void TestCollectionConvertWithMismatchedBracket()
         {
-            Action parse = () => ODataUriUtils.ConvertFromUriLiteral("[1,2,3)", ODataVersion.V4, HardCodedTestModel.TestModel, new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetInt32(false))));
-            parse.Throws<ODataException>(SRResources.ExpressionLexer_UnbalancedBracketExpression);
+            string input = "[1,2,3)";
+            Action parse = () => ODataUriUtils.ConvertFromUriLiteral(input, ODataVersion.V4, HardCodedTestModel.TestModel, new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetInt32(false))));
+            parse.Throws<ODataException>(Error.Format(SRResources.JsonReader_MissingComma, "Array"));
         }
 #endregion
 

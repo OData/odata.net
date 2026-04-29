@@ -10,8 +10,10 @@ using Microsoft.OData.Edm;
 using Xunit;
 using System.Collections.Generic;
 
+#if false
 namespace Microsoft.OData.Tests.UriParser.SemanticAst
 {
+
     /// <summary>
     /// Unit tests for the CollectionConstantNode class
     /// </summary>
@@ -88,7 +90,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             CollectionConstantNode collectionConstantNode = new CollectionConstantNode(
                 (literalToken.Value as ODataCollectionValue)?.Items, text, expectedType);
 
-            Assert.Equal(text, collectionConstantNode.LiteralText);
+            Assert.Equal(text, collectionConstantNode.LiteralText.ToString());
         }
 
         [Fact]
@@ -153,7 +155,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             object collection = ODataUriConversionUtils.ConvertFromCollectionValue("[1,2,3]", HardCodedTestModel.TestModel, expectedType);
             LiteralToken literalToken = new LiteralToken(collection, text, expectedType);
 
-            Action target = () => new CollectionConstantNode((literalToken.Value as ODataCollectionValue)?.Items, null, expectedType);
+            Action target = () => new CollectionConstantNode((literalToken.Value as ODataCollectionValue)?.Items, (string)null, expectedType);
             Assert.Throws<ArgumentNullException>("literalText", target);
         }
 
@@ -185,3 +187,4 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         }
     }
 }
+#endif

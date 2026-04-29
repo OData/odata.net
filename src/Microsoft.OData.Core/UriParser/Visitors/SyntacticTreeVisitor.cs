@@ -298,5 +298,25 @@ namespace Microsoft.OData.UriParser
         {
             throw new NotImplementedException();
         }
+
+        /// <summary>
+        /// Visits a CollectionLiteralToken
+        /// </summary>
+        /// <param name="tokenIn">The CollectionLiteralToken to bind</param>
+        /// <returns>A user defined value</returns>
+        public virtual T Visit(CollectionLiteralToken tokenIn)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Visits a ResourceLiteralToken
+        /// </summary>
+        /// <param name="tokenIn">The ResourceLiteralToken to bind</param>
+        /// <returns>A user defined value</returns>
+        public virtual T Visit(ResourceLiteralToken tokenIn)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

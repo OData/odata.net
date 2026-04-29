@@ -207,7 +207,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             var uriParser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://host"), new Uri("http://host/People(1)/Fully.Qualified.Namespace.HasHat(onCat={why555})"));
             Action action = () => uriParser.ParsePath();
-            action.Throws<ODataException>(Error.Format(SRResources.ExpressionLexer_ExpectedLiteralToken, "{why555}"));
+            action.Throws<ODataException>(Error.Format(SRResources.FunctionCallBinder_NoUriTemplateParsingEnabled, "{why555}"));
         }
 
         [Fact]
@@ -326,46 +326,52 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         #endregion
 
         #region Validation tests
-        [Fact]
-        public void ValidTemplateInputShouldWork()
+        [Theory]
+        //[InlineData("{}")] // empty curly brace is not allowed because it will be treated as an empty template expression which is invalid. 
+        [InlineData("{_12}")]
+        [InlineData("{12}")]
+        [InlineData("{j}")]
+        [InlineData("{count}")]
+        [InlineData("{temp1}")]
+        [InlineData("{top_of_p}")]
+        [InlineData("{skip12}")]
+        [InlineData("{LastNum}")]
+        [InlineData("{_1V!@$%^&*}")]
+        [InlineData("{(}")]
+        [InlineData("{)}")]
+        [InlineData("{)(*&^%$@!}")]
+        [InlineData("{___}")]
+        [InlineData("{_v1V)_}")]
+        [InlineData("{變量}")]
+        [InlineData("{嵐山}")]
+        [InlineData("{춘향전}")]
+        [InlineData("{的1_vé@_@}")]
+        [InlineData("{{}and{}}")]
+        public void ValidTemplateInputShouldWork(string input)
         {
-            var inputs = new[]
+            // Validate template for parameters
+            IEdmFunction function = HardCodedTestModel.TestModel.FindOperations("Fully.Qualified.Namespace.HasHat").Single(f => f.Parameters.Count() == 2) as IEdmFunction;
+            var uriParser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("People(1)/Fully.Qualified.Namespace.HasHat(onCat=" + input + ")", UriKind.Relative))
             {
-                "{}"        , "{_12}"       , "{12}"        , "{j}"         , "{count}"         ,
-                "{temp1}"   , "{top_of_p}"  , "{skip12}"    , "{LastNum}"   , "{_1V!@$%^&*}"    ,
-                "{(}"       , "{)}"         , "{)(*&^%$@!}" , "{___}"       , "{_v1V)_}"        ,
-                "{變量}"    , "{嵐山}"       , "{춘향전}"    , "{的1_vé@_@}" , "{{}and{}}"       ,
+                EnableUriTemplateParsing = true
             };
 
-            // Validate template for parameters
-            IEdmFunction function = HardCodedTestModel.TestModel.FindOperations("Fully.Qualified.Namespace.HasHat").Single(f => f.Parameters.Count() == 2)as IEdmFunction;
-            foreach (var input in inputs)
-            {
-                var uriParser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("People(1)/Fully.Qualified.Namespace.HasHat(onCat=" + input + ")", UriKind.Relative))
-                {
-                    EnableUriTemplateParsing = true
-                };
-
-                var path = uriParser.ParsePath();
-                OperationSegmentParameter parameter = path.LastSegment.ShouldBeOperationSegment(function).Parameters.Single();
-                parameter.ShouldBeConstantParameterWithValueType("onCat", new UriTemplateExpression { LiteralText = input, ExpectedType = function.Parameters.Last().Type });
-            }
+            var path = uriParser.ParsePath();
+            OperationSegmentParameter parameter = path.LastSegment.ShouldBeOperationSegment(function).Parameters.Single();
+            parameter.ShouldBeConstantParameterWithValueType("onCat", new UriTemplateExpression { LiteralText = input, ExpectedType = function.Parameters.Last().Type });
 
             // Validate template for keys
-            foreach (var input in inputs)
+            uriParser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://host"), new Uri("http://host/People(" + input + ")"))
             {
-                var uriParser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://host"), new Uri("http://host/People(" + input + ")"))
-                {
-                    EnableUriTemplateParsing = true
-                };
+                EnableUriTemplateParsing = true
+            };
 
-                var path = uriParser.ParsePath();
-                var keySegment = Assert.IsType<KeySegment>(path.LastSegment);
-                KeyValuePair<string, object> keypair = keySegment.Keys.Single();
-                Assert.Equal("ID", keypair.Key);
-                var edmTypeReference = ((IEdmEntityType)keySegment.EdmType).DeclaredKey.Single().Type;
-                keypair.Value.ShouldBeUriTemplateExpression(input, edmTypeReference);
-            }
+            path = uriParser.ParsePath();
+            var keySegment = Assert.IsType<KeySegment>(path.LastSegment);
+            KeyValuePair<string, object> keypair = keySegment.Keys.Single();
+            Assert.Equal("ID", keypair.Key);
+            var edmTypeReference = ((IEdmEntityType)keySegment.EdmType).DeclaredKey.Single().Type;
+            keypair.Value.ShouldBeUriTemplateExpression(input, edmTypeReference);
         }
 
         [Fact]
@@ -382,56 +388,54 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             Assert.True(parser.Validate(ODataUrlValidationRuleSet.AllRules, out validationMessages));
         }
 
-        [Fact]
-        public void ErrorParameterTemplateInputShouldThrow()
+        public static TheoryData<string, string> ErrorParameterTemplates => new()
         {
-            var errorCases = new[]
+            // A: quoted property name fully inside initial 2040-char buffer
+            { "{", Error.Format(SRResources.ExpressionLexer_UnbalancedExpression, "{", 6, "onCat={") },
+            { "}", Error.Format(SRResources.UriQueryExpressionParser_ExpressionExpected, 6, "onCat=}") },
+            { "{}1", Error.Format(SRResources.ExpressionLexer_SyntaxError, 9, "onCat={}1")},
+            { "}{", Error.Format(SRResources.UriQueryExpressionParser_ExpressionExpected, 6, "onCat=}{") },
+            { "{{}", Error.Format(SRResources.ExpressionLexer_UnbalancedExpression, "{", 6, "onCat={{}")},
+            { "{}}", Error.Format(SRResources.ExpressionLexer_SyntaxError, 9, "onCat={}}")},
+            { "{#}", SRResources.RequestUriProcessor_SyntaxError}
+        };
+
+        [Theory]
+        [MemberData(nameof(ErrorParameterTemplates))]
+        public void ErrorParameterTemplateInputShouldThrow(string input, string error)
+        {
+            var uriParser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("People(1)/Fully.Qualified.Namespace.HasHat(onCat=" + input + ")", UriKind.Relative))
             {
-                new {Input = "{"    , Error = SRResources.ExpressionLexer_UnbalancedBracketExpression},
-                new {Input = "}"    , Error = Error.Format(SRResources.ExpressionLexer_InvalidCharacter, "}", 6, "onCat=}")},
-                new {Input = "{}1"  , Error = Error.Format(SRResources.ExpressionLexer_SyntaxError, 9, "onCat={}1")},
-                new {Input = "}{"   , Error = Error.Format(SRResources.ExpressionLexer_InvalidCharacter, "}", 6, "onCat=}{")},
-                new {Input = "{{}"  , Error = SRResources.ExpressionLexer_UnbalancedBracketExpression}, // Thrown by ODataPathParser::TryBindingParametersAndMatchingOperation
-                new {Input = "{}}"  , Error = Error.Format(SRResources.ExpressionLexer_InvalidCharacter, "}", 8, "onCat={}}")},
-                new {Input = "{#}"  , Error = SRResources.RequestUriProcessor_SyntaxError},
+                EnableUriTemplateParsing = true
             };
 
-            foreach (var errorCase in errorCases)
-            {
-                var uriParser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("People(1)/Fully.Qualified.Namespace.HasHat(onCat=" + errorCase.Input + ")", UriKind.Relative))
-                {
-                    EnableUriTemplateParsing = true
-                };
-
-                Action action = () => uriParser.ParsePath();
-                action.Throws<ODataException>(errorCase.Error);
-            }
+            Action action = () => uriParser.ParsePath();
+            action.Throws<ODataException>(error);
         }
 
-        [Fact]
-        public void ErrorKeyTemplateInputShouldThrow()
+        public static TheoryData<string, string> KeyParameterTemplates => new()
         {
-            var errorCases = new[]
+            // A: quoted property name fully inside initial 2040-char buffer
+            { "{", Error.Format(SRResources.ExpressionLexer_UnbalancedExpression, "{", 1, "({)") },
+            { "}", Error.Format(SRResources.UriQueryExpressionParser_ExpressionExpected, 1, "(})") },
+            { "{}1", Error.Format(SRResources.UriQueryExpressionParser_CloseParenOrCommaExpected, 3, "({}1)")},
+            { "}{", Error.Format(SRResources.UriQueryExpressionParser_ExpressionExpected, 1, "(}{)") },
+            { "{{}", Error.Format(SRResources.ExpressionLexer_UnbalancedExpression, "{", 1, "({{})")},
+            { "{}}", Error.Format(SRResources.UriQueryExpressionParser_CloseParenOrCommaExpected, 3, "({}})")},
+            { "{#}", SRResources.RequestUriProcessor_SyntaxError}
+        };
+
+        [Theory]
+        [MemberData(nameof(KeyParameterTemplates))]
+        public void ErrorKeyTemplateInputShouldThrow(string input, string error)
+        {
+            var uriParser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://host"), new Uri("http://host/People(" + input + ")"))
             {
-                new {Input = "{"    , Error = SRResources.ExpressionLexer_UnbalancedBracketExpression},
-                new {Input = "}"    , Error = Error.Format(SRResources.ExpressionLexer_InvalidCharacter, "}", 1, "(})")},
-                new {Input = "{}1"  , Error = Error.Format(SRResources.UriQueryExpressionParser_CloseParenOrCommaExpected, 3, "({}1)")}, //Strings.BadRequest_KeyCountMismatch("Fully.Qualified.Namespace.Person")},
-                new {Input = "}{"   , Error = Error.Format(SRResources.ExpressionLexer_InvalidCharacter, "}", 1, "(}{)")},
-                new {Input = "{{}"  , Error = SRResources.ExpressionLexer_UnbalancedBracketExpression}, // Thrown by ODataPathParser::TryBindKeyFromParentheses
-                new {Input = "{}}"  , Error = Error.Format(SRResources.ExpressionLexer_InvalidCharacter, "}", 3, "({}})")},
-                new {Input = "{#}"  , Error = SRResources.RequestUriProcessor_SyntaxError},
+                EnableUriTemplateParsing = true
             };
 
-            foreach (var errorCase in errorCases)
-            {
-                var uriParser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://host"), new Uri("http://host/People(" + errorCase.Input + ")"))
-                {
-                    EnableUriTemplateParsing = true
-                };
-
-                Action action = () => uriParser.ParsePath();
-                action.Throws<ODataException>(errorCase.Error);
-            }
+            Action action = () => uriParser.ParsePath();
+            action.Throws<ODataException>(error);
         }
         #endregion
     }

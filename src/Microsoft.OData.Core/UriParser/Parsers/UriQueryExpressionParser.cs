@@ -7,14 +7,17 @@
 namespace Microsoft.OData.UriParser
 {
     #region Namespaces
+    using Microsoft.OData.Core;
+    using Microsoft.OData.Edm;
+    using Microsoft.OData.Metadata;
+    using Microsoft.OData.UriParser.Aggregation;
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Diagnostics;
     using System.Linq;
-    using Microsoft.OData.UriParser.Aggregation;
-    using Microsoft.OData.Edm;
-    using Microsoft.OData.Core;
+    using System.Text;
+    using System.Text.Json;
     #endregion Namespaces
 
     /// <summary>
@@ -199,12 +202,24 @@ namespace Microsoft.OData.UriParser
         {
             Debug.Assert(lexer != null, "lexer != null");
 
+            if (lexer.CurrentToken.Kind == ExpressionTokenKind.StringLiteral)
+            {
+                // If the literal is double quoted string, we treat it as a quoted literal and the text inside the quotes will be treated as the value of the literal.
+                if (lexer.CurrentToken.Length >= 2 && lexer.CurrentToken.Span[0] == '"' && lexer.CurrentToken.Span[^1] == '"')
+                {
+                    string unescapedText = JsonSerializer.Deserialize<string>(lexer.CurrentToken.Span);
+                    LiteralToken result = new LiteralToken(unescapedText, lexer.CurrentToken.Text.ToString(), EdmCoreModel.Instance.GetString(true));
+                    lexer.NextToken();
+                    return result;
+                }
+            }
+
             switch (lexer.CurrentToken.Kind)
             {
                 case ExpressionTokenKind.BooleanLiteral:
                 case ExpressionTokenKind.DateOnlyLiteral:
                 case ExpressionTokenKind.DecimalLiteral:
-                case ExpressionTokenKind.StringLiteral:
+                case ExpressionTokenKind.StringLiteral: // single or double quoted string literal
                 case ExpressionTokenKind.Int64Literal:
                 case ExpressionTokenKind.IntegerLiteral:
                 case ExpressionTokenKind.DoubleLiteral:
@@ -223,16 +238,6 @@ namespace Microsoft.OData.UriParser
                     // Why not using EdmTypeReference.FullName? (literalEdmTypeReference.FullName)
                     string edmConstantName = GetEdmConstantNames(literalEdmTypeReference);
                     return ParseTypedLiteral(lexer, model, literalEdmTypeReference, edmConstantName);
-
-                case ExpressionTokenKind.BracedExpression:
-                case ExpressionTokenKind.BracketedExpression:
-                case ExpressionTokenKind.ParenthesesExpression:
-                    {
-                        string tokenText = lexer.CurrentToken.Text.ToString();
-                        LiteralToken result = new LiteralToken(tokenText, tokenText);
-                        lexer.NextToken();
-                        return result;
-                    }
 
                 case ExpressionTokenKind.NullLiteral:
                     return ParseNullLiteral(lexer);
@@ -293,7 +298,7 @@ namespace Microsoft.OData.UriParser
             // '('
             if (this.lexer.CurrentToken.Kind != ExpressionTokenKind.OpenParen)
             {
-                throw ParseError(Error.Format(SRResources.UriQueryExpressionParser_OpenParenExpected, this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
+                throw ParseError(Error.Format(SRResources.UriQueryExpressionParser_ExpressionTokenExpected, "(", this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
             }
 
             lexer.NextToken();
@@ -362,7 +367,7 @@ namespace Microsoft.OData.UriParser
             // '('
             if (this.lexer.CurrentToken.Kind != ExpressionTokenKind.OpenParen)
             {
-                throw ParseError(Error.Format(SRResources.UriQueryExpressionParser_OpenParenExpected, this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
+                throw ParseError(Error.Format(SRResources.UriQueryExpressionParser_ExpressionTokenExpected, "(", this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
             }
 
             this.lexer.NextToken();
@@ -488,7 +493,7 @@ namespace Microsoft.OData.UriParser
             // '('
             if (this.lexer.CurrentToken.Kind != ExpressionTokenKind.OpenParen)
             {
-                throw ParseError(Error.Format(SRResources.UriQueryExpressionParser_OpenParenExpected, this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
+                throw ParseError(Error.Format(SRResources.UriQueryExpressionParser_ExpressionTokenExpected, "(", this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
             }
 
             this.lexer.NextToken();
@@ -573,7 +578,7 @@ namespace Microsoft.OData.UriParser
             // '('
             if (this.lexer.CurrentToken.Kind != ExpressionTokenKind.OpenParen)
             {
-                throw ParseError(Error.Format(SRResources.UriQueryExpressionParser_OpenParenExpected, this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
+                throw ParseError(Error.Format(SRResources.UriQueryExpressionParser_ExpressionTokenExpected, "(", this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
             }
 
             this.lexer.NextToken();
@@ -581,7 +586,7 @@ namespace Microsoft.OData.UriParser
             // '('
             if (this.lexer.CurrentToken.Kind != ExpressionTokenKind.OpenParen)
             {
-                throw ParseError(Error.Format(SRResources.UriQueryExpressionParser_OpenParenExpected, this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
+                throw ParseError(Error.Format(SRResources.UriQueryExpressionParser_ExpressionTokenExpected, "(", this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
             }
 
             this.lexer.NextToken();
@@ -590,7 +595,7 @@ namespace Microsoft.OData.UriParser
             var properties = new List<EndPathToken>();
             while (true)
             {
-                var expression = this.ParsePrimary() as EndPathToken;
+                var expression = this.ParsePrimary(isIn: false) as EndPathToken;
 
                 if (expression == null)
                 {
@@ -610,7 +615,7 @@ namespace Microsoft.OData.UriParser
             // ")"
             if (this.lexer.CurrentToken.Kind != ExpressionTokenKind.CloseParen)
             {
-                throw ParseError(Error.Format(SRResources.UriQueryExpressionParser_CloseParenOrOperatorExpected, this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
+                throw ParseError(Error.Format(SRResources.UriQueryExpressionParser_ExpressionTokenExpected, ")", this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
             }
 
             this.lexer.NextToken();
@@ -651,7 +656,7 @@ namespace Microsoft.OData.UriParser
             lexer.NextToken();
 
             // '(' expression ')'
-            return this.ParseParenExpression();
+            return this.ParseParenExpression(isIn: false);
         }
 
         /// <summary>
@@ -802,6 +807,7 @@ namespace Microsoft.OData.UriParser
         {
             Debug.Assert(lexer != null, "lexer != null");
 
+            ReadOnlyMemory<char> tokenText = lexer.CurrentToken.Text;
             ReadOnlySpan<char> tokenSpan = lexer.CurrentToken.Span;
             UriLiteralParsingException typeParsingException;
             object targetValue = DefaultUriLiteralParser.GetOrCreate(model).ParseUriStringToType(tokenSpan, targetTypeReference, out typeParsingException);
@@ -833,7 +839,13 @@ namespace Microsoft.OData.UriParser
                 }
             }
 
-            LiteralToken result = new LiteralToken(targetValue, tokenSpan.ToString());
+            IEdmTypeReference inferredType = targetTypeReference;
+            if (targetTypeReference != null && (targetTypeReference.IsGeography() || targetTypeReference.IsGeometry()))
+            {
+                inferredType = EdmLibraryExtensions.GetPrimitiveTypeReference(targetValue.GetType());
+            }
+
+            LiteralToken result = new LiteralToken(targetValue, tokenText.ToString(), inferredType);
             lexer.NextToken();
             return result;
         }
@@ -1056,19 +1068,19 @@ namespace Microsoft.OData.UriParser
         private QueryToken ParseInHas()
         {
             this.RecurseEnter();
-            QueryToken left = this.ParsePrimary();
+            QueryToken left = this.ParsePrimary(isIn: false);
             while (true)
             {
                 if (this.TokenIdentifierIs(ExpressionConstants.KeywordIn))
                 {
                     this.lexer.NextToken();
-                    QueryToken right = this.ParsePrimary();
+                    QueryToken right = this.ParsePrimary(isIn: true);
                     left = new InToken(left, right);
                 }
                 else if (this.TokenIdentifierIs(ExpressionConstants.KeywordHas))
                 {
                     this.lexer.NextToken();
-                    QueryToken right = this.ParsePrimary();
+                    QueryToken right = this.ParsePrimary(isIn: false);
                     left = new BinaryOperatorToken(BinaryOperatorKind.Has, left, right);
                 } 
                 else
@@ -1085,7 +1097,7 @@ namespace Microsoft.OData.UriParser
         /// Parses the primary expressions.
         /// </summary>
         /// <returns>The lexical token representing the expression.</returns>
-        private QueryToken ParsePrimary()
+        private QueryToken ParsePrimary(bool isIn)
         {
             this.RecurseEnter();
             QueryToken expr = this.aggregateExpressionParents.Count > 0 ? this.aggregateExpressionParents.Peek() : null;
@@ -1095,7 +1107,7 @@ namespace Microsoft.OData.UriParser
             }
             else
             {
-                expr = this.ParsePrimaryStart();
+                expr = this.ParsePrimaryStart(isIn);
             }
 
             // Parse the $root path, for example: '$root/people(12)'
@@ -1138,7 +1150,7 @@ namespace Microsoft.OData.UriParser
         /// Handles the start of primary expressions.
         /// </summary>
         /// <returns>The lexical token representing the expression.</returns>
-        private QueryToken ParsePrimaryStart()
+        private QueryToken ParsePrimaryStart(bool isIn)
         {
             switch (this.lexer.CurrentToken.Kind)
             {
@@ -1156,7 +1168,17 @@ namespace Microsoft.OData.UriParser
 
                 case ExpressionTokenKind.OpenParen:
                     {
-                        return this.ParseParenExpression();
+                        return this.ParseParenExpression(isIn);
+                    }
+
+                case ExpressionTokenKind.OpenBracket:
+                    {
+                        return this.ParseBracketedExpression();
+                    }
+
+                case ExpressionTokenKind.OpenBrace:
+                    {
+                        return this.ParseBracedExpression();
                     }
 
                 case ExpressionTokenKind.Star:
@@ -1243,23 +1265,295 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// Parses parenthesized expressions.
         /// </summary>
+        /// <param name="isIn">A value indicating whether the expression is part of an 'in' operator.</param>
         /// <returns>The lexical token representing the expression.</returns>
-        private QueryToken ParseParenExpression()
+        private QueryToken ParseParenExpression(bool isIn)
         {
             if (this.lexer.CurrentToken.Kind != ExpressionTokenKind.OpenParen)
             {
-                throw ParseError(Error.Format(SRResources.UriQueryExpressionParser_OpenParenExpected, this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
+                throw ParseError(Error.Format(SRResources.UriQueryExpressionParser_ExpressionTokenExpected, "(", this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
             }
 
-            this.lexer.NextToken();
+            int startPosition = this.Lexer.CurrentToken.Position;
+
+            this.lexer.NextToken(); // move over '('
+            if (isIn && this.lexer.CurrentToken.Kind == ExpressionTokenKind.CloseParen)
+            {
+                // only valid for 'in' operator, we allow empty parentheses to represent empty collection, for example: '1 in ()'
+                // for others, empty parentheses is not a valid expression, for example: 'Id eq ()' is invalid.
+                int endPosition = this.lexer.CurrentToken.Position + 1;
+                this.lexer.NextToken(); // read over ')'
+
+                return new CollectionLiteralToken() // return empty collection token for empty parentheses "()"
+                {
+                    OriginalText = this.lexer.ExpressionText.Slice(startPosition, endPosition - startPosition)
+                };
+            }
+
+            // ParseExpression() should throw exception if there's no expression within the parentheses, for example: '()' is invalid.
             QueryToken result = this.ParseExpression();
+
+            if (isIn)
+            {
+                // The right operand of 'in' operator MUST be either a comma-separated list of primitive values, enclosed in parentheses,
+                // or a single expression that resolves to a collection.
+                // So, it's invalid to enclose the single expression using parentheses. That's, it's safe to use 'CollectionLiteralToken' here for in operator.
+                CollectionLiteralToken collectionToken = new CollectionLiteralToken();
+                collectionToken.Items.Add(result);
+                result = collectionToken; // update to the collection token to return
+
+                while (this.Lexer.CurrentToken.Kind == ExpressionTokenKind.Comma)
+                {
+                    this.lexer.NextToken(); // read over ','
+                    collectionToken.Items.Add(this.ParseExpression());
+                }
+
+                if (this.lexer.CurrentToken.Kind == ExpressionTokenKind.CloseParen)
+                {
+                    // if not ')' closed, an exception will throw after.
+                    int endPosition = this.lexer.CurrentToken.Position + 1;
+                    collectionToken.OriginalText = this.lexer.ExpressionText.Slice(startPosition, endPosition - startPosition);
+                }
+            }
+
             if (this.lexer.CurrentToken.Kind != ExpressionTokenKind.CloseParen)
             {
-                throw ParseError(Error.Format(SRResources.UriQueryExpressionParser_CloseParenOrOperatorExpected, this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
+                throw ParseError(Error.Format(SRResources.UriQueryExpressionParser_ExpressionTokenExpected, ")", this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
             }
 
-            this.lexer.NextToken();
+            this.lexer.NextToken(); // read over ')'
             return result;
+        }
+
+        /// <summary>
+        /// Parses bracketed expressions, for example: [1, 2, 3].
+        /// </summary>
+        /// <returns>The lexical token representing the expression.</returns>
+        private QueryToken ParseBracketedExpression()
+        {
+            if (this.lexer.CurrentToken.Kind != ExpressionTokenKind.OpenBracket)
+            {
+                throw ParseError(Error.Format(SRResources.UriQueryExpressionParser_ExpressionTokenExpected, "[", this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
+            }
+
+            int startPosition = this.lexer.CurrentToken.Position;
+            int endPosition;
+            this.lexer.NextToken(); // read over '['
+
+            CollectionLiteralToken collectionToken = new CollectionLiteralToken();
+            if (this.lexer.CurrentToken.Kind == ExpressionTokenKind.CloseBracket)
+            {
+                endPosition = this.lexer.CurrentToken.Position + 1;
+
+                this.lexer.NextToken(); // read over ']'
+
+                collectionToken.OriginalText = this.lexer.ExpressionText.Slice(startPosition, endPosition - startPosition);
+
+                return collectionToken; // return empty collection token for empty brackets "[]"
+            }
+
+            while (true)
+            {
+                collectionToken.Items.Add(this.ParseExpression());
+                if (this.Lexer.CurrentToken.Kind != ExpressionTokenKind.Comma)
+                {
+                    break;
+                }
+
+                this.lexer.NextToken(); // read over ','
+            }
+
+            if (this.lexer.CurrentToken.Kind != ExpressionTokenKind.CloseBracket)
+            {
+                throw ParseError(Error.Format(SRResources.UriQueryExpressionParser_ExpressionTokenExpected, "]", this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
+            }
+
+            endPosition = this.lexer.CurrentToken.Position + 1;
+
+            this.lexer.NextToken(); // read over ']'
+
+            collectionToken.OriginalText = this.lexer.ExpressionText.Slice(startPosition, endPosition - startPosition);
+
+            return collectionToken;
+        }
+
+        /// <summary>
+        /// Parses the curly braced expressions, for example:
+        /// 1) Json Object: { "name": "value", "number": 42 }, the key should be string literal, the value can be anything.
+        /// 2) Route constraints: {id:int}
+        ///    however, from the existing test cases, it seems the current implementation accepts any expression as route constraint, for example: {*&%%}, which is weird but we need to keep it for back-compatibility.
+        ///    So we treat any expression within braces that cannot be parsed as JSON object as route constraint and return the whole expression as a literal token.
+        /// </summary>
+        /// <remarks>The string literal for JSON object should be enclosed in double quotes. However, for back-compatibility, single quotes are also allowed.</remarks>
+        /// <returns>The lexical token representing the expression.</returns>
+        private QueryToken ParseBracedExpression()
+        {
+            if (this.lexer.CurrentToken.Kind != ExpressionTokenKind.OpenBrace)
+            {
+                throw ParseError(Error.Format(SRResources.UriQueryExpressionParser_ExpressionTokenExpected, "{", this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
+            }
+
+            int startPosition = this.lexer.CurrentToken.Position;
+            ExpressionLexer.ExpressionLexerPosition position = this.lexer.SnapshotPosition();
+            this.lexer.NextToken(); // read over '{'
+
+            // for empty {}, we treat it as empty map. It means the route template should have at least one identifier within the braces, for example: {id:int}
+            if (this.lexer.CurrentToken.Kind == ExpressionTokenKind.CloseBrace)
+            {
+                int endPostion = this.lexer.CurrentToken.Position + 1;
+                this.lexer.NextToken(); // read over '}'
+                return new ResourceLiteralToken
+                {
+                    OriginalText = this.lexer.ExpressionText.Slice(startPosition, endPostion - startPosition)
+                };
+            }
+
+            if (TryParseAsResourceLiteralToken(startPosition, out ResourceLiteralToken mapToken))
+            {
+                return mapToken;
+            }
+
+            // if the braced expression cannot be parsed as Resource literal token,
+            // we restore the lexer position and try to parse it as route constraint.
+            this.lexer.RestorePosition(position);
+
+            ReadOnlyMemory<char> template = this.lexer.GetBalancedExpression('{', '}');
+            this.lexer.NextToken();
+            return new LiteralToken(new UriTemplateExpression(), template.ToString());
+        }
+
+        // For a JSON object (map or key value pairs), the key of each pair should be a string literal,
+        // the value of each pair could be any expression, meanwhile the key and the value are separated by a colon, for example: {"name": "value"}.
+        private bool TryParseAsResourceLiteralToken(int startPosition, out ResourceLiteralToken resourceLiteralToken)
+        {
+            resourceLiteralToken = new ResourceLiteralToken();
+            while (true)
+            {
+                // Parse the key value pair expression, for example: "name": "value",
+                // So the key should be string literal (single quoted or double quoted).
+                if (this.lexer.CurrentToken.Kind != ExpressionTokenKind.StringLiteral)
+                {
+                    return false;
+                }
+
+                ReadOnlyMemory<char> keyText = this.lexer.CurrentToken.Text;
+                this.lexer.NextToken();
+
+                if (this.lexer.CurrentToken.Kind != ExpressionTokenKind.Colon)
+                {
+                    return false;
+                }
+
+                this.lexer.NextToken(); // read over ':'
+
+                QueryToken valueToken = this.ParseExpression();
+                if (valueToken == null)
+                {
+                    return false;
+                }
+
+                ReadOnlySpan<char> keySpan = keyText.Span;
+                UriParserHelper.TryRemoveQuotes(ref keySpan, out string key); // key should have value here.
+                if (keySpan.Equals("@odata.type", StringComparison.Ordinal) || keySpan.Equals("@type", StringComparison.Ordinal)) // no case-insensitive
+                {
+                    if (valueToken.Kind != QueryTokenKind.Literal)
+                    {
+                        throw new ODataException(Error.Format(SRResources.UriQueryExpressionParser_ResourceConstantTypePropertyShouldHaveStringLiteralValue, valueToken.Kind));
+                    }
+
+                    if (resourceLiteralToken.TypeNameFromLiteral != null)
+                    {
+                        throw new ODataException(SRResources.UriQueryExpressionParser_ResourceConstantDuplicatedTypePropertyFound);
+                    }
+
+                    ReadOnlySpan<char> typeValueSpan = ((LiteralToken)valueToken).OriginalText.AsSpan();
+                    UriParserHelper.TryRemoveQuotes(ref typeValueSpan, out string typeName);
+                    resourceLiteralToken.TypeNameFromLiteral = typeName ?? typeValueSpan.ToString(); // may have "#" at the beginning
+                }
+                else
+                {
+                    resourceLiteralToken.Properties.Add(new KeyValuePair<string, QueryToken>(key, valueToken));
+                }
+
+                if (this.lexer.CurrentToken.Kind != ExpressionTokenKind.Comma)
+                {
+                    break;
+                }
+
+                this.lexer.NextToken(); // read over ','
+            }
+
+            if (this.lexer.CurrentToken.Kind != ExpressionTokenKind.CloseBrace)
+            {
+                return false;
+            }
+
+            int endPosition = this.lexer.CurrentToken.Position + 1;
+
+            this.lexer.NextToken(); // read over '}'
+
+            resourceLiteralToken.OriginalText = this.lexer.ExpressionText.Slice(startPosition, endPosition - startPosition);
+            return true;
+        }
+
+        internal static string GetStringByRemoveQuotes(ReadOnlySpan<char> text)
+        {
+            if (text.Length < 2)
+            {
+                return text.ToString();
+            }
+
+            string escaped;
+            char ch;
+            if (text[0] == '\'' && text[^1] == '\'')
+            {
+                // single-quoted, the single quote is escaped by doubling it, for example: 'abc''def' represents abc'def
+                escaped = "''";
+                ch = '\'';
+            }
+            else if (text[0] == '"' && text[^1] == '"')
+            {
+                // double-quoted, the double quote is escaped by backslash, for example: "abc\"def" represents abc"def
+                escaped = "\\\"";
+                ch = '"';
+            }
+            else
+            {
+                // for none quoted, just return the original text, for example: abc, which is not a valid string literal but we just return it.
+                return text.ToString();
+            }
+
+            ReadOnlySpan<char> s = text.Slice(1, text.Length - 2);
+            ReadOnlySpan<char> t = s;
+
+            StringBuilder sb = null;
+
+            while (true)
+            {
+                int i = t.IndexOf(escaped, StringComparison.Ordinal);
+                if (i >= 0)
+                {
+                    if (sb == null)
+                    {
+                        sb = new StringBuilder();
+                    }
+
+                    sb.Append(t.Slice(0, i)).Append(ch);
+                    t = t.Slice(i + 2);
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            if (sb != null)
+            {
+                sb.Append(t);
+                return sb.ToString();
+            }
+
+            return s.ToString();
         }
 
         /// <summary>
@@ -1293,7 +1587,7 @@ namespace Microsoft.OData.UriParser
             this.lexer.NextToken();
             if (this.lexer.CurrentToken.Kind != ExpressionTokenKind.OpenParen)
             {
-                throw ParseError(Error.Format(SRResources.UriQueryExpressionParser_OpenParenExpected, this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
+                throw ParseError(Error.Format(SRResources.UriQueryExpressionParser_ExpressionTokenExpected, "(", this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
             }
 
             this.lexer.NextToken();
@@ -1302,13 +1596,14 @@ namespace Microsoft.OData.UriParser
             if (this.lexer.CurrentToken.Kind == ExpressionTokenKind.CloseParen)
             {
                 this.lexer.NextToken();
+                LiteralToken literalToken = new LiteralToken(true, "true", EdmCoreModel.Instance.GetBoolean(true));
                 if (isAny)
                 {
-                    return new AnyToken(new LiteralToken(true, "True"), null, parent);
+                    return new AnyToken(literalToken, null, parent);
                 }
                 else
                 {
-                    return new AllToken(new LiteralToken(true, "True"), null, parent);
+                    return new AllToken(literalToken, null, parent);
                 }
             }
 

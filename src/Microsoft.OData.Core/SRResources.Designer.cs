@@ -277,6 +277,33 @@ namespace Microsoft.OData.Core {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to A query token as &apos;{0}&apos; is invalid within a collection. Only the primitive literal, JSON object literal, and JSON array literal are supported..
+        /// </summary>
+        internal static string CollectionLiteralBinder_InvalidTokenItem {
+            get {
+                return ResourceManager.GetString("CollectionLiteralBinder_InvalidTokenItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot mix &apos;{0}&apos; types of literals within a collection which contains &apos;{1}&apos; if the collection has a specific expected type (non-untyped) assigned..
+        /// </summary>
+        internal static string CollectionLiteralBinder_MixedLiterals {
+            get {
+                return ResourceManager.GetString("CollectionLiteralBinder_MixedLiterals", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The collection literal token expected an untyped or a collection type, but found &apos;{0}&apos; with type kind &apos;{1}&apos;..
+        /// </summary>
+        internal static string CollectionLiteralToken_ExpectedCollectionType {
+            get {
+                return ResourceManager.GetString("CollectionLiteralToken_ExpectedCollectionType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to An item of type kind &apos;{0}&apos; was found in a collection that otherwise has items of type kind &apos;{1}&apos;. In OData, all items in a collection must have the same type kind..
         /// </summary>
         internal static string CollectionWithoutExpectedTypeValidator_IncompatibleItemTypeKind {
@@ -665,11 +692,11 @@ namespace Microsoft.OData.Core {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Found an unbalanced bracket expression..
+        ///   Looks up a localized string similar to Found an unbalanced &apos;{0}&apos; expression at position &apos;{1}&apos; in &apos;{2}&apos;..
         /// </summary>
-        internal static string ExpressionLexer_UnbalancedBracketExpression {
+        internal static string ExpressionLexer_UnbalancedExpression {
             get {
-                return ResourceManager.GetString("ExpressionLexer_UnbalancedBracketExpression", resourceCulture);
+                return ResourceManager.GetString("ExpressionLexer_UnbalancedExpression", resourceCulture);
             }
         }
         
@@ -769,6 +796,15 @@ namespace Microsoft.OData.Core {
         internal static string FunctionCallBinder_CaseRequiresEvenNumberOfArgs {
             get {
                 return ResourceManager.GetString("FunctionCallBinder_CaseRequiresEvenNumberOfArgs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Found a Uri template &apos;{0}&apos;, but the Uri template parsing is not enabled. Please config &apos;EnableUriTemplateParsing&apos; on ODataUriParser. .
+        /// </summary>
+        internal static string FunctionCallBinder_NoUriTemplateParsingEnabled {
+            get {
+                return ResourceManager.GetString("FunctionCallBinder_NoUriTemplateParsingEnabled", resourceCulture);
             }
         }
         
@@ -1367,6 +1403,42 @@ namespace Microsoft.OData.Core {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cannot bind the literal &apos;{0}&apos; from type &apos;{1}&apos; to the incompatible type &apos;{2}&apos;..
+        /// </summary>
+        internal static string LiteralBinder_CannotBindLiteralToIncompatibleType {
+            get {
+                return ResourceManager.GetString("LiteralBinder_CannotBindLiteralToIncompatibleType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot bind the literal &apos;{0}&apos; to the non-nullable type &apos;{1}&apos;. Non-nullable types must have a value..
+        /// </summary>
+        internal static string LiteralBinder_CannotBindNullLiteralToNonNullableType {
+            get {
+                return ResourceManager.GetString("LiteralBinder_CannotBindNullLiteralToNonNullableType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot bind the literal &apos;{0}&apos; to the expected type &apos;{1}&apos;..
+        /// </summary>
+        internal static string LiteralBinder_CannotConvertPrimitiveValue {
+            get {
+                return ResourceManager.GetString("LiteralBinder_CannotConvertPrimitiveValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot bind the literal &apos;{0}&apos; to the expected type &apos;{1}&apos;. Reasons: &apos;{2}&apos;..
+        /// </summary>
+        internal static string LiteralBinder_CannotConvertPrimitiveValueWithReason {
+            get {
+                return ResourceManager.GetString("LiteralBinder_CannotConvertPrimitiveValueWithReason", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The character set &apos;{0}&apos; is not supported..
         /// </summary>
         internal static string MediaType_EncodingNotSupported {
@@ -1466,15 +1538,6 @@ namespace Microsoft.OData.Core {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The Cast or IsOf expression has an invalid number of operands: number of operands is &apos;{0}&apos; and it should be 1 or 2..
-        /// </summary>
-        internal static string MetadataBinder_CastOrIsOfExpressionWithWrongNumberOfOperands {
-            get {
-                return ResourceManager.GetString("MetadataBinder_CastOrIsOfExpressionWithWrongNumberOfOperands", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Cast or IsOf Function must have a type in its arguments..
         /// </summary>
         internal static string MetadataBinder_CastOrIsOfFunctionWithoutATypeArgument {
@@ -1529,11 +1592,29 @@ namespace Microsoft.OData.Core {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The &apos;{0}&apos; argument for an invocation of a function &apos;{1}&apos; is not a collection value. This argument must be a collection value..
+        /// </summary>
+        internal static string MetadataBinder_FunctionArgumentNotCollectionValue {
+            get {
+                return ResourceManager.GetString("MetadataBinder_FunctionArgumentNotCollectionValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The argument for an invocation of a function with name &apos;{0}&apos; is not a single value. All arguments for this function must be single values..
         /// </summary>
         internal static string MetadataBinder_FunctionArgumentNotSingleValue {
             get {
                 return ResourceManager.GetString("MetadataBinder_FunctionArgumentNotSingleValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The function &apos;{0}&apos; has an invalid number of operands: number of operands is &apos;{1}&apos; and it should be &apos;{2}&apos;..
+        /// </summary>
+        internal static string MetadataBinder_FunctionWithWrongNumberOfOperands {
+            get {
+                return ResourceManager.GetString("MetadataBinder_FunctionWithWrongNumberOfOperands", resourceCulture);
             }
         }
         
@@ -1786,6 +1867,15 @@ namespace Microsoft.OData.Core {
         internal static string MetadataBinder_UnnamedKeyValueOnTypeWithMultipleKeyProperties {
             get {
                 return ResourceManager.GetString("MetadataBinder_UnnamedKeyValueOnTypeWithMultipleKeyProperties", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Query token &apos;{0}&apos; as node kind &apos;{1}&apos; is invalid within &apos;{2}&apos;. So far, only the primitive literal, JSON object literal, and JSON array literal are supported..
+        /// </summary>
+        internal static string MetadataBinder_UnsupportedQueryNodeForConstant {
+            get {
+                return ResourceManager.GetString("MetadataBinder_UnsupportedQueryNodeForConstant", resourceCulture);
             }
         }
         
@@ -6257,6 +6347,42 @@ namespace Microsoft.OData.Core {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cannot resolve the type name &apos;{0}&apos; specified as &quot;@odata.type&quot; or &quot;@type&quot; in the resource literal &apos;{1}&apos;..
+        /// </summary>
+        internal static string ResourceLiteralBinder_CannotResolveTypeName {
+            get {
+                return ResourceManager.GetString("ResourceLiteralBinder_CannotResolveTypeName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A resource literal has a type name &apos;{0}&apos; that is incompatible with the type &apos;{1}&apos; from metadata..
+        /// </summary>
+        internal static string ResourceLiteralBinder_IncompatibleType {
+            get {
+                return ResourceManager.GetString("ResourceLiteralBinder_IncompatibleType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A query token as &apos;{0}&apos; is invalid for a property value within a resource literal. Only the primitive literal, JSON object literal, and JSON array literal are supported..
+        /// </summary>
+        internal static string ResourceLiteralBinder_InvalidPropertyValueTokenItem {
+            get {
+                return ResourceManager.GetString("ResourceLiteralBinder_InvalidPropertyValueTokenItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The resource literal token expected an untyped or a structured type, but found &apos;{0}&apos; with type kind &apos;{1}&apos;..
+        /// </summary>
+        internal static string ResourceLiteralToken_ExpectedStructuredType {
+            get {
+                return ResourceManager.GetString("ResourceLiteralToken_ExpectedStructuredType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to A resource of type &apos;{0}&apos; was found in a resource set that otherwise has entries of type &apos;{1}&apos;. In OData, all entries in a resource set must have a common base type..
         /// </summary>
         internal static string ResourceSetWithoutExpectedTypeValidator_IncompatibleTypes {
@@ -6725,6 +6851,24 @@ namespace Microsoft.OData.Core {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Failed to parse a JSON array &apos;{0}&apos; to a non-collection type, the target type is &apos;{1}&apos;..
+        /// </summary>
+        internal static string UriPrimitiveTypeParsers_FailedToParseJsonArrayToNonCollectionType {
+            get {
+                return ResourceManager.GetString("UriPrimitiveTypeParsers_FailedToParseJsonArrayToNonCollectionType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to parse a JSON object &apos;{0}&apos; to a non-structured type, the target type is &apos;{1}&apos;..
+        /// </summary>
+        internal static string UriPrimitiveTypeParsers_FailedToParseJsonObjectToNonStrucutredType {
+            get {
+                return ResourceManager.GetString("UriPrimitiveTypeParsers_FailedToParseJsonObjectToNonStrucutredType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Failed to parse string to Geography..
         /// </summary>
         internal static string UriPrimitiveTypeParsers_FailedToParseStringToGeography {
@@ -6770,15 +6914,6 @@ namespace Microsoft.OData.Core {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &apos;)&apos; or operator expected at position {0} in &apos;{1}&apos;..
-        /// </summary>
-        internal static string UriQueryExpressionParser_CloseParenOrOperatorExpected {
-            get {
-                return ResourceManager.GetString("UriQueryExpressionParser_CloseParenOrOperatorExpected", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to &apos;:&apos; expected at position {0} in &apos;{1}&apos;. The &apos;case&apos; function requires &apos;condition:result&apos; pairs..
         /// </summary>
         internal static string UriQueryExpressionParser_ColonExpectedForCaseFunctionCall {
@@ -6793,6 +6928,15 @@ namespace Microsoft.OData.Core {
         internal static string UriQueryExpressionParser_ExpressionExpected {
             get {
                 return ResourceManager.GetString("UriQueryExpressionParser_ExpressionExpected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Expression Token &apos;{0}&apos; expected at position {1} in &apos;{2}&apos;..
+        /// </summary>
+        internal static string UriQueryExpressionParser_ExpressionTokenExpected {
+            get {
+                return ResourceManager.GetString("UriQueryExpressionParser_ExpressionTokenExpected", resourceCulture);
             }
         }
         
@@ -6824,15 +6968,6 @@ namespace Microsoft.OData.Core {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &apos;(&apos; expected at position {0} in &apos;{1}&apos;..
-        /// </summary>
-        internal static string UriQueryExpressionParser_OpenParenExpected {
-            get {
-                return ResourceManager.GetString("UriQueryExpressionParser_OpenParenExpected", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Expression expected at position {0} in &apos;{1}&apos;..
         /// </summary>
         internal static string UriQueryExpressionParser_PropertyPathExpected {
@@ -6847,6 +6982,25 @@ namespace Microsoft.OData.Core {
         internal static string UriQueryExpressionParser_RangeVariableAlreadyDeclared {
             get {
                 return ResourceManager.GetString("UriQueryExpressionParser_RangeVariableAlreadyDeclared", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The &quot;@odata.type&quot; or &quot;@type&quot; property in a resource constant is duplicated..
+        /// </summary>
+        internal static string UriQueryExpressionParser_ResourceConstantDuplicatedTypePropertyFound {
+            get {
+                return ResourceManager.GetString("UriQueryExpressionParser_ResourceConstantDuplicatedTypePropertyFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The &quot;@odata.type&quot; or &quot;@type&quot; property in a resource constant should have a string literal value, but found a &apos;{0}&apos; token kind..
+        /// </summary>
+        internal static string UriQueryExpressionParser_ResourceConstantTypePropertyShouldHaveStringLiteralValue {
+            get {
+                return ResourceManager.GetString("UriQueryExpressionParser_ResourceConstantTypePropertyShouldHaveStringLiteralValue" +
+                        "", resourceCulture);
             }
         }
         

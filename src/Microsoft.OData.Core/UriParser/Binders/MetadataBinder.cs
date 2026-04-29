@@ -6,7 +6,6 @@
 
 namespace Microsoft.OData.UriParser
 {
-    using System;
     #region Namespaces
 
     using System.Collections.Generic;
@@ -209,6 +208,12 @@ namespace Microsoft.OData.UriParser
                 case QueryTokenKind.RootPath:
                     result = this.BindRootPath((RootPathToken)token);
                     break;
+                case QueryTokenKind.CollectionLiteral:
+                    result = this.BindCollectionLiteral((CollectionLiteralToken)token);
+                    break;
+                case QueryTokenKind.ResourceLiteral:
+                    result = this.BindResourceLiteral((ResourceLiteralToken)token);
+                    break;
                 default:
                     throw new ODataException(Error.Format(SRResources.MetadataBinder_UnsupportedQueryTokenKind, token.Kind));
             }
@@ -278,7 +283,7 @@ namespace Microsoft.OData.UriParser
         /// <returns>The bound literal token.</returns>
         protected virtual QueryNode BindLiteral(LiteralToken literalToken)
         {
-            return LiteralBinder.BindLiteral(literalToken);
+            return LiteralBinder.BindLiteral(literalToken, this.BindingState);
         }
 
         /// <summary>
@@ -372,20 +377,8 @@ namespace Microsoft.OData.UriParser
         /// <returns>The bound In token.</returns>
         protected virtual QueryNode BindIn(InToken inToken)
         {
-            Func<QueryToken, QueryNode> InBinderMethod = (queryToken) =>
-             {
-                 ExceptionUtils.CheckArgumentNotNull(queryToken, "queryToken");
-
-                 if (queryToken.Kind == QueryTokenKind.Literal)
-                 {
-                     return LiteralBinder.BindInLiteral((LiteralToken)queryToken);
-                 }
-
-                 return this.Bind(queryToken);
-             };
-
-            InBinder inBinder = new InBinder(InBinderMethod, this.BindingState.Configuration.Resolver);
-            return inBinder.BindInOperator(inToken, this.BindingState);
+            InBinder inBinder = new InBinder(Bind, this.BindingState.Configuration.Resolver);
+            return inBinder.BindInOperator(inToken);
         }
 
         /// <summary>
@@ -423,6 +416,26 @@ namespace Microsoft.OData.UriParser
             // The EdmType could be null for Dynamic path segment
             IEdmTypeReference typeReference = lastSegment.EdmType == null ? null : lastSegment.EdmType.ToTypeReference(true);
             return new RootPathNode(path, typeReference);
+        }
+
+        /// <summary>
+        /// Binds a CollectionLiteralToken, a collection literal token is a list of primitive or complex literal values, or a list of root path tokens.
+        /// </summary>
+        /// <param name="collectionToken">The collection literal token to bind.</param>
+        /// <returns>The bound collection literal token.</returns>
+        protected virtual QueryNode BindCollectionLiteral(CollectionLiteralToken collectionToken)
+        {
+            return CollectionLiteralBinder.BindCollectionLiteralToken(collectionToken, this.Bind);
+        }
+
+        /// <summary>
+        /// Binds a ResourceLiteralToken, a resource literal token is a collection of key value pairs.
+        /// </summary>
+        /// <param name="resourceLiteralToken">The resource literal token to bind.</param>
+        /// <returns>The bound resource literal token.</returns>
+        protected virtual QueryNode BindResourceLiteral(ResourceLiteralToken resourceLiteralToken)
+        {
+            return ResourceLiteralBinder.BindResourceLiteralToken(resourceLiteralToken, this.Bind, this.BindingState);
         }
     }
 }

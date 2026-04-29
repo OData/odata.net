@@ -59,7 +59,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             ODataException exception2 = Assert.Throws<ODataException>(
                 () => UriBuilder(queryUri, ODataUrlKeyDelimiter.Parentheses, settings, new StringAsEnumResolver { EnableCaseInsensitive = true }));
 
-            Assert.Equal("The string 'NonDefinedShape' is not a valid enumeration type constant.", exception1.Message);
+            Assert.Equal("The string ''NonDefinedShape'' is not a valid enumeration type constant.", exception1.Message);
             Assert.Equal(exception1.Message, exception2.Message);
         }
 
