@@ -123,6 +123,12 @@ namespace Microsoft.OData
         /// <summary> "isof function </summary>
         internal const string UnboundFunctionIsOf = "isof";
 
+        /// <summary> "hassubset" function </summary>
+        internal const string UnboundFunctionHassubset = "hassubset";
+
+        /// <summary> "hassubset" function </summary>
+        internal const string UnboundFunctionHassubsequence = "hassubsequence";
+
         /// <summary> Spatial length function </summary>
         internal const string UnboundFunctionLength = "geo.length";
 

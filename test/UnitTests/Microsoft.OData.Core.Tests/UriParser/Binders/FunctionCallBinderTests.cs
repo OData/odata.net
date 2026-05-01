@@ -608,6 +608,222 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         }
 
         [Fact]
+        public void HassubsequenceFunctionBindReturnsWorksWithTwoCollectionArguments()
+        {
+            CollectionLiteralToken leftCol = new CollectionLiteralToken();
+            leftCol.Items.Add(new LiteralToken(1));
+            leftCol.Items.Add(new LiteralToken(2));
+            leftCol.Items.Add(new LiteralToken(3));
+
+            CollectionLiteralToken rightCol = new CollectionLiteralToken();
+            rightCol.Items.Add(new LiteralToken(2));
+            rightCol.Items.Add(new LiteralToken(3));
+
+            QueryToken[] args = [leftCol, rightCol];
+
+            FunctionCallToken functionToken = new FunctionCallToken("hassubsequence", args);
+            QueryNode node = this.functionCallBinder.BindFunctionCall(functionToken);
+            var functionCallNode = node.ShouldBeSingleValueFunctionCallQueryNode("hassubsequence");
+            CollectionConstantNode leftNode = Assert.IsType<CollectionConstantNode>(functionCallNode.Parameters.ElementAt(0));
+            Assert.Equal(3, leftNode.Items.Count);
+
+            CollectionConstantNode rightNode = Assert.IsType<CollectionConstantNode>(functionCallNode.Parameters.ElementAt(1));
+            Assert.Equal(2, rightNode.Items.Count);
+        }
+
+        [Fact]
+        public void HassubsetFunctionBindWorksWithTwoCollectionArguments()
+        {
+            CollectionLiteralToken leftCol = new CollectionLiteralToken();
+            leftCol.Items.Add(new LiteralToken(1));
+            leftCol.Items.Add(new LiteralToken(2));
+            leftCol.Items.Add(new LiteralToken(3));
+
+            CollectionLiteralToken rightCol = new CollectionLiteralToken();
+            rightCol.Items.Add(new LiteralToken(1));
+            rightCol.Items.Add(new LiteralToken(3));
+
+            QueryToken[] args = [leftCol, rightCol];
+
+            FunctionCallToken functionToken = new FunctionCallToken("hassubset", args);
+            QueryNode node = this.functionCallBinder.BindFunctionCall(functionToken);
+            var functionCallNode = node.ShouldBeSingleValueFunctionCallQueryNode("hassubset");
+            Assert.True(functionCallNode.TypeReference.IsEquivalentTo(EdmCoreModel.Instance.GetBoolean(false)));
+
+            CollectionConstantNode leftNode = Assert.IsType<CollectionConstantNode>(functionCallNode.Parameters.ElementAt(0));
+            Assert.Equal(3, leftNode.Items.Count);
+
+            CollectionConstantNode rightNode = Assert.IsType<CollectionConstantNode>(functionCallNode.Parameters.ElementAt(1));
+            Assert.Equal(2, rightNode.Items.Count);
+        }
+
+        [Fact]
+        public void HassubsetFunctionReturnsNonNullableBoolean()
+        {
+            CollectionLiteralToken col1 = new CollectionLiteralToken();
+            col1.Items.Add(new LiteralToken("a"));
+
+            CollectionLiteralToken col2 = new CollectionLiteralToken();
+            col2.Items.Add(new LiteralToken("a"));
+
+            QueryToken[] args = [col1, col2];
+            FunctionCallToken functionToken = new FunctionCallToken("hassubset", args);
+            QueryNode node = this.functionCallBinder.BindFunctionCall(functionToken);
+            var functionCallNode = node.ShouldBeSingleValueFunctionCallQueryNode("hassubset");
+            Assert.False(functionCallNode.TypeReference.IsNullable);
+            Assert.Equal("Edm.Boolean", functionCallNode.TypeReference.FullName());
+        }
+
+        [Fact]
+        public void HassubsequenceFunctionReturnsNonNullableBoolean()
+        {
+            CollectionLiteralToken col1 = new CollectionLiteralToken();
+            col1.Items.Add(new LiteralToken(1));
+
+            CollectionLiteralToken col2 = new CollectionLiteralToken();
+            col2.Items.Add(new LiteralToken(1));
+
+            QueryToken[] args = [col1, col2];
+            FunctionCallToken functionToken = new FunctionCallToken("hassubsequence", args);
+            QueryNode node = this.functionCallBinder.BindFunctionCall(functionToken);
+            var functionCallNode = node.ShouldBeSingleValueFunctionCallQueryNode("hassubsequence");
+            Assert.False(functionCallNode.TypeReference.IsNullable);
+            Assert.Equal("Edm.Boolean", functionCallNode.TypeReference.FullName());
+        }
+
+        [Fact]
+        public void HassubsetFunctionWithEmptySubsetArgument()
+        {
+            CollectionLiteralToken superSet = new CollectionLiteralToken();
+            superSet.Items.Add(new LiteralToken(1));
+            superSet.Items.Add(new LiteralToken(2));
+
+            CollectionLiteralToken emptySubset = new CollectionLiteralToken();
+
+            QueryToken[] args = [superSet, emptySubset];
+            FunctionCallToken functionToken = new FunctionCallToken("hassubset", args);
+            QueryNode node = this.functionCallBinder.BindFunctionCall(functionToken);
+            var functionCallNode = node.ShouldBeSingleValueFunctionCallQueryNode("hassubset");
+            Assert.Equal(2, functionCallNode.Parameters.Count());
+
+            CollectionConstantNode subsetNode = Assert.IsType<CollectionConstantNode>(functionCallNode.Parameters.ElementAt(1));
+            Assert.Empty(subsetNode.Items);
+        }
+
+        [Fact]
+        public void HassubsequenceFunctionWithEmptySubsequenceArgument()
+        {
+            CollectionLiteralToken superSeq = new CollectionLiteralToken();
+            superSeq.Items.Add(new LiteralToken(1));
+            superSeq.Items.Add(new LiteralToken(2));
+
+            CollectionLiteralToken emptySubseq = new CollectionLiteralToken();
+
+            QueryToken[] args = [superSeq, emptySubseq];
+            FunctionCallToken functionToken = new FunctionCallToken("hassubsequence", args);
+            QueryNode node = this.functionCallBinder.BindFunctionCall(functionToken);
+            var functionCallNode = node.ShouldBeSingleValueFunctionCallQueryNode("hassubsequence");
+            Assert.Equal(2, functionCallNode.Parameters.Count());
+
+            CollectionConstantNode emptyNode = Assert.IsType<CollectionConstantNode>(functionCallNode.Parameters.ElementAt(1));
+            Assert.Empty(emptyNode.Items);
+        }
+
+        [Theory]
+        [InlineData("hassubset")]
+        [InlineData("hassubsequence")]
+        public void HassubsetAndHassubsequenceWithOneArgumentThrows(string functionName)
+        {
+            CollectionLiteralToken col = new CollectionLiteralToken();
+            col.Items.Add(new LiteralToken(1));
+
+            QueryToken[] args = [col];
+            FunctionCallToken functionToken = new FunctionCallToken(functionName, args);
+            Action bind = () => this.functionCallBinder.BindFunctionCall(functionToken);
+            bind.Throws<ODataErrorException>(Error.Format(SRResources.MetadataBinder_FunctionWithWrongNumberOfOperands, functionName, 1, "2"));
+        }
+
+        [Theory]
+        [InlineData("hassubset")]
+        [InlineData("hassubsequence")]
+        public void HassubsetAndHassubsequenceWithThreeArgumentsThrows(string functionName)
+        {
+            CollectionLiteralToken col = new CollectionLiteralToken();
+            col.Items.Add(new LiteralToken(1));
+
+            QueryToken[] args = [col, col, col];
+            FunctionCallToken functionToken = new FunctionCallToken(functionName, args);
+            Action bind = () => this.functionCallBinder.BindFunctionCall(functionToken);
+            bind.Throws<ODataErrorException>(Error.Format(SRResources.MetadataBinder_FunctionWithWrongNumberOfOperands, functionName, 3, "2"));
+        }
+
+        [Theory]
+        [InlineData("hassubset")]
+        [InlineData("hassubsequence")]
+        public void HassubsetAndHassubsequenceWithNonCollectionFirstArgThrows(string functionName)
+        {
+            CollectionLiteralToken col = new CollectionLiteralToken();
+            col.Items.Add(new LiteralToken(1));
+
+            QueryToken[] args = [new LiteralToken(42), col];
+            FunctionCallToken functionToken = new FunctionCallToken(functionName, args);
+            Action bind = () => this.functionCallBinder.BindFunctionCall(functionToken);
+            bind.Throws<ODataErrorException>(Error.Format(SRResources.MetadataBinder_FunctionArgumentNotCollectionValue, 1, functionName));
+        }
+
+        [Theory]
+        [InlineData("hassubset")]
+        [InlineData("hassubsequence")]
+        public void HassubsetAndHassubsequenceWithNonCollectionSecondArgThrows(string functionName)
+        {
+            CollectionLiteralToken col = new CollectionLiteralToken();
+            col.Items.Add(new LiteralToken(1));
+
+            QueryToken[] args = [col, new LiteralToken(42)];
+            FunctionCallToken functionToken = new FunctionCallToken(functionName, args);
+            Action bind = () => this.functionCallBinder.BindFunctionCall(functionToken);
+            bind.Throws<ODataErrorException>(Error.Format(SRResources.MetadataBinder_FunctionArgumentNotCollectionValue, 2, functionName));
+        }
+
+        [Fact]
+        public void HassubsetFunctionWithStringCollections()
+        {
+            CollectionLiteralToken superSet = new CollectionLiteralToken();
+            superSet.Items.Add(new LiteralToken("apple"));
+            superSet.Items.Add(new LiteralToken("banana"));
+            superSet.Items.Add(new LiteralToken("cherry"));
+
+            CollectionLiteralToken subSet = new CollectionLiteralToken();
+            subSet.Items.Add(new LiteralToken("banana"));
+
+            QueryToken[] args = [superSet, subSet];
+            FunctionCallToken functionToken = new FunctionCallToken("hassubset", args);
+            QueryNode node = this.functionCallBinder.BindFunctionCall(functionToken);
+            var functionCallNode = node.ShouldBeSingleValueFunctionCallQueryNode("hassubset");
+            Assert.Equal("Edm.Boolean", functionCallNode.TypeReference.FullName());
+            Assert.Equal(2, functionCallNode.Parameters.Count());
+        }
+
+        [Fact]
+        public void HassubsequenceFunctionWithStringCollections()
+        {
+            CollectionLiteralToken superSeq = new CollectionLiteralToken();
+            superSeq.Items.Add(new LiteralToken("a"));
+            superSeq.Items.Add(new LiteralToken("b"));
+            superSeq.Items.Add(new LiteralToken("c"));
+
+            CollectionLiteralToken subSeq = new CollectionLiteralToken();
+            subSeq.Items.Add(new LiteralToken("b"));
+            subSeq.Items.Add(new LiteralToken("c"));
+
+            QueryToken[] args = [superSeq, subSeq];
+            FunctionCallToken functionToken = new FunctionCallToken("hassubsequence", args);
+            QueryNode node = this.functionCallBinder.BindFunctionCall(functionToken);
+            var functionCallNode = node.ShouldBeSingleValueFunctionCallQueryNode("hassubsequence");
+            Assert.Equal("Edm.Boolean", functionCallNode.TypeReference.FullName());
+            Assert.Equal(2, functionCallNode.Parameters.Count());
+        }
+        [Fact]
         public void TypeMustBeLastArgumentToIsOf()
         {
             QueryToken[] args = new QueryToken[]
