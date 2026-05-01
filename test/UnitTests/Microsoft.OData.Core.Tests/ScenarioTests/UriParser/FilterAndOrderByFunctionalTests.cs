@@ -2707,6 +2707,54 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Fact]
+        public void HassubsetInFilterWithBooleanComparison()
+        {
+            // Arrange & Act - Use hassubset in boolean expression
+            IEdmEntityType personType = HardCodedTestModel.GetPersonType();
+            IEdmProperty relatedIdsProp = personType.FindProperty("RelatedIDs");
+            Assert.NotNull(relatedIdsProp);
+
+            var filterClause = ParseFilter("hassubset(RelatedIDs, [0,9]) eq true", HardCodedTestModel.TestModel, personType, HardCodedTestModel.GetPeopleSet());
+
+            // Assert
+            var binaryOp = filterClause.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal);
+            SingleValueFunctionCallNode hassubsetCall = binaryOp.Left.ShouldBeSingleValueFunctionCallQueryNode("hassubset");
+            Assert.Equal(2, hassubsetCall.Parameters.Count());
+
+            hassubsetCall.Parameters.ElementAt(0).ShouldBeCollectionPropertyAccessQueryNode(relatedIdsProp);
+            CollectionConstantNode collectionNode = Assert.IsType<CollectionConstantNode>(hassubsetCall.Parameters.ElementAt(1));
+            Assert.Equal(2, collectionNode.Items.Count);
+
+            collectionNode.Items.ElementAt(0).ShouldBeConstantQueryNode(0);
+            collectionNode.Items.ElementAt(1).ShouldBeConstantQueryNode(9);
+            binaryOp.Right.ShouldBeConstantQueryNode(true);
+        }
+
+        [Fact]
+        public void HassubsequenceInFilterWithBooleanComparison()
+        {
+            // Arrange & Act - Use hassubsequence in boolean expression
+            IEdmEntityType personType = HardCodedTestModel.GetPersonType();
+            IEdmProperty relatedIdsProp = personType.FindProperty("RelatedIDs");
+            Assert.NotNull(relatedIdsProp);
+
+            var filterClause = ParseFilter("hassubsequence(RelatedIDs, [0,9]) eq true", HardCodedTestModel.TestModel, personType, HardCodedTestModel.GetPeopleSet());
+
+            // Assert
+            var binaryOp = filterClause.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal);
+            SingleValueFunctionCallNode hassubsequenceCall = binaryOp.Left.ShouldBeSingleValueFunctionCallQueryNode("hassubsequence");
+            Assert.Equal(2, hassubsequenceCall.Parameters.Count());
+
+            hassubsequenceCall.Parameters.ElementAt(0).ShouldBeCollectionPropertyAccessQueryNode(relatedIdsProp);
+            CollectionConstantNode collectionNode = Assert.IsType<CollectionConstantNode>(hassubsequenceCall.Parameters.ElementAt(1));
+            Assert.Equal(2, collectionNode.Items.Count);
+
+            collectionNode.Items.ElementAt(0).ShouldBeConstantQueryNode(0);
+            collectionNode.Items.ElementAt(1).ShouldBeConstantQueryNode(9);
+            binaryOp.Right.ShouldBeConstantQueryNode(true);
+        }
+
+        [Fact]
         public void FilterWithInOperationWithAny()
         {
             // https://github.com/OData/odata.net/issues/1447
@@ -3765,9 +3813,69 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
         #endregion
 
-        private static FilterClause ParseFilter(string text, IEdmModel edmModel, IEdmType edmType, IEdmNavigationSource edmEntitySet = null)
+        #region case function in filter
+
+        [Fact]
+        public void CaseFunctionWithBooleanConditionsInFilter()
         {
-            return new ODataQueryOptionParser(edmModel, edmType, edmEntitySet, new Dictionary<string, string>() { { "$filter", text } }) { Resolver = new ODataUriResolver() { EnableCaseInsensitive = false } }.ParseFilter();
+            FilterClause filter = ParseFilter("case(ID gt 0:true, ID eq 0:false) eq true",
+                HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
+
+            BinaryOperatorNode binaryNode = filter.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal);
+            SingleValueFunctionCallNode caseNode = binaryNode.Left.ShouldBeSingleValueFunctionCallQueryNode("case");
+            Assert.Equal(4, caseNode.Parameters.Count());
+        }
+
+        [Fact]
+        public void CaseFunctionWithStringResultInFilter()
+        {
+            FilterClause filter = ParseFilter("case(ID gt 0:'positive', ID lt 0:'negative', true:'zero') eq 'positive'",
+                HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
+
+            BinaryOperatorNode binaryNode = filter.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal);
+            SingleValueFunctionCallNode caseNode = binaryNode.Left.ShouldBeSingleValueFunctionCallQueryNode("case");
+            Assert.Equal(6, caseNode.Parameters.Count());
+            Assert.Collection(caseNode.Parameters,
+                e => e.ShouldBeBinaryOperatorNode(BinaryOperatorKind.GreaterThan),
+                e => e.ShouldBeConstantQueryNode("positive"),
+                e => e.ShouldBeBinaryOperatorNode(BinaryOperatorKind.LessThan),
+                e => e.ShouldBeConstantQueryNode("negative"),
+                e => e.ShouldBeConstantQueryNode(true),
+                e => e.ShouldBeConstantQueryNode("zero"));
+        }
+
+        [Fact]
+        public void CaseFunctionMissingColonThrows()
+        {
+            string filterText = "case(ID gt 0 1, true:0) eq 0";
+            Action parse = () => ParseFilter(filterText, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
+            parse.Throws<ODataException>(Error.Format(SRResources.UriQueryExpressionParser_ColonExpectedForCaseFunctionCall, 13, filterText));
+        }
+
+        [Fact]
+        public void CaseFunctionCaseInsensitiveNameWorks()
+        {
+            FilterClause filter = ParseFilter("CASE(ID gt 0 :1, true:-1) eq 1",
+                HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet(),
+                caseInsensitive: true);
+
+            BinaryOperatorNode binaryNode = filter.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal);
+            binaryNode.Left.ShouldBeSingleValueFunctionCallQueryNode("case");
+        }
+
+        [Fact]
+        public void CaseFunctionInOrderBy()
+        {
+            OrderByClause orderBy = ParseOrderBy("case(ID gt 0 :1, true:-1)", // Note: "ID gt 0:1, true:-1" is confusing because "0:1" could be parsed as a TimeOfDay. Adding a whitespace avoids this issue.
+                HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
+
+            orderBy.Expression.ShouldBeSingleValueFunctionCallQueryNode("case");
+        }
+        #endregion
+
+        private static FilterClause ParseFilter(string text, IEdmModel edmModel, IEdmType edmType, IEdmNavigationSource edmEntitySet = null, bool caseInsensitive = false)
+        {
+            return new ODataQueryOptionParser(edmModel, edmType, edmEntitySet, new Dictionary<string, string>() { { "$filter", text } }) { Resolver = new ODataUriResolver() { EnableCaseInsensitive = caseInsensitive } }.ParseFilter();
         }
 
         private static OrderByClause ParseOrderBy(string text, IEdmModel edmModel, IEdmType edmType, IEdmNavigationSource edmEntitySet = null)

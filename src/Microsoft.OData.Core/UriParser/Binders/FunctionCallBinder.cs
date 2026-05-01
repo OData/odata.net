@@ -29,6 +29,8 @@ namespace Microsoft.OData.UriParser
         {
             ExpressionConstants.UnboundFunctionCast,
             ExpressionConstants.UnboundFunctionIsOf,
+            ExpressionConstants.UnboundFunctionHassubset,
+            ExpressionConstants.UnboundFunctionHassubsequence
         };
 
         /// <summary>
@@ -716,6 +718,15 @@ namespace Microsoft.OData.UriParser
                         break;
                     }
 
+                case ExpressionConstants.UnboundFunctionHassubset:
+                case ExpressionConstants.UnboundFunctionHassubsequence:
+                    {
+                        ValidateArgsForCollection(functionCallTokenName, args);
+                        returnType = EdmCoreModel.Instance.GetBoolean(false); // non-nullable boolean
+                        break;
+                    }
+
+
                 default:
                     {
                         break;
@@ -845,6 +856,22 @@ namespace Microsoft.OData.UriParser
             else
             {
                 return EdmCoreModel.Instance.GetBoolean(true);
+            }
+        }
+
+        private static void ValidateArgsForCollection(string functionName, List<QueryNode> args)
+        {
+            if (args.Count != 2)
+            {
+                throw new ODataErrorException(Error.Format(SRResources.MetadataBinder_FunctionWithWrongNumberOfOperands, functionName, args.Count, "2"));
+            }
+
+            for (int i = 0; i < args.Count; i++)
+            {
+                if (!(args[i] is CollectionNode))
+                {
+                    throw new ODataErrorException(Error.Format(SRResources.MetadataBinder_FunctionArgumentNotCollectionValue, i + 1, functionName));
+                }
             }
         }
 
