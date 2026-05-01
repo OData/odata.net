@@ -3813,6 +3813,186 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
         #endregion
 
+        #region Spatial Literals in 'in' operator
+        [Fact]
+        public void FilterWithInOperationWithGeographyPointLiteralCollection()
+        {
+            var point1 = GeographyPoint.Create(32.0, -100.0);
+            var point2 = GeographyPoint.Create(48.5, 2.3);
+            string literal1 = $"geography'{SpatialHelpers.WriteSpatial(point1)}'";
+            string literal2 = $"geography'{SpatialHelpers.WriteSpatial(point2)}'";
+            string filter = $"GeographyPoint in ({literal1}, {literal2})";
+            Assert.Equal("GeographyPoint in (geography'SRID=4326;POINT (-100 32)', geography'SRID=4326;POINT (2.3 48.5)')", filter);
+
+            FilterClause filterClause = ParseFilter(filter, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+
+            var inNode = Assert.IsType<InNode>(filterClause.Expression);
+            Assert.Equal("GeographyPoint", Assert.IsType<SingleValuePropertyAccessNode>(inNode.Left).Property.Name);
+
+            CollectionConstantNode collectionNode = Assert.IsType<CollectionConstantNode>(inNode.Right);
+            Assert.Equal(2, collectionNode.Items.Count);
+
+            ConstantNode item1 = Assert.IsType<ConstantNode>(collectionNode.Items.ElementAt(0));
+            Assert.Equal(literal1, item1.LiteralText);
+            Assert.IsAssignableFrom<GeographyPoint>(item1.Value);
+
+            ConstantNode item2 = Assert.IsType<ConstantNode>(collectionNode.Items.ElementAt(1));
+            Assert.Equal(literal2, item2.LiteralText);
+            Assert.IsAssignableFrom<GeographyPoint>(item2.Value);
+        }
+
+        [Fact]
+        public void FilterWithInOperationWithGeometryPointLiteralCollection()
+        {
+            var point1 = GeometryPoint.Create(1.0, 2.0);
+            var point2 = GeometryPoint.Create(3.5, 4.5);
+            string literal1 = $"geometry'{SpatialHelpers.WriteSpatial(point1)}'";
+            string literal2 = $"geometry'{SpatialHelpers.WriteSpatial(point2)}'";
+            string filter = $"GeometryPoint in ({literal1}, {literal2})";
+            Assert.Equal("GeometryPoint in (geometry'SRID=0;POINT (1 2)', geometry'SRID=0;POINT (3.5 4.5)')", filter);
+
+            FilterClause filterClause = ParseFilter(filter, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+
+            var inNode = Assert.IsType<InNode>(filterClause.Expression);
+            Assert.Equal("GeometryPoint", Assert.IsType<SingleValuePropertyAccessNode>(inNode.Left).Property.Name);
+
+            CollectionConstantNode collectionNode = Assert.IsType<CollectionConstantNode>(inNode.Right);
+            Assert.Equal(2, collectionNode.Items.Count);
+
+            ConstantNode item1 = Assert.IsType<ConstantNode>(collectionNode.Items.ElementAt(0));
+            Assert.Equal(literal1, item1.LiteralText);
+            Assert.IsAssignableFrom<GeometryPoint>(item1.Value);
+
+            ConstantNode item2 = Assert.IsType<ConstantNode>(collectionNode.Items.ElementAt(1));
+            Assert.Equal(literal2, item2.LiteralText);
+            Assert.IsAssignableFrom<GeometryPoint>(item2.Value);
+        }
+
+        [Fact]
+        public void FilterWithInOperationWithSingleGeographyPointLiteralCollection()
+        {
+            var point = GeographyPoint.Create(51.5, -0.1);
+            string literal = $"geography'{SpatialHelpers.WriteSpatial(point)}'";
+            string filter = $"GeographyPoint in ({literal})";
+
+            FilterClause filterClause = ParseFilter(filter, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+
+            var inNode = Assert.IsType<InNode>(filterClause.Expression);
+            CollectionConstantNode collectionNode = Assert.IsType<CollectionConstantNode>(inNode.Right);
+            Assert.Single(collectionNode.Items);
+
+            ConstantNode item = Assert.IsType<ConstantNode>(collectionNode.Items.Single());
+            Assert.Equal(literal, item.LiteralText);
+            Assert.IsAssignableFrom<GeographyPoint>(item.Value);
+        }
+
+        [Fact]
+        public void FilterWithInOperationWithGeographyLineStringLiteralCollection()
+        {
+            var line1 = GeographyFactory.LineString().LineTo(0.0, 0.0).LineTo(1.0, 1.0).Build();
+            var line2 = GeographyFactory.LineString().LineTo(2.0, 2.0).LineTo(3.0, 3.0).Build();
+            string literal1 = $"geography'{SpatialHelpers.WriteSpatial(line1)}'";
+            string literal2 = $"geography'{SpatialHelpers.WriteSpatial(line2)}'";
+            string filter = $"GeographyLineString in ({literal1}, {literal2})";
+            Assert.Equal("GeographyLineString in (geography'SRID=4326;LINESTRING (0 0, 1 1)', geography'SRID=4326;LINESTRING (2 2, 3 3)')", filter);
+
+            FilterClause filterClause = ParseFilter(filter, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+
+            var inNode = Assert.IsType<InNode>(filterClause.Expression);
+            Assert.Equal("GeographyLineString", Assert.IsType<SingleValuePropertyAccessNode>(inNode.Left).Property.Name);
+
+            CollectionConstantNode collectionNode = Assert.IsType<CollectionConstantNode>(inNode.Right);
+            Assert.Equal(2, collectionNode.Items.Count);
+            Assert.All(collectionNode.Items, item => Assert.IsAssignableFrom<GeographyLineString>(Assert.IsType<ConstantNode>(item).Value));
+        }
+
+        [Fact]
+        public void FilterWithInOperationWithGeometryLineStringLiteralCollection()
+        {
+            var line1 = GeometryFactory.LineString().LineTo(0.0, 0.0).LineTo(1.0, 1.0).Build();
+            var line2 = GeometryFactory.LineString().LineTo(2.0, 2.0).LineTo(3.0, 3.0).Build();
+            string literal1 = $"geometry'{SpatialHelpers.WriteSpatial(line1)}'";
+            string literal2 = $"geometry'{SpatialHelpers.WriteSpatial(line2)}'";
+            string filter = $"GeometryLineString in ({literal1}, {literal2})";
+            Assert.Equal("GeometryLineString in (geometry'SRID=0;LINESTRING (0 0, 1 1)', geometry'SRID=0;LINESTRING (2 2, 3 3)')", filter);
+
+            FilterClause filterClause = ParseFilter(filter, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+
+            var inNode = Assert.IsType<InNode>(filterClause.Expression);
+            Assert.Equal("GeometryLineString", Assert.IsType<SingleValuePropertyAccessNode>(inNode.Left).Property.Name);
+
+            CollectionConstantNode collectionNode = Assert.IsType<CollectionConstantNode>(inNode.Right);
+            Assert.Equal(2, collectionNode.Items.Count);
+            Assert.All(collectionNode.Items, item => Assert.IsAssignableFrom<GeometryLineString>(Assert.IsType<ConstantNode>(item).Value));
+        }
+
+        [Fact]
+        public void FilterWithInOperationWithGeographyPolygonLiteralCollection()
+        {
+            var polygon1 = GeographyFactory.Polygon().Ring(0.0, 0.0).LineTo(0.0, 1.0).LineTo(1.0, 1.0).LineTo(0.0, 0.0).Build();
+            var polygon2 = GeographyFactory.Polygon().Ring(5.0, 5.0).LineTo(5.0, 6.0).LineTo(6.0, 6.0).LineTo(5.0, 5.0).Build();
+            string literal1 = $"geography'{SpatialHelpers.WriteSpatial(polygon1)}'";
+            string literal2 = $"geography'{SpatialHelpers.WriteSpatial(polygon2)}'";
+            string filter = $"GeographyPolygon in ({literal1}, {literal2})";
+
+            FilterClause filterClause = ParseFilter(filter, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+
+            var inNode = Assert.IsType<InNode>(filterClause.Expression);
+            Assert.Equal("GeographyPolygon", Assert.IsType<SingleValuePropertyAccessNode>(inNode.Left).Property.Name);
+
+            CollectionConstantNode collectionNode = Assert.IsType<CollectionConstantNode>(inNode.Right);
+            Assert.Equal(2, collectionNode.Items.Count);
+            Assert.All(collectionNode.Items, item => Assert.IsAssignableFrom<GeographyPolygon>(Assert.IsType<ConstantNode>(item).Value));
+        }
+
+        [Fact]
+        public void FilterWithInOperationWithGeometryPolygonLiteralCollection()
+        {
+            var polygon1 = GeometryFactory.Polygon().Ring(0.0, 0.0).LineTo(0.0, 1.0).LineTo(1.0, 1.0).LineTo(0.0, 0.0).Build();
+            var polygon2 = GeometryFactory.Polygon().Ring(5.0, 5.0).LineTo(5.0, 6.0).LineTo(6.0, 6.0).LineTo(5.0, 5.0).Build();
+            string literal1 = $"geometry'{SpatialHelpers.WriteSpatial(polygon1)}'";
+            string literal2 = $"geometry'{SpatialHelpers.WriteSpatial(polygon2)}'";
+            string filter = $"GeometryPolygon in ({literal1}, {literal2})";
+
+            FilterClause filterClause = ParseFilter(filter, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+
+            var inNode = Assert.IsType<InNode>(filterClause.Expression);
+            Assert.Equal("GeometryPolygon", Assert.IsType<SingleValuePropertyAccessNode>(inNode.Left).Property.Name);
+
+            CollectionConstantNode collectionNode = Assert.IsType<CollectionConstantNode>(inNode.Right);
+            Assert.Equal(2, collectionNode.Items.Count);
+            Assert.All(collectionNode.Items, item => Assert.IsAssignableFrom<GeometryPolygon>(Assert.IsType<ConstantNode>(item).Value));
+        }
+
+        [Fact]
+        public void FilterWithInOperationWithGeographyPointLiteralCollectionVerifiesItemType()
+        {
+            var point = GeographyPoint.Create(48.8566, 2.3522);
+            string literal = $"geography'{SpatialHelpers.WriteSpatial(point)}'";
+            string filter = $"GeographyPoint in ({literal})";
+
+            FilterClause filterClause = ParseFilter(filter, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+
+            var inNode = Assert.IsType<InNode>(filterClause.Expression);
+            CollectionConstantNode collectionNode = Assert.IsType<CollectionConstantNode>(inNode.Right);
+            Assert.Equal("Edm.GeographyPoint", collectionNode.CollectionType.ElementType().FullName());
+        }
+
+        [Fact]
+        public void FilterWithInOperationWithGeometryPointLiteralCollectionVerifiesItemType()
+        {
+            var point = GeometryPoint.Create(1.0, 2.0);
+            string literal = $"geometry'{SpatialHelpers.WriteSpatial(point)}'";
+            string filter = $"GeometryPoint in ({literal})";
+
+            FilterClause filterClause = ParseFilter(filter, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+
+            var inNode = Assert.IsType<InNode>(filterClause.Expression);
+            CollectionConstantNode collectionNode = Assert.IsType<CollectionConstantNode>(inNode.Right);
+            Assert.Equal("Edm.GeometryPoint", collectionNode.CollectionType.ElementType().FullName());
+        }
+        #endregion Spatial Literals in 'in' operator
+
         #region case function in filter
 
         [Fact]
