@@ -3866,7 +3866,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         [Fact]
         public void CaseFunctionInOrderBy()
         {
-            OrderByClause orderBy = ParseOrderBy("case(ID gt 0 :1, true:-1)", // be noted: "ID gt 0:1, true:-1" is confusing that "0:1" could be parsed as TimeOfDay. Add a white space can avoid this issue.
+            OrderByClause orderBy = ParseOrderBy("case(ID gt 0 :1, true:-1)", // Note: "ID gt 0:1, true:-1" is confusing because "0:1" could be parsed as a TimeOfDay. Adding a whitespace avoids this issue.
                 HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
 
             orderBy.Expression.ShouldBeSingleValueFunctionCallQueryNode("case");
