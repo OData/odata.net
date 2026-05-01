@@ -722,7 +722,7 @@ namespace Microsoft.OData.UriParser
                 case ExpressionConstants.UnboundFunctionHassubsequence:
                     {
                         ValidateArgsForCollection(functionCallTokenName, args);
-                        returnType = EdmCoreModel.Instance.GetBoolean(false); // why 'false'? Because these functions return non-nullable boolean, and GetBoolean is designed to return nullable boolean by default, we need to specify false here to get the non-nullable boolean type reference.
+                        returnType = EdmCoreModel.Instance.GetBoolean(false); // non-nullable boolean
                         break;
                     }
 
