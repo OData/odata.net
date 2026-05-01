@@ -202,18 +202,6 @@ namespace Microsoft.OData.UriParser
         {
             Debug.Assert(lexer != null, "lexer != null");
 
-            if (lexer.CurrentToken.Kind == ExpressionTokenKind.StringLiteral)
-            {
-                // If the literal is double quoted string, we treat it as a quoted literal and the text inside the quotes will be treated as the value of the literal.
-                if (lexer.CurrentToken.Length >= 2 && lexer.CurrentToken.Span[0] == '"' && lexer.CurrentToken.Span[^1] == '"')
-                {
-                    string unescapedText = JsonSerializer.Deserialize<string>(lexer.CurrentToken.Span);
-                    LiteralToken result = new LiteralToken(unescapedText, lexer.CurrentToken.Text.ToString(), EdmCoreModel.Instance.GetString(true));
-                    lexer.NextToken();
-                    return result;
-                }
-            }
-
             switch (lexer.CurrentToken.Kind)
             {
                 case ExpressionTokenKind.BooleanLiteral:
