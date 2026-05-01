@@ -608,7 +608,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         }
 
         [Fact]
-        public void HassubsequenceFunctionBindReturnsWorksWithTwoCollectionArguments()
+        public void HassubsequenceFunctionBindWorksWithTwoCollectionArguments()
         {
             CollectionLiteralToken leftCol = new CollectionLiteralToken();
             leftCol.Items.Add(new LiteralToken(1));
