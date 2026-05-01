@@ -1,3 +1,70 @@
+Microsoft.OData.UriParser.CollectionConstantNode.CollectionConstantNode(Microsoft.OData.Edm.IEdmCollectionTypeReference collectionType) -> void
+Microsoft.OData.UriParser.CollectionConstantNode.Items.get -> System.Collections.Generic.IList<Microsoft.OData.UriParser.QueryNode>
+Microsoft.OData.UriParser.CollectionConstantNode.LiteralText.get -> System.ReadOnlyMemory<char>
+Microsoft.OData.UriParser.CollectionConstantNode.LiteralText.set -> void
+Microsoft.OData.UriParser.CollectionLiteralToken.CollectionLiteralToken() -> void
+Microsoft.OData.UriParser.CollectionLiteralToken.ExpectedCollectionType.get -> Microsoft.OData.Edm.IEdmCollectionTypeReference
+Microsoft.OData.UriParser.CollectionLiteralToken.ExpectedCollectionType.set -> void
+Microsoft.OData.UriParser.CollectionLiteralToken.Items.get -> System.Collections.Generic.IList<Microsoft.OData.UriParser.QueryToken>
+Microsoft.OData.UriParser.CollectionRootPathNode
+Microsoft.OData.UriParser.CollectionRootPathNode.Collection.get -> System.Collections.Generic.IList<Microsoft.OData.UriParser.RootPathNode>
+Microsoft.OData.UriParser.CollectionRootPathNode.CollectionRootPathNode(Microsoft.OData.Edm.IEdmCollectionTypeReference typeReference) -> void
+Microsoft.OData.UriParser.CollectionRootPathNode.Count.get -> int
+Microsoft.OData.UriParser.CollectionRootPathNode.LiteralText.get -> System.ReadOnlyMemory<char>
+Microsoft.OData.UriParser.CollectionLiteralToken
+Microsoft.OData.UriParser.CollectionLiteralToken.OriginalText.get -> System.ReadOnlyMemory<char>
+Microsoft.OData.UriParser.CollectionLiteralToken.OriginalText.set -> void
+Microsoft.OData.UriParser.CollectionRootPathNode.LiteralText.set -> void
+Microsoft.OData.UriParser.ConstantNode.LiteralText.get -> string
+Microsoft.OData.UriParser.IndexSegment
+Microsoft.OData.UriParser.IndexSegment.Index.get -> long
+Microsoft.OData.UriParser.IndexSegment.IndexSegment(long index, Microsoft.OData.Edm.IEdmType targetEdmType) -> void
+Microsoft.OData.UriParser.QueryTokenKind.SearchTerm = 34 -> Microsoft.OData.UriParser.QueryTokenKind
+Microsoft.OData.UriParser.ISyntacticTreeVisitor<T>.Visit(Microsoft.OData.UriParser.CollectionLiteralToken tokenIn) -> T
+Microsoft.OData.UriParser.ISyntacticTreeVisitor<T>.Visit(Microsoft.OData.UriParser.ResourceLiteralToken tokenIn) -> T
+Microsoft.OData.UriParser.ResourceConstantNode.LiteralText.set -> void
+Microsoft.OData.UriParser.ResourceConstantNode.Properties.get -> System.Collections.Generic.IList<System.Collections.Generic.KeyValuePair<string, Microsoft.OData.UriParser.QueryNode>>
+Microsoft.OData.UriParser.ResourceLiteralToken
+Microsoft.OData.UriParser.ResourceLiteralToken.ExpectedType.get -> Microsoft.OData.Edm.IEdmStructuredTypeReference
+Microsoft.OData.UriParser.ResourceLiteralToken.ExpectedType.set -> void
+Microsoft.OData.UriParser.ResourceLiteralToken.OriginalText.get -> System.ReadOnlyMemory<char>
+Microsoft.OData.UriParser.ResourceLiteralToken.OriginalText.set -> void
+Microsoft.OData.UriParser.QueryNodeKind.CollectionRootExpr = 38 -> Microsoft.OData.UriParser.QueryNodeKind
+Microsoft.OData.UriParser.QueryNodeKind.ParameterAliasCollection = 36 -> Microsoft.OData.UriParser.QueryNodeKind
+Microsoft.OData.UriParser.QueryNodeKind.ResourceConstant = 37 -> Microsoft.OData.UriParser.QueryNodeKind
+Microsoft.OData.UriParser.QueryTokenKind.CollectionLiteral = 35 -> Microsoft.OData.UriParser.QueryTokenKind
+Microsoft.OData.UriParser.QueryTokenKind.ResourceLiteral = 36 -> Microsoft.OData.UriParser.QueryTokenKind
+Microsoft.OData.UriParser.ResourceConstantNode
+Microsoft.OData.UriParser.ResourceConstantNode.ExpectedStructuredType.get -> Microsoft.OData.Edm.IEdmStructuredTypeReference
+Microsoft.OData.UriParser.ResourceConstantNode.LiteralText.get -> System.ReadOnlyMemory<char>
+Microsoft.OData.UriParser.ResourceConstantNode.ResourceConstantNode(Microsoft.OData.Edm.IEdmStructuredTypeReference typeReference) -> void
+Microsoft.OData.UriParser.ResourceLiteralToken.Properties.get -> System.Collections.Generic.IList<System.Collections.Generic.KeyValuePair<string, Microsoft.OData.UriParser.QueryToken>>
+Microsoft.OData.UriParser.ResourceLiteralToken.ResourceLiteralToken() -> void
+Microsoft.OData.UriParser.ResourceLiteralToken.TypeNameFromLiteral.get -> string
+Microsoft.OData.UriParser.ResourceLiteralToken.TypeNameFromLiteral.set -> void
+override Microsoft.OData.UriParser.CollectionRootPathNode.Accept<T>(Microsoft.OData.UriParser.QueryNodeVisitor<T> visitor) -> T
+override Microsoft.OData.UriParser.CollectionRootPathNode.CollectionType.get -> Microsoft.OData.Edm.IEdmCollectionTypeReference
+override Microsoft.OData.UriParser.CollectionRootPathNode.ItemType.get -> Microsoft.OData.Edm.IEdmTypeReference
+override Microsoft.OData.UriParser.CollectionLiteralToken.Accept<T>(Microsoft.OData.UriParser.ISyntacticTreeVisitor<T> visitor) -> T
+override Microsoft.OData.UriParser.CollectionLiteralToken.Kind.get -> Microsoft.OData.UriParser.QueryTokenKind
+override Microsoft.OData.UriParser.IndexSegment.EdmType.get -> Microsoft.OData.Edm.IEdmType
+override Microsoft.OData.UriParser.IndexSegment.HandleWith(Microsoft.OData.UriParser.PathSegmentHandler handler) -> void
+override Microsoft.OData.UriParser.IndexSegment.TranslateWith<T>(Microsoft.OData.UriParser.PathSegmentTranslator<T> translator) -> T
+override Microsoft.OData.UriParser.ResourceLiteralToken.Accept<T>(Microsoft.OData.UriParser.ISyntacticTreeVisitor<T> visitor) -> T
+override Microsoft.OData.UriParser.ResourceLiteralToken.Kind.get -> Microsoft.OData.UriParser.QueryTokenKind
+override Microsoft.OData.UriParser.ResourceConstantNode.Accept<T>(Microsoft.OData.UriParser.QueryNodeVisitor<T> visitor) -> T
+override Microsoft.OData.UriParser.ResourceConstantNode.TypeReference.get -> Microsoft.OData.Edm.IEdmTypeReference
+virtual Microsoft.OData.UriParser.PathSegmentHandler.Handle(Microsoft.OData.UriParser.IndexSegment segment) -> void
+virtual Microsoft.OData.UriParser.PathSegmentTranslator<T>.Translate(Microsoft.OData.UriParser.IndexSegment segment) -> T
+Microsoft.OData.UriParser.ParameterAliasCollectionNode
+Microsoft.OData.UriParser.ParameterAliasCollectionNode.Alias.get -> string
+Microsoft.OData.UriParser.ParameterAliasCollectionNode.ParameterAliasCollectionNode(string alias, Microsoft.OData.Edm.IEdmCollectionTypeReference collectionType) -> void
+override Microsoft.OData.UriParser.ParameterAliasCollectionNode.Accept<T>(Microsoft.OData.UriParser.QueryNodeVisitor<T> visitor) -> T
+override Microsoft.OData.UriParser.ParameterAliasCollectionNode.CollectionType.get -> Microsoft.OData.Edm.IEdmCollectionTypeReference
+override Microsoft.OData.UriParser.ParameterAliasCollectionNode.ItemType.get -> Microsoft.OData.Edm.IEdmTypeReference
+virtual Microsoft.OData.UriParser.QueryNodeVisitor<T>.Visit(Microsoft.OData.UriParser.CollectionRootPathNode nodeIn) -> T
+virtual Microsoft.OData.UriParser.QueryNodeVisitor<T>.Visit(Microsoft.OData.UriParser.ParameterAliasCollectionNode nodeIn) -> T
+virtual Microsoft.OData.UriParser.QueryNodeVisitor<T>.Visit(Microsoft.OData.UriParser.ResourceConstantNode nodeIn) -> T
 Microsoft.OData.IODataRequestMessage.GetStreamAsync(System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<System.IO.Stream>
 Microsoft.OData.IODataResponseMessage.GetStreamAsync(System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<System.IO.Stream>
 Microsoft.OData.ODataAsynchronousResponseMessage.GetStreamAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<System.IO.Stream>
