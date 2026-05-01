@@ -126,7 +126,7 @@ namespace Microsoft.OData
         /// <summary> "hassubset" function </summary>
         internal const string UnboundFunctionHassubset = "hassubset";
 
-        /// <summary> "hassubset" function </summary>
+        /// <summary> "hassubsequence" function </summary>
         internal const string UnboundFunctionHassubsequence = "hassubsequence";
 
         /// <summary> Spatial length function </summary>
