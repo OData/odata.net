@@ -8,7 +8,7 @@
     <authors>Microsoft</authors>
     <license type="expression">MIT</license>
     <projectUrl>http://odata.github.io/</projectUrl>
-    <iconUrl>http://static.tumblr.com/hgchgxz/9ualgdf98/icon.png</iconUrl>
+    <icon>images\odata.png</icon>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <readme>docs\README.md</readme>
     <summary>LINQ-enabled client API for issuing OData queries and consuming OData JSON payloads. Supports OData v4 and v4.01. </summary>
@@ -29,8 +29,6 @@ OData .NET library is open source at http://github.com/OData/odata.net. Document
     <file src="$ProductRoot$\Microsoft.OData.Client.xml" target="lib" />
     <file src="$ProductRoot$\Microsoft.OData.Client.pdb" target="lib" />
     <file src="$SourcesRoot$\src\Microsoft.OData.Client\**\*.cs" target="src\Microsoft.OData.Client" />
-    <!-- file README.md -->
-    <file src="$SourcesRoot$\src\Microsoft.OData.Client\Docs\README.md" target="docs\" />
     <!-- files imported from EdmLib -->
     <file src="$SourcesRoot$\src\Microsoft.OData.Edm\Csdl\EdmValueParser.cs" target="src\Microsoft.OData.Edm\Csdl\EdmValueParser.cs" />
     <file src="$SourcesRoot$\src\Microsoft.OData.Edm\Csdl\EdmValueWriter.cs" target="src\Microsoft.OData.Edm\Csdl\EdmValueWriter.cs" />
@@ -79,5 +77,9 @@ OData .NET library is open source at http://github.com/OData/odata.net. Document
     <file src="$SourcesRoot$\src\Microsoft.OData.Core\UriParser\SyntacticAst\UnaryOperatorToken.cs" target="src\Microsoft.OData.Core\UriParser\SyntacticAst\UnaryOperatorToken.cs" />
     <file src="$SourcesRoot$\src\PlatformHelper.cs" target="src\PlatformHelper.cs" />
     <file src="$SourcesRoot$\src\AssemblyInfo\AssemblyMetadataAttribute.cs" target="src\AssemblyMetadataAttribute.cs" />
+    <!-- file README.md -->
+    <file src="$SourcesRoot$\src\Microsoft.OData.Client\Docs\README.md" target="docs\" />
+    <!-- file odata icon -->
+    <file src="$SourcesRoot$\images\odata.png" target="images\" />
   </files>
 </package>
