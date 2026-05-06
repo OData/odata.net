@@ -6481,6 +6481,15 @@ namespace Microsoft.OData.Core {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to JSON condition failed: the JsonReader is on node {0} (Value: {1}) but it was expected be on {2}..
+        /// </summary>
+        internal static string ODataJsonDeserializer_AssertJsonConditionFailed {
+            get {
+                return ResourceManager.GetString("ODataJsonDeserializer_AssertJsonConditionFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The value &apos;{0}&apos; is not a qualified type name. A qualified type name is expected..
         /// </summary>
         internal static string TypeUtils_TypeNameIsNotQualified {

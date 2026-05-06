@@ -1,4 +1,4 @@
-﻿//---------------------------------------------------------------------
+//---------------------------------------------------------------------
 // <copyright file="PlatformHelper.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
@@ -41,7 +41,7 @@ namespace Microsoft.OData.Edm
     /// Helper methods that provide a common API surface on all platforms.
     /// </summary>
     [SuppressMessage("Performance", "CA1825:Avoid zero-length array allocations.", Justification = "<Pending>")]
-    internal static class PlatformHelper
+    internal static partial class PlatformHelper
     {
         /// <summary>
         /// Use this instead of Type.EmptyTypes.
@@ -50,19 +50,28 @@ namespace Microsoft.OData.Edm
         internal static readonly Type[] EmptyTypes = new Type[0];
 
         /// <summary>
-        /// This pattern eliminates all invalid dates, the supported format should be "YYYY-MM-DD"
+        /// This pattern eliminates all invalid dates, the supported format should be "YYYY-MM-DD".
         /// </summary>
-        internal static readonly Regex DateValidator = CreateCompiled(@"^(\d{4})-(0?[1-9]|1[012])-(0?[1-9]|[12]\d|3[0|1])$", RegexOptions.Singleline);
+        [GeneratedRegex(@"^(\d{4})-(0?[1-9]|1[012])-(0?[1-9]|[12]\d|3[0|1])$", RegexOptions.Singleline)]
+        private static partial Regex DateValidatorRegex();
+
+        internal static readonly Regex DateValidator = DateValidatorRegex();
 
         /// <summary>
-        /// This pattern eliminates all invalid timeOfDay, the supported format should be "hh:mm:ss.fffffff"
+        /// This pattern eliminates all invalid timeOfDay, the supported format should be "hh:mm:ss.fffffff".
         /// </summary>
-        internal static readonly Regex TimeOfDayValidator = CreateCompiled(@"^(0?\d|1\d|2[0-3]):(0?\d|[1-5]\d)(:(0?\d|[1-5]\d)(\.\d{1,7})?)?$", RegexOptions.Singleline);
+        [GeneratedRegex(@"^(0?\d|1\d|2[0-3]):(0?\d|[1-5]\d)(:(0?\d|[1-5]\d)(\.\d{1,7})?)?$", RegexOptions.Singleline)]
+        private static partial Regex TimeOfDayValidatorRegex();
+
+        internal static readonly Regex TimeOfDayValidator = TimeOfDayValidatorRegex();
 
         /// <summary>
-        /// This pattern eliminates whether a text is potentially DateTimeOffset but not others like GUID, digit .etc
+        /// This pattern eliminates whether a text is potentially DateTimeOffset but not others like GUID, digit .etc.
         /// </summary>
-        internal static readonly Regex PotentialDateTimeOffsetValidator = CreateCompiled(@"^(\d{2,4})-(\d{1,2})-(\d{1,2})(T|(\s+))(\d{1,2}):(\d{1,2})", RegexOptions.Singleline);
+        [GeneratedRegex(@"^(\d{2,4})-(\d{1,2})-(\d{1,2})(T|(\s+))(\d{1,2}):(\d{1,2})", RegexOptions.Singleline)]
+        private static partial Regex PotentialDateTimeOffsetValidatorRegex();
+
+        internal static readonly Regex PotentialDateTimeOffsetValidator = PotentialDateTimeOffsetValidatorRegex();
 
         /// <summary>
         /// Replacement for Uri.UriSchemeHttp, which does not exist on.
@@ -231,7 +240,7 @@ namespace Microsoft.OData.Edm
             Date date;
             if (!PlatformHelper.TryConvertStringToDate(text, out date))
             {
-                throw new FormatException(string.Format(CultureInfo.InvariantCulture, "String '{0}' was not recognized as a valid Edm.Date.", text));
+                throw new FormatException($"String '{text}' was not recognized as a valid Edm.Date.");
             }
 
             return date;
@@ -247,7 +256,7 @@ namespace Microsoft.OData.Edm
             DateOnly date;
             if (!DateOnly.TryParse(text, out date))
             {
-                throw new FormatException(string.Format(CultureInfo.InvariantCulture, "String '{0}' was not recognized as a valid Edm.Date.", text));
+                throw new FormatException($"String '{text}' was not recognized as a valid Edm.Date.");
             }
 
             return date;
@@ -288,7 +297,7 @@ namespace Microsoft.OData.Edm
             TimeOfDay timeOfDay;
             if (!PlatformHelper.TryConvertStringToTimeOfDay(text, out timeOfDay))
             {
-                throw new FormatException(string.Format(CultureInfo.InvariantCulture, "String '{0}' was not recognized as a valid Edm.TimeOfDay.", text));
+                throw new FormatException($"String '{text}' was not recognized as a valid Edm.TimeOfDay.");
             }
 
             return timeOfDay;
@@ -304,7 +313,7 @@ namespace Microsoft.OData.Edm
             TimeOnly timeOfDay;
             if (!TimeOnly.TryParse(text, out timeOfDay))
             {
-                throw new FormatException(string.Format(CultureInfo.InvariantCulture, "String '{0}' was not recognized as a valid Edm.TimeOfDay.", text));
+                throw new FormatException($"String '{text}' was not recognized as a valid Edm.TimeOfDay.");
             }
 
             return timeOfDay;

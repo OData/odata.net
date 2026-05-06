@@ -183,7 +183,8 @@ namespace Microsoft.OData.Edm
                 this.vocabularyAnnotationsDictionary.Add(annotation.Target, elementAnnotations);
             }
 
-            elementAnnotations.RemoveAll(p => p.Term.FullName() == annotation.Term.FullName());
+            string termFullName = annotation.Term.FullName();
+            elementAnnotations.RemoveAll(p => string.Equals(p.Term.FullName(), termFullName, StringComparison.Ordinal));
             elementAnnotations.Add(annotation);
         }
     }

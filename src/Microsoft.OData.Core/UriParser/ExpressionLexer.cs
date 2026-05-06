@@ -582,7 +582,7 @@ namespace Microsoft.OData.UriParser
                     {
                         this.NextChar();
                         this.ParseIdentifier();
-                        string currentIdentifier = this.Text.Substring(tokenPos + 1, this.textPos - tokenPos - 1);
+                        ReadOnlySpan<char> currentIdentifier = this.Text.AsSpan(tokenPos + 1, this.textPos - tokenPos - 1);
 
                         if (ExpressionLexerUtils.IsInfinityLiteralDouble(currentIdentifier))
                         {
@@ -720,11 +720,9 @@ namespace Microsoft.OData.UriParser
                         // Include dots for the case of annotation.
                         this.ParseIdentifier(true /*includingDots*/);
 
-                        // Extract the identifier from expression.
-                        string leftToken = ExpressionText.Substring(start, this.textPos - start);
+                        ReadOnlySpan<char> leftToken = ExpressionText.AsSpan(start, this.textPos - start);
 
-
-                        t = this.parsingFunctionParameters && !leftToken.Contains(".", StringComparison.Ordinal)
+                        t = this.parsingFunctionParameters && leftToken.IndexOf('.') < 0
                             ? ExpressionTokenKind.ParameterAlias
                             : ExpressionTokenKind.Identifier;
                         break;

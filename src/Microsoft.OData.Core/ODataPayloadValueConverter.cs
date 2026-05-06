@@ -55,18 +55,16 @@ namespace Microsoft.OData
             {
                 Type targetType = EdmLibraryExtensions.GetPrimitiveClrType(primitiveTypeReference.PrimitiveDefinition(), false);
 
-                string stringValue = value as string;
-                if (stringValue != null)
+                if (value is string stringValue)
                 {
                     return ConvertStringValue(stringValue, targetType);
                 }
-                else if (value is Int32)
+                else if (value is int intValue)
                 {
-                    return ConvertInt32Value((int)value, targetType, primitiveTypeReference);
+                    return ConvertInt32Value(intValue, targetType, primitiveTypeReference);
                 }
-                else if (value is Decimal)
+                else if (value is decimal decimalValue)
                 {
-                    Decimal decimalValue = (Decimal)value;
                     if (targetType == typeof(Int64))
                     {
                         return Convert.ToInt64(decimalValue);
@@ -87,9 +85,9 @@ namespace Microsoft.OData
                         throw new ODataException(Error.Format(SRResources.ODataJsonReaderUtils_CannotConvertDecimal, primitiveTypeReference.FullName()));
                     }
                 }
-                else if (value is Double)
+                else if (value is double doubleValue)
                 {
-                    return ConvertDoubleValue((Double)value, targetType, primitiveTypeReference);
+                    return ConvertDoubleValue(doubleValue, targetType, primitiveTypeReference);
                 }
                 else if (value is bool)
                 {

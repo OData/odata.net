@@ -4,6 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
@@ -115,7 +116,7 @@ namespace Microsoft.Spatial
         /// <returns>The coordinate system, for debugging.</returns>
         public override string ToString()
         {
-            return string.Format(CultureInfo.InvariantCulture, "{0}CoordinateSystem(EpsgId={1})", this.topology, this.EpsgId);
+            return FormattableString.Invariant($"{this.topology}CoordinateSystem(EpsgId={this.EpsgId})");
         }
 
         /// <summary>Displays a string that can be used with extended WKT.</summary>

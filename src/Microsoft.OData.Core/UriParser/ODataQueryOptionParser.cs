@@ -698,8 +698,9 @@ namespace Microsoft.OData.UriParser
                 return true;
             }
 
+            string finalName = nameWithoutDollarPrefix ?? trimmedName;
             throw new ODataException(Error.Format(SRResources.QueryOptionUtils_QueryParameterMustBeSpecifiedOnce,
-                isNoDollarQueryOptionsEnabled ? string.Format(CultureInfo.InvariantCulture, "${0}/{0}", nameWithoutDollarPrefix ?? trimmedName) : trimmedName));
+                isNoDollarQueryOptionsEnabled ? $"${finalName}/{finalName}" : trimmedName));
         }
         #endregion private methods
     }

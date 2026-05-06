@@ -153,7 +153,9 @@ namespace Microsoft.Spatial
         /// <returns>The string representation of this instance.</returns>
         public override string ToString()
         {
-            return String.Format(System.Globalization.CultureInfo.InvariantCulture, "GeographyPosition(latitude:{0}, longitude:{1}, z:{2}, m:{3})", this.latitude, this.longitude, this.z.HasValue ? $"{this.z}" : "null", this.m.HasValue ? $"{this.m}" : "null");
+            string z = this.z.HasValue ? this.z.Value.ToString(System.Globalization.CultureInfo.InvariantCulture) : "null";
+            string m = this.m.HasValue ? this.m.Value.ToString(System.Globalization.CultureInfo.InvariantCulture) : "null";
+            return FormattableString.Invariant($"GeographyPosition(latitude:{this.latitude}, longitude:{this.longitude}, z:{z}, m:{m})");
         }
     }
 }

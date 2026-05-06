@@ -313,9 +313,9 @@ namespace Microsoft.OData.Client.Materialization
         /// <param name="collection">Collection to add link to.</param>
         internal void FoundNextLinkForUnmodifiedCollection(IEnumerable collection)
         {
-            if (collection != null && !this.nextLinkTable.ContainsKey(collection))
+            if (collection != null)
             {
-                this.nextLinkTable.Add(collection, null);
+                this.nextLinkTable.TryAdd(collection, null);
             }
         }
 

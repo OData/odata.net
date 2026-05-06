@@ -477,8 +477,8 @@ namespace Microsoft.OData.Client.Materialization
                 // Take the example Select(p => new MyEmployee { Manager = (p as Employee).Manager }), if p is of Person type, the Manager navigation property would not
                 // be on its payload from the server. Thus we don't need to set the MyEmployee.Manager link.
                 StreamDescriptor streamInfo;
-                var odataProperty = entry.Entry.Properties.Where(p => p.Name == propertyName).FirstOrDefault();
-                var link = odataProperty == null && entry.NestedResourceInfos != null ? entry.NestedResourceInfos.Where(l => l.Name == propertyName).FirstOrDefault() : null;
+                var odataProperty = entry.Entry.Properties.FirstOrDefault(p => p.Name == propertyName);
+                var link = odataProperty == null && entry.NestedResourceInfos != null ? entry.NestedResourceInfos.FirstOrDefault(l => l.Name == propertyName) : null;
 
                 if (link == null && odataProperty == null && !entry.EntityDescriptor.TryGetNamedStreamInfo(propertyName, out streamInfo))
                 {
@@ -640,7 +640,7 @@ namespace Microsoft.OData.Client.Materialization
                     // projecting a DataServiceStreamLink property
                     // the stream link does not come inside <Properties>
                     // instead, it's materialized and attached to the entity descriptor on the MaterializerEntry struct
-                    var streamDescriptor = entry.EntityDescriptor.StreamDescriptors.Where(sd => sd.Name == propertyName).SingleOrDefault();
+                    var streamDescriptor = entry.EntityDescriptor.StreamDescriptors.SingleOrDefault(sd => sd.Name == propertyName);
                     if (streamDescriptor == null)
                     {
                         // We are projecting a named stream on a derived type and entry is of a base type which the named stream is not defined on. Return null.
@@ -671,7 +671,7 @@ namespace Microsoft.OData.Client.Materialization
                     }
 
                     odataProperty = properties?.FirstOrDefault(p => p.Name == propertyName);
-                    link = odataProperty == null && links != null ? links.Where(p => p.Name == propertyName).FirstOrDefault() : null;
+                    link = odataProperty == null && links != null ? links.FirstOrDefault(p => p.Name == propertyName) : null;
                     if (link == null && odataProperty == null)
                     {
                         throw new InvalidOperationException(Error.Format(SRResources.Materializer_PropertyMissing, propertyName));
@@ -1045,7 +1045,7 @@ namespace Microsoft.OData.Client.Materialization
             ODataNestedResourceInfo link = null;
             if (links != null)
             {
-                link = links.Where(p => p.Name == propertyName).FirstOrDefault();
+                link = links.FirstOrDefault(p => p.Name == propertyName);
             }
 
             if (link == null)

@@ -1,4 +1,4 @@
-﻿//---------------------------------------------------------------------
+//---------------------------------------------------------------------
 // <copyright file="EdmUtil.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
@@ -21,7 +21,7 @@ namespace Microsoft.OData.Edm
     /// <summary>
     /// Utilities for Edm.
     /// </summary>
-    public static class EdmUtil
+    public static partial class EdmUtil
     {
         // this is what we should be doing for CDM schemas
         // the RegEx for valid identifiers are taken from the C# Language Specification (2.4.2 Identifiers)
@@ -37,7 +37,10 @@ namespace Microsoft.OData.Edm
         private const string NameExp = StartCharacterExp + OtherCharacterExp + "{0,}";
 
         // private static Regex ValidDottedName=new Regex(@"^"+NameExp+@"(\."+NameExp+@"){0,}$",RegexOptions.Singleline);
-        private static Regex UndottedNameValidator = PlatformHelper.CreateCompiled(@"^" + NameExp + @"$", RegexOptions.Singleline);
+        [GeneratedRegex("^" + NameExp + "$", RegexOptions.Singleline)]
+        private static partial Regex UndottedNameValidatorRegex();
+
+        private static Regex UndottedNameValidator = UndottedNameValidatorRegex();
 
         /// <summary>
         /// Checks whether the <paramref name="annotatableProperty"/> has a MIME type annotation.

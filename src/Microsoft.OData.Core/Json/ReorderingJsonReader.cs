@@ -1,4 +1,4 @@
-﻿//---------------------------------------------------------------------
+//---------------------------------------------------------------------
 // <copyright file="ReorderingJsonReader.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
@@ -756,10 +756,14 @@ namespace Microsoft.OData.Json
             {
                 // Instance-level annotation for the instance itself; not property name.
                 propertyName = null;
-                annotationName = jsonPropertyName.Substring(1);
-                if (annotationName.IndexOf('.', StringComparison.Ordinal) == -1)
+                ReadOnlySpan<char> tail = jsonPropertyName.AsSpan(1);
+                if (tail.IndexOf('.') == -1)
                 {
-                    annotationName = ODataJsonConstants.ODataAnnotationNamespacePrefix + annotationName;
+                    annotationName = string.Concat(ODataJsonConstants.ODataAnnotationNamespacePrefix.AsSpan(), tail);
+                }
+                else
+                {
+                    annotationName = jsonPropertyName.Substring(1);
                 }
             }
             else

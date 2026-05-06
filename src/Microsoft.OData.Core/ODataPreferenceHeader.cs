@@ -155,12 +155,12 @@ namespace Microsoft.OData
                 var returnContentPreference = this.Get(ReturnPreferenceTokenName);
                 if (returnContentPreference != null && returnContentPreference.Value != null)
                 {
-                    if (returnContentPreference.Value.ToLowerInvariant().Equals(ReturnRepresentationPreferenceTokenValue, System.StringComparison.Ordinal))
+                    if (returnContentPreference.Value.Equals(ReturnRepresentationPreferenceTokenValue, System.StringComparison.OrdinalIgnoreCase))
                     {
                         return true;
                     }
 
-                    if (returnContentPreference.Value.ToLowerInvariant().Equals(ReturnMinimalPreferenceTokenValue, System.StringComparison.Ordinal))
+                    if (returnContentPreference.Value.Equals(ReturnMinimalPreferenceTokenValue, System.StringComparison.OrdinalIgnoreCase))
                     {
                         return false;
                     }
@@ -294,9 +294,8 @@ namespace Microsoft.OData
                     }
 
                     // TODO: Fix hard code string before Loc of 6.16 release
-                    throw new ODataException(string.Format(CultureInfo.InvariantCulture,
-                        "Invalid value '{0}' for {1} preference header found. The {1} preference header requires an integer value.",
-                        wait.Value, ODataPreferenceHeader.WaitPreferenceTokenName));
+                    throw new ODataException(
+                        $"Invalid value '{wait.Value}' for {ODataPreferenceHeader.WaitPreferenceTokenName} preference header found. The {ODataPreferenceHeader.WaitPreferenceTokenName} preference header requires an integer value.");
                 }
 
                 return null;
@@ -306,7 +305,7 @@ namespace Microsoft.OData
             {
                 if (value != null)
                 {
-                    this.Set(new HttpHeaderValueElement(WaitPreferenceTokenName, string.Format(CultureInfo.InvariantCulture, "{0}", value), EmptyParameters));
+                    this.Set(new HttpHeaderValueElement(WaitPreferenceTokenName, value.Value.ToString(CultureInfo.InvariantCulture), EmptyParameters));
                 }
                 else
                 {
@@ -365,9 +364,8 @@ namespace Microsoft.OData
                     }
 
                     // TODO: Fix hard code string before Loc of 6.16 release
-                    throw new ODataException(string.Format(CultureInfo.InvariantCulture,
-                        "Invalid value '{0}' for {1} preference header found. The {1} preference header requires an integer value.",
-                        maxPageSizeHttpHeaderValueElement.Value, ODataPreferenceHeader.ODataMaxPageSizePreferenceToken));
+                    throw new ODataException(
+                        $"Invalid value '{maxPageSizeHttpHeaderValueElement.Value}' for {ODataPreferenceHeader.ODataMaxPageSizePreferenceToken} preference header found. The {ODataPreferenceHeader.ODataMaxPageSizePreferenceToken} preference header requires an integer value.");
                 }
 
                 return null;
@@ -377,7 +375,7 @@ namespace Microsoft.OData
             {
                 if (value.HasValue)
                 {
-                    this.Set(new HttpHeaderValueElement(ODataMaxPageSizePreferenceToken, string.Format(CultureInfo.InvariantCulture, "{0}", value.Value), EmptyParameters));
+                    this.Set(new HttpHeaderValueElement(ODataMaxPageSizePreferenceToken, value.Value.ToString(CultureInfo.InvariantCulture), EmptyParameters));
                 }
                 else
                 {

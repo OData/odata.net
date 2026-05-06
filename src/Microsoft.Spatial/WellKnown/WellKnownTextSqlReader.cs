@@ -1,4 +1,4 @@
-﻿//---------------------------------------------------------------------
+//---------------------------------------------------------------------
 // <copyright file="WellKnownTextSqlReader.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
@@ -308,49 +308,57 @@ namespace Microsoft.Spatial
                     throw new FormatException(Error.Format(SRResources.WellKnownText_UnknownTaggedText, string.Empty));
                 }
 
-                switch (this.lexer.CurrentToken.Text.ToUpperInvariant())
+                string token = this.lexer.CurrentToken.Text;
+                if (string.Equals(token, WellKnownTextConstants.WktPoint, StringComparison.OrdinalIgnoreCase))
                 {
-                    case WellKnownTextConstants.WktPoint:
-                        this.pipeline.BeginGeo(SpatialType.Point);
-                        this.ParsePointText();
-                        this.pipeline.EndGeo();
-                        break;
-                    case WellKnownTextConstants.WktLineString:
-                        this.pipeline.BeginGeo(SpatialType.LineString);
-                        this.ParseLineStringText();
-                        this.pipeline.EndGeo();
-                        break;
-                    case WellKnownTextConstants.WktPolygon:
-                        this.pipeline.BeginGeo(SpatialType.Polygon);
-                        this.ParsePolygonText();
-                        this.pipeline.EndGeo();
-                        break;
-                    case WellKnownTextConstants.WktMultiPoint:
-                        this.pipeline.BeginGeo(SpatialType.MultiPoint);
-                        this.ParseMultiGeoText(SpatialType.Point, this.ParsePointText);
-                        this.pipeline.EndGeo();
-                        break;
-                    case WellKnownTextConstants.WktMultiLineString:
-                        this.pipeline.BeginGeo(SpatialType.MultiLineString);
-                        this.ParseMultiGeoText(SpatialType.LineString, this.ParseLineStringText);
-                        this.pipeline.EndGeo();
-                        break;
-                    case WellKnownTextConstants.WktMultiPolygon:
-                        this.pipeline.BeginGeo(SpatialType.MultiPolygon);
-                        this.ParseMultiGeoText(SpatialType.Polygon, this.ParsePolygonText);
-                        this.pipeline.EndGeo();
-                        break;
-                    case WellKnownTextConstants.WktCollection:
-                        this.pipeline.BeginGeo(SpatialType.Collection);
-                        this.ParseCollectionText();
-                        this.pipeline.EndGeo();
-                        break;
-                    case WellKnownTextConstants.WktFullGlobe:
-                        this.pipeline.BeginGeo(SpatialType.FullGlobe);
-                        this.pipeline.EndGeo();
-                        break;
-                    default:
-                        throw new FormatException(Error.Format(SRResources.WellKnownText_UnknownTaggedText, this.lexer.CurrentToken.Text));
+                    this.pipeline.BeginGeo(SpatialType.Point);
+                    this.ParsePointText();
+                    this.pipeline.EndGeo();
+                }
+                else if (string.Equals(token, WellKnownTextConstants.WktLineString, StringComparison.OrdinalIgnoreCase))
+                {
+                    this.pipeline.BeginGeo(SpatialType.LineString);
+                    this.ParseLineStringText();
+                    this.pipeline.EndGeo();
+                }
+                else if (string.Equals(token, WellKnownTextConstants.WktPolygon, StringComparison.OrdinalIgnoreCase))
+                {
+                    this.pipeline.BeginGeo(SpatialType.Polygon);
+                    this.ParsePolygonText();
+                    this.pipeline.EndGeo();
+                }
+                else if (string.Equals(token, WellKnownTextConstants.WktMultiPoint, StringComparison.OrdinalIgnoreCase))
+                {
+                    this.pipeline.BeginGeo(SpatialType.MultiPoint);
+                    this.ParseMultiGeoText(SpatialType.Point, this.ParsePointText);
+                    this.pipeline.EndGeo();
+                }
+                else if (string.Equals(token, WellKnownTextConstants.WktMultiLineString, StringComparison.OrdinalIgnoreCase))
+                {
+                    this.pipeline.BeginGeo(SpatialType.MultiLineString);
+                    this.ParseMultiGeoText(SpatialType.LineString, this.ParseLineStringText);
+                    this.pipeline.EndGeo();
+                }
+                else if (string.Equals(token, WellKnownTextConstants.WktMultiPolygon, StringComparison.OrdinalIgnoreCase))
+                {
+                    this.pipeline.BeginGeo(SpatialType.MultiPolygon);
+                    this.ParseMultiGeoText(SpatialType.Polygon, this.ParsePolygonText);
+                    this.pipeline.EndGeo();
+                }
+                else if (string.Equals(token, WellKnownTextConstants.WktCollection, StringComparison.OrdinalIgnoreCase))
+                {
+                    this.pipeline.BeginGeo(SpatialType.Collection);
+                    this.ParseCollectionText();
+                    this.pipeline.EndGeo();
+                }
+                else if (string.Equals(token, WellKnownTextConstants.WktFullGlobe, StringComparison.OrdinalIgnoreCase))
+                {
+                    this.pipeline.BeginGeo(SpatialType.FullGlobe);
+                    this.pipeline.EndGeo();
+                }
+                else
+                {
+                    throw new FormatException(Error.Format(SRResources.WellKnownText_UnknownTaggedText, this.lexer.CurrentToken.Text));
                 }
             }
 
@@ -361,17 +369,16 @@ namespace Microsoft.Spatial
             private double ReadDouble()
             {
                 // <double> := <NUM> {.<NUM>}
-                var numberText = new StringBuilder();
                 this.ReadToken(WellKnownTextTokenType.Number, null);
-                numberText.Append(this.lexer.CurrentToken.Text);
+                string intPart = this.lexer.CurrentToken.Text;
                 if (this.ReadOptionalToken(WellKnownTextTokenType.Period, null))
                 {
-                    numberText.Append(WellKnownTextConstants.WktPeriod);
                     this.ReadToken(WellKnownTextTokenType.Number, null);
-                    numberText.Append(this.lexer.CurrentToken.Text);
+                    string fracPart = this.lexer.CurrentToken.Text;
+                    return double.Parse(string.Concat(intPart, WellKnownTextConstants.WktPeriod, fracPart), CultureInfo.InvariantCulture);
                 }
 
-                return Double.Parse(numberText.ToString(), CultureInfo.InvariantCulture);
+                return double.Parse(intPart, CultureInfo.InvariantCulture);
             }
 
             /// <summary>
@@ -402,19 +409,18 @@ namespace Microsoft.Spatial
             private bool TryReadOptionalNullableDouble(out double? value)
             {
                 // <double> := <NUM> {.<NUM>}
-                var numberText = new StringBuilder();
-
                 if (this.ReadOptionalToken(WellKnownTextTokenType.Number, null))
                 {
-                    numberText.Append(this.lexer.CurrentToken.Text);
+                    string intPart = this.lexer.CurrentToken.Text;
                     if (this.ReadOptionalToken(WellKnownTextTokenType.Period, null))
                     {
-                        numberText.Append(WellKnownTextConstants.WktPeriod);
                         this.ReadToken(WellKnownTextTokenType.Number, null);
-                        numberText.Append(this.lexer.CurrentToken.Text);
+                        string fracPart = this.lexer.CurrentToken.Text;
+                        value = double.Parse(string.Concat(intPart, WellKnownTextConstants.WktPeriod, fracPart), CultureInfo.InvariantCulture);
+                        return true;
                     }
 
-                    value = Double.Parse(numberText.ToString(), CultureInfo.InvariantCulture);
+                    value = double.Parse(intPart, CultureInfo.InvariantCulture);
                     return true;
                 }
 

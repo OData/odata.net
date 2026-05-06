@@ -407,7 +407,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
 
         private string ValidateTypeName(string name)
         {
-            string[] typeInformation = name.Split(new char[] { '(', ')' });
+            string[] typeInformation = name.Split('(', ')');
             string typeName = typeInformation[0];
 
             // For inline types, we need to check that the name contained inside is a valid type name

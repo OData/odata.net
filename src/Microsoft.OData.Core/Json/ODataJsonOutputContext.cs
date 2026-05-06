@@ -1,4 +1,4 @@
-﻿//---------------------------------------------------------------------
+//---------------------------------------------------------------------
 // <copyright file="ODataJsonOutputContext.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
@@ -1045,7 +1045,7 @@ namespace Microsoft.OData.Json
         /// be included in the payload. This should only be used in debug scenarios.
         /// </param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private async Task WriteInStreamErrorImplementationAsync(ODataError error, bool includeDebugInformation)
+        private async ValueTask WriteInStreamErrorImplementationAsync(ODataError error, bool includeDebugInformation)
         {
             if (this.outputInStreamErrorListener != null)
             {
@@ -1077,7 +1077,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="property">The property to write.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private async Task WritePropertyImplementationAsync(ODataProperty property)
+        private async ValueTask WritePropertyImplementationAsync(ODataProperty property)
         {
             ODataJsonPropertySerializer jsonPropertySerializer = new ODataJsonPropertySerializer(this, /*initContextUriBuilder*/ true);
             await jsonPropertySerializer.WriteTopLevelPropertyAsync(property)
@@ -1101,7 +1101,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="serviceDocument">The service document to write.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private async Task WriteServiceDocumentImplementationAsync(ODataServiceDocument serviceDocument)
+        private async ValueTask WriteServiceDocumentImplementationAsync(ODataServiceDocument serviceDocument)
         {
             ODataJsonServiceDocumentSerializer jsonServiceDocumentSerializer = new ODataJsonServiceDocumentSerializer(this);
             await jsonServiceDocumentSerializer.WriteServiceDocumentAsync(serviceDocument)
@@ -1131,7 +1131,7 @@ namespace Microsoft.OData.Json
         /// be included in the payload. This should only be used in debug scenarios.
         /// </param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private async Task WriteErrorImplementationAsync(ODataError error, bool includeDebugInformation)
+        private async ValueTask WriteErrorImplementationAsync(ODataError error, bool includeDebugInformation)
         {
             ODataJsonSerializer jsonSerializer = new ODataJsonSerializer(this, false);
             await jsonSerializer.WriteTopLevelErrorAsync(error, includeDebugInformation)
@@ -1153,7 +1153,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="links">The entity reference links to write as message payload.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private async Task WriteEntityReferenceLinksImplementationAsync(ODataEntityReferenceLinks links)
+        private async ValueTask WriteEntityReferenceLinksImplementationAsync(ODataEntityReferenceLinks links)
         {
             ODataJsonEntityReferenceLinkSerializer jsonEntityReferenceLinkSerializer = new ODataJsonEntityReferenceLinkSerializer(this);
             await jsonEntityReferenceLinkSerializer.WriteEntityReferenceLinksAsync(links)
@@ -1175,7 +1175,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="link">The entity reference link to write as message payload.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private async Task WriteEntityReferenceLinkImplementationAsync(ODataEntityReferenceLink link)
+        private async ValueTask WriteEntityReferenceLinkImplementationAsync(ODataEntityReferenceLink link)
         {
             ODataJsonEntityReferenceLinkSerializer jsonEntityReferenceLinkSerializer = new ODataJsonEntityReferenceLinkSerializer(this);
             await jsonEntityReferenceLinkSerializer.WriteEntityReferenceLinkAsync(link)

@@ -52,7 +52,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 
         private IEnumerable<string> ComputePath()
         {
-            return this.Expression.Path.Split(new char[] { '/' }, StringSplitOptions.None);
+            return this.Expression.Path.Split('/', StringSplitOptions.None);
         }
     }
 }

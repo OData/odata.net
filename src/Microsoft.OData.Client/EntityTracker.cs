@@ -1,4 +1,4 @@
-﻿//---------------------------------------------------------------------
+//---------------------------------------------------------------------
 // <copyright file="EntityTracker.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
@@ -150,13 +150,24 @@ namespace Microsoft.OData.Client
         {
             this.EnsureLinkBindings();
 
-            // Since we are changing the list on the fly, we need to convert it into a list first
-            // so that enumeration won't get effected.
-            foreach (LinkDescriptor end in this.bindings.Values.Where(resource.IsRelatedEntity).ToList())
+            // Materialize matches first since DetachExistingLink mutates this.bindings.
+            List<LinkDescriptor> related = null;
+            foreach (LinkDescriptor end in this.bindings.Values)
             {
-                this.DetachExistingLink(
-                        end,
-                        end.Target == resource.Entity && resource.State == EntityStates.Added);
+                if (resource.IsRelatedEntity(end))
+                {
+                    (related ??= new List<LinkDescriptor>()).Add(end);
+                }
+            }
+
+            if (related != null)
+            {
+                foreach (LinkDescriptor end in related)
+                {
+                    this.DetachExistingLink(
+                            end,
+                            end.Target == resource.Entity && resource.State == EntityStates.Added);
+                }
             }
 
             resource.ChangeOrder = UInt32.MaxValue;

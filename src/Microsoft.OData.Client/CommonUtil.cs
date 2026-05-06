@@ -37,7 +37,7 @@ namespace Microsoft.OData.Service
             Debug.Assert(rawValue != null && rawValue.Length > 0 && rawValue.IndexOf('{', StringComparison.Ordinal) != 0 && rawValue.IndexOf('[', StringComparison.Ordinal) != 0,
                   "rawValue != null && rawValue.Length > 0 && rawValue.IndexOf('{') != 0 && rawValue.IndexOf('[') != 0");
             ODataCollectionValue collectionValue = (ODataCollectionValue)
-                ODataUriUtils.ConvertFromUriLiteral(string.Format(CultureInfo.InvariantCulture, "[{0}]", rawValue), ODataVersion.V4);
+                ODataUriUtils.ConvertFromUriLiteral($"[{rawValue}]", ODataVersion.V4);
             foreach (object item in collectionValue.Items)
             {
                 return item;

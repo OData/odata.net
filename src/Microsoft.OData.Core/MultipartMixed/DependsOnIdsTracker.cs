@@ -82,9 +82,9 @@ namespace Microsoft.OData.MultipartMixed
         /// Get the list of dependsOn ids for the current state.
         /// </summary>
         /// <returns>The read-only list of dependsOn ids for the current batch operation request.</returns>
-        internal IEnumerable<string> GetDependsOnIds()
+        internal IReadOnlyList<string> GetDependsOnIds()
         {
-            return isInChangeSet ? this.changeSetDependsOnIds : this.topLevelDependsOnIds;
+            return isInChangeSet ? (IReadOnlyList<string>)this.changeSetDependsOnIds : (IReadOnlyList<string>)this.topLevelDependsOnIds;
         }
     }
 }

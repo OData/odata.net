@@ -24,7 +24,7 @@ namespace Microsoft.OData.UriParser
     /// (others)            StringLiteral
     /// </summary>
     [DebuggerDisplay("SearchLexer ({text} @ {textPos} [{token}])")]
-    internal sealed class SearchLexer : ExpressionLexer
+    internal sealed partial class SearchLexer : ExpressionLexer
     {
         /// <summary>
         /// Pattern for searchWord
@@ -34,7 +34,10 @@ namespace Microsoft.OData.UriParser
         ///
         /// \p{L} means any kind of letter from any language, include [Lo] such as CJK single character.
         /// </summary>
-        internal static readonly Regex InvalidWordPattern = new Regex(@"([^\p{L}\p{Nl}])");
+        [GeneratedRegex(@"([^\p{L}\p{Nl}])", RegexOptions.CultureInvariant)]
+        private static partial Regex InvalidWordPatternRegex();
+
+        internal static readonly Regex InvalidWordPattern = InvalidWordPatternRegex();
 
         /// <summary>
         /// Escape character used in search query

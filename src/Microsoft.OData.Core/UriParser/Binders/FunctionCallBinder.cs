@@ -452,7 +452,7 @@ namespace Microsoft.OData.UriParser
                 if (paraToken.ValueToken is EndPathToken)
                 {
                     throw new ODataException(Error.Format(SRResources.MetadataBinder_ParameterNotInScope,
-                        string.Format(CultureInfo.InvariantCulture, "{0}={1}", paraToken.ParameterName, (paraToken.ValueToken as EndPathToken).Identifier)));
+                        $"{paraToken.ParameterName}={(paraToken.ValueToken as EndPathToken).Identifier}"));
                 }
 
                 SingleValueNode boundNode = (SingleValueNode)binder.Bind(paraToken.ValueToken);

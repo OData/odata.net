@@ -452,7 +452,7 @@ namespace Microsoft.OData.Client
 
                     Debug.Assert(
                         header.Value == this.cachedRequestHeaders.GetHeader(header.Key),
-                        String.Format(CultureInfo.InvariantCulture, "The header '{0}' has a different value. Old Value: '{1}', Current Value: '{2}' Please make sure to set the header before SendingRequest event is fired", header.Key, header.Value, this.cachedRequestHeaders.GetHeader(header.Key)));
+                        Error.Format(SRResources.ODataRequestMessageWrapper_HeaderValueChanged, header.Key, header.Value, this.cachedRequestHeaders.GetHeader(header.Key)));
                 }
 
                 this.cachedRequestHeaders = null;

@@ -156,6 +156,9 @@
   <data name="PathSegmentMustNotContainSlash" xml:space="preserve">
     <value>Path segments must not contain '/' character.</value>
   </data>
+  <data name="PathSegmentMustNotBeNull" xml:space="preserve">
+    <value>Path segments must not be null.</value>
+  </data>
   <data name="Constructable_DependentPropertyCountMustMatchNumberOfPropertiesOnPrincipalType" xml:space="preserve">
     <value>The number of dependent properties must match the number of key properties on the principal entity type. '{0}' principal properties were provided, but {1} dependent properties were provided.</value>
   </data>
@@ -1046,5 +1049,11 @@
   </data>
   <data name="EdmVocabularyAnnotations_InvalidLocationForTargetPathAnnotation" xml:space="preserve">
     <value>Invalid to set inline location for a path target '{0}'.</value>
+  </data>
+  <data name="EdmModel_Validator_Semantic_NavigationSourceMappingMustResolveToValidNavigationProperty" xml:space="preserve">
+    <value>The binding path {0} for navigation property {1} under navigation source {2} is not valid.</value>
+  </data>
+  <data name="EdmModel_Validator_Semantic_NavigationPropertyPartnerPathInvalid" xml:space="preserve">
+    <value>Cannot resolve partner path for navigation property '{0}'.</value>
   </data>
 </root>

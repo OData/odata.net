@@ -591,9 +591,10 @@ namespace Microsoft.OData.UriParser
                     {
                         if (queryOptionDic.ContainsKey(fixedQueryOptionName))
                         {
+                            string trimmed = fixedQueryOptionName.TrimStart('$');
                             throw new ODataException(Error.Format(SRResources.QueryOptionUtils_QueryParameterMustBeSpecifiedOnce,
                                 this.EnableNoDollarQueryOptions
-                                ? string.Format(CultureInfo.InvariantCulture, "${0}/{0}", fixedQueryOptionName.TrimStart('$'))
+                                ? $"${trimmed}/{trimmed}"
                                 : fixedQueryOptionName));
                         }
 
@@ -628,33 +629,31 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Judge if optionName belongs to UriQueryConstants (Case ignored).
+        /// Judge if optionName belongs to UriQueryConstants (Case ignored when configured).
         /// </summary>
         /// <param name="optionName">The name of a query option.</param>
         /// <returns>True if optionName is OData query option, vise versa.</returns>
         private bool IsODataQueryOption(string optionName)
         {
-            switch (this.Resolver.EnableCaseInsensitive ? optionName.ToLowerInvariant() : optionName)
-            {
-                case UriQueryConstants.FilterQueryOption:
-                case UriQueryConstants.ApplyQueryOption:
-                case UriQueryConstants.OrderByQueryOption:
-                case UriQueryConstants.SelectQueryOption:
-                case UriQueryConstants.ExpandQueryOption:
-                case UriQueryConstants.SkipQueryOption:
-                case UriQueryConstants.SkipTokenQueryOption:
-                case UriQueryConstants.DeltaTokenQueryOption:
-                case UriQueryConstants.IdQueryOption:
-                case UriQueryConstants.TopQueryOption:
-                case UriQueryConstants.IndexQueryOption:
-                case UriQueryConstants.CountQueryOption:
-                case UriQueryConstants.FormatQueryOption:
-                case UriQueryConstants.SearchQueryOption:
-                case UriQueryConstants.ComputeQueryOption:
-                    return true;
-                default:
-                    return false;
-            }
+            StringComparison comparison = this.Resolver.EnableCaseInsensitive
+                ? StringComparison.OrdinalIgnoreCase
+                : StringComparison.Ordinal;
+
+            return optionName.Equals(UriQueryConstants.FilterQueryOption, comparison)
+                || optionName.Equals(UriQueryConstants.ApplyQueryOption, comparison)
+                || optionName.Equals(UriQueryConstants.OrderByQueryOption, comparison)
+                || optionName.Equals(UriQueryConstants.SelectQueryOption, comparison)
+                || optionName.Equals(UriQueryConstants.ExpandQueryOption, comparison)
+                || optionName.Equals(UriQueryConstants.SkipQueryOption, comparison)
+                || optionName.Equals(UriQueryConstants.SkipTokenQueryOption, comparison)
+                || optionName.Equals(UriQueryConstants.DeltaTokenQueryOption, comparison)
+                || optionName.Equals(UriQueryConstants.IdQueryOption, comparison)
+                || optionName.Equals(UriQueryConstants.TopQueryOption, comparison)
+                || optionName.Equals(UriQueryConstants.IndexQueryOption, comparison)
+                || optionName.Equals(UriQueryConstants.CountQueryOption, comparison)
+                || optionName.Equals(UriQueryConstants.FormatQueryOption, comparison)
+                || optionName.Equals(UriQueryConstants.SearchQueryOption, comparison)
+                || optionName.Equals(UriQueryConstants.ComputeQueryOption, comparison);
         }
     }
 }

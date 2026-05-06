@@ -353,21 +353,29 @@ namespace Microsoft.OData.Evaluation
                 // DEVNOTE: for some reason, the client adds .0 to doubles where the server does not.
                 // Unfortunately, it would be a breaking change to alter this behavior now.
 #if ODATA_CLIENT || ODATA_CORE
-                IEnumerable<char> characters = input.ToCharArray();
-
+                int start = 0;
 #if ODATA_CORE
                 // negative numbers can also be 'whole', but the client did not take that into account.
-                if (input[0] == '-')
+                if (input.Length > 0 && input[0] == '-')
                 {
-                    characters = characters.Skip(1);
+                    start = 1;
                 }
 #endif
-                // a whole number should be all digits.
-                if (characters.All(char.IsDigit))
+                // a whole number should be all digits. Inspect in-place to avoid ToCharArray + LINQ allocation.
+                bool allDigits = input.Length > start;
+                for (int i = start; i < input.Length; i++)
+                {
+                    if (!char.IsDigit(input[i]))
+                    {
+                        allDigits = false;
+                        break;
+                    }
+                }
+
+                if (allDigits)
                 {
                     return string.Concat(input, ".0");
                 }
-
 #endif
                 // the server never appended anything, so it will fall through to here.
                 return input;

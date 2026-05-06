@@ -1,4 +1,4 @@
-﻿//---------------------------------------------------------------------
+//---------------------------------------------------------------------
 // <copyright file="ODataContextUriBuilder.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
@@ -9,6 +9,7 @@ namespace Microsoft.OData
     using Microsoft.OData.Core;
     #region Namespaces
     using System;
+    using System.Collections.Frozen;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Text;
@@ -32,7 +33,7 @@ namespace Microsoft.OData
         /// <summary>
         /// Stores the validation method mapping for supported payload kind.
         /// </summary>
-        private static readonly Dictionary<ODataPayloadKind, Action<ODataContextUrlInfo>> ValidationDictionary = new Dictionary<ODataPayloadKind, Action<ODataContextUrlInfo>>(EqualityComparer<ODataPayloadKind>.Default)
+        private static readonly FrozenDictionary<ODataPayloadKind, Action<ODataContextUrlInfo>> ValidationDictionary = new Dictionary<ODataPayloadKind, Action<ODataContextUrlInfo>>(EqualityComparer<ODataPayloadKind>.Default)
         {
             { ODataPayloadKind.ServiceDocument,         null },
             { ODataPayloadKind.EntityReferenceLink,     null },
@@ -43,7 +44,7 @@ namespace Microsoft.OData
             { ODataPayloadKind.Resource,                   ValidateNavigationSource },
             { ODataPayloadKind.ResourceSet,                    ValidateNavigationSource },
             { ODataPayloadKind.Delta,                   ValidateDelta },
-        };
+        }.ToFrozenDictionary();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ODataContextUriBuilder"/> class.

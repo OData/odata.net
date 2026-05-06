@@ -232,7 +232,7 @@ namespace Microsoft.OData.Client
         {
             // Add User-Agent header to every request - Since UserAgent field is not supported in silverlight,
             // doing this non-silverlight stacks only
-            this.SetHeader(XmlConstants.HttpUserAgent, string.Format(CultureInfo.InvariantCulture, "Microsoft.OData.Client/{0}.{1}.{2}", assemblyVersion.Major, assemblyVersion.Minor, assemblyVersion.Build));
+            this.SetHeader(XmlConstants.HttpUserAgent, FormattableString.Invariant($"Microsoft.OData.Client/{assemblyVersion.Major}.{assemblyVersion.Minor}.{assemblyVersion.Build}"));
         }
 
         /// <summary>

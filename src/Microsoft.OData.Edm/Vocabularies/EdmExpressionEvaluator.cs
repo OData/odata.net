@@ -662,7 +662,7 @@ namespace Microsoft.OData.Edm.Vocabularies
                     {
                         if (!enumType.IsFlags || !EdmEnumValueParser.IsEnumIntegerType(enumType))
                         {
-                            throw new InvalidOperationException(string.Format(CultureInfo.InvariantCulture, "Type {0} cannot be assigned with multi-values.", enumType.FullName()));
+                            throw new InvalidOperationException($"Type {enumType.FullName()} cannot be assigned with multi-values.");
                         }
 
                         long result = 0;

@@ -881,5 +881,8 @@
   <data name="Context_EntityInNonTrackedContextLacksMediaLinks" xml:space="preserve">
     <value>The context is in non tracking mode, The entity does not seem to have the media links populated properly. Please verify server response is correct and that the entity extends BaseEntityType.</value>
   </data>
+  <data name="ODataRequestMessageWrapper_HeaderValueChanged" xml:space="preserve">
+    <value>The header '{0}' has a different value. Old Value: '{1}', Current Value: '{2}' Please make sure to set the header before SendingRequest event is fired</value>
+  </data>
 </root>
 
