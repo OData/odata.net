@@ -74,6 +74,45 @@ namespace Microsoft.OData.Client.Tests.ScenarioTests.Deadlocks
     ""Name"": ""NewCo""
 }";
 
+        private const string OrganizationLoadedNameResponse = @"{
+    ""@odata.context"": ""http://localhost:8007/$metadata#Organizations(1)/Name"",
+    ""value"": ""Acme""
+}";
+
+        // Multipart/mixed batch response: one wrapped 200 OK GET /Organizations.
+        // Boundary string must match the one set on the HttpResponseMessage Content-Type below.
+        private const string BatchResponseBody =
+            "--batchresponse_test\r\n" +
+            "Content-Type: application/http\r\n" +
+            "Content-Transfer-Encoding: binary\r\n" +
+            "\r\n" +
+            "HTTP/1.1 200 OK\r\n" +
+            "Content-Type: application/json;charset=utf-8\r\n" +
+            "\r\n" +
+            "{\"@odata.context\":\"http://localhost:8007/$metadata#Organizations\",\"value\":[{\"Id\":1,\"Name\":\"Acme\"},{\"Id\":2,\"Name\":\"Globex\"}]}\r\n" +
+            "--batchresponse_test--\r\n";
+
+        // Save-path batch response: outer batch boundary wraps a changeset boundary, which wraps the
+        // single 201 Created for the AddObject. Required because BatchSaveResult expects a changeset
+        // when this.Queries is null (save path) and would NRE on a flat query-style batch response.
+        private const string BatchSaveResponseBody =
+            "--batchresponse_test\r\n" +
+            "Content-Type: multipart/mixed; boundary=changesetresponse_1\r\n" +
+            "\r\n" +
+            "--changesetresponse_1\r\n" +
+            "Content-Type: application/http\r\n" +
+            "Content-Transfer-Encoding: binary\r\n" +
+            "Content-ID: 1\r\n" +
+            "\r\n" +
+            "HTTP/1.1 201 Created\r\n" +
+            "Content-Type: application/json;charset=utf-8\r\n" +
+            "Location: http://localhost:8007/Organizations(99)\r\n" +
+            "OData-EntityId: http://localhost:8007/Organizations(99)\r\n" +
+            "\r\n" +
+            "{\"@odata.context\":\"http://localhost:8007/$metadata#Organizations/$entity\",\"Id\":99,\"Name\":\"NewCo\"}\r\n" +
+            "--changesetresponse_1--\r\n" +
+            "--batchresponse_test--\r\n";
+
         #endregion
 
         // ----------- Async path: ExecuteAsync -----------
@@ -146,6 +185,63 @@ namespace Microsoft.OData.Client.Tests.ScenarioTests.Deadlocks
             Assert.Contains(handler.Requests, r => r.StartsWith("POST ") && r.EndsWith("/Organizations"));
         }
 
+        // ----------- Async batch path: ExecuteBatchAsync -----------
+
+        // Async batch path: ODataBatchReader/Writer were heavily rewritten in PR #3409.
+        [Fact]
+        public async Task ExecuteBatchAsync_DoesNotDeadlock_UnderSingleThreadedSynchronizationContext()
+        {
+            using var handler = new RoutingMockHttpClientHandler();
+            var run = SingleThreadSynchronizationContext.Run<DataServiceResponse>(async () =>
+            {
+                var ctx = CreateContext(handler);
+                return await ctx.ExecuteBatchAsync(ctx.Organizations);
+            });
+
+            var response = await AwaitWithTimeout(run);
+            Assert.NotNull(response);
+            Assert.Contains(handler.Requests, r => r.StartsWith("POST ") && r.EndsWith("/$batch"));
+        }
+
+        // ----------- Lazy-loaded property path: LoadPropertyAsync -----------
+
+        // Lazy-loaded property path: exercises another reader entry point.
+        [Fact]
+        public async Task LoadPropertyAsync_DoesNotDeadlock_UnderSingleThreadedSynchronizationContext()
+        {
+            using var handler = new RoutingMockHttpClientHandler();
+            var run = SingleThreadSynchronizationContext.Run<QueryOperationResponse>(async () =>
+            {
+                var ctx = CreateContext(handler);
+                // Materialise an entity first so we have something to load a property on.
+                var orgs = (await ctx.Organizations.ExecuteAsync()).ToList();
+                var first = orgs.First();
+                return await ctx.LoadPropertyAsync(first, nameof(Organization.Name));
+            });
+
+            var response = await AwaitWithTimeout(run);
+            Assert.NotNull(response);
+            Assert.Contains(handler.Requests, r => r.Contains("/Organizations(1)/Name"));
+        }
+
+        // ----------- Batched-write save path: SaveChangesAsync with BatchWithSingleChangeset -----------
+
+        // Batched-write save path: SaveChanges with batching produces a POST /$batch.
+        [Fact]
+        public async Task SaveChangesAsyncBatched_DoesNotDeadlock_UnderSingleThreadedSynchronizationContext()
+        {
+            using var handler = new RoutingMockHttpClientHandler(useBatchSaveResponse: true);
+            var run = SingleThreadSynchronizationContext.Run(async () =>
+            {
+                var ctx = CreateContext(handler);
+                ctx.AddObject("Organizations", new Organization { Id = 99, Name = "NewCo" });
+                await ctx.SaveChangesAsync(SaveChangesOptions.BatchWithSingleChangeset);
+            });
+
+            await AwaitWithTimeout(run);
+            Assert.Contains(handler.Requests, r => r.StartsWith("POST ") && r.EndsWith("/$batch"));
+        }
+
         // ----------- Sanity: no captured context -----------
 
         [Fact]
@@ -210,8 +306,8 @@ namespace Microsoft.OData.Client.Tests.ScenarioTests.Deadlocks
         // through the captured SynchronizationContext — which would mask the very bug under test.
         private sealed class RoutingMockHttpClientHandler : MockHttpClientHandler
         {
-            public RoutingMockHttpClientHandler(bool filtered = false)
-                : base(req => Respond(req, filtered))
+            public RoutingMockHttpClientHandler(bool filtered = false, bool useBatchSaveResponse = false)
+                : base(req => Respond(req, filtered, useBatchSaveResponse))
             {
             }
 
@@ -223,7 +319,7 @@ namespace Microsoft.OData.Client.Tests.ScenarioTests.Deadlocks
                 return Task.Run(() => Send(request, cancellationToken));
             }
 
-            private static HttpResponseMessage Respond(HttpRequestMessage req, bool filtered)
+            private static HttpResponseMessage Respond(HttpRequestMessage req, bool filtered, bool useBatchSaveResponse)
             {
                 string url = req.RequestUri.AbsoluteUri;
 
@@ -235,6 +331,30 @@ namespace Microsoft.OData.Client.Tests.ScenarioTests.Deadlocks
                     };
                     resp.Content.Headers.ContentType =
                         new System.Net.Http.Headers.MediaTypeHeaderValue("application/xml");
+                    return resp;
+                }
+
+                if (req.Method == HttpMethod.Post && url.EndsWith("/$batch", StringComparison.Ordinal))
+                {
+                    var resp = new HttpResponseMessage(HttpStatusCode.OK)
+                    {
+                        Content = new StringContent(useBatchSaveResponse ? BatchSaveResponseBody : BatchResponseBody)
+                    };
+                    resp.Content.Headers.ContentType =
+                        System.Net.Http.Headers.MediaTypeHeaderValue.Parse(
+                            "multipart/mixed; boundary=batchresponse_test");
+                    return resp;
+                }
+
+                if (req.Method == HttpMethod.Get && url.Contains("/Organizations(1)/Name"))
+                {
+                    var resp = new HttpResponseMessage(HttpStatusCode.OK)
+                    {
+                        Content = new StringContent(OrganizationLoadedNameResponse)
+                    };
+                    resp.Content.Headers.ContentType =
+                        new System.Net.Http.Headers.MediaTypeHeaderValue("application/json")
+                        { CharSet = "utf-8" };
                     return resp;
                 }
 
