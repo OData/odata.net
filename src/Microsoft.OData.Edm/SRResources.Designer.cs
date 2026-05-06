@@ -2301,6 +2301,24 @@ namespace Microsoft.OData.Edm {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The binding path {0} for navigation property {1} under navigation source {2} is not valid..
+        /// </summary>
+        internal static string EdmModel_Validator_Semantic_NavigationSourceMappingMustResolveToValidNavigationProperty {
+            get {
+                return ResourceManager.GetString("EdmModel_Validator_Semantic_NavigationSourceMappingMustResolveToValidNavigationProperty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot resolve partner path for navigation property &apos;{0}&apos;..
+        /// </summary>
+        internal static string EdmModel_Validator_Semantic_NavigationPropertyPartnerPathInvalid {
+            get {
+                return ResourceManager.GetString("EdmModel_Validator_Semantic_NavigationPropertyPartnerPathInvalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Term type &apos;{0}&apos; is not supported for value retrieval..
         /// </summary>
         internal static string EdmVocabularyAnnotations_TermTypeNotSupported {
@@ -2369,6 +2387,15 @@ namespace Microsoft.OData.Edm {
         internal static string PathSegmentMustNotContainSlash {
             get {
                 return ResourceManager.GetString("PathSegmentMustNotContainSlash", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Path segments must not be null..
+        /// </summary>
+        internal static string PathSegmentMustNotBeNull {
+            get {
+                return ResourceManager.GetString("PathSegmentMustNotBeNull", resourceCulture);
             }
         }
         

@@ -8,10 +8,12 @@ namespace Microsoft.OData
 {
     #region Namespaces
     using System;
+    using System.Buffers;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.Linq;
+    using System.Text;
     using Microsoft.OData.Core;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Metadata;
@@ -25,6 +27,9 @@ namespace Microsoft.OData
         /// <summary>The set of characters that are invalid in property names.</summary>
         /// <remarks>Keep this array in sync with MetadataProviderUtils.InvalidCharactersInPropertyNames in Astoria.</remarks>
         internal static readonly char[] InvalidCharactersInPropertyNames = new char[] { ':', '.', '@' };
+
+        /// <summary>SIMD-accelerated lookup for <see cref="InvalidCharactersInPropertyNames"/>.</summary>
+        private static readonly SearchValues<char> InvalidCharactersInPropertyNamesSearchValues = SearchValues.Create(InvalidCharactersInPropertyNames);
 
         /// <summary>Maximum batch boundary length supported (not including leading CRLF or '-').</summary>
         private const int MaxBoundaryLength = 70;
@@ -452,7 +457,26 @@ namespace Microsoft.OData
         {
             Debug.Assert(!string.IsNullOrEmpty(propertyName), "The JSON reader should have verified that the property name is not null or empty.");
 
-            return propertyName.IndexOfAny(ValidationUtils.InvalidCharactersInPropertyNames) < 0;
+            return propertyName.AsSpan().IndexOfAny(InvalidCharactersInPropertyNamesSearchValues) < 0;
+        }
+
+        /// <summary>Pre-built description of invalid property-name characters; computed once.</summary>
+        private static readonly string InvalidCharactersInPropertyNamesAsErrorString = BuildInvalidCharactersErrorString();
+
+        private static string BuildInvalidCharactersErrorString()
+        {
+            char[] chars = ValidationUtils.InvalidCharactersInPropertyNames;
+            // Each entry contributes 3 chars ('X') + ", " between each.  Pre-size accordingly.
+            StringBuilder sb = new StringBuilder(chars.Length * 5);
+            for (int i = 0; i < chars.Length; i++)
+            {
+                if (i > 0)
+                {
+                    sb.Append(", ");
+                }
+                sb.Append('\'').Append(chars[i]).Append('\'');
+            }
+            return sb.ToString();
         }
 
         /// <summary>
@@ -465,10 +489,7 @@ namespace Microsoft.OData
 
             if (!IsValidPropertyName(propertyName))
             {
-                string invalidChars = string.Join(
-                    ", ",
-                    ValidationUtils.InvalidCharactersInPropertyNames.Select(c => string.Format(CultureInfo.InvariantCulture, "'{0}'", c)).ToArray());
-                throw new ODataException(Error.Format(SRResources.ValidationUtils_PropertiesMustNotContainReservedChars, propertyName, invalidChars));
+                throw new ODataException(Error.Format(SRResources.ValidationUtils_PropertiesMustNotContainReservedChars, propertyName, InvalidCharactersInPropertyNamesAsErrorString));
             }
         }
     }

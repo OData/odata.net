@@ -1,4 +1,4 @@
-﻿//---------------------------------------------------------------------
+//---------------------------------------------------------------------
 // <copyright file="ODataJsonResourceSerializer.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
@@ -862,7 +862,7 @@ namespace Microsoft.OData.Json
         /// <param name="propertyName">The name of the navigation property for which to write the association link.</param>
         /// <param name="associationLinkUrl">The association link URL to write.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private async Task WriteAssociationLinkAsync(string propertyName, Uri associationLinkUrl)
+        private async ValueTask WriteAssociationLinkAsync(string propertyName, Uri associationLinkUrl)
         {
             Debug.Assert(!String.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
             Debug.Assert(associationLinkUrl != null, "associationLinkUrl != null");
@@ -882,7 +882,7 @@ namespace Microsoft.OData.Json
         /// </remarks>
         /// <param name="operations">A grouping of operations that are all actions or all functions and share the same "metadata".</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private async Task WriteOperationMetadataGroupAsync(IGrouping<string, ODataOperation> operations)
+        private async ValueTask WriteOperationMetadataGroupAsync(IGrouping<string, ODataOperation> operations)
         {
             this.ValidateOperationMetadataGroup(operations);
             await this.JsonOutputContext.JsonWriter.WriteNameAsync(operations.Key)
@@ -915,7 +915,7 @@ namespace Microsoft.OData.Json
         /// Expects the write to already have written the "rel value" and opened an array.
         /// </remarks>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private async Task WriteOperationAsync(ODataOperation operation)
+        private async ValueTask WriteOperationAsync(ODataOperation operation)
         {
             Debug.Assert(operation != null, "operation must not be null.");
             Debug.Assert(operation.Metadata != null, "operation.Metadata != null");

@@ -1,4 +1,4 @@
-﻿//---------------------------------------------------------------------
+//---------------------------------------------------------------------
 // <copyright file="ODataMultipartMixedBatchWriter.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
@@ -656,7 +656,9 @@ namespace Microsoft.OData.MultipartMixed
                     {
                         string headerName = headerPair.Key;
                         string headerValue = headerPair.Value;
-                        this.RawOutputContext.TextWriter.WriteLine(string.Format(CultureInfo.InvariantCulture, "{0}: {1}", headerName, headerValue));
+                        this.RawOutputContext.TextWriter.Write(headerName);
+                        this.RawOutputContext.TextWriter.Write(": ");
+                        this.RawOutputContext.TextWriter.WriteLine(headerValue);
                     }
                 }
 

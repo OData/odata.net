@@ -89,7 +89,7 @@ namespace Microsoft.OData.UriParser
         /// <returns>String representation of this token.</returns>
         public override string ToString()
         {
-            return String.Format(System.Globalization.CultureInfo.InvariantCulture, $"{this.Kind} @ {this.Position}: [{this.Text}]", this.Kind, this.Position);
+            return $"{this.Kind} @ {this.Position}: [{this.Text}]";
         }
 
         /// <summary>Gets the current identifier text.</summary>

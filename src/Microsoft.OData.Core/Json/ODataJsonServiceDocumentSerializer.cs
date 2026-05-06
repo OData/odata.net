@@ -1,4 +1,4 @@
-﻿//---------------------------------------------------------------------
+//---------------------------------------------------------------------
 // <copyright file="ODataJsonServiceDocumentSerializer.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
@@ -217,7 +217,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="serviceDocumentElement">The element in service document to write.</param>
         /// <param name="kind">Kind of the service document element, optional for entitysets must for FunctionImport and Singleton.</param>
-        private async Task WriteServiceDocumentElementAsync(ODataServiceDocumentElement serviceDocumentElement, string kind)
+        private async ValueTask WriteServiceDocumentElementAsync(ODataServiceDocumentElement serviceDocumentElement, string kind)
         {
             // validate that the resource has a non-null url.
             ValidationUtils.ValidateServiceDocumentElement(serviceDocumentElement, ODataFormat.Json);

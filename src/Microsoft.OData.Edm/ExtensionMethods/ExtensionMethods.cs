@@ -28,7 +28,6 @@ namespace Microsoft.OData.Edm
     public static class ExtensionMethods
     {
         private const int ContainerExtendsMaxDepth = 100;
-        private const string CollectionTypeFormat = EdmConstants.Type_Collection + "({0})";
 
         private static readonly IEnumerable<IEdmStructuralProperty> EmptyStructuralProperties = Enumerable.Empty<IEdmStructuralProperty>();
         private static readonly IEnumerable<IEdmNavigationProperty> EmptyNavigationProperties = Enumerable.Empty<IEdmNavigationProperty>();
@@ -1810,7 +1809,7 @@ namespace Microsoft.OData.Edm
             {
                 // Handle collection case.
                 namedDefinition = (type as IEdmCollectionType).ElementType.Definition as IEdmSchemaElement;
-                return namedDefinition != null ? string.Format(CultureInfo.InvariantCulture, CollectionTypeFormat, namedDefinition.FullName()) : null;
+                return namedDefinition != null ? EdmConstants.Type_Collection + "(" + namedDefinition.FullName() + ")" : null;
             }
         }
 
@@ -2967,7 +2966,7 @@ namespace Microsoft.OData.Edm
                     }
                 }
 
-                return (ns != null) ? string.Format(CultureInfo.InvariantCulture, "{0}{1}", ns, name.Substring(idx)) : name;
+                return (ns != null) ? string.Concat(ns, name.AsSpan(idx)) : name;
             }
 
             return name;
@@ -3799,7 +3798,7 @@ namespace Microsoft.OData.Edm
 
             Debug.Assert(!string.IsNullOrEmpty(name), "name must be provided");
 
-            string qualifiedName = String.Format(CultureInfo.InvariantCulture, "{0}.{1}", namespaceName, name);
+            string qualifiedName = $"{namespaceName}.{name}";
 
             // If the user has already defined his own UInt TypeDefinition, we don't define ours anymore.
             var type = model.FindDeclaredType(qualifiedName) as IEdmTypeDefinition;

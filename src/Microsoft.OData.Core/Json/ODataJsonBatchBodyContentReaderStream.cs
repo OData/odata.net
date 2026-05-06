@@ -94,8 +94,7 @@ namespace Microsoft.OData.Json
 
                     case BatchPayloadBodyContentType.Textual:
                     {
-                        string bodyContent = string.Format(CultureInfo.InvariantCulture,
-                            "\"{0}\"", jsonReader.ReadStringValue());
+                        string bodyContent = $"\"{jsonReader.ReadStringValue()}\"";
                         WriteBytes(Encoding.UTF8.GetBytes(bodyContent));
                     }
 
@@ -135,8 +134,7 @@ namespace Microsoft.OData.Json
             if (mediaType != null && mediaType.Type.Equals(MimeConstants.MimeTextType, StringComparison.Ordinal))
             {
                 // Explicit check for matching of textual content-type.
-                string bodyContent = string.Format(CultureInfo.InvariantCulture,
-                    "\"{0}\"", this.cachedBodyContent);
+                string bodyContent = $"\"{this.cachedBodyContent}\"";
                 WriteBytes(Encoding.UTF8.GetBytes(bodyContent));
             }
             else
@@ -185,8 +183,7 @@ namespace Microsoft.OData.Json
                         break;
 
                     case BatchPayloadBodyContentType.Textual:
-                        string bodyContent = string.Format(CultureInfo.InvariantCulture,
-                            "\"{0}\"", jsonReader.ReadStringValue());
+                        string bodyContent = $"\"{jsonReader.ReadStringValue()}\"";
                         await WriteBytesAsync(Encoding.UTF8.GetBytes(bodyContent))
                             .ConfigureAwait(false);
 
@@ -227,8 +224,7 @@ namespace Microsoft.OData.Json
             if (mediaType != null && mediaType.Type.Equals(MimeConstants.MimeTextType, StringComparison.Ordinal))
             {
                 // Explicit check for matching of textual content-type.
-                string bodyContent = string.Format(CultureInfo.InvariantCulture,
-                    "\"{0}\"", this.cachedBodyContent);
+                string bodyContent = $"\"{this.cachedBodyContent}\"";
                 await WriteBytesAsync(Encoding.UTF8.GetBytes(bodyContent))
                     .ConfigureAwait(false);
             }

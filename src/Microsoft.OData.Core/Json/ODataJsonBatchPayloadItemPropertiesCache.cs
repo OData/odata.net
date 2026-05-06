@@ -1,4 +1,4 @@
-﻿//---------------------------------------------------------------------
+//---------------------------------------------------------------------
 // <copyright file="ODataJsonBatchPayloadItemPropertiesCache.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
@@ -344,7 +344,7 @@ namespace Microsoft.OData.Json
         /// Wrapper method with validation to asynchronously scan the JSON object for known properties.
         /// </summary>
         /// <returns>A task that represents the asynchronous read operation.</returns>
-        private async Task ScanJsonPropertiesAsync()
+        private async ValueTask ScanJsonPropertiesAsync()
         {
             Debug.Assert(this.jsonReader != null, $"{nameof(this.jsonReader)} != null");
             Debug.Assert(this.jsonProperties == null, $"{nameof(this.jsonProperties)} == null");

@@ -19,6 +19,34 @@ namespace Microsoft.OData
     /// </summary>
     internal static class Utils
     {
+        /// <summary>Allocation-free <see cref="System.Linq.Enumerable.Any{T}(IEnumerable{T})"/> for known collection types.</summary>
+        internal static bool HasAny<T>(IEnumerable<T> source)
+        {
+            if (source == null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            // Fast paths for common collection shapes - avoid the GetEnumerator() allocation.
+            if (source is T[] array)
+            {
+                return array.Length > 0;
+            }
+
+            if (source is ICollection<T> collection)
+            {
+                return collection.Count > 0;
+            }
+
+            if (source is IReadOnlyCollection<T> readOnlyCollection)
+            {
+                return readOnlyCollection.Count > 0;
+            }
+
+            using IEnumerator<T> enumerator = source.GetEnumerator();
+            return enumerator.MoveNext();
+        }
+
         /// <summary>
         /// Calls IDisposable.Dispose() on the argument if it is not null
         /// and is an IDisposable.

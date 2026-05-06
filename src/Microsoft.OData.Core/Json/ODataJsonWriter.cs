@@ -1,4 +1,4 @@
-﻿//---------------------------------------------------------------------
+//---------------------------------------------------------------------
 // <copyright file="ODataJsonWriter.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
@@ -526,14 +526,14 @@ namespace Microsoft.OData.Json
                 {
                     // write "odata.actions" metadata
                     IEnumerable<ODataAction> actions = resourceSet.Actions;
-                    if (actions != null && actions.Any())
+                    if (actions != null && Utils.HasAny(actions))
                     {
                         this.jsonResourceSerializer.WriteOperations(actions.Cast<ODataOperation>(), /*isAction*/ true);
                     }
 
                     // write "odata.functions" metadata
                     IEnumerable<ODataFunction> functions = resourceSet.Functions;
-                    if (functions != null && functions.Any())
+                    if (functions != null && Utils.HasAny(functions))
                     {
                         this.jsonResourceSerializer.WriteOperations(functions.Cast<ODataOperation>(), /*isAction*/ false);
                     }
@@ -1482,7 +1482,7 @@ namespace Microsoft.OData.Json
                 {
                     // Write "odata.actions" metadata
                     IEnumerable<ODataAction> actions = resourceSet.Actions;
-                    if (actions != null && actions.Any())
+                    if (actions != null && Utils.HasAny(actions))
                     {
                         await this.jsonResourceSerializer.WriteOperationsAsync(actions.Cast<ODataOperation>(), /*isAction*/ true)
                             .ConfigureAwait(false);
@@ -1490,7 +1490,7 @@ namespace Microsoft.OData.Json
 
                     // Write "odata.functions" metadata
                     IEnumerable<ODataFunction> functions = resourceSet.Functions;
-                    if (functions != null && functions.Any())
+                    if (functions != null && Utils.HasAny(functions))
                     {
                         await this.jsonResourceSerializer.WriteOperationsAsync(functions.Cast<ODataOperation>(), /*isAction*/ false)
                             .ConfigureAwait(false);
@@ -2619,7 +2619,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="entityReferenceLink">The OData entity reference link.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private async Task WriteEntityReferenceLinkImplementationAsync(ODataEntityReferenceLink entityReferenceLink)
+        private async ValueTask WriteEntityReferenceLinkImplementationAsync(ODataEntityReferenceLink entityReferenceLink)
         {
             Debug.Assert(entityReferenceLink != null, "entityReferenceLink != null");
 
@@ -2775,7 +2775,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="resource">The deleted resource to write deleted entry contents for</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private async Task WriteV4DeletedEntryContentsAsync(ODataDeletedResource resource)
+        private async ValueTask WriteV4DeletedEntryContentsAsync(ODataDeletedResource resource)
         {
             await this.WriteDeletedResourceIdAsync(resource)
                 .ConfigureAwait(false);
@@ -2788,7 +2788,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="resource">The deleted resource to write deleted entry contents for</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private async Task WriteDeletedEntryContentsAsync(ODataDeletedResource resource)
+        private async ValueTask WriteDeletedEntryContentsAsync(ODataDeletedResource resource)
         {
             await this.odataAnnotationWriter.WriteInstanceAnnotationNameAsync(
                 ODataAnnotationNames.ODataRemoved).ConfigureAwait(false);
@@ -2825,7 +2825,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="resource">The resource to write the id for.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private async Task WriteDeletedResourceIdAsync(ODataDeletedResource resource)
+        private async ValueTask WriteDeletedResourceIdAsync(ODataDeletedResource resource)
         {
             Debug.Assert(resource != null, "resource != null");
             if (this.Version == null || this.Version < ODataVersion.V401)
@@ -2879,7 +2879,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="resource">The resource to write the reason for.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private async Task WriteDeltaResourceReasonAsync(ODataDeletedResource resource)
+        private async ValueTask WriteDeltaResourceReasonAsync(ODataDeletedResource resource)
         {
             Debug.Assert(resource != null, "resource != null");
 
@@ -2925,7 +2925,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="link">The link to write source for.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private async Task WriteDeltaLinkSourceAsync(ODataDeltaLinkBase link)
+        private async ValueTask WriteDeltaLinkSourceAsync(ODataDeltaLinkBase link)
         {
             Debug.Assert(link != null, "link != null");
             Debug.Assert(link is ODataDeltaLink || link is ODataDeltaDeletedLink,
@@ -2942,7 +2942,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="link">The link to write relationship for.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private async Task WriteDeltaLinkRelationshipAsync(ODataDeltaLinkBase link)
+        private async ValueTask WriteDeltaLinkRelationshipAsync(ODataDeltaLinkBase link)
         {
             Debug.Assert(link != null, "link != null");
             Debug.Assert(link is ODataDeltaLink || link is ODataDeltaDeletedLink,
@@ -2959,7 +2959,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="link">The link to write target for.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private async Task WriteDeltaLinkTargetAsync(ODataDeltaLinkBase link)
+        private async ValueTask WriteDeltaLinkTargetAsync(ODataDeltaLinkBase link)
         {
             Debug.Assert(link != null, "link != null");
             Debug.Assert(link is ODataDeltaLink || link is ODataDeltaDeletedLink,

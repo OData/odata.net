@@ -52,12 +52,7 @@ namespace Microsoft.OData.MultipartMixed
         /// <returns>The multipart/mixed content type with the specified boundary (if any).</returns>
         internal static string CreateMultipartMixedContentType(string boundary)
         {
-            return string.Format(
-                CultureInfo.InvariantCulture,
-                "{0}; {1}={2}",
-                MimeConstants.MimeMultipartMixed,
-                ODataConstants.HttpMultipartBoundary,
-                boundary);
+            return $"{MimeConstants.MimeMultipartMixed}; {ODataConstants.HttpMultipartBoundary}={boundary}";
         }
 
         /// <summary>
@@ -114,7 +109,8 @@ namespace Microsoft.OData.MultipartMixed
                 writer.WriteLine();
             }
 
-            writer.WriteLine("--{0}", boundary);
+            writer.Write("--");
+            writer.WriteLine(boundary);
         }
 
         /// <summary>
@@ -137,7 +133,9 @@ namespace Microsoft.OData.MultipartMixed
             }
 
             // Note that we don't write a newline AFTER the end boundary since there's no need to.
-            writer.Write("--{0}--", boundary);
+            writer.Write("--");
+            writer.Write(boundary);
+            writer.Write("--");
         }
 
         /// <summary>
@@ -200,7 +198,9 @@ namespace Microsoft.OData.MultipartMixed
             Debug.Assert(changeSetBoundary != null, "changeSetBoundary != null");
 
             string multipartContentType = CreateMultipartMixedContentType(changeSetBoundary);
-            writer.WriteLine("{0}: {1}", ODataConstants.ContentTypeHeader, multipartContentType);
+            writer.Write(ODataConstants.ContentTypeHeader);
+            writer.Write(": ");
+            writer.WriteLine(multipartContentType);
 
             // write separator line between headers and first change set operation
             writer.WriteLine();
@@ -227,8 +227,8 @@ namespace Microsoft.OData.MultipartMixed
                     .ConfigureAwait(false);
             }
 
-            await writer.WriteLineAsync(string.Concat("--", boundary))
-                .ConfigureAwait(false);
+            await writer.WriteAsync("--").ConfigureAwait(false);
+            await writer.WriteLineAsync(boundary).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -252,9 +252,9 @@ namespace Microsoft.OData.MultipartMixed
                     .ConfigureAwait(false);
             }
 
-            // Note that we don't write a newline AFTER the end boundary since there's no need to.
-            await writer.WriteAsync(string.Concat("--", boundary, "--"))
-                .ConfigureAwait(false);
+            await writer.WriteAsync("--").ConfigureAwait(false);
+            await writer.WriteAsync(boundary).ConfigureAwait(false);
+            await writer.WriteAsync("--").ConfigureAwait(false);
         }
 
         /// <summary>
@@ -341,11 +341,17 @@ namespace Microsoft.OData.MultipartMixed
         /// <param name="contentId">The Content-ID value to write in ChangeSet head.</param>
         private static void WriteHeaders(TextWriter writer, bool inChangeSetBound, string contentId)
         {
-            writer.WriteLine("{0}: {1}", ODataConstants.ContentTypeHeader, MimeConstants.MimeApplicationHttp);
-            writer.WriteLine("{0}: {1}", ODataConstants.ContentTransferEncoding, ODataConstants.BatchContentTransferEncoding);
+            writer.Write(ODataConstants.ContentTypeHeader);
+            writer.Write(": ");
+            writer.WriteLine(MimeConstants.MimeApplicationHttp);
+            writer.Write(ODataConstants.ContentTransferEncoding);
+            writer.Write(": ");
+            writer.WriteLine(ODataConstants.BatchContentTransferEncoding);
             if (inChangeSetBound && contentId != null)
             {
-                writer.WriteLine("{0}: {1}", ODataConstants.ContentIdHeader, contentId);
+                writer.Write(ODataConstants.ContentIdHeader);
+                writer.Write(": ");
+                writer.WriteLine(contentId);
             }
         }
 

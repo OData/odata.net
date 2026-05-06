@@ -308,7 +308,7 @@ namespace Microsoft.OData.Client.Materialization
             if (lastIndexOf > 0)
             {
                 string unqualifiedTypeName = serverTypeName.Substring(serverTypeName.LastIndexOf('.') + 1);
-                clientType = assembly.GetType(string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0}.{1}", containingTypeNamespace, unqualifiedTypeName));
+                clientType = assembly.GetType($"{containingTypeNamespace}.{unqualifiedTypeName}");
                 if (clientType != null)
                 {
                     return clientType;

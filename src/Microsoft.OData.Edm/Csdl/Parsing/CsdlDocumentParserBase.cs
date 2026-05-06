@@ -117,7 +117,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
             CsdlTypeReference elementType = null;
             if (typeString != null)
             {
-                string[] typeInformation = typeString.Split(new char[] { '(', ')' });
+                string[] typeInformation = typeString.Split('(', ')');
                 string typeName = typeInformation[0];
                 switch (typeName)
                 {

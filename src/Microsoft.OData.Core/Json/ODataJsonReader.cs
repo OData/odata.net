@@ -3181,7 +3181,7 @@ namespace Microsoft.OData.Json
         /// Asynchronously reads the next item in a nested resource info content in a request payload.
         /// </summary>
         /// <returns>A task that represents the asynchronous read operation.</returns>
-        private async Task ReadNextNestedResourceInfoContentItemInRequestAsync()
+        private async ValueTask ReadNextNestedResourceInfoContentItemInRequestAsync()
         {
             Debug.Assert(
                 this.CurrentScope.State == ODataReaderState.NestedResourceInfoStart,
@@ -3230,7 +3230,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="state">The reader state to switch to.</param>
         /// <returns>A task that represents the asynchronous read operation.</returns>
-        private async Task StartDeltaLinkAsync(ODataReaderState state)
+        private async ValueTask StartDeltaLinkAsync(ODataReaderState state)
         {
             Debug.Assert(
                 state == ODataReaderState.DeltaLink || state == ODataReaderState.DeltaDeletedLink,
@@ -3282,7 +3282,7 @@ namespace Microsoft.OData.Json
         ///                 JsonNodeType.StartArray
         /// Post-Condition: The reader is positioned on the first item in the resource set, or on the end array of the resource set.
         /// </remarks>
-        private async Task ReadResourceSetStartAsync(ODataResourceSet resourceSet, SelectedPropertiesNode selectedProperties)
+        private async ValueTask ReadResourceSetStartAsync(ODataResourceSet resourceSet, SelectedPropertiesNode selectedProperties)
         {
             Debug.Assert(resourceSet != null, "resourceSet != null");
 
@@ -3310,7 +3310,7 @@ namespace Microsoft.OData.Json
         /// Asynchronously reads the end of the current resource set.
         /// </summary>
         /// <returns>A task that represents the asynchronous read operation.</returns>
-        private async Task ReadResourceSetEndAsync()
+        private async ValueTask ReadResourceSetEndAsync()
         {
             Debug.Assert(
                 this.State == ODataReaderState.ResourceSetStart || this.State == ODataReaderState.DeltaResourceSetStart,
@@ -3354,7 +3354,7 @@ namespace Microsoft.OData.Json
         ///                 JsonNodeType.Property               Property after deferred link or expanded entity reference
         ///                 JsonNodeType.EndObject              If no (more) properties exist in the resource's content
         /// </remarks>
-        private async Task ReadExpandedNestedResourceInfoStartAsync(ODataNestedResourceInfo nestedResourceInfo)
+        private async ValueTask ReadExpandedNestedResourceInfoStartAsync(ODataNestedResourceInfo nestedResourceInfo)
         {
             Debug.Assert(nestedResourceInfo != null, "nestedResourceInfo != null");
 
@@ -3424,7 +3424,7 @@ namespace Microsoft.OData.Json
         ///                 JsonNodeType.Property               Property after deferred link or expanded entity reference
         ///                 JsonNodeType.EndObject              If no (more) properties exist in the resource's content
         /// </remarks>
-        private async Task ReadResourceSetItemStartAsync(PropertyAndAnnotationCollector propertyAndAnnotationCollector,
+        private async ValueTask ReadResourceSetItemStartAsync(PropertyAndAnnotationCollector propertyAndAnnotationCollector,
             SelectedPropertiesNode selectedProperties)
         {
             IEdmNavigationSource source = this.CurrentNavigationSource;
@@ -3614,7 +3614,7 @@ namespace Microsoft.OData.Json
         /// Asynchronously reads the next entity or complex value (or primitive or collection value for an untyped collection) in a resource set.
         /// </summary>
         /// <returns>A task that represents the asynchronous read operation.</returns>
-        private async Task ReadNextResourceSetItemAsync()
+        private async ValueTask ReadNextResourceSetItemAsync()
         {
             Debug.Assert(this.State == ODataReaderState.ResourceSetStart ||
                 this.State == ODataReaderState.DeltaResourceSetStart,
@@ -3706,7 +3706,7 @@ namespace Microsoft.OData.Json
         ///                 JsonNodeType.StartArray
         /// Post-Condition: The reader is positioned on the first item in the resource set, or on the end array of the resource set.
         /// </remarks>
-        private async Task ReadDeltaResourceSetStartAsync(ODataDeltaResourceSet deltaResourceSet, SelectedPropertiesNode selectedProperties)
+        private async ValueTask ReadDeltaResourceSetStartAsync(ODataDeltaResourceSet deltaResourceSet, SelectedPropertiesNode selectedProperties)
         {
             Debug.Assert(deltaResourceSet != null, "resourceSet != null");
 
@@ -3733,7 +3733,7 @@ namespace Microsoft.OData.Json
         /// Asynchronously read the resource up to the first nested resource info.
         /// </summary>
         /// <returns>A task that represents the asynchronous read operation.</returns>
-        private async Task StartReadingResourceAsync()
+        private async ValueTask StartReadingResourceAsync()
         {
             ODataResourceBase currentResource = this.Item as ODataResourceBase;
 

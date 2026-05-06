@@ -1,4 +1,4 @@
-﻿//---------------------------------------------------------------------
+//---------------------------------------------------------------------
 // <copyright file="UriParserHelper.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
@@ -171,12 +171,21 @@ namespace Microsoft.OData.UriParser
         /// <exception cref="ArgumentException">Literal is not valid</exception>
         internal static void ValidatePrefixLiteral(string typePrefixLiteralName)
         {
-            bool isLettersOnly = typePrefixLiteralName.ToCharArray().All(x => char.IsLetter(x) || x == '.');
+            bool isLettersOnly = true;
+            for (int i = 0; i < typePrefixLiteralName.Length; i++)
+            {
+                char c = typePrefixLiteralName[i];
+                if (!char.IsLetter(c) && c != '.')
+                {
+                    isLettersOnly = false;
+                    break;
+                }
+            }
 
             if (!isLettersOnly)
             {
                 throw new ArgumentException(
-                    string.Format(CultureInfo.InvariantCulture, Error.Format(SRResources.UriParserHelper_InvalidPrefixLiteral, typePrefixLiteralName)));
+                    Error.Format(SRResources.UriParserHelper_InvalidPrefixLiteral, typePrefixLiteralName));
             }
         }
 

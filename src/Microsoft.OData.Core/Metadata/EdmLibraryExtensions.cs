@@ -9,6 +9,7 @@ namespace Microsoft.OData.Metadata
     #region Namespaces
     using System;
     using System.Collections;
+    using System.Collections.Frozen;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
@@ -42,7 +43,9 @@ namespace Microsoft.OData.Metadata
         /// <summary>
         /// Map of CLR primitive type to EDM primitive type reference. Doesn't include spatial types since they need assignability and not equality.
         /// </summary>
-        private static readonly Dictionary<Type, IEdmPrimitiveTypeReference> PrimitiveTypeReferenceMap = new Dictionary<Type, IEdmPrimitiveTypeReference>(EqualityComparer<Type>.Default);
+        private static readonly FrozenDictionary<Type, IEdmPrimitiveTypeReference> PrimitiveTypeReferenceMap;
+
+        private static readonly Dictionary<Type, IEdmPrimitiveTypeReference> _primitiveTypeReferenceMapBuilder = new Dictionary<Type, IEdmPrimitiveTypeReference>();
 
 #if !NETSTANDARD1_1
         /// <summary>
@@ -87,9 +90,6 @@ namespace Microsoft.OData.Metadata
         /// <summary>The qualifier to turn a type name into a Collection type name.</summary>
         private const string CollectionTypeQualifier = "Collection";
 
-        /// <summary>Format string to describe a Collection of a given type.</summary>
-        private const string CollectionTypeFormat = CollectionTypeQualifier + "({0})";
-
         #endregion Edm Collection constants
 
         /// <summary>
@@ -98,51 +98,53 @@ namespace Microsoft.OData.Metadata
         [SuppressMessage("Microsoft.Performance", "CA1810:InitializeReferenceTypeStaticFieldsInline", Justification = "Need to use the static constructor for the phone platform.")]
         static EdmLibraryExtensions()
         {
-            PrimitiveTypeReferenceMap.Add(typeof(Boolean), BooleanTypeReference);
-            PrimitiveTypeReferenceMap.Add(typeof(Byte), ByteTypeReference);
-            PrimitiveTypeReferenceMap.Add(typeof(Decimal), DecimalTypeReference);
-            PrimitiveTypeReferenceMap.Add(typeof(Double), DoubleTypeReference);
-            PrimitiveTypeReferenceMap.Add(typeof(Int16), Int16TypeReference);
-            PrimitiveTypeReferenceMap.Add(typeof(Int32), Int32TypeReference);
-            PrimitiveTypeReferenceMap.Add(typeof(Int64), Int64TypeReference);
-            PrimitiveTypeReferenceMap.Add(typeof(SByte), SByteTypeReference);
-            PrimitiveTypeReferenceMap.Add(typeof(String), StringTypeReference);
-            PrimitiveTypeReferenceMap.Add(typeof(Single), SingleTypeReference);
+            _primitiveTypeReferenceMapBuilder.Add(typeof(Boolean), BooleanTypeReference);
+            _primitiveTypeReferenceMapBuilder.Add(typeof(Byte), ByteTypeReference);
+            _primitiveTypeReferenceMapBuilder.Add(typeof(Decimal), DecimalTypeReference);
+            _primitiveTypeReferenceMapBuilder.Add(typeof(Double), DoubleTypeReference);
+            _primitiveTypeReferenceMapBuilder.Add(typeof(Int16), Int16TypeReference);
+            _primitiveTypeReferenceMapBuilder.Add(typeof(Int32), Int32TypeReference);
+            _primitiveTypeReferenceMapBuilder.Add(typeof(Int64), Int64TypeReference);
+            _primitiveTypeReferenceMapBuilder.Add(typeof(SByte), SByteTypeReference);
+            _primitiveTypeReferenceMapBuilder.Add(typeof(String), StringTypeReference);
+            _primitiveTypeReferenceMapBuilder.Add(typeof(Single), SingleTypeReference);
 
 #if ODATA_SERVICE
-            PrimitiveTypeReferenceMap.Add(typeof(DateTime), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.DateTimeOffset), false));
+            _primitiveTypeReferenceMapBuilder.Add(typeof(DateTime), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.DateTimeOffset), false));
 #endif
-            PrimitiveTypeReferenceMap.Add(typeof(DateTimeOffset), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.DateTimeOffset), false));
-            PrimitiveTypeReferenceMap.Add(typeof(Guid), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Guid), false));
-            PrimitiveTypeReferenceMap.Add(typeof(TimeSpan), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Duration), false));
-            PrimitiveTypeReferenceMap.Add(typeof(byte[]), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Binary), true));
-            PrimitiveTypeReferenceMap.Add(typeof(Stream), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Stream), false));
+            _primitiveTypeReferenceMapBuilder.Add(typeof(DateTimeOffset), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.DateTimeOffset), false));
+            _primitiveTypeReferenceMapBuilder.Add(typeof(Guid), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Guid), false));
+            _primitiveTypeReferenceMapBuilder.Add(typeof(TimeSpan), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Duration), false));
+            _primitiveTypeReferenceMapBuilder.Add(typeof(byte[]), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Binary), true));
+            _primitiveTypeReferenceMapBuilder.Add(typeof(Stream), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Stream), false));
 
-            PrimitiveTypeReferenceMap.Add(typeof(Boolean?), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Boolean), true));
-            PrimitiveTypeReferenceMap.Add(typeof(Byte?), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Byte), true));
+            _primitiveTypeReferenceMapBuilder.Add(typeof(Boolean?), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Boolean), true));
+            _primitiveTypeReferenceMapBuilder.Add(typeof(Byte?), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Byte), true));
 #if ODATA_SERVICE
-            PrimitiveTypeReferenceMap.Add(typeof(DateTime?), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.DateTimeOffset), true));
+            _primitiveTypeReferenceMapBuilder.Add(typeof(DateTime?), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.DateTimeOffset), true));
 #endif
-            PrimitiveTypeReferenceMap.Add(typeof(DateTimeOffset?), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.DateTimeOffset), true));
+            _primitiveTypeReferenceMapBuilder.Add(typeof(DateTimeOffset?), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.DateTimeOffset), true));
 
-            PrimitiveTypeReferenceMap.Add(typeof(Decimal?), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Decimal), true));
-            PrimitiveTypeReferenceMap.Add(typeof(Double?), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Double), true));
-            PrimitiveTypeReferenceMap.Add(typeof(Int16?), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Int16), true));
-            PrimitiveTypeReferenceMap.Add(typeof(Int32?), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Int32), true));
-            PrimitiveTypeReferenceMap.Add(typeof(Int64?), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Int64), true));
-            PrimitiveTypeReferenceMap.Add(typeof(SByte?), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.SByte), true));
-            PrimitiveTypeReferenceMap.Add(typeof(Single?), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Single), true));
-            PrimitiveTypeReferenceMap.Add(typeof(Guid?), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Guid), true));
-            PrimitiveTypeReferenceMap.Add(typeof(TimeSpan?), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Duration), true));
-            PrimitiveTypeReferenceMap.Add(typeof(Date), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Date), false));
-            PrimitiveTypeReferenceMap.Add(typeof(Date?), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Date), true));
-            PrimitiveTypeReferenceMap.Add(typeof(TimeOfDay), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.TimeOfDay), false));
-            PrimitiveTypeReferenceMap.Add(typeof(TimeOfDay?), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.TimeOfDay), true));
+            _primitiveTypeReferenceMapBuilder.Add(typeof(Decimal?), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Decimal), true));
+            _primitiveTypeReferenceMapBuilder.Add(typeof(Double?), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Double), true));
+            _primitiveTypeReferenceMapBuilder.Add(typeof(Int16?), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Int16), true));
+            _primitiveTypeReferenceMapBuilder.Add(typeof(Int32?), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Int32), true));
+            _primitiveTypeReferenceMapBuilder.Add(typeof(Int64?), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Int64), true));
+            _primitiveTypeReferenceMapBuilder.Add(typeof(SByte?), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.SByte), true));
+            _primitiveTypeReferenceMapBuilder.Add(typeof(Single?), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Single), true));
+            _primitiveTypeReferenceMapBuilder.Add(typeof(Guid?), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Guid), true));
+            _primitiveTypeReferenceMapBuilder.Add(typeof(TimeSpan?), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Duration), true));
+            _primitiveTypeReferenceMapBuilder.Add(typeof(Date), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Date), false));
+            _primitiveTypeReferenceMapBuilder.Add(typeof(Date?), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Date), true));
+            _primitiveTypeReferenceMapBuilder.Add(typeof(TimeOfDay), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.TimeOfDay), false));
+            _primitiveTypeReferenceMapBuilder.Add(typeof(TimeOfDay?), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.TimeOfDay), true));
 
-            PrimitiveTypeReferenceMap.Add(typeof(DateOnly), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Date), false));
-            PrimitiveTypeReferenceMap.Add(typeof(DateOnly?), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Date), true));
-            PrimitiveTypeReferenceMap.Add(typeof(TimeOnly), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.TimeOfDay), false));
-            PrimitiveTypeReferenceMap.Add(typeof(TimeOnly?), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.TimeOfDay), true));
+            _primitiveTypeReferenceMapBuilder.Add(typeof(DateOnly), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Date), false));
+            _primitiveTypeReferenceMapBuilder.Add(typeof(DateOnly?), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Date), true));
+            _primitiveTypeReferenceMapBuilder.Add(typeof(TimeOnly), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.TimeOfDay), false));
+            _primitiveTypeReferenceMapBuilder.Add(typeof(TimeOnly?), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.TimeOfDay), true));
+
+            PrimitiveTypeReferenceMap = _primitiveTypeReferenceMapBuilder.ToFrozenDictionary();
 
 #if !NETSTANDARD1_1
             // Pack type codes of supported primitive types in the bitmap
@@ -268,12 +270,13 @@ namespace Microsoft.OData.Metadata
                     currentClosestType = operationBindingType;
                 }
 
-                if (!sortedOperations.ContainsKey(operationBindingType))
+                if (!sortedOperations.TryGetValue(operationBindingType, out List<IEdmOperation> bucket))
                 {
-                    sortedOperations[operationBindingType] = new List<IEdmOperation>();
+                    bucket = new List<IEdmOperation>();
+                    sortedOperations[operationBindingType] = bucket;
                 }
 
-                sortedOperations[operationBindingType].Add(operation);
+                bucket.Add(operation);
             }
 
             if (currentClosestType != null)
@@ -1644,7 +1647,7 @@ namespace Microsoft.OData.Metadata
         /// <returns>Type name for a collection of the specified item type name.</returns>
         internal static string GetCollectionTypeName(string itemTypeName)
         {
-            return string.Format(CultureInfo.InvariantCulture, CollectionTypeFormat, itemTypeName);
+            return CollectionTypeQualifier + "(" + itemTypeName + ")";
         }
 
 #if !ODATA_CLIENT

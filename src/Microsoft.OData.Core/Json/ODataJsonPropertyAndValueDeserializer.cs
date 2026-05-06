@@ -1,4 +1,4 @@
-﻿//---------------------------------------------------------------------
+//---------------------------------------------------------------------
 // <copyright file="ODataJsonPropertyAndValueDeserializer.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
@@ -3572,7 +3572,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="propertyAndAnnotationCollector">The duplicate property names checker to use.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        private async Task ValidateNoPropertyInNullPayloadAsync(PropertyAndAnnotationCollector propertyAndAnnotationCollector)
+        private async ValueTask ValidateNoPropertyInNullPayloadAsync(PropertyAndAnnotationCollector propertyAndAnnotationCollector)
         {
             Debug.Assert(propertyAndAnnotationCollector != null, "propertyAndAnnotationCollector != null");
 

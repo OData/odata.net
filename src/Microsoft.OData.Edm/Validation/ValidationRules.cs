@@ -433,13 +433,10 @@ namespace Microsoft.OData.Edm.Validation
 
                         if (!TryResolveNavigationPropertyBindingPath(context.Model, navigationSource, mapping))
                         {
-                            // TODO: Update error message in V7.1 #644
                             context.AddError(
                                 navigationSource.Location(),
                                 EdmErrorCode.UnresolvedNavigationPropertyBindingPath,
-                                string.Format(
-                                    CultureInfo.CurrentCulture,
-                                    "The binding path {0} for navigation property {1} under navigation source {2} is not valid.",
+                                Error.Format(SRResources.EdmModel_Validator_Semantic_NavigationSourceMappingMustResolveToValidNavigationProperty,
                                     mapping.Path.Path,
                                     mapping.NavigationProperty.Name,
                                     navigationSource.Name));
@@ -1427,10 +1424,7 @@ namespace Microsoft.OData.Edm.Validation
                         context.AddError(
                         property.Location(),
                         EdmErrorCode.UnresolvedNavigationPropertyPartnerPath,
-                        string.Format(
-                            CultureInfo.CurrentCulture,
-                            "Cannot resolve partner path for navigation property '{0}'.",
-                            property.Name));
+                        Error.Format(SRResources.EdmModel_Validator_Semantic_NavigationPropertyPartnerPathInvalid, property.Name));
                     }
                 });
 

@@ -1,4 +1,4 @@
-﻿//---------------------------------------------------------------------
+//---------------------------------------------------------------------
 // <copyright file="MediaTypeUtils.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
@@ -915,7 +915,14 @@ namespace Microsoft.OData
                 this.MediaTypeResolver = resolver;
                 this.PayloadKind = payloadKind;
                 this.ContentTypeName = RemoveBoundary(contentTypeName);
+
+                int result = (resolver?.GetHashCode() ?? 0) ^ payloadKind.GetHashCode();
+                this.hashCode = this.ContentTypeName != null
+                    ? result ^ this.ContentTypeName.GetHashCode(StringComparison.Ordinal)
+                    : result;
             }
+
+            private readonly int hashCode;
 
             /// <summary>
             /// Type of the mediaTypeResolver.
@@ -970,8 +977,7 @@ namespace Microsoft.OData
             /// <returns>A 32-bit signed integer hash code.</returns>
             public override int GetHashCode()
             {
-                int result = this.MediaTypeResolver.GetHashCode() ^ this.PayloadKind.GetHashCode();
-                return this.ContentTypeName != null ? result ^ this.ContentTypeName.GetHashCode(StringComparison.Ordinal) : result;
+                return this.hashCode;
             }
 
             /// <summary>

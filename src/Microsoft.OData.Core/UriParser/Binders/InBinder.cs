@@ -390,7 +390,7 @@ namespace Microsoft.OData.UriParser
             {
                 if (items[i] != NullLiteral && items[i][0] != '\'' && items[i][0] != '"')
                 {
-                    items[i] = String.Format(CultureInfo.InvariantCulture, "'{0}'", items[i]);
+                    items[i] = $"'{items[i]}'";
                 }
             }
 
@@ -423,7 +423,7 @@ namespace Microsoft.OData.UriParser
                 }
                 if (items[i][0] != '\'' && items[i][0] != '"')
                 {
-                    items[i] = String.Format(CultureInfo.InvariantCulture, "'{0}'", items[i]);
+                    items[i] = $"'{items[i]}'";
                 }
             }
 

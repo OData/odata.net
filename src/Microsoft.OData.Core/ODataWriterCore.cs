@@ -90,7 +90,34 @@ namespace Microsoft.OData
                 selectedProperties: outputContext.MessageWriterSettings.SelectedProperties,
                 odataUri: odataUri,
                 enableDelta: true));
-            this.CurrentScope.DerivedTypeConstraints = this.outputContext.Model.GetDerivedTypeConstraints(navigationSource)?.ToList();
+            this.CurrentScope.DerivedTypeConstraints = MaterializeOrNull(this.outputContext.Model.GetDerivedTypeConstraints(navigationSource));
+        }
+
+        /// <summary>
+        /// Returns <paramref name="source"/> as an <see cref="IReadOnlyList{T}"/>, materializing the
+        /// sequence to an array when it isn't already a known collection. Used to avoid re-enumerating
+        /// the LINQ iterator returned by <see cref="ExtensionMethods.GetDerivedTypeConstraints"/>.
+        /// </summary>
+        private static IReadOnlyList<string> MaterializeOrNull(IEnumerable<string> source)
+        {
+            if (source == null)
+            {
+                return null;
+            }
+
+            if (source is IReadOnlyList<string> readOnlyList)
+            {
+                return readOnlyList;
+            }
+
+            if (source is ICollection<string> collection)
+            {
+                var array = new string[collection.Count];
+                collection.CopyTo(array, 0);
+                return array;
+            }
+
+            return source.ToArray();
         }
 
         /// <summary>
@@ -3191,7 +3218,7 @@ namespace Microsoft.OData
                     throw new ODataException(errorMessage);
             }
 
-            scope.DerivedTypeConstraints = derivedTypeConstraints?.ToList();
+            scope.DerivedTypeConstraints = MaterializeOrNull(derivedTypeConstraints);
             this.scopeStack.Push(scope);
         }
 
@@ -4008,7 +4035,7 @@ namespace Microsoft.OData
             }
 
             /// <summary>Gets or sets the derived type constraints for the current scope.</summary>
-            internal List<string> DerivedTypeConstraints { get; set; }
+            internal IReadOnlyList<string> DerivedTypeConstraints { get; set; }
         }
 
         /// <summary>

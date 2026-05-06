@@ -1,4 +1,4 @@
-﻿//---------------------------------------------------------------------
+//---------------------------------------------------------------------
 // <copyright file="ODataJsonDeserializer.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
@@ -547,12 +547,11 @@ namespace Microsoft.OData.Json
                 return;
             }
 
-            string message = string.Format(
-                CultureInfo.InvariantCulture,
-                "JSON condition failed: the JsonReader is on node {0} (Value: {1}) but it was expected be on {2}.",
-                this.JsonReader.NodeType.ToString(),
+            string message = Error.Format(
+                SRResources.ODataJsonDeserializer_AssertJsonConditionFailed,
+                this.JsonReader.NodeType,
                 this.JsonReader.GetValue(),
-                string.Join(",", allowedNodeTypes.Select(n => n.ToString()).ToArray()));
+                string.Join(',', allowedNodeTypes.Select(n => n.ToString())));
             Debug.Assert(false, message);
 #endif
         }

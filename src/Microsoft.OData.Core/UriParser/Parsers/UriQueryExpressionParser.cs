@@ -1,4 +1,4 @@
-﻿//---------------------------------------------------------------------
+//---------------------------------------------------------------------
 // <copyright file="UriQueryExpressionParser.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
@@ -352,7 +352,7 @@ namespace Microsoft.OData.UriParser
             PathSegmentToken pathToken = termParser.ParseTerm(allowRef: true);
 
             QueryToken filterToken = null;
-            ExpandToken nestedExpand = null;
+            List<ExpandTermToken> mergedExpandTerms = null;
 
             // Followed (optionally) by filter and expand
             // Syntax for expand inside $apply is different (and much simpler)  from $expand clause => had to use different parsing approach
@@ -368,15 +368,19 @@ namespace Microsoft.OData.UriParser
                             break;
                         case ExpressionConstants.KeywordExpand:
                             ExpandToken tempNestedExpand = ParseExpand();
-                            nestedExpand = nestedExpand == null
-                                ? tempNestedExpand
-                                : new ExpandToken(nestedExpand.ExpandTerms.Concat(tempNestedExpand.ExpandTerms));
+                            mergedExpandTerms ??= new List<ExpandTermToken>();
+                            foreach (ExpandTermToken term in tempNestedExpand.ExpandTerms)
+                            {
+                                mergedExpandTerms.Add(term);
+                            }
                             break;
                         default:
                             throw ParseError(Error.Format(SRResources.UriQueryExpressionParser_KeywordOrIdentifierExpected, supportedKeywords, this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
                     }
                 }
             }
+
+            ExpandToken nestedExpand = mergedExpandTerms != null ? new ExpandToken(mergedExpandTerms) : null;
 
             // Leaf level expands require filter
             if (filterToken == null && nestedExpand == null)

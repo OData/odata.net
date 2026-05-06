@@ -1132,6 +1132,15 @@ namespace Microsoft.OData.Client {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The header &apos;{0}&apos; has a different value. Old Value: &apos;{1}&apos;, Current Value: &apos;{2}&apos; Please make sure to set the header before SendingRequest event is fired.
+        /// </summary>
+        internal static string ODataRequestMessageWrapper_HeaderValueChanged {
+            get {
+                return ResourceManager.GetString("ODataRequestMessageWrapper_HeaderValueChanged", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The context is currently in no tracking mode, in order to use streams make sure your entities extend BaseEntityType and query the Item again from the server to populate the read link or enable tracking..
         /// </summary>
         internal static string Context_EntityMediaLinksNotTrackedInEntity {

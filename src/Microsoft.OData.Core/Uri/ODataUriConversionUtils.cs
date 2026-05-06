@@ -58,7 +58,7 @@ namespace Microsoft.OData
             ExceptionUtils.CheckArgumentNotNull(value.Value, "value.Value");
 
             // not URL-encode the resulting string:
-            return string.Format(CultureInfo.InvariantCulture, "{0}'{1}'", value.TypeName, value.Value);
+            return $"{value.TypeName}'{value.Value}'";
         }
 
         /// <summary>

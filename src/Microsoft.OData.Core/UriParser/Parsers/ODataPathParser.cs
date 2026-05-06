@@ -22,12 +22,15 @@ namespace Microsoft.OData.UriParser
     /// <summary>
     /// Semantic parser for the path of the request URI.
     /// </summary>
-    internal sealed class ODataPathParser
+    internal sealed partial class ODataPathParser
     {
         /// <summary>
-        /// regex pattern to match a contentID
+        /// regex pattern to match a contentID.
         /// </summary>
-        internal static readonly Regex ContentIdRegex = PlatformHelper.CreateCompiled(@"^\$[0-9]+$", RegexOptions.Singleline);
+        [GeneratedRegex(@"^\$[0-9]+$", RegexOptions.Singleline)]
+        private static partial Regex ContentIdRegexFactory();
+
+        internal static readonly Regex ContentIdRegex = ContentIdRegexFactory();
 
         /// <summary>Empty list of strings.</summary>
         private static readonly IList<string> EmptyList = new List<string>();
@@ -1184,7 +1187,7 @@ namespace Microsoft.OData.UriParser
             /*
              * For Non-KeyAsSegment, try to handle it as a key property value, unless it was preceded by an escape - marker segment('$').
              * For KeyAsSegment, the following precedence rules should be supported[ODATA - 799]:
-             * Try to match an OData segment(starting with “$”).
+             * Try to match an OData segment(starting with ï¿½$ï¿½).
              *   - Note: $filter path segment is a special case that has the format "$filter(@a)", where @a represents an alias.
              * Try to match an alias - qualified bound action name, bound function overload, or type name.
              * Try to match a namespace-qualified bound action name, bound function overload, or type name.

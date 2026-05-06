@@ -1,4 +1,4 @@
-﻿//---------------------------------------------------------------------
+//---------------------------------------------------------------------
 // <copyright file="ODataUtf8JsonWriter.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
@@ -196,8 +196,16 @@ namespace Microsoft.OData.Json
         public void WritePaddingFunctionName(string functionName)
         {
             this.CommitUtf8JsonWriterContentsToBuffer();
-            this.bufferWriter.Write(Encoding.UTF8.GetBytes(functionName));
+            this.WritePaddingFunctionNameCore(functionName);
             this.DrainBufferIfThresholdReached();
+        }
+
+        private void WritePaddingFunctionNameCore(string functionName)
+        {
+            int byteCount = Encoding.UTF8.GetByteCount(functionName);
+            Span<byte> destination = this.bufferWriter.GetSpan(byteCount);
+            int written = Encoding.UTF8.GetBytes(functionName.AsSpan(), destination);
+            this.bufferWriter.Advance(written);
         }
 
         public void EndPaddingFunctionScope()
@@ -306,6 +314,13 @@ namespace Microsoft.OData.Json
         public void WriteValue(double value)
         {
             this.WriteSeparatorIfNecessary();
+            this.WriteFiniteOrSpecialDoubleValue(value);
+            this.DrainBufferIfThresholdReached();
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void WriteFiniteOrSpecialDoubleValue(double value)
+        {
             if (double.IsNaN(value))
             {
                 this.utf8JsonWriter.WriteStringValue(nanValue.Span);
@@ -320,21 +335,26 @@ namespace Microsoft.OData.Json
             }
             else
             {
-                // whereas double.MinValue and double.MaxValue have 16 digits scale. Hence we need
-                // to use XmlConvert in all other cases, except infinity
-                string valueToWrite = XmlConvert.ToString(value);
+                // "R" round-trip format matches XmlConvert.ToString(double) for finite values.
+                Span<char> buffer = stackalloc char[32];
+                int written;
+                if (!value.TryFormat(buffer, out written, "R", CultureInfo.InvariantCulture))
+                {
+                    string s = XmlConvert.ToString(value);
+                    s.AsSpan().CopyTo(buffer);
+                    written = s.Length;
+                }
 
-                // We write doubles like 100 as 100.0 (with .0 decimal point).
-                // We do this to retain consistency with the legacy JsonWriter and with older
-                // versions. However, it's not a hard requirement. Clients should not rely on the .0
-                // to decide whether a value is an integer or double. We should consider
-                // dropping this in the future (potentially behind a compatibility flag) to avoid
-                // the cost of converting to a string and checking whether a decimal point is needed.
-                bool needsFractionalPart = valueToWrite.IndexOfAny(JsonValueUtils.DoubleIndicatingCharacters) == -1;
-                this.utf8JsonWriter.WriteRawValue(needsFractionalPart ? $"{valueToWrite}.0" : valueToWrite, skipInputValidation: true);
+                bool needsFractionalPart = buffer.Slice(0, written).IndexOfAny(JsonValueUtils.DoubleIndicatingCharactersSearchValues) == -1;
+                if (needsFractionalPart && written + 2 <= buffer.Length)
+                {
+                    buffer[written] = '.';
+                    buffer[written + 1] = '0';
+                    written += 2;
+                }
+
+                this.utf8JsonWriter.WriteRawValue(buffer.Slice(0, written), skipInputValidation: true);
             }
-
-            this.DrainBufferIfThresholdReached();
         }
 
         public void WriteValue(Guid value)
@@ -720,7 +740,10 @@ namespace Microsoft.OData.Json
                 this.bufferWriter.Write(itemSeparator.Slice(0, 1).Span);
             }
 
-            this.bufferWriter.Write(Encoding.UTF8.GetBytes(rawValue));
+            int byteCount = Encoding.UTF8.GetByteCount(rawValue);
+            Span<byte> destination = this.bufferWriter.GetSpan(byteCount);
+            int written = Encoding.UTF8.GetBytes(rawValue.AsSpan(), destination);
+            this.bufferWriter.Advance(written);
 
             // since we bypass the Utf8JsonWriter, we need to signal to other
             // Write methods that a separator should be written first
@@ -909,7 +932,7 @@ namespace Microsoft.OData.Json
         public async Task WritePaddingFunctionNameAsync(string functionName)
         {
             this.CommitUtf8JsonWriterContentsToBuffer();
-            this.bufferWriter.Write(Encoding.UTF8.GetBytes(functionName));
+            this.WritePaddingFunctionNameCore(functionName);
             await this.DrainBufferIfThresholdReachedAsync().ConfigureAwait(false);
         }
 
@@ -1019,34 +1042,7 @@ namespace Microsoft.OData.Json
         public async Task WriteValueAsync(double value)
         {
             this.WriteSeparatorIfNecessary();
-            if (double.IsNaN(value))
-            {
-                this.utf8JsonWriter.WriteStringValue(nanValue.Span);
-            }
-            else if (double.IsPositiveInfinity(value))
-            {
-                this.utf8JsonWriter.WriteStringValue(positiveInfinityValue.Span);
-            }
-            else if (double.IsNegativeInfinity(value))
-            {
-                this.utf8JsonWriter.WriteStringValue(negativeInfinityValue.Span);
-            }
-            else
-            {
-                // whereas double.MinValue and double.MaxValue have 16 digits scale. Hence we need
-                // to use XmlConvert in all other cases, except infinity
-                string valueToWrite = XmlConvert.ToString(value);
-
-                // We write doubles like 100 as 100.0 (with .0 decimal point).
-                // We do this to retain consistency with the legacy JsonWriter and with older
-                // versions. However, it's not a hard requirement. Clients should not rely on the .0
-                // to decide whether a value is an integer or double. We should consider
-                // dropping this in the future (potentially behind a compatibility flag) to avoid
-                // the cost of converting to a string and checking whether a decimal point is needed.
-                bool needsFractionalPart = valueToWrite.IndexOfAny(JsonValueUtils.DoubleIndicatingCharacters) == -1;
-                this.utf8JsonWriter.WriteRawValue(needsFractionalPart ? $"{valueToWrite}.0" : valueToWrite, skipInputValidation: true);
-            }
-
+            this.WriteFiniteOrSpecialDoubleValue(value);
             await this.DrainBufferIfThresholdReachedAsync().ConfigureAwait(false);
         }
 

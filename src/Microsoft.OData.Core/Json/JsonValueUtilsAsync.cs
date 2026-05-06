@@ -1,4 +1,4 @@
-﻿//---------------------------------------------------------------------
+//---------------------------------------------------------------------
 // <copyright file="JsonValueUtils.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
@@ -134,9 +134,17 @@ namespace Microsoft.OData.Json
             // to use XmlConvert in all other cases, except infinity
             string valueToWrite = XmlConvert.ToString(value);
 
-            if (valueToWrite.IndexOfAny(DoubleIndicatingCharacters) < 0)
+            if (valueToWrite.AsSpan().IndexOfAny(DoubleIndicatingCharactersSearchValues) < 0)
             {
-                valueToWrite += ".0";
+                // Append ".0" via string.Create (single allocation) then a single WriteAsync, instead
+                // of two WriteAsync calls (which would create an async state machine for the continuation).
+                string withSuffix = string.Create(valueToWrite.Length + 2, valueToWrite, static (span, source) =>
+                {
+                    source.AsSpan().CopyTo(span);
+                    span[source.Length] = '.';
+                    span[source.Length + 1] = '0';
+                });
+                return writer.WriteAsync(withSuffix);
             }
 
             return writer.WriteAsync(valueToWrite);

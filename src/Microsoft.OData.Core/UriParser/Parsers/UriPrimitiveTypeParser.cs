@@ -254,8 +254,8 @@ namespace Microsoft.OData.UriParser
             catch (Exception primitiveParserException)
             {
                 exception = new UriLiteralParsingException(
-                    string.Format(CultureInfo.InvariantCulture, Error.Format(SRResources.UriPrimitiveTypeParsers_FailedToParseTextToPrimitiveValue, text, targetType),
-                                                        primitiveParserException));
+                    Error.Format(SRResources.UriPrimitiveTypeParsers_FailedToParseTextToPrimitiveValue, text, targetType),
+                                                        primitiveParserException);
                 targetValue = null;
                 return false;
             }
