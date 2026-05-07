@@ -316,5 +316,70 @@ namespace Microsoft.OData.Client.Tests.Serialization
             }
         }
 
+        // Focused regression tests for issue #3521. SendInternalAsync awaits HttpClient.SendAsync;
+        // without ConfigureAwait(false) the continuation is posted to the captured single-threaded
+        // SynchronizationContext, deadlocking GetResponse()'s send.Wait() / send.Result and the
+        // APM EndGetResponse's Task.Result. The handler's small Task.Delay forces asynchronous
+        // completion — without that, the await sees an already-completed task and runs the
+        // continuation synchronously, masking the bug.
+        [Fact]
+        public async Task GetResponse_DoesNotDeadlock_UnderSingleThreadedSynchronizationContext()
+        {
+            using var handler = new MockDelayedHttpClientHandler("Hello", delayMilliseconds: 1);
+            var args = BuildArgs(handler);
+
+            var run = SingleThreadSynchronizationContext.Run<string>(() =>
+            {
+                using var request = new HttpClientRequestMessage(args);
+                IODataResponseMessage response = request.GetResponse();
+                using var stream = response.GetStream();
+                using var reader = new StreamReader(stream);
+                return Task.FromResult(reader.ReadToEnd());
+            });
+
+            string body = await AwaitOrFailDeadlock(run);
+            Assert.Equal("Hello", body);
+        }
+
+        [Fact]
+        public async Task BeginEndGetResponse_DoesNotDeadlock_UnderSingleThreadedSynchronizationContext()
+        {
+            using var handler = new MockDelayedHttpClientHandler("Hello", delayMilliseconds: 1);
+            var args = BuildArgs(handler);
+
+            var run = SingleThreadSynchronizationContext.Run<string>(async () =>
+            {
+                using var request = new HttpClientRequestMessage(args);
+                IODataResponseMessage response = await Task.Factory.FromAsync(
+                    request.BeginGetResponse, request.EndGetResponse, null);
+                using var stream = response.GetStream();
+                using var reader = new StreamReader(stream);
+                return reader.ReadToEnd();
+            });
+
+            string body = await AwaitOrFailDeadlock(run);
+            Assert.Equal("Hello", body);
+        }
+
+        private static DataServiceClientRequestMessageArgs BuildArgs(HttpClientHandler handler)
+        {
+            return new DataServiceClientRequestMessageArgs(
+                "GET",
+                new Uri("http://localhost"),
+                usePostTunneling: false,
+                headers: new Dictionary<string, string>(),
+                httpClientFactory: new MockHttpClientFactory(handler));
+        }
+
+        private static async Task<T> AwaitOrFailDeadlock<T>(Task<T> call)
+        {
+            var timeout = TimeSpan.FromSeconds(5);
+            var completed = await Task.WhenAny(call, Task.Delay(timeout));
+            if (completed != call)
+            {
+                Assert.Fail($"Deadlock detected (timed out after {timeout.TotalSeconds}s) — regression of issue #3521 (SynchronizationContext capture).");
+            }
+            return await call;
+        }
     }
 }

@@ -9,7 +9,7 @@ using System.Collections.Concurrent;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Microsoft.OData.Client.Tests.ScenarioTests.Deadlocks
+namespace Microsoft.OData.Client.Tests.Serialization
 {
     // Pumps Post-ed callbacks on a single dedicated worker thread. Mirrors the load-bearing invariant of
     // Blazor Server's renderer scheduler (and WPF/WinForms Dispatcher): one thread serially runs queued
