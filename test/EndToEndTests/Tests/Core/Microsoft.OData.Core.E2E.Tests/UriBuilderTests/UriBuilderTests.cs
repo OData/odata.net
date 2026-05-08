@@ -4,6 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System.Net;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 
@@ -453,18 +454,51 @@ public class UriBuilderTests
         Assert.Equal(queryUri, actualUri);
     }
 
+    [Theory]
+    [InlineData("?$filter=Status eq 'Deleted'", true)]
+    [InlineData("?$filter=Status eq 'Deleted'", false)]
+    [InlineData("?$filter='Deleted' eq Status", true)]
+    [InlineData("?$filter='Deleted' eq Status", false)]
+    public void BuildUriWithStringAsEnumResolverBuildsEnumLiteralCorrectly(string queryUriString, bool useStringAsEnumResolver)
+    {
+        var queryUri = new Uri($"http://localhost/People{queryUriString}");
+
+        var odataUriParser = new ODataUriParser(this.GetModel(), _baseUri, queryUri);
+        if (useStringAsEnumResolver)
+        {
+            odataUriParser.Resolver = new StringAsEnumResolver();
+        }
+
+        // Act
+        ODataUri odataUri = odataUriParser.ParseUri();
+        var actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Slash);
+
+        // Assert
+        Assert.Equal(WebUtility.UrlDecode(queryUri.ToString()), WebUtility.UrlDecode(actualUri.ToString()));
+
+        Assert.Equal(queryUriString, WebUtility.UrlDecode(actualUri.Query));
+    }
+
     #region Private
 
     private EdmModel GetModel()
     {
         EdmModel model = new EdmModel();
+
+        EdmEnumType edmEnumType = new EdmEnumType("NS", "ItemStatus");
+        edmEnumType.AddMember("Active", new EdmEnumMemberValue(0));
+        edmEnumType.AddMember("Deleted", new EdmEnumMemberValue(1));
+        model.AddElement(edmEnumType);
+
         EdmEntityType edmEntityType = new EdmEntityType("NS", "Person");
         edmEntityType.AddKeys(edmEntityType.AddStructuralProperty("ID", EdmPrimitiveTypeKind.Int32));
         edmEntityType.AddStructuralProperty("Color", EdmPrimitiveTypeKind.String);
         edmEntityType.AddStructuralProperty("FA", EdmPrimitiveTypeKind.String);
+        edmEntityType.AddStructuralProperty("Status", new EdmEnumTypeReference(edmEnumType, false));
         edmEntityType.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo { Name = "MyDog", TargetMultiplicity = EdmMultiplicity.ZeroOrOne, Target = edmEntityType });
         edmEntityType.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo { Name = "MyCat", TargetMultiplicity = EdmMultiplicity.ZeroOrOne, Target = edmEntityType });
         model.AddElement(edmEntityType);
+
         EdmEntityContainer container = new EdmEntityContainer("NS", "EntityContainer");
         model.AddElement(container);
         container.AddEntitySet("People", edmEntityType);
