@@ -1,4 +1,4 @@
-﻿//---------------------------------------------------------------------
+//---------------------------------------------------------------------
 // <copyright file="StringAsEnumResolver.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
@@ -8,8 +8,8 @@ namespace Microsoft.OData.UriParser
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
+    using Microsoft.OData;
     using Microsoft.OData.Core;
     using Microsoft.OData.Edm;
 
@@ -35,26 +35,26 @@ namespace Microsoft.OData.UriParser
 
             if (leftNode.TypeReference != null && rightNode.TypeReference != null)
             {
-                if ((leftNode.TypeReference.IsEnum()) && (rightNode.TypeReference.IsString()) && rightNode is ConstantNode)
+                if ((leftNode.TypeReference.IsEnum()) && (rightNode.TypeReference.IsString()) && rightNode is ConstantNode rightConstantNode)
                 {
-                    string text = ((ConstantNode)rightNode).Value as string;
+                    string text = rightConstantNode.Value as string;
                     ODataEnumValue val;
                     IEdmTypeReference typeRef = leftNode.TypeReference;
 
                     if (TryParseEnum(typeRef.Definition as IEdmEnumType, text, out val))
                     {
-                        rightNode = new ConstantNode(val, text, typeRef);
+                        rightNode = new ConstantNode(val, rightConstantNode.LiteralText, typeRef);
                         return;
                     }
                 }
-                else if ((rightNode.TypeReference.IsEnum()) && (leftNode.TypeReference.IsString()) && leftNode is ConstantNode)
+                else if ((rightNode.TypeReference.IsEnum()) && (leftNode.TypeReference.IsString()) && leftNode is ConstantNode leftConstantNode)
                 {
-                    string text = ((ConstantNode)leftNode).Value as string;
+                    string text = leftConstantNode.Value as string;
                     ODataEnumValue val;
                     IEdmTypeReference typeRef = rightNode.TypeReference;
                     if (TryParseEnum(typeRef.Definition as IEdmEnumType, text, out val))
                     {
-                        leftNode = new ConstantNode(val, text, typeRef);
+                        leftNode = new ConstantNode(val, leftConstantNode.LiteralText, typeRef);
                         return;
                     }
                 }
@@ -104,7 +104,7 @@ namespace Microsoft.OData.UriParser
 
                     if (TryParseEnum(typeRef.Definition as IEdmEnumType, text, out val))
                     {
-                        newVal = new ConstantNode(val, text, typeRef);
+                        newVal = new ConstantNode(val, constNode.LiteralText, typeRef);
                     }
                 }
 

@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Xml;
 using Microsoft.OData.Core;
@@ -16,12 +17,12 @@ using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Vocabularies;
 using Microsoft.OData.Edm.Vocabularies.Community.V1;
+using Microsoft.OData.Edm.Vocabularies.V1;
+using Microsoft.OData.Metadata;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.UriParser.Aggregation;
 using Microsoft.OData.UriParser.Validation;
 using Xunit;
-using Microsoft.OData.Metadata;
-using Microsoft.OData.Edm.Vocabularies.V1;
 
 namespace Microsoft.OData.Tests.UriParser
 {
@@ -1447,6 +1448,31 @@ namespace Microsoft.OData.Tests.UriParser
 
             Uri resultUri = uri.BuildUri(ODataUrlKeyDelimiter.Parentheses);
             Assert.Equal(fullUriString, Uri.UnescapeDataString(resultUri.OriginalString));
+        }
+
+        [Theory]
+        [InlineData("?$filter=Shape eq 'Rectangle'", true)]
+        [InlineData("?$filter=Shape eq 'Rectangle'", false)]
+        [InlineData("?$filter='Rectangle' eq Shape", true)]
+        [InlineData("?$filter='Rectangle' eq Shape", false)]
+        public void ParseEnumAsStringInFilterClauseWithOrWithoutStringAsEnumResolver(string queryUriString, bool useStringAsEnumResolver)
+        {
+            var queryUri = new Uri($"{ServiceRoot}Pet2Set{queryUriString}");
+
+            var odataUriParser = new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, queryUri);
+            if (useStringAsEnumResolver)
+            {
+                odataUriParser.Resolver = new StringAsEnumResolver();
+            }
+
+            // Act
+            ODataUri odataUri = odataUriParser.ParseUri();
+            var actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Slash);
+
+            // Assert
+            Assert.Equal(WebUtility.UrlDecode(queryUri.ToString()), WebUtility.UrlDecode(actualUri.ToString()));
+
+            Assert.Equal(queryUriString, WebUtility.UrlDecode(actualUri.Query));
         }
 
         // use static to make sure one model used in all tests
