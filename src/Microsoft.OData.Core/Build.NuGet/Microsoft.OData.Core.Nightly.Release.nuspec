@@ -13,7 +13,8 @@
     <readme>docs\README.md</readme>
     <summary>Classes to serialize, deserialize and validate OData JSON payloads. Supports OData v4 and v4.01.</summary>
     <description>Classes to serialize, deserialize and validate OData JSON payloads. Supports OData v4 and v4.01. Enables construction of OData services and clients. Targets .NET 8 or above.
-OData .NET library is open source at http://github.com/OData/odata.net. Documentation for the library can be found at https://docs.microsoft.com/en-us/odata/.</description>    
+OData .NET library is open source at http://github.com/OData/odata.net. Documentation for the library can be found at https://docs.microsoft.com/en-us/odata/.</description>
+    <releaseNotes>https://learn.microsoft.com/en-us/odata/changelog/$VersionFullNumberRelease$</releaseNotes>
     <copyright>© Microsoft Corporation. All rights reserved.</copyright>
     <dependencies>
       <group>
@@ -21,12 +22,12 @@ OData .NET library is open source at http://github.com/OData/odata.net. Document
         <dependency id="Microsoft.OData.Edm" version="[$VersionFullSemantic$-Nightly$NightlyBuildVersion$]" />
         <dependency id="Microsoft.Bcl.AsyncInterfaces" version="8.0.0" />
         <dependency id="Microsoft.Extensions.ObjectPool" version="6.0.3" />
+        <dependency id="Microsoft.Extensions.DependencyInjection.Abstractions" version="8.0.0" />
         <dependency id="Microsoft.Extensions.DependencyInjection" version="8.0.0" />
       </group>
     </dependencies>
   </metadata>
   <files>
- 
     <file src="$ProductRoot$\Microsoft.OData.Core.dll" target="lib" />
     <file src="$ProductRoot$\Microsoft.OData.Core.pdb" target="lib" />
     <file src="$ProductRoot$\Microsoft.OData.Core.xml" target="lib" />
