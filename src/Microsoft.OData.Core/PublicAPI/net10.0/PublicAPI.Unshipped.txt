@@ -1,0 +1,9 @@
+Microsoft.OData.ODataMessageReaderSettings.ShouldReadPropertyAsStream.get -> System.Func<Microsoft.OData.ODataPropertyStreamingContext, bool>
+Microsoft.OData.ODataMessageReaderSettings.ShouldReadPropertyAsStream.set -> void
+Microsoft.OData.ODataPropertyStreamingContext
+Microsoft.OData.ODataPropertyStreamingContext.CustomPropertyAnnotations.get -> System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<string, object>>
+Microsoft.OData.ODataPropertyStreamingContext.IsCollection.get -> bool
+Microsoft.OData.ODataPropertyStreamingContext.ODataPropertyStreamingContext() -> void
+Microsoft.OData.ODataPropertyStreamingContext.PrimitiveType.get -> Microsoft.OData.Edm.IEdmPrimitiveType
+Microsoft.OData.ODataPropertyStreamingContext.Property.get -> Microsoft.OData.Edm.IEdmProperty
+Microsoft.OData.ODataPropertyStreamingContext.PropertyName.get -> string
