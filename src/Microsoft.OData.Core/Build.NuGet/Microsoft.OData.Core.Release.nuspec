@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <package>
   <metadata>
     <title>ODataLib</title>
@@ -8,7 +8,7 @@
     <authors>Microsoft</authors>
     <license type="expression">MIT</license>
     <projectUrl>http://odata.github.io/</projectUrl>
-    <icon>images\odata.png</icon>
+    <icon>images/odata.png</icon>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <readme>docs\README.md</readme>
     <summary>Classes to serialize, deserialize and validate OData JSON payloads. Supports OData v4 and v4.01.</summary>
@@ -39,6 +39,6 @@ OData .NET library is open source at http://github.com/OData/odata.net. Document
     <!-- file README.md -->
     <file src="$SourcesRoot$\src\Microsoft.OData.Core\Docs\README.md" target="docs\" />
     <!-- file odata icon -->
-    <file src="$SourcesRoot$\images\odata.png" target="images\" />
+    <file src="$SourcesRoot$/images/odata.png" target="images/" />
   </files>
 </package>

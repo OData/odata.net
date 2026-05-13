@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <package>
   <metadata>
     <title>Microsoft.Spatial</title>
@@ -8,7 +8,7 @@
     <authors>Microsoft</authors>
     <license type="expression">MIT</license>
     <projectUrl>http://odata.github.io/</projectUrl>
-    <icon>images\odata.png</icon>
+    <icon>images/odata.png</icon>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <readme>docs\README.md</readme>
     <summary>Contains classes and methods that facilitate geography and geometry spatial operations.</summary>
@@ -26,6 +26,6 @@ OData .NET library is open source at http://github.com/OData/odata.net. Document
     <!-- file README.md -->
     <file src="$SourcesRoot$\src\Microsoft.Spatial\Docs\README.md" target="docs\" />
     <!-- file odata icon -->
-    <file src="$SourcesRoot$\images\odata.png" target="images\" />
+    <file src="$SourcesRoot$/images/odata.png" target="images/" />
   </files>
 </package>
