@@ -8,7 +8,7 @@
     <authors>Microsoft</authors>
     <license type="expression">MIT</license>
     <projectUrl>http://odata.github.io/</projectUrl>
-    <iconUrl>http://static.tumblr.com/hgchgxz/9ualgdf98/icon.png</iconUrl>
+    <icon>images\odata.png</icon>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
     <readme>docs\README.md</readme>
     <summary>Classes to serialize, deserialize and validate OData JSON payloads. Supports OData v4 and v4.01.</summary>
@@ -22,6 +22,8 @@ OData .NET library is open source at http://github.com/OData/odata.net. Document
         <dependency id="Microsoft.OData.Edm" version="[$VersionNuGetSemantic$]" />
         <dependency id="Microsoft.Bcl.AsyncInterfaces" version="8.0.0" />
         <dependency id="Microsoft.Extensions.ObjectPool" version="6.0.3" />
+        <dependency id="Microsoft.Extensions.DependencyInjection.Abstractions" version="8.0.0" />
+        <dependency id="Microsoft.Extensions.DependencyInjection" version="8.0.0" />
       </group>
     </dependencies>
   </metadata>
@@ -36,5 +38,7 @@ OData .NET library is open source at http://github.com/OData/odata.net. Document
     <file src="$SourcesRoot$\src\AssemblyInfo\AssemblyMetadataAttribute.cs" target="src\AssemblyMetadataAttribute.cs" />
     <!-- file README.md -->
     <file src="$SourcesRoot$\src\Microsoft.OData.Core\Docs\README.md" target="docs\" />
+    <!-- file odata icon -->
+    <file src="$SourcesRoot$\images\odata.png" target="images\" />
   </files>
 </package>
