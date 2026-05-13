@@ -1,4 +1,4 @@
-﻿//---------------------------------------------------------------------
+//---------------------------------------------------------------------
 // <copyright file="ODataUriParserTests.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
@@ -18,7 +18,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Text;
 using System.Xml;
 using Xunit;
@@ -1465,7 +1464,7 @@ namespace Microsoft.OData.Tests.UriParser
             Assert.Equal(queryUriString, Uri.UnescapeDataString(actualUri.Query));
         }
 
-        #region Escape Function Parse
+#region Escape Function Parse
         [Theory]
         [InlineData("/root:/", "/root/NS.NormalFunction(path='')")]
         [InlineData("/root:/abc", "/root/NS.NormalFunction(path='abc')")]
