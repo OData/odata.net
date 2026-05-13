@@ -4,14 +4,15 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using Microsoft.OData.Core;
+using Microsoft.OData.Edm;
+using Microsoft.OData.Edm.Vocabularies;
+using Microsoft.OData.UriParser;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.OData.UriParser;
-using Microsoft.OData.Edm;
-using Microsoft.OData.Edm.Vocabularies;
+using System.Net;
 using Xunit;
-using Microsoft.OData.Core;
 
 namespace Microsoft.OData.Tests.UriParser.Metadata
 {
@@ -86,6 +87,25 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
             var bin = filter.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal);
             bin.Right.ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPet2PetColorPatternProperty());
             bin.Left.ShouldBeEnumNode(enumtypeRef.EnumDefinition(), "2");
+        }
+
+        // Regression test for https://github.com/OData/odata.net/issues/3524
+        // StringAsEnumResolver must preserve the original single-quoted LiteralText so that
+        // BuildUri round-trips the filter without dropping the quotes.
+        [Theory]
+        [InlineData("http://host/Pet2Set?$filter=PetColorPattern eq 'Blue'")] // left=enum, right=string
+        [InlineData("http://host/Pet2Set?$filter='Blue' eq PetColorPattern")]  // left=string, right=enum
+        public void StringAsEnumResolver_BuildUri_PreservesQuotedEnumLiteralText(string uriString)
+        {
+            var uri = new Uri(uriString);
+            var parser = new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, uri)
+            {
+                Resolver = new StringAsEnumResolver()
+            };
+
+            Uri rebuiltUri = parser.ParseUri().BuildUri(ODataUrlKeyDelimiter.Parentheses);
+
+            Assert.Equal(Uri.UnescapeDataString(uri.Query), Uri.UnescapeDataString(rebuiltUri.Query));
         }
 
         [Fact]

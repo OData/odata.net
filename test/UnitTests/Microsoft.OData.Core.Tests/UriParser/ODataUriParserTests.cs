@@ -4,13 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Xml;
 using Microsoft.OData.Core;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Csdl;
@@ -20,6 +13,14 @@ using Microsoft.OData.Metadata;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.UriParser.Aggregation;
 using Microsoft.OData.UriParser.Validation;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Text;
+using System.Xml;
 using Xunit;
 
 namespace Microsoft.OData.Tests.UriParser
@@ -1439,7 +1440,32 @@ namespace Microsoft.OData.Tests.UriParser
             Assert.Equal(fullUriString, Uri.UnescapeDataString(resultUri.OriginalString));
         }
 
-#region Escape Function Parse
+        [Theory]
+        [InlineData("?$filter=Shape eq 'Rectangle'", true)]
+        [InlineData("?$filter=Shape eq 'Rectangle'", false)]
+        [InlineData("?$filter='Rectangle' eq Shape", true)]
+        [InlineData("?$filter='Rectangle' eq Shape", false)]
+        public void ParseEnumAsStringInFilterClauseWithOrWithoutStringAsEnumResolver(string queryUriString, bool useStringAsEnumResolver)
+        {
+            var queryUri = new Uri($"{ServiceRoot}Pet2Set{queryUriString}");
+
+            var odataUriParser = new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, queryUri);
+            if (useStringAsEnumResolver)
+            {
+                odataUriParser.Resolver = new StringAsEnumResolver();
+            }
+
+            // Act
+            ODataUri odataUri = odataUriParser.ParseUri();
+            var actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Slash);
+
+            // Assert
+            Assert.Equal(Uri.UnescapeDataString(queryUri.ToString()), Uri.UnescapeDataString(actualUri.ToString()));
+
+            Assert.Equal(queryUriString, Uri.UnescapeDataString(actualUri.Query));
+        }
+
+        #region Escape Function Parse
         [Theory]
         [InlineData("/root:/", "/root/NS.NormalFunction(path='')")]
         [InlineData("/root:/abc", "/root/NS.NormalFunction(path='abc')")]
