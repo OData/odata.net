@@ -1,0 +1,6 @@
+@Microsoft.OData.Client.Wasm.Sample.Server_HostAddress = http://localhost:5023
+
+GET {{Microsoft.OData.Client.Wasm.Sample.Server_HostAddress}}/Customers
+Accept: application/json
+
+###

@@ -51,9 +51,14 @@ public class CancellationTokenTestsController : ODataController
     }
 
     [HttpPost("odata/Customers({key})/Default.ChangeCustomerAuditInfo")]
-    public IActionResult ChangeCustomerAuditInfo([FromODataUri] int key, [FromBody] AuditInfo auditInfo, CancellationToken cancellationToken)
+    public IActionResult ChangeCustomerAuditInfo([FromODataUri] int key, [FromBody] ODataActionParameters parameters, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
+
+        if (parameters == null || !parameters.TryGetValue("auditInfo", out var auditInfoObj) || auditInfoObj is not AuditInfo auditInfo)
+        {
+            return BadRequest();
+        }
 
         var customer = _dataSource.Customers?.FirstOrDefault(c => c.CustomerId == key);
         if (customer == null)

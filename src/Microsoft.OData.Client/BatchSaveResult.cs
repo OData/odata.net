@@ -17,6 +17,8 @@ namespace Microsoft.OData.Client
     using System.Linq;
     using System.Net;
     using System.Text;
+    using System.Threading;
+    using System.Threading.Tasks;
     using Microsoft.OData;
     using Microsoft.OData.Client.Metadata;
 
@@ -29,9 +31,6 @@ namespace Microsoft.OData.Client
     internal class BatchSaveResult : BaseSaveResult
     {
         #region Private Fields
-
-        /// <summary>The size of the copy buffer to create.</summary>
-        private const int StreamCopyBufferSize = 4000;
 
         /// <summary>Array of queries being executed</summary>
         private readonly DataServiceRequest[] Queries;
@@ -73,7 +72,7 @@ namespace Microsoft.OData.Client
         {
             Debug.Assert(Util.IsBatch(options), "the options must have batch  flag set");
             this.Queries = queries;
-            this.streamCopyBuffer = new byte[StreamCopyBufferSize];
+            this.streamCopyBuffer = new byte[WebUtil.DefaultBufferSizeForStreamCopy];
             this.useRelativeUri = Util.UseRelativeUri(options);
             this.useJsonBatch = Util.UseJsonBatch(options);
         }
@@ -169,16 +168,54 @@ namespace Microsoft.OData.Client
                 {
                     InvalidOperationException exception = WebUtil.GetHttpWebResponse(ex, ref this.batchResponseMessage);
 
-                    // For non-async batch requests we rethrow the WebException.  This is shipped behavior.
+                    // Rethrow to preserve existing error-handling behavior for callers.
                     throw exception;
                 }
                 finally
                 {
                     if (this.batchResponseMessage != null)
                     {
-                        // For non-async batch requests we call the test hook to get the response stream but we cannot consume it
-                        // because we rethrow what we caught and the customer need to be able to read the response stream from the WebException.
-                        // Note that on the async batch code path we do consume the response stream and throw a DataServiceRequestException.
+                        // Capture the response stream before rethrowing so that the caller can read it
+                        // from the rethrown exception's response. We do not consume it here since
+                        // control is returned to the caller via the rethrown exception.
+                        this.responseStream = this.batchResponseMessage.GetStream();
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Asynchronous batch request.
+        /// </summary>
+        /// <param name="cancellationToken">Optional cancellation token.</param>
+        /// <returns>A task that represents the asynchronous batch request operation.</returns>
+        internal async Task BatchRequestAsync(CancellationToken cancellationToken = default)
+        {
+            ODataRequestMessageWrapper batchRequestMessage = this.GenerateBatchRequest();
+
+            if (batchRequestMessage != null)
+            {
+                batchRequestMessage.SetRequestStream(batchRequestMessage.CachedRequestStream);
+
+                try
+                {
+                    this.batchResponseMessage = await this.RequestInfo.GetResponseAsync(batchRequestMessage, false, cancellationToken)
+                        .ConfigureAwait(false);
+                }
+                catch (DataServiceTransportException ex)
+                {
+                    InvalidOperationException exception = WebUtil.GetHttpWebResponse(ex, ref this.batchResponseMessage);
+
+                    // Rethrow to preserve existing error-handling behavior for callers.
+                    throw exception;
+                }
+                finally
+                {
+                    if (this.batchResponseMessage != null)
+                    {
+                        // Capture the response stream before rethrowing so that the caller can read it
+                        // from the rethrown exception's response. We do not consume it here since
+                        // control is returned to the caller via the rethrown exception.
                         this.responseStream = this.batchResponseMessage.GetStream();
                     }
                 }
@@ -869,7 +906,7 @@ namespace Microsoft.OData.Client
             try
             {
                 operationResponseContentStream = new MemoryStream();
-                WebUtil.CopyStream(originalOperationResponseContentStream, operationResponseContentStream, ref this.streamCopyBuffer);
+                WebUtil.CopyStream(originalOperationResponseContentStream, operationResponseContentStream, this.streamCopyBuffer);
                 operationResponseContentStream.Position = 0;
             }
             finally
