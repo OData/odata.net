@@ -261,24 +261,24 @@ namespace Microsoft.OData.UriParser
             catch (FormatException primitiveParserException)
             {
                 exception = new UriLiteralParsingException(
-                    string.Format(CultureInfo.InvariantCulture, Error.Format(SRResources.UriPrimitiveTypeParsers_FailedToParseTextToPrimitiveValue, text.ToString(), targetType),
-                                                            primitiveParserException));
+                    Error.Format(SRResources.UriPrimitiveTypeParsers_FailedToParseTextToPrimitiveValue, text.ToString(), targetType),
+                                                            primitiveParserException);
                 targetValue = null;
                 return false;
             }
             catch (OverflowException primitiveParserException)
             {
                 exception = new UriLiteralParsingException(
-                    string.Format(CultureInfo.InvariantCulture, Error.Format(SRResources.UriPrimitiveTypeParsers_FailedToParseTextToPrimitiveValue, text.ToString(), targetType),
-                                                            primitiveParserException));
+                    Error.Format(SRResources.UriPrimitiveTypeParsers_FailedToParseTextToPrimitiveValue, text.ToString(), targetType),
+                                                            primitiveParserException);
                 targetValue = null;
                 return false;
             }
             catch (ODataException primitiveParserException)
             {
                 exception = new UriLiteralParsingException(
-                    string.Format(CultureInfo.InvariantCulture, Error.Format(SRResources.UriPrimitiveTypeParsers_FailedToParseTextToPrimitiveValue, text.ToString(), targetType),
-                                                            primitiveParserException));
+                    Error.Format(SRResources.UriPrimitiveTypeParsers_FailedToParseTextToPrimitiveValue, text.ToString(), targetType),
+                                                            primitiveParserException);
                 targetValue = null;
                 return false;
             }

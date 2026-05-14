@@ -31,8 +31,8 @@ namespace Microsoft.OData.Tests.Json
             {
                 Assert.True(ODataAnnotationNames.IsODataAnnotationName(annotationName));
 
-                Assert.Contains(annotationName, ODataAnnotationNames.KnownODataAnnotationNames);
-                Assert.DoesNotContain(annotationName.ToUpperInvariant(), ODataAnnotationNames.KnownODataAnnotationNames);
+                Assert.Contains(annotationName, ODataAnnotationNames.KnownODataAnnotationNames.AsEnumerable());
+                Assert.DoesNotContain(annotationName.ToUpperInvariant(), ODataAnnotationNames.KnownODataAnnotationNames.AsEnumerable());
             }
         }
 

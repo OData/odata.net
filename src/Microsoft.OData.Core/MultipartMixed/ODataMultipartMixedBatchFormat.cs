@@ -153,19 +153,29 @@ namespace Microsoft.OData.MultipartMixed
                 ? mediaType.Parameters
                 : new List<KeyValuePair<string, string>>();
 
-            IEnumerable<KeyValuePair<string, string>> boundaryParameters = origParameters.Where(
-                p =>
-                    string.Compare(p.Key, ODataConstants.HttpMultipartBoundary, StringComparison.OrdinalIgnoreCase) == 0);
+            int boundaryCount = 0;
+            string firstBoundaryValue = null;
+            foreach (KeyValuePair<string, string> p in origParameters)
+            {
+                if (string.Compare(p.Key, ODataConstants.HttpMultipartBoundary, StringComparison.OrdinalIgnoreCase) == 0)
+                {
+                    if (boundaryCount == 0)
+                    {
+                        firstBoundaryValue = p.Value;
+                    }
+                    boundaryCount++;
+                }
+            }
 
             string batchBoundary;
-            if (boundaryParameters.Count() > 1)
+            if (boundaryCount > 1)
             {
                 throw new ODataContentTypeException(
                     Error.Format(SRResources.MediaTypeUtils_NoOrMoreThanOneContentTypeSpecified, mediaType.ToText()));
             }
-            else if (boundaryParameters.Count() == 1)
+            else if (boundaryCount == 1)
             {
-                batchBoundary = boundaryParameters.First().Value;
+                batchBoundary = firstBoundaryValue;
                 mediaTypeParameters = mediaType.Parameters;
             }
             else

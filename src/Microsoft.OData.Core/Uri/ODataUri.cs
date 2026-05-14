@@ -1,4 +1,4 @@
-﻿//---------------------------------------------------------------------
+//---------------------------------------------------------------------
 // <copyright file="ODataUri.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
@@ -74,7 +74,9 @@ namespace Microsoft.OData
         {
             this.ParameterAliasValueAccessor = parameterAliasValueAccessor;
             this.Path = path;
-            this.CustomQueryOptions = new ReadOnlyCollection<QueryNode>(customQueryOptions.ToList());
+            this.CustomQueryOptions = customQueryOptions == null
+                ? new ReadOnlyCollection<QueryNode>(new List<QueryNode>(0))
+                : new ReadOnlyCollection<QueryNode>(new List<QueryNode>(customQueryOptions));
             this.SelectAndExpand = selectAndExpand;
             this.Filter = filter;
             this.OrderBy = orderby;

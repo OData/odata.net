@@ -693,7 +693,7 @@ namespace Microsoft.OData
                 IEnumerable<string> missingParameters = parameters.Where(p => !this.parameterNamesWritten.Contains(p.Name) && !this.outputContext.EdmTypeResolver.GetParameterType(p).IsNullable).Select(p => p.Name);
                 if (missingParameters.Any())
                 {
-                    missingParameters = missingParameters.Select(name => String.Format(CultureInfo.InvariantCulture, "'{0}'", name));
+                    missingParameters = missingParameters.Select(name => $"'{name}'");
 
                     // We're calling the ToArray here since not all platforms support the string.Join which takes IEnumerable.
                     throw new ODataException(Error.Format(SRResources.ODataParameterWriterCore_MissingParameterInParameterPayload, string.Join(", ", missingParameters.ToArray()), this.operation.Name));

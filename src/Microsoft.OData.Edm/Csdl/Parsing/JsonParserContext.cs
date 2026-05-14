@@ -218,7 +218,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
             }
             else
             {
-                return string.Format(CultureInfo.InvariantCulture, "[{0}]", (int)node);
+                return string.Create(CultureInfo.InvariantCulture, $"[{(int)node}]");
             }
         }
     }

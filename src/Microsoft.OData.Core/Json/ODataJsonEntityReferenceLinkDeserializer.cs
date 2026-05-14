@@ -1,4 +1,4 @@
-﻿//---------------------------------------------------------------------
+//---------------------------------------------------------------------
 // <copyright file="ODataJsonEntityReferenceLinkDeserializer.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
@@ -539,7 +539,7 @@ namespace Microsoft.OData.Json
         /// Post-Condition: JsonNodeType.EndObject              When the end of the entity reference links object is reached
         ///                 Any                                 The first node of the value of the 'url' property (if found)
         /// </remarks>
-        private async Task ReadEntityReferenceLinksAnnotationsAsync(
+        private async ValueTask ReadEntityReferenceLinksAnnotationsAsync(
             ODataEntityReferenceLinks links,
             PropertyAndAnnotationCollector propertyAndAnnotationCollector,
             bool forLinksStart)

@@ -1,4 +1,4 @@
-﻿//---------------------------------------------------------------------
+//---------------------------------------------------------------------
 // <copyright file="BuiltInUriFunctions.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
@@ -8,6 +8,7 @@ namespace Microsoft.OData.UriParser
 {
     #region Namespaces
     using System;
+    using System.Collections.Frozen;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
@@ -23,12 +24,12 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// Dictionary of the name of the built-in function and all the signatures.
         /// </summary>
-        private static readonly Dictionary<string, FunctionSignatureWithReturnType[]> builtInFunctions = InitializeBuiltInFunctions();
+        private static readonly FrozenDictionary<string, FunctionSignatureWithReturnType[]> builtInFunctions = InitializeBuiltInFunctions().ToFrozenDictionary(StringComparer.Ordinal);
 
         /// <summary>
         /// Case-insensitive lookup of the name of the built-in functions to their canonical case-sensitive name
         /// </summary>
-        private static readonly Dictionary<string, string> caseInsensitiveKeys = builtInFunctions.Keys.ToDictionary(key => key, StringComparer.OrdinalIgnoreCase);
+        private static readonly FrozenDictionary<string, string> caseInsensitiveKeys = builtInFunctions.Keys.ToDictionary(key => key, StringComparer.OrdinalIgnoreCase).ToFrozenDictionary(StringComparer.OrdinalIgnoreCase);
 
         /// <summary>
         /// Returns a list of signatures for a function name.

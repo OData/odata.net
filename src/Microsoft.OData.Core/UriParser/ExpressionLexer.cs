@@ -768,10 +768,9 @@ namespace Microsoft.OData.UriParser
                         this.ParseIdentifier(true /*includingDots*/);
 
                         // Extract the identifier from expression.
-                        ReadOnlyMemory<char> leftToken = ExpressionText.Slice(start, this.textPos - start);
+                        ReadOnlySpan<char> leftToken = ExpressionText.Slice(start, this.textPos - start).Span;
 
-
-                        t = this.parsingFunctionParameters && !leftToken.Span.Contains(".", StringComparison.Ordinal)
+                        t = this.parsingFunctionParameters && leftToken.IndexOf('.') < 0
                             ? ExpressionTokenKind.ParameterAlias
                             : ExpressionTokenKind.Identifier;
                         break;

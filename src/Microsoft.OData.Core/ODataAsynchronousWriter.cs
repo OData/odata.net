@@ -220,7 +220,9 @@ namespace Microsoft.OData
                 {
                     string headerName = headerPair.Key;
                     string headerValue = headerPair.Value;
-                    this.rawOutputContext.TextWriter.WriteLine(string.Format(CultureInfo.InvariantCulture, "{0}: {1}", headerName, headerValue));
+                    this.rawOutputContext.TextWriter.Write(headerName);
+                    this.rawOutputContext.TextWriter.Write(": ");
+                    this.rawOutputContext.TextWriter.WriteLine(headerValue);
                 }
             }
 

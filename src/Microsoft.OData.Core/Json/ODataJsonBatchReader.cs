@@ -1,4 +1,4 @@
-﻿//---------------------------------------------------------------------
+//---------------------------------------------------------------------
 // <copyright file="ODataJsonBatchReader.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
@@ -616,7 +616,7 @@ namespace Microsoft.OData.Json
         /// Asynchronously verify the first JSON property of the batch payload to detect the reader's mode.
         /// </summary>
         /// <returns>A task that represents the asynchronous read operation.</returns>
-        private async Task DetectReaderModeAsync()
+        private async ValueTask DetectReaderModeAsync()
         {
             await this.batchStream.JsonReader.ReadNextAsync()
                 .ConfigureAwait(false);

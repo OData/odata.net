@@ -289,9 +289,9 @@ namespace Microsoft.OData
         /// <remarks>
         /// Scope annotations are those that do not apply to specific properties, and start directly with "@".
         /// </remarks>
-        internal IEnumerable<Annotation> GetCustomScopeAnnotation()
+        internal IReadOnlyList<Annotation> GetCustomScopeAnnotation()
         {
-            return customScopeAnnotations;
+            return (IReadOnlyList<Annotation>)customScopeAnnotations;
         }
 
         /// <summary>
@@ -430,14 +430,14 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="propertyName">Name of the property.</param>
         /// <returns>Custom property annotation name value pairs.</returns>
-        internal IEnumerable<Annotation> GetCustomPropertyAnnotations(string propertyName)
+        internal IReadOnlyList<Annotation> GetCustomPropertyAnnotations(string propertyName)
         {
             Debug.Assert(propertyName != null);
 
             PropertyData data;
             return propertyData.TryGetValue(propertyName, out data)
-                   ? data.CustomAnnotations
-                   : Enumerable.Empty<Annotation>();
+                   ? (IReadOnlyList<Annotation>)data.CustomAnnotations
+                   : Array.Empty<Annotation>();
         }
 
         /// <summary>

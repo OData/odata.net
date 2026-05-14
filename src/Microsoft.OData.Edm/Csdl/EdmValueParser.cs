@@ -1,4 +1,4 @@
-﻿//---------------------------------------------------------------------
+//---------------------------------------------------------------------
 // <copyright file="EdmValueParser.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
@@ -27,12 +27,15 @@ namespace Microsoft.OData.Edm.Csdl
     /// <summary>
     /// Contains xml parsing methods for Edm.
     /// </summary>
-    internal static class EdmValueParser
+    internal static partial class EdmValueParser
     {
         /// <summary>
-        /// This pattern eliminates all durations with year or month fields, leaving only those with day, hour, minutes, and/or seconds fields
+        /// This pattern eliminates all durations with year or month fields, leaving only those with day, hour, minutes, and/or seconds fields.
         /// </summary>
-        internal static readonly Regex DayTimeDurationValidator = PlatformHelper.CreateCompiled("^[^YM]*[DT].*$", RegexOptions.Singleline);
+        [GeneratedRegex("^[^YM]*[DT].*$", RegexOptions.Singleline)]
+        private static partial Regex DayTimeDurationValidatorRegex();
+
+        internal static readonly Regex DayTimeDurationValidator = DayTimeDurationValidatorRegex();
 
         /// <summary>
         /// Converts a string to a TimeSpan.

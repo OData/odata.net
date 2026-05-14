@@ -45,12 +45,25 @@ namespace Microsoft.OData.Edm
         {
             EdmUtil.CheckArgumentNull(pathSegments, "pathSegments");
 
-            if (pathSegments.Any(segment => segment.Contains("/", StringComparison.Ordinal)))
+            List<string> segments = pathSegments is ICollection<string> col
+                ? new List<string>(col.Count)
+                : new List<string>();
+            foreach (string segment in pathSegments)
             {
-                throw new ArgumentException(SRResources.PathSegmentMustNotContainSlash);
+                if (segment == null)
+                {
+                    throw new ArgumentException(SRResources.PathSegmentMustNotBeNull, nameof(pathSegments));
+                }
+
+                if (segment.IndexOf('/') >= 0)
+                {
+                    throw new ArgumentException(SRResources.PathSegmentMustNotContainSlash);
+                }
+
+                segments.Add(segment);
             }
 
-            this.pathSegments = pathSegments.ToList();
+            this.pathSegments = segments;
         }
 
         /// <summary>
@@ -66,7 +79,7 @@ namespace Microsoft.OData.Edm
         /// </summary>
         public string Path
         {
-            get { return this.path ?? (this.path = string.Join("/", this.pathSegments.ToArray())); }
+            get { return this.path ?? (this.path = string.Join('/', this.pathSegments)); }
         }
 
         /// <summary>

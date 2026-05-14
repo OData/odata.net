@@ -1,4 +1,4 @@
-﻿//---------------------------------------------------------------------
+//---------------------------------------------------------------------
 // <copyright file="ODataAnnotationNames.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
@@ -8,6 +8,7 @@ namespace Microsoft.OData.Json
 {
     #region Namespaces
     using System;
+    using System.Collections.Frozen;
     using System.Collections.Generic;
     using System.Diagnostics;
     using Microsoft.OData.Core;
@@ -19,9 +20,9 @@ namespace Microsoft.OData.Json
     internal static class ODataAnnotationNames
     {
         /// <summary>
-        /// Hash set of known odata annotation names that have special meanings to OData Lib.
+        /// Frozen set of known odata annotation names that have special meanings to OData Lib.
         /// </summary>
-        internal static readonly HashSet<string> KnownODataAnnotationNames =
+        internal static readonly FrozenSet<string> KnownODataAnnotationNames =
             new HashSet<string>(
                 new[]
                 {
@@ -45,7 +46,7 @@ namespace Microsoft.OData.Json
                     ODataDelta,
                     ODataNull,
                 },
-                StringComparer.Ordinal);
+                StringComparer.Ordinal).ToFrozenSet(StringComparer.Ordinal);
 
         /// <summary>The OData Context annotation name.</summary>
         internal const string ODataContext = "odata.context";

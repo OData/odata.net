@@ -49,7 +49,7 @@ namespace Microsoft.OData.Evaluation
         /// Gets the computed missing Actions from the generator.
         /// </summary>
         /// <returns>The computed missing Actions.</returns>
-        internal IEnumerable<ODataAction> GetComputedActions()
+        internal IReadOnlyList<ODataAction> GetComputedActions()
         {
             this.ComputeMissingOperationsToResource();
             return this.computedActions;
@@ -59,7 +59,7 @@ namespace Microsoft.OData.Evaluation
         /// Gets the computed missing Functions from the generator.
         /// </summary>
         /// <returns>The computed missing Functions.</returns>
-        internal IEnumerable<ODataFunction> GetComputedFunctions()
+        internal IReadOnlyList<ODataFunction> GetComputedFunctions()
         {
             this.ComputeMissingOperationsToResource();
             return this.computedFunctions;

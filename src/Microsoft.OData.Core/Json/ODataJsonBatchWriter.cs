@@ -1,4 +1,4 @@
-﻿//---------------------------------------------------------------------
+//---------------------------------------------------------------------
 // <copyright file="ODataJsonBatchWriter.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
@@ -278,9 +278,9 @@ namespace Microsoft.OData.Json
             List<string> dependsOnRequestIds = new List<string>();
             foreach (string id in dependsOnIds)
             {
-                if (this.atomicityGroupIdToRequestId.ContainsKey(id))
+                if (this.atomicityGroupIdToRequestId.TryGetValue(id, out IList<string> groupRequests))
                 {
-                    dependsOnRequestIds.AddRange(this.atomicityGroupIdToRequestId[id]);
+                    dependsOnRequestIds.AddRange(groupRequests);
                 }
                 else
                 {
@@ -739,11 +739,8 @@ namespace Microsoft.OData.Json
             // write the pending headers (if any)
             this.WritePendingMessageData(false);
 
-            this.jsonWriter.WriteRawValue(string.Format(CultureInfo.InvariantCulture,
-                "{0} \"{1}\" {2}",
-                JsonConstants.ArrayElementSeparator,
-                PropertyBody,
-                JsonConstants.NameValueSeparator));
+            this.jsonWriter.WriteRawValue(
+                $"{JsonConstants.ArrayElementSeparator} \"{PropertyBody}\" {JsonConstants.NameValueSeparator}");
 
             // flush the text writer to make sure all buffers of the text writer
             // are flushed to the underlying async stream
@@ -887,7 +884,7 @@ namespace Microsoft.OData.Json
                     case BatchPayloadUriOption.AbsoluteUriUsingHostHeader:
                         string absoluteResourcePath = ExtractAbsoluteResourcePath(absoluteUriString);
                         this.jsonWriter.WriteValue(absoluteResourcePath);
-                        this.CurrentOperationRequestMessage.SetHeader("host", string.Format(CultureInfo.InvariantCulture, "{0}:{1}", uri.Host, uri.Port));
+                        this.CurrentOperationRequestMessage.SetHeader("host", FormattableString.Invariant($"{uri.Host}:{uri.Port}"));
                         break;
 
                     case BatchPayloadUriOption.RelativeUri:
@@ -919,7 +916,7 @@ namespace Microsoft.OData.Json
         /// Asynchronously writes all the pending headers and prepares the writer to write a content of the operation.
         /// </summary>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private async Task StartBatchOperationContentAsync()
+        private async ValueTask StartBatchOperationContentAsync()
         {
             Debug.Assert(this.CurrentOperationMessage != null, "Expected non-null operation message!");
             Debug.Assert(this.jsonWriter != null, "Must have a Json writer!");
@@ -928,11 +925,8 @@ namespace Microsoft.OData.Json
             await this.WritePendingMessageDataAsync(false)
                 .ConfigureAwait(false);
 
-            await this.jsonWriter.WriteRawValueAsync(string.Format(CultureInfo.InvariantCulture,
-                "{0} \"{1}\" {2}",
-                JsonConstants.ArrayElementSeparator,
-                PropertyBody,
-                JsonConstants.NameValueSeparator)).ConfigureAwait(false);
+            await this.jsonWriter.WriteRawValueAsync(
+                $"{JsonConstants.ArrayElementSeparator} \"{PropertyBody}\" {JsonConstants.NameValueSeparator}").ConfigureAwait(false);
 
             // flush the text writer to make sure all buffers of the text writer
             // are flushed to the underlying async stream
@@ -947,7 +941,7 @@ namespace Microsoft.OData.Json
         /// A flag to control whether after writing the pending data we report writing the message to be completed or not.
         /// </param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private async Task WritePendingMessageDataAsync(bool reportMessageCompleted)
+        private async ValueTask WritePendingMessageDataAsync(bool reportMessageCompleted)
         {
             if (this.CurrentOperationMessage != null)
             {
@@ -993,7 +987,7 @@ namespace Microsoft.OData.Json
         /// Always sets the isBatchEnvelopeWritten flag to true before return.
         /// </summary>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private async Task WriteBatchEnvelopeAsync()
+        private async ValueTask WriteBatchEnvelopeAsync()
         {
             // Start the top level scope
             await this.jsonWriter.StartObjectScopeAsync()
@@ -1010,7 +1004,7 @@ namespace Microsoft.OData.Json
         /// Asynchronously writes pending data for the current request message.
         /// </summary>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private async Task WritePendingRequestMessageDataAsync()
+        private async ValueTask WritePendingRequestMessageDataAsync()
         {
             Debug.Assert(this.CurrentOperationRequestMessage != null, "this.CurrentOperationRequestMessage != null");
 
@@ -1039,7 +1033,7 @@ namespace Microsoft.OData.Json
         /// Asynchronously writes pending data for the current response message.
         /// </summary>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private async Task WritePendingResponseMessageDataAsync()
+        private async ValueTask WritePendingResponseMessageDataAsync()
         {
             Debug.Assert(this.JsonOutputContext.WritingResponse, "If the response message is available we must be writing response.");
             Debug.Assert(this.CurrentOperationResponseMessage != null, "this.CurrentOperationResponseMessage != null");
@@ -1094,7 +1088,7 @@ namespace Microsoft.OData.Json
         /// The format of operation Request-URI, which could be AbsoluteUri, AbsoluteResourcePathAndHost, or RelativeResourcePath.
         /// </param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private async Task WriteRequestUriAsync(Uri uri, BatchPayloadUriOption payloadUriOption)
+        private async ValueTask WriteRequestUriAsync(Uri uri, BatchPayloadUriOption payloadUriOption)
         {
             await this.jsonWriter.WriteNameAsync(PropertyUrl)
                 .ConfigureAwait(false);
@@ -1116,7 +1110,7 @@ namespace Microsoft.OData.Json
                         await this.jsonWriter.WriteValueAsync(absoluteResourcePath)
                             .ConfigureAwait(false);
                         this.CurrentOperationRequestMessage.SetHeader("host",
-                            string.Format(CultureInfo.InvariantCulture, "{0}:{1}", uri.Host, uri.Port));
+                            FormattableString.Invariant($"{uri.Host}:{uri.Port}"));
                         break;
 
                     case BatchPayloadUriOption.RelativeUri:

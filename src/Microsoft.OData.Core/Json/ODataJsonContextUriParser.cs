@@ -21,7 +21,7 @@ namespace Microsoft.OData.Json
     /// <summary>
     /// Parser for odata context URIs used in JSON.
     /// </summary>
-    internal sealed class ODataJsonContextUriParser
+    internal sealed partial class ODataJsonContextUriParser
     {
         /// <summary>
         /// Pattern for key segments, Examples:
@@ -29,7 +29,10 @@ namespace Microsoft.OData.Json
         /// Customer(baf04077-a3c0-454b-ac6f-9fec00b8e170), Message(FromUsername='1',MessageId=-10)
         /// Message(geography'SRID=0;Collection(LineString(142.1 64.1,3.14 2.78))'),Message(duration'P6DT23H59M59.9999S')
         /// </summary>
-        private static readonly Regex KeyPattern = new Regex(@"^(?:-{0,1}\d+?|\w*'.+?'|[A-F0-9]{8}(?:-[A-F0-9]{4}){3}-[A-F0-9]{12}|.+?=.+?)$", RegexOptions.IgnoreCase);
+        [GeneratedRegex(@"^(?:-{0,1}\d+?|\w*'.+?'|[A-F0-9]{8}(?:-[A-F0-9]{4}){3}-[A-F0-9]{12}|.+?=.+?)$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant)]
+        private static partial Regex KeyPatternRegex();
+
+        private static readonly Regex KeyPattern = KeyPatternRegex();
 
         /// <summary>The model to use when resolving the target of the URI.</summary>
         private readonly IEdmModel model;
