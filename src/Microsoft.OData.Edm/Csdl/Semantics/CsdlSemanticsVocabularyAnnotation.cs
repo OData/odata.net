@@ -582,7 +582,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                 foreach (IEdmOperationParameter parameter in function.Parameters)
                 {
                     parameterTypeNameEnumerator.MoveNext();
-                    string[] typeInformation = parameterTypeNameEnumerator.Current.Split(new char[] { '(', ')' });
+                    string[] typeInformation = parameterTypeNameEnumerator.Current.Split('(', ')');
                     switch (typeInformation[0])
                     {
                         case CsdlConstants.Value_Collection:

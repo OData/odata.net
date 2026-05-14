@@ -147,7 +147,7 @@ namespace Microsoft.OData.UriParser.Aggregation
                 result = string.Join(",", groupByPropertyArray);
                 result = aggregateExpressions == null
                     ? result
-                    : string.Format(CultureInfo.InvariantCulture, "{0},{1}", result, CreateAggregatePropertiesUriSegment(aggregateExpressions));
+                    : $"{result},{CreateAggregatePropertiesUriSegment(aggregateExpressions)}";
             }
             else
             {
@@ -161,7 +161,7 @@ namespace Microsoft.OData.UriParser.Aggregation
                 string computeProperties = string.Join(",", computeExpressions.Select(e => e.Alias).ToArray());
                 if (!string.IsNullOrEmpty(computeProperties))
                 {
-                    result = string.Format(CultureInfo.InvariantCulture, "{0},{1}", result, computeProperties);
+                    result = $"{result},{computeProperties}";
                 }
             }
 

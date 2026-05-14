@@ -2678,4 +2678,7 @@
   <data name="TaskUtils_NullContinuationTask" xml:space="preserve">
     <value>The continuation task returned by the operation cannot be null.</value>
   </data>
+  <data name="ODataJsonDeserializer_AssertJsonConditionFailed" xml:space="preserve">
+    <value>JSON condition failed: the JsonReader is on node {0} (Value: {1}) but it was expected to be on {2}.</value>
+  </data>
 </root>

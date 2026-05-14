@@ -1,4 +1,4 @@
-﻿//---------------------------------------------------------------------
+//---------------------------------------------------------------------
 // <copyright file="JsonReader.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
@@ -3267,7 +3267,9 @@ namespace Microsoft.OData.Json
             int characterValue = ParseFourHexDigits(hexChar1, hexChar2, hexChar3, hexChar4);
             if (characterValue < 0)
             {
-                throw JsonReaderExtensions.CreateException(Error.Format(SRResources.JsonReader_UnrecognizedEscapeSequence, "\\u" + new string(new char[] {hexChar1, hexChar2, hexChar3, hexChar4})));
+                throw JsonReaderExtensions.CreateException(Error.Format(
+                    SRResources.JsonReader_UnrecognizedEscapeSequence,
+                    new string(this.characterBuffer, this.tokenStartIndex - 6, 6)));
             }
 
             return characterValue;

@@ -47,9 +47,8 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
                         // Skip actionImports that have the same name for same overloads of a action.
                         IEdmActionImport actionImport = (IEdmActionImport)element;
                         string uniqueActionName = actionImport.Name + "_" + actionImport.Action.FullName() + GetEntitySetString(actionImport);
-                        if (!actionImportsWritten.Contains(uniqueActionName))
+                        if (actionImportsWritten.Add(uniqueActionName))
                         {
-                            actionImportsWritten.Add(uniqueActionName);
                             this.ProcessActionImport(actionImport);
                         }
 
@@ -58,9 +57,8 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
                         // Skip functionImports that have the same name for same overloads of a function.
                         IEdmFunctionImport functionImport = (IEdmFunctionImport)element;
                         string uniqueFunctionName = functionImport.Name + "_" + functionImport.Function.FullName() + GetEntitySetString(functionImport);
-                        if (!functionImportsWritten.Contains(uniqueFunctionName))
+                        if (functionImportsWritten.Add(uniqueFunctionName))
                         {
-                            functionImportsWritten.Add(uniqueFunctionName);
                             this.ProcessFunctionImport(functionImport);
                         }
 
@@ -99,9 +97,8 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
                         IEdmActionImport actionImport = (IEdmActionImport)element;
 
                         var uniqueActionName = string.Concat(actionImport.Name, "_", actionImport.Action.FullName(), GetEntitySetString(actionImport));
-                        if (!actionImportsWritten.Contains(uniqueActionName))
+                        if (actionImportsWritten.Add(uniqueActionName))
                         {
-                            actionImportsWritten.Add(uniqueActionName);
                             await this.ProcessActionImportAsync(actionImport).ConfigureAwait(false);
                         }
 
@@ -111,9 +108,8 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
                         IEdmFunctionImport functionImport = (IEdmFunctionImport)element;
 
                         var uniqueFunctionName = string.Concat(functionImport.Name, "_", functionImport.Function.FullName(), GetEntitySetString(functionImport));
-                        if (!functionImportsWritten.Contains(uniqueFunctionName))
+                        if (functionImportsWritten.Add(uniqueFunctionName))
                         {
-                            functionImportsWritten.Add(uniqueFunctionName);
                             await this.ProcessFunctionImportAsync(functionImport).ConfigureAwait(false);
                         }
 

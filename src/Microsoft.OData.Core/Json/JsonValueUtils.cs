@@ -1,4 +1,4 @@
-﻿//---------------------------------------------------------------------
+//---------------------------------------------------------------------
 // <copyright file="JsonValueUtils.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
@@ -8,6 +8,7 @@ namespace Microsoft.OData.Json
 {
     #region Namespaces
     using System;
+    using System.Buffers;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
@@ -48,6 +49,10 @@ namespace Microsoft.OData.Json
         /// Characters which, if found inside a number, indicate that the number is a double when no other type information is available.
         /// </summary>
         internal static readonly char[] DoubleIndicatingCharacters = new char[] { '.', 'e', 'E' };
+
+        /// <summary>
+        /// </summary>
+        internal static readonly SearchValues<char> DoubleIndicatingCharactersSearchValues = SearchValues.Create(DoubleIndicatingCharacters);
 
         /// <summary>
         /// Map of special characters to strings.
@@ -168,7 +173,7 @@ namespace Microsoft.OData.Json
                 string valueToWrite = XmlConvert.ToString(value);
 
                 writer.Write(valueToWrite);
-                if (valueToWrite.IndexOfAny(JsonValueUtils.DoubleIndicatingCharacters) < 0)
+                if (valueToWrite.AsSpan().IndexOfAny(JsonValueUtils.DoubleIndicatingCharactersSearchValues) < 0)
                 {
                     writer.Write(".0");
                 }
@@ -532,39 +537,46 @@ namespace Microsoft.OData.Json
         {
             Debug.Assert(inputString != null, "The string value must not be null.");
 
-            StringBuilder builder = new StringBuilder();
-            int startIndex = 0;
-            int inputStringLength = inputString.Length;
-            int subStrLength;
-            for (int currentIndex = 0; currentIndex < inputStringLength; currentIndex++)
+            StringBuilder builder = StringBuilderPool.Shared.Get();
+            try
             {
-                char c = inputString[currentIndex];
-
-                // Append the un-handled characters (that do not require special treatment)
-                // to the string builder when special characters are detected.
-                if (JsonValueUtils.SpecialCharToEscapedStringMap[c] == null)
+                int startIndex = 0;
+                int inputStringLength = inputString.Length;
+                int subStrLength;
+                for (int currentIndex = 0; currentIndex < inputStringLength; currentIndex++)
                 {
-                    continue;
+                    char c = inputString[currentIndex];
+
+                    // Append the un-handled characters (that do not require special treatment)
+                    // to the string builder when special characters are detected.
+                    if (JsonValueUtils.SpecialCharToEscapedStringMap[c] == null)
+                    {
+                        continue;
+                    }
+
+                    // Flush out the un-escaped characters we've built so far via AsSpan to avoid Substring allocation.
+                    subStrLength = currentIndex - startIndex;
+                    if (subStrLength > 0)
+                    {
+                        builder.Append(inputString.AsSpan(startIndex, subStrLength));
+                    }
+
+                    builder.Append(JsonValueUtils.SpecialCharToEscapedStringMap[c]);
+                    startIndex = currentIndex + 1;
                 }
 
-                // Flush out the un-escaped characters we've built so far.
-                subStrLength = currentIndex - startIndex;
+                subStrLength = inputStringLength - startIndex;
                 if (subStrLength > 0)
                 {
-                    builder.Append(inputString.Substring(startIndex, subStrLength));
+                    builder.Append(inputString.AsSpan(startIndex, subStrLength));
                 }
 
-                builder.Append(JsonValueUtils.SpecialCharToEscapedStringMap[c]);
-                startIndex = currentIndex + 1;
+                return builder.ToString();
             }
-
-            subStrLength = inputStringLength - startIndex;
-            if (subStrLength > 0)
+            finally
             {
-                builder.Append(inputString.Substring(startIndex, subStrLength));
+                StringBuilderPool.Shared.Return(builder);
             }
-
-            return builder.ToString();
         }
 
         /// <summary>
@@ -710,7 +722,7 @@ namespace Microsoft.OData.Json
                 if ((c < ' ') || (c > 0x7F))
                 {
                     // We only need to populate for characters < ' ' and > 0x7F.
-                    specialCharToEscapedStringMap[c] = string.Format(CultureInfo.InvariantCulture, "\\u{0:x4}", c);
+                    specialCharToEscapedStringMap[c] = string.Create(CultureInfo.InvariantCulture, $"\\u{c:x4}");
                 }
                 else
                 {
@@ -737,13 +749,8 @@ namespace Microsoft.OData.Json
         private static string FormatDateTimeAsJsonTicksString(DateTimeOffset value)
         {
             Int32 offsetMinutes = (Int32)value.Offset.TotalMinutes;
-
-            return String.Format(
-                CultureInfo.InvariantCulture,
-                JsonConstants.ODataDateTimeOffsetFormat,
-                DateTimeTicksToJsonTicks(value.Ticks),
-                offsetMinutes >= 0 ? JsonConstants.ODataDateTimeOffsetPlusSign : string.Empty,
-                offsetMinutes);
+            string sign = offsetMinutes >= 0 ? JsonConstants.ODataDateTimeOffsetPlusSign : string.Empty;
+            return string.Create(CultureInfo.InvariantCulture, $"\\/Date({DateTimeTicksToJsonTicks(value.Ticks)}{sign}{offsetMinutes:D4})\\/");
         }
 
         /// <summary>

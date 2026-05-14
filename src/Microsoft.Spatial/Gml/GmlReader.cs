@@ -1,4 +1,4 @@
-﻿//---------------------------------------------------------------------
+//---------------------------------------------------------------------
 // <copyright file="GmlReader.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
@@ -7,6 +7,7 @@
 namespace Microsoft.Spatial
 {
     using System;
+    using System.Collections.Frozen;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Xml;
@@ -54,16 +55,16 @@ namespace Microsoft.Spatial
             private static readonly char[] coordinateDelimiter = { ' ', '\t', '\r', '\n' };
 
             /// <summary>
-            /// List of known gml elements that can be ignored by the parser
+            /// List of known gml elements that can be ignored by the parser.
             /// </summary>
-            private static readonly Dictionary<String, String> skippableElements = new Dictionary<string, string>(StringComparer.Ordinal)
+            private static readonly FrozenSet<string> skippableElements = new HashSet<string>(StringComparer.Ordinal)
                 {
-                    { GmlConstants.Name, GmlConstants.Name },
-                    { GmlConstants.Description, GmlConstants.Description },
-                    { GmlConstants.MetadataProperty, GmlConstants.MetadataProperty },
-                    { GmlConstants.DescriptionReference, GmlConstants.DescriptionReference },
-                    { GmlConstants.IdentifierElement, GmlConstants.IdentifierElement }
-                };
+                    GmlConstants.Name,
+                    GmlConstants.Description,
+                    GmlConstants.MetadataProperty,
+                    GmlConstants.DescriptionReference,
+                    GmlConstants.IdentifierElement
+                }.ToFrozenSet(StringComparer.Ordinal);
 
             #region Atomized Constants
 
@@ -788,7 +789,7 @@ namespace Microsoft.Spatial
                     {
                         // calling LocalName_get() multiple times should be avoided.
                         String localName = this.reader.LocalName;
-                        shouldSkip = skippableElements.ContainsKey(localName);
+                        shouldSkip = skippableElements.Contains(localName);
                     }
                     else
                     {

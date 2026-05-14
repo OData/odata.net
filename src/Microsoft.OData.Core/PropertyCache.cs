@@ -1,4 +1,4 @@
-﻿//---------------------------------------------------------------------
+//---------------------------------------------------------------------
 // <copyright file="PropertyCache.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
@@ -19,11 +19,16 @@ namespace Microsoft.OData
 
         private struct PropertyKey : IEquatable<PropertyKey>
         {
+            private readonly int hashCode;
+
             public PropertyKey(int depth, string name, string fullTypeName)
             {
                 this.Depth = depth;
                 this.Name = name;
                 this.FullTypeName = fullTypeName;
+                this.hashCode = depth ^
+                                (name != null ? name.GetHashCode(StringComparison.Ordinal) : 0) ^
+                                (fullTypeName != null ? fullTypeName.GetHashCode(StringComparison.Ordinal) : 0);
             }
 
             public int Depth { get; private set; }
@@ -44,9 +49,7 @@ namespace Microsoft.OData
 
             public override int GetHashCode()
             {
-                return this.Depth.GetHashCode() ^
-                       this.Name.GetHashCode(StringComparison.Ordinal) ^
-                       (this.FullTypeName?.GetHashCode(StringComparison.Ordinal) ?? 0);
+                return this.hashCode;
             }
 
             public override bool Equals(object obj)

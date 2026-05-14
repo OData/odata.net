@@ -1,4 +1,4 @@
-﻿//---------------------------------------------------------------------
+//---------------------------------------------------------------------
 // <copyright file="CsdlReader.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
@@ -509,9 +509,9 @@ namespace Microsoft.OData.Edm.Csdl
                 {
                     if (this.reader.NodeType == XmlNodeType.Element)
                     {
-                        if (elementParsers.ContainsKey(this.reader.LocalName))
+                        if (elementParsers.TryGetValue(this.reader.LocalName, out Action parser))
                         {
-                            elementParsers[this.reader.LocalName]();
+                            parser();
                         }
                         else
                         {

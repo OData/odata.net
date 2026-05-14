@@ -279,7 +279,7 @@ namespace Microsoft.OData.Client
         /// <returns>A multipart mime header with a generated batch boundary</returns>
         private static string CreateMultiPartMimeContentType()
         {
-            return string.Format(CultureInfo.InvariantCulture, "{0}; {1}={2}_{3}", XmlConstants.MimeMultiPartMixed, XmlConstants.HttpMultipartBoundary, XmlConstants.HttpMultipartBoundaryBatch, Guid.NewGuid());
+            return $"{XmlConstants.MimeMultiPartMixed}; {XmlConstants.HttpMultipartBoundary}={XmlConstants.HttpMultipartBoundaryBatch}_{Guid.NewGuid()}";
         }
 
         /// <summary>

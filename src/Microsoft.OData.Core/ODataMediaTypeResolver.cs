@@ -1,4 +1,4 @@
-﻿//---------------------------------------------------------------------
+//---------------------------------------------------------------------
 // <copyright file="ODataMediaTypeResolver.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
@@ -8,6 +8,7 @@ namespace Microsoft.OData
 {
     #region Namespaces
     using System;
+    using System.Collections.Frozen;
     using System.Collections.Generic;
     using System.Linq;
     using Microsoft.Extensions.DependencyInjection;
@@ -21,7 +22,7 @@ namespace Microsoft.OData
         /// <summary>
         /// The set of payload kinds which are supported for the JSON formats.
         /// </summary>
-        private static readonly HashSet<ODataPayloadKind> JsonPayloadKindSet = new HashSet<ODataPayloadKind>
+        private static readonly FrozenSet<ODataPayloadKind> JsonPayloadKindSet = new HashSet<ODataPayloadKind>
         {
             ODataPayloadKind.ResourceSet,
             ODataPayloadKind.Resource,
@@ -34,7 +35,7 @@ namespace Microsoft.OData
             ODataPayloadKind.Parameter,
             ODataPayloadKind.Delta,
             ODataPayloadKind.IndividualProperty
-        };
+        }.ToFrozenSet();
 
         /// <summary>
         /// MediaTypeResolver.

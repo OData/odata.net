@@ -70,7 +70,7 @@ namespace Microsoft.OData.Json
         /// <summary>
         /// The detected payload kinds from parsing the context URI.
         /// </summary>
-        internal IEnumerable<ODataPayloadKind> DetectedPayloadKinds { get; set; }
+        internal IReadOnlyList<ODataPayloadKind> DetectedPayloadKinds { get; set; }
 
         /// <summary>
         /// ODataPath parsed from context Url
