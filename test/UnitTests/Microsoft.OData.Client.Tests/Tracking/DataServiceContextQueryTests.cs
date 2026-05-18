@@ -11,6 +11,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using Xunit;
@@ -163,6 +164,37 @@ namespace Microsoft.OData.Client.Tests.Tracking
         }
 
         [Fact]
+        public async Task ExecuteAsync_WithResponseStreamThatDisallowsSynchronousReads_ShouldSucceed()
+        {
+            // Arrange
+            string response = @"{
+    ""@odata.context"": ""http://localhost:8007/$metadata#Employees"",
+    ""value"": [
+        {
+            ""EmpNumber"": 1,
+            ""EmpType"": ""FullTime"",
+            ""OrgId"": 1,
+            ""Name"": ""John Doe""
+        }
+    ]
+}";
+
+            SetupContextWithRequestPipeline(
+                _defaultContext,
+                response,
+                "Employees",
+                () => new AsyncReadOnlyStream(new MemoryStream(Encoding.UTF8.GetBytes(response))));
+
+            // Act
+            DataServiceQuery<Employee> query = _defaultContext.Employees;
+            IEnumerable<Employee> employees = await query.ExecuteAsync();
+
+            // Assert
+            Employee employee = Assert.Single(employees);
+            Assert.Equal("John Doe", employee.Name);
+        }
+
+        [Fact]
         public void UseWhereToFilterByOtherKeyOtherThanEnumKey_WithEnumAsKey_DoNotThrowException()
         {
             // Arrange
@@ -298,7 +330,7 @@ namespace Microsoft.OData.Client.Tests.Tracking
             Assert.Equal(EmployeeType.FullTime, employee.EmpType);
         }
 
-        private void SetupContextWithRequestPipeline(DataServiceContext context, string response, string path)
+        private void SetupContextWithRequestPipeline(DataServiceContext context, string response, string path, Func<Stream> responseStreamFactory = null)
         {
             string location = $"{ServiceRoot}/{path}";
 
@@ -309,7 +341,8 @@ namespace Microsoft.OData.Client.Tests.Tracking
                 {
                     { "Content-Type", "application/json;charset=utf-8" },
                     { "Location", location },
-                });
+                },
+                responseStreamFactory);
         }
 
         class Container : DataServiceContext

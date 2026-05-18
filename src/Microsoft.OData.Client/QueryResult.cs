@@ -13,6 +13,7 @@ namespace Microsoft.OData.Client
     using System.IO;
     using System.Linq;
     using System.Net;
+    using System.Threading.Tasks;
     using Microsoft.OData;
 
     /// <summary>
@@ -505,6 +506,7 @@ namespace Microsoft.OData.Client
             AsyncStateBag asyncStateBag = asyncResult.AsyncState as AsyncStateBag;
 
             PerRequest pereq = asyncStateBag == null ? null : asyncStateBag.PerRequest;
+            bool deferHandleCompleted = false;
 
             try
             {
@@ -554,8 +556,9 @@ namespace Microsoft.OData.Client
                             this.asyncStreamCopyBuffer = Util.NullCheck(this.GetAsyncResponseStreamCopyBuffer(), InternalError.InvalidAsyncResponseStreamCopyBuffer);
                         }
 
-                        // Make async calls to read the response stream
-                        this.ReadResponseStream(asyncStateBag);
+                        // Make async calls to read and copy the response stream.
+                        this.ReadResponseStreamAsync(asyncStateBag);
+                        deferHandleCompleted = true;
                     }
                     else
                     {
@@ -573,7 +576,10 @@ namespace Microsoft.OData.Client
             }
             finally
             {
-                this.HandleCompleted(pereq);
+                if (!deferHandleCompleted)
+                {
+                    this.HandleCompleted(pereq);
+                }
             }
         }
 
@@ -590,82 +596,53 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Make async calls to read the response stream.
+        /// Make async calls to read and copy the response stream.
         /// </summary>
         /// <param name="asyncStateBag">the state containing the information about the asynchronous operation.</param>
-        private void ReadResponseStream(AsyncStateBag asyncStateBag)
+        private void ReadResponseStreamAsync(AsyncStateBag asyncStateBag)
+        {
+            _ = this.ReadResponseStreamAsyncInternal(asyncStateBag);
+        }
+
+        /// <summary>
+        /// Copies the response stream asynchronously using TAP stream APIs.
+        /// </summary>
+        /// <param name="asyncStateBag">the state containing the information about the asynchronous operation.</param>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "required for this feature")]
+        private async Task ReadResponseStreamAsyncInternal(AsyncStateBag asyncStateBag)
         {
             Debug.Assert(asyncStateBag != null, "asyncStateBag != null");
             PerRequest pereq = asyncStateBag.PerRequest;
-            IAsyncResult asyncResult = null;
-
-            byte[] buffer = this.asyncStreamCopyBuffer;
-            Stream httpResponseStream = pereq.ResponseStream;
-
-            do
-            {
-                int bufferOffset = 0;
-                int bufferLength = buffer.Length;
-
-                this.usingBuffer = true;
-                asyncResult = BaseAsyncResult.InvokeAsync(httpResponseStream.BeginRead, buffer, bufferOffset, bufferLength, this.AsyncEndRead, asyncStateBag);
-                pereq.SetRequestCompletedSynchronously(asyncResult.CompletedSynchronously);
-                this.SetCompletedSynchronously(asyncResult.CompletedSynchronously); // BeginRead
-            }
-            while (asyncResult.CompletedSynchronously && !pereq.RequestCompleted && !this.IsCompletedInternally && httpResponseStream.CanRead);
-
-            Debug.Assert((!this.CompletedSynchronously && !pereq.RequestCompletedSynchronously) || this.IsCompletedInternally || pereq.RequestCompleted, "AsyncEndGetResponse !IsCompleted");
-        }
-
-        /// <summary>handle responseStream.BeginRead with responseStream.EndRead</summary>
-        /// <param name="asyncResult">async result</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "required for this feature")]
-        private void AsyncEndRead(IAsyncResult asyncResult)
-        {
-            Debug.Assert(asyncResult != null && asyncResult.IsCompleted, "asyncResult.IsCompleted");
-            AsyncStateBag asyncStateBag = asyncResult.AsyncState as AsyncStateBag;
-            PerRequest pereq = asyncStateBag == null ? null : asyncStateBag.PerRequest;
-
-            int count = 0;
             try
             {
                 this.CompleteCheck(pereq, InternalError.InvalidEndReadCompleted);
-                pereq.SetRequestCompletedSynchronously(asyncResult.CompletedSynchronously); // BeginRead
-                this.SetCompletedSynchronously(asyncResult.CompletedSynchronously);
+                pereq.SetRequestCompletedSynchronously(false);
+                this.SetCompletedSynchronously(false);
 
                 Stream httpResponseStream = Util.NullCheck(pereq.ResponseStream, InternalError.InvalidEndReadStream); // get the http response stream.
-
                 Stream outResponseStream = Util.NullCheck(this.outputResponseStream, InternalError.InvalidEndReadCopy);
-
                 byte[] buffer = Util.NullCheck(this.asyncStreamCopyBuffer, InternalError.InvalidEndReadBuffer);
-                count = httpResponseStream.EndRead(asyncResult);
-                this.usingBuffer = false;
+                this.usingBuffer = true;
 
-                if (count > 0)
+                while (!pereq.RequestCompleted && !this.IsCompletedInternally && httpResponseStream.CanRead)
                 {
-                    outResponseStream.Write(buffer, 0, count);
-                }
-
-                if (count > 0 && buffer.Length > 0 && httpResponseStream.CanRead)
-                {
-                    if (!asyncResult.CompletedSynchronously)
+                    int count = await httpResponseStream.ReadAsync(buffer, 0, buffer.Length).ConfigureAwait(false);
+                    if (count <= 0)
                     {
-                        // if CompletedSynchronously then caller will call and we reduce risk of stack overflow
-                        this.ReadResponseStream(asyncStateBag);
-                    }
-                }
-                else
-                {
-                    // Debug.Assert(this.ContentLength < 0 || outResponseStream.Length == this.ContentLength, "didn't read expected ContentLength");
-                    if (outResponseStream.Position < outResponseStream.Length)
-                    {
-                        // In Silverlight, generally 3 bytes less than advertised by ContentLength are read
-                        ((MemoryStream)outResponseStream).SetLength(outResponseStream.Position);
+                        break;
                     }
 
-                    pereq.SetComplete();
-                    this.SetCompleted();
+                    await outResponseStream.WriteAsync(buffer, 0, count).ConfigureAwait(false);
                 }
+
+                if (outResponseStream.Position < outResponseStream.Length)
+                {
+                    // In Silverlight, generally 3 bytes less than advertised by ContentLength are read
+                    ((MemoryStream)outResponseStream).SetLength(outResponseStream.Position);
+                }
+
+                pereq.SetComplete();
+                this.SetCompleted();
             }
             catch (Exception e)
             {
@@ -676,6 +653,7 @@ namespace Microsoft.OData.Client
             }
             finally
             {
+                this.usingBuffer = false;
                 this.HandleCompleted(pereq);
             }
         }

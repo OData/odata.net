@@ -269,6 +269,24 @@ namespace Microsoft.OData.Client.Tests.Tracking
         }
 
         [Fact]
+        public async Task SaveChangesAsync_WithResponseStreamThatDisallowsSynchronousReads_ShouldSucceed()
+        {
+            SetupContextWithRequestPipelineForSaving(
+                new DataServiceContext[] { DefaultTrackingContext },
+                false,
+                () => new AsyncReadOnlyStream(new MemoryStream(Encoding.UTF8.GetBytes(USER_RESPONSE))));
+
+            var user = new OtherUser
+            {
+                Name = "Some name"
+            };
+
+            DefaultTrackingContext.AddObject("Users", user);
+            await DefaultTrackingContext.SaveChangesAsync();
+            Assert.Single(DefaultTrackingContext.Entities.ToList());
+        }
+
+        [Fact]
         public async Task GetNamedStreamsShouldWorkInNoTrackingModeIfExtendsBaseEntity()
         {
             SetupContextWithRequestPipeline(new DataServiceContext[] { NonTrackingContext }, true, true);
@@ -299,7 +317,7 @@ namespace Microsoft.OData.Client.Tests.Tracking
             }
         }
 
-        private void SetupContextWithRequestPipelineForSaving(DataServiceContext[] dataServiceContexts, bool forMediaLinkEntities)
+        private void SetupContextWithRequestPipelineForSaving(DataServiceContext[] dataServiceContexts, bool forMediaLinkEntities, Func<Stream> responseStreamFactory = null)
         {
             var response = forMediaLinkEntities ? DOCUMENT_RESPONSE : USER_RESPONSE;
             var location = forMediaLinkEntities ? "http://localhost:8000/Documents(1)/edit/content" : "http://localhost:8000/Users(1)";
@@ -314,7 +332,8 @@ namespace Microsoft.OData.Client.Tests.Tracking
                         {
                             {"Content-Type", "application/json;charset=utf-8"},
                             { "Location", location },
-                        });
+                        },
+                        responseStreamFactory);
             }
         }
 
@@ -394,25 +413,39 @@ namespace Microsoft.OData.Client.Tests.Tracking
 
     public class CustomizedRequestMessage : HttpClientRequestMessage
     {
+        private readonly Func<Stream> responseStreamFactory;
+
         public string Response { get; set; }
         public Dictionary<string, string> CustomizedHeaders { get; set; }
 
         public CustomizedRequestMessage(DataServiceClientRequestMessageArgs args)
             : base(args)
         {
+            this.responseStreamFactory = this.CreateDefaultResponseStream;
         }
 
         public CustomizedRequestMessage(DataServiceClientRequestMessageArgs args, string response, Dictionary<string, string> headers)
+            : this(args, response, headers, null)
+        {
+        }
+
+        public CustomizedRequestMessage(DataServiceClientRequestMessageArgs args, string response, Dictionary<string, string> headers, Func<Stream> responseStreamFactory)
             : base(args)
         {
             this.Response = response;
             this.CustomizedHeaders = headers;
+            this.responseStreamFactory = responseStreamFactory ?? this.CreateDefaultResponseStream;
+        }
+
+        private Stream CreateDefaultResponseStream()
+        {
+            byte[] byteArray = Encoding.UTF8.GetBytes(this.Response ?? string.Empty);
+            return new MemoryStream(byteArray);
         }
 
         public override Stream GetStream()
         {
-            byte[] byteArray = Encoding.UTF8.GetBytes(Response);
-            return new MemoryStream(byteArray);
+            return this.responseStreamFactory();
         }
 
         public override IAsyncResult BeginGetRequestStream(AsyncCallback callback, object state)
@@ -440,8 +473,7 @@ namespace Microsoft.OData.Client.Tests.Tracking
                 200,
                 () =>
                 {
-                    byte[] byteArray = Encoding.UTF8.GetBytes(this.Response);
-                    return new MemoryStream(byteArray);
+                    return this.responseStreamFactory();
                 });
         }
 
