@@ -246,7 +246,8 @@ namespace Microsoft.OData.Edm
                 return Enumerable.Empty<IEdmOperation>();
             }
 
-            IList<IEdmOperation> matchedOperations = new List<IEdmOperation>();
+            // Needn't to allocate a new list every call. Defer the allocation until we find the first matched operation.
+            IList<IEdmOperation> matchedOperations = null;
 
             IList<IEdmOperation> operations = enumerable as IList<IEdmOperation>;
 
@@ -254,9 +255,9 @@ namespace Microsoft.OData.Edm
             {
                 for (int i = 0; i < operations.Count; i++)
                 {
-                    if (qualifiedName.Equals(operations[i].FullName(), StringComparison.Ordinal))
+                    if (operations[i].FullNameEquals(qualifiedName, StringComparison.Ordinal))
                     {
-                        matchedOperations.Add(operations[i]);
+                        (matchedOperations ??= new List<IEdmOperation>()).Add(operations[i]);
                     }
                 }
             }
@@ -264,14 +265,14 @@ namespace Microsoft.OData.Edm
             {
                 foreach (IEdmOperation operation in enumerable)
                 {
-                    if (qualifiedName.Equals(operation.FullName(), StringComparison.Ordinal))
+                    if (operation.FullNameEquals(qualifiedName, StringComparison.Ordinal))
                     {
-                        matchedOperations.Add(operation);
+                        (matchedOperations ??= new List<IEdmOperation>()).Add(operation);
                     }
                 }
             }
 
-            return matchedOperations;
+            return (IEnumerable<IEdmOperation>)matchedOperations ?? Array.Empty<IEdmOperation>();
         }
 
         /// <summary>
