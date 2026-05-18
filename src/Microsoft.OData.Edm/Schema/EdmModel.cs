@@ -184,7 +184,7 @@ namespace Microsoft.OData.Edm
             }
 
             string termFullName = annotation.Term.FullName();
-            elementAnnotations.RemoveAll(p => string.Equals(p.Term.FullName(), termFullName, StringComparison.Ordinal));
+            elementAnnotations.RemoveAll(p => p.Term.FullNameEquals(termFullName, StringComparison.Ordinal));
             elementAnnotations.Add(annotation);
         }
     }
