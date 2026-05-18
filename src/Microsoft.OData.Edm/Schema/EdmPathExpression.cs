@@ -55,7 +55,7 @@ namespace Microsoft.OData.Edm
                     throw new ArgumentException(SRResources.PathSegmentMustNotBeNull, nameof(pathSegments));
                 }
 
-                if (segment.IndexOf('/') >= 0)
+                if (segment.IndexOf('/', StringComparison.Ordinal) >= 0)
                 {
                     throw new ArgumentException(SRResources.PathSegmentMustNotContainSlash);
                 }
