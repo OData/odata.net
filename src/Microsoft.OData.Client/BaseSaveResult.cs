@@ -18,6 +18,7 @@ namespace Microsoft.OData.Client
     using System.Net;
     using System.Text;
     using System.Threading;
+    using System.Threading.Tasks;
     using Microsoft.OData;
     using Microsoft.OData.Client.Metadata;
 
@@ -475,6 +476,7 @@ namespace Microsoft.OData.Client
             AsyncStateBag asyncStateBag = asyncResult.AsyncState as AsyncStateBag;
 
             PerRequest pereq = asyncStateBag == null ? null : asyncStateBag.PerRequest;
+            bool deferHandleCompleted = false;
 
             try
             {
@@ -512,13 +514,8 @@ namespace Microsoft.OData.Client
                         this.buildBatchBuffer = new byte[8000];
                     }
 
-                    do
-                    {
-                        Util.DebugInjectFault("SaveAsyncResult::AsyncEndGetResponse_BeforeBeginRead");
-                        asyncResult = InvokeAsync(httpResponseStream.BeginRead, this.buildBatchBuffer, 0, this.buildBatchBuffer.Length, this.AsyncEndRead, new AsyncReadState(pereq));
-                        pereq.SetRequestCompletedSynchronously(asyncResult.CompletedSynchronously); // BeginRead
-                    }
-                    while (asyncResult.CompletedSynchronously && !pereq.RequestCompleted && !this.IsCompletedInternally && httpResponseStream.CanRead);
+                    this.ReadResponseStreamAsync(pereq);
+                    deferHandleCompleted = true;
                 }
                 else
                 {
@@ -544,7 +541,10 @@ namespace Microsoft.OData.Client
             }
             finally
             {
-                this.HandleCompleted(pereq);
+                if (!deferHandleCompleted)
+                {
+                    this.HandleCompleted(pereq);
+                }
             }
         }
 
@@ -1353,55 +1353,61 @@ namespace Microsoft.OData.Client
             }
         }
 
-        /// <summary>handle responseStream.BeginRead with responseStream.EndRead</summary>
-        /// <param name="asyncResult">async result</param>
+        /// <summary>
+        /// Reads and copies the response stream asynchronously using TAP stream APIs.
+        /// </summary>
+        /// <param name="pereq">The per-request state.</param>
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "required for this feature")]
-        private void AsyncEndRead(IAsyncResult asyncResult)
+        private void ReadResponseStreamAsync(PerRequest pereq)
         {
-            Debug.Assert(asyncResult != null && asyncResult.IsCompleted, "asyncResult.IsCompleted");
-            AsyncReadState state = (AsyncReadState)asyncResult.AsyncState;
-            PerRequest pereq = state.Pereq;
-            int count = 0;
+            Task responseStreamTask = this.ReadResponseStreamAsyncInternal(pereq);
+            if (responseStreamTask.IsCompleted)
+            {
+                responseStreamTask.GetAwaiter().GetResult();
+            }
+        }
+
+        /// <summary>
+        /// Reads and copies the response stream asynchronously using TAP stream APIs.
+        /// </summary>
+        /// <param name="pereq">The per-request state.</param>
+        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "required for this feature")]
+        private async Task ReadResponseStreamAsyncInternal(PerRequest pereq)
+        {
             try
             {
                 this.CompleteCheck(pereq, InternalError.InvalidEndReadCompleted);
-                pereq.SetRequestCompletedSynchronously(asyncResult.CompletedSynchronously); // BeginRead
+                // TAP stream operations don't expose CompletedSynchronously, so in this APM-based
+                // tracking flow we conservatively mark the copy operation as asynchronous.
+                pereq.SetRequestCompletedSynchronously(false);
 
                 EqualRefCheck(this.perRequest, pereq, InternalError.InvalidEndRead);
                 Stream httpResponseStream = Util.NullCheck(pereq.ResponseStream, InternalError.InvalidEndReadStream);
+                Stream outputResponse = Util.NullCheck(this.ResponseStream, InternalError.InvalidEndReadCopy);
+                byte[] buffer = Util.NullCheck(this.buildBatchBuffer, InternalError.InvalidEndReadBuffer);
 
-                Util.DebugInjectFault("SaveAsyncResult::AsyncEndRead_BeforeEndRead");
-                count = httpResponseStream.EndRead(asyncResult);
-                if (count > 0)
+                while (!pereq.RequestCompleted && !this.IsCompletedInternally && httpResponseStream.CanRead)
                 {
-                    Stream outputResponse = Util.NullCheck(this.ResponseStream, InternalError.InvalidEndReadCopy);
-                    outputResponse.Write(this.buildBatchBuffer, 0, count);
-                    state.TotalByteCopied += count;
-
-                    if (!asyncResult.CompletedSynchronously && httpResponseStream.CanRead)
+                    Util.DebugInjectFault("SaveAsyncResult::AsyncEndRead_BeforeEndRead");
+                    int count = await httpResponseStream.ReadAsync(buffer, 0, buffer.Length).ConfigureAwait(false);
+                    if (count <= 0)
                     {
-                        // if CompletedSynchronously then caller will call and we reduce risk of stack overflow
-                        do
-                        {
-                            asyncResult = InvokeAsync(httpResponseStream.BeginRead, this.buildBatchBuffer, 0, this.buildBatchBuffer.Length, this.AsyncEndRead, state);
-                            pereq.SetRequestCompletedSynchronously(asyncResult.CompletedSynchronously); // BeginRead
-                        }
-                        while (asyncResult.CompletedSynchronously && !pereq.RequestCompleted && !this.IsCompletedInternally && httpResponseStream.CanRead);
+                        break;
                     }
+
+                    await outputResponse.WriteAsync(buffer, 0, count).ConfigureAwait(false);
                 }
-                else
-                {
-                    pereq.SetComplete();
 
-                    // BeginRead could fail and callback still invoked
-                    // if pereq.RequestCompletedSynchronously is true, this.FinishCurrentChange() will be
-                    // invoked by the current thread in SaveResult.BeginCreateNextChange().
-                    // if pereq.RequestCompletedSynchronously is false, we will call this.FinishCurrentChange() here and
-                    // the parent thread will not call this.FinishCurrentChange() in SaveResult.BeginCreateNextChange().
-                    if (!this.IsCompletedInternally && !pereq.RequestCompletedSynchronously)
-                    {
-                        this.FinishCurrentChange(pereq);
-                    }
+                pereq.SetComplete();
+
+                // BeginRead could fail and callback still invoked
+                // if pereq.RequestCompletedSynchronously is true, this.FinishCurrentChange() will be
+                // invoked by the current thread in SaveResult.BeginCreateNextChange().
+                // if pereq.RequestCompletedSynchronously is false, we will call this.FinishCurrentChange() here and
+                // the parent thread will not call this.FinishCurrentChange() in SaveResult.BeginCreateNextChange().
+                if (!this.IsCompletedInternally && !pereq.RequestCompletedSynchronously)
+                {
+                    this.FinishCurrentChange(pereq);
                 }
             }
             catch (Exception e)
@@ -1496,35 +1502,5 @@ namespace Microsoft.OData.Client
             return sourcePropertyUri;
         }
 
-        /// <summary>
-        /// Async read state
-        /// </summary>
-        private struct AsyncReadState
-        {
-            /// <summary>PerRequest class which tracks the request and response stream </summary>
-            internal readonly PerRequest Pereq;
-
-            /// <summary>total number of byte copied.</summary>
-            private int totalByteCopied;
-
-            /// <summary>
-            /// constructor
-            /// </summary>
-            /// <param name="pereq">Perrequest class</param>
-            internal AsyncReadState(PerRequest pereq)
-            {
-                this.Pereq = pereq;
-                this.totalByteCopied = 0;
-            }
-
-            /// <summary>
-            /// Returns the total number of byte copied till now.
-            /// </summary>
-            internal int TotalByteCopied
-            {
-                get { return this.totalByteCopied; }
-                set { this.totalByteCopied = value; }
-            }
-        }
     }
 }
