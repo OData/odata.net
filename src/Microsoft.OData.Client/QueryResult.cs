@@ -620,6 +620,8 @@ namespace Microsoft.OData.Client
             try
             {
                 this.CompleteCheck(pereq, InternalError.InvalidEndReadCompleted);
+                // TAP stream operations don't expose CompletedSynchronously, so in this APM-based
+                // tracking flow we conservatively mark the copy operation as asynchronous.
                 pereq.SetRequestCompletedSynchronously(false);
                 this.SetCompletedSynchronously(false);
 
