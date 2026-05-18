@@ -601,7 +601,11 @@ namespace Microsoft.OData.Client
         /// <param name="asyncStateBag">the state containing the information about the asynchronous operation.</param>
         private void ReadResponseStreamAsync(AsyncStateBag asyncStateBag)
         {
-            _ = this.ReadResponseStreamAsyncInternal(asyncStateBag);
+            Task responseStreamTask = this.ReadResponseStreamAsyncInternal(asyncStateBag);
+            if (responseStreamTask.IsCompleted)
+            {
+                responseStreamTask.GetAwaiter().GetResult();
+            }
         }
 
         /// <summary>

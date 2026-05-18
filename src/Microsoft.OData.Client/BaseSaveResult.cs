@@ -1360,7 +1360,11 @@ namespace Microsoft.OData.Client
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "required for this feature")]
         private void ReadResponseStreamAsync(PerRequest pereq)
         {
-            _ = this.ReadResponseStreamAsyncInternal(pereq);
+            Task responseStreamTask = this.ReadResponseStreamAsyncInternal(pereq);
+            if (responseStreamTask.IsCompleted)
+            {
+                responseStreamTask.GetAwaiter().GetResult();
+            }
         }
 
         /// <summary>
