@@ -4,17 +4,14 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using Microsoft.OData.Client.Tests.Serialization;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Xml;
-using Microsoft.OData.Client.Tests.Serialization;
-using Microsoft.OData.Edm.Csdl;
 using Xunit;
 
 namespace Microsoft.OData.Client.Tests.ScenarioTests.Deadlocks
@@ -128,7 +125,7 @@ namespace Microsoft.OData.Client.Tests.ScenarioTests.Deadlocks
                 return orgs.ToList();
             });
 
-            var orgs = await AwaitWithTimeout(run);
+            var orgs = await AwaitWithTimeout(run.Task, run.Shutdown);
             Assert.Equal(2, orgs.Count);
             Assert.Contains(orgs, o => o.Name == "Acme");
         }
@@ -146,7 +143,7 @@ namespace Microsoft.OData.Client.Tests.ScenarioTests.Deadlocks
                 return Task.FromResult(org);
             });
 
-            var org = await AwaitWithTimeout(run);
+            var org = await AwaitWithTimeout(run.Task, run.Shutdown);
             Assert.NotNull(org);
             Assert.Equal("Acme", org.Name);
         }
@@ -164,7 +161,7 @@ namespace Microsoft.OData.Client.Tests.ScenarioTests.Deadlocks
                 return Task.FromResult(orgs);
             });
 
-            var orgs = await AwaitWithTimeout(run);
+            var orgs = await AwaitWithTimeout(run.Task, run.Shutdown);
             Assert.Equal(2, orgs.Count);
         }
 
@@ -181,7 +178,7 @@ namespace Microsoft.OData.Client.Tests.ScenarioTests.Deadlocks
                 await ctx.SaveChangesAsync();
             });
 
-            await AwaitWithTimeout(run);
+            await AwaitWithTimeout(run.Task, run.Shutdown);
             Assert.Contains(handler.Requests, r => r.StartsWith("POST ") && r.EndsWith("/Organizations"));
         }
 
@@ -198,7 +195,7 @@ namespace Microsoft.OData.Client.Tests.ScenarioTests.Deadlocks
                 return await ctx.ExecuteBatchAsync(ctx.Organizations);
             });
 
-            var response = await AwaitWithTimeout(run);
+            var response = await AwaitWithTimeout(run.Task, run.Shutdown);
             Assert.NotNull(response);
             Assert.Contains(handler.Requests, r => r.StartsWith("POST ") && r.EndsWith("/$batch"));
         }
@@ -219,7 +216,7 @@ namespace Microsoft.OData.Client.Tests.ScenarioTests.Deadlocks
                 return await ctx.LoadPropertyAsync(first, nameof(Organization.Name));
             });
 
-            var response = await AwaitWithTimeout(run);
+            var response = await AwaitWithTimeout(run.Task, run.Shutdown);
             Assert.NotNull(response);
             Assert.Contains(handler.Requests, r => r.Contains("/Organizations(1)/Name"));
         }
@@ -238,7 +235,7 @@ namespace Microsoft.OData.Client.Tests.ScenarioTests.Deadlocks
                 await ctx.SaveChangesAsync(SaveChangesOptions.BatchWithSingleChangeset);
             });
 
-            await AwaitWithTimeout(run);
+            await AwaitWithTimeout(run.Task, run.Shutdown);
             Assert.Contains(handler.Requests, r => r.StartsWith("POST ") && r.EndsWith("/$batch"));
         }
 
@@ -276,23 +273,27 @@ namespace Microsoft.OData.Client.Tests.ScenarioTests.Deadlocks
             return new OrgContainer(new Uri(ServiceRoot), factory);
         }
 
-        // Races the call against a 5 s timeout. On timeout we fail with a clear regression message.
-        // Surfaces any inner exception via the awaited task.
-        private static async Task AwaitWithTimeout(Task call)
+        // Races the call against a 5 s timeout. On timeout we dispose the pump's shutdown handle
+        // (best-effort: signals CompleteAdding so no more work is queued; the worker may still be
+        // wedged on the deadlocked callback but exits with the process as a background thread)
+        // and fail with a clear regression message. Surfaces any inner exception via the awaited task.
+        private static async Task AwaitWithTimeout(Task call, IDisposable shutdown)
         {
             var completed = await Task.WhenAny(call, Task.Delay(DeadlockTimeout));
             if (completed != call)
             {
+                shutdown.Dispose();
                 Assert.Fail($"Deadlock detected (timed out after {DeadlockTimeout.TotalSeconds}s) — regression of issue #3521 (SynchronizationContext capture).");
             }
             await call;
         }
 
-        private static async Task<T> AwaitWithTimeout<T>(Task<T> call)
+        private static async Task<T> AwaitWithTimeout<T>(Task<T> call, IDisposable shutdown)
         {
             var completed = await Task.WhenAny(call, Task.Delay(DeadlockTimeout));
             if (completed != call)
             {
+                shutdown.Dispose();
                 Assert.Fail($"Deadlock detected (timed out after {DeadlockTimeout.TotalSeconds}s) — regression of issue #3521 (SynchronizationContext capture).");
             }
             return await call;

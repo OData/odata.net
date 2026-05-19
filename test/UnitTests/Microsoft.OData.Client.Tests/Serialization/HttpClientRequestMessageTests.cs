@@ -337,7 +337,7 @@ namespace Microsoft.OData.Client.Tests.Serialization
                 return Task.FromResult(reader.ReadToEnd());
             });
 
-            string body = await AwaitOrFailDeadlock(run);
+            string body = await AwaitOrFailDeadlock(run.Task, run.Shutdown);
             Assert.Equal("Hello", body);
         }
 
@@ -357,7 +357,7 @@ namespace Microsoft.OData.Client.Tests.Serialization
                 return reader.ReadToEnd();
             });
 
-            string body = await AwaitOrFailDeadlock(run);
+            string body = await AwaitOrFailDeadlock(run.Task, run.Shutdown);
             Assert.Equal("Hello", body);
         }
 
@@ -371,12 +371,13 @@ namespace Microsoft.OData.Client.Tests.Serialization
                 httpClientFactory: new MockHttpClientFactory(handler));
         }
 
-        private static async Task<T> AwaitOrFailDeadlock<T>(Task<T> call)
+        private static async Task<T> AwaitOrFailDeadlock<T>(Task<T> call, IDisposable shutdown)
         {
             var timeout = TimeSpan.FromSeconds(5);
             var completed = await Task.WhenAny(call, Task.Delay(timeout));
             if (completed != call)
             {
+                shutdown.Dispose();
                 Assert.Fail($"Deadlock detected (timed out after {timeout.TotalSeconds}s) — regression of issue #3521 (SynchronizationContext capture).");
             }
             return await call;

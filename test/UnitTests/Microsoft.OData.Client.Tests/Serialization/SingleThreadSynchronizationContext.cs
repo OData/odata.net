@@ -50,20 +50,23 @@ namespace Microsoft.OData.Client.Tests.Serialization
             }
         }
 
+        // Best-effort, non-blocking shutdown. Signals the worker to stop after its current callback;
+        // we deliberately do NOT Join the worker or Dispose the queue. If a posted continuation is
+        // deadlocked (the failure mode these tests guard against), Join would hang and Dispose would
+        // race the still-parked consumer. The worker is IsBackground=true and exits with the process.
         public void Dispose()
         {
-            _queue.CompleteAdding();
-            if (_worker.IsAlive)
+            if (!_queue.IsAddingCompleted)
             {
-                _worker.Join();
+                _queue.CompleteAdding();
             }
-            _queue.Dispose();
         }
 
-        // Runs asyncAction on a worker thread that has this context installed. The returned task completes
-        // when asyncAction's task completes; the context is disposed afterwards. Callers enforce timeouts
-        // via Task.WhenAny so a deadlocked test releases the runner instead of hanging it.
-        public static Task Run(Func<Task> asyncAction)
+        // Runs asyncAction on a worker thread that has this context installed. Returns the task that
+        // settles when asyncAction's task settles, plus a Shutdown handle the caller can dispose to
+        // tear down the pump on timeout. On natural completion the context is disposed automatically;
+        // Dispose is idempotent, so a redundant Shutdown.Dispose() from a `using` is harmless.
+        public static (Task Task, IDisposable Shutdown) Run(Func<Task> asyncAction)
         {
             if (asyncAction == null) throw new ArgumentNullException(nameof(asyncAction));
 
@@ -83,15 +86,11 @@ namespace Microsoft.OData.Client.Tests.Serialization
                 }
             }, null);
 
-            // Dispose the context once the action's task settles, regardless of outcome.
-            return tcs.Task.ContinueWith(t =>
-            {
-                ctx.Dispose();
-                return t;
-            }, TaskScheduler.Default).Unwrap();
+            _ = tcs.Task.ContinueWith(_ => ctx.Dispose(), TaskScheduler.Default);
+            return (tcs.Task, ctx);
         }
 
-        public static Task<T> Run<T>(Func<Task<T>> asyncAction)
+        public static (Task<T> Task, IDisposable Shutdown) Run<T>(Func<Task<T>> asyncAction)
         {
             if (asyncAction == null) throw new ArgumentNullException(nameof(asyncAction));
 
@@ -111,11 +110,8 @@ namespace Microsoft.OData.Client.Tests.Serialization
                 }
             }, null);
 
-            return tcs.Task.ContinueWith(t =>
-            {
-                ctx.Dispose();
-                return t;
-            }, TaskScheduler.Default).Unwrap();
+            _ = tcs.Task.ContinueWith(_ => ctx.Dispose(), TaskScheduler.Default);
+            return (tcs.Task, ctx);
         }
     }
 }
