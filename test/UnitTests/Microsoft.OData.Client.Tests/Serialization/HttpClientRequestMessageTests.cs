@@ -367,6 +367,7 @@ namespace Microsoft.OData.Client.Tests.Serialization
             Assert.True(completed);
         }
 
+        // Simulates a UI synchronization context that captures continuations but does not pump queued work.
         private sealed class NonPumpingSynchronizationContext : SynchronizationContext
         {
             public override void Post(SendOrPostCallback d, object state)
