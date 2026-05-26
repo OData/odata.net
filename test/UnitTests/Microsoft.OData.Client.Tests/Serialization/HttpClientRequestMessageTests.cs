@@ -316,5 +316,63 @@ namespace Microsoft.OData.Client.Tests.Serialization
             }
         }
 
+        [Fact]
+        public void GetResponse_DoesNotDeadlock_WithSynchronizationContext()
+        {
+            Exception capturedException = null;
+            bool completed = false;
+            Thread requestThread = new Thread(() =>
+            {
+                SynchronizationContext.SetSynchronizationContext(new NonPumpingSynchronizationContext());
+                try
+                {
+                    using (var handler = new MockDelayedHttpClientHandler("Foo", delayMilliseconds: 100))
+                    {
+                        var httpClientFactory = new MockHttpClientFactory(handler);
+                        var args = new DataServiceClientRequestMessageArgs(
+                            "GET",
+                            new Uri("http://localhost"),
+                            usePostTunneling: false,
+                            headers: new Dictionary<string, string>(),
+                            httpClientFactory: httpClientFactory);
+
+                        using (var request = new HttpClientRequestMessage(args))
+                        {
+                            IODataResponseMessage response = request.GetResponse();
+                            using (var stream = response.GetStream())
+                            using (StreamReader reader = new StreamReader(stream))
+                            {
+                                Assert.Equal("Foo", reader.ReadToEnd());
+                            }
+                        }
+                    }
+
+                    completed = true;
+                }
+                catch (Exception ex)
+                {
+                    capturedException = ex;
+                }
+                finally
+                {
+                    SynchronizationContext.SetSynchronizationContext(null);
+                }
+            });
+
+            requestThread.IsBackground = true;
+            requestThread.Start();
+
+            Assert.True(requestThread.Join(TimeSpan.FromSeconds(5)), "GetResponse should complete without deadlocking on SynchronizationContext.");
+            Assert.Null(capturedException);
+            Assert.True(completed);
+        }
+
+        private sealed class NonPumpingSynchronizationContext : SynchronizationContext
+        {
+            public override void Post(SendOrPostCallback d, object state)
+            {
+            }
+        }
+
     }
 }

@@ -513,7 +513,7 @@ namespace Microsoft.OData.Client
             try
             {
                 // Use HttpCompletionOption.ResponseHeadersRead to shorten the window before cancellation is honoured
-                return await _client.SendAsync(_requestMessage, HttpCompletionOption.ResponseHeadersRead, sendToken);
+                return await _client.SendAsync(_requestMessage, HttpCompletionOption.ResponseHeadersRead, sendToken).ConfigureAwait(false);
             }
             catch (OperationCanceledException ex)
             {
