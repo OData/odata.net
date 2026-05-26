@@ -395,11 +395,30 @@ namespace Microsoft.OData.Client
             });
         }
 
-        private Task<HttpResponseMessage> CreateSendTask()
+        public override async Task<IODataResponseMessage> GetResponseAsync(CancellationToken cancellationToken)
         {
+            HttpResponseMessage httpResponseMessage = await CreateSendTask(cancellationToken).ConfigureAwait(false);
+            _httpResponseMessage = httpResponseMessage;
+            
+            return await ConvertHttpWebResponseAsync(httpResponseMessage).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Create a task to send the HTTP request.
+        /// </summary>
+        /// <param name="cancellationToken">Optional cancellation token from the caller.</param>
+        /// <returns>A task that produces the HTTP response message.</returns>
+        private Task<HttpResponseMessage> CreateSendTask(CancellationToken cancellationToken = default)
+        {
+            // Check if the external cancellation token is already cancelled
+            if (cancellationToken.IsCancellationRequested)
+            {
+                return Task.FromCanceled<HttpResponseMessage>(cancellationToken);
+            }
+
             // Only set the message content if the stream has been written to, otherwise
             // HttpClient will complain if it's a GET request.
-            Byte[] messageContent = _messageStream.ToArray();
+            byte[] messageContent = _messageStream.ToArray();
             if (messageContent.Length > 0)
             {
                 _requestMessage.Content = new ByteArrayContent(messageContent);
@@ -434,17 +453,39 @@ namespace Microsoft.OData.Client
             CancellationTokenSource timeoutTokenSource = null;
             CancellationTokenSource linkedTokenSource = null;
 
-            if (_isTimeoutProvidedByCaller && _timeout > TimeSpan.Zero)
+            bool hasTimeout = _isTimeoutProvidedByCaller && _timeout > TimeSpan.Zero;
+            bool hasCancellationToken = cancellationToken.CanBeCanceled;
+
+            if (hasTimeout && hasCancellationToken)
             {
-                // Per-request timeout: link abort + timeout so either cancels the send
+                // Link abort + timeout + external token so  any cancels the send
+                timeoutTokenSource = new CancellationTokenSource(_timeout);
+                linkedTokenSource = CancellationTokenSource.CreateLinkedTokenSource(
+                    _abortRequestCancellationTokenSource.Token,
+                    timeoutTokenSource.Token,
+                    cancellationToken);
+                sendToken = linkedTokenSource.Token;
+            }
+            else if (hasTimeout)
+            {
+                // Link abort + timeout so either cancels the send
                 timeoutTokenSource = new CancellationTokenSource(_timeout);
                 linkedTokenSource = CancellationTokenSource.CreateLinkedTokenSource(
                     _abortRequestCancellationTokenSource.Token,
                     timeoutTokenSource.Token);
                 sendToken = linkedTokenSource.Token;
             }
+            else if (hasCancellationToken)
+            {
+                // Link abort + external token so either cancels the send
+                linkedTokenSource = CancellationTokenSource.CreateLinkedTokenSource(
+                    _abortRequestCancellationTokenSource.Token,
+                    cancellationToken);
+                sendToken = linkedTokenSource.Token;
+            }
+            // else use abort token only (already set)
 
-            return SendInternalAsync(_requestMessage, sendToken, linkedTokenSource, timeoutTokenSource);
+            return SendInternalAsync(_requestMessage, sendToken, linkedTokenSource, timeoutTokenSource, cancellationToken);
         }
 
         /// <summary>
@@ -455,6 +496,7 @@ namespace Microsoft.OData.Client
         /// <param name="sendToken"><see cref="CancellationToken"/> combining abort and optional timeout.</param>
         /// <param name="linkedTokenSource">Linked <see cref="CancellationTokenSource"/> (abort + timeout) if a timeout was specified; otherwise null.</param>
         /// <param name="timeoutTokenSource"><see cref="CancellationTokenSource"/> created for the per-request timeout; null if no timeout.</param>
+        /// <param name="cancellationToken">The external cancellation token provided by the caller.</param>
         /// <returns>A task producing the <see cref="HttpResponseMessage"/>.</returns>
         /// <remarks>
         /// Internal cancellations (abort or timeout) are wrapped as <see cref="DataServiceTransportException"/>; 
@@ -465,7 +507,8 @@ namespace Microsoft.OData.Client
             HttpRequestMessage request,
             CancellationToken sendToken,
             CancellationTokenSource linkedTokenSource,
-            CancellationTokenSource timeoutTokenSource)
+            CancellationTokenSource timeoutTokenSource,
+            CancellationToken cancellationToken)
         {
             try
             {
@@ -474,8 +517,13 @@ namespace Microsoft.OData.Client
             }
             catch (OperationCanceledException ex)
             {
+                // If the external cancellation token triggered the cancellation, propagate as is
+                if (cancellationToken.IsCancellationRequested)
+                {
+                    throw;
+                }
+
                 // Wrap internal timeout / abort as DataServiceTransportException
-                // but let external caller-driven cancellations propagate as OperationCanceledException.
                 // Currently, only abort or per-request timeout can trigger cancellation (no external token linked)
                 throw new DataServiceTransportException(response: null, ex);
             }
@@ -513,6 +561,19 @@ namespace Microsoft.OData.Client
                     task.Wait();
                     return task.Result;
                 });
+        }
+
+        private static async Task<HttpWebResponseMessage> ConvertHttpWebResponseAsync(HttpResponseMessage response)
+        {
+            IEnumerable<KeyValuePair<string, string>> allHeaders = HttpHeadersToStringDictionary(response.Headers).Concat(
+                HttpHeadersToStringDictionary(response.Content.Headers));
+
+            Stream contentStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+
+            return new HttpWebResponseMessage(
+                allHeaders.ToDictionary((h1) => h1.Key, (h2) => h2.Value),
+                (int)response.StatusCode,
+                () => contentStream);
         }
 
         private static T UnwrapAggregateException<T>(Func<T> action)

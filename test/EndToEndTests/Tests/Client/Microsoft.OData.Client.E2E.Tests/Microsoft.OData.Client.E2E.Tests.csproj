@@ -31,6 +31,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="AsyncRegressionTests\Client\AsyncRegressionTestsCsdl.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <EmbeddedResource Include="ClientWithoutTypeResolverTests\Clients\MismatchedClientModel\MismatchedClientModelCsdl.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>

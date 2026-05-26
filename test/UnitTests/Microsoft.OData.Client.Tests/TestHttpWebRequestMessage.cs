@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Microsoft.OData.Client.Tests
@@ -39,6 +40,11 @@ namespace Microsoft.OData.Client.Tests
         public override IODataResponseMessage GetResponse()
         {
             return new HttpWebResponseMessage(this.headers, this.statusCode, this.getResponseStream);
+        }
+
+        public override Task<IODataResponseMessage> GetResponseAsync(CancellationToken cancellationToken)
+        {
+            return Task.FromResult(GetResponse());
         }
 
         public override IAsyncResult BeginGetResponse(AsyncCallback callback, object state)

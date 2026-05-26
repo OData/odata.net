@@ -10,6 +10,7 @@ namespace Microsoft.OData.Client
     using System.Collections;
     using System.Linq;
     using System.Linq.Expressions;
+    using System.Threading;
     using System.Threading.Tasks;
 
     /// <summary>non-generic placeholder for generic implementation</summary>
@@ -66,7 +67,7 @@ namespace Microsoft.OData.Client
         /// <returns>A task represents An <see cref="System.Collections.Generic.IEnumerable{T}" /> that contains the results of the query operation.</returns>
         public virtual Task<IEnumerable> ExecuteAsync()
         {
-            return Task<IEnumerable>.Factory.FromAsync(this.BeginExecute, this.EndExecute, null);
+            return this.ExecuteAsyncInternal(CancellationToken.None);
         }
 
         /// <summary>Called to complete the asynchronous operation of executing a data service query.</summary>
@@ -83,6 +84,16 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <returns>An IEnumerable that contains the response from the Internet resource.</returns>
         internal abstract IEnumerable ExecuteInternal();
+
+        /// <summary>
+        /// Asynchronously returns an <see cref="IEnumerable"/> from an internet resource.
+        /// </summary>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation.
+        /// The result contains the response from the internet resource.
+        /// </returns>
+        internal abstract Task<IEnumerable> ExecuteAsyncInternal(CancellationToken cancellationToken);
 
         /// <summary>
         /// Begins an asynchronous request to an Internet resource.

@@ -7,6 +7,7 @@
 namespace Microsoft.OData.Client
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Linq.Expressions;
     using System.Threading;
@@ -165,9 +166,21 @@ namespace Microsoft.OData.Client
         /// <summary>Starts an asynchronous network operation that executes the query represented by this object instance.</summary>
         /// <returns>A task that represents the result of the query operation.</returns>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-        public virtual Task<TElement> GetValueAsync(CancellationToken cancellationToken)
+        public async virtual Task<TElement> GetValueAsync(CancellationToken cancellationToken)
         {
-            return this.Context.FromAsync(this.BeginGetValue, this.EndGetValue, cancellationToken);
+            IEnumerable<TElement> result;
+
+            if (this.isFunction)
+            {
+                result = await this.Context.ExecuteAsync<TElement>(this.RequestUri, XmlConstants.HttpMethodGet, true, cancellationToken)
+                    .ConfigureAwait(false);
+            }
+            else
+            {
+                result = await this.Query.ExecuteAsync(cancellationToken).ConfigureAwait(false);
+            }
+
+            return result.SingleOrDefault();
         }
 
         /// <summary>Ends an asynchronous query request to a data service.</summary>

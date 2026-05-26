@@ -7,12 +7,12 @@
 namespace Microsoft.OData.Client
 {
     using System;
-    using System.Collections.Generic;
     using System.Diagnostics;
     using System.Globalization;
     using System.IO;
-    using System.Linq;
     using System.Net;
+    using System.Threading;
+    using System.Threading.Tasks;
     using Microsoft.OData;
 
     /// <summary>
@@ -237,35 +237,42 @@ namespace Microsoft.OData.Client
                 IODataResponseMessage response = null;
                 response = this.RequestInfo.GetSynchronousResponse(this.Request, true);
                 this.SetHttpWebResponse(Util.NullCheck(response, InternalError.InvalidGetResponse));
+                this.ProcessResponseStream();
+            }
+            catch (Exception e)
+            {
+                this.HandleFailure(e);
+                throw;
+            }
+            finally
+            {
+                this.SetCompleted();
+                this.CompletedRequest();
+            }
 
-                if (HttpStatusCode.NoContent != this.StatusCode)
+            if (this.Failure != null)
+            {
+                throw this.Failure;
+            }
+        }
+
+        /// <summary>
+        /// Asynchronously executes the query request.
+        /// </summary>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        /// <returns>A task that represents the asynchronous operation.</returns>
+        internal async Task ExecuteQueryAsync(CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                if (this.requestContentStream != null && this.requestContentStream.Stream != null)
                 {
-                    using (Stream stream = this.responseMessage.GetStream())
-                    {
-                        if (stream != null)
-                        {
-                            Stream copy = this.GetAsyncResponseStreamCopy();
-                            this.outputResponseStream = copy;
-
-                            Byte[] buffer = this.GetAsyncResponseStreamCopyBuffer();
-
-                            long copied = WebUtil.CopyStream(stream, copy, ref buffer);
-                            if (this.responseStreamOwner)
-                            {
-                                if (copied == 0)
-                                {
-                                    this.outputResponseStream = null;
-                                }
-                                else if (copy.Position < copy.Length)
-                                {   // In Silverlight, generally 3 bytes less than advertised by ContentLength are read
-                                    ((MemoryStream)copy).SetLength(copy.Position);
-                                }
-                            }
-
-                            this.PutAsyncResponseStreamCopyBuffer(buffer);
-                        }
-                    }
+                    this.Request.SetRequestStream(this.requestContentStream);
                 }
+
+                IODataResponseMessage response = await this.RequestInfo.GetResponseAsync(this.Request, true, cancellationToken);
+                this.SetHttpWebResponse(Util.NullCheck(response, InternalError.InvalidGetResponse));
+                await this.ProcessResponseStreamAsync(cancellationToken);
             }
             catch (Exception e)
             {
@@ -447,7 +454,7 @@ namespace Microsoft.OData.Client
         protected virtual byte[] GetAsyncResponseStreamCopyBuffer()
         {   // consider having a cache of these buffers since they will be pinned
             Debug.Assert(this.asyncStreamCopyBuffer == null, "non-null this.asyncStreamCopyBuffer");
-            return System.Threading.Interlocked.Exchange(ref reusableAsyncCopyBuffer, null) ?? new byte[8000];
+            return System.Threading.Interlocked.Exchange(ref reusableAsyncCopyBuffer, null) ?? new byte[WebUtil.DefaultBufferSizeForStreamCopy];
         }
 
         /// <summary>returning a buffer after being done with it</summary>
@@ -659,7 +666,7 @@ namespace Microsoft.OData.Client
                     // Debug.Assert(this.ContentLength < 0 || outResponseStream.Length == this.ContentLength, "didn't read expected ContentLength");
                     if (outResponseStream.Position < outResponseStream.Length)
                     {
-                        // In Silverlight, generally 3 bytes less than advertised by ContentLength are read
+                        // Some HTTP stacks may report a smaller content length than actual bytes read so the MemoryStream length needs to be trimmed accordingly
                         ((MemoryStream)outResponseStream).SetLength(outResponseStream.Position);
                     }
 
@@ -709,6 +716,86 @@ namespace Microsoft.OData.Client
                 responseMessageWrapper,
                 payloadKind,
                 base.MaterializerCache);
+        }
+
+        /// <summary>
+        /// Processes the response stream by copying it to the output stream.
+        /// </summary>
+        private void ProcessResponseStream()
+        {
+            if (HttpStatusCode.NoContent == this.StatusCode)
+            {
+                return;
+            }
+
+            using (Stream stream = this.responseMessage.GetStream())
+            {
+                if (stream == null)
+                {
+                    return;
+                }
+
+                Stream copy = this.GetAsyncResponseStreamCopy();
+                this.outputResponseStream = copy;
+
+                Byte[] buffer = this.GetAsyncResponseStreamCopyBuffer();
+
+                long copied = WebUtil.CopyStream(stream, copy, buffer);
+
+                this.FinalizeStreamCopy(copy, copied);
+                this.PutAsyncResponseStreamCopyBuffer(buffer);
+            }
+        }
+
+        /// <summary>
+        /// Asynchronously processes the response stream by copying it to the output stream.
+        /// </summary>
+        private async ValueTask ProcessResponseStreamAsync(CancellationToken cancellationToken)
+        {
+            if (HttpStatusCode.NoContent == this.StatusCode)
+            {
+                return;
+            }
+
+            // TODO: Use GetStreamAsync when it is available.
+            using (Stream stream = this.responseMessage.GetStream())
+            {
+                if (stream == null)
+                {
+                    return;
+                }
+
+                Stream copy = this.GetAsyncResponseStreamCopy();
+                this.outputResponseStream = copy;
+
+                Byte[] buffer = this.GetAsyncResponseStreamCopyBuffer();
+
+                long copied = await WebUtil.CopyStreamAsync(stream, copy, buffer, cancellationToken);
+
+                this.FinalizeStreamCopy(copy, copied);
+                this.PutAsyncResponseStreamCopyBuffer(buffer);
+            }
+        }
+
+        /// <summary>
+        /// Finalizes the stream copy by adjusting the length of the output stream if necessary.
+        /// </summary>
+        private void FinalizeStreamCopy(Stream copy, long copied)
+        {
+            if (!this.responseStreamOwner)
+            {
+                return;
+            }
+
+            if (copied == 0)
+            {
+                this.outputResponseStream = null;
+            }
+            else if (copy.Position < copy.Length)
+            {
+                // Some HTTP stacks may report a smaller content length than actual bytes read so the MemoryStream length needs to be trimmed accordingly
+                ((MemoryStream)copy).SetLength(copy.Position);
+            }
         }
     }
 }

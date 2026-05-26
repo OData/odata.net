@@ -11,6 +11,7 @@ namespace Microsoft.OData.Client.Tests.Tracking
     using System.IO;
     using System.Linq;
     using System.Text;
+    using System.Threading;
     using System.Threading.Tasks;
     using System.Xml;
     using Edm.Csdl;
@@ -443,6 +444,13 @@ namespace Microsoft.OData.Client.Tests.Tracking
                     byte[] byteArray = Encoding.UTF8.GetBytes(this.Response);
                     return new MemoryStream(byteArray);
                 });
+        }
+
+        public override Task<IODataResponseMessage> GetResponseAsync(CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            return Task.FromResult(GetResponse());
         }
 
         public override IAsyncResult BeginGetResponse(AsyncCallback callback, object state)

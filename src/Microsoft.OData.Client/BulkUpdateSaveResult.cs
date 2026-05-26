@@ -12,6 +12,8 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.OData.Client.Materialization;
 
 namespace Microsoft.OData.Client
@@ -186,6 +188,45 @@ namespace Microsoft.OData.Client
             try
             {
                 this.batchResponseMessage = this.RequestInfo.GetSynchronousResponse(bulkUpdateRequestMessage, false);
+                this.responseStream = this.batchResponseMessage.GetStream();
+                this.HandleBulkUpdateResponse(this.batchResponseMessage, responseStream);
+            }
+            catch (DataServiceTransportException ex)
+            {
+                InvalidOperationException exception = WebUtil.GetHttpWebResponse(ex, ref this.batchResponseMessage);
+
+                throw exception;
+            }
+        }
+
+        /// <summary>
+        /// Asynchronous bulk update request.
+        /// </summary>
+        /// <typeparam name="T">The type of the top-level objects to be deep-updated.</typeparam>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        /// <param name="objects">The top-level objects of the type to be deep updated.</param>
+        /// <returns>A task that represents the asynchronous operation.</returns>
+        internal async Task BulkUpdateRequestAsync<T>(CancellationToken cancellationToken, params T[] objects)
+        {
+            if (objects == null || objects.Length == 0)
+            {
+                throw Error.Argument(SRResources.Util_EmptyArray, nameof(objects));
+            }
+
+            BuildDescriptorGraph(this.ChangedEntries, true, objects);
+
+            ODataRequestMessageWrapper bulkUpdateRequestMessage = this.GenerateBulkUpdateRequest();
+
+            if (bulkUpdateRequestMessage == null)
+            {
+                return;
+            }
+
+            bulkUpdateRequestMessage.SetRequestStream(bulkUpdateRequestMessage.CachedRequestStream);
+
+            try
+            {
+                this.batchResponseMessage = await this.RequestInfo.GetResponseAsync(bulkUpdateRequestMessage, false, cancellationToken);
                 this.responseStream = this.batchResponseMessage.GetStream();
                 this.HandleBulkUpdateResponse(this.batchResponseMessage, responseStream);
             }

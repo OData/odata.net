@@ -1,0 +1,43 @@
+﻿{
+  "ProviderId": "Microsoft.OData.ConnectedService",
+  "Version": "1.1.1.0",
+  "GettingStartedDocument": {
+    "Uri": "http://odata.github.io/odata.net/"
+  },
+  "ExtendedData": {
+    "EnableNamingAlias": true,
+    "IgnoreUnexpectedElementsAndAttributes": true,
+    "IncludeT4File": false,
+    "ExcludedOperationImports": [],
+    "ExcludedBoundOperations": [],
+    "OmitVersioningInfo": false,
+    "ServiceName": "WasmSampleBackend",
+    "Endpoint": "http://localhost:5023/$metadata",
+    "EdmxVersion": {
+      "Major": 4,
+      "Minor": 0,
+      "Build": 0,
+      "Revision": 0,
+      "MajorRevision": 0,
+      "MinorRevision": 0
+    },
+    "GeneratedFileNamePrefix": "WasmSampleBackendProxy",
+    "UseNamespacePrefix": false,
+    "NamespacePrefix": "WasmSampleBackedClient",
+    "UseDataServiceCollection": true,
+    "MakeTypesInternal": false,
+    "OpenGeneratedFilesInIDE": false,
+    "GenerateMultipleFiles": false,
+    "CustomHttpHeaders": null,
+    "IncludeWebProxy": false,
+    "WebProxyHost": null,
+    "IncludeWebProxyNetworkCredentials": false,
+    "StoreWebProxyNetworkCredentials": false,
+    "WebProxyNetworkCredentialsUsername": null,
+    "WebProxyNetworkCredentialsPassword": null,
+    "WebProxyNetworkCredentialsDomain": null,
+    "IncludeCustomHeaders": false,
+    "StoreCustomHttpHeaders": false,
+    "ExcludedSchemaTypes": []
+  }
+}
