@@ -11,6 +11,7 @@ using System.Globalization;
 using System.Text;
 using System.Xml;
 using Microsoft.OData.Edm;
+using Microsoft.OData.Json;
 using Microsoft.Spatial;
 
 namespace Microsoft.OData.UriParser
@@ -554,7 +555,7 @@ namespace Microsoft.OData.UriParser
             {
                 try
                 {
-                    targetValue = Convert.FromBase64String(text);
+                    targetValue = JsonSharedUtils.ConvertFromBase64String(text);
                 }
                 catch (FormatException)
                 {

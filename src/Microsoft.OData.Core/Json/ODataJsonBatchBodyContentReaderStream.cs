@@ -353,7 +353,7 @@ namespace Microsoft.OData.Json
         /// <param name="encodedContent">The base64url-encoded content.</param>
         private void WriteBinaryContent(string encodedContent)
         {
-            byte[] bytes = Convert.FromBase64String(encodedContent.Replace('-', '+').Replace('_', '/'));
+            byte[] bytes = JsonSharedUtils.ConvertFromBase64String(encodedContent);
             WriteBytes(bytes);
         }
 
@@ -479,7 +479,7 @@ namespace Microsoft.OData.Json
         /// <returns>A task that represents the asynchronous write operation.</returns>
         private Task WriteBinaryContentAsync(string encodedContent)
         {
-            byte[] bytes = Convert.FromBase64String(encodedContent.Replace('-', '+').Replace('_', '/'));
+            byte[] bytes = JsonSharedUtils.ConvertFromBase64String(encodedContent);
             
             return WriteBytesAsync(bytes);
         }
