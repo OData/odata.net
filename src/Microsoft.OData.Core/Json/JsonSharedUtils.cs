@@ -70,5 +70,40 @@ namespace Microsoft.OData.Json
                     return false;
             }
         }
+
+        /// <summary>
+        /// Converts a Base64/Base64Url string to bytes.
+        /// </summary>
+        /// <param name="value">The Base64/Base64Url string value.</param>
+        /// <returns>The decoded byte array.</returns>
+        /// <exception cref="FormatException">Thrown if the value is not valid Base64 or Base64Url.</exception>
+        internal static byte[] ConvertFromBase64String(string value)
+        {
+            if (value == null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            if (value.AsSpan().IndexOfAny('-', '_') >= 0)
+            {
+                char[] chars = value.ToCharArray();
+
+                for (int i = 0; i < chars.Length; i++)
+                {
+                    if (chars[i] == '-')
+                    {
+                        chars[i] = '+';
+                    }
+                    else if (chars[i] == '_')
+                    {
+                        chars[i] = '/';
+                    }
+                }
+
+                return Convert.FromBase64CharArray(chars, 0, chars.Length);
+            }
+
+            return Convert.FromBase64String(value);
+        }
     }
 }

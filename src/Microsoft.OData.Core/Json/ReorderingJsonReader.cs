@@ -47,7 +47,7 @@ namespace Microsoft.OData.Json
             try
             {
                 result = this.GetValue() == null ? Stream.Null :
-                    new MemoryStream(Convert.FromBase64String((string)this.GetValue()));
+                    new MemoryStream(JsonSharedUtils.ConvertFromBase64String((string)this.GetValue()));
             }
             catch (FormatException)
             {
@@ -113,7 +113,7 @@ namespace Microsoft.OData.Json
                 }
                 else
                 {
-                    result = new MemoryStream(Convert.FromBase64String((string)value));
+                    result = new MemoryStream(JsonSharedUtils.ConvertFromBase64String((string)value));
                 }
             }
             catch (FormatException)

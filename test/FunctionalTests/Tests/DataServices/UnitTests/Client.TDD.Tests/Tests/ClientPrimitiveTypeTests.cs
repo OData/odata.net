@@ -91,6 +91,20 @@ namespace AstoriaUnitTests.Tests
             Assert.Equal("AAECAw==", converter.ToString(new byte[] { 0, 1, 2, 3 }));
         }
 
+        [Fact]
+        public void ByteArrayTypeConverterTests_Base64Url()
+        {
+            PrimitiveTypeConverter converter = new ByteArrayTypeConverter();
+
+            // "AAEA_w==" is the Base64Url form of standard Base64 "AAEA/w==" ({ 0x00, 0x01, 0x00, 0xFF })
+            Byte[] array = (Byte[])converter.Parse("AAEA_w==");
+            Assert.Equal(new byte[] { 0x00, 0x01, 0x00, 0xFF }, array);
+
+            // "AAEC-w==" is the Base64Url form of standard Base64 "AAEC+w==" ({ 0x00, 0x01, 0x02, 0xFB })
+            array = (Byte[])converter.Parse("AAEC-w==");
+            Assert.Equal(new byte[] { 0x00, 0x01, 0x02, 0xFB }, array);
+        }
+
 #if !(NETCOREAPP1_0 || NETCOREAPP2_0)
         [Fact]
         public void BinaryTypeConverterTests()
@@ -102,6 +116,23 @@ namespace AstoriaUnitTests.Tests
             {
                 Assert.Equal(new System.Data.Linq.Binary(new byte[] { 0, 1, 2, 3 }), (System.Data.Linq.Binary)converter.Parse("AAECAw=="));
                 Assert.Equal("\"AAECAw==\"", converter.ToString(new System.Data.Linq.Binary(new byte[] { 0, 1, 2, 3 })));
+            }
+            finally
+            {
+                BinaryTypeConverter.BinaryType = temp;
+            }
+        }
+
+        [Fact]
+        public void BinaryTypeConverterTests_Base64Url()
+        {
+            PrimitiveTypeConverter converter = new BinaryTypeConverter();
+            Type temp = BinaryTypeConverter.BinaryType;
+            BinaryTypeConverter.BinaryType = typeof(System.Data.Linq.Binary);
+            try
+            {
+                // "AAEA_w==" is Base64Url for { 0x00, 0x01, 0x00, 0xFF }
+                Assert.Equal(new System.Data.Linq.Binary(new byte[] { 0x00, 0x01, 0x00, 0xFF }), (System.Data.Linq.Binary)converter.Parse("AAEA_w=="));
             }
             finally
             {

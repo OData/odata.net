@@ -163,6 +163,9 @@ namespace Microsoft.OData.Tests.Query
             result = ODataUriUtils.ConvertFromUriLiteral("binary''", ODataVersion.V4) as byte[];
             Assert.Empty(result);
 
+            result = ODataUriUtils.ConvertFromUriLiteral("binary'AAEA_w=='", ODataVersion.V4) as byte[];
+            Assert.Equal(new byte[] { 0x00, 0x01, 0x00, 0xff }, result);
+
             // Invalid base64 value.
             Action action = () => { ODataUriUtils.ConvertFromUriLiteral("binary'AwEEAQUJAgYFAwUJ='", ODataVersion.V4); };
             action.Throws<ODataException>(Error.Format(SRResources.UriQueryExpressionParser_UnrecognizedLiteral, "Edm.Binary", "binary'AwEEAQUJAgYFAwUJ='", "0", "binary'AwEEAQUJAgYFAwUJ='"));
