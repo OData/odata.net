@@ -28,6 +28,7 @@ namespace Microsoft.OData.Client
     using System.Reflection;
     using System.Xml;
     using Microsoft.OData.Edm;
+    using Microsoft.OData.Json;
     using Microsoft.Spatial;
 
     /// <summary>
@@ -156,7 +157,7 @@ namespace Microsoft.OData.Client
         /// <returns>An instance of primitive type</returns>
         internal override object Parse(String text)
         {
-            return Convert.FromBase64String(text);
+            return JsonSharedUtils.ConvertFromBase64String(text);
         }
 
         /// <summary>
@@ -194,7 +195,7 @@ namespace Microsoft.OData.Client
         /// <returns>An instance of primitive type</returns>
         internal override object Parse(String text)
         {
-            return Activator.CreateInstance(BinaryType, Convert.FromBase64String(text));
+            return Activator.CreateInstance(BinaryType, JsonSharedUtils.ConvertFromBase64String(text));
         }
 
         /// <summary>
