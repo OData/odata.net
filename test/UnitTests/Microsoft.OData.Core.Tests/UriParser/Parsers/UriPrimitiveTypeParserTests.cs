@@ -395,6 +395,14 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             Assert.False(this.TryParseUriStringToPrimitiveType("null", EdmCoreModel.Instance.GetInt32(false), out output));
         }
 
+        [Fact]
+        public void TryUriStringToPrimitiveWithUrlSafeBinaryLiteralShouldReturnByteArray()
+        {
+            object output;
+            Assert.True(this.TryParseUriStringToPrimitiveType("binary'AAEA_w=='", EdmCoreModel.Instance.GetBinary(false), out output));
+            Assert.Equal(new byte[] { 0x00, 0x01, 0x00, 0xff }, (byte[])output);
+        }
+
         #region Private Methods
 
         private bool TryParseUriStringToPrimitiveType(string text, IEdmTypeReference targetType, out object targetValue)

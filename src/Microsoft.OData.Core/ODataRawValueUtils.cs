@@ -12,6 +12,7 @@ namespace Microsoft.OData
     using System.Xml;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Core;
+    using Microsoft.OData.Json;
     #endregion Namespaces
 
     /// <summary>
@@ -152,7 +153,7 @@ namespace Microsoft.OData
                 switch (primitiveKind)
                 {
                     case EdmPrimitiveTypeKind.Binary:
-                        return Convert.FromBase64String(text);
+                        return JsonSharedUtils.ConvertFromBase64String(text);
                     case EdmPrimitiveTypeKind.Boolean:
                         return ConvertXmlBooleanValue(text);
                     case EdmPrimitiveTypeKind.Byte:
