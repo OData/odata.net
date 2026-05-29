@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Microsoft.OData.Serializer.Json.Writers;
 
-internal class ODataJsonGuidWriter<TCustomState> : ODataWriter<Guid, ODataWriterState<TCustomState>>
+internal class ODataJsonGuidWriter<TCustomState> : ODataJsonWriter<Guid, TCustomState>
 {
     public override bool Write(Guid value, ODataWriterState<TCustomState> state)
     {

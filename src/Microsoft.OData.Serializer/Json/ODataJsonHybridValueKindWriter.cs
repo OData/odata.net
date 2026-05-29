@@ -11,7 +11,7 @@ internal class ODataJsonHybridValueKindWriter<T, TCustomState>(ODataTypeInfo<T, 
     ODataJsonWriter<T, TCustomState>
 {
     // Since this cache is only attached to this writer instance, no need to make it concurrent.
-    private readonly Dictionary<ODataValueKind, ODataWriter<T, ODataWriterState<TCustomState>>> _writerCache = [];
+    private readonly Dictionary<ODataValueKind, ODataWriter<T, ODataWriterState<TCustomState>, ODataReaderState<TCustomState>>> _writerCache = [];
 
     public override bool Write(T value, ODataWriterState<TCustomState> state)
     {
@@ -21,7 +21,7 @@ internal class ODataJsonHybridValueKindWriter<T, TCustomState>(ODataTypeInfo<T, 
         return writer.Write(value, state);
     }
 
-    private ODataWriter<T, ODataWriterState<TCustomState>> GetWriterForValueKind(ODataValueKind valueKind)
+    private ODataWriter<T, ODataWriterState<TCustomState>, ODataReaderState<TCustomState>> GetWriterForValueKind(ODataValueKind valueKind)
     {
         if (_writerCache.TryGetValue(valueKind, out var writer))
         {

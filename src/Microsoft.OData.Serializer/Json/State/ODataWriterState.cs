@@ -134,7 +134,7 @@ public sealed class ODataWriterState<TCustomState>
         return Stack.IsTopLevel();
     }
 
-    internal IODataWriter<ODataWriterState<TCustomState>> GetWriter(Type type)
+    internal IODataWriter<ODataWriterState<TCustomState>, ODataReaderState<TCustomState>> GetWriter(Type type)
     {
         return writers.GetWriter(type, EdmModel);
     }
@@ -146,7 +146,7 @@ public sealed class ODataWriterState<TCustomState>
         var writer = writers.GetWriter<T>(EdmModel);
         return writer.Write(value, this);
     }
-
+    
     /// <summary>
     /// Writes the value completely in memory, without
     /// breaking for resumability if the buffer is full.
