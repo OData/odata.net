@@ -5,7 +5,7 @@
 //---------------------------------------------------------------------
 
 namespace Microsoft.OData.Client
-{ 
+{
     using System;
     using System.Collections.Generic;
     using System.Globalization;
@@ -18,7 +18,7 @@ namespace Microsoft.OData.Client
     using System.Threading;
     using System.Threading.Tasks;
     using Microsoft.OData;
-   
+
     /// <summary>
     /// HttpClient based implementation of DataServiceClientRequestMessage.
     /// </summary>
@@ -60,8 +60,8 @@ namespace Microsoft.OData.Client
         bool _isTimeoutProvidedByCaller = false;
 
         /// <summary>
-        /// This will be used to cache content headers to be retrieved later. 
-        /// When the message content is being set. 
+        /// This will be used to cache content headers to be retrieved later.
+        /// When the message content is being set.
         /// </summary>
         private readonly Dictionary<string, string> _contentHeaderValueCache;
 
@@ -79,7 +79,7 @@ namespace Microsoft.OData.Client
         /// The args.ActualMethod is the actual method. In post tunneling situations method will be POST instead of the specified verb method.
         /// The args.method is the specified verb method
         /// </summary>
-        public HttpClientRequestMessage(DataServiceClientRequestMessageArgs args) 
+        public HttpClientRequestMessage(DataServiceClientRequestMessageArgs args)
             : base(args.ActualMethod)
         {
             _messageStream = new MemoryStream();
@@ -103,7 +103,7 @@ namespace Microsoft.OData.Client
                     throw;
                 }
             }
-            
+
             _contentHeaderValueCache = new Dictionary<string, string>();
             _effectiveHttpMethod = args.Method;
             _requestMessage = new HttpRequestMessage(new HttpMethod(this.ActualMethod), args.RequestUri);
@@ -180,7 +180,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Gets or sets a value that indicates whether to send data in segments. 
+        /// Gets or sets a value that indicates whether to send data in segments.
         /// </summary>
         public override bool SendChunked
         {
@@ -273,7 +273,7 @@ namespace Microsoft.OData.Client
             else
             {
                 _contentHeaderValueCache[headerName] = headerValue;
-            }            
+            }
         }
 
         /// <summary>
@@ -499,7 +499,7 @@ namespace Microsoft.OData.Client
         /// <param name="cancellationToken">The external cancellation token provided by the caller.</param>
         /// <returns>A task producing the <see cref="HttpResponseMessage"/>.</returns>
         /// <remarks>
-        /// Internal cancellations (abort or timeout) are wrapped as <see cref="DataServiceTransportException"/>; 
+        /// Internal cancellations (abort or timeout) are wrapped as <see cref="DataServiceTransportException"/>;
         /// other exceptions propagate.
         /// Transient linked/timeout token sources are disposed in the finally block.
         /// </remarks>
@@ -512,8 +512,8 @@ namespace Microsoft.OData.Client
         {
             try
             {
-                // Use HttpCompletionOption.ResponseHeadersRead to shorten the window before cancellation is honoured
-                return await _client.SendAsync(_requestMessage, HttpCompletionOption.ResponseHeadersRead, sendToken);
+                // Use HttpCompletionOption.ResponseHeadersRead to shorten the window before cancellation is honoured.
+                return await _client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, sendToken).ConfigureAwait(false);
             }
             catch (OperationCanceledException ex)
             {
@@ -529,7 +529,7 @@ namespace Microsoft.OData.Client
             }
             finally
             {
-                // Dispose transient timeout/linked token sources after completion to avoid resource leaks;
+                // Dispose transient timeout/linked token sources after completion to avoid resource leaks
                 linkedTokenSource?.Dispose();
                 timeoutTokenSource?.Dispose();
             }
