@@ -151,5 +151,22 @@ namespace Microsoft.OData.Client
         /// <returns>A System.Net.WebResponse that contains the response from the Internet resource.</returns>
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate", Justification = "This is intentionally a method.")]
         public abstract IODataResponseMessage GetResponse();
+
+        /// <summary>
+        /// Asynchronously returns a response from a network resource.
+        /// </summary>
+        /// <param name="cancellationToken">The cancellation token to cancel the operation.</param>
+        /// <returns>A task that represents the asynchronous operation. The task result contains the response message.</returns>
+        public virtual Task<IODataResponseMessage> GetResponseAsync(CancellationToken cancellationToken)
+        {
+            try
+            {
+                return Task.FromResult(GetResponse());
+            }
+            catch (Exception ex) when (CommonUtil.IsCatchableExceptionType(ex))
+            {
+                return Task.FromException<IODataResponseMessage>(ex);
+            }
+        }
     }
 }

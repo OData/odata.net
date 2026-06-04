@@ -11,6 +11,8 @@ namespace Microsoft.OData.Client
     using System.Diagnostics;
     using System.Linq;
     using System.Net;
+    using System.Threading;
+    using System.Threading.Tasks;
     using Microsoft.OData;
     using Microsoft.OData.Client.Materialization;
 
@@ -156,6 +158,63 @@ namespace Microsoft.OData.Client
                 DataServiceRequest<TElement> serviceRequest = new DataServiceRequest<TElement>(requestUri, queryComponents, this.Plan);
                 result = serviceRequest.CreateExecuteResult(this, context, null, null, Util.ExecuteMethodName);
                 result.ExecuteQuery();
+                return result.ProcessResult<TElement>(this.Plan);
+            }
+            catch (InvalidOperationException ex)
+            {
+                if (result != null)
+                {
+                    QueryOperationResponse operationResponse = result.GetResponse<TElement>(ObjectMaterializer.EmptyResults);
+
+                    if (operationResponse != null)
+                    {
+                        if (context.IgnoreResourceNotFoundException)
+                        {
+                            DataServiceClientException cex = ex as DataServiceClientException;
+                            if (cex != null && cex.StatusCode == (int)HttpStatusCode.NotFound)
+                            {
+                                // don't throw
+                                return (QueryOperationResponse<TElement>)operationResponse;
+                            }
+                        }
+
+                        operationResponse.Error = ex;
+                        throw new DataServiceQueryException(SRResources.DataServiceException_GeneralError, ex, operationResponse);
+                    }
+                }
+
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Asynchronously executes the query and returns a typed <see cref="QueryOperationResponse{TElement}"/>.
+        /// </summary>
+        /// <typeparam name="TElement">The element type of the response.</typeparam>
+        /// <param name="context">The data service context.</param>
+        /// <param name="queryComponents">The query components describing the request.</param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        /// <returns>
+        /// A task whose result is a <see cref="QueryOperationResponse{TElement}"/> whose enumerable results can be iterated to
+        /// materialize <typeparamref name="TElement"/> instances. The response also carries HTTP status,
+        /// headers, and the request <see cref="Uri"/> for diagnostics and paging.
+        /// </returns>
+        internal async Task<QueryOperationResponse<TElement>> ExecuteAsync<TElement>(
+            DataServiceContext context,
+            QueryComponents queryComponents,
+            CancellationToken cancellationToken)
+        {
+            Debug.Assert(context != null, "context is null");
+            Debug.Assert(queryComponents != null, "queryComponents is null");
+
+            QueryResult result = null;
+
+            try
+            {
+                Uri requestUri = queryComponents.Uri;
+                DataServiceRequest<TElement> serviceRequest = new DataServiceRequest<TElement>(requestUri, queryComponents, this.Plan);
+                result = serviceRequest.CreateExecuteResult(this, context, null, null, "ExecuteAsync");
+                await result.ExecuteQueryAsync(cancellationToken).ConfigureAwait(false);
                 return result.ProcessResult<TElement>(this.Plan);
             }
             catch (InvalidOperationException ex)

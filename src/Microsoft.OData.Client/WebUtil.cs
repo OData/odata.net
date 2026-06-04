@@ -15,6 +15,8 @@ namespace Microsoft.OData.Client
     using System.Linq;
     using System.Reflection;
     using System.Runtime.CompilerServices;
+    using System.Threading;
+    using System.Threading.Tasks;
     using Microsoft.OData;
     using Microsoft.OData.Client.Metadata;
 
@@ -82,6 +84,32 @@ namespace Microsoft.OData.Client
             while (input.CanRead && ((count = input.Read(buffer, 0, buffer.Length)) > 0))
             {
                 output.Write(buffer, 0, count);
+                total += count;
+            }
+
+            return total;
+        }
+
+        /// <summary>Asynchronously copy from one stream to another.</summary>
+        /// <param name="input">Input stream to read from.</param>
+        /// <param name="output">Output stream to write to.</param>
+        /// <param name="buffer">Buffer to use for copying. If null, a new buffer will be created.</param>
+        /// <param name="cancellationToken">Cancellation token to observe.</param>
+        /// <returns>
+        /// A task that represents the asynchronous copy operation.
+        /// The task result contains the total number of bytes copied.
+        /// </returns>
+        internal static async Task<long> CopyStreamAsync(Stream input, Stream output, byte[] buffer, CancellationToken cancellationToken = default)
+        {
+            Debug.Assert(input != null, "null input stream");
+            Debug.Assert(output != null, "null output stream");
+            Debug.Assert(buffer == null || buffer.Length > 0, "null or empty buffer");
+
+            long total = 0;
+            int count;
+            while (input.CanRead && (count = await input.ReadAsync(buffer.AsMemory(0, buffer.Length), cancellationToken).ConfigureAwait(false)) > 0)
+            {
+                await output.WriteAsync(buffer.AsMemory(0, count), cancellationToken).ConfigureAwait(false);
                 total += count;
             }
 
