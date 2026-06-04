@@ -13,6 +13,8 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.OData.Client.Materialization;
 using Microsoft.OData.Edm;
 
@@ -110,6 +112,44 @@ namespace Microsoft.OData.Client
             try
             {
                 this.batchResponseMessage = this.RequestInfo.GetSynchronousResponse(deepInsertRequestMessage, false);
+                this.responseStream = this.batchResponseMessage.GetStream();
+            }
+            catch (DataServiceTransportException ex)
+            {
+                InvalidOperationException exception = WebUtil.GetHttpWebResponse(ex, ref this.batchResponseMessage);
+
+                throw exception;
+            }
+        }
+
+        /// <summary>
+        /// Asynchronously sends a deep insert request without blocking waits.
+        /// </summary>
+        /// <typeparam name="T">The type of the top-level object to be deep inserted.</typeparam>
+        /// <param name="resource">The top-level object to be deep inserted.</param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        /// <returns>A task that represents the asynchronous operation.</returns>
+        internal async Task DeepInsertRequestAsync<T>(T resource, CancellationToken cancellationToken)
+        {
+            if (resource == null)
+            {
+                throw Error.ArgumentNull(nameof(resource));
+            }
+
+            BuildDescriptorGraph(this.ChangedEntries, true, resource);
+
+            ODataRequestMessageWrapper deepInsertRequestMessage = this.GenerateDeepInsertRequest();
+
+            if (deepInsertRequestMessage == null)
+            {
+                return;
+            }
+
+            deepInsertRequestMessage.SetRequestStream(deepInsertRequestMessage.CachedRequestStream);
+
+            try
+            {
+                this.batchResponseMessage = await this.RequestInfo.GetResponseAsync(deepInsertRequestMessage, false, cancellationToken);
                 this.responseStream = this.batchResponseMessage.GetStream();
             }
             catch (DataServiceTransportException ex)
