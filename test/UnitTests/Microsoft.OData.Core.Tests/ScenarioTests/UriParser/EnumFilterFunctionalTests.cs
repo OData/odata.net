@@ -634,6 +634,49 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             action.Throws<ODataException>(Error.Format(SRResources.Binder_IsNotValidEnumConstant, expectedExceptionParameter));
         }
 
+        [Fact]
+        public void ParseFilterWithInOperatorWithNullableEnumAndNullValue()
+        {
+            // Regression test for https://github.com/OData/odata.net/issues/3491
+            // $filter=Color in (null, 'Green') should work for nullable enum properties.
+            string filterQuery = "Color in (null, 'Green')";
+
+            // Act
+            FilterClause filter = ParseFilter(filterQuery, this.userModel, this.entityType, this.entitySet);
+
+            // Assert
+            InNode inNode = filter.Expression.ShouldBeInNode();
+            Assert.IsType<SingleValuePropertyAccessNode>(inNode.Left);
+
+            CollectionConstantNode collection = Assert.IsType<CollectionConstantNode>(inNode.Right);
+            Assert.Equal(2, collection.Collection.Count);
+
+            // First item should be null
+            ConstantNode nullItem = collection.Collection[0];
+            Assert.Null(nullItem.Value);
+
+            // Second item should be the enum value 'Green'
+            ConstantNode greenItem = collection.Collection[1];
+            ODataEnumValue enumValue = Assert.IsType<ODataEnumValue>(greenItem.Value);
+            Assert.Equal("Green", enumValue.Value);
+        }
+
+        [Fact]
+        public void ParseFilterWithInOperatorWithNullableEnumAndOnlyNullValue()
+        {
+            // $filter=Color in (null) should work for nullable enum properties.
+            string filterQuery = "Color in (null)";
+
+            // Act
+            FilterClause filter = ParseFilter(filterQuery, this.userModel, this.entityType, this.entitySet);
+
+            // Assert
+            InNode inNode = filter.Expression.ShouldBeInNode();
+            CollectionConstantNode collection = Assert.IsType<CollectionConstantNode>(inNode.Right);
+            Assert.Single(collection.Collection);
+            Assert.Null(collection.Collection[0].Value);
+        }
+
         private T GetIEdmType<T>(string typeName) where T : IEdmType
         {
             return (T)this.userModel.FindType(typeName);

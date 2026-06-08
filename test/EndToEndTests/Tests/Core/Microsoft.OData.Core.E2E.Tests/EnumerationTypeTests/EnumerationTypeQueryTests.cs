@@ -603,6 +603,24 @@ public class EnumerationTypeQueryTests : EndToEndTestBase<EnumerationTypeQueryTe
         Assert.Contains(expectedErrorMessage, exception.Message);
     }
 
+    [Fact]
+    public async Task QueryNullableEnumWithNullInOperator_DoesNotThrowParserError()
+    {
+        // Arrange - tests fix for issue #3491: nullable enum with null in 'in' operator.
+        // Before the fix, the URI parser would throw "not a valid enumeration type constant"
+        // because null was being quoted as 'null' and treated as an enum member name.
+        // SkinColor is a nullable Color enum (Color?). No products have SkinColor = null,
+        // so this should return an empty set rather than throwing a parser error.
+        var filter = "SkinColor in (null)";
+        var queryText = $"Products?$filter={filter}";
+
+        // Act - should not throw; before the fix this would throw ODataException
+        List<ODataResource> entries = await TestsHelper.QueryResourceSetsAsync(queryText, MimeTypeODataParameterMinimalMetadata);
+
+        // Assert - no products have null SkinColor, so expect empty result
+        Assert.Empty(entries);
+    }
+
     #endregion
 
     #region Private methods
