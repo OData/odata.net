@@ -583,16 +583,14 @@ public class AsyncMethodTests : AsynchronousEndToEndTestBase<AsyncMethodTests.Te
         context.SendingRequest2 += sendRequestEvent;
 
         // Act & Assert
-        var customers = context.Customers.GetAllPagesAsync();
-        Assert.Equal(1, sentRequestCount);
-        foreach (var customer in await customers)
+        await foreach (var customer in context.Customers.EnumerateAllPagesAsync())
         {
             if (++count == 3)
             {
                 break;
             }
         }
-        //Only two Request sent
+        // Only two requests sent (one per page, stopping after 3 items)
         Assert.Equal(2, sentRequestCount);
         this.EnqueueTestComplete();
     }
