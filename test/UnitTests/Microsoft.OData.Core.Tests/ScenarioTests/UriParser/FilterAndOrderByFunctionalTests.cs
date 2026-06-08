@@ -2676,6 +2676,50 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Fact]
+        public void FilterWithInOperationWithNullableEnumAndNullValue()
+        {
+            // Regression test for https://github.com/OData/odata.net/issues/3491
+            // $filter=Status in (null, 'Active') should work for nullable enum properties.
+            var enumType = new EdmEnumType("NS", "Status");
+            enumType.AddMember("New", new EdmEnumMemberValue(1));
+            enumType.AddMember("Active", new EdmEnumMemberValue(2));
+            enumType.AddMember("Closed", new EdmEnumMemberValue(3));
+
+            var entityType = new EdmEntityType("NS", "Order");
+            entityType.AddKeys(entityType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
+            entityType.AddStructuralProperty("Status", new EdmEnumTypeReference(enumType, isNullable: true));
+
+            var container = new EdmEntityContainer("NS", "Default");
+            var entitySet = container.AddEntitySet("Orders", entityType);
+
+            var model = new EdmModel();
+            model.AddElement(enumType);
+            model.AddElement(entityType);
+            model.AddElement(container);
+
+            // Act - parse "$filter=Status in (null, 'Active')"
+            FilterClause filter = new ODataQueryOptionParser(
+                model, entityType, entitySet,
+                new Dictionary<string, string> { { "$filter", "Status in (null, 'Active')" } }).ParseFilter();
+
+            // Assert
+            InNode inNode = Assert.IsType<InNode>(filter.Expression);
+            Assert.Equal("Status", Assert.IsType<SingleValuePropertyAccessNode>(inNode.Left).Property.Name);
+
+            CollectionConstantNode collection = Assert.IsType<CollectionConstantNode>(inNode.Right);
+            Assert.Equal(2, collection.Items.Count);
+
+            // First item should be null
+            ConstantNode nullItem = Assert.IsType<ConstantNode>(collection.Items[0]);
+            Assert.Null(nullItem.Value);
+
+            // Second item should be the enum value 'Active'
+            ConstantNode activeItem = Assert.IsType<ConstantNode>(collection.Items[1]);
+            ODataEnumValue enumValue = Assert.IsType<ODataEnumValue>(activeItem.Value);
+            Assert.Equal("Active", enumValue.Value);
+        }
+
+        [Fact]
         public void MatchesPatternInFilterWithTheReturnType()
         {
             // Arrange & Act - Filter people whose names match capitalized pattern
