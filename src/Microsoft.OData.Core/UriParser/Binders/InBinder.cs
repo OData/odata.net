@@ -513,7 +513,12 @@ namespace Microsoft.OData.UriParser
                     }
 
                     // If item is already quoted, keep it; otherwise wrap in single quotes
+                    // Exception: 'null' literal should be kept as-is (not quoted) to represent null value
                     if (token.Length > 0 && (token[0] == '\'' || token[0] == '"'))
+                    {
+                        result.Append(token);
+                    }
+                    else if (token.Equals(NullLiteral, StringComparison.Ordinal))
                     {
                         result.Append(token);
                     }
