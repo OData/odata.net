@@ -298,9 +298,9 @@ namespace Microsoft.OData.Client
                     this.Request.SetRequestStream(this.requestContentStream);
                 }
 
-                IODataResponseMessage response = await this.RequestInfo.GetResponseAsync(this.Request, true, cancellationToken);
+                IODataResponseMessage response = await this.RequestInfo.GetResponseAsync(this.Request, true, cancellationToken).ConfigureAwait(false);
                 this.SetHttpWebResponse(Util.NullCheck(response, InternalError.InvalidGetResponse));
-                await this.ProcessResponseStreamAsync(cancellationToken);
+                await this.ProcessResponseStreamAsync(cancellationToken).ConfigureAwait(false);
             }
             catch (Exception e)
             {
@@ -770,7 +770,7 @@ namespace Microsoft.OData.Client
 
                 Byte[] buffer = this.GetAsyncResponseStreamCopyBuffer();
 
-                long copied = await WebUtil.CopyStreamAsync(stream, copy, buffer, cancellationToken);
+                long copied = await WebUtil.CopyStreamAsync(stream, copy, buffer, cancellationToken).ConfigureAwait(false);
 
                 this.FinalizeStreamCopy(copy, copied);
                 this.PutAsyncResponseStreamCopyBuffer(buffer);

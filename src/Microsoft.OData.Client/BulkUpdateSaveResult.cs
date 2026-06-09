@@ -226,7 +226,7 @@ namespace Microsoft.OData.Client
 
             try
             {
-                this.batchResponseMessage = await this.RequestInfo.GetResponseAsync(bulkUpdateRequestMessage, false, cancellationToken);
+                this.batchResponseMessage = await this.RequestInfo.GetResponseAsync(bulkUpdateRequestMessage, false, cancellationToken).ConfigureAwait(false);
                 this.responseStream = this.batchResponseMessage.GetStream();
                 this.HandleBulkUpdateResponse(this.batchResponseMessage, responseStream);
             }

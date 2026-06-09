@@ -149,7 +149,7 @@ namespace Microsoft.OData.Client
 
             try
             {
-                this.batchResponseMessage = await this.RequestInfo.GetResponseAsync(deepInsertRequestMessage, false, cancellationToken);
+                this.batchResponseMessage = await this.RequestInfo.GetResponseAsync(deepInsertRequestMessage, false, cancellationToken).ConfigureAwait(false);
                 this.responseStream = this.batchResponseMessage.GetStream();
             }
             catch (DataServiceTransportException ex)
