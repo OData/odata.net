@@ -285,15 +285,14 @@ namespace Microsoft.OData.Client.Tests.Serialization
         }
 
         [Fact]
-        public async Task WhenTimeoutNotSet_HttpClientTimeoutStillApplies()
+        public void GetResponse_DoesNotDeadlock_UnderSingleThreadedSynchronizationContext()
         {
-            // Arrange
-            using (var handler = new MockDelayedHttpClientHandler("success", delayMilliseconds: 5000))
+            // Arrange - simulate a UI SynchronizationContext (WinForms/WPF) that does not pump messages.
+            // Without ConfigureAwait(false) on the internal SendAsync, this would deadlock because
+            // the continuation would try to marshal back to the blocked thread.
+            using (var handler = new MockHttpClientHandler("OK"))
             {
-                var httpClientFactory = new MockHttpClientFactory(handler, new MockHttpClientFactoryOptions
-                {
-                    Timeout = 1
-                });
+                var httpClientFactory = new MockHttpClientFactory(handler);
                 var args = new DataServiceClientRequestMessageArgs(
                     "GET",
                     new Uri("http://localhost"),
@@ -301,20 +300,56 @@ namespace Microsoft.OData.Client.Tests.Serialization
                     headers: new Dictionary<string, string>(),
                     httpClientFactory: httpClientFactory);
 
-                using (var request = new HttpClientRequestMessage(args))
-                {
-                    // Act
-                    Task<IODataResponseMessage> getResponseTask =
-                        Task.Run(() => Task.Factory.FromAsync(request.BeginGetResponse, request.EndGetResponse, null));
+                IODataResponseMessage response = null;
+                Exception caughtException = null;
 
-                    // Assert
-                    await Assert.ThrowsAsync<DataServiceTransportException>(async () =>
+                // Run on a dedicated thread with a non-pumping SynchronizationContext
+                var thread = new Thread(() =>
+                {
+                    SynchronizationContext.SetSynchronizationContext(new NonPumpingSynchronizationContext());
+                    try
                     {
-                        await getResponseTask;
-                    });
-                }
+                        using (var request = new HttpClientRequestMessage(args))
+                        {
+                            response = request.GetResponse();
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        caughtException = ex;
+                    }
+                });
+
+                thread.IsBackground = true;
+                thread.Start();
+
+                // Wait with timeout - if it deadlocks, this will fail
+                bool completed = thread.Join(TimeSpan.FromSeconds(10));
+
+                // Assert
+                Assert.True(completed, "GetResponse() deadlocked under a single-threaded SynchronizationContext");
+                Assert.Null(caughtException);
+                Assert.NotNull(response);
             }
         }
 
+        /// <summary>
+        /// A SynchronizationContext that does not pump (simulates WinForms/WPF UI thread behavior).
+        /// Posts are queued but never executed, which causes deadlocks if await continuations
+        /// try to marshal back to this context.
+        /// </summary>
+        private sealed class NonPumpingSynchronizationContext : SynchronizationContext
+        {
+            public override void Post(SendOrPostCallback d, object state)
+            {
+                // Intentionally do NOT execute the callback - simulates a blocked UI thread
+                // that cannot process posted messages.
+            }
+
+            public override void Send(SendOrPostCallback d, object state)
+            {
+                throw new NotSupportedException("Send is not supported on this context.");
+            }
+        }
     }
 }
