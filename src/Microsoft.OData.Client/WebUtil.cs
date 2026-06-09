@@ -105,6 +105,11 @@ namespace Microsoft.OData.Client
             Debug.Assert(output != null, "null output stream");
             Debug.Assert(buffer == null || buffer.Length > 0, "null or empty buffer");
 
+            if (buffer == null)
+            {
+                buffer = new byte[1000];
+            }
+
             long total = 0;
             int count;
             while (input.CanRead && (count = await input.ReadAsync(buffer.AsMemory(0, buffer.Length), cancellationToken).ConfigureAwait(false)) > 0)
