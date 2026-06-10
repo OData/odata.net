@@ -287,7 +287,7 @@ namespace Microsoft.OData.Client
         /// Pages are fetched on-demand as you iterate through the results.
         /// </summary>
         /// <remarks>
-        /// Use this method for large result sets or when you want to process the results incrementaly.
+        /// Use this method for large result sets or when you want to process the results incrementally.
         /// Network requests for additional pages are made as you iterate through the results.
         /// For small result sets where you need all results upfront, consider using <see cref="GetAllPagesAsync(CancellationToken)" /> instead.
         /// </remarks>
