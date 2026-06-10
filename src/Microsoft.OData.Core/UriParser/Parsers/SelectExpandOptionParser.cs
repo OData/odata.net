@@ -590,7 +590,10 @@ namespace Microsoft.OData.UriParser
                 targetStructuredType,
                 this.maxRecursionDepth - 1,
                 this.enableCaseInsensitiveBuiltinIdentifier,
-                this.enableNoDollarQueryOptions);
+                this.enableNoDollarQueryOptions)
+            {
+                MaxAggregateDepth = this.MaxAggregateDepth
+            };
 
             return innerSelectParser.ParseSelect();
         }
@@ -629,7 +632,10 @@ namespace Microsoft.OData.UriParser
                 targetStructuredType,
                 this.maxRecursionDepth - 1,
                 this.enableCaseInsensitiveBuiltinIdentifier,
-                this.enableNoDollarQueryOptions);
+                this.enableNoDollarQueryOptions)
+            {
+                MaxAggregateDepth = this.MaxAggregateDepth
+            };
 
             return innerExpandParser.ParseExpand();
         }

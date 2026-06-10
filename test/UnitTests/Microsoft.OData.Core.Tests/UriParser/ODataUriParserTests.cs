@@ -2216,5 +2216,23 @@ namespace Microsoft.OData.Tests.UriParser
             Assert.Single(transformations);
             Assert.IsType<AggregateTransformationNode>(transformations[0]);
         }
+
+        [Fact]
+        public void ParseNestedExpandWithApplyAggregateLimitShouldBeHonored()
+        {
+            // Verify that AggregateLimit is propagated to nested $expand parsing
+            // $expand=MyPaintings($apply=aggregate(Value with sum as TotalValue))
+            var uriParser = new ODataUriParser(
+                HardCodedTestModel.TestModel,
+                ServiceRoot,
+                new Uri("http://host/People?$expand=MyPaintings($apply=aggregate(Value with sum as TotalValue))"))
+            {
+                Settings = { AggregateLimit = 0 }
+            };
+
+            // AggregateLimit of 0 should reject even a simple aggregate inside nested $expand
+            Action parse = () => uriParser.ParseSelectAndExpand();
+            Assert.Throws<ODataException>(parse);
+        }
     }
 }
