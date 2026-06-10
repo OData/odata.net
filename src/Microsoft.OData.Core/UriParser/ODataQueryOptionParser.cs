@@ -425,7 +425,8 @@ namespace Microsoft.OData.UriParser
             UriQueryExpressionParser expressionParser = new UriQueryExpressionParser(
                 configuration.Model,
                 configuration.Settings.FilterLimit,
-                configuration.EnableCaseInsensitiveUriFunctionIdentifier);
+                configuration.EnableCaseInsensitiveUriFunctionIdentifier,
+                maxAggregateExpressionDepth: configuration.Settings.AggregateLimit);
             var applyTokens = expressionParser.ParseApply(apply.AsMemory());
 
             // Bind it to metadata
