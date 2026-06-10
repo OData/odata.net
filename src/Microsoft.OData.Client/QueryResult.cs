@@ -251,7 +251,7 @@ namespace Microsoft.OData.Client
 
                             Byte[] buffer = this.GetAsyncResponseStreamCopyBuffer();
 
-                            long copied = WebUtil.CopyStream(stream, copy, ref buffer);
+                            long copied = WebUtil.CopyStream(stream, copy, buffer);
                             if (this.responseStreamOwner)
                             {
                                 if (copied == 0)

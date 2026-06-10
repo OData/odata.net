@@ -880,7 +880,8 @@ namespace Microsoft.OData.Client
                     // we need to check for whether the incoming stream was data or not. Hence we need to copy it to a temporary memory stream
                     using (MemoryStream memoryStream = new MemoryStream())
                     {
-                        if (WebUtil.CopyStream(stream, memoryStream, ref this.buildBatchBuffer) != 0)
+                        this.buildBatchBuffer ??= new byte[WebUtil.DefaultBufferSizeForStreamCopy];
+                        if (WebUtil.CopyStream(stream, memoryStream, this.buildBatchBuffer) != 0)
                         {
                             // set the memory stream position to zero again.
                             memoryStream.Position = 0;

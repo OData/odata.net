@@ -252,7 +252,7 @@ namespace Microsoft.OData.Client
                 else
                 {
                     byte[] buffer = new byte[WebUtil.DefaultBufferSizeForStreamCopy];
-                    WebUtil.CopyStream(requestStreamContent.Stream, requestStream, ref buffer);
+                    WebUtil.CopyStream(requestStreamContent.Stream, requestStream, buffer);
                 }
             }
         }
