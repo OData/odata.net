@@ -16,6 +16,8 @@ namespace Microsoft.OData.Client
     using System.Net;
     using System.Text;
     using System.Collections.Generic;
+    using System.Threading;
+    using System.Threading.Tasks;
     using Microsoft.OData;
     using Microsoft.OData.Client.Materialization;
     using Microsoft.OData.Client.Metadata;
@@ -248,6 +250,67 @@ namespace Microsoft.OData.Client
                 finally
                 {
                     WebUtil.DisposeMessage(responseMsg);
+                }
+
+                // we have no more pending requests or there has been an error in the previous request and we decided not to continue
+                // (When an error occurs and we are not going to continue on error, we call SetCompleted
+            }
+            while (this.entryIndex < this.ChangedEntries.Count && !this.IsCompletedInternally);
+
+            Debug.Assert(this.entryIndex < this.ChangedEntries.Count || this.ChangedEntries.All(o => o.ContentGeneratedForSave), "didn't generate content for all entities/links");
+        }
+
+        /// <summary>
+        /// Asynchronously processes all pending changes without blocking waits.
+        /// </summary>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        /// <returns>A task that represents the asynchronous operation.</returns>
+        internal async Task CreateNextChangeAsync(CancellationToken cancellationToken = default)
+        {
+            ODataRequestMessageWrapper requestMessage = null;
+
+            do
+            {
+                IODataResponseMessage responseMessage = null;
+
+                try
+                {
+                    requestMessage = this.CreateNextRequest();
+                    if ((requestMessage != null) || (this.entryIndex < this.ChangedEntries.Count))
+                    {
+                        if (this.ChangedEntries[this.entryIndex].ContentGeneratedForSave)
+                        {
+                            Debug.Assert(this.ChangedEntries[this.entryIndex] is LinkDescriptor, "only expected RelatedEnd to presave");
+                            Debug.Assert(
+                                this.ChangedEntries[this.entryIndex].State == EntityStates.Added ||
+                                this.ChangedEntries[this.entryIndex].State == EntityStates.Modified,
+                                "only expected added to presave");
+                            continue;
+                        }
+
+                        ContentStream contentStream = this.CreateNonBatchChangeData(this.entryIndex, requestMessage);
+                        if (contentStream != null && contentStream.Stream != null)
+                        {
+                            requestMessage.SetRequestStream(contentStream);
+                        }
+
+                        responseMessage = await this.RequestInfo.GetResponseAsync(requestMessage, false, cancellationToken)
+                            .ConfigureAwait(false);
+
+                        this.HandleOperationResponse(responseMessage);
+                        this.HandleOperationResponseHeaders((HttpStatusCode)responseMessage.StatusCode, new HeaderCollection(responseMessage));
+                        this.HandleOperationResponseData(responseMessage);
+                        this.perRequest = null;
+                    }
+                }
+                catch (InvalidOperationException e)
+                {
+                    e = WebUtil.GetHttpWebResponse(e, ref responseMessage);
+                    this.HandleOperationException(e, responseMessage);
+                }
+                finally
+                {
+                    WebUtil.DisposeMessage(responseMessage);
                 }
 
                 // we have no more pending requests or there has been an error in the previous request and we decided not to continue
@@ -817,7 +880,8 @@ namespace Microsoft.OData.Client
                     // we need to check for whether the incoming stream was data or not. Hence we need to copy it to a temporary memory stream
                     using (MemoryStream memoryStream = new MemoryStream())
                     {
-                        if (WebUtil.CopyStream(stream, memoryStream, ref this.buildBatchBuffer) != 0)
+                        this.buildBatchBuffer ??= new byte[WebUtil.DefaultBufferSizeForStreamCopy];
+                        if (WebUtil.CopyStream(stream, memoryStream, this.buildBatchBuffer) != 0)
                         {
                             // set the memory stream position to zero again.
                             memoryStream.Position = 0;

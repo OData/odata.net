@@ -107,8 +107,8 @@ public class CancellationTokenTests : EndToEndTestBase<CancellationTokenTests.Te
         // Act & Assert
         Task response() => _context.Customers.ByKey(11).GetValueAsync(source.Token);
         source.Cancel();
-        var exception = await Assert.ThrowsAsync<OperationCanceledException>(response);
-        Assert.Equal("The operation was canceled.", exception.Message);
+        var exception = await Assert.ThrowsAnyAsync<OperationCanceledException>(response);
+        Assert.True(exception.CancellationToken.IsCancellationRequested);
     }
 
     #endregion
@@ -130,8 +130,8 @@ public class CancellationTokenTests : EndToEndTestBase<CancellationTokenTests.Te
 
         Task response() => _context.Customers.ExecuteAsync(source.Token);
         source.Cancel();
-        var exception = await Assert.ThrowsAsync<OperationCanceledException>(response);
-        Assert.Equal("The operation was canceled.", exception.Message);
+        var exception = await Assert.ThrowsAnyAsync<OperationCanceledException>(response);
+        Assert.True(exception.CancellationToken.IsCancellationRequested);
 
         // ExecuteAsync by continuation
         var customers = await _context.Customers.ExecuteAsync() as QueryOperationResponse<Customer>;
@@ -142,8 +142,8 @@ public class CancellationTokenTests : EndToEndTestBase<CancellationTokenTests.Te
 
         Task response2() => _context.ExecuteAsync(continuation, source.Token);
         source.Cancel();
-        var exception2 = await Assert.ThrowsAsync<OperationCanceledException>(response2);
-        Assert.Equal("The operation was canceled.", exception2.Message);
+        var exception2 = await Assert.ThrowsAnyAsync<OperationCanceledException>(response2);
+        Assert.True(exception2.CancellationToken.IsCancellationRequested);
 
         // ExecuteAsync by nextLink
         var customers2 = await _context.Customers.ExecuteAsync() as QueryOperationResponse<Customer>;
@@ -154,8 +154,8 @@ public class CancellationTokenTests : EndToEndTestBase<CancellationTokenTests.Te
 
         Task response3() => _context.ExecuteAsync<Customer>(continuation2.NextLinkUri, source.Token);
         source.Cancel();
-        var exception3 = await Assert.ThrowsAsync<OperationCanceledException>(response3);
-        Assert.Equal("The operation was canceled.", exception3.Message);
+        var exception3 = await Assert.ThrowsAnyAsync<OperationCanceledException>(response3);
+        Assert.True(exception3.CancellationToken.IsCancellationRequested);
     }
 
     #endregion
@@ -177,8 +177,8 @@ public class CancellationTokenTests : EndToEndTestBase<CancellationTokenTests.Te
 
         Task response() => _context.Customers.GetAllPagesAsync(source.Token);
         source.Cancel();
-        var exception = await Assert.ThrowsAsync<OperationCanceledException>(response);
-        Assert.Equal("The operation was canceled.", exception.Message);
+        var exception = await Assert.ThrowsAnyAsync<OperationCanceledException>(response);
+        Assert.True(exception.CancellationToken.IsCancellationRequested);
     }
 
     #endregion
@@ -291,7 +291,7 @@ public class CancellationTokenTests : EndToEndTestBase<CancellationTokenTests.Te
             });
 
         source.Cancel();
-        var exception = await Assert.ThrowsAsync<OperationCanceledException>(response);
+        var exception = await Assert.ThrowsAnyAsync<OperationCanceledException>(response);
         Assert.Equal("The operation was canceled.", exception.Message);
     }
 
@@ -323,8 +323,8 @@ public class CancellationTokenTests : EndToEndTestBase<CancellationTokenTests.Te
         Task response() => getComputerAction.ExecuteAsync(source.Token);
 
         source.Cancel();
-        var exception = await Assert.ThrowsAsync<OperationCanceledException>(response);
-        Assert.Equal("The operation was canceled.", exception.Message);
+        var exception = await Assert.ThrowsAnyAsync<OperationCanceledException>(response);
+        Assert.True(exception.CancellationToken.IsCancellationRequested);
     }
 
     #endregion

@@ -13,6 +13,7 @@ namespace Microsoft.OData.Client
     using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
+    using System.Runtime.CompilerServices;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -227,7 +228,12 @@ namespace Microsoft.OData.Client
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         public virtual Task<IEnumerable<TElement>> ExecuteAsync(CancellationToken cancellationToken)
         {
-            return this.Context.FromAsync(this.BeginExecute, this.EndExecute, cancellationToken);
+            if (this.IsFunction)
+            {
+                return this.Context.ExecuteAsync<TElement>(this.RequestUri, XmlConstants.HttpMethodGet, false, cancellationToken);
+            }
+
+            return this.ExecuteAsyncImpl(cancellationToken);
         }
 
         /// <summary>Ends an asynchronous query request to a data service.</summary>
@@ -255,18 +261,41 @@ namespace Microsoft.OData.Client
             return GetAllPagesAsync(CancellationToken.None);
         }
 
-
         /// <summary>
-        /// Asynchronously sends a request to get all items by auto iterating all pages
+        /// Asynchronously retrieves all pages of results and returns them as a materialized collection.
+        /// All pages are fetched before this method returns.
         /// </summary>
+        /// <remarks>
+        /// Use this method when you need all results upfront. For large result sets, or when you need to process
+        /// results incrementally, consider using <see cref="EnumerateAllPagesAsync(CancellationToken)" /> instead.
+        /// </remarks>
         /// <returns>A task that represents an <see cref="System.Collections.Generic.IEnumerable{T}" /> that contains the results of the query operation.</returns>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "CA2008:Do not create tasks without passing a TaskScheduler", Justification = "<Pending>")]
-        public virtual Task<IEnumerable<TElement>> GetAllPagesAsync(CancellationToken cancellationToken)
+        public virtual async Task<IEnumerable<TElement>> GetAllPagesAsync(CancellationToken cancellationToken)
         {
-            var currentTask = this.Context.FromAsync(this.BeginExecute, this.EndExecute, cancellationToken);
-            var nextTask = currentTask.ContinueWith(t => this.ContinuePage(t.Result, cancellationToken), cancellationToken);
-            return nextTask;
+            List<TElement> elements = new List<TElement>();
+            await foreach (TElement element in this.GetAllPagesAsyncInternal(cancellationToken).ConfigureAwait(false))
+            {
+                elements.Add(element);
+            }
+
+            return elements;
+        }
+
+        /// <summary>
+        /// Asynchronously enumerates all pages of results with lazy evaluation.
+        /// Pages are fetched on-demand as you iterate through the results.
+        /// </summary>
+        /// <remarks>
+        /// Use this method for large result sets or when you want to process the results incrementally.
+        /// Network requests for additional pages are made as you iterate through the results.
+        /// For small result sets where you need all results upfront, consider using <see cref="GetAllPagesAsync(CancellationToken)" /> instead.
+        /// </remarks>
+        /// <returns>An <see cref="IAsyncEnumerable{T}" /> that contains the results of the query operation.</returns>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        public virtual IAsyncEnumerable<TElement> EnumerateAllPagesAsync(CancellationToken cancellationToken = default)
+        {
+            return this.GetAllPagesAsyncInternal(cancellationToken);
         }
 
         /// <summary>Executes the query and returns the results as a collection that implements IEnumerable.</summary>
@@ -436,6 +465,50 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
+        /// Asynchronously executes the query and returns the results.
+        /// </summary>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        /// <returns>A task that represents the asynchronous operation.
+        /// The task result contains the query results.</returns>
+        internal override async Task<IEnumerable> ExecuteAsyncInternal(CancellationToken cancellationToken)
+        {
+            return await this.ExecuteAsync(cancellationToken)
+                .ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Asynchronously retrieves all pages of results by iterating through continuation tokens.
+        /// </summary>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        /// <returns>An async enumerable that yields elements from all pages of results.</returns>
+        internal async IAsyncEnumerable<TElement> GetAllPagesAsyncInternal([EnumeratorCancellation] CancellationToken cancellationToken)
+        {
+            // Get first page
+            QueryOperationResponse<TElement> response = await this.ExecuteAsync<TElement>(
+                this.Context,
+                this.Translate(),
+                cancellationToken).ConfigureAwait(false);
+
+            do
+            {
+                foreach (TElement element in response)
+                {
+                    yield return element;
+                }
+
+                DataServiceQueryContinuation<TElement> continuation = response.GetContinuation();
+                if (continuation == null)
+                {
+                    break;
+                }
+
+                response = await this.Context.ExecuteAsyncInternal<TElement>(continuation, cancellationToken)
+                    .ConfigureAwait(false);
+            }
+            while (true);
+        }
+
+        /// <summary>
         /// gets the query components for the query after translating
         /// </summary>
         /// <returns>QueryComponents for query</returns>
@@ -447,6 +520,20 @@ namespace Microsoft.OData.Client
             }
 
             return this.queryComponents;
+        }
+
+        /// <summary>
+        /// Asynchronously executes the query and returns the results.
+        /// </summary>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        /// <returns>A task that represents the asynchronous operation.
+        /// The task result contains the query results.</returns>
+        private async Task<IEnumerable<TElement>> ExecuteAsyncImpl(CancellationToken cancellationToken)
+        {
+            return await this.ExecuteAsync<TElement>(
+                this.Context,
+                this.Translate(),
+                cancellationToken).ConfigureAwait(false); // Implicit cast to IEnumerable<TElement>
         }
 
         /// <summary>
