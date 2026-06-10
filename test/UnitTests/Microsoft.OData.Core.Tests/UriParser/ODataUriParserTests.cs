@@ -2182,5 +2182,57 @@ namespace Microsoft.OData.Tests.UriParser
 
             return model;
         }
+
+        [Fact]
+        public void ParseApplyWithAggregateLimitExceededShouldThrow()
+        {
+            // Set up a parser with a low AggregateLimit
+            var uriParser = new ODataUriParser(
+                HardCodedTestModel.TestModel,
+                ServiceRoot,
+                new Uri("http://host/People?$apply=aggregate(MyPaintings(aggregate(Owner(aggregate(MyPaintings(aggregate(Value with sum as Total)))))))"))
+            {
+                Settings = { AggregateLimit = 3 }
+            };
+
+            // Parsing should throw because the nesting depth (4) exceeds the aggregate limit (3)
+            Action parse = () => uriParser.ParseApply();
+            Assert.Throws<ODataException>(parse);
+        }
+
+        [Fact]
+        public void ParseApplyWithAggregateWithinLimitShouldSucceed()
+        {
+            // Set up a parser with default AggregateLimit
+            var uriParser = new ODataUriParser(
+                HardCodedTestModel.TestModel,
+                ServiceRoot,
+                new Uri("http://host/People?$apply=aggregate(ID with sum as TotalId)"));
+
+            // Parsing should succeed for a simple aggregate within default limit
+            var applyClause = uriParser.ParseApply();
+            Assert.NotNull(applyClause);
+            var transformations = applyClause.Transformations.ToList();
+            Assert.Single(transformations);
+            Assert.IsType<AggregateTransformationNode>(transformations[0]);
+        }
+
+        [Fact]
+        public void ParseNestedExpandWithApplyAggregateLimitShouldBeHonored()
+        {
+            // Verify that AggregateLimit is propagated to nested $expand parsing
+            // $expand=MyPaintings($apply=aggregate(Value with sum as TotalValue))
+            var uriParser = new ODataUriParser(
+                HardCodedTestModel.TestModel,
+                ServiceRoot,
+                new Uri("http://host/People?$expand=MyPaintings($apply=aggregate(Value with sum as TotalValue))"))
+            {
+                Settings = { AggregateLimit = 0 }
+            };
+
+            // AggregateLimit of 0 should reject even a simple aggregate inside nested $expand
+            Action parse = () => uriParser.ParseSelectAndExpand();
+            Assert.Throws<ODataException>(parse);
+        }
     }
 }
