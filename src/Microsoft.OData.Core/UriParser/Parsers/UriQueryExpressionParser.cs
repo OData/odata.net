@@ -114,6 +114,7 @@ namespace Microsoft.OData.UriParser
         {
             ExceptionUtils.CheckArgumentNotNull(model, "model");
             Debug.Assert(maxDepth >= 0, "maxDepth >= 0");
+            Debug.Assert(maxAggregateExpressionDepth >= 0, "maxAggregateExpressionDepth >= 0");
 
             this.model = model;
             this.maxDepth = maxDepth;

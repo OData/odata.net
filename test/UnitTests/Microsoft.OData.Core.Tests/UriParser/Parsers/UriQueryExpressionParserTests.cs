@@ -1453,9 +1453,9 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         }
 
         [Fact]
-        public void ParseAggregateExpressionDefaultDepthLimitShouldBeApplied()
+        public void ParseAggregateExpressionWithDefaultParserShouldSucceedForShallowExpression()
         {
-            // Default parser should have the default aggregate limit
+            // Default parser should have the default aggregate limit (100)
             var parser = new UriQueryExpressionParser(HardCodedTestModel.TestModel, 50);
 
             // A single aggregate expression should succeed with default limits
@@ -1464,6 +1464,18 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             IEnumerable<QueryToken> result = parser.ParseApply(apply);
             Assert.NotNull(result);
             Assert.Single(result);
+        }
+
+        [Fact]
+        public void ParseAggregateExpressionWithDepthLimitOfZeroShouldThrowImmediately()
+        {
+            // A limit of 0 should reject even the simplest aggregate
+            var parser = new UriQueryExpressionParser(HardCodedTestModel.TestModel, 50, maxAggregateExpressionDepth: 0);
+
+            string apply = "aggregate(UnitPrice with sum as TotalPrice)";
+
+            Action parse = () => parser.ParseApply(apply);
+            parse.Throws<ODataException>(Error.Format(SRResources.UriQueryExpressionParser_AggregateExpressionDepthLimitExceeded, 0));
         }
 
         #endregion
