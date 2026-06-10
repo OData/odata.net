@@ -74,13 +74,13 @@ namespace Microsoft.OData.Client
         /// <summary>copy from one stream to another</summary>
         /// <param name="input">input stream</param>
         /// <param name="output">output stream</param>
-        /// <param name="buffer">reusable buffer</param>
+        /// <param name="buffer">reusable buffer; must be non-null and non-empty</param>
         /// <returns>count of copied bytes</returns>
         internal static long CopyStream(Stream input, Stream output, byte[] buffer)
         {
             Debug.Assert(input != null, "null input stream");
             Debug.Assert(output != null, "null output stream");
-            Debug.Assert(buffer == null || buffer.Length > 0, "null or empty buffer");
+            Debug.Assert(buffer != null && buffer.Length > 0, "null or empty buffer");
 
             long total = 0;
 
@@ -99,19 +99,17 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <param name="input">Input stream to read from.</param>
         /// <param name="output">Output stream to write to.</param>
-        /// <param name="buffer">Buffer to use for copying. If null, a new buffer will be created.</param>
+        /// <param name="buffer">Buffer to use for copying; must be non-null and non-empty. The caller owns the buffer lifecycle to allow reuse across calls.</param>
         /// <param name="cancellationToken">Cancellation token to observe.</param>
         /// <returns>
         /// A task that represents the asynchronous copy operation.
-        /// The task result contains a tuple with:
-        /// - BytesCopied: The total number of bytes copied
-        /// - Buffer: The buffer used for copying (either the provided buffer or a newly created one)
+        /// The task result contains the total number of bytes copied.
         /// </returns>
         internal static async Task<long> CopyStreamAsync(Stream input, Stream output, byte[] buffer, CancellationToken cancellationToken = default)
         {
             Debug.Assert(input != null, "null input stream");
             Debug.Assert(output != null, "null output stream");
-            Debug.Assert(buffer == null || buffer.Length > 0, "null or empty buffer");
+            Debug.Assert(buffer != null && buffer.Length > 0, "null or empty buffer");
 
             long total = 0;
             int count;

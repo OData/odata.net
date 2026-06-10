@@ -1879,7 +1879,7 @@ namespace Microsoft.OData.Client
         /// <param name="operationParameters">The operation parameters used.</param>
         public async virtual Task<OperationResponse> ExecuteAsync(Uri requestUri, string httpMethod, CancellationToken cancellationToken, params OperationParameter[] operationParameters)
         {
-            QueryOperationResponse<object> result = await ExecuteAsyncInternal<object>(requestUri, httpMethod, false, cancellationToken, operationParameters);
+            QueryOperationResponse<object> result = await ExecuteAsyncInternal<object>(requestUri, httpMethod, false, cancellationToken, operationParameters).ConfigureAwait(false);
             if (result.Any())
             {
                 throw new DataServiceClientException(SRResources.Context_ExecuteExpectedVoidResponse);
