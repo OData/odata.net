@@ -2182,5 +2182,39 @@ namespace Microsoft.OData.Tests.UriParser
 
             return model;
         }
+
+        [Fact]
+        public void ParseApplyWithAggregateLimitExceededShouldThrow()
+        {
+            // Set up a parser with a low AggregateLimit
+            var uriParser = new ODataUriParser(
+                HardCodedTestModel.TestModel,
+                ServiceRoot,
+                new Uri("http://host/People?$apply=aggregate(MyPaintings(aggregate(Owner(aggregate(MyPaintings(aggregate(Value with sum as Total)))))))"))
+            {
+                Settings = { AggregateLimit = 3 }
+            };
+
+            // Parsing should throw because the nesting depth (4) exceeds the aggregate limit (3)
+            Action parse = () => uriParser.ParseApply();
+            Assert.Throws<ODataException>(parse);
+        }
+
+        [Fact]
+        public void ParseApplyWithAggregateWithinLimitShouldSucceed()
+        {
+            // Set up a parser with default AggregateLimit
+            var uriParser = new ODataUriParser(
+                HardCodedTestModel.TestModel,
+                ServiceRoot,
+                new Uri("http://host/People?$apply=aggregate(ID with sum as TotalId)"));
+
+            // Parsing should succeed for a simple aggregate within default limit
+            var applyClause = uriParser.ParseApply();
+            Assert.NotNull(applyClause);
+            var transformations = applyClause.Transformations.ToList();
+            Assert.Single(transformations);
+            Assert.IsType<AggregateTransformationNode>(transformations[0]);
+        }
     }
 }

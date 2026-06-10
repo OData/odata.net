@@ -315,7 +315,7 @@ namespace Microsoft.OData.UriParser
         /// syntactic parser. This guarantees a set level of performance.
         /// </summary>
         /// <exception cref="ODataException">Throws if the input value is negative.</exception>
-        internal int AggregateLimit
+        public int AggregateLimit
         {
             get
             {
