@@ -542,8 +542,10 @@ namespace Microsoft.OData.Client
                     throw;
                 }
 
-                // Wrap internal timeout / abort as DataServiceTransportException
-                throw new DataServiceTransportException(response: null, ex);
+                // Wrap internal timeout / abort as DataServiceTransportException.
+                // The inner exception must be an InvalidOperationException for compatibility with
+                // WebUtil.GetHttpWebResponse, which casts InnerException to InvalidOperationException.
+                throw new DataServiceTransportException(response: null, new InvalidOperationException(ex.Message, ex));
             }
             finally
             {

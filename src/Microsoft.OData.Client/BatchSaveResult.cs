@@ -906,7 +906,7 @@ namespace Microsoft.OData.Client
             try
             {
                 operationResponseContentStream = new MemoryStream();
-                WebUtil.CopyStream(originalOperationResponseContentStream, operationResponseContentStream, ref this.streamCopyBuffer);
+                WebUtil.CopyStream(originalOperationResponseContentStream, operationResponseContentStream, this.streamCopyBuffer);
                 operationResponseContentStream.Position = 0;
             }
             finally

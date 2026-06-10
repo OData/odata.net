@@ -26,7 +26,7 @@ namespace Microsoft.OData.Client
         /// <summary>
         /// Default buffer size used for stream copy.
         /// </summary>
-        internal const int DefaultBufferSizeForStreamCopy = 64 * 1024;
+        internal const int DefaultBufferSizeForStreamCopy = 4096;
 
         /// <summary>
         /// Whether DataServiceCollection&lt;&gt; type is available.
@@ -66,16 +66,15 @@ namespace Microsoft.OData.Client
         /// <summary>copy from one stream to another</summary>
         /// <param name="input">input stream</param>
         /// <param name="output">output stream</param>
-        /// <param name="refBuffer">reusable buffer, must be non-null and non-empty</param>
+        /// <param name="buffer">reusable buffer; must be non-null and non-empty</param>
         /// <returns>count of copied bytes</returns>
-        internal static long CopyStream(Stream input, Stream output, ref byte[] refBuffer)
+        internal static long CopyStream(Stream input, Stream output, byte[] buffer)
         {
             Debug.Assert(input != null, "null input stream");
             Debug.Assert(output != null, "null output stream");
-            Debug.Assert(refBuffer != null && refBuffer.Length > 0, "null or empty buffer");
+            Debug.Assert(buffer != null && buffer.Length > 0, "null or empty buffer");
 
             long total = 0;
-            byte[] buffer = refBuffer;
 
             int count;
             while (input.CanRead && ((count = input.Read(buffer, 0, buffer.Length)) > 0))
