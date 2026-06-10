@@ -71,6 +71,7 @@ namespace Microsoft.OData.UriParser
             this.maxRecursionDepth = maxRecursionDepth;
             this.enableCaseInsensitiveBuiltinIdentifier = enableCaseInsensitiveBuiltinIdentifier;
             this.enableNoDollarQueryOptions = enableNoDollarQueryOptions;
+            this.MaxAggregateDepth = ODataUriParserSettings.DefaultAggregateLimit;
         }
 
         /// <summary>
@@ -108,6 +109,11 @@ namespace Microsoft.OData.UriParser
         /// The maximum depth for $search nested in $expand.
         /// </summary>
         internal int MaxSearchDepth { get; set; }
+
+        /// <summary>
+        /// The maximum depth for aggregate expressions nested in $expand.
+        /// </summary>
+        internal int MaxAggregateDepth { get; set; }
 
         /// <summary>
         /// Building off a PathSegmentToken, continue parsing any select options (nested $filter, $expand, etc)
@@ -680,7 +686,7 @@ namespace Microsoft.OData.UriParser
             this.lexer.NextToken();
             ReadOnlyMemory<char> applyText = UriParserHelper.ReadQueryOption(this.lexer);
 
-            UriQueryExpressionParser applyParser = new UriQueryExpressionParser(this.model, this.MaxOrderByDepth, enableCaseInsensitiveBuiltinIdentifier);
+            UriQueryExpressionParser applyParser = new UriQueryExpressionParser(this.model, this.MaxOrderByDepth, enableCaseInsensitiveBuiltinIdentifier, maxAggregateExpressionDepth: this.MaxAggregateDepth);
             return applyParser.ParseApply(applyText);
         }
     }

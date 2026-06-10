@@ -36,6 +36,11 @@ namespace Microsoft.OData.UriParser
         private readonly int maxDepth;
 
         /// <summary>
+        /// The maximum depth allowed for aggregate expression recursion.
+        /// </summary>
+        private readonly int maxAggregateExpressionDepth;
+
+        /// <summary>
         /// List of supported $apply keywords
         /// </summary>
         private static readonly string supportedKeywords = string.Join("|", new string[] { ExpressionConstants.KeywordAggregate, ExpressionConstants.KeywordFilter, ExpressionConstants.KeywordGroupBy, ExpressionConstants.KeywordCompute, ExpressionConstants.KeywordExpand });
@@ -104,7 +109,8 @@ namespace Microsoft.OData.UriParser
         /// <param name="maxDepth">The maximum depth of each part of the query - a recursion limit.</param>
         /// <param name="enableCaseInsensitiveBuiltinIdentifier">Whether to allow case insensitive for builtin identifier.</param>
         /// <param name="enableNoDollarQueryOptions">Whether to allow no-dollar query options.</param>
-        internal UriQueryExpressionParser(IEdmModel model, int maxDepth, bool enableCaseInsensitiveBuiltinIdentifier = false, bool enableNoDollarQueryOptions = false)
+        /// <param name="maxAggregateExpressionDepth">The maximum depth for aggregate expression recursion. Defaults to <see cref="ODataUriParserSettings.DefaultAggregateLimit"/>.</param>
+        internal UriQueryExpressionParser(IEdmModel model, int maxDepth, bool enableCaseInsensitiveBuiltinIdentifier = false, bool enableNoDollarQueryOptions = false, int maxAggregateExpressionDepth = ODataUriParserSettings.DefaultAggregateLimit)
         {
             ExceptionUtils.CheckArgumentNotNull(model, "model");
             Debug.Assert(maxDepth >= 0, "maxDepth >= 0");
@@ -113,6 +119,7 @@ namespace Microsoft.OData.UriParser
             this.maxDepth = maxDepth;
             this.enableCaseInsensitiveBuiltinIdentifier = enableCaseInsensitiveBuiltinIdentifier;
             this.enableNoDollarQueryOptions = enableNoDollarQueryOptions;
+            this.maxAggregateExpressionDepth = maxAggregateExpressionDepth;
         }
 
         /// <summary>
@@ -517,6 +524,12 @@ namespace Microsoft.OData.UriParser
 
         internal AggregateTokenBase ParseAggregateExpression()
         {
+            // Check depth limit before recursing
+            if (this.parseAggregateExpressionDepth >= this.maxAggregateExpressionDepth)
+            {
+                throw new ODataException(Error.Format(SRResources.UriQueryExpressionParser_AggregateExpressionDepthLimitExceeded, this.maxAggregateExpressionDepth));
+            }
+
             try
             {
                 this.parseAggregateExpressionDepth++;

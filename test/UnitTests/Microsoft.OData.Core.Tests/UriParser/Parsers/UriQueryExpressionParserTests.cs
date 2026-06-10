@@ -1421,5 +1421,51 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         }
 
         #endregion
+
+        #region ParseAggregateExpression depth limit
+
+        [Fact]
+        public void ParseAggregateExpressionExceedingDepthLimitShouldThrow()
+        {
+            // Create a parser with a very low aggregate depth limit
+            var parser = new UriQueryExpressionParser(HardCodedTestModel.TestModel, 50, maxAggregateExpressionDepth: 2);
+
+            // Build a deeply nested aggregate: aggregate(Products(aggregate(Items(aggregate(Price with sum as Total)))))
+            // This has 3 levels of nesting which exceeds the limit of 2
+            string apply = "aggregate(Products(aggregate(Items(aggregate(Price with sum as Total)))))";
+
+            Action parse = () => parser.ParseApply(apply);
+            parse.Throws<ODataException>(Error.Format(SRResources.UriQueryExpressionParser_AggregateExpressionDepthLimitExceeded, 2));
+        }
+
+        [Fact]
+        public void ParseAggregateExpressionWithinDepthLimitShouldSucceed()
+        {
+            // Create a parser with aggregate depth limit of 2
+            var parser = new UriQueryExpressionParser(HardCodedTestModel.TestModel, 50, maxAggregateExpressionDepth: 2);
+
+            // A single aggregate expression should succeed (depth = 1)
+            string apply = "aggregate(UnitPrice with sum as TotalPrice)";
+
+            IEnumerable<QueryToken> result = parser.ParseApply(apply);
+            Assert.NotNull(result);
+            Assert.Single(result);
+        }
+
+        [Fact]
+        public void ParseAggregateExpressionDefaultDepthLimitShouldBeApplied()
+        {
+            // Default parser should have the default aggregate limit
+            var parser = new UriQueryExpressionParser(HardCodedTestModel.TestModel, 50);
+
+            // A single aggregate expression should succeed with default limits
+            string apply = "aggregate(UnitPrice with sum as TotalPrice)";
+
+            IEnumerable<QueryToken> result = parser.ParseApply(apply);
+            Assert.NotNull(result);
+            Assert.Single(result);
+        }
+
+        #endregion
     }
 }
