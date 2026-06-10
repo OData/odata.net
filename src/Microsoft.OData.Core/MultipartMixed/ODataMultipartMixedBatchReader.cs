@@ -293,12 +293,12 @@ namespace Microsoft.OData.MultipartMixed
 
             httpMethod = requestLine.Substring(0, firstSpaceIndex);               // Request - Http method
             string uriSegment = requestLine.Substring(firstSpaceIndex + 1, lastSpaceIndex - firstSpaceIndex - 1);      // Request - Request uri
-            string httpVersionSegment = requestLine.Substring(lastSpaceIndex + 1);             // Request - Http version
 
-            // Validate HttpVersion
-            if (string.CompareOrdinal(ODataConstants.HttpVersionInBatching, httpVersionSegment) != 0)
+            // Validate HttpVersion - use span comparison to avoid allocation on happy path
+            ReadOnlySpan<char> httpVersionSpan = requestLine.AsSpan(lastSpaceIndex + 1);
+            if (!httpVersionSpan.Equals(ODataConstants.HttpVersionInBatching.AsSpan(), StringComparison.Ordinal))
             {
-                throw new ODataException(Error.Format(SRResources.ODataBatchReaderStream_InvalidHttpVersionSpecified, httpVersionSegment, ODataConstants.HttpVersionInBatching));
+                throw new ODataException(Error.Format(SRResources.ODataBatchReaderStream_InvalidHttpVersionSpecified, requestLine.Substring(lastSpaceIndex + 1), ODataConstants.HttpVersionInBatching));
             }
 
             // NOTE: this method will throw if the method is not recognized.
@@ -346,19 +346,19 @@ namespace Microsoft.OData.MultipartMixed
                 throw new ODataException(Error.Format(SRResources.ODataBatchReaderStream_InvalidResponseLine, responseLine));
             }
 
-            string httpVersionSegment = responseLine.Substring(0, firstSpaceIndex);
-            string statusCodeSegment = responseLine.Substring(firstSpaceIndex + 1, secondSpaceIndex - firstSpaceIndex - 1);
-
-            // Validate HttpVersion
-            if (string.CompareOrdinal(ODataConstants.HttpVersionInBatching, httpVersionSegment) != 0)
+            // Validate HttpVersion - use span comparison to avoid allocation on happy path
+            ReadOnlySpan<char> httpVersionSpan = responseLine.AsSpan(0, firstSpaceIndex);
+            if (!httpVersionSpan.Equals(ODataConstants.HttpVersionInBatching.AsSpan(), StringComparison.Ordinal))
             {
-                throw new ODataException(Error.Format(SRResources.ODataBatchReaderStream_InvalidHttpVersionSpecified, httpVersionSegment, ODataConstants.HttpVersionInBatching));
+                throw new ODataException(Error.Format(SRResources.ODataBatchReaderStream_InvalidHttpVersionSpecified, responseLine.Substring(0, firstSpaceIndex), ODataConstants.HttpVersionInBatching));
             }
 
+            // Parse status code using span to avoid allocation on happy path
+            ReadOnlySpan<char> statusCodeSpan = responseLine.AsSpan(firstSpaceIndex + 1, secondSpaceIndex - firstSpaceIndex - 1);
             int intResult;
-            if (!Int32.TryParse(statusCodeSegment, out intResult))
+            if (!Int32.TryParse(statusCodeSpan, out intResult))
             {
-                throw new ODataException(Error.Format(SRResources.ODataBatchReaderStream_NonIntegerHttpStatusCode, statusCodeSegment));
+                throw new ODataException(Error.Format(SRResources.ODataBatchReaderStream_NonIntegerHttpStatusCode, responseLine.Substring(firstSpaceIndex + 1, secondSpaceIndex - firstSpaceIndex - 1)));
             }
 
             return intResult;

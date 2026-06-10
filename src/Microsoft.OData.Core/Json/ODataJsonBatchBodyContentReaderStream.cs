@@ -307,22 +307,23 @@ namespace Microsoft.OData.Json
             }
 
             contentTypeHeader = contentTypeHeader.Trim();
-            int idx = contentTypeHeader.IndexOf(';', StringComparison.Ordinal);
-            string fullType = idx != -1
-                ? contentTypeHeader.Substring(0, idx)
-                : contentTypeHeader;
+            ReadOnlySpan<char> span = contentTypeHeader.AsSpan();
 
-            int idxSlash = fullType.IndexOf('/', StringComparison.Ordinal);
-            string type = null;
-            string subType = null;
+            int idx = span.IndexOf(';');
+            ReadOnlySpan<char> fullType = idx != -1 ? span.Slice(0, idx) : span;
+
+            int idxSlash = fullType.IndexOf('/');
+            string type;
+            string subType;
             if (idxSlash != -1)
             {
-                type = fullType.Substring(0, idxSlash);
-                subType = fullType.Substring(idxSlash + 1);
+                type = fullType.Slice(0, idxSlash).ToString();
+                subType = fullType.Slice(idxSlash + 1).ToString();
             }
             else
             {
-                type = fullType;
+                type = fullType.ToString();
+                subType = null;
             }
 
             return new ODataMediaType(type, subType);

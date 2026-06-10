@@ -187,7 +187,8 @@ namespace Microsoft.OData.Json
             int firstColon = url.IndexOf(':', StringComparison.Ordinal);
             if (queryOptionSeparator > 0 && firstColon > 0 && queryOptionSeparator < firstColon)
             {
-                url = url.Substring(0, queryOptionSeparator) + url.Substring(queryOptionSeparator).Replace(":", "%3A", StringComparison.Ordinal);
+                // Only replace colons in the query string portion, avoid allocating intermediate substring for the prefix
+                url = string.Concat(url.AsSpan(0, queryOptionSeparator), url.Substring(queryOptionSeparator).Replace(":", "%3A", StringComparison.Ordinal));
             }
 
             Uri requestUri = new Uri(url, UriKind.RelativeOrAbsolute);

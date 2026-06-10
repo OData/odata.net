@@ -337,13 +337,11 @@ namespace Microsoft.OData.Json
                     throw new ODataException(Error.Format(SRResources.ODataJsonContextUriParser_InvalidContextUrl, UriUtils.UriToString(this.parseResult.ContextUri)));
                 }
 
-                string previous = fragment.Substring(0, index + 1);
-
                 // Don't treat Collection(Edm.Type) as SelectExpand segment
-                if (!previous.Equals("Collection", StringComparison.Ordinal))
+                ReadOnlySpan<char> previous = fragment.AsSpan(0, index + 1);
+                if (!previous.Equals("Collection".AsSpan(), StringComparison.Ordinal))
                 {
-                    string selectExpandStr = fragment.Substring(index + 2);
-                    selectExpandStr = selectExpandStr.Substring(0, selectExpandStr.Length - 1);
+                    string selectExpandStr = fragment.Substring(index + 2, fragment.Length - index - 3);
 
                     // Do not treat Key as SelectExpand segment
                     if (KeyPattern.IsMatch(selectExpandStr))
@@ -352,7 +350,7 @@ namespace Microsoft.OData.Json
                     }
 
                     this.parseResult.SelectQueryOption = ExtractSelectQueryOption(selectExpandStr);
-                    fragment = previous;
+                    fragment = fragment.Substring(0, index + 1);
                 }
             }
 
