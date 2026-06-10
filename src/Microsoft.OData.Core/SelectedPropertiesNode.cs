@@ -502,10 +502,9 @@ namespace Microsoft.OData
             List<string> result = new List<string>();
             int parenBalance = 0;
             int startIdx = 0;
-            char[] chars = selectClause.ToCharArray();
-            for (int i = 0; i < chars.Length; i++)
+            for (int i = 0; i < selectClause.Length; i++)
             {
-                switch (chars[i])
+                switch (selectClause[i])
                 {
                     case '(':
                         ++parenBalance;
@@ -516,11 +515,10 @@ namespace Microsoft.OData
                     case ItemSeparator:
                         if (parenBalance == 0)
                         {
-                            string item = selectClause.Substring(startIdx, i - startIdx);
-                            if (item.Length != 0)
+                            if (i > startIdx)
                             {
                                 // Add non-empty item only.
-                                result.Add(item);
+                                result.Add(selectClause.Substring(startIdx, i - startIdx));
                             }
 
                             startIdx = i + 1;
@@ -530,10 +528,10 @@ namespace Microsoft.OData
                 }
             }
 
-            if (startIdx < chars.Length)
+            if (startIdx < selectClause.Length)
             {
                 // Add the last item, which is non-empty.
-                result.Add(selectClause.Substring(startIdx, chars.Length - startIdx));
+                result.Add(selectClause.Substring(startIdx, selectClause.Length - startIdx));
             }
 
             return result.ToArray();
@@ -613,7 +611,7 @@ namespace Microsoft.OData
             int idxLP = item.IndexOf('(', StringComparison.Ordinal);
             if (idxLP == -1
                 || !item.EndsWith(")", StringComparison.Ordinal)
-                || !IsNavigationPropertyToken(item.Substring(0, idxLP)))
+                || !IsNavigationPropertyToken(item.AsSpan(0, idxLP)))
             {
                 // selected item is not properly parenthesized, or is an operation token.
                 return false;
@@ -627,7 +625,7 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="token">The token to check.</param>
         /// <returns>true if token can be resolved to a navigation property; false otherwise.</returns>
-        private bool IsNavigationPropertyToken(string token)
+        private bool IsNavigationPropertyToken(ReadOnlySpan<char> token)
         {
             const char NameSpaceSeparator = '.';
 
@@ -638,32 +636,42 @@ namespace Microsoft.OData
              #4. otherwise, it's a navigation property
              */
 
-            // For better readability, set the value in if-else branches corresponding to decision tree above.
-            bool found;
-            if (token.IndexOf(NameSpaceSeparator, StringComparison.Ordinal) != -1)
+            // #1
+            if (token.IndexOf(NameSpaceSeparator) != -1)
             {
-                // #1
-                found = false;
-            }
-            else if (this.structuredType == null || this.structuredType.NavigationProperties().Any(_ => _.Name.Equals(token, StringComparison.Ordinal)))
-            {
-                // #2
-                // Note that action and function names in a contextUrl *SHOULD* always be qualified, 
-                // So if we can't validate against the structured type, should assume it's a nav prop
-                found = true;
-            }
-            else if (this.edmModel != null && this.edmModel.FindBoundOperations(this.structuredType).Any(op => op.Name.Equals(token, StringComparison.Ordinal)))
-            {
-                // #3
-                found = false;
-            }
-            else
-            {
-                // #4
-                found = true;
+                return false;
             }
 
-            return found;
+            // #2
+            // Note that action and function names in a contextUrl *SHOULD* always be qualified,
+            // So if we can't validate against the structured type, should assume it's a nav prop
+            if (this.structuredType == null)
+            {
+                return true;
+            }
+
+            foreach (var navProp in this.structuredType.NavigationProperties())
+            {
+                if (token.Equals(navProp.Name.AsSpan(), StringComparison.Ordinal))
+                {
+                    return true;
+                }
+            }
+
+            // #3
+            if (this.edmModel != null)
+            {
+                foreach (var op in this.edmModel.FindBoundOperations(this.structuredType))
+                {
+                    if (token.Equals(op.Name.AsSpan(), StringComparison.Ordinal))
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            // #4
+            return true;
         }
 
         /// <summary>
