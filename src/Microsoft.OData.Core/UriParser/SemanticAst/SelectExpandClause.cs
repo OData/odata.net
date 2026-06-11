@@ -6,6 +6,7 @@
 
 namespace Microsoft.OData.UriParser
 {
+    using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Linq;
@@ -13,7 +14,7 @@ namespace Microsoft.OData.UriParser
     /// <summary>
     /// Class representing the combined semantic meaning of any select or expand clauses in the uri.
     /// </summary>
-    public sealed class SelectExpandClause
+    public sealed class SelectExpandClause : IEquatable<SelectExpandClause>
     {
         /// <summary>
         /// The selected properties and operations.
@@ -148,6 +149,35 @@ namespace Microsoft.OData.UriParser
         {
             PathSelectItem pathSelectItem = selectItem as PathSelectItem;
             return pathSelectItem != null && (pathSelectItem.SelectedPath.LastSegment is PropertySegment);
+        }
+
+        /// <summary>
+        /// Determines whether the specified <see cref="SelectExpandClause"/> is equal to the current <see cref="SelectExpandClause"/>.
+        /// </summary>
+        /// <param name="other">The <see cref="SelectExpandClause"/> to compare with the current <see cref="SelectExpandClause"/>.</param>
+        /// <returns><c>true</c> if the specified <see cref="SelectExpandClause"/> is equal to the current <see cref="SelectExpandClause"/>; otherwise, <c>false</c>.</returns>
+        public bool Equals(SelectExpandClause other)
+        {
+            return SemanticAstStructuralEqualityComparer.AreEqual(this, other);
+        }
+
+        /// <summary>
+        /// Determines whether the specified object is equal to the current <see cref="SelectExpandClause"/>.
+        /// </summary>
+        /// <param name="obj">The object to compare with the current <see cref="SelectExpandClause"/>.</param>
+        /// <returns><c>true</c> if the specified object is equal to the current <see cref="SelectExpandClause"/>; otherwise, <c>false</c>.</returns>
+        public override bool Equals(object obj)
+        {
+            return this.Equals(obj as SelectExpandClause);
+        }
+
+        /// <summary>
+        /// Serves as the default hash function.
+        /// </summary>
+        /// <returns>A hash code for the current <see cref="SelectExpandClause"/>.</returns>
+        public override int GetHashCode()
+        {
+            return SemanticAstStructuralEqualityComparer.GetHashCode(this);
         }
     }
 }
