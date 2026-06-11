@@ -154,6 +154,10 @@ namespace Microsoft.OData.Client
                 return Task.FromCanceled<IODataResponseMessage>(cancellationToken);
             }
 
+            // cancellationToken is not forwarded to GetResponse() because the synchronous GetResponse()
+            // does not accept a cancellation token. Cancellation is only honoured before the call starts.
+            // Subclasses that override GetResponseAsync (e.g. HttpClientRequestMessage) can honour the
+            // token throughout the full async operation.
             try
             {
                 return Task.FromResult(GetResponse());
