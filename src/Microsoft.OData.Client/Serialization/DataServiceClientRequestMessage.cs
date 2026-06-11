@@ -149,6 +149,15 @@ namespace Microsoft.OData.Client
         /// <returns>A task that represents the asynchronous operation. The task result contains the response message.</returns>
         public virtual Task<IODataResponseMessage> GetResponseAsync(CancellationToken cancellationToken)
         {
+            if (cancellationToken.IsCancellationRequested)
+            {
+                return Task.FromCanceled<IODataResponseMessage>(cancellationToken);
+            }
+
+            // cancellationToken is not forwarded to GetResponse() because the synchronous GetResponse()
+            // does not accept a cancellation token. Cancellation is only honoured before the call starts.
+            // Subclasses that override GetResponseAsync (e.g. HttpClientRequestMessage) can honour the
+            // token throughout the full async operation.
             try
             {
                 return Task.FromResult(GetResponse());
