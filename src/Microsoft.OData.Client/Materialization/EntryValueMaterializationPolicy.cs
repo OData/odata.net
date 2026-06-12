@@ -485,7 +485,7 @@ namespace Microsoft.OData.Client.Materialization
                     else
                     {
                         // Try List<> first because that's what we did in V1/V2, but use the actual property type if it doesn't support List<>
-                        Type listCollectionType = typeof(List<>).MakeGenericType(property.EntityCollectionItemType);
+                        Type listCollectionType = typeof(List<>).MakeGenericType(property.CollectionGenericType);
                         if (collectionType.IsAssignableFrom(listCollectionType))
                         {
                             collectionType = listCollectionType;
@@ -498,7 +498,7 @@ namespace Microsoft.OData.Client.Materialization
                 {
                     if (DSClient.PlatformHelper.IsInterface(collectionType))
                     {
-                        collectionType = typeof(System.Collections.ObjectModel.Collection<>).MakeGenericType(property.EntityCollectionItemType);
+                        collectionType = typeof(System.Collections.ObjectModel.Collection<>).MakeGenericType(property.CollectionGenericType);
                     }
 
                     result = this.CreateNewInstance(property.EdmProperty.Type, collectionType);
@@ -767,7 +767,7 @@ namespace Microsoft.OData.Client.Materialization
                     containerProperty.Add(link.Name, collection);
                 }
             }
-            else 
+            else
             {
                 MaterializerEntry linkEntry = linkState.Entry;
                 Type itemType = ResolveClientTypeForDynamicProperty(linkEntry.Entry.TypeName, entry.ResolvedObject);
