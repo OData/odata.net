@@ -285,6 +285,38 @@ namespace Microsoft.OData.Client.Tests.Serialization
         }
 
         [Fact]
+        public async Task WhenTimeoutNotSet_HttpClientTimeoutStillApplies()
+        {
+            // Arrange
+            using (var handler = new MockDelayedHttpClientHandler("success", delayMilliseconds: 5000))
+            {
+                var httpClientFactory = new MockHttpClientFactory(handler, new MockHttpClientFactoryOptions
+                {
+                    Timeout = 1
+                });
+                var args = new DataServiceClientRequestMessageArgs(
+                    "GET",
+                    new Uri("http://localhost"),
+                    usePostTunneling: false,
+                    headers: new Dictionary<string, string>(),
+                    httpClientFactory: httpClientFactory);
+
+                using (var request = new HttpClientRequestMessage(args))
+                {
+                    // Act
+                    Task<IODataResponseMessage> getResponseTask =
+                        Task.Run(() => Task.Factory.FromAsync(request.BeginGetResponse, request.EndGetResponse, null));
+
+                    // Assert
+                    await Assert.ThrowsAsync<DataServiceTransportException>(async () =>
+                    {
+                        await getResponseTask;
+                    });
+                }
+            }
+        }
+
+        [Fact]
         public void GetResponse_DoesNotDeadlock_UnderSingleThreadedSynchronizationContext()
         {
             // Arrange - simulate a UI SynchronizationContext (WinForms/WPF) that does not pump messages.
@@ -334,9 +366,9 @@ namespace Microsoft.OData.Client.Tests.Serialization
         }
 
         /// <summary>
-        /// A SynchronizationContext that does not pump (simulates WinForms/WPF UI thread behavior).
-        /// Posts are queued but never executed, which causes deadlocks if await continuations
-        /// try to marshal back to this context.
+        /// A SynchronizationContext that discards posted callbacks (simulates WinForms/WPF UI thread behavior).
+        /// Posted continuations are never executed, which causes deadlocks if await continuations
+        /// try to marshal back to this context without ConfigureAwait(false).
         /// </summary>
         private sealed class NonPumpingSynchronizationContext : SynchronizationContext
         {
