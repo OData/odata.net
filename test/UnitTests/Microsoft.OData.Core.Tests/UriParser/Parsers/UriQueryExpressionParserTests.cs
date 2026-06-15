@@ -1430,9 +1430,9 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             // Create a parser with a very low aggregate depth limit
             var parser = new UriQueryExpressionParser(HardCodedTestModel.TestModel, 50, maxAggregateExpressionDepth: 2);
 
-            // Build a deeply nested aggregate: aggregate(Products(aggregate(Items(aggregate(Price with sum as Total)))))
+            // Build a deeply nested entity-set aggregate: aggregate(Products(Items(Price with sum as Total)))
             // This has 3 levels of nesting which exceeds the limit of 2
-            string apply = "aggregate(Products(aggregate(Items(aggregate(Price with sum as Total)))))";
+            string apply = "aggregate(Products(Items(Price with sum as Total)))";
 
             Action parse = () => parser.ParseApply(apply);
             parse.Throws<ODataException>(Error.Format(SRResources.UriQueryExpressionParser_AggregateExpressionDepthLimitExceeded, 2));

@@ -2187,10 +2187,11 @@ namespace Microsoft.OData.Tests.UriParser
         public void ParseApplyWithAggregateLimitExceededShouldThrow()
         {
             // Set up a parser with a low AggregateLimit
+            // Entity-set aggregation syntax: aggregate(NavProp(NavProp(expr with method as alias)))
             var uriParser = new ODataUriParser(
                 HardCodedTestModel.TestModel,
                 ServiceRoot,
-                new Uri("http://host/People?$apply=aggregate(MyPaintings(aggregate(Owner(aggregate(MyPaintings(aggregate(Value with sum as Total)))))))"))
+                new Uri("http://host/People?$apply=aggregate(MyPaintings(Owner(MyPaintings(Value with sum as Total))))"))
             {
                 Settings = { AggregateLimit = 3 }
             };
