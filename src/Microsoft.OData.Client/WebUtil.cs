@@ -25,6 +25,7 @@ namespace Microsoft.OData.Client
     {
         /// <summary>
         /// Default buffer size used for stream copy.
+        /// Aligned with .NET's default Stream.CopyTo buffer size to balance memory usage and I/O efficiency.
         /// </summary>
         internal const int DefaultBufferSizeForStreamCopy = 4096;
 
