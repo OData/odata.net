@@ -513,7 +513,7 @@ namespace Microsoft.OData.Client
             try
             {
                 // Use HttpCompletionOption.ResponseHeadersRead to shorten the window before cancellation is honoured
-                return await _client.SendAsync(_requestMessage, HttpCompletionOption.ResponseHeadersRead, sendToken);
+                return await _client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, sendToken).ConfigureAwait(false);
             }
             catch (OperationCanceledException ex)
             {
@@ -523,9 +523,10 @@ namespace Microsoft.OData.Client
                     throw;
                 }
 
-                // Wrap internal timeout / abort as DataServiceTransportException
-                // Currently, only abort or per-request timeout can trigger cancellation (no external token linked)
-                throw new DataServiceTransportException(response: null, ex);
+                // Wrap internal timeout / abort as DataServiceTransportException.
+                // The inner exception must be an InvalidOperationException for compatibility with
+                // WebUtil.GetHttpWebResponse, which casts InnerException to InvalidOperationException.
+                throw new DataServiceTransportException(response: null, new InvalidOperationException(ex.Message, ex));
             }
             finally
             {
