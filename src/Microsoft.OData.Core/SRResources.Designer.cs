@@ -7032,6 +7032,15 @@ namespace Microsoft.OData.Core {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The aggregate expression depth exceeded the maximum allowed depth of {0}. You can adjust the depth limit by setting the &apos;ODataUriParserSettings.AggregateLimit&apos; property..
+        /// </summary>
+        internal static string UriQueryExpressionParser_AggregateExpressionDepthLimitExceeded {
+            get {
+                return ResourceManager.GetString("UriQueryExpressionParser_AggregateExpressionDepthLimitExceeded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Unrecognized &apos;{0}&apos; literal &apos;{1}&apos; at &apos;{2}&apos; in &apos;{3}&apos;..
         /// </summary>
         internal static string UriQueryExpressionParser_UnrecognizedLiteral {

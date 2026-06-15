@@ -39,6 +39,11 @@ namespace Microsoft.OData.UriParser
         internal const int DefaultSearchLimit = 100;
 
         /// <summary>
+        /// Default recursive call limit for aggregate expressions.
+        /// </summary>
+        internal const int DefaultAggregateLimit = 100;
+
+        /// <summary>
         /// the recursive depth of the Syntactic tree for a filter clause
         /// </summary>
         private int filterLimit;
@@ -74,6 +79,11 @@ namespace Microsoft.OData.UriParser
         private int searchLimit;
 
         /// <summary>
+        /// the maximum depth of the syntactic tree for aggregate expressions
+        /// </summary>
+        private int aggregateLimit;
+
+        /// <summary>
         /// Initializes a new instance of <see cref="ODataUriParserSettings"/> with default values.
         /// </summary>
         public ODataUriParserSettings()
@@ -83,6 +93,7 @@ namespace Microsoft.OData.UriParser
             this.PathLimit = DefaultPathLimit;
             this.SelectExpandLimit = DefaultSelectExpandLimit;
             this.SearchLimit = DefaultSearchLimit;
+            this.AggregateLimit = DefaultAggregateLimit;
 
             this.MaximumExpansionDepth = int.MaxValue;
             this.MaximumExpansionCount = int.MaxValue;
@@ -97,6 +108,7 @@ namespace Microsoft.OData.UriParser
                 OrderByLimit = this.OrderByLimit,
                 PathLimit = this.PathLimit,
                 SearchLimit = this.SearchLimit,
+                AggregateLimit = this.AggregateLimit,
                 MaximumExpansionDepth = this.MaximumExpansionDepth,
                 MaximumExpansionCount = this.MaximumExpansionCount,
                 EnableParsingKeyAsSegment = this.EnableParsingKeyAsSegment
@@ -295,6 +307,29 @@ namespace Microsoft.OData.UriParser
                 }
 
                 this.searchLimit = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the maximum recursive depth for aggregate expressions, which limits the maximum depth of the tree that can be parsed by the
+        /// syntactic parser. This guarantees a set level of performance.
+        /// </summary>
+        /// <exception cref="ODataException">Throws if the input value is negative.</exception>
+        public int AggregateLimit
+        {
+            get
+            {
+                return this.aggregateLimit;
+            }
+
+            set
+            {
+                if (value < 0)
+                {
+                    throw new ODataException(SRResources.UriParser_NegativeLimit);
+                }
+
+                this.aggregateLimit = value;
             }
         }
     }
