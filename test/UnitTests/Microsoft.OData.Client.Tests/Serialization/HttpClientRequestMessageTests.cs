@@ -372,6 +372,93 @@ namespace Microsoft.OData.Client.Tests.Serialization
             }
         }
 
+        [Fact]
+        public async Task GetResponseAsync_WhenAborted_ThrowsDataServiceTransportExceptionWithInvalidOperationExceptionInner()
+        {
+            // Arrange
+            using (var handler = new MockUnresponsiveHttpClientHandler())
+            {
+                var httpClientFactory = new MockHttpClientFactory(handler);
+                var args = new DataServiceClientRequestMessageArgs(
+                    "GET",
+                    new Uri("http://localhost"),
+                    usePostTunneling: false,
+                    headers: new Dictionary<string, string>(),
+                    httpClientFactory: httpClientFactory);
+
+                using (var request = new HttpClientRequestMessage(args))
+                {
+                    handler.OnRequestStarted = () => request.Abort();
+
+                    // Act
+                    var ex = await Assert.ThrowsAsync<DataServiceTransportException>(
+                        () => request.GetResponseAsync(CancellationToken.None));
+
+                    // Assert: InnerException must be InvalidOperationException so that
+                    // WebUtil.GetHttpWebResponse can cast it without InvalidCastException.
+                    Assert.IsType<InvalidOperationException>(ex.InnerException);
+                    // The original OperationCanceledException is preserved as the cause.
+                    Assert.IsAssignableFrom<OperationCanceledException>(ex.InnerException.InnerException);
+                }
+            }
+        }
+
+        [Fact]
+        public async Task GetResponseAsync_WhenTimedOut_ThrowsDataServiceTransportExceptionWithInvalidOperationExceptionInner()
+        {
+            // Arrange
+            using (var handler = new MockUnresponsiveHttpClientHandler())
+            {
+                var httpClientFactory = new MockHttpClientFactory(handler);
+                var args = new DataServiceClientRequestMessageArgs(
+                    "GET",
+                    new Uri("http://localhost"),
+                    usePostTunneling: false,
+                    headers: new Dictionary<string, string>(),
+                    httpClientFactory: httpClientFactory);
+
+                using (var request = new HttpClientRequestMessage(args))
+                {
+                    request.Timeout = 1;
+
+                    // Act
+                    var ex = await Assert.ThrowsAsync<DataServiceTransportException>(
+                        () => request.GetResponseAsync(CancellationToken.None));
+
+                    // Assert: InnerException must be InvalidOperationException so that
+                    // WebUtil.GetHttpWebResponse can cast it without InvalidCastException.
+                    Assert.IsType<InvalidOperationException>(ex.InnerException);
+                    Assert.IsAssignableFrom<OperationCanceledException>(ex.InnerException.InnerException);
+                }
+            }
+        }
+
+        [Fact]
+        public async Task GetResponseAsync_WhenExternalTokenCancelled_PropagatesOperationCanceledException()
+        {
+            // Arrange
+            using (var handler = new MockUnresponsiveHttpClientHandler())
+            {
+                var httpClientFactory = new MockHttpClientFactory(handler);
+                var args = new DataServiceClientRequestMessageArgs(
+                    "GET",
+                    new Uri("http://localhost"),
+                    usePostTunneling: false,
+                    headers: new Dictionary<string, string>(),
+                    httpClientFactory: httpClientFactory);
+
+                using (var request = new HttpClientRequestMessage(args))
+                using (var cts = new CancellationTokenSource())
+                {
+                    handler.OnRequestStarted = () => cts.Cancel();
+
+                    // Act & Assert: external cancellation must not be wrapped in DataServiceTransportException.
+                    await Assert.ThrowsAnyAsync<OperationCanceledException>(
+                        () => request.GetResponseAsync(cts.Token));
+                }
+            }
+        }
+
         /// <summary>
         /// A SynchronizationContext that discards posted callbacks without executing them.
         /// This simulates the deadlock scenario where a blocked thread cannot pump its
