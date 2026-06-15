@@ -2197,7 +2197,7 @@ namespace Microsoft.OData.Tests.UriParser
 
             // Parsing should throw because the nesting depth (4) exceeds the aggregate limit (3)
             Action parse = () => uriParser.ParseApply();
-            Assert.Throws<ODataException>(parse);
+            parse.Throws<ODataException>(Error.Format(SRResources.UriQueryExpressionParser_AggregateExpressionDepthLimitExceeded, 3));
         }
 
         [Fact]
@@ -2232,7 +2232,7 @@ namespace Microsoft.OData.Tests.UriParser
 
             // AggregateLimit of 0 should reject even a simple aggregate inside nested $expand
             Action parse = () => uriParser.ParseSelectAndExpand();
-            Assert.Throws<ODataException>(parse);
+            parse.Throws<ODataException>(Error.Format(SRResources.UriQueryExpressionParser_AggregateExpressionDepthLimitExceeded, 0));
         }
     }
 }

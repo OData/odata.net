@@ -38,7 +38,8 @@ namespace Microsoft.OData.UriParser
                 configuration.EnableCaseInsensitiveUriFunctionIdentifier,
                 configuration.EnableNoDollarQueryOptions)
             {
-                MaxPathDepth = configuration.Settings.PathLimit
+                MaxPathDepth = configuration.Settings.PathLimit,
+                MaxAggregateDepth = configuration.Settings.AggregateLimit
             };
             selectTree = selectParser.ParseSelect();
 
