@@ -1157,7 +1157,7 @@ namespace Microsoft.OData.UriParser
             {
                 this.NextChar();
             }
-            while (this.ch.HasValue && this.ch != ',' && this.ch != ')' && this.ch != ' ');
+            while (this.ch.HasValue && this.ch != ',' && this.ch != ')' && this.ch != ']' && this.ch != ' ');
 
             if (this.ch == null)
             {
