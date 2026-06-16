@@ -159,11 +159,11 @@ namespace Microsoft.OData.Client
         /// <returns>A task that represents the asynchronous operation. The task result contains the response message.</returns>
         public virtual Task<IODataResponseMessage> GetResponseAsync(CancellationToken cancellationToken)
         {
-            if (cancellationToken.IsCancellationRequested)
-            {
-                return Task.FromCanceled<IODataResponseMessage>(cancellationToken);
-            }
-
+            if (cancellationToken.IsCancellationRequested)
+            {
+                return Task.FromCanceled<IODataResponseMessage>(cancellationToken);
+            }
+
             try
             {
                 return Task.FromResult(GetResponse());
