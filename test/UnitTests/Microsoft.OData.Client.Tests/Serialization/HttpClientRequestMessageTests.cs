@@ -316,5 +316,80 @@ namespace Microsoft.OData.Client.Tests.Serialization
             }
         }
 
+        [Fact]
+        public void GetResponse_DoesNotDeadlock_UnderSingleThreadedSynchronizationContext()
+        {
+            // Arrange - use a handler that completes asynchronously (with a small delay)
+            // to ensure the await actually yields and attempts to post the continuation
+            // back to the SynchronizationContext. A synchronous Task.FromResult would not
+            // exercise the deadlock scenario.
+            using (var handler = new MockDelayedHttpClientHandler("OK", delayMilliseconds: 50))
+            {
+                var httpClientFactory = new MockHttpClientFactory(handler);
+                var args = new DataServiceClientRequestMessageArgs(
+                    "GET",
+                    new Uri("http://localhost"),
+                    usePostTunneling: false,
+                    headers: new Dictionary<string, string>(),
+                    httpClientFactory: httpClientFactory);
+
+                IODataResponseMessage response = null;
+                Exception caughtException = null;
+
+                // Run on a dedicated thread with a non-pumping SynchronizationContext
+                var thread = new Thread(() =>
+                {
+                    SynchronizationContext.SetSynchronizationContext(new NonPumpingSynchronizationContext());
+                    try
+                    {
+                        using (var request = new HttpClientRequestMessage(args))
+                        {
+                            response = request.GetResponse();
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        caughtException = ex;
+                    }
+                });
+
+                thread.IsBackground = true;
+                thread.Start();
+
+                // Wait with timeout - if it deadlocks, this will fail
+                bool completed = thread.Join(TimeSpan.FromSeconds(10));
+
+                if (!completed)
+                {
+                    // Interrupt the stuck thread to avoid leaving it running in the test process
+                    thread.Interrupt();
+                }
+
+                // Assert
+                Assert.True(completed, "GetResponse() deadlocked under a single-threaded SynchronizationContext");
+                Assert.Null(caughtException);
+                Assert.NotNull(response);
+            }
+        }
+
+        /// <summary>
+        /// A SynchronizationContext that discards posted callbacks without executing them.
+        /// This simulates the deadlock scenario where a blocked thread cannot pump its
+        /// message queue: continuations posted via Post() are lost, so any await without
+        /// ConfigureAwait(false) will hang indefinitely waiting for the continuation to run.
+        /// </summary>
+        private sealed class NonPumpingSynchronizationContext : SynchronizationContext
+        {
+            public override void Post(SendOrPostCallback d, object state)
+            {
+                // Intentionally discard the callback — simulates a thread whose message
+                // queue is blocked and cannot process posted continuations.
+            }
+
+            public override void Send(SendOrPostCallback d, object state)
+            {
+                throw new NotSupportedException("Send is not supported on this context.");
+            }
+        }
     }
 }
