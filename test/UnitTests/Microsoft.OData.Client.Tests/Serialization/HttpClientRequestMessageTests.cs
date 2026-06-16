@@ -319,10 +319,11 @@ namespace Microsoft.OData.Client.Tests.Serialization
         [Fact]
         public void GetResponse_DoesNotDeadlock_UnderSingleThreadedSynchronizationContext()
         {
-            // Arrange - simulate a UI SynchronizationContext (WinForms/WPF) that does not pump messages.
-            // Without ConfigureAwait(false) on the internal SendAsync, this would deadlock because
-            // the continuation would try to marshal back to the blocked thread.
-            using (var handler = new MockHttpClientHandler("OK"))
+            // Arrange - use a handler that completes asynchronously (with a small delay)
+            // to ensure the await actually yields and attempts to post the continuation
+            // back to the SynchronizationContext. A synchronous Task.FromResult would not
+            // exercise the deadlock scenario.
+            using (var handler = new MockDelayedHttpClientHandler("OK", delayMilliseconds: 50))
             {
                 var httpClientFactory = new MockHttpClientFactory(handler);
                 var args = new DataServiceClientRequestMessageArgs(
@@ -358,6 +359,12 @@ namespace Microsoft.OData.Client.Tests.Serialization
                 // Wait with timeout - if it deadlocks, this will fail
                 bool completed = thread.Join(TimeSpan.FromSeconds(10));
 
+                if (!completed)
+                {
+                    // Interrupt the stuck thread to avoid leaving it running in the test process
+                    thread.Interrupt();
+                }
+
                 // Assert
                 Assert.True(completed, "GetResponse() deadlocked under a single-threaded SynchronizationContext");
                 Assert.Null(caughtException);
@@ -366,16 +373,17 @@ namespace Microsoft.OData.Client.Tests.Serialization
         }
 
         /// <summary>
-        /// A SynchronizationContext that discards posted callbacks (simulates WinForms/WPF UI thread behavior).
-        /// Posted continuations are never executed, which causes deadlocks if await continuations
-        /// try to marshal back to this context without ConfigureAwait(false).
+        /// A SynchronizationContext that discards posted callbacks without executing them.
+        /// This simulates the deadlock scenario where a blocked thread cannot pump its
+        /// message queue: continuations posted via Post() are lost, so any await without
+        /// ConfigureAwait(false) will hang indefinitely waiting for the continuation to run.
         /// </summary>
         private sealed class NonPumpingSynchronizationContext : SynchronizationContext
         {
             public override void Post(SendOrPostCallback d, object state)
             {
-                // Intentionally do NOT execute the callback - simulates a blocked UI thread
-                // that cannot process posted messages.
+                // Intentionally discard the callback — simulates a thread whose message
+                // queue is blocked and cannot process posted continuations.
             }
 
             public override void Send(SendOrPostCallback d, object state)
