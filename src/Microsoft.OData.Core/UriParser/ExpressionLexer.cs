@@ -1147,7 +1147,9 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Parses a literal be checking for delimiting characters '\0', ',',')' and ' '
+        /// Parses a literal by checking for delimiting characters '\0', ',', ')', ']' and ' '.
+        /// ']' is included so that the literal scanner stops at the end of a bracketed collection
+        /// (e.g. the last item of an 'X in [...]' expression).
         /// </summary>
         /// <param name="tokenPos">Index from which the substring starts</param>
         /// <returns>Substring from this.text that has parsed the literal and ends in one of above delimiting characters</returns>
