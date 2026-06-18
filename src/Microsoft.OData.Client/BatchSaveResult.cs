@@ -17,6 +17,8 @@ namespace Microsoft.OData.Client
     using System.Linq;
     using System.Net;
     using System.Text;
+    using System.Threading;
+    using System.Threading.Tasks;
     using Microsoft.OData;
     using Microsoft.OData.Client.Metadata;
 
@@ -179,6 +181,41 @@ namespace Microsoft.OData.Client
                         // For non-async batch requests we call the test hook to get the response stream but we cannot consume it
                         // because we rethrow what we caught and the customer need to be able to read the response stream from the WebException.
                         // Note that on the async batch code path we do consume the response stream and throw a DataServiceRequestException.
+                        this.responseStream = this.batchResponseMessage.GetStream();
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Asynchronously sends the batch request without blocking waits.
+        /// </summary>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        /// <returns>A task that represents the asynchronous batch request operation.</returns>
+        internal async Task BatchRequestAsync(CancellationToken cancellationToken = default)
+        {
+            ODataRequestMessageWrapper batchRequestMessage = this.GenerateBatchRequest();
+
+            if (batchRequestMessage != null)
+            {
+                batchRequestMessage.SetRequestStream(batchRequestMessage.CachedRequestStream);
+
+                try
+                {
+                    this.batchResponseMessage = await this.RequestInfo.GetResponseAsync(batchRequestMessage, false, cancellationToken)
+                        .ConfigureAwait(false);
+                }
+                catch (DataServiceTransportException ex)
+                {
+                    InvalidOperationException exception = WebUtil.GetHttpWebResponse(ex, ref this.batchResponseMessage);
+
+                    // Rethrow to preserve existing error-handling behavior for callers.
+                    throw exception;
+                }
+                finally
+                {
+                    if (this.batchResponseMessage != null)
+                    {
                         this.responseStream = this.batchResponseMessage.GetStream();
                     }
                 }
@@ -869,7 +906,7 @@ namespace Microsoft.OData.Client
             try
             {
                 operationResponseContentStream = new MemoryStream();
-                WebUtil.CopyStream(originalOperationResponseContentStream, operationResponseContentStream, ref this.streamCopyBuffer);
+                WebUtil.CopyStream(originalOperationResponseContentStream, operationResponseContentStream, this.streamCopyBuffer);
                 operationResponseContentStream.Position = 0;
             }
             finally

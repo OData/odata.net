@@ -1774,9 +1774,10 @@ namespace Microsoft.OData.Client
         /// <param name="requestUri">The URI to which the query request will be sent. The URI may be any valid data service URI; it can contain $ query parameters.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <typeparam name="TElement">The type returned by the query.</typeparam>
-        public virtual Task<IEnumerable<TElement>> ExecuteAsync<TElement>(Uri requestUri, CancellationToken cancellationToken)
+        public virtual async Task<IEnumerable<TElement>> ExecuteAsync<TElement>(Uri requestUri, CancellationToken cancellationToken)
         {
-            return this.FromAsync(this.BeginExecute<TElement>, this.EndExecute<TElement>, requestUri, cancellationToken);
+            return await this.ExecuteAsyncInternal<TElement>(requestUri, XmlConstants.HttpMethodGet, null, cancellationToken)
+                .ConfigureAwait(false);
         }
 
         /// <summary>Asynchronously sends a request to the data service to execute a specific URI.</summary>
@@ -1811,9 +1812,16 @@ namespace Microsoft.OData.Client
         /// <param name="httpMethod">The HTTP data transfer method used by the client.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <param name="operationParameters">The operation parameters used.</param>
-        public virtual Task<OperationResponse> ExecuteAsync(Uri requestUri, string httpMethod, CancellationToken cancellationToken, params OperationParameter[] operationParameters)
+        public async virtual Task<OperationResponse> ExecuteAsync(Uri requestUri, string httpMethod, CancellationToken cancellationToken, params OperationParameter[] operationParameters)
         {
-            return this.FromAsync((callback, state) => this.BeginExecute(requestUri, callback, state, httpMethod, operationParameters), this.EndExecute, cancellationToken);
+            QueryOperationResponse<object> result = await ExecuteAsyncInternal<object>(requestUri, httpMethod, false, cancellationToken, operationParameters)
+                .ConfigureAwait(false);
+            if (result.Any())
+            {
+                throw new DataServiceClientException(SRResources.Context_ExecuteExpectedVoidResponse);
+            }
+
+            return result;
         }
 
         /// <summary>Asynchronously sends a request to the data service to execute a specific URI.</summary>
@@ -1851,9 +1859,10 @@ namespace Microsoft.OData.Client
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <param name="operationParameters">The operation parameters used.</param>
         /// <typeparam name="TElement">The type returned by the query.</typeparam>
-        public virtual Task<IEnumerable<TElement>> ExecuteAsync<TElement>(Uri requestUri, string httpMethod, bool singleResult, CancellationToken cancellationToken, params OperationParameter[] operationParameters)
+        public virtual async Task<IEnumerable<TElement>> ExecuteAsync<TElement>(Uri requestUri, string httpMethod, bool singleResult, CancellationToken cancellationToken, params OperationParameter[] operationParameters)
         {
-            return this.FromAsync((callback, state) => this.BeginExecute<TElement>(requestUri, callback, state, httpMethod, singleResult, operationParameters), this.EndExecute<TElement>, cancellationToken);
+            return await ExecuteAsyncInternal<TElement>(requestUri, httpMethod, singleResult, cancellationToken, operationParameters)
+                .ConfigureAwait(false);
         }
 
         /// <summary>Asynchronously sends a request to the data service to execute a specific URI.</summary>
@@ -1889,9 +1898,10 @@ namespace Microsoft.OData.Client
         /// <param name="operationParameters">The operation parameters used.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <typeparam name="TElement">The type returned by the query.</typeparam>
-        public virtual Task<IEnumerable<TElement>> ExecuteAsync<TElement>(Uri requestUri, string httpMethod, CancellationToken cancellationToken, params OperationParameter[] operationParameters)
+        public virtual async Task<IEnumerable<TElement>> ExecuteAsync<TElement>(Uri requestUri, string httpMethod, CancellationToken cancellationToken, params OperationParameter[] operationParameters)
         {
-            return this.FromAsync((callback, state) => this.BeginExecute<TElement>(requestUri, callback, state, httpMethod, operationParameters), this.EndExecute<TElement>, cancellationToken);
+            return await this.ExecuteAsyncInternal<TElement>(requestUri, httpMethod, null, cancellationToken, operationParameters)
+                .ConfigureAwait(false);
         }
 
         /// <summary>Asynchronously sends a request to the data service to retrieve the next page of data in a paged query result.</summary>
@@ -1923,9 +1933,15 @@ namespace Microsoft.OData.Client
         /// <param name="continuation">A <see cref="Microsoft.OData.Client.DataServiceQueryContinuation{T}" /> object that represents the next page of data to return from the data service.</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         /// <typeparam name="TElement">The type returned by the query.</typeparam>
-        public virtual Task<IEnumerable<TElement>> ExecuteAsync<TElement>(DataServiceQueryContinuation<TElement> continuation, CancellationToken cancellationToken)
+        public virtual async Task<IEnumerable<TElement>> ExecuteAsync<TElement>(DataServiceQueryContinuation<TElement> continuation, CancellationToken cancellationToken)
         {
-            return this.FromAsync(this.BeginExecute, this.EndExecute<TElement>, continuation, cancellationToken);
+            Util.CheckArgumentNull(continuation, "continuation");
+
+            QueryComponents qc = continuation.CreateQueryComponents();
+            Uri requestUri = qc.Uri;
+            DataServiceRequest request = new DataServiceRequest<TElement>(requestUri, qc, continuation.Plan);
+
+            return await request.ExecuteAsync<TElement>(this, qc, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>Called to complete the <see cref="Microsoft.OData.Client.DataServiceContext.BeginExecute{TElement}(System.Uri,System.AsyncCallback,System.Object)" />.</summary>
@@ -3220,6 +3236,76 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
+        /// Asynchronously executes a request against the data service using the specified parameters.
+        /// </summary>
+        /// <typeparam name="TElement">The type of elements in the result.</typeparam>
+        /// <param name="requestUri">The request URI.</param>
+        /// <param name="httpMethod">The HTTP method to use.</param>
+        /// <param name="singleResult">Whether a single result is expected.</param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        /// <param name="operationParameters">The operation parameters associated with the request.</param>
+        /// <returns>A task representing the query operation response.</returns>
+        internal Task<QueryOperationResponse<TElement>> ExecuteAsyncInternal<TElement>(
+            Uri requestUri,
+            string httpMethod,
+            bool? singleResult,
+            CancellationToken cancellationToken,
+            params OperationParameter[] operationParameters)
+        {
+            List<UriOperationParameter> uriOperationParameters = null;
+            List<BodyOperationParameter> bodyOperationParameters = null;
+            try
+            {
+                this.ValidateExecuteParameters<TElement>(
+                    ref requestUri,
+                    httpMethod,
+                    ref singleResult,
+                    out bodyOperationParameters,
+                    out uriOperationParameters,
+                    operationParameters);
+            }
+            catch (Exception ex) when (CommonUtil.IsCatchableExceptionType(ex))
+            {
+                return Task.FromException<QueryOperationResponse<TElement>>(ex);
+            }
+
+            QueryComponents queryComponents = new QueryComponents(
+                requestUri,
+                Util.ODataVersionEmpty,
+                lastSegmentType: typeof(TElement),
+                projection: null,
+                normalizerRewrites: null,
+                httpMethod,
+                singleResult,
+                bodyOperationParameters,
+                uriOperationParameters);
+
+            requestUri = queryComponents.Uri;
+            DataServiceRequest request = new DataServiceRequest<TElement>(requestUri, queryComponents, null);
+
+            return request.ExecuteAsync<TElement>(this, queryComponents, cancellationToken);
+        }
+
+        /// <summary>
+        /// Asynchronously executes a query continuation to retrieve the next page of results.
+        /// </summary>
+        /// <typeparam name="TElement">The type of elements in the query result.</typeparam>
+        /// <param name="continuation">The continuation token representing the next page of results.</param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        /// <returns>A task that represents the asynchronous operation.
+        /// The task result contains a query operation response with the next page of results.</returns>
+        internal Task<QueryOperationResponse<TElement>> ExecuteAsyncInternal<TElement>(
+            DataServiceQueryContinuation<TElement> continuation,
+            CancellationToken cancellationToken)
+        {
+            QueryComponents queryComponents = continuation.CreateQueryComponents();
+            Uri requestUri = queryComponents.Uri;
+            DataServiceRequest request = new DataServiceRequest<TElement>(requestUri, queryComponents, continuation.Plan);
+
+            return request.ExecuteAsync<TElement>(this, queryComponents, cancellationToken);
+        }
+
+        /// <summary>
         /// Track a binding.
         /// </summary>
         /// <param name="source">Source resource.</param>
@@ -3344,6 +3430,29 @@ namespace Microsoft.OData.Client
         {
             Debug.Assert(asyncResult != null, "Expected a non-null asyncResult for all scenarios calling EndGetResponse");
             return this.GetResponseHelper(request, asyncResult, true);
+        }
+
+        /// <summary>
+        /// Asynchronously gets the response for the request.
+        /// </summary>
+        /// <param name="request">The OData request message wrapper to get the response from.</param>
+        /// <param name="handleWebException">If true, suppresses <see cref="WebException"/> if the response is available;
+        /// otherwise, always rethrows <see cref="WebException"/>.</param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        /// <returns>A task that represents the asynchronous operation.
+        /// The task result contains the OData response message.</returns>
+        /// <exception cref="DataServiceTransportException">
+        /// Thrown when a transport-level error occurs and <paramref name="handleWebException"/> is false or the response is null.
+        /// </exception>
+        /// <remarks>
+        /// This method fires the <see cref="ReceivingResponse"/> event after receiving the response.
+        /// </remarks>
+        internal Task<IODataResponseMessage> GetResponseAsync(
+            ODataRequestMessageWrapper request,
+            bool handleWebException,
+            CancellationToken cancellationToken = default)
+        {
+            return this.GetResponseHelperAsync(request, handleWebException, cancellationToken);
         }
 
         #endregion
@@ -4102,6 +4211,48 @@ namespace Microsoft.OData.Client
 
                 this.FireReceivingResponseEvent(new ReceivingResponseEventArgs(response, request.Descriptor));
 
+                if (!handleWebException || response == null)
+                {
+                    throw;
+                }
+            }
+
+            return response;
+        }
+
+        /// <summary>
+        /// Asynchronously gets the response, fires the ReceivingResponse event, and handles transport exceptions.
+        /// </summary>
+        /// <param name="request">The OData request message wrapper to get the response from.</param>
+        /// <param name="handleWebException">If true, suppresses <see cref="WebException"/> if the response is available;
+        /// otherwise, always rethrows <see cref="WebException"/>.</param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        /// <returns>A task that represents the asynchronous operation.
+        /// The task result contains the OData response message.</returns>
+        /// <exception cref="DataServiceTransportException">
+        /// Thrown when a transport-level error occurs and <paramref name="handleWebException"/> is false or the response is null.
+        /// </exception>
+        /// <remarks>
+        /// This method fires the <see cref="ReceivingResponse"/> event after receiving the response.
+        /// </remarks>
+        internal async Task<IODataResponseMessage> GetResponseHelperAsync(
+            ODataRequestMessageWrapper request,
+            bool handleWebException,
+            CancellationToken cancellationToken)
+        {
+            Debug.Assert(request != null, "Expected a non-null request for all scenarios calling GetAsynchronousResponse");
+            IODataResponseMessage response = null;
+
+            try
+            {
+                response = await request.GetResponseAsync(cancellationToken).ConfigureAwait(false);
+
+                this.FireReceivingResponseEvent(new ReceivingResponseEventArgs(response, request.Descriptor));
+            }
+            catch (DataServiceTransportException e)
+            {
+                response = e.Response;
+                this.FireReceivingResponseEvent(new ReceivingResponseEventArgs(response, request.Descriptor));
                 if (!handleWebException || response == null)
                 {
                     throw;

@@ -13,6 +13,8 @@ namespace Microsoft.OData.Client
     using System.IO;
     using System.Linq;
     using System.Net;
+    using System.Threading;
+    using System.Threading.Tasks;
     using Microsoft.OData;
 
     /// <summary>
@@ -249,7 +251,7 @@ namespace Microsoft.OData.Client
 
                             Byte[] buffer = this.GetAsyncResponseStreamCopyBuffer();
 
-                            long copied = WebUtil.CopyStream(stream, copy, ref buffer);
+                            long copied = WebUtil.CopyStream(stream, copy, buffer);
                             if (this.responseStreamOwner)
                             {
                                 if (copied == 0)
@@ -266,6 +268,39 @@ namespace Microsoft.OData.Client
                         }
                     }
                 }
+            }
+            catch (Exception e)
+            {
+                this.HandleFailure(e);
+                throw;
+            }
+            finally
+            {
+                this.SetCompleted();
+                this.CompletedRequest();
+            }
+
+            if (this.Failure != null)
+            {
+                throw this.Failure;
+            }
+        }
+
+        /// <summary>Asynchronous query execution without blocking waits.</summary>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        /// <returns>A task that represents the asynchronous query execution.</returns>
+        internal async Task ExecuteQueryAsync(CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                if (this.requestContentStream != null && this.requestContentStream.Stream != null)
+                {
+                    this.Request.SetRequestStream(this.requestContentStream);
+                }
+
+                IODataResponseMessage response = await this.RequestInfo.GetResponseAsync(this.Request, true, cancellationToken).ConfigureAwait(false);
+                this.SetHttpWebResponse(Util.NullCheck(response, InternalError.InvalidGetResponse));
+                await this.ProcessResponseStreamAsync(cancellationToken).ConfigureAwait(false);
             }
             catch (Exception e)
             {
@@ -709,6 +744,57 @@ namespace Microsoft.OData.Client
                 responseMessageWrapper,
                 payloadKind,
                 base.MaterializerCache);
+        }
+
+        /// <summary>
+        /// Asynchronously processes the response stream by copying it to the output stream.
+        /// </summary>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
+        /// <returns>A task that represents the asynchronous stream processing.</returns>
+        private async ValueTask ProcessResponseStreamAsync(CancellationToken cancellationToken)
+        {
+            if (HttpStatusCode.NoContent == this.StatusCode)
+            {
+                return;
+            }
+
+            using (Stream stream = this.responseMessage.GetStream())
+            {
+                if (stream == null)
+                {
+                    return;
+                }
+
+                Stream copy = this.GetAsyncResponseStreamCopy();
+                this.outputResponseStream = copy;
+
+                Byte[] buffer = this.GetAsyncResponseStreamCopyBuffer();
+
+                long copied = await WebUtil.CopyStreamAsync(stream, copy, buffer, cancellationToken).ConfigureAwait(false);
+
+                this.FinalizeStreamCopy(copy, copied);
+                this.PutAsyncResponseStreamCopyBuffer(buffer);
+            }
+        }
+
+        /// <summary>
+        /// Finalizes the stream copy by adjusting the length of the output stream if necessary.
+        /// </summary>
+        private void FinalizeStreamCopy(Stream copy, long copied)
+        {
+            if (!this.responseStreamOwner)
+            {
+                return;
+            }
+
+            if (copied == 0)
+            {
+                this.outputResponseStream = null;
+            }
+            else if (copy.Position < copy.Length)
+            {
+                ((MemoryStream)copy).SetLength(copy.Position);
+            }
         }
     }
 }

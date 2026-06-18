@@ -342,11 +342,12 @@ namespace Microsoft.OData.Client.Tests.Tracking
 
             // Act
             DataServiceQuery<EmployeeWithNullableEnumKey> query = _defaultContext.EmployeesWithNullableEnumKey;
-            var exception = await Assert.ThrowsAsync<InvalidOperationException>(() => query.ExecuteAsync());
+            var exception = await Assert.ThrowsAsync<DataServiceQueryException>(() => query.ExecuteAsync());
 
             // Assert
             Assert.NotNull(exception);
-            Assert.Equal("The key property 'EmpType' on type 'Microsoft.OData.Client.Tests.Tracking.EmployeeWithNullableEnumKey' is of type 'System.Nullable`1[[Microsoft.OData.Client.Tests.Tracking.EmployeeType, Microsoft.OData.Client.Tests, Version=0.0.0.0, Culture=neutral, PublicKeyToken=69c3241e6f0468ca]]', which is nullable. Key properties cannot be nullable.", exception.Message);
+            Assert.IsType<InvalidOperationException>(exception.InnerException);
+            Assert.Equal("The key property 'EmpType' on type 'Microsoft.OData.Client.Tests.Tracking.EmployeeWithNullableEnumKey' is of type 'System.Nullable`1[[Microsoft.OData.Client.Tests.Tracking.EmployeeType, Microsoft.OData.Client.Tests, Version=0.0.0.0, Culture=neutral, PublicKeyToken=69c3241e6f0468ca]]', which is nullable. Key properties cannot be nullable.", exception.InnerException.Message);
         }
 
         [Theory]
@@ -470,11 +471,12 @@ namespace Microsoft.OData.Client.Tests.Tracking
             EmployeeWithNullableEnumKeySingle query = _defaultContext.EmployeesWithNullableEnumKey.ByKey(
                 new Dictionary<string, object>() { { "EmpNumber", 8 }, { "EmpType", EmployeeType.PartTime }, { "OrgId", 1 } });
 
-            var exception = await Assert.ThrowsAsync<InvalidOperationException>(() => query.GetValueAsync());
+            var exception = await Assert.ThrowsAsync<DataServiceQueryException>(() => query.GetValueAsync());
 
             // Assert
             Assert.NotNull(exception);
-            Assert.Equal("The key property 'EmpType' on type 'Microsoft.OData.Client.Tests.Tracking.EmployeeWithNullableEnumKey' is of type 'System.Nullable`1[[Microsoft.OData.Client.Tests.Tracking.EmployeeType, Microsoft.OData.Client.Tests, Version=0.0.0.0, Culture=neutral, PublicKeyToken=69c3241e6f0468ca]]', which is nullable. Key properties cannot be nullable.", exception.Message);
+            Assert.IsType<InvalidOperationException>(exception.InnerException);
+            Assert.Equal("The key property 'EmpType' on type 'Microsoft.OData.Client.Tests.Tracking.EmployeeWithNullableEnumKey' is of type 'System.Nullable`1[[Microsoft.OData.Client.Tests.Tracking.EmployeeType, Microsoft.OData.Client.Tests, Version=0.0.0.0, Culture=neutral, PublicKeyToken=69c3241e6f0468ca]]', which is nullable. Key properties cannot be nullable.", exception.InnerException.Message);
         }
 
         [Theory]
