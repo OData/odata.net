@@ -1104,6 +1104,40 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             Assert.IsType<FunctionCallToken>(inToken.Left);
         }
 
+        // Regression: bare GUID literals as the last item inside a bracketed 'in [...]'
+        // collection used to fail because ExpressionLexer.ParseLiteral terminated only on
+        // ',', ')', and ' ' — never on ']'. The closing bracket got folded into the literal,
+        // which broke Guid/DateOnly/DateTimeOffset/TimeOnly recognition.
+        [Fact]
+        public void ParseInOperatorWithBracketedGuidLiterals()
+        {
+            QueryToken token = this.testSubject.ParseFilter("Id in [c2081e58-21a5-4a15-b0bd-fff03ebadd30,0697576b-d616-4057-9d28-ed359775129e]");
+            Assert.NotNull(token);
+            var inToken = Assert.IsType<InToken>(token);
+            var collectionToken = Assert.IsType<CollectionLiteralToken>(inToken.Right);
+            Assert.Equal(2, collectionToken.Items.Count);
+        }
+
+        [Fact]
+        public void ParseInOperatorWithSingleDigitStartingGuidInBrackets()
+        {
+            QueryToken token = this.testSubject.ParseFilter("Id in [0697576b-d616-4057-9d28-ed359775129e]");
+            Assert.NotNull(token);
+            var inToken = Assert.IsType<InToken>(token);
+            var collectionToken = Assert.IsType<CollectionLiteralToken>(inToken.Right);
+            Assert.Single(collectionToken.Items);
+        }
+
+        [Fact]
+        public void ParseInOperatorWithSingleLetterStartingGuidInBrackets()
+        {
+            QueryToken token = this.testSubject.ParseFilter("Id in [c2081e58-21a5-4a15-b0bd-fff03ebadd30]");
+            Assert.NotNull(token);
+            var inToken = Assert.IsType<InToken>(token);
+            var collectionToken = Assert.IsType<CollectionLiteralToken>(inToken.Right);
+            Assert.Single(collectionToken.Items);
+        }
+
         #endregion
 
         #region Map/Object Parsing Tests

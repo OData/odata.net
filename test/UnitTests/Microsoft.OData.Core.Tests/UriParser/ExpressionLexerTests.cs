@@ -1406,6 +1406,84 @@ namespace Microsoft.OData.Tests.UriParser
                 new ExpressionToken() { Kind = ExpressionTokenKind.GuidLiteral, Text = "ABCDEF12-ABCD-ABCD-ABCD-ABCDEFABCDEF".AsMemory() });
         }
 
+        // Regression: a GUID literal followed by ']' must still be recognized as a GUID,
+        // not have the closing bracket folded into the literal. Previously ParseLiteral only
+        // stopped at ',', ')', and ' ', so the GUID-detection path failed for any GUID that
+        // immediately preceded a ']' (notably the last item in 'X in [...]' collection literals).
+        [Fact]
+        public void ParseGuidLiteralFollowedByCloseBracket()
+        {
+            // Letter-starting GUID, the only element of a bracketed list.
+            ValidateTokenSequence(this.model, "[c2081e58-21a5-4a15-b0bd-fff03ebadd30]",
+                OpenBracketToken,
+                new ExpressionToken() { Kind = ExpressionTokenKind.GuidLiteral, Text = "c2081e58-21a5-4a15-b0bd-fff03ebadd30".AsMemory() },
+                CloseBracketToken);
+        }
+
+        [Fact]
+        public void ParseDigitStartingGuidLiteralFollowedByCloseBracket()
+        {
+            // Digit-starting GUID, the only element of a bracketed list. The lexer enters
+            // ParseFromDigit, then falls through to its TryParseGuid letter-fallback branch.
+            ValidateTokenSequence(this.model, "[0697576b-d616-4057-9d28-ed359775129e]",
+                OpenBracketToken,
+                new ExpressionToken() { Kind = ExpressionTokenKind.GuidLiteral, Text = "0697576b-d616-4057-9d28-ed359775129e".AsMemory() },
+                CloseBracketToken);
+        }
+
+        [Fact]
+        public void ParseDigitStartingGuidLiteralFollowedByComma()
+        {
+            // Digit-starting GUID is not the last element of a bracketed list.
+            ValidateTokenSequence(this.model, "[0697576b-d616-4057-9d28-ed359775129e,c2081e58-21a5-4a15-b0bd-fff03ebadd30]",
+                OpenBracketToken,
+                new ExpressionToken() { Kind = ExpressionTokenKind.GuidLiteral, Text = "0697576b-d616-4057-9d28-ed359775129e".AsMemory() },
+                CommaToken,
+                new ExpressionToken() { Kind = ExpressionTokenKind.GuidLiteral, Text = "c2081e58-21a5-4a15-b0bd-fff03ebadd30".AsMemory() },
+                CloseBracketToken);
+        }
+
+        [Fact]
+        public void ParseTwoGuidLiteralsWithLastDigitStartingInsideBrackets()
+        {
+            // Real-world failing case: letter-starting GUID first, digit-starting GUID last.
+            // Reported via Microsoft.Restier integration tests against OData 9.0.0-rc.
+            ValidateTokenSequence(this.model, "[c2081e58-21a5-4a15-b0bd-fff03ebadd30,0697576b-d616-4057-9d28-ed359775129e]",
+                OpenBracketToken,
+                new ExpressionToken() { Kind = ExpressionTokenKind.GuidLiteral, Text = "c2081e58-21a5-4a15-b0bd-fff03ebadd30".AsMemory() },
+                CommaToken,
+                new ExpressionToken() { Kind = ExpressionTokenKind.GuidLiteral, Text = "0697576b-d616-4057-9d28-ed359775129e".AsMemory() },
+                CloseBracketToken);
+        }
+
+        [Fact]
+        public void ParseDateOnlyLiteralFollowedByCloseBracket()
+        {
+            // Same ParseLiteral terminator issue would have broken Date literals at end of brackets.
+            ValidateTokenSequence(this.model, "[2025-06-16]",
+                OpenBracketToken,
+                new ExpressionToken() { Kind = ExpressionTokenKind.DateOnlyLiteral, Text = "2025-06-16".AsMemory() },
+                CloseBracketToken);
+        }
+
+        [Fact]
+        public void ParseDateTimeOffsetLiteralFollowedByCloseBracket()
+        {
+            ValidateTokenSequence(this.model, "[2025-06-16T11:22:33Z]",
+                OpenBracketToken,
+                new ExpressionToken() { Kind = ExpressionTokenKind.DateTimeOffsetLiteral, Text = "2025-06-16T11:22:33Z".AsMemory() },
+                CloseBracketToken);
+        }
+
+        [Fact]
+        public void ParseTimeOnlyLiteralFollowedByCloseBracket()
+        {
+            ValidateTokenSequence(this.model, "[08:20:15]",
+                OpenBracketToken,
+                new ExpressionToken() { Kind = ExpressionTokenKind.TimeOnlyLiteral, Text = "08:20:15".AsMemory() },
+                CloseBracketToken);
+        }
+
         // Type-prefixed literals
         [Fact]
         public void ParseDurationLiteralWithPrefix()
