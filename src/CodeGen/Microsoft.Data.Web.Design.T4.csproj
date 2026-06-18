@@ -7,7 +7,7 @@
     <ConditionalAPTCA_L2>true</ConditionalAPTCA_L2>
     <DocumentationFile>$(AssemblyName).xml</DocumentationFile>
     <RestorePackages>true</RestorePackages>
-    <TargetFrameworks>net48</TargetFrameworks>
+    <TargetFrameworks>net10.0</TargetFrameworks>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <ShouldGenerateAssemblyAttributeFile>false</ShouldGenerateAssemblyAttributeFile>
@@ -18,22 +18,12 @@
   <Import Project="..\Build.props" />
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.0.0" />
-    <PackageReference Include="Microsoft.VisualStudio.TextTemplating.Interfaces.10.0" Version="10.0.30320" />
-    <PackageReference Include="MSTest.TestFramework" Version="2.1.0" />
-    <PackageReference Include="MSTest.TestAdapter" Version="2.1.0" /> 
+    <PackageReference Include="Microsoft.VisualStudio.TextTemplating.Interfaces.10.0" Version="17.0.32112.339" />
+    <PackageReference Include="System.CodeDom" Version="9.0.4" />
   </ItemGroup>
   
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Web" />
-    <Reference Include="System.Web.Extensions" />
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Xml.Linq" />
     <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj" />
- 
   </ItemGroup>
   <!-- Source files -->
   <ItemGroup>
