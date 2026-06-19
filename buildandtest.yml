@@ -40,3 +40,19 @@ steps:
     arguments: '--configuration $(buildConfiguration) --settings $(Build.SourcesDirectory)\test.runsettings --no-build'
     projects: |
       $(Build.SourcesDirectory)\sln\OData.Pipeline.sln
+
+- task: DotNetCoreCLI@2
+  displayName: 'Build CodeGen Tests'
+  inputs:
+    command: 'build'
+    arguments: '--configuration $(BuildConfiguration)'
+    projects: |
+      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\DesignT4UnitTests\Microsoft.OData.Service.Design.T4.UnitTests.csproj
+
+- task: DotNetCoreCLI@2
+  displayName: 'Test CodeGen'
+  inputs:
+    command: 'test'
+    arguments: '--configuration $(buildConfiguration) --no-build'
+    projects: |
+      $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\DesignT4UnitTests\Microsoft.OData.Service.Design.T4.UnitTests.csproj

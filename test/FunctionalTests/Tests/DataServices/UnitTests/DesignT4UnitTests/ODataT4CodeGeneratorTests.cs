@@ -5,7 +5,7 @@
 //---------------------------------------------------------------------
 
 using System;
-using System.CodeDom.Compiler;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
@@ -14,11 +14,12 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Xml;
 using FluentAssertions;
-using Microsoft.CSharp;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.VisualBasic;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.Spatial;
-using Microsoft.VisualBasic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.OData.Client.Design.T4.UnitTests
@@ -452,6 +453,11 @@ namespace Microsoft.OData.Client.Design.T4.UnitTests
 
         private static string CodeGenWithT4TemplateFromCommandline(string edmx, string namespacePrefix, bool isCSharp, bool useDataServiceCollection)
         {
+            if (!File.Exists(T4TransformToolPath))
+            {
+                Assert.Inconclusive("TextTransform.exe not found at: " + T4TransformToolPath + ". This test requires Visual Studio to be installed.");
+            }
+
             File.WriteAllText(EdmxTestInputFile, edmx);
 
             ODataT4CodeGenerator.LanguageOption option;
@@ -519,40 +525,74 @@ namespace Microsoft.OData.Client.Design.T4.UnitTests
 
         private static void GeneratedCodeShouldCompile(string source, bool isCSharp)
         {
-            CompilerParameters compilerOptions = new CompilerParameters
+            var runtimeDir = Path.GetDirectoryName(typeof(object).Assembly.Location);
+            var metadataReferences = new List<MetadataReference>();
+
+            // Add OData assembly references
+            var referenceAssemblies = new[]
             {
-                GenerateExecutable = false,
-                GenerateInMemory = true,
-                IncludeDebugInformation = false,
-                TreatWarningsAsErrors = true,
-                WarningLevel = 4,
-                ReferencedAssemblies =
-                {
-                    typeof(DataServiceContext).Assembly.Location,
-                    typeof(IEdmModel).Assembly.Location,
-                    typeof(GeographyPoint).Assembly.Location,
-                    typeof(ODataVersion).Assembly.Location,
-                    DataFxAssemblyRef.File.System,
-                    DataFxAssemblyRef.File.SystemCore,
-                    DataFxAssemblyRef.File.SystemIO,
-                    DataFxAssemblyRef.File.SystemRuntime,
-                    DataFxAssemblyRef.File.SystemXml,
-                    DataFxAssemblyRef.File.SystemXmlReaderWriter
-                }
+                typeof(DataServiceContext).Assembly,
+                typeof(IEdmModel).Assembly,
+                typeof(GeographyPoint).Assembly,
+                typeof(ODataVersion).Assembly,
+                typeof(object).Assembly,
+                typeof(Uri).Assembly,
+                typeof(System.Linq.Enumerable).Assembly,
+                typeof(System.Collections.ObjectModel.ObservableCollection<>).Assembly,
+                typeof(System.ComponentModel.INotifyPropertyChanged).Assembly,
+                typeof(System.Xml.XmlReader).Assembly,
             };
 
-            CodeDomProvider codeProvider = null;
+            foreach (var asm in referenceAssemblies)
+            {
+                metadataReferences.Add(MetadataReference.CreateFromFile(asm.Location));
+            }
+
+            // Add essential runtime references
+            var runtimeRefs = new[] { "System.Runtime.dll", "System.Collections.dll", "netstandard.dll", "System.Xml.dll", "System.IO.dll", "System.Xml.ReaderWriter.dll", "System.Private.Xml.dll", "System.Text.Json.dll" };
+            foreach (var runtimeRef in runtimeRefs)
+            {
+                var path = Path.Combine(runtimeDir, runtimeRef);
+                if (File.Exists(path))
+                {
+                    metadataReferences.Add(MetadataReference.CreateFromFile(path));
+                }
+            }
+
+            IEnumerable<Diagnostic> diagnostics;
             if (isCSharp)
             {
-                codeProvider = new CSharpCodeProvider();
+                var syntaxTree = CSharpSyntaxTree.ParseText(source);
+                var compilation = CSharpCompilation.Create(
+                    "TestAssembly",
+                    new[] { syntaxTree },
+                    metadataReferences,
+                    new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
+                diagnostics = compilation.GetDiagnostics();
             }
             else
             {
-                codeProvider = new VBCodeProvider();
+                // Add VB runtime for VisualBasic compilation
+                foreach (var vbDll in new[] { "Microsoft.VisualBasic.dll", "Microsoft.VisualBasic.Core.dll" })
+                {
+                    var vbPath = Path.Combine(runtimeDir, vbDll);
+                    if (File.Exists(vbPath))
+                    {
+                        metadataReferences.Add(MetadataReference.CreateFromFile(vbPath));
+                    }
+                }
+
+                var syntaxTree = VisualBasicSyntaxTree.ParseText(source);
+                var compilation = VisualBasicCompilation.Create(
+                    "TestAssembly",
+                    new[] { syntaxTree },
+                    metadataReferences,
+                    new VisualBasicCompilationOptions(OutputKind.DynamicallyLinkedLibrary, rootNamespace: ""));
+                diagnostics = compilation.GetDiagnostics();
             }
 
-            var results = codeProvider.CompileAssemblyFromSource(compilerOptions, source);
-            results.Errors.Should().BeEmpty();
+            var errors = diagnostics.Where(d => d.Severity == DiagnosticSeverity.Error).ToList();
+            errors.Should().BeEmpty("Generated code should compile without errors, but got:\n" + string.Join("\n", errors.Select(e => e.ToString())));
         }
     }
 }
