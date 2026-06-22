@@ -567,7 +567,8 @@ namespace Microsoft.OData.Client.Design.T4.UnitTests
                     "TestAssembly",
                     new[] { syntaxTree },
                     metadataReferences,
-                    new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
+                    new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary)
+                        .WithGeneralDiagnosticOption(ReportDiagnostic.Error));
                 diagnostics = compilation.GetDiagnostics();
             }
             else
@@ -587,12 +588,13 @@ namespace Microsoft.OData.Client.Design.T4.UnitTests
                     "TestAssembly",
                     new[] { syntaxTree },
                     metadataReferences,
-                    new VisualBasicCompilationOptions(OutputKind.DynamicallyLinkedLibrary, rootNamespace: ""));
+                    new VisualBasicCompilationOptions(OutputKind.DynamicallyLinkedLibrary, rootNamespace: "")
+                        .WithGeneralDiagnosticOption(ReportDiagnostic.Error));
                 diagnostics = compilation.GetDiagnostics();
             }
 
-            var errors = diagnostics.Where(d => d.Severity == DiagnosticSeverity.Error).ToList();
-            errors.Should().BeEmpty("Generated code should compile without errors, but got:\n" + string.Join("\n", errors.Select(e => e.ToString())));
+            var errors = diagnostics.Where(d => d.Severity == DiagnosticSeverity.Error || d.Severity == DiagnosticSeverity.Warning).ToList();
+            errors.Should().BeEmpty("Generated code should compile without errors or warnings, but got:\n" + string.Join("\n", errors.Select(e => e.ToString())));
         }
     }
 }

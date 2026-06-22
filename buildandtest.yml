@@ -53,6 +53,6 @@ steps:
   displayName: 'Test CodeGen'
   inputs:
     command: 'test'
-    arguments: '--configuration $(buildConfiguration) --no-build'
+    arguments: '--configuration $(BuildConfiguration) --no-build'
     projects: |
       $(Build.SourcesDirectory)\test\FunctionalTests\Tests\DataServices\UnitTests\DesignT4UnitTests\Microsoft.OData.Service.Design.T4.UnitTests.csproj
