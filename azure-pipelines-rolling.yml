@@ -33,6 +33,9 @@ variables:
   value: none
 - name: runCodesignValidationInjection
   value: false
+- group: OData-Shared
+- name: AZURE_ARTIFACTS_FEED
+  value: "$(ODataFeed)"
 
 extends:
   template: v1/1ES.Official.PipelineTemplate.yml@1ESPipelineTemplates
