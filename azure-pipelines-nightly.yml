@@ -19,7 +19,13 @@ variables:
   value: anycpu
 - name: ProductBinPath
   value: $(Build.SourcesDirectory)\src\Microsoft.OData.Serializer\bin\
-- group: OData-ESRP-CodeSigning
+- group: OData-Shared
+- name: __NugetSecurityAnalysisWarningLevel__
+  value: none
+- name: runCodesignValidationInjection
+  value: false
+- name: AZURE_ARTIFACTS_FEED
+  value: "$(ODataFeed)"
 
 extends:
   template: v1/1ES.Official.PipelineTemplate.yml@1ESPipelineTemplates
