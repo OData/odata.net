@@ -563,15 +563,47 @@ namespace Microsoft.OData.Service.Design.UnitTests
         }
 
         [TestMethod]
-        public void GetClrTypeNameDateShouldBeGlobalMicrosoftODataEdmLibraryDate()
+        public void GetClrTypeNameDateShouldBeGlobalSystemDateOnly()
         {
-            ODataT4CodeGenerator.Utils.GetClrTypeName(new EdmPrimitiveType(EdmPrimitiveTypeKind.Date), template).Should().Be("global::Microsoft.OData.Edm.Date");
+            ODataT4CodeGenerator.Utils.GetClrTypeName(new EdmPrimitiveType(EdmPrimitiveTypeKind.Date), template).Should().Be("global::System.DateOnly");
         }
 
         [TestMethod]
-        public void GetClrTypeNameTimeOfDayShouldBeGlobalMicrosoftODataEdmLibraryTimeOfDay()
+        public void GetClrTypeNameTimeOfDayShouldBeGlobalSystemTimeOnly()
         {
-            ODataT4CodeGenerator.Utils.GetClrTypeName(new EdmPrimitiveType(EdmPrimitiveTypeKind.TimeOfDay), template).Should().Be("global::Microsoft.OData.Edm.TimeOfDay");
+            ODataT4CodeGenerator.Utils.GetClrTypeName(new EdmPrimitiveType(EdmPrimitiveTypeKind.TimeOfDay), template).Should().Be("global::System.TimeOnly");
+        }
+
+        [TestMethod]
+        public void GetClrTypeNameNullableDateShouldBeGlobalSystemNullableOfDateOnly()
+        {
+            EdmPrimitiveType edmPrimitiveType = new EdmPrimitiveType(EdmPrimitiveTypeKind.Date);
+            IEdmTypeReference edmTypeReference = new EdmTypeReferenceForTest(edmPrimitiveType, true);
+            ODataT4CodeGenerator.Utils.GetClrTypeName(edmTypeReference, false, template, context).Should().Be("global::System.Nullable<global::System.DateOnly>");
+        }
+
+        [TestMethod]
+        public void GetClrTypeNameNullableTimeOfDayShouldBeGlobalSystemNullableOfTimeOnly()
+        {
+            EdmPrimitiveType edmPrimitiveType = new EdmPrimitiveType(EdmPrimitiveTypeKind.TimeOfDay);
+            IEdmTypeReference edmTypeReference = new EdmTypeReferenceForTest(edmPrimitiveType, true);
+            ODataT4CodeGenerator.Utils.GetClrTypeName(edmTypeReference, false, template, context).Should().Be("global::System.Nullable<global::System.TimeOnly>");
+        }
+
+        [TestMethod]
+        public void GetClrTypeNameNonNullableDateShouldBeGlobalSystemDateOnly()
+        {
+            EdmPrimitiveType edmPrimitiveType = new EdmPrimitiveType(EdmPrimitiveTypeKind.Date);
+            IEdmTypeReference edmTypeReference = new EdmTypeReferenceForTest(edmPrimitiveType, false);
+            ODataT4CodeGenerator.Utils.GetClrTypeName(edmTypeReference, false, template, context).Should().Be("global::System.DateOnly");
+        }
+
+        [TestMethod]
+        public void GetClrTypeNameNonNullableTimeOfDayShouldBeGlobalSystemTimeOnly()
+        {
+            EdmPrimitiveType edmPrimitiveType = new EdmPrimitiveType(EdmPrimitiveTypeKind.TimeOfDay);
+            IEdmTypeReference edmTypeReference = new EdmTypeReferenceForTest(edmPrimitiveType, false);
+            ODataT4CodeGenerator.Utils.GetClrTypeName(edmTypeReference, false, template, context).Should().Be("global::System.TimeOnly");
         }
 
         [TestMethod]

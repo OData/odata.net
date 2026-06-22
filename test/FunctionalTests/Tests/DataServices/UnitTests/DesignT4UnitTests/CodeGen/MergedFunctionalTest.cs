@@ -2719,8 +2719,8 @@ namespace MergedFunctionalTest
                     string nonNullableStringProp, 
                     global::System.TimeSpan nonNullableDurationProp, 
                     global::System.DateTimeOffset nonNullableDateTimeOffsetProp, 
-                    global::Microsoft.OData.Edm.Date nonNullableDateProp, 
-                    global::Microsoft.OData.Edm.TimeOfDay nonNullableTimeOfDayProp, 
+                    global::System.DateOnly nonNullableDateProp, 
+                    global::System.TimeOnly nonNullableTimeOfDayProp, 
                     global::Microsoft.OData.Client.DataServiceStreamLink nonNullableStreamProp, 
                     sbyte nonNullableSByteProp, 
                     global::Microsoft.Spatial.Geography nonNullableGeography, 
@@ -3649,7 +3649,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property NonNullableDateProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.OData.Edm.Date NonNullableDateProp
+        public global::System.DateOnly NonNullableDateProp
         {
             get
             {
@@ -3663,14 +3663,14 @@ namespace MergedFunctionalTest
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Edm.Date _NonNullableDateProp;
-        partial void OnNonNullableDatePropChanging(global::Microsoft.OData.Edm.Date value);
+        private global::System.DateOnly _NonNullableDateProp;
+        partial void OnNonNullableDatePropChanging(global::System.DateOnly value);
         partial void OnNonNullableDatePropChanged();
         /// <summary>
         /// There are no comments for Property ExplicitlyNullableDateProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Nullable<global::Microsoft.OData.Edm.Date> ExplicitlyNullableDateProp
+        public global::System.Nullable<global::System.DateOnly> ExplicitlyNullableDateProp
         {
             get
             {
@@ -3684,14 +3684,14 @@ namespace MergedFunctionalTest
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::System.Nullable<global::Microsoft.OData.Edm.Date> _ExplicitlyNullableDateProp;
-        partial void OnExplicitlyNullableDatePropChanging(global::System.Nullable<global::Microsoft.OData.Edm.Date> value);
+        private global::System.Nullable<global::System.DateOnly> _ExplicitlyNullableDateProp;
+        partial void OnExplicitlyNullableDatePropChanging(global::System.Nullable<global::System.DateOnly> value);
         partial void OnExplicitlyNullableDatePropChanged();
         /// <summary>
         /// There are no comments for Property NullableDateProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Nullable<global::Microsoft.OData.Edm.Date> NullableDateProp
+        public global::System.Nullable<global::System.DateOnly> NullableDateProp
         {
             get
             {
@@ -3705,14 +3705,14 @@ namespace MergedFunctionalTest
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::System.Nullable<global::Microsoft.OData.Edm.Date> _NullableDateProp;
-        partial void OnNullableDatePropChanging(global::System.Nullable<global::Microsoft.OData.Edm.Date> value);
+        private global::System.Nullable<global::System.DateOnly> _NullableDateProp;
+        partial void OnNullableDatePropChanging(global::System.Nullable<global::System.DateOnly> value);
         partial void OnNullableDatePropChanged();
         /// <summary>
         /// There are no comments for Property NonNullableTimeOfDayProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.OData.Edm.TimeOfDay NonNullableTimeOfDayProp
+        public global::System.TimeOnly NonNullableTimeOfDayProp
         {
             get
             {
@@ -3726,14 +3726,14 @@ namespace MergedFunctionalTest
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Edm.TimeOfDay _NonNullableTimeOfDayProp;
-        partial void OnNonNullableTimeOfDayPropChanging(global::Microsoft.OData.Edm.TimeOfDay value);
+        private global::System.TimeOnly _NonNullableTimeOfDayProp;
+        partial void OnNonNullableTimeOfDayPropChanging(global::System.TimeOnly value);
         partial void OnNonNullableTimeOfDayPropChanged();
         /// <summary>
         /// There are no comments for Property ExplicitlyNullableTimeOfDayProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Nullable<global::Microsoft.OData.Edm.TimeOfDay> ExplicitlyNullableTimeOfDayProp
+        public global::System.Nullable<global::System.TimeOnly> ExplicitlyNullableTimeOfDayProp
         {
             get
             {
@@ -3747,14 +3747,14 @@ namespace MergedFunctionalTest
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::System.Nullable<global::Microsoft.OData.Edm.TimeOfDay> _ExplicitlyNullableTimeOfDayProp;
-        partial void OnExplicitlyNullableTimeOfDayPropChanging(global::System.Nullable<global::Microsoft.OData.Edm.TimeOfDay> value);
+        private global::System.Nullable<global::System.TimeOnly> _ExplicitlyNullableTimeOfDayProp;
+        partial void OnExplicitlyNullableTimeOfDayPropChanging(global::System.Nullable<global::System.TimeOnly> value);
         partial void OnExplicitlyNullableTimeOfDayPropChanged();
         /// <summary>
         /// There are no comments for Property NullableTimeOfDayProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Nullable<global::Microsoft.OData.Edm.TimeOfDay> NullableTimeOfDayProp
+        public global::System.Nullable<global::System.TimeOnly> NullableTimeOfDayProp
         {
             get
             {
@@ -3768,8 +3768,8 @@ namespace MergedFunctionalTest
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::System.Nullable<global::Microsoft.OData.Edm.TimeOfDay> _NullableTimeOfDayProp;
-        partial void OnNullableTimeOfDayPropChanging(global::System.Nullable<global::Microsoft.OData.Edm.TimeOfDay> value);
+        private global::System.Nullable<global::System.TimeOnly> _NullableTimeOfDayProp;
+        partial void OnNullableTimeOfDayPropChanging(global::System.Nullable<global::System.TimeOnly> value);
         partial void OnNullableTimeOfDayPropChanged();
         /// <summary>
         /// There are no comments for Property NonNullableStreamProp in the schema.
@@ -5311,7 +5311,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property BagOfDate in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Collections.ObjectModel.Collection<global::Microsoft.OData.Edm.Date> BagOfDate
+        public global::System.Collections.ObjectModel.Collection<global::System.DateOnly> BagOfDate
         {
             get
             {
@@ -5325,14 +5325,14 @@ namespace MergedFunctionalTest
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::System.Collections.ObjectModel.Collection<global::Microsoft.OData.Edm.Date> _BagOfDate = new global::System.Collections.ObjectModel.Collection<global::Microsoft.OData.Edm.Date>();
-        partial void OnBagOfDateChanging(global::System.Collections.ObjectModel.Collection<global::Microsoft.OData.Edm.Date> value);
+        private global::System.Collections.ObjectModel.Collection<global::System.DateOnly> _BagOfDate = new global::System.Collections.ObjectModel.Collection<global::System.DateOnly>();
+        partial void OnBagOfDateChanging(global::System.Collections.ObjectModel.Collection<global::System.DateOnly> value);
         partial void OnBagOfDateChanged();
         /// <summary>
         /// There are no comments for Property BagOfTimeOfDay in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::System.Collections.ObjectModel.Collection<global::Microsoft.OData.Edm.TimeOfDay> BagOfTimeOfDay
+        public global::System.Collections.ObjectModel.Collection<global::System.TimeOnly> BagOfTimeOfDay
         {
             get
             {
@@ -5346,8 +5346,8 @@ namespace MergedFunctionalTest
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::System.Collections.ObjectModel.Collection<global::Microsoft.OData.Edm.TimeOfDay> _BagOfTimeOfDay = new global::System.Collections.ObjectModel.Collection<global::Microsoft.OData.Edm.TimeOfDay>();
-        partial void OnBagOfTimeOfDayChanging(global::System.Collections.ObjectModel.Collection<global::Microsoft.OData.Edm.TimeOfDay> value);
+        private global::System.Collections.ObjectModel.Collection<global::System.TimeOnly> _BagOfTimeOfDay = new global::System.Collections.ObjectModel.Collection<global::System.TimeOnly>();
+        partial void OnBagOfTimeOfDayChanging(global::System.Collections.ObjectModel.Collection<global::System.TimeOnly> value);
         partial void OnBagOfTimeOfDayChanged();
         /// <summary>
         /// There are no comments for Property BagOfStream in the schema.
@@ -6122,7 +6122,7 @@ namespace MergedFunctionalTest
         /// There are no comments for Property DateProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.OData.Edm.Date DateProp
+        public global::System.DateOnly DateProp
         {
             get
             {
@@ -6136,14 +6136,14 @@ namespace MergedFunctionalTest
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Edm.Date _DateProp = global::Microsoft.OData.Edm.Date.Parse("2014-10-08");
-        partial void OnDatePropChanging(global::Microsoft.OData.Edm.Date value);
+        private global::System.DateOnly _DateProp = global::System.DateOnly.Parse("2014-10-08");
+        partial void OnDatePropChanging(global::System.DateOnly value);
         partial void OnDatePropChanged();
         /// <summary>
         /// There are no comments for Property TimeOfDayProp in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public global::Microsoft.OData.Edm.TimeOfDay TimeOfDayProp
+        public global::System.TimeOnly TimeOfDayProp
         {
             get
             {
@@ -6157,8 +6157,8 @@ namespace MergedFunctionalTest
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Edm.TimeOfDay _TimeOfDayProp = global::Microsoft.OData.Edm.TimeOfDay.Parse("12:34:56");
-        partial void OnTimeOfDayPropChanging(global::Microsoft.OData.Edm.TimeOfDay value);
+        private global::System.TimeOnly _TimeOfDayProp = global::System.TimeOnly.Parse("12:34:56");
+        partial void OnTimeOfDayPropChanging(global::System.TimeOnly value);
         partial void OnTimeOfDayPropChanged();
         /// <summary>
         /// There are no comments for Property GeographyProp in the schema.
