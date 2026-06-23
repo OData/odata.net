@@ -1172,3 +1172,13 @@ dotnet_diagnostic.CA2242.severity = none
 dotnet_diagnostic.CA2243.severity = none
 
 dotnet_diagnostic.CA5122.severity = error
+
+# CA2007: Do not directly await a Task without calling ConfigureAwait
+# Required to prevent the regression class fixed in issue #3521.
+# Currently warning; escalate to error in a follow-up PR after
+# legitimate suppressions have been triaged.
+[Microsoft.OData.Client/**.cs]
+dotnet_diagnostic.CA2007.severity = warning
+
+[Microsoft.OData.Core/**.cs]
+dotnet_diagnostic.CA2007.severity = warning
