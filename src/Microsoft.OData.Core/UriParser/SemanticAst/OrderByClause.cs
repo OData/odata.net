@@ -7,13 +7,14 @@
 namespace Microsoft.OData.UriParser
 {
     #region Namespaces
+    using System;
     using Microsoft.OData.Edm;
     #endregion Namespaces
 
     /// <summary>
     /// Represents the result of parsing the $orderby query option.
     /// </summary>
-    public sealed class OrderByClause
+    public sealed class OrderByClause : IEquatable<OrderByClause>
     {
         /// <summary>
         /// The order-by expression.
@@ -98,6 +99,35 @@ namespace Microsoft.OData.UriParser
             {
                 return this.RangeVariable.TypeReference;
             }
+        }
+
+        /// <summary>
+        /// Determines whether the specified <see cref="OrderByClause"/> is equal to the current <see cref="OrderByClause"/>.
+        /// </summary>
+        /// <param name="other">The <see cref="OrderByClause"/> to compare with the current <see cref="OrderByClause"/>.</param>
+        /// <returns><c>true</c> if the specified <see cref="OrderByClause"/> is equal to the current <see cref="OrderByClause"/>; otherwise, <c>false</c>.</returns>
+        public bool Equals(OrderByClause other)
+        {
+            return SemanticAstStructuralEqualityComparer.AreEqual(this, other);
+        }
+
+        /// <summary>
+        /// Determines whether the specified object is equal to the current <see cref="OrderByClause"/>.
+        /// </summary>
+        /// <param name="obj">The object to compare with the current <see cref="OrderByClause"/>.</param>
+        /// <returns><c>true</c> if the specified object is equal to the current <see cref="OrderByClause"/>; otherwise, <c>false</c>.</returns>
+        public override bool Equals(object obj)
+        {
+            return this.Equals(obj as OrderByClause);
+        }
+
+        /// <summary>
+        /// Serves as the default hash function.
+        /// </summary>
+        /// <returns>A hash code for the current <see cref="OrderByClause"/>.</returns>
+        public override int GetHashCode()
+        {
+            return SemanticAstStructuralEqualityComparer.GetHashCode(this);
         }
     }
 }

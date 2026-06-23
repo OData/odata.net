@@ -1,0 +1,18 @@
+Microsoft.OData.UriParser.FilterClause.Equals(Microsoft.OData.UriParser.FilterClause other) -> bool
+override Microsoft.OData.UriParser.FilterClause.Equals(object obj) -> bool
+override Microsoft.OData.UriParser.FilterClause.GetHashCode() -> int
+Microsoft.OData.UriParser.OrderByClause.Equals(Microsoft.OData.UriParser.OrderByClause other) -> bool
+override Microsoft.OData.UriParser.OrderByClause.Equals(object obj) -> bool
+override Microsoft.OData.UriParser.OrderByClause.GetHashCode() -> int
+Microsoft.OData.UriParser.QueryNode.Equals(Microsoft.OData.UriParser.QueryNode other) -> bool
+override Microsoft.OData.UriParser.QueryNode.Equals(object obj) -> bool
+override Microsoft.OData.UriParser.QueryNode.GetHashCode() -> int
+Microsoft.OData.UriParser.RangeVariable.Equals(Microsoft.OData.UriParser.RangeVariable other) -> bool
+override Microsoft.OData.UriParser.RangeVariable.Equals(object obj) -> bool
+override Microsoft.OData.UriParser.RangeVariable.GetHashCode() -> int
+Microsoft.OData.UriParser.SearchClause.Equals(Microsoft.OData.UriParser.SearchClause other) -> bool
+override Microsoft.OData.UriParser.SearchClause.Equals(object obj) -> bool
+override Microsoft.OData.UriParser.SearchClause.GetHashCode() -> int
+Microsoft.OData.UriParser.SelectExpandClause.Equals(Microsoft.OData.UriParser.SelectExpandClause other) -> bool
+override Microsoft.OData.UriParser.SelectExpandClause.Equals(object obj) -> bool
+override Microsoft.OData.UriParser.SelectExpandClause.GetHashCode() -> int
