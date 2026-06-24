@@ -20,10 +20,6 @@ variables:
 - name: ProductBinPath
   value: $(Build.SourcesDirectory)\src\Microsoft.OData.Serializer\bin\
 - group: OData-Shared
-- name: __NugetSecurityAnalysisWarningLevel__
-  value: none
-- name: runCodesignValidationInjection
-  value: false
 - name: AZURE_ARTIFACTS_FEED
   value: "$(ODataFeed)"
 
