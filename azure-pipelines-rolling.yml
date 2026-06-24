@@ -53,11 +53,10 @@ extends:
         steps:
         - checkout: self
           fetchTags: false
+
         - task: NuGetToolInstaller@1
           displayName: Use NuGet >=5.2.0
-          inputs:
-            versionSpec: '>=5.2.0'
-            checkLatest: true
+
         - task: UseDotNet@2
           displayName: Use .NET Core SDK 8.x
           inputs:
