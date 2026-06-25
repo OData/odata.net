@@ -31,6 +31,10 @@ variables:
   value: $(Build.SourcesDirectory)\artifacts\bin\$(BuildPlatform)\$(BuildConfiguration)
 - name: runCodesignValidationInjection
   value: false
+- group: OData-Shared
+- name: AZURE_ARTIFACTS_FEED
+  value: "$(ODataFeed)"
+
 extends:
   template: v1/1ES.Official.PipelineTemplate.yml@1ESPipelineTemplates
   parameters:
@@ -49,11 +53,10 @@ extends:
         steps:
         - checkout: self
           fetchTags: false
+
         - task: NuGetToolInstaller@1
           displayName: Use NuGet >=5.2.0
-          inputs:
-            versionSpec: '>=5.2.0'
-            checkLatest: true
+
         - task: UseDotNet@2
           displayName: Use .NET Core SDK 8.x
           inputs:

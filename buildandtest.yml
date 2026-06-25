@@ -1,7 +1,6 @@
 steps:
-- task: NuGetToolInstaller@0
-  inputs:
-    versionSpec: '6.5.0'
+- task: NuGetAuthenticate@1
+  displayName: 'Authenticate to the feed'
 
 - task: UseDotNet@2
   displayName: 'Install .NET 8'
