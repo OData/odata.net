@@ -195,7 +195,7 @@ namespace Microsoft.OData.Tests.UriParser
             Assert.NotNull(node);
             var functionCallNode = Assert.IsType<CollectionResourceFunctionCallNode>(node);
             functionCallNode.Functions.ContainExactly(operationImports);
-            return  functionCallNode;
+            return functionCallNode;
         }
 
         public static SingleValuePropertyAccessNode ShouldBeSingleValuePropertyAccessQueryNode(this QueryNode node, IEdmProperty expectedProperty)
@@ -238,7 +238,7 @@ namespace Microsoft.OData.Tests.UriParser
             var propertyAccessNode = Assert.IsType<CountNode>(node);
             return propertyAccessNode;
         }
-        
+
         public static CollectionOpenPropertyAccessNode ShouldBeCollectionOpenPropertyAccessQueryNode(this QueryNode node, string expectedPropertyName)
         {
             Assert.NotNull(node);
@@ -374,7 +374,7 @@ namespace Microsoft.OData.Tests.UriParser
 
             Assert.Equal(enumType.FullTypeName(), enumNode.TypeReference.FullName());
             Assert.Equal(value, ((ODataEnumValue)enumNode.Value).Value);
-      
+
             return enumNode;
         }
 
@@ -425,6 +425,14 @@ namespace Microsoft.OData.Tests.UriParser
             Assert.Equal(literalText, uriTemplate.LiteralText);
             Assert.True(uriTemplate.ExpectedType.IsEquivalentTo(expectedType));
             return uriTemplate;
+        }
+
+        public static CollectionConstantNode ShouldBeCollectionConstantNode(this QueryNode node, IEdmCollectionTypeReference expectedCollectionTypeReference)
+        {
+            Assert.NotNull(node);
+            var collectionConstantNode = Assert.IsType<CollectionConstantNode>(node);
+            Assert.True(collectionConstantNode.CollectionType.IsEquivalentTo(expectedCollectionTypeReference));
+            return collectionConstantNode;
         }
     }
 }
