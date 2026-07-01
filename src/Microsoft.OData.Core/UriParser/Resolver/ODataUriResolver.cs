@@ -604,9 +604,10 @@ namespace Microsoft.OData.UriParser
 
         private static void FindSchemaElementsInModel<T>(IEdmModel model, ReadOnlySpan<char> qualifiedName, bool caseInsensitive, ref IList<T> results) where T : IEdmSchemaElement
         {
+            StringComparison comparisonType = caseInsensitive ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
             foreach (IEdmSchemaElement schema in model.SchemaElements)
             {
-                if (qualifiedName.Equals(schema.FullName(), caseInsensitive ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal))
+                if (schema.FullNameEquals(qualifiedName, comparisonType))
                 {
                     if (schema is T)
                     {
