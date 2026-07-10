@@ -817,5 +817,84 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             Assert.Equal("Stores", expandTerm3.PathToNavigationProp.Identifier);
             Assert.NotNull(expandTerm3.FilterOption);
         }
+
+        [Fact]
+        public void ParseApplyWithDeeplyNestedExpandExceedingMaxDepthShouldThrow()
+        {
+            int maxDepth = 5;
+            var parser = new UriQueryExpressionParser(maxDepth);
+            string apply = BuildNestedExpandApply(maxDepth + 1);
+
+            Action parse = () => parser.ParseApply(apply);
+            parse.Throws<ODataException>(SRResources.UriQueryExpressionParser_TooDeep);
+        }
+
+        [Fact]
+        public void ParseApplyWithNestedExpandAtMaxDepthShouldParseSuccessfully()
+        {
+            int maxSelectExpandDepth = 5;
+            var parser = new UriQueryExpressionParser(800) { MaxSelectExpandDepth = maxSelectExpandDepth };
+            string apply = BuildNestedExpandApply(maxSelectExpandDepth);
+
+            IEnumerable<QueryToken> actual = parser.ParseApply(apply);
+            Assert.NotNull(actual);
+            Assert.Single(actual);
+        }
+
+        [Fact]
+        public void ParseApplyExpandDepthExceedingMaxSelectExpandDepthShouldThrow()
+        {
+            // MaxSelectExpandDepth is enforced independently of the filter expression limit.
+            var parser = new UriQueryExpressionParser(maxDepth: 100) { MaxSelectExpandDepth = 5 };
+            string apply = BuildNestedExpandApply(6);
+
+            Action parse = () => parser.ParseApply(apply);
+            parse.Throws<ODataException>(SRResources.UriQueryExpressionParser_TooDeep);
+        }
+
+        [Fact]
+        public void ParseApplyExpandDepthUsesMaxSelectExpandDepthNotFilterLimit()
+        {
+            // Expand depth is governed by MaxSelectExpandDepth independently from the filter expression
+            // limit (maxDepth). depth=12 exceeds maxDepth(10) but is within MaxSelectExpandDepth(15).
+            var parser = new UriQueryExpressionParser(maxDepth: 10) { MaxSelectExpandDepth = 15 };
+            string apply = BuildNestedExpandApply(12);
+
+            IEnumerable<QueryToken> actual = parser.ParseApply(apply);
+            Assert.NotNull(actual);
+            Assert.Single(actual);
+        }
+
+        [Fact]
+        public void ParseApplyWithFilterAndNestedExpandShouldParseSuccessfully()
+        {
+            // A $apply containing both a filter expression and a nested expand parses correctly.
+            // The filter expression depth counter and the expand nesting depth counter are independent.
+            string apply = "expand(Friends, filter(true), expand(Friends, filter(true)))";
+
+            IEnumerable<QueryToken> actual = this.testSubject.ParseApply(apply);
+            Assert.NotNull(actual);
+            Assert.Single(actual);
+            ExpandToken expandToken = Assert.IsType<ExpandToken>(actual.Single());
+            ExpandTermToken term = Assert.Single(expandToken.ExpandTerms);
+            Assert.NotNull(term.FilterOption);
+            Assert.NotNull(term.ExpandOption);
+        }
+
+        /// <summary>
+        /// Builds a nested expand $apply string of the given depth.
+        /// The innermost level uses filter(true) as required by the parser.
+        /// Example for depth=2: expand(A, expand(A, filter(true)))
+        /// </summary>
+        private static string BuildNestedExpandApply(int depth)
+        {
+            string apply = "expand(A, filter(true))";
+            for (int i = 1; i < depth; i++)
+            {
+                apply = $"expand(A, {apply})";
+            }
+
+            return apply;
+        }
     }
 }

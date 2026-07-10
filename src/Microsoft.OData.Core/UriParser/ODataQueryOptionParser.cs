@@ -412,7 +412,10 @@ namespace Microsoft.OData.UriParser
             ExceptionUtils.CheckArgumentNotNull(apply, "apply");
 
             // Get the syntactic representation of the apply expression
-            UriQueryExpressionParser expressionParser = new UriQueryExpressionParser(configuration.Settings.FilterLimit, configuration.EnableCaseInsensitiveUriFunctionIdentifier);
+            UriQueryExpressionParser expressionParser = new UriQueryExpressionParser(configuration.Settings.FilterLimit, configuration.EnableCaseInsensitiveUriFunctionIdentifier)
+            {
+                MaxSelectExpandDepth = configuration.Settings.SelectExpandLimit
+            };
             var applyTokens = expressionParser.ParseApply(apply);
 
             // Bind it to metadata

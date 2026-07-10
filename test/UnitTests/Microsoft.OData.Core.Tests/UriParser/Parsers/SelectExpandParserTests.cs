@@ -789,6 +789,15 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             test.Throws<ODataException>(SRResources.UriQueryExpressionParser_TooDeep);
         }
 
+        [Fact]
+        public void SelectLimitTest()
+        {
+            // Arrange & Act & Assert
+            this.LimitationTest("d1($select=d2($select=d3($select=d4($select=d5))))", null);
+            Action test = () => this.LimitationTest("d1($select=d2($select=d3($select=d4($select=d5($select=d6)))))", null);
+            test.Throws<ODataException>(SRResources.UriQueryExpressionParser_TooDeep);
+        }
+
         private void LimitationTest(string select, string expand)
         {
             SelectToken selectTree;
