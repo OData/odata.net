@@ -60,6 +60,17 @@ namespace Microsoft.OData.UriParser
         private int recursionDepth;
 
         /// <summary>
+        /// The current nesting depth of expand(...) within a $apply clause.
+        /// </summary>
+        private int selectExpandDepth = 0;
+
+        /// <summary>
+        /// The maximum allowed nesting depth for nested $expand and expand(...) within $apply clauses.
+        /// Defaults to <see cref="maxDepth"/> when not explicitly set.
+        /// </summary>
+        private int maxSelectExpandDepth;
+
+        /// <summary>
         /// The lexer being used for the parsing.
         /// </summary>
         private ExpressionLexer lexer;
@@ -118,6 +129,7 @@ namespace Microsoft.OData.UriParser
 
             this.model = model;
             this.maxDepth = maxDepth;
+            this.maxSelectExpandDepth = maxDepth;
             this.enableCaseInsensitiveBuiltinIdentifier = enableCaseInsensitiveBuiltinIdentifier;
             this.enableNoDollarQueryOptions = enableNoDollarQueryOptions;
             this.maxAggregateExpressionDepth = maxAggregateExpressionDepth;
@@ -162,6 +174,16 @@ namespace Microsoft.OData.UriParser
         internal bool EnableNoDollarQueryOptions
         {
             get { return this.enableNoDollarQueryOptions; }
+        }
+
+        /// <summary>
+        /// Gets or sets the maximum allowed nesting depth for nested <c>$expand</c> and <c>expand(...)</c> within <c>$apply</c> clauses.
+        /// Defaults to the <c>maxDepth</c> value passed to the constructor.
+        /// </summary>
+        internal int MaxSelectExpandDepth
+        {
+            get { return this.maxSelectExpandDepth; }
+            set { this.maxSelectExpandDepth = value; }
         }
 
         /// <summary>
@@ -357,6 +379,12 @@ namespace Microsoft.OData.UriParser
 
         internal ExpandToken ParseExpand()
         {
+            this.selectExpandDepth++;
+            if (this.selectExpandDepth > this.maxSelectExpandDepth)
+            {
+                throw new ODataException(SRResources.UriQueryExpressionParser_TooDeep);
+            }
+
             Debug.Assert(TokenIdentifierIs(ExpressionConstants.KeywordExpand), "token identifier is expand");
             lexer.NextToken();
 
@@ -378,7 +406,7 @@ namespace Microsoft.OData.UriParser
             List<ExpandTermToken> mergedExpandTerms = null;
 
             // Followed (optionally) by filter and expand
-            // Syntax for expand inside $apply is different (and much simpler)  from $expand clause => had to use different parsing approach
+            // Syntax for expand inside $apply is different (and much simpler) from $expand clause => had to use different parsing approach
             while (this.lexer.CurrentToken.Kind == ExpressionTokenKind.Comma)
             {
                 this.lexer.NextToken();
@@ -423,7 +451,7 @@ namespace Microsoft.OData.UriParser
 
             this.lexer.NextToken();
 
-
+            this.selectExpandDepth--;
             return new ExpandToken(termTokens);
         }
 
@@ -439,6 +467,7 @@ namespace Microsoft.OData.UriParser
             }
 
             this.recursionDepth = 0;
+            this.selectExpandDepth = 0;
             this.lexer = CreateLexerForFilterOrOrderByOrApplyExpression(this.model, apply);
 
             while (true)

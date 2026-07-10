@@ -426,7 +426,10 @@ namespace Microsoft.OData.UriParser
                 configuration.Model,
                 configuration.Settings.FilterLimit,
                 configuration.EnableCaseInsensitiveUriFunctionIdentifier,
-                maxAggregateExpressionDepth: configuration.Settings.AggregateLimit);
+                maxAggregateExpressionDepth: configuration.Settings.AggregateLimit)
+            {
+                MaxSelectExpandDepth = configuration.Settings.SelectExpandLimit
+            };
             var applyTokens = expressionParser.ParseApply(apply.AsMemory());
 
             // Bind it to metadata

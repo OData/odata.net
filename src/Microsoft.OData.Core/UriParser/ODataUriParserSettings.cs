@@ -109,6 +109,7 @@ namespace Microsoft.OData.UriParser
                 PathLimit = this.PathLimit,
                 SearchLimit = this.SearchLimit,
                 AggregateLimit = this.AggregateLimit,
+                SelectExpandLimit = this.SelectExpandLimit,
                 MaximumExpansionDepth = this.MaximumExpansionDepth,
                 MaximumExpansionCount = this.MaximumExpansionCount,
                 EnableParsingKeyAsSegment = this.EnableParsingKeyAsSegment
