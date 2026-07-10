@@ -45,7 +45,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.UriBuilder
         [Fact]
         public void BuildUrlWithApplyAggregateOnCollectionProperty()
         {
-            string customFunctionName = "NS.UnionDate";
+            string customFunctionName = "NS.UnionDateApplyBuilder";
             string query = $"http://gobbledygook/People?$apply=aggregate(MyDates with {customFunctionName} as UnionDate)";
 
             try

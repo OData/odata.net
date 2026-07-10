@@ -146,7 +146,7 @@ namespace Microsoft.OData.Tests.UriParser
         [Fact]
         public void CanParseAggregateOnCollectionProperty()
         {
-            string customFunctionName = "NS.UnionDate";
+            string customFunctionName = "NS.UnionDateUriParser";
             try
             {
                 var argument = EdmCoreModel.GetCollection(EdmCoreModel.Instance.GetDate(/*isNullable*/false));
@@ -2039,5 +2039,58 @@ namespace Microsoft.OData.Tests.UriParser
             return model;
         }
 #endregion
+
+        [Fact]
+        public void ParseApplyWithAggregateLimitExceededShouldThrow()
+        {
+            // Set up a parser with a low AggregateLimit
+            // Entity-set aggregation syntax: aggregate(NavProp(NavProp(NavProp(expr with method as alias))))
+            var uriParser = new ODataUriParser(
+                HardCodedTestModel.TestModel,
+                ServiceRoot,
+                new Uri("http://host/People?$apply=aggregate(MyPaintings(Owner(MyPaintings(Value with sum as Total))))"))
+            {
+                Settings = { AggregateLimit = 3 }
+            };
+
+            // Parsing should throw because the nesting depth (4) exceeds the aggregate limit (3)
+            Action parse = () => uriParser.ParseApply();
+            parse.Throws<ODataException>(Error.Format(SRResources.UriQueryExpressionParser_AggregateExpressionDepthLimitExceeded, 3));
+        }
+
+        [Fact]
+        public void ParseApplyWithAggregateWithinLimitShouldSucceed()
+        {
+            // Set up a parser with default AggregateLimit
+            var uriParser = new ODataUriParser(
+                HardCodedTestModel.TestModel,
+                ServiceRoot,
+                new Uri("http://host/People?$apply=aggregate(FavoriteNumber with sum as Total)"));
+
+            // Parsing should succeed for a simple aggregate within default limit
+            var applyClause = uriParser.ParseApply();
+            Assert.NotNull(applyClause);
+            var transformations = applyClause.Transformations.ToList();
+            Assert.Single(transformations);
+            Assert.IsType<AggregateTransformationNode>(transformations[0]);
+        }
+
+        [Fact]
+        public void ParseNestedExpandWithApplyAggregateLimitShouldBeHonored()
+        {
+            // Verify that AggregateLimit is propagated to nested $expand parsing
+            // $expand=MyPaintings($apply=aggregate(Value with sum as TotalValue))
+            var uriParser = new ODataUriParser(
+                HardCodedTestModel.TestModel,
+                ServiceRoot,
+                new Uri("http://host/People?$expand=MyPaintings($apply=aggregate(Value with sum as TotalValue))"))
+            {
+                Settings = { AggregateLimit = 0 }
+            };
+
+            // AggregateLimit of 0 should reject even a simple aggregate inside nested $expand
+            Action parse = () => uriParser.ParseSelectAndExpand();
+            parse.Throws<ODataException>(Error.Format(SRResources.UriQueryExpressionParser_AggregateExpressionDepthLimitExceeded, 0));
+        }
     }
 }

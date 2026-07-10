@@ -43,7 +43,7 @@ namespace Microsoft.OData.Tests.UriParser.Extensions.Binders
         [Fact]
         public void BindApplyWithAggregateOnCollectionPropertyShouldReturnApplyClause()
         {
-            string customFunctionName = "NS.UnionDate";
+            string customFunctionName = "NS.UnionDateApplyBinder";
             try
             {
                 var argument = EdmCoreModel.GetCollection(EdmCoreModel.Instance.GetDate(/*isNullable*/false));

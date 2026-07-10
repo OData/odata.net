@@ -1841,6 +1841,9 @@
   <data name="UriQueryExpressionParser_TooDeep" xml:space="preserve">
     <value>Recursion depth exceeded allowed limit.</value>
   </data>
+  <data name="UriQueryExpressionParser_AggregateExpressionDepthLimitExceeded" xml:space="preserve">
+    <value>The aggregate expression depth exceeded the maximum allowed depth of {0}. You can adjust the depth limit by setting the 'ODataUriParserSettings.AggregateLimit' property.</value>
+  </data>
   <data name="UriQueryExpressionParser_ExpressionExpected" xml:space="preserve">
     <value>Expression expected at position {0} in '{1}'.</value>
   </data>
