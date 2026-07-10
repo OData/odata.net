@@ -1,3 +1,5 @@
+Microsoft.OData.UriParser.ODataUriParserSettings.AggregateLimit.get -> int
+Microsoft.OData.UriParser.ODataUriParserSettings.AggregateLimit.set -> void
 Microsoft.OData.ODataMessageReaderSettings.ShouldReadPropertyAsStream.get -> System.Func<Microsoft.OData.ODataPropertyStreamingContext, bool>
 Microsoft.OData.ODataMessageReaderSettings.ShouldReadPropertyAsStream.set -> void
 Microsoft.OData.ODataPropertyStreamingContext

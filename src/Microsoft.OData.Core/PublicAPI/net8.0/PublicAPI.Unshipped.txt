@@ -1,2 +1,0 @@
-Microsoft.OData.UriParser.ODataUriParserSettings.AggregateLimit.get -> int
-Microsoft.OData.UriParser.ODataUriParserSettings.AggregateLimit.set -> void
