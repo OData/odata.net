@@ -382,6 +382,42 @@ namespace Microsoft.OData.Tests.UriParser
         }
 
         [Fact]
+        public void NestedCountFilterLimitIsRespected()
+        {
+            // CountSegmentParser.ParseInnerFilter() previously hard-coded DefaultFilterLimit (800) and
+            // reset the recursion counter to zero at every $count($filter=...) nesting level, so the
+            // configured FilterLimit was not enforced across nesting levels.
+            // The fix propagates the remaining depth budget so the limit is correctly applied.
+            //
+            // The expression nests $count($filter=...) three levels deep:
+            //
+            //   MyFriendsDogs/$count($filter=
+            //     MyFriendsDogs/$count($filter=
+            //       MyFriendsDogs/$count($filter=true) gt 0
+            //     ) gt 0
+            //   ) gt 0
+            //
+            // With FilterLimit=3 the parser exhausts its depth budget on the third nesting level.
+            string inner =
+                "MyFriendsDogs/$count($filter=" +
+                    "MyFriendsDogs/$count($filter=" +
+                        "MyFriendsDogs/$count($filter=true) gt 0" +
+                    ") gt 0" +
+                ") gt 0";
+
+            ODataUriParser parser = new ODataUriParser(
+                HardCodedTestModel.TestModel,
+                ServiceRoot,
+                new Uri($"http://host/People?$filter={Uri.EscapeDataString(inner)}"))
+            {
+                Settings = { FilterLimit = 3 }
+            };
+
+            Action parseWithLimit = () => parser.ParseFilter();
+            parseWithLimit.Throws<ODataException>(SRResources.UriQueryExpressionParser_TooDeep);
+        }
+
+        [Fact]
         public void NegativeFilterLimitThrows()
         {
             Action negativeLimit = () => new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, FullUri) { Settings = { FilterLimit = -98798 } };

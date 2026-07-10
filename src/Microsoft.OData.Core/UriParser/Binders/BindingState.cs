@@ -36,7 +36,7 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// The current recursion depth of binding.
         /// </summary>
-        private int BindingRecursionDepth;
+        private int bindingRecursionDepth;
 
         /// <summary>
         /// Collection of query option tokens associated with the current query being processed.
@@ -57,15 +57,30 @@ namespace Microsoft.OData.UriParser
         {
             ExceptionUtils.CheckArgumentNotNull(configuration, "configuration");
             this.configuration = configuration;
-            this.BindingRecursionDepth = 0;
+            this.bindingRecursionDepth = 0;
         }
 
         internal BindingState(ODataUriParserConfiguration configuration, List<ODataPathSegment> parsedSegments)
         {
             ExceptionUtils.CheckArgumentNotNull(configuration, "configuration");
             this.configuration = configuration;
-            this.BindingRecursionDepth = 0;
+            this.bindingRecursionDepth = 0;
             this.parsedSegments = parsedSegments;
+        }
+
+        /// <summary>
+        /// Constructs a <see cref="BindingState"/> with the given <paramref name="configuration"/> and an
+        /// initial recursion depth. Used when creating an inner binding context (e.g. for a nested
+        /// <c>$count($filter=...)</c>) so that the depth budget accumulated by the outer binder is
+        /// carried forward and the recursion limit is correctly enforced across nesting levels.
+        /// </summary>
+        /// <param name="configuration">The configuration used for binding.</param>
+        /// <param name="initialRecursionDepth">The recursion depth already consumed by the outer binder.</param>
+        internal BindingState(ODataUriParserConfiguration configuration, int initialRecursionDepth)
+        {
+            ExceptionUtils.CheckArgumentNotNull(configuration, nameof(configuration));
+            this.configuration = configuration;
+            this.bindingRecursionDepth = initialRecursionDepth;
         }
 
         /// <summary>
@@ -165,14 +180,24 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
+        /// The current binding recursion depth. Exposed so that nested binding contexts (e.g. for
+        /// <c>$count($filter=...)</c>) can inherit the accumulated depth and not inadvertently reset
+        /// the recursion counter to zero.
+        /// </summary>
+        internal int BindingRecursionDepth
+        {
+            get { return this.bindingRecursionDepth; }
+        }
+
+        /// <summary>
         /// Marks the fact that a recursive method was entered, and checks that the depth is allowed.
         /// </summary>
         internal void RecurseEnter()
         {
-            this.BindingRecursionDepth++;
+            this.bindingRecursionDepth++;
 
             // TODO: add BindingLimit, use uniform error message
-            if (this.BindingRecursionDepth > this.configuration.Settings.FilterLimit)
+            if (this.bindingRecursionDepth > this.configuration.Settings.FilterLimit)
             {
                 throw new ODataException(SRResources.UriQueryExpressionParser_TooDeep);
             }
@@ -183,9 +208,9 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         internal void RecurseLeave()
         {
-            Debug.Assert(this.BindingRecursionDepth > 0, "Decreasing recursion depth below zero, imbalanced recursion calls.");
+            Debug.Assert(this.bindingRecursionDepth > 0, "Decreasing recursion depth below zero, imbalanced recursion calls.");
 
-            this.BindingRecursionDepth--;
+            this.bindingRecursionDepth--;
         }
     }
 }

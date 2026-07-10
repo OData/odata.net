@@ -120,7 +120,21 @@ namespace Microsoft.OData.UriParser
             this.lexer.NextToken();
             string filterText = UriParserHelper.ReadQueryOption(this.lexer);
 
-            UriQueryExpressionParser filterParser = new UriQueryExpressionParser(ODataUriParserSettings.DefaultFilterLimit, this.UriQueryExpressionParser.EnableCaseInsensitiveBuiltinIdentifier);
+            // Propagate the remaining depth budget from the outer parser rather than hard-coding
+            // DefaultFilterLimit. Without this, each nested $count($filter=...) level would reset
+            // recursionDepth to 0, meaning the configured FilterLimit would not be enforced across
+            // nesting levels. By propagating the remaining budget the total recursion depth is
+            // correctly bounded by the configured FilterLimit.
+            int remainingDepth = this.UriQueryExpressionParser.MaxDepth - this.UriQueryExpressionParser.CurrentRecursionDepth;
+            if (remainingDepth <= 0)
+            {
+                throw new ODataException(SRResources.UriQueryExpressionParser_TooDeep);
+            }
+
+            UriQueryExpressionParser filterParser = new UriQueryExpressionParser(
+                remainingDepth,
+                this.UriQueryExpressionParser.EnableCaseInsensitiveBuiltinIdentifier,
+                this.UriQueryExpressionParser.EnableNoDollarQueryOptions);
             return filterParser.ParseFilter(filterText);
         }
 
