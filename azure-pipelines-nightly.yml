@@ -30,7 +30,9 @@ variables:
   value: none
 - name: runCodesignValidationInjection
   value: false
-- group: OData-ESRP-CodeSigning
+- group: OData-Shared
+- name: AZURE_ARTIFACTS_FEED
+  value: "$(ODataFeed)"
 
 extends:
   template: v1/1ES.Official.PipelineTemplate.yml@1ESPipelineTemplates
@@ -100,6 +102,14 @@ extends:
               packagesToPush: $(Build.ArtifactStagingDirectory)\Nuget-Release\*Nightly*.nupkg
               nuGetFeedType: external
               publishFeedCredentials: 'MyGet.org - ODL Feed'
+            - output: nuget
+              displayName: 'NuGet push - Packages to Internal Feed'
+              packageParentPath: '$(Build.ArtifactStagingDirectory)\Nuget-Release'
+              packagesToPush: $(Build.ArtifactStagingDirectory)\Nuget-Release\*.nupkg
+              nuGetFeedType: internal
+              publishVstsFeed: $(ODataPublishFeed)
+              allowPackageConflicts: true
+              publishPackageMetadata: true
         steps:
           - template: /nightly.yml@self
 
