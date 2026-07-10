@@ -1,3 +1,6 @@
+override Microsoft.OData.Client.HttpClientRequestMessage.GetResponseAsync(System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Microsoft.OData.IODataResponseMessage>
+virtual Microsoft.OData.Client.DataServiceClientRequestMessage.GetResponseAsync(System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Microsoft.OData.IODataResponseMessage>
+virtual Microsoft.OData.Client.DataServiceQuery<TElement>.EnumerateAllPagesAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Collections.Generic.IAsyncEnumerable<TElement>
 abstract Microsoft.OData.Client.DataServiceClientRequestMessage.Url.set -> void
 Microsoft.OData.Client.DataServiceClientRequestMessageArgs.DataServiceClientRequestMessageArgs(string method, System.Uri requestUri, bool usePostTunneling, System.Collections.Generic.IDictionary<string, string> headers) -> void
 Microsoft.OData.Client.DataServiceClientRequestMessageArgs.DataServiceClientRequestMessageArgs(string method, System.Uri requestUri, bool usePostTunneling, System.Collections.Generic.IDictionary<string, string> headers, System.Net.Http.IHttpClientFactory httpClientFactory) -> void
