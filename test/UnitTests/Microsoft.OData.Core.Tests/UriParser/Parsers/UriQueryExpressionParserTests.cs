@@ -881,6 +881,64 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             Assert.NotNull(term.ExpandOption);
         }
 
+        #region ParseAggregateExpression depth limit
+
+        [Fact]
+        public void ParseAggregateExpressionExceedingDepthLimitShouldThrow()
+        {
+            // Create a parser with a very low aggregate depth limit
+            var parser = new UriQueryExpressionParser(50) { MaxAggregateDepth = 2 };
+
+            // Build a deeply nested entity-set aggregate: aggregate(Products(Items(Price with sum as Total)))
+            // This has 3 levels of nesting which exceeds the limit of 2
+            string apply = "aggregate(Products(Items(Price with sum as Total)))";
+
+            Action parse = () => parser.ParseApply(apply);
+            parse.Throws<ODataException>(Error.Format(SRResources.UriQueryExpressionParser_AggregateExpressionDepthLimitExceeded, 2));
+        }
+
+        [Fact]
+        public void ParseAggregateExpressionWithinDepthLimitShouldSucceed()
+        {
+            // Create a parser with aggregate depth limit of 2
+            var parser = new UriQueryExpressionParser(50) { MaxAggregateDepth = 2 };
+
+            // A single aggregate expression should succeed (depth = 1)
+            string apply = "aggregate(UnitPrice with sum as TotalPrice)";
+
+            IEnumerable<QueryToken> result = parser.ParseApply(apply);
+            Assert.NotNull(result);
+            Assert.Single(result);
+        }
+
+        [Fact]
+        public void ParseAggregateExpressionWithDefaultParserShouldSucceedForShallowExpression()
+        {
+            // Default parser should have the default aggregate limit (100)
+            var parser = new UriQueryExpressionParser(50);
+
+            // A single aggregate expression should succeed with default limits
+            string apply = "aggregate(UnitPrice with sum as TotalPrice)";
+
+            IEnumerable<QueryToken> result = parser.ParseApply(apply);
+            Assert.NotNull(result);
+            Assert.Single(result);
+        }
+
+        [Fact]
+        public void ParseAggregateExpressionWithDepthLimitOfZeroShouldThrowImmediately()
+        {
+            // A limit of 0 should reject even the simplest aggregate
+            var parser = new UriQueryExpressionParser(50) { MaxAggregateDepth = 0 };
+
+            string apply = "aggregate(UnitPrice with sum as TotalPrice)";
+
+            Action parse = () => parser.ParseApply(apply);
+            parse.Throws<ODataException>(Error.Format(SRResources.UriQueryExpressionParser_AggregateExpressionDepthLimitExceeded, 0));
+        }
+
+        #endregion
+
         /// <summary>
         /// Builds a nested expand $apply string of the given depth.
         /// The innermost level uses filter(true) as required by the parser.

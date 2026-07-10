@@ -2307,7 +2307,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         [Fact]
         public void ApplyAggregateCollectionPropertyTreatedAsOpenPropertyInSelect()
         {
-            string customFunctionName = "NS.UnionDate";
+            string customFunctionName = "NS.UnionDateSelectExpand";
             try
             {
                 var argument = EdmCoreModel.GetCollection(EdmCoreModel.Instance.GetDate(/*isNullable*/false));
