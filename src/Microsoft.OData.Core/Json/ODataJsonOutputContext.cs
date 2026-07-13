@@ -8,6 +8,7 @@ namespace Microsoft.OData.Json
 {
     #region Namespaces
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
@@ -116,6 +117,10 @@ namespace Microsoft.OData.Json
             bool alwaysAddTypeAnnotationsForDerivedTypes = messageWriterSettings.AlwaysAddTypeAnnotationsForDerivedTypes;
             this.metadataLevel = JsonMetadataLevel.Create(messageInfo.MediaType, metadataDocumentUri, alwaysAddTypeAnnotationsForDerivedTypes, this.Model, this.WritingResponse);
             this.propertyCacheHandler = new PropertyCacheHandler();
+
+            // Write OData headers if message is available
+            // This enables the new serializer to write headers when created directly (not through ODataMessageWriter)
+            this.WriteODataHeaders(messageInfo, messageWriterSettings);
         }
 
         /// <summary>
@@ -1180,6 +1185,89 @@ namespace Microsoft.OData.Json
             ODataJsonEntityReferenceLinkSerializer jsonEntityReferenceLinkSerializer = new ODataJsonEntityReferenceLinkSerializer(this);
             await jsonEntityReferenceLinkSerializer.WriteEntityReferenceLinkAsync(link)
                 .ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Writes OData-specific headers (OData-Version and Content-Type) to the message if available.
+        /// This method enables the new serializer to write headers when the output context is created directly.
+        /// </summary>
+        /// <param name="messageInfo">The message info containing the optional message wrapper.</param>
+        /// <param name="messageWriterSettings">The writer settings containing version and other configuration.</param>
+        private void WriteODataHeaders(ODataMessageInfo messageInfo, ODataMessageWriterSettings messageWriterSettings)
+        {
+            // Only write headers if message is available
+            // Message is null when output context is created for internal use (e.g., URI conversion)
+            if (messageInfo.Message == null)
+            {
+                return;
+            }
+
+            ODataMessage message = messageInfo.Message;
+
+            // Write OData-Version header based on settings
+            if (messageWriterSettings.Version.HasValue)
+            {
+                string odataVersionString = ODataUtils.ODataVersionToString(messageWriterSettings.Version.Value);
+                message.SetHeader(ODataConstants.ODataVersionHeader, odataVersionString);
+            }
+
+            // Write Content-Type header
+            // Construct the content type from the media type, encoding, and additional parameters
+            if (messageInfo.MediaType != null)
+            {
+                string contentType = this.BuildContentTypeHeader(messageInfo.MediaType, messageInfo.Encoding);
+                message.SetHeader(ODataConstants.ContentTypeHeader, contentType);
+            }
+        }
+
+        /// <summary>
+        /// Builds the Content-Type header value from media type and encoding.
+        /// </summary>
+        /// <param name="mediaType">The media type.</param>
+        /// <param name="encoding">The encoding.</param>
+        /// <returns>The content type string for the header.</returns>
+        private static string BuildContentTypeHeader(ODataMediaType mediaType, Encoding encoding)
+        {
+            Debug.Assert(mediaType != null, "mediaType != null");
+
+            // Initialize with estimated capacity to reduce allocations
+            // Typical: "application/json" (16) + parameters (~50) = ~70 chars
+            StringBuilder contentType = new StringBuilder(70);
+            contentType.Append(mediaType.Type);
+            contentType.Append('/');
+            contentType.Append(mediaType.SubType);
+
+            bool hasCharset = false;
+
+            // Add parameters and check for charset in a single pass
+            if (mediaType.Parameters != null)
+            {
+                foreach (KeyValuePair<string, string> parameter in mediaType.Parameters)
+                {
+                    contentType.Append(';');
+                    contentType.Append(parameter.Key);
+                    contentType.Append('=');
+                    // Parameter values in media types are already validated and escaped by ODataMediaType
+                    contentType.Append(parameter.Value);
+
+                    if (string.Equals(parameter.Key, ODataConstants.Charset, StringComparison.OrdinalIgnoreCase))
+                    {
+                        hasCharset = true;
+                    }
+                }
+            }
+
+            // Add charset parameter if encoding is specified and not already present
+            if (encoding != null && !hasCharset)
+            {
+                contentType.Append(';');
+                contentType.Append(ODataConstants.Charset);
+                contentType.Append('=');
+                // WebName is safe - it's a well-known encoding name like "utf-8"
+                contentType.Append(encoding.WebName);
+            }
+
+            return contentType.ToString();
         }
     }
 }
