@@ -149,6 +149,36 @@
   <data name="WellKnownText_TooManyDimensions" xml:space="preserve">
     <value>The WellKnownTextReader is configured to allow only two dimensions, and a third dimension was encountered.</value>
   </data>
+  <data name="WellKnownBinary_NotSupportedSpatial" xml:space="preserve">
+    <value>The WKB writer: Spatial type "{0}" is not supported.</value>
+  </data>
+  <data name="WellKnownBinary_InvalidSubSpatial" xml:space="preserve">
+    <value>The WKB writer: Invalid to begin a "{0}" under "{1}", Details: "{2}".</value>
+  </data>
+  <data name="WellKnownBinary_InvalidBeginOrEndFigureOrAddLine" xml:space="preserve">
+    <value>The WKB writer: Invalid to "{0}" without specify the spatial type. Please call BeginGeometry(), or beginGeography() first.</value>
+  </data>
+  <data name="WellKnownBinary_InvalidBeginFigureOnSpatial" xml:space="preserve">
+    <value>The WKB writer: Invalid to begin a figure for spatial type "{0}".</value>
+  </data>
+  <data name="WellKnownBinary_InvalidBeginFigureWithoutEndingPrevious" xml:space="preserve">
+    <value>The WKB writer: Invalid to begin a new figure "{0}" without ending the previou figure.</value>
+  </data>
+  <data name="WellKnownBinary_InvalidAddLineTo" xml:space="preserve">
+    <value>The WKB writer: Invalid to AddLineTo for "{0}".{1}</value>
+  </data>
+  <data name="WellKnownBinary_InvalidEndFigure" xml:space="preserve">
+    <value>The WKB writer: Invalid to end figure on "{0}".{1}</value>
+  </data>
+  <data name="WellKnownBinary_InvalidEndGeo" xml:space="preserve">
+    <value>The WKB writer: Invalid to end spatial type "{0}".{1}</value>
+  </data>
+  <data name="WellKnownBinary_ByteLengthNotEnough" xml:space="preserve">
+    <value>The WKB reader is reading a "{0}" value with "{1}" bytes expected but only get "{2}" bytes.</value>
+  </data>
+  <data name="WellKnownBinary_UnknownByteOrder" xml:space="preserve">
+    <value>The WKB reader: the byte order '{0}' is unknown. It should be 0x00 (BigEndian) and 0x01 (LittleEndian).</value>
+  </data>
   <data name="Validator_SridMismatch" xml:space="preserve">
     <value>Invalid spatial data: An instance of spatial type can have only one unique CoordinateSystem for all of its coordinates.</value>
   </data>
