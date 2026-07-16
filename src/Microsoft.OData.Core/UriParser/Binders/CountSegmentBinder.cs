@@ -55,7 +55,10 @@ namespace Microsoft.OData.UriParser
             FilterClause filterClause = null;
             SearchClause searchClause = null;
 
-            BindingState innerBindingState = new BindingState(state.Configuration);            
+            // Initialise the inner binding state with the outer state's current recursion depth so
+            // that the total binding depth across all nested $count($filter=...) levels is bounded
+            // by the configured FilterLimit.
+            BindingState innerBindingState = new BindingState(state.Configuration, state.BindingRecursionDepth);
             innerBindingState.ImplicitRangeVariable = NodeFactory.CreateParameterNode(ExpressionConstants.It, node);
             MetadataBinder binder = new MetadataBinder(innerBindingState);
 

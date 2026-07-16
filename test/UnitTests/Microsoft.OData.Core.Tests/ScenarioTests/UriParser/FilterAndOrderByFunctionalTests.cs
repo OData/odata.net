@@ -477,6 +477,87 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Fact]
+        public void NestedCountFilterRespectsConfiguredFilterLimit()
+        {
+            // The expression nests $count($filter=...) three levels deep:
+            //
+            //   MyFriendsDogs/$count($filter=
+            //     MyFriendsDogs/$count($filter=
+            //       MyFriendsDogs/$count($filter=true) gt 0
+            //     ) gt 0
+            //   ) gt 0
+            //
+            // With FilterLimit=3 the parser exhausts its depth budget on the third nesting level
+            // and must throw ODataException rather than silently succeeding or crashing.
+            string filter =
+                "MyFriendsDogs/$count($filter=" +
+                    "MyFriendsDogs/$count($filter=" +
+                        "MyFriendsDogs/$count($filter=true) gt 0" +
+                    ") gt 0" +
+                ") gt 0";
+
+            var parser = new ODataQueryOptionParser(
+                HardCodedTestModel.TestModel,
+                HardCodedTestModel.GetPersonType(),
+                HardCodedTestModel.GetPeopleSet(),
+                new Dictionary<string, string> { { "$filter", filter } })
+            {
+                Settings = { FilterLimit = 3 }
+            };
+
+            Action act = () => parser.ParseFilter();
+            act.Throws<ODataException>(SRResources.UriQueryExpressionParser_TooDeep);
+        }
+
+        [Fact]
+        public void CountFilterWithinFilterLimitSucceeds()
+        {
+            // Verify that a valid $count($filter=...) expression parses successfully after the fix.
+            // This ensures the change to propagate the remaining depth budget does not break the
+            // happy path for a single level of $count($filter=...).
+            string filter = "MyFriendsDogs/$count($filter=Color eq 'Brown') gt 1";
+
+            var parser = new ODataQueryOptionParser(
+                HardCodedTestModel.TestModel,
+                HardCodedTestModel.GetPersonType(),
+                HardCodedTestModel.GetPeopleSet(),
+                new Dictionary<string, string> { { "$filter", filter } })
+            {
+                Settings = { FilterLimit = 20 }
+            };
+
+            FilterClause result = parser.ParseFilter();
+            Assert.NotNull(result);
+        }
+
+        [Fact]
+        public void DeeplyNestedCountFilterExceedingLimitThrows()
+        {
+            // Verify that a deeply nested $count($filter=...) expression — far beyond the
+            // configured FilterLimit — is rejected with a catchable ODataException.
+            // Each iteration wraps the previous expression in one more level, e.g.:
+            //   MyFriendsDogs/$count($filter=<previous>) gt 0
+            const int nestingDepth = 100;
+            string filter = "true";
+            for (int i = 0; i < nestingDepth; i++)
+            {
+                filter = $"MyFriendsDogs/$count($filter={filter}) gt 0";
+            }
+
+            var parser = new ODataQueryOptionParser(
+                HardCodedTestModel.TestModel,
+                HardCodedTestModel.GetPersonType(),
+                HardCodedTestModel.GetPeopleSet(),
+                new Dictionary<string, string> { { "$filter", filter } })
+            {
+                Settings = { FilterLimit = 10 }
+            };
+
+            Action act = () => parser.ParseFilter();
+            act.Throws<ODataException>(SRResources.UriQueryExpressionParser_TooDeep);
+        }
+
+        [Fact]
         public void CompareComplexWithNull()
         {
             var filter = ParseFilter("MyAddress eq null", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());

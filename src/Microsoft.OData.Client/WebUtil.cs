@@ -90,7 +90,7 @@ namespace Microsoft.OData.Client
         /// <summary>Asynchronously copy from one stream to another.</summary>
         /// <param name="input">Input stream to read from.</param>
         /// <param name="output">Output stream to write to.</param>
-        /// <param name="buffer">Buffer to use for copying. Must be non-null and non-empty.</param>
+        /// <param name="buffer">Buffer to use for copying; must be non-null and non-empty. The caller owns the buffer lifecycle to allow reuse across calls.</param>
         /// <param name="cancellationToken">Cancellation token to observe.</param>
         /// <returns>
         /// A task that represents the asynchronous copy operation.

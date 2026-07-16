@@ -33,6 +33,8 @@ variables:
 - group: OData-Shared
 - name: AZURE_ARTIFACTS_FEED
   value: "$(ODataFeed)"
+- name: PackagesToPush
+  value: $(Build.ArtifactStagingDirectory)\Nuget-Release\*Nightly*nupkg
 
 extends:
   template: v1/1ES.Official.PipelineTemplate.yml@1ESPipelineTemplates
@@ -105,7 +107,7 @@ extends:
             - output: nuget
               displayName: 'NuGet push - Packages to Internal Feed'
               packageParentPath: '$(Build.ArtifactStagingDirectory)\Nuget-Release'
-              packagesToPush: $(Build.ArtifactStagingDirectory)\Nuget-Release\*.nupkg
+              packagesToPush: '$(PackagesToPush)'
               nuGetFeedType: internal
               publishVstsFeed: $(ODataPublishFeed)
               allowPackageConflicts: true

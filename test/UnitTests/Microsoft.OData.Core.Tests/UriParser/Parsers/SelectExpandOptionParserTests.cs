@@ -290,6 +290,20 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             Assert.Equal(Error.Format(SRResources.ExpressionLexer_SyntaxError, 13, "($select=prop"), exception.Message);
         }
 
+        // Documents that $apply is NOT a valid option within $select.
+        // $apply is only supported within $expand (OData v4.01+), not within $select per any OData spec version.
+        [Fact]
+        public void ApplyOptionInSelectThrows()
+        {
+            // Arrange & Act
+            string optionsText = "($apply=aggregate(Amount with sum as Total))";
+            Action test = () => this.ParseSelectOptions(optionsText);
+
+            // Assert
+            ODataException exception = Assert.Throws<ODataException>(test);
+            Assert.Equal(Error.Format(SRResources.UriSelectParser_TermIsNotValid, optionsText), exception.Message);
+        }
+
         private SelectTermToken ParseSelectOptions(string optionsText, int maxDepth = 100)
         {
             PathSegmentToken pathToken = new NonSystemToken("Property", null, null);
@@ -625,6 +639,76 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             aggregateExpressionToken.Expression.ShouldBeEndPathToken("Amount");
         }
 
+        // for example: $expand=Orders($apply=expand(Customer, filter(Active eq true)))
+        // Documents that the expand() transformation (OData Aggregation Extension) can appear within $apply
+        // which itself is within $expand. This is distinct from the $expand query option — expand() is a
+        // set transformation that applies filtering while traversing a navigation property.
+        [Fact]
+        public void NestedExpandTransformationInApplyWithinExpandIsAllowed()
+        {
+            // Arrange & Act
+            ExpandTermToken expandTerm = this.ParseExpandOptions("($apply=expand(Customer, filter(Active eq true)))");
+
+            // Assert
+            Assert.NotNull(expandTerm);
+            Assert.NotNull(expandTerm.ApplyOptions);
+
+            QueryToken token = Assert.Single(expandTerm.ApplyOptions);
+            ExpandToken expand = Assert.IsType<ExpandToken>(token);
+
+            ExpandTermToken innerTerm = Assert.Single(expand.ExpandTerms);
+            Assert.Equal("Customer", innerTerm.PathToNavigationProp.Identifier);
+            Assert.NotNull(innerTerm.FilterOption);
+        }
+
+        // for example: $expand=Sales($apply=groupby((Region));$select=Region)
+        // Documents that $select (OData v4.0 core) and $apply (OData v4.01 / Aggregation Extension)
+        // can coexist within the same $expand option set.
+        [Fact]
+        public void ExpandWithSelectOptionAndApplyTransformationIsAllowed()
+        {
+            // Arrange & Act
+            ExpandTermToken expandTerm = this.ParseExpandOptions("($apply=groupby((Region));$select=Region)");
+
+            // Assert
+            Assert.NotNull(expandTerm);
+            Assert.NotNull(expandTerm.ApplyOptions);
+            Assert.NotNull(expandTerm.SelectOption);
+
+            QueryToken token = Assert.Single(expandTerm.ApplyOptions);
+            GroupByToken groupBy = Assert.IsType<GroupByToken>(token);
+            Assert.Single(groupBy.Properties);
+
+            SelectTermToken[] selectTerms = expandTerm.SelectOption.SelectTerms.ToArray();
+            Assert.Single(selectTerms);
+            selectTerms[0].PathToProperty.ShouldBeNonSystemToken("Region");
+        }
+
+        // for example: $expand=Orders($expand=Customer;$apply=aggregate(Amount with sum as Total))
+        // Documents that the nested $expand query option (OData v4.0 core) and $apply transformation
+        // (OData v4.01 / Aggregation Extension) can coexist within the same $expand option set.
+        [Fact]
+        public void ExpandWithNestedExpandOptionAndApplyTransformationIsAllowed()
+        {
+            // Arrange & Act
+            ExpandTermToken expandTerm = this.ParseExpandOptions("($expand=Customer;$apply=aggregate(Amount with sum as Total))");
+
+            // Assert
+            Assert.NotNull(expandTerm);
+            Assert.NotNull(expandTerm.ExpandOption);
+            Assert.NotNull(expandTerm.ApplyOptions);
+
+            ExpandTermToken innerExpandTerm = Assert.Single(expandTerm.ExpandOption.ExpandTerms);
+            innerExpandTerm.PathToNavigationProp.ShouldBeNonSystemToken("Customer");
+
+            QueryToken applyToken = Assert.Single(expandTerm.ApplyOptions);
+            AggregateToken aggregate = Assert.IsType<AggregateToken>(applyToken);
+            AggregateExpressionToken aggregateExpressionToken = Assert.IsType<AggregateExpressionToken>(Assert.Single(aggregate.AggregateExpressions));
+            Assert.Equal("Total", aggregateExpressionToken.Alias);
+            Assert.Equal(AggregationMethod.Sum, aggregateExpressionToken.Method);
+            aggregateExpressionToken.Expression.ShouldBeEndPathToken("Amount");
+        }
+
         [Fact]
         public void NestedExpandsInExpandAreAllowed()
         {
@@ -735,7 +819,8 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             {
                 MaxFilterDepth = 9,
                 MaxSearchDepth = 9,
-                MaxOrderByDepth = 9
+                MaxOrderByDepth = 9,
+                MaxSelectExpandDepth = maxDepth
             };
 
             return optionParser.BuildExpandTermToken(pathToken, optionsText).ElementAt(0);
