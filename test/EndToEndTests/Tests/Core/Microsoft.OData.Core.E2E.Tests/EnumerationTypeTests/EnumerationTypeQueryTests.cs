@@ -280,7 +280,7 @@ public class EnumerationTypeQueryTests : EndToEndTestBase<EnumerationTypeQueryTe
         Assert.Equal(8, entity2["ProductID"]?.Value);
         Assert.Equal("Car", entity2["Name"]?.Value);
         Assert.Equal("Red", (entity2["SkinColor"]?.Value as ODataEnumValue)?.Value);
-        Assert.Equal("ReadWrite, Execute", (entity2["UserAccess"]?.Value as ODataEnumValue)?.Value);
+        Assert.Equal("Read, Write, ReadWrite, Execute", (entity2["UserAccess"]?.Value as ODataEnumValue)?.Value);
 
         var entity3 = entries[3].Properties.ToDictionary(p => p.Name, p => p as ODataProperty);
         Assert.Equal(9, entity3["ProductID"]?.Value);
@@ -366,11 +366,11 @@ public class EnumerationTypeQueryTests : EndToEndTestBase<EnumerationTypeQueryTe
     [InlineData("UserAccess in ('Read', 'ReadWrite','Execute')", new object[] { AccessLevel.Read, AccessLevel.ReadWrite, AccessLevel.Read })]
     [InlineData("UserAccess in (Microsoft.OData.E2E.TestCommon.Common.Server.Default.AccessLevel'Read', Microsoft.OData.E2E.TestCommon.Common.Server.Default.AccessLevel'ReadWrite')", new object[] { AccessLevel.Read, AccessLevel.ReadWrite, AccessLevel.Read })]
     [InlineData("UserAccess in (   Microsoft.OData.E2E.TestCommon.Common.Server.Default.AccessLevel'Read',   Microsoft.OData.E2E.TestCommon.Common.Server.Default.AccessLevel'ReadWrite')", new object[] { AccessLevel.Read, AccessLevel.ReadWrite, AccessLevel.Read })]
-    [InlineData("UserAccess in ('Read', 'Read, Write, Execute','Execute')", new object[] { AccessLevel.Read, AccessLevel.ReadWrite | AccessLevel.Execute, AccessLevel.Read })]
-    [InlineData("UserAccess in ('Read', 'Read, Write,    Execute','Execute')", new object[] { AccessLevel.Read, AccessLevel.ReadWrite | AccessLevel.Execute, AccessLevel.Read })]
-    [InlineData("UserAccess in ('None', 'ReadWrite, Execute','Execute')", new object[] { AccessLevel.None, AccessLevel.ReadWrite | AccessLevel.Execute })]
-    [InlineData("UserAccess in ('None', '  ReadWrite, Execute',  'Execute')", new object[] { AccessLevel.None, AccessLevel.ReadWrite | AccessLevel.Execute })]
-    [InlineData("UserAccess in ('Read', 'ReadWrite, Execute')", new object[] { AccessLevel.Read, AccessLevel.ReadWrite | AccessLevel.Execute, AccessLevel.Read })]
+    [InlineData("UserAccess in ('Read', 'Read, Write, Execute','Execute')", new object[] { "Read", "Read, Write, ReadWrite, Execute", "Read" })]
+    [InlineData("UserAccess in ('Read', 'Read, Write,    Execute','Execute')", new object[] { "Read", "Read, Write, ReadWrite, Execute", "Read" })]
+    [InlineData("UserAccess in ('None', 'ReadWrite, Execute','Execute')", new object[] { "None", "Read, Write, ReadWrite, Execute" })]
+    [InlineData("UserAccess in ('None', '  ReadWrite, Execute',  'Execute')", new object[] { "None", "Read, Write, ReadWrite, Execute" })]
+    [InlineData("UserAccess in ('Read', 'ReadWrite, Execute')", new object[] { "Read", "Read, Write, ReadWrite, Execute", "Read" })]
     public async Task QueryFlagsEnumAndVerifyResults_WithInOperator(string filter, object[] expectedUserAccess)
     {
         // Arrange
@@ -435,7 +435,7 @@ public class EnumerationTypeQueryTests : EndToEndTestBase<EnumerationTypeQueryTe
     public async Task QueryFlagsEnumAndVerifyResults_InOperator_WorksWithDoubleQuotes()
     {
         var filter = @"UserAccess in (""None"", ""  ReadWrite, Execute"",  ""Execute"")";
-        var expectedUserAccess = new object[] { AccessLevel.None, AccessLevel.ReadWrite | AccessLevel.Execute };
+        var expectedUserAccess = new object[] { "None", "Read, Write, ReadWrite, Execute" };
 
         var queryText = $"Products?$filter={filter}";
         List<ODataResource> entries = await TestsHelper.QueryResourceSetsAsync(queryText, MimeTypeODataParameterMinimalMetadata);
