@@ -7,10 +7,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.OData.UriParser;
-using Microsoft.OData.Edm;
-using Xunit;
 using Microsoft.OData.Core;
+using Microsoft.OData.Edm;
+using Microsoft.OData.UriParser;
+using Xunit;
 
 namespace Microsoft.OData.Tests.UriParser.Binders
 {
@@ -114,11 +114,12 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         public void TypePromoteArguments()
         {
             var signature = this.GetSingleSubstringFunctionSignatureForTest();
-            List<QueryNode> nodes = new List<QueryNode>()
-                                        {
-                                            new ConstantNode("Hello"),
-                                            new ConstantNode(3)
-                                        };
+            var nodes = new (QueryNode Node, IEdmTypeReference TypeReference)[]
+            {
+                (new ConstantNode("Hello"), EdmCoreModel.Instance.GetString(false)),
+                (new ConstantNode(3), EdmCoreModel.Instance.GetInt32(false))
+            };
+
             FunctionCallBinder.TypePromoteArguments(signature, nodes);
             AssertSignatureTypesMatchArguments(signature, nodes);
         }
@@ -127,14 +128,15 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         public void TypePromoteArgumentsWithNullLiteralExpectConvert()
         {
             var signature = this.GetSingleSubstringFunctionSignatureForTest();
-            List<QueryNode> nodes = new List<QueryNode>()
-                                        {
-                                            new ConstantNode(null),
-                                            new ConstantNode(3)
-                                        };
+            var nodes = new (QueryNode Node, IEdmTypeReference TypeReference)[]
+            {
+                (new ConstantNode(null), null),
+                (new ConstantNode(3), EdmCoreModel.Instance.GetInt32(false))
+            };
+
             FunctionCallBinder.TypePromoteArguments(signature, nodes);
-            nodes[0].ShouldBeConvertQueryNode(EdmPrimitiveTypeKind.String).Source.ShouldBeConstantQueryNode<object>(null);
-            nodes[1].ShouldBeConstantQueryNode(3);
+            nodes[0].Node.ShouldBeConvertQueryNode(EdmPrimitiveTypeKind.String).Source.ShouldBeConstantQueryNode<object>(null);
+            nodes[1].Node.ShouldBeConstantQueryNode(3);
 
             AssertSignatureTypesMatchArguments(signature, nodes);
         }
@@ -143,14 +145,15 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         public void TypePromoteAllArgumentsAreNullLiteralsExpectConvert()
         {
             var signature = this.GetSingleSubstringFunctionSignatureForTest();
-            List<QueryNode> nodes = new List<QueryNode>()
-                                        {
-                                            new ConstantNode(null),
-                                            new ConstantNode(null)
-                                        };
+            var nodes = new (QueryNode Node, IEdmTypeReference TypeReference)[]
+            {
+                (new ConstantNode(null), null),
+                (new ConstantNode(null), null)
+            };
+
             FunctionCallBinder.TypePromoteArguments(signature, nodes);
-            nodes[0].ShouldBeConvertQueryNode(EdmPrimitiveTypeKind.String).Source.ShouldBeConstantQueryNode<object>(null);
-            nodes[1].ShouldBeConvertQueryNode(EdmPrimitiveTypeKind.Int32).Source.ShouldBeConstantQueryNode<object>(null);
+            nodes[0].Node.ShouldBeConvertQueryNode(EdmPrimitiveTypeKind.String).Source.ShouldBeConstantQueryNode<object>(null);
+            nodes[1].Node.ShouldBeConvertQueryNode(EdmPrimitiveTypeKind.Int32).Source.ShouldBeConstantQueryNode<object>(null);
 
             AssertSignatureTypesMatchArguments(signature, nodes);
         }
@@ -159,15 +162,16 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         public void TypePromoteArgumentsWithOpenPropertyExpectConvert()
         {
             var signature = this.GetSingleSubstringFunctionSignatureForTest();
-            List<QueryNode> nodes = new List<QueryNode>()
-                                        {
-                                            new SingleValueOpenPropertyAccessNode(new ConstantNode(null), OpenPropertyName),
-                                            new ConstantNode(3)
-                                        };
+            var nodes = new (QueryNode Node, IEdmTypeReference TypeReference)[]
+            {
+                (new SingleValueOpenPropertyAccessNode(new ConstantNode(null), OpenPropertyName), null),
+                (new ConstantNode(3), EdmCoreModel.Instance.GetInt32(false))
+            };
+
             FunctionCallBinder.TypePromoteArguments(signature, nodes);
-            nodes[0].ShouldBeConvertQueryNode(EdmPrimitiveTypeKind.String)
+            nodes[0].Node.ShouldBeConvertQueryNode(EdmPrimitiveTypeKind.String)
                     .Source.ShouldBeSingleValueOpenPropertyAccessQueryNode(OpenPropertyName);
-            nodes[1].ShouldBeConstantQueryNode(3);
+            nodes[1].Node.ShouldBeConstantQueryNode(3);
 
             AssertSignatureTypesMatchArguments(signature, nodes);
         }
@@ -176,15 +180,16 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         public void TypePromoteAllArgumentsAreOpenPropertiesExpectConvert()
         {
             var signature = this.GetSingleSubstringFunctionSignatureForTest();
-            List<QueryNode> nodes = new List<QueryNode>()
-                                        {
-                                            new SingleValueOpenPropertyAccessNode(new ConstantNode(null), OpenPropertyName),
-                                            new SingleValueOpenPropertyAccessNode(new ConstantNode(null), OpenPropertyName + "1")
-                                        };
+            var nodes = new (QueryNode Node, IEdmTypeReference TypeReference)[]
+            {
+                (new SingleValueOpenPropertyAccessNode(new ConstantNode(null), OpenPropertyName), null),
+                (new SingleValueOpenPropertyAccessNode(new ConstantNode(null), OpenPropertyName + "1"), null)
+            };
+
             FunctionCallBinder.TypePromoteArguments(signature, nodes);
-            nodes[0].ShouldBeConvertQueryNode(EdmPrimitiveTypeKind.String)
+            nodes[0].Node.ShouldBeConvertQueryNode(EdmPrimitiveTypeKind.String)
                     .Source.ShouldBeSingleValueOpenPropertyAccessQueryNode(OpenPropertyName);
-            nodes[1].ShouldBeConvertQueryNode(EdmPrimitiveTypeKind.Int32)
+            nodes[1].Node.ShouldBeConvertQueryNode(EdmPrimitiveTypeKind.Int32)
                     .Source.ShouldBeSingleValueOpenPropertyAccessQueryNode(OpenPropertyName + "1");
 
             AssertSignatureTypesMatchArguments(signature, nodes);
@@ -194,15 +199,16 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         public void TypePromoteArgumentsAreNullAndOpenPropertiesExpectConvert()
         {
             var signature = this.GetSingleSubstringFunctionSignatureForTest();
-            List<QueryNode> nodes = new List<QueryNode>()
-                                        {
-                                            new SingleValueOpenPropertyAccessNode(new ConstantNode(null), OpenPropertyName),
-                                            new ConstantNode(null)
-                                        };
+            var nodes = new (QueryNode Node, IEdmTypeReference TypeReference)[]
+            {
+                (new SingleValueOpenPropertyAccessNode(new ConstantNode(null), OpenPropertyName), null),
+                (new ConstantNode(null), null)
+            };
+
             FunctionCallBinder.TypePromoteArguments(signature, nodes);
-            nodes[0].ShouldBeConvertQueryNode(EdmPrimitiveTypeKind.String)
+            nodes[0].Node.ShouldBeConvertQueryNode(EdmPrimitiveTypeKind.String)
                     .Source.ShouldBeSingleValueOpenPropertyAccessQueryNode(OpenPropertyName);
-            nodes[1].ShouldBeConvertQueryNode(EdmPrimitiveTypeKind.Int32)
+            nodes[1].Node.ShouldBeConvertQueryNode(EdmPrimitiveTypeKind.Int32)
                     .Source.ShouldBeConstantQueryNode<object>(null);
 
             AssertSignatureTypesMatchArguments(signature, nodes);
@@ -212,11 +218,12 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         public void TypePromoteArgumentsMismatchedTypes()
         {
             var signature = this.GetSingleSubstringFunctionSignatureForTest();
-            List<QueryNode> nodes = new List<QueryNode>()
-                                        {
-                                            new ConstantNode(3),
-                                            new ConstantNode("Hello"),
-                                        };
+            var nodes = new (QueryNode Node, IEdmTypeReference TypeReference)[]
+            {
+                (new ConstantNode(3), EdmCoreModel.Instance.GetInt32(false)),
+                (new ConstantNode("Hello"), EdmCoreModel.Instance.GetString(false)  ),
+            };
+
             Action a = () => FunctionCallBinder.TypePromoteArguments(signature, nodes);
             a.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_CannotConvertToType, "Edm.Int32", "Edm.String"));
         }
@@ -225,11 +232,12 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         public void TypePromoteArgumentsMismatchedTypeAndNull()
         {
             var signature = this.GetSingleSubstringFunctionSignatureForTest();
-            List<QueryNode> nodes = new List<QueryNode>()
-                                        {
-                                            new ConstantNode(null),
-                                            new ConstantNode("Hello")
-                                        };
+            var nodes = new (QueryNode Node, IEdmTypeReference TypeReference)[]
+            {
+                (new ConstantNode(null), null),
+                (new ConstantNode("Hello"), EdmCoreModel.Instance.GetString(false))
+            };
+
             Action a = () => FunctionCallBinder.TypePromoteArguments(signature, nodes);
             a.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_CannotConvertToType, "Edm.String", "Edm.Int32"));
         }
@@ -239,11 +247,12 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         public void TypePromoteArgumentsMismatchedTypeAndOpenProperty()
         {
             var signature = this.GetSingleSubstringFunctionSignatureForTest();
-            List<QueryNode> nodes = new List<QueryNode>()
-                                        {
-                                            new SingleValueOpenPropertyAccessNode(new ConstantNode(null), "SomeProperty"),
-                                            new ConstantNode("Hello")
-                                        };
+            var nodes = new (QueryNode Node, IEdmTypeReference TypeReference)[]
+            {
+                (new SingleValueOpenPropertyAccessNode(new ConstantNode(null), "SomeProperty"), null),
+                (new ConstantNode("Hello"), EdmCoreModel.Instance.GetString(false))
+            };
+
             Action a = () => FunctionCallBinder.TypePromoteArguments(signature, nodes);
             a.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_CannotConvertToType, "Edm.String", "Edm.Int32"));
         }
@@ -258,10 +267,11 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             FunctionSignatureWithReturnType signature =
                 new FunctionSignatureWithReturnType(EdmCoreModel.Instance.GetDouble(false), enumTypeRef);
 
-            List<QueryNode> nodes = new List<QueryNode>()
-                                        {
-                                            new ConstantNode("MyValue", "MyNS.MyName'MyValue'", enumTypeRef),
-                                        };
+            var nodes = new (QueryNode Node, IEdmTypeReference TypeReference)[]
+            {
+                (new ConstantNode("MyValue", "MyNS.MyName'MyValue'", enumTypeRef), enumTypeRef)
+            };
+
             FunctionCallBinder.TypePromoteArguments(signature, nodes);
             AssertSignatureTypesMatchArguments(signature, nodes);
         }
@@ -270,33 +280,20 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         [Fact]
         public void EnsureArgumentsAreSingleValue()
         {
-            List<QueryNode> argumentNodes =
-               new List<QueryNode>()
-                {
-                    new ConstantNode(new DateTimeOffset(2012, 11, 19, 1, 1, 1, 1, new TimeSpan(0, 1, 1, 0)))
-                };
-            var result = FunctionCallBinder.ValidateArgumentsAreSingleValue("year", argumentNodes);
-            Assert.Single(result);
-            Assert.Equal("Edm.DateTimeOffset", result[0].TypeReference.Definition.FullTypeName());
-        }
+            List<QueryNode> argumentNodes = new List<QueryNode>()
+            {
+                new ConstantNode(new DateTimeOffset(2012, 11, 19, 1, 1, 1, 1, new TimeSpan(0, 1, 1, 0)))
+            };
 
-        [Fact]
-        public void ShouldThrowWhenArgumentsAreNotSingleValue()
-        {
-            List<QueryNode> argumentNodes =
-                new List<QueryNode>()
-                {
-                    new CollectionNavigationNode(HardCodedTestModel.GetDogsSet(), HardCodedTestModel.GetDogMyPeopleNavProp(), new EdmPathExpression("MyDog"))
-                };
-
-            Action bind = () => FunctionCallBinder.ValidateArgumentsAreSingleValue("year", argumentNodes);
-            bind.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_FunctionArgumentNotSingleValue, "year"));
+            var result = FunctionCallBinder.ValidateArgumentNodes("year", argumentNodes);
+            var constantNode = Assert.IsType<ConstantNode>(Assert.Single(result).Node);
+            Assert.Equal("Edm.DateTimeOffset", constantNode.TypeReference.Definition.FullTypeName());
         }
 
         [Fact]
         public void EnsureArgumentsAreSingleValueNoArguments()
         {
-            var result = FunctionCallBinder.ValidateArgumentsAreSingleValue("year", new List<QueryNode>());
+            var result = FunctionCallBinder.ValidateArgumentNodes("year", new List<QueryNode>());
             Assert.Empty(result);
         }
 
@@ -304,19 +301,20 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         [Fact]
         public void MatchArgumentsToSignatureDuplicateSignature()
         {
-            List<QueryNode> argumentNodes =
-                new List<QueryNode>()
-                {
-                    new ConstantNode("grr" ),
-                    new ConstantNode("grr" )
-                };
             var nameSignatures = this.GetDuplicateIndexOfFunctionSignatureForTest();
 
             Action bind = () => FunctionCallBinder.MatchSignatureToUriFunction(
                 "IndexOf",
-                new SingleValueNode[] {
-                     new SingleValuePropertyAccessNode(new ConstantNode(null)/*parent*/, new EdmStructuralProperty(new EdmEntityType("MyNamespace", "MyEntityType"), "myPropertyName", argumentNodes[0].GetEdmTypeReference())),
-                     new SingleValuePropertyAccessNode(new ConstantNode(null)/*parent*/, new EdmStructuralProperty(new EdmEntityType("MyNamespace", "MyEntityType"), "myPropertyName", argumentNodes[1].GetEdmTypeReference()))},
+                new (QueryNode Node, IEdmTypeReference TypeReference)[] {
+                     (new SingleValuePropertyAccessNode(
+                         new ConstantNode(null)/*parent*/,
+                         new EdmStructuralProperty(new EdmEntityType("MyNamespace", "MyEntityType"), "myPropertyName", EdmCoreModel.Instance.GetString(false))),
+                         EdmCoreModel.Instance.GetString(false)),
+                     (new SingleValuePropertyAccessNode(
+                         new ConstantNode(null)/*parent*/,
+                         new EdmStructuralProperty(new EdmEntityType("MyNamespace", "MyEntityType"), "myPropertyName", EdmCoreModel.Instance.GetString(false))),
+                         EdmCoreModel.Instance.GetString(false))
+                },
                 nameSignatures);
 
             bind.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_NoApplicableFunctionFound,
@@ -327,17 +325,13 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         [Fact]
         public void MatchArgumentsToSignature()
         {
-            List<QueryNode> argumentNodes =
-                new List<QueryNode>()
-                {
-                    new ConstantNode(new DateTimeOffset(2012, 11, 19, 1, 1, 1, 1, new TimeSpan(0, 1, 1, 0)))
-                };
+            var argumentNodes = new (QueryNode Node, IEdmTypeReference TypeReference)[]
+            {
+                (new ConstantNode(new DateTimeOffset(2012, 11, 19, 1, 1, 1, 1, new TimeSpan(0, 1, 1, 0))), EdmCoreModel.Instance.GetDateTimeOffset(false))
+            };
             var signatures = this.GetHardCodedYearFunctionSignatureForTest();
 
-            var result = FunctionCallBinder.MatchSignatureToUriFunction(
-                "year",
-                argumentNodes.Select(s => (SingleValueNode)s).ToArray(),
-                signatures);
+            var result = FunctionCallBinder.MatchSignatureToUriFunction("year", argumentNodes, signatures);
 
             Assert.Equal("Edm.Int32", result.Value.ReturnType.FullName());
             Assert.Equal("Edm.DateTimeOffset", result.Value.ArgumentTypes[0].FullName());
@@ -346,16 +340,15 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         [Fact]
         public void MatchArgumentsToSignatureNoMatchEmpty()
         {
-            List<QueryNode> argumentNodes =
-                new List<QueryNode>()
-                {
-                    new ConstantNode(4)
-                };
-
             Action bind = () => FunctionCallBinder.MatchSignatureToUriFunction(
                 "year",
-                new SingleValueNode[] {
-                     new SingleValuePropertyAccessNode(new ConstantNode(null)/*parent*/, new EdmStructuralProperty(new EdmEntityType("MyNamespace", "MyEntityType"), "myPropertyName", argumentNodes[0].GetEdmTypeReference()))},
+                new (QueryNode Node, IEdmTypeReference TypeReference)[]
+                {
+                     (new SingleValuePropertyAccessNode(
+                         new ConstantNode(null)/*parent*/,
+                         new EdmStructuralProperty(new EdmEntityType("MyNamespace", "MyEntityType"), "myPropertyName", EdmCoreModel.Instance.GetInt32(false))),
+                         EdmCoreModel.Instance.GetInt32(false))
+                },
                 new List<KeyValuePair<string, FunctionSignatureWithReturnType>>());
 
             bind.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_NoApplicableFunctionFound,
@@ -366,16 +359,15 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         [Fact]
         public void MatchArgumentsToSignatureNoMatchContainsSignatures()
         {
-            List<QueryNode> argumentNodes =
-                new List<QueryNode>()
-                {
-                    new ConstantNode(4)
-                };
-
             Action bind = () => FunctionCallBinder.MatchSignatureToUriFunction(
                 "year",
-                new SingleValueNode[] {
-                     new SingleValuePropertyAccessNode(new ConstantNode(null)/*parent*/, new EdmStructuralProperty(new EdmEntityType("MyNamespace", "MyEntityType"), "myPropertyName", argumentNodes[0].GetEdmTypeReference()))},
+                new (QueryNode Node, IEdmTypeReference TypeReference)[]
+                {
+                     (new SingleValuePropertyAccessNode(
+                         new ConstantNode(null)/*parent*/,
+                         new EdmStructuralProperty(new EdmEntityType("MyNamespace", "MyEntityType"), "myPropertyName", EdmCoreModel.Instance.GetInt32(false))),
+                         EdmCoreModel.Instance.GetInt32(false))
+                },
                 this.GetHardCodedYearFunctionSignatureForTest());
 
             bind.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_NoApplicableFunctionFound,
@@ -390,9 +382,14 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         {
             var result = FunctionCallBinder.MatchSignatureToUriFunction(
                 "substring",
-                 new SingleValueNode[] {
-                     new SingleValuePropertyAccessNode(new ConstantNode(null)/*parent*/, new EdmStructuralProperty(new EdmEntityType("MyNamespace", "MyEntityType"), "myPropertyName", EdmCoreModel.Instance.GetString(true))),
-                     new SingleValueOpenPropertyAccessNode(new ConstantNode(null)/*parent*/, "myOpenPropertyname")}, // open property's TypeReference is null
+                 new (QueryNode Node, IEdmTypeReference TypeReference)[]
+                 {
+                     (new SingleValuePropertyAccessNode(
+                         new ConstantNode(null), /*parent*/
+                         new EdmStructuralProperty(new EdmEntityType("MyNamespace", "MyEntityType"), "myPropertyName", EdmCoreModel.Instance.GetString(true))),
+                         EdmCoreModel.Instance.GetString(true)),
+                     (new SingleValueOpenPropertyAccessNode(new ConstantNode(null)/*parent*/, "myOpenPropertyname"), null) // open property's TypeReference is null
+                 },
                  FunctionCallBinder.GetUriFunctionSignatures("substring"));
 
             FunctionSignatureWithReturnType sig = result.Value;
@@ -1396,6 +1393,268 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             }
         }
 
+        [Fact]
+        public void TypePromoteArguments_CollectionPropertyAccessNode()
+        {
+            var functionSignature = new FunctionSignatureWithReturnType(
+                EdmCoreModel.Instance.GetDecimal(false),
+                EdmCoreModel.GetCollection(EdmCoreModel.Instance.GetDecimal(false)));
+            var collectionType = new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetInt32(false)));
+            var overtimeHoursProperty = new EdmStructuralProperty(new EdmEntityType("NS", "Employee"), "OvertimeHours", collectionType);
+            var nodes = new (QueryNode Node, IEdmTypeReference TypeReference)[]
+            {
+                (new CollectionPropertyAccessNode(new ConstantNode(null), overtimeHoursProperty), collectionType)
+            };
+
+            FunctionCallBinder.TypePromoteArguments(functionSignature, nodes);
+            var collectionPropertyAccessNode = nodes[0].Node.ShouldBeCollectionPropertyAccessQueryNode(overtimeHoursProperty);
+            // Conversion should be implicit
+            Assert.True(collectionPropertyAccessNode.CollectionType.IsEquivalentTo(EdmCoreModel.GetCollection(EdmCoreModel.Instance.GetInt32(false))));
+            Assert.True(collectionPropertyAccessNode.ItemType.IsEquivalentTo(EdmCoreModel.Instance.GetInt32(false)));
+        }
+
+        [Fact]
+        public void TypePromoteArguments_CollectionConstantNode()
+        {
+            var functionSignature = new FunctionSignatureWithReturnType(
+                EdmCoreModel.Instance.GetInt64(false),
+                EdmCoreModel.GetCollection(EdmCoreModel.Instance.GetInt64(false)));
+            var collectionType = new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetInt32(false)));
+            var nodes = new (QueryNode Node, IEdmTypeReference TypeReference)[]
+            {
+                (new CollectionConstantNode(new List<object> { 1, 2, 3 }, "[1,2,3]", collectionType), collectionType)
+            };
+
+            FunctionCallBinder.TypePromoteArguments(functionSignature, nodes);
+            var collectionConstantNode = nodes[0].Node.ShouldBeCollectionConstantNode(EdmCoreModel.GetCollection(EdmCoreModel.Instance.GetInt64(false)));
+            Assert.Equal(3, collectionConstantNode.Collection.Count);
+            collectionConstantNode.Collection[0].ShouldBeConstantQueryNode(1L);
+            collectionConstantNode.Collection[1].ShouldBeConstantQueryNode(2L);
+            collectionConstantNode.Collection[2].ShouldBeConstantQueryNode(3L);
+        }
+
+        [Fact]
+        public void TypePromoteArguments_ConstantNodeToCollectionConstantNode()
+        {
+            var functionSignature = new FunctionSignatureWithReturnType(
+                EdmCoreModel.Instance.GetInt64(false),
+                EdmCoreModel.GetCollection(EdmCoreModel.Instance.GetInt64(false)));
+            var nodes = new (QueryNode Node, IEdmTypeReference TypeReference)[]
+            {
+                (new ConstantNode("[1,2,3]", "[1,2,3]"), EdmCoreModel.Instance.GetString(false))
+            };
+
+            FunctionCallBinder.TypePromoteArguments(functionSignature, nodes);
+            var collectionConstantNode = nodes[0].Node.ShouldBeCollectionConstantNode(EdmCoreModel.GetCollection(EdmCoreModel.Instance.GetInt64(false)));
+            Assert.Equal(3, collectionConstantNode.Collection.Count);
+            collectionConstantNode.Collection[0].ShouldBeConstantQueryNode(1L);
+            collectionConstantNode.Collection[1].ShouldBeConstantQueryNode(2L);
+            collectionConstantNode.Collection[2].ShouldBeConstantQueryNode(3L);
+        }
+
+        [Fact]
+        public void MatchSignatureToUriFunction_CollectionPropertyAccessNode()
+        {
+            var functionSignature = new FunctionSignatureWithReturnType(
+                EdmCoreModel.Instance.GetDecimal(false),
+                EdmCoreModel.GetCollection(EdmCoreModel.Instance.GetDecimal(false)));
+            var otherFunctionSignature = new FunctionSignatureWithReturnType(
+                EdmCoreModel.Instance.GetInt32(false),
+                EdmCoreModel.Instance.GetInt32(false));
+
+            var collectionType = new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetInt32(false)));
+            var overtimeHoursProperty = new EdmStructuralProperty(new EdmEntityType("NS", "Employee"), "OvertimeHours", collectionType);
+            var nodes = new (QueryNode Node, IEdmTypeReference TypeReference)[]
+            {
+                (new CollectionPropertyAccessNode(new ConstantNode(null), overtimeHoursProperty), collectionType)
+            };
+
+            var result = FunctionCallBinder.MatchSignatureToUriFunction(
+                "func1",
+                nodes,
+                new List<KeyValuePair<string, FunctionSignatureWithReturnType>>
+                {
+                    new KeyValuePair<string, FunctionSignatureWithReturnType>("func0", functionSignature),
+                    new KeyValuePair<string, FunctionSignatureWithReturnType>("func1", functionSignature),
+                    new KeyValuePair<string, FunctionSignatureWithReturnType>("func1", otherFunctionSignature),
+                    new KeyValuePair<string, FunctionSignatureWithReturnType>("func2", otherFunctionSignature)
+                });
+
+            Assert.Equal("func1", result.Key);
+            Assert.Same(functionSignature, result.Value);
+            Assert.Equal("Edm.Decimal", result.Value.ReturnType.FullName());
+            Assert.Single(result.Value.ArgumentTypes);
+            Assert.Equal("Collection(Edm.Decimal)", result.Value.ArgumentTypes[0].FullName());
+        }
+
+        [Fact]
+        public void MatchSignatureToUriFunction_CollectionPropertyAccessNode_SourceTypeMatchingTargetType()
+        {
+            var functionSignature = new FunctionSignatureWithReturnType(
+                EdmCoreModel.Instance.GetDecimal(false),
+                EdmCoreModel.GetCollection(EdmCoreModel.Instance.GetDecimal(false)));
+            var otherFunctionSignature = new FunctionSignatureWithReturnType(
+                EdmCoreModel.Instance.GetDecimal(false),
+                EdmCoreModel.Instance.GetDecimal(false));
+
+            var collectionType = new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetDecimal(false)));
+            var overtimeHoursProperty = new EdmStructuralProperty(new EdmEntityType("NS", "Employee"), "OvertimeHours", collectionType);
+            var nodes = new (QueryNode Node, IEdmTypeReference TypeReference)[]
+            {
+                (new CollectionPropertyAccessNode(new ConstantNode(null), overtimeHoursProperty), collectionType)
+            };
+
+            var result = FunctionCallBinder.MatchSignatureToUriFunction(
+                "func1",
+                nodes,
+                new List<KeyValuePair<string, FunctionSignatureWithReturnType>>
+                {
+                    new KeyValuePair<string, FunctionSignatureWithReturnType>("func0", functionSignature),
+                    new KeyValuePair<string, FunctionSignatureWithReturnType>("func1", functionSignature),
+                    new KeyValuePair<string, FunctionSignatureWithReturnType>("func1", otherFunctionSignature),
+                    new KeyValuePair<string, FunctionSignatureWithReturnType>("func2", otherFunctionSignature)
+                });
+
+            Assert.Equal("func1", result.Key);
+            Assert.Same(functionSignature, result.Value);
+            Assert.Equal("Edm.Decimal", result.Value.ReturnType.FullName());
+            Assert.Single(result.Value.ArgumentTypes);
+            Assert.Equal("Collection(Edm.Decimal)", result.Value.ArgumentTypes[0].FullName());
+        }
+
+        [Fact]
+        public void MatchSignatureToUriFunction_CollectionConstantNode()
+        {
+            var functionSignature = new FunctionSignatureWithReturnType(
+                EdmCoreModel.Instance.GetInt64(false),
+                EdmCoreModel.GetCollection(EdmCoreModel.Instance.GetInt64(false)));
+            var otherFunctionSignature = new FunctionSignatureWithReturnType(
+                EdmCoreModel.Instance.GetInt32(false),
+                EdmCoreModel.Instance.GetInt32(false));
+
+            var collectionType = new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetInt32(false)));
+            var nodes = new (QueryNode Node, IEdmTypeReference TypeReference)[]
+            {
+                (new CollectionConstantNode(new List<object> { 1, 2, 3 }, "[1,2,3]", collectionType), collectionType)
+            };
+
+            var result = FunctionCallBinder.MatchSignatureToUriFunction(
+                "func1",
+                nodes,
+                new List<KeyValuePair<string, FunctionSignatureWithReturnType>>
+                {
+                    new KeyValuePair<string, FunctionSignatureWithReturnType>("func0", functionSignature),
+                    new KeyValuePair<string, FunctionSignatureWithReturnType>("func1", functionSignature),
+                    new KeyValuePair<string, FunctionSignatureWithReturnType>("func1", otherFunctionSignature),
+                    new KeyValuePair<string, FunctionSignatureWithReturnType>("func2", otherFunctionSignature)
+                });
+
+            Assert.Equal("func1", result.Key);
+            Assert.Same(functionSignature, result.Value);
+            Assert.Equal("Edm.Int64", result.Value.ReturnType.FullName());
+            Assert.Single(result.Value.ArgumentTypes);
+            Assert.Equal("Collection(Edm.Int64)", result.Value.ArgumentTypes[0].FullName());
+        }
+
+        [Fact]
+        public void MatchSignatureToUriFunction_ConstantNodeToCollectionConstantNode()
+        {
+            var functionSignature = new FunctionSignatureWithReturnType(
+                EdmCoreModel.Instance.GetInt64(false),
+                EdmCoreModel.GetCollection(EdmCoreModel.Instance.GetInt64(false)));
+            var otherFunctionSignature = new FunctionSignatureWithReturnType(
+                EdmCoreModel.Instance.GetInt32(false),
+                EdmCoreModel.Instance.GetInt32(false));
+
+            var nodes = new (QueryNode Node, IEdmTypeReference TypeReference)[]
+            {
+                (new ConstantNode("[1,2,3]", "[1,2,3]"), EdmCoreModel.Instance.GetString(false))
+            };
+
+            var result = FunctionCallBinder.MatchSignatureToUriFunction(
+                "func1",
+                nodes,
+                new List<KeyValuePair<string, FunctionSignatureWithReturnType>>
+                {
+                    new KeyValuePair<string, FunctionSignatureWithReturnType>("func0", functionSignature),
+                    new KeyValuePair<string, FunctionSignatureWithReturnType>("func1", functionSignature),
+                    new KeyValuePair<string, FunctionSignatureWithReturnType>("func1", otherFunctionSignature),
+                    new KeyValuePair<string, FunctionSignatureWithReturnType>("func2", otherFunctionSignature)
+                });
+
+            Assert.Equal("func1", result.Key);
+            Assert.Same(functionSignature, result.Value);
+            Assert.Equal("Edm.Int64", result.Value.ReturnType.FullName());
+            Assert.Single(result.Value.ArgumentTypes);
+            Assert.Equal("Collection(Edm.Int64)", result.Value.ArgumentTypes[0].FullName());
+        }
+
+        [Fact]
+        public void MatchSignatureToUriFunction_ConstantNodeToCollectionConstantNode_Empty()
+        {
+            var functionSignature = new FunctionSignatureWithReturnType(
+                EdmCoreModel.Instance.GetInt64(false),
+                EdmCoreModel.GetCollection(EdmCoreModel.Instance.GetInt64(false)));
+            var otherFunctionSignature = new FunctionSignatureWithReturnType(
+                EdmCoreModel.Instance.GetInt32(false),
+                EdmCoreModel.Instance.GetInt32(false));
+
+            var nodes = new (QueryNode Node, IEdmTypeReference TypeReference)[]
+            {
+                (new ConstantNode("[]", "[]"), EdmCoreModel.Instance.GetString(false))
+            };
+
+            var result = FunctionCallBinder.MatchSignatureToUriFunction(
+                "func1",
+                nodes,
+                new List<KeyValuePair<string, FunctionSignatureWithReturnType>>
+                {
+                    new KeyValuePair<string, FunctionSignatureWithReturnType>("func0", functionSignature),
+                    new KeyValuePair<string, FunctionSignatureWithReturnType>("func1", functionSignature),
+                    new KeyValuePair<string, FunctionSignatureWithReturnType>("func1", otherFunctionSignature),
+                    new KeyValuePair<string, FunctionSignatureWithReturnType>("func2", otherFunctionSignature)
+                });
+
+            Assert.Equal("func1", result.Key);
+            Assert.Same(functionSignature, result.Value);
+            Assert.Equal("Edm.Int64", result.Value.ReturnType.FullName());
+            Assert.Single(result.Value.ArgumentTypes);
+            Assert.Equal("Collection(Edm.Int64)", result.Value.ArgumentTypes[0].FullName());
+        }
+
+        [Fact]
+        public void MatchSignatureToUriFunction_ConstantNodeToCollectionConstantNode_SingleNullItem()
+        {
+            var functionSignature = new FunctionSignatureWithReturnType(
+                EdmCoreModel.Instance.GetInt64(false),
+                EdmCoreModel.GetCollection(EdmCoreModel.Instance.GetInt64(true)));
+            var otherFunctionSignature = new FunctionSignatureWithReturnType(
+                EdmCoreModel.Instance.GetInt32(false),
+                EdmCoreModel.Instance.GetInt32(true));
+
+            var nodes = new (QueryNode Node, IEdmTypeReference TypeReference)[]
+            {
+                (new ConstantNode("[null]", "[null]"), EdmCoreModel.Instance.GetString(false))
+            };
+
+            var result = FunctionCallBinder.MatchSignatureToUriFunction(
+                "func1",
+                nodes,
+                new List<KeyValuePair<string, FunctionSignatureWithReturnType>>
+                {
+                    new KeyValuePair<string, FunctionSignatureWithReturnType>("func0", functionSignature),
+                    new KeyValuePair<string, FunctionSignatureWithReturnType>("func1", functionSignature),
+                    new KeyValuePair<string, FunctionSignatureWithReturnType>("func1", otherFunctionSignature),
+                    new KeyValuePair<string, FunctionSignatureWithReturnType>("func2", otherFunctionSignature)
+                });
+
+            Assert.Equal("func1", result.Key);
+            Assert.Same(functionSignature, result.Value);
+            Assert.Equal("Edm.Int64", result.Value.ReturnType.FullName());
+            Assert.Single(result.Value.ArgumentTypes);
+            Assert.Equal("Collection(Edm.Int64)", result.Value.ArgumentTypes[0].FullName());
+        }
+
         private bool RunBindEndPathAsFunctionCall(string endPathIdentifier, out QueryNode functionCallNode)
         {
             var boundFunctionCallToken = new EndPathToken(endPathIdentifier, null);
@@ -1462,11 +1721,11 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             return signatures[0];
         }
 
-        private static void AssertSignatureTypesMatchArguments(FunctionSignatureWithReturnType signature, List<QueryNode> nodes)
+        private static void AssertSignatureTypesMatchArguments(FunctionSignatureWithReturnType signature, (QueryNode Node, IEdmTypeReference Type)[] nodes)
         {
             for (int i = 0; i < signature.ArgumentTypes.Length; ++i)
             {
-                Assert.Same(MetadataBindingUtils.GetEdmType(nodes[i]), signature.ArgumentTypes[i].Definition);
+                Assert.Same(MetadataBindingUtils.GetEdmType(nodes[i].Node), signature.ArgumentTypes[i].Definition);
             }
         }
 
