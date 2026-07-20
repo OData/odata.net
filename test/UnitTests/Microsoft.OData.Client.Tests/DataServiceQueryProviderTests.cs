@@ -110,7 +110,7 @@ namespace Microsoft.OData.Client.Tests
         }
 
         [Fact]
-        public void ThrowsForEnumerableContainsWithEmptyCollection()
+        public void TranslatesEnumerableContainsWithEmptyCollectionToEmptyInOperator()
         {
             // Arrange
             var sut = new DataServiceQueryProvider(dsc);
@@ -118,14 +118,14 @@ namespace Microsoft.OData.Client.Tests
                 .Where(product => Enumerable.Empty<string>().Contains(product.Name));
 
             // Act
-            var exception = Assert.ThrowsAny<InvalidOperationException>(() => sut.Translate(products.Expression));
+            var queryComponents = sut.Translate(products.Expression);
 
             // Assert
-            Assert.Equal(SRResources.ALinq_ContainsNotValidOnEmptyCollection, exception.Message);
+            Assert.Equal(@"http://root/Products?$filter=Name in ()", queryComponents.Uri.ToString());
         }
 
         [Fact]
-        public void ThrowsForEnumerableContainsWithEmptyEnumCollection()
+        public void TranslatesEnumerableContainsWithEmptyEnumCollectionToEmptyInOperator()
         {
             // Arrange
             var sut = new DataServiceQueryProvider(dsc);
@@ -133,10 +133,10 @@ namespace Microsoft.OData.Client.Tests
                 .Where(product => Enumerable.Empty<Color>().Contains(product.Color));
 
             // Act
-            var exception = Assert.ThrowsAny<InvalidOperationException>(() => sut.Translate(products.Expression));
+            var queryComponents = sut.Translate(products.Expression);
 
             // Assert
-            Assert.Equal(SRResources.ALinq_ContainsNotValidOnEmptyCollection, exception.Message);
+            Assert.Equal(@"http://root/Products?$filter=Color in ()", queryComponents.Uri.ToString());
         }
 
         [Fact]
