@@ -39,7 +39,6 @@ public class SRResourcesTests
     [InlineData("ALinq_CollectionPropertyNotSupportedInWhere", new object[] { "Value" })]
     [InlineData("ALinq_ConditionalNotSupported", new object[] { })]
     [InlineData("ALinq_ConstantNotSupported", new object[] { "Value" })]
-    [InlineData("ALinq_ContainsNotValidOnEmptyCollection", new object[] { })]
     [InlineData("ALinq_CouldNotConvert", new object[] { "Value" })]
     [InlineData("ALinq_ExpressionCannotEndWithTypeAs", new object[] { "Value", "Value" })]
     [InlineData("ALinq_ExpressionNotSupportedInProjection", new object[] { "Value", "Value" })]
