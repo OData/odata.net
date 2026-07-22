@@ -1758,7 +1758,7 @@ namespace Microsoft.OData.Tests.Json
                 await AdvanceReaderToFirstPropertyAsync(jsonResourceDeserializer.JsonReader);
 
                 var exception = await Assert.ThrowsAsync<ODataException>(
-                    () => jsonResourceDeserializer.ReadDeletedResourceAsync());
+                    () => jsonResourceDeserializer.ReadDeletedResourceAsync().AsTask());
 
                 Assert.Equal(
                     SRResources.ODataWriterCore_DeltaResourceWithoutIdOrKeyProperties,
@@ -1780,7 +1780,7 @@ namespace Microsoft.OData.Tests.Json
                 await AdvanceReaderToFirstPropertyAsync(jsonResourceDeserializer.JsonReader);
 
                 var exception = await Assert.ThrowsAsync<ODataException>(
-                    () => jsonResourceDeserializer.ReadDeletedResourceAsync());
+                    () => jsonResourceDeserializer.ReadDeletedResourceAsync().AsTask());
 
                 Assert.Equal(
                     Error.Format(SRResources.ODataJsonResourceDeserializer_DeltaRemovedAnnotationMustBeObject, "NaO"),
@@ -1804,7 +1804,7 @@ namespace Microsoft.OData.Tests.Json
                 await AdvanceReaderToFirstPropertyAsync(jsonResourceDeserializer.JsonReader);
 
                 var exception = await Assert.ThrowsAsync<ODataException>(
-                    () => jsonResourceDeserializer.ReadDeletedEntryAsync());
+                    () => jsonResourceDeserializer.ReadDeletedEntryAsync().AsTask());
 
                 Assert.Equal(
                     SRResources.ODataWriterCore_NestedContentNotAllowedIn40DeletedEntry,
