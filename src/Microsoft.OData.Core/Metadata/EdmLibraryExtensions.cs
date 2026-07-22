@@ -1692,7 +1692,7 @@ namespace Microsoft.OData.Metadata
 
             // if the container name of the operationImport doesn't equal the current container, don't search just return empty as there are no matches.
             if (containerName != null &&
-                !(container.Name.Equals(containerName, StringComparison.Ordinal) || container.FullName().Equals(containerName, StringComparison.Ordinal)))
+                !(container.Name.Equals(containerName, StringComparison.Ordinal) || container.FullNameEquals(containerName, StringComparison.Ordinal)))
             {
                 return Enumerable.Empty<IEdmOperationImport>();
             }

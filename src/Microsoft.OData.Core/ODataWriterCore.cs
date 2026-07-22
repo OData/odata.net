@@ -96,7 +96,7 @@ namespace Microsoft.OData
         /// <summary>
         /// Returns <paramref name="source"/> as an <see cref="IReadOnlyList{T}"/>, materializing the
         /// sequence to an array when it isn't already a known collection. Used to avoid re-enumerating
-        /// the LINQ iterator returned by <see cref="ExtensionMethods.GetDerivedTypeConstraints"/>.
+        /// the LINQ iterator returned by <see cref="ExtensionMethods.GetDerivedTypeConstraints(IEdmModel, IEdmNavigationSource)"/>.
         /// </summary>
         private static IReadOnlyList<string> MaterializeOrNull(IEnumerable<string> source)
         {
