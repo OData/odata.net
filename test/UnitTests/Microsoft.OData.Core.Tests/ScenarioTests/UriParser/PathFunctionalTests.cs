@@ -569,6 +569,21 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Fact]
+        public void FunctionWithEmptyCollectionParameterInJsonWorks()
+        {
+            // Focused coverage for issue #3510: an empty collection literal still binds through the
+            // non-SingleValueNode branch of FunctionCallBinder.BindSegmentParameters and yields an
+            // empty CollectionConstantNode parameter value.
+            string parameterValue = "[]";
+            var result = PathFunctionalTestsUtil.RunParsePath($"People(1)/Fully.Qualified.Namespace.OwnsTheseDogs(dogNames={parameterValue})");
+            var parameters = result.LastSegment.ShouldBeOperationSegment(HardCodedTestModel.GetFunctionForOwnsTheseDogs()).Parameters;
+            var parameter = Assert.Single(parameters);
+            var collectionConstant = Assert.IsType<CollectionConstantNode>(parameter.Value);
+            Assert.Equal(parameterValue.AsMemory(), collectionConstant.LiteralText);
+            Assert.Empty(collectionConstant.Items);
+        }
+
+        [Fact]
         public void FunctionWithCollectionOfComplexParameterInJsonWorks()
         {
             string resource1 = "{\"Street\":\"NE 24th St.\",\"City\":\"Redmond\"}";
