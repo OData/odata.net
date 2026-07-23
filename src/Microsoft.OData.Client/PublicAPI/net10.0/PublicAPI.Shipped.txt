@@ -1007,3 +1007,6 @@ virtual Microsoft.OData.Client.HttpWebResponseMessage.SetHeader(string headerNam
 virtual Microsoft.OData.Client.HttpWebResponseMessage.StatusCode.get -> int
 virtual Microsoft.OData.Client.HttpWebResponseMessage.StatusCode.set -> void
 virtual Microsoft.OData.Client.QueryOperationResponse.Count.get -> long
+virtual Microsoft.OData.Client.DataServiceClientRequestMessage.GetResponseAsync(System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Microsoft.OData.IODataResponseMessage>
+override Microsoft.OData.Client.HttpClientRequestMessage.GetResponseAsync(System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Microsoft.OData.IODataResponseMessage>
+virtual Microsoft.OData.Client.DataServiceQuery<TElement>.EnumerateAllPagesAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Collections.Generic.IAsyncEnumerable<TElement>

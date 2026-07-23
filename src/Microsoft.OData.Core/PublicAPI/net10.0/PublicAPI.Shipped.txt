@@ -182,6 +182,8 @@ Microsoft.OData.ODataMessageWriterSettings.ShouldIncludeAnnotation.set -> void
 Microsoft.OData.UriParser.ODataPath.this[int index].get -> Microsoft.OData.UriParser.ODataPathSegment
 Microsoft.OData.ODataMessageWriterSettings.BufferSize.get -> int
 Microsoft.OData.ODataMessageWriterSettings.BufferSize.set -> void
+Microsoft.OData.UriParser.ODataUriParserSettings.AggregateLimit.get -> int
+Microsoft.OData.UriParser.ODataUriParserSettings.AggregateLimit.set -> void
 Microsoft.OData.UriParser.ODataUriParserSettings.EnableParsingKeyAsSegment.get -> bool
 Microsoft.OData.UriParser.ODataUriParserSettings.EnableParsingKeyAsSegment.set -> void
 Microsoft.OData.Json.IJsonWriterFactory.CreateJsonWriter(System.IO.Stream stream, bool isIeee754Compatible, System.Text.Encoding encoding) -> Microsoft.OData.Json.IJsonWriter
