@@ -7,7 +7,6 @@
 namespace Microsoft.OData.Edm
 {
     using System;
-    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
@@ -18,10 +17,6 @@ namespace Microsoft.OData.Edm
     /// </summary>
     public static class EnumHelper
     {
-        private const int MaxHashElements = 100;
-
-        private static readonly ConcurrentDictionary<IEdmEnumType, HashEntry> fieldInfoHash = new ConcurrentDictionary<IEdmEnumType, HashEntry>(4, EnumHelper.MaxHashElements);
-
         /// <summary>
         /// Parse an enum literal value to integer. The literal value can be Enum member name (e.g. "Red"), underlying value (e.g. "2"), or combined values (e.g. "Red, Green, Blue", "1,2,4").
         /// </summary>
@@ -119,7 +114,7 @@ namespace Microsoft.OData.Edm
             string[] strArray;
             ulong[] numArray;
             ulong num = (ulong)value;
-            enumType.GetCachedValuesAndNames(out numArray, out strArray, true, true);
+            GetEnumValuesAndNames(enumType, out numArray, out strArray);
             int index = numArray.Length - 1;
             StringBuilder builder = new StringBuilder();
             bool flag = true;
@@ -177,53 +172,19 @@ namespace Microsoft.OData.Edm
         {
             ulong[] values;
             string[] names;
-            enumType.GetCachedValuesAndNames(out values, out names, true, true);
+            GetEnumValuesAndNames(enumType, out values, out names);
             ulong num = (ulong)value;
             int index = Array.BinarySearch(values, num);
             return index >= 0 ? names[index] : value.ToString(CultureInfo.InvariantCulture);
         }
 
         /// <summary>
-        /// Get cached values and names from hash table
+        /// Enumerates the enum members and produces the member values and names ordered by value.
         /// </summary>
         /// <param name="enumType">edm enum type</param>
-        /// <param name="values">output values</param>
-        /// <param name="names">output names</param>
-        /// <param name="getValues">true if get values, false otherwise</param>
-        /// <param name="getNames">true if get names, false otherwise</param>
-        private static void GetCachedValuesAndNames(this IEdmEnumType enumType, out ulong[] values, out string[] names, bool getValues, bool getNames)
-        {
-            HashEntry hashEntry = GetHashEntry(enumType);
-            values = hashEntry.Values;
-            if (values != null)
-            {
-                getValues = false;
-            }
-
-            names = hashEntry.Names;
-            if (names != null)
-            {
-                getNames = false;
-            }
-
-            if (!getValues && !getNames)
-            {
-                return;
-            }
-
-            GetEnumValuesAndNames(enumType, ref values, ref names, getValues, getNames);
-            if (getValues)
-            {
-                hashEntry.Values = values;
-            }
-
-            if (getNames)
-            {
-                hashEntry.Names = names;
-            }
-        }
-
-        private static void GetEnumValuesAndNames(IEdmEnumType enumType, ref ulong[] values, ref string[] names, bool getValues, bool getNames)
+        /// <param name="values">output values, ordered ascending</param>
+        /// <param name="names">output names, ordered by their corresponding value</param>
+        private static void GetEnumValuesAndNames(IEdmEnumType enumType, out ulong[] values, out string[] names)
         {
             Dictionary<string, ulong> dict = new Dictionary<string, ulong>();
             foreach (var member in enumType.Members)
@@ -238,32 +199,6 @@ namespace Microsoft.OData.Edm
             Dictionary<string, ulong> sortedDict = dict.OrderBy(d => d.Value).ToDictionary(d => d.Key, d => d.Value);
             values = sortedDict.Select(d => d.Value).ToArray();
             names = sortedDict.Select(d => d.Key).ToArray();
-        }
-
-        private static HashEntry GetHashEntry(IEdmEnumType enumType)
-        {
-            try
-            {
-                return EnumHelper.fieldInfoHash.GetOrAdd(enumType, type => new HashEntry(null, null));
-            }
-            catch (OverflowException)
-            {
-                EnumHelper.fieldInfoHash.Clear();
-                return EnumHelper.fieldInfoHash.GetOrAdd(enumType, type => new HashEntry(null, null));
-            }
-        }
-
-
-        private class HashEntry
-        {
-            public string[] Names;
-            public ulong[] Values;
-
-            public HashEntry(string[] names, ulong[] values)
-            {
-                this.Names = names;
-                this.Values = values;
-            }
         }
     }
 }
