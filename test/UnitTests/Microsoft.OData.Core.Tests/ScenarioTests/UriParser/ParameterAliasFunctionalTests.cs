@@ -204,6 +204,33 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Fact]
+        public void ParsePath_CollectionStringAliasInBoundFunction_ProducesParameterAliasCollectionNodeParameterValue()
+        {
+            // Regression coverage for issue #3510: a collection-typed parameter supplied via a
+            // parameter alias binds to a ParameterAliasCollectionNode, which is NOT a SingleValueNode
+            // and therefore flows through the non-SingleValueNode branch of
+            // FunctionCallBinder.BindSegmentParameters.
+            const string relativeUri = "People(1)/Fully.Qualified.Namespace.OwnsTheseDogs(dogNames=@dogNames)?@dogNames=[\"Barky\",\"Junior\"]";
+            ParseUriAndVerify(
+                new Uri("http://gobbledygook/" + relativeUri),
+                (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
+                {
+                    var parameters = oDataPath.LastSegment.ShouldBeOperationSegment(HardCodedTestModel.GetFunctionForOwnsTheseDogs()).Parameters;
+                    OperationSegmentParameter parameter = Assert.Single(parameters);
+                    Assert.Equal("dogNames", parameter.Name);
+
+                    ParameterAliasCollectionNode aliasCollectionNode = ((QueryNode)parameter.Value)
+                        .ShouldBeParameterAliasCollectionNode("@dogNames", EdmCoreModel.Instance.GetString(true));
+
+                    // The alias itself resolves to the collection literal.
+                    CollectionConstantNode constNode = Assert.IsType<CollectionConstantNode>(aliasNodes["@dogNames"]);
+                    Assert.Equal(2, constNode.Items.Count);
+                    constNode.Items.ElementAt(0).ShouldBeConstantQueryNode("Barky");
+                    constNode.Items.ElementAt(1).ShouldBeConstantQueryNode("Junior");
+                });
+        }
+
+        [Fact]
         public void ParsePath_IntArgumentOnShortParameter()
         {
             const string relativeUri = "People(1)/Fully.Qualified.Namespace.IsOlderThanShort(age=@age)?@age=1234";
