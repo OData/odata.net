@@ -122,8 +122,8 @@ namespace Microsoft.OData.Json
             ODataError error = null;
             while (this.JsonReader.NodeType == JsonNodeType.Property)
             {
-                string propertyName = this.JsonReader.ReadPropertyName();
-                string annotatedPropertyName, annotationName;
+                ReadOnlySpan<char> propertyName = this.JsonReader.ReadPropertyName();
+                ReadOnlySpan<char> annotatedPropertyName, annotationName;
                 if (!ODataJsonDeserializer.TryParsePropertyAnnotation(propertyName, out annotatedPropertyName, out annotationName))
                 {
                     if (ODataJsonReaderUtils.IsAnnotationProperty(propertyName))
@@ -141,7 +141,7 @@ namespace Microsoft.OData.Json
                     }
                     else
                     {
-                        if (string.Equals(ODataJsonConstants.ODataErrorPropertyName, propertyName, StringComparison.Ordinal))
+                        if (propertyName.SequenceEqual(ODataJsonConstants.ODataErrorPropertyName.AsSpan()))
                         {
                             // If we find multiple errors or an invalid error value, this is not an error payload.
                             if (error != null || !this.JsonReader.StartBufferingAndTryToReadInStreamErrorPropertyValue(out error))
@@ -203,13 +203,13 @@ namespace Microsoft.OData.Json
             ODataError error = null;
             while (this.JsonReader.NodeType == JsonNodeType.Property)
             {
-                string propertyName = await this.JsonReader.ReadPropertyNameAsync()
+                ReadOnlyMemory<char> propertyName = await this.JsonReader.ReadPropertyNameAsync()
                     .ConfigureAwait(false);
                 if (!TryParsePropertyAnnotation(propertyName, out _, out _))
                 {
-                    if (ODataJsonReaderUtils.IsAnnotationProperty(propertyName))
+                    if (ODataJsonReaderUtils.IsAnnotationProperty(propertyName.Span))
                     {
-                        if (propertyName != null && propertyName.StartsWith(ODataJsonConstants.ODataPropertyAnnotationSeparatorChar + ODataJsonConstants.ODataAnnotationNamespacePrefix, StringComparison.Ordinal))
+                        if (!propertyName.IsEmpty && propertyName.Span.StartsWith((ODataJsonConstants.ODataPropertyAnnotationSeparatorChar + ODataJsonConstants.ODataAnnotationNamespacePrefix).AsSpan(), StringComparison.Ordinal))
                         {
                             // Any @odata.* instance annotations are not allowed for errors.
                             return Enumerable.Empty<ODataPayloadKind>();
@@ -223,7 +223,7 @@ namespace Microsoft.OData.Json
                     }
                     else
                     {
-                        if (string.Equals(ODataJsonConstants.ODataErrorPropertyName, propertyName, StringComparison.Ordinal))
+                        if (propertyName.Equals(ODataJsonConstants.ODataErrorPropertyName))
                         {
                             // If we find multiple errors or an invalid error value, this is not an error payload.
                             if (error != null)

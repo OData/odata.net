@@ -500,12 +500,12 @@ namespace Microsoft.OData.Json
             this.batchStream.JsonReader.ReadNext();
             this.batchStream.JsonReader.ReadStartObject();
 
-            string propertyName = this.batchStream.JsonReader.ReadPropertyName();
-            if (PropertyNameRequests.Equals(propertyName, StringComparison.OrdinalIgnoreCase))
+            ReadOnlySpan<char> propertyName = this.batchStream.JsonReader.ReadPropertyName();
+            if (propertyName.Equals(PropertyNameRequests.AsSpan(), StringComparison.OrdinalIgnoreCase))
             {
                 this.mode = ReaderMode.Requests;
             }
-            else if (PropertyNameResponses.Equals(propertyName, StringComparison.OrdinalIgnoreCase))
+            else if (propertyName.Equals(PropertyNameResponses.AsSpan(), StringComparison.OrdinalIgnoreCase))
             {
                 this.mode = ReaderMode.Responses;
             }
@@ -623,14 +623,14 @@ namespace Microsoft.OData.Json
             await this.batchStream.JsonReader.ReadStartObjectAsync()
                 .ConfigureAwait(false);
 
-            string propertyName = await this.batchStream.JsonReader.ReadPropertyNameAsync()
+            ReadOnlyMemory<char> propertyName = await this.batchStream.JsonReader.ReadPropertyNameAsync()
                 .ConfigureAwait(false);
 
-            if (PropertyNameRequests.Equals(propertyName, StringComparison.OrdinalIgnoreCase))
+            if (propertyName.Span.Equals(PropertyNameRequests.AsSpan(), StringComparison.OrdinalIgnoreCase))
             {
                 this.mode = ReaderMode.Requests;
             }
-            else if (PropertyNameResponses.Equals(propertyName, StringComparison.OrdinalIgnoreCase))
+            else if (propertyName.Span.Equals(PropertyNameResponses.AsSpan(), StringComparison.OrdinalIgnoreCase))
             {
                 this.mode = ReaderMode.Responses;
             }
