@@ -432,6 +432,118 @@ namespace Microsoft.OData.Client.Tests.ALinq
             Assert.Throws<NotSupportedException>(() => queryable.Take(1).Min(d => d.Amount));
         }
 
+        #region Empty Aggregate Result (Issue #3574)
+
+        [Fact]
+        public void Sum_ReturnsZero_WhenAggregateResultSetIsEmpty()
+        {
+            // Arrange
+            var queryable = this.dsContext.CreateQuery<Number>(numbersEntitySetName);
+            MockEmptyAggregateResult("SumIntProp");
+
+            // Act
+            int result = queryable.Sum(d => d.IntProp);
+
+            // Assert
+            Assert.Equal(0, result);
+        }
+
+        [Fact]
+        public void Sum_NullableReturnsZero_WhenAggregateResultSetIsEmpty()
+        {
+            // Arrange
+            var queryable = this.dsContext.CreateQuery<Number>(numbersEntitySetName);
+            MockEmptyAggregateResult("SumNullableDecimalProp");
+
+            // Act
+            decimal? result = queryable.Sum(d => d.NullableDecimalProp);
+
+            // Assert
+            // LINQ-to-Objects returns 0 (not null) for Sum over an empty nullable sequence.
+            Assert.Equal(0m, result);
+        }
+
+        [Fact]
+        public void CountDistinct_ReturnsZero_WhenAggregateResultSetIsEmpty()
+        {
+            // Arrange
+            var queryable = this.dsContext.CreateQuery<Number>(numbersEntitySetName);
+            MockEmptyAggregateResult("CountDistinctRowParity");
+
+            // Act
+            int result = queryable.CountDistinct(d => d.RowParity);
+
+            // Assert
+            Assert.Equal(0, result);
+        }
+
+        [Fact]
+        public void Average_NullableReturnsNull_WhenAggregateResultSetIsEmpty()
+        {
+            // Arrange
+            var queryable = this.dsContext.CreateQuery<Number>(numbersEntitySetName);
+            MockEmptyAggregateResult("AverageNullableDoubleProp");
+
+            // Act
+            double? result = queryable.Average(d => d.NullableDoubleProp);
+
+            // Assert
+            Assert.Null(result);
+        }
+
+        [Fact]
+        public void Max_NullableReturnsNull_WhenAggregateResultSetIsEmpty()
+        {
+            // Arrange
+            var queryable = this.dsContext.CreateQuery<Number>(numbersEntitySetName);
+            MockEmptyAggregateResult("MaxNullableLongProp");
+
+            // Act
+            long? result = queryable.Max(d => d.NullableLongProp);
+
+            // Assert
+            Assert.Null(result);
+        }
+
+        [Fact]
+        public void Average_NonNullableThrows_WhenAggregateResultSetIsEmpty()
+        {
+            // Arrange
+            var queryable = this.dsContext.CreateQuery<Number>(numbersEntitySetName);
+            MockEmptyAggregateResult("AverageDoubleProp");
+
+            // Act & Assert
+            // LINQ-to-Objects throws InvalidOperationException for a non-nullable Average over an empty sequence.
+            // The client surfaces it wrapped in a DataServiceQueryException.
+            var exception = Assert.Throws<DataServiceQueryException>(() => queryable.Average(d => d.DoubleProp));
+            Assert.IsType<InvalidOperationException>(exception.InnerException);
+        }
+
+        [Fact]
+        public void Min_NonNullableThrows_WhenAggregateResultSetIsEmpty()
+        {
+            // Arrange
+            var queryable = this.dsContext.CreateQuery<Number>(numbersEntitySetName);
+            MockEmptyAggregateResult("MinDecimalProp");
+
+            // Act & Assert
+            var exception = Assert.Throws<DataServiceQueryException>(() => queryable.Min(d => d.DecimalProp));
+            Assert.IsType<InvalidOperationException>(exception.InnerException);
+        }
+
+        private void MockEmptyAggregateResult(string aggregateAlias)
+        {
+            string mockResponse = string.Format(
+                "{{\"@odata.context\":\"{0}/$metadata#{1}({2})\",\"value\":[]}}",
+                serviceUri,
+                numbersEntitySetName,
+                aggregateAlias);
+
+            InterceptRequestAndMockResponse(mockResponse);
+        }
+
+        #endregion Empty Aggregate Result (Issue #3574)
+
         #region Mock Aggregation Responses
 
         private void MockCountDistinct()
