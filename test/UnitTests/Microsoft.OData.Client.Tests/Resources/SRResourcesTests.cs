@@ -15,6 +15,7 @@ public class SRResourcesTests
 {
     [Theory]
     [InlineData("ALinq_AggregationMethodNotSupported", new object[] { "Value" })]
+    [InlineData("ALinq_AggregationOnEmptyCollectionNotSupported", new object[] { })]
     [InlineData("ALinq_AnyAllNotSupportedInOrderBy", new object[] { "Value" })]
     [InlineData("ALinq_BinaryNotSupported", new object[] { "Value" })]
     [InlineData("ALinq_CannotAddCountOption", new object[] { })]
