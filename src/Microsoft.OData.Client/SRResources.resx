@@ -671,9 +671,6 @@
   <data name="ALinq_TypeTokenWithNoTrailingNavProp" xml:space="preserve">
     <value>Found an illegal type token '{0}' without a trailing navigation property. </value>
   </data>
-  <data name="ALinq_ContainsNotValidOnEmptyCollection" xml:space="preserve">
-    <value>The Contains method cannot be used with an empty collection.</value>
-  </data>
   <data name="ALinq_AggregationMethodNotSupported" xml:space="preserve">
     <value>The aggregation method '{0}' is not supported.</value>
   </data>
