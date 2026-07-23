@@ -578,12 +578,8 @@ namespace Microsoft.OData.Client
                     listExpr.Append(uriLiteral);
                 }
 
-                // Contains cannot be used with an empty static collection
-                if (listExpr.Length == 0)
-                {
-                    throw new InvalidOperationException(SRResources.ALinq_ContainsNotValidOnEmptyCollection);
-                }
-
+                // An empty collection is translated to the empty 'in' collection literal, e.g. "Name in ()",
+                // which the OData query parser supports and evaluates to no matches.
                 listExpr.Insert(0, UriHelper.LEFTPAREN);
                 listExpr.Append(UriHelper.RIGHTPAREN);
 

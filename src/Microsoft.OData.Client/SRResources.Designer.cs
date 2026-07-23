@@ -286,15 +286,6 @@ namespace Microsoft.OData.Client {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The Contains method cannot be used with an empty collection..
-        /// </summary>
-        internal static string ALinq_ContainsNotValidOnEmptyCollection {
-            get {
-                return ResourceManager.GetString("ALinq_ContainsNotValidOnEmptyCollection", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Could not convert constant {0} expression to string..
         /// </summary>
         internal static string ALinq_CouldNotConvert {
