@@ -57,5 +57,23 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             Assert.True(parser.TryParseLiteral(typeof(Date), "2015-09-28", out output));
             Assert.Equal(new Date(2015, 09, 28), output);
         }
+
+        [Fact]
+        public void TryParseLiteralWithTimeOfDayForSlashKeyDelimiterShouldReturnValidTimeOfDay()
+        {
+            var parser = LiteralParser.ForKeys(true /*keyAsSegment*/);
+            object output;
+            Assert.True(parser.TryParseLiteral(typeof(TimeOfDay), "13:20:00", out output));
+            Assert.Equal(new TimeOfDay(13, 20, 00, 0), output);
+        }
+
+        [Fact]
+        public void TryParseLiteralWithTimeOfDayForParenthesesKeyDelimiterShouldReturnValidTimeOfDay()
+        {
+            var parser = LiteralParser.ForKeys(false /*keyAsSegment*/);
+            object output;
+            Assert.True(parser.TryParseLiteral(typeof(TimeOfDay), "13:20:00", out output));
+            Assert.Equal(new TimeOfDay(13, 20, 00, 0), output);
+        }
     }
 }
