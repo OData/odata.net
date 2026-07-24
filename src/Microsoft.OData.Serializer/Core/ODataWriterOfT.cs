@@ -1,6 +1,6 @@
 ﻿namespace Microsoft.OData.Serializer;
 
-public abstract class ODataWriter<T, TState> : IODataWriter<T, TState>
+public abstract class ODataWriter<T, TWriteState, TReadState> : IODataWriter<T, TWriteState, TReadState>
 {
     public Type? Type { get; } = typeof(T);
 
@@ -9,10 +9,15 @@ public abstract class ODataWriter<T, TState> : IODataWriter<T, TState>
         return type == Type;
     }
 
-    public abstract bool Write(T value, TState state);
+    public abstract bool Write(T value, TWriteState state);
 
-    public bool WriteObject(object value, TState state)
+    public bool WriteObject(object value, TWriteState state)
     {
         return Write((T)value, state);
+    }
+
+    public virtual bool Read(TReadState state, out T value)
+    {
+        throw new NotImplementedException();
     }
 }

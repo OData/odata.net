@@ -1,7 +1,7 @@
 ﻿
 namespace Microsoft.OData.Serializer;
 
-internal class ODataJsonDoubleWriter<TCustomState> : ODataWriter<double, ODataWriterState<TCustomState>>
+internal class ODataJsonDoubleWriter<TCustomState> : ODataJsonWriter<double, TCustomState>
 {
     public override bool Write(double value, ODataWriterState<TCustomState> state)
     {

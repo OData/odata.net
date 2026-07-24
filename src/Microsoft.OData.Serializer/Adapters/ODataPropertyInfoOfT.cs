@@ -3,7 +3,7 @@
 namespace Microsoft.OData.Serializer;
 
 #pragma warning disable CA1005 // Avoid excessive parameters on generic types
-public class ODataPropertyInfo<TDeclaringType, TCustomState> :
+public partial class ODataPropertyInfo<TDeclaringType, TCustomState> :
     ODataPropertyInfo,
     IValueWriter<TCustomState>,
     ICountWriter<TCustomState>,

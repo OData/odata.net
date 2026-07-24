@@ -1,6 +1,6 @@
 ﻿
 namespace Microsoft.OData.Serializer;
 
-public abstract class ODataJsonWriter<T, TCustomState> : ODataWriter<T, ODataWriterState<TCustomState>>
+public abstract class ODataJsonWriter<T, TCustomState> : ODataWriter<T, ODataWriterState<TCustomState>, ODataReaderState<TCustomState>>
 {
 }

@@ -2,8 +2,8 @@
 
 namespace Microsoft.OData.Serializer;
 
-internal class ODataResourceJsonWriter<T, TCustomState>(ODataTypeInfo<T, TCustomState> typeInfo)
-    : ODataWriter<T, ODataWriterState<TCustomState>>,
+internal partial class ODataResourceJsonWriter<T, TCustomState>(ODataTypeInfo<T, TCustomState> typeInfo)
+    : ODataJsonWriter<T, TCustomState>,
     IResourcePopertyWriter<T, TCustomState>,
     IEtagWriter<TCustomState>,
     IODataIdWriter<TCustomState>

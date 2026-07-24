@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Microsoft.OData.Serializer;
 
-internal class ODataJsonInt64Writer<TCustomState> : ODataWriter<long, ODataWriterState<TCustomState>>
+internal class ODataJsonInt64Writer<TCustomState> : ODataJsonWriter<long, TCustomState>
 {
     public override bool Write(long value, ODataWriterState<TCustomState> state)
     {

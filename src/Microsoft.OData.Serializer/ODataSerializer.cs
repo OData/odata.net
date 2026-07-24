@@ -147,6 +147,22 @@ public static class ODataSerializer
         //} while (!isDone);
     }
 
+    public static ValueTask<T> ReadAsync<T>(Stream stream, IEdmModel model, ODataSerializerOptions options) =>
+        ReadAsync<T, DefaultState>(stream, model, options, default);
+
+    public static async ValueTask<T> ReadAsync<T, TCustomState>(Stream stream, IEdmModel model, ODataSerializerOptions<TCustomState> options, TCustomState state)
+    {
+        var converterProvider = new ODataJsonWriterProvider<TCustomState>(options);
+        var readerState = new ODataReaderState<TCustomState>(stream, model, converterProvider);
+        
+        var converter = converterProvider.GetWriter<T>(model);
+
+        bool success = converter.Read(readerState, out T value);
+        // TODO should check success for resumability
+
+        return value;
+    }
+
     private static ODataPayloadKind GetPayloadKindFromUri(ODataUri uri)
     {
         var lastSegment = uri.Path.LastSegment;
