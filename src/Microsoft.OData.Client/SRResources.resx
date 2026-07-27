@@ -674,6 +674,9 @@
   <data name="ALinq_AggregationMethodNotSupported" xml:space="preserve">
     <value>The aggregation method '{0}' is not supported.</value>
   </data>
+  <data name="ALinq_AggregationOnEmptyCollectionNotSupported" xml:space="preserve">
+    <value>The aggregation cannot be performed on an empty collection.</value>
+  </data>
   <data name="ALinq_InvalidAggregateExpression" xml:space="preserve">
     <value>The expression '{0}' is not a valid aggregate expression. The aggregate expression must evaluate to a single-valued property path to an aggregatable property.</value>
   </data>
