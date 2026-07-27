@@ -23,12 +23,15 @@ namespace Microsoft.OData.Client.Tests.ScenarioTests.Deadlocks
     // SynchronizationContext. On a single-threaded scheduler the calling thread blocks (sync-over-async)
     // waiting for a continuation that has been queued back onto the same single thread.
     //
-    // Each test runs under a SingleThreadSynchronizationContext and races the call against a 5 s timeout
-    // so a regression fails fast instead of hanging the test runner.
+    // Each test runs under a SingleThreadSynchronizationContext and races the call against a timeout
+    // so a regression fails (instead of hanging the test runner). The timeout is generous: a
+    // non-deadlocked call completes in well under a second, while a real deadlock never completes,
+    // so a large timeout only affects how long we wait before declaring failure — it avoids false
+    // positives on slow/contended CI agents without slowing the passing path.
     public class SynchronizationContextDeadlockTests
     {
         private const string ServiceRoot = "http://localhost:8007";
-        private static readonly TimeSpan DeadlockTimeout = TimeSpan.FromSeconds(5);
+        private static readonly TimeSpan DeadlockTimeout = TimeSpan.FromSeconds(30);
 
         #region Test Edmx
 
@@ -274,7 +277,7 @@ namespace Microsoft.OData.Client.Tests.ScenarioTests.Deadlocks
             return new OrgContainer(new Uri(ServiceRoot), factory);
         }
 
-        // Races the call against a 5 s timeout. On timeout we dispose the pump's shutdown handle
+        // Races the call against the deadlock timeout. On timeout we dispose the pump's shutdown handle
         // (best-effort: signals CompleteAdding so no more work is queued; the worker may still be
         // wedged on the deadlocked callback but exits with the process as a background thread)
         // and fail with a clear regression message. Surfaces any inner exception via the awaited task.
