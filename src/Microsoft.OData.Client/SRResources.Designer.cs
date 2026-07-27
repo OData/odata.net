@@ -70,6 +70,15 @@ namespace Microsoft.OData.Client {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The aggregation cannot be performed on an empty collection..
+        /// </summary>
+        internal static string ALinq_AggregationOnEmptyCollectionNotSupported {
+            get {
+                return ResourceManager.GetString("ALinq_AggregationOnEmptyCollectionNotSupported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The method &apos;{0}&apos; is not supported by the &apos;orderby&apos; query option..
         /// </summary>
         internal static string ALinq_AnyAllNotSupportedInOrderBy {
