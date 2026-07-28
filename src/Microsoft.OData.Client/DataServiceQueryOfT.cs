@@ -553,13 +553,19 @@ namespace Microsoft.OData.Client
             if (continuation != null)
             {
                 var asyncResult = this.Context.BeginExecute(continuation, null, null);
-                cancellationToken.Register(() => this.Context.CancelRequest(asyncResult));
-                var currentTask = Task<IEnumerable<TElement>>.Factory.FromAsync(asyncResult, this.Context.EndExecute<TElement>);
-                var nextTask = currentTask.ContinueWith(t => ContinuePage(t.Result, cancellationToken), cancellationToken);
-                nextTask.Wait(cancellationToken);
-                foreach (var element in nextTask.Result)
+
+                // Dispose the cancellation registration once the request completes so it is removed
+                // from the (potentially long-lived) token source, otherwise the captured async result
+                // graph is kept alive for every page, leaking memory (issue #3583).
+                using (cancellationToken.Register(() => this.Context.CancelRequest(asyncResult)))
                 {
-                    yield return element;
+                    var currentTask = Task<IEnumerable<TElement>>.Factory.FromAsync(asyncResult, this.Context.EndExecute<TElement>);
+                    var nextTask = currentTask.ContinueWith(t => ContinuePage(t.Result, cancellationToken), cancellationToken);
+                    nextTask.Wait(cancellationToken);
+                    foreach (var element in nextTask.Result)
+                    {
+                        yield return element;
+                    }
                 }
             }
         }

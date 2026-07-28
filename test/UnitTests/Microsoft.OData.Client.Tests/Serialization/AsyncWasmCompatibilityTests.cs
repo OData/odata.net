@@ -209,6 +209,41 @@ namespace Microsoft.OData.Client.Tests.Serialization
                 () => context.Products.GetAllPagesAsync(cts.Token));
         }
 
+        [Fact]
+        public async Task GetAllPagesAsync_WithReusedCancellationToken_LeavesNoLingeringRegistrations()
+        {
+            // Regression test for issue #3583: repeatedly paging with a single, long-lived
+            // CancellationToken must not accumulate cancellation-token registrations. Each leaked
+            // registration keeps the request/response graph alive until the token source is disposed,
+            // so a long-running job that reuses one token would grow memory without bound.
+            // Arrange
+            int requestCount = 0;
+            var context = CreateContext();
+            context.Configurations.RequestPipeline.OnMessageCreating = (args) =>
+            {
+                requestCount++;
+                // Two pages per call: odd requests return page 1 (with next link), even return page 2.
+                string response = (requestCount % 2 == 1) ? ProductsPage1Response : ProductsPage2Response;
+                return new AsyncTestRequestMessage(args, response);
+            };
+
+            using var cts = new CancellationTokenSource();
+
+            // Act - simulate a long-running job that reuses the same token across many calls.
+            for (int i = 0; i < 5; i++)
+            {
+                var products = (await context.Products.GetAllPagesAsync(cts.Token)).ToList();
+                Assert.Equal(3, products.Count);
+            }
+
+            // Cancelling the shared token after all requests have completed must not reach into any
+            // completed request. A lingering registration would invoke CancelRequest here.
+            cts.Cancel();
+
+            // Assert
+            Assert.Equal(0, context.CancelRequestCount);
+        }
+
         #endregion
 
         #region EnumerateAllPagesAsync Tests
@@ -370,6 +405,18 @@ namespace Microsoft.OData.Client.Tests.Serialization
             }
 
             public DataServiceQuery<Product> Products { get; private set; }
+
+            /// <summary>
+            /// Number of times <see cref="CancelRequest"/> was invoked. Used by tests to detect
+            /// cancellation-token registrations that outlive a completed request (issue #3583).
+            /// </summary>
+            public int CancelRequestCount { get; private set; }
+
+            public override void CancelRequest(IAsyncResult asyncResult)
+            {
+                this.CancelRequestCount++;
+                base.CancelRequest(asyncResult);
+            }
         }
 
         /// <summary>
