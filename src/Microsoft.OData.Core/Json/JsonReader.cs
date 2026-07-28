@@ -2195,7 +2195,7 @@ namespace Microsoft.OData.Json
             {
                 await GetOrAwait(pendingPostColonWhitespaceTask).ConfigureAwait(false);
 
-                return await ContinueAfterColonWhitespaceAsync(thisParam);
+                return await ContinueAfterColonWhitespaceAsync(thisParam).ConfigureAwait(false);
             }
         }
 

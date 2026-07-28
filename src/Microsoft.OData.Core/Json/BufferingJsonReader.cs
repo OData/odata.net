@@ -925,7 +925,7 @@ namespace Microsoft.OData.Json
             static async Task AwaitReadInternalAsync(BufferingJsonReader thisParam, Task<bool> readInternalTask)
             {
                 await readInternalTask.ConfigureAwait(false);
-                await thisParam.DetectAndTryReadInStreamErrorAsync();
+                await thisParam.DetectAndTryReadInStreamErrorAsync().ConfigureAwait(false);
             }
         }
 

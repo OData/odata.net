@@ -725,12 +725,12 @@ namespace Microsoft.OData.Json
             Stream stream = await this.JsonWriter.StartStreamValueScopeAsync().ConfigureAwait(false);
             await streamValue.Stream.CopyToAsync(stream).ConfigureAwait(false);
             await stream.FlushAsync().ConfigureAwait(false);
-            await stream.DisposeAsync();
+            await stream.DisposeAsync().ConfigureAwait(false);
             await this.JsonWriter.EndStreamValueScopeAsync().ConfigureAwait(false);
 
             if (!streamValue.LeaveOpen)
             {
-                await streamValue.Stream.DisposeAsync();
+                await streamValue.Stream.DisposeAsync().ConfigureAwait(false);
             }
         }
 
