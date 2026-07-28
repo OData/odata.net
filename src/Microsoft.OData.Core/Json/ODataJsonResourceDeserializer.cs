@@ -13,12 +13,12 @@ namespace Microsoft.OData.Json
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Threading.Tasks;
+    using Microsoft.OData.Core;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Vocabularies;
     using Microsoft.OData.Edm.Vocabularies.V1;
     using Microsoft.OData.Evaluation;
     using Microsoft.OData.Metadata;
-    using Microsoft.OData.Core;
 
     #endregion Namespaces
 
@@ -1336,25 +1336,21 @@ namespace Microsoft.OData.Json
                 isCollection = this.JsonReader.NodeType != JsonNodeType.PrimitiveValue;
             }
 
-            Func<IEdmPrimitiveType, bool, string, IEdmProperty, bool> readAsStream = this.MessageReaderSettings.ReadAsStreamFunc;
-
             // is the property a stream or a stream collection,
             // untyped collection,
             // or a binary or binary collection the client wants to read as a stream...
             if (
                 (primitiveType != null &&
                     (primitiveType.IsStream() ||
-                        (readAsStream != null
-                             && (property == null || !property.IsKey())  // don't stream key properties
+                        ((property == null || !property.IsKey())  // don't stream key properties
                              && (primitiveType.IsBinary() || primitiveType.IsString() || isCollection))
-                         && readAsStream(primitiveType, isCollection, propertyName, property))) ||
+                             && ShouldReadPrimitiveValueAsStream(resourceState, primitiveType, isCollection, propertyName, property))) ||
                 (propertyType != null &&
                     isCollection &&
                     propertyType.Definition.AsElementType().IsUntyped()) ||
                 (propertyType == null
                     && (isCollection || this.JsonReader.CanStream())
-                    && readAsStream != null
-                    && readAsStream(null, isCollection, propertyName, property)))
+                    && ShouldReadPrimitiveValueAsStream(resourceState, null, isCollection, propertyName, property)))
             {
                 if (isCollection)
                 {
@@ -3576,25 +3572,21 @@ namespace Microsoft.OData.Json
                 isCollection = this.JsonReader.NodeType != JsonNodeType.PrimitiveValue;
             }
 
-            Func<IEdmPrimitiveType, bool, string, IEdmProperty, bool> readAsStream = this.MessageReaderSettings.ReadAsStreamFunc;
-
             // Is the property a stream or a stream collection,
             // untyped collection,
             // or a binary or binary collection the client wants to read as a stream...
             if (
                 (primitiveType != null &&
                     (primitiveType.IsStream() ||
-                        (readAsStream != null
-                             && (property == null || !property.IsKey())  // don't stream key properties
+                        ((property == null || !property.IsKey())  // don't stream key properties
                              && (primitiveType.IsBinary() || primitiveType.IsString() || isCollection))
-                         && readAsStream(primitiveType, isCollection, propertyName, property))) ||
+                             && ShouldReadPrimitiveValueAsStream(resourceState, primitiveType, isCollection, propertyName, property))) ||
                 (propertyType != null &&
                     isCollection &&
                     propertyType.Definition.AsElementType().IsUntyped()) ||
                 (propertyType == null
                     && (isCollection || await this.JsonReader.CanStreamAsync().ConfigureAwait(false))
-                    && readAsStream != null
-                    && readAsStream(null, isCollection, propertyName, property)))
+                    && ShouldReadPrimitiveValueAsStream(resourceState, null, isCollection, propertyName, property)))
             {
                 if (isCollection)
                 {
@@ -4313,6 +4305,45 @@ namespace Microsoft.OData.Json
 
             this.JsonReader.AssertNotBuffering();
             this.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
+        }
+
+        /// <summary>
+        /// Determines whether a primitive value should be read as a stream.
+        /// </summary>
+        /// <param name="resourceState">The current resource state containing property annotations.</param>
+        /// <param name="primitiveType">The primitive type of the property, or null if unknown.</param>
+        /// <param name="isCollection">Whether the property is a collection.</param>
+        /// <param name="propertyName">The name of the property.</param>
+        /// <param name="property">The EDM property, or null for dynamic properties.</param>
+        /// <returns>True if the property should be read as a stream; otherwise, false.</returns>
+        private bool ShouldReadPrimitiveValueAsStream(IODataJsonReaderResourceState resourceState, IEdmPrimitiveType primitiveType, bool isCollection, string propertyName, IEdmProperty property)
+        {
+            Func<ODataPropertyStreamingContext, bool> shouldReadAsStream = this.MessageReaderSettings.ShouldReadPropertyAsStream;
+            if (shouldReadAsStream != null)
+            {
+                IEnumerable<KeyValuePair<string, object>> customPropertyAnnotations = resourceState?.PropertyAndAnnotationCollector?.GetCustomPropertyAnnotations(propertyName) 
+                    ?? Enumerable.Empty<KeyValuePair<string, object>>();
+
+                ODataPropertyStreamingContext propertyReadingContext = new ODataPropertyStreamingContext
+                {
+                    PrimitiveType = primitiveType,
+                    IsCollection = isCollection,
+                    PropertyName = propertyName,
+                    Property = property,
+                    CustomPropertyAnnotations = customPropertyAnnotations
+                };
+
+                return shouldReadAsStream(propertyReadingContext);
+            }
+
+            // Fallback to ReadAsStreamFunc
+            Func<IEdmPrimitiveType, bool, string, IEdmProperty, bool> readAsStream = this.MessageReaderSettings.ReadAsStreamFunc;
+            if (readAsStream != null)
+            {
+                return readAsStream(primitiveType, isCollection, propertyName, property);
+            }
+
+            return false;
         }
     }
 }
