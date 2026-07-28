@@ -1134,7 +1134,7 @@ namespace Microsoft.OData.Json
             }
             else if (value.Length > bufferWriter.FreeCapacity || value.Length > chunkSize)
             {
-                await WriteStringValueInChunksAsync(value.AsMemory());
+                await WriteStringValueInChunksAsync(value.AsMemory()).ConfigureAwait(false);
             }
             else
             {
@@ -1186,7 +1186,7 @@ namespace Microsoft.OData.Json
                 }
 
                 // Flush the buffer if needed
-                await this.DrainBufferIfThresholdReachedAsync();
+                await this.DrainBufferIfThresholdReachedAsync().ConfigureAwait(false);
             }
 
             this.bufferWriter.Write(this.DoubleQuote.Slice(0, 1).Span);
@@ -1207,7 +1207,7 @@ namespace Microsoft.OData.Json
             }
             else if (value.Length > bufferWriter.FreeCapacity || value.Length > chunkSize)
             {
-                await WriteByteValueInChunksAsync(value);
+                await WriteByteValueInChunksAsync(value).ConfigureAwait(false);
             }
             else
             {
