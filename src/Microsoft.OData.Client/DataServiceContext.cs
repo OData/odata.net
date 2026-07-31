@@ -3647,13 +3647,19 @@ namespace Microsoft.OData.Client
                 CancellationTokenRegistration registration = cancellationToken.Register(() => this.CancelRequest(beginLoadPropertyResult));
                 var currentTask = Task<QueryOperationResponse>.Factory.FromAsync(beginLoadPropertyResult, this.EndLoadProperty);
 
+                // Schedule the disposal/continuation with CancellationToken.None so it always runs
+                // even when the token is already canceled; otherwise the continuation could be
+                // skipped and the registration would never be disposed (and stay rooted in a
+                // long-lived token source).
                 return currentTask.ContinueWith(
                     t =>
                     {
                         registration.Dispose();
                         return this.ContinuePageAsync(t.Result, entity, propertyName, cancellationToken);
                     },
-                    cancellationToken).Unwrap();
+                    CancellationToken.None,
+                    TaskContinuationOptions.ExecuteSynchronously,
+                    TaskScheduler.Default).Unwrap();
             }
 
             var taskSource = new TaskCompletionSource<QueryOperationResponse>();

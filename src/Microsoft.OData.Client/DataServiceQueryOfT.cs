@@ -554,18 +554,28 @@ namespace Microsoft.OData.Client
             {
                 var asyncResult = this.Context.BeginExecute(continuation, null, null);
 
-                // Dispose the cancellation registration once the request completes so it is removed
-                // from the (potentially long-lived) token source, otherwise the captured async result
-                // graph is kept alive for every page, leaking memory (issue #3583).
-                using (cancellationToken.Register(() => this.Context.CancelRequest(asyncResult)))
+                // Register cancellation for this page's request and dispose the registration as soon
+                // as that request completes. A using block cannot be used here because this is an
+                // iterator method: its scope would stay open for the entire enumeration, keeping every
+                // page's registration (and the captured async result graph) rooted in a potentially
+                // long-lived token source until enumeration ends (issue #3583).
+                CancellationTokenRegistration registration = cancellationToken.Register(() => this.Context.CancelRequest(asyncResult));
+                IEnumerable<TElement> nextPage;
+                try
                 {
                     var currentTask = Task<IEnumerable<TElement>>.Factory.FromAsync(asyncResult, this.Context.EndExecute<TElement>);
                     var nextTask = currentTask.ContinueWith(t => ContinuePage(t.Result, cancellationToken), cancellationToken);
                     nextTask.Wait(cancellationToken);
-                    foreach (var element in nextTask.Result)
-                    {
-                        yield return element;
-                    }
+                    nextPage = nextTask.Result;
+                }
+                finally
+                {
+                    registration.Dispose();
+                }
+
+                foreach (var element in nextPage)
+                {
+                    yield return element;
                 }
             }
         }
