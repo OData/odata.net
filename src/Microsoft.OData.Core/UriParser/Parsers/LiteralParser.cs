@@ -37,6 +37,7 @@ namespace Microsoft.OData.UriParser
             { typeof(String), new StringPrimitiveParser() },
             { typeof(Decimal), new DecimalPrimitiveParser() },
             { typeof(DateOnly), new DatePrimitiveParser() },
+            { typeof(TimeOnly), new TimeOfDayPrimitiveParser() },
 
             // Types without single-quotes or type markers
             { typeof(Boolean), DelegatingPrimitiveParser<bool>.WithoutMarkup(ConverterUtils.ToBoolean) },
@@ -623,6 +624,40 @@ namespace Microsoft.OData.UriParser
                 bool isSucceed = EdmValueParser.TryParseDateOnly(text, out DateOnly? date);
                 targetValue = date;
                 return isSucceed;
+            }
+        }
+
+        /// <summary>
+        /// Parser specific to the Edm.TimeOfDay type.
+        /// </summary>
+        private sealed class TimeOfDayPrimitiveParser : PrimitiveParser
+        {
+            /// <summary>
+            /// Initializes a new instance of the <see cref="TimeOfDayPrimitiveParser"/> class.
+            /// </summary>
+            public TimeOfDayPrimitiveParser()
+                : base(typeof(TimeOnly))
+            {
+            }
+
+            /// <summary>
+            /// Tries to convert the given text into this parser's expected type. Conversion only, formatting should already have been removed.
+            /// </summary>
+            /// <param name="text">The text to convert.</param>
+            /// <param name="targetValue">The target value.</param>
+            /// <returns>
+            /// Whether or not conversion was successful.
+            /// </returns>
+            internal override bool TryConvert(ReadOnlySpan<char> text, out object targetValue)
+            {
+                if (UriUtils.TryUriStringToTimeOnly(text, out TimeOnly timeOfDay))
+                {
+                    targetValue = timeOfDay;
+                    return true;
+                }
+
+                targetValue = null;
+                return false;
             }
         }
     }
