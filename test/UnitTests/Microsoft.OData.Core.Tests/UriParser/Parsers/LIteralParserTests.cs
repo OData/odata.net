@@ -57,5 +57,35 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             Assert.True(parser.TryParseLiteral(typeof(DateOnly), "2015-09-28", out output));
             Assert.Equal(new DateOnly(2015, 09, 28), output);
         }
+
+        [Fact]
+        public void TryParseLiteralWithTimeOfDayForSlashKeyDelimiterShouldReturnValidTimeOfDay()
+        {
+            var parser = LiteralParser.ForKeys(true /*keyAsSegment*/);
+            object output;
+            Assert.True(parser.TryParseLiteral(typeof(TimeOnly), "13:20:00", out output));
+            Assert.Equal(new TimeOnly(13, 20, 00, 0), output);
+        }
+
+        [Fact]
+        public void TryParseLiteralWithTimeOfDayForParenthesesKeyDelimiterShouldReturnValidTimeOfDay()
+        {
+            var parser = LiteralParser.ForKeys(false /*keyAsSegment*/);
+            object output;
+            Assert.True(parser.TryParseLiteral(typeof(TimeOnly), "13:20:00", out output));
+            Assert.Equal(new TimeOnly(13, 20, 00, 0), output);
+        }
+
+        [Theory]
+        [InlineData("1:20 PM")] // 12-hour/culture-specific format is not a valid OData time-of-day literal
+        [InlineData("24:00:00")] // hours out of range
+        [InlineData("13:60:00")] // minutes out of range
+        [InlineData("not-a-time")]
+        public void TryParseLiteralWithInvalidTimeOfDayFormatShouldReturnFalse(string literal)
+        {
+            var parser = LiteralParser.ForKeys(false /*keyAsSegment*/);
+            object output;
+            Assert.False(parser.TryParseLiteral(typeof(TimeOnly), literal, out output));
+        }
     }
 }

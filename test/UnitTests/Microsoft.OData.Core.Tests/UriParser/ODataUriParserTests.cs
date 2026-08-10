@@ -34,6 +34,38 @@ namespace Microsoft.OData.Tests.UriParser
         private readonly Uri ServiceRoot = new Uri("http://host");
         private readonly Uri FullUri = new Uri("http://host/People");
 
+        [Theory]
+        [InlineData(false)] // parentheses key delimiter: Appointments(13:20:00)
+        [InlineData(true)]  // key-as-segment delimiter:  Appointments/13:20:00
+        public void ParseUriWithTimeOfDayKeyReturnsValidKeySegment(bool keyAsSegment)
+        {
+            // Arrange
+            EdmModel model = new EdmModel();
+            EdmEntityType appointment = new EdmEntityType("NS", "Appointment");
+            IEdmStructuralProperty keyProperty = appointment.AddStructuralProperty("Time", EdmCoreModel.Instance.GetTimeOnly(false));
+            appointment.AddKeys(keyProperty);
+            model.AddElement(appointment);
+            EdmEntityContainer container = new EdmEntityContainer("NS", "Container");
+            container.AddEntitySet("Appointments", appointment);
+            model.AddElement(container);
+
+            string relativeUri = keyAsSegment ? "Appointments/13:20:00" : "Appointments(13:20:00)";
+            ODataUriParser parser = new ODataUriParser(model, ServiceRoot, new Uri("http://host/" + relativeUri));
+            if (keyAsSegment)
+            {
+                parser.UrlKeyDelimiter = ODataUrlKeyDelimiter.Slash;
+            }
+
+            // Act
+            ODataPath path = parser.ParsePath();
+
+            // Assert
+            KeySegment segment = Assert.IsType<KeySegment>(path.LastSegment);
+            KeyValuePair<string, object> key = Assert.Single(segment.Keys);
+            Assert.Equal("Time", key.Key);
+            Assert.Equal(new TimeOnly(13, 20, 0), key.Value);
+        }
+
         [Fact]
         public void NestedFilterWithDerivedType()
         {
