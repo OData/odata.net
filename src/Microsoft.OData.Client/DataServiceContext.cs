@@ -3755,11 +3755,26 @@ namespace Microsoft.OData.Client
             if (continuation != null)
             {
                 IAsyncResult beginLoadPropertyResult = this.BeginLoadProperty(entity, propertyName, continuation, null, null);
-                cancellationToken.Register(() => this.CancelRequest(beginLoadPropertyResult));
+
+                // Dispose the cancellation registration once the request completes so it is removed
+                // from the (potentially long-lived) token source, otherwise the captured async result
+                // is kept alive for every page, leaking memory (issue #3583).
+                CancellationTokenRegistration registration = cancellationToken.Register(() => this.CancelRequest(beginLoadPropertyResult));
                 var currentTask = Task<QueryOperationResponse>.Factory.FromAsync(beginLoadPropertyResult, this.EndLoadProperty);
 
+                // Schedule the disposal/continuation with CancellationToken.None so it always runs
+                // even when the token is already canceled; otherwise the continuation could be
+                // skipped and the registration would never be disposed (and stay rooted in a
+                // long-lived token source).
                 return currentTask.ContinueWith(
-                    t => this.ContinuePageAsync(t.Result, entity, propertyName, cancellationToken), cancellationToken).Unwrap();
+                    t =>
+                    {
+                        registration.Dispose();
+                        return this.ContinuePageAsync(t.Result, entity, propertyName, cancellationToken);
+                    },
+                    CancellationToken.None,
+                    TaskContinuationOptions.ExecuteSynchronously,
+                    TaskScheduler.Default).Unwrap();
             }
 
             var taskSource = new TaskCompletionSource<QueryOperationResponse>();
