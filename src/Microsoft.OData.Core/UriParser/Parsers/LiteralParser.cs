@@ -39,6 +39,7 @@ namespace Microsoft.OData.UriParser
             { typeof(String), new StringPrimitiveParser() },
             { typeof(Decimal), new DecimalPrimitiveParser() },
             { typeof(Date), new DatePrimitiveParser() },
+            { typeof(TimeOfDay), new TimeOfDayPrimitiveParser() },
 
             // Types without single-quotes or type markers
             { typeof(Boolean), DelegatingPrimitiveParser<bool>.WithoutMarkup(XmlConvert.ToBoolean) },
@@ -655,6 +656,36 @@ namespace Microsoft.OData.UriParser
                 Date? date;
                 bool isSucceed = EdmValueParser.TryParseDate(text, out date);
                 targetValue = date;
+                return isSucceed;
+            }
+        }
+
+        /// <summary>
+        /// Parser specific to the Edm.TimeOfDay type.
+        /// </summary>
+        private sealed class TimeOfDayPrimitiveParser : PrimitiveParser
+        {
+            /// <summary>
+            /// Initializes a new instance of the <see cref="TimeOfDayPrimitiveParser"/> class.
+            /// </summary>
+            public TimeOfDayPrimitiveParser()
+                : base(typeof(TimeOfDay))
+            {
+            }
+
+            /// <summary>
+            /// Tries to convert the given text into this parser's expected type. Conversion only, formatting should already have been removed.
+            /// </summary>
+            /// <param name="text">The text to convert.</param>
+            /// <param name="targetValue">The target value.</param>
+            /// <returns>
+            /// Whether or not conversion was successful.
+            /// </returns>
+            internal override bool TryConvert(string text, out object targetValue)
+            {
+                TimeOfDay? timeOfDay;
+                bool isSucceed = EdmValueParser.TryParseTimeOfDay(text, out timeOfDay);
+                targetValue = timeOfDay;
                 return isSucceed;
             }
         }
