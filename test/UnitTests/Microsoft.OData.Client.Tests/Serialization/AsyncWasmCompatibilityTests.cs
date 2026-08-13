@@ -399,7 +399,14 @@ namespace Microsoft.OData.Client.Tests.Serialization
         {
             public TestContainer(Uri serviceRoot) : base(serviceRoot, ODataProtocolVersion.V4)
             {
-                Format.LoadServiceModel = () => CsdlReader.Parse(XmlReader.Create(new StringReader(Edmx)));
+                Format.LoadServiceModel = () =>
+                {
+                    using (StringReader stringReader = new StringReader(Edmx))
+                    using (XmlReader xmlReader = XmlReader.Create(stringReader))
+                    {
+                        return CsdlReader.Parse(xmlReader);
+                    }
+                };
                 Format.UseJson();
                 Products = base.CreateQuery<Product>("Products");
             }
@@ -410,11 +417,13 @@ namespace Microsoft.OData.Client.Tests.Serialization
             /// Number of times <see cref="CancelRequest"/> was invoked. Used by tests to detect
             /// cancellation-token registrations that outlive a completed request (issue #3583).
             /// </summary>
-            public int CancelRequestCount { get; private set; }
+            public int CancelRequestCount => Volatile.Read(ref this.cancelRequestCount);
+
+            private int cancelRequestCount;
 
             public override void CancelRequest(IAsyncResult asyncResult)
             {
-                this.CancelRequestCount++;
+                Interlocked.Increment(ref this.cancelRequestCount);
                 base.CancelRequest(asyncResult);
             }
         }
@@ -446,9 +455,9 @@ namespace Microsoft.OData.Client.Tests.Serialization
 
             public override IAsyncResult BeginGetResponse(AsyncCallback callback, object state)
             {
-                var tcs = new TaskCompletionSource<bool>(state);
+                var tcs = new TaskCompletionSource<bool>(state, TaskCreationOptions.RunContinuationsAsynchronously);
                 tcs.TrySetResult(true);
-                callback(tcs.Task);
+                callback?.Invoke(tcs.Task);
                 return tcs.Task;
             }
 
