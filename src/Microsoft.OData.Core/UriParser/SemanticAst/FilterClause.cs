@@ -7,13 +7,14 @@
 namespace Microsoft.OData.UriParser
 {
     #region Namespaces
+    using System;
     using Microsoft.OData.Edm;
     #endregion Namespaces
 
     /// <summary>
     /// The result of parsing a $filter query option.
     /// </summary>
-    public sealed class FilterClause
+    public sealed class FilterClause : IEquatable<FilterClause>
     {
         /// <summary>
         /// The filter expression - this should evaluate to a single boolean value.
@@ -65,6 +66,35 @@ namespace Microsoft.OData.UriParser
             {
                 return this.RangeVariable.TypeReference;
             }
+        }
+
+        /// <summary>
+        /// Determines whether the specified <see cref="FilterClause"/> is equal to the current <see cref="FilterClause"/>.
+        /// </summary>
+        /// <param name="other">The <see cref="FilterClause"/> to compare with the current <see cref="FilterClause"/>.</param>
+        /// <returns><c>true</c> if the specified <see cref="FilterClause"/> is equal to the current <see cref="FilterClause"/>; otherwise, <c>false</c>.</returns>
+        public bool Equals(FilterClause other)
+        {
+            return SemanticAstStructuralEqualityComparer.AreEqual(this, other);
+        }
+
+        /// <summary>
+        /// Determines whether the specified object is equal to the current <see cref="FilterClause"/>.
+        /// </summary>
+        /// <param name="obj">The object to compare with the current <see cref="FilterClause"/>.</param>
+        /// <returns><c>true</c> if the specified object is equal to the current <see cref="FilterClause"/>; otherwise, <c>false</c>.</returns>
+        public override bool Equals(object obj)
+        {
+            return this.Equals(obj as FilterClause);
+        }
+
+        /// <summary>
+        /// Serves as the default hash function.
+        /// </summary>
+        /// <returns>A hash code for the current <see cref="FilterClause"/>.</returns>
+        public override int GetHashCode()
+        {
+            return SemanticAstStructuralEqualityComparer.GetHashCode(this);
         }
     }
 }
