@@ -269,8 +269,9 @@ namespace Microsoft.OData.UriParser.Validation.Rules
         /// <returns>True if the annotation is the Revisions annotation, otherwise false.</returns>
         private static bool isRevisionsAnnotation(IEdmVocabularyAnnotation annotation)
         {
-            return string.Equals(annotation.Term.FullName(), CoreVocabularyConstants.Revisions, StringComparison.OrdinalIgnoreCase) ||
-                            string.Equals(annotation.Term.FullName(), DefaultCoreAliasWithRevisionTerm, StringComparison.OrdinalIgnoreCase);
+            IEdmTerm term = annotation.Term;
+            return term.FullNameEquals(CoreVocabularyConstants.Revisions, StringComparison.OrdinalIgnoreCase) ||
+                            term.FullNameEquals(DefaultCoreAliasWithRevisionTerm, StringComparison.OrdinalIgnoreCase);
         }
     }
 }

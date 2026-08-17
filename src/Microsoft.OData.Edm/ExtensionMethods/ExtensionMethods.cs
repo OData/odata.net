@@ -1587,6 +1587,69 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
+        /// Compares the full name of <paramref name="element"/> to <paramref name="qualifiedName"/>
+        /// using <see cref="StringComparison.Ordinal"/> without materializing the concatenated
+        /// "Namespace.Name" string when the element does not implement <see cref="IEdmFullNamedElement"/>.
+        /// Mirrors the semantics of <see cref="FullName(IEdmSchemaElement)"/>.
+        /// </summary>
+        /// <param name="element">Reference to the calling object.</param>
+        /// <param name="qualifiedName">The qualified name to compare against.</param>
+        /// <returns>true if the element's full name equals <paramref name="qualifiedName"/> using <see cref="StringComparison.Ordinal"/>; otherwise, false.</returns>
+        public static bool FullNameEquals(this IEdmSchemaElement element, ReadOnlySpan<char> qualifiedName)
+        {
+            return FullNameEquals(element, qualifiedName, StringComparison.Ordinal);
+        }
+
+        /// <summary>
+        /// Compares the full name of <paramref name="element"/> to <paramref name="qualifiedName"/>
+        /// using the specified <see cref="StringComparison"/> without materializing the concatenated
+        /// "Namespace.Name" string when the element does not implement <see cref="IEdmFullNamedElement"/>.
+        /// Mirrors the semantics of <see cref="FullName(IEdmSchemaElement)"/>.
+        /// </summary>
+        /// <param name="element">Reference to the calling object.</param>
+        /// <param name="qualifiedName">The qualified name to compare against.</param>
+        /// <param name="comparisonType">The string comparison to apply.</param>
+        /// <returns>true if the element's full name equals <paramref name="qualifiedName"/> using <paramref name="comparisonType"/>; otherwise, false.</returns>
+        public static bool FullNameEquals(this IEdmSchemaElement element, ReadOnlySpan<char> qualifiedName, StringComparison comparisonType)
+        {
+            EdmUtil.CheckArgumentNull(element, "element");
+
+            if (element is IEdmFullNamedElement fullNamed)
+            {
+                return qualifiedName.Equals(fullNamed.FullName.AsSpan(), comparisonType);
+            }
+
+            string name = element.Name;
+            string ns = element.Namespace;
+
+            if (name == null)
+            {
+                return qualifiedName.Length == 0;
+            }
+
+            if (ns == null)
+            {
+                return qualifiedName.Equals(name.AsSpan(), comparisonType);
+            }
+
+            // Compare "ns + '.' + name" against qualifiedName in place.
+            int nsLen = ns.Length;
+            int nameLen = name.Length;
+            if (qualifiedName.Length != nsLen + 1 + nameLen)
+            {
+                return false;
+            }
+
+            if (qualifiedName[nsLen] != '.')
+            {
+                return false;
+            }
+
+            return qualifiedName.Slice(0, nsLen).Equals(ns.AsSpan(), comparisonType)
+                && qualifiedName.Slice(nsLen + 1, nameLen).Equals(name.AsSpan(), comparisonType);
+        }
+
+        /// <summary>
         /// Gets the Short Qualified name of the element.
         /// </summary>
         /// <param name="element">Reference to the calling object.</param>
@@ -2631,7 +2694,7 @@ namespace Microsoft.OData.Edm
 
             if (forceFullyQualifiedNameFilter || operationName.IndexOf(".", StringComparison.Ordinal) > -1)
             {
-                return operations.Where(o => o.FullName() == operationName);
+                return operations.Where(o => o.FullNameEquals(operationName.AsSpan(), StringComparison.Ordinal));
             }
             else
             {
@@ -3238,7 +3301,7 @@ namespace Microsoft.OData.Edm
             int nextIndex = 1;
             if (firstElementName.Contains(".", StringComparison.Ordinal))
             {
-                if (string.Equals(firstElementName, container.FullName(), StringComparison.OrdinalIgnoreCase))
+                if (container.FullNameEquals(firstElementName, StringComparison.OrdinalIgnoreCase))
                 {
                     if (pathSegments.Length > 1)
                     {
