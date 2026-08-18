@@ -6,7 +6,7 @@
 
 namespace Microsoft.OData.UriParser
 {
-    using System.Diagnostics;
+    using Microsoft.OData.Edm;
 
     /// <summary>
     /// Class that knows how to bind literal values.
@@ -48,8 +48,8 @@ namespace Microsoft.OData.UriParser
             {
                 if (literalToken.ExpectedEdmTypeReference != null)
                 {
-                    OData.Edm.IEdmCollectionTypeReference collectionReference =
-                        literalToken.ExpectedEdmTypeReference as OData.Edm.IEdmCollectionTypeReference;
+                    IEdmCollectionTypeReference collectionReference =
+                        literalToken.ExpectedEdmTypeReference as IEdmCollectionTypeReference;
                     if (collectionReference != null)
                     {
                         ODataCollectionValue collectionValue = literalToken.Value as ODataCollectionValue;

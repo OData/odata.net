@@ -78,12 +78,12 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// Signature for add
         /// </summary>
-        private static readonly FunctionSignature[] AdditionSignatures = arithmeticSignatures.Concat(GetAdditionTermporalSignatures()).ToArray();
+        private static readonly FunctionSignature[] AdditionSignatures = arithmeticSignatures.Concat(GetAdditionTemporalSignatures()).ToArray();
 
         /// <summary>
         /// Signature for sub
         /// </summary>
-        private static readonly FunctionSignature[] SubtractionSignatures = arithmeticSignatures.Concat(GetSubtractionTermporalSignatures()).ToArray();
+        private static readonly FunctionSignature[] SubtractionSignatures = arithmeticSignatures.Concat(GetSubtractionTemporalSignatures()).ToArray();
 
         /// <summary>Function signatures for relational operators (eq, ne, lt, le, gt, ge).</summary>
         private static readonly FunctionSignature[] relationalSignatures = new FunctionSignature[]
@@ -377,25 +377,26 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>Finds the best fitting function for the specified arguments.</summary>
-        /// <param name="nameFunctions">Functions with names to consider.</param>
-        /// <param name="argumentNodes">Nodes of the arguments for the function, can be new {null,null}.</param>
         /// <param name="functionCallToken">Function call token used for case-sensitive matching to resolve ambiguous cases.</param>
+        /// <param name="nameFunctions">Functions with names to consider.</param>
+        /// <param name="argumentMetadata">Nodes of the arguments for the function, can be new {null,null}.</param>
         /// <returns>The best fitting function; null if none found or ambiguous.</returns>
         internal static KeyValuePair<string, FunctionSignatureWithReturnType> FindBestFunctionSignature(
+            string functionCallToken,
             IList<KeyValuePair<string, FunctionSignatureWithReturnType>> nameFunctions,
-            SingleValueNode[] argumentNodes, string functionCallToken)
+            (QueryNode Node, IEdmTypeReference TypeReference)[] argumentMetadata)
         {
-            IEdmTypeReference[] argumentTypes = argumentNodes.Select(s => s.TypeReference).ToArray();
-            Debug.Assert(nameFunctions != null, "nameFunctions != null");
-            Debug.Assert(argumentTypes != null, "argumentTypes != null");
-            Debug.Assert(functionCallToken != null, "functionCallToken != null");
+            Debug.Assert(nameFunctions != null, $"{nameof(nameFunctions)} != null");
+            Debug.Assert(argumentMetadata != null, $"{nameof(argumentMetadata)} != null");
+            Debug.Assert(functionCallToken != null, $"{nameof(functionCallToken)} != null");
+
             IList<KeyValuePair<string, FunctionSignatureWithReturnType>> applicableNameFunctions
                 = new List<KeyValuePair<string, FunctionSignatureWithReturnType>>(nameFunctions.Count);
 
             // Build a list of applicable functions (and cache their promoted arguments).
             foreach (KeyValuePair<string, FunctionSignatureWithReturnType> candidate in nameFunctions)
             {
-                if (candidate.Value.ArgumentTypes.Length != argumentTypes.Length)
+                if (candidate.Value.ArgumentTypes.Length != argumentMetadata.Length)
                 {
                     continue;
                 }
@@ -403,7 +404,7 @@ namespace Microsoft.OData.UriParser
                 bool argumentsMatch = true;
                 for (int i = 0; i < candidate.Value.ArgumentTypes.Length; i++)
                 {
-                    if (!CanPromoteNodeTo(argumentNodes[i], argumentTypes[i], candidate.Value.ArgumentTypes[i]))
+                    if (!CanPromoteNodeTo(argumentMetadata[i].Node, argumentMetadata[i].TypeReference, candidate.Value.ArgumentTypes[i]))
                     {
                         argumentsMatch = false;
                         break;
@@ -428,6 +429,7 @@ namespace Microsoft.OData.UriParser
             }
             else
             {
+                // TODO: Verify when this block is hit in practice and determine how it'd handle collection node arguments.
                 // Find a single function which is better than all others.
                 IList<KeyValuePair<string, FunctionSignatureWithReturnType>> equallyArgumentsMatchingNameFunctions =
                     new List<KeyValuePair<string, FunctionSignatureWithReturnType>>();
@@ -436,7 +438,10 @@ namespace Microsoft.OData.UriParser
                     bool betterThanAllOthers = true;
                     for (int j = 0; j < applicableNameFunctions.Count; j++)
                     {
-                        if (i != j && MatchesArgumentTypesBetterThan(argumentTypes, applicableNameFunctions[j].Value.ArgumentTypes, applicableNameFunctions[i].Value.ArgumentTypes))
+                        if (i != j && MatchesArgumentTypesBetterThan(
+                            argumentMetadata.Select(d => d.TypeReference).ToArray(),
+                            applicableNameFunctions[j].Value.ArgumentTypes,
+                            applicableNameFunctions[i].Value.ArgumentTypes))
                         {
                             betterThanAllOthers = false;
                             break;
@@ -555,7 +560,7 @@ namespace Microsoft.OData.UriParser
         /// function signatures for temporal
         /// </summary>
         /// <returns>temporal function signatures for temporal for add</returns>
-        private static IEnumerable<FunctionSignature> GetAdditionTermporalSignatures()
+        private static IEnumerable<FunctionSignature> GetAdditionTemporalSignatures()
         {
             yield return new FunctionSignature(new[] { EdmCoreModel.Instance.GetDateTimeOffset(false), EdmCoreModel.Instance.GetDuration(false) },
                                                new FunctionSignature.CreateArgumentTypeWithFacets[]
@@ -623,7 +628,7 @@ namespace Microsoft.OData.UriParser
         /// function signatures for temporal
         /// </summary>
         /// <returns>temporal function signatures for temporal for sub</returns>
-        private static IEnumerable<FunctionSignature> GetSubtractionTermporalSignatures()
+        private static IEnumerable<FunctionSignature> GetSubtractionTemporalSignatures()
         {
             yield return new FunctionSignature(new[] { EdmCoreModel.Instance.GetDateTimeOffset(false), EdmCoreModel.Instance.GetDuration(false) },
                                                new FunctionSignature.CreateArgumentTypeWithFacets[]
@@ -848,6 +853,219 @@ namespace Microsoft.OData.UriParser
                 {
                     return true;
                 }
+            }
+
+            return false;
+        }
+
+        /// <summary>Promotes the specified expression to the given type if necessary.</summary>
+        /// <param name="sourceNodeOrNull">The actual argument node, may be null.</param>
+        /// <param name="sourceType">The actual argument type.</param>
+        /// <param name="targetType">The required type to promote to.</param>
+        /// <returns>True if the <paramref name="sourceType"/> could be promoted; otherwise false.</returns>
+        private static bool CanPromoteNodeTo(CollectionNode sourceNodeOrNull, IEdmTypeReference sourceType, IEdmTypeReference targetType)
+        {
+            Debug.Assert(targetType != null, "targetType != null");
+
+            if (sourceType == null)
+            {
+                // Null or open collection - allow if target collection is nullable
+                return targetType.IsNullable;
+            }
+
+            IEdmCollectionTypeReference sourceCollectionType = sourceType.AsCollectionOrNull();
+            IEdmCollectionTypeReference targetCollectionType = targetType.AsCollectionOrNull();
+            if (sourceCollectionType == null || targetCollectionType == null)
+            {
+                return false;
+            }
+
+            IEdmTypeReference sourceElementType = sourceCollectionType.ElementType();
+            IEdmTypeReference targetElementType = targetCollectionType.ElementType();
+            Debug.Assert(targetElementType.IsODataPrimitiveTypeKind() || targetElementType.IsODataEnumTypeKind(),
+                "Type promotion only supported for primitive or enum collection types.");
+
+            if (sourceElementType.IsEquivalentTo(targetElementType))
+            {
+                return true;
+            }
+
+            if (CanConvertTo(null, sourceElementType, targetElementType))
+            {
+                return true;
+            }
+
+            // Allow promotion from nullable<T> to non-nullable by directly accessing underlying value.
+            if (sourceElementType.IsNullable && targetElementType.IsODataValueType())
+            {
+                // COMPAT 40: Type promotion in the product allows promotion from a nullable type to arbitrary value types
+                IEdmTypeReference nonNullableSourceType = sourceElementType.Definition.ToTypeReference(false);
+                if (CanConvertTo(null, nonNullableSourceType, targetElementType))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Determines whether a syntactic or already-semantic <see cref="QueryNode"/> can be promoted to (or is already compatible with) a target Edm type,
+        /// including support for promoting a string literal that represents a bracketed collection expression into a <see cref="CollectionConstantNode"/>.
+        /// </summary>
+        /// <param name="sourceNodeOrNull">
+        /// The source node. May be null (null literal / open property),
+        /// a <see cref="ConstantNode"/>, a <see cref="CollectionNode"/> or a <see cref="SingleValueNode"/>.
+        /// </param>
+        /// <param name="sourceType">The current (inferred or declared) Edm type reference of the source node; may be null for null/open cases.</param>
+        /// <param name="targetType">The desired Edm type reference to promote to. May be a collection or single-valued type.</param>
+        /// <returns><c>true</c> if the source can be used as (or promoted to) the target; <c>false</c> otherwise.</returns>
+        /// <remarks>
+        /// This overload centralizes promotion logic for both single and collection-valued arguments used during function overload resolution.
+        /// It defers conversion of bracketed collection text (e.g. "[1,2,3]", "['A','B']", "[]") embedded in a <see cref="ConstantNode"/> until this stage
+        /// because at this stage the target function parameter type known. Deferring to this stage makes it possible to:
+        /// 1) Correctly interpret empty collections or collections whose items are all null (which are promotable to ANY collection element type),
+        /// 2) Avoid allocating intermediate collection node variants that may later mismatch chosen overloads, and
+        /// 3) Fail early for incompatible element types (e.g. "[true,false]" when the target expects a numeric collection) without guessing.
+        /// Workflow:
+        /// 1) If the target is collection-valued:
+        ///    a) Existing <see cref="CollectionNode"/> instances delegate to collection element promotion.
+        ///    b) Null source type succeed only if the target collection type is nullable.
+        ///    c) A string <see cref="ConstantNode"/> whose literal text parses as an OData collection literal is heuristically converted via
+        ///       <see cref="TryParseCollectionConstantNode"/> and then validated against the target collection element type.
+        /// 2) If the target is single-valued, collections cannot be promoted; otherwise delegate to primitive/enum promotion rules.
+        public static bool CanPromoteNodeTo(QueryNode sourceNodeOrNull, IEdmTypeReference sourceType, IEdmTypeReference targetType)
+        {
+            Debug.Assert(targetType != null, "targetType != null");
+
+            if (targetType.IsCollection())
+            {
+                // Case 1: Source is already a CollectionNode
+                if (sourceNodeOrNull is CollectionNode || (sourceType?.IsCollection() == true))
+                {
+                    return CanPromoteNodeTo(sourceNodeOrNull as CollectionNode, sourceType, targetType);
+                }
+
+                // Case 2: Source is null or open-typed
+                if (sourceType == null)
+                {
+                    return targetType.IsNullable;
+                }
+
+                // Case 3: Source is a ConstantNode with LiteralText that could be a bracketed expression
+                if (sourceNodeOrNull is ConstantNode constantNode
+                    && sourceType.IsString()
+                    && !string.IsNullOrEmpty(constantNode.LiteralText))
+                {
+                    if (TryParseCollectionConstantNode(constantNode, targetType.AsCollection(), out CollectionConstantNode collectionConstantNode))
+                    {
+                        return CanPromoteNodeTo(
+                            collectionConstantNode,
+                            collectionConstantNode.CollectionType,
+                            targetType);
+                    }
+
+                    return false;
+                }
+
+                return false;
+            }
+
+            // Non-collection target type
+            if (sourceNodeOrNull is CollectionNode)
+            {
+                // Cannot promote a collection to a single value
+                return false;
+            }
+
+            return CanPromoteNodeTo(sourceNodeOrNull as SingleValueNode, sourceType, targetType);
+        }
+
+        /// <summary>
+        /// Attempts to parse and wrap a string literal contained in a <see cref="ConstantNode"/> as an OData collection literal,
+        /// producing a semantic <see cref="CollectionConstantNode"/> suitable for later promotion against a target collection type.
+        /// </summary>
+        /// <param name="constantNode">The original constant node whose <c>LiteralText</c> may represent a bracketed collection (e.g. "[1,2,3]", "['A','B']", "[]").</param>
+        /// <param name="targetType">The function parameter or expected <see cref="IEdmCollectionTypeReference"/> the caller is trying to promote to.</param>
+        /// <param name="collectionConstantNode">Outputs the constructed collection constant node when parsing succeeds; null otherwise.</param>
+        /// <returns><c>true</c> if parsing produced an <see cref="ODataCollectionValue"/> and a corresponding <see cref="CollectionConstantNode"/>;
+        /// <c>false</c> if parsing fails or the literal is not a collection.</returns>
+        /// <remarks>
+        /// Parsing is delegated to <see cref="ODataUriUtils.ConvertFromUriLiteral(string,ODataVersion,IEdmModel,IEdmTypeReference)"/>
+        /// using heuristic typing (no model supplied) to deserialize the bracketed expression.
+        /// If the literal represents an empty collection or all items are null, we cannot infer an element type from content;
+        /// the collection can be promoted to ANY element type,
+        /// so we construct a <see cref="CollectionConstantNode"/> using the caller's <paramref name="targetType"/>.
+        /// If at least one non-null item exists, its CLR type is mapped to an Edm primitive type
+        /// and used to build the node's collection type. This enables early rejection of incompatible element scenarios
+        /// (e.g. string items when a numeric collection is required).
+        /// NOTE:
+        /// This transformation is intentionally performed late (during promotion) because at this stage we have the target type available to guide parsing.
+        /// Performing conversion early would require guessing or defaulting element types, making empty arrays ambiguous
+        /// and complicating overload resolution. By deferring, we align parsing outcome with the concrete expected type, simplifying validation and error messages.
+        /// </remarks>
+        public static bool TryParseCollectionConstantNode(ConstantNode constantNode, IEdmCollectionTypeReference targetType, out CollectionConstantNode collectionConstantNode)
+        {
+            Debug.Assert(constantNode != null, "constantNode != null");
+            Debug.Assert(targetType != null, "targetType != null");
+
+            collectionConstantNode = null;
+
+            // How would we reuse the result in FunctionCallBinder.TypePromoteArguments?
+            try
+            {
+                object result = ODataUriUtils.ConvertFromUriLiteral(
+                    value: constantNode.LiteralText,
+                    version: ODataVersion.V4,
+                    model: null,
+                    typeReference: null); // Parsing type reference when there's no model available results into an exception. Type will be evaluated heuristically.
+
+                if (result != null && result is ODataCollectionValue collectionValue)
+                {
+                    // NOTE: Looping through all items to determine if the items are homogeneous is potentially expensive.
+                    // We just check the first item and let an exception be thrown later if the items are not homogeneous.
+                    object collectionItem = null;
+                    bool collectionIsEmpty;
+                    using (IEnumerator<object> enumerator = collectionValue.Items.GetEnumerator())
+                    {
+                        collectionIsEmpty = !enumerator.MoveNext();
+                        if (!collectionIsEmpty)
+                        {
+                            collectionItem = enumerator.Current;
+                        }
+                    }
+
+                    if (collectionIsEmpty || (collectionItem == null && targetType.IsNullable))
+                    {
+                        // Empty collection or all items are null - can promote to any collection type
+                        collectionConstantNode = new CollectionConstantNode(collectionValue.Items, constantNode.LiteralText, targetType.AsCollection());
+
+                        return true;
+                    }
+                    
+                    if (collectionItem == null)
+                    {
+                        // First item is null but the target [collection] type is not nullable - cannot promote
+                        return false;
+                    }
+
+                    Type collectionItemType = collectionItem.GetType();
+                    IEdmTypeReference collectionItemTypeReference = EdmLibraryExtensions.GetPrimitiveTypeReference(collectionItemType);
+                    // TODO: Handle enum types
+                    if (!collectionItemTypeReference.IsPrimitive())
+                    {
+                        return false;
+                    }
+
+                    IEdmCollectionTypeReference collectionTypeReference = new EdmCollectionTypeReference(new EdmCollectionType(collectionItemTypeReference));
+                    collectionConstantNode = new CollectionConstantNode(collectionValue.Items, constantNode.LiteralText, collectionTypeReference);
+
+                    return true;
+                }
+            }
+            catch (ODataException)
+            {
+                return false;
             }
 
             return false;

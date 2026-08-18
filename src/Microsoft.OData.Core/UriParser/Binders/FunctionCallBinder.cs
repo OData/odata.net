@@ -47,45 +47,87 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         /// <param name="signature">The signature to match the types to.</param>
         /// <param name="argumentNodes">The types to promote.</param>
-        internal static void TypePromoteArguments(FunctionSignatureWithReturnType signature, List<QueryNode> argumentNodes)
+        internal static void TypePromoteArguments(
+            FunctionSignatureWithReturnType signature,
+            (QueryNode Node, IEdmTypeReference TypeReference)[] argumentsMetadata)
         {
             // Convert all argument nodes to the best signature argument type
-            Debug.Assert(signature.ArgumentTypes.Length == argumentNodes.Count, "The best signature match doesn't have the same number of arguments.");
-            for (int i = 0; i < argumentNodes.Count; i++)
+            Debug.Assert(signature.ArgumentTypes.Length == argumentsMetadata.Length,
+                "The best signature match doesn't have the same number of arguments.");
+
+            for (int i = 0; i < argumentsMetadata.Length; i++)
             {
-                Debug.Assert(argumentNodes[i] is SingleValueNode, "We should have already verified that all arguments are single values.");
-                SingleValueNode argumentNode = (SingleValueNode)argumentNodes[i];
+                Debug.Assert(argumentsMetadata[i].Node is SingleValueNode or CollectionNode,
+                    "We should have already verified that all arguments are single- or collection-valued.");
                 IEdmTypeReference signatureArgumentType = signature.ArgumentTypes[i];
-                Debug.Assert(signatureArgumentType.IsODataPrimitiveTypeKind() || signatureArgumentType.IsODataEnumTypeKind(), "Only primitive or enum types should be able to get here.");
-                argumentNodes[i] = MetadataBindingUtils.ConvertToTypeIfNeeded(argumentNode, signatureArgumentType);
+                
+                if (argumentsMetadata[i].Node is SingleValueNode singleValueNode)
+                {
+                    if (signatureArgumentType.IsCollection() && singleValueNode is ConstantNode constantNode && constantNode.TypeReference.IsString())
+                    {
+                        if (!TypePromotionUtils.TryParseCollectionConstantNode(constantNode, signatureArgumentType.AsCollection(), out CollectionConstantNode collectionConstantNode))
+                        {
+                            Debug.Assert(false, "Only constant node with bracketed expression that is possible to convert to a collection that can be promoted should be able to get here.");
+                        }
+
+                        CollectionNode collectionNode = MetadataBindingUtils.ConvertToTypeIfNeeded(collectionConstantNode, signatureArgumentType);
+                        argumentsMetadata[i].Node = collectionNode;
+                        argumentsMetadata[i].TypeReference = collectionNode.CollectionType;
+                        continue;
+                    }
+
+                    Debug.Assert(signatureArgumentType.IsODataPrimitiveTypeKind() || signatureArgumentType.IsODataEnumTypeKind(),
+                        "Only primitive or enum types should be able to get here.");
+                    SingleValueNode queryNode = MetadataBindingUtils.ConvertToTypeIfNeeded(singleValueNode, signatureArgumentType);
+                    argumentsMetadata[i].Node = queryNode;
+                    argumentsMetadata[i].TypeReference = queryNode.TypeReference;
+                }
+                else
+                {
+                    Debug.Assert(signatureArgumentType is IEdmCollectionTypeReference signatureCollectionType
+                        && (signatureCollectionType.ElementType().IsODataPrimitiveTypeKind() || signatureCollectionType.ElementType().IsODataEnumTypeKind()),
+                        "Only primitive or enum collection element types should be able to get here.");
+
+                    CollectionNode collectionNode = MetadataBindingUtils.ConvertToTypeIfNeeded(
+                        (CollectionNode)argumentsMetadata[i].Node,
+                        signatureArgumentType);
+                    argumentsMetadata[i].Node = collectionNode;
+                    argumentsMetadata[i].TypeReference = collectionNode.CollectionType;
+                }
             }
         }
 
         /// <summary>
-        /// Checks that all arguments are SingleValueNodes
+        /// Checks that all arguments are single-valued or collection-valued nodes.
         /// </summary>
         /// <param name="functionName">The name of the function the arguments are from.</param>
         /// <param name="argumentNodes">The arguments to validate.</param>
-        /// <returns>SingleValueNode array</returns>
-        internal static SingleValueNode[] ValidateArgumentsAreSingleValue(string functionName, List<QueryNode> argumentNodes)
+        internal static (QueryNode Node, IEdmTypeReference TypeReference)[] ValidateArgumentNodes(string functionName, List<QueryNode> argumentNodes)
         {
-            ExceptionUtils.CheckArgumentNotNull(functionName, "functionCallToken");
-            ExceptionUtils.CheckArgumentNotNull(argumentNodes, "argumentNodes");
+            ExceptionUtils.CheckArgumentNotNull(functionName, $"{nameof(functionName)}");
+            ExceptionUtils.CheckArgumentNotNull(argumentNodes, $"{nameof(argumentNodes)}");
 
-            // Right now all functions take a single value for all arguments
-            SingleValueNode[] ret = new SingleValueNode[argumentNodes.Count];
+            (QueryNode Node, IEdmTypeReference TypeReference)[] argumentsMetadata = new (QueryNode, IEdmTypeReference)[argumentNodes.Count];
+
+            // Functions take a single-valued or collection-valued arguments
             for (int i = 0; i < argumentNodes.Count; i++)
             {
-                SingleValueNode argumentNode = argumentNodes[i] as SingleValueNode;
-                if (argumentNode == null)
+                QueryNode argumentNode = argumentNodes[i];
+                if (argumentNode is SingleValueNode singleValueNode)
                 {
-                    throw new ODataException(Error.Format(SRResources.MetadataBinder_FunctionArgumentNotSingleValue, functionName));
+                    argumentsMetadata[i] = (singleValueNode, singleValueNode.TypeReference);
                 }
-
-                ret[i] = argumentNode;
+                else if (argumentNode is CollectionNode collectionNode)
+                {
+                    argumentsMetadata[i] = (collectionNode, collectionNode.CollectionType);
+                }
+                else
+                {
+                    throw new ODataException(Error.Format(SRResources.MetadataBinder_FunctionArgumentNotSingleValueOrCollectionNode, functionName));
+                }
             }
 
-            return ret;
+            return argumentsMetadata;
         }
 
         /// <summary>
@@ -95,24 +137,24 @@ namespace Microsoft.OData.UriParser
         /// <param name="argumentNodes">The nodes of the arguments, can be new {null,null}.</param>
         /// <param name="nameSignatures">The name-signature pairs to match against</param>
         /// <returns>Returns the matching signature or throws</returns>
-        internal static KeyValuePair<string, FunctionSignatureWithReturnType> MatchSignatureToUriFunction(string functionCallToken, SingleValueNode[] argumentNodes,
+        internal static KeyValuePair<string, FunctionSignatureWithReturnType> MatchSignatureToUriFunction(
+            string functionCallToken,
+            (QueryNode Node, IEdmTypeReference TypeReference)[] argumentsMetadata,
             IList<KeyValuePair<string, FunctionSignatureWithReturnType>> nameSignatures)
         {
             KeyValuePair<string, FunctionSignatureWithReturnType> nameSignature;
 
-            IEdmTypeReference[] argumentTypes = argumentNodes.Select(s => s.TypeReference).ToArray();
-
             // Handle the cases where we don't have type information (null literal, open properties) for ANY of the arguments
-            int argumentCount = argumentTypes.Length;
-            if (argumentTypes.All(a => a == null) && argumentCount > 0)
+            int argumentsCount = argumentsMetadata.Length;
+            if (argumentsMetadata.All(n => n.TypeReference == null) && argumentsCount > 0)
             {
                 // we specifically want to find just the first function that matches the number of arguments, we don't care about
                 // ambiguity here because we're already in an ambiguous case where we don't know what kind of types
                 // those arguments are.
-                KeyValuePair<string, FunctionSignatureWithReturnType> found = nameSignatures.FirstOrDefault(pair => pair.Value.ArgumentTypes.Length == argumentCount);
+                KeyValuePair<string, FunctionSignatureWithReturnType> found = nameSignatures.FirstOrDefault(pair => pair.Value.ArgumentTypes.Length == argumentsCount);
                 if (found.Equals(TypePromotionUtils.NotFoundKeyValuePair))
                 {
-                    throw new ODataException(Error.Format(SRResources.FunctionCallBinder_CannotFindASuitableOverload, functionCallToken, argumentTypes.Length));
+                    throw new ODataException(Error.Format(SRResources.FunctionCallBinder_CannotFindASuitableOverload, functionCallToken, argumentsMetadata.Length));
                 }
                 else
                 {
@@ -124,8 +166,7 @@ namespace Microsoft.OData.UriParser
             }
             else
             {
-                nameSignature =
-                    TypePromotionUtils.FindBestFunctionSignature(nameSignatures, argumentNodes, functionCallToken);
+                nameSignature = TypePromotionUtils.FindBestFunctionSignature(functionCallToken, nameSignatures, argumentsMetadata);
                 if (nameSignature.Equals(TypePromotionUtils.NotFoundKeyValuePair))
                 {
                     throw new ODataException(Error.Format(SRResources.MetadataBinder_NoApplicableFunctionFound,
@@ -303,15 +344,19 @@ namespace Microsoft.OData.UriParser
             IList<KeyValuePair<string, FunctionSignatureWithReturnType>> nameSignatures = GetUriFunctionSignatures(functionCallToken.Name,
                 this.state.Configuration.EnableCaseInsensitiveUriFunctionIdentifier);
 
-            SingleValueNode[] argumentNodeArray = ValidateArgumentsAreSingleValue(functionCallToken.Name, argumentNodes);
-            KeyValuePair<string, FunctionSignatureWithReturnType> nameSignature = MatchSignatureToUriFunction(functionCallToken.Name, argumentNodeArray, nameSignatures);
+            (QueryNode Node, IEdmTypeReference TypeReference)[] argumentsMetadata = ValidateArgumentNodes(functionCallToken.Name, argumentNodes);
+            KeyValuePair<string, FunctionSignatureWithReturnType> nameSignature = MatchSignatureToUriFunction(functionCallToken.Name, argumentsMetadata, nameSignatures);
             Debug.Assert(nameSignature.Key != null, "nameSignature.Key != null");
 
             string canonicalName = nameSignature.Key;
             FunctionSignatureWithReturnType signature = nameSignature.Value;
             if (signature != null)
             {
-                TypePromoteArguments(signature, argumentNodes);
+                TypePromoteArguments(signature, argumentsMetadata);
+                for (int i = 0; i < argumentsMetadata.Length; i++)
+                {
+                    argumentNodes[i] = argumentsMetadata[i].Node;
+                }
             }
 
             if (signature.ReturnType != null && signature.ReturnType.IsStructured())
@@ -388,7 +433,7 @@ namespace Microsoft.OData.UriParser
             IEdmFunction function = (IEdmFunction)operation;
 
             // TODO:  $filter $orderby parameter expression which contains complex or collection should NOT be supported in this way
-            //     but should be parsed into token tree, and binded to node tree: parsedParameters.Select(p => this.bindMethod(p));
+            //     but should be parsed into token tree, and bound to node tree: parsedParameters.Select(p => this.bindMethod(p));
             ICollection<FunctionParameterToken> parsedParameters = HandleComplexOrCollectionParameterValueIfExists(state.Configuration.Model, function, syntacticArguments, state.Configuration.Resolver.EnableCaseInsensitive);
 
             IEnumerable<QueryNode> boundArguments = parsedParameters.Select(p => this.bindMethod(p));
@@ -430,13 +475,21 @@ namespace Microsoft.OData.UriParser
         /// Bind path segment's operation or operationImport's parameters.
         /// </summary>
         /// <param name="configuration">The ODataUriParserConfiguration.</param>
-        /// <param name="functionOrOpertion">The function or operation.</param>
-        /// <param name="segmentParameterTokens">The parameter tokens to be binded.</param>
-        /// <returns>The binded semantic nodes.</returns>
-        internal static List<OperationSegmentParameter> BindSegmentParameters(ODataUriParserConfiguration configuration, IEdmOperation functionOrOpertion, ICollection<FunctionParameterToken> segmentParameterTokens)
+        /// <param name="functionOrOperation">The function or operation.</param>
+        /// <param name="segmentParameterTokens">The parameter tokens to be bound.</param>
+        /// <returns>The bound semantic nodes.</returns>
+        internal static List<OperationSegmentParameter> BindSegmentParameters(
+            ODataUriParserConfiguration configuration,
+            IEdmOperation functionOrOperation,
+            ICollection<FunctionParameterToken> segmentParameterTokens)
         {
-            // TODO: HandleComplexOrCollectionParameterValueIfExists is temp work around for single copmlex or colleciton type, it can't handle nested complex or collection value.
-            ICollection<FunctionParameterToken> parametersParsed = FunctionCallBinder.HandleComplexOrCollectionParameterValueIfExists(configuration.Model, functionOrOpertion, segmentParameterTokens, configuration.Resolver.EnableCaseInsensitive, configuration.EnableUriTemplateParsing);
+            // TODO: HandleComplexOrCollectionParameterValueIfExists is temp work around for single complex or collection type, it can't handle nested complex or collection value.
+            ICollection<FunctionParameterToken> parametersParsed = HandleComplexOrCollectionParameterValueIfExists(
+                configuration.Model,
+                functionOrOperation,
+                segmentParameterTokens,
+                configuration.Resolver.EnableCaseInsensitive,
+                configuration.EnableUriTemplateParsing);
 
             // Bind it to metadata
             BindingState state = new BindingState(configuration);
@@ -445,6 +498,8 @@ namespace Microsoft.OData.UriParser
             MetadataBinder binder = new MetadataBinder(state);
             List<OperationSegmentParameter> boundParameters = new List<OperationSegmentParameter>();
 
+            // TODO: Why does this method only handle SingleValueNode?
+            // What about other QueryNode types like CollectionNode?
             IDictionary<string, SingleValueNode> input = new Dictionary<string, SingleValueNode>(StringComparer.Ordinal);
             foreach (FunctionParameterToken paraToken in parametersParsed)
             {
@@ -463,7 +518,7 @@ namespace Microsoft.OData.UriParser
                 }
             }
 
-            IDictionary<IEdmOperationParameter, SingleValueNode> result = configuration.Resolver.ResolveOperationParameters(functionOrOpertion, input);
+            IDictionary<IEdmOperationParameter, SingleValueNode> result = configuration.Resolver.ResolveOperationParameters(functionOrOperation, input);
 
             foreach (KeyValuePair<IEdmOperationParameter, SingleValueNode> item in result)
             {
@@ -553,7 +608,7 @@ namespace Microsoft.OData.UriParser
         /// This is temp work around for $filter $orderby parameter expression which contains complex or collection
         ///     like "Fully.Qualified.Namespace.CanMoveToAddresses(addresses=[{\"Street\":\"NE 24th St.\",\"City\":\"Redmond\"},{\"Street\":\"Pine St.\",\"City\":\"Seattle\"}])";
         /// TODO:  $filter $orderby parameter expression which contains nested complex or collection should NOT be supported in this way
-        ///     but should be parsed into token tree, and binded to node tree: parsedParameters.Select(p => this.bindMethod(p));
+        ///     but should be parsed into token tree, and bound to node tree: parsedParameters.Select(p => this.bindMethod(p));
         /// </summary>
         /// <param name="model">The model.</param>
         /// <param name="operation">IEdmFunction or IEdmOperation</param>
@@ -590,7 +645,7 @@ namespace Microsoft.OData.UriParser
                 string valueStr = null;
                 if (valueToken != null && (valueStr = valueToken.Value as string) != null && !string.IsNullOrEmpty(valueToken.OriginalText))
                 {
-                    ExpressionLexer lexer = new ExpressionLexer(valueToken.OriginalText, true /*moveToFirstToken*/, false /*useSemicolonDelimiter*/, true /*parsingFunctionParameters*/);
+                    ExpressionLexer lexer = new ExpressionLexer(valueToken.OriginalText, moveToFirstToken: true, useSemicolonDelimiter: false, parsingFunctionParameters: true);
                     if (lexer.CurrentToken.Kind == ExpressionTokenKind.BracketedExpression || lexer.CurrentToken.Kind == ExpressionTokenKind.BracedExpression)
                     {
                         object result;
@@ -608,7 +663,7 @@ namespace Microsoft.OData.UriParser
                         }
                         else
                         {
-                            // For complex & colleciton of complex directly return the raw string.
+                            // For complex & collection of complex directly return the raw string.
                             partiallyParsedParametersWithComplexOrCollection.Add(funcParaToken);
                             continue;
                         }

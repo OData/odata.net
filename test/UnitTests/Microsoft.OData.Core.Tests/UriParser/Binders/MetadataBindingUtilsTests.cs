@@ -5,10 +5,13 @@
 //---------------------------------------------------------------------
 
 using System;
-using Microsoft.OData.UriParser;
-using Microsoft.OData.Edm;
-using Xunit;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using Microsoft.OData.Core;
+using Microsoft.OData.Edm;
+using Microsoft.OData.UriParser;
+using Xunit;
 
 namespace Microsoft.OData.Tests.UriParser.Binders
 {
@@ -18,6 +21,21 @@ namespace Microsoft.OData.Tests.UriParser.Binders
     public class MetadataBindingUtilsTests
     {
         #region MetadataBindingUtils.ConvertToType Tests
+
+        private static MethodInfo PrivateBuildCollectionLiteral =>
+            typeof(MetadataBindingUtils).GetMethods(BindingFlags.NonPublic | BindingFlags.Static)
+            .Single(m => m.Name == "BuildCollectionLiteral");
+
+        private static MethodInfo PrivateConvertNodes =>
+            typeof(MetadataBindingUtils).GetMethods(BindingFlags.NonPublic | BindingFlags.Static)
+            .Single(
+                m => m.Name == "ConvertNodes"
+                && m.GetParameters().Length == 2
+                && m.GetParameters()[0].ParameterType == typeof(IList<ConstantNode>));
+
+        private static IEdmCollectionTypeReference CollectionOf(IEdmTypeReference element) =>
+            new EdmCollectionTypeReference(new EdmCollectionType(element));
+
         [Fact]
         public void IfTypePromotionNeededConvertNodeIsCreatedAndSourcePropertySet()
         {
@@ -214,6 +232,264 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             }
         }
 
+        [Fact]
+        public void ConvertCollection_TargetNull_ReturnsSource()
+        {
+            // Arrange
+            var elem = EdmCoreModel.Instance.GetInt32(false);
+            var sourceType = CollectionOf(elem);
+            var source = CreateCollection(new[] { new ConstantNode(1, "1", elem) }, sourceType);
+            
+            // Act
+            var result = MetadataBindingUtils.ConvertToTypeIfNeeded(source, null);
+
+            // Assert
+            Assert.Same(source, result);
+        }
+
+        [Fact]
+        public void ConvertCollection_TargetNotCollection_Throws()
+        {
+            // Arrange
+            var elem = EdmCoreModel.Instance.GetInt32(false);
+            var sourceType = CollectionOf(elem);
+            var source = CreateCollection(new[] { new ConstantNode(1, "1", elem) }, sourceType);
+
+            // Non-collection primitive target
+            var nonCollectionTarget = EdmCoreModel.Instance.GetInt64(false);
+
+            // Act
+            var ex = Assert.Throws<ODataException>(() => MetadataBindingUtils.ConvertToTypeIfNeeded(source, nonCollectionTarget));
+
+            // Assert
+            Assert.Contains(source.CollectionType.FullName(), ex.Message, StringComparison.Ordinal);
+            Assert.Contains(nonCollectionTarget.FullName(), ex.Message, StringComparison.Ordinal);
+        }
+
+        [Fact]
+        public void ConvertCollection_EquivalentTypes_PrimitiveElements_ReturnsSourceUnchanged()
+        {
+            // Arrange
+            var elem = EdmCoreModel.Instance.GetString(true);
+            var type = CollectionOf(elem);
+            var source = CreateCollection(new[] { new ConstantNode("a", "'a'", elem) }, type);
+            // Act
+            var result = MetadataBindingUtils.ConvertToTypeIfNeeded(source, type);
+
+            // Assert
+            Assert.Same(source, result);
+        }
+
+        [Fact]
+        public void ConvertCollection_EquivalentTypes_TypeDefinitionElements_ConvertsUnderlying()
+        {
+            // Arrange
+            // Define a type definition over Int32
+            var intDef = new EdmTypeDefinition("NS", "MyIntDef", EdmPrimitiveTypeKind.Int32);
+            var sourceElemDef = new EdmTypeDefinitionReference(intDef, false);
+            var targetElem = EdmCoreModel.Instance.GetInt32(false);
+
+            var sourceType = CollectionOf(sourceElemDef);
+            var targetType = CollectionOf(targetElem);
+
+            Assert.True(sourceType.IsEquivalentTo(targetType)); // Equivalent collection types
+
+            var source = CreateCollection(new[]
+            {
+                new ConstantNode(10, "10", sourceElemDef),
+                new ConstantNode(20, "20", sourceElemDef)
+            }, sourceType);
+
+            // Act
+            var resultNode = MetadataBindingUtils.ConvertToTypeIfNeeded(source, targetType);
+
+            // Assert
+            Assert.NotSame(source, resultNode); // New collection produced due to definition conversion
+
+            var collectionConstant = Assert.IsType<CollectionConstantNode>(resultNode);
+            Assert.Equal(2, collectionConstant.Collection.Count);
+            Assert.All(collectionConstant.Collection, c =>
+            {
+                Assert.Equal(EdmPrimitiveTypeKind.Int32, c.TypeReference.AsPrimitive().PrimitiveKind());
+            });
+
+            // Literal rebuilt via BuildCollectionLiteral
+            Assert.Equal("(10,20)", collectionConstant.LiteralText);
+        }
+
+        [Fact]
+        public void ConvertCollection_NonEquivalentConvertible_PrimitiveElements_ProducesNewCollection()
+        {
+            // Arrange
+            var sourceElem = EdmCoreModel.Instance.GetInt32(true);
+            var targetElem = EdmCoreModel.Instance.GetDecimal(false);
+
+            var sourceType = CollectionOf(sourceElem);
+            var targetType = CollectionOf(targetElem);
+
+            var source = CreateCollection(new[]
+            {
+                new ConstantNode(1, "1", sourceElem),
+                new ConstantNode(2, "2", sourceElem)
+            }, sourceType);
+
+            // Act
+            var result = MetadataBindingUtils.ConvertToTypeIfNeeded(source, targetType);
+
+            // Assert
+            Assert.NotSame(source, result);
+
+            var converted = Assert.IsType<CollectionConstantNode>(result);
+            Assert.Equal(2, converted.Collection.Count);
+            Assert.All(converted.Collection, c =>
+            {
+                Assert.Equal(EdmPrimitiveTypeKind.Decimal, c.TypeReference.AsPrimitive().PrimitiveKind());
+            });
+            Assert.Equal("(1,2)", converted.LiteralText);
+        }
+
+        [Fact]
+        public void ConvertCollection_ItemProducesConvertNode_MaterializedAsConstant()
+        {
+            // Arrange
+            var sourceElem = EdmCoreModel.Instance.GetInt32(false);
+            var targetElem = EdmCoreModel.Instance.GetDecimal(false);
+            var sourceType = CollectionOf(sourceElem);
+            var targetType = CollectionOf(targetElem);
+
+            var item = new ConstantNode(123, "123", sourceElem);
+            var source = CreateCollection(new[] { item }, sourceType);
+
+            // Act
+            var result = MetadataBindingUtils.ConvertToTypeIfNeeded(source, targetType);
+
+            // Assert
+            var converted = Assert.IsType<CollectionConstantNode>(result);
+            var convertedItem = converted.Collection.Single();
+
+            Assert.Equal(123m, convertedItem.Value);
+            Assert.Equal(EdmPrimitiveTypeKind.Decimal, convertedItem.TypeReference.AsPrimitive().PrimitiveKind());
+            Assert.Equal("(123)", converted.LiteralText);
+        }
+
+        [Fact]
+        public void ConvertCollection_NonConvertibleElementTypes_Throws()
+        {
+            // Arrange
+            var sourceElem = EdmCoreModel.Instance.GetString(false);
+            var targetElem = EdmCoreModel.Instance.GetDate(false); // string -> date not directly convertible in promotion rules
+            var sourceType = CollectionOf(sourceElem);
+            var targetType = CollectionOf(targetElem);
+
+            var source = CreateCollection(new[] { new ConstantNode("2020-01-01", "'2020-01-01'", sourceElem) }, sourceType);
+
+            // Act
+            var ex = Assert.Throws<ODataException>(() => MetadataBindingUtils.ConvertToTypeIfNeeded(source, targetType));
+
+            // Assert
+            Assert.Contains(sourceElem.FullName(), ex.Message, StringComparison.Ordinal);
+            Assert.Contains(targetElem.FullName(), ex.Message, StringComparison.Ordinal);
+        }
+
+        [Fact]
+        public void ConvertNodes_PreservesNullAndCoercesTypes()
+        {
+            // Arrange
+            var sourceElem = EdmCoreModel.Instance.GetInt32(true);
+            var targetElem = EdmCoreModel.Instance.GetInt64(false);
+
+            var list = new List<ConstantNode>
+            {
+                null, // should become ConstantNode(null,"null",targetElem)
+                new ConstantNode(9, "9", sourceElem)
+            };
+
+            // Act
+            var converted = (List<ConstantNode>)PrivateConvertNodes.Invoke(
+                null,
+                new object[] { list, targetElem });
+
+
+            // Assert
+            Assert.Equal(2, converted.Count);
+            Assert.Null(converted[0].Value);
+            Assert.Equal("null", converted[0].LiteralText);
+            Assert.Equal(EdmPrimitiveTypeKind.Int64, converted[1].TypeReference.AsPrimitive().PrimitiveKind());
+        }
+
+        [Fact]
+        public void BuildCollectionLiteral_QuotesStringsAndEscapes()
+        {
+            // Arrange
+            var stringType = EdmCoreModel.Instance.GetString(false);
+            var nodes = new List<ConstantNode>
+            {
+                new ConstantNode("abc", "abc", stringType),                // needs quoting
+                new ConstantNode("O'Malley", "O'Malley", stringType),      // needs quote + escape
+                new ConstantNode("'alreadyQuoted'", "'alreadyQuoted'", stringType), // already quoted
+                new ConstantNode(null, "null", stringType),                  // null value -> null literal
+            };
+
+            // Act
+            string literal = (string)PrivateBuildCollectionLiteral.Invoke(null, new object[] { nodes, stringType });
+
+            // Assert
+            Assert.Equal("('abc','O''Malley','alreadyQuoted',null)", literal);
+        }
+
+        [Fact]
+        public void BuildCollectionLiteral_NonString_NoQuoting()
+        {
+            // Arrange
+            var intType = EdmCoreModel.Instance.GetInt32(true);
+            var nodes = new List<ConstantNode>
+            {
+                new ConstantNode(1, "1", intType),
+                new ConstantNode(2, "2", intType),
+                new ConstantNode(null, "null", intType),
+            };
+
+            // Act
+            string literal = (string)PrivateBuildCollectionLiteral.Invoke(null, new object[] { nodes, intType });
+
+            // Assert
+            Assert.Equal("(1,2,null)", literal);
+        }
+
+        [Fact]
+        public void ConvertCollection_TypeDefinitionWithMixedItems_ProducesEscapedLiteral()
+        {
+            // Arrange
+            var def = new EdmTypeDefinition("NS", "MyStringDef", EdmPrimitiveTypeKind.String);
+            var sourceElemDef = new EdmTypeDefinitionReference(def, true);
+            var targetElem = EdmCoreModel.Instance.GetString(true);
+
+            var sourceType = CollectionOf(sourceElemDef);
+            var targetType = CollectionOf(targetElem);
+
+            var source = CreateCollection(new[]
+            {
+                new ConstantNode("plain", "plain", sourceElemDef),
+                new ConstantNode("O'Hara", "O'Hara", sourceElemDef),
+                new ConstantNode("'quotedAlready'", "'quotedAlready'", sourceElemDef),
+                new ConstantNode(null, "null", sourceElemDef)
+            }, sourceType);
+
+            // Act
+            var result = MetadataBindingUtils.ConvertToTypeIfNeeded(source, targetType);
+
+            // Assert
+            var converted = Assert.IsType<CollectionConstantNode>(result);
+            Assert.Equal("('plain','O''Hara','quotedAlready',null)", converted.LiteralText);
+            Assert.All(converted.Collection, n =>
+            {
+                if (n.Value != null)
+                {
+                    Assert.Equal(EdmPrimitiveTypeKind.String, n.TypeReference.AsPrimitive().PrimitiveKind());
+                }
+            });
+        }
+
         [Theory]
         [InlineData("FullTime")]
         [InlineData("PartTime")]
@@ -321,6 +597,13 @@ namespace Microsoft.OData.Tests.UriParser.Binders
 
                 return employeeType;
             }
+        }
+
+        private static CollectionConstantNode CreateCollection(IEnumerable<ConstantNode> items, IEdmCollectionTypeReference typeRef, string literal = null)
+        {
+            var list = items?.ToList() ?? new List<ConstantNode>();
+            literal ??= "[" + string.Join(",", list.Select(n => n?.LiteralText ?? (n?.Value == null ? "null" : ODataUriUtils.ConvertToUriLiteral(n.Value, ODataVersion.V4)))) + "]";
+            return new CollectionConstantNode(list, literal, typeRef);
         }
 
         private static EdmEnumType EmployeeTypeWithFlags

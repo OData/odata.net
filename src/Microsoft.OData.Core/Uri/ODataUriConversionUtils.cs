@@ -671,19 +671,19 @@ namespace Microsoft.OData
                 {
                     ODataJsonPropertyAndValueDeserializer deserializer = new ODataJsonPropertyAndValueDeserializer(context);
 
-                    // TODO: The way JSON array literals look in the URI is different that response payload with an array in it.
+                    // TODO: The way JSON array literals look in the URI is different than response payload with an array in it.
                     // The fact that we have to manually setup the underlying reader shows this different in the protocol.
                     // There is a discussion on if we should change this or not.
                     deserializer.JsonReader.Read(); // Move to first thing
                     object rawResult = deserializer.ReadNonEntityValue(
-                        null /*payloadTypeName*/,
-                        typeReference,
-                        null /*DuplicatePropertyNameChecker*/,
-                        null /*CollectionWithoutExpectedTypeValidator*/,
-                        true /*validateNullValue*/,
-                        false /*isTopLevelPropertyValue*/,
-                        false /*insideResourceValue*/,
-                        null /*propertyName*/);
+                        payloadTypeName: null,
+                        expectedValueTypeReference: typeReference,
+                        propertyAndAnnotationCollector: null,
+                        collectionValidator: null,
+                        validateNullValue: true,
+                        isTopLevelPropertyValue: false,
+                        insideResourceValue: false,
+                        propertyName: null);
                     deserializer.ReadPayloadEnd(false);
 
                     return rawResult;

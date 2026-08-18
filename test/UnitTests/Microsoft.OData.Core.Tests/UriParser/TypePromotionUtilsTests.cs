@@ -6,8 +6,9 @@
 
 using System;
 using System.Linq;
-using Microsoft.OData.UriParser;
+using System.Reflection;
 using Microsoft.OData.Edm;
+using Microsoft.OData.UriParser;
 using Xunit;
 
 namespace Microsoft.OData.Tests.UriParser
@@ -18,6 +19,23 @@ namespace Microsoft.OData.Tests.UriParser
     public class TypePromotionUtilsTests
     {
         #region PromoteOperandTypes Tests (For Binary Operators)
+        private static MethodInfo SingleValueCanPromote => 
+            typeof(TypePromotionUtils).GetMethods(BindingFlags.NonPublic | BindingFlags.Static)
+            .First(m => m.Name == "CanPromoteNodeTo" && m.GetParameters()[0].ParameterType == typeof(SingleValueNode));
+
+        private static MethodInfo CollectionCanPromote =>
+            typeof(TypePromotionUtils).GetMethods(BindingFlags.NonPublic | BindingFlags.Static)
+            .First(m => m.Name == "CanPromoteNodeTo" && m.GetParameters()[0].ParameterType == typeof(CollectionNode));
+
+        private static bool InvokeSingle(SingleValueNode node, IEdmTypeReference sourceType, IEdmTypeReference targetType) =>
+            (bool)SingleValueCanPromote.Invoke(null, new object[] { node, sourceType, targetType });
+
+        private static bool InvokeCollection(CollectionNode node, IEdmTypeReference sourceType, IEdmTypeReference targetType) =>
+            (bool)CollectionCanPromote.Invoke(null, new object[] { node, sourceType, targetType });
+
+        private static IEdmCollectionTypeReference CollectionOf(IEdmTypeReference element) =>
+            new EdmCollectionTypeReference(new EdmCollectionType(element));
+        
         [Fact]
         public void EqualsOnComplexAndNullIsSupported()
         {
@@ -609,7 +627,7 @@ namespace Microsoft.OData.Tests.UriParser
             Assert.Equal(6, ((IEdmDecimalTypeReference)((SingleValuePropertyAccessNode)unaryNode.Operand).TypeReference).Precision);
             Assert.Equal(3, ((IEdmDecimalTypeReference)((SingleValuePropertyAccessNode)unaryNode.Operand).TypeReference).Scale);
 
-            // GetAdditionTermporalSignatures: date, duration
+            // GetAdditionTemporalSignatures: date, duration
             var dateTypeDefinition = EdmCoreModel.Instance.GetDate(nullable).Definition;
             tree = new ODataUriParser(model, svcRoot, new Uri("http://host/Set?$filter=Date add Duration_6 ne 2016-08-18", UriKind.Absolute)).ParseUri().Filter;
             binaryNode = (BinaryOperatorNode)((BinaryOperatorNode)tree.Expression).Left;
@@ -682,7 +700,7 @@ namespace Microsoft.OData.Tests.UriParser
             Assert.Equal(6, ((IEdmDecimalTypeReference)((SingleValuePropertyAccessNode)unaryNode.Operand).TypeReference).Precision);
             Assert.Equal(3, ((IEdmDecimalTypeReference)((SingleValuePropertyAccessNode)unaryNode.Operand).TypeReference).Scale);
 
-            // GetAdditionTermporalSignatures: date, duration
+            // GetAdditionTemporalSignatures: date, duration
             var dateTypeDefinition = EdmCoreModel.Instance.GetDate(nullable).Definition;
             tree = new ODataUriParser(model, svcRoot, new Uri("http://host/Set?$orderby=Date add Duration_6", UriKind.Absolute)).ParseUri().OrderBy;
             binaryNode = (BinaryOperatorNode)tree.Expression;
@@ -698,6 +716,239 @@ namespace Microsoft.OData.Tests.UriParser
             CustomTypeFacetsPromotionRulesTestFilter(true);
             CustomTypeFacetsPromotionRulesTestOrderBy(false);
             CustomTypeFacetsPromotionRulesTestOrderBy(true);
+        }
+
+        // SingleValueNode overload
+
+        [Fact]
+        public void Single_NullSourceType_NullableTargetPrimitive_Promotes()
+        {
+            var target = EdmCoreModel.Instance.GetInt32(true);
+            Assert.True(InvokeSingle(null, null, target));
+        }
+
+        [Fact]
+        public void Single_NullSourceType_NonNullableTargetPrimitive_DoesNotPromote()
+        {
+            var target = EdmCoreModel.Instance.GetInt32(false);
+            Assert.False(InvokeSingle(null, null, target));
+        }
+
+        [Fact]
+        public void Single_ExactMatch_Promotes()
+        {
+            var t = EdmCoreModel.Instance.GetString(false);
+            var node = new ConstantNode("abc", "'abc'", t);
+            Assert.True(InvokeSingle(node, t, t));
+        }
+
+        [Fact]
+        public void Single_NullableToNonNullableSameValueType_Promotes()
+        {
+            var src = EdmCoreModel.Instance.GetInt32(true);
+            var dst = EdmCoreModel.Instance.GetInt32(false);
+            var node = new ConstantNode(5, "5", src);
+            Assert.True(InvokeSingle(node, src, dst));
+        }
+
+        [Fact]
+        public void Single_IncompatiblePrimitiveTypes_Fails()
+        {
+            var src = EdmCoreModel.Instance.GetString(true);
+            var dst = EdmCoreModel.Instance.GetInt32(false);
+            var node = new ConstantNode("abc", "'abc'", src);
+            Assert.False(InvokeSingle(node, src, dst));
+        }
+
+        [Fact]
+        public void Single_NullableStringToNonNullableInt_Fails()
+        {
+            var src = EdmCoreModel.Instance.GetString(true);
+            var dst = EdmCoreModel.Instance.GetInt32(false);
+            var node = new ConstantNode("123", "'123'", src);
+            Assert.False(InvokeSingle(node, src, dst));
+        }
+
+        // CollectionNode overload
+
+        [Fact]
+        public void Collection_NullSourceType_NullableTargetCollection_Promotes()
+        {
+            var target = CollectionOf(EdmCoreModel.Instance.GetInt32(true));
+            Assert.True(InvokeCollection(null, null, target));
+        }
+
+        [Fact]
+        public void Collection_NullSourceType_NonNullableTargetCollection_Fails()
+        {
+            var target = CollectionOf(EdmCoreModel.Instance.GetInt32(false));
+            Assert.False(InvokeCollection(null, null, target));
+        }
+
+        [Fact]
+        public void Collection_EquivalentElementTypes_Promotes()
+        {
+            var elem = EdmCoreModel.Instance.GetString(true);
+            var srcType = CollectionOf(elem);
+            var dstType = CollectionOf(elem);
+            var node = new CollectionConstantNode(new object[] { "a", "b" }, "['a','b']", srcType);
+            Assert.True(InvokeCollection(node, srcType, dstType));
+        }
+
+        [Fact]
+        public void Collection_NullableElementToNonNullableElement_Promotes()
+        {
+            var srcElem = EdmCoreModel.Instance.GetInt32(true);
+            var dstElem = EdmCoreModel.Instance.GetInt32(false);
+            var srcType = CollectionOf(srcElem);
+            var dstType = CollectionOf(dstElem);
+            var node = new CollectionConstantNode(new object[] { 1, 2 }, "[1,2]", srcType);
+            Assert.True(InvokeCollection(node, srcType, dstType));
+        }
+
+        [Fact]
+        public void Collection_IncompatibleElementTypes_Fails()
+        {
+            var srcType = CollectionOf(EdmCoreModel.Instance.GetString(true));
+            var dstType = CollectionOf(EdmCoreModel.Instance.GetInt32(false));
+            var node = new CollectionConstantNode(new object[] { "1", "2" }, "['1','2']", srcType);
+            Assert.False(InvokeCollection(node, srcType, dstType));
+        }
+
+        [Fact]
+        public void Collection_NullableStringElementsToNonNullableIntElements_Fails()
+        {
+            var srcType = CollectionOf(EdmCoreModel.Instance.GetString(true));
+            var dstType = CollectionOf(EdmCoreModel.Instance.GetInt32(false));
+            var node = new CollectionConstantNode(new object[] { "10", "11" }, "['10','11']", srcType);
+            Assert.False(InvokeCollection(node, srcType, dstType));
+        }
+
+        // QueryNode overload
+
+        [Fact]
+        public void Query_NullSourceType_NullablePrimitiveTarget_Promotes()
+        {
+            var target = EdmCoreModel.Instance.GetBoolean(true);
+            Assert.True(TypePromotionUtils.CanPromoteNodeTo(null, null, target));
+        }
+
+        [Fact]
+        public void Query_NullSourceType_NonNullablePrimitiveTarget_Fails()
+        {
+            var target = EdmCoreModel.Instance.GetBoolean(false);
+            Assert.False(TypePromotionUtils.CanPromoteNodeTo(null, null, target));
+        }
+
+        [Fact]
+        public void Query_CollectionNodeCannotPromoteToSingleValue()
+        {
+            var elem = EdmCoreModel.Instance.GetInt32(false);
+            var collType = CollectionOf(elem);
+            var collNode = new CollectionConstantNode(new object[] { 1 }, "[1]", collType);
+            var targetSingle = EdmCoreModel.Instance.GetInt32(false);
+            Assert.False(TypePromotionUtils.CanPromoteNodeTo(collNode, collType, targetSingle));
+        }
+
+        [Fact]
+        public void Query_BracketedIntLiteral_ToIntCollection_Promotes()
+        {
+            var constant = new ConstantNode("[1,2,3]", "[1,2,3]", EdmCoreModel.Instance.GetString(true));
+            var targetElem = EdmCoreModel.Instance.GetInt32(false);
+            var targetColl = CollectionOf(targetElem);
+            Assert.True(TypePromotionUtils.CanPromoteNodeTo(constant, constant.TypeReference, targetColl));
+        }
+
+        [Fact]
+        public void Query_BracketedStringLiteral_ToStringCollection_Promotes()
+        {
+            var constant = new ConstantNode("['a','b']", "['a','b']", EdmCoreModel.Instance.GetString(true));
+            var targetElem = EdmCoreModel.Instance.GetString(false);
+            var targetColl = CollectionOf(targetElem);
+            Assert.True(TypePromotionUtils.CanPromoteNodeTo(constant, constant.TypeReference, targetColl));
+        }
+
+        [Fact]
+        public void Query_BracketedBoolLiteral_ToIntCollection_Fails()
+        {
+            var constant = new ConstantNode("[true,false]", "[true,false]", EdmCoreModel.Instance.GetString(true));
+            var targetElem = EdmCoreModel.Instance.GetInt32(false);
+            var targetColl = CollectionOf(targetElem);
+            Assert.False(TypePromotionUtils.CanPromoteNodeTo(constant, constant.TypeReference, targetColl));
+        }
+
+        [Fact]
+        public void Query_EmptyCollectionLiteral_ToNonNullableElementCollection_Promotes()
+        {
+            var constant = new ConstantNode("[]", "[]", EdmCoreModel.Instance.GetString(true));
+            var targetElem = EdmCoreModel.Instance.GetString(false);
+            var targetColl = CollectionOf(targetElem);
+            Assert.True(TypePromotionUtils.CanPromoteNodeTo(constant, constant.TypeReference, targetColl));
+        }
+
+        [Fact]
+        public void Query_AllNullItemsLiteral_ToNullableElementCollection_Promotes()
+        {
+            var constant = new ConstantNode("[null,null]", "[null,null]", EdmCoreModel.Instance.GetString(true));
+            var targetElem = EdmCoreModel.Instance.GetInt32(true);
+            var targetColl = CollectionOf(targetElem);
+            Assert.True(TypePromotionUtils.CanPromoteNodeTo(constant, constant.TypeReference, targetColl));
+        }
+
+        [Fact]
+        public void Query_AllNullItemsLiteral_ToNonNullableElementCollection_Fails()
+        {
+            var constant = new ConstantNode("[null,null]", "[null,null]", EdmCoreModel.Instance.GetString(true));
+            var targetElem = EdmCoreModel.Instance.GetInt32(false);
+            var targetColl = CollectionOf(targetElem);
+            Assert.False(TypePromotionUtils.CanPromoteNodeTo(constant, constant.TypeReference, targetColl));
+        }
+
+        [Fact]
+        public void Query_BracketedIntLiteral_ToStringCollection_Fails()
+        {
+            var constant = new ConstantNode("[1,2,3]", "[1,2,3]", EdmCoreModel.Instance.GetString(true));
+            var targetElem = EdmCoreModel.Instance.GetString(false);
+            var targetColl = CollectionOf(targetElem);
+            Assert.False(TypePromotionUtils.CanPromoteNodeTo(constant, constant.TypeReference, targetColl));
+        }
+
+        [Fact]
+        public void Query_NonBracketedStringLiteral_CannotPromoteToCollection()
+        {
+            var constant = new ConstantNode("abc", "'abc'", EdmCoreModel.Instance.GetString(true));
+            var targetElem = EdmCoreModel.Instance.GetString(false);
+            var targetColl = CollectionOf(targetElem);
+            Assert.False(TypePromotionUtils.CanPromoteNodeTo(constant, constant.TypeReference, targetColl));
+        }
+
+        [Fact]
+        public void Query_ExistingCollectionNode_NullableToNonNullableElement_Promotes()
+        {
+            var srcElem = EdmCoreModel.Instance.GetInt32(true);
+            var dstElem = EdmCoreModel.Instance.GetInt32(false);
+            var srcType = CollectionOf(srcElem);
+            var dstType = CollectionOf(dstElem);
+            var node = new CollectionConstantNode(new object[] { 10, 11 }, "[10,11]", srcType);
+            Assert.True(TypePromotionUtils.CanPromoteNodeTo(node, srcType, dstType));
+        }
+
+        [Fact]
+        public void Query_ExistingCollectionNode_IncompatibleElementTypes_Fails()
+        {
+            var srcType = CollectionOf(EdmCoreModel.Instance.GetString(true));
+            var dstType = CollectionOf(EdmCoreModel.Instance.GetInt32(false));
+            var node = new CollectionConstantNode(new object[] { "x", "y" }, "['x','y']", srcType);
+            Assert.False(TypePromotionUtils.CanPromoteNodeTo(node, srcType, dstType));
+        }
+
+        [Fact]
+        public void Query_BracketedWhitespaceLiteral_IntCollection_Promotes()
+        {
+            var constant = new ConstantNode("[ 1 , 2 , 3 ]", "[ 1 , 2 , 3 ]", EdmCoreModel.Instance.GetString(true));
+            var targetElem = EdmCoreModel.Instance.GetInt32(false);
+            var targetColl = CollectionOf(targetElem);
+            Assert.True(TypePromotionUtils.CanPromoteNodeTo(constant, constant.TypeReference, targetColl));
         }
 
         internal class CustomTypeFacetsPromotionRules : TypeFacetsPromotionRules
@@ -790,7 +1041,7 @@ namespace Microsoft.OData.Tests.UriParser
             Assert.Equal(6, ((IEdmDecimalTypeReference)((SingleValuePropertyAccessNode)unaryNode.Operand).TypeReference).Precision);
             Assert.Equal(3, ((IEdmDecimalTypeReference)((SingleValuePropertyAccessNode)unaryNode.Operand).TypeReference).Scale);
 
-            // GetAdditionTermporalSignatures: date, duration
+            // GetAdditionTemporalSignatures: date, duration
             var dateTypeDefinition = EdmCoreModel.Instance.GetDate(nullable).Definition;
             parser = new ODataUriParser(model, svcRoot, new Uri("http://host/Set?$filter=Date add Duration_6 ne 2016-08-18", UriKind.Absolute));
             parser.Resolver.TypeFacetsPromotionRules = new CustomTypeFacetsPromotionRules();
@@ -874,7 +1125,7 @@ namespace Microsoft.OData.Tests.UriParser
             Assert.Equal(6, ((IEdmDecimalTypeReference)((SingleValuePropertyAccessNode)unaryNode.Operand).TypeReference).Precision);
             Assert.Equal(3, ((IEdmDecimalTypeReference)((SingleValuePropertyAccessNode)unaryNode.Operand).TypeReference).Scale);
 
-            // GetAdditionTermporalSignatures: date, duration
+            // GetAdditionTemporalSignatures: date, duration
             var dateTypeDefinition = EdmCoreModel.Instance.GetDate(nullable).Definition;
             parser = new ODataUriParser(model, svcRoot, new Uri("http://host/Set?$orderby=Date add Duration_6", UriKind.Absolute));
             parser.Resolver.TypeFacetsPromotionRules = new CustomTypeFacetsPromotionRules();

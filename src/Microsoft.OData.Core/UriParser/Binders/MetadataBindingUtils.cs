@@ -7,6 +7,7 @@
 namespace Microsoft.OData.UriParser
 {
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics;
     using Microsoft.OData;
     using Microsoft.OData.Core;
@@ -73,7 +74,7 @@ namespace Microsoft.OData.UriParser
                     {
                         if(enumType.TryParse(memberIntegralValue, out IEdmEnumMember enumMember))
                         {
-                            string literalText = ODataUriUtils.ConvertToUriLiteral(enumMember.Name, default(ODataVersion));
+                            string literalText = ODataUriUtils.ConvertToUriLiteral(enumMember.Name, default);
                             return new ConstantNode(new ODataEnumValue(enumMember.Name, enumType.ToString()), literalText, targetTypeReference);
                         }
                         
@@ -82,7 +83,7 @@ namespace Microsoft.OData.UriParser
                             string flagsValue = enumType.ParseFlagsFromIntegralValue(memberIntegralValue);
                             if(!string.IsNullOrEmpty(flagsValue))
                             {
-                                string literalText = ODataUriUtils.ConvertToUriLiteral(flagsValue, default(ODataVersion));
+                                string literalText = ODataUriUtils.ConvertToUriLiteral(flagsValue, default);
                                 return new ConstantNode(new ODataEnumValue(flagsValue, enumType.ToString()), literalText, targetTypeReference);
                             }
                         }
@@ -142,8 +143,8 @@ namespace Microsoft.OData.UriParser
                             var targetDecimalType = (IEdmDecimalTypeReference)targetTypeReference;
                             return decimalType.Precision == targetDecimalType.Precision &&
                                    decimalType.Scale == targetDecimalType.Scale ?
-                                   (SingleValueNode)candidate :
-                                   (SingleValueNode)(new ConvertNode(candidate, targetTypeReference));
+                                   candidate :
+                                   new ConvertNode(candidate, targetTypeReference);
                         }
                         else
                         {
@@ -163,6 +164,140 @@ namespace Microsoft.OData.UriParser
                 // cause we don't know for sure.
                 return new ConvertNode(source, targetTypeReference);
             }
+        }
+
+        /// <summary>
+        /// Converts a collection node's element type to <paramref name="targetTypeReference"/> when possible,
+        /// materializing a new <see cref="CollectionConstantNode"/> for constant collections;
+        /// leaves non-constant/open or non-convertible collections unchanged.
+        /// </summary>
+        /// <param name="source">Source collection node.</param>
+        /// <param name="targetTypeReference">Desired collection type (must be a collection).</param>
+        /// <returns>Converted collection node or original source.</returns>
+        internal static CollectionNode ConvertToTypeIfNeeded(CollectionNode source, IEdmTypeReference targetTypeReference)
+        {
+            Debug.Assert(source != null, "source != null");
+
+            if (targetTypeReference == null)
+            {
+                return source;
+            }
+
+            IEdmCollectionTypeReference sourceCollectionType = source.CollectionType;
+            if (sourceCollectionType == null) // Open collection? Leave as is
+            {
+                return source;
+            }
+
+            if (!targetTypeReference.IsCollection())
+            {
+                throw new ODataException(Error.Format(SRResources.MetadataBinder_CannotConvertToType, source.CollectionType.FullName(), targetTypeReference.FullName()));
+            }
+
+            IEdmCollectionTypeReference targetCollectionType = targetTypeReference.AsCollection();
+
+            if (sourceCollectionType.IsEquivalentTo(targetCollectionType))
+            {
+                IEdmTypeReference sourceElemType = sourceCollectionType.ElementType();
+                IEdmTypeReference targetElemType = targetCollectionType.ElementType();
+                if (source is CollectionConstantNode colConstantNode
+                    && sourceElemType.IsTypeDefinition()
+                    && targetElemType.IsPrimitive()
+                    && sourceElemType.AsPrimitive().PrimitiveKind() == targetElemType.AsPrimitive().PrimitiveKind())
+                {
+                    List<ConstantNode> convertedNodes = ConvertNodes(colConstantNode.Collection, targetElemType);
+                    
+                    return new CollectionConstantNode(convertedNodes, BuildCollectionLiteral(convertedNodes, targetElemType), targetCollectionType);
+                }
+
+                return source;
+            }
+
+            IEdmTypeReference sourceElementType = sourceCollectionType.ElementType();
+            IEdmTypeReference targetElementType = targetCollectionType.ElementType();
+
+            if (!TypePromotionUtils.CanConvertTo(null, sourceElementType, targetElementType))
+            {
+                throw new ODataException(Error.Format(SRResources.MetadataBinder_CannotConvertToType, sourceElementType.FullName(), targetElementType.FullName()));
+            }
+            
+            if (source is CollectionConstantNode collectionConstantNode)
+            {
+                List<ConstantNode> convertedNodes = ConvertNodes(collectionConstantNode.Collection, targetElementType);
+
+                return new CollectionConstantNode(convertedNodes, BuildCollectionLiteral(convertedNodes, targetElementType), targetCollectionType);
+            }
+
+            // Non-constant collections: leave as-is (conversion implicit)
+            return source;
+        }
+
+        /// <summary>
+        /// Converts each constant value to <paramref name="targetElementType"/>, applying enum/numeric coercion; preserves null items.
+        /// </summary>
+        /// <param name="nodes">Original constant value nodes.</param>
+        /// <param name="targetElementType">The target primitive type.</param>
+        /// <returns>List of converted constant nodes.</returns>
+        private static List<ConstantNode> ConvertNodes(IList<ConstantNode> nodes, IEdmTypeReference targetElementType)
+        {
+            List<ConstantNode> convertedNodes = new List<ConstantNode>(nodes.Count);
+
+            for (int i = 0; i < nodes.Count; i++)
+            {
+                ConstantNode item = nodes[i];
+                if (item == null)
+                {
+                    // Preserve null
+                    convertedNodes.Add(new ConstantNode(null, "null", targetElementType));
+                    continue;
+                }
+
+                ConstantNode convertedNode = ConvertToTypeIfNeeded(item, targetElementType) as ConstantNode;
+
+                // If ConvertToTypeIfNeeded returned a ConvertNode, force materialization into a ConstantNode
+                if (convertedNode == null)
+                {
+                    // Try to keep original literal text if meaningful
+                    string literal = item.LiteralText ?? ODataUriUtils.ConvertToUriLiteral(item.Value, ODataVersion.V4);
+                    convertedNode = new ConstantNode(item.Value, literal, targetElementType);
+                }
+
+                convertedNodes.Add(convertedNode);
+            }
+
+            return convertedNodes;
+        }
+
+        /// <summary>
+        /// Builds a bracketed collection literal (e.g. [1,2,3]) from constant nodes, quoting/escaping strings and preserving nulls.
+        /// </summary>
+        /// <param name="nodes">Constant nodes representing items.</param>
+        /// <param name="typeReference">Element type for string quoting rules.</param>
+        /// <returns>OData collection literal text.</returns>
+        private static string BuildCollectionLiteral(List<ConstantNode> nodes, IEdmTypeReference typeReference)
+        {
+            Debug.Assert(typeReference != null, $"{nameof(typeReference)} != null");
+
+            List<string> list = new List<string>();
+            for (int i = 0; i < nodes.Count; i++)
+            {
+                ConstantNode node = nodes[i];
+                if (node == null || node.Value == null)
+                {
+                    list.Add("null");
+                    continue;
+                }
+                
+                string literal = node.LiteralText ?? ODataUriUtils.ConvertToUriLiteral(node.Value, ODataVersion.V4);
+                if (typeReference.IsString() && !(literal.Length > 1 && literal[0] == '\'' && literal[^1] == '\''))
+                {
+                    literal = $"'{literal.Replace("'", "''", StringComparison.Ordinal)}'";
+                }
+
+                list.Add(literal);
+            }
+
+            return "(" + string.Join(",", list) + ")";
         }
 
         /// <summary>

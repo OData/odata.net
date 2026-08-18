@@ -9,6 +9,7 @@ using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Microsoft.OData.Tests.UriParser.SemanticAst
 {
@@ -17,11 +18,14 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
     /// </summary>
     public class CollectionConstantNodeTests
     {
+        private static IEdmCollectionTypeReference CollectionOf(IEdmTypeReference element) =>
+            new EdmCollectionTypeReference(new EdmCollectionType(element));
+
         [Fact]
         public void NumberCollectionThroughLiteralTokenIsSetCorrectly()
         {
             const string text = "(1,2,3)";
-            var expectedType = new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetInt32(false)));
+            var expectedType = CollectionOf(EdmCoreModel.Instance.GetInt32(false));
             object collection = ODataUriConversionUtils.ConvertFromCollectionValue("[1,2,3]", HardCodedTestModel.TestModel, expectedType);
             LiteralToken literalToken = new LiteralToken(collection, text, expectedType);
 
@@ -41,7 +45,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         public void StringCollectionThroughLiteralTokenIsSetCorrectly()
         {
             const string text = "('abc','def','ghi')";
-            var expectedType = new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetString(true)));
+            var expectedType = CollectionOf(EdmCoreModel.Instance.GetString(true));
             object collection = ODataUriConversionUtils.ConvertFromCollectionValue("['abc','def','ghi']", HardCodedTestModel.TestModel, expectedType);
             LiteralToken literalToken = new LiteralToken(collection, text, expectedType);
 
@@ -61,7 +65,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         public void NullableCollectionTypeSetsConstantNodeCorrectly()
         {
             const string text = "('abc','def', null)";
-            var expectedType = new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetString(true)));
+            var expectedType = CollectionOf(EdmCoreModel.Instance.GetString(true));
             object collection = ODataUriConversionUtils.ConvertFromCollectionValue("['abc','def', null]", HardCodedTestModel.TestModel, expectedType);
             LiteralToken literalToken = new LiteralToken(collection, text, expectedType);
 
@@ -81,7 +85,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         public void TextIsSetCorrectly()
         {
             const string text = "(1,2,3)";
-            var expectedType = new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetInt32(false)));
+            var expectedType = CollectionOf(EdmCoreModel.Instance.GetInt32(false));
             object collection = ODataUriConversionUtils.ConvertFromCollectionValue("[1,2,3]", HardCodedTestModel.TestModel, expectedType);
             LiteralToken literalToken = new LiteralToken(collection, text, expectedType);
 
@@ -95,7 +99,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         public void ItemTypeIsSetCorrectly()
         {
             const string text = "(1,2,3)";
-            var expectedType = new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetInt32(false)));
+            var expectedType = CollectionOf(EdmCoreModel.Instance.GetInt32(false));
             object collection = ODataUriConversionUtils.ConvertFromCollectionValue("[1,2,3]", HardCodedTestModel.TestModel, expectedType);
             LiteralToken literalToken = new LiteralToken(collection, text, expectedType);
 
@@ -109,7 +113,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         public void CollectionTypeIsSetCorrectly()
         {
             const string text = "(1,2,3)";
-            var expectedType = new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetInt32(false)));
+            var expectedType = CollectionOf(EdmCoreModel.Instance.GetInt32(false));
             object collection = ODataUriConversionUtils.ConvertFromCollectionValue("[1,2,3]", HardCodedTestModel.TestModel, expectedType);
             LiteralToken literalToken = new LiteralToken(collection, text, expectedType);
 
@@ -123,7 +127,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         public void KindIsSetCorrectly()
         {
             const string text = "(1,2,3)";
-            var expectedType = new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetInt32(false)));
+            var expectedType = CollectionOf(EdmCoreModel.Instance.GetInt32(false));
             object collection = ODataUriConversionUtils.ConvertFromCollectionValue("[1,2,3]", HardCodedTestModel.TestModel, expectedType);
             LiteralToken literalToken = new LiteralToken(collection, text, expectedType);
 
@@ -137,11 +141,11 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         public void NullValueShouldThrow()
         {
             const string text = "(1,2,3)";
-            var expectedType = new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetInt32(false)));
+            var expectedType = CollectionOf(EdmCoreModel.Instance.GetInt32(false));
             object collection = ODataUriConversionUtils.ConvertFromCollectionValue("[1,2,3]", HardCodedTestModel.TestModel, expectedType);
             LiteralToken literalToken = new LiteralToken(collection, text, expectedType);
 
-            Action target = () => new CollectionConstantNode(null, text, expectedType);
+            Action target = () => new CollectionConstantNode((List<object>)null, text, expectedType);
             Assert.Throws<ArgumentNullException>("objectCollection", target);
         }
 
@@ -149,7 +153,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         public void NullLiteralTextShouldThrow()
         {
             const string text = "(1,2,3)";
-            var expectedType = new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetInt32(false)));
+            var expectedType = CollectionOf(EdmCoreModel.Instance.GetInt32(false));
             object collection = ODataUriConversionUtils.ConvertFromCollectionValue("[1,2,3]", HardCodedTestModel.TestModel, expectedType);
             LiteralToken literalToken = new LiteralToken(collection, text, expectedType);
 
@@ -161,12 +165,114 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         public void NullCollectionTypeShouldThrow()
         {
             const string text = "(1,2,3)";
-            var expectedType = new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetInt32(false)));
+            var expectedType = CollectionOf(EdmCoreModel.Instance.GetInt32(false));
             object collection = ODataUriConversionUtils.ConvertFromCollectionValue("[1,2,3]", HardCodedTestModel.TestModel, expectedType);
             LiteralToken literalToken = new LiteralToken(collection, text, expectedType);
 
             Action target = () => new CollectionConstantNode((literalToken.Value as ODataCollectionValue)?.Items, text, null);
             Assert.Throws<ArgumentNullException>("collectionType", target);
+        }
+
+        [Fact]
+        public void Constructor_WithConstantNodeCollection_ValidCollectionType_DoesNotThrow()
+        {
+            // Arrange
+            const string literalText = "(1, null, 2)";
+            var nodeType = EdmCoreModel.Instance.GetInt32(false);
+            var collectionType = CollectionOf(nodeType);
+            var nodes = new List<ConstantNode>
+            {
+                new ConstantNode(1, "1", nodeType),
+                null,
+                new ConstantNode(2, "2", nodeType)
+            };
+
+            // Act
+            var result = new CollectionConstantNode(nodes, literalText, collectionType);
+
+            // Assert
+            Assert.Same(collectionType, result.CollectionType);
+            Assert.Equal(literalText, result.LiteralText);
+            Assert.Equal(3, result.Collection.Count);
+        }
+
+        [Fact]
+        public void Constructor_WithConstantNodeCollection_NullCollectionType_ThrowsArgumentNull()
+        {
+            // Arrange
+            const string literalText = "(1, null, 2)";
+            var nodeType = EdmCoreModel.Instance.GetInt32(false);
+            var nodes = new List<ConstantNode>
+            {
+                new ConstantNode(1, "1", nodeType),
+                null,
+                new ConstantNode(2, "2", nodeType)
+            };
+
+            // Act
+            var ex = Assert.Throws<ArgumentNullException>(() => new CollectionConstantNode(nodes, literalText, collectionType: null));
+
+            // Assert
+            Assert.Equal("collectionType", ex.ParamName);
+            Assert.Contains("collectionType", ex.Message, StringComparison.Ordinal);
+        }
+
+        [Fact]
+        public void Constructor_WithConstantNodeCollection_NullNodeCollection_ThrowsArgumentNull()
+        {
+            // Arrange
+            const string literalText = "(1,2,3)";
+            var nodeType = EdmCoreModel.Instance.GetInt32(false);
+            var collectionType = CollectionOf(nodeType);
+
+            // Act
+            var ex = Assert.Throws<ArgumentNullException>(() => new CollectionConstantNode((List<ConstantNode>)null, literalText, collectionType));
+
+            // Assert
+            Assert.Equal("nodeCollection", ex.ParamName);
+            Assert.Contains("nodeCollection", ex.Message, StringComparison.Ordinal);
+        }
+
+        [Fact]
+        public void Constructor_WithConstantNodeCollection_NullLiteralText_ThrowsArgumentNull()
+        {
+            // Arrange
+            var nodeType = EdmCoreModel.Instance.GetInt32(false);
+            var collectionType = CollectionOf(nodeType);
+            var nodes = new List<ConstantNode>
+            {
+                new ConstantNode(1, "1", nodeType),
+                new ConstantNode(2, "2", nodeType),
+                new ConstantNode(3, "3", nodeType)
+            };
+
+            // Act
+            var ex = Assert.Throws<ArgumentNullException>(() => new CollectionConstantNode(nodes, literalText: null, collectionType));
+
+            // Assert
+            Assert.Equal("literalText", ex.ParamName);
+            Assert.Contains("literalText", ex.Message, StringComparison.Ordinal);
+        }
+
+        [Fact]
+        public void Constructor_WithConstantNodeCollection_EmptyLiteralText_ThrowsArgumentNull()
+        {
+            // Arrange
+            var nodeType = EdmCoreModel.Instance.GetInt32(false);
+            var collectionType = CollectionOf(nodeType);
+            var nodes = new List<ConstantNode>
+            {
+                new ConstantNode(1, "1", nodeType),
+                new ConstantNode(2, "2", nodeType),
+                new ConstantNode(3, "3", nodeType)
+            };
+
+            // Act
+            var ex = Assert.Throws<ArgumentNullException>(() => new CollectionConstantNode(nodes, literalText: string.Empty, collectionType));
+
+            // Assert
+            Assert.Equal("literalText", ex.ParamName);
+            Assert.Contains("literalText", ex.Message, StringComparison.Ordinal);
         }
 
         private static void VerifyCollectionConstantNode(IList<ConstantNode> actual, ConstantNode[] expected)
