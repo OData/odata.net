@@ -2785,9 +2785,10 @@ namespace Microsoft.OData
                             {
                                 case EdmNavigationSourceKind.ContainedEntitySet:
                                     // Containment cannot be written alone without odata uri.
+                                    bool pathBuiltFromResourceId = false;
                                     if (!odataPath.Any())
                                     {
-                                        this.TryBuildPathFromResourceId(out odataPath);
+                                        pathBuiltFromResourceId = this.TryBuildPathFromResourceId(out odataPath);
                                         if (odataPath == null || !odataPath.Any())
                                         {
                                             throw new ODataException(SRResources.ODataWriterCore_PathInODataUriMustBeSetWhenWritingContainedElement);
@@ -2798,6 +2799,11 @@ namespace Microsoft.OData
                                     if (!EdmExtensionMethods.HasKey(this.CurrentScope.NavigationSource, this.CurrentScope.ResourceType))
                                     {
                                         // if there's no key, for example in a complex property, just use the existing odata path.
+                                        newPath = odataPath;
+                                    }
+                                    else if (pathBuiltFromResourceId)
+                                    {
+                                        // The resource ID represents the complete resource path and already includes its key.
                                         newPath = odataPath;
                                     }
                                     else
