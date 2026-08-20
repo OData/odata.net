@@ -43,6 +43,9 @@ namespace Microsoft.OData.Client
         /// <summary>The max protocol version this Edm model is created for.</summary>
         private readonly ODataProtocolVersion maxProtocolVersion;
 
+        /// <summary>Optional resolver for mapping CLR property names to server-defined names.</summary>
+        private readonly Func<PropertyInfo, string> resolvePropertyName;
+
         /// <summary>Referenced core model.</summary>
         private readonly IEnumerable<IEdmModel> coreModel = new IEdmModel[] { EdmCoreModel.Instance };
 
@@ -51,9 +54,66 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <param name="maxProtocolVersion">The protocol version this Edm model is created for.</param>
         internal ClientEdmModel(ODataProtocolVersion maxProtocolVersion)
+            : this(maxProtocolVersion, null)
+        {
+        }
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="maxProtocolVersion">The protocol version this Edm model is created for.</param>
+        /// <param name="resolvePropertyName">Optional resolver for server-defined property names.</param>
+        internal ClientEdmModel(ODataProtocolVersion maxProtocolVersion, Func<PropertyInfo, string> resolvePropertyName)
         {
             this.maxProtocolVersion = maxProtocolVersion;
+            this.resolvePropertyName = resolvePropertyName;
             this.EdmStructuredSchemaElements = new ConcurrentEdmSchemaDictionary();
+        }
+
+        /// <summary>Gets the server-defined name for a CLR member.</summary>
+        /// <param name="memberInfo">Member to resolve.</param>
+        /// <returns>Server-defined name.</returns>
+        internal string GetServerDefinedName(MemberInfo memberInfo)
+        {
+            PropertyInfo propertyInfo = memberInfo as PropertyInfo;
+            return propertyInfo == null
+                ? ClientTypeUtil.GetServerDefinedName(memberInfo)
+                : ClientTypeUtil.GetServerDefinedName(propertyInfo, this.resolvePropertyName);
+        }
+
+        /// <summary>Gets client property information for a server-defined name.</summary>
+        /// <param name="type">CLR type containing the property.</param>
+        /// <param name="serverDefinedName">Server-defined property name.</param>
+        /// <param name="undeclaredPropertyBehavior">Behavior for undeclared properties.</param>
+        /// <returns>The matching property, or null.</returns>
+        internal PropertyInfo GetClientPropertyInfo(Type type, string serverDefinedName, UndeclaredPropertyBehavior undeclaredPropertyBehavior)
+        {
+            if (this.resolvePropertyName == null)
+            {
+                return ClientTypeUtil.GetClientPropertyInfo(type, serverDefinedName, undeclaredPropertyBehavior);
+            }
+
+            PropertyInfo[] matchingProperties = ClientTypeUtil.GetPropertiesOnType(type, declaredOnly: false)
+                .Where(property => string.Equals(this.GetServerDefinedName(property), serverDefinedName, StringComparison.Ordinal))
+                .Take(2)
+                .ToArray();
+            if (matchingProperties.Length > 1)
+            {
+                throw Client.Error.InvalidOperation(Error.Format(
+                    SRResources.ClientType_PropertyNameResolverCollision,
+                    matchingProperties[0].Name,
+                    matchingProperties[1].Name,
+                    type,
+                    serverDefinedName));
+            }
+
+            PropertyInfo propertyInfo = matchingProperties.SingleOrDefault();
+            if (propertyInfo == null && undeclaredPropertyBehavior == UndeclaredPropertyBehavior.ThrowException)
+            {
+                throw Client.Error.InvalidOperation(Error.Format(SRResources.ClientType_MissingProperty, type.ToString(), serverDefinedName));
+            }
+
+            return propertyInfo;
         }
 
         /// <summary>
@@ -454,7 +514,9 @@ namespace Microsoft.OData.Client
                             // This will leave entityType intact in case of an exception during loading.
                             List<IEdmProperty> loadedProperties = new List<IEdmProperty>();
                             List<IEdmStructuralProperty> loadedKeyProperties = new List<IEdmStructuralProperty>();
-                            foreach (PropertyInfo property in ClientTypeUtil.GetPropertiesOnType(type, /*declaredOnly*/edmBaseType != null).OrderBy(p => p.Name))
+                            PropertyInfo[] properties = ClientTypeUtil.GetPropertiesOnType(type, /*declaredOnly*/edmBaseType != null).OrderBy(p => p.Name).ToArray();
+                            this.ValidatePropertyNames(type, properties);
+                            foreach (PropertyInfo property in properties)
                             {
                                 IEdmProperty edmProperty = this.CreateEdmProperty((EdmStructuredType)entityType, property);
                                 loadedProperties.Add(edmProperty);
@@ -477,7 +539,7 @@ namespace Microsoft.OData.Client
                             List<IEdmStructuralProperty> orderedloadedKeyProperties = new List<IEdmStructuralProperty>();
                             foreach (var orderedKey in keyProperties)
                             {
-                                string serverDefinedName = ClientTypeUtil.GetServerDefinedName(orderedKey);
+                                string serverDefinedName = this.GetServerDefinedName(orderedKey);
                                 IEdmStructuralProperty keyProperty = loadedKeyProperties.FirstOrDefault(k => k.Name == serverDefinedName);
 
                                 if (keyProperty != null)
@@ -524,7 +586,9 @@ namespace Microsoft.OData.Client
                             // Create properties without modifying the complexType.
                             // This will leave complexType intact in case of an exception during loading.
                             List<IEdmProperty> loadedProperties = new List<IEdmProperty>();
-                            foreach (PropertyInfo property in ClientTypeUtil.GetPropertiesOnType(type, /*declaredOnly*/edmBaseType != null).OrderBy(p => p.Name))
+                            PropertyInfo[] properties = ClientTypeUtil.GetPropertiesOnType(type, /*declaredOnly*/edmBaseType != null).OrderBy(p => p.Name).ToArray();
+                            this.ValidatePropertyNames(type, properties);
+                            foreach (PropertyInfo property in properties)
                             {
                                 IEdmProperty edmProperty = this.CreateEdmProperty(complexType, property);
                                 loadedProperties.Add(edmProperty);
@@ -609,7 +673,7 @@ namespace Microsoft.OData.Client
                     // The partner representing the other side exists only inside this property and is not added to the target entity type,
                     // so it should not cause any name collisions.
                     edmProperty = EdmNavigationProperty.CreateNavigationPropertyWithPartner(
-                        ClientTypeUtil.GetServerDefinedName(propertyInfo),
+                        this.GetServerDefinedName(propertyInfo),
                         propertyEdmType.ToEdmTypeReference(isPropertyNullable),
                         /*dependentProperties*/ null,
                         /*principalProperties*/ null,
@@ -625,11 +689,34 @@ namespace Microsoft.OData.Client
             }
             else
             {
-                edmProperty = new EdmStructuralProperty(declaringType, ClientTypeUtil.GetServerDefinedName(propertyInfo), propertyEdmType.ToEdmTypeReference(isPropertyNullable));
+                edmProperty = new EdmStructuralProperty(declaringType, this.GetServerDefinedName(propertyInfo), propertyEdmType.ToEdmTypeReference(isPropertyNullable));
             }
 
             edmProperty.SetClientPropertyAnnotation(new ClientPropertyAnnotation(edmProperty, propertyInfo, this));
             return edmProperty;
+        }
+
+        /// <summary>Validates that each CLR property maps to a unique server-defined name.</summary>
+        /// <param name="type">CLR declaring type.</param>
+        /// <param name="properties">Properties to validate.</param>
+        private void ValidatePropertyNames(Type type, IEnumerable<PropertyInfo> properties)
+        {
+            Dictionary<string, PropertyInfo> propertiesByServerName = new Dictionary<string, PropertyInfo>(StringComparer.Ordinal);
+            foreach (PropertyInfo property in properties)
+            {
+                string serverDefinedName = this.GetServerDefinedName(property);
+                if (propertiesByServerName.TryGetValue(serverDefinedName, out PropertyInfo conflictingProperty))
+                {
+                    throw Client.Error.InvalidOperation(Error.Format(
+                        SRResources.ClientType_PropertyNameResolverCollision,
+                        conflictingProperty.Name,
+                        property.Name,
+                        type,
+                        serverDefinedName));
+                }
+
+                propertiesByServerName.Add(serverDefinedName, property);
+            }
         }
 
         /// <summary>

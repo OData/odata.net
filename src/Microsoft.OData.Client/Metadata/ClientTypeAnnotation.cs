@@ -173,7 +173,8 @@ namespace Microsoft.OData.Client.Metadata
 
             if (!this.clientPropertyCache.TryGetValue(propertyName, out property))
             {
-                string propertyClientName = ClientTypeUtil.GetClientPropertyName(this.ElementType, propertyName, undeclaredPropertyBehavior);
+                PropertyInfo propertyInfo = this.model.GetClientPropertyInfo(this.ElementType, propertyName, undeclaredPropertyBehavior);
+                string propertyClientName = propertyInfo == null ? propertyName : propertyInfo.Name;
                 if ((string.IsNullOrEmpty(propertyClientName) || !this.clientPropertyCache.TryGetValue(propertyClientName, out property)) && (undeclaredPropertyBehavior == UndeclaredPropertyBehavior.ThrowException))
                 {
                     throw Error.InvalidOperation(Error.Format(SRResources.ClientType_MissingProperty, this.ElementTypeName, propertyName));
