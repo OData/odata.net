@@ -8,6 +8,7 @@ namespace Microsoft.OData.UriParser
 {
     #region Namespaces
 
+    using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using Microsoft.OData.Edm;
@@ -40,12 +41,25 @@ namespace Microsoft.OData.UriParser
         /// <param name="objectCollection">A collection of objects.</param>
         /// <param name="literalText">The literal text for this node's value, formatted according to the OData URI literal formatting rules.</param>
         /// <param name="collectionType">The reference to the collection type.</param>
-        /// <exception cref="System.ArgumentNullException">Throws if the input literalText is null.</exception>
+        /// <exception cref="System.ArgumentNullException">Throws if the input literalText is null or empty.</exception>
         public CollectionConstantNode(IEnumerable<object> objectCollection, string literalText, IEdmCollectionTypeReference collectionType)
+            : this(objectCollection, literalText, collectionType, item => item?.ToString() ?? "null")
+        {
+        }
+
+        /// <summary>
+        /// Create a CollectionConstantNode using a formatter for each item's literal text.
+        /// </summary>
+        internal CollectionConstantNode(
+            IEnumerable<object> objectCollection,
+            string literalText,
+            IEdmCollectionTypeReference collectionType,
+            Func<object, string> itemLiteralTextFormatter)
         {
             ExceptionUtils.CheckArgumentNotNull(objectCollection, "objectCollection");
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(literalText, "literalText");
             ExceptionUtils.CheckArgumentNotNull(collectionType, "collectionType");
+            ExceptionUtils.CheckArgumentNotNull(itemLiteralTextFormatter, "itemLiteralTextFormatter");
 
             this.LiteralText = literalText;
             EdmCollectionType edmCollectionType = collectionType.Definition as EdmCollectionType;
@@ -54,7 +68,8 @@ namespace Microsoft.OData.UriParser
 
             foreach (object item in objectCollection)
             {
-                this.collection.Add(new ConstantNode(item, item != null ? item.ToString() : "null", this.itemType));
+                string itemLiteralText = itemLiteralTextFormatter(item);
+                this.collection.Add(new ConstantNode(item, itemLiteralText, this.itemType));
             }
         }
 
