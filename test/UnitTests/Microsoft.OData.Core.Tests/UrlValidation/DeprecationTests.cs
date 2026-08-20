@@ -70,10 +70,10 @@ namespace Microsoft.OData.Tests
 
                 Assert.Contains(elementName as string, expectedErrors);
                 Assert.IsType<DateOnly>(date);
-                Assert.Equal(date as DateOnly?, expectedDate);
-                Assert.Equal(version as string, expectedDateAsString);
+                Assert.Equal(expectedDate, date as DateOnly?);
+                Assert.Equal(expectedDateAsString, version as string);
                 Assert.IsType<DateOnly>(removalDate);
-                Assert.Equal(removalDate as DateOnly?, expectedRemovalDate);
+                Assert.Equal(expectedRemovalDate, removalDate as DateOnly?);
                 Assert.Contains(elementName as string, error.Message);
                 Assert.Contains(expectedRemovalDateAsString, error.Message);
             }
