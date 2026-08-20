@@ -991,7 +991,11 @@ namespace Microsoft.OData.Client.Materialization
                 // The KeySelectorMap property is initialized and populated with a least one item if we're dealing with a GroupBy expression.
                 if (queryComponents.GroupByKeySelectorMap?.Count > 0)
                 {
-                    result = GroupByProjectionPlanCompiler.CompilePlan(projection, queryComponents.NormalizerRewrites, queryComponents.GroupByKeySelectorMap);
+                    result = GroupByProjectionPlanCompiler.CompilePlan(
+                        projection,
+                        queryComponents.NormalizerRewrites,
+                        queryComponents.GroupByKeySelectorMap,
+                        materializerContext.Model);
                 }
                 else
                 {

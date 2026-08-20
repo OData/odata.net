@@ -507,7 +507,7 @@ namespace Microsoft.OData.Client
             else
             {
                 var member = m.Expression.Type.GetMember(m.Member.Name).First();
-                this.builder.Append(ClientTypeUtil.GetServerDefinedName(member));
+                this.builder.Append(this.context.GetServerDefinedName(member));
             }
 
             return m;
