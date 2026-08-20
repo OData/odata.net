@@ -231,6 +231,20 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
+        /// Initializes a new context with a resolver that maps CLR property names to server-defined property names.
+        /// </summary>
+        /// <param name="serviceRoot">An absolute URI that identifies the root of a data service.</param>
+        /// <param name="maxProtocolVersion">The maximum protocol version that the client understands.</param>
+        /// <param name="resolvePropertyName">
+        /// Resolver that maps a CLR property to its server-defined name.
+        /// <see cref="OriginalNameAttribute"/> takes precedence when present.
+        /// </param>
+        public DataServiceContext(Uri serviceRoot, ODataProtocolVersion maxProtocolVersion, Func<PropertyInfo, string> resolvePropertyName)
+            : this(serviceRoot, maxProtocolVersion, CreateClientEdmModel(maxProtocolVersion, resolvePropertyName))
+        {
+        }
+
+        /// <summary>
         /// Instantiates a new context with the specified <paramref name="serviceRoot"/> Uri.
         /// The library expects the Uri to point to the root of a data service,
         /// but does not issue a request to validate it does indeed identify the root of a service.
@@ -758,6 +772,14 @@ namespace Microsoft.OData.Client
         internal ClientEdmModel Model
         {
             get { return this.model; }
+        }
+
+        /// <summary>Gets the server-defined name for a CLR member.</summary>
+        /// <param name="memberInfo">Member to resolve.</param>
+        /// <returns>Server-defined name.</returns>
+        internal string GetServerDefinedName(MemberInfo memberInfo)
+        {
+            return this.model.GetServerDefinedName(memberInfo);
         }
 
         /// <summary>
@@ -4590,6 +4612,19 @@ namespace Microsoft.OData.Client
 
             descriptor.State = EntityStates.Unchanged;
             descriptor.DependsOnIds = null;
+        }
+
+        /// <summary>Creates an isolated client model for a context-specific property-name resolver.</summary>
+        private static ClientEdmModel CreateClientEdmModel(
+            ODataProtocolVersion maxProtocolVersion,
+            Func<PropertyInfo, string> resolvePropertyName)
+        {
+            Util.CheckArgumentNull(resolvePropertyName, "resolvePropertyName");
+            Util.CheckEnumerationValue(maxProtocolVersion, "maxProtocolVersion");
+
+            ClientEdmModel clientModel = new ClientEdmModel(maxProtocolVersion, resolvePropertyName);
+            clientModel.SetEdmVersion(maxProtocolVersion.ToVersion());
+            return clientModel;
         }
 
         /// <summary>

@@ -358,7 +358,7 @@ namespace Microsoft.OData.Client
 
                     keyValuesFromPredicates.Add(property, constantValue);
                     keyPredicates.Add(predicate);
-                    expToPropertyNameMap.Add(predicate, ClientTypeUtil.GetServerDefinedName(property));
+                    expToPropertyNameMap.Add(predicate, edmModel.GetServerDefinedName(property));
                 }
                 else
                 {
@@ -1844,7 +1844,7 @@ namespace Microsoft.OData.Client
                     Expression boundTarget;
                     if (MatchNonPrivateReadableProperty(me, out pi, out boundTarget))
                     {
-                        string propertyName = ClientTypeUtil.GetServerDefinedName(pi);
+                        string propertyName = context.GetServerDefinedName(pi);
 
                         NonSystemToken newPropertyToAdd = new NonSystemToken(propertyName, null, null);
                         if (propertyPath == null)

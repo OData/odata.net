@@ -293,7 +293,7 @@ namespace Microsoft.OData.Client.Annotation
                 return edmValueAnnotation;
             }
 
-            var severSidePropertyName = ClientTypeUtil.GetServerDefinedName(propertyInfo);
+            var severSidePropertyName = context.GetServerDefinedName(propertyInfo);
             if (string.IsNullOrEmpty(severSidePropertyName))
             {
                 return null;
@@ -658,7 +658,7 @@ namespace Microsoft.OData.Client.Annotation
             /// <returns>True if the property is found, else false.</returns>
             internal bool TryGetClientPropertyInfo(Type type, string propertyName, out PropertyInfo propertyInfo)
             {
-                propertyInfo = ClientTypeUtil.GetClientPropertyInfo(type, propertyName, this.dataServiceContext.UndeclaredPropertyBehavior);
+                propertyInfo = this.dataServiceContext.Model.GetClientPropertyInfo(type, propertyName, this.dataServiceContext.UndeclaredPropertyBehavior);
                 return propertyInfo != null;
             }
 
@@ -719,7 +719,7 @@ namespace Microsoft.OData.Client.Annotation
                     var clientTypeAnnotation = edmModel.GetClientTypeAnnotation(edmType);
                     if (clientTypeAnnotation != null)
                     {
-                        var propertyInfo = ClientTypeUtil.GetClientPropertyInfo(clientTypeAnnotation.ElementType, propertyName, this.dataServiceContext.UndeclaredPropertyBehavior);
+                        var propertyInfo = this.dataServiceContext.Model.GetClientPropertyInfo(clientTypeAnnotation.ElementType, propertyName, this.dataServiceContext.UndeclaredPropertyBehavior);
                         if (propertyInfo != null)
                         {
                             var annotation = GetOrInsertCachedMetadataAnnotationForPropertyInfo(this.dataServiceContext, propertyInfo, termName, qualifier);

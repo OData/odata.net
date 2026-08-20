@@ -184,7 +184,7 @@ namespace Microsoft.OData.Client
                 null :
                 UriHelper.GetEntityTypeNameForUriAndValidateMaxProtocolVersion(convertedSourceType, context, ref this.uriVersion);
 
-            string propertyServerDefinedName = ClientTypeUtil.GetServerDefinedName(pi);
+            string propertyServerDefinedName = context.GetServerDefinedName(pi);
 
             string propertyName = convertedSourceType != null ?
                 String.Join(UriHelper.FORWARDSLASH.ToString(), new string[] { convertedSourceTypeName, propertyServerDefinedName }) :

@@ -54,6 +54,9 @@ namespace Microsoft.OData.Client
         /// <summary>Mapping of member names in the GroupBy key selector to their respective expressions.</summary>
         private readonly Dictionary<string, Expression> keySelectorMap;
 
+        /// <summary>The client model used to resolve server-defined property names.</summary>
+        private readonly ClientEdmModel model;
+
         #endregion Private fields
 
         #region Constructors
@@ -65,7 +68,8 @@ namespace Microsoft.OData.Client
         /// <param name="keySelectorMap">Mapping of member names in the GroupBy key selector to their respective expressions.</param>
         private GroupByProjectionPlanCompiler(
             Dictionary<Expression, Expression> normalizerRewrites,
-            Dictionary<string, Expression> keySelectorMap)
+            Dictionary<string, Expression> keySelectorMap,
+            ClientEdmModel model)
         {
             this.annotations = new Dictionary<Expression, ExpressionAnnotation>(ReferenceEqualityComparer<Expression>.Instance);
             this.materializerExpression = Expression.Parameter(typeof(object), "mat");
@@ -73,6 +77,7 @@ namespace Microsoft.OData.Client
             this.pathBuilder = new GroupByProjectionPathBuilder();
             this.resultSelectorMap = new Dictionary<Expression, MappingInfo>(ReferenceEqualityComparer<Expression>.Instance);
             this.keySelectorMap = keySelectorMap;
+            this.model = model;
         }
 
         #endregion Constructors
@@ -87,7 +92,8 @@ namespace Microsoft.OData.Client
         internal static ProjectionPlan CompilePlan(
             LambdaExpression projection,
             Dictionary<Expression, Expression> normalizerRewrites,
-            Dictionary<string, Expression> keySelectorMap)
+            Dictionary<string, Expression> keySelectorMap,
+            ClientEdmModel model)
         {
             Debug.Assert(projection != null, "projection != null");
             Debug.Assert(projection.Parameters.Count >= 1, "projection.Parameters.Count >= 1");
@@ -100,7 +106,7 @@ namespace Microsoft.OData.Client
                 projection.Body.NodeType == ExpressionType.New,
                 "projection.Body.NodeType == Constant, MemberInit, MemberAccess, Convert(Checked) New");
 
-            GroupByProjectionPlanCompiler rewriter = new GroupByProjectionPlanCompiler(normalizerRewrites, keySelectorMap);
+            GroupByProjectionPlanCompiler rewriter = new GroupByProjectionPlanCompiler(normalizerRewrites, keySelectorMap, model);
             GroupByProjectionAnalyzer.Analyze(rewriter, projection);
 
             Expression plan = rewriter.Visit(projection);
@@ -454,7 +460,7 @@ namespace Microsoft.OData.Client
             // annotations always come from target expression
             // that are generated anew (except parameters,
             // but those)
-            ProjectionPathSegment memberSegment = new ProjectionPathSegment(baseAnnotation.Segment.StartPath, m);
+            ProjectionPathSegment memberSegment = ProjectionPathSegment.CreateWithModel(baseAnnotation.Segment.StartPath, m, this.model);
             baseAnnotation.Segment.StartPath.Add(memberSegment);
             return this.CallValueForPathWithType(
                 baseAnnotation.Segment.StartPath.RootEntry,
