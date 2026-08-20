@@ -36,24 +36,24 @@ namespace Microsoft.OData.Tests
         public static void WithDeprecatedElementsGeneratesErrors(String request, params string[] expectedErrors)
         {
             string expectedDateAsString = "2020-03-30";
-            Date expectedDate = Date.Parse(expectedDateAsString);
+            DateOnly expectedDate = DateOnly.Parse(expectedDateAsString);
             string expectedRemovalDateAsString = "2022-03-30";
-            Date expectedRemovalDate = Date.Parse(expectedRemovalDateAsString);
+            DateOnly expectedRemovalDate = DateOnly.Parse(expectedRemovalDateAsString);
 
             IEdmModel model = GetModel();
             ODataUriParser parser = new ODataUriParser(model, new Uri(request, UriKind.Relative));
-            
+
             IEnumerable<ODataUrlValidationMessage> errors;
-            ODataUrlValidationRuleSet rules = new ODataUrlValidationRuleSet(new ODataUrlValidationRule[] 
+            ODataUrlValidationRuleSet rules = new ODataUrlValidationRuleSet(new ODataUrlValidationRule[]
             {
                 ODataUrlValidationRules.DeprecatedNavigationSourceRule,
-                ODataUrlValidationRules.DeprecatedPropertyRule, 
-                ODataUrlValidationRules.DeprecatedTypeRule 
+                ODataUrlValidationRules.DeprecatedPropertyRule,
+                ODataUrlValidationRules.DeprecatedTypeRule
             });
             parser.Validate(rules, out errors);
 
             Assert.Equal(expectedErrors.Count(), errors.Count());
-            foreach(ODataUrlValidationMessage error in errors)
+            foreach (ODataUrlValidationMessage error in errors)
             {
                 Assert.Equal(ODataUrlValidationMessageCodes.DeprecatedElement, error.MessageCode);
                 object elementName;
@@ -61,17 +61,19 @@ namespace Microsoft.OData.Tests
                 object date;
                 Assert.True(error.ExtendedProperties.TryGetValue("Date", out date));
                 object removalDate;
-                Assert.True(error.ExtendedProperties.TryGetValue("RemovalDate", out removalDate)); 
+                Assert.True(error.ExtendedProperties.TryGetValue("RemovalDate", out removalDate));
                 object version;
                 Assert.True(error.ExtendedProperties.TryGetValue("Version", out version));
 
                 string elementNameAsString = elementName as string;
-                elementName =elementNameAsString.Substring(elementNameAsString.LastIndexOf('.') + 1);
+                elementName = elementNameAsString.Substring(elementNameAsString.LastIndexOf('.') + 1);
 
                 Assert.Contains(elementName as string, expectedErrors);
-                Assert.Equal(date as Date?, expectedDate);
+                Assert.IsType<DateOnly>(date);
+                Assert.Equal(date as DateOnly?, expectedDate);
                 Assert.Equal(version as string, expectedDateAsString);
-                Assert.Equal(removalDate as Date?, expectedRemovalDate);
+                Assert.IsType<DateOnly>(removalDate);
+                Assert.Equal(removalDate as DateOnly?, expectedRemovalDate);
                 Assert.Contains(elementName as string, error.Message);
                 Assert.Contains(expectedRemovalDateAsString, error.Message);
             }
@@ -109,106 +111,106 @@ namespace Microsoft.OData.Tests
         private static string JetsonsModel = @"
 <edmx:Edmx xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"" Version=""4.0"">
   <edmx:DataServices>
-    <Schema xmlns = ""http://docs.oasis-open.org/odata/ns/edm"" Namespace=""Jetsons.Models"">
-      <ComplexType Name = ""address"" >
+    <Schema xmlns=""http://docs.oasis-open.org/odata/ns/edm"" Namespace=""Jetsons.Models"">
+      <ComplexType Name=""address"">
         <Property Name=""city"" Type=""Edm.String""/>
         <Property Name=""subAddress"" Type=""Jetsons.Models.address""/>
-        <Property Name = ""state"" Type=""Edm.String"">
-          <Annotation Term = ""Core.Revisions"" >
+        <Property Name=""state"" Type=""Edm.String"">
+          <Annotation Term=""Core.Revisions"">
             <Collection>
               <Record>
                 <PropertyValue Property=""Version"" String=""2020-03-30""/>
-                <PropertyValue Property = ""Kind"" EnumMember=""RevisionKind/Deprecated""/>
-                <PropertyValue Property = ""Description"" String=""'state' is deprecated and will be retired on 2022-03-30. Please use 'region'.""/>
+                <PropertyValue Property=""Kind"" EnumMember=""RevisionKind/Deprecated""/>
+                <PropertyValue Property=""Description"" String=""'state' is deprecated and will be retired on 2022-03-30. Please use 'region'.""/>
                 <PropertyValue Property=""Date"" Date=""2020-03-30""/>
                 <PropertyValue Property=""RemovalDate"" Date=""2022-03-30""/>
               </Record>
             </Collection>
           </Annotation>
         </Property>
-        <Property Name = ""zip"" Type=""Edm.String""/>
+        <Property Name=""zip"" Type=""Edm.String""/>
       </ComplexType>
-      <EntityType Name = ""company"" >
+      <EntityType Name=""company"">
         <Key>
           <PropertyRef Name=""stockSymbol""/>
         </Key>
-        <Property Name = ""stockSymbol"" Type=""Edm.String"" Nullable=""false""/>
-        <Property Name = ""name_2"" Type=""Edm.String""/>
-        <Property Name = ""name"" Type=""Edm.String"">
-          <Annotation Term = ""Core.Revisions"" >
+        <Property Name=""stockSymbol"" Type=""Edm.String"" Nullable=""false""/>
+        <Property Name=""name_2"" Type=""Edm.String""/>
+        <Property Name=""name"" Type=""Edm.String"">
+          <Annotation Term=""Core.Revisions"">
             <Collection>
               <Record>
                 <PropertyValue Property=""Date"" Date=""2020-03-30""/>
                 <PropertyValue Property=""RemovalDate"" Date=""2022-03-30""/>
                 <PropertyValue Property=""Version"" String=""2020-03-30""/>
-                <PropertyValue Property = ""Kind"" EnumMember=""RevisionKind/Deprecated""/>
-                <PropertyValue Property = ""Description"" String=""'name' is deprecated and will be retired on 2022-03-30. Please use 'name2'.""/>
+                <PropertyValue Property=""Kind"" EnumMember=""RevisionKind/Deprecated""/>
+                <PropertyValue Property=""Description"" String=""'name' is deprecated and will be retired on 2022-03-30. Please use 'name_2'.""/>
               </Record>
             </Collection>
           </Annotation>
         </Property>
-        <Property Name = ""incorporated"" Type=""Edm.DateTimeOffset"" Nullable=""false""/>
-        <Property Name = ""address"" Type=""Jetsons.Models.address""/>
-        <NavigationProperty Name = ""employees"" Type=""Collection(Jetsons.Models.employee)"" ContainsTarget=""true"">
-          <Annotation Term = ""Core.Revisions"" >
+        <Property Name=""incorporated"" Type=""Edm.DateTimeOffset"" Nullable=""false""/>
+        <Property Name=""address"" Type=""Jetsons.Models.address""/>
+        <NavigationProperty Name=""employees"" Type=""Collection(Jetsons.Models.employee)"" ContainsTarget=""true"">
+          <Annotation Term=""Core.Revisions"">
             <Collection>
               <Record>
                 <PropertyValue Property=""Date"" Date=""2020-03-30""/>
                 <PropertyValue Property=""RemovalDate"" Date=""2022-03-30""/>
                 <PropertyValue Property=""Version"" String=""2020-03-30""/>
-                <PropertyValue Property = ""Kind"" EnumMember=""RevisionKind/Deprecated""/>
-                <PropertyValue Property = ""Description"" String=""'employees' is deprecated and will be retired on 2022-03-30. Please use 'directs'.""/>
+                <PropertyValue Property=""Kind"" EnumMember=""RevisionKind/Deprecated""/>
+                <PropertyValue Property=""Description"" String=""'employees' is deprecated and will be retired on 2022-03-30. Please use 'directs'.""/>
               </Record>
             </Collection>
           </Annotation>
         </NavigationProperty>
-        <NavigationProperty Name = ""directs"" Type=""Collection(Jetsons.Models.employee)"" ContainsTarget=""true""/>
+        <NavigationProperty Name=""directs"" Type=""Collection(Jetsons.Models.employee)"" ContainsTarget=""true""/>
       </EntityType>
-      <EntityType Name = ""employee"" >
+      <EntityType Name=""employee"">
         <Key>
           <PropertyRef Name=""id""/>
         </Key>
-        <Property Name = ""id"" Type=""Edm.Int32"" Nullable=""false""/>
-        <Property Name = ""firstName"" Type=""Edm.String""/>
-        <Property Name = ""lastName"" Type=""Edm.String""/>
-        <Property Name = ""title"" Type=""Edm.String""/>
-        <NavigationProperty Name = ""vehicles"" Type=""Collection(Jetsons.Models.vehicle)"" ContainsTarget=""true""/>
+        <Property Name=""id"" Type=""Edm.Int32"" Nullable=""false""/>
+        <Property Name=""firstName"" Type=""Edm.String""/>
+        <Property Name=""lastName"" Type=""Edm.String""/>
+        <Property Name=""title"" Type=""Edm.String""/>
+        <NavigationProperty Name=""vehicles"" Type=""Collection(Jetsons.Models.vehicle)"" ContainsTarget=""true""/>
      </EntityType>
-      <EntityType Name = ""vehicle"" >
+      <EntityType Name=""vehicle"">
         <Key>
           <PropertyRef Name=""license""/>
         </Key>
-        <Property Name = ""license"" Type=""Edm.String"" Nullable=""false""/>
-        <Property Name = ""model"" Type=""Edm.String""/>
-        <Annotation Term = ""Core.Revisions"" >
+        <Property Name=""license"" Type=""Edm.String"" Nullable=""false""/>
+        <Property Name=""model"" Type=""Edm.String""/>
+        <Annotation Term=""Core.Revisions"">
             <Collection>
                 <Record>
                 <PropertyValue Property=""Date"" Date=""2020-03-30""/>
                 <PropertyValue Property=""RemovalDate"" Date=""2022-03-30""/>
                 <PropertyValue Property=""Version"" String=""2020-03-30""/>
-                <PropertyValue Property = ""Kind"" EnumMember=""RevisionKind/Deprecated""/>
-                <PropertyValue Property = ""Description"" String=""'vehicle' is deprecated and will be retired on 2022-03-30.""/>
+                <PropertyValue Property=""Kind"" EnumMember=""RevisionKind/Deprecated""/>
+                <PropertyValue Property=""Description"" String=""'vehicle' is deprecated and will be retired on 2022-03-30.""/>
                 </Record>
             </Collection>
         </Annotation>
       </EntityType>
-      <Action Name = ""ResetDataSource"" />
+      <Action Name=""ResetDataSource""/>
       <EntityContainer Name=""Container"">
-        <EntitySet Name = ""competitors"" EntityType=""Jetsons.Models.company"">
-          <Annotation Term = ""Core.Revisions"" >
+        <EntitySet Name=""competitors"" EntityType=""Jetsons.Models.company"">
+          <Annotation Term=""Core.Revisions"">
             <Collection>
               <Record>
                 <PropertyValue Property=""Date"" Date=""2020-03-30""/>
                 <PropertyValue Property=""RemovalDate"" Date=""2022-03-30""/>
                 <PropertyValue Property=""Version"" String=""2020-03-30""/>
-                <PropertyValue Property = ""Kind"" EnumMember=""RevisionKind/Deprecated""/>
-                <PropertyValue Property = ""Description"" String=""'competitors' is deprecated and will be retired on 2022-03-30.""/>
+                <PropertyValue Property=""Kind"" EnumMember=""RevisionKind/Deprecated""/>
+                <PropertyValue Property=""Description"" String=""'competitors' is deprecated and will be retired on 2022-03-30.""/>
               </Record>
             </Collection>
           </Annotation>
         </EntitySet>
-        <Singleton Name = ""company"" Type=""Jetsons.Models.company""/>
-        <ActionImport Name = ""ResetDataSource"" Action=""Jetsons.Models.ResetDataSource""/>
+        <Singleton Name=""company"" Type=""Jetsons.Models.company""/>
+        <ActionImport Name=""ResetDataSource"" Action=""Jetsons.Models.ResetDataSource""/>
       </EntityContainer>
     </Schema>
   </edmx:DataServices>
