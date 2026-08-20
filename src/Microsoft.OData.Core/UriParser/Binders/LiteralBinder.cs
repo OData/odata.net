@@ -6,6 +6,7 @@
 
 namespace Microsoft.OData.UriParser
 {
+    using System;
     using System.Diagnostics;
 
     /// <summary>
@@ -55,9 +56,14 @@ namespace Microsoft.OData.UriParser
                         ODataCollectionValue collectionValue = literalToken.Value as ODataCollectionValue;
                         if (collectionValue != null)
                         {
-                            return new CollectionConstantNode(collectionValue.Items, literalToken.OriginalText, collectionReference);
+                            return new CollectionConstantNode(
+                                collectionValue.Items,
+                                literalToken.OriginalText,
+                                collectionReference,
+                                GetInCollectionItemLiteralText);
                         }
                     }
+
 
                     return new ConstantNode(literalToken.Value, literalToken.OriginalText, literalToken.ExpectedEdmTypeReference);
                 }
@@ -66,6 +72,16 @@ namespace Microsoft.OData.UriParser
             }
 
             return new ConstantNode(literalToken.Value);
+        }
+
+        private static string GetInCollectionItemLiteralText(object item)
+        {
+            if (item is string stringValue)
+            {
+                return $"'{stringValue.Replace("'", "''", StringComparison.Ordinal)}'";
+            }
+
+            return item?.ToString() ?? "null";
         }
     }
 }
