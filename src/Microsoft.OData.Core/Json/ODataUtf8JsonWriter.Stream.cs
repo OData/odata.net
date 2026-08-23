@@ -43,8 +43,9 @@ namespace Microsoft.OData.Json
         /// </summary>
         public void EndStreamValueScope()
         {
-            this.binaryValueStream?.Dispose();
+            Stream stream = this.binaryValueStream;
             this.binaryValueStream = null;
+            stream?.Dispose();
             this.Flush();
 
             this.bufferWriter.Write(this.DoubleQuote.Slice(0, 1).Span);
@@ -76,10 +77,11 @@ namespace Microsoft.OData.Json
         /// <returns>A task representing the asynchronous operation.</returns>
         public async Task EndStreamValueScopeAsync()
         {
-            if (this.binaryValueStream != null)
+            Stream stream = this.binaryValueStream;
+            this.binaryValueStream = null;
+            if (stream != null)
             {
-                await this.binaryValueStream.DisposeAsync().ConfigureAwait(false);
-                this.binaryValueStream = null;
+                await stream.DisposeAsync().ConfigureAwait(false);
             }
 
             await this.DrainBufferIfThresholdReachedAsync().ConfigureAwait(false);
@@ -96,16 +98,24 @@ namespace Microsoft.OData.Json
         internal sealed class ODataUtf8JsonWriteStream : Stream
         {
             private readonly ODataUtf8JsonWriter jsonWriter = null;
+            private readonly ArrayPool<byte> arrayPool;
             private byte[] buffer;
-            int numBytesNotWrittenFromPreviousChunk = 0;
+            private int disposed;
+            private int numBytesNotWrittenFromPreviousChunk = 0;
 
             /// <summary>
             /// Initializes a new instance of the <see cref="ODataUtf8JsonWriter"> class with the specified ODataUtf8JsonWriter.
             /// </summary>
             /// <param name="writer">The OData UTF-8 JSON writer to write to.</param>
             internal ODataUtf8JsonWriteStream(ODataUtf8JsonWriter writer)
+                : this(writer, ArrayPool<byte>.Shared)
+            {
+            }
+
+            internal ODataUtf8JsonWriteStream(ODataUtf8JsonWriter writer, ArrayPool<byte> arrayPool)
             {
                 this.jsonWriter = writer;
+                this.arrayPool = arrayPool;
             }
 
             public override bool CanRead => false;
@@ -147,22 +157,35 @@ namespace Microsoft.OData.Json
             /// <param name="disposing">true if called from Dispose; false if called form the finalizer.</param>
             protected override void Dispose(bool disposing)
             {
-                if (this.numBytesNotWrittenFromPreviousChunk > 0)
+                if (Interlocked.Exchange(ref this.disposed, 1) != 0)
                 {
-                    // If there are unprocessed bytes, encode and write them as the final block.
-                    ReadOnlySpan<byte> bytesNotProcessedFromPreviousChunk = this.buffer.AsSpan().Slice(0, this.numBytesNotWrittenFromPreviousChunk);
-
-                    this.jsonWriter.Base64EncodeAndWriteChunk(bytesNotProcessedFromPreviousChunk, isFinalBlock: true, out this.numBytesNotWrittenFromPreviousChunk);
-                    Debug.Assert(numBytesNotWrittenFromPreviousChunk == 0, "numBytesNotWrittenFromPreviousChunk == 0");
+                    return;
                 }
 
-                if (this.buffer != null)
-                {
-                    ArrayPool<byte>.Shared.Return(this.buffer);
-                }
+                byte[] buffer = Interlocked.Exchange(ref this.buffer, null);
 
-                this.Flush();
-                base.Dispose(disposing);
+                try
+                {
+                    if (buffer != null && this.numBytesNotWrittenFromPreviousChunk > 0)
+                    {
+                        // If there are unprocessed bytes, encode and write them as the final block.
+                        ReadOnlySpan<byte> bytesNotProcessedFromPreviousChunk = buffer.AsSpan().Slice(0, this.numBytesNotWrittenFromPreviousChunk);
+
+                        this.jsonWriter.Base64EncodeAndWriteChunk(bytesNotProcessedFromPreviousChunk, isFinalBlock: true, out this.numBytesNotWrittenFromPreviousChunk);
+                        Debug.Assert(numBytesNotWrittenFromPreviousChunk == 0, "numBytesNotWrittenFromPreviousChunk == 0");
+                    }
+
+                    this.Flush();
+                }
+                finally
+                {
+                    if (buffer != null)
+                    {
+                        this.arrayPool.Return(buffer);
+                    }
+
+                    base.Dispose(disposing);
+                }
             }
 
             /// <summary>
@@ -171,21 +194,36 @@ namespace Microsoft.OData.Json
             /// <returns>A <see cref="ValueTask"/> representing the asynchronous operation.</returns>
             public override async ValueTask DisposeAsync()
             {
-                if (this.numBytesNotWrittenFromPreviousChunk > 0)
+                if (Interlocked.Exchange(ref this.disposed, 1) != 0)
                 {
-                    // If there are unprocessed bytes, encode and write them as the final block.
-                    ReadOnlyMemory<byte> bytesNotProcessedFromPreviousChunk = this.buffer.AsMemory().Slice(0, this.numBytesNotWrittenFromPreviousChunk);
-
-                    this.jsonWriter.Base64EncodeAndWriteChunk(bytesNotProcessedFromPreviousChunk.Span, isFinalBlock: true, out this.numBytesNotWrittenFromPreviousChunk);
-                    Debug.Assert(numBytesNotWrittenFromPreviousChunk == 0, "numBytesNotWrittenFromPreviousChunk == 0");
+                    return;
                 }
 
-                if (this.buffer != null)
-                {
-                    ArrayPool<byte>.Shared.Return(this.buffer);
-                }
+                byte[] buffer = Interlocked.Exchange(ref this.buffer, null);
 
-                await this.jsonWriter.FlushAsync().ConfigureAwait(false);
+                try
+                {
+                    if (buffer != null && this.numBytesNotWrittenFromPreviousChunk > 0)
+                    {
+                        // If there are unprocessed bytes, encode and write them as the final block.
+                        ReadOnlyMemory<byte> bytesNotProcessedFromPreviousChunk = buffer.AsMemory().Slice(0, this.numBytesNotWrittenFromPreviousChunk);
+
+                        this.jsonWriter.Base64EncodeAndWriteChunk(bytesNotProcessedFromPreviousChunk.Span, isFinalBlock: true, out this.numBytesNotWrittenFromPreviousChunk);
+                        Debug.Assert(numBytesNotWrittenFromPreviousChunk == 0, "numBytesNotWrittenFromPreviousChunk == 0");
+                    }
+
+                    await this.jsonWriter.FlushAsync().ConfigureAwait(false);
+                }
+                finally
+                {
+                    if (buffer != null)
+                    {
+                        this.arrayPool.Return(buffer);
+                    }
+
+                    base.Dispose(true);
+                    GC.SuppressFinalize(this);
+                }
             }
 
             /// <summary>
@@ -263,7 +301,7 @@ namespace Microsoft.OData.Json
                         int totalLength = bytesNotProcessedFromPreviousChunk.Length + chunk.Length;
 
                         // Rent an array to hold bytes from both previous and current chunks.
-                        byte[] combinedArray = ArrayPool<byte>.Shared.Rent(totalLength);
+                        byte[] combinedArray = this.arrayPool.Rent(totalLength);
 
                         // Copy bytes from bytesNotProcessedFromPreviousChunk to the combined array
                         bytesNotProcessedFromPreviousChunk.CopyTo(combinedArray);
@@ -273,7 +311,7 @@ namespace Microsoft.OData.Json
 
                         WriteChunk(combinedArray.AsSpan().Slice(0, totalLength), totalLength, isFinalBlock);
 
-                        ArrayPool<byte>.Shared.Return(combinedArray);
+                        this.arrayPool.Return(combinedArray);
                     }
                     else
                     {
@@ -309,7 +347,7 @@ namespace Microsoft.OData.Json
                         int totalLength = bytesNotProcessedFromPreviousChunk.Length + chunk.Length;
 
                         // Rent an array to hold bytes from both previous and current chunks.
-                        byte[] combinedArray = ArrayPool<byte>.Shared.Rent(totalLength);
+                        byte[] combinedArray = this.arrayPool.Rent(totalLength);
 
                         // Copy bytes from bytesNotProcessedFromPreviousChunk to the combined array
                         bytesNotProcessedFromPreviousChunk.Span.CopyTo(combinedArray);
@@ -319,7 +357,7 @@ namespace Microsoft.OData.Json
 
                         WriteChunk(combinedArray.AsSpan().Slice(0, totalLength), totalLength, isFinalBlock);
 
-                        ArrayPool<byte>.Shared.Return(combinedArray);
+                        this.arrayPool.Return(combinedArray);
                     }
                     else
                     {
@@ -345,7 +383,7 @@ namespace Microsoft.OData.Json
                 {
                     if (this.buffer == null)
                     {
-                        this.buffer = ArrayPool<byte>.Shared.Rent(ODataUtf8JsonWriter.chunkSize);
+                        this.buffer = this.arrayPool.Rent(ODataUtf8JsonWriter.chunkSize);
                     }
 
                     // Update the buffer with unprocessed bytes from the current chunk.
