@@ -10,6 +10,8 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.OData.Core;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OData.Core.Tests.DependencyInjection;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Json;
 using Xunit;
@@ -505,6 +507,24 @@ namespace Microsoft.OData.Tests.Json
             Assert.Equal("\"CjEyMzQ1Njc4OTA=\"", result);
         }
 
+        [Fact]
+        public async Task WriteStreamValueAsync_DisposesWriterStreamOnce()
+        {
+            var writerStream = new DisposeTrackingMemoryStream();
+            var jsonWriter = new MockJsonWriter
+            {
+                StartStreamValueScopeAsyncFunc = () => Task.FromResult<Stream>(writerStream),
+                EndStreamValueScopeAsyncFunc = async () => await writerStream.DisposeAsync()
+            };
+            var container = ServiceProviderHelper.BuildServiceProvider(
+                services => services.AddSingleton<IJsonWriterFactory>(new MockJsonWriterFactory(jsonWriter)));
+            var serializer = this.CreateODataJsonValueSerializer(true, container, true);
+
+            await serializer.WriteStreamValueAsync(new ODataBinaryStreamValue(new MemoryStream(new byte[] { 1 })));
+
+            Assert.Equal(1, writerStream.DisposeCount);
+        }
+
         private ODataJsonValueSerializer CreateODataJsonValueSerializer(bool writingResponse, IServiceProvider serviceProvider = null, bool isAsync = false)
         {
             var messageInfo = new ODataMessageInfo
@@ -536,6 +556,21 @@ namespace Microsoft.OData.Tests.Json
             this.stream.Position = 0;
             
             return await new StreamReader(this.stream).ReadToEndAsync();
+        }
+
+        private sealed class DisposeTrackingMemoryStream : MemoryStream
+        {
+            public int DisposeCount { get; private set; }
+
+            protected override void Dispose(bool disposing)
+            {
+                if (disposing)
+                {
+                    this.DisposeCount++;
+                }
+
+                base.Dispose(disposing);
+            }
         }
     }
 }

@@ -363,6 +363,24 @@ namespace Microsoft.OData.Tests.Json
             Assert.Equal("\"CjEyMzQ1Njc4OTA=\"", result);
         }
 
+        [Fact]
+        public void WriteStreamValue_DisposesWriterStreamOnce()
+        {
+            var writerStream = new DisposeTrackingMemoryStream();
+            var jsonWriter = new MockJsonWriter
+            {
+                StartStreamValueScopeFunc = () => writerStream,
+                EndStreamValueScopeAction = () => writerStream.Dispose()
+            };
+            var container = ServiceProviderHelper.BuildServiceProvider(
+                services => services.AddSingleton<IJsonWriterFactory>(new MockJsonWriterFactory(jsonWriter)));
+            var serializer = this.CreateODataJsonValueSerializer(true, container);
+
+            serializer.WriteStreamValue(new ODataBinaryStreamValue(new MemoryStream(new byte[] { 1 })));
+
+            Assert.Equal(1, writerStream.DisposeCount);
+        }
+
         private ODataJsonValueSerializer CreateODataJsonValueSerializer(bool writingResponse, IServiceProvider serviceProvider = null)
         {
             var messageInfo = new ODataMessageInfo
@@ -398,11 +416,14 @@ namespace Microsoft.OData.Tests.Json
         {
             public bool Disposed { get; private set; } = false;
 
+            public int DisposeCount { get; private set; }
+
             protected override void Dispose(bool disposing)
             {
                 if (disposing)
                 {
                     this.Disposed = true;
+                    this.DisposeCount++;
                 }
 
                 base.Dispose(disposing);
