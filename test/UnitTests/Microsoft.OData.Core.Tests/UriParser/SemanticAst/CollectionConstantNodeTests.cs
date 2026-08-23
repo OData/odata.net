@@ -78,6 +78,20 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         }
 
         [Fact]
+        public void EmptyStringItemUsesNonEmptyLiteralText()
+        {
+            const string text = "('')";
+            var expectedType = new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetString(true)));
+
+            CollectionConstantNode collectionConstantNode = new CollectionConstantNode(
+                new[] { string.Empty }, text, expectedType);
+
+            ConstantNode item = Assert.Single(collectionConstantNode.Collection);
+            Assert.Equal(string.Empty, item.Value);
+            Assert.Equal("''", item.LiteralText);
+        }
+
+        [Fact]
         public void TextIsSetCorrectly()
         {
             const string text = "(1,2,3)";

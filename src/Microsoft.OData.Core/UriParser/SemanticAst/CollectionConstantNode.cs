@@ -43,7 +43,11 @@ namespace Microsoft.OData.UriParser
         /// <param name="collectionType">The reference to the collection type.</param>
         /// <exception cref="System.ArgumentNullException">Throws if the input literalText is null or empty.</exception>
         public CollectionConstantNode(IEnumerable<object> objectCollection, string literalText, IEdmCollectionTypeReference collectionType)
-            : this(objectCollection, literalText, collectionType, item => item?.ToString() ?? "null")
+            : this(
+                objectCollection,
+                literalText,
+                collectionType,
+                item => item is string stringValue && stringValue.Length == 0 ? "''" : item?.ToString() ?? "null")
         {
         }
 
