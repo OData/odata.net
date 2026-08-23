@@ -11,6 +11,7 @@ namespace Microsoft.OData.Json
     using System.IO;
     using System.Text;
     using System.Text.Unicode;
+    using System.Threading;
     using System.Threading.Tasks;
 
     internal sealed partial class ODataUtf8JsonWriter
@@ -68,7 +69,9 @@ namespace Microsoft.OData.Json
                 this.bufferWriter.Write(this.DoubleQuote.Slice(0, 1).Span);
             }
 
-            this.textWriter?.Dispose();
+            TextWriter textWriter = this.textWriter;
+            this.textWriter = null;
+            textWriter?.Dispose();
             this.Flush();
 
             CheckIfSeparatorNeeded();
@@ -113,9 +116,11 @@ namespace Microsoft.OData.Json
                 this.bufferWriter.Write(this.DoubleQuote.Slice(0, 1).Span);
             }
 
-            if (this.textWriter != null)
+            TextWriter textWriter = this.textWriter;
+            this.textWriter = null;
+            if (textWriter != null)
             {
-                await this.textWriter.DisposeAsync().ConfigureAwait(false);
+                await textWriter.DisposeAsync().ConfigureAwait(false);
             }
 
             await this.DrainBufferIfThresholdReachedAsync().ConfigureAwait(false);
@@ -139,6 +144,7 @@ namespace Microsoft.OData.Json
         internal sealed class ODataUtf8JsonTextWriter : TextWriter
         {
             private readonly ODataUtf8JsonWriter jsonWriter = null;
+            private readonly ArrayPool<char> arrayPool;
             // Buffer used to store chars that could not be encoded due to
             // insufficient data in the input buffer. The chars will be prepended
             // to the next chunk of input.
@@ -148,10 +154,17 @@ namespace Microsoft.OData.Json
             // This buffer is used by Write(char) to store the char so
             // that we can re-use our Write(char[], ...) method.
             private char[] singleCharBuffer;
+            private int disposed;
 
             public ODataUtf8JsonTextWriter(ODataUtf8JsonWriter jsonWriter)
+                : this(jsonWriter, ArrayPool<char>.Shared)
+            {
+            }
+
+            internal ODataUtf8JsonTextWriter(ODataUtf8JsonWriter jsonWriter, ArrayPool<char> arrayPool)
             {
                 this.jsonWriter = jsonWriter;
+                this.arrayPool = arrayPool;
             }
 
             /// <summary>
@@ -182,18 +195,32 @@ namespace Microsoft.OData.Json
             /// <param name="disposing">true if called from Dispose; false if called form the finalizer.</param>
             protected override void Dispose(bool disposing)
             {
-                if (this.buffer != null)
+                if (Interlocked.Exchange(ref this.disposed, 1) != 0)
                 {
-                    ArrayPool<char>.Shared.Return(this.buffer);
+                    return;
                 }
 
-                if (this.singleCharBuffer != null)
-                {
-                    ArrayPool<char>.Shared.Return(this.singleCharBuffer);
-                }
+                char[] buffer = Interlocked.Exchange(ref this.buffer, null);
+                char[] singleCharBuffer = Interlocked.Exchange(ref this.singleCharBuffer, null);
 
-                this.Flush();
-                base.Dispose(disposing);
+                try
+                {
+                    this.Flush();
+                }
+                finally
+                {
+                    if (buffer != null)
+                    {
+                        this.arrayPool.Return(buffer);
+                    }
+
+                    if (singleCharBuffer != null)
+                    {
+                        this.arrayPool.Return(singleCharBuffer);
+                    }
+
+                    base.Dispose(disposing);
+                }
             }
 
             /// <summary>
@@ -202,17 +229,33 @@ namespace Microsoft.OData.Json
             /// <returns>A <see cref="ValueTask"/> representing the asynchronous operation.</returns>
             public override async ValueTask DisposeAsync()
             {
-                if (this.buffer != null)
+                if (Interlocked.Exchange(ref this.disposed, 1) != 0)
                 {
-                    ArrayPool<char>.Shared.Return(this.buffer);
+                    return;
                 }
 
-                if (this.singleCharBuffer != null)
-                {
-                    ArrayPool<char>.Shared.Return(this.singleCharBuffer);
-                }
+                char[] buffer = Interlocked.Exchange(ref this.buffer, null);
+                char[] singleCharBuffer = Interlocked.Exchange(ref this.singleCharBuffer, null);
 
-                await this.FlushAsync().ConfigureAwait(false);
+                try
+                {
+                    await this.FlushAsync().ConfigureAwait(false);
+                }
+                finally
+                {
+                    if (buffer != null)
+                    {
+                        this.arrayPool.Return(buffer);
+                    }
+
+                    if (singleCharBuffer != null)
+                    {
+                        this.arrayPool.Return(singleCharBuffer);
+                    }
+
+                    base.Dispose(true);
+                    GC.SuppressFinalize(this);
+                }
             }
 
             /// <summary>
@@ -238,7 +281,7 @@ namespace Microsoft.OData.Json
             /// <param name="value">The character to write.</param>
             public override async Task WriteAsync(char value)
             {
-                this.singleCharBuffer ??= ArrayPool<char>.Shared.Rent(1);
+                this.singleCharBuffer ??= this.arrayPool.Rent(1);
                 this.singleCharBuffer[0] = value;
                 ReadOnlyMemory<char> input = this.singleCharBuffer.AsMemory().Slice(0, 1);
 
@@ -314,7 +357,7 @@ namespace Microsoft.OData.Json
                         ReadOnlySpan<char> charsNotProcessedFromPreviousChunk = this.buffer.AsSpan().Slice(0, this.numOfCharsNotWrittenFromPreviousChunk);
                         int totalLength = charsNotProcessedFromPreviousChunk.Length + chunk.Length;
 
-                        char[] combinedArray = ArrayPool<char>.Shared.Rent(totalLength);
+                        char[] combinedArray = this.arrayPool.Rent(totalLength);
 
                         // Copy chars from charsNotProcessedFromPreviousChunk to the combined array
                         charsNotProcessedFromPreviousChunk.CopyTo(combinedArray);
@@ -327,7 +370,7 @@ namespace Microsoft.OData.Json
                         // Write the chunk.
                         this.WriteChunk(combinedArray.AsSpan().Slice(0, totalLength), totalLength, firstIndexToEscape, isFinalBlock);
 
-                        ArrayPool<char>.Shared.Return(combinedArray);
+                        this.arrayPool.Return(combinedArray);
                     }
                     else
                     {
@@ -362,7 +405,7 @@ namespace Microsoft.OData.Json
                         ReadOnlyMemory<char> charsNotProcessedFromPreviousChunk = this.buffer.AsMemory().Slice(0, this.numOfCharsNotWrittenFromPreviousChunk);
                         int totalLength = charsNotProcessedFromPreviousChunk.Length + chunk.Length;
 
-                        char[] combinedArray = ArrayPool<char>.Shared.Rent(totalLength);
+                        char[] combinedArray = this.arrayPool.Rent(totalLength);
 
                         // Copy chars from charsNotProcessedFromPreviousChunk to the combined array
                         charsNotProcessedFromPreviousChunk.CopyTo(combinedArray);
@@ -375,7 +418,7 @@ namespace Microsoft.OData.Json
                         // Write the chunk.
                         this.WriteChunk(combinedArray.AsSpan().Slice(0, totalLength), totalLength, firstIndexToEscape, isFinalBlock);
 
-                        ArrayPool<char>.Shared.Return(combinedArray);
+                        this.arrayPool.Return(combinedArray);
                     }
                     else
                     {
@@ -411,7 +454,7 @@ namespace Microsoft.OData.Json
                         ReadOnlySpan<char> charsNotProcessedFromPreviousChunk = this.buffer.AsSpan().Slice(0, this.numOfCharsNotWrittenFromPreviousChunk);
                         int totalLength = charsNotProcessedFromPreviousChunk.Length + chunk.Length;
 
-                        char[] combinedArray = ArrayPool<char>.Shared.Rent(totalLength);
+                        char[] combinedArray = this.arrayPool.Rent(totalLength);
 
                         // Copy chars from charsNotProcessedFromPreviousChunk to the combined array
                         charsNotProcessedFromPreviousChunk.CopyTo(combinedArray);
@@ -422,7 +465,7 @@ namespace Microsoft.OData.Json
                         // Write the chunk.
                         this.WriteChunkWithoutEscaping(combinedArray.AsSpan().Slice(0, totalLength), totalLength, isFinalBlock);
 
-                        ArrayPool<char>.Shared.Return(combinedArray, true);
+                        this.arrayPool.Return(combinedArray, true);
                     }
                     else
                     {
@@ -455,7 +498,7 @@ namespace Microsoft.OData.Json
                         ReadOnlyMemory<char> charsNotProcessedFromPreviousChunk = this.buffer.AsMemory().Slice(0, this.numOfCharsNotWrittenFromPreviousChunk);
                         int totalLength = charsNotProcessedFromPreviousChunk.Length + chunk.Length;
 
-                        char[] combinedArray = ArrayPool<char>.Shared.Rent(totalLength);
+                        char[] combinedArray = this.arrayPool.Rent(totalLength);
 
                         // Copy chars from charsNotProcessedFromPreviousChunk to the combined array
                         charsNotProcessedFromPreviousChunk.CopyTo(combinedArray);
@@ -466,7 +509,7 @@ namespace Microsoft.OData.Json
                         // Write the chunk.
                         this.WriteChunkWithoutEscaping(combinedArray.AsSpan().Slice(0, totalLength), totalLength, isFinalBlock);
 
-                        ArrayPool<char>.Shared.Return(combinedArray, true);
+                        this.arrayPool.Return(combinedArray, true);
                     }
                     else
                     {
@@ -488,7 +531,7 @@ namespace Microsoft.OData.Json
                     {
                         if (this.buffer == null)
                         {
-                            this.buffer = ArrayPool<char>.Shared.Rent(ODataUtf8JsonWriter.chunkSize);
+                            this.buffer = this.arrayPool.Rent(ODataUtf8JsonWriter.chunkSize);
                         }
 
                         // Update the buffer with unprocessed bytes from the current chunk.
@@ -522,7 +565,7 @@ namespace Microsoft.OData.Json
                 {
                     if (this.buffer == null)
                     {
-                        this.buffer = ArrayPool<char>.Shared.Rent(ODataUtf8JsonWriter.chunkSize);
+                        this.buffer = this.arrayPool.Rent(ODataUtf8JsonWriter.chunkSize);
                     }
 
                     // Update the buffer with unprocessed bytes from the current chunk.

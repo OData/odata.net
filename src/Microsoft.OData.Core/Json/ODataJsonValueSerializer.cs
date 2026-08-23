@@ -382,15 +382,24 @@ namespace Microsoft.OData.Json
 
         public virtual void WriteStreamValue(ODataBinaryStreamValue streamValue)
         {
-            Stream stream = this.JsonWriter.StartStreamValueScope();
-            streamValue.Stream.CopyTo(stream);
-            stream.Flush();
-            stream.Dispose();
-            this.JsonWriter.EndStreamValueScope();
-
-            if (!streamValue.LeaveOpen)
+            try
             {
-                streamValue.Stream.Dispose();
+                Stream stream = this.JsonWriter.StartStreamValueScope();
+                try
+                {
+                    streamValue.Stream.CopyTo(stream);
+                }
+                finally
+                {
+                    this.JsonWriter.EndStreamValueScope();
+                }
+            }
+            finally
+            {
+                if (!streamValue.LeaveOpen)
+                {
+                    streamValue.Stream.Dispose();
+                }
             }
         }
 
@@ -722,15 +731,24 @@ namespace Microsoft.OData.Json
         /// <returns>A task that represents the asynchronous write operation.</returns>
         public virtual async Task WriteStreamValueAsync(ODataBinaryStreamValue streamValue)
         {
-            Stream stream = await this.JsonWriter.StartStreamValueScopeAsync().ConfigureAwait(false);
-            await streamValue.Stream.CopyToAsync(stream).ConfigureAwait(false);
-            await stream.FlushAsync().ConfigureAwait(false);
-            await stream.DisposeAsync().ConfigureAwait(false);
-            await this.JsonWriter.EndStreamValueScopeAsync().ConfigureAwait(false);
-
-            if (!streamValue.LeaveOpen)
+            try
             {
-                await streamValue.Stream.DisposeAsync().ConfigureAwait(false);
+                Stream stream = await this.JsonWriter.StartStreamValueScopeAsync().ConfigureAwait(false);
+                try
+                {
+                    await streamValue.Stream.CopyToAsync(stream).ConfigureAwait(false);
+                }
+                finally
+                {
+                    await this.JsonWriter.EndStreamValueScopeAsync().ConfigureAwait(false);
+                }
+            }
+            finally
+            {
+                if (!streamValue.LeaveOpen)
+                {
+                    await streamValue.Stream.DisposeAsync().ConfigureAwait(false);
+                }
             }
         }
 
