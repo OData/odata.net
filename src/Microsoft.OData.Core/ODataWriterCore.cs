@@ -2785,15 +2785,25 @@ namespace Microsoft.OData
                             {
                                 case EdmNavigationSourceKind.ContainedEntitySet:
                                     // Containment cannot be written alone without odata uri.
+                                    bool pathBuiltFromResourceId = false;
                                     if (!odataPath.Any())
                                     {
-                                        throw new ODataException(SRResources.ODataWriterCore_PathInODataUriMustBeSetWhenWritingContainedElement);
+                                        pathBuiltFromResourceId = this.TryBuildPathFromResourceId(out odataPath);
+                                        if (odataPath == null || !odataPath.Any())
+                                        {
+                                            throw new ODataException(SRResources.ODataWriterCore_PathInODataUriMustBeSetWhenWritingContainedElement);
+                                        }
                                     }
 
                                     ODataPath newPath = null;
                                     if (!EdmExtensionMethods.HasKey(this.CurrentScope.NavigationSource, this.CurrentScope.ResourceType))
                                     {
                                         // if there's no key, for example in a complex property, just use the existing odata path.
+                                        newPath = odataPath;
+                                    }
+                                    else if (pathBuiltFromResourceId && IsSingleResourcePath(odataPath))
+                                    {
+                                        // A resource ID that targets a single resource already represents its complete path.
                                         newPath = odataPath;
                                     }
                                     else
@@ -2808,7 +2818,10 @@ namespace Microsoft.OData
                                         }
                                         else
                                         {
-                                            newPath = null;
+                                            ODataPath resourcePath;
+                                            newPath = this.TryBuildPathFromResourceId(out resourcePath) && IsSingleResourcePath(resourcePath)
+                                                ? resourcePath
+                                                : null;
                                         }
                                     }
 
@@ -2901,6 +2914,60 @@ namespace Microsoft.OData
             
             keySegment = new KeySegment(keys, currentEntityType, this.CurrentScope.NavigationSource);
             return true;
+        }
+
+        private bool TryBuildPathFromResourceId(out ODataPath resourcePath)
+        {
+            ODataResourceBase resource = this.CurrentScope.Item as ODataResourceBase;
+            Uri resourceId = resource != null && resource.HasNonComputedId ? resource.NonComputedId : null;
+            Uri serviceRoot = this.CurrentScope.ODataUri.ServiceRoot;
+            if (resourceId == null)
+            {
+                resourcePath = null;
+                return false;
+            }
+
+            try
+            {
+                ODataUriParser uriParser;
+                if (resourceId.IsAbsoluteUri)
+                {
+                    if (serviceRoot == null)
+                    {
+                        resourcePath = null;
+                        return false;
+                    }
+
+                    uriParser = new ODataUriParser(
+                        this.outputContext.Model,
+                        serviceRoot,
+                        resourceId,
+                        this.outputContext.Container);
+                }
+                else
+                {
+                    uriParser = new ODataUriParser(
+                        this.outputContext.Model,
+                        resourceId,
+                        this.outputContext.Container);
+                }
+
+                resourcePath = uriParser.ParsePath();
+                return resourcePath.Any();
+            }
+            catch (ODataException)
+            {
+                resourcePath = null;
+                return false;
+            }
+        }
+
+        private static bool IsSingleResourcePath(ODataPath path)
+        {
+            ODataPathSegment lastSegment = path?.LastSegment;
+            return lastSegment != null &&
+                lastSegment.SingleResult &&
+                lastSegment.TargetKind == RequestTargetKind.Resource;
         }
 
         private IList<KeyValuePair<string, object>> GetKeyProperties(IEdmEntityType currentEntityType, bool throwIfFail)
