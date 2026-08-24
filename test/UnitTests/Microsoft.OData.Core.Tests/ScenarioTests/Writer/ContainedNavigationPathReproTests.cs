@@ -151,6 +151,65 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer
         }
 
         [Fact]
+        public void WriteNestedContainedCollectionAppendsKeyToRecoveredCollectionPath()
+        {
+            Uri serviceRoot = new Uri("https://service.test/");
+            EdmModel model = CreateModel(
+                listItemNavigationName: "items",
+                listItemMultiplicity: EdmMultiplicity.Many,
+                out EdmEntityType driveItemType,
+                out EdmEntitySet driveItems);
+            Uri requestUri = new Uri(serviceRoot, "driveItems('parent')");
+            ODataMessageWriterSettings settings = CreateSettings(model, serviceRoot, requestUri);
+            settings.SetContentType("application/json;odata.metadata=minimal", null);
+            ODataPath recoveredPath;
+
+            using (MemoryStream stream = new MemoryStream())
+            {
+                InMemoryMessage message = new InMemoryMessage { Stream = stream };
+                using (ODataMessageWriter messageWriter = new ODataMessageWriter((IODataResponseMessage)message, settings, model))
+                {
+                    ODataWriter resourceWriter = messageWriter.CreateODataResourceWriter(driveItems, driveItemType);
+                    resourceWriter.WriteStart(new ODataResource
+                    {
+                        EditLink = new Uri("driveItems('parent')", UriKind.Relative)
+                    });
+                    resourceWriter.WriteStart(new ODataNestedResourceInfo
+                    {
+                        Name = "items",
+                        IsCollection = true,
+                        Url = new Uri("driveItems('parent')/items", UriKind.Relative),
+                        AssociationLinkUrl = new Uri("driveItems('parent')/items/$ref", UriKind.Relative)
+                    });
+                    resourceWriter.WriteStart(new ODataResourceSet());
+                    resourceWriter.WriteStart(new ODataResource
+                    {
+                        Id = new Uri("driveItems('parent')/items", UriKind.Relative),
+                        Properties = new[] { new ODataProperty { Name = "id", Value = "child" } }
+                    });
+                    resourceWriter.WriteStart(new ODataNestedResourceInfo { Name = "fields", IsCollection = false });
+                    recoveredPath = GetCurrentPath(resourceWriter);
+                    resourceWriter.WriteStart(new ODataResource
+                    {
+                        Id = new Uri("driveItems('parent')/items('child')/fields", UriKind.Relative)
+                    });
+                    resourceWriter.WriteEnd();
+                    resourceWriter.WriteEnd();
+                    resourceWriter.WriteEnd();
+                    resourceWriter.WriteEnd();
+                    resourceWriter.WriteEnd();
+                    resourceWriter.WriteEnd();
+                    resourceWriter.Flush();
+                }
+            }
+
+            Assert.Equal(2, recoveredPath.OfType<KeySegment>().Count());
+            Assert.Equal(
+                "driveItems('parent')/items('child')/fields",
+                recoveredPath.ToResourcePathString(ODataUrlKeyDelimiter.Parentheses));
+        }
+
+        [Fact]
         public void InvalidExplicitIdsPreserveMissingContainedPathException()
         {
             Uri serviceRoot = new Uri("https://service.test/");

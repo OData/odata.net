@@ -2801,9 +2801,9 @@ namespace Microsoft.OData
                                         // if there's no key, for example in a complex property, just use the existing odata path.
                                         newPath = odataPath;
                                     }
-                                    else if (pathBuiltFromResourceId)
+                                    else if (pathBuiltFromResourceId && !odataPath.IsCollection())
                                     {
-                                        // The resource ID represents the complete resource path and already includes its key.
+                                        // A resource ID that targets a single resource already represents its complete path.
                                         newPath = odataPath;
                                     }
                                     else
