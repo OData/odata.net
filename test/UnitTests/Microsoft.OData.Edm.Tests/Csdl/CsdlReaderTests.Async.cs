@@ -87,7 +87,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
 
             // Verify writing model
             model.SetEdmVersion(Version.Parse(odataVersion));
-            await VerifyXmlModelAsync(model, odataVersion == "4.0" ? entitySetWithoutNavProperties : entitySetWithNavProperties).ConfigureAwait(false);
+            await VerifyXmlModelAsync(model, odataVersion == "4.0" ? entitySetWithoutNavProperties : entitySetWithNavProperties);
         }
 
         [Fact]
@@ -146,7 +146,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                    "<Term Name=\"MyDefaultTerm\" Type=\"Edm.String\" DefaultValue=\"This is a test\" AppliesTo=\"Property Term\" Nullable=\"false\" />" +
                  "</Schema>" +
                "</edmx:DataServices>" +
-             "</edmx:Edmx>").ConfigureAwait(false);
+             "</edmx:Edmx>");
         }
 
         [Fact]
@@ -210,7 +210,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                        "<Term Name=\"MyDefaultBoolTerm3\" Type=\"Edm.Boolean\" DefaultValue=\"true\" AppliesTo=\"Property Term\" Nullable=\"false\" />" +
                      "</Schema>" +
                    "</edmx:DataServices>" +
-                 "</edmx:Edmx>").ConfigureAwait(false);
+                 "</edmx:Edmx>");
         }
 
         [Fact]
@@ -310,7 +310,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                  "<Term Name=\"DefaultDateTerm\" Type=\"Edm.Date\" DefaultValue=\"2000-12-10\" AppliesTo=\"Property Term\" Nullable=\"false\" />" +
                  "</Schema>" +
                "</edmx:DataServices>" +
-             "</edmx:Edmx>", writerSettings).ConfigureAwait(false);
+             "</edmx:Edmx>", writerSettings);
         }
 
         static async Task VerifyXmlModelAsync(IEdmModel model, string csdl)

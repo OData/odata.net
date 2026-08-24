@@ -3063,7 +3063,7 @@ var v40Json =
             {
                 if (!CsdlWriter.TryWriteCsdl(model, writer, csdlTarget, out var errors))
                 {
-                    Assert.True(false, "Serialization was unsuccessful");
+                    Assert.Fail("Serialization was unsuccessful");
                 }
 
                 // Xml writer should have flushed whatever is in the buffer before TryWriteCsdl is exited

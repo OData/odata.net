@@ -9,6 +9,7 @@ namespace Microsoft.OData.Client
     /// <summary>
     /// Base type of entity type to include <see cref="Microsoft.OData.Client.DataServiceContext" /> for function and action invocation
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1033:Interface methods should be callable by child types", Justification = "The protected Context property exposes this functionality to derived types.")]
     public class BaseEntityType : IBaseEntityType
     {
         /// <summary>

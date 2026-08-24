@@ -32,7 +32,7 @@ namespace Microsoft.OData.Tests.Json
 
             // Assert
             Assert.Equal("any target", error.Target);
-            Assert.Equal(1, error.Details.Count);
+            Assert.Single(error.Details);
             var detail = error.Details.Single();
             Assert.Equal("500", detail.Code);
             Assert.Equal("another target", detail.Target);
@@ -132,7 +132,7 @@ namespace Microsoft.OData.Tests.Json
 
             // Assert Top Level properties
             Assert.Equal("any target", error.Target);
-            Assert.Equal(1, error.Details.Count);
+            Assert.Single(error.Details);
             var detail = error.Details.Single();
             Assert.Equal("500", detail.Code);
             Assert.Equal("any target", detail.Target);

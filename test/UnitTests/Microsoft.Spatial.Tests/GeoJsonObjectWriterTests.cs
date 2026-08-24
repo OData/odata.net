@@ -679,7 +679,7 @@ namespace Microsoft.Spatial.Tests
                 case SpatialType.Collection:
                     return "GeometryCollection";
                 default:
-                    Assert.True(false, string.Format("Unrecognized GeoJson type '{0}'", type));
+                    Assert.Fail(string.Format("Unrecognized GeoJson type '{0}'", type));
                     return null;
             }
         }

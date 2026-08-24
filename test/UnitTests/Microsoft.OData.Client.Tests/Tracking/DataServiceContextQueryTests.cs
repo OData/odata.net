@@ -255,7 +255,7 @@ namespace Microsoft.OData.Client.Tests.Tracking
             EmployeeSingle query = _defaultContext.Employees.ByKey(
                 new Dictionary<string, object>() { { "EmpNumber", 8 }, { "EmpType", EmployeeType.PartTime }, { "OrgId", 1 } });
 
-            Employee employee = await query.GetValueAsync().ConfigureAwait(false);
+            Employee employee = await query.GetValueAsync();
 
             // Assert
             Assert.Equal(expectedUri, query.Query.ToString());
@@ -341,7 +341,9 @@ namespace Microsoft.OData.Client.Tests.Tracking
         [ForeignKey("OrgId")]
         public virtual Organization Organization { get; set; }
 
+#pragma warning disable CS0067 // Required by INotifyPropertyChanged.
         public event PropertyChangedEventHandler PropertyChanged;
+#pragma warning restore CS0067
     }
 
     public class Organization

@@ -1150,7 +1150,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.Json
                 }
                 else
                 {
-                    Assert.True(false, "Top level item to write must be entry or feed.");
+                    Assert.Fail("Top level item to write must be entry or feed.");
                 }
 
                 Assert.Equal(itemsToWrite.Length, currentIdx);

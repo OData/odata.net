@@ -856,7 +856,7 @@ namespace Microsoft.OData.Tests.Json
 
             this.WriteExpandedFeedWithModelImplementation();
 
-            Assert.Equal(this.TestPayload(),
+            Assert.Equal(actual: this.TestPayload(), expected:
                 "{" +
                     "\"@odata.context\":\"http://host/service/$metadata#Customers/$delta\"," +
                     "\"value\":" +
@@ -890,7 +890,7 @@ namespace Microsoft.OData.Tests.Json
 
             this.WriteExpandedFeedWithModelImplementation();
 
-            Assert.Equal(this.TestPayload(),
+            Assert.Equal(actual: this.TestPayload(), expected:
                 "{" +
                     "\"@odata.context\":\"http://host/service/$metadata#Customers/$delta\"," +
                     "\"value\":" +
@@ -951,7 +951,7 @@ namespace Microsoft.OData.Tests.Json
             writer.WriteEnd(); // deltaFeedWithInfo
             writer.Flush();
 
-            Assert.Equal(this.TestPayload(),
+            Assert.Equal(actual: this.TestPayload(), expected:
                 "{" +
                     "\"@odata.context\":\"http://host/service/$metadata#Customers/$delta\"," +
                     "\"value\":" +
@@ -1008,7 +1008,7 @@ namespace Microsoft.OData.Tests.Json
             writer.WriteEnd(); // deltaFeed
             writer.Flush();
 
-            Assert.Equal(this.TestPayload(),
+            Assert.Equal(actual: this.TestPayload(), expected:
                 "{" +
                     "\"@odata.context\":\"http://host/service/$metadata#Customers/$delta\"," +
                     "\"value\":" +
@@ -1069,7 +1069,7 @@ namespace Microsoft.OData.Tests.Json
             writer.WriteEnd(); // deltaFeed
             writer.Flush();
 
-            Assert.Equal(this.TestPayload(),
+            Assert.Equal(actual: this.TestPayload(), expected:
                 "{" +
                     "\"@odata.context\":\"http://host/service/$metadata#Customers/$delta\"," +
                     "\"value\":" +
@@ -1106,7 +1106,7 @@ namespace Microsoft.OData.Tests.Json
 
             this.WriteNestedDeltaFeedImplementation(isResponse);
 
-            Assert.Equal(this.TestPayload(),
+            Assert.Equal(actual: this.TestPayload(), expected:
                 "{" +
                     "\"@context\":\"http://host/service/$metadata#Customers/$delta\"," +
                     "\"value\":" +
@@ -1367,7 +1367,7 @@ namespace Microsoft.OData.Tests.Json
             writer.WriteEnd(); // deltaFeed
             writer.Flush();
 
-            Assert.Equal(this.TestPayload(),
+            Assert.Equal(actual: this.TestPayload(), expected:
                 "{" +
                     "\"@odata.context\":\"http://host/service/$metadata#Customers/$delta\"," +
                     "\"value\":" +

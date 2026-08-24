@@ -121,7 +121,7 @@ namespace Microsoft.OData.Tests
             string applyClause = "aggregate(Id with sum as TotalId)";
             foreach (ODataVersion version in Versions)
             {
-                Assert.Equal(this.CreateFeedContextUri(null, null, applyClause, null, version).OriginalString, MetadataDocumentUriString + "#Cities(TotalId)");
+                Assert.Equal(MetadataDocumentUriString + "#Cities(TotalId)", this.CreateFeedContextUri(null, null, applyClause, null, version).OriginalString);
             }
         }
 
@@ -136,7 +136,7 @@ namespace Microsoft.OData.Tests
             string applyClause = "aggregate(DynamicProperty with " + method + " as DynamicPropertyTotal)";
             foreach (ODataVersion version in Versions)
             {
-                Assert.Equal(this.CreateFeedContextUri(null, null, applyClause, null, version).OriginalString, MetadataDocumentUriString + "#Cities(DynamicPropertyTotal)");
+                Assert.Equal(MetadataDocumentUriString + "#Cities(DynamicPropertyTotal)", this.CreateFeedContextUri(null, null, applyClause, null, version).OriginalString);
             }
         }
 
@@ -154,7 +154,7 @@ namespace Microsoft.OData.Tests
 
                 foreach (ODataVersion version in Versions)
                 {
-                    Assert.Equal(this.CreateFeedContextUri(null, null, applyClause, null, version).OriginalString, MetadataDocumentUriString + "#Cities(DisctRestaurants)");
+                    Assert.Equal(MetadataDocumentUriString + "#Cities(DisctRestaurants)", this.CreateFeedContextUri(null, null, applyClause, null, version).OriginalString);
                 }
             }
             finally
@@ -170,7 +170,7 @@ namespace Microsoft.OData.Tests
             string applyClause = "groupby((Name, Address/Street))";
             foreach (ODataVersion version in Versions)
             {
-                Assert.Equal(this.CreateFeedContextUri(null, null, applyClause, null, version).OriginalString, MetadataDocumentUriString + "#Cities(Name,Address(Street))");
+                Assert.Equal(MetadataDocumentUriString + "#Cities(Name,Address(Street))", this.CreateFeedContextUri(null, null, applyClause, null, version).OriginalString);
             }
         }
 
@@ -180,7 +180,7 @@ namespace Microsoft.OData.Tests
             string applyClause = "groupby((Name, DynamicProperty, Address/Street))";
             foreach (ODataVersion version in Versions)
             {
-                Assert.Equal(this.CreateFeedContextUri(null, null, applyClause, null, version).OriginalString, MetadataDocumentUriString + "#Cities(Name,DynamicProperty,Address(Street))");
+                Assert.Equal(MetadataDocumentUriString + "#Cities(Name,DynamicProperty,Address(Street))", this.CreateFeedContextUri(null, null, applyClause, null, version).OriginalString);
             }
         }
 
@@ -190,7 +190,7 @@ namespace Microsoft.OData.Tests
             string applyClause = "filter(Id eq 1)";
             foreach (ODataVersion version in Versions)
             {
-                Assert.Equal(this.CreateFeedContextUri(null, null, applyClause, null, version).OriginalString, MetadataDocumentUriString + "#Cities");
+                Assert.Equal(MetadataDocumentUriString + "#Cities", this.CreateFeedContextUri(null, null, applyClause, null, version).OriginalString);
             }
         }
         [Fact]
@@ -199,7 +199,7 @@ namespace Microsoft.OData.Tests
             string applyClause = "groupby((Name), aggregate(Id with sum as TotalId))";
             foreach (ODataVersion version in Versions)
             {
-                Assert.Equal(this.CreateFeedContextUri(null, null, applyClause, null, version).OriginalString, MetadataDocumentUriString + "#Cities(Name,TotalId)");
+                Assert.Equal(MetadataDocumentUriString + "#Cities(Name,TotalId)", this.CreateFeedContextUri(null, null, applyClause, null, version).OriginalString);
             }
         }
 
@@ -209,7 +209,7 @@ namespace Microsoft.OData.Tests
             string applyClause = "groupby((Name), aggregate(Id with sum as TotalId))";
             foreach (ODataVersion version in Versions)
             {
-                Assert.Equal(this.CreateFeedContextUri("Name", null, applyClause, null, version).OriginalString, MetadataDocumentUriString + "#Cities(Name)");
+                Assert.Equal(MetadataDocumentUriString + "#Cities(Name)", this.CreateFeedContextUri("Name", null, applyClause, null, version).OriginalString);
             }
         }
 
@@ -219,7 +219,7 @@ namespace Microsoft.OData.Tests
             string applyClause = "expand(Districts, filter(true))";
             foreach (ODataVersion version in Versions)
             {
-                Assert.Equal(this.CreateFeedContextUri(null, null, applyClause, null, version).OriginalString, MetadataDocumentUriString + "#Cities");
+                Assert.Equal(MetadataDocumentUriString + "#Cities", this.CreateFeedContextUri(null, null, applyClause, null, version).OriginalString);
             }
         }
 
@@ -230,7 +230,7 @@ namespace Microsoft.OData.Tests
             string computeClause = "compute('Test' as NewColumn)";
             foreach (ODataVersion version in Versions)
             {
-                Assert.Equal(this.CreateFeedContextUri(null, null, computeClause, null, version).OriginalString, MetadataDocumentUriString + "#Cities");
+                Assert.Equal(MetadataDocumentUriString + "#Cities", this.CreateFeedContextUri(null, null, computeClause, null, version).OriginalString);
             }
         }
 
@@ -240,7 +240,7 @@ namespace Microsoft.OData.Tests
             string computeClause = "compute('Test' as NewColumn)";
             foreach (ODataVersion version in Versions)
             {
-                Assert.Equal(this.CreateFeedContextUri("Id,Name,NewColumn", null, computeClause, null, version).OriginalString, MetadataDocumentUriString + "#Cities(Id,Name,NewColumn)");
+                Assert.Equal(MetadataDocumentUriString + "#Cities(Id,Name,NewColumn)", this.CreateFeedContextUri("Id,Name,NewColumn", null, computeClause, null, version).OriginalString);
             }
         }
 
@@ -250,7 +250,7 @@ namespace Microsoft.OData.Tests
             string computeClause = "'Test' as NewColumn";
             foreach (ODataVersion version in Versions)
             {
-                Assert.Equal(this.CreateFeedContextUri(null, null, null, computeClause, version).OriginalString, MetadataDocumentUriString + "#Cities");
+                Assert.Equal(MetadataDocumentUriString + "#Cities", this.CreateFeedContextUri(null, null, null, computeClause, version).OriginalString);
             }
         }
 
@@ -260,7 +260,7 @@ namespace Microsoft.OData.Tests
             string computeClause = "'Test' as NewColumn";
             foreach (ODataVersion version in Versions)
             {
-                Assert.Equal(this.CreateFeedContextUri("Id,Name,NewColumn", null, null, computeClause, version).OriginalString, MetadataDocumentUriString + "#Cities(Id,Name,NewColumn)");
+                Assert.Equal(MetadataDocumentUriString + "#Cities(Id,Name,NewColumn)", this.CreateFeedContextUri("Id,Name,NewColumn", null, null, computeClause, version).OriginalString);
             }
         }
 

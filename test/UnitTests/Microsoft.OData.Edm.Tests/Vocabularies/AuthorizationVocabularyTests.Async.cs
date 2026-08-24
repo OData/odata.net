@@ -135,8 +135,8 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
             settings.Encoding = System.Text.Encoding.UTF8;
 
             XmlWriter xw = XmlWriter.Create(sw, settings);
-            var (_, errors) = await this._authorizationModel.TryWriteSchemaAsync(xw).ConfigureAwait(false);
-            await xw.FlushAsync().ConfigureAwait(false);
+            var (_, errors) = await this._authorizationModel.TryWriteSchemaAsync(xw);
+            await xw.FlushAsync();
 
             xw.Close();
             string output = sw.ToString();

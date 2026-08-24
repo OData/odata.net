@@ -54,7 +54,7 @@ namespace Microsoft.OData.Client
             this.response = response;
         }
 
-#pragma warning disable 0628
+#pragma warning disable 0628, SYSLIB0051
         /// <summary>
         /// Initializes a new instance of the DataServiceQueryException class from the
         /// specified SerializationInfo and StreamingContext instances.
@@ -71,7 +71,7 @@ namespace Microsoft.OData.Client
             : base(info, context)
         {
         }
-#pragma warning restore 0628
+#pragma warning restore 0628, SYSLIB0051
 
         #endregion Constructors
 

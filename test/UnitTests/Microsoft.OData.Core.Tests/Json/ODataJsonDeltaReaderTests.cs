@@ -558,7 +558,7 @@ namespace Microsoft.OData.Tests.Json
                         break;
                     case ODataReaderState.Stream:
                     case ODataReaderState.NestedResourceInfoStart:
-                        Assert.True(false, "Should not add stream or navigation properties to delta payload");
+                        Assert.Fail("Should not add stream or navigation properties to delta payload");
                         break;
                 }
             }
@@ -4254,12 +4254,12 @@ namespace Microsoft.OData.Tests.Json
                                 Assert.True(nestedResourceInfo.Name.Equals("Details") || nestedResourceInfo.Name.Equals("Address") || nestedResourceInfo.Name.Equals("City"));
                                 break;
                             default:
-                                Assert.True(false, "Wrong reader sub state.");
+                                Assert.Fail("Wrong reader sub state.");
                                 break;
                         }
                         break;
                     default:
-                        Assert.True(false, "Wrong reader state.");
+                        Assert.Fail("Wrong reader state.");
                         break;
                 }
             }

@@ -43,7 +43,7 @@ namespace Microsoft.OData.Tests
                 }
                 else
                 {
-                    Assert.True(false, "Test only currently supports creating ODataResource from IEdmPrimitiveValue instances.");
+                    Assert.Fail("Test only currently supports creating ODataResource from IEdmPrimitiveValue instances.");
                     return null;
                 }
 

@@ -20,7 +20,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             ODataPath clone = new ODataPath(existing);
 
             clone.FirstSegment.ShouldBeMetadataSegment();
-            Assert.Equal(1, clone.Segments.Count);
+            Assert.Single(clone.Segments);
         }
 
         [Fact]

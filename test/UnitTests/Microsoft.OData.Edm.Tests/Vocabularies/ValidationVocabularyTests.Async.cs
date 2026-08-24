@@ -121,8 +121,8 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
             };
 
             XmlWriter xw = XmlWriter.Create(sw, settings);
-            var (_, errors) = await this._validationModel.TryWriteSchemaAsync(xw).ConfigureAwait(false);
-            await xw.FlushAsync().ConfigureAwait(false);
+            var (_, errors) = await this._validationModel.TryWriteSchemaAsync(xw);
+            await xw.FlushAsync();
             xw.Close();
             string output = sw.ToString();
 

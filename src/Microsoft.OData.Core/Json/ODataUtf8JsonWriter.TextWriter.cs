@@ -115,7 +115,7 @@ namespace Microsoft.OData.Json
 
             if (this.textWriter != null)
             {
-                await this.textWriter.DisposeAsync();
+                await this.textWriter.DisposeAsync().ConfigureAwait(false);
             }
 
             await this.DrainBufferIfThresholdReachedAsync().ConfigureAwait(false);
@@ -173,7 +173,7 @@ namespace Microsoft.OData.Json
             /// <returns>A task representing the asynchronous flush operation.</returns>
             public override async Task FlushAsync()
             {
-                await this.jsonWriter.FlushAsync();
+                await this.jsonWriter.FlushAsync().ConfigureAwait(false);
             }
 
             /// <summary>
