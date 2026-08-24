@@ -95,7 +95,7 @@ namespace Microsoft.Spatial.Tests
         {
             this.implementation.callback = (methodName, arguments) =>
             {
-                Assert.True(false, "shouldn't call the implementation");
+                Assert.Fail("shouldn't call the implementation");
             };
             var result = GeometryOperationsExtensions.Distance(null, geomPoints[0]);
             Assert.Null(result);
@@ -109,7 +109,7 @@ namespace Microsoft.Spatial.Tests
         {
             this.implementation.callback = (methodName, arguments) =>
                                                {
-                                                   Assert.True(false, "shouldn't call the implementation");
+                                                   Assert.Fail("shouldn't call the implementation");
                                                };
             var result = GeographyOperationsExtensions.Distance(null, geogPoints[0]);
             Assert.Null(result);
@@ -224,7 +224,7 @@ namespace Microsoft.Spatial.Tests
                 }
                 else
                 {
-                    Assert.True(false, "Unsupported type: " + type);
+                    Assert.Fail("Unsupported type: " + type);
                 }
             }
 

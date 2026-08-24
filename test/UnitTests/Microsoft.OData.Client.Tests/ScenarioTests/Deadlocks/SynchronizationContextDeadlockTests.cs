@@ -416,6 +416,8 @@ namespace Microsoft.OData.Client.Tests.ScenarioTests.Deadlocks
     {
         public int Id { get; set; }
         public string Name { get; set; }
+#pragma warning disable CS0067 // Required by INotifyPropertyChanged.
         public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+#pragma warning restore CS0067
     }
 }

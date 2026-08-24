@@ -1178,7 +1178,7 @@ namespace Microsoft.OData.Tests.UriParser
                     parser.UrlKeyDelimiter = ODataUrlKeyDelimiter.Slash;
                     break;
                 default:
-                    Assert.True(false, "Unreachable code path");
+                    Assert.Fail("Unreachable code path");
                     break;
             }
 

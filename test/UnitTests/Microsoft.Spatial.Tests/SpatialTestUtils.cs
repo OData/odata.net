@@ -268,7 +268,7 @@ namespace Microsoft.Spatial.Tests
             {
                 return ex as T;
             }
-            Assert.True(false, "Exception of the wrong type thrown - expected " + typeof(T).Name + " but got " + ex.GetType().Name);
+            Assert.Fail("Exception of the wrong type thrown - expected " + typeof(T).Name + " but got " + ex.GetType().Name);
             return null;
         }
 
@@ -342,7 +342,7 @@ namespace Microsoft.Spatial.Tests
                 messageBuilder.AppendLine(actualBuilder.ToString());
 
                 var message = messageBuilder.ToString();
-                Assert.True(false, message);
+                Assert.Fail(message);
             }
         }
 

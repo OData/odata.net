@@ -49,7 +49,7 @@ namespace Microsoft.OData.Metadata
 
 #if !NETSTANDARD1_1
         /// <summary>
-        /// Packs the <see cref="TypeCode"/> of supported primitive types. This is used to speed up the <see cref="IsPrimitiveType(Type)"/> method.
+        /// Packs the <see cref="TypeCode"/> of supported primitive types. This is used to speed up the <c>IsPrimitiveType</c> method.
         /// If the bit at a given type code position is set, it means that's a support primitive type.
         /// </summary>
         private static int PrimitiveTypeCodeBitMap = 0;

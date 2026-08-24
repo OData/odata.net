@@ -925,7 +925,7 @@ namespace Microsoft.OData.Json
             static async Task AwaitReadInternalAsync(BufferingJsonReader thisParam, Task<bool> readInternalTask)
             {
                 await readInternalTask.ConfigureAwait(false);
-                await thisParam.DetectAndTryReadInStreamErrorAsync();
+                await thisParam.DetectAndTryReadInStreamErrorAsync().ConfigureAwait(false);
             }
         }
 
@@ -2372,6 +2372,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         [DebuggerStepThrough]
         [Conditional("DEBUG")]
+        [SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "This method accesses instance state in DEBUG builds.")]
         private void AssertAsynchronous()
         {
 #if DEBUG

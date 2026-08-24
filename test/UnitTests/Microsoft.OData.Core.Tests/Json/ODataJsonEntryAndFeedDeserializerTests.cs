@@ -327,7 +327,7 @@ namespace Microsoft.OData.Tests.Json
             var propertyAndAnnotationCollector = new PropertyAndAnnotationCollector(true);
             ODataResourceSet feed = new ODataResourceSet();
             deserializer.ReadAndApplyResourceSetInstanceAnnotationValue("custom.Int32Annotation", feed, propertyAndAnnotationCollector);
-            Assert.Equal(1, feed.InstanceAnnotations.Count);
+            Assert.Single(feed.InstanceAnnotations);
             TestUtils.AssertODataValueAreEqual(new ODataPrimitiveValue(123), feed.InstanceAnnotations.Single(ia => ia.Name == "custom.Int32Annotation").Value);
         }
 
@@ -374,7 +374,7 @@ namespace Microsoft.OData.Tests.Json
             AdvanceReaderToFirstPropertyValue(deserializer.JsonReader);
             var entryState = new TestJsonReaderEntryState();
             deserializer.ApplyEntryInstanceAnnotation(entryState, "custom.Int32Annotation", 123);
-            Assert.Equal(1, entryState.Resource.InstanceAnnotations.Count);
+            Assert.Single(entryState.Resource.InstanceAnnotations);
             TestUtils.AssertODataValueAreEqual(new ODataPrimitiveValue(123), entryState.Resource.InstanceAnnotations.Single(ia => ia.Name == "custom.Int32Annotation").Value);
         }
 
@@ -403,7 +403,7 @@ namespace Microsoft.OData.Tests.Json
             var feed = new ODataResourceSet();
             var propertyAndAnnotationCollector = new PropertyAndAnnotationCollector(true);
             deserializer.ReadTopLevelResourceSetAnnotations(feed, propertyAndAnnotationCollector, true /*forResourceSetStart*/, true /*readAllFeedProperties*/);
-            Assert.Equal(0, feed.InstanceAnnotations.Count);
+            Assert.Empty(feed.InstanceAnnotations);
         }
 
         [Fact]
@@ -414,7 +414,7 @@ namespace Microsoft.OData.Tests.Json
             var feed = new ODataResourceSet();
             var propertyAndAnnotationCollector = new PropertyAndAnnotationCollector(true);
             deserializer.ReadTopLevelResourceSetAnnotations(feed, propertyAndAnnotationCollector, true /*forResourceSetStart*/, false /*readAllFeedProperties*/);
-            Assert.Equal(1, feed.InstanceAnnotations.Count);
+            Assert.Single(feed.InstanceAnnotations);
             TestUtils.AssertODataValueAreEqual(new ODataPrimitiveValue(123), feed.InstanceAnnotations.Single(ia => ia.Name == "custom.before").Value);
         }
 
@@ -426,7 +426,7 @@ namespace Microsoft.OData.Tests.Json
             var feed = new ODataResourceSet();
             var propertyAndAnnotationCollector = new PropertyAndAnnotationCollector(true);
             deserializer.ReadTopLevelResourceSetAnnotations(feed, propertyAndAnnotationCollector, true /*forResourceSetStart*/, false /*readAllFeedProperties*/);
-            Assert.Equal(0, feed.InstanceAnnotations.Count);
+            Assert.Empty(feed.InstanceAnnotations);
         }
 
         [Fact]
@@ -448,7 +448,7 @@ namespace Microsoft.OData.Tests.Json
             var feed = new ODataResourceSet();
             var propertyAndAnnotationCollector = new PropertyAndAnnotationCollector(true);
             deserializer.ReadTopLevelResourceSetAnnotations(feed, propertyAndAnnotationCollector, false /*forResourceSetStart*/, false /*readAllFeedProperties*/);
-            Assert.Equal(1, feed.InstanceAnnotations.Count);
+            Assert.Single(feed.InstanceAnnotations);
             TestUtils.AssertODataValueAreEqual(new ODataPrimitiveValue(456), feed.InstanceAnnotations.Single(ia => ia.Name == "custom.after").Value);
         }
 
@@ -460,7 +460,7 @@ namespace Microsoft.OData.Tests.Json
             var feed = new ODataResourceSet();
             var propertyAndAnnotationCollector = new PropertyAndAnnotationCollector(true);
             deserializer.ReadTopLevelResourceSetAnnotations(feed, propertyAndAnnotationCollector, false /*forResourceSetStart*/, false /*readAllFeedProperties*/);
-            Assert.Equal(0, feed.InstanceAnnotations.Count);
+            Assert.Empty(feed.InstanceAnnotations);
         }
 
         #endregion Test ReadTopLevelResourceSetAnnotations
@@ -486,7 +486,7 @@ namespace Microsoft.OData.Tests.Json
             AdvanceReaderToFirstProperty(deserializer.JsonReader);
             var entryState = new TestJsonReaderEntryState();
             deserializer.ReadResourceContent(entryState);
-            Assert.Equal(0, entryState.Resource.InstanceAnnotations.Count);
+            Assert.Empty(entryState.Resource.InstanceAnnotations);
         }
 
         #endregion Test ReadResourceContent

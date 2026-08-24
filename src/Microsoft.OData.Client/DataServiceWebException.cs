@@ -34,6 +34,8 @@ namespace Microsoft.OData.Client
 
         }
 
+        // Legacy formatter-based serialization is retained for compatibility.
+#pragma warning disable SYSLIB0003, SYSLIB0051, CS0672
         [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
         protected DataServiceTransportException(SerializationInfo info, StreamingContext context)
    : base(info, context)
@@ -60,6 +62,7 @@ namespace Microsoft.OData.Client
             // MUST call through to the base class to let it save its own state
             base.GetObjectData(info, context);
         }
+#pragma warning restore SYSLIB0003, SYSLIB0051, CS0672
 
 
     }

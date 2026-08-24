@@ -53,7 +53,7 @@ namespace Microsoft.OData.Tests
 
                 var charsRead = reader.Read(charBuffer, 0, maxLength);
 
-                Assert.Equal(charsRead, maxLength);
+                Assert.Equal(maxLength, charsRead);
                 Assert.Equal("fox jumps over", new string(charBuffer));
             }
         }
@@ -67,7 +67,7 @@ namespace Microsoft.OData.Tests
 
                 var charsRead = await reader.ReadAsync(charBuffer, 0, maxLength);
 
-                Assert.Equal(charsRead, maxLength);
+                Assert.Equal(maxLength, charsRead);
                 Assert.Equal("fox jumps over", new string(charBuffer));
             }
         }

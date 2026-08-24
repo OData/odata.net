@@ -84,7 +84,7 @@ namespace Microsoft.OData.Tests.Json
                             }
                         }))));
             var str = Encoding.UTF8.GetString(stream.ToArray());
-            Assert.Equal(str,
+            Assert.Equal(actual: str, expected:
                 "{" +
                     "\"@odata.context\":\"http://svc/$metadata#EntitySet/$entity\"," +
                     "\"ID\":1," +

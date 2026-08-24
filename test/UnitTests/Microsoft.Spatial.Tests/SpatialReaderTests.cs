@@ -93,7 +93,7 @@ namespace Microsoft.Spatial.Tests
                     return (TException) ex;
                 throw;
             }
-            Assert.True(false, "Expected exception, but no exception was thrown.");
+            Assert.Fail("Expected exception, but no exception was thrown.");
 // ReSharper disable HeuristicUnreachableCode
             return default(TException);
 // ReSharper restore HeuristicUnreachableCode
