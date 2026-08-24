@@ -77,41 +77,41 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.Json
         #region Writing odata.context
 
         [Fact]
-        public void ShouldWriteContextUriForComplexCollectionRequestWithoutUserModelAndWithSerializationInfo()
+        public async Task ShouldWriteContextUriForComplexCollectionRequestWithoutUserModelAndWithSerializationInfo()
         {
-            WriteAndValidate(this.collectionStartWithSerializationInfo, items, "{\"@odata.context\":\"http://odata.org/test/$metadata#Collection(ns.Address)\",\"value\":[{\"Street\":\"1 Microsoft Way\",\"Zipcode\":98052,\"State@odata.type\":\"#ns.StateEnum\",\"State\":\"WA\"}]}", writingResponse: false);
+            await WriteAndValidateAsync(this.collectionStartWithSerializationInfo, items, "{\"@odata.context\":\"http://odata.org/test/$metadata#Collection(ns.Address)\",\"value\":[{\"Street\":\"1 Microsoft Way\",\"Zipcode\":98052,\"State@odata.type\":\"#ns.StateEnum\",\"State\":\"WA\"}]}", writingResponse: false);
         }
 
         [Fact]
-        public void ShouldWriteContextUriForComplexCollectionRequestWithoutUserModelAndWithItemType()
+        public async Task ShouldWriteContextUriForComplexCollectionRequestWithoutUserModelAndWithItemType()
         {
-            WriteAndValidate(this.collectionStartWithoutSerializationInfo, this.items, "{\"@odata.context\":\"http://odata.org/test/$metadata#Collection(ns.Address)\",\"value\":[{\"Street\":\"1 Microsoft Way\",\"Zipcode\":98052,\"State\":\"WA\"}]}", writingResponse: false, itemTypeReference: this.addressTypeReference);
+            await WriteAndValidateAsync(this.collectionStartWithoutSerializationInfo, this.items, "{\"@odata.context\":\"http://odata.org/test/$metadata#Collection(ns.Address)\",\"value\":[{\"Street\":\"1 Microsoft Way\",\"Zipcode\":98052,\"State\":\"WA\"}]}", writingResponse: false, itemTypeReference: this.addressTypeReference);
         }
 
         [Fact]
-        public void ShouldNotWriteContextUriForComplexCollectionRequestWithoutUserModelAndWithoutItemTypeAndWithoutSerializationInfo()
+        public async Task ShouldNotWriteContextUriForComplexCollectionRequestWithoutUserModelAndWithoutItemTypeAndWithoutSerializationInfo()
         {
-            WriteAndValidate(this.collectionStartWithoutSerializationInfo, this.items, "{\"value\":[{\"Street\":\"1 Microsoft Way\",\"Zipcode\":98052,\"State@odata.type\":\"#ns.StateEnum\",\"State\":\"WA\"}]}", writingResponse: false);
+            await WriteAndValidateAsync(this.collectionStartWithoutSerializationInfo, this.items, "{\"value\":[{\"Street\":\"1 Microsoft Way\",\"Zipcode\":98052,\"State@odata.type\":\"#ns.StateEnum\",\"State\":\"WA\"}]}", writingResponse: false);
         }
 
         [Fact]
-        public void ShouldWriteContextUriBasedOnSerializationInfoForComplexCollectionRequestWithoutUserModelWhenBothItemTypeAndSerializationInfoAreGiven()
+        public async Task ShouldWriteContextUriBasedOnSerializationInfoForComplexCollectionRequestWithoutUserModelWhenBothItemTypeAndSerializationInfoAreGiven()
         {
             ODataResourceSet collectionStart = new ODataResourceSet();
             collectionStart.SetSerializationInfo(new ODataResourceSerializationInfo { ExpectedTypeName = "foo.bar" });
-            WriteAndValidate(collectionStart, this.items, "{\"@odata.context\":\"http://odata.org/test/$metadata#Collection(foo.bar)\",\"value\":[{\"Street\":\"1 Microsoft Way\",\"Zipcode\":98052,\"State\":\"WA\"}]}", writingResponse: false, itemTypeReference: this.addressTypeReference);
+            await WriteAndValidateAsync(collectionStart, this.items, "{\"@odata.context\":\"http://odata.org/test/$metadata#Collection(foo.bar)\",\"value\":[{\"Street\":\"1 Microsoft Way\",\"Zipcode\":98052,\"State\":\"WA\"}]}", writingResponse: false, itemTypeReference: this.addressTypeReference);
         }
 
         [Fact]
-        public void ShouldWriteContextUriForComplexCollectionResponseWithoutUserModelAndWithSerializationInfo()
+        public async Task ShouldWriteContextUriForComplexCollectionResponseWithoutUserModelAndWithSerializationInfo()
         {
-            WriteAndValidate(this.collectionStartWithSerializationInfo, items, "{\"@odata.context\":\"http://odata.org/test/$metadata#Collection(ns.Address)\",\"value\":[{\"Street\":\"1 Microsoft Way\",\"Zipcode\":98052,\"State\":\"WA\"}]}", writingResponse: true);
+            await WriteAndValidateAsync(this.collectionStartWithSerializationInfo, items, "{\"@odata.context\":\"http://odata.org/test/$metadata#Collection(ns.Address)\",\"value\":[{\"Street\":\"1 Microsoft Way\",\"Zipcode\":98052,\"State\":\"WA\"}]}", writingResponse: true);
         }
 
         [Fact]
-        public void ShouldWriteContextUriForComplexCollectionResponseWithoutUserModelAndWithItemType()
+        public async Task ShouldWriteContextUriForComplexCollectionResponseWithoutUserModelAndWithItemType()
         {
-            WriteAndValidate(this.collectionStartWithoutSerializationInfo, items, "{\"@odata.context\":\"http://odata.org/test/$metadata#Collection(ns.Address)\",\"value\":[{\"Street\":\"1 Microsoft Way\",\"Zipcode\":98052,\"State\":\"WA\"}]}", writingResponse: true, itemTypeReference: this.addressTypeReference);
+            await WriteAndValidateAsync(this.collectionStartWithoutSerializationInfo, items, "{\"@odata.context\":\"http://odata.org/test/$metadata#Collection(ns.Address)\",\"value\":[{\"Street\":\"1 Microsoft Way\",\"Zipcode\":98052,\"State\":\"WA\"}]}", writingResponse: true, itemTypeReference: this.addressTypeReference);
         }
 
         [Fact]
@@ -124,15 +124,15 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.Json
         }
 
         [Fact]
-        public void ShouldWriteContextUriBasedOnSerializationInfoForComplexCollectionResponseWithoutUserModelWhenBothItemTypeAndSerializationInfoAreGiven()
+        public async Task ShouldWriteContextUriBasedOnSerializationInfoForComplexCollectionResponseWithoutUserModelWhenBothItemTypeAndSerializationInfoAreGiven()
         {
             ODataResourceSet collectionStart = new ODataResourceSet();
             collectionStart.SetSerializationInfo(new ODataResourceSerializationInfo { ExpectedTypeName = "foo.bar" });
-            WriteAndValidate(collectionStart, this.items, "{\"@odata.context\":\"http://odata.org/test/$metadata#Collection(foo.bar)\",\"value\":[{\"Street\":\"1 Microsoft Way\",\"Zipcode\":98052,\"State\":\"WA\"}]}", writingResponse: true, itemTypeReference: this.addressTypeReference);
+            await WriteAndValidateAsync(collectionStart, this.items, "{\"@odata.context\":\"http://odata.org/test/$metadata#Collection(foo.bar)\",\"value\":[{\"Street\":\"1 Microsoft Way\",\"Zipcode\":98052,\"State\":\"WA\"}]}", writingResponse: true, itemTypeReference: this.addressTypeReference);
         }
 
         [Fact]
-        public void ShouldWriteCountAndNextLinkAnnotationOfComplexCollectionPropertyIfSpecified()
+        public async Task ShouldWriteCountAndNextLinkAnnotationOfComplexCollectionPropertyIfSpecified()
         {
             ODataResourceSet collectionStart = new ODataResourceSet()
             {
@@ -140,47 +140,47 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.Json
                 NextPageLink = new Uri("http://next-link")
             };
             collectionStart.SetSerializationInfo(new ODataResourceSerializationInfo { ExpectedTypeName = "foo.bar" });
-            WriteAndValidate(collectionStart, this.items, "{\"@odata.context\":\"http://odata.org/test/$metadata#Collection(foo.bar)\",\"@odata.count\":3,\"@odata.nextLink\":\"http://next-link/\",\"value\":[{\"Street\":\"1 Microsoft Way\",\"Zipcode\":98052,\"State\":\"WA\"}]}", writingResponse: true, itemTypeReference: this.addressTypeReference);
+            await WriteAndValidateAsync(collectionStart, this.items, "{\"@odata.context\":\"http://odata.org/test/$metadata#Collection(foo.bar)\",\"@odata.count\":3,\"@odata.nextLink\":\"http://next-link/\",\"value\":[{\"Street\":\"1 Microsoft Way\",\"Zipcode\":98052,\"State\":\"WA\"}]}", writingResponse: true, itemTypeReference: this.addressTypeReference);
         }
         #endregion
 
         #region Inheritance
         [Fact]
-        public void ShouldWriteContextUriForComplexCollectionRequestWithoutUserModelAndWithSerializationInfo_Inherit()
+        public async Task ShouldWriteContextUriForComplexCollectionRequestWithoutUserModelAndWithSerializationInfo_Inherit()
         {
-            WriteAndValidate(this.collectionStartWithSerializationInfo, derivedItems, "{\"@odata.context\":\"http://odata.org/test/$metadata#Collection(ns.Address)\",\"value\":[{\"@odata.type\":\"#ns.DerivedAddress\",\"Street\":\"1 Microsoft Way\",\"Zipcode\":98052,\"State@odata.type\":\"#ns.StateEnum\",\"State\":\"WA\",\"City\":\"Shanghai\"}]}", writingResponse: false);
+            await WriteAndValidateAsync(this.collectionStartWithSerializationInfo, derivedItems, "{\"@odata.context\":\"http://odata.org/test/$metadata#Collection(ns.Address)\",\"value\":[{\"@odata.type\":\"#ns.DerivedAddress\",\"Street\":\"1 Microsoft Way\",\"Zipcode\":98052,\"State@odata.type\":\"#ns.StateEnum\",\"State\":\"WA\",\"City\":\"Shanghai\"}]}", writingResponse: false);
         }
 
         [Fact]
-        public void ShouldWriteContextUriForComplexCollectionRequestWithoutUserModelAndWithItemType_Inherit()
+        public async Task ShouldWriteContextUriForComplexCollectionRequestWithoutUserModelAndWithItemType_Inherit()
         {
-            WriteAndValidate(this.collectionStartWithoutSerializationInfo, this.derivedItems, "{\"@odata.context\":\"http://odata.org/test/$metadata#Collection(ns.DerivedAddress)\",\"value\":[{\"Street\":\"1 Microsoft Way\",\"Zipcode\":98052,\"State\":\"WA\",\"City\":\"Shanghai\"}]}", writingResponse: false, itemTypeReference: this.derivedAddressTypeReference);
+            await WriteAndValidateAsync(this.collectionStartWithoutSerializationInfo, this.derivedItems, "{\"@odata.context\":\"http://odata.org/test/$metadata#Collection(ns.DerivedAddress)\",\"value\":[{\"Street\":\"1 Microsoft Way\",\"Zipcode\":98052,\"State\":\"WA\",\"City\":\"Shanghai\"}]}", writingResponse: false, itemTypeReference: this.derivedAddressTypeReference);
         }
 
         [Fact]
-        public void ShouldNotWriteContextUriForComplexCollectionRequestWithoutUserModelAndWithoutItemTypeAndWithoutSerializationInfo_Inherit()
+        public async Task ShouldNotWriteContextUriForComplexCollectionRequestWithoutUserModelAndWithoutItemTypeAndWithoutSerializationInfo_Inherit()
         {
-            WriteAndValidate(this.collectionStartWithoutSerializationInfo, this.derivedItems, "{\"value\":[{\"@odata.type\":\"#ns.DerivedAddress\",\"Street\":\"1 Microsoft Way\",\"Zipcode\":98052,\"State@odata.type\":\"#ns.StateEnum\",\"State\":\"WA\",\"City\":\"Shanghai\"}]}", writingResponse: false);
+            await WriteAndValidateAsync(this.collectionStartWithoutSerializationInfo, this.derivedItems, "{\"value\":[{\"@odata.type\":\"#ns.DerivedAddress\",\"Street\":\"1 Microsoft Way\",\"Zipcode\":98052,\"State@odata.type\":\"#ns.StateEnum\",\"State\":\"WA\",\"City\":\"Shanghai\"}]}", writingResponse: false);
         }
 
         [Fact]
-        public void ShouldWriteContextUriBasedOnSerializationInfoForComplexCollectionRequestWithoutUserModelWhenBothItemTypeAndSerializationInfoAreGiven_Inherit()
+        public async Task ShouldWriteContextUriBasedOnSerializationInfoForComplexCollectionRequestWithoutUserModelWhenBothItemTypeAndSerializationInfoAreGiven_Inherit()
         {
             ODataResourceSet collectionStart = new ODataResourceSet();
             collectionStart.SetSerializationInfo(new ODataResourceSerializationInfo { ExpectedTypeName = "foo.bar" });
-            WriteAndValidate(collectionStart, this.derivedItems, "{\"@odata.context\":\"http://odata.org/test/$metadata#Collection(foo.bar)\",\"value\":[{\"Street\":\"1 Microsoft Way\",\"Zipcode\":98052,\"State\":\"WA\",\"City\":\"Shanghai\"}]}", writingResponse: false, itemTypeReference: this.derivedAddressTypeReference);
+            await WriteAndValidateAsync(collectionStart, this.derivedItems, "{\"@odata.context\":\"http://odata.org/test/$metadata#Collection(foo.bar)\",\"value\":[{\"Street\":\"1 Microsoft Way\",\"Zipcode\":98052,\"State\":\"WA\",\"City\":\"Shanghai\"}]}", writingResponse: false, itemTypeReference: this.derivedAddressTypeReference);
         }
 
         [Fact]
-        public void ShouldWriteContextUriForComplexCollectionResponseWithoutUserModelAndWithSerializationInfo_Inherit()
+        public async Task ShouldWriteContextUriForComplexCollectionResponseWithoutUserModelAndWithSerializationInfo_Inherit()
         {
-            WriteAndValidate(this.collectionStartWithSerializationInfo, derivedItems, "{\"@odata.context\":\"http://odata.org/test/$metadata#Collection(ns.Address)\",\"value\":[{\"@odata.type\":\"#ns.DerivedAddress\",\"Street\":\"1 Microsoft Way\",\"Zipcode\":98052,\"State\":\"WA\",\"City\":\"Shanghai\"}]}", writingResponse: true);
+            await WriteAndValidateAsync(this.collectionStartWithSerializationInfo, derivedItems, "{\"@odata.context\":\"http://odata.org/test/$metadata#Collection(ns.Address)\",\"value\":[{\"@odata.type\":\"#ns.DerivedAddress\",\"Street\":\"1 Microsoft Way\",\"Zipcode\":98052,\"State\":\"WA\",\"City\":\"Shanghai\"}]}", writingResponse: true);
         }
 
         [Fact]
-        public void ShouldWriteContextUriForComplexCollectionResponseWithoutUserModelAndWithItemType_Inherit()
+        public async Task ShouldWriteContextUriForComplexCollectionResponseWithoutUserModelAndWithItemType_Inherit()
         {
-            WriteAndValidate(this.collectionStartWithoutSerializationInfo, derivedItems, "{\"@odata.context\":\"http://odata.org/test/$metadata#Collection(ns.DerivedAddress)\",\"value\":[{\"Street\":\"1 Microsoft Way\",\"Zipcode\":98052,\"State\":\"WA\",\"City\":\"Shanghai\"}]}", writingResponse: true, itemTypeReference: this.derivedAddressTypeReference);
+            await WriteAndValidateAsync(this.collectionStartWithoutSerializationInfo, derivedItems, "{\"@odata.context\":\"http://odata.org/test/$metadata#Collection(ns.DerivedAddress)\",\"value\":[{\"Street\":\"1 Microsoft Way\",\"Zipcode\":98052,\"State\":\"WA\",\"City\":\"Shanghai\"}]}", writingResponse: true, itemTypeReference: this.derivedAddressTypeReference);
         }
 
         [Fact]
@@ -193,20 +193,20 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.Json
         }
 
         [Fact]
-        public void ShouldWriteContextUriBasedOnSerializationInfoForComplexCollectionResponseWithoutUserModelWhenBothItemTypeAndSerializationInfoAreGiven_Inherit()
+        public async Task ShouldWriteContextUriBasedOnSerializationInfoForComplexCollectionResponseWithoutUserModelWhenBothItemTypeAndSerializationInfoAreGiven_Inherit()
         {
             ODataResourceSet collectionStart = new ODataResourceSet();
             collectionStart.SetSerializationInfo(new ODataResourceSerializationInfo { ExpectedTypeName = "foo.bar" });
-            WriteAndValidate(collectionStart, this.derivedItems, "{\"@odata.context\":\"http://odata.org/test/$metadata#Collection(foo.bar)\",\"value\":[{\"@odata.type\":\"#ns.DerivedAddress\",\"Street\":\"1 Microsoft Way\",\"Zipcode\":98052,\"State\":\"WA\",\"City\":\"Shanghai\"}]}", writingResponse: true, itemTypeReference: this.derivedAddressTypeReference);
+            await WriteAndValidateAsync(collectionStart, this.derivedItems, "{\"@odata.context\":\"http://odata.org/test/$metadata#Collection(foo.bar)\",\"value\":[{\"@odata.type\":\"#ns.DerivedAddress\",\"Street\":\"1 Microsoft Way\",\"Zipcode\":98052,\"State\":\"WA\",\"City\":\"Shanghai\"}]}", writingResponse: true, itemTypeReference: this.derivedAddressTypeReference);
         }
         #endregion Without model
 
-        private static void WriteAndValidate(ODataResourceSet collectionStart, IEnumerable<ODataResource> items, string expectedPayload, bool writingResponse = true, IEdmTypeReference itemTypeReference = null)
+        private static async Task WriteAndValidateAsync(ODataResourceSet collectionStart, IEnumerable<ODataResource> items, string expectedPayload, bool writingResponse = true, IEdmTypeReference itemTypeReference = null)
         {
             WriteAndValidateSync(itemTypeReference, collectionStart, items, expectedPayload, writingResponse);
-            WriteAndValidateAsync(itemTypeReference, collectionStart, items, expectedPayload, writingResponse);
+            await WriteAndValidateResourcesAsync(itemTypeReference, collectionStart, items, expectedPayload, writingResponse);
             WriteAndValidatePrimitivesSync(itemTypeReference, collectionStart, items, expectedPayload, writingResponse);
-            WriteAndValidatePrimitivesAsync(itemTypeReference, collectionStart, items, expectedPayload, writingResponse).GetAwaiter().GetResult();
+            await WriteAndValidatePrimitivesAsync(itemTypeReference, collectionStart, items, expectedPayload, writingResponse);
         }
 
         private static void WriteAndValidateSync(IEdmTypeReference itemTypeReference, ODataResourceSet collectionStart, IEnumerable<ODataResource> items, string expectedPayload, bool writingResponse)
@@ -225,21 +225,19 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.Json
             ValidateWrittenPayload(stream, expectedPayload);
         }
 
-        private static void WriteAndValidateAsync(IEdmTypeReference itemTypeReference, ODataResourceSet collectionStart, IEnumerable<ODataResource> items, string expectedPayload, bool writingResponse)
+        private static async Task WriteAndValidateResourcesAsync(IEdmTypeReference itemTypeReference, ODataResourceSet collectionStart, IEnumerable<ODataResource> items, string expectedPayload, bool writingResponse)
         {
             MemoryStream stream = new MemoryStream();
             var outputContext = CreateJsonOutputContext(stream, writingResponse, synchronous: false);
-            var createODataWriterTask = outputContext.CreateODataResourceSetWriterAsync(null, itemTypeReference == null ? null : itemTypeReference.ToStructuredType());
-            createODataWriterTask.Wait();
-            var odataWriter = createODataWriterTask.Result;
-            odataWriter.WriteStartAsync(collectionStart).Wait();
+            var odataWriter = await outputContext.CreateODataResourceSetWriterAsync(null, itemTypeReference == null ? null : itemTypeReference.ToStructuredType());
+            await odataWriter.WriteStartAsync(collectionStart);
             foreach (ODataResource item in items)
             {
-                odataWriter.WriteStartAsync(item).Wait();
-                odataWriter.WriteEndAsync().Wait();
+                await odataWriter.WriteStartAsync(item);
+                await odataWriter.WriteEndAsync();
             }
 
-            odataWriter.WriteEndAsync().Wait();
+            await odataWriter.WriteEndAsync();
             ValidateWrittenPayload(stream, expectedPayload);
         }
 
