@@ -55,14 +55,14 @@ namespace Microsoft.OData
         private static readonly UTF8Encoding encodingUtf8NoPreamble = new UTF8Encoding(false, true);
 
         /// <summary>
-        /// Max size to cache match info.
+        /// Maximum number of media type match results to cache.
         /// </summary>
-        private const int MatchInfoCacheInitialSize = 256;
+        internal const int MatchInfoCacheMaxSize = 256;
 
         /// <summary>
         /// Concurrent cache to cache match info.
         /// </summary>
-        private static MatchInfoConcurrentCache MatchInfoCache = new MatchInfoConcurrentCache(MatchInfoCacheInitialSize);
+        private static readonly MatchInfoConcurrentCache MatchInfoCache = new MatchInfoConcurrentCache(MatchInfoCacheMaxSize);
 
         /// <summary>UTF-8 encoding, without the BOM preamble.</summary>
         /// <remarks>
@@ -1008,17 +1008,39 @@ namespace Microsoft.OData
         private sealed class MatchInfoConcurrentCache
         {
             /// <summary>
+            /// Maximum number of elements that the cache can contain.
+            /// </summary>
+            private readonly int maxSize;
+
+            /// <summary>
             /// The dictionary to save elements.
             /// </summary>
             private readonly ConcurrentDictionary<MatchInfoCacheKey, MediaTypeMatchInfo> dict;
 
             /// <summary>
+            /// Tracks insertion order for FIFO eviction.
+            /// </summary>
+            private readonly Queue<MatchInfoCacheKey> insertionOrder;
+
+            /// <summary>
+            /// Serializes cache misses and eviction while leaving reads lock-free.
+            /// </summary>
+            private readonly object addLock = new object();
+
+            /// <summary>
             /// Constructor.
             /// </summary>
-            /// <param name="initialSize">Initial size of the cache.</param>
-            public MatchInfoConcurrentCache(int initialSize)
+            /// <param name="maxSize">Maximum number of elements that the cache can contain.</param>
+            public MatchInfoConcurrentCache(int maxSize)
             {
-                this.dict = new ConcurrentDictionary<MatchInfoCacheKey, MediaTypeMatchInfo>(4, initialSize);
+                if (maxSize <= 0)
+                {
+                    throw new ArgumentOutOfRangeException(nameof(maxSize));
+                }
+
+                this.maxSize = maxSize;
+                this.dict = new ConcurrentDictionary<MatchInfoCacheKey, MediaTypeMatchInfo>(4, maxSize);
+                this.insertionOrder = new Queue<MatchInfoCacheKey>(maxSize);
             }
 
             /// <summary>
@@ -1039,16 +1061,25 @@ namespace Microsoft.OData
             /// <param name="value">The value of the element to add.</param>
             public void Add(MatchInfoCacheKey key, MediaTypeMatchInfo value)
             {
-                try
+                lock (this.addLock)
                 {
-                    // Try to add the key to the dictionary. If we are overflowing
-                    // clear the dictionary and attempt to add the entry again.
-                    this.dict.TryAdd(key, value);
-                }
-                catch (OverflowException)
-                {
-                    this.dict.Clear();
-                    this.dict.TryAdd(key, value);
+                    if (this.dict.ContainsKey(key))
+                    {
+                        return;
+                    }
+
+                    if (this.insertionOrder.Count == this.maxSize)
+                    {
+                        MatchInfoCacheKey oldestKey = this.insertionOrder.Dequeue();
+                        MediaTypeMatchInfo removedValue;
+                        bool removed = this.dict.TryRemove(oldestKey, out removedValue);
+                        Debug.Assert(removed, "The oldest cache entry should exist.");
+                    }
+
+                    if (this.dict.TryAdd(key, value))
+                    {
+                        this.insertionOrder.Enqueue(key);
+                    }
                 }
             }
 
@@ -1058,7 +1089,10 @@ namespace Microsoft.OData
             /// <returns>ContentType of items in the cache</returns>
             internal IEnumerable<string> GetKeys()
             {
-                return this.dict.Keys.Select(k => k.ContentTypeName);
+                lock (this.addLock)
+                {
+                    return this.dict.Keys.Select(k => k.ContentTypeName).ToArray();
+                }
             }
         }
     }

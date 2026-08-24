@@ -8,6 +8,7 @@ using Microsoft.OData.Core;
 using System;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Microsoft.OData.Tests
@@ -446,7 +447,95 @@ namespace Microsoft.OData.Tests
                 MediaTypeUtils.GetFormatFromContentType(string.Format("multipart/mixed;boundary={0}", Guid.NewGuid()), new ODataPayloadKind[] { ODataPayloadKind.Batch }, ODataMediaTypeResolver.GetMediaTypeResolver(null), out mediaType, out encoding, out payloadKind);
             }
 
-            Assert.True(MediaTypeUtils.GetCacheKeys().Count(k => k.StartsWith("multipart/mixed")) == 1, "Multiple multipart/mixed keys in cache");
+            string[] multipartKeys = MediaTypeUtils.GetCacheKeys().Where(k => k.StartsWith("multipart/mixed")).ToArray();
+            Assert.Single(multipartKeys);
+        }
+
+        [Fact]
+        public void MatchInfoCacheShouldEvictOldestEntriesAtCapacity()
+        {
+            string testId = Guid.NewGuid().ToString("N");
+            int entryCount = MediaTypeUtils.MatchInfoCacheMaxSize + 100;
+            string firstContentType = $"application/json;odata.metadata=minimal;x-cache-test={testId}-0";
+            string lastContentType = $"application/json;odata.metadata=minimal;x-cache-test={testId}-{entryCount - 1}";
+
+            for (int i = 0; i < entryCount; i++)
+            {
+                TestMediaTypeWithFormat.ParseContentType(
+                    $"application/json;odata.metadata=minimal;x-cache-test={testId}-{i}",
+                    ODataVersion.V4);
+            }
+
+            string[] cacheKeys = MediaTypeUtils.GetCacheKeys().ToArray();
+            Assert.InRange(cacheKeys.Length, 1, MediaTypeUtils.MatchInfoCacheMaxSize);
+            Assert.DoesNotContain(firstContentType, cacheKeys);
+            Assert.Contains(lastContentType, cacheKeys);
+        }
+
+        [Fact]
+        public void MatchInfoCacheShouldRemainBoundedAfterSustainedLargeUniqueContentTypes()
+        {
+            const int entryCount = 10000;
+            string testId = Guid.NewGuid().ToString("N");
+            string padding = new string('a', 3800);
+            string firstContentType = $"application/json;odata.metadata=minimal;x-cache-test={testId}-0-{padding}";
+
+            for (int i = 0; i < entryCount; i++)
+            {
+                TestMediaTypeWithFormat.ParseContentType(
+                    $"application/json;odata.metadata=minimal;x-cache-test={testId}-{i}-{padding}",
+                    ODataVersion.V4);
+            }
+
+            const string standardContentType = "application/json;odata.metadata=minimal";
+            TestMediaTypeWithFormat.ParseContentType(standardContentType, ODataVersion.V4)
+                .BeJson()
+                .HaveDefaultMetadata();
+
+            string[] cacheKeys = MediaTypeUtils.GetCacheKeys().ToArray();
+            Assert.Equal(MediaTypeUtils.MatchInfoCacheMaxSize, cacheKeys.Length);
+            Assert.DoesNotContain(firstContentType, cacheKeys);
+            Assert.Contains(standardContentType, cacheKeys);
+        }
+
+        [Fact]
+        public void MatchInfoCacheShouldRemainBoundedDuringConcurrentAdds()
+        {
+            string testId = Guid.NewGuid().ToString("N");
+
+            Parallel.For(
+                0,
+                MediaTypeUtils.MatchInfoCacheMaxSize * 4,
+                i => TestMediaTypeWithFormat.ParseContentType(
+                    $"application/json;odata.metadata=minimal;x-cache-test={testId}-{i}",
+                    ODataVersion.V4));
+
+            string sentinelContentType = $"application/json;odata.metadata=minimal;x-cache-test={testId}-sentinel";
+            TestMediaTypeWithFormat.ParseContentType(sentinelContentType, ODataVersion.V4);
+
+            string[] cacheKeys = MediaTypeUtils.GetCacheKeys().ToArray();
+            Assert.InRange(cacheKeys.Length, 1, MediaTypeUtils.MatchInfoCacheMaxSize);
+            Assert.Contains(sentinelContentType, cacheKeys);
+        }
+
+        [Fact]
+        public void MatchInfoCacheShouldBoundNegativeMatchResults()
+        {
+            string testId = Guid.NewGuid().ToString("N");
+            string firstContentType = $"application/x-cache-test-{testId}-0";
+            string lastContentType = $"application/x-cache-test-{testId}-{MediaTypeUtils.MatchInfoCacheMaxSize}";
+
+            for (int i = 0; i <= MediaTypeUtils.MatchInfoCacheMaxSize; i++)
+            {
+                string contentType = $"application/x-cache-test-{testId}-{i}";
+                Assert.Throws<ODataContentTypeException>(
+                    () => TestMediaTypeWithFormat.ParseContentType(contentType, ODataVersion.V4));
+            }
+
+            string[] cacheKeys = MediaTypeUtils.GetCacheKeys().ToArray();
+            Assert.InRange(cacheKeys.Length, 1, MediaTypeUtils.MatchInfoCacheMaxSize);
+            Assert.DoesNotContain(firstContentType, cacheKeys);
+            Assert.Contains(lastContentType, cacheKeys);
         }
     }
 
