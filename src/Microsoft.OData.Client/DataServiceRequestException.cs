@@ -14,7 +14,6 @@ namespace Microsoft.OData.Client
     public sealed class DataServiceRequestException : InvalidOperationException
     {
         /// <summary>Actual response object.</summary>
-        [NonSerialized]
         private readonly DataServiceResponse response;
 
         #region Constructors

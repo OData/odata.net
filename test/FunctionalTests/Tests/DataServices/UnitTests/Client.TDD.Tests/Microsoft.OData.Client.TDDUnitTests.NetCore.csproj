@@ -23,7 +23,6 @@
   <ItemGroup>
     <Compile Remove="Tests\Annotation\ClientAnnotationTests.cs" />
     <Compile Remove="Tests\Common\TestPrimitiveType.cs" /> <!-- Removed because no support for Binary Type in Net Core 1.0 -->
-    <Compile Remove="Tests\DataServiceClientExceptionSerializationTests.cs" />
     <Compile Remove="Tests\DataServiceClientRequestPipelineTests.cs" />
     <Compile Remove="Tests\DataServiceClientResponsePipelineTests.cs" />
     <Compile Remove="Tests\EntityParameter\EntityParameterTests.cs" />
